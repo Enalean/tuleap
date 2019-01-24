@@ -19,35 +19,28 @@
  *
  */
 
-namespace Tuleap\Tracker\Workflow\PostAction\Update;
+namespace Tuleap\Tracker\Workflow\PostAction\Update\Internal;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
 use PHPUnit\Framework\TestCase;
 use Transition;
-use Tuleap\DB\TransactionExecutor;
-use Tuleap\Tracker\Workflow\PostAction\Update\Internal\CIBuild;
-use Tuleap\Tracker\Workflow\PostAction\Update\Internal\CIBuildRepository;
+use Tuleap\Tracker\Workflow\PostAction\Update\PostActionCollection;
 
-class PostActionsUpdaterTest extends TestCase
+class CIBuildUpdaterTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
     /**
-     * @var PostActionsUpdater
+     * @var CIBuildUpdater
      */
-    private $post_action_updater;
-
+    private $updater;
     /**
+     *
      * @var MockInterface
      */
     private $ci_build_repository;
-
-    /**
-     * @var MockInterface
-     */
-    private $transaction_executor;
 
     /**
      * @before
@@ -55,7 +48,6 @@ class PostActionsUpdaterTest extends TestCase
     public function createUpdater()
     {
         $this->ci_build_repository = Mockery::mock(CIBuildRepository::class);
-
         $this->ci_build_repository
             ->shouldReceive('deleteAllByTransitionIfIdNotIn')
             ->byDefault();
@@ -63,37 +55,7 @@ class PostActionsUpdaterTest extends TestCase
             ->shouldReceive('update')
             ->byDefault();
 
-        $this->transaction_executor = Mockery::mock(TransactionExecutor::class);
-        $this->transaction_executor
-            ->shouldReceive('execute')
-            ->andReturnUsing(function (callable $operation) {
-                $operation();
-            });
-
-        $this->post_action_updater = new PostActionsUpdater(
-            $this->ci_build_repository,
-            $this->transaction_executor
-        );
-    }
-
-    public function testUpdateDeletesRemovedCIBuildActions()
-    {
-        $transition = $this->buildATransition();
-
-        $this->ci_build_repository
-            ->shouldReceive('findAllIdsByTransition')
-            ->with($transition)
-            ->andReturns([2, 3]);
-
-        $action  = new CIBuild(2, 'http://example.test');
-        $actions = new PostActionCollection($action);
-
-        $this->ci_build_repository
-            ->shouldReceive('deleteAllByTransitionIfIdNotIn')
-            ->with($transition, [2])
-            ->andReturns();
-
-        $this->post_action_updater->updateByTransition($transition, $actions);
+        $this->updater = new CIBuildUpdater($this->ci_build_repository);
     }
 
     public function testUpdateAddsNewCIBuildActions()
@@ -105,7 +67,7 @@ class PostActionsUpdaterTest extends TestCase
             ->with($transition)
             ->andReturns([1]);
 
-        $added_action = new CIBuild(1, 'http://example.test');
+        $added_action = new CIBuild(null, 'http://example.test');
         $actions      = new PostActionCollection($added_action);
 
         $this->ci_build_repository
@@ -113,7 +75,7 @@ class PostActionsUpdaterTest extends TestCase
             ->with($transition, $added_action)
             ->andReturns();
 
-        $this->post_action_updater->updateByTransition($transition, $actions);
+        $this->updater->updateByTransition($actions, $transition);
     }
 
     public function testUpdateUpdatesCIBuildActionsWhichAlreadyExists()
@@ -133,7 +95,27 @@ class PostActionsUpdaterTest extends TestCase
             ->with($updated_action)
             ->andReturns();
 
-        $this->post_action_updater->updateByTransition($transition, $actions);
+        $this->updater->updateByTransition($actions, $transition);
+    }
+
+    public function testUpdateDeletesRemovedCIBuildActions()
+    {
+        $transition = $this->buildATransition();
+
+        $this->ci_build_repository
+            ->shouldReceive('findAllIdsByTransition')
+            ->with($transition)
+            ->andReturns([2, 3]);
+
+        $action  = new CIBuild(2, 'http://example.test');
+        $actions = new PostActionCollection($action);
+
+        $this->ci_build_repository
+            ->shouldReceive('deleteAllByTransitionIfIdNotIn')
+            ->with($transition, [2])
+            ->andReturns();
+
+        $this->updater->updateByTransition($actions, $transition);
     }
 
     private function buildATransition(): MockInterface
