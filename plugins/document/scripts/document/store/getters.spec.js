@@ -65,10 +65,10 @@ describe("Store getters", () => {
             const global_progress = getters.global_upload_progress({
                 folder_content: [
                     { id: 1 },
-                    { id: 2 },
-                    { id: 3, progress: 25 },
+                    { id: 2, progress: 25, upload_error: "Error during upload" },
+                    { id: 3, progress: 25, upload_error: null },
                     { id: 4 },
-                    { id: 5, progress: 75 },
+                    { id: 5, progress: 75, upload_error: null },
                     { id: 6 }
                 ]
             });

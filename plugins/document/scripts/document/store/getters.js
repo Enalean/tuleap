@@ -37,27 +37,20 @@ export const current_folder_title = state => {
 
 export const user_can_dragndrop = state => state.max_files_dragndrop > 0;
 
-let nb_uploads = 0;
-
 export const global_upload_progress = state => {
-    const uploads = state.folder_content.filter(item => item.hasOwnProperty("progress"));
+    const ongoing_uploads = state.folder_content.filter(item => {
+        return item.hasOwnProperty("progress") && item.upload_error === null;
+    });
 
-    if (!uploads.length) {
-        nb_uploads = 0;
+    if (ongoing_uploads.length === 0) {
         return 0;
     }
 
-    const total_progress = uploads.reduce((sum, item) => {
-        sum += item.progress;
-
-        return sum;
+    const total_progress = ongoing_uploads.reduce((sum, item) => {
+        return sum + item.progress;
     }, 0);
 
-    nb_uploads = uploads.length > nb_uploads ? uploads.length : nb_uploads;
-
-    const finished_upload_total_progress = (nb_uploads - uploads.length) * 100;
-
-    return Math.trunc((total_progress + finished_upload_total_progress) / nb_uploads);
+    return Math.trunc(total_progress / ongoing_uploads.length);
 };
 
 export const is_uploading = state => {
