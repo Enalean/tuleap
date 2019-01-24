@@ -21,7 +21,9 @@
 
 namespace Tuleap\Tracker\REST\v1\Workflow;
 
+use Transition_PostAction_Field_Date;
 use Tuleap\REST\JsonCast;
+use Tuleap\Tracker\REST\v1\Workflow\PostAction\UnsupportedDateValueException;
 
 /**
  * Representation of a transition action which sets a fixed field value.
@@ -32,6 +34,18 @@ use Tuleap\REST\JsonCast;
  */
 class SetFieldValueRepresentation
 {
+    public const TYPE = "set_field_value";
+
+    public const UNSET_DATE_VALUE = null;
+    public const EMPTY_DATE_VALUE = "";
+    public const CURRENT_DATE_VALUE = "current";
+
+    public const DATE_VALUE_MAPPING = [
+        0 => self::UNSET_DATE_VALUE,
+        Transition_PostAction_Field_Date::CLEAR_DATE => self::EMPTY_DATE_VALUE,
+        Transition_PostAction_Field_Date::FILL_CURRENT_TIME => self::CURRENT_DATE_VALUE
+    ];
+
     /**
      * @var string Action identifier (unique among actions with same type and same field type)
      */
@@ -40,7 +54,7 @@ class SetFieldValueRepresentation
     /**
      * @var string
      */
-    public $type = "set_field_value";
+    public $type = self::TYPE;
 
     /**
      * @var int
@@ -53,16 +67,16 @@ class SetFieldValueRepresentation
     public $field_type;
 
     /**
-     * @var int|float
+     * @var string|int|float
      */
     public $value;
 
     private function __construct($id, $field_id, $field_type, $value)
     {
-        $this->id = $id;
-        $this->field_id = $field_id;
+        $this->id         = $id;
+        $this->field_id   = $field_id;
         $this->field_type = $field_type;
-        $this->value = $value;
+        $this->value      = $value;
     }
 
     /**
@@ -70,14 +84,18 @@ class SetFieldValueRepresentation
      * @param int $field_id
      * @param int $value
      * @return SetFieldValueRepresentation
+     * @throws UnsupportedDateValueException
      */
     public static function forDate($id, $field_id, $value)
     {
+        if (!array_key_exists($value, self::DATE_VALUE_MAPPING)) {
+            throw new UnsupportedDateValueException($value, array_keys(self::DATE_VALUE_MAPPING));
+        }
         return new self(
             JsonCast::toInt($id),
             JsonCast::toInt($field_id),
             'date',
-            JsonCast::toInt($value)
+            self::DATE_VALUE_MAPPING[$value]
         );
     }
 

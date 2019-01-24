@@ -51,6 +51,9 @@ class PostActionsRepresentationBuilder implements Visitor
         $this->post_action_representations = [];
     }
 
+    /**
+     * @throws UnsupportedDateValueException
+     */
     public function build()
     {
         foreach ($this->post_actions as $post_action) {
@@ -67,6 +70,9 @@ class PostActionsRepresentationBuilder implements Visitor
         );
     }
 
+    /**
+     * @throws UnsupportedDateValueException
+     */
     public function visitDateField(Transition_PostAction_Field_Date $post_action)
     {
         $this->post_action_representations[] = SetFieldValueRepresentation::forDate(

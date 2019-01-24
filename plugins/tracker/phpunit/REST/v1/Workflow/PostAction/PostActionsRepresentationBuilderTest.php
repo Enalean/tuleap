@@ -68,7 +68,7 @@ class PostActionsRepresentationBuilderTest extends TestCase
         $this->assertSame('set_field_value', $representation[0]->type);
         $this->assertSame(8, $representation[0]->field_id);
         $this->assertSame('date', $representation[0]->field_type);
-        $this->assertSame(Transition_PostAction_Field_Date::CLEAR_DATE, $representation[0]->value);
+        $this->assertSame('', $representation[0]->value);
     }
 
     public function testBuildReturnsRunJobRepresentationBasedOnGivenFieldIntAction()
