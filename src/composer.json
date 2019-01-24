@@ -42,6 +42,7 @@
     "psr/http-server-handler": "^1.0",
     "psr/http-server-middleware": "^1.0",
     "symfony/console": "^4.2",
+    "symfony/var-exporter": "^4.2",
     "zendframework/zend-mail": "^2.10"
   },
   "config": {

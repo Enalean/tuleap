@@ -28,7 +28,8 @@ use Tuleap\Plugin\PluginProxyInjectedData;
  */
 class PluginManager {
 
-    const PLUGIN_HOOK_CACHE_FILE = 'hooks.json';
+    const PLUGIN_HOOK_CACHE_FILE  = 'hooks.json';
+    public const PLUGIN_HOOKS_CACHE_TYPE = 'plugin_hooks_cache_type';
 
     /**
      * @var ContentInterpretor
@@ -94,7 +95,7 @@ class PluginManager {
     }
 
     public function loadPlugins() {
-        if (ForgeConfig::get('plugin_hooks_cache_type') === 'serialized') {
+        if (ForgeConfig::get(self::PLUGIN_HOOKS_CACHE_TYPE) === 'serialized') {
             (new PluginLoader($this->event_manager, $this->plugin_factory))->loadPlugins();
         } else {
             $injected_data = $this->getPluginsInjectedData();
@@ -520,7 +521,7 @@ class PluginManager {
 
     public function restoreOwnershipOnCacheFile(Logger $logger, Backend $backend)
     {
-        if (ForgeConfig::get('plugin_hooks_cache_type') === 'serialized') {
+        if (ForgeConfig::get(self::PLUGIN_HOOKS_CACHE_TYPE) === 'serialized') {
             PluginLoader::restoreOwnershipOnCacheFile($logger, $backend);
         } else {
             $plugin_cache_file = $this->getCacheFile();

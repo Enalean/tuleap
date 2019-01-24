@@ -219,7 +219,7 @@ class PluginManager_LoadPluginTest extends TuleapTestCase {
         parent::setUp();
         ForgeConfig::store();
         ForgeConfig::set('codendi_cache_dir', '/tmp');
-        ForgeConfig::set('plugin_hooks_cache_type', 'json');
+        ForgeConfig::set(PluginManager::PLUGIN_HOOKS_CACHE_TYPE, 'json');
 
         $this->plugin_factory = mock('PluginFactory');
         $this->event_manager  = mock('EventManager');
@@ -300,7 +300,7 @@ class PluginManager_LoadPluginWithSerialiazedProxyTest extends TuleapTestCase {
         parent::setUp();
         ForgeConfig::store();
         ForgeConfig::set('codendi_cache_dir', '/tmp');
-        ForgeConfig::set('plugin_hooks_cache_type', 'serialized');
+        ForgeConfig::set(PluginManager::PLUGIN_HOOKS_CACHE_TYPE, 'serialized');
 
         $this->plugin_factory = Mockery::mock(PluginFactory::class);
         $this->event_manager  = Mockery::mock(EventManager::class);
