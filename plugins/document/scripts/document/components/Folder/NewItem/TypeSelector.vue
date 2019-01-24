@@ -37,9 +37,11 @@
 </template>
 <script>
 import {
+    ICON_EMBEDDED,
     ICON_EMPTY,
     ICON_LINK,
     ICON_WIKI,
+    TYPE_EMBEDDED,
     TYPE_EMPTY,
     TYPE_LINK,
     TYPE_WIKI,
@@ -53,7 +55,7 @@ export default {
         value: String
     },
     computed: {
-        ...mapState(["user_can_create_wiki"]),
+        ...mapState(["user_can_create_wiki", "embedded_are_allowed"]),
         supported_types() {
             let types = [
                 {
@@ -81,6 +83,14 @@ export default {
                     is_checked: this.value === TYPE_WIKI,
                     label: this.$gettext("Wiki page"),
                     icons: [ICON_WIKI]
+                });
+            }
+            if (this.embedded_are_allowed) {
+                types.push({
+                    identifier: TYPE_EMBEDDED,
+                    is_checked: this.value === TYPE_EMBEDDED,
+                    label: this.$gettext("Embedded"),
+                    icons: [ICON_EMBEDDED]
                 });
             }
             return types;

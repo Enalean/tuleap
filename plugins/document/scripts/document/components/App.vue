@@ -49,7 +49,8 @@ export default {
         date_time_format: String,
         max_files_dragndrop: Number,
         max_size_upload: Number,
-        is_under_construction: Boolean
+        is_under_construction: Boolean,
+        embedded_are_allowed: Boolean
     },
     computed: {
         ...mapState(["has_folder_permission_error", "has_folder_loading_error"]),
@@ -77,7 +78,8 @@ export default {
             this.user_can_create_wiki,
             this.max_files_dragndrop,
             this.max_size_upload,
-            this.is_under_construction
+            this.is_under_construction,
+            this.embedded_are_allowed
         ]);
 
         window.addEventListener("beforeunload", event => {

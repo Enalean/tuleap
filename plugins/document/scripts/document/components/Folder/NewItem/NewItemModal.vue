@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2018. All Rights Reserved.
+  - Copyright (c) Enalean, 2018-2019. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -33,6 +33,7 @@
             <global-properties v-bind:item="item" v-bind:parent="parent">
                 <link-properties v-model="item.link_properties" v-bind:item="item"/>
                 <wiki-properties v-model="item.wiki_properties" v-bind:item="item"/>
+                <embedded-properties v-model="item.embedded_properties" v-bind:item="item"/>
                 <file-properties v-model="item.file_properties" v-bind:item="item"/>
             </global-properties>
         </div>
@@ -51,6 +52,7 @@ import TypeSelector from "./TypeSelector.vue";
 import ModalHeader from "./ModalHeader.vue";
 import ModalFooter from "./ModalFooter.vue";
 import ModalFeedback from "./ModalFeedback.vue";
+import EmbeddedProperties from "./Property/EmbeddedProperties.vue";
 import FileProperties from "./Property/FileProperties.vue";
 import { TYPE_FILE } from "../../../constants.js";
 
@@ -58,6 +60,7 @@ export default {
     name: "NewItemModal",
     components: {
         FileProperties,
+        EmbeddedProperties,
         ModalFooter,
         ModalHeader,
         GlobalProperties,
@@ -80,6 +83,9 @@ export default {
                 },
                 file_properties: {
                     file: ""
+                },
+                embedded_properties: {
+                    content: ""
                 }
             },
             item: {},
@@ -125,7 +131,6 @@ export default {
             event.preventDefault();
             this.is_loading = true;
             this.$store.commit("resetModalError");
-
             await this.$store.dispatch("createNewItem", [this.item, this.current_folder]);
 
             this.is_loading = false;

@@ -39,7 +39,8 @@ const state = {
     max_files_dragndrop: 1,
     max_size_upload: 1,
     is_under_construction: false,
-    files_uploads_list: []
+    files_uploads_list: [],
+    embedded_are_allowed: false
 };
 
 export default state;

@@ -34,6 +34,9 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
+msgid "Content"
+msgstr ""
+
 msgid "Create document"
 msgstr ""
 
@@ -59,6 +62,9 @@ msgstr[1] ""
 msgid "Dropping files in %s is forbidden."
 msgstr ""
 
+msgid "Embedded"
+msgstr ""
+
 msgid "Empty"
 msgstr ""
 
@@ -81,6 +87,9 @@ msgid "Last update date"
 msgstr ""
 
 msgid "Link"
+msgstr ""
+
+msgid "My content..."
 msgstr ""
 
 msgid "My document"

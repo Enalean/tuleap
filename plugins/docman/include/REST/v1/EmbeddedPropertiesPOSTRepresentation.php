@@ -24,7 +24,7 @@ namespace Tuleap\Docman\REST\v1;
 class EmbeddedPropertiesPOSTRepresentation
 {
     /**
-     * @var string {@type string}
+     * @var string {@type string} {@required false}
      */
-    public $content = '';
+    public $content;
 }

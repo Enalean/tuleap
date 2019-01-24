@@ -44,6 +44,9 @@ msgstr "Annuler le téléversement"
 msgid "Close"
 msgstr "Fermer"
 
+msgid "Content"
+msgstr "Contenu"
+
 msgid "Create document"
 msgstr "Créer le document"
 
@@ -73,6 +76,9 @@ msgstr[1] ""
 msgid "Dropping files in %s is forbidden."
 msgstr "Déposer des fichiers dans %s n'est pas permis."
 
+msgid "Embedded"
+msgstr "Embarqué"
+
 msgid "Empty"
 msgstr "Vide"
 
@@ -96,6 +102,9 @@ msgstr "Mis à jour"
 
 msgid "Link"
 msgstr "Lien"
+
+msgid "My content..."
+msgstr "Mon contenu..."
 
 msgid "My document"
 msgstr "Mon document"
