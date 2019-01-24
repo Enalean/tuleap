@@ -26,7 +26,11 @@
              v-bind:class="{'document-new-item-type-checked': type.is_checked}"
              v-on:click="$emit('input', type.identifier)"
         >
-            <i class="document-new-item-type-icon fa" v-bind:class="type.icon"></i>
+            <i class="document-new-item-type-icon fa"
+               v-for="icon of type.icons"
+               v-bind:key="icon"
+               v-bind:class="icon"
+            ></i>
             <span class="document-new-item-type-label">{{ type.label }}</span>
         </div>
     </div>
@@ -39,8 +43,7 @@ import {
     TYPE_EMPTY,
     TYPE_LINK,
     TYPE_WIKI,
-    TYPE_FILE,
-    ICON_FILE
+    TYPE_FILE
 } from "../../../constants.js";
 import { mapState } from "vuex";
 
@@ -54,22 +57,22 @@ export default {
         supported_types() {
             let types = [
                 {
+                    identifier: TYPE_FILE,
+                    is_checked: this.value === TYPE_FILE,
+                    label: this.$gettext("File"),
+                    icons: ["fa-file-excel-o", "fa-file-word-o", "fa-file-pdf-o", "fa-file-image-o"]
+                },
+                {
                     identifier: TYPE_LINK,
                     is_checked: this.value === TYPE_LINK,
                     label: this.$gettext("Link"),
-                    icon: ICON_LINK
+                    icons: [ICON_LINK]
                 },
                 {
                     identifier: TYPE_EMPTY,
                     is_checked: this.value === TYPE_EMPTY,
                     label: this.$gettext("Empty"),
-                    icon: ICON_EMPTY
-                },
-                {
-                    identifier: TYPE_FILE,
-                    is_checked: this.value === TYPE_FILE,
-                    label: this.$gettext("File"),
-                    icon: ICON_FILE
+                    icons: [ICON_EMPTY]
                 }
             ];
             if (this.user_can_create_wiki) {
@@ -77,7 +80,7 @@ export default {
                     identifier: TYPE_WIKI,
                     is_checked: this.value === TYPE_WIKI,
                     label: this.$gettext("Wiki page"),
-                    icon: ICON_WIKI
+                    icons: [ICON_WIKI]
                 });
             }
             return types;
