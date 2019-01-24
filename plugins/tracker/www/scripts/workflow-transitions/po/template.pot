@@ -97,6 +97,11 @@ msgstr ""
 msgid "This action will delete all transition rules! It is irreversible."
 msgstr ""
 
+msgid ""
+"This workflow is legacy, which means that pre conditions and post actions "
+"defined in transitions are processed even if the workflow is not activated."
+msgstr ""
+
 msgid "Tracker cannot be loaded"
 msgstr ""
 

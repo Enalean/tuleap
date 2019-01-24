@@ -39,6 +39,14 @@ export const are_transition_rules_enforced = state => {
     return Boolean(parseInt(state.current_tracker.workflow.is_used, 10));
 };
 
+export const is_workflow_legacy = state => {
+    if (!state.current_tracker) {
+        return null;
+    }
+
+    return state.current_tracker.workflow.is_legacy;
+};
+
 export const current_tracker_id = state => {
     if (state.current_tracker === null) {
         return null;
