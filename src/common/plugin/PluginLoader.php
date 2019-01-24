@@ -25,6 +25,7 @@ use Backend;
 use EventManager;
 use ForgeConfig;
 use Logger;
+use Symfony\Component\VarExporter\VarExporter;
 
 class PluginLoader
 {
@@ -97,7 +98,7 @@ class PluginLoader
 
     private function serializeInFile($path, $var)
     {
-        file_put_contents($path, '<?php'.PHP_EOL.'return '.var_export($var, true).';');
+        file_put_contents($path, '<?php'.PHP_EOL.'return '.VarExporter::export($var).';');
     }
 
     private function getHooksOfAvailablePlugins()

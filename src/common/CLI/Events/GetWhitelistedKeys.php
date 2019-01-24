@@ -45,6 +45,7 @@ class GetWhitelistedKeys implements Dispatchable
         Prometheus::CONFIG_PROMETHEUS_NODE_EXPORTER => true,
         NewsCollectionBuilder::CONFIG_DISPLAY_NEWS => true,
         StatisticsCollectionBuilder::CONFIG_DISPLAY_STATISTICS => true,
+        \PluginManager::PLUGIN_HOOKS_CACHE_TYPE => true,
     ];
 
     public function addPluginsKeys($key_name)

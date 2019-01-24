@@ -16,6 +16,12 @@ SUDO=
 DOCKER=$(SUDO) docker
 DOCKER_COMPOSE=$(SUDO) docker-compose $(DOCKER_COMPOSE_FILE)
 
+ifeq ($(MODE),Prod)
+COMPOSER_INSTALL=composer install --classmap-authoritative --no-dev --no-interaction --no-scripts
+else
+COMPOSER_INSTALL=composer install
+endif
+
 AUTOLOAD_EXCLUDES=^tests|^template
 
 .DEFAULT_GOAL := help
@@ -31,16 +37,11 @@ help:
 .PHONY: composer
 composer:  ## Install PHP dependencies with Composer
 	@echo "Processing src/composer.json"
-	@composer install --working-dir=src/
-	@find plugins/ src/www/themes/ tests/ -mindepth 2 -maxdepth 2 -type f -name 'composer.json' \
-		-exec echo "Processing {}" \; -execdir composer install \;
+	@$(COMPOSER_INSTALL) --working-dir=src/
 	@echo "Processing tools/Configuration/composer.json"
-	@composer install --working-dir=tools/Configuration/
-
-composer-production-autoloaders: ## Dump autoloaders for production
-	@composer dump-autoload --working-dir=src/ --optimize --no-dev --classmap-authoritative
-	@find plugins/ tests/ -mindepth 2 -maxdepth 2 -type f -name 'composer.json' \
-		-exec echo "Processing {}" \; -execdir composer dump-autoload  --optimize --no-dev --classmap-authoritative \;
+	@$(COMPOSER_INSTALL) --working-dir=tools/Configuration/
+	@find plugins/ src/www/themes/ tests/ -mindepth 2 -maxdepth 2 -type f -name 'composer.json' \
+		-exec echo "Processing {}" \; -execdir $(COMPOSER_INSTALL) \;
 
 ## RNG generation
 
