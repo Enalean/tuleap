@@ -115,6 +115,14 @@ msgstr ""
 "Cette action supprimera toutes les règles de transitions ! Cela est "
 "irréversible."
 
+msgid ""
+"This workflow is legacy, which means that pre conditions and post actions "
+"defined in transitions are processed even if the workflow is not activated."
+msgstr ""
+"Ce workflow a un comportement incohérent. Ceci signifie que les conditions "
+"ainsi que les actions définies dans les transitions seront exécutées bien que "
+"le worflow soit désactivé."
+
 msgid "Tracker cannot be loaded"
 msgstr "Le tracker ne peut pas être chargé"
 
