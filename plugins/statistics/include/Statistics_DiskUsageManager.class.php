@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\DB\Compat\Legacy2018\CompatPDODataAccessResult;
+use Tuleap\Statistics\Events\StatisticsRefreshDiskUsage;
 use Tuleap\SVN\DiskUsage\Collector as SVNCollector;
 use Tuleap\CVS\DiskUsage\Collector as CVSCollector;
 
@@ -314,14 +316,43 @@ class Statistics_DiskUsageManager {
     }
 
     public function returnTotalProjectSize($group_id){
-        $dao  = $this->_getDao();
-        $recentDate = $dao->searchMostRecentDate();
-        $dar = $dao->returnTotalSizeProject($group_id, $recentDate);
+        $dao            = $this->_getDao();
+        $recentDate     = $dao->searchMostRecentDate();
+        $dar            = $dao->searchServicesSizesPerProject($group_id, $recentDate);
+        $usage_refresh  = new StatisticsRefreshDiskUsage($group_id);
+
+        $this->event_manager->processEvent($usage_refresh);
+
         if ($dar && !$dar->isError()) {
-            $projectSize= $dar->getRow();
-            return $projectSize['size'];
+            return $this->computeTotalSizeOfProject($dar, $usage_refresh);
         }
         return false;
+    }
+
+    private function computeTotalSizeOfProject(CompatPDODataAccessResult $dar, StatisticsRefreshDiskUsage $refresh_usage): int
+    {
+        $disk_usages = $this->refreshUsages(
+            $this->extractSavedServicesDiskUsages($dar),
+            $refresh_usage
+        );
+
+        return array_sum($disk_usages);
+    }
+
+    private function refreshUsages(array $saved_usages, StatisticsRefreshDiskUsage $refreshed_usages): array
+    {
+        return array_merge($saved_usages, $refreshed_usages->getRefreshedUsages());
+    }
+
+    private function extractSavedServicesDiskUsages(CompatPDODataAccessResult $dar): array
+    {
+        $saved_usages = array();
+
+        foreach ($dar as $row) {
+            $saved_usages[$row['service']] = $row['size'];
+        }
+
+        return $saved_usages;
     }
 
     public function returnTotalSizeOfProjects($date) {
@@ -365,11 +396,14 @@ class Statistics_DiskUsageManager {
         $dao               = $this->_getDao();
         $recentDate        = $dao->searchMostRecentDate();
         $size_per_services = $dao->searchSizePerService($recentDate, $group_id);
-        $services          = array();
-        foreach ($size_per_services as $row) {
-            $services[$row['service']] = $row['size'];
-        }
-        return $services;
+        $usage_refresh     = new StatisticsRefreshDiskUsage($group_id);
+
+        $this->event_manager->processEvent($usage_refresh);
+
+        return $this->refreshUsages(
+            $this->extractSavedServicesDiskUsages($size_per_services),
+            $usage_refresh
+        );
     }
 
     public function getTopUsers($endDate, $order) {

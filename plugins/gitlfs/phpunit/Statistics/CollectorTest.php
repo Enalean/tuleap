@@ -21,8 +21,6 @@
 namespace Tuleap\GitLFS\Statistics;
 
 use Mockery;
-use Tuleap\GitLFS\Authorization\Action\ActionAuthorizationDAO;
-use Tuleap\GitLFS\LFSObject\LFSObjectDAO;
 
 class CollectorTest extends \PHPUnit\Framework\TestCase
 {
@@ -30,16 +28,16 @@ class CollectorTest extends \PHPUnit\Framework\TestCase
 
     public function testSizeOccupiedByProjectAndCollectionTimeAreRetrieved()
     {
-        $disk_usage_dao = Mockery::mock(\Statistics_DiskUsageDao::class);
-        $statistics_dao = Mockery::mock(LFSStatisticsDAO::class);
+        $disk_usage_dao       = Mockery::mock(\Statistics_DiskUsageDao::class);
+        $statistics_retriever = Mockery::mock(Retriever::class);
 
-        $collector = new Collector($disk_usage_dao, $statistics_dao);
+        $collector = new Collector($disk_usage_dao, $statistics_retriever);
 
         $project = \Mockery::mock(\Project::class);
         $project->shouldReceive('getID')->andReturns(102);
         $params       = ['project' => $project, 'time_to_collect' => []];
         $current_time = new \DateTimeImmutable('17-12-2018');
-        $statistics_dao->shouldReceive('getOccupiedSizeByProjectIDAndExpiration')->andReturns(123456);
+        $statistics_retriever->shouldReceive('getProjectDiskUsage')->andReturns(123456);
 
         $disk_usage_dao->shouldReceive('addGroup')->once();
 
