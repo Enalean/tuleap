@@ -396,9 +396,9 @@ class TransitionsResource extends AuthenticatedResource
         }
         ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt($project);
 
-        $post_actions = $this->getPostActionsUpdateJsonParser()
+        $post_actions = $this->getPostActionCollectionJsonParser()
             ->parse($post_actions_representation->post_actions);
-        $this->getPostActionUpdater()->updateByTransition($transition, $post_actions);
+        $this->getPostActionCollectionUpdater()->updateByTransition($transition, $post_actions);
     }
 
     /**
@@ -487,14 +487,14 @@ class TransitionsResource extends AuthenticatedResource
         return new RESTLogger();
     }
 
-    private function getPostActionsUpdateJsonParser(): PostActionCollectionJsonParser
+    private function getPostActionCollectionJsonParser(): PostActionCollectionJsonParser
     {
         return new PostActionCollectionJsonParser(
             new CIBuildJsonParser()
         );
     }
 
-    private function getPostActionUpdater(): PostActionCollectionUpdater
+    private function getPostActionCollectionUpdater(): PostActionCollectionUpdater
     {
         return new PostActionCollectionUpdater(
             new TransactionExecutor(
