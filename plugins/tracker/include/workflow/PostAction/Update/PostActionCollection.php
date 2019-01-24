@@ -83,38 +83,6 @@ class PostActionCollection implements PostActionVisitor
     }
 
     /**
-     * @return CIBuild[]
-     */
-    public function getCIBuildActions(): array
-    {
-        return $this->ci_build_actions;
-    }
-
-    /**
-     * @return SetDateValue[]
-     */
-    public function getSetDateValueActions(): array
-    {
-        return $this->set_date_value_actions;
-    }
-
-    /**
-     * @return SetIntValue[]
-     */
-    public function getSetIntValueActions(): array
-    {
-        return $this->set_int_value_actions;
-    }
-
-    /**
-     * @return SetFloatValue[]
-     */
-    public function getSetFloatValueActions(): array
-    {
-        return $this->set_float_value_actions;
-    }
-
-    /**
      * Compare only CIBuild actions against a list of action ids:
      * - Actions without id are marked as added
      * - Actions whose id is in given list are marked as updated
