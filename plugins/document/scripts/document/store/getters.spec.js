@@ -90,13 +90,11 @@ describe("Store getters", () => {
             const state = { ...initial_state };
             state.max_size_upload = 1;
 
-            const has_error = getters.has_file_upload_error(state)([
-                {
-                    name: "title",
-                    size: 10,
-                    type: TYPE_FILE
-                }
-            ]);
+            const has_error = getters.has_file_upload_error(state)({
+                name: "title",
+                size: 10,
+                type: TYPE_FILE
+            });
 
             expect(has_error).toEqual(MAX_SIZE_ERROR);
         });
@@ -114,13 +112,11 @@ describe("Store getters", () => {
             ];
             state.current_folder = { id: 10 };
 
-            const has_error = getters.has_file_upload_error(state)([
-                {
-                    name: "title",
-                    size: 1,
-                    type: TYPE_FILE
-                }
-            ]);
+            const has_error = getters.has_file_upload_error(state)({
+                name: "title",
+                size: 1,
+                type: TYPE_FILE
+            });
 
             expect(has_error).toEqual(ALREADY_EXISTS_ERROR);
         });
@@ -138,13 +134,11 @@ describe("Store getters", () => {
             ];
             state.current_folder = { id: 10 };
 
-            const has_error = getters.has_file_upload_error(state)([
-                {
-                    title: "title",
-                    size: 1,
-                    type: TYPE_FILE
-                }
-            ]);
+            const has_error = getters.has_file_upload_error(state)({
+                title: "title",
+                size: 1,
+                type: TYPE_FILE
+            });
 
             expect(has_error).toEqual();
         });
@@ -153,13 +147,11 @@ describe("Store getters", () => {
             const state = { ...initial_state };
             state.max_size_upload = 100;
 
-            const has_error = getters.has_file_upload_error(state)([
-                {
-                    title: "title",
-                    size: 1,
-                    type: TYPE_FILE
-                }
-            ]);
+            const has_error = getters.has_file_upload_error(state)({
+                title: "title",
+                size: 1,
+                type: TYPE_FILE
+            });
 
             expect(has_error).toEqual();
         });

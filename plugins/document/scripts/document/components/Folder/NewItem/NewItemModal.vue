@@ -19,7 +19,12 @@
   -->
 
 <template>
-    <form class="tlp-modal" role="dialog" aria-labelledby="document-new-item-modal" v-on:submit="addDocument">
+    <form class="tlp-modal"
+          role="dialog"
+          aria-labelledby="document-new-item-modal"
+          v-on:submit="addDocument"
+          enctype="multipart/form-data"
+    >
         <modal-header v-bind:modal_title="modal_title"/>
         <modal-feedback/>
         <div class="tlp-modal-body document-new-item-modal-body" v-if="is_displayed">
@@ -28,6 +33,7 @@
             <global-properties v-bind:item="item" v-bind:parent="parent">
                 <link-properties v-model="item.link_properties" v-bind:item="item"/>
                 <wiki-properties v-model="item.wiki_properties" v-bind:item="item"/>
+                <file-properties v-model="item.file_properties" v-bind:item="item"/>
             </global-properties>
         </div>
 
@@ -38,7 +44,6 @@
 <script>
 import { mapState } from "vuex";
 import { modal as createModal } from "tlp";
-import { TYPE_EMPTY } from "../../../constants.js";
 import GlobalProperties from "./Property/GlobalProperties.vue";
 import LinkProperties from "./Property/LinkProperties.vue";
 import WikiProperties from "./Property/WikiProperties.vue";
@@ -46,10 +51,13 @@ import TypeSelector from "./TypeSelector.vue";
 import ModalHeader from "./ModalHeader.vue";
 import ModalFooter from "./ModalFooter.vue";
 import ModalFeedback from "./ModalFeedback.vue";
+import FileProperties from "./Property/FileProperties.vue";
+import { TYPE_EMPTY } from "../../../constants.js";
 
 export default {
     name: "NewItemModal",
     components: {
+        FileProperties,
         ModalFooter,
         ModalHeader,
         GlobalProperties,
@@ -69,6 +77,9 @@ export default {
                 },
                 wiki_properties: {
                     page_name: ""
+                },
+                file_properties: {
+                    file: ""
                 }
             },
             item: {},
@@ -116,6 +127,7 @@ export default {
             this.$store.commit("resetModalError");
 
             await this.$store.dispatch("createNewItem", [this.item, this.current_folder]);
+
             this.is_loading = false;
             if (this.has_modal_error === false) {
                 this.modal.hide();

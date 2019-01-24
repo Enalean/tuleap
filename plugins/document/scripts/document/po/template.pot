@@ -62,6 +62,9 @@ msgstr ""
 msgid "Empty"
 msgstr ""
 
+msgid "File"
+msgstr ""
+
 msgid "Go to my home page"
 msgstr ""
 
@@ -178,7 +181,7 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-msgid "You are not allowed to upload files bigger than %{ size }."
+msgid "You are not allowed to upload files bigger than %s."
 msgstr ""
 
 msgid ""

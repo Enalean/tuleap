@@ -129,15 +129,17 @@ export default {
                 return;
             }
 
-            const error_type = this.has_file_upload_error(files);
-            if (error_type) {
-                this.error_modal_shown = error_type;
-                return;
+            for (const file of files) {
+                const error_type = this.has_file_upload_error(file);
+                if (error_type) {
+                    this.error_modal_shown = error_type;
+                    return;
+                }
             }
 
             for (const file of files) {
                 this.$store
-                    .dispatch("addNewUploadFile", [file, this.current_folder])
+                    .dispatch("addNewUploadFile", [file, this.current_folder, file.name, ""])
                     .catch(error => {
                         this.error_modal_shown = this.CREATION_ERROR;
                         this.error_modal_reasons.push({ filename: file.name, message: error });

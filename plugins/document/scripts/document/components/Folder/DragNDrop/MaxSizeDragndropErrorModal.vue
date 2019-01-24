@@ -19,26 +19,25 @@
 
 <template>
     <error-modal v-on:error-modal-hidden="bubbleErrorModalHidden">
-        <translate
-            tag="p"
-            v-bind:translate-params="{size: max_size_upload_in_mb}"
-        >
-            You are not allowed to upload files bigger than %{ size }.
-        </translate>
+        <p>{{ error_message }}</p>
     </error-modal>
 </template>
 
 <script>
 import { mapState } from "vuex";
 import ErrorModal from "./ErrorModal.vue";
+import { sprintf } from "sprintf-js";
 import prettyKibibytes from "pretty-kibibytes";
 
 export default {
     components: { ErrorModal },
     computed: {
         ...mapState(["max_size_upload"]),
-        max_size_upload_in_mb() {
-            return prettyKibibytes(this.max_size_upload);
+        error_message() {
+            return sprintf(
+                this.$gettext("You are not allowed to upload files bigger than %s."),
+                prettyKibibytes(this.max_size_upload)
+            );
         }
     },
     methods: {
