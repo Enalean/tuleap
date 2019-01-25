@@ -171,6 +171,9 @@ msgstr ""
 msgid "Confirm deletion"
 msgstr ""
 
+msgid "Deactivate transitions"
+msgstr ""
+
 msgid "Default Tuleap notifications"
 msgstr ""
 
@@ -631,6 +634,9 @@ msgid ""
 "sort a report, the sort has been ignored. Please choose another column."
 msgstr ""
 
+msgid "The request is not valid."
+msgstr ""
+
 msgid "The same value cannot be source and destination at the same time."
 msgstr ""
 
@@ -686,6 +692,9 @@ msgstr ""
 msgid "This transition already exists."
 msgstr ""
 
+msgid "This workflow is already in a functional state. Skipping."
+msgstr ""
+
 msgid ""
 "This workflow is legacy, which means that pre conditions and post actions "
 "defined in transitions are processed even if the workflow is not activated."
@@ -724,6 +733,9 @@ msgid "Transition with id '%d' has no workflow"
 msgstr ""
 
 msgid "Transitions Rules"
+msgstr ""
+
+msgid "Transitions are now fully deactivated."
 msgstr ""
 
 msgid "Triggers"

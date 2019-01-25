@@ -31,10 +31,14 @@ class Tracker_Workflow_Action_Transitions_DefineWorkflow  extends Tracker_Workfl
         $this->form_element_factory = $form_element_factory;
     }
 
-    public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, PFUser $current_user) {
+    public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, PFUser $current_user)
+    {
         $hp = Codendi_HTMLPurifier::instance();
         $workflow = $this->workflow_factory->getWorkflowByTrackerId($this->tracker->id);
         $this->displayHeader($layout);
+
+        $this->displayLegacy($workflow);
+
         echo '<h3>'.$GLOBALS['Language']->getText('workflow_admin','title_define_transitions').'</h3>';
 
         echo '<div class="workflow_transitions">';
@@ -68,8 +72,9 @@ class Tracker_Workflow_Action_Transitions_DefineWorkflow  extends Tracker_Workfl
         $this->displayFooter($layout);
     }
 
-     private function displayAdminWorkflow(TrackerManager $layout, Codendi_Request $request, PFUser $current_user, Workflow $workflow) {
-        echo '<form action="'.TRACKER_BASE_URL.'/?'. http_build_query(
+     private function displayAdminWorkflow(TrackerManager $layout, Codendi_Request $request, PFUser $current_user, Workflow $workflow)
+     {
+         echo '<form action="'.TRACKER_BASE_URL.'/?'. http_build_query(
             array(
                 'tracker' => (int)$this->tracker->id,
                 'func'    => Workflow::FUNC_ADMIN_TRANSITIONS)
@@ -104,6 +109,27 @@ class Tracker_Workflow_Action_Transitions_DefineWorkflow  extends Tracker_Workfl
         echo '</p>';
     }
 
+    private function displayLegacy(Workflow $workflow)
+    {
+        if (! $workflow->isLegacy()) {
+            return '';
+        }
+
+        $tracker_id = $workflow->getTrackerId();
+        $form_url   = '/plugins/tracker/workflow/'.urlencode($tracker_id).'/legacy_transitions';
+        echo '<form action="'.$form_url.'" method="POST">';
+        echo '<div class="alert alert-warning">';
+        echo '<p>';
+        echo dgettext('tuleap-tracker', "This workflow is legacy, which means that pre conditions and post actions defined in transitions are processed even if the workflow is not activated.");
+        echo '</p>';
+        echo '<p>';
+        echo '<input type="hidden" name="deactivate_legacy_transitions" value="1" />';
+        echo '<button class="btn" type="submit">'.dgettext("tuleap-tracker", "Deactivate transitions").'</button>';
+        echo '</p>';
+        echo '</div>';
+        echo '</form>';
+    }
+
     private function displayEnabled(Workflow $workflow) {
         $checked    = '';
         $classnames = '';
@@ -115,11 +141,6 @@ class Tracker_Workflow_Action_Transitions_DefineWorkflow  extends Tracker_Workfl
         echo '<div class="'. $classnames .'">';
         if (! $workflow->is_used) {
             echo '<h4>'. $GLOBALS['Language']->getText('workflow_admin', 'transitions_deactivated') .'</h4>';
-        }
-        if ($workflow->isLegacy()) {
-            echo '<p>';
-            echo dgettext('tuleap-tracker', "This workflow is legacy, which means that pre conditions and post actions defined in transitions are processed even if the workflow is not activated.");
-            echo '</p>';
         }
         echo '<p>';
         echo '<input type="hidden" name="is_used" value="0" />';

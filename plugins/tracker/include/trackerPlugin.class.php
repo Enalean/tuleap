@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - 2019. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -88,6 +88,7 @@ use Tuleap\Tracker\Webhook\Actions\WebhookEditController;
 use Tuleap\Tracker\Webhook\Actions\WebhookURLValidator;
 use Tuleap\Tracker\Webhook\WebhookDao;
 use Tuleap\Tracker\Webhook\WebhookFactory;
+use Tuleap\Tracker\Workflow\WorkflowLegacyController;
 use Tuleap\Tracker\Workflow\WorkflowMenuTabPresenterBuilder;
 use Tuleap\Tracker\Workflow\WorkflowTransitionController;
 use Tuleap\User\History\HistoryRetriever;
@@ -1699,6 +1700,13 @@ class trackerPlugin extends Plugin {
                     $this->getTrackerFactory(),
                     new TrackerManager,
                     new WorkflowMenuTabPresenterBuilder()
+                );
+            });
+
+            $r->post('/workflow/{tracker_id:\d+}/legacy_transitions', function () {
+                return new WorkflowLegacyController(
+                    $this->getTrackerFactory(),
+                    new Workflow_Dao()
                 );
             });
         });
