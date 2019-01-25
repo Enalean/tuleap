@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <section class="tlp-modal-body-section">
+    <section class="tlp-modal-body-section tracker-workflow-transition-modal-actions-section">
         <h2 class="tlp-modal-subtitle" v-translate>Actions automatically performed</h2>
         <post-action-skeleton
             v-if="is_loading_modal"
@@ -26,7 +26,7 @@
         />
         <template v-else-if="has_post_actions">
             <post-action
-                v-for="post_action in visible_post_actions"
+                v-for="post_action in post_actions"
                 v-bind:key="post_action.unique_id"
                 data-test-type="action"
             >
@@ -37,11 +37,17 @@
                     disabled
                 >
                     <option v-bind:value="RUN_JOB_ACTION_TYPE" v-translate>Launch a CI job</option>
+                    <option v-bind:value="SET_FIELD_VALUE_ACTION_TYPE" v-translate>Change the value of a field</option>
                 </select>
 
                 <run-job-action
                     slot="body"
                     v-if="post_action.type === RUN_JOB_ACTION_TYPE"
+                    v-bind:action-id="post_action.unique_id"
+                />
+                <set-value-action
+                    slot="body"
+                    v-else-if="post_action.type === SET_FIELD_VALUE_ACTION_TYPE"
                     v-bind:action-id="post_action.unique_id"
                 />
             </post-action>
@@ -56,12 +62,13 @@
 import EmptyPostAction from "./Empty/EmptyPostAction.vue";
 import PostActionSkeleton from "./Skeletons/PostActionSkeleton.vue";
 import RunJobAction from "./RunJobAction.vue";
+import SetValueAction from "./SetValueAction.vue";
 import PostAction from "./PostAction.vue";
 import { mapState, mapGetters } from "vuex";
 
 export default {
     name: "PostActionsSection",
-    components: { EmptyPostAction, PostActionSkeleton, RunJobAction, PostAction },
+    components: { EmptyPostAction, PostActionSkeleton, RunJobAction, SetValueAction, PostAction },
     data() {
         return {
             RUN_JOB_ACTION_TYPE: "run_job",
@@ -72,15 +79,7 @@ export default {
         ...mapState("transitionModal", ["is_loading_modal"]),
         ...mapGetters("transitionModal", ["post_actions"]),
         has_post_actions() {
-            return this.visible_post_actions && this.visible_post_actions.length > 0;
-        },
-        visible_post_actions() {
-            if (!this.post_actions) {
-                return null;
-            }
-            return this.post_actions.filter(
-                post_action => post_action.type === this.RUN_JOB_ACTION_TYPE
-            );
+            return this.post_actions && this.post_actions.length > 0;
         }
     }
 };

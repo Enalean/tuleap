@@ -29,7 +29,13 @@ msgstr ""
 msgid "Change or remove field"
 msgstr ""
 
+msgid "Change the value of a field"
+msgstr ""
+
 msgid "Choose a field"
+msgstr ""
+
+msgid "Clear"
 msgstr ""
 
 msgid "Comment must not be empty"
@@ -50,6 +56,12 @@ msgstr ""
 msgid "Confirm"
 msgstr ""
 
+msgid "Current time"
+msgstr ""
+
+msgid "Dates"
+msgstr ""
+
 msgid "Enable transition rules"
 msgstr ""
 
@@ -57,6 +69,9 @@ msgid "Field"
 msgstr ""
 
 msgid "Field(s) that must not be empty"
+msgstr ""
+
+msgid "Floats"
 msgstr ""
 
 msgid "Groups that may make the transition"
@@ -68,13 +83,22 @@ msgid ""
 "using the configuration matrix."
 msgstr ""
 
+msgid "Integers"
+msgstr ""
+
 msgid "Job url"
 msgstr ""
 
 msgid "Launch a CI job"
 msgstr ""
 
+msgid "New value"
+msgstr ""
+
 msgid "No action is currently defined."
+msgstr ""
+
+msgid "Please choose"
 msgstr ""
 
 msgid "Save and start configuration"

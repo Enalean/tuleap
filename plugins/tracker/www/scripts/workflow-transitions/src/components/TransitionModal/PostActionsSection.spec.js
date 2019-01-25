@@ -74,7 +74,7 @@ describe("PostActionsSection", () => {
                 expect(wrapper.contains(empty_message_selector)).toBeTruthy();
             });
         });
-        describe("when some actions", () => {
+        describe("when some post actions", () => {
             beforeEach(() =>
                 (store.getters["transitionModal/post_actions"] = createList(
                     "post_action",
@@ -82,12 +82,12 @@ describe("PostActionsSection", () => {
                     "presented"
                 )));
 
-            it("shows only actions", () => {
+            it("shows only post actions", () => {
                 expect(wrapper.contains(skeleton_selector)).toBeFalsy();
                 expect(wrapper.contains(action_selector)).toBeTruthy();
                 expect(wrapper.contains(empty_message_selector)).toBeFalsy();
             });
-            it("shows as many action as stored", () => {
+            it("shows as many post action as stored", () => {
                 expect(wrapper.findAll(action_selector).length).toBe(2);
             });
         });

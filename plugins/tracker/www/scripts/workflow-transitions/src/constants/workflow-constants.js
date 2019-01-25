@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2017 - 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,36 +15,12 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-const STRUCTURAL_FIELDS = ["column", "fieldset", "linebreak", "separator", "staticrichtext"];
-
-const READ_ONLY_FIELDS = [
-    "aid",
-    "atid",
-    "burndown",
-    "cross",
-    "luby",
-    "lud",
-    "priority",
-    "subby",
-    "subon"
-];
-
-const COMPUTED_FIELD = "computed";
-const SELECTBOX_FIELD = "sb";
-const DATE_FIELD = "date";
-const INT_FIELD = "int";
-const FLOAT_FIELD = "float";
-const LIST_BIND_STATIC = "static";
-
-export {
-    STRUCTURAL_FIELDS,
-    READ_ONLY_FIELDS,
-    COMPUTED_FIELD,
-    SELECTBOX_FIELD,
-    LIST_BIND_STATIC,
-    DATE_FIELD,
-    INT_FIELD,
-    FLOAT_FIELD
+const DATE_FIELD_VALUE = {
+    CLEAR: "",
+    CURRENT: "current"
 };
+
+export { DATE_FIELD_VALUE };
