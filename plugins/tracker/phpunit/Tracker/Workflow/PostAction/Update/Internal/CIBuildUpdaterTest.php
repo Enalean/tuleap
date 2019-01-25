@@ -43,6 +43,11 @@ class CIBuildUpdaterTest extends TestCase
     private $ci_build_repository;
 
     /**
+     * @var CIBuildValidator | MockInterface
+     */
+    private $validator;
+
+    /**
      * @before
      */
     public function createUpdater()
@@ -55,20 +60,21 @@ class CIBuildUpdaterTest extends TestCase
             ->shouldReceive('update')
             ->byDefault();
 
-        $this->updater = new CIBuildUpdater($this->ci_build_repository);
+        $this->validator = Mockery::mock(CIBuildValidator::class);
+        $this->updater   = new CIBuildUpdater($this->ci_build_repository, $this->validator);
     }
 
     public function testUpdateAddsNewCIBuildActions()
     {
         $transition = $this->buildATransition();
-
-        $this->ci_build_repository
-            ->shouldReceive('findAllIdsByTransition')
-            ->with($transition)
-            ->andReturns([1]);
+        $this->mockFindAllIdsByTransition($transition, [1]);
 
         $added_action = new CIBuild(null, 'http://example.test');
         $actions      = new PostActionCollection($added_action);
+
+        $this->validator
+            ->shouldReceive('validate')
+            ->withArgs([$actions]);
 
         $this->ci_build_repository
             ->shouldReceive('create')
@@ -78,17 +84,38 @@ class CIBuildUpdaterTest extends TestCase
         $this->updater->updateByTransition($actions, $transition);
     }
 
+    /**
+     * @expectedException \Tuleap\Tracker\Workflow\PostAction\Update\Internal\DuplicateCIBuildPostAction
+     */
+    public function testUpdateDoesNothingIfActionsAreNotValid()
+    {
+        $transition   = $this->buildATransition();
+        $this->mockFindAllIdsByTransition($transition, [1]);
+
+        $action  = new CIBuild(1, 'invalid action');
+        $actions = new PostActionCollection($action);
+
+        $this->validator
+            ->shouldReceive('validate')
+            ->withArgs([$actions])
+            ->andThrow(new DuplicateCIBuildPostAction());
+
+        $this->ci_build_repository->shouldNotReceive('deleteAllByTransitionIfIdNotIn', 'create', 'update');
+
+        $this->updater->updateByTransition($actions, $transition);
+    }
+
     public function testUpdateUpdatesCIBuildActionsWhichAlreadyExists()
     {
-        $transition = $this->buildATransition();
-
-        $this->ci_build_repository
-            ->shouldReceive('findAllIdsByTransition')
-            ->with($transition)
-            ->andReturns([1]);
+        $transition   = $this->buildATransition();
+        $this->mockFindAllIdsByTransition($transition, [1]);
 
         $updated_action = new CIBuild(1, 'http://example.test');
         $actions        = new PostActionCollection($updated_action);
+
+        $this->validator
+            ->shouldReceive('validate')
+            ->withArgs([$actions]);
 
         $this->ci_build_repository
             ->shouldReceive('update')
@@ -102,13 +129,14 @@ class CIBuildUpdaterTest extends TestCase
     {
         $transition = $this->buildATransition();
 
-        $this->ci_build_repository
-            ->shouldReceive('findAllIdsByTransition')
-            ->with($transition)
-            ->andReturns([2, 3]);
+        $this->mockFindAllIdsByTransition($transition, [2, 3]);
 
         $action  = new CIBuild(2, 'http://example.test');
         $actions = new PostActionCollection($action);
+
+        $this->validator
+            ->shouldReceive('validate')
+            ->withArgs([$actions]);
 
         $this->ci_build_repository
             ->shouldReceive('deleteAllByTransitionIfIdNotIn')
@@ -121,5 +149,16 @@ class CIBuildUpdaterTest extends TestCase
     private function buildATransition(): MockInterface
     {
         return Mockery::mock(Transition::class);
+    }
+
+    private function mockFindAllIdsByTransition(
+        $transition,
+        array $ids
+    ) {
+        $existing_ids = new PostActionIdCollection(...$ids);
+        $this->ci_build_repository
+            ->shouldReceive('findAllIdsByTransition')
+            ->withArgs([$transition])
+            ->andReturn($existing_ids);
     }
 }

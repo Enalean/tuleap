@@ -16,22 +16,30 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 namespace Tuleap\Tracker\Workflow\PostAction\Update\Internal;
 
-use DataAccessQueryException;
-use Transition;
-use Tuleap\Tracker\Workflow\PostAction\Update\PostActionCollection;
+require_once __DIR__ . '/../../../../../bootstrap.php';
 
-interface PostActionUpdater
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
+
+class PostActionIdCollectionTest extends TestCase
 {
-    /**
-     * @throws DataAccessQueryException
-     * @throws DuplicateCIBuildPostAction
-     * @throws UnknownPostActionIdsException
-     * @throws InvalidCIBuildPostActionException
-     */
-    public function updateByTransition(PostActionCollection $actions, Transition $transition): void;
+    use MockeryPHPUnitIntegration;
+
+    public function testContainsReturnsTrueWhenIdIsKnown()
+    {
+        $collection = new PostActionIdCollection(1, 2, 3);
+
+        $this->assertFalse($collection->contains(4));
+    }
+
+    public function testContainsReturnsFalseWhenIdIsUnknown()
+    {
+        $collection = new PostActionIdCollection(1, 2, 3);
+
+        $this->assertTrue($collection->contains(2));
+    }
 }

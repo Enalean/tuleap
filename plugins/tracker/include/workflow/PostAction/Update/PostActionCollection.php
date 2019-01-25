@@ -22,12 +22,13 @@
 namespace Tuleap\Tracker\Workflow\PostAction\Update;
 
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\CIBuild;
+use Tuleap\Tracker\Workflow\PostAction\Update\Internal\PostActionIdCollection;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\PostActionsDiff;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\PostActionVisitor;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\SetDateValue;
-use Tuleap\Tracker\Workflow\PostAction\Update\Internal\SetFloateValue;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\SetFloatValue;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\SetIntValue;
+use Tuleap\Tracker\Workflow\PostAction\Update\Internal\UnknownPostActionIdsException;
 use Tuleap\Tracker\Workflow\Update\PostAction;
 
 /**
@@ -83,60 +84,54 @@ class PostActionCollection implements PostActionVisitor
     }
 
     /**
+     * @return CIBuild[]
+     */
+    public function getCIBuildActions(): array
+    {
+        return $this->ci_build_actions;
+    }
+
+    /**
      * Compare only CIBuild actions against a list of action ids:
      * - Actions without id are marked as added
      * - Actions whose id is in given list are marked as updated
+     * @throws UnknownPostActionIdsException
      */
-    public function compareCIBuildActionsTo(array $our_ids): PostActionsDiff
+    public function compareCIBuildActionsTo(PostActionIdCollection $our_ids): PostActionsDiff
     {
         return $this->compare($our_ids, $this->ci_build_actions);
     }
 
     /**
-     * @param int[] $our_ids ids of actions taken as reference
-     * @param PostAction[] $theirs actions to compare
+     * @param PostActionIdCollection $our_ids ids of actions taken as reference
+     * @param PostAction[]           $theirs  actions to compare
      *
      * @return PostActionsDiff Comparison result
+     * @throws UnknownPostActionIdsException
      */
-    private function compare(array $our_ids, array $theirs): PostActionsDiff
+    private function compare(PostActionIdCollection $our_ids, array $theirs): PostActionsDiff
     {
-        $added = array_filter(
-            $theirs,
-            function (PostAction $post_action) {
-                return $post_action->getId() === null;
-            }
-        );
+        $added = [];
+        $updated = [];
+        $unknown_ids = [];
 
-        $updated = array_filter(
-            array_map(
-                function ($id) use ($theirs) {
-                    return $this->findActionWithId($theirs, $id);
-                },
-                $our_ids
-            ),
-            function ($action) {
-                return $action !== null;
+        foreach ($theirs as $post_action) {
+            if ($post_action->getId() === null) {
+                $added[] = $post_action;
+            } elseif ($our_ids->contains($post_action->getId())) {
+                $updated[] = $post_action;
+            } else {
+                $unknown_ids[] = $post_action->getId();
             }
-        );
+        }
+
+        if (count($unknown_ids) > 0) {
+            throw new UnknownPostActionIdsException($unknown_ids);
+        }
 
         return new PostActionsDiff(
             array_values($added),
             array_values($updated)
         );
-    }
-
-    /**
-     * Find action with given id in given list.
-     *
-     * @return PostAction|null Found action. null otherwise.
-     */
-    private function findActionWithId(array $actions, int $id): ?PostAction
-    {
-        foreach ($actions as $action) {
-            if ($action->getId() === $id) {
-                return $action;
-            }
-        }
-        return null;
     }
 }

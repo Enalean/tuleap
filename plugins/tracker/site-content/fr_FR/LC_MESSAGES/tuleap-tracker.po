@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.2.1\n"
+"X-Generator: Poedit 2.2\n"
 
 #, php-format
 msgid "%s has been created"
@@ -364,6 +364,10 @@ msgstr "Me notifier lors de la création d'un nouvel artéfact"
 msgid "On all updates?"
 msgstr "À chaque modification ?"
 
+#, php-format
+msgid "One id or more could not be found: '%s'"
+msgstr "Un id ou plus n'a pas été trouvé : '%s'"
+
 msgid "Please provide a valid limit."
 msgstr "Veuillez fournir une limite valide."
 
@@ -670,6 +674,9 @@ msgstr ""
 msgid "The integer field '%s' cannot be compared to the string value '%s'."
 msgstr "Le champ entier '%s' ne peut pas être comparé à la chaîne '%s'."
 
+msgid "The job_url attribute must be a valid URL."
+msgstr "L'attribut job_url doit être une URL valide."
+
 #, php-format
 msgid "The list field '%s' cannot be compared to MYSELF() for anonymous users."
 msgstr ""
@@ -769,6 +776,9 @@ msgstr "La liste des désabonnements ont été mise à jour avec succès."
 msgid "The value '%s' doesn't exist for the list field '%s'."
 msgstr "La valeur '%s' n’existe pas pour le champ liste ‘%s’."
 
+msgid "There should not be duplicate run_job ids."
+msgstr "Les ids de type run_job ne doivent pas être en doublons."
+
 msgid "This template does not use trackers"
 msgstr "Ce patron n'utilise pas les trackers"
 
@@ -789,8 +799,8 @@ msgid ""
 "defined in transitions are processed even if the workflow is not activated."
 msgstr ""
 "Ce workflow a un comportement incohérent. Ceci signifie que les conditions "
-"ainsi que les actions définies dans les transitions seront exécutées bien que "
-"le worflow soit désactivé."
+"ainsi que les actions définies dans les transitions seront exécutées bien "
+"que le worflow soit désactivé."
 
 msgid "Time"
 msgstr "Date"
