@@ -13,6 +13,11 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
+msgid ""
+"Differences may exist between actual size of a project/service and "
+"statistics which are computed daily"
+msgstr "Il peut y avoir des différences entre la taille réelle des projets/services et les statistiques qui sont calculées chaque jour"
+
 msgid "Remaining space"
 msgstr "Espace restant"
 
