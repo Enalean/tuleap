@@ -119,6 +119,9 @@ msgid ""
 "Artifact submissions (and possibly updates) will be systematically sent."
 msgstr ""
 
+msgid "Bad field_id attribute format: int expected."
+msgstr ""
+
 #, php-format
 msgid "Bad format: '%s'. Array expected"
 msgstr ""
@@ -127,6 +130,9 @@ msgid "Bad id attribute format: int expected."
 msgstr ""
 
 msgid "Bad job_url attribute format: string expected."
+msgstr ""
+
+msgid "Bad value attribute format: string expected."
 msgstr ""
 
 msgid ""
@@ -248,7 +254,15 @@ msgstr ""
 msgid "Mail configuration"
 msgstr ""
 
+msgid ""
+"Mandatory attribute field_id not found in action with type \"set_field_value"
+"\"."
+msgstr ""
+
 msgid "Mandatory attribute job_url not found in CI build action."
+msgstr ""
+
+msgid "Mandatory attribute value not found in with type \"set_field_value\"."
 msgstr ""
 
 msgid ""
@@ -740,6 +754,10 @@ msgid "Unsubscribe a user"
 msgstr ""
 
 msgid "Unsubscribers"
+msgstr ""
+
+#, php-format
+msgid "Unsupported value attribute content: '%s'. Allowed contents are: '%s'"
 msgstr ""
 
 msgid "Use"

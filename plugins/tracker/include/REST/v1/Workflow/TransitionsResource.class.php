@@ -24,6 +24,7 @@ namespace Tuleap\Tracker\REST\v1\Workflow;
 use Luracast\Restler\RestException;
 use TrackerFactory;
 use Transition_PostAction_CIBuildDao;
+use Transition_PostAction_Field_DateDao;
 use TransitionFactory;
 use Tuleap\DB\DataAccessObject;
 use Tuleap\DB\TransactionExecutor;
@@ -42,10 +43,12 @@ use Tuleap\Tracker\REST\v1\Workflow\PostAction\Update\SetIntValueJsonParser;
 use Tuleap\Tracker\REST\WorkflowTransitionPOSTRepresentation;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\CIBuildRepository;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\CIBuildUpdater;
+use Tuleap\Tracker\Workflow\PostAction\Update\Internal\CIBuildValidator;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\DuplicateCIBuildPostAction;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\DuplicatePostActionIdsException;
-use Tuleap\Tracker\Workflow\PostAction\Update\Internal\CIBuildValidator;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\InvalidCIBuildPostActionException;
+use Tuleap\Tracker\Workflow\PostAction\Update\Internal\SetDateValueRepository;
+use Tuleap\Tracker\Workflow\PostAction\Update\Internal\SetDateValueUpdater;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\UnknownPostActionIdsException;
 use Tuleap\Tracker\Workflow\PostAction\Update\PostActionCollectionUpdater;
 use Tuleap\Tracker\Workflow\Transition\OrphanTransitionException;
@@ -342,7 +345,7 @@ class TransitionsResource extends AuthenticatedResource
 
     /**
      * Update all post actions of a transition.
-     * WARNING: only CI Build post actions are handled for now.
+     * WARNING: only CI Build and Set Date Value post actions are handled for now.
      *
      * <ul>
      * <li>Actions without id will be created</li>
@@ -358,6 +361,13 @@ class TransitionsResource extends AuthenticatedResource
      * &nbsp; &nbsp; &nbsp; "id": null, <br/>
      * &nbsp; &nbsp; &nbsp; "type": "run_job", <br/>
      * &nbsp; &nbsp; &nbsp; "job_url": "http://example.com" <br/>
+     * &nbsp; &nbsp; }, <br/>
+     * &nbsp; &nbsp; { <br/>
+     * &nbsp; &nbsp; &nbsp; "id": null, <br/>
+     * &nbsp; &nbsp; &nbsp; "type": "set_field_value", <br/>
+     * &nbsp; &nbsp; &nbsp; "field_type": "date", <br/>
+     * &nbsp; &nbsp; &nbsp; "field_id": 43, <br/>
+     * &nbsp; &nbsp; &nbsp; "value": "current" <br/>
      * &nbsp; &nbsp; } <br/>
      * &nbsp; ] <br/>
      * } <br/>
@@ -512,7 +522,8 @@ class TransitionsResource extends AuthenticatedResource
     private function getPostActionCollectionJsonParser(): PostActionCollectionJsonParser
     {
         return new PostActionCollectionJsonParser(
-            new CIBuildJsonParser()
+            new CIBuildJsonParser(),
+            new SetDateValueJsonParser()
         );
     }
 
@@ -523,8 +534,16 @@ class TransitionsResource extends AuthenticatedResource
                 new DataAccessObject()
             ),
             new CIBuildUpdater(
-                new CIBuildRepository(new Transition_PostAction_CIBuildDao()),
+                new CIBuildRepository(
+                    new Transition_PostAction_CIBuildDao()
+                ),
                 new CIBuildValidator()
+            ),
+            new SetDateValueUpdater(
+                new SetDateValueRepository(
+                    new Transition_PostAction_Field_DateDao(),
+                    new DataAccessObject()
+                )
             )
         );
     }

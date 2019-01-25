@@ -25,8 +25,8 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
 use PHPUnit\Framework\TestCase;
-use Transition;
 use Tuleap\Tracker\Workflow\PostAction\Update\PostActionCollection;
+use Tuleap\Tracker\Workflow\PostAction\Update\TransitionFactory;
 
 class CIBuildUpdaterTest extends TestCase
 {
@@ -66,7 +66,7 @@ class CIBuildUpdaterTest extends TestCase
 
     public function testUpdateAddsNewCIBuildActions()
     {
-        $transition = $this->buildATransition();
+        $transition = TransitionFactory::buildATransition();
         $this->mockFindAllIdsByTransition($transition, [1]);
 
         $added_action = new CIBuild(null, 'http://example.test');
@@ -89,7 +89,7 @@ class CIBuildUpdaterTest extends TestCase
      */
     public function testUpdateDoesNothingIfActionsAreNotValid()
     {
-        $transition   = $this->buildATransition();
+        $transition = TransitionFactory::buildATransition();
         $this->mockFindAllIdsByTransition($transition, [1]);
 
         $action  = new CIBuild(1, 'invalid action');
@@ -107,7 +107,7 @@ class CIBuildUpdaterTest extends TestCase
 
     public function testUpdateUpdatesCIBuildActionsWhichAlreadyExists()
     {
-        $transition   = $this->buildATransition();
+        $transition = TransitionFactory::buildATransition();
         $this->mockFindAllIdsByTransition($transition, [1]);
 
         $updated_action = new CIBuild(1, 'http://example.test');
@@ -127,7 +127,7 @@ class CIBuildUpdaterTest extends TestCase
 
     public function testUpdateDeletesRemovedCIBuildActions()
     {
-        $transition = $this->buildATransition();
+        $transition = TransitionFactory::buildATransition();
 
         $this->mockFindAllIdsByTransition($transition, [2, 3]);
 
@@ -144,11 +144,6 @@ class CIBuildUpdaterTest extends TestCase
             ->andReturns();
 
         $this->updater->updateByTransition($actions, $transition);
-    }
-
-    private function buildATransition(): MockInterface
-    {
-        return Mockery::mock(Transition::class);
     }
 
     private function mockFindAllIdsByTransition(
