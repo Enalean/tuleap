@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) STMicroelectronics, 2010. All Rights Reserved.
- * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -99,7 +99,7 @@ $renderer->header($GLOBALS['Language']->getText('admin_groupedit', 'title'), fal
 
 ?>
 <div class="tlp-framed-vertically">
-    <h1 class="tlp-framed-horizontally"><?= $project->getUnconvertedPublicName() ?></h1>
+    <h1 class="tlp-framed-horizontally"><?= $purifier->purify($project->getUnconvertedPublicName()) ?></h1>
 
     <nav class="tlp-tabs">
         <a href="/admin/groupedit.php?group_id=<?= (int)$group_id ?>" class="tlp-tab">
