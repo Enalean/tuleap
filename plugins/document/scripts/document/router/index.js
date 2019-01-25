@@ -48,6 +48,7 @@ export function createRouter(project_name) {
         if (!store.getters.is_uploading || abortCurrentUploads(router.app.$gettext, store)) {
             store.commit("resetErrors");
             store.commit("emptyFilesUploadsList");
+            store.commit("resetFoldedLists");
             next();
         } else {
             next(false);
