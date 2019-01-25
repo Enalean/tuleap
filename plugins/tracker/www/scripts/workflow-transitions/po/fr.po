@@ -121,7 +121,7 @@ msgid ""
 msgstr ""
 "Ce workflow a un comportement incohérent. Ceci signifie que les conditions "
 "ainsi que les actions définies dans les transitions seront exécutées bien que "
-"le worflow soit désactivé."
+"le workflow soit désactivé."
 
 msgid "Tracker cannot be loaded"
 msgstr "Le tracker ne peut pas être chargé"

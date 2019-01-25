@@ -90,4 +90,13 @@ class Workflow_Dao extends DataAccessObject
                 VALUES ($tracker_id, $field_id, $is_used)";
         return $this->updateAndGetLastId($sql);
     }
+
+    public function removeWorkflowLegacyState($workflow_id)
+    {
+        $workflow_id = $this->da->escapeInt($workflow_id);
+
+        $sql = " UPDATE tracker_workflow SET is_legacy=0 WHERE workflow_id=$workflow_id";
+
+        return $this->update($sql);
+    }
 }
