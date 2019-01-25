@@ -39,6 +39,7 @@ export {
     appendFolderToAscendantHierarchy,
     setCurrentFolder,
     setModalError,
+    resetFoldedLists,
     resetModalError,
     removeCreatedPropertyOnItem,
     replaceUploadingFileWithActualFile,
@@ -150,6 +151,11 @@ function unfoldFolderContent(state, folder_id) {
     state.folded_items_ids = state.folded_items_ids.filter(item => !items_to_unfold.includes(item));
 
     delete state.folded_by_map[folder_id];
+}
+
+function resetFoldedLists(state) {
+    state.folded_items_ids = [];
+    state.folded_by_map = {};
 }
 
 function initApp(
