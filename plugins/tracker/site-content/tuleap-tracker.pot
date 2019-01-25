@@ -132,6 +132,12 @@ msgstr ""
 msgid "Bad job_url attribute format: string expected."
 msgstr ""
 
+msgid "Bad value attribute format: float expected."
+msgstr ""
+
+msgid "Bad value attribute format: integer expected."
+msgstr ""
+
 msgid "Bad value attribute format: string expected."
 msgstr ""
 
