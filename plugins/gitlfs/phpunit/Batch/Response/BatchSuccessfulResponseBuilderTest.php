@@ -32,6 +32,7 @@ use Tuleap\GitLFS\Batch\Request\BatchRequestOperation;
 use Tuleap\GitLFS\LFSObject\LFSObject;
 use Tuleap\GitLFS\LFSObject\LFSObjectID;
 use Tuleap\GitLFS\LFSObject\LFSObjectRetriever;
+use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\Project\Quota\ProjectQuotaChecker;
 
 class BatchSuccessfulResponseBuilderTest extends TestCase
@@ -63,12 +64,12 @@ class BatchSuccessfulResponseBuilderTest extends TestCase
      */
     private $logger;
 
+    private $prometheus;
 
     /**
      * @var MockInterface
      */
     private $project_quota_checker;
-
     /**
      * @var MockInterface
      */
@@ -81,6 +82,7 @@ class BatchSuccessfulResponseBuilderTest extends TestCase
         $this->object_retriever      = \Mockery::mock(LFSObjectRetriever::class);
         $this->admin_dao             = \Mockery::mock(AdminDao::class);
         $this->logger                = \Mockery::mock(\Logger::class);
+        $this->prometheus            = \Mockery::mock(Prometheus::class);
         $this->project_quota_checker = \Mockery::mock(ProjectQuotaChecker::class);
         $this->repository            = \Mockery::mock(\GitRepository::class);
 
@@ -93,6 +95,7 @@ class BatchSuccessfulResponseBuilderTest extends TestCase
     {
         $this->token_creator->shouldReceive('createActionAuthorizationToken')->andReturns(\Mockery::mock(SplitToken::class));
         $this->logger->shouldReceive('debug');
+        $this->prometheus->shouldReceive('increment')->once();
 
         $current_time = new \DateTimeImmutable('2018-11-22', new \DateTimeZone('UTC'));
         $operation    = \Mockery::mock(BatchRequestOperation::class);
@@ -116,7 +119,8 @@ class BatchSuccessfulResponseBuilderTest extends TestCase
             $this->object_retriever,
             $this->admin_dao,
             $this->project_quota_checker,
-            $this->logger
+            $this->logger,
+            $this->prometheus
         );
         $batch_response = $builder->build(
             $current_time,
@@ -134,6 +138,7 @@ class BatchSuccessfulResponseBuilderTest extends TestCase
     {
         $this->token_creator->shouldReceive('createActionAuthorizationToken')->andReturns(\Mockery::mock(SplitToken::class));
         $this->logger->shouldReceive('debug');
+        $this->prometheus->shouldReceive('increment')->once();
 
         $current_time = new \DateTimeImmutable('2018-11-22', new \DateTimeZone('UTC'));
         $operation    = \Mockery::mock(BatchRequestOperation::class);
@@ -157,7 +162,8 @@ class BatchSuccessfulResponseBuilderTest extends TestCase
             $this->object_retriever,
             $this->admin_dao,
             $this->project_quota_checker,
-            $this->logger
+            $this->logger,
+            $this->prometheus
         );
         $batch_response = $builder->build(
             $current_time,
@@ -190,7 +196,8 @@ class BatchSuccessfulResponseBuilderTest extends TestCase
             $this->object_retriever,
             $this->admin_dao,
             $this->project_quota_checker,
-            $this->logger
+            $this->logger,
+            $this->prometheus
         );
 
         $builder->build(
@@ -208,6 +215,7 @@ class BatchSuccessfulResponseBuilderTest extends TestCase
     {
         $this->token_creator->shouldReceive('createActionAuthorizationToken')->andReturns(\Mockery::mock(SplitToken::class));
         $this->logger->shouldReceive('debug');
+        $this->prometheus->shouldReceive('increment')->once();
 
         $current_time = new \DateTimeImmutable('2018-11-22', new \DateTimeZone('UTC'));
         $operation    = \Mockery::mock(BatchRequestOperation::class);
@@ -231,7 +239,8 @@ class BatchSuccessfulResponseBuilderTest extends TestCase
             $this->object_retriever,
             $this->admin_dao,
             $this->project_quota_checker,
-            $this->logger
+            $this->logger,
+            $this->prometheus
         );
 
         $builder->build(
@@ -250,7 +259,6 @@ class BatchSuccessfulResponseBuilderTest extends TestCase
     public function testBuildingResponseWithAFileWithASizeBiggerThanProjectQuotaIsRejected()
     {
         $this->token_creator->shouldReceive('createActionAuthorizationToken')->andReturns(\Mockery::mock(SplitToken::class));
-        $this->logger->shouldReceive('debug');
 
         $current_time = new \DateTimeImmutable('2018-11-22', new \DateTimeZone('UTC'));
         $operation    = \Mockery::mock(BatchRequestOperation::class);
@@ -274,7 +282,8 @@ class BatchSuccessfulResponseBuilderTest extends TestCase
             $this->object_retriever,
             $this->admin_dao,
             $this->project_quota_checker,
-            $this->logger
+            $this->logger,
+            $this->prometheus
         );
 
         $builder->build(

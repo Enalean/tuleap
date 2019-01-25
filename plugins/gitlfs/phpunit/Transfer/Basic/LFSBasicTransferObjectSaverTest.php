@@ -27,6 +27,7 @@ use Tuleap\GitLFS\LFSObject\LFSObject;
 use Tuleap\GitLFS\LFSObject\LFSObjectID;
 use Tuleap\GitLFS\LFSObject\LFSObjectPathAllocator;
 use Tuleap\GitLFS\LFSObject\LFSObjectRetriever;
+use Tuleap\Instrument\Prometheus\Prometheus;
 
 class LFSBasicTransferObjectSaverTest extends TestCase
 {
@@ -35,17 +36,24 @@ class LFSBasicTransferObjectSaverTest extends TestCase
     private $filesystem;
     private $lfs_object_retriever;
     private $path_allocator;
+    private $prometheus;
 
     protected function setUp()
     {
         $this->filesystem           = \Mockery::mock(FilesystemInterface::class);
         $this->lfs_object_retriever = \Mockery::mock(LFSObjectRetriever::class);
         $this->path_allocator       = \Mockery::mock(LFSObjectPathAllocator::class);
+        $this->prometheus           = Prometheus::getInMemory();
     }
 
     public function testObjectIsSavedIfNeeded()
     {
-        $object_saver = new LFSBasicTransferObjectSaver($this->filesystem, $this->lfs_object_retriever, $this->path_allocator);
+        $object_saver = new LFSBasicTransferObjectSaver(
+            $this->filesystem,
+            $this->lfs_object_retriever,
+            $this->path_allocator,
+            $this->prometheus
+        );
 
         $ready_path = 'ready-path';
         $this->path_allocator->shouldReceive('getPathForReadyToBeAvailableObject')->andReturns($ready_path);
@@ -80,7 +88,12 @@ class LFSBasicTransferObjectSaverTest extends TestCase
 
     public function testAlreadySavedObjectIsSkipped()
     {
-        $object_saver = new LFSBasicTransferObjectSaver($this->filesystem, $this->lfs_object_retriever, $this->path_allocator);
+        $object_saver = new LFSBasicTransferObjectSaver(
+            $this->filesystem,
+            $this->lfs_object_retriever,
+            $this->path_allocator,
+            $this->prometheus
+        );
 
         $this->path_allocator->shouldReceive('getPathForReadyToBeAvailableObject')->andReturns('path');
         $this->lfs_object_retriever->shouldReceive('doesLFSObjectExistsForRepository')->andReturns(true);
@@ -99,7 +112,12 @@ class LFSBasicTransferObjectSaverTest extends TestCase
      */
     public function testSaveIsRejectedWhenInputIsNotAResource()
     {
-        $object_saver = new LFSBasicTransferObjectSaver($this->filesystem, $this->lfs_object_retriever, $this->path_allocator);
+        $object_saver = new LFSBasicTransferObjectSaver(
+            $this->filesystem,
+            $this->lfs_object_retriever,
+            $this->path_allocator,
+            $this->prometheus
+        );
 
         $this->path_allocator->shouldReceive('getPathForReadyToBeAvailableObject')->andReturns('path');
         $this->lfs_object_retriever->shouldReceive('doesLFSObjectExistsForRepository')->andReturns(false);
@@ -119,7 +137,12 @@ class LFSBasicTransferObjectSaverTest extends TestCase
      */
     public function testSaveIsRejectedWhenOIDOfSavedFileDoesNotMatchTheExpectation()
     {
-        $object_saver = new LFSBasicTransferObjectSaver($this->filesystem, $this->lfs_object_retriever, $this->path_allocator);
+        $object_saver = new LFSBasicTransferObjectSaver(
+            $this->filesystem,
+            $this->lfs_object_retriever,
+            $this->path_allocator,
+            $this->prometheus
+        );
 
         $ready_path = 'ready-path';
         $this->path_allocator->shouldReceive('getPathForReadyToBeAvailableObject')->andReturns($ready_path);
@@ -160,7 +183,12 @@ class LFSBasicTransferObjectSaverTest extends TestCase
         $object_size,
         $excepted_exception
     ) {
-        $object_saver = new LFSBasicTransferObjectSaver($this->filesystem, $this->lfs_object_retriever, $this->path_allocator);
+        $object_saver = new LFSBasicTransferObjectSaver(
+            $this->filesystem,
+            $this->lfs_object_retriever,
+            $this->path_allocator,
+            $this->prometheus
+        );
 
         $ready_path = 'ready-path';
         $this->path_allocator->shouldReceive('getPathForReadyToBeAvailableObject')->andReturns($ready_path);

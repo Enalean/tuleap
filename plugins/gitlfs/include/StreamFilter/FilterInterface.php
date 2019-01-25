@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,13 +22,7 @@ namespace Tuleap\GitLFS\StreamFilter;
 
 interface FilterInterface
 {
-    /**
-     * @return string
-     */
-    public function process($data_chunk);
-
-    /**
-     * @return int
-     */
-    public function getFilteredChainIdentifier();
+    public function process($data_chunk) : string;
+    public function getFilteredChainIdentifier() : int;
+    public function filterDetachedEvent() : void;
 }

@@ -39,6 +39,7 @@ use Tuleap\GitLFS\Transfer\Transfer;
 use Tuleap\GitLFS\Batch\Request\BatchRequestOperation;
 use Tuleap\GitLFS\Batch\Response\Action\BatchResponseActionHref;
 use Tuleap\GitLFS\Batch\Response\Action\BatchResponseActionHrefUpload;
+use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\Project\Quota\ProjectQuotaChecker;
 
 class BatchSuccessfulResponseBuilder
@@ -73,6 +74,10 @@ class BatchSuccessfulResponseBuilder
      * @var ProjectQuotaChecker
      */
     private $project_quota_checker;
+    /**
+     * @var Prometheus
+     */
+    private $prometheus;
 
     public function __construct(
         ActionAuthorizationTokenCreator $authorization_token_creator,
@@ -80,7 +85,8 @@ class BatchSuccessfulResponseBuilder
         LFSObjectRetriever $lfs_object_retriever,
         AdminDao $admin_dao,
         ProjectQuotaChecker $project_quota_checker,
-        \Logger $logger
+        \Logger $logger,
+        Prometheus $prometheus
     ) {
         $this->authorization_token_creator = $authorization_token_creator;
         $this->token_header_formatter      = $token_header_formatter;
@@ -88,6 +94,7 @@ class BatchSuccessfulResponseBuilder
         $this->logger                      = $logger;
         $this->admin_dao                   = $admin_dao;
         $this->project_quota_checker       = $project_quota_checker;
+        $this->prometheus                  = $prometheus;
     }
 
     public function build(
@@ -165,6 +172,11 @@ class BatchSuccessfulResponseBuilder
                     $request_object,
                     new BatchResponseActionsForUploadOperation($upload_action_content, $verify_action_content)
                 );
+                $this->prometheus->increment(
+                    'gitlfs_accepted_upload_requests_total',
+                    'Total number of accepted Git LFS upload requests',
+                    ['transfer' => 'basic']
+                );
                 $this->logger->debug('Ready to accept upload query for OID ' . $request_object->getOID()->getValue());
             } else {
                 $response_objects[] = new BatchResponseObjectWithoutAction($request_object);
@@ -227,6 +239,11 @@ class BatchSuccessfulResponseBuilder
                 $response_objects[]    = new BatchResponseObjectWithActions(
                     $request_object,
                     new BatchResponseActionsForDownloadOperation($download_action_content)
+                );
+                $this->prometheus->increment(
+                    'gitlfs_accepted_download_requests_total',
+                    'Total number of accepted Git LFS download requests',
+                    ['transfer' => 'basic']
                 );
                 $this->logger->debug('Ready to accept download query for OID ' . $request_object->getOID()->getValue());
             } else {

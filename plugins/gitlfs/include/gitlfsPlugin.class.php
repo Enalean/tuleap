@@ -110,7 +110,8 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
                 new \Tuleap\GitLFS\Transfer\Basic\LFSBasicTransferObjectSaver(
                     $this->getFilesystem(),
                     new LFSObjectRetriever(new \Tuleap\GitLFS\LFSObject\LFSObjectDAO()),
-                    new LFSObjectPathAllocator()
+                    new LFSObjectPathAllocator(),
+                    \Tuleap\Instrument\Prometheus\Prometheus::instance()
                 )
             );
         });
@@ -119,7 +120,8 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
                 return new \Tuleap\GitLFS\Transfer\Basic\LFSBasicTransferDownloadController(
                     $this->getLFSActionUserAccessRequestChecker(),
                     $this->getFilesystem(),
-                    new LFSObjectPathAllocator()
+                    new LFSObjectPathAllocator(),
+                    \Tuleap\Instrument\Prometheus\Prometheus::instance()
                 );
             });
             $r->post('/objects/{oid:[a-fA-F0-9]{64}}/verify', function () {
@@ -156,7 +158,8 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
                     new LFSObjectDAO()
                 ),
                 new LFSObjectPathAllocator(),
-                $this->getFilesystem()
+                $this->getFilesystem(),
+                \Tuleap\Instrument\Prometheus\Prometheus::instance()
             );
         });
     }
@@ -177,7 +180,8 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
                     new \Tuleap\GitLFS\Lock\LockDao(),
                     $this->getUserManager()
                 ),
-                $this->getUserRetriever($logger)
+                $this->getUserRetriever($logger),
+                \Tuleap\Instrument\Prometheus\Prometheus::instance()
             );
             return new \Tuleap\GitLFS\LFSJSONHTTPDispatchable($lfs_lock_controller);
         });
@@ -228,7 +232,8 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
                     new \Tuleap\GitLFS\Lock\LockDao(),
                     $this->getUserManager()
                 ),
-                $this->getUserRetriever($logger)
+                $this->getUserRetriever($logger),
+                \Tuleap\Instrument\Prometheus\Prometheus::instance()
             );
             return new \Tuleap\GitLFS\LFSJSONHTTPDispatchable($lfs_lock_controller);
         });
@@ -245,7 +250,8 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
                     new LFSObjectRetriever(new \Tuleap\GitLFS\LFSObject\LFSObjectDAO()),
                     new \Tuleap\GitLFS\Admin\AdminDao(),
                     new ProjectQuotaChecker(EventManager::instance()),
-                    $logger
+                    $logger,
+                    \Tuleap\Instrument\Prometheus\Prometheus::instance()
                 ),
                 $this->getUserRetriever($logger)
             );

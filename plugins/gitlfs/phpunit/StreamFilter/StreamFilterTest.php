@@ -102,6 +102,7 @@ class StreamFilterTest extends TestCase
         $filter   = \Mockery::mock(FilterInterface::class);
         $filter->shouldReceive('getFilteredChainIdentifier')->andReturns(STREAM_FILTER_READ);
         $filter->shouldReceive('process')->andThrows(\Exception::class);
+        $filter->shouldReceive('filterDetachedEvent');
 
         StreamFilter::prependFilter($source_resource, $filter);
 
@@ -111,5 +112,27 @@ class StreamFilterTest extends TestCase
 
         fclose($source_resource);
         fclose($destination_resource);
+    }
+
+    public function testUserFilterIsNotifiedWhenTheResourceIsBeingClosed() : void
+    {
+        $filter = \Mockery::mock(FilterInterface::class);
+        $filter->shouldReceive('getFilteredChainIdentifier')->andReturns(STREAM_FILTER_READ);
+        $filter->shouldReceive('filterDetachedEvent')->once();
+
+        $source_resource = fopen('php://memory', 'rb+');
+        StreamFilter::prependFilter($source_resource, $filter);
+        fclose($source_resource);
+    }
+
+    public function testUserFilterIsNotifiedWhenTheFilterIsBeingDetached() : void
+    {
+        $filter = \Mockery::mock(FilterInterface::class);
+        $filter->shouldReceive('getFilteredChainIdentifier')->andReturns(STREAM_FILTER_READ);
+        $filter->shouldReceive('filterDetachedEvent')->once();
+
+        $source_resource = fopen('php://memory', 'rb+');
+        $handle          = StreamFilter::prependFilter($source_resource, $filter);
+        StreamFilter::removeFilter($handle);
     }
 }
