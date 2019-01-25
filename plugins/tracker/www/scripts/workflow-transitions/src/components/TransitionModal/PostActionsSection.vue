@@ -43,7 +43,6 @@
                     slot="body"
                     v-if="post_action.type === RUN_JOB_ACTION_TYPE"
                     v-bind:action-id="post_action.unique_id"
-                    v-bind:job-url="post_action.job_url"
                 />
             </post-action>
         </template>
