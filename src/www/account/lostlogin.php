@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2019. All Rights Reserved.
  * Copyright 1999-2000 (c) The SourceForge Crew
  *
  * This file is a part of Tuleap.
@@ -74,10 +74,11 @@ $HTML->header(array('title'=>$Language->getText('account_lostlogin', 'title')));
 <P><?php echo $Language->getText('account_lostlogin', 'message', array($purifier->purify($user->getRealName(), CODENDI_PURIFIER_CONVERT_HTML))); ?>.
 
 <form action="lostlogin.php" method="post">
+<input type="hidden" value="<?php echo $purifier->purify($user->getUserName()) ?>" autocomplete="username">
 <p><?php echo $Language->getText('account_lostlogin', 'newpasswd'); ?>:
-<br><input type="password" name="form_pw">
+<br><input type="password" name="form_pw" autocomplete="new-password">
 <p><?php echo $Language->getText('account_lostlogin', 'newpasswd2'); ?>:
-<br><input type="password" name="form_pw2">
+<br><input type="password" name="form_pw2" autocomplete="new-password">
 <input type="hidden" name="confirm_hash" value="<?php echo $purifier->purify($confirm_hash); ?>">
 <p><input type="submit" name="Update" value="<?php echo $Language->getText('global', 'btn_update'); ?>">
 </form>

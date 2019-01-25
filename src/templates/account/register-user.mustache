@@ -7,8 +7,8 @@
                 <div class="control-group error">
                     <div class="controls">
             {{/has_error }}
-                        <input type="password" value="" placeholder="{{ new_password }} *" id="form_pw" name="form_pw" required />
-                        <input type="password" value="" placeholder="{{ new_password2 }} *" name="form_pw2" required />
+                        <input type="password" value="" placeholder="{{ new_password }} *" id="form_pw" name="form_pw" required autocomplete="new-password" />
+                        <input type="password" value="" placeholder="{{ new_password2 }} *" name="form_pw2" required autocomplete="new-password" />
             {{# has_error }}
                         <span class="help-inline">{{ error }}</span>
                     </div>
@@ -24,7 +24,7 @@
                 <div class="control-group error">
                     <div class="controls">
             {{/has_error }}
-                        <input type="text" name="form_realname" placeholder="{{ realname }} *" value="{{ value }}" required="required" />
+                        <input type="text" name="form_realname" placeholder="{{ realname }} *" value="{{ value }}" required="required" autocomplete="name" />
             {{# has_error }}
                         <span class="help-inline">{{ error }}</span>
                     </div>

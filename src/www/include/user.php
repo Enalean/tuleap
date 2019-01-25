@@ -276,9 +276,9 @@ function user_display_choose_password($page,$user_id = false) {
 
 
     <? } else { echo $purifier->purify($GLOBALS['Language']->getText('account_change_pw', 'new_password')); ?>:
-    <br><input type="password" value="" id="form_pw" name="form_pw">
+    <br><input type="password" value="" id="form_pw" name="form_pw" autocomplete="new-password">
     <p><? echo $purifier->purify($GLOBALS['Language']->getText('account_change_pw', 'new_password2')); ?>:
-    <br><input type="password" value="" name="form_pw2">
+    <br><input type="password" value="" name="form_pw2" autocomplete="new-password">
     <? } ?>
     </td><td>
     <div class="password_strategy">

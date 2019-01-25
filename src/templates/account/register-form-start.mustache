@@ -10,7 +10,7 @@
                     <div class="control-group error">
                         <div class="controls">
                     {{/has_error }}
-                            <input type="text" id="form_loginname" name="form_loginname" placeholder="{{ login }} *" value="{{ value }}" required="required" />
+                            <input type="text" id="form_loginname" name="form_loginname" placeholder="{{ login }} *" value="{{ value }}" required="required" autocomplete="username" />
                     {{# has_error }}
                             <span class="help-inline">{{ error }}</span>
                         </div>
@@ -23,7 +23,7 @@
                         <div class="control-group error">
                             <div class="controls">
                     {{/has_error }}
-                                <input type="email" id="form_email" name="form_email" placeholder="{{ email }} *" value="{{ value }}" required="required" data-email-suggestion="register-email-suggestion" />
+                                <input type="email" id="form_email" name="form_email" placeholder="{{ email }} *" value="{{ value }}" required="required" data-email-suggestion="register-email-suggestion" autocomplete="email" />
                     {{# has_error }}
                                 <span class="help-inline">{{ error }}</span>
                             </div>

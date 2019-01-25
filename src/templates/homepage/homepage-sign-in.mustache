@@ -20,6 +20,7 @@
                             name="form_loginname"
                             placeholder="{{ username_placeholder }}"
                             tabindex="1"
+                            autocomplete="username"
                         >
                     </div>
                     <div class="tlp-form-element">
@@ -31,6 +32,7 @@
                             name="form_pw"
                             placeholder="{{ password_placeholder }}"
                             tabindex="2"
+                            autocomplete="current-password"
                         >
                         {{# allow_password_recovery }}
                             <p class="tlp-text-info homepage-sign-in-forgot-password">

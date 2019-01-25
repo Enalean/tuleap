@@ -8,7 +8,7 @@
     {{# csrf_token }}
         {{> csrf_token_input }}
     {{/ csrf_token }}
-    {{# gettext }}New email address:{{/ gettext }} <input type="text" size="30" name="form_newemail" />
+    {{# gettext }}New email address:{{/ gettext }} <input type="text" size="30" name="form_newemail" autocomplete="email" />
     <input class="btn btn-primary" type="submit" name="Send Confirmation to New Address" value="{{# gettext }}Send confirmation to new address{{/ gettext }}">
 </form>
 

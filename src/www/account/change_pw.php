@@ -1,6 +1,6 @@
 <?php
 //
-// Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
+// Copyright (c) Enalean, 2015 - 2019. All Rights Reserved.
 // SourceForge: Breaking Down the Barriers to Open Source Development
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
@@ -113,16 +113,19 @@ if (register_valid($user_id, $csrf, $old_password_required)) {
 } else { // not valid registration, or first time to page
 	$HTML->includeJavascriptFile('/scripts/check_pw.js');
 	$HTML->header(array('title'=>$Language->getText('account_options', 'change_password')));
-
+	$user     = UserManager::instance()->getUserById($user_id);
+	$username = $user !== null ? $user->getUserName() : '';
+	$purifier = Codendi_HTMLPurifier::instance();
 ?>
-<h2><? echo $Language->getText('account_change_pw', 'title'); ?></h2>
-<form action="change_pw.php" method="post" autocomplete="off" >
-<p><?
+<h2><?php echo $Language->getText('account_change_pw', 'title'); ?></h2>
+<form action="change_pw.php" method="post">
+<input type="hidden" value="<?php echo $purifier->purify($username) ?>" autocomplete="username">
+<p><?php
 echo $csrf->fetchHTMLInput();
 if ($old_password_required) {
     echo $Language->getText('account_change_pw', 'old_password'); ?>:
     <br>
-    <input type="password" value="" name="form_oldpw">
+    <input type="password" value="" name="form_oldpw" autocomplete="current-password">
 <?php
 }
 user_display_choose_password('',is_numeric($request->get('user_id')) ? $request->get('user_id') : 0); ?>
