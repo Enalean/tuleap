@@ -39,6 +39,8 @@ use Tuleap\Docman\Notifications\NotificationEventAdder;
 use Tuleap\Docman\Upload\DocumentOngoingUploadDAO;
 use Tuleap\Docman\Upload\DocumentOngoingUploadRetriever;
 use Tuleap\Docman\Upload\DocumentToUploadCreator;
+use Tuleap\Docman\Upload\DocumentUploadFinisher;
+use Tuleap\Docman\Upload\DocumentUploadPathAllocator;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
@@ -71,7 +73,7 @@ class DocmanItemsResource extends AuthenticatedResource
         $this->rest_user_manager = RestUserManager::build();
         $this->item_dao          = new Docman_ItemDao();
         $this->request_builder   = new DocmanItemsRequestBuilder($this->rest_user_manager, ProjectManager::instance());
-        $this->event_manager = EventManager::instance();
+        $this->event_manager     = EventManager::instance();
     }
 
     /**
@@ -172,7 +174,12 @@ class DocmanItemsResource extends AuthenticatedResource
         $this->addLogEvents();
         $this->addNotificationEvents($project);
 
-        $document_on_going_upload_dao = new DocumentOngoingUploadDAO();
+        $document_on_going_upload_dao   = new DocumentOngoingUploadDAO();
+        $document_upload_path_allocator = new DocumentUploadPathAllocator();
+
+        /** @var \docmanPlugin $docman_plugin */
+        $docman_plugin = \PluginManager::instance()->getPluginByName('docman');
+        $root_path     = $docman_plugin->getPluginInfo()->getPropertyValueForName('docman_root');
 
         $docman_item_creator = new DocmanItemCreator(
             $this->getItemFactory($project->getID()),
@@ -182,6 +189,22 @@ class DocmanItemsResource extends AuthenticatedResource
                 $this->getPermissionManager(),
                 $this->event_manager,
                 new \Docman_LinkVersionFactory()
+            ),
+            new EmptyFileToUploadFinisher(
+                new DocumentUploadFinisher(
+                    new \BackendLogger(),
+                    $document_upload_path_allocator,
+                    $this->getItemFactory(),
+                    new \Docman_VersionFactory(),
+                    \PermissionsManager::instance(),
+                    $this->event_manager,
+                    $document_on_going_upload_dao,
+                    $this->item_dao,
+                    new \Docman_FileStorage($root_path),
+                    new \Docman_MIMETypeDetector(),
+                    \UserManager::instance()
+                ),
+                $document_upload_path_allocator
             )
         );
             return $docman_item_creator->create(

@@ -305,6 +305,33 @@ class DocmanItemsTest extends DocmanBase
 
     /**
      * @depends testGetRootId
+     */
+    public function testPostEmptyFileDocument(int $root_id): void
+    {
+        $query     = json_encode([
+            'title'           => 'File2',
+            'parent_id'       => $root_id,
+            'type'            => 'file',
+            'file_properties' => ['file_name' => 'file1', 'file_size' => 0]
+        ]);
+
+        $response1 = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post('docman_items', null, $query)
+        );
+        $this->assertEquals(201, $response1->getStatusCode());
+        $this->assertEmpty($response1->json()['file_properties']['upload_href']);
+
+        $file_item_response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->get($response1->json()['uri'])
+        );
+        $this->assertEquals(200, $file_item_response->getStatusCode());
+        $this->assertEquals('file', $file_item_response->json()['type']);
+    }
+
+    /**
+     * @depends testGetRootId
      * @expectedException \Guzzle\Http\Exception\ClientErrorResponseException
      * @expectExceptionCode 400
      */

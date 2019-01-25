@@ -545,6 +545,25 @@ describe("Store actions", () => {
             expect(context.commit).not.toHaveBeenCalled();
             expect(uploadFile).not.toHaveBeenCalled();
         });
+        it("does not start upload if file is empty", async () => {
+            context.state.folder_content = [{ id: 45 }];
+            const dropped_file = { name: "empty-file.txt", size: 0, type: "text/plain" };
+            const parent = { id: 42 };
+
+            const created_item_reference = { id: 66 };
+            addNewDocument.and.returnValue(Promise.resolve(created_item_reference));
+
+            const created_item = { id: 66, parent_id: 42, type: "file" };
+            getItem.and.returnValue(Promise.resolve(created_item));
+
+            await addNewUploadFile(context, [dropped_file, parent]);
+
+            expect(context.commit).toHaveBeenCalledWith(
+                "addJustCreatedItemToFolderContent",
+                created_item
+            );
+            expect(uploadFile).not.toHaveBeenCalled();
+        });
     });
     describe("cancelFileUpload", () => {
         let item;
