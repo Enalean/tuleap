@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -289,5 +289,37 @@ class FrontRouterTest extends TestCase
         $_SERVER['REQUEST_URI']    = '/stuff';
 
         $this->router->route($this->request);
+    }
+
+    /**
+     * @testWith [200]
+     *           [500]
+     *           [302]
+     *           [419]
+     *           [101]
+     * @runInSeparateProcess
+     */
+    public function testHTTPStatusCodeIsCorrectlyRecorded(int $status_code) : void
+    {
+        $handler = \Mockery::mock(DispatchableWithRequestNoAuthz::class);
+        $handler->shouldReceive('process');
+
+        $this->route_collector->shouldReceive('collect')->with(Mockery::on(function (FastRoute\RouteCollector $r) use ($handler, $status_code) {
+            $r->get('/stuff', function () use ($handler, $status_code) {
+                http_response_code($status_code);
+                return $handler;
+            });
+            return true;
+        }));
+
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+        $_SERVER['REQUEST_URI']    = '/stuff';
+
+        $this->router->route($this->request, $this->layout);
+
+        $this->assertContains(
+            'tuleap_http_responses_total{code="' . $status_code . '",router="fastroute"} 1',
+            \Tuleap\Instrument\Prometheus\Prometheus::instance()->renderText()
+        );
     }
 }
