@@ -8,6 +8,8 @@
 // Copyright (c) Asial Corporation. All rights reserved.
 //========================================================================
 
+// phpcs:ignoreFile
+
 class ImgData_Squares extends ImgData {
     protected $name = 'Squares';
     protected $an = array(MARK_IMG_SQUARE =>'imgdata');
@@ -19,7 +21,7 @@ class ImgData_Squares extends ImgData {
     protected $maxidx = 7 ;
     protected $imgdata ;
 
-    function ImgData_Squares () {
+    function __construct() {
         //==========================================================
         //sq_lblue.png
         //==========================================================
