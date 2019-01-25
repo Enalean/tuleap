@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -44,7 +44,7 @@ class hudson_gitPlugin extends Plugin
 
         if (defined('GIT_BASE_URL')) {
             $this->addHook(Hooks::ADDITIONAL_WEBHOOKS);
-            $this->addHook(GIT_HOOK_POSTRECEIVE);
+            $this->addHook(GIT_HOOK_POSTRECEIVE_REF_UPDATE);
             $this->addHook(self::DISPLAY_HUDSON_ADDITION_INFO);
         }
     }
@@ -104,7 +104,7 @@ class hudson_gitPlugin extends Plugin
         }
     }
 
-    public function git_hook_post_receive($params)
+    public function git_hook_post_receive_ref_update($params)
     {
         if ($this->isAllowed($params['repository']->getProjectId())) {
             $controller = new Hook\HookTriggerController(
@@ -117,7 +117,7 @@ class hudson_gitPlugin extends Plugin
                 $this->getLogger(),
                 new JobManager(new JobDao())
             );
-            $controller->trigger($params['repository']);
+            $controller->trigger($params['repository'], $params['newrev']);
         }
     }
 

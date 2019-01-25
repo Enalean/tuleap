@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -57,7 +57,7 @@ class HookTriggerController
         $this->job_manager    = $job_manager;
     }
 
-    public function trigger(GitRepository $repository)
+    public function trigger(GitRepository $repository, string $commit_reference) : void
     {
         $date_job = $_SERVER['REQUEST_TIME'];
         $dar = $this->dao->searchById($repository->getId());
@@ -65,7 +65,7 @@ class HookTriggerController
             try {
                 $transports = $repository->getAccessURL();
                 foreach ($transports as $protocol => $url) {
-                    $response = $this->jenkins_client->pushGitNotifications($row['jenkins_server_url'], $url);
+                    $response = $this->jenkins_client->pushGitNotifications($row['jenkins_server_url'], $url, $commit_reference);
 
                     $this->logger->debug('repository #'.$repository->getId().' : '.$response->getBody());
                     if (count($response->getJobPaths()) > 0) {

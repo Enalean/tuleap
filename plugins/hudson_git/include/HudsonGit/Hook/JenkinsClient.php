@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -58,14 +58,14 @@ class JenkinsClient
         $this->csrf_crumb_retriever = $csrf_crumb_retriever;
     }
 
-    public function pushGitNotifications($server_url, $repository_url)
+    public function pushGitNotifications($server_url, $repository_url, string $commit_reference) : ?\Tuleap\HudsonGit\PollingResponse
     {
         $csrf_crumb_header = $this->csrf_crumb_retriever->getCSRFCrumbHeader($server_url);
 
         if (mb_substr($server_url, -1) === '/') {
             $server_url = mb_substr($server_url, 0, -1);
         }
-        $push_url = $server_url . self::$NOTIFY_URL . '?url=' . urlencode($repository_url);
+        $push_url = $server_url . self::$NOTIFY_URL . '?url=' . urlencode($repository_url) . '&sha1=' . urlencode($commit_reference);
 
         $options  = array(
             CURLOPT_SSL_VERIFYPEER  => true,
