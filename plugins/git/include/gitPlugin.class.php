@@ -790,7 +790,7 @@ class GitPlugin extends Plugin
         );
     }
 
-    private function getAdminRouter() {
+    public function getAdminRouter() {
         $project_manager             = ProjectManager::instance();
         $gerrit_ressource_restrictor = new GerritServerResourceRestrictor(new RestrictedGerritServerDao());
 
@@ -2572,67 +2572,79 @@ class GitPlugin extends Plugin
         );
     }
 
+    public function routeGetGit()
+    {
+        return new GitRepositoryListController(
+            $this->getProjectManager(),
+            $this->getRepositoryFactory(),
+            new ListPresenterBuilder(
+                $this->getGitPermissionsManager(),
+                $this->getGitDao(),
+                UserManager::instance()
+            ),
+            $this->getIncludeAssets()
+        );
+    }
+
+    public function routeGetLegacyURLForRepository()
+    {
+        return new \Tuleap\Git\GitLegacyURLRedirectController(
+            $this->getProjectManager(),
+            $this->getRepositoryFactory()
+        );
+    }
+
+    public function routeGetPostSmartHTTP()
+    {
+        $logger = new \WrapperLogger($this->getLogger(), 'http');
+        return new \Tuleap\Git\HTTP\HTTPController(
+            $logger,
+            $this->getProjectManager(),
+            $this->getRepositoryFactory(),
+            $this->getHTTPAccessControl($logger)
+        );
+    }
+
+    public function routeGetPostRepositoryView()
+    {
+        return new \Tuleap\Git\GitRepositoryBrowserController(
+            $this->getRepositoryFactory(),
+            $this->getProjectManager(),
+            $this->getMirrorDataMapper(),
+            $this->getGitPhpAccessLogger(),
+            $this->getThemeManager(),
+            $this->getGitRepositoryHeaderDisplayer(),
+            new FilesHeaderPresenterBuilder(
+                new GitPHPProjectRetriever(),
+                new CommitForCurrentTreeRetriever(),
+                $this->getGitRepositoryUrlManager()
+            )
+        );
+    }
+
+    public function routeGetPostLegacyController()
+    {
+        return new \Tuleap\Git\GitPluginDefaultController(
+            $this->getChainOfRouters(),
+            EventManager::instance()
+        );
+    }
+
     public function collectRoutesEvent(\Tuleap\Request\CollectRoutesEvent $event)
     {
-        $event->getRouteCollector()->addGroup(GIT_SITE_ADMIN_BASE_URL, function (FastRoute\RouteCollector $r) {
-            $r->addRoute(
-                ['GET', 'POST'], '[/]', function() {
-                return $this->getAdminRouter();
-            });
-        });
+        $event->getRouteCollector()->addRoute(['GET', 'POST'], GIT_SITE_ADMIN_BASE_URL.'[/]', $this->getRouteHandler('getAdminRouter'));
 
         $event->getRouteCollector()->addGroup(GIT_BASE_URL, function (FastRoute\RouteCollector $r) {
             EventManager::instance()->processEvent(new \Tuleap\Git\CollectGitRoutesEvent($r));
 
-            $r->addRoute(['GET'], '/index.php/{project_id:\d+}/view/{repository_id:\d+}/[{args}]', function () {
-                return new \Tuleap\Git\GitLegacyURLRedirectController(
-                    $this->getProjectManager(),
-                    $this->getRepositoryFactory()
-                );
-            });
-            $r->addRoute(['GET', 'POST'], '/{project_name}/{path:.*\.git|.*}/{smart_http:HEAD|info/refs\??.*|git-upload-pack|git-receive-pack|objects/info[^/]+|objects/[0-9a-f]{2}/[0-9a-f]{38}|pack/pack-[0-9a-f]{40}\.pack|pack/pack-[0-9a-f]{40}\.idx}', function () {
-                $logger = new \WrapperLogger($this->getLogger(), 'http');
-                return new \Tuleap\Git\HTTP\HTTPController(
-                    $logger,
-                    $this->getProjectManager(),
-                    $this->getRepositoryFactory(),
-                    $this->getHTTPAccessControl($logger)
-                );
-            });
-            $r->get('/{project_name:[A-z0-9-]+}[/]', function() {
-                return new GitRepositoryListController(
-                    $this->getProjectManager(),
-                    $this->getRepositoryFactory(),
-                    new ListPresenterBuilder(
-                        $this->getGitPermissionsManager(),
-                        $this->getGitDao(),
-                        UserManager::instance()
-                    ),
-                    $this->getIncludeAssets()
-                );
-            });
-            $r->addRoute(['GET', 'POST'], '/{project_name}/{path:.*}', function () {
+            $r->get('/index.php/{project_id:\d+}/view/{repository_id:\d+}/[{args}]', $this->getRouteHandler('routeGetLegacyURLForRepository'));
 
-                return new \Tuleap\Git\GitRepositoryBrowserController(
-                    $this->getRepositoryFactory(),
-                    $this->getProjectManager(),
-                    $this->getMirrorDataMapper(),
-                    $this->getGitPhpAccessLogger(),
-                    $this->getThemeManager(),
-                    $this->getGitRepositoryHeaderDisplayer(),
-                    new FilesHeaderPresenterBuilder(
-                        new GitPHPProjectRetriever(),
-                        new CommitForCurrentTreeRetriever(),
-                        $this->getGitRepositoryUrlManager()
-                    )
-                );
-            });
-            $r->addRoute(['GET', 'POST'], '/{path:.*}', function () {
-                return new \Tuleap\Git\GitPluginDefaultController(
-                    $this->getChainOfRouters(),
-                    EventManager::instance()
-                );
-            });
+            $r->addRoute(['GET', 'POST'], '/{project_name}/{path:.*\.git|.*}/{smart_http:HEAD|info/refs\??.*|git-upload-pack|git-receive-pack|objects/info[^/]+|objects/[0-9a-f]{2}/[0-9a-f]{38}|pack/pack-[0-9a-f]{40}\.pack|pack/pack-[0-9a-f]{40}\.idx}', $this->getRouteHandler('routeGetPostSmartHTTP'));
+
+            $r->get('/{project_name:[A-z0-9-]+}[/]', $this->getRouteHandler('routeGetGit'));
+
+            $r->addRoute(['GET', 'POST'], '/{project_name}/{path:.*}', $this->getRouteHandler('routeGetPostRepositoryView'));
+            $r->addRoute(['GET', 'POST'], '/{path:.*}', $this->getRouteHandler('routeGetPostLegacyController'));
         });
     }
 

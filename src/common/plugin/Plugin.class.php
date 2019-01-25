@@ -395,4 +395,12 @@ class Plugin implements PFO_Plugin {
         );
         $dao->removeOrphanWidgetsByNames($names);
     }
+
+    protected function getRouteHandler(string $handler) : array
+    {
+        return [
+            'plugin'  => $this->getName(),
+            'handler' => $handler,
+        ];
+    }
 }

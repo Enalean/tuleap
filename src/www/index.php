@@ -40,6 +40,7 @@ $router = new FrontRouter(
                 new User_ForgeUserGroupPermissionsDao()
             )
         )
-    )
+    ),
+    PluginManager::instance()
 );
 $router->route($request);

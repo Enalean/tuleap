@@ -66,109 +66,186 @@ class RouteCollector
         $this->event_manager = $event_manager;
     }
 
+    public static function getSlash()
+    {
+        $dao = new \Admin_Homepage_Dao();
+        if ($dao->isStandardHomepageUsed()) {
+            return new SiteHomepageController();
+        }
+        return new LegacySiteHomePageController();
+    }
+
+    public static function getOrPostProjectHome()
+    {
+        return new \Tuleap\Project\Home();
+    }
+
+    public static function getAdminPasswordPolicy()
+    {
+        return new PasswordPolicyDisplayController(
+            new \Tuleap\Admin\AdminPageRenderer,
+            \TemplateRendererFactory::build(),
+            new PasswordConfigurationRetriever(new PasswordConfigurationDAO)
+        );
+    }
+
+    public static function postAdminPasswordPolicy()
+    {
+        return new PasswordPolicyUpdateController(
+            new PasswordConfigurationSaver(new PasswordConfigurationDAO)
+        );
+    }
+
+    public static function getProjectCreationModeration()
+    {
+        return new ProjectCreationModerationDisplayController();
+    }
+
+    public static function postProjectCreationModeration()
+    {
+        return new ProjectCreationModerationUpdateController();
+    }
+
+    public static function getProjectCreationTemplates()
+    {
+        return new ProjectTemplatesController();
+    }
+
+    public static function getProjectCreationWebhooks()
+    {
+        return new WebhooksDisplayController();
+    }
+
+    public static function postProjectCreationWebhooks()
+    {
+        return new WebhooksUpdateController();
+    }
+
+    public static function getProjectCreationFields()
+    {
+        return new ProjectFieldsDisplayController();
+    }
+
+    public static function postProjectCreationFields()
+    {
+        return new ProjectFieldsUpdateController();
+    }
+
+    public static function getProjectCreationCategories()
+    {
+        return new ProjectCategoriesDisplayController();
+    }
+
+    public static function postProjectCreationCategories()
+    {
+        return new TroveCatListController();
+    }
+
+    public static function getProjectCreationVisibility()
+    {
+        return new ProjectVisibilityConfigDisplayController();
+    }
+
+    public static function postProjectCreationVisibility()
+    {
+        return new ProjectVisibilityConfigUpdateController(
+            new ProjectVisibilityConfigManager(
+                new ConfigDao()
+            )
+        );
+    }
+
+    public static function postAccountAccessKeyCreate()
+    {
+        return new AccessKeyCreationController();
+    }
+
+    public static function postAccountAccessKeyRevoke()
+    {
+        return new AccessKeyRevocationController();
+    }
+
+    public static function postAccountAvatar()
+    {
+        $user_manager = \UserManager::instance();
+        return new ChangeAvatarController($user_manager, new UserAvatarSaver($user_manager));
+    }
+
+    public static function getUsersName()
+    {
+        return new ProfileController(
+            new ProfilePresenterBuilder(EventManager::instance(), Codendi_HTMLPurifier::instance())
+        );
+    }
+
+    public static function getUsersNameAvatar()
+    {
+        return new AvatarController();
+    }
+
+    public static function getUsersNameAvatarHash()
+    {
+        return new AvatarController(['expires' => 'never']);
+    }
+
+    public static function postJoinPrivateProjectMail()
+    {
+        return new PermissionDeniedMailSender(
+            new PlaceHolderBuilder(\ProjectManager::instance()),
+            new \CSRFSynchronizerToken("/join-private-project-mail/")
+        );
+    }
+
+    public static function postJoinRestrictedUserMail()
+    {
+        return new PermissionDeniedMailSender(
+            new PlaceHolderBuilder(\ProjectManager::instance()),
+            new \CSRFSynchronizerToken("/join-project-restricted-user-mail/")
+        );
+    }
+
     public function collect(FastRoute\RouteCollector $r)
     {
-        $r->get('/', function () {
-            $dao = new \Admin_Homepage_Dao();
-            if ($dao->isStandardHomepageUsed()) {
-                return new SiteHomepageController();
-            }
-            return new LegacySiteHomePageController();
-        });
-        $r->addRoute(['GET', 'POST'], '/projects/{name}[/]', function () {
-            return new \Tuleap\Project\Home();
-        });
+        $r->get('/', [__CLASS__, 'getSlash']);
+        $r->addRoute(['GET', 'POST'], '/projects/{name}[/]', [__CLASS__, 'getOrPostProjectHome']);
+
         $r->addGroup('/admin', function (FastRoute\RouteCollector $r) {
-            $r->get('/password_policy/', function () {
-                return new PasswordPolicyDisplayController(
-                    new \Tuleap\Admin\AdminPageRenderer,
-                    \TemplateRendererFactory::build(),
-                    new PasswordConfigurationRetriever(new PasswordConfigurationDAO)
-                );
-            });
-            $r->post('/password_policy/', function () {
-                return new PasswordPolicyUpdateController(
-                    new PasswordConfigurationSaver(new PasswordConfigurationDAO)
-                );
-            });
-            $r->get('/project-creation/moderation', function () {
-                return new ProjectCreationModerationDisplayController();
-            });
-            $r->post('/project-creation/moderation', function () {
-                return new ProjectCreationModerationUpdateController();
-            });
-            $r->get('/project-creation/templates', function () {
-                return new ProjectTemplatesController();
-            });
-            $r->get('/project-creation/webhooks', function () {
-                return new WebhooksDisplayController();
-            });
-            $r->post('/project-creation/webhooks', function () {
-                return new WebhooksUpdateController();
-            });
-            $r->get('/project-creation/fields', function () {
-                return new ProjectFieldsDisplayController();
-            });
-            $r->post('/project-creation/fields', function () {
-                return new ProjectFieldsUpdateController();
-            });
-            $r->get('/project-creation/categories', function () {
-                return new ProjectCategoriesDisplayController();
-            });
-            $r->post('/project-creation/categories', function () {
-                return new TroveCatListController();
-            });
-            $r->get('/project-creation/visibility', function () {
-                return new ProjectVisibilityConfigDisplayController();
-            });
-            $r->post('/project-creation/visibility', function () {
-                return new ProjectVisibilityConfigUpdateController(
-                    new ProjectVisibilityConfigManager(
-                        new ConfigDao()
-                    )
-                );
-            });
+            $r->get('/password_policy/', [__CLASS__, 'getAdminPasswordPolicy']);
+            $r->post('/password_policy/', [__CLASS__, 'postAdminPasswordPolicy']);
+
+            $r->get('/project-creation/moderation', [__CLASS__, 'getProjectCreationModeration']);
+            $r->post('/project-creation/moderation', [__CLASS__, 'postProjectCreationModeration']);
+
+            $r->get('/project-creation/templates', [__CLASS__, 'getProjectCreationTemplates']);
+
+            $r->get('/project-creation/webhooks', [__CLASS__, 'getProjectCreationWebhooks']);
+            $r->post('/project-creation/webhooks', [__CLASS__, 'postProjectCreationWebhooks']);
+
+            $r->get('/project-creation/fields', [__CLASS__, 'getProjectCreationFields']);
+            $r->post('/project-creation/fields', [__CLASS__, 'postProjectCreationFields']);
+
+            $r->get('/project-creation/categories', [__CLASS__, 'getProjectCreationCategories']);
+            $r->post('/project-creation/categories', [__CLASS__, 'postProjectCreationCategories']);
+
+            $r->get('/project-creation/visibility', [__CLASS__, 'getProjectCreationVisibility']);
+            $r->post('/project-creation/visibility', [__CLASS__, 'postProjectCreationVisibility']);
         });
+
         $r->addGroup('/account', function (FastRoute\RouteCollector $r) {
-            $r->post('/access_key/create', function () {
-                return new AccessKeyCreationController();
-            });
-            $r->post('/access_key/revoke', function () {
-                return new AccessKeyRevocationController();
-            });
-        });
-        $r->post('/account/avatar', function () {
-            $user_manager = \UserManager::instance();
-            return new ChangeAvatarController($user_manager, new UserAvatarSaver($user_manager));
+            $r->post('/access_key/create', [__CLASS__, 'postAccountAccessKeyCreate']);
+            $r->post('/access_key/revoke', [__CLASS__, 'postAccountAccessKeyRevoke']);
+            $r->post('/avatar', [__CLASS__, 'postAccountAvatar']);
         });
 
-        $r->addRoute(['GET'], '/users/{name}[/]', function () {
-            return new ProfileController(
-                new ProfilePresenterBuilder(EventManager::instance(), Codendi_HTMLPurifier::instance())
-            );
+
+        $r->addGroup('/users', function (FastRoute\RouteCollector $r) {
+            $r->get('/{name}[/]', [__CLASS__, 'getUsersName']);
+            $r->get('/{name}/avatar.png', [__CLASS__, 'getUsersNameAvatar']);
+            $r->get('/{name}/avatar-{hash}.png', [__CLASS__, 'getUsersNameAvatarHash']);
         });
 
-        $r->addRoute(['GET'], '/users/{name}/avatar.png', function () {
-            return new AvatarController();
-        });
-
-        $r->addRoute(['GET'], '/users/{name}/avatar-{hash}.png', function () {
-            return new AvatarController(['expires' => 'never']);
-        });
-
-        $r->addRoute(['POST'], '/join-private-project-mail/', function () {
-            return new PermissionDeniedMailSender(
-                new PlaceHolderBuilder(\ProjectManager::instance()),
-                new \CSRFSynchronizerToken("/join-private-project-mail/")
-            );
-        });
-
-        $r->addRoute(['POST'], '/join-project-restricted-user-mail/', function () {
-            return new PermissionDeniedMailSender(
-                new PlaceHolderBuilder(\ProjectManager::instance()),
-                new \CSRFSynchronizerToken("/join-project-restricted-user-mail/")
-            );
-        });
+        $r->post('/join-private-project-mail/', [__CLASS__, 'postJoinPrivateProjectMail']);
+        $r->post('/join-project-restricted-user-mail/', [__CLASS__, 'postJoinRestrictedUserMail']);
 
         $collect_routes = new CollectRoutesEvent($r);
         $this->event_manager->processEvent($collect_routes);

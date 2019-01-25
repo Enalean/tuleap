@@ -23,6 +23,7 @@ namespace Tuleap\Request;
 
 use Mockery;
 use PHPUnit\Framework\TestCase;
+use PluginManager;
 use Tuleap\Layout\BaseLayout;
 use FastRoute;
 use Tuleap\Layout\ErrorRendering;
@@ -44,6 +45,7 @@ class FrontRouterTest extends TestCase
     private $error_rendering;
     private $theme_manager;
     private $burning_parrot;
+    private $plugin_manager;
 
     public function setUp()
     {
@@ -57,6 +59,7 @@ class FrontRouterTest extends TestCase
         $this->error_rendering = Mockery::mock(ErrorRendering::class);
         $this->theme_manager = Mockery::mock(\ThemeManager::class);
         $this->burning_parrot = Mockery::mock(BurningParrotTheme::class);
+        $this->plugin_manager = Mockery::mock(PluginManager::class);
 
         $this->request->shouldReceive('getCurrentUser')->andReturn(Mockery::mock(\PFUser::class));
         $this->theme_manager->shouldReceive('getBurningParrot')->andReturn($this->burning_parrot);
@@ -67,7 +70,8 @@ class FrontRouterTest extends TestCase
             $this->url_verification_factory,
             $this->logger,
             $this->error_rendering,
-            $this->theme_manager
+            $this->theme_manager,
+            $this->plugin_manager
         );
     }
 
@@ -137,7 +141,7 @@ class FrontRouterTest extends TestCase
 
     public function testItRaisesAnErrorWhenHandlerIsUnknown()
     {
-        $handler = new \stdClass();
+        $handler = \Mockery::mock(DispatchableWithRequest::class);
 
         $url_verification = Mockery::mock(\URLVerification::class);
         $url_verification->shouldReceive('assertValidUrl')->with(Mockery::any(), $this->request, null)->once();
@@ -240,6 +244,44 @@ class FrontRouterTest extends TestCase
             $r->get('/stuff', function () use ($handler) {
                 return $handler;
             });
+            return true;
+        }));
+
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+        $_SERVER['REQUEST_URI']    = '/stuff';
+
+        $this->router->route($this->request);
+    }
+
+    public function testItInstantiatePluginsWhenRoutingAPluginRoute()
+    {
+        $controller = Mockery::mock(DispatchableWithRequest::class);
+        $controller->shouldReceive('process')->once();
+
+        $this->plugin_manager->shouldReceive('getPluginByName')->with('foobar')->andReturns(
+            new class($controller) {
+
+                private $controller;
+
+                public function __construct($controller)
+                {
+                    $this->controller = $controller;
+                }
+
+                public function myHandler()
+                {
+                    return $this->controller;
+                }
+            }
+        );
+
+
+        $url_verification = Mockery::mock(\URLVerification::class);
+        $url_verification->shouldReceive('assertValidUrl');
+        $this->url_verification_factory->shouldReceive('getURLVerification')->andReturn($url_verification);
+
+        $this->route_collector->shouldReceive('collect')->with(Mockery::on(function (FastRoute\RouteCollector $r) {
+            $r->get('/stuff', [ 'plugin' => 'foobar', 'handler' => 'myHandler']);
             return true;
         }));
 
