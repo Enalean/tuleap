@@ -18,15 +18,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\GitLFS;
 
 use HTTPRequest;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
+use Tuleap\Request\ForbiddenException;
+use Tuleap\Request\NotFoundException;
 
 class LFSJSONHTTPDispatchable implements DispatchableWithRequestNoAuthz
 {
-    const GIT_LFS_MIME_TYPE = 'application/vnd.git-lfs+json';
+    private const GIT_LFS_MIME_TYPE = 'application/vnd.git-lfs+json';
 
     /**
      * @var DispatchableWithRequestNoAuthz
@@ -38,16 +42,25 @@ class LFSJSONHTTPDispatchable implements DispatchableWithRequestNoAuthz
         $this->dispatchable_with_request = $dispatchable_with_request;
     }
 
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(HTTPRequest $request, BaseLayout $layout, array $variables) : void
     {
         if (! $this->doesRequestAcceptGitLFSResponse($request)) {
             throw new \RuntimeException(self::GIT_LFS_MIME_TYPE . ' data must be an acceptable response', 406);
         }
         header('Content-Type: ' . self::GIT_LFS_MIME_TYPE);
-        $this->dispatchable_with_request->process($request, $layout, $variables);
+        try {
+            $this->dispatchable_with_request->process($request, $layout, $variables);
+        } catch (NotFoundException | ForbiddenException | GitLFSException $exception) {
+            $status_code = $exception->getCode();
+            if ($status_code === 0) {
+                $status_code = 500;
+            }
+            http_response_code($status_code);
+            echo json_encode(['message' => $exception->getMessage()]);
+        }
     }
 
-    private function doesRequestAcceptGitLFSResponse(\HttpRequest $request)
+    private function doesRequestAcceptGitLFSResponse(\HttpRequest $request) : bool
     {
         return stripos(trim($request->getFromServer('HTTP_ACCEPT')), self::GIT_LFS_MIME_TYPE) === 0;
     }

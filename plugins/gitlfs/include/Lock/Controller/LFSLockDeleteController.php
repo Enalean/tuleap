@@ -28,7 +28,6 @@ use Tuleap\GitLFS\Lock\LockDestructor;
 use Tuleap\GitLFS\Lock\LockRetriever;
 use Tuleap\GitLFS\Lock\Request\LockDeleteRequest;
 use Tuleap\GitLFS\Lock\Response\LockResponseBuilder;
-use Tuleap\GitLFS\Lock\Request\IncorrectlyFormattedReferenceRequestException;
 use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
@@ -113,11 +112,7 @@ class LFSLockDeleteController implements DispatchableWithRequestNoAuthz
         if ($json_string === false) {
             throw new \RuntimeException('Can not read the body of the request');
         }
-        try {
-            $lock_delete_request = LockDeleteRequest::buildFromJSONString($json_string);
-        } catch (IncorrectlyFormattedReferenceRequestException $exception) {
-            throw new \RuntimeException($exception->getMessage(), 400);
-        }
+        $lock_delete_request = LockDeleteRequest::buildFromJSONString($json_string);
 
         $user = $this->user_retriever->retrieveUser($request, $repository, $lock_delete_request);
 

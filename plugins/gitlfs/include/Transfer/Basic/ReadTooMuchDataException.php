@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,10 +20,12 @@
 
 namespace Tuleap\GitLFS\Transfer\Basic;
 
-final class ReadTooMuchDataException extends \RuntimeException
+use Tuleap\GitLFS\GitLFSException;
+
+final class ReadTooMuchDataException extends GitLFSException
 {
     public function __construct($maximum_expected_size)
     {
-        parent::__construct("Read more data than the maximum expected size ($maximum_expected_size)");
+        parent::__construct("Read more data than the maximum expected size ($maximum_expected_size)", 400);
     }
 }

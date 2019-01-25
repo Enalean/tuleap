@@ -22,7 +22,6 @@ namespace Tuleap\GitLFS\Batch;
 
 use HTTPRequest;
 use Tuleap\GitLFS\Batch\Request\BatchRequest;
-use Tuleap\GitLFS\Batch\Request\IncorrectlyFormattedBatchRequestException;
 use Tuleap\GitLFS\Batch\Response\BatchSuccessfulResponseBuilder;
 use Tuleap\GitLFS\Batch\Response\UnknownOperationException;
 use Tuleap\GitLFS\HTTP\LFSAPIHTTPAccessControl;
@@ -86,11 +85,7 @@ class LFSBatchController implements DispatchableWithRequestNoAuthz
         if ($json_string === false) {
             throw new \RuntimeException('Can not read the body of the request');
         }
-        try {
-            $batch_request = BatchRequest::buildFromJSONString($json_string);
-        } catch (IncorrectlyFormattedBatchRequestException $exception) {
-            throw new \RuntimeException($exception->getMessage(), 400);
-        }
+        $batch_request = BatchRequest::buildFromJSONString($json_string);
 
         $user = $this->user_retriever->retrieveUser($request, $repository, $batch_request);
 

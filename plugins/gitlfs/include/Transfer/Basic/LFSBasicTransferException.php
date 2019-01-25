@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,6 +20,8 @@
 
 namespace Tuleap\GitLFS\Transfer\Basic;
 
-abstract class LFSBasicTransferException extends \RuntimeException
+use Tuleap\GitLFS\GitLFSException;
+
+abstract class LFSBasicTransferException extends GitLFSException
 {
 }

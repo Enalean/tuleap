@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,6 +20,12 @@
 
 namespace Tuleap\GitLFS\Batch\Request;
 
-final class IncorrectlyFormattedBatchRequestException extends \RuntimeException
+use Tuleap\GitLFS\GitLFSException;
+
+final class IncorrectlyFormattedBatchRequestException extends GitLFSException
 {
+    public function __construct(string $message)
+    {
+        parent::__construct($message, 400);
+    }
 }

@@ -20,7 +20,8 @@
 
 namespace Tuleap\GitLFS\Lock;
 
-class LockDestructionNotAuthorizedException extends \Exception
-{
+use Tuleap\GitLFS\GitLFSException;
 
+final class LockDestructionNotAuthorizedException extends GitLFSException
+{
 }

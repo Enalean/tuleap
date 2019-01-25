@@ -18,14 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\GitLFS\Lock\Request;
+declare(strict_types=1);
 
-use Tuleap\GitLFS\GitLFSException;
+namespace Tuleap\GitLFS;
 
-final class IncorrectlyFormattedReferenceRequestException extends GitLFSException
+abstract class GitLFSException extends \RuntimeException
 {
-    public function __construct(string $message)
-    {
-        parent::__construct($message, 400);
-    }
 }

@@ -22,7 +22,6 @@ namespace Tuleap\GitLFS\Lock\Request;
 
 use Tuleap\GitLFS\HTTP\GitLfsHTTPOperation;
 use Tuleap\GitLFS\HTTP\RequestReference;
-use Tuleap\GitLFS\Lock\Request\IncorrectlyFormattedReferenceRequestException;
 
 class LockDeleteRequest implements GitLfsHTTPOperation
 {

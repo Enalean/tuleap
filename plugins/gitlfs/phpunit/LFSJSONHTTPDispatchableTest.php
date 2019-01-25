@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,11 +18,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\GitLFS;
 
 use HTTPRequest;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Throwable;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
 
@@ -34,7 +37,7 @@ class LFSJSONHTTPDispatchableTest extends TestCase
      * @runInSeparateProcess
      * @dataProvider providerAcceptHeader
      */
-    public function testRequestAcceptingGitLFSResponseAreProcessed($accept_header)
+    public function testRequestAcceptingGitLFSResponseAreProcessed($accept_header) : void
     {
         $dispatchable = \Mockery::mock(DispatchableWithRequestNoAuthz::class);
         $dispatchable->shouldReceive('process')->once();
@@ -51,7 +54,7 @@ class LFSJSONHTTPDispatchableTest extends TestCase
         );
     }
 
-    public function providerAcceptHeader()
+    public function providerAcceptHeader() : array
     {
         return [
             ['application/vnd.git-lfs+json'],
@@ -62,7 +65,7 @@ class LFSJSONHTTPDispatchableTest extends TestCase
     /**
      * @expectedException \RuntimeException
      */
-    public function testRequestNotAcceptingGitLFSResponseAreNotProcessed()
+    public function testRequestNotAcceptingGitLFSResponseAreNotProcessed() : void
     {
         $dispatchable = \Mockery::mock(DispatchableWithRequestNoAuthz::class);
         $dispatchable->shouldReceive('process')->never();
@@ -76,5 +79,38 @@ class LFSJSONHTTPDispatchableTest extends TestCase
             \Mockery::mock(BaseLayout::class),
             []
         );
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testGitLFSErrorsAreGivenAccordingToTheGitLFSSpecification() : void
+    {
+        $dispatchable = \Mockery::mock(DispatchableWithRequestNoAuthz::class);
+
+        $error_message = 'Error message test';
+        $error_code    = 444;
+        $git_lfs_error = new class($error_message, $error_code) extends GitLFSException {
+            public function __construct(string $message, int $code)
+            {
+                parent::__construct($message, $code);
+            }
+        };
+
+        $dispatchable->shouldReceive('process')->andThrows($git_lfs_error);
+
+        $request = \Mockery::mock(HTTPRequest::class);
+        $request->shouldReceive('getFromServer')->with('HTTP_ACCEPT')
+            ->andReturns('application/vnd.git-lfs+json');
+
+        $lfs_json_dispatchable = new LFSJSONHTTPDispatchable($dispatchable);
+        $lfs_json_dispatchable->process(
+            $request,
+            \Mockery::mock(BaseLayout::class),
+            []
+        );
+
+        $this->expectOutputString(json_encode(['message' => $error_message]));
+        $this->assertSame($error_code, http_response_code());
     }
 }
