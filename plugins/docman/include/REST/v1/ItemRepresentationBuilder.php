@@ -97,6 +97,12 @@ class ItemRepresentationBuilder
         $user_representation = new MinimalUserRepresentation();
         $user_representation->build($owner);
 
+        $is_expanded = false;
+        if ($type === ItemRepresentation::TYPE_FOLDER) {
+            $preference = $owner->getPreference("plugin_docman_hide_".$item->getGroupId(). "_" .$item->getId());
+            $is_expanded = $preference !== false;
+        }
+
         $user_can_write = $this->permissions_manager->userCanWrite($current_user, $item->getId());
 
         $item_representation = new ItemRepresentation();
@@ -105,6 +111,7 @@ class ItemRepresentationBuilder
             $user_representation,
             $user_can_write,
             $type,
+            $is_expanded,
             $file_properties,
             $embedded_file_properties,
             $link_properties,

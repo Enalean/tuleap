@@ -86,12 +86,17 @@ class ItemRepresentation
     * @var int {@type int}
     */
     public $parent_id;
+    /**
+     * @var bool {@type bool}
+     */
+    public $is_expanded;
 
     public function build(
         \Docman_Item $item,
         MinimalUserRepresentation $owner,
         $user_can_write,
         $type,
+        bool $is_expanded,
         FilePropertiesRepresentation $file_properties = null,
         EmbeddedFilePropertiesRepresentation $embedded_file_properties = null,
         LinkPropertiesRepresentation $link_properties = null,
@@ -107,6 +112,7 @@ class ItemRepresentation
         $this->embedded_file_properties = $embedded_file_properties;
         $this->link_properties          = $link_properties;
         $this->wiki_properties          = $wiki_properties;
+        $this->is_expanded              = $is_expanded;
 
 
         $parent_id = JsonCast::toInt($item->getParentId());
