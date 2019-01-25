@@ -346,7 +346,7 @@ class DocmanItemCreatorTest extends TestCase
 
         $this->link_version_factory
             ->shouldReceive('create')
-            ->with($created_item, 'Initial version', 'Initial version', time())
+            ->with($created_item, 'Initial version', 'Initial version', $current_time->getTimestamp())
             ->once()
             ->andReturn(true);
 
