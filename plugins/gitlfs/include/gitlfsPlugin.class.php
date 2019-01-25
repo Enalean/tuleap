@@ -44,6 +44,7 @@ use Tuleap\GitLFS\GitPHPDisplay\Detector;
 use Tuleap\GitLFS\LFSObject\LFSObjectDAO;
 use Tuleap\GitLFS\LFSObject\LFSObjectPathAllocator;
 use Tuleap\GitLFS\LFSObject\LFSObjectRetriever;
+use Tuleap\GitLFS\Statistics\Retriever;
 use Tuleap\Project\Quota\ProjectQuotaChecker;
 use Tuleap\PullRequest\Events\PullRequestDiffRepresentationBuild;
 use Tuleap\Request\CollectRoutesEvent;
@@ -97,6 +98,10 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
         if (file_exists(__DIR__ . '/../../pullrequest/include/pullrequestPlugin.class.php')) {
             require_once __DIR__ . '/../../pullrequest/include/pullrequestPlugin.class.php';
             $this->addHook(PullRequestDiffRepresentationBuild::NAME);
+        }
+        if (file_exists(__DIR__ . '/../../statistics/include/statisticsPlugin.class.php')) {
+            require_once __DIR__ . '/../../statistics/include/statisticsPlugin.class.php';
+            $this->addHook(\Tuleap\Statistics\Events\StatisticsRefreshDiskUsage::NAME);
         }
 
         return parent::getHooksAndCallbacks();
@@ -334,6 +339,15 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
     {
         return new \Tuleap\GitLFS\Statistics\Collector(
             $disk_usage_manager->_getDao(),
+            new Retriever(
+                new \Tuleap\GitLFS\Statistics\LFSStatisticsDAO()
+            )
+        );
+    }
+
+    private function getStatisticsRetriever(): Retriever
+    {
+        return new Retriever(
             new \Tuleap\GitLFS\Statistics\LFSStatisticsDAO()
         );
     }
@@ -410,6 +424,17 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
         $event->addPluginsKeys(self::MAX_FILE_SIZE_KEY);
     }
 
+    public function statisticsRefreshDiskUsage(\Tuleap\Statistics\Events\StatisticsRefreshDiskUsage $event): void
+    {
+        $event->addUsageForService(
+            self::SERVICE_SHORTNAME,
+            $this->getStatisticsRetriever()->getProjectDiskUsage(
+                $this->getProjectManager()->getProject($event->getProjectId()),
+                new DateTimeImmutable()
+            )
+        );
+    }
+
     private function getLFSAPIHTTPAccessControl()
     {
         return new \Tuleap\GitLFS\HTTP\LFSAPIHTTPAccessControl(
@@ -441,6 +466,11 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
     private function getUserManager()
     {
         return UserManager::instance();
+    }
+
+    private function getProjectManager(): ProjectManager
+    {
+        return ProjectManager::instance();
     }
 
     private function getGitRepositoryFactory()

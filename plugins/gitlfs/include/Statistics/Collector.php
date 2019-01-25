@@ -26,17 +26,18 @@ class Collector
      * @var \Statistics_DiskUsageDao
      */
     private $disk_usage_dao;
+
     /**
-     * @var LFSStatisticsDAO
+     * @var Retriever
      */
-    private $statistics_dao;
+    private $statistics_retriever;
 
     public function __construct(
         \Statistics_DiskUsageDao $disk_usage_dao,
-        LFSStatisticsDAO $lfs_statistics_dao
+        Retriever $statistics_retriever
     ) {
-        $this->disk_usage_dao = $disk_usage_dao;
-        $this->statistics_dao = $lfs_statistics_dao;
+        $this->disk_usage_dao       = $disk_usage_dao;
+        $this->statistics_retriever = $statistics_retriever;
     }
 
     public function proceedToDiskUsageCollection(array &$params, \DateTimeImmutable $current_time)
@@ -48,7 +49,7 @@ class Collector
         $this->disk_usage_dao->addGroup(
             $project->getID(),
             \gitlfsPlugin::SERVICE_SHORTNAME,
-            $this->statistics_dao->getOccupiedSizeByProjectIDAndExpiration($project->getID(), $current_time->getTimestamp()),
+            $this->statistics_retriever->getProjectDiskUsage($project, $current_time),
             $current_time->getTimestamp()
         );
 

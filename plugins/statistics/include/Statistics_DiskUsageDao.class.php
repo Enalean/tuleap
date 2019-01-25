@@ -310,24 +310,14 @@ class Statistics_DiskUsageDao extends DataAccessObject {
     }
 
 
-    public function searchProject($groupId, $date) {
+    public function searchServicesSizesPerProject($groupId, $date) {
         $sql = 'SELECT service, size'.
-            ' FROM plugin_statistics_diskusage_group '.
-            ' WHERE '.$this->returnDateStatement($date).
-            ' AND group_id = '.$this->da->escapeInt($groupId).
-            ' ORDER BY size DESC';
-        //echo $sql.PHP_EOL;
-        return $this->retrieve($sql);
-    }
-    
-   public function returnTotalSizeProject($groupId, $date) {
-        $sql = 'SELECT sum(size) as size'.
             ' FROM plugin_statistics_diskusage_group '.
             ' WHERE '.$this->returnDateStatement($date).
             ' AND group_id = '.$this->da->escapeInt($groupId);
         return $this->retrieve($sql);
-   }
-
+    }
+    
    public function returnTotalSizeProjectNearDate($group_id, $date) {
         $sql = 'SELECT sum(size) as size'.
             ' FROM plugin_statistics_diskusage_group '.
