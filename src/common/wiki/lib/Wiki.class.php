@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2019. All Rights Reserved.
  * Copyright 2005, STMicroelectronics
  *
  * Originally written by Manuel Vacelet
@@ -143,12 +143,15 @@ class Wiki {
    * @return number of project pages (0 if wiki is empty)
    */
   function getProjectPageCount() {
+      $excluded_pages_db_escaped = [];
+      foreach (array_merge(WikiPage::getAdminPages(), WikiPage::getDefaultPages()) as $excluded_page) {
+          $excluded_pages_db_escaped[] = '"' . db_es($excluded_page) . '"';
+      }
     $res = db_query(' SELECT count(*) as count'
 		    .' FROM wiki_page, wiki_nonempty'
 		    .' WHERE wiki_page.group_id="'.db_ei($this->gid).'"'
 		    .' AND wiki_nonempty.id=wiki_page.id'
-            .' AND wiki_page.pagename NOT IN ("'.implode('","', WikiPage::getDefaultPages()).'",
-                                              "'.implode('","', WikiPage::getAdminPages()).'")');
+            .' AND wiki_page.pagename NOT IN ('.implode(',', $excluded_pages_db_escaped).')');
     
     if(db_numrows($res) > 0) 
       return db_result($res,0,'count');

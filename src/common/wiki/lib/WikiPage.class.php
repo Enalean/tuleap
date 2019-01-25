@@ -1,7 +1,7 @@
 <?php
 /* 
  * Copyright 2005, STMicroelectronics
- * Copyright (c) Enalean, 2014-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2019. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet
  *
@@ -381,7 +381,10 @@ class WikiPage {
      * @return string[] List of pagename
      */
     public function getAllAdminPages() {
-        $WikiPageAdminPages = self::getAdminPages();
+        $admin_pages_db_escaped = [];
+        foreach (self::getDefaultPages() as $admin_page) {
+            $admin_pages_db_escaped[] = '"' . db_es($admin_page) . '"';
+        }
 
         $allPages = array();
 
@@ -389,7 +392,7 @@ class WikiPage {
                         .' FROM wiki_page, wiki_nonempty'
                         .' WHERE wiki_page.group_id="'.db_ei(self::$gid).'"'
                         .' AND wiki_nonempty.id=wiki_page.id'
-                        .' AND wiki_page.pagename IN ("'.implode('","', $WikiPageAdminPages).'")');
+                        .' AND wiki_page.pagename IN ('.implode(',', $admin_pages_db_escaped).')');
         while($row = db_fetch_array($res)) {
           $allPages[]=$row[0];
         }
@@ -402,7 +405,11 @@ class WikiPage {
      * @return string[] List of pagename
      */
     public function getAllInternalPages() {
-        $WikiPageDefaultPages = self::getDefaultPages();
+        $default_pages_db_escaped = [];
+        foreach (self::getDefaultPages() as $default_page) {
+            $default_pages_db_escaped[] = '"' . db_es($default_page) . '"';
+        }
+
 
         $allPages = array();
 
@@ -410,7 +417,7 @@ class WikiPage {
                         .' FROM wiki_page, wiki_nonempty'
                         .' WHERE wiki_page.group_id="'.db_ei(self::$gid).'"'
                         .' AND wiki_nonempty.id=wiki_page.id'
-                        .' AND wiki_page.pagename IN ("'.implode('","', $WikiPageDefaultPages).'")');
+                        .' AND wiki_page.pagename IN ('.implode(',', $default_pages_db_escaped).')');
         while($row = db_fetch_array($res)) {
           $allPages[]=$row[0];
         }
@@ -422,9 +429,12 @@ class WikiPage {
     /**
      * @return string[] List of pagename
      */
-    public function getAllUserPages() {
-        $WikiPageAdminPages = self::getAdminPages();
-        $WikiPageDefaultPages = self::getDefaultPages();
+    public function getAllUserPages()
+    {
+        $excluded_pages_db_escaped = [];
+        foreach (array_merge(self::getAdminPages(), self::getDefaultPages()) as $excluded_page) {
+            $excluded_pages_db_escaped[] = '"' . db_es($excluded_page) . '"';
+        }
 
         $allPages = array();
 
@@ -432,8 +442,7 @@ class WikiPage {
                         .' FROM wiki_page, wiki_nonempty'
                         .' WHERE wiki_page.group_id="'.db_ei(self::$gid).'"'
                         .' AND wiki_nonempty.id=wiki_page.id'
-                        .' AND wiki_page.pagename NOT IN ("'.implode('","', $WikiPageDefaultPages).'",
-                                                          "'.implode('","', $WikiPageAdminPages).'")');
+                        .' AND wiki_page.pagename NOT IN (' . implode(',', $excluded_pages_db_escaped) . ')');
         while($row = db_fetch_array($res)) {
           $allPages[]=$row[0];
         }
