@@ -20,7 +20,6 @@
 
 namespace Tuleap\GitLFS\Download;
 
-use Feedback;
 use GitRepositoryFactory;
 use HTTPRequest;
 use League\Flysystem\FilesystemInterface;
@@ -89,13 +88,8 @@ class FileDownloaderController implements DispatchableWithRequest
         \Tuleap\Project\ServiceInstrumentation::increment('gitlfs');
         $repository = $this->git_repository_factory->getRepositoryById($variables['repo_id']);
 
-        if (! $repository->userCanRead($request->getCurrentUser())) {
-            $layout->addFeedback(
-                Feedback::ERROR,
-                dgettext('tuleap-gitlfs', 'You are not allowed to access this Git repository.')
-            );
-            $layout->redirect('/');
-            return;
+        if ($repository === null || ! $repository->userCanRead($request->getCurrentUser())) {
+            throw new NotFoundException(dgettext('tuleap-git', 'Repository does not exist'));
         }
 
         session_write_close();
@@ -106,12 +100,7 @@ class FileDownloaderController implements DispatchableWithRequest
         );
 
         if ($lfs_object === null) {
-            $layout->addFeedback(
-                Feedback::ERROR,
-                dgettext('tuleap-gitlfs', 'The provided LFS object does not exist.')
-            );
-            $layout->redirect('/');
-            return;
+            throw new NotFoundException(dgettext('tuleap-gitlfs', 'The provided LFS object does not exist.'));
         }
 
         header('Content-Type: application/octet-stream');
