@@ -50,8 +50,8 @@ msgstr "Créer le document"
 msgid "Create folder"
 msgstr "Créer le dossier"
 
-msgid "Creation of folder, wiki page, link, empty item."
-msgstr "Création de dossier, page wiki, de lien, d'élément vide."
+msgid "Creation of folder, file, wiki page, link, empty item."
+msgstr "Création de dossier, fichier, page wiki, de lien, d'élément vide."
 
 msgid "Description"
 msgstr "Description"

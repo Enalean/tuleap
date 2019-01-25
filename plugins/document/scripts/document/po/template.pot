@@ -40,7 +40,7 @@ msgstr ""
 msgid "Create folder"
 msgstr ""
 
-msgid "Creation of folder, wiki page, link, empty item."
+msgid "Creation of folder, file, wiki page, link, empty item."
 msgstr ""
 
 msgid "Description"
