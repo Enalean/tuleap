@@ -81,6 +81,13 @@ class DocmanItemsTest extends DocmanBase
         $this->assertEquals($items[4]['user_can_write'], false);
         $this->assertEquals($items[5]['user_can_write'], false);
 
+        $this->assertEquals($items[0]['is_expanded'], false);
+        $this->assertEquals($items[1]['is_expanded'], false);
+        $this->assertEquals($items[2]['is_expanded'], false);
+        $this->assertEquals($items[3]['is_expanded'], false);
+        $this->assertEquals($items[4]['is_expanded'], false);
+        $this->assertEquals($items[5]['is_expanded'], false);
+
 
         $this->assertEquals($items[0]['file_properties'], null);
         $this->assertEquals($items[1]['file_properties'], null);

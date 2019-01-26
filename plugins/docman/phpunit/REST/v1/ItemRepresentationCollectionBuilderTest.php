@@ -152,6 +152,7 @@ class ItemRepresentationCollectionBuilderTest extends \PHPUnit\Framework\TestCas
             $user_representation,
             true,
             ItemRepresentation::TYPE_FOLDER,
+            false,
             null
         );
 
@@ -182,6 +183,7 @@ class ItemRepresentationCollectionBuilderTest extends \PHPUnit\Framework\TestCas
             $user_representation,
             true,
             ItemRepresentation::TYPE_FILE,
+            false,
             $file_properties
         );
 
@@ -255,14 +257,16 @@ class ItemRepresentationCollectionBuilderTest extends \PHPUnit\Framework\TestCas
             $docman_folder1,
             $user_representation,
             true,
-            ItemRepresentation::TYPE_FOLDER
+            ItemRepresentation::TYPE_FOLDER,
+            false
         );
         $representation2 = new ItemRepresentation();
         $representation2->build(
             $docman_folder2,
             $user_representation,
             true,
-            ItemRepresentation::TYPE_FOLDER
+            ItemRepresentation::TYPE_FOLDER,
+            false
         );
 
         $this->item_representation_builder->shouldReceive('buildItemRepresentation')
