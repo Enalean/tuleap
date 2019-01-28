@@ -288,7 +288,7 @@ class WorkflowFactory
      *
      * @return Workflow the worflow object, or null if there is no workflow
      */
-    public function getWorkflowByTrackerId($tracker_id)
+    public function getWorkflowByTrackerId(?int $tracker_id)
     {
         if (!isset($this->cache_workflowfield[$tracker_id])) {
             $this->cache_workflowfield[$tracker_id] = array(null);
@@ -305,7 +305,7 @@ class WorkflowFactory
      */
     public function clearTrackerWorkflowFromCache(Tracker $tracker)
     {
-        unset($this->cache_workflowfield[$tracker->getId()]);
+        unset($this->cache_workflowfield[(int) $tracker->getId()]);
     }
 
     /**

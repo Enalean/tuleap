@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -531,6 +531,18 @@ class TrackersResource extends AuthenticatedResource
      * <br />
      * /!\ "set_transitions_rules" and "delete_transitions_rules" cannot be used at the same time.
      *
+     * <br/>
+     * Deactivate legacy transitions:
+     * <pre>
+     * {
+     *   "workflow": {
+     *       "is_legacy": false
+     *   }
+     * }
+     * </pre>
+     * <br/>
+     * /!\ A workflow cannot be switched from standard to legacy.
+     *
      * @url PATCH {id}
      * @access protected
      *
@@ -604,7 +616,18 @@ class TrackersResource extends AuthenticatedResource
             );
         }
 
+        if (isset($workflow_query['is_legacy']) && $workflow_query['is_legacy'] === false) {
+            return $this->deactivateLegacyTransitions($tracker);
+        }
+
         throw new I18NRestException(400, dgettext('tuleap-tracker', 'Please provide a valid query.'));
+    }
+
+    private function deactivateLegacyTransitions(Tracker $tracker) : void
+    {
+        $workflow_id = $tracker->getWorkflow()->getId();
+
+        (new \Workflow_Dao())->removeWorkflowLegacyState($workflow_id);
     }
 
     /**
