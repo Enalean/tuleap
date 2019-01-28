@@ -294,6 +294,7 @@ class DocmanItemCreator
 
                 return $this->createDocument(
                     PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE,
+                    $current_time,
                     $parent_item,
                     $user,
                     $project,
