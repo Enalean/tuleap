@@ -30,55 +30,45 @@ use PHPUnit\Framework\TestCase;
 use Tuleap\Tracker\Workflow\PostAction\Update\PostActionCollection;
 use Tuleap\Tracker\Workflow\PostAction\Update\TransitionFactory;
 
-class CIBuildUpdaterTest extends TestCase
+class SetIntValueUpdaterTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
     /**
-     * @var CIBuildUpdater
+     * @var SetIntValueUpdater
      */
     private $updater;
     /**
      *
      * @var MockInterface
      */
-    private $ci_build_repository;
-
-    /**
-     * @var CIBuildValidator | MockInterface
-     */
-    private $validator;
+    private $set_int_value_repository;
 
     /**
      * @before
      */
     public function createUpdater()
     {
-        $this->ci_build_repository = Mockery::mock(CIBuildRepository::class);
-        $this->ci_build_repository
+        $this->set_int_value_repository = Mockery::mock(SetIntValueRepository::class);
+        $this->set_int_value_repository
             ->shouldReceive('deleteAllByTransitionIfIdNotIn')
             ->byDefault();
-        $this->ci_build_repository
+        $this->set_int_value_repository
             ->shouldReceive('update')
             ->byDefault();
 
-        $this->validator = Mockery::mock(CIBuildValidator::class);
-        $this->updater   = new CIBuildUpdater($this->ci_build_repository, $this->validator);
+        $this->updater = new SetIntValueUpdater($this->set_int_value_repository);
     }
 
-    public function testUpdateAddsNewCIBuildActions()
+    public function testUpdateAddsNewSetIntValueActions()
     {
         $transition = TransitionFactory::buildATransition();
         $this->mockFindAllIdsByTransition($transition, [1]);
 
-        $added_action = new CIBuild(null, 'http://example.test');
+        $added_action = new SetIntValue(null, 43, 1);
         $actions      = new PostActionCollection($added_action);
 
-        $this->validator
-            ->shouldReceive('validate')
-            ->withArgs([$actions]);
-
-        $this->ci_build_repository
+        $this->set_int_value_repository
             ->shouldReceive('create')
             ->with($transition, $added_action)
             ->andReturns();
@@ -86,40 +76,15 @@ class CIBuildUpdaterTest extends TestCase
         $this->updater->updateByTransition($actions, $transition);
     }
 
-    /**
-     * @expectedException \Tuleap\Tracker\Workflow\PostAction\Update\Internal\DuplicateCIBuildPostAction
-     */
-    public function testUpdateDoesNothingIfActionsAreNotValid()
+    public function testUpdateUpdatesSetIntValueActionsWhichAlreadyExists()
     {
         $transition = TransitionFactory::buildATransition();
         $this->mockFindAllIdsByTransition($transition, [1]);
 
-        $action  = new CIBuild(1, 'invalid action');
-        $actions = new PostActionCollection($action);
-
-        $this->validator
-            ->shouldReceive('validate')
-            ->withArgs([$actions])
-            ->andThrow(new DuplicateCIBuildPostAction());
-
-        $this->ci_build_repository->shouldNotReceive('deleteAllByTransitionIfIdNotIn', 'create', 'update');
-
-        $this->updater->updateByTransition($actions, $transition);
-    }
-
-    public function testUpdateUpdatesCIBuildActionsWhichAlreadyExists()
-    {
-        $transition = TransitionFactory::buildATransition();
-        $this->mockFindAllIdsByTransition($transition, [1]);
-
-        $updated_action = new CIBuild(1, 'http://example.test');
+        $updated_action = new SetIntValue(1, 43, 1);
         $actions        = new PostActionCollection($updated_action);
 
-        $this->validator
-            ->shouldReceive('validate')
-            ->withArgs([$actions]);
-
-        $this->ci_build_repository
+        $this->set_int_value_repository
             ->shouldReceive('update')
             ->with($updated_action)
             ->andReturns();
@@ -127,20 +92,16 @@ class CIBuildUpdaterTest extends TestCase
         $this->updater->updateByTransition($actions, $transition);
     }
 
-    public function testUpdateDeletesRemovedCIBuildActions()
+    public function testUpdateDeletesRemovedSetIntValueActions()
     {
         $transition = TransitionFactory::buildATransition();
 
         $this->mockFindAllIdsByTransition($transition, [2, 3]);
 
-        $action  = new CIBuild(2, 'http://example.test');
+        $action  = new SetIntValue(2, 43, 1);
         $actions = new PostActionCollection($action);
 
-        $this->validator
-            ->shouldReceive('validate')
-            ->withArgs([$actions]);
-
-        $this->ci_build_repository
+        $this->set_int_value_repository
             ->shouldReceive('deleteAllByTransitionIfIdNotIn')
             ->with($transition, [2])
             ->andReturns();
@@ -153,7 +114,7 @@ class CIBuildUpdaterTest extends TestCase
         array $ids
     ) {
         $existing_ids = new PostActionIdCollection(...$ids);
-        $this->ci_build_repository
+        $this->set_int_value_repository
             ->shouldReceive('findAllIdsByTransition')
             ->withArgs([$transition])
             ->andReturn($existing_ids);

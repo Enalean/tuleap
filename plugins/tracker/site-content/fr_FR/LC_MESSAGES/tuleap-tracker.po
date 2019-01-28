@@ -166,6 +166,12 @@ msgstr "Mauvais format de l'attribut id : numérique attendu."
 msgid "Bad job_url attribute format: string expected."
 msgstr "Mauvais format de l'attribut job_url : chaine de caractères attendu."
 
+msgid "Bad value attribute format: float expected."
+msgstr "L'attribut value a un mauvais format : flottant attendu."
+
+msgid "Bad value attribute format: integer expected."
+msgstr "L'attribut value a un mauvais format : entier attendu."
+
 msgid "Bad value attribute format: string expected."
 msgstr "L'attribut value a un mauvais format : chaîne de caractères attendu."
 
@@ -887,7 +893,8 @@ msgstr "Désabonnés"
 
 #, php-format
 msgid "Unsupported value attribute content: '%s'. Allowed contents are: '%s'"
-msgstr "Contenu de l'attribut value non supporté: '%s'. Contenus autorisé: '%s'"
+msgstr ""
+"Contenu de l'attribut value non supporté: '%s'. Contenus autorisés: '%s'"
 
 msgid "Use"
 msgstr "Utiliser"

@@ -25,6 +25,8 @@ use Luracast\Restler\RestException;
 use TrackerFactory;
 use Transition_PostAction_CIBuildDao;
 use Transition_PostAction_Field_DateDao;
+use Transition_PostAction_Field_FloatDao;
+use Transition_PostAction_Field_IntDao;
 use TransitionFactory;
 use Tuleap\DB\DataAccessObject;
 use Tuleap\DB\TransactionExecutor;
@@ -49,6 +51,10 @@ use Tuleap\Tracker\Workflow\PostAction\Update\Internal\DuplicatePostActionIdsExc
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\InvalidCIBuildPostActionException;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\SetDateValueRepository;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\SetDateValueUpdater;
+use Tuleap\Tracker\Workflow\PostAction\Update\Internal\SetFloatValueRepository;
+use Tuleap\Tracker\Workflow\PostAction\Update\Internal\SetFloatValueUpdater;
+use Tuleap\Tracker\Workflow\PostAction\Update\Internal\SetIntValueRepository;
+use Tuleap\Tracker\Workflow\PostAction\Update\Internal\SetIntValueUpdater;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\UnknownPostActionIdsException;
 use Tuleap\Tracker\Workflow\PostAction\Update\PostActionCollectionUpdater;
 use Tuleap\Tracker\Workflow\Transition\OrphanTransitionException;
@@ -363,11 +369,25 @@ class TransitionsResource extends AuthenticatedResource
      * &nbsp; &nbsp; &nbsp; "job_url": "http://example.com" <br/>
      * &nbsp; &nbsp; }, <br/>
      * &nbsp; &nbsp; { <br/>
-     * &nbsp; &nbsp; &nbsp; "id": null, <br/>
+     * &nbsp; &nbsp; &nbsp; "id": 1, <br/>
      * &nbsp; &nbsp; &nbsp; "type": "set_field_value", <br/>
      * &nbsp; &nbsp; &nbsp; "field_type": "date", <br/>
      * &nbsp; &nbsp; &nbsp; "field_id": 43, <br/>
      * &nbsp; &nbsp; &nbsp; "value": "current" <br/>
+     * &nbsp; &nbsp; }, <br/>
+     * &nbsp; &nbsp; { <br/>
+     * &nbsp; &nbsp; &nbsp; "id": 2, <br/>
+     * &nbsp; &nbsp; &nbsp; "type": "set_field_value", <br/>
+     * &nbsp; &nbsp; &nbsp; "field_type": "int", <br/>
+     * &nbsp; &nbsp; &nbsp; "field_id": 44, <br/>
+     * &nbsp; &nbsp; &nbsp; "value": 3 <br/>
+     * &nbsp; &nbsp; }, <br/>
+     * &nbsp; &nbsp; { <br/>
+     * &nbsp; &nbsp; &nbsp; "id": 2, <br/>
+     * &nbsp; &nbsp; &nbsp; "type": "set_field_value", <br/>
+     * &nbsp; &nbsp; &nbsp; "field_type": "float", <br/>
+     * &nbsp; &nbsp; &nbsp; "field_id": 45, <br/>
+     * &nbsp; &nbsp; &nbsp; "value": 1.23 <br/>
      * &nbsp; &nbsp; } <br/>
      * &nbsp; ] <br/>
      * } <br/>
@@ -523,7 +543,9 @@ class TransitionsResource extends AuthenticatedResource
     {
         return new PostActionCollectionJsonParser(
             new CIBuildJsonParser(),
-            new SetDateValueJsonParser()
+            new SetDateValueJsonParser(),
+            new SetIntValueJsonParser(),
+            new SetFloatValueJsonParser()
         );
     }
 
@@ -542,6 +564,18 @@ class TransitionsResource extends AuthenticatedResource
             new SetDateValueUpdater(
                 new SetDateValueRepository(
                     new Transition_PostAction_Field_DateDao(),
+                    new DataAccessObject()
+                )
+            ),
+            new SetIntValueUpdater(
+                new SetintValueRepository(
+                    new Transition_PostAction_Field_IntDao(),
+                    new DataAccessObject()
+                )
+            ),
+            new SetFloatValueUpdater(
+                new SetFloatValueRepository(
+                    new Transition_PostAction_Field_FloatDao(),
                     new DataAccessObject()
                 )
             )
