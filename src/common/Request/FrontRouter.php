@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -95,7 +95,7 @@ class FrontRouter
                     }
                     break;
             }
-            RequestInstrumentation::increment(200);
+            RequestInstrumentation::increment(http_response_code());
         } catch (NotFoundException $exception) {
             RequestInstrumentation::increment(404);
             $this->error_rendering->rendersError(
