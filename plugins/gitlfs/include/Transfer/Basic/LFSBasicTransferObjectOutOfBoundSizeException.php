@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,6 +24,6 @@ final class LFSBasicTransferObjectOutOfBoundSizeException extends LFSBasicTransf
 {
     public function __construct()
     {
-        parent::__construct('Size of the received object is out of bound of the expected size');
+        parent::__construct('Size of the received object is out of bound of the expected size', 400);
     }
 }

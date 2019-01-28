@@ -24,7 +24,6 @@ use HTTPRequest;
 use Tuleap\GitLFS\HTTP\LFSAPIHTTPAccessControl;
 use Tuleap\GitLFS\HTTP\UserRetriever;
 use Tuleap\GitLFS\Lock\LockRetriever;
-use Tuleap\GitLFS\Lock\Request\IncorrectlyFormattedReferenceRequestException;
 use Tuleap\GitLFS\Lock\Request\LockVerifyRequest;
 use Tuleap\GitLFS\Lock\Response\LockResponseBuilder;
 use Tuleap\Layout\BaseLayout;
@@ -96,11 +95,7 @@ class LFSLockVerifyController implements DispatchableWithRequestNoAuthz
         if ($json_string === false) {
             throw new \RuntimeException('Can not read the body of the request');
         }
-        try {
-            $lock_verify_request = LockVerifyRequest::buildFromJSONString($json_string);
-        } catch (IncorrectlyFormattedReferenceRequestException $exception) {
-            throw new \RuntimeException($exception->getMessage(), 400);
-        }
+        $lock_verify_request = LockVerifyRequest::buildFromJSONString($json_string);
 
         $user = $this->user_retriever->retrieveUser($request, $repository, $lock_verify_request);
 
