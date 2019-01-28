@@ -109,6 +109,7 @@ class DocmanItemCreator
                 }
                 return $this->createDocument(
                     PLUGIN_DOCMAN_ITEM_TYPE_FOLDER,
+                    $current_time,
                     $parent_item,
                     $user,
                     $project,
@@ -126,6 +127,7 @@ class DocmanItemCreator
                 }
                 return $this->createDocument(
                     PLUGIN_DOCMAN_ITEM_TYPE_EMPTY,
+                    $current_time,
                     $parent_item,
                     $user,
                     $project,
@@ -161,6 +163,7 @@ class DocmanItemCreator
                 }
                 return $this->createDocument(
                     PLUGIN_DOCMAN_ITEM_TYPE_WIKI,
+                    $current_time,
                     $parent_item,
                     $user,
                     $project,
@@ -227,6 +230,7 @@ class DocmanItemCreator
                 }
                 return $this->createDocument(
                     PLUGIN_DOCMAN_ITEM_TYPE_LINK,
+                    $current_time,
                     $parent_item,
                     $user,
                     $project,
@@ -268,6 +272,7 @@ class DocmanItemCreator
      */
     private function createDocument(
         $item_type_id,
+        \DateTimeImmutable $current_time,
         Docman_Item $parent_item,
         PFUser $user,
         Project $project,
@@ -288,10 +293,11 @@ class DocmanItemCreator
         );
 
         $params = [
-            'group_id' => $project->getID(),
-            'parent'   => $parent_item,
-            'item'     => $item,
-            'user'     => $user
+            'group_id'      => $project->getID(),
+            'parent'        => $parent_item,
+            'item'          => $item,
+            'user'          => $user,
+            'creation_time' => $current_time
         ];
 
         $item->accept($this->creator_visitor, $params);
