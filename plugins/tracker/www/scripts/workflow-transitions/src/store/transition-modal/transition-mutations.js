@@ -42,6 +42,8 @@ function showModal(state) {
 
 function clearModalShown(state) {
     state.is_modal_shown = false;
+    state.is_modal_operation_failed = false;
+    state.modal_operation_failure_message = null;
 }
 
 function saveCurrentTransition(state, transition) {
