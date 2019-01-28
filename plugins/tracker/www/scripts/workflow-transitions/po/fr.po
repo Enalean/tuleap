@@ -74,6 +74,9 @@ msgstr "Date courante"
 msgid "Dates"
 msgstr "Dates"
 
+msgid "Delete this action"
+msgstr "Supprimer cette action"
+
 msgid "Enable transition rules"
 msgstr "Activer les règles de transition"
 

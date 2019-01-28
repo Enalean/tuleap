@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import Vue from "vue";
 export {
     clearModalShown,
     showModal,
@@ -31,7 +32,8 @@ export {
     updateAuthorizedUserGroupIds,
     savePostActions,
     updatePostAction,
-    addPostAction
+    addPostAction,
+    deletePostAction
 };
 
 function showModal(state) {
@@ -119,4 +121,8 @@ function addPostAction(state) {
         unique_id: `new_${state.new_post_action_unique_id_index}`,
         type: "run_job"
     });
+}
+
+function deletePostAction(state, unique_id) {
+    Vue.delete(state.post_actions_by_unique_id, unique_id);
 }

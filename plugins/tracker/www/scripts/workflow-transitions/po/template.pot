@@ -65,6 +65,9 @@ msgstr ""
 msgid "Dates"
 msgstr ""
 
+msgid "Delete this action"
+msgstr ""
+
 msgid "Enable transition rules"
 msgstr ""
 
