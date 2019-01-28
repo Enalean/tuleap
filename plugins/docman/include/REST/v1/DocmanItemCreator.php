@@ -146,30 +146,7 @@ class DocmanItemCreator
                         sprintf('The wiki service of the project: "%s" is not available', $project->getUnixName())
                     );
                 }
-                if ($docman_item_post_representation->wiki_properties === null) {
-                    throw new RestException(
-                        400,
-                        "Please provide wiki_properties in order to create a wiki document."
-                    );
-                }
-                if ($docman_item_post_representation->file_properties !== null) {
-                    throw new RestException(
-                        400,
-                        '"file_properties" is not null while the given type is "wiki"'
-                    );
-                }
-                if ($docman_item_post_representation->link_properties !== null) {
-                    throw new RestException(
-                        400,
-                        '"link_properties" is not null while the given type is "wiki"'
-                    );
-                }
-                if ($docman_item_post_representation->embedded_properties !== null) {
-                    throw new RestException(
-                        400,
-                        sprintf('"embedded_properties" is not null while the given type is "wiki"')
-                    );
-                }
+                $this->checkPropertiesByType($docman_item_post_representation, ItemRepresentation::TYPE_WIKI);
                 return $this->createDocument(
                     PLUGIN_DOCMAN_ITEM_TYPE_WIKI,
                     $current_time,
@@ -183,30 +160,7 @@ class DocmanItemCreator
                     null
                 );
             case ItemRepresentation::TYPE_FILE:
-                if ($docman_item_post_representation->file_properties === null) {
-                    throw new RestException(
-                        400,
-                        'Providing file properties is mandatory when creating a new file'
-                    );
-                }
-                if ($docman_item_post_representation->wiki_properties !== null) {
-                    throw new RestException(
-                        400,
-                        sprintf('"wiki_properties" is not null while the given type is "file"')
-                    );
-                }
-                if ($docman_item_post_representation->link_properties !== null) {
-                    throw new RestException(
-                        400,
-                        sprintf('"link_properties" is not null while the given type is "file"')
-                    );
-                }
-                if ($docman_item_post_representation->embedded_properties !== null) {
-                    throw new RestException(
-                        400,
-                        sprintf('"embedded_properties" is not null while the given type is "file"')
-                    );
-                }
+                $this->checkPropertiesByType($docman_item_post_representation, ItemRepresentation::TYPE_FILE);
                 return $this->createFileDocument(
                     $parent_item,
                     $user,
@@ -217,30 +171,7 @@ class DocmanItemCreator
                 );
 
             case ItemRepresentation::TYPE_LINK:
-                if ($docman_item_post_representation->link_properties === null) {
-                    throw new RestException(
-                        400,
-                        "Please provide link_properties in order to create a link document."
-                    );
-                }
-                if ($docman_item_post_representation->wiki_properties !== null) {
-                    throw new RestException(
-                        400,
-                        sprintf('"wiki_properties" is not null while the given type is "link"')
-                    );
-                }
-                if ($docman_item_post_representation->file_properties !== null) {
-                    throw new RestException(
-                        400,
-                        sprintf('"file_properties" is not null while the given type is "link"')
-                    );
-                }
-                if ($docman_item_post_representation->embedded_properties !== null) {
-                    throw new RestException(
-                        400,
-                        sprintf('"embedded_properties" is not null while the given type is "link"')
-                    );
-                }
+                $this->checkPropertiesByType($docman_item_post_representation, ItemRepresentation::TYPE_LINK);
                 $link_url   = $docman_item_post_representation->link_properties->link_url;
                 $valid_http = new Rule_Regexp(Valid_LocalURI::URI_REGEXP);
                 $valid_ftp  = new Rule_Regexp(Valid_FTPURI::URI_REGEXP);
@@ -267,30 +198,7 @@ class DocmanItemCreator
                 if ($is_embedded_allowed === false) {
                     throw new RestException(403, 'Embedded files are not allowed');
                 }
-                if ($docman_item_post_representation->embedded_properties === null) {
-                    throw new RestException(
-                        400,
-                        "Please provide embedded_properties in order to create an embedded document."
-                    );
-                }
-                if ($docman_item_post_representation->wiki_properties !== null) {
-                    throw new RestException(
-                        400,
-                        sprintf('"wiki_properties" is not null while the given type is "embedded"')
-                    );
-                }
-                if ($docman_item_post_representation->file_properties !== null) {
-                    throw new RestException(
-                        400,
-                        sprintf('"file_properties" is not null while the given type is "embedded"')
-                    );
-                }
-                if ($docman_item_post_representation->link_properties !== null) {
-                    throw new RestException(
-                        400,
-                        sprintf('"link_properties" is not null while the given type is "embedded"')
-                    );
-                }
+                $this->checkPropertiesByType($docman_item_post_representation, ItemRepresentation::TYPE_EMBEDDED);
 
                 return $this->createDocument(
                     PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE,
@@ -449,6 +357,37 @@ class DocmanItemCreator
             && $this->item_factory->doesTitleCorrespondToExistingFolder($representation->title, $representation->parent_id)
         ) {
             throw new RestException(400, "A folder with same title already exists in the given folder.");
+        }
+    }
+
+    /**
+     * @throws RestException
+     */
+    private function checkPropertiesByType(
+        DocmanItemPOSTRepresentation $docman_item_post_representation,
+        $checked_type
+    ) : void {
+        $types_with_properties = [
+            ItemRepresentation::TYPE_WIKI,
+            ItemRepresentation::TYPE_FILE,
+            ItemRepresentation::TYPE_LINK,
+            ItemRepresentation::TYPE_EMBEDDED
+        ];
+
+        foreach ($types_with_properties as $type) {
+            if ($type === $checked_type && $docman_item_post_representation->{$type . "_properties"} === null) {
+                throw new RestException(
+                    400,
+                    "Please provide " .$type . "_properties in order to create a $checked_type document."
+                );
+            }
+
+            if ($type !== $checked_type && $docman_item_post_representation->{$type . "_properties"} !== null) {
+                throw new RestException(
+                    400,
+                    $type . "_properties" . ' is not null while the given type is "' . $checked_type . '"'
+                );
+            }
         }
     }
 }
