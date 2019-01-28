@@ -133,6 +133,11 @@ function appendSubFolderContent(state, [folder_id, sub_items]) {
 }
 
 function foldFolderContent(state, folder_id) {
+    const index = state.folder_content.findIndex(item => item.id === folder_id);
+
+    if (index !== -1) {
+        state.folder_content[index].is_expanded = false;
+    }
     const children = getFolderUnfoldedDescendants(state, folder_id);
     const folded_content = children.map(item => item.id);
 
@@ -142,6 +147,12 @@ function foldFolderContent(state, folder_id) {
 }
 
 function unfoldFolderContent(state, folder_id) {
+    const index = state.folder_content.findIndex(item => item.id === folder_id);
+
+    if (index !== -1) {
+        state.folder_content[index].is_expanded = true;
+    }
+
     const items_to_unfold = state.folded_by_map[folder_id];
 
     if (!items_to_unfold) {

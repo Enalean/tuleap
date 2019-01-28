@@ -72,10 +72,8 @@ export default {
             return this.folded_items_ids.includes(this.item.id);
         }
     },
-    async mounted() {
-        const user_preferences = await this.$store.dispatch("getFolderShouldBeOpen", this.item.id);
-
-        if (user_preferences.value !== false) {
+    mounted() {
+        if (this.item.is_expanded !== false) {
             this.open();
         }
     },

@@ -23,7 +23,6 @@ import {
     getProject,
     getItem,
     getParents,
-    getUserPreferencesForFolderInProject,
     patchUserPreferenciesForFolderInProject,
     deleteUserPreferenciesForFolderInProject,
     deleteUserPreferenciesForUIInProject
@@ -171,25 +170,6 @@ describe("rest-querier", () => {
                 "Content-Type": "application/json"
             }
         };
-
-        describe("getUserPreferencesForFolderInProject() -", () => {
-            it("should retrieve the current user's preferencies for a given folder", async () => {
-                mockFetchSuccess(tlp.get, {
-                    return_json: {
-                        key: preference_key,
-                        value: false
-                    }
-                });
-
-                await getUserPreferencesForFolderInProject(user_id, project_id, folder_id);
-
-                expect(tlp.get).toHaveBeenCalledWith("/api/users/102/preferences", {
-                    params: {
-                        key: preference_key
-                    }
-                });
-            });
-        });
 
         describe("patchUserPreferenciesForFolderInProject() -", () => {
             it("should set the current user's preferencies for a given folder on 'expanded'", async () => {
