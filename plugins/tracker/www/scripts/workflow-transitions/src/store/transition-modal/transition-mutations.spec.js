@@ -209,14 +209,18 @@ describe("Transition mutations", () => {
     });
 
     describe("deletePostAction", () => {
+        const post_action_to_remove = create("post_action", "presented", {
+            unique_id: "unique_id_to_remove"
+        });
+
         beforeEach(() => {
             state = {
                 post_actions_by_unique_id: {
-                    unique_id_to_remove: create("post_action", "presented"),
+                    unique_id_to_remove: post_action_to_remove,
                     unique_id_to_keep: create("post_action", "presented")
                 }
             };
-            mutations.deletePostAction(state, "unique_id_to_remove");
+            mutations.deletePostAction(state, post_action_to_remove);
         });
 
         it("Removes post action with given unique_id", () => {
