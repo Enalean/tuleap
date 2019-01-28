@@ -51,6 +51,15 @@
                     v-bind:action-id="post_action.unique_id"
                 />
             </post-action>
+            <button
+                class="tlp-button-primary tlp-button-outline tlp-button-small"
+                type="button"
+                v-on:click="addNewPostAction()"
+                v-bind:disabled="is_modal_save_running"
+            >
+                <i class="fa fa-plus tlp-button-icon"></i>
+                <translate>Add another action</translate>
+            </button>
         </template>
         <empty-post-action
             v-else
@@ -64,7 +73,7 @@ import PostActionSkeleton from "./Skeletons/PostActionSkeleton.vue";
 import RunJobAction from "./RunJobAction.vue";
 import SetValueAction from "./SetValueAction.vue";
 import PostAction from "./PostAction.vue";
-import { mapState, mapGetters } from "vuex";
+import { mapState, mapGetters, mapMutations } from "vuex";
 
 export default {
     name: "PostActionsSection",
@@ -76,11 +85,16 @@ export default {
         };
     },
     computed: {
-        ...mapState("transitionModal", ["is_loading_modal"]),
+        ...mapState("transitionModal", ["is_loading_modal", "is_modal_save_running"]),
         ...mapGetters("transitionModal", ["post_actions"]),
         has_post_actions() {
             return this.post_actions && this.post_actions.length > 0;
         }
+    },
+    methods: {
+        ...mapMutations({
+            addNewPostAction: "transitionModal/addPostAction"
+        })
     }
 };
 </script>

@@ -17,15 +17,31 @@
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<template functional>
+<template>
     <div class="empty-pane">
         <div class="tracker-workflow-transition-modal-empty-action">
             <div v-translate>No action is currently defined.</div>
             <div v-translate>Start by adding one.</div>
         </div>
-        <button class="tlp-button-primary tlp-button-outline" type="button" disabled>
+        <button
+            class="tlp-button-primary tlp-button-outline"
+            type="button"
+            v-on:click="addNewPostAction()"
+        >
             <i class="fa fa-plus tlp-button-icon"></i>
             <translate>Add action</translate>
         </button>
     </div>
 </template>
+<script>
+import { mapMutations } from "vuex";
+
+export default {
+    name: "EmptyPostAction",
+    methods: {
+        ...mapMutations({
+            addNewPostAction: "transitionModal/addPostAction"
+        })
+    }
+};
+</script>
