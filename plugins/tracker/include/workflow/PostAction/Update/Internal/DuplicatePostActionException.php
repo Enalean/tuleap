@@ -20,6 +20,6 @@
 
 namespace Tuleap\Tracker\Workflow\PostAction\Update\Internal;
 
-final class DuplicateCIBuildPostAction extends \Exception
+final class DuplicatePostActionException extends \Exception
 {
 }

@@ -29,9 +29,8 @@ interface PostActionUpdater
 {
     /**
      * @throws DataAccessQueryException
-     * @throws DuplicateCIBuildPostAction
+     * @throws InvalidPostActionException
      * @throws UnknownPostActionIdsException
-     * @throws InvalidCIBuildPostActionException
      */
     public function updateByTransition(PostActionCollection $actions, Transition $transition): void;
 }

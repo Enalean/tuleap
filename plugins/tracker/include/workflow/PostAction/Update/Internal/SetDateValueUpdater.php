@@ -24,6 +24,7 @@ namespace Tuleap\Tracker\Workflow\PostAction\Update\Internal;
 use DataAccessQueryException;
 use Transition;
 use Tuleap\Tracker\Workflow\PostAction\Update\PostActionCollection;
+use Tuleap\Tracker\Workflow\Transition\OrphanTransitionException;
 
 class SetDateValueUpdater implements PostActionUpdater
 {
@@ -31,18 +32,27 @@ class SetDateValueUpdater implements PostActionUpdater
      * @var SetDateValueRepository
      */
     private $repository;
+    /**
+     * @var SetDateValueValidator
+     */
+    private $validator;
 
-    public function __construct(SetDateValueRepository $repository)
+    public function __construct(SetDateValueRepository $repository, SetDateValueValidator $validator)
     {
         $this->repository = $repository;
+        $this->validator  = $validator;
     }
 
     /**
      * Update (and replace) all set date value post actions with those included in given collection.
      * @throws DataAccessQueryException
+     * @throws UnknownPostActionIdsException
+     * @throws InvalidPostActionException
+     * @throws OrphanTransitionException
      */
     public function updateByTransition(PostActionCollection $actions, Transition $transition): void
     {
+        $actions->validateSetDateValueActions($this->validator, $transition->getWorkflow()->getTracker());
         $existing_ids_collection = $this->repository->findAllIdsByTransition($transition);
         $diff                    = $actions->compareSetDateValueActionsTo($existing_ids_collection);
 

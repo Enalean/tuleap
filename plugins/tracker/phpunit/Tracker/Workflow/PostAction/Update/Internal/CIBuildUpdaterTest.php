@@ -76,33 +76,12 @@ class CIBuildUpdaterTest extends TestCase
 
         $this->validator
             ->shouldReceive('validate')
-            ->withArgs([$actions]);
+            ->with($added_action);
 
         $this->ci_build_repository
             ->shouldReceive('create')
             ->with($transition, $added_action)
             ->andReturns();
-
-        $this->updater->updateByTransition($actions, $transition);
-    }
-
-    /**
-     * @expectedException \Tuleap\Tracker\Workflow\PostAction\Update\Internal\DuplicateCIBuildPostAction
-     */
-    public function testUpdateDoesNothingIfActionsAreNotValid()
-    {
-        $transition = TransitionFactory::buildATransition();
-        $this->mockFindAllIdsByTransition($transition, [1]);
-
-        $action  = new CIBuild(1, 'invalid action');
-        $actions = new PostActionCollection($action);
-
-        $this->validator
-            ->shouldReceive('validate')
-            ->withArgs([$actions])
-            ->andThrow(new DuplicateCIBuildPostAction());
-
-        $this->ci_build_repository->shouldNotReceive('deleteAllByTransitionIfIdNotIn', 'create', 'update');
 
         $this->updater->updateByTransition($actions, $transition);
     }
@@ -117,7 +96,7 @@ class CIBuildUpdaterTest extends TestCase
 
         $this->validator
             ->shouldReceive('validate')
-            ->withArgs([$actions]);
+            ->with($updated_action);
 
         $this->ci_build_repository
             ->shouldReceive('update')
@@ -138,7 +117,7 @@ class CIBuildUpdaterTest extends TestCase
 
         $this->validator
             ->shouldReceive('validate')
-            ->withArgs([$actions]);
+            ->with($action);
 
         $this->ci_build_repository
             ->shouldReceive('deleteAllByTransitionIfIdNotIn')

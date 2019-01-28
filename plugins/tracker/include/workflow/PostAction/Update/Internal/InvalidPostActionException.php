@@ -20,6 +20,6 @@
 
 namespace Tuleap\Tracker\Workflow\PostAction\Update\Internal;
 
-final class InvalidCIBuildPostActionException extends \Exception
+class InvalidPostActionException extends \Exception
 {
 }

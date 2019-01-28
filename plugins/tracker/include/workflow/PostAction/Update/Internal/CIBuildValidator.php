@@ -22,62 +22,44 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Workflow\PostAction\Update\Internal;
 
-use Tuleap\Tracker\Workflow\PostAction\Update\PostActionCollection;
-use Tuleap\Tracker\Workflow\Update\PostAction;
-
 class CIBuildValidator
 {
     /**
-     * @throws DuplicateCIBuildPostAction
-     * @throws InvalidCIBuildPostActionException
+     * @var PostActionIdValidator
      */
-    public function validate(PostActionCollection $new_post_actions): void
+    private $ids_validator;
+
+    public function __construct(PostActionIdValidator $ids_validator)
     {
-        $ci_builds = $new_post_actions->getCIBuildActions();
-        $ids       = $this->extractPostActionIds(...$ci_builds);
+        $this->ids_validator = $ids_validator;
+    }
 
-        if ($this->hasDuplicateIds(...$ids)) {
-            throw new DuplicateCIBuildPostAction();
+    /**
+     * @throws InvalidPostActionException
+     */
+    public function validate(CIBuild ...$ci_builds): void
+    {
+        try {
+            $this->ids_validator->validate(...$ci_builds);
+        } catch (DuplicatePostActionException $e) {
+            throw new InvalidPostActionException(
+                dgettext('tuleap-tracker', "There should not be duplicate 'run_job' ids.")
+            );
         }
-
         foreach ($ci_builds as $ci_build) {
             $this->validateCIBuild($ci_build);
         }
     }
 
     /**
-     * @return int[]
-     */
-    private function extractPostActionIds(PostAction ...$actions): array
-    {
-        $ids = array_map(
-            function (PostAction $action) {
-                return $action->getId();
-            },
-            $actions
-        );
-        return array_filter(
-            $ids,
-            function ($id) {
-                return $id !== null;
-            }
-        );
-    }
-
-    private function hasDuplicateIds(int ...$ids): bool
-    {
-        return count($ids) !== count(array_unique($ids));
-    }
-
-    /**
-     * @throws InvalidCIBuildPostActionException
+     * @throws InvalidPostActionException
      */
     private function validateCIBuild(CIBuild $ci_build)
     {
         $job_url = $ci_build->getJobUrl();
         if (! $this->isUrlValid($job_url)) {
-            throw new InvalidCIBuildPostActionException(
-                dgettext('tuleap-tracker', 'The job_url attribute must be a valid URL.')
+            throw new InvalidPostActionException(
+                dgettext('tuleap-tracker', "The 'job_url' attribute must be a valid URL.")
             );
         }
     }
