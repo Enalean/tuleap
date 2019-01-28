@@ -180,13 +180,13 @@ class SetDateValueJsonParserTest extends TestCase
      * @expectedException \Tuleap\REST\I18NRestException
      * @expectedExceptionCode 400
      */
-    public function testParseThrowsWhenValueIsNotInt()
+    public function testParseThrowsWhenValueIsNotString()
     {
         $this->parser->parse([
             "type" => "set_field_value",
             "field_type" => "date",
             "field_id" => 43,
-            "value" => "not int"
+            "value" => 99
         ]);
     }
 
@@ -200,7 +200,7 @@ class SetDateValueJsonParserTest extends TestCase
             "type" => "set_field_value",
             "field_type" => "date",
             "field_id" => 43,
-            "value" => 99
+            "value" => "not supported"
         ]);
     }
 }
