@@ -230,4 +230,88 @@ describe("Transition mutations", () => {
             expect(state.post_actions_by_unique_id["unique_id_to_keep"]).not.toBeUndefined();
         });
     });
+
+    describe("updateSetValuePostActionField", () => {
+        const post_action = create("post_action", "presented", {
+            unique_id: "unique_id",
+            field_id: 3
+        });
+        const new_field = create("field", { field_id: 4 });
+        const state = {
+            post_actions_by_unique_id: {
+                unique_id: post_action
+            }
+        };
+
+        const mutatedPostAction = () => {
+            mutations.updateSetValuePostActionField(state, { post_action, new_field });
+            return state.post_actions_by_unique_id.unique_id;
+        };
+
+        it("Updates post action field id", () => {
+            expect(mutatedPostAction().field_id).toEqual(4);
+        });
+
+        describe("when field type change", () => {
+            beforeEach(() => {
+                post_action.field_type = "date";
+                new_field.type = "int";
+            });
+
+            it("Updates post action field type", () => {
+                expect(mutatedPostAction().field_type).toEqual("int");
+            });
+            it("Reset post action id", () => {
+                expect(mutatedPostAction().id).toBeNull();
+            });
+
+            describe("from int to float", () => {
+                beforeEach(() => {
+                    post_action.field_type = "int";
+                    post_action.value = 23;
+                    new_field.type = "float";
+                });
+
+                it("does not update post action value", () => {
+                    expect(mutatedPostAction().value).toEqual(23);
+                });
+            });
+
+            describe("from float to int", () => {
+                beforeEach(() => {
+                    post_action.field_type = "float";
+                    post_action.value = 1.23;
+                    new_field.type = "int";
+                });
+
+                it("converts post action value to int", () => {
+                    expect(mutatedPostAction().value).toEqual(1);
+                });
+            });
+
+            describe("from date", () => {
+                beforeEach(() => {
+                    post_action.field_type = "date";
+                    post_action.value = "current";
+                    new_field.type = "int";
+                });
+
+                it("resets post action value", () => {
+                    expect(mutatedPostAction().value).toBeNull();
+                });
+            });
+
+            describe("to date", () => {
+                beforeEach(() => {
+                    post_action.field_type = "int";
+                    post_action.value = 1.23;
+                    new_field.type = "date";
+                });
+
+                it("resets post action value", () => {
+                    expect(mutatedPostAction().value).toBeNull();
+                });
+            });
+        });
+    });
 });

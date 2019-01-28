@@ -21,6 +21,9 @@
 import { shallowMount } from "@vue/test-utils";
 
 import SetValueAction from "./SetValueAction.vue";
+import DateInput from "./DateInput.vue";
+import FloatInput from "./FloatInput.vue";
+import IntInput from "./IntInput.vue";
 import localVue from "../../support/local-vue.js";
 import { createStoreMock } from "../../support/store-wrapper.spec-helper.js";
 import { create } from "../../support/factories";
@@ -83,10 +86,6 @@ describe("SetValueAction", () => {
 
     afterEach(() => store.reset());
 
-    const date_value_input_selector = '[data-test-type="date-value"]';
-    const int_value_input_selector = '[data-test-type="int-value"]';
-    const float_value_input_selector = '[data-test-type="float-value"]';
-
     it("Shows date field in date fields group", () => {
         let date_group_selector = `optgroup[data-test-type="${DATE_FIELD}-group"]`;
         let date_select_group = wrapper.find(date_group_selector);
@@ -101,7 +100,7 @@ describe("SetValueAction", () => {
         });
 
         it("shows post action value", () => {
-            expect(wrapper.find(date_value_input_selector).element.value).toBe("current");
+            expect(wrapper.find(DateInput).props().value).toBe("current");
         });
     });
 
@@ -113,7 +112,7 @@ describe("SetValueAction", () => {
         });
 
         it("shows value of action", () => {
-            expect(wrapper.find(int_value_input_selector).element.value).toBe("200");
+            expect(wrapper.find(IntInput).props().value).toBe(200);
         });
     });
 
@@ -125,7 +124,7 @@ describe("SetValueAction", () => {
         });
 
         it("shows value of action", () => {
-            expect(wrapper.find(float_value_input_selector).element.value).toBe("12.34");
+            expect(wrapper.find(FloatInput).props().value).toBe(12.34);
         });
     });
 });

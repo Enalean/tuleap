@@ -18,6 +18,8 @@
  */
 
 import Vue from "vue";
+import { INT_FIELD, FLOAT_FIELD } from "../../../../constants/fields-constants.js";
+
 export {
     clearModalShown,
     showModal,
@@ -31,6 +33,7 @@ export {
     updateNotEmptyFieldIds,
     updateAuthorizedUserGroupIds,
     savePostActions,
+    updateSetValuePostActionField,
     updatePostAction,
     addPostAction,
     deletePostAction
@@ -113,6 +116,28 @@ function updatePostAction(state, new_action) {
     const post_actions = { ...state.post_actions_by_unique_id };
     post_actions[new_action.unique_id] = new_action;
     state.post_actions_by_unique_id = post_actions;
+}
+
+function updateSetValuePostActionField(state, { post_action, new_field }) {
+    const new_post_action = {
+        ...post_action,
+        field_id: new_field.field_id
+    };
+
+    if (new_field.type !== new_post_action.field_type) {
+        new_post_action.id = null;
+    }
+    new_post_action.field_type = new_field.type;
+
+    if (post_action.field_type === INT_FIELD && new_field.type === FLOAT_FIELD) {
+        new_post_action.value = post_action.value;
+    } else if (post_action.field_type === FLOAT_FIELD && new_field.type === INT_FIELD) {
+        new_post_action.value = parseInt(post_action.value, 10) || null;
+    } else {
+        new_post_action.value = null;
+    }
+
+    updatePostAction(state, new_post_action);
 }
 
 function addPostAction(state) {

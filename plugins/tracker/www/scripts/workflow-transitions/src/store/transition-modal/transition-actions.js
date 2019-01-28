@@ -72,12 +72,9 @@ async function loadPostActions({ commit }, transition_id) {
 async function saveTransitionRules({ commit, state, getters }) {
     try {
         commit("beginModalSave");
-        const ci_build_post_actions = getters.post_actions.filter(
-            post_action => post_action.type === "run_job"
-        );
         await Promise.all([
             patchTransition(state.current_transition),
-            putPostActions(state.current_transition.id, ci_build_post_actions)
+            putPostActions(state.current_transition.id, getters.post_actions)
         ]);
         commit("clearModalShown");
     } catch (error) {
