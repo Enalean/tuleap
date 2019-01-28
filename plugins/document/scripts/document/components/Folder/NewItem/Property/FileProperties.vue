@@ -44,7 +44,7 @@
 
 <script>
 import { TYPE_FILE } from "../../../../constants.js";
-import { mapState, mapGetters } from "vuex";
+import { mapState } from "vuex";
 import { sprintf } from "sprintf-js";
 import prettyKibibytes from "pretty-kibibytes";
 
@@ -60,7 +60,6 @@ export default {
         };
     },
     computed: {
-        ...mapGetters(["has_file_upload_error"]),
         ...mapState(["max_size_upload"]),
         is_displayed() {
             return this.item.type === TYPE_FILE;
