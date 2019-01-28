@@ -39,6 +39,7 @@ export function uploadFile(context, dropped_file, fake_item, docman_item) {
         onSuccess: async () => {
             const file = await getItem(docman_item.id);
             flagItemAsCreated(context, file);
+            file.level = fake_item.level;
             context.commit("replaceUploadingFileWithActualFile", [fake_item, file]);
             context.commit("removeFileFromUploadsList", fake_item);
         },

@@ -47,7 +47,8 @@ export default {
             MAX_FILES_ERROR: "max_files",
             CREATION_ERROR: "creation_error",
             MAX_SIZE_ERROR: "max_size",
-            ALREADY_EXISTS_ERROR: "already_exists"
+            ALREADY_EXISTS_ERROR: "already_exists",
+            highlighted_folder_id: null
         };
     },
     computed: {
@@ -100,21 +101,27 @@ export default {
             if (this.isDragNDropingOnAModal(event)) {
                 return;
             }
-            this.is_dropzone_highlighted = true;
+
+            this.highlightFolderDropZone(event);
         },
         ondragleave(event) {
             event.preventDefault();
             event.stopPropagation();
-            this.is_dropzone_highlighted = false;
+
+            this.clearHighlight();
         },
         ondrop(event) {
             event.preventDefault();
             event.stopPropagation();
+
             if (this.isDragNDropingOnAModal(event)) {
                 return;
             }
 
-            this.is_dropzone_highlighted = false;
+            const is_uploading_in_subfolder = this.highlighted_folder_id !== null;
+            const dropzone_folder = this.getDropZoneFolder();
+            this.clearHighlight();
+
             if (!this.user_can_dragndrop_in_current_folder) {
                 return;
             }
@@ -141,7 +148,7 @@ export default {
                         item =>
                             item.title === file.name &&
                             item.type !== this.TYPE_FOLDER &&
-                            item.parent_id === this.current_folder.id
+                            item.parent_id === dropzone_folder.id
                     )
                 ) {
                     this.error_modal_shown = this.ALREADY_EXISTS_ERROR;
@@ -149,9 +156,22 @@ export default {
                 }
             }
 
+            let should_display_fake_item = false;
+            if (!is_uploading_in_subfolder) {
+                should_display_fake_item = true;
+            } else {
+                should_display_fake_item = dropzone_folder.is_expanded;
+            }
+
             for (const file of files) {
                 this.$store
-                    .dispatch("addNewUploadFile", [file, this.current_folder, file.name, ""])
+                    .dispatch("addNewUploadFile", [
+                        file,
+                        dropzone_folder,
+                        file.name,
+                        "",
+                        should_display_fake_item
+                    ])
                     .catch(error => {
                         this.error_modal_shown = this.CREATION_ERROR;
                         this.error_modal_reasons.push({ filename: file.name, message: error });
@@ -164,6 +184,34 @@ export default {
         },
         isDragNDropingOnAModal(event) {
             return Boolean(event.target.closest(".tlp-modal"));
+        },
+        clearHighlight() {
+            for (const element of document.querySelectorAll(
+                ".document-tree-item-folder-highlighted"
+            )) {
+                element.classList.remove("document-tree-item-folder-highlighted");
+            }
+
+            this.is_dropzone_highlighted = false;
+            this.highlighted_folder_id = null;
+        },
+        highlightFolderDropZone(event) {
+            this.clearHighlight();
+
+            const closet_row = event.target.closest(".document-tree-item-folder");
+            if (closet_row) {
+                closet_row.classList.add("document-tree-item-folder-highlighted");
+                this.highlighted_folder_id = parseInt(closet_row.dataset.itemId, 10);
+            } else {
+                this.is_dropzone_highlighted = true;
+            }
+        },
+        getDropZoneFolder: function() {
+            if (!this.highlighted_folder_id) {
+                return this.current_folder;
+            }
+
+            return this.folder_content.find(item => item.id === this.highlighted_folder_id);
         }
     }
 };
