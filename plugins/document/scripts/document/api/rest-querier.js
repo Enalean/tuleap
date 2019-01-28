@@ -25,7 +25,6 @@ export {
     getFolderContent,
     getItem,
     getParents,
-    getUserPreferencesForFolderInProject,
     patchUserPreferenciesForFolderInProject,
     deleteUserPreferenciesForFolderInProject,
     deleteUserPreferenciesForUnderConstructionModal,
@@ -97,16 +96,6 @@ function getParents(folder_id) {
             offset: 0
         }
     });
-}
-
-async function getUserPreferencesForFolderInProject(user_id, project_id, folder_id) {
-    const response = await get(`/api/users/${user_id}/preferences`, {
-        params: {
-            key: `plugin_docman_hide_${project_id}_${folder_id}`
-        }
-    });
-
-    return response.json();
 }
 
 async function patchUserPreferenciesForFolderInProject(user_id, project_id, folder_id) {

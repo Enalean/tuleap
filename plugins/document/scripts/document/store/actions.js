@@ -25,7 +25,6 @@ import {
     getFolderContent,
     getItem,
     getProject,
-    getUserPreferencesForFolderInProject,
     patchUserPreferenciesForFolderInProject,
     deleteUserPreferenciesForUIInProject
 } from "../api/rest-querier.js";
@@ -150,22 +149,6 @@ export const loadFolder = (context, folder_id) => {
 
     function shouldWeRemotelyLoadTheFolder(current_folder) {
         return !current_folder || current_folder.id !== folder_id;
-    }
-};
-
-export const getFolderShouldBeOpen = (context, folder_id) => {
-    if (context.state.user_id === 0) {
-        return { value: false };
-    }
-
-    try {
-        return getUserPreferencesForFolderInProject(
-            context.state.user_id,
-            context.state.project_id,
-            folder_id
-        );
-    } catch (exception) {
-        return handleErrors(context, exception);
     }
 };
 
