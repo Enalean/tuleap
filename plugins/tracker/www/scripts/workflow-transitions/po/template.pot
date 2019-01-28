@@ -14,6 +14,9 @@ msgstr ""
 msgid "Add action"
 msgstr ""
 
+msgid "Add another action"
+msgstr ""
+
 msgid "An error occurred"
 msgstr ""
 

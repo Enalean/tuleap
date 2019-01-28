@@ -30,7 +30,8 @@ export {
     updateNotEmptyFieldIds,
     updateAuthorizedUserGroupIds,
     savePostActions,
-    updatePostAction
+    updatePostAction,
+    addPostAction
 };
 
 function showModal(state) {
@@ -108,4 +109,12 @@ function updatePostAction(state, new_action) {
     const post_actions = { ...state.post_actions_by_unique_id };
     post_actions[new_action.unique_id] = new_action;
     state.post_actions_by_unique_id = post_actions;
+}
+
+function addPostAction(state) {
+    state.new_post_action_unique_id_index += 1;
+    updatePostAction(state, {
+        unique_id: `new_${state.new_post_action_unique_id_index}`,
+        type: "run_job"
+    });
 }

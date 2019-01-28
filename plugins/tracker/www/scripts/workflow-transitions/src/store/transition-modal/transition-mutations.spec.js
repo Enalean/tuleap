@@ -183,4 +183,28 @@ describe("Transition mutations", () => {
             expect(state.post_actions_by_unique_id.post_action_id).toBe(new_action);
         });
     });
+
+    describe("addPostAction", () => {
+        beforeEach(() => {
+            state = {
+                new_post_action_unique_id_index: 3,
+                post_actions_by_unique_id: {
+                    run_job_1: create("post_action", "presented")
+                }
+            };
+            mutations.addPostAction(state);
+        });
+
+        it("Increments post action unique_id index", () => {
+            expect(state.new_post_action_unique_id_index).toEqual(4);
+        });
+        it("Adds new ci build post action", () => {
+            let post_action_unique_ids = Object.keys(state.post_actions_by_unique_id);
+            expect(post_action_unique_ids.length).toEqual(2);
+            expect(state.post_actions_by_unique_id["new_4"]).toEqual({
+                unique_id: "new_4",
+                type: "run_job"
+            });
+        });
+    });
 });

@@ -31,7 +31,8 @@ export default {
         is_modal_operation_failed: false,
         modal_operation_failure_message: null,
         user_groups: null,
-        post_actions_by_unique_id: null
+        post_actions_by_unique_id: null,
+        new_post_action_unique_id_index: 0
     },
     getters,
     mutations,

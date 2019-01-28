@@ -22,6 +22,9 @@ msgstr "Actions exécutées automatiquement"
 msgid "Add action"
 msgstr "Ajouter une action"
 
+msgid "Add another action"
+msgstr "Ajouter une nouvelle action"
+
 msgid "An error occurred"
 msgstr "Une erreur est survenue"
 
