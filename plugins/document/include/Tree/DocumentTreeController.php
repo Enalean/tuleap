@@ -39,10 +39,15 @@ class DocumentTreeController implements DispatchableWithRequest, DispatchableWit
      * @var DocumentTreeProjectExtractor
      */
     private $project_extractor;
+    /**
+     * @var \DocmanPluginInfo
+     */
+    private $docman_plugin_info;
 
-    public function __construct(DocumentTreeProjectExtractor $project_extractor)
+    public function __construct(DocumentTreeProjectExtractor $project_extractor, \DocmanPluginInfo $docman_plugin_info)
     {
         $this->project_extractor = $project_extractor;
+        $this->docman_plugin_info = $docman_plugin_info;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
@@ -66,7 +71,8 @@ class DocumentTreeController implements DispatchableWithRequest, DispatchableWit
             new DocumentTreePresenter(
                 $project,
                 $request->getCurrentUser(),
-                $preference === '1'
+                $preference === '1',
+                (bool)$this->docman_plugin_info->getPropertyValueForName('embedded_are_allowed')
             )
         );
 

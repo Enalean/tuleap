@@ -48,14 +48,23 @@ class DocumentTreePresenter
      * @var bool
      */
     public $is_under_construction;
+    /**
+     * @var bool
+     */
+    public $embedded_are_allowed;
 
-    public function __construct(\Project $project, \PFUser $user, bool $is_under_construction)
-    {
+    public function __construct(
+        \Project $project,
+        \PFUser $user,
+        bool $is_under_construction,
+        bool $embedded_are_allowed
+    ) {
         $this->project_id            = $project->getID();
         $this->project_name          = $project->getUnixNameLowerCase();
         $this->user_is_admin         = $user->isAdmin($project->getID());
         $this->user_can_create_wiki  = $project->usesWiki();
         $this->max_size_upload       = \ForgeConfig::get("sys_max_size_upload");
         $this->is_under_construction = $is_under_construction;
+        $this->embedded_are_allowed  = $embedded_are_allowed;
     }
 }

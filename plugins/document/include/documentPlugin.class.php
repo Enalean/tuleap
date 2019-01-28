@@ -31,6 +31,11 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 class documentPlugin extends Plugin // phpcs:ignore
 {
+    /**
+     * @var DocmanPluginInfo
+     */
+    private $old_docman_plugin_info;
+
     public function __construct($id)
     {
         parent::__construct($id);
@@ -60,6 +65,15 @@ class documentPlugin extends Plugin // phpcs:ignore
         return $this->pluginInfo;
     }
 
+    public function getOldPluginInfo() : DocmanPluginInfo
+    {
+        if (!$this->old_docman_plugin_info) {
+            $plugin                       = PluginManager::instance()->getPluginByName('docman');
+            $this->old_docman_plugin_info = new DocmanPluginInfo($plugin);
+        }
+        return $this->old_docman_plugin_info;
+    }
+
     public function getDependencies()
     {
         return ['docman'];
@@ -74,7 +88,7 @@ class documentPlugin extends Plugin // phpcs:ignore
                 return new DocumentTreeUnderConstructionController($this->getProjectExtractor());
             });
             $r->get('/{project_name:[A-z0-9-]+}/[{vue-routing:.*}]', function () {
-                return new DocumentTreeController($this->getProjectExtractor());
+                return new DocumentTreeController($this->getProjectExtractor(), $this->getOldPluginInfo());
             });
         });
     }

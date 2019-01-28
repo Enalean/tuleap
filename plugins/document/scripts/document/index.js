@@ -55,6 +55,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const max_files_dragndrop = Number.parseInt(vue_mount_point.dataset.maxFilesDragndrop, 10);
     const max_size_upload = Number.parseInt(vue_mount_point.dataset.maxSizeUpload, 10);
     const is_under_construction = Boolean(vue_mount_point.dataset.isUnderConstruction);
+    const embedded_are_allowed = Boolean(vue_mount_point.dataset.embeddedAreAllowed);
 
     moment.tz(user_timezone).locale(user_locale);
 
@@ -72,7 +73,8 @@ document.addEventListener("DOMContentLoaded", () => {
             date_time_format,
             max_files_dragndrop,
             max_size_upload,
-            is_under_construction
+            is_under_construction,
+            embedded_are_allowed
         }
     }).$mount(vue_mount_point);
 });

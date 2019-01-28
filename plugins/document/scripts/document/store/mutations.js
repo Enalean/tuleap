@@ -180,7 +180,8 @@ function initApp(
         user_can_create_wiki,
         max_files_dragndrop,
         max_size_upload,
-        is_under_construction
+        is_under_construction,
+        embedded_are_allowed
     ]
 ) {
     state.user_id = user_id;
@@ -192,6 +193,7 @@ function initApp(
     state.max_files_dragndrop = max_files_dragndrop;
     state.max_size_upload = max_size_upload;
     state.is_under_construction = is_under_construction;
+    state.embedded_are_allowed = embedded_are_allowed;
 }
 
 function saveAscendantHierarchy(state, hierarchy) {
