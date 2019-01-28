@@ -125,6 +125,7 @@ class Docman_Actions extends Actions {
      * This function handle file storage regarding user parameters.
      *
      * @access: private
+     *
      */
     function _storeFile($item) {
         $fs       = $this->_getFileStorage();

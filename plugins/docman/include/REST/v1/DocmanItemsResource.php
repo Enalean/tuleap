@@ -24,12 +24,13 @@
 
 namespace Tuleap\Docman\REST\v1;
 
+use Codendi_HTMLPurifier;
 use Docman_Item;
 use Docman_ItemDao;
 use Docman_ItemFactory;
 use Docman_Log;
 use EventManager;
-use Luracast\Restler\RestException;
+use PluginManager;
 use Project;
 use ProjectManager;
 use Tuleap\Docman\Item\ItemIsNotAFolderException;
@@ -118,8 +119,6 @@ class DocmanItemsResource extends AuthenticatedResource
      * /!\ Docman REST routes are under construction and subject to changes /!\
      * </pre>
      *
-     * Warning: only empty, wiki, link and file items can be created.
-     *
      * When creating a new file, you will get an URL where the file needs
      * to be uploaded using the
      * <a href="https://tus.io/protocols/resumable-upload.html">tus resumable upload protocol</a>
@@ -129,7 +128,7 @@ class DocmanItemsResource extends AuthenticatedResource
      * <br/>
      * If you want to create an empty or a folder item, all keys xxx_properties must be null.
      * <br/>
-     * If the document is not an empty document,'type = xxx' MUST match with the key 'xxx_properties'. The others properties types must not be written.
+     * If the document is not an empty or a folder item,'type = xxx' MUST match with the key 'xxx_properties'. The others properties types must not be written.
      * <br/>
      * <br/>
      * Example with the creation of a wiki: <br/>
@@ -148,7 +147,6 @@ class DocmanItemsResource extends AuthenticatedResource
      *
      * @url    POST
      * @access hybrid
-
      * @status 201
      *
      * @return CreatedItemRepresentation
@@ -160,6 +158,14 @@ class DocmanItemsResource extends AuthenticatedResource
      */
     public function post(DocmanItemPOSTRepresentation $docman_item_post_representation)
     {
+        if (isset($docman_item_post_representation->embedded_properties) && $docman_item_post_representation->embedded_properties->content !== '') {
+            $purifier                                                      = Codendi_HTMLPurifier::instance();
+            $docman_item_post_representation->embedded_properties->content = $purifier->purify(
+                $docman_item_post_representation->embedded_properties->content,
+                CODENDI_PURIFIER_BASIC
+            );
+        }
+
         $this->checkAccess();
         $this->sendAllowHeadersWithPost();
 
@@ -181,6 +187,12 @@ class DocmanItemsResource extends AuthenticatedResource
         $docman_plugin = \PluginManager::instance()->getPluginByName('docman');
         $root_path     = $docman_plugin->getPluginInfo()->getPropertyValueForName('docman_root');
 
+        $docman_plugin       = PluginManager::instance()->getPluginByName('docman');
+        $docman_root         = $docman_plugin->getPluginInfo()->getPropertyValueForName('docman_root');
+        $is_embedded_allowed = $docman_plugin->getPluginInfo()->getPropertyValueForName('embedded_are_allowed');
+
+        $docman_file_storage = new \Docman_FileStorage($docman_root);
+
         $docman_item_creator = new DocmanItemCreator(
             $this->getItemFactory($project->getID()),
             new DocumentOngoingUploadRetriever($document_on_going_upload_dao),
@@ -188,7 +200,9 @@ class DocmanItemsResource extends AuthenticatedResource
             new AfterItemCreationVisitor(
                 $this->getPermissionManager(),
                 $this->event_manager,
-                new \Docman_LinkVersionFactory()
+                new \Docman_LinkVersionFactory(),
+                $docman_file_storage,
+                new \Docman_VersionFactory()
             ),
             new EmptyFileToUploadFinisher(
                 new DocumentUploadFinisher(
@@ -207,13 +221,14 @@ class DocmanItemsResource extends AuthenticatedResource
                 $document_upload_path_allocator
             )
         );
-            return $docman_item_creator->create(
-                $parent,
-                $current_user,
-                $project,
-                $docman_item_post_representation,
-                new \DateTimeImmutable()
-            );
+        return $docman_item_creator->create(
+            $parent,
+            $current_user,
+            $project,
+            $docman_item_post_representation,
+            new \DateTimeImmutable(),
+            $is_embedded_allowed
+        );
     }
 
     private function getItemFactory($group_id = null)
@@ -414,12 +429,12 @@ class DocmanItemsResource extends AuthenticatedResource
 
     private function addNotificationEvents(Project $project)
     {
-        $feedback                         = new NullResponseFeedbackWrapper();
-        $notifications_builders           = new NotificationBuilders($feedback, $project, null);
-        $notification_manager             = $notifications_builders->buildNotificationManager();
-        $notification_manager_add         = $notifications_builders->buildNotificationManagerAdd();
-        $notification_manager_delete      = $notifications_builders->buildNotificationManagerDelete();
-        $notification_manager_move        = $notifications_builders->buildNotificationManagerMove();
+        $feedback                    = new NullResponseFeedbackWrapper();
+        $notifications_builders      = new NotificationBuilders($feedback, $project, null);
+        $notification_manager        = $notifications_builders->buildNotificationManager();
+        $notification_manager_add    = $notifications_builders->buildNotificationManagerAdd();
+        $notification_manager_delete = $notifications_builders->buildNotificationManagerDelete();
+        $notification_manager_move   = $notifications_builders->buildNotificationManagerMove();
         $notification_manager_subscribers = $notifications_builders->buildNotificationManagerSubsribers();
 
         $adder = new NotificationEventAdder(
@@ -438,7 +453,7 @@ class DocmanItemsResource extends AuthenticatedResource
     private function addLogEvents()
     {
         $logger = new Docman_Log();
-        $adder =  new LogEventAdder($this->event_manager, $logger);
+        $adder  = new LogEventAdder($this->event_manager, $logger);
 
         $adder->addLogEventManagement();
     }

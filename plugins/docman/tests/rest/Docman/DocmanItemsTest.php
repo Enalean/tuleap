@@ -626,4 +626,54 @@ class DocmanItemsTest extends DocmanBase
         }
         return $items[$index];
     }
+
+    /**
+     * @depends testGetRootId
+     */
+    public function testPostEmbeddedDocument(int $root_id): void
+    {
+        $headers = ['Content-Type' => 'application/json'];
+        $embedded_properties = ['content' => 'step1 : Avoid to sort items in the docman'];
+        $query = json_encode(
+            [
+                'title'           => 'How to become a Tuleap (embedded version)',
+                'description'     => 'A description',
+                'parent_id'       => $root_id,
+                'type'            => 'embedded',
+                'embedded_properties' => $embedded_properties
+            ]
+        );
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post('docman_items', $headers, $query)
+        );
+
+        $this->assertEquals(201, $response->getStatusCode());
+    }
+
+    /**
+     * @depends             testGetRootId
+     * @expectedException \Guzzle\Http\Exception\ClientErrorResponseException
+     * @expectExceptionCode 400
+     */
+    public function testPostEmbeddedReturns400IfTypeAndPropertiesDoesNotMatch(int $root_id): void
+    {
+        $headers         = ['Content-Type' => 'application/json'];
+        $wiki_properties = ['page_name' => 'Ten steps to become a Tuleap'];
+        $query           = json_encode(
+            [
+                'title'           => 'To the future',
+                'description'     => 'A description',
+                'parent_id'       => $root_id,
+                'type'            => 'link',
+                'embedded_properties' => $wiki_properties
+            ]
+        );
+
+        $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post('docman_items', $headers, $query)
+        );
+    }
 }

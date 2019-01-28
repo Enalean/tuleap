@@ -21,6 +21,8 @@
 namespace Tuleap\Docman\REST\v1;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use org\bovigo\vfs\vfsStream;
+use org\bovigo\vfs\vfsStreamDirectory;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Docman\Upload\DocumentOngoingUploadRetriever;
 use Tuleap\Docman\Upload\DocumentToUpload;
@@ -38,6 +40,13 @@ class DocmanItemCreatorTest extends TestCase
     private $document_ongoing_upload_retriever;
     private $document_to_upload_creator;
     private $link_version_factory;
+    private $file_storage;
+    private $version_factory;
+    /**
+     * @var vfsStreamDirectory
+     */
+    private $docman_file_system;
+
     private $empty_file_to_upload_finisher;
 
     public function setUp()
@@ -45,15 +54,21 @@ class DocmanItemCreatorTest extends TestCase
         $this->permissions_manager  = \Mockery::mock(\PermissionsManager::class);
         $this->event_manager        = \Mockery::mock(\EventManager::class);
         $this->link_version_factory = \Mockery::mock(\Docman_LinkVersionFactory::class);
+        $this->file_storage         = \Mockery::mock(\Docman_FileStorage::class);
+        $this->version_factory      = \Mockery::mock(\Docman_VersionFactory::class);
         $this->creator_visitor      = new AfterItemCreationVisitor(
             $this->permissions_manager,
             $this->event_manager,
-            $this->link_version_factory
+            $this->link_version_factory,
+            $this->file_storage,
+            $this->version_factory
         );
 
         $this->item_factory                      = \Mockery::mock(\Docman_ItemFactory::class);
         $this->document_ongoing_upload_retriever = \Mockery::mock(DocumentOngoingUploadRetriever::class);
         $this->document_to_upload_creator        = \Mockery::mock(DocumentToUploadCreator::class);
+
+        $this->directorySetup();
         $this->empty_file_to_upload_finisher     = \Mockery::mock(EmptyFileToUploadFinisher::class);
     }
 
@@ -102,7 +117,8 @@ class DocmanItemCreatorTest extends TestCase
             $user,
             $project,
             $post_representation,
-            $current_time
+            $current_time,
+            true
         );
 
         $this->assertSame(12, $created_item_representation->id);
@@ -156,7 +172,8 @@ class DocmanItemCreatorTest extends TestCase
             $user,
             $project,
             $post_representation,
-            $current_time
+            $current_time,
+            true
         );
 
         $this->assertSame(12, $created_item_representation->id);
@@ -213,7 +230,8 @@ class DocmanItemCreatorTest extends TestCase
             $user,
             $project,
             $post_representation,
-            $current_time
+            $current_time,
+            true
         );
     }
 
@@ -250,7 +268,8 @@ class DocmanItemCreatorTest extends TestCase
             $user,
             $project,
             $post_representation,
-            $current_time
+            $current_time,
+            true
         );
 
         $this->assertSame(12, $created_item_representation->id);
@@ -290,7 +309,8 @@ class DocmanItemCreatorTest extends TestCase
             $user,
             $project,
             $post_representation,
-            $current_time
+            $current_time,
+            true
         );
     }
 
@@ -357,7 +377,8 @@ class DocmanItemCreatorTest extends TestCase
             $user,
             $project,
             $post_representation,
-            $current_time
+            $current_time,
+            true
         );
 
         $this->assertSame(12, $created_item_representation->id);
@@ -390,7 +411,7 @@ class DocmanItemCreatorTest extends TestCase
         $project->shouldReceive('getID')->andReturns(102);
         $this->event_manager->shouldReceive('processEvent');
 
-        $created_item = \Mockery::mock(\Docman_Empty::class);
+        $created_item = \Mockery::mock(\Docman_Folder::class);
         $created_item->shouldReceive('getId')->andReturns(12);
         $created_item->shouldReceive('getParentId')->andReturns(11);
         $created_item->makePartial();
@@ -409,11 +430,184 @@ class DocmanItemCreatorTest extends TestCase
             $user,
             $project,
             $post_representation,
-            $current_time
+            $current_time,
+            true
         );
 
         $this->assertSame(12, $created_item_representation->id);
         $this->assertNull($created_item_representation->file_properties);
+    }
+
+    public function testEmbeddedFileCanBeCreated(): void
+    {
+        $item_creator = new DocmanItemCreator(
+            $this->item_factory,
+            $this->document_ongoing_upload_retriever,
+            $this->document_to_upload_creator,
+            $this->creator_visitor,
+            $this->empty_file_to_upload_finisher
+        );
+
+        $parent_item  = \Mockery::mock(\Docman_Item::class);
+        $user         = \Mockery::mock(\PFUser::class);
+        $project      = \Mockery::mock(\Project::class);
+        $current_time = new \DateTimeImmutable();
+
+        $post_representation                               = new DocmanItemPOSTRepresentation();
+        $post_representation->type                         = ItemRepresentation::TYPE_EMBEDDED;
+        $post_representation->title                        = 'Embedded file';
+        $post_representation->parent_id                    = 11;
+        $post_representation->embedded_properties          = new EmbeddedPropertiesPOSTRepresentation();
+        $post_representation->embedded_properties->content = 'My original content :)';
+
+        $this->document_ongoing_upload_retriever->shouldReceive('isThereAlreadyAnUploadOngoing')->andReturns(false);
+        $parent_item->shouldReceive('getId')->andReturns(11);
+        $user->shouldReceive('getId')->andReturns(222);
+        $project->shouldReceive('getID')->andReturns(102);
+        $this->event_manager->shouldReceive('processEvent');
+
+        $created_item = \Mockery::mock(\Docman_EmbeddedFile::class);
+        $created_item->shouldReceive('getId')->andReturns(12);
+        $created_item->shouldReceive('getParentId')->andReturns(11);
+        $created_item->shouldReceive('getGroupId')->andReturn(102);
+        $created_item->makePartial();
+
+        $this->item_factory
+            ->shouldReceive('createWithoutOrdering')
+            ->with('Embedded file', '', 11, 100, 222, PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE, null, null)
+            ->once()
+            ->andReturns($created_item);
+        $this->permissions_manager->shouldReceive('clonePermissions')->once();
+
+        $this->item_factory->shouldReceive('doesTitleCorrespondToExistingFolder')->andReturn(false);
+        $this->item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
+
+        $created_file_path = $this->docman_file_system->url() . '/Embedded/file';
+        $this->file_storage->shouldReceive('store')->with(
+            $post_representation->embedded_properties->content,
+            $created_item->getGroupId(),
+            $created_item->getId(),
+            1
+        )->andReturns($created_file_path);
+        $created_file_size = $this->docman_file_system->getChild('Embedded/file')->size();
+
+        $new_embedded_version_row = [
+            'item_id'   => $created_item->getId(),
+            'number'    => 1,
+            'user_id'   => $user->getId(),
+            'label'     => '',
+            'changelog' => dgettext('plugin_docman', 'Initial version'),
+            'date'      => time(),
+            'filename'  => basename($created_file_path),
+            'filesize'  => $created_file_size,
+            'filetype'  => 'text/html',
+            'path'      => $created_file_path
+        ];
+
+
+        $version_id = 3;
+        $this->version_factory->shouldReceive('create')->with($new_embedded_version_row)->andReturn($version_id);
+        $this->version_factory->shouldReceive('getCurrentVersionForItem')->with($created_item)->andReturn(
+            new \Docman_Version()
+        );
+
+        $is_embedded_allowed         = true;
+        $created_item_representation = $item_creator->create(
+            $parent_item,
+            $user,
+            $project,
+            $post_representation,
+            $current_time,
+            $is_embedded_allowed
+        );
+
+        $this->assertSame(12, $created_item_representation->id);
+        $this->assertNull($created_item_representation->file_properties);
+    }
+
+    /**
+     * @expectedException \Luracast\Restler\RestException
+     * @expectedExceptionCode 403
+     */
+    public function testEmbeddedFileCannotBeCreatedIfDocmanDoesNotAllowEmbedded(): void
+    {
+        $item_creator = new DocmanItemCreator(
+            $this->item_factory,
+            $this->document_ongoing_upload_retriever,
+            $this->document_to_upload_creator,
+            $this->creator_visitor,
+            $this->empty_file_to_upload_finisher
+        );
+
+        $parent_item  = \Mockery::mock(\Docman_Item::class);
+        $user         = \Mockery::mock(\PFUser::class);
+        $project      = \Mockery::mock(\Project::class);
+        $current_time = new \DateTimeImmutable();
+
+        $post_representation                               = new DocmanItemPOSTRepresentation();
+        $post_representation->type                         = ItemRepresentation::TYPE_EMBEDDED;
+        $post_representation->title                        = 'Embedded file';
+        $post_representation->parent_id                    = 11;
+        $post_representation->embedded_properties          = new EmbeddedPropertiesPOSTRepresentation();
+        $post_representation->embedded_properties->content = 'My original content failed :(';
+
+        $this->document_ongoing_upload_retriever->shouldReceive('isThereAlreadyAnUploadOngoing')->andReturns(false);
+        $parent_item->shouldReceive('getId')->andReturns(11);
+        $user->shouldReceive('getId')->andReturns(222);
+        $project->shouldReceive('getID')->andReturns(102);
+        $this->event_manager->shouldReceive('processEvent')->never();
+
+        $created_item = \Mockery::mock(\Docman_EmbeddedFile::class);
+        $created_item->shouldReceive('getId')->andReturns(12);
+        $created_item->shouldReceive('getParentId')->andReturns(11);
+        $created_item->shouldReceive('getGroupId')->andReturn(102);
+        $created_item->makePartial();
+
+        $this->item_factory
+            ->shouldReceive('createWithoutOrdering')
+            ->with('Embedded file', '', 11, 100, 222, PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE, null, null)
+            ->never();
+        $this->permissions_manager->shouldReceive('clonePermissions')->never();
+
+        $this->item_factory->shouldReceive('doesTitleCorrespondToExistingFolder')->andReturn(false);
+        $this->item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
+
+        $created_path_file = '/path/to/my/file';
+        $this->file_storage->shouldReceive('store')->with(
+            $post_representation->embedded_properties->content,
+            $created_item->getGroupId(),
+            $created_item->getId(),
+            1
+        )->never();
+
+        $new_embedded_version_row = [
+            'item_id'   => $created_item->getId(),
+            'number'    => 1,
+            'user_id'   => $user->getId(),
+            'label'     => '',
+            'changelog' => dgettext('plugin_docman', 'Initial version'),
+            'date'      => time(),
+            'filename'  => basename($created_path_file),
+            'filesize'  => 10,
+            'filetype'  => 'text/html',
+            'path'      => $created_path_file
+        ];
+
+        $version_id = 3;
+        $this->version_factory->shouldReceive('create')->with($new_embedded_version_row)->andReturn($version_id);
+        $this->version_factory->shouldReceive('getCurrentVersionForItem')->with($created_item)->andReturn(
+            new \Docman_Version()
+        );
+
+        $is_embedded_allowed = false;
+        $item_creator->create(
+            $parent_item,
+            $user,
+            $project,
+            $post_representation,
+            $current_time,
+            $is_embedded_allowed
+        );
     }
 
     /**
@@ -464,7 +658,8 @@ class DocmanItemCreatorTest extends TestCase
             $user,
             $project,
             $post_representation,
-            $current_time
+            $current_time,
+            true
         );
     }
 
@@ -499,7 +694,20 @@ class DocmanItemCreatorTest extends TestCase
             $user,
             $project,
             $post_representation,
-            $current_time
+            $current_time,
+            true
+        );
+    }
+
+    private function directorySetup()
+    {
+        $this->docman_file_system = vfsStream::setup(
+            'docman_root',
+            777,
+            [
+                'Embedded' => ['file' => 'Freak no more'],
+                'File'     => []
+            ]
         );
     }
 }

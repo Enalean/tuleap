@@ -35,7 +35,7 @@ class DocmanItemPOSTRepresentation
      */
     public $parent_id;
     /**
-     * @var string Item type {@choice empty,wiki,file,link,folder} {@from body} {@required true}
+     * @var string Item type {@choice empty,wiki,file,link,embedded,folder} {@from body} {@required true}
      */
     public $type;
     /**
@@ -50,4 +50,8 @@ class DocmanItemPOSTRepresentation
      * @var LinkPropertiesPOSTRepresentation {@type \Tuleap\Docman\REST\v1\LinkPropertiesPOSTRepresentation} {@from body} {@required false}
      */
     public $link_properties = null;
+    /**
+     * @var EmbeddedPropertiesPOSTRepresentation {@type \Tuleap\Docman\REST\v1\EmbeddedPropertiesPOSTRepresentation} {@from body} {@required false}
+     */
+    public $embedded_properties = null;
 }
