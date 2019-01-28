@@ -96,7 +96,7 @@ describe("SetValueAction", () => {
     describe("when post action sets a date field", () => {
         beforeEach(() => wrapper.setProps({ actionId: "set_date_value_action_id" }));
 
-        fit("select corresponding date field", () => {
+        it("select corresponding date field", () => {
             expect(wrapper.vm.post_action_field).toEqual(date_field);
         });
 
