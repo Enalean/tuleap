@@ -52,7 +52,7 @@ import ModalHeader from "./ModalHeader.vue";
 import ModalFooter from "./ModalFooter.vue";
 import ModalFeedback from "./ModalFeedback.vue";
 import FileProperties from "./Property/FileProperties.vue";
-import { TYPE_EMPTY } from "../../../constants.js";
+import { TYPE_FILE } from "../../../constants.js";
 
 export default {
     name: "NewItemModal",
@@ -71,7 +71,7 @@ export default {
             default_item: {
                 title: "",
                 description: "",
-                type: TYPE_EMPTY,
+                type: TYPE_FILE,
                 link_properties: {
                     link_url: ""
                 },
