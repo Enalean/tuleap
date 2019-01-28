@@ -29,6 +29,7 @@ class SiteCache {
     public function invalidatePluginBasedCaches() {
         $this->invalidateTemplateEngine();
         $this->invalidateRestler();
+        $this->invalidateFrontRouter();
         $this->invalidateLanguage();
         $this->invalidateWSDL();
         $this->invalidatePlugin();
@@ -45,6 +46,12 @@ class SiteCache {
         $this->logger->info('Invalidate Restler cache');
         $restler = new RestlerCache();
         $restler->invalidateCache();
+    }
+
+    private function invalidateFrontRouter()
+    {
+        $this->logger->info('Invalidate FrontRouter cache');
+        \Tuleap\Request\FrontRouter::invalidateCache();
     }
 
     private function invalidateLanguage() {
@@ -111,6 +118,8 @@ class SiteCache {
             ForgeConfig::getApplicationUserLogin(),
             array('php')
         );
+
+        \Tuleap\Request\FrontRouter::restoreOwnership($this->logger, $backend);
 
         PluginManager::instance()->restoreOwnershipOnCacheFile($this->logger, $backend);
     }

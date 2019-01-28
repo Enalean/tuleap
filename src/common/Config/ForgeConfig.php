@@ -152,4 +152,9 @@ class ForgeConfig {
     {
         return trim(self::get('homedir_prefix')) !== '';
     }
+
+    public static function getCacheDir()
+    {
+        return self::get('codendi_cache_dir');
+    }
 }

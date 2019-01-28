@@ -22,6 +22,7 @@
 namespace Tuleap\Request;
 
 use Mockery;
+use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
 use PluginManager;
 use Tuleap\Layout\BaseLayout;
@@ -65,6 +66,9 @@ class FrontRouterTest extends TestCase
         $this->theme_manager->shouldReceive('getBurningParrot')->andReturn($this->burning_parrot);
         $this->theme_manager->shouldReceive('getTheme')->andReturn($this->layout);
 
+        \ForgeConfig::store();
+        \ForgeConfig::set('codendi_cache_dir', vfsStream::setup()->url());
+
         $this->router = new FrontRouter(
             $this->route_collector,
             $this->url_verification_factory,
@@ -81,6 +85,7 @@ class FrontRouterTest extends TestCase
         unset($_SERVER['REQUEST_URI']);
         unset($GLOBALS['HTML']);
         unset($GLOBALS['Response']);
+        \ForgeConfig::restore();
         parent::tearDown();
     }
 

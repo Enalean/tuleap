@@ -21,13 +21,12 @@
 
 namespace Tuleap\Request;
 
+use Backend;
 use FastRoute;
 use HTTPRequest;
 use Logger;
 use ThemeManager;
-use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\ErrorRendering;
-use Tuleap\Theme\BurningParrot\BurningParrotTheme;
 use URLVerificationFactory;
 
 class FrontRouter
@@ -155,9 +154,39 @@ class FrontRouter
 
     private function getDispatcher()
     {
-        return FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) {
-            $this->route_collector->collect($r);
-        });
+        return FastRoute\cachedDispatcher(
+            function (FastRoute\RouteCollector $r) {
+                $this->route_collector->collect($r);
+            },
+            [
+                'cacheFile' => self::getCacheFile(),
+            ]
+        );
+    }
+
+    public static function invalidateCache(): void
+    {
+        if (file_exists(self::getCacheFile())) {
+            unlink(self::getCacheFile());
+        }
+    }
+
+    private static function getCacheFile(): string
+    {
+        return \ForgeConfig::getCacheDir() . '/web_routes.php';
+    }
+
+    public static function restoreOwnership(Logger $logger, Backend $backend): void
+    {
+        if (file_exists(self::getCacheFile())) {
+            $logger->debug('Restore ownership on '.self::getCacheFile());
+            $backend->changeOwnerGroupMode(
+                self::getCacheFile(),
+                \ForgeConfig::getApplicationUserLogin(),
+                \ForgeConfig::getApplicationUserLogin(),
+                0640
+            );
+        }
     }
 
     /**
