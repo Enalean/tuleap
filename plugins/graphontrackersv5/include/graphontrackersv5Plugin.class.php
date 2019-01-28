@@ -353,16 +353,20 @@ class GraphOnTrackersV5Plugin extends Plugin
         return $include_assets;
     }
 
+    public function routeGetChart(): ChartDataController
+    {
+        return new ChartDataController(
+            Tracker_ReportFactory::instance(),
+            Tracker_Report_RendererFactory::instance(),
+            GraphOnTrackersV5_ChartFactory::instance()
+        );
+    }
+
     public function collectRoutesEvent(CollectRoutesEvent $event)
     {
         $event->getRouteCollector()->get(
             "/plugins/graphontrackersv5/report/{report_id:\d+}/renderer/{renderer_id:-?\d+}/chart/{chart_id:-?\d+}",
-            function () {
-            return new ChartDataController(
-                Tracker_ReportFactory::instance(),
-                Tracker_Report_RendererFactory::instance(),
-                GraphOnTrackersV5_ChartFactory::instance()
-            );
-        });
+            $this->getRouteHandler('routeGetChart')
+        );
     }
 }

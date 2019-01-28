@@ -69,6 +69,8 @@ use Tuleap\Tracker\Notifications\NotificationsForProjectMemberCleaner;
 use Tuleap\Tracker\Notifications\RecipientsManager;
 use Tuleap\Tracker\Notifications\Settings\NotificationsAdminSettingsDisplayController;
 use Tuleap\Tracker\Notifications\Settings\NotificationsAdminSettingsUpdateController;
+use Tuleap\Tracker\Notifications\Settings\NotificationsUserSettingsDisplayController;
+use Tuleap\Tracker\Notifications\Settings\NotificationsUserSettingsUpdateController;
 use Tuleap\Tracker\Notifications\Settings\UserNotificationSettingsDAO;
 use Tuleap\Tracker\Notifications\Settings\UserNotificationSettingsRetriever;
 use Tuleap\Tracker\Notifications\TrackerForceNotificationsLevelCommand;
@@ -1627,88 +1629,114 @@ class trackerPlugin extends Plugin {
         $event->setUserList($autocompleted_user_list_filtered);
     }
 
+    public function routeLegacyController(): \Tuleap\Tracker\TrackerPluginDefaultController
+    {
+        return new \Tuleap\Tracker\TrackerPluginDefaultController(new TrackerManager);
+    }
+
+    public function routeGetNotifications(): NotificationsAdminSettingsDisplayController
+    {
+        return new NotificationsAdminSettingsDisplayController(
+            $this->getTrackerFactory(),
+            new TrackerManager,
+            $this->getUserManager()
+
+        );
+    }
+
+    public function routePostNotifications(): NotificationsAdminSettingsUpdateController
+    {
+        return new NotificationsAdminSettingsUpdateController(
+            $this->getTrackerFactory(),
+            $this->getUserManager()
+        );
+    }
+
+    public function routeGetNotificationsMy(): NotificationsUserSettingsDisplayController
+    {
+        return new NotificationsUserSettingsDisplayController(
+            TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR . '/notifications/'),
+            $this->getTrackerFactory(),
+            new TrackerManager,
+            new UserNotificationSettingsRetriever(
+                new Tracker_GlobalNotificationDao,
+                new UnsubscribersNotificationDAO,
+                new UserNotificationOnlyStatusChangeDAO
+            )
+        );
+    }
+
+    public function routePostNotificationsMy(): NotificationsUserSettingsUpdateController
+    {
+        return new NotificationsUserSettingsUpdateController(
+            $this->getTrackerFactory(),
+            new UserNotificationSettingsDAO,
+            new ProjectHistoryDao
+        );
+    }
+
+    public function routePostWebhooksDelete(): WebhookDeleteController
+    {
+        return new WebhookDeleteController(
+            new WebhookFactory(new WebhookDao()),
+            $this->getTrackerFactory(),
+            new WebhookDao()
+        );
+    }
+
+    public function routePostWebhooksCreate(): WebhookCreateController
+    {
+        return new WebhookCreateController(
+            new WebhookDao(),
+            $this->getTrackerFactory(),
+            new WebhookURLValidator()
+        );
+    }
+
+    public function routePostWebhooksEdit(): WebhookEditController
+    {
+        return new WebhookEditController(
+            new WebhookFactory(new WebhookDao()),
+            TrackerFactory::instance(),
+            new WebhookDao(),
+            new WebhookURLValidator()
+        );
+    }
+
+    public function routeGetWorkflowTransitions(): WorkflowTransitionController
+    {
+        return new WorkflowTransitionController(
+            $this->getTrackerFactory(),
+            new TrackerManager,
+            new WorkflowMenuTabPresenterBuilder()
+        );
+    }
+
+    public function routePostWorkflowLegacyTransitions(): WorkflowLegacyController
+    {
+        return new WorkflowLegacyController(
+            $this->getTrackerFactory(),
+            new Workflow_Dao()
+        );
+    }
+
     public function collectRoutesEvent(\Tuleap\Request\CollectRoutesEvent $event)
     {
         $event->getRouteCollector()->addGroup(TRACKER_BASE_URL, function(FastRoute\RouteCollector $r) {
-            $r->addRoute(['GET', 'POST'],'[/[index.php]]',  function () {
-                return new \Tuleap\Tracker\TrackerPluginDefaultController(new TrackerManager);
-            });
-            $r->get('/notifications/{id:\d+}/', function () {
-                return new  NotificationsAdminSettingsDisplayController(
-                    $this->getTrackerFactory(),
-                    new TrackerManager,
-                    $this->getUserManager()
+            $r->addRoute(['GET', 'POST'],'[/[index.php]]', $this->getRouteHandler('routeLegacyController'));
 
-                );
-            });
-            $r->post('/notifications/{id:\d+}/', function () {
-                return new  NotificationsAdminSettingsUpdateController(
-                    $this->getTrackerFactory(),
-                    $this->getUserManager()
-                );
-            });
-            $r->get('/notifications/my/{id:\d+}/', function () {
-                return new  \Tuleap\Tracker\Notifications\Settings\NotificationsUserSettingsDisplayController(
-                    TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR . '/notifications/'),
-                    $this->getTrackerFactory(),
-                    new TrackerManager,
-                    new UserNotificationSettingsRetriever(
-                        new Tracker_GlobalNotificationDao,
-                        new UnsubscribersNotificationDAO,
-                        new UserNotificationOnlyStatusChangeDAO
-                    )
-                );
-            });
-            $r->post('/notifications/my/{id:\d+}/', function () {
-                return new  \Tuleap\Tracker\Notifications\Settings\NotificationsUserSettingsUpdateController(
-                    $this->getTrackerFactory(),
-                    new UserNotificationSettingsDAO,
-                    new ProjectHistoryDao
-                );
-            });
+            $r->get('/notifications/{id:\d+}/', $this->getRouteHandler('routeGetNotifications'));
+            $r->post('/notifications/{id:\d+}/', $this->getRouteHandler('routePostNotifications'));
+            $r->get('/notifications/my/{id:\d+}/', $this->getRouteHandler('routeGetNotificationsMy'));
+            $r->post('/notifications/my/{id:\d+}/', $this->getRouteHandler('routePostNotificationsMy'));
 
-            $r->post('/webhooks/delete', function () {
-                return new WebhookDeleteController(
-                    new WebhookFactory(new WebhookDao()),
-                    $this->getTrackerFactory(),
-                    new WebhookDao()
-                );
-            });
+            $r->post('/webhooks/delete', $this->getRouteHandler('routePostWebhooksDelete'));
+            $r->post('/webhooks/create', $this->getRouteHandler('routePostWebhooksCreate'));
+            $r->post('/webhooks/edit', $this->getRouteHandler('routePostWebhooksEdit'));
 
-            $r->post('/webhooks/create', function () {
-                return new WebhookCreateController(
-                    new WebhookDao(),
-                    $this->getTrackerFactory(),
-                    new WebhookURLValidator()
-                );
-            });
+            $r->get('/workflow/{tracker_id:\d+}/transitions', $this->getRouteHandler('routeGetWorkflowTransitions'));
 
-            $r->post(
-                '/webhooks/edit',
-                function () {
-                    return new WebhookEditController(
-                        new WebhookFactory(new WebhookDao()),
-                        TrackerFactory::instance(),
-                        new WebhookDao(),
-                        new WebhookURLValidator()
-                    );
-            }
-            );
-
-            $r->get('/workflow/{tracker_id:\d+}/transitions', function () {
-                return new WorkflowTransitionController(
-                    $this->getTrackerFactory(),
-                    new TrackerManager,
-                    new WorkflowMenuTabPresenterBuilder()
-                );
-            });
-
-            $r->post('/workflow/{tracker_id:\d+}/legacy_transitions', function () {
-                return new WorkflowLegacyController(
-                    $this->getTrackerFactory(),
-                    new Workflow_Dao()
-                );
-            });
+            $r->post('/workflow/{tracker_id:\d+}/legacy_transitions', $this->getRouteHandler('routePostWorkflowLegacyTransitions'));
         });
     }
 

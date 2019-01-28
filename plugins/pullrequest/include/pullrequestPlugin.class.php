@@ -616,34 +616,39 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
         }
     }
 
+    public function routePostRepositorySettings(): RepoManagementController
+    {
+        $repository_factory = new GitRepositoryFactory(new GitDao(), ProjectManager::instance());
+        $fine_grained_dao   = new FineGrainedDao();
+
+        return new RepoManagementController(
+            new MergeSettingDAO(),
+            $repository_factory,
+            new GitPermissionsManager(
+                new Git_PermissionsDao(),
+                new Git_SystemEventManager(SystemEventManager::instance(), $repository_factory),
+                $fine_grained_dao,
+                new FineGrainedRetriever($fine_grained_dao)
+            )
+        );
+    }
+
+    public function routePostDefaultSettings(): DefaultSettingsController
+    {
+        return new DefaultSettingsController(new MergeSettingDAO(), new ProjectHistoryDao());
+    }
+
     public function collectRoutesEvent(CollectRoutesEvent $event)
     {
         $event->getRouteCollector()->post(
             $this->getPluginPath() . '/repository-settings',
-            function () {
-                $repository_factory = new GitRepositoryFactory(new GitDao(), ProjectManager::instance());
-                $fine_grained_dao   = new FineGrainedDao();
-
-                return new RepoManagementController(
-                    new MergeSettingDAO(),
-                    $repository_factory,
-                    new GitPermissionsManager(
-                        new Git_PermissionsDao(),
-                        new Git_SystemEventManager(SystemEventManager::instance(), $repository_factory),
-                        $fine_grained_dao,
-                        new FineGrainedRetriever($fine_grained_dao)
-                    )
-                );
-            }
+            $this->getRouteHandler('routePostRepositorySettings')
         );
         $event->getRouteCollector()->post(
             $this->getPluginPath() . '/default-settings',
-            function () {
-                return new DefaultSettingsController(new MergeSettingDAO(), new ProjectHistoryDao());
-            }
+            $this->getRouteHandler('routePostDefaultSettings')
         );
     }
-
 
     public function repositoryExternalNavigationTabsCollector(RepositoryExternalNavigationTabsCollector $event)
     {

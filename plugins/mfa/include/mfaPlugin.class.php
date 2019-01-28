@@ -58,36 +58,48 @@ class mfaPlugin  extends Plugin // @codingStandardsIgnoreLine
         return $this->pluginInfo;
     }
 
+    public function routeGetEnroll(): EnrollmentDisplayController
+    {
+        return new EnrollmentDisplayController(
+            TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates/'),
+            $this->getTOTPEnroller()
+        );
+    }
+
+    public function routePostEnroll(): EnrollmentRegisterController
+    {
+        return new EnrollmentRegisterController(
+            $this->getTOTPEnroller()
+        );
+    }
+
+    public function routeGetEnrollTest(): TrialAuthenticationDisplayController
+    {
+        return new TrialAuthenticationDisplayController(
+            TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates/'),
+            $this->getTOTPEnroller()
+        );
+    }
+
+    public function routePostEnrollTest(): TrialAuthenticationVerifierController
+    {
+        return new TrialAuthenticationVerifierController(
+            new TOTPRetriever(
+                new TOTPEnrollmentDAO(),
+                (new KeyFactory())->getEncryptionKey(),
+                TOTPModeBuilder::build()
+            ),
+            new TOTPValidator()
+        );
+    }
+
     public function collectRoutesEvent(\Tuleap\Request\CollectRoutesEvent $event)
     {
         $event->getRouteCollector()->addGroup($this->getPluginPath(), function (FastRoute\RouteCollector $r) {
-            $r->get('/enroll', function () {
-                return new EnrollmentDisplayController(
-                    TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates/'),
-                    $this->getTOTPEnroller()
-                );
-            });
-            $r->post('/enroll', function () {
-                return new EnrollmentRegisterController(
-                    $this->getTOTPEnroller()
-                );
-            });
-            $r->get('/enroll/test', function () {
-                return new TrialAuthenticationDisplayController(
-                    TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates/'),
-                    $this->getTOTPEnroller()
-                );
-            });
-            $r->post('/enroll/test', function () {
-                return new TrialAuthenticationVerifierController(
-                    new TOTPRetriever(
-                        new TOTPEnrollmentDAO(),
-                        (new KeyFactory())->getEncryptionKey(),
-                        TOTPModeBuilder::build()
-                    ),
-                    new TOTPValidator()
-                );
-            });
+            $r->get('/enroll', $this->getRouteHandler('routeGetEnroll'));
+            $r->post('/enroll', $this->getRouteHandler('routePostEnroll'));
+            $r->get('/enroll/test', $this->getRouteHandler('routeGetEnrollTest'));
+            $r->post('/enroll/test', $this->getRouteHandler('routePostEnrollTest'));
         });
     }
 

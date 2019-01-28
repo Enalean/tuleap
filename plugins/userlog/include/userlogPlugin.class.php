@@ -122,10 +122,13 @@ class userlogPlugin extends Plugin implements \Tuleap\Request\DispatchableWithRe
         $router->route($request);
     }
 
+    public function routeSlash(): userlogPlugin
+    {
+        return $this;
+    }
+
     public function collectRoutesEvent(\Tuleap\Request\CollectRoutesEvent $event)
     {
-        $event->getRouteCollector()->addRoute(['GET', 'POST'], '/plugins/userlog[/]', function () {
-           return $this;
-        });
+        $event->getRouteCollector()->addRoute(['GET', 'POST'], '/plugins/userlog[/]', $this->getRouteHandler('routeSlash'));
     }
 }

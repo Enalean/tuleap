@@ -175,15 +175,10 @@ class crosstrackerPlugin extends Plugin // phpcs:ignore
 
     public function collectRoutesEvent(CollectRoutesEvent $event)
     {
-        $event->getRouteCollector()->get(CROSSTRACKER_BASE_URL . '/csv_export/{report_id:\d+}', function () {
-            return $this->getCSVExportController();
-        });
+        $event->getRouteCollector()->get(CROSSTRACKER_BASE_URL . '/csv_export/{report_id:\d+}', $this->getRouteHandler('routeGetCSVExportReport'));
     }
 
-    /**
-     * @return CSVExportController
-     */
-    private function getCSVExportController()
+    public function routeGetCSVExportReport(): CSVExportController
     {
         $user_manager = UserManager::instance();
 

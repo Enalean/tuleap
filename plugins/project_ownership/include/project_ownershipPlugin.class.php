@@ -106,6 +106,21 @@ class project_ownershipPlugin extends Plugin // phpcs:ignore
         );
     }
 
+    public function routeGetProjectAdmin(): IndexController
+    {
+        return new IndexController(
+            TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates'),
+            ProjectManager::instance(),
+            new HeaderNavigationDisplayer(),
+            new ProjectOwnerPresenterBuilder(
+                new ProjectOwnerDAO(),
+                UserManager::instance(),
+                UserHelper::instance(),
+                $GLOBALS['Language']
+            )
+        );
+    }
+
     public function collectRoutesEvent(CollectRoutesEvent $routes)
     {
         $routes->getRouteCollector()->addGroup(
@@ -113,19 +128,7 @@ class project_ownershipPlugin extends Plugin // phpcs:ignore
             function (FastRoute\RouteCollector $r) {
                 $r->get(
                     '/project/{project_id:\d+}/admin',
-                    function () {
-                        return new IndexController(
-                            TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates'),
-                            ProjectManager::instance(),
-                            new HeaderNavigationDisplayer(),
-                            new ProjectOwnerPresenterBuilder(
-                                new ProjectOwnerDAO(),
-                                UserManager::instance(),
-                                UserHelper::instance(),
-                                $GLOBALS['Language']
-                            )
-                        );
-                    }
+                    $this->getRouteHandler('routeGetProjectAdmin')
                 );
             }
         );
