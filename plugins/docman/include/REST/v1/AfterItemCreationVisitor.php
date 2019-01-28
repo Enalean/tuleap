@@ -84,11 +84,13 @@ class AfterItemCreationVisitor implements ItemVisitor
 
     public function visitLink(Docman_Link $item, array $params = [])
     {
+        $creation_time = $params['creation_time'];
+
         $this->docman_link_version_factory->create(
             $item,
             dgettext('plugin_docman', 'Initial version'),
             dgettext('plugin_docman', 'Initial version'),
-            time()
+            $creation_time->getTimestamp()
         );
         $this->inheritPermissionsFromParent($item);
         $this->event_manager->processEvent(PLUGIN_DOCMAN_EVENT_NEW_LINK, $params);
