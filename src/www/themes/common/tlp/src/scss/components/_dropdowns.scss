@@ -125,6 +125,10 @@ $tlp-dropdown-transition: 75ms ease-out;
             box-shadow: inset 0 -1px 0 #e3e5ed;
         }
     }
+
+    &.tlp-dropdown-menu-large {
+        margin: $tlp-dropdown-arrow-size 7px 0 6px;
+    }
 }
 
 .tlp-dropdown-menu-title {
@@ -206,7 +210,12 @@ $tlp-dropdown-transition: 75ms ease-out;
 
 .tlp-dropdown-split-button-caret {
     border-radius: 0 4px 4px 0;
+
+    &.tlp-button-large {
+        padding: 0 $tlp-spacing;
+    }
 }
+
 $flatpickr-day-hover: #f3f3f3;
 $flatpickr-day-dimmed: #d0d0d0;
 $flatpickr-animation: 100ms ease-in-out showFlatPickr;
