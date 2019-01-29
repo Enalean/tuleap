@@ -30,6 +30,3 @@ export const ICON_WIKI = "fa-wikipedia-w document-wiki-icon";
 export const ICON_EMPTY = "fa-file-o document-empty-icon";
 
 export const DOCMAN_FOLDER_EXPANDED_VALUE = 2;
-
-export const MAX_SIZE_ERROR = "max_size";
-export const ALREADY_EXISTS_ERROR = "already_exists";
