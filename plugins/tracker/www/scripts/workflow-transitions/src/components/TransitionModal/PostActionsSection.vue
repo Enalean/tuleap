@@ -30,15 +30,25 @@
                 v-bind:key="post_action.unique_id"
                 data-test-type="action"
             >
-                <select
-                    slot="action-type"
-                    class="tlp-select"
-                    v-bind:value="post_action.type"
-                    disabled
-                >
-                    <option v-bind:value="RUN_JOB_ACTION_TYPE" v-translate>Launch a CI job</option>
-                    <option v-bind:value="SET_FIELD_VALUE_ACTION_TYPE" v-translate>Change the value of a field</option>
-                </select>
+                <template slot="action-type">
+                    <select
+
+                        class="tlp-select"
+                        v-bind:value="post_action.type"
+                        disabled
+                    >
+                        <option v-bind:value="RUN_JOB_ACTION_TYPE" v-translate>Launch a CI job</option>
+                        <option v-bind:value="SET_FIELD_VALUE_ACTION_TYPE" v-translate>Change the value of a field</option>
+                    </select>
+                    <a
+                        href="javascript:;"
+                        class="tracker-workflow-transition-modal-action-remove"
+                        v-on:click.prevent="deletePostAction(post_action.unique_id)"
+                        v-bind:title="delete_title"
+                    >
+                        <i class="fa fa-trash-o"></i>
+                    </a>
+                </template>
 
                 <run-job-action
                     slot="body"
@@ -89,12 +99,21 @@ export default {
         ...mapGetters("transitionModal", ["post_actions"]),
         has_post_actions() {
             return this.post_actions && this.post_actions.length > 0;
+        },
+        delete_title() {
+            return this.$gettext("Delete this action");
         }
     },
     methods: {
         ...mapMutations({
             addNewPostAction: "transitionModal/addPostAction"
-        })
+        }),
+        deletePostAction(unique_id) {
+            if (this.is_modal_save_running) {
+                return;
+            }
+            this.$store.commit("transitionModal/deletePostAction", unique_id);
+        }
     }
 };
 </script>
