@@ -43,7 +43,8 @@ $permission_manager = new FRSPermissionManager(
     new FRSPermissionFactory(new FRSPermissionDao())
 );
 $release_permission_manager = new ReleasePermissionManager($permission_manager , $frsrf);
-if ($release_permission_manager->canUserSeeRelease($user, $release, $release->getProject()) === false) {
+if ($release === null ||
+    $release_permission_manager->canUserSeeRelease($user, $release, $release->getProject()) === false) {
     exit_error($Language->getText('file_shownotes','not_found_err'),$Language->getText('file_shownotes','release_not_found'));
 }
 
