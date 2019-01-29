@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-2019. All Rights Reserved.
  * Copyright 1999-2000 (c) The SourceForge Crew
  *
  * Tuleap is free software; you can redistribute it and/or modify
@@ -36,7 +36,7 @@ $HTML->header(array('title'=>$Language->getText('account_lostpw', 'title')));
 <FORM action="lostpw-confirm.php" method="post" class="form-inline">
 <P>
 Login Name:
-<INPUT type="text" name="form_loginname">
+<INPUT type="text" name="form_loginname" autocomplete="username">
 <INPUT class="btn btn-primary" type="submit" name="Send Lost Password Hash" value="<?php echo $Language->getText('account_lostpw', 'send_hash'); ?>">
 </FORM>
 
