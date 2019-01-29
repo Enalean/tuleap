@@ -19,7 +19,7 @@
   -->
 
 <template>
-    <div class="tlp-form-element" v-if="is_displayed">
+    <div class="tlp-form-element" v-show="is_displayed">
         <label
             class="tlp-label"
             for="document-new-item-embedded"
@@ -28,9 +28,9 @@
         </label>
         <div class="tlp-form-element">
             <textarea type="text" class="tlp-textarea" id="document-new-item-embedded" name="embedded-content"
+                      ref="embedded_editor"
                       v-bind:placeholder="placeholder"
                       v-bind:value="value.content"
-                      v-on:input="$emit('input', {content : $event.target.value})"
             >
             </textarea>
         </div>
@@ -46,12 +46,41 @@ export default {
         value: Object,
         item: Object
     },
+    data() {
+        return {
+            editor: null
+        };
+    },
     computed: {
         is_displayed() {
             return this.item.type === TYPE_EMBEDDED;
         },
         placeholder() {
             return this.$gettext("My content...");
+        }
+    },
+    mounted() {
+        const text_area = this.$refs.embedded_editor;
+        if (this.editor !== null) {
+            this.editor.destroy();
+        }
+        this.editor = CKEDITOR.replace(text_area); // eslint-disable-line no-undef
+
+        this.editor.on("change", this.onChange);
+
+        this.editor.on("mode", () => {
+            if (this.editor.mode === "source") {
+                const editable = this.editor.editable();
+                editable.attachListener(editable, "input", () => {
+                    this.onChange();
+                });
+            }
+        });
+    },
+    methods: {
+        onChange() {
+            const new_content = this.editor.getData();
+            this.$emit("input", { content: new_content });
         }
     }
 };

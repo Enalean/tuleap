@@ -32,6 +32,7 @@
 
 .document-new-item-type {
     display: flex;
+    position: relative;
     flex-direction: column;
     align-items: center;
     min-width: 96px;
@@ -90,7 +91,6 @@
 }
 
 .document-new-item-type.document-new-item-type-checked {
-    position: relative;
     border: 1px solid $tlp-theme-color;
 
     > .document-new-item-type-label {
