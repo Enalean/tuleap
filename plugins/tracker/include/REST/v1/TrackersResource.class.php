@@ -578,6 +578,7 @@ class TrackersResource extends AuthenticatedResource
 
             $this->processWorkflowTransitionPatchQuery($workflow_query, $tracker);
             $this->getWorkflowFactory()->clearTrackerWorkflowFromCache($tracker);
+            $tracker->workflow = null;
 
             $builder = new Tracker_REST_TrackerRestBuilder($this->formelement_factory);
             return $builder->getTrackerRepresentation($user, $tracker);

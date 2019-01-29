@@ -28,7 +28,8 @@ import {
     getUserGroups,
     patchTransition,
     getPostActions,
-    putPostActions
+    putPostActions,
+    deactivateLegacyTransitions
 } from "../api/rest-querier.js";
 import { create } from "../support/factories.js";
 
@@ -160,6 +161,17 @@ describe("Rest queries:", () => {
             it("returns PATCH response", () => {
                 expect(returned_value).toBe(json_result);
             });
+        });
+
+        describe("deactivateLegacyTransitions()", () => {
+            beforeEach(() => {
+                deactivateLegacyTransitions(1);
+            });
+
+            it("calls api tracker", () =>
+                expect(patch).toHaveBeenCalledWith(
+                    "/api/trackers/1?query=%7B%22workflow%22%3A%7B%22is_legacy%22%3Afalse%7D%7D"
+                ));
         });
 
         describe("patchTransition()", () => {
