@@ -26,7 +26,7 @@
             </span>
         </div>
         <div class="tracker-workflow-transition-modal-action-details">
-            <div class="tlp-form-element">
+            <div class="tracker-workflow-transition-modal-action-details-element tlp-form-element">
                 <label class="tlp-skeleton-label"></label>
                 <select class="tlp-select tlp-skeleton-select" disabled></select>
             </div>

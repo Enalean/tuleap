@@ -25,10 +25,12 @@
             data-test-type="skeleton"
         />
         <template v-else-if="has_post_actions">
-            <post-action
+            <component
                 v-for="post_action in post_actions"
                 v-bind:key="post_action.unique_id"
-                v-bind:post-action="post_action"
+                v-bind:post_action="post_action"
+                v-bind:is="getComponent(post_action)"
+                data-test-type="post-action"
             />
             <button
                 class="tlp-button-primary tlp-button-outline tlp-button-small"
@@ -47,14 +49,16 @@
     </section>
 </template>
 <script>
+import { POST_ACTION_TYPE } from "../../constants/workflow-constants.js";
 import EmptyPostAction from "./Empty/EmptyPostAction.vue";
 import PostActionSkeleton from "./Skeletons/PostActionSkeleton.vue";
-import PostAction from "./PostAction.vue";
+import RunJobAction from "./RunJobAction.vue";
+import SetValueAction from "./SetValueAction.vue";
 import { mapState, mapGetters, mapMutations } from "vuex";
 
 export default {
     name: "PostActionsSection",
-    components: { EmptyPostAction, PostActionSkeleton, PostAction },
+    components: { EmptyPostAction, PostActionSkeleton, RunJobAction, SetValueAction },
     computed: {
         ...mapState("transitionModal", ["is_loading_modal", "is_modal_save_running"]),
         ...mapGetters("transitionModal", ["post_actions"]),
@@ -65,7 +69,16 @@ export default {
     methods: {
         ...mapMutations({
             addNewPostAction: "transitionModal/addPostAction"
-        })
+        }),
+        getComponent(post_action) {
+            if (post_action.type === POST_ACTION_TYPE.RUN_JOB) {
+                return RunJobAction;
+            } else if (post_action.type === POST_ACTION_TYPE.SET_FIELD_VALUE) {
+                return SetValueAction;
+            } else {
+                return null;
+            }
+        }
     }
 };
 </script>

@@ -31,29 +31,12 @@ import { DATE_FIELD } from "../../../../constants/fields-constants.js";
 
 describe("SetValueAction", () => {
     let store;
-    const set_date_value_action = create("post_action", "presented", {
-        type: "set_field_value",
-        field_type: "date",
-        field_id: 43,
-        value: "current"
-    });
-    const date_field = create("field", { field_id: 43, type: "date" });
-
-    const set_int_value_action = create("post_action", "presented", {
-        type: "set_field_value",
-        field_type: "int",
-        field_id: 44,
-        value: 200
-    });
-    const int_field = create("field", { field_id: 44, type: "int" });
-
-    const set_float_value_action = create("post_action", "presented", {
-        type: "set_field_value",
-        field_type: "float",
-        field_id: 45,
-        value: 12.34
-    });
-    const float_field = create("field", { field_id: 45, type: "float" });
+    const date_field_id = 43;
+    const date_field = create("field", { field_id: date_field_id, type: "date" });
+    const int_field_id = 44;
+    const int_field = create("field", { field_id: int_field_id, type: "int" });
+    const float_field_id = 45;
+    const float_field = create("field", { field_id: float_field_id, type: "float" });
 
     let wrapper;
 
@@ -65,11 +48,6 @@ describe("SetValueAction", () => {
                 }),
                 transitionModal: {
                     current_transition: create("transition"),
-                    post_actions_by_unique_id: {
-                        set_date_value_action_id: set_date_value_action,
-                        set_int_value_action_id: set_int_value_action,
-                        set_float_value_action_id: set_float_value_action
-                    },
                     is_modal_save_running: false
                 }
             }
@@ -79,7 +57,7 @@ describe("SetValueAction", () => {
 
         wrapper = shallowMount(SetValueAction, {
             mocks: { $store: store },
-            propsData: { actionId: "set_date_value_action_id" },
+            propsData: { post_action: create("post_action", "presented") },
             localVue
         });
     });
@@ -93,7 +71,13 @@ describe("SetValueAction", () => {
     });
 
     describe("when post action sets a date field", () => {
-        beforeEach(() => wrapper.setProps({ actionId: "set_date_value_action_id" }));
+        const post_action = create("post_action", "presented", {
+            type: "set_field_value",
+            field_type: "date",
+            field_id: date_field_id,
+            value: "current"
+        });
+        beforeEach(() => wrapper.setProps({ post_action }));
 
         it("select corresponding date field", () => {
             expect(wrapper.vm.post_action_field).toEqual(date_field);
@@ -105,7 +89,13 @@ describe("SetValueAction", () => {
     });
 
     describe("when post action sets an int field", () => {
-        beforeEach(() => wrapper.setProps({ actionId: "set_int_value_action_id" }));
+        const post_action = create("post_action", "presented", {
+            type: "set_field_value",
+            field_type: "int",
+            field_id: int_field_id,
+            value: 200
+        });
+        beforeEach(() => wrapper.setProps({ post_action }));
 
         it("shows value of action", () => {
             expect(wrapper.vm.post_action_field).toEqual(int_field);
@@ -117,7 +107,13 @@ describe("SetValueAction", () => {
     });
 
     describe("when post action sets a float field", () => {
-        beforeEach(() => wrapper.setProps({ actionId: "set_float_value_action_id" }));
+        const post_action = create("post_action", "presented", {
+            type: "set_field_value",
+            field_type: "float",
+            field_id: float_field_id,
+            value: 12.34
+        });
+        beforeEach(() => wrapper.setProps({ post_action }));
 
         it("shows value of action", () => {
             expect(wrapper.vm.post_action_field).toEqual(float_field);

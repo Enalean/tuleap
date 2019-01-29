@@ -18,9 +18,14 @@
  *
  */
 
+const POST_ACTION_TYPE = {
+    RUN_JOB: "run_job",
+    SET_FIELD_VALUE: "set_field_value"
+};
+
 const DATE_FIELD_VALUE = {
     CLEAR: "",
     CURRENT: "current"
 };
 
-export { DATE_FIELD_VALUE };
+export { POST_ACTION_TYPE, DATE_FIELD_VALUE };
