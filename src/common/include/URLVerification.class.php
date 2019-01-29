@@ -571,20 +571,12 @@ class URLVerification {
             } catch (ProjectAccessSuspendedException $exception) {
                 $this->displaySuspendedProjectError($user, $project);
             } catch (User_PasswordExpiredException $exception) {
-                if (! $this->isPageAllowedWhenPasswordExpired($server)) {
+                if (! $this->isScriptAllowedForAnonymous($server)) {
                     $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('include_account', 'change_pwd_err'));
                     $GLOBALS['Response']->redirect('/account/change_pw.php?user_id'.$user->getId());
                 }
             }
         }
-    }
-
-    private function isPageAllowedWhenPasswordExpired($server) {
-        return $this->isLogoutPage($server) || $this->isScriptAllowedForAnonymous($server);
-    }
-
-    private function isLogoutPage($server) {
-        return isset($server['SCRIPT_NAME']) && $server['SCRIPT_NAME'] == '/account/logout.php';
     }
 
     /**

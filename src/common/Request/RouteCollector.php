@@ -49,6 +49,7 @@ use Tuleap\Trove\TroveCatListController;
 use Tuleap\User\AccessKey\AccessKeyCreationController;
 use Tuleap\User\AccessKey\AccessKeyRevocationController;
 use Tuleap\User\Account\ChangeAvatarController;
+use Tuleap\User\Account\LogoutController;
 use Tuleap\User\Account\UserAvatarSaver;
 use Tuleap\User\Profile\AvatarController;
 use Tuleap\User\Profile\ProfileController;
@@ -171,6 +172,11 @@ class RouteCollector
         return new ChangeAvatarController($user_manager, new UserAvatarSaver($user_manager));
     }
 
+    public static function postLogoutAccount() : LogoutController
+    {
+        return new LogoutController(\UserManager::instance());
+    }
+
     public static function getUsersName()
     {
         return new ProfileController(
@@ -235,6 +241,7 @@ class RouteCollector
             $r->post('/access_key/create', [__CLASS__, 'postAccountAccessKeyCreate']);
             $r->post('/access_key/revoke', [__CLASS__, 'postAccountAccessKeyRevoke']);
             $r->post('/avatar', [__CLASS__, 'postAccountAvatar']);
+            $r->post('/logout', [__CLASS__, 'postLogoutAccount']);
         });
 
 
