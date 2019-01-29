@@ -36,7 +36,8 @@ export {
     updateSetValuePostActionField,
     updatePostAction,
     addPostAction,
-    deletePostAction
+    deletePostAction,
+    updatePostActionType
 };
 
 function showModal(state) {
@@ -110,6 +111,13 @@ function presentPostAction(post_action) {
     }
 
     return { ...post_action, unique_id };
+}
+
+function updatePostActionType(state, { post_action, type }) {
+    updatePostAction(state, {
+        unique_id: post_action.unique_id,
+        type
+    });
 }
 
 function updatePostAction(state, new_action) {

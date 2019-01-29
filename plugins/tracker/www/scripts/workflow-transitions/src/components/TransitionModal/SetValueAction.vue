@@ -85,6 +85,7 @@ import { DATE_FIELD_VALUE } from "../../constants/workflow-constants.js";
 import DateInput from "./DateInput.vue";
 import FloatInput from "./FloatInput.vue";
 import IntInput from "./IntInput.vue";
+import PlaceholderInput from "./PlaceholderInput.vue";
 
 import { compare } from "../../support/string.js";
 import { mapState } from "vuex";
@@ -149,7 +150,7 @@ export default {
             } else if (this.post_action.field_type === FLOAT_FIELD) {
                 return FloatInput;
             } else {
-                return null;
+                return PlaceholderInput;
             }
         },
         post_action_field: {

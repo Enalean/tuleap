@@ -23,8 +23,8 @@
         <div class="tlp-form-element tracker-workflow-transition-modal-action-type">
             <select
                 class="tlp-select"
-                v-bind:value="postAction.type"
-                disabled
+                v-model="post_action_type"
+                v-bind:disabled="is_modal_save_running"
             >
                 <option v-bind:value="RUN_JOB_ACTION_TYPE" v-translate>Launch a CI job</option>
                 <option v-bind:value="SET_FIELD_VALUE_ACTION_TYPE" v-translate>Change the value of a field</option>
@@ -74,6 +74,17 @@ export default {
         ...mapState("transitionModal", ["is_modal_save_running"]),
         delete_title() {
             return this.$gettext("Delete this action");
+        },
+        post_action_type: {
+            get() {
+                return this.postAction.type;
+            },
+            set(type) {
+                this.$store.commit("transitionModal/updatePostActionType", {
+                    post_action: this.postAction,
+                    type
+                });
+            }
         }
     },
     methods: {
