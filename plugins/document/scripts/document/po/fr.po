@@ -215,7 +215,7 @@ msgstr[1] ""
 msgid "You are not allowed to upload files bigger than %s."
 msgstr ""
 "Vous n'êtes pas autorisés à téléverser des fichiers avec une taille excédant "
-"%size."
+"%s."
 
 msgid ""
 "You can drag 'n drop files from your desktop into the current folder to "
