@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -37,7 +37,7 @@ class Tracker_Workflow_Action_Transitions_Details extends Tracker_Workflow_Actio
         //TODO check that the transition belongs to the current tracker
 
         // Permissions
-        $ugroups = $request->get('ugroups');
+        $ugroups = $request->get('ugroups') ?: [];
         permission_clear_all($this->tracker->group_id, 'PLUGIN_TRACKER_WORKFLOW_TRANSITION', $transition, false);
         if ($this->transition_factory->addPermissions($ugroups, $transition)) {
             $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('workflow_admin', 'permissions_updated'));
