@@ -497,7 +497,7 @@ class DocmanItemCreatorTest extends TestCase
             'user_id'   => $user->getId(),
             'label'     => '',
             'changelog' => dgettext('plugin_docman', 'Initial version'),
-            'date'      => time(),
+            'date'      => $current_time->getTimestamp(),
             'filename'  => basename($created_file_path),
             'filesize'  => $created_file_size,
             'filetype'  => 'text/html',
@@ -552,52 +552,16 @@ class DocmanItemCreatorTest extends TestCase
         $post_representation->embedded_properties->content = 'My original content failed :(';
 
         $this->document_ongoing_upload_retriever->shouldReceive('isThereAlreadyAnUploadOngoing')->andReturns(false);
-        $parent_item->shouldReceive('getId')->andReturns(11);
-        $user->shouldReceive('getId')->andReturns(222);
-        $project->shouldReceive('getID')->andReturns(102);
         $this->event_manager->shouldReceive('processEvent')->never();
 
-        $created_item = \Mockery::mock(\Docman_EmbeddedFile::class);
-        $created_item->shouldReceive('getId')->andReturns(12);
-        $created_item->shouldReceive('getParentId')->andReturns(11);
-        $created_item->shouldReceive('getGroupId')->andReturn(102);
-        $created_item->makePartial();
 
         $this->item_factory
             ->shouldReceive('createWithoutOrdering')
-            ->with('Embedded file', '', 11, 100, 222, PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE, null, null)
             ->never();
         $this->permissions_manager->shouldReceive('clonePermissions')->never();
-
         $this->item_factory->shouldReceive('doesTitleCorrespondToExistingFolder')->andReturn(false);
         $this->item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
-
-        $created_path_file = '/path/to/my/file';
-        $this->file_storage->shouldReceive('store')->with(
-            $post_representation->embedded_properties->content,
-            $created_item->getGroupId(),
-            $created_item->getId(),
-            1
-        )->never();
-
-        $new_embedded_version_row = [
-            'item_id'   => $created_item->getId(),
-            'number'    => 1,
-            'user_id'   => $user->getId(),
-            'label'     => '',
-            'changelog' => dgettext('plugin_docman', 'Initial version'),
-            'date'      => time(),
-            'filename'  => basename($created_path_file),
-            'filesize'  => 10,
-            'filetype'  => 'text/html',
-            'path'      => $created_path_file
-        ];
-
-        $version_id = 3;
-        $this->version_factory->shouldReceive('create')->with($new_embedded_version_row)->andReturn($version_id);
-        $this->version_factory->shouldReceive('getCurrentVersionForItem')->with($created_item)->andReturn(
-            new \Docman_Version()
-        );
+        $this->file_storage->shouldReceive('store')->never();
 
         $is_embedded_allowed = false;
         $item_creator->create(
