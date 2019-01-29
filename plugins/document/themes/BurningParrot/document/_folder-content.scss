@@ -1,0 +1,159 @@
+/**
+ * Copyright (c) Enalean, 2019. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.document-tree-head-name {
+    width: 100%;
+}
+
+.document-tree-head-owner,
+.document-tree-head-updatedate {
+    white-space: nowrap;
+
+    &.document-tree-head-skeleton {
+        min-width: 150px;
+    }
+}
+
+.document-tree-cell-owner,
+.document-tree-cell-updatedate {
+    color: $tlp-ui-dimmed;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+/* stylelint-disable selector-no-qualifying-type */
+.tlp-table > tbody > tr.document-tree-item-created:nth-child(odd) > td {
+    animation: 5s ease-in-out document-created-item-animation-odd;
+}
+
+.tlp-table > tbody > tr.document-tree-item-created:nth-child(even) > td {
+    animation: 5s ease-in-out document-created-item-animation-even;
+}
+/* stylelint-enable selector-no-qualifying-type */
+
+@keyframes document-created-item-animation-odd {
+    0% {
+        background: transparentize($tlp-ui-success, .9);
+    }
+
+    80% {
+        background: transparentize($tlp-ui-success, .9);
+    }
+
+    100% {
+        background: $tlp-table-row-background-odd;
+    }
+}
+
+@keyframes document-created-item-animation-even {
+    0% {
+        background: transparentize($tlp-ui-success, .9);
+    }
+
+    80% {
+        background: transparentize($tlp-ui-success, .9);
+    }
+
+    100% {
+        background: $tlp-table-row-background-even;
+    }
+}
+
+.document-folder-title-loading {
+    width: 300px;
+}
+
+.document-badge-avatar {
+    display: flex;
+    align-items: center;
+}
+
+.document-badge-avatar-img {
+    flex: 0 0 auto;
+    margin: 0 5px 0 0;
+}
+
+.document-badge-avatar-username {
+    &:not(:hover) {
+        color: $tlp-ui-dimmed;
+    }
+}
+
+.document-folder-content-title {
+    display: flex;
+    align-items: center;
+}
+
+.document-folder-content-icon {
+    flex: 0 0 auto;
+    margin: 0 5px 0 0;
+
+    &.document-wiki-icon {
+        position: relative;
+        top: 5px;
+        left: 2px;
+        margin: 0 9px 0 0;
+        font-size: 13px;
+    }
+}
+
+.document-folder-toggle {
+    color: $tlp-ui-dimmed;
+    cursor: pointer;
+
+    &:hover {
+        color: #222222;
+    }
+}
+
+.document-tree-item-hidden {
+    display: none;
+}
+
+.document-folder-error-link {
+    margin: $tlp-spacing 0 0;
+    font-size: 20px;
+    line-height: 20px;
+}
+
+.document-folder-error-details {
+    text-align: left;
+}
+
+.document-folder-subitem-link:not(:hover) {
+    color: inherit;
+}
+
+.document-empty-folder-for-writers {
+    margin: $tlp-double-spacing auto $tlp-spacing;
+}
+
+.document-folder-with-error,
+.document-folder-container-empty {
+    flex: 1 0 auto;
+}
+
+@media screen and (max-width: 1100px) {
+    .document-tree-head-owner,
+    .document-tree-head-updatedate,
+    .document-tree-cell-owner,
+    .document-tree-cell-updatedate {
+        display: none;
+    }
+}
