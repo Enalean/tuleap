@@ -64,29 +64,36 @@ class tuleap_synchroPlugin extends Plugin  // @codingStandardsIgnoreLine
         return parent::getHooksAndCallbacks();
     }
 
+    public function routeGetAdmin(): ListEndpointsController
+    {
+        return new ListEndpointsController(
+            new AdminPageRenderer(),
+            new ListEndpointsRetriever(new TuleapSynchroDao(), new EndpointBuilder()),
+            new ListEndpointsPresenterBuilder()
+        );
+    }
+
+    public function routePostAddEndpoint(): EndpointCreatorController
+    {
+        return new EndpointCreatorController(
+            new EndpointChecker(new Valid_HTTPURI()),
+            new EndpointUpdater(new TuleapSynchroDao(), new WebhookGenerator(new TuleapSynchroDao(), 5))
+        );
+    }
+
+    public function routePostDeleteEndpoint(): EndpointDeleteController
+    {
+        return new EndpointDeleteController(
+            new EndpointUpdater(new TuleapSynchroDao(), new WebhookGenerator(new TuleapSynchroDao(), 5)),
+            new AdminPageRenderer()
+        );
+    }
+
     public function collectRoutesEvent(CollectRoutesEvent $event)
     {
-        $event->getRouteCollector()->get('/admin/tuleap_synchro', function () {
-            return new ListEndpointsController(
-                new AdminPageRenderer(),
-                new ListEndpointsRetriever(new TuleapSynchroDao(), new EndpointBuilder()),
-                new ListEndpointsPresenterBuilder()
-            );
-        });
-
-        $event->getRouteCollector()->post('/admin/tuleap_synchro/add_endpoint', function () {
-            return new EndpointCreatorController(
-                new EndpointChecker(new Valid_HTTPURI()),
-                new EndpointUpdater(new TuleapSynchroDao(), new WebhookGenerator(new TuleapSynchroDao(), 5))
-            );
-        });
-
-        $event->getRouteCollector()->post('/admin/tuleap_synchro/delete_endpoint', function () {
-            return new EndpointDeleteController(
-                new EndpointUpdater(new TuleapSynchroDao(), new WebhookGenerator(new TuleapSynchroDao(), 5)),
-                new AdminPageRenderer()
-            );
-        });
+        $event->getRouteCollector()->get('/admin/tuleap_synchro', $this->getRouteHandler('routeGetAdmin'));
+        $event->getRouteCollector()->post('/admin/tuleap_synchro/add_endpoint', $this->getRouteHandler('routePostAddEndpoint'));
+        $event->getRouteCollector()->post('/admin/tuleap_synchro/delete_endpoint', $this->getRouteHandler('routePostDeleteEndpoint'));
     }
 
     public function site_admin_option_hook(array $params) // @codingStandardsIgnoreLine

@@ -51,10 +51,13 @@ class prometheus_metricsPlugin extends Plugin  // @codingStandardsIgnoreLine
         return parent::getHooksAndCallbacks();
     }
 
+    public function routeGetMetrics(): \Tuleap\PrometheusMetrics\MetricsController
+    {
+        return new \Tuleap\PrometheusMetrics\MetricsController($this->getPluginEtcRoot());
+    }
+
     public function collectRoutesEvent(CollectRoutesEvent $event)
     {
-        $event->getRouteCollector()->get('/metrics', function () {
-            return new \Tuleap\PrometheusMetrics\MetricsController($this->getPluginEtcRoot());
-        });
+        $event->getRouteCollector()->get('/metrics', $this->getRouteHandler('routeGetMetrics'));
     }
 }

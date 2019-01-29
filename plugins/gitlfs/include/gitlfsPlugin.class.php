@@ -41,6 +41,7 @@ use Tuleap\GitLFS\Batch\Response\BatchSuccessfulResponseBuilder;
 use Tuleap\Git\GitPHP\Events\DisplayFileContentInGitView;
 use Tuleap\GitLFS\Download\FileDownloaderController;
 use Tuleap\GitLFS\GitPHPDisplay\Detector;
+use Tuleap\GitLFS\LFSJSONHTTPDispatchable;
 use Tuleap\GitLFS\LFSObject\LFSObjectDAO;
 use Tuleap\GitLFS\LFSObject\LFSObjectPathAllocator;
 use Tuleap\GitLFS\LFSObject\LFSObjectRetriever;
@@ -107,161 +108,191 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
         return parent::getHooksAndCallbacks();
     }
 
+    public function routePutUploadsGitLFSObjects(): \Tuleap\GitLFS\Transfer\Basic\LFSBasicTransferUploadController
+    {
+        return new \Tuleap\GitLFS\Transfer\Basic\LFSBasicTransferUploadController(
+            $this->getLFSActionUserAccessRequestChecker(),
+            new \Tuleap\GitLFS\Transfer\Basic\LFSBasicTransferObjectSaver(
+                $this->getFilesystem(),
+                new LFSObjectRetriever(new \Tuleap\GitLFS\LFSObject\LFSObjectDAO()),
+                new LFSObjectPathAllocator(),
+                \Tuleap\Instrument\Prometheus\Prometheus::instance()
+            )
+        );
+    }
+
+    public function routeGetGitLFSObjects(): \Tuleap\GitLFS\Transfer\Basic\LFSBasicTransferDownloadController
+    {
+        return new \Tuleap\GitLFS\Transfer\Basic\LFSBasicTransferDownloadController(
+            $this->getLFSActionUserAccessRequestChecker(),
+            $this->getFilesystem(),
+            new LFSObjectPathAllocator(),
+            \Tuleap\Instrument\Prometheus\Prometheus::instance()
+        );
+    }
+
+    public function routePostGitLFSObjects(): \Tuleap\GitLFS\Transfer\LFSTransferVerifyController
+    {
+        $lfs_object_dao = new \Tuleap\GitLFS\LFSObject\LFSObjectDAO();
+        return new \Tuleap\GitLFS\Transfer\LFSTransferVerifyController(
+            $this->getLFSActionUserAccessRequestChecker(),
+            new \Tuleap\GitLFS\Transfer\LFSTransferVerifier(
+                $this->getFilesystem(),
+                new LFSObjectRetriever($lfs_object_dao),
+                new LFSObjectPathAllocator(),
+                $lfs_object_dao
+            )
+        );
+    }
+
+    public function routeGetGitLFSConfig(): \Tuleap\GitLFS\Admin\IndexController
+    {
+        return new \Tuleap\GitLFS\Admin\IndexController(
+            new \Tuleap\GitLFS\Admin\AdminDao(),
+            new AdminPageRenderer()
+        );
+    }
+
+    public function routePostGitLFSConfig(): \Tuleap\GitLFS\Admin\IndexPostController
+    {
+        return new \Tuleap\GitLFS\Admin\IndexPostController(
+            new \Tuleap\GitLFS\Admin\AdminDao()
+        );
+    }
+
+    public function routeGetGitLFSRepositoryObjects(): FileDownloaderController
+    {
+        return new FileDownloaderController(
+            new GitRepositoryFactory(
+                new GitDao(),
+                ProjectManager::instance()
+            ),
+            new LFSObjectRetriever(
+                new LFSObjectDAO()
+            ),
+            new LFSObjectPathAllocator(),
+            $this->getFilesystem(),
+            \Tuleap\Instrument\Prometheus\Prometheus::instance()
+        );
+    }
+
     public function collectRoutesEvent(CollectRoutesEvent $event)
     {
-        $event->getRouteCollector()->put('/uploads/git-lfs/objects/{oid:[a-fA-F0-9]{64}}', function () {
-            return new \Tuleap\GitLFS\Transfer\Basic\LFSBasicTransferUploadController(
-                $this->getLFSActionUserAccessRequestChecker(),
-                new \Tuleap\GitLFS\Transfer\Basic\LFSBasicTransferObjectSaver(
-                    $this->getFilesystem(),
-                    new LFSObjectRetriever(new \Tuleap\GitLFS\LFSObject\LFSObjectDAO()),
-                    new LFSObjectPathAllocator(),
-                    \Tuleap\Instrument\Prometheus\Prometheus::instance()
-                )
-            );
-        });
+        $event->getRouteCollector()->put('/uploads/git-lfs/objects/{oid:[a-fA-F0-9]{64}}', $this->getRouteHandler('routePutUploadsGitLFSObjects'));
         $event->getRouteCollector()->addGroup('/git-lfs', function (FastRoute\RouteCollector $r) {
-            $r->get('/objects/{oid:[a-fA-F0-9]{64}}', function () {
-                return new \Tuleap\GitLFS\Transfer\Basic\LFSBasicTransferDownloadController(
-                    $this->getLFSActionUserAccessRequestChecker(),
-                    $this->getFilesystem(),
-                    new LFSObjectPathAllocator(),
-                    \Tuleap\Instrument\Prometheus\Prometheus::instance()
-                );
-            });
-            $r->post('/objects/{oid:[a-fA-F0-9]{64}}/verify', function () {
-                $lfs_object_dao = new \Tuleap\GitLFS\LFSObject\LFSObjectDAO();
-                return new \Tuleap\GitLFS\Transfer\LFSTransferVerifyController(
-                    $this->getLFSActionUserAccessRequestChecker(),
-                    new \Tuleap\GitLFS\Transfer\LFSTransferVerifier(
-                        $this->getFilesystem(),
-                        new LFSObjectRetriever($lfs_object_dao),
-                        new LFSObjectPathAllocator(),
-                        $lfs_object_dao
-                    )
-                );
-            });
+            $r->get('/objects/{oid:[a-fA-F0-9]{64}}', $this->getRouteHandler('routeGetGitLFSObjects'));
+            $r->post('/objects/{oid:[a-fA-F0-9]{64}}/verify', $this->getRouteHandler('routePostGitLFSObjects'));
         });
-        $event->getRouteCollector()->get('/plugins/git-lfs/config', function () {
-            return new \Tuleap\GitLFS\Admin\IndexController(
+        $event->getRouteCollector()->get('/plugins/git-lfs/config', $this->getRouteHandler('routeGetGitLFSConfig'));
+        $event->getRouteCollector()->post('/plugins/git-lfs/config', $this->getRouteHandler('routePostGitLFSConfig'));
+        $event->getRouteCollector()->get('/plugins/git-lfs/{repo_id:[0-9]+}/objects/{oid:[a-fA-F0-9]{64}}', $this->getRouteHandler('routeGetGitLFSRepositoryObjects'));
+    }
+
+    public function routePostGitLFSLocks(): LFSJSONHTTPDispatchable
+    {
+        $logger              = new \WrapperLogger($this->getGitPlugin()->getLogger(), 'LFS Lock');
+        $lfs_lock_controller = new \Tuleap\GitLFS\Lock\Controller\LFSLockCreateController(
+            $this,
+            $this->getGitRepositoryFactory(),
+            $this->getLFSAPIHTTPAccessControl(),
+            new \Tuleap\GitLFS\Lock\Response\LockResponseBuilder(),
+            new \Tuleap\GitLFS\Lock\LockCreator(
+                new \Tuleap\GitLFS\Lock\LockDao()
+            ),
+            new \Tuleap\GitLFS\Lock\LockRetriever(
+                new \Tuleap\GitLFS\Lock\LockDao(),
+                $this->getUserManager()
+            ),
+            $this->getUserRetriever($logger),
+            \Tuleap\Instrument\Prometheus\Prometheus::instance()
+        );
+        return new LFSJSONHTTPDispatchable($lfs_lock_controller);
+    }
+
+    public function routeGetGitLFSLocks(): LFSJSONHTTPDispatchable
+    {
+        $logger              = new \WrapperLogger($this->getGitPlugin()->getLogger(), 'LFS Lock');
+        $lfs_lock_controller = new \Tuleap\GitLFS\Lock\Controller\LFSLockListController(
+            $this,
+            $this->getGitRepositoryFactory(),
+            $this->getLFSAPIHTTPAccessControl(),
+            new \Tuleap\GitLFS\Lock\Response\LockResponseBuilder(),
+            new \Tuleap\GitLFS\Lock\LockRetriever(
+                new \Tuleap\GitLFS\Lock\LockDao(),
+                $this->getUserManager()
+            ),
+            $this->getUserRetriever($logger)
+        );
+        return new LFSJSONHTTPDispatchable($lfs_lock_controller);
+    }
+
+    public function routePostGitLFSLocksVerify(): LFSJSONHTTPDispatchable
+    {
+        $logger              = new \WrapperLogger($this->getGitPlugin()->getLogger(), 'LFS Lock');
+        $lfs_lock_controller = new \Tuleap\GitLFS\Lock\Controller\LFSLockVerifyController(
+            $this,
+            $this->getGitRepositoryFactory(),
+            $this->getLFSAPIHTTPAccessControl(),
+            new \Tuleap\GitLFS\Lock\Response\LockResponseBuilder(),
+            new \Tuleap\GitLFS\Lock\LockRetriever(
+                new \Tuleap\GitLFS\Lock\LockDao(),
+                $this->getUserManager()
+            ),
+            $this->getUserRetriever($logger)
+        );
+        return new LFSJSONHTTPDispatchable($lfs_lock_controller);
+    }
+
+    public function routePostGitLFSLocksUnlock(): LFSJSONHTTPDispatchable
+    {
+        $logger              = new \WrapperLogger($this->getGitPlugin()->getLogger(), 'LFS Lock');
+        $lfs_lock_controller = new \Tuleap\GitLFS\Lock\Controller\LFSLockDeleteController(
+            $this,
+            $this->getGitRepositoryFactory(),
+            $this->getLFSAPIHTTPAccessControl(),
+            new \Tuleap\GitLFS\Lock\Response\LockResponseBuilder(),
+            new \Tuleap\GitLFS\Lock\LockDestructor(
+                new \Tuleap\GitLFS\Lock\LockDao()
+            ),
+            new \Tuleap\GitLFS\Lock\LockRetriever(
+                new \Tuleap\GitLFS\Lock\LockDao(),
+                $this->getUserManager()
+            ),
+            $this->getUserRetriever($logger),
+            \Tuleap\Instrument\Prometheus\Prometheus::instance()
+        );
+        return new LFSJSONHTTPDispatchable($lfs_lock_controller);
+    }
+
+    public function routePostGitLFSObjectsBatch(): LFSJSONHTTPDispatchable
+    {
+        $logger               = new \WrapperLogger($this->getGitPlugin()->getLogger(), 'LFS Batch');
+        $lfs_batch_controller = new \Tuleap\GitLFS\Batch\LFSBatchController(
+            $this,
+            $this->getGitPlugin()->getRepositoryFactory(),
+            $this->getLFSAPIHTTPAccessControl(),
+            new BatchSuccessfulResponseBuilder(
+                new ActionAuthorizationTokenCreator(new SplitTokenVerificationStringHasher(), new ActionAuthorizationDAO()),
+                new LFSAuthorizationTokenHeaderSerializer(),
+                new LFSObjectRetriever(new \Tuleap\GitLFS\LFSObject\LFSObjectDAO()),
                 new \Tuleap\GitLFS\Admin\AdminDao(),
-                new AdminPageRenderer()
-            );
-        });
-        $event->getRouteCollector()->post('/plugins/git-lfs/config', function () {
-            return new \Tuleap\GitLFS\Admin\IndexPostController(
-                new \Tuleap\GitLFS\Admin\AdminDao()
-            );
-        });
-        $event->getRouteCollector()->get('/plugins/git-lfs/{repo_id:[0-9]+}/objects/{oid:[a-fA-F0-9]{64}}', function () {
-            return new FileDownloaderController(
-                new GitRepositoryFactory(
-                    new GitDao(),
-                    ProjectManager::instance()
-                ),
-                new LFSObjectRetriever(
-                    new LFSObjectDAO()
-                ),
-                new LFSObjectPathAllocator(),
-                $this->getFilesystem(),
+                new ProjectQuotaChecker(EventManager::instance()),
+                $logger,
                 \Tuleap\Instrument\Prometheus\Prometheus::instance()
-            );
-        });
+            ),
+            $this->getUserRetriever($logger)
+        );
+        return new LFSJSONHTTPDispatchable($lfs_batch_controller);
     }
 
     public function collectGitRoutesEvent(CollectGitRoutesEvent $event)
     {
-        $event->getRouteCollector()->post('/{project_name}/{path:.*\.git}/info/lfs/locks', function () {
-            $logger              = new \WrapperLogger($this->getGitPlugin()->getLogger(), 'LFS Lock');
-            $lfs_lock_controller = new \Tuleap\GitLFS\Lock\Controller\LFSLockCreateController(
-                $this,
-                $this->getGitRepositoryFactory(),
-                $this->getLFSAPIHTTPAccessControl(),
-                new \Tuleap\GitLFS\Lock\Response\LockResponseBuilder(),
-                new \Tuleap\GitLFS\Lock\LockCreator(
-                    new \Tuleap\GitLFS\Lock\LockDao()
-                ),
-                new \Tuleap\GitLFS\Lock\LockRetriever(
-                    new \Tuleap\GitLFS\Lock\LockDao(),
-                    $this->getUserManager()
-                ),
-                $this->getUserRetriever($logger),
-                \Tuleap\Instrument\Prometheus\Prometheus::instance()
-            );
-            return new \Tuleap\GitLFS\LFSJSONHTTPDispatchable($lfs_lock_controller);
-        });
+        $event->getRouteCollector()->post('/{project_name}/{path:.*\.git}/info/lfs/locks', $this->getRouteHandler('routePostGitLFSLocks'));
+        $event->getRouteCollector()->get('/{project_name}/{path:.*\.git}/info/lfs/locks', $this->getRouteHandler('routeGetGitLFSLocks'));
+        $event->getRouteCollector()->post('/{project_name}/{path:.*\.git}/info/lfs/locks/verify', $this->getRouteHandler('routePostGitLFSLocksVerify'));
+        $event->getRouteCollector()->post('/{project_name}/{path:.*\.git}/info/lfs/locks/{lock_id}/unlock', $this->getRouteHandler('routePostGitLFSLocksUnlock'));
 
-        $event->getRouteCollector()->get('/{project_name}/{path:.*\.git}/info/lfs/locks', function () {
-            $logger              = new \WrapperLogger($this->getGitPlugin()->getLogger(), 'LFS Lock');
-            $lfs_lock_controller = new \Tuleap\GitLFS\Lock\Controller\LFSLockListController(
-                $this,
-                $this->getGitRepositoryFactory(),
-                $this->getLFSAPIHTTPAccessControl(),
-                new \Tuleap\GitLFS\Lock\Response\LockResponseBuilder(),
-                new \Tuleap\GitLFS\Lock\LockRetriever(
-                    new \Tuleap\GitLFS\Lock\LockDao(),
-                    $this->getUserManager()
-                ),
-                $this->getUserRetriever($logger)
-            );
-            return new \Tuleap\GitLFS\LFSJSONHTTPDispatchable($lfs_lock_controller);
-        });
-
-        $event->getRouteCollector()->post('/{project_name}/{path:.*\.git}/info/lfs/locks/verify', function () {
-            $logger              = new \WrapperLogger($this->getGitPlugin()->getLogger(), 'LFS Lock');
-            $lfs_lock_controller = new \Tuleap\GitLFS\Lock\Controller\LFSLockVerifyController(
-                $this,
-                $this->getGitRepositoryFactory(),
-                $this->getLFSAPIHTTPAccessControl(),
-                new \Tuleap\GitLFS\Lock\Response\LockResponseBuilder(),
-                new \Tuleap\GitLFS\Lock\LockRetriever(
-                    new \Tuleap\GitLFS\Lock\LockDao(),
-                    $this->getUserManager()
-                ),
-                $this->getUserRetriever($logger)
-            );
-            return new \Tuleap\GitLFS\LFSJSONHTTPDispatchable($lfs_lock_controller);
-        });
-
-        $event->getRouteCollector()->post('/{project_name}/{path:.*\.git}/info/lfs/locks/{lock_id}/unlock', function () {
-            $logger              = new \WrapperLogger($this->getGitPlugin()->getLogger(), 'LFS Lock');
-            $lfs_lock_controller = new \Tuleap\GitLFS\Lock\Controller\LFSLockDeleteController(
-                $this,
-                $this->getGitRepositoryFactory(),
-                $this->getLFSAPIHTTPAccessControl(),
-                new \Tuleap\GitLFS\Lock\Response\LockResponseBuilder(),
-                new \Tuleap\GitLFS\Lock\LockDestructor(
-                    new \Tuleap\GitLFS\Lock\LockDao()
-                ),
-                new \Tuleap\GitLFS\Lock\LockRetriever(
-                    new \Tuleap\GitLFS\Lock\LockDao(),
-                    $this->getUserManager()
-                ),
-                $this->getUserRetriever($logger),
-                \Tuleap\Instrument\Prometheus\Prometheus::instance()
-            );
-            return new \Tuleap\GitLFS\LFSJSONHTTPDispatchable($lfs_lock_controller);
-        });
-
-        $event->getRouteCollector()->post('/{project_name}/{path:.*\.git}/info/lfs/objects/batch', function () {
-            $logger               = new \WrapperLogger($this->getGitPlugin()->getLogger(), 'LFS Batch');
-            $lfs_batch_controller = new \Tuleap\GitLFS\Batch\LFSBatchController(
-                $this,
-                $this->getGitPlugin()->getRepositoryFactory(),
-                $this->getLFSAPIHTTPAccessControl(),
-                new BatchSuccessfulResponseBuilder(
-                    new ActionAuthorizationTokenCreator(new SplitTokenVerificationStringHasher(), new ActionAuthorizationDAO()),
-                    new LFSAuthorizationTokenHeaderSerializer(),
-                    new LFSObjectRetriever(new \Tuleap\GitLFS\LFSObject\LFSObjectDAO()),
-                    new \Tuleap\GitLFS\Admin\AdminDao(),
-                    new ProjectQuotaChecker(EventManager::instance()),
-                    $logger,
-                    \Tuleap\Instrument\Prometheus\Prometheus::instance()
-                ),
-                $this->getUserRetriever($logger)
-            );
-            return new \Tuleap\GitLFS\LFSJSONHTTPDispatchable($lfs_batch_controller);
-        });
+        $event->getRouteCollector()->post('/{project_name}/{path:.*\.git}/info/lfs/objects/batch', $this->getRouteHandler('routePostGitLFSObjectsBatch'));
     }
 
     /**

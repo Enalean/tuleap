@@ -111,34 +111,52 @@ class create_test_envPlugin extends Plugin
         }
     }
 
+    public function routeGetNotificationBot(): NotificationBotIndexController
+    {
+        require_once __DIR__ . '/../../botmattermost/include/botmattermostPlugin.class.php';
+
+        return new NotificationBotIndexController(
+            new BotFactory(new BotDao()),
+            new NotificationBotDao(),
+            new AdminPageRenderer()
+        );
+    }
+
+    public function routePostNotificationBot(): NotificationBotSaveController
+    {
+        require_once __DIR__ . '/../../botmattermost/include/botmattermostPlugin.class.php';
+
+        return new NotificationBotSaveController(
+            new NotificationBotDao(),
+            $this->getPluginPath()
+        );
+    }
+
+    public function routeGetCallMeBack(): CallMeBackAdminController
+    {
+        return new CallMeBackAdminController(
+            new CallMeBackEmailDao(),
+            new CallMeBackMessageDao(),
+            new AdminPageRenderer()
+        );
+    }
+
+    public function routePostCallMeBack(): CallMeBackAdminSaveController
+    {
+        return new CallMeBackAdminSaveController(
+            new CallMeBackEmailDao(),
+            new CallMeBackMessageDao()
+        );
+    }
+
     public function collectRoutesEvent(CollectRoutesEvent $event)
     {
-        $event->getRouteCollector()->get($this->getPluginPath() . '/notification-bot', function () {
-            return new NotificationBotIndexController(
-                new BotFactory(new BotDao()),
-                new NotificationBotDao(),
-                new AdminPageRenderer()
-            );
-        });
-        $event->getRouteCollector()->post($this->getPluginPath() . '/notification-bot', function () {
-            return new NotificationBotSaveController(
-                new NotificationBotDao(),
-                $this->getPluginPath()
-            );
-        });
+        $event->getRouteCollector()->addGroup($this->getPluginPath(), function (FastRoute\RouteCollector $r) {
+            $r->get('/notification-bot', $this->getRouteHandler('routeGetNotificationBot'));
+            $r->post('/notification-bot', $this->getRouteHandler('routePostNotificationBot'));
 
-        $event->getRouteCollector()->get($this->getPluginPath() . '/call-me-back', function () {
-            return new CallMeBackAdminController(
-                new CallMeBackEmailDao(),
-                new CallMeBackMessageDao(),
-                new AdminPageRenderer()
-            );
-        });
-        $event->getRouteCollector()->post($this->getPluginPath() . '/call-me-back', function () {
-            return new CallMeBackAdminSaveController(
-                new CallMeBackEmailDao(),
-                new CallMeBackMessageDao()
-            );
+            $r->get('/call-me-back', $this->getRouteHandler('routeGetCallMeBack'));
+            $r->post('/call-me-back', $this->getRouteHandler('routePostCallMeBack'));
         });
     }
 
