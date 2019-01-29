@@ -33,7 +33,8 @@
                 class="tlp-select"
                 data-test-type="field"
                 v-model="post_action_field"
-                disabled
+                required
+                v-bind:disabled="is_modal_save_running"
             >
                 <option
                     v-bind:value="null"
@@ -68,54 +69,12 @@
             >
                 New value
             </label>
-            <select
-                v-if="is_date_field"
+            <component
+                v-bind:is="value_input_component"
                 v-bind:id="value_input_id"
-                class="tlp-select"
-                data-test-type="date-value"
                 v-model="value"
-                disabled
-            >
-                <option
-                    v-bind:value="null"
-                    v-translate
-                    disabled
-                >
-                    Please choose
-                </option>
-                <option
-                    v-bind:value="DATE_FIELD_VALUE.CLEAR"
-                    v-translate
-                >
-                    Clear
-                </option>
-                <option
-                    v-bind:value="DATE_FIELD_VALUE.CURRENT"
-                    v-translate
-                >
-                    Current time
-                </option>
-            </select>
-            <input
-                v-else-if="is_int_field"
-                v-bind:id="value_input_id"
-                type="number"
-                step="1"
-                class="tlp-input"
-                data-test-type="int-value"
-                v-bind:value="value"
-                disabled
-            >
-            <input
-                v-else-if="is_float_field"
-                v-bind:id="value_input_id"
-                type="number"
-                step="any"
-                class="tlp-input"
-                data-test-type="float-value"
-                v-bind:value="value"
-                disabled
-            >
+                v-bind:disabled="is_modal_save_running"
+            />
         </div>
     </div>
 </template>
@@ -123,12 +82,16 @@
 <script>
 import { DATE_FIELD, INT_FIELD, FLOAT_FIELD } from "../../../../constants/fields-constants.js";
 import { DATE_FIELD_VALUE } from "../../constants/workflow-constants.js";
+import DateInput from "./DateInput.vue";
+import FloatInput from "./FloatInput.vue";
+import IntInput from "./IntInput.vue";
 
 import { compare } from "../../support/string.js";
 import { mapState } from "vuex";
 
 export default {
     name: "SetValueAction",
+    components: { DateInput, FloatInput, IntInput },
     props: {
         actionId: {
             type: String,
@@ -178,29 +141,47 @@ export default {
         value_input_id() {
             return `post-action-${this.actionId}-value`;
         },
-        post_action_field() {
-            if (!this.post_action.field_id) {
+        value_input_component() {
+            if (this.post_action.field_type === DATE_FIELD) {
+                return DateInput;
+            } else if (this.post_action.field_type === INT_FIELD) {
+                return IntInput;
+            } else if (this.post_action.field_type === FLOAT_FIELD) {
+                return FloatInput;
+            } else {
                 return null;
             }
-            const matching_fields = this.available_fields.filter(
-                field => field.field_id === this.post_action.field_id
-            );
-            if (matching_fields.length === 0) {
-                return null;
+        },
+        post_action_field: {
+            get() {
+                if (!this.post_action.field_id) {
+                    return null;
+                }
+                const matching_fields = this.available_fields.filter(
+                    field => field.field_id === this.post_action.field_id
+                );
+                if (matching_fields.length === 0) {
+                    return null;
+                }
+                return matching_fields[0];
+            },
+            set(new_field) {
+                this.$store.commit("transitionModal/updateSetValuePostActionField", {
+                    post_action: this.post_action,
+                    new_field
+                });
             }
-            return matching_fields[0];
         },
-        is_date_field() {
-            return this.post_action.field_type === DATE_FIELD;
-        },
-        is_int_field() {
-            return this.post_action.field_type === INT_FIELD;
-        },
-        is_float_field() {
-            return this.post_action.field_type === FLOAT_FIELD;
-        },
-        value() {
-            return this.post_action.value;
+        value: {
+            get() {
+                return this.post_action.value;
+            },
+            set(value) {
+                this.$store.commit("transitionModal/updatePostAction", {
+                    ...this.post_action,
+                    value
+                });
+            }
         }
     },
     methods: {
