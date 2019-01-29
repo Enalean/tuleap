@@ -23,16 +23,22 @@
             <empty-folder-for-writers-svg/>
         </div>
         <p class="empty-page-text" v-translate>It's time to add new documents!</p>
-        <new-item-button class="tlp-button-primary tlp-button-large"/>
+        <div class="tlp-dropdown">
+            <div class="tlp-dropdown-split-button">
+                <new-item-button class="tlp-button-primary tlp-button-large tlp-dropdown-split-button-main"/>
+                <dropdown-button v-bind:is_in_large_mode="true"/>
+            </div>
+        </div>
     </div>
 </template>
 
 <script>
 import EmptyFolderForWritersSvg from "./EmptyFolderForWritersSvg.vue";
 import NewItemButton from "../NewItem/NewItemButton.vue";
+import DropdownButton from "../Dropdown/DropdownButton.vue";
 
 export default {
     name: "EmptyFolderForWriters",
-    components: { EmptyFolderForWritersSvg, NewItemButton }
+    components: { EmptyFolderForWritersSvg, NewItemButton, DropdownButton }
 };
 </script>

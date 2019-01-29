@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -178,6 +178,15 @@
             if (dropdown_trigger_split_example2_options) {
                 tlp.dropdown(dropdown_trigger_split_example2_options, {
                     dropdown_menu: document.getElementById("dropdown-split-example2-menu")
+                });
+            }
+
+            var dropdown_trigger_large_split_example_options = document.getElementById(
+                "dropdown-large-split-example"
+            );
+            if (dropdown_trigger_large_split_example_options) {
+                tlp.dropdown(dropdown_trigger_large_split_example_options, {
+                    dropdown_menu: document.getElementById("dropdown-large-split-example-menu")
                 });
             }
 

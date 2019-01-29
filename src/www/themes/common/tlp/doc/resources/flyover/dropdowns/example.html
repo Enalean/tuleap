@@ -228,3 +228,35 @@ Split button dropdown
         {dropdown_menu: document.getElementById('dropdown-split-example2-menu')}
     );
 </script>
+
+<br>
+<br>
+
+Split large button dropdown
+<div class="tlp-dropdown">
+    <div class="tlp-dropdown-split-button">
+        <button class="tlp-button-primary tlp-dropdown-split-button-main tlp-button-large" type="button" title="Passed">
+            New document
+        </button>
+        <button class="tlp-button-primary tlp-append tlp-dropdown-split-button-caret tlp-button-large" id="dropdown-large-split-example">
+            <i class="fa fa-caret-down"></i>
+        </button>
+    </div>
+    <div id="dropdown-large-split-example-menu" class="tlp-dropdown-menu tlp-dropdown-menu-large tlp-dropdown-menu-right" role="menu">
+        <a class="tlp-dropdown-menu-item steps-step-action-fail ng-binding" role="menuitem">
+            <i class="fa fa-fw fa-times-circle"></i> Failed
+        </a>
+        <a class="tlp-dropdown-menu-item steps-step-action-block ng-binding" role="menuitem">
+            <i class="fa fa-fw fa-exclamation-circle"></i> Blocked
+        </a>
+        <a class="tlp-dropdown-menu-item steps-step-action-notrun ng-binding" role="menuitem">
+            <i class="fa fa-fw fa-question-circle"></i> Not run
+        </a>
+    </div>
+</div>
+<script>
+    tlp.dropdown(
+        document.getElementById('dropdown-large-split-example'),
+        {dropdown_menu: document.getElementById('dropdown-large-split-example-menu')}
+    );
+</script>
