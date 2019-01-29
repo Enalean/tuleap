@@ -149,6 +149,9 @@ msgid ""
 "An error occurred with your upload. Please try again or choose another image."
 msgstr ""
 
+msgid "An issue occurred while retrieving the RSS feed"
+msgstr ""
+
 msgid "And more..."
 msgstr ""
 

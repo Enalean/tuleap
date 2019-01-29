@@ -183,6 +183,9 @@ msgstr ""
 "Une erreur est survenue lors de votre téléversement. Merci d'essayer à "
 "nouveau ou de choisir une autre image."
 
+msgid "An issue occurred while retrieving the RSS feed"
+msgstr "Une erreur est survenue lors de la récupération du flux RSS"
+
 msgid "And more..."
 msgstr "Et plus ..."
 
