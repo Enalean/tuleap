@@ -531,4 +531,4 @@ tracker =
             )
         )
 
-non_empty_string = xsd:string { minLength = "1" pattern = "(\s*[^\s+]\s*)+" }
+non_empty_string = xsd:string { minLength = "1" pattern = "(\s*\S+\s*)+" }

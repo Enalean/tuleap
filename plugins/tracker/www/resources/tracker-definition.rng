@@ -1292,7 +1292,7 @@
   <define name="non_empty_string">
     <data type="string">
       <param name="minLength">1</param>
-      <param name="pattern">(\s*[^\s+]\s*)+</param>
+      <param name="pattern">(\s*\S+\s*)+</param>
     </data>
   </define>
 </grammar>
