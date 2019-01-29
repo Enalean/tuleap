@@ -1088,7 +1088,7 @@ class TrackerTest extends TuleapTestCase {
     // Tracker "admin workflow" permissions
     //
     public function testPermsAdminWorkflowTrackerSiteAdmin() {
-        $request_admin_workflow_tracker = \Mockery::spy(\Codendi_Request::class);
+        $request_admin_workflow_tracker = \Mockery::spy(\HTTPRequest::class);
         $request_admin_workflow_tracker->shouldReceive('get')->with('func')->andReturns(Workflow::FUNC_ADMIN_TRANSITIONS);
 
         // site admin can access tracker admin part
@@ -1096,7 +1096,7 @@ class TrackerTest extends TuleapTestCase {
         $this->tracker->process($this->tracker_manager, $request_admin_workflow_tracker, $this->site_admin_user);
     }
     public function testPermsAdminWorkflowTrackerProjectAdmin() {
-        $request_admin_workflow_tracker = \Mockery::spy(\Codendi_Request::class);
+        $request_admin_workflow_tracker = \Mockery::spy(\HTTPRequest::class);
         $request_admin_workflow_tracker->shouldReceive('get')->with('func')->andReturns(Workflow::FUNC_ADMIN_TRANSITIONS);
 
         // project admin can access tracker admin part
@@ -1104,7 +1104,7 @@ class TrackerTest extends TuleapTestCase {
         $this->tracker->process($this->tracker_manager, $request_admin_workflow_tracker, $this->project_admin_user);
     }
     public function testPermsAdminWorkflowTrackerTrackerAdmin() {
-        $request_admin_workflow_tracker = \Mockery::spy(\Codendi_Request::class);
+        $request_admin_workflow_tracker = \Mockery::spy(\HTTPRequest::class);
         $request_admin_workflow_tracker->shouldReceive('get')->with('func')->andReturns(Workflow::FUNC_ADMIN_TRANSITIONS);
 
         // tracker admin can access tracker admin part
@@ -1113,7 +1113,7 @@ class TrackerTest extends TuleapTestCase {
         $this->tracker2->process($this->tracker_manager, $request_admin_workflow_tracker, $this->all_trackers_admin_user);
     }
     public function testPermsAdminWorkflowTrackerTracker1Admin() {
-        $request_admin_workflow_tracker = \Mockery::spy(\Codendi_Request::class);
+        $request_admin_workflow_tracker = \Mockery::spy(\HTTPRequest::class);
         $request_admin_workflow_tracker->shouldReceive('get')->with('func')->andReturns(Workflow::FUNC_ADMIN_TRANSITIONS);
 
         // tracker admin can access tracker admin part
@@ -1122,7 +1122,7 @@ class TrackerTest extends TuleapTestCase {
         $this->tracker2->process($this->tracker_manager, $request_admin_workflow_tracker, $this->tracker1_admin_user);
     }
     public function testPermsAdminWorkflowTrackerTracker2Admin() {
-        $request_admin_workflow_tracker = \Mockery::spy(\Codendi_Request::class);
+        $request_admin_workflow_tracker = \Mockery::spy(\HTTPRequest::class);
         $request_admin_workflow_tracker->shouldReceive('get')->with('func')->andReturns(Workflow::FUNC_ADMIN_TRANSITIONS);
 
         // tracker admin can access tracker admin part
@@ -1131,7 +1131,7 @@ class TrackerTest extends TuleapTestCase {
         $this->tracker2->process($this->tracker_manager, $request_admin_workflow_tracker, $this->tracker2_admin_user);
     }
     public function testPermsAdminWorkflowTrackerProjectMember() {
-        $request_admin_workflow_tracker = \Mockery::spy(\Codendi_Request::class);
+        $request_admin_workflow_tracker = \Mockery::spy(\HTTPRequest::class);
         $request_admin_workflow_tracker->shouldReceive('get')->with('func')->andReturns(Workflow::FUNC_ADMIN_TRANSITIONS);
 
         // project member can NOT access tracker admin part
@@ -1139,7 +1139,7 @@ class TrackerTest extends TuleapTestCase {
         $this->tracker->process($this->tracker_manager, $request_admin_workflow_tracker, $this->project_member_user);
     }
     public function testPermsAdminWorkflowTrackerRegisteredUser() {
-        $request_admin_workflow_tracker = \Mockery::spy(\Codendi_Request::class);
+        $request_admin_workflow_tracker = \Mockery::spy(\HTTPRequest::class);
         $request_admin_workflow_tracker->shouldReceive('get')->with('func')->andReturns(Workflow::FUNC_ADMIN_TRANSITIONS);
 
         // registered user can NOT access tracker admin part

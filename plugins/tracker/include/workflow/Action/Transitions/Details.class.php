@@ -32,14 +32,24 @@ class Tracker_Workflow_Action_Transitions_Details extends Tracker_Workflow_Actio
 
     public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, PFUser $current_user)
     {
-        $transition = $request->get('transition');
+        $transition = $this->transition_factory->getTransition($request->get('transition'));
+        if ($transition === null || (int) $transition->getWorkflow()->getTrackerId() !== (int) $this->tracker->getId()) {
+            $GLOBALS['Response']->redirect('/');
+        }
 
-        //TODO check that the transition belongs to the current tracker
+        $ugroups = $request->get('ugroups');
+        if (! $ugroups || ! is_array($ugroups)) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                $GLOBALS['Language']->getText('workflow_admin', 'permissions_not_updated')
+            );
+            $this->redirectToTransactionEditionPage($transition);
+        }
 
         // Permissions
-        $ugroups = $request->get('ugroups') ?: [];
-        permission_clear_all($this->tracker->group_id, 'PLUGIN_TRACKER_WORKFLOW_TRANSITION', $transition, false);
-        if ($this->transition_factory->addPermissions($ugroups, $transition)) {
+
+        permission_clear_all($transition->getGroupId(), 'PLUGIN_TRACKER_WORKFLOW_TRANSITION', $transition->getId(), false);
+        if ($this->transition_factory->addPermissions($ugroups, $transition->getId())) {
             $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('workflow_admin', 'permissions_updated'));
         } else {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('workflow_admin', 'permissions_not_updated'));
@@ -48,7 +58,7 @@ class Tracker_Workflow_Action_Transitions_Details extends Tracker_Workflow_Actio
         //Conditions
         try {
             $condition_manager = new Transition_ConditionManager();
-            $condition_manager->process($this->transition_factory->getTransition($transition), $request, $current_user);
+            $condition_manager->process($transition, $request, $current_user);
             $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('workflow_admin', 'empty_fields_updated'));
         } catch (CannotCreateTransitionException $exception) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('workflow_admin', 'empty_fields_not_updated'));
@@ -56,14 +66,19 @@ class Tracker_Workflow_Action_Transitions_Details extends Tracker_Workflow_Actio
 
         // Post actions
         $tpam = new Transition_PostActionManager();
-        $tpam->process($this->transition_factory->getTransition($transition), $request, $current_user);
+        $tpam->process($transition, $request, $current_user);
 
+        $this->redirectToTransactionEditionPage($transition);
+    }
+
+    private function redirectToTransactionEditionPage(Transition $transition) : void
+    {
         $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?'. http_build_query(
-            array(
-                'tracker'         => (int)$this->tracker->id,
-                'func'            => Workflow::FUNC_ADMIN_TRANSITIONS,
-                'edit_transition' => $request->get('transition'),
-            )
-        ));
+                array(
+                    'tracker'         => $transition->getWorkflow()->getTrackerId(),
+                    'func'            => Workflow::FUNC_ADMIN_TRANSITIONS,
+                    'edit_transition' => $transition->getId(),
+                )
+            ));
     }
 }
