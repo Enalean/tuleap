@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean 2014-2017. All rights reserved
+ * Copyright (c) Enalean 2014-2019. All rights reserved
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -18,6 +18,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\Http\BinaryFileResponse;
 
 require_once('Docman_View_View.class.php');
 require_once('Docman_View_DocmanError.class.php');
@@ -39,24 +41,12 @@ class Docman_View_Download extends Docman_View_View {
                     $GLOBALS['Response']->addFeedback('error',$e->getMessage(), CODENDI_PURIFIER_DISABLED);
                     $GLOBALS['Response']->redirect($this->_controller->getDefaultUrl());
                 }
-                header('Expires: Mon, 26 Nov 1962 00:00:00 GMT');  // IE & HTTPS
-                header('Pragma: private');                         // IE & HTTPS
-                header('Cache-control: private, must-revalidate'); // IE & HTTPS
-                header('X-Content-Type-Options: nosniff');         // IE
-                header('Content-Type: '. $version->getFiletype());
-                header('Content-Length: '. $version->getFilesize());
-                header('Content-Disposition: attachment; filename="'. $version->getFilename() .'"');
-                if (ob_get_level()) {
-                    ob_end_clean();
-                }
-
-                flush();
-                $file = fopen($version->getPath(), "r");
-                while (! feof($file)) {
-                    print fread($file, 30*1024);
-                    flush();
-                }
-                fclose($file);
+                $file_response = New BinaryFileResponse(
+                    $version->getPath(),
+                    $version->getFilename(),
+                    $version->getFiletype()
+                );
+                $file_response->send();
             } else {
                 $this->_controller->feedback->log('error', 'The file cannot be found.');
                 $v = new Docman_View_DocmanError($this->_controller);
