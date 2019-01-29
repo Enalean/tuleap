@@ -123,6 +123,6 @@ function addPostAction(state) {
     });
 }
 
-function deletePostAction(state, unique_id) {
-    Vue.delete(state.post_actions_by_unique_id, unique_id);
+function deletePostAction(state, post_action) {
+    Vue.delete(state.post_actions_by_unique_id, post_action.unique_id);
 }

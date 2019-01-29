@@ -21,6 +21,7 @@
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../../support/local-vue.js";
 import PostActionsSection from "./PostActionsSection.vue";
+import PostAction from "./PostAction.vue";
 import { createList } from "../../support/factories.js";
 import { createStoreMock } from "../../support/store-wrapper.spec-helper.js";
 
@@ -49,7 +50,6 @@ describe("PostActionsSection", () => {
     });
 
     const skeleton_selector = '[data-test-type="skeleton"]';
-    const action_selector = '[data-test-type="action"]';
     const empty_message_selector = '[data-test-type="empty-message"]';
 
     describe("when loading", () => {
@@ -57,7 +57,7 @@ describe("PostActionsSection", () => {
 
         it("shows only skeleton", () => {
             expect(wrapper.contains(skeleton_selector)).toBeTruthy();
-            expect(wrapper.contains(action_selector)).toBeFalsy();
+            expect(wrapper.contains(PostAction)).toBeFalsy();
             expect(wrapper.contains(empty_message_selector)).toBeFalsy();
         });
     });
@@ -70,7 +70,7 @@ describe("PostActionsSection", () => {
 
             it("shows only empty message", () => {
                 expect(wrapper.contains(skeleton_selector)).toBeFalsy();
-                expect(wrapper.contains(action_selector)).toBeFalsy();
+                expect(wrapper.contains(PostAction)).toBeFalsy();
                 expect(wrapper.contains(empty_message_selector)).toBeTruthy();
             });
         });
@@ -84,11 +84,11 @@ describe("PostActionsSection", () => {
 
             it("shows only post actions", () => {
                 expect(wrapper.contains(skeleton_selector)).toBeFalsy();
-                expect(wrapper.contains(action_selector)).toBeTruthy();
+                expect(wrapper.contains(PostAction)).toBeTruthy();
                 expect(wrapper.contains(empty_message_selector)).toBeFalsy();
             });
             it("shows as many post action as stored", () => {
-                expect(wrapper.findAll(action_selector).length).toBe(2);
+                expect(wrapper.findAll(PostAction).length).toBe(2);
             });
         });
     });
