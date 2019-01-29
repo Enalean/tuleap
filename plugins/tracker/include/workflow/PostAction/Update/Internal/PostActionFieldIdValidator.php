@@ -16,54 +16,32 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
+
+declare(strict_types=1);
 
 namespace Tuleap\Tracker\Workflow\PostAction\Update\Internal;
 
 use Tuleap\Tracker\Workflow\PostAction\Update\SetFieldValue;
 
-final class SetFloatValue implements SetFieldValue
+class PostActionFieldIdValidator
 {
     /**
-     * @var int|null $id
+     * @throws DuplicateFieldIdException
      */
-    private $id;
-
-    /**
-     * @var int $field_id
-     */
-    private $field_id;
-
-    /**
-     * @var float $value
-     */
-    private $value;
-
-    public function __construct(?int $id, int $field_id, float $value)
+    public function validate(SetFieldValue ...$set_field_values): void
     {
-        $this->id       = $id;
-        $this->field_id = $field_id;
-        $this->value    = $value;
+        $field_ids = [];
+        foreach ($set_field_values as $set_field_value) {
+            $field_ids[] = $set_field_value->getFieldId();
+        }
+        if ($this->hasDuplicateFieldIds(...$field_ids)) {
+            throw new DuplicateFieldIdException();
+        }
     }
 
-    public function getId(): ?int
+    private function hasDuplicateFieldIds(int ...$ids): bool
     {
-        return $this->id;
-    }
-
-    public function getFieldId(): int
-    {
-        return $this->field_id;
-    }
-
-    public function getValue(): float
-    {
-        return $this->value;
-    }
-
-    public function accept(PostActionVisitor $visitor)
-    {
-        $visitor->visitSetFloatValue($this);
+        return count($ids) !== count(array_unique($ids));
     }
 }
