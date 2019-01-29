@@ -385,6 +385,381 @@ describe("Store mutations", () => {
                 { id: 45, parent_id: 42, level: 3, type: "wiki", title: "A.11" }
             ]);
         });
+        it("it inserts a FOLDER at the right place, after the last children of its nearest sibling", () => {
+            const item = { id: 66, parent_id: 0, type: "folder", title: "B" };
+            const state = {
+                folder_content: [
+                    { id: 42, parent_id: 0, level: 0, type: "folder", title: "A" },
+                    { id: 43, parent_id: 42, level: 1, type: "folder", title: "A.A" },
+                    { id: 45, parent_id: 42, level: 1, type: "wiki", title: "A kiwi" },
+                    { id: 44, parent_id: 0, level: 0, type: "folder", title: "C" }
+                ]
+            };
+            mutations.addJustCreatedItemToFolderContent(state, item);
+            expect(state.folder_content).toEqual([
+                { id: 42, parent_id: 0, level: 0, type: "folder", title: "A" },
+                { id: 43, parent_id: 42, level: 1, type: "folder", title: "A.A" },
+                { id: 45, parent_id: 42, level: 1, type: "wiki", title: "A kiwi" },
+                { id: 66, parent_id: 0, level: 0, type: "folder", title: "B" },
+                { id: 44, parent_id: 0, level: 0, type: "folder", title: "C" }
+            ]);
+        });
+        it("Given newly created items, then thgy should be inserted at the right place", () => {
+            const folder_a = { id: 10, title: "A", type: "folder", parent_id: 42, level: 0 };
+            const folder_b = { id: 11, title: "B", type: "folder", parent_id: 42, level: 0 };
+            const doc_a = { id: 12, title: "A", type: "wiki", parent_id: 42, level: 0 };
+            const doc_b = { id: 13, title: "B", type: "wiki", parent_id: 42, level: 0 };
+            const sub_folder_a = {
+                id: 14,
+                title: "A",
+                type: "folder",
+                parent_id: folder_a.id,
+                level: 0
+            };
+            const sub_folder_b = {
+                id: 15,
+                title: "B",
+                type: "folder",
+                parent_id: folder_a.id,
+                level: 0
+            };
+            const sub_doc_a = {
+                id: 16,
+                title: "A",
+                type: "wiki",
+                parent_id: folder_a.id,
+                level: 0
+            };
+            const sub_doc_b = {
+                id: 17,
+                title: "B",
+                type: "wiki",
+                parent_id: folder_a.id,
+                level: 0
+            };
+            const doc_to_add = { id: 66, title: "A1", type: "wiki", parent_id: 42 };
+            const doc_added = { level: 0, ...doc_to_add };
+            const doc_to_add_in_folder_a = { ...doc_to_add, parent_id: folder_a.id };
+            const doc_added_in_folder_a = { level: 1, ...doc_to_add_in_folder_a };
+            const folder_to_add = { id: 69, title: "A1", type: "folder", parent_id: 42 };
+            const folder_added = { level: 0, ...folder_to_add };
+            const folder_to_add_in_folder_a = { ...folder_to_add, parent_id: folder_a.id };
+            const folder_added_in_folder_a = { level: 1, ...folder_to_add_in_folder_a };
+            const map = new Map([
+                [
+                    {
+                        item: doc_to_add,
+                        folder_content: []
+                    },
+                    [doc_added]
+                ],
+                [
+                    {
+                        item: doc_to_add,
+                        folder_content: [doc_a]
+                    },
+                    [doc_a, doc_added]
+                ],
+                [
+                    {
+                        item: doc_to_add,
+                        folder_content: [doc_b]
+                    },
+                    [doc_added, doc_b]
+                ],
+                [
+                    {
+                        item: doc_to_add,
+                        folder_content: [doc_a, doc_b]
+                    },
+                    [doc_a, doc_added, doc_b]
+                ],
+                [
+                    {
+                        item: doc_to_add,
+                        folder_content: [folder_a]
+                    },
+                    [folder_a, doc_added]
+                ],
+                [
+                    {
+                        item: doc_to_add,
+                        folder_content: [folder_b]
+                    },
+                    [folder_b, doc_added]
+                ],
+                [
+                    {
+                        item: doc_to_add,
+                        folder_content: [folder_a, folder_b]
+                    },
+                    [folder_a, folder_b, doc_added]
+                ],
+                [
+                    {
+                        item: doc_to_add,
+                        folder_content: [folder_a, folder_b, doc_a, doc_b]
+                    },
+                    [folder_a, folder_b, doc_a, doc_added, doc_b]
+                ],
+                [
+                    {
+                        item: doc_to_add_in_folder_a,
+                        folder_content: [folder_a]
+                    },
+                    [folder_a, doc_added_in_folder_a]
+                ],
+                [
+                    {
+                        item: doc_to_add_in_folder_a,
+                        folder_content: [folder_a, folder_b]
+                    },
+                    [folder_a, doc_added_in_folder_a, folder_b]
+                ],
+                [
+                    {
+                        item: doc_to_add_in_folder_a,
+                        folder_content: [folder_a, folder_b, doc_a]
+                    },
+                    [folder_a, doc_added_in_folder_a, folder_b, doc_a]
+                ],
+                [
+                    {
+                        item: doc_to_add_in_folder_a,
+                        folder_content: [folder_a, folder_b, doc_a, doc_b]
+                    },
+                    [folder_a, doc_added_in_folder_a, folder_b, doc_a, doc_b]
+                ],
+                [
+                    {
+                        item: doc_to_add_in_folder_a,
+                        folder_content: [folder_a, sub_doc_a, folder_b, doc_a]
+                    },
+                    [folder_a, sub_doc_a, doc_added_in_folder_a, folder_b, doc_a]
+                ],
+                [
+                    {
+                        item: doc_to_add_in_folder_a,
+                        folder_content: [folder_a, sub_doc_b, folder_b, doc_a]
+                    },
+                    [folder_a, doc_added_in_folder_a, sub_doc_b, folder_b, doc_a]
+                ],
+                [
+                    {
+                        item: doc_to_add_in_folder_a,
+                        folder_content: [folder_a, sub_doc_a, sub_doc_b, folder_b, doc_a]
+                    },
+                    [folder_a, sub_doc_a, doc_added_in_folder_a, sub_doc_b, folder_b, doc_a]
+                ],
+                [
+                    {
+                        item: doc_to_add_in_folder_a,
+                        folder_content: [folder_a, sub_folder_a, folder_b, doc_a]
+                    },
+                    [folder_a, sub_folder_a, doc_added_in_folder_a, folder_b, doc_a]
+                ],
+                [
+                    {
+                        item: doc_to_add_in_folder_a,
+                        folder_content: [folder_a, sub_folder_b, folder_b, doc_a]
+                    },
+                    [folder_a, sub_folder_b, doc_added_in_folder_a, folder_b, doc_a]
+                ],
+                [
+                    {
+                        item: doc_to_add_in_folder_a,
+                        folder_content: [folder_a, sub_folder_a, sub_folder_b, folder_b, doc_a]
+                    },
+                    [folder_a, sub_folder_a, sub_folder_b, doc_added_in_folder_a, folder_b, doc_a]
+                ],
+                [
+                    {
+                        item: doc_to_add_in_folder_a,
+                        folder_content: [
+                            folder_a,
+                            sub_folder_a,
+                            sub_folder_b,
+                            sub_doc_a,
+                            sub_doc_b,
+                            folder_b,
+                            doc_a
+                        ]
+                    },
+                    [
+                        folder_a,
+                        sub_folder_a,
+                        sub_folder_b,
+                        sub_doc_a,
+                        doc_added_in_folder_a,
+                        sub_doc_b,
+                        folder_b,
+                        doc_a
+                    ]
+                ],
+                [
+                    {
+                        item: folder_to_add,
+                        folder_content: []
+                    },
+                    [folder_added]
+                ],
+                [
+                    {
+                        item: folder_to_add,
+                        folder_content: [doc_a]
+                    },
+                    [folder_added, doc_a]
+                ],
+                [
+                    {
+                        item: folder_to_add,
+                        folder_content: [doc_b]
+                    },
+                    [folder_added, doc_b]
+                ],
+                [
+                    {
+                        item: folder_to_add,
+                        folder_content: [doc_a, doc_b]
+                    },
+                    [folder_added, doc_a, doc_b]
+                ],
+                [
+                    {
+                        item: folder_to_add,
+                        folder_content: [folder_a]
+                    },
+                    [folder_a, folder_added]
+                ],
+                [
+                    {
+                        item: folder_to_add,
+                        folder_content: [folder_b]
+                    },
+                    [folder_added, folder_b]
+                ],
+                [
+                    {
+                        item: folder_to_add,
+                        folder_content: [folder_a, folder_b]
+                    },
+                    [folder_a, folder_added, folder_b]
+                ],
+                [
+                    {
+                        item: folder_to_add,
+                        folder_content: [folder_a, folder_b, doc_a, doc_b]
+                    },
+                    [folder_a, folder_added, folder_b, doc_a, doc_b]
+                ],
+                [
+                    {
+                        item: folder_to_add_in_folder_a,
+                        folder_content: [folder_a]
+                    },
+                    [folder_a, folder_added_in_folder_a]
+                ],
+                [
+                    {
+                        item: folder_to_add_in_folder_a,
+                        folder_content: [folder_a, folder_b]
+                    },
+                    [folder_a, folder_added_in_folder_a, folder_b]
+                ],
+                [
+                    {
+                        item: folder_to_add_in_folder_a,
+                        folder_content: [folder_a, folder_b, doc_a]
+                    },
+                    [folder_a, folder_added_in_folder_a, folder_b, doc_a]
+                ],
+                [
+                    {
+                        item: folder_to_add_in_folder_a,
+                        folder_content: [folder_a, folder_b, doc_a, doc_b]
+                    },
+                    [folder_a, folder_added_in_folder_a, folder_b, doc_a, doc_b]
+                ],
+                [
+                    {
+                        item: folder_to_add_in_folder_a,
+                        folder_content: [folder_a, sub_doc_a, folder_b, doc_a]
+                    },
+                    [folder_a, folder_added_in_folder_a, sub_doc_a, folder_b, doc_a]
+                ],
+                [
+                    {
+                        item: folder_to_add_in_folder_a,
+                        folder_content: [folder_a, sub_doc_b, folder_b, doc_a]
+                    },
+                    [folder_a, folder_added_in_folder_a, sub_doc_b, folder_b, doc_a]
+                ],
+                [
+                    {
+                        item: folder_to_add_in_folder_a,
+                        folder_content: [folder_a, sub_doc_a, sub_doc_b, folder_b, doc_a]
+                    },
+                    [folder_a, folder_added_in_folder_a, sub_doc_a, sub_doc_b, folder_b, doc_a]
+                ],
+                [
+                    {
+                        item: folder_to_add_in_folder_a,
+                        folder_content: [folder_a, sub_folder_a, folder_b, doc_a]
+                    },
+                    [folder_a, sub_folder_a, folder_added_in_folder_a, folder_b, doc_a]
+                ],
+                [
+                    {
+                        item: folder_to_add_in_folder_a,
+                        folder_content: [folder_a, sub_folder_b, folder_b, doc_a]
+                    },
+                    [folder_a, folder_added_in_folder_a, sub_folder_b, folder_b, doc_a]
+                ],
+                [
+                    {
+                        item: folder_to_add_in_folder_a,
+                        folder_content: [folder_a, sub_folder_a, sub_folder_b, folder_b, doc_a]
+                    },
+                    [
+                        folder_a,
+                        sub_folder_a,
+                        folder_added_in_folder_a,
+                        sub_folder_b,
+                        folder_b,
+                        doc_a
+                    ]
+                ],
+                [
+                    {
+                        item: folder_to_add_in_folder_a,
+                        folder_content: [
+                            folder_a,
+                            sub_folder_a,
+                            sub_folder_b,
+                            sub_doc_a,
+                            sub_doc_b,
+                            folder_b,
+                            doc_a
+                        ]
+                    },
+                    [
+                        folder_a,
+                        sub_folder_a,
+                        folder_added_in_folder_a,
+                        sub_folder_b,
+                        sub_doc_a,
+                        sub_doc_b,
+                        folder_b,
+                        doc_a
+                    ]
+                ]
+            ]);
+            map.forEach((expected_content, { item, folder_content }) => {
+                const state = { folder_content };
+                mutations.addJustCreatedItemToFolderContent(state, item);
+                expect(state.folder_content).toEqual(expected_content);
+            });
+        });
     });
 
     describe("replaceUploadingFileWithActualFile", () => {

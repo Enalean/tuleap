@@ -54,67 +54,98 @@ function saveFolderContent(state, folder_content) {
     state.folder_content = folder_content;
 }
 
-function addJustCreatedItemToFolderContent(state, item) {
-    const parent = state.folder_content.find(parent => parent.id === item.parent_id);
+function addDocumentToTheRightPlace(state, new_item, parent) {
+    const near_sibling_index = state.folder_content.findIndex(
+        sibling =>
+            sibling.type !== TYPE_FOLDER &&
+            sibling.parent_id === new_item.parent_id &&
+            sibling.title.localeCompare(new_item.title, undefined, {
+                numeric: true
+            }) >= 0
+    );
 
-    item.level = parent ? parent.level + 1 : 0;
-    const length = state.folder_content.length;
-    let i = 0;
-    while (i < length) {
-        const possible_sibling = state.folder_content[i];
-        const next_sibling = state.folder_content[i + 1];
-        const is_sibling = possible_sibling.parent_id === item.parent_id;
+    const has_no_sibling_and_no_parent = near_sibling_index === -1 && !parent;
+    const has_a_parent_but_no_siblings = near_sibling_index === -1 && parent;
 
-        if (is_sibling) {
-            const are_both_folders =
-                item.type === TYPE_FOLDER && possible_sibling.type === TYPE_FOLDER;
-            const are_both_documents =
-                item.type !== TYPE_FOLDER && possible_sibling.type !== TYPE_FOLDER;
-            if (are_both_folders || are_both_documents) {
-                if (
-                    possible_sibling.title.localeCompare(item.title, undefined, {
-                        numeric: true
-                    }) >= 0
-                ) {
-                    break;
-                }
-            } else if (item.type === TYPE_FOLDER) {
-                break;
-            }
-            if (!next_sibling) {
-                i++;
-                break;
-            }
-            const are_next_item_and_current_item_sibling =
-                next_sibling.parent_id === item.parent_id;
-            if (!are_next_item_and_current_item_sibling) {
-                if (next_sibling.parent_id === possible_sibling.parent_id) {
-                    i++;
-                    break;
-                }
-                const are_both_items_different_type =
-                    possible_sibling.type === TYPE_FOLDER && item.type !== TYPE_FOLDER;
-                if (are_both_items_different_type) {
-                    i++;
-                    continue;
-                }
-                i++;
-                break;
-            }
+    if (has_no_sibling_and_no_parent) {
+        state.folder_content.push(new_item);
+
+        return;
+    } else if (has_a_parent_but_no_siblings) {
+        const document_siblings = state.folder_content.filter(
+            item => item.parent_id === new_item.parent_id
+        );
+
+        let nearest_sibling;
+
+        if (!document_siblings.length) {
+            nearest_sibling = parent;
+        } else {
+            nearest_sibling = document_siblings[document_siblings.length - 1];
         }
-        const is_current_folder_empty =
-            next_sibling &&
-            possible_sibling.id === item.parent_id &&
-            next_sibling.parent_id === possible_sibling.parent_id;
 
-        if (is_current_folder_empty) {
-            i++;
-            break;
-        }
-        i++;
+        const nearest_sibling_index = state.folder_content.findIndex(
+            item => item.id === nearest_sibling.id
+        );
+
+        state.folder_content.splice(nearest_sibling_index + 1, 0, new_item);
+
+        return;
     }
 
-    state.folder_content.splice(i, 0, item);
+    state.folder_content.splice(near_sibling_index, 0, new_item);
+}
+
+function addFolderToTheRightPlace(state, new_item, parent) {
+    const folder_siblings = state.folder_content.filter(
+        item => item.type === TYPE_FOLDER && item.parent_id === new_item.parent_id
+    );
+
+    let nearest_sibling = folder_siblings.find(sibling => {
+        return (
+            sibling.title.localeCompare(new_item.title, undefined, {
+                numeric: true
+            }) >= 0
+        );
+    });
+
+    const is_the_last_of_its_siblings = !nearest_sibling && folder_siblings.length > 0;
+
+    if (is_the_last_of_its_siblings) {
+        nearest_sibling = folder_siblings[folder_siblings.length - 1];
+
+        const nearest_sibling_index = state.folder_content.findIndex(
+            item => item.id === nearest_sibling.id
+        );
+
+        state.folder_content.splice(nearest_sibling_index + 1, 0, new_item);
+    } else if (nearest_sibling) {
+        const nearest_sibling_index = state.folder_content.findIndex(
+            item => item.id === nearest_sibling.id
+        );
+
+        state.folder_content.splice(nearest_sibling_index, 0, new_item);
+    } else {
+        if (parent) {
+            const parent_index = state.folder_content.findIndex(item => item.id === parent.id);
+
+            state.folder_content.splice(parent_index + 1, 0, new_item);
+        } else {
+            state.folder_content.splice(0, 0, new_item);
+        }
+    }
+}
+
+function addJustCreatedItemToFolderContent(state, new_item) {
+    const parent = state.folder_content.find(parent => parent.id === new_item.parent_id);
+
+    new_item.level = parent ? parent.level + 1 : 0;
+
+    if (new_item.type !== TYPE_FOLDER) {
+        return addDocumentToTheRightPlace(state, new_item, parent);
+    }
+
+    addFolderToTheRightPlace(state, new_item, parent);
 }
 
 function appendSubFolderContent(state, [folder_id, sub_items]) {
