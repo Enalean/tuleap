@@ -122,12 +122,13 @@ class Tracker_Workflow_Action_Transitions_DefineWorkflow  extends Tracker_Workfl
         echo '<form action="'.$form_url.'" method="POST">';
         echo '<div class="alert alert-warning">';
         echo '<p>';
-        echo dgettext('tuleap-tracker', "This workflow is legacy, which means that pre conditions and post actions defined in transitions are processed even if the workflow is not activated.");
+        echo dgettext('tuleap-tracker', "This workflow has an incoherent behaviour : pre conditions and post actions defined in transitions are processed even if the workflow is not activated.");
         echo '</p>';
         echo '<p>';
-        echo '<input type="hidden" name="deactivate_legacy_transitions" value="1" />';
-        echo '<button class="btn" type="submit">'.dgettext("tuleap-tracker", "Deactivate transitions").'</button>';
+        echo dgettext('tuleap-tracker', "By clicking on \"Fully deactivate the workflow\", the workflow's behaviour will be fixed.");
         echo '</p>';
+        echo '<input type="hidden" name="deactivate_legacy_transitions" value="1" />';
+        echo '<button class="btn" type="submit">'.dgettext("tuleap-tracker", "Fully deactivate the workflow").'</button>';
         echo '</div>';
         echo '</form>';
     }

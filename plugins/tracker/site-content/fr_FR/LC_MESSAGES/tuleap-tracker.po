@@ -193,6 +193,13 @@ msgid "Burndown is under calculation. It will be available in a few minutes."
 msgstr ""
 "Le burndown est en cours de calcul. Il sera disponible dans quelques minutes."
 
+msgid ""
+"By clicking on \"Fully deactivate the workflow\", the workflow's behaviour "
+"will be fixed."
+msgstr ""
+"En cliquant sur \"Désactiver complètement le workflow\", le comportement de "
+"votre workflow sera corrigé."
+
 msgid "Cancel"
 msgstr "Annuler"
 
@@ -223,9 +230,6 @@ msgstr "Configurer les trackers"
 
 msgid "Confirm deletion"
 msgstr "Confirmer la suppression"
-
-msgid "Deactivate transitions"
-msgstr "Désactiver les transitions"
 
 msgid "Default Tuleap notifications"
 msgstr "Notifications par défaut"
@@ -277,6 +281,9 @@ msgstr "La valeur du champ ne peux pas être vide"
 
 msgid "Force notification configuration usage to all users"
 msgstr "Forcer la configuration des notifications à tous les utilisateurs"
+
+msgid "Fully deactivate the workflow"
+msgstr "Désactiver complètement le workflow"
 
 msgid "Global Rules"
 msgstr "Règles Globales"
@@ -819,8 +826,8 @@ msgid ""
 "There should not be duplicate field_ids for 'set_field_value' actions with "
 "type 'date'."
 msgstr ""
-"Les field_ids d'actions 'set_field_value' avec type 'date' ne doivent "
-"pas être en doublons."
+"Les field_ids d'actions 'set_field_value' avec type 'date' ne doivent pas "
+"être en doublons."
 
 msgid ""
 "There should not be duplicate ids for 'set_field_value' actions with type "
@@ -844,16 +851,15 @@ msgstr "Ce tracker a été supprimé."
 msgid "This transition already exists."
 msgstr "Cette transition existe déjà."
 
-msgid "This workflow is already in a functional state. Skipping."
-msgstr "Ce workflow est déjà fonctionnel. Cette modification est donc ignorée."
-
 msgid ""
-"This workflow is legacy, which means that pre conditions and post actions "
+"This workflow has an incoherent behaviour : pre conditions and post actions "
 "defined in transitions are processed even if the workflow is not activated."
 msgstr ""
-"Ce workflow a un comportement incohérent. Ceci signifie que les conditions "
-"ainsi que les actions définies dans les transitions seront exécutées bien "
-"que le workflow soit désactivé."
+"Ce workflow a un comportement incohérent : les conditions ainsi que les actions "
+"définies dans les transitions sont exécutées bien qu'il soit désactivé."
+
+msgid "This workflow is already in a functional state. Skipping."
+msgstr "Ce workflow est déjà fonctionnel. Cette modification est donc ignorée."
 
 msgid "Time"
 msgstr "Date"
