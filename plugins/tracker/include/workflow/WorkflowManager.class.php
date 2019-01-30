@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -26,7 +26,7 @@ class WorkflowManager {
         $this->tracker = $tracker;
     }
 
-    public function process(TrackerManager $engine, Codendi_Request $request, PFUser $current_user) {
+    public function process(TrackerManager $engine, HTTPRequest $request, PFUser $current_user) {
         $workflow_factory = WorkflowFactory::instance();
         if ($request->get('func') == Workflow::FUNC_ADMIN_RULES) {
             $token = new CSRFSynchronizerToken(TRACKER_BASE_URL. '/?'. http_build_query(
@@ -66,8 +66,8 @@ class WorkflowManager {
             $action = new Tracker_Workflow_Action_Transitions_Delete($this->tracker, $workflow_factory);
         } else if ($request->get('transitions')) {
             $action = new Tracker_Workflow_Action_Transitions_CreateMatrix($this->tracker, $workflow_factory, Tracker_FormElementFactory::instance());
-        } else if ($request->get('workflow_details')) {
-            $action = new Tracker_Workflow_Action_Transitions_Details($this->tracker, TransitionFactory::instance());
+        } else if ($request->get('workflow_details') && $request->isPost()) {
+            $action     = new Tracker_Workflow_Action_Transitions_Details($this->tracker, TransitionFactory::instance());
         } else {
             $action = new Tracker_Workflow_Action_Transitions_DefineWorkflow($this->tracker, WorkflowFactory::instance(), Tracker_FormElementFactory::instance());
         }
