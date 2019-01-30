@@ -22,7 +22,8 @@ chown -R codendiadm:codendiadm \
     /data/lib/tuleap/user \
     /data/lib/tuleap/wiki \
     /data/lib/tuleap/gitolite/admin \
-    /var/lib/tuleap/svn_plugin
+    /var/lib/tuleap/svn_plugin \
+    /data/lib/tuleap/git-lfs
 
 chown codendiadm:codendiadm \
     /data/home/groups \
