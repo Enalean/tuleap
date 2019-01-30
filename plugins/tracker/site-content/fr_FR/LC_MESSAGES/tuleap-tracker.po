@@ -836,6 +836,9 @@ msgstr ""
 "Les ids d'actions 'set_field_value' avec type 'date' ne doivent pas être en "
 "doublons."
 
+msgid "This REST route is still under construction."
+msgstr "Cette route REST est en cours de construction."
+
 msgid "This template does not use trackers"
 msgstr "Ce patron n'utilise pas les trackers"
 
@@ -851,12 +854,16 @@ msgstr "Ce tracker a été supprimé."
 msgid "This transition already exists."
 msgstr "Cette transition existe déjà."
 
+msgid "This view is still under construction."
+msgstr "Cette page est en cours de construction."
+
 msgid ""
 "This workflow has an incoherent behaviour : pre conditions and post actions "
 "defined in transitions are processed even if the workflow is not activated."
 msgstr ""
-"Ce workflow a un comportement incohérent : les conditions ainsi que les actions "
-"définies dans les transitions sont exécutées bien qu'il soit désactivé."
+"Ce workflow a un comportement incohérent : les conditions ainsi que les "
+"actions définies dans les transitions sont exécutées bien qu'il soit "
+"désactivé."
 
 msgid "This workflow is already in a functional state. Skipping."
 msgstr "Ce workflow est déjà fonctionnel. Cette modification est donc ignorée."

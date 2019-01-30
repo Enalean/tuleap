@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,6 +22,9 @@ namespace Tuleap\Tracker\REST;
 
 use REST_TestDataBuilder;
 use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfigDAO;
+use Tuleap\Tracker\Tests\REST\TrackerBase;
+
+require_once __DIR__ . '/TrackerBase.php';
 
 class DataBuilder extends REST_TestDataBuilder
 {
@@ -36,6 +39,7 @@ class DataBuilder extends REST_TestDataBuilder
     public function __construct()
     {
         parent::__construct();
+        $this->instanciateFactories();
 
         $this->config_dao = new ArtifactsDeletionConfigDAO();
     }
@@ -46,6 +50,7 @@ class DataBuilder extends REST_TestDataBuilder
 
         $this->createUser();
         $this->setUpDeletableArtifactsLimit();
+        $this->setUpWorkflowFeatureFlag();
     }
 
     private function setUpDeletableArtifactsLimit()
@@ -58,5 +63,26 @@ class DataBuilder extends REST_TestDataBuilder
         $user = $this->user_manager->getUserByUserName(self::USER_TESTER_NAME);
         $user->setPassword(self::USER_TESTER_PASS);
         $this->user_manager->updateDb($user);
+    }
+
+    private function setUpWorkflowFeatureFlag()
+    {
+        $tracker = $this->getTrackerInProject(
+            TrackerBase::TRACKER_WORKFLOW_WITH_TRANSITIONS_SHORTNAME,
+            TrackerBase::TRACKER_WORKFLOWS_PROJECT_NAME
+        );
+        $workflow_tracker_id = $tracker->getId();
+        $local_inc           = fopen('/etc/tuleap/conf/local.inc', 'a');
+        if ($local_inc === false) {
+            throw new \RuntimeException('Could not append feature flag to local.inc');
+        }
+        $write_result = fwrite(
+            $local_inc,
+            "\$sys_tracker_whitelist_that_should_use_new_workflow_transitions_interface = '$workflow_tracker_id';"
+        );
+        if ($write_result === false) {
+            throw new \RuntimeException('Could not append feature flag to local.inc');
+        }
+        fclose($local_inc);
     }
 }

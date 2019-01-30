@@ -19,12 +19,15 @@
  */
 
 use Tuleap\Tracker\Webhook\Actions\AdminWebhooks;
+use Tuleap\Tracker\Workflow\FeatureFlag;
 
 /**
  * Base class to manage action that can be done on a workflow
  */
 abstract class Tracker_Workflow_Action
 {
+    use FeatureFlag;
+
     const PANE_RULES                  = 'rules';
     const PANE_TRANSITIONS            = 'transitions';
     const PANE_CROSS_TRACKER_TRIGGERS = 'triggers';
@@ -104,25 +107,9 @@ abstract class Tracker_Workflow_Action
         );
     }
 
-    private function isNewWorkflowEnabled(): bool
-    {
-        $whitelist = ForgeConfig::get('sys_tracker_whitelist_that_should_use_new_workflow_transitions_interface');
-        if (empty($whitelist)) {
-            return false;
-        }
-
-        foreach (explode(',', $whitelist) as $whitelisted_tracker_id) {
-            if ($this->tracker->id === trim($whitelisted_tracker_id)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     private function buildTransitionsLink(): string
     {
-        if ($this->isNewWorkflowEnabled()) {
+        if ($this->isNewWorkflowEnabled($this->tracker)) {
             return $this->buildNewTransitionsLink();
         }
         return $this->buildLegacyTransitionsLink();

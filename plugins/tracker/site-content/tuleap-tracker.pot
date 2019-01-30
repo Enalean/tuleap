@@ -717,6 +717,9 @@ msgid ""
 "'date'."
 msgstr ""
 
+msgid "This REST route is still under construction."
+msgstr ""
+
 msgid "This template does not use trackers"
 msgstr ""
 
@@ -730,6 +733,9 @@ msgid "This tracker is deleted"
 msgstr ""
 
 msgid "This transition already exists."
+msgstr ""
+
+msgid "This view is still under construction."
 msgstr ""
 
 msgid ""
