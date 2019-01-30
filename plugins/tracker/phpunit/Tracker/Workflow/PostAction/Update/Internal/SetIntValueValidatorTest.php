@@ -26,12 +26,12 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 
-class SetDateValueValidatorTest extends TestCase
+class SetIntValueValidatorTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    /** @var SetDateValueValidator */
-    private $set_date_value_validator;
+    /** @var SetIntValueValidator */
+    private $set_int_value_validator;
     /** @var PostActionIdValidator | Mockery\MockInterface */
     private $ids_validator;
     /** @var PostActionFieldIdValidator | Mockery\MockInterface */
@@ -39,15 +39,15 @@ class SetDateValueValidatorTest extends TestCase
     /** @var \Tracker_FormElementFactory | Mockery\MockInterface */
     private $form_element_factory;
 
-    protected function setUp() : void
+    protected function setUp()
     {
         $this->ids_validator = Mockery::mock(PostActionIdValidator::class);
         $this->ids_validator->shouldReceive('validate')->byDefault();
         $this->field_id_validator = Mockery::mock(PostActionFieldIdValidator::class);
         $this->field_id_validator->shouldReceive('validate')->byDefault();
 
-        $this->form_element_factory = Mockery::mock(\Tracker_FormElementFactory::class);
-        $this->set_date_value_validator = new SetDateValueValidator(
+        $this->form_element_factory    = Mockery::mock(\Tracker_FormElementFactory::class);
+        $this->set_int_value_validator = new SetIntValueValidator(
             $this->ids_validator,
             $this->field_id_validator,
             $this->form_element_factory
@@ -56,73 +56,88 @@ class SetDateValueValidatorTest extends TestCase
 
     public function testValidateDoesNotThrowWhenValid()
     {
-        $date_field = Mockery::mock(\Tracker_FormElement_Field_Date::class)
+        $integer_field   = Mockery::mock(\Tracker_FormElement_Field_Integer::class)
             ->shouldReceive('getId')
             ->andReturn(1)
             ->getMock();
-        $other_date_field = Mockery::mock(\Tracker_FormElement_Field_Date::class)
+        $other_int_field = Mockery::mock(\Tracker_FormElement_Field_Integer::class)
             ->shouldReceive('getId')
             ->andReturn(2)
             ->getMock();
         $this->form_element_factory
-            ->shouldReceive('getUsedCustomDateFields')
-            ->andReturn([$date_field, $other_date_field]);
+            ->shouldReceive('getUsedIntFields')
+            ->andReturn([$integer_field, $other_int_field]);
 
-        $first_date_value  = new SetDateValue(null, 1, 0);
-        $second_date_value = new SetDateValue(null, 2, 0);
+        $first_int_value  = new SetIntValue(null, 1, 12);
+        $second_int_value = new SetIntValue(null, 2, 42);
 
-        $this->set_date_value_validator->validate(
+        $this->set_int_value_validator->validate(
             Mockery::mock(\Tracker::class),
-            $first_date_value,
-            $second_date_value
+            $first_int_value,
+            $second_int_value
         );
     }
 
+    /**
+     * @expectedException \Tuleap\Tracker\Workflow\PostAction\Update\Internal\InvalidPostActionException
+     */
     public function testValidateWrapsDuplicatePostActionException()
     {
-        $first_same_id  = new SetDateValue(2, 1, 0);
-        $second_same_id = new SetDateValue(2, 2, 1);
-        $this->ids_validator
-            ->shouldReceive('validate')
-            ->with($first_same_id, $second_same_id)
-            ->andThrow(new DuplicatePostActionException());
+        $this->set_int_value_validator = new SetIntValueValidator(
+            new PostActionIdValidator(),
+            $this->field_id_validator,
+            $this->form_element_factory
+        );
 
-        $this->expectException(InvalidPostActionException::class);
+        $first_same_id  = new SetIntValue(2, 1, 12);
+        $second_same_id = new SetIntValue(2, 2, 42);
 
-        $this->set_date_value_validator->validate(Mockery::mock(\Tracker::class), $first_same_id, $second_same_id);
+        $this->set_int_value_validator->validate(
+            Mockery::mock(\Tracker::class),
+            $first_same_id,
+            $second_same_id
+        );
     }
 
+    /**
+     * @expectedException \Tuleap\Tracker\Workflow\PostAction\Update\Internal\InvalidPostActionException
+     */
     public function testValidateWrapsDuplicateFieldIdException()
     {
-        $first_same_field_id = new SetDateValue(null, 1, 0);
-        $second_same_field_id = new SetDateValue(null, 1, 2);
-        $this->field_id_validator->shouldReceive('validate')
-            ->with($first_same_field_id, $second_same_field_id)
-            ->andThrow(new DuplicateFieldIdException());
+        $this->set_int_value_validator = new SetIntValueValidator(
+            $this->ids_validator,
+            new PostActionFieldIdValidator(),
+            $this->form_element_factory
+        );
 
-        $this->expectException(InvalidPostActionException::class);
+        $first_same_field_id  = new SetIntValue(null, 1, 79);
+        $second_same_field_id = new SetIntValue(null, 1, 2);
 
-        $this->set_date_value_validator->validate(
+        $this->set_int_value_validator->validate(
             Mockery::mock(\Tracker::class),
             $first_same_field_id,
             $second_same_field_id
         );
     }
 
-    public function testValidateThrowsWhenFieldIdDoesNotMatchADateField()
+    /**
+     * @expectedException \Tuleap\Tracker\Workflow\PostAction\Update\Internal\InvalidPostActionException
+     */
+    public function testValidateThrowsWhenFieldIdDoesNotMatchAnIntegerField()
     {
-        $date_field = Mockery::mock(\Tracker_FormElement_Field_Date::class)
+        $integer_field = Mockery::mock(\Tracker_FormElement_Field_Integer::class)
             ->shouldReceive('getId')
             ->andReturn(1)
             ->getMock();
         $this->form_element_factory
-            ->shouldReceive('getUsedCustomDateFields')
-            ->andReturn([$date_field]);
+            ->shouldReceive('getUsedIntFields')
+            ->andReturn([$integer_field]);
 
-        $invalid_field_id = new SetDateValue(null, 8, 0);
+        $invalid_field_id = new SetIntValue(null, 8, 0);
 
-        $this->expectException(InvalidPostActionException::class);
-
-        $this->set_date_value_validator->validate(Mockery::mock(\Tracker::class), $invalid_field_id);
+        $this->set_int_value_validator->validate(
+            Mockery::mock(\Tracker::class),
+            $invalid_field_id
+        );
     }
 }

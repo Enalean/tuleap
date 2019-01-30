@@ -30,6 +30,7 @@ use Tuleap\Tracker\Workflow\PostAction\Update\Internal\SetDateValue;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\SetDateValueValidator;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\SetFloatValue;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\SetIntValue;
+use Tuleap\Tracker\Workflow\PostAction\Update\Internal\SetIntValueValidator;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\UnknownPostActionIdsException;
 use Tuleap\Tracker\Workflow\Update\PostAction;
 
@@ -94,12 +95,19 @@ class PostActionCollection implements PostActionVisitor
     }
 
     /**
-     * @param SetDateValueValidator $validator
      * @throws Internal\InvalidPostActionException
      */
     public function validateSetDateValueActions(SetDateValueValidator $validator, \Tracker $tracker): void
     {
         $validator->validate($tracker, ...$this->set_date_value_actions);
+    }
+
+    /**
+     * @throws Internal\InvalidPostActionException
+     */
+    public function validateSetIntValueActions(SetIntValueValidator $validator, \Tracker $tracker): void
+    {
+        $validator->validate($tracker, ...$this->set_int_value_actions);
     }
 
     /**

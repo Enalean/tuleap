@@ -39,7 +39,6 @@ class SetDateValueUpdaterTest extends TestCase
      */
     private $updater;
     /**
-     *
      * @var MockInterface
      */
     private $set_date_value_repository;
@@ -65,14 +64,14 @@ class SetDateValueUpdaterTest extends TestCase
             ->shouldReceive('update')
             ->byDefault();
         $this->tracker = Mockery::mock(\Tracker::class);
-
         $this->validator = Mockery::mock(SetDateValueValidator::class);
+
         $this->updater = new SetDateValueUpdater($this->set_date_value_repository, $this->validator);
     }
 
     public function testUpdateAddsNewSetDateValueActions()
     {
-        $transition = $this->mockTransitionWithTracker();
+        $transition = TransitionFactory::buildATransitionWithTracker($this->tracker);
         $this->mockFindAllIdsByTransition($transition, [1]);
 
         $added_action = new SetDateValue(null, 43, 1);
@@ -92,7 +91,7 @@ class SetDateValueUpdaterTest extends TestCase
 
     public function testUpdateUpdatesSetDateValueActionsWhichAlreadyExists()
     {
-        $transition = $this->mockTransitionWithTracker();
+        $transition = TransitionFactory::buildATransitionWithTracker($this->tracker);
         $this->mockFindAllIdsByTransition($transition, [1]);
 
         $updated_action = new SetDateValue(1, 43, 1);
@@ -112,7 +111,7 @@ class SetDateValueUpdaterTest extends TestCase
 
     public function testUpdateDeletesRemovedSetDateValueActions()
     {
-        $transition = $this->mockTransitionWithTracker();
+        $transition = TransitionFactory::buildATransitionWithTracker($this->tracker);
         $this->mockFindAllIdsByTransition($transition, [2, 3]);
 
         $action  = new SetDateValue(2, 43, 1);
@@ -139,16 +138,5 @@ class SetDateValueUpdaterTest extends TestCase
             ->shouldReceive('findAllIdsByTransition')
             ->withArgs([$transition])
             ->andReturn($existing_ids);
-    }
-
-    private function mockTransitionWithTracker()
-    {
-        $transition    = TransitionFactory::buildATransition();
-        $workflow      = Mockery::mock(\Workflow::class);
-        $workflow->shouldReceive('getTracker')
-            ->andReturn($this->tracker);
-        $transition->shouldReceive('getWorkflow')
-            ->andReturn($workflow);
-        return $transition;
     }
 }
