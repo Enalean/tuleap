@@ -286,7 +286,7 @@ class WorkflowFactory
      *
      * @param int $tracker_id the Id of the tracker
      *
-     * @return Workflow the worflow object, or null if there is no workflow
+     * @return Workflow|null
      */
     public function getWorkflowByTrackerId(?int $tracker_id)
     {
