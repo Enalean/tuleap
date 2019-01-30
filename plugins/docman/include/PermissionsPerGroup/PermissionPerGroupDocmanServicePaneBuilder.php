@@ -132,7 +132,7 @@ class PermissionPerGroupDocmanServicePaneBuilder
 
     private function getGlobalAdminLink(PermissionPerGroupPaneCollector $event)
     {
-        return DOCMAN_BASE_URL . "?" . http_build_query(
+        return DOCMAN_BASE_URL . "/?" . http_build_query(
             [
                 "group_id" => $event->getProject()->getID(),
                 "action"   => "admin_permissions"
