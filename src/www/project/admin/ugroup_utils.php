@@ -705,16 +705,18 @@ function ugroup_get_ugroup() {
  * @return Array
  */
 function ugroup_count_project_admins($groupId, $usersSql) {
-    $um = ugroup_get_user_manager();
     $admins    = 0;
     $nonAdmins = 0;
-    $res = db_query($usersSql);
-    while ($row = db_fetch_array($res)) {
-        $user = $um->getUserById($row['user_id']);
-        if ($user->isMember($groupId, 'A')) {
-            $admins ++;
-        } else {
-            $nonAdmins ++;
+    if ($usersSql !== null) {
+        $um = ugroup_get_user_manager();
+        $res = db_query($usersSql);
+        while ($row = db_fetch_array($res)) {
+            $user = $um->getUserById($row['user_id']);
+            if ($user->isMember($groupId, 'A')) {
+                $admins ++;
+            } else {
+                $nonAdmins ++;
+            }
         }
     }
     return array('admins' => $admins, 'non_admins' => $nonAdmins);
