@@ -121,18 +121,28 @@ class SetDateValueRepositoryTest extends TestCase
         $this->set_date_value_repository->update($set_date_value);
     }
 
-    public function testDeleteAllByTransitionIfIdNotInDeletesExpectedTransitions()
+    public function testDeleteAllByTransitionIfNotInDeletesExpectedTransitions()
     {
+        $set_date_values = [
+            new SetDateValue(1, 43, 1),
+            new SetDateValue(2, 43, 1),
+            new SetDateValue(3, 43, 1)
+        ];
         $this->set_date_value_dao
             ->shouldReceive('deletePostActionByTransitionIfIdNotIn')
             ->with(1, [1, 2, 3])
             ->andReturn(true);
         $transition = TransitionFactory::buildATransitionWithId(1);
-        $this->set_date_value_repository->deleteAllByTransitionIfIdNotIn($transition, [1, 2, 3]);
+        $this->set_date_value_repository->deleteAllByTransitionIfNotIn($transition, $set_date_values);
     }
 
-    public function testDeleteAllByTransitionIfIdNotInThrowsIfDeleteFail()
+    public function testDeleteAllByTransitionIfNotInThrowsIfDeleteFail()
     {
+        $set_date_values = [
+            new SetDateValue(1, 43, 1),
+            new SetDateValue(2, 43, 1),
+            new SetDateValue(3, 43, 1)
+        ];
         $this->set_date_value_dao
             ->shouldReceive('deletePostActionByTransitionIfIdNotIn')
             ->andReturn(false);
@@ -140,7 +150,7 @@ class SetDateValueRepositoryTest extends TestCase
 
         $this->expectException(DataAccessQueryException::class);
 
-        $this->set_date_value_repository->deleteAllByTransitionIfIdNotIn($transition, [1, 2, 3]);
+        $this->set_date_value_repository->deleteAllByTransitionIfNotIn($transition, $set_date_values);
     }
 
     public function testFindAllIdsByTransitionReturnsIdsOfAllActionsOnGivenTransition()

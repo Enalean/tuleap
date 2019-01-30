@@ -102,12 +102,18 @@ class SetDateValueRepository
     }
 
     /**
-     * @param Transition $transition
-     * @param int[] $ids_to_skip
+     * @param SetDateValue[] $set_date_values
      * @throws DataAccessQueryException
      */
-    public function deleteAllByTransitionIfIdNotIn(Transition $transition, array $ids_to_skip)
+    public function deleteAllByTransitionIfNotIn(Transition $transition, array $set_date_values)
     {
+        $ids_to_skip = array_map(
+            function (SetDateValue $action) {
+                return $action->getId();
+            },
+            $set_date_values
+        );
+
         $success = $this->set_date_value_dao->deletePostActionByTransitionIfIdNotIn($transition->getId(), $ids_to_skip);
         if ($success === false) {
             throw new DataAccessQueryException(

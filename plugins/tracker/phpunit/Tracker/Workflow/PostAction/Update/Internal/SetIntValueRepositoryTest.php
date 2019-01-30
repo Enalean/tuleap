@@ -121,18 +121,29 @@ class SetIntValueRepositoryTest extends TestCase
         $this->set_int_value_repository->update($set_int_value);
     }
 
-    public function testDeleteAllByTransitionIfIdNotInDeletesExpectedTransitions()
+    public function testDeleteAllByTransitionIfNotInDeletesExpectedTransitions()
     {
+        $set_int_values = [
+            new SetIntValue(1, 43, 1),
+            new SetIntValue(2, 43, 1),
+            new SetIntValue(3, 43, 1)
+        ];
+
         $this->set_int_value_dao
             ->shouldReceive('deletePostActionByTransitionIfIdNotIn')
             ->with(1, [1, 2, 3])
             ->andReturn(true);
         $transition = TransitionFactory::buildATransitionWithId(1);
-        $this->set_int_value_repository->deleteAllByTransitionIfIdNotIn($transition, [1, 2, 3]);
+        $this->set_int_value_repository->deleteAllByTransitionIfNotIn($transition, $set_int_values);
     }
 
-    public function testDeleteAllByTransitionIfIdNotInThrowsIfDeleteFail()
+    public function testDeleteAllByTransitionIfNotInThrowsIfDeleteFail()
     {
+        $set_int_values = [
+            new SetIntValue(1, 43, 1),
+            new SetIntValue(2, 43, 1),
+            new SetIntValue(3, 43, 1)
+        ];
         $this->set_int_value_dao
             ->shouldReceive('deletePostActionByTransitionIfIdNotIn')
             ->andReturn(false);
@@ -140,7 +151,7 @@ class SetIntValueRepositoryTest extends TestCase
 
         $this->expectException(DataAccessQueryException::class);
 
-        $this->set_int_value_repository->deleteAllByTransitionIfIdNotIn($transition, [1, 2, 3]);
+        $this->set_int_value_repository->deleteAllByTransitionIfNotIn($transition, $set_int_values);
     }
 
     public function testFindAllIdsByTransitionReturnsIdsOfAllActionsOnGivenTransition()

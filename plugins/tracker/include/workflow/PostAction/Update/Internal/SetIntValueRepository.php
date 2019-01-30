@@ -102,12 +102,18 @@ class SetIntValueRepository
     }
 
     /**
-     * @param Transition $transition
-     * @param int[] $ids_to_skip
+     * @param SetIntValue[] $set_int_values
      * @throws DataAccessQueryException
      */
-    public function deleteAllByTransitionIfIdNotIn(Transition $transition, array $ids_to_skip)
+    public function deleteAllByTransitionIfNotIn(Transition $transition, array $set_int_values)
     {
+        $ids_to_skip = array_map(
+            function (SetIntValue $action) {
+                return $action->getId();
+            },
+            $set_int_values
+        );
+
         $success = $this->set_int_value_dao->deletePostActionByTransitionIfIdNotIn($transition->getId(), $ids_to_skip);
         if ($success === false) {
             throw new DataAccessQueryException(

@@ -58,7 +58,7 @@ class SetIntValueUpdaterTest extends TestCase
     {
         $this->set_int_value_repository = Mockery::mock(SetIntValueRepository::class);
         $this->set_int_value_repository
-            ->shouldReceive('deleteAllByTransitionIfIdNotIn')
+            ->shouldReceive('deleteAllByTransitionIfNotIn')
             ->byDefault();
         $this->set_int_value_repository
             ->shouldReceive('update')
@@ -123,8 +123,8 @@ class SetIntValueUpdaterTest extends TestCase
             ->with($this->tracker, $action);
 
         $this->set_int_value_repository
-            ->shouldReceive('deleteAllByTransitionIfIdNotIn')
-            ->with($transition, [2])
+            ->shouldReceive('deleteAllByTransitionIfNotIn')
+            ->with($transition, [$action])
             ->andReturns();
 
         $this->updater->updateByTransition($actions, $transition);

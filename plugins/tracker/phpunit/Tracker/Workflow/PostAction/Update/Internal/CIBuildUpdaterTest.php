@@ -56,7 +56,7 @@ class CIBuildUpdaterTest extends TestCase
     {
         $this->ci_build_repository = Mockery::mock(CIBuildRepository::class);
         $this->ci_build_repository
-            ->shouldReceive('deleteAllByTransitionIfIdNotIn')
+            ->shouldReceive('deleteAllByTransitionIfNotIn')
             ->byDefault();
         $this->ci_build_repository
             ->shouldReceive('update')
@@ -120,8 +120,8 @@ class CIBuildUpdaterTest extends TestCase
             ->with($action);
 
         $this->ci_build_repository
-            ->shouldReceive('deleteAllByTransitionIfIdNotIn')
-            ->with($transition, [2])
+            ->shouldReceive('deleteAllByTransitionIfNotIn')
+            ->with($transition, [$action])
             ->andReturns();
 
         $this->updater->updateByTransition($actions, $transition);

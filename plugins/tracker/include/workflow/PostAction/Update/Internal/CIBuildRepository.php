@@ -75,12 +75,18 @@ class CIBuildRepository
     }
 
     /**
-     * @param Transition $transition
-     * @param int[] $ids_to_skip
+     * @param CIBuild[] $ci_builds
      * @throws DataAccessQueryException
      */
-    public function deleteAllByTransitionIfIdNotIn(Transition $transition, array $ids_to_skip)
+    public function deleteAllByTransitionIfNotIn(Transition $transition, array $ci_builds)
     {
+        $ids_to_skip = array_map(
+            function (CIBuild $action) {
+                return $action->getId();
+            },
+            $ci_builds
+        );
+
         $success = $this->ci_build_dao->deletePostActionByTransitionIfIdNotIn($transition->getId(), $ids_to_skip);
         if ($success === false) {
             throw new DataAccessQueryException(

@@ -56,7 +56,7 @@ class SetIntValueUpdater implements PostActionUpdater
         $existing_ids_collection = $this->repository->findAllIdsByTransition($transition);
         $diff                    = $actions->compareSetIntValueActionsTo($existing_ids_collection);
 
-        $this->repository->deleteAllByTransitionIfIdNotIn($transition, $diff->getUpdatedActionIds());
+        $this->repository->deleteAllByTransitionIfNotIn($transition, $diff->getUpdatedActions());
 
         foreach ($diff->getAddedActions() as $added_action) {
             $this->repository->create($transition, $added_action);
