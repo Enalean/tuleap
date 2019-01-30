@@ -37,6 +37,7 @@ use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\REST\RESTLogger;
 use Tuleap\REST\UserManager;
 use Tuleap\Tracker\REST\v1\TrackerPermissionsChecker;
+use Tuleap\Tracker\REST\v1\Workflow\PostAction\PostActionsRepresentationBuilder;
 use Tuleap\Tracker\REST\v1\Workflow\PostAction\Update\CIBuildJsonParser;
 use Tuleap\Tracker\REST\v1\Workflow\PostAction\Update\PostActionCollectionJsonParser;
 use Tuleap\Tracker\REST\v1\Workflow\PostAction\Update\SetDateValueJsonParser;

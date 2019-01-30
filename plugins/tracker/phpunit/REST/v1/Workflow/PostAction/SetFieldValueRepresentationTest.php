@@ -19,7 +19,7 @@
  *
  */
 
-namespace Tuleap\Tracker\REST\v1\Workflow;
+namespace Tuleap\Tracker\REST\v1\Workflow\PostAction;
 
 use PHPUnit\Framework\TestCase;
 use Transition_PostAction_Field_Date;

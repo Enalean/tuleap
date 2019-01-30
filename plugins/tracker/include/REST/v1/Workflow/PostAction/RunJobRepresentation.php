@@ -19,7 +19,7 @@
  *
  */
 
-namespace Tuleap\Tracker\REST\v1\Workflow;
+namespace Tuleap\Tracker\REST\v1\Workflow\PostAction;
 
 use Tuleap\REST\JsonCast;
 
@@ -42,7 +42,7 @@ class RunJobRepresentation
 
     private function __construct($id, $job_url)
     {
-        $this->id = $id;
+        $this->id      = $id;
         $this->job_url = $job_url;
     }
 

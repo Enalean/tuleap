@@ -19,7 +19,7 @@
  *
  */
 
-namespace Tuleap\Tracker\REST\v1\Workflow;
+namespace Tuleap\Tracker\REST\v1\Workflow\PostAction;
 
 use Transition_PostAction;
 use Transition_PostAction_CIBuild;
@@ -47,7 +47,7 @@ class PostActionsRepresentationBuilder implements Visitor
      */
     public function __construct(array $post_actions)
     {
-        $this->post_actions = $post_actions;
+        $this->post_actions                = $post_actions;
         $this->post_action_representations = [];
     }
 
