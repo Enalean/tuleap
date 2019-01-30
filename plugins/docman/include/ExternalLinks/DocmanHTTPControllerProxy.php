@@ -53,7 +53,7 @@ class DocmanHTTPControllerProxy
 
         $redirector = new ExternalLinkRedirector(
             $user,
-            $request->getProject(),
+            $request,
             $folder_id
         );
 
