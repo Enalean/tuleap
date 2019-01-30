@@ -43,6 +43,7 @@ use Tuleap\Tracker\REST\v1\Workflow\PostAction\Update\SetDateValueJsonParser;
 use Tuleap\Tracker\REST\v1\Workflow\PostAction\Update\SetFloatValueJsonParser;
 use Tuleap\Tracker\REST\v1\Workflow\PostAction\Update\SetIntValueJsonParser;
 use Tuleap\Tracker\REST\WorkflowTransitionPOSTRepresentation;
+use Tuleap\Tracker\Workflow\FeatureFlag;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\CIBuildRepository;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\CIBuildUpdater;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\CIBuildValidator;
@@ -66,6 +67,7 @@ use WorkflowFactory;
 
 class TransitionsResource extends AuthenticatedResource
 {
+    use FeatureFlag;
 
     /** @var UserManager */
     private $user_manager;
@@ -419,6 +421,9 @@ class TransitionsResource extends AuthenticatedResource
                 404,
                 dgettext('tuleap-tracker', 'Transition not found.')
             );
+        }
+        if (! $this->isNewWorkflowEnabled($transition->getWorkflow()->getTracker())) {
+            throw new I18NRestException(403, dgettext('tuleap-tracker', 'This REST route is still under construction.'));
         }
 
         $current_user = $this->user_manager->getCurrentUser();
