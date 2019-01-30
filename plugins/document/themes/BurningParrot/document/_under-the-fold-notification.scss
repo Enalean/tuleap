@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,21 +16,28 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-@import 'headers';
-@import 'icons';
-@import 'folder-content';
-@import 'new-document';
-@import 'upload';
-@import 'under-the-fold-notification';
-@import 'switch-to-docman';
-@import '../../../../../src/www/themes/BurningParrot/css/includes/global-variables';
 
-.document-app {
-    display: flex;
-    flex-direction: column;
-    height: calc(100vh - #{$navbar-height});
+.document-new-item-under-the-fold-notification {
+    position: fixed;
+    z-index: 11000;
+    right: $tlp-half-spacing;
+    bottom: $tlp-half-spacing;
+    margin: 0;
+    opacity: 1;
+    background: mix($tlp-ui-success, $tlp-ui-white, 7);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, .175);
+}
 
-    > .breadcrumb {
-        flex: 0 0 auto;
-    }
+.document-new-item-under-the-fold-notification-fadeout {
+    transition: opacity 1s ease-in-out;
+    opacity: 0;
+}
+
+.document-new-item-under-the-fold-notification-fast-fadeout {
+    transition: opacity 250ms ease-in-out;
+    opacity: 0;
+}
+
+.document-new-item-under-the-fold-notification-icon {
+    margin: 0 0 0 5px;
 }
