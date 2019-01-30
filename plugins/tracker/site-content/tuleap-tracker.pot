@@ -412,6 +412,9 @@ msgstr ""
 msgid "That tracker does not exist."
 msgstr ""
 
+msgid "The 'job_url' attribute must be a valid URL."
+msgstr ""
+
 #, php-format
 msgid "The @comments metadata cannot be compared to MYSELF()."
 msgstr ""
@@ -495,6 +498,11 @@ msgstr ""
 msgid ""
 "The field '%s' is not supported. Please\n"
 "                    refer to the documentation for the allowed types."
+msgstr ""
+
+#, php-format
+msgid ""
+"The field_id value '%u' does not match a date field in use in the tracker."
 msgstr ""
 
 #, php-format
@@ -605,9 +613,6 @@ msgstr ""
 msgid "The integer field '%s' cannot be compared to the string value '%s'."
 msgstr ""
 
-msgid "The job_url attribute must be a valid URL."
-msgstr ""
-
 #, php-format
 msgid "The list field '%s' cannot be compared to MYSELF() for anonymous users."
 msgstr ""
@@ -694,7 +699,17 @@ msgstr ""
 msgid "The value '%s' doesn't exist for the list field '%s'."
 msgstr ""
 
-msgid "There should not be duplicate run_job ids."
+msgid "There should not be duplicate 'run_job' ids."
+msgstr ""
+
+msgid ""
+"There should not be duplicate field_ids for 'set_field_value' actions with "
+"type 'date'."
+msgstr ""
+
+msgid ""
+"There should not be duplicate ids for 'set_field_value' actions with type "
+"'date'."
 msgstr ""
 
 msgid "This template does not use trackers"

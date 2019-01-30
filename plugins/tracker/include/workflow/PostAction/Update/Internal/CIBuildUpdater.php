@@ -46,13 +46,12 @@ class CIBuildUpdater implements PostActionUpdater
      * Update (and replace) all CI Build post actions with those included in given collection.
      * @throws DataAccessQueryException
      * @throws UnknownPostActionIdsException
-     * @throws DuplicateCIBuildPostAction
-     * @throws InvalidCIBuildPostActionException
+     * @throws InvalidPostActionException
      */
     public function updateByTransition(PostActionCollection $actions, Transition $transition): void
     {
+        $actions->validateCIBuildActions($this->validator);
         $existing_ids_collection = $this->ci_build_repository->findAllIdsByTransition($transition);
-        $this->validator->validate($actions);
         $diff = $actions->compareCIBuildActionsTo($existing_ids_collection);
 
         $this->ci_build_repository->deleteAllByTransitionIfIdNotIn($transition, $diff->getUpdatedActionIds());

@@ -69,15 +69,4 @@ class PostActionCollectionTest extends TestCase
 
         $actions->compareCIBuildActionsTo($existing_ids);
     }
-
-    public function testGetCiBuildActionsReturnsCIBuildActions()
-    {
-        $ci_build_action       = new CIBuild(1, 'http://example.test');
-        $set_date_value_action = new SetDateValue(1, 22, 13);
-        $actions               = new PostActionCollection($ci_build_action, $set_date_value_action);
-
-        $ci_build_actions = $actions->getCIBuildActions();
-
-        $this->assertEquals([$ci_build_action], $ci_build_actions);
-    }
 }

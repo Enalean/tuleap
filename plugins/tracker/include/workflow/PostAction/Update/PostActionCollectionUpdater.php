@@ -24,8 +24,7 @@ namespace Tuleap\Tracker\Workflow\PostAction\Update;
 use DataAccessQueryException;
 use Transition;
 use Tuleap\DB\TransactionExecutor;
-use Tuleap\Tracker\Workflow\PostAction\Update\Internal\DuplicateCIBuildPostAction;
-use Tuleap\Tracker\Workflow\PostAction\Update\Internal\InvalidCIBuildPostActionException;
+use Tuleap\Tracker\Workflow\PostAction\Update\Internal\InvalidPostActionException;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\PostActionUpdater;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\UnknownPostActionIdsException;
 
@@ -52,9 +51,8 @@ class PostActionCollectionUpdater
     /**
      * Replace all actions on a transaction by given actions collection.
      * @throws DataAccessQueryException
-     * @throws DuplicateCIBuildPostAction
+     * @throws InvalidPostActionException
      * @throws UnknownPostActionIdsException
-     * @throws InvalidCIBuildPostActionException
      */
     public function updateByTransition(Transition $transition, PostActionCollection $actions): void
     {

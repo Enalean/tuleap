@@ -473,6 +473,9 @@ msgstr "URL cible :"
 msgid "That tracker does not exist."
 msgstr "Cet outil de suivi n'existe pas."
 
+msgid "The 'job_url' attribute must be a valid URL."
+msgstr "L'attribut 'job_url' doit être une URL valide."
+
 #, php-format
 msgid "The @comments metadata cannot be compared to MYSELF()."
 msgstr "@comments ne peut pas être comparé à MYSELF()."
@@ -571,6 +574,12 @@ msgid ""
 msgstr ""
 "Le champ '%s' n'est pas supporté. Merci de vous référer à la documentation "
 "pour les types de champs autorisés."
+
+#, php-format
+msgid ""
+"The field_id value '%u' does not match a date field in use in the tracker."
+msgstr ""
+"Le field_id '%u' ne correspond pas à un champ date utilisé dans le tracker."
 
 #, php-format
 msgid "The file field '%s' cannot be compared to MYSELF()."
@@ -701,9 +710,6 @@ msgstr ""
 msgid "The integer field '%s' cannot be compared to the string value '%s'."
 msgstr "Le champ entier '%s' ne peut pas être comparé à la chaîne '%s'."
 
-msgid "The job_url attribute must be a valid URL."
-msgstr "L'attribut job_url doit être une URL valide."
-
 #, php-format
 msgid "The list field '%s' cannot be compared to MYSELF() for anonymous users."
 msgstr ""
@@ -806,8 +812,22 @@ msgstr "La liste des désabonnements ont été mise à jour avec succès."
 msgid "The value '%s' doesn't exist for the list field '%s'."
 msgstr "La valeur '%s' n’existe pas pour le champ liste ‘%s’."
 
-msgid "There should not be duplicate run_job ids."
-msgstr "Les ids de type run_job ne doivent pas être en doublons."
+msgid "There should not be duplicate 'run_job' ids."
+msgstr "Les ids de type 'run_job' ne doivent pas être en doublons."
+
+msgid ""
+"There should not be duplicate field_ids for 'set_field_value' actions with "
+"type 'date'."
+msgstr ""
+"Les field_ids d'actions 'set_field_value' avec type 'date' ne doivent "
+"pas être en doublons."
+
+msgid ""
+"There should not be duplicate ids for 'set_field_value' actions with type "
+"'date'."
+msgstr ""
+"Les ids d'actions 'set_field_value' avec type 'date' ne doivent pas être en "
+"doublons."
 
 msgid "This template does not use trackers"
 msgstr "Ce patron n'utilise pas les trackers"

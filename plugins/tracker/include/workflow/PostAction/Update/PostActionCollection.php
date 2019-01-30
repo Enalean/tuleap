@@ -22,10 +22,12 @@
 namespace Tuleap\Tracker\Workflow\PostAction\Update;
 
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\CIBuild;
+use Tuleap\Tracker\Workflow\PostAction\Update\Internal\CIBuildValidator;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\PostActionIdCollection;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\PostActionsDiff;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\PostActionVisitor;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\SetDateValue;
+use Tuleap\Tracker\Workflow\PostAction\Update\Internal\SetDateValueValidator;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\SetFloatValue;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\SetIntValue;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\UnknownPostActionIdsException;
@@ -84,11 +86,20 @@ class PostActionCollection implements PostActionVisitor
     }
 
     /**
-     * @return CIBuild[]
+     * @throws Internal\InvalidPostActionException
      */
-    public function getCIBuildActions(): array
+    public function validateCIBuildActions(CIBuildValidator $validator): void
     {
-        return $this->ci_build_actions;
+        $validator->validate(...$this->ci_build_actions);
+    }
+
+    /**
+     * @param SetDateValueValidator $validator
+     * @throws Internal\InvalidPostActionException
+     */
+    public function validateSetDateValueActions(SetDateValueValidator $validator, \Tracker $tracker): void
+    {
+        $validator->validate($tracker, ...$this->set_date_value_actions);
     }
 
     /**
@@ -106,6 +117,7 @@ class PostActionCollection implements PostActionVisitor
      * Compare only Set Date Value actions against a list of action ids:
      * - Actions without id are marked as added
      * - Actions whose id is in given list are marked as updated
+     * @throws UnknownPostActionIdsException
      */
     public function compareSetDateValueActionsTo(PostActionIdCollection $our_ids): PostActionsDiff
     {
@@ -116,6 +128,7 @@ class PostActionCollection implements PostActionVisitor
      * Compare only Set Int Value actions against a list of action ids:
      * - Actions without id are marked as added
      * - Actions whose id is in given list are marked as updated
+     * @throws UnknownPostActionIdsException
      */
     public function compareSetIntValueActionsTo(PostActionIdCollection $our_ids): PostActionsDiff
     {
@@ -126,6 +139,7 @@ class PostActionCollection implements PostActionVisitor
      * Compare only Set Float Value actions against a list of action ids:
      * - Actions without id are marked as added
      * - Actions whose id is in given list are marked as updated
+     * @throws UnknownPostActionIdsException
      */
     public function compareSetFloatValueActionsTo(PostActionIdCollection $our_ids): PostActionsDiff
     {

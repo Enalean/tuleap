@@ -22,19 +22,13 @@ namespace Tuleap\Tracker\Workflow\PostAction\Update\Internal;
 
 final class UnknownPostActionIdsException extends \Exception
 {
-    /**
-     * @var mixed[]
-     */
-    private $unknown_ids;
-
     public function __construct(array $unknown_ids)
     {
-        parent::__construct();
-        $this->unknown_ids = $unknown_ids;
-    }
-
-    public function getUnknownIds(): array
-    {
-        return $this->unknown_ids;
+        parent::__construct(
+            sprintf(
+                dgettext('tuleap-tracker', "One id or more could not be found: '%s'"),
+                implode(',', $unknown_ids)
+            )
+        );
     }
 }

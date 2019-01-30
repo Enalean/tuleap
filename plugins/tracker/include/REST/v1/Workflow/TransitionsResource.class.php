@@ -46,11 +46,11 @@ use Tuleap\Tracker\REST\WorkflowTransitionPOSTRepresentation;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\CIBuildRepository;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\CIBuildUpdater;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\CIBuildValidator;
-use Tuleap\Tracker\Workflow\PostAction\Update\Internal\DuplicateCIBuildPostAction;
-use Tuleap\Tracker\Workflow\PostAction\Update\Internal\DuplicatePostActionIdsException;
-use Tuleap\Tracker\Workflow\PostAction\Update\Internal\InvalidCIBuildPostActionException;
+use Tuleap\Tracker\Workflow\PostAction\Update\Internal\InvalidPostActionException;
+use Tuleap\Tracker\Workflow\PostAction\Update\Internal\PostActionIdValidator;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\SetDateValueRepository;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\SetDateValueUpdater;
+use Tuleap\Tracker\Workflow\PostAction\Update\Internal\SetDateValueValidator;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\SetFloatValueRepository;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\SetFloatValueUpdater;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\SetIntValueRepository;
@@ -435,20 +435,7 @@ class TransitionsResource extends AuthenticatedResource
             ->parse($post_actions_representation->post_actions);
         try {
             $this->getPostActionCollectionUpdater()->updateByTransition($transition, $post_actions);
-        } catch (DuplicateCIBuildPostAction $e) {
-            throw new I18NRestException(
-                400,
-                dgettext('tuleap-tracker', 'There should not be duplicate run_job ids.')
-            );
-        } catch (UnknownPostActionIdsException $e) {
-            throw new I18NRestException(
-                400,
-                sprintf(
-                    dgettext('tuleap-tracker', "One id or more could not be found: '%s'"),
-                    implode(',', $e->getUnknownIds())
-                )
-            );
-        } catch (InvalidCIBuildPostActionException $e) {
+        } catch (InvalidPostActionException | UnknownPostActionIdsException $e) {
             throw new I18NRestException(400, $e->getMessage());
         }
     }
@@ -551,6 +538,7 @@ class TransitionsResource extends AuthenticatedResource
 
     private function getPostActionCollectionUpdater(): PostActionCollectionUpdater
     {
+        $ids_validator = new PostActionIdValidator();
         return new PostActionCollectionUpdater(
             new TransactionExecutor(
                 new DataAccessObject()
@@ -559,13 +547,14 @@ class TransitionsResource extends AuthenticatedResource
                 new CIBuildRepository(
                     new Transition_PostAction_CIBuildDao()
                 ),
-                new CIBuildValidator()
+                new CIBuildValidator($ids_validator)
             ),
             new SetDateValueUpdater(
                 new SetDateValueRepository(
                     new Transition_PostAction_Field_DateDao(),
                     new DataAccessObject()
-                )
+                ),
+                new SetDateValueValidator($ids_validator, \Tracker_FormElementFactory::instance())
             ),
             new SetIntValueUpdater(
                 new SetintValueRepository(
