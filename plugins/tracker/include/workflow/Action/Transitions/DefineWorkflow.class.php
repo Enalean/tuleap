@@ -37,7 +37,9 @@ class Tracker_Workflow_Action_Transitions_DefineWorkflow  extends Tracker_Workfl
         $workflow = $this->workflow_factory->getWorkflowByTrackerId($this->tracker->id);
         $this->displayHeader($layout);
 
-        $this->displayLegacy($workflow);
+        if ($workflow !== null) {
+            $this->displayLegacy($workflow);
+        }
 
         echo '<h3>'.$GLOBALS['Language']->getText('workflow_admin','title_define_transitions').'</h3>';
 
