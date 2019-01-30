@@ -44,7 +44,7 @@ final class LogoutController implements DispatchableWithRequestNoAuthz
         $logout_csrf = new CSRFSynchronizerToken('logout_action');
         $logout_csrf->check('/my/');
 
-        header('Clear-Site-Data: "*"');
+        header('Clear-Site-Data: "cache", "storage", "executionContexts"');
         $this->user_manager->logout();
 
         $layout->redirect('/');
