@@ -20,11 +20,12 @@
 
 namespace Tuleap\Tracker;
 
-use BaseLanguage;
 use ForgeConfig;
-use Layout;
 use Logger;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
 use SimpleXMLElement;
 use Tracker_CannedResponseFactory;
 use Tracker_FormElementFactory;
@@ -32,6 +33,7 @@ use Tracker_ReportFactory;
 use Tracker_RuleFactory;
 use Tracker_SemanticFactory;
 use Tracker_Workflow_Trigger_RulesManager;
+use Tuleap\ForgeConfigSandbox;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\XML\MappingsRegistry;
 use WorkflowFactory;
@@ -39,6 +41,13 @@ use XML_RNGValidator;
 
 class TrackerXmlImportTest extends TestCase
 {
+    use MockeryPHPUnitIntegration, ForgeConfigSandbox;
+
+    /**
+     * @var string
+     */
+    private $temporary_directory;
+
     /**
      * @var MappingsRegistry
      */
@@ -52,19 +61,13 @@ class TrackerXmlImportTest extends TestCase
      */
     private $project;
 
-    private $initial_tmp_dir;
     private $configuration;
 
-    public function setUp()
+    protected function setUp()
     {
-        parent::setUp();
-        $GLOBALS['Language'] = \Mockery::spy(BaseLanguage::class);
-        $GLOBALS['HTML']     = \Mockery::spy(Layout::class);
-        $GLOBALS['Response'] = $GLOBALS['HTML'];
-
-        $this->initial_tmp_dir = ForgeConfig::get('tmp_dir');
-        ForgeConfig::set('tmp_dir', '/tmp');
-        ForgeConfig::set('codendi_utils_prefix', __DIR__ . '/../../../../src/utils/');
+        $this->temporary_directory = sys_get_temp_dir() . '/' . bin2hex(random_bytes(8));
+        mkdir($this->temporary_directory);
+        ForgeConfig::set('tmp_dir', $this->temporary_directory);
 
         $class_parameters = [
             \Mockery::spy(\TrackerFactory::class),
@@ -99,11 +102,19 @@ class TrackerXmlImportTest extends TestCase
         $this->configuration     = new ImportConfig();
     }
 
-    public function tearDown()
+    protected function tearDown()
     {
-        parent::tearDown();
-
-        ForgeConfig::set('tmp_dir', $this->initial_tmp_dir);
+        $folders = new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator($this->temporary_directory, RecursiveDirectoryIterator::SKIP_DOTS),
+            RecursiveIteratorIterator::CHILD_FIRST
+        );
+        foreach ($folders as $folder) {
+            if ($folder->isDir()) {
+                rmdir($folder->getPathname());
+            } else {
+                unlink($folder->getPathname());
+            }
+        }
     }
 
     public function testItShouldRaiseExceptionWithEmptyTrackerDescription()
