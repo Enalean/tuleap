@@ -120,7 +120,7 @@ class AfterItemCreationVisitor implements ItemVisitor
             'user_id'   => $params['user']->getId(),
             'label'     => '',
             'changelog' => dgettext('plugin_docman', 'Initial version'),
-            'date'      => time(),
+            'date'      => $item->getCreateDate(),
             'filename'  => basename($created_file_path),
             'filesize'  => filesize($created_file_path),
             'filetype'  => 'text/html',

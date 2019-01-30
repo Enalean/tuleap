@@ -34,14 +34,9 @@ class DocmanItemCreatorTest extends TestCase
 
     private $type_retriever;
     private $creator_visitor;
-    private $permissions_manager;
-    private $event_manager;
     private $item_factory;
     private $document_ongoing_upload_retriever;
     private $document_to_upload_creator;
-    private $link_version_factory;
-    private $file_storage;
-    private $version_factory;
     /**
      * @var vfsStreamDirectory
      */
@@ -51,24 +46,12 @@ class DocmanItemCreatorTest extends TestCase
 
     public function setUp()
     {
-        $this->permissions_manager  = \Mockery::mock(\PermissionsManager::class);
-        $this->event_manager        = \Mockery::mock(\EventManager::class);
-        $this->link_version_factory = \Mockery::mock(\Docman_LinkVersionFactory::class);
-        $this->file_storage         = \Mockery::mock(\Docman_FileStorage::class);
-        $this->version_factory      = \Mockery::mock(\Docman_VersionFactory::class);
-        $this->creator_visitor      = new AfterItemCreationVisitor(
-            $this->permissions_manager,
-            $this->event_manager,
-            $this->link_version_factory,
-            $this->file_storage,
-            $this->version_factory
-        );
+        $this->creator_visitor      = \Mockery::mock(AfterItemCreationVisitor::class);
 
         $this->item_factory                      = \Mockery::mock(\Docman_ItemFactory::class);
         $this->document_ongoing_upload_retriever = \Mockery::mock(DocumentOngoingUploadRetriever::class);
         $this->document_to_upload_creator        = \Mockery::mock(DocumentToUploadCreator::class);
 
-        $this->directorySetup();
         $this->empty_file_to_upload_finisher     = \Mockery::mock(EmptyFileToUploadFinisher::class);
     }
 
@@ -96,7 +79,6 @@ class DocmanItemCreatorTest extends TestCase
         $parent_item->shouldReceive('getId')->andReturns(11);
         $user->shouldReceive('getId')->andReturns(222);
         $project->shouldReceive('getID')->andReturns(102);
-        $this->event_manager->shouldReceive('processEvent');
 
         $created_item = \Mockery::mock(\Docman_Empty::class);
         $created_item->shouldReceive('getId')->andReturns(12);
@@ -108,9 +90,10 @@ class DocmanItemCreatorTest extends TestCase
             ->with('Title', '', 11, 100, 222, PLUGIN_DOCMAN_ITEM_TYPE_EMPTY, null, null)
             ->once()
             ->andReturns($created_item);
-        $this->permissions_manager->shouldReceive('clonePermissions')->once();
 
         $this->item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
+
+        $this->creator_visitor->shouldReceive('visitEmpty')->once();
 
         $created_item_representation = $item_creator->create(
             $parent_item,
@@ -151,7 +134,6 @@ class DocmanItemCreatorTest extends TestCase
         $user->shouldReceive('getId')->andReturns(222);
         $project->shouldReceive('getID')->andReturns(102);
         $project->shouldReceive('usesWiki')->andReturn(true);
-        $this->event_manager->shouldReceive('processEvent');
 
         $created_item = \Mockery::mock(\Docman_Empty::class);
         $created_item->shouldReceive('getId')->andReturns(12);
@@ -163,9 +145,10 @@ class DocmanItemCreatorTest extends TestCase
             ->with('Title', '', 11, 100, 222, PLUGIN_DOCMAN_ITEM_TYPE_WIKI, "Monchichi", null)
             ->once()
             ->andReturns($created_item);
-        $this->permissions_manager->shouldReceive('clonePermissions')->once();
 
         $this->item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
+
+        $this->creator_visitor->shouldReceive('visitEmpty')->once();
 
         $created_item_representation = $item_creator->create(
             $parent_item,
@@ -209,7 +192,6 @@ class DocmanItemCreatorTest extends TestCase
         $parent_item->shouldReceive('getId')->andReturns(11);
         $user->shouldReceive('getId')->andReturns(222);
         $project->shouldReceive('getID')->andReturns(102);
-        $this->event_manager->shouldReceive('processEvent');
 
         $created_item = \Mockery::mock(\Docman_Empty::class);
         $created_item->shouldReceive('getId')->andReturns(12);
@@ -340,8 +322,6 @@ class DocmanItemCreatorTest extends TestCase
         $user->shouldReceive('getId')->andReturns(222);
         $project->shouldReceive('getID')->andReturns(102);
 
-        $this->event_manager->shouldReceive('processEvent');
-
         $created_item = \Mockery::mock(\Docman_Link::class);
         $created_item->shouldReceive('getId')->andReturns(12);
         $created_item->shouldReceive('getParentId')->andReturns(11);
@@ -362,15 +342,9 @@ class DocmanItemCreatorTest extends TestCase
             ->once()
             ->andReturns($created_item);
 
-        $this->permissions_manager->shouldReceive('clonePermissions')->once();
-
-        $this->link_version_factory
-            ->shouldReceive('create')
-            ->with($created_item, 'Initial version', 'Initial version', $current_time->getTimestamp())
-            ->once()
-            ->andReturn(true);
-
         $this->item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
+
+        $this->creator_visitor->shouldReceive('visitLink')->once();
 
         $created_item_representation = $item_creator->create(
             $parent_item,
@@ -409,7 +383,6 @@ class DocmanItemCreatorTest extends TestCase
         $parent_item->shouldReceive('getId')->andReturns(11);
         $user->shouldReceive('getId')->andReturns(222);
         $project->shouldReceive('getID')->andReturns(102);
-        $this->event_manager->shouldReceive('processEvent');
 
         $created_item = \Mockery::mock(\Docman_Folder::class);
         $created_item->shouldReceive('getId')->andReturns(12);
@@ -421,9 +394,10 @@ class DocmanItemCreatorTest extends TestCase
             ->with('Title', '', 11, 100, 222, PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, null, null)
             ->once()
             ->andReturns($created_item);
-        $this->permissions_manager->shouldReceive('clonePermissions')->once();
 
         $this->item_factory->shouldReceive('doesTitleCorrespondToExistingFolder')->andReturn(false);
+
+        $this->creator_visitor->shouldReceive('visitFolder')->once();
 
         $created_item_representation = $item_creator->create(
             $parent_item,
@@ -464,7 +438,6 @@ class DocmanItemCreatorTest extends TestCase
         $parent_item->shouldReceive('getId')->andReturns(11);
         $user->shouldReceive('getId')->andReturns(222);
         $project->shouldReceive('getID')->andReturns(102);
-        $this->event_manager->shouldReceive('processEvent');
 
         $created_item = \Mockery::mock(\Docman_EmbeddedFile::class);
         $created_item->shouldReceive('getId')->andReturns(12);
@@ -477,39 +450,11 @@ class DocmanItemCreatorTest extends TestCase
             ->with('Embedded file', '', 11, 100, 222, PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE, null, null)
             ->once()
             ->andReturns($created_item);
-        $this->permissions_manager->shouldReceive('clonePermissions')->once();
 
         $this->item_factory->shouldReceive('doesTitleCorrespondToExistingFolder')->andReturn(false);
         $this->item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
 
-        $created_file_path = $this->docman_file_system->url() . '/Embedded/file';
-        $this->file_storage->shouldReceive('store')->with(
-            $post_representation->embedded_properties->content,
-            $created_item->getGroupId(),
-            $created_item->getId(),
-            1
-        )->andReturns($created_file_path);
-        $created_file_size = $this->docman_file_system->getChild('Embedded/file')->size();
-
-        $new_embedded_version_row = [
-            'item_id'   => $created_item->getId(),
-            'number'    => 1,
-            'user_id'   => $user->getId(),
-            'label'     => '',
-            'changelog' => dgettext('plugin_docman', 'Initial version'),
-            'date'      => $current_time->getTimestamp(),
-            'filename'  => basename($created_file_path),
-            'filesize'  => $created_file_size,
-            'filetype'  => 'text/html',
-            'path'      => $created_file_path
-        ];
-
-
-        $version_id = 3;
-        $this->version_factory->shouldReceive('create')->with($new_embedded_version_row)->andReturn($version_id);
-        $this->version_factory->shouldReceive('getCurrentVersionForItem')->with($created_item)->andReturn(
-            new \Docman_Version()
-        );
+        $this->creator_visitor->shouldReceive('visitEmbeddedFile')->once();
 
         $is_embedded_allowed         = true;
         $created_item_representation = $item_creator->create(
@@ -552,16 +497,12 @@ class DocmanItemCreatorTest extends TestCase
         $post_representation->embedded_properties->content = 'My original content failed :(';
 
         $this->document_ongoing_upload_retriever->shouldReceive('isThereAlreadyAnUploadOngoing')->andReturns(false);
-        $this->event_manager->shouldReceive('processEvent')->never();
-
 
         $this->item_factory
             ->shouldReceive('createWithoutOrdering')
             ->never();
-        $this->permissions_manager->shouldReceive('clonePermissions')->never();
         $this->item_factory->shouldReceive('doesTitleCorrespondToExistingFolder')->andReturn(false);
         $this->item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
-        $this->file_storage->shouldReceive('store')->never();
 
         $is_embedded_allowed = false;
         $item_creator->create(
@@ -603,7 +544,6 @@ class DocmanItemCreatorTest extends TestCase
         $parent_item->shouldReceive('getId')->andReturns(11);
         $user->shouldReceive('getId')->andReturns(222);
         $project->shouldReceive('getID')->andReturns(102);
-        $this->event_manager->shouldReceive('processEvent');
 
         $created_item = \Mockery::mock(\Docman_Empty::class);
         $created_item->shouldReceive('getId')->andReturns(12);
@@ -660,18 +600,6 @@ class DocmanItemCreatorTest extends TestCase
             $post_representation,
             $current_time,
             true
-        );
-    }
-
-    private function directorySetup()
-    {
-        $this->docman_file_system = vfsStream::setup(
-            'docman_root',
-            777,
-            [
-                'Embedded' => ['file' => 'Freak no more'],
-                'File'     => []
-            ]
         );
     }
 }
