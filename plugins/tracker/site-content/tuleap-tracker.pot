@@ -154,6 +154,11 @@ msgstr ""
 msgid "Burndown is under calculation. It will be available in a few minutes."
 msgstr ""
 
+msgid ""
+"By clicking on \"Fully deactivate the workflow\", the workflow's behaviour "
+"will be fixed."
+msgstr ""
+
 msgid "Cancel"
 msgstr ""
 
@@ -181,9 +186,6 @@ msgid "Configure trackers"
 msgstr ""
 
 msgid "Confirm deletion"
-msgstr ""
-
-msgid "Deactivate transitions"
 msgstr ""
 
 msgid "Default Tuleap notifications"
@@ -231,6 +233,9 @@ msgid "Field value cannot be empty"
 msgstr ""
 
 msgid "Force notification configuration usage to all users"
+msgstr ""
+
+msgid "Fully deactivate the workflow"
 msgstr ""
 
 msgid "Global Rules"
@@ -727,12 +732,12 @@ msgstr ""
 msgid "This transition already exists."
 msgstr ""
 
-msgid "This workflow is already in a functional state. Skipping."
+msgid ""
+"This workflow has an incoherent behaviour : pre conditions and post actions "
+"defined in transitions are processed even if the workflow is not activated."
 msgstr ""
 
-msgid ""
-"This workflow is legacy, which means that pre conditions and post actions "
-"defined in transitions are processed even if the workflow is not activated."
+msgid "This workflow is already in a functional state. Skipping."
 msgstr ""
 
 msgid "Time"
