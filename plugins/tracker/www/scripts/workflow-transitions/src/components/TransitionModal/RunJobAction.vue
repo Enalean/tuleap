@@ -79,8 +79,8 @@ export default {
                 return this.post_action.job_url;
             },
             set(job_url) {
-                this.$store.commit("transitionModal/updatePostAction", {
-                    ...this.post_action,
+                this.$store.commit("transitionModal/updateRunJobPostActionJobUrl", {
+                    post_action: this.post_action,
                     job_url
                 });
             }

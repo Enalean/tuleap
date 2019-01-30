@@ -34,7 +34,8 @@ export {
     updateAuthorizedUserGroupIds,
     savePostActions,
     updateSetValuePostActionField,
-    updatePostAction,
+    updateSetValuePostActionValue,
+    updateRunJobPostActionJobUrl,
     addPostAction,
     deletePostAction,
     updatePostActionType
@@ -120,12 +121,6 @@ function updatePostActionType(state, { post_action, type }) {
     });
 }
 
-function updatePostAction(state, new_action) {
-    const post_actions = { ...state.post_actions_by_unique_id };
-    post_actions[new_action.unique_id] = new_action;
-    state.post_actions_by_unique_id = post_actions;
-}
-
 function updateSetValuePostActionField(state, { post_action, new_field }) {
     const new_post_action = {
         ...post_action,
@@ -146,6 +141,26 @@ function updateSetValuePostActionField(state, { post_action, new_field }) {
     }
 
     updatePostAction(state, new_post_action);
+}
+
+function updateSetValuePostActionValue(state, { post_action, value }) {
+    updatePostAction(state, {
+        ...post_action,
+        value
+    });
+}
+
+function updateRunJobPostActionJobUrl(state, { post_action, job_url }) {
+    updatePostAction(state, {
+        ...post_action,
+        job_url
+    });
+}
+
+function updatePostAction(state, new_action) {
+    const post_actions = { ...state.post_actions_by_unique_id };
+    post_actions[new_action.unique_id] = new_action;
+    state.post_actions_by_unique_id = post_actions;
 }
 
 function addPostAction(state) {

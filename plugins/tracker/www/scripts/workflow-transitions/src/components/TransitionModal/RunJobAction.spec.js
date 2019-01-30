@@ -64,10 +64,13 @@ describe("RunJobAction", () => {
         });
 
         it("updates store", () => {
-            expect(store.commit).toHaveBeenCalledWith("transitionModal/updatePostAction", {
-                ...post_action,
-                job_url: "http://new-url.test"
-            });
+            expect(store.commit).toHaveBeenCalledWith(
+                "transitionModal/updateRunJobPostActionJobUrl",
+                {
+                    post_action: post_action,
+                    job_url: "http://new-url.test"
+                }
+            );
         });
     });
 });
