@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2019. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -1666,8 +1666,8 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
 
             //Add an aggregate function
             if (isset($renderer_parameters['add_aggregate']) && is_array($renderer_parameters['add_aggregate'])) {
-                list($column_id, $agg) = each($renderer_parameters['add_aggregate']);
-
+                $column_id = key($renderer_parameters['add_aggregate']);
+                $agg       = current($renderer_parameters['add_aggregate']);
                 //Is the field used by the tracker?
                 if ($field = $ff->getUsedFormElementById($column_id)) {
                     //Has the field already an aggregate function?
@@ -1675,13 +1675,13 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                     if (isset($aggregates[$column_id])) {
                         //Yes. Check if it has already the wanted aggregate function
                         $found = false;
-                        reset($aggregates[$column_id]);
-                        while (!$found && (list($key,$row) = each($aggregates[$column_id]))) {
+                        foreach ($aggregates[$column_id] as $key => $row) {
                             if ($row['aggregate'] === $agg) {
                                 $found = true;
                                 //remove it (toggle)
                                 unset($aggregates[$column_id][$key]);
                                 $this->report_session->set("{$this->id}.aggregates.{$column_id}", $aggregates[$column_id]);
+                                break;
                             }
                         }
                         if (!$found) {
@@ -1746,8 +1746,8 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
 
             //Toggle multisort
             if (isset($renderer_parameters['multisort'])) {
-                $sort_fields = $this->getSort();
-                list($keep_it,) = each($sort_fields);
+                $sort_fields     = $this->getSort();
+                $keep_it         = key($sort_fields);
                 $this->multisort = !$this->multisort;
                 $this->report_session->set("{$this->id}.multisort", $this->multisort);
                 if (!$this->multisort) {
@@ -1832,8 +1832,8 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
 
             //Reorder columns
             if (isset($renderer_parameters['reorder-column']) && is_array($renderer_parameters['reorder-column'])) {
-                list($column_id, $new_position) = each($renderer_parameters['reorder-column']);
-                $new_position = (int)$new_position;
+                $column_id    = key($renderer_parameters['reorder-column']);
+                $new_position = (int) current($renderer_parameters['reorder-column']);
                 if ($column_id) {
                     $columns = $this->getColumns();
                     if (isset($columns[$column_id])) {
