@@ -37,13 +37,16 @@ AutoReqProv: no
 # Php and web related stuff
 Requires: php72-php, php72-php-mysql, php72-php-xml, php72-php-json, php72-php-mbstring, php72-php-gd, php72-php-soap, php72-php-pear, php72-php-intl, php72-php-process, php72-php-opcache, php72-php-fpm, php72-php-pecl-redis, php72-php-sodium, rh-mysql57-mysql
 
-Requires: highlight, forgeupgrade >= 1.6, ckeditor, nginx, logrotate
+Requires: highlight, forgeupgrade >= 1.6, nginx, logrotate
 
 # Unit file
 Requires: systemd
 
 # It's embedded in Tuleap thanks to composer.
 Obsoletes: php-amqplib-amqplib
+
+# It's embedded in Tuleap thanks to npm.
+Obsoletes: ckeditor
 
 %description
 Tuleap is a web based application that address all the aspects of product development.
@@ -815,6 +818,7 @@ fi
 %{APP_DIR}/src/www/assets/admindelegation
 %{APP_DIR}/src/www/assets/statistics
 %{APP_DIR}/src/www/assets/hudson
+%{APP_DIR}/src/www/assets/ckeditor-*
 %{APP_DIR}/src/www/codendi.css
 %{APP_DIR}/src/www/cvs
 %{APP_DIR}/src/www/export

@@ -85,7 +85,7 @@ $recipients = array(
 $assets_path    = ForgeConfig::get('tuleap_dir') . '/src/www/assets';
 $include_assets = new IncludeAssets($assets_path, '/assets');
 
-$GLOBALS['HTML']->includeFooterJavascriptFile("/scripts/ckeditor-4.3.2/ckeditor.js");
+$GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL("ckeditor.js"));
 $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/tuleap/tuleap-ckeditor-toolbar.js');
 $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('site-admin-mass-emailing.js'));
 

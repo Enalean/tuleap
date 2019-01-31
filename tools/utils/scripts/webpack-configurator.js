@@ -19,6 +19,7 @@
 
 const webpack = require("webpack");
 const WebpackAssetsManifest = require("webpack-assets-manifest");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
 const AngularGettextPlugin = require("angular-gettext-plugin");
 const { VueLoaderPlugin } = require("vue-loader");
 const rule_configurations = require("./webpack-rule-configs.js");
@@ -64,9 +65,14 @@ function getAngularGettextPlugin() {
     });
 }
 
+function getCopyPlugin(patterns = [], options = {}) {
+    return new CopyWebpackPlugin(patterns, options);
+}
+
 const configurator = {
     configureOutput,
     getAngularGettextPlugin,
+    getCopyPlugin,
     getManifestPlugin,
     getMomentLocalePlugin,
     getVueLoaderPlugin

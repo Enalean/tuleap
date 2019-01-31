@@ -142,9 +142,6 @@ $alias_file      = "/etc/aliases.codendi";
 // Comma separated paths where Tuleap can find plugins
 $sys_extra_plugin_path = '';
 
-// 3rd Party libraries
-$ckeditor_dir     = "/usr/share/ckeditor";
-
 // ForgeUpgrade config file
 $forgeupgrade_file = "/etc/tuleap/forgeupgrade/config.ini";
 

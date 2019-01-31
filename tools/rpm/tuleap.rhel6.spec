@@ -48,8 +48,6 @@ Requires: php72-php-mysqlnd, php72-php-pdo, php72-php-xml, php72-php-mbstring, p
 Requires: php72-php-soap, php72-php-pear, php72-php-intl, php72-php-process, php72-php-cli
 Requires: php72-php-bcmath, php72-php-fpm, php72-php-opcache, php72-php-json, php72-php-pecl-zip, php72-php-pecl-redis, php72-php-sodium
 
-Requires: ckeditor >= 4.3.2
-
 Requires: curl
 Requires: tuleap-core-subversion
 
@@ -80,6 +78,9 @@ Requires: bind-utils
 
 Obsoletes: php-restler, php-amqplib-amqplib, php-markdown
 Obsoletes: %{name}-plugin-im
+
+# It's embedded in Tuleap thanks to npm.
+Obsoletes: ckeditor
 
 %description
 Tuleap is a web based application that address all the aspects of product development.
@@ -617,7 +618,6 @@ done
 
 # Apache conf dir
 %{__install} -d $RPM_BUILD_ROOT/etc/httpd/conf.d/tuleap-plugins/
-%{__install} src/etc/ckeditor.conf.dist $RPM_BUILD_ROOT/etc/httpd/conf.d/tuleap-plugins/ckeditor.conf
 %{__install} src/etc/tuleap-uploaded-images.conf.dist $RPM_BUILD_ROOT/etc/httpd/conf.d/tuleap-plugins/tuleap-uploaded-images.conf
 %{__install} -d $RPM_BUILD_ROOT/etc/httpd/conf.d/tuleap-aliases/
 %{__install} src/etc/00-common.conf.dist $RPM_BUILD_ROOT/etc/httpd/conf.d/tuleap-aliases/00-common.conf
@@ -1027,6 +1027,7 @@ fi
 %{APP_DIR}/src/www/assets/admindelegation
 %{APP_DIR}/src/www/assets/statistics
 %{APP_DIR}/src/www/assets/hudson
+%{APP_DIR}/src/www/assets/ckeditor-*
 %{APP_DIR}/src/www/codendi.css
 %{APP_DIR}/src/www/cvs
 %{APP_DIR}/src/www/export
@@ -1101,7 +1102,6 @@ fi
 %attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_syslog
 %dir %attr(-,%{APP_USER},%{APP_USER}) %{APP_CACHE_DIR}
 %dir /etc/httpd/conf.d/tuleap-plugins
-%attr(04755,root,root) /etc/httpd/conf.d/tuleap-plugins/ckeditor.conf
 %attr(04755,root,root) /etc/httpd/conf.d/tuleap-plugins/tuleap-uploaded-images.conf
 %dir /etc/httpd/conf.d/tuleap-aliases
 %attr(00644,root,root) /etc/httpd/conf.d/tuleap-aliases/00-common.conf
