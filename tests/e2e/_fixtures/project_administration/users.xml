@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<users>
+    <user>
+        <id>101</id>
+        <username>ProjectAdministrator</username>
+        <realname><![CDATA[ProjectAdministrator]]></realname>
+        <email><![CDATA[ProjectAdministrator@example.com]]></email>
+        <ldapid></ldapid>
+    </user>
+</users>

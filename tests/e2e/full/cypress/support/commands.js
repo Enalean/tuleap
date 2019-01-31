@@ -19,13 +19,13 @@
 
 Cypress.Commands.add("login", () => {
     cy.visit("/");
-    cy.get("#form_loginname").type("alice");
+    cy.get("#form_loginname").type("ProjectAdministrator");
     cy.get("#form_pw").type("Correct Horse Battery Staple{enter}");
 });
 
 Cypress.Commands.add("projectMemberLogin", () => {
     cy.visit("/");
-    cy.get("#form_loginname").type("bob");
+    cy.get("#form_loginname").type("ProjectMember");
     cy.get("#form_pw").type("Correct Horse Battery Staple{enter}");
 });
 
