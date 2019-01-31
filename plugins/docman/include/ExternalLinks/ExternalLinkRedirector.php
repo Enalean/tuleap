@@ -38,6 +38,11 @@ class ExternalLinkRedirector implements Dispatchable
     private $project;
 
     /**
+     * @var \HTTPRequest
+     */
+    private $request;
+
+    /**
      * @var bool
      */
     private $should_redirect_user = false;
@@ -46,10 +51,11 @@ class ExternalLinkRedirector implements Dispatchable
      */
     private $folder_id;
 
-    public function __construct(\PFUser $user, \Project $project, int $folder_id)
+    public function __construct(\PFUser $user, \HTTPRequest $request, int $folder_id)
     {
         $this->user      = $user;
-        $this->project   = $project;
+        $this->project   = $request->getProject();
+        $this->request   = $request;
         $this->folder_id = $folder_id;
     }
 
@@ -76,8 +82,10 @@ class ExternalLinkRedirector implements Dispatchable
             return;
         }
 
-        $preference_name = "plugin_docman_display_new_ui_" . $this->project->getID();
-        if ((bool) $this->user->getPreference($preference_name) === true) {
+        $preference_name              = "plugin_docman_display_new_ui_" . $this->project->getID();
+        $is_request_for_legacy_docman = $this->request->exist("action");
+
+        if ((bool)$this->user->getPreference($preference_name) === true && !$is_request_for_legacy_docman) {
             $this->should_redirect_user = true;
             return;
         }
