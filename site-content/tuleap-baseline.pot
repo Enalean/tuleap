@@ -1,0 +1,5 @@
+msgid "Baseline"
+msgstr ""
+
+msgid "Set and compare baseline of items"
+msgstr ""
