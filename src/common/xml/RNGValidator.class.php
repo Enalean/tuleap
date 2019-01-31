@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -46,20 +46,28 @@ class XML_RNGValidator {
         return $dom;
     }
 
-    private function extractErrors(DOMDocument $dom, $rng_path) {
-        $indent   = ForgeConfig::get('codendi_utils_prefix') .'/xml/indent.xsl';
-        $jing     = ForgeConfig::get('codendi_utils_prefix') .'/xml/jing.jar';
-        $temp     = tempnam(ForgeConfig::get('tmp_dir'), 'xml');
-        $xml_file = tempnam(ForgeConfig::get('tmp_dir'), 'xml_src_');
-        file_put_contents($xml_file, $dom->saveXML());
-        $cmd_indent = "xsltproc -o $temp $indent $xml_file";
-        `$cmd_indent`;
+    private function extractErrors(DOMDocument $dom, $rng_path)
+    {
+        $java_parser_output = [];
 
-        $output = array();
-        $cmd_valid = "java -jar $jing $rng_path $temp";
-        exec($cmd_valid, $output);
+        $system_command = new System_Command();
+        $temp           = tempnam(ForgeConfig::get('tmp_dir'), 'xml');
+        $xml_file       = tempnam(ForgeConfig::get('tmp_dir'), 'xml_src_');
+        try {
+            file_put_contents($xml_file, $dom->saveXML());
+            $indent = __DIR__ .'/../../utils/xml/indent.xsl';
+            $jing   = __DIR__ .'/../../utils/xml/jing.jar';
+            $system_command->exec('xsltproc -o ' . escapeshellarg($temp) . ' ' . escapeshellarg($indent) . ' ' .escapeshellarg($xml_file));
+            $java_parser_output = $system_command->exec('java -jar ' . escapeshellarg($jing) . ' ' .  escapeshellarg($rng_path) . ' ' . escapeshellarg($temp));
+        } catch (System_Command_CommandException $ex) {
+            throw new XML_ParseException($rng_path, [], file($temp, FILE_IGNORE_NEW_LINES));
+        } finally {
+            unlink($temp);
+            unlink($xml_file);
+        }
+
         $errors = array();
-        foreach($output as $o) {
+        foreach($java_parser_output as $o) {
             $matches = array();
             preg_match('/:(\d+):(\d+):([^:]+):(.*)/', $o, $matches);
             //1 line
