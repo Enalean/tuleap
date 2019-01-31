@@ -22,7 +22,7 @@
 namespace Tuleap\Tracker\REST\v1\Workflow\PostAction\Update;
 
 use Tuleap\REST\I18NRestException;
-use Tuleap\Tracker\REST\v1\Workflow\SetFieldValueRepresentation;
+use Tuleap\Tracker\REST\v1\Workflow\PostAction\SetFieldValueRepresentation;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\SetDateValue;
 use Tuleap\Tracker\Workflow\Update\PostAction;
 

@@ -19,11 +19,10 @@
  *
  */
 
-namespace Tuleap\Tracker\REST\v1\Workflow;
+namespace Tuleap\Tracker\REST\v1\Workflow\PostAction;
 
 use Transition_PostAction_Field_Date;
 use Tuleap\REST\JsonCast;
-use Tuleap\Tracker\REST\v1\Workflow\PostAction\UnsupportedDateValueException;
 
 /**
  * Representation of a transition action which sets a fixed field value.

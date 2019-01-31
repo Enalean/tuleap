@@ -19,7 +19,7 @@
  *
  */
 
-namespace Tuleap\Tracker\REST\v1\Workflow;
+namespace Tuleap\Tracker\REST\v1\Workflow\PostAction;
 
 use Jenkins_Client;
 use Mockery;
@@ -51,16 +51,16 @@ class PostActionsRepresentationBuilderTest extends TestCase
     private function buildAPostActionCIBuild($id, $job_url): Transition_PostAction_CIBuild
     {
         $transition = Mockery::mock(Transition::class);
-        $client = Mockery::mock(Jenkins_Client::class);
+        $client     = Mockery::mock(Jenkins_Client::class);
         return new Transition_PostAction_CIBuild($transition, $id, $job_url, $client);
     }
 
     public function testBuildReturnsRunJobRepresentationBasedOnGivenFieldDateAction()
     {
-        $transition = Mockery::mock(Transition::class);
-        $field = $this->buildFieldWithId(8);
+        $transition     = Mockery::mock(Transition::class);
+        $field          = $this->buildFieldWithId(8);
         $set_date_field = new Transition_PostAction_Field_Date($transition, 1, $field, Transition_PostAction_Field_Date::CLEAR_DATE);
-        $builder = new PostActionsRepresentationBuilder([$set_date_field]);
+        $builder        = new PostActionsRepresentationBuilder([$set_date_field]);
 
         $representation = $builder->build();
 
@@ -73,10 +73,10 @@ class PostActionsRepresentationBuilderTest extends TestCase
 
     public function testBuildReturnsRunJobRepresentationBasedOnGivenFieldIntAction()
     {
-        $transition = Mockery::mock(Transition::class);
-        $field = $this->buildFieldWithId(8);
+        $transition    = Mockery::mock(Transition::class);
+        $field         = $this->buildFieldWithId(8);
         $set_int_field = new Transition_PostAction_Field_Int($transition, 1, $field, 23);
-        $builder = new PostActionsRepresentationBuilder([$set_int_field]);
+        $builder       = new PostActionsRepresentationBuilder([$set_int_field]);
 
         $representation = $builder->build();
 
@@ -89,10 +89,10 @@ class PostActionsRepresentationBuilderTest extends TestCase
 
     public function testBuildReturnsRunJobRepresentationBasedOnGivenFieldFloatAction()
     {
-        $transition = Mockery::mock(Transition::class);
-        $field = $this->buildFieldWithId(8);
+        $transition      = Mockery::mock(Transition::class);
+        $field           = $this->buildFieldWithId(8);
         $set_float_field = new Transition_PostAction_Field_Float($transition, 1, $field, 3.4);
-        $builder = new PostActionsRepresentationBuilder([$set_float_field]);
+        $builder         = new PostActionsRepresentationBuilder([$set_float_field]);
 
         $representation = $builder->build();
 
@@ -119,7 +119,7 @@ class PostActionsRepresentationBuilderTest extends TestCase
     private function buildAPostAction(): Transition_PostAction_Field_Float
     {
         $transition = Mockery::mock(Transition::class);
-        $field = $this->buildFieldWithId(8);
+        $field      = $this->buildFieldWithId(8);
         return new Transition_PostAction_Field_Float($transition, 1, $field, 3.4);
     }
 
