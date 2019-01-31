@@ -1042,7 +1042,8 @@ class Docman_Actions extends Actions {
     * top item. And for each child node, there is a callback to
     * Docman_Actions::recursivePermission (see each method for details).
     */
-    public function permissions($params) {
+    public function permissions($params)
+    {
         $id    = isset($params['id'])    ? $params['id']    : $this->_controler->request->get('id');
         $force = isset($params['force']) ? $params['force'] : false;
         if ($id && $this->_controler->request->exist('permissions')) {
@@ -1057,6 +1058,11 @@ class Docman_Actions extends Actions {
                     'user'     => $user,
                 )
             );
+
+            $project_id = (int) $this->_controler->request->get('group_id');
+            $url        = DOCMAN_BASE_URL . "/?group_id=".urlencode($project_id)."&action=details&id=".urlencode($id)."&section=permissions";
+
+            $GLOBALS['Response']->redirect($url);
         }
     }
 
