@@ -373,9 +373,9 @@ class testmanagementPlugin extends Plugin
     public function burning_parrot_get_javascript_files(array $params)
     {
         if ($this->currentRequestIsForPlugin()) {
-            $ckeditor_path = '/scripts/ckeditor-4.3.2/';
-            $GLOBALS['HTML']->includeFooterJavascriptSnippet('window.CKEDITOR_BASEPATH = "'. $ckeditor_path .'";');
-            $params['javascript_files'][] = $ckeditor_path .'ckeditor.js';
+            $assets_path    = ForgeConfig::get('tuleap_dir') . '/src/www/assets';
+            $include_assets = new IncludeAssets($assets_path, '/assets');
+            $params['javascript_files'][] = $include_assets->getFileURL('ckeditor.js');
 
             $test_management_include_assets = new IncludeAssets(
                 TESTMANAGEMENT_BASE_DIR . '/www/assets',
