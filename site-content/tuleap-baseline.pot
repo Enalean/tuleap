@@ -1,5 +1,11 @@
 msgid "Baseline"
 msgstr ""
 
+msgid "Baseline service is disabled for this project"
+msgstr ""
+
+msgid "Baselines"
+msgstr ""
+
 msgid "Set and compare baseline of items"
 msgstr ""

@@ -21,17 +21,42 @@
 
 declare(strict_types=1);
 
+use Tuleap\Baseline\ServiceController;
+use Tuleap\Layout\ServiceUrlCollector;
+
 require_once __DIR__.'/../vendor/autoload.php';
+require_once __DIR__.'/../../tracker/include/trackerPlugin.class.php';
 
 class baselinePlugin extends Plugin  // @codingStandardsIgnoreLine
 {
     public const NAME = 'baseline';
+    public const SERVICE_SHORTNAME = 'plugin_baseline';
 
     public function __construct($id)
     {
         parent::__construct($id);
         $this->setScope(self::SCOPE_PROJECT);
         bindtextdomain('tuleap-baseline', __DIR__.'/../site-content');
+    }
+
+    public function getDependencies() : array
+    {
+        return ['tracker'];
+    }
+
+    public function getServiceShortname() : string
+    {
+        return self::SERVICE_SHORTNAME;
+    }
+
+    public function getHooksAndCallbacks() : Collection
+    {
+        $this->addHook(\Tuleap\Request\CollectRoutesEvent::NAME);
+
+        $this->addHook(ServiceUrlCollector::NAME);
+        $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
+
+        return parent::getHooksAndCallbacks();
     }
 
     public function getPluginInfo()
@@ -41,5 +66,28 @@ class baselinePlugin extends Plugin  // @codingStandardsIgnoreLine
         }
 
         return $this->pluginInfo;
+    }
+
+    public function serviceUrlCollector(ServiceUrlCollector $collector)
+    {
+        if ($collector->getServiceShortname() === $this->getServiceShortname()) {
+            $collector->setUrl($this->getPluginPath() . "/" . urlencode($collector->getProject()->getUnixNameLowerCase()));
+        }
+    }
+
+    public function routeGetSlash() : ServiceController
+    {
+        return new ServiceController(
+            ProjectManager::instance(),
+            TemplateRendererFactory::build()->getRenderer(__DIR__ . "/../templates"),
+            $this
+        );
+    }
+
+    public function collectRoutesEvent(\Tuleap\Request\CollectRoutesEvent $event) : void
+    {
+        $event->getRouteCollector()->addGroup($this->getPluginPath(), function (FastRoute\RouteCollector $r) {
+            $r->get('/{project_name}[/]', $this->getRouteHandler('routeGetSlash'));
+        });
     }
 }
