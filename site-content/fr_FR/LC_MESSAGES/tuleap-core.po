@@ -1024,6 +1024,9 @@ msgstr "API SOAP"
 msgid "SVN"
 msgstr "SVN"
 
+msgid "SVN Commits"
+msgstr "Commits SVN"
+
 msgid "Save categories"
 msgstr "Sauvegarder les catégories"
 

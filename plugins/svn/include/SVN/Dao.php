@@ -269,4 +269,26 @@ class Dao extends DataAccessObject
 
         return $this->retrieveFirstRow($sql);
     }
+
+    public function countSVNCommits()
+    {
+        $sql = "SELECT sum(svn_write_operations) AS nb
+                FROM plugin_svn_full_history";
+
+        $row = $this->retrieve($sql)->getRow();
+
+        return $row['nb'];
+    }
+
+    public function countSVNCommitBefore(int $timestamp)
+    {
+        $timestamp = $this->da->escapeInt($timestamp);
+        $sql       = "SELECT sum(svn_write_operations) AS nb
+                FROM plugin_svn_full_history
+                WHERE UNIX_TIMESTAMP(STR_TO_DATE(day, '%Y%m%d'))  >= $timestamp";
+
+        $row = $this->retrieve($sql)->getRow();
+
+        return $row['nb'];
+    }
 }

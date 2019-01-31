@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,45 +22,43 @@ declare(strict_types = 1);
 
 namespace Tuleap\layout\HomePage;
 
-class HomePageStatistic
+use Tuleap\Event\Dispatchable;
+
+class LastMonthStatisticsCollectorSVN implements Dispatchable
 {
-    /**
-     * @var string
-     */
-    private $label;
+    const NAME = 'lastMonthStatisticsCollectorSVN';
     /**
      * @var int
      */
-    private $total;
+    public $svn_commits = 0;
     /**
      * @var int
      */
-    private $last_month_growth;
+    private $timestamp;
 
-    public function __construct(string $label, int $total, int $last_month_growth)
+    public function __construct(int $timestamp)
     {
-        $this->label             = $label;
-        $this->total             = $total;
-        $this->last_month_growth = $last_month_growth;
+        $this->timestamp = $timestamp;
     }
 
-    public function getLabel(): string
+    /**
+     * @return int
+     */
+    public function getTimestamp() : int
     {
-        return $this->label;
+        return $this->timestamp;
     }
 
-    public function getTotal(): int
+    public function getSVNPluginCommitsCount() : int
     {
-        return $this->total;
+        return $this->svn_commits;
     }
 
-    public function getLastMonthGrowth(): int
+    /**
+     * @param int $svn_commits
+     */
+    public function setSvnCommits(int $svn_commits)
     {
-        return $this->last_month_growth;
-    }
-
-    public function hasGrowth(): bool
-    {
-        return $this->last_month_growth > 0;
+        $this->svn_commits = $svn_commits;
     }
 }

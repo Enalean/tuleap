@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,45 +22,27 @@ declare(strict_types = 1);
 
 namespace Tuleap\layout\HomePage;
 
-class HomePageStatistic
+use Tuleap\Event\Dispatchable;
+
+class StatisticsCollectorSVN implements Dispatchable
 {
-    /**
-     * @var string
-     */
-    private $label;
+    const NAME = 'statisticsCollectorSVN';
+
     /**
      * @var int
      */
-    private $total;
+    private $svn_commits = 0;
+
+    public function getSVNPluginCommitsCount(): int
+    {
+        return $this->svn_commits;
+    }
+
     /**
-     * @var int
+     * @param int $svn_commits
      */
-    private $last_month_growth;
-
-    public function __construct(string $label, int $total, int $last_month_growth)
+    public function setSvnCommits(int $svn_commits)
     {
-        $this->label             = $label;
-        $this->total             = $total;
-        $this->last_month_growth = $last_month_growth;
-    }
-
-    public function getLabel(): string
-    {
-        return $this->label;
-    }
-
-    public function getTotal(): int
-    {
-        return $this->total;
-    }
-
-    public function getLastMonthGrowth(): int
-    {
-        return $this->last_month_growth;
-    }
-
-    public function hasGrowth(): bool
-    {
-        return $this->last_month_growth > 0;
+        $this->svn_commits = $svn_commits;
     }
 }

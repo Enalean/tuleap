@@ -27,6 +27,8 @@ use Tuleap\CVS\DiskUsage\FullHistoryDao;
 use Tuleap\CVS\DiskUsage\Retriever as CVSRetriever;
 use Tuleap\Error\ProjectAccessSuspendedController;
 use Tuleap\Httpd\PostRotateEvent;
+use Tuleap\layout\HomePage\LastMonthStatisticsCollectorSVN;
+use Tuleap\layout\HomePage\StatisticsCollectorSVN;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\Navigation\NavigationDropdownItemPresenter;
 use Tuleap\Project\Admin\Navigation\NavigationDropdownQuickLinksCollector;
@@ -43,7 +45,6 @@ use Tuleap\SVN\AccessControl\AccessFileHistoryCreator;
 use Tuleap\SVN\AccessControl\AccessFileHistoryDao;
 use Tuleap\SVN\AccessControl\AccessFileHistoryFactory;
 use Tuleap\SVN\Admin\AdminController;
-use Tuleap\SVN\Repository\Destructor;
 use Tuleap\SVN\Admin\GlobalAdminController;
 use Tuleap\SVN\Admin\ImmutableTagController;
 use Tuleap\SVN\Admin\ImmutableTagCreator;
@@ -84,6 +85,7 @@ use Tuleap\SVN\PermissionsPerGroup\PermissionPerGroupRepositoryRepresentationBui
 use Tuleap\SVN\PermissionsPerGroup\PermissionPerGroupSVNServicePaneBuilder;
 use Tuleap\SVN\PermissionsPerGroup\SVNJSONPermissionsRetriever;
 use Tuleap\SVN\Reference\Extractor;
+use Tuleap\SVN\Repository\Destructor;
 use Tuleap\SVN\Repository\HookConfigChecker;
 use Tuleap\SVN\Repository\HookConfigRetriever;
 use Tuleap\SVN\Repository\HookConfigSanitizer;
@@ -184,6 +186,14 @@ class SvnPlugin extends Plugin
         $this->addHook(PermissionPerGroupDisplayEvent::NAME);
 
         $this->addHook(PostRotateEvent::NAME);
+    }
+
+    public function getHooksAndCallbacks()
+    {
+        $this->addHook(StatisticsCollectorSVN::NAME);
+        $this->addHook(LastMonthStatisticsCollectorSVN::NAME);
+
+        return parent::getHooksAndCallbacks();
     }
 
     public function export_xml_project($params)
@@ -1179,5 +1189,27 @@ class SvnPlugin extends Plugin
     public function httpdPostRotate(PostRotateEvent $event)
     {
         DBWriter::build($event->getLogger())->postrotate();
+    }
+
+    public function statisticsCollectorSVN(StatisticsCollectorSVN $collector)
+    {
+        $dao     = new Dao();
+        $commits = $dao->countSVNCommits();
+        if (! $commits) {
+            return;
+        }
+
+        $collector->setSvnCommits($commits);
+    }
+
+    public function lastMonthStatisticsCollectorSVN(LastMonthStatisticsCollectorSVN $collector)
+    {
+        $dao     = new Dao();
+        $commits = $dao->countSVNCommitBefore($collector->getTimestamp());
+        if (! $commits) {
+            return;
+        }
+
+        $collector->setSvnCommits($commits);
     }
 }
