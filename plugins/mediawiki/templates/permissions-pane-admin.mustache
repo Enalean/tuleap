@@ -83,7 +83,12 @@
     </div>
 
     <div class="admin_group_mediawiki_submit">
-        <input type="submit" name="submit" value="{{ submit_label }}" class="btn btn-primary"/>
+        <input type="submit"
+               name="submit"
+               value="{{ submit_label }}"
+               class="btn btn-primary"
+               data-test="mediawiki-administration-permission-submit-button"
+        />
         {{ or_string }}
         <input type="submit" name="restore" value="{{ restore_label }}" class="btn btn-danger"/>
     </div>

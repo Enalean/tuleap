@@ -106,6 +106,7 @@ seed_data() {
     load_project /usr/share/tuleap/tests/e2e/_fixtures/frs_project
     load_project /usr/share/tuleap/tests/e2e/_fixtures/project_administration
     load_project /usr/share/tuleap/tests/e2e/_fixtures/mediawiki_public_project
+    load_project /usr/share/tuleap/tests/e2e/_fixtures/platform_allows_anonymous
 
     chown -R codendiadm:codendiadm /var/log/tuleap
 }
@@ -117,6 +118,7 @@ setup_database
 seed_data
 
 /usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/src/utils/tuleap.php config-set sys_project_approval 0
+/usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/src/utils/tuleap.php config-set project_admin_can_choose_visibility 1
 /usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/src/utils/tuleap.php set-user-password admin welcome0
 
 service php72-php-fpm start
