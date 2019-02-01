@@ -26,7 +26,8 @@ require_once 'common/widget/Widget.class.php';
  *
  * Tracker Renderer
  */
-abstract class Tracker_Widget_Renderer extends Widget {
+abstract class Tracker_Widget_Renderer extends Widget
+{
     var $renderer_title;
     var $renderer_id;
 
@@ -221,5 +222,14 @@ abstract class Tracker_Widget_Renderer extends Widget {
     function getCategory() {
         return 'trackers';
     }
+
+    public function getJavascriptDependencies()
+    {
+        return $this->getRenderer()->getJavascriptDependencies();
+    }
+
+    public function getStylesheetDependencies()
+    {
+        return $this->getRenderer()->getStylesheetDependencies();
+    }
 }
-?>

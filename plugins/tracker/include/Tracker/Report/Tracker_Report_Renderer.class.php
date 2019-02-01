@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean 2017. All rights reserved
+ * Copyright (c) Enalean 2017 - 2018. All rights reserved
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -25,9 +25,10 @@ use Tuleap\Dashboard\User\UserDashboardDao;
 use Tuleap\Dashboard\User\UserDashboardRetriever;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\Tracker\Report\WidgetAddToDashboardDropdownBuilder;
+use Tuleap\Tracker\Widget\WidgetWithAssetDependencies;
 use Tuleap\Widget\WidgetFactory;
 
-abstract class Tracker_Report_Renderer
+abstract class Tracker_Report_Renderer implements WidgetWithAssetDependencies
 {
 
     public $id;

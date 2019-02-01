@@ -20,6 +20,9 @@
 
 use Tuleap\Cardwall\AccentColor\AccentColorBuilder;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
+use Tuleap\Layout\CssAssetCollection;
+use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
 use Tuleap\Tracker\Report\WidgetAdditionalButtonPresenter;
 
@@ -305,5 +308,27 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
 
     public function getIcon() {
         return 'fa fa-table';
+    }
+
+    public function getJavascriptDependencies()
+    {
+        return [];
+    }
+
+    /** @return CssAssetCollection */
+    public function getStylesheetDependencies()
+    {
+        $tracker_assets = new IncludeAssets(
+            __DIR__ . '/../../tracker/www/themes/FlamingParrot/assets',
+            TRACKER_BASE_URL . '/themes/FlamingParrot/assets'
+        );
+        $cardwall_assets = new IncludeAssets(
+            __DIR__ . '/../../../src/www/assets/cardwall/FlamingParrot',
+            '/assets/cardwall/FlamingParrot'
+        );
+        return new CssAssetCollection([
+            new CssAssetWithoutVariantDeclinaisons($tracker_assets, 'style'),
+            new CssAssetWithoutVariantDeclinaisons($cardwall_assets, 'style')
+        ]);
     }
 }

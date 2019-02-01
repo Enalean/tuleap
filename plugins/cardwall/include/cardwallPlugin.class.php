@@ -67,7 +67,6 @@ class cardwallPlugin extends Plugin
     public function getHooksAndCallbacks() {
         if (defined('TRACKER_BASE_URL')) {
             $this->addHook('cssfile');
-            $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
             $this->addHook('javascript_file');
             $this->addHook('tracker_report_renderer_types');
             $this->addHook('tracker_report_renderer_instance');
@@ -251,14 +250,6 @@ class cardwallPlugin extends Plugin
         }
     }
 
-    /** @see \Event::BURNING_PARROT_GET_STYLESHEETS */
-    public function burning_parrot_get_stylesheets(array $params)
-    {
-        if ($this->canIncludeStylesheets()) {
-            $params['stylesheets'][] = $this->getCSSURL();
-        }
-    }
-
     private function getCSSURL()
     {
         $theme_include_assets = new IncludeAssets(
@@ -271,8 +262,6 @@ class cardwallPlugin extends Plugin
     private function canIncludeStylesheets()
     {
         return $this->isAgileDashboardOrTrackerUrl()
-            || strpos($_SERVER['REQUEST_URI'], '/my/') === 0
-            || strpos($_SERVER['REQUEST_URI'], '/projects/') === 0
             || strpos($_SERVER['REQUEST_URI'], '/widgets/') === 0;
     }
 

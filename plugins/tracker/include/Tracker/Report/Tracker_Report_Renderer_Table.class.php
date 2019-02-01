@@ -22,6 +22,9 @@
 require_once('common/include/Codendi_HTTPPurifier.class.php');
 
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
+use Tuleap\Layout\CssAsset;
+use Tuleap\Layout\CssAssetCollection;
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
@@ -2468,5 +2471,20 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         $artifact_link_usage_dao = new ArtifactLinksUsageDao();
 
         return new NaturePresenterFactory($nature_dao, $artifact_link_usage_dao);
+    }
+
+    public function getJavascriptDependencies()
+    {
+        return [];
+    }
+
+    /** @return CssAssetCollection */
+    public function getStylesheetDependencies()
+    {
+        $include_assets = new IncludeAssets(
+            __DIR__ . '/../../../www/themes/BurningParrot/assets',
+            TRACKER_BASE_URL . '/themes/BurningParrot/assets'
+        );
+        return new CssAssetCollection([new CssAsset($include_assets, 'style')]);
     }
 }
