@@ -45,7 +45,7 @@ class AdminControllerTest extends TestCase
     private $event_manager;
     private $http_request;
 
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
 
@@ -67,7 +67,7 @@ class AdminControllerTest extends TestCase
         HTTPRequest::setInstance($this->http_request);
     }
 
-    public function tearDown()
+    public function tearDown() : void
     {
         HTTPRequest::clearInstance();
 
