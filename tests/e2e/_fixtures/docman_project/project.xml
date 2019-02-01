@@ -4,13 +4,13 @@
     <ugroups>
         <ugroup name="project_members" description="">
             <members>
-                <member format="username">alice</member>
-                <member format="username">bob</member>
+                <member format="username">ProjectAdministrator</member>
+                <member format="username">ProjectMember</member>
             </members>
         </ugroup>
         <ugroup name="project_admins" description="">
             <members>
-                <member format="username">alice</member>
+                <member format="username">ProjectAdministrator</member>
             </members>
         </ugroup>
     </ugroups>

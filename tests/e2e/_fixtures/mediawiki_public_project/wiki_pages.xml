@@ -33,7 +33,7 @@
       <id>1</id>
       <timestamp>2018-08-17T08:27:37Z</timestamp>
       <contributor>
-        <username>alice</username>
+        <username>ProjectAdministrator</username>
         <id>1</id>
       </contributor>
       <comment>Created page with &quot;content&quot;</comment>
@@ -47,7 +47,7 @@
       <parentid>1</parentid>
       <timestamp>2018-08-17T11:34:47Z</timestamp>
       <contributor>
-        <username>alice</username>
+        <username>ProjectAdministrator</username>
         <id>1</id>
       </contributor>
       <text xml:space="preserve" bytes="37">My custom content
@@ -62,7 +62,7 @@
       <parentid>2</parentid>
       <timestamp>2018-08-17T11:34:56Z</timestamp>
       <contributor>
-        <username>alice</username>
+        <username>ProjectAdministrator</username>
         <id>1</id>
       </contributor>
       <text xml:space="preserve" bytes="38">My custom content
@@ -81,7 +81,7 @@
       <id>4</id>
       <timestamp>2018-08-17T11:38:02Z</timestamp>
       <contributor>
-        <username>alice</username>
+        <username>ProjectAdministrator</username>
         <id>1</id>
       </contributor>
       <text xml:space="preserve" bytes="0" />

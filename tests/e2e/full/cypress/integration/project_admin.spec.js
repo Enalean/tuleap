@@ -45,7 +45,7 @@ describe("Project admin", function() {
             cy.get(
                 "[data-test=project-admin-members-add-user-select] + .select2-container"
             ).click();
-            cy.get(".select2-search__field").type("bob{enter}");
+            cy.get(".select2-search__field").type("ProjectMember{enter}");
             cy.get(".select2-result-user").click();
             cy.get('[data-test="project-admin-submit-add-member"]').click();
 
