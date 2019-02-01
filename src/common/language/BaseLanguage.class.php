@@ -71,7 +71,6 @@ class BaseLanguage {
         $text_array = array();
         $this->loadAllLanguageFiles($lang, $text_array);
 
-        // Dump the result into the cached files
         $this->dumpLanguageFile($lang, $text_array);
 
         return $text_array;
@@ -186,19 +185,14 @@ class BaseLanguage {
     /**
      * Create a PHP file that contains all the strings loaded in this object.
      */
-    function dumpLanguageFile($lang, $text_array) {
+    public function dumpLanguageFile($lang, $text_array)
+    {
         // Create language cache directory if needed
         if (! is_dir($this->getCacheDirectory())) {
             // This directory must be world reachable, but writable only by the web-server
             mkdir($this->getCacheDirectory(), 0755);
         }
-        $fh = fopen($this->getCacheDirectory().DIRECTORY_SEPARATOR.$lang.'.bin', 'wb');
-        if (flock($fh, LOCK_EX)) {
-            fwrite($fh, serialize($text_array));
-            fflush($fh);
-            flock($fh, LOCK_UN);
-        }
-        fclose($fh);
+        file_put_contents($this->getCacheDirectory().DIRECTORY_SEPARATOR.$lang.'.php', '<?php'.PHP_EOL.'return '.\Symfony\Component\VarExporter\VarExporter::export($text_array).';');
     }
 
     function loadLanguageFile($fname) {
@@ -244,12 +238,11 @@ class BaseLanguage {
         }
     }
 
-    // Load the global language file (this is a global message catalog
-    // that is loaded for all scripts from pre.php
-    function loadLanguage($lang) {
-        if($this->lang != $lang) {
+    function loadLanguage($lang)
+    {
+        if($this->lang !== $lang) {
             $this->lang = $lang;
-            $this->loadFromSerialized($lang) || $this->loadFromPHP($lang) || $this->loadFromTabs($lang);
+            $this->loadFromSerialized($lang) || $this->loadFromTabs($lang);
         }
     }
 
@@ -264,34 +257,9 @@ class BaseLanguage {
      */
     private function loadFromSerialized($lang)
     {
-        $strings_are_loaded = false;
-        $filepath = $this->getCacheDirectory().DIRECTORY_SEPARATOR.$lang.'.bin';
-        if (is_file($filepath)) {
-            $filesize = filesize($filepath);
-            if ($filesize > 0) {
-                $fh = fopen($filepath, 'rb');
-                if (flock($fh, LOCK_SH)) {
-                    $content = fread($fh, $filesize);
-                    if (strlen($content) === $filesize) {
-                        $strings = unserialize($content);
-                        if ($strings !== false) {
-                            $this->text_array = $strings;
-                            $strings_are_loaded = true;
-                        }
-                    }
-                    flock($fh, LOCK_UN);
-                }
-                fclose($fh);
-            }
-        }
-        return $strings_are_loaded;
-    }
-
-    private function loadFromPHP($lang)
-    {
         $filepath = $this->getCacheDirectory().DIRECTORY_SEPARATOR.$lang.'.php';
         if (is_file($filepath)) {
-            include($filepath);
+            $this->text_array = require $filepath;
             return true;
         }
         return false;
@@ -523,8 +491,9 @@ class BaseLanguage {
         }
     }
 
-    public function getCacheDirectory() {
-        return ForgeConfig::get('codendi_cache_dir').DIRECTORY_SEPARATOR.'lang';
+    public function getCacheDirectory()
+    {
+        return ForgeConfig::getCacheDir().DIRECTORY_SEPARATOR.'lang';
     }
 
     public function getOverridableText($pagename, $category, $args="")
