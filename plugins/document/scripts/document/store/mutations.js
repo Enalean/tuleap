@@ -47,7 +47,8 @@ export {
     removeIsUnderConstruction,
     addFileInUploadsList,
     removeFileFromUploadsList,
-    emptyFilesUploadsList
+    emptyFilesUploadsList,
+    addFileToFoldedFolder
 };
 
 function saveFolderContent(state, folder_content) {
@@ -139,6 +140,10 @@ function addFolderToTheRightPlace(state, new_item, parent) {
 function addJustCreatedItemToFolderContent(state, new_item) {
     const parent = state.folder_content.find(parent => parent.id === new_item.parent_id);
 
+    if (parent && !parent.level) {
+        parent.level = 0;
+    }
+
     new_item.level = parent ? parent.level + 1 : 0;
 
     if (new_item.type !== TYPE_FOLDER) {
@@ -160,7 +165,11 @@ function appendSubFolderContent(state, [folder_id, sub_items]) {
         item.level = parent_folder.level + 1;
     });
 
-    state.folder_content.splice(folder_index + 1, 0, ...sub_items);
+    const filtered_sub_items = sub_items.filter(
+        item => state.folder_content.findIndex(existing_item => item.id === existing_item.id) === -1
+    );
+
+    state.folder_content.splice(folder_index + 1, 0, ...filtered_sub_items);
 }
 
 function foldFolderContent(state, folder_id) {
@@ -175,6 +184,17 @@ function foldFolderContent(state, folder_id) {
     state.folded_items_ids = state.folded_items_ids.concat(folded_content);
 
     state.folded_by_map[folder_id] = folded_content;
+}
+
+function addFileToFoldedFolder(state, [parent, item, should_display_fake_item]) {
+    if (!should_display_fake_item) {
+        if (!state.folded_by_map[parent.id]) {
+            state.folded_by_map[parent.id] = [];
+        }
+
+        state.folded_by_map[parent.id].push(item.id);
+        state.folded_items_ids.push(item.id);
+    }
 }
 
 function unfoldFolderContent(state, folder_id) {

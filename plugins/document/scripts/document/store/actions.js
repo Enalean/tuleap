@@ -69,7 +69,7 @@ export const getSubfolderContent = async (context, folder_id) => {
 export const createNewItem = async (context, [item, parent]) => {
     try {
         if (item.type === TYPE_FILE) {
-            await createNewFile(context, item, parent);
+            await createNewFile(context, item, parent, false);
         } else {
             const item_reference = await addNewDocument(item, parent.id);
 
@@ -176,7 +176,12 @@ export const setUserPreferenciesForFolder = (context, [folder_id, should_be_clos
     }
 };
 
-async function createNewFile(context, { title, description, file_properties }, parent) {
+async function createNewFile(
+    context,
+    { title, description, file_properties },
+    parent,
+    should_display_fake_item
+) {
     const dropped_file = file_properties.file;
     const new_file = await addNewDocument(
         {
@@ -216,13 +221,17 @@ async function createNewFile(context, { title, description, file_properties }, p
     fake_item.uploader = uploadFile(context, dropped_file, fake_item, new_file);
 
     context.commit("addJustCreatedItemToFolderContent", fake_item);
+    context.commit("addFileToFoldedFolder", [parent, fake_item, should_display_fake_item]);
     context.commit("addFileInUploadsList", fake_item);
 }
 
-export const addNewUploadFile = async (context, [dropped_file, parent, title, description]) => {
+export const addNewUploadFile = async (
+    context,
+    [dropped_file, parent, title, description, should_display_fake_item]
+) => {
     try {
         const item = { title, description, file_properties: { file: dropped_file } };
-        await createNewFile(context, item, parent);
+        await createNewFile(context, item, parent, should_display_fake_item);
     } catch (exception) {
         const error_json = await exception.response.json();
         throw getErrorMessage(error_json);

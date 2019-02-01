@@ -65,6 +65,9 @@ export default {
 
             return href;
         },
+        folder_id() {
+            return this.item.id;
+        },
         is_folder_open() {
             return !this.is_loading && !this.is_closed;
         },

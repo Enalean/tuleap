@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <tr v-bind:class="row_classes">
+    <tr v-bind:class="row_classes" v-bind:data-item-id="item.id">
         <td v-bind:colspan="colspan">
             <component
                 v-bind:is="cell_title_component_name"
@@ -77,7 +77,8 @@ export default {
             return {
                 "document-tree-item-hidden": this.is_folded,
                 "document-tree-item-created": this.item.created,
-                "document-tree-item-uploading": this.item.is_uploading
+                "document-tree-item-uploading": this.item.is_uploading,
+                "document-tree-item-folder": this.item.type === TYPE_FOLDER
             };
         },
         cell_title_component_name() {

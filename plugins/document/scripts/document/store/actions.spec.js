@@ -484,7 +484,7 @@ describe("Store actions", () => {
             const uploader = {};
             uploadFile.and.returnValue(uploader);
 
-            await addNewUploadFile(context, [dropped_file, parent]);
+            await addNewUploadFile(context, [dropped_file, parent, "filename.txt", "", true]);
 
             const expected_fake_item_with_uploader = {
                 id: 66,
@@ -512,7 +512,7 @@ describe("Store actions", () => {
             const uploader = {};
             uploadFile.and.returnValue(uploader);
 
-            await addNewUploadFile(context, [dropped_file, parent]);
+            await addNewUploadFile(context, [dropped_file, parent, "filename.txt", "", true]);
 
             const expected_fake_item = {
                 id: 66,
@@ -540,7 +540,7 @@ describe("Store actions", () => {
             const created_item_reference = { id: 66 };
             addNewDocument.and.returnValue(Promise.resolve(created_item_reference));
 
-            await addNewUploadFile(context, [dropped_file, parent]);
+            await addNewUploadFile(context, [dropped_file, parent, "filename.txt", "", true]);
 
             expect(context.commit).not.toHaveBeenCalled();
             expect(uploadFile).not.toHaveBeenCalled();
@@ -556,7 +556,7 @@ describe("Store actions", () => {
             const created_item = { id: 66, parent_id: 42, type: "file" };
             getItem.and.returnValue(Promise.resolve(created_item));
 
-            await addNewUploadFile(context, [dropped_file, parent]);
+            await addNewUploadFile(context, [dropped_file, parent, "filename.txt", "", true]);
 
             expect(context.commit).toHaveBeenCalledWith(
                 "addJustCreatedItemToFolderContent",
