@@ -17,6 +17,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\CLI\CLICommandsCollector;
 use Tuleap\Dashboard\User\AtUserCreationDefaultWidgetsCreator;
@@ -35,6 +36,9 @@ use Tuleap\Project\XML\Export\NoArchive;
 use Tuleap\Queue\WorkerEvent;
 use Tuleap\Request\CurrentPage;
 use Tuleap\Service\ServiceCreator;
+use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfig;
+use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfigController;
+use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfigDAO;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDuplicator;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactDeletor;
@@ -45,14 +49,24 @@ use Tuleap\Tracker\Artifact\ArtifactsDeletion\PendingArtifactRemovalDao;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsRunnerDao;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\AsynchronousActionsRunner;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\AsynchronousSupervisor;
+use Tuleap\Tracker\Artifact\InvertCommentsController;
+use Tuleap\Tracker\Artifact\InvertDisplayChangesController;
 use Tuleap\Tracker\Artifact\LatestHeartbeatsCollector;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
+use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigController;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
+use Tuleap\Tracker\Config\ConfigController;
 use Tuleap\Tracker\ForgeUserGroupPermission\TrackerAdminAllProjects;
 use Tuleap\Tracker\FormElement\BurndownCacheDateRetriever;
 use Tuleap\Tracker\FormElement\BurndownCalculator;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureConfigController;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureCreator;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDeletor;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureEditor;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureUsagePresenterFactory;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureValidator;
 use Tuleap\Tracker\FormElement\FieldCalculator;
 use Tuleap\Tracker\FormElement\SystemEvent\SystemEvent_BURNDOWN_DAILY;
 use Tuleap\Tracker\FormElement\SystemEvent\SystemEvent_BURNDOWN_GENERATE;
@@ -83,6 +97,9 @@ use Tuleap\Tracker\PermissionsPerGroup\ProjectAdminPermissionPerGroupPresenterBu
 use Tuleap\Tracker\ProjectDeletionEvent;
 use Tuleap\Tracker\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\Reference\ReferenceCreator;
+use Tuleap\Tracker\Report\TrackerReportConfig;
+use Tuleap\Tracker\Report\TrackerReportConfigController;
+use Tuleap\Tracker\Report\TrackerReportConfigDao;
 use Tuleap\Tracker\Service\ServiceActivator;
 use Tuleap\Tracker\Webhook\Actions\WebhookCreateController;
 use Tuleap\Tracker\Webhook\Actions\WebhookDeleteController;
@@ -1720,10 +1737,84 @@ class trackerPlugin extends Plugin {
         );
     }
 
+    public function routePostInvertCommentsOrder(): InvertCommentsController
+    {
+        return new InvertCommentsController();
+    }
+
+    public function routePostInvertDisplayChanges(): InvertDisplayChangesController
+    {
+        return new InvertDisplayChangesController();
+    }
+
+    public function routeConfig(): ConfigController
+    {
+        $project_manager         = ProjectManager::instance();
+        $nature_dao              = new NatureDao();
+        $nature_validator        = new NatureValidator($nature_dao);
+        $admin_page_renderer     = new AdminPageRenderer();
+        $artifact_link_usage_dao = new ArtifactLinksUsageDao();
+        $artifact_deletion_dao   = new ArtifactsDeletionConfigDAO();
+
+        return new ConfigController(
+            new CSRFSynchronizerToken(TRACKER_BASE_URL.'/config.php'),
+            new MailGatewayConfigController(
+                new MailGatewayConfig(
+                    new MailGatewayConfigDao()
+                ),
+                new Config_LocalIncFinder(),
+                EventManager::instance(),
+                $admin_page_renderer
+            ),
+            new NatureConfigController(
+                $project_manager,
+                new NatureCreator(
+                    $nature_dao,
+                    $nature_validator
+                ),
+                new NatureEditor(
+                    $nature_dao,
+                    $nature_validator
+                ),
+                new NatureDeletor(
+                    $nature_dao,
+                    $nature_validator
+                ),
+                new NaturePresenterFactory(
+                    $nature_dao,
+                    $artifact_link_usage_dao
+                ),
+                new NatureUsagePresenterFactory(
+                    $nature_dao
+                ),
+                $admin_page_renderer
+            ),
+            new TrackerReportConfigController(
+                new TrackerReportConfig(
+                    new TrackerReportConfigDao()
+                ),
+                $admin_page_renderer
+            ),
+            new ArtifactsDeletionConfigController(
+                $admin_page_renderer,
+                new ArtifactsDeletionConfig(
+                    $artifact_deletion_dao
+                ),
+                $artifact_deletion_dao,
+                PluginManager::instance()
+            )
+        );
+    }
+
     public function collectRoutesEvent(\Tuleap\Request\CollectRoutesEvent $event)
     {
         $event->getRouteCollector()->addGroup(TRACKER_BASE_URL, function(FastRoute\RouteCollector $r) {
             $r->addRoute(['GET', 'POST'],'[/[index.php]]', $this->getRouteHandler('routeLegacyController'));
+
+            $r->post('/invert_comments_order.php', $this->getRouteHandler('routePostInvertCommentsOrder'));
+            $r->post('/invert_display_changes.php', $this->getRouteHandler('routePostInvertDisplayChanges'));
+
+            $r->addRoute(['GET', 'POST'], '/config.php', $this->getRouteHandler('routeConfig'));
 
             $r->get('/notifications/{id:\d+}/', $this->getRouteHandler('routeGetNotifications'));
             $r->post('/notifications/{id:\d+}/', $this->getRouteHandler('routePostNotifications'));

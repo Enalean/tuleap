@@ -1,6 +1,0 @@
-# Prevent IE7 from caching the tracker reports.
-<Files index.php>
-  ExpiresActive On
-  ExpiresDefault A0
-</Files>
-
