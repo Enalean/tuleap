@@ -112,6 +112,9 @@ tests_cypress: ## Run Cypress tests
 tests_cypress_dev: ## Start cypress container to launch tests manually
 	@tests/e2e/full/wrap_for_dev_context.sh
 
+tests_cypress_distlp: ## Run Cypress distlp tests
+	@tests/e2e/distlp/wrap.sh
+
 tests_rest_setup_72: ## Start REST tests (PHP FPM 7.2) container to launch tests manually
 	$(DOCKER) run -ti --rm -v $(CURDIR):/usr/share/tuleap:cached --mount type=tmpfs,destination=/tmp -w /usr/share/tuleap enalean/tuleap-test-rest:c6-php72-mysql57 /bin/bash -c "/usr/share/tuleap/tests/rest/bin/run.sh setup && scl enable php72 bash"
 

@@ -7,7 +7,7 @@
 set -ex
 
 MAX_TEST_EXECUTION_TIME='30m'
-DOCKERCOMPOSE="docker-compose -f docker-compose-distlp-tests.yml -p distlp-tests-${BUILD_TAG}"
+DOCKERCOMPOSE="docker-compose -f docker-compose-distlp-tests.yml -p distlp-tests-${BUILD_TAG:-dev}"
 
 test_results_folder='./test_results_distlp'
 if [ -n "$1" ]; then

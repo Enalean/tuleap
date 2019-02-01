@@ -52,6 +52,7 @@ plugins/themes/*/assets
 src/www/themes/BurningParrot/css/vendor/*.scss
 test_results/*
 test_results_e2e/*
+test_results_distlp/*
 tests/soap/vendor
 tests/rest/vendor
 src/www/themes/local
