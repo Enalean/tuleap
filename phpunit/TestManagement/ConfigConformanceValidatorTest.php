@@ -58,7 +58,8 @@ class ConfigConformanceAsserterTest extends TestCase
     private $another_project_id           = 102;
     private $another_execution_tracker_id = 666;
 
-    public function setUp() {
+    public function setUp() : void
+    {
         parent::setUp();
         $project = Mockery::spy(Project::class);
         $project->shouldReceive('getID')->andReturn($this->project_id);

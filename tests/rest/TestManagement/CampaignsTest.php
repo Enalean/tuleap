@@ -115,23 +115,19 @@ class CampaignsTest extends BaseTest {
     {
         $campaign = $this->getValid73Campaign();
 
-        try {
-            $this->getResponse(
-                $this->client->patch(
-                    'testmanagement_campaigns/' . $campaign['id'],
-                    null,
-                    json_encode(
-                        [
-                            'job_configuration' => ['url' => 'avadakedavra', 'token' => 'so secret']
-                        ]
-                    )
+        $response = $this->getResponse(
+            $this->client->patch(
+                'testmanagement_campaigns/' . $campaign['id'],
+                null,
+                json_encode(
+                    [
+                        'job_configuration' => ['url' => 'avadakedavra', 'token' => 'so secret']
+                    ]
                 )
-            );
-            $this->fail('Should have receive a 400');
-        } catch (\Guzzle\Http\Exception\ClientErrorResponseException $exception) {
-            $this->assertEquals(400, $exception->getResponse()->getStatusCode());
-            return;
-        }
+            )
+        );
+
+        $this->assertEquals(400, $response->getStatusCode());
     }
 
     private function revertCampaign(array $campaign)

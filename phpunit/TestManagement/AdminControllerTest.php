@@ -65,7 +65,7 @@ class AdminControllerTest extends TestCase
     const EXECUTION_TRACKER_ID = 533;
     const ISSUE_TRACKER_ID = 534;
 
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
         $this->globals = $GLOBALS;
@@ -95,7 +95,7 @@ class AdminControllerTest extends TestCase
         );
     }
 
-    protected function tearDown()
+    protected function tearDown() : void
     {
         $GLOBALS = $this->globals;
         parent::tearDown();

@@ -22,6 +22,7 @@ namespace Tuleap\TestManagement\REST\v1;
 
 require_once __DIR__ . '/../../../bootstrap.php';
 
+use Luracast\Restler\RestException;
 use PFUser;
 use PHPUnit\Framework\TestCase;
 use Tracker_Artifact;
@@ -57,7 +58,7 @@ class StepsResultsChangesBuilderTest extends TestCase
     private $test_status_builder;
     private $execution_status_field;
 
-    public function setUp()
+    public function setUp() : void
     {
         $this->user                       = $this->createMock(PFUser::class);
         $this->execution_artifact         = $this->createMock(Tracker_Artifact::class);
@@ -235,9 +236,6 @@ class StepsResultsChangesBuilderTest extends TestCase
         $this->assertEquals($expected, $this->getChanges($submitted_steps_results));
     }
 
-    /**
-     * @expectedException \Luracast\Restler\RestException
-     */
     public function testItRaisesExceptionIfThereIsNoExecutionField()
     {
         $map = [
@@ -247,13 +245,12 @@ class StepsResultsChangesBuilderTest extends TestCase
 
         $this->form_element_factory->method('getUsedFieldByNameForUser')->will($this->returnValueMap($map));
 
+        $this->expectException(RestException::class);
+
         $submitted_steps_results = [];
         $this->getChanges($submitted_steps_results);
     }
 
-    /**
-     * @expectedException \Luracast\Restler\RestException
-     */
     public function testItRaisesExceptionIfThereIsNoDefinitionField()
     {
         $map = [
@@ -262,6 +259,8 @@ class StepsResultsChangesBuilderTest extends TestCase
         ];
 
         $this->form_element_factory->method('getUsedFieldByNameForUser')->will($this->returnValueMap($map));
+
+        $this->expectException(RestException::class);
 
         $submitted_steps_results = [];
         $this->getChanges($submitted_steps_results);
@@ -325,9 +324,6 @@ class StepsResultsChangesBuilderTest extends TestCase
         $this->getChanges($submitted_steps_results);
     }
 
-    /**
-     * @expectedException \Luracast\Restler\RestException
-     */
     public function testItRaisesExceptionIfThereIsntAnyStepsInDefinitionChangeset()
     {
         $map = [
@@ -341,13 +337,12 @@ class StepsResultsChangesBuilderTest extends TestCase
 
         $this->definition_artifact->method('getLastChangeset')->willReturn(null);
 
+        $this->expectException(RestException::class);
+
         $submitted_steps_results = [];
         $this->getChanges($submitted_steps_results);
     }
 
-    /**
-     * @expectedException \Luracast\Restler\RestException
-     */
     public function testItRaisesExceptionIfThereIsNoStepsDefinedInDefinitionChangesetValue()
     {
         $map = [
@@ -365,6 +360,8 @@ class StepsResultsChangesBuilderTest extends TestCase
             [$this->definition_field, $this->definition_changeset, null]
         ];
         $this->definition_artifact->method('getValue')->will($this->returnValueMap($value_map));
+
+        $this->expectException(RestException::class);
 
         $submitted_steps_results = [];
         $this->getChanges($submitted_steps_results);

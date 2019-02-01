@@ -67,7 +67,7 @@ class FirstConfigCreatorTest extends TestCase
     private $execution_tracker_xml_path;
     private $issue_tracker_xml_path;
 
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
 
@@ -145,7 +145,7 @@ class FirstConfigCreatorTest extends TestCase
         );
     }
 
-    public function tearDown()
+    public function tearDown() : void
     {
         $GLOBALS = $this->globals;
 
