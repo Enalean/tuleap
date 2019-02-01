@@ -86,9 +86,6 @@ class SetFloatValueRepositoryTest extends TestCase
         $this->set_float_value_repository->create($transition, $set_float_value);
     }
 
-    /**
-     * @expectedException DataAccessQueryException
-     */
     public function testCreateThrowsWhenCreationFail()
     {
         $this->set_float_value_dao->shouldReceive('create')
@@ -96,6 +93,8 @@ class SetFloatValueRepositoryTest extends TestCase
 
         $transition      = TransitionFactory::buildATransition();
         $set_float_value = new SetFloatValue(null, 43, 1.23);
+
+        $this->expectException(DataAccessQueryException::class);
 
         $this->set_float_value_repository->create($transition, $set_float_value);
     }
@@ -110,15 +109,15 @@ class SetFloatValueRepositoryTest extends TestCase
         $this->set_float_value_repository->update($set_float_value);
     }
 
-    /**
-     * @expectedException DataAccessQueryException
-     */
     public function testUpdateThrowsWhenUpdateFail()
     {
         $this->set_float_value_dao
             ->shouldReceive('updatePostAction')
             ->andReturn(false);
         $set_float_value = new SetFloatValue(9, 43, 1.23);
+
+        $this->expectException(DataAccessQueryException::class);
+
         $this->set_float_value_repository->update($set_float_value);
     }
 
@@ -132,15 +131,15 @@ class SetFloatValueRepositoryTest extends TestCase
         $this->set_float_value_repository->deleteAllByTransitionIfIdNotIn($transition, [1, 2, 3]);
     }
 
-    /**
-     * @expectedException DataAccessQueryException
-     */
     public function testDeleteAllByTransitionIfIdNotInThrowsIfDeleteFail()
     {
         $this->set_float_value_dao
             ->shouldReceive('deletePostActionByTransitionIfIdNotIn')
             ->andReturn(false);
         $transition = TransitionFactory::buildATransition();
+
+        $this->expectException(DataAccessQueryException::class);
+
         $this->set_float_value_repository->deleteAllByTransitionIfIdNotIn($transition, [1, 2, 3]);
     }
 
@@ -161,15 +160,15 @@ class SetFloatValueRepositoryTest extends TestCase
         $this->assertEquals(new PostActionIdCollection(1, 2, 3), $ids);
     }
 
-    /**
-     * @expectedException DataAccessQueryException
-     */
     public function testFindAllIdsByTransitionThrowsWhenFindFail()
     {
         $this->set_float_value_dao
             ->shouldReceive('findAllIdsByTransitionId')
             ->andReturn(false);
         $transition = TransitionFactory::buildATransition();
+
+        $this->expectException(DataAccessQueryException::class);
+
         $this->set_float_value_repository->findAllIdsByTransition($transition);
     }
 }

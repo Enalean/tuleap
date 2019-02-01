@@ -38,14 +38,14 @@ class DocumentBeingUploadedLockerTest extends TestCase
      */
     private $tmp_dir;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $path = sys_get_temp_dir() . '/' . bin2hex(random_bytes(8));
         mkdir($path);
         $this->tmp_dir = $path;
     }
 
-    protected function tearDown()
+    protected function tearDown() : void
     {
         $folders = new RecursiveIteratorIterator(
             new RecursiveDirectoryIterator($this->tmp_dir, RecursiveDirectoryIterator::SKIP_DOTS),

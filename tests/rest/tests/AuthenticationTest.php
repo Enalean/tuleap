@@ -24,15 +24,11 @@
  */
 class AuthenticationTest extends RestBase {
 
-    public function testRestrictedGETResourceIsNotReadableByAnonymous() {
-        $exception_thrown = false;
-        try {
-            $this->client->get("projects/$this->project_public_id/user_groups")->send();
-        } catch(Guzzle\Http\Exception\ClientErrorResponseException $e) {
-            $this->assertEquals(401, $e->getResponse()->getStatusCode());
-            $exception_thrown = true;
-        }
-        $this->assertTrue($exception_thrown);
+    public function testRestrictedGETResourceIsNotReadableByAnonymous()
+    {
+        $response = $this->client->get("projects/$this->project_public_id/user_groups")->send();
+
+        $this->assertEquals(401, $response->getStatusCode());
     }
 
     public function testOPTIONSIsReadableByAnonymous() {
@@ -47,33 +43,24 @@ class AuthenticationTest extends RestBase {
         $this->assertEquals(200, $response->getStatusCode());
     }
 
-    public function testGETWithBasicAuthAndWrongCredentialsThrowsAnException() {
-        $exception_thrown = false;
-        try {
-            $this->getResponseByBasicAuth(
-                REST_TestDataBuilder::TEST_USER_1_NAME,
-                'wrong_password',
-                $this->client->get('projects')
-            );
-        } catch(Guzzle\Http\Exception\ClientErrorResponseException $e) {
-            $this->assertEquals(401, $e->getResponse()->getStatusCode());
-            $exception_thrown = true;
-        }
-        $this->assertTrue($exception_thrown);
+    public function testGETWithBasicAuthAndWrongCredentialsThrowsAnException()
+    {
+        $response = $this->getResponseByBasicAuth(
+            REST_TestDataBuilder::TEST_USER_1_NAME,
+            'wrong_password',
+            $this->client->get('projects')
+        );
+
+        $this->assertEquals(401, $response->getStatusCode());
     }
 
-    public function testGETWithTokenAndWrongCredentialsThrowsAnException() {
-        $exception_thrown = false;
-        try {
-            $request = $this->client->get('projects');
-            $request
-                ->setHeader('X-Auth-Token', 'wrong_token')
-                ->setHeader('X-Auth-UserId', $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME]);
-            $request->send();
-        } catch(Guzzle\Http\Exception\ClientErrorResponseException $e) {
-            $this->assertEquals(401, $e->getResponse()->getStatusCode());
-            $exception_thrown = true;
-        }
-        $this->assertTrue($exception_thrown);
+    public function testGETWithTokenAndWrongCredentialsThrowsAnException()
+    {
+        $request = $this->client->get('projects');
+        $request
+            ->setHeader('X-Auth-Token', 'wrong_token')
+            ->setHeader('X-Auth-UserId', $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME]);
+        $response = $request->send();
+        $this->assertEquals(401, $response->getStatusCode());
     }
 }

@@ -25,7 +25,7 @@ use RestBase;
 
 class CrossTrackerTest extends RestBase
 {
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
 

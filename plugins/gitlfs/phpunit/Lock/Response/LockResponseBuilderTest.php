@@ -35,7 +35,7 @@ class LockResponseBuilderTest extends TestCase
      */
     private $lock_response_builder;
 
-    public function setUp()
+    public function setUp() : void
     {
         $this->lock_response_builder = new LockResponseBuilder();
     }

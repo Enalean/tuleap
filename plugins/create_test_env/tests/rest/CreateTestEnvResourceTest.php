@@ -55,7 +55,7 @@ class CreateTestEnvResourceTest extends \RestBase
         $this->assertEquals($response->getStatusCode(), 201);
 
         $return = $response->json();
-        $this->assertInternalType('int', $return['id']);
+        $this->assertIsInt($return['id']);
         $this->assertEquals('test-for-john-doe', $return['project_shortname']);
         $this->assertEquals('https://localhost/projects/test-for-john-doe', $return['project_url']);
         $this->assertStringStartsWith('Test project for ', $return['project_realname']);
@@ -63,34 +63,28 @@ class CreateTestEnvResourceTest extends \RestBase
 
     public function testCreateProjectRefuseBadPassword()
     {
-        $error_code      = 200;
-        $exception_class = '';
-        $exception_msgs  = [];
-        try {
-            $this->getResponseWithoutAuth($this->client->post(
-                'create_test_env/',
-                null,
-                json_encode(
-                    [
-                        'secret'    => 'a78e62ee64d594d99a800e5489c052d98cce84a54bb571bccc29b0dcd7ef4441',
-                        'firstname' => 'John',
-                        'lastname'  => 'Doe',
-                        'email'     => 'jd@example.com',
-                        'password'  => 'azerty',
-                        'login'     => 'jdoe',
-                        'archive'   => 'foo',
-                    ],
-                    true
-                )
-            ));
-        } catch (\Guzzle\Http\Exception\ClientErrorResponseException $exception) {
-            $error_code      = $exception->getResponse()->getStatusCode();
-            $exception_json  = $exception->getResponse()->json();
-            $exception_class = $exception_json['error']['exception'];
-            $exception_msgs  = $exception_json['error']['password_exceptions'];
-        }
-        $this->assertEquals(400, $error_code);
+        $response = $this->getResponseWithoutAuth($this->client->post(
+            'create_test_env/',
+            null,
+            json_encode(
+                [
+                    'secret'    => 'a78e62ee64d594d99a800e5489c052d98cce84a54bb571bccc29b0dcd7ef4441',
+                    'firstname' => 'John',
+                    'lastname'  => 'Doe',
+                    'email'     => 'jd@example.com',
+                    'password'  => 'azerty',
+                    'login'     => 'jdoe',
+                    'archive'   => 'foo',
+                ],
+                true
+            )
+        ));
+
+        $this->assertEquals(400, $response->getStatusCode());
+        $exception_json  = $response->json();
+        $exception_class = $exception_json['error']['exception'];
         $this->assertEquals('Tuleap\\CreateTestEnv\\Exception\\InvalidPasswordException', $exception_class);
+        $exception_msgs  = $exception_json['error']['password_exceptions'];
         $this->assertCount(1, $exception_msgs);
     }
 }

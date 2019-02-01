@@ -33,7 +33,7 @@ class CumulativeFlowChartTest extends TestCase
 {
     private $data_builder;
 
-    public function setUp()
+    public function setUp() : void
     {
         $this->data_builder = new GraphOnTrackersV5_CumulativeFlow_DataBuilder(null, null);
     }

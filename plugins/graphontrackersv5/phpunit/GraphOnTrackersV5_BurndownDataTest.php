@@ -41,7 +41,7 @@ class GraphOnTrackersV5BurndownDataTest extends TestCase
      */
     private $artifacts_ids;
 
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
         $this->artifacts_ids = array(5215, 5217, 5239, 5241);

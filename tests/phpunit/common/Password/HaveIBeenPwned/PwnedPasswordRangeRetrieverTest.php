@@ -36,15 +36,15 @@ class PwnedPasswordRangeRetrieverTest extends TestCase
         $this->assertEquals('API_RESPONSE', $hash_suffixes);
     }
 
-    /**
-     * @expectedException \LengthException
-     */
     public function testTooLongPrefixIsRejected()
     {
         $http_client = $this->createMock(\Http_Client::class);
         $logger      = $this->createMock(\Logger::class);
 
         $retriever = new PwnedPasswordRangeRetriever($http_client, $logger);
+
+        $this->expectException(\LengthException::class);
+
         $retriever->getHashSuffixesMatchingPrefix(sha1('password'));
     }
 

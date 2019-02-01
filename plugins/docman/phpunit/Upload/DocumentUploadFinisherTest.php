@@ -41,7 +41,7 @@ class DocumentUploadFinisherTest extends TestCase
     private $file_storage;
     private $user_manager;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $this->logger              = \Mockery::mock(\Logger::class);
         $this->item_factory        = \Mockery::mock(Docman_ItemFactory::class);

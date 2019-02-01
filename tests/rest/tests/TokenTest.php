@@ -24,11 +24,8 @@
  */
 class TokenTest extends RestBase {
 
-    /**
-     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
-     */
     public function testPostThrowExceptionIfUsernameDoesNotExist() {
-        $this->getResponseWithoutAuth($this->client->post(
+        $response = $this->getResponseWithoutAuth($this->client->post(
             'tokens',
             null,
             json_encode(array(
@@ -36,13 +33,11 @@ class TokenTest extends RestBase {
                 "password" => 'pwd'
             ))
         ));
+        $this->assertEquals(401, $response->getStatusCode());
     }
 
-    /**
-     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
-     */
     public function testPostThrowExceptionIfUsernameAndPaswordDoesNotMatch() {
-        $this->getResponseWithoutAuth($this->client->post(
+        $response = $this->getResponseWithoutAuth($this->client->post(
             'tokens',
             null,
             json_encode(array(
@@ -50,5 +45,6 @@ class TokenTest extends RestBase {
                 "password" => 'pwd'
             ))
         ));
+        $this->assertEquals(401, $response->getStatusCode());
     }
 }

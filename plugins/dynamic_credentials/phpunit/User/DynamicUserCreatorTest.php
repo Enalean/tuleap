@@ -33,14 +33,14 @@ class DynamicUserCreatorTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         parent::setUp();
         $language = \Mockery::mock(\BaseLanguage::class);
         $GLOBALS['Language'] = $language;
     }
 
-    protected function tearDown()
+    protected function tearDown() : void
     {
         unset($GLOBALS['Language']);
         parent::tearDown();
@@ -80,7 +80,6 @@ class DynamicUserCreatorTest extends TestCase
 
     /**
      * @runInSeparateProcess
-     * @expectedException \Tuleap\DynamicCredentials\User\InvalidStateCleanUpDoesNotInterruptException
      */
     public function testCurrentUserIsLogoutWhenCredentialIsExpired()
     {
@@ -101,12 +100,13 @@ class DynamicUserCreatorTest extends TestCase
             [$clean_up, 'clean_up_expired']
         );
 
+        $this->expectException(InvalidStateCleanUpDoesNotInterruptException::class);
+
         $dynamic_user_creator->getDynamicUser([]);
     }
 
     /**
      * @runInSeparateProcess
-     * @expectedException \Tuleap\DynamicCredentials\User\InvalidStateCleanUpDoesNotInterruptException
      */
     public function testCurrentUserIsLogoutWhenCredentialIsNotFound()
     {
@@ -124,6 +124,8 @@ class DynamicUserCreatorTest extends TestCase
             'Realname',
             [$clean_up, 'clean_up_not_found']
         );
+
+        $this->expectException(InvalidStateCleanUpDoesNotInterruptException::class);
 
         $dynamic_user_creator->getDynamicUser([]);
     }

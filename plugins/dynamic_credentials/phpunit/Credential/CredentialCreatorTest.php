@@ -30,9 +30,6 @@ class CredentialCreatorTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    /**
-     * @expectedException \Tuleap\DynamicCredentials\Credential\DuplicateCredentialException
-     */
     public function testQueryFailureIsConsideredAsDuplicateCredential()
     {
         $dao = Mockery::mock(CredentialDAO::class);
@@ -43,6 +40,9 @@ class CredentialCreatorTest extends TestCase
         $identifier_extractor->shouldReceive('extract');
 
         $credential_creator = new CredentialCreator($dao, $password_handler, $identifier_extractor);
+
+        $this->expectException(DuplicateCredentialException::class);
+
         $credential_creator->create('username', 'password', new \DateTimeImmutable());
     }
 }

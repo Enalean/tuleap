@@ -20,6 +20,7 @@
 
 namespace Tuleap\Docman\REST\v1;
 
+use Luracast\Restler\RestException;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
@@ -44,7 +45,7 @@ class DocmanItemCreatorTest extends TestCase
 
     private $empty_file_to_upload_finisher;
 
-    public function setUp()
+    public function setUp() : void
     {
         $this->creator_visitor      = \Mockery::mock(AfterItemCreationVisitor::class);
 
@@ -163,10 +164,6 @@ class DocmanItemCreatorTest extends TestCase
         $this->assertNull($created_item_representation->file_properties);
     }
 
-    /**
-     * @expectedException \Luracast\Restler\RestException
-     * @expectedExceptionCode 400
-     */
     public function testWikiDocumentCannotBeCreatedIfServiceWikiIsNotAvailable()
     {
         $item_creator = new DocmanItemCreator(
@@ -206,6 +203,9 @@ class DocmanItemCreatorTest extends TestCase
         $project->shouldReceive('getUnixName')->once();
 
         $this->item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
+
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(400);
 
         $item_creator->create(
             $parent_item,
@@ -258,10 +258,6 @@ class DocmanItemCreatorTest extends TestCase
         $this->assertNotNull($created_item_representation->file_properties);
     }
 
-    /**
-     * @expectedException \Luracast\Restler\RestException
-     * @expectedExceptionCode 409
-     */
     public function testDocumentCreationWhenAFileIsBeingUploadedForItIsRejected()
     {
         $item_creator = new DocmanItemCreator(
@@ -285,6 +281,9 @@ class DocmanItemCreatorTest extends TestCase
         $this->item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
 
         $this->document_ongoing_upload_retriever->shouldReceive('isThereAlreadyAnUploadOngoing')->andReturns(true);
+
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(409);
 
         $item_creator->create(
             $parent_item,
@@ -470,10 +469,6 @@ class DocmanItemCreatorTest extends TestCase
         $this->assertNull($created_item_representation->file_properties);
     }
 
-    /**
-     * @expectedException \Luracast\Restler\RestException
-     * @expectedExceptionCode 403
-     */
     public function testEmbeddedFileCannotBeCreatedIfDocmanDoesNotAllowEmbedded(): void
     {
         $item_creator = new DocmanItemCreator(
@@ -504,6 +499,9 @@ class DocmanItemCreatorTest extends TestCase
         $this->item_factory->shouldReceive('doesTitleCorrespondToExistingFolder')->andReturn(false);
         $this->item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
 
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(403);
+
         $is_embedded_allowed = false;
         $item_creator->create(
             $parent_item,
@@ -515,10 +513,6 @@ class DocmanItemCreatorTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException \Luracast\Restler\RestException
-     * @expectedExceptionCode 400
-     */
     public function testFolderCannotBeCreatedIfTheTypeGivenIsNotFolder()
     {
         $item_creator = new DocmanItemCreator(
@@ -557,6 +551,9 @@ class DocmanItemCreatorTest extends TestCase
 
         $this->item_factory->shouldReceive('doesTitleCorrespondToExistingFolder')->andReturn(false);
 
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(400);
+
         $item_creator->create(
             $parent_item,
             $user,
@@ -567,10 +564,6 @@ class DocmanItemCreatorTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException \Luracast\Restler\RestException
-     * @expectedExceptionCode 400
-     */
     public function testItemAreRejectedIfItemWIthSameNameAlreadyExists()
     {
         $item_creator = new DocmanItemCreator(
@@ -592,6 +585,9 @@ class DocmanItemCreatorTest extends TestCase
         $post_representation->parent_id = 11;
 
         $this->item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(true);
+
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(400);
 
         $item_creator->create(
             $parent_item,

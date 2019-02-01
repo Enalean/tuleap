@@ -40,21 +40,17 @@ class RedisInitializerTest extends TestCase
         $initializer->init($redis);
     }
 
-    /**
-     * @expectedException \Tuleap\Redis\RedisConnectionException
-     */
     public function testInitializationFailsIfNoHostHaveBeenProvided()
     {
         $initializer = new RedisInitializer(false, false, new ConcealedString(''));
 
         $redis = \Mockery::mock(\Redis::class);
 
+        $this->expectException(RedisConnectionException::class);
+
         $initializer->init($redis);
     }
 
-    /**
-     * @expectedException \Tuleap\Redis\RedisConnectionException
-     */
     public function testInitializationFailsIfConnectDoesNotSucceed()
     {
         $initializer = new RedisInitializer('redis', '6379', new ConcealedString(''));
@@ -62,12 +58,11 @@ class RedisInitializerTest extends TestCase
         $redis = \Mockery::mock(\Redis::class);
         $redis->shouldReceive('connect')->andReturns(false);
 
+        $this->expectException(RedisConnectionException::class);
+
         $initializer->init($redis);
     }
 
-    /**
-     * @expectedException \Tuleap\Redis\RedisConnectionException
-     */
     public function testNoPasswordLeaksInExceptionMessage()
     {
         $password    = 'my_password';
@@ -78,10 +73,12 @@ class RedisInitializerTest extends TestCase
         $redis->shouldReceive('auth')->andReturns(false);
         $redis->shouldReceive('getLastError')->once()->andReturns($password);
 
+        $this->expectException(RedisConnectionException::class);
+
         try {
             $initializer->init($redis);
         } catch (RedisConnectionException $ex) {
-            $this->assertNotContains($password, $ex->getMessage());
+            $this->assertStringNotContainsStringIgnoringCase($password, $ex->getMessage());
             throw $ex;
         }
     }

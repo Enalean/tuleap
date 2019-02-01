@@ -48,23 +48,13 @@ class TrackerWorkflowsTest extends TrackerBase
     {
         $field_status_id           = $this->getStatusFieldId();
         $query                     = '{"workflow": {"set_transitions_rules": {"field_id":' . $field_status_id . '}}}';
-        $has_exception_been_caught = false;
 
-        try {
-            $this->getResponseByName(
-                \REST_TestDataBuilder::TEST_USER_2_NAME,
-                $this->client->patch("trackers/" . $this->tracker_workflows_tracker_id . '?query=' . urlencode($query), null, null)
-            );
-        } catch (BadResponseException $e) {
-            $this->assertEquals(
-                403,
-                $e->getResponse()->getStatusCode()
-            );
+        $response = $this->getResponseByName(
+            \REST_TestDataBuilder::TEST_USER_2_NAME,
+            $this->client->patch("trackers/" . $this->tracker_workflows_tracker_id . '?query=' . urlencode($query), null, null)
+        );
 
-            $has_exception_been_caught = true;
-        }
-
-        $this->assertTrue($has_exception_been_caught);
+        $this->assertEquals(403, $response->getStatusCode());
     }
 
     /**
@@ -74,46 +64,26 @@ class TrackerWorkflowsTest extends TrackerBase
     {
         $field_status_id           = $this->getStatusFieldId();
         $query                     = '{"workflow": {"set_transitions_rules": {"field_id":' . $field_status_id . '}}}';
-        $has_exception_been_caught = false;
 
-        try {
-            $this->getResponseByName(
-                \REST_TestDataBuilder::TEST_USER_1_NAME,
-                $this->client->patch("trackers/" . $this->tracker_workflows_tracker_id . '?query=' . urlencode($query), null, null)
-            );
-        } catch (BadResponseException $e) {
-            $this->assertEquals(
-                400,
-                $e->getResponse()->getStatusCode()
-            );
+        $response = $this->getResponseByName(
+            \REST_TestDataBuilder::TEST_USER_1_NAME,
+            $this->client->patch("trackers/" . $this->tracker_workflows_tracker_id . '?query=' . urlencode($query), null, null)
+        );
 
-            $has_exception_been_caught = true;
-        }
-
-        $this->assertTrue($has_exception_been_caught);
+        $this->assertEquals(400, $response->getStatusCode());
     }
 
     public function testPATCHTrackerWorkflowsWhenDeleteAndSetATransitionSameTimeReturnsError()
     {
         $field_status_id = $this->getStatusFieldId();
         $query = '{"workflow": {"set_transitions_rules": {"field_id":' . $field_status_id . '}, "delete_transitions_rules": true}}';
-        $has_exception_been_caught = false;
 
-        try {
-            $this->getResponseByName(
-                \REST_TestDataBuilder::TEST_USER_1_NAME,
-                $this->client->patch("trackers/" . $this->tracker_workflows_tracker_id . '?query=' . urlencode($query), null, null)
-            );
-        } catch (BadResponseException $e) {
-            $this->assertEquals(
-                400,
-                $e->getResponse()->getStatusCode()
-            );
+        $response = $this->getResponseByName(
+            \REST_TestDataBuilder::TEST_USER_1_NAME,
+            $this->client->patch("trackers/" . $this->tracker_workflows_tracker_id . '?query=' . urlencode($query), null, null)
+        );
 
-            $has_exception_been_caught = true;
-        }
-
-        $this->assertTrue($has_exception_been_caught);
+        $this->assertEquals(400, $response->getStatusCode());
     }
 
     /**
@@ -175,20 +145,16 @@ class TrackerWorkflowsTest extends TrackerBase
      */
     public function testPATCHTrackerWorkflowsDeleteAWorkflowTransitionRulesWhenNotExist()
     {
-        $query = '{"workflow": {"delete_transitions_rules": true}}';
-        try {
-            $this->getResponseByName(
-                \REST_TestDataBuilder::TEST_USER_1_NAME,
-                $this->client->patch(
-                    "trackers/" . $this->tracker_workflows_tracker_id . '?query=' . urlencode($query),
-                    null,
-                    null
-                )
-            );
-            $this->fail('Expected exception not raised');
-        } catch (BadResponseException $e) {
-            $this->assertEquals(400, $e->getResponse()->getStatusCode());
-        }
+        $query    = '{"workflow": {"delete_transitions_rules": true}}';
+        $response = $this->getResponseByName(
+            \REST_TestDataBuilder::TEST_USER_1_NAME,
+            $this->client->patch(
+                "trackers/" . $this->tracker_workflows_tracker_id . '?query=' . urlencode($query),
+                null,
+                null
+            )
+        );
+        $this->assertEquals(400, $response->getStatusCode());
     }
 
     private function getStatusFieldId()

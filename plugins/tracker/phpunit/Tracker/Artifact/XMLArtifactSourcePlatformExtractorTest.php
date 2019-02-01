@@ -46,7 +46,7 @@ class XMLArtifactSourcePlatformExtractorTest extends TestCase
      */
     private $logger;
 
-    public function setUp()
+    public function setUp() : void
     {
         $this->config = \Mockery::mock(ImportConfig::class);
 

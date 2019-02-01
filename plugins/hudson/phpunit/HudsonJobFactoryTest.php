@@ -25,40 +25,40 @@ use PHPUnit\Framework\TestCase;
 
 class HudsonJobFactoryTest extends TestCase // @codingStandardsIgnoreLine
 {
-    protected function setUp()
+    protected function setUp() : void
     {
         $GLOBALS['Language'] = Mockery::spy(BaseLanguage::class);
     }
 
-    protected function tearDown()
+    protected function tearDown() : void
     {
         unset($GLOBALS['Language']);
     }
 
-    /**
-     * @expectedException HudsonJobURLMalformedException
-     */
     public function testBuildingJobWithMalformedURL()
     {
         $job_factory = new MinimalHudsonJobFactory();
+
+        $this->expectException(HudsonJobURLMalformedException::class);
+
         $job_factory->getMinimalHudsonJob('toto', '');
     }
 
-    /**
-     * @expectedException HudsonJobURLMalformedException
-     */
     public function testBuildingJobWithMissingSchemeURL()
     {
         $job_factory = new MinimalHudsonJobFactory();
+
+        $this->expectException(HudsonJobURLMalformedException::class);
+
         $job_factory->getMinimalHudsonJob('example.com/hudson/jobs/Tuleap', '');
     }
 
-    /**
-     * @expectedException HudsonJobURLMalformedException
-     */
     public function testBuildingJobWithMissingHostURL()
     {
         $job_factory = new MinimalHudsonJobFactory();
+
+        $this->expectException(HudsonJobURLMalformedException::class);
+
         $job_factory->getMinimalHudsonJob('https://', '');
     }
 }

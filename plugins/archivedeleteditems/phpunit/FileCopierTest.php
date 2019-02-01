@@ -41,7 +41,7 @@ class FileCopierTest extends TestCase
     private $source_file;
     private $destination_file;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $this->logger           = \Mockery::spy(\Tuleap\ArchiveDeletedItems\ArchiveLogger::class);
         $this->file_system      = vfsStream::setup();

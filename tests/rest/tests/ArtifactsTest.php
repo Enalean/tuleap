@@ -427,16 +427,13 @@ class ArtifactsTest extends ArtifactBase  // @codingStandardsIgnoreLine
         $this->assertCount(count($existing_artifact_ids), $artifacts['collection']);
     }
 
-    /**
-     * @expectedException \Guzzle\Http\Exception\ClientErrorResponseException
-     */
     public function testGetTooManyArtifacts()
     {
-        $too_many_artifacts_id = array_fill(0, 10000, 1);
+        $too_many_artifacts_id = array_keys(array_fill(0, 200, 1));
         $query                 = json_encode(array('id' => $too_many_artifacts_id));
 
         $response = $this->getResponse($this->client->get('artifacts?query=' . urlencode($query)));
-        $this->assertEquals($response->getStatusCode(), 403);
+        $this->assertEquals(403, $response->getStatusCode());
     }
 
 
@@ -711,11 +708,8 @@ class ArtifactsTest extends ArtifactBase  // @codingStandardsIgnoreLine
 
     public function testAnonymousGETArtifact()
     {
-        try {
-            $this->client->get('artifacts/'.$this->story_artifact_ids[1])->send();
-        } catch (Exception $e) {
-            $this->assertEquals($e->getResponse()->getStatusCode(), 403);
-        }
+        $response = $this->client->get('artifacts/'.$this->story_artifact_ids[1])->send();
+        $this->assertEquals(403, $response->getStatusCode());
     }
 
     public function testGetSuspendedProjectArtifactForSiteAdmin()
@@ -730,28 +724,19 @@ class ArtifactsTest extends ArtifactBase  // @codingStandardsIgnoreLine
 
     public function testGetSuspendedProjectArtifactForRegularUser()
     {
-        $has_exception_been_caught = false;
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::TEST_USER_1_NAME,
+            $this->client->get('artifacts/' . $this->suspended_tracker_artifacts_ids[1])
+        );
 
-        try {
-            $this->getResponseByName(
-                REST_TestDataBuilder::TEST_USER_1_NAME,
-                $this->client->get('artifacts/' . $this->suspended_tracker_artifacts_ids[1])
-            );
-        } catch (BadResponseException $exception) {
-            $this->assertEquals($exception->getResponse()->getStatusCode(), 403);
-
-            $has_exception_been_caught = true;
-        }
-
-        $this->assertTrue($has_exception_been_caught);
+        $this->assertEquals(403, $response->getStatusCode());
     }
 
-    /**
-     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
-     */
     public function testPUTSuspendedProjectArtifactForSiteAdmin()
     {
         $target_artifact_id = $this->suspended_tracker_artifacts_ids[1];
+
+        $this->expectExceptionCode(403);
 
         $put_resource = json_encode(
             [
@@ -764,7 +749,7 @@ class ArtifactsTest extends ArtifactBase  // @codingStandardsIgnoreLine
             ]
         );
 
-        $this->getResponseByName(
+        $response = $this->getResponseByName(
             REST_TestDataBuilder::ADMIN_USER_NAME,
             $this->client->put(
                 'artifacts/' . $target_artifact_id,
@@ -772,14 +757,14 @@ class ArtifactsTest extends ArtifactBase  // @codingStandardsIgnoreLine
                 $put_resource
             )
         );
+        $this->assertEquals(400, $response->getStatusCode());
     }
 
-    /**
-     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
-     */
     public function testPUTSuspendedProjectArtifactForRegularUser()
     {
         $target_artifact_id = $this->suspended_tracker_artifacts_ids[1];
+
+        $this->expectExceptionCode(403);
 
         $put_resource = json_encode(
             [
@@ -792,7 +777,7 @@ class ArtifactsTest extends ArtifactBase  // @codingStandardsIgnoreLine
             ]
         );
 
-        $this->getResponseByName(
+        $response = $this->getResponseByName(
             REST_TestDataBuilder::TEST_USER_1_NAME,
             $this->client->put(
                 'artifacts/' . $target_artifact_id,
@@ -800,6 +785,7 @@ class ArtifactsTest extends ArtifactBase  // @codingStandardsIgnoreLine
                 $put_resource
             )
         );
+        $this->assertEquals(400, $response->getStatusCode());
     }
 
     private function getFieldIdForFieldLabel($artifact_id, $field_label)
@@ -827,6 +813,9 @@ class ArtifactsTest extends ArtifactBase  // @codingStandardsIgnoreLine
     private function getArtifact($artifact_id)
     {
         $response = $this->getResponse($this->client->get('artifacts/'.$artifact_id));
+        if ($response->getStatusCode() !== 200) {
+            throw new Exception($response->getBody(), $response->getStatusCode());
+        }
         $this->assertNotNull($response->getHeader('Last-Modified'));
         $this->assertNotNull($response->getHeader('Etag'));
 

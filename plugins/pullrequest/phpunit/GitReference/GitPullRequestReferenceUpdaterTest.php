@@ -62,9 +62,6 @@ class GitPullRequestReferenceUpdaterTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException \Tuleap\PullRequest\GitReference\GitReferenceNotFound
-     */
     public function testGitReferenceUpateWhenTheReferenceIsNotFound()
     {
         $dao               = \Mockery::mock(GitPullRequestReferenceDAO::class);
@@ -83,6 +80,7 @@ class GitPullRequestReferenceUpdaterTest extends TestCase
         $dao->shouldReceive('getReferenceByPullRequestId')->andReturns([]);
 
         $dao->shouldNotReceive('updateStatusByPullRequestId');
+        $this->expectException(GitReferenceNotFound::class);
 
         $reference_updater->updatePullRequestReference(
             $pull_request,
@@ -92,9 +90,6 @@ class GitPullRequestReferenceUpdaterTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException \LogicException
-     */
     public function testExpectedDestinationRepositoryIsGiven()
     {
         $dao               = \Mockery::mock(GitPullRequestReferenceDAO::class);
@@ -109,6 +104,8 @@ class GitPullRequestReferenceUpdaterTest extends TestCase
 
         $pull_request->shouldReceive('getRepoDestId')->andReturns(1);
         $repository_destination->shouldReceive('getId')->andReturns(2);
+
+        $this->expectException(\LogicException::class);
 
         $reference_updater->updatePullRequestReference(
             $pull_request,
@@ -150,9 +147,6 @@ class GitPullRequestReferenceUpdaterTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException \Git_Command_Exception
-     */
     public function testGitReferenceIsMarkedAsBrokenWhenCannotBeUpdated()
     {
         $dao               = \Mockery::mock(GitPullRequestReferenceDAO::class);
@@ -176,6 +170,8 @@ class GitPullRequestReferenceUpdaterTest extends TestCase
         $namespace_checker->shouldReceive('isAvailable')->andReturns(true);
         $dao->shouldReceive('updateStatusByPullRequestId')->with($pull_request->getId(), GitPullRequestReference::STATUS_BROKEN)->once();
         $executor_source->shouldReceive('push')->once()->andThrow(\Mockery::mock(\Git_Command_Exception::class));
+
+        $this->expectException(\Git_Command_Exception::class);
 
         $reference_updater->updatePullRequestReference(
             $pull_request,

@@ -21,6 +21,7 @@
 namespace Tuleap\GitLFS\Authorization;
 
 use PHPUnit\Framework\TestCase;
+use Tuleap\Authentication\SplitToken\InvalidIdentifierFormatException;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 use Tuleap\Cryptography\ConcealedString;
@@ -44,12 +45,12 @@ class LFSAuthorizationTokenHeaderSerializerTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException \Tuleap\Authentication\SplitToken\InvalidIdentifierFormatException
-     */
     public function testBuildingFromAnIncorrectlyFormattedIdentifierIsRejected()
     {
         $serializer = new LFSAuthorizationTokenHeaderSerializer();
+
+        $this->expectException(InvalidIdentifierFormatException::class);
+
         $serializer->getSplitToken(new ConcealedString('incorrect_identifier'));
     }
 }

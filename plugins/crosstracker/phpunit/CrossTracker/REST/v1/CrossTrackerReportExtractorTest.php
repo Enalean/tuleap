@@ -48,7 +48,7 @@ class CrossTrackerReportExtractorTest extends TestCase
      */
     private $tracker_factory;
 
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
 

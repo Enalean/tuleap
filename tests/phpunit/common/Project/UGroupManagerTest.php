@@ -29,7 +29,6 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Project;
 use ProjectUGroup;
-use Tuleap\CustomAssert;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Project\Admin\ProjectUGroup\DynamicUGroupMembersUpdater;
@@ -39,7 +38,7 @@ use UGroupUserDao;
 
 class UGroupManagerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, CustomAssert, ForgeConfigSandbox, GlobalLanguageMock;
+    use MockeryPHPUnitIntegration, ForgeConfigSandbox, GlobalLanguageMock;
 
     /**
      * @var UGroupManager
@@ -196,17 +195,35 @@ class UGroupManagerTest extends TestCase
         return new Project(['group_id' => 1, 'access' => $access]);
     }
 
-    private function assertUgroupsContainsId($user_groups, $id)
+    /**
+     * @param ProjectUGroup[] $user_groups
+     */
+    private function assertUgroupsContainsId(array $user_groups, int $expected_id) : void
     {
-        $this->assertContainsAnySatisfies($user_groups, function (ProjectUGroup $group) use ($id) {
-            return $group->getId() === $id;
-        });
+        $this->assertContains(
+            $expected_id,
+            $this->flattenUserGroupsToUserGroupIDs(...$user_groups)
+        );
     }
 
-    private function assertUgroupsNotContainsId($user_groups, $id)
+    /**
+     * @param ProjectUGroup[] $user_groups
+     */
+    private function assertUgroupsNotContainsId(array $user_groups, int $not_expected_id) : void
     {
-        $this->assertNotContainsAnySatisfies($user_groups, function (ProjectUGroup $group) use ($id) {
-            return $group->getId() === $id;
-        });
+        $this->assertNotContains(
+            $not_expected_id,
+            $this->flattenUserGroupsToUserGroupIDs(...$user_groups)
+        );
+    }
+
+    private function flattenUserGroupsToUserGroupIDs(ProjectUGroup ...$user_groups) : array
+    {
+        return array_map(
+            function (ProjectUGroup $user_group) : int {
+                return $user_group->getId();
+            },
+            $user_groups
+        );
     }
 }

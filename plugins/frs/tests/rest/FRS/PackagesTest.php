@@ -33,7 +33,7 @@ class PackagesTest extends RestBase
 
     private $project_id;
 
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
         $this->project_id = $this->getProjectId(self::PROJECT_NAME);

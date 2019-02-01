@@ -46,7 +46,7 @@ class PasswordChangerTest extends TestCase
      */
     private $user;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $this->user_manager    = \Mockery::mock(\UserManager::class);
         $this->session_manager = \Mockery::mock(SessionManager::class);
@@ -66,9 +66,6 @@ class PasswordChangerTest extends TestCase
         $password_changer->changePassword($this->user, 'new_password');
     }
 
-    /**
-     * @expectedException \Tuleap\User\Password\Change\PasswordChangeException
-     */
     public function testSessionsAndResetTokensAreInvalidatedBeforeUpdatingPassword()
     {
         $password_changer = new PasswordChanger($this->user_manager, $this->session_manager, $this->revoker);
@@ -77,6 +74,8 @@ class PasswordChangerTest extends TestCase
         $this->session_manager->shouldReceive('destroyAllSessionsButTheCurrentOne')->once();
         $this->revoker->shouldReceive('revokeTokens')->once();
         $this->user_manager->shouldReceive('updateDb')->once()->andReturns(false);
+
+        $this->expectException(PasswordChangeException::class);
 
         $password_changer->changePassword($this->user, 'new_password');
     }

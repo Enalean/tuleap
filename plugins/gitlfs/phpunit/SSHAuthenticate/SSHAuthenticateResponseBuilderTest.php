@@ -39,7 +39,7 @@ class SSHAuthenticateResponseBuilderTest extends TestCase
     private $response_builder;
     private $current_time;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         parent::setUp();
         $this->token_creator = Mockery::mock(UserTokenCreator::class);

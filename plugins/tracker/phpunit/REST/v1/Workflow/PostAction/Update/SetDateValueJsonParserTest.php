@@ -25,6 +25,7 @@ require_once __DIR__ . '/../../../../../bootstrap.php';
 
 use PHPUnit\Framework\TestCase;
 use Transition_PostAction_Field_Date;
+use Tuleap\REST\I18NRestException;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\SetDateValue;
 
 class SetDateValueJsonParserTest extends TestCase
@@ -93,12 +94,10 @@ class SetDateValueJsonParserTest extends TestCase
         $this->assertEquals($expected_action, $set_date_value);
     }
 
-    /**
-     * @expectedException \Tuleap\REST\I18NRestException
-     * @expectedExceptionCode 400
-     */
     public function testParseThrowsWhenIdIsNotInt()
     {
+        $this->expectException(I18NRestException::class);
+        $this->expectExceptionCode(400);
         $this->parser->parse([
             "id" => "not int",
             "type" => "set_field_value",
@@ -108,12 +107,10 @@ class SetDateValueJsonParserTest extends TestCase
         ]);
     }
 
-    /**
-     * @expectedException \Tuleap\REST\I18NRestException
-     * @expectedExceptionCode 400
-     */
     public function testParseThrowsWhenNoFieldIdProvided()
     {
+        $this->expectException(I18NRestException::class);
+        $this->expectExceptionCode(400);
         $this->parser->parse([
             "type" => "set_field_value",
             "field_type" => "date",
@@ -121,12 +118,10 @@ class SetDateValueJsonParserTest extends TestCase
         ]);
     }
 
-    /**
-     * @expectedException \Tuleap\REST\I18NRestException
-     * @expectedExceptionCode 400
-     */
     public function testParseThrowsWhenFieldIdIsNull()
     {
+        $this->expectException(I18NRestException::class);
+        $this->expectExceptionCode(400);
         $this->parser->parse([
             "type" => "set_field_value",
             "field_type" => "date",
@@ -135,12 +130,10 @@ class SetDateValueJsonParserTest extends TestCase
         ]);
     }
 
-    /**
-     * @expectedException \Tuleap\REST\I18NRestException
-     * @expectedExceptionCode 400
-     */
     public function testParseThrowsWhenFieldIdIsNotInt()
     {
+        $this->expectException(I18NRestException::class);
+        $this->expectExceptionCode(400);
         $this->parser->parse([
             "type" => "set_field_value",
             "field_type" => "date",
@@ -149,12 +142,10 @@ class SetDateValueJsonParserTest extends TestCase
         ]);
     }
 
-    /**
-     * @expectedException \Tuleap\REST\I18NRestException
-     * @expectedExceptionCode 400
-     */
     public function testParseThrowsWhenNoValueProvided()
     {
+        $this->expectException(I18NRestException::class);
+        $this->expectExceptionCode(400);
         $this->parser->parse([
             "type" => "set_field_value",
             "field_type" => "date",
@@ -162,12 +153,10 @@ class SetDateValueJsonParserTest extends TestCase
         ]);
     }
 
-    /**
-     * @expectedException \Tuleap\REST\I18NRestException
-     * @expectedExceptionCode 400
-     */
     public function testParseThrowsWhenValueIsNull()
     {
+        $this->expectException(I18NRestException::class);
+        $this->expectExceptionCode(400);
         $this->parser->parse([
             "type" => "set_field_value",
             "field_type" => "date",
@@ -176,12 +165,10 @@ class SetDateValueJsonParserTest extends TestCase
         ]);
     }
 
-    /**
-     * @expectedException \Tuleap\REST\I18NRestException
-     * @expectedExceptionCode 400
-     */
     public function testParseThrowsWhenValueIsNotString()
     {
+        $this->expectException(I18NRestException::class);
+        $this->expectExceptionCode(400);
         $this->parser->parse([
             "type" => "set_field_value",
             "field_type" => "date",
@@ -190,12 +177,10 @@ class SetDateValueJsonParserTest extends TestCase
         ]);
     }
 
-    /**
-     * @expectedException \Tuleap\REST\I18NRestException
-     * @expectedExceptionCode 400
-     */
     public function testParseThrowsWhenValueIsNotSupported()
     {
+        $this->expectException(I18NRestException::class);
+        $this->expectExceptionCode(400);
         $this->parser->parse([
             "type" => "set_field_value",
             "field_type" => "date",

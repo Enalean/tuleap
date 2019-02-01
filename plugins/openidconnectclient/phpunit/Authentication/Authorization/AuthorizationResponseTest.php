@@ -38,27 +38,25 @@ class AuthorizationResponseTest extends TestCase
         $this->assertSame('state', $response->getState());
     }
 
-    /**
-     * @expectedException \Tuleap\OpenIDConnectClient\Authentication\Authorization\MissingParameterAuthorizationResponseException
-     * @expectedExceptionMessage code
-     */
     public function testResponseConstructionIsRejectedWhenCodeIsMissing()
     {
         $request = \Mockery::mock(\HTTPRequest::class);
         $request->shouldReceive('get')->with('code')->andReturns(false);
 
+        $this->expectException(MissingParameterAuthorizationResponseException::class);
+        $this->expectExceptionMessage('code');
+
         AuthorizationResponse::buildFromHTTPRequest($request);
     }
 
-    /**
-     * @expectedException \Tuleap\OpenIDConnectClient\Authentication\Authorization\MissingParameterAuthorizationResponseException
-     * @expectedExceptionMessage state
-     */
     public function testResponseConstructionIsRejectedWhenStateIsMissing()
     {
         $request = \Mockery::mock(\HTTPRequest::class);
         $request->shouldReceive('get')->with('code')->andReturns('code');
         $request->shouldReceive('get')->with('state')->andReturns(false);
+
+        $this->expectException(MissingParameterAuthorizationResponseException::class);
+        $this->expectExceptionMessage('state');
 
         AuthorizationResponse::buildFromHTTPRequest($request);
     }

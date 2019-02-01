@@ -26,7 +26,7 @@ class ArtifactsChangesetsTest extends RestBase {
 
     private $artifact_resource;
 
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
 

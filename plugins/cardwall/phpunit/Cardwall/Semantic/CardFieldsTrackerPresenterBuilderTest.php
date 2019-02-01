@@ -50,7 +50,7 @@ class CardFieldsTrackerPresenterBuilderTest extends TestCase
      */
     private $builder;
 
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
 

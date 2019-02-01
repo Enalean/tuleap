@@ -42,7 +42,8 @@ class SystemEvent_PROFTPD_UPDATE_ACLTest extends \PHPUnit\Framework\TestCase {
     private $project_manager;
     private $acl_updater;
 
-    public function setUp() {
+    public function setUp() : void
+    {
         parent::setUp();
 
         $this->event   = $this->getMockBuilder('Tuleap\ProFTPd\SystemEvent\PROFTPD_UPDATE_ACL')->setMethods(array('done'))->disableOriginalConstructor()->getMock();
@@ -98,7 +99,7 @@ class SystemEvent_PROFTPD_UPDATE_ACLTest extends \PHPUnit\Framework\TestCase {
         $GLOBALS['sys_http_user'] = 'httpuser';
     }
 
-    protected function tearDown()
+    protected function tearDown() : void
     {
         parent::tearDown();
         unset($GLOBALS['sys_http_user']);

@@ -23,6 +23,8 @@ namespace Tuleap\Project\REST;
 
 use PHPUnit\Framework\TestCase;
 use Tuleap\project\REST\v1\UserGroupQueryParameterParser;
+use Tuleap\REST\Exceptions\InvalidJsonException;
+use Tuleap\REST\I18NRestException;
 use Tuleap\REST\JsonDecoder;
 
 class UserGroupQueryParameterParserTest extends TestCase
@@ -59,20 +61,18 @@ class UserGroupQueryParameterParserTest extends TestCase
         $this->assertFalse($representation->isWithSystemUserGroups());
     }
 
-    /**
-     * @expectedException Tuleap\REST\Exceptions\InvalidJsonException
-     */
     public function testParseNotJsonParameterThrows400()
     {
+        $this->expectException(InvalidJsonException::class);
+
         $this->parser->parse("not_json");
     }
 
-    /**
-     * @expectedException Tuleap\REST\I18NRestException
-     * @expectedExceptionCode 400
-     */
     public function testParseJsonParameterWithoutMandatoryAttributeThrows400()
     {
+        $this->expectException(I18NRestException::class);
+        $this->expectExceptionCode(400);
+
         $this->parser->parse("{\"invalid_attribute\": false}");
     }
 }

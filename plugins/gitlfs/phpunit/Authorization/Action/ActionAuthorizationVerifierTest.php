@@ -37,7 +37,7 @@ class ActionAuthorizationVerifierTest extends TestCase
     private $repository_factory;
     private $current_time;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $this->dao                = \Mockery::mock(ActionAuthorizationDAO::class);
         $this->hasher             = \Mockery::mock(SplitTokenVerificationStringHasher::class);
@@ -78,9 +78,6 @@ class ActionAuthorizationVerifierTest extends TestCase
         $this->assertSame($expected_repository, $authorized_action->getRepository());
     }
 
-    /**
-     * @expectedException \Tuleap\GitLFS\Authorization\Action\ActionAuthorizationNotFoundException
-     */
     public function testVerificationFailsWhenANotExpiredAuthorizationCanNotBeFound()
     {
         $verifier = new ActionAuthorizationVerifier($this->dao, $this->hasher, $this->repository_factory);
@@ -89,12 +86,12 @@ class ActionAuthorizationVerifierTest extends TestCase
 
         $authorization_token = \Mockery::mock(SplitToken::class);
         $authorization_token->shouldReceive('getID')->andReturns(1);
+
+        $this->expectException(ActionAuthorizationNotFoundException::class);
+
         $verifier->getAuthorization($this->current_time, $authorization_token, 'oid', new ActionAuthorizationTypeUpload());
     }
 
-    /**
-     * @expectedException \Tuleap\GitLFS\Authorization\Action\InvalidActionAuthorizationException
-     */
     public function testVerificationFailsWhenVerificationStringDoesNotMatch()
     {
         $verifier = new ActionAuthorizationVerifier($this->dao, $this->hasher, $this->repository_factory);
@@ -118,12 +115,11 @@ class ActionAuthorizationVerifierTest extends TestCase
         ]);
         $this->hasher->shouldReceive('verifyHash')->with($verification_string, 'valid')->andReturns(false);
 
+        $this->expectException(InvalidActionAuthorizationException::class);
+
         $verifier->getAuthorization($this->current_time, $authorization_token, $oid, $action_type);
     }
 
-    /**
-     * @expectedException \Tuleap\GitLFS\Authorization\Action\InvalidActionAuthorizationException
-     */
     public function testVerificationFailsWhenOIDDoesNotMatch()
     {
         $verifier = new ActionAuthorizationVerifier($this->dao, $this->hasher, $this->repository_factory);
@@ -146,12 +142,11 @@ class ActionAuthorizationVerifierTest extends TestCase
         ]);
         $this->hasher->shouldReceive('verifyHash')->with($verification_string, 'valid')->andReturns(true);
 
+        $this->expectException(InvalidActionAuthorizationException::class);
+
         $verifier->getAuthorization($current_time, $authorization_token, 'not_requested_oid', $action_type);
     }
 
-    /**
-     * @expectedException \Tuleap\GitLFS\Authorization\Action\InvalidActionAuthorizationException
-     */
     public function testVerificationFailsWhenActionTypeDoesNotMatch()
     {
         $verifier = new ActionAuthorizationVerifier($this->dao, $this->hasher, $this->repository_factory);
@@ -176,12 +171,11 @@ class ActionAuthorizationVerifierTest extends TestCase
         ]);
         $this->hasher->shouldReceive('verifyHash')->with($verification_string, 'valid')->andReturns(true);
 
+        $this->expectException(InvalidActionAuthorizationException::class);
+
         $verifier->getAuthorization($this->current_time, $authorization_token, $oid, $action_type);
     }
 
-    /**
-     * @expectedException \Tuleap\GitLFS\Authorization\Action\ActionAuthorizationMatchingUnknownRepositoryException
-     */
     public function testVerificationFailsWHenTheCorrespondingRepositoryCanNotBeFound()
     {
         $verifier = new ActionAuthorizationVerifier($this->dao, $this->hasher, $this->repository_factory);
@@ -205,6 +199,8 @@ class ActionAuthorizationVerifierTest extends TestCase
         ]);
         $this->hasher->shouldReceive('verifyHash')->with($verification_string, 'valid')->andReturns(true);
         $this->repository_factory->shouldReceive('getRepositoryById')->andReturns(null);
+
+        $this->expectException(ActionAuthorizationMatchingUnknownRepositoryException::class);
 
         $verifier->getAuthorization($this->current_time, $authorization_token, $oid, $action_type);
     }

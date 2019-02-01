@@ -35,7 +35,7 @@ class TQLTest extends RestBase
 
     private $tracker_id;
 
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
         $this->tracker_id = $this->getTrackerId();
@@ -86,82 +86,46 @@ class TQLTest extends RestBase
 
     public function testInvalidQuery()
     {
-        $exception_thrown = false;
-        try {
-            $this->performExpertQuery('summary="bug1');
-        } catch (ClientErrorResponseException $exception) {
-            $response = $exception->getResponse();
-            $this->assertEquals(400, $response->getStatusCode());
-
-            $body = $response->json();
-            $this->assertContains(
-                "Error during parsing expert query",
-                $body['error']['message']
-            );
-
-            $exception_thrown = true;
-        }
-        $this->assertTrue($exception_thrown);
+        $response = $this->performExpertQuery('summary="bug1');
+        $this->assertEquals(400, $response->getStatusCode());
+        $body = $response->json();
+        $this->assertStringContainsString(
+            "Error during parsing expert query",
+            $body['error']['message']
+        );
     }
 
     public function testUnknownValueForListFields()
     {
-        $exception_thrown = false;
-        try {
-            $this->performExpertQuery('status = "pouet"');
-        } catch (ClientErrorResponseException $exception) {
-            $response = $exception->getResponse();
-            $this->assertEquals(400, $response->getStatusCode());
-
-            $body = $response->json();
-            $this->assertContains(
-                "The value 'pouet' doesn't exist for the list field 'status'",
-                $body['error']['message']
-            );
-
-            $exception_thrown = true;
-        }
-        $this->assertTrue($exception_thrown);
+        $response = $this->performExpertQuery('status = "pouet"');
+        $this->assertEquals(400, $response->getStatusCode());
+        $body = $response->json();
+        $this->assertStringContainsString(
+            "The value 'pouet' doesn't exist for the list field 'status'",
+            $body['error']['message']
+        );
     }
 
     public function testInvalidDateTime()
     {
-        $exception_thrown = false;
-        try {
-            $this->performExpertQuery('due_date = "2017-01-10 12:12"');
-        } catch (ClientErrorResponseException $exception) {
-            $response = $exception->getResponse();
-            $this->assertEquals(400, $response->getStatusCode());
-
-            $body = $response->json();
-            $this->assertContains(
-                "The date field 'due_date' cannot be compared to the string value '2017-01-10 12:12'",
-                $body['error']['message']
-            );
-
-            $exception_thrown = true;
-        }
-        $this->assertTrue($exception_thrown);
+        $response = $this->performExpertQuery('due_date = "2017-01-10 12:12"');
+        $this->assertEquals(400, $response->getStatusCode());
+        $body = $response->json();
+        $this->assertStringContainsString(
+            "The date field 'due_date' cannot be compared to the string value '2017-01-10 12:12'",
+            $body['error']['message']
+        );
     }
 
     public function testUnknownField()
     {
-        $exception_thrown = false;
-        try {
-            $this->performExpertQuery('test = "bug1"');
-        } catch (ClientErrorResponseException $exception) {
-            $response = $exception->getResponse();
-            $this->assertEquals(400, $response->getStatusCode());
-
-            $body = $response->json();
-            $this->assertContains(
-                "We cannot search on 'test', we don't know what it refers to",
-                $body['error']['message']
-            );
-
-            $exception_thrown = true;
-        }
-        $this->assertTrue($exception_thrown);
+        $response = $this->performExpertQuery('test = "bug1"');
+        $this->assertEquals(400, $response->getStatusCode());
+        $body = $response->json();
+        $this->assertStringContainsString(
+            "We cannot search on 'test', we don't know what it refers to",
+            $body['error']['message']
+        );
     }
 
     private function getTrackerId()

@@ -39,27 +39,25 @@ class ConfigurationSaverTest extends TestCase
         $saver->save('valid_site_key', 'valid_secret_key');
     }
 
-    /**
-     * @expectedException \Tuleap\Captcha\ConfigurationMalformedDataException
-     */
     public function testInvalidKeysAreRejected()
     {
         $dao = \Mockery::mock(DataAccessObject::class);
 
         $saver = new ConfigurationSaver($dao);
 
+        $this->expectException(ConfigurationMalformedDataException::class);
+
         $saver->save(false, false);
     }
 
-    /**
-     * @expectedException \Tuleap\Captcha\ConfigurationDataAccessException
-     */
     public function testUnsuccessfulSaveIsNoSilent()
     {
         $dao = \Mockery::mock(DataAccessObject::class);
         $dao->shouldReceive('save')->andReturns(false)->once();
 
         $saver = new ConfigurationSaver($dao);
+
+        $this->expectException(ConfigurationDataAccessException::class);
 
         $saver->save('valid_site_key', 'valid_secret_key');
     }

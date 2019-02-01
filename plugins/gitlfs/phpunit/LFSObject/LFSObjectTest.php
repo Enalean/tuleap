@@ -38,11 +38,9 @@ class LFSObjectTest extends TestCase
         $this->assertSame($size, $lfs_object->getSize());
     }
 
-    /**
-     * @expectedException \UnexpectedValueException
-     */
     public function testInvalidSizeIsRejected()
     {
+        $this->expectException(\UnexpectedValueException::class);
         new LFSObject(\Mockery::mock(LFSObjectID::class), -123);
     }
 }

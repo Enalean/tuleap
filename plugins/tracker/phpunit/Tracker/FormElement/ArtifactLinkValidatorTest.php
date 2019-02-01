@@ -89,7 +89,7 @@ class ArtifactLinkValidatorTest extends TestCase
     private $project;
     private $dao;
 
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
 
@@ -129,7 +129,7 @@ class ArtifactLinkValidatorTest extends TestCase
         $this->nature_no_nature = \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenter::class);
     }
 
-    protected function tearDown()
+    protected function tearDown() : void
     {
         $GLOBALS = $this->backup_globals;
 

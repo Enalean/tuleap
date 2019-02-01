@@ -26,11 +26,9 @@ use PHPUnit\Framework\TestCase;
 
 class GitPullRequestReferenceTest extends TestCase
 {
-    /**
-     * @expectedException \DomainException
-     */
     public function testInvalidStatusIsRejected()
     {
+        $this->expectException(\DomainException::class);
         new GitPullRequestReference(1, 99999999999999999);
     }
 

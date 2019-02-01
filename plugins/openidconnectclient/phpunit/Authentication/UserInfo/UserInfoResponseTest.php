@@ -28,25 +28,23 @@ class UserInfoResponseTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    /**
-     * @expectedException \Tuleap\OpenIDConnectClient\Authentication\UserInfo\NotSupportedContentTypeUserInfoResponseException
-     */
     public function testContentTypeNotAnnouncedAsJSONIsRejected()
     {
         $http_response = \Mockery::mock(ResponseInterface::class);
         $http_response->shouldReceive('getHeaderLine')->andReturns('application/jwt');
 
+        $this->expectException(NotSupportedContentTypeUserInfoResponseException::class);
+
         UserInfoResponse::buildFromHTTPResponse($http_response);
     }
 
-    /**
-     * @expectedException \Tuleap\OpenIDConnectClient\Authentication\UserInfo\IncorrectlyFormattedUserInfoResponseException
-     */
     public function testNotValidJSONISRejected()
     {
         $http_response = \Mockery::mock(ResponseInterface::class);
         $http_response->shouldReceive('getHeaderLine')->andReturns('application/json');
         $http_response->shouldReceive('getBody')->andReturns('{NotJSONValid');
+
+        $this->expectException(IncorrectlyFormattedUserInfoResponseException::class);
 
         UserInfoResponse::buildFromHTTPResponse($http_response);
     }

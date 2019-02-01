@@ -55,7 +55,7 @@ class AccessKeyVerifierTest extends TestCase
      */
     private $verifier;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $this->dao          = \Mockery::mock(AccessKeyDAO::class);
         $this->hasher       = \Mockery::mock(SplitTokenVerificationStringHasher::class);
@@ -65,7 +65,7 @@ class AccessKeyVerifierTest extends TestCase
         \ForgeConfig::store();
     }
 
-    protected function tearDown()
+    protected function tearDown() : void
     {
         \ForgeConfig::restore();
     }
@@ -125,20 +125,16 @@ class AccessKeyVerifierTest extends TestCase
         ];
     }
 
-    /**
-     * @expectedException \Tuleap\User\AccessKey\AccessKeyNotFoundException
-     */
     public function testVerificationFailsWhenKeyCanNotBeFound()
     {
         $this->access_key->shouldReceive('getID')->andReturns(1);
         $this->dao->shouldReceive('searchAccessKeyVerificationAndTraceabilityDataByID')->andReturns(null);
 
+        $this->expectException(AccessKeyNotFoundException::class);
+
         $this->verifier->getUser($this->access_key, '2001:db8::1777');
     }
 
-    /**
-     * @expectedException \Tuleap\User\AccessKey\InvalidAccessKeyException
-     */
     public function testVerificationFailsWhenVerificationStringDoesNotMatch()
     {
         $this->access_key->shouldReceive('getID')->andReturns(1);
@@ -149,12 +145,11 @@ class AccessKeyVerifierTest extends TestCase
             ->andReturns(\Mockery::mock(SplitTokenVerificationString::class));
         $this->hasher->shouldReceive('verifyHash')->andReturns(false);
 
+        $this->expectException(InvalidAccessKeyException::class);
+
         $this->verifier->getUser($this->access_key, self::IP_ADDRESS_REQUESTING_VERIFICATION);
     }
 
-    /**
-     * @expectedException \Tuleap\User\AccessKey\AccessKeyMatchingUnknownUserException
-     */
     public function testVerificationFailsWhenTheCorrespondingTuleapCanNotBeFound()
     {
         $this->access_key->shouldReceive('getID')->andReturns(1);
@@ -165,6 +160,8 @@ class AccessKeyVerifierTest extends TestCase
             ->andReturns(\Mockery::mock(SplitTokenVerificationString::class));
         $this->hasher->shouldReceive('verifyHash')->andReturns(true);
         $this->user_manager->shouldReceive('getUserById')->andReturns(null);
+
+        $this->expectException(AccessKeyMatchingUnknownUserException::class);
 
         $this->verifier->getUser($this->access_key, self::IP_ADDRESS_REQUESTING_VERIFICATION);
     }

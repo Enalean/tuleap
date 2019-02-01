@@ -23,6 +23,7 @@ namespace Tuleap\DynamicCredentials\REST;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Cryptography\Exception\InvalidKeyException;
 use Tuleap\DynamicCredentials\Plugin\PluginInfo;
 
 class RequestSignatureVerifierTest extends TestCase
@@ -33,14 +34,14 @@ class RequestSignatureVerifierTest extends TestCase
     const SECRET_KEY  = 'KOJqKTCvuBvSdKN/MgGLlTI7T3hrZKERlq2JDLB7Wc+RrsZy+jdE7QV6Sx9WQEKBOd0LP8gwt/AJADcOg3yTrw==';
     const USED_DOMAIN = 'example.com';
 
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
         \ForgeConfig::store();
         \ForgeConfig::set('sys_https_host', self::USED_DOMAIN);
     }
 
-    public function tearDown()
+    public function tearDown() : void
     {
         \ForgeConfig::restore();
         parent::tearDown();
@@ -79,13 +80,12 @@ class RequestSignatureVerifierTest extends TestCase
         return base64_encode(sodium_crypto_sign_detached(self::USED_DOMAIN . $parameter, $secret_key_decoded));
     }
 
-    /**
-     * @expectedException \Tuleap\Cryptography\Exception\InvalidKeyException
-     */
     public function testRejectionWhenInvalidPublicKeyIsGiven()
     {
         $plugin_info = Mockery::mock(PluginInfo::class);
         $plugin_info->shouldReceive('getPropertyValueForName')->andReturn('invalid_public_key');
+
+        $this->expectException(InvalidKeyException::class);
 
         new RequestSignatureVerifier($plugin_info);
     }

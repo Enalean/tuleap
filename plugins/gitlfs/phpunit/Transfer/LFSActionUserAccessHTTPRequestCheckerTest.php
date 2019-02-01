@@ -29,6 +29,8 @@ use Tuleap\GitLFS\Authorization\Action\ActionAuthorizationException;
 use Tuleap\GitLFS\Authorization\Action\ActionAuthorizationVerifier;
 use Tuleap\GitLFS\Authorization\Action\AuthorizedAction;
 use Tuleap\GitLFS\Authorization\Action\Type\ActionAuthorizationType;
+use Tuleap\Request\ForbiddenException;
+use Tuleap\Request\NotFoundException;
 
 class LFSActionUserAccessHTTPRequestCheckerTest extends TestCase
 {
@@ -38,7 +40,7 @@ class LFSActionUserAccessHTTPRequestCheckerTest extends TestCase
     private $authorization_token_unserializer;
     private $authorization_verifier;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $this->plugin                           = \Mockery::mock(\gitlfsPlugin::class);
         $this->authorization_token_unserializer = \Mockery::mock(SplitTokenIdentifierTranslator::class);
@@ -78,9 +80,6 @@ class LFSActionUserAccessHTTPRequestCheckerTest extends TestCase
         $this->assertInstanceOf(AuthorizedAction::class, $authorized_action);
     }
 
-    /**
-     * @expectedException \Tuleap\Request\ForbiddenException
-     */
     public function testRequestWithoutAuthorizationIsDenied()
     {
         $access_checker = new LFSActionUserAccessHTTPRequestChecker(
@@ -93,6 +92,8 @@ class LFSActionUserAccessHTTPRequestCheckerTest extends TestCase
         $request->shouldReceive('getFromServer')->with('HTTP_AUTHORIZATION')
             ->andReturns(false);
 
+        $this->expectException(ForbiddenException::class);
+
         $access_checker->userCanAccess(
             $request,
             \Mockery::mock(ActionAuthorizationType::class),
@@ -100,9 +101,6 @@ class LFSActionUserAccessHTTPRequestCheckerTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException \Tuleap\Request\ForbiddenException
-     */
     public function testRequestWithAnIncorrectlyFormattedAuthorizationIsDenied()
     {
         $this->authorization_token_unserializer->shouldReceive('getSplitToken')
@@ -118,6 +116,8 @@ class LFSActionUserAccessHTTPRequestCheckerTest extends TestCase
         $request->shouldReceive('getFromServer')->with('HTTP_AUTHORIZATION')
             ->andReturns('incorrectly_formatted_header');
 
+        $this->expectException(ForbiddenException::class);
+
         $access_checker->userCanAccess(
             $request,
             \Mockery::mock(ActionAuthorizationType::class),
@@ -125,9 +125,6 @@ class LFSActionUserAccessHTTPRequestCheckerTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException \Tuleap\Request\ForbiddenException
-     */
     public function testRequestWithAnInvalidAuthorizationIsDenied()
     {
         $this->authorization_token_unserializer->shouldReceive('getSplitToken')
@@ -145,6 +142,8 @@ class LFSActionUserAccessHTTPRequestCheckerTest extends TestCase
         $request->shouldReceive('getFromServer')->with('HTTP_AUTHORIZATION')
             ->andReturns('invalid_authorization');
 
+        $this->expectException(ForbiddenException::class);
+
         $access_checker->userCanAccess(
             $request,
             \Mockery::mock(ActionAuthorizationType::class),
@@ -152,9 +151,6 @@ class LFSActionUserAccessHTTPRequestCheckerTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException \Tuleap\Request\NotFoundException
-     */
     public function testRequestAboutANotAccessibleRepositoryIsRejected()
     {
         $this->authorization_token_unserializer->shouldReceive('getSplitToken')
@@ -172,6 +168,8 @@ class LFSActionUserAccessHTTPRequestCheckerTest extends TestCase
         $request = \Mockery::mock(\HTTPRequest::class);
         $request->shouldReceive('getFromServer')->with('HTTP_AUTHORIZATION')
             ->andReturns('valid_auth');
+
+        $this->expectException(NotFoundException::class);
 
         $access_checker->userCanAccess(
             $request,

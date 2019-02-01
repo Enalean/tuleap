@@ -35,7 +35,7 @@ class TransitionListValidatorTest extends \PHPUnit\Framework\TestCase  // phpcs:
      */
     private $transition_factory;
 
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
 

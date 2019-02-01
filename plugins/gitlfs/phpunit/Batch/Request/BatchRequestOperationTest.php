@@ -34,11 +34,10 @@ class BatchRequestOperationTest extends TestCase
         $this->assertFalse($download_operation->isUpload());
     }
 
-    /**
-     * @expectedException \Tuleap\GitLFS\Batch\Request\IncorrectlyFormattedBatchRequestException
-     */
     public function testUnknownOperationIsRejected()
     {
+        $this->expectException(IncorrectlyFormattedBatchRequestException::class);
+
         new BatchRequestOperation('unknown');
     }
 }

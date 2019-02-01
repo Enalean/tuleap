@@ -36,7 +36,7 @@ class PostActionIdValidatorTest extends TestCase
      */
     private $validator;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $this->validator = new PostActionIdValidator();
     }
@@ -49,13 +49,12 @@ class PostActionIdValidatorTest extends TestCase
         $this->validator->validate($first_post_action, $second_post_action);
     }
 
-    /**
-     * @expectedException \Tuleap\Tracker\Workflow\PostAction\Update\Internal\DuplicatePostActionException
-     */
     public function testValidateThrowsWhenDuplicateCIBuildIds()
     {
         $first_post_action  = $this->createPostActionWithId(2);
         $second_post_action = $this->createPostActionWithId(2);
+
+        $this->expectException(DuplicatePostActionException::class);
 
         $this->validator->validate($first_post_action, $second_post_action);
     }

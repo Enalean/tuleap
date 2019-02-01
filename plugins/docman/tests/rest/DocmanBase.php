@@ -29,7 +29,7 @@ class DocmanBase extends RestBase
     const PROJECT_NAME = 'docmanproject';
     protected $project_id;
 
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
         $this->project_id = $this->getProjectId(self::PROJECT_NAME);

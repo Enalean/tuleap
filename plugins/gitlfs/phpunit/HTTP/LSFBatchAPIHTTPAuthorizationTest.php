@@ -37,7 +37,7 @@ class LSFBatchAPIHTTPAuthorizationTest extends TestCase
     private $token_verifier;
     private $token_unserializer;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $this->token_verifier     = \Mockery::mock(UserTokenVerifier::class);
         $this->token_unserializer = \Mockery::mock(SplitTokenIdentifierTranslator::class);

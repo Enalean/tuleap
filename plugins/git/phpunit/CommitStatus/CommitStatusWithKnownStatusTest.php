@@ -36,22 +36,20 @@ class CommitStatusWithKnownStatusTest extends TestCase
         $this->assertEquals($status_name, $commit_status->getStatusName());
     }
 
-    /**
-     * @expectedException \DomainException
-     */
     public function testInvalidStatusNameIsRejectedWhenBuilding()
     {
         $date = \Mockery::mock(\DateTimeImmutable::class);
 
+        $this->expectException(\DomainException::class);
+
         CommitStatusWithKnownStatus::buildFromStatusName('invalid_status_name', $date);
     }
 
-    /**
-     * @expectedException \DomainException
-     */
     public function testInvalidStatusIdIsRejectedWhenBuilding()
     {
         $date = \Mockery::mock(\DateTimeImmutable::class);
+
+        $this->expectException(\DomainException::class);
 
         new CommitStatusWithKnownStatus(999999999999999, $date);
     }

@@ -42,7 +42,7 @@ class FieldUsedInSemanticObjectCheckerTest extends TestCase
      */
     private $background_dao;
 
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
 

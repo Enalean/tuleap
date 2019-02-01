@@ -22,6 +22,7 @@ namespace Tuleap\User\AccessKey;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Authentication\SplitToken\InvalidIdentifierFormatException;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 use Tuleap\Cryptography\ConcealedString;
@@ -57,12 +58,12 @@ class AccessKeySerializerTest extends TestCase
         $this->assertSame($hex_verification_string, bin2hex($access_key->getVerificationString()->getString()));
     }
 
-    /**
-     * @expectedException \Tuleap\Authentication\SplitToken\InvalidIdentifierFormatException
-     */
     public function testBuildingFromAnIncorrectlyFormattedIdentifierIsRejected()
     {
         $access_key_serializer = new AccessKeySerializer();
+
+        $this->expectException(InvalidIdentifierFormatException::class);
+
         $access_key_serializer->getSplitToken(new ConcealedString('incorrect_identifier'));
     }
 }

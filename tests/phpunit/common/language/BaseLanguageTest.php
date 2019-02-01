@@ -1,6 +1,4 @@
 <?php
-use org\bovigo\vfs\vfsStream;
-
 /**
  * Copyright (c) Enalean, 2019. All Rights Reserved.
  *
@@ -21,13 +19,15 @@ use org\bovigo\vfs\vfsStream;
  *
  */
 
-class BaseLanguageTest extends \PHPUnit\Framework\TestCase
+use org\bovigo\vfs\vfsStream;
+
+class BaseLanguageTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
     protected $cache_dir;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         parent::setUp();
         ForgeConfig::store();
@@ -47,7 +47,7 @@ class BaseLanguageTest extends \PHPUnit\Framework\TestCase
         }
     }
 
-    protected function tearDown()
+    protected function tearDown() : void
     {
         unset($GLOBALS['sys_incdir']);
         unset($GLOBALS['sys_pluginsroot']);
@@ -123,7 +123,6 @@ class BaseLanguageTest extends \PHPUnit\Framework\TestCase
         $l2 = new BaseLanguage('en_US,fr_FR', 'fr_FR');
         $this->assertEquals('fr_FR', $l2->getLanguageFromAcceptLanguage(''));
         $this->assertEquals('fr_FR', $l2->getLanguageFromAcceptLanguage('de-de'));
-
     }
 
     public function testParseLanguageFile()
@@ -175,7 +174,6 @@ class BaseLanguageTest extends \PHPUnit\Framework\TestCase
             $result,
             'Files are included'
         );
-
     }
 
     public function testLoadAllTabFiles()

@@ -38,7 +38,7 @@ class CardFieldXmlExtractorTest extends TestCase
      */
     private $xml_security;
 
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
 
@@ -46,7 +46,7 @@ class CardFieldXmlExtractorTest extends TestCase
         $this->xml_security->enableExternalLoadOfEntities();
     }
 
-    public function tearDown()
+    public function tearDown() : void
     {
         $this->xml_security->disableExternalLoadOfEntities();
 

@@ -38,7 +38,7 @@ class TusServerTest extends TestCase
     private $data_store;
     private $file_information_provider;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $this->message_factory           = MessageFactoryBuilder::build();
         $this->data_store                = \Mockery::mock(TusDataStore::class);

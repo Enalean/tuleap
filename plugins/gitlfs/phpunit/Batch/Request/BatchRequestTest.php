@@ -70,10 +70,10 @@ JSON;
 
     /**
      * @dataProvider providerIncorrectJSONBatchRequest
-     * @expectedException \Tuleap\GitLFS\Batch\Request\IncorrectlyFormattedBatchRequestException
      */
     public function testParsingIncorrectBatchRequest($json_string)
     {
+        $this->expectException(IncorrectlyFormattedBatchRequestException::class);
         BatchRequest::buildFromJSONString($json_string);
     }
 

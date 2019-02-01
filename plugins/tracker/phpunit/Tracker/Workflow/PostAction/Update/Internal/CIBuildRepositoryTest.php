@@ -67,9 +67,6 @@ class CIBuildRepositoryTest extends TestCase
         $this->ci_build_repository->create($transition, $ci_build);
     }
 
-    /**
-     * @expectedException DataAccessQueryException
-     */
     public function testCreateThrowsWhenCreationFail()
     {
         $this->ci_build_dao->shouldReceive('create')
@@ -77,6 +74,8 @@ class CIBuildRepositoryTest extends TestCase
 
         $transition = TransitionFactory::buildATransition();
         $ci_build   = new CIBuild(null, 'http://example.test');
+
+        $this->expectException(DataAccessQueryException::class);
 
         $this->ci_build_repository->create($transition, $ci_build);
     }
@@ -91,15 +90,15 @@ class CIBuildRepositoryTest extends TestCase
         $this->ci_build_repository->update($ci_build);
     }
 
-    /**
-     * @expectedException DataAccessQueryException
-     */
     public function testUpdateThrowsWhenUpdateFail()
     {
         $this->ci_build_dao
             ->shouldReceive('updatePostAction')
             ->andReturn(false);
         $ci_build = new CIBuild(9, 'http://updated-ci-url.test');
+
+        $this->expectException(DataAccessQueryException::class);
+
         $this->ci_build_repository->update($ci_build);
     }
 
@@ -113,15 +112,15 @@ class CIBuildRepositoryTest extends TestCase
         $this->ci_build_repository->deleteAllByTransitionIfIdNotIn($transition, [1, 2, 3]);
     }
 
-    /**
-     * @expectedException DataAccessQueryException
-     */
     public function testDeleteAllByTransitionIfIdNotInThrowsIfDeleteFail()
     {
         $this->ci_build_dao
             ->shouldReceive('deletePostActionByTransitionIfIdNotIn')
             ->andReturn(false);
         $transition = TransitionFactory::buildATransition();
+
+        $this->expectException(DataAccessQueryException::class);
+
         $this->ci_build_repository->deleteAllByTransitionIfIdNotIn($transition, [1, 2, 3]);
     }
 
@@ -142,15 +141,15 @@ class CIBuildRepositoryTest extends TestCase
         $this->assertEquals(new PostActionIdCollection(1, 2, 3), $ids);
     }
 
-    /**
-     * @expectedException DataAccessQueryException
-     */
     public function testFindAllIdsByTransitionThrowsWhenFindFail()
     {
         $this->ci_build_dao
             ->shouldReceive('findAllIdsByTransitionId')
             ->andReturn(false);
         $transition = TransitionFactory::buildATransition();
+
+        $this->expectException(DataAccessQueryException::class);
+
         $this->ci_build_repository->findAllIdsByTransition($transition);
     }
 }

@@ -27,9 +27,6 @@ class ForgePropertiesManagerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    /**
-     * @expectedException \Tuleap\ForgeAccess\UnknownForgeAccessValueException
-     */
     public function testUnknownAccessValueIsRejected()
     {
         $forge_properties_manager = new \ForgeAccess_ForgePropertiesManager(
@@ -39,6 +36,8 @@ class ForgePropertiesManagerTest extends TestCase
             \Mockery::mock(\EventManager::class),
             \Mockery::mock(\Tuleap\FRS\FRSPermissionCreator::class)
         );
+
+        $this->expectException(UnknownForgeAccessValueException::class);
 
         $forge_properties_manager->updateAccess('not_valid_access_value', 'anonymous');
     }

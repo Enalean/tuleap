@@ -49,9 +49,6 @@ class PhpWikiTest extends RestBase {
         $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
     }
 
-    /**
-     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
-     */
     public function testGETVersionsReturns400IfNoVersionGiven() {
         $response = $this->getResponse($this->client->get('phpwiki/'.REST_TestDataBuilder::PHPWIKI_PAGE_ID . '/versions'));
         $this->assertEquals($response->getStatusCode(), 400);
@@ -67,9 +64,6 @@ class PhpWikiTest extends RestBase {
         $this->assertResponseBodyIsVersion4($response);
     }
 
-    /**
-     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
-     */
     public function testGETVersionsThrows404WhenVersionNotExists() {
         $response = $this->getResponse($this->client->get('phpwiki/'.REST_TestDataBuilder::PHPWIKI_PAGE_ID . '/versions?version_id=10'));
 

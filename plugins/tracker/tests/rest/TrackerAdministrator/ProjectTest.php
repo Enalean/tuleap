@@ -56,9 +56,6 @@ class ProjectTest extends TrackerBase
         $this->assertEquals($this->tracker_administrator_project_id, $json_projects[0]['id']);
     }
 
-    /**
-     * @expectedException \Guzzle\Http\Exception\ClientErrorResponseException
-     */
     public function testItReturnsAnErrorIfTheTrackerAdministratorFilterIsSetToFalse()
     {
         $url = 'projects?' . http_build_query([

@@ -55,7 +55,7 @@ class TrackerBase extends RestBase
     protected $base_artifact_ids   = [];
     protected $delete_artifact_ids = [];
 
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
 

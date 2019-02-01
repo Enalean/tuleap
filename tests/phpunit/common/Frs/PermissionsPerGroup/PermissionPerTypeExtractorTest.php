@@ -76,7 +76,7 @@ class PermissionPerTypeExtractorTest extends TestCase
      */
     private $formatter;
 
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
 

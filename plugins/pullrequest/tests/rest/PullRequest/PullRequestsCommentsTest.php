@@ -54,9 +54,6 @@ class PullRequestsCommentsTest extends RestBase {
         $this->assertEquals('I am never at home on Sundays.', $pull_request_comments[2]['content']);
     }
 
-    /**
-     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
-     */
     public function testGetPullRequestCommentsThrows403IfUserCantSeeGitRepository() {
         $response = $this->getResponseForNonMember($this->client->get('pull_requests/1/comments'));
 

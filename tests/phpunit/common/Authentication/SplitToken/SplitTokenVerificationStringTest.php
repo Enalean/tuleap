@@ -28,11 +28,9 @@ class SplitTokenVerificationStringTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    /**
-     * @expectedException \Tuleap\Authentication\SplitToken\IncorrectSizeVerificationStringException
-     */
     public function testIncorrectlySizedVerificationStringAreRejected()
     {
+        $this->expectException(IncorrectSizeVerificationStringException::class);
         new SplitTokenVerificationString(new ConcealedString('too_short'));
     }
 

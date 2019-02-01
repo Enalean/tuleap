@@ -33,7 +33,7 @@ class CSVRepresentationTest extends TestCase
     /** @var CSVRepresentation */
     private $representation;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         parent::setUp();
         $this->representation = new CSVRepresentation();

@@ -106,7 +106,7 @@ class ConfigPermissionsSerializerFineGrainedPermissionsTest extends TestCase
      */
     private $regexp_retriever;
 
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
 
@@ -180,7 +180,7 @@ class ConfigPermissionsSerializerFineGrainedPermissionsTest extends TestCase
         $GLOBALS = $globals;
     }
 
-    public function tearDown()
+    public function tearDown() : void
     {
         PermissionsManager::clearInstance();
         parent::tearDown();

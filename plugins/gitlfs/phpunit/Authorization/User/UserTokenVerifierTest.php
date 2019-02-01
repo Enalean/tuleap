@@ -36,7 +36,7 @@ class UserTokenVerifierTest extends TestCase
     private $user_manager;
     private $current_time;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $this->dao          = \Mockery::mock(UserAuthorizationDAO::class);
         $this->hasher       = \Mockery::mock(SplitTokenVerificationStringHasher::class);
@@ -108,9 +108,6 @@ class UserTokenVerifierTest extends TestCase
         $verifier->getUser($this->current_time, $user_token, $repository, $operation);
     }
 
-    /**
-     * @expectedException \Tuleap\GitLFS\Authorization\User\UserAuthorizationNotFoundException
-     */
     public function testGettingUserFailsWhenANotExpiredAuthorizationCanNotBeFound()
     {
         $verifier = new UserTokenVerifier($this->dao, $this->hasher, $this->user_manager);
@@ -122,13 +119,11 @@ class UserTokenVerifierTest extends TestCase
         $operation = \Mockery::mock(UserOperation::class);
 
         $this->dao->shouldReceive('searchAuthorizationByIDAndExpiration')->andReturns(null);
+        $this->expectException(UserAuthorizationNotFoundException::class);
 
         $verifier->getUser($this->current_time, $user_token, $repository, $operation);
     }
 
-    /**
-     * @expectedException \Tuleap\GitLFS\Authorization\User\InvalidUserUserAuthorizationException
-     */
     public function testGettingUserFailsWhenAVerificationStringDoesNotMatch()
     {
         $verifier = new UserTokenVerifier($this->dao, $this->hasher, $this->user_manager);
@@ -151,12 +146,11 @@ class UserTokenVerifierTest extends TestCase
         ]);
         $this->hasher->shouldReceive('verifyHash')->with($verification_string, 'notvalid')->andReturns(false);
 
+        $this->expectException(InvalidUserUserAuthorizationException::class);
+
         $verifier->getUser($this->current_time, $user_token, $repository, $operation);
     }
 
-    /**
-     * @expectedException \Tuleap\GitLFS\Authorization\User\InvalidUserUserAuthorizationException
-     */
     public function testGettingUserFailsWhenOperationDoesNotMatch()
     {
         $verifier = new UserTokenVerifier($this->dao, $this->hasher, $this->user_manager);
@@ -180,12 +174,11 @@ class UserTokenVerifierTest extends TestCase
         ]);
         $this->hasher->shouldReceive('verifyHash')->with($verification_string, 'valid')->andReturns(true);
 
+        $this->expectException(InvalidUserUserAuthorizationException::class);
+
         $verifier->getUser($this->current_time, $user_token, $repository, $operation);
     }
 
-    /**
-     * @expectedException \Tuleap\GitLFS\Authorization\User\UserNotFoundExceptionUser
-     */
     public function testGettingUserFailsWhenUserCannotBeFound()
     {
         $verifier = new UserTokenVerifier($this->dao, $this->hasher, $this->user_manager);
@@ -211,12 +204,11 @@ class UserTokenVerifierTest extends TestCase
         ]);
         $this->hasher->shouldReceive('verifyHash')->with($verification_string, 'valid')->andReturns(true);
 
+        $this->expectException(UserNotFoundExceptionUser::class);
+
         $verifier->getUser($this->current_time, $user_token, $repository, $operation);
     }
 
-    /**
-     * @expectedException \Tuleap\GitLFS\Authorization\User\UserNotFoundExceptionUser
-     */
     public function testGettingUserFailsWhenUserIsNotAlive()
     {
         $verifier = new UserTokenVerifier($this->dao, $this->hasher, $this->user_manager);
@@ -244,9 +236,8 @@ class UserTokenVerifierTest extends TestCase
         ]);
         $this->hasher->shouldReceive('verifyHash')->with($verification_string, 'valid')->andReturns(true);
 
-        $this->assertSame(
-            $user,
-            $verifier->getUser($this->current_time, $user_token, $repository, $operation)
-        );
+        $this->expectException(UserNotFoundExceptionUser::class);
+
+        $verifier->getUser($this->current_time, $user_token, $repository, $operation);
     }
 }

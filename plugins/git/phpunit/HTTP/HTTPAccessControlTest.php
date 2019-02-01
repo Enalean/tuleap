@@ -30,7 +30,7 @@ class HTTPAccessControlTest extends TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    protected function tearDown()
+    protected function tearDown() : void
     {
         unset($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']);
     }

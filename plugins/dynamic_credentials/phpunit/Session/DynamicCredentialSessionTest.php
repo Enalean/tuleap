@@ -49,9 +49,6 @@ class DynamicCredentialSessionTest extends TestCase
         $this->assertSame($credential, $dynamic_session->getAssociatedCredential());
     }
 
-    /**
-     * @expectedException \Tuleap\DynamicCredentials\Session\DynamicCredentialSessionNotInitializedException
-     */
     public function testCredentialIsNotRetrievedWhenSessionIsNotInitialized()
     {
         $session_storage      = [];
@@ -59,12 +56,11 @@ class DynamicCredentialSessionTest extends TestCase
 
         $dynamic_session = new DynamicCredentialSession($session_storage, $credential_retriever);
 
+        $this->expectException(DynamicCredentialSessionNotInitializedException::class);
+
         $dynamic_session->getAssociatedCredential();
     }
 
-    /**
-     * @expectedException \Tuleap\DynamicCredentials\Session\DynamicCredentialSessionNotInitializedException
-     */
     public function testSessionIsNotInitializedWhenAuthenticationFail()
     {
         $credential_retriever = Mockery::mock(CredentialRetriever::class);
@@ -77,6 +73,9 @@ class DynamicCredentialSessionTest extends TestCase
             $dynamic_session->initialize('username', 'password');
         } catch (CredentialAuthenticationException $ex) {
         }
+
+        $this->expectException(DynamicCredentialSessionNotInitializedException::class);
+
         $dynamic_session->getAssociatedCredential();
     }
 }

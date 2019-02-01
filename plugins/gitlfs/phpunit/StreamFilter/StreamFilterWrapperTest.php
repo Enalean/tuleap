@@ -24,13 +24,13 @@ use PHPUnit\Framework\TestCase;
 
 class StreamFilterWrapperTest extends TestCase
 {
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testIncorrectFilterIsRejected() : void
     {
         $filter_wrapper = new StreamFilterWrapper();
         $filter_wrapper->params = 'invalid_filter';
+
+        $this->expectException(\InvalidArgumentException::class);
+
         $filter_wrapper->onCreate();
     }
 

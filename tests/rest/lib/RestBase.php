@@ -24,8 +24,6 @@ use PHPUnit\Framework\TestCase;
 use Test\Rest\Cache;
 use Test\Rest\RequestWrapper;
 
-require_once __DIR__ . '/../../lib/bootstrap_phpunit_custom_assert.php';
-
 class RestBase extends TestCase // phpcs:ignore
 {
     protected $base_url = 'https://localhost/api/v1';
@@ -86,7 +84,14 @@ class RestBase extends TestCase // phpcs:ignore
 
         $this->cache = Cache::instance();
 
-        $this->client = new Client($this->base_url);
+        $this->client = new Client(
+            $this->base_url,
+            [
+                'request.options' => [
+                    'exceptions' => false,
+                ]
+            ]
+        );
         $this->client->setSslVerification(false, false, false);
         $this->setup_client = new Client($this->setup_url);
         $this->setup_client->setSslVerification(false, false, false);
@@ -100,7 +105,7 @@ class RestBase extends TestCase // phpcs:ignore
         $this->rest_request = new RequestWrapper($this->client, $this->cache);
     }
 
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
 

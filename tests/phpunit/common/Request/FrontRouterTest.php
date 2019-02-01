@@ -48,7 +48,7 @@ class FrontRouterTest extends TestCase
     private $burning_parrot;
     private $plugin_manager;
 
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
 
@@ -79,7 +79,7 @@ class FrontRouterTest extends TestCase
         );
     }
 
-    public function tearDown()
+    public function tearDown() : void
     {
         unset($_SERVER['REQUEST_METHOD']);
         unset($_SERVER['REQUEST_URI']);
@@ -322,7 +322,7 @@ class FrontRouterTest extends TestCase
 
         $this->router->route($this->request, $this->layout);
 
-        $this->assertContains(
+        $this->assertStringContainsString(
             'tuleap_http_responses_total{code="' . $status_code . '",router="fastroute"} 1',
             \Tuleap\Instrument\Prometheus\Prometheus::instance()->renderText()
         );

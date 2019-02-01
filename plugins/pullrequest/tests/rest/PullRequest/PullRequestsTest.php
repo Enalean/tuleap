@@ -55,9 +55,6 @@ class PullRequestsTest extends RestBase
         $this->assertEquals(array('OPTIONS', 'GET', 'POST', 'PATCH'), $response->getHeader('Allow')->normalize()->toArray());
     }
 
-    /**
-     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
-     */
     public function testGetPullRequestThrows403IfUserCantSeeGitRepository() {
         $response = $this->getResponseForNonMember($this->client->get('pull_requests/1'));
 
@@ -85,9 +82,6 @@ class PullRequestsTest extends RestBase
     //     $this->assertEquals('abandon', $pull_request['status']);
     // }
 
-     /**
-     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
-     */
     public function testPATCHPullRequestThrow400IfStatusIsUnknown() {
         $data = json_encode(array(
             'status' => 'whatever'
@@ -99,6 +93,6 @@ class PullRequestsTest extends RestBase
             $data
         ));
 
-        $this->assertEquals($response->getStatusCode(), 400);
+        $this->assertEquals(400, $response->getStatusCode());
     }
 }

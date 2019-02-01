@@ -54,7 +54,7 @@ class TOTPEnrollerTest extends TestCase
      */
     private $user;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $this->dao            = \Mockery::mock(TOTPEnrollmentDAO::class);
         $this->encryption_key = \Mockery::mock(EncryptionKey::class);
@@ -80,9 +80,6 @@ class TOTPEnrollerTest extends TestCase
         $totp_enroller->enrollUser($this->user, $session, '000000');
     }
 
-    /**
-     * @expectedException \Tuleap\MFA\Enrollment\TOTP\InvalidTOTPCodeException
-     */
     public function testUserIsNotEnrolledWhenProvidingAInvalidTOTPCode()
     {
         $totp_enroller = new TOTPEnroller($this->dao, $this->encryption_key, $this->totp_validator, $this->totp_mode);
@@ -93,12 +90,12 @@ class TOTPEnrollerTest extends TestCase
         $this->dao->shouldReceive('enrollUserID')->never();
 
         $totp_enroller->prepareSessionForEnrollment($session);
+
+        $this->expectException(InvalidTOTPCodeException::class);
+
         $totp_enroller->enrollUser($this->user, $session, '111111');
     }
 
-    /**
-     * @expectedException \Tuleap\MFA\Enrollment\TOTP\EnrollmentTOTPMissingSessionSecretException
-     */
     public function testEnrollmentIsNotAttemptedIfSharedSecretIsNotAvailable()
     {
         $totp_enroller = new TOTPEnroller($this->dao, $this->encryption_key, $this->totp_validator, $this->totp_mode);
@@ -107,6 +104,8 @@ class TOTPEnrollerTest extends TestCase
 
         $this->totp_validator->shouldReceive('validate')->never();
         $this->dao->shouldReceive('enrollUserID')->never();
+
+        $this->expectException(EnrollmentTOTPMissingSessionSecretException::class);
 
         $totp_enroller->enrollUser($this->user, $session, '000000');
     }

@@ -76,7 +76,7 @@ class TimetrackingOverviewRepresentationsBuilderTest extends TestCase
      */
     private $project;
 
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
         $globals = array_merge([], $GLOBALS);

@@ -25,6 +25,7 @@ require_once __DIR__ . '/bootstrap.php';
 use Http\Client\Exception\HttpException;
 use Http\Message\RequestFactory;
 use Http\Mock\Client;
+use HudsonJobURLFileException;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
@@ -34,19 +35,16 @@ class HudsonJobBuilderTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $GLOBALS['Language'] = \Mockery::spy(\BaseLanguage::class);
     }
 
-    protected function tearDown()
+    protected function tearDown() : void
     {
         unset($GLOBALS['Language']);
     }
 
-    /**
-     * @expectedException \Http\Client\Exception\HttpException
-     */
     public function testExceptionIsRaisedWhenDataCannotBeRetrieved()
     {
         $minimal_job = \Mockery::mock(MinimalHudsonJob::class);
@@ -60,12 +58,12 @@ class HudsonJobBuilderTest extends TestCase
         $http_client->addException(\Mockery::mock(HttpException::class));
 
         $job_builder = new HudsonJobBuilder($request_factory, $http_client);
+
+        $this->expectException(HttpException::class);
+
         $job_builder->getHudsonJob($minimal_job);
     }
 
-    /**
-     * @expectedException \HudsonJobURLFileException
-     */
     public function testExceptionIsRaisedWhenInvalidXMLDataIsRetrieved()
     {
         $minimal_job = \Mockery::mock(MinimalHudsonJob::class);
@@ -81,6 +79,9 @@ class HudsonJobBuilderTest extends TestCase
         $http_client->addResponse($response);
 
         $job_builder = new HudsonJobBuilder($request_factory, $http_client);
+
+        $this->expectException(HudsonJobURLFileException::class);
+
         $job_builder->getHudsonJob($minimal_job);
     }
 

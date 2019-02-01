@@ -53,9 +53,6 @@ class RepositoryTest extends TestBase {
         $this->assertEquals(array('OPTIONS', 'GET', 'PATCH'), $response->getHeader('Allow')->normalize()->toArray());
     }
 
-    /**
-     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
-     */
     public function testGetGitRepositoryThrows403IfUserCantSeeRepository() {
         $response = $this->getResponseForNonMember($this->client->get(
             'git/'.GitDataBuilder::REPOSITORY_GIT_ID
@@ -105,9 +102,6 @@ class RepositoryTest extends TestBase {
         $this->assertNotEmpty($content['content']);
     }
 
-    /**
-     * @expectedException \Guzzle\Http\Exception\ClientErrorResponseException
-     */
     public function testGETFilesOnNonExistingFile()
     {
         $url = 'git/'.GitDataBuilder::REPOSITORY_GIT_ID . '/files?' . http_build_query([
@@ -120,9 +114,6 @@ class RepositoryTest extends TestBase {
         $this->assertEquals($response->getStatusCode(), 404);
     }
 
-    /**
-     * @expectedException \Guzzle\Http\Exception\ClientErrorResponseException
-     */
     public function testGETFilesOnNonExistingBranch()
     {
         $url = 'git/'.GitDataBuilder::REPOSITORY_GIT_ID . '/files?' . http_build_query([
@@ -150,7 +141,7 @@ class RepositoryTest extends TestBase {
         $branches = $response->json();
 
         $this->assertCount(2, $branches);
-        $this->assertEquals(
+        $this->assertEqualsCanonicalizing(
             $branches,
             [
                 [
@@ -207,11 +198,7 @@ class RepositoryTest extends TestBase {
                         'verification'  => ['signature' => null]
                     ]
                 ],
-            ],
-            $message = '',
-            $delta = 0,
-            $max_depth = 10,
-            $canonicalize = true
+            ]
         );
     }
 
@@ -229,7 +216,7 @@ class RepositoryTest extends TestBase {
 
         $tags = $response->json();
         $this->assertCount(1, $tags);
-        $this->assertEquals(
+        $this->assertEqualsCanonicalizing(
             $tags,
             [
                 [
@@ -259,11 +246,7 @@ class RepositoryTest extends TestBase {
                         'verification'  => ['signature' => null]
                     ]
                 ]
-            ],
-            $message = '',
-            $delta = 0,
-            $max_depth = 10,
-            $canonicalize = true
+            ]
         );
     }
 }

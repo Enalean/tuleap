@@ -29,6 +29,7 @@ use Tracker_FormElementFactory;
 use Tracker_Semantic_ContributorFactory;
 use Tuleap\Tracker\Action\Move\NoFeedbackFieldCollector;
 use Tuleap\Tracker\Events\MoveArtifactGetExternalSemanticCheckers;
+use Tuleap\Tracker\Exception\MoveArtifactSemanticsException;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
@@ -41,7 +42,7 @@ class BeforeMoveArtifactTest extends TestCase
      */
     private $before_move_artifact;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         parent::setUp();
 
@@ -180,9 +181,6 @@ class BeforeMoveArtifactTest extends TestCase
         $this->assertTrue($this->before_move_artifact->artifactCanBeMoved($this->source_tracker, $this->target_tracker, $this->feedback_field_collector));
     }
 
-    /**
-     * @expectedException \Tuleap\Tracker\Exception\MoveArtifactSemanticsException
-     */
     public function testSemanticAreNotAlignedIfBothTrackersHaveOnlyDescriptionSemanticWithFieldsWithDifferentTypes()
     {
         $this->source_tracker->shouldReceive([
@@ -204,6 +202,8 @@ class BeforeMoveArtifactTest extends TestCase
 
         $this->form_element_factory->shouldReceive('getType')->with($this->source_description_field)->andReturn('text');
         $this->form_element_factory->shouldReceive('getType')->with($this->target_description_field)->andReturn('string');
+
+        $this->expectException(MoveArtifactSemanticsException::class);
 
         $this->before_move_artifact->artifactCanBeMoved($this->source_tracker, $this->target_tracker, $this->feedback_field_collector);
     }
@@ -255,9 +255,6 @@ class BeforeMoveArtifactTest extends TestCase
         $this->assertTrue($this->before_move_artifact->artifactCanBeMoved($this->source_tracker, $this->target_tracker, $this->feedback_field_collector));
     }
 
-    /**
-     * @expectedException \Tuleap\Tracker\Exception\MoveArtifactSemanticsException
-     */
     public function testSemanticAreNotAlignedIfSourceTrackerHasDescriptionAndTargetHasTitle()
     {
         $this->source_tracker->shouldReceive([
@@ -277,12 +274,11 @@ class BeforeMoveArtifactTest extends TestCase
         $this->source_tracker->shouldReceive('getContributorField')->andReturn(null);
         $this->target_tracker->shouldReceive('getContributorField')->andReturn(null);
 
+        $this->expectException(MoveArtifactSemanticsException::class);
+
         $this->before_move_artifact->artifactCanBeMoved($this->source_tracker, $this->target_tracker, $this->feedback_field_collector);
     }
 
-    /**
-     * @expectedException \Tuleap\Tracker\Exception\MoveArtifactSemanticsException
-     */
     public function testSemanticAreNotAlignedIfSourceTrackerHasTitleAndTargetHasDescription()
     {
         $this->source_tracker->shouldReceive([
@@ -302,12 +298,11 @@ class BeforeMoveArtifactTest extends TestCase
         $this->source_tracker->shouldReceive('getContributorField')->andReturn(null);
         $this->target_tracker->shouldReceive('getContributorField')->andReturn(null);
 
+        $this->expectException(MoveArtifactSemanticsException::class);
+
         $this->before_move_artifact->artifactCanBeMoved($this->source_tracker, $this->target_tracker, $this->feedback_field_collector);
     }
 
-    /**
-     * @expectedException \Tuleap\Tracker\Exception\MoveArtifactSemanticsException
-     */
     public function testSemanticAreNotAlignedIfSourceTrackerHasNoSemantic()
     {
         $this->source_tracker->shouldReceive([
@@ -327,12 +322,11 @@ class BeforeMoveArtifactTest extends TestCase
         $this->source_tracker->shouldReceive('getContributorField')->andReturn(null);
         $this->target_tracker->shouldReceive('getContributorField')->andReturn($this->target_contributor_field);
 
+        $this->expectException(MoveArtifactSemanticsException::class);
+
         $this->before_move_artifact->artifactCanBeMoved($this->source_tracker, $this->target_tracker, $this->feedback_field_collector);
     }
 
-    /**
-     * @expectedException \Tuleap\Tracker\Exception\MoveArtifactSemanticsException
-     */
     public function testExternalSemanticsAreNotCheckedIfNotReturnedByOtherPlugin()
     {
         $this->event_manager->shouldReceive('processEvent')->with(Mockery::on(function (MoveArtifactGetExternalSemanticCheckers $event) {
@@ -356,12 +350,11 @@ class BeforeMoveArtifactTest extends TestCase
         $this->source_tracker->shouldReceive('getContributorField')->andReturn(null);
         $this->target_tracker->shouldReceive('getContributorField')->andReturn($this->target_contributor_field);
 
+        $this->expectException(MoveArtifactSemanticsException::class);
+
         $this->before_move_artifact->artifactCanBeMoved($this->source_tracker, $this->target_tracker, $this->feedback_field_collector);
     }
 
-    /**
-     * @expectedException \Tuleap\Tracker\Exception\MoveArtifactSemanticsException
-     */
     public function testSemanticsAreNotAlignedIfBothTrackerAndExternalSemanticsAreNotAligned()
     {
         $this->event_manager->shouldReceive('processEvent')->with(Mockery::on(function (MoveArtifactGetExternalSemanticCheckers $event) {
@@ -394,6 +387,8 @@ class BeforeMoveArtifactTest extends TestCase
 
         $this->source_tracker->shouldReceive('getContributorField')->andReturn(null);
         $this->target_tracker->shouldReceive('getContributorField')->andReturn($this->target_contributor_field);
+
+        $this->expectException(MoveArtifactSemanticsException::class);
 
         $this->before_move_artifact->artifactCanBeMoved($this->source_tracker, $this->target_tracker, $this->feedback_field_collector);
     }
@@ -458,9 +453,6 @@ class BeforeMoveArtifactTest extends TestCase
         $this->assertTrue($this->before_move_artifact->artifactCanBeMoved($this->source_tracker, $this->target_tracker, $this->feedback_field_collector));
     }
 
-    /**
-     * @expectedException \Tuleap\Tracker\Exception\MoveArtifactSemanticsException
-     */
     public function testSemanticAreNotAlignedIfBothTrackersHaveOnlyStatusSemanticWithFieldsWithDifferentTypes()
     {
         $this->source_tracker->shouldReceive([
@@ -483,12 +475,11 @@ class BeforeMoveArtifactTest extends TestCase
         $this->form_element_factory->shouldReceive('getType')->with($this->source_status_field)->andReturn('sb');
         $this->form_element_factory->shouldReceive('getType')->with($this->target_status_field)->andReturn('rb');
 
+        $this->expectException(MoveArtifactSemanticsException::class);
+
         $this->before_move_artifact->artifactCanBeMoved($this->source_tracker, $this->target_tracker, $this->feedback_field_collector);
     }
 
-    /**
-     * @expectedException \Tuleap\Tracker\Exception\MoveArtifactSemanticsException
-     */
     public function testSemanticAreNotAlignedIfOneTrackersDoesNotHaveStatusSemantic()
     {
         $this->source_tracker->shouldReceive([
@@ -507,6 +498,8 @@ class BeforeMoveArtifactTest extends TestCase
 
         $this->source_tracker->shouldReceive('getContributorField')->andReturn(null);
         $this->target_tracker->shouldReceive('getContributorField')->andReturn(null);
+
+        $this->expectException(MoveArtifactSemanticsException::class);
 
         $this->before_move_artifact->artifactCanBeMoved($this->source_tracker, $this->target_tracker, $this->feedback_field_collector);
     }
@@ -536,9 +529,6 @@ class BeforeMoveArtifactTest extends TestCase
         $this->assertTrue($this->before_move_artifact->artifactCanBeMoved($this->source_tracker, $this->target_tracker, $this->feedback_field_collector));
     }
 
-    /**
-     * @expectedException \Tuleap\Tracker\Exception\MoveArtifactSemanticsException
-     */
     public function testSemanticAreNotAlignedIfBothTrackersHaveOnlyContributorSemanticWithFieldsWithDifferentTypes()
     {
         $this->source_tracker->shouldReceive([
@@ -561,12 +551,11 @@ class BeforeMoveArtifactTest extends TestCase
         $this->form_element_factory->shouldReceive('getType')->with($this->source_contributor_field)->andReturn('msb');
         $this->form_element_factory->shouldReceive('getType')->with($this->target_contributor_field)->andReturn('rb');
 
+        $this->expectException(MoveArtifactSemanticsException::class);
+
         $this->before_move_artifact->artifactCanBeMoved($this->source_tracker, $this->target_tracker, $this->feedback_field_collector);
     }
 
-    /**
-     * @expectedException \Tuleap\Tracker\Exception\MoveArtifactSemanticsException
-     */
     public function testSemanticAreNotAlignedIfOneTrackersDoesNotHaveContributorSemantic()
     {
         $this->source_tracker->shouldReceive([
@@ -585,6 +574,8 @@ class BeforeMoveArtifactTest extends TestCase
 
         $this->source_tracker->shouldReceive('getContributorField')->andReturn($this->source_contributor_field);
         $this->target_tracker->shouldReceive('getContributorField')->andReturn(null);
+
+        $this->expectException(MoveArtifactSemanticsException::class);
 
         $this->before_move_artifact->artifactCanBeMoved($this->source_tracker, $this->target_tracker, $this->feedback_field_collector);
     }

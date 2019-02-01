@@ -28,6 +28,8 @@ use Tracker_Artifact_Changeset;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind_Static;
 use Tracker_FormElement_Field_List_BindDecorator;
+use Tuleap\Tracker\Artifact\Exception\NoChangesetException;
+use Tuleap\Tracker\Artifact\Exception\NoChangesetValueException;
 
 class BindDecoratorRetrieverTest extends TestCase
 {
@@ -44,7 +46,7 @@ class BindDecoratorRetrieverTest extends TestCase
     /** @var Tracker_FormElement_Field_List_Bind_Static */
     private $bind_static;
 
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
 
@@ -73,9 +75,6 @@ class BindDecoratorRetrieverTest extends TestCase
         $this->assertEquals($this->decorator, $result);
     }
 
-    /**
-     * @expectedException \Tuleap\Tracker\FormElement\Field\ListFields\Bind\NoBindDecoratorException
-     */
     public function testItThrowsWhenNoDecorator()
     {
         $values = [['id' => 4884]];
@@ -85,26 +84,26 @@ class BindDecoratorRetrieverTest extends TestCase
         $this->list_field->method('getBind')->willReturn($this->bind_static);
         $this->bind_static->method('getChangesetValues')->willReturn($values);
 
+        $this->expectException(NoBindDecoratorException::class);
+
         $this->decorator_retriever->getDecoratorForFirstValue($this->list_field, $this->artifact);
     }
 
-    /**
-     * @expectedException \Tuleap\Tracker\Artifact\Exception\NoChangesetValueException
-     */
     public function testItThrowsWhenNoValue()
     {
         $this->artifact->method('getLastChangeset')->willReturn($this->changeset);
         $this->list_field->method('getBind')->willReturn($this->bind_static);
         $this->bind_static->expects($this->once())->method('getChangesetValues')->with(747)->willReturn([]);
 
+        $this->expectException(NoChangesetValueException::class);
+
         $this->decorator_retriever->getDecoratorForFirstValue($this->list_field, $this->artifact);
     }
 
-    /**
-     * @expectedException \Tuleap\Tracker\Artifact\Exception\NoChangesetException
-     */
     public function testItThrowsWhenNoChangeset()
     {
+        $this->expectException(NoChangesetException::class);
+
         $this->decorator_retriever->getDecoratorForFirstValue($this->list_field, $this->artifact);
     }
 }

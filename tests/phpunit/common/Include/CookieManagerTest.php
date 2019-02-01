@@ -20,13 +20,13 @@
 
 class CookieManagerTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
 {
-    protected function setUp()
+    protected function setUp() : void
     {
         ForgeConfig::store();
         ForgeConfig::set('sys_cookie_prefix', 'test');
     }
 
-    protected function tearDown()
+    protected function tearDown() : void
     {
         ForgeConfig::restore();
     }

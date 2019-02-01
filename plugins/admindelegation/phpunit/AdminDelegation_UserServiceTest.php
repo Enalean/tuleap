@@ -28,7 +28,7 @@ class AdminDelegation_UserServiceTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    public function setUp()
+    public function setUp() : void
     {
         $this->user = \Mockery::spy(PFUser::class);
         $this->user->shouldReceive('getId')->andReturn(112);

@@ -82,9 +82,6 @@ class GitPullRequestReferenceCreatorTest extends TestCase
         $reference_creator->createPullRequestReference($pull_request, $executor_source, $executor_destination, $repository_destination);
     }
 
-    /**
-     * @expectedException \LogicException
-     */
     public function testExpectedDestinationRepositoryIsGiven()
     {
         $dao               = \Mockery::mock(GitPullRequestReferenceDAO::class);
@@ -99,12 +96,11 @@ class GitPullRequestReferenceCreatorTest extends TestCase
         $pull_request->shouldReceive('getRepoDestId')->andReturns(1);
         $repository_destination->shouldReceive('getId')->andReturns(2);
 
+        $this->expectException(\LogicException::class);
+
         $reference_creator->createPullRequestReference($pull_request, $executor_source, $executor_destination, $repository_destination);
     }
 
-    /**
-     * @expectedException \Git_Command_Exception
-     */
     public function testGitReferenceIsMarkedAsBrokenWhenItCannotBeCreated()
     {
         $dao               = \Mockery::mock(GitPullRequestReferenceDAO::class);
@@ -126,6 +122,8 @@ class GitPullRequestReferenceCreatorTest extends TestCase
         $pull_request->shouldReceive('getSha1Src')->andReturns('38762cf7f55934b34d179ae6a4c80cadccbb7f0a');
         $repository_destination->shouldReceive('getId')->andReturns(1);
         $repository_destination->shouldReceive('getPath')->andReturns('/path');
+
+        $this->expectException(\Git_Command_Exception::class);
 
         $reference_creator->createPullRequestReference($pull_request, $executor_source, $executor_destination, $repository_destination);
     }

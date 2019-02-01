@@ -43,7 +43,7 @@ class ConfigPermissionsSerializerMirrorsTest extends TestCase
     private $permissions_manager;
     private $project;
 
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
         $this->mirror_mapper = Mockery::spy(\Git_Mirror_MirrorDataMapper::class);
@@ -76,7 +76,7 @@ class ConfigPermissionsSerializerMirrorsTest extends TestCase
         PermissionsManager::setInstance($this->permissions_manager);
     }
 
-    public function tearDown()
+    public function tearDown() : void
     {
         PermissionsManager::clearInstance();
         parent::tearDown();

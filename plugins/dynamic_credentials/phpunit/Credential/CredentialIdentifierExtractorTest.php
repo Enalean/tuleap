@@ -36,11 +36,13 @@ class CredentialIdentifierExtractorTest extends TestCase
 
     /**
      * @dataProvider incorrectlyFormattedUsernameProvider
-     * @expectedException \Tuleap\DynamicCredentials\Credential\CredentialInvalidUsernameException
      */
     public function testRejectionWhenUsernameIsIncorrectlyFormatted($username)
     {
         $extractor = new CredentialIdentifierExtractor;
+
+        $this->expectException(CredentialInvalidUsernameException::class);
+
         $extractor->extract($username);
     }
 

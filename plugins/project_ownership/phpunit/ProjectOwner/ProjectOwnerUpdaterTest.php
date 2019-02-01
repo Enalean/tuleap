@@ -35,7 +35,7 @@ class ProjectOwnerUpdaterTest extends TestCase
      */
     private $mockery_matcher_callback_wrapped_operations;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $this->dao                                         = \Mockery::mock(ProjectOwnerDAO::class);
         $this->mockery_matcher_callback_wrapped_operations = \Mockery::on(
@@ -62,9 +62,6 @@ class ProjectOwnerUpdaterTest extends TestCase
         $updater->updateProjectOwner($project, $user);
     }
 
-    /**
-     * @expectedException \Tuleap\ProjectOwnership\ProjectOwner\OnlyProjectAdministratorCanBeSetAsProjectOwnerException
-     */
     public function testProjectOwnerCannotBeSetIfNotAlreadyAProjectAdmin()
     {
         $this->dao->shouldReceive('save')->never();
@@ -78,6 +75,9 @@ class ProjectOwnerUpdaterTest extends TestCase
         $project->shouldReceive('getID')->andReturns('101');
 
         $updater = new ProjectOwnerUpdater($this->dao);
+
+        $this->expectException(OnlyProjectAdministratorCanBeSetAsProjectOwnerException::class);
+
         $updater->updateProjectOwner($project, $user);
     }
 }

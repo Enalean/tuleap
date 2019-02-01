@@ -22,7 +22,8 @@ require_once __DIR__.'/../../bootstrap.php';
 
 class FileImporterTest extends \PHPUnit\Framework\TestCase {
 
-    protected function setUp() {
+    protected function setUp() : void
+    {
         parent::setUp();
 
         $this->dao             = $this->getMockBuilder('Tuleap\ProFTPd\Xferlog\Dao')->disableOriginalConstructor()->getMock();

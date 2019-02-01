@@ -46,48 +46,24 @@ class UserGroupTest extends RestBase {
     }
 
     public function testGETIdDoesNotWorkIfUserIsProjectMemberButNotProjectAdmin() {
-        // Cannot use @expectedException as we want to check status code.
-        $exception = false;
-        try {
-            $this->getResponse(
-                $this->client->get('user_groups/'.REST_TestDataBuilder::STATIC_UGROUP_1_ID),
-                REST_TestDataBuilder::TEST_USER_2_NAME
-            );
-        } catch (Guzzle\Http\Exception\BadResponseException $e) {
-            $this->assertEquals($e->getResponse()->getStatusCode(), 403);
-            $exception = true;
-        }
-
-        $this->assertTrue($exception);
+        $response = $this->getResponse(
+            $this->client->get('user_groups/'.REST_TestDataBuilder::STATIC_UGROUP_1_ID),
+            REST_TestDataBuilder::TEST_USER_2_NAME
+        );
+        $this->assertEquals($response->getStatusCode(), 403);
     }
 
     public function testGETIdDoesNotWorkIfUserIsNotProjectMember() {
-        // Cannot use @expectedException as we want to check status code.
-        $exception = false;
-        try {
-            $this->getResponse(
-                $this->client->get('user_groups/'.REST_TestDataBuilder::STATIC_UGROUP_2_ID),
-                REST_TestDataBuilder::TEST_USER_2_NAME
-            );
-        } catch (Guzzle\Http\Exception\BadResponseException $e) {
-            $this->assertEquals($e->getResponse()->getStatusCode(), 403);
-            $exception = true;
-        }
-
-        $this->assertTrue($exception);
+        $response = $this->getResponse(
+            $this->client->get('user_groups/'.REST_TestDataBuilder::STATIC_UGROUP_2_ID),
+            REST_TestDataBuilder::TEST_USER_2_NAME
+        );
+        $this->assertEquals($response->getStatusCode(), 403);
     }
 
     public function testGETIdThrowsA404IfUserGroupIdDoesNotExist() {
-        // Cannot use @expectedException as we want to check status code.
-        $exception = false;
-        try {
-            $response = $this->getResponse($this->client->get("user_groups/$this->project_private_id"."_999"));
-        } catch (Guzzle\Http\Exception\BadResponseException $e) {
-            $this->assertEquals($e->getResponse()->getStatusCode(), 404);
-            $exception = true;
-        }
-
-        $this->assertTrue($exception);
+        $response = $this->getResponse($this->client->get("user_groups/$this->project_private_id"."_999"));
+        $this->assertEquals($response->getStatusCode(), 404);
     }
 
     public function testOptionsUsers() {
@@ -375,7 +351,6 @@ class UserGroupTest extends RestBase {
 
     /**
      * @depends testPutUsersInUserGroupWithUsername
-     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
      */
     public function testPutUsersInUserGroupWithEmailMultipleUsers() {
         $put_resource = json_encode(array(
@@ -424,7 +399,6 @@ class UserGroupTest extends RestBase {
 
     /**
      * @depends testPutUsersInUserGroup
-     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
      */
     public function testPutUsersInUserGroupWithTwoDifferentIds() {
         $put_resource = json_encode(array(
@@ -444,7 +418,6 @@ class UserGroupTest extends RestBase {
 
     /**
      * @depends testPutUsersInUserGroup
-     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
      */
     public function testPutUsersInUserGroupWithUnknownKey() {
         $put_resource = json_encode(array(
@@ -464,23 +437,23 @@ class UserGroupTest extends RestBase {
 
     /**
      * @depends testPutUsersInUserGroup
-     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
      */
     public function testPutUsersInUserGroupWithNonAdminUser() {
         $put_resource = json_encode(array(
             array('id' => $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME])
         ));
 
-        $this->getResponseWithUser2($this->client->put(
+        $response = $this->getResponseWithUser2($this->client->put(
             'user_groups/'.$this->project_private_member_id.'_'.REST_TestDataBuilder::STATIC_UGROUP_2_ID.'/users',
             null,
             $put_resource)
         );
+
+        $this->assertEquals(403, $response->getStatusCode());
     }
 
     /**
      * @depends testPutUsersInUserGroup
-     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
      */
     public function testPutUsersInUserGroupWithNonValidRepresentation() {
         $put_resource = json_encode(array(
@@ -490,11 +463,12 @@ class UserGroupTest extends RestBase {
             )
         ));
 
-        $this->getResponse($this->client->put(
+        $response = $this->getResponse($this->client->put(
             'user_groups/'.$this->project_private_member_id.'_'.REST_TestDataBuilder::STATIC_UGROUP_2_ID.'/users',
             null,
             $put_resource)
         );
+        $this->assertEquals(400, $response->getStatusCode());
     }
 
     public function testOptions()

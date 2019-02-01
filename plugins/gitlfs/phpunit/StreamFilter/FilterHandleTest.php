@@ -35,20 +35,16 @@ class FilterHandleTest extends TestCase
         fclose($stream);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testFilterHandleCreationRejectsInvalidResource()
     {
+        $this->expectException(\InvalidArgumentException::class);
         $stream_filter = false;
         new FilterHandle($stream_filter);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testFilterHandleCreationIsRejectedWhenGivenResourceIsNotAStream()
     {
+        $this->expectException(\InvalidArgumentException::class);
         $stream = fopen('php://memory', 'rb');
         try {
             new FilterHandle($stream);

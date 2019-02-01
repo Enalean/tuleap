@@ -54,7 +54,7 @@ class ProjectSerializerTest extends TestCase
     private $big_object_authorization_manager;
     private $version_detector;
 
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
 
@@ -106,7 +106,7 @@ class ProjectSerializerTest extends TestCase
         );
     }
 
-    public function tearDown()
+    public function tearDown() : void
     {
         PermissionsManager::clearInstance();
         HTTPRequest::clearInstance();

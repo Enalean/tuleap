@@ -56,9 +56,6 @@ class ProjectBacklogV2Test extends RestBase
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
-    /**
-     * @expectedException \Guzzle\Http\Exception\ClientErrorResponseException
-     */
     public function testGETProjectTopBacklogNoPlannings()
     {
         $response = $this->getResponse($this->client->get("projects/$this->project_public_id/backlog"));

@@ -30,32 +30,27 @@ class TokenResponseTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    /**
-     * @expectedException \Tuleap\OpenIDConnectClient\Authentication\Token\IncorrectlyFormattedTokenResponseException
-     */
     public function testNotValidJSONISRejected()
     {
         $http_response = \Mockery::mock(ResponseInterface::class);
         $http_response->shouldReceive('getBody')->andReturns('{NotJSONValid');
 
+        $this->expectException(IncorrectlyFormattedTokenResponseException::class);
+
         TokenResponse::buildFromHTTPResponse($http_response);
     }
 
-    /**
-     * @expectedException \Tuleap\OpenIDConnectClient\Authentication\Token\IncorrectlyFormattedTokenResponseException
-     * @expectedExceptionMessageRegExp {"id_token":"token"}
-     */
     public function testJSONWithMissingEntryIsRejected()
     {
         $http_response = \Mockery::mock(ResponseInterface::class);
         $http_response->shouldReceive('getBody')->andReturns(json_encode(['id_token' => 'token']));
 
+        $this->expectException(IncorrectlyFormattedTokenResponseException::class);
+        $this->expectExceptionMessageRegExp('{"id_token":"token"}');
+
         TokenResponse::buildFromHTTPResponse($http_response);
     }
 
-    /**
-     * @expectedException \Tuleap\OpenIDConnectClient\Authentication\Token\IncorrectTokenResponseTypeException
-     */
     public function testInvalidTokenTypeIsRejected()
     {
         $http_response = \Mockery::mock(ResponseInterface::class);
@@ -68,6 +63,8 @@ class TokenResponseTest extends TestCase
                 ]
             )
         );
+
+        $this->expectException(IncorrectTokenResponseTypeException::class);
 
         TokenResponse::buildFromHTTPResponse($http_response);
     }

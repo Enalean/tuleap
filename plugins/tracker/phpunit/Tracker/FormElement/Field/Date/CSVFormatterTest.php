@@ -37,7 +37,7 @@ class CSVFormatterTest extends TestCase
     /** @var int */
     private $timestamp = 1540456782;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         parent::setUp();
 

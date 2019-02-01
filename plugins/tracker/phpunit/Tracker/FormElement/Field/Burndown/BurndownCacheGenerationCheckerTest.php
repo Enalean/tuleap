@@ -74,7 +74,7 @@ class BurndownCacheGenerationCheckerTest extends TestCase
      */
     private $cache_checker;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         parent::setUp();
 

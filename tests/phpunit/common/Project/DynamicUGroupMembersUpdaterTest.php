@@ -45,7 +45,7 @@ class DynamicUGroupMembersUpdaterTest extends TestCase
      */
     private $mockery_matcher_callback_wrapped_operations;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $this->dao                                         = \Mockery::mock(UserPermissionsDao::class);
         $globals                                           = array_merge([], $GLOBALS);
@@ -60,9 +60,6 @@ class DynamicUGroupMembersUpdaterTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException \Tuleap\Project\Admin\ProjectUGroup\CannotRemoveLastProjectAdministratorException
-     */
     public function testTheLastProjectAdministratorCannotBeRemoved()
     {
         $updater = new DynamicUGroupMembersUpdater($this->dao, $this->ugroup_binding, $this->event_manager);
@@ -77,6 +74,7 @@ class DynamicUGroupMembersUpdaterTest extends TestCase
         $this->dao->shouldReceive('wrapAtomicOperations')
             ->with($this->mockery_matcher_callback_wrapped_operations);
         $this->dao->shouldReceive('isThereOtherProjectAdmin')->andReturns(false);
+        $this->expectException(CannotRemoveLastProjectAdministratorException::class);
 
         $updater->removeUser($project, $admin_ugroup, $user);
     }

@@ -73,7 +73,7 @@ class ItemRepresentationCollectionBuilderTest extends \PHPUnit\Framework\TestCas
      */
     private $link_version_factory;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         parent::setUp();
         $this->user_manager                           = Mockery::mock(UserManager::class);
