@@ -20,19 +20,16 @@
 
 namespace Tuleap\Theme\BurningParrot\Navbar;
 
-use Admin_Homepage_Dao;
+use EventManager;
 use HTTPRequest;
 use PFUser;
-use EventManager;
-use Tuleap\BurningParrotCompatiblePageDetector;
 use Tuleap\Glyph\GlyphFinder;
-use Tuleap\Request\CurrentPage;
-use Tuleap\Theme\BurningParrot\Navbar\MenuItem\Presenter as MenuItemPresenter;
-use Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Presenter as DropdownMenuItemPresenter;
-use Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Content\Projects\ProjectsPresenter;
-use Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Content\Projects\ProjectPresentersBuilder;
-use Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Content\Links\LinksPresenter;
 use Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Content\Links\LinkPresentersBuilder;
+use Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Content\Links\LinksPresenter;
+use Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Content\Projects\ProjectPresentersBuilder;
+use Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Content\Projects\ProjectsPresenter;
+use Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Presenter as DropdownMenuItemPresenter;
+use Tuleap\Theme\BurningParrot\Navbar\MenuItem\Presenter as MenuItemPresenter;
 use URLRedirect;
 
 class PresenterBuilder
@@ -141,18 +138,19 @@ class PresenterBuilder
 
     private function getGlobalMenuItems(PFUser $current_user)
     {
-        $global_menu_items = array();
+        if (! $current_user->isSuperUser()) {
+            return [];
+        }
 
-        if ($current_user->isSuperUser()) {
-            $global_menu_items[] = new MenuItemPresenter(
+        return [
+            new MenuItemPresenter(
                 $GLOBALS['Language']->getText('include_menu', 'site_admin'),
                 '/admin/',
                 'fa fa-cog',
-                'go-to-admin'
-            );
-        }
-
-        return $global_menu_items;
+                'go-to-admin',
+                ['data-test=platform-administration-link']
+            )
+        ];
     }
 
     private function displayNewAccountMenuItem()

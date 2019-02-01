@@ -49,7 +49,7 @@
                                 <label class="tlp-label" for="status">{{ status_label }}
                                     {{^ is_in_limbo }}<i class="fa fa-asterisk"></i>{{/ is_in_limbo }}
                                 </label>
-                                <select class="tlp-select" id="status" name="form_status">
+                                <select class="tlp-select" id="status" name="form_status" data-test="user-status">
                                     {{# status }}
                                         <option value="{{ key }}" {{# is_current }}selected{{/ is_current }}>
                                             {{ status }}
@@ -145,7 +145,7 @@
                 </section>
 
                 <section class="tlp-pane-section tlp-pane-section-submit">
-                    <button type="submit" class="tlp-button-primary">
+                    <button type="submit" class="tlp-button-primary" data-test="save-user">
                         <i class="fa fa-save tlp-button-icon"></i> {{ update_information }}
                     </button>
                 </section>

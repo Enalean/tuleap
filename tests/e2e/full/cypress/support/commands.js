@@ -36,6 +36,18 @@ Cypress.Commands.add("platformAdminLogin", () => {
     cy.get("#form_pw").type("welcome0{enter}");
 });
 
+Cypress.Commands.add("RestrictedMemberLogin", () => {
+    cy.visit("/");
+    cy.get("#form_loginname").type("RestrictedMember");
+    cy.get("#form_pw").type("Correct Horse Battery Staple{enter}");
+});
+
+Cypress.Commands.add("RestrictedRegularUserLogin", () => {
+    cy.visit("/");
+    cy.get("#form_loginname").type("RestrictedRegularUser");
+    cy.get("#form_pw").type("Correct Horse Battery Staple{enter}");
+});
+
 Cypress.Commands.add("userLogout", () => {
     cy.get("[data-test=user_logout]").click({ force: true });
 });
@@ -59,4 +71,25 @@ Cypress.Commands.add("visitProjectService", (project_unixname, service_label) =>
             cache_service_urls[project_unixname][service_label] = href;
             cy.visit(href);
         });
+});
+
+Cypress.Commands.add("updatePlatformVisibilityAndAllowRestricted", () => {
+    cy.platformAdminLogin();
+
+    cy.get("[data-test=platform-administration-link]").click();
+    cy.get("[data-test=global_access_right]").click({ force: true });
+
+    cy.get('[type="radio"]').check("restricted");
+
+    cy.get("[data-test=update_forge_access_button]").click({ force: true });
+
+    cy.get("[data-test=global-admin-search-user]").type("RestrictedMember{enter}");
+    cy.get("[data-test=user-status]").select("Restricted");
+    cy.get("[data-test=save-user]").click();
+
+    cy.get("[data-test=global-admin-search-user]").type("RestrictedRegularUser{enter}");
+    cy.get("[data-test=user-status]").select("Restricted");
+    cy.get("[data-test=save-user]").click();
+
+    cy.userLogout();
 });

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) Enalean, 2019. All Rights Reserved.
+  ~
+  ~ This file is a part of Tuleap.
+  ~
+  ~ Tuleap is free software; you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation; either version 2 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Tuleap is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<project access="public" description="my short description" full-name="Platform allows restricted" unix-name="platform-allows-restricted">
+    <long-description/>
+    <ugroups>
+        <ugroup name="project_members" description="">
+            <members>
+                <member format="username">ProjectAdministrator</member>
+                <member format="username">RestrictedMember</member>
+            </members>
+        </ugroup>
+        <ugroup name="project_admins" description="">
+            <members>
+                <member format="username">ProjectAdministrator</member>
+            </members>
+        </ugroup>
+    </ugroups>
+
+    <services>
+        <service shortname="summary" enabled="true"/>
+        <service shortname="tracker" enabled="true"/>
+        <service shortname="plugin_mediawiki" enabled="true"/>
+    </services>
+
+    <mediawiki pages-backup="wiki_pages.xml" language="en_US" files-folder-backup="files">
+        <read-access>
+            <ugroup>project_members</ugroup>
+        </read-access>
+        <write-access>
+            <ugroup>project_admins</ugroup>
+        </write-access>
+
+    </mediawiki>
+</project>
