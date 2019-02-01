@@ -7,14 +7,22 @@ VERSION=$(shell LANG=C cat VERSION)
 ifeq ($(RELEASE),)
 	RELEASE=1
 endif
-DIST=
+ifeq ($(OS),)
+	DIST=
+endif
+ifeq ($(OS),centos:6)
+	DIST=.el6
+endif
+ifeq ($(OS),centos:7)
+	DIST=.el7
+endif
 BASE_DIR=$(shell pwd)
 RPMBUILD=rpmbuild --define "_topdir $(RPM_TMP)" --define "dist $(DIST)"
 
 NAME_VERSION=$(PKG_NAME)-$(VERSION)
 
 all:
-	$(MAKE) DIST=$(shell rpm --eval '.el%{centos_ver}') rpm
+	$(MAKE) rpm
 
 rpm: $(RPM_TMP)/RPMS/noarch/$(NAME_VERSION)-$(RELEASE)$(DIST).noarch.rpm
 	@echo "Results: $^"
@@ -62,5 +70,5 @@ docker-run:
 	@[ -n "$(GID)" -a -n "$(UID)" ] || (echo "*** ERROR: UID or GID are missing" && false)
 	useradd -d /build -m build
 	cp -Rf /tuleap/ /build/src && cp -Rf /plugin/ /build/src/plugins/mytuleap_contact_support && chown -R build /build/src
-	su --login --command "make -C /build/src/plugins/mytuleap_contact_support all RELEASE=$(RELEASE)" build
+	su --login --command "make -C /build/src/plugins/mytuleap_contact_support all RELEASE=$(RELEASE) OS=$(OS)" build
 	install -o $(UID) -g $(GID) -m 0644 /build/rpmbuild/RPMS/noarch/*.rpm /output
