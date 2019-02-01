@@ -97,8 +97,8 @@ class MediawikiMLEBExtensionManager {
     {
         $projects = [];
 
-        foreach ($this->extension_dao->getProjectIdsEligibleToMLEBExtensionActivation() as $row) {
-            $projects[] = $this->project_manager->getProject($row['project_id']);
+        foreach ($this->extension_dao->getProjectIdsEligibleToMLEBExtensionActivation() as $project_id) {
+            $projects[] = $this->project_manager->getProject($project_id);
         }
 
         return $projects;
