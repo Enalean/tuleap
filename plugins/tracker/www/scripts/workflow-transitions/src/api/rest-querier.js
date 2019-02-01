@@ -34,7 +34,8 @@ export {
     getUserGroups,
     patchTransition,
     getPostActions,
-    putPostActions
+    putPostActions,
+    deactivateLegacyTransitions
 };
 
 const JSON_HEADERS = { "content-type": "application/json" };
@@ -139,4 +140,14 @@ function putPostActions(transition_id, post_actions) {
         headers: JSON_HEADERS,
         body: JSON.stringify({ post_actions })
     });
+}
+
+async function deactivateLegacyTransitions(tracker_id) {
+    const query = JSON.stringify({
+        workflow: {
+            is_legacy: false
+        }
+    });
+    const response = await patch(`/api/trackers/${tracker_id}?query=${encodeURIComponent(query)}`);
+    return response.json();
 }

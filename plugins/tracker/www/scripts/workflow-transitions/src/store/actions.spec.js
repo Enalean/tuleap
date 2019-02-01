@@ -24,7 +24,8 @@ import {
     resetWorkflowTransitions,
     createWorkflowTransitions,
     updateTransitionRulesEnforcement,
-    deleteTransition
+    deleteTransition,
+    deactivateLegacyTransitions
 } from "./actions.js";
 import {
     restore as restore$RestQuerier,
@@ -33,7 +34,8 @@ import {
     rewire$getTracker,
     rewire$resetWorkflowTransitions,
     rewire$updateTransitionRulesEnforcement,
-    rewire$deleteTransition
+    rewire$deleteTransition,
+    rewire$deactivateLegacyTransitions
 } from "../api/rest-querier.js";
 import {
     restore as restore$ExceptionHandler,
@@ -283,6 +285,36 @@ describe("Store actions:", () => {
                 expect(getErrorMessage).toHaveBeenCalledWith(exception));
             it("fails operation", () =>
                 expect(context.commit).toHaveBeenCalledWith("failOperation", "error message"));
+        });
+    });
+
+    describe("deactivateLegacyTransitions()", () => {
+        let restDeactivateLegacyTransitions;
+
+        beforeEach(() => {
+            context = {
+                ...context,
+                getters: { current_tracker_id: 1 }
+            };
+            restDeactivateLegacyTransitions = jasmine.createSpy("deactivateLegacyTransitions");
+            rewire$deactivateLegacyTransitions(restDeactivateLegacyTransitions);
+        });
+
+        describe("when deactivate legacy transitions is successful", () => {
+            const tracker = create("tracker");
+
+            beforeEach(async () => {
+                restDeactivateLegacyTransitions.and.returnValue(Promise.resolve(tracker));
+                await deactivateLegacyTransitions(context);
+            });
+
+            it("begins a new operation", () =>
+                expect(context.commit).toHaveBeenCalledWith("beginOperation"));
+            it("reset workflow transitions", () =>
+                expect(restDeactivateLegacyTransitions).toHaveBeenCalledWith(1));
+            it("update tracker in store", () =>
+                expect(context.commit).toHaveBeenCalledWith("saveCurrentTracker", tracker));
+            it("ends operation", () => expect(context.commit).toHaveBeenCalledWith("endOperation"));
         });
     });
 });

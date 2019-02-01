@@ -32,6 +32,13 @@ msgid "Are you sure to change transitions based field?"
 msgstr ""
 "Êtes-vous sûr de changer le champ sur lequel les transitions sont basées ?"
 
+msgid ""
+"By clicking on \"Fully deactivate the workflow\", the workflow's behaviour "
+"will be fixed."
+msgstr ""
+"En cliquant sur \"Désactiver complètement le workflow\", le comportement de "
+"votre workflow sera corrigé."
+
 msgid "Cancel"
 msgstr "Annuler"
 
@@ -88,6 +95,9 @@ msgstr "Champ(s) qui doivent être rempli(s)"
 
 msgid "Floats"
 msgstr "Flottants"
+
+msgid "Fully deactivate the workflow"
+msgstr "Désactiver complètement le workflow"
 
 msgid "Groups that may make the transition"
 msgstr "Groupes autorisés à effectuer la transition"
@@ -146,12 +156,12 @@ msgstr ""
 "irréversible."
 
 msgid ""
-"This workflow is legacy, which means that pre conditions and post actions "
+"This workflow has an incoherent behaviour: pre conditions and post actions "
 "defined in transitions are processed even if the workflow is not activated."
 msgstr ""
-"Ce workflow a un comportement incohérent. Ceci signifie que les conditions "
-"ainsi que les actions définies dans les transitions seront exécutées bien "
-"que le worflow soit désactivé."
+"Ce workflow a un comportement incohérent : les conditions ainsi que les "
+"actions définies dans les transitions sont exécutées bien qu'il soit "
+"désactivé."
 
 msgid "Tracker cannot be loaded"
 msgstr "Le tracker ne peut pas être chargé"

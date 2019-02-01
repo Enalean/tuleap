@@ -23,6 +23,11 @@ msgstr ""
 msgid "Are you sure to change transitions based field?"
 msgstr ""
 
+msgid ""
+"By clicking on \"Fully deactivate the workflow\", the workflow's behaviour "
+"will be fixed."
+msgstr ""
+
 msgid "Cancel"
 msgstr ""
 
@@ -80,6 +85,9 @@ msgstr ""
 msgid "Floats"
 msgstr ""
 
+msgid "Fully deactivate the workflow"
+msgstr ""
+
 msgid "Groups that may make the transition"
 msgstr ""
 
@@ -128,7 +136,7 @@ msgid "This action will delete all transition rules! It is irreversible."
 msgstr ""
 
 msgid ""
-"This workflow is legacy, which means that pre conditions and post actions "
+"This workflow has an incoherent behaviour: pre conditions and post actions "
 "defined in transitions are processed even if the workflow is not activated."
 msgstr ""
 

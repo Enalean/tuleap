@@ -23,7 +23,8 @@ import {
     getTracker,
     resetWorkflowTransitions as restResetWorkflowTransitions,
     updateTransitionRulesEnforcement as restUpdateTransitionRulesEnforcement,
-    deleteTransition as restDeleteTransition
+    deleteTransition as restDeleteTransition,
+    deactivateLegacyTransitions as restDeactivateLegacyTransitions
 } from "../api/rest-querier.js";
 import { getErrorMessage } from "./exception-handler.js";
 
@@ -111,6 +112,20 @@ export async function deleteTransition(context, transition) {
         context.commit("beginOperation");
         await restDeleteTransition(transition.id);
         context.commit("deleteTransition", transition);
+    } catch (exception) {
+        const error_message = await getErrorMessage(exception);
+        context.commit("failOperation", error_message);
+    } finally {
+        context.commit("endOperation");
+    }
+}
+
+export async function deactivateLegacyTransitions(context) {
+    try {
+        const tracker_id = context.getters.current_tracker_id;
+        context.commit("beginOperation");
+        const tracker_with_updated_workflow = await restDeactivateLegacyTransitions(tracker_id);
+        context.commit("saveCurrentTracker", tracker_with_updated_workflow);
     } catch (exception) {
         const error_message = await getErrorMessage(exception);
         context.commit("failOperation", error_message);

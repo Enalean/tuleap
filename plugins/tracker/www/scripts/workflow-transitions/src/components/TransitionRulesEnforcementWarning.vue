@@ -1,5 +1,21 @@
 <template>
     <div class="tracker-workflow-rules-enforcement-warning">
+        <div v-if="is_workflow_legacy === true"
+             class="tlp-alert-warning"
+        >
+            <p v-translate>
+                This workflow has an incoherent behaviour: pre conditions and post actions defined in transitions are processed even if the workflow is not activated.
+            </p>
+            <p v-translate>
+                By clicking on "Fully deactivate the workflow", the workflow's behaviour will be fixed.
+            </p>
+            <button class="tlp-button-warning"
+                    v-on:click="deactivateLegacyTransitions()"
+            >
+                <span v-translate>Fully deactivate the workflow</span>
+                <i v-if="is_loading" class="tlp-button-icon fa fa-spinner fa-spin"></i>
+            </button>
+        </div>
         <div v-if="are_transition_rules_enforced === true"
              key="enforcement_enabled"
              v-translate
@@ -16,13 +32,6 @@
         >
             Transition rules don't apply yet.
         </div>
-
-        <div v-if="is_workflow_legacy === true"
-             v-translate
-             class="tlp-alert-warning"
-        >
-            This workflow is legacy, which means that pre conditions and post actions defined in transitions are processed even if the workflow is not activated.
-        </div>
     </div>
 </template>
 <script>
@@ -32,6 +41,20 @@ export default {
     name: "TransitionRulesEnforcementWarning",
     computed: {
         ...mapGetters(["are_transition_rules_enforced", "is_workflow_legacy"])
+    },
+    data() {
+        return {
+            is_loading: false
+        };
+    },
+    methods: {
+        async deactivateLegacyTransitions() {
+            this.is_loading = true;
+
+            await this.$store.dispatch("deactivateLegacyTransitions");
+
+            this.is_loading = false;
+        }
     }
 };
 </script>
