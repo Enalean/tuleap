@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,6 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import '../../node_modules/flatpickr/dist/flatpickr.min';
-@import '../../node_modules/select2/dist/css/select2.min';
-@import './overrides/ckeditor-override';
+// stylelint-disable selector-class-pattern
+
+.cke_dialog,
+.cke_dialog_background_cover,
+.cke_panel {
+    z-index: 100051 !important;
+}
+
+// stylelint-enable selector-class-pattern
