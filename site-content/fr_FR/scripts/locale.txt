@@ -24,7 +24,3 @@ codendi.locales['search'] = {
 codendi.locales['account'] = {
     theme_variant_preview : 'Ceci est une prévisualisation. Vous devez sauvegarder vos préférences pour appliquer cette modification.'
 };
-
-codendi.locales['register'] = {
-    did_you_mean: 'Vouliez-vous dire <a class="suggested-email">#{full}</a> ?'
-};
