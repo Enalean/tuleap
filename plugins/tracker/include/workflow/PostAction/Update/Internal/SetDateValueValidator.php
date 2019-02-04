@@ -31,13 +31,21 @@ class SetDateValueValidator
      */
     private $ids_validator;
     /**
+     * @var PostActionFieldIdValidator
+     */
+    private $field_ids_validator;
+    /**
      * @var \Tracker_FormElementFactory
      */
     private $form_element_factory;
 
-    public function __construct(PostActionIdValidator $ids_validator, \Tracker_FormElementFactory $form_element_factory)
-    {
+    public function __construct(
+        PostActionIdValidator $ids_validator,
+        PostActionFieldIdValidator $field_ids_validator,
+        \Tracker_FormElementFactory $form_element_factory
+    ) {
         $this->ids_validator        = $ids_validator;
+        $this->field_ids_validator  = $field_ids_validator;
         $this->form_element_factory = $form_element_factory;
     }
 
@@ -57,14 +65,9 @@ class SetDateValueValidator
             );
         }
 
-        $date_field_ids = $this->extractDateFieldIds($tracker);
-        $field_ids      = [];
-        foreach ($set_date_values as $set_date_value) {
-            $field_ids[] = $set_date_value->getFieldId();
-            $this->validateSetDateValue($set_date_value, $date_field_ids);
-        }
-
-        if ($this->hasDuplicateFieldIds(...$field_ids)) {
+        try {
+            $this->field_ids_validator->validate(...$set_date_values);
+        } catch (DuplicateFieldIdException $e) {
             throw new InvalidPostActionException(
                 dgettext(
                     'tuleap-tracker',
@@ -72,12 +75,13 @@ class SetDateValueValidator
                 )
             );
         }
+
+        $date_field_ids = $this->extractDateFieldIds($tracker);
+        foreach ($set_date_values as $set_date_value) {
+            $this->validateSetDateValue($set_date_value, $date_field_ids);
+        }
     }
 
-    private function hasDuplicateFieldIds(int ...$ids): bool
-    {
-        return count($ids) !== count(array_unique($ids));
-    }
 
     /**
      * @throws InvalidPostActionException

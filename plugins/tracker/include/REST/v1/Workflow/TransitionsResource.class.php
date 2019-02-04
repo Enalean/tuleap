@@ -49,6 +49,7 @@ use Tuleap\Tracker\Workflow\PostAction\Update\Internal\CIBuildRepository;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\CIBuildUpdater;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\CIBuildValidator;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\InvalidPostActionException;
+use Tuleap\Tracker\Workflow\PostAction\Update\Internal\PostActionFieldIdValidator;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\PostActionIdValidator;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\SetDateValueRepository;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\SetDateValueUpdater;
@@ -544,7 +545,9 @@ class TransitionsResource extends AuthenticatedResource
 
     private function getPostActionCollectionUpdater(): PostActionCollectionUpdater
     {
-        $ids_validator = new PostActionIdValidator();
+        $ids_validator       = new PostActionIdValidator();
+        $field_ids_validator = new PostActionFieldIdValidator();
+
         return new PostActionCollectionUpdater(
             new TransactionExecutor(
                 new DataAccessObject()
@@ -560,7 +563,7 @@ class TransitionsResource extends AuthenticatedResource
                     new Transition_PostAction_Field_DateDao(),
                     new DataAccessObject()
                 ),
-                new SetDateValueValidator($ids_validator, \Tracker_FormElementFactory::instance())
+                new SetDateValueValidator($ids_validator, $field_ids_validator, \Tracker_FormElementFactory::instance())
             ),
             new SetIntValueUpdater(
                 new SetintValueRepository(

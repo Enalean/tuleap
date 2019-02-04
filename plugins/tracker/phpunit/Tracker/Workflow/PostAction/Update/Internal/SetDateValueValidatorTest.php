@@ -34,6 +34,8 @@ class SetDateValueValidatorTest extends TestCase
     private $set_date_value_validator;
     /** @var PostActionIdValidator | Mockery\MockInterface */
     private $ids_validator;
+    /** @var PostActionFieldIdValidator | Mockery\MockInterface */
+    private $field_id_validator;
     /** @var \Tracker_FormElementFactory | Mockery\MockInterface */
     private $form_element_factory;
 
@@ -41,9 +43,15 @@ class SetDateValueValidatorTest extends TestCase
     {
         $this->ids_validator = Mockery::mock(PostActionIdValidator::class);
         $this->ids_validator->shouldReceive('validate')->byDefault();
+        $this->field_id_validator = Mockery::mock(PostActionFieldIdValidator::class);
+        $this->field_id_validator->shouldReceive('validate')->byDefault();
 
-        $this->form_element_factory     = Mockery::mock(\Tracker_FormElementFactory::class);
-        $this->set_date_value_validator = new SetDateValueValidator($this->ids_validator, $this->form_element_factory);
+        $this->form_element_factory = Mockery::mock(\Tracker_FormElementFactory::class);
+        $this->set_date_value_validator = new SetDateValueValidator(
+            $this->ids_validator,
+            $this->field_id_validator,
+            $this->form_element_factory
+        );
     }
 
     public function testValidateDoesNotThrowWhenValid()
@@ -71,38 +79,33 @@ class SetDateValueValidatorTest extends TestCase
     }
 
     /**
-     * @@expectedException \Tuleap\Tracker\Workflow\PostAction\Update\Internal\InvalidPostActionException
+     * @expectedException \Tuleap\Tracker\Workflow\PostAction\Update\Internal\InvalidPostActionException
      */
     public function testValidateWrapsDuplicatePostActionException()
     {
-        $ci_build = new SetDateValue(null, 1, 0);
+        $set_date_value = new SetDateValue(null, 1, 0);
         $this->ids_validator
             ->shouldReceive('validate')
             ->andThrow(new DuplicatePostActionException());
 
-        $this->set_date_value_validator->validate(Mockery::mock(\Tracker::class), $ci_build);
+        $this->set_date_value_validator->validate(Mockery::mock(\Tracker::class), $set_date_value);
     }
 
     /**
      * @expectedException \Tuleap\Tracker\Workflow\PostAction\Update\Internal\InvalidPostActionException
      */
-    public function testValidateThrowsWhenDuplicateFieldIds()
+    public function testValidateWrapsDuplicateFieldIdException()
     {
-        $date_field = Mockery::mock(\Tracker_FormElement_Field_Date::class)
-            ->shouldReceive('getId')
-            ->andReturn(3)
-            ->getMock();
-        $this->form_element_factory
-            ->shouldReceive('getUsedCustomDateFields')
-            ->andReturn([$date_field]);
-
-        $first_identical_field_id  = new SetDateValue(null, 3, 0);
-        $second_identical_field_id = new SetDateValue(null, 3, 1);
+        $first_same_field_id = new SetDateValue(null, 1, 0);
+        $second_same_field_id = new SetDateValue(null, 1, 2);
+        $this->field_id_validator->shouldReceive('validate')
+            ->with($first_same_field_id, $second_same_field_id)
+            ->andThrow(new DuplicateFieldIdException());
 
         $this->set_date_value_validator->validate(
             Mockery::mock(\Tracker::class),
-            $first_identical_field_id,
-            $second_identical_field_id
+            $first_same_field_id,
+            $second_same_field_id
         );
     }
 

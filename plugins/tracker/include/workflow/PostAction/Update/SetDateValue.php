@@ -21,9 +21,9 @@
 
 namespace Tuleap\Tracker\Workflow\PostAction\Update\Internal;
 
-use Tuleap\Tracker\Workflow\Update\PostAction;
+use Tuleap\Tracker\Workflow\PostAction\Update\SetFieldValue;
 
-final class SetDateValue implements PostAction
+final class SetDateValue implements SetFieldValue
 {
     /**
      * @var int|null $id
