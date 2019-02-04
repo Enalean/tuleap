@@ -217,6 +217,14 @@ msgstr ""
 msgid "Categories"
 msgstr ""
 
+msgid "Categories successfully updated."
+msgstr ""
+
+msgid ""
+"Categorizing your project will help potential developers and users to find "
+"your project and engage."
+msgstr ""
+
 msgid "Change email address"
 msgstr ""
 
@@ -226,6 +234,9 @@ msgid ""
 msgstr ""
 
 msgid "Child projects"
+msgstr ""
+
+msgid "Choose a category..."
 msgstr ""
 
 msgid "Clear history"
@@ -819,6 +830,9 @@ msgid ""
 "Project administrators group first."
 msgstr ""
 
+msgid "Project categories"
+msgstr ""
+
 msgid "Project creation moderation"
 msgstr ""
 
@@ -916,6 +930,9 @@ msgid "SOAP API"
 msgstr ""
 
 msgid "SVN"
+msgstr ""
+
+msgid "Save categories"
 msgstr ""
 
 msgid "Save delegated permissions"
@@ -1364,6 +1381,11 @@ msgstr ""
 msgid "You are not the user who asked for email change"
 msgstr ""
 
+msgid "You can choose up to %s category"
+msgid_plural "You can choose up to %s categories"
+msgstr[0] ""
+msgstr[1] ""
+
 msgid ""
 "You can configure some pages to be accessible by anyone, even if the "
 "platform would forbid it."
@@ -1411,6 +1433,9 @@ msgid "You cannot access to this page."
 msgstr ""
 
 msgid "You don't have any dashboards."
+msgstr ""
+
+msgid "You don't have permission to access administration of this project."
 msgstr ""
 
 msgid "You don't have permissions to see user groups."
@@ -1479,6 +1504,9 @@ msgid "Your history is empty"
 msgstr ""
 
 msgid "Your platform does not allow restricted users."
+msgstr ""
+
+msgid "Your request is invalid"
 msgstr ""
 
 #, php-format

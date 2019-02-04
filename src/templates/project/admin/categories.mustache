@@ -1,0 +1,50 @@
+<div class="tlp-framed-horizontally">
+    <section class="tlp-pane">
+        <div class="tlp-pane-container">
+            <div class="tlp-pane-header">
+                <h1 class="tlp-pane-title">{{# gettext }}Project categories{{/ gettext }}</h1>
+            </div>
+            <form method="POST" class="tlp-pane-section">
+                {{# csrf }}{{> csrf_token_input }}{{/csrf}}
+                <p>{{# gettext }}Categorizing your project will help potential developers and users to find your project and engage.{{/ gettext }}</p>
+                {{# categories }}
+                    <div class="tlp-form-element project-admin-category">
+                        <label class="tlp-label" for="category-select-{{ id }}">
+                            {{ label }}
+                            {{# is_mandatory }}<i class="fa fa-asterisk"></i>{{/ is_mandatory }}
+                        </label>
+                        <select class="tlp-select project-admin-category-select"
+                                id="category-select-{{ id }}"
+                                name="categories[{{ id }}][]"
+                                style="width:100%"
+                                multiple
+                                {{# is_mandatory }}required{{/ is_mandatory }}
+                                data-placeholder="{{# gettext }}Choose a category...{{/ gettext }}"
+                                data-maximum-selection-length="{{ maximum_selection_length }}"
+                        >
+                            {{# values }}
+                                <option {{# is_selected }}selected{{/ is_selected }} data-fullpath="{{ fullpath }}" value="{{ id }}">
+                                    {{ label }}
+                                </option>
+                            {{/values}}
+                        </select>
+                        <p class="tlp-text-info">
+                            {{# ngettext }}
+                                You can choose up to %s category |
+                                You can choose up to %s categories |
+                                {{ maximum_selection_length }} |
+                                {{ maximum_selection_length }}
+                            {{/ ngettext }}
+                        </p>
+                    </div>
+                {{/ categories }}
+                <div class="tlp-pane-section-submit">
+                    <button type="submit" class="tlp-button-primary">
+                        <i class="fa fa-save tlp-button-icon"></i>
+                        {{# gettext }}Save categories{{/ gettext }}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </section>
+</div>

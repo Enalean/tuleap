@@ -56,6 +56,32 @@ class TroveCatDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
+    public function getTopCategories()
+    {
+        $sql = 'SELECT trove_cat_id, fullname, mandatory
+                FROM trove_cat
+                WHERE parent = 0
+                ORDER BY fullname';
+
+        return $this->retrieve($sql);
+    }
+
+    public function getCategoriesUnderGivenRootForProject($root_id, $project_id)
+    {
+        $root_id    = $this->da->escapeInt($root_id);
+        $project_id = $this->da->escapeInt($project_id);
+
+        $sql = "SELECT trove_cat.trove_cat_id, trove_cat.fullpath, trove_cat.fullname, IF(trove_group_link.trove_cat_id IS NULL, 0, 1) as is_selected
+                FROM trove_cat LEFT JOIN trove_group_link ON (
+                  trove_cat.trove_cat_id = trove_group_link.trove_cat_id
+                  AND trove_group_link.group_id = $project_id
+                )
+                WHERE trove_cat.root_parent = $root_id
+                ORDER BY trove_cat.fullname";
+
+        return $this->retrieve($sql);
+    }
+
     public function getCategoryParent($node_id)
     {
         $node_id = $this->da->escapeInt($node_id);
@@ -230,5 +256,17 @@ class TroveCatDao extends DataAccessObject
                 WHERE trove_cat.trove_cat_id = $trove_cat_id";
 
         return $this->update($sql);
+    }
+
+    public function removeProjectTopCategoryValue($project_id, $trove_cat_root_id)
+    {
+        $project_id        = $this->da->escapeInt($project_id);
+        $trove_cat_root_id = $this->da->escapeInt($trove_cat_root_id);
+
+        $sql = "DELETE FROM trove_group_link
+                WHERE group_id = $project_id
+                AND trove_cat_root= $trove_cat_root_id";
+
+        $this->update($sql);
     }
 }
