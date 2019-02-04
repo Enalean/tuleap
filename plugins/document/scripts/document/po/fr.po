@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Poedit 2.2.1\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 msgid ""
@@ -178,6 +178,13 @@ msgstr "Le dossier a été créé ci dessous."
 
 msgid "There is no upload in progress"
 msgstr "Il n'y a aucun téléversement en cours"
+
+msgid ""
+"This feature \"Upload a new file version\" is under construction. It is not "
+"ready yet to be used."
+msgstr ""
+"Cette fonctionnalité \"Téléverser une nouvelle version  de fichier\" est en "
+"cours de réalisation. Elle n'est pas encore prête pour l'utilisation."
 
 msgid "This folder is empty"
 msgstr "Ce dossier est vide"

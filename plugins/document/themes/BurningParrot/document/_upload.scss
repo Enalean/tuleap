@@ -64,11 +64,12 @@ $progress-bar-background-color: $tlp-ui-border-normal;
 }
 
 /* stylelint-disable selector-no-qualifying-type */
-.tlp-table > tbody > tr.document-tree-item-folder-highlighted > td {
+.tlp-table > tbody > tr.document-tree-item-highlighted > td {
     background: $tlp-theme-color;
     color: $tlp-ui-white;
 
-    .document-folder-toggle {
+    .document-folder-toggle,
+    .document-folder-content-fake-caret {
         visibility: hidden;
     }
 
@@ -79,6 +80,10 @@ $progress-bar-background-color: $tlp-ui-border-normal;
 
     .document-folder-content-icon::before {
         content: '\f064'; //fa-mail-forward
+    }
+
+    .fa {
+        color: $tlp-ui-white;
     }
 
     .document-badge-avatar-username {
