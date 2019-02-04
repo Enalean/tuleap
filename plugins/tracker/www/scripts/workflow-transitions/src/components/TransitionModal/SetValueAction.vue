@@ -172,8 +172,8 @@ export default {
                 return this.post_action.value;
             },
             set(value) {
-                this.$store.commit("transitionModal/updatePostAction", {
-                    ...this.post_action,
+                this.$store.commit("transitionModal/updateSetValuePostActionValue", {
+                    post_action: this.post_action,
                     value
                 });
             }

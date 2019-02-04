@@ -168,19 +168,36 @@ describe("Transition mutations", () => {
         });
     });
 
-    describe("updatePostAction", () => {
-        const old_action = create("post_action", "presented", { unique_id: "post_action_id" });
-        const new_action = create("post_action", "presented", { unique_id: "post_action_id" });
+    describe("updateSetValuePostActionValue", () => {
+        const post_action = create("post_action", "presented", { value: 1 });
+        const unique_id = post_action.unique_id;
 
         beforeEach(() => {
-            state = {
-                post_actions_by_unique_id: { "old-post-action": old_action }
-            };
-            mutations.updatePostAction(state, new_action);
+            state = { post_actions_by_unique_id: {} };
+            state.post_actions_by_unique_id[unique_id] = post_action;
+            mutations.updateSetValuePostActionValue(state, { post_action, value: 22 });
         });
 
-        it("updates state with given post action", () => {
-            expect(state.post_actions_by_unique_id.post_action_id).toBe(new_action);
+        it("updates state's post action with given value", () => {
+            expect(state.post_actions_by_unique_id[unique_id].value).toBe(22);
+        });
+    });
+
+    describe("updateRunJobPostActionJobUrl", () => {
+        const post_action = create("post_action", "presented", { job_url: "http://old.test" });
+        const unique_id = post_action.unique_id;
+
+        beforeEach(() => {
+            state = { post_actions_by_unique_id: {} };
+            state.post_actions_by_unique_id[unique_id] = post_action;
+            mutations.updateRunJobPostActionJobUrl(state, {
+                post_action,
+                job_url: "http://new.test"
+            });
+        });
+
+        it("updates state's post action with given job_url", () => {
+            expect(state.post_actions_by_unique_id[unique_id].job_url).toBe("http://new.test");
         });
     });
 
