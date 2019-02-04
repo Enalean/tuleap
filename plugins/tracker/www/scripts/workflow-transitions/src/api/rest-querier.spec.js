@@ -31,7 +31,7 @@ import {
     putPostActions,
     deactivateLegacyTransitions
 } from "../api/rest-querier.js";
-import { create } from "../support/factories.js";
+import { create, createList } from "../support/factories.js";
 
 describe("Rest queries:", () => {
     const json_headers = {
@@ -96,18 +96,21 @@ describe("Rest queries:", () => {
             );
             rewire$put(put);
         });
-        describe("putPostActions()", () => {
-            const actions = [{ id: 1 }, { id: 2 }];
+        fdescribe("putPostActions()", () => {
+            const actions = createList("post_action", 2, "presented");
 
-            beforeEach(async () => {
-                await putPostActions(9, actions);
+            beforeEach(() => putPostActions(9, actions));
+
+            it("calls PUT actions with json headers", () =>
+                expect(put).toHaveBeenCalledWith(
+                    "/api/tracker_workflow_transitions/9/actions",
+                    jasmine.objectContaining({ headers: json_headers })
+                ));
+
+            it("does not send unique_ids", () => {
+                let serialized_post_actions = put.calls.mostRecent().args[1].body;
+                expect(serialized_post_actions).not.toMatch(/"unique_id":/);
             });
-
-            it("calls PUT actions", () =>
-                expect(put).toHaveBeenCalledWith("/api/tracker_workflow_transitions/9/actions", {
-                    headers: json_headers,
-                    body: '{"post_actions":[{"id":1},{"id":2}]}'
-                }));
         });
     });
 

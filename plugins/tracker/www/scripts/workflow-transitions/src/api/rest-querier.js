@@ -135,7 +135,11 @@ async function getPostActions(transition_id) {
     return response.json();
 }
 
-function putPostActions(transition_id, post_actions) {
+function putPostActions(transition_id, presented_post_actions) {
+    const post_actions = presented_post_actions.map(presented_post_action => ({
+        ...presented_post_action,
+        unique_id: undefined
+    }));
     return put(`/api/tracker_workflow_transitions/${transition_id}/actions`, {
         headers: JSON_HEADERS,
         body: JSON.stringify({ post_actions })
