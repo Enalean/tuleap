@@ -30,13 +30,12 @@ $current_user = $request->getCurrentUser();
 
 $trove_cat_dao = new TroveCatDao();
 
-// assign default. 18 is 'topic'
-$form_cat = 18;
-$request  = HTTPRequest::instance();
+$request = HTTPRequest::instance();
 if ($request->exist('form_cat')) {
     $form_cat = intval($request->get('form_cat'));
-} elseif (isset($GLOBALS['sys_default_trove_cat'])) {
-    $form_cat = $GLOBALS['sys_default_trove_cat'];
+} else {
+    $res_rootcat = db_query("SELECT trove_cat_id FROM trove_cat WHERE parent=0 ORDER BY fullname LIMIT 1");
+    $form_cat = db_fetch_array($res_rootcat)['trove_cat_id'];
 }
 
 $special_cat = $request->getValidated('special_cat');
