@@ -21,17 +21,19 @@
 
 namespace Tuleap\Tracker\Config;
 
+use Tuleap\Layout\BaseLayout;
+use Tuleap\Request\DispatchableWithBurningParrot;
+use Tuleap\Request\DispatchableWithRequestNoAuthz;
 use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfigController;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigController;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureConfigController;
 use CSRFSynchronizerToken;
-use Codendi_Request;
 use Response;
 use PFUser;
 use Feedback;
 use Tuleap\Tracker\Report\TrackerReportConfigController;
 
-class ConfigRouter
+class ConfigController implements DispatchableWithRequestNoAuthz, DispatchableWithBurningParrot
 {
 
     /** @var NatureConfigController */
@@ -67,8 +69,9 @@ class ConfigRouter
         $this->deletion_controller      = $deletion_controller;
     }
 
-    public function process(Codendi_Request $request, Response $response, PFUser $user)
+    public function process(\HTTPRequest $request, BaseLayout $response, array $variables)
     {
+        $user = $request->getCurrentUser();
         $this->checkUserIsSiteadmin($user, $response);
 
         switch ($request->get('action')) {
@@ -119,7 +122,6 @@ class ConfigRouter
             default:
                 $this->mailgateway_controller->index($this->csrf, $response);
         }
-
     }
 
     private function checkUserIsSiteadmin(PFUser $user, Response $response)

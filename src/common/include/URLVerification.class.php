@@ -70,7 +70,7 @@ class URLVerification {
      *
      * @return URL
      */
-    function getUrl()
+    protected function getUrl()
     {
         return new URL();
     }
