@@ -115,6 +115,7 @@ class TrackerXmlImportTest extends TestCase
                 unlink($folder->getPathname());
             }
         }
+        rmdir($this->temporary_directory);
     }
 
     public function testItShouldRaiseExceptionWithEmptyTrackerDescription()

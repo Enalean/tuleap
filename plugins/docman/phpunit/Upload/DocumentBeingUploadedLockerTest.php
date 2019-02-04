@@ -58,6 +58,7 @@ class DocumentBeingUploadedLockerTest extends TestCase
                 unlink($folder->getPathname());
             }
         }
+        rmdir($this->tmp_dir);
     }
 
     public function testALockCanOnlyBeAcquiredOnce() : void
