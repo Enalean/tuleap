@@ -19,8 +19,8 @@
   -->
 
 <template>
-    <div>
-        <div class="tlp-form-element">
+    <post-action v-bind:post-action="post_action">
+        <div class="tracker-workflow-transition-modal-action-details-element tlp-form-element">
             <label
                 v-bind:for="field_id_input_id"
                 class="tlp-label"
@@ -61,7 +61,7 @@
             </select>
         </div>
 
-        <div class="tlp-form-element">
+        <div class="tracker-workflow-transition-modal-action-details-element tlp-form-element">
             <label
                 v-bind:for="value_input_id"
                 class="tlp-label"
@@ -76,12 +76,13 @@
                 v-bind:disabled="is_modal_save_running"
             />
         </div>
-    </div>
+    </post-action>
 </template>
 
 <script>
 import { DATE_FIELD, INT_FIELD, FLOAT_FIELD } from "../../../../constants/fields-constants.js";
 import { DATE_FIELD_VALUE } from "../../constants/workflow-constants.js";
+import PostAction from "./PostAction.vue";
 import DateInput from "./DateInput.vue";
 import FloatInput from "./FloatInput.vue";
 import IntInput from "./IntInput.vue";
@@ -92,10 +93,10 @@ import { mapState } from "vuex";
 
 export default {
     name: "SetValueAction",
-    components: { DateInput, FloatInput, IntInput },
+    components: { PostAction, DateInput, FloatInput, IntInput },
     props: {
-        actionId: {
-            type: String,
+        post_action: {
+            type: Object,
             mandatory: true
         }
     },
@@ -106,11 +107,7 @@ export default {
     },
     computed: {
         ...mapState(["current_tracker"]),
-        ...mapState("transitionModal", [
-            "current_transition",
-            "post_actions_by_unique_id",
-            "is_modal_save_running"
-        ]),
+        ...mapState("transitionModal", ["current_transition", "is_modal_save_running"]),
         available_fields() {
             // Side effect is prevented with array duplication before sort
             return [...this.current_tracker.fields].sort((field1, field2) =>
@@ -133,14 +130,11 @@ export default {
                 }
             ].map(group => ({ ...group, fields: this.available_fields_of_type(group.type) }));
         },
-        post_action() {
-            return this.post_actions_by_unique_id[this.actionId];
-        },
         field_id_input_id() {
-            return `post-action-${this.actionId}-field-id`;
+            return `post-action-${this.post_action.unique_id}-field-id`;
         },
         value_input_id() {
-            return `post-action-${this.actionId}-value`;
+            return `post-action-${this.post_action.unique_id}-value`;
         },
         value_input_component() {
             if (this.post_action.field_type === DATE_FIELD) {

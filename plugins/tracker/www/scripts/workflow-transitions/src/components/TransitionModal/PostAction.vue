@@ -26,8 +26,8 @@
                 v-model="post_action_type"
                 v-bind:disabled="is_modal_save_running"
             >
-                <option v-bind:value="RUN_JOB_ACTION_TYPE" v-translate>Launch a CI job</option>
-                <option v-bind:value="SET_FIELD_VALUE_ACTION_TYPE" v-translate>Change the value of a field</option>
+                <option v-bind:value="POST_ACTION_TYPE.RUN_JOB" v-translate>Launch a CI job</option>
+                <option v-bind:value="POST_ACTION_TYPE.SET_FIELD_VALUE" v-translate>Change the value of a field</option>
             </select>
             <a
                 href="javascript:;"
@@ -39,29 +39,19 @@
             </a>
         </div>
         <div class="tracker-workflow-transition-modal-action-details">
-            <run-job-action
-                v-if="postAction.type === RUN_JOB_ACTION_TYPE"
-                v-bind:action-id="postAction.unique_id"
-            />
-            <set-value-action
-                v-else-if="postAction.type === SET_FIELD_VALUE_ACTION_TYPE"
-                v-bind:action-id="postAction.unique_id"
-            />
+            <slot/>
         </div>
     </div>
 </template>
 <script>
-import RunJobAction from "./RunJobAction.vue";
-import SetValueAction from "./SetValueAction.vue";
+import { POST_ACTION_TYPE } from "../../constants/workflow-constants.js";
 import { mapState } from "vuex";
 
 export default {
     name: "PostAction",
-    components: { RunJobAction, SetValueAction },
     data() {
         return {
-            RUN_JOB_ACTION_TYPE: "run_job",
-            SET_FIELD_VALUE_ACTION_TYPE: "set_field_value"
+            POST_ACTION_TYPE
         };
     },
     props: {

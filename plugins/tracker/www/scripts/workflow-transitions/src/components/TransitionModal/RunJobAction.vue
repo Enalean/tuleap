@@ -19,63 +19,60 @@
   -->
 
 <template>
-    <div class="tlp-form-element">
-        <label v-bind:for="job_url_input_id" class="tlp-label" v-translate>Job url</label>
-        <input
-            v-bind:id="job_url_input_id"
-            type="text"
-            class="tlp-input"
-            placeholder="https://www.example.com"
-            v-model="job_url"
-            data-test-type="job-url"
-            required
-            v-bind:disabled="is_modal_save_running"
-        >
-        <p class="tlp-text-info" v-translate>
-            Tuleap will automatically pass the following parameters to the job:
-        </p>
-        <ul class="tlp-text-info">
-            <li v-translate>
-                userId: identifier of Tuleap user who made the transition (integer)
-            </li>
-            <li v-translate="{ project_id: current_tracker.project.id }">
-                projectId: identifier of the current project (ie. %{ project_id }) (integer)
-            </li>
-            <li v-translate="{ tracker_id: current_tracker.id}">
-                trackerId: identifier of the current tracker (ie. %{ tracker_id }) (integer)
-            </li>
-            <li v-translate>
-                artifactId: identifier of the artifact where the transition happens (integer)
-            </li>
-            <li v-translate="{ transition_id: current_transition.id }">
-                triggerFieldValue: value of current transition target (ie. %{ transition_id }) (string)
-            </li>
-        </ul>
-    </div>
+    <post-action v-bind:post-action="post_action">
+        <div class="tracker-workflow-transition-modal-action-details-element tlp-form-element">
+            <label v-bind:for="job_url_input_id" class="tlp-label" v-translate>Job url</label>
+            <input
+                v-bind:id="job_url_input_id"
+                type="text"
+                class="tlp-input"
+                placeholder="https://www.example.com"
+                v-model="job_url"
+                data-test-type="job-url"
+                required
+                v-bind:disabled="is_modal_save_running"
+            >
+            <p class="tlp-text-info" v-translate>
+                Tuleap will automatically pass the following parameters to the job:
+            </p>
+            <ul class="tlp-text-info">
+                <li v-translate>
+                    userId: identifier of Tuleap user who made the transition (integer)
+                </li>
+                <li v-translate="{ project_id: current_tracker.project.id }">
+                    projectId: identifier of the current project (ie. %{ project_id }) (integer)
+                </li>
+                <li v-translate="{ tracker_id: current_tracker.id}">
+                    trackerId: identifier of the current tracker (ie. %{ tracker_id }) (integer)
+                </li>
+                <li v-translate>
+                    artifactId: identifier of the artifact where the transition happens (integer)
+                </li>
+                <li v-translate="{ transition_id: current_transition.id }">
+                    triggerFieldValue: value of current transition target (ie. %{ transition_id }) (string)
+                </li>
+            </ul>
+        </div>
+    </post-action>
 </template>
 <script>
+import PostAction from "./PostAction.vue";
 import { mapState } from "vuex";
 
 export default {
     name: "RunJobAction",
+    components: { PostAction },
     props: {
-        actionId: {
-            type: String,
+        post_action: {
+            type: Object,
             mandatory: true
         }
     },
     computed: {
         ...mapState(["current_tracker"]),
-        ...mapState("transitionModal", [
-            "current_transition",
-            "post_actions_by_unique_id",
-            "is_modal_save_running"
-        ]),
+        ...mapState("transitionModal", ["current_transition", "is_modal_save_running"]),
         job_url_input_id() {
-            return `post-action-${this.actionId}-job-url`;
-        },
-        post_action() {
-            return this.post_actions_by_unique_id[this.actionId];
+            return `post-action-${this.post_action.unique_id}-job-url`;
         },
         job_url: {
             get() {

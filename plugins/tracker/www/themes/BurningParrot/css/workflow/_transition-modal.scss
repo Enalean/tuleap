@@ -33,8 +33,17 @@
 }
 
 .tracker-workflow-transition-modal-action-details {
+    display: flex;
     padding: $tlp-spacing;
     border-top: 1px solid $tlp-ui-border-light;
+}
+
+.tracker-workflow-transition-modal-action-details-element {
+    flex-grow: 1;
+
+    &:not(:first-child) {
+        margin-left: $tlp-double-spacing;
+    }
 }
 
 .tracker-workflow-transition-modal-action-remove {

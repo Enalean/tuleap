@@ -27,7 +27,7 @@ import { create } from "../../support/factories";
 
 describe("RunJobAction", () => {
     let store;
-    const current_action = create("post_action", "presented", { job_url: "http://my-url.test" });
+    const post_action = create("post_action", "presented", { job_url: "http://my-url.test" });
     let wrapper;
 
     beforeEach(() => {
@@ -36,7 +36,6 @@ describe("RunJobAction", () => {
                 current_tracker: create("tracker", { project: { id: 1 } }),
                 transitionModal: {
                     current_transition: create("transition"),
-                    post_actions_by_unique_id: { "1": current_action },
                     is_modal_save_running: false
                 }
             }
@@ -46,7 +45,7 @@ describe("RunJobAction", () => {
 
         wrapper = shallowMount(RunJobAction, {
             mocks: { $store: store },
-            propsData: { actionId: "1" },
+            propsData: { post_action },
             localVue
         });
     });
@@ -66,7 +65,7 @@ describe("RunJobAction", () => {
 
         it("updates store", () => {
             expect(store.commit).toHaveBeenCalledWith("transitionModal/updatePostAction", {
-                ...current_action,
+                ...post_action,
                 job_url: "http://new-url.test"
             });
         });
