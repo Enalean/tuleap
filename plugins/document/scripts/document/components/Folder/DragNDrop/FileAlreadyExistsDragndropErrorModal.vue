@@ -20,7 +20,7 @@
 <template>
     <error-modal v-on:error-modal-hidden="bubbleErrorModalHidden">
         <translate tag="p">
-            A document already exists with the same title.
+            A document already exists with the same title. However you can create a new version of this document by dropping the item on the file you want to update.
         </translate>
     </error-modal>
 </template>
