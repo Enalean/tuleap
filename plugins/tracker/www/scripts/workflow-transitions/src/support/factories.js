@@ -146,6 +146,6 @@ export function create(factory_name, ...trait_or_attributes) {
     return evaluateAttributesAsFunction(Object.assign({}, ...attributes));
 }
 
-export function createList(factory, count, attributes) {
-    return Array.from(Array(count)).map(() => create(factory, attributes));
+export function createList(factory, count, trait_or_attributes) {
+    return Array.from(Array(count)).map(() => create(factory, trait_or_attributes));
 }
