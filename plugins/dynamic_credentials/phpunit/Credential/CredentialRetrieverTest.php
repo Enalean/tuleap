@@ -49,9 +49,6 @@ class CredentialRetrieverTest extends TestCase
         $this->assertEquals('identifier', $credential->getIdentifier());
     }
 
-    /**
-     * @expectedException \Tuleap\DynamicCredentials\Credential\CredentialInvalidUsernameException
-     */
     public function testAuthenticationRejectsWronglyFormattedUsername()
     {
         $dao                  = Mockery::mock(CredentialDAO::class);
@@ -61,12 +58,11 @@ class CredentialRetrieverTest extends TestCase
 
         $credential_retriever = new CredentialRetriever($dao, $password_handler, $identifier_extractor);
 
+        $this->expectException(CredentialInvalidUsernameException::class);
+
         $credential_retriever->authenticate('username', 'password');
     }
 
-    /**
-     * @expectedException \Tuleap\DynamicCredentials\Credential\CredentialNotFoundException
-     */
     public function testAuthenticationRejectsUnknownCredential()
     {
         $dao = Mockery::mock(CredentialDAO::class);
@@ -77,12 +73,11 @@ class CredentialRetrieverTest extends TestCase
 
         $credential_retriever = new CredentialRetriever($dao, $password_handler, $identifier_extractor);
 
+        $this->expectException(CredentialNotFoundException::class);
+
         $credential_retriever->authenticate('username', 'password');
     }
 
-    /**
-     * @expectedException \Tuleap\DynamicCredentials\Credential\CredentialAuthenticationException
-     */
     public function testAuthenticationRejectsInvalidPassword()
     {
         $expiration_date = new \DateTimeImmutable('+10 minutes');
@@ -97,12 +92,11 @@ class CredentialRetrieverTest extends TestCase
 
         $credential_retriever = new CredentialRetriever($dao, $password_handler, $identifier_extractor);
 
+        $this->expectException(CredentialAuthenticationException::class);
+
         $credential_retriever->authenticate('username', 'password');
     }
 
-    /**
-     * @expectedException \Tuleap\DynamicCredentials\Credential\CredentialExpiredException
-     */
     public function testAuthenticationRejectsExpiredAccount()
     {
         $expiration_date = new \DateTimeImmutable('-10 minutes');
@@ -116,6 +110,8 @@ class CredentialRetrieverTest extends TestCase
         $identifier_extractor->shouldReceive('extract')->andReturn('identifier');
 
         $credential_retriever = new CredentialRetriever($dao, $password_handler, $identifier_extractor);
+
+        $this->expectException(CredentialExpiredException::class);
 
         $credential_retriever->authenticate('username', 'password');
     }
@@ -136,9 +132,6 @@ class CredentialRetrieverTest extends TestCase
         $this->assertEquals('identifier', $credential->getIdentifier());
     }
 
-    /**
-     * @expectedException \Tuleap\DynamicCredentials\Credential\CredentialNotFoundException
-     */
     public function testExceptionIsThrownWhenCredentialIdentifierDoesNotExist()
     {
         $dao             = Mockery::mock(CredentialDAO::class);
@@ -147,6 +140,8 @@ class CredentialRetrieverTest extends TestCase
         $identifier_extractor = Mockery::mock(CredentialIdentifierExtractor::class);
 
         $credential_retriever = new CredentialRetriever($dao, $password_handler, $identifier_extractor);
+
+        $this->expectException(CredentialNotFoundException::class);
 
         $credential_retriever->getByIdentifier('identifier');
     }

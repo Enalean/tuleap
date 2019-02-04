@@ -44,9 +44,6 @@ class LoginUniqueAuthenticationUrlGeneratorTest extends TestCase
         $url_generator->getURL('return_to');
     }
 
-    /**
-     * @expectedException \Tuleap\OpenIDConnectClient\Login\IncoherentDataUniqueProviderException
-     */
     public function testAProviderDefinedAsUniqueAuthenticationEndpointIsExpected()
     {
         $provider_manager = \Mockery::mock(ProviderManager::class);
@@ -55,12 +52,11 @@ class LoginUniqueAuthenticationUrlGeneratorTest extends TestCase
 
         $url_generator = new LoginUniqueAuthenticationUrlGenerator($provider_manager, $authorization_request_creator);
 
+        $this->expectException(IncoherentDataUniqueProviderException::class);
+
         $url_generator->getURL('');
     }
 
-    /**
-     * @expectedException \Tuleap\OpenIDConnectClient\Login\IncoherentDataUniqueProviderException
-     */
     public function testOnlyOneProviderDefinedAsUniqueAuthenticationEndpointIsExpected()
     {
         $provider_manager = \Mockery::mock(ProviderManager::class);
@@ -71,6 +67,8 @@ class LoginUniqueAuthenticationUrlGeneratorTest extends TestCase
         $authorization_request_creator = \Mockery::mock(AuthorizationRequestCreator::class);
 
         $url_generator = new LoginUniqueAuthenticationUrlGenerator($provider_manager, $authorization_request_creator);
+
+        $this->expectException(IncoherentDataUniqueProviderException::class);
 
         $url_generator->getURL('');
     }

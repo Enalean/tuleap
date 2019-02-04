@@ -55,11 +55,9 @@ class SetFieldValueRepresentationTest extends TestCase
         $this->assertEquals(SetFieldValueRepresentation::UNSET_DATE_VALUE, $representation->value);
     }
 
-    /**
-     * @expectedException \Tuleap\Tracker\REST\v1\Workflow\PostAction\UnsupportedDateValueException
-     */
     public function testForDateThrowsWhenUnsupportedValue()
     {
+        $this->expectException(UnsupportedDateValueException::class);
         SetFieldValueRepresentation::forDate("1", 43, 99);
     }
 }

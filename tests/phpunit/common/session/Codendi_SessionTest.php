@@ -30,7 +30,7 @@ class Codendi_SessionTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
      */
     private $codendi_session;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $this->pseudo_php_session                        = [];
         $this->codendi_session                           = new Codendi_Session($this->pseudo_php_session);
@@ -206,11 +206,10 @@ class Codendi_SessionTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
         $this->assertFalse(isset($pseudo_php_session['riri']));
     }
 
-    /**
-     * @expectedException \PHPUnit\Framework\Error\Warning
-     */
     public function testItRaisesAnErrorWhenTryingToUseAStringAsAStringOffset()
     {
+        $this->expectException(\PHPUnit\Framework\Error\Warning::class);
+
         $pseudo_php_session = [];
         $session            = new Codendi_Session($pseudo_php_session);
         $session->changeSessionNamespace('riri');

@@ -44,9 +44,6 @@ class ConfigurationRetrieverTest extends TestCase
         $this->assertSame($configuration->getSecretKey(), 'secret_key');
     }
 
-    /**
-     * @expectedException \Tuleap\Captcha\ConfigurationNotFoundException
-     */
     public function testAnExceptionIsThrownWhenConfigurationIsNotFound()
     {
         $dao = \Mockery::mock(DataAccessObject::class);
@@ -54,6 +51,7 @@ class ConfigurationRetrieverTest extends TestCase
 
         $configuration_retriever = new ConfigurationRetriever($dao);
 
+        $this->expectException(ConfigurationNotFoundException::class);
         $configuration_retriever->retrieve();
     }
 }

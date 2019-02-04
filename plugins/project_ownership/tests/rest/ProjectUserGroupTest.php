@@ -33,20 +33,14 @@ class ProjectUserGroupTest extends \RestBase
             [\REST_TestDataBuilder::ADMIN_USER_NAME, \REST_TestDataBuilder::TEST_USER_1_NAME]
         );
         $this->assertEquals(200, $update_admins_response->getStatusCode());
-        $status_code   = 0;
-        $error_message = '';
-        try {
-            $this->updateProjectAdmin(
-                $project_id,
-                \REST_TestDataBuilder::ADMIN_USER_NAME,
-                [\REST_TestDataBuilder::TEST_USER_1_NAME]
-            );
-        } catch (\Guzzle\Http\Exception\ClientErrorResponseException $exception) {
-            $status_code   = $exception->getResponse()->getStatusCode();
-            $error_message = $exception->getResponse()->json()['error']['message'];
-        }
-        $this->assertEquals(400, $status_code);
-        $this->assertContains('project owner', $error_message);
+
+        $response = $this->updateProjectAdmin(
+            $project_id,
+            \REST_TestDataBuilder::ADMIN_USER_NAME,
+            [\REST_TestDataBuilder::TEST_USER_1_NAME]
+        );
+        $this->assertEquals(400, $response->getStatusCode());
+        $this->assertStringContainsString('project owner', $response->json()['error']['message']);
     }
 
     private function createProjectAs(string $user_name): int

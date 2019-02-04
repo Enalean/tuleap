@@ -118,14 +118,11 @@ class MilestonesContentTest extends MilestoneBase
         $this->assertEquals($response_put->getBody(true), '');
     }
 
-    /**
-     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
-     */
     public function testPUTContentWithoutPermission() {
         $response_put = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_2_NAME, $this->client->put('milestones/'.$this->release_artifact_ids[1].'/content', null, '['.$this->epic_artifact_ids[4].','.$this->epic_artifact_ids[1].']'));
 
         $this->assertEquals($response_put->getStatusCode(), 403);
-        $this->assertEquals($response_put->json(), array());
+        $this->assertArrayHasKey('error', $response_put->json());
     }
 
     public function testPUTContentOnlyOneElement()

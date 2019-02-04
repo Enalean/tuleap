@@ -26,13 +26,13 @@ use PHPUnit\Framework\TestCase;
 class CreateTestProjectTest extends TestCase
 {
 
-    public function setUp()
+    public function setUp() : void
     {
         \ForgeConfig::store();
         \ForgeConfig::set('sys_custompluginsroot', __DIR__.'/_fixtures');
     }
 
-    public function tearDown()
+    public function tearDown() : void
     {
         \ForgeConfig::restore();
     }

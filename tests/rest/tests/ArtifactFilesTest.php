@@ -37,7 +37,8 @@ class ArtifactFilesTest extends ArtifactFileBase
         return $this->getResponse($request, REST_TestDataBuilder::TEST_USER_2_NAME);
     }
 
-    public function setUp() {
+    public function setUp() : void
+    {
         parent::setUp();
 
         $this->first_file = array(
@@ -147,15 +148,8 @@ class ArtifactFilesTest extends ArtifactFileBase
 
         $request = $this->client->put('artifact_temporary_files/'.$file_id, null, $put_resource);
 
-        $unauthorised = false;
-        try {
-            $this->getResponseForDifferentUser($request);
-        } catch (Exception $e) {
-            $unauthorised = true;
-            $this->assertEquals($e->getResponse()->getStatusCode(), 401);
-        }
-
-        $this->assertTrue($unauthorised);
+        $response = $this->getResponseForDifferentUser($request);
+        $this->assertEquals($response->getStatusCode(), 401);
     }
 
     /**
@@ -171,19 +165,9 @@ class ArtifactFilesTest extends ArtifactFileBase
 
         $request = $this->client->put('artifact_temporary_files/'.$file_id, null, $put_resource);
 
-        $error = false;
-        try {
-            $this->getResponse($request);
-        } catch (Exception $e) {
-            $error = true;
-
-            $response = $e->getResponse();
-            $this->assertEquals($response->getStatusCode(), 406);
-
-            $this->assertArrayHasKey('X-DISK-USAGE', $response->getHeaders());
-        }
-
-        $this->assertTrue($error);
+        $response = $this->getResponse($request);
+        $this->assertEquals(406, $response->getStatusCode());
+        $this->assertArrayHasKey('X-DISK-USAGE', $response->getHeaders());
     }
 
     public function testPutArtifactId_throwsErrorForInvalidFile() {
@@ -197,15 +181,8 @@ class ArtifactFilesTest extends ArtifactFileBase
 
         $request = $this->client->put('artifact_temporary_files/'.$file_id, null, $put_resource);
 
-        $error = false;
-        try {
-            $this->getResponse($request);
-        } catch (Exception $e) {
-            $error = true;
-            $this->assertEquals($e->getResponse()->getStatusCode(), 404);
-        }
-
-        $this->assertTrue($error);
+        $response = $this->getResponse($request);
+        $this->assertEquals($response->getStatusCode(), 404);
     }
 
     /**

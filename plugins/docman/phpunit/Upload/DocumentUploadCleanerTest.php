@@ -23,20 +23,11 @@ namespace Tuleap\Docman\Upload;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
+use Tuleap\ForgeConfigSandbox;
 
 class DocumentUploadCleanerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    public function setUp()
-    {
-        \ForgeConfig::store();
-    }
-
-    public function tearDown()
-    {
-        \ForgeConfig::restore();
-    }
+    use MockeryPHPUnitIntegration, ForgeConfigSandbox;
 
     public function testDanglingDocumentBeingUploadedAreCleaned()
     {

@@ -43,7 +43,7 @@ class BurnupCalculatorTest extends TestCase
      */
     private $calculator;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         parent::setUp();
 

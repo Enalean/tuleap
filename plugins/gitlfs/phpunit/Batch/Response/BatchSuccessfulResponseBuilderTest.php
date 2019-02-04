@@ -75,7 +75,7 @@ class BatchSuccessfulResponseBuilderTest extends TestCase
      */
     private $repository;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $this->token_creator         = \Mockery::mock(ActionAuthorizationTokenCreator::class);
         $this->token_formatter       = \Mockery::mock(SplitTokenFormatter::class);
@@ -177,9 +177,6 @@ class BatchSuccessfulResponseBuilderTest extends TestCase
         $this->assertInstanceOf(BatchSuccessfulResponse::class, $batch_response);
     }
 
-    /**
-     * @expectedException \Tuleap\GitLFS\Batch\Response\UnknownOperationException
-     */
     public function testBuildingResponseForAnUnknownResponseIsRejected()
     {
         $current_time = new \DateTimeImmutable('2018-11-22', new \DateTimeZone('UTC'));
@@ -200,6 +197,8 @@ class BatchSuccessfulResponseBuilderTest extends TestCase
             $this->prometheus
         );
 
+        $this->expectException(UnknownOperationException::class);
+
         $builder->build(
             $current_time,
             'https://example.com',
@@ -208,9 +207,6 @@ class BatchSuccessfulResponseBuilderTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException \Tuleap\GitLFS\Batch\Response\MaxFileSizeException
-     */
     public function testBuildingResponseWithAFileWithASizeBiggerThanMaxSizeIsRejected()
     {
         $this->token_creator->shouldReceive('createActionAuthorizationToken')->andReturns(\Mockery::mock(SplitToken::class));
@@ -243,6 +239,8 @@ class BatchSuccessfulResponseBuilderTest extends TestCase
             $this->prometheus
         );
 
+        $this->expectException(MaxFileSizeException::class);
+
         $builder->build(
             $current_time,
             'https://example.com',
@@ -253,9 +251,6 @@ class BatchSuccessfulResponseBuilderTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException \Tuleap\GitLFS\Batch\Response\ProjectQuotaExceededException
-     */
     public function testBuildingResponseWithAFileWithASizeBiggerThanProjectQuotaIsRejected()
     {
         $this->token_creator->shouldReceive('createActionAuthorizationToken')->andReturns(\Mockery::mock(SplitToken::class));
@@ -285,6 +280,8 @@ class BatchSuccessfulResponseBuilderTest extends TestCase
             $this->logger,
             $this->prometheus
         );
+
+        $this->expectException(ProjectQuotaExceededException::class);
 
         $builder->build(
             $current_time,

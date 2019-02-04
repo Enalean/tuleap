@@ -86,12 +86,11 @@ class DocumentBeingUploadedWriterTest extends TestCase
         $this->assertSame($written_size, $file_length);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testInputThatIsNotAResourceIsRejected() : void
     {
         $writer = new DocumentBeingUploadedWriter(new DocumentUploadPathAllocator());
+
+        $this->expectException(\InvalidArgumentException::class);
 
         $not_a_resource = false;
         $writer->writeChunk(\Mockery::mock(TusFileInformation::class), 0, $not_a_resource);

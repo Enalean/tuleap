@@ -25,6 +25,7 @@
 namespace Tuleap\Project\REST;
 
 use EventManager;
+use Luracast\Restler\RestException;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Project\REST\v1\GetProjectsQueryChecker;
@@ -44,7 +45,7 @@ class GetProjectsQueryCheckerTest extends TestCase
      */
     private $event_manager;
 
-    public function setUp()
+    public function setUp() : void
     {
         $this->event_manager = \Mockery::mock(EventManager::class);
         $this->checker       = new GetProjectsQueryChecker($this->event_manager);
@@ -66,10 +67,6 @@ class GetProjectsQueryCheckerTest extends TestCase
     }
 
 
-    /**
-     * @expectedException \Luracast\Restler\RestException
-     * @expectedExceptionCode 400
-     */
     public function testItRaiseAnExceptionForCriterionProvidedByPlugin()
     {
         $this->event_manager->shouldReceive("processEvent")->with(
@@ -82,61 +79,65 @@ class GetProjectsQueryCheckerTest extends TestCase
         );
 
         $json_query = ["whatever" => true];
+
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(400);
+
         $this->checker->checkQuery($json_query, false);
     }
 
-    /**
-     * @expectedException \Luracast\Restler\RestException
-     * @expectedExceptionCode 400
-     */
     public function testItRaiseExeptionWhenNotSupportedQuery()
     {
         $this->event_manager->shouldReceive("processEvent");
         $json_query = ["whatever" => true];
+
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(400);
+
         $this->checker->checkQuery($json_query, false);
     }
 
-    /**
-     * @expectedException \Luracast\Restler\RestException
-     * @expectedExceptionCode 400
-     */
     public function testProjectsYouAreNotMemberOfIsNotSupported()
     {
         $this->event_manager->shouldReceive("processEvent");
         $json_query = ["is_member_of" => false];
+
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(400);
+
         $this->checker->checkQuery($json_query, false);
     }
 
-    /**
-     * @expectedException \Luracast\Restler\RestException
-     * @expectedExceptionCode 400
-     */
     public function testProjectsYouAreNotAdministratorOfAtLeastOneTrackerIsNotSupported()
     {
         $this->event_manager->shouldReceive("processEvent");
         $json_query = ["is_tracker_admin" => false];
+
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(400);
+
         $this->checker->checkQuery($json_query, false);
     }
 
-    /**
-     * @expectedException \Luracast\Restler\RestException
-     * @expectedExceptionCode 403
-     */
     public function testItRaiseExeptionWhenWithStatusAndUserIsNotProjectManager()
     {
         $this->event_manager->shouldReceive("processEvent");
         $json_query = ["with_status" => true];
+
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(403);
+
         $this->checker->checkQuery($json_query, false);
     }
 
-    /**
-     * @expectedException \Luracast\Restler\RestException
-     * @expectedExceptionCode 400
-     */
     public function testItRaiseExeptionWhenWithStatusIsNotValid()
     {
         $this->event_manager->shouldReceive("processEvent");
         $json_query = ["with_status" => false];
+
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(400);
+
         $this->checker->checkQuery($json_query, true);
     }
 

@@ -73,9 +73,6 @@ class GerritTest extends TestBase {
         $this->assertEquals($servers[2]['html_url'], 'http://restricted:8080');
     }
 
-    /**
-     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
-     */
     public function testGetGitRepositoryThrows403IfUserCantSeeRepository() {
         $response  = $this->getResponseForNonMember($this->client->get('gerrit'));
 

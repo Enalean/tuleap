@@ -73,9 +73,6 @@ class TrackerFieldsTest extends TrackerBase
         $this->assertEquals($tracker_field_json['values'][6]['label'], 'new_value_02');
     }
 
-    /**
-     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
-     */
     public function testPATCHThrowsAnExceptionIfFieldIsNotASimpleList()
     {
         $field_id = $this->getStaticMultiSelectboxFieldId();
@@ -88,9 +85,6 @@ class TrackerFieldsTest extends TrackerBase
         $this->assertEquals($response->getStatusCode(), 400);
     }
 
-    /**
-     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
-     */
     public function testPATCHThrowsAnExceptionIfFieldIsNotBoundToStaticValues()
     {
         $field_id = $this->getUserSelectboxFieldId();

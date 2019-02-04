@@ -44,7 +44,7 @@ class SSHAuthenticateTest extends TestCase
     private $ssh_response;
     private $user_operation_factory;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $this->project_manager        = Mockery::mock(\ProjectManager::class);
         $this->user_manager           = Mockery::mock(\UserManager::class);

@@ -35,7 +35,7 @@ class CIBuildValidatorTest extends TestCase
     /** @var PostActionIdValidator | Mockery\MockInterface */
     private $ids_validator;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $this->ids_validator      = Mockery::mock(PostActionIdValidator::class);
         $this->ids_validator->shouldReceive('validate')->byDefault();
@@ -51,35 +51,32 @@ class CIBuildValidatorTest extends TestCase
         $this->ci_build_validator->validate($first_ci_build, $second_ci_build);
     }
 
-    /**
-     * @expectedException \Tuleap\Tracker\Workflow\PostAction\Update\Internal\InvalidPostActionException
-     */
     public function testValidateThrowsWhenInvalidJobUrl()
     {
         $invalid_ci_build = $this->createCIBuildWithUrl('not an URL');
 
+        $this->expectException(InvalidPostActionException::class);
+
         $this->ci_build_validator->validate($invalid_ci_build);
     }
 
-    /**
-     * @expectedException \Tuleap\Tracker\Workflow\PostAction\Update\Internal\InvalidPostActionException
-     */
     public function testValidateThrowsWhenEmptyJobUrl()
     {
         $invalid_ci_build = $this->createCIBuildWithUrl('');
 
+        $this->expectException(InvalidPostActionException::class);
+
         $this->ci_build_validator->validate($invalid_ci_build);
     }
 
-    /**
-     * @@expectedException \Tuleap\Tracker\Workflow\PostAction\Update\Internal\InvalidPostActionException
-     */
     public function testValidateWrapsDuplicatePostActionException()
     {
         $ci_build = $this->createCIBuild();
         $this->ids_validator
             ->shouldReceive('validate')
             ->andThrow(new DuplicatePostActionException());
+
+        $this->expectException(InvalidPostActionException::class);
 
         $this->ci_build_validator->validate($ci_build);
     }

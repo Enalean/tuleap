@@ -49,7 +49,7 @@ class GitAdminProcessTest extends TestCase
     private $a_brand_new_server;
     private $an_existing_server;
 
-    public function setUp()
+    public function setUp() : void
     {
         $GLOBALS['Response']       = \Mockery::spy(Response::class);
         $this->csrf                = \Mockery::spy(CSRFSynchronizerToken::class);

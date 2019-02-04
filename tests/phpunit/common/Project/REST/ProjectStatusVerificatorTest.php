@@ -20,6 +20,7 @@
 
 namespace Tuleap\Project\REST;
 
+use Luracast\Restler\RestException;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\REST\ProjectStatusVerificator;
@@ -33,7 +34,7 @@ class ProjectStatusVerificatorTest extends TestCase
      */
     private $verificator;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $this->verificator = ProjectStatusVerificator::build();
     }
@@ -46,24 +47,18 @@ class ProjectStatusVerificatorTest extends TestCase
         $this->verificator->checkProjectStatusAllowsAllUsersToAccessIt($project);
     }
 
-    /**
-     * @expectedException \Luracast\Restler\RestException
-     * @expectedExceptionCode 403
-     * @expectedExceptionMessage This project is suspended
-     */
     public function testNobodyCanAccessASuspendedProject()
     {
         $project = \Mockery::mock(\Project::class);
         $project->shouldReceive('isSuspended')->andReturn(true);
 
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(403);
+        $this->expectExceptionMessage('This project is suspended');
+
         $this->verificator->checkProjectStatusAllowsAllUsersToAccessIt($project);
     }
 
-    /**
-     * @expectedException \Luracast\Restler\RestException
-     * @expectedExceptionCode 403
-     * @expectedExceptionMessage This project is suspended
-     */
     public function testRegularUsersCantAccessASuspendedProject()
     {
         $project = \Mockery::mock(\Project::class);
@@ -71,6 +66,10 @@ class ProjectStatusVerificatorTest extends TestCase
 
         $user = \Mockery::mock(\PFUser::class);
         $user->shouldReceive('isSuperUser')->andReturn(false);
+
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(403);
+        $this->expectExceptionMessage('This project is suspended');
 
         $this->verificator->checkProjectStatusAllowsOnlySiteAdminToAccessIt(
             $user,

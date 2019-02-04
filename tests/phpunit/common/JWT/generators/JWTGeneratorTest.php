@@ -43,7 +43,7 @@ class JWTGeneratorTest extends TestCase
     /** @var string */
     private $private_key;
 
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
 

@@ -21,6 +21,7 @@
 namespace Tuleap\Tracker\Tests\REST\Workflows;
 
 use Guzzle\Http\Exception\BadResponseException;
+use Guzzle\Http\Exception\ClientErrorResponseException;
 use REST_TestDataBuilder;
 use Tuleap\Tracker\Tests\REST\TrackerBase;
 
@@ -56,9 +57,6 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
         $this->assertEquals($response_content['uri'], "tracker_workflow_transitions/{$response_content['id']}");
     }
 
-    /**
-     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
-     */
     public function testPOSTTrackerWorkflowTransitionsRegularUsersHaveForbiddenAccess()
     {
         $transition_combinations   = $this->getAllTransitionCombinations($this->tracker_workflow_transitions_tracker_id);
@@ -79,13 +77,9 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
             )
         );
 
-        $this->fail('An exception was expected');
-        $this->assertEquals($response->getStatusCode(), 400);
+        $this->assertEquals(403, $response->getStatusCode());
     }
 
-    /**
-     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
-     */
     public function testPOSTTrackerWorkflowTransitionsWhenTrackerDoesNotExistReturnsError()
     {
         $params = json_encode(array(
@@ -103,13 +97,9 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
             )
         );
 
-        $this->fail('An exception was expected');
-        $this->assertEquals($response->getStatusCode(), 400);
+        $this->assertEquals(404, $response->getStatusCode());
     }
 
-    /**
-     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
-     */
     public function testPOSTTrackerWorkflowTransitionsWhenTrackerHasNoWorkflowReturnsError()
     {
         $params = json_encode(array(
@@ -127,13 +117,9 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
             )
         );
 
-        $this->fail('An exception was expected');
         $this->assertEquals($response->getStatusCode(), 404);
     }
 
-    /**
-     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
-     */
     public function testPOSTTrackerWorkflowTransitionsWhenTransitionAlreadyExistReturnsError()
     {
         $transition_combinations   = $this->getAllTransitionCombinations($this->tracker_workflow_transitions_tracker_id);
@@ -154,13 +140,9 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
             )
         );
 
-        $this->fail('An exception was expected');
         $this->assertEquals($response->getStatusCode(), 400);
     }
 
-    /**
-     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
-     */
     public function testPOSTTrackerWorkflowTransitionsWhenFieldValueDoesNotExistReturnsError()
     {
         $transition_combinations   = $this->getAllTransitionCombinations($this->tracker_workflow_transitions_tracker_id);
@@ -181,13 +163,9 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
             )
         );
 
-        $this->fail('An exception was expected');
         $this->assertEquals($response->getStatusCode(), 404);
     }
 
-    /**
-     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
-     */
     public function testPOSTTrackerWorkflowTransitionsWhenFromIdEqualsToIdReturnsError()
     {
         $transition_combinations   = $this->getAllTransitionCombinations($this->tracker_workflow_transitions_tracker_id);
@@ -208,7 +186,6 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
             )
         );
 
-        $this->fail('An exception was expected');
         $this->assertEquals($response->getStatusCode(), 400);
     }
 
@@ -230,18 +207,15 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
 
     public function testDELETETrackerWorkflowTransitionsReturns404WhenTransitionDoesNotExist()
     {
-        try {
-            $this->getResponseByName(
-                REST_TestDataBuilder::TEST_USER_1_NAME,
-                $this->client->delete(
-                    'tracker_workflow_transitions/0',
-                    null
-                )
-            );
-            $this->fail('Expected exception not raised');
-        } catch (BadResponseException $e) {
-            $this->assertEquals(404, $e->getResponse()->getStatusCode());
-        }
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::TEST_USER_1_NAME,
+            $this->client->delete(
+                'tracker_workflow_transitions/0',
+                null
+            )
+        );
+
+        $this->assertEquals(404, $response->getStatusCode());
     }
 
     public function testGETTrackerWorkflowTransitionsReturnsTheTransitionRepresentation()

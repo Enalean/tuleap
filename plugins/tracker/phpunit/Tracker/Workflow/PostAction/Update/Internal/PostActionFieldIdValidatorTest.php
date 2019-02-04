@@ -32,7 +32,7 @@ class PostActionFieldIdValidatorTest extends TestCase
     /** @var PostActionFieldIdValidator */
     private $field_ids_validator;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $this->field_ids_validator = new PostActionFieldIdValidator();
     }
@@ -46,13 +46,12 @@ class PostActionFieldIdValidatorTest extends TestCase
         $this->expectNotToPerformAssertions();
     }
 
-    /**
-     * @expectedException \Tuleap\Tracker\Workflow\PostAction\Update\Internal\DuplicateFieldIdException
-     */
     public function testValidateThrowsWhenDuplicateFieldIds()
     {
         $first_identical_field_id  = new SetDateValue(null, 3, 0);
         $second_identical_field_id = new SetDateValue(null, 3, 1);
+
+        $this->expectException(DuplicateFieldIdException::class);
 
         $this->field_ids_validator->validate($first_identical_field_id, $second_identical_field_id);
     }

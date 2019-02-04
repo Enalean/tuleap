@@ -92,7 +92,7 @@ class MilestoneControllerTest extends TestCase
     /** @var BreadCrumb */
     private $top_backlog_breadcrumb;
 
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
         ForgeConfig::store();
@@ -146,7 +146,7 @@ class MilestoneControllerTest extends TestCase
         );
     }
 
-    public function tearDown()
+    public function tearDown() : void
     {
         ForgeConfig::restore();
         parent::tearDown();

@@ -35,11 +35,10 @@ class SessionStateTest extends TestCase
         $this->assertSame($session_state->getReturnTo(), $rebuilt_session_state->getReturnTo());
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testBuildingFromAnInvalidRepresentationIsRejected()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         $representation = new \stdClass();
         SessionState::buildFromMinimalRepresentation($representation);
     }

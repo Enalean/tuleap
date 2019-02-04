@@ -29,7 +29,8 @@ class ACLUpdaterTest extends PHPUnit\Framework\TestCase {
 
     private $path;
 
-    protected function setUp() {
+    protected function setUp() : void
+    {
         parent::setUp();
         $this->backend     = $this->getMockBuilder('Backend')->disableOriginalConstructor()->getMock();
         $this->acl_updater = new Tuleap\ProFTPd\Admin\ACLUpdater($this->backend);

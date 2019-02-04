@@ -53,7 +53,7 @@ class DocumentFooterPresenterBuilderTest extends TestCase
      */
     private $project;
 
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
 

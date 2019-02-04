@@ -28,7 +28,8 @@ class BacklogItemsTest extends RestBase {
 
     private $stories_ids = array();
 
-    public function setUp() {
+    public function setUp() : void
+    {
         parent::setUp();
         $this->tasks   = $this->getArtifactIdsIndexedByTitle('private-member', 'task');
         $this->stories = $this->getArtifactIdsIndexedByTitle('private-member', 'story');
@@ -123,9 +124,6 @@ class BacklogItemsTest extends RestBase {
         $this->assertEquals($first_task['label'], "Implement the feature");
     }
 
-    /**
-     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
-     */
     public function testPATCHChildrenDuplicateIds() {
         $uri = 'backlog_items/'.$this->stories_ids[1].'/children';
         $response      = $this->getResponse($this->client->get($uri));
@@ -137,18 +135,17 @@ class BacklogItemsTest extends RestBase {
         $first_id  = $backlog_items[0]['id'];
         $second_id = $backlog_items[1]['id'];
 
-        $this->getResponse($this->client->patch($uri, null, json_encode(array(
+        $response = $this->getResponse($this->client->patch($uri, null, json_encode(array(
             'order' => array(
                 'ids'         => array($second_id, $second_id),
                 'direction'   => 'before',
                 'compared_to' => $first_id
             )
         ))));
+
+        $this->assertEquals(409, $response->getStatusCode());
     }
 
-    /**
-     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
-     */
     public function testPATCHSomeoneElseChildren() {
         $uri = 'backlog_items/'.$this->stories_ids[1].'/children';
         $response      = $this->getResponse($this->client->get($uri));
@@ -160,18 +157,17 @@ class BacklogItemsTest extends RestBase {
 
         $first_id  = $backlog_items[0]['id'];
 
-        $this->getResponse($this->client->patch($uri, null, json_encode(array(
+        $response = $this->getResponse($this->client->patch($uri, null, json_encode(array(
             'order' => array(
                 'ids'         => array(9999),
                 'direction'   => 'before',
                 'compared_to' => $first_id
             )
         ))));
+
+        $this->assertEquals(409, $response->getStatusCode());
     }
 
-    /**
-     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
-     */
     public function testGETChildrenWithWrongId() {
         $response      = $this->getResponse($this->client->get('backlog_items/700/children'));
         $this->assertEquals($response->getStatusCode(), 404);

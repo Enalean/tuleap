@@ -64,7 +64,7 @@ class RepositoryTest extends TestBase
             "[/] * = rw @members = rw"
         );
 
-        $this->assertEquals(
+        $this->assertEqualsCanonicalizing(
             $repository['settings']['email_notifications'],
             array(
                 array(
@@ -79,11 +79,7 @@ class RepositoryTest extends TestBase
                     'emails'      => array("project-svn@list.example.com"),
                     'path'        => "/trunk"
                 )
-            ),
-            $message = '',
-            $delta = 0,
-            $max_depth = 10,
-            $canonicalize = true
+            )
         );
     }
 
@@ -116,7 +112,6 @@ class RepositoryTest extends TestBase
     /**
      * @depends testGETRepositoryForProjectAdmin
      * @depends testGETRepositoryForProjectMember
-     * @expectedException \Guzzle\Http\Exception\ClientErrorResponseException
      */
     public function testDELETERepositoryForProjectMember()
     {
@@ -125,7 +120,7 @@ class RepositoryTest extends TestBase
                 'svn/1'
             )
         );
-        $this->assertEquals($response->getStatusCode(), 401);
+        $this->assertEquals(403, $response->getStatusCode());
     }
 
     public function testPOSTRepositoryForProjectAdmin()
@@ -251,9 +246,6 @@ class RepositoryTest extends TestBase
         );
     }
 
-    /**
-     * @expectedException \Guzzle\Http\Exception\ClientErrorResponseException
-     */
     public function testPOSTRepositoryForProjectMember()
     {
         $params = json_encode(
@@ -264,7 +256,7 @@ class RepositoryTest extends TestBase
         );
 
         $response = $this->getResponseWithProjectMember($this->client->post('svn', null, $params));
-        $this->assertEquals($response->getStatusCode(), 401);
+        $this->assertEquals(403, $response->getStatusCode());
     }
 
     public function testPOSTWithALayout()

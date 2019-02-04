@@ -42,7 +42,7 @@ class AssetsIncluderTest extends TestCase
 
     private $backup_globals;
 
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
 
@@ -57,7 +57,7 @@ class AssetsIncluderTest extends TestCase
         $this->includer = new AssetsIncluder($include_assets);
     }
 
-    public function tearDown()
+    public function tearDown() : void
     {
         $GLOBALS = $this->backup_globals;
 

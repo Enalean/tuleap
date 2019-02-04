@@ -28,7 +28,8 @@ class DocmanTest extends SOAPBase
     private $content    = 'Content of the file';
     private $content_v2 = 'Updated content of the file';
 
-    public function setUp() {
+    public function setUp() : void
+    {
         parent::setUp();
 
         $_SERVER['SERVER_NAME'] = $this->server_name;
@@ -36,7 +37,8 @@ class DocmanTest extends SOAPBase
         $_SERVER['SCRIPT_NAME'] = $this->base_wsdl;
     }
 
-    public function tearDown() {
+    public function tearDown() : void
+    {
         unset($_SERVER['SERVER_NAME']);
         unset($_SERVER['SERVER_PORT']);
         unset($_SERVER['SCRIPT_NAME']);

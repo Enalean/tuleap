@@ -37,7 +37,7 @@ class Tracker_FormElement_Field_NumericTest extends \PHPUnit\Framework\TestCase 
      */
     private $artifact;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         parent::setUp();
 

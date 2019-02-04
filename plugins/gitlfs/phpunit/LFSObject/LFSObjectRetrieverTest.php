@@ -26,7 +26,7 @@ class LFSObjectRetrieverTest extends TestCase
 {
     private $dao;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $this->dao = \Mockery::mock(LFSObjectDAO::class);
     }

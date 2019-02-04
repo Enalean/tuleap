@@ -46,7 +46,7 @@ class CSVRepresentationBuilderTest extends TestCase
     /** @var MockInterface */
     private $similar_fields_formatter;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         parent::setUp();
 

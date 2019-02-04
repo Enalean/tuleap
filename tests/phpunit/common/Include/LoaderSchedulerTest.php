@@ -35,7 +35,7 @@ class LoaderSchedulerTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
      */
     private $loader_scheduler;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $this->cookie_manager = Mockery::mock(CookieManager::class);
         $this->plugin_manager = Mockery::mock(PluginManager::class);

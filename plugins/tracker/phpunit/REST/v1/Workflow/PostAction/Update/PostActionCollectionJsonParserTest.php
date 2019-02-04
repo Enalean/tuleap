@@ -27,6 +27,7 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
 use PHPUnit\Framework\TestCase;
+use Tuleap\REST\I18NRestException;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\CIBuild;
 use Tuleap\Tracker\Workflow\PostAction\Update\PostActionCollection;
 
@@ -80,12 +81,10 @@ class PostActionCollectionJsonParserTest extends TestCase
         $this->assertEquals(new PostActionCollection(), $post_actions);
     }
 
-    /**
-     * @expectedException \Tuleap\REST\I18NRestException
-     * @expectedExceptionCode 400
-     */
     public function testParseThrowsWhenNoParserAcceptGivenJson()
     {
+        $this->expectException(I18NRestException::class);
+        $this->expectExceptionCode(400);
         $this->action_parser
             ->shouldReceive('accept')
             ->andReturn(false);
@@ -93,12 +92,10 @@ class PostActionCollectionJsonParserTest extends TestCase
         $this->collection_parser->parse([["id" => 1]]);
     }
 
-    /**
-     * @expectedException \Tuleap\REST\I18NRestException
-     * @expectedExceptionCode 400
-     */
     public function testParseWithNotAssociativeArrayThrows()
     {
+        $this->expectException(I18NRestException::class);
+        $this->expectExceptionCode(400);
         $this->collection_parser->parse([
             "not an array"
         ]);

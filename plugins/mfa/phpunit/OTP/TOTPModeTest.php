@@ -39,45 +39,35 @@ class TOTPModeTest extends TestCase
         $this->assertEquals($algorithm, $totp_mode->getAlgorithm());
     }
 
-    /**
-     * @expectedException \TypeError
-     * @expectedExceptionMessageRegExp *time_step*
-     */
     public function testExpectsTimeStepToBeAnInt()
     {
+        $this->expectException(\TypeError::class);
+        $this->expectExceptionMessageRegExp('*time_step*');
         new TOTPMode('Time step', 6, 'sha1');
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testExpectsTimeStepToBePositive()
     {
+        $this->expectException(\InvalidArgumentException::class);
         new TOTPMode(-1, 6, 'sha1');
     }
 
-    /**
-     * @expectedException \TypeError
-     * @expectedExceptionMessageRegExp *code_length*
-     */
     public function testExpectsCodeLengthToBeAnInt()
     {
+        $this->expectException(\TypeError::class);
+        $this->expectExceptionMessageRegExp('*code_length*');
         new TOTPMode(30, 'code_length', 'sha1');
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testExpectsCodeLengthToBeInAnAcceptableRange()
     {
+        $this->expectException(\InvalidArgumentException::class);
         new TOTPMode(30, 99999999999999, 'sha1');
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testExpectsASupportedAlgorithm()
     {
+        $this->expectException(\InvalidArgumentException::class);
         new TOTPMode(30, 6, 'sha3');
     }
 }

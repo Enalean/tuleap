@@ -22,15 +22,12 @@ namespace Tuleap\REST;
 
 use Guzzle\Http\Exception\BadResponseException;
 use REST_TestDataBuilder;
-use Tuleap\CustomAssert;
 
 /**
  * @group ProjectTests
  */
 class ProjectTest extends ProjectBase
 {
-    use CustomAssert;
-
     private function getBasicAuthResponse($request)
     {
         return $this->getResponseByBasicAuth(
@@ -50,25 +47,15 @@ class ProjectTest extends ProjectBase
             'template_id' => 100
         ]);
 
-        $has_exception_been_catched = false;
-
-        // Cannot use @expectedException as we want to check status code.
-        try {
-            $response = $this->getResponseByName(
-                REST_TestDataBuilder::TEST_USER_2_NAME,
-                $this->client->post(
-                    'projects',
-                    null,
-                    $post_resource
-                )
-            );
-        } catch (BadResponseException $exception) {
-            $this->assertEquals($exception->getResponse()->getStatusCode(), 403);
-
-            $has_exception_been_catched = true;
-        }
-
-        $this->assertTrue($has_exception_been_catched);
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::TEST_USER_2_NAME,
+            $this->client->post(
+                'projects',
+                null,
+                $post_resource
+            )
+        );
+        $this->assertEquals($response->getStatusCode(), 403);
     }
 
     public function testPOSTForAdmin()
@@ -236,9 +223,6 @@ class ProjectTest extends ProjectBase
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
-    /**
-     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
-     */
     public function testGETByNonMembershipShouldFail()
     {
         $response = $this->getResponse($this->client->get('projects?query='. urlencode('{"is_member_of":false}')));
@@ -413,44 +397,20 @@ class ProjectTest extends ProjectBase
 
     public function testGETbyIdForForbiddenUser()
     {
-        // Cannot use @expectedException as we want to check status code.
-        $exception = false;
-        try {
-            $this->getResponseByName(REST_TestDataBuilder::TEST_USER_1_NAME, $this->client->get('projects/'.REST_TestDataBuilder::ADMIN_PROJECT_ID));
-        } catch (BadResponseException $e) {
-            $this->assertEquals($e->getResponse()->getStatusCode(), 403);
-            $exception = true;
-        }
-
-        $this->assertTrue($exception);
+        $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_1_NAME, $this->client->get('projects/'.REST_TestDataBuilder::ADMIN_PROJECT_ID));
+        $this->assertEquals($response->getStatusCode(), 403);
     }
 
     public function testGETBadRequest()
     {
-        // Cannot use @expectedException as we want to check status code.
-        $exception = false;
-        try {
-            $this->getResponseByName(REST_TestDataBuilder::ADMIN_USER_NAME, $this->client->get('projects/abc'));
-        } catch (BadResponseException $e) {
-            $this->assertEquals($e->getResponse()->getStatusCode(), 400);
-            $exception = true;
-        }
-
-        $this->assertTrue($exception);
+        $response = $this->getResponseByName(REST_TestDataBuilder::ADMIN_USER_NAME, $this->client->get('projects/abc'));
+        $this->assertEquals($response->getStatusCode(), 400);
     }
 
     public function testGETUnknownProject()
     {
-        // Cannot use @expectedException as we want to check status code.
-        $exception = false;
-        try {
-            $this->getResponseByName(REST_TestDataBuilder::ADMIN_USER_NAME, $this->client->get('projects/1234567890'));
-        } catch (BadResponseException $e) {
-            $this->assertEquals($e->getResponse()->getStatusCode(), 404);
-            $exception = true;
-        }
-
-        $this->assertTrue($exception);
+        $response  = $this->getResponseByName(REST_TestDataBuilder::ADMIN_USER_NAME, $this->client->get('projects/1234567890'));
+        $this->assertEquals($response->getStatusCode(), 404);
     }
 
     public function testGETmilestones()
@@ -622,9 +582,6 @@ class ProjectTest extends ProjectBase
         $this->assertEquals($third_backlog_item['artifact']['tracker']['id'], $this->epic_tracker_id);
     }
 
-    /**
-     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
-     */
     public function testPUTbacklogWithoutPermission()
     {
         $response_put = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_2_NAME, $this->client->put('projects/'.$this->project_private_member_id.'/backlog', null, '['.$this->epic_artifact_ids[7].','.$this->epic_artifact_ids[5].','.$this->epic_artifact_ids[6].']'));
@@ -839,13 +796,15 @@ class ProjectTest extends ProjectBase
         );
 
         $json_response = $response->json();
-        $this->assertContainsAnyArrayWithKey($json_response, 'id', 1); // ProjectUgroup::ANONYMOUS
-        $this->assertContainsAnyArrayWithKey($json_response, 'id', 2); // ProjectUgroup::REGISTERED
+
+        $user_group_ids = [];
+        foreach ($json_response as $user_group) {
+            $user_group_ids[] = $user_group['id'];
+        }
+        $this->assertContains(1, $user_group_ids); // ProjectUgroup::ANONYMOUS
+        $this->assertContains(2, $user_group_ids); // ProjectUgroup::REGISTERED
     }
 
-    /**
-     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
-     */
     public function testPATCHbacklogWithoutPermission()
     {
         $response_patch = $this->getResponseByName(
@@ -1079,14 +1038,7 @@ class ProjectTest extends ProjectBase
             )
         );
 
-        $this->assertEquals(
-            $expected_result,
-            $response->json(),
-            $message = '',
-            $delta = 0,
-            $max_depth = 10,
-            $canonicalize = true
-        );
+        $this->assertEqualsCanonicalizing($expected_result, $response->json());
     }
 
     public function testGETWikiWithNotExistingPagename()
@@ -1124,20 +1076,11 @@ class ProjectTest extends ProjectBase
             'status' => 'suspended'
         ]);
 
-        $has_exception_been_caught = false;
-
-        try {
-            $this->getResponseByName(
-                REST_TestDataBuilder::TEST_USER_2_NAME,
-                $this->client->patch('projects/'. $this->project_deleted_id, null, $patch_resource)
-            );
-        } catch (BadResponseException $exception) {
-            $this->assertEquals($exception->getResponse()->getStatusCode(), 403);
-
-            $has_exception_been_caught = true;
-        }
-
-        $this->assertTrue($has_exception_been_caught);
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::TEST_USER_2_NAME,
+            $this->client->patch('projects/'. $this->project_deleted_id, null, $patch_resource)
+        );
+        $this->assertEquals(403, $response->getStatusCode());
     }
 
     public function testPATCHWithAdmin()

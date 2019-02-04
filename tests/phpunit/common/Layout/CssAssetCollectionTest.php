@@ -33,11 +33,6 @@ class CssAssetCollectionTest extends TestCase
     /** @var CssAssetCollection */
     private $collection;
 
-    protected function setUp()
-    {
-        parent::setUp();
-    }
-
     public function testGetDeduplicatedAssets()
     {
         $asset_one = Mockery::mock(CssAsset::class);

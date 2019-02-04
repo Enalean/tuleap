@@ -103,15 +103,17 @@ class AccessKeyTest extends RestBase
         $request = $this->client->get('projects');
         $request->setHeader('X-Auth-AccessKey', $key_identifier);
 
-        try {
-            $response = $request->send();
-        } catch (\Guzzle\Http\Exception\ClientErrorResponseException $e) {
-            $this->assertEquals(401, $e->getResponse()->getStatusCode());
+        $response = $request->send();
+
+        if ($response->getStatusCode() === 401) {
             return false;
         }
+        if ($response->getStatusCode() === 200) {
+            return true;
+        }
 
-        $this->assertEquals(200, $response->getStatusCode());
-        return true;
+        $this->fail('Got unknown HTTP status code for an access key authentication: ' . $response->getStatusCode());
+        return false;
     }
 
     public function testAuthenticationWithAnIncorrectAccessKeyIsRejected(): void

@@ -38,24 +38,22 @@ class HudsonJobLazyExceptionHandlerTest extends TestCase
         $this->assertSame($hudson_job_lazy_exception->getHudsonJob(), $hudson_job);
     }
 
-    /**
-     * @expectedException \Exception
-     */
     public function testExceptionIsThrownWhenErrorExist()
     {
         $exception = \Mockery::mock(\Exception::class);
 
         $hudson_job_lazy_exception = new HudsonJobLazyExceptionHandler(null, $exception);
 
+        $this->expectException(\Exception::class);
+
         $hudson_job_lazy_exception->getHudsonJob();
     }
 
-    /**
-     * @expectedException \RuntimeException
-     */
     public function testRuntimeExceptionIsThrownWhenObjectIsIncorrectlyInitializedByDeveloper()
     {
         $hudson_job_lazy_exception = new HudsonJobLazyExceptionHandler(null, null);
+
+        $this->expectException(\RuntimeException::class);
 
         $hudson_job_lazy_exception->getHudsonJob();
     }

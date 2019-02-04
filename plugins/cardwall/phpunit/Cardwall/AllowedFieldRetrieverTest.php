@@ -49,7 +49,7 @@ class AllowedFieldRetrieverTest extends TestCase
      */
     private $form_element_factory;
 
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
 

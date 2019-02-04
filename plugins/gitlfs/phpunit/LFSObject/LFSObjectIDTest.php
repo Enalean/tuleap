@@ -32,11 +32,9 @@ class LFSObjectIDTest extends TestCase
         $this->assertSame($oid_value, $oid->getValue());
     }
 
-    /**
-     * @expectedException \UnexpectedValueException
-     */
     public function testInvalidOIDValueIsRejected()
     {
+        $this->expectException(\UnexpectedValueException::class);
         new LFSObjectID('invalid_oid');
     }
 }

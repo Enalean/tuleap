@@ -27,7 +27,7 @@ class URLVerificationRestrictedUserTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    public function tearDown()
+    public function tearDown() : void
     {
         unset($_SERVER['REQUEST_URI']);
         parent::tearDown();

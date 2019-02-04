@@ -111,9 +111,6 @@ class MilestonesBacklogTest extends MilestoneBase
         $this->assertEquals($backlog_items[2]['artifact']['tracker']['id'], $this->user_stories_tracker_id);
     }
 
-    /**
-     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
-     */
     public function testPUTBacklogWithoutPermission()
     {
         $response_put = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_2_NAME, $this->client->put('milestones/'.$this->release_artifact_ids[1].'/backlog', null, '['.$this->story_artifact_ids[4].','.$this->story_artifact_ids[5].','.$this->story_artifact_ids[3].']'));
@@ -188,9 +185,6 @@ class MilestonesBacklogTest extends MilestoneBase
         $this->assertEquals($backlog_items[$last_item]['artifact']['tracker']['id'], $this->user_stories_tracker_id);
     }
 
-    /**
-     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
-     */
     public function testPOSTBacklogWithoutPermissions()
     {
         $post = array(

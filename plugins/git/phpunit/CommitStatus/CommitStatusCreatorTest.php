@@ -51,9 +51,6 @@ class CommitStatusCreatorTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException \Tuleap\Git\CommitStatus\CommitDoesNotExistException
-     */
     public function testExistenceOfTheCommitReferenceIsVerified()
     {
         $dao = \Mockery::mock(CommitStatusDAO::class);
@@ -65,6 +62,8 @@ class CommitStatusCreatorTest extends TestCase
 
         $git_exec->shouldReceive('doesObjectExists')->andReturns(false);
 
+        $this->expectException(CommitDoesNotExistException::class);
+
         $commit_status_creator->createCommitStatus(
             $repository,
             $git_exec,
@@ -73,9 +72,6 @@ class CommitStatusCreatorTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException \Tuleap\Git\CommitStatus\InvalidCommitReferenceException
-     */
     public function testReferenceIsACommitIsVerified()
     {
         $dao = \Mockery::mock(CommitStatusDAO::class);
@@ -87,6 +83,8 @@ class CommitStatusCreatorTest extends TestCase
 
         $git_exec->shouldReceive('doesObjectExists')->andReturns(true);
         $git_exec->shouldReceive('getObjectType')->andReturns('tag');
+
+        $this->expectException(InvalidCommitReferenceException::class);
 
         $commit_status_creator->createCommitStatus(
             $repository,

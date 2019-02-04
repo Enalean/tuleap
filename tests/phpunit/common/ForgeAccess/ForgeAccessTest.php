@@ -33,13 +33,13 @@ class ForgeAccessTest extends TestCase
 
     private $permissions_overrider_manager;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $this->permissions_overrider_manager = \Mockery::mock(\PermissionsOverrider_PermissionsOverriderManager::class);
         \PermissionsOverrider_PermissionsOverriderManager::setInstance($this->permissions_overrider_manager);
     }
 
-    protected function tearDown()
+    protected function tearDown() : void
     {
         \PermissionsOverrider_PermissionsOverriderManager::clearInstance();
     }

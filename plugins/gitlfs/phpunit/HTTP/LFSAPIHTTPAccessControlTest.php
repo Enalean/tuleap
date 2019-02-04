@@ -27,6 +27,7 @@ use Tuleap\GitLFS\Batch\Request\BatchRequest;
 use Tuleap\Git\Permissions\AccessControlVerifier;
 use Tuleap\GitLFS\HTTP\LFSAPIHTTPAccessControl;
 use Tuleap\GitLFS\HTTP\LSFAPIHTTPAuthorization;
+use Tuleap\Request\NotFoundException;
 
 class LFSAPIHTTPAccessControlTest extends TestCase
 {
@@ -37,7 +38,7 @@ class LFSAPIHTTPAccessControlTest extends TestCase
     private $user_manager;
     private $access_control_verifier;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $this->lfs_http_api_access_control = \Mockery::mock(LSFAPIHTTPAuthorization::class);
         $this->http_access_control         = \Mockery::mock(HTTPAccessControl::class);
@@ -130,9 +131,6 @@ class LFSAPIHTTPAccessControlTest extends TestCase
         $this->assertTrue($batch_api_access_control->canAccess($repository, $batch_request, $user));
     }
 
-    /**
-     * @expectedException \Tuleap\Request\NotFoundException
-     */
     public function testUserWithoutReadPermissionDoesNotSeeTheRepository()
     {
         $this->lfs_http_api_access_control->shouldReceive('getUserFromAuthorizationToken')->andReturns(null);
@@ -152,6 +150,8 @@ class LFSAPIHTTPAccessControlTest extends TestCase
         $repository->shouldReceive('userCanRead')->andReturns(false);
         $batch_request = \Mockery::mock(BatchRequest::class);
 
-        $this->assertTrue($batch_api_access_control->canAccess($repository, $batch_request, $user));
+        $this->expectException(NotFoundException::class);
+
+        $batch_api_access_control->canAccess($repository, $batch_request, $user);
     }
 }

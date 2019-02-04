@@ -31,7 +31,7 @@ use SOAPBase;
 class ProjectTest extends SOAPBase
 {
 
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
 
@@ -40,7 +40,7 @@ class ProjectTest extends SOAPBase
         $_SERVER['SCRIPT_NAME'] = $this->base_wsdl;
     }
 
-    public function tearDown()
+    public function tearDown() : void
     {
         unset($_SERVER['SERVER_NAME']);
         unset($_SERVER['SERVER_PORT']);

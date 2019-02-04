@@ -43,7 +43,7 @@ class MilestonesBacklogPatchTest extends MilestoneBase
     private $releases;
     private $sprints;
 
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
 
@@ -90,9 +90,6 @@ class MilestonesBacklogPatchTest extends MilestoneBase
         );
     }
 
-    /**
-     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
-     */
     public function testPatchBacklogWithoutPermission() {
         $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_2_NAME, $this->client->patch($this->uri, null, json_encode(array(
             'order' => array(
@@ -103,7 +100,7 @@ class MilestonesBacklogPatchTest extends MilestoneBase
         ))));
         $this->assertEquals($response->getStatusCode(), 403);
 
-        $this->assertEquals(
+        $this->assertEqualsCanonicalizing(
             array(
                 $this->story_add['id'],
                 $this->story_sub['id'],
@@ -135,22 +132,16 @@ class MilestonesBacklogPatchTest extends MilestoneBase
         );
     }
 
-    public function testPatchBacklogWithItemNotInBacklogRaiseErrors() {
-        $exception_thrown = false;
-
-        try {
-            $this->getResponse($this->client->patch($this->uri, null, json_encode(array(
-                'order' => array(
-                    'ids'         => array($this->story_mul['id'], $this->story_sub['id']),
-                    'direction'   => 'before',
-                    'compared_to' => 1
-                )
-            ))));
-        } catch (Guzzle\Http\Exception\ClientErrorResponseException $exception) {
-            $exception_thrown = true;
-            $this->assertEquals(409, $exception->getResponse()->getStatusCode());
-        }
-        $this->assertTrue($exception_thrown, "An exception should have been thrown");
+    public function testPatchBacklogWithItemNotInBacklogRaiseErrors()
+    {
+        $response = $this->getResponse($this->client->patch($this->uri, null, json_encode(array(
+            'order' => array(
+                'ids'         => array($this->story_mul['id'], $this->story_sub['id']),
+                'direction'   => 'before',
+                'compared_to' => 1
+            )
+        ))));
+        $this->assertEquals(409, $response->getStatusCode());
     }
 
     public function testPatchContentBefore() {
@@ -201,9 +192,6 @@ class MilestonesBacklogPatchTest extends MilestoneBase
         );
     }
 
-    /**
-     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
-     */
     public function testPatchContentWithoutPermission() {
         $uri = 'milestones/'.$this->release['id'].'/content';
 

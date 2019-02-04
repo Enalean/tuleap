@@ -36,7 +36,8 @@ class SystemEvent_PROFTPD_DIRECTORY_CREATETest extends \PHPUnit\Framework\TestCa
     private $backend;
     private $acl_updater;
 
-    public function setUp() {
+    public function setUp() : void
+    {
         parent::setUp();
         $this->event   = $this->getMockBuilder('Tuleap\ProFTPd\SystemEvent\PROFTPD_DIRECTORY_CREATE')->setMethods(array('done'))->disableOriginalConstructor()->getMock();
         $this->backend = $this->getMockBuilder('Backend')->disableOriginalConstructor()->getMock();
@@ -52,7 +53,7 @@ class SystemEvent_PROFTPD_DIRECTORY_CREATETest extends \PHPUnit\Framework\TestCa
         $this->event->injectDependencies($this->backend, $this->acl_updater, $this->ftp_directory);
     }
 
-    public function tearDown()
+    public function tearDown() : void
     {
         rmdir($this->path);
         unset($GLOBALS['sys_http_user']);

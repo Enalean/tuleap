@@ -63,7 +63,7 @@ class TrackerXmlImportTest extends TestCase
 
     private $configuration;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $this->temporary_directory = sys_get_temp_dir() . '/' . bin2hex(random_bytes(8));
         mkdir($this->temporary_directory);
@@ -102,7 +102,7 @@ class TrackerXmlImportTest extends TestCase
         $this->configuration     = new ImportConfig();
     }
 
-    protected function tearDown()
+    protected function tearDown() : void
     {
         $folders = new RecursiveIteratorIterator(
             new RecursiveDirectoryIterator($this->temporary_directory, RecursiveDirectoryIterator::SKIP_DOTS),

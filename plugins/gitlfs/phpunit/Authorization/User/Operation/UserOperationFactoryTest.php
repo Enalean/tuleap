@@ -24,12 +24,12 @@ use PHPUnit\Framework\TestCase;
 
 class UserOperationFactoryTest extends TestCase
 {
-    /**
-     * @expectedException \Tuleap\GitLFS\Authorization\User\Operation\UnknownUserOperationException
-     */
     public function testCreationOfAUnknownOperationIsRejected()
     {
         $factory = new UserOperationFactory();
+
+        $this->expectException(UnknownUserOperationException::class);
+
         $factory->getUserOperationFromName('not_valid_operation_name');
     }
 }

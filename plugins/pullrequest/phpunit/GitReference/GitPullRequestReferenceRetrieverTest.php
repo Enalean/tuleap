@@ -45,9 +45,6 @@ class GitPullRequestReferenceRetrieverTest extends TestCase
         $this->assertInstanceOf(GitPullRequestReference::class, $git_reference);
     }
 
-    /**
-     * @expectedException \Tuleap\PullRequest\GitReference\GitPullRequestReferenceNotFoundException
-     */
     public function testNotFoundExceptionIsThrownWhenGitReferenceIsNotReservedForThePullRequest()
     {
         $dao = \Mockery::mock(GitPullRequestReferenceDAO::class);
@@ -57,6 +54,9 @@ class GitPullRequestReferenceRetrieverTest extends TestCase
 
 
         $reference_retriever = new GitPullRequestReferenceRetriever($dao);
+
+        $this->expectException(GitPullRequestReferenceNotFoundException::class);
+
         $reference_retriever->getGitReferenceFromPullRequest($pull_request);
     }
 }

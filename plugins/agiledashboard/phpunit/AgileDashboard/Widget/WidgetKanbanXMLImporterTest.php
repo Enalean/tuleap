@@ -39,7 +39,7 @@ class WidgetKanbanXMLImporterTest extends TestCase
      */
     private $widget;
 
-    public function setUp()
+    public function setUp() : void
     {
         $kanban = new \AgileDashboard_Kanban(
             20001,
@@ -53,7 +53,7 @@ class WidgetKanbanXMLImporterTest extends TestCase
         $this->widget = Mockery::mock(\Widget::class);
     }
 
-    public function tearDown()
+    public function tearDown() : void
     {
         if ($container = Mockery::getContainer()) {
             $this->addToAssertionCount($container->mockery_getExpectationCount());
@@ -96,9 +96,6 @@ class WidgetKanbanXMLImporterTest extends TestCase
         $this->assertEquals(30003, $event->getContentId());
     }
 
-    /**
-     * @expectedException \RuntimeException
-     */
     public function testItShouldThrowExceptionsWhenIDIsNotPresent()
     {
         $xml = new \SimpleXMLElement(
@@ -119,14 +116,12 @@ class WidgetKanbanXMLImporterTest extends TestCase
         );
 
         $importer = new WidgetKanbanXMLImporter();
-        $importer->configureWidget($event);
 
-        $this->assertFalse($event->isWidgetConfigured());
+
+        $this->expectException(\RuntimeException::class);
+        $importer->configureWidget($event);
     }
 
-    /**
-     * @expectedException \RuntimeException
-     */
     public function testItShouldThrowExceptionsWhenKanbanIsNotReferenced()
     {
         $xml = new \SimpleXMLElement(
@@ -147,8 +142,9 @@ class WidgetKanbanXMLImporterTest extends TestCase
         );
 
         $importer = new WidgetKanbanXMLImporter();
-        $importer->configureWidget($event);
 
-        $this->assertFalse($event->isWidgetConfigured());
+        $this->expectException(\RuntimeException::class);
+
+        $importer->configureWidget($event);
     }
 }

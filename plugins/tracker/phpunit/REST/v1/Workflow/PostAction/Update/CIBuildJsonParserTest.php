@@ -24,6 +24,7 @@ namespace Tuleap\Tracker\REST\v1\Workflow\PostAction\Update;
 require_once __DIR__ . '/../../../../../bootstrap.php';
 
 use PHPUnit\Framework\TestCase;
+use Tuleap\REST\I18NRestException;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\CIBuild;
 
 class CIBuildJsonParserTest extends TestCase
@@ -75,12 +76,10 @@ class CIBuildJsonParserTest extends TestCase
         $this->assertEquals(new CIBuild(null, "http://example.test"), $ci_build);
     }
 
-    /**
-     * @expectedException \Tuleap\REST\I18NRestException
-     * @expectedExceptionCode 400
-     */
     public function testParseThrowsWhenIdIsNotInt()
     {
+        $this->expectException(I18NRestException::class);
+        $this->expectExceptionCode(400);
         $this->parser->parse([
             "id" => "not int",
             "type" => "run_job",
@@ -88,33 +87,27 @@ class CIBuildJsonParserTest extends TestCase
         ]);
     }
 
-    /**
-     * @expectedException \Tuleap\REST\I18NRestException
-     * @expectedExceptionCode 400
-     */
     public function testParseThrowsWhenNoJobUrlProvided()
     {
+        $this->expectException(I18NRestException::class);
+        $this->expectExceptionCode(400);
         $this->parser->parse(["type" => "run_job"]);
     }
 
-    /**
-     * @expectedException \Tuleap\REST\I18NRestException
-     * @expectedExceptionCode 400
-     */
     public function testParseThrowsWhenJobUrlIsNull()
     {
+        $this->expectException(I18NRestException::class);
+        $this->expectExceptionCode(400);
         $this->parser->parse([
             "type" => "run_job",
             "job_url" => null
         ]);
     }
 
-    /**
-     * @expectedException \Tuleap\REST\I18NRestException
-     * @expectedExceptionCode 400
-     */
     public function testParseThrowsWhenJobUrlIsNotString()
     {
+        $this->expectException(I18NRestException::class);
+        $this->expectExceptionCode(400);
         $this->parser->parse([
             "type" => "run_job",
             "job_url" => 3

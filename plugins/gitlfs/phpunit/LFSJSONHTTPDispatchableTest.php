@@ -62,9 +62,6 @@ class LFSJSONHTTPDispatchableTest extends TestCase
         ];
     }
 
-    /**
-     * @expectedException \RuntimeException
-     */
     public function testRequestNotAcceptingGitLFSResponseAreNotProcessed() : void
     {
         $dispatchable = \Mockery::mock(DispatchableWithRequestNoAuthz::class);
@@ -74,6 +71,9 @@ class LFSJSONHTTPDispatchableTest extends TestCase
         $request->shouldReceive('getFromServer')->with('HTTP_ACCEPT')->andReturns('text/plain');
 
         $lfs_json_dispatchable = new LFSJSONHTTPDispatchable($dispatchable);
+
+        $this->expectException(\RuntimeException::class);
+
         $lfs_json_dispatchable->process(
             $request,
             \Mockery::mock(BaseLayout::class),

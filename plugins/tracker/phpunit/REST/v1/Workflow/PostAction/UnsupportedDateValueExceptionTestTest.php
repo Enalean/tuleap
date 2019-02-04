@@ -29,13 +29,13 @@ class UnsupportedDateValueExceptionTestTest extends TestCase
     public function testConstructor()
     {
         $exception = new UnsupportedDateValueException(1, [2, 3]);
-        $this->assertContains("'1'", $exception->getMessage());
-        $this->assertContains("'2', '3'", $exception->getMessage());
+        $this->assertStringContainsString("'1'", $exception->getMessage());
+        $this->assertStringContainsString("'2', '3'", $exception->getMessage());
     }
 
     public function testConstructorWithNull()
     {
         $exception = new UnsupportedDateValueException(null, [2, 3]);
-        $this->assertContains("'null'", $exception->getMessage());
+        $this->assertStringContainsString("'null'", $exception->getMessage());
     }
 }

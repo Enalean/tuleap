@@ -30,7 +30,7 @@ class DocumentToUploadCreatorTest extends TestCase
     private $dao;
     private $mockery_matcher_callback_wrapped_operations;
 
-    public function setUp()
+    public function setUp() : void
     {
         \ForgeConfig::store();
 
@@ -44,7 +44,7 @@ class DocumentToUploadCreatorTest extends TestCase
         );
     }
 
-    public function tearDown()
+    public function tearDown() : void
     {
         \ForgeConfig::restore();
     }
@@ -106,9 +106,6 @@ class DocumentToUploadCreatorTest extends TestCase
         $this->assertSame(12, $document_to_upload->getItemId());
     }
 
-    /**
-     * @expectedException \Tuleap\Docman\Upload\DocumentToUploadCreationConflictException
-     */
     public function testCreationIsRejectedWhenAnotherUserIsCreatingTheDocument()
     {
         $this->dao->shouldReceive('wrapAtomicOperations')->with($this->mockery_matcher_callback_wrapped_operations);
@@ -125,6 +122,8 @@ class DocumentToUploadCreatorTest extends TestCase
             ['user_id' => 103]
         ]);
 
+        $this->expectException(DocumentToUploadCreationConflictException::class);
+
         $creator->create(
             $parent_item,
             $user,
@@ -136,9 +135,6 @@ class DocumentToUploadCreatorTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException \Tuleap\Docman\Upload\DocumentToUploadCreationFileMismatchException
-     */
     public function testCreationIsRejectedWhenTheUserIsAlreadyCreatingTheDocumentWithAnotherFile()
     {
         $this->dao->shouldReceive('wrapAtomicOperations')->with($this->mockery_matcher_callback_wrapped_operations);
@@ -155,6 +151,8 @@ class DocumentToUploadCreatorTest extends TestCase
             ['user_id' => 102, 'filename' => 'filename1', 'filesize' => 123456]
         ]);
 
+        $this->expectException(DocumentToUploadCreationFileMismatchException::class);
+
         $creator->create(
             $parent_item,
             $user,
@@ -166,9 +164,6 @@ class DocumentToUploadCreatorTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException \Tuleap\Docman\Upload\DocumentToUploadMaxSizeExceededException
-     */
     public function testCreationIsRejectedIfTheFileIsBiggerThanTheConfigurationLimit()
     {
         $creator = new DocumentToUploadCreator($this->dao);
@@ -177,6 +172,8 @@ class DocumentToUploadCreatorTest extends TestCase
         $parent_item = \Mockery::mock(\Docman_Item::class);
         $user = \Mockery::mock(\PFUser::class);
         $current_time = new \DateTimeImmutable();
+
+        $this->expectException(DocumentToUploadMaxSizeExceededException::class);
 
         $creator->create(
             $parent_item,

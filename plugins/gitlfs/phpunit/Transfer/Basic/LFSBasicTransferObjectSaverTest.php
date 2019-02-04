@@ -38,7 +38,7 @@ class LFSBasicTransferObjectSaverTest extends TestCase
     private $path_allocator;
     private $prometheus;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $this->filesystem           = \Mockery::mock(FilesystemInterface::class);
         $this->lfs_object_retriever = \Mockery::mock(LFSObjectRetriever::class);
@@ -107,9 +107,6 @@ class LFSBasicTransferObjectSaverTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testSaveIsRejectedWhenInputIsNotAResource()
     {
         $object_saver = new LFSBasicTransferObjectSaver(
@@ -123,6 +120,8 @@ class LFSBasicTransferObjectSaverTest extends TestCase
         $this->lfs_object_retriever->shouldReceive('doesLFSObjectExistsForRepository')->andReturns(false);
         $this->filesystem->shouldReceive('has')->andReturns(false);
 
+        $this->expectException(\InvalidArgumentException::class);
+
         $broken_input_resource = false;
         $object_saver->saveObject(
             \Mockery::mock(\GitRepository::class),
@@ -131,10 +130,6 @@ class LFSBasicTransferObjectSaverTest extends TestCase
         );
     }
 
-
-    /**
-     * @expectedException \Tuleap\GitLFS\Transfer\Basic\LFSBasicTransferObjectIntegrityException
-     */
     public function testSaveIsRejectedWhenOIDOfSavedFileDoesNotMatchTheExpectation()
     {
         $object_saver = new LFSBasicTransferObjectSaver(
@@ -160,6 +155,8 @@ class LFSBasicTransferObjectSaverTest extends TestCase
         rewind($input_resource);
         $expected_oid_value = \hash('sha256', $input_data);
         $lfs_object         = new LFSObject(new LFSObjectID($expected_oid_value), $input_size);
+
+        $this->expectException(LFSBasicTransferObjectIntegrityException::class);
 
         $this->filesystem->shouldReceive('writeStream')->with($temporary_save_path, \Mockery::any())->andReturnUsing(
             function ($save_path, $input_stream) {

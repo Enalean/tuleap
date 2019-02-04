@@ -49,11 +49,9 @@ final class BlockToMaxSizeOnReadFilterTest extends TestCase
         fclose($input_source);
     }
 
-    /**
-     * @expectedException \UnexpectedValueException
-     */
     public function testNegativeSizeIsRejected()
     {
+        $this->expectException(\UnexpectedValueException::class);
         new BlockToMaxSizeOnReadFilter(-123);
     }
 }

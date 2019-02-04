@@ -31,12 +31,12 @@ class ArtifactPayloadTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         \UserHelper::setInstance(\Mockery::spy(\UserHelper::class));
     }
 
-    protected function tearDown()
+    protected function tearDown() : void
     {
         \UserHelper::clearInstance();
     }

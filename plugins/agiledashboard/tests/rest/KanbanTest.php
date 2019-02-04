@@ -491,7 +491,6 @@ class KanbanTest extends TestBase {
     }
 
     /**
-     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
      * @depends testPOSTKanbanItemsInColmun
      */
     public function testPOSTKanbanItemsInUnknowColmun() {
@@ -552,7 +551,6 @@ class KanbanTest extends TestBase {
     }
 
     /**
-     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
      * @depends testPUTTrackerReportsWithEmptyArray
      */
     public function testPUTTrackerReportsThrowsExceptionOnReportThatDoesNotExist()
@@ -566,6 +564,7 @@ class KanbanTest extends TestBase {
                 "tracker_report_ids" => array(-1)
             ))
         ));
+        $this->assertEquals(404, $response->getStatusCode());
     }
 
     /**
@@ -578,7 +577,6 @@ class KanbanTest extends TestBase {
     }
 
     /**
-     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
      * @depends testDELETEKanban
      */
     public function testGETDeletedKanban() {
@@ -587,9 +585,6 @@ class KanbanTest extends TestBase {
         $this->assertEquals($response->getStatusCode(), 404);
     }
 
-    /**
-     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
-     */
     public function testGETCumulativeFlowInvalidDate()
     {
         $url = 'kanban/' . DataBuilder::KANBAN_CUMULATIVE_FLOW_ID . '/cumulative_flow?' . http_build_query(
@@ -604,9 +599,6 @@ class KanbanTest extends TestBase {
         $this->assertEquals($response->getStatusCode(), 400);
     }
 
-    /**
-     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
-     */
     public function testGETCumulativeFlowTooMuchPointsRequested()
     {
         $url = 'kanban/' . DataBuilder::KANBAN_CUMULATIVE_FLOW_ID . '/cumulative_flow?' . http_build_query(

@@ -72,14 +72,8 @@ class UsersTest extends RestBase // phpcs:ignore
 
     public function testGETIdDoesNotWorkIfUserDoesNotExist()
     {
-        $exception_thrown = false;
-        try {
-            $this->getResponseByName(REST_TestDataBuilder::TEST_USER_1_NAME, $this->client->get('users/1'));
-        } catch (Guzzle\Http\Exception\ClientErrorResponseException $e) {
-            $this->assertEquals(404, $e->getResponse()->getStatusCode());
-            $exception_thrown = true;
-        }
-        $this->assertTrue($exception_thrown);
+        $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_1_NAME, $this->client->get('users/1'));
+        $this->assertEquals(404, $response->getStatusCode());
     }
 
     public function testGETMembershipBySelfReturnsUserGroups()
@@ -96,14 +90,11 @@ class UsersTest extends RestBase // phpcs:ignore
 
     public function testUserCannotSeeGroupOfAnotherUser()
     {
-        $exception_thrown = false;
-        try {
-            $this->getResponseByName(REST_TestDataBuilder::TEST_USER_1_NAME, $this->client->get('users/'.$this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME].'/membership'));
-        } catch (Guzzle\Http\Exception\ClientErrorResponseException $e) {
-            $this->assertEquals(403, $e->getResponse()->getStatusCode());
-            $exception_thrown = true;
-        }
-        $this->assertTrue($exception_thrown);
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::TEST_USER_1_NAME,
+            $this->client->get('users/'.$this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME].'/membership')
+        );
+        $this->assertEquals(403, $response->getStatusCode());
     }
 
     public function testUserCanSeeGroupOfAnotherUserIfSheHasDelegatedPermissions()
@@ -372,9 +363,6 @@ class UsersTest extends RestBase // phpcs:ignore
         $this->assertCount(0, $json);
     }
 
-    /**
-     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
-     */
     public function testGetUserWithInvalidJson()
     {
         $search = urlencode('{jeanclaude}');
@@ -404,9 +392,6 @@ class UsersTest extends RestBase // phpcs:ignore
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
-    /**
-     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
-     */
     public function testPatchPreferencesAnotherUser()
     {
         $preference = json_encode(
@@ -456,52 +441,33 @@ class UsersTest extends RestBase // phpcs:ignore
 
     public function testGETPreferencesAnotherUser()
     {
-        $exception_thrown = false;
-        try {
-            $this->getResponseByName(
-                REST_TestDataBuilder::TEST_USER_1_NAME,
-                $this->client->get('users/'.$this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME].'/preferences?key=my_preference')
-            );
-        } catch (Guzzle\Http\Exception\ClientErrorResponseException $e) {
-            $this->assertEquals(403, $e->getResponse()->getStatusCode());
-            $exception_thrown = true;
-        }
-        $this->assertTrue($exception_thrown);
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::TEST_USER_1_NAME,
+            $this->client->get('users/'.$this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME].'/preferences?key=my_preference')
+        );
+        $this->assertEquals(403, $response->getStatusCode());
     }
 
     public function testGETHistoryAnotherUser()
     {
-        $exception_thrown = false;
-        try {
-            $this->getResponseByName(
-                REST_TestDataBuilder::TEST_USER_1_NAME,
-                $this->client->get('users/'.$this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME].'/history')
-            );
-        } catch (Guzzle\Http\Exception\ClientErrorResponseException $e) {
-            $this->assertEquals(403, $e->getResponse()->getStatusCode());
-            $exception_thrown = true;
-        }
-        $this->assertTrue($exception_thrown);
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::TEST_USER_1_NAME,
+            $this->client->get('users/'.$this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME].'/history')
+        );
+        $this->assertEquals(403, $response->getStatusCode());
     }
 
     public function testPUTHistoryAnotherUser()
     {
-        $exception_thrown = false;
-        try {
-            $this->getResponseByName(
-                REST_TestDataBuilder::TEST_USER_1_NAME,
-                $this->client->put('users/'.$this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME].'/history', null, json_encode(array()))
-            );
-        } catch (Guzzle\Http\Exception\ClientErrorResponseException $e) {
-            $this->assertEquals(403, $e->getResponse()->getStatusCode());
-            $exception_thrown = true;
-        }
-        $this->assertTrue($exception_thrown);
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::TEST_USER_1_NAME,
+            $this->client->put('users/'.$this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME].'/history', null, json_encode(array()))
+        );
+        $this->assertEquals(403, $response->getStatusCode());
     }
 
     public function testPUTHistoryManipulation()
     {
-        $exception_thrown = false;
         $history_entries  = json_encode(
             array (
                 array (
@@ -512,15 +478,11 @@ class UsersTest extends RestBase // phpcs:ignore
                 )
             )
         );
-        try {
-            $this->getResponseByName(
-                REST_TestDataBuilder::TEST_USER_1_NAME,
-                $this->client->put('users/'.$this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME].'/history', null, $history_entries)
-            );
-        } catch (Guzzle\Http\Exception\ClientErrorResponseException $e) {
-            $this->assertEquals(403, $e->getResponse()->getStatusCode());
-            $exception_thrown = true;
-        }
-        $this->assertTrue($exception_thrown);
+
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::TEST_USER_1_NAME,
+            $this->client->put('users/'.$this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME].'/history', null, $history_entries)
+        );
+        $this->assertEquals(403, $response->getStatusCode());
     }
 }

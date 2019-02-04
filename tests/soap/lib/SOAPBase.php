@@ -40,7 +40,7 @@ class SOAPBase extends \PHPUnit\Framework\TestCase
 
     private static $user_ids;
 
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
 

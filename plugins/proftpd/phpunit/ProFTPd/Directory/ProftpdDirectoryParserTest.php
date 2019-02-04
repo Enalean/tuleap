@@ -24,7 +24,8 @@ require_once __DIR__.'/../../bootstrap.php';
 
 class DirectoryParserTest extends \PHPUnit\Framework\TestCase {
 
-    public function setUp() {
+    public function setUp() : void
+    {
         parent::setUp();
 
         $this->expected_item_01 = new DirectoryItem(

@@ -28,9 +28,6 @@ class RepositoryTestNonRegressionTest extends TestBase
     const TULEAP_MAGIC_GROUP_ID_ANONYMOUS = 1;
     const TULEAP_MAGIC_GROUP_ID_MEMBERS   = 3;
 
-    /**
-     * @expectedException \Guzzle\Http\Exception\ClientErrorResponseException
-     */
     public function testPOSTRepositoryWithMissingKey()
     {
         $params = json_encode(
@@ -49,9 +46,6 @@ class RepositoryTestNonRegressionTest extends TestBase
         $this->assertEquals($response->getStatusCode(), 400);
     }
 
-    /**
-     * @expectedException \Guzzle\Http\Exception\ClientErrorResponseException
-     */
     public function testPOSTWithEmailNotificationWithMissingPathKey()
     {
         $params = json_encode(
@@ -77,9 +71,6 @@ class RepositoryTestNonRegressionTest extends TestBase
         $this->assertEquals($response->getStatusCode(), 400);
     }
 
-    /**
-     * @expectedException \Guzzle\Http\Exception\ClientErrorResponseException
-     */
     public function testPOSTWithEmailNotificationWithMissingEmailsKey()
     {
         $params = json_encode(
@@ -102,9 +93,6 @@ class RepositoryTestNonRegressionTest extends TestBase
         $this->assertEquals($response->getStatusCode(), 400);
     }
 
-    /**
-     * @expectedException \Guzzle\Http\Exception\ClientErrorResponseException
-     */
     public function testPOSTWithEmailNotificationWithMissingUserGroupsKey()
     {
         $params = json_encode(
@@ -127,9 +115,6 @@ class RepositoryTestNonRegressionTest extends TestBase
         $this->assertEquals($response->getStatusCode(), 400);
     }
 
-    /**
-     * @expectedException \Guzzle\Http\Exception\ClientErrorResponseException
-     */
     public function testPOSTWithEmailNotificationWithMissingUsersKey()
     {
         $params = json_encode(
@@ -155,9 +140,6 @@ class RepositoryTestNonRegressionTest extends TestBase
         $this->assertEquals($response->getStatusCode(), 400);
     }
 
-    /**
-     * @expectedException \Guzzle\Http\Exception\ClientErrorResponseException
-     */
     public function testPOSTWithEmailNotificationWithEmptyNotification()
     {
         $params = json_encode(
@@ -181,9 +163,6 @@ class RepositoryTestNonRegressionTest extends TestBase
         $this->assertEquals($response->getStatusCode(), 400);
     }
 
-    /**
-     * @expectedException \Guzzle\Http\Exception\ClientErrorResponseException
-     */
     public function testPOSTWithDuplicatePath()
     {
         $params = json_encode(
@@ -218,9 +197,6 @@ class RepositoryTestNonRegressionTest extends TestBase
         $this->assertEquals($response->getStatusCode(), 400);
     }
 
-    /**
-     * @expectedException \Guzzle\Http\Exception\ClientErrorResponseException
-     */
     public function testPOSTWithNonExistingGroupId()
     {
         $params = json_encode(
@@ -244,12 +220,9 @@ class RepositoryTestNonRegressionTest extends TestBase
         );
 
         $response = $this->getResponse($this->client->post('svn', null, $params));
-        $this->assertEquals($response->getStatusCode(), 400);
+        $this->assertEquals(404, $response->getStatusCode());
     }
 
-    /**
-     * @expectedException \Guzzle\Http\Exception\ClientErrorResponseException
-     */
     public function testPOSTWithUGroupIdFromAnOtherProject()
     {
         $params = json_encode(
@@ -276,9 +249,6 @@ class RepositoryTestNonRegressionTest extends TestBase
         $this->assertEquals($response->getStatusCode(), 400);
     }
 
-    /**
-     * @expectedException \Guzzle\Http\Exception\ClientErrorResponseException
-     */
     public function testPOSTWithUnsupportedDynamicUGroupId()
     {
         $params = json_encode(
@@ -386,9 +356,6 @@ class RepositoryTestNonRegressionTest extends TestBase
         );
     }
 
-    /**
-     * @expectedException \Guzzle\Http\Exception\ClientErrorResponseException
-     */
     public function testPUTRepositoryWithMissingCommitRulesKey()
     {
         $params = json_encode(
@@ -417,9 +384,6 @@ class RepositoryTestNonRegressionTest extends TestBase
         $this->assertEquals($response->getStatusCode(), 400);
     }
 
-    /**
-     * @expectedException \Guzzle\Http\Exception\ClientErrorResponseException
-     */
     public function testPUTRepositoryWithMissingImmutableTagKey()
     {
         $params = json_encode(
@@ -448,9 +412,6 @@ class RepositoryTestNonRegressionTest extends TestBase
         $this->assertEquals($response->getStatusCode(), 400);
     }
 
-    /**
-     * @expectedException \Guzzle\Http\Exception\ClientErrorResponseException
-     */
     public function testPUTRepositoryWithMissingAccessFileKey()
     {
         $params = json_encode(
@@ -482,9 +443,6 @@ class RepositoryTestNonRegressionTest extends TestBase
         $this->assertEquals($response->getStatusCode(), 400);
     }
 
-    /**
-     * @expectedException \Guzzle\Http\Exception\ClientErrorResponseException
-     */
     public function testPUTRepositoryWithMissingEmailNotificationsKey()
     {
         $params = json_encode(
@@ -507,9 +465,6 @@ class RepositoryTestNonRegressionTest extends TestBase
         $this->assertEquals($response->getStatusCode(), 400);
     }
 
-    /**
-     * @expectedException \Guzzle\Http\Exception\ClientErrorResponseException
-     */
     public function testPUTRepositoryWithMissingCommitRulesCommitChangedKey()
     {
         $params = json_encode(
@@ -541,9 +496,6 @@ class RepositoryTestNonRegressionTest extends TestBase
         $this->assertEquals($response->getStatusCode(), 400);
     }
 
-    /**
-     * @expectedException \Guzzle\Http\Exception\ClientErrorResponseException
-     */
     public function testPUTRepositoryWithMissingImmutableTagsWhiteListKey()
     {
         $params = json_encode(
@@ -571,9 +523,6 @@ class RepositoryTestNonRegressionTest extends TestBase
         $this->assertEquals($response->getStatusCode(), 400);
     }
 
-    /**
-     * @expectedException \Guzzle\Http\Exception\ClientErrorResponseException
-     */
     public function testPUTRepositoryWithMissingUsersKey()
     {
         $params = json_encode(
@@ -600,9 +549,6 @@ class RepositoryTestNonRegressionTest extends TestBase
         $this->assertEquals($response->getStatusCode(), 400);
     }
 
-    /**
-     * @expectedException \Guzzle\Http\Exception\ClientErrorResponseException
-     */
     public function testPUTRepositoryWithMissingUserGroupsKey()
     {
         $params = json_encode(

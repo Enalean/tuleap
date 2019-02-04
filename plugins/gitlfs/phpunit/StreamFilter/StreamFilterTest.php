@@ -69,23 +69,20 @@ class StreamFilterTest extends TestCase
         fclose($resource);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testAttachingAFilterToSomethingElseThanAResourceIsRejected()
     {
+        $this->expectException(\InvalidArgumentException::class);
         $not_a_resource = false;
         StreamFilter::prependFilter($not_a_resource, \Mockery::mock(FilterInterface::class));
     }
 
-    /**
-     * @expectedException \DomainException
-     */
     public function testFilterWithInvalidChainIdentifierIsRejected()
     {
         $resource = fopen('php://memory', 'rb');
         $filter   = \Mockery::mock(FilterInterface::class);
         $filter->shouldReceive('getFilteredChainIdentifier')->andReturns(123456789);
+
+        $this->expectException(\DomainException::class);
 
         try {
             StreamFilter::prependFilter($resource, $filter);

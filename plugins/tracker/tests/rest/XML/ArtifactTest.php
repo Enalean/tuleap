@@ -58,7 +58,8 @@ class ArtifactTest extends RestBase {
         $this->xml_client->setDefaultOption('headers/Content-Type', 'application/xml; charset=UTF8');
     }
 
-    public function setUp() {
+    public function setUp() : void
+    {
         parent::setUp();
 
         $this->getReleaseArtifactIds();

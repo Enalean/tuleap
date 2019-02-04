@@ -172,7 +172,7 @@ class XmlImportTest extends \PHPUnit\Framework\TestCase
      */
     private $artifact_source_id_dao;
 
-    public function setUp()
+    public function setUp() : void
     {
         $this->tracker = \Mockery::mock(Tracker::class);
         $this->tracker->shouldReceive('getId')->andReturn($this->tracker_id);

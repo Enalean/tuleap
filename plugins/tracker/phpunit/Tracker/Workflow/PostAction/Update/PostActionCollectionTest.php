@@ -25,6 +25,7 @@ use PHPUnit\Framework\TestCase;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\CIBuild;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\PostActionIdCollection;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\SetDateValue;
+use Tuleap\Tracker\Workflow\PostAction\Update\Internal\UnknownPostActionIdsException;
 
 class PostActionCollectionTest extends TestCase
 {
@@ -55,9 +56,6 @@ class PostActionCollectionTest extends TestCase
         $this->assertEquals([$updated_action], $diff->getUpdatedActions());
     }
 
-    /**
-     * @expectedException \Tuleap\Tracker\Workflow\PostAction\Update\Internal\UnknownPostActionIdsException
-     */
     public function testCompareCIBuildActionsToThrowsWhenUnknownPostActionId()
     {
         $unknown_action = new CIBuild(10, 'https://example.com');
@@ -66,6 +64,8 @@ class PostActionCollectionTest extends TestCase
         $existing_ids->shouldReceive('contains')
             ->withArgs([10])
             ->andReturnFalse();
+
+        $this->expectException(UnknownPostActionIdsException::class);
 
         $actions->compareCIBuildActionsTo($existing_ids);
     }

@@ -65,7 +65,7 @@ class BurndownDataBuilderForRESTTest extends TestCase
     private $filed_id;
 
 
-    protected function setUp()
+    protected function setUp() : void
     {
         parent::setUp();
 
@@ -114,7 +114,7 @@ class BurndownDataBuilderForRESTTest extends TestCase
         $GLOBALS['Language']->shouldReceive('getText');
     }
 
-    protected function tearDown()
+    protected function tearDown() : void
     {
         date_default_timezone_set($this->original_timezone);
         unset($GLOBALS['Language']);

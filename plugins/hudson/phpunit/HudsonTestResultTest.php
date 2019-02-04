@@ -35,7 +35,7 @@ class HudsonTestResultTest extends TestCase
      */
     private $http_client;
 
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
 
@@ -46,7 +46,7 @@ class HudsonTestResultTest extends TestCase
         $GLOBALS['Language'] = Mockery::spy(BaseLanguage::class);
     }
 
-    public function tearDown()
+    public function tearDown() : void
     {
         unset($GLOBALS['Language']);
         $this->xml_security->disableExternalLoadOfEntities();

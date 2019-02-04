@@ -35,7 +35,7 @@ class AuthorizationRequestCreatorTest extends TestCase
 
     private $state_manager;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $state = \Mockery::mock(State::class);
         $state->shouldReceive('getSignedState')->andReturns(self::SIGNED_STATE);
@@ -59,12 +59,12 @@ class AuthorizationRequestCreatorTest extends TestCase
 
         $authorization_request_url = $authorization_request->getURL();
         $this->assertStringStartsWith($authorization_endpoint, $authorization_request_url);
-        $this->assertContains('client_id=1234', $authorization_request_url);
-        $this->assertContains('redirect_uri=', $authorization_request_url);
-        $this->assertContains('response_type=code', $authorization_request_url);
-        $this->assertContains('scope=openid+profile+email', $authorization_request_url);
-        $this->assertContains('state=' . self::SIGNED_STATE, $authorization_request_url);
-        $this->assertContains('nonce=' . self::NONCE_FOR_TEST, $authorization_request_url);
+        $this->assertStringContainsString('client_id=1234', $authorization_request_url);
+        $this->assertStringContainsString('redirect_uri=', $authorization_request_url);
+        $this->assertStringContainsString('response_type=code', $authorization_request_url);
+        $this->assertStringContainsString('scope=openid+profile+email', $authorization_request_url);
+        $this->assertStringContainsString('state=' . self::SIGNED_STATE, $authorization_request_url);
+        $this->assertStringContainsString('nonce=' . self::NONCE_FOR_TEST, $authorization_request_url);
     }
 
     public function testValidAuthorizationRequestWithMultipleProvidersIsGenerated()

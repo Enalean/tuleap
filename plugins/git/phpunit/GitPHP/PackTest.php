@@ -79,7 +79,7 @@ class PackTest extends TestCase
      * In the V2 pack index with 64-bit index entries, all Git objects located after the offset 1200
      * use 64-bit index entries
      */
-    protected function setUp()
+    protected function setUp() : void
     {
         $git_repository = vfsStream::setup(
             'git_repo',
@@ -173,29 +173,29 @@ class PackTest extends TestCase
         return $full_object_tests;
     }
 
-    /**
-     * @expectedException \Exception
-     * @expectedExceptionMessage Unsupported pack format
-     */
     public function testGetObjectRejectsPackWithInvalidSignature()
     {
         $this->pack_index_file->withContent(file_get_contents(self::V2_PACK_INDEX_PATH));
         $this->pack_archive_file->withContent('NOTAPACK');
 
         $pack           = new Pack($this->project, self::SHA1_PACK);
+
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('Unsupported pack format');
+
         $pack->GetObject('60bcae14911e8f4ec8949936ce5f3f4162abca0a', $type);
     }
 
-    /**
-     * @expectedException \Exception
-     * @expectedExceptionMessage Unsupported pack format
-     */
     public function testGetObjectRejectsPackWithUnsupportedVersion()
     {
         $this->pack_index_file->withContent(file_get_contents(self::V2_PACK_INDEX_PATH));
         $this->pack_archive_file->withContent('PACK' . pack('N', 9));
 
         $pack           = new Pack($this->project, self::SHA1_PACK);
+
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('Unsupported pack format');
+
         $pack->GetObject('60bcae14911e8f4ec8949936ce5f3f4162abca0a', $type);
     }
 }

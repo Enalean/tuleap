@@ -42,7 +42,7 @@ class LFSTransferVerifierTest extends TestCase
      */
     private $mockery_matcher_callback_wrapped_operations;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $this->filesystem           = \Mockery::mock(FilesystemInterface::class);
         $this->lfs_object_retriever = \Mockery::mock(LFSObjectRetriever::class);

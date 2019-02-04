@@ -55,7 +55,7 @@ class BurndownRemainingEffortAdderTest extends TestCase
      */
     private $computed_cache;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         parent::setUp();
 
@@ -74,7 +74,7 @@ class BurndownRemainingEffortAdderTest extends TestCase
         $GLOBALS['Language']->shouldReceive('getText');
     }
 
-    protected function tearDown()
+    protected function tearDown() : void
     {
         unset($GLOBALS['Language']);
         parent::tearDown();

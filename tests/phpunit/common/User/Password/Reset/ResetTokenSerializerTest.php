@@ -21,6 +21,7 @@
 namespace Tuleap\User\Password\Reset;
 
 use PHPUnit\Framework\TestCase;
+use Tuleap\Authentication\SplitToken\InvalidIdentifierFormatException;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 use Tuleap\Cryptography\ConcealedString;
@@ -41,14 +42,14 @@ class ResetTokenSerializerTest extends TestCase
         $this->assertSame((string) $verification_string->getString(), (string) $unserialized_token->getVerificationString()->getString());
     }
 
-    /**
-     * @expectedException \Tuleap\Authentication\SplitToken\InvalidIdentifierFormatException
-     */
     public function testIncorrectlyFormattedIdentifierIsRejected()
     {
         $identifier = '100' . ResetTokenSerializer::PARTS_SEPARATOR . 'random_string' . ResetTokenSerializer::PARTS_SEPARATOR . 'separated';
 
         $serializer = new ResetTokenSerializer();
+
+        $this->expectException(InvalidIdentifierFormatException::class);
+
         $serializer->getSplitToken(new ConcealedString($identifier));
     }
 }

@@ -20,6 +20,7 @@
 
 namespace Tuleap\Project\REST;
 
+use Luracast\Restler\RestException;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 
@@ -32,7 +33,7 @@ class UserRESTReferenceRetrieverTest extends TestCase
      */
     private $user_manager;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $this->user_manager = \Mockery::mock(\UserManager::class);
     }
@@ -74,11 +75,6 @@ class UserRESTReferenceRetrieverTest extends TestCase
         ];
     }
 
-    /**
-     * @expectedException \Luracast\Restler\RestException
-     * @expectedExceptionCode 400
-     * @expectedExceptionMessage More than one user use the email
-     */
     public function testMultipleUsersMatchingASameEmailAreRejected()
     {
         $representation        = new UserRESTReferenceRepresentation();
@@ -88,14 +84,14 @@ class UserRESTReferenceRetrieverTest extends TestCase
             ->andReturns([\Mockery::mock(\PFUser::class), \Mockery::mock(\PFUser::class)]);
 
         $retriever = new UserRESTReferenceRetriever($this->user_manager);
+
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(400);
+        $this->expectExceptionMessage('More than one user use the email');
+
         $retriever->getUserFromReference($representation);
     }
 
-    /**
-     * @expectedException \Luracast\Restler\RestException
-     * @expectedExceptionCode 400
-     * @expectedExceptionMessage Only one key can be passed
-     */
     public function testOnlyKeyOfTheRepresentationCanBeSet()
     {
         $representation           = new UserRESTReferenceRepresentation();
@@ -103,17 +99,22 @@ class UserRESTReferenceRetrieverTest extends TestCase
         $representation->username = 'username';
 
         $retriever = new UserRESTReferenceRetriever($this->user_manager);
+
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(400);
+        $this->expectExceptionMessage('Only one key can be passed');
+
         $retriever->getUserFromReference($representation);
     }
 
-    /**
-     * @expectedException \Luracast\Restler\RestException
-     * @expectedExceptionCode 400
-     * @expectedExceptionMessage At least one key must
-     */
     public function testRepresentationMustHaveAtLeastOneValue()
     {
         $retriever = new UserRESTReferenceRetriever($this->user_manager);
+
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(400);
+        $this->expectExceptionMessage('At least one key must');
+
         $retriever->getUserFromReference(new UserRESTReferenceRepresentation);
     }
 }

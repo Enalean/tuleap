@@ -28,7 +28,7 @@ class TrackerBase extends RestBase
     protected $report_id;
     protected $report_uri;
 
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
 

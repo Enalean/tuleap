@@ -20,8 +20,6 @@
 
 namespace Tuleap\DynamicCredentials\REST;
 
-use Guzzle\Http\Exception\ClientErrorResponseException;
-
 require_once 'bootstrap.php';
 
 class DynamicCredentialsTest extends \RestBase
@@ -35,7 +33,8 @@ class DynamicCredentialsTest extends \RestBase
         $expiration_date = new \DateTimeImmutable('+30 minutes');
 
         $this->createAccount(self::USERNAME, self::PASSWORD, $expiration_date);
-        $this->login(self::USERNAME, self::PASSWORD);
+        $response = $this->login(self::USERNAME, self::PASSWORD);
+        $this->assertSame(201, $response->getStatusCode());
     }
 
     public function testPOSTNewAccountAndLoginFailureWithExpiredAccount()
@@ -51,22 +50,18 @@ class DynamicCredentialsTest extends \RestBase
         $expiration_date = new \DateTimeImmutable('+30 minutes');
         $expiration = $expiration_date->format(\DateTime::ATOM);
 
-        try {
-            $this->getResponseWithoutAuth($this->client->post(
-                'dynamic_credentials',
-                null,
-                json_encode([
-                    'username'   => self::USERNAME . 'reject_me',
-                    'password'   => self::PASSWORD,
-                    'expiration' => $expiration,
-                    'signature'  => $this->getSignatureForPostAction('wrong_username', self::PASSWORD, $expiration)
-                ])
-            ));
-        } catch (ClientErrorResponseException $ex) {
-            $this->assertEquals(403, $ex->getResponse()->getStatusCode());
-            return;
-        }
-        $this->fail();
+        $response = $this->getResponseWithoutAuth($this->client->post(
+            'dynamic_credentials',
+            null,
+            json_encode([
+                'username'   => self::USERNAME . 'reject_me',
+                'password'   => self::PASSWORD,
+                'expiration' => $expiration,
+                'signature'  => $this->getSignatureForPostAction('wrong_username', self::PASSWORD, $expiration)
+            ])
+        ));
+
+        $this->assertEquals(403, $response->getStatusCode());
     }
 
 
@@ -88,13 +83,9 @@ class DynamicCredentialsTest extends \RestBase
         $uri = 'dynamic_credentials/' . urlencode(self::USERNAME . 'reject_me') . '?'  . http_build_query([
                 'signature' => $this->getSignatureForDeleteAction('wrong_username')
             ]);
-        try {
-            $this->getResponseWithoutAuth($this->client->delete($uri));
-        } catch (ClientErrorResponseException $ex) {
-            $this->assertEquals(403, $ex->getResponse()->getStatusCode());
-            return;
-        }
-        $this->fail();
+        $response = $this->getResponseWithoutAuth($this->client->delete($uri));
+
+        $this->assertEquals(403, $response->getStatusCode());
     }
 
     public function testDELETENonExistingAccount()
@@ -102,13 +93,9 @@ class DynamicCredentialsTest extends \RestBase
         $uri = 'dynamic_credentials/' . urlencode(self::USERNAME. 'donotexist') . '?' . http_build_query([
                 'signature'  => $this->getSignatureForDeleteAction(self::USERNAME. 'donotexist')
             ]);
-        try {
-            $this->getResponseWithoutAuth($this->client->delete($uri));
-        } catch (ClientErrorResponseException $ex) {
-            $this->assertEquals(404, $ex->getResponse()->getStatusCode());
-            return;
-        }
-        $this->fail();
+        $response = $this->getResponseWithoutAuth($this->client->delete($uri));
+
+        $this->assertEquals(404, $response->getStatusCode());
     }
 
     /**
@@ -136,7 +123,7 @@ class DynamicCredentialsTest extends \RestBase
 
     private function login(string $username, string $password)
     {
-        $response = $this->getResponseWithoutAuth($this->client->post(
+        return $this->getResponseWithoutAuth($this->client->post(
             'tokens',
             null,
             json_encode([
@@ -144,18 +131,13 @@ class DynamicCredentialsTest extends \RestBase
                 'password' => $password
             ])
         ));
-        $this->assertSame(201, $response->getStatusCode());
     }
 
     private function ensureLoginFail(string $username, string $password)
     {
-        try {
-            $this->login($username, $password);
-        } catch (ClientErrorResponseException $ex) {
-            $this->assertEquals(401, $ex->getResponse()->getStatusCode());
-            return;
-        }
-        $this->fail();
+        $response = $this->login($username, $password);
+
+        $this->assertEquals(401, $response->getStatusCode());
     }
 
     private function getSignatureForPostAction(string $username, string $password, string $expiration_date): string

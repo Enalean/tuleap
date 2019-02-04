@@ -23,7 +23,8 @@
  */
 class ArtifactsCreationWithWrongWorkflowTest extends RestBase {
 
-    public function setUp() {
+    public function setUp() : void
+    {
         parent::setUp();
 
         $this->tracker_test_helper = new Test\Rest\Tracker\TrackerFactory(
@@ -34,9 +35,6 @@ class ArtifactsCreationWithWrongWorkflowTest extends RestBase {
         );
     }
 
-    /**
-     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
-     */
     public function testPostArtifactFailsIfValueInSelectBoxIsNotValidRegardingWorkflow() {
         $tracker  = $this->tracker_test_helper->getTrackerRest('releases');
         $response = $tracker->createArtifact(
@@ -46,7 +44,7 @@ class ArtifactsCreationWithWrongWorkflowTest extends RestBase {
             )
         );
 
-        $this->assertEquals($response->getStatusCode(), 400);
+        $this->assertEquals($response['error']['code'], 400);
     }
 
     public function testPostArtifactSuccededIfValueInSelectBoxIsValidRegardingWorkflow() {

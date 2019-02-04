@@ -26,7 +26,7 @@ require_once __DIR__ . '/../../bootstrap.php';
 
 class CollectionOfUserInvolvedInNotificationPresenterBuilderTest extends TestCase
 {
-    protected function tearDown()
+    protected function tearDown() : void
     {
         \UserHelper::clearInstance();
     }

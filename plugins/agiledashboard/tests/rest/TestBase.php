@@ -28,7 +28,7 @@ class TestBase extends RestBase
     protected $kanban_artifact_ids = array();
     protected $tracker_report_id   = null;
 
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
 
