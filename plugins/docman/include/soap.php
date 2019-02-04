@@ -571,7 +571,14 @@ $soapFunctions[] = array('createDocmanFolder', 'Create a folder');
 function createDocmanFile($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, $permissions, $metadata, $file_size, $file_name, $mime_type, $content, $chunk_offset, $chunk_size, $author, $date, $owner, $create_date, $update_date) {
 
     $content = base64_decode($content);
-    
+
+    if (strlen($content) !== (int) $file_size) {
+        return new SoapFault(
+            invalid_item_fault,
+            sprintf('Expected a file of %s bytes, got a file of %s bytes', $file_size, strlen($content))
+        );
+    }
+
     //ignore mime type coming from the client, guess it instead
     //Write the content of the file into a temporary file
     //The best accurate results are got when the file has the real extension, therefore use the filename
@@ -587,7 +594,6 @@ function createDocmanFile($sessionKey, $group_id, $parent_id, $title, $descripti
     $extraParams = array(
         'chunk_offset'   => $chunk_offset,
         'chunk_size'     => $chunk_size,
-        'file_size'      => $file_size,
         'file_name'      => $file_name,
         'mime_type'      => $mime_type,
         'upload_content' => $content,
@@ -649,14 +655,22 @@ $soapFunctions[] = array('createDocmanEmptyDocument', 'Creates a docman empty do
  * Creates a docman file version
  */
 function createDocmanFileVersion($sessionKey, $group_id, $item_id, $label, $changelog, $file_size, $file_name, $mime_type, $content, $chunk_offset, $chunk_size, $author, $date) {
-        
+
+    $content = base64_decode($content);
+
+    if (strlen($content) !== (int) $file_size) {
+        return new SoapFault(
+            invalid_item_fault,
+            sprintf('Expected a file of %s bytes, got a file of %s bytes', $file_size, strlen($content))
+        );
+    }
+
     $params = array(
         'id'             => $item_id,
         'version'        => array('label' => $label, 'changelog' => $changelog),
-        'upload_content' => base64_decode($content),
+        'upload_content' => $content,
         'chunk_offset'   => $chunk_offset,
         'chunk_size'     => $chunk_size,
-        'file_size'      => $file_size,
         'file_name'      => $file_name,
         'mime_type'      => $mime_type,
         'date'           => $date,

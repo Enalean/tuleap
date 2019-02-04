@@ -180,11 +180,7 @@ class Docman_Actions extends Actions {
                         $_filename = basename($path);
                     }
 
-                    if ($request->exist('file_size')) {
-                        $_filesize = $request->get('file_size');
-                    } else {
-                        $_filesize = filesize($path);
-                    }
+                    $_filesize = filesize($path);
 
                     if ($request->exist('mime_type')) {
                         $_filetype = $request->get('mime_type');

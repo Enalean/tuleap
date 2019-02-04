@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-require_once dirname(__FILE__).'/../bootstrap.php';
+require_once __DIR__ .'/../bootstrap.php';
 
 /**
  * @group DocmanTest
@@ -144,6 +144,41 @@ class DocmanTest extends SOAPBase
         $this->assertTrue($item_id > 0);
 
         return $item_id;
+    }
+
+    /**
+     * @depends testGetDocumentRootFolder
+     * @param $root_folder_id
+     */
+    public function testCreateFileWithTheWrongSizeFail($root_folder_id) : void
+    {
+        $session_hash = $this->getSessionHash();
+
+        $this->expectException(SoapFault::class);
+
+        $this->soap_base->createDocmanFile(
+            $session_hash,
+            SOAP_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID,
+            $root_folder_id,
+            'Uploaded document fail',
+            'Description of uploaded document fail',
+            'end',
+            null,
+            null,
+            array(),
+            array(),
+            strlen($this->content) + 10,
+            'filefail.txt',
+            'text/plain',
+            base64_encode($this->content),
+            0,
+            strlen($this->content),
+            SOAP_TestDataBuilder::TEST_USER_1_NAME,
+            '1438953065',
+            SOAP_TestDataBuilder::TEST_USER_1_NAME,
+            '1438953065',
+            ''
+        );
     }
 
     /**
