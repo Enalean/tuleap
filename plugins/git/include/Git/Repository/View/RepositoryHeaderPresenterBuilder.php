@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -80,6 +80,10 @@ class RepositoryHeaderPresenterBuilder
      * @var GitDao
      */
     private $dao;
+    /**
+     * @var DefaultCloneURLSelector
+     */
+    private $default_clone_url_selector;
 
     public function __construct(
         GitDao $dao,
@@ -91,18 +95,20 @@ class RepositoryHeaderPresenterBuilder
         array $gerrit_servers,
         Git_Mirror_MirrorDataMapper $mirror_data_mapper,
         $selected_tab,
-        \EventManager $event_manager
+        \EventManager $event_manager,
+        DefaultCloneURLSelector $default_clone_url_selector
     ) {
-        $this->dao                    = $dao;
-        $this->url_manager            = $url_manager;
-        $this->driver_factory         = $driver_factory;
-        $this->project_creator_status = $project_creator_status;
-        $this->gerrit_usermanager     = $gerrit_usermanager;
-        $this->permissions_manager    = $permissions_manager;
-        $this->gerrit_servers         = $gerrit_servers;
-        $this->mirror_data_mapper     = $mirror_data_mapper;
-        $this->selected_tab           = $selected_tab;
-        $this->event_manager          = $event_manager;
+        $this->dao                        = $dao;
+        $this->url_manager                = $url_manager;
+        $this->driver_factory             = $driver_factory;
+        $this->project_creator_status     = $project_creator_status;
+        $this->gerrit_usermanager         = $gerrit_usermanager;
+        $this->permissions_manager        = $permissions_manager;
+        $this->gerrit_servers             = $gerrit_servers;
+        $this->mirror_data_mapper         = $mirror_data_mapper;
+        $this->selected_tab               = $selected_tab;
+        $this->event_manager              = $event_manager;
+        $this->default_clone_url_selector = $default_clone_url_selector;
     }
 
     /** @return RepositoryHeaderPresenter */
@@ -178,7 +184,9 @@ class RepositoryHeaderPresenterBuilder
         $mirrors = $this->mirror_data_mapper->fetchAllRepositoryMirrors($repository);
         $clone_urls->setMirrors($mirrors);
 
-        return new ClonePresenter($clone_urls, $repository);
+        $clone_presenter = new ClonePresenter($this->default_clone_url_selector);
+        $clone_presenter->build($clone_urls, $repository, $current_user);
+        return $clone_presenter;
     }
 
     private function buildTabsPresenter(GitRepository $repository)

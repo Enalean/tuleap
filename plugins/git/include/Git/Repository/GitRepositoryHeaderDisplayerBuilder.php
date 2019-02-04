@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -49,6 +49,7 @@ use Tuleap\Git\Gitolite\VersionDetector;
 use Tuleap\Git\GitViews\Header\HeaderRenderer;
 use Tuleap\Git\Permissions\FineGrainedDao;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
+use Tuleap\Git\Repository\View\DefaultCloneURLSelector;
 use Tuleap\Git\Repository\View\RepositoryHeaderPresenterBuilder;
 use Tuleap\Layout\IncludeAssets;
 use UserManager;
@@ -140,7 +141,8 @@ class GitRepositoryHeaderDisplayerBuilder
             $this->getGerritServerFactory()->getServers(),
             $this->getMirrorDataMapper(),
             $selected_tab,
-            EventManager::instance()
+            EventManager::instance(),
+            new DefaultCloneURLSelector()
         );
     }
 
