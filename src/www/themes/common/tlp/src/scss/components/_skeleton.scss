@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,85 +17,96 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-$tlp-skeleton-color: transparentize($tlp-theme-color, .9);
-$tlp-skeleton-secondary-color: transparentize($tlp-theme-color, .95);
-$tlp-skeleton-animation-duration: 1.2s;
+$tlp-skeleton-color: transparentize($tlp-theme-color, .85);
+$tlp-skeleton-highlight-color: transparentize($tlp-theme-color, .97);
 
-
-.tlp-skeleton-text-icon {
-    margin: 0 5px 0 0;
-}
-
-.tlp-skeleton-icon {
-    color: $tlp-skeleton-color;
-}
-
-.tlp-skeleton-text {
-    @extend %tlp-skeleton-text;
-}
-
-/* stylelint-disable selector-no-qualifying-type */
-h1.tlp-skeleton-text {
-    height: 46px;
-    background-size: 600px 8px;
-}
-
-h2.tlp-skeleton-text {
-    height: 30px;
-    background-size: 600px 7px;
-}
-
-h3.tlp-skeleton-text {
-    height: 20px;
-}
-
-h4.tlp-skeleton-text {
-    height: 20px;
-}
-
-h5.tlp-skeleton-text {
-    height: 18px;
-}
-
-h6.tlp-skeleton-text {
-    height: 17px;
-}
-/* stylelint-enable */
-
-.tlp-skeleton-label {
-    @extend %tlp-skeleton-text;
-    height: 14px;
-}
-
-.tlp-skeleton-select {
-    @extend %tlp-skeleton-animation;
-    background-size: 600px 50px;
-}
-
-%tlp-skeleton-animation {
-    animation: tlp-skeleton-animation-text $tlp-skeleton-animation-duration infinite linear;
-    background: linear-gradient(90deg, $tlp-skeleton-color 0, $tlp-skeleton-secondary-color 40px, $tlp-skeleton-color 80px) repeat-x bottom left;
-}
-
-%tlp-skeleton-text {
-    @extend %tlp-skeleton-animation;
-    display: inline-block;
-    width: 100px;
-    min-height: 6px;
-    border-radius: 3px;
-    background-size: 600px 6px;
-}
-
-@keyframes tlp-skeleton-animation-text {
+@keyframes skeletonBlink {
     0% {
-        background-position: -100px;
-    }
-
-    40% {
-        background-position: 140px;
+        opacity: 1;
     }
 
     100% {
-        background-position: 520px;
+        opacity: .3;
     }
+}
+
+@keyframes skeletonProgress {
+    0% {
+        background-position: 0, 0;
+    }
+
+    100% {
+        background-position: 100vw, 0;
+    }
+}
+
+.tlp-skeleton-text {
+    display: inline-flex;
+    position: relative;
+    width: 150px;
+    overflow: hidden;
+
+    &::after {
+        content: ' ';
+        display: inline-block;
+        position: relative;
+        width: 100%;
+        height: 6px;
+        animation: skeletonProgress 1.5s linear infinite;
+        border-radius: 2px;
+        background-image: linear-gradient(to right, $tlp-skeleton-color, $tlp-skeleton-highlight-color, $tlp-skeleton-color);
+        background-repeat: repeat-x;
+        background-position: -50vw bottom;
+        background-size: 100vw 100%;
+    }
+
+    &.tlp-label {
+        width: 30%;
+    }
+}
+
+h1 > .tlp-skeleton-text {
+    width: 350px;
+
+    &::after {
+        height: 16px;
+        border-radius: 4px;
+    }
+}
+
+h2 > .tlp-skeleton-text {
+    width: 300px;
+
+    &::after {
+        height: 12px;
+        border-radius: 3px;
+    }
+}
+
+p > .tlp-skeleton-text {
+    width: 100%;
+
+    &:last-child {
+        width: 70%;
+    }
+}
+
+.tlp-table > tbody > tr > td > .tlp-skeleton-text {
+    width: 70%;
+}
+
+.tlp-skeleton-icon {
+    animation: skeletonBlink 750ms linear infinite alternate;
+    color: $tlp-skeleton-color;
+
+    + .tlp-skeleton-text {
+        margin: 0 0 0 5px;
+    }
+}
+
+.tlp-skeleton-field {
+    animation: skeletonBlink 750ms linear infinite alternate;
+    border: 1px solid $tlp-skeleton-color;
+    background: transparent;
+    box-shadow: inset 0 0 0 1px $tlp-skeleton-color;
 }

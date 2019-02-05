@@ -22,12 +22,21 @@
         <h2 class="tlp-modal-subtitle" v-translate>Conditions of the transition</h2>
         <div class="tlp-form-element">
             <label
+                v-if="is_loading_modal"
+                key="group-label-skeleton"
+                class="tlp-label tlp-label-skeleton"
+            >
+                <span class="tlp-skeleton-text"></span>
+            </label>
+            <label
+                v-else
+                key="group-label"
                 for="workflow-configuration-permission"
                 class="tlp-label"
                 v-translate
             >Groups that may make the transition</label>
-            <select v-if="!user_groups"
-                    class="tlp-select tlp-skeleton-select"
+            <select v-if="is_loading_modal"
+                    class="tlp-select tlp-skeleton-field"
                     disabled
             ></select>
             <select v-else
@@ -46,13 +55,22 @@
         </div>
         <div class="tlp-form-element">
             <label
+                v-if="is_loading_modal"
+                key="fields-label-skeleton"
+                class="tlp-label tlp-label-skeleton"
+            >
+                <span class="tlp-skeleton-text"></span>
+            </label>
+            <label
+                v-else
+                key="fields-label"
                 for="workflow-configuration-not-empty-fields"
                 class="tlp-label"
                 v-translate
             >Field(s) that must not be empty</label>
             <select v-if="is_loading_modal"
                     id="workflow-configuration-not-empty-fields"
-                    class="tlp-select tlp-skeleton-select"
+                    class="tlp-select tlp-skeleton-field"
                     disabled
             ></select>
             <multi-select
@@ -73,18 +91,23 @@
         </div>
         <div class="tlp-form-element" v-if="!is_transition_from_new_artifact">
             <label
+                v-if="is_loading_modal"
                 for="workflow-configuration-not-empty-comment"
                 class="tlp-label tlp-checkbox"
             >
                 <input
-                    v-if="is_loading_modal"
-                    id="workflow-configuration-not-empty-comment"
                     type="checkbox"
-                    name="transition-comment-not-empty"
+                    class="tlp-skeleton-field"
                     disabled
                 >
+                <span class="tlp-skeleton-text"></span>
+            </label>
+            <label
+                v-else
+                for="workflow-configuration-not-empty-comment"
+                class="tlp-label tlp-checkbox"
+            >
                 <input
-                    v-else
                     id="workflow-configuration-not-empty-comment"
                     type="checkbox"
                     name="transition-comment-not-empty"

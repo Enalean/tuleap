@@ -1,4 +1,8 @@
 {
   "label": "Skeleton screens",
-  "shortcode": ".tlp-skeleton-[type]"
+  "children": [
+    "typo",
+    "fields",
+    "tables"
+  ]
 }
