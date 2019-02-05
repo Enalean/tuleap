@@ -58,15 +58,14 @@ class SetDateValueUpdaterTest extends TestCase
     {
         $this->set_date_value_repository = Mockery::mock(SetDateValueRepository::class);
         $this->set_date_value_repository
-            ->shouldReceive('deleteAllByTransitionIfIdNotIn')
+            ->shouldReceive('deleteAllByTransitionIfNotIn')
             ->byDefault();
         $this->set_date_value_repository
             ->shouldReceive('update')
             ->byDefault();
-        $this->tracker = Mockery::mock(\Tracker::class);
+        $this->tracker   = Mockery::mock(\Tracker::class);
         $this->validator = Mockery::mock(SetDateValueValidator::class);
-
-        $this->updater = new SetDateValueUpdater($this->set_date_value_repository, $this->validator);
+        $this->updater   = new SetDateValueUpdater($this->set_date_value_repository, $this->validator);
     }
 
     public function testUpdateAddsNewSetDateValueActions()
@@ -122,8 +121,8 @@ class SetDateValueUpdaterTest extends TestCase
             ->with($this->tracker, $action);
 
         $this->set_date_value_repository
-            ->shouldReceive('deleteAllByTransitionIfIdNotIn')
-            ->with($transition, [2])
+            ->shouldReceive('deleteAllByTransitionIfNotIn')
+            ->with($transition, [$action])
             ->andReturns();
 
         $this->updater->updateByTransition($actions, $transition);

@@ -52,9 +52,9 @@ class CIBuildUpdater implements PostActionUpdater
     {
         $actions->validateCIBuildActions($this->validator);
         $existing_ids_collection = $this->ci_build_repository->findAllIdsByTransition($transition);
-        $diff = $actions->compareCIBuildActionsTo($existing_ids_collection);
+        $diff                    = $actions->compareCIBuildActionsTo($existing_ids_collection);
 
-        $this->ci_build_repository->deleteAllByTransitionIfIdNotIn($transition, $diff->getUpdatedActionIds());
+        $this->ci_build_repository->deleteAllByTransitionIfNotIn($transition, $diff->getUpdatedActions());
 
         foreach ($diff->getAddedActions() as $added_action) {
             $this->ci_build_repository->create($transition, $added_action);

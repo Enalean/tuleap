@@ -103,12 +103,18 @@ class SetFloatValueRepository
     }
 
     /**
-     * @param Transition $transition
-     * @param int[] $ids_to_skip
+     * @param SetFloatValue[] $set_float_values
      * @throws DataAccessQueryException
      */
-    public function deleteAllByTransitionIfIdNotIn(Transition $transition, array $ids_to_skip)
+    public function deleteAllByTransitionIfNotIn(Transition $transition, array $set_float_values)
     {
+        $ids_to_skip = array_map(
+            function (SetFloatValue $action) {
+                return $action->getId();
+            },
+            $set_float_values
+        );
+
         $success = $this->set_float_value_dao->deletePostActionByTransitionIfIdNotIn($transition->getId(), $ids_to_skip);
         if ($success === false) {
             throw new DataAccessQueryException(

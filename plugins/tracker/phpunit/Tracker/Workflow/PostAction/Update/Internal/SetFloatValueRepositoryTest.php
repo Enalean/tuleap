@@ -121,18 +121,28 @@ class SetFloatValueRepositoryTest extends TestCase
         $this->set_float_value_repository->update($set_float_value);
     }
 
-    public function testDeleteAllByTransitionIfIdNotInDeletesExpectedTransitions()
+    public function testDeleteAllByTransitionIfNotInDeletesExpectedTransitions()
     {
+        $set_float_values = [
+            new SetFloatValue(1, 43, 1.23),
+            new SetFloatValue(2, 43, 1.23),
+            new SetFloatValue(3, 43, 1.23)
+        ];
         $this->set_float_value_dao
             ->shouldReceive('deletePostActionByTransitionIfIdNotIn')
             ->with(1, [1, 2, 3])
             ->andReturn(true);
         $transition = TransitionFactory::buildATransitionWithId(1);
-        $this->set_float_value_repository->deleteAllByTransitionIfIdNotIn($transition, [1, 2, 3]);
+        $this->set_float_value_repository->deleteAllByTransitionIfNotIn($transition, $set_float_values);
     }
 
-    public function testDeleteAllByTransitionIfIdNotInThrowsIfDeleteFail()
+    public function testDeleteAllByTransitionIfNotInThrowsIfDeleteFail()
     {
+        $set_float_values = [
+            new SetFloatValue(1, 43, 1.23),
+            new SetFloatValue(2, 43, 1.23),
+            new SetFloatValue(3, 43, 1.23)
+        ];
         $this->set_float_value_dao
             ->shouldReceive('deletePostActionByTransitionIfIdNotIn')
             ->andReturn(false);
@@ -140,7 +150,7 @@ class SetFloatValueRepositoryTest extends TestCase
 
         $this->expectException(DataAccessQueryException::class);
 
-        $this->set_float_value_repository->deleteAllByTransitionIfIdNotIn($transition, [1, 2, 3]);
+        $this->set_float_value_repository->deleteAllByTransitionIfNotIn($transition, $set_float_values);
     }
 
     public function testFindAllIdsByTransitionReturnsIdsOfAllActionsOnGivenTransition()

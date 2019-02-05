@@ -51,7 +51,7 @@ class SetFloatValueUpdaterTest extends TestCase
     {
         $this->set_float_value_repository = Mockery::mock(SetFloatValueRepository::class);
         $this->set_float_value_repository
-            ->shouldReceive('deleteAllByTransitionIfIdNotIn')
+            ->shouldReceive('deleteAllByTransitionIfNotIn')
             ->byDefault();
         $this->set_float_value_repository
             ->shouldReceive('update')
@@ -102,8 +102,8 @@ class SetFloatValueUpdaterTest extends TestCase
         $actions = new PostActionCollection($action);
 
         $this->set_float_value_repository
-            ->shouldReceive('deleteAllByTransitionIfIdNotIn')
-            ->with($transition, [2])
+            ->shouldReceive('deleteAllByTransitionIfNotIn')
+            ->with($transition, [$action])
             ->andReturns();
 
         $this->updater->updateByTransition($actions, $transition);
