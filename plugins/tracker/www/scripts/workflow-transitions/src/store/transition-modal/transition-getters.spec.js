@@ -68,4 +68,46 @@ describe("Transition getters: ", () => {
             });
         });
     });
+
+    describe("set_value_action_fields", () => {
+        it("map tracker fields and sets fields selected in post actions to disabled", () => {
+            const post_actions = [
+                {
+                    id: 48,
+                    type: "set_field_value",
+                    field_type: "float",
+                    field_id: 24
+                }
+            ];
+            const field_in_post_action = {
+                field_id: 24,
+                label: "seaquake",
+                type: "float"
+            };
+            const field_not_in_post_action = {
+                field_id: 32,
+                label: "cain",
+                type: "int"
+            };
+            const root_state = {
+                current_tracker: {
+                    fields: [field_in_post_action, field_not_in_post_action]
+                }
+            };
+
+            const fields = getters.set_value_action_fields({}, { post_actions }, root_state);
+
+            expect(fields.length).toEqual(2);
+            expect(fields[0].disabled).toBe(true);
+            expect(fields[1].disabled).toBe(false);
+        });
+
+        it("when actions are not loaded, it returns null", () => {
+            const post_actions = null;
+
+            const fields = getters.set_value_action_fields({}, { post_actions }, {});
+
+            expect(fields).toBeNull();
+        });
+    });
 });

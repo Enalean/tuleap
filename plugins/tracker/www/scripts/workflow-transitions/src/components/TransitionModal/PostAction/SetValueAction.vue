@@ -53,6 +53,7 @@
                         v-for="field in group.fields"
                         v-bind:key="field.field_id"
                         v-bind:value="field"
+                        v-bind:disabled="field.disabled"
                         v-bind:data-test-type="`field_${field.field_id}`"
                     >
                         {{ field.label }}
@@ -89,7 +90,7 @@ import IntInput from "./IntInput.vue";
 import PlaceholderInput from "./PlaceholderInput.vue";
 
 import { compare } from "../../../support/string.js";
-import { mapState } from "vuex";
+import { mapState, mapGetters } from "vuex";
 
 export default {
     name: "SetValueAction",
@@ -106,11 +107,11 @@ export default {
         };
     },
     computed: {
-        ...mapState(["current_tracker"]),
         ...mapState("transitionModal", ["current_transition", "is_modal_save_running"]),
+        ...mapGetters("transitionModal", ["set_value_action_fields"]),
         available_fields() {
             // Side effect is prevented with array duplication before sort
-            return [...this.current_tracker.fields].sort((field1, field2) =>
+            return [...this.set_value_action_fields].sort((field1, field2) =>
                 compare(field1.label, field2.label)
             );
         },
@@ -128,7 +129,7 @@ export default {
                     label: this.$gettext("Dates"),
                     type: DATE_FIELD
                 }
-            ].map(group => ({ ...group, fields: this.available_fields_of_type(group.type) }));
+            ].map(group => ({ ...group, fields: this.getAvailableFieldsOfType(group.type) }));
         },
         field_id_input_id() {
             return `post-action-${this.post_action.unique_id}-field-id`;
@@ -180,7 +181,7 @@ export default {
         }
     },
     methods: {
-        available_fields_of_type(type) {
+        getAvailableFieldsOfType(type) {
             return this.available_fields.filter(field => field.type === type);
         }
     }

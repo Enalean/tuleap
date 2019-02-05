@@ -43,13 +43,13 @@ describe("SetValueAction", () => {
     beforeEach(() => {
         const store_options = {
             state: {
-                current_tracker: create("tracker", {
-                    fields: [date_field, int_field, float_field]
-                }),
                 transitionModal: {
                     current_transition: create("transition"),
                     is_modal_save_running: false
                 }
+            },
+            getters: {
+                "transitionModal/set_value_action_fields": [date_field, int_field, float_field]
             }
         };
 
@@ -65,9 +65,28 @@ describe("SetValueAction", () => {
     afterEach(() => store.reset());
 
     it("Shows date field in date fields group", () => {
-        let date_group_selector = `optgroup[data-test-type="${DATE_FIELD}-group"]`;
-        let date_select_group = wrapper.find(date_group_selector);
+        const date_group_selector = `optgroup[data-test-type="${DATE_FIELD}-group"]`;
+        const date_select_group = wrapper.find(date_group_selector);
         expect(date_select_group.contains('[data-test-type="field_43"]')).toBeTruthy();
+    });
+
+    describe("when fields are already used in other post actions", () => {
+        beforeEach(() => {
+            const used_date_field = {
+                ...date_field,
+                disabled: true
+            };
+            store.getters["transitionModal/set_value_action_fields"] = [
+                used_date_field,
+                int_field,
+                float_field
+            ];
+        });
+
+        it("shows a disabled option", () => {
+            const date_field_option = wrapper.find('[data-test-type="field_43"]');
+            expect(date_field_option.attributes().disabled).toBeTruthy();
+        });
     });
 
     describe("when post action sets a date field", () => {
