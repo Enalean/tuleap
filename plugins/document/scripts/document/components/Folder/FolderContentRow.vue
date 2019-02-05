@@ -18,14 +18,16 @@
   -->
 
 <template>
-    <tr v-bind:class="row_classes" v-bind:data-item-id="item.id">
+    <tr class="document-tree-item-toggle-quicklook" v-bind:class="row_classes" v-bind:data-item-id="item.id">
         <td v-bind:colspan="colspan">
-            <component
-                v-bind:is="cell_title_component_name"
-                v-bind:item="item"
-                v-bind:style="item_indentation"
-                class="document-folder-content-title"
-            />
+            <div class="document-folder-content-title">
+                <component
+                    v-bind:is="cell_title_component_name"
+                    v-bind:item="item"
+                    v-bind:style="item_indentation"
+                />
+                <quick-look-button/>
+            </div>
         </td>
         <template v-if="! item.is_uploading">
             <td class="document-tree-cell-owner">
@@ -41,13 +43,14 @@
 <script>
 import { mapState } from "vuex";
 import UserBadge from "../User/UserBadge.vue";
-import { TYPE_FOLDER, TYPE_LINK, TYPE_FILE, TYPE_WIKI } from "../../constants.js";
+import { TYPE_FILE, TYPE_FOLDER, TYPE_LINK, TYPE_WIKI } from "../../constants.js";
 import moment from "moment";
 import phptomoment from "phptomoment";
+import QuickLookButton from "./QuickLookButton.vue";
 
 export default {
     name: "FolderContentRow",
-    components: { UserBadge },
+    components: { QuickLookButton, UserBadge },
     props: {
         item: Object
     },
@@ -106,7 +109,7 @@ export default {
                 import(/* webpackChunkName: "document-cell-title-" */ `./ItemTitle/${name}CellTitle.vue`);
         },
         colspan() {
-            return this.item.is_uploading ? 3 : 1;
+            return this.item.is_uploading ? 4 : 1;
         }
     },
     mounted() {

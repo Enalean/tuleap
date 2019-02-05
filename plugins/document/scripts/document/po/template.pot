@@ -139,6 +139,9 @@ msgstr ""
 msgid "Project documentation"
 msgstr ""
 
+msgid "Quick look"
+msgstr ""
+
 msgid "Searching for items (will redirect you to the old results page)."
 msgstr ""
 

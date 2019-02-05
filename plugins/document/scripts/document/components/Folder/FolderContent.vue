@@ -22,9 +22,15 @@
         <table class="tlp-table">
             <thead>
                 <tr>
-                    <th class="document-tree-head-name" v-translate>Name</th>
-                    <th class="document-tree-head-owner" v-translate>Owner</th>
-                    <th class="document-tree-head-updatedate" v-translate>Last update date</th>
+                    <th class="document-tree-head-name" v-translate>
+                        Name
+                    </th>
+                    <th class="document-tree-head-owner" v-translate>
+                        Owner
+                    </th>
+                    <th class="document-tree-head-updatedate" v-translate>
+                        Last update date
+                    </th>
                 </tr>
             </thead>
 

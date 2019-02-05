@@ -154,6 +154,9 @@ msgstr "Merci de bien vouloir recommencer."
 msgid "Project documentation"
 msgstr "Documentation du projet"
 
+msgid "Quick look"
+msgstr "Aperçu"
+
 msgid "Searching for items (will redirect you to the old results page)."
 msgstr ""
 "Rechercher des éléments (vous serez redirigés vers l'ancienne page de "
