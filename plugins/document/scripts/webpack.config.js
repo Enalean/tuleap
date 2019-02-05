@@ -21,6 +21,7 @@ const webpack_configurator = require("../../../tools/utils/scripts/webpack-confi
 
 const assets_dir_path = path.resolve(__dirname, "../../../src/www/assets/document/scripts");
 const assets_public_path = "/assets/document/scripts/";
+const MomentTimezoneDataPlugin = require("moment-timezone-data-webpack-plugin");
 
 const webpack_config = {
     entry: {
@@ -48,7 +49,11 @@ const webpack_config = {
     plugins: [
         webpack_configurator.getManifestPlugin(),
         webpack_configurator.getVueLoaderPlugin(),
-        webpack_configurator.getMomentLocalePlugin()
+        webpack_configurator.getMomentLocalePlugin(),
+        new MomentTimezoneDataPlugin({
+            startYear: 1970,
+            endYear: new Date().getFullYear() + 1
+        })
     ],
     resolveLoader: {
         alias: webpack_configurator.easygettext_loader_alias
