@@ -1,7 +1,6 @@
 <?php
-
 /**
- * Copyright (c) Enalean, 2013-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,7 +20,7 @@
 
 use Tuleap\Jenkins\JenkinsCSRFCrumbRetriever;
 
-require_once TRACKER_BASE_DIR .'/workflow/PostAction/PostActionSubFactory.class.php';
+require_once TRACKER_BASE_DIR .'/Workflow/PostAction/PostActionSubFactory.class.php';
 
 /**
  * Loads and saves CIBuild post actions
