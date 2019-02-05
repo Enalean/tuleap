@@ -31,7 +31,7 @@ class ServiceCreateServiceTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $this->template = [
             'name' => 'template-name',

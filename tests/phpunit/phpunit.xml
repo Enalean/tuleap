@@ -64,7 +64,7 @@
     </filter>
     <testsuites>
         <testsuite name="Core Tests">
-            <directory>common</directory>
+            <directory>.</directory>
         </testsuite>
         <testsuite name="Plugins">
             <directory>../../plugins/*/phpunit</directory>
