@@ -56,6 +56,7 @@ use Tuleap\Tracker\Workflow\PostAction\Update\Internal\SetDateValueUpdater;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\SetDateValueValidator;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\SetFloatValueRepository;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\SetFloatValueUpdater;
+use Tuleap\Tracker\Workflow\PostAction\Update\Internal\SetFloatValueValidator;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\SetIntValueRepository;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\SetIntValueUpdater;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\SetIntValueValidator;
@@ -578,7 +579,8 @@ class TransitionsResource extends AuthenticatedResource
                 new SetFloatValueRepository(
                     new Transition_PostAction_Field_FloatDao(),
                     new DataAccessObject()
-                )
+                ),
+                new SetFloatValueValidator($ids_validator, $field_ids_validator, $form_element_factory)
             )
         );
     }

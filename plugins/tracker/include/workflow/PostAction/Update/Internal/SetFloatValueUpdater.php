@@ -32,9 +32,15 @@ class SetFloatValueUpdater implements PostActionUpdater
      */
     private $repository;
 
-    public function __construct(SetFloatValueRepository $repository)
+    /**
+     * @var SetFloatValueValidator
+     */
+    private $validator;
+
+    public function __construct(SetFloatValueRepository $repository, SetFloatValueValidator $validator)
     {
         $this->repository = $repository;
+        $this->validator = $validator;
     }
 
     /**
@@ -43,6 +49,7 @@ class SetFloatValueUpdater implements PostActionUpdater
      */
     public function updateByTransition(PostActionCollection $actions, Transition $transition): void
     {
+        $actions->validateSetFloatValueActions($this->validator, $transition->getWorkflow()->getTracker());
         $existing_ids_collection = $this->repository->findAllIdsByTransition($transition);
         $diff                    = $actions->compareSetFloatValueActionsTo($existing_ids_collection);
 

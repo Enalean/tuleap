@@ -26,12 +26,12 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 
-class SetIntValueValidatorTest extends TestCase
+class SetFloatValueValidatorTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    /** @var SetIntValueValidator */
-    private $set_int_value_validator;
+    /** @var SetFloatValueValidator */
+    private $set_float_value_validator;
     /** @var PostActionIdValidator | Mockery\MockInterface */
     private $ids_validator;
     /** @var PostActionFieldIdValidator | Mockery\MockInterface */
@@ -46,8 +46,8 @@ class SetIntValueValidatorTest extends TestCase
         $this->field_id_validator = Mockery::mock(PostActionFieldIdValidator::class);
         $this->field_id_validator->shouldReceive('validate')->byDefault();
 
-        $this->form_element_factory    = Mockery::mock(\Tracker_FormElementFactory::class);
-        $this->set_int_value_validator = new SetIntValueValidator(
+        $this->form_element_factory      = Mockery::mock(\Tracker_FormElementFactory::class);
+        $this->set_float_value_validator = new SetFloatValueValidator(
             $this->ids_validator,
             $this->field_id_validator,
             $this->form_element_factory
@@ -56,25 +56,26 @@ class SetIntValueValidatorTest extends TestCase
 
     public function testValidateDoesNotThrowWhenValid()
     {
-        $integer_field   = Mockery::mock(\Tracker_FormElement_Field_Integer::class)
+        $float_field = Mockery::mock(\Tracker_FormElement_Field_Float::class)
             ->shouldReceive('getId')
             ->andReturn(1)
             ->getMock();
-        $other_int_field = Mockery::mock(\Tracker_FormElement_Field_Integer::class)
+        $other_float_field = Mockery::mock(\Tracker_FormElement_Field_Float::class)
             ->shouldReceive('getId')
             ->andReturn(2)
             ->getMock();
         $this->form_element_factory
-            ->shouldReceive('getUsedIntFields')
-            ->andReturn([$integer_field, $other_int_field]);
+            ->shouldReceive('getUsedFormElementsByType')
+            ->with(Mockery::any(), 'float')
+            ->andReturn([$float_field, $other_float_field]);
 
-        $first_int_value  = new SetIntValue(null, 1, 12);
-        $second_int_value = new SetIntValue(null, 2, 42);
+        $first_float_value  = new SetFloatValue(null, 1, 12.0);
+        $second_float_value = new SetFloatValue(null, 2, 42.1);
 
-        $this->set_int_value_validator->validate(
+        $this->set_float_value_validator->validate(
             Mockery::mock(\Tracker::class),
-            $first_int_value,
-            $second_int_value
+            $first_float_value,
+            $second_float_value
         );
     }
 
@@ -83,16 +84,16 @@ class SetIntValueValidatorTest extends TestCase
      */
     public function testValidateWrapsDuplicatePostActionException()
     {
-        $this->set_int_value_validator = new SetIntValueValidator(
+        $this->set_float_value_validator = new SetFloatValueValidator(
             new PostActionIdValidator(),
             $this->field_id_validator,
             $this->form_element_factory
         );
 
-        $first_same_id  = new SetIntValue(2, 1, 12);
-        $second_same_id = new SetIntValue(2, 2, 42);
+        $first_same_id  = new SetFloatValue(2, 1, 12.0);
+        $second_same_id = new SetFloatValue(2, 2, 42.1);
 
-        $this->set_int_value_validator->validate(
+        $this->set_float_value_validator->validate(
             Mockery::mock(\Tracker::class),
             $first_same_id,
             $second_same_id
@@ -104,16 +105,16 @@ class SetIntValueValidatorTest extends TestCase
      */
     public function testValidateWrapsDuplicateFieldIdException()
     {
-        $this->set_int_value_validator = new SetIntValueValidator(
+        $this->set_float_value_validator = new SetFloatValueValidator(
             $this->ids_validator,
             new PostActionFieldIdValidator(),
             $this->form_element_factory
         );
 
-        $first_same_field_id  = new SetIntValue(null, 1, 79);
-        $second_same_field_id = new SetIntValue(null, 1, 2);
+        $first_same_field_id  = new SetFloatValue(null, 1, 79.0);
+        $second_same_field_id = new SetFloatValue(null, 1, 2.0);
 
-        $this->set_int_value_validator->validate(
+        $this->set_float_value_validator->validate(
             Mockery::mock(\Tracker::class),
             $first_same_field_id,
             $second_same_field_id
@@ -123,19 +124,20 @@ class SetIntValueValidatorTest extends TestCase
     /**
      * @expectedException \Tuleap\Tracker\Workflow\PostAction\Update\Internal\InvalidPostActionException
      */
-    public function testValidateThrowsWhenFieldIdDoesNotMatchAnIntegerField()
+    public function testValidateThrowsWhenFieldIdDoesNotMatchAUsedFloatField()
     {
-        $integer_field = Mockery::mock(\Tracker_FormElement_Field_Integer::class)
+        $float_field = Mockery::mock(\Tracker_FormElement_Field_Float::class)
             ->shouldReceive('getId')
             ->andReturn(1)
             ->getMock();
         $this->form_element_factory
-            ->shouldReceive('getUsedIntFields')
-            ->andReturn([$integer_field]);
+            ->shouldReceive('getUsedFormElementsByType')
+            ->with(Mockery::any(), 'float')
+            ->andReturn([$float_field]);
 
-        $invalid_field_id = new SetIntValue(null, 8, 0);
+        $invalid_field_id = new SetFloatValue(null, 8, 0.0);
 
-        $this->set_int_value_validator->validate(
+        $this->set_float_value_validator->validate(
             Mockery::mock(\Tracker::class),
             $invalid_field_id
         );
