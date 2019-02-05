@@ -58,6 +58,7 @@ use Tuleap\Tracker\Workflow\PostAction\Update\Internal\SetFloatValueRepository;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\SetFloatValueUpdater;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\SetIntValueRepository;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\SetIntValueUpdater;
+use Tuleap\Tracker\Workflow\PostAction\Update\Internal\SetIntValueValidator;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\UnknownPostActionIdsException;
 use Tuleap\Tracker\Workflow\PostAction\Update\PostActionCollectionUpdater;
 use Tuleap\Tracker\Workflow\Transition\OrphanTransitionException;
@@ -545,8 +546,9 @@ class TransitionsResource extends AuthenticatedResource
 
     private function getPostActionCollectionUpdater(): PostActionCollectionUpdater
     {
-        $ids_validator       = new PostActionIdValidator();
-        $field_ids_validator = new PostActionFieldIdValidator();
+        $ids_validator        = new PostActionIdValidator();
+        $field_ids_validator  = new PostActionFieldIdValidator();
+        $form_element_factory = \Tracker_FormElementFactory::instance();
 
         return new PostActionCollectionUpdater(
             new TransactionExecutor(
@@ -563,13 +565,14 @@ class TransitionsResource extends AuthenticatedResource
                     new Transition_PostAction_Field_DateDao(),
                     new DataAccessObject()
                 ),
-                new SetDateValueValidator($ids_validator, $field_ids_validator, \Tracker_FormElementFactory::instance())
+                new SetDateValueValidator($ids_validator, $field_ids_validator, $form_element_factory)
             ),
             new SetIntValueUpdater(
                 new SetintValueRepository(
                     new Transition_PostAction_Field_IntDao(),
                     new DataAccessObject()
-                )
+                ),
+                new SetIntValueValidator($ids_validator, $field_ids_validator, $form_element_factory)
             ),
             new SetFloatValueUpdater(
                 new SetFloatValueRepository(

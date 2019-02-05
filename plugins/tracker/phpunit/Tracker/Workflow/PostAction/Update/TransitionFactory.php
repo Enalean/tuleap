@@ -43,4 +43,15 @@ class TransitionFactory
             ->andReturn($id);
         return $transition;
     }
+
+    public static function buildATransitionWithTracker(\Tracker $tracker): MockInterface
+    {
+        $transition = self::buildATransition();
+        $workflow      = Mockery::mock(\Workflow::class);
+        $workflow->shouldReceive('getTracker')
+            ->andReturn($tracker);
+        $transition->shouldReceive('getWorkflow')
+            ->andReturn($workflow);
+        return $transition;
+    }
 }

@@ -24,6 +24,7 @@ namespace Tuleap\Tracker\Workflow\PostAction\Update\Internal;
 use DataAccessQueryException;
 use Transition;
 use Tuleap\Tracker\Workflow\PostAction\Update\PostActionCollection;
+use Tuleap\Tracker\Workflow\Transition\OrphanTransitionException;
 
 class SetIntValueUpdater implements PostActionUpdater
 {
@@ -31,18 +32,27 @@ class SetIntValueUpdater implements PostActionUpdater
      * @var SetIntValueRepository
      */
     private $repository;
+    /**
+     * @var SetIntValueValidator
+     */
+    private $validator;
 
-    public function __construct(SetIntValueRepository $repository)
+    public function __construct(SetIntValueRepository $repository, SetIntValueValidator $validator)
     {
         $this->repository = $repository;
+        $this->validator  = $validator;
     }
 
     /**
      * Update (and replace) all set int value post actions with those included in given collection.
      * @throws DataAccessQueryException
+     * @throws InvalidPostActionException
+     * @throws OrphanTransitionException
+     * @throws UnknownPostActionIdsException
      */
     public function updateByTransition(PostActionCollection $actions, Transition $transition): void
     {
+        $actions->validateSetIntValueActions($this->validator, $transition->getWorkflow()->getTracker());
         $existing_ids_collection = $this->repository->findAllIdsByTransition($transition);
         $diff                    = $actions->compareSetIntValueActionsTo($existing_ids_collection);
 

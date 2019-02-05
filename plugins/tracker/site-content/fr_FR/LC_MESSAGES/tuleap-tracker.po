@@ -589,6 +589,13 @@ msgstr ""
 "Le field_id '%u' ne correspond pas à un champ date utilisé dans le tracker."
 
 #, php-format
+msgid ""
+"The field_id value '%u' does not match an int field in use in the tracker."
+msgstr ""
+"La valeur de field_id '%u' ne correspond pas à un champ de type entier "
+"utilisé dans le tracker."
+
+#, php-format
 msgid "The file field '%s' cannot be compared to MYSELF()."
 msgstr "Le champ fichier '%s' ne peut pas être comparé à MYSELF()."
 
@@ -830,10 +837,24 @@ msgstr ""
 "être en doublons."
 
 msgid ""
+"There should not be duplicate field_ids for 'set_field_value' actions with "
+"type 'int'."
+msgstr ""
+"Les field_ids d'actions 'set_field_value' avec type 'int' ne doivent pas "
+"être en doublons."
+
+msgid ""
 "There should not be duplicate ids for 'set_field_value' actions with type "
 "'date'."
 msgstr ""
 "Les ids d'actions 'set_field_value' avec type 'date' ne doivent pas être en "
+"doublons."
+
+msgid ""
+"There should not be duplicate ids for 'set_field_value' actions with type "
+"'int'."
+msgstr ""
+"Les ids d'actions 'set_field_value' avec type 'int' ne doivent pas être en "
 "doublons."
 
 msgid "This REST route is still under construction."
