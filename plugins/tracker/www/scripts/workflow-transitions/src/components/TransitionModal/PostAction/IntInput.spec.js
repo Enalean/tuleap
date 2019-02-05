@@ -20,7 +20,7 @@
 
 import { shallowMount } from "@vue/test-utils";
 import IntInput from "./IntInput.vue";
-import localVue from "../../support/local-vue.js";
+import localVue from "../../../support/local-vue.js";
 
 describe("IntInput", () => {
     let wrapper;

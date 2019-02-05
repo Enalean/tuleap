@@ -20,8 +20,8 @@
 
 import { shallowMount } from "@vue/test-utils";
 import DateInput from "./DateInput.vue";
-import { DATE_FIELD_VALUE } from "../../constants/workflow-constants.js";
-import localVue from "../../support/local-vue.js";
+import { DATE_FIELD_VALUE } from "../../../constants/workflow-constants.js";
+import localVue from "../../../support/local-vue.js";
 
 describe("DateInput", () => {
     let wrapper;

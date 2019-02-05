@@ -52,7 +52,7 @@
 </template>
 
 <script>
-import { DATE_FIELD_VALUE } from "../../constants/workflow-constants.js";
+import { DATE_FIELD_VALUE } from "../../../constants/workflow-constants.js";
 export default {
     name: "DateInput",
     props: {

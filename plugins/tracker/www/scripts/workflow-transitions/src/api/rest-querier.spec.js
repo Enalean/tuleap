@@ -96,7 +96,7 @@ describe("Rest queries:", () => {
             );
             rewire$put(put);
         });
-        fdescribe("putPostActions()", () => {
+        describe("putPostActions()", () => {
             const actions = createList("post_action", 2, "presented");
 
             beforeEach(() => putPostActions(9, actions));
