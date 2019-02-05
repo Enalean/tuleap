@@ -147,7 +147,9 @@ class WikiServiceViews extends WikiViews {
    *
    * Display project pages.
    */
-  function _browseProjectWikiPages() {
+  function _browseProjectWikiPages()
+  {
+    WikiPage::globallySetProjectID($this->gid);
     $allPages = WikiPage::getAllUserPages();
     $this->_browsePages($allPages);
   }

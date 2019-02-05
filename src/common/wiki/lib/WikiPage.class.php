@@ -94,6 +94,11 @@ class WikiPage {
         $this->wrapper = new WikiPageWrapper($project_id);
     }
 
+    public static function globallySetProjectID(int $project_id)
+    {
+        self::$gid = $project_id;
+    }
+
     public function isReferenced() {
         return $this->referenced;
     }
