@@ -218,7 +218,7 @@ async function createNewFile(
         upload_error: null
     };
 
-    fake_item.uploader = uploadFile(context, dropped_file, fake_item, new_file);
+    fake_item.uploader = uploadFile(context, dropped_file, fake_item, new_file, parent);
 
     context.commit("addJustCreatedItemToFolderContent", fake_item);
     context.commit("addFileToFoldedFolder", [parent, fake_item, should_display_fake_item]);
@@ -233,6 +233,7 @@ export const addNewUploadFile = async (
         const item = { title, description, file_properties: { file: dropped_file } };
         await createNewFile(context, item, parent, should_display_fake_item);
     } catch (exception) {
+        context.commit("toggleCollapsedFolderHasUploadingContent", [parent, false]);
         const error_json = await exception.response.json();
         throw getErrorMessage(error_json);
     }
@@ -247,6 +248,26 @@ export const cancelFileUpload = async (context, item) => {
     } finally {
         context.commit("removeItemFromFolderContent", item);
         context.commit("removeFileFromUploadsList", item);
+    }
+};
+
+export const cancelFolderUpload = (context, folder) => {
+    try {
+        const children = context.state.files_uploads_list.filter(
+            item => item.parent_id === folder.id
+        );
+
+        children.forEach(async child => {
+            child.uploader.abort();
+            await cancelUpload(child);
+
+            context.commit("removeItemFromFolderContent", child);
+            context.commit("removeFileFromUploadsList", child);
+        });
+    } catch (e) {
+        // do nothing
+    } finally {
+        context.commit("resetFolderIsUploading", folder);
     }
 };
 

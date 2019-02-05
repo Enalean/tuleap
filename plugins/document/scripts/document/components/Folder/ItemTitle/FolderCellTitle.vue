@@ -76,6 +76,7 @@ export default {
         }
     },
     mounted() {
+        this.$store.commit("initializeFolderProperties", this.item);
         if (this.item.is_expanded !== false) {
             this.open();
         }
@@ -109,6 +110,7 @@ export default {
         },
         toggle() {
             if (this.is_closed) {
+                this.$store.commit("toggleCollapsedFolderHasUploadingContent", [this.item, false]);
                 this.open();
             } else {
                 this.$store.commit("foldFolderContent", this.item.id);

@@ -176,6 +176,13 @@ export default {
                 should_display_fake_item = dropzone_item.is_expanded;
             }
 
+            if (is_uploading_in_subfolder && !dropzone_item.is_expanded) {
+                this.$store.commit("toggleCollapsedFolderHasUploadingContent", [
+                    dropzone_item,
+                    true
+                ]);
+            }
+
             for (const file of files) {
                 this.$store
                     .dispatch("addNewUploadFile", [

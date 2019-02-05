@@ -908,5 +908,198 @@ describe("Store mutations", () => {
                 { id: 1, title: "tutu.txt" }
             ]);
         });
+
+        it("it should toggle parent has uploading file if all items are canceled", () => {
+            const file = {
+                id: 5,
+                title: "tyty.txt",
+                parent_id: 1
+            };
+
+            const state = {
+                files_uploads_list: [{ id: 5, title: "tyty.txt", parent_id: 1 }],
+                folder_content: [
+                    {
+                        id: 1,
+                        title: "My folder",
+                        progress: 75,
+                        is_uploading_in_collapsed_folder: true
+                    }
+                ]
+            };
+
+            mutations.removeFileFromUploadsList(state, file);
+
+            expect(state.folder_content).toEqual([
+                { id: 1, title: "My folder", progress: 0, is_uploading_in_collapsed_folder: false }
+            ]);
+        });
+    });
+
+    describe("initializeFolderProperties", () => {
+        it("it should not do anything if folder is not found", () => {
+            const folder = {
+                id: 5,
+                title: "toto.txt"
+            };
+
+            const state = {
+                folder_content: [{ id: 2, title: "titi.txt" }, { id: 1, title: "tutu.txt" }]
+            };
+
+            mutations.initializeFolderProperties(state, folder);
+
+            expect(state.folder_content).toEqual([
+                { id: 2, title: "titi.txt" },
+                { id: 1, title: "tutu.txt" }
+            ]);
+        });
+
+        it("it should add new watchable properties for folder", () => {
+            const folder = {
+                id: 1,
+                title: "tutu.txt"
+            };
+
+            const state = {
+                folder_content: [{ id: 2, title: "titi.txt" }, { id: 1, title: "tutu.txt" }]
+            };
+
+            mutations.initializeFolderProperties(state, folder);
+
+            expect(state.folder_content).toEqual([
+                { id: 2, title: "titi.txt" },
+                {
+                    id: 1,
+                    title: "tutu.txt",
+                    is_uploading_in_collapsed_folder: false,
+                    progress: null
+                }
+            ]);
+        });
+    });
+
+    describe("toggleCollapsedFolderHasUploadingContent", () => {
+        it("it should not do anything if folder is not found", () => {
+            const folder = {
+                id: 5,
+                title: "toto.txt"
+            };
+
+            const state = {
+                folder_content: [{ id: 2, title: "titi.txt" }, { id: 1, title: "tutu.txt" }]
+            };
+
+            mutations.toggleCollapsedFolderHasUploadingContent(state, [folder, true]);
+
+            expect(state.folder_content).toEqual([
+                { id: 2, title: "titi.txt" },
+                { id: 1, title: "tutu.txt" }
+            ]);
+        });
+
+        it("it should toggle upload is done in a collapsed folder", () => {
+            const folder = {
+                id: 1,
+                title: "tutu.txt"
+            };
+
+            const state = {
+                folder_content: [{ id: 2, title: "titi.txt" }, { id: 1, title: "tutu.txt" }]
+            };
+
+            mutations.toggleCollapsedFolderHasUploadingContent(state, [folder, true]);
+
+            expect(state.folder_content).toEqual([
+                { id: 2, title: "titi.txt" },
+                { id: 1, title: "tutu.txt", is_uploading_in_collapsed_folder: true, progress: 0 }
+            ]);
+        });
+    });
+
+    describe("updateFolderProgressbar", () => {
+        it("it should not do anything if folder is not found", () => {
+            const folder = {
+                id: 5,
+                title: "toto.txt"
+            };
+
+            const state = {
+                folder_content: [{ id: 2, title: "titi.txt" }, { id: 1, title: "tutu.txt" }]
+            };
+
+            mutations.updateFolderProgressbar(state, folder);
+
+            expect(state.folder_content).toEqual([
+                { id: 2, title: "titi.txt" },
+                { id: 1, title: "tutu.txt" }
+            ]);
+        });
+
+        it("it should store the progress of folder by computing the progress of its children", () => {
+            const folder = {
+                id: 1,
+                title: "tutu.txt"
+            };
+
+            const state = {
+                folder_content: [{ id: 1, title: "tutu.txt", progress: null }],
+                files_uploads_list: [
+                    { id: 2, title: "tutu.txt", progress: 25, parent_id: 1 },
+                    { id: 3, title: "tutu.txt", progress: 50, parent_id: 1 },
+                    { id: 4, title: "tutu.txt", progress: 75, parent_id: 1 }
+                ]
+            };
+
+            mutations.updateFolderProgressbar(state, folder);
+
+            expect(state.folder_content).toEqual([{ id: 1, title: "tutu.txt", progress: 50 }]);
+        });
+    });
+
+    describe("resetFolderIsUploading", () => {
+        it("it should not do anything if folder is not found", () => {
+            const folder = {
+                id: 5,
+                title: "toto.txt"
+            };
+
+            const state = {
+                folder_content: [{ id: 2, title: "titi.txt" }, { id: 1, title: "tutu.txt" }]
+            };
+
+            mutations.resetFolderIsUploading(state, folder);
+
+            expect(state.folder_content).toEqual([
+                { id: 2, title: "titi.txt" },
+                { id: 1, title: "tutu.txt" }
+            ]);
+        });
+
+        it("it resets uploading properties of folder", () => {
+            const folder = {
+                id: 1,
+                title: "tutu.txt"
+            };
+
+            const state = {
+                folder_content: [
+                    { id: 2, title: "titi.txt" },
+                    {
+                        id: 1,
+                        title: "tutu.txt",
+                        is_uploading_in_collapsed_folder: true,
+                        progress: 75
+                    }
+                ]
+            };
+
+            mutations.resetFolderIsUploading(state, folder);
+
+            expect(state.folder_content).toEqual([
+                { id: 2, title: "titi.txt" },
+                { id: 1, title: "tutu.txt", is_uploading_in_collapsed_folder: false, progress: 0 }
+            ]);
+        });
     });
 });

@@ -21,7 +21,7 @@ import { Upload } from "tus-js-client";
 import { getItem } from "../../api/rest-querier.js";
 import { flagItemAsCreated } from "./flag-item-as-created.js";
 
-export function uploadFile(context, dropped_file, fake_item, docman_item) {
+export function uploadFile(context, dropped_file, fake_item, docman_item, parent) {
     const uploader = new Upload(dropped_file, {
         uploadUrl: docman_item.file_properties.upload_href,
         retryDelays: [0, 1000, 3000, 5000],
@@ -35,6 +35,7 @@ export function uploadFile(context, dropped_file, fake_item, docman_item) {
             } else {
                 fake_item.progress = Math.trunc((bytes_uploaded / bytes_total) * 100);
             }
+            context.commit("updateFolderProgressbar", parent);
         },
         onSuccess: async () => {
             const file = await getItem(docman_item.id);
@@ -42,6 +43,7 @@ export function uploadFile(context, dropped_file, fake_item, docman_item) {
             file.level = fake_item.level;
             context.commit("replaceUploadingFileWithActualFile", [fake_item, file]);
             context.commit("removeFileFromUploadsList", fake_item);
+            context.commit("toggleCollapsedFolderHasUploadingContent", [parent, false]);
         },
         onError: ({ originalRequest }) => {
             fake_item.is_uploading = false;
