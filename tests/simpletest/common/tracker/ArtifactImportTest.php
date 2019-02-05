@@ -1,5 +1,4 @@
 <?php
-require_once('database.php');
 require_once('www/include/utils.php');
 
 Mock::generate('BaseLanguage');
@@ -48,8 +47,8 @@ Mock::generate('ArtifactType');
 
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * 
- * 
+ *
+ *
  *
  * Tests the class ArtifactImport
  */
@@ -78,7 +77,7 @@ class ArtifactImportTest extends TuleapTestCase {
 
       /***************** var setup ***********************
        */
-      
+
       $at = new ArtifactTypeTestVersion($this);
       $at->setReturnValue('getName','TestTracker');
       $at->setReturnValue('allowsAnon',false);
@@ -149,7 +148,7 @@ class ArtifactImportTest extends TuleapTestCase {
       $orig_subm->setReturnValue('isSelectBox',false);
       $orig_subm->setReturnValue('isMultiSelectBox',false);
 
-      
+
       $atf = new MockArtifactFieldFactory($at);
       $atf->setReturnValue('getAllUsedFields',array($submitted_by,$submitted_on,$artifact_id,$comment_type_id,$assigned_to,$orig_subm));
       $atf->setReturnValue('getFieldFromName',$submitted_by,array('submitted_by'));
@@ -160,7 +159,7 @@ class ArtifactImportTest extends TuleapTestCase {
       $atf->setReturnValue('getFieldFromName',$comment_type_id,array('comment_type_id'));
       $atf->setReturnValue('getFieldFromName',$orig_subm,array('details'));
 
-      
+
       /**************** test parseFieldNames ************
        */
 
@@ -180,9 +179,9 @@ class ArtifactImportTest extends TuleapTestCase {
       $this->assertTrue($test->isError());
 
       $test = new ArtifactImport($at,$atf,'group');
-      $test->parseFieldNames(array($GLOBALS['Language']->getText('project_export_artifact_export', 'follow_up_comments'), 
-                                   $GLOBALS['Language']->getText('project_export_artifact_export', 'depend_on'), 
-                                   $GLOBALS['Language']->getText('project_export_artifact_export', 'add_cc_lbl'), 
+      $test->parseFieldNames(array($GLOBALS['Language']->getText('project_export_artifact_export', 'follow_up_comments'),
+                                   $GLOBALS['Language']->getText('project_export_artifact_export', 'depend_on'),
+                                   $GLOBALS['Language']->getText('project_export_artifact_export', 'add_cc_lbl'),
                                    $GLOBALS['Language']->getText('project_export_artifact_export' ,'cc_comment_lbl'),
                                    'Assigned To','Original Submission'));
       $this->assertFalse($test->isError());
@@ -313,7 +312,7 @@ class ArtifactImportTest extends TuleapTestCase {
       /***************** test parseFollowUpComments *****************
        */
 
-      
+
       $aff = new MockArtifactFieldFactory($this);
       $aff->setReturnValue('getAllUsedFields',array());
       $aff->setReturnValue('getFieldFromName',$submitted_by,array('submitted_by'));
@@ -338,14 +337,14 @@ class ArtifactImportTest extends TuleapTestCase {
       $um = new MockUserManager($this);
       $ai = new ArtifactImportTestVersion($this);
       $user = mock('PFUser');
-      
+
       $ai->setReturnReference('getUserManager', $um);
       $um->setReturnReference('getUserByUserName', $user);
-      
+
       $ai->__construct($at,$aff,'group');
-     
+
       $ai->parseFollowUpComments($followup_comments,$parsed_comments,$art_id,true);
-      
+
       $this->assertFalse($ai->isError());
       $this->assertEqual($parsed_comments[0]['date'],'2005-09-02 18:18');
       $this->assertEqual($parsed_comments[0]['type'],$GLOBALS['Language']->getText('global','none'));
@@ -374,8 +373,8 @@ Excel issue, reassigned to Gene, reduced to Ordinary
       $this->assertEqual($parsed_comments[1]['date'],'2005-09-02 16:51');
       $this->assertEqual($parsed_comments[1]['type'],$GLOBALS['Language']->getText('global','none'));
       $this->assertEqual($parsed_comments[1]['by'],'doswald');
-      
- 
+
+
       $parsed_comments = array();
 
       $followup_comments= "==================================================
@@ -425,17 +424,17 @@ Problem also occurs for new bugs posted to a project *with* a New Bugs address. 
       $this->assertEqual($parsed_comments[3]['type'],$GLOBALS['Language']->getText('global','none'));
       $this->assertEqual($parsed_comments[3]['date'],'2000-12-08 22:27');
 
-      
+
 
       /**
-      check by hand: 
+      check by hand:
       *  double submission (can not access DB from here)
       *  not enough columns in a row
       *  real insertion, real update (can not access DB)
       *  follow-up comment is already in DB or not
       */
     }
-    
+
     function testSplitFollowUpComments() {
         $aitv = new ArtifactImportFollowUpCommentsTestVersion($this);
         $followup_comments = file_get_contents(dirname(__FILE__) . '/_fixtures/followup_comments1.txt');
@@ -478,8 +477,8 @@ Problem also occurs for new bugs posted to a project *with* a New Bugs address. 
 
     /**
      * This case is impossible to catch so it's a known error.
-     * 
-     * It might happens if, on the web, the user entered *as text* HTML entities 
+     *
+     * It might happens if, on the web, the user entered *as text* HTML entities
      * (for instance &lt;), then exported it in CSV and finaly imported it with
      * CSV as well.
      */

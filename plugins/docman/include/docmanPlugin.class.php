@@ -1235,7 +1235,8 @@ class DocmanPlugin extends Plugin
             new Docman_ItemDao(),
             $this->getUserManager(),
             $this->getItemFactory(),
-            Docman_PermissionsManager::instance($project->getID())
+            Docman_PermissionsManager::instance($project->getID()),
+            new \Docman_LockFactory()
         );
 
         $item_representation = $item_representation_builder->buildRootId($project, $current_user);

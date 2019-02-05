@@ -184,6 +184,7 @@ class ItemRepresentationCollectionBuilderTest extends \PHPUnit\Framework\TestCas
             true,
             ItemRepresentation::TYPE_FILE,
             false,
+            null,
             $file_properties
         );
 

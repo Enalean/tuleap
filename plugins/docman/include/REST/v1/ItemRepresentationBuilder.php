@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -43,17 +43,23 @@ class ItemRepresentationBuilder
      * @var \Docman_PermissionsManager
      */
     private $permissions_manager;
+    /**
+     * @var \Docman_LockFactory
+     */
+    private $lock_factory;
 
     public function __construct(
         Docman_ItemDao $dao,
         \UserManager $user_manager,
         Docman_ItemFactory $docman_item_factory,
-        \Docman_PermissionsManager $permissions_manager
+        \Docman_PermissionsManager $permissions_manager,
+        \Docman_LockFactory $lock_factory
     ) {
         $this->dao                 = $dao;
         $this->user_manager        = $user_manager;
         $this->docman_item_factory = $docman_item_factory;
         $this->permissions_manager = $permissions_manager;
+        $this->lock_factory        = $lock_factory;
     }
 
     /**
@@ -94,8 +100,8 @@ class ItemRepresentationBuilder
         WikiPropertiesRepresentation $wiki_properties = null
     ) {
         $owner               = $this->user_manager->getUserById($item->getOwnerId());
-        $user_representation = new MinimalUserRepresentation();
-        $user_representation->build($owner);
+        $owner_representation = new MinimalUserRepresentation();
+        $owner_representation->build($owner);
 
         $is_expanded = false;
         if ($type === ItemRepresentation::TYPE_FOLDER) {
@@ -104,14 +110,17 @@ class ItemRepresentationBuilder
         }
 
         $user_can_write = $this->permissions_manager->userCanWrite($current_user, $item->getId());
-
         $item_representation = new ItemRepresentation();
+
+        $lock_info = $this->getLockInformation($item);
+
         $item_representation->build(
             $item,
-            $user_representation,
+            $owner_representation,
             $user_can_write,
             $type,
             $is_expanded,
+            $lock_info,
             $file_properties,
             $embedded_file_properties,
             $link_properties,
@@ -119,5 +128,23 @@ class ItemRepresentationBuilder
         );
 
         return $item_representation;
+    }
+
+    private function getLockInformation(\Docman_Item $item) : ?ItemLockInfoRepresentation
+    {
+        $lock_infos = $this->lock_factory->getLockInfoForItem($item);
+
+        if (!$lock_infos) {
+            return null;
+        }
+
+        $lock_owner = (new MinimalUserRepresentation())->build(
+            $this->user_manager->getUserById((int) $lock_infos['user_id'])
+        );
+
+        return new ItemLockInfoRepresentation(
+            $lock_owner,
+            $lock_infos
+        );
     }
 }

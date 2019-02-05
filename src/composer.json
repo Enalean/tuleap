@@ -4,7 +4,8 @@
       "Tuleap\\": ["common/"]
     },
     "classmap": ["common/", "embedded_vendor/"],
-    "exclude-from-classmap": ["common/wiki/phpwiki/"]
+    "exclude-from-classmap": ["common/wiki/phpwiki/"],
+    "files": ["www/include/database.php"]
   },
   "autoload-dev": {
     "psr-4": {

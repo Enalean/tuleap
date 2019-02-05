@@ -167,9 +167,6 @@ $Language = new BaseLanguage($GLOBALS['sys_supported_languages'], $GLOBALS['sys_
 //various html utilities
 require_once('utils.php');
 
-//database abstraction
-require_once('database.php');
-
 //security library
 require_once('session.php');
 
