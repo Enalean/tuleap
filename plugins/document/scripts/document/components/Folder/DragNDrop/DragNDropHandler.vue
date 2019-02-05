@@ -35,6 +35,7 @@
 <script>
 import { mapState, mapGetters } from "vuex";
 import CurrentFolderDropZone from "./CurrentFolderDropZone.vue";
+import { TYPE_FOLDER, TYPE_FILE } from "../../../constants.js";
 
 export default {
     components: { CurrentFolderDropZone },
@@ -48,7 +49,8 @@ export default {
             CREATION_ERROR: "creation_error",
             MAX_SIZE_ERROR: "max_size",
             ALREADY_EXISTS_ERROR: "already_exists",
-            highlighted_folder_id: null
+            FEATURE_UNDER_CONSTRUCTION: "feature_under_construction",
+            highlighted_item_id: null
         };
     },
     computed: {
@@ -77,6 +79,11 @@ export default {
             if (this.error_modal_shown === this.CREATION_ERROR) {
                 return () =>
                     import(/* webpackChunkName: "document-max-size-dragndrop-error-modal" */ "./CreationErrorDragndropErrorModal.vue");
+            }
+
+            if (this.error_modal_shown === this.FEATURE_UNDER_CONSTRUCTION) {
+                return () =>
+                    import(/* webpackChunkName: "document-feature-under-construction-error-modal" */ "./FeatureUnderConstructionModal.vue");
             }
 
             return () =>
@@ -118,9 +125,15 @@ export default {
                 return;
             }
 
-            const is_uploading_in_subfolder = this.highlighted_folder_id !== null;
-            const dropzone_folder = this.getDropZoneFolder();
+            const is_uploading_in_subfolder = this.highlighted_item_id !== null;
+            const dropzone_item = this.getDropZoneItem();
             this.clearHighlight();
+
+            if (dropzone_item.type === TYPE_FILE) {
+                this.error_modal_shown = this.FEATURE_UNDER_CONSTRUCTION;
+
+                return;
+            }
 
             if (!this.user_can_dragndrop_in_current_folder) {
                 return;
@@ -147,8 +160,8 @@ export default {
                     this.folder_content.find(
                         item =>
                             item.title === file.name &&
-                            item.type !== this.TYPE_FOLDER &&
-                            item.parent_id === dropzone_folder.id
+                            item.type !== TYPE_FOLDER &&
+                            item.parent_id === dropzone_item.id
                     )
                 ) {
                     this.error_modal_shown = this.ALREADY_EXISTS_ERROR;
@@ -160,14 +173,14 @@ export default {
             if (!is_uploading_in_subfolder) {
                 should_display_fake_item = true;
             } else {
-                should_display_fake_item = dropzone_folder.is_expanded;
+                should_display_fake_item = dropzone_item.is_expanded;
             }
 
             for (const file of files) {
                 this.$store
                     .dispatch("addNewUploadFile", [
                         file,
-                        dropzone_folder,
+                        dropzone_item,
                         file.name,
                         "",
                         should_display_fake_item
@@ -186,32 +199,37 @@ export default {
             return Boolean(event.target.closest(".tlp-modal"));
         },
         clearHighlight() {
-            for (const element of document.querySelectorAll(
-                ".document-tree-item-folder-highlighted"
-            )) {
-                element.classList.remove("document-tree-item-folder-highlighted");
+            for (const element of document.querySelectorAll(".document-tree-item-highlighted")) {
+                element.classList.remove("document-tree-item-highlighted");
             }
 
             this.is_dropzone_highlighted = false;
-            this.highlighted_folder_id = null;
+            this.highlighted_item_id = null;
         },
         highlightFolderDropZone(event) {
             this.clearHighlight();
 
-            const closet_row = event.target.closest(".document-tree-item-folder");
-            if (closet_row) {
-                closet_row.classList.add("document-tree-item-folder-highlighted");
-                this.highlighted_folder_id = parseInt(closet_row.dataset.itemId, 10);
+            const target_drop_zones = [".document-tree-item-folder"];
+
+            if (event.dataTransfer.items.length === 1) {
+                target_drop_zones.push(".document-tree-item-file");
+            }
+
+            const closest_row = event.target.closest(target_drop_zones);
+
+            if (closest_row) {
+                closest_row.classList.add("document-tree-item-highlighted");
+                this.highlighted_item_id = parseInt(closest_row.dataset.itemId, 10);
             } else {
                 this.is_dropzone_highlighted = true;
             }
         },
-        getDropZoneFolder: function() {
-            if (!this.highlighted_folder_id) {
+        getDropZoneItem: function() {
+            if (!this.highlighted_item_id) {
                 return this.current_folder;
             }
 
-            return this.folder_content.find(item => item.id === this.highlighted_folder_id);
+            return this.folder_content.find(item => item.id === this.highlighted_item_id);
         }
     }
 };

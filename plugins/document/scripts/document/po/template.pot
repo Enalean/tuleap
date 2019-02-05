@@ -160,6 +160,11 @@ msgstr ""
 msgid "There is no upload in progress"
 msgstr ""
 
+msgid ""
+"This feature \"Upload a new file version\" is under construction. It is not "
+"ready yet to be used."
+msgstr ""
+
 msgid "This folder is empty"
 msgstr ""
 
