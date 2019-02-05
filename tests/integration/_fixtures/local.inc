@@ -170,10 +170,6 @@ $sys_dbauth_passwd = '%sys_dbauth_passwd%';
 // (was group 714 in SourceForge - sfnews)
 $sys_news_group = 46;
 
-// Default trove category in software map welcome page.
-// Default is 18 ('topic')
-$sys_default_trove_cat = 18;
-
 // Make project categorisation mandatory. If a project has not categorized itself,
 // it will result in a warning in project summary page.
 $sys_trove_cat_mandatory = 1;
