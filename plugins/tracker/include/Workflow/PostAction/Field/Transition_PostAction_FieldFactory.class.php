@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once TRACKER_BASE_DIR .'/workflow/PostAction/PostActionSubFactory.class.php';
+require_once TRACKER_BASE_DIR .'/Workflow/PostAction/PostActionSubFactory.class.php';
 
 /**
  * Loads and saves Field post actions
@@ -315,5 +315,3 @@ class Transition_PostAction_FieldFactory implements Transition_PostActionSubFact
         return $dao->searchByTransitionId($transition->getId());
     }
 }
-
-?>
