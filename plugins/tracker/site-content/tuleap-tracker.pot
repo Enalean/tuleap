@@ -512,6 +512,11 @@ msgstr ""
 
 #, php-format
 msgid ""
+"The field_id value '%u' does not match a float field in use in the tracker."
+msgstr ""
+
+#, php-format
+msgid ""
 "The field_id value '%u' does not match an int field in use in the tracker."
 msgstr ""
 
@@ -719,12 +724,22 @@ msgstr ""
 
 msgid ""
 "There should not be duplicate field_ids for 'set_field_value' actions with "
+"type 'float'."
+msgstr ""
+
+msgid ""
+"There should not be duplicate field_ids for 'set_field_value' actions with "
 "type 'int'."
 msgstr ""
 
 msgid ""
 "There should not be duplicate ids for 'set_field_value' actions with type "
 "'date'."
+msgstr ""
+
+msgid ""
+"There should not be duplicate ids for 'set_field_value' actions with type "
+"'float'."
 msgstr ""
 
 msgid ""

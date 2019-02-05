@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Workflow\PostAction\Update\Internal;
 
-class SetIntValueValidator
+class SetFloatValueValidator
 {
     /**
      * @var PostActionIdValidator
@@ -50,62 +50,63 @@ class SetIntValueValidator
     /**
      * @throws InvalidPostActionException
      */
-    public function validate(\Tracker $tracker, SetIntValue ...$set_int_values): void
+    public function validate(\Tracker $tracker, SetFloatValue ...$set_float_values): void
     {
         try {
-            $this->ids_validator->validate(...$set_int_values);
+            $this->ids_validator->validate(...$set_float_values);
         } catch (DuplicatePostActionException $e) {
             throw new InvalidPostActionException(
                 dgettext(
                     'tuleap-tracker',
-                    "There should not be duplicate ids for 'set_field_value' actions with type 'int'."
+                    "There should not be duplicate ids for 'set_field_value' actions with type 'float'."
                 )
             );
         }
 
         try {
-            $this->field_ids_validator->validate(...$set_int_values);
+            $this->field_ids_validator->validate(...$set_float_values);
         } catch (DuplicateFieldIdException $e) {
             throw new InvalidPostActionException(
                 dgettext(
                     'tuleap-tracker',
-                    "There should not be duplicate field_ids for 'set_field_value' actions with type 'int'."
+                    "There should not be duplicate field_ids for 'set_field_value' actions with type 'float'."
                 )
             );
         }
 
-        $int_field_ids = $this->extractIntFieldIds($tracker);
-        foreach ($set_int_values as $set_int_value) {
-            $this->validateSetIntValue($set_int_value, $int_field_ids);
+        $float_field_ids = $this->extractFloatFieldIds($tracker);
+        foreach ($set_float_values as $set_float_value) {
+            $this->validateSetFloatValue($set_float_value, $float_field_ids);
         }
     }
 
     /**
      * @throws InvalidPostActionException
      */
-    private function validateSetIntValue(SetIntValue $set_int_value, array $int_field_ids)
+    private function validateSetFloatValue(SetFloatValue $set_float_value, array $float_field_ids)
     {
-        if (! in_array($set_int_value->getFieldId(), $int_field_ids, true)) {
+        if (! in_array($set_float_value->getFieldId(), $float_field_ids, true)) {
             throw new InvalidPostActionException(
                 sprintf(
                     dgettext(
                         'tuleap-tracker',
-                        "The field_id value '%u' does not match an int field in use in the tracker."
+                        "The field_id value '%u' does not match a float field in use in the tracker."
                     ),
-                    $set_int_value->getFieldId()
+                    $set_float_value->getFieldId()
                 )
             );
         }
     }
 
-    private function extractIntFieldIds(\Tracker $tracker)
+    private function extractFloatFieldIds(\Tracker $tracker) : array
     {
-        $int_fields    = $this->form_element_factory->getUsedIntFields($tracker);
-        $int_field_ids = [];
-        /** @var \Tracker_FormElement_Field_Integer $int_field */
-        foreach ($int_fields as $int_field) {
-            $int_field_ids[] = (int) $int_field->getId();
+        $float_fields    = $this->form_element_factory->getUsedFormElementsByType($tracker, 'float');
+        $float_field_ids = [];
+        /** @var \Tracker_FormElement_Field_Float $float_field */
+        foreach ($float_fields as $float_field) {
+            $float_field_ids[] = (int) $float_field->getId();
         }
-        return $int_field_ids;
+
+        return $float_field_ids;
     }
 }

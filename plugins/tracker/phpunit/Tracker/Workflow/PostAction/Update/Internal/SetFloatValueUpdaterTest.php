@@ -45,6 +45,16 @@ class SetFloatValueUpdaterTest extends TestCase
     private $set_float_value_repository;
 
     /**
+     * @var MockInterface
+     */
+    private $validator;
+
+    /**
+     * @var MockInterface
+     */
+    private $tracker;
+
+    /**
      * @before
      */
     public function createUpdater()
@@ -57,16 +67,24 @@ class SetFloatValueUpdaterTest extends TestCase
             ->shouldReceive('update')
             ->byDefault();
 
-        $this->updater = new SetFloatValueUpdater($this->set_float_value_repository);
+        $this->tracker = Mockery::mock(\Tracker::class);
+
+        $this->validator = Mockery::mock(SetFloatValueValidator::class);
+
+        $this->updater = new SetFloatValueUpdater($this->set_float_value_repository, $this->validator);
     }
 
     public function testUpdateAddsNewSetFloatValueActions()
     {
-        $transition = TransitionFactory::buildATransition();
+        $transition = TransitionFactory::buildATransitionWithTracker($this->tracker);
         $this->mockFindAllIdsByTransition($transition, [1]);
 
         $added_action = new SetFloatValue(null, 43, 1.23);
         $actions      = new PostActionCollection($added_action);
+
+        $this->validator
+            ->shouldReceive('validate')
+            ->with($this->tracker, $added_action);
 
         $this->set_float_value_repository
             ->shouldReceive('create')
@@ -78,11 +96,15 @@ class SetFloatValueUpdaterTest extends TestCase
 
     public function testUpdateUpdatesSetFloatValueActionsWhichAlreadyExists()
     {
-        $transition = TransitionFactory::buildATransition();
+        $transition = TransitionFactory::buildATransitionWithTracker($this->tracker);
         $this->mockFindAllIdsByTransition($transition, [1]);
 
         $updated_action = new SetFloatValue(1, 43, 1.23);
         $actions        = new PostActionCollection($updated_action);
+
+        $this->validator
+            ->shouldReceive('validate')
+            ->with($this->tracker, $updated_action);
 
         $this->set_float_value_repository
             ->shouldReceive('update')
@@ -94,12 +116,16 @@ class SetFloatValueUpdaterTest extends TestCase
 
     public function testUpdateDeletesRemovedSetFloatValueActions()
     {
-        $transition = TransitionFactory::buildATransition();
+        $transition = TransitionFactory::buildATransitionWithTracker($this->tracker);
 
         $this->mockFindAllIdsByTransition($transition, [2, 3]);
 
         $action  = new SetFloatValue(2, 43, 1.23);
         $actions = new PostActionCollection($action);
+
+        $this->validator
+            ->shouldReceive('validate')
+            ->with($this->tracker, $action);
 
         $this->set_float_value_repository
             ->shouldReceive('deleteAllByTransitionIfNotIn')
