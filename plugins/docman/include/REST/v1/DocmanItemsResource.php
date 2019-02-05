@@ -158,14 +158,6 @@ class DocmanItemsResource extends AuthenticatedResource
      */
     public function post(DocmanItemPOSTRepresentation $docman_item_post_representation)
     {
-        if (isset($docman_item_post_representation->embedded_properties) && $docman_item_post_representation->embedded_properties->content !== '') {
-            $purifier                                                      = Codendi_HTMLPurifier::instance();
-            $docman_item_post_representation->embedded_properties->content = $purifier->purify(
-                $docman_item_post_representation->embedded_properties->content,
-                CODENDI_PURIFIER_BASIC
-            );
-        }
-
         $this->checkAccess();
         $this->sendAllowHeadersWithPost();
 

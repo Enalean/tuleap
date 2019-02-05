@@ -22,6 +22,7 @@ declare(strict_types = 1);
 
 namespace Tuleap\Document\Tree;
 
+use ForgeConfig;
 use HTTPRequest;
 use Project;
 use TemplateRendererFactory;
@@ -46,7 +47,7 @@ class DocumentTreeController implements DispatchableWithRequest, DispatchableWit
 
     public function __construct(DocumentTreeProjectExtractor $project_extractor, \DocmanPluginInfo $docman_plugin_info)
     {
-        $this->project_extractor = $project_extractor;
+        $this->project_extractor  = $project_extractor;
         $this->docman_plugin_info = $docman_plugin_info;
     }
 
@@ -96,11 +97,14 @@ class DocumentTreeController implements DispatchableWithRequest, DispatchableWit
      */
     private function includeJavascriptFiles(BaseLayout $layout)
     {
-        $include_assets  = new IncludeAssets(
+        $include_assets = new IncludeAssets(
             __DIR__ . '/../../../../src/www/assets/document/scripts',
             '/assets/document/scripts'
         );
 
+        $assets_path     = ForgeConfig::get('tuleap_dir') . '/src/www/assets';
+        $ckeditor_assets = new IncludeAssets($assets_path, '/assets');
+        $layout->includeFooterJavascriptFile($ckeditor_assets->getFileURL('ckeditor.js'));
         $layout->includeFooterJavascriptFile($include_assets->getFileURL('document.js'));
     }
 
