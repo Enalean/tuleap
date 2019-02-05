@@ -49,7 +49,13 @@ class MediawikiDao extends DataAccessObject {
         $sql = "SELECT $group_id AS group_id, COUNT(1) AS result
                 FROM ".$this->getTableName($project, 'page');
 
-        return $this->retrieve($sql)->getRow();
+        $result = $this->retrieve($sql);
+
+        if ($result === false) {
+            return ['result' => 0];
+        }
+
+        return $result->getRow();
     }
 
     public function getModifiedMediawikiPagesNumberOfAProjectBetweenStartDateAndEndDate(Project $project, $start_date, $end_date) {
@@ -66,7 +72,13 @@ class MediawikiDao extends DataAccessObject {
                     page_touched <= $end_date
                ";
 
-        return $this->retrieve($sql)->getRow();
+        $result = $this->retrieve($sql);
+
+        if ($result === false) {
+            return ['result' => 0];
+        }
+
+        return $result->getRow();
     }
 
     public function getCreatedPagesNumberSinceStartDate(Project $project, $start_date) {
@@ -82,7 +94,13 @@ class MediawikiDao extends DataAccessObject {
                     rev_timestamp >= $start_date
                ";
 
-        return $this->retrieve($sql)->getRow();
+        $result = $this->retrieve($sql);
+
+        if ($result === false) {
+            return ['result' => 0];
+        }
+
+        return $result->getRow();
     }
 
     public function getMediawikiGroupsForUser(PFUser $user, Project $project) {
