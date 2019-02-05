@@ -20,7 +20,7 @@
 
 import { shallowMount } from "@vue/test-utils";
 import FloatInput from "./FloatInput.vue";
-import localVue from "../../support/local-vue.js";
+import localVue from "../../../support/local-vue.js";
 
 describe("FloatInput", () => {
     let wrapper;

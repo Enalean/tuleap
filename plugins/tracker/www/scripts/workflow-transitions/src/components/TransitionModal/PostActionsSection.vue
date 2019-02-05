@@ -52,8 +52,8 @@
 import { POST_ACTION_TYPE } from "../../constants/workflow-constants.js";
 import EmptyPostAction from "./Empty/EmptyPostAction.vue";
 import PostActionSkeleton from "./Skeletons/PostActionSkeleton.vue";
-import RunJobAction from "./RunJobAction.vue";
-import SetValueAction from "./SetValueAction.vue";
+import RunJobAction from "./PostAction/RunJobAction.vue";
+import SetValueAction from "./PostAction/SetValueAction.vue";
 import { mapState, mapGetters, mapMutations } from "vuex";
 
 export default {

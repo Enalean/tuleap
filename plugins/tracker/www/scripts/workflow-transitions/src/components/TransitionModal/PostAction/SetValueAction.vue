@@ -80,15 +80,15 @@
 </template>
 
 <script>
-import { DATE_FIELD, INT_FIELD, FLOAT_FIELD } from "../../../../constants/fields-constants.js";
-import { DATE_FIELD_VALUE } from "../../constants/workflow-constants.js";
+import { DATE_FIELD, INT_FIELD, FLOAT_FIELD } from "../../../../../constants/fields-constants.js";
+import { DATE_FIELD_VALUE } from "../../../constants/workflow-constants.js";
 import PostAction from "./PostAction.vue";
 import DateInput from "./DateInput.vue";
 import FloatInput from "./FloatInput.vue";
 import IntInput from "./IntInput.vue";
 import PlaceholderInput from "./PlaceholderInput.vue";
 
-import { compare } from "../../support/string.js";
+import { compare } from "../../../support/string.js";
 import { mapState } from "vuex";
 
 export default {

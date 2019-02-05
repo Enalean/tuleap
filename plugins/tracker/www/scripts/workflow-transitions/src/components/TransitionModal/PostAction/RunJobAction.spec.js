@@ -21,9 +21,9 @@
 import { shallowMount } from "@vue/test-utils";
 
 import RunJobAction from "./RunJobAction.vue";
-import localVue from "../../support/local-vue.js";
-import { createStoreMock } from "../../support/store-wrapper.spec-helper.js";
-import { create } from "../../support/factories";
+import localVue from "../../../support/local-vue.js";
+import { createStoreMock } from "../../../support/store-wrapper.spec-helper.js";
+import { create } from "../../../support/factories";
 
 describe("RunJobAction", () => {
     let store;

@@ -44,7 +44,7 @@
     </div>
 </template>
 <script>
-import { POST_ACTION_TYPE } from "../../constants/workflow-constants.js";
+import { POST_ACTION_TYPE } from "../../../constants/workflow-constants.js";
 import { mapState } from "vuex";
 
 export default {
