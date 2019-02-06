@@ -137,7 +137,7 @@ class ProjectDashboardController
                 && $request->getCurrentUser()->isAdmin($project->getID())
                 && empty($trove_cats)
             ) {
-                $trove_url = '/project/admin/group_trove.php?group_id='.$project->getID();
+                $trove_url = '/project/'. (int) $project->getID() .'/admin/categories';
                 $GLOBALS['Response']->addFeedback(
                     Feedback::WARN,
                     $GLOBALS['Language']->getText('include_html', 'no_trovcat', $trove_url),

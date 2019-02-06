@@ -82,17 +82,6 @@ function trove_getrootcat($trove_cat_id) {
 	return 0;
 }
 
-// returns an associative array of all project roots
-function trove_getallroots() {
-	$res = db_query('SELECT trove_cat_id,fullname FROM trove_cat '
-		.'WHERE parent=0 ORDER BY fullname');
-	while ($row = db_fetch_array($res)) {
-		$tmpcatid = $row["trove_cat_id"];
-		$CATROOTS[$tmpcatid] = $row["fullname"];
-	}
-	return $CATROOTS;
-}
-
 // return boolean true when project is categorized
 function trove_project_categorized($group_id) {
     $res_trovecat = db_query('SELECT NULL '
@@ -104,56 +93,6 @@ function trove_project_categorized($group_id) {
     } else {
         return true;
     }
-}
-
-// returns HTML code for full select output for a particular root
-function trove_get_html_cat_selectfull($node,$selected,$name) {
-    global $Language;
-	$html = "";
-    $html .= '<BR><SELECT name="'. $name .'">';
-	$html .= '  <OPTION value="0">'.$Language->getText('include_trove','none_selected')."\n".'</OPTION>';
-	$res_cat = db_query('SELECT trove_cat_id,fullpath FROM trove_cat WHERE '
-		.'root_parent='.db_ei($node).' ORDER BY fullpath');
-        $purifier = Codendi_HTMLPurifier::instance();
-	while ($row_cat = db_fetch_array($res_cat)) {
-		$html .= '  <OPTION value="'.$row_cat['trove_cat_id'].'"';
-		if ($selected == $row_cat['trove_cat_id']) $html .= (' selected');
-		$html .= '>'.$purifier->purify($row_cat['fullpath'])."\n".'</OPTION>';
-	}
-	$html .= "</SELECT>\n";
-    return $html;
-}
-
-/**
- * returns the html code for the full select 
- * for all categories, for a specific group
- *
- * @param int group_id the group for categorization
- * @return string html code for the full select
- */
-function trove_get_html_allcat_selectfull($group_id) {
-    $html = "";
-    $purifier = Codendi_HTMLPurifier::instance();
-    $CATROOTS = trove_getallroots();
-    while (list($catroot,$fullname) = each($CATROOTS)) {
-        $html .= "\n<HR>\n<P><B>".$purifier->purify($fullname)."</B> \n";
-    
-        $res_grpcat = db_query('SELECT trove_cat_id FROM trove_group_link WHERE '.
-                               'group_id='.db_ei($group_id).' AND trove_cat_root='.db_ei($catroot).
-                               ' ORDER BY trove_group_id');
-        for ($i=1;$i<=$GLOBALS['TROVE_MAXPERROOT'];$i++) {
-            // each drop down, consisting of all cats in each root
-            $name= "root$i"."[".$purifier->purify($catroot)."]";
-            // see if we have one for selection
-            if ($row_grpcat = db_fetch_array($res_grpcat)) {
-                $selected = $purifier->purify($row_grpcat["trove_cat_id"]);
-            } else {
-                $selected = 0;
-            }
-            $html .= trove_get_html_cat_selectfull($catroot,$selected,$name);
-        }
-    }
-    return $html;
 }
 
 // returns a full path for a trove category

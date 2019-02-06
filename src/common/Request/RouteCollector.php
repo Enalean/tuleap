@@ -25,6 +25,9 @@ use Codendi_HTMLPurifier;
 use ConfigDao;
 use EventManager;
 use FastRoute;
+use ProjectHistoryDao;
+use TroveCatDao;
+use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Admin\ProjectCreation\ProjectCategoriesDisplayController;
 use Tuleap\Admin\ProjectCreation\ProjectFieldsDisplayController;
 use Tuleap\Admin\ProjectCreation\ProjectFieldsUpdateController;
@@ -45,6 +48,8 @@ use Tuleap\Password\Administration\PasswordPolicyUpdateController;
 use Tuleap\Password\Configuration\PasswordConfigurationDAO;
 use Tuleap\Password\Configuration\PasswordConfigurationRetriever;
 use Tuleap\Password\Configuration\PasswordConfigurationSaver;
+use Tuleap\Project\Admin\Categories;
+use Tuleap\Project\Home;
 use Tuleap\Trove\TroveCatListController;
 use Tuleap\User\AccessKey\AccessKeyCreationController;
 use Tuleap\User\AccessKey\AccessKeyRevocationController;
@@ -78,13 +83,13 @@ class RouteCollector
 
     public static function getOrPostProjectHome()
     {
-        return new \Tuleap\Project\Home();
+        return new Home();
     }
 
     public static function getAdminPasswordPolicy()
     {
         return new PasswordPolicyDisplayController(
-            new \Tuleap\Admin\AdminPageRenderer,
+            new AdminPageRenderer,
             \TemplateRendererFactory::build(),
             new PasswordConfigurationRetriever(new PasswordConfigurationDAO)
         );
@@ -210,9 +215,25 @@ class RouteCollector
         );
     }
 
+    public static function getProjectAdminIndexCategories()
+    {
+        return new Categories\IndexController(new TroveCatDao());
+    }
+
+    public static function getProjectAdminUpdateCategories()
+    {
+        return new Categories\UpdateController(new TroveCatDao(), new ProjectHistoryDao());
+    }
+
     public function collect(FastRoute\RouteCollector $r)
     {
         $r->get('/', [__CLASS__, 'getSlash']);
+
+        $r->addGroup('/project/{id:\d+}/admin', function (FastRoute\RouteCollector $r) {
+            $r->get('/categories', [__CLASS__, 'getProjectAdminIndexCategories']);
+            $r->post('/categories', [__CLASS__, 'getProjectAdminUpdateCategories']);
+        });
+
         $r->addRoute(['GET', 'POST'], '/projects/{name}[/]', [__CLASS__, 'getOrPostProjectHome']);
 
         $r->addGroup('/admin', function (FastRoute\RouteCollector $r) {

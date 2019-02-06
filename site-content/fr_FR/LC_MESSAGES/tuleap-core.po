@@ -255,6 +255,16 @@ msgstr "Impossible de mettre à jour le groupe utilisateur"
 msgid "Categories"
 msgstr "Catégories"
 
+msgid "Categories successfully updated."
+msgstr "Les catégories ont été mises à jour avec succès."
+
+msgid ""
+"Categorizing your project will help potential developers and users to find "
+"your project and engage."
+msgstr ""
+"Catégoriser votre projet permettra aux développeurs et utilisateurs de plus "
+"facilement le trouver et y participer."
+
 msgid "Change email address"
 msgstr "Changer l'adresse e-mail"
 
@@ -268,6 +278,9 @@ msgstr ""
 
 msgid "Child projects"
 msgstr "Projets enfants"
+
+msgid "Choose a category..."
+msgstr "Choisissez une catégorie…"
 
 msgid "Clear history"
 msgstr "Effacer l'historique"
@@ -887,6 +900,9 @@ msgstr ""
 "Les administrateurs ne peuvent pas être retirés du projet. Vous devez "
 "d'abord les retirer du groupe Administrateurs du projet."
 
+msgid "Project categories"
+msgstr "Catégories de projet"
+
 msgid "Project creation moderation"
 msgstr "Modération de la création de projets"
 
@@ -985,6 +1001,9 @@ msgstr "API SOAP"
 
 msgid "SVN"
 msgstr "SVN"
+
+msgid "Save categories"
+msgstr "Sauvegarder les catégories"
 
 msgid "Save delegated permissions"
 msgstr "Sauvegarder les permissions déléguées"
@@ -1493,6 +1512,11 @@ msgstr ""
 "Vous n'etes pas l'utilisateur à l'origine de la demande de changement d'e-"
 "mail"
 
+msgid "You can choose up to %s category"
+msgid_plural "You can choose up to %s categories"
+msgstr[0] "Vous pouvez choisir au plus %s catégorie"
+msgstr[1] "Vous pouvez choisir au plus %s catégories"
+
 msgid ""
 "You can configure some pages to be accessible by anyone, even if the "
 "platform would forbid it."
@@ -1557,6 +1581,10 @@ msgstr "Vous ne pouvez pas accéder à cette page."
 
 msgid "You don't have any dashboards."
 msgstr "Vous n'avez aucun tableau de bord."
+
+msgid "You don't have permission to access administration of this project."
+msgstr ""
+"Vous n'avez pas la permission d'accéder à l'administration de ce projet."
 
 msgid "You don't have permissions to see user groups."
 msgstr "Vous n'avez pas la permission de voir les groupes d'utilisateurs."
@@ -1644,6 +1672,9 @@ msgstr "Votre historique est vide"
 
 msgid "Your platform does not allow restricted users."
 msgstr "Votre plateforme n'authorise pas les utilisateurs restreints"
+
+msgid "Your request is invalid"
+msgstr "Votre requête n'est pas valide"
 
 #, php-format
 msgid "[%s] Email change confirmation"

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,14 +17,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import 'project-admin/labels';
-@import 'project-admin/details';
-@import 'project-admin/ugroups';
-@import 'project-admin/members';
-@import 'project-admin/permissions';
-@import 'project-admin/categories';
+import { select2 } from "tlp";
 
-.project-administration-title {
-    padding: $tlp-spacing $tlp-spacing 0;
-    word-break: break-all;
-}
+document.addEventListener("DOMContentLoaded", () => {
+    for (const select_category of document.querySelectorAll(".project-admin-category-select")) {
+        select2(select_category, {
+            placeholder: select_category.dataset.placeholder,
+            allowClear: true,
+            maximumSelectionLength: select_category.dataset.maximumSelectionLength,
+            templateResult: result => {
+                if (!result.element) {
+                    return result.text;
+                }
+
+                return result.element.dataset.fullpath;
+            }
+        });
+    }
+});
