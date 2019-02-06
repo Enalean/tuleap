@@ -279,7 +279,7 @@ msgstr ""
 msgid "Child projects"
 msgstr "Projets enfants"
 
-msgid "Choose a category..."
+msgid "Choose a category…"
 msgstr "Choisissez une catégorie…"
 
 msgid "Clear history"

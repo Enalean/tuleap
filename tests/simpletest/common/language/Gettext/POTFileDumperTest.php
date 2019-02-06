@@ -43,7 +43,11 @@ class POTFileDumperTest extends \TuleapTestCase
 
         $dumper->dump($collection, $path);
 
-        $this->assertEqual(file_get_contents($path), <<<POT
+        $this->assertEqual(file_get_contents($path), <<<'POT'
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+
 msgid "whenever, wherever"
 msgstr ""
 
@@ -63,7 +67,11 @@ POT
 
         $dumper->dump($collection, $path);
 
-        $this->assertEqual(file_get_contents($path), <<<POT
+        $this->assertEqual(file_get_contents($path), <<<'POT'
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+
 msgid "whenever, wherever"
 msgstr ""
 
@@ -85,7 +93,11 @@ POT
 
         $dumper->dump($collection, $path);
 
-        $this->assertEqual(file_get_contents($path), <<<POT
+        $this->assertEqual(file_get_contents($path), <<<'POT'
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+
 msgid "singular"
 msgid_plural "plural"
 msgstr[0] ""
@@ -107,6 +119,10 @@ POT
         $dumper->dump($collection, $path);
 
         $this->assertEqual(file_get_contents($path), <<<'POT'
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+
 msgid "\" should be written escaped"
 msgstr ""
 
@@ -126,6 +142,10 @@ POT
         $dumper->dump($collection, $path);
 
         $this->assertEqual(file_get_contents($path), <<<'POT'
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+
 msgid "\\ should be written escaped"
 msgstr ""
 
@@ -145,6 +165,10 @@ POT
         $dumper->dump($collection, $path);
 
         $this->assertEqual(file_get_contents($path), <<<'POT'
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+
 msgid "\n should be written escaped"
 msgstr ""
 

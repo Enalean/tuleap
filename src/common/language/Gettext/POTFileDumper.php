@@ -24,8 +24,21 @@ class POTFileDumper
 {
     public function dump(POTEntryCollection $collection, $path)
     {
-        $content = '';
-        foreach ($collection->getEntries() as $entry) {
+        $entries = $collection->getEntries();
+        if (count($entries) === 0) {
+            file_put_contents($path, '');
+            return;
+        }
+
+        $content = <<<'EOS'
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+
+
+EOS;
+
+        foreach ($entries as $entry) {
             $msgid = $this->escape($entry->getMsgid());
             $content .= "msgid \"$msgid\"\n";
 
