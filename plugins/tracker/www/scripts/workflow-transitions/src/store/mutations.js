@@ -31,6 +31,8 @@ export {
     saveCurrentTracker,
     addTransition,
     deleteTransition,
+    markTransitionUpdated,
+    hideTransitionUpdated,
     createWorkflow,
     beginTransitionRulesEnforcement,
     endTransitionRulesEnforcement,
@@ -66,7 +68,14 @@ function stopCurrentTrackerLoading(state) {
 }
 
 function saveCurrentTracker(state, tracker) {
-    state.current_tracker = tracker;
+    const presented_transitions = [...tracker.workflow.transitions].map(presentTransition);
+    state.current_tracker = {
+        ...tracker,
+        workflow: {
+            ...tracker.workflow,
+            transitions: presented_transitions
+        }
+    };
 }
 
 // Transition operations
@@ -77,10 +86,19 @@ function addTransition(state, transition) {
     if (!state.current_tracker.workflow.transitions) {
         state.current_tracker.workflow.transitions = [];
     }
+    const presented_transition = presentTransition(transition);
+
     state.current_tracker.workflow.transitions = [
         ...state.current_tracker.workflow.transitions,
-        transition
+        presented_transition
     ];
+}
+
+function presentTransition(transition) {
+    return {
+        ...transition,
+        updated: false
+    };
 }
 
 function deleteTransition(state, transition_to_delete) {
@@ -94,6 +112,24 @@ function deleteTransition(state, transition_to_delete) {
     state.current_tracker.workflow.transitions = state.current_tracker.workflow.transitions.filter(
         transition => transition !== transition_to_delete
     );
+}
+
+function markTransitionUpdated(state, { id }) {
+    const transition = findTransitionById(state, id);
+    if (transition) {
+        transition.updated = true;
+    }
+}
+
+function hideTransitionUpdated(state, { id }) {
+    const transition = findTransitionById(state, id);
+    if (transition) {
+        transition.updated = false;
+    }
+}
+
+function findTransitionById(state, id) {
+    return state.current_tracker.workflow.transitions.find(element => element.id === id);
 }
 
 function createWorkflow(state, field_id) {

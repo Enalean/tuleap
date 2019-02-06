@@ -25,6 +25,7 @@ import {
     getPostActions,
     putPostActions
 } from "../../api/rest-querier.js";
+import { animateUpdated } from "../../helpers/item-animator.js";
 
 export {
     showTransitionConfigurationModal,
@@ -76,6 +77,14 @@ async function saveTransitionRules({ commit, state, getters }) {
             patchTransition(state.current_transition),
             putPostActions(state.current_transition.id, getters.post_actions)
         ]);
+        animateUpdated(
+            () => {
+                commit("markTransitionUpdated", state.current_transition, { root: true });
+            },
+            () => {
+                commit("hideTransitionUpdated", state.current_transition, { root: true });
+            }
+        );
         commit("clearModalShown");
     } catch (error) {
         const error_message = await getErrorMessage(error);

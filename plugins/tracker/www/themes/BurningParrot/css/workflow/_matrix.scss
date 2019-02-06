@@ -62,10 +62,15 @@
             position: relative;
             width: 100px;
             min-width: 100px;
+            transition: background ease-in-out 100ms;
             font-size: 20px;
             font-weight: 600;
             line-height: 16px;
             text-align: center;
+
+            &.tracker-workflow-transition-action-updated {
+                background: transparentize($tlp-ui-success, .9);
+            }
         }
     }
 }
@@ -109,9 +114,29 @@
     }
 }
 
+@keyframes bounce {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.6);
+    }
+
+    100% {
+        transform: scale(1.4);
+    }
+}
+
 .tracker-workflow-transition-mark {
+    transition: color ease-in-out 100ms;
     color: $tlp-theme-color;
     cursor: pointer;
+
+    &.tracker-workflow-transition-action-updated {
+        animation: bounce ease-in-out 500ms infinite alternate;
+        color: $tlp-ui-success;
+    }
 }
 
 .tracker-workflow-transition-action-disabled {

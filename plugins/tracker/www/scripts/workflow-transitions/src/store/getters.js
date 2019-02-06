@@ -24,6 +24,9 @@ export const workflow_field_label = state => {
     if (state.current_tracker === null) {
         return null;
     }
+    if (state.current_tracker.workflow.field_id === 0) {
+        return null;
+    }
 
     const selected_field = state.current_tracker.fields.find(
         field => field.field_id === state.current_tracker.workflow.field_id
