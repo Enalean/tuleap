@@ -40,6 +40,17 @@ pipeline {
             }
         }
 
+        stage('Sign packages') {
+            steps {
+                script {
+                    def lib_signing = new org.tuleap.Signing();
+                    withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'vault-role-enterprise-signing-key', passwordVariable: 'SECRET_ID', usernameVariable: 'ROLE_ID']]) {
+                        lib_signing.signPackages(pwd() + '/packages/', env.VAULT, env.ROLE_ID, env.SECRET_ID, 'gpg/sign/tuleap-enterprise-rpm-signing');
+                    }
+                }
+            }
+        }
+
         stage('Build repositories') {
             steps {
                 script {
