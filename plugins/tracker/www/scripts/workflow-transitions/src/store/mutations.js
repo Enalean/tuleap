@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,82 +21,103 @@ import state from "./state.js";
 
 const initial_state = { ...state };
 
-export default {
-    failOperation(state, message) {
-        state.is_operation_failed = true;
-        state.operation_failure_message = message;
-    },
-    beginOperation(state) {
-        state.is_operation_running = true;
-        state.is_operation_failed = false;
-        state.operation_failure_message = null;
-    },
-    endOperation(state) {
-        state.is_operation_running = false;
-    },
-
-    // Current tracker loading
-    startCurrentTrackerLoading(state) {
-        state.is_current_tracker_loading = true;
-    },
-    failCurrentTrackerLoading(state) {
-        state.is_current_tracker_load_failed = true;
-    },
-    stopCurrentTrackerLoading(state) {
-        state.is_current_tracker_loading = false;
-    },
-    saveCurrentTracker(state, tracker) {
-        state.current_tracker = tracker;
-    },
-
-    // Transition operations
-    addTransition(state, transition) {
-        if (!state.current_tracker || !state.current_tracker.workflow) {
-            return;
-        }
-        if (!state.current_tracker.workflow.transitions) {
-            state.current_tracker.workflow.transitions = [];
-        }
-        state.current_tracker.workflow.transitions = [
-            ...state.current_tracker.workflow.transitions,
-            transition
-        ];
-    },
-    deleteTransition(state, transition_to_delete) {
-        if (
-            !state.current_tracker ||
-            !state.current_tracker.workflow ||
-            !state.current_tracker.workflow.transitions
-        ) {
-            return;
-        }
-        state.current_tracker.workflow.transitions = state.current_tracker.workflow.transitions.filter(
-            transition => transition !== transition_to_delete
-        );
-    },
-
-    createWorkflow(state, field_id) {
-        if (!state.current_tracker) {
-            return;
-        }
-        if (!state.current_tracker.workflow) {
-            state.current_tracker.workflow = {};
-        }
-
-        state.current_tracker.workflow.field_id = field_id;
-    },
-
-    // Transition rules enforcement
-    beginTransitionRulesEnforcement() {
-        state.is_operation_running = true;
-        state.is_rules_enforcement_running = true;
-    },
-    endTransitionRulesEnforcement() {
-        state.is_operation_running = false;
-        state.is_rules_enforcement_running = false;
-    },
-
-    resetState(state) {
-        Object.assign(state, initial_state);
-    }
+export {
+    failOperation,
+    beginOperation,
+    endOperation,
+    startCurrentTrackerLoading,
+    failCurrentTrackerLoading,
+    stopCurrentTrackerLoading,
+    saveCurrentTracker,
+    addTransition,
+    deleteTransition,
+    createWorkflow,
+    beginTransitionRulesEnforcement,
+    endTransitionRulesEnforcement,
+    resetState
 };
+
+function failOperation(state, message) {
+    state.is_operation_failed = true;
+    state.operation_failure_message = message;
+}
+
+function beginOperation(state) {
+    state.is_operation_running = true;
+    state.is_operation_failed = false;
+    state.operation_failure_message = null;
+}
+
+function endOperation(state) {
+    state.is_operation_running = false;
+}
+
+// Current tracker loading
+function startCurrentTrackerLoading(state) {
+    state.is_current_tracker_loading = true;
+}
+
+function failCurrentTrackerLoading(state) {
+    state.is_current_tracker_load_failed = true;
+}
+
+function stopCurrentTrackerLoading(state) {
+    state.is_current_tracker_loading = false;
+}
+
+function saveCurrentTracker(state, tracker) {
+    state.current_tracker = tracker;
+}
+
+// Transition operations
+function addTransition(state, transition) {
+    if (!state.current_tracker || !state.current_tracker.workflow) {
+        return;
+    }
+    if (!state.current_tracker.workflow.transitions) {
+        state.current_tracker.workflow.transitions = [];
+    }
+    state.current_tracker.workflow.transitions = [
+        ...state.current_tracker.workflow.transitions,
+        transition
+    ];
+}
+
+function deleteTransition(state, transition_to_delete) {
+    if (
+        !state.current_tracker ||
+        !state.current_tracker.workflow ||
+        !state.current_tracker.workflow.transitions
+    ) {
+        return;
+    }
+    state.current_tracker.workflow.transitions = state.current_tracker.workflow.transitions.filter(
+        transition => transition !== transition_to_delete
+    );
+}
+
+function createWorkflow(state, field_id) {
+    if (!state.current_tracker) {
+        return;
+    }
+    if (!state.current_tracker.workflow) {
+        state.current_tracker.workflow = {};
+    }
+
+    state.current_tracker.workflow.field_id = field_id;
+}
+
+// Transition rules enforcement
+function beginTransitionRulesEnforcement() {
+    state.is_operation_running = true;
+    state.is_rules_enforcement_running = true;
+}
+
+function endTransitionRulesEnforcement() {
+    state.is_operation_running = false;
+    state.is_rules_enforcement_running = false;
+}
+
+function resetState(state) {
+    Object.assign(state, initial_state);
+}
