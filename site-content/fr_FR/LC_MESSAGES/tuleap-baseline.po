@@ -20,5 +20,9 @@ msgstr "Le service Baseline est désactivé pour ce projet"
 msgid "Baselines"
 msgstr "Baselines"
 
+msgid "Resource under construction"
+msgstr "Ressource en construction"
+
 msgid "Set and compare baseline of items"
 msgstr "Poser des baselines et les comparer"
+

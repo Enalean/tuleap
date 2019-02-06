@@ -21,6 +21,7 @@
 
 declare(strict_types=1);
 
+use Tuleap\Baseline\REST\BaselineRestResourcesInjector;
 use Tuleap\Baseline\ServiceController;
 use Tuleap\Layout\ServiceUrlCollector;
 
@@ -36,6 +37,7 @@ class baselinePlugin extends Plugin  // @codingStandardsIgnoreLine
     {
         parent::__construct($id);
         $this->setScope(self::SCOPE_PROJECT);
+        $this->addHook(Event::REST_RESOURCES);
         bindtextdomain('tuleap-baseline', __DIR__.'/../site-content');
     }
 
@@ -89,5 +91,14 @@ class baselinePlugin extends Plugin  // @codingStandardsIgnoreLine
         $event->getRouteCollector()->addGroup($this->getPluginPath(), function (FastRoute\RouteCollector $r) {
             $r->get('/{project_name}[/]', $this->getRouteHandler('routeGetSlash'));
         });
+    }
+
+    /**
+     * @see REST_RESOURCES
+     */
+    public function rest_resources($params)
+    {
+        $injector = new BaselineRestResourcesInjector();
+        $injector->populate($params['restler']);
     }
 }

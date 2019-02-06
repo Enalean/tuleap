@@ -7,5 +7,8 @@ msgstr ""
 msgid "Baselines"
 msgstr ""
 
+msgid "Resource under construction"
+msgstr ""
+
 msgid "Set and compare baseline of items"
 msgstr ""
