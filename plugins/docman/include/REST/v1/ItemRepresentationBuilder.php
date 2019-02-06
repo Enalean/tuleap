@@ -48,6 +48,10 @@ class ItemRepresentationBuilder
      * @var \Docman_LockFactory
      */
     private $lock_factory;
+    /**
+     * @var MetadataRepresentationBuilder
+     */
+    private $metadata_representation_builder;
 
     /**
      * @var \Docman_ApprovalTableFactoriesFactory
@@ -66,7 +70,8 @@ class ItemRepresentationBuilder
         \Docman_PermissionsManager $permissions_manager,
         \Docman_LockFactory $lock_factory,
         \Docman_ApprovalTableFactoriesFactory $approval_table_factory,
-        ApprovalTableStateMapper $approval_table_state_mapper
+        ApprovalTableStateMapper $approval_table_state_mapper,
+        MetadataRepresentationBuilder $metadata_representation_builder
     ) {
         $this->dao                         = $dao;
         $this->user_manager                = $user_manager;
@@ -75,6 +80,7 @@ class ItemRepresentationBuilder
         $this->lock_factory                = $lock_factory;
         $this->approval_table_factory      = $approval_table_factory;
         $this->approval_table_state_mapper = $approval_table_state_mapper;
+        $this->metadata_representation_builder = $metadata_representation_builder;
     }
 
     /**
@@ -104,6 +110,7 @@ class ItemRepresentationBuilder
 
     /**
      * @return ItemRepresentation
+     * @throws UnknownMetadataException
      */
     public function buildItemRepresentation(
         \Docman_Item $item,
@@ -130,12 +137,15 @@ class ItemRepresentationBuilder
         $lock_info = $this->getLockInformation($item);
         $approval_table = $this->getApprovalTable($item);
 
+        $metadata_representations = $this->metadata_representation_builder->build($item);
+
         $item_representation->build(
             $item,
             $owner_representation,
             $user_can_write,
             $type,
             $is_expanded,
+            $metadata_representations,
             $approval_table,
             $lock_info,
             $file_properties,

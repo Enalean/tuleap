@@ -143,6 +143,77 @@ class DocmanItemsTest extends DocmanBase
             urlencode($items[5]['id']) . '&switcholdui=true'
         );
 
+        $this->assertEquals(
+            $items[0]['metadata'][0],
+            [
+                "name"                      => "Title",
+                "type"                      => "string",
+                "value"                     => "folder 2",
+                "list_value"                => null,
+                "is_required"               => true,
+                "is_multiple_value_allowed" => false
+            ]
+        );
+
+
+        $this->assertEquals(
+            $items[1]['metadata'][0],
+            [
+                "name"                      => "Title",
+                "type"                      => "string",
+                "value"                     => "item A",
+                "list_value"                => null,
+                "is_required"               => true,
+                "is_multiple_value_allowed" => false
+            ]
+        );
+        $this->assertEquals(
+            $items[2]['metadata'][0],
+            [
+                "name"                      => "Title",
+                "type"                      => "string",
+                "value"                     => "item C",
+                "list_value"                => null,
+                "is_required"               => true,
+                "is_multiple_value_allowed" => false
+            ]
+        );
+        $this->assertEquals(
+            $items[3]['metadata'][0],
+            [
+                "name"                      => "Title",
+                "type"                      => "string",
+                "value"                     => "item E",
+                "list_value"                => null,
+                "is_required"               => true,
+                "is_multiple_value_allowed" => false
+            ]
+        );
+        $this->assertEquals(
+            $items[4]['metadata'][0],
+            [
+                "name"                      => "Title",
+                "type"                      => "string",
+                "value"                     => "item F",
+                "list_value"                => null,
+                "is_required"               => true,
+                "is_multiple_value_allowed" => false
+            ]
+        );
+        $this->assertEquals(
+            $items[5]['metadata'][0],
+            [
+                "name"                      => "Title",
+                "type"                      => "string",
+                "value"                     => "item G",
+                "list_value"                => null,
+                "is_required"               => true,
+                "is_multiple_value_allowed" => false
+            ]
+        );
+
+
+
         return $items;
     }
 
