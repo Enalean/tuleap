@@ -1,5 +1,0 @@
-msgid "Exposes tuleap instrumentation for prometheus consumption"
-msgstr ""
-
-msgid "Prometheus metrics end point"
-msgstr ""

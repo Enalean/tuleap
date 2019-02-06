@@ -9,6 +9,7 @@ tests/simpletest/common/include/_fixtures/big_file
 nbproject
 *.mo
 *.po~
+*.pot
 *.css
 !plugins/boomerang/*.css
 !plugins/git/gitphp-0.1.0/gitphp.css
