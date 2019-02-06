@@ -202,6 +202,49 @@
     border-right: 1px solid $tlp-ui-border-normal;
 }
 
+.current-project-nav-flag {
+    display: flex;
+    align-items: center;
+    margin: 0 0 0 $tlp-spacing;
+    color: $tlp-ui-dimmed;
+
+    > .tuleap-svg {
+        flex: 0 0 auto;
+
+        > path {
+            fill: $tlp-ui-dimmed;
+        }
+    }
+}
+
+.current-project-nav-flag-labels {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    flex-direction: column;
+    margin: 0 0 0 7px;
+
+    @media screen and (max-width: 900px) {
+        display: none;
+    }
+}
+
+.current-project-nav-flag-label {
+    max-width: 150px;
+    overflow: hidden;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    line-height: 11px;
+    text-overflow: ellipsis;
+    text-transform: uppercase;
+    white-space: nowrap;
+
+    @media screen and (max-width: 1250px) {
+        max-width: 100px;
+    }
+}
+
 .current-project-name {
     max-width: 250px;
     overflow: hidden;

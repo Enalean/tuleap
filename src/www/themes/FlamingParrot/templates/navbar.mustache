@@ -16,6 +16,18 @@
 
                             {{ project_name }}
                         </a>
+                        {{# has_project_flags }}
+                            <span class="current-project-nav-flag"
+                                  title="{{# project_flags }}{{ label }} {{/ project_flags }}"
+                            >
+                                {{# glyph }}project-shield{{/ glyph }}
+                                <span class="current-project-nav-flag-labels">
+                                    {{# project_flags }}
+                                        <span class="current-project-nav-flag-label">{{ label }}</span>
+                                    {{/ project_flags }}
+                                </span>
+                            </span>
+                        {{/ has_project_flags }}
                     </li>
                 {{/ current_project_navbar_info }}
 

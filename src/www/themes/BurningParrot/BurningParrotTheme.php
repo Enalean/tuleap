@@ -35,6 +35,8 @@ use Tuleap\layout\HomePage\StatisticsCollectionBuilder;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\SidebarPresenter;
 use Tuleap\News\NewsDao;
+use Tuleap\project\Flags\ProjectFlagsBuilder;
+use Tuleap\project\Flags\ProjectFlagsDao;
 use Tuleap\Theme\BurningParrot\Navbar\PresenterBuilder as NavbarPresenterBuilder;
 use URLRedirect;
 use User_LoginPresenterBuilder;
@@ -65,6 +67,10 @@ class BurningParrotTheme extends BaseLayout
 
     /** @var EventManager */
     private $event_manager;
+    /**
+     * @var ProjectFlagsBuilder
+     */
+    private $project_flags_builder;
 
     public function __construct($root, PFUser $user)
     {
@@ -75,6 +81,8 @@ class BurningParrotTheme extends BaseLayout
         $this->event_manager   = EventManager::instance();
         $this->request         = HTTPRequest::instance();
         $this->renderer        = TemplateRendererFactory::build()->getRenderer($this->getTemplateDir());
+
+        $this->project_flags_builder = new ProjectFlagsBuilder(new ProjectFlagsDao());
 
         $tlp_include_assets = new IncludeAssets(
             ForgeConfig::get('tuleap_dir') . '/src/www/themes/common/tlp/dist',
@@ -330,7 +338,8 @@ class BurningParrotTheme extends BaseLayout
 
         return new CurrentProjectNavbarInfoPresenter(
             $project,
-            $this->getProjectPrivacy($project)
+            $this->getProjectPrivacy($project),
+            $this->project_flags_builder->buildProjectFlags($project)
         );
     }
 
