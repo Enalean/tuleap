@@ -76,6 +76,20 @@ pipeline {
                         }
                     } }
                 }
+                stage('Build RPM') {
+                    steps {
+                        script {
+                            dir ('sources/plugins/baseline') {
+                                sh "TULEAP_PATH=${WORKSPACE}/sources ./build-rpm.sh"
+                            }
+                        }
+                    }
+                    post {
+                        always {
+                            archiveArtifacts "*.rpm"
+                        }
+                    }
+                }
             }
             post {
                 always {
