@@ -17,6 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
 declare(strict_types=1);
 
 namespace Tuleap\Docman\REST\v1;
@@ -25,6 +26,7 @@ use Docman_ItemDao;
 use Docman_ItemFactory;
 use Mockery;
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface;
+use Tuleap\Docman\ApprovalTable\ApprovalTableStateMapper;
 
 class ItemRepresentationBuilderTest extends \PHPUnit\Framework\TestCase
 {
@@ -56,24 +58,39 @@ class ItemRepresentationBuilderTest extends \PHPUnit\Framework\TestCase
      */
     private $item_representation_builder;
 
+    /**
+     * @var \Docman_ApprovalTableFactoriesFactory
+     */
+    private $approval_table_factory;
+
+    /**
+     * @var ApprovalTableStateMapper
+     */
+    private $approval_table_state_mapper;
+
     protected function setUp() : void
     {
         parent::setUp();
 
-        $this->dao                  = Mockery::Mock(Docman_ItemDao::class);
-        $this->user_manager         = Mockery::Mock(\UserManager::class);
+        $this->dao                         = Mockery::Mock(Docman_ItemDao::class);
+        $this->user_manager                = Mockery::Mock(\UserManager::class);
+        $this->docman_item_factory         = Mockery::Mock(Docman_ItemFactory::class);
+        $this->permissions_manager         = Mockery::Mock(\Docman_PermissionsManager::class);
+        $this->lock_factory                = Mockery::Mock(\Docman_LockFactory::class);
+        $this->approval_table_factory      = Mockery::Mock(\Docman_ApprovalTableFactoriesFactory::class);
+        $this->approval_table_state_mapper = new ApprovalTableStateMapper();
+
         \UserManager::setInstance($this->user_manager);
         \CodendiDataAccess::setInstance(\Mockery::spy(LegacyDataAccessInterface::class));
-        $this->docman_item_factory  = Mockery::Mock(Docman_ItemFactory::class);
-        $this->permissions_manager  = Mockery::Mock(\Docman_PermissionsManager::class);
-        $this->lock_factory         = Mockery::Mock(\Docman_LockFactory::class);
 
         $this->item_representation_builder = new ItemRepresentationBuilder(
             $this->dao,
             $this->user_manager,
             $this->docman_item_factory,
             $this->permissions_manager,
-            $this->lock_factory
+            $this->lock_factory,
+            $this->approval_table_factory,
+            $this->approval_table_state_mapper
         );
     }
 
@@ -105,6 +122,19 @@ class ItemRepresentationBuilderTest extends \PHPUnit\Framework\TestCase
         $docman_item->setTitle('My file.txt');
         $docman_item->setOwnerId($owner_id);
 
+        $item_approval_table = Mockery::Mock(\Docman_ApprovalTableFile::class);
+        $item_approval_table->shouldReceive('getOwner')->andReturns($owner_id);
+        $item_approval_table->shouldReceive('getDate')->andReturns(1549462600);
+        $item_approval_table->shouldReceive('isEnabled')->andReturns(true);
+        $item_approval_table->shouldReceive('getApprovalState')->andReturns(0);
+
+        $file_approval_table_factory = Mockery::Mock(\Docman_ApprovalTableFileFactory::class);
+        $file_approval_table_factory->shouldReceive('getTable')->andReturns($item_approval_table);
+
+        $this->approval_table_factory->shouldReceive('getSpecificFactoryFromItem')->with($docman_item)->andReturn(
+            $file_approval_table_factory
+        );
+
         $this->user_manager->shouldReceive('getUserById')
             ->withArgs([$owner_id])
             ->andReturns($current_user);
@@ -132,5 +162,10 @@ class ItemRepresentationBuilderTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($representation->embedded_file_properties, null);
         $this->assertEquals($representation->link_properties, null);
         $this->assertEquals($representation->wiki_properties, null);
+
+        $this->assertEquals($representation->approval_table->approval_state, 'Not yet');
+        $this->assertEquals($representation->approval_table->table_owner->id, $owner_id);
+        $this->assertEquals($representation->approval_table->approval_request_date, '2019-02-06T15:16:40+01:00');
+        $this->assertEquals($representation->approval_table->has_been_approved, false);
     }
 }

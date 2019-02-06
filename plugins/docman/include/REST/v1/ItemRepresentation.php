@@ -96,12 +96,18 @@ class ItemRepresentation
      */
     public $lock_info;
 
+    /**
+     * @var ItemApprovalTableRepresentation | null
+     */
+    public $approval_table;
+
     public function build(
         \Docman_Item $item,
         MinimalUserRepresentation $owner,
         $user_can_write,
         $type,
         bool $is_expanded,
+        ItemApprovalTableRepresentation $approval_table = null,
         ItemLockInfoRepresentation $lock_info = null,
         FilePropertiesRepresentation $file_properties = null,
         EmbeddedFilePropertiesRepresentation $embedded_file_properties = null,
@@ -119,6 +125,7 @@ class ItemRepresentation
         $this->link_properties          = $link_properties;
         $this->wiki_properties          = $wiki_properties;
         $this->is_expanded              = $is_expanded;
+        $this->approval_table           = $approval_table;
         $this->lock_info                = $lock_info;
 
         $parent_id = JsonCast::toInt($item->getParentId());

@@ -32,6 +32,7 @@ use EventManager;
 use PluginManager;
 use Project;
 use ProjectManager;
+use Tuleap\Docman\ApprovalTable\ApprovalTableStateMapper;
 use Tuleap\Docman\Item\ItemIsNotAFolderException;
 use Tuleap\Docman\Log\LogEventAdder;
 use Tuleap\Docman\Notifications\NotificationBuilders;
@@ -397,7 +398,9 @@ class DocmanItemsResource extends AuthenticatedResource
             \UserManager::instance(),
             Docman_ItemFactory::instance($item->getGroupId()),
             $this->getDocmanPermissionManager($project),
-            new \Docman_LockFactory()
+            new \Docman_LockFactory(),
+            new \Docman_ApprovalTableFactoriesFactory(),
+            new ApprovalTableStateMapper()
         );
         return $item_representation_builder;
     }
