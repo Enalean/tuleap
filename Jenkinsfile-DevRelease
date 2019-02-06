@@ -26,7 +26,7 @@ pipeline {
             }
             post {
                 always {
-                    archiveArtifacts "${WORKSPACE}/packages/*.rpm"
+                    archiveArtifacts "packages/*.rpm"
                 }
             }
         }
