@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - 2019. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -51,6 +51,7 @@ use Tuleap\Git\Gitolite\SSHKey\Provider\User;
 use Tuleap\Git\Gitolite\SSHKey\Provider\WholeInstanceKeysAggregator;
 use Tuleap\Git\Gitolite\SSHKey\SystemEvent\MigrateToTuleapSSHKeyManagement;
 use Tuleap\Git\Gitolite\VersionDetector;
+use Tuleap\Git\Repository\GitRepositoryObjectsSizeRetriever;
 use Tuleap\Git\GitViews\Header\HeaderRenderer;
 use Tuleap\Git\GitXmlExporter;
 use Tuleap\Git\GlobalParameterDao;
@@ -2789,6 +2790,12 @@ class GitPlugin extends Plugin
             new \Tuleap\Git\Gitolite\RegenerateConfigurationCommand(
                 ProjectManager::instance(),
                 $this->getGitSystemEventManager()
+            )
+        );
+        $commands_collector->addCommand(
+            new \Tuleap\Git\Repository\RepositoriesWithObjectsOverTheLimitCommand(
+                $this->getRepositoryFactory(),
+                new GitRepositoryObjectsSizeRetriever()
             )
         );
     }

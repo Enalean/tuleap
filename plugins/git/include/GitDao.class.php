@@ -805,4 +805,15 @@ class GitDao extends \Tuleap\DB\DataAccessObject
 
         return $this->getDB()->run($sql, $repository_id, $user_id);
     }
+
+    public function searchRepositoriesActiveInTheLast2Months()
+    {
+        $sql = 'SELECT DISTINCT plugin_git.*
+                FROM plugin_git
+                JOIN plugin_git_log ON plugin_git_log.repository_id = plugin_git.repository_id
+                WHERE repository_deletion_date = "0000-00-00 00:00:00" AND
+                      push_date > UNIX_TIMESTAMP(NOW() - INTERVAL 2 MONTH)';
+
+        return $this->getDB()->run($sql);
+    }
 }
