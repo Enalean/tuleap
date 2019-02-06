@@ -37,6 +37,14 @@
     white-space: nowrap;
 }
 
+.document-tree-item-toggle-quicklook button {
+    visibility: hidden;
+}
+
+.document-tree-item-toggle-quicklook:hover button {
+    visibility: visible;
+}
+
 /* stylelint-disable selector-no-qualifying-type */
 .tlp-table > tbody > tr.document-tree-item-created:nth-child(odd) > td {
     animation: 5s ease-in-out document-created-item-animation-odd;
@@ -97,7 +105,9 @@
 
 .document-folder-content-title {
     display: flex;
+    position: relative;
     align-items: center;
+    justify-content: space-between;
 }
 
 .document-folder-content-icon {
