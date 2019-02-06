@@ -19,6 +19,7 @@ pipeline {
             steps {
                 script {
                     dir ('sources/plugins/baseline') {
+                        sh "mkdir -p ${WORKSPACE}/packages"
                         sh "TULEAP_PATH=${WORKSPACE}/sources WORKSPACE=${WORKSPACE}/packages ./build-rpm.sh"
                     }
                 }
