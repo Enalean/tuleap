@@ -13,7 +13,7 @@
                     v-on:click="deactivateLegacyTransitions()"
             >
                 <span v-translate>Fully deactivate the workflow</span>
-                <i v-if="is_loading" class="tlp-button-icon fa fa-spinner fa-spin"></i>
+                <i v-if="is_loading" class="tlp-button-icon fa fa-circle-o-notch fa-spin"></i>
             </button>
         </div>
         <div v-if="are_transition_rules_enforced === true"

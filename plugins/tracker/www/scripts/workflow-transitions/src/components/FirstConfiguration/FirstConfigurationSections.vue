@@ -62,7 +62,7 @@
                 <i
                     class="tlp-button-icon fa"
                     v-bind:class="{
-                        'fa-spinner fa-spin': is_operation_running,
+                        'fa-circle-o-notch fa-spin': is_operation_running,
                         'fa-long-arrow-right': !is_operation_running
                     }"
                 ></i>

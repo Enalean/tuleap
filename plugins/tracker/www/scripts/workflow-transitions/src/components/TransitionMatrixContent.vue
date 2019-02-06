@@ -26,7 +26,7 @@
         ></i>
         <i
             v-else-if="is_operation_running"
-            class="fa fa-spinner fa-spin tracker-workflow-transition-spinner"
+            class="fa fa-circle-o-notch fa-spin tracker-workflow-transition-spinner"
             data-test-type="spinner"
         ></i>
         <div

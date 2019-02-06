@@ -52,7 +52,7 @@
                 v-bind:disabled="is_operation_running"
                 data-dismiss="modal"
             >
-                <i v-if="is_operation_running" class="tlp-button-icon fa fa-spinner fa-spin"></i>
+                <i v-if="is_operation_running" class="tlp-button-icon fa fa-circle-o-notch fa-spin"></i>
                 <span v-translate>Confirm</span>
             </button>
         </div>

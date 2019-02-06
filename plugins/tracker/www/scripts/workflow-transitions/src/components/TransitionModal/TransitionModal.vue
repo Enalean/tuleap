@@ -46,7 +46,7 @@
                 class="tlp-button-primary tlp-modal-action"
                 v-bind:disabled="is_modal_save_running"
             >
-                <i class="tlp-button-icon fa fa-fw fa-spin fa-spinner" v-if="is_modal_save_running"></i>
+                <i class="tlp-button-icon fa fa-fw fa-spin fa-circle-o-notch" v-if="is_modal_save_running"></i>
                 <i class="tlp-button-icon fa fa-fw fa-save" v-else></i>
                 <span v-translate>Save configuration</span>
             </button>
