@@ -1,10 +1,6 @@
 #!/usr/bin/env groovy
 
-@Library('tuleap-jenkinsfile-library@master') _
-
 def actions
-def lib = new org.tuleap.Build();
-def lib_signing = new org.tuleap.Signing();
 
 pipeline {
     agent {
@@ -104,6 +100,7 @@ pipeline {
         }
 
         stage('Antiviral scan') {
+            def lib = new org.tuleap.Build();
             lib.antiviralScan(pwd() + '/packages/')
         }
 
@@ -114,6 +111,7 @@ pipeline {
         }
 
         stage('Sign repositories metadata') {
+            def lib_signing = new org.tuleap.Signing();
             withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'vault-role-enterprise-signing-key', passwordVariable: 'SECRET_ID', usernameVariable: 'ROLE_ID']]) {
                 lib_signing.signRepositories(pwd() + '/packages/', env.VAULT, env.ROLE_ID, env.SECRET_ID, 'gpg/sign/tuleap-enterprise-rpm-signing');
             }
