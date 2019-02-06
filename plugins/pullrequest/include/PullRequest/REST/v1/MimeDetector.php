@@ -20,6 +20,8 @@
 
 namespace Tuleap\PullRequest\REST\v1;
 
+use Tuleap\Git\BinaryDetector;
+
 class MimeDetector
 {
 
@@ -122,6 +124,11 @@ class MimeDetector
             $mime_type = isset($mime_types[$file_ext]) ? $mime_types[$file_ext] : $mime_type;
         }
 
-        return array($mime_type, str_replace(' charset=', '', $charset_info));
+        $charset = str_replace(' charset=', '', $charset_info);
+        if (BinaryDetector::isBinary($file_content)) {
+            $charset = 'binary';
+        }
+
+        return array($mime_type, $charset);
     }
 }

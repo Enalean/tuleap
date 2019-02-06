@@ -21,6 +21,8 @@
 
 namespace Tuleap\Git\GitPHP;
 
+use Tuleap\Git\BinaryDetector;
+
 /**
  * Commit class
  *
@@ -229,7 +231,7 @@ class FileDiff
         if (! $blob) {
             return false;
         }
-        return $blob->IsBinary();
+        return BinaryDetector::isBinary($blob->GetData());
     }
 
     public function hasStats()
@@ -841,8 +843,8 @@ class FileDiff
         $toName = '/dev/null';
         if (empty($this->status) || ($this->status == 'M') || ($this->status == 'D')) {
             $fromBlob = $this->GetFromBlob();
-            $isBinary = $isBinary || $fromBlob->IsBinary();
             $fromData = $fromBlob->GetData(false);
+            $isBinary = $isBinary || BinaryDetector::isBinary($fromData);
             $fromName = 'a/';
             if (!empty($file)) {
                 $fromName .= $file;
@@ -854,8 +856,8 @@ class FileDiff
         }
         if (empty($this->status) || ($this->status == 'M') || ($this->status == 'A')) {
             $toBlob = $this->GetToBlob();
-            $isBinary = $isBinary || $toBlob->IsBinary();
             $toData = $toBlob->GetData(false);
+            $isBinary = $isBinary || BinaryDetector::isBinary($toData);
             $toName = 'b/';
             if (!empty($file)) {
                 $toName .= $file;

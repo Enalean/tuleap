@@ -23,6 +23,7 @@ namespace Tuleap\Git\GitPHP;
 
 use EventManager;
 use GeSHi;
+use Tuleap\Git\BinaryDetector;
 use Tuleap\Git\Repository\View\LanguageDetectorForPrismJS;
 use Tuleap\Git\GitPHP\Events\DisplayFileContentInGitView;
 use Tuleap\Layout\IncludeAssets;
@@ -223,11 +224,13 @@ class Controller_Blob extends ControllerBase // @codingStandardsIgnoreLine
                     $this->tpl->assign('mime', $mime);
                     $this->tpl->assign('data', base64_encode($blob->GetData()));
                     return;
-                } elseif ($mimetype !== 'image' && $mimetype !== "text") {
-                    $this->tpl->assign('is_binaryfile', true);
-                    return;
                 }
             }
+        }
+
+        if (BinaryDetector::isBinary($blob->GetData())) {
+            $this->tpl->assign('is_binaryfile', true);
+            return;
         }
 
         $this->tpl->assign('extrascripts', array('blame'));
