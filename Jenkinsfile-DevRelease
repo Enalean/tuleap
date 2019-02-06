@@ -41,8 +41,10 @@ pipeline {
 
         stage('Build repositories') {
             steps {
-                docker.image('nexus.enalean.com:20000/createrepo').inside() {
-                    sh 'createrepo --checksum=sha256 --compress-type=gz packages/'
+                script {
+                    docker.image('nexus.enalean.com:20000/createrepo').inside() {
+                        sh 'createrepo --checksum=sha256 --compress-type=gz packages/'
+                    }
                 }
             }
         }
@@ -60,17 +62,19 @@ pipeline {
 
         stage('Publish repositories') {
             steps {
-                docker.image('nexus.enalean.com:20000/rsync').inside('-v /jenkins/.ssh:/root/.ssh -u root') {
-                    sshagent(['enalean_packages-my-enalean-com']) {
-                        sh """
-                        DISTRIBUTION=dev
-                        OS='rhel6 rhel7'
+                script {
+                    docker.image('nexus.enalean.com:20000/rsync').inside('-v /jenkins/.ssh:/root/.ssh -u root') {
+                        sshagent(['enalean_packages-my-enalean-com']) {
+                            sh """
+                            DISTRIBUTION=dev
+                            OS='rhel6 rhel7'
 
-                        for i in \$OS; do
-                            #ssh enalean_packages@my.enalean.com mkdir -p /var/lib/enalean_packages/yum/tuleap-baseline/\$DISTRIBUTION/\$i
-                            #rsync -r --delete-after ${WORKSPACE}/packages/ enalean_packages@my.enalean.com:/var/lib/enalean_packages/yum/tuleap-baseline/\$DISTRIBUTION/\$i/noarch
-                        done
-                        """
+                            for i in \$OS; do
+                                #ssh enalean_packages@my.enalean.com mkdir -p /var/lib/enalean_packages/yum/tuleap-baseline/\$DISTRIBUTION/\$i
+                                #rsync -r --delete-after ${WORKSPACE}/packages/ enalean_packages@my.enalean.com:/var/lib/enalean_packages/yum/tuleap-baseline/\$DISTRIBUTION/\$i/noarch
+                            done
+                            """
+                        }
                     }
                 }
             }
