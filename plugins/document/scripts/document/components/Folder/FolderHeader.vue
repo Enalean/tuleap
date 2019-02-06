@@ -21,8 +21,8 @@
 
 <template>
     <div class="document-header">
-        <h1 v-bind:class="title_class" class="document-header-title">
-            {{ folder_title }}
+        <h1 class="document-header-title">
+            <span v-bind:class="title_class">{{ folder_title }}</span>
         </h1>
         <div class="document-header-actions">
             <div class="tlp-dropdown" v-if="can_display_new_document_button">

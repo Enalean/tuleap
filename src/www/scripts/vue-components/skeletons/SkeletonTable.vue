@@ -26,7 +26,7 @@
         <tbody>
             <tr v-for="(row, row_index) in rows" v-bind:key="row_index">
                 <td v-for="(cell, cell_index) in row" v-bind:key="cell_index" v-bind:class="getCellClassname(cell_index)">
-                    <i class="fa tlp-skeleton-text-icon tlp-skeleton-icon" v-bind:class="cell.icon" v-if="cell.icon"></i>
+                    <i class="fa tlp-skeleton-icon" v-bind:class="cell.icon" v-if="cell.icon"></i>
                     <span class="tlp-skeleton-text" v-bind:style="{width: cell.width}"></span>
                 </td>
             </tr>

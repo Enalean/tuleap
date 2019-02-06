@@ -20,15 +20,15 @@
 <template functional>
     <div class="tlp-card tracker-workflow-transition-modal-action-card">
         <div class="tlp-form-element tracker-workflow-transition-modal-action-type">
-            <select class="tlp-select tlp-skeleton-select" disabled></select>
+            <select class="tlp-select tlp-skeleton-field" disabled></select>
             <span class="tracker-workflow-transition-modal-action-remove">
                 <i class="tlp-skeleton-icon fa fa-trash-o"></i>
             </span>
         </div>
         <div class="tracker-workflow-transition-modal-action-details">
             <div class="tracker-workflow-transition-modal-action-details-element tlp-form-element">
-                <label class="tlp-skeleton-label"></label>
-                <select class="tlp-select tlp-skeleton-select" disabled></select>
+                <label class="tlp-label tlp-skeleton-label"></label>
+                <select class="tlp-select tlp-skeleton-field" disabled></select>
             </div>
         </div>
     </div>
