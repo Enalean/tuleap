@@ -4,11 +4,10 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// 
+//
 
 // ################################## Trove Globals
 
-$GLOBALS['TROVE_MAXPERROOT']  = 3;
 $GLOBALS['TROVE_BROWSELIMIT'] = 20;
 
 

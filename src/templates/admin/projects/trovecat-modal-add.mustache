@@ -14,51 +14,66 @@
         <div class="tlp-modal-body">
             <div class="trove-cats-general-properties">
                 <div class="trove-cats-general-property">
-                    <div class="tlp-form-element trove-cats-fullname-property">
-                        <label class="tlp-label" for="fullname">{{ label_fullname }} <i class="fa fa-asterisk"></i></label>
-                        <input
-                            type="text"
-                            class="tlp-input"
-                            id="fullname"
-                            name="fullname"
-                            required
-                            placeholder="{{ label_fullname }}"
-                        >
+                    <div class="trove-cats-general-property-column">
+                        <div class="tlp-form-element trove-cats-fullname-property">
+                            <label class="tlp-label" for="fullname">{{ label_fullname }} <i class="fa fa-asterisk"></i></label>
+                            <input
+                                type="text"
+                                class="tlp-input"
+                                id="fullname"
+                                name="fullname"
+                                required
+                                placeholder="{{ label_fullname }}"
+                            >
+                        </div>
+                        <div class="tlp-form-element">
+                            <label class="tlp-label" for="parent-0">{{ parent_category_label }}</label>
+                            <select
+                                    class="tlp-select trove-cats-modal-select-parent-category"
+                                    id="parent-0"
+                                    name="parent"
+                                    data-parent-trove-id="0"
+                                    data-id="0"
+                                    data-is-parent-top-level-id="1"
+                                    data-is-parent-mandatory="0"
+                            >
+                                <option value="0">{{ root_label }}</option>
+                                {{# trovecats }}
+                                <option
+                                        value="{{ trove_cat_id }}"
+                                        data-is-top-level-id="{{ is_top_level_id }}"
+                                        data-is-parent-mandatory="{{ is_mandatory }}"
+                                >
+                                    {{ hierarchy }}
+                                {{/ trovecats }}
+                            </select>
+                        </div>
                     </div>
-                    <div class="tlp-form-element trove-cats-shortname-property">
-                        <label class="tlp-label" for="shortname">{{ label_shortname }} <i class="fa fa-asterisk"></i></label>
-                        <input
-                            type="text"
-                            class="tlp-input"
-                            id="shortname"
-                            name="shortname"
-                            required
-                            placeholder="{{ label_shortname }}"
-                        >
+                    <div class="trove-cats-general-property-column">
+                        <div class="tlp-form-element trove-cats-shortname-property">
+                            <label class="tlp-label" for="shortname">{{ label_shortname }} <i class="fa fa-asterisk"></i></label>
+                            <input
+                                type="text"
+                                class="tlp-input"
+                                id="shortname"
+                                name="shortname"
+                                required
+                                placeholder="{{ label_shortname }}"
+                            >
+                        </div>
                     </div>
                 </div>
                 <div class="trove-cats-general-property">
-                    <div class="tlp-form-element">
-                        <label class="tlp-label" for="parent-0">{{ parent_category_label }}</label>
-                        <select
-                            class="tlp-select trove-cats-modal-select-parent-category"
-                            id="parent-0"
-                            name="parent"
-                            data-parent-trove-id="0"
-                            data-id="0"
-                            data-is-parent-top-level-id="1"
-                            data-is-parent-mandatory="0"
-                        >
-                            <option value="0">{{ root_label }}</option>
-                            {{# trovecats }}
-                            <option
-                                value="{{ trove_cat_id }}"
-                                data-is-top-level-id="{{ is_top_level_id }}"
-                                data-is-parent-mandatory="{{ is_mandatory }}"
-                            >
-                                {{ hierarchy }}
-                            {{/ trovecats }}
-                        </select>
+                    <div class="trove-cats-general-property-column">
+                        <div class="tlp-form-element">
+                            <label class="tlp-label" for="description">{{ label_description }}</label>
+                            <textarea
+                                    class="tlp-textarea"
+                                    id="description"
+                                    name="description"
+                                    placeholder="{{ description_placeholder }}"
+                            ></textarea>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -84,15 +99,6 @@
                     > {{ label_display }}
                 </label>
                 <p class="tlp-text-info">{{ display_info }}</p>
-            </div>
-            <div class="tlp-form-element">
-                <label class="tlp-label" for="description">{{ label_description }}</label>
-                <textarea
-                    class="tlp-textarea"
-                    id="description"
-                    name="description"
-                    placeholder="{{ description_placeholder }}"
-                ></textarea>
             </div>
         </div>
 

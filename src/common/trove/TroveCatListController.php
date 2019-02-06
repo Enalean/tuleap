@@ -30,6 +30,8 @@ use Tuleap\Request\NotFoundException;
 
 class TroveCatListController implements DispatchableWithRequest
 {
+    private const DEFAULT_NB_MAX_VALUES = 3;
+
     /**
      * @var TroveCatDao
      */
@@ -95,7 +97,8 @@ class TroveCatListController implements DispatchableWithRequest
             $trove_category['mandatory'],
             $trove_category['display'],
             $trove_category['fullpath'],
-            $trove_category['fullpath_ids']
+            $trove_category['fullpath_ids'],
+            $trove_category['nb_max_values']
         );
     }
 
@@ -152,9 +155,14 @@ class TroveCatListController implements DispatchableWithRequest
             $current_trove_category['display'],
             $current_trove_category['trove_cat_id'],
             $current_trove_category['fullpath'],
-            $current_trove_category['fullpath_ids']
+            $current_trove_category['fullpath_ids'],
+            $current_trove_category['nb_max_values']
         );
 
+        $newroot_for_children = $current_trove_category['root_parent'];
+        if (! $newroot_for_children) {
+            $newroot_for_children = $current_trove_category['trove_cat_id'];
+        }
         foreach ($trove_category_children as $child) {
             if ($current_trove_category['parent'] === $child['trove_cat_id']) {
                 $this->trove_cat_dao->rollBack();
@@ -165,12 +173,13 @@ class TroveCatListController implements DispatchableWithRequest
                 $child['fullname'],
                 $child['description'],
                 $child['parent'],
-                isset($current_trove_category['root_parent']) ? $current_trove_category['root_parent'] : 0,
+                $newroot_for_children,
                 $child['is_top_level_id'],
                 $child['display_during_project_creation'],
                 $child['trove_cat_id'],
                 $current_trove_category['fullpath'] . ' :: ' . $child['hierarchy'],
-                $current_trove_category['fullpath_ids'] . ' :: ' . $child['trove_cat_id']
+                $current_trove_category['fullpath_ids'] . ' :: ' . $child['trove_cat_id'],
+                $child['nb_max_values']
             );
         }
 
@@ -195,6 +204,11 @@ class TroveCatListController implements DispatchableWithRequest
 
         if (! $request->get('shortname')) {
             throw new TroveCatMissingShortNameException();
+        }
+
+        $nb_max_values = (int) $request->get('nb-max-values');
+        if ($nb_max_values < 1) {
+            $nb_max_values = self::DEFAULT_NB_MAX_VALUES;
         }
 
         $display = $this->isANewRootChild(
@@ -229,7 +243,8 @@ class TroveCatListController implements DispatchableWithRequest
             'trove_cat_id' => $request->get('id'),
             'fullpath'     => (isset($trove_cat_list['hierarchy'])) ? $trove_cat_list['hierarchy'] .  " :: " .$request->get('fullname') : $request->get('fullname'),
             'fullpath_ids' => (isset($trove_cat_list['hierarchy_id'])) ? $trove_cat_list['hierarchy_id'] . " :: "  . $trove_cat_id : $trove_cat_id,
-            'root_parent'  => (int) $ids[0]
+            'root_parent'  => (int) $ids[0],
+            'nb_max_values' => $nb_max_values,
         );
 
         return $trove_categories;

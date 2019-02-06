@@ -40,8 +40,6 @@ use Tuleap\Request\NotFoundException;
 
 class IndexController implements DispatchableWithRequest, DispatchableWithProject, DispatchableWithBurningParrot
 {
-    public const TROVE_MAXPERROOT = 3;
-
     /**
      * @var TroveCatDao
      */
@@ -106,7 +104,7 @@ class IndexController implements DispatchableWithRequest, DispatchableWithProjec
                 'id'                       => $row['trove_cat_id'],
                 'label'                    => $row['fullname'],
                 'is_mandatory'             => (bool) $row['mandatory'],
-                'maximum_selection_length' => self::TROVE_MAXPERROOT,
+                'maximum_selection_length' => $row['nb_max_values'],
                 'values'                   => $values
             ];
         }
