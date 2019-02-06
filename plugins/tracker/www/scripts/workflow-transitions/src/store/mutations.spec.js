@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,7 +18,7 @@
  *
  */
 
-import mutations from "./mutations.js";
+import { addTransition, deleteTransition, createWorkflow } from "./mutations.js";
 import initial_state from "./state.js";
 import { create } from "../support/factories.js";
 
@@ -30,7 +30,6 @@ describe("Store mutations:", () => {
     });
 
     describe("addTransition", () => {
-        const { addTransition } = mutations;
         const transition_to_add = create("transition");
         const another_transition = create("transition");
 
@@ -73,7 +72,6 @@ describe("Store mutations:", () => {
     });
 
     describe("deleteTransition()", () => {
-        const { deleteTransition } = mutations;
         let transition_to_delete;
         let another_transition;
 
@@ -108,8 +106,6 @@ describe("Store mutations:", () => {
     });
 
     describe("createWorkflow()", () => {
-        const { createWorkflow } = mutations;
-
         beforeEach(() => {
             state.current_tracker = create("tracker", {
                 workflow: {
