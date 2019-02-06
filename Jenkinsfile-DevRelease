@@ -95,8 +95,10 @@ pipeline {
         stage('Deploy on tuleap-devel.enalean.com') {
             steps {
                 script {
-                    sshagent(['enalean_packages-my-enalean-com']) {
-                        sh "ssh jenkins_updater@tuleap-devel.enalean.com sudo /usr/local/bin/update_tuleap.sh"
+                    docker.image('nexus.enalean.com:20000/rsync').inside('-v /jenkins/.ssh:/root/.ssh -u root') {
+                        sshagent(['enalean_packages-my-enalean-com']) {
+                            sh "ssh jenkins_updater@tuleap-devel.enalean.com sudo /usr/local/bin/update_tuleap.sh"
+                        }
                     }
                 }
             }
