@@ -91,12 +91,18 @@ class ItemRepresentation
      */
     public $is_expanded;
 
+    /**
+     * @var ItemLockInfoRepresentation | null
+     */
+    public $lock_info;
+
     public function build(
         \Docman_Item $item,
         MinimalUserRepresentation $owner,
         $user_can_write,
         $type,
         bool $is_expanded,
+        ItemLockInfoRepresentation $lock_info = null,
         FilePropertiesRepresentation $file_properties = null,
         EmbeddedFilePropertiesRepresentation $embedded_file_properties = null,
         LinkPropertiesRepresentation $link_properties = null,
@@ -113,7 +119,7 @@ class ItemRepresentation
         $this->link_properties          = $link_properties;
         $this->wiki_properties          = $wiki_properties;
         $this->is_expanded              = $is_expanded;
-
+        $this->lock_info                = $lock_info;
 
         $parent_id = JsonCast::toInt($item->getParentId());
 

@@ -24,7 +24,6 @@
 
 namespace Tuleap\Docman\REST\v1;
 
-use Codendi_HTMLPurifier;
 use Docman_Item;
 use Docman_ItemDao;
 use Docman_ItemFactory;
@@ -397,7 +396,8 @@ class DocmanItemsResource extends AuthenticatedResource
             $this->item_dao,
             \UserManager::instance(),
             Docman_ItemFactory::instance($item->getGroupId()),
-            $this->getDocmanPermissionManager($project)
+            $this->getDocmanPermissionManager($project),
+            new \Docman_LockFactory()
         );
         return $item_representation_builder;
     }

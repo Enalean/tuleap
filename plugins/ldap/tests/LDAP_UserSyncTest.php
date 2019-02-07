@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once __DIR__ . '/bootstrap.php';
+
 // Partial because of inheritance issues
 Mock::generatePartial('LDAPResult', 'LDAPResultTestVersion', array('getEmail', 'getCommonName', 'get'));
 Mock::generatePartial('PFUser', 'User4LDAPUserSync', array('getRealName', 'getEmail', 'getStatus', 'setRealName', 'setEmail', 'setStatus'));
@@ -39,30 +41,30 @@ class LDAP_UserSyncTest extends TuleapTestCase {
         $user->setReturnValue('getEmail',    'toto');
         $user->expectNever('setRealName');
         $user->expectNever('setEmail');
-        
+
         $lr = new LDAPResultTestVersion($this);
         $lr->setReturnValue('getCommonName', 'toto');
         $lr->setReturnValue('getEmail',      'toto');
-        
+
         $sync = new LDAP_UserSync();
         $sync->sync($user, $lr);
     }
-    
+
     function testUserUpdateEmailIfLdapDoesntMatch() {
         $user = new User4LDAPUserSync($this);
         $user->setReturnValue('getRealName', 'toto');
         $user->setReturnValue('getEmail',    'toto');
         $user->expectNever('setRealName');
         $user->expectOnce('setEmail', array('foobar'));
-        
+
         $lr = new LDAPResultTestVersion($this);
         $lr->setReturnValue('getCommonName', 'toto');
         $lr->setReturnValue('getEmail',      'foobar');
-        
+
         $sync = new LDAP_UserSync();
         $sync->sync($user, $lr);
     }
-    
+
 
     function testUserUpdateRealnameIfLdapDoesntMatch() {
         $user = new User4LDAPUserSync($this);
@@ -70,11 +72,11 @@ class LDAP_UserSyncTest extends TuleapTestCase {
         $user->setReturnValue('getEmail',    'toto');
         $user->expectOnce('setRealName', array('foobar'));
         $user->expectNever('setEmail');
-        
+
         $lr = new LDAPResultTestVersion($this);
         $lr->setReturnValue('getCommonName', 'foobar');
         $lr->setReturnValue('getEmail',      'toto');
-        
+
         $sync = new LDAP_UserSync();
         $sync->sync($user, $lr);
     }
@@ -87,12 +89,12 @@ class LDAP_UserSyncTest extends TuleapTestCase {
         $user->expectNever('setRealName');
         $user->expectNever('setEmail');
         $user->expectOnce('setStatus', array(PFUser::STATUS_RESTRICTED));
-        
+
         $lr = new LDAPResultTestVersion($this);
         $lr->setReturnValue('getCommonName', 'toto');
         $lr->setReturnValue('getEmail',      'toto');
         $lr->setReturnValue('get',           'contractor', array('employeetype'));
-        
+
 
         $sync = LDAP_UserSyncTestVersion::instance();
         $sync->sync($user, $lr);

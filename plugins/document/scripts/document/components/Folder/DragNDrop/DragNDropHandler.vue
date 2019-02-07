@@ -50,12 +50,19 @@ export default {
             MAX_SIZE_ERROR: "max_size",
             ALREADY_EXISTS_ERROR: "already_exists",
             FEATURE_UNDER_CONSTRUCTION: "feature_under_construction",
+            EDITION_LOCKED: "edition_locked",
             highlighted_item_id: null
         };
     },
     computed: {
         ...mapGetters(["user_can_dragndrop"]),
-        ...mapState(["current_folder", "folder_content", "max_files_dragndrop", "max_size_upload"]),
+        ...mapState([
+            "current_folder",
+            "folder_content",
+            "max_files_dragndrop",
+            "max_size_upload",
+            "user_id"
+        ]),
         user_can_dragndrop_in_current_folder() {
             return (
                 this.user_can_dragndrop && this.current_folder && this.current_folder.user_can_write
@@ -84,6 +91,11 @@ export default {
             if (this.error_modal_shown === this.FEATURE_UNDER_CONSTRUCTION) {
                 return () =>
                     import(/* webpackChunkName: "document-feature-under-construction-error-modal" */ "./FeatureUnderConstructionModal.vue");
+            }
+
+            if (this.error_modal_shown === this.EDITION_LOCKED) {
+                return () =>
+                    import(/* webpackChunkName: "document-edition-locked-error-modal" */ "./DocumentLockedForEditionErrorModal.vue");
             }
 
             return () =>
@@ -130,7 +142,7 @@ export default {
             this.clearHighlight();
 
             if (dropzone_item.type === TYPE_FILE) {
-                this.error_modal_shown = this.FEATURE_UNDER_CONSTRUCTION;
+                this.uploadNewFileVersion(event, dropzone_item);
 
                 return;
             }
@@ -230,6 +242,24 @@ export default {
             }
 
             return this.folder_content.find(item => item.id === this.highlighted_item_id);
+        },
+        uploadNewFileVersion(event, dropzone_item) {
+            const lock_info = dropzone_item.lock_info;
+            const is_document_locked_by_current_user =
+                lock_info === null ||
+                (lock_info !== null && lock_info.locked_by.id === this.user_id);
+
+            if (!is_document_locked_by_current_user) {
+                this.error_modal_shown = this.EDITION_LOCKED;
+                this.error_modal_reasons.push({
+                    filename: dropzone_item.title,
+                    lock_owner: lock_info.locked_by
+                });
+
+                return;
+            }
+
+            this.error_modal_shown = this.FEATURE_UNDER_CONSTRUCTION;
         }
     }
 };

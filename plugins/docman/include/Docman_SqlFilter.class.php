@@ -3,7 +3,7 @@
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2006
- * 
+ *
  * This file is a part of Codendi.
  *
  * Codendi is free software; you can redistribute it and/or modify
@@ -20,22 +20,20 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'database.php';
-
 class Docman_SqlFilterFactory {
     function __construct() {
-        
+
     }
 
     function getFromFilter($filter) {
         $f = null;
-       
+
         if(is_a($filter, 'Docman_FilterDateAdvanced')) {
             $f = new Docman_SqlFilterDateAdvanced($filter);
         }
         elseif(is_a($filter, 'Docman_FilterDate')) {
             $f = new Docman_SqlFilterDate($filter);
-        } 
+        }
         elseif(is_a($filter, 'Docman_FilterGlobalText')) {
             $f = new Docman_SqlFilterGlobalText($filter);
         }
@@ -47,7 +45,7 @@ class Docman_SqlFilterFactory {
         }
         elseif(is_a($filter, 'Docman_FilterListAdvanced')) {
             if(!in_array(0, $filter->getValue())) {
-                $f = new Docman_SqlFilterListAdvanced($filter); 
+                $f = new Docman_SqlFilterListAdvanced($filter);
             }
         }
         elseif(is_a($filter, 'Docman_FilterList')) {
@@ -56,7 +54,7 @@ class Docman_SqlFilterFactory {
             if($filter->getValue() != 0) {
                 $f = new Docman_SqlFilter($filter);
             }
-        }       
+        }
         return $f;
     }
 }
@@ -64,14 +62,14 @@ class Docman_SqlFilterFactory {
 /**
  *
  */
-class Docman_SqlFilter 
+class Docman_SqlFilter
 extends Docman_MetadataSqlQueryChunk {
 
     /**
      * The search type is the full text one
      */
     const BOOLEAN_SEARCH_TYPE = 'IN BOOLEAN MODE';
-   
+
     var $filter;
     var $isRealMetadata;
     var $db;
@@ -90,19 +88,19 @@ extends Docman_MetadataSqlQueryChunk {
                 $tables[] = $this->_getMdvJoin();
             }
         }
-        
+
         return $tables;
     }
-    
+
     function _getSpecificSearchChunk() {
         $stmt = array();
-        
+
         if($this->filter->getValue() !== null &&
            $this->filter->getValue() != '') {
             $data_access = CodendiDataAccess::instance();
             $stmt[] = $this->field.' = '.$data_access->quoteSmart($this->filter->getValue());
         }
-        
+
         return $stmt;
     }
 
@@ -111,7 +109,7 @@ extends Docman_MetadataSqlQueryChunk {
 
         $whereArray = $this->_getSpecificSearchChunk();
         $where = implode(' AND ', $whereArray);
-        
+
         return $where;
     }
 
@@ -122,13 +120,13 @@ extends Docman_MetadataSqlQueryChunk {
      ** 3-*pattern* ==>For this case, the search type corresponds to an SQL statement with LIKE
      ** 4-*pattern  ==>Will use the LIKE statement
      *
-     * Return array with true in 'like' field if the pattern corresponds to (3) or (4) 
+     * Return array with true in 'like' field if the pattern corresponds to (3) or (4)
      * and the corrsponding formatted string in 'pattern' field
-     * else return false in 'like' field for the (1) and (2) case which corresponds to the full text search 
+     * else return false in 'like' field for the (1) and (2) case which corresponds to the full text search
      *
-     *  
+     *
      * @param String $qv
-     * 
+     *
      * @return Array
      */
     function getSearchType($qv) {
@@ -154,7 +152,7 @@ extends Docman_MetadataSqlQueryChunk {
 /**
  *
  */
-class Docman_SqlFilterDate 
+class Docman_SqlFilterDate
 extends Docman_SqlFilter {
 
     function __construct($filter) {
@@ -273,7 +271,7 @@ extends Docman_SqlFilterDate {
 /**
  *
  */
-class Docman_SqlFilterOwner 
+class Docman_SqlFilterOwner
 extends Docman_SqlFilter {
 
     function __construct($filter) {
@@ -294,13 +292,13 @@ extends Docman_SqlFilter {
 /**
  *
  */
-class Docman_SqlFilterText 
+class Docman_SqlFilterText
 extends Docman_SqlFilter {
 
     function __construct($filter) {
         parent::__construct($filter);
     }
-    
+
     function _getSpecificSearchChunk() {
         $stmt = array();
         if($this->filter->getValue() !== null &&
@@ -319,7 +317,7 @@ extends Docman_SqlFilter {
 
 class Docman_SqlFilterGlobalText
 extends Docman_SqlFilterText {
-    
+
     function __construct($filter) {
         parent::__construct($filter);
     }
@@ -344,20 +342,20 @@ extends Docman_SqlFilterText {
             if ($searchType['like']) {
                 $matches[] = ' i.title LIKE '.$searchType['pattern'].'  OR i.description LIKE '.$searchType['pattern'];
                 $matches[] = ' v.label LIKE '.$searchType['pattern'].'  OR  v.changelog LIKE '.$searchType['pattern'].'  OR v.filename LIKE '.$searchType['pattern'];
-                
+
                 foreach($this->filter->dynTextFields as $f) {
                     $matches[] = ' mdv_'.$f.'.valueText LIKE '.$searchType['pattern'].'  OR  mdv_'.$f.'.valueString LIKE '.$searchType['pattern'];
                 }
-                
+
                 $stmt[] = '('.implode(' OR ', $matches).')';
             } else {
                 $matches[] = "MATCH (i.title, i.description) AGAINST ('".db_es($qv)."' ".Docman_SqlFilter::BOOLEAN_SEARCH_TYPE.")";
                 $matches[] = "MATCH (v.label, v.changelog, v.filename) AGAINST ('".db_es($qv)."' ".Docman_SqlFilter::BOOLEAN_SEARCH_TYPE.")";
-                
+
                 foreach($this->filter->dynTextFields as $f) {
                     $matches[] = "MATCH (mdv_".$f.".valueText, mdv_".$f.".valueString) AGAINST ('".db_es($qv)."' ".Docman_SqlFilter::BOOLEAN_SEARCH_TYPE.")";
                 }
-                
+
                 $stmt[] = '('.implode(' OR ', $matches).')';
             }
         }
@@ -375,16 +373,16 @@ extends Docman_SqlFilter {
 
     function _getSpecificSearchChunk() {
         $stmt = array();
-        
+
         $v = $this->filter->getValue();
-        if($v !== null 
-           && (count($v) > 0 
+        if($v !== null
+           && (count($v) > 0
                || (count($v) == 1 && $v[0] != '')
                )
            ) {
             $stmt[] = $this->field.' IN ('.implode(',', $this->filter->getValue()).')';
         }
-        
+
         return $stmt;
     }
 }

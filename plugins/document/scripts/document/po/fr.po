@@ -248,3 +248,12 @@ msgstr ""
 
 msgid "or you don't have permissions to see its items"
 msgstr "ou alors vous n'avez pas le droit de voir ses éléments"
+
+msgid ""
+"{{ filename }} has been locked for edition by <a v-bind:href=\"lock_owner."
+"user_url\">{{ lock_owner.display_name }}</a>. You can't upload a new version "
+"of this file until the lock is released."
+msgstr ""
+"L'édition de {{ filename }} a été bloquée par <a v-bind:href=\"lock_owner."
+"user_url\">{{ lock_owner.display_name }}</a>. Vous ne pouvez pas téléverser "
+"de nouvelle version tant que le verrou n'a pas été levé."
