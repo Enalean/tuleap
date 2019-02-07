@@ -26,6 +26,8 @@ namespace Tuleap\Baseline;
 use HTTPRequest;
 use TemplateRenderer;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Layout\CssAsset;
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithProject;
 use Tuleap\Request\DispatchableWithRequest;
@@ -54,6 +56,30 @@ class ServiceController implements DispatchableWithRequest, DispatchableWithBurn
         $this->plugin            = $plugin;
     }
 
+
+    private function includeJavascriptFiles(BaseLayout $layout)
+    {
+        $include_assets = new IncludeAssets(
+            __DIR__ . '/../../../src/www/assets/baseline/scripts',
+            '/assets/baseline/scripts'
+        );
+
+        $layout->includeFooterJavascriptFile($include_assets->getFileURL('baseline.js'));
+    }
+
+    private function includeCssFiles(BaseLayout $layout)
+    {
+        $layout->addCssAsset(
+            new CssAsset(
+                new IncludeAssets(
+                    __DIR__ . '/../../../src/www/assets/baseline/BurningParrot',
+                    '/assets/baseline/BurningParrot'
+                ),
+                'baseline'
+            )
+        );
+    }
+
     /**
      * Is able to process a request routed by FrontRouter
      *
@@ -74,6 +100,9 @@ class ServiceController implements DispatchableWithRequest, DispatchableWithBurn
             $layout->addFeedback(\Feedback::ERROR, dgettext('tuleap-baseline', 'Baseline service is disabled for this project'));
             $layout->redirect('/projects/'.$variables['project_name']);
         }
+
+        $this->includeCssFiles($layout);
+        $this->includeJavascriptFiles($layout);
 
         $layout->header(
             [
