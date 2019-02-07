@@ -26,7 +26,6 @@ namespace Tuleap\Baseline;
 use HTTPRequest;
 use TemplateRenderer;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithProject;
@@ -67,19 +66,6 @@ class ServiceController implements DispatchableWithRequest, DispatchableWithBurn
         $layout->includeFooterJavascriptFile($include_assets->getFileURL('baseline.js'));
     }
 
-    private function includeCssFiles(BaseLayout $layout)
-    {
-        $layout->addCssAsset(
-            new CssAsset(
-                new IncludeAssets(
-                    __DIR__ . '/../../../src/www/assets/baseline/BurningParrot',
-                    '/assets/baseline/BurningParrot'
-                ),
-                'baseline'
-            )
-        );
-    }
-
     /**
      * Is able to process a request routed by FrontRouter
      *
@@ -101,7 +87,6 @@ class ServiceController implements DispatchableWithRequest, DispatchableWithBurn
             $layout->redirect('/projects/'.$variables['project_name']);
         }
 
-        $this->includeCssFiles($layout);
         $this->includeJavascriptFiles($layout);
 
         $layout->header(
