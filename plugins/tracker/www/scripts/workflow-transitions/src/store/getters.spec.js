@@ -56,6 +56,16 @@ describe("Store getters:", () => {
                 expect(workflow_field_label(state)).toBeNull();
             });
         });
+
+        it("when workflow field_id is 0, it will return null", () => {
+            state.current_tracker = {
+                workflow: {
+                    field_id: 0
+                }
+            };
+
+            expect(workflow_field_label(state)).toBeNull();
+        });
     });
 
     describe("are_transition_rules_enforced", () => {

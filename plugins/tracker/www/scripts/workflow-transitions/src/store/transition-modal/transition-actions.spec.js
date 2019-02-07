@@ -24,8 +24,9 @@ import {
     rewire$getPostActions,
     rewire$patchTransition,
     rewire$putPostActions,
-    restore
+    restore as restoreRest
 } from "../../api/rest-querier.js";
+import { rewire$animateUpdated, restore as restoreAnimate } from "../../helpers/item-animator.js";
 import {
     showTransitionConfigurationModal,
     loadTransition,
@@ -52,7 +53,10 @@ describe("Transition modal actions", () => {
         };
     });
 
-    afterEach(restore);
+    afterEach(() => {
+        restoreRest();
+        restoreAnimate();
+    });
 
     describe("showTransitionConfigurationModal()", () => {
         let transition;
@@ -154,14 +158,15 @@ describe("Transition modal actions", () => {
     });
 
     describe("saveTransitionRules()", () => {
-        let patchTransition, putPostActions;
+        let patchTransition, putPostActions, animateUpdated;
         const current_transition = create("transition", { id: 9 });
         const post_actions = createList("post_action", 2, "presented");
 
         beforeEach(async () => {
+            animateUpdated = jasmine.createSpy("animateUpdated");
+            rewire$animateUpdated(animateUpdated);
             patchTransition = jasmine.createSpy("patchTransition");
             rewire$patchTransition(patchTransition);
-
             putPostActions = jasmine.createSpy("putPostActions");
             rewire$putPostActions(putPostActions);
 
@@ -175,6 +180,9 @@ describe("Transition modal actions", () => {
                 }
             };
             await saveTransitionRules(context);
+        });
+        it("animates the transition", () => {
+            expect(animateUpdated).toHaveBeenCalled();
         });
 
         it("patches transition", () => {

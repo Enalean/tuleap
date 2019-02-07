@@ -18,7 +18,12 @@
   -->
 
 <template>
-    <td class="tracker-workflow-transition-cell">
+    <td
+        class="tracker-workflow-transition-cell"
+        v-bind:class="{
+            'tracker-workflow-transition-action-updated': is_transition_updated
+        }"
+    >
         <i
             v-if="!is_allowed"
             class="fa fa-ban tracker-workflow-transition-cell-forbidden"
@@ -39,15 +44,19 @@
         <template v-else-if="transition">
             <div
                 class="tracker-workflow-transition-mark"
-                v-bind:class="{ 'tracker-workflow-transition-action-disabled': is_another_operation_running }"
-                data-test-action="delete-transition"
+                v-bind:class="{
+                    'tracker-workflow-transition-action-disabled': is_another_operation_running,
+                    'tracker-workflow-transition-action-updated': is_transition_updated
+                }"
                 v-on:click="is_another_operation_running || deleteTransition()"
+                data-test-action="delete-transition"
             >
                 ⤴
             </div>
             <button
-                class="tlp-button-primary tlp-button-mini tracker-workflow-advanced-transition-button"
                 type="button"
+                class="tlp-button-primary tlp-button-mini tracker-workflow-advanced-transition-button"
+                v-bind:class="{ 'tlp-button-success': is_transition_updated }"
                 v-on:click="openModal()"
                 data-test-action="configure-transition"
                 v-translate
@@ -91,6 +100,13 @@ export default {
         },
         is_empty() {
             return this.is_allowed && !this.transition;
+        },
+        is_transition_updated() {
+            if (!this.transition) {
+                return false;
+            }
+
+            return this.transition.updated;
         }
     },
 

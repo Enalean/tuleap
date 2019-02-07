@@ -26,8 +26,7 @@ const factories = {
         default: {
             id: identity,
             fields: [],
-            workflow: null,
-            transitions: []
+            workflow: null
         }
     },
     workflow: {
@@ -80,6 +79,9 @@ const factories = {
             authorized_user_group_ids: [],
             not_empty_field_ids: [],
             is_comment_required: false
+        },
+        presented: {
+            updated: false
         }
     },
     user_group: {
