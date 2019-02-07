@@ -24,6 +24,7 @@
                         <tr>
                             <th>{{ header_name }}</th>
                             <th>{{ header_description }}</th>
+                            <th class="trove-cats-project-flag-column">{{# gettext }}Project flag?{{/ gettext }}</th>
                             <th></th>
                         </tr>
                         </thead>
@@ -37,6 +38,9 @@
                                     </div>
                                 </td>
                                 <td>{{ description }}</td>
+                                <td class="trove-cats-project-flag-column">
+                                    {{# is_project_flag }}<i class="fa fa-check"></i>{{/ is_project_flag }}
+                                </td>
                                 <td class="tlp-table-cell-actions">
                                     <button
                                         type="button"

@@ -98,6 +98,7 @@ class TroveCatHierarchyRetriever
                 'is_top_level_id'                 => (int) $row_child['parent'] === 0,
                 'is_parent_mandatory'             => (int) $row_child['parent_mandatory'] === 1 && $row_child['parent_mandatory'] !== null,
                 'nb_max_values'                   => (int) $row_child['nb_max_values'],
+                'is_project_flag'                 => (boolean) $row_child['is_project_flag'],
                 'purified_delete_message'         => Codendi_HTMLPurifier::instance()->purify(
                     $GLOBALS['Language']->getText(
                         'admin_trove_cat_delete',
