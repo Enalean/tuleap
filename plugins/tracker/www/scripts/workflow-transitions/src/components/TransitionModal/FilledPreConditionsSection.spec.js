@@ -20,13 +20,13 @@
 
 import { shallowMount } from "@vue/test-utils";
 
-import PreConditionsSection from "./PreConditionsSection.vue";
+import FilledPreConditionsSection from "./FilledPreConditionsSection.vue";
 import localVue from "../../support/local-vue.js";
 import module_options from "../../store/transition-modal/module.js";
 import { createStoreMock } from "../../support/store-wrapper.spec-helper.js";
 import { create } from "../../support/factories";
 
-describe("PreConditionsSection", () => {
+describe("FilledPreConditionsSection", () => {
     let store;
     let wrapper;
 
@@ -46,7 +46,7 @@ describe("PreConditionsSection", () => {
 
         store = createStoreMock(store_options);
 
-        wrapper = shallowMount(PreConditionsSection, {
+        wrapper = shallowMount(FilledPreConditionsSection, {
             mocks: {
                 $store: store
             },
