@@ -20,15 +20,18 @@
 import { SELECTBOX_FIELD, LIST_BIND_STATIC } from "../../../constants/fields-constants.js";
 import { compare } from "../support/string.js";
 
-export const workflow_field_label = state => {
+export const current_workflow_field = state => {
     if (state.current_tracker === null) {
         return null;
     }
 
-    const selected_field = state.current_tracker.fields.find(
+    return state.current_tracker.fields.find(
         field => field.field_id === state.current_tracker.workflow.field_id
     );
-    return selected_field.label;
+};
+
+export const workflow_field_label = (state, getters) => {
+    return !getters.current_workflow_field ? null : getters.current_workflow_field.label;
 };
 
 export const are_transition_rules_enforced = state => {
@@ -70,3 +73,15 @@ export const selectbox_fields = state => {
 };
 
 export const has_selectbox_fields = (state, getters) => getters.selectbox_fields.length > 0;
+
+export const all_target_states = (state, getters) => {
+    if (getters.current_workflow_field === null) {
+        return [];
+    }
+    const all_target_values = getters.current_workflow_field.values;
+    if (all_target_values === null) {
+        return [];
+    }
+
+    return all_target_values.filter(value => value.is_hidden === false);
+};

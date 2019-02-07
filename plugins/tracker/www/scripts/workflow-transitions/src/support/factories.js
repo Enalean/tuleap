@@ -69,7 +69,11 @@ const factories = {
     field_value: {
         default: {
             id: identity,
-            label: "Value label"
+            label: "Value label",
+            is_hidden: false
+        },
+        hidden: {
+            is_hidden: true
         }
     },
     transition: {
