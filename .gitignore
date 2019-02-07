@@ -1,3 +1,4 @@
 vendor/
 *.mo
 *~
+node_modules/
