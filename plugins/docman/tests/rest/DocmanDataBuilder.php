@@ -129,12 +129,18 @@ class DocmanDataBuilder extends REST_TestDataBuilder
     /**
      * To help understand tests structure, below a representation of folder hierarchy
      *
-     *                          folder 1
+     *                                    Root
+     *                                     +
+     *                                     |
+     *                            +--------+---------+
+     *                            |                  |
+     *                            +                  +
+     *                          folder 1           folder 3
      *                            +
      *                            |
-     *  +---------------+---------+--------+---------------------+---------------------+-------------+-----------+------------+
-     *  +               +                  +                     +                     +             +           +            +
-     *Item A          Item B             Item C             Folder 2                 Item E        Item F      Item G       Folder 3
+     *  +---------------+---------+--------+---------------------+---------------------+-------------+-----------+
+     *  +               +                  +                     +                     +             +           +
+     *Item A          Item B             Item C             Folder 2                 Item E        Item F      Item G
      *                                                           +
      *                                                           |
      *                                                           +
@@ -147,14 +153,14 @@ class DocmanDataBuilder extends REST_TestDataBuilder
         $this->docman_item_factory = Docman_ItemFactory::instance($project->getID());
         $docman_root               = $this->docman_item_factory->getRoot($project->getID());
 
-        $folder_id = $this->addItem(self::REGULAR_USER_ID, $project, $docman_root->getId(), 'folder 1', PLUGIN_DOCMAN_ITEM_TYPE_FOLDER);
+        $folder_id   = $this->addItem(self::REGULAR_USER_ID, $project, $docman_root->getId(), 'folder 1', PLUGIN_DOCMAN_ITEM_TYPE_FOLDER);
+        $folder_3_id = $this->addItem(self::REGULAR_USER_ID, $project, $docman_root->getId(), 'folder 3', PLUGIN_DOCMAN_ITEM_TYPE_FOLDER);
         $this->addWritePermissionOnItem($project, $folder_id, \ProjectUGroup::PROJECT_MEMBERS);
 
         $item_A_id = $this->addItem(self::ANON_ID, $project, $folder_id, 'item A', PLUGIN_DOCMAN_ITEM_TYPE_EMPTY);
         $item_B_id = $this->addItem(self::REGULAR_USER_ID, $project, $folder_id, 'item B', PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE);
         $item_C_id = $this->addItem(self::REGULAR_USER_ID, $project, $folder_id, 'item C', PLUGIN_DOCMAN_ITEM_TYPE_FILE);
         $folder_2_id = $this->addItem(self::REGULAR_USER_ID, $project, $folder_id, 'folder 2', PLUGIN_DOCMAN_ITEM_TYPE_FOLDER);
-        $folder_3_id = $this->addItem(self::REGULAR_USER_ID, $project, $folder_id, 'folder 3', PLUGIN_DOCMAN_ITEM_TYPE_FOLDER);
 
         $item_D_id = $this->addItem(self::REGULAR_USER_ID, $project, $folder_2_id, 'item D', PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE);
 
