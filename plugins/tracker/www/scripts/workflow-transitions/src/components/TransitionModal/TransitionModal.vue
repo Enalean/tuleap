@@ -25,8 +25,15 @@
         v-on:submit.prevent="saveTransition"
     >
         <div class="tlp-modal-header">
-            <h1 class="tlp-modal-title" id="configure-modal-title" v-translate>
-                Configure transition
+            <h1
+                class="tlp-modal-title"
+                id="configure-modal-title"
+                v-translate="{
+                    from_state_label: from_state_label,
+                    to_state_label: to_state_label
+                }"
+            >
+                Configure transition from %{from_state_label} to %{to_state_label}
             </h1>
             <div class="tlp-modal-close" data-dismiss="modal" aria-label="Close">
                 &times;
@@ -53,7 +60,10 @@
                 class="tlp-button-primary tlp-modal-action"
                 v-bind:disabled="is_modal_save_running"
             >
-                <i class="tlp-button-icon fa fa-fw fa-spin fa-circle-o-notch" v-if="is_modal_save_running"></i>
+                <i
+                    class="tlp-button-icon fa fa-fw fa-spin fa-circle-o-notch"
+                    v-if="is_modal_save_running"
+                ></i>
                 <i class="tlp-button-icon fa fa-fw fa-save" v-else></i>
                 <span v-translate>
                     Save configuration
@@ -69,7 +79,7 @@ import ModalErrorFeedback from "./ModalErrorFeedback.vue";
 import PreConditionsSkeleton from "./Skeletons/PreConditionsSkeleton.vue";
 import FilledPreConditionsSection from "./FilledPreConditionsSection.vue";
 import { modal as createModal } from "tlp";
-import { mapState, mapMutations } from "vuex";
+import { mapState, mapGetters, mapMutations } from "vuex";
 
 export default {
     name: "TransitionModal",
@@ -80,7 +90,29 @@ export default {
         PostActionsSection
     },
     computed: {
-        ...mapState("transitionModal", ["is_modal_save_running", "is_loading_modal"])
+        ...mapState("transitionModal", ["is_modal_save_running", "is_loading_modal"]),
+        ...mapGetters(["all_target_states"]),
+        ...mapState("transitionModal", {
+            from_state_label(state) {
+                if (state.current_transition === null) {
+                    return null;
+                }
+                if (state.current_transition.from_id === null) {
+                    return this.$gettext("(New artifact)");
+                }
+                return this.all_target_states.find(
+                    from_state => from_state.id === state.current_transition.from_id
+                ).label;
+            },
+            to_state_label(state) {
+                if (state.current_transition === null) {
+                    return null;
+                }
+                return this.all_target_states.find(
+                    to_state => to_state.id === state.current_transition.to_id
+                ).label;
+            }
+        })
     },
     mounted() {
         const modal = createModal(this.$el);
@@ -99,7 +131,7 @@ export default {
         );
     },
     methods: {
-        ...mapMutations("transitionModal", ["clearModalShown", "saveTransitionRules"]),
+        ...mapMutations("transitionModal", ["clearModalShown"]),
         saveTransition() {
             this.$store.dispatch("transitionModal/saveTransitionRules");
         }

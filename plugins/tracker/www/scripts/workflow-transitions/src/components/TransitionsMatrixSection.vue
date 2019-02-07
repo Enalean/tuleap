@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2018. All Rights Reserved.
+  - Copyright (c) Enalean, 2018- 2019. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -23,16 +23,18 @@
             <thead>
                 <tr>
                     <th></th>
-                    <th v-for="to in all_target_values" v-bind:key="to.id">
+                    <th v-for="to in all_target_states" v-bind:key="to.id">
                         {{ to.label }}
                     </th>
                 </tr>
             </thead>
             <tbody class="tracker-workflow-transition-tbody">
                 <tr v-for="from in all_source_values" v-bind:key="from.id">
-                    <td class="tracker-workflow-transition-row-label">{{ from.label }}</td>
+                    <td class="tracker-workflow-transition-row-label">
+                        {{ from.label }}
+                    </td>
                     <transition-matrix-content
-                        v-for="to in all_target_values"
+                        v-for="to in all_target_states"
                         v-bind:key="to.id"
                         v-bind:from="from"
                         v-bind:to="to"
@@ -45,37 +47,28 @@
             <p
                 class="empty-page-text tracker-workflow-transition-matrix-empty-state-field-empty"
                 v-translate
-            >The field on which the transitions are based has no selectable value</p>
+            >
+                The field on which the transitions are based has no selectable value
+            </p>
             <a class="tlp-button-primary" v-bind:href="configure_field_url">
                 <i class="fa fa-cog"></i>
-                <span v-translate>Configure it</span>
+                <span v-translate>
+                    Configure it
+                </span>
             </a>
         </div>
     </section>
 </template>
 <script>
-import { mapState } from "vuex";
+import { mapState, mapGetters } from "vuex";
 import TransitionMatrixContent from "./TransitionMatrixContent.vue";
 
 export default {
     name: "TransitionsMatrixSection",
-
     components: { TransitionMatrixContent },
-
     computed: {
         ...mapState(["current_tracker"]),
-
-        all_target_values() {
-            const all_target_values = this.current_tracker.fields.find(
-                field => field.field_id === this.current_tracker.workflow.field_id
-            ).values;
-
-            if (all_target_values === null) {
-                return [];
-            }
-
-            return all_target_values.filter(value => value.is_hidden === false);
-        },
+        ...mapGetters(["all_target_states"]),
 
         all_source_values() {
             return [
@@ -83,11 +76,11 @@ export default {
                     label: this.$gettext("(New artifact)"),
                     id: null
                 },
-                ...this.all_target_values
+                ...this.all_target_states
             ];
         },
         has_field_values() {
-            return this.all_target_values.length > 0;
+            return this.all_target_states.length > 0;
         },
         configure_field_url() {
             const tracker_id = this.current_tracker.id;
@@ -96,7 +89,6 @@ export default {
             return `/plugins/tracker/?tracker=${tracker_id}&func=admin-formElement-update&formElement=${workflow_field_id}`;
         }
     },
-
     methods: {
         findTransition(from, to) {
             return this.current_tracker.workflow.transitions.find(

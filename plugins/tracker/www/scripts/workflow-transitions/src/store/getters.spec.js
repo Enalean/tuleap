@@ -19,42 +19,56 @@
  */
 
 import {
+    current_workflow_field,
     workflow_field_label,
     are_transition_rules_enforced,
     current_tracker_id,
-    selectbox_fields
+    selectbox_fields,
+    all_target_states
 } from "./getters.js";
 import initial_state from "./state.js";
 import { create } from "../support/factories.js";
 
 describe("Store getters:", () => {
-    let state;
+    let state, getters;
 
-    beforeEach(() => (state = { ...initial_state }));
+    beforeEach(() => {
+        state = { ...initial_state };
+        getters = {};
+    });
 
-    describe("workflow_field_label()", () => {
-        beforeEach(() => {
+    describe("current_workflow_field", () => {
+        it("returns the current workflow's selected field", () => {
+            const workflow_field = create("field", "workflow_compliant", { field_id: 13 });
+
             state.current_tracker = {
-                fields: [
-                    create("field", { field_id: 1 }),
-                    create("field", { field_id: 2, label: "Workflow field label" })
-                ],
+                fields: [create("field"), workflow_field],
                 workflow: {
-                    field_id: 2
+                    field_id: 13
                 }
             };
+
+            expect(current_workflow_field(state)).toEqual(workflow_field);
         });
 
+        it("without tracker, it returns null", () => {
+            state.current_tracker = null;
+
+            expect(current_workflow_field(state)).toBeNull();
+        });
+    });
+
+    describe("workflow_field_label", () => {
         it("returns label of current tracker workflow field", () => {
-            expect(workflow_field_label(state)).toBe("Workflow field label");
+            getters.current_workflow_field = create("field", { label: "subjoint" });
+
+            expect(workflow_field_label(state, getters)).toBe("subjoint");
         });
 
-        describe("without tracker", () => {
-            beforeEach(() => (state.current_tracker = null));
+        it("without a current tracker workflow field, it returns null", () => {
+            getters.current_workflow_field = null;
 
-            it("returns null", () => {
-                expect(workflow_field_label(state)).toBeNull();
-            });
+            expect(workflow_field_label(state, getters)).toBeNull();
         });
 
         it("when workflow field_id is 0, it will return null", () => {
@@ -153,6 +167,39 @@ describe("Store getters:", () => {
             it("returns an empty array", () => {
                 expect(selectbox_fields(state)).toEqual([]);
             });
+        });
+    });
+
+    describe("all_target_states", () => {
+        let value, hidden_value;
+
+        beforeEach(() => {
+            state.current_tracker = create("tracker");
+            value = create("field_value");
+            hidden_value = create("field_value", "hidden");
+            getters.current_workflow_field = create("field", {
+                values: [value, hidden_value]
+            });
+        });
+
+        it("returns the current workflow field's values", () => {
+            expect(all_target_states(state, getters)).toEqual([value]);
+        });
+
+        it("filters out values that are hidden", () => {
+            expect(all_target_states(state, getters)).not.toContain(hidden_value);
+        });
+
+        it("without a current workflow field, it returns an empty array", () => {
+            getters.current_workflow_field = null;
+
+            expect(all_target_states(state, getters)).toEqual([]);
+        });
+
+        it("without field values, it returns an empty array", () => {
+            getters.current_workflow_field = create("field", { values: null });
+
+            expect(all_target_states(state, getters)).toEqual([]);
         });
     });
 });

@@ -69,8 +69,8 @@ msgstr "Configurer"
 msgid "Configure it"
 msgstr "Configurez le"
 
-msgid "Configure transition"
-msgstr "Configurer la transition"
+msgid "Configure transition from %{from_state_label} to %{to_state_label}"
+msgstr "Configurer la transition de %{from_state_label} vers %{to_state_label}"
 
 msgid "Confirm"
 msgstr "Confirmer"
