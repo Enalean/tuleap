@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<testsuite name="HeadlessChrome 72.0.3626 (Ubuntu 0.0.0)" package="" timestamp="2019-02-12T10:35:18" id="0" hostname="scra-Inspiron-5482" tests="5" errors="0" failures="0" time="0.019">
+  <properties>
+    <property name="browser.fullName" value="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/72.0.3626.81 HeadlessChrome/72.0.3626.81 Safari/537.36"/>
+  </properties>
+  <testcase name="Rest queries: for GET actions: getBaseline() calls baseline API" time="0.003" classname="Rest queries:"/>
+  <testcase name="Rest queries: for GET actions: getBaseline() returns the baseline" time="0.001" classname="Rest queries:"/>
+  <testcase name="Baseline should content artifact id" time="0.011" classname="Baseline"/>
+  <testcase name="Baseline should content date" time="0.002" classname="Baseline"/>
+  <testcase name="Baseline should content show baseline" time="0.002" classname="Baseline"/>
+  <system-out>
+    <![CDATA[HeadlessChrome 72.0.3626 (Ubuntu 0.0.0) ERROR: '[Vue warn]: Unknown custom element: <translate> - did you register the component correctly? For recursive components, make sure to provide the "name" option.
+
+found in
+
+---> <BaselineContent> at baseline/components/App.vue
+       <Root>'
+,HeadlessChrome 72.0.3626 (Ubuntu 0.0.0) ERROR: '[Vue warn]: Unknown custom element: <translate> - did you register the component correctly? For recursive components, make sure to provide the "name" option.
+
+found in
+
+---> <BaselineContent> at baseline/components/App.vue
+       <Root>'
+,HeadlessChrome 72.0.3626 (Ubuntu 0.0.0) ERROR: '[Vue warn]: Unknown custom element: <translate> - did you register the component correctly? For recursive components, make sure to provide the "name" option.
+
+found in
+
+---> <BaselineContent> at baseline/components/App.vue
+       <Root>'
+
+]]>
+  </system-out>
+  <system-err/>
+</testsuite>

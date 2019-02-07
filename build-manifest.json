@@ -1,0 +1,38 @@
+{
+    "name": "baseline",
+    "themes": {
+        "BurningParrot": {
+            "files": [
+                "themes/BurningParrot/baseline-blue.scss",
+                "themes/BurningParrot/baseline-blue-condensed.scss",
+                "themes/BurningParrot/baseline-green.scss",
+                "themes/BurningParrot/baseline-green-condensed.scss",
+                "themes/BurningParrot/baseline-grey.scss",
+                "themes/BurningParrot/baseline-grey-condensed.scss",
+                "themes/BurningParrot/baseline-orange.scss",
+                "themes/BurningParrot/baseline-orange-condensed.scss",
+                "themes/BurningParrot/baseline-purple.scss",
+                "themes/BurningParrot/baseline-purple-condensed.scss",
+                "themes/BurningParrot/baseline-red.scss",
+                "themes/BurningParrot/baseline-red-condensed.scss"
+            ],
+            "includes": [
+                "../../src/www/themes/common/tlp/src/scss"
+            ],
+            "watched_includes": [
+                "themes/BurningParrot/**/_*.scss"
+            ],
+            "target_dir": "../../src/www/assets/baseline/BurningParrot",
+            "is_revisioned": true
+        }
+    },
+    "gettext-vue": {
+        "baseline": {
+            "scripts": "scripts/",
+            "po": "scripts/baseline/po"
+        }
+    },
+    "components": [
+        "scripts/"
+    ]
+}

@@ -18,10 +18,18 @@
  */
 
 import Vue from "vue";
-
 import App from "./components/App.vue";
+import french_translations from "./po/fr.po";
+import GetTextPlugin from "vue-gettext";
 
 document.addEventListener("DOMContentLoaded", () => {
+    Vue.use(GetTextPlugin, {
+        translations: {
+            fr: french_translations.messages
+        },
+        silent: true
+    });
+
     Vue.config.language = document.body.dataset.userLocale;
 
     const vue_mount_point = document.getElementById("baseline-container");
@@ -31,6 +39,11 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     const AppComponent = Vue.extend(App);
-
-    new AppComponent({}).$mount(vue_mount_point);
+    const url_params = new URLSearchParams(window.location.search);
+    new AppComponent({
+        propsData: {
+            artifact_id: Number(url_params.get("artifact_id")),
+            date: url_params.get("date")
+        }
+    }).$mount(vue_mount_point);
 });
