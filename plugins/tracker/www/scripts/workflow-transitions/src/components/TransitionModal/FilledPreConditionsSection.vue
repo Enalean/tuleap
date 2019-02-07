@@ -31,6 +31,7 @@
                 multiple
                 v-bind:disabled="is_modal_save_running"
                 v-model="authorized_user_group_ids"
+                required
             >
                 <option
                     v-for="user_group in user_groups"
