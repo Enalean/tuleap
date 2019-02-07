@@ -85,7 +85,7 @@ $tlp-switch-button-spinner-size: $tlp-switch-height - 2 * ($tlp-switch-button-pa
         }
 
         &::after {
-            content: '\f110'; // fa-spinner
+            content: '\f1ce'; // fa-spinner
             left: ($tlp-switch-width - $tlp-switch-button-spinner-size) / 2;
             width: $tlp-switch-button-spinner-size;
             height: $tlp-switch-button-spinner-size;
