@@ -815,6 +815,7 @@ CREATE TABLE trove_cat (
   fullpath_ids text,
   mandatory TINYINT(1) NOT NULL DEFAULT 0,
   display_during_project_creation TINYINT(1) NOT NULL DEFAULT 0,
+  is_project_flag BOOL NOT NULL DEFAULT false,
   PRIMARY KEY  (trove_cat_id),
   KEY parent_idx (parent),
   KEY root_parent_idx (root_parent),

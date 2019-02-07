@@ -22,6 +22,8 @@ use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbPresenterBuilder;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\OpenGraph\NoOpenGraphPresenter;
+use Tuleap\project\Flags\ProjectFlagsBuilder;
+use Tuleap\project\Flags\ProjectFlagsDao;
 
 require_once 'common/templating/TemplateRenderer.class.php';
 require_once 'common/templating/TemplateRendererFactory.class.php';
@@ -51,12 +53,18 @@ class FlamingParrot_Theme extends Layout {
     protected $renderer;
 
     private $show_sidebar = false;
+    /**
+     * @var ProjectFlagsBuilder
+     */
+    private $project_flags_builder;
 
     public function __construct($root)
     {
         parent::__construct($root);
 
         $this->renderer = TemplateRendererFactory::build()->getRenderer($this->getTemplateDir());
+
+        $this->project_flags_builder = new ProjectFlagsBuilder(new ProjectFlagsDao());
     }
 
     private function render($template_name, $presenter) {
@@ -281,7 +289,8 @@ class FlamingParrot_Theme extends Layout {
 
         return new FlamingParrot_CurrentProjectNavbarInfoPresenter(
             $project,
-            $this->getProjectPrivacy($project)
+            $this->getProjectPrivacy($project),
+            $this->project_flags_builder->buildProjectFlags($project)
         );
     }
 
