@@ -25,12 +25,17 @@
         v-on:submit.prevent="saveTransition"
     >
         <div class="tlp-modal-header">
-            <h1 class="tlp-modal-title" id="configure-modal-title" v-translate>Configure transition</h1>
-            <div class="tlp-modal-close" data-dismiss="modal" aria-label="Close">&times;</div>
+            <h1 class="tlp-modal-title" id="configure-modal-title" v-translate>
+                Configure transition
+            </h1>
+            <div class="tlp-modal-close" data-dismiss="modal" aria-label="Close">
+                &times;
+            </div>
         </div>
         <modal-error-feedback/>
         <div class="tlp-modal-body tlp-modal-body-with-sections">
-            <pre-conditions-section/>
+            <pre-conditions-skeleton v-if="is_loading_modal"/>
+            <filled-pre-conditions-section v-else/>
             <post-actions-section/>
         </div>
         <div class="tlp-modal-footer">
@@ -40,7 +45,9 @@
                 data-dismiss="modal"
                 v-translate
                 v-bind:disabled="is_modal_save_running"
-            >Cancel</button>
+            >
+                Cancel
+            </button>
             <button
                 type="submit"
                 class="tlp-button-primary tlp-modal-action"
@@ -48,25 +55,32 @@
             >
                 <i class="tlp-button-icon fa fa-fw fa-spin fa-circle-o-notch" v-if="is_modal_save_running"></i>
                 <i class="tlp-button-icon fa fa-fw fa-save" v-else></i>
-                <span v-translate>Save configuration</span>
+                <span v-translate>
+                    Save configuration
+                </span>
             </button>
         </div>
     </form>
 </template>
 
 <script>
-import PreConditionsSection from "./PreConditionsSection.vue";
 import PostActionsSection from "./PostActionsSection.vue";
 import ModalErrorFeedback from "./ModalErrorFeedback.vue";
+import PreConditionsSkeleton from "./Skeletons/PreConditionsSkeleton.vue";
+import FilledPreConditionsSection from "./FilledPreConditionsSection.vue";
 import { modal as createModal } from "tlp";
 import { mapState, mapMutations } from "vuex";
 
 export default {
     name: "TransitionModal",
     components: {
+        FilledPreConditionsSection,
+        PreConditionsSkeleton,
         ModalErrorFeedback,
-        PreConditionsSection,
         PostActionsSection
+    },
+    computed: {
+        ...mapState("transitionModal", ["is_modal_save_running", "is_loading_modal"])
     },
     mounted() {
         const modal = createModal(this.$el);
@@ -83,9 +97,6 @@ export default {
                 }
             }
         );
-    },
-    computed: {
-        ...mapState("transitionModal", ["is_modal_save_running"])
     },
     methods: {
         ...mapMutations("transitionModal", ["clearModalShown", "saveTransitionRules"]),
