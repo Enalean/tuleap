@@ -77,12 +77,13 @@ async function saveTransitionRules({ commit, state, getters }) {
             patchTransition(state.current_transition),
             putPostActions(state.current_transition.id, getters.post_actions)
         ]);
+        const transition = { ...state.current_transition };
         animateUpdated(
             () => {
-                commit("markTransitionUpdated", state.current_transition, { root: true });
+                commit("markTransitionUpdated", transition, { root: true });
             },
             () => {
-                commit("hideTransitionUpdated", state.current_transition, { root: true });
+                commit("hideTransitionUpdated", transition, { root: true });
             }
         );
         commit("clearModalShown");

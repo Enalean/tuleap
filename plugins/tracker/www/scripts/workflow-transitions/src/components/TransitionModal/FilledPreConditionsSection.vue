@@ -23,11 +23,11 @@
     >
         <template slot="authorized-ugroups">
             <label for="workflow-configuration-permission" class="tlp-label" v-translate>
-                Groups that may make the transition
+                Groups that may process the transition
             </label>
             <select
                 id="workflow-configuration-permission"
-                class="tlp-select"
+                class="tlp-select tracker-workflow-transition-modal-authorized-ugroups"
                 multiple
                 v-bind:disabled="is_modal_save_running"
                 v-model="authorized_user_group_ids"

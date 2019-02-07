@@ -91,7 +91,7 @@ msgid "Field"
 msgstr "Champ"
 
 msgid "Field(s) that must not be empty"
-msgstr "Champ(s) qui doivent être rempli(s)"
+msgstr "Le(s) champs suivant(s) doivent obligatoirement avoir une valeur"
 
 msgid "Floats"
 msgstr "Flottants"
@@ -99,7 +99,7 @@ msgstr "Flottants"
 msgid "Fully deactivate the workflow"
 msgstr "Désactiver complètement le workflow"
 
-msgid "Groups that may make the transition"
+msgid "Groups that may process the transition"
 msgstr "Groupes autorisés à effectuer la transition"
 
 msgid ""

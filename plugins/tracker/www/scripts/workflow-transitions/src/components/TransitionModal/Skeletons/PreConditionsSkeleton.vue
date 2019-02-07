@@ -23,7 +23,10 @@
             <label class="tlp-label tlp-label-skeleton">
                 <span class="tlp-skeleton-text"></span>
             </label>
-            <select class="tlp-select tlp-skeleton-field" disabled></select>
+            <select
+                class="tlp-select tlp-skeleton-field tracker-workflow-transition-modal-authorized-ugroups"
+                disabled
+            ></select>
         </template>
         <template slot="fields-not-empty">
             <label class="tlp-label tlp-label-skeleton">
