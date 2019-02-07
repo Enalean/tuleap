@@ -120,20 +120,35 @@ $json = json_decode(file_get_contents($core_manifest), true);
 gettextJS("core", $basedir, $json);
 gettextVue("core", $basedir, $json);
 
+
 foreach (glob("$basedir/plugins/*", GLOB_ONLYDIR) as $path) {
     $translated_plugin = basename($path);
-    if (! is_file("$path/site-content/tuleap-$translated_plugin.pot")) {
-        warning("[$translated_plugin] No .pot file found.");
-        continue;
-    }
+    gettextPHP($path, $translated_plugin, $gettext_in_mustache_extractor);
 
+    $manifest = "$path/build-manifest.json";
+    if (is_file($manifest)) {
+        $json = json_decode(file_get_contents($manifest), true);
+        gettextJS($translated_plugin, $path, $json);
+        gettextSmarty($translated_plugin, $path, $json);
+        gettextVue($translated_plugin, $path, $json);
+    }
+}
+
+/**
+ * @param                 $path
+ * @param string          $translated_plugin
+ * @param DomainExtractor $gettext_in_mustache_extractor
+ */
+function gettextPHP($path, string $translated_plugin, DomainExtractor $gettext_in_mustache_extractor): void
+{
     info("[$translated_plugin] Generating default .pot file");
     $src      = escapeshellarg("$path/include");
     $template = escapeshellarg("$path/site-content/tuleap-$translated_plugin.pot");
     $default  = escapeshellarg("$path/site-content/tuleap-$translated_plugin-default.pot");
     $plural   = escapeshellarg("$path/site-content/tuleap-$translated_plugin-plural.pot");
     $mustache = escapeshellarg("$path/site-content/tuleap-$translated_plugin-mustache.pot");
-    executeCommandAndExitIfStderrNotEmpty("find $src -name '*.php' \
+    executeCommandAndExitIfStderrNotEmpty(
+        "find $src -name '*.php' \
         | xargs xgettext \
             --keyword='dgettext:1c,2' \
             --default-domain=$translated_plugin \
@@ -145,10 +160,12 @@ foreach (glob("$basedir/plugins/*", GLOB_ONLYDIR) as $path) {
             --regexp='$translated_plugin\b' \
             - \
         | sed '/^msgctxt/d' \
-        > $default");
+        > $default"
+    );
 
     info("[$translated_plugin] Generating plural .pot file");
-    executeCommandAndExitIfStderrNotEmpty("find $src -name '*.php' \
+    executeCommandAndExitIfStderrNotEmpty(
+        "find $src -name '*.php' \
         | xargs xgettext \
             --keyword='dngettext:1c,2,3' \
             --default-domain=$translated_plugin \
@@ -160,7 +177,8 @@ foreach (glob("$basedir/plugins/*", GLOB_ONLYDIR) as $path) {
             --regexp='$translated_plugin\b' \
             - \
         | sed '/^msgctxt/d' \
-        > $plural");
+        > $plural"
+    );
 
     info("[$translated_plugin] Generating .pot file for .mustache files");
     $gettext_in_mustache_extractor->extract(
@@ -198,14 +216,6 @@ EOS;
     info("[$translated_plugin] Merging .pot file into .po files");
     $site_content = escapeshellarg("$path/site-content");
     exec("find $site_content -name 'tuleap-$translated_plugin.po' -exec msgmerge --update \"{}\" $template \;");
-
-    $manifest = "$path/build-manifest.json";
-    if (is_file($manifest)) {
-        $json = json_decode(file_get_contents($manifest), true);
-        gettextJS($translated_plugin, $path, $json);
-        gettextSmarty($translated_plugin, $path, $json);
-        gettextVue($translated_plugin, $path, $json);
-    }
 }
 
 function gettextJS($translated_plugin, $path, $manifest_json)
