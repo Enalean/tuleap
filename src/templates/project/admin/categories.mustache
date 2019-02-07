@@ -13,6 +13,7 @@
                             {{ label }}
                             {{# is_mandatory }}<i class="fa fa-asterisk"></i>{{/ is_mandatory }}
                         </label>
+                        <input type="hidden" name="categories[{{ id }}][]">
                         <select class="tlp-select project-admin-category-select"
                                 id="category-select-{{ id }}"
                                 name="categories[{{ id }}][]"
