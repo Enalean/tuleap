@@ -216,10 +216,15 @@ class TransitionsResource extends AuthenticatedResource
         $project = $transition->getWorkflow()->getTracker()->getProject();
         ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt($project);
 
+        $authorized_user_group_ids = $transition_conditions->getAuthorizedUserGroupIds();
+        if (count($authorized_user_group_ids) === 0) {
+            throw new I18NRestException(400, dgettext('tuleap-tracker', 'There must be at least one authorized user group.'));
+        }
+
         try {
             $this->getTransitionUpdater()->update(
                 $transition,
-                $transition_conditions->getAuthorizedUserGroupIds(),
+                $authorized_user_group_ids,
                 $transition_conditions->not_empty_field_ids,
                 $transition_conditions->is_comment_required
             );

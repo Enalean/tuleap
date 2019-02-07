@@ -86,6 +86,15 @@ class TransitionUpdater
      */
     private function updatePermissions(\Transition $transition, array $authorized_user_group_ids)
     {
+        if (count($authorized_user_group_ids) === 0) {
+            throw new TransitionUpdateException(
+                sprintf(
+                    dgettext('tuleap-tracker', "Cannot update permissions of transition with id '%d'"),
+                    $transition->getId()
+                )
+            );
+        }
+
         $clear_permissions_success = permission_clear_all(
             $transition->getWorkflow()->getTracker()->group_id,
             'PLUGIN_TRACKER_WORKFLOW_TRANSITION',

@@ -272,6 +272,29 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
         $this->assertEquals(true, $response_content['is_comment_required']);
     }
 
+    public function testPATCHTrackerWorkflowTransitionsThrows400WhenNoAuthorizedUgroupsSelected()
+    {
+        $transition_combinations = $this->getAllTransitionCombinations($this->tracker_workflow_transitions_tracker_id);
+        $transition = $transition_combinations["transitions"][0];
+
+        $params = json_encode([
+            "authorized_user_group_ids" => [],
+            "not_empty_field_ids" => [],
+            "is_comment_required" => true
+        ]);
+
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->client->patch(
+                'tracker_workflow_transitions/' . $transition['id'],
+                null,
+                $params
+            )
+        );
+
+        $this->assertEquals($response->getStatusCode(), 400);
+    }
+
     public function testGETTrackerWorkflowTransitionActions()
     {
         $transition_combinations = $this->getAllTransitionCombinations($this->tracker_workflow_transitions_tracker_id);
