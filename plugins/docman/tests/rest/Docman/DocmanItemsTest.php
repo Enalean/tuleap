@@ -23,6 +23,7 @@
 namespace Tuleap\Docman\rest\v1;
 
 use Guzzle\Http\Client;
+use REST_TestDataBuilder;
 use Tuleap\Docman\rest\DocmanBase;
 use Tuleap\Docman\rest\DocmanDataBuilder;
 
@@ -539,11 +540,16 @@ class DocmanItemsTest extends DocmanBase
         );
         $this->assertEquals(400, $response->getStatusCode());
     }
+
     /**
-     * @depends testGetDocumentItemsForRegularUser
+     * @depends testGetRootId
      */
-    public function testPostReturns403WhenPermissionDenied(array $stored_items)
+    public function testPostReturns403WhenPermissionDenied(int $root_id) : void
     {
+        $stored_items = $this->getResponseByName(
+            REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('docman_items/' . $root_id . '/docman_items')
+        )->json();
         $folder_3 = $this->findItemByTitle($stored_items, 'folder 3');
 
         $query = json_encode([
@@ -557,12 +563,7 @@ class DocmanItemsTest extends DocmanBase
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
             $this->client->post('docman_items', null, $query)
         );
-        /**
-         * @todo: Fix the test: The test is incorrect, parent_id is set to null in the query resulting
-         * in a 400 because the validation of the query fails. parent_id should not be null.
-         */
-        $this->assertTrue(true);
-        //$this->assertEquals(403, $response->getStatusCode());
+        $this->assertEquals(403, $response->getStatusCode());
     }
 
     /**
