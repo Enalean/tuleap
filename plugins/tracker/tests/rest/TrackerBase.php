@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2018. All rights reserved.
+ * Copyright Enalean (c) 2018 - 2019. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -90,63 +90,5 @@ class TrackerBase extends RestBase
             $this->delete_tracker_id,
             $this->delete_artifact_ids
         );
-    }
-
-    /**
-     * Returns all transitions combinations:
-     * - current transitions (already used)
-     * - available transitions to create (not used yet)
-     *
-     * @param $tracker_id
-     *
-     * @return array
-     */
-    protected function getAllTransitionCombinations($tracker_id)
-    {
-        $tracker = $this->getResponseByName(
-            REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->setup_client->get("trackers/$tracker_id")
-        )->json();
-
-        $tracker_workflow_field_key = array_search(
-            $tracker["workflow"]["field_id"],
-            array_column(
-                $tracker["fields"],
-                "field_id"
-            )
-        );
-        $all_field_values_ids = array_column($tracker["fields"][$tracker_workflow_field_key]["values"], "id");
-
-        $all_transitions = [
-            "transitions" => [],
-            "missing_transitions" => []
-        ];
-
-        foreach ($tracker["workflow"]["transitions"] as $transition) {
-            $all_transitions["transitions"][] = [
-                "id" => $transition["id"],
-                "from_id" => $transition["from_id"],
-                "to_id" => $transition["to_id"]
-            ];
-        }
-
-        foreach (array_merge([null], $all_field_values_ids) as $from_id) {
-            foreach ($all_field_values_ids as $to_id) {
-                $is_not_used_transition = empty(
-                    array_filter($all_transitions["transitions"], function ($transition) use ($from_id, $to_id) {
-                        return ($transition['from_id'] === $from_id && $transition['to_id'] === $to_id);
-                    })
-                );
-
-                if ($from_id !== $to_id && $is_not_used_transition) {
-                    $all_transitions["missing_transitions"][] = [
-                        "from_id" => $from_id,
-                        "to_id" => $to_id
-                    ];
-                }
-            }
-        };
-
-        return $all_transitions;
     }
 }

@@ -29,10 +29,71 @@ require_once __DIR__ . '/../bootstrap.php';
 
 class TrackerWorkflowTransitionsTest extends TrackerBase
 {
-    public function testPOSTTrackerWorkflowTransitionsSavesANewTransitionAndReturnsTheTransitionRepresentation()
+
+    /**
+     * Returns all transitions combinations:
+     * - current transitions (already used)
+     * - available transitions to create (not used yet)
+     */
+    public function testGetAllTransitionCombinations() : array
     {
-        $transition_combinations = $this->getAllTransitionCombinations($this->tracker_workflow_transitions_tracker_id);
-        $available_transition    = $transition_combinations["missing_transitions"][0];
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->setup_client->get("trackers/$this->tracker_workflow_transitions_tracker_id")
+        );
+
+        $this->assertEquals($response->getStatusCode(), 200);
+
+        $tracker = $response->json();
+
+        $tracker_workflow_field_key = array_search(
+            $tracker["workflow"]["field_id"],
+            array_column(
+                $tracker["fields"],
+                "field_id"
+            )
+        );
+        $all_field_values_ids = array_column($tracker["fields"][$tracker_workflow_field_key]["values"], "id");
+
+        $all_transitions = [
+            "transitions" => [],
+            "missing_transitions" => []
+        ];
+
+        foreach ($tracker["workflow"]["transitions"] as $transition) {
+            $all_transitions["transitions"][] = [
+                "id" => $transition["id"],
+                "from_id" => $transition["from_id"],
+                "to_id" => $transition["to_id"]
+            ];
+        }
+
+        foreach (array_merge([null], $all_field_values_ids) as $from_id) {
+            foreach ($all_field_values_ids as $to_id) {
+                $is_not_used_transition = empty(
+                    array_filter($all_transitions["transitions"], function ($transition) use ($from_id, $to_id) {
+                        return ($transition['from_id'] === $from_id && $transition['to_id'] === $to_id);
+                    })
+                );
+
+                if ($from_id !== $to_id && $is_not_used_transition) {
+                    $all_transitions["missing_transitions"][] = [
+                        "from_id" => $from_id,
+                        "to_id" => $to_id
+                    ];
+                }
+            }
+        };
+
+        return $all_transitions;
+    }
+
+    /**
+     * @depends testGetAllTransitionCombinations
+     */
+    public function testPOSTTrackerWorkflowTransitionsSavesANewTransitionAndReturnsTheTransitionRepresentation($transition_combinations)
+    {
+        $available_transition = $transition_combinations["missing_transitions"][0];
 
         $params = json_encode(array(
             "tracker_id" => $this->tracker_workflow_transitions_tracker_id,
@@ -57,10 +118,12 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
         $this->assertEquals($response_content['uri'], "tracker_workflow_transitions/{$response_content['id']}");
     }
 
-    public function testPOSTTrackerWorkflowTransitionsRegularUsersHaveForbiddenAccess()
+    /**
+     * @depends testGetAllTransitionCombinations
+     */
+    public function testPOSTTrackerWorkflowTransitionsRegularUsersHaveForbiddenAccess($transition_combinations)
     {
-        $transition_combinations   = $this->getAllTransitionCombinations($this->tracker_workflow_transitions_tracker_id);
-        $available_transition      = $transition_combinations["missing_transitions"][0];
+        $available_transition = $transition_combinations["missing_transitions"][0];
 
         $params = json_encode(array(
             "tracker_id" => $this->tracker_workflow_transitions_tracker_id,
@@ -120,10 +183,12 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
         $this->assertEquals($response->getStatusCode(), 404);
     }
 
-    public function testPOSTTrackerWorkflowTransitionsWhenTransitionAlreadyExistReturnsError()
+    /**
+     * @depends testGetAllTransitionCombinations
+     */
+    public function testPOSTTrackerWorkflowTransitionsWhenTransitionAlreadyExistReturnsError($transition_combinations)
     {
-        $transition_combinations   = $this->getAllTransitionCombinations($this->tracker_workflow_transitions_tracker_id);
-        $used_transition      = $transition_combinations["transitions"][0];
+        $used_transition = $transition_combinations["transitions"][0];
 
         $params = json_encode(array(
             "tracker_id" => $this->tracker_workflow_transitions_tracker_id,
@@ -143,10 +208,12 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
         $this->assertEquals($response->getStatusCode(), 400);
     }
 
-    public function testPOSTTrackerWorkflowTransitionsWhenFieldValueDoesNotExistReturnsError()
+    /**
+     * @depends testGetAllTransitionCombinations
+     */
+    public function testPOSTTrackerWorkflowTransitionsWhenFieldValueDoesNotExistReturnsError($transition_combinations)
     {
-        $transition_combinations   = $this->getAllTransitionCombinations($this->tracker_workflow_transitions_tracker_id);
-        $available_transition      = $transition_combinations["missing_transitions"][0];
+        $available_transition = $transition_combinations["missing_transitions"][0];
 
         $params = json_encode(array(
             "tracker_id" => $this->tracker_workflow_transitions_tracker_id,
@@ -166,10 +233,12 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
         $this->assertEquals($response->getStatusCode(), 404);
     }
 
-    public function testPOSTTrackerWorkflowTransitionsWhenFromIdEqualsToIdReturnsError()
+    /**
+     * @depends testGetAllTransitionCombinations
+     */
+    public function testPOSTTrackerWorkflowTransitionsWhenFromIdEqualsToIdReturnsError($transition_combinations)
     {
-        $transition_combinations   = $this->getAllTransitionCombinations($this->tracker_workflow_transitions_tracker_id);
-        $available_transition      = $transition_combinations["missing_transitions"][0];
+        $available_transition = $transition_combinations["missing_transitions"][0];
 
         $params = json_encode(array(
             "tracker_id" => $this->tracker_workflow_transitions_tracker_id,
@@ -189,10 +258,12 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
         $this->assertEquals($response->getStatusCode(), 400);
     }
 
-    public function testDELETETrackerWorkflowTransitions()
+    /**
+     * @depends testGetAllTransitionCombinations
+     */
+    public function testDELETETrackerWorkflowTransitions($transition_combinations)
     {
-        $transition_combinations = $this->getAllTransitionCombinations($this->tracker_workflow_transitions_tracker_id);
-        $used_transition         = $transition_combinations["transitions"][0];
+        $used_transition = $transition_combinations["transitions"][1];
 
         $response = $this->getResponseByName(
             REST_TestDataBuilder::TEST_USER_1_NAME,
@@ -218,9 +289,11 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
         $this->assertEquals(404, $response->getStatusCode());
     }
 
-    public function testGETTrackerWorkflowTransitionsReturnsTheTransitionRepresentation()
+    /**
+     * @depends testGetAllTransitionCombinations
+     */
+    public function testGETTrackerWorkflowTransitionsReturnsTheTransitionRepresentation($transition_combinations)
     {
-        $transition_combinations = $this->getAllTransitionCombinations($this->tracker_workflow_transitions_tracker_id);
         $transition = $transition_combinations["transitions"][0];
 
         $response = $this->getResponseByName(
@@ -236,9 +309,11 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
         $this->assertEquals($transition['to_id'], $response_content['to_id']);
     }
 
-    public function testPATCHTrackerWorkflowTransitionsThenGETReturnsUpdatedTransition()
+    /**
+     * @depends testGetAllTransitionCombinations
+     */
+    public function testPATCHTrackerWorkflowTransitionsThenGETReturnsUpdatedTransition($transition_combinations)
     {
-        $transition_combinations = $this->getAllTransitionCombinations($this->tracker_workflow_transitions_tracker_id);
         $transition = $transition_combinations["transitions"][0];
 
         $tracker_workflows_project_id = $this->getProjectId(self::TRACKER_WORKFLOWS_PROJECT_NAME);
@@ -272,9 +347,11 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
         $this->assertEquals(true, $response_content['is_comment_required']);
     }
 
-    public function testPATCHTrackerWorkflowTransitionsThrows400WhenNoAuthorizedUgroupsSelected()
+    /**
+     * @depends testGetAllTransitionCombinations
+     */
+    public function testPATCHTrackerWorkflowTransitionsThrows400WhenNoAuthorizedUgroupsSelected($transition_combinations)
     {
-        $transition_combinations = $this->getAllTransitionCombinations($this->tracker_workflow_transitions_tracker_id);
         $transition = $transition_combinations["transitions"][0];
 
         $params = json_encode([
@@ -295,9 +372,11 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
         $this->assertEquals($response->getStatusCode(), 400);
     }
 
-    public function testGETTrackerWorkflowTransitionActions()
+    /**
+     * @depends testGetAllTransitionCombinations
+     */
+    public function testGETTrackerWorkflowTransitionActions($transition_combinations)
     {
-        $transition_combinations = $this->getAllTransitionCombinations($this->tracker_workflow_transitions_tracker_id);
         $transition = $transition_combinations["transitions"][0];
         $response = $this->getResponseByName(
             REST_TestDataBuilder::TEST_USER_1_NAME,
@@ -307,10 +386,12 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
-    public function testPUTTrackerWorkflowTransitionActions()
+    /**
+     * @depends testGetAllTransitionCombinations
+     */
+    public function testPUTTrackerWorkflowTransitionActions($transition_combinations)
     {
-        $transition_combinations = $this->getAllTransitionCombinations($this->tracker_workflow_transitions_tracker_id);
-        $transition              = $transition_combinations["transitions"][0];
+        $transition = $transition_combinations["transitions"][0];
 
         $body = json_encode([
             "post_actions" => [
