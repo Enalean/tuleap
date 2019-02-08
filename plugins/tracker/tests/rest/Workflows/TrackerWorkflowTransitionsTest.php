@@ -61,11 +61,7 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
         ];
 
         foreach ($tracker["workflow"]["transitions"] as $transition) {
-            $all_transitions["transitions"][] = [
-                "id" => $transition["id"],
-                "from_id" => $transition["from_id"],
-                "to_id" => $transition["to_id"]
-            ];
+            $all_transitions["transitions"][] = $transition;
         }
 
         foreach (array_merge([null], $all_field_values_ids) as $from_id) {
@@ -372,27 +368,97 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
         $this->assertEquals($response->getStatusCode(), 400);
     }
 
-    /**
-     * @depends testGetAllTransitionCombinations
-     */
-    public function testGETTrackerWorkflowTransitionActions($transition_combinations)
+
+    public function testGetResolvedToClosedTransition() : array
     {
-        $transition = $transition_combinations["transitions"][0];
         $response = $this->getResponseByName(
-            REST_TestDataBuilder::TEST_USER_1_NAME,
-            $this->client->get('tracker_workflow_transitions/' . $transition['id'] . '/actions')
+            REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->setup_client->get("trackers/$this->tracker_workflow_transitions_tracker_id")
         );
 
         $this->assertEquals($response->getStatusCode(), 200);
+
+        $tracker = $response->json();
+
+        $status_field_id   = 0;
+        $resolved_value_id = 0;
+        $closed_value_id   = 0;
+
+        foreach ($tracker['fields'] as $tracker_field) {
+            if ($tracker_field['name'] === 'status_id') {
+                $status_field_id = $tracker_field['field_id'];
+
+                foreach ($tracker_field['values'] as $field_value) {
+                    if ($field_value['label'] === 'Resolved') {
+                        $resolved_value_id = $field_value['id'];
+                    }
+
+                    if ($field_value['label'] === 'Closed') {
+                        $closed_value_id = $field_value['id'];
+                    }
+                }
+                break;
+            }
+        }
+
+        if ($status_field_id === 0 || $resolved_value_id === 0 || $closed_value_id ===0) {
+            $this->fail();
+        }
+
+        $resolved_to_closed_transition = null;
+        foreach ($tracker["workflow"]["transitions"] as $transition) {
+            if ($transition['from_id'] === $resolved_value_id && $transition['to_id'] === $closed_value_id) {
+                $resolved_to_closed_transition = $transition;
+                break;
+            }
+        }
+
+        if ($resolved_to_closed_transition === null) {
+            $this->fail();
+        }
+
+        return $resolved_to_closed_transition;
     }
 
     /**
-     * @depends testGetAllTransitionCombinations
+     * @depends testGetResolvedToClosedTransition
      */
-    public function testPUTTrackerWorkflowTransitionActions($transition_combinations)
+    public function testGETTrackerWorkflowTransitionActions($transition)
     {
-        $transition = $transition_combinations["transitions"][0];
+        $transition_id = $transition['id'];
 
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::TEST_USER_1_NAME,
+            $this->client->get("tracker_workflow_transitions/$transition_id/actions")
+        );
+
+        $this->assertEquals($response->getStatusCode(), 200);
+
+        $post_actions = $response->json();
+
+        $this->assertCount(4, $post_actions);
+
+        $first_post_action = $post_actions[0];
+        $this->assertSame("set_field_value", $first_post_action["type"]);
+        $this->assertSame("date", $first_post_action["field_type"]);
+
+        $second_post_action = $post_actions[1];
+        $this->assertSame("set_field_value", $second_post_action["type"]);
+        $this->assertSame("int", $second_post_action["field_type"]);
+
+        $third_post_action = $post_actions[2];
+        $this->assertSame("set_field_value", $third_post_action["type"]);
+        $this->assertSame("float", $third_post_action["field_type"]);
+
+        $forth_post_action = $post_actions[3];
+        $this->assertSame("run_job", $forth_post_action["type"]);
+    }
+
+    /**
+     * @depends testGetResolvedToClosedTransition
+     */
+    public function testPUTTrackerWorkflowTransitionActions($transition)
+    {
         $body = json_encode([
             "post_actions" => [
                 [
