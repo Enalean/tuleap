@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -423,7 +423,8 @@ class cardwallPlugin extends Plugin
         $redirect = $params['redirect'];
         if ($cardwall) {
             if (!$redirect->stayInTracker()) {
-                list($redirect_to, $redirect_params) = each($cardwall);
+                $redirect_to     = key($cardwall);
+                $redirect_params = current($cardwall);
                 switch ($redirect_to) {
                 case 'agile':
                     $this->redirectToAgileDashboard($redirect, $redirect_params);
@@ -438,9 +439,11 @@ class cardwallPlugin extends Plugin
         }
     }
 
-    private function redirectToAgileDashboard(Tracker_Artifact_Redirect $redirect, array $redirect_params) {
-        list($planning_id, $artifact_id) = each($redirect_params);
-        $planning = PlanningFactory::build()->getPlanning($planning_id);
+    private function redirectToAgileDashboard(Tracker_Artifact_Redirect $redirect, array $redirect_params)
+    {
+        $planning_id = key($redirect_params);
+        $artifact_id = current($redirect_params);
+        $planning    = PlanningFactory::build()->getPlanning($planning_id);
         if ($planning) {
             $redirect->base_url         = AGILEDASHBOARD_BASE_URL;
             $redirect->query_parameters = array(
@@ -453,10 +456,12 @@ class cardwallPlugin extends Plugin
         }
     }
 
-    private function redirectToRenderer(Tracker_Artifact_Redirect $redirect, array $redirect_params) {
-        list($report_id, $renderer_id) = each($redirect_params);
-        $redirect->base_url            = TRACKER_BASE_URL;
-        $redirect->query_parameters    = array(
+    private function redirectToRenderer(Tracker_Artifact_Redirect $redirect, array $redirect_params)
+    {
+        $report_id                   = key($redirect_params);
+        $renderer_id                 = current($redirect_params);
+        $redirect->base_url          = TRACKER_BASE_URL;
+        $redirect->query_parameters  = array(
             'report'   => $report_id,
             'renderer' => $renderer_id,
         );
