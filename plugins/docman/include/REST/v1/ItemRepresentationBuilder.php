@@ -23,6 +23,7 @@ namespace Tuleap\Docman\REST\v1;
 use Docman_ItemDao;
 use Docman_ItemFactory;
 use Project;
+use Tuleap\Docman\ApprovalTable\ApprovalTableStateMapper;
 use Tuleap\User\REST\MinimalUserRepresentation;
 
 class ItemRepresentationBuilder
@@ -48,18 +49,32 @@ class ItemRepresentationBuilder
      */
     private $lock_factory;
 
+    /**
+     * @var \Docman_ApprovalTableFactoriesFactory
+     */
+    private $approval_table_factory;
+
+    /**
+     * @var ApprovalTableStateMapper
+     */
+    private $approval_table_state_mapper;
+
     public function __construct(
         Docman_ItemDao $dao,
         \UserManager $user_manager,
         Docman_ItemFactory $docman_item_factory,
         \Docman_PermissionsManager $permissions_manager,
-        \Docman_LockFactory $lock_factory
+        \Docman_LockFactory $lock_factory,
+        \Docman_ApprovalTableFactoriesFactory $approval_table_factory,
+        ApprovalTableStateMapper $approval_table_state_mapper
     ) {
-        $this->dao                 = $dao;
-        $this->user_manager        = $user_manager;
-        $this->docman_item_factory = $docman_item_factory;
-        $this->permissions_manager = $permissions_manager;
-        $this->lock_factory        = $lock_factory;
+        $this->dao                         = $dao;
+        $this->user_manager                = $user_manager;
+        $this->docman_item_factory         = $docman_item_factory;
+        $this->permissions_manager         = $permissions_manager;
+        $this->lock_factory                = $lock_factory;
+        $this->approval_table_factory      = $approval_table_factory;
+        $this->approval_table_state_mapper = $approval_table_state_mapper;
     }
 
     /**
@@ -113,6 +128,7 @@ class ItemRepresentationBuilder
         $item_representation = new ItemRepresentation();
 
         $lock_info = $this->getLockInformation($item);
+        $approval_table = $this->getApprovalTable($item);
 
         $item_representation->build(
             $item,
@@ -120,6 +136,7 @@ class ItemRepresentationBuilder
             $user_can_write,
             $type,
             $is_expanded,
+            $approval_table,
             $lock_info,
             $file_properties,
             $embedded_file_properties,
@@ -138,13 +155,36 @@ class ItemRepresentationBuilder
             return null;
         }
 
-        $lock_owner = (new MinimalUserRepresentation())->build(
-            $this->user_manager->getUserById((int) $lock_infos['user_id'])
-        );
+        $lock_owner = $this->getMinimalUserRepresentation((int) $lock_infos['user_id']);
 
         return new ItemLockInfoRepresentation(
             $lock_owner,
             $lock_infos
+        );
+    }
+
+    private function getApprovalTable(\Docman_Item $item) : ?ItemApprovalTableRepresentation
+    {
+        $table_factory = $this->approval_table_factory->getSpecificFactoryFromItem($item);
+        if (! $table_factory) {
+            return null;
+        }
+
+        /* @var $approval_table \Docman_ApprovalTable */
+        $approval_table = $table_factory->getTable();
+        if (! $approval_table || ! $approval_table->isEnabled()) {
+            return null;
+        }
+
+        $table_owner = $this->getMinimalUserRepresentation((int) $approval_table->getOwner());
+
+        return new ItemApprovalTableRepresentation($approval_table, $table_owner, $this->approval_table_state_mapper);
+    }
+
+    private function getMinimalUserRepresentation(int $user_id) : MinimalUserRepresentation
+    {
+        return (new MinimalUserRepresentation())->build(
+            $this->user_manager->getUserById($user_id)
         );
     }
 }

@@ -51,6 +51,7 @@ export default {
             ALREADY_EXISTS_ERROR: "already_exists",
             FEATURE_UNDER_CONSTRUCTION: "feature_under_construction",
             EDITION_LOCKED: "edition_locked",
+            DOCUMENT_NEEDS_APPROVAL: "document_needs_approval",
             highlighted_item_id: null
         };
     },
@@ -96,6 +97,10 @@ export default {
             if (this.error_modal_shown === this.EDITION_LOCKED) {
                 return () =>
                     import(/* webpackChunkName: "document-edition-locked-error-modal" */ "./DocumentLockedForEditionErrorModal.vue");
+            }
+            if (this.error_modal_shown === this.DOCUMENT_NEEDS_APPROVAL) {
+                return () =>
+                    import(/* webpackChunkName: "document-needs-approval-error-modal" */ "./DocumentNeedsApprovalErrorModal.vue");
             }
 
             return () =>
@@ -244,16 +249,30 @@ export default {
             return this.folder_content.find(item => item.id === this.highlighted_item_id);
         },
         uploadNewFileVersion(event, dropzone_item) {
-            const lock_info = dropzone_item.lock_info;
+            const { lock_info, approval_table } = dropzone_item;
             const is_document_locked_by_current_user =
                 lock_info === null ||
                 (lock_info !== null && lock_info.locked_by.id === this.user_id);
 
             if (!is_document_locked_by_current_user) {
                 this.error_modal_shown = this.EDITION_LOCKED;
-                this.error_modal_reasons.push({
+                this.error_modal_reasons.OKpush({
                     filename: dropzone_item.title,
                     lock_owner: lock_info.locked_by
+                });
+
+                return;
+            }
+
+            const is_an_approval_table_blocking_update =
+                approval_table !== null && !approval_table.has_been_approved;
+
+            if (is_an_approval_table_blocking_update) {
+                this.error_modal_shown = this.DOCUMENT_NEEDS_APPROVAL;
+                this.error_modal_reasons.push({
+                    filename: dropzone_item.title,
+                    approval_table_owner: approval_table.table_owner,
+                    approval_table_state: approval_table.approval_state
                 });
 
                 return;

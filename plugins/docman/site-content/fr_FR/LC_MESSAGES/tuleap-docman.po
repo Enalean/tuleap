@@ -10,7 +10,16 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.2\n"
+"X-Generator: Poedit 2.2.1\n"
+
+msgid "Approved"
+msgstr "Approuvé"
+
+msgid "Commented"
+msgstr "Commenté"
+
+msgid "Declined"
+msgstr "Décliné"
 
 msgid "Document manager"
 msgstr "Gestionnaire de documents"
@@ -37,11 +46,17 @@ msgstr ""
 "La nouvelle interface est en cours de construction et toutes les "
 "fonctionnalités n'ont pas encore été portées."
 
+msgid "Not yet"
+msgstr "Pas encore"
+
 msgid "Notified people"
 msgstr "Personnes notifiées"
 
 msgid "Permission"
 msgstr "Permission"
+
+msgid "Rejected"
+msgstr "Rejecté"
 
 msgid "Switch to new user interface"
 msgstr "Basculer sur la nouvelle interface utilisateur"

@@ -13,6 +13,13 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 msgid ""
+"<a v-bind:href=\"table_owner.user_url\">{{ table_owner.display_name }}</a> "
+"has created an approval table for the last version of {{ filename }}."
+msgstr ""
+"<a v-bind:href=\"table_owner.user_url\">{{ table_owner.display_name }}</a> a "
+"créé une table d'approbation pour la dernière version de {{ filename }}."
+
+msgid ""
 "<b>The new interface is under construction</b>, all features are not "
 "available for now. Here's the list of what have already been migrated:"
 msgstr ""
@@ -55,6 +62,9 @@ msgstr "Créer le dossier"
 
 msgid "Creation of folder, file, wiki page, link, empty item."
 msgstr "Création de dossier, fichier, page wiki, de lien, d'élément vide."
+
+msgid "Current approval table state: {{ table_state }}."
+msgstr "État de la table d’approbation actuel: {{ table_state }}"
 
 msgid "Description"
 msgstr "Description"
@@ -240,6 +250,13 @@ msgid ""
 msgstr ""
 "Vous pouvez revenir à l'ancienne interface du gestionnaire de documents à "
 "tout moment. (Le bouton se trouve en bas de la page)"
+
+msgid ""
+"You can't upload a new version of this file until the approval table is "
+"closed."
+msgstr ""
+"Vous ne pouvez pas téléverser de nouvelle version tant que la table "
+"d'approbation n'a pas été close."
 
 msgid "You may only access documents you are granted read permission on."
 msgstr ""

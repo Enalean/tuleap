@@ -152,8 +152,7 @@ class ItemRepresentationCollectionBuilderTest extends \PHPUnit\Framework\TestCas
             $user_representation,
             true,
             ItemRepresentation::TYPE_FOLDER,
-            false,
-            null
+            false
         );
 
         $version_data_item3   = [
@@ -184,6 +183,7 @@ class ItemRepresentationCollectionBuilderTest extends \PHPUnit\Framework\TestCas
             true,
             ItemRepresentation::TYPE_FILE,
             false,
+            null,
             null,
             $file_properties
         );
