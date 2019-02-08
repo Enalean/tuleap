@@ -131,23 +131,6 @@
                         </formElement>
                     </formElements>
                     </formElement>
-                    <formElement type="date" ID="F16" rank="20" use_it="0">
-                    <name>close_date</name>
-                    <label>End Date</label>
-                    <description>End Date</description>
-                    <properties default_value="today"/>
-                    </formElement>
-                    <formElement type="msb" ID="F17" rank="31" use_it="0">
-                    <name>multi_assigned_to</name>
-                    <label>Assigned to (multiple)</label>
-                    <description>Who is in charge of this artifact</description>
-                    <properties size="7"/>
-                    <bind type="users">
-                        <items>
-                        <item label="group_members"/>
-                        </items>
-                    </bind>
-                    </formElement>
                 </formElements>
                 </formElement>
                 <formElement type="fieldset" ID="F18" rank="315">
@@ -170,45 +153,6 @@
                             <item ID="F20-V3" label="Resolved" is_hidden="0"/>
                             <item ID="F20-V4" label="Closed" is_hidden="0"/>
                             <item ID="F20-V5" label="Reopened" is_hidden="0"/>
-                            </items>
-                        </bind>
-                        </formElement>
-                        <formElement type="sb" ID="F21" rank="5" use_it="0">
-                        <name>stage</name>
-                        <label>Stage</label>
-                        <description>Stage in the life cycle of the artifact</description>
-                        <bind type="static" is_rank_alpha="0">
-                            <items>
-                            <item ID="F21-V0" label="New" is_hidden="0">
-                                <description>The artifact has just been submitted</description>
-                            </item>
-                            <item ID="F21-V1" label="Analyzed" is_hidden="0">
-                                <description>The cause of the artifact has been identified and documented</description>
-                            </item>
-                            <item ID="F21-V2" label="Accepted" is_hidden="0">
-                                <description>The artifact will be worked on.</description>
-                            </item>
-                            <item ID="F21-V3" label="Under Implementation" is_hidden="0">
-                                <description>The artifact is being worked on.</description>
-                            </item>
-                            <item ID="F21-V4" label="Ready for Review" is_hidden="0">
-                                <description>Updated/Created non-software work product (e.g. documentation) is ready for review and approval.</description>
-                            </item>
-                            <item ID="F21-V5" label="Ready for Test" is_hidden="0">
-                                <description>Updated/Created software is ready to be included in the next build</description>
-                            </item>
-                            <item ID="F21-V6" label="In Test" is_hidden="0">
-                                <description>Updated/Created software is in the build and is ready to enter the test phase</description>
-                            </item>
-                            <item ID="F21-V7" label="Approved" is_hidden="0">
-                                <description>The artifact fix has been succesfully tested. It is approved and awaiting release.</description>
-                            </item>
-                            <item ID="F21-V8" label="Declined" is_hidden="0">
-                                <description>The artifact was not accepted.</description>
-                            </item>
-                            <item ID="F21-V9" label="Done" is_hidden="0">
-                                <description>The artifact is closed.</description>
-                            </item>
                             </items>
                         </bind>
                         </formElement>
@@ -273,10 +217,6 @@
                     <label>Cross references</label>
                     <description>List of items referenced by or referencing this item.</description>
                     </formElement>
-                    <formElement type="art_link" ID="F30" rank="1" use_it="0">
-                    <name>references</name>
-                    <label>References</label>
-                    </formElement>
                 </formElements>
                 </formElement>
                 <formElement type="fieldset" ID="F31" rank="319">
@@ -290,90 +230,21 @@
                     </formElement>
                 </formElements>
                 </formElement>
-                <formElement type="sb" ID="F33" rank="42" use_it="0">
-                <name>platform</name>
-                <label>Platform</label>
-                <bind type="static" is_rank_alpha="0">
-                    <items>
-                    <item ID="F33-V0" label="Linux" is_hidden="0"/>
-                    <item ID="F33-V1" label="Windows XP" is_hidden="0"/>
-                    <item ID="F33-V2" label="Solaris" is_hidden="0"/>
-                    <item ID="F33-V3" label="Windows 2000" is_hidden="0"/>
-                    <item ID="F33-V4" label="Other" is_hidden="0"/>
-                    </items>
-                </bind>
-                </formElement>
-                <formElement type="sb" ID="F34" rank="44" use_it="0">
-                <name>source</name>
-                <label>Source</label>
-                <description>Customer from which the request comes from.</description>
-                <bind type="static" is_rank_alpha="0"/>
-                </formElement>
-                <formElement type="sb" ID="F35" rank="46" use_it="0">
-                <name>version</name>
-                <label>Version</label>
-                <description>Product version concerned by the bug.</description>
-                <bind type="static" is_rank_alpha="0"/>
-                </formElement>
-                <formElement type="date" ID="F36" rank="20" use_it="0">
+                <formElement type="date" ID="F36" rank="20">
                 <name>close_date</name>
                 <label>End Date</label>
                 <description>End Date</description>
                 <properties default_value="today"/>
                 </formElement>
-                <formElement type="msb" ID="F37" rank="31" use_it="0">
-                <name>multi_assigned_to</name>
-                <label>Assigned to (multiple)</label>
-                <description>Who is in charge of this artifact</description>
-                <properties size="7"/>
-                <bind type="users">
-                    <items>
-                    <item label="group_members"/>
-                    </items>
-                </bind>
+                <formElement type="int" ID="F40" rank="6">
+                    <name>entier</name>
+                    <label><![CDATA[entier]]></label>
+                    <properties size="5"/>
                 </formElement>
-                <formElement type="art_link" ID="F38" rank="1" use_it="0">
-                <name>references</name>
-                <label>References</label>
-                </formElement>
-                <formElement type="sb" ID="F39" rank="5" use_it="0">
-                <name>stage</name>
-                <label>Stage</label>
-                <description>Stage in the life cycle of the artifact</description>
-                <bind type="static" is_rank_alpha="0">
-                    <items>
-                    <item ID="F39-V0" label="New" is_hidden="0">
-                        <description>The artifact has just been submitted</description>
-                    </item>
-                    <item ID="F39-V1" label="Analyzed" is_hidden="0">
-                        <description>The cause of the artifact has been identified and documented</description>
-                    </item>
-                    <item ID="F39-V2" label="Accepted" is_hidden="0">
-                        <description>The artifact will be worked on.</description>
-                    </item>
-                    <item ID="F39-V3" label="Under Implementation" is_hidden="0">
-                        <description>The artifact is being worked on.</description>
-                    </item>
-                    <item ID="F39-V4" label="Ready for Review" is_hidden="0">
-                        <description>Updated/Created non-software work product (e.g. documentation) is ready for review and approval.</description>
-                    </item>
-                    <item ID="F39-V5" label="Ready for Test" is_hidden="0">
-                        <description>Updated/Created software is ready to be included in the next build</description>
-                    </item>
-                    <item ID="F39-V6" label="In Test" is_hidden="0">
-                        <description>Updated/Created software is in the build and is ready to enter the test phase</description>
-                    </item>
-                    <item ID="F39-V7" label="Approved" is_hidden="0">
-                        <description>The artifact fix has been succesfully tested. It is approved and awaiting release.</description>
-                    </item>
-                    <item ID="F39-V8" label="Declined" is_hidden="0">
-                        <description>The artifact was not accepted.</description>
-                    </item>
-                    <item ID="F39-V9" label="Done" is_hidden="0">
-                        <description>The artifact is closed.</description>
-                    </item>
-                    </items>
-                </bind>
+                <formElement type="float" ID="F41" rank="7">
+                    <name>il_flotte</name>
+                    <label><![CDATA[il flotte]]></label>
+                    <properties size="5"/>
                 </formElement>
             </formElements>
             <semantics>
@@ -554,6 +425,18 @@
                 <transition>
                     <from_id REF="F20-V3"/>
                     <to_id REF="F20-V4"/>
+                    <postactions>
+                        <postaction_field_date valuetype="2">
+                            <field_id REF="F36"/>
+                        </postaction_field_date>
+                        <postaction_field_int value="1">
+                            <field_id REF="F40"/>
+                        </postaction_field_int>
+                        <postaction_field_float value="1.2">
+                            <field_id REF="F41"/>
+                        </postaction_field_float>
+                        <postaction_ci_build job_url="https://example.com"/>
+                    </postactions>
                     <conditions>
                     <condition type="perms">
                         <permissions>
@@ -679,6 +562,15 @@
                 <permission scope="field" REF="F25" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
                 <permission scope="field" REF="F25" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
                 <permission scope="field" REF="F25" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+                <permission scope="field" REF="F36" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+                <permission scope="field" REF="F36" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+                <permission scope="field" REF="F36" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+                <permission scope="field" REF="F40" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+                <permission scope="field" REF="F40" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+                <permission scope="field" REF="F40" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+                <permission scope="field" REF="F41" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+                <permission scope="field" REF="F41" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+                <permission scope="field" REF="F41" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
             </permissions>
         </tracker>
         <tracker id="T50" parent_id="0">
@@ -784,24 +676,6 @@
                                 </formElement>
                             </formElements>
                         </formElement>
-                        <formElement type="date" ID="F1211" rank="20" use_it="0">
-                            <name>close_date</name>
-                            <label><![CDATA[End Date]]></label>
-                            <description><![CDATA[End Date]]></description>
-                            <properties default_value="today" display_time="0"/>
-                        </formElement>
-                        <formElement type="msb" ID="F1212" rank="31" use_it="0">
-                            <name>multi_assigned_to</name>
-                            <label><![CDATA[Assigned to (multiple)]]></label>
-                            <description><![CDATA[Who is in charge of this artifact]]></description>
-                            <properties size="7"/>
-                            <bind type="users">
-                                <items>
-                                    <item label="group_members"/>
-                                </items>
-                                <default_values/>
-                            </bind>
-                        </formElement>
                     </formElements>
                 </formElement>
                 <formElement type="fieldset" ID="F1213" rank="283">
@@ -824,45 +698,6 @@
                                             <item ID="V543" label="Resolved" is_hidden="0"/>
                                             <item ID="V544" label="Closed" is_hidden="0"/>
                                             <item ID="V545" label="Reopened" is_hidden="0"/>
-                                        </items>
-                                    </bind>
-                                </formElement>
-                                <formElement type="sb" ID="F1216" rank="5" use_it="0">
-                                    <name>stage</name>
-                                    <label><![CDATA[Stage]]></label>
-                                    <description><![CDATA[Stage in the life cycle of the artifact]]></description>
-                                    <bind type="static" is_rank_alpha="0">
-                                        <items>
-                                            <item ID="V546" label="New" is_hidden="0">
-                                                <description><![CDATA[The artifact has just been submitted]]></description>
-                                            </item>
-                                            <item ID="V547" label="Analyzed" is_hidden="0">
-                                                <description><![CDATA[The cause of the artifact has been identified and documented]]></description>
-                                            </item>
-                                            <item ID="V548" label="Accepted" is_hidden="0">
-                                                <description><![CDATA[The artifact will be worked on.]]></description>
-                                            </item>
-                                            <item ID="V549" label="Under Implementation" is_hidden="0">
-                                                <description><![CDATA[The artifact is being worked on.]]></description>
-                                            </item>
-                                            <item ID="V550" label="Ready for Review" is_hidden="0">
-                                                <description><![CDATA[Updated/Created non-software work product (e.g. documentation) is ready for review and approval.]]></description>
-                                            </item>
-                                            <item ID="V551" label="Ready for Test" is_hidden="0">
-                                                <description><![CDATA[Updated/Created software is ready to be included in the next build]]></description>
-                                            </item>
-                                            <item ID="V552" label="In Test" is_hidden="0">
-                                                <description><![CDATA[Updated/Created software is in the build and is ready to enter the test phase]]></description>
-                                            </item>
-                                            <item ID="V553" label="Approved" is_hidden="0">
-                                                <description><![CDATA[The artifact fix has been succesfully tested. It is approved and awaiting release.]]></description>
-                                            </item>
-                                            <item ID="V554" label="Declined" is_hidden="0">
-                                                <description><![CDATA[The artifact was not accepted.]]></description>
-                                            </item>
-                                            <item ID="V555" label="Done" is_hidden="0">
-                                                <description><![CDATA[The artifact is closed.]]></description>
-                                            </item>
                                         </items>
                                     </bind>
                                 </formElement>
