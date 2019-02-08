@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -27,10 +27,28 @@ require_once __DIR__ . '/../bootstrap.php';
 
 class TrackerWorkflowsTest extends TrackerBase
 {
-    public function testPATCHTrackerWorkflowsCreatesANewWorklowAndReturnsTheNewWorkflowRepresentation()
+    public function testGetStatusFieldId() : int
     {
-        $field_status_id = $this->getStatusFieldId();
-        $query           = '{"workflow": {"set_transitions_rules": {"field_id":' . $field_status_id . '}}}';
+        $response = $this->getResponseByName(
+            \REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('trackers/' . $this->tracker_workflows_tracker_id)
+        );
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $tracker = $response->json();
+
+        $status_field_index = array_search('status_id', array_column($tracker['fields'], 'name'));
+
+        return (int) $tracker['fields'][$status_field_index]['field_id'];
+    }
+
+    /**
+     * @depends testGetStatusFieldId
+     */
+    public function testPATCHTrackerWorkflowsCreatesANewWorklowAndReturnsTheNewWorkflowRepresentation($field_status_id)
+    {
+        $query = '{"workflow": {"set_transitions_rules": {"field_id":' . $field_status_id . '}}}';
 
         $response = $this->getResponseByName(
             \REST_TestDataBuilder::TEST_USER_1_NAME,
@@ -44,10 +62,12 @@ class TrackerWorkflowsTest extends TrackerBase
         $this->assertEquals(200, $response->getStatusCode());
     }
 
-    public function testPATCHTrackerWorkflowsRegularUsersHaveForbiddenAccess()
+    /**
+     * @depends testGetStatusFieldId
+     */
+    public function testPATCHTrackerWorkflowsRegularUsersHaveForbiddenAccess($field_status_id)
     {
-        $field_status_id           = $this->getStatusFieldId();
-        $query                     = '{"workflow": {"set_transitions_rules": {"field_id":' . $field_status_id . '}}}';
+        $query = '{"workflow": {"set_transitions_rules": {"field_id":' . $field_status_id . '}}}';
 
         $response = $this->getResponseByName(
             \REST_TestDataBuilder::TEST_USER_2_NAME,
@@ -58,12 +78,12 @@ class TrackerWorkflowsTest extends TrackerBase
     }
 
     /**
+     * @depends testGetStatusFieldId
      * @depends testPATCHTrackerWorkflowsCreatesANewWorklowAndReturnsTheNewWorkflowRepresentation
      */
-    public function testPATCHTrackerWorkflowsWhenAWorkflowIsAlreadyDefinedReturnsError()
+    public function testPATCHTrackerWorkflowsWhenAWorkflowIsAlreadyDefinedReturnsError($field_status_id)
     {
-        $field_status_id           = $this->getStatusFieldId();
-        $query                     = '{"workflow": {"set_transitions_rules": {"field_id":' . $field_status_id . '}}}';
+        $query = '{"workflow": {"set_transitions_rules": {"field_id":' . $field_status_id . '}}}';
 
         $response = $this->getResponseByName(
             \REST_TestDataBuilder::TEST_USER_1_NAME,
@@ -73,9 +93,11 @@ class TrackerWorkflowsTest extends TrackerBase
         $this->assertEquals(400, $response->getStatusCode());
     }
 
-    public function testPATCHTrackerWorkflowsWhenDeleteAndSetATransitionSameTimeReturnsError()
+    /**
+     * @depends testGetStatusFieldId
+     */
+    public function testPATCHTrackerWorkflowsWhenDeleteAndSetATransitionSameTimeReturnsError($field_status_id)
     {
-        $field_status_id = $this->getStatusFieldId();
         $query = '{"workflow": {"set_transitions_rules": {"field_id":' . $field_status_id . '}, "delete_transitions_rules": true}}';
 
         $response = $this->getResponseByName(
@@ -155,19 +177,5 @@ class TrackerWorkflowsTest extends TrackerBase
             )
         );
         $this->assertEquals(400, $response->getStatusCode());
-    }
-
-    private function getStatusFieldId()
-    {
-        $response = $this->getResponseByName(
-            \REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->client->get('trackers/' . $this->tracker_workflows_tracker_id)
-        );
-
-        $tracker = $response->json();
-
-        $status_field_index = array_search('status_id', array_column($tracker['fields'], 'name'));
-
-        return $tracker['fields'][$status_field_index]['field_id'];
     }
 }
