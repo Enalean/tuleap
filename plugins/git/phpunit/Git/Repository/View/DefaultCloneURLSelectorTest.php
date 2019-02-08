@@ -43,7 +43,7 @@ class DefaultCloneURLSelectorTest extends TestCase
      */
     private $current_user;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $this->selector     = new DefaultCloneURLSelector();
         $this->clone_urls   = Mockery::mock(CloneURLs::class);
@@ -101,25 +101,21 @@ class DefaultCloneURLSelectorTest extends TestCase
         $this->assertEquals($https_url, $result->getUrl());
     }
 
-    /**
-     * @expectedException \Tuleap\Git\Repository\View\NoCloneURLException
-     */
     public function testSelectThrowsWhenNoURL()
     {
         $this->clone_urls->shouldReceive('hasGerritUrl', 'hasSshUrl', 'hasHttpsUrl')->andReturnFalse();
         $this->current_user->shouldReceive('isAnonymous')->andReturnFalse();
 
+        $this->expectException(NoCloneURLException::class);
         $this->selector->select($this->clone_urls, $this->current_user);
     }
 
-    /**
-     * @expectedException \Tuleap\Git\Repository\View\NoCloneURLException
-     */
     public function testSelectThrowsWhenAnonymousUserAndNoHttps()
     {
         $this->clone_urls->shouldReceive('hasHttpsUrl')->andReturnFalse();
         $this->current_user->shouldReceive('isAnonymous')->andReturnTrue();
 
+        $this->expectException(NoCloneURLException::class);
         $this->selector->select($this->clone_urls, $this->current_user);
     }
 }
