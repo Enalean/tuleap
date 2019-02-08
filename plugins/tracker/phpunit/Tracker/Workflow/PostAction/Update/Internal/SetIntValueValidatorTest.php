@@ -78,9 +78,6 @@ class SetIntValueValidatorTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException \Tuleap\Tracker\Workflow\PostAction\Update\Internal\InvalidPostActionException
-     */
     public function testValidateWrapsDuplicatePostActionException()
     {
         $this->set_int_value_validator = new SetIntValueValidator(
@@ -92,6 +89,7 @@ class SetIntValueValidatorTest extends TestCase
         $first_same_id  = new SetIntValue(2, 1, 12);
         $second_same_id = new SetIntValue(2, 2, 42);
 
+        $this->expectException(InvalidPostActionException::class);
         $this->set_int_value_validator->validate(
             Mockery::mock(\Tracker::class),
             $first_same_id,
@@ -99,9 +97,6 @@ class SetIntValueValidatorTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException \Tuleap\Tracker\Workflow\PostAction\Update\Internal\InvalidPostActionException
-     */
     public function testValidateWrapsDuplicateFieldIdException()
     {
         $this->set_int_value_validator = new SetIntValueValidator(
@@ -113,6 +108,7 @@ class SetIntValueValidatorTest extends TestCase
         $first_same_field_id  = new SetIntValue(null, 1, 79);
         $second_same_field_id = new SetIntValue(null, 1, 2);
 
+        $this->expectException(InvalidPostActionException::class);
         $this->set_int_value_validator->validate(
             Mockery::mock(\Tracker::class),
             $first_same_field_id,
@@ -120,9 +116,6 @@ class SetIntValueValidatorTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException \Tuleap\Tracker\Workflow\PostAction\Update\Internal\InvalidPostActionException
-     */
     public function testValidateThrowsWhenFieldIdDoesNotMatchAnIntegerField()
     {
         $integer_field = Mockery::mock(\Tracker_FormElement_Field_Integer::class)
@@ -135,6 +128,7 @@ class SetIntValueValidatorTest extends TestCase
 
         $invalid_field_id = new SetIntValue(null, 8, 0);
 
+        $this->expectException(InvalidPostActionException::class);
         $this->set_int_value_validator->validate(
             Mockery::mock(\Tracker::class),
             $invalid_field_id

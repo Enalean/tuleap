@@ -79,9 +79,6 @@ class SetFloatValueValidatorTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException \Tuleap\Tracker\Workflow\PostAction\Update\Internal\InvalidPostActionException
-     */
     public function testValidateWrapsDuplicatePostActionException()
     {
         $this->set_float_value_validator = new SetFloatValueValidator(
@@ -93,6 +90,7 @@ class SetFloatValueValidatorTest extends TestCase
         $first_same_id  = new SetFloatValue(2, 1, 12.0);
         $second_same_id = new SetFloatValue(2, 2, 42.1);
 
+        $this->expectException(InvalidPostActionException::class);
         $this->set_float_value_validator->validate(
             Mockery::mock(\Tracker::class),
             $first_same_id,
@@ -100,9 +98,6 @@ class SetFloatValueValidatorTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException \Tuleap\Tracker\Workflow\PostAction\Update\Internal\InvalidPostActionException
-     */
     public function testValidateWrapsDuplicateFieldIdException()
     {
         $this->set_float_value_validator = new SetFloatValueValidator(
@@ -114,6 +109,7 @@ class SetFloatValueValidatorTest extends TestCase
         $first_same_field_id  = new SetFloatValue(null, 1, 79.0);
         $second_same_field_id = new SetFloatValue(null, 1, 2.0);
 
+        $this->expectException(InvalidPostActionException::class);
         $this->set_float_value_validator->validate(
             Mockery::mock(\Tracker::class),
             $first_same_field_id,
@@ -121,9 +117,6 @@ class SetFloatValueValidatorTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException \Tuleap\Tracker\Workflow\PostAction\Update\Internal\InvalidPostActionException
-     */
     public function testValidateThrowsWhenFieldIdDoesNotMatchAUsedFloatField()
     {
         $float_field = Mockery::mock(\Tracker_FormElement_Field_Float::class)
@@ -137,6 +130,7 @@ class SetFloatValueValidatorTest extends TestCase
 
         $invalid_field_id = new SetFloatValue(null, 8, 0.0);
 
+        $this->expectException(InvalidPostActionException::class);
         $this->set_float_value_validator->validate(
             Mockery::mock(\Tracker::class),
             $invalid_field_id
