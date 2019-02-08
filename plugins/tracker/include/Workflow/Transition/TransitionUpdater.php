@@ -23,8 +23,8 @@ namespace Tuleap\Tracker\Workflow\Transition;
 
 use Exception;
 use TransitionFactory;
+use Tuleap\DB\TransactionExecutor;
 use Workflow_Transition_ConditionFactory;
-use Workflow_TransitionDao;
 
 /**
  * Useful class to update a workflow transition in a single transaction.
@@ -38,14 +38,14 @@ class TransitionUpdater
     private $transition_factory;
 
     /**
-     * @var Workflow_TransitionDao
+     * @var TransactionExecutor
      */
-    private $transition_dao;
+    private $transaction_executor;
 
-    public function __construct(TransitionFactory $transition_factory, Workflow_TransitionDao $transition_dao)
+    public function __construct(TransitionFactory $transition_factory, TransactionExecutor $transaction_executor)
     {
-        $this->transition_factory = $transition_factory;
-        $this->transition_dao = $transition_dao;
+        $this->transition_factory   = $transition_factory;
+        $this->transaction_executor = $transaction_executor;
     }
 
     /**
@@ -58,17 +58,18 @@ class TransitionUpdater
         $is_comment_required
     ) {
         try {
-            $this->transition_dao->startTransaction();
-            $condition_factory = Workflow_Transition_ConditionFactory::build();
-            $condition_factory->addCondition(
-                $transition,
-                $not_empty_field_ids,
-                $is_comment_required
+            $this->transaction_executor->execute(
+                function () use ($transition, $not_empty_field_ids, $is_comment_required, $authorized_user_group_ids) {
+                    $condition_factory = Workflow_Transition_ConditionFactory::build();
+                    $condition_factory->addCondition(
+                        $transition,
+                        $not_empty_field_ids,
+                        $is_comment_required
+                    );
+                    $this->updatePermissions($transition, $authorized_user_group_ids);
+                }
             );
-            $this->updatePermissions($transition, $authorized_user_group_ids);
-            $this->transition_dao->commit();
         } catch (Exception $exception) {
-            $this->transition_dao->rollBack();
             throw new TransitionUpdateException(
                 sprintf(
                     dgettext('tuleap-tracker', "Cannot update transition with id '%d'"),
