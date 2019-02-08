@@ -529,7 +529,8 @@ describe("Store actions", () => {
                 context,
                 dropped_file,
                 expected_fake_item,
-                created_item_reference
+                created_item_reference,
+                parent
             );
         });
         it("Does not start upload nor create fake item if item reference already exist in the store", async () => {

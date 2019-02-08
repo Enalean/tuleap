@@ -40,6 +40,7 @@
 
 <script>
 import { mapActions } from "vuex";
+import { TYPE_FOLDER } from "../../../constants.js";
 
 export default {
     props: {
@@ -56,11 +57,15 @@ export default {
         }
     },
     methods: {
-        ...mapActions(["cancelFileUpload"]),
+        ...mapActions(["cancelFileUpload", "cancelFolderUpload"]),
         cancel() {
             if (!this.is_canceled) {
                 this.is_canceled = true;
-                this.cancelFileUpload(this.item);
+                if (this.item.type !== TYPE_FOLDER) {
+                    this.cancelFileUpload(this.item);
+                } else {
+                    this.cancelFolderUpload(this.item);
+                }
             }
         }
     }

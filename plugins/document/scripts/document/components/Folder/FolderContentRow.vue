@@ -29,7 +29,11 @@
                 <quick-look-button/>
             </div>
         </td>
-        <template v-if="! item.is_uploading">
+        <template v-if="item.is_uploading_in_collapsed_folder">
+            <td><upload-progress-bar v-bind:item="item"/></td>
+            <td></td>
+        </template>
+        <template v-else-if="! item.is_uploading">
             <td class="document-tree-cell-owner">
                 <user-badge v-bind:user="item.owner"/>
             </td>
@@ -43,6 +47,7 @@
 <script>
 import { mapState } from "vuex";
 import UserBadge from "../User/UserBadge.vue";
+import UploadProgressBar from "./ProgressBar/UploadProgressBar.vue";
 import { TYPE_FILE, TYPE_FOLDER, TYPE_LINK, TYPE_WIKI } from "../../constants.js";
 import moment from "moment";
 import phptomoment from "phptomoment";
@@ -50,7 +55,7 @@ import QuickLookButton from "./QuickLookButton.vue";
 
 export default {
     name: "FolderContentRow",
-    components: { QuickLookButton, UserBadge },
+    components: { QuickLookButton, UserBadge, UploadProgressBar },
     props: {
         item: Object
     },
