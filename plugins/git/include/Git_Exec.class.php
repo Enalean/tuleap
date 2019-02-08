@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -260,6 +260,23 @@ class Git_Exec
             return false;
         }
         return true;
+    }
+
+    /**
+     * @return int
+     */
+    public function getLargestObjectSize()
+    {
+        $output = [];
+        $this->gitCmdWithOutput(
+            'cat-file --batch-check=\'%(objectsize)\' --batch-all-objects | sort -rn 2> /dev/null | head -1',
+            $output
+        );
+
+        if (empty($output)) {
+            return 0;
+        }
+        return (int) $output[0];
     }
 
     /**

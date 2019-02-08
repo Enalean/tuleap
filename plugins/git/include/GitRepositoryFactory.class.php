@@ -325,6 +325,21 @@ class GitRepositoryFactory
     }
 
     /**
+     * @return GitRepository[]
+     */
+    public function getAllRepositoriesWithActivityInTheLast2Months()
+    {
+        $repositories = [];
+
+        $rows = $this->dao->searchRepositoriesActiveInTheLast2Months();
+        foreach ($rows as $row) {
+            $repositories[] = $this->instanciateFromRow($row);
+        }
+
+        return $repositories;
+    }
+
+    /**
      * Get the list of all archived repositories to purge
      *
      * @param int $retention_period
