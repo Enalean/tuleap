@@ -715,6 +715,9 @@ msgstr "Nom, type …"
 msgid "Navebar"
 msgstr "Barre de menu"
 
+msgid "Nb maximum of allowed values"
+msgstr "Nb maximum de valeurs autorisées"
+
 msgid "Nb members"
 msgstr "Nb membres"
 

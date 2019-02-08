@@ -85,14 +85,14 @@ class UpdateController implements DispatchableWithRequest, DispatchableWithProje
             $layout->redirect($url);
         }
 
-        $top_categories_ids = [];
+        $top_categories_nb_max_values = [];
         foreach ($this->dao->getTopCategories() as $row) {
-            $top_categories_ids[$row['trove_cat_id']] = true;
+            $top_categories_nb_max_values[$row['trove_cat_id']] = $row['nb_max_values'];
         }
 
         $this->history_dao->groupAddHistory('changed_trove', "", $project->getID());
         foreach ($categories as $root_id => $trove_cat_ids) {
-            if (! isset($top_categories_ids[$root_id])) {
+            if (! isset($top_categories_nb_max_values[$root_id])) {
                 continue;
             }
 
@@ -102,7 +102,7 @@ class UpdateController implements DispatchableWithRequest, DispatchableWithProje
 
             $this->dao->removeProjectTopCategoryValue($project->getID(), $root_id);
 
-            $first_trove_cat_ids = \array_slice($trove_cat_ids, 0, IndexController::TROVE_MAXPERROOT);
+            $first_trove_cat_ids = \array_slice($trove_cat_ids, 1, $top_categories_nb_max_values[$root_id]);
             foreach ($first_trove_cat_ids as $submitted_category_id) {
                 \trove_setnode($project->getID(), (int) $submitted_category_id, $root_id);
             }

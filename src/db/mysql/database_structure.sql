@@ -816,6 +816,7 @@ CREATE TABLE trove_cat (
   mandatory TINYINT(1) NOT NULL DEFAULT 0,
   display_during_project_creation TINYINT(1) NOT NULL DEFAULT 0,
   is_project_flag BOOL NOT NULL DEFAULT false,
+  nb_max_values INT(11) NOT NULL default '3',
   PRIMARY KEY  (trove_cat_id),
   KEY parent_idx (parent),
   KEY root_parent_idx (root_parent),

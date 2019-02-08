@@ -3,20 +3,28 @@
     margin: 0 0 $tlp-spacing;
 }
 
-.tlp-table-cell-actions-button {
-    margin: -5px 0 -3px 5px;
-}
+.trove-cats-general-property-column {
+    width: 100%;
 
-.trove-cats-fullname-property {
-    width: 50%;
-}
-
-.trove-cats-shortname-property {
-    width: 50%;
+    &:first-child {
+        margin: 0 $tlp-half-spacing 0 0;
+    }
 
     &:last-child {
-        margin: 0 $tlp-spacing;
+        margin: 0 0 0 $tlp-half-spacing;
     }
+
+    &:only-child {
+        margin: 0;
+    }
+}
+
+.trove-cats-np-max-values-input {
+    width: 60px;
+}
+
+.tlp-table-cell-actions-button {
+    margin: -5px 0 -3px 5px;
 }
 
 .trove-cats-modal-edit {

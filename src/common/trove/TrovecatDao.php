@@ -58,7 +58,7 @@ class TroveCatDao extends DataAccessObject
 
     public function getTopCategories()
     {
-        $sql = 'SELECT trove_cat_id, fullname, mandatory
+        $sql = 'SELECT trove_cat_id, fullname, mandatory, nb_max_values
                 FROM trove_cat
                 WHERE parent = 0
                 ORDER BY fullname';
@@ -147,7 +147,8 @@ class TroveCatDao extends DataAccessObject
         $display,
         $trove_cat_id,
         $fullpath,
-        $fullpath_ids
+        $fullpath_ids,
+        $nb_max_values
     ) {
         $shortname    = $this->da->quoteSmart($shortname);
         $fullname     = $this->da->quoteSmart($fullname);
@@ -159,6 +160,7 @@ class TroveCatDao extends DataAccessObject
         $trove_cat_id = $this->da->escapeInt($trove_cat_id);
         $fullpath     = $this->da->quoteSmart($fullpath);
         $fullpath_ids = $this->da->quoteSmart($fullpath_ids);
+        $nb_max_values = $this->da->escapeInt($nb_max_values);
 
         $version = date("Ymd", time()) . '01';
 
@@ -172,7 +174,8 @@ class TroveCatDao extends DataAccessObject
               mandatory = $mandatory,
               display_during_project_creation = $display,
               fullpath = $fullpath,
-              fullpath_ids = $fullpath_ids
+              fullpath_ids = $fullpath_ids,
+              nb_max_values = $nb_max_values
            WHERE trove_cat_id= $trove_cat_id";
 
         return $this->update($sql);
@@ -187,7 +190,8 @@ class TroveCatDao extends DataAccessObject
         $mandatory,
         $display,
         $fullpath,
-        $fullpath_ids
+        $fullpath_ids,
+        $nb_max_values
     ) {
         $escaped_shortname    = $this->da->quoteSmart($shortname);
         $escaped_fullname     = $this->da->quoteSmart($fullname);
@@ -198,6 +202,7 @@ class TroveCatDao extends DataAccessObject
         $escaped_display      = $this->da->escapeInt($display);
         $escaped_fullpath     = $this->da->quoteSmart($fullpath);
         $escaped_fullpath_ids = $this->da->quoteSmart($fullpath_ids);
+        $escaped_nb_max_values = $this->da->escapeInt($nb_max_values);
 
         $version = date("Ymd", time()) . '01';
 
@@ -213,7 +218,8 @@ class TroveCatDao extends DataAccessObject
                   mandatory,
                   display_during_project_creation,
                   fullpath,
-                  fullpath_ids
+                  fullpath_ids,
+                  nb_max_values
               ) values (
                   $escaped_shortname,
                   $escaped_fullname,
@@ -224,7 +230,8 @@ class TroveCatDao extends DataAccessObject
                   $escaped_mandatory,
                   $escaped_display,
                   $escaped_fullpath,
-                  $escaped_fullpath_ids
+                  $escaped_fullpath_ids,
+                  $escaped_nb_max_values
               )";
 
         $trove_cat_id  = $this->updateAndGetLastId($sql);
@@ -240,7 +247,8 @@ class TroveCatDao extends DataAccessObject
             $display,
             $trove_cat_id,
             $fullpath,
-            $fullpath_ids
+            $fullpath_ids,
+            $nb_max_values
         );
 
         $this->commit();
