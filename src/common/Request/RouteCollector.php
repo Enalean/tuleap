@@ -49,6 +49,7 @@ use Tuleap\Password\Configuration\PasswordConfigurationDAO;
 use Tuleap\Password\Configuration\PasswordConfigurationRetriever;
 use Tuleap\Password\Configuration\PasswordConfigurationSaver;
 use Tuleap\Project\Admin\Categories;
+use Tuleap\Project\Admin\Categories\ProjectCategoriesUpdater;
 use Tuleap\Project\Home;
 use Tuleap\Trove\TroveCatListController;
 use Tuleap\User\AccessKey\AccessKeyCreationController;
@@ -222,7 +223,14 @@ class RouteCollector
 
     public static function getProjectAdminUpdateCategories()
     {
-        return new Categories\UpdateController(new TroveCatDao(), new ProjectHistoryDao());
+        return new Categories\UpdateController(
+            \ProjectManager::instance(),
+            new ProjectCategoriesUpdater(
+                new TroveCatDao(),
+                new ProjectHistoryDao(),
+                new Categories\TroveSetNodeFacade()
+            )
+        );
     }
 
     public function collect(FastRoute\RouteCollector $r)

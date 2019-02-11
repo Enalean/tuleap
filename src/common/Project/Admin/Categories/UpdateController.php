@@ -25,9 +25,7 @@ namespace Tuleap\Project\Admin\Categories;
 
 use HTTPRequest;
 use Project;
-use ProjectHistoryDao;
 use ProjectManager;
-use TroveCatDao;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithProject;
 use Tuleap\Request\DispatchableWithRequest;
@@ -37,18 +35,18 @@ use Tuleap\Request\NotFoundException;
 class UpdateController implements DispatchableWithRequest, DispatchableWithProject
 {
     /**
-     * @var TroveCatDao
+     * @var ProjectManager
      */
-    private $dao;
+    private $project_manager;
     /**
-     * @var ProjectHistoryDao
+     * @var ProjectCategoriesUpdater
      */
-    private $history_dao;
+    private $updater;
 
-    public function __construct(TroveCatDao $dao, ProjectHistoryDao $history_dao)
+    public function __construct(ProjectManager $project_manager, ProjectCategoriesUpdater $updater)
     {
-        $this->dao         = $dao;
-        $this->history_dao = $history_dao;
+        $this->project_manager = $project_manager;
+        $this->updater = $updater;
     }
 
     /**
@@ -56,7 +54,7 @@ class UpdateController implements DispatchableWithRequest, DispatchableWithProje
      */
     public function getProject(\HTTPRequest $request, array $variables): Project
     {
-        $project = ProjectManager::instance()->getProject($variables['id']);
+        $project = $this->project_manager->getProject($variables['id']);
         if (! $project || $project->isError()) {
             throw new NotFoundException(gettext("Project does not exist"));
         }
@@ -75,40 +73,21 @@ class UpdateController implements DispatchableWithRequest, DispatchableWithProje
             throw new ForbiddenException(gettext("You don't have permission to access administration of this project."));
         }
 
-        $url  = '/project/' . (int) $project->getID() . '/admin/categories';
-        $csrf = new \CSRFSynchronizerToken($url);
-        $csrf->check();
+        $redirect_url  = '/project/' . (int) $project->getID() . '/admin/categories';
 
         $categories = $request->get('categories');
         if (! is_array($categories)) {
             $layout->addFeedback(\Feedback::ERROR, gettext("Your request is invalid"));
-            $layout->redirect($url);
+            $layout->redirect($redirect_url);
+            return;
         }
 
-        $top_categories_nb_max_values = [];
-        foreach ($this->dao->getTopCategories() as $row) {
-            $top_categories_nb_max_values[$row['trove_cat_id']] = $row['nb_max_values'];
-        }
+        $csrf = new \CSRFSynchronizerToken($redirect_url);
+        $csrf->check();
 
-        $this->history_dao->groupAddHistory('changed_trove', "", $project->getID());
-        foreach ($categories as $root_id => $trove_cat_ids) {
-            if (! isset($top_categories_nb_max_values[$root_id])) {
-                continue;
-            }
-
-            if (! is_array($trove_cat_ids)) {
-                continue;
-            }
-
-            $this->dao->removeProjectTopCategoryValue($project->getID(), $root_id);
-
-            $first_trove_cat_ids = \array_slice($trove_cat_ids, 1, $top_categories_nb_max_values[$root_id]);
-            foreach ($first_trove_cat_ids as $submitted_category_id) {
-                \trove_setnode($project->getID(), (int) $submitted_category_id, $root_id);
-            }
-        }
+        $this->updater->update($project, $categories);
 
         $layout->addFeedback(\Feedback::INFO, gettext("Categories successfully updated."));
-        $layout->redirect($url);
+        $layout->redirect($redirect_url);
     }
 }
