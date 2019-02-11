@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-2019. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -602,36 +602,22 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
                 $html   .= $hp->purify($tracker->getName(), CODENDI_PURIFIER_CONVERT_HTML) . $project_name;
                 $html   .= '</h2>';
 
-                $matching_artifact_ids_as_string = $artifact_links_per_tracker->getMatchingIDs()['id'];
-                $async_limit = ForgeConfig::get('tracker_artifactlink_async_limit', 50);
-                if (substr_count($matching_artifact_ids_as_string, ',') < $async_limit) {
-                    $html .= $this->fetchRendererAsArtifactLink(
-                        $artifact_links_per_tracker,
-                        $read_only,
-                        $prefill_removed_values,
-                        $prefill_edited_natures,
-                        $reverse_artifact_links,
-                        $from_aid
-                    );
-                } else {
-                    $html .= '<div
+                $html .= '<div
                         class="tracker-form-element-artifactlink-renderer-async"
                         data-field-id="' . (int) $this->getId() . '"
                         data-renderer-data="' . Codendi_HTMLPurifier::instance()->purify(
-                            json_encode(
-                                [
-                                    'artifact_id'            => $artifact->getId(),
-                                    'tracker_id'             => $tracker->getId(),
-                                    'reverse_artifact_links' => $reverse_artifact_links,
-                                    'read_only'              => $read_only,
-                                    'from_aid'               => $from_aid,
-                                    'prefill_removed_values' => $prefill_removed_values,
-                                    'prefill_edited_natures' => $prefill_edited_natures
-                                ]
-                            )
-                        ) . '"></div>';
-                }
-                $html .= '</div>';
+                        json_encode(
+                            [
+                                'artifact_id'            => $artifact->getId(),
+                                'tracker_id'             => $tracker->getId(),
+                                'reverse_artifact_links' => $reverse_artifact_links,
+                                'read_only'              => $read_only,
+                                'from_aid'               => $from_aid,
+                                'prefill_removed_values' => $prefill_removed_values,
+                                'prefill_edited_natures' => $prefill_edited_natures
+                            ]
+                        )
+                    ) . '"></div></div>';
             }
 
             $html .= $this->fetchNatureTables($artifact_links_to_render, $reverse_artifact_links);
