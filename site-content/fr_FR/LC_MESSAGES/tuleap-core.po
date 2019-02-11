@@ -918,6 +918,13 @@ msgstr "Le projet n'existe pas"
 msgid "Project flag?"
 msgstr "Marqueur de projet ?"
 
+msgid ""
+"Project flags are displayed in the navigation bar. Up to 2 categories can be "
+"used as flag."
+msgstr ""
+"Les marqueurs de projet sont affichés dans la barre de navigation. Jusqu'à 2 "
+"catégories peuvent être utilisées en tant que marqueur."
+
 msgid "Project hierarchy"
 msgstr "Hierarchie de projets"
 
@@ -1369,6 +1376,9 @@ msgstr "Mis à jour avec succès"
 
 msgid "Upload text file"
 msgstr "Téléverser un fichier texte"
+
+msgid "Use as project flag"
+msgstr "Utilisée en tant que marqueur de projet"
 
 #, php-format
 msgid "User '%s' does not exist"

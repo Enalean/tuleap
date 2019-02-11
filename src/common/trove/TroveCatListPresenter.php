@@ -46,6 +46,10 @@ class TroveCatListPresenter
     public $alert_description_delete_modal;
     public $alert_description_delete_modal_next;
     public $navbar;
+    /**
+     * @var bool
+     */
+    public $is_quota_of_project_flags_reached;
 
 
     public function __construct($navbar, array $trovecats, CSRFSynchronizerToken $csrf_token)
@@ -84,5 +88,13 @@ class TroveCatListPresenter
         $this->trovecats  = $trovecats;
         $this->csrf_token = $csrf_token;
         $this->navbar = $navbar;
+
+        $nb_categories_flagged_as_project_flag = 0;
+        foreach ($trovecats as $trovecat) {
+            if ($trovecat['is_top_level_id'] && $trovecat['is_project_flag']) {
+                $nb_categories_flagged_as_project_flag++;
+            }
+        }
+        $this->is_quota_of_project_flags_reached = $nb_categories_flagged_as_project_flag >= 2;
     }
 }
