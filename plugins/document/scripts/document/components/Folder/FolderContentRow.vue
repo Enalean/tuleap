@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2018. All Rights Reserved.
+  - Copyright (c) Enalean, 2018-2019. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -26,7 +26,7 @@
                     v-bind:item="item"
                     v-bind:style="item_indentation"
                 />
-                <quick-look-button/>
+                <quick-look-button v-on:displayQuickLook="$emit('displayQuickLook', item)" v-bind:item="item"/>
             </div>
         </td>
         <template v-if="item.is_uploading_in_collapsed_folder">
@@ -47,11 +47,11 @@
 <script>
 import { mapState } from "vuex";
 import UserBadge from "../User/UserBadge.vue";
+import QuickLookButton from "./QuickLook/QuickLookButton.vue";
 import UploadProgressBar from "./ProgressBar/UploadProgressBar.vue";
 import { TYPE_FILE, TYPE_FOLDER, TYPE_LINK, TYPE_WIKI } from "../../constants.js";
 import moment from "moment";
 import phptomoment from "phptomoment";
-import QuickLookButton from "./QuickLookButton.vue";
 
 export default {
     name: "FolderContentRow",

@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2018. All Rights Reserved.
+  - Copyright (c) Enalean, 2018-2019. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -18,41 +18,65 @@
   -->
 
 <template>
-    <div class="tlp-card">
-        <table class="tlp-table">
-            <thead>
-                <tr>
-                    <th class="document-tree-head-name" v-translate>
-                        Name
-                    </th>
-                    <th class="document-tree-head-owner" v-translate>
-                        Owner
-                    </th>
-                    <th class="document-tree-head-updatedate" v-translate>
-                        Last update date
-                    </th>
-                </tr>
-            </thead>
+    <div class="document-folder-content-quicklook">
+        <section class="tlp-pane document-folder-pane">
+            <div class="tlp-pane-container tlp-pane-section">
+                <table class="tlp-table">
+                    <thead>
+                        <tr>
+                            <th class="document-tree-head-name" v-translate>
+                                Name
+                            </th>
+                            <th class="document-tree-head-owner" v-translate>
+                                Owner
+                            </th>
+                            <th class="document-tree-head-updatedate" v-translate>
+                                Last update date
+                            </th>
+                        </tr>
+                    </thead>
 
-            <tbody>
-                <folder-content-row v-for="item of folder_content"
-                                    v-bind:key="item.id"
-                                    v-bind:item="item"
-                />
-            </tbody>
-        </table>
+                    <tbody>
+                        <folder-content-row v-for="item of folder_content"
+                                            v-bind:key="item.id"
+                                            v-bind:item="item"
+                                            v-on:displayQuickLook="displayQuickLook(item)"
+                        />
+                    </tbody>
+                </table>
+            </div>
+        </section>
+        <section v-if="toggle_quick_look" class="tlp-pane document-quick-look-pane">
+            <quicklook-global v-on:closeQuickLookEvent="closeQuickLook" v-bind:item="quick_look_item"/>
+        </section>
     </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
 import FolderContentRow from "./FolderContentRow.vue";
+import QuicklookGlobal from "./QuickLook/QuickLookGlobal.vue";
 
 export default {
     name: "FolderContent",
-    components: { FolderContentRow },
+    components: { QuicklookGlobal, FolderContentRow },
+    data() {
+        return {
+            quick_look_item: null,
+            toggle_quick_look: false
+        };
+    },
     computed: {
         ...mapState(["folder_content"])
+    },
+    methods: {
+        displayQuickLook(item) {
+            this.quick_look_item = item;
+            this.toggle_quick_look = true;
+        },
+        closeQuickLook() {
+            this.toggle_quick_look = false;
+        }
     }
 };
 </script>

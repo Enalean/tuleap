@@ -17,10 +17,30 @@
   - along with Tuleap. If not, see http://www.gnu.org/licenses/.
   -
   -->
-
-<template functional>
-    <button type="button" class="tlp-button-primary tlp-button-outline tlp-button-small" disabled>
-        <i class="fa fa-eye tlp-button-icon"></i>
-        <translate>Quick look</translate>
-    </button>
+<template>
+    <div class="tlp-pane-container">
+        <div class="tlp-pane-header document-quick-look-header">
+            <h2 class="tlp-pane-title document-quick-look-title" v-bind:title="item.title">
+                <i class="tlp-pane-title-icon"></i>
+                {{ item.title }}
+            </h2>
+            <div class="document-quick-look-close-button" v-on:click="closeQuickLookEvent">
+                ×
+            </div>
+        </div>
+    </div>
 </template>
+
+<script>
+export default {
+    name: "QuicklookGlobal",
+    props: {
+        item: Object
+    },
+    methods: {
+        closeQuickLookEvent() {
+            this.$emit("closeQuickLookEvent", false);
+        }
+    }
+};
+</script>

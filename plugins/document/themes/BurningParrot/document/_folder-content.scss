@@ -156,6 +156,16 @@
     flex: 1 0 auto;
 }
 
+.document-folder-content-quicklook {
+    display: flex;
+    align-items: flex-start;
+}
+
+.document-folder-pane {
+    flex: 1 1 auto;
+    margin: 0;
+}
+
 @media screen and (max-width: 1100px) {
     .document-tree-head-owner,
     .document-tree-head-updatedate,
