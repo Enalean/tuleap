@@ -915,6 +915,9 @@ msgstr "Paramètres de création de projets"
 msgid "Project does not exist"
 msgstr "Le projet n'existe pas"
 
+msgid "Project flag?"
+msgstr "Marqueur de projet ?"
+
 msgid "Project hierarchy"
 msgstr "Hierarchie de projets"
 
