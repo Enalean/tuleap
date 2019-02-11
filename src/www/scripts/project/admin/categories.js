@@ -20,7 +20,9 @@
 import { select2 } from "tlp";
 
 document.addEventListener("DOMContentLoaded", () => {
-    for (const select_category of document.querySelectorAll(".project-admin-category-select")) {
+    for (const select_category of document.querySelectorAll(
+        ".project-admin-category-select[multiple]"
+    )) {
         select2(select_category, {
             placeholder: select_category.dataset.placeholder,
             allowClear: true,

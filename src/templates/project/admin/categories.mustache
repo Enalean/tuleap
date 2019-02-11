@@ -18,7 +18,7 @@
                                 id="category-select-{{ id }}"
                                 name="categories[{{ id }}][]"
                                 style="width:100%"
-                                multiple
+                                {{# is_multiple }}multiple{{/ is_multiple }}
                                 {{# is_mandatory }}required{{/ is_mandatory }}
                                 data-placeholder="{{# gettext }}Choose a category…{{/ gettext }}"
                                 data-maximum-selection-length="{{ maximum_selection_length }}"
@@ -29,14 +29,16 @@
                                 </option>
                             {{/values}}
                         </select>
-                        <p class="tlp-text-info">
-                            {{# ngettext }}
-                                You can choose up to %s category |
-                                You can choose up to %s categories |
-                                {{ maximum_selection_length }} |
-                                {{ maximum_selection_length }}
-                            {{/ ngettext }}
-                        </p>
+                        {{# is_multiple }}
+                            <p class="tlp-text-info">
+                                {{# ngettext }}
+                                    You can choose up to %s category |
+                                    You can choose up to %s categories |
+                                    {{ maximum_selection_length }} |
+                                    {{ maximum_selection_length }}
+                                {{/ ngettext }}
+                            </p>
+                        {{/ is_multiple }}
                     </div>
                 {{/ categories }}
                 <div class="tlp-pane-section-submit">
