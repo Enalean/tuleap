@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -260,10 +260,11 @@ class RestBase extends TestCase // phpcs:ignore
         $this->sprints_tracker_id      = $this->tracker_ids[$this->project_private_member_id][REST_TestDataBuilder::SPRINTS_TRACKER_SHORTNAME];
         $this->tasks_tracker_id        = $this->tracker_ids[$this->project_private_member_id][REST_TestDataBuilder::TASKS_TRACKER_SHORTNAME];
         $this->user_stories_tracker_id = $this->tracker_ids[$this->project_private_member_id][REST_TestDataBuilder::USER_STORIES_TRACKER_SHORTNAME];
+        // Since the tracker is deleted it can not be retrieved through the REST route, it is however expected to be created right after
+        // the user story tracker so hopefully it takes the next available ID. This is a weak assumption, a clean way to achieve the test
+        // would be to introduce a DELETE trackers/:id route. See tests/rest/_fixtures/01-private-member/project.xml.
+        $this->deleted_tracker_id      = $this->user_stories_tracker_id + 1;
 
-        if (isset($this->tracker_ids[$this->project_private_member_id][REST_TestDataBuilder::DELETED_TRACKER_SHORTNAME])) {
-            $this->deleted_tracker_id = $this->tracker_ids[$this->project_private_member_id][REST_TestDataBuilder::DELETED_TRACKER_SHORTNAME];
-        }
 
         $this->kanban_tracker_id = $this->tracker_ids[$this->project_private_member_id][REST_TestDataBuilder::KANBAN_TRACKER_SHORTNAME];
     }
