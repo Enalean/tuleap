@@ -192,6 +192,10 @@ function gettextPHP($path, string $translated_plugin, DomainExtractor $gettext_i
     unlink("$path/site-content/tuleap-$translated_plugin-default.pot");
     unlink("$path/site-content/tuleap-$translated_plugin-plural.pot");
     unlink("$path/site-content/tuleap-$translated_plugin-mustache.pot");
+    if (filesize("$path/site-content/tuleap-$translated_plugin.pot") === 0) {
+        info("[$translated_plugin] Nothing to translate in gettext PHP");
+        return;
+    }
 
     foreach (glob("$path/site-content/*", GLOB_ONLYDIR) as $foreign_dir) {
         if (basename($foreign_dir) === 'en_US') {
@@ -204,6 +208,19 @@ function gettextPHP($path, string $translated_plugin, DomainExtractor $gettext_i
             if (! mkdir($lc_messages, 0755, true) && ! is_dir($lc_messages)) {
                 throw new \RuntimeException(sprintf('Directory "%s" was not created', $lc_messages));
             }
+        }
+
+        $po_file = "$lc_messages/tuleap-$translated_plugin.po";
+        if (! is_file($po_file)) {
+            info("[$translated_plugin] Creating $po_file");
+            $content = <<<'EOS'
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+
+EOS;
+
+            file_put_contents($po_file, $content);
         }
     }
 
