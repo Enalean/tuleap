@@ -21,6 +21,7 @@
  */
 
 use PHPUnit\Framework\TestCase;
+use Tuleap\CookieManager;
 
 class UserManagerTest extends TestCase
 {

@@ -1,4 +1,26 @@
 <?php
+/**
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ * Copyright (c) Enalean, 2012 - 2019. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
+// phpcs:ignoreFile
 
 Mock::generate('PFUser');
 Mock::generate('UserDao');
@@ -22,8 +44,6 @@ Mock::generatePartial('UserManager',
 // Special mock for getUserByIdentifier test
 Mock::generatePartial('UserManager', 'UserManager4GetByIdent', array('_getEventManager', 'getUserByUserName', 'getUserById', 'getUserByEmail'));
 
-require_once('common/include/CookieManager.class.php');
-Mock::generate('CookieManager');
 Mock::generate('EventManager', 'BaseMockEventManager');
 
 class MockEM4UserManager extends BaseMockEventManager {
@@ -33,27 +53,6 @@ class MockEM4UserManager extends BaseMockEventManager {
        }
    }
 }
-
-/**
- * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
- *
- * This file is a part of Tuleap.
- *
- * Tuleap is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * Tuleap is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
- */
 
 class UserManagerTest extends TuleapTestCase
 {
@@ -158,7 +157,7 @@ class UserManagerTest extends TuleapTestCase
     }
 
     function testGoodLogin() {
-        $cm               = new MockCookieManager($this);
+        $cm               = mock(\Tuleap\CookieManager::class);
         $session_manager  = mock('Tuleap\User\SessionManager');
         $dao              = new MockUserDao($this);
         $dar              = new MockDataAccessResult($this);
@@ -199,7 +198,7 @@ class UserManagerTest extends TuleapTestCase
     }
 
     function testBadLogin() {
-        $cm               = new MockCookieManager($this);
+        $cm               = mock(\Tuleap\CookieManager::class);
         $dao              = new MockUserDao($this);
         $dar              = new MockDataAccessResult($this);
         $user123          = mock('PFUser');
@@ -235,7 +234,7 @@ class UserManagerTest extends TuleapTestCase
 
     function testSuspenedUserGetSession() {
 
-        $cm               = new MockCookieManager($this);
+        $cm               = mock(\Tuleap\CookieManager::class);
         $session_manager  = mock('Tuleap\User\SessionManager');
         $dar_valid_hash   = new MockDataAccessResult($this);
         $user123          = mock('PFUser');
@@ -268,7 +267,7 @@ class UserManagerTest extends TuleapTestCase
     }
 
     function testDeletedUserGetSession() {
-        $cm               = new MockCookieManager($this);
+        $cm               = mock(\Tuleap\CookieManager::class);
         $session_manager  = mock('Tuleap\User\SessionManager');
         $dar_valid_hash   = new MockDataAccessResult($this);
         $user123          = mock('PFUser');

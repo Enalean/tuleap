@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2019. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -19,6 +19,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+// phpcs:ignoreFile
+
+use Tuleap\CookieManager;
 use Tuleap\Dashboard\User\AtUserCreationDefaultWidgetsCreator;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\User\InvalidSessionException;
@@ -28,7 +31,8 @@ use Tuleap\User\UserConnectionUpdateEvent;
 use Tuleap\User\UserRetrieverByLoginNameEvent;
 use Tuleap\Widget\WidgetFactory;
 
-class UserManager {
+class UserManager
+{
 
     /**
      * User with id lower than 100 are considered specials (siteadmin, null,

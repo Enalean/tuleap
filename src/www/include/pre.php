@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011 - 2018. All rights reserved
+ * Copyright (c) Enalean, 2011 - 2019. All rights reserved
  * Copyright 1999-2000 (c) The SourceForge Crew
  *
  * This file is a part of Tuleap.
@@ -20,6 +20,7 @@
  */
 
 use Tuleap\BurningParrotCompatiblePageDetector;
+use Tuleap\CookieManager;
 use Tuleap\Request\CurrentPage;
 use Tuleap\TimezoneRetriever;
 
