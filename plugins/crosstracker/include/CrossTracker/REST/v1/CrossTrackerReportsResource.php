@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -73,13 +73,14 @@ use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\NotEqua
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\NotIn\NotInComparisonChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\MetadataChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\MetadataUsageChecker;
-use Tuleap\project\ProjectAccessSuspendedException;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\JsonDecoder;
 use Tuleap\REST\ProjectAuthorization;
 use Tuleap\REST\QueryParameterException;
 use Tuleap\REST\QueryParameterParser;
+use Tuleap\Tracker\Report\TrackerNotFoundException;
+use Tuleap\Tracker\Report\TrackerDuplicateException;
 use Tuleap\Tracker\Report\Query\Advanced\DateFormat;
 use Tuleap\Tracker\Report\Query\Advanced\ExpertQueryValidator;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Parser;
@@ -95,6 +96,7 @@ use Tuleap\Tracker\Report\Query\Advanced\SearchablesDoNotExistException;
 use Tuleap\Tracker\Report\Query\Advanced\SizeValidatorVisitor;
 use Tuleap\Tracker\Report\TrackerReportConfig;
 use Tuleap\Tracker\Report\TrackerReportConfigDao;
+use Tuleap\Tracker\Report\TrackerReportExtractor;
 use URLVerification;
 use UserManager;
 
@@ -114,9 +116,9 @@ class CrossTrackerReportsResource extends AuthenticatedResource
      */
     private $cross_tracker_artifact_factory;
     /**
-     * @var CrossTrackerReportExtractor
+     * @var TrackerReportExtractor
      */
-    private $cross_tracker_extractor;
+    private $tracker_extractor;
     /**
      * @var CrossTrackerReportDao
      */
@@ -149,8 +151,8 @@ class CrossTrackerReportsResource extends AuthenticatedResource
             TrackerFactory::instance()
         );
 
-        $this->cross_tracker_dao              = new CrossTrackerReportDao();
-        $this->cross_tracker_extractor        = new CrossTrackerReportExtractor(TrackerFactory::instance());
+        $this->cross_tracker_dao = new CrossTrackerReportDao();
+        $this->tracker_extractor = new TrackerReportExtractor(TrackerFactory::instance());
 
         $report_config = new TrackerReportConfig(
             new TrackerReportConfigDao()
@@ -520,7 +522,7 @@ class CrossTrackerReportsResource extends AuthenticatedResource
 
         $current_user = $this->user_manager->getCurrentUser();
         try {
-            $trackers  = $this->cross_tracker_extractor->extractTrackers($trackers_id);
+            $trackers = $this->tracker_extractor->extractTrackers($trackers_id);
 
             $this->checkQueryIsValid($trackers, $expert_query, $current_user);
 
@@ -615,7 +617,7 @@ class CrossTrackerReportsResource extends AuthenticatedResource
             throw new RestException(400, $exception->getMessage());
         }
 
-        return $this->cross_tracker_extractor->extractTrackers($trackers_id);
+        return $this->tracker_extractor->extractTrackers($trackers_id);
     }
 
     private function getExpertQueryFromRoute($query_parameter, CrossTrackerReport $report)

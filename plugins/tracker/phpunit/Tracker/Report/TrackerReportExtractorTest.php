@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2019. All Rights Reserved.
  *
- * This file is a part of Tuleap.
+ *  This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,14 +19,14 @@
  *
  */
 
-namespace Tuleap\CrossTracker\REST\v1;
+namespace Tuleap\Tracker\Report;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 
-require_once __DIR__ . '/../../../bootstrap.php';
+require_once __DIR__ . '/../../bootstrap.php';
 
-class CrossTrackerReportExtractorTest extends TestCase
+class TrackerReportExtractorTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -40,7 +40,7 @@ class CrossTrackerReportExtractorTest extends TestCase
      */
     private $tracker_1;
     /**
-     * @var CrossTrackerReportExtractor
+     * @var TrackerReportExtractor
      */
     private $extractor;
     /**
@@ -56,7 +56,7 @@ class CrossTrackerReportExtractorTest extends TestCase
 
         $this->tracker_factory = \Mockery::spy(\TrackerFactory::class);
 
-        $this->extractor = new CrossTrackerReportExtractor($this->tracker_factory);
+        $this->extractor = new TrackerReportExtractor($this->tracker_factory);
 
         $this->project      = \Mockery::spy(\Project::class);
         $this->tracker_id_1 = 1;
@@ -113,7 +113,7 @@ class CrossTrackerReportExtractorTest extends TestCase
     {
         $this->tracker_factory->shouldReceive('getTrackerById')->with($this->tracker_id_1)->andReturn(null);
 
-        $this->expectException('Tuleap\CrossTracker\REST\v1\TrackerNotFoundException');
+        $this->expectException('Tuleap\Tracker\Report\TrackerNotFoundException');
         $this->extractor->extractTrackers(array($this->tracker_id_1));
     }
 

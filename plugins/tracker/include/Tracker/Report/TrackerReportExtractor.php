@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2019. All Rights Reserved.
  *
  *  This file is a part of Tuleap.
  *
@@ -19,9 +19,9 @@
  *
  */
 
-namespace Tuleap\CrossTracker\REST\v1;
+namespace Tuleap\Tracker\Report;
 
-class CrossTrackerReportExtractor
+class TrackerReportExtractor
 {
     /**
      * @var \TrackerFactory
@@ -56,7 +56,7 @@ class CrossTrackerReportExtractor
         if (count($invalid_tracker) > 0) {
             throw new TrackerNotFoundException(
                 sprintf(
-                    dgettext('tuleap-crosstracker', 'One tracker or more are not found: %s'),
+                    dgettext('tuleap-tracker', 'One tracker or more are not found: %s'),
                     implode(',', $invalid_tracker)
                 )
             );
@@ -66,7 +66,7 @@ class CrossTrackerReportExtractor
         if (count($duplicates) > 0) {
             throw new TrackerDuplicateException(
                 sprintf(
-                    dgettext('tuleap-crosstracker', 'One tracker or more is duplicated in list: %s'),
+                    dgettext('tuleap-tracker', 'One tracker or more is duplicated in list: %s'),
                     implode(',', $duplicates)
                 )
             );

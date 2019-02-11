@@ -402,6 +402,14 @@ msgstr "À chaque modification ?"
 msgid "One id or more could not be found: '%s'"
 msgstr "Un id ou plus n'a pas été trouvé : '%s'"
 
+#, php-format
+msgid "One tracker or more are not found: %s"
+msgstr "Un tracker ou plus n'a pas été trouvé : '%s'"
+
+#, php-format
+msgid "One tracker or more is duplicated in list: %s"
+msgstr "Un tracker ou plus est dupliqué : %s"
+
 msgid "Please provide a valid limit."
 msgstr "Veuillez fournir une limite valide."
 
@@ -834,7 +842,9 @@ msgid "The value '%s' doesn't exist for the list field '%s'."
 msgstr "La valeur '%s' n’existe pas pour le champ liste ‘%s’."
 
 msgid "There must be at least one authorized user group."
-msgstr "Il doit y avoir au moins un groupe d'utilisateurs autorisé à effectuer la transition."
+msgstr ""
+"Il doit y avoir au moins un groupe d'utilisateurs autorisé à effectuer la "
+"transition."
 
 msgid "There should not be duplicate 'run_job' ids."
 msgstr "Les ids de type 'run_job' ne doivent pas être en doublons."
