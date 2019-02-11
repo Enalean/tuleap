@@ -66,7 +66,6 @@ use Tuleap\Tracker\Workflow\Transition\OrphanTransitionException;
 use Tuleap\Tracker\Workflow\Transition\TransitionUpdateException;
 use Tuleap\Tracker\Workflow\Transition\TransitionUpdater;
 use Workflow;
-use Workflow_TransitionDao;
 use WorkflowFactory;
 
 class TransitionsResource extends AuthenticatedResource
@@ -517,19 +516,11 @@ class TransitionsResource extends AuthenticatedResource
     }
 
     /**
-     * @return Workflow_TransitionDao
-     */
-    private function getTransitionDao()
-    {
-        return new Workflow_TransitionDao();
-    }
-
-    /**
      * @return TransitionUpdater
      */
     private function getTransitionUpdater()
     {
-        return new TransitionUpdater($this->getTransitionFactory(), $this->getTransitionDao());
+        return new TransitionUpdater($this->getTransitionFactory(), new TransactionExecutor(new DataAccessObject()));
     }
 
     /**
