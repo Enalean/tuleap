@@ -65,6 +65,7 @@ use Tuleap\Tracker\Workflow\PostAction\Update\PostActionCollectionUpdater;
 use Tuleap\Tracker\Workflow\Transition\OrphanTransitionException;
 use Tuleap\Tracker\Workflow\Transition\TransitionUpdateException;
 use Tuleap\Tracker\Workflow\Transition\TransitionUpdater;
+use Tuleap\Tracker\Workflow\Transition\Update\TransitionRetriever;
 use Workflow;
 use WorkflowFactory;
 
@@ -74,10 +75,20 @@ class TransitionsResource extends AuthenticatedResource
 
     /** @var UserManager */
     private $user_manager;
+    /** @var TransitionPatcher */
+    private $transition_patcher;
 
     public function __construct()
     {
-        $this->user_manager = UserManager::build();
+        $this->user_manager   = UserManager::build();
+        $transition_factory   = $this->getTransitionFactory();
+        $transition_dao       = new \Workflow_TransitionDao();
+        $transaction_executor = new TransactionExecutor(new DataAccessObject());
+        $this->transition_patcher = new TransitionPatcher(
+            new TransitionUpdater($transition_factory, $transaction_executor),
+            new TransitionRetriever($transition_dao, $transition_factory),
+            $transaction_executor
+        );
     }
 
     /**
@@ -217,18 +228,8 @@ class TransitionsResource extends AuthenticatedResource
         $project = $transition->getWorkflow()->getTracker()->getProject();
         ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt($project);
 
-        $authorized_user_group_ids = $transition_conditions->getAuthorizedUserGroupIds();
-        if (count($authorized_user_group_ids) === 0) {
-            throw new I18NRestException(400, dgettext('tuleap-tracker', 'There must be at least one authorized user group.'));
-        }
-
         try {
-            $this->getTransitionUpdater()->update(
-                $transition,
-                $authorized_user_group_ids,
-                $transition_conditions->not_empty_field_ids,
-                $transition_conditions->is_comment_required
-            );
+            $this->transition_patcher->patch($transition, $transition_conditions);
         } catch (TransitionUpdateException $exception) {
             throw new I18NRestException(400, dgettext('tuleap-tracker', 'The transition has not been updated.'));
         }
@@ -515,14 +516,6 @@ class TransitionsResource extends AuthenticatedResource
     private function getPermissionsChecker()
     {
         return new TransitionsPermissionsChecker(new TrackerPermissionsChecker(new \URLVerification()));
-    }
-
-    /**
-     * @return TransitionUpdater
-     */
-    private function getTransitionUpdater()
-    {
-        return new TransitionUpdater($this->getTransitionFactory(), new TransactionExecutor(new DataAccessObject()));
     }
 
     /**

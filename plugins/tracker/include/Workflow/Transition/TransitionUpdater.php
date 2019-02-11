@@ -97,7 +97,7 @@ class TransitionUpdater
         }
 
         $clear_permissions_success = permission_clear_all(
-            $transition->getWorkflow()->getTracker()->group_id,
+            $transition->getWorkflow()->getTracker()->getGroupId(),
             'PLUGIN_TRACKER_WORKFLOW_TRANSITION',
             $transition->getId(),
             false

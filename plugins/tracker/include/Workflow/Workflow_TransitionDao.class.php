@@ -1,7 +1,7 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2015 - 2019. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,7 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Workflow_TransitionDao extends DataAccessObject
+class Workflow_TransitionDao extends DataAccessObject //phpcs:ignoreFile
 {
     public function __construct($da = null)
     {
@@ -139,6 +139,25 @@ class Workflow_TransitionDao extends DataAccessObject
         $transition_id = $this->da->escapeInt($transition_id);
         $sql = "SELECT * FROM $this->table_name
                 WHERE transition_id=$transition_id";
+        return $this->retrieve($sql);
+    }
+
+    /**
+     * @param int $workflow_id
+     * @param int $to_id
+     * @param int $transition_id
+     * @return DataAccessResult|false
+     */
+    public function searchSiblings($workflow_id, $to_id, $transition_id)
+    {
+        $workflow_id   = $this->da->escapeInt($workflow_id);
+        $to_id         = $this->da->escapeInt($to_id);
+        $transition_id = $this->da->escapeInt($transition_id);
+
+        $sql = "SELECT * FROM tracker_workflow_transition
+               WHERE to_id = $to_id
+                 AND workflow_id = $workflow_id
+                 AND transition_id != $transition_id";
         return $this->retrieve($sql);
     }
 }
