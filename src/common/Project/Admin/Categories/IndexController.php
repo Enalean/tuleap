@@ -105,6 +105,7 @@ class IndexController implements DispatchableWithRequest, DispatchableWithProjec
                 'label'                    => $row['fullname'],
                 'is_mandatory'             => (bool) $row['mandatory'],
                 'maximum_selection_length' => $row['nb_max_values'],
+                'is_multiple'              => $row['nb_max_values'] > 1,
                 'values'                   => $values
             ];
         }
