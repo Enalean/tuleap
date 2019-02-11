@@ -42,6 +42,11 @@ class WorkflowRepresentation
     public $is_legacy;
 
     /**
+     * @var bool
+     */
+    public $is_advanced;
+
+    /**
      * @var \Tuleap\Tracker\REST\WorkflowRulesRepresentation
      */
     public $rules;
@@ -56,6 +61,7 @@ class WorkflowRepresentation
         $this->field_id    = JsonCast::toInt($workflow->getFieldId());
         $this->is_used     = $workflow->is_used;
         $this->is_legacy   = JsonCast::toBoolean($workflow->isLegacy());
+        $this->is_advanced = JsonCast::toBoolean($workflow->isAdvanced());
         $this->rules       = $rules;
         $this->transitions = $transitions;
     }

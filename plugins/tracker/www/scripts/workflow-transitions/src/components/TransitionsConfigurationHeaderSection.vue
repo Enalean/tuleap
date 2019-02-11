@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2018. All Rights Reserved.
+  - Copyright (c) Enalean, 2018 - 2019. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -64,7 +64,7 @@
                         type="checkbox"
                         id="workflow-advanced-configuration"
                         class="tlp-switch-checkbox"
-                        checked
+                        v-model="is_workflow_advanced"
                         disabled
                     >
                     <label
@@ -119,6 +119,15 @@ export default {
 
     computed: {
         ...mapState(["is_operation_running", "is_rules_enforcement_running"]),
+        ...mapState({
+            is_workflow_advanced(state) {
+                if (!state.current_tracker) {
+                    return null;
+                }
+
+                return state.current_tracker.workflow.is_advanced;
+            }
+        }),
         ...mapGetters(["workflow_field_label", "are_transition_rules_enforced"]),
         advanced_configuration_tooltip() {
             return this.$gettext(
