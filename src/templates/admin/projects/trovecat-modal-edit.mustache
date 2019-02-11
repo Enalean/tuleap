@@ -15,54 +15,44 @@
         <input type="hidden" name="id" value="{{ trove_cat_id }}">
         <div class="tlp-modal-body">
             <div class="trove-cats-general-properties">
-                <div class="trove-cats-general-property">
-                    <div class="trove-cats-general-property-column">
-                        <div class="tlp-form-element trove-cats-fullname-property">
-                            <label class="tlp-label" for="fullname-{{ trove_cat_id }}">{{ label_fullname }} <i
-                                    class="fa fa-asterisk"></i></label>
-                            <input type="text" class="tlp-input" id="fullname-{{ trove_cat_id }}" name="fullname" required
-                                   placeholder="{{ label_fullname }}" value="{{ fullname }}">
-                        </div>
-                        <div class="tlp-form-element">
-                            <label class="tlp-label" for="parent-{{ trove_cat_id }}">{{ parent_category_label }}</label>
-                            <select
-                                    class="tlp-select trove-cats-modal-select-parent-category parent"
-                                    id="parent-{{ trove_cat_id }}"
-                                    name="parent"
-                                    data-parent-trove-id="{{ parent }}"
-                                    data-id="{{ trove_cat_id }}"
-                                    data-is-parent-top-level-id="{{ is_top_level_id }}"
-                                    data-is-parent-mandatory="{{ is_parent_mandatory }}"
-                            >
-                                <option value="0">{{ root_label }}</option>
-                                {{# trovecats }}
-                                <option
-                                        value="{{ trove_cat_id }}"
-                                        data-is-top-level-id="{{ is_top_level_id }}"
-                                        data-is-parent-mandatory="{{ is_mandatory }}"
-                                >
-                                    {{ hierarchy }}
-                                {{/ trovecats }}
-                            </select>
-                        </div>
-                    </div>
-                    <div class="trove-cats-general-property-column">
-                        <div class="tlp-form-element trove-cats-shortname-property">
-                            <label class="tlp-label" for="shortname-{{ trove_cat_id }}">{{ label_shortname }} <i
-                                    class="fa fa-asterisk"></i></label>
-                            <input type="text" class="tlp-input" id="shortname-{{ trove_cat_id }}" name="shortname" required
-                                   placeholder="{{ label_shortname }}" value="{{ shortname }}">
-                        </div>
-                    </div>
+                <div class="tlp-form-element trove-cats-fullname-property">
+                    <label class="tlp-label" for="fullname-{{ trove_cat_id }}">{{ label_fullname }} <i
+                            class="fa fa-asterisk"></i></label>
+                    <input type="text" class="tlp-input" id="fullname-{{ trove_cat_id }}" name="fullname" required
+                           placeholder="{{ label_fullname }}" value="{{ fullname }}">
                 </div>
-                <div class="trove-cats-general-property">
-                    <div class="trove-cats-general-property-column">
-                        <div class="tlp-form-element">
-                            <label class="tlp-label" for="description-{{ trove_cat_id }}">{{ label_description }}</label>
-                            <textarea class="tlp-textarea" id="description-{{ trove_cat_id }}" name="description"
-                                      placeholder="{{ description_placeholder }}">{{ description }}</textarea>
-                        </div>
-                    </div>
+                <div class="tlp-form-element trove-cats-shortname-property">
+                    <label class="tlp-label" for="shortname-{{ trove_cat_id }}">{{ label_shortname }} <i
+                            class="fa fa-asterisk"></i></label>
+                    <input type="text" class="tlp-input" id="shortname-{{ trove_cat_id }}" name="shortname" required
+                           placeholder="{{ label_shortname }}" value="{{ shortname }}">
+                </div>
+                <div class="tlp-form-element trove-cats-parent-property">
+                    <label class="tlp-label" for="parent-{{ trove_cat_id }}">{{ parent_category_label }}</label>
+                    <select
+                            class="tlp-select trove-cats-modal-select-parent-category parent"
+                            id="parent-{{ trove_cat_id }}"
+                            name="parent"
+                            data-parent-trove-id="{{ parent }}"
+                            data-id="{{ trove_cat_id }}"
+                            data-is-parent-top-level-id="{{ is_top_level_id }}"
+                            data-is-parent-mandatory="{{ is_parent_mandatory }}"
+                    >
+                        <option value="0">{{ root_label }}</option>
+                        {{# trovecats }}
+                        <option
+                                value="{{ trove_cat_id }}"
+                                data-is-top-level-id="{{ is_top_level_id }}"
+                                data-is-parent-mandatory="{{ is_mandatory }}"
+                        >
+                            {{ hierarchy }}
+                        {{/ trovecats }}
+                    </select>
+                </div>
+                <div class="tlp-form-element trove-cats-description-property">
+                    <label class="tlp-label" for="description-{{ trove_cat_id }}">{{ label_description }}</label>
+                    <textarea class="tlp-textarea" id="description-{{ trove_cat_id }}" name="description"
+                              placeholder="{{ description_placeholder }}">{{ description }}</textarea>
                 </div>
             </div>
 

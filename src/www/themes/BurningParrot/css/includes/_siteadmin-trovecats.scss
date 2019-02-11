@@ -1,22 +1,26 @@
-.trove-cats-general-property {
+.trove-cats-general-properties {
     display: flex;
+    flex-wrap: wrap;
     margin: 0 0 $tlp-spacing;
 }
 
-.trove-cats-general-property-column {
+.trove-cats-fullname-property {
+    margin: 0 $tlp-half-spacing $tlp-spacing 0;
+    width: calc(50% - #{$tlp-half-spacing});
+}
+
+.trove-cats-shortname-property {
+    margin: 0 0 $tlp-spacing $tlp-half-spacing;
+    width: calc(50% - #{$tlp-half-spacing});
+}
+
+.trove-cats-parent-property {
+    margin: 0 $tlp-half-spacing $tlp-spacing 0;
+    width: calc(50% - #{$tlp-half-spacing});
+}
+
+.trove-cats-description-property {
     width: 100%;
-
-    &:first-child {
-        margin: 0 $tlp-half-spacing 0 0;
-    }
-
-    &:last-child {
-        margin: 0 0 0 $tlp-half-spacing;
-    }
-
-    &:only-child {
-        margin: 0;
-    }
 }
 
 .trove-cats-np-max-values-input {
