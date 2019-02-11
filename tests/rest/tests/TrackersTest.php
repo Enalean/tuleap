@@ -248,17 +248,12 @@ class TrackersTest extends TrackerBase
         $this->assertEquals($response->getStatusCode(), 400);
     }
 
-    public function testGetDeletedTrackerReturnsError()
+    public function testGetDeletedTrackerReturnsError() : void
     {
-        $tracker_uri = $this->getDeletedTrackerId();
-        $response    = $this->getResponse($this->client->get($tracker_uri));
+        $response = $this->getResponse($this->client->get("trackers/$this->deleted_tracker_id"));
 
-        /**
-         * @todo: Fix the test. Currently it does not pass because the generated tracker URI is
-         * incorrect. The tracker ID is not populated.
-         */
-        $this->assertTrue(true);
-        //$this->assertEquals(403, $response->getStatusCode());
+        $this->assertEquals(404, $response->getStatusCode());
+        $this->assertStringContainsString('deleted', $response->json()['error']['i18n_error_message']);
     }
 
     public function testGetParentArtifacts()
@@ -273,11 +268,6 @@ class TrackersTest extends TrackerBase
         $this->assertEquals($parent_artifacts[2]['title'], "Epic pic");
         $this->assertEquals($parent_artifacts[3]['title'], "Fourth epic");
         $this->assertEquals($parent_artifacts[4]['title'], "First epic");
-    }
-
-    private function getDeletedTrackerId()
-    {
-        return "trackers/$this->deleted_tracker_id";
     }
 
     private function getReleaseTrackerUri()
