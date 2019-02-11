@@ -112,6 +112,34 @@
                 </label>
                 <p class="tlp-text-info">{{ display_info }}</p>
             </div>
+
+            {{# is_top_level_id }}
+                <div class="tlp-form-element
+                        {{# is_quota_of_project_flags_reached }}
+                            {{^ is_project_flag }}
+                                tlp-form-element-disabled
+                            {{/ is_project_flag }}
+                        {{/ is_quota_of_project_flags_reached }}"
+                >
+                    <label class="tlp-label tlp-checkbox">
+                        <input
+                            type="checkbox"
+                            name="is-project-flag"
+                            value="1"
+                            {{# is_project_flag }} checked {{/ is_project_flag }}
+                            {{# is_quota_of_project_flags_reached }}
+                                {{^ is_project_flag }}
+                                    disabled
+                                {{/ is_project_flag }}
+                            {{/ is_quota_of_project_flags_reached }}
+                        >
+                        {{# gettext }}Use as project flag{{/ gettext }}
+                    </label>
+                    <p class="tlp-text-info">
+                        {{# gettext }}Project flags are displayed in the navigation bar. Up to 2 categories can be used as flag.{{/ gettext }}
+                    </p>
+                </div>
+            {{/ is_top_level_id }}
         </div>
 
         <div class="tlp-modal-footer">
