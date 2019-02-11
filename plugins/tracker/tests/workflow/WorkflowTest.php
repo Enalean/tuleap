@@ -276,6 +276,7 @@ class Workflow_BeforeAfterTest extends TuleapTestCase {
         $field_id    = 103;
         $is_used     = 1;
         $is_legacy   = 0;
+        $is_advanced = 1;
         $transitions = array($this->transition_null_to_open, $this->transition_open_to_close);
         $this->workflow = partial_mock(
             'Workflow',
@@ -288,6 +289,7 @@ class Workflow_BeforeAfterTest extends TuleapTestCase {
                 $tracker_id,
                 $field_id,
                 $is_used,
+                $is_advanced,
                 $is_legacy,
                 $transitions
             )
@@ -304,6 +306,7 @@ class Workflow_BeforeAfterTest extends TuleapTestCase {
                 $tracker_id,
                 $field_id,
                 false,
+                $is_advanced,
                 $is_legacy,
                 $transitions
             )
@@ -320,6 +323,7 @@ class Workflow_BeforeAfterTest extends TuleapTestCase {
                 $tracker_id,
                 $field_id,
                 false,
+                $is_advanced,
                 true,
                 $transitions
             )

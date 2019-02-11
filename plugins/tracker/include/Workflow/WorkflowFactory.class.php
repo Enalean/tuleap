@@ -21,7 +21,7 @@
 
 use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyDao;
 
-class WorkflowFactory
+class WorkflowFactory //phpcs:ignoreFile
 {
 
     /** @var TransitionFactory */
@@ -140,6 +140,7 @@ class WorkflowFactory
             $row['tracker_id'],
             $row['field_id'],
             $row['is_used'],
+            $row['is_advanced'],
             $row['is_legacy']
         );
     }
@@ -365,9 +366,10 @@ class WorkflowFactory
     {
         if ($workflow = $this->getWorkflowByTrackerId($from_tracker_id)) {
             $is_used = $workflow->getIsUsed();
+            $is_advanced = $workflow->isAdvanced();
 
             //Duplicate workflow
-            if ($id = $this->getDao()->duplicate($to_tracker_id, $from_id, $to_id, $values, $is_used)) {
+            if ($id = $this->getDao()->duplicate($to_tracker_id, $to_id, $is_used, $is_advanced)) {
                 $transitions = $workflow->getTransitions();
                 //Duplicate transitions
                 $this->transition_factory->duplicate($values, $id, $transitions, $field_mapping, $ugroup_mapping, $duplicate_type);
@@ -404,6 +406,7 @@ class WorkflowFactory
             $tracker->getId(),
             0, // not available yet
             (string)$xml->is_used,
+            true, // For legacy compatibility
             false,
             $transitions
         );
@@ -425,7 +428,12 @@ class WorkflowFactory
         $workflow->setTracker($tracker);
         $dao = $this->getDao();
 
-        $workflow_id = $dao->save($workflow->tracker_id, $workflow->getField()->getId(), $workflow->is_used);
+        $workflow_id = $dao->save(
+            $workflow->tracker_id,
+            $workflow->getField()->getId(),
+            $workflow->is_used,
+            $workflow->isAdvanced()
+        );
 
         //Save transitions
         foreach ($workflow->getTransitions() as $transition) {
@@ -442,7 +450,7 @@ class WorkflowFactory
     /**
      * Get the Workflow dao
      *
-     * @return Worflow_Dao
+     * @return Workflow_Dao
      */
     protected function getDao()
     {
@@ -452,7 +460,7 @@ class WorkflowFactory
     /**
      * Get the Workflow Transition dao
      *
-     * @return Worflow_TransitionDao
+     * @return Workflow_TransitionDao
      */
     protected function getTransitionDao()
     {

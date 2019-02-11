@@ -24,8 +24,8 @@
  * This is typically the case when there is no workflow defined(aka no transition)
  * for a given tracker.
  */
-class WorkflowWithoutTransition extends Workflow {
-
+class WorkflowWithoutTransition extends Workflow //phpcs:ignoreFile
+{
     public function __construct(
         Tracker_RulesManager $global_rules_manager,
         Tracker_Workflow_Trigger_RulesManager $trigger_rules_manager,
@@ -35,6 +35,7 @@ class WorkflowWithoutTransition extends Workflow {
         $workflow_id = 0;
         $field_id    = 0;
         $is_used     = false;
+        $is_advanced = true;
         $is_legacy   = false;
         parent::__construct(
             $global_rules_manager,
@@ -44,6 +45,7 @@ class WorkflowWithoutTransition extends Workflow {
             $tracker_id,
             $field_id,
             $is_used,
+            $is_advanced,
             $is_legacy
         );
     }
