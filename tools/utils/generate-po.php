@@ -200,16 +200,10 @@ function gettextPHP($path, string $translated_plugin, DomainExtractor $gettext_i
 
         $lc_messages = "$foreign_dir/LC_MESSAGES";
         if (! is_dir($lc_messages)) {
-            $po_file = escapeshellarg("$lc_messages/tuleap-$translated_plugin.po");
-            info("[$translated_plugin] Creating missing $po_file");
-            mkdir($lc_messages, 0755, true);
-            $content = <<<EOS
-msgid ""
-msgstr ""
-"Content-Type: text/plain; charset=UTF-8\n"
-EOS;
-
-            file_put_contents($po_file, $content);
+            info("[$translated_plugin] Creating LC_MESSAGES folder $lc_messages");
+            if (! mkdir($lc_messages, 0755, true) && ! is_dir($lc_messages)) {
+                throw new \RuntimeException(sprintf('Directory "%s" was not created', $lc_messages));
+            }
         }
     }
 
