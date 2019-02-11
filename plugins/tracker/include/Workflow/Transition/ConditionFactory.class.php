@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,6 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+//phpcs:ignoreFile
 
 use Tuleap\Tracker\Workflow\Transition\Condition\CannotCreateTransitionException;
 
@@ -90,8 +92,10 @@ class Workflow_Transition_ConditionFactory {
             }
         }
 
-        if (! $this->getCommentNotEmptyDao()->create($transition->getId(), $is_comment_required)) {
-            throw new CannotCreateTransitionException();
+        if ($transition->getIdFrom() !== '') {
+            if (! $this->getCommentNotEmptyDao()->create($transition->getId(), $is_comment_required)) {
+                throw new CannotCreateTransitionException();
+            }
         }
     }
 

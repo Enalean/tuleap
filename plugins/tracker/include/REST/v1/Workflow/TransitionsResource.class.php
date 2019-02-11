@@ -184,6 +184,8 @@ class TransitionsResource extends AuthenticatedResource
     /**
      * Patch a transition from a workflow
      *
+     * <br />Parameter "is_comment_required" is not taken into account for transition from (New Artifact).
+     *
      * @url PATCH {id}
      *
      * @status 200
