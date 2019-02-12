@@ -72,27 +72,53 @@ class Tracker_Artifact_Changeset_InitialChangesetCreator_BaseTest extends Tuleap
 
 class Tracker_Artifact_Changeset_InitialChangesetCreator_WorkflowTest extends Tracker_Artifact_Changeset_InitialChangesetCreator_BaseTest {
 
-    public function itCallsTheAfterMethodOnWorkflowWhenCreateInitialChangeset() {
+    public function itCallsTheAfterMethodOnWorkflowWhenCreateInitialChangeset()
+    {
         stub($this->changeset_dao)->create()->returns(5667);
         stub($this->artifact_factory)->save()->returns(true);
+        stub($this->workflow)->validate()->returns(true);
+
         expect($this->workflow)->after($this->fields_data, new IsAExpectation('Tracker_Artifact_Changeset'), null)->once();
 
         $this->creator->create($this->artifact, $this->fields_data, $this->submitter, $this->submitted_on);
     }
 
-    public function itDoesNotCallTheAfterMethodOnWorkflowWhenSaveOfInitialChangesetFails() {
+    public function itDoesNotCallTheAfterMethodOnWorkflowWhenSaveOfInitialChangesetFails()
+    {
         stub($this->changeset_dao)->create()->returns(false);
+        stub($this->workflow)->validate()->returns(true);
+
         expect($this->workflow)->after()->never();
 
         $this->creator->create($this->artifact, $this->fields_data, $this->submitter, $this->submitted_on);
     }
 
-    public function itDoesNotCallTheAfterMethodOnWorkflowWhenSaveOfArtifactFails() {
+    public function itDoesNotCallTheAfterMethodOnWorkflowWhenSaveOfArtifactFails()
+    {
         stub($this->changeset_dao)->create()->returns(true);
         stub($this->artifact_factory)->save()->returns(false);
+        stub($this->workflow)->validate()->returns(true);
+
         expect($this->workflow)->after()->never();
 
         $this->creator->create($this->artifact, $this->fields_data, $this->submitter, $this->submitted_on);
+    }
+
+    public function itDoesNotCreateTheChangesetIfTheWorkflowValidationFailed()
+    {
+        $transition = mock(Transition::class);
+
+        stub($this->workflow)->validate()->throws(
+            new Tracker_Workflow_Transition_InvalidConditionForTransitionException($transition)
+        );
+
+        expect($this->changeset_dao)->create()->never();
+        expect($this->artifact_factory)->save()->never();
+        expect($this->workflow)->after()->never();
+
+        $creation = $this->creator->create($this->artifact, $this->fields_data, $this->submitter, $this->submitted_on);
+
+        $this->assertFalse($creation);
     }
 }
 

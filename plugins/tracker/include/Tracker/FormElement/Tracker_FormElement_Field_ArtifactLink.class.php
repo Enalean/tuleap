@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-2019. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -1490,14 +1490,15 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
      *
      * @return bool true if the submitted value is empty
      */
-    public function isEmpty($submitted_value, Tracker_Artifact $artifact) {
+    public function isEmpty($submitted_value, Tracker_Artifact $artifact)
+    {
         $hasNoNewValues           = empty($submitted_value['new_values']);
         $hasNoLastChangesetValues = true;
         $last_changeset_values    = array();
-        $last_changeset           = $this->getLastChangesetValue($artifact);
+        $last_changeset_value     = $this->getLastChangesetValue($artifact);
 
-        if ($last_changeset) {
-            $last_changeset_values    = $last_changeset->getArtifactIds();
+        if ($last_changeset_value) {
+            $last_changeset_values    = $last_changeset_value->getArtifactIds();
             $hasNoLastChangesetValues = empty($last_changeset_values);
         }
 

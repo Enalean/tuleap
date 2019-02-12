@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -139,14 +139,16 @@ abstract class Tracker_Artifact_Changeset_InitialChangesetCreatorBase extends Tr
         array &$fields_data,
         PFUser $submitter
     ) {
-        $workflow = $artifact->getWorkflow();
-        $workflow->before($fields_data, $submitter, $artifact);
-        $augmented_data = $this->field_initializator->process($artifact, $fields_data);
-
         try {
-            $workflow->checkGlobalRules($augmented_data, $this->formelement_factory);
+            $workflow = $artifact->getWorkflow();
+            $workflow->validate($fields_data, $artifact, "");
+            $workflow->before($fields_data, $submitter, $artifact);
+            $augmented_data = $this->field_initializator->process($artifact, $fields_data);
+            $workflow->checkGlobalRules($augmented_data);
             return true;
         } catch (Tracker_Workflow_GlobalRulesViolationException $e) {
+            return false;
+        } catch (Tracker_Workflow_Transition_InvalidConditionForTransitionException $e) {
             return false;
         }
     }

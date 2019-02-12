@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-2019. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -668,6 +668,20 @@ class Tracker_FormElement_Field_FileTest extends Tracker_FormElement_Field_File_
 
         $formelement_field_file->shouldReceive('checkThatAtLeastOneFileIsUploaded')->andReturns(false);
         $formelement_field_file->shouldReceive('isPreviousChangesetEmpty')->andReturns(true);
+
+        $this->assertTrue($formelement_field_file->isEmpty($submitted_value, $artifact));
+    }
+
+    public function itReturnsTrueWhenTheFieldIsEmptyAtArtifactCreation()
+    {
+        $formelement_field_file = \Mockery::mock(\Tracker_FormElement_Field_File::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $submitted_value = [];
+
+        $no_changeset = \Mockery::spy(\Tracker_Artifact_Changeset_Null::class);
+        $artifact = \Mockery::spy(\Tracker_Artifact::class);
+        stub($artifact)->getLastChangeset()->returns($no_changeset);
+
+        $formelement_field_file->shouldReceive('checkThatAtLeastOneFileIsUploaded')->andReturns(false);
 
         $this->assertTrue($formelement_field_file->isEmpty($submitted_value, $artifact));
     }
