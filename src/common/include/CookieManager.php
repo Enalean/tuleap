@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,10 +19,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap;
+
 use Delight\Cookie\Cookie;
+use ForgeConfig;
 
 /**
- * CookieManager
+ * Tuleap\CookieManager
  *
  * Manages cookies
  */
@@ -34,7 +37,7 @@ class CookieManager
         $cookie->setValue($value);
         $cookie->setExpiryTime($expire);
 
-        return $cookie->save();
+        $this->sendHTTPHeader($cookie);
     }
 
     /**
@@ -55,7 +58,7 @@ class CookieManager
      */
     public static function canCookieUseSecureFlag()
     {
-        return (bool) ForgeConfig::get('sys_https_host');
+        return (bool)ForgeConfig::get('sys_https_host');
     }
 
     public function getCookie($name)
@@ -74,7 +77,8 @@ class CookieManager
     public function removeCookie($name)
     {
         $cookie = $this->buildCookie($name);
-        $cookie->delete();
+        $cookie->setValue('');
+        $this->sendHTTPHeader($cookie);
     }
 
     /**
@@ -85,10 +89,19 @@ class CookieManager
         $cookie_prefix = ForgeConfig::get('sys_cookie_prefix');
         $cookie_name   = "${cookie_prefix}_${name}";
 
-        if (! self::canCookieUseSecureFlag()) {
+        if (!self::canCookieUseSecureFlag()) {
             return $cookie_name;
         }
 
         return Cookie::PREFIX_HOST . $cookie_name;
+    }
+
+    private function sendHTTPHeader(Cookie $cookie) : void
+    {
+        $header = (string) $cookie;
+        if ($header === '' || headers_sent()) {
+            return;
+        }
+        header($header, false);
     }
 }

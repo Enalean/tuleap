@@ -1,4 +1,7 @@
 <?php
+
+use Tuleap\CookieManager;
+
 /**
  * Copyright (c) Enalean, 2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved

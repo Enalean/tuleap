@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,7 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class CookieManagerTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
+namespace Tuleap;
+
+use ForgeConfig;
+use Tuleap\Test\Network\HTTPHeaderStack;
+
+class CookieManagerTest extends \PHPUnit\Framework\TestCase
 {
     protected function setUp() : void
     {
@@ -29,52 +34,47 @@ class CookieManagerTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
     protected function tearDown() : void
     {
         ForgeConfig::restore();
+        HTTPHeaderStack::clear();
     }
 
-    /**
-     * @runInSeparateProcess
-     */
-    public function testCookiePrefixIsSet()
+    public function testCookiePrefixIsSet() : void
     {
         ForgeConfig::set('sys_default_domain', 'example.com');
         ForgeConfig::set('sys_https_host', 'example.com');
         $cookie_manager = new CookieManager();
         $cookie_manager->setCookie('name', 'value');
 
-        $headers = xdebug_get_headers();
+        $headers = HTTPHeaderStack::getStack();
 
-        $this->assertSame($headers[0], 'Set-Cookie: __Host-test_name=value; path=/; secure; httponly; SameSite=Lax');
+        $this->assertCount(1, $headers);
+        $this->assertSame($headers[0]->getHeader(), 'Set-Cookie: __Host-test_name=value; path=/; secure; httponly; SameSite=Lax');
     }
 
-    /**
-     * @runInSeparateProcess
-     */
-    public function testItDoesNotSetCookiePrefixIfHTTPSIsNotAvailable()
+    public function testItDoesNotSetCookiePrefixIfHTTPSIsNotAvailable() : void
     {
         ForgeConfig::set('sys_default_domain', 'example.com');
         ForgeConfig::set('sys_https_host', '');
         $cookie_manager = new CookieManager();
         $cookie_manager->setCookie('name', 'value');
 
-        $headers = xdebug_get_headers();
+        $headers = HTTPHeaderStack::getStack();
 
-        $this->assertSame($headers[0], 'Set-Cookie: test_name=value; path=/; httponly; SameSite=Lax');
+        $this->assertCount(1, $headers);
+        $this->assertSame($headers[0]->getHeader(), 'Set-Cookie: test_name=value; path=/; httponly; SameSite=Lax');
     }
 
-    /**
-     * @runInSeparateProcess
-     */
-    public function testCookiesRemoval()
+    public function testCookiesRemoval() : void
     {
         $cookie_manager = new CookieManager();
         $cookie_manager->removeCookie('name');
 
-        $headers = xdebug_get_headers();
+        $headers = HTTPHeaderStack::getStack();
 
-        $this->assertSame($headers[0], 'Set-Cookie: test_name=deleted; expires=Thu, 01-Jan-1970 00:00:01 GMT; Max-Age=0; path=/; httponly; SameSite=Lax');
+        $this->assertCount(1, $headers);
+        $this->assertSame($headers[0]->getHeader(), 'Set-Cookie: test_name=deleted; expires=Thu, 01-Jan-1970 00:00:01 GMT; Max-Age=0; path=/; httponly; SameSite=Lax');
     }
 
-    public function testItDeterminesIfACookieCanUseSecureFlag()
+    public function testItDeterminesIfACookieCanUseSecureFlag() : void
     {
         ForgeConfig::set('sys_https_host', '');
         $this->assertFalse(CookieManager::canCookieUseSecureFlag());

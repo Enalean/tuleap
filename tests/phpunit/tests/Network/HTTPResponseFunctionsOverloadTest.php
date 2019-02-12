@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,20 +16,30 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
-require_once __DIR__.'/../../src/vendor/autoload.php';
-require_once __DIR__.'/../../src/www/themes/BurningParrot/BurningParrotTheme.php';
-require_once __DIR__.'/../../src/common/constants.php';
-require_once __DIR__ . '/../lib/Network/HTTPResponseFunctionsOverload.php';
+declare(strict_types=1);
 
-$basedir      = dirname(__DIR__, 2);
-$src_path     = $basedir.'/src';
-$include_path = $basedir.'/src/www/include';
+namespace Tuleap\Test\Network;
 
-ini_set('include_path', ini_get('include_path').':'.$src_path.':'.$include_path);
+use PHPUnit\Framework\TestCase;
 
-foreach (glob(__DIR__ . '/../../plugins/*/phpunit/bootstrap.php') as $bootstrap_plugin) {
-    require_once $bootstrap_plugin;
+final class HTTPResponseFunctionsOverloadTest extends TestCase
+{
+    public function tearDown() : void
+    {
+        HTTPHeaderStack::clear();
+    }
+
+    public function testOverloadedHTTPHeadersFunctions() : void
+    {
+        $this->assertFalse(\Tuleap\headers_sent());
+        \Tuleap\header('Header: my_header');
+        $this->assertFalse(\Tuleap\headers_sent());
+
+        $stack = HTTPHeaderStack::getStack();
+
+        $this->assertCount(1, $stack);
+        $this->assertEquals('Header: my_header', $stack[0]->getHeader());
+    }
 }

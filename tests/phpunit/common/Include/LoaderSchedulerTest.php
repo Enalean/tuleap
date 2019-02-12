@@ -1,4 +1,7 @@
 <?php
+
+use Tuleap\CookieManager;
+
 /**
  * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
  *
