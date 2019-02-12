@@ -23,8 +23,17 @@
     width: 100%;
 }
 
-.trove-cats-np-max-values-input {
+.trove-cats-nb-max-values-input {
     width: 60px;
+}
+
+.trove-cats-is-project-flag-warning,
+.trove-cats-nb-max-values-input-warning {
+    display: none;
+
+    &.shown {
+        display: block;
+    }
 }
 
 .tlp-table-cell-actions-button {
