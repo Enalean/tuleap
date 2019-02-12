@@ -65,7 +65,8 @@ $progress-bar-background-color: $tlp-ui-border-normal;
 
 /* stylelint-disable selector-no-qualifying-type */
 .tlp-table > tbody > tr.document-tree-item-highlighted > td {
-    background: $tlp-theme-color;
+    border-bottom-color: transparentize($tlp-theme-color, .15);
+    background: transparentize($tlp-theme-color, .15);
     color: $tlp-ui-white;
 
     .document-folder-toggle,
@@ -103,6 +104,10 @@ $progress-bar-background-color: $tlp-ui-border-normal;
 .document-file-upload-cell-title-content {
     display: flex;
     align-items: center;
+}
+
+.document-file-upload-fake-item-cell-title {
+    display: flex;
 }
 
 .document-file-upload-progress-value {
