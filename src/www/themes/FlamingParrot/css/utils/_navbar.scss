@@ -1,3 +1,4 @@
+$nav-dropdown-content-border-radius: 3px;
 .logo {
     width: $sidebar-width;
     max-width: $sidebar-width;
@@ -421,6 +422,72 @@
             fill: #747474;
         }
     }
+}
+
+.current-project-nav-flag-popover {
+    width: 276px;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    font-size: 14px;
+    font-weight: normal;
+    letter-spacing: normal;
+    text-transform: none;
+    background: transparent;
+    color: #333333;
+
+    > h3 {
+        margin: 0;
+        padding: 10px;
+        border-top-left-radius: $nav-dropdown-content-border-radius;
+        border-top-right-radius: $nav-dropdown-content-border-radius;
+        background-color: $main;
+        color: #ffffff;
+        font-size: 14px;
+        font-weight: normal;
+        line-height: 20px;
+        letter-spacing: normal;
+        text-align: center;
+        cursor: initial;
+    }
+
+    > .popover-content {
+        padding: 20px;
+        background: #FFFFFF;
+        border-bottom-left-radius: $nav-dropdown-content-border-radius;
+        border-bottom-right-radius: $nav-dropdown-content-border-radius;
+    }
+
+    > .arrow::after {
+        border-bottom-color: $main;
+    }
+}
+
+.current-project-nav-flag-popover-flags {
+    margin: 0 0 0 10px;
+    list-style-type: disc;
+    color: $main;
+}
+
+.current-project-nav-flag-popover-flag {
+    margin: 0 0 20px;
+
+    &:last-child {
+        margin: 0;
+    }
+}
+
+.current-project-nav-flag-popover-title {
+    margin: 0 0 10px;
+    line-height: 20px;
+    font-size: 20px;
+    font-weight: 600;
+    color: $main;
+}
+
+.current-project-nav-flag-popover-description {
+    margin: 0;
+    color: #333333;
 }
 
 .current-project-nav-flag-labels {

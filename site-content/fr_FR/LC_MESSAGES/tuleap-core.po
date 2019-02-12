@@ -915,6 +915,11 @@ msgstr "Paramètres de création de projets"
 msgid "Project does not exist"
 msgstr "Le projet n'existe pas"
 
+msgid "Project flag"
+msgid_plural "Project flags"
+msgstr[0] "Marqueur de projet"
+msgstr[1] "Marqueurs de projet"
+
 msgid "Project flag?"
 msgstr "Marqueur de projet ?"
 
@@ -1175,6 +1180,9 @@ msgid ""
 msgstr ""
 "Le projet %s n'est pas dans un état valide et ne peut pas être affiché dans "
 "la liste. Veuillez faire le nécessaire."
+
+msgid "The project is:"
+msgstr "Le projet est :"
 
 msgid "The requested dashboard does not exist."
 msgstr "Le tableau de bord demandé n’existe pas."

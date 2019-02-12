@@ -43,7 +43,7 @@ class ProjectFlagsBuilder
     {
         return array_map(
             function ($row) {
-                return new ProjectFlagPresenter($row['label']);
+                return new ProjectFlagPresenter($row['label'], $row['description']);
             },
             $this->dao->searchProjectFlags((int) $project->getID())
         );

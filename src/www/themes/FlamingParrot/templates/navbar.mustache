@@ -19,6 +19,9 @@
                         {{# has_project_flags }}
                             <span class="current-project-nav-flag"
                                   title="{{# project_flags }}{{ label }} {{/ project_flags }}"
+                                  data-title="{{ project_flags_title }}"
+                                  data-description="{{ project_flags_description }}"
+                                  data-project-flags="{{ json_encoded_project_flags }}"
                             >
                                 {{# glyph }}project-shield{{/ glyph }}
                                 <span class="current-project-nav-flag-labels">
