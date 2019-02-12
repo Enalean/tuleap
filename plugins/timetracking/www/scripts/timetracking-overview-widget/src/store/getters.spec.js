@@ -44,4 +44,37 @@ describe("Getters Timetracking Overview", () => {
             expect(getters.has_error(state)).toBe(false);
         });
     });
+    describe("Call sums", () => {
+        it("Given a widget with state initialisation, Then set trackers, getters should give total times of all trackers", () => {
+            let trackers = [
+                {
+                    id: "16",
+                    label: "tracker",
+                    project: {},
+                    uri: "",
+                    minutes: 60
+                },
+                {
+                    id: "18",
+                    label: "tracker 2",
+                    project: {},
+                    uri: "",
+                    minutes: 20
+                }
+            ];
+            mutations.setTrackersTimes(state, trackers);
+            expect(getters.get_formatted_total_sum(state)).toBe("01:20");
+        });
+
+        it("Given a widget with state initialisation, Then get_formatted_time should format total time", () => {
+            let trackers = {
+                id: "16",
+                label: "tracker",
+                project: {},
+                uri: "",
+                minutes: 120
+            };
+            expect(getters.get_formatted_time()(trackers)).toBe("02:00");
+        });
+    });
 });

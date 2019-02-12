@@ -40,7 +40,7 @@
     </tr>
 </template>
 <script>
-import { formatMinutes } from "../../time-formatters.js";
+import { formatMinutes } from "../../../../time-formatters.js";
 import WidgetModalEditTime from "./WidgetModalEditTime.vue";
 
 export default {

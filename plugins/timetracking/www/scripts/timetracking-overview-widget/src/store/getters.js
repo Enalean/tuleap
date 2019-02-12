@@ -18,3 +18,20 @@
  */
 
 export const has_error = state => state.error_message !== null;
+
+import { formatMinutes } from "../../../time-formatters.js";
+
+export function get_formatted_total_sum(state) {
+    let sum = 0;
+    state.trackers_times.forEach(function(tracker) {
+        sum = sum + tracker.minutes;
+    });
+
+    return formatMinutes(sum);
+}
+
+export const get_formatted_time = () => time => {
+    return formatMinutes(time.minutes);
+};
+
+export const can_results_be_displayed = state => !state.is_loading && state.error_message === null;

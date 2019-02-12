@@ -22,13 +22,18 @@
         <div v-if="has_error" class="tlp-alert-danger">
             {{ error_message }}
         </div>
-        <table v-else class="tlp-table">
+        <div v-if="is_loading" class="timetracking-loader"></div>
+        <table v-if="can_results_be_displayed" class="tlp-table">
             <thead>
                 <tr>
-                    <th v-translate> Tracker </th>
-                    <th v-translate> Project </th>
+                    <th v-translate>
+                        Tracker
+                    </th>
+                    <th v-translate>
+                        Project
+                    </th>
                     <th class="tlp-table-cell-numeric">
-                        <translate> Time </translate>
+                        <translate> Time</translate>
                         <span class="tlp-tooltip tlp-tooltip-left timetracking-time-tooltip"
                               v-bind:data-tlp-tooltip="time_format_tooltip"
                               v-bind:aria-label="time_format_tooltip"
@@ -40,26 +45,45 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
+                <tr v-if="! has_data_to_display">
                     <td colspan="4" class="tlp-table-cell-empty" v-translate>
                         No time have been found for this period and these trackers
                     </td>
                 </tr>
+                <time-tracking-overview-table-row v-else
+                                                  v-for="tracker_time in trackers_times"
+                                                  v-bind:key="tracker_time.id"
+                                                  v-bind:time="tracker_time"
+                />
             </tbody>
+            <tfoot v-if="has_data_to_display">
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th class="tlp-table-cell-numeric timetracking-total-sum">
+                        ∑ {{ get_formatted_total_sum }}
+                    </th>
+                    <th></th>
+                </tr>
+            </tfoot>
         </table>
     </div>
 </template>
-
 <script>
+import TimeTrackingOverviewTableRow from "./TimeTrackingOverviewTableRow.vue";
 import { mapGetters, mapState } from "vuex";
 
 export default {
     name: "TimeTrackingOverviewTable",
+    components: { TimeTrackingOverviewTableRow },
     computed: {
-        ...mapState(["error_message"]),
-        ...mapGetters(["has_error"]),
+        ...mapGetters(["get_formatted_total_sum", "has_error", "can_results_be_displayed"]),
+        ...mapState(["trackers_times", "error_message", "is_loading"]),
         time_format_tooltip() {
             return this.$gettext("The time is displayed in hours:minutes");
+        },
+        has_data_to_display() {
+            return this.trackers_times.length > 0;
         }
     }
 };

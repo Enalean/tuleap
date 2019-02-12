@@ -50,3 +50,43 @@ describe("Get Report() -", () => {
         ]);
     });
 });
+
+describe("Get Report's times() -", () => {
+    it("the REST API will be queried : trackers withs artefacts and times are returned", async () => {
+        const trackers = [
+            {
+                artifacts: [
+                    {
+                        minutes: 20
+                    },
+                    {
+                        minutes: 40
+                    }
+                ],
+                id: "16",
+                label: "tracker",
+                project: {},
+                uri: ""
+            },
+            {
+                artifacts: [
+                    {
+                        minutes: 20
+                    }
+                ],
+                id: "18",
+                label: "tracker 2",
+                project: {},
+                uri: ""
+            }
+        ];
+        mockFetchSuccess(tlp.get, {
+            return_json: trackers
+        });
+
+        const result = await getTrackersFromReport(1);
+
+        expect(tlp.get).toHaveBeenCalledWith("/api/v1/timetracking_reports/1");
+        expect(result).toEqual(trackers);
+    });
+});

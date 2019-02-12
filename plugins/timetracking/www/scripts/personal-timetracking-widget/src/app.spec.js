@@ -19,7 +19,7 @@
 
 import "tlp-mocks";
 
-import "./time-formatters.spec.js";
+import "../../time-formatters.spec.js";
 import "./api/rest-querier.spec.js";
 
 import "./store/mutations.spec.js";

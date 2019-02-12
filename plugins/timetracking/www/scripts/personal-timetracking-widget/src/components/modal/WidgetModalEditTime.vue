@@ -55,7 +55,8 @@
                     v-bind:class="{'tlp-tooltip tlp-tooltip-bottom timetracking-tooltip': error_message}"
                     v-bind:data-tlp-tooltip="error_message"
                     v-on:click="validateNewTime()"
-            ><i class="fa fa-check"></i>
+            >
+                <i class="fa fa-check"></i>
             </button>
             <button class="tlp-button-primary tlp-button-outline"
                     type="button"
@@ -68,7 +69,7 @@
 </template>
 <script>
 import { DateTime } from "luxon";
-import { formatMinutes } from "../../time-formatters.js";
+import { formatMinutes } from "../../../../time-formatters.js";
 import { TIME_REGEX } from "../../../../constants.js";
 import { datePicker } from "tlp";
 import { mapGetters } from "vuex";

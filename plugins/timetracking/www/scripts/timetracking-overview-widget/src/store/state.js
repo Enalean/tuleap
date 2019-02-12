@@ -21,11 +21,13 @@ import { DateTime } from "luxon";
 const state = {
     report_id: null,
     start_date: DateTime.local()
-        .minus({ weeks: 1 })
+        .minus({ months: 1 })
         .toISODate(),
     end_date: DateTime.local().toISODate(),
     error_message: null,
-    selected_trackers: []
+    selected_trackers: [],
+    trackers_times: [],
+    is_loading: false
 };
 
 export default state;

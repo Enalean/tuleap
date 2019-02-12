@@ -39,7 +39,9 @@
                 <translate> Project </translate>
             </span>
             <span class="timetracking-details-modal-artifact-infos-project-name">
-                <a v-bind:href="project_link">{{ current_project.label }}</a>
+                <a v-bind:href="project_link">
+                    {{ current_project.label }}
+                </a>
             </span>
         </div>
     </div>
@@ -47,7 +49,7 @@
 
 <script>
 import { mapGetters } from "vuex";
-import { formatDateDayMonthYear } from "../../time-formatters.js";
+import { formatDateDayMonthYear } from "../../../../time-formatters.js";
 export default {
     name: "WidgetModalArtifactInfo",
     computed: {
