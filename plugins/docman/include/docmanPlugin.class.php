@@ -41,6 +41,7 @@ use Tuleap\Docman\Notifications\UsersUpdater;
 use Tuleap\Docman\PermissionsPerGroup\PermissionPerGroupDocmanServicePaneBuilder;
 use Tuleap\Docman\REST\ResourcesInjector;
 use Tuleap\Docman\REST\v1\ItemRepresentationBuilder;
+use Tuleap\Docman\REST\v1\MetadataRepresentationBuilder;
 use Tuleap\Docman\Tus\TusServer;
 use Tuleap\Docman\Upload\FileUploadController;
 use Tuleap\Http\MessageFactoryBuilder;
@@ -1239,7 +1240,10 @@ class DocmanPlugin extends Plugin
             Docman_PermissionsManager::instance($project->getID()),
             new \Docman_LockFactory(),
             new \Docman_ApprovalTableFactoriesFactory(),
-            new ApprovalTableStateMapper()
+            new ApprovalTableStateMapper(),
+            new MetadataRepresentationBuilder(
+                new Docman_MetadataFactory($project->getID())
+            )
         );
 
         $item_representation = $item_representation_builder->buildRootId($project, $current_user);

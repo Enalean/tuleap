@@ -29,6 +29,7 @@ use Docman_ItemDao;
 use Docman_ItemFactory;
 use Docman_Log;
 use EventManager;
+use Luracast\Restler\RestException;
 use PluginManager;
 use Project;
 use ProjectManager;
@@ -108,8 +109,14 @@ class DocmanItemsResource extends AuthenticatedResource
         $item          = $items_request->getItem();
 
         $representation_visitor = $this->getItemRepresentationVisitor($items_request);
-
-        return $item->accept($representation_visitor, ['current_user' => $items_request->getUser()]);
+        try {
+            return $item->accept($representation_visitor, ['current_user' => $items_request->getUser()]);
+        } catch (UnknownMetadataException $exception) {
+            throw new RestException(
+                500,
+                $exception->getMessage()
+            );
+        }
     }
 
     /**
@@ -258,7 +265,14 @@ class DocmanItemsResource extends AuthenticatedResource
 
         $item_representation_builder = $this->getRepresentationBuilder($items_request);
 
-        $items_representation = $item_representation_builder->buildFolderContent($folder, $user, $limit, $offset);
+        try {
+            $items_representation = $item_representation_builder->buildFolderContent($folder, $user, $limit, $offset);
+        } catch (UnknownMetadataException $exception) {
+            throw new RestException(
+                500,
+                $exception->getMessage()
+            );
+        }
 
         Header::sendPaginationHeaders($limit, $offset, $items_representation->getTotalSize(), self::MAX_LIMIT);
 
@@ -400,7 +414,10 @@ class DocmanItemsResource extends AuthenticatedResource
             $this->getDocmanPermissionManager($project),
             new \Docman_LockFactory(),
             new \Docman_ApprovalTableFactoriesFactory(),
-            new ApprovalTableStateMapper()
+            new ApprovalTableStateMapper(),
+            new MetadataRepresentationBuilder(
+                new \Docman_MetadataFactory($project->getID())
+            )
         );
         return $item_representation_builder;
     }

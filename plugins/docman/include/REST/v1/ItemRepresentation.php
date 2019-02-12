@@ -95,6 +95,10 @@ class ItemRepresentation
      * @var ItemLockInfoRepresentation | null
      */
     public $lock_info;
+    /**
+     * @var MetadataRepresentation[]
+     */
+    public $metadata;
 
     /**
      * @var ItemApprovalTableRepresentation | null
@@ -107,6 +111,7 @@ class ItemRepresentation
         $user_can_write,
         $type,
         bool $is_expanded,
+        array $metadata_representations,
         ItemApprovalTableRepresentation $approval_table = null,
         ItemLockInfoRepresentation $lock_info = null,
         FilePropertiesRepresentation $file_properties = null,
@@ -127,6 +132,7 @@ class ItemRepresentation
         $this->is_expanded              = $is_expanded;
         $this->approval_table           = $approval_table;
         $this->lock_info                = $lock_info;
+        $this->metadata                 = $metadata_representations;
 
         $parent_id = JsonCast::toInt($item->getParentId());
 

@@ -231,8 +231,11 @@ class Docman_Item {
     public function setMetadata(&$metadata) {
         $this->_metadata = $metadata;
     }
-    
-    public function &getMetadata() {
+
+    /**
+     * @return Docman_Metadata[]
+     */
+    public function getMetadata() {
         return $this->_metadata;
     }
    

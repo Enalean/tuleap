@@ -152,7 +152,19 @@ class ItemRepresentationCollectionBuilderTest extends \PHPUnit\Framework\TestCas
             $user_representation,
             true,
             ItemRepresentation::TYPE_FOLDER,
-            false
+            false,
+            [
+                new MetadataRepresentation(
+                    'name',
+                    PLUGIN_DOCMAN_METADATA_TYPE_STRING,
+                    false,
+                    'value',
+                    [],
+                    true
+                )
+            ],
+            null,
+            null
         );
 
         $version_data_item3   = [
@@ -183,6 +195,16 @@ class ItemRepresentationCollectionBuilderTest extends \PHPUnit\Framework\TestCas
             true,
             ItemRepresentation::TYPE_FILE,
             false,
+            [
+                new MetadataRepresentation(
+                    'name',
+                    PLUGIN_DOCMAN_METADATA_TYPE_STRING,
+                    false,
+                    'value',
+                    [],
+                    true
+                )
+            ],
             null,
             null,
             $file_properties
@@ -259,7 +281,17 @@ class ItemRepresentationCollectionBuilderTest extends \PHPUnit\Framework\TestCas
             $user_representation,
             true,
             ItemRepresentation::TYPE_FOLDER,
-            false
+            false,
+            [
+                new MetadataRepresentation(
+                    'name',
+                    PLUGIN_DOCMAN_METADATA_TYPE_STRING,
+                    false,
+                    'value',
+                    [],
+                    true
+                )
+            ]
         );
         $representation2 = new ItemRepresentation();
         $representation2->build(
@@ -267,7 +299,17 @@ class ItemRepresentationCollectionBuilderTest extends \PHPUnit\Framework\TestCas
             $user_representation,
             true,
             ItemRepresentation::TYPE_FOLDER,
-            false
+            false,
+            [
+                new MetadataRepresentation(
+                    'name',
+                    PLUGIN_DOCMAN_METADATA_TYPE_STRING,
+                    false,
+                    'value',
+                    [],
+                    true
+                )
+            ]
         );
 
         $this->item_representation_builder->shouldReceive('buildItemRepresentation')
