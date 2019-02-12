@@ -250,6 +250,19 @@ msgstr "Supprimer"
 msgid "Destination id does not exist."
 msgstr "L'id destination n'existe pas."
 
+msgid "Disable all notifications"
+msgstr "Désactiver toutes les notifications"
+
+msgid ""
+"Disable all notifications, regardless of user preferences and regardless of "
+"\"Global Email Notifications\" below."
+msgstr ""
+"Désactiver les notifications quelles que soient les préférences utilisateur "
+"et les \"Notification e-mail globale\" ci-dessous."
+
+msgid "Disable notifications"
+msgstr "Désactiver les notifications"
+
 msgid "Edit"
 msgstr "Éditer"
 
@@ -267,8 +280,12 @@ msgstr ""
 msgid "Enable notifications"
 msgstr "Activer les notifications"
 
-msgid "Enable notifications for this tracker"
-msgstr "Activer les notifications pour cet outil de suivi"
+msgid ""
+"Enable notifications for this tracker, you will be able to choose the "
+"notifications level once enabled."
+msgstr ""
+"Activer les notifications pour ce tracker, vous pourrez choisir le mode"
+"de notifications"
 
 msgid "Error during parsing expert query"
 msgstr "Erreur pendant l'analyse de la requête experte"
@@ -468,19 +485,6 @@ msgstr "Valider"
 
 msgid "Submit Changes"
 msgstr "Valider"
-
-msgid "Suspend all notifications"
-msgstr "Suspendre toutes les notifications"
-
-msgid ""
-"Suspend all notifications, regardless of user preferences and regardless of "
-"\"Global Email Notifications\" below."
-msgstr ""
-"Désactiver les notifications quelles que soient les préférences utilisateur "
-"et les \"Notification e-mail globale\" ci-dessous."
-
-msgid "Suspend notifications"
-msgstr "Suspendre les notification"
 
 msgid "Target URL:"
 msgstr "URL cible :"

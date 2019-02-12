@@ -4,7 +4,7 @@
     <p>
         {{# dgettext }}
             tuleap-tracker
-            | Enable notifications for this tracker
+            | Enable notifications for this tracker, you will be able to choose the notifications level once enabled.
         {{/ dgettext }}
     </p>
     <button name="enable_notifications" class="btn">
@@ -14,15 +14,15 @@
 {{/ is_disabled }}
 
 {{^ is_disabled }}
-    <h3>{{# dgettext }} tuleap-tracker | Suspend all notifications {{/ dgettext }}</h3>
+    <h3>{{# dgettext }} tuleap-tracker | Disable all notifications {{/ dgettext }}</h3>
     <p>
         {{# dgettext }}
             tuleap-tracker
-            | Suspend all notifications, regardless of user preferences and regardless of "Global Email Notifications" below.
+            | Disable all notifications, regardless of user preferences and regardless of "Global Email Notifications" below.
         {{/ dgettext }}
     </p>
     <button name="disable_notifications" class="btn btn-danger">
-        {{# dgettext }} tuleap-tracker | Suspend notifications {{/ dgettext }}
+        {{# dgettext }} tuleap-tracker | Disable notifications {{/ dgettext }}
     </button>
 
     <h3>{{# dgettext }} tuleap-tracker | Default notifications {{/ dgettext }}</h3>
