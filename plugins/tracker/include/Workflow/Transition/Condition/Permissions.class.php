@@ -1,7 +1,6 @@
 <?php
-
 /**
- * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,10 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+//phpcs:ignoreFile
+
 use Tuleap\Tracker\Workflow\Transition\Condition\Visitor;
 
 class Workflow_Transition_Condition_Permissions extends Workflow_Transition_Condition
-{ //phpcs:ignore
+{
 
     /** @var string */
     public $identifier = 'perms';
@@ -113,7 +114,7 @@ class Workflow_Transition_Condition_Permissions extends Workflow_Transition_Cond
     public function validate($fields_data, Tracker_Artifact $artifact, $comment_body) {
         $current_user = UserManager::instance()->getCurrentUser();
 
-        if (! $this->isUserAllowedToSeeTransition($current_user, $artifact->getTracker()->getGroupId())) {
+        if (! $this->isUserAllowedToSeeTransition($current_user, $artifact->getTracker())) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,
                 $GLOBALS['Language']->getText('plugin_tracker_artifact', 'transition_permissions_not_valid')
@@ -124,10 +125,15 @@ class Workflow_Transition_Condition_Permissions extends Workflow_Transition_Cond
         return true;
     }
 
-    public function isUserAllowedToSeeTransition(PFUser $user, $project_id) {
+    public function isUserAllowedToSeeTransition(PFUser $user, Tracker $tracker)
+    {
+        if ($tracker->userIsAdmin($user)) {
+            return true;
+        }
+
         $transition_ugroups = $this->getAuthorizedUGroups();
         foreach($transition_ugroups as $ugroup) {
-            if ($user->isMemberOfUGroup($ugroup['ugroup_id'], $project_id)) {
+            if ($user->isMemberOfUGroup($ugroup['ugroup_id'], $tracker->getGroupId())) {
                 return true;
             }
         }
