@@ -23,6 +23,9 @@
                                 data-placeholder="{{# gettext }}Choose a category…{{/ gettext }}"
                                 data-maximum-selection-length="{{ maximum_selection_length }}"
                         >
+                            {{^ is_multiple }}
+                                {{^ is_mandatory }}<option value="">{{# gettext }}Choose a category…{{/gettext}}</option>{{/is_mandatory}}
+                            {{/is_multiple}}
                             {{# values }}
                                 <option {{# is_selected }}selected{{/ is_selected }} data-fullpath="{{ fullpath }}" value="{{ id }}">
                                     {{ label }}
