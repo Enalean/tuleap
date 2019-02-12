@@ -28,7 +28,7 @@ class ProjectFlagsDao extends DataAccessObject
 {
     public function searchProjectFlags(int $project_id): array
     {
-        $sql = 'SELECT trove_cat.fullname as label
+        $sql = 'SELECT trove_cat.fullname as label, trove_cat.description
                 FROM trove_group_link
                     INNER JOIN trove_cat AS top_category ON (
                         trove_group_link.trove_cat_root = top_category.trove_cat_id

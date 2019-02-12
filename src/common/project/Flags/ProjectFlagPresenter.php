@@ -28,12 +28,14 @@ class ProjectFlagPresenter
      * @var string
      */
     public $label;
-
     /**
-     * @param string $label
+     * @var string
      */
-    public function __construct($label)
+    public $description;
+
+    public function __construct(string $label, string $description)
     {
-        $this->label = $label;
+        $this->label       = $label;
+        $this->description = $description;
     }
 }
