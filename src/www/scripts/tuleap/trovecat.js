@@ -46,7 +46,69 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     selectParentCategoryOption();
+    bindNbMaxValuesToProjectFlag();
 });
+
+function bindNbMaxValuesToProjectFlag() {
+    for (const nb_max_input of document.querySelectorAll(".trove-cats-nb-max-values-input")) {
+        const is_project_flag_input = document.getElementById(
+            nb_max_input.dataset.inputProjectFlagId
+        );
+        if (!is_project_flag_input) {
+            continue;
+        }
+
+        if (is_project_flag_input.checked) {
+            markFormElementAsDisabled(nb_max_input);
+        } else if (nb_max_input.value !== "1") {
+            markFormElementAsDisabled(is_project_flag_input);
+        }
+
+        is_project_flag_input.addEventListener("click", () => {
+            if (is_project_flag_input.checked) {
+                markFormElementAsDisabled(nb_max_input);
+            } else {
+                markFormElementAsEnabled(nb_max_input);
+            }
+        });
+
+        nb_max_input.addEventListener("click", () => {
+            if (nb_max_input.value === "1") {
+                markFormElementAsEnabled(is_project_flag_input);
+            } else {
+                markFormElementAsDisabled(is_project_flag_input);
+            }
+        });
+    }
+}
+
+function markFormElementAsDisabled(input) {
+    input.disabled = true;
+    const parent = input.closest(".tlp-form-element");
+    if (parent) {
+        parent.classList.add("tlp-form-element-disabled");
+    }
+    const warning = document.getElementById(input.dataset.warningId);
+    if (warning) {
+        warning.classList.add("shown");
+    }
+}
+
+function markFormElementAsEnabled(input) {
+    if (Boolean(input.dataset.isPermanentlyDisabled) === true) {
+        return;
+    }
+
+    input.disabled = false;
+    const parent = input.closest(".tlp-form-element");
+    if (parent) {
+        parent.classList.remove("tlp-form-element-disabled");
+    }
+    const warning = document.getElementById(input.dataset.warningId);
+    if (warning) {
+        warning.classList.remove("shown");
+    }
+}
 
 function selectParentCategoryOption() {
     var select_categories = document.getElementsByClassName(

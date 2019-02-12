@@ -214,7 +214,7 @@ class TroveCatListController implements DispatchableWithRequest
             $nb_max_values = self::DEFAULT_NB_MAX_VALUES;
         }
 
-        $is_project_flag = $this->isProjectFlag($request);
+        $is_project_flag = $this->isProjectFlag($request, $nb_max_values);
 
         $display = $this->isANewRootChild(
             $request->get('parent'),
@@ -289,7 +289,7 @@ class TroveCatListController implements DispatchableWithRequest
      * @return bool
      * @throws \Exception
      */
-    private function isProjectFlag(HTTPRequest $request)
+    private function isProjectFlag(HTTPRequest $request, $nb_max_values)
     {
         $is_project_flag = $request->get('is-project-flag') === "1";
         if ($is_project_flag) {
@@ -298,6 +298,10 @@ class TroveCatListController implements DispatchableWithRequest
             }
 
             $this->checkNbOfExistingProjectFlags($request);
+
+            if ($nb_max_values !== 1) {
+                throw new \Exception("Only categories with nb max values = 1 can be marked as project flag.");
+            }
         }
 
         return $is_project_flag;

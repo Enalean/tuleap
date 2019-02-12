@@ -73,17 +73,25 @@
             </div>
 
             {{# is_top_level_id }}
+                <input type="hidden" name="nb-max-values" value="1">
                 <div class="tlp-form-element">
                     <label class="tlp-label" for="nb-max-values-{{ trove_cat_id }}">
                         {{# gettext }}Nb maximum of allowed values{{/ gettext }}
                     </label>
                     <input type="number"
                            min="1"
-                           class="tlp-input trove-cats-np-max-values-input"
+                           class="tlp-input trove-cats-nb-max-values-input"
                            id="nb-max-values-{{ trove_cat_id }}"
+                           data-input-project-flag-id="trove-cats-modal-is-project-flag-{{ trove_cat_id }}"
+                           data-warning-id="nb-max-values-warning-{{ trove_cat_id }}"
                            name="nb-max-values"
                            value="{{ nb_max_values }}"
                            placeholder="3">
+                    <p class="tlp-text-warning trove-cats-nb-max-values-input-warning"
+                       id="nb-max-values-warning-{{ trove_cat_id }}"
+                    >
+                        {{# gettext }}Can only be updated when the category is not used as project flag.{{/ gettext }}
+                    </p>
                 </div>
             {{/ is_top_level_id }}
 
@@ -115,6 +123,7 @@
                         <input
                             type="checkbox"
                             name="is-project-flag"
+                            id="trove-cats-modal-is-project-flag-{{ trove_cat_id }}"
                             value="1"
                             {{# is_project_flag }} checked {{/ is_project_flag }}
                             {{# is_quota_of_project_flags_reached }}
@@ -122,11 +131,14 @@
                                     disabled
                                 {{/ is_project_flag }}
                             {{/ is_quota_of_project_flags_reached }}
+                            data-is-permanently-disabled="{{# is_quota_of_project_flags_reached }}{{^ is_project_flag }}1{{/ is_project_flag }}{{/ is_quota_of_project_flags_reached }}"
                         >
                         {{# gettext }}Use as project flag{{/ gettext }}
                     </label>
                     <p class="tlp-text-info">
-                        {{# gettext }}Project flags are displayed in the navigation bar. Up to 2 categories can be used as flag.{{/ gettext }}
+                        {{# gettext }}Project flags are displayed in the navigation bar.{{/ gettext }}<br>
+                        {{# gettext }}Up to 2 categories can be used as flag.{{/ gettext }}<br>
+                        {{# gettext }}Nb maximum of allowed values must be 1.{{/ gettext }}
                     </p>
                 </div>
             {{/ is_top_level_id }}

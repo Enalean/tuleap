@@ -218,6 +218,11 @@ msgstr "Bloquer l'utilisation des mots de passe connus comme compromis"
 msgid "CVS"
 msgstr "CVS"
 
+msgid "Can only be updated when the category is not used as project flag."
+msgstr ""
+"Ne peut être mis à jour que lorsque la catégorie n'est pas utilisée en tant "
+"que marqueur de projet."
+
 msgid "Cancel"
 msgstr "Annuler"
 
@@ -718,6 +723,9 @@ msgstr "Barre de menu"
 msgid "Nb maximum of allowed values"
 msgstr "Nb maximum de valeurs autorisées"
 
+msgid "Nb maximum of allowed values must be 1."
+msgstr "Nb maximum de valeurs autorisées doit être à 1."
+
 msgid "Nb members"
 msgstr "Nb membres"
 
@@ -923,12 +931,8 @@ msgstr[1] "Marqueurs de projet"
 msgid "Project flag?"
 msgstr "Marqueur de projet ?"
 
-msgid ""
-"Project flags are displayed in the navigation bar. Up to 2 categories can be "
-"used as flag."
-msgstr ""
-"Les marqueurs de projet sont affichés dans la barre de navigation. Jusqu'à 2 "
-"catégories peuvent être utilisées en tant que marqueur."
+msgid "Project flags are displayed in the navigation bar."
+msgstr "Les marqueurs de projet sont affichés dans la barre de navigation."
 
 msgid "Project hierarchy"
 msgstr "Hierarchie de projets"
@@ -1369,6 +1373,9 @@ msgstr "Cette action n'est pas autorisée pour les anonymes"
 
 msgid "Unix name"
 msgstr "Now unix"
+
+msgid "Up to 2 categories can be used as flag."
+msgstr "Jusqu'à 2 catégories peuvent être utilisées en tant que marqueur."
 
 msgid "Update"
 msgstr "Mettre à jour"
