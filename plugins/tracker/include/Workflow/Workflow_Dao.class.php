@@ -21,7 +21,7 @@
 
 require_once('common/dao/include/DataAccessObject.class.php');
 
-class Workflow_Dao extends DataAccessObject
+class Workflow_Dao extends DataAccessObject //phpcs:ignoreFile
 {
     public function __construct($da = null)
     {
@@ -32,9 +32,10 @@ class Workflow_Dao extends DataAccessObject
     public function create($tracker_id, $field_id)
     {
         $tracker_id = $this->da->escapeInt($tracker_id);
-        $field_id = $this->da->escapeInt($field_id);
-        $sql = "INSERT INTO $this->table_name (tracker_id, field_id)
-                VALUES ($tracker_id, $field_id)";
+        $field_id   = $this->da->escapeInt($field_id);
+
+        $sql        = "INSERT INTO tracker_workflow (tracker_id, field_id, is_advanced)
+                VALUES ($tracker_id, $field_id, 1)";
         return $this->updateAndGetLastId($sql);
     }
 
@@ -71,23 +72,27 @@ class Workflow_Dao extends DataAccessObject
         return $this->update($sql);
     }
 
-    public function duplicate($to_tracker_id, $from_id, $to_id, $values, $is_used)
+    public function duplicate($to_tracker_id, $to_id, $is_used, $is_advanced)
     {
         $to_tracker_id = $this->da->escapeInt($to_tracker_id);
-        $to_id = $this->da->escapeInt($to_id);
-        $is_used = $this->da->escapeInt($is_used);
-        $sql = "INSERT INTO $this->table_name (tracker_id, field_id, is_used)
-                VALUES ($to_tracker_id, $to_id, $is_used)";
+        $to_id         = $this->da->escapeInt($to_id);
+        $is_used       = $this->da->escapeInt($is_used);
+        $is_advanced   = $this->da->escapeInt($is_advanced);
+
+        $sql = "INSERT INTO tracker_workflow (tracker_id, field_id, is_used, is_advanced)
+                VALUES ($to_tracker_id, $to_id, $is_used, $is_advanced)";
         return $this->updateAndGetLastId($sql);
     }
 
-    public function save($tracker_id, $field_id, $is_used)
+    public function save($tracker_id, $field_id, $is_used, $is_advanced)
     {
-        $tracker_id = $this->da->escapeInt($tracker_id);
-        $field_id = $this->da->escapeInt($field_id);
-        $is_used = $this->da->escapeInt($is_used);
-        $sql = "INSERT INTO $this->table_name (tracker_id, field_id, is_used)
-                VALUES ($tracker_id, $field_id, $is_used)";
+        $tracker_id  = $this->da->escapeInt($tracker_id);
+        $field_id    = $this->da->escapeInt($field_id);
+        $is_used     = $this->da->escapeInt($is_used);
+        $is_advanced = $this->da->escapeInt($is_advanced);
+
+        $sql = "INSERT INTO tracker_workflow (tracker_id, field_id, is_used, is_advanced)
+                VALUES ($tracker_id, $field_id, $is_used, $is_advanced)";
         return $this->updateAndGetLastId($sql);
     }
 

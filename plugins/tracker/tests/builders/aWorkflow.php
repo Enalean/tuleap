@@ -73,7 +73,8 @@ class Test_Workflow_Builder {
         return $this;
     }
 
-    public function build() {
+    public function build()
+    {
         return new Workflow(
             $this->global_rules_manager,
             $this->trigger_rules_manager,
@@ -82,6 +83,7 @@ class Test_Workflow_Builder {
             $this->tracker_id,
             $this->field_id,
             $this->is_used,
+            true,
             false,
             $this->transitions
         );

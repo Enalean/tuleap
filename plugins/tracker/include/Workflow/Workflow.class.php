@@ -21,8 +21,8 @@
 
 use Tuleap\Tracker\Workflow\BeforeEvent;
 
-class Workflow {
-
+class Workflow //phpcs:ignoreFile
+{
     const FUNC_ADMIN_RULES       = 'admin-workflow';
     const FUNC_ADMIN_TRANSITIONS = 'admin-workflow-transitions';
     const FUNC_ADMIN_CROSS_TRACKER_TRIGGERS = 'admin-workflow-triggers';
@@ -75,6 +75,11 @@ class Workflow {
      */
     private $is_legacy;
 
+    /**
+     * @var bool
+     */
+    private $is_advanced;
+
     public function __construct(
         Tracker_RulesManager $global_rules_manager,
         Tracker_Workflow_Trigger_RulesManager $trigger_rules_manager,
@@ -83,6 +88,7 @@ class Workflow {
         $tracker_id,
         $field_id,
         $is_used,
+        $is_advanced,
         $is_legacy = false,
         $transitions = null
     ) {
@@ -94,6 +100,7 @@ class Workflow {
         $this->global_rules_manager  = $global_rules_manager;
         $this->trigger_rules_manager = $trigger_rules_manager;
         $this->logger                = $logger;
+        $this->is_advanced           = $is_advanced;
         $this->is_legacy             = $is_legacy;
     }
 
@@ -451,5 +458,13 @@ class Workflow {
     public function isLegacy()
     {
         return $this->is_legacy;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAdvanced()
+    {
+        return $this->is_advanced;
     }
 }
