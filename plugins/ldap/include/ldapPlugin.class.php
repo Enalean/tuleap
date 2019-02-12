@@ -791,7 +791,7 @@ class LdapPlugin extends Plugin {
             $ldap_group              = $project_members_manager->getLdapGroupByGroupId($project_id);
 
             if ($ldap_group) {
-                $group_name = $ldap_group->getCommonName();
+                $group_name = $ldap_group->getGroupCommonName();
                 $display_name = $ldap_group->getGroupDisplayName();
                 $is_linked  = true;
             } else {

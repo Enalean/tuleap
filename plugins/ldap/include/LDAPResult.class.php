@@ -206,6 +206,23 @@ class LDAPResult implements Iterator, Countable {
         return $this->get($this->ldapParams['cn']);
     }
 
+    public function getGroupCommonName()
+    {
+        if (isset($this->ldapParams['server_type']) && $this->ldapParams['server_type'] === LDAP::SERVER_TYPE_ACTIVE_DIRECTORY) {
+            $group_common_name_with_uid = $this->get($this->ldapParams['grp_uid']);
+            if ($group_common_name_with_uid) {
+                return $group_common_name_with_uid;
+            }
+        }
+
+        $group_common_name_with_cn = $this->get($this->ldapParams['grp_cn']);
+        if ($group_common_name_with_cn) {
+            return $group_common_name_with_cn;
+        }
+
+        return $this->getCommonName();
+    }
+
     /**
      * @return string
      * */
@@ -218,7 +235,7 @@ class LDAPResult implements Iterator, Countable {
             }
         }
 
-        return $this->getCommonName();
+        return $this->getGroupCommonName();
     }
 
     function getLogin() {
