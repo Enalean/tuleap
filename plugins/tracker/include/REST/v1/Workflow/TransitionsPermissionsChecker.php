@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -78,7 +78,7 @@ class TransitionsPermissionsChecker
      * @throws RestException 403
      * @throws RestException 404
      */
-    public function checkRead(PFUser $user, $transition)
+    public function checkRead(PFUser $user, Transition $transition)
     {
         $this->permissions_checker->checkUpdateWorkflow($user, $transition->getWorkflow()->getTracker());
     }
