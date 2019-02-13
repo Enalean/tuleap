@@ -53,6 +53,11 @@ class ItemRepresentation
     public $last_update_date;
 
     /**
+     * @var string {@type string}
+     */
+    public $creation_date;
+
+    /**
      * @var bool {@type bool}
      */
     public $user_can_write;
@@ -123,6 +128,7 @@ class ItemRepresentation
         $this->title                    = $item->getTitle();
         $this->owner                    = $owner;
         $this->last_update_date         = JsonCast::toDate($item->getUpdateDate());
+        $this->creation_date            = JsonCast::toDate($item->getCreateDate());
         $this->user_can_write           = $user_can_write;
         $this->type                     = $type;
         $this->file_properties          = $file_properties;
