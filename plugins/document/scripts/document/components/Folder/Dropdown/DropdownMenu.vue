@@ -32,11 +32,11 @@
 import { mapState } from "vuex";
 export default {
     name: "DropDownMenu",
-    computed: {
-        ...mapState(["current_folder"])
-    },
     props: {
         is_in_large_mode: Boolean
+    },
+    computed: {
+        ...mapState(["current_folder"])
     },
     methods: {
         showNewFolderModal() {

@@ -45,9 +45,9 @@ import QuickLookFile from "./QuickLookFile.vue";
 import {
     ICON_EMBEDDED,
     ICON_EMPTY,
+    ICON_FOLDER_ICON,
     ICON_LINK,
     ICON_WIKI,
-    ICON_FOLDER_ICON,
     TYPE_EMBEDDED,
     TYPE_FILE,
     TYPE_FOLDER,
@@ -86,6 +86,8 @@ export default {
                     name = "File";
                     break;
                 case TYPE_FOLDER:
+                    name = "Folder";
+                    break;
                 case TYPE_LINK:
                 case TYPE_WIKI:
                 case TYPE_EMBEDDED:

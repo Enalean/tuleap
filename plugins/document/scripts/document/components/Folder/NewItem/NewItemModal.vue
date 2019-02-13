@@ -131,7 +131,7 @@ export default {
             event.preventDefault();
             this.is_loading = true;
             this.$store.commit("resetModalError");
-            await this.$store.dispatch("createNewItem", [this.item, this.current_folder]);
+            await this.$store.dispatch("createNewItem", [this.item, this.parent]);
 
             this.is_loading = false;
             if (this.has_modal_error === false) {
