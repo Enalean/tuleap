@@ -28,5 +28,6 @@ export const ICON_LINK = "fa-link document-link-icon";
 export const ICON_EMBEDDED = "fa-file-text document-text-icon";
 export const ICON_WIKI = "fa-wikipedia-w document-wiki-icon";
 export const ICON_EMPTY = "fa-file-o document-empty-icon";
+export const ICON_FOLDER_ICON = "fa-folder-open-o document-folder-icon";
 
 export const DOCMAN_FOLDER_EXPANDED_VALUE = 2;

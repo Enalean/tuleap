@@ -72,6 +72,9 @@ msgstr "Description"
 msgid "Documents"
 msgstr "Documents"
 
+msgid "Download"
+msgstr "Télécharger"
+
 msgid "Drop one file to upload it to %(folder)s (max size is %(size)s)."
 msgid_plural ""
 "Drop up to %(nb_files)s files to upload them to %(folder)s (max size is "

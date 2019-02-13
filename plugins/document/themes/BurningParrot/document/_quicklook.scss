@@ -42,6 +42,21 @@
     white-space: nowrap;
 }
 
+.document-quick-look-file-action {
+    display: flex;
+    margin: $tlp-spacing 0 0;
+}
+
+.document-quick-look-action-button-margin {
+    margin: 0 $tlp-half-spacing 0 0;
+}
+
+.document-quick-look-icon {
+    padding: 0 0 $tlp-spacing;
+    font-size: 100px;
+    text-align: center;
+}
+
 @media screen and (max-width: 1200px) {
     .document-folder-content-quicklook {
         flex-direction: column;
