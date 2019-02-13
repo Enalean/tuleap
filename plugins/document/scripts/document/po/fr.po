@@ -60,6 +60,9 @@ msgstr "Créer le document"
 msgid "Create folder"
 msgstr "Créer le dossier"
 
+msgid "Creation date"
+msgstr "Date de création"
+
 msgid "Creation of folder, file, wiki page, link, empty item."
 msgstr "Création de dossier, fichier, page wiki, de lien, d'élément vide."
 
@@ -104,6 +107,9 @@ msgstr "Aller à la page d'accueil"
 msgid "Go to parent folder"
 msgstr "Aller au dossier parent"
 
+msgid "Id"
+msgstr "Id"
+
 msgid "It seems the contents of this folder can't be loaded."
 msgstr "Le contenu de ce dossier n'a pas pu être chargé."
 
@@ -112,6 +118,9 @@ msgstr "Il est temps d'ajouter des documents !"
 
 msgid "Last update date"
 msgstr "Mis à jour"
+
+msgid "Last updated date"
+msgstr "Date de dernière mise à jour"
 
 msgid "Link"
 msgstr "Lien"

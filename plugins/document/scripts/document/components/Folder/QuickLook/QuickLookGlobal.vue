@@ -18,7 +18,7 @@
   -
   -->
 <template>
-    <div class="tlp-pane-container">
+    <section class="tlp-pane-container">
         <div class="tlp-pane-header document-quick-look-header">
             <h2 class="tlp-pane-title document-quick-look-title" v-bind:title="item.title">
                 <i class="tlp-pane-title-icon fa" v-bind:class="icon_class"></i>
@@ -28,26 +28,26 @@
                 ×
             </div>
         </div>
-        <div class="tlp-pane-section">
+        <section class="tlp-pane-section">
             <div class="document-quick-look-icon">
-                <i class="fa " v-bind:class="icon_class"></i>
+                <i class="fa" v-bind:class="icon_class"></i>
             </div>
             <component
                 v-bind:is="quick_look_component_action"
                 v-bind:item="item"
             />
-        </div>
-    </div>
+        </section>
+        <quick-look-document-metadata v-bind:item="item"/>
+    </section>
 </template>
 
 <script>
-import QuickLookFile from "./QuickLookFile.vue";
 import {
     ICON_EMBEDDED,
     ICON_EMPTY,
+    ICON_FOLDER_ICON,
     ICON_LINK,
     ICON_WIKI,
-    ICON_FOLDER_ICON,
     TYPE_EMBEDDED,
     TYPE_FILE,
     TYPE_FOLDER,
@@ -55,10 +55,11 @@ import {
     TYPE_WIKI
 } from "../../../constants.js";
 import { iconForMimeType } from "../../../helpers/icon-for-mime-type.js";
+import QuickLookDocumentMetadata from "./QuickLookDocumentMetadata.vue";
 
 export default {
     name: "QuicklookGlobal",
-    components: { QuickLookFile },
+    components: { QuickLookDocumentMetadata },
     props: {
         item: Object
     },

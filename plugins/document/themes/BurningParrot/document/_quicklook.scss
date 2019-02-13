@@ -57,6 +57,18 @@
     text-align: center;
 }
 
+.document-quick-look-properties {
+    display: flex;
+}
+
+.document-quick-look-properties-column:first-child {
+    margin: 0 $tlp-double-spacing 0 0;
+}
+
+#document-owner > .document-badge-avatar >.document-badge-avatar-username {
+    color: $tlp-theme-color;
+}
+
 @media screen and (max-width: 1200px) {
     .document-folder-content-quicklook {
         flex-direction: column;
