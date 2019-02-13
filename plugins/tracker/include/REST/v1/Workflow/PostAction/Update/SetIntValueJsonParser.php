@@ -24,6 +24,7 @@ namespace Tuleap\Tracker\REST\v1\Workflow\PostAction\Update;
 use Tuleap\REST\I18NRestException;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\SetIntValue;
 use Tuleap\Tracker\Workflow\Update\PostAction;
+use Workflow;
 
 class SetIntValueJsonParser implements PostActionUpdateJsonParser
 {
@@ -36,7 +37,7 @@ class SetIntValueJsonParser implements PostActionUpdateJsonParser
             && $json['field_type'] === 'int';
     }
 
-    public function parse(array $json): PostAction
+    public function parse(Workflow $workflow, array $json): PostAction
     {
         if (isset($json['id']) && !is_int($json['id'])) {
             throw new I18NRestException(
@@ -69,8 +70,14 @@ class SetIntValueJsonParser implements PostActionUpdateJsonParser
             );
         }
 
+        // In workflow simple mode, we drop and recreate all post actions. Therefore, the $id must be null to recreate them
+        $id = null;
+        if ($workflow->isAdvanced()) {
+            $id = $json['id'] ?? null;
+        }
+
         return new SetIntValue(
-            $json['id'] ?? null,
+            $id,
             $json['field_id'],
             $json['value']
         );

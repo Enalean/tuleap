@@ -80,6 +80,11 @@ class TransitionsResource extends AuthenticatedResource
     /** @var TransitionPOSTHandler */
     private $post_handler;
 
+    /**
+     * @var TransitionRetriever
+     */
+    private $transition_retriever;
+
     public function __construct()
     {
         $this->user_manager         = UserManager::build();
@@ -89,9 +94,10 @@ class TransitionsResource extends AuthenticatedResource
         $transition_factory         = $this->getTransitionFactory();
         $transition_dao             = new \Workflow_TransitionDao();
         $transaction_executor       = new TransactionExecutor(new DataAccessObject());
+        $this->transition_retriever = new TransitionRetriever($transition_dao, $transition_factory);
         $this->transition_patcher   = new TransitionPatcher(
             new TransitionUpdater($transition_factory, $transaction_executor),
-            new TransitionRetriever($transition_dao, $transition_factory),
+            $this->transition_retriever,
             $transaction_executor
         );
         $this->post_handler         = new TransitionPOSTHandler(
@@ -399,7 +405,8 @@ class TransitionsResource extends AuthenticatedResource
                 $this->getPermissionsChecker(),
                 ProjectStatusVerificator::build(),
                 $this->getPostActionCollectionJsonParser(),
-                $this->getPostActionCollectionUpdater()
+                $this->getPostActionCollectionUpdater(),
+                $this->transition_retriever
             );
 
             $handler->handle($current_user, $transition, $post_actions_representation);

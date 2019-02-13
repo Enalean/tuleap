@@ -30,6 +30,7 @@ use PHPUnit\Framework\TestCase;
 use Tuleap\REST\I18NRestException;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\CIBuild;
 use Tuleap\Tracker\Workflow\PostAction\Update\PostActionCollection;
+use Workflow;
 
 class PostActionCollectionJsonParserTest extends TestCase
 {
@@ -70,34 +71,45 @@ class PostActionCollectionJsonParserTest extends TestCase
             ->shouldReceive('parse')
             ->andReturn($ci_build);
 
-        $action_collection = $collection_parser->parse([["type" => "should match one parser"]]);
+        $workflow = Mockery::mock(Workflow::class);
+
+        $action_collection = $collection_parser->parse($workflow, [["type" => "should match one parser"]]);
 
         $this->assertEquals(new PostActionCollection($ci_build), $action_collection);
     }
 
     public function testParseWithEmptyArrayReturnsEmptyPostActionCollection()
     {
-        $post_actions = $this->collection_parser->parse([]);
+        $workflow = Mockery::mock(Workflow::class);
+
+        $post_actions = $this->collection_parser->parse($workflow, []);
         $this->assertEquals(new PostActionCollection(), $post_actions);
     }
 
     public function testParseThrowsWhenNoParserAcceptGivenJson()
     {
+        $workflow = Mockery::mock(Workflow::class);
+
         $this->expectException(I18NRestException::class);
         $this->expectExceptionCode(400);
         $this->action_parser
             ->shouldReceive('accept')
             ->andReturn(false);
 
-        $this->collection_parser->parse([["id" => 1]]);
+        $this->collection_parser->parse($workflow, [["id" => 1]]);
     }
 
     public function testParseWithNotAssociativeArrayThrows()
     {
+        $workflow = Mockery::mock(Workflow::class);
+
         $this->expectException(I18NRestException::class);
         $this->expectExceptionCode(400);
-        $this->collection_parser->parse([
-            "not an array"
-        ]);
+        $this->collection_parser->parse(
+            $workflow,
+            [
+                "not an array"
+            ]
+        );
     }
 }

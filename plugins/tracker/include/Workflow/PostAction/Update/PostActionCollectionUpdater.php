@@ -58,8 +58,24 @@ class PostActionCollectionUpdater
     {
         $this->transaction_executor->execute(
             function () use ($transition, $actions) {
-                foreach ($this->post_action_updaters as $updater) {
-                    $updater->updateByTransition($actions, $transition);
+                $this->updateATransition($transition, $actions);
+            }
+        );
+    }
+
+    private function updateATransition(Transition $transition, PostActionCollection $actions)
+    {
+        foreach ($this->post_action_updaters as $updater) {
+            $updater->updateByTransition($actions, $transition);
+        }
+    }
+
+    public function updateForAllSiblingsTransition(array $all_sibling_transitions, PostActionCollection $actions): void
+    {
+        $this->transaction_executor->execute(
+            function () use ($all_sibling_transitions, $actions) {
+                foreach ($all_sibling_transitions as $transition) {
+                    $this->updateATransition($transition, $actions);
                 }
             }
         );
