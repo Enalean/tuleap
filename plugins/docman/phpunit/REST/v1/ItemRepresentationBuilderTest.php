@@ -26,11 +26,16 @@ use Docman_ItemDao;
 use Docman_ItemFactory;
 use Mockery;
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface;
+use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\ApprovalTable\ApprovalTableStateMapper;
 
 class ItemRepresentationBuilderTest extends \PHPUnit\Framework\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    /**
+     * @var Mockery\MockInterface|ApprovalTableRetriever
+     */
+    private $approval_table_retriever;
     /**
      * @var Mockery\MockInterface|MetadataRepresentationBuilder
      */
@@ -63,11 +68,6 @@ class ItemRepresentationBuilderTest extends \PHPUnit\Framework\TestCase
     private $item_representation_builder;
 
     /**
-     * @var \Docman_ApprovalTableFactoriesFactory
-     */
-    private $approval_table_factory;
-
-    /**
      * @var ApprovalTableStateMapper
      */
     private $approval_table_state_mapper;
@@ -81,7 +81,6 @@ class ItemRepresentationBuilderTest extends \PHPUnit\Framework\TestCase
         $this->docman_item_factory         = Mockery::Mock(Docman_ItemFactory::class);
         $this->permissions_manager         = Mockery::Mock(\Docman_PermissionsManager::class);
         $this->lock_factory                = Mockery::Mock(\Docman_LockFactory::class);
-        $this->approval_table_factory      = Mockery::Mock(\Docman_ApprovalTableFactoriesFactory::class);
         $this->approval_table_state_mapper = new ApprovalTableStateMapper();
 
         \UserManager::setInstance($this->user_manager);
@@ -90,6 +89,7 @@ class ItemRepresentationBuilderTest extends \PHPUnit\Framework\TestCase
         $this->permissions_manager             = Mockery::Mock(\Docman_PermissionsManager::class);
         $this->lock_factory                    = Mockery::Mock(\Docman_LockFactory::class);
         $this->metadata_representation_builder = Mockery::mock(MetadataRepresentationBuilder::class);
+        $this->approval_table_retriever        = Mockery::mock(ApprovalTableRetriever::class);
 
         $this->item_representation_builder = new ItemRepresentationBuilder(
             $this->dao,
@@ -97,9 +97,9 @@ class ItemRepresentationBuilderTest extends \PHPUnit\Framework\TestCase
             $this->docman_item_factory,
             $this->permissions_manager,
             $this->lock_factory,
-            $this->approval_table_factory,
             $this->approval_table_state_mapper,
-            $this->metadata_representation_builder
+            $this->metadata_representation_builder,
+            $this->approval_table_retriever
         );
     }
 
@@ -149,11 +149,9 @@ class ItemRepresentationBuilderTest extends \PHPUnit\Framework\TestCase
         $item_approval_table->shouldReceive('isEnabled')->andReturns(true);
         $item_approval_table->shouldReceive('getApprovalState')->andReturns(0);
 
-        $file_approval_table_factory = Mockery::Mock(\Docman_ApprovalTableFileFactory::class);
-        $file_approval_table_factory->shouldReceive('getTable')->andReturns($item_approval_table);
 
-        $this->approval_table_factory->shouldReceive('getSpecificFactoryFromItem')->with($docman_item)->andReturn(
-            $file_approval_table_factory
+        $this->approval_table_retriever->shouldReceive('retrieveByItem')->with($docman_item)->andReturn(
+            $item_approval_table
         );
 
         $this->user_manager->shouldReceive('getUserById')

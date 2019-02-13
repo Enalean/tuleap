@@ -72,6 +72,11 @@ msgstr "La ressource %d n'existe pas."
 msgid "There is already a document being uploaded for this item"
 msgstr "Il y a déjà un document en cours de téléversement pour cet élément"
 
+msgid "Update document with approval table is not possible yet."
+msgstr ""
+"La mise à jour d'un document avec une table d'approbation n'est pas possible "
+"pour l'instant"
+
 msgid "User, group"
 msgstr "Utilisateur, groupe"
 

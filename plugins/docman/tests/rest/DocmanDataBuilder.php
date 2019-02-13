@@ -22,6 +22,7 @@
 
 namespace Tuleap\Docman\rest;
 
+use Docman_ApprovalTableItemDao;
 use Docman_ItemFactory;
 use PluginManager;
 use Project;
@@ -36,6 +37,10 @@ class DocmanDataBuilder extends REST_TestDataBuilder
     const         DOCMAN_REGULAR_USER_PASSWORD = 'welcome0';
     private const ANON_ID                      = 0;
     private const REGULAR_USER_ID              = 102;
+    /**
+     * @var \PFUser
+     */
+    private $docman_user;
 
     /**
      * @var Docman_ItemFactory
@@ -48,6 +53,7 @@ class DocmanDataBuilder extends REST_TestDataBuilder
         $this->installPlugin();
         $this->addContent();
         $this->generateDocmanRegularUser();
+        $this->setFeatureFlag();
     }
 
     private function installPlugin()
@@ -157,9 +163,9 @@ class DocmanDataBuilder extends REST_TestDataBuilder
         $folder_3_id = $this->addItem(self::REGULAR_USER_ID, $project, $docman_root->getId(), 'folder 3', PLUGIN_DOCMAN_ITEM_TYPE_FOLDER);
         $this->addWritePermissionOnItem($project, $folder_id, \ProjectUGroup::PROJECT_MEMBERS);
 
-        $item_A_id = $this->addItem(self::ANON_ID, $project, $folder_id, 'item A', PLUGIN_DOCMAN_ITEM_TYPE_EMPTY);
-        $item_B_id = $this->addItem(self::REGULAR_USER_ID, $project, $folder_id, 'item B', PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE);
-        $item_C_id = $this->addItem(self::REGULAR_USER_ID, $project, $folder_id, 'item C', PLUGIN_DOCMAN_ITEM_TYPE_FILE);
+        $item_A_id   = $this->addItem(self::ANON_ID, $project, $folder_id, 'item A', PLUGIN_DOCMAN_ITEM_TYPE_EMPTY);
+        $item_B_id   = $this->addItem(self::REGULAR_USER_ID, $project, $folder_id, 'item B', PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE);
+        $item_C_id   = $this->addItem(self::REGULAR_USER_ID, $project, $folder_id, 'item C', PLUGIN_DOCMAN_ITEM_TYPE_FILE);
         $folder_2_id = $this->addItem(self::REGULAR_USER_ID, $project, $folder_id, 'folder 2', PLUGIN_DOCMAN_ITEM_TYPE_FOLDER);
 
         $item_D_id = $this->addItem(self::REGULAR_USER_ID, $project, $folder_2_id, 'item D', PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE);
@@ -194,6 +200,8 @@ class DocmanDataBuilder extends REST_TestDataBuilder
         $this->addReadPermissionOnItem($project, $item_F_id, \ProjectUGroup::PROJECT_MEMBERS);
         $this->addReadPermissionOnItem($project, $folder_3_id, \ProjectUGroup::PROJECT_ADMIN);
         $this->addReadPermissionOnItem($project, $item_G_id, \ProjectUGroup::PROJECT_MEMBERS);
+
+        $this->addApprovalTableForItem($folder_id);
     }
 
     private function addReadPermissionOnItem(Project $project, $object_id, $ugroup_name)
@@ -220,9 +228,9 @@ class DocmanDataBuilder extends REST_TestDataBuilder
 
     private function generateDocmanRegularUser()
     {
-        $docman_user = $this->user_manager->getUserByUserName(self::DOCMAN_REGULAR_USER_NAME);
-        $docman_user->setPassword(self::DOCMAN_REGULAR_USER_PASSWORD);
-        $this->user_manager->updateDb($docman_user);
+        $this->docman_user = $this->user_manager->getUserByUserName(self::DOCMAN_REGULAR_USER_NAME);
+        $this->docman_user->setPassword(self::DOCMAN_REGULAR_USER_PASSWORD);
+        $this->user_manager->updateDb($this->docman_user);
     }
 
     private function activateWikiServiceForTheProject(): void
@@ -230,5 +238,35 @@ class DocmanDataBuilder extends REST_TestDataBuilder
         $project = $this->project_manager->getProjectByUnixName(self::PROJECT_NAME);
         $initializer = new DocmanDatabaseInitialization();
         $initializer->setup($project);
+    }
+
+    private function addApprovalTableForItem(int $id): void
+    {
+        $dao = new Docman_ApprovalTableItemDao();
+        $dao->createTable(
+            'item_id',
+            $id,
+            self::REGULAR_USER_ID,
+            "",
+            time(),
+            PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED,
+            false
+        );
+    }
+
+    private function setFeatureFlag()
+    {
+        $local_inc           = fopen('/etc/tuleap/conf/local.inc', 'a');
+        if ($local_inc === false) {
+            throw new \RuntimeException('Could not append feature flag to local.inc');
+        }
+        $write_result = fwrite(
+            $local_inc,
+            "\$enable_patch_item_route = 1;"
+        );
+        if ($write_result === false) {
+            throw new \RuntimeException('Could not append feature flag to local.inc');
+        }
+        fclose($local_inc);
     }
 }

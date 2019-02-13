@@ -24,6 +24,7 @@
  *
  */
 
+use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\ApprovalTable\ApprovalTableStateMapper;
 use Tuleap\Docman\ExternalLinks\ExternalLink;
 use Tuleap\Docman\ExternalLinks\ExternalLinkParametersExtractor;
@@ -1239,11 +1240,11 @@ class DocmanPlugin extends Plugin
             $this->getItemFactory(),
             Docman_PermissionsManager::instance($project->getID()),
             new \Docman_LockFactory(),
-            new \Docman_ApprovalTableFactoriesFactory(),
             new ApprovalTableStateMapper(),
             new MetadataRepresentationBuilder(
                 new Docman_MetadataFactory($project->getID())
-            )
+            ),
+            new ApprovalTableRetriever(new Docman_ApprovalTableFactoriesFactory())
         );
 
         $item_representation = $item_representation_builder->buildRootId($project, $current_user);
