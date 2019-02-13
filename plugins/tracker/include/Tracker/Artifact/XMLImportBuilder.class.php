@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,8 +19,6 @@
  */
 
 use Tracker\Artifact\XMLArtifactSourcePlatformExtractor;
-use Tuleap\Http\HttpClientFactory;
-use Tuleap\Http\MessageFactoryBuilder;
 use Tuleap\Tracker\Artifact\ExistingArtifactSourceIdFromTrackerExtractor;
 use Tuleap\Tracker\DAO\TrackerArtifactSourceIdDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
@@ -29,10 +27,6 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationDetector;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SubmittedValueConvertor;
 use Tuleap\Tracker\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\RecentlyVisited\VisitRecorder;
-use Tuleap\Tracker\Webhook\WebhookDao;
-use Tuleap\Tracker\Webhook\WebhookFactory;
-use Tuleap\Tracker\Webhook\WebhookStatusLogger;
-use Tuleap\Webhook\Emitter;
 
 class Tracker_Artifact_XMLImportBuilder {
 
@@ -50,14 +44,6 @@ class Tracker_Artifact_XMLImportBuilder {
         $changeset_dao         = new Tracker_Artifact_ChangesetDao();
         $changeset_comment_dao = new Tracker_Artifact_Changeset_CommentDao();
         $send_notifications    = false;
-        $webhook_dao           = new WebhookDao();
-        $emitter               = new Emitter(
-            MessageFactoryBuilder::build(),
-            HttpClientFactory::createClient(),
-            new WebhookStatusLogger($webhook_dao)
-        );
-
-        $webhook_factory = new WebhookFactory($webhook_dao);
 
         $artifact_creator = new Tracker_ArtifactCreator(
             $artifact_factory,
@@ -67,9 +53,7 @@ class Tracker_Artifact_XMLImportBuilder {
                 $formelement_factory,
                 $changeset_dao,
                 $artifact_factory,
-                EventManager::instance(),
-                $emitter,
-                $webhook_factory
+                EventManager::instance()
             ),
             $visit_recorder
         );
@@ -90,9 +74,7 @@ class Tracker_Artifact_XMLImportBuilder {
                     )
                 ),
                 Tracker_FormElementFactory::instance()
-            ),
-            $emitter,
-            $webhook_factory
+            )
         );
 
         $artifact_source_id_dao = new TrackerArtifactSourceIdDao();

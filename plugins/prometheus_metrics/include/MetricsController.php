@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -89,6 +89,9 @@ class MetricsController implements DispatchableWithRequestNoAuthz
             $http_client     = HttpClientFactory::createClientForInternalTuleapUse();
             $request         = $request_factory->createRequest('GET', $node_exporter_url);
             $response        = $http_client->sendRequest($request);
+            if ($response->getStatusCode() !== 200) {
+                return '';
+            }
             return (string) $response->getBody();
         } catch (\Exception $exception) {
             return '';

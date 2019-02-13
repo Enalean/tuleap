@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -110,7 +110,7 @@ class ActionsRunner
                 $logger,
                 new WebhookEmitter(
                     MessageFactoryBuilder::build(),
-                    HttpClientFactory::createClient(),
+                    HttpClientFactory::createAsyncClient(),
                     new WebhookStatusLogger($webhook_dao)
                 ),
                 new WebhookFactory($webhook_dao)

@@ -18,9 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Http;
 
-use Http\Client\Common\Plugin\ErrorPlugin;
 use Http\Client\Common\Plugin\RedirectPlugin;
 use Http\Client\Common\PluginClient;
 use Http\Adapter\Guzzle6\Client;
@@ -29,10 +30,40 @@ class HttpClientFactory
 {
     private const TIMEOUT = 5;
 
+    public static function createClient() : \Psr\Http\Client\ClientInterface
+    {
+        return self::createClientWithStandardConfig();
+    }
+
+    public static function createAsyncClient() : \Http\Client\HttpAsyncClient
+    {
+        return self::createClientWithStandardConfig();
+    }
+
     /**
-     * @return \Http\Client\HttpClient|\Http\Client\HttpAsyncClient
+     * This client should only be used for Tuleap internal use to
+     * query internal resources. Queries requested by users (e.g. webhooks)
+     * MUST NOT use it.
      */
-    public static function createClient()
+    public static function createClientForInternalTuleapUse() : \Psr\Http\Client\ClientInterface
+    {
+        return self::createClientWithConfigForInternalTuleapUse();
+    }
+
+    /**
+     * This client should only be used for Tuleap internal use to
+     * query internal resources. Queries requested by users (e.g. webhooks)
+     * MUST NOT use it.
+     */
+    public static function createAsyncClientForInternalTuleapUse() : \Http\Client\HttpAsyncClient
+    {
+        return self::createClientWithConfigForInternalTuleapUse();
+    }
+
+    /**
+     * @return \Http\Client\HttpAsyncClient|\Psr\Http\Client\ClientInterface
+     */
+    private static function createClientWithStandardConfig()
     {
         return self::createClientWithConfig([
             'timeout' => self::TIMEOUT,
@@ -41,19 +72,15 @@ class HttpClientFactory
     }
 
     /**
-     * This client should only be used for Tuleap internal use to
-     * query internal resources. Queries requested by users (e.g. webhooks)
-     * MUST NOT use it.
-     *
-     * @return \Http\Client\HttpClient|\Http\Client\HttpAsyncClient
+     * @return \Http\Client\HttpAsyncClient|\Psr\Http\Client\ClientInterface
      */
-    public static function createClientForInternalTuleapUse()
+    private static function createClientWithConfigForInternalTuleapUse()
     {
         return self::createClientWithConfig(['timeout' => self::TIMEOUT]);
     }
 
     /**
-     * @return \Http\Client\HttpClient|\Http\Client\HttpAsyncClient
+     * @return \Psr\Http\Client\ClientInterface|\Http\Client\HttpAsyncClient
      */
     private static function createClientWithConfig(array $config)
     {
@@ -62,7 +89,6 @@ class HttpClientFactory
         return new PluginClient(
             $client,
             [
-                new ErrorPlugin(),
                 new RedirectPlugin()
             ]
         );

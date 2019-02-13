@@ -24,10 +24,10 @@ namespace TuleapDev;
 
 use Http\Client\Common\Plugin\AuthenticationPlugin;
 use Http\Client\Common\PluginClient;
-use Http\Client\HttpClient;
 use Http\Message\Authentication\BasicAuth;
 use Http\Message\MessageFactory;
 use Http\Message\MessageFactory\GuzzleMessageFactory;
+use Psr\Http\Client\ClientInterface;
 use RuntimeException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -82,7 +82,7 @@ class GerritSetupCommand extends Command
         OutputInterface $output,
         MessageFactory $message_factory,
         string $gerrit_server,
-        HttpClient $client
+        ClientInterface $client
     ): void {
         $request  = $message_factory->createRequest(
             'POST',
@@ -119,7 +119,7 @@ class GerritSetupCommand extends Command
         OutputInterface $output,
         MessageFactory $message_factory,
         string $gerrit_server,
-        HttpClient $plugin_client
+        ClientInterface $plugin_client
     ): void {
         $request  = $message_factory->createRequest(
             'POST',
@@ -141,7 +141,7 @@ class GerritSetupCommand extends Command
         OutputInterface $output,
         MessageFactory $message_factory,
         string $gerrit_server,
-        HttpClient $plugin_client
+        ClientInterface $plugin_client
     ): void {
         $request  = $message_factory->createRequest(
             'PUT',
@@ -165,7 +165,7 @@ class GerritSetupCommand extends Command
         OutputInterface $output,
         MessageFactory $message_factory,
         string $gerrit_server,
-        HttpClient $plugin_client
+        ClientInterface $plugin_client
     ): void {
 
         $admin_group_uuid = $this->getAdministratorGroupUUID($message_factory, $gerrit_server, $plugin_client);
@@ -226,7 +226,7 @@ class GerritSetupCommand extends Command
         $output->writeln("Permissions on All-Projects updated");
     }
 
-    private function getAdministratorGroupUUID(MessageFactory $message_factory, string $gerrit_server, HttpClient $plugin_client) : string
+    private function getAdministratorGroupUUID(MessageFactory $message_factory, string $gerrit_server, ClientInterface $plugin_client) : string
     {
         $request  = $message_factory->createRequest('GET', $gerrit_server.'/a/groups/Administrators');
         $response = $plugin_client->sendRequest($request);
@@ -249,7 +249,7 @@ class GerritSetupCommand extends Command
         OutputInterface $output,
         MessageFactory $message_factory,
         string $gerrit_server,
-        HttpClient $plugin_client
+        ClientInterface $plugin_client
     ): void {
         $request  = $message_factory->createRequest(
             'POST',

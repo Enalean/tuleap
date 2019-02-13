@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2019. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -42,7 +42,7 @@ class hudsonActions extends Actions {
         $job_url = $request->get('hudson_job_url');
         try {
             $minimal_job_factory = new MinimalHudsonJobFactory();
-            $job_builder         = new HudsonJobBuilder(MessageFactoryBuilder::build(), HttpClientFactory::createClient());
+            $job_builder         = new HudsonJobBuilder(MessageFactoryBuilder::build(), HttpClientFactory::createAsyncClient());
             $job                 = $job_builder->getHudsonJob(
                 $minimal_job_factory->getMinimalHudsonJob($job_url, '')
             );
