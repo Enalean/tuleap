@@ -1,7 +1,7 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2015 - 2019. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,11 +19,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Workflow\Transition\TransitionCreationParameters;
 use Tuleap\Tracker\Workflow\TransitionDeletionException;
 
 require_once('common/permission/PermissionsManager.class.php');
 
-class TransitionFactory
+class TransitionFactory //phpcs:ignoreFile
 {
 
     /** @var Workflow_Transition_ConditionFactory */
@@ -295,16 +296,10 @@ class TransitionFactory
 
     /**
      * Generate transition object and save it in database.
-     *
-     * @param Workflow  $workflow
-     * @param int       $validated_from_id
-     * @param int       $validated_to_id
-     *
-     * @return Transition
      */
-    public function createAndSaveTransition($workflow, $validated_from_id, $validated_to_id)
+    public function createAndSaveTransition(Workflow $workflow, TransitionCreationParameters $parameters)
     {
-        $new_transition = $this->buildTransition($validated_from_id, $validated_to_id, $workflow, null);
+        $new_transition = $this->buildTransition($parameters->getFromId(), $parameters->getToId(), $workflow, null);
         $this->saveObject($workflow->getId(), $new_transition);
 
         return $new_transition;
