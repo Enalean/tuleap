@@ -70,6 +70,23 @@ class Tracker_Workflow_Trigger_RulesManager_duplicateTest extends Tracker_Workfl
         $new_field_02      = aMockField()->withTracker($template_tracker)->withId(503)->build();
         $new_field_03      = aMockField()->withTracker($template_tracker)->withId(501)->build();
 
+        $new_field_01->shouldReceive('getAllValues')->andReturn(array(
+            aBindStaticValue()->withId(601)->build(),
+            aBindStaticValue()->withId(602)->build()
+        ));
+
+        $new_field_02->shouldReceive('getAllValues')->andReturn(array(
+            aBindStaticValue()->withId(701)->build(),
+            aBindStaticValue()->withId(702)->build(),
+            aBindStaticValue()->withId(703)->build(),
+            aBindStaticValue()->withId(704)->build()
+        ));
+
+        $new_field_03->shouldReceive('getAllValues')->andReturn(array(
+            aBindStaticValue()->withId(801)->build(),
+            aBindStaticValue()->withId(802)->build(),
+        ));
+
         stub($this->formelement_factory)->getFieldById(502)->returns($new_field_01);
         stub($this->formelement_factory)->getFieldById(503)->returns($new_field_02);
         stub($this->formelement_factory)->getFieldById(501)->returns($new_field_03);
@@ -112,9 +129,6 @@ class Tracker_Workflow_Trigger_RulesManager_duplicateTest extends Tracker_Workfl
         stub($this->manager)->getForTargetTracker()->returns(
             array($rule_01, $rule_02)
         );
-
-//        stub($this->manager)->getTriggers(0)->returns($trigger_01);
-//        stub($this->manager)->getTriggers(1)->returns($trigger_02);
 
         $template_trackers = array(
            $template_tracker,
