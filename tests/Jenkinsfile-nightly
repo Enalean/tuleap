@@ -37,6 +37,10 @@ pipeline {
                     steps { script { actions.runEndToEndTests('full') } }
                     post { always { junit 'results/e2e/full/*.xml' } }
                 }
+                stage('Distributed SVN integration') {
+                    steps { script { actions.runEndToEndTests('distlp') } }
+                    post { always { junit 'results/e2e/distlp/*.xml' } }
+                }
             }
             post {
                 always {

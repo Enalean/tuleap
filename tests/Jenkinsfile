@@ -103,10 +103,6 @@ pipeline {
                 }
                 stage('Build and run CentOS 6') { steps { script { actions.runBuildAndRun('centos6') } } }
                 stage('Build and run CentOS 7') { steps { script { actions.runBuildAndRun('centos7') } } }
-                stage('Distributed SVN integration') {
-                    steps { script { actions.runEndToEndTests('distlp') } }
-                    post { always { junit 'results/e2e/**/*.xml' } }
-                }
                 stage('Code conformity') {
                     stages {
                         stage('Check translation files') {
