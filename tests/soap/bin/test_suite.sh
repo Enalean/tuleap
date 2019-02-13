@@ -7,7 +7,7 @@ generate_testsuite() {
 }
 
 run_testsuite() {
-    /opt/remi/php"$PHP_VERSION"/root/usr/bin/php /usr/share/tuleap/src/vendor/bin/phpunit --configuration /tmp/suite.xml
+    /opt/remi/php"$PHP_VERSION"/root/usr/bin/php /usr/share/tuleap/src/vendor/bin/phpunit --do-not-cache-result --configuration /tmp/suite.xml
 }
 
 generate_testsuite
