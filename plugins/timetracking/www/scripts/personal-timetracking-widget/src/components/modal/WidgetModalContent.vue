@@ -45,7 +45,7 @@
 </template>
 <script>
 import { mapState, mapMutations, mapGetters } from "vuex";
-import { REST_FEEDBACK_ADD, REST_FEEDBACK_EDIT, ERROR_OCCURED } from "../../constants.js";
+import { REST_FEEDBACK_ADD, REST_FEEDBACK_EDIT, ERROR_OCCURRED } from "../../../../constants.js";
 import WidgetModalArtifactInfo from "./WidgetModalArtifactInfo.vue";
 import WidgetModalTable from "./WidgetModalTable.vue";
 import WidgetLinkToArtifact from "../WidgetLinkToArtifact.vue";
@@ -67,7 +67,7 @@ export default {
                     return this.$gettext("Time successfully added");
                 case REST_FEEDBACK_EDIT:
                     return this.$gettext("Time successfully updated");
-                case ERROR_OCCURED:
+                case ERROR_OCCURRED:
                     return this.$gettext("An error occurred");
                 default:
                     return this.rest_feedback.message;

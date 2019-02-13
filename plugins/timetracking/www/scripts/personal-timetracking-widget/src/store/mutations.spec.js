@@ -23,7 +23,7 @@
 
 import mutations from "./mutations.js";
 import initial_state from "./state.js";
-import { REST_FEEDBACK_ADD, ERROR_OCCURED, REST_FEEDBACK_EDIT } from "../constants";
+import { REST_FEEDBACK_ADD, ERROR_OCCURRED, REST_FEEDBACK_EDIT } from "../../../constants.js";
 
 describe("Store mutations", () => {
     let state;
@@ -74,7 +74,7 @@ describe("Store mutations", () => {
 
         it("Given a widget with states updated with error message, Then we call setAddMode, states must change", () => {
             state.is_add_mode = true;
-            state.rest_feedback.message = ERROR_OCCURED;
+            state.rest_feedback.message = ERROR_OCCURRED;
             state.rest_feedback.type = "danger";
             mutations.setAddMode(state, false);
 
