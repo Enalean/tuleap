@@ -579,7 +579,7 @@ abstract class GraphOnTrackersV5_Chart implements Visitable
 
     private function isGraphDrawnByD3() {
         $d3_visitor = new D3CompatibleChartVisitor();
-        return $this->accept($d3_visitor) && HTTPRequest::instance()->getBrowser()->isCompatibleWithD3();
+        return $this->accept($d3_visitor);
     }
 
     private function fetchContentJPGraph($store_in_session) {

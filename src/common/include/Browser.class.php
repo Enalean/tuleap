@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All rights reserved
+ * Copyright (c) Enalean, 2014-2019. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -18,12 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class Browser {
-    public function getDeprecatedMessage() {
+class Browser
+{
+    public function getDeprecatedMessage()
+    {
         return '';
-    }
-
-    public function isCompatibleWithD3() {
-        return true;
     }
 }

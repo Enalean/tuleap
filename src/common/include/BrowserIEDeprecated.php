@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class BrowserIEDeprecated extends Browser
+class BrowserIEDeprecated extends Browser //phpcs:ignore
 {
 
     /** @var PFUser */
@@ -57,10 +57,5 @@ class BrowserIEDeprecated extends Browser
                   </form>';
 
         return $form;
-    }
-
-    public function isCompatibleWithD3()
-    {
-        return false;
     }
 }
