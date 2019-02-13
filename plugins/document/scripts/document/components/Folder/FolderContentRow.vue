@@ -20,13 +20,17 @@
 <template>
     <tr class="document-tree-item-toggle-quicklook" v-bind:class="row_classes" v-bind:data-item-id="item.id">
         <td v-bind:colspan="colspan">
-            <div class="document-folder-content-title">
+            <div v-bind:class="{ 'document-folder-content-title': item_is_not_being_uploaded }">
                 <component
                     v-bind:is="cell_title_component_name"
                     v-bind:item="item"
                     v-bind:style="item_indentation"
                 />
-                <quick-look-button v-on:displayQuickLook="$emit('displayQuickLook', item)" v-bind:item="item"/>
+                <quick-look-button
+                    v-on:displayQuickLook="$emit('displayQuickLook', item)"
+                    v-bind:item="item"
+                    v-if="item_is_not_being_uploaded"
+                />
             </div>
         </td>
         <template v-if="item.is_uploading_in_collapsed_folder">
@@ -115,6 +119,9 @@ export default {
         },
         colspan() {
             return this.item.is_uploading ? 4 : 1;
+        },
+        item_is_not_being_uploaded() {
+            return !this.item.is_uploading_in_collapsed_folder && !this.item.is_uploading;
         }
     },
     mounted() {
