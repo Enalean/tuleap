@@ -33,6 +33,10 @@ class DocmanItemUpdatorTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
     /**
+     * @var \Docman_LockFactory|Mockery\MockInterface
+     */
+    private $lock_factory;
+    /**
      * @var DocmanItemUpdator
      */
     private $updator;
@@ -47,19 +51,39 @@ class DocmanItemUpdatorTest extends TestCase
         parent::setUp();
 
         $this->approval_table_retriever = Mockery::mock(ApprovalTableRetriever::class);
+        $this->lock_factory = Mockery::mock(\Docman_LockFactory::class);
 
-        $this->updator = new DocmanItemUpdator($this->approval_table_retriever);
+        $this->updator = new DocmanItemUpdator($this->approval_table_retriever, $this->lock_factory);
     }
 
     public function testItThrowsAnExceptionWhenDocumentHasAnApprovalTable()
     {
         $item = Mockery::mock(Docman_Item::class);
+        $user = Mockery::mock(\PFUser::class);
         $this->approval_table_retriever->shouldReceive('retrieveByItem')
                                        ->with($item)
                                        ->andReturn(Mockery::mock(Docman_ApprovalTable::class));
 
         $this->expectException(ExceptionDocumentHasApprovalTable::class);
 
-        $this->updator->update($item);
+        $this->updator->update($item, $user);
+    }
+
+    public function testItThrowsAnExceptionWhenDocumentIsLockedByAnotherUser()
+    {
+        $item = Mockery::mock(Docman_Item::class);
+        $user = Mockery::mock(\PFUser::class);
+        $user->shouldReceive('getId')->andReturn(101);
+        $this->approval_table_retriever->shouldReceive('retrieveByItem')
+                                       ->with($item)
+                                       ->andReturn(null);
+
+        $this->lock_factory->shouldReceive('getLockInfoForItem')
+            ->with($item)
+            ->andReturn(["user_id" => 106]);
+
+        $this->expectException(ExceptionItemIsLockedByAnotherUser::class);
+
+        $this->updator->update($item, $user);
     }
 }

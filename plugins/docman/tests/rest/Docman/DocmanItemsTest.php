@@ -773,6 +773,30 @@ class DocmanItemsTest extends DocmanBase
     /**
      * @depends testGetRootId
      */
+    public function testPatchOnDocumentLockedByAnOtherUserThrowException(int $root_id)
+    {
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('docman_items/' . $root_id . '/docman_items')
+        );
+        $folder = $response->json();
+
+        $put_resource = json_encode([]);
+
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->client->patch(
+                'docman_items/'.$folder[1]["id"],
+                null,
+                $put_resource
+            )
+        );
+        $this->assertEquals(403, $response->getStatusCode());
+    }
+
+    /**
+     * @depends testGetRootId
+     */
     public function testPatchOnDocumentThrowsANotImplementedException(int $root_id)
     {
         $put_resource = json_encode([]);
