@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2018. All rights reserved.
+ * Copyright Enalean (c) 2018-2019. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -25,15 +25,23 @@
 namespace Tuleap\Timetracking\REST;
 
 use DBTablesDao;
+use EventManager;
 use PFUser;
 use Project;
 use REST_TestDataBuilder;
 use Tracker_ArtifactFactory;
+use Tuleap\Dashboard\User\UserDashboardDao;
+use Tuleap\Dashboard\User\UserDashboardRetriever;
+use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\Timetracking\Admin\AdminDao;
 use Tuleap\Timetracking\Admin\TimetrackingEnabler;
 use Tuleap\Timetracking\Admin\TimetrackingUgroupDao;
 use Tuleap\Timetracking\Admin\TimetrackingUgroupSaver;
 use Tuleap\Timetracking\Time\TimeDao;
+use Tuleap\Timetracking\Time\TimetrackingReportDao;
+use Tuleap\Widget\WidgetFactory;
+use User_ForgeUserGroupPermissionsDao;
+use User_ForgeUserGroupPermissionsManager;
 
 class TimetrackingDataBuilder extends REST_TestDataBuilder
 {
@@ -62,6 +70,8 @@ class TimetrackingDataBuilder extends REST_TestDataBuilder
         $this->setEnabledTrackers($project);
         $this->setWritersAndReaders($project);
         $this->addTimesInDB($project);
+
+        $this->initTimetrackingOverviewWidget();
     }
 
     private function createUser()
@@ -134,5 +144,25 @@ class TimetrackingDataBuilder extends REST_TestDataBuilder
 
         $saver->saveWriters($tracker, [\ProjectUGroup::PROJECT_MEMBERS]);
         $saver->saveReaders($tracker, [\ProjectUGroup::PROJECT_ADMIN]);
+    }
+
+    private function initTimetrackingOverviewWidget()
+    {
+        $report_dao = new TimetrackingReportDao();
+        $widget_dao = new DashboardWidgetDao(
+            new WidgetFactory(
+                $this->user_manager,
+                new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
+                EventManager::instance()
+            )
+        );
+
+        $user_dashboard_dao  = new UserDashboardDao($widget_dao);
+        $dashboard_retriever = new UserDashboardRetriever($user_dashboard_dao);
+        $user                = $this->user_manager->getUserByUserName(self::USER_TESTER_NAME);
+        $dashboard_ids       = $dashboard_retriever->getAllUserDashboards($user);
+
+        $user_report_id = $report_dao->create();
+        $widget_dao->create($user->getId(), 'u', $dashboard_ids[0]->getId(), 'timetracking-overview', $user_report_id);
     }
 }

@@ -23,6 +23,8 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Timetracking\Time;
 
 use Tuleap\DB\DataAccessObject;
@@ -42,5 +44,70 @@ class TimetrackingReportDao extends DataAccessObject
                 WHERE id = ?';
 
         return $this->getDB()->run($sql, $report_id);
+    }
+
+    public function searchReportById(int $report_id)
+    {
+          $sql = 'SELECT id
+                FROM plugin_timetracking_overview_report
+                WHERE id = ?';
+
+        return $this->getDB()->single($sql, [$report_id]);
+    }
+
+    public function searchTimetrackingWidgetByTimetrackingReportId(int $content_id)
+    {
+        $sql = "SELECT dashboard_id, user_id, project_dashboards.project_id
+                  FROM plugin_timetracking_overview_report
+                INNER JOIN dashboards_lines_columns_widgets AS widget
+                    ON plugin_timetracking_overview_report.id = widget.content_id
+                INNER JOIN dashboards_lines_columns
+                    ON widget.column_id = dashboards_lines_columns.id
+                INNER JOIN dashboards_lines
+                    ON dashboards_lines_columns.line_id = dashboards_lines.id
+                LEFT JOIN user_dashboards
+                    ON user_dashboards.id = dashboards_lines.dashboard_id
+                LEFT JOIN project_dashboards
+                    ON project_dashboards.id = dashboards_lines.dashboard_id
+                 WHERE plugin_timetracking_overview_report.id = ?
+                  AND widget.name = 'timetracking-overview'
+                  AND dashboard_type = 'user'";
+
+        return $this->getDB()->row($sql, $content_id);
+    }
+
+
+    public function searchReportTrackersById(int $report_id)
+    {
+        $sql = 'SELECT report_tracker.*
+                  FROM plugin_timetracking_overview_report AS report
+                  INNER JOIN plugin_timetracking_overview_report_tracker AS report_tracker
+                          ON report.id = report_tracker.report_id
+                 WHERE report_id = ?';
+
+        return $this->getDB()->run($sql, $report_id);
+    }
+
+    public function updateReport(int $report_id, array $trackers)
+    {
+        $this->wrapAtomicOperations(function () use ($report_id, $trackers) {
+            $this->getDB()->run(
+                'DELETE FROM plugin_timetracking_overview_report_tracker WHERE report_id = ?',
+                $report_id
+            );
+            $this->addTrackersToReport($trackers, $report_id);
+        });
+    }
+
+    public function addTrackersToReport(array $trackers, int $report_id)
+    {
+        $data_to_insert = [];
+        foreach ($trackers as $tracker) {
+            $data_to_insert[] = ['report_id' => $report_id, 'tracker_id' => $tracker->getId()];
+        }
+
+        if (! empty($data_to_insert)) {
+            $this->getDB()->insertMany('plugin_timetracking_overview_report_tracker', $data_to_insert);
+        }
     }
 }

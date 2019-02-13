@@ -29,3 +29,9 @@ CREATE TABLE plugin_timetracking_times (
 CREATE TABLE plugin_timetracking_overview_report (
     id INT(11) AUTO_INCREMENT NOT NULL PRIMARY KEY
 ) ENGINE=InnoDB;
+
+CREATE TABLE plugin_timetracking_overview_report_tracker (
+    report_id INT(11) NOT NULL,
+    tracker_id INT(11) NOT NULL,
+    PRIMARY KEY (report_id, tracker_id)
+) ENGINE=InnoDB;
