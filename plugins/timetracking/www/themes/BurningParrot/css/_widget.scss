@@ -58,6 +58,13 @@
     margin: $tlp-spacing;
 }
 
+.timetracking-detail-modal-step {
+    max-width: 125px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 .timetracking-time-tooltip {
     margin: 0 0 0 5px;
     vertical-align: middle;
