@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,19 +19,19 @@
  *
  */
 
-namespace Tuleap\Tracker\Workflow\Transition;
+namespace Tuleap\Tracker\Workflow\Transition\Condition;
 
 use Exception;
 use TransitionFactory;
 use Tuleap\DB\TransactionExecutor;
+use Tuleap\Tracker\Workflow\Transition\OrphanTransitionException;
 use Workflow_Transition_ConditionFactory;
 
 /**
- * Useful class to update a workflow transition in a single transaction.
+ * Useful class to update transition conditions in a single transaction.
  */
-class TransitionUpdater
+class ConditionsUpdater
 {
-
     /**
      * @var TransitionFactory
      */
@@ -41,15 +41,23 @@ class TransitionUpdater
      * @var TransactionExecutor
      */
     private $transaction_executor;
+    /**
+     * @var Workflow_Transition_ConditionFactory
+     */
+    private $condition_factory;
 
-    public function __construct(TransitionFactory $transition_factory, TransactionExecutor $transaction_executor)
-    {
+    public function __construct(
+        TransitionFactory $transition_factory,
+        Workflow_Transition_ConditionFactory $condition_factory,
+        TransactionExecutor $transaction_executor
+    ) {
         $this->transition_factory   = $transition_factory;
         $this->transaction_executor = $transaction_executor;
+        $this->condition_factory    = $condition_factory;
     }
 
     /**
-     * @throws TransitionUpdateException
+     * @throws ConditionsUpdateException
      */
     public function update(
         \Transition $transition,
@@ -60,8 +68,7 @@ class TransitionUpdater
         try {
             $this->transaction_executor->execute(
                 function () use ($transition, $not_empty_field_ids, $is_comment_required, $authorized_user_group_ids) {
-                    $condition_factory = Workflow_Transition_ConditionFactory::build();
-                    $condition_factory->addCondition(
+                    $this->condition_factory->addCondition(
                         $transition,
                         $not_empty_field_ids,
                         $is_comment_required
@@ -70,9 +77,9 @@ class TransitionUpdater
                 }
             );
         } catch (Exception $exception) {
-            throw new TransitionUpdateException(
+            throw new ConditionsUpdateException(
                 sprintf(
-                    dgettext('tuleap-tracker', "Cannot update transition with id '%d'"),
+                    dgettext('tuleap-tracker', "Cannot update conditions of transition with id '%d'"),
                     $transition->getId()
                 ),
                 0,
@@ -83,12 +90,12 @@ class TransitionUpdater
 
     /**
      * @throws OrphanTransitionException
-     * @throws TransitionUpdateException
+     * @throws ConditionsUpdateException
      */
     private function updatePermissions(\Transition $transition, array $authorized_user_group_ids)
     {
         if (count($authorized_user_group_ids) === 0) {
-            throw new TransitionUpdateException(
+            throw new ConditionsUpdateException(
                 sprintf(
                     dgettext('tuleap-tracker', "Cannot update permissions of transition with id '%d'"),
                     $transition->getId()
@@ -102,8 +109,8 @@ class TransitionUpdater
             $transition->getId(),
             false
         );
-        if (!$clear_permissions_success) {
-            throw new TransitionUpdateException(
+        if ($clear_permissions_success === false) {
+            throw new ConditionsUpdateException(
                 sprintf(
                     dgettext('tuleap-tracker', "Cannot update permissions of transition with id '%d'"),
                     $transition->getId()
@@ -116,8 +123,8 @@ class TransitionUpdater
             $transition->getId()
         );
 
-        if (!$add_permissions_success) {
-            throw new TransitionUpdateException(
+        if ($add_permissions_success === false) {
+            throw new ConditionsUpdateException(
                 sprintf(
                     dgettext('tuleap-tracker', "Cannot update permissions of transition with id '%d'"),
                     $transition->getId()

@@ -204,14 +204,16 @@ msgid "Cancel"
 msgstr "Annuler"
 
 #, php-format
+msgid "Cannot update conditions of transition with id '%d'"
+msgstr ""
+"Impossible de mettre à jour les conditions de la transition ayant pour id "
+"'%d'"
+
+#, php-format
 msgid "Cannot update permissions of transition with id '%d'"
 msgstr ""
 "Impossible de mettre à jour les permissions de la transition ayant pour id "
 "'%d'"
-
-#, php-format
-msgid "Cannot update transition with id '%d'"
-msgstr "Impossible de mettre à jour la transition ayant pour id '%d'"
 
 msgid "Check permissions?"
 msgstr "Vérifier les permissions ?"

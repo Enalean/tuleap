@@ -24,27 +24,27 @@ namespace Tuleap\Tracker\REST\v1\Workflow;
 
 use Tuleap\DB\TransactionExecutor;
 use Tuleap\REST\I18NRestException;
+use Tuleap\Tracker\Workflow\Transition\Condition\ConditionsUpdateException;
+use Tuleap\Tracker\Workflow\Transition\Condition\ConditionsUpdater;
 use Tuleap\Tracker\Workflow\Transition\NoSiblingTransitionException;
 use Tuleap\Tracker\Workflow\Transition\OrphanTransitionException;
-use Tuleap\Tracker\Workflow\Transition\TransitionUpdateException;
-use Tuleap\Tracker\Workflow\Transition\TransitionUpdater;
 use Tuleap\Tracker\Workflow\Transition\Update\TransitionRetriever;
 
 class TransitionPatcher
 {
-    /** @var TransitionUpdater */
-    private $transition_updater;
+    /** @var ConditionsUpdater */
+    private $conditions_updater;
     /** @var TransitionRetriever */
     private $transition_retriever;
     /** @var TransactionExecutor */
     private $transaction_executor;
 
     public function __construct(
-        TransitionUpdater $transition_updater,
+        ConditionsUpdater $transition_updater,
         TransitionRetriever $transition_retriever,
         TransactionExecutor $transaction_executor
     ) {
-        $this->transition_updater = $transition_updater;
+        $this->conditions_updater   = $transition_updater;
         $this->transition_retriever = $transition_retriever;
         $this->transaction_executor = $transaction_executor;
     }
@@ -52,7 +52,7 @@ class TransitionPatcher
     /**
      * @throws OrphanTransitionException
      * @throws I18NRestException
-     * @throws TransitionUpdateException
+     * @throws ConditionsUpdateException
      */
     public function patch(\Transition $transition, WorkflowTransitionPATCHRepresentation $transition_conditions): void
     {
@@ -67,7 +67,7 @@ class TransitionPatcher
         $this->transaction_executor->execute(
             function () use ($transition, $authorized_user_group_ids, $transition_conditions) {
                 $workflow = $transition->getWorkflow();
-                $this->transition_updater->update(
+                $this->conditions_updater->update(
                     $transition,
                     $authorized_user_group_ids,
                     $transition_conditions->not_empty_field_ids,
@@ -79,7 +79,7 @@ class TransitionPatcher
                 try {
                     $siblings_collection = $this->transition_retriever->getSiblingTransitions($transition);
                     foreach ($siblings_collection->getTransitions() as $sibling) {
-                        $this->transition_updater->update(
+                        $this->conditions_updater->update(
                             $sibling,
                             $authorized_user_group_ids,
                             $transition_conditions->not_empty_field_ids,

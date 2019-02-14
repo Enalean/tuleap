@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,11 +19,8 @@
  *
  */
 
-namespace Tuleap\Tracker\Workflow\Transition;
+namespace Tuleap\Tracker\Workflow\Transition\Condition;
 
-use Exception;
-
-class TransitionUpdateException extends Exception
+class ConditionsUpdateException extends \Exception
 {
-
 }
