@@ -1,0 +1,259 @@
+<p>Like tooltips, popovers can display meaningful information
+    <a href="javascript:;"
+       class="popover-example"
+       id="popover-example"
+       data-placement="top"
+    >when you hover an element.</a>
+</p>
+
+<div class="tlp-popover" id="popover-example-content">
+    <div class="tlp-popover-header">
+        <h3 class="tlp-popover-title">For your information...</h3>
+    </div>
+    <div class="tlp-popover-body">
+        <p>
+            This is an example of sentence that you can find on a popover.
+            To close this popover just mouse out.
+        </p>
+    </div>
+    <div class="tlp-popover-arrow"></div>
+</div>
+
+<script>
+    tlp.createPopover(
+        document.getElementById("popover-example"),
+        document.getElementById("popover-example-content")
+    );
+</script>
+
+<p>In addition, you can also to
+    <a href="javascript:;"
+       class="popover-example"
+       id="popover-example-click"
+       data-placement="right"
+       data-trigger="click"
+    >trigger the popover on click</a>.
+</p>
+
+<div class="tlp-popover" id="popover-example-click-content">
+    <div class="tlp-popover-header">
+        <h3 class="tlp-popover-title">For your information...</h3>
+    </div>
+    <div class="tlp-popover-body">
+        <p>
+            This is an example of sentence that you can find on a popover.
+            To close this popover just click out.
+        </p>
+    </div>
+    <div class="tlp-popover-arrow"></div>
+</div>
+
+<script>
+    tlp.createPopover(
+        document.getElementById("popover-example-click"),
+        document.getElementById("popover-example-click-content")
+    );
+</script>
+
+<p>Popovers have a header, a body and optionally a footer. Footer is usefull
+    for user interaction like confirmation or cancel buttons
+    <a href="javascript:;"
+       class="popover-example"
+       id="popover-example-footer"
+       data-placement="bottom-start"
+       data-trigger="click"
+    >like in this example</a>.
+</p>
+
+<div class="tlp-popover tlp-popover-danger" id="popover-example-footer-content">
+    <div class="tlp-popover-header">
+        <h3 class="tlp-popover-title">This is a title of popover</h3>
+    </div>
+    <div class="tlp-popover-body">
+        <p>
+            This is an example of sentence that you can find on a popover.
+            You can add an action and and close button. To close this popover just click out
+            or click on Cancel button below.
+        </p>
+    </div>
+    <div class="tlp-popover-footer">
+        <button type="button" class="tlp-button-danger tlp-button-outline" data-dismiss="popover">Cancel</button>
+        <button type="button" class="tlp-button-danger">Primary action</button>
+    </div>
+    <div class="tlp-popover-arrow"></div>
+</div>
+
+<script>
+    tlp.createPopover(
+        document.getElementById("popover-example-footer"),
+        document.getElementById("popover-example-footer-content")
+    );
+</script>
+
+<p>Use <code id="popover-anchor-example" data-placement="top-start">anchor</code> option to stick the popover to an
+    element and trigger it <a href="javascript:;" id="popover-anchor-example-trigger">from somewhere else</a>
+    in the page.
+</p>
+
+<div class="tlp-popover tlp-popover-info" id="popover-anchor-example-content">
+    <div class="tlp-popover-header">
+        <h3 class="tlp-popover-title">This is a title of popover</h3>
+    </div>
+    <div class="tlp-popover-body">
+        <p>
+            This is an example of sentence that you can find on a popover.
+        </p>
+    </div>
+    <div class="tlp-popover-arrow"></div>
+</div>
+
+<script>
+    tlp.createPopover(
+        document.getElementById("popover-anchor-example-trigger"),
+        document.getElementById("popover-anchor-example-content"), {
+            anchor: document.getElementById("popover-anchor-example")
+        }
+    );
+</script>
+
+<p>You can decide where to place the popover relatively to the trigger element. Play with the following dots to see the various placement.</p>
+<div class="popover-examples-container">
+    <i class="fa fa-circle popover-example" id="popover-placement-top-start" data-placement="top-start"></i>
+    <i class="fa fa-circle popover-example" id="popover-placement-top" data-placement="top"></i>
+    <i class="fa fa-circle popover-example" id="popover-placement-top-end" data-placement="top-end"></i>
+    <i class="fa fa-circle popover-example" id="popover-placement-right-start" data-placement="right-start"></i>
+    <i class="fa fa-circle popover-example" id="popover-placement-right" data-placement="right"></i>
+    <i class="fa fa-circle popover-example" id="popover-placement-right-end" data-placement="right-end"></i>
+    <i class="fa fa-circle popover-example" id="popover-placement-bottom-start" data-placement="bottom-start"></i>
+    <i class="fa fa-circle popover-example" id="popover-placement-bottom" data-placement="bottom"></i>
+    <i class="fa fa-circle popover-example" id="popover-placement-bottom-end" data-placement="bottom-end"></i>
+    <i class="fa fa-circle popover-example" id="popover-placement-left-start" data-placement="left-start"></i>
+    <i class="fa fa-circle popover-example" id="popover-placement-left" data-placement="left"></i>
+    <i class="fa fa-circle popover-example" id="popover-placement-left-end" data-placement="left-end"></i>
+</div>
+
+<div class="tlp-popover" id="popover-placement-top-start-content">
+    <div class="tlp-popover-header">
+        <h3 class="tlp-popover-title">Placement of popover</h3>
+    </div>
+    <div class="tlp-popover-body">
+        <pre>placement: "top-start"</pre>
+    </div>
+    <div class="tlp-popover-arrow"></div>
+</div>
+
+<div class="tlp-popover tlp-popover-danger" id="popover-placement-top-content">
+    <div class="tlp-popover-header">
+        <h3 class="tlp-popover-title">Placement of popover</h3>
+    </div>
+    <div class="tlp-popover-body">
+        <pre>placement: "top"</pre>
+    </div>
+    <div class="tlp-popover-arrow"></div>
+</div>
+
+<div class="tlp-popover" id="popover-placement-top-end-content">
+    <div class="tlp-popover-header">
+        <h3 class="tlp-popover-title">Placement of popover</h3>
+    </div>
+    <div class="tlp-popover-body">
+        <pre>placement: "top-end"</pre>
+    </div>
+    <div class="tlp-popover-arrow"></div>
+</div>
+
+<div class="tlp-popover" id="popover-placement-right-start-content">
+    <div class="tlp-popover-header">
+        <h3 class="tlp-popover-title">Placement of popover</h3>
+    </div>
+    <div class="tlp-popover-body">
+        <pre>placement: "right-start"</pre>
+    </div>
+    <div class="tlp-popover-arrow"></div>
+</div>
+
+<div class="tlp-popover tlp-popover-success" id="popover-placement-right-content">
+    <div class="tlp-popover-header">
+        <h3 class="tlp-popover-title">Placement of popover</h3>
+    </div>
+    <div class="tlp-popover-body">
+        <pre>placement: "right"</pre>
+    </div>
+    <div class="tlp-popover-arrow"></div>
+</div>
+
+<div class="tlp-popover" id="popover-placement-right-end-content">
+    <div class="tlp-popover-header">
+        <h3 class="tlp-popover-title">Placement of popover</h3>
+    </div>
+    <div class="tlp-popover-body">
+        <pre>placement: "right-end"</pre>
+    </div>
+    <div class="tlp-popover-arrow"></div>
+</div>
+
+<div class="tlp-popover" id="popover-placement-bottom-start-content">
+    <div class="tlp-popover-header">
+        <h3 class="tlp-popover-title">Placement of popover</h3>
+    </div>
+    <div class="tlp-popover-body">
+        <pre>placement: "bottom-start"</pre>
+    </div>
+    <div class="tlp-popover-arrow"></div>
+</div>
+
+<div class="tlp-popover tlp-popover-info" id="popover-placement-bottom-content">
+    <div class="tlp-popover-header">
+        <h3 class="tlp-popover-title">Placement of popover</h3>
+    </div>
+    <div class="tlp-popover-body">
+        <pre>placement: "bottom"</pre>
+    </div>
+    <div class="tlp-popover-arrow"></div>
+</div>
+
+<div class="tlp-popover" id="popover-placement-bottom-end-content">
+    <div class="tlp-popover-header">
+        <h3 class="tlp-popover-title">Placement of popover</h3>
+    </div>
+    <div class="tlp-popover-body">
+        <pre>placement: "bottom-end"</pre>
+    </div>
+    <div class="tlp-popover-arrow"></div>
+</div>
+
+<div class="tlp-popover" id="popover-placement-left-start-content">
+    <div class="tlp-popover-header">
+        <h3 class="tlp-popover-title">Placement of popover</h3>
+    </div>
+    <div class="tlp-popover-body">
+        <pre>placement: "left-start"</pre>
+    </div>
+    <div class="tlp-popover-arrow"></div>
+</div>
+
+<div class="tlp-popover tlp-popover-warning" id="popover-placement-left-content">
+    <div class="tlp-popover-header">
+        <h3 class="tlp-popover-title">Placement of popover</h3>
+    </div>
+    <div class="tlp-popover-body">
+        <pre>placement: "left"</pre>
+    </div>
+    <div class="tlp-popover-arrow"></div>
+</div>
+
+<div class="tlp-popover" id="popover-placement-left-end-content">
+    <div class="tlp-popover-header">
+        <h3 class="tlp-popover-title">Placement of popover</h3>
+    </div>
+    <div class="tlp-popover-body">
+        <pre>placement: "left-end"</pre>
+    </div>
+    <div class="tlp-popover-arrow"></div>
+</div>
+
+<script>
+    for (const trigger of document.querySelectorAll(".popover-example")) {
+        tlp.createPopover(trigger, document.getElementById(trigger.id + "-content"));
+    }
+</script>

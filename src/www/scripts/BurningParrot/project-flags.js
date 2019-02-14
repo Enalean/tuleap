@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2016 - 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,23 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import 'components/layout';
-@import 'components/typography';
-@import 'components/avatars';
-@import 'components/badges';
-@import 'components/buttons';
-@import 'components/button-bar';
-@import 'components/pagination';
-@import 'components/panes';
-@import 'components/cards';
-@import 'components/alerts';
-@import 'components/tables';
-@import 'components/tabs';
-@import 'components/forms';
-@import 'components/dropdowns';
-@import 'components/popovers';
-@import 'components/tooltips';
-@import 'components/modal';
-@import 'components/switch';
-@import 'components/illustration';
-@import 'components/skeleton';
+import { createPopover } from "tlp";
+
+export function init() {
+    const project_flags_element = document.getElementById("current-project-nav-flag");
+    if (!project_flags_element) {
+        return;
+    }
+
+    const popover_content = document.getElementById("current-project-nav-flag-popover");
+
+    createPopover(project_flags_element, popover_content, {
+        anchor: project_flags_element.querySelector("svg"),
+        placement: "bottom-start"
+    });
+}

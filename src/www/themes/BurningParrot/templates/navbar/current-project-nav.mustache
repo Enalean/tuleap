@@ -12,7 +12,7 @@
     </a>
     {{# has_project_flags }}
         <span class="current-project-nav-flag"
-              title="{{# project_flags }}{{ label }} {{/ project_flags }}"
+              id="current-project-nav-flag"
         >
             {{# glyph }}project-shield{{/ glyph }}
             <span class="current-project-nav-flag-labels">
@@ -21,6 +21,27 @@
                 {{/ project_flags }}
             </span>
         </span>
+        <div class="tlp-popover" id="current-project-nav-flag-popover">
+            <div class="tlp-popover-header current-project-nav-flag-popover-header">
+                <h3 class="tlp-popover-title current-project-nav-flag-popover-title">{{ project_flags_title }}</h3>
+            </div>
+            <div class="tlp-popover-body">
+                <p>{{ project_flags_description }}
+                <ul class="current-project-nav-flag-popover-flags">
+                    {{# project_flags }}
+                        <li class="current-project-nav-flag-popover-flag">
+                            <h2 class="current-project-nav-flag-popover-content-title">
+                                {{ label }}
+                            </h2>
+                            <p class="current-project-nav-flag-popover-content-description">
+                                {{ description }}
+                            </p>
+                        </li>
+                    {{/ project_flags }}
+                </ul>
+            </div>
+            <div class="tlp-popover-arrow"></div>
+        </div>
     {{/ has_project_flags }}
 </nav>
 {{/ current_project_navbar_info_presenter }}

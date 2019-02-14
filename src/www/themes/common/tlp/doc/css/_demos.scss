@@ -244,3 +244,89 @@
     color: transparentize($tlp-ui-dimmed, .2);
     cursor: pointer;
 }
+
+.popover-examples-container {
+    display: grid;
+    grid-template-columns: repeat(5, 14px);
+    grid-template-rows: repeat(5, 14px);
+    column-gap: 30px;
+    row-gap: 30px;
+    margin: 0 0 0 400px;
+
+    > i {
+        text-align: center;
+        &:not(:hover) {
+            color: transparentize($tlp-ui-dimmed, .2);
+        }
+    }
+
+    &::before {
+        content: '';
+        width: 174px;
+        height: 174px;
+        border: 2px solid transparentize($tlp-ui-dimmed, .2);
+        grid-column: 1 / 5;
+        grid-row: 1 / 5;
+        margin: 7px 0 0 6px;
+    }
+}
+
+#popover-placement-top-start {
+    grid-column: 2;
+    grid-row: 1;
+}
+
+#popover-placement-top {
+    grid-column: 3;
+    grid-row: 1;
+}
+
+#popover-placement-top-end {
+    grid-column: 4;
+    grid-row: 1;
+}
+
+#popover-placement-right-start {
+    grid-column: 5;
+    grid-row: 2;
+}
+
+#popover-placement-right {
+    grid-column: 5;
+    grid-row: 3;
+}
+
+#popover-placement-right-end {
+    grid-column: 5;
+    grid-row: 4;
+}
+
+#popover-placement-bottom-start {
+    grid-column: 2;
+    grid-row: 5;
+}
+
+#popover-placement-bottom {
+    grid-column: 3;
+    grid-row: 5;
+}
+
+#popover-placement-bottom-end {
+    grid-column: 4;
+    grid-row: 5;
+}
+
+#popover-placement-left-start {
+    grid-column: 1;
+    grid-row: 2;
+}
+
+#popover-placement-left {
+    grid-column: 1;
+    grid-row: 3;
+}
+
+#popover-placement-left-end {
+    grid-column: 1;
+    grid-row: 4;
+}

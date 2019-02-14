@@ -155,6 +155,29 @@
                 });
             });
 
+            var popover_triggers = document.querySelectorAll(".popover-example");
+            [].forEach.call(popover_triggers, function(trigger) {
+                tlp.createPopover(trigger, document.getElementById(trigger.id + "-content"));
+            });
+
+            var popover_anchor_example_trigger = document.getElementById(
+                "popover-anchor-example-trigger"
+            );
+            if (popover_anchor_example_trigger) {
+                tlp.createPopover(
+                    popover_anchor_example_trigger,
+                    document.getElementById("popover-anchor-example-content"),
+                    {
+                        anchor: document.getElementById("popover-anchor-example")
+                    }
+                );
+            }
+
+            var dropdown_trigger = document.getElementById("dropdown-example");
+            if (dropdown_trigger) {
+                tlp.dropdown(dropdown_trigger);
+            }
+
             var dropdown_trigger_options = document.getElementById("dropdown-example-options");
             if (dropdown_trigger_options) {
                 tlp.dropdown(dropdown_trigger_options, {

@@ -37,6 +37,14 @@ class CurrentProjectNavbarInfoPresenter
      * @var bool
      */
     public $has_project_flags;
+    /**
+     * @var string
+     */
+    public $project_flags_title;
+    /**
+     * @var string
+     */
+    public $project_flags_description;
 
     public function __construct(Project $project, $project_privacy, array $project_flags)
     {
@@ -50,6 +58,10 @@ class CurrentProjectNavbarInfoPresenter
             CODENDI_PURIFIER_STRIP_HTML
         );
         $this->project_flags     = $project_flags;
-        $this->has_project_flags = count($project_flags) > 0;
+        $nb_project_flags        = count($project_flags);
+        $this->has_project_flags = $nb_project_flags > 0;
+
+        $this->project_flags_title = ngettext("Project flag", "Project flags", $nb_project_flags);
+        $this->project_flags_description = _("The project is:");
     }
 }

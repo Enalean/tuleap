@@ -1,0 +1,204 @@
+/**
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+$tlp-popover-radius: 3px;
+$tlp-popover-arrow-size: 10px;
+$tlp-popover-shadow: 0 4px 15px rgba(0, 0, 0, .175);
+$tlp-popover-transition: 75ms ease-out;
+
+.tlp-popover {
+    display: flex;
+    position: absolute;
+    z-index: 1000;
+    flex-direction: column;
+    width: 400px;
+    transition: opacity $tlp-popover-transition,
+        transform $tlp-popover-transition,
+        box-shadow $tlp-popover-transition;
+    opacity: 0;
+    box-shadow: none;
+    pointer-events: none;
+
+    &.tlp-popover-shown {
+        transform: translateY(0);
+        opacity: 1;
+        box-shadow: $tlp-popover-shadow;
+        pointer-events: auto;
+    }
+}
+
+.tlp-popover-header {
+    display: flex;
+    align-items: center;
+    padding: $tlp-half-spacing $tlp-spacing;
+    border-top-left-radius: $tlp-popover-radius;
+    border-top-right-radius: $tlp-popover-radius;
+    background: $tlp-theme-color;
+}
+
+.tlp-popover-title {
+    margin: 0;
+    color: $tlp-ui-white;
+    font-size: 16px;
+    line-height: 24px;
+    text-transform: none;
+}
+
+.tlp-popover-body {
+    padding: $tlp-spacing;
+    background: $tlp-ui-white;
+}
+
+.tlp-popover-footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: $tlp-spacing;
+    border-top: 1px solid $tlp-ui-border-light;
+    background: $tlp-ui-white;
+
+    > button {
+        margin: 0 0 0 $tlp-half-spacing;
+    }
+}
+
+.tlp-popover-arrow {
+    position: absolute;
+    width: 0;
+    height: 0;
+    margin: $tlp-popover-arrow-size;
+    border: $tlp-popover-arrow-size solid $tlp-theme-color;
+}
+
+.tlp-popover-danger {
+    > .tlp-popover-header {
+        background: $tlp-ui-danger;
+    }
+
+    > .tlp-popover-arrow {
+        border-color: $tlp-ui-danger;
+    }
+}
+
+.tlp-popover-info {
+    > .tlp-popover-header {
+        background: $tlp-ui-info;
+    }
+
+    > .tlp-popover-arrow {
+        border-color: $tlp-ui-info;
+    }
+}
+
+.tlp-popover-warning {
+    > .tlp-popover-header {
+        background: $tlp-ui-warning;
+    }
+
+    > .tlp-popover-arrow {
+        border-color: $tlp-ui-warning;
+    }
+}
+
+.tlp-popover-success {
+    > .tlp-popover-header {
+        background: $tlp-ui-success;
+    }
+
+    > .tlp-popover-arrow {
+        border-color: $tlp-ui-success;
+    }
+}
+
+.tlp-popover[x-placement^='top'] {
+    margin-bottom: $tlp-popover-arrow-size;
+
+    > .tlp-popover-arrow {
+        bottom: -$tlp-popover-arrow-size;
+        left: calc(50% - #{$tlp-popover-arrow-size});
+        margin: 0 $tlp-popover-arrow-size;
+        border-width: $tlp-popover-arrow-size $tlp-popover-arrow-size 0 $tlp-popover-arrow-size;
+        border-color: $tlp-ui-white;
+        border-right-color: transparent;
+        border-bottom-color: transparent;
+        border-left-color: transparent;
+    }
+}
+
+.tlp-popover[x-placement^='bottom'] {
+    margin-top: $tlp-popover-arrow-size;
+
+    > .tlp-popover-arrow {
+        top: -$tlp-popover-arrow-size;
+        left: calc(50% - #{$tlp-popover-arrow-size});
+        margin: 0 $tlp-popover-arrow-size;
+        border-width: 0 $tlp-popover-arrow-size $tlp-popover-arrow-size $tlp-popover-arrow-size;
+        border-top-color: transparent;
+        border-right-color: transparent;
+        border-left-color: transparent;
+    }
+}
+
+.tlp-popover[x-placement^='right'] {
+    margin-left: $tlp-popover-arrow-size;
+
+    &[x-placement='right'],
+    &[x-placement='right-end'] {
+        > .tlp-popover-arrow {
+            border-color: $tlp-ui-white;
+            border-top-color: transparent;
+            border-bottom-color: transparent;
+            border-left-color: transparent;
+        }
+    }
+
+    > .tlp-popover-arrow {
+        top: calc(50% - #{$tlp-popover-arrow-size});
+        left: -$tlp-popover-arrow-size;
+        margin: $tlp-popover-arrow-size 0;
+        border-width: $tlp-popover-arrow-size $tlp-popover-arrow-size $tlp-popover-arrow-size 0;
+        border-top-color: transparent;
+        border-bottom-color: transparent;
+        border-left-color: transparent;
+    }
+}
+
+.tlp-popover[x-placement^='left'] {
+    margin-right: $tlp-popover-arrow-size;
+
+    &[x-placement='left'],
+    &[x-placement='left-end'] {
+        > .tlp-popover-arrow {
+            border-color: $tlp-ui-white;
+            border-top-color: transparent;
+            border-right-color: transparent;
+            border-bottom-color: transparent;
+        }
+    }
+
+    > .tlp-popover-arrow {
+        top: calc(50% - #{$tlp-popover-arrow-size});
+        right: -$tlp-popover-arrow-size;
+        margin: $tlp-popover-arrow-size 0;
+        border-width: $tlp-popover-arrow-size 0 $tlp-popover-arrow-size $tlp-popover-arrow-size;
+        border-top-color: transparent;
+        border-right-color: transparent;
+        border-bottom-color: transparent;
+    }
+}

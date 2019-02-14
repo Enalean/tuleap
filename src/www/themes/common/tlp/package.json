@@ -10,6 +10,7 @@
     "dom4": "^1.8.3",
     "flatpickr": "1.9.1",
     "jquery": "2.1.0",
+    "popper.js": "^1.14.7",
     "select2": "4.0.3",
     "whatwg-fetch": "^2.0.3"
   },
