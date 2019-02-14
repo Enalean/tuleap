@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,6 +21,7 @@
 namespace Tuleap\Git\Gitolite\SSHKey;
 
 use TuleapTestCase;
+use Tuleap\Git\GlobalParameterDao;
 
 require_once __DIR__ .'/../../../bootstrap.php';
 
@@ -30,7 +31,7 @@ class ManagementDetectorTest extends TuleapTestCase
     {
         $version_detector     = mock('Tuleap\Git\Gitolite\VersionDetector');
         stub($version_detector)->isGitolite3()->returns(false);
-        $global_parameter_dao = mock('Tuleap\Git\GlobalParameterDao');
+        $global_parameter_dao = safe_mock(GlobalParameterDao::class);
         $system_event_manager = mock('SystemEventManager');
 
         $management_detector = new ManagementDetector($version_detector, $global_parameter_dao, $system_event_manager);
@@ -42,7 +43,7 @@ class ManagementDetectorTest extends TuleapTestCase
     {
         $version_detector     = mock('Tuleap\Git\Gitolite\VersionDetector');
         stub($version_detector)->isGitolite3()->returns(true);
-        $global_parameter_dao = mock('Tuleap\Git\GlobalParameterDao');
+        $global_parameter_dao = safe_mock(GlobalParameterDao::class);
         stub($global_parameter_dao)->isAuthorizedKeysFileManagedByTuleap()->returns(false);
         $system_event_manager = mock('SystemEventManager');
 
@@ -55,7 +56,7 @@ class ManagementDetectorTest extends TuleapTestCase
     {
         $version_detector     = mock('Tuleap\Git\Gitolite\VersionDetector');
         stub($version_detector)->isGitolite3()->returns(true);
-        $global_parameter_dao = mock('Tuleap\Git\GlobalParameterDao');
+        $global_parameter_dao = safe_mock(GlobalParameterDao::class);
         stub($global_parameter_dao)->isAuthorizedKeysFileManagedByTuleap()->returns(true);
         $system_event_manager = mock('SystemEventManager');
 
@@ -68,7 +69,7 @@ class ManagementDetectorTest extends TuleapTestCase
     {
         $version_detector     = mock('Tuleap\Git\Gitolite\VersionDetector');
         stub($version_detector)->isGitolite3()->returns(false);
-        $global_parameter_dao = mock('Tuleap\Git\GlobalParameterDao');
+        $global_parameter_dao = safe_mock(GlobalParameterDao::class);
         $system_event_manager = mock('SystemEventManager');
 
         $management_detector = new ManagementDetector($version_detector, $global_parameter_dao, $system_event_manager);
@@ -80,7 +81,7 @@ class ManagementDetectorTest extends TuleapTestCase
     {
         $version_detector     = mock('Tuleap\Git\Gitolite\VersionDetector');
         stub($version_detector)->isGitolite3()->returns(true);
-        $global_parameter_dao = mock('Tuleap\Git\GlobalParameterDao');
+        $global_parameter_dao = safe_mock(GlobalParameterDao::class);
         stub($global_parameter_dao)->isAuthorizedKeysFileManagedByTuleap()->returns(true);
         $system_event_manager = mock('SystemEventManager');
 
@@ -93,7 +94,7 @@ class ManagementDetectorTest extends TuleapTestCase
     {
         $version_detector     = mock('Tuleap\Git\Gitolite\VersionDetector');
         stub($version_detector)->isGitolite3()->returns(true);
-        $global_parameter_dao = mock('Tuleap\Git\GlobalParameterDao');
+        $global_parameter_dao = safe_mock(GlobalParameterDao::class);
         stub($global_parameter_dao)->isAuthorizedKeysFileManagedByTuleap()->returns(false);
         $system_event_manager = mock('SystemEventManager');
         stub($system_event_manager)->isThereAnEventAlreadyOnGoing()->returns(true);
@@ -107,7 +108,7 @@ class ManagementDetectorTest extends TuleapTestCase
     {
         $version_detector     = mock('Tuleap\Git\Gitolite\VersionDetector');
         stub($version_detector)->isGitolite3()->returns(true);
-        $global_parameter_dao = mock('Tuleap\Git\GlobalParameterDao');
+        $global_parameter_dao = safe_mock(GlobalParameterDao::class);
         stub($global_parameter_dao)->isAuthorizedKeysFileManagedByTuleap()->returns(false);
         $system_event_manager = mock('SystemEventManager');
         stub($system_event_manager)->isThereAnEventAlreadyOnGoing()->returns(false);

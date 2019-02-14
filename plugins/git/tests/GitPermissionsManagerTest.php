@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Git\Permissions\FineGrainedDao;
+
 require_once 'bootstrap.php';
 
 abstract class GitPermissionsManagerTest extends TuleapTestCase {
@@ -30,12 +32,12 @@ abstract class GitPermissionsManagerTest extends TuleapTestCase {
         parent::setUp();
         $this->permissions_manager = mock('PermissionsManager');
         PermissionsManager::setInstance($this->permissions_manager);
-        $this->git_permissions_dao      = mock('Git_PermissionsDao');
+        $this->git_permissions_dao      = safe_mock(Git_PermissionsDao::class);
         $this->git_system_event_manager = mock('Git_SystemEventManager');
         $this->git_permissions_manager  = new GitPermissionsManager(
             $this->git_permissions_dao,
             $this->git_system_event_manager,
-            mock('Tuleap\Git\Permissions\FineGrainedDao'),
+            \Mockery::spy(FineGrainedDao::class),
             mock('Tuleap\Git\Permissions\FineGrainedRetriever')
         );
     }

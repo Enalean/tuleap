@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,7 +19,13 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once dirname(__FILE__).'/../bootstrap.php';
+//phpcs:ignoreFile
+
+
+use Tuleap\Git\Notifications\UsersToNotifyDao;
+use Tuleap\Git\Notifications\UgroupsToNotifyDao;
+
+require_once __DIR__ .'/../bootstrap.php';
 
 class SystemEvent_GIT_REPO_DELETETest extends TuleapTestCase {
     private $project_id;
@@ -45,8 +51,8 @@ class SystemEvent_GIT_REPO_DELETETest extends TuleapTestCase {
         stub($this->repository_factory)->getDeletedRepository($this->repository_id)->returns($this->repository);
 
         $this->system_event_manager  = mock('Git_SystemEventManager');
-        $this->ugroups_to_notify_dao = mock('Tuleap\Git\Notifications\UgroupsToNotifyDao');
-        $this->users_to_notify_dao   = mock('Tuleap\Git\Notifications\UsersToNotifyDao');
+        $this->ugroups_to_notify_dao = \Mockery::spy(UgroupsToNotifyDao::class);
+        $this->users_to_notify_dao   = \Mockery::spy(UsersToNotifyDao::class);
         $this->event_manager         = mock('EventManager');
 
         $this->event = partial_mock('SystemEvent_GIT_REPO_DELETE', array('done', 'warning', 'error', 'getId'));

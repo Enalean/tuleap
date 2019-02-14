@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016-2018. All rights reserved
+ * Copyright (c) Enalean, 2016-2019. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -20,10 +20,11 @@
 
 namespace Tuleap\Git\Gitolite;
 
-require_once dirname(__FILE__) . '/../../bootstrap.php';
+require_once __DIR__ . '/../../bootstrap.php';
 
 use GitBackendLogger;
 use UserDao;
+use Tuleap\Git\History\Dao;
 
 class Gitolite3LogParserTest extends \TuleapTestCase
 {
@@ -51,9 +52,9 @@ class Gitolite3LogParserTest extends \TuleapTestCase
         $this->logger         = mock('GitBackendLogger');
         $this->factory        = mock('GitRepositoryFactory');
         $this->user_manager   = mock('UserManager');
-        $this->history_dao    = mock('Tuleap\Git\History\Dao');
+        $this->history_dao    = \Mockery::spy(Dao::class);
         $this->user_validator = new \Tuleap\Git\RemoteServer\Gerrit\HttpUserValidator;
-        $this->file_logs_dao  = mock('Tuleap\Git\Gitolite\GitoliteFileLogsDao');
+        $this->file_logs_dao  = \Mockery::spy(GitoliteFileLogsDao::class);
         $this->user_dao       = mock(UserDao::class);
         $this->parser         = new Gitolite3LogParser(
             $this->logger,

@@ -21,6 +21,7 @@
 namespace Tuleap\Git\Notifications;
 
 use TuleapTestCase;
+use Tuleap\Git\Notifications\UsersToNotifyDao;
 
 class NotificationsForProjectMemberCleanerTest extends TuleapTestCase
 {
@@ -57,7 +58,7 @@ class NotificationsForProjectMemberCleanerTest extends TuleapTestCase
             ->getAllRepositories($this->project)
             ->returns(array($this->unreadable_repository, $this->readable_repository));
 
-        $this->users_to_notify_dao = mock('Tuleap\Git\Notifications\UsersToNotifyDao');
+        $this->users_to_notify_dao = \Mockery::mock(UsersToNotifyDao::class);
 
         $this->cleaner = new NotificationsForProjectMemberCleaner(
             $this->factory,
@@ -71,7 +72,7 @@ class NotificationsForProjectMemberCleanerTest extends TuleapTestCase
         stub($this->user)->isMember($this->project->getID())->returns(true);
 
         expect($this->mails_to_notify_manager)->removeMailByRepository()->never();
-        expect($this->users_to_notify_dao)->delete()->never();
+        $this->users_to_notify_dao->shouldReceive('delete')->never();
 
         $this->cleaner->cleanNotificationsAfterUserRemoval($this->project, $this->user);
     }
@@ -87,12 +88,7 @@ class NotificationsForProjectMemberCleanerTest extends TuleapTestCase
             ->removeMailByRepository($this->unreadable_repository, 'jdoe@example.com')
             ->once();
 
-        expect($this->users_to_notify_dao)
-            ->delete()
-            ->count(1);
-        expect($this->users_to_notify_dao)
-            ->delete($this->unreadable_repository->getId(), $this->user->getId())
-            ->once();
+        $this->users_to_notify_dao->shouldReceive('delete')->with($this->unreadable_repository->getId(), $this->user->getId())->once();
 
         $this->cleaner->cleanNotificationsAfterUserRemoval($this->project, $this->user);
     }

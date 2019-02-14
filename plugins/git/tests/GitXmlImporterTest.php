@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -161,9 +161,9 @@ class GitXmlImporterTest extends TuleapTestCase {
 
         PluginManager::setInstance($plugin_manager);
 
-        $this->permission_dao = mock('PermissionsDAO');
+        $this->permission_dao = mock('PermissionsDao');
         $permissions_manager  = new PermissionsManager($this->permission_dao);
-        $git_mirror_dao       = mock('Git_Mirror_MirrorDao');
+        $git_mirror_dao       = safe_mock(Git_Mirror_MirrorDao::class);
         $git_gitolite_driver  = new Git_GitoliteDriver(
             $this->logger,
             $this->git_systemeventmanager,

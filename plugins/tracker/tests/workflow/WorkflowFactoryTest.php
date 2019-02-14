@@ -90,7 +90,7 @@ class WorkflowFactoryTest extends TuleapTestCase {
             mock('Tracker_FormElementFactory'),
             mock('Tracker_Workflow_Trigger_RulesManager'),
             mock('WorkflowBackendLogger'),
-            mock(ReadOnlyDao::class)
+            \Mockery::mock(ReadOnlyDao::class)
         );
 
         $workflow = $workflow_factory->getInstanceFromXML($xml, $mapping, $tracker, $this->project);
@@ -159,7 +159,7 @@ class WorkflowFactory_IsFieldUsedInWorkflowTest extends TuleapTestCase {
                 mock('Tracker_FormElementFactory'),
                 mock('Tracker_Workflow_Trigger_RulesManager'),
                 mock('WorkflowBackendLogger'),
-                mock(ReadOnlyDao::class)
+                \Mockery::mock(ReadOnlyDao::class)
             )
         );
         stub($this->workflow_factory)->getWorkflowByTrackerId($tracker->getId())->returns($workflow);
@@ -204,7 +204,7 @@ class WorkflowFactory_CacheTest extends TuleapTestCase {
                 mock('Tracker_FormElementFactory'),
                 mock('Tracker_Workflow_Trigger_RulesManager'),
                 mock('WorkflowBackendLogger'),
-                mock(ReadOnlyDao::class)
+                \Mockery::mock(ReadOnlyDao::class)
             )
         );
         $this->dao = mock('Workflow_Dao');
@@ -215,7 +215,7 @@ class WorkflowFactory_CacheTest extends TuleapTestCase {
         stub($this->dao)->searchByTrackerId(112)->returnsDar(
             array('tracker_id' => 112, 'workflow_id' => 34, 'field_id' => 56, 'is_used' => 1, 'is_legacy' => 0, 'is_advanced' => 1)
         );
-        $this->assertIdentical(
+        $this->assertSame(
             $this->workflow_factory->getWorkflowByTrackerId(112),
             $this->workflow_factory->getWorkflowByTrackerId(112)
         );

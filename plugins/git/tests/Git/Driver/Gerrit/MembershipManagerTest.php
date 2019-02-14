@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../../../bootstrap.php';
+require_once __DIR__ .'/../../../bootstrap.php';
 
 abstract class Git_Driver_Gerrit_MembershipManagerCommonTest extends TuleapTestCase {
     protected $user_ldap_id;
@@ -84,7 +84,7 @@ class Git_Driver_Gerrit_MembershipManager_NoGerritRepoTest extends Git_Driver_Ge
         stub($this->remote_server_factory_without_gerrit)->getServersForUGroup()->returns(array());
 
         $this->membership_manager = new Git_Driver_Gerrit_MembershipManager(
-            mock('Git_Driver_Gerrit_MembershipDao'),
+            safe_mock(Git_Driver_Gerrit_MembershipDao::class),
             $this->driver_factory,
             $this->gerrit_user_manager,
             $this->remote_server_factory_without_gerrit,
@@ -119,7 +119,7 @@ abstract class Git_Driver_Gerrit_MembershipManagerCommonWithRepoTest extends Git
         stub($this->git_repository)->getId()->returns($this->git_repository_id);
 
         $this->membership_manager = new Git_Driver_Gerrit_MembershipManager(
-            mock('Git_Driver_Gerrit_MembershipDao'),
+            safe_mock(Git_Driver_Gerrit_MembershipDao::class),
             $this->driver_factory,
             $this->gerrit_user_manager,
             $this->remote_server_factory,
@@ -261,7 +261,7 @@ class Git_Driver_Gerrit_MembershipManager_BindedUGroupsTest extends TuleapTestCa
             'Git_Driver_Gerrit_MembershipManager',
             array('createGroupForServer'),
             array(
-                mock('Git_Driver_Gerrit_MembershipDao'),
+                safe_mock(Git_Driver_Gerrit_MembershipDao::class),
                 $this->driver_factory,
                 $this->gerrit_user_manager,
                 $this->remote_server_factory,
@@ -384,7 +384,7 @@ abstract class Git_Driver_Gerrit_MembershipManagerGroupCreationCommonTest extend
                 'doesGroupExistOnServer'
             ),
             array(
-                mock('Git_Driver_Gerrit_MembershipDao'),
+                \Mockery::spy(Git_Driver_Gerrit_MembershipDao::class),
                 $this->driver_factory,
                 $this->gerrit_user_manager,
                 mock('Git_RemoteServer_GerritServerFactory'),
@@ -456,7 +456,7 @@ class Git_Driver_Gerrit_MembershipManager_CreateGroupForUmbrellaTest extends Git
         $this->remote_server_factory  = mock('Git_RemoteServer_GerritServerFactory');
         $this->git_repository_factory = mock('GitRepositoryFactory');
         $this->logger = mock('Logger');
-        $this->dao    = mock('Git_Driver_Gerrit_MembershipDao');
+        $this->dao    = \Mockery::spy(Git_Driver_Gerrit_MembershipDao::class);
         $this->user1 = mock('PFUser');
         $this->user2 = mock('PFUser');
 
@@ -504,7 +504,7 @@ class Git_Driver_Gerrit_MembershipManager_CreateGroupTest extends Git_Driver_Ger
         $this->remote_server_factory  = mock('Git_RemoteServer_GerritServerFactory');
         $this->git_repository_factory = mock('GitRepositoryFactory');
         $this->logger                 = mock('Logger');
-        $this->dao                    = mock('Git_Driver_Gerrit_MembershipDao');
+        $this->dao                    = \Mockery::spy(Git_Driver_Gerrit_MembershipDao::class);
         $this->user1                  = mock('PFUser');
         $this->user2                  = mock('PFUser');
 
@@ -566,7 +566,7 @@ class Git_Driver_Gerrit_MembershipManager_CreateGroupTest extends Git_Driver_Ger
         stub($this->ugroup)->getMembers()->returns(array());
         stub($this->remote_server)->getId()->returns(666);
 
-        expect($this->dao)->addReference(1236, 25698, 666)->once();
+        $this->dao->shouldReceive('addReference')->with(1236, 25698, 666)->once();
 
         $this->membership_manager->createGroupForServer($this->remote_server, $this->ugroup);
     }
@@ -584,6 +584,8 @@ class Git_Driver_Gerrit_MembershipManager_CreateGroupTest extends Git_Driver_Ger
 
     public function itAddsMembersToAGroupThatAlreadyExists() {
         stub($this->ugroup)->getMembers()->returns(array($this->user1, $this->user2));
+        stub($this->ugroup)->getId()->returns(123);
+
         stub($this->driver)->doesTheGroupExist()->returns(true);
         stub($this->ugroup)->getSourceGroup()->returns(false);
 
@@ -617,9 +619,8 @@ class Git_Driver_Gerrit_MembershipManager_CreateGroupTest extends Git_Driver_Ger
         stub($remote_server1)->getId()->returns(666);
         stub($remote_server2)->getId()->returns(667);
 
-        expect($this->dao)->addReference()->count(2);
-        expect($this->dao)->addReference(1236, 25698, 666)->at(0);
-        expect($this->dao)->addReference(1236, 25698, 667)->at(1);
+        $this->dao->shouldReceive('addReference')->with(1236, 25698, 666)->once();
+        $this->dao->shouldReceive('addReference')->with(1236, 25698, 667)->once();
 
         $this->membership_manager->createGroupOnProjectsServers($this->ugroup);
     }
@@ -664,7 +665,7 @@ class Git_Driver_Gerrit_MembershipManager_CreateGroupTest extends Git_Driver_Ger
         expect($this->driver)->createGroup()->count(2);
         stub($this->driver)->createGroup()->throwsAt(0, new Exception('whatever'));
         expect($this->driver)->createGroup($remote_server2, '*', '*')->at(1);
-        expect($this->dao)->addReference('*', '*', 667)->once();
+        $this->dao->shouldReceive('addReference')->with(\Mockery::any(), \Mockery::any(), 667)->once();
 
         $this->membership_manager->createGroupOnProjectsServers($this->ugroup);
     }
@@ -734,7 +735,7 @@ class Git_Driver_Gerrit_MembershipManagerListGroupsTest extends Git_Driver_Gerri
         parent::setUp();
 
         $this->membership_manager = new Git_Driver_Gerrit_MembershipManager(
-            mock('Git_Driver_Gerrit_MembershipDao'),
+            \Mockery::spy(Git_Driver_Gerrit_MembershipDao::class),
             $this->driver_factory,
             $this->gerrit_user_manager,
             mock('Git_RemoteServer_GerritServerFactory'),
@@ -786,7 +787,7 @@ class Git_Driver_Gerrit_MembershipManagerListGroupsCacheTest extends Git_Driver_
         parent::setUp();
 
         $this->membership_manager = new Git_Driver_Gerrit_MembershipManager(
-            mock('Git_Driver_Gerrit_MembershipDao'),
+            \Mockery::spy(Git_Driver_Gerrit_MembershipDao::class),
             $this->driver_factory,
             $this->gerrit_user_manager,
             mock('Git_RemoteServer_GerritServerFactory'),

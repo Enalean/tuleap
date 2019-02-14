@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -59,14 +59,13 @@ class GitRepositoryTest extends TuleapTestCase {
         $project = mock('Project');
         $repo->setReturnValue('_getProjectManager', $pm);
         $pm->setReturnValue('getProjectByUnixName', $project);
-        $dao = mock('GitDao');
+        $dao = \Mockery::mock(GitDao::class);
         $repo->setReturnValue('getDao', $dao);
-        $dao->setReturnValue('getProjectRepositoryByName', ['repository_id' => 48]);
+        $dao->shouldReceive('getProjectRepositoryByName')->andReturn(['repository_id' => 48])->once();
 
         $this->assertEqual($repo->getRepositoryIDByName('repo', 'prj'), 48);
 
         $repo->expectOnce('_getProjectManager');
-        $dao->expectOnce('getProjectRepositoryByName');
         $project->expectOnce('getID');
     }
 
@@ -76,14 +75,13 @@ class GitRepositoryTest extends TuleapTestCase {
         $project = mock('Project');
         $repo->setReturnValue('_getProjectManager', $pm);
         $pm->setReturnValue('getProjectByUnixName', $project);
-        $dao = mock('GitDao');
+        $dao = \Mockery::mock(GitDao::class);
         $repo->setReturnValue('getDao', $dao);
-        $dao->setReturnValue('getProjectRepositoryByName', false);
+        $dao->shouldReceive('getProjectRepositoryByName')->andReturnFalse()->once();
 
         $this->assertEqual($repo->getRepositoryIDByName('repo', 'prj'), 0);
 
         $repo->expectOnce('_getProjectManager');
-        $dao->expectOnce('getProjectRepositoryByName');
         $project->expectOnce('getID');
     }
 

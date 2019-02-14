@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -26,8 +26,6 @@ use Tracker_Artifact_Changeset;
 use Tracker_FormElement_Field_Selectbox;
 use Tuleap\Tracker\Notifications\Settings\UserNotificationSettings;
 use Tuleap\Tracker\Notifications\Settings\UserNotificationSettingsRetriever;
-use Tuleap\Tracker\Notifications\UnsubscribersNotificationDAO;
-use Tuleap\Tracker\Notifications\UserNotificationOnlyStatusChangeDAO;
 
 require_once __DIR__.'/../../bootstrap.php';
 
@@ -65,9 +63,9 @@ class RecipientsManagerTest extends \TuleapTestCase
 
         $this->user_manager                    = mock('\UserManager');
         $this->formelement_factory             = mock('\Tracker_FormElementFactory');
-        $this->unsubscribers_notification_dao  = mock(UnsubscribersNotificationDAO::class);
+        $this->unsubscribers_notification_dao  = \Mockery::mock(UnsubscribersNotificationDAO::class);
         $this->notification_settings_retriever = mock(UserNotificationSettingsRetriever::class);
-        $this->user_status_change_only_dao     = mock(UserNotificationOnlyStatusChangeDAO::class);
+        $this->user_status_change_only_dao     = \Mockery::spy(UserNotificationOnlyStatusChangeDAO::class);
         $this->recipients_manager              = new RecipientsManager(
             $this->formelement_factory,
             $this->user_manager,

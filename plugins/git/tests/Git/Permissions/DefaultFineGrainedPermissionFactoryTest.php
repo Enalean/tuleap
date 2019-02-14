@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,7 +22,7 @@ namespace Tuleap\Git\Permissions;
 
 use TuleapTestCase;
 
-require_once dirname(__FILE__).'/../../bootstrap.php';
+require_once __DIR__ .'/../../bootstrap.php';
 
 class DefaultFineGrainedPermissionFactoryTest extends TuleapTestCase
 {
@@ -31,7 +31,7 @@ class DefaultFineGrainedPermissionFactoryTest extends TuleapTestCase
     {
         parent::setUp();
 
-        $this->dao            = mock('Tuleap\Git\Permissions\FineGrainedDao');
+        $this->dao            = safe_mock(FineGrainedDao::class);
         $this->ugroup_manager = mock('UGroupManager');
         $this->normalizer     = mock('PermissionsNormalizer');
 

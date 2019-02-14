@@ -23,6 +23,7 @@ namespace Tuleap\GitLFS\Transfer\Basic;
 use League\Flysystem\FilesystemInterface;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\DB\DBConnection;
 use Tuleap\GitLFS\LFSObject\LFSObject;
 use Tuleap\GitLFS\LFSObject\LFSObjectID;
 use Tuleap\GitLFS\LFSObject\LFSObjectPathAllocator;
@@ -34,6 +35,7 @@ class LFSBasicTransferObjectSaverTest extends TestCase
     use MockeryPHPUnitIntegration;
 
     private $filesystem;
+    private $db_connection;
     private $lfs_object_retriever;
     private $path_allocator;
     private $prometheus;
@@ -41,6 +43,7 @@ class LFSBasicTransferObjectSaverTest extends TestCase
     protected function setUp() : void
     {
         $this->filesystem           = \Mockery::mock(FilesystemInterface::class);
+        $this->db_connection        = \Mockery::mock(DBConnection::class);
         $this->lfs_object_retriever = \Mockery::mock(LFSObjectRetriever::class);
         $this->path_allocator       = \Mockery::mock(LFSObjectPathAllocator::class);
         $this->prometheus           = Prometheus::getInMemory();
@@ -50,6 +53,7 @@ class LFSBasicTransferObjectSaverTest extends TestCase
     {
         $object_saver = new LFSBasicTransferObjectSaver(
             $this->filesystem,
+            $this->db_connection,
             $this->lfs_object_retriever,
             $this->path_allocator,
             $this->prometheus
@@ -80,6 +84,8 @@ class LFSBasicTransferObjectSaverTest extends TestCase
             }
         );
 
+        $this->db_connection->shouldReceive('reconnectAfterALongRunningProcess')->once();
+
         $this->filesystem->shouldReceive('rename')->with($temporary_save_path, $ready_path)->once()->andReturns(true);
         $this->filesystem->shouldReceive('delete')->with($temporary_save_path)->once();
 
@@ -90,6 +96,7 @@ class LFSBasicTransferObjectSaverTest extends TestCase
     {
         $object_saver = new LFSBasicTransferObjectSaver(
             $this->filesystem,
+            $this->db_connection,
             $this->lfs_object_retriever,
             $this->path_allocator,
             $this->prometheus
@@ -111,6 +118,7 @@ class LFSBasicTransferObjectSaverTest extends TestCase
     {
         $object_saver = new LFSBasicTransferObjectSaver(
             $this->filesystem,
+            $this->db_connection,
             $this->lfs_object_retriever,
             $this->path_allocator,
             $this->prometheus
@@ -134,6 +142,7 @@ class LFSBasicTransferObjectSaverTest extends TestCase
     {
         $object_saver = new LFSBasicTransferObjectSaver(
             $this->filesystem,
+            $this->db_connection,
             $this->lfs_object_retriever,
             $this->path_allocator,
             $this->prometheus
@@ -167,6 +176,7 @@ class LFSBasicTransferObjectSaverTest extends TestCase
             }
         );
 
+        $this->db_connection->shouldReceive('reconnectAfterALongRunningProcess');
         $this->filesystem->shouldReceive('delete')->with($temporary_save_path)->once();
 
         $object_saver->saveObject(\Mockery::mock(\GitRepository::class), $lfs_object, $input_resource);
@@ -182,6 +192,7 @@ class LFSBasicTransferObjectSaverTest extends TestCase
     ) {
         $object_saver = new LFSBasicTransferObjectSaver(
             $this->filesystem,
+            $this->db_connection,
             $this->lfs_object_retriever,
             $this->path_allocator,
             $this->prometheus
@@ -214,6 +225,7 @@ class LFSBasicTransferObjectSaverTest extends TestCase
         );
 
         $this->filesystem->shouldReceive('delete')->with($temporary_save_path)->once();
+        $this->db_connection->shouldReceive('reconnectAfterALongRunningProcess');
 
         $this->expectException($excepted_exception);
         $object_saver->saveObject(\Mockery::mock(\GitRepository::class), $lfs_object, $input_resource);

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2017. All rights reserved.
+ * Copyright Enalean (c) 2017-2019. All rights reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,10 +20,12 @@
 
 namespace Tuleap\Git\Hook;
 
-require_once dirname(__FILE__).'/../../bootstrap.php';
+require_once __DIR__ .'/../../bootstrap.php';
 
 use PFUser;
 use TuleapTestCase;
+use Tuleap\Git\Notifications\UsersToNotifyDao;
+use Tuleap\Git\Notifications\UgroupsToNotifyDao;
 
 class PostReceiveMailsRetrieverTest extends TuleapTestCase
 {
@@ -45,7 +47,7 @@ class PostReceiveMailsRetrieverTest extends TuleapTestCase
             ->withNotifiedEmails(array('jdoe@example.com', 'smith@example.com'))
             ->build();
 
-        $notified_users_dao = mock('Tuleap\Git\Notifications\UsersToNotifyDao');
+        $notified_users_dao = safe_mock(UsersToNotifyDao::class);
         stub($notified_users_dao)
             ->searchUsersByRepositoryId(101)
             ->returnsDar(
@@ -53,7 +55,7 @@ class PostReceiveMailsRetrieverTest extends TuleapTestCase
                 array('email' => 'smith@example.com')
             );
 
-        $notified_ugroup_dao = mock('Tuleap\Git\Notifications\UgroupsToNotifyDao');
+        $notified_ugroup_dao = safe_mock(UgroupsToNotifyDao::class);
         stub($notified_ugroup_dao)
             ->searchUgroupsByRepositoryId(101)
             ->returnsDar(

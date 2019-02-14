@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -33,7 +33,7 @@ class GitRepositoryManager_DeleteAllRepositoriesTest extends TuleapTestCase {
         $this->project              = stub('Project')->getID()->returns($this->project_id);
         $this->repository_factory   = mock('GitRepositoryFactory');
         $this->git_system_event_manager = mock('Git_SystemEventManager');
-        $this->dao                  = mock('GitDao');
+        $this->dao                  = safe_mock(GitDao::class);
         $this->backup_directory     = "/tmp/";
         $this->mirror_updater       = mock('GitRepositoryMirrorUpdater');
         $this->mirror_data_mapper   = mock('Git_Mirror_MirrorDataMapper');
@@ -101,7 +101,7 @@ class GitRepositoryManager_IsRepositoryNameAlreadyUsedTest extends TuleapTestCas
         stub($this->project)->getID()->returns($this->project_id);
         stub($this->project)->getUnixName()->returns($this->project_name);
 
-        $this->dao                = mock('GitDao');
+        $this->dao                = safe_mock(GitDao::class);
         $this->backup_directory   = "/tmp/";
         $this->mirror_updater     = mock('GitRepositoryMirrorUpdater');
         $this->mirror_data_mapper = mock('Git_Mirror_MirrorDataMapper');
@@ -192,7 +192,7 @@ class GitRepositoryManager_CreateTest extends TuleapTestCase {
         $this->repository = new GitRepository();
 
         $this->git_system_event_manager = mock('Git_SystemEventManager');
-        $this->dao                      = mock('GitDao');
+        $this->dao                      = safe_mock(GitDao::class);
         $this->backup_directory         = "/tmp/";
         $this->mirror_updater           = mock('GitRepositoryMirrorUpdater');
         $this->mirror_data_mapper       = mock('Git_Mirror_MirrorDataMapper');
@@ -317,7 +317,7 @@ class GitRepositoryManager_ForkTest extends TuleapTestCase {
             array(
                 mock('GitRepositoryFactory'),
                 $this->git_system_event_manager,
-                mock('GitDao'),
+                safe_mock(GitDao::class),
                 $this->backup_directory,
                 $this->mirror_updater,
                 $this->mirror_data_mapper,

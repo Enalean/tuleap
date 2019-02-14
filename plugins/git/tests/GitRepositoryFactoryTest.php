@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2011-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -29,7 +29,7 @@ class GitRepositoryFactoryTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
 
-        $this->dao             = mock('GitDao');
+        $this->dao             = safe_mock(GitDao::class);
         $this->project_manager = mock('ProjectManager');
         $this->project         = mock('Project');
 
@@ -87,7 +87,7 @@ class GitRepositoryFactory_getGerritRepositoriesWithPermissionsForUGroupTest ext
 
     public function setUp() {
         parent::setUp();
-        $this->dao = mock('GitDao');
+        $this->dao = \Mockery::mock(GitDao::class);
         $this->project_manager = mock('ProjectManager');
 
         $this->factory = partial_mock('GitRepositoryFactory', array('instanciateFromRow'), array($this->dao, $this->project_manager));
@@ -104,8 +104,9 @@ class GitRepositoryFactory_getGerritRepositoriesWithPermissionsForUGroupTest ext
 
     public function itCallsDaoWithArguments() {
         $ugroups = array(404, 416, 115);
-        expect($this->dao)->searchGerritRepositoriesWithPermissionsForUGroupAndProject($this->project_id, $ugroups)->once();
-        stub($this->dao)->searchGerritRepositoriesWithPermissionsForUGroupAndProject()->returnsEmptyDar();
+        $this->dao->shouldReceive('searchGerritRepositoriesWithPermissionsForUGroupAndProject')
+            ->with($this->project_id, $ugroups)->andReturn([])
+            ->once();
         $this->factory->getGerritRepositoriesWithPermissionsForUGroupAndProject($this->project, $this->ugroup, $this->user);
     }
 
@@ -243,7 +244,7 @@ class GitRepositoryFactory_getAllGerritRepositoriesFromProjectTest extends Tulea
 
     public function setUp() {
         parent::setUp();
-        $this->dao = mock('GitDao');
+        $this->dao = \Mockery::mock(GitDao::class);
         $this->project_manager = mock('ProjectManager');
 
         $this->factory = partial_mock(
@@ -267,9 +268,9 @@ class GitRepositoryFactory_getAllGerritRepositoriesFromProjectTest extends Tulea
         $this->ugroup  = stub('ProjectUGroup')->getId()->returns($this->ugroup_id);
     }
 
-    public function itFetchAllGerritRepositoriesFromDao() {
-        expect($this->dao)->searchAllGerritRepositoriesOfProject($this->project_id)->once();
-        stub($this->dao)->searchAllGerritRepositoriesOfProject()->returnsEmptyDar();
+    public function itFetchAllGerritRepositoriesFromDao()
+    {
+        $this->dao->shouldReceive('searchAllGerritRepositoriesOfProject')->with($this->project_id)->andReturn([])->once();
         $this->factory->getAllGerritRepositoriesFromProject($this->project, $this->user);
     }
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2019. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2011. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -18,6 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\Git\Notifications\UgroupsToNotifyDao;
+use Tuleap\Git\Notifications\UsersToNotifyDao;
 
 require_once 'bootstrap.php';
 require_once (__DIR__.'/../include/GitActions.class.php');
@@ -67,8 +70,8 @@ class GitActionsTest extends TuleapTestCase {
             mock('Tuleap\Git\Permissions\RegexpFineGrainedDisabler'),
             mock('Tuleap\Git\Permissions\RegexpPermissionFilter'),
             mock('Tuleap\Git\Permissions\RegexpFineGrainedRetriever'),
-            mock('Tuleap\Git\Notifications\UsersToNotifyDao'),
-            mock('Tuleap\Git\Notifications\UgroupsToNotifyDao'),
+            safe_mock(UsersToNotifyDao::class),
+            safe_mock(UgroupsToNotifyDao::class),
             mock('UGroupManager')
         ))
             ->makePartial()

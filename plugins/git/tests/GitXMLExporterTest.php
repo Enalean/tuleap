@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,6 +24,7 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'bootstrap.php';
 
 use ForgeConfig;
 use Git;
+use Git_LogDao;
 use SimpleXMLElement;
 use Tuleap\Project\XML\ArchiveException;
 use Tuleap\Project\XML\Export\ZipArchive;
@@ -119,7 +120,7 @@ class GitXMLExporterTest extends TuleapTestCase
 
         $this->user_manager = mock(\UserManager::class);
 
-        $this->git_log_dao = mock('Git_LogDao');
+        $this->git_log_dao = \Mockery::spy(Git_LogDao::class);
 
         $this->xml_exporter = new GitXmlExporter(
             mock('Project'),

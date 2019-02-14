@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../../bootstrap.php';
+require_once __DIR__ .'/../../bootstrap.php';
 
 class Git_RemoteServer_GerritServerFactoryTest extends TuleapTestCase {
 
@@ -81,8 +81,8 @@ class Git_RemoteServer_GerritServerFactoryTest extends TuleapTestCase {
             'replication_password' => '',
         );
 
-        $git_dao   = mock('GitDao');
-        $this->dao = mock('Git_RemoteServer_Dao');
+        $git_dao   = safe_mock(GitDao::class);
+        $this->dao = \Mockery::spy(Git_RemoteServer_Dao::class);
         $this->system_event_manager = mock('Git_SystemEventManager');
 
         stub($this->dao)->searchAll()->returns([$this->dar_1, $this->dar_2]);
@@ -154,8 +154,7 @@ class Git_RemoteServer_GerritServerFactoryTest extends TuleapTestCase {
     public function itGetsAllServersForAGivenProject() {
         stub($this->project_manager)->getChildProjects()->returns(array());
         $project = stub('Project')->getId()->returns(458);
-        expect($this->dao)->searchAllByProjectId(458)->once();
-        stub($this->dao)->searchAllByProjectId()->returns([$this->dar_1]);
+        $this->dao->shouldReceive('searchAllByProjectId')->with(458)->andReturn([$this->dar_1])->once();
         $servers = $this->factory->getServersForProject($project);
         $this->assertIsA($servers[$this->server_id], 'Git_RemoteServer_GerritServer');
     }
@@ -190,12 +189,7 @@ class Git_RemoteServer_GerritServerFactoryTest extends TuleapTestCase {
         stub($this->project_manager)->getChildProjects(933)->returns(array($grandchild));
         stub($this->project_manager)->getChildProjects()->returns(array());
 
-        stub($this->dao)->searchAllByProjectId()->returns([]);
-        expect($this->dao)->searchAllByProjectId()->count(4);
-        expect($this->dao)->searchAllByProjectId(369)->at(0);
-        expect($this->dao)->searchAllByProjectId(933)->at(1);
-        expect($this->dao)->searchAllByProjectId(96)->at(2);
-        expect($this->dao)->searchAllByProjectId(934)->at(3);
+        $this->dao->shouldReceive('searchAllByProjectId')->andReturn([])->times(4);
 
         $this->factory->getServersForProject($parent);
     }

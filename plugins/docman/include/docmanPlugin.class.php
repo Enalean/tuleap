@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
- * Copyright (c) Enalean, 2015 - 2018.
+ * Copyright (c) Enalean, 2015 - 2019.
  *
  * Originally written by Manuel Vacelet, 2006
  *
@@ -1278,7 +1278,8 @@ class DocmanPlugin extends Plugin
                         $this->getItemFactory()
                     ),
                     new \Tuleap\Docman\Upload\DocumentBeingUploadedWriter(
-                        $path_allocator
+                        $path_allocator,
+                        \Tuleap\DB\DBFactory::getMainTuleapDBConnection()
                     ),
                     new \Tuleap\Docman\Upload\DocumentBeingUploadedLocker(
                         $path_allocator
