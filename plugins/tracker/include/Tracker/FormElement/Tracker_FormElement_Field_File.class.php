@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean 2017-2018. All rights reserved
+ * Copyright (c) Enalean 2017-2019. All rights reserved
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -1111,10 +1111,13 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
         return $visitor->visitFile($this);
     }
 
-    public function isPreviousChangesetEmpty(Tracker_Artifact $artifact, $value) {
+    protected function isPreviousChangesetEmpty(Tracker_Artifact $artifact, $value) {
         $last_changeset = $artifact->getLastChangeset();
 
-        if ($last_changeset && count($last_changeset->getValue($this)->getFiles()) > 0) {
+        if ($last_changeset &&
+            ! is_a($last_changeset, Tracker_Artifact_Changeset_Null::class) &&
+            count($last_changeset->getValue($this)->getFiles()) > 0
+        ) {
             return $this->areAllFilesDeletedFromPreviousChangeset($last_changeset, $value);
         }
         return true;
