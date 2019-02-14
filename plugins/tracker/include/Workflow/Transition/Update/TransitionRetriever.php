@@ -61,4 +61,41 @@ class TransitionRetriever
         }
         return new TransitionCollection(...$siblings);
     }
+
+    /**
+     * @throws NoSiblingTransitionException
+     */
+    public function getFirstSiblingTransition(\Transition $transition): \Transition
+    {
+        $rows = $this->transition_dao->searchSiblings(
+            $transition->workflow_id,
+            $transition->getIdTo(),
+            $transition->getId()
+        );
+        if ($rows === false) {
+            throw new NoSiblingTransitionException();
+        }
+
+        $row = $this->searchSiblingTransitionInRows($rows);
+        return $this->transition_factory->getInstanceFromRow($row);
+    }
+
+    /**
+     * @throws NoSiblingTransitionException
+     */
+    private function searchSiblingTransitionInRows($siblings): array
+    {
+        $transition_from_new_artifact = null;
+        foreach ($siblings as $row) {
+            if ($row['from_id'] === '0') {
+                $transition_from_new_artifact = $row;
+            } else {
+                return $row;
+            }
+        }
+        if ($transition_from_new_artifact !== null) {
+            return $transition_from_new_artifact;
+        }
+        throw new NoSiblingTransitionException();
+    }
 }

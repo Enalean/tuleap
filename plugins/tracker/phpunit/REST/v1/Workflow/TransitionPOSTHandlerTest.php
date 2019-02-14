@@ -26,10 +26,12 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use TrackerFactory;
+use Tuleap\DB\TransactionExecutor;
 use Tuleap\REST\I18NRestException;
 use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\REST\UserManager;
 use Tuleap\Tracker\REST\WorkflowTransitionPOSTRepresentation;
+use Tuleap\Tracker\Workflow\Transition\Condition\ConditionsReplicator;
 use Tuleap\Tracker\Workflow\Transition\TransitionCreationParameters;
 
 class TransitionPOSTHandlerTest extends TestCase
@@ -52,6 +54,10 @@ class TransitionPOSTHandlerTest extends TestCase
     private $transition_factory;
     /** @var Mockery\MockInterface */
     private $validator;
+    /** @var Mockery\MockInterface */
+    private $transaction_executor;
+    /** @var Mockery\MockInterface */
+    private $conditions_replicator;
 
     private const TRACKER_ID = 196;
     private const FROM_ID = 134;
@@ -66,18 +72,24 @@ class TransitionPOSTHandlerTest extends TestCase
         $this->workflow_factory           = Mockery::mock(\WorkflowFactory::class);
         $this->transition_factory         = Mockery::mock(\TransitionFactory::class);
         $this->validator                  = Mockery::mock(TransitionValidator::class);
-        $this->tracker                    = Mockery::mock(\Tracker::class)
-            ->shouldReceive('getId')
-            ->andReturn(self::TRACKER_ID)
-            ->getMock();
-        $this->handler                    = new TransitionPOSTHandler(
+        $this->transaction_executor       = Mockery::mock(TransactionExecutor::class);
+        $this->transaction_executor->shouldReceive('execute')
+            ->andReturnUsing(
+                function (callable $callback) {
+                    $callback();
+                }
+            );
+        $this->conditions_replicator = Mockery::mock(ConditionsReplicator::class);
+        $this->handler               = new TransitionPOSTHandler(
             $this->user_manager,
             $this->tracker_factory,
             $this->project_status_verificator,
             $this->permissions_checker,
             $this->workflow_factory,
             $this->transition_factory,
-            $this->validator
+            $this->validator,
+            $this->transaction_executor,
+            $this->conditions_replicator
         );
     }
 
@@ -100,7 +112,7 @@ class TransitionPOSTHandlerTest extends TestCase
         $this->permissions_checker
             ->shouldReceive('checkCreate')
             ->with($current_user, $tracker);
-        $workflow = Mockery::mock(\Workflow::class);
+        $workflow = $this->buildAdvancedWorkflow();
         $this->workflow_factory
             ->shouldReceive('getWorkflowByTrackerId')
             ->with(self::TRACKER_ID)
@@ -120,12 +132,47 @@ class TransitionPOSTHandlerTest extends TestCase
             ->with($workflow, $validated_parameters)
             ->andReturn($new_transition);
 
+        $this->conditions_replicator->shouldNotReceive('replicateFromFirstSiblingTransition');
+
         $result = $this->handler->handle(self::TRACKER_ID, self::FROM_ID, self::TO_ID);
 
         $expected = new WorkflowTransitionPOSTRepresentation();
         $expected->build($new_transition);
 
         $this->assertEquals($expected, $result);
+    }
+
+    public function testHandleForSimpleModeAlsoReplicatesConditions()
+    {
+        $current_user = Mockery::mock(\PFUser::class);
+        $this->user_manager
+            ->shouldReceive('getCurrentUser')
+            ->andReturn($current_user);
+        $tracker = Mockery::mock(\Tracker::class);
+        $project = Mockery::mock(\Project::class);
+        $tracker->shouldReceive('getProject')->andReturn($project);
+        $this->tracker_factory->allows('getTrackerById')->andReturn($tracker);
+        $this->project_status_verificator->allows('checkProjectStatusAllowsAllUsersToAccessIt');
+        $this->permissions_checker->allows('checkCreate');
+        $this->validator->allows('validateForCreation');
+
+        $new_transition = Mockery::mock(\Transition::class)
+            ->shouldReceive('getId')
+            ->andReturn(965)
+            ->getMock();
+        $this->transition_factory
+            ->shouldReceive('createAndSaveTransition')
+            ->andReturn($new_transition);
+
+        $workflow = $this->buildSimpleWorkflow();
+        $this->workflow_factory
+            ->shouldReceive('getWorkflowByTrackerId')
+            ->with(self::TRACKER_ID)
+            ->andReturn($workflow);
+
+        $this->conditions_replicator->shouldReceive('replicateFromFirstSiblingTransition');
+
+        $this->handler->handle(self::TRACKER_ID, self::FROM_ID, self::TO_ID);
     }
 
     public function testHandleThrowsWhenNoTrackerFound()
@@ -167,5 +214,27 @@ class TransitionPOSTHandlerTest extends TestCase
         $this->expectExceptionCode(404);
 
         $this->handler->handle(self::TRACKER_ID, self::FROM_ID, self::TO_ID);
+    }
+
+    /**
+     * @return Mockery\MockInterface|\Workflow
+     */
+    private function buildAdvancedWorkflow()
+    {
+        return Mockery::mock(\Workflow::class)
+            ->shouldReceive('isAdvanced')
+            ->andReturnTrue()
+            ->getMock();
+    }
+
+    /**
+     * @return Mockery\MockInterface|\Workflow
+     */
+    private function buildSimpleWorkflow()
+    {
+        return Mockery::mock(\Workflow::class)
+            ->shouldReceive('isAdvanced')
+            ->andReturnFalse()
+            ->getMock();
     }
 }
