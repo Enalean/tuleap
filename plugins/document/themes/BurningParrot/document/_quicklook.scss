@@ -94,6 +94,11 @@
     word-break: break-all;
 }
 
+.document-quick-look-image > img {
+    max-width: 100%;
+    margin: 0 auto;
+}
+
 @media screen and (max-width: 1200px) {
     .document-folder-content-quicklook {
         flex-direction: column;

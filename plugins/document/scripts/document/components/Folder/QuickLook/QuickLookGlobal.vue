@@ -29,7 +29,10 @@
             </div>
         </div>
         <section class="tlp-pane-section">
-            <div class="document-quick-look-icon">
+            <div class="document-quick-look-image" v-if="is_an_image">
+                <img v-bind:src="item.file_properties.html_url" v-bind:alt="item.title">
+            </div>
+            <div class="document-quick-look-icon" v-else>
                 <i class="fa" v-bind:class="icon_class"></i>
             </div>
             <component
@@ -102,6 +105,11 @@ export default {
                     return;
             }
             return () => import(/* webpackChunkName: "quick-look-" */ `./QuickLook${name}.vue`);
+        },
+        is_an_image() {
+            return (
+                this.item.file_properties && this.item.file_properties.file_type.includes("image")
+            );
         }
     },
     methods: {
