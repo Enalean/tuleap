@@ -26,7 +26,7 @@
     />
     <tr v-else>
         <td>{{ timeData.date }}</td>
-        <td>{{ timeData.step }}</td>
+        <td class="timetracking-detail-modal-step" v-bind:title="timeData.step">{{ timeData.step }}</td>
         <td class="timetracking-details-modal-buttons">
             <span>{{ minutes }}</span>
             <span>
