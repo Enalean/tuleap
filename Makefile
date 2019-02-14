@@ -121,7 +121,8 @@ tests_rest_setup_72: ## Start REST tests (PHP FPM 7.2) container to launch tests
 phpunit-ci-run:
 	$(PHP) src/vendor/bin/phpunit \
 		-c tests/phpunit/phpunit.xml \
-		--log-junit /tmp/results/phpunit_tests_results.xml
+		--log-junit /tmp/results/phpunit_tests_results.xml \
+		--do-not-cache-result
 
 run-as-owner:
 	@USER_ID=`stat -c '%u' /tuleap`; \
@@ -145,7 +146,7 @@ phpunit-docker-73: ## Run PHPUnit tests in Docker container with PHP 7.3. Use FI
 	@docker run --rm -v $(CURDIR):/tuleap:ro enalean/tuleap-test-phpunit:c7-php73 scl enable php73 "make -C /tuleap phpunit FILES=$(FILES)"
 
 phpunit:
-	src/vendor/bin/phpunit -c tests/phpunit/phpunit.xml $(FILES)
+	src/vendor/bin/phpunit -c tests/phpunit/phpunit.xml --do-not-cache-result $(FILES)
 
 simpletest-72-ci:
 	@mkdir -p $(WORKSPACE)/results/ut-simpletest/php-72
