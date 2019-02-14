@@ -227,7 +227,7 @@ class DocmanItemsTest extends DocmanBase
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
         );
 
-        $this->assertEquals(['OPTIONS', 'GET', 'POST'], $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'GET', 'POST', 'PATCH'], $response->getHeader('Allow')->normalize()->toArray());
     }
 
     /**
@@ -744,5 +744,42 @@ class DocmanItemsTest extends DocmanBase
             $this->client->post('docman_items', $headers, $query)
         );
         $this->assertEquals(400, $response->getStatusCode());
+    }
+
+    /**
+     * @depends testGetRootId
+     */
+    public function testPatchOnDocumentWithApprovalTableThrowException(int $root_id)
+    {
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->get('docman_items/' . $root_id . '/docman_items')
+        );
+        $folder = $response->json();
+
+        $put_resource = json_encode([]);
+
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->client->patch(
+                'docman_items/'.$folder[0]["id"],
+                null,
+                $put_resource
+            )
+        );
+        $this->assertEquals(403, $response->getStatusCode());
+    }
+
+    /**
+     * @depends testGetRootId
+     */
+    public function testPatchOnDocumentThrowsANotImplementedException(int $root_id)
+    {
+        $put_resource = json_encode([]);
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->client->patch('docman_items/' . $root_id, null, $put_resource)
+        );
+        $this->assertEquals(501, $response->getStatusCode());
     }
 }

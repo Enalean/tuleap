@@ -33,6 +33,7 @@ use Luracast\Restler\RestException;
 use PluginManager;
 use Project;
 use ProjectManager;
+use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\ApprovalTable\ApprovalTableStateMapper;
 use Tuleap\Docman\Item\ItemIsNotAFolderException;
 use Tuleap\Docman\Log\LogEventAdder;
@@ -166,7 +167,7 @@ class DocmanItemsResource extends AuthenticatedResource
     public function post(DocmanItemPOSTRepresentation $docman_item_post_representation)
     {
         $this->checkAccess();
-        $this->sendAllowHeadersWithPost();
+        $this->sendAllowHeadersWithPostPatch();
 
         $current_user = $this->rest_user_manager->getCurrentUser();
 
@@ -230,6 +231,64 @@ class DocmanItemsResource extends AuthenticatedResource
         );
     }
 
+    /**
+     * Patch an element of document manager
+     *
+     * Create a new version of an existing document
+     *
+     * <pre>
+     * /!\ This route is under construction and will be subject to changes
+     * </pre>
+     *
+     * @url PATCH {id}
+     * @access hybrid
+     *
+     * @param int $id Id of the item
+     *
+     * @status 200
+     * @throws 403
+     * @throws 501
+     */
+
+    public function patch(int $id)
+    {
+        if (! \ForgeConfig::get('enable_patch_item_route')) {
+            throw new RestException(
+                501
+            );
+        }
+        $this->checkAccess();
+        $this->sendAllowHeadersWithPostPatch();
+
+        $current_user = $this->rest_user_manager->getCurrentUser();
+
+        $item_request = $this->request_builder->buildFromItemId($id);
+        $item         = $item_request->getItem();
+
+        $project = $item_request->getProject();
+        $this->checkUserCanWriteFolder($current_user, $project, $item->getParentId());
+
+        $this->addLogEvents();
+        $this->addNotificationEvents($project);
+
+        $docman_item_updator = new DocmanItemUpdator(new ApprovalTableRetriever(new \Docman_ApprovalTableFactoriesFactory()));
+
+        try {
+            $docman_item_updator->update(
+                $item
+            );
+        } catch (ExceptionDocumentHasApprovalTable $exception) {
+            throw new I18NRestException(
+                403,
+                dgettext('tuleap-docman', 'Update document with approval table is not possible yet.')
+            );
+        }
+
+        throw new RestException(
+            501
+        );
+    }
+
     private function getItemFactory($group_id = null)
     {
         return new Docman_ItemFactory($group_id);
@@ -255,7 +314,7 @@ class DocmanItemsResource extends AuthenticatedResource
     {
         $this->checkAccess();
 
-        $this->sendAllowHeadersWithPost();
+        $this->sendAllowHeadersWithPostPatch();
 
         $items_request = $this->request_builder->buildFromItemId($id);
         $folder        = $items_request->getItem();
@@ -284,7 +343,7 @@ class DocmanItemsResource extends AuthenticatedResource
      */
     public function optionsDocumentItems($id)
     {
-        $this->sendAllowHeadersWithPost();
+        $this->sendAllowHeadersWithPostPatch();
     }
 
     /**
@@ -364,9 +423,9 @@ class DocmanItemsResource extends AuthenticatedResource
         return \Docman_PermissionsManager::instance($project->getGroupId());
     }
 
-    private function sendAllowHeadersWithPost()
+    private function sendAllowHeadersWithPostPatch()
     {
-        Header::allowOptionsGetPost();
+        Header::allowOptionsGetPostPatch();
     }
 
     private function sendAllowHeaders()
@@ -413,11 +472,11 @@ class DocmanItemsResource extends AuthenticatedResource
             Docman_ItemFactory::instance($item->getGroupId()),
             $this->getDocmanPermissionManager($project),
             new \Docman_LockFactory(),
-            new \Docman_ApprovalTableFactoriesFactory(),
             new ApprovalTableStateMapper(),
             new MetadataRepresentationBuilder(
                 new \Docman_MetadataFactory($project->getID())
-            )
+            ),
+            new ApprovalTableRetriever(new \Docman_ApprovalTableFactoriesFactory())
         );
         return $item_representation_builder;
     }
