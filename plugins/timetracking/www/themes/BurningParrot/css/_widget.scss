@@ -41,6 +41,7 @@
 .timetracking-writing-mode-selected-dates,
 .timetracking-reading-mode-dates {
     display: flex;
+    min-width: max-content;
     margin: $tlp-spacing $tlp-spacing 0;
 }
 
@@ -66,22 +67,25 @@
 .timetracking-overview-reading-mode-trackers-list {
     display: flex;
     flex-direction: row;
-    margin: $tlp-spacing;
+    margin: $tlp-spacing $tlp-spacing $tlp-half-spacing;
     color: $tlp-theme-color;
 }
 
 .timetracking-overview-reading-mode-trackers {
     display: flex;
+    flex-wrap: wrap;
 }
 
 .timetracking-overview-reading-mode-tracker {
     display: flex;
     flex-direction: column;
-    margin: 0 $tlp-spacing 0 0;
+    margin: 0 $tlp-spacing $tlp-half-spacing 0;
 }
 
 .timetracking-overview-reading-mode-tracker-project-name {
-    margin: 7px 0 0;
+    display: flex;
+    align-items: center;
+    margin: 5px 0 0;
     color: $tlp-ui-dimmed;
     font-size: 14px;
     font-weight: 400;
@@ -208,4 +212,9 @@
     display: flex;
     align-items: center;
     margin: $tlp-spacing $tlp-half-spacing 0;
+}
+
+.timetracking-archive {
+    margin: 0 3px 0 0;
+    font-size: 12px;
 }

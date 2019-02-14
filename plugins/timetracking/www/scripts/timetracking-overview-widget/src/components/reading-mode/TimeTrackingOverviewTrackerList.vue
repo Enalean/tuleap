@@ -26,7 +26,7 @@
             >
                 <span>{{ tracker.label }}</span>
                 <span class="timetracking-overview-reading-mode-tracker-project-name">
-                    <time-tracking-overview-project-icon/>{{ tracker.project.label }}
+                    <i class="fa fa-archive timetracking-archive"></i>{{ tracker.project.label }}
                 </span>
             </div>
         </div>
@@ -37,11 +37,9 @@
 </template>
 <script>
 import { mapState } from "vuex";
-import TimeTrackingOverviewProjectIcon from "./TimeTrackingOverviewProjectIcon.vue";
 
 export default {
     name: "TrackerListReadingMode",
-    components: { TimeTrackingOverviewProjectIcon },
     computed: {
         ...mapState(["selected_trackers"]),
         has_no_trackers_in_report() {
