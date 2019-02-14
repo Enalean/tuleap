@@ -107,6 +107,9 @@ msgstr "Aller à la page d'accueil"
 msgid "Go to parent folder"
 msgstr "Aller au dossier parent"
 
+msgid "Go to the wiki page"
+msgstr "Aller à la page wiki"
+
 msgid "Id"
 msgstr "Id"
 
