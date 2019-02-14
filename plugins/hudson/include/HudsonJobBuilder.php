@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -101,6 +101,12 @@ class HudsonJobBuilder
      */
     private function getXMLContent(MinimalHudsonJob $minimal_hudson_job, ResponseInterface $http_response)
     {
+        if ($http_response->getStatusCode() === 404) {
+            throw new HudsonJobURLFileNotFoundException(
+                $GLOBALS['Language']->getText('plugin_hudson', 'job_url_file_not_found', [$minimal_hudson_job->getJobUrl()])
+            );
+        }
+
         $previous_libxml_use_errors = libxml_use_internal_errors(true);
         $xmlobj                     = simplexml_load_string($http_response->getBody());
         libxml_use_internal_errors($previous_libxml_use_errors);

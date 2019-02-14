@@ -1,7 +1,7 @@
 #!/usr/share/tuleap/src/utils/php-launcher.sh
 <?php
 /**
- * Copyright Enalean (c) 2011-2018. All rights reserved.
+ * Copyright Enalean (c) 2011-2019. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registered trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -95,7 +95,7 @@ $post_receive = new Git_Hook_PostReceive(
     $system_event_manager,
     EventManager::instance(),
     new \Tuleap\Git\Webhook\WebhookRequestSender(
-        new \Tuleap\Webhook\Emitter(MessageFactoryBuilder::build(), HttpClientFactory::createClient(), new GitWebhookStatusLogger($webhook_dao)),
+        new \Tuleap\Webhook\Emitter(MessageFactoryBuilder::build(), HttpClientFactory::createAsyncClient(), new GitWebhookStatusLogger($webhook_dao)),
         new \Tuleap\Git\Webhook\WebhookFactory($webhook_dao),
         $logger
     ),

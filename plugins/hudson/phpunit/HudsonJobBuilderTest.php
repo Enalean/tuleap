@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,10 +22,10 @@ namespace Tuleap\Hudson;
 
 require_once __DIR__ . '/bootstrap.php';
 
-use Http\Client\Exception\HttpException;
 use Http\Message\RequestFactory;
 use Http\Mock\Client;
 use HudsonJobURLFileException;
+use HudsonJobURLFileNotFoundException;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
@@ -45,7 +45,7 @@ class HudsonJobBuilderTest extends TestCase
         unset($GLOBALS['Language']);
     }
 
-    public function testExceptionIsRaisedWhenDataCannotBeRetrieved()
+    public function testExceptionIsRaisedWhenThePageCannotBeFound() : void
     {
         $minimal_job = \Mockery::mock(MinimalHudsonJob::class);
         $minimal_job->shouldReceive('getName');
@@ -55,11 +55,13 @@ class HudsonJobBuilderTest extends TestCase
         $request_factory->shouldReceive('createRequest')->andReturns(\Mockery::mock(RequestInterface::class));
 
         $http_client = new Client();
-        $http_client->addException(\Mockery::mock(HttpException::class));
+        $response    = \Mockery::mock(ResponseInterface::class);
+        $response->shouldReceive('getStatusCode')->andReturns(404);
+        $http_client->addResponse($response);
 
         $job_builder = new HudsonJobBuilder($request_factory, $http_client);
 
-        $this->expectException(HttpException::class);
+        $this->expectException(HudsonJobURLFileNotFoundException::class);
 
         $job_builder->getHudsonJob($minimal_job);
     }
@@ -76,6 +78,7 @@ class HudsonJobBuilderTest extends TestCase
         $http_client = new Client();
         $response    = \Mockery::mock(ResponseInterface::class);
         $response->shouldReceive('getBody')->andReturns('Not valid XML');
+        $response->shouldReceive('getStatusCode')->andReturns(200);
         $http_client->addResponse($response);
 
         $job_builder = new HudsonJobBuilder($request_factory, $http_client);
@@ -97,6 +100,7 @@ class HudsonJobBuilderTest extends TestCase
         $http_client = new Client();
         $response    = \Mockery::mock(ResponseInterface::class);
         $response->shouldReceive('getBody')->andReturns('<_/>');
+        $response->shouldReceive('getStatusCode')->andReturns(200);
         $http_client->addResponse($response);
 
         $job_builder = new HudsonJobBuilder($request_factory, $http_client);
@@ -124,6 +128,7 @@ class HudsonJobBuilderTest extends TestCase
         $http_client = new Client();
         $response    = \Mockery::mock(ResponseInterface::class);
         $response->shouldReceive('getBody')->andReturns('<_/>');
+        $response->shouldReceive('getStatusCode')->andReturns(200);
         $http_client->setDefaultResponse($response);
 
         $job_builder         = new HudsonJobBuilder($request_factory, $http_client);

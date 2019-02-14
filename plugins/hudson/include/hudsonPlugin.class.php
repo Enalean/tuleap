@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - 2019. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -125,7 +125,7 @@ class hudsonPlugin extends Plugin
 
         $user        = UserManager::instance()->getCurrentUser();
         $hf          = $this->getMinimalHudsonJobFactory();
-        $job_builder = new HudsonJobBuilder(MessageFactoryBuilder::build(), HttpClientFactory::createClient());
+        $job_builder = new HudsonJobBuilder(MessageFactoryBuilder::build(), HttpClientFactory::createAsyncClient());
 
         switch($get_widget_event->getName()) {
             // MY
@@ -269,7 +269,7 @@ class hudsonPlugin extends Plugin
                     $row = $dar->current();
                     try {
                         $minimal_job_factory = $this->getMinimalHudsonJobFactory();
-                        $job_builder         = new HudsonJobBuilder(MessageFactoryBuilder::build(), HttpClientFactory::createClient());
+                        $job_builder         = new HudsonJobBuilder(MessageFactoryBuilder::build(), HttpClientFactory::createAsyncClient());
                         $job                 = $job_builder->getHudsonJob(
                             $minimal_job_factory->getMinimalHudsonJob($row['job_url'], '')
                         );
@@ -351,7 +351,7 @@ class hudsonPlugin extends Plugin
                     $row = $dar->current();
                     try {
                         $minimal_job_factory = $this->getMinimalHudsonJobFactory();
-                        $job_builder         = new HudsonJobBuilder(MessageFactoryBuilder::build(), HttpClientFactory::createClient());
+                        $job_builder         = new HudsonJobBuilder(MessageFactoryBuilder::build(), HttpClientFactory::createAsyncClient());
                         $job                 = $job_builder->getHudsonJob(
                             $minimal_job_factory->getMinimalHudsonJob($row['job_url'], '')
                         );

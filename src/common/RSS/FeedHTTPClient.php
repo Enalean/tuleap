@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\RSS;
 
 use Http\Message\RequestFactory;
+use Psr\Http\Client\ClientInterface;
 use Zend\Feed\Reader\Http\HeaderAwareClientInterface;
 use Zend\Feed\Reader\Http\Psr7ResponseDecorator;
 use Zend\Feed\Reader\Http\ResponseInterface;
@@ -30,7 +31,7 @@ use Zend\Feed\Reader\Http\ResponseInterface;
 final class FeedHTTPClient implements HeaderAwareClientInterface
 {
     /**
-     * @var \Http\Client\HttpClient
+     * @var ClientInterface
      */
     private $http_client;
     /**
@@ -38,7 +39,7 @@ final class FeedHTTPClient implements HeaderAwareClientInterface
      */
     private $http_request_factory;
 
-    public function __construct(\Http\Client\HttpClient $http_client, RequestFactory $http_request_factory)
+    public function __construct(ClientInterface $http_client, RequestFactory $http_request_factory)
     {
         $this->http_client          = $http_client;
         $this->http_request_factory = $http_request_factory;

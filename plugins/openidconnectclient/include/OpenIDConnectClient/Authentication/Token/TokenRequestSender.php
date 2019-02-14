@@ -23,11 +23,11 @@ namespace Tuleap\OpenIDConnectClient\Authentication\Token;
 class TokenRequestSender
 {
     /**
-     * @var \Http\Client\HttpClient
+     * @var \Psr\Http\Client\ClientInterface
      */
     private $http_client;
 
-    public function __construct(\Http\Client\HttpClient $http_client)
+    public function __construct(\Psr\Http\Client\ClientInterface $http_client)
     {
         $this->http_client = $http_client;
     }

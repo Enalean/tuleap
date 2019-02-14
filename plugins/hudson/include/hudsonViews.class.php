@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2019. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -286,7 +286,7 @@ class hudsonViews extends Views {
             echo '<tbody>';
             $cpt                                   = 1;
             $minimal_job_factory                   = new MinimalHudsonJobFactory();
-            $job_builder                           = new HudsonJobBuilder(MessageFactoryBuilder::build(), HttpClientFactory::createClient());
+            $job_builder                           = new HudsonJobBuilder(MessageFactoryBuilder::build(), HttpClientFactory::createAsyncClient());
             $minimal_hudson_jobs                   = [];
             $hudson_jobs_complementary_information = [];
 

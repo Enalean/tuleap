@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2011 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - 2019. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -378,7 +378,7 @@ class ProjectManager
         $webhook_status_logger   = new WebhookStatusLogger(new WebhookLoggerDao());
         $webhook_emitter         = new Emitter(
             MessageFactoryBuilder::build(),
-            HttpClientFactory::createClient(),
+            HttpClientFactory::createAsyncClient(),
             $webhook_status_logger
         );
         $project_created_payload = new ProjectCreatedPayload($project, $_SERVER['REQUEST_TIME']);

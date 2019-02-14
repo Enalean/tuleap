@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright Enalean (c) 2014 - 2018. All rights reserved.
+ * Copyright Enalean (c) 2014 - 2019. All rights reserved.
  *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
+ * Tuleap and Enalean names and logos are registered trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
  * owners.
  *
@@ -23,8 +23,6 @@
  */
 
 use Tracker\Artifact\XMLArtifactSourcePlatformExtractor;
-use Tuleap\Http\HttpClientFactory;
-use Tuleap\Http\MessageFactoryBuilder;
 use Tuleap\Tracker\Artifact\ExistingArtifactSourceIdFromTrackerExtractor;
 use Tuleap\Tracker\DAO\TrackerArtifactSourceIdDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
@@ -33,10 +31,6 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationDetector;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SubmittedValueConvertor;
 use Tuleap\Tracker\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\RecentlyVisited\VisitRecorder;
-use Tuleap\Tracker\Webhook\WebhookDao;
-use Tuleap\Tracker\Webhook\WebhookFactory;
-use Tuleap\Tracker\Webhook\WebhookStatusLogger;
-use Tuleap\Webhook\Emitter;
 
 class Tracker_Migration_MigrationManager {
 
@@ -166,16 +160,8 @@ class Tracker_Migration_MigrationManager {
         );
     }
 
-    private function getArtifactCreator(Tracker_Artifact_Changeset_AtGivenDateFieldsValidator $fields_validator, Tracker_Artifact_ChangesetDao $changeset_dao) {
-        $webhook_dao = new WebhookDao();
-        $emitter     = new Emitter(
-            MessageFactoryBuilder::build(),
-            HttpClientFactory::createClient(),
-            new WebhookStatusLogger($webhook_dao)
-        );
-
-        $webhook_factory = new WebhookFactory($webhook_dao);
-
+    private function getArtifactCreator(Tracker_Artifact_Changeset_AtGivenDateFieldsValidator $fields_validator, Tracker_Artifact_ChangesetDao $changeset_dao)
+    {
         return new Tracker_ArtifactCreator(
             $this->artifact_factory,
             $fields_validator,
@@ -184,9 +170,7 @@ class Tracker_Migration_MigrationManager {
                 $this->form_element_factory,
                 $changeset_dao,
                 $this->artifact_factory,
-                EventManager::instance(),
-                $emitter,
-                $webhook_factory
+                EventManager::instance()
             ),
             new VisitRecorder(new RecentlyVisitedDao())
         );
@@ -194,14 +178,6 @@ class Tracker_Migration_MigrationManager {
 
     private function getChangesetCreator(Tracker_Artifact_Changeset_AtGivenDateFieldsValidator $fields_validator, Tracker_Artifact_ChangesetDao $changeset_dao) {
         $changeset_comment_dao = new Tracker_Artifact_Changeset_CommentDao();
-        $webhook_dao           = new WebhookDao();
-        $emitter               = new Emitter(
-            MessageFactoryBuilder::build(),
-            HttpClientFactory::createClient(),
-            new WebhookStatusLogger($webhook_dao)
-        );
-
-        $webhook_factory = new WebhookFactory($webhook_dao);
 
         return new Tracker_Artifact_Changeset_NewChangesetAtGivenDateCreator(
             $fields_validator,
@@ -219,9 +195,7 @@ class Tracker_Migration_MigrationManager {
                     )
                 ),
                 Tracker_FormElementFactory::instance()
-            ),
-            $emitter,
-            $webhook_factory
+            )
         );
     }
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,14 +20,16 @@
 
 namespace Tuleap\OpenIDConnectClient\Authentication\UserInfo;
 
+use Psr\Http\Client\ClientInterface;
+
 class UserInfoRequestSender
 {
     /**
-     * @var \Http\Client\HttpClient
+     * @var ClientInterface
      */
     private $http_client;
 
-    public function __construct(\Http\Client\HttpClient $http_client)
+    public function __construct(ClientInterface $http_client)
     {
         $this->http_client = $http_client;
     }
