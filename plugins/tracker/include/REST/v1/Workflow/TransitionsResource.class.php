@@ -38,6 +38,7 @@ use Tuleap\REST\RESTLogger;
 use Tuleap\REST\UserManager;
 use Tuleap\Tracker\REST\v1\TrackerPermissionsChecker;
 use Tuleap\Tracker\REST\v1\Workflow\PostAction\PostActionsRepresentationBuilder;
+use Tuleap\Tracker\REST\v1\Workflow\PostAction\PUTHandler;
 use Tuleap\Tracker\REST\v1\Workflow\PostAction\Update\CIBuildJsonParser;
 use Tuleap\Tracker\REST\v1\Workflow\PostAction\Update\PostActionCollectionJsonParser;
 use Tuleap\Tracker\REST\v1\Workflow\PostAction\Update\SetDateValueJsonParser;
@@ -318,7 +319,6 @@ class TransitionsResource extends AuthenticatedResource
 
     /**
      * Update all post actions of a transition.
-     * WARNING: only CI Build and Set Date Value post actions are handled for now.
      *
      * <ul>
      * <li>Actions without id will be created</li>
@@ -387,24 +387,25 @@ class TransitionsResource extends AuthenticatedResource
                 dgettext('tuleap-tracker', 'Transition not found.')
             );
         }
+
         if (! $this->isNewWorkflowEnabled($transition->getWorkflow()->getTracker())) {
             throw new I18NRestException(403, dgettext('tuleap-tracker', 'This REST route is still under construction.'));
         }
 
-        $current_user = $this->user_manager->getCurrentUser();
-        $this->getPermissionsChecker()->checkRead($current_user, $transition);
         try {
-            $project = $transition->getWorkflow()->getTracker()->getProject();
+            $current_user = $this->user_manager->getCurrentUser();
+
+            $handler = new PUTHandler(
+                $this->getPermissionsChecker(),
+                ProjectStatusVerificator::build(),
+                $this->getPostActionCollectionJsonParser(),
+                $this->getPostActionCollectionUpdater()
+            );
+
+            $handler->handle($current_user, $transition, $post_actions_representation);
         } catch (OrphanTransitionException $exception) {
             $this->getRESTLogger()->error('Cannot update transition post actions', $exception);
             throw new RestException(520);
-        }
-        ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt($project);
-
-        $post_actions = $this->getPostActionCollectionJsonParser()
-            ->parse($post_actions_representation->post_actions);
-        try {
-            $this->getPostActionCollectionUpdater()->updateByTransition($transition, $post_actions);
         } catch (InvalidPostActionException | UnknownPostActionIdsException $e) {
             throw new I18NRestException(400, $e->getMessage());
         }
