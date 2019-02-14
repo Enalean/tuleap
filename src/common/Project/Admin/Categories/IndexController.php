@@ -91,6 +91,7 @@ class IndexController implements DispatchableWithRequest, DispatchableWithProjec
     {
         $categories = [];
         foreach ($this->dao->getTopCategories() as $row) {
+            $nb_selected = 0;
             $values = [];
             foreach ($this->dao->getCategoriesUnderGivenRootForProject($row['trove_cat_id'], $project->getID()) as $row_value) {
                 $values[] = [
@@ -99,13 +100,16 @@ class IndexController implements DispatchableWithRequest, DispatchableWithProjec
                     'is_selected' => $row_value['is_selected'],
                     'id'          => $row_value['trove_cat_id']
                 ];
+                if ($row_value['is_selected']) {
+                    $nb_selected++;
+                }
             }
             $categories[] = [
                 'id'                       => $row['trove_cat_id'],
                 'label'                    => $row['fullname'],
                 'is_mandatory'             => (bool) $row['mandatory'],
                 'maximum_selection_length' => $row['nb_max_values'],
-                'is_multiple'              => $row['nb_max_values'] > 1,
+                'is_multiple'              => $row['nb_max_values'] > 1 || $nb_selected > 1,
                 'values'                   => $values
             ];
         }
