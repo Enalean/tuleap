@@ -46,12 +46,14 @@ use Tuleap\Tracker\REST\v1\Workflow\PostAction\Update\SetFloatValueJsonParser;
 use Tuleap\Tracker\REST\v1\Workflow\PostAction\Update\SetIntValueJsonParser;
 use Tuleap\Tracker\REST\WorkflowTransitionPOSTRepresentation;
 use Tuleap\Tracker\Workflow\FeatureFlag;
+use Tuleap\Tracker\Workflow\PostAction\PostActionsRetriever;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\CIBuildRepository;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\CIBuildUpdater;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\CIBuildValidator;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\InvalidPostActionException;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\PostActionFieldIdValidator;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\PostActionIdValidator;
+use Tuleap\Tracker\Workflow\PostAction\Update\Internal\PostActionsMapper;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\SetDateValueRepository;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\SetDateValueUpdater;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\SetDateValueValidator;
@@ -63,10 +65,10 @@ use Tuleap\Tracker\Workflow\PostAction\Update\Internal\SetIntValueUpdater;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\SetIntValueValidator;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\UnknownPostActionIdsException;
 use Tuleap\Tracker\Workflow\PostAction\Update\PostActionCollectionUpdater;
-use Tuleap\Tracker\Workflow\Transition\Condition\ConditionsReplicator;
 use Tuleap\Tracker\Workflow\Transition\Condition\ConditionsUpdateException;
 use Tuleap\Tracker\Workflow\Transition\Condition\ConditionsUpdater;
 use Tuleap\Tracker\Workflow\Transition\OrphanTransitionException;
+use Tuleap\Tracker\Workflow\Transition\Update\TransitionReplicator;
 use Tuleap\Tracker\Workflow\Transition\Update\TransitionRetriever;
 use WorkflowFactory;
 
@@ -127,11 +129,22 @@ class TransitionsResource extends AuthenticatedResource
             $this->getTransitionFactory(),
             new TransitionValidator(),
             $this->getTransactionExecutor(),
-            new ConditionsReplicator(
-                $this->getTransitionRetriever(),
+            new TransitionReplicator(
                 $this->getConditionFactory(),
-                $this->getConditionsUpdater()
-            )
+                $this->getConditionsUpdater(),
+                new PostActionsRetriever(
+                    new \Transition_PostAction_CIBuildFactory($this->getCIBuildDao()),
+                    new \Transition_PostAction_FieldFactory(
+                        \Tracker_FormElementFactory::instance(),
+                        $this->getFieldDateDao(),
+                        $this->getFieldIntDao(),
+                        $this->getFieldFloatDao()
+                    )
+                ),
+                $this->getPostActionCollectionUpdater(),
+                new PostActionsMapper()
+            ),
+            $this->getTransitionRetriever()
         );
 
         return $handler->handle($tracker_id, $from_id, $to_id);
@@ -480,32 +493,52 @@ class TransitionsResource extends AuthenticatedResource
             $this->getTransactionExecutor(),
             new CIBuildUpdater(
                 new CIBuildRepository(
-                    new Transition_PostAction_CIBuildDao()
+                    $this->getCIBuildDao()
                 ),
                 new CIBuildValidator($ids_validator)
             ),
             new SetDateValueUpdater(
                 new SetDateValueRepository(
-                    new Transition_PostAction_Field_DateDao(),
+                    $this->getFieldDateDao(),
                     new DataAccessObject()
                 ),
                 new SetDateValueValidator($ids_validator, $field_ids_validator, $form_element_factory)
             ),
             new SetIntValueUpdater(
                 new SetintValueRepository(
-                    new Transition_PostAction_Field_IntDao(),
+                    $this->getFieldIntDao(),
                     new DataAccessObject()
                 ),
                 new SetIntValueValidator($ids_validator, $field_ids_validator, $form_element_factory)
             ),
             new SetFloatValueUpdater(
                 new SetFloatValueRepository(
-                    new Transition_PostAction_Field_FloatDao(),
+                    $this->getFieldFloatDao(),
                     new DataAccessObject()
                 ),
                 new SetFloatValueValidator($ids_validator, $field_ids_validator, $form_element_factory)
             )
         );
+    }
+
+    private function getCIBuildDao(): Transition_PostAction_CIBuildDao
+    {
+        return new Transition_PostAction_CIBuildDao();
+    }
+
+    private function getFieldDateDao(): Transition_PostAction_Field_DateDao
+    {
+        return new Transition_PostAction_Field_DateDao();
+    }
+
+    private function getFieldIntDao(): Transition_PostAction_Field_IntDao
+    {
+        return new Transition_PostAction_Field_IntDao();
+    }
+
+    private function getFieldFloatDao(): Transition_PostAction_Field_FloatDao
+    {
+        return new Transition_PostAction_Field_FloatDao();
     }
 
     private function getConditionsUpdater(): ConditionsUpdater

@@ -31,8 +31,9 @@ use Tuleap\REST\I18NRestException;
 use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\REST\UserManager;
 use Tuleap\Tracker\REST\WorkflowTransitionPOSTRepresentation;
-use Tuleap\Tracker\Workflow\Transition\Condition\ConditionsReplicator;
 use Tuleap\Tracker\Workflow\Transition\TransitionCreationParameters;
+use Tuleap\Tracker\Workflow\Transition\Update\TransitionReplicator;
+use Tuleap\Tracker\Workflow\Transition\Update\TransitionRetriever;
 
 class TransitionPOSTHandlerTest extends TestCase
 {
@@ -57,7 +58,9 @@ class TransitionPOSTHandlerTest extends TestCase
     /** @var Mockery\MockInterface */
     private $transaction_executor;
     /** @var Mockery\MockInterface */
-    private $conditions_replicator;
+    private $transition_replicator;
+    /** @var Mockery\MockInterface */
+    private $transition_retriever;
 
     private const TRACKER_ID = 196;
     private const FROM_ID = 134;
@@ -79,7 +82,8 @@ class TransitionPOSTHandlerTest extends TestCase
                     $callback();
                 }
             );
-        $this->conditions_replicator = Mockery::mock(ConditionsReplicator::class);
+        $this->transition_replicator = Mockery::mock(TransitionReplicator::class);
+        $this->transition_retriever  = Mockery::mock(TransitionRetriever::class);
         $this->handler               = new TransitionPOSTHandler(
             $this->user_manager,
             $this->tracker_factory,
@@ -89,7 +93,8 @@ class TransitionPOSTHandlerTest extends TestCase
             $this->transition_factory,
             $this->validator,
             $this->transaction_executor,
-            $this->conditions_replicator
+            $this->transition_replicator,
+            $this->transition_retriever
         );
     }
 
@@ -132,7 +137,7 @@ class TransitionPOSTHandlerTest extends TestCase
             ->with($workflow, $validated_parameters)
             ->andReturn($new_transition);
 
-        $this->conditions_replicator->shouldNotReceive('replicateFromFirstSiblingTransition');
+        $this->transition_replicator->shouldNotReceive('replicate');
 
         $result = $this->handler->handle(self::TRACKER_ID, self::FROM_ID, self::TO_ID);
 
@@ -142,7 +147,7 @@ class TransitionPOSTHandlerTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testHandleForSimpleModeAlsoReplicatesConditions()
+    public function testHandleForSimpleModeAlsoReplicatesTransitionFromFirstSibling()
     {
         $current_user = Mockery::mock(\PFUser::class);
         $this->user_manager
@@ -163,6 +168,11 @@ class TransitionPOSTHandlerTest extends TestCase
         $this->transition_factory
             ->shouldReceive('createAndSaveTransition')
             ->andReturn($new_transition);
+        $sibling_transition = Mockery::mock(\Transition::class);
+        $this->transition_retriever
+            ->shouldReceive('getFirstSiblingTransition')
+            ->with($new_transition)
+            ->andReturn($sibling_transition);
 
         $workflow = $this->buildSimpleWorkflow();
         $this->workflow_factory
@@ -170,7 +180,9 @@ class TransitionPOSTHandlerTest extends TestCase
             ->with(self::TRACKER_ID)
             ->andReturn($workflow);
 
-        $this->conditions_replicator->shouldReceive('replicateFromFirstSiblingTransition');
+        $this->transition_replicator
+            ->shouldReceive('replicate')
+            ->with($sibling_transition, $new_transition);
 
         $this->handler->handle(self::TRACKER_ID, self::FROM_ID, self::TO_ID);
     }

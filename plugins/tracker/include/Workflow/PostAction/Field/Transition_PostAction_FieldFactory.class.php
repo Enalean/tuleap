@@ -23,7 +23,8 @@ require_once TRACKER_BASE_DIR .'/Workflow/PostAction/PostActionSubFactory.class.
 /**
  * Loads and saves Field post actions
  */
-class Transition_PostAction_FieldFactory implements Transition_PostActionSubFactory {
+class Transition_PostAction_FieldFactory implements Transition_PostActionSubFactory //phpcs:ignoreFile
+{
 
     /** @var Array of available post actions classes */
     protected $post_actions_classes = array(
@@ -105,6 +106,45 @@ class Transition_PostAction_FieldFactory implements Transition_PostActionSubFact
             foreach($this->loadPostActionRows($transition, $shortname) as $row) {
                 $post_actions[] = $this->buildPostAction($transition, $row, $shortname, $klass);
             }
+        }
+        return $post_actions;
+    }
+
+    /**
+     * @return \Transition_PostAction_Field_Date[]
+     */
+    public function getSetDateFieldValues(Transition $transition)
+    {
+        return $this->buildPostActionsForShortname($transition, Transition_PostAction_Field_Date::SHORT_NAME);
+    }
+
+    /**
+     * @return \Transition_PostAction_Field_Float[]
+     */
+    public function getSetFloatFieldValues(Transition $transition)
+    {
+        return $this->buildPostActionsForShortname($transition, Transition_PostAction_Field_Float::SHORT_NAME);
+    }
+
+    /**
+     * @return \Transition_PostAction_Field_Int[]
+     */
+    public function getSetIntFieldValues(Transition $transition)
+    {
+        return $this->buildPostActionsForShortname($transition, Transition_PostAction_Field_Int::SHORT_NAME);
+    }
+
+    private function buildPostActionsForShortname(Transition $transition, string $shortname)
+    {
+        $rows         = $this->loadPostActionRows($transition, $shortname);
+        $post_actions = [];
+        foreach ($rows as $row) {
+            $post_actions[] = $this->buildPostAction(
+                $transition,
+                $row,
+                $shortname,
+                $this->post_actions_classes[$shortname]
+            );
         }
         return $post_actions;
     }
