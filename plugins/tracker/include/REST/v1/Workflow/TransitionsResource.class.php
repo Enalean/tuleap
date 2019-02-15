@@ -63,6 +63,7 @@ use Tuleap\Tracker\Workflow\PostAction\Update\Internal\SetIntValueUpdater;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\SetIntValueValidator;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\UnknownPostActionIdsException;
 use Tuleap\Tracker\Workflow\PostAction\Update\PostActionCollectionUpdater;
+use Tuleap\Tracker\Workflow\Transition\Condition\ConditionsReplicator;
 use Tuleap\Tracker\Workflow\Transition\Condition\ConditionsUpdateException;
 use Tuleap\Tracker\Workflow\Transition\Condition\ConditionsUpdater;
 use Tuleap\Tracker\Workflow\Transition\OrphanTransitionException;
@@ -75,24 +76,10 @@ class TransitionsResource extends AuthenticatedResource
 
     /** @var UserManager */
     private $user_manager;
-    /** @var TransitionPOSTHandler */
-    private $post_handler;
 
     public function __construct()
     {
-        $this->user_manager         = UserManager::build();
-        $tracker_factory            = $this->getTrackerFactory();
-        $project_status_verificator = ProjectStatusVerificator::build();
-        $permissions_checker        = $this->getPermissionsChecker();
-        $this->post_handler         = new TransitionPOSTHandler(
-            $this->user_manager,
-            $tracker_factory,
-            $project_status_verificator,
-            $permissions_checker,
-            WorkflowFactory::instance(),
-            $this->getTransitionFactory(),
-            new TransitionValidator()
-        );
+        $this->user_manager = UserManager::build();
     }
 
     /**
@@ -131,7 +118,23 @@ class TransitionsResource extends AuthenticatedResource
         $this->checkAccess();
         $this->sendAllowHeaderForTransition();
 
-        return $this->post_handler->handle($tracker_id, $from_id, $to_id);
+        $handler = new TransitionPOSTHandler(
+            $this->user_manager,
+            $this->getTrackerFactory(),
+            ProjectStatusVerificator::build(),
+            $this->getPermissionsChecker(),
+            WorkflowFactory::instance(),
+            $this->getTransitionFactory(),
+            new TransitionValidator(),
+            $this->getTransactionExecutor(),
+            new ConditionsReplicator(
+                $this->getTransitionRetriever(),
+                $this->getConditionFactory(),
+                $this->getConditionsUpdater()
+            )
+        );
+
+        return $handler->handle($tracker_id, $from_id, $to_id);
     }
 
     /**
@@ -509,9 +512,14 @@ class TransitionsResource extends AuthenticatedResource
     {
         return new ConditionsUpdater(
             $this->getTransitionFactory(),
-            \Workflow_Transition_ConditionFactory::build(),
+            $this->getConditionFactory(),
             $this->getTransactionExecutor()
         );
+    }
+
+    private function getConditionFactory(): \Workflow_Transition_ConditionFactory
+    {
+        return \Workflow_Transition_ConditionFactory::build();
     }
 
     private function getTransitionRetriever(): TransitionRetriever

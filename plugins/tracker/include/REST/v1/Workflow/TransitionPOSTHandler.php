@@ -23,10 +23,13 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\REST\v1\Workflow;
 
 use Luracast\Restler\RestException;
+use Tuleap\DB\TransactionExecutor;
 use Tuleap\REST\I18NRestException;
 use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\REST\UserManager;
 use Tuleap\Tracker\REST\WorkflowTransitionPOSTRepresentation;
+use Tuleap\Tracker\Workflow\Transition\Condition\ConditionsReplicator;
+use Tuleap\Tracker\Workflow\Transition\Condition\ConditionsUpdateException;
 use Workflow;
 use WorkflowFactory;
 
@@ -46,6 +49,10 @@ class TransitionPOSTHandler
     private $transition_factory;
     /** @var TransitionValidator */
     private $validator;
+    /** @var TransactionExecutor */
+    private $transaction_executor;
+    /** @var ConditionsReplicator */
+    private $conditions_replicator;
 
     public function __construct(
         UserManager $user_manager,
@@ -54,7 +61,9 @@ class TransitionPOSTHandler
         TransitionsPermissionsChecker $permissions_checker,
         WorkflowFactory $workflow_factory,
         \TransitionFactory $transition_factory,
-        TransitionValidator $validator
+        TransitionValidator $validator,
+        TransactionExecutor $transaction_executor,
+        ConditionsReplicator $conditions_replicator
     ) {
         $this->user_manager               = $user_manager;
         $this->tracker_factory            = $tracker_factory;
@@ -63,6 +72,8 @@ class TransitionPOSTHandler
         $this->workflow_factory           = $workflow_factory;
         $this->transition_factory         = $transition_factory;
         $this->validator                  = $validator;
+        $this->transaction_executor       = $transaction_executor;
+        $this->conditions_replicator      = $conditions_replicator;
     }
 
     /**
@@ -78,16 +89,31 @@ class TransitionPOSTHandler
         $this->project_status_verificator->checkProjectStatusAllowsAllUsersToAccessIt($tracker->getProject());
         $this->permissions_checker->checkCreate($current_user, $tracker);
 
-        $workflow   = $this->getWorkflowByTrackerId($tracker_id);
-        $params     = $this->validator->validateForCreation($workflow, $from_id, $to_id);
-        $transition = $this->transition_factory->createAndSaveTransition(
-            $workflow,
-            $params
-        );
+        $workflow       = $this->getWorkflowByTrackerId($tracker_id);
+        $params         = $this->validator->validateForCreation($workflow, $from_id, $to_id);
+        try {
+            $representation = null;
+            $this->transaction_executor->execute(
+                function () use ($workflow, $params, &$representation) {
+                    $transition     = $this->transition_factory->createAndSaveTransition($workflow, $params);
+                    $representation = $this->buildRepresentation($transition);
 
+                    if ($workflow->isAdvanced()) {
+                        return;
+                    }
+                    $this->conditions_replicator->replicateFromFirstSiblingTransition($transition);
+                }
+            );
+            return $representation;
+        } catch (ConditionsUpdateException $exception) {
+            throw new I18NRestException(400, dgettext('tuleap-tracker', 'The transition has not been updated.'));
+        }
+    }
+
+    private function buildRepresentation(\Transition $transition): WorkflowTransitionPOSTRepresentation
+    {
         $transition_representation = new WorkflowTransitionPOSTRepresentation();
         $transition_representation->build($transition);
-
         return $transition_representation;
     }
 

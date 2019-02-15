@@ -68,6 +68,7 @@ class Workflow_Transition_ConditionFactory {
     }
 
     /**
+     * @deprecated use get*Condition methods
      * @return Workflow_Transition_ConditionsCollection
      */
     public function getConditions(Transition $transition) {
@@ -77,6 +78,30 @@ class Workflow_Transition_ConditionFactory {
         $collection->add($this->commentnotempty_factory->getCommentNotEmpty($transition));
 
         return $collection;
+    }
+
+    /**
+     * @return Workflow_Transition_Condition_Permissions
+     */
+    public function getPermissionsCondition(Transition $transition)
+    {
+        return new Workflow_Transition_Condition_Permissions($transition);
+    }
+
+    /**
+     * @return Workflow_Transition_Condition_FieldNotEmpty
+     */
+    public function getFieldNotEmptyCondition(Transition $transition)
+    {
+        return $this->fieldnotempty_factory->getFieldNotEmpty($transition);
+    }
+
+    /**
+     * @return Workflow_Transition_Condition_CommentNotEmpty
+     */
+    public function getCommentNotEmptyCondition(Transition $transition)
+    {
+        return $this->commentnotempty_factory->getCommentNotEmpty($transition);
     }
 
     /**

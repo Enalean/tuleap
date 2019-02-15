@@ -22,7 +22,9 @@
 
 use Tuleap\Tracker\Workflow\Transition\OrphanTransitionException;
 
-class Transition {
+//phpcs:ignoreFile
+class Transition
+{
     public $transition_id;
     public $workflow_id;
 
@@ -304,6 +306,7 @@ class Transition {
     }
 
     /**
+     * @deprecated use ConditionFactory get*Condition methods
      * @return Workflow_Transition_ConditionsCollection
      */
     public function getConditions() {
