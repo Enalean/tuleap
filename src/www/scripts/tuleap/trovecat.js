@@ -50,12 +50,13 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 function bindNbMaxValuesToProjectFlag() {
-    for (const nb_max_input of document.querySelectorAll(".trove-cats-nb-max-values-input")) {
-        const is_project_flag_input = document.getElementById(
+    const all_nb_max_input_elements = document.querySelectorAll(".trove-cats-nb-max-values-input");
+    [].forEach.call(all_nb_max_input_elements, function(nb_max_input) {
+        var is_project_flag_input = document.getElementById(
             nb_max_input.dataset.inputProjectFlagId
         );
         if (!is_project_flag_input) {
-            continue;
+            return;
         }
 
         if (is_project_flag_input.checked) {
@@ -64,7 +65,7 @@ function bindNbMaxValuesToProjectFlag() {
             markFormElementAsDisabled(is_project_flag_input);
         }
 
-        is_project_flag_input.addEventListener("click", () => {
+        is_project_flag_input.addEventListener("click", function() {
             if (is_project_flag_input.checked) {
                 markFormElementAsDisabled(nb_max_input);
             } else {
@@ -72,23 +73,25 @@ function bindNbMaxValuesToProjectFlag() {
             }
         });
 
-        nb_max_input.addEventListener("click", () => {
-            if (nb_max_input.value === "1") {
-                markFormElementAsEnabled(is_project_flag_input);
-            } else {
-                markFormElementAsDisabled(is_project_flag_input);
-            }
+        ["change", "keyup"].forEach(function(event_type) {
+            nb_max_input.addEventListener(event_type, function() {
+                if (nb_max_input.value === "1") {
+                    markFormElementAsEnabled(is_project_flag_input);
+                } else {
+                    markFormElementAsDisabled(is_project_flag_input);
+                }
+            });
         });
-    }
+    });
 }
 
 function markFormElementAsDisabled(input) {
     input.disabled = true;
-    const parent = input.closest(".tlp-form-element");
+    var parent = input.closest(".tlp-form-element");
     if (parent) {
         parent.classList.add("tlp-form-element-disabled");
     }
-    const warning = document.getElementById(input.dataset.warningId);
+    var warning = document.getElementById(input.dataset.warningId);
     if (warning) {
         warning.classList.add("shown");
     }
@@ -100,11 +103,11 @@ function markFormElementAsEnabled(input) {
     }
 
     input.disabled = false;
-    const parent = input.closest(".tlp-form-element");
+    var parent = input.closest(".tlp-form-element");
     if (parent) {
         parent.classList.remove("tlp-form-element-disabled");
     }
-    const warning = document.getElementById(input.dataset.warningId);
+    var warning = document.getElementById(input.dataset.warningId);
     if (warning) {
         warning.classList.remove("shown");
     }
