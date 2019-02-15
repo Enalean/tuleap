@@ -90,3 +90,13 @@ docker-run:
 	cp -Rf /tuleap/ /build/src && cp -Rf /plugin/ /build/src/plugins/baseline && chown -R build /build/src
 	su --login --command "make -C /build/src/plugins/baseline all RELEASE=$(RELEASE)" build
 	install -o $(UID) -g $(GID) -m 0644 /build/rpmbuild/RPMS/noarch/*.rpm /output
+
+start-sonarqube: ## Start Sonarqube server
+	@docker-compose up -d sonarqube
+	@echo "Sonarqube is starting.... Go to http://localhost:9000"
+
+stop-sonarqube: ## Start Sonarqube server
+	@docker-compose down
+
+sonarscanner: ## Analyze code with Sonarqube (Sonarqube must be started)
+	@docker run -ti -v $(pwd):/root/src --link sonarqube newtmitch/sonar-scanner:alpine

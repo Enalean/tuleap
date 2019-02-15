@@ -2,3 +2,6 @@ vendor/
 *.mo
 *~
 node_modules/
+
+# SonarQube scanner temporary files
+.scannerwork/
