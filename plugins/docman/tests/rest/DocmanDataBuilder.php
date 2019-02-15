@@ -202,6 +202,7 @@ class DocmanDataBuilder extends REST_TestDataBuilder
         $this->addReadPermissionOnItem($project, $item_G_id, \ProjectUGroup::PROJECT_MEMBERS);
 
         $this->addApprovalTableForItem($folder_id);
+        $this->lockItem($folder_3_id);
     }
 
     private function addReadPermissionOnItem(Project $project, $object_id, $ugroup_name)
@@ -268,5 +269,15 @@ class DocmanDataBuilder extends REST_TestDataBuilder
             throw new \RuntimeException('Could not append feature flag to local.inc');
         }
         fclose($local_inc);
+    }
+
+    private function lockItem(int $item_id)
+    {
+        $dao = new \Docman_LockDao();
+        $dao->addLock(
+            $item_id,
+            self::REGULAR_USER_ID,
+            time()
+        );
     }
 }

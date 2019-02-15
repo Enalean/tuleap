@@ -27,6 +27,7 @@ namespace Tuleap\Docman\REST\v1;
 use Docman_Item;
 use Docman_ItemDao;
 use Docman_ItemFactory;
+use Docman_LockFactory;
 use Docman_Log;
 use EventManager;
 use Luracast\Restler\RestException;
@@ -271,16 +272,25 @@ class DocmanItemsResource extends AuthenticatedResource
         $this->addLogEvents();
         $this->addNotificationEvents($project);
 
-        $docman_item_updator = new DocmanItemUpdator(new ApprovalTableRetriever(new \Docman_ApprovalTableFactoriesFactory()));
+        $docman_item_updator = new DocmanItemUpdator(
+            new ApprovalTableRetriever(new \Docman_ApprovalTableFactoriesFactory()),
+            new Docman_LockFactory()
+        );
 
         try {
             $docman_item_updator->update(
-                $item
+                $item,
+                $current_user
             );
         } catch (ExceptionDocumentHasApprovalTable $exception) {
             throw new I18NRestException(
                 403,
                 dgettext('tuleap-docman', 'Update document with approval table is not possible yet.')
+            );
+        } catch (ExceptionItemIsLockedByAnotherUser $exception) {
+            throw new I18NRestException(
+                403,
+                dgettext('tuleap-docman', 'Document is locked by another user.')
             );
         }
 

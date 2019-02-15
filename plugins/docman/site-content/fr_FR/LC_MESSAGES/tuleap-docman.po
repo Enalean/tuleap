@@ -21,6 +21,9 @@ msgstr "Commenté"
 msgid "Declined"
 msgstr "Décliné"
 
+msgid "Document is locked by another user."
+msgstr "Le document est reservé par un autre utilisateur."
+
 msgid "Document manager"
 msgstr "Gestionnaire de documents"
 

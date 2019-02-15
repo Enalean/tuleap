@@ -22,6 +22,7 @@ declare(strict_types = 1);
 
 namespace Tuleap\Docman\REST\v1;
 
+use Docman_LockFactory;
 use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 
 class DocmanItemUpdator
@@ -30,20 +31,32 @@ class DocmanItemUpdator
      * @var ApprovalTableRetriever
      */
     private $approval_table_retriever;
+    /**
+     * @var Docman_LockFactory
+     */
+    private $lock_factory;
 
-    public function __construct(ApprovalTableRetriever $approval_table_retriever)
+    public function __construct(ApprovalTableRetriever $approval_table_retriever, Docman_LockFactory $lock_factory)
     {
         $this->approval_table_retriever = $approval_table_retriever;
+        $this->lock_factory             = $lock_factory;
     }
 
     /**
      * @throws ExceptionDocumentHasApprovalTable
+     * @throws ExceptionItemIsLockedByAnotherUser
      */
-    public function update(\Docman_Item $item): void
+    public function update(\Docman_Item $item, \PFUser $user) : void
     {
         $approval_table = $this->approval_table_retriever->retrieveByItem($item);
         if ($approval_table) {
             throw new ExceptionDocumentHasApprovalTable();
+        }
+
+        $lock_infos = $this->lock_factory->getLockInfoForItem($item);
+
+        if ($lock_infos && (int)$lock_infos['user_id'] !== $user->getId()) {
+            throw new ExceptionItemIsLockedByAnotherUser();
         }
     }
 }
