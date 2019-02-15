@@ -69,7 +69,7 @@ export const getSubfolderContent = async (context, folder_id) => {
 export const createNewItem = async (context, [item, parent]) => {
     try {
         if (item.type === TYPE_FILE) {
-            await createNewFile(context, item, parent, false);
+            await createNewFile(context, item, parent, true);
         } else {
             const item_reference = await addNewDocument(item, parent.id);
 
