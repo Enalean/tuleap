@@ -100,8 +100,10 @@ document-quick-look-link-action,
         flex-direction: column;
     }
 
+    .document-quick-look-pane,
     .document-folder-pane {
         width: 100%;
+        max-width: unset;
     }
 
     .document-quick-look-pane {
