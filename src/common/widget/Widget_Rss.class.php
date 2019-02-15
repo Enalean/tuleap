@@ -20,7 +20,7 @@
  */
 
 use Tuleap\Http\HttpClientFactory;
-use Tuleap\Http\MessageFactoryBuilder;
+use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\RSS\FeedHTTPClient;
 use Zend\Feed\Reader\Reader as FeedReader;
 
@@ -226,7 +226,7 @@ abstract class Widget_Rss extends Widget
      */
     private function retrieveFeed(string $url) : \Zend\Feed\Reader\Feed\FeedInterface
     {
-        $http_client = new FeedHTTPClient(HttpClientFactory::createClient(), MessageFactoryBuilder::build());
+        $http_client = new FeedHTTPClient(HttpClientFactory::createClient(), HTTPFactoryBuilder::requestFactory());
         FeedReader::setHttpClient($http_client);
         $cache_dir = ForgeConfig::get('codendi_cache_dir') . '/rss';
         if (! is_dir($cache_dir) && ! mkdir($cache_dir) && ! is_dir($cache_dir)) {

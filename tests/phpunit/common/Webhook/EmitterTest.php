@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,24 +21,27 @@
 namespace Tuleap\Webhook;
 
 use Http\Client\Exception\HttpException;
-use Http\Message\RequestFactory;
 use Http\Mock\Client;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
+use Psr\Http\Message\StreamInterface;
 
 class EmitterTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    public function testWebhooksAreEmitted()
+    public function testWebhooksAreEmitted() : void
     {
-        $request_factory = \Mockery::mock(RequestFactory::class);
+        $request_factory = \Mockery::mock(RequestFactoryInterface::class);
+        $stream_factory  = \Mockery::mock(StreamFactoryInterface::class);
         $http_client     = new Client();
         $status_logger   = \Mockery::mock(StatusLogger::class);
 
-        $webhook_emitter = new Emitter($request_factory, $http_client, $status_logger);
+        $webhook_emitter = new Emitter($request_factory, $stream_factory, $http_client, $status_logger);
 
         $webhook_1 = \Mockery::mock(Webhook::class);
         $webhook_1->shouldReceive('getUrl');
@@ -53,8 +56,12 @@ class EmitterTest extends TestCase
         $http_response->shouldReceive('getReasonPhrase');
         $http_client->addResponse($http_response);
 
+        $request = \Mockery::mock(RequestInterface::class);
+        $request->shouldReceive('withHeader')->andReturnSelf();
+        $request->shouldReceive('withBody')->andReturnSelf();
         $request_factory->shouldReceive('createRequest')->twice()
-            ->andReturns(\Mockery::mock(RequestInterface::class));
+            ->andReturns($request);
+        $stream_factory->shouldReceive('createStream')->andReturn(\Mockery::mock(StreamInterface::class));
         $status_logger->shouldReceive('log')->twice();
 
         $webhook_emitter->emit($payload, $webhook_1, $webhook_2);

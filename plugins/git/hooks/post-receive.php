@@ -25,7 +25,7 @@
 
 use Tuleap\Git\Webhook\GitWebhookStatusLogger;
 use Tuleap\Http\HttpClientFactory;
-use Tuleap\Http\MessageFactoryBuilder;
+use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Jenkins\JenkinsCSRFCrumbRetriever;
 use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;
@@ -95,7 +95,12 @@ $post_receive = new Git_Hook_PostReceive(
     $system_event_manager,
     EventManager::instance(),
     new \Tuleap\Git\Webhook\WebhookRequestSender(
-        new \Tuleap\Webhook\Emitter(MessageFactoryBuilder::build(), HttpClientFactory::createAsyncClient(), new GitWebhookStatusLogger($webhook_dao)),
+        new \Tuleap\Webhook\Emitter(
+                HTTPFactoryBuilder::requestFactory(),
+                HTTPFactoryBuilder::streamFactory(),
+                HttpClientFactory::createAsyncClient(),
+                new GitWebhookStatusLogger($webhook_dao)
+        ),
         new \Tuleap\Git\Webhook\WebhookFactory($webhook_dao),
         $logger
     ),

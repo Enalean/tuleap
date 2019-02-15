@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,18 +20,18 @@
 
 namespace Tuleap\OpenIDConnectClient\Authentication\UserInfo;
 
-use Http\Message\RequestFactory;
+use Psr\Http\Message\RequestFactoryInterface;
 use Tuleap\OpenIDConnectClient\Authentication\Token\TokenResponse;
 use Tuleap\OpenIDConnectClient\Provider\Provider;
 
 class UserInfoRequestCreator
 {
     /**
-     * @var RequestFactory
+     * @var RequestFactoryInterface
      */
     private $http_request_factory;
 
-    public function __construct(RequestFactory $http_request_factory)
+    public function __construct(RequestFactoryInterface $http_request_factory)
     {
         $this->http_request_factory = $http_request_factory;
     }
@@ -44,11 +44,9 @@ class UserInfoRequestCreator
 
         $http_request = $this->http_request_factory->createRequest(
             'GET',
-            $provider->getUserInfoEndpoint(),
-            [
-                'Authorization' => 'Bearer ' . $token_response->getAccessToken()
-            ]
-        );
+            $provider->getUserInfoEndpoint()
+        )->withHeader('Authorization', 'Bearer ' . $token_response->getAccessToken());
+
         return new UserInfoRequestWithData($http_request);
     }
 }

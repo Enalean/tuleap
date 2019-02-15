@@ -22,12 +22,12 @@ namespace Tuleap\Hudson;
 
 require_once __DIR__ . '/bootstrap.php';
 
-use Http\Message\RequestFactory;
 use Http\Mock\Client;
 use HudsonJobURLFileException;
 use HudsonJobURLFileNotFoundException;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
@@ -51,7 +51,7 @@ class HudsonJobBuilderTest extends TestCase
         $minimal_job->shouldReceive('getName');
         $minimal_job->shouldReceive('getJobUrl');
 
-        $request_factory = \Mockery::mock(RequestFactory::class);
+        $request_factory = \Mockery::mock(RequestFactoryInterface::class);
         $request_factory->shouldReceive('createRequest')->andReturns(\Mockery::mock(RequestInterface::class));
 
         $http_client = new Client();
@@ -72,7 +72,7 @@ class HudsonJobBuilderTest extends TestCase
         $minimal_job->shouldReceive('getName');
         $minimal_job->shouldReceive('getJobUrl');
 
-        $request_factory = \Mockery::mock(RequestFactory::class);
+        $request_factory = \Mockery::mock(RequestFactoryInterface::class);
         $request_factory->shouldReceive('createRequest')->andReturns(\Mockery::mock(RequestInterface::class));
 
         $http_client = new Client();
@@ -94,7 +94,7 @@ class HudsonJobBuilderTest extends TestCase
         $minimal_job->shouldReceive('getName');
         $minimal_job->shouldReceive('getJobUrl');
 
-        $request_factory = \Mockery::mock(RequestFactory::class);
+        $request_factory = \Mockery::mock(RequestFactoryInterface::class);
         $request_factory->shouldReceive('createRequest')->andReturns(\Mockery::mock(RequestInterface::class));
 
         $http_client = new Client();
@@ -122,7 +122,7 @@ class HudsonJobBuilderTest extends TestCase
         $minimal_job2->shouldReceive('getName');
         $minimal_job2->shouldReceive('getJobUrl');
 
-        $request_factory = \Mockery::mock(RequestFactory::class);
+        $request_factory = \Mockery::mock(RequestFactoryInterface::class);
         $request_factory->shouldReceive('createRequest')->andReturns(\Mockery::mock(RequestInterface::class));
 
         $http_client = new Client();

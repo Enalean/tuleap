@@ -24,7 +24,7 @@
  */
 
 use Tuleap\Http\HttpClientFactory;
-use Tuleap\Http\MessageFactoryBuilder;
+use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Tracker\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\Webhook\WebhookDao;
@@ -395,7 +395,8 @@ class Tracker_ArtifactFactory {
         $visit_recorder      = new VisitRecorder(new RecentlyVisitedDao());
         $webhook_dao         = new WebhookDao();
         $emitter             = new Emitter(
-            MessageFactoryBuilder::build(),
+            HTTPFactoryBuilder::requestFactory(),
+            HTTPFactoryBuilder::streamFactory(),
             HttpClientFactory::createAsyncClient(),
             new WebhookStatusLogger($webhook_dao)
         );

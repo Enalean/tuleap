@@ -20,27 +20,27 @@
 
 namespace Tuleap\Docman\Tus;
 
-use Http\Message\MessageFactory;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamInterface;
-use Tuleap\Http\MessageFactoryBuilder;
+use Tuleap\Http\HTTPFactoryBuilder;
 
 class TusServerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
     /**
-     * @var MessageFactory
+     * @var ResponseFactoryInterface
      */
-    private $message_factory;
+    private $response_factory;
     private $data_store;
     private $file_information_provider;
 
     protected function setUp() : void
     {
-        $this->message_factory           = MessageFactoryBuilder::build();
+        $this->response_factory          = HTTPFactoryBuilder::responseFactory();
         $this->data_store                = \Mockery::mock(TusDataStore::class);
         $this->file_information_provider = \Mockery::mock(TusFileInformationProvider::class);
         $this->data_store->shouldReceive('getFileInformationProvider')->andReturns($this->file_information_provider);
@@ -49,7 +49,7 @@ class TusServerTest extends TestCase
     public function testInformationAboutTheServerCanBeGathered() : void
     {
         $this->data_store->shouldReceive('getTerminater')->andReturns(null);
-        $server = new TusServer($this->message_factory, $this->data_store);
+        $server = new TusServer($this->response_factory, $this->data_store);
 
         $incoming_request = \Mockery::mock(ServerRequestInterface::class);
         $incoming_request->shouldReceive('getMethod')->andReturns('OPTIONS');
@@ -64,7 +64,7 @@ class TusServerTest extends TestCase
     public function testInformationAboutExtensionsAreGivenIfThereIsAnAvailableExtension() : void
     {
         $this->data_store->shouldReceive('getTerminater')->andReturns(\Mockery::mock(TusTerminaterDataStore::class));
-        $server = new TusServer($this->message_factory, $this->data_store);
+        $server = new TusServer($this->response_factory, $this->data_store);
 
         $incoming_request = \Mockery::mock(ServerRequestInterface::class);
         $incoming_request->shouldReceive('getMethod')->andReturns('OPTIONS');
@@ -77,7 +77,7 @@ class TusServerTest extends TestCase
 
     public function testInformationAboutTheFileBeingUploadedCanBeGathered() : void
     {
-        $server = new TusServer($this->message_factory, $this->data_store);
+        $server = new TusServer($this->response_factory, $this->data_store);
 
         $incoming_request = \Mockery::mock(ServerRequestInterface::class);
         $incoming_request->shouldReceive('getMethod')->andReturns('HEAD');
@@ -112,7 +112,7 @@ class TusServerTest extends TestCase
         }
         $locker = \Mockery::mock(TusLocker::class);
         $this->data_store->shouldReceive('getLocker')->andReturns($locker);
-        $server = new TusServer($this->message_factory, $this->data_store);
+        $server = new TusServer($this->response_factory, $this->data_store);
 
         $upload_request = \Mockery::mock(ServerRequestInterface::class);
         $upload_request->shouldReceive('getMethod')->andReturns('PATCH');
@@ -170,7 +170,7 @@ class TusServerTest extends TestCase
 
     public function testRequestWithANonSupportedVersionOfTheProtocolIsRejected() : void
     {
-        $server = new TusServer($this->message_factory, $this->data_store);
+        $server = new TusServer($this->response_factory, $this->data_store);
 
         $incoming_request = \Mockery::mock(ServerRequestInterface::class);
         $incoming_request->shouldReceive('getMethod')->andReturns('HEAD');
@@ -184,7 +184,7 @@ class TusServerTest extends TestCase
     public function testAnUploadRequestWithAnIncorrectOffsetIsRejected() : void
     {
         $this->data_store->shouldReceive('getLocker')->andReturns(null);
-        $server = new TusServer($this->message_factory, $this->data_store);
+        $server = new TusServer($this->response_factory, $this->data_store);
 
         $incoming_request = \Mockery::mock(ServerRequestInterface::class);
         $incoming_request->shouldReceive('getMethod')->andReturns('PATCH');
@@ -204,7 +204,7 @@ class TusServerTest extends TestCase
 
     public function testAnUploadRequestWithoutTheOffsetIsRejected() : void
     {
-        $server = new TusServer($this->message_factory, $this->data_store);
+        $server = new TusServer($this->response_factory, $this->data_store);
 
         $incoming_request = \Mockery::mock(ServerRequestInterface::class);
         $incoming_request->shouldReceive('getMethod')->andReturns('PATCH');
@@ -221,7 +221,7 @@ class TusServerTest extends TestCase
 
     public function testAnUploadRequestWithAnIncorrectContentTypeIsRejected() : void
     {
-        $server = new TusServer($this->message_factory, $this->data_store);
+        $server = new TusServer($this->response_factory, $this->data_store);
 
         $incoming_request = \Mockery::mock(ServerRequestInterface::class);
         $incoming_request->shouldReceive('getMethod')->andReturns('PATCH');
@@ -240,7 +240,7 @@ class TusServerTest extends TestCase
         $data_writer = \Mockery::mock(TusWriter::class);
         $this->data_store->shouldReceive('getWriter')->andReturns($data_writer);
         $this->data_store->shouldReceive('getLocker')->andReturns(null);
-        $server = new TusServer($this->message_factory, $this->data_store);
+        $server = new TusServer($this->response_factory, $this->data_store);
 
         $incoming_request = \Mockery::mock(ServerRequestInterface::class);
         $incoming_request->shouldReceive('getMethod')->andReturns('PATCH');
@@ -267,7 +267,7 @@ class TusServerTest extends TestCase
 
     public function testANotFoundErrorIsGivenWhenTheFileCanNotBeProvided() : void
     {
-        $server = new TusServer($this->message_factory, $this->data_store);
+        $server = new TusServer($this->response_factory, $this->data_store);
 
         $incoming_request = \Mockery::mock(ServerRequestInterface::class);
         $incoming_request->shouldReceive('getMethod')->andReturns('PATCH');
@@ -285,7 +285,7 @@ class TusServerTest extends TestCase
     {
         $terminater = \Mockery::mock(TusTerminaterDataStore::class);
         $this->data_store->shouldReceive('getTerminater')->andReturns($terminater);
-        $server = new TusServer($this->message_factory, $this->data_store);
+        $server = new TusServer($this->response_factory, $this->data_store);
 
         $incoming_request = \Mockery::mock(ServerRequestInterface::class);
         $incoming_request->shouldReceive('getMethod')->andReturns('DELETE');
@@ -303,7 +303,7 @@ class TusServerTest extends TestCase
     public function testAnUploadCanNotBeTerminatedWhenTheTerminationExtensionIsNotEnabled() : void
     {
         $this->data_store->shouldReceive('getTerminater')->andReturns(null);
-        $server = new TusServer($this->message_factory, $this->data_store);
+        $server = new TusServer($this->response_factory, $this->data_store);
 
         $incoming_request = \Mockery::mock(ServerRequestInterface::class);
         $incoming_request->shouldReceive('getMethod')->andReturns('DELETE');
@@ -321,7 +321,7 @@ class TusServerTest extends TestCase
         $finisher = \Mockery::mock(TusFinisherDataStore::class);
         $this->data_store->shouldReceive('getFinisher')->andReturns($finisher);
         $this->data_store->shouldReceive('getLocker')->andReturns(null);
-        $server = new TusServer($this->message_factory, $this->data_store);
+        $server = new TusServer($this->response_factory, $this->data_store);
 
         $incomplete_upload_request = \Mockery::mock(ServerRequestInterface::class);
         $incomplete_upload_request->shouldReceive('getMethod')->andReturns('PATCH');
@@ -350,7 +350,7 @@ class TusServerTest extends TestCase
     {
         $locker = \Mockery::mock(TusLocker::class);
         $this->data_store->shouldReceive('getLocker')->andReturns($locker);
-        $server = new TusServer($this->message_factory, $this->data_store);
+        $server = new TusServer($this->response_factory, $this->data_store);
 
         $incoming_request = \Mockery::mock(ServerRequestInterface::class);
         $incoming_request->shouldReceive('getMethod')->andReturns('PATCH');

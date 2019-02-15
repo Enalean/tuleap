@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,20 +20,26 @@
 
 namespace Tuleap\OpenIDConnectClient\Authentication\Token;
 
-use Http\Message\RequestFactory;
+use Psr\Http\Message\RequestFactoryInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 use Tuleap\OpenIDConnectClient\Authentication\Authorization\AuthorizationResponse;
 use Tuleap\OpenIDConnectClient\Provider\Provider;
 
 class TokenRequestCreator
 {
     /**
-     * @var RequestFactory
+     * @var RequestFactoryInterface
      */
     private $http_request_factory;
+    /**
+     * @var StreamFactoryInterface
+     */
+    private $stream_factory;
 
-    public function __construct(RequestFactory $http_request_factory)
+    public function __construct(RequestFactoryInterface $http_request_factory, StreamFactoryInterface $stream_factory)
     {
         $this->http_request_factory = $http_request_factory;
+        $this->stream_factory       = $stream_factory;
     }
 
     /**
@@ -43,21 +49,24 @@ class TokenRequestCreator
     {
         $http_request = $this->http_request_factory->createRequest(
             'POST',
-            $provider->getTokenEndpoint(),
-            [
-                'Content-Type' => 'application/x-www-form-urlencoded',
-                'Accept'       => 'application/json'
-            ],
-            http_build_query(
-                [
-                    'grant_type'    => 'authorization_code',
-                    'code'          => $authorization_response->getCode(),
-                    'redirect_uri'  => $redirect_uri,
-                    'client_id'     => $provider->getClientId(),
-                    'client_secret' => $provider->getClientSecret(),
-                ]
-            )
+            $provider->getTokenEndpoint()
         );
+        $http_request = $http_request
+            ->withHeader('Content-Type', 'application/x-www-form-urlencoded')
+            ->withHeader('Accept', 'application/json')
+            ->withBody(
+                $this->stream_factory->createStream(
+                    http_build_query(
+                        [
+                            'grant_type'    => 'authorization_code',
+                            'code'          => $authorization_response->getCode(),
+                            'redirect_uri'  => $redirect_uri,
+                            'client_id'     => $provider->getClientId(),
+                            'client_secret' => $provider->getClientSecret(),
+                        ]
+                    )
+                )
+            );
 
         return new TokenRequest($http_request);
     }

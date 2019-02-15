@@ -20,7 +20,7 @@
  */
 
 use Tuleap\Http\HttpClientFactory;
-use Tuleap\Http\MessageFactoryBuilder;
+use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Hudson\HudsonJobBuilder;
 
 /**
@@ -42,7 +42,7 @@ class hudsonActions extends Actions {
         $job_url = $request->get('hudson_job_url');
         try {
             $minimal_job_factory = new MinimalHudsonJobFactory();
-            $job_builder         = new HudsonJobBuilder(MessageFactoryBuilder::build(), HttpClientFactory::createAsyncClient());
+            $job_builder         = new HudsonJobBuilder(HTTPFactoryBuilder::requestFactory(), HttpClientFactory::createAsyncClient());
             $job                 = $job_builder->getHudsonJob(
                 $minimal_job_factory->getMinimalHudsonJob($job_url, '')
             );

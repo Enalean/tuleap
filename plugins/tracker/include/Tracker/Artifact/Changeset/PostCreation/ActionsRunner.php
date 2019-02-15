@@ -31,7 +31,7 @@ use Tracker_Artifact_MailGateway_RecipientFactory;
 use Tracker_FormElementFactory;
 use Tracker_GlobalNotificationDao;
 use Tuleap\Http\HttpClientFactory;
-use Tuleap\Http\MessageFactoryBuilder;
+use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Mail\MailLogger;
 use Tuleap\Queue\QueueFactory;
 use Tuleap\Queue\Worker;
@@ -109,7 +109,8 @@ class ActionsRunner
             new WebhookNotificationTask(
                 $logger,
                 new WebhookEmitter(
-                    MessageFactoryBuilder::build(),
+                    HTTPFactoryBuilder::requestFactory(),
+                    HTTPFactoryBuilder::streamFactory(),
                     HttpClientFactory::createAsyncClient(),
                     new WebhookStatusLogger($webhook_dao)
                 ),

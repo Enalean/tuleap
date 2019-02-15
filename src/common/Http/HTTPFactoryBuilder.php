@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,17 +18,31 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Http;
 
-use Http\Message\MessageFactory\GuzzleMessageFactory;
+use Http\Factory\Guzzle\RequestFactory;
+use Http\Factory\Guzzle\ResponseFactory;
+use Http\Factory\Guzzle\StreamFactory;
+use Psr\Http\Message\RequestFactoryInterface;
+use Psr\Http\Message\ResponseFactoryInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-class MessageFactoryBuilder
+final class HTTPFactoryBuilder
 {
-    /**
-     * @return \Http\Message\MessageFactory
-     */
-    public static function build()
+    public static function requestFactory() : RequestFactoryInterface
     {
-        return new GuzzleMessageFactory();
+        return new RequestFactory();
+    }
+
+    public static function responseFactory() : ResponseFactoryInterface
+    {
+        return new ResponseFactory();
+    }
+
+    public static function streamFactory() : StreamFactoryInterface
+    {
+        return new StreamFactory();
     }
 }

@@ -20,7 +20,7 @@
 
 namespace Tuleap\Http\Server;
 
-use Http\Message\ResponseFactory;
+use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -28,11 +28,11 @@ use Psr\Http\Server\RequestHandlerInterface;
 final class AlwaysSuccessfulRequestHandler implements RequestHandlerInterface
 {
     /**
-     * @var ResponseFactory
+     * @var ResponseFactoryInterface
      */
     private $response_factory;
 
-    public function __construct(ResponseFactory $response_factory)
+    public function __construct(ResponseFactoryInterface $response_factory)
     {
         $this->response_factory = $response_factory;
     }
