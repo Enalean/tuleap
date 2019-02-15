@@ -179,6 +179,23 @@ class Docman_MetadataFactory {
     }
 
     /**
+     * Build a list of modifiable metadata used in the project.
+     */
+    private function getUsedModifiableMetadataList() : array {
+        $metadata_list = array();
+        foreach($this->modifiableMetadata as $metadata_label) {
+            $metadata = $this->getHardCodedMetadataFromLabel($metadata_label);
+            $this->appendHardCodedMetadataParams($metadata);
+
+            if($metadata->isUsed()) {
+                $metadata_list[] = $metadata;
+            }
+        }
+
+        return $metadata_list;
+    }
+
+    /**
      * Get an array of metadata label for all inheritable metadata.
      *
      * - All Real metadata are inheritable.
@@ -210,13 +227,13 @@ class Docman_MetadataFactory {
      *
      * @param boolean $onlyUsed Return only metadata enabled by the project.
      */
-    function &getMetadataForGroup($onlyUsed = false) {        
+    function &getMetadataForGroup($onlyUsed = false) {
         $mda = array_merge($this->getHardCodedMetadataList($onlyUsed),
                            $this->getRealMetadataList($onlyUsed));
-        
+
         $i = new ArrayIterator($mda);
         return $i;
-    }    
+    }
 
     /**
      * Append elements of ListOfValues metadata.
@@ -261,25 +278,24 @@ class Docman_MetadataFactory {
     /**
      * Add all the metadata (with their values) to the given item
      */
-    function appendItemMetadataList(&$item) {
-        $mda = array();
-
+    public function appendItemMetadataList(Docman_Item &$item) {
         // Static metadata
-        $mda = $this->getHardCodedMetadataList(true);
-        foreach($mda as $md) {
-            $md->setValue($item->getHardCodedMetadataValue($md->getLabel()));
-            $item->addMetadata($md);
-            unset($md);
-        }
-        
-        // Dynamic metadata
-        $mdIter = $this->getRealMetadataIterator(true);
-        $mdIter->rewind();
-        while($mdIter->valid()) {
-            $md = $mdIter->current();
-            $this->addMetadataValueToItem($item, $md);
-            $mdIter->next();
-        }
+        $hardcoded_metadata = $this->getHardCodedMetadataList(true);
+        $this->appendHardcodedMetadataToItem($item, $hardcoded_metadata);
+
+        $this->appendDynamicMetadataToItem($item);
+    }
+
+    /**
+     * Appends used dynamic and modifiable metadata (with their value) to the given item.
+     */
+    public function appendItemMetadataListWithoutBasicProperties(Docman_Item $item)
+    {
+        $modifiable_metadata = $this->getUsedModifiableMetadataList();
+
+        $this->appendHardcodedMetadataToItem($item, $modifiable_metadata);
+
+        $this->appendDynamicMetadataToItem($item);
     }
 
     /**
@@ -839,5 +855,26 @@ class Docman_MetadataFactory {
 
     public function setRealGroupId($group_id) {
         $this->groupId = $group_id;
+    }
+
+    private function appendDynamicMetadataToItem(Docman_Item $item): void
+    {
+        $metadata_iterator = $this->getRealMetadataIterator(true);
+        $metadata_iterator->rewind();
+
+        while ($metadata_iterator->valid()) {
+            $current_metadata = $metadata_iterator->current();
+            $this->addMetadataValueToItem($item, $current_metadata);
+            $metadata_iterator->next();
+        }
+    }
+
+    private function appendHardcodedMetadataToItem(Docman_Item $item, array $modifiable_metadata): void
+    {
+        foreach ($modifiable_metadata as $metadata) {
+            $metadata->setValue($item->getHardCodedMetadataValue($metadata->getLabel()));
+            $item->addMetadata($metadata);
+            unset($metadata);
+        }
     }
 }

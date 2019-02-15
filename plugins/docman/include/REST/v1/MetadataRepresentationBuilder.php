@@ -42,10 +42,13 @@ class MetadataRepresentationBuilder
      */
     public function build(\Docman_Item $item) : array
     {
-        $this->factory->appendItemMetadataList($item);
+        $this->factory->appendItemMetadataListWithoutBasicProperties($item);
 
         $metadata_representations = [];
-        foreach ($item->getMetadata() as $metadata) {
+
+        $item_metadata = $item->getMetadata();
+
+        foreach ($item_metadata as $metadata) {
             $value      = $metadata->getValue();
             $list_value = null;
             $date_value = null;

@@ -38,6 +38,12 @@
             />
         </section>
         <quick-look-document-metadata v-bind:item="item"/>
+        <section class="tlp-pane-section" v-if="item.description">
+            <div class="tlp-property">
+                <label class="tlp-label" for="item-description" v-translate>Description</label>
+                <p id="item-description">{{ item.description }}</p>
+            </div>
+        </section>
     </section>
 </template>
 

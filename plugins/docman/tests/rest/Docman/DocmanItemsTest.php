@@ -146,9 +146,9 @@ class DocmanItemsTest extends DocmanBase
         $this->assertEquals(
             $items[0]['metadata'][0],
             [
-                "name"                      => "Title",
+                "name"                      => "Custom metadata",
                 "type"                      => "string",
-                "value"                     => "folder 2",
+                "value"                     => "custom value for folder_2",
                 "list_value"                => null,
                 "is_required"               => true,
                 "is_multiple_value_allowed" => false
@@ -159,9 +159,9 @@ class DocmanItemsTest extends DocmanBase
         $this->assertEquals(
             $items[1]['metadata'][0],
             [
-                "name"                      => "Title",
+                "name"                      => "Custom metadata",
                 "type"                      => "string",
-                "value"                     => "item A",
+                "value"                     => "custom value for item_A",
                 "list_value"                => null,
                 "is_required"               => true,
                 "is_multiple_value_allowed" => false
@@ -170,9 +170,9 @@ class DocmanItemsTest extends DocmanBase
         $this->assertEquals(
             $items[2]['metadata'][0],
             [
-                "name"                      => "Title",
+                "name"                      => "Custom metadata",
                 "type"                      => "string",
-                "value"                     => "item C",
+                "value"                     => "custom value for item_C",
                 "list_value"                => null,
                 "is_required"               => true,
                 "is_multiple_value_allowed" => false
@@ -181,9 +181,9 @@ class DocmanItemsTest extends DocmanBase
         $this->assertEquals(
             $items[3]['metadata'][0],
             [
-                "name"                      => "Title",
+                "name"                      => "Custom metadata",
                 "type"                      => "string",
-                "value"                     => "item E",
+                "value"                     => "custom value for item_E",
                 "list_value"                => null,
                 "is_required"               => true,
                 "is_multiple_value_allowed" => false
@@ -192,9 +192,9 @@ class DocmanItemsTest extends DocmanBase
         $this->assertEquals(
             $items[4]['metadata'][0],
             [
-                "name"                      => "Title",
+                "name"                      => "Custom metadata",
                 "type"                      => "string",
-                "value"                     => "item F",
+                "value"                     => "custom value for item_F",
                 "list_value"                => null,
                 "is_required"               => true,
                 "is_multiple_value_allowed" => false
@@ -203,9 +203,9 @@ class DocmanItemsTest extends DocmanBase
         $this->assertEquals(
             $items[5]['metadata'][0],
             [
-                "name"                      => "Title",
+                "name"                      => "Custom metadata",
                 "type"                      => "string",
-                "value"                     => "item G",
+                "value"                     => "custom value for item_G",
                 "list_value"                => null,
                 "is_required"               => true,
                 "is_multiple_value_allowed" => false
