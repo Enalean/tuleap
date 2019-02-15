@@ -96,6 +96,8 @@ export default {
                     name = "Folder";
                     break;
                 case TYPE_LINK:
+                    name = "Link";
+                    break;
                 case TYPE_WIKI:
                 case TYPE_EMBEDDED:
                 default:

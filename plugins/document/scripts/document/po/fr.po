@@ -163,6 +163,9 @@ msgid_plural "Oops… Unable to upload files"
 msgstr[0] "Oups… Impossible de téléverser un fichier"
 msgstr[1] "Oups… Impossible de téléverser des fichiers"
 
+msgid "Open link"
+msgstr "Ouvrir le lien"
+
 msgid "Owner"
 msgstr "Propriétaire"
 
