@@ -20,20 +20,50 @@
 import { select2 } from "tlp";
 
 document.addEventListener("DOMContentLoaded", () => {
-    for (const select_category of document.querySelectorAll(
+    const form = document.getElementById("project-admin-category-form");
+    if (!form) {
+        return;
+    }
+    const list_of_multiple_select = document.querySelectorAll(
         ".project-admin-category-select[multiple]"
-    )) {
-        select2(select_category, {
-            placeholder: select_category.dataset.placeholder,
-            allowClear: true,
-            maximumSelectionLength: select_category.dataset.maximumSelectionLength,
-            templateResult: result => {
-                if (!result.element) {
-                    return result.text;
-                }
-
-                return result.element.dataset.fullpath;
-            }
-        });
+    );
+    for (const select_category of list_of_multiple_select) {
+        instantiateSelect2(select_category);
+        checkMultipleSelectRespectsMaximumSelectionLength(select_category);
     }
 });
+
+function instantiateSelect2(select_category) {
+    select2(select_category, {
+        placeholder: select_category.dataset.placeholder,
+        allowClear: true,
+        maximumSelectionLength: select_category.dataset.maximumSelectionLength,
+        templateResult: result => {
+            if (!result.element) {
+                return result.text;
+            }
+
+            return result.element.dataset.fullpath;
+        }
+    }).on("change", function() {
+        checkMultipleSelectRespectsMaximumSelectionLength(select_category);
+    });
+}
+
+function checkMultipleSelectRespectsMaximumSelectionLength(select_category) {
+    let nb_selected_values = 0;
+    const n = select_category.options.length;
+    for (let i = 0; i < n; i++) {
+        if (select_category.options[i].selected) {
+            nb_selected_values++;
+        }
+    }
+
+    if (nb_selected_values > select_category.dataset.maximumSelectionLength) {
+        select_category.setCustomValidity(select_category.dataset.maximumSelectionLengthMessage);
+        select_category.closest(".tlp-form-element").classList.add("tlp-form-element-error");
+    } else {
+        select_category.setCustomValidity("");
+        select_category.closest(".tlp-form-element").classList.remove("tlp-form-element-error");
+    }
+}
