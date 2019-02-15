@@ -19,9 +19,9 @@
  *
  */
 
-namespace Tuleap\Tracker\Workflow\PostAction\Update\Internal;
+namespace Tuleap\Tracker\Workflow\PostAction\Update;
 
-use Tuleap\Tracker\Workflow\PostAction\Update\SetFieldValue;
+use Tuleap\Tracker\Workflow\PostAction\Update\Internal\PostActionVisitor;
 
 final class SetDateValue implements SetFieldValue
 {

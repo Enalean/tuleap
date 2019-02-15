@@ -26,7 +26,7 @@ require_once __DIR__ . '/../../../../../bootstrap.php';
 use Mockery;
 use PHPUnit\Framework\TestCase;
 use Tuleap\REST\I18NRestException;
-use Tuleap\Tracker\Workflow\PostAction\Update\Internal\CIBuild;
+use Tuleap\Tracker\Workflow\PostAction\Update\CIBuild;
 use Workflow;
 
 class CIBuildJsonParserTest extends TestCase

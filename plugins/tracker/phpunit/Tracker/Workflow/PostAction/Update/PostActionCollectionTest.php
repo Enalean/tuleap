@@ -22,9 +22,7 @@ namespace Tuleap\Tracker\Workflow\PostAction\Update;
 
 use Mockery;
 use PHPUnit\Framework\TestCase;
-use Tuleap\Tracker\Workflow\PostAction\Update\Internal\CIBuild;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\PostActionIdCollection;
-use Tuleap\Tracker\Workflow\PostAction\Update\Internal\SetDateValue;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\UnknownPostActionIdsException;
 
 class PostActionCollectionTest extends TestCase

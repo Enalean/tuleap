@@ -28,7 +28,6 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
 use PHPUnit\Framework\TestCase;
 use Tuleap\DB\TransactionExecutor;
-use Tuleap\Tracker\Workflow\PostAction\Update\Internal\CIBuild;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\PostActionUpdater;
 
 class PostActionCollectionUpdaterTest extends TestCase

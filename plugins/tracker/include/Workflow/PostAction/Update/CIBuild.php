@@ -19,11 +19,12 @@
  *
  */
 
-namespace Tuleap\Tracker\Workflow\PostAction\Update\Internal;
+namespace Tuleap\Tracker\Workflow\PostAction\Update;
 
+use Tuleap\Tracker\Workflow\PostAction\Update\Internal\PostActionVisitor;
 use Tuleap\Tracker\Workflow\Update\PostAction;
 
-class CIBuild implements PostAction
+final class CIBuild implements PostAction
 {
     /**
      * @var int|null

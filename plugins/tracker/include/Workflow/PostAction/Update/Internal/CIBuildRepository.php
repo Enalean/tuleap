@@ -24,6 +24,7 @@ namespace Tuleap\Tracker\Workflow\PostAction\Update\Internal;
 use DataAccessQueryException;
 use Transition;
 use Transition_PostAction_CIBuildDao;
+use Tuleap\Tracker\Workflow\PostAction\Update\CIBuild;
 
 /**
  * Anti-corruption layer around Transition_PostAction_CIBuildDao, dedicated to CI Build updates.

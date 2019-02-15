@@ -21,16 +21,12 @@
 
 namespace Tuleap\Tracker\Workflow\PostAction\Update;
 
-use Tuleap\Tracker\Workflow\PostAction\Update\Internal\CIBuild;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\CIBuildValidator;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\PostActionIdCollection;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\PostActionsDiff;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\PostActionVisitor;
-use Tuleap\Tracker\Workflow\PostAction\Update\Internal\SetDateValue;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\SetDateValueValidator;
-use Tuleap\Tracker\Workflow\PostAction\Update\Internal\SetFloatValue;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\SetFloatValueValidator;
-use Tuleap\Tracker\Workflow\PostAction\Update\Internal\SetIntValue;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\SetIntValueValidator;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\UnknownPostActionIdsException;
 use Tuleap\Tracker\Workflow\Update\PostAction;

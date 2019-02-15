@@ -25,6 +25,7 @@ require_once __DIR__ . '/../../../../../bootstrap.php';
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Tracker\Workflow\PostAction\Update\CIBuild;
 
 class CIBuildValidatorTest extends TestCase
 {
@@ -44,8 +45,8 @@ class CIBuildValidatorTest extends TestCase
 
     public function testValidateDoesNotThrowWhenValid()
     {
-        $first_ci_build  = $this->createCIBuild();
-        $second_ci_build = $this->createCIBuild();
+        $first_ci_build  = new CIBuild(null, 'https://example.com');
+        $second_ci_build = new CIBuild(2, 'https://example.com/2');
         $this->ids_validator->shouldReceive('validate');
 
         $this->ci_build_validator->validate($first_ci_build, $second_ci_build);
@@ -53,7 +54,7 @@ class CIBuildValidatorTest extends TestCase
 
     public function testValidateThrowsWhenInvalidJobUrl()
     {
-        $invalid_ci_build = $this->createCIBuildWithUrl('not an URL');
+        $invalid_ci_build = new CIBuild(null, 'not an URL');
 
         $this->expectException(InvalidPostActionException::class);
 
@@ -62,7 +63,7 @@ class CIBuildValidatorTest extends TestCase
 
     public function testValidateThrowsWhenEmptyJobUrl()
     {
-        $invalid_ci_build = $this->createCIBuildWithUrl('');
+        $invalid_ci_build = new CIBuild(null, '');
 
         $this->expectException(InvalidPostActionException::class);
 
@@ -71,7 +72,7 @@ class CIBuildValidatorTest extends TestCase
 
     public function testValidateWrapsDuplicatePostActionException()
     {
-        $ci_build = $this->createCIBuild();
+        $ci_build = new CIBuild(1, 'https://example.com');
         $this->ids_validator
             ->shouldReceive('validate')
             ->andThrow(new DuplicatePostActionException());
@@ -79,19 +80,5 @@ class CIBuildValidatorTest extends TestCase
         $this->expectException(InvalidPostActionException::class);
 
         $this->ci_build_validator->validate($ci_build);
-    }
-
-    private function createCIBuild()
-    {
-        $ci_build = Mockery::mock(CIBuild::class);
-        return $ci_build->shouldReceive('getJobUrl')->andReturn('https://example.com')
-            ->getMock();
-    }
-
-    private function createCIBuildWithUrl(string $job_url)
-    {
-        $ci_build = Mockery::mock(CIBuild::class);
-        $ci_build->shouldReceive('getJobUrl')->andReturn($job_url);
-        return $ci_build;
     }
 }

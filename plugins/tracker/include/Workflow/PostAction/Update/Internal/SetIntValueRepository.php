@@ -25,6 +25,7 @@ use DataAccessQueryException;
 use Transition;
 use Transition_PostAction_Field_IntDao;
 use Tuleap\DB\DataAccessObject;
+use Tuleap\Tracker\Workflow\PostAction\Update\SetIntValue;
 
 /**
  * Anti-corruption layer around Transition_PostAction_Field_IntDao, dedicated to Set Int Value updates.

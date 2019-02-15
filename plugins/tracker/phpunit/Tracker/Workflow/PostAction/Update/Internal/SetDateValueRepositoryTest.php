@@ -31,6 +31,7 @@ use Mockery\MockInterface;
 use PHPUnit\Framework\TestCase;
 use Transition_PostAction_Field_DateDao;
 use Tuleap\DB\DataAccessObject;
+use Tuleap\Tracker\Workflow\PostAction\Update\SetDateValue;
 use Tuleap\Tracker\Workflow\PostAction\Update\TransitionFactory;
 
 class SetDateValueRepositoryTest extends TestCase
