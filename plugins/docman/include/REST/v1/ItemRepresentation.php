@@ -43,6 +43,11 @@ class ItemRepresentation
     public $title;
 
     /**
+     * @var string {@type string}
+     */
+    public $description;
+
+    /**
      * @var MinimalUserRepresentation {@type MinimalUserRepresentation}
      */
     public $owner;
@@ -126,6 +131,7 @@ class ItemRepresentation
     ) {
         $this->id                       = JsonCast::toInt($item->getId());
         $this->title                    = $item->getTitle();
+        $this->description              = $item->getDescription();
         $this->owner                    = $owner;
         $this->last_update_date         = JsonCast::toDate($item->getUpdateDate());
         $this->creation_date            = JsonCast::toDate($item->getCreateDate());

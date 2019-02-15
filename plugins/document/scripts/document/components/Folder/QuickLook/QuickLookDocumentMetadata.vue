@@ -30,6 +30,7 @@
                     <user-badge v-bind:user="item.owner"/>
                 </p>
             </div>
+            <quick-look-document-additional-metadata-list v-for="metadata in metadata_right_column" v-bind:metadata="metadata" v-bind:key="metadata.name"/>
         </div>
         <div class="document-quick-look-properties-column">
             <div class="tlp-property">
@@ -40,26 +41,37 @@
                 <label for="document-last-update-date" class="tlp-label" v-translate>Last updated date</label>
                 <p id="document-last-update-date">{{ getFormattedDate(item.last_update_date) }}</p>
             </div>
+            <quick-look-document-additional-metadata-list v-for="metadata in metadata_left_column" v-bind:metadata="metadata" v-bind:key="metadata.name"/>
         </div>
     </section>
 </template>
 <script>
-import moment from "moment";
-import phptomoment from "phptomoment";
 import { mapState } from "vuex";
+import { formatDateUsingPreferredUserFormat } from "../../../helpers/date-formatter.js";
 import UserBadge from "../../User/UserBadge.vue";
+import QuickLookDocumentAdditionalMetadataList from "./QuickLookDocumentAdditionalMetadataList.vue";
 
 export default {
+    components: { QuickLookDocumentAdditionalMetadataList, UserBadge },
     props: {
         item: Object
     },
-    components: { UserBadge },
     computed: {
-        ...mapState(["date_time_format"])
+        ...mapState(["date_time_format"]),
+        metadata_right_column() {
+            const metadata_length = this.item.metadata.length;
+
+            return this.item.metadata.slice(0, Math.ceil(metadata_length / 2));
+        },
+        metadata_left_column() {
+            const metadata_length = this.item.metadata.length;
+
+            return this.item.metadata.slice(Math.ceil(metadata_length / 2), metadata_length);
+        }
     },
     methods: {
         getFormattedDate(date) {
-            return moment(date).format(phptomoment(this.date_time_format));
+            return formatDateUsingPreferredUserFormat(date, this.date_time_format);
         }
     }
 };

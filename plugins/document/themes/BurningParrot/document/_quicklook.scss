@@ -20,6 +20,7 @@
 
 .document-quick-look-pane {
     min-width: 500px;
+    max-width: 35%;
     margin: 0 0 0 $tlp-spacing;
 }
 
@@ -71,12 +72,26 @@
     display: flex;
 }
 
+.document-quick-look-properties-column {
+    flex: 1 1 50%;
+}
+
 .document-quick-look-properties-column:first-child {
     margin: 0 $tlp-double-spacing 0 0;
 }
 
 #document-owner > .document-badge-avatar >.document-badge-avatar-username {
     color: $tlp-theme-color;
+}
+
+.document-quick-look-property-empty {
+    color: $tlp-ui-dimmed;
+    font-style: italic;
+}
+
+#item-description,
+.document-quick-look-properties-column > .tlp-property > p {
+    word-break: break-all;
 }
 
 @media screen and (max-width: 1200px) {

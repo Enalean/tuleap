@@ -54,8 +54,10 @@ import UserBadge from "../User/UserBadge.vue";
 import QuickLookButton from "./QuickLook/QuickLookButton.vue";
 import UploadProgressBar from "./ProgressBar/UploadProgressBar.vue";
 import { TYPE_FILE, TYPE_FOLDER, TYPE_LINK, TYPE_WIKI } from "../../constants.js";
-import moment from "moment";
-import phptomoment from "phptomoment";
+import {
+    formatDateUsingPreferredUserFormat,
+    getElapsedTimeFromNow
+} from "../../helpers/date-formatter.js";
 
 export default {
     name: "FolderContentRow",
@@ -66,10 +68,13 @@ export default {
     computed: {
         ...mapState(["date_time_format", "folded_items_ids"]),
         formatted_date() {
-            return moment(this.item.last_update_date).fromNow();
+            return getElapsedTimeFromNow(this.item.last_update_date);
         },
         formatted_full_date() {
-            return moment(this.item.last_update_date).format(phptomoment(this.date_time_format));
+            return formatDateUsingPreferredUserFormat(
+                this.item.last_update_date,
+                this.date_time_format
+            );
         },
         is_folded() {
             return this.folded_items_ids.includes(this.item.id);

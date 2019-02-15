@@ -20,10 +20,13 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Docman\rest;
 
 use Docman_ApprovalTableItemDao;
 use Docman_ItemFactory;
+use Docman_MetadataValueFactory;
 use PluginManager;
 use Project;
 use REST_TestDataBuilder;
@@ -47,10 +50,33 @@ class DocmanDataBuilder extends REST_TestDataBuilder
      */
     private $docman_item_factory;
 
+    /**
+     * @var \Docman_MetadataFactory
+     */
+    private $metadata_factory;
+
+    /**
+     * @var Project
+     */
+    private $project;
+
+    /**
+     * @var Docman_MetadataValueFactory
+     */
+    private $metadata_value_factory;
+
     public function setUp()
     {
         echo 'Setup Docman REST Tests configuration' . PHP_EOL;
+
+        $this->project = $this->project_manager->getProjectByUnixName(self::PROJECT_NAME);
+
+        $this->docman_item_factory    = Docman_ItemFactory::instance($this->project->getID());
+        $this->metadata_factory       = new \Docman_MetadataFactory($this->project->getID());
+        $this->metadata_value_factory = new Docman_MetadataValueFactory($this->project->getID());
+
         $this->installPlugin();
+        $this->createCustomMetadata();
         $this->addContent();
         $this->generateDocmanRegularUser();
         $this->setFeatureFlag();
@@ -63,11 +89,11 @@ class DocmanDataBuilder extends REST_TestDataBuilder
         $this->activateWikiServiceForTheProject();
     }
 
-    private function addItem($user_id, Project $project, $docman_root_id, $title, $item_type, $link_url = '', $file_path = '', $wiki_page = '')
+    private function addItem($user_id, $docman_root_id, $title, $item_type, $link_url = '', $file_path = '', $wiki_page = '')
     {
         $item = array(
             'parent_id'         => $docman_root_id,
-            'group_id'          => $project->getID(),
+            'group_id'          => $this->project->getID(),
             'title'             => $title,
             'description'       => '',
             'create_date'       => time(),
@@ -154,25 +180,22 @@ class DocmanDataBuilder extends REST_TestDataBuilder
      */
     private function addContent()
     {
-        $project = $this->project_manager->getProjectByUnixName(self::PROJECT_NAME);
+        $docman_root = $this->docman_item_factory->getRoot($this->project->getID());
 
-        $this->docman_item_factory = Docman_ItemFactory::instance($project->getID());
-        $docman_root               = $this->docman_item_factory->getRoot($project->getID());
+        $folder_id   = $this->addItem(self::REGULAR_USER_ID, $docman_root->getId(), 'folder 1', PLUGIN_DOCMAN_ITEM_TYPE_FOLDER);
+        $folder_3_id = $this->addItem(self::REGULAR_USER_ID, $docman_root->getId(), 'folder 3', PLUGIN_DOCMAN_ITEM_TYPE_FOLDER);
+        $this->addWritePermissionOnItem($folder_id, \ProjectUGroup::PROJECT_MEMBERS);
 
-        $folder_id   = $this->addItem(self::REGULAR_USER_ID, $project, $docman_root->getId(), 'folder 1', PLUGIN_DOCMAN_ITEM_TYPE_FOLDER);
-        $folder_3_id = $this->addItem(self::REGULAR_USER_ID, $project, $docman_root->getId(), 'folder 3', PLUGIN_DOCMAN_ITEM_TYPE_FOLDER);
-        $this->addWritePermissionOnItem($project, $folder_id, \ProjectUGroup::PROJECT_MEMBERS);
+        $item_A_id = $this->addItem(self::ANON_ID, $folder_id, 'item A', PLUGIN_DOCMAN_ITEM_TYPE_EMPTY);
+        $item_B_id = $this->addItem(self::REGULAR_USER_ID, $folder_id, 'item B', PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE);
+        $item_C_id = $this->addItem(self::REGULAR_USER_ID, $folder_id, 'item C', PLUGIN_DOCMAN_ITEM_TYPE_FILE);
+        $folder_2_id = $this->addItem(self::REGULAR_USER_ID, $folder_id, 'folder 2', PLUGIN_DOCMAN_ITEM_TYPE_FOLDER);
 
-        $item_A_id   = $this->addItem(self::ANON_ID, $project, $folder_id, 'item A', PLUGIN_DOCMAN_ITEM_TYPE_EMPTY);
-        $item_B_id   = $this->addItem(self::REGULAR_USER_ID, $project, $folder_id, 'item B', PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE);
-        $item_C_id   = $this->addItem(self::REGULAR_USER_ID, $project, $folder_id, 'item C', PLUGIN_DOCMAN_ITEM_TYPE_FILE);
-        $folder_2_id = $this->addItem(self::REGULAR_USER_ID, $project, $folder_id, 'folder 2', PLUGIN_DOCMAN_ITEM_TYPE_FOLDER);
 
-        $item_D_id = $this->addItem(self::REGULAR_USER_ID, $project, $folder_2_id, 'item D', PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE);
+        $item_D_id = $this->addItem(self::REGULAR_USER_ID, $folder_2_id, 'item D', PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE);
 
         $item_E_id = $this->addItem(
             self::REGULAR_USER_ID,
-            $project,
             $folder_id,
             'item E',
             PLUGIN_DOCMAN_ITEM_TYPE_LINK,
@@ -180,35 +203,46 @@ class DocmanDataBuilder extends REST_TestDataBuilder
         );
 
         $item_F_path = dirname(__FILE__) . '/_fixtures/docmanFile/embeddedFile';
-        $item_F_id   = $item_B_id = $this->addItem(
+        $item_F_id = $this->addItem(
             self::REGULAR_USER_ID,
-            $project,
             $folder_id,
             'item F',
             PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE,
             '',
             $item_F_path
         );
-        $item_G_id = $this->addItem(self::REGULAR_USER_ID, $project, $folder_id, 'item G', PLUGIN_DOCMAN_ITEM_TYPE_WIKI, '', '', 'MyWikiPage');
 
-        $this->addReadPermissionOnItem($project, $item_A_id, \ProjectUGroup::PROJECT_MEMBERS);
-        $this->addReadPermissionOnItem($project, $item_B_id, \ProjectUGroup::PROJECT_ADMIN);
-        $this->addReadPermissionOnItem($project, $item_C_id, \ProjectUGroup::PROJECT_MEMBERS);
-        $this->addReadPermissionOnItem($project, $folder_2_id, \ProjectUGroup::PROJECT_MEMBERS);
-        $this->addReadPermissionOnItem($project, $item_D_id, \ProjectUGroup::PROJECT_MEMBERS);
-        $this->addReadPermissionOnItem($project, $item_E_id, \ProjectUGroup::PROJECT_MEMBERS);
-        $this->addReadPermissionOnItem($project, $item_F_id, \ProjectUGroup::PROJECT_MEMBERS);
-        $this->addReadPermissionOnItem($project, $folder_3_id, \ProjectUGroup::PROJECT_ADMIN);
-        $this->addReadPermissionOnItem($project, $item_G_id, \ProjectUGroup::PROJECT_MEMBERS);
+        $item_G_id = $this->addItem(self::REGULAR_USER_ID, $folder_id, 'item G', PLUGIN_DOCMAN_ITEM_TYPE_WIKI, '', '', 'MyWikiPage');
+
+        $this->addReadPermissionOnItem($item_A_id, \ProjectUGroup::PROJECT_MEMBERS);
+        $this->addReadPermissionOnItem($item_B_id, \ProjectUGroup::PROJECT_ADMIN);
+        $this->addReadPermissionOnItem($item_C_id, \ProjectUGroup::PROJECT_MEMBERS);
+        $this->addReadPermissionOnItem($folder_2_id, \ProjectUGroup::PROJECT_MEMBERS);
+        $this->addReadPermissionOnItem($item_D_id, \ProjectUGroup::PROJECT_MEMBERS);
+        $this->addReadPermissionOnItem($item_E_id, \ProjectUGroup::PROJECT_MEMBERS);
+        $this->addReadPermissionOnItem($item_F_id, \ProjectUGroup::PROJECT_MEMBERS);
+        $this->addReadPermissionOnItem($folder_3_id, \ProjectUGroup::PROJECT_ADMIN);
+        $this->addReadPermissionOnItem($item_G_id, \ProjectUGroup::PROJECT_MEMBERS);
 
         $this->addApprovalTableForItem($folder_id);
         $this->lockItem($folder_3_id);
+
+
+        $this->appendCustomMetadataValueToItem($item_A_id, "custom value for item_A");
+        $this->appendCustomMetadataValueToItem($item_B_id, "custom value for item_B");
+        $this->appendCustomMetadataValueToItem($item_C_id, "custom value for item_C");
+        $this->appendCustomMetadataValueToItem($folder_2_id, "custom value for folder_2");
+        $this->appendCustomMetadataValueToItem($item_D_id, "custom value for item_D");
+        $this->appendCustomMetadataValueToItem($item_E_id, "custom value for item_E");
+        $this->appendCustomMetadataValueToItem($item_F_id, "custom value for item_F");
+        $this->appendCustomMetadataValueToItem($folder_3_id, "custom value for folder_3");
+        $this->appendCustomMetadataValueToItem($item_G_id, "custom value for item_G");
     }
 
-    private function addReadPermissionOnItem(Project $project, $object_id, $ugroup_name)
+    private function addReadPermissionOnItem($object_id, $ugroup_name)
     {
         permission_add_ugroup(
-            $project->getID(),
+            $this->project->getID(),
             'PLUGIN_DOCMAN_READ',
             $object_id,
             $ugroup_name,
@@ -216,10 +250,10 @@ class DocmanDataBuilder extends REST_TestDataBuilder
         );
     }
 
-    private function addWritePermissionOnItem(Project $project, $object_id, $ugroup_name)
+    private function addWritePermissionOnItem($object_id, $ugroup_name)
     {
         permission_add_ugroup(
-            $project->getID(),
+            $this->project->getID(),
             'PLUGIN_DOCMAN_WRITE',
             $object_id,
             $ugroup_name,
@@ -236,9 +270,39 @@ class DocmanDataBuilder extends REST_TestDataBuilder
 
     private function activateWikiServiceForTheProject(): void
     {
-        $project = $this->project_manager->getProjectByUnixName(self::PROJECT_NAME);
+        $this->project = $this->project_manager->getProjectByUnixName(self::PROJECT_NAME);
         $initializer = new DocmanDatabaseInitialization();
-        $initializer->setup($project);
+        $initializer->setup($this->project);
+    }
+
+    private function createCustomMetadata() : void
+    {
+        $custom_metadata = new \Docman_Metadata();
+
+        $custom_metadata->setName("Custom metadata");
+        $custom_metadata->setType(PLUGIN_DOCMAN_METADATA_TYPE_STRING);
+        $custom_metadata->setDescription("A custom metadata used for testing purpose");
+        $custom_metadata->setIsRequired(true);
+        $custom_metadata->setIsEmptyAllowed(false);
+        $custom_metadata->setIsMultipleValuesAllowed(false);
+        $custom_metadata->setSpecial(false);
+        $custom_metadata->setUseIt(true);
+
+        $this->metadata_factory->create(
+            $custom_metadata
+        );
+    }
+
+    private function appendCustomMetadataValueToItem(int $item_id, string $value) : void
+    {
+        $metadata_value  = new \Docman_MetadataValueScalar();
+
+        $metadata_value->setType(PLUGIN_DOCMAN_METADATA_TYPE_STRING);
+        $metadata_value->setItemId($item_id);
+        $metadata_value->setFieldId(1);
+        $metadata_value->setValueString($value);
+
+        $this->metadata_value_factory->create($metadata_value);
     }
 
     private function addApprovalTableForItem(int $id): void
@@ -257,7 +321,7 @@ class DocmanDataBuilder extends REST_TestDataBuilder
 
     private function setFeatureFlag()
     {
-        $local_inc           = fopen('/etc/tuleap/conf/local.inc', 'a');
+        $local_inc = fopen('/etc/tuleap/conf/local.inc', 'a');
         if ($local_inc === false) {
             throw new \RuntimeException('Could not append feature flag to local.inc');
         }

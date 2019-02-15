@@ -28,7 +28,7 @@ use PHPUnit\Framework\TestCase;
 
 class MetadataRepresentationBuilderTest extends TestCase
 {
-    public function testItBuildMetadata()
+    public function testItBuildMetadataWithoutBasicProperties()
     {
         $item = Mockery::mock(\Docman_Item::class);
 
@@ -41,6 +41,7 @@ class MetadataRepresentationBuilderTest extends TestCase
         $simple_metadata->shouldReceive('getName')->andReturn("simple metadata label");
         $simple_metadata->shouldReceive('getType')->andReturn(PLUGIN_DOCMAN_METADATA_TYPE_TEXT);
         $simple_metadata->shouldReceive('isRequired')->andReturn(false);
+        $simple_metadata->shouldReceive('getLabel')->andReturn("simple_metadata_label");
 
         $value1 = Mockery::mock(\Docman_MetadataValueList::class);
         $value1->shouldReceive('getId')->andReturn(1);
@@ -59,8 +60,9 @@ class MetadataRepresentationBuilderTest extends TestCase
         $list_metadata->shouldReceive('getName')->andReturn("list metadata label");
         $list_metadata->shouldReceive('getType')->andReturn(PLUGIN_DOCMAN_METADATA_TYPE_LIST);
         $list_metadata->shouldReceive('isRequired')->andReturn(true);
+        $list_metadata->shouldReceive('getLabel')->andReturn("list_metadata_label");
 
-        $factory->shouldReceive('appendItemMetadataList');
+        $factory->shouldReceive('appendItemMetadataListWithoutBasicProperties');
         $item->shouldReceive('getMetadata')->andReturn(
             [
                 $simple_metadata,
