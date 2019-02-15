@@ -29,6 +29,8 @@ use Tuleap\Tracker\REST\v1\Workflow\PostAction\Update\PostActionCollectionJsonPa
 use Tuleap\Tracker\REST\v1\Workflow\PostActionsPUTRepresentation;
 use Tuleap\Tracker\REST\v1\Workflow\TransitionsPermissionsChecker;
 use Tuleap\Tracker\Workflow\PostAction\Update\PostActionCollectionUpdater;
+use Tuleap\Tracker\Workflow\Transition\NoSiblingTransitionException;
+use Tuleap\Tracker\Workflow\Transition\Update\TransitionRetriever;
 
 class PUTHandler
 {
@@ -51,16 +53,23 @@ class PUTHandler
      */
     private $action_collection_updater;
 
+    /**
+     * @var TransitionRetriever
+     */
+    private $transition_retriever;
+
     public function __construct(
         TransitionsPermissionsChecker $transitions_permissions_checker,
         ProjectStatusVerificator $project_status_verificator,
         PostActionCollectionJsonParser $post_action_collection_json_parser,
-        PostActionCollectionUpdater $action_collection_updater
+        PostActionCollectionUpdater $action_collection_updater,
+        TransitionRetriever $transition_retriever
     ) {
         $this->transitions_permissions_checker    = $transitions_permissions_checker;
         $this->project_status_verificator         = $project_status_verificator;
         $this->post_action_collection_json_parser = $post_action_collection_json_parser;
         $this->action_collection_updater          = $action_collection_updater;
+        $this->transition_retriever               = $transition_retriever;
     }
 
     /**
@@ -77,10 +86,31 @@ class PUTHandler
         PostActionsPUTRepresentation $post_actions_representation
     ) {
         $this->transitions_permissions_checker->checkRead($current_user, $transition);
-        $project = $transition->getWorkflow()->getTracker()->getProject();
+        $workflow = $transition->getWorkflow();
+        $project  = $workflow->getTracker()->getProject();
         $this->project_status_verificator->checkProjectStatusAllowsAllUsersToAccessIt($project);
 
-        $post_actions = $this->post_action_collection_json_parser->parse($post_actions_representation->post_actions);
-        $this->action_collection_updater->updateByTransition($transition, $post_actions);
+        $post_actions = $this->post_action_collection_json_parser->parse($workflow, $post_actions_representation->post_actions);
+
+        if ($workflow->isAdvanced()) {
+            $this->action_collection_updater->updateByTransition($transition, $post_actions);
+        } else {
+            $all_transitions = $this->getAllSiblingsTransitions($transition);
+            $this->action_collection_updater->updateForAllSiblingsTransition($all_transitions, $post_actions);
+        }
+    }
+
+    private function getAllSiblingsTransitions(Transition $transition) : array
+    {
+        $all_transitions = [$transition];
+
+        try {
+            $siblings_collection = $this->transition_retriever->getSiblingTransitions($transition);
+            $all_transitions = array_merge($all_transitions, $siblings_collection->getTransitions());
+        } catch (NoSiblingTransitionException $e) {
+            //Do nothing, no siblings
+        }
+
+        return $all_transitions;
     }
 }

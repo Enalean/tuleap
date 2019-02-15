@@ -25,6 +25,7 @@ use Tuleap\REST\I18NRestException;
 use Tuleap\Tracker\REST\v1\Workflow\PostAction\SetFieldValueRepresentation;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\SetDateValue;
 use Tuleap\Tracker\Workflow\Update\PostAction;
+use Workflow;
 
 class SetDateValueJsonParser implements PostActionUpdateJsonParser
 {
@@ -37,7 +38,7 @@ class SetDateValueJsonParser implements PostActionUpdateJsonParser
             && $json['field_type'] === 'date';
     }
 
-    public function parse(array $json): PostAction
+    public function parse(Workflow $workflow, array $json): PostAction
     {
         if (isset($json['id']) && !is_int($json['id'])) {
             throw new I18NRestException(
@@ -82,8 +83,14 @@ class SetDateValueJsonParser implements PostActionUpdateJsonParser
             );
         }
 
+        // In workflow simple mode, we drop and recreate all post actions. Therefore, the $id must be null to recreate them
+        $id = null;
+        if ($workflow->isAdvanced()) {
+            $id = $json['id'] ?? null;
+        }
+
         return new SetDateValue(
-            $json['id'] ?? null,
+            $id,
             $json['field_id'],
             $this->mapValue($value)
         );

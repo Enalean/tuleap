@@ -24,6 +24,7 @@ namespace Tuleap\Tracker\REST\v1\Workflow\PostAction\Update;
 use Tuleap\REST\I18NRestException;
 use Tuleap\Tracker\Workflow\PostAction\Update\PostActionCollection;
 use Tuleap\Tracker\Workflow\Update\PostAction;
+use Workflow;
 
 /**
  * Json parser which produces a PostActionCollection.
@@ -43,7 +44,7 @@ class PostActionCollectionJsonParser
     /**
      * @throws I18NRestException 400
      */
-    public function parse(array $json): PostActionCollection
+    public function parse(Workflow $workflow, array $json): PostActionCollection
     {
         $post_actions = [];
         foreach ($json as $post_action_json) {
@@ -56,7 +57,7 @@ class PostActionCollectionJsonParser
                     )
                 );
             }
-            $post_actions[] = $this->parsePostAction($post_action_json);
+            $post_actions[] = $this->parsePostAction($workflow, $post_action_json);
         }
         return new PostActionCollection(...$post_actions);
     }
@@ -64,11 +65,11 @@ class PostActionCollectionJsonParser
     /**
      * @throws I18NRestException 400
      */
-    private function parsePostAction(array $json): PostAction
+    private function parsePostAction(Workflow $workflow, array $json): PostAction
     {
         foreach ($this->action_parsers as $parser) {
             if ($parser->accept($json)) {
-                return $parser->parse($json);
+                return $parser->parse($workflow, $json);
             }
         }
         throw new I18NRestException(

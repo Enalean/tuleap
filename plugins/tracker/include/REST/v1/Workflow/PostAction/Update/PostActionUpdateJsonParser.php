@@ -23,6 +23,7 @@ namespace Tuleap\Tracker\REST\v1\Workflow\PostAction\Update;
 
 use Tuleap\REST\I18NRestException;
 use Tuleap\Tracker\Workflow\Update\PostAction;
+use Workflow;
 
 interface PostActionUpdateJsonParser
 {
@@ -35,5 +36,5 @@ interface PostActionUpdateJsonParser
     /**
      * @throws I18NRestException 400
      */
-    public function parse(array $json): PostAction;
+    public function parse(Workflow $workflow, array $json): PostAction;
 }

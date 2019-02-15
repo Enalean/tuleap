@@ -23,12 +23,17 @@ namespace Tuleap\Tracker\REST\v1\Workflow\PostAction\Update;
 
 require_once __DIR__ . '/../../../../../bootstrap.php';
 
+use Mockery;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\REST\I18NRestException;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\SetIntValue;
+use Workflow;
 
 class SetIntValueJsonParserTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
+
     /**
      * @var SetIntValueJsonParser
      */
@@ -70,121 +75,200 @@ class SetIntValueJsonParserTest extends TestCase
 
     public function testParseReturnsNewSetIntValueBasedOnGivenJson()
     {
-        $set_date_value  = $this->parser->parse([
-            "id" => 2,
-            "type" => "set_field_value",
-            "field_type" => "int",
-            "field_id" => 43,
-            "value" => 1
-        ]);
+        $workflow = Mockery::mock(Workflow::class);
+        $workflow->shouldReceive('isAdvanced')->andReturn(true);
+
+        $set_date_value  = $this->parser->parse(
+            $workflow,
+            [
+                "id" => 2,
+                "type" => "set_field_value",
+                "field_type" => "int",
+                "field_id" => 43,
+                "value" => 1
+            ]
+        );
         $expected_action = new SetIntValue(2, 43, 1);
         $this->assertEquals($expected_action, $set_date_value);
     }
 
     public function testParseWhenIdNotProvided()
     {
-        $set_date_value  = $this->parser->parse([
-            "type" => "set_field_value",
-            "field_type" => "date",
-            "field_id" => 43,
-            "value" => 1
-        ]);
+        $workflow = Mockery::mock(Workflow::class);
+        $workflow->shouldReceive('isAdvanced')->andReturn(true);
+
+        $set_date_value  = $this->parser->parse(
+            $workflow,
+            [
+                "type" => "set_field_value",
+                "field_type" => "date",
+                "field_id" => 43,
+                "value" => 1
+            ]
+        );
+        $expected_action = new SetIntValue(null, 43, 1);
+        $this->assertEquals($expected_action, $set_date_value);
+    }
+
+    public function testParseReturnsNewSetIntValueWithoutIdWhenWorkflowIsNotAdvanced()
+    {
+        $workflow = Mockery::mock(Workflow::class);
+        $workflow->shouldReceive('isAdvanced')->andReturn(false);
+
+        $set_date_value  = $this->parser->parse(
+            $workflow,
+            [
+                "id" => 2,
+                "type" => "set_field_value",
+                "field_type" => "int",
+                "field_id" => 43,
+                "value" => 1
+            ]
+        );
         $expected_action = new SetIntValue(null, 43, 1);
         $this->assertEquals($expected_action, $set_date_value);
     }
 
     public function testParseThrowsWhenIdIsNotInt()
     {
+        $workflow = Mockery::mock(Workflow::class);
+        $workflow->shouldReceive('isAdvanced')->andReturn(true);
+
         $this->expectException(I18NRestException::class);
         $this->expectExceptionCode(400);
-        $this->parser->parse([
-            "id" => "not int",
-            "type" => "set_field_value",
-            "field_type" => "date",
-            "field_id" => 43,
-            "value" => 1
-        ]);
+        $this->parser->parse(
+            $workflow,
+            [
+                "id" => "not int",
+                "type" => "set_field_value",
+                "field_type" => "date",
+                "field_id" => 43,
+                "value" => 1
+            ]
+        );
     }
 
     public function testParseThrowsWhenNoFieldIdProvided()
     {
+        $workflow = Mockery::mock(Workflow::class);
+        $workflow->shouldReceive('isAdvanced')->andReturn(true);
+
         $this->expectException(I18NRestException::class);
         $this->expectExceptionCode(400);
-        $this->parser->parse([
-            "type" => "set_field_value",
-            "field_type" => "date",
-            "value" => 1
-        ]);
+        $this->parser->parse(
+            $workflow,
+            [
+                "type" => "set_field_value",
+                "field_type" => "date",
+                "value" => 1
+            ]
+        );
     }
 
     public function testParseThrowsWhenFieldIdIsNull()
     {
+        $workflow = Mockery::mock(Workflow::class);
+        $workflow->shouldReceive('isAdvanced')->andReturn(true);
+
         $this->expectException(I18NRestException::class);
         $this->expectExceptionCode(400);
-        $this->parser->parse([
-            "type" => "set_field_value",
-            "field_type" => "date",
-            "field_id" => null,
-            "value" => 1
-        ]);
+        $this->parser->parse(
+            $workflow,
+            [
+                "type" => "set_field_value",
+                "field_type" => "date",
+                "field_id" => null,
+                "value" => 1
+            ]
+        );
     }
 
     public function testParseThrowsWhenFieldIdIsNotInt()
     {
+        $workflow = Mockery::mock(Workflow::class);
+        $workflow->shouldReceive('isAdvanced')->andReturn(true);
+
         $this->expectException(I18NRestException::class);
         $this->expectExceptionCode(400);
-        $this->parser->parse([
-            "type" => "set_field_value",
-            "field_type" => "date",
-            "field_id" => "not int",
-            "value" => 1
-        ]);
+        $this->parser->parse(
+            $workflow,
+            [
+                "type" => "set_field_value",
+                "field_type" => "date",
+                "field_id" => "not int",
+                "value" => 1
+            ]
+        );
     }
 
     public function testParseThrowsWhenNoValueProvided()
     {
+        $workflow = Mockery::mock(Workflow::class);
+        $workflow->shouldReceive('isAdvanced')->andReturn(true);
+
         $this->expectException(I18NRestException::class);
         $this->expectExceptionCode(400);
-        $this->parser->parse([
-            "type" => "set_field_value",
-            "field_type" => "date",
-            "field_id" => 43
-        ]);
+        $this->parser->parse(
+            $workflow,
+            [
+                "type" => "set_field_value",
+                "field_type" => "date",
+                "field_id" => 43
+            ]
+        );
     }
 
     public function testParseThrowsWhenValueIsNull()
     {
+        $workflow = Mockery::mock(Workflow::class);
+        $workflow->shouldReceive('isAdvanced')->andReturn(true);
+
         $this->expectException(I18NRestException::class);
         $this->expectExceptionCode(400);
-        $this->parser->parse([
-            "type" => "set_field_value",
-            "field_type" => "date",
-            "field_id" => 43,
-            "value" => null
-        ]);
+        $this->parser->parse(
+            $workflow,
+            [
+                "type" => "set_field_value",
+                "field_type" => "date",
+                "field_id" => 43,
+                "value" => null
+            ]
+        );
     }
 
     public function testParseThrowsWhenValueIsNotNumeric()
     {
+        $workflow = Mockery::mock(Workflow::class);
+        $workflow->shouldReceive('isAdvanced')->andReturn(true);
+
         $this->expectException(I18NRestException::class);
         $this->expectExceptionCode(400);
-        $this->parser->parse([
-            "type" => "set_field_value",
-            "field_type" => "date",
-            "field_id" => 43,
-            "value" => "not int"
-        ]);
+        $this->parser->parse(
+            $workflow,
+            [
+                "type" => "set_field_value",
+                "field_type" => "date",
+                "field_id" => 43,
+                "value" => "not int"
+            ]
+        );
     }
 
     public function testParseThrowsWhenValueIsFloat()
     {
+        $workflow = Mockery::mock(Workflow::class);
+        $workflow->shouldReceive('isAdvanced')->andReturn(true);
+
         $this->expectException(I18NRestException::class);
         $this->expectExceptionCode(400);
-        $this->parser->parse([
-            "type" => "set_field_value",
-            "field_type" => "date",
-            "field_id" => 43,
-            "value" => 1.23
-        ]);
+        $this->parser->parse(
+            $workflow,
+            [
+                "type" => "set_field_value",
+                "field_type" => "date",
+                "field_id" => 43,
+                "value" => 1.23
+            ]
+        );
     }
 }
