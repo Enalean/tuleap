@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -91,7 +91,7 @@ class Tracker_REST_TrackerRestBuilder {
         foreach ($workflow->getTransitions() as $transition) {
             $condition_permission = new Workflow_Transition_Condition_Permissions($transition);
 
-            if ($condition_permission->isUserAllowedToSeeTransition($user, $project_id)) {
+            if ($condition_permission->isUserAllowedToSeeTransition($user, $workflow->getTracker())) {
                 $transitions[] = $this->getWorkflowTransitionRepresentation($transition);
             }
         }
