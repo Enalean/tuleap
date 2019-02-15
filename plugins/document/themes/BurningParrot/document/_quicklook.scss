@@ -47,6 +47,16 @@
     margin: $tlp-spacing 0 0;
 }
 
+.document-quick-look-folder-action,
+.document-quick-look-file-action {
+    display: flex;
+    margin: $tlp-spacing 0 0 0;
+}
+
+.document-quick-look-folder-action-new-folder-button {
+    margin: 0 $tlp-half-spacing 0 0;
+}
+
 .document-quick-look-action-button-margin {
     margin: 0 $tlp-half-spacing 0 0;
 }

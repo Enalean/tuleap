@@ -25,7 +25,7 @@
         <p class="empty-page-text" v-translate>It's time to add new documents!</p>
         <div class="tlp-dropdown">
             <div class="tlp-dropdown-split-button">
-                <new-item-button class="tlp-button-primary tlp-button-large tlp-dropdown-split-button-main"/>
+                <new-item-button class="tlp-button-primary tlp-button-large tlp-dropdown-split-button-main" v-bind:item="current_folder"/>
                 <dropdown-button v-bind:is_in_large_mode="true"/>
             </div>
         </div>
@@ -33,12 +33,16 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 import EmptyFolderForWritersSvg from "./EmptyFolderForWritersSvg.vue";
 import NewItemButton from "../NewItem/NewItemButton.vue";
 import DropdownButton from "../Dropdown/DropdownButton.vue";
 
 export default {
     name: "EmptyFolderForWriters",
-    components: { EmptyFolderForWritersSvg, NewItemButton, DropdownButton }
+    components: { EmptyFolderForWritersSvg, NewItemButton, DropdownButton },
+    computed: {
+        ...mapState(["current_folder"])
+    }
 };
 </script>

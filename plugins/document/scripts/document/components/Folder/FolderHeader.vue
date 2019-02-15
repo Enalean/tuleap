@@ -27,7 +27,7 @@
         <div class="document-header-actions">
             <div class="tlp-dropdown" v-if="can_display_new_document_button">
                 <div class="tlp-dropdown-split-button">
-                    <new-item-button class="tlp-button-primary tlp-dropdown-split-button-main"/>
+                    <new-item-button class="tlp-button-primary tlp-dropdown-split-button-main" v-bind:item="current_folder"/>
                     <dropdown-button/>
                 </div>
                 <new-item-modal/>

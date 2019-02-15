@@ -21,18 +21,18 @@ import {
     addNewDocument,
     cancelUpload,
     deleteUserPreferenciesForFolderInProject,
+    deleteUserPreferenciesForUIInProject,
     deleteUserPreferenciesForUnderConstructionModal,
     getFolderContent,
     getItem,
     getProject,
-    patchUserPreferenciesForFolderInProject,
-    deleteUserPreferenciesForUIInProject
+    patchUserPreferenciesForFolderInProject
 } from "../api/rest-querier.js";
 
 import {
+    getErrorMessage,
     handleErrors,
-    handleErrorsForModal,
-    getErrorMessage
+    handleErrorsForModal
 } from "./actions-helpers/handle-errors.js";
 import { loadFolderContent } from "./actions-helpers/load-folder-content.js";
 import { loadAscendantHierarchy } from "./actions-helpers/load-ascendant-hierarchy.js";

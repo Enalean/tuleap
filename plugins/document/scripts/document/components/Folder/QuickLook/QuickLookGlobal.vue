@@ -87,6 +87,8 @@ export default {
                     name = "File";
                     break;
                 case TYPE_FOLDER:
+                    name = "Folder";
+                    break;
                 case TYPE_LINK:
                 case TYPE_WIKI:
                 case TYPE_EMBEDDED:
