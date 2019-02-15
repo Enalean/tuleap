@@ -26,8 +26,22 @@ class BaselinesResourceTest extends RestBase
 {
     public function testGetByArtifactIdAndDate()
     {
-        $url      = 'baselines/?' . http_build_query(['artifact_id' => 1, "date" => "1995-09-02"]);
-        $response = $this->getResponse($this->client->get($url));
-        $this->assertEquals("Resource under construction", $response->json());
+        $artifact = $this->fetchArtifact();
+
+        $url           = 'baselines/?' . http_build_query(['artifact_id' => $artifact['id'], "date" => "2017-09-02"]);
+        $response      = $this->getResponse($this->client->get($url));
+        $json_response = $response->json();
+
+        $this->assertEquals("old title", $json_response['artifact_title']);
+        $this->assertEquals(1479378846, $json_response['last_modification_date_before_baseline_date']);
+        $this->assertEquals("To be done", $json_response['artifact_status']);
+        $this->assertEquals("Artifact that will be moved in another tracker", $json_response['artifact_description']);
+    }
+
+    public function fetchArtifact(): array
+    {
+        $project_id = $this->project_ids["baseline-test"];
+        $trackers   = $this->tracker_ids[$project_id];
+        return $this->getArtifacts($trackers['base'])[0];
     }
 }

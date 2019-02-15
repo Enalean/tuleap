@@ -20,26 +20,49 @@
 
 namespace Tuleap\Baseline\REST;
 
+use Tracker_Artifact_ChangesetFactoryBuilder;
+use Tracker_ArtifactFactory;
 use Tuleap\REST\AuthenticatedResource;
+use Tuleap\REST\I18NRestException;
+use Tuleap\REST\ProjectStatusVerificator;
+use Tuleap\REST\UserManager;
 
 class BaselinesResource extends AuthenticatedResource
 {
     /**
-     * Get a virtual Baseline
+     * Get a virtual simplified Baseline
      *
      * Get a virtual Baseline based on artifact id and date
-     *
      *
      * @url    GET
      * @access public
      *
      * @param int    $artifact_id The artifact id {@from query}
-     * @param string $date        The baseline date {@from query}{@type date}
+     * @param string $date        format: YYYY-MM-DD {@from query}
      *
-     * @return string
+     * @return Tuleap\Baseline\REST\SimplifiedBaselineRepresentation
+     * @throws \Rest_Exception_InvalidTokenException
+     * @throws I18NRestException 401
+     * @throws I18NRestException 403
+     * @throws I18NRestException 404
+     * @throws \User_PasswordExpiredException
+     * @throws \User_StatusDeletedException
+     * @throws \User_StatusInvalidException
+     * @throws \User_StatusPendingException
+     * @throws \User_StatusSuspendedException
+     * @throws \Luracast\Restler\RestException
      */
-    public function getByArtifactIdAndDate(int $artifact_id, string $date)
+    public function getByArtifactIdAndDate(int $artifact_id, string $date): SimplifiedBaselineRepresentation
     {
-        return dgettext("tuleap-baseline", "Resource under construction");
+        $this->checkAccess();
+
+        $controller = new BaselinesController(
+            UserManager::build(),
+            Tracker_Artifact_ChangesetFactoryBuilder::build(),
+            Tracker_ArtifactFactory::instance(),
+            new FieldRepository(),
+            new ArtifactPermissionsChecker(UserManager::build(), ProjectStatusVerificator::build())
+        );
+        return $controller->getByArtifactIdAndDate($artifact_id, $date);
     }
 }

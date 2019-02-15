@@ -7,8 +7,20 @@ msgstr ""
 msgid "Baselines"
 msgstr ""
 
-msgid "Resource under construction"
+#, php-format
+msgid "Invalid date: %s. Expected format: %s"
+msgstr ""
+
+#, php-format
+msgid "No artifact found with id %u"
+msgstr ""
+
+#, php-format
+msgid "No changetset found at timestamp %u"
 msgstr ""
 
 msgid "Set and compare baseline of items"
+msgstr ""
+
+msgid "You cannot access to this artifact"
 msgstr ""

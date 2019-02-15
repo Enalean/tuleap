@@ -20,9 +20,20 @@ msgstr "Le service Baseline est désactivé pour ce projet"
 msgid "Baselines"
 msgstr "Baselines"
 
-msgid "Resource under construction"
-msgstr "Ressource en construction"
+#, php-format
+msgid "Invalid date: %s. Expected format: %s"
+msgstr "Date invalide %s. Format attendu : %s"
+
+#, php-format
+msgid "No artifact found with id %u"
+msgstr "Aucun artefact trouvé avec l'id %u"
+
+#, php-format
+msgid "No changetset found at timestamp %u"
+msgstr "Aucune modification pour cet horodatage %u"
 
 msgid "Set and compare baseline of items"
 msgstr "Poser des baselines et les comparer"
 
+msgid "You cannot access to this artifact"
+msgstr "Vous ne pouvez pas accéder à cet artefact"
