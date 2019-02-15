@@ -34,8 +34,9 @@ be added.
 * Benjamin Dauton
 * Sandra Echinard
 * Marie Ange Garnier
-* Thomas Gorka
 * Thomas Gerbet
+* Thomas Gorka
+* Martin Goyot
 * Joris Masson
 * Yannis Rossetto
 * Nicolas Terray
@@ -62,7 +63,6 @@ be added.
 * Yoann Celton
 * Mohamed Amine Doghri
 * Anthony Gauchy
-* Martin Goyot
 * Raphaël Hertzog
 * Ahmed Hosni
 * Hugo Kelfani
