@@ -20,7 +20,7 @@
 
 namespace Tuleap\Docman\REST\v1;
 
-final class FilePropertiesPOSTRepresentation
+final class FilePropertiesPOSTPATCHRepresentation
 {
     /**
      * @var string Name of the file {@from body} {@required true}

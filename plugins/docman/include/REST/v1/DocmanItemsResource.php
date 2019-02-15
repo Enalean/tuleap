@@ -43,6 +43,7 @@ use Tuleap\Docman\Notifications\NotificationEventAdder;
 use Tuleap\Docman\Upload\DocumentOngoingUploadDAO;
 use Tuleap\Docman\Upload\DocumentOngoingUploadRetriever;
 use Tuleap\Docman\Upload\DocumentToUploadCreator;
+use Tuleap\Docman\Upload\DocumentToUploadMaxSizeExceededException;
 use Tuleap\Docman\Upload\DocumentUploadFinisher;
 use Tuleap\Docman\Upload\DocumentUploadPathAllocator;
 use Tuleap\REST\AuthenticatedResource;
@@ -245,13 +246,14 @@ class DocmanItemsResource extends AuthenticatedResource
      * @access hybrid
      *
      * @param int $id Id of the item
+     * @param DocmanItemPATCHRepresentation $representation {@from body}
      *
      * @status 200
      * @throws 403
      * @throws 501
      */
 
-    public function patch(int $id)
+    public function patch(int $id, DocmanItemPATCHRepresentation $representation)
     {
         if (! \ForgeConfig::get('enable_patch_item_route')) {
             throw new RestException(
@@ -280,7 +282,8 @@ class DocmanItemsResource extends AuthenticatedResource
         try {
             $docman_item_updator->update(
                 $item,
-                $current_user
+                $current_user,
+                $representation
             );
         } catch (ExceptionDocumentHasApprovalTable $exception) {
             throw new I18NRestException(
@@ -291,6 +294,11 @@ class DocmanItemsResource extends AuthenticatedResource
             throw new I18NRestException(
                 403,
                 dgettext('tuleap-docman', 'Document is locked by another user.')
+            );
+        } catch (DocumentToUploadMaxSizeExceededException $exception) {
+            throw new RestException(
+                400,
+                $exception->getMessage()
             );
         }
 
