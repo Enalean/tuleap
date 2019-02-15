@@ -26,8 +26,8 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\DB\TransactionExecutor;
+use Tuleap\Tracker\Workflow\Transition\Condition\ConditionsUpdater;
 use Tuleap\Tracker\Workflow\Transition\NoSiblingTransitionException;
-use Tuleap\Tracker\Workflow\Transition\TransitionUpdater;
 use Tuleap\Tracker\Workflow\Transition\Update\TransitionCollection;
 use Tuleap\Tracker\Workflow\Transition\Update\TransitionRetriever;
 
@@ -46,7 +46,7 @@ class TransitionPatcherTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->updater              = Mockery::mock(TransitionUpdater::class);
+        $this->updater              = Mockery::mock(ConditionsUpdater::class);
         $this->retriever            = Mockery::mock(TransitionRetriever::class);
         $this->transaction_executor = Mockery::mock(TransactionExecutor::class);
         $this->patcher              = new TransitionPatcher(

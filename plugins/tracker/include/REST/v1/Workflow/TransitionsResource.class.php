@@ -63,9 +63,9 @@ use Tuleap\Tracker\Workflow\PostAction\Update\Internal\SetIntValueUpdater;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\SetIntValueValidator;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\UnknownPostActionIdsException;
 use Tuleap\Tracker\Workflow\PostAction\Update\PostActionCollectionUpdater;
+use Tuleap\Tracker\Workflow\Transition\Condition\ConditionsUpdateException;
+use Tuleap\Tracker\Workflow\Transition\Condition\ConditionsUpdater;
 use Tuleap\Tracker\Workflow\Transition\OrphanTransitionException;
-use Tuleap\Tracker\Workflow\Transition\TransitionUpdateException;
-use Tuleap\Tracker\Workflow\Transition\TransitionUpdater;
 use Tuleap\Tracker\Workflow\Transition\Update\TransitionRetriever;
 use WorkflowFactory;
 
@@ -75,15 +75,8 @@ class TransitionsResource extends AuthenticatedResource
 
     /** @var UserManager */
     private $user_manager;
-    /** @var TransitionPatcher */
-    private $transition_patcher;
     /** @var TransitionPOSTHandler */
     private $post_handler;
-
-    /**
-     * @var TransitionRetriever
-     */
-    private $transition_retriever;
 
     public function __construct()
     {
@@ -91,22 +84,13 @@ class TransitionsResource extends AuthenticatedResource
         $tracker_factory            = $this->getTrackerFactory();
         $project_status_verificator = ProjectStatusVerificator::build();
         $permissions_checker        = $this->getPermissionsChecker();
-        $transition_factory         = $this->getTransitionFactory();
-        $transition_dao             = new \Workflow_TransitionDao();
-        $transaction_executor       = new TransactionExecutor(new DataAccessObject());
-        $this->transition_retriever = new TransitionRetriever($transition_dao, $transition_factory);
-        $this->transition_patcher   = new TransitionPatcher(
-            new TransitionUpdater($transition_factory, $transaction_executor),
-            $this->transition_retriever,
-            $transaction_executor
-        );
         $this->post_handler         = new TransitionPOSTHandler(
             $this->user_manager,
             $tracker_factory,
             $project_status_verificator,
             $permissions_checker,
             WorkflowFactory::instance(),
-            $transition_factory,
+            $this->getTransitionFactory(),
             new TransitionValidator()
         );
     }
@@ -197,13 +181,13 @@ class TransitionsResource extends AuthenticatedResource
      *
      * <br />Parameter "is_comment_required" is not taken into account for transition from (New Artifact).
      *
-     * @url PATCH {id}
+     * @url    PATCH {id}
      *
      * @status 200
      *
      * @access protected
      *
-     * @param int $id Transition id
+     * @param int                                   $id                    Transition id
      * @param WorkflowTransitionPATCHRepresentation $transition_conditions The new transition representation
      *
      * @throws I18NRestException 400
@@ -212,6 +196,8 @@ class TransitionsResource extends AuthenticatedResource
      * @throws RestException 403
      * @throws RestException 404
      * @throws OrphanTransitionException
+     * @throws \User_LoginException
+     * @throws \Rest_Exception_InvalidTokenException
      */
     public function patchTransition($id, $transition_conditions)
     {
@@ -229,9 +215,15 @@ class TransitionsResource extends AuthenticatedResource
         $project = $transition->getWorkflow()->getTracker()->getProject();
         ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt($project);
 
+        $handler = new TransitionPatcher(
+            $this->getConditionsUpdater(),
+            $this->getTransitionRetriever(),
+            $this->getTransactionExecutor()
+        );
+
         try {
-            $this->transition_patcher->patch($transition, $transition_conditions);
-        } catch (TransitionUpdateException $exception) {
+            $handler->patch($transition, $transition_conditions);
+        } catch (ConditionsUpdateException $exception) {
             throw new I18NRestException(400, dgettext('tuleap-tracker', 'The transition has not been updated.'));
         }
     }
@@ -406,7 +398,7 @@ class TransitionsResource extends AuthenticatedResource
                 ProjectStatusVerificator::build(),
                 $this->getPostActionCollectionJsonParser(),
                 $this->getPostActionCollectionUpdater(),
-                $this->transition_retriever
+                $this->getTransitionRetriever()
             );
 
             $handler->handle($current_user, $transition, $post_actions_representation);
@@ -470,6 +462,11 @@ class TransitionsResource extends AuthenticatedResource
         );
     }
 
+    private function getTransactionExecutor(): TransactionExecutor
+    {
+        return new TransactionExecutor(new DataAccessObject());
+    }
+
     private function getPostActionCollectionUpdater(): PostActionCollectionUpdater
     {
         $ids_validator        = new PostActionIdValidator();
@@ -477,9 +474,7 @@ class TransitionsResource extends AuthenticatedResource
         $form_element_factory = \Tracker_FormElementFactory::instance();
 
         return new PostActionCollectionUpdater(
-            new TransactionExecutor(
-                new DataAccessObject()
-            ),
+            $this->getTransactionExecutor(),
             new CIBuildUpdater(
                 new CIBuildRepository(
                     new Transition_PostAction_CIBuildDao()
@@ -508,5 +503,19 @@ class TransitionsResource extends AuthenticatedResource
                 new SetFloatValueValidator($ids_validator, $field_ids_validator, $form_element_factory)
             )
         );
+    }
+
+    private function getConditionsUpdater(): ConditionsUpdater
+    {
+        return new ConditionsUpdater(
+            $this->getTransitionFactory(),
+            \Workflow_Transition_ConditionFactory::build(),
+            $this->getTransactionExecutor()
+        );
+    }
+
+    private function getTransitionRetriever(): TransitionRetriever
+    {
+        return new TransitionRetriever(new \Workflow_TransitionDao(), $this->getTransitionFactory());
     }
 }
