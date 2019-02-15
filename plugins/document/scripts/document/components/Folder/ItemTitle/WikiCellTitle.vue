@@ -24,7 +24,7 @@
         <fake-caret v-bind:item="item"/>
         <i class="fa fa-fw document-folder-content-icon" v-bind:class="icon"></i>
         <a v-bind:href="wiki_html_url" class="document-folder-subitem-link">
-            {{ item.title }}
+            {{ title }}
         </a>
     </div>
 </template>
@@ -32,6 +32,7 @@
 <script>
 import FakeCaret from "./FakeCaret.vue";
 import { ICON_WIKI } from "../../../constants.js";
+import { getTitleWithElipsisIfNeeded } from "../../../helpers/cell-title-formatter.js";
 
 export default {
     name: "WikiCellTitle",
@@ -45,6 +46,9 @@ export default {
         },
         icon() {
             return ICON_WIKI;
+        },
+        title() {
+            return getTitleWithElipsisIfNeeded(this.item);
         }
     }
 };

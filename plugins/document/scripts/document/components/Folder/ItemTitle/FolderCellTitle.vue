@@ -33,7 +33,7 @@
            }"
         ></i>
         <a v-on:click.prevent="goToFolder" v-bind:href="folder_href" class="document-folder-subitem-link">
-            {{ item.title }}
+            {{ title }}
         </a>
     </div>
 </template>
@@ -41,6 +41,7 @@
 <script>
 import { mapState, mapGetters } from "vuex";
 import { abortCurrentUploads } from "../../../helpers/abort-current-uploads.js";
+import { getTitleWithElipsisIfNeeded } from "../../../helpers/cell-title-formatter.js";
 
 export default {
     name: "FolderCellTitle",
@@ -73,6 +74,9 @@ export default {
         },
         is_folded() {
             return this.folded_items_ids.includes(this.item.id);
+        },
+        title() {
+            return getTitleWithElipsisIfNeeded(this.item);
         }
     },
     mounted() {
