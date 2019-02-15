@@ -33,8 +33,8 @@
                                 {{^ is_mandatory }}<option value="">{{# gettext }}Choose a category…{{/gettext}}</option>{{/is_mandatory}}
                             {{/is_multiple}}
                             {{# values }}
-                                <option {{# is_selected }}selected{{/ is_selected }} data-fullpath="{{ fullpath }}" value="{{ id }}">
-                                    {{ label }}
+                                <option {{# is_selected }}selected{{/ is_selected }} data-label="{{ label }}" value="{{ id }}">
+                                    {{ fullpath }}
                                 </option>
                             {{/values}}
                         </select>

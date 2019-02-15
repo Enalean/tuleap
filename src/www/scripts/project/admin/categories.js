@@ -38,12 +38,12 @@ function instantiateSelect2(select_category) {
         placeholder: select_category.dataset.placeholder,
         allowClear: true,
         maximumSelectionLength: select_category.dataset.maximumSelectionLength,
-        templateResult: result => {
-            if (!result.element) {
-                return result.text;
+        templateSelection: state => {
+            if (!state.element) {
+                return state.text;
             }
 
-            return result.element.dataset.fullpath;
+            return state.element.dataset.label;
         }
     }).on("change", function() {
         checkMultipleSelectRespectsMaximumSelectionLength(select_category);
