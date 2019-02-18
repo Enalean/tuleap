@@ -44,15 +44,21 @@ class DocmanItemUpdator
      * @var VersionToUploadCreator
      */
     private $creator;
+    /**
+     * @var VersionToUploadVisitorBeforeUpdateValidator
+     */
+    private $before_update_validator;
 
     public function __construct(
         ApprovalTableRetriever $approval_table_retriever,
         Docman_LockFactory $lock_factory,
-        VersionToUploadCreator $creator
+        VersionToUploadCreator $creator,
+        VersionToUploadVisitorBeforeUpdateValidator $before_update_validator
     ) {
         $this->approval_table_retriever = $approval_table_retriever;
         $this->lock_factory             = $lock_factory;
         $this->creator                  = $creator;
+        $this->before_update_validator  = $before_update_validator;
     }
 
     /**
@@ -73,6 +79,8 @@ class DocmanItemUpdator
         if ($lock_infos && (int)$lock_infos['user_id'] !== $user->getId()) {
             throw new ExceptionItemIsLockedByAnotherUser();
         }
+
+        $item->accept($this->before_update_validator, []);
 
         try {
             $document_to_upload = $this->creator->create(

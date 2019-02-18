@@ -281,7 +281,8 @@ class DocmanItemsResource extends AuthenticatedResource
         $docman_item_updator = new DocmanItemUpdator(
             new ApprovalTableRetriever(new \Docman_ApprovalTableFactoriesFactory()),
             new Docman_LockFactory(),
-            new VersionToUploadCreator(new DocumentOnGoingVersionToUploadDAO())
+            new VersionToUploadCreator(new DocumentOnGoingVersionToUploadDAO()),
+            new VersionToUploadVisitorBeforeUpdateValidator()
         );
 
         try {

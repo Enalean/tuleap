@@ -35,6 +35,10 @@ class DocmanItemUpdatorTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
     /**
+     * @var Mockery\MockInterface|VersionToUploadVisitorBeforeUpdateValidator
+     */
+    private $visitor_checker;
+    /**
      * @var Mockery\MockInterface|VersionToUploadCreator
      */
     private $creator;
@@ -59,8 +63,14 @@ class DocmanItemUpdatorTest extends TestCase
         $this->approval_table_retriever = Mockery::mock(ApprovalTableRetriever::class);
         $this->lock_factory             = Mockery::mock(\Docman_LockFactory::class);
         $this->creator                  = Mockery::mock(VersionToUploadCreator::class);
+        $this->visitor_checker          = Mockery::mock(VersionToUploadVisitorBeforeUpdateValidator::class);
 
-        $this->updator = new DocmanItemUpdator($this->approval_table_retriever, $this->lock_factory, $this->creator);
+        $this->updator = new DocmanItemUpdator(
+            $this->approval_table_retriever,
+            $this->lock_factory,
+            $this->creator,
+            $this->visitor_checker
+        );
     }
 
     public function testItThrowsAnExceptionWhenDocumentHasAnApprovalTable()
@@ -122,6 +132,8 @@ class DocmanItemUpdatorTest extends TestCase
         $version_id = 1;
         $version_to_upload = new VersionToUpload($version_id);
         $this->creator->shouldReceive('create')->once()->andReturn($version_to_upload);
+
+        $item->shouldReceive('accept')->withArgs([$this->visitor_checker, []]);
 
         $created_version_representation =  $this->updator->update($item, $user, $representation);
 
