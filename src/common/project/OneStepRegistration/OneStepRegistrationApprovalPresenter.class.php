@@ -1,6 +1,6 @@
 <?php
 /**
-  * Copyright (c) Enalean, 2015. All rights reserved
+  * Copyright (c) Enalean, 2015 - 2019. All rights reserved
   *
   * This file is a part of Tuleap.
   *
@@ -28,7 +28,7 @@ class Project_OneStepRegistration_OneStepRegistrationApprovalPresenter {
     }
 
     public function get_section_one() {
-        return $GLOBALS['Language']->getText('register_confirmation_approval_project_one_step', 'section_one');
+        return "";
     }
 
     public function get_section_two() {
