@@ -30,6 +30,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
 use PHPUnit\Framework\TestCase;
 use Transition_PostAction_CIBuildDao;
+use Tuleap\Tracker\Workflow\PostAction\Update\CIBuild;
 use Tuleap\Tracker\Workflow\PostAction\Update\TransitionFactory;
 
 class CIBuildRepositoryTest extends TestCase

@@ -26,7 +26,7 @@ require_once __DIR__ . '/../../../../../bootstrap.php';
 use Mockery;
 use PHPUnit\Framework\TestCase;
 use Tuleap\REST\I18NRestException;
-use Tuleap\Tracker\Workflow\PostAction\Update\Internal\SetFloatValue;
+use Tuleap\Tracker\Workflow\PostAction\Update\SetFloatValue;
 use Workflow;
 
 class SetFloatValueJsonParserTest extends TestCase

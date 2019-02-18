@@ -28,7 +28,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
 use PHPUnit\Framework\TestCase;
 use Tuleap\REST\I18NRestException;
-use Tuleap\Tracker\Workflow\PostAction\Update\Internal\CIBuild;
+use Tuleap\Tracker\Workflow\PostAction\Update\CIBuild;
 use Tuleap\Tracker\Workflow\PostAction\Update\PostActionCollection;
 use Workflow;
 

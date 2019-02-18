@@ -25,6 +25,7 @@ use DataAccessQueryException;
 use Transition;
 use Transition_PostAction_Field_DateDao;
 use Tuleap\DB\DataAccessObject;
+use Tuleap\Tracker\Workflow\PostAction\Update\SetDateValue;
 
 /**
  * Anti-corruption layer around Transition_PostAction_Field_DateDao, dedicated to Set Date Value updates.

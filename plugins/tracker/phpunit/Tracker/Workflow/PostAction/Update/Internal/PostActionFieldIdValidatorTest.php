@@ -24,6 +24,7 @@ require_once __DIR__ . '/../../../../../bootstrap.php';
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Tracker\Workflow\PostAction\Update\SetDateValue;
 
 class PostActionFieldIdValidatorTest extends TestCase
 {

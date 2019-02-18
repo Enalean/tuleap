@@ -27,7 +27,7 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\REST\I18NRestException;
-use Tuleap\Tracker\Workflow\PostAction\Update\Internal\SetIntValue;
+use Tuleap\Tracker\Workflow\PostAction\Update\SetIntValue;
 use Workflow;
 
 class SetIntValueJsonParserTest extends TestCase

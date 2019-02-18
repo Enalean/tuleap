@@ -25,6 +25,7 @@ use DataAccessQueryException;
 use Transition;
 use Transition_PostAction_Field_FloatDao;
 use Tuleap\DB\DataAccessObject;
+use Tuleap\Tracker\Workflow\PostAction\Update\SetFloatValue;
 
 /**
  * Anti-corruption layer around Transition_PostAction_Field_FloatDao, dedicated to Set Float Value updates.

@@ -27,7 +27,7 @@ use Mockery;
 use PHPUnit\Framework\TestCase;
 use Transition_PostAction_Field_Date;
 use Tuleap\REST\I18NRestException;
-use Tuleap\Tracker\Workflow\PostAction\Update\Internal\SetDateValue;
+use Tuleap\Tracker\Workflow\PostAction\Update\SetDateValue;
 use Workflow;
 
 class SetDateValueJsonParserTest extends TestCase

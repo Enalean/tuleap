@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Workflow\PostAction\Update\Internal;
 
+use Tuleap\Tracker\Workflow\PostAction\Update\SetIntValue;
+
 class SetIntValueValidator
 {
     /**
