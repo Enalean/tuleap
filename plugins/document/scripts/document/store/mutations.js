@@ -48,7 +48,7 @@ export {
     addFileInUploadsList,
     removeFileFromUploadsList,
     emptyFilesUploadsList,
-    addFileToFoldedFolder,
+    addDocumentToFoldedFolder,
     toggleCollapsedFolderHasUploadingContent,
     updateFolderProgressbar,
     initializeFolderProperties,
@@ -190,7 +190,7 @@ function foldFolderContent(state, folder_id) {
     state.folded_by_map[folder_id] = folded_content;
 }
 
-function addFileToFoldedFolder(state, [parent, item, should_display_fake_item]) {
+function addDocumentToFoldedFolder(state, [parent, item, should_display_fake_item]) {
     if (!should_display_fake_item) {
         if (!state.folded_by_map[parent.id]) {
             state.folded_by_map[parent.id] = [];

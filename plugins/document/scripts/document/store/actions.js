@@ -76,6 +76,9 @@ export const createNewItem = async (context, [item, parent]) => {
             const created_item = await getItem(item_reference.id);
             flagItemAsCreated(context, created_item);
 
+            if (!parent.is_expanded) {
+                context.commit("addDocumentToFoldedFolder", [parent, created_item, false]);
+            }
             return Promise.resolve(
                 context.commit("addJustCreatedItemToFolderContent", created_item)
             );
@@ -221,7 +224,7 @@ async function createNewFile(
     fake_item.uploader = uploadFile(context, dropped_file, fake_item, new_file, parent);
 
     context.commit("addJustCreatedItemToFolderContent", fake_item);
-    context.commit("addFileToFoldedFolder", [parent, fake_item, should_display_fake_item]);
+    context.commit("addDocumentToFoldedFolder", [parent, fake_item, should_display_fake_item]);
     context.commit("addFileInUploadsList", fake_item);
 }
 
