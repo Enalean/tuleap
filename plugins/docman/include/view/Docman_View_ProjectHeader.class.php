@@ -1,21 +1,30 @@
 <?php
-
 /**
-* Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
-* 
-* 
-*
-* Docman_View_ProjectHeader
-*/
-
-require_once('Docman_View_Header.class.php');
+ * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 /* abstract */ class Docman_View_ProjectHeader extends Docman_View_Header {
     
     /* protected */ function _scripts($params) {
         echo '<script type="text/javascript"> var docman = new com.xerox.codendi.Docman('. $params['group_id'] .', ';
         $di = $this->_getDocmanIcons($params);
-        echo $this->phpArrayToJsArray(array_merge(array(
+        echo json_encode(array_merge(array(
                 'folderSpinner' => $di->getFolderSpinner(),
                 'spinner'       => $di->getSpinner(),
                 'pluginPath'    => $this->_controller->pluginPath,

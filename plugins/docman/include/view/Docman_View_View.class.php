@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2011 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -245,7 +245,7 @@
         $user = $this->_controller->getUser();
         $itemMenuVisitor = new Docman_View_GetMenuItemsVisitor($user, $item->getGroupId());
         $user_actions = $item->accept($itemMenuVisitor, $params);
-        $js .= $this->phpArrayToJsArray($user_actions);
+        $js .= json_encode($user_actions);
         $js .= ");\n";
         return $js;
     }
@@ -265,33 +265,5 @@
         $html .= '</a>';
         $html .= '</span>';
         return $html;
-    }
-
-    /**
-     * Convert a php array to JSON encoding
-     * FIXME: use json_encode instead
-     */
-    function phpArrayToJsArray($array) {
-        if (is_array($array)) {
-            if (count($array)) {
-                $output = '{';
-                reset($array);
-                $comma = '';
-                do {
-                    if(list($key, $value) = each($array)) {
-                        $output .= $comma . $key .': '. $this->phpArrayToJsArray($value);
-                        $comma = ', ';
-                    }
-                } while($key);
-                $output .= '}';
-            } else {
-                $output = '{}';
-            }
-        } else if (is_bool($array)) {
-            $output = $array?'true':'false';
-        } else {
-            $output = "'". addslashes($array) ."'";
-        }
-        return $output;
     }
 }

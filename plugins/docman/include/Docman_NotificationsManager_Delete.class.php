@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -46,11 +46,14 @@ class Docman_NotificationsManager_Delete extends Docman_NotificationsManager
                 $last = end($l['items']);
                 //Search for parent
                 $p = null;
-                while (!$p && (list($k,) = each($last['events']))) {
-                    if (isset($last['events'][$k]['parent'])) {
-                        $p =  $last['events'][$k]['parent'];
-                        $t =  $last['events'][$k]['type'];
-                        $u = $last['events'][$k]['user'];
+                foreach ($last['events'] as $key => $v) {
+                    if (isset($last['events'][$key]['parent'])) {
+                        $p =  $last['events'][$key]['parent'];
+                        $t =  $last['events'][$key]['type'];
+                        $u = $last['events'][$key]['user'];
+                    }
+                    if ($p !== null) {
+                        break;
                     }
                 }
                 $this->_addMessage(
@@ -78,9 +81,11 @@ class Docman_NotificationsManager_Delete extends Docman_NotificationsManager
                     // - A/B has been removed
                     // We keep only the second notifications
                     $found = false;
-                    reset($i['events']);
-                    while (!$found && (list($k,$v) = each($i['events']))) {
+                    foreach ($i['events'] as $v) {
                         $found = $v['type'] == self::MESSAGE_REMOVED;
+                        if ($found) {
+                            break;
+                        }
                     }
                     if ($found) {
                         $e = $v;
