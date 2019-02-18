@@ -26,6 +26,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Docman\Tus\TusFileInformation;
+use Tuleap\Docman\Upload\Document\DocumentOngoingUploadDAO;
 use Tuleap\ForgeConfigSandbox;
 
 class DocumentUploadCancelerTest extends TestCase

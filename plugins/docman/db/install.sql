@@ -421,6 +421,19 @@ CREATE TABLE plugin_docman_new_document_upload (
     INDEX idx_expiration_date (expiration_date)
 ) ENGINE=InnoDB;
 
+DROP TABLE IF EXISTS plugin_docman_new_version_upload;
+CREATE TABLE plugin_docman_new_version_upload(
+    id INT(11) UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    expiration_date INT(11) UNSIGNED NOT NULL,
+    item_id INT(11) UNSIGNED NOT NULL,
+    version_title TEXT NULL,
+    changelog TEXT NULL,
+    user_id INT(11) UNSIGNED NOT NULL,
+    filename TEXT NULL,
+    filesize INT(11) UNSIGNED NULL,
+    INDEX idx_expiration_date (expiration_date)
+) ENGINE=InnoDB;
+
 -- Enable service for project 1 and 100
 INSERT INTO service(group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES ( 100 , 'plugin_docman:service_lbl_key' , 'plugin_docman:service_desc_key' , 'docman', '/plugins/docman/?group_id=$group_id', 1 , 0 , 'system',  95 );
 

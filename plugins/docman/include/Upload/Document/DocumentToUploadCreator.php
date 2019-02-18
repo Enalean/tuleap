@@ -18,7 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Docman\Upload;
+namespace Tuleap\Docman\Upload\Document;
+
+use Tuleap\Docman\Upload\UploadCreationConflictException;
+use Tuleap\Docman\Upload\UploadCreationFileMismatchException;
+use Tuleap\Docman\Upload\UploadMaxSizeExceededException;
 
 class DocumentToUploadCreator
 {
@@ -44,7 +48,7 @@ class DocumentToUploadCreator
         $filesize
     ) {
         if ((int) $filesize > (int) \ForgeConfig::get('sys_max_size_upload')) {
-            throw new DocumentToUploadMaxSizeExceededException(
+            throw new UploadMaxSizeExceededException(
                 (int) $filesize,
                 (int) \ForgeConfig::get('sys_max_size_upload')
             );
@@ -73,10 +77,10 @@ class DocumentToUploadCreator
             if (count($rows) === 1) {
                 $row = $rows[0];
                 if ($row['user_id'] !== (int) $user->getId()) {
-                    throw new DocumentToUploadCreationConflictException();
+                    throw new UploadCreationConflictException();
                 }
                 if ($row['filename'] !== $filename || (int) $filesize !== $row['filesize']) {
-                    throw new DocumentToUploadCreationFileMismatchException();
+                    throw new UploadCreationFileMismatchException();
                 }
                 $item_id = $row['item_id'];
                 return;

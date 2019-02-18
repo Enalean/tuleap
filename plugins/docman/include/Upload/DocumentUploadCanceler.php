@@ -24,6 +24,7 @@ namespace Tuleap\Docman\Upload;
 
 use Tuleap\Docman\Tus\TusFileInformation;
 use Tuleap\Docman\Tus\TusTerminaterDataStore;
+use Tuleap\Docman\Upload\Document\DocumentOngoingUploadDAO;
 
 final class DocumentUploadCanceler implements TusTerminaterDataStore
 {

@@ -21,8 +21,8 @@
 namespace Tuleap\Docman\REST\v1;
 
 use Tuleap\Docman\Tus\CannotWriteFileException;
+use Tuleap\Docman\Upload\Document\DocumentToUpload;
 use Tuleap\Docman\Upload\DocumentAlreadyUploadedInformation;
-use Tuleap\Docman\Upload\DocumentToUpload;
 use Tuleap\Docman\Upload\DocumentUploadFinisher;
 use Tuleap\Docman\Upload\DocumentUploadPathAllocator;
 

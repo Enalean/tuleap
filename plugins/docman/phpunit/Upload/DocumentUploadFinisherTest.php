@@ -25,6 +25,7 @@ use Docman_VersionFactory;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Docman\Upload\Document\DocumentOngoingUploadDAO;
 use Tuleap\ForgeConfigSandbox;
 
 class DocumentUploadFinisherTest extends TestCase

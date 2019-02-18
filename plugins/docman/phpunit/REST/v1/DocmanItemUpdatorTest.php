@@ -28,11 +28,16 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
-use Tuleap\Docman\Upload\DocumentToUploadMaxSizeExceededException;
+use Tuleap\Docman\Upload\Version\VersionToUpload;
+use Tuleap\Docman\Upload\Version\VersionToUploadCreator;
 
 class DocmanItemUpdatorTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+    /**
+     * @var Mockery\MockInterface|VersionToUploadCreator
+     */
+    private $creator;
     /**
      * @var \Docman_LockFactory|Mockery\MockInterface
      */
@@ -52,9 +57,10 @@ class DocmanItemUpdatorTest extends TestCase
         parent::setUp();
 
         $this->approval_table_retriever = Mockery::mock(ApprovalTableRetriever::class);
-        $this->lock_factory = Mockery::mock(\Docman_LockFactory::class);
+        $this->lock_factory             = Mockery::mock(\Docman_LockFactory::class);
+        $this->creator                  = Mockery::mock(VersionToUploadCreator::class);
 
-        $this->updator = new DocmanItemUpdator($this->approval_table_retriever, $this->lock_factory);
+        $this->updator = new DocmanItemUpdator($this->approval_table_retriever, $this->lock_factory, $this->creator);
     }
 
     public function testItThrowsAnExceptionWhenDocumentHasAnApprovalTable()
@@ -92,7 +98,7 @@ class DocmanItemUpdatorTest extends TestCase
         $this->updator->update($item, $user, $representation);
     }
 
-    public function testItThrowsAnExceptionWhenDocumentSizeExceedMaxAllowedSize()
+    public function testItShouldStoreTheNewVersionWhenFileRepresentationIsCorrect()
     {
         $item = Mockery::mock(Docman_Item::class);
         $user = Mockery::mock(\PFUser::class);
@@ -111,10 +117,14 @@ class DocmanItemUpdatorTest extends TestCase
         $representation->version_title              = 'version title';
         $representation->file_properties            = new FilePropertiesPOSTPATCHRepresentation();
         $representation->file_properties->file_name = 'file';
-        $representation->file_properties->file_size = 999999999999;
+        $representation->file_properties->file_size = 0;
 
-        $this->expectException(DocumentToUploadMaxSizeExceededException::class);
+        $version_id = 1;
+        $version_to_upload = new VersionToUpload($version_id);
+        $this->creator->shouldReceive('create')->once()->andReturn($version_to_upload);
 
-        $this->updator->update($item, $user, $representation);
+        $created_version_representation =  $this->updator->update($item, $user, $representation);
+
+        $this->assertEquals("/uploads/docman/version/1", $created_version_representation->upload_href);
     }
 }

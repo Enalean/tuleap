@@ -25,6 +25,7 @@ namespace Tuleap\Docman\Upload;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
+use Tuleap\Docman\Upload\Document\DocumentOngoingUploadDAO;
 
 class DocumentBeingUploadedInformationProviderTest extends TestCase
 {

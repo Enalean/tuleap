@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,12 +18,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Docman\Upload;
+declare(strict_types = 1);
+
+namespace Tuleap\Docman\Upload\Version;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Docman\Upload\UploadCreationConflictException;
+use Tuleap\Docman\Upload\UploadCreationFileMismatchException;
+use Tuleap\Docman\Upload\UploadMaxSizeExceededException;
 
-class DocumentToUploadCreatorTest extends TestCase
+class VersionToUploadCreatorTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -34,7 +39,7 @@ class DocumentToUploadCreatorTest extends TestCase
     {
         \ForgeConfig::store();
 
-        $this->dao = \Mockery::mock(DocumentOngoingUploadDAO::class);
+        $this->dao = \Mockery::mock(DocumentOnGoingVersionToUploadDAO::class);
 
         $this->mockery_matcher_callback_wrapped_operations = \Mockery::on(
             function (callable $operations) {
@@ -44,7 +49,7 @@ class DocumentToUploadCreatorTest extends TestCase
         );
     }
 
-    public function tearDown() : void
+    public function tearDown()  : void
     {
         \ForgeConfig::restore();
     }
@@ -52,35 +57,35 @@ class DocumentToUploadCreatorTest extends TestCase
     public function testCreation()
     {
         $this->dao->shouldReceive('wrapAtomicOperations')->with($this->mockery_matcher_callback_wrapped_operations);
-        $creator = new DocumentToUploadCreator($this->dao);
+        $creator = new VersionToUploadCreator($this->dao);
 
         \ForgeConfig::set('sys_max_size_upload', '999999');
-        $parent_item = \Mockery::mock(\Docman_Item::class);
-        $parent_item->shouldReceive('getId')->andReturns(11);
+        $item = \Mockery::mock(\Docman_Item::class);
+        $item->shouldReceive('getId')->andReturns(11);
         $user = \Mockery::mock(\PFUser::class);
         $user->shouldReceive('getId')->andReturns(102);
         $current_time = new \DateTimeImmutable();
 
-        $this->dao->shouldReceive('searchDocumentOngoingUploadByParentIDTitleAndExpirationDate')->andReturns([]);
-        $this->dao->shouldReceive('saveDocumentOngoingUpload')->once()->andReturns(12);
+        $this->dao->shouldReceive('searchDocumentVersionOngoingUploadByItemIdAndExpirationDate')->andReturns([]);
+        $this->dao->shouldReceive('saveDocumentVersionOngoingUpload')->once()->andReturns(12);
 
         $document_to_upload = $creator->create(
-            $parent_item,
+            $item,
             $user,
             $current_time,
-            'title',
-            'description',
+            'version title',
+            'changelog',
             'filename',
             123456
         );
 
-        $this->assertSame(12, $document_to_upload->getItemId());
+        $this->assertSame(12, $document_to_upload->getVersionId());
     }
 
     public function testANewItemIsNotCreatedIfAnUploadIsOngoingWithTheSameFile()
     {
         $this->dao->shouldReceive('wrapAtomicOperations')->with($this->mockery_matcher_callback_wrapped_operations);
-        $creator = new DocumentToUploadCreator($this->dao);
+        $creator = new VersionToUploadCreator($this->dao);
 
         \ForgeConfig::set('sys_max_size_upload', '999999');
         $parent_item = \Mockery::mock(\Docman_Item::class);
@@ -89,27 +94,29 @@ class DocumentToUploadCreatorTest extends TestCase
         $user->shouldReceive('getId')->andReturns(102);
         $current_time = new \DateTimeImmutable();
 
-        $this->dao->shouldReceive('searchDocumentOngoingUploadByParentIDTitleAndExpirationDate')->andReturns([
-            ['item_id' => 12, 'user_id' => 102, 'filename' => 'filename', 'filesize' => 123456]
-        ]);
+        $this->dao->shouldReceive('searchDocumentVersionOngoingUploadByItemIdAndExpirationDate')->andReturns(
+            [
+                ['id' => 12, 'user_id' => 102, 'filename' => 'filename', 'filesize' => 123456]
+            ]
+        );
 
         $document_to_upload = $creator->create(
             $parent_item,
             $user,
             $current_time,
-            'title',
-            'description',
+            'version title',
+            'changelog',
             'filename',
             123456
         );
 
-        $this->assertSame(12, $document_to_upload->getItemId());
+        $this->assertSame(12, $document_to_upload->getVersionId());
     }
 
     public function testCreationIsRejectedWhenAnotherUserIsCreatingTheDocument()
     {
         $this->dao->shouldReceive('wrapAtomicOperations')->with($this->mockery_matcher_callback_wrapped_operations);
-        $creator = new DocumentToUploadCreator($this->dao);
+        $creator = new VersionToUploadCreator($this->dao);
 
         \ForgeConfig::set('sys_max_size_upload', '999999');
         $parent_item = \Mockery::mock(\Docman_Item::class);
@@ -118,18 +125,20 @@ class DocumentToUploadCreatorTest extends TestCase
         $user->shouldReceive('getId')->andReturns(102);
         $current_time = new \DateTimeImmutable();
 
-        $this->dao->shouldReceive('searchDocumentOngoingUploadByParentIDTitleAndExpirationDate')->andReturns([
-            ['user_id' => 103]
-        ]);
+        $this->dao->shouldReceive('searchDocumentVersionOngoingUploadByItemIdAndExpirationDate')->andReturns(
+            [
+                ['user_id' => 103]
+            ]
+        );
 
-        $this->expectException(DocumentToUploadCreationConflictException::class);
+        $this->expectException(UploadCreationConflictException::class);
 
         $creator->create(
             $parent_item,
             $user,
             $current_time,
-            'title',
-            'description',
+            'version title',
+            'changelog',
             'filename',
             123456
         );
@@ -138,7 +147,7 @@ class DocumentToUploadCreatorTest extends TestCase
     public function testCreationIsRejectedWhenTheUserIsAlreadyCreatingTheDocumentWithAnotherFile()
     {
         $this->dao->shouldReceive('wrapAtomicOperations')->with($this->mockery_matcher_callback_wrapped_operations);
-        $creator = new DocumentToUploadCreator($this->dao);
+        $creator = new VersionToUploadCreator($this->dao);
 
         \ForgeConfig::set('sys_max_size_upload', '999999');
         $parent_item = \Mockery::mock(\Docman_Item::class);
@@ -147,18 +156,20 @@ class DocumentToUploadCreatorTest extends TestCase
         $user->shouldReceive('getId')->andReturns(102);
         $current_time = new \DateTimeImmutable();
 
-        $this->dao->shouldReceive('searchDocumentOngoingUploadByParentIDTitleAndExpirationDate')->andReturns([
-            ['user_id' => 102, 'filename' => 'filename1', 'filesize' => 123456]
-        ]);
+        $this->dao->shouldReceive('searchDocumentVersionOngoingUploadByItemIdAndExpirationDate')->andReturns(
+            [
+                ['user_id' => 102, 'filename' => 'filename1', 'filesize' => 123456]
+            ]
+        );
 
-        $this->expectException(DocumentToUploadCreationFileMismatchException::class);
+        $this->expectException(UploadCreationFileMismatchException::class);
 
         $creator->create(
             $parent_item,
             $user,
             $current_time,
-            'title',
-            'description',
+            'version title',
+            'changelog',
             'filename2',
             789
         );
@@ -166,21 +177,21 @@ class DocumentToUploadCreatorTest extends TestCase
 
     public function testCreationIsRejectedIfTheFileIsBiggerThanTheConfigurationLimit()
     {
-        $creator = new DocumentToUploadCreator($this->dao);
+        $creator = new VersionToUploadCreator($this->dao);
 
         \ForgeConfig::set('sys_max_size_upload', '1');
-        $parent_item = \Mockery::mock(\Docman_Item::class);
-        $user = \Mockery::mock(\PFUser::class);
+        $parent_item  = \Mockery::mock(\Docman_Item::class);
+        $user         = \Mockery::mock(\PFUser::class);
         $current_time = new \DateTimeImmutable();
 
-        $this->expectException(DocumentToUploadMaxSizeExceededException::class);
+        $this->expectException(UploadMaxSizeExceededException::class);
 
         $creator->create(
             $parent_item,
             $user,
             $current_time,
-            'title',
-            'description',
+            'version title',
+            'changelog',
             'filename',
             2
         );

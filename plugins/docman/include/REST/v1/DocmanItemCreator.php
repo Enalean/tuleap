@@ -27,10 +27,10 @@ use PFUser;
 use Project;
 use Rule_Regexp;
 use Tuleap\Docman\Upload\DocumentOngoingUploadRetriever;
-use Tuleap\Docman\Upload\DocumentToUploadCreationConflictException;
-use Tuleap\Docman\Upload\DocumentToUploadCreationFileMismatchException;
-use Tuleap\Docman\Upload\DocumentToUploadCreator;
-use Tuleap\Docman\Upload\DocumentToUploadMaxSizeExceededException;
+use Tuleap\Docman\Upload\UploadCreationConflictException;
+use Tuleap\Docman\Upload\UploadCreationFileMismatchException;
+use Tuleap\Docman\Upload\Document\DocumentToUploadCreator;
+use Tuleap\Docman\Upload\UploadMaxSizeExceededException;
 use Valid_FTPURI;
 use Valid_LocalURI;
 
@@ -317,11 +317,11 @@ class DocmanItemCreator
 
                 return $representation;
             }
-        } catch (DocumentToUploadCreationConflictException $exception) {
+        } catch (UploadCreationConflictException $exception) {
             throw new RestException(409, $exception->getMessage());
-        } catch (DocumentToUploadCreationFileMismatchException $exception) {
+        } catch (UploadCreationFileMismatchException $exception) {
             throw new RestException(409, $exception->getMessage());
-        } catch (DocumentToUploadMaxSizeExceededException $exception) {
+        } catch (UploadMaxSizeExceededException $exception) {
             throw new RestException(400, $exception->getMessage());
         }
 

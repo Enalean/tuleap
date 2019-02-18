@@ -20,6 +20,8 @@
 
 namespace Tuleap\Docman\Upload;
 
+use Tuleap\Docman\Upload\Document\DocumentOngoingUploadDAO;
+
 final class DocumentUploadCleaner
 {
     /**

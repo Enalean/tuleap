@@ -15,6 +15,7 @@ DROP TABLE IF EXISTS plugin_docman_notification_ugroups;
 DROP TABLE IF EXISTS plugin_docman_version_deleted;
 DROP TABLE IF EXISTS plugin_docman_new_document_upload;
 DROP TABLE IF EXISTS plugin_docman_item_id;
+DROP TABLE IF EXISTS plugin_docman_new_version_upload;
 
 DELETE FROM service WHERE short_name='docman';
 

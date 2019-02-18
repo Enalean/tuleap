@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,30 +18,26 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Docman\Upload;
+declare(strict_types = 1);
 
-final class DocumentToUpload
+namespace Tuleap\Docman\Upload\Version;
+
+final class VersionToUpload
 {
-    private $item_id;
+    private $version_id;
 
-    public function __construct($item_id)
+    public function __construct(int $version_id)
     {
-        $this->item_id = $item_id;
+        $this->version_id = $version_id;
     }
 
-    /**
-     * @return int
-     */
-    public function getItemId()
+    public function getVersionId(): int
     {
-        return $this->item_id;
+        return $this->version_id;
     }
 
-    /**
-     * @return string
-     */
-    public function getUploadHref()
+    public function getUploadHref(): string
     {
-        return '/uploads/docman/file/' . urlencode($this->item_id);
+        return '/uploads/docman/version/' . $this->version_id;
     }
 }

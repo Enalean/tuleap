@@ -24,6 +24,7 @@ namespace Tuleap\Docman\Upload;
 
 use Tuleap\Docman\Tus\TusFileInformation;
 use Tuleap\Docman\Tus\TusFileInformationProvider;
+use Tuleap\Docman\Upload\Document\DocumentOngoingUploadDAO;
 
 final class DocumentBeingUploadedInformationProvider implements TusFileInformationProvider
 {

@@ -40,12 +40,14 @@ use Tuleap\Docman\Item\ItemIsNotAFolderException;
 use Tuleap\Docman\Log\LogEventAdder;
 use Tuleap\Docman\Notifications\NotificationBuilders;
 use Tuleap\Docman\Notifications\NotificationEventAdder;
-use Tuleap\Docman\Upload\DocumentOngoingUploadDAO;
+use Tuleap\Docman\Upload\Document\DocumentOngoingUploadDAO;
+use Tuleap\Docman\Upload\Document\DocumentToUploadCreator;
 use Tuleap\Docman\Upload\DocumentOngoingUploadRetriever;
-use Tuleap\Docman\Upload\DocumentToUploadCreator;
-use Tuleap\Docman\Upload\DocumentToUploadMaxSizeExceededException;
+use Tuleap\Docman\Upload\UploadMaxSizeExceededException;
 use Tuleap\Docman\Upload\DocumentUploadFinisher;
 use Tuleap\Docman\Upload\DocumentUploadPathAllocator;
+use Tuleap\Docman\Upload\Version\DocumentOnGoingVersionToUploadDAO;
+use Tuleap\Docman\Upload\Version\VersionToUploadCreator;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
@@ -248,6 +250,8 @@ class DocmanItemsResource extends AuthenticatedResource
      * @param int $id Id of the item
      * @param DocmanItemPATCHRepresentation $representation {@from body}
      *
+     * @return CreatedItemFilePropertiesRepresentation
+     *
      * @status 200
      * @throws 403
      * @throws 501
@@ -276,11 +280,12 @@ class DocmanItemsResource extends AuthenticatedResource
 
         $docman_item_updator = new DocmanItemUpdator(
             new ApprovalTableRetriever(new \Docman_ApprovalTableFactoriesFactory()),
-            new Docman_LockFactory()
+            new Docman_LockFactory(),
+            new VersionToUploadCreator(new DocumentOnGoingVersionToUploadDAO())
         );
 
         try {
-            $docman_item_updator->update(
+            return $docman_item_updator->update(
                 $item,
                 $current_user,
                 $representation
@@ -295,16 +300,12 @@ class DocmanItemsResource extends AuthenticatedResource
                 403,
                 dgettext('tuleap-docman', 'Document is locked by another user.')
             );
-        } catch (DocumentToUploadMaxSizeExceededException $exception) {
+        } catch (UploadMaxSizeExceededException $exception) {
             throw new RestException(
                 400,
                 $exception->getMessage()
             );
         }
-
-        throw new RestException(
-            501
-        );
     }
 
     private function getItemFactory($group_id = null)
