@@ -69,6 +69,9 @@ msgstr "Création de dossier, fichier, page wiki, de lien, d'élément vide."
 msgid "Current approval table state: {{ table_state }}."
 msgstr "État de la table d’approbation actuel: {{ table_state }}"
 
+msgid "Customs metadata"
+msgstr "Métadonnées personnalisées"
+
 msgid "Description"
 msgstr "Description"
 
@@ -100,6 +103,12 @@ msgstr "Vide"
 
 msgid "File"
 msgstr "Fichier"
+
+msgid ""
+"Generic information: id, title, description, created by, last update date"
+msgstr ""
+"Informations génériques : id, titre, description, créateur, date de dernière mise à "
+"jour"
 
 msgid "Go to my home page"
 msgstr "Aller à la page d'accueil"
@@ -152,6 +161,9 @@ msgstr "Nouveau dossier"
 msgid "OK, got it"
 msgstr "OK, compris"
 
+msgid "Obsolescence date and status"
+msgstr "Date d'obsolescence et status"
+
 msgid "Oops, there's an issue."
 msgstr "Oups, il y a eu un problème."
 
@@ -176,11 +188,17 @@ msgstr ""
 msgid "Please start again."
 msgstr "Merci de bien vouloir recommencer."
 
+msgid "Preview for images and embedded document"
+msgstr "Aperçu des images et des fichiers embarqués"
+
 msgid "Project documentation"
 msgstr "Documentation du projet"
 
 msgid "Quick look"
 msgstr "Aperçu"
+
+msgid "Quick look of documents or folders with:"
+msgstr "Aperçu des documents ou des dossiers avec :"
 
 msgid "Searching for items (will redirect you to the old results page)."
 msgstr ""

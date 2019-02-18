@@ -44,6 +44,23 @@
                 <li v-translate>
                     Searching for items (will redirect you to the old results page).
                 </li>
+                <li>
+                    <translate> Quick look of documents or folders with:</translate>
+                    <ul>
+                        <li>
+                            <translate>Preview for images and embedded document</translate>
+                        </li>
+                        <li>
+                            <translate>Generic information: id, title, description, created by, last update date</translate>
+                        </li>
+                        <li>
+                            <translate>Obsolescence date and status</translate>
+                        </li>
+                        <li>
+                            <translate>Customs metadata</translate>
+                        </li>
+                    </ul>
+                </li>
             </ul>
             <p v-translate>
                 You can switch to the old Document Manager UI whenever you want. (The switch is at the bottom of the page)
