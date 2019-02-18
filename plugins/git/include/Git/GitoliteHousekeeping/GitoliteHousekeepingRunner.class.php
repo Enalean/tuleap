@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,8 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
-require_once 'common/backend/BackendService.class.php';
 
 /**
  * I process the clean up of the gitolite admin working copy
@@ -74,13 +72,14 @@ class Git_GitoliteHousekeeping_GitoliteHousekeepingRunner {
         return $head_of_chain;
     }
 
-    private function setUpChainFromArrayOfCommands(array $commands) {
-        reset($commands);
-        $current = current($commands);
-        next($commands);
-        while (list(,$next) = each($commands)) {
-            $current->setNextCommand($next);
-            $current = $next;
+    private function setUpChainFromArrayOfCommands(array $commands)
+    {
+        $current_command = null;
+        foreach ($commands as $next_command) {
+            if ($current_command !== null) {
+                $current_command->setNextCommand($next_command);
+            }
+            $current_command = $next_command;
         }
     }
 }
