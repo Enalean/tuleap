@@ -236,7 +236,7 @@ class DocmanItemCreatorTest extends TestCase
         $post_representation->type                      = ItemRepresentation::TYPE_FILE;
         $post_representation->title                     = 'Title';
         $post_representation->parent_id                 = 11;
-        $file_properties_post_representation            = new FilePropertiesPOSTRepresentation();
+        $file_properties_post_representation            = new FilePropertiesPOSTPATCHRepresentation();
         $file_properties_post_representation->file_size = 123456;
         $file_properties_post_representation->file_name = 'myfile';
         $post_representation->file_properties           = $file_properties_post_representation;

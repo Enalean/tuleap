@@ -24,6 +24,7 @@ namespace Tuleap\Docman\REST\v1;
 
 use Docman_LockFactory;
 use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
+use Tuleap\Docman\Upload\DocumentToUploadMaxSizeExceededException;
 
 class DocmanItemUpdator
 {
@@ -45,8 +46,9 @@ class DocmanItemUpdator
     /**
      * @throws ExceptionDocumentHasApprovalTable
      * @throws ExceptionItemIsLockedByAnotherUser
+     * @throws DocumentToUploadMaxSizeExceededException
      */
-    public function update(\Docman_Item $item, \PFUser $user) : void
+    public function update(\Docman_Item $item, \PFUser $user, DocmanItemPATCHRepresentation $patch_representation) : void
     {
         $approval_table = $this->approval_table_retriever->retrieveByItem($item);
         if ($approval_table) {
@@ -57,6 +59,16 @@ class DocmanItemUpdator
 
         if ($lock_infos && (int)$lock_infos['user_id'] !== $user->getId()) {
             throw new ExceptionItemIsLockedByAnotherUser();
+        }
+
+        if ($patch_representation->file_properties) {
+            $file_size = $patch_representation->file_properties->file_size;
+            if ((int)$file_size > (int) \ForgeConfig::get('sys_max_size_upload')) {
+                throw new DocumentToUploadMaxSizeExceededException(
+                    (int) $file_size,
+                    (int) \ForgeConfig::get('sys_max_size_upload')
+                );
+            }
         }
     }
 }

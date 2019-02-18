@@ -296,7 +296,7 @@ class DocmanItemCreator
         $title,
         $description,
         \DateTimeImmutable $current_time,
-        FilePropertiesPOSTRepresentation $file_properties
+        FilePropertiesPOSTPATCHRepresentation $file_properties
     ) {
         try {
             $document_to_upload = $this->document_to_upload_creator->create(

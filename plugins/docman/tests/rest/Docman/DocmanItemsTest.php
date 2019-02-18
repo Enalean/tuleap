@@ -757,7 +757,13 @@ class DocmanItemsTest extends DocmanBase
         );
         $folder = $response->json();
 
-        $put_resource = json_encode([]);
+        $put_resource = json_encode(
+            [
+                'version_title'   => 'My version title',
+                'changelog'       => 'I have changed',
+                'file_properties' => ['file_name' => 'file1', 'file_size' => 10]
+            ]
+        );
 
         $response = $this->getResponseByName(
             REST_TestDataBuilder::ADMIN_USER_NAME,
@@ -781,7 +787,13 @@ class DocmanItemsTest extends DocmanBase
         );
         $folder = $response->json();
 
-        $put_resource = json_encode([]);
+        $put_resource = json_encode(
+            [
+                'version_title'   => 'My version title',
+                'changelog'       => 'I have changed',
+                'file_properties' => ['file_name' => 'file1', 'file_size' => 10]
+            ]
+        );
 
         $response = $this->getResponseByName(
             REST_TestDataBuilder::ADMIN_USER_NAME,
@@ -799,11 +811,37 @@ class DocmanItemsTest extends DocmanBase
      */
     public function testPatchOnDocumentThrowsANotImplementedException(int $root_id)
     {
-        $put_resource = json_encode([]);
-        $response = $this->getResponseByName(
+        $put_resource = json_encode(
+            [
+                'version_title'   => 'My version title',
+                'changelog'       => 'I have changed',
+                'file_properties' => ['file_name' => 'file1', 'file_size' => 10]
+            ]
+        );
+        $response     = $this->getResponseByName(
             REST_TestDataBuilder::ADMIN_USER_NAME,
             $this->client->patch('docman_items/' . $root_id, null, $put_resource)
         );
         $this->assertEquals(501, $response->getStatusCode());
+    }
+
+    /**
+     * @depends testGetRootId
+     */
+    public function testPatchFileDocumentIsRejectedIfFileIsTooBig(int $root_id)
+    {
+        $put_resource = json_encode(
+            [
+                'version_title'   => 'My version title',
+                'changelog'       => 'I have changed',
+                'file_properties' => ['file_name' => 'file1', 'file_size' => 999999999999]
+            ]
+        );
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->patch('docman_items/' . $root_id, null, $put_resource)
+        );
+        $this->assertEquals(400, $response->getStatusCode());
     }
 }

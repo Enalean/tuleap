@@ -28,6 +28,7 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
+use Tuleap\Docman\Upload\DocumentToUploadMaxSizeExceededException;
 
 class DocmanItemUpdatorTest extends TestCase
 {
@@ -66,7 +67,9 @@ class DocmanItemUpdatorTest extends TestCase
 
         $this->expectException(ExceptionDocumentHasApprovalTable::class);
 
-        $this->updator->update($item, $user);
+        $representation                  = new DocmanItemPATCHRepresentation();
+
+        $this->updator->update($item, $user, $representation);
     }
 
     public function testItThrowsAnExceptionWhenDocumentIsLockedByAnotherUser()
@@ -84,6 +87,34 @@ class DocmanItemUpdatorTest extends TestCase
 
         $this->expectException(ExceptionItemIsLockedByAnotherUser::class);
 
-        $this->updator->update($item, $user);
+        $representation                  = new DocmanItemPATCHRepresentation();
+
+        $this->updator->update($item, $user, $representation);
+    }
+
+    public function testItThrowsAnExceptionWhenDocumentSizeExceedMaxAllowedSize()
+    {
+        $item = Mockery::mock(Docman_Item::class);
+        $user = Mockery::mock(\PFUser::class);
+        $user->shouldReceive('getId')->andReturn(101);
+        $this->approval_table_retriever->shouldReceive('retrieveByItem')
+                                       ->with($item)
+                                       ->andReturn(null);
+
+        $this->lock_factory->shouldReceive('getLockInfoForItem')
+                           ->with($item)
+                           ->andReturn(null);
+
+
+        $representation                             = new DocmanItemPATCHRepresentation();
+        $representation->change_log                 = 'changelog';
+        $representation->version_title              = 'version title';
+        $representation->file_properties            = new FilePropertiesPOSTPATCHRepresentation();
+        $representation->file_properties->file_name = 'file';
+        $representation->file_properties->file_size = 999999999999;
+
+        $this->expectException(DocumentToUploadMaxSizeExceededException::class);
+
+        $this->updator->update($item, $user, $representation);
     }
 }
