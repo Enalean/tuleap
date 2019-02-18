@@ -24,7 +24,8 @@ import {
     are_transition_rules_enforced,
     current_tracker_id,
     selectbox_fields,
-    all_target_states
+    all_target_states,
+    current_workflow_transitions
 } from "./getters.js";
 import initial_state from "./state.js";
 import { create } from "../support/factories.js";
@@ -200,6 +201,37 @@ describe("Store getters:", () => {
             getters.current_workflow_field = create("field", { values: null });
 
             expect(all_target_states(state, getters)).toEqual([]);
+        });
+    });
+
+    describe("current_workflow_transitions", () => {
+        it("returns the current tracker workflow's transitions", () => {
+            const first_transition = {
+                id: 70,
+                from_id: 295,
+                to_id: 683
+            };
+            const second_transition = {
+                id: 709,
+                from_id: 318,
+                to_id: 99
+            };
+            state.current_tracker = create("tracker", {
+                workflow: {
+                    transitions: [first_transition, second_transition]
+                }
+            });
+
+            expect(current_workflow_transitions(state)).toEqual([
+                first_transition,
+                second_transition
+            ]);
+        });
+
+        it("without tracker, it returns an empty array", () => {
+            state.current_tracker = null;
+
+            expect(current_workflow_transitions(state)).toEqual([]);
         });
     });
 });

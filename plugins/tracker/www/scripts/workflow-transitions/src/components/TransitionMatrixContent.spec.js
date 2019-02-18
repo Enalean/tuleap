@@ -147,11 +147,22 @@ describe("TransitionMatrixContent", () => {
 
             beforeEach(() => {
                 wrapper.setProps({ transition });
+                store.getters.is_workflow_advanced = true;
             });
 
             it("shows transition", () => {
                 expect(wrapper.contains(delete_transition_selector)).toBeTruthy();
                 expect(wrapper.contains(transition_configuration_selector)).toBeTruthy();
+            });
+
+            describe("and the workflow is in simple mode", () => {
+                beforeEach(() => {
+                    store.getters.is_workflow_advanced = false;
+                });
+
+                it("does not show the 'configure transition' button", () => {
+                    expect(wrapper.contains(transition_configuration_selector)).toBeFalsy();
+                });
             });
 
             describe("during another operation running", () => {
@@ -203,6 +214,44 @@ describe("TransitionMatrixContent", () => {
 
                     it("hides spinner", () => {
                         expect(wrapper.contains(spinner_selector)).toBeFalsy();
+                    });
+                });
+            });
+
+            describe("when the transition has just been updated", () => {
+                beforeEach(() => {
+                    localVue.set(transition, "updated", true);
+                });
+
+                it("shows an 'updated' animation", () => {
+                    const delete_transition_icon = wrapper.find(delete_transition_selector);
+                    const configure_transition_button = wrapper.find(
+                        transition_configuration_selector
+                    );
+
+                    expect(delete_transition_icon.classes()).toContain(
+                        "tracker-workflow-transition-action-updated"
+                    );
+                    expect(configure_transition_button.classes()).toContain("tlp-button-success");
+                    expect(wrapper.classes()).toContain(
+                        "tracker-workflow-transition-action-updated"
+                    );
+                });
+
+                describe("and the workflow is in simple mode", () => {
+                    beforeEach(() => {
+                        store.getters.is_workflow_advanced = false;
+                    });
+
+                    it("does not show an 'updated' animation", () => {
+                        const delete_transition_icon = wrapper.find(delete_transition_selector);
+
+                        expect(delete_transition_icon.classes()).not.toContain(
+                            "tracker-workflow-transition-action-updated"
+                        );
+                        expect(wrapper.classes()).not.toContain(
+                            "tracker-workflow-transition-action-updated"
+                        );
                     });
                 });
             });

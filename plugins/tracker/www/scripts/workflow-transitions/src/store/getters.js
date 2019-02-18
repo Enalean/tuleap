@@ -53,6 +53,14 @@ export const is_workflow_legacy = state => {
     return state.current_tracker.workflow.is_legacy;
 };
 
+export const is_workflow_advanced = state => {
+    if (!state.current_tracker) {
+        return null;
+    }
+
+    return state.current_tracker.workflow.is_advanced;
+};
+
 export const current_tracker_id = state => {
     if (state.current_tracker === null) {
         return null;
@@ -87,4 +95,11 @@ export const all_target_states = (state, getters) => {
     }
 
     return all_target_values.filter(value => value.is_hidden === false);
+};
+
+export const current_workflow_transitions = state => {
+    if (state.current_tracker === null) {
+        return [];
+    }
+    return state.current_tracker.workflow.transitions;
 };

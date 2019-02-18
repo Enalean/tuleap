@@ -119,16 +119,11 @@ export default {
 
     computed: {
         ...mapState(["is_operation_running", "is_rules_enforcement_running"]),
-        ...mapState({
-            is_workflow_advanced(state) {
-                if (!state.current_tracker) {
-                    return null;
-                }
-
-                return state.current_tracker.workflow.is_advanced;
-            }
-        }),
-        ...mapGetters(["workflow_field_label", "are_transition_rules_enforced"]),
+        ...mapGetters([
+            "workflow_field_label",
+            "are_transition_rules_enforced",
+            "is_workflow_advanced"
+        ]),
         advanced_configuration_tooltip() {
             return this.$gettext(
                 "Use advanced configuration if you want to configure each transition independently."

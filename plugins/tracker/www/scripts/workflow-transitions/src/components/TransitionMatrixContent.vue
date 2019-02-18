@@ -54,47 +54,47 @@
                 ⤴
             </div>
             <button
+                v-if="is_workflow_advanced"
                 type="button"
                 class="tlp-button-primary tlp-button-mini tracker-workflow-advanced-transition-button"
                 v-bind:class="{ 'tlp-button-success': is_transition_updated }"
                 v-on:click="openModal()"
                 data-test-action="configure-transition"
                 v-translate
-            >Configure</button>
+            >
+                Configure
+            </button>
         </template>
     </td>
 </template>
-
 <script>
-import { mapState } from "vuex";
+import { mapState, mapGetters } from "vuex";
 
 export default {
     name: "TransitionMatrixContent",
-
     props: {
         from: {
             type: Object,
-            mandatory: true
+            required: true
         },
         to: {
             type: Object,
-            mandatory: true
+            required: true
         },
         transition: {
             type: Object
         }
     },
-
     data() {
         return {
             is_operation_running: false
         };
     },
-
     computed: {
         ...mapState({
             is_another_operation_running: "is_operation_running"
         }),
+        ...mapGetters(["is_workflow_advanced"]),
         is_allowed() {
             return this.from.id !== this.to.id;
         },
@@ -102,14 +102,13 @@ export default {
             return this.is_allowed && !this.transition;
         },
         is_transition_updated() {
-            if (!this.transition) {
+            if (!this.transition || !this.is_workflow_advanced) {
                 return false;
             }
 
             return this.transition.updated;
         }
     },
-
     methods: {
         async createTransition() {
             this.is_operation_running = true;
@@ -123,7 +122,6 @@ export default {
                 this.is_operation_running = false;
             }
         },
-
         async deleteTransition() {
             this.is_operation_running = true;
             try {
@@ -132,7 +130,6 @@ export default {
                 this.is_operation_running = false;
             }
         },
-
         openModal() {
             this.$store.dispatch(
                 "transitionModal/showTransitionConfigurationModal",

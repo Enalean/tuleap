@@ -66,8 +66,14 @@ msgstr "Conditions de la transition"
 msgid "Configure"
 msgstr "Configurer"
 
+msgid "Configure all transitions to %{to_state_label}"
+msgstr "Configurer toutes les transitions vers %{to_state_label}"
+
 msgid "Configure it"
 msgstr "Configurez le"
+
+msgid "Configure state"
+msgstr "Configurer l'état"
 
 msgid "Configure transition from %{from_state_label} to %{to_state_label}"
 msgstr "Configurer la transition de %{from_state_label} vers %{to_state_label}"
