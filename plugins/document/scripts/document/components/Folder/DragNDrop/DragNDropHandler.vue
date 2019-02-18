@@ -279,7 +279,8 @@ export default {
                 this.error_modal_reasons.push({
                     filename: dropzone_item.title,
                     approval_table_owner: approval_table.table_owner,
-                    approval_table_state: approval_table.approval_state
+                    approval_table_state: approval_table.approval_state,
+                    approval_table_admin_url: approval_table.admin_url
                 });
 
                 return;

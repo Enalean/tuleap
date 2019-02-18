@@ -20,7 +20,7 @@
 <template>
     <error-modal v-on:error-modal-hidden="bubbleErrorModalHidden">
         <p v-translate>
-            <a v-bind:href="table_owner.user_url">{{ table_owner.display_name }}</a> has created an approval table for the last version of {{ filename }}.
+            <a v-bind:href="table_owner.user_url">{{ table_owner.display_name }}</a> has created an <a v-bind:href="approval_table_url">approval table</a>  for the last version of {{ filename }}.
         </p>
         <p v-translate>
             You can't upload a new version of this file until the approval table is closed.
@@ -47,6 +47,9 @@ export default {
         },
         table_state() {
             return this.reasons[0].approval_table_state;
+        },
+        approval_table_url() {
+            return this.reasons[0].approval_table_admin_url;
         }
     },
     methods: {
