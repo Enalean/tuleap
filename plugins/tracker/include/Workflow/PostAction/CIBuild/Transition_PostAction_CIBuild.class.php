@@ -18,13 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+// phpcs:ignoreFile
+
 use Tuleap\Tracker\Workflow\PostAction\Visitor;
 
-require_once(dirname(__FILE__) .'/../Transition_PostAction.class.php');
-require_once 'common/Jenkins/Client.class.php';
-
 class Transition_PostAction_CIBuild extends Transition_PostAction
-{ //phpcs:ignore
+{
 
     const SHORT_NAME                          = 'ci_build';
     const XML_TAG_NAME                        = 'postaction_ci_build';
@@ -78,19 +77,20 @@ class Transition_PostAction_CIBuild extends Transition_PostAction
     }
 
     /** @return string html */
-    public function fetch() {
+    public function fetch()
+    {
+        $purifier = Codendi_HTMLPurifier::instance();
         $html  = '';
         $title = $GLOBALS['Language']->getText('workflow_admin','ci_url');
         $text_field = '<input type="text"
-            title="'. $title .'"
+            title="'. $purifier->purify($title) .'"
             required
             class="required"
-            pattern="' . self::JOB_URL_PATTERN . '"
-            name="workflow_postaction_ci_build['.$this->id.']"
-            value="'. $this->getJobUrl() .'"
+            pattern="' . $purifier->purify(self::JOB_URL_PATTERN) . '"
+            name="workflow_postaction_ci_build['. $purifier->purify($this->id) .']"
+            value="'. $purifier->purify($this->getJobUrl()) .'"
             size="50"
             maxsize="255" />';
-        $purifier = Codendi_HTMLPurifier::instance();
         $html    .= $GLOBALS['Language']->getText('workflow_admin', 'ci_build', array($text_field));
         $html    .= '<p class="help">'.$GLOBALS['Language']->getText('workflow_admin', 'ci_build_help', array(ForgeConfig::get('sys_name'))).'
             <ul class="help">
