@@ -28,8 +28,10 @@ use Tuleap\REST\I18NRestException;
 use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\REST\UserManager;
 use Tuleap\Tracker\REST\WorkflowTransitionPOSTRepresentation;
-use Tuleap\Tracker\Workflow\Transition\Condition\ConditionsReplicator;
 use Tuleap\Tracker\Workflow\Transition\Condition\ConditionsUpdateException;
+use Tuleap\Tracker\Workflow\Transition\NoSiblingTransitionException;
+use Tuleap\Tracker\Workflow\Transition\Update\TransitionReplicator;
+use Tuleap\Tracker\Workflow\Transition\Update\TransitionRetriever;
 use Workflow;
 use WorkflowFactory;
 
@@ -51,8 +53,10 @@ class TransitionPOSTHandler
     private $validator;
     /** @var TransactionExecutor */
     private $transaction_executor;
-    /** @var ConditionsReplicator */
-    private $conditions_replicator;
+    /** @var TransitionReplicator */
+    private $transition_replicator;
+    /** @var TransitionRetriever */
+    private $transition_retriever;
 
     public function __construct(
         UserManager $user_manager,
@@ -63,7 +67,8 @@ class TransitionPOSTHandler
         \TransitionFactory $transition_factory,
         TransitionValidator $validator,
         TransactionExecutor $transaction_executor,
-        ConditionsReplicator $conditions_replicator
+        TransitionReplicator $conditions_replicator,
+        TransitionRetriever $transition_retriever
     ) {
         $this->user_manager               = $user_manager;
         $this->tracker_factory            = $tracker_factory;
@@ -73,7 +78,8 @@ class TransitionPOSTHandler
         $this->transition_factory         = $transition_factory;
         $this->validator                  = $validator;
         $this->transaction_executor       = $transaction_executor;
-        $this->conditions_replicator      = $conditions_replicator;
+        $this->transition_replicator      = $conditions_replicator;
+        $this->transition_retriever       = $transition_retriever;
     }
 
     /**
@@ -101,7 +107,12 @@ class TransitionPOSTHandler
                     if ($workflow->isAdvanced()) {
                         return;
                     }
-                    $this->conditions_replicator->replicateFromFirstSiblingTransition($transition);
+                    try {
+                        $sibling_transition = $this->transition_retriever->getFirstSiblingTransition($transition);
+                        $this->transition_replicator->replicate($sibling_transition, $transition);
+                    } catch (NoSiblingTransitionException $e) {
+                        //Nothing to replicate, ignore
+                    }
                 }
             );
             return $representation;
