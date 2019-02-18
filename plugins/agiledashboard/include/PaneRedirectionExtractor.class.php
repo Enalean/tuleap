@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright Enalean (c) 2013. All rights reserved.
+ * Copyright Enalean (c) 2013-2019. All rights reserved.
  *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
+ * Tuleap and Enalean names and logos are registered trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
  * owners.
  *
@@ -54,9 +54,11 @@ class AgileDashboard_PaneRedirectionExtractor {
         if (! is_array($planning) || ! count($planning)) {
             return;
         }
-        list($pane_identifier, $from_planning) = each($planning);
+        $pane_identifier = key($planning);
+        $from_planning   = current($planning);
         if (is_array($from_planning) && count($from_planning)) {
-            list($planning_id, $planning_artifact_id) = each($from_planning);
+            $planning_id          = key($from_planning);
+            $planning_artifact_id = current($from_planning);
             return array(
                 self::PANE        => $pane_identifier,
                 self::PLANNING_ID => $planning_id,
