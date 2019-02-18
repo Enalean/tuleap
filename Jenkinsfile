@@ -96,6 +96,20 @@ pipeline {
                 always {
                     archiveArtifacts allowEmptyArchive: true, artifacts: 'results/'
                 }
+                failure {
+                    withCredentials([string(credentialsId: 'email-notification-baseline-plugin-team', variable: 'email')]) {
+                        mail to: email,
+                        subject: "${currentBuild.fullDisplayName} is broken",
+                        body: "See ${env.BUILD_URL}"
+                    }
+                }
+                unstable {
+                    withCredentials([string(credentialsId: 'email-notification-baseline-plugin-team', variable: 'email')]) {
+                        mail to: email,
+                        subject: "Tuleap ${currentBuild.fullDisplayName} is unstable",
+                        body: "See ${env.BUILD_URL}"
+                    }
+                }
             }
         }
     }
