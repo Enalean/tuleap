@@ -50,7 +50,6 @@ class DataBuilder extends REST_TestDataBuilder
 
         $this->createUser();
         $this->setUpDeletableArtifactsLimit();
-        $this->setUpWorkflowFeatureFlag();
     }
 
     private function setUpDeletableArtifactsLimit()
@@ -63,26 +62,5 @@ class DataBuilder extends REST_TestDataBuilder
         $user = $this->user_manager->getUserByUserName(self::USER_TESTER_NAME);
         $user->setPassword(self::USER_TESTER_PASS);
         $this->user_manager->updateDb($user);
-    }
-
-    private function setUpWorkflowFeatureFlag()
-    {
-        $tracker = $this->getTrackerInProject(
-            TrackerBase::TRACKER_WORKFLOW_WITH_TRANSITIONS_SHORTNAME,
-            TrackerBase::TRACKER_WORKFLOWS_PROJECT_NAME
-        );
-        $workflow_tracker_id = $tracker->getId();
-        $local_inc           = fopen('/etc/tuleap/conf/local.inc', 'a');
-        if ($local_inc === false) {
-            throw new \RuntimeException('Could not append feature flag to local.inc');
-        }
-        $write_result = fwrite(
-            $local_inc,
-            "\$sys_tracker_whitelist_that_should_use_new_workflow_transitions_interface = '$workflow_tracker_id';"
-        );
-        if ($write_result === false) {
-            throw new \RuntimeException('Could not append feature flag to local.inc');
-        }
-        fclose($local_inc);
     }
 }

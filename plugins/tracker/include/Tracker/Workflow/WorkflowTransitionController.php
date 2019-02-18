@@ -59,8 +59,8 @@ class WorkflowTransitionController implements DispatchableWithRequest, Dispatcha
         if (! $tracker) {
             throw new NotFoundException(dgettext('tuleap-tracker', "Tracker does not exist"));
         }
-        if (! $this->isNewWorkflowEnabled($tracker)) {
-            throw new ForbiddenException(dgettext('tuleap-tracker', 'This view is still under construction.'));
+        if ($this->isNewWorkflowDisabled($tracker)) {
+            throw new ForbiddenException(dgettext('tuleap-tracker', 'This view is not available for this workflow.'));
         }
 
         $current_user = $request->getCurrentUser();

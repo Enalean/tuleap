@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+//phpcs:ignoreFile
+
 class Tracker_Workflow_Action_Transitions_DefineWorkflow  extends Tracker_Workflow_Action_Transitions {
     /** @var WorkflowFactory */
     private $workflow_factory;
@@ -74,8 +76,22 @@ class Tracker_Workflow_Action_Transitions_DefineWorkflow  extends Tracker_Workfl
         $this->displayFooter($layout);
     }
 
-     private function displayAdminWorkflow(TrackerManager $layout, Codendi_Request $request, PFUser $current_user, Workflow $workflow)
-     {
+     private function displayAdminWorkflow(
+         TrackerManager $layout,
+         Codendi_Request $request,
+         PFUser $current_user,
+         Workflow $workflow
+     ) {
+         if (! $workflow->isAdvanced()) {
+             echo '<div class="alert alert-warning">';
+             echo '<p>';
+             echo dgettext('tuleap-tracker', "This workflow is in simple mode and cannot be displayed in legacy UI.");
+             echo '</p>';
+             echo '</div>';
+
+             return;
+         }
+
          echo '<form action="'.TRACKER_BASE_URL.'/?'. http_build_query(
             array(
                 'tracker' => (int)$this->tracker->id,
