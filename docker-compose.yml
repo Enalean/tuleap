@@ -7,20 +7,21 @@ services:
       - "9000:9000"
       - "9092:9092"
     networks:
-      - sonarnet
+      - sonar-server
+      - sonar-db
+    depends_on:
+      - db
     environment:
       - sonar.jdbc.url=jdbc:postgresql://db:5432/sonar
     volumes:
       - sonarqube_conf:/opt/sonarqube/conf
       - sonarqube_data:/opt/sonarqube/data
       - sonarqube_extensions:/opt/sonarqube/extensions
-    links:
-      - db
 
   db:
     image: postgres
     networks:
-      - sonarnet
+      - sonar-db
     environment:
       - POSTGRES_USER=sonar
       - POSTGRES_PASSWORD=sonar
@@ -28,8 +29,19 @@ services:
       - postgresql:/var/lib/postgresql
       - postgresql_data:/var/lib/postgresql/data
 
+  sonarscanner:
+    image: newtmitch/sonar-scanner:alpine
+    networks:
+      - sonar-server
+    depends_on:
+      - sonarqube
+    volumes:
+      - .:/root/src
+
 networks:
-  sonarnet:
+  sonar-db:
+    driver: bridge
+  sonar-server:
     driver: bridge
 
 volumes:

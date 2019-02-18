@@ -99,4 +99,4 @@ stop-sonarqube: ## Start Sonarqube server
 	@docker-compose down
 
 sonarscanner: ## Analyze code with Sonarqube (Sonarqube must be started)
-	@docker run -ti -v $(pwd):/root/src --link sonarqube newtmitch/sonar-scanner:alpine
+	@docker-compose run sonarscanner
