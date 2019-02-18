@@ -53,7 +53,7 @@
                         v-for="field in group.fields"
                         v-bind:key="field.field_id"
                         v-bind:value="field"
-                        v-bind:disabled="field.disabled"
+                        v-bind:disabled="field.disabled && field !== post_action_field"
                         v-bind:data-test-type="`field_${field.field_id}`"
                     >
                         {{ field.label }}
