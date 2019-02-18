@@ -25,7 +25,7 @@ var codendi = codendi || {};
 
         if (embedded_content.length > 0) {
             options = {
-                toolbar: "full",
+                toolbar: "advanced",
                 onLoad: $.noop(),
                 toggle: false,
                 default_in_html: true

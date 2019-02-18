@@ -64,7 +64,29 @@ export default {
         if (this.editor !== null) {
             this.editor.destroy();
         }
-        this.editor = CKEDITOR.replace(text_area); // eslint-disable-line no-undef
+
+        // eslint-disable-next-line no-undef
+        this.editor = CKEDITOR.replace(text_area, {
+            toolbar: [
+                [
+                    "Cut",
+                    "Copy",
+                    "Paste",
+                    "PasteText",
+                    "PasteFromWord",
+                    "-",
+                    "Undo",
+                    "Redo",
+                    "Link",
+                    "Unlink",
+                    "Anchor"
+                ],
+                ["Image", "Table", "HorizontalRule", "SpecialChar", "-", "Source"],
+                "/",
+                ["Bold", "Italic", "Underline", "Strike", "Subscript", "Superscript", "-"],
+                ["RemoveFormat", "NumberedList", "BulletedList", "Format"]
+            ]
+        });
 
         this.editor.on("change", this.onChange);
 

@@ -43,7 +43,7 @@ codendi.RTE = Class.create({
 
     can_be_resized: function() {
         var resize_enabled = this.options.resize_enabled;
-        return typeof resize_enabled == "undefined" || resize_enabled;
+        return typeof resize_enabled === "undefined" || resize_enabled;
     },
 
     init_rte: function() {
@@ -54,8 +54,11 @@ codendi.RTE = Class.create({
         if (CKEDITOR.instances && CKEDITOR.instances[this.element.id]) {
             CKEDITOR.instances[this.element.id].destroy(true);
         }
-        if (this.options.toolbar == "basic") {
-            var toolbar = [
+
+        let toolbar = "full";
+
+        if (this.options.toolbar === "basic") {
+            toolbar = [
                 ["Styles", "Format", "Font", "FontSize"],
                 ["Bold", "Italic", "Underline", "Strike", "-", "Subscript", "Superscript"],
                 "/",
@@ -64,21 +67,55 @@ codendi.RTE = Class.create({
                 ["JustifyLeft", "JustifyCenter", "JustifyRight", "JustifyBlock"],
                 ["Link", "Unlink", "Anchor", "Image"]
             ];
-        } else if (this.options.toolbar == "minimal") {
-            var toolbar = [
+        } else if (this.options.toolbar === "minimal") {
+            toolbar = [
                 ["Bold", "Italic", "Underline"],
                 ["NumberedList", "BulletedList", "-", "Blockquote", "Format"],
                 ["Link", "Unlink", "Anchor", "Image"]
             ];
-        } else if (this.options.toolbar == "tuleap") {
-            var toolbar = [
+        } else if (this.options.toolbar === "tuleap") {
+            toolbar = [
                 ["Bold", "Italic", "Underline"],
                 ["NumberedList", "BulletedList", "-", "Blockquote", "Format"],
                 ["Link", "Unlink", "Anchor", "Image"],
                 ["Source"]
             ];
-        } else {
-            var toolbar = "Full";
+        } else if (this.options.toolbar === "advanced") {
+            toolbar = [
+                [
+                    "Cut",
+                    "Copy",
+                    "Paste",
+                    "PasteText",
+                    "PasteFromWord",
+                    "-",
+                    "Undo",
+                    "Redo",
+                    "Link",
+                    "Unlink",
+                    "Anchor",
+                    "Image",
+                    "Table",
+                    "HorizontalRule",
+                    "SpecialChar",
+                    "-",
+                    "Source"
+                ],
+                "/",
+                [
+                    "Bold",
+                    "Italic",
+                    "Underline",
+                    "Strike",
+                    "Subscript",
+                    "Superscript",
+                    "-",
+                    "RemoveFormat",
+                    "NumberedList",
+                    "BulletedList",
+                    "Format"
+                ]
+            ];
         }
 
         /*
@@ -154,7 +191,7 @@ codendi.RTE = Class.create({
                     evt.editor.resize("100%", this.element.getHeight(), true);
                 } else if (
                     this.element.getWidth() > 0 &&
-                    (typeof this.options.no_resize == "undefined" || !this.options.no_resize)
+                    (typeof this.options.no_resize === "undefined" || !this.options.no_resize)
                 ) {
                     evt.editor.resize(this.element.getWidth(), this.element.getHeight(), true);
                 }
