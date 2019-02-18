@@ -95,13 +95,15 @@ export default {
                 case TYPE_FILE:
                     name = "File";
                     break;
+                case TYPE_WIKI:
+                    name = "Wiki";
+                    break;
                 case TYPE_FOLDER:
                     name = "Folder";
                     break;
                 case TYPE_LINK:
                     name = "Link";
                     break;
-                case TYPE_WIKI:
                 case TYPE_EMBEDDED:
                 default:
                     return;
