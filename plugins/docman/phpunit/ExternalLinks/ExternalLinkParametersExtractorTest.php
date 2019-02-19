@@ -28,6 +28,8 @@ use PHPUnit\Framework\TestCase;
 
 class ExternalLinkParametersExtractorTest extends TestCase
 {
+    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
     public function testItReturnZeroWhenFolderIdIsNotProvided()
     {
         $request         = Mockery::mock(HTTPRequest::class);

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -25,6 +25,7 @@ use Git_GitRepositoryUrlManager;
 use GitRepository;
 use HTTPRequest;
 use Mockery;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\Git\GitPHP\Commit;
 use Tuleap\Git\GitPHP\Head;
 use Tuleap\Git\GitPHP\Project;
@@ -33,6 +34,8 @@ use Tuleap\Git\Repository\GitPHPProjectRetriever;
 
 class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
 {
+    use MockeryPHPUnitIntegration;
+
     /**
      * @var FilesHeaderPresenterBuilder
      */

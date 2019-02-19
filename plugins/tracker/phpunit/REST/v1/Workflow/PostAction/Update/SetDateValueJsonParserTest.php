@@ -32,6 +32,8 @@ use Workflow;
 
 class SetDateValueJsonParserTest extends TestCase
 {
+    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
     /**
      * @var SetDateValueJsonParser
      */

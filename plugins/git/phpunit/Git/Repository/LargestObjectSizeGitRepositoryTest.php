@@ -22,10 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\Git\Repository;
 
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 
 final class LargestObjectSizeGitRepositoryTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
+
     public function testExpectedValuesAreRetrieved() : void
     {
         $repository = \Mockery::mock(\GitRepository::class);

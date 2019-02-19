@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,6 +20,8 @@
 
 class Tracker_FormElement_Field_List_Bind_UsersTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
 {
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
     public function testRetrievingDefaultRESTValuesDoesNotHitTheDBWhenNoDefaultValuesIsSet()
     {
         $list_field     = Mockery::mock(Tracker_FormElement_Field_List::class);

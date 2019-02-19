@@ -28,6 +28,8 @@ use PHPUnit\Framework\TestCase;
 
 class MetadataRepresentationBuilderTest extends TestCase
 {
+    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
     public function testItBuildMetadataWithoutBasicProperties()
     {
         $item = Mockery::mock(\Docman_Item::class);

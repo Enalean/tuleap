@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,10 +22,13 @@ namespace Tuleap\Git\CommitStatus;
 
 require_once __DIR__ . '/../bootstrap.php';
 
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 
 class CommitStatusWithKnownStatusTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
+
     public function testCanBeBuiltFromStatusName()
     {
         $status_name = 'success';
