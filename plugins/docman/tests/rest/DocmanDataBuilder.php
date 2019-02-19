@@ -164,10 +164,10 @@ class DocmanDataBuilder extends REST_TestDataBuilder
      *                                    Root
      *                                     +
      *                                     |
-     *                            +--------+---------+
-     *                            |                  |
-     *                            +                  +
-     *                          folder 1           folder 3
+     *                            +--------+---------+---------+---------+
+     *                            |                  |         |         |
+     *                            +                  +         +         +
+     *                          folder 1           folder 3   file A    file B
      *                            +
      *                            |
      *  +---------------+---------+--------+---------------------+---------------------+-------------+-----------+
@@ -185,6 +185,11 @@ class DocmanDataBuilder extends REST_TestDataBuilder
         $folder_id   = $this->addItem(self::REGULAR_USER_ID, $docman_root->getId(), 'folder 1', PLUGIN_DOCMAN_ITEM_TYPE_FOLDER);
         $folder_3_id = $this->addItem(self::REGULAR_USER_ID, $docman_root->getId(), 'folder 3', PLUGIN_DOCMAN_ITEM_TYPE_FOLDER);
         $this->addWritePermissionOnItem($folder_id, \ProjectUGroup::PROJECT_MEMBERS);
+
+        $file_A_id = $this->addItem(self::REGULAR_USER_ID, $folder_id, 'file A', PLUGIN_DOCMAN_ITEM_TYPE_FILE);
+        $this->addWritePermissionOnItem($file_A_id, \ProjectUGroup::PROJECT_MEMBERS);
+        $file_B_id = $this->addItem(self::REGULAR_USER_ID, $folder_id, 'file B', PLUGIN_DOCMAN_ITEM_TYPE_FILE);
+        $this->addWritePermissionOnItem($file_B_id, \ProjectUGroup::PROJECT_MEMBERS);
 
         $item_A_id = $this->addItem(self::ANON_ID, $folder_id, 'item A', PLUGIN_DOCMAN_ITEM_TYPE_EMPTY);
         $item_B_id = $this->addItem(self::REGULAR_USER_ID, $folder_id, 'item B', PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE);
@@ -237,6 +242,8 @@ class DocmanDataBuilder extends REST_TestDataBuilder
         $this->appendCustomMetadataValueToItem($item_F_id, "custom value for item_F");
         $this->appendCustomMetadataValueToItem($folder_3_id, "custom value for folder_3");
         $this->appendCustomMetadataValueToItem($item_G_id, "custom value for item_G");
+        $this->appendCustomMetadataValueToItem($file_A_id, "custom value for file A");
+        $this->appendCustomMetadataValueToItem($file_B_id, "custom value for file B");
     }
 
     private function addReadPermissionOnItem($object_id, $ugroup_name)

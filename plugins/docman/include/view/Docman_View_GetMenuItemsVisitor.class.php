@@ -19,6 +19,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Docman\Upload\Version\DocumentOnGoingVersionToUploadDAO;
+use Tuleap\Docman\Upload\Version\VersionOngoingUploadRetriever;
+
 require_once dirname(__FILE__).'/../Docman_LockFactory.class.php';
 
 class Docman_View_GetMenuItemsVisitor /* implements Visitor*/ {
@@ -119,6 +122,11 @@ class Docman_View_GetMenuItemsVisitor /* implements Visitor*/ {
     function visitFile(&$item, $params = array()) {
         if($this->dPm->userCanWrite($this->user, $item->getId())) {
             $this->actions['canNewVersion'] = true;
+        }
+
+        $retriever = new VersionOngoingUploadRetriever(new DocumentOnGoingVersionToUploadDAO());
+        if ($retriever->isThereAlreadyAnUploadOngoing($item, new DateTimeImmutable())) {
+            $this->actions['canNewVersion'] = false;
         }
         return $this->visitDocument($item, $params);
     }

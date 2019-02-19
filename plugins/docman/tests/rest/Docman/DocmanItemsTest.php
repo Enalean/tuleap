@@ -31,7 +31,6 @@ require_once __DIR__ . '/../bootstrap.php';
 
 class DocmanItemsTest extends DocmanBase
 {
-
     public function testGetRootId()
     {
         $project_response = $this->getResponse($this->client->get('projects/' . $this->project_id));
@@ -40,32 +39,6 @@ class DocmanItemsTest extends DocmanBase
 
         $json_projects = $project_response->json();
         return $json_projects['additional_informations']['docman']['root_item']['id'];
-    }
-
-    /**
-     * @depends testGetRootId
-     */
-    public function testGetFileId($root_id)
-    {
-        $response = $this->getResponseByName(
-            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->get('docman_items/' . $root_id . '/docman_items')
-        );
-        $folder = $response->json();
-
-        $this->assertEquals(count($folder), 1);
-        $folder_id = $folder[0]['id'];
-        $this->assertEquals($folder[0]['user_can_write'], true);
-
-        $response = $this->getResponseByName(
-            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->get('docman_items/' . $folder_id . '/docman_items')
-        );
-        $items = $response->json();
-
-        $this->assertEquals($items[2]['title'], 'item C');
-
-        return $items[2]['id'];
     }
 
     /**
@@ -89,88 +62,100 @@ class DocmanItemsTest extends DocmanBase
         );
         $items = $response->json();
 
-        $this->assertEquals(count($items), 6);
+        $this->assertEquals(count($items), 8);
 
-        $this->assertEquals($items[0]['title'], 'folder 2');
-        $this->assertEquals($items[1]['title'], 'item A');
-        $this->assertEquals($items[2]['title'], 'item C');
-        $this->assertEquals($items[3]['title'], 'item E');
-        $this->assertEquals($items[4]['title'], 'item F');
-        $this->assertEquals($items[5]['title'], 'item G');
+        $folder_2_index = 0;
+        $item_a_index = 3;
+        $item_c_index = 4;
+        $item_e_index = 5;
+        $item_f_index = 6;
+        $item_g_index = 7;
+
+
+        $this->assertEquals($items[$folder_2_index]['title'], 'folder 2');
+        $this->assertEquals($items[1]['title'], 'file A');
+        $this->assertEquals($items[2]['title'], 'file B');
+        $this->assertEquals($items[$item_a_index]['title'], 'item A');
+        $this->assertEquals($items[$item_c_index]['title'], 'item C');
+        $this->assertEquals($items[$item_e_index]['title'], 'item E');
+        $this->assertEquals($items[$item_f_index]['title'], 'item F');
+        $this->assertEquals($items[$item_g_index]['title'], 'item G');
 
         $this->assertEquals('Test User 1 (rest_api_tester_1)', $items[0]['owner']['display_name']);
-        $this->assertEquals('Anonymous user', $items[1]['owner']['display_name']);
+        $this->assertEquals('Anonymous user', $items[$item_a_index]['owner']['display_name']);
 
-        $this->assertEquals($items[0]['user_can_write'], false);
-        $this->assertEquals($items[1]['user_can_write'], false);
-        $this->assertEquals($items[2]['user_can_write'], false);
-        $this->assertEquals($items[3]['user_can_write'], false);
-        $this->assertEquals($items[4]['user_can_write'], false);
-        $this->assertEquals($items[5]['user_can_write'], false);
+        $this->assertEquals($items[$folder_2_index]['user_can_write'], false);
+        $this->assertEquals($items[$item_a_index]['user_can_write'], false);
+        $this->assertEquals($items[$item_c_index]['user_can_write'], false);
+        $this->assertEquals($items[$item_e_index]['user_can_write'], false);
+        $this->assertEquals($items[$item_f_index]['user_can_write'], false);
+        $this->assertEquals($items[$item_g_index]['user_can_write'], false);
 
-        $this->assertEquals($items[0]['is_expanded'], false);
-        $this->assertEquals($items[1]['is_expanded'], false);
-        $this->assertEquals($items[2]['is_expanded'], false);
-        $this->assertEquals($items[3]['is_expanded'], false);
-        $this->assertEquals($items[4]['is_expanded'], false);
-        $this->assertEquals($items[5]['is_expanded'], false);
+        $this->assertEquals($items[$folder_2_index]['is_expanded'], false);
+        $this->assertEquals($items[$item_a_index]['is_expanded'], false);
+        $this->assertEquals($items[$item_c_index]['is_expanded'], false);
+        $this->assertEquals($items[$item_e_index]['is_expanded'], false);
+        $this->assertEquals($items[$item_f_index]['is_expanded'], false);
+        $this->assertEquals($items[$item_g_index]['is_expanded'], false);
 
 
-        $this->assertEquals($items[0]['file_properties'], null);
-        $this->assertEquals($items[1]['file_properties'], null);
-        $this->assertEquals($items[2]['file_properties']['file_type'], 'application/pdf');
+        $this->assertEquals($items[$folder_2_index]['file_properties'], null);
+        $this->assertEquals($items[$item_a_index]['file_properties'], null);
+        $this->assertEquals($items[$item_c_index]['file_properties']['file_type'], 'application/pdf');
         $this->assertEquals(
-            $items[2]['file_properties']['html_url'],
-            '/plugins/docman/?group_id=' . urlencode($this->project_id) . '&action=show&id=' . urlencode($items[2]['id']). '&switcholdui=true'
+            $items[$item_c_index]['file_properties']['html_url'],
+            '/plugins/docman/?group_id=' . urlencode($this->project_id) .
+            '&action=show&id=' . urlencode($items[$item_c_index]['id']). '&switcholdui=true'
         );
-        $this->assertEquals($items[3]['file_properties'], null);
-        $this->assertEquals($items[4]['file_properties'], null);
-        $this->assertEquals($items[5]['file_properties'], null);
+        $this->assertEquals($items[$item_e_index]['file_properties'], null);
+        $this->assertEquals($items[$item_f_index]['file_properties'], null);
+        $this->assertEquals($items[$item_g_index]['file_properties'], null);
 
-        $this->assertEquals($items[0]['link_properties'], null);
-        $this->assertEquals($items[1]['link_properties'], null);
-        $this->assertEquals($items[2]['link_properties'], null);
-        $this->assertEquals($items[3]['link_properties']['link_url'], 'https://my.example.test');
+        $this->assertEquals($items[$folder_2_index]['link_properties'], null);
+        $this->assertEquals($items[$item_a_index]['link_properties'], null);
+        $this->assertEquals($items[$item_c_index]['link_properties'], null);
+        $this->assertEquals($items[$item_e_index]['link_properties']['link_url'], 'https://my.example.test');
         $this->assertEquals(
-            $items[3]['link_properties']['html_url'],
-            '/plugins/docman/?group_id=' . urlencode($this->project_id) . '&action=show&id=' . urlencode($items[3]['id']). '&switcholdui=true'
+            $items[$item_e_index]['link_properties']['html_url'],
+            '/plugins/docman/?group_id=' . urlencode($this->project_id) .
+            '&action=show&id=' . urlencode($items[$item_e_index]['id']). '&switcholdui=true'
         );
-        $this->assertEquals($items[4]['link_properties'], null);
-        $this->assertEquals($items[5]['link_properties'], null);
+        $this->assertEquals($items[$item_f_index]['link_properties'], null);
+        $this->assertEquals($items[$item_f_index]['link_properties'], null);
 
-        $this->assertEquals($items[0]['embedded_file_properties'], null);
-        $this->assertEquals($items[1]['embedded_file_properties'], null);
-        $this->assertEquals($items[2]['embedded_file_properties'], null);
-        $this->assertEquals($items[3]['embedded_file_properties'], null);
-        $this->assertEquals($items[4]['embedded_file_properties']['file_type'], 'text/html');
+        $this->assertEquals($items[$folder_2_index]['embedded_file_properties'], null);
+        $this->assertEquals($items[$item_a_index]['embedded_file_properties'], null);
+        $this->assertEquals($items[$item_c_index]['embedded_file_properties'], null);
+        $this->assertEquals($items[$item_e_index]['embedded_file_properties'], null);
+        $this->assertEquals($items[$item_f_index]['embedded_file_properties']['file_type'], 'text/html');
         $this->assertEquals(
-            $items[4]['embedded_file_properties']['content'],
+            $items[$item_f_index]['embedded_file_properties']['content'],
             file_get_contents(dirname(__DIR__) . '/_fixtures/docmanFile/embeddedFile')
         );
-        $this->assertEquals($items[5]['embedded_file_properties'], null);
+        $this->assertEquals($items[$item_g_index]['embedded_file_properties'], null);
 
 
-        $this->assertEquals($items[0]['link_properties'], null);
-        $this->assertEquals($items[1]['link_properties'], null);
-        $this->assertEquals($items[2]['link_properties'], null);
-        $this->assertEquals($items[3]['link_properties']['link_url'], 'https://my.example.test');
-        $this->assertEquals($items[4]['link_properties'], null);
-        $this->assertEquals($items[5]['link_properties'], null);
+        $this->assertEquals($items[$folder_2_index]['link_properties'], null);
+        $this->assertEquals($items[$item_a_index]['link_properties'], null);
+        $this->assertEquals($items[$item_c_index]['link_properties'], null);
+        $this->assertEquals($items[$item_e_index]['link_properties']['link_url'], 'https://my.example.test');
+        $this->assertEquals($items[$item_f_index]['link_properties'], null);
+        $this->assertEquals($items[$item_g_index]['link_properties'], null);
 
-        $this->assertEquals($items[0]['wiki_properties'], null);
-        $this->assertEquals($items[1]['wiki_properties'], null);
-        $this->assertEquals($items[2]['wiki_properties'], null);
-        $this->assertEquals($items[3]['wiki_properties'], null);
-        $this->assertEquals($items[4]['wiki_properties'], null);
-        $this->assertEquals($items[5]['wiki_properties']['page_name'], 'MyWikiPage');
+        $this->assertEquals($items[$folder_2_index]['wiki_properties'], null);
+        $this->assertEquals($items[$item_a_index]['wiki_properties'], null);
+        $this->assertEquals($items[$item_c_index]['wiki_properties'], null);
+        $this->assertEquals($items[$item_e_index]['wiki_properties'], null);
+        $this->assertEquals($items[$item_f_index]['wiki_properties'], null);
+        $this->assertEquals($items[$item_g_index]['wiki_properties']['page_name'], 'MyWikiPage');
         $this->assertEquals(
-            $items[5]['wiki_properties']['html_url'],
+            $items[$item_g_index]['wiki_properties']['html_url'],
             '/plugins/docman/?group_id=' . urlencode($this->project_id) . '&action=show&id=' .
-            urlencode($items[5]['id']) . '&switcholdui=true'
+            urlencode($items[$item_g_index]['id']) . '&switcholdui=true'
         );
 
         $this->assertEquals(
-            $items[0]['metadata'][0],
+            $items[$folder_2_index]['metadata'][0],
             [
                 "name"                      => "Custom metadata",
                 "type"                      => "string",
@@ -181,9 +166,8 @@ class DocmanItemsTest extends DocmanBase
             ]
         );
 
-
         $this->assertEquals(
-            $items[1]['metadata'][0],
+            $items[$item_a_index]['metadata'][0],
             [
                 "name"                      => "Custom metadata",
                 "type"                      => "string",
@@ -194,7 +178,7 @@ class DocmanItemsTest extends DocmanBase
             ]
         );
         $this->assertEquals(
-            $items[2]['metadata'][0],
+            $items[$item_c_index]['metadata'][0],
             [
                 "name"                      => "Custom metadata",
                 "type"                      => "string",
@@ -205,7 +189,7 @@ class DocmanItemsTest extends DocmanBase
             ]
         );
         $this->assertEquals(
-            $items[3]['metadata'][0],
+            $items[$item_e_index]['metadata'][0],
             [
                 "name"                      => "Custom metadata",
                 "type"                      => "string",
@@ -216,7 +200,7 @@ class DocmanItemsTest extends DocmanBase
             ]
         );
         $this->assertEquals(
-            $items[4]['metadata'][0],
+            $items[$item_f_index]['metadata'][0],
             [
                 "name"                      => "Custom metadata",
                 "type"                      => "string",
@@ -227,7 +211,7 @@ class DocmanItemsTest extends DocmanBase
             ]
         );
         $this->assertEquals(
-            $items[5]['metadata'][0],
+            $items[$item_g_index]['metadata'][0],
             [
                 "name"                      => "Custom metadata",
                 "type"                      => "string",
@@ -237,8 +221,6 @@ class DocmanItemsTest extends DocmanBase
                 "is_multiple_value_allowed" => false
             ]
         );
-
-
 
         return $items;
     }
@@ -833,10 +815,11 @@ class DocmanItemsTest extends DocmanBase
     }
 
     /**
-     * @depends testGetFileId
+     * @depends testGetDocumentItemsForRegularUser
      */
-    public function testPatchFileDocumentIsRejectedIfFileIsTooBig(int $file_id)
+    public function testPatchFileDocumentIsRejectedIfFileIsTooBig(array $items): void
     {
+        $file = $this->findItemByTitle($items, 'file A');
         $put_resource = json_encode(
             [
                 'version_title'   => 'My version title',
@@ -847,54 +830,17 @@ class DocmanItemsTest extends DocmanBase
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->patch('docman_items/' . $file_id, null, $put_resource)
+            $this->client->patch('docman_items/' . $file['id'], null, $put_resource)
         );
         $this->assertEquals(400, $response->getStatusCode());
     }
 
     /**
-     * @depends testGetFileId
+     * @depends testGetDocumentItemsForRegularUser
      */
-    public function testPatchFileDocumentReturnsFileRepresentation(int $file_id)
+    public function testPatchOnEmptyItemThrowAnException(array $items): void
     {
-        $put_resource = json_encode(
-            [
-                'version_title'   => 'My version title',
-                'changelog'       => 'I have changed',
-                'file_properties' => ['file_name' => 'file1', 'file_size' => 10]
-            ]
-        );
-
-        $response = $this->getResponseByName(
-            DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->patch('docman_items/' . $file_id, null, $put_resource)
-        );
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals("/uploads/docman/version/1", $response->json()['upload_href']);
-    }
-
-    /**
-     * @depends testGetRootId
-     */
-    public function testPatchOnEmptyItemThrowAnException(int $root_id)
-    {
-        $response = $this->getResponseByName(
-            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->get('docman_items/' . $root_id . '/docman_items')
-        );
-        $folder = $response->json();
-
-        $folder_id = $folder[0]['id'];
-        $this->assertEquals($folder[0]['user_can_write'], true);
-
-        $response = $this->getResponseByName(
-            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->get('docman_items/' . $folder_id . '/docman_items')
-        );
-        $items = $response->json();
-
-        $empty_id = $items[1]['id'];
-
+        $empty = $this->findItemByTitle($items, 'item A');
 
         $put_resource = json_encode(
             [
@@ -906,8 +852,67 @@ class DocmanItemsTest extends DocmanBase
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->patch('docman_items/' . $empty_id, null, $put_resource)
+            $this->client->patch('docman_items/' . $empty['id'], null, $put_resource)
         );
         $this->assertEquals(501, $response->getStatusCode());
+    }
+
+    /**
+     * @depends testGetDocumentItemsForRegularUser
+     */
+    public function testPACTHIsRejectedIfAFileIsBeingUploadedForTheSameNameByADifferentUser(array $items) : void
+    {
+        $file = $this->findItemByTitle($items, 'file A');
+        $put_resource = json_encode(
+            [
+                'version_title'   => 'My version title',
+                'changelog'       => 'I have changed',
+                'file_properties' => ['file_name' => 'file1', 'file_size' => 10]
+            ]
+        );
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->patch('docman_items/' . $file['id'], null, $put_resource)
+        );
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals("/uploads/docman/version/1", $response->json()['upload_href']);
+
+
+        $put_resource = json_encode(
+            [
+                'version_title'   => 'My version title',
+                'changelog'       => 'I have changed',
+                'file_properties' => ['file_name' => 'file1', 'file_size' => 10]
+            ]
+        );
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->patch('docman_items/' . $file['id'], null, $put_resource)
+        );
+        $this->assertEquals(409, $response->getStatusCode());
+    }
+
+    /**
+     * @depends testGetDocumentItemsForRegularUser
+     */
+    public function testPatchFileDocumentReturnsFileRepresentation(array $items): void
+    {
+        $file = $this->findItemByTitle($items, 'file B');
+        $put_resource = json_encode(
+            [
+                'version_title'   => 'My version title',
+                'changelog'       => 'I have changed',
+                'file_properties' => ['file_name' => 'file1', 'file_size' => 10]
+            ]
+        );
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->patch('docman_items/' . $file['id'], null, $put_resource)
+        );
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals("/uploads/docman/version/2", $response->json()['upload_href']);
     }
 }

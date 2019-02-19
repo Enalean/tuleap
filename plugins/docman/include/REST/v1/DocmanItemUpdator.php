@@ -22,6 +22,7 @@ declare(strict_types = 1);
 
 namespace Tuleap\Docman\REST\v1;
 
+use Docman_Item;
 use Docman_LockFactory;
 use Luracast\Restler\RestException;
 use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
@@ -67,8 +68,12 @@ class DocmanItemUpdator
      * @throws UploadMaxSizeExceededException
      * @throws RestException
      */
-    public function update(\Docman_Item $item, \PFUser $user, DocmanItemPATCHRepresentation $patch_representation) : CreatedItemFilePropertiesRepresentation
-    {
+    public function update(
+        \Docman_Item $item,
+        \PFUser $user,
+        DocmanItemPATCHRepresentation $patch_representation,
+        \DateTimeImmutable $time
+    ) : CreatedItemFilePropertiesRepresentation {
         $approval_table = $this->approval_table_retriever->retrieveByItem($item);
         if ($approval_table) {
             throw new ExceptionDocumentHasApprovalTable();
@@ -86,7 +91,7 @@ class DocmanItemUpdator
             $document_to_upload = $this->creator->create(
                 $item,
                 $user,
-                new \DateTimeImmutable(),
+                $time,
                 $patch_representation->version_title,
                 $patch_representation->change_log,
                 $patch_representation->file_properties->file_name,

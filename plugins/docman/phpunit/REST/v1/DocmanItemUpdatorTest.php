@@ -37,7 +37,7 @@ class DocmanItemUpdatorTest extends TestCase
     /**
      * @var Mockery\MockInterface|VersionToUploadVisitorBeforeUpdateValidator
      */
-    private $visitor_checker;
+    private $before_update_validator;
     /**
      * @var Mockery\MockInterface|VersionToUploadCreator
      */
@@ -63,13 +63,13 @@ class DocmanItemUpdatorTest extends TestCase
         $this->approval_table_retriever = Mockery::mock(ApprovalTableRetriever::class);
         $this->lock_factory             = Mockery::mock(\Docman_LockFactory::class);
         $this->creator                  = Mockery::mock(VersionToUploadCreator::class);
-        $this->visitor_checker          = Mockery::mock(VersionToUploadVisitorBeforeUpdateValidator::class);
+        $this->before_update_validator  = Mockery::mock(VersionToUploadVisitorBeforeUpdateValidator::class);
 
         $this->updator = new DocmanItemUpdator(
             $this->approval_table_retriever,
             $this->lock_factory,
             $this->creator,
-            $this->visitor_checker
+            $this->before_update_validator
         );
     }
 
@@ -85,7 +85,7 @@ class DocmanItemUpdatorTest extends TestCase
 
         $representation                  = new DocmanItemPATCHRepresentation();
 
-        $this->updator->update($item, $user, $representation);
+        $this->updator->update($item, $user, $representation, new \DateTimeImmutable());
     }
 
     public function testItThrowsAnExceptionWhenDocumentIsLockedByAnotherUser()
@@ -105,7 +105,7 @@ class DocmanItemUpdatorTest extends TestCase
 
         $representation                  = new DocmanItemPATCHRepresentation();
 
-        $this->updator->update($item, $user, $representation);
+        $this->updator->update($item, $user, $representation, new \DateTimeImmutable());
     }
 
     public function testItShouldStoreTheNewVersionWhenFileRepresentationIsCorrect()
@@ -133,9 +133,10 @@ class DocmanItemUpdatorTest extends TestCase
         $version_to_upload = new VersionToUpload($version_id);
         $this->creator->shouldReceive('create')->once()->andReturn($version_to_upload);
 
-        $item->shouldReceive('accept')->withArgs([$this->visitor_checker, []]);
+        $time = new \DateTimeImmutable();
+        $item->shouldReceive('accept')->withArgs([$this->before_update_validator, []]);
 
-        $created_version_representation =  $this->updator->update($item, $user, $representation);
+        $created_version_representation = $this->updator->update($item, $user, $representation, $time);
 
         $this->assertEquals("/uploads/docman/version/1", $created_version_representation->upload_href);
     }

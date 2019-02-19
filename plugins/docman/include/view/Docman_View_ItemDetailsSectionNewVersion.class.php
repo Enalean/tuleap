@@ -22,6 +22,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Docman\Upload\Version\DocumentOnGoingVersionToUploadDAO;
+use Tuleap\Docman\Upload\Version\VersionOngoingUploadRetriever;
+
 require_once('Docman_View_ItemDetailsSectionActions.class.php');
 require_once('Docman_View_ItemDetailsSectionApprovalCreate.class.php');
 require_once('Docman_View_GetSpecificFieldsVisitor.class.php');
@@ -93,6 +96,16 @@ class Docman_View_ItemDetailsSectionNewVersion extends Docman_View_ItemDetailsSe
             $changelog = $this->_controller->_viewParams['changelog'];
         }
 
+
+        $retriever = new VersionOngoingUploadRetriever(new DocumentOnGoingVersionToUploadDAO());
+
+        if ($retriever->isThereAlreadyAnUploadOngoing($item, new DateTimeImmutable())) {
+            $renderer = TemplateRendererFactory::build()->getRenderer(__DIR__ . "/../../templates");
+            return $renderer->renderToString(
+                'document_file_upload_on_going_error',
+                []
+            );
+        }
         $content = '';
         $content .= '<form action="'. $this->url .'&amp;id='. $this->item->getId() .'" method="post" enctype="multipart/form-data" id="plugin_docman_new_version_form" data-test="plugin_docman_new_version_form">';
 
