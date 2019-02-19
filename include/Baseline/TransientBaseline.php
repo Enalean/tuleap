@@ -21,18 +21,29 @@
 
 namespace Tuleap\Baseline;
 
-/**
- * Gather all security permissions.
- */
-interface Permissions
-{
-    /**
-     * @throws NotAuthorizedException
-     */
-    function checkReadSimpleBaseline(SimplifiedBaseline $baseline): void;
+use Tracker_Artifact;
 
-    /**
-     * @throws NotAuthorizedException
-     */
-    function checkCreateBaseline(TransientBaseline $baseline);
+class TransientBaseline
+{
+    /** @var string */
+    private $name;
+
+    /** @var Tracker_Artifact */
+    private $milestone;
+
+    public function __construct(string $name, Tracker_Artifact $milestone)
+    {
+        $this->name      = $name;
+        $this->milestone = $milestone;
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    public function getMilestone(): Tracker_Artifact
+    {
+        return $this->milestone;
+    }
 }

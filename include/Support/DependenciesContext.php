@@ -21,16 +21,21 @@
 
 namespace Tuleap\Baseline\Support;
 
+use ParagonIE\EasyDB\EasyDB;
 use Tracker_Artifact_ChangesetFactory;
 use Tracker_Artifact_ChangesetFactoryBuilder;
 use Tracker_ArtifactFactory;
+use Tuleap\Baseline\Adapter\BaselineRepositoryImpl;
 use Tuleap\Baseline\Adapter\ChangesetRepositoryImpl;
+use Tuleap\Baseline\Adapter\ClockImpl;
 use Tuleap\Baseline\Adapter\CurrentUserProviderImpl;
 use Tuleap\Baseline\Adapter\FieldRepositoryImpl;
 use Tuleap\Baseline\Adapter\MilestoneRepositoryImpl;
 use Tuleap\Baseline\Adapter\ProjectPermissionsImpl;
+use Tuleap\Baseline\BaselineRepository;
 use Tuleap\Baseline\BaselineService;
 use Tuleap\Baseline\ChangesetRepository;
+use Tuleap\Baseline\Clock;
 use Tuleap\Baseline\CurrentUserProvider;
 use Tuleap\Baseline\FieldRepository;
 use Tuleap\Baseline\MilestoneRepository;
@@ -38,6 +43,7 @@ use Tuleap\Baseline\Permissions;
 use Tuleap\Baseline\PermissionsImpl;
 use Tuleap\Baseline\ProjectPermissions;
 use Tuleap\Baseline\REST\BaselineController;
+use Tuleap\DB\DBFactory;
 use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\REST\UserManager;
 
@@ -61,6 +67,9 @@ class DependenciesContext
 
     /** @var ChangesetRepository */
     private $changeset_repository;
+
+    /** @var BaselineRepository */
+    private $baseline_repository;
 
     /** @var CurrentUserProvider */
     private $current_user_provider;
@@ -87,6 +96,12 @@ class DependenciesContext
     /** @var ProjectStatusVerificator */
     private $project_status_verificator;
 
+    /** @var Clock */
+    private $clock;
+
+    /** @var EasyDB */
+    private $database;
+
     public function getBaselineController(): BaselineController
     {
         if ($this->baseline_controller === null) {
@@ -110,7 +125,10 @@ class DependenciesContext
             $this->baseline_service = new BaselineService(
                 $this->getFieldRepository(),
                 $this->getPermissions(),
-                $this->getChangesetRepository()
+                $this->getChangesetRepository(),
+                $this->getBaselineRepository(),
+                $this->getCurrentUserProvider(),
+                $this->getClock()
             );
         }
         return $this->baseline_service;
@@ -149,6 +167,21 @@ class DependenciesContext
     public function setChangesetRepository(ChangesetRepository $changeset_repository): void
     {
         $this->changeset_repository = $changeset_repository;
+    }
+
+    public function getBaselineRepository(): BaselineRepository
+    {
+        if ($this->baseline_repository === null) {
+            $this->baseline_repository = new BaselineRepositoryImpl(
+                $this->getDatabase()
+            );
+        }
+        return $this->baseline_repository;
+    }
+
+    public function setBaselineRepository(BaselineRepository $baseline_repository): void
+    {
+        $this->baseline_repository = $baseline_repository;
     }
 
     public function getCurrentUserProvider(): CurrentUserProvider
@@ -260,5 +293,26 @@ class DependenciesContext
     public function setProjectStatusVerificator(ProjectStatusVerificator $project_status_verificator): void
     {
         $this->project_status_verificator = $project_status_verificator;
+    }
+
+    public function getClock(): Clock
+    {
+        if ($this->clock === null) {
+            $this->clock = new ClockImpl();
+        }
+        return $this->clock;
+    }
+
+    public function setClock(Clock $clock): void
+    {
+        $this->clock = $clock;
+    }
+
+    public function getDatabase(): EasyDB
+    {
+        if ($this->database === null) {
+            $this->database = DBFactory::getMainTuleapDBConnection()->getDB();
+        }
+        return $this->database;
     }
 }

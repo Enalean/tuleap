@@ -35,6 +35,38 @@ class BaselinesResource extends AuthenticatedResource
     }
 
     /**
+     * Create a new Baseline
+     *
+     * Create a new Baseline on current date time.
+     *
+     * @url    POST
+     * @status 201
+     * @access public
+     *
+     * @param string $name         Name of the baseline {@from body}
+     * @param int    $milestone_id Id of a milestone {@from body}
+     *
+     * @return Tuleap\Baseline\REST\BaselineRepresentation
+     * @throws \Rest_Exception_InvalidTokenException
+     * @throws I18NRestException 401
+     * @throws I18NRestException 403
+     * @throws I18NRestException 404
+     * @throws \User_PasswordExpiredException
+     * @throws \User_StatusDeletedException
+     * @throws \User_StatusInvalidException
+     * @throws \User_StatusPendingException
+     * @throws \User_StatusSuspendedException
+     * @throws \Luracast\Restler\RestException
+     */
+    public function post(string $name, int $milestone_id): BaselineRepresentation
+    {
+        $this->checkAccess();
+        return $this->context
+            ->getBaselineController()
+            ->post($name, $milestone_id);
+    }
+
+    /**
      * Get a virtual simplified Baseline
      *
      * Get a virtual Baseline based on artifact id and date

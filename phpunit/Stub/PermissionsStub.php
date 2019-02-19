@@ -24,6 +24,7 @@ namespace Tuleap\Baseline\Stub;
 use Tuleap\Baseline\NotAuthorizedException;
 use Tuleap\Baseline\Permissions;
 use Tuleap\Baseline\SimplifiedBaseline;
+use Tuleap\Baseline\TransientBaseline;
 
 /**
  * Implementation of Permissions used for tests.
@@ -41,6 +42,16 @@ class PermissionsStub implements Permissions
     public function denyAll()
     {
         $this->all_permitted = false;
+    }
+
+    /**
+     * @throws NotAuthorizedException
+     */
+    function checkCreateBaseline(TransientBaseline $baseline)
+    {
+        if (! $this->all_permitted) {
+            throw new NotAuthorizedException('Baseline read not authorized');
+        }
     }
 
     /**

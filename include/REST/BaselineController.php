@@ -28,6 +28,7 @@ use Tuleap\Baseline\ChangesetNotFoundException;
 use Tuleap\Baseline\CurrentUserProvider;
 use Tuleap\Baseline\MilestoneRepository;
 use Tuleap\Baseline\NotAuthorizedException;
+use Tuleap\Baseline\TransientBaseline;
 use Tuleap\REST\I18NRestException;
 
 class BaselineController
@@ -55,6 +56,35 @@ class BaselineController
         $this->current_user_provider = $current_user_provider;
         $this->milestone_repository  = $milestone_repository;
         $this->baseline_service      = $baseline_service;
+    }
+
+    /**
+     * @throws I18NRestException
+     * @throws \Luracast\Restler\RestException
+     * @throws \Rest_Exception_InvalidTokenException
+     * @throws \User_PasswordExpiredException
+     * @throws \User_StatusDeletedException
+     * @throws \User_StatusInvalidException
+     * @throws \User_StatusPendingException
+     * @throws \User_StatusSuspendedException
+     */
+    public function post(string $name, int $milestone_id): BaselineRepresentation
+    {
+        $milestone = $this->milestone_repository->findById($milestone_id);
+        if ($milestone === null) {
+            throw new I18NRestException(
+                404,
+                sprintf(
+                    dgettext('tuleap-baseline', 'No milestone found with id %u'),
+                    $milestone_id
+                )
+            );
+        }
+
+        $baseline         = new TransientBaseline($name, $milestone);
+        $created_baseline = $this->baseline_service->create($baseline);
+
+        return new BaselineRepresentation($created_baseline);
     }
 
     /**

@@ -49,17 +49,32 @@ class BaselineServiceTest extends TestCase
     /** @var ChangesetRepository|MockInterface */
     private $changeset_repository;
 
+    /** @var BaselineRepository|MockInterface */
+    private $baseline_repository;
+
+    /** @var CurrentUserProvider|MockInterface */
+    private $current_user_provider;
+
+    /** @var Clock|MockInterface */
+    private $clock;
+
     /** @before */
     public function createInstance()
     {
-        $this->field_repository     = Mockery::mock(FieldRepository::class)->shouldIgnoreMissing();
-        $this->permissions          = Mockery::mock(Permissions::class)->shouldIgnoreMissing();
-        $this->changeset_repository = Mockery::mock(ChangesetRepository::class)->shouldIgnoreMissing();
+        $this->field_repository      = Mockery::mock(FieldRepository::class)->shouldIgnoreMissing();
+        $this->permissions           = Mockery::mock(Permissions::class)->shouldIgnoreMissing();
+        $this->changeset_repository  = Mockery::mock(ChangesetRepository::class)->shouldIgnoreMissing();
+        $this->baseline_repository   = Mockery::mock(BaselineRepository::class);
+        $this->current_user_provider = Mockery::mock(CurrentUserProvider::class);
+        $this->clock                 = Mockery::mock(Clock::class);
 
         $this->service = new BaselineService(
             $this->field_repository,
             $this->permissions,
-            $this->changeset_repository
+            $this->changeset_repository,
+            $this->baseline_repository,
+            $this->current_user_provider,
+            $this->clock
         );
     }
 

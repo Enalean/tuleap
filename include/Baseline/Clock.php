@@ -21,18 +21,9 @@
 
 namespace Tuleap\Baseline;
 
-/**
- * Gather all security permissions.
- */
-interface Permissions
-{
-    /**
-     * @throws NotAuthorizedException
-     */
-    function checkReadSimpleBaseline(SimplifiedBaseline $baseline): void;
+use DateTime;
 
-    /**
-     * @throws NotAuthorizedException
-     */
-    function checkCreateBaseline(TransientBaseline $baseline);
+interface Clock
+{
+    function now(): DateTime;
 }

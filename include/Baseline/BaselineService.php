@@ -37,6 +37,44 @@ class BaselineService
     /** @var ChangesetRepository */
     private $changeset_repository;
 
+    /** @var BaselineRepository */
+    private $baseline_repository;
+
+    /** @var CurrentUserProvider */
+    private $current_user_provider;
+
+    /** @var Clock */
+    private $clock;
+
+    public function __construct(
+        FieldRepository $field_repository,
+        Permissions $permissions,
+        ChangesetRepository $changeset_repository,
+        BaselineRepository $baseline_repository,
+        CurrentUserProvider $current_user_provider,
+        Clock $clock
+    ) {
+        $this->field_repository      = $field_repository;
+        $this->permissions           = $permissions;
+        $this->changeset_repository  = $changeset_repository;
+        $this->baseline_repository   = $baseline_repository;
+        $this->current_user_provider = $current_user_provider;
+        $this->clock                 = $clock;
+    }
+
+    /**
+     * @throws NotAuthorizedException
+     */
+    public function create(TransientBaseline $baseline): Baseline
+    {
+        $this->permissions->checkCreateBaseline($baseline);
+        return $this->baseline_repository->create(
+            $baseline,
+            $this->current_user_provider->getUser(),
+            $this->clock->now()
+        );
+    }
+
     /**
      * Find simplified baseline on given milestone and given date time.
      *
@@ -64,16 +102,6 @@ class BaselineService
 
         $this->permissions->checkReadSimpleBaseline($baseline);
         return $baseline;
-    }
-
-    public function __construct(
-        FieldRepository $field_repository,
-        Permissions $permissions,
-        ChangesetRepository $changeset_repository
-    ) {
-        $this->field_repository     = $field_repository;
-        $this->permissions          = $permissions;
-        $this->changeset_repository = $changeset_repository;
     }
 
     private function getTrackerTitle(Tracker $tracker, Tracker_Artifact_Changeset $changeSet): ?string

@@ -19,20 +19,32 @@
  *
  */
 
-namespace Tuleap\Baseline;
+namespace Tuleap\Baseline\Stub;
+
+use DateTime;
+use Tuleap\Baseline\Clock;
+use Tuleap\Baseline\Support\DateTimeFactory;
 
 /**
- * Gather all security permissions.
+ * A clock where time is frozen. Useful for tests.
  */
-interface Permissions
+class FrozenClock implements Clock
 {
-    /**
-     * @throws NotAuthorizedException
-     */
-    function checkReadSimpleBaseline(SimplifiedBaseline $baseline): void;
+    /** @var DateTime */
+    private $now;
 
-    /**
-     * @throws NotAuthorizedException
-     */
-    function checkCreateBaseline(TransientBaseline $baseline);
+    public function __construct()
+    {
+        $this->now = DateTimeFactory::one();
+    }
+
+    public function setNow(DateTime $now): void
+    {
+        $this->now = $now;
+    }
+
+    public function now(): DateTime
+    {
+        return $this->now;
+    }
 }

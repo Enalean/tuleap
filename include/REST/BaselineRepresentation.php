@@ -19,20 +19,34 @@
  *
  */
 
-namespace Tuleap\Baseline;
+namespace Tuleap\Baseline\REST;
 
-/**
- * Gather all security permissions.
- */
-interface Permissions
+use DateTime;
+use Tuleap\Baseline\Baseline;
+
+class BaselineRepresentation
 {
-    /**
-     * @throws NotAuthorizedException
-     */
-    function checkReadSimpleBaseline(SimplifiedBaseline $baseline): void;
+    /** @var int */
+    public $id;
 
-    /**
-     * @throws NotAuthorizedException
-     */
-    function checkCreateBaseline(TransientBaseline $baseline);
+    /** @var string */
+    public $name;
+
+    /** @var int */
+    public $milestone_id;
+
+    /** @var int */
+    public $author_id;
+
+    /** @var DateTime */
+    public $creation_date;
+
+    public function __construct(Baseline $baseline)
+    {
+        $this->id            = $baseline->getId();
+        $this->name          = $baseline->getName();
+        $this->milestone_id  = $baseline->getMilestone()->getId();
+        $this->author_id     = $baseline->getAuthor()->getId();
+        $this->creation_date = $baseline->getCreationDate()->format('c');
+    }
 }

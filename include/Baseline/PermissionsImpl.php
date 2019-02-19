@@ -42,6 +42,14 @@ class PermissionsImpl implements Permissions
     /**
      * @throws NotAuthorizedException
      */
+    function checkCreateBaseline(TransientBaseline $baseline)
+    {
+        $this->checkReadArtifact($baseline->getMilestone());
+    }
+
+    /**
+     * @throws NotAuthorizedException
+     */
     public function checkReadSimpleBaseline(SimplifiedBaseline $baseline): void
     {
         $this->checkReadArtifact($baseline->getMilestone());

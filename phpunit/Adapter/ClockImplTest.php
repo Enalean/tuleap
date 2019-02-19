@@ -19,20 +19,37 @@
  *
  */
 
-namespace Tuleap\Baseline;
+namespace Tuleap\Baseline\Adapter;
 
-/**
- * Gather all security permissions.
- */
-interface Permissions
+require_once __DIR__ . '/../bootstrap.php';
+
+use DateTime;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
+use Tuleap\Baseline\Clock;
+
+class ClockImplTest extends TestCase
 {
-    /**
-     * @throws NotAuthorizedException
-     */
-    function checkReadSimpleBaseline(SimplifiedBaseline $baseline): void;
+    use MockeryPHPUnitIntegration;
+
+    /** @var Clock */
+    private $clock;
 
     /**
-     * @throws NotAuthorizedException
+     * @before
      */
-    function checkCreateBaseline(TransientBaseline $baseline);
+    public function createInstance()
+    {
+        $this->clock = new ClockImpl();
+    }
+
+    public function testNowReturnsCurrentDateTime()
+    {
+        $before_now = new DateTime('now');
+        $now        = $this->clock->now();
+        $after_now  = new DateTime('now');
+
+        $this->assertGreaterThan($before_now, $now);
+        $this->assertLessThan($after_now, $now);
+    }
 }

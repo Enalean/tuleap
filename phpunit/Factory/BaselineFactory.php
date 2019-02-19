@@ -19,20 +19,23 @@
  *
  */
 
-namespace Tuleap\Baseline;
+namespace Tuleap\Baseline\Factory;
+
+use PFUser;
+use Tuleap\Baseline\Support\DateTimeFactory;
 
 /**
- * Gather all security permissions.
+ * ObjectMother pattern applied to baselines
  */
-interface Permissions
+class BaselineFactory
 {
-    /**
-     * @throws NotAuthorizedException
-     */
-    function checkReadSimpleBaseline(SimplifiedBaseline $baseline): void;
-
-    /**
-     * @throws NotAuthorizedException
-     */
-    function checkCreateBaseline(TransientBaseline $baseline);
+    public static function one()
+    {
+        return (new BaselineBuilder())
+            ->id(1)
+            ->name('Milestone startup')
+            ->milestone(MilestoneFactory::one()->build())
+            ->author(new PFUser())
+            ->creationDate(DateTimeFactory::one());
+    }
 }

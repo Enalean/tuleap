@@ -24,18 +24,45 @@ use RestBase;
 
 class BaselinesResourceTest extends RestBase
 {
+    private const TEST_USER_NAME = 'rest_api_tester_1';
+
     public function testGetByArtifactIdAndDate()
     {
         $artifact = $this->fetchFirstArtifactByProjectName("baseline-test");
 
-        $url           = 'baselines/?' . http_build_query(['artifact_id' => $artifact['id'], "date" => "2017-09-02"]);
-        $response      = $this->getResponse($this->client->get($url));
+        $url      = 'baselines/?' . http_build_query(['artifact_id' => $artifact['id'], "date" => "2017-09-02"]);
+        $response = $this->getResponse($this->client->get($url));
         $json_response = $response->json();
 
         $this->assertEquals("old title", $json_response['artifact_title']);
         $this->assertEquals(1479378846, $json_response['last_modification_date_before_baseline_date']);
         $this->assertEquals("To be done", $json_response['artifact_status']);
         $this->assertEquals("Artifact that will be moved in another tracker", $json_response['artifact_description']);
+    }
+
+    public function testPost()
+    {
+        $artifact = $this->fetchFirstArtifactByProjectName("baseline-test");
+
+        $response = $this->getResponseByName(
+            self::TEST_USER_NAME,
+            $this->client->post(
+                'baselines',
+                null,
+                json_encode(
+                    [
+                        'name'         => 'new baseline',
+                        'milestone_id' => $artifact['id']
+                    ]
+                )
+            )
+        );
+        $json_response = $response->json();
+
+        $this->assertNotNull($json_response['id']);
+        $this->assertEquals('new baseline', $json_response['name']);
+        $this->assertEquals($this->user_ids[self::TEST_USER_NAME], $json_response['author_id']);
+        $this->assertNotNull($json_response['creation_date']);
     }
 
     private function fetchFirstArtifactByProjectName(string $project_name): array

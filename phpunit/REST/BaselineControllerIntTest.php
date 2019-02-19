@@ -31,9 +31,11 @@ use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_Text;
 use Tuleap\Baseline\Factory\ChangesetFactory;
 use Tuleap\Baseline\Factory\MilestoneFactory;
+use Tuleap\Baseline\Stub\BaselineRepositoryStub;
 use Tuleap\Baseline\Stub\ChangesetRepositoryStub;
 use Tuleap\Baseline\Stub\CurrentUserProviderStub;
 use Tuleap\Baseline\Stub\FieldRepositoryStub;
+use Tuleap\Baseline\Stub\FrozenClock;
 use Tuleap\Baseline\Stub\MilestoneRepositoryStub;
 use Tuleap\Baseline\Stub\PermissionsStub;
 use Tuleap\Baseline\Support\DependenciesContext;
@@ -57,11 +59,17 @@ class BaselineControllerIntTest extends TestCase
     /** @var ChangesetRepositoryStub */
     private $changeset_repository;
 
+    /** @var BaselineRepositoryStub */
+    private $baseline_repository;
+
     /** @var PermissionsStub */
     private $permissions;
 
     /** @var CurrentUserProviderStub */
     private $current_user_provider;
+
+    /** @var FrozenClock */
+    private $clock;
 
     /** @before */
     public function createContextWithStubs()
@@ -77,13 +85,35 @@ class BaselineControllerIntTest extends TestCase
         $this->changeset_repository = new ChangesetRepositoryStub();
         $context->setChangesetRepository($this->changeset_repository);
 
+        $this->baseline_repository = new BaselineRepositoryStub();
+        $context->setBaselineRepository($this->baseline_repository);
+
         $this->permissions = new PermissionsStub();
         $context->setPermissions($this->permissions);
 
         $this->current_user_provider = new CurrentUserProviderStub();
         $context->setCurrentUserProvider($this->current_user_provider);
 
+        $this->clock = new FrozenClock();
+        $context->setClock($this->clock);
+
         $this->controller = $context->getBaselineController();
+    }
+
+    public function testPost()
+    {
+        $this->permissions->permitAll();
+        $milestone = MilestoneFactory::one()->id(2)->build();
+        $this->milestone_repository->add($milestone);
+
+        $this->controller->post('My first baseline', 2);
+
+        $this->assertEquals(1, $this->baseline_repository->count());
+        $baseline = $this->baseline_repository->findAny();
+        $this->assertEquals('My first baseline', $baseline->getName());
+        $this->assertEquals($milestone, $baseline->getMilestone());
+        $this->assertEquals($this->current_user_provider->getUser(), $baseline->getAuthor());
+        $this->assertEquals($this->clock->now(), $baseline->getCreationDate());
     }
 
     public function testGetByMilestoneIdAndDate()

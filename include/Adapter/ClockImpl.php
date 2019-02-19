@@ -19,20 +19,15 @@
  *
  */
 
-namespace Tuleap\Baseline;
+namespace Tuleap\Baseline\Adapter;
 
-/**
- * Gather all security permissions.
- */
-interface Permissions
+use DateTime;
+use Tuleap\Baseline\Clock;
+
+class ClockImpl implements Clock
 {
-    /**
-     * @throws NotAuthorizedException
-     */
-    function checkReadSimpleBaseline(SimplifiedBaseline $baseline): void;
-
-    /**
-     * @throws NotAuthorizedException
-     */
-    function checkCreateBaseline(TransientBaseline $baseline);
+    public function now(): DateTime
+    {
+        return new DateTime('now');
+    }
 }
