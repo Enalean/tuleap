@@ -4,6 +4,7 @@
 #  *
 #  * Codendi 
 #  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+#  * Copyright (c) Enalean, 2019. All rights reserved
 #  * http://www.codendi.com
 #  *
 #  *
@@ -185,8 +186,7 @@ register_confirmation_project_one_step	redirect_content	Go to the project homepa
 #-----------------------------------------------
 # Script: src/common/project/OneStepRegistration/OneStepRegistrationApprovalPresenter.php
 #
-register_confirmation_approval_project_one_step	title	Your project has been created
-register_confirmation_approval_project_one_step	section_one	Your project has been submitted to the administrators for validation.
+register_confirmation_approval_project_one_step	title	Your project has been submitted to the administrators for validation
 register_confirmation_approval_project_one_step	section_two	You will receive decision notification and further instructions by email.
 register_confirmation_approval_project_one_step	thanks	Thank you for using $1
 register_confirmation_approval_project_one_step	redirect_content	Go back to your homepage

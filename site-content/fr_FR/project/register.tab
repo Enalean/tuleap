@@ -1,5 +1,6 @@
 #
 # Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+# Copyright (c) Enalean, 2019. All rights reserved
 # This file is licensed under the GNU General Public License version 2. See the file COPYING.
 #
 #-----------------------------------------------
@@ -167,8 +168,7 @@ register_confirmation_project_one_step	redirect_content	Aller à la page d'accue
 #-----------------------------------------------
 # Script: src/common/project/OneStepRegistration/OneStepRegistrationApprovalPresenter.php
 #
-register_confirmation_approval_project_one_step	title	Votre projet a été créé
-register_confirmation_approval_project_one_step	section_one	Le projet a été soumis à validation aux administrateurs.
+register_confirmation_approval_project_one_step	title	Le projet a été soumis à validation aux administrateurs
 register_confirmation_approval_project_one_step	section_two	Vous recevrez une notification par email concernant leur décision et des instructions supplémentaires.
 register_confirmation_approval_project_one_step	thanks	Merci d'utiliser $1
 register_confirmation_approval_project_one_step	redirect_content	Retourner sur ma page personnelle
