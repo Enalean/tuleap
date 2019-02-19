@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,11 +23,14 @@ namespace Tuleap\Cardwall\OnTop\Config;
 require_once __DIR__ . '/../../../bootstrap.php';
 
 use Mockery;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tracker_FormElement_Field_List;
 
 class ColumnFactoryTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
+
     /** @var Mockery\MockInterface */
     private $field;
 
@@ -51,9 +54,6 @@ class ColumnFactoryTest extends TestCase
         $this->column_factory = new \Cardwall_OnTop_Config_ColumnFactory($this->dao, $this->on_top_dao);
     }
 
-    /**
-     * @doesNotPerformAssertions
-     */
     public function testItShouldNotFatalErrorOnInvalidBindValue()
     {
         $filter = [123,234];

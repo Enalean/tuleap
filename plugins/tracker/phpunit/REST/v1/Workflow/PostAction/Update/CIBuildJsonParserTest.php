@@ -31,6 +31,8 @@ use Workflow;
 
 class CIBuildJsonParserTest extends TestCase
 {
+    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
     /**
      * @var CIBuildJsonParser
      */

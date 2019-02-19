@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,12 +21,15 @@
 namespace Tuleap\OpenIDConnectClient\Authentication\UserInfo;
 
 use Http\Message\RequestFactory;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\OpenIDConnectClient\Authentication\Token\TokenResponse;
 use Tuleap\OpenIDConnectClient\Provider\Provider;
 
 class UserInfoRequestCreatorTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
+
     public function testAnEmptyRequestIsCreatedWhenNoUserEndpointIsAvailable()
     {
         $request_factory           = \Mockery::mock(RequestFactory::class);

@@ -31,6 +31,8 @@ use Workflow;
 
 class SetFloatValueJsonParserTest extends TestCase
 {
+    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
     /**
      * @var SetFloatValueJsonParser
      */

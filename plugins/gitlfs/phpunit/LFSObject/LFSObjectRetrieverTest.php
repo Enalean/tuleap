@@ -20,10 +20,13 @@
 
 namespace Tuleap\GitLFS\LFSObject;
 
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 
 class LFSObjectRetrieverTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
+
     private $dao;
 
     protected function setUp() : void

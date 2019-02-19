@@ -21,12 +21,15 @@
 namespace Tuleap\Docman\ExternalLinks;
 
 use Mockery;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use PHPUnit\Framework\TestCase;
 use Project;
 
 class ExternalLinkRedirectorTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
+
     /**
      * @var Project
      */

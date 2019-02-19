@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,6 +22,7 @@
 namespace Tuleap\Tracker\Artifact;
 
 use Logger;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tracker\Artifact\XMLArtifactSourcePlatformExtractor;
 use Tuleap\Project\XML\Import\ImportConfig;
@@ -31,6 +32,8 @@ require_once __DIR__ . '/../../bootstrap.php';
 
 class XMLArtifactSourcePlatformExtractorTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
+
     /**
      * @var XMLArtifactSourcePlatformExtractor
      */

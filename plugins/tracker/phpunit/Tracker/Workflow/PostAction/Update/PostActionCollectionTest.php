@@ -27,6 +27,8 @@ use Tuleap\Tracker\Workflow\PostAction\Update\Internal\UnknownPostActionIdsExcep
 
 class PostActionCollectionTest extends TestCase
 {
+    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
 
     public function testCompareCIBuildActionsToIdentifiesNewActions()
     {

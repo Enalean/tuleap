@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved.
  *
  * This file is a part of Tuleap.
@@ -25,6 +25,8 @@ use PHPUnit\Framework\TestCase;
 
 class HudsonJobFactoryTest extends TestCase // @codingStandardsIgnoreLine
 {
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
     protected function setUp() : void
     {
         $GLOBALS['Language'] = Mockery::spy(BaseLanguage::class);

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,12 +20,15 @@
 
 namespace Tuleap\Tracker\Notifications;
 
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
 class CollectionOfUserInvolvedInNotificationPresenterBuilderTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
+
     protected function tearDown() : void
     {
         \UserHelper::clearInstance();

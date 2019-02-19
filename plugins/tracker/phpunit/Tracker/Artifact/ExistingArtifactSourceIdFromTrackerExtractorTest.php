@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,6 +21,7 @@
 
 namespace Tuleap\Tracker\Artifact;
 
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tracker;
 use Tracker_Artifact;
@@ -32,6 +33,8 @@ require_once __DIR__ . '/../../bootstrap.php';
 
 class ExistingArtifactSourceIdFromTrackerExtractorTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
+
     /**
      * @var Tracker_ArtifactFactory
      */

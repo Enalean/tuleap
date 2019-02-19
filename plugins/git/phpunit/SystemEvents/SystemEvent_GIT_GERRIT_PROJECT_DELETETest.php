@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -25,6 +25,8 @@ require_once __DIR__ . '/../bootstrap.php';
 
 class SystemEvent_GIT_GERRIT_PROJECT_DELETE_BaseTest extends TestCase  // phpcs:ignore
 {
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
     /**
      * @var Git_RemoteServer_GerritServer|MockInterface
      */
