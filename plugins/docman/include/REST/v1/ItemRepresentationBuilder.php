@@ -181,7 +181,12 @@ class ItemRepresentationBuilder
 
         $table_owner    = $this->getMinimalUserRepresentation((int) $approval_table->getOwner());
 
-        return new ItemApprovalTableRepresentation($approval_table, $table_owner, $this->approval_table_state_mapper);
+        return new ItemApprovalTableRepresentation(
+            $approval_table,
+            $table_owner,
+            $this->approval_table_state_mapper,
+            $item
+        );
     }
 
     private function getMinimalUserRepresentation(int $user_id) : MinimalUserRepresentation
