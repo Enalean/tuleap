@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2019. All Rights Reserved.
  * Copyright 1999-2000 (c) The SourceForge Crew
  * SourceForge: Breaking Down the Barriers to Open Source Development
  *
@@ -359,7 +359,7 @@ function commit_add_sort_criteria($criteria_list, $order, $msort)
     if ($criteria_list) {
         $arr = explode(',',$criteria_list);
         $i = 0;
-        while (list(,$attr) = each($arr)) {
+        foreach ($arr as $attr) {
             preg_match("/\s*([^<>]*)([<>]*)/", $attr,$match);
             list(,$mattr,$mdir) = $match;
             //echo "<br><pre>DBG \$mattr=$mattr,\$mdir=$mdir</pre>";
@@ -403,7 +403,7 @@ function commit_criteria_list_to_text($criteria_list, $url)
         $arr    = explode(',', $criteria_list);
         $morder = '';
 
-        while (list(,$crit) = each($arr)) {
+        foreach ($arr as $crit) {
 
             $morder .= ($morder ? ",".$crit : $crit);
             $attr = str_replace('>','',$crit);
@@ -611,8 +611,7 @@ function format_cvs_history($group_id) {
     
     // Format output 
     $output = '<P><b>'.$GLOBALS['Language']->getText('cvs_intro', 'nb_commits').'</b><BR>&nbsp;';
-    reset($cvshist);
-    while (list($user, ) = each($cvshist)) {
+    foreach ($cvshist as $user => $value) {
       $output .= '<BR>'.$user.' ('.$cvshist[$user]['last'].'/'
 	.$cvshist[$user]['full'].')';
     }

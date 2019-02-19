@@ -300,7 +300,7 @@ function svn_utils_add_sort_criteria($criteria_list, $order, $msort)
     if ($criteria_list) {
 	$arr = explode(',',$criteria_list);
 	$i = 0;
-	while (list(,$attr) = each($arr)) {
+	foreach ($arr as $attr) {
 	    preg_match("/\s*([^<>]*)([<>]*)/", $attr,$match);
 	    list(,$mattr,$mdir) = $match;
 	    //echo "<br><pre>DBG \$mattr=$mattr,\$mdir=$mdir</pre>";
@@ -345,7 +345,7 @@ function svn_utils_criteria_list_to_text($criteria_list, $url){
     $morder = '';
 	$arr = explode(',',$criteria_list);
 
-	while (list(,$crit) = each($arr)) {
+	foreach ($arr as $crit) {
 
 	    $morder .= ($morder ? ",".$crit : $crit);
 	    $attr = str_replace('>','',$crit);
@@ -494,10 +494,9 @@ function svn_utils_format_svn_history($group_id) {
 
         // Format output 
         $output = '<P><b>'.$Language->getText('svn_utils','ci_week').'</b><BR>&nbsp;';
-        reset($svnhist);
         $uh = new UserHelper();
-        $hp = Codendi_HTMLPurifier::instance(); 
-        while (list($user, ) = each($svnhist)) {
+        $hp = Codendi_HTMLPurifier::instance();
+        foreach ($svnhist as $user => $value) {
             $output .= '<BR>'
                 .$hp->purify($uh->getDisplayNameFromUserName($user), CODENDI_PURIFIER_CONVERT_HTML)
                 .' ('.$svnhist[$user]['last'].'/'
@@ -639,8 +638,7 @@ function svn_utils_parse_access_file($project_svnroot) {
 
           if (strpos($who,'@') === 0) {
             if (array_key_exists(strtolower(substr($who,1)),$SVNGROUPS)) {
-              reset($SVNGROUPS[strtolower(substr($who,1))]); 
-	      while (list(,$user) = each($SVNGROUPS[strtolower(substr($who,1))])) {
+          foreach($SVNGROUPS[strtolower(substr($who,1))] as $user) {
 		if (array_key_exists($user,$SVNACCESS) === false) $SVNACCESS[$user] = array();
                 $SVNACCESS[$user][$path] = $perm;
                 //echo "SVNACCESS[$user][$path] = $perm <br>\n";
