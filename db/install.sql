@@ -10,3 +10,13 @@ WHERE group_id NOT IN (SELECT group_id
                        FROM service
                        WHERE short_name
                            LIKE 'plugin_baseline');
+
+-- Baseline entity
+CREATE TABLE IF NOT EXISTS plugin_baseline_baseline
+(
+	id int auto_increment primary key,
+	name varchar(255) not null,
+	artifact_id int not null,
+	user_id int not null,
+	creation_date int not null
+);

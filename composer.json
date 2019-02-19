@@ -1,7 +1,10 @@
 {
     "autoload": {
         "psr-4": {
-            "Tuleap\\Baseline\\": "include/"
+            "Tuleap\\Baseline\\": [
+                "include/",
+                "include/Baseline/"
+            ]
         }
     },
     "require": {
