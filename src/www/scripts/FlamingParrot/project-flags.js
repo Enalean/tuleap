@@ -35,23 +35,26 @@ document.addEventListener("DOMContentLoaded", () => {
         { title: project_flags_element.dataset.title }
     );
 
+    const shield_icon_html = new XMLSerializer().serializeToString(
+        document.querySelector(".tuleap-svg-project-shield")
+    );
+
     const content = render(
-        `<p>{{ description }}</p>
-        <ul class="current-project-nav-flag-popover-flags">
-            {{# project_flags }}
-                <li class="current-project-nav-flag-popover-flag">
-                    <h2 class="current-project-nav-flag-popover-title">
-                        {{ label }}
-                    </h2>
-                    <p class="current-project-nav-flag-popover-description">
+        `{{# project_flags }}
+            <div class="current-project-nav-flag-popover-flag">
+                ${shield_icon_html}
+                <h2 class="current-project-nav-flag-popover-content-title">
+                    {{ label }}
+                </h2>
+                {{# description }}
+                    <p class="current-project-nav-flag-popover-content-description">
                         {{ description }}
                     </p>
-                </li>
-            {{/ project_flags }}
-        </ul>`,
+                {{/ description }}
+            </div>
+        {{/ project_flags }}`,
         {
-            project_flags: JSON.parse(project_flags_element.dataset.projectFlags),
-            description: project_flags_element.dataset.description
+            project_flags: JSON.parse(project_flags_element.dataset.projectFlags)
         }
     );
 

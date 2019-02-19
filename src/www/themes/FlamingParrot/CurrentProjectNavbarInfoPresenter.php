@@ -40,10 +40,6 @@ class FlamingParrot_CurrentProjectNavbarInfoPresenter  // phpcs:ignore
      * @var string
      */
     public $project_flags_title;
-    /**
-     * @var string
-     */
-    public $project_flags_description;
 
     public function __construct(Project $project, $project_privacy, array $project_flags)
     {
@@ -62,7 +58,6 @@ class FlamingParrot_CurrentProjectNavbarInfoPresenter  // phpcs:ignore
 
         $this->json_encoded_project_flags = \json_encode($project_flags);
 
-        $this->project_flags_title       = ngettext("Project flag", "Project flags", $nb_project_flags);
-        $this->project_flags_description = _("The project is:");
+        $this->project_flags_title = ngettext("Project flag", "Project flags", $nb_project_flags);
     }
 }

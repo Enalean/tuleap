@@ -38,6 +38,9 @@ function getPopperOptions(anchor, options) {
         modifiers: {
             arrow: {
                 element: ".tlp-popover-arrow"
+            },
+            computeStyle: {
+                gpuAcceleration: false
             }
         }
     };

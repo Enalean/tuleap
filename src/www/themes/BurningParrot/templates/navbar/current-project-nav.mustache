@@ -21,27 +21,27 @@
                 {{/ project_flags }}
             </span>
         </span>
-        <div class="tlp-popover" id="current-project-nav-flag-popover">
-            <div class="tlp-popover-header current-project-nav-flag-popover-header">
-                <h3 class="tlp-popover-title current-project-nav-flag-popover-title">{{ project_flags_title }}</h3>
+        <section class="tlp-popover" id="current-project-nav-flag-popover">
+            <div class="tlp-popover-arrow"></div>
+            <div class="tlp-popover-header">
+                <h1 class="tlp-popover-title">{{ project_flags_title }}</h1>
             </div>
             <div class="tlp-popover-body">
-                <p>{{ project_flags_description }}
-                <ul class="current-project-nav-flag-popover-flags">
-                    {{# project_flags }}
-                        <li class="current-project-nav-flag-popover-flag">
-                            <h2 class="current-project-nav-flag-popover-content-title">
-                                {{ label }}
-                            </h2>
+                {{# project_flags }}
+                    <div class="current-project-nav-flag-popover-flag">
+                        {{# glyph }}project-shield{{/ glyph }}
+                        <h2 class="current-project-nav-flag-popover-content-title">
+                            {{ label }}
+                        </h2>
+                        {{# description }}
                             <p class="current-project-nav-flag-popover-content-description">
                                 {{ description }}
                             </p>
-                        </li>
-                    {{/ project_flags }}
-                </ul>
+                        {{/ description }}
+                    </div>
+                {{/ project_flags }}
             </div>
-            <div class="tlp-popover-arrow"></div>
-        </div>
+        </section>
     {{/ has_project_flags }}
 </nav>
 {{/ current_project_navbar_info_presenter }}

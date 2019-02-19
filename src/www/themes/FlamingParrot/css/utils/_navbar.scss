@@ -429,7 +429,7 @@ $nav-dropdown-content-border-radius: 3px;
     padding: 0;
     border: 0;
     border-radius: 0;
-    font-size: 14px;
+    font-size: 16px;
     font-weight: normal;
     letter-spacing: normal;
     text-transform: none;
@@ -443,17 +443,16 @@ $nav-dropdown-content-border-radius: 3px;
         border-top-right-radius: $nav-dropdown-content-border-radius;
         background-color: $main;
         color: #ffffff;
-        font-size: 14px;
+        font-size: 16px;
         font-weight: normal;
         line-height: 20px;
         letter-spacing: normal;
-        text-align: center;
         cursor: initial;
     }
 
     > .popover-content {
         padding: 20px;
-        background: #FFFFFF;
+        background: #ffffff;
         border-bottom-left-radius: $nav-dropdown-content-border-radius;
         border-bottom-right-radius: $nav-dropdown-content-border-radius;
     }
@@ -463,31 +462,41 @@ $nav-dropdown-content-border-radius: 3px;
     }
 }
 
-.current-project-nav-flag-popover-flags {
-    margin: 0 0 0 10px;
-    list-style-type: disc;
+.current-project-nav-flag-popover-flag {
+    position: relative;
+    margin: 0 0 20px;
+    padding: 0 0 0 20px;
     color: $main;
+
+    &:last-child {
+        margin: 0;
+    }
+
+    > .tuleap-svg-project-shield {
+        position: absolute;
+        top: 3px;
+        left: 0;
+        width: 12px;
+
+        > path {
+            fill: $main;
+        }
+    }
 }
 
-.current-project-nav-flag-popover-flag {
-    margin: 0 0 20px;
+.current-project-nav-flag-popover-content-title {
+    margin: 0 0 10px;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 24px;
 
     &:last-child {
         margin: 0;
     }
 }
 
-.current-project-nav-flag-popover-title {
-    margin: 0 0 10px;
-    line-height: 20px;
-    font-size: 20px;
-    font-weight: 600;
-    color: $main;
-}
-
-.current-project-nav-flag-popover-description {
-    margin: 0;
-    color: #333333;
+.current-project-nav-flag-popover-content-description {
+    color: #747474;
 }
 
 .current-project-nav-flag-labels {
