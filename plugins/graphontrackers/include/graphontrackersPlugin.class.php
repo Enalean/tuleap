@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - 2019. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
  * Originally written by Mahmoud MAALEJ, 2006. STMicroelectronics.
@@ -169,7 +169,7 @@ class GraphOnTrackersPlugin extends Plugin
                     $custom_pref=user_get_preference('tracker_graph_brow_cust'.$this->atid);
                     if ($custom_pref) {
                         $pref_arr = explode('&',substr($custom_pref,1));
-                        while (list(,$expr) = each($pref_arr)) {
+                        foreach ($pref_arr as $expr) {
                             list($field,$value_id) = explode('=',$expr);
                                 $field = str_replace('[]','',$field);
                             if($field == 'report_graphic_id') {
