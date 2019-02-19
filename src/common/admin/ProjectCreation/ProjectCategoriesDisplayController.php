@@ -27,6 +27,8 @@ use TroveCatDao;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Admin\ProjectCreationNavBarPresenter;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Layout\CssAsset;
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
@@ -52,7 +54,10 @@ class ProjectCategoriesDisplayController implements DispatchableWithRequest
             throw new ForbiddenException();
         }
 
-        $layout->includeFooterJavascriptFile('/scripts/tuleap/trovecat.js');
+        $assets_path    = ForgeConfig::get('tuleap_dir') . '/src/www/assets';
+        $include_assets = new IncludeAssets($assets_path, '/assets');
+
+        $layout->includeFooterJavascriptFile($include_assets->getFileURL('trovecat-admin.js'));
 
         $csrf_token = new \CSRFSynchronizerToken('/admin/project-creation/categories');
         $trove_dao = new TroveCatDao();
@@ -78,6 +83,5 @@ class ProjectCategoriesDisplayController implements DispatchableWithRequest
             'trovecatlist',
             $presenter
         );
-
     }
 }
