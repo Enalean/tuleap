@@ -30,6 +30,7 @@
                     v-on:displayQuickLook="$emit('displayQuickLook', item)"
                     v-bind:item="item"
                     v-if="item_is_not_being_uploaded"
+                    class="quick-look-button"
                 />
             </div>
         </td>

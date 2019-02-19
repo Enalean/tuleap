@@ -166,6 +166,13 @@
     margin: 0;
 }
 
+
+.document-folder-right-container {
+    min-width: 500px;
+    max-width: 35%;
+    margin: 0 0 0 $tlp-spacing;
+}
+
 @media screen and (max-width: 1100px) {
     .document-tree-head-owner,
     .document-tree-head-updatedate,

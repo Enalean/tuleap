@@ -46,9 +46,11 @@
                 </table>
             </div>
         </section>
-        <section v-if="toggle_quick_look" class="tlp-pane document-quick-look-pane">
-            <quicklook-global v-on:closeQuickLookEvent="closeQuickLook" v-bind:item="quick_look_item"/>
-        </section>
+        <div v-if="toggle_quick_look" class="document-folder-right-container">
+            <section class="tlp-pane document-quick-look-pane">
+                <quicklook-global v-on:closeQuickLookEvent="closeQuickLook" v-bind:item="quick_look_item"/>
+            </section>
+        </div>
     </div>
 </template>
 
