@@ -20,29 +20,10 @@
 
 namespace Tuleap\Docman\Upload;
 
-use Tuleap\Docman\Upload\Document\DocumentOngoingUploadDAO;
-
-class DocumentOngoingUploadRetriever
+final class UploadCreationFileMismatchException extends UploadCreationException
 {
-    /**
-     * @var DocumentOngoingUploadDAO
-     */
-    private $dao;
-
-    public function __construct(DocumentOngoingUploadDAO $dao)
+    public function __construct()
     {
-        $this->dao = $dao;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isThereAlreadyAnUploadOngoing(\Docman_Item $parent_item, $title, \DateTimeImmutable $current_time)
-    {
-        return ! empty($this->dao->searchDocumentOngoingUploadByParentIDTitleAndExpirationDate(
-            $parent_item->getId(),
-            $title,
-            $current_time->getTimestamp()
-        ));
+        parent::__construct('You already have started the creation of this document with another file');
     }
 }

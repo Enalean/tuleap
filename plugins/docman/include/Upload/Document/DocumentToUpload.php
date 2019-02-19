@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,12 +18,30 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Docman\Upload;
+namespace Tuleap\Docman\Upload\Document;
 
-final class DocumentToUploadCreationFileMismatchException extends DocumentToUploadCreationException
+final class DocumentToUpload
 {
-    public function __construct()
+    private $item_id;
+
+    public function __construct($item_id)
     {
-        parent::__construct('You already have started the creation of this document with another file');
+        $this->item_id = $item_id;
+    }
+
+    /**
+     * @return int
+     */
+    public function getItemId()
+    {
+        return $this->item_id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUploadHref()
+    {
+        return '/uploads/docman/file/' . urlencode($this->item_id);
     }
 }

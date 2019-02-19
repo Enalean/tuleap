@@ -1265,7 +1265,7 @@ class DocmanPlugin extends Plugin
     public function routeUploadsDocmanFile(): FileUploadController
     {
 
-        $document_ongoing_upload_dao = new \Tuleap\Docman\Upload\DocumentOngoingUploadDAO();
+        $document_ongoing_upload_dao = new \Tuleap\Docman\Upload\Document\DocumentOngoingUploadDAO();
         $root_path                   = $this->getPluginInfo()->getPropertyValueForName('docman_root');
         $path_allocator              = new \Tuleap\Docman\Upload\DocumentUploadPathAllocator();
         return new FileUploadController(
@@ -1318,7 +1318,7 @@ class DocmanPlugin extends Plugin
     {
         $cleaner = new \Tuleap\Docman\Upload\DocumentUploadCleaner(
             new \Tuleap\Docman\Upload\DocumentUploadPathAllocator(),
-            new \Tuleap\Docman\Upload\DocumentOngoingUploadDAO()
+            new \Tuleap\Docman\Upload\Document\DocumentOngoingUploadDAO()
         );
         $cleaner->deleteDanglingDocumentToUpload(new \DateTimeImmutable());
     }

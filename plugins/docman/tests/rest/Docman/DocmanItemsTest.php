@@ -809,25 +809,6 @@ class DocmanItemsTest extends DocmanBase
     /**
      * @depends testGetRootId
      */
-    public function testPatchOnDocumentThrowsANotImplementedException(int $root_id)
-    {
-        $put_resource = json_encode(
-            [
-                'version_title'   => 'My version title',
-                'changelog'       => 'I have changed',
-                'file_properties' => ['file_name' => 'file1', 'file_size' => 10]
-            ]
-        );
-        $response     = $this->getResponseByName(
-            REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->client->patch('docman_items/' . $root_id, null, $put_resource)
-        );
-        $this->assertEquals(501, $response->getStatusCode());
-    }
-
-    /**
-     * @depends testGetRootId
-     */
     public function testPatchFileDocumentIsRejectedIfFileIsTooBig(int $root_id)
     {
         $put_resource = json_encode(
@@ -843,5 +824,26 @@ class DocmanItemsTest extends DocmanBase
             $this->client->patch('docman_items/' . $root_id, null, $put_resource)
         );
         $this->assertEquals(400, $response->getStatusCode());
+    }
+
+    /**
+     * @depends testGetRootId
+     */
+    public function testPatchFileDocumentReturnsFileRepresentation(int $root_id)
+    {
+        $put_resource = json_encode(
+            [
+                'version_title'   => 'My version title',
+                'changelog'       => 'I have changed',
+                'file_properties' => ['file_name' => 'file1', 'file_size' => 10]
+            ]
+        );
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->patch('docman_items/' . $root_id, null, $put_resource)
+        );
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals("/uploads/docman/version/1", $response->json()['upload_href']);
     }
 }

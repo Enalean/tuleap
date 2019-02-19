@@ -23,8 +23,12 @@ declare(strict_types = 1);
 namespace Tuleap\Docman\REST\v1;
 
 use Docman_LockFactory;
+use Luracast\Restler\RestException;
 use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
-use Tuleap\Docman\Upload\DocumentToUploadMaxSizeExceededException;
+use Tuleap\Docman\Upload\UploadCreationConflictException;
+use Tuleap\Docman\Upload\UploadCreationFileMismatchException;
+use Tuleap\Docman\Upload\UploadMaxSizeExceededException;
+use Tuleap\Docman\Upload\Version\VersionToUploadCreator;
 
 class DocmanItemUpdator
 {
@@ -36,19 +40,28 @@ class DocmanItemUpdator
      * @var Docman_LockFactory
      */
     private $lock_factory;
+    /**
+     * @var VersionToUploadCreator
+     */
+    private $creator;
 
-    public function __construct(ApprovalTableRetriever $approval_table_retriever, Docman_LockFactory $lock_factory)
-    {
+    public function __construct(
+        ApprovalTableRetriever $approval_table_retriever,
+        Docman_LockFactory $lock_factory,
+        VersionToUploadCreator $creator
+    ) {
         $this->approval_table_retriever = $approval_table_retriever;
         $this->lock_factory             = $lock_factory;
+        $this->creator                  = $creator;
     }
 
     /**
      * @throws ExceptionDocumentHasApprovalTable
      * @throws ExceptionItemIsLockedByAnotherUser
-     * @throws DocumentToUploadMaxSizeExceededException
+     * @throws UploadMaxSizeExceededException
+     * @throws RestException
      */
-    public function update(\Docman_Item $item, \PFUser $user, DocmanItemPATCHRepresentation $patch_representation) : void
+    public function update(\Docman_Item $item, \PFUser $user, DocmanItemPATCHRepresentation $patch_representation) : CreatedItemFilePropertiesRepresentation
     {
         $approval_table = $this->approval_table_retriever->retrieveByItem($item);
         if ($approval_table) {
@@ -61,14 +74,27 @@ class DocmanItemUpdator
             throw new ExceptionItemIsLockedByAnotherUser();
         }
 
-        if ($patch_representation->file_properties) {
-            $file_size = $patch_representation->file_properties->file_size;
-            if ((int)$file_size > (int) \ForgeConfig::get('sys_max_size_upload')) {
-                throw new DocumentToUploadMaxSizeExceededException(
-                    (int) $file_size,
-                    (int) \ForgeConfig::get('sys_max_size_upload')
-                );
-            }
+        try {
+            $document_to_upload = $this->creator->create(
+                $item,
+                $user,
+                new \DateTimeImmutable(),
+                $patch_representation->version_title,
+                $patch_representation->change_log,
+                $patch_representation->file_properties->file_name,
+                $patch_representation->file_properties->file_size
+            );
+        } catch (UploadCreationConflictException $exception) {
+            throw new RestException(409, $exception->getMessage());
+        } catch (UploadCreationFileMismatchException $exception) {
+            throw new RestException(409, $exception->getMessage());
+        } catch (UploadMaxSizeExceededException $exception) {
+            throw new RestException(400, $exception->getMessage());
         }
+
+        $file_properties_representation = new CreatedItemFilePropertiesRepresentation();
+        $file_properties_representation->build($document_to_upload->getUploadHref());
+
+        return $file_properties_representation;
     }
 }

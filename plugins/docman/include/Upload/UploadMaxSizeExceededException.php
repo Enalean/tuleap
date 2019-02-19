@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\Upload;
 
-final class DocumentToUploadMaxSizeExceededException extends DocumentToUploadCreationException
+final class UploadMaxSizeExceededException extends UploadCreationException
 {
     public function __construct(int $requested_size, int $max_allowed_size)
     {

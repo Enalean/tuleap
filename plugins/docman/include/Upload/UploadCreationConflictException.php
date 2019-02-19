@@ -20,6 +20,10 @@
 
 namespace Tuleap\Docman\Upload;
 
-abstract class DocumentToUploadCreationException extends \RuntimeException
+final class UploadCreationConflictException extends UploadCreationException
 {
+    public function __construct()
+    {
+        parent::__construct('A document is already being uploaded for this item');
+    }
 }

@@ -23,6 +23,7 @@ namespace Tuleap\Docman\Upload;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Docman\Upload\Document\DocumentOngoingUploadDAO;
 use Tuleap\ForgeConfigSandbox;
 
 class DocumentUploadCleanerTest extends TestCase

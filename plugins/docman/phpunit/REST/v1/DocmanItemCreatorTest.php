@@ -22,12 +22,11 @@ namespace Tuleap\Docman\REST\v1;
 
 use Luracast\Restler\RestException;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Docman\Upload\Document\DocumentToUploadCreator;
 use Tuleap\Docman\Upload\DocumentOngoingUploadRetriever;
-use Tuleap\Docman\Upload\DocumentToUpload;
-use Tuleap\Docman\Upload\DocumentToUploadCreator;
+use Tuleap\Docman\Upload\Document\DocumentToUpload;
 
 class DocmanItemCreatorTest extends TestCase
 {
