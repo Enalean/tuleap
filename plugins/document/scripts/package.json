@@ -6,6 +6,7 @@
   "license": "GPL-2.0+",
   "private": true,
   "dependencies": {
+    "dompurify": "^1.0.9",
     "moment": "^2.22.2",
     "moment-timezone": "^0.5.23",
     "phptomoment": "0.0.2",

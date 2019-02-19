@@ -96,6 +96,14 @@
     margin: 0 auto;
 }
 
+.document-quick-look-embedded {
+    max-height: 50vh;
+    padding: $tlp-spacing;
+    overflow-y: auto;
+    border-radius: 2px;
+    box-shadow: 0 0 1px 1px $tlp-ui-border-normal;
+}
+
 @media screen and (max-width: 1200px) {
     .document-folder-content-quicklook {
         flex-direction: column;

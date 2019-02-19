@@ -29,12 +29,7 @@
             </div>
         </div>
         <section class="tlp-pane-section">
-            <div class="document-quick-look-image" v-if="is_an_image">
-                <img v-bind:src="item.file_properties.html_url" v-bind:alt="item.title">
-            </div>
-            <div class="document-quick-look-icon" v-else>
-                <i class="fa" v-bind:class="icon_class"></i>
-            </div>
+            <quick-look-document-preview v-bind:icon-class="icon_class" v-bind:item="item"/>
             <component
                 v-bind:is="quick_look_component_action"
                 v-bind:item="item"
@@ -43,8 +38,12 @@
         <quick-look-document-metadata v-bind:item="item"/>
         <section class="tlp-pane-section" v-if="item.description">
             <div class="tlp-property">
-                <label class="tlp-label" for="item-description" v-translate>Description</label>
-                <p id="item-description">{{ item.description }}</p>
+                <label class="tlp-label" for="item-description" v-translate>
+                    Description
+                </label>
+                <p id="item-description">
+                    {{ item.description }}
+                </p>
             </div>
         </section>
     </section>
@@ -65,10 +64,11 @@ import {
 } from "../../../constants.js";
 import { iconForMimeType } from "../../../helpers/icon-for-mime-type.js";
 import QuickLookDocumentMetadata from "./QuickLookDocumentMetadata.vue";
+import QuickLookDocumentPreview from "./QuickLookDocumentPreview.vue";
 
 export default {
     name: "QuicklookGlobal",
-    components: { QuickLookDocumentMetadata },
+    components: { QuickLookDocumentPreview, QuickLookDocumentMetadata },
     props: {
         item: Object
     },
@@ -109,11 +109,6 @@ export default {
                     return;
             }
             return () => import(/* webpackChunkName: "quick-look-" */ `./QuickLook${name}.vue`);
-        },
-        is_an_image() {
-            return (
-                this.item.file_properties && this.item.file_properties.file_type.includes("image")
-            );
         }
     },
     methods: {
