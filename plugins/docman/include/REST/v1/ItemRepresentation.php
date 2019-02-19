@@ -102,6 +102,11 @@ class ItemRepresentation
     public $is_expanded;
 
     /**
+     * @var bool {@type bool}
+     */
+    public $can_user_manage;
+
+    /**
      * @var ItemLockInfoRepresentation | null
      */
     public $lock_info;
@@ -121,6 +126,7 @@ class ItemRepresentation
         $user_can_write,
         $type,
         bool $is_expanded,
+        bool $can_user_manage,
         array $metadata_representations,
         ItemApprovalTableRepresentation $approval_table = null,
         ItemLockInfoRepresentation $lock_info = null,
@@ -136,6 +142,7 @@ class ItemRepresentation
         $this->last_update_date         = JsonCast::toDate($item->getUpdateDate());
         $this->creation_date            = JsonCast::toDate($item->getCreateDate());
         $this->user_can_write           = $user_can_write;
+        $this->can_user_manage          = $can_user_manage;
         $this->type                     = $type;
         $this->file_properties          = $file_properties;
         $this->embedded_file_properties = $embedded_file_properties;

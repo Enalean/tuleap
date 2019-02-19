@@ -19,31 +19,28 @@
   -->
 
 <template>
-    <div>
+    <div class="tlp-dropdown">
         <button class="tlp-button-primary tlp-dropdown-split-button-caret"
-                v-bind:class="{'tlp-button-large': is_in_large_mode}"
+                v-bind:class="{'tlp-button-large': isInLargeMode}"
                 ref="dropdownButton"
                 type="button"
         >
             <i class="fa fa-caret-down"></i>
         </button>
-        <dropdown-menu v-bind:is_in_large_mode="is_in_large_mode"/>
+        <slot></slot>
     </div>
 </template>
 
 <script>
-import DropdownMenu from "./DropdownMenu.vue";
 import { dropdown as createDropdown } from "tlp";
 
 export default {
     name: "DropdownButton",
-    components: { DropdownMenu },
     props: {
-        is_in_large_mode: Boolean
+        isInLargeMode: Boolean
     },
     mounted() {
-        const dropdown = createDropdown(this.$refs.dropdownButton);
-        dropdown.hide();
+        createDropdown(this.$refs.dropdownButton);
     }
 };
 </script>

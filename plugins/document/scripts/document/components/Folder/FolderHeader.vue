@@ -22,13 +22,17 @@
 <template>
     <div class="document-header">
         <h1 class="document-header-title">
-            <span v-bind:class="title_class">{{ folder_title }}</span>
+            <span v-bind:class="title_class">
+                {{ folder_title }}
+            </span>
         </h1>
         <div class="document-header-actions">
             <div class="tlp-dropdown" v-if="can_display_new_document_button">
                 <div class="tlp-dropdown-split-button">
                     <new-item-button class="tlp-button-primary tlp-dropdown-split-button-main" v-bind:item="current_folder"/>
-                    <dropdown-button/>
+                    <dropdown-button>
+                        <dropdown-menu-current-folder/>
+                    </dropdown-button>
                 </div>
                 <new-item-modal/>
                 <new-folder-modal/>
@@ -48,10 +52,12 @@ import NewItemModal from "./NewItem/NewItemModal.vue";
 import DropdownButton from "./Dropdown/DropdownButton.vue";
 import FileUploadManager from "./FilesUploads/FilesUploadsManager.vue";
 import NewFolderModal from "./NewItem/NewFolderModal.vue";
+import DropdownMenuCurrentFolder from "./Dropdown/DropdownMenuCurrentFolder.vue";
 
 export default {
     name: "FolderHeader",
     components: {
+        DropdownMenuCurrentFolder,
         NewFolderModal,
         DropdownButton,
         SearchBox,

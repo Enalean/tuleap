@@ -19,32 +19,72 @@
   -->
 
 <template>
-    <div class="tlp-dropdown-menu tlp-dropdown-shown"
-         v-bind:class="{'tlp-dropdown-menu-large': is_in_large_mode}"
+    <div class="tlp-dropdown-menu"
+         v-bind:class="{'tlp-dropdown-menu-large tlp-dropdown-menu-top': isInFolderEmptyState}"
+         role="menu"
     >
-        <a href="#" v-on:click.prevent="showNewFolderModal" class="tlp-dropdown-menu-item" role="menuitem">
-            <i class="fa fa-fw fa-folder-open-o tlp-dropdown-menu-item-icon"></i>
-            <translate>New folder</translate>
+        <slot></slot>
+        <span class="tlp-dropdown-menu-title document-dropdown-menu-title" role="menuitem">
+            {{ item.title }}
+        </span>
+        <a v-bind:href="getUrlForPane(DETAILS_PANE_NAME)" class="tlp-dropdown-menu-item" role="menuitem">
+            <i class="fa fa-fw fa-list tlp-dropdown-menu-item-icon"></i>
+            <span v-translate>
+                Details
+            </span>
+        </a>
+        <a v-bind:href="getUrlForPane(NOTIFS_PANE_NAME)" class="tlp-dropdown-menu-item" role="menuitem">
+            <i class="fa fa-fw fa-bell-o tlp-dropdown-menu-item-icon"></i>
+            <span v-translate>
+                Notifications
+            </span>
+        </a>
+        <a v-bind:href="getUrlForPane(HISTORY_PANE_NAME)" class="tlp-dropdown-menu-item" role="menuitem">
+            <i class="fa fa-fw fa-history tlp-dropdown-menu-item-icon"></i>
+            <span v-translate>
+                History
+            </span>
+        </a>
+        <a v-if="item.can_user_manage" v-bind:href="getUrlForPane(PERMISSIONS_PANE_NAME)" class="tlp-dropdown-menu-item" role="menuitem">
+            <i class="fa fa-fw fa-lock tlp-dropdown-menu-item-icon"></i>
+            <span v-translate>
+                Permissions
+            </span>
+        </a>
+        <a v-bind:href="getUrlForPane(APPROVAL_TABLES_PANE_NAME)" class="tlp-dropdown-menu-item" role="menuitem">
+            <i class="fa fa-fw fa-check-square-o tlp-dropdown-menu-item-icon"></i>
+            <span v-translate>
+                Approval tables
+            </span>
         </a>
     </div>
 </template>
 <script>
 import { mapState } from "vuex";
+
 export default {
     name: "DropDownMenu",
     props: {
-        is_in_large_mode: Boolean
+        isInFolderEmptyState: Boolean,
+        item: Object
+    },
+    data() {
+        return {
+            DETAILS_PANE_NAME: "details",
+            NOTIFS_PANE_NAME: "notifications",
+            HISTORY_PANE_NAME: "history",
+            PERMISSIONS_PANE_NAME: "permissions",
+            APPROVAL_TABLES_PANE_NAME: "approval"
+        };
     },
     computed: {
-        ...mapState(["current_folder"])
+        ...mapState(["project_id"])
     },
     methods: {
-        showNewFolderModal() {
-            document.dispatchEvent(
-                new CustomEvent("show-new-folder-modal", {
-                    detail: { parent: this.current_folder }
-                })
-            );
+        getUrlForPane(pane_name) {
+            return `/plugins/docman/?group_id=${this.project_id}&id=${
+                this.item.id
+            }&action=details&section=${pane_name}`;
         }
     }
 };
