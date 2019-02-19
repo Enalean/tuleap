@@ -24,6 +24,9 @@ use Tuleap\Tracker\Workflow\FeatureFlag;
 /**
  * Base class to manage action that can be done on a workflow
  */
+
+//phpcs:ignoreFile
+
 abstract class Tracker_Workflow_Action
 {
     use FeatureFlag;
@@ -109,10 +112,11 @@ abstract class Tracker_Workflow_Action
 
     private function buildTransitionsLink(): string
     {
-        if ($this->isNewWorkflowEnabled($this->tracker)) {
-            return $this->buildNewTransitionsLink();
+        if ($this->isNewWorkflowDisabled($this->tracker)) {
+            return $this->buildLegacyTransitionsLink();
         }
-        return $this->buildLegacyTransitionsLink();
+
+        return $this->buildNewTransitionsLink();
     }
 
     private function buildTriggersLink()

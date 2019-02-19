@@ -286,8 +286,8 @@ msgid ""
 "Enable notifications for this tracker, you will be able to choose the "
 "notifications level once enabled."
 msgstr ""
-"Activer les notifications pour ce tracker, vous pourrez choisir le mode"
-"de notifications"
+"Activer les notifications pour ce tracker, vous pourrez choisir le modede "
+"notifications"
 
 msgid "Error during parsing expert query"
 msgstr "Erreur pendant l'analyse de la requête experte"
@@ -897,8 +897,8 @@ msgstr ""
 "Les ids d'actions 'set_field_value' avec type 'int' ne doivent pas être en "
 "doublons."
 
-msgid "This REST route is still under construction."
-msgstr "Cette route REST est en cours de construction."
+msgid "This REST route is not available for this workflow."
+msgstr "Cette route REST n'est pas disponible pour ce workflow."
 
 msgid "This template does not use trackers"
 msgstr "Ce patron n'utilise pas les trackers"
@@ -915,8 +915,8 @@ msgstr "Ce tracker a été supprimé."
 msgid "This transition already exists."
 msgstr "Cette transition existe déjà."
 
-msgid "This view is still under construction."
-msgstr "Cette page est en cours de construction."
+msgid "This view is not available for this workflow."
+msgstr "Cette page n'est pas disponible pour ce workflow."
 
 msgid ""
 "This workflow has an incoherent behaviour : pre conditions and post actions "
@@ -928,6 +928,9 @@ msgstr ""
 
 msgid "This workflow is already in a functional state. Skipping."
 msgstr "Ce workflow est déjà fonctionnel. Cette modification est donc ignorée."
+
+msgid "This workflow is in simple mode and cannot be displayed in legacy UI."
+msgstr "Ce workflow est en mode simple et ne peut être affiché dans l'ancienne interface."
 
 msgid "Time"
 msgstr "Date"

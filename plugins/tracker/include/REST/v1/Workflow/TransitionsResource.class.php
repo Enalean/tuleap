@@ -402,8 +402,8 @@ class TransitionsResource extends AuthenticatedResource
             );
         }
 
-        if (! $this->isNewWorkflowEnabled($transition->getWorkflow()->getTracker())) {
-            throw new I18NRestException(403, dgettext('tuleap-tracker', 'This REST route is still under construction.'));
+        if ($this->isNewWorkflowDisabled($transition->getWorkflow()->getTracker())) {
+            throw new I18NRestException(403, dgettext('tuleap-tracker', 'This REST route is not available for this workflow.'));
         }
 
         try {

@@ -24,9 +24,9 @@ use ForgeConfig;
 
 trait FeatureFlag
 {
-    private function isNewWorkflowEnabled(\Tracker $tracker): bool
+    private function isNewWorkflowDisabled(\Tracker $tracker): bool
     {
-        $whitelist = ForgeConfig::get('sys_tracker_whitelist_that_should_use_new_workflow_transitions_interface');
+        $whitelist = ForgeConfig::get('sys_tracker_whitelist_that_should_use_legacy_workflow_transitions_interface');
         if ($whitelist === false || empty($whitelist)) {
             return false;
         }
