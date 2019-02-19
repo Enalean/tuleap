@@ -45,6 +45,32 @@ class DocmanItemsTest extends DocmanBase
     /**
      * @depends testGetRootId
      */
+    public function testGetFileId($root_id)
+    {
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->get('docman_items/' . $root_id . '/docman_items')
+        );
+        $folder = $response->json();
+
+        $this->assertEquals(count($folder), 1);
+        $folder_id = $folder[0]['id'];
+        $this->assertEquals($folder[0]['user_can_write'], true);
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->get('docman_items/' . $folder_id . '/docman_items')
+        );
+        $items = $response->json();
+
+        $this->assertEquals($items[2]['title'], 'item C');
+
+        return $items[2]['id'];
+    }
+
+    /**
+     * @depends testGetRootId
+     */
     public function testGetDocumentItemsForRegularUser($root_id)
     {
         $response = $this->getResponseByName(
@@ -807,9 +833,9 @@ class DocmanItemsTest extends DocmanBase
     }
 
     /**
-     * @depends testGetRootId
+     * @depends testGetFileId
      */
-    public function testPatchFileDocumentIsRejectedIfFileIsTooBig(int $root_id)
+    public function testPatchFileDocumentIsRejectedIfFileIsTooBig(int $file_id)
     {
         $put_resource = json_encode(
             [
@@ -821,15 +847,15 @@ class DocmanItemsTest extends DocmanBase
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->patch('docman_items/' . $root_id, null, $put_resource)
+            $this->client->patch('docman_items/' . $file_id, null, $put_resource)
         );
         $this->assertEquals(400, $response->getStatusCode());
     }
 
     /**
-     * @depends testGetRootId
+     * @depends testGetFileId
      */
-    public function testPatchFileDocumentReturnsFileRepresentation(int $root_id)
+    public function testPatchFileDocumentReturnsFileRepresentation(int $file_id)
     {
         $put_resource = json_encode(
             [
@@ -841,9 +867,47 @@ class DocmanItemsTest extends DocmanBase
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->patch('docman_items/' . $root_id, null, $put_resource)
+            $this->client->patch('docman_items/' . $file_id, null, $put_resource)
         );
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals("/uploads/docman/version/1", $response->json()['upload_href']);
+    }
+
+    /**
+     * @depends testGetRootId
+     */
+    public function testPatchOnEmptyItemThrowAnException(int $root_id)
+    {
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->get('docman_items/' . $root_id . '/docman_items')
+        );
+        $folder = $response->json();
+
+        $folder_id = $folder[0]['id'];
+        $this->assertEquals($folder[0]['user_can_write'], true);
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->get('docman_items/' . $folder_id . '/docman_items')
+        );
+        $items = $response->json();
+
+        $empty_id = $items[1]['id'];
+
+
+        $put_resource = json_encode(
+            [
+                'version_title'   => 'My version title',
+                'changelog'       => 'I have changed',
+                'file_properties' => ['file_name' => 'file1', 'file_size' => 0]
+            ]
+        );
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->patch('docman_items/' . $empty_id, null, $put_resource)
+        );
+        $this->assertEquals(501, $response->getStatusCode());
     }
 }
