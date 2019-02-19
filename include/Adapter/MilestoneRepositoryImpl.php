@@ -19,11 +19,28 @@
  *
  */
 
-require_once __DIR__ . '/../include/baselinePlugin.class.php';
+namespace Tuleap\Baseline\Adapter;
 
-foreach (['Factory', 'Stub'] as $folder) {
-    $files = glob(__DIR__ . '/' . $folder . '/*.php');
-    foreach ($files as $file) {
-        require_once($file);
+use Tracker_Artifact;
+use Tracker_ArtifactFactory;
+use Tuleap\Baseline\MilestoneRepository;
+
+class MilestoneRepositoryImpl implements MilestoneRepository
+{
+    /**
+     * @var Tracker_ArtifactFactory
+     */
+    private $artifact_factory;
+
+    public function __construct(Tracker_ArtifactFactory $artifact_factory)
+    {
+        $this->artifact_factory = $artifact_factory;
+    }
+
+    public function findById(int $id): ?Tracker_Artifact
+    {
+        $milestone = $this->artifact_factory->getArtifactById($id);
+        // TODO check $milestone is a milestone
+        return $milestone;
     }
 }

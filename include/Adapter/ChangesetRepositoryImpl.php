@@ -19,11 +19,29 @@
  *
  */
 
-namespace Tuleap\Baseline;
+namespace Tuleap\Baseline\Adapter;
 
-use PFUser;
+use DateTime;
+use Tracker_Artifact;
+use Tracker_Artifact_Changeset;
+use Tracker_Artifact_ChangesetFactory;
+use Tuleap\Baseline\ChangesetRepository;
 
-interface SecurityContext
+class ChangesetRepositoryImpl implements ChangesetRepository
 {
-    function getCurrentUser(): PFUser;
+    /** @var Tracker_Artifact_ChangesetFactory */
+    private $changeset_factory;
+
+    public function __construct(Tracker_Artifact_ChangesetFactory $changeset_factory)
+    {
+        $this->changeset_factory = $changeset_factory;
+    }
+
+    public function findByArtifactAndDate(Tracker_Artifact $artifact, DateTime $date): ?Tracker_Artifact_Changeset
+    {
+        return $this->changeset_factory->getChangesetAtTimestamp(
+            $artifact,
+            $date->getTimestamp()
+        );
+    }
 }

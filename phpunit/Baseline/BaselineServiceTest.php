@@ -21,106 +21,114 @@
 
 namespace Tuleap\Baseline;
 
+require_once __DIR__ . '/../bootstrap.php';
+
 use DateTime;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
-use PFUser;
 use PHPUnit\Framework\TestCase;
 use Tracker_Artifact;
-use Tuleap\GlobalLanguageMock;
-use Tuleap\REST\UserManager;
+use Tuleap\Baseline\Factory\ChangesetFactory;
+use Tuleap\Baseline\Factory\MilestoneFactory;
+use Tuleap\Baseline\Support\DateTimeFactory;
 
 class BaselineServiceTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
-    use GlobalLanguageMock;
 
-    /** @var BaselineService|MockInterface */
+    /** @var BaselineService */
     private $service;
 
-    /** @var UserManager|MockInterface */
-    private $user_manager;
+    /** @var FieldRepository|MockInterface */
+    private $field_repository;
 
-    /** @var Clock|MockInterface */
-    private $clock;
+    /** @var Permissions|MockInterface */
+    private $permissions;
 
-    /** @var BaselineRepository|MockInterface */
-    private $baseline_repository;
+    /** @var ChangesetRepository|MockInterface */
+    private $changeset_repository;
 
-    /** @var PFUser */
-    private $current_user;
-
-    /** @var DateTime */
-    private $now;
-
-    /**
-     * @before
-     */
-    public function createInstanceAndMockDefaultBehaviors()
+    /** @before */
+    public function createInstance()
     {
-        $this->user_manager        = Mockery::mock(UserManager::class);
-        $this->clock               = Mockery::mock(Clock::class);
-        $this->baseline_repository = Mockery::mock(BaselineRepository::class);
+        $this->field_repository     = Mockery::mock(FieldRepository::class)->shouldIgnoreMissing();
+        $this->permissions          = Mockery::mock(Permissions::class)->shouldIgnoreMissing();
+        $this->changeset_repository = Mockery::mock(ChangesetRepository::class)->shouldIgnoreMissing();
 
         $this->service = new BaselineService(
-            $this->user_manager,
-            $this->clock,
-            $this->baseline_repository
-        );
-
-        $this->current_user = $this->buildAUser();
-        $this->user_manager
-            ->shouldReceive('getCurrentUser')
-            ->andReturn($this->current_user);
-
-        $this->now = $this->buildADateTime();
-        $this->clock
-            ->shouldReceive('now')
-            ->andReturn($this->now);
-    }
-
-    public function testCreate()
-    {
-        $transient_baseline = new TransientBaseline('name', $this->buildAMilestone());
-
-        $created_baseline = $this->buildABaseline();
-        $this->baseline_repository
-            ->shouldReceive('create')
-            ->with($transient_baseline, $this->current_user, $this->now)
-            ->andReturn($created_baseline);
-
-        $baseline = $this->service->create($transient_baseline);
-
-        $this->assertEquals($baseline, $created_baseline);
-    }
-
-    private function buildADateTime(): DateTime
-    {
-        return DateTime::createFromFormat('Y-m-d H:i:s', '2019-03-15 15:16:17');
-    }
-
-    private function buildABaseline(): Baseline
-    {
-        return new Baseline(
-            1,
-            'Milestone startup',
-            $this->buildAMilestone(),
-            $this->buildAUser(),
-            $this->buildADateTime()
+            $this->field_repository,
+            $this->permissions,
+            $this->changeset_repository
         );
     }
 
-    private function buildAUser(): PFUser
+    /** @var Tracker_Artifact */
+    private $a_milestone;
+
+    /** @var DateTime */
+    private $a_date;
+
+    /** @before */
+    public function createEntities()
     {
-        return new PFUser();
+        $this->a_milestone = MilestoneFactory::one()->build();
+        $this->a_date      = DateTimeFactory::one();
     }
 
-    /**
-     * @return Tracker_Artifact|MockInterface
-     */
-    private function buildAMilestone()
+    public function testFindSimplifiedThrowsWhenNoChangesetFound()
     {
-        return Mockery::mock(Tracker_Artifact::class);
+        $this->expectException(ChangesetNotFoundException::class);
+
+        $this->changeset_repository
+            ->shouldReceive('findByArtifactAndDate')
+            ->andReturn(null);
+
+        $this->service->findSimplified($this->a_milestone, $this->a_date);
+    }
+
+    public function testFindSimplifiedReturnsNullTitleWhenNoCorrespondingSemanticDefined()
+    {
+        $this->changeset_repository
+            ->shouldReceive('findByArtifactAndDate')
+            ->andReturn(ChangesetFactory::one()->build());
+
+        $this->field_repository
+            ->shouldReceive('findTitleByTracker')
+            ->andReturn(null);
+
+        $baseline = $this->service->findSimplified($this->a_milestone, $this->a_date);
+
+        $this->assertNull($baseline->getTitle());
+    }
+
+    public function testFindSimplifiedReturnsNullDescriptionWhenNoCorrespondingSemanticDefined()
+    {
+        $this->changeset_repository
+            ->shouldReceive('findByArtifactAndDate')
+            ->andReturn(ChangesetFactory::one()->build());
+
+        $this->field_repository
+            ->shouldReceive('findDescriptionByTracker')
+            ->andReturn(null);
+
+        $baseline = $this->service->findSimplified($this->a_milestone, $this->a_date);
+
+        $this->assertNull($baseline->getDescription());
+    }
+
+    public function testFindSimplifiedReturnsNullStatusWhenNoCorrespondingSemanticDefined()
+    {
+        $this->changeset_repository
+            ->shouldReceive('findByArtifactAndDate')
+            ->andReturn(ChangesetFactory::one()->build());
+
+        $this->field_repository
+            ->shouldReceive('findStatusByTracker')
+            ->andReturn(null);
+
+        $baseline = $this->service->findSimplified($this->a_milestone, $this->a_date);
+
+        $this->assertNull($baseline->getStatus());
     }
 }

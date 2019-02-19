@@ -19,24 +19,37 @@
  *
  */
 
-namespace Tuleap\Baseline\Adapter;
+namespace Tuleap\Baseline\Stub;
 
-use PFUser;
-use Tuleap\Baseline\SecurityContext;
-use Tuleap\REST\UserManager;
+use Tuleap\Baseline\NotAuthorizedException;
+use Tuleap\Baseline\Permissions;
+use Tuleap\Baseline\SimplifiedBaseline;
 
-class SecurityContextImpl implements SecurityContext
+/**
+ * Implementation of Permissions used for tests.
+ */
+class PermissionsStub implements Permissions
 {
-    /** @var UserManager */
-    private $user_manager;
+    /** @var bool */
+    private $all_permitted;
 
-    public function __construct(UserManager $user_manager)
+    public function permitAll(): void
     {
-        $this->user_manager = $user_manager;
+        $this->all_permitted = true;
     }
 
-    function getCurrentUser(): PFUser
+    public function denyAll()
     {
-        return $this->user_manager->getCurrentUser();
+        $this->all_permitted = false;
+    }
+
+    /**
+     * @throws NotAuthorizedException
+     */
+    function checkReadSimpleBaseline(SimplifiedBaseline $baseline): void
+    {
+        if (! $this->all_permitted) {
+            throw new NotAuthorizedException('Baseline read not authorized');
+        }
     }
 }

@@ -19,11 +19,13 @@
  *
  */
 
-require_once __DIR__ . '/../include/baselinePlugin.class.php';
+namespace Tuleap\Baseline;
 
-foreach (['Factory', 'Stub'] as $folder) {
-    $files = glob(__DIR__ . '/' . $folder . '/*.php');
-    foreach ($files as $file) {
-        require_once($file);
-    }
+use DateTime;
+use Tracker_Artifact;
+use Tracker_Artifact_Changeset;
+
+interface ChangesetRepository
+{
+    function findByArtifactAndDate(Tracker_Artifact $artifact, DateTime $date): ?Tracker_Artifact_Changeset;
 }

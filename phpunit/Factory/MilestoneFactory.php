@@ -19,14 +19,15 @@
  *
  */
 
-namespace Tuleap\Baseline;
+namespace Tuleap\Baseline\Factory;
 
-use DateTime;
-
-class Clock
+/**
+ * ObjectMother pattern applied to Milestone entity
+ */
+class MilestoneFactory
 {
-    public function now()
+    public static function one(): MilestoneBuilder
     {
-        return new DateTime('now');
+        return (new MilestoneBuilder())->id(3);
     }
 }

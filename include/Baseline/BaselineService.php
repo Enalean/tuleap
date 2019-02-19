@@ -21,35 +21,88 @@
 
 namespace Tuleap\Baseline;
 
-use Tuleap\REST\UserManager;
+use DateTime;
+use Tracker;
+use Tracker_Artifact;
+use Tracker_Artifact_Changeset;
 
 class BaselineService
 {
-    /** @var UserManager */
-    private $user_manager;
+    /** @var FieldRepository */
+    private $field_repository;
 
-    /** @var Clock */
-    private $clock;
+    /** @var Permissions */
+    private $permissions;
 
-    /** @var BaselineRepository */
-    private $baseline_repository;
+    /** @var ChangesetRepository */
+    private $changeset_repository;
 
-    public function __construct(
-        UserManager $user_manager,
-        Clock $clock,
-        BaselineRepository $baseline_repository
-    ) {
-        $this->user_manager        = $user_manager;
-        $this->clock               = $clock;
-        $this->baseline_repository = $baseline_repository;
+    /**
+     * Find simplified baseline on given milestone and given date time.
+     *
+     * @throws ChangesetNotFoundException when given tracker did not exist on given date
+     * @throws NotAuthorizedException
+     */
+    public function findSimplified(Tracker_Artifact $milestone, DateTime $date): SimplifiedBaseline
+    {
+        $change_set = $this->changeset_repository->findByArtifactAndDate($milestone, $date);
+        if ($change_set === null) {
+            throw new ChangesetNotFoundException($date);
+        }
+
+        $tracker        = $milestone->getTracker();
+        $changeset_date = new DateTime();
+        $changeset_date->setTimestamp($change_set->getSubmittedOn());
+
+        $baseline = new SimplifiedBaseline(
+            $milestone,
+            $this->getTrackerTitle($tracker, $change_set),
+            $this->getTrackerDescription($tracker, $change_set),
+            $this->getTrackerStatus($tracker, $change_set),
+            $changeset_date
+        );
+
+        $this->permissions->checkReadSimpleBaseline($baseline);
+        return $baseline;
     }
 
-    public function create(TransientBaseline $baseline): Baseline
+    public function __construct(
+        FieldRepository $field_repository,
+        Permissions $permissions,
+        ChangesetRepository $changeset_repository
+    ) {
+        $this->field_repository     = $field_repository;
+        $this->permissions          = $permissions;
+        $this->changeset_repository = $changeset_repository;
+    }
+
+    private function getTrackerTitle(Tracker $tracker, Tracker_Artifact_Changeset $changeSet): ?string
     {
-        return $this->baseline_repository->create(
-            $baseline,
-            $this->user_manager->getCurrentUser(),
-            $this->clock->now()
-        );
+        $title_field = $this->field_repository->findTitleByTracker($tracker);
+        if ($title_field === null) {
+            return null;
+        }
+
+        return $changeSet->getValue($title_field)->getValue();
+    }
+
+    private function getTrackerDescription(Tracker $tracker, Tracker_Artifact_Changeset $changeSet): ?string
+    {
+        $description_field = $this->field_repository->findDescriptionByTracker($tracker);
+        if ($description_field === null) {
+            return null;
+        }
+
+        return $changeSet->getValue($description_field)->getValue();
+    }
+
+    private function getTrackerStatus(Tracker $tracker, Tracker_Artifact_Changeset $changeSet): ?string
+    {
+        $status_field = $this->field_repository->findStatusByTracker($tracker);
+        if ($status_field === null) {
+            return null;
+        }
+
+        return $status_field->getFirstValueFor($changeSet);
     }
 }

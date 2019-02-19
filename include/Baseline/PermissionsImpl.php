@@ -23,41 +23,43 @@ namespace Tuleap\Baseline;
 
 use Tracker_Artifact;
 
-class ArtifactPermissions
+class PermissionsImpl implements Permissions
 {
-    /** @var SecurityContext */
-    private $security_context;
+    /** @var CurrentUserProvider */
+    private $current_user_provider;
 
     /**
      * @var ProjectPermissions
      */
     private $project_permissions;
 
-    public function __construct(SecurityContext $security_context, ProjectPermissions $project_permissions)
+    public function __construct(CurrentUserProvider $current_user_provider, ProjectPermissions $project_permissions)
     {
-        $this->security_context    = $security_context;
-        $this->project_permissions = $project_permissions;
+        $this->current_user_provider = $current_user_provider;
+        $this->project_permissions   = $project_permissions;
     }
 
     /**
      * @throws NotAuthorizedException
-     * @throws \Rest_Exception_InvalidTokenException
-     * @throws \User_PasswordExpiredException
-     * @throws \User_StatusDeletedException
-     * @throws \User_StatusInvalidException
-     * @throws \User_StatusPendingException
-     * @throws \User_StatusSuspendedException
      */
-    public function checkRead(Tracker_Artifact $artifact)
+    public function checkReadSimpleBaseline(SimplifiedBaseline $baseline): void
     {
-        if (! $artifact->userCanView($this->security_context->getCurrentUser())) {
+        $this->checkReadArtifact($baseline->getMilestone());
+    }
+
+    /**
+     * @throws NotAuthorizedException
+     */
+    private function checkReadArtifact(Tracker_Artifact $artifact): void
+    {
+        if (! $artifact->userCanView($this->current_user_provider->getUser())) {
             throw new NotAuthorizedException(
                 dgettext('tuleap-baseline', 'You cannot read this artifact')
             );
         }
 
         $tracker = $artifact->getTracker();
-        if (! $tracker->userCanView($this->security_context->getCurrentUser())) {
+        if (! $tracker->userCanView($this->current_user_provider->getUser())) {
             throw new NotAuthorizedException(
                 dgettext('tuleap-baseline', 'You cannot read this artifact because you cannot access to its tracker')
             );

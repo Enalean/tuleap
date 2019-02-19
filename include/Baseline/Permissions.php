@@ -19,11 +19,15 @@
  *
  */
 
-require_once __DIR__ . '/../include/baselinePlugin.class.php';
+namespace Tuleap\Baseline;
 
-foreach (['Factory', 'Stub'] as $folder) {
-    $files = glob(__DIR__ . '/' . $folder . '/*.php');
-    foreach ($files as $file) {
-        require_once($file);
-    }
+/**
+ * Gather all security permissions.
+ */
+interface Permissions
+{
+    /**
+     * @throws NotAuthorizedException
+     */
+    function checkReadSimpleBaseline(SimplifiedBaseline $baseline): void;
 }

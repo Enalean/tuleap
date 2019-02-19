@@ -21,34 +21,24 @@
 
 namespace Tuleap\Baseline;
 
-require_once __DIR__ . '/../bootstrap.php';
-
 use DateTime;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
+use League\Flysystem\Exception;
 
-class ClockTest extends TestCase
+/**
+ * No changeset found before a date.
+ */
+class ChangesetNotFoundException extends Exception
 {
-    use MockeryPHPUnitIntegration;
+    /** @var DateTime */
+    private $date;
 
-    /** @var Clock */
-    private $clock;
-
-    /**
-     * @before
-     */
-    public function createInstance()
+    public function __construct(DateTime $date)
     {
-        $this->clock = new Clock();
+        $this->date = $date;
     }
 
-    public function testNowReturnsCurrentDateTime()
+    public function getDate(): DateTime
     {
-        $before_now = new DateTime('now');
-        $now        = $this->clock->now();
-        $after_now  = new DateTime('now');
-
-        $this->assertGreaterThan($before_now, $now);
-        $this->assertLessThan($after_now, $now);
+        return $this->date;
     }
 }

@@ -20,18 +20,20 @@
 
 namespace Tuleap\Baseline\REST;
 
-use Tracker_Artifact_ChangesetFactoryBuilder;
-use Tracker_ArtifactFactory;
-use Tuleap\Baseline\Adapter\ProjectPermissionsImpl;
-use Tuleap\Baseline\Adapter\SecurityContextImpl;
-use Tuleap\Baseline\ArtifactPermissions;
+use Tuleap\Baseline\Support\DependenciesContext;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\I18NRestException;
-use Tuleap\REST\ProjectStatusVerificator;
-use Tuleap\REST\UserManager;
 
 class BaselinesResource extends AuthenticatedResource
 {
+    /** @var DependenciesContext */
+    private $context;
+
+    public function __construct()
+    {
+        $this->context = new DependenciesContext();
+    }
+
     /**
      * Get a virtual simplified Baseline
      *
@@ -58,17 +60,8 @@ class BaselinesResource extends AuthenticatedResource
     public function getByArtifactIdAndDate(int $artifact_id, string $date): SimplifiedBaselineRepresentation
     {
         $this->checkAccess();
-
-        $controller = new BaselinesController(
-            UserManager::build(),
-            Tracker_Artifact_ChangesetFactoryBuilder::build(),
-            Tracker_ArtifactFactory::instance(),
-            new FieldRepository(),
-            new ArtifactPermissions(
-                new SecurityContextImpl(UserManager::build()),
-                new ProjectPermissionsImpl(ProjectStatusVerificator::build())
-            )
-        );
-        return $controller->getByArtifactIdAndDate($artifact_id, $date);
+        return $this->context
+            ->getBaselineController()
+            ->getByMilestoneIdAndDate($artifact_id, $date);
     }
 }

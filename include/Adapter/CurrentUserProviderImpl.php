@@ -19,34 +19,24 @@
  *
  */
 
-namespace Tuleap\Baseline;
+namespace Tuleap\Baseline\Adapter;
 
-use Tracker_Artifact;
+use PFUser;
+use Tuleap\Baseline\CurrentUserProvider;
+use Tuleap\REST\UserManager;
 
-/**
- * Baseline which is not yet persisted.
- */
-class TransientBaseline
+class CurrentUserProviderImpl implements CurrentUserProvider
 {
-    /** @var string */
-    private $name;
+    /** @var UserManager */
+    private $user_manager;
 
-    /** @var Tracker_Artifact */
-    private $milestone;
-
-    public function __construct(string $name, Tracker_Artifact $milestone)
+    public function __construct(UserManager $user_manager)
     {
-        $this->name      = $name;
-        $this->milestone = $milestone;
+        $this->user_manager = $user_manager;
     }
 
-    public function getName(): string
+    function getUser(): PFUser
     {
-        return $this->name;
-    }
-
-    public function getMilestone(): Tracker_Artifact
-    {
-        return $this->milestone;
+        return $this->user_manager->getCurrentUser();
     }
 }

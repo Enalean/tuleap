@@ -19,7 +19,7 @@
  *
  */
 
-namespace Tuleap\Baseline\REST;
+namespace Tuleap\Baseline\Adapter;
 
 use Tracker;
 use Tracker_FormElement;
@@ -28,8 +28,9 @@ use Tracker_FormElement_Field_Text;
 use Tracker_Semantic_Description;
 use Tracker_Semantic_Status;
 use Tracker_Semantic_Title;
+use Tuleap\Baseline\FieldRepository;
 
-class FieldRepository
+class FieldRepositoryImpl implements FieldRepository
 {
     public function findTitleByTracker(Tracker $tracker): ?Tracker_FormElement_Field_Text
     {

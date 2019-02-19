@@ -19,11 +19,17 @@
  *
  */
 
-require_once __DIR__ . '/../include/baselinePlugin.class.php';
+namespace Tuleap\Baseline;
 
-foreach (['Factory', 'Stub'] as $folder) {
-    $files = glob(__DIR__ . '/' . $folder . '/*.php');
-    foreach ($files as $file) {
-        require_once($file);
-    }
+use Tracker;
+use Tracker_FormElement_Field_List;
+use Tracker_FormElement_Field_Text;
+
+interface FieldRepository
+{
+    function findTitleByTracker(Tracker $tracker): ?Tracker_FormElement_Field_Text;
+
+    function findDescriptionByTracker(Tracker $tracker): ?Tracker_FormElement_Field_Text;
+
+    function findStatusByTracker(Tracker $tracker): ?Tracker_FormElement_Field_List;
 }

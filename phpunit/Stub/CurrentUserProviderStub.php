@@ -19,11 +19,31 @@
  *
  */
 
-require_once __DIR__ . '/../include/baselinePlugin.class.php';
+namespace Tuleap\Baseline\Stub;
 
-foreach (['Factory', 'Stub'] as $folder) {
-    $files = glob(__DIR__ . '/' . $folder . '/*.php');
-    foreach ($files as $file) {
-        require_once($file);
+use PFUser;
+use Tuleap\Baseline\CurrentUserProvider;
+
+/**
+ * Implementation of CurrentUserProvider used for tests.
+ */
+class CurrentUserProviderStub implements CurrentUserProvider
+{
+    /** @var PFUSer */
+    private $user;
+
+    public function __construct()
+    {
+        $this->user = new PFUser(['timezone' => 'GMT+3']);
+    }
+
+    public function setUser(PFUser $current_user): void
+    {
+        $this->user = $current_user;
+    }
+
+    function getUser(): PFUser
+    {
+        return $this->user;
     }
 }

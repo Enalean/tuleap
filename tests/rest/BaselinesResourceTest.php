@@ -26,7 +26,7 @@ class BaselinesResourceTest extends RestBase
 {
     public function testGetByArtifactIdAndDate()
     {
-        $artifact = $this->fetchArtifact();
+        $artifact = $this->fetchFirstArtifactByProjectName("baseline-test");
 
         $url           = 'baselines/?' . http_build_query(['artifact_id' => $artifact['id'], "date" => "2017-09-02"]);
         $response      = $this->getResponse($this->client->get($url));
@@ -38,9 +38,9 @@ class BaselinesResourceTest extends RestBase
         $this->assertEquals("Artifact that will be moved in another tracker", $json_response['artifact_description']);
     }
 
-    public function fetchArtifact(): array
+    private function fetchFirstArtifactByProjectName(string $project_name): array
     {
-        $project_id = $this->project_ids["baseline-test"];
+        $project_id = $this->project_ids[$project_name];
         $trackers   = $this->tracker_ids[$project_id];
         return $this->getArtifacts($trackers['base'])[0];
     }

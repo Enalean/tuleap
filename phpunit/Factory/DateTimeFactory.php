@@ -19,11 +19,14 @@
  *
  */
 
-require_once __DIR__ . '/../include/baselinePlugin.class.php';
+namespace Tuleap\Baseline\Support;
 
-foreach (['Factory', 'Stub'] as $folder) {
-    $files = glob(__DIR__ . '/' . $folder . '/*.php');
-    foreach ($files as $file) {
-        require_once($file);
+use DateTime;
+
+class DateTimeFactory
+{
+    public static function one(): DateTime
+    {
+        return DateTime::createFromFormat('Y-m-d H:i:s', '2019-03-21 14:47:03');
     }
 }

@@ -19,51 +19,34 @@
  *
  */
 
-namespace Tuleap\Baseline;
+namespace Tuleap\Baseline\Stub;
 
 use DateTime;
-use PFUser;
 use Tracker_Artifact;
+use Tracker_Artifact_Changeset;
+use Tuleap\Baseline\ChangesetRepository;
 
 /**
- * Persisted baseline
+ * Implementation of ChangesetRepository used for tests.
  */
-class Baseline extends TransientBaseline
+class ChangesetRepositoryStub implements ChangesetRepository
 {
-    /** @var int */
-    private $id;
+    /** @var Tracker_Artifact_Changeset */
+    private $changeset;
 
-    /** @var PFUser */
-    private $author;
-
-    /** @var DateTime */
-    private $creation_date;
-
-    public function __construct(
-        int $id,
-        string $name,
-        Tracker_Artifact $milestone,
-        PFUser $author,
-        DateTime $creation_date
-    ) {
-        parent::__construct($name, $milestone);
-        $this->id            = $id;
-        $this->author        = $author;
-        $this->creation_date = $creation_date;
-    }
-
-    public function getId(): int
+    public function findByArtifactAndDate(Tracker_Artifact $artifact, DateTime $date): ?Tracker_Artifact_Changeset
     {
-        return $this->id;
+        return $this->changeset;
     }
 
-    public function getAuthor(): PFUser
+    public function setSingleChangesetForAllDates(Tracker_Artifact_Changeset $changeset): void
     {
-        return $this->author;
+        $this->changeset = $changeset;
     }
 
-    public function getCreationDate(): DateTime
+    public function removeAll()
     {
-        return $this->creation_date;
+        $this->changeset = null;
     }
+
 }

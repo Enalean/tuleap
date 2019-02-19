@@ -25,15 +25,28 @@ msgid "Invalid date: %s. Expected format: %s"
 msgstr "Date invalide %s. Format attendu : %s"
 
 #, php-format
-msgid "No artifact found with id %u"
-msgstr "Aucun artefact trouvé avec l'id %u"
+msgid "No changetset found before %s"
+msgstr "Aucune modification trouvée avant la date du %s"
 
 #, php-format
-msgid "No changetset found at timestamp %u"
-msgstr "Aucune modification pour cet horodatage %u"
+msgid "No milestone found with id %u"
+msgstr "Aucune milestone  trouvé avec l'id %u"
 
 msgid "Set and compare baseline of items"
 msgstr "Poser des baselines et les comparer"
 
-msgid "You cannot access to this artifact"
+#, php-format
+msgid "This operation is not allowed. %s"
+msgstr ""
+
+msgid "You cannot read this artifact"
 msgstr "Vous ne pouvez pas accéder à cet artefact"
+
+msgid "You cannot read this artifact because you cannot access to its project"
+msgstr ""
+
+msgid "You cannot read this artifact because you cannot access to its tracker"
+msgstr ""
+
+msgid "You cannot read this project"
+msgstr "Vous ne pouvez pas accéder à ce projet"

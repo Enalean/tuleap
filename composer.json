@@ -4,7 +4,8 @@
             "Tuleap\\Baseline\\": [
                 "include/",
                 "include/Baseline/",
-                "include/Adapter/"
+                "include/Adapter/",
+                "include/Support/"
             ]
         }
     },
