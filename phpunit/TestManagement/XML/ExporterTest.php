@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,11 +22,14 @@ namespace Tuleap\TestManagement\XML;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\TestManagement\Config;
 
 class ExporterTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
+
     /**
      * @var Exporter
      */
