@@ -19,8 +19,11 @@
   -->
 
 <template>
-    <div class="tlp-dropdown-menu"
-         v-bind:class="{'tlp-dropdown-menu-large tlp-dropdown-menu-top': isInFolderEmptyState}"
+    <div class="tlp-dropdown-menu document-dropdown-menu"
+         v-bind:class="{
+             'tlp-dropdown-menu-large tlp-dropdown-menu-top': isInFolderEmptyState,
+             'tlp-dropdown-menu-right': isInQuickLookMode
+         }"
          role="menu"
     >
         <slot></slot>
@@ -66,6 +69,7 @@ export default {
     name: "DropDownMenu",
     props: {
         isInFolderEmptyState: Boolean,
+        isInQuickLookMode: Boolean,
         item: Object
     },
     data() {

@@ -19,7 +19,7 @@
   -->
 
 <template>
-    <button type="button" class="tlp-button-primary tlp-button-outline tlp-button-small"
+    <button type="button" class="tlp-button-primary tlp-button-outline tlp-button-small tlp-dropdown-split-button-main"
             v-on:click="displayQuickLook()">
         <i class="fa fa-eye tlp-button-icon"></i>
         <translate>Quick look</translate>

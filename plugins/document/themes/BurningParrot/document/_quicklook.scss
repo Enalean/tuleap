@@ -108,6 +108,9 @@
     margin: 0 0 0 $tlp-spacing;
 }
 
+.document-tree-quick-look-button {
+    display: flex;
+}
 
 @media screen and (max-width: 1200px) {
     .document-folder-content-quicklook {
