@@ -26,7 +26,7 @@ use Luracast\Restler\RestException;
 use PFUser;
 use Project;
 use Rule_Regexp;
-use Tuleap\Docman\Upload\DocumentOngoingUploadRetriever;
+use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
 use Tuleap\Docman\Upload\UploadCreationConflictException;
 use Tuleap\Docman\Upload\UploadCreationFileMismatchException;
 use Tuleap\Docman\Upload\Document\DocumentToUploadCreator;

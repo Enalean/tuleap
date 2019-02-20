@@ -41,12 +41,13 @@ use Tuleap\Docman\Log\LogEventAdder;
 use Tuleap\Docman\Notifications\NotificationBuilders;
 use Tuleap\Docman\Notifications\NotificationEventAdder;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadDAO;
+use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
 use Tuleap\Docman\Upload\Document\DocumentToUploadCreator;
-use Tuleap\Docman\Upload\DocumentOngoingUploadRetriever;
-use Tuleap\Docman\Upload\UploadMaxSizeExceededException;
 use Tuleap\Docman\Upload\DocumentUploadFinisher;
 use Tuleap\Docman\Upload\DocumentUploadPathAllocator;
+use Tuleap\Docman\Upload\UploadMaxSizeExceededException;
 use Tuleap\Docman\Upload\Version\DocumentOnGoingVersionToUploadDAO;
+use Tuleap\Docman\Upload\Version\VersionOngoingUploadRetriever;
 use Tuleap\Docman\Upload\Version\VersionToUploadCreator;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
@@ -282,14 +283,15 @@ class DocmanItemsResource extends AuthenticatedResource
             new ApprovalTableRetriever(new \Docman_ApprovalTableFactoriesFactory()),
             new Docman_LockFactory(),
             new VersionToUploadCreator(new DocumentOnGoingVersionToUploadDAO()),
-            new VersionToUploadVisitorBeforeUpdateValidator()
+            new VersionToUploadVisitorBeforeUpdateValidator(new VersionOngoingUploadRetriever(new DocumentOnGoingVersionToUploadDAO()))
         );
 
         try {
             return $docman_item_updator->update(
                 $item,
                 $current_user,
-                $representation
+                $representation,
+                new \DateTimeImmutable()
             );
         } catch (ExceptionDocumentHasApprovalTable $exception) {
             throw new I18NRestException(

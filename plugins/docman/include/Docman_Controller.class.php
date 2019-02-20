@@ -23,7 +23,9 @@ use Tuleap\Docman\Log\LogEventAdder;
 use Tuleap\Docman\Notifications\NotificationBuilders;
 use Tuleap\Docman\Notifications\NotificationEventAdder;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadDAO;
-use Tuleap\Docman\Upload\DocumentOngoingUploadRetriever;
+use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
+use Tuleap\Docman\Upload\Version\DocumentOnGoingVersionToUploadDAO;
+use Tuleap\Docman\Upload\Version\VersionOngoingUploadRetriever;
 use Tuleap\User\InvalidEntryInAutocompleterCollection;
 use Tuleap\User\RequestFromAutocompleter;
 
@@ -1357,11 +1359,15 @@ class Docman_Controller extends Controler {
 
                 $valid = true;
                 if ($this->request->exist('confirm')) {
+                    $retriever = new VersionOngoingUploadRetriever(new DocumentOnGoingVersionToUploadDAO());
+                    if ($retriever->isThereAlreadyAnUploadOngoing($item, new DateTimeImmutable())) {
+                        $valid = false;
+                    }
                     //Validations
-                    if ($view == 'update') {
+                    if ($valid && $view == 'update') {
                         $this->updateMetadataFromUserInput($item);
                         $valid = $this->_validateRequest($item->accept(new Docman_View_GetFieldsVisitor()));
-                    } else {
+                    } else if ($valid) {
                         $this->updateItemFromUserInput($item);
                         $valid = (($this->_validateApprovalTable($this->request, $item))&&($this->_validateRequest($item->accept(new Docman_View_GetSpecificFieldsVisitor(), array('request' => &$this->request)))));
                     }
