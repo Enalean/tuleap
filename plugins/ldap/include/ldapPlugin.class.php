@@ -91,7 +91,6 @@ class LdapPlugin extends Plugin {
 
         // User Home
         $this->addHook('user_home_pi_entry', 'personalInformationEntry', false);
-        $this->addHook('user_home_pi_tail', 'personalInformationTail', false);
 
         // User account
         $this->addHook('account_pi_entry', 'accountPiEntry', false);
@@ -571,13 +570,6 @@ class LdapPlugin extends Plugin {
     /**
      * Hook
      */
-    function personalInformationTail($params) {
-        print '<TR>';
-        $this->displayUserDetails($params['showdir']
-                                  ,$params['user_name']);
-        print '</TR>';
-    }
-
     function buildLinkToDirectory(&$lr, $value='') {
         if($value === '') {
             $value = $lr->getLogin();
@@ -591,34 +583,6 @@ class LdapPlugin extends Plugin {
             $link = $value;
         }
         return $link;
-    }
-
-    function displayUserDetails($showdir, $user_name) {
-        include($GLOBALS['Language']->getContent('user_home', null, 'ldap'));
-
-        if (!$showdir && $my_html_ldap_format) {
-            echo '<td colspan="2" align="center"><a href="/users/'.$user_name.'/?showdir=1"><hr>[ '.$GLOBALS['Language']->getText('plugin_ldap','more_from_directory',$GLOBALS['sys_org_name']).'... ]</a><td>';
-
-        } else {
-            $ldapUm = $this->getLdapUserManager();
-            $lr = $ldapUm->getLdapFromUserName($user_name);
-
-            if (!$lr) {
-                //$feedback = $GLOBALS['sys_org_name'].' '.$Language->getText('plugin_ldap','directory').': '.$ldap->getErrorMessage();
-                echo '<td colspan="2" align="center"><hr><b>'.$feedback.'</b></td>';
-            } else {
-                // Format LDAP output based on templates given in user_home.php
-
-                if ($my_html_ldap_format) {
-                    preg_match_all("/%([\w\d\-\_]+)%/", $my_html_ldap_format, $matches);
-                    foreach($matches[1] as $field) {
-                        $value = $lr->get($field) ? $lr->get($field) : "-";
-                        $my_html_ldap_format  = str_replace("%$field%", $value, $my_html_ldap_format);
-                    }
-                    echo $my_html_ldap_format;
-                }
-            }
-        }
     }
 
     /**
