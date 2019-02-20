@@ -29,8 +29,6 @@ use Tuleap\Tracker\Workflow\FeatureFlag;
 
 abstract class Tracker_Workflow_Action
 {
-    use FeatureFlag;
-
     const PANE_RULES                  = 'rules';
     const PANE_TRANSITIONS            = 'transitions';
     const PANE_CROSS_TRACKER_TRIGGERS = 'triggers';
@@ -117,6 +115,22 @@ abstract class Tracker_Workflow_Action
         }
 
         return $this->buildNewTransitionsLink();
+    }
+
+    private function isNewWorkflowDisabled(\Tracker $tracker): bool
+    {
+        $whitelist = ForgeConfig::get('sys_tracker_whitelist_that_should_use_legacy_workflow_transitions_interface');
+        if ($whitelist === false || empty($whitelist)) {
+            return false;
+        }
+
+        foreach (explode(',', $whitelist) as $whitelisted_tracker_id) {
+            if ($tracker->id === trim($whitelisted_tracker_id)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private function buildTriggersLink()
