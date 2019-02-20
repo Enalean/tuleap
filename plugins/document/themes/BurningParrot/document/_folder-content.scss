@@ -181,6 +181,11 @@
     margin: 0 0 0 $tlp-spacing;
 }
 
+.document-folder-content-quick-look-and-item-uploading {
+    display: flex;
+    justify-content: space-between;
+}
+
 @media screen and (max-width: 1100px) {
     .document-tree-head-owner,
     .document-tree-head-updatedate,

@@ -27,12 +27,14 @@
                             <th class="document-tree-head-name" v-translate>
                                 Name
                             </th>
-                            <th class="document-tree-head-owner" v-translate>
-                                Owner
-                            </th>
-                            <th class="document-tree-head-updatedate" v-translate>
-                                Last update date
-                            </th>
+                            <template v-if="! toggle_quick_look">
+                                <th class="document-tree-head-owner" v-translate>
+                                    Owner
+                                </th>
+                                <th class="document-tree-head-updatedate" v-translate>
+                                    Last update date
+                                </th>
+                            </template>
                         </tr>
                     </thead>
 
@@ -40,6 +42,7 @@
                         <folder-content-row v-for="item of folder_content"
                                             v-bind:key="item.id"
                                             v-bind:item="item"
+                                            v-bind:is-quick-look-displayed="toggle_quick_look"
                                             v-on:displayQuickLook="displayQuickLook(item)"
                         />
                     </tbody>
