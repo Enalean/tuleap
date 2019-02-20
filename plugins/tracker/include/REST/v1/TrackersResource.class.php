@@ -35,6 +35,8 @@ use Tracker_ReportFactory;
 use Tracker_REST_Artifact_ArtifactRepresentationBuilder;
 use Tracker_REST_TrackerRestBuilder;
 use TrackerFactory;
+use Tuleap\DB\DataAccessObject;
+use Tuleap\DB\TransactionExecutor;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Exceptions\LimitOutOfBoundsException;
 use Tuleap\REST\Header;
@@ -52,8 +54,12 @@ use Tuleap\Tracker\Report\Query\Advanced\SearchablesDoNotExistException;
 use Tuleap\Tracker\REST\Artifact\ParentArtifactReference;
 use Tuleap\Tracker\REST\ReportRepresentation;
 use Tuleap\Tracker\REST\v1\Workflow\ModeUpdater;
+use Tuleap\Tracker\Workflow\Transition\Update\TransitionReplicator;
+use Tuleap\Tracker\Workflow\Transition\Update\TransitionReplicatorBuilder;
+use Tuleap\Tracker\Workflow\Transition\Update\TransitionRetriever;
 use UserManager;
 use Workflow_Dao;
+use Workflow_TransitionDao;
 use WorkflowFactory;
 
 /**
@@ -555,7 +561,16 @@ class TrackersResource extends AuthenticatedResource
      * }
      * </pre>
      * <br/>
-     * /!\ A workflow cannot be switched from advanced to simple yet.
+     *
+     * Switch a workflow from advanced to simple mode:
+     * <pre>
+     * {
+     *   "workflow": {
+     *       "is_advanced": false
+     *   }
+     * }
+     * </pre>
+     * <br/>
      *
      * @url PATCH {id}
      * @access protected
@@ -634,11 +649,46 @@ class TrackersResource extends AuthenticatedResource
             return $this->deactivateLegacyTransitions($tracker);
         }
 
-        if (isset($workflow_query['is_advanced']) && $workflow_query['is_advanced'] === true) {
-            return $this->switchWorkflowToAdvancedMode($tracker);
+        if (isset($workflow_query['is_advanced'])) {
+            $workflow_mode_updater = $this->getModeUpdater();
+
+            if ($workflow_query['is_advanced'] === true) {
+                return $workflow_mode_updater->switchWorkflowToAdvancedMode($tracker);
+            } else {
+                $transaction_executor = new TransactionExecutor(new DataAccessObject());
+                return $transaction_executor->execute(
+                    function () use ($workflow_mode_updater, $tracker) {
+                        $workflow_mode_updater->switchWorkflowToSimpleMode($tracker);
+                    }
+                );
+            }
+
         }
 
         throw new I18NRestException(400, dgettext('tuleap-tracker', 'Please provide a valid query.'));
+    }
+
+    /**
+     * @return ModeUpdater
+     */
+    private function getModeUpdater() : ModeUpdater
+    {
+        $transition_factory = \TransitionFactory::instance();
+
+        return new ModeUpdater(
+            new Workflow_Dao(),
+            $transition_factory,
+            new TransitionRetriever(
+                new Workflow_TransitionDao(),
+                $transition_factory
+            ),
+            $this->getTransitionReplicator()
+        );
+    }
+
+    private function getTransitionReplicator() : TransitionReplicator
+    {
+        return TransitionReplicatorBuilder::build();
     }
 
     private function deactivateLegacyTransitions(Tracker $tracker) : void
@@ -646,12 +696,6 @@ class TrackersResource extends AuthenticatedResource
         $workflow_id = $tracker->getWorkflow()->getId();
 
         (new \Workflow_Dao())->removeWorkflowLegacyState($workflow_id);
-    }
-
-    private function switchWorkflowToAdvancedMode(Tracker $tracker) : void
-    {
-        $workflow_mode_updater = new ModeUpdater(new Workflow_Dao());
-        $workflow_mode_updater->switchWorkflowToAdvancedMode($tracker);
     }
 
     /**
