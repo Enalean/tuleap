@@ -543,6 +543,18 @@ class TrackersResource extends AuthenticatedResource
      * <br/>
      * /!\ A workflow cannot be switched from standard to legacy.
      *
+     * <br/>
+     * Switch a workflow from simple to advanced mode:
+     * <pre>
+     * {
+     *   "workflow": {
+     *       "is_advanced": true
+     *   }
+     * }
+     * </pre>
+     * <br/>
+     * /!\ A workflow cannot be switched from advanced to simple yet.
+     *
      * @url PATCH {id}
      * @access protected
      *
@@ -593,7 +605,6 @@ class TrackersResource extends AuthenticatedResource
      * @param array $workflow_query
      * @param Tracker $tracker
      *
-     * @return int Created workflow id
      * @throws I18NRestException 500
      * @throws I18NRestException 400
      * @throws I18NRestException 404
@@ -621,6 +632,10 @@ class TrackersResource extends AuthenticatedResource
             return $this->deactivateLegacyTransitions($tracker);
         }
 
+        if (isset($workflow_query['is_advanced']) && $workflow_query['is_advanced'] === true) {
+            return $this->switchWorkflowToAdvancedMode($tracker);
+        }
+
         throw new I18NRestException(400, dgettext('tuleap-tracker', 'Please provide a valid query.'));
     }
 
@@ -629,6 +644,13 @@ class TrackersResource extends AuthenticatedResource
         $workflow_id = $tracker->getWorkflow()->getId();
 
         (new \Workflow_Dao())->removeWorkflowLegacyState($workflow_id);
+    }
+
+    private function switchWorkflowToAdvancedMode(Tracker $tracker) : void
+    {
+        $workflow_id = $tracker->getWorkflow()->getId();
+
+        (new \Workflow_Dao())->switchWorkflowToAdvancedMode($workflow_id);
     }
 
     /**

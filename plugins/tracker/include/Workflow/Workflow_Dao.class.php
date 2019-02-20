@@ -104,4 +104,13 @@ class Workflow_Dao extends DataAccessObject //phpcs:ignoreFile
 
         return $this->update($sql);
     }
+
+    public function switchWorkflowToAdvancedMode($workflow_id)
+    {
+        $workflow_id = $this->da->escapeInt($workflow_id);
+
+        $sql = " UPDATE tracker_workflow SET is_advanced=1 WHERE workflow_id=$workflow_id";
+
+        return $this->update($sql);
+    }
 }
