@@ -21,7 +21,7 @@
 
 use Http\Discovery\MessageFactoryDiscovery;
 use Tuleap\Http\HttpClientFactory;
-use Tuleap\Http\MessageFactoryBuilder;
+use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Hudson\HudsonJobBuilder;
 
 require_once 'www/include/help.php';
@@ -286,7 +286,10 @@ class hudsonViews extends Views {
             echo '<tbody>';
             $cpt                                   = 1;
             $minimal_job_factory                   = new MinimalHudsonJobFactory();
-            $job_builder                           = new HudsonJobBuilder(MessageFactoryBuilder::build(), HttpClientFactory::createAsyncClient());
+            $job_builder                           = new HudsonJobBuilder(
+                HTTPFactoryBuilder::requestFactory(),
+                HttpClientFactory::createAsyncClient()
+            );
             $minimal_hudson_jobs                   = [];
             $hudson_jobs_complementary_information = [];
 

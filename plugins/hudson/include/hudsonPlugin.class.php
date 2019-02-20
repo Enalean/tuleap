@@ -22,7 +22,7 @@
 use Tuleap\Dashboard\Project\ProjectDashboardController;
 use Tuleap\Dashboard\User\UserDashboardController;
 use Tuleap\Http\HttpClientFactory;
-use Tuleap\Http\MessageFactoryBuilder;
+use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Hudson\HudsonJobBuilder;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\CurrentPage;
@@ -125,7 +125,7 @@ class hudsonPlugin extends Plugin
 
         $user        = UserManager::instance()->getCurrentUser();
         $hf          = $this->getMinimalHudsonJobFactory();
-        $job_builder = new HudsonJobBuilder(MessageFactoryBuilder::build(), HttpClientFactory::createAsyncClient());
+        $job_builder = new HudsonJobBuilder(HTTPFactoryBuilder::requestFactory(), HttpClientFactory::createAsyncClient());
 
         switch($get_widget_event->getName()) {
             // MY
@@ -269,7 +269,7 @@ class hudsonPlugin extends Plugin
                     $row = $dar->current();
                     try {
                         $minimal_job_factory = $this->getMinimalHudsonJobFactory();
-                        $job_builder         = new HudsonJobBuilder(MessageFactoryBuilder::build(), HttpClientFactory::createAsyncClient());
+                        $job_builder         = new HudsonJobBuilder(HTTPFactoryBuilder::requestFactory(), HttpClientFactory::createAsyncClient());
                         $job                 = $job_builder->getHudsonJob(
                             $minimal_job_factory->getMinimalHudsonJob($row['job_url'], '')
                         );
@@ -351,7 +351,7 @@ class hudsonPlugin extends Plugin
                     $row = $dar->current();
                     try {
                         $minimal_job_factory = $this->getMinimalHudsonJobFactory();
-                        $job_builder         = new HudsonJobBuilder(MessageFactoryBuilder::build(), HttpClientFactory::createAsyncClient());
+                        $job_builder         = new HudsonJobBuilder(HTTPFactoryBuilder::requestFactory(), HttpClientFactory::createAsyncClient());
                         $job                 = $job_builder->getHudsonJob(
                             $minimal_job_factory->getMinimalHudsonJob($row['job_url'], '')
                         );

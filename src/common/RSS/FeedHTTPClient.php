@@ -22,8 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\RSS;
 
-use Http\Message\RequestFactory;
 use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\RequestFactoryInterface;
 use Zend\Feed\Reader\Http\HeaderAwareClientInterface;
 use Zend\Feed\Reader\Http\Psr7ResponseDecorator;
 use Zend\Feed\Reader\Http\ResponseInterface;
@@ -35,11 +35,11 @@ final class FeedHTTPClient implements HeaderAwareClientInterface
      */
     private $http_client;
     /**
-     * @var RequestFactory
+     * @var RequestFactoryInterface
      */
     private $http_request_factory;
 
-    public function __construct(ClientInterface $http_client, RequestFactory $http_request_factory)
+    public function __construct(ClientInterface $http_client, RequestFactoryInterface $http_request_factory)
     {
         $this->http_client          = $http_client;
         $this->http_request_factory = $http_request_factory;
@@ -47,7 +47,10 @@ final class FeedHTTPClient implements HeaderAwareClientInterface
 
     public function get($uri, array $headers = []) : ResponseInterface
     {
-        $request = $this->http_request_factory->createRequest('GET', $uri, $headers);
+        $request = $this->http_request_factory->createRequest('GET', $uri);
+        foreach ($headers as $name => $value) {
+            $request = $request->withHeader($name, $value);
+        }
 
         return new Psr7ResponseDecorator($this->http_client->sendRequest($request));
     }

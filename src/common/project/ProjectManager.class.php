@@ -22,7 +22,7 @@ use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\FRS\FRSPermissionDao;
 use Tuleap\Http\HttpClientFactory;
-use Tuleap\Http\MessageFactoryBuilder;
+use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Project\Webhook\Log\StatusLogger as WebhookStatusLogger;
 use Tuleap\Project\Webhook\Log\WebhookLoggerDao;
 use Tuleap\Project\Webhook\ProjectCreatedPayload;
@@ -377,7 +377,8 @@ class ProjectManager
     {
         $webhook_status_logger   = new WebhookStatusLogger(new WebhookLoggerDao());
         $webhook_emitter         = new Emitter(
-            MessageFactoryBuilder::build(),
+            HTTPFactoryBuilder::requestFactory(),
+            HTTPFactoryBuilder::streamFactory(),
             HttpClientFactory::createAsyncClient(),
             $webhook_status_logger
         );

@@ -24,7 +24,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Tuleap\Http\MessageFactoryBuilder;
+use Tuleap\Http\HTTPFactoryBuilder;
 
 class TuleapRESTCORSMiddlewareTest extends TestCase
 {
@@ -32,9 +32,9 @@ class TuleapRESTCORSMiddlewareTest extends TestCase
 
     private $message_factory;
 
-    public function testMinimalInformationNeededForATuleapRESTCallIsAddedd()
+    public function testMinimalInformationNeededForATuleapRESTCallIsAdded()
     {
-        $this->message_factory = MessageFactoryBuilder::build();
+        $this->message_factory = HTTPFactoryBuilder::responseFactory();
 
         $request_handler_response = $this->message_factory->createResponse(200);
 
@@ -52,7 +52,7 @@ class TuleapRESTCORSMiddlewareTest extends TestCase
 
     public function testAllowedAndExposedHeadersAreNotOverwritten()
     {
-        $this->message_factory = MessageFactoryBuilder::build();
+        $this->message_factory = HTTPFactoryBuilder::responseFactory();
 
         $request_handler_response = $this->message_factory->createResponse(200)
             ->withHeader('Access-Control-Allow-Headers', 'MyAllowedHeader')

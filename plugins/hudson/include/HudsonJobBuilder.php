@@ -21,16 +21,16 @@
 namespace Tuleap\Hudson;
 
 use Http\Client\HttpAsyncClient;
-use Http\Message\RequestFactory;
 use HudsonJobURLFileException;
 use HudsonJobURLFileNotFoundException;
+use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use SimpleXMLElement;
 
 class HudsonJobBuilder
 {
     /**
-     * @var RequestFactory
+     * @var RequestFactoryInterface
      */
     private $http_request_factory;
     /**
@@ -39,7 +39,7 @@ class HudsonJobBuilder
     private $http_client;
 
 
-    public function __construct(RequestFactory $http_request_factory, HttpAsyncClient $http_client)
+    public function __construct(RequestFactoryInterface $http_request_factory, HttpAsyncClient $http_client)
     {
         $this->http_request_factory = $http_request_factory;
         $this->http_client          = $http_client;

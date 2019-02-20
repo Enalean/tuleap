@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2019. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,7 +32,7 @@ use Luracast\Restler\Defaults;
 use Luracast\Restler\Format\JsonFormat;
 
 if (! headers_sent()) {
-    $message_factory = \Tuleap\Http\MessageFactoryBuilder::build();
+    $message_factory = \Tuleap\Http\HTTPFactoryBuilder::responseFactory();
     $request_handler = new \Tuleap\Http\Server\AlwaysSuccessfulRequestHandler($message_factory);
     $cors_middleware = new \Tuleap\REST\TuleapRESTCORSMiddleware();
     $minimal_request = new \Tuleap\Http\Server\NullServerRequest();

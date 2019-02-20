@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\Tus;
 
-use Http\Message\ResponseFactory;
+use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
@@ -31,7 +31,7 @@ final class TusServer implements RequestHandlerInterface
     private const TUS_VERSION = '1.0.0';
 
     /**
-     * @var ResponseFactory
+     * @var ResponseFactoryInterface
      */
     private $response_factory;
     /**
@@ -40,7 +40,7 @@ final class TusServer implements RequestHandlerInterface
     private $data_store;
 
     public function __construct(
-        ResponseFactory $response_factory,
+        ResponseFactoryInterface $response_factory,
         TusDataStore $data_store
     ) {
         $this->response_factory = $response_factory;

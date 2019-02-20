@@ -26,19 +26,19 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Tuleap\Http\MessageFactoryBuilder;
+use Tuleap\Http\HTTPFactoryBuilder;
 
 class TusCORSMiddlewareTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    private $message_factory;
+    private $response_factory;
 
     public function testTusInformationIsAdded()
     {
-        $this->message_factory = MessageFactoryBuilder::build();
+        $this->response_factory = HTTPFactoryBuilder::responseFactory();
 
-        $request_handler_response = $this->message_factory->createResponse(200);
+        $request_handler_response = $this->response_factory->createResponse(200);
 
         $request_handler = \Mockery::mock(RequestHandlerInterface::class);
         $request_handler->shouldReceive('handle')->andReturns($request_handler_response);
@@ -54,9 +54,9 @@ class TusCORSMiddlewareTest extends TestCase
 
     public function testAllowedAndExposedHeadersAreNotOverwritten()
     {
-        $this->message_factory = MessageFactoryBuilder::build();
+        $this->response_factory = HTTPFactoryBuilder::responseFactory();
 
-        $request_handler_response = $this->message_factory->createResponse(200)
+        $request_handler_response = $this->response_factory->createResponse(200)
             ->withHeader('Access-Control-Allow-Headers', 'MyAllowedHeader')
             ->withHeader('Access-Control-Expose-Headers', 'MyExposedHeader');
 

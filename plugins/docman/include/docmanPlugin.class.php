@@ -45,7 +45,7 @@ use Tuleap\Docman\REST\v1\ItemRepresentationBuilder;
 use Tuleap\Docman\REST\v1\MetadataRepresentationBuilder;
 use Tuleap\Docman\Tus\TusServer;
 use Tuleap\Docman\Upload\FileUploadController;
-use Tuleap\Http\MessageFactoryBuilder;
+use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Layout\PaginationPresenter;
 use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;
@@ -1270,7 +1270,7 @@ class DocmanPlugin extends Plugin
         $path_allocator              = new \Tuleap\Docman\Upload\DocumentUploadPathAllocator();
         return new FileUploadController(
             new TusServer(
-                MessageFactoryBuilder::build(),
+                HTTPFactoryBuilder::responseFactory(),
                 new \Tuleap\Docman\Upload\DocumentDataStore(
                     new \Tuleap\Docman\Upload\DocumentBeingUploadedInformationProvider(
                         $path_allocator,

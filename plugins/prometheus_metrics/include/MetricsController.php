@@ -25,7 +25,7 @@ use ForgeConfig;
 use HTTPRequest;
 use Prometheus\RenderTextFormat;
 use Tuleap\Http\HttpClientFactory;
-use Tuleap\Http\MessageFactoryBuilder;
+use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
@@ -85,7 +85,7 @@ class MetricsController implements DispatchableWithRequestNoAuthz
             if ($node_exporter_url === '') {
                 return '';
             }
-            $request_factory = MessageFactoryBuilder::build();
+            $request_factory = HTTPFactoryBuilder::requestFactory();
             $http_client     = HttpClientFactory::createClientForInternalTuleapUse();
             $request         = $request_factory->createRequest('GET', $node_exporter_url);
             $response        = $http_client->sendRequest($request);
