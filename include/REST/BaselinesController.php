@@ -23,7 +23,6 @@ namespace Tuleap\Baseline\REST;
 
 use DateTime;
 use DateTimeZone;
-use DateUtils;
 use Tracker;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetFactory;
@@ -83,7 +82,9 @@ class BaselinesController
      * @throws \User_StatusPendingException
      * @throws \User_StatusSuspendedException
      */
-    public function getByArtifactIdAndDate(int $artifact_id, string $last_modification_date_before_baseline_date
+    public function getByArtifactIdAndDate(
+        int $artifact_id,
+        string $last_modification_date_before_baseline_date
     ): SimplifiedBaselineRepresentation {
 
         $date_time = $this->parseDate($last_modification_date_before_baseline_date, "Y-m-d");
@@ -95,8 +96,8 @@ class BaselinesController
             throw new I18NRestException(
                 404,
                 sprintf(
-                    dgettext('tuleap-baseline', 'No artifact found with id %u')
-                    , $artifact_id
+                    dgettext('tuleap-baseline', 'No artifact found with id %u'),
+                    $artifact_id
                 )
             );
         }
@@ -111,8 +112,8 @@ class BaselinesController
             throw new I18NRestException(
                 404,
                 sprintf(
-                    dgettext('tuleap-baseline', 'No changetset found at timestamp %u')
-                    , $timestamp
+                    dgettext('tuleap-baseline', 'No changetset found at timestamp %u'),
+                    $timestamp
                 )
             );
         }
@@ -149,9 +150,9 @@ class BaselinesController
             throw new I18NRestException(
                 400,
                 sprintf(
-                    dgettext('tuleap-baseline', 'Invalid date: %s. Expected format: %s')
-                    , $date
-                    , $format
+                    dgettext('tuleap-baseline', 'Invalid date: %s. Expected format: %s'),
+                    $date,
+                    $format
                 )
             );
         }
