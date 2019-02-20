@@ -19,9 +19,9 @@
  */
 
 .document-quick-look-pane {
+    position: fixed;
     min-width: 500px;
     max-width: 35%;
-    margin: 0 0 0 $tlp-spacing;
 }
 
 .document-quick-look-header {
@@ -104,6 +104,11 @@
     box-shadow: 0 0 1px 1px $tlp-ui-border-normal;
 }
 
+.quick-look-button {
+    margin: 0 0 0 $tlp-spacing;
+}
+
+
 @media screen and (max-width: 1200px) {
     .document-folder-content-quicklook {
         flex-direction: column;
@@ -117,6 +122,7 @@
 
     .document-quick-look-pane {
         display: block;
+        position: relative;
         width: 100%;
         margin: $tlp-spacing 0 0 0;
     }
