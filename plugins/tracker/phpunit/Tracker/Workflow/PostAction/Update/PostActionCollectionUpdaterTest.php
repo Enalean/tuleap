@@ -61,15 +61,7 @@ class PostActionCollectionUpdaterTest extends TestCase
         $this->post_action_updater1 = Mockery::mock(PostActionUpdater::class);
         $this->post_action_updater2 = Mockery::mock(PostActionUpdater::class);
 
-        $this->transaction_executor = Mockery::mock(TransactionExecutor::class);
-        $this->transaction_executor
-            ->shouldReceive('execute')
-            ->andReturnUsing(function (callable $operation) {
-                $operation();
-            });
-
         $this->collection_updater = new PostActionCollectionUpdater(
-            $this->transaction_executor,
             $this->post_action_updater1,
             $this->post_action_updater2
         );

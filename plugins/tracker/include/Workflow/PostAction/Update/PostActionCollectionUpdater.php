@@ -31,20 +31,12 @@ use Tuleap\Tracker\Workflow\PostAction\Update\Internal\UnknownPostActionIdsExcep
 class PostActionCollectionUpdater
 {
     /**
-     * @var TransactionExecutor
-     */
-    private $transaction_executor;
-
-    /**
      * @var PostActionUpdater[]
      */
     private $post_action_updaters;
 
-    public function __construct(
-        TransactionExecutor $transaction_executor,
-        PostActionUpdater...$post_action_updaters
-    ) {
-        $this->transaction_executor = $transaction_executor;
+    public function __construct(PostActionUpdater...$post_action_updaters)
+    {
         $this->post_action_updaters = $post_action_updaters;
     }
 
@@ -56,28 +48,20 @@ class PostActionCollectionUpdater
      */
     public function updateByTransition(Transition $transition, PostActionCollection $actions): void
     {
-        $this->transaction_executor->execute(
-            function () use ($transition, $actions) {
-                $this->updateATransition($transition, $actions);
-            }
-        );
-    }
-
-    private function updateATransition(Transition $transition, PostActionCollection $actions)
-    {
         foreach ($this->post_action_updaters as $updater) {
             $updater->updateByTransition($actions, $transition);
         }
     }
 
+    /**
+     * @throws DataAccessQueryException
+     * @throws InvalidPostActionException
+     * @throws UnknownPostActionIdsException
+     */
     public function updateForAllSiblingsTransition(array $all_sibling_transitions, PostActionCollection $actions): void
     {
-        $this->transaction_executor->execute(
-            function () use ($all_sibling_transitions, $actions) {
-                foreach ($all_sibling_transitions as $transition) {
-                    $this->updateATransition($transition, $actions);
-                }
-            }
-        );
+        foreach ($all_sibling_transitions as $transition) {
+            $this->updateByTransition($transition, $actions);
+        }
     }
 }
