@@ -23,13 +23,14 @@
     <div>
         <fake-caret v-bind:item="item"/>
         <i class="fa fa-fw document-folder-content-icon" v-bind:class="icon_class"></i>
-        {{ item.title }}
+        {{ title }}
     </div>
 </template>
 
 <script>
 import { TYPE_EMBEDDED, TYPE_EMPTY, ICON_EMBEDDED, ICON_EMPTY } from "../../../constants.js";
 import FakeCaret from "./FakeCaret.vue";
+import { getTitleWithElipsisIfNeeded } from "../../../helpers/cell-title-formatter.js";
 
 export default {
     name: "DocumentCellTitle",
@@ -46,6 +47,9 @@ export default {
                 default:
                     return ICON_EMPTY;
             }
+        },
+        title() {
+            return getTitleWithElipsisIfNeeded(this.item);
         }
     }
 };

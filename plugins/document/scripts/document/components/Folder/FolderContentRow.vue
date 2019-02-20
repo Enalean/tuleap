@@ -25,6 +25,7 @@
                     v-bind:is="cell_title_component_name"
                     v-bind:item="item"
                     v-bind:style="item_indentation"
+                    v-bind:title="item.title"
                 />
                 <quick-look-button
                     v-on:displayQuickLook="$emit('displayQuickLook', item)"

@@ -24,7 +24,7 @@
         <fake-caret v-bind:item="item"/>
         <i class="fa fa-fw document-folder-content-icon" v-bind:class="icon_class"></i>
         <a v-bind:href="item.file_properties.html_url" class="document-folder-subitem-link">
-            {{ item.title }}
+            {{ title }}
         </a>
     </div>
 </template>
@@ -33,6 +33,7 @@
 import { iconForMimeType } from "../../../helpers/icon-for-mime-type.js";
 import { ICON_EMPTY } from "../../../constants.js";
 import FakeCaret from "./FakeCaret.vue";
+import { getTitleWithElipsisIfNeeded } from "../../../helpers/cell-title-formatter.js";
 
 export default {
     name: "FileCellTitle",
@@ -47,6 +48,9 @@ export default {
             }
 
             return iconForMimeType(this.item.file_properties.file_type);
+        },
+        title() {
+            return getTitleWithElipsisIfNeeded(this.item);
         }
     }
 };
