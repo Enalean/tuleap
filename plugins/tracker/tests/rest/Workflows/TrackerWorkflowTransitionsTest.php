@@ -330,61 +330,21 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
         $this->assertEquals($response->getStatusCode(), 400);
     }
 
-    public function testGetResolvedToClosedTransition() : array
+    public function testGetResolvedToClosedTransition(): int
     {
-        $response = $this->getResponseByName(
-            REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->setup_client->get("trackers/$this->tracker_workflow_transitions_tracker_id")
+        $transition = $this->getSpecificTransition(
+            $this->tracker_workflow_transitions_tracker_id,
+            'status_id',
+            'Resolved',
+            'Closed'
         );
-
-        $this->assertEquals($response->getStatusCode(), 200);
-
-        $tracker = $response->json();
-
-        $status_field_id   = 0;
-        $resolved_value_id = 0;
-        $closed_value_id   = 0;
-
-        foreach ($tracker['fields'] as $tracker_field) {
-            if ($tracker_field['name'] === 'status_id') {
-                $status_field_id = $tracker_field['field_id'];
-
-                foreach ($tracker_field['values'] as $field_value) {
-                    if ($field_value['label'] === 'Resolved') {
-                        $resolved_value_id = $field_value['id'];
-                    }
-
-                    if ($field_value['label'] === 'Closed') {
-                        $closed_value_id = $field_value['id'];
-                    }
-                }
-                break;
-            }
-        }
-
-        if ($status_field_id === 0 || $resolved_value_id === 0 || $closed_value_id ===0) {
-            $this->fail();
-        }
-
-        $resolved_to_closed_transition = null;
-        foreach ($tracker["workflow"]["transitions"] as $transition) {
-            if ($transition['from_id'] === $resolved_value_id && $transition['to_id'] === $closed_value_id) {
-                $resolved_to_closed_transition = $transition;
-                break;
-            }
-        }
-
-        if ($resolved_to_closed_transition === null) {
-            $this->fail();
-        }
-
-        return $resolved_to_closed_transition;
+        return $transition['id'];
     }
 
     /**
      * @depends testGetResolvedToClosedTransition
      */
-    public function testPATCHTrackerWorkflowTransitionsThenGETReturnsUpdatedTransition($transition)
+    public function testPATCHTrackerWorkflowTransitionsThenGETReturnsUpdatedTransition(int $transition_id)
     {
         $tracker_workflows_project_id = $this->getProjectId(self::TRACKER_WORKFLOWS_PROJECT_NAME);
         $a_user_group_id = $this->user_groups_ids[$tracker_workflows_project_id]['project_members'];
@@ -398,7 +358,7 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
         $response = $this->getResponseByName(
             REST_TestDataBuilder::ADMIN_USER_NAME,
             $this->client->patch(
-                'tracker_workflow_transitions/' . $transition['id'],
+                "tracker_workflow_transitions/$transition_id",
                 null,
                 $params
             )
@@ -407,7 +367,7 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
 
         $response = $this->getResponseByName(
             REST_TestDataBuilder::TEST_USER_1_NAME,
-            $this->client->get('tracker_workflow_transitions/' . $transition['id'])
+            $this->client->get("tracker_workflow_transitions/$transition_id")
         );
         $this->assertEquals($response->getStatusCode(), 200);
 
@@ -420,10 +380,8 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
     /**
      * @depends testGetResolvedToClosedTransition
      */
-    public function testGETTrackerWorkflowTransitionActions($transition)
+    public function testGETTrackerWorkflowTransitionActions(int $transition_id)
     {
-        $transition_id = $transition['id'];
-
         $response = $this->getResponseByName(
             REST_TestDataBuilder::TEST_USER_1_NAME,
             $this->client->get("tracker_workflow_transitions/$transition_id/actions")
@@ -454,7 +412,7 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
     /**
      * @depends testGetResolvedToClosedTransition
      */
-    public function testPUTTrackerWorkflowTransitionActions($transition)
+    public function testPUTTrackerWorkflowTransitionActions(int $transition_id)
     {
         $body = json_encode([
             "post_actions" => [
@@ -469,7 +427,7 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
         $response = $this->getResponseByName(
             REST_TestDataBuilder::TEST_USER_1_NAME,
             $this->client->put(
-                'tracker_workflow_transitions/' . $transition['id'] . '/actions',
+                "tracker_workflow_transitions/$transition_id/actions",
                 null,
                 $body
             )

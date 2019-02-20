@@ -25,7 +25,6 @@
 namespace Tuleap\Tracker\Tests\REST;
 
 use RestBase;
-use REST_TestDataBuilder;
 
 class TrackerBase extends RestBase
 {
@@ -43,14 +42,17 @@ class TrackerBase extends RestBase
     const SIMPLE_02_TRACKER_SHORTNAME                 = 'simple_tracker_02';
     const TRACKER_WITH_WORKFLOWS_SHORTNAME            = 'workflows_tracker';
     const TRACKER_WORKFLOW_WITH_TRANSITIONS_SHORTNAME = 'workflows_tracker_transitions';
+    const TRACKER_WORKFLOW_SIMPLE_MODE_SHORTNAME      = 'workflow_simple_mode';
 
     protected $tracker_administrator_project_id;
+    protected $tracker_workflows_project_id;
 
     protected $delete_tracker_id;
     protected $move_tracker_id;
     protected $base_tracker_id;
     protected $tracker_fields_tracker_id;
     protected $tracker_workflows_tracker_id;
+    protected $simple_mode_workflow_tracker_id;
 
     protected $base_artifact_ids   = [];
     protected $delete_artifact_ids = [];
@@ -63,14 +65,15 @@ class TrackerBase extends RestBase
         $delete_project_id                      = $this->getProjectId(self::DELETE_PROJECT_NAME);
         $tracker_fields_project_id              = $this->getProjectId(self::TRACKER_FIELDS_PROJECT_NAME);
         $this->tracker_administrator_project_id = $this->getProjectId(self::TRACKER_ADMINISTRATOR_PROJECT_NAME);
-        $tracker_workflows_project_id           = $this->getProjectId(self::TRACKER_WORKFLOWS_PROJECT_NAME);
+        $this->tracker_workflows_project_id     = $this->getProjectId(self::TRACKER_WORKFLOWS_PROJECT_NAME);
 
         $this->move_tracker_id                         = $this->tracker_ids[$move_project_id][self::MOVE_TRACKER_SHORTNAME];
         $this->base_tracker_id                         = $this->tracker_ids[$move_project_id][self::BASE_TRACKER_SHORTNAME];
         $this->delete_tracker_id                       = $this->tracker_ids[$delete_project_id][self::DELETE_TRACKER_SHORTNAME];
         $this->tracker_fields_tracker_id               = $this->tracker_ids[$tracker_fields_project_id][self::TRACKER_FIELDS_TRACKER_SHORTNAME];
-        $this->tracker_workflows_tracker_id            = $this->tracker_ids[$tracker_workflows_project_id][self::TRACKER_WITH_WORKFLOWS_SHORTNAME];
-        $this->tracker_workflow_transitions_tracker_id = $this->tracker_ids[$tracker_workflows_project_id][self::TRACKER_WORKFLOW_WITH_TRANSITIONS_SHORTNAME];
+        $this->tracker_workflows_tracker_id            = $this->tracker_ids[$this->tracker_workflows_project_id][self::TRACKER_WITH_WORKFLOWS_SHORTNAME];
+        $this->tracker_workflow_transitions_tracker_id = $this->tracker_ids[$this->tracker_workflows_project_id][self::TRACKER_WORKFLOW_WITH_TRANSITIONS_SHORTNAME];
+        $this->simple_mode_workflow_tracker_id         = $this->tracker_ids[$this->tracker_workflows_project_id][self::TRACKER_WORKFLOW_SIMPLE_MODE_SHORTNAME];
 
         $this->getBaseArtifactIds();
         $this->getDeleteArtifactIds();
@@ -90,5 +93,60 @@ class TrackerBase extends RestBase
             $this->delete_tracker_id,
             $this->delete_artifact_ids
         );
+    }
+
+    protected function getSpecificTransition(
+        int $tracker_id,
+        string $workflow_field_shortname,
+        string $from_label,
+        string $to_label
+    ): array {
+        $response = $this->getResponseByName(
+            \REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->setup_client->get("trackers/$tracker_id")
+        );
+
+        $this->assertEquals($response->getStatusCode(), 200);
+
+        $tracker = $response->json();
+
+        $status_field_id = 0;
+        $from_value_id   = 0;
+        $to_value_id     = 0;
+
+        foreach ($tracker['fields'] as $tracker_field) {
+            if ($tracker_field['name'] === $workflow_field_shortname) {
+                $status_field_id = $tracker_field['field_id'];
+
+                foreach ($tracker_field['values'] as $field_value) {
+                    if ($field_value['label'] === $from_label) {
+                        $from_value_id = $field_value['id'];
+                    }
+
+                    if ($field_value['label'] === $to_label) {
+                        $to_value_id = $field_value['id'];
+                    }
+                }
+                break;
+            }
+        }
+
+        if ($status_field_id === 0 || $from_value_id === 0 || $to_value_id === 0) {
+            $this->fail();
+        }
+
+        $found_transition = null;
+        foreach ($tracker["workflow"]["transitions"] as $transition) {
+            if ($transition['from_id'] === $from_value_id && $transition['to_id'] === $to_value_id) {
+                $found_transition = $transition;
+                break;
+            }
+        }
+
+        if ($found_transition === null) {
+            $this->fail();
+        }
+
+        return $found_transition;
     }
 }
