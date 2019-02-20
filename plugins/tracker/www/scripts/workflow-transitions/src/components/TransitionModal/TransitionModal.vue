@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2018. All Rights Reserved.
+  - Copyright (c) Enalean, 2018 - 2019. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -25,16 +25,7 @@
         v-on:submit.prevent="saveTransition"
     >
         <div class="tlp-modal-header">
-            <h1
-                class="tlp-modal-title"
-                id="configure-modal-title"
-                v-translate="{
-                    from_state_label: from_state_label,
-                    to_state_label: to_state_label
-                }"
-            >
-                Configure transition from %{from_state_label} to %{to_state_label}
-            </h1>
+            <transition-modal-title/>
             <div class="tlp-modal-close" data-dismiss="modal" aria-label="Close">
                 &times;
             </div>
@@ -78,41 +69,21 @@ import PostActionsSection from "./PostActionsSection.vue";
 import ModalErrorFeedback from "./ModalErrorFeedback.vue";
 import PreConditionsSkeleton from "./Skeletons/PreConditionsSkeleton.vue";
 import FilledPreConditionsSection from "./FilledPreConditionsSection.vue";
+import TransitionModalTitle from "./TransitionModalTitle.vue";
 import { modal as createModal } from "tlp";
-import { mapState, mapGetters, mapMutations } from "vuex";
+import { mapMutations, mapState } from "vuex";
 
 export default {
     name: "TransitionModal",
     components: {
+        TransitionModalTitle,
         FilledPreConditionsSection,
         PreConditionsSkeleton,
         ModalErrorFeedback,
         PostActionsSection
     },
     computed: {
-        ...mapState("transitionModal", ["is_modal_save_running", "is_loading_modal"]),
-        ...mapGetters(["all_target_states"]),
-        ...mapState("transitionModal", {
-            from_state_label(state) {
-                if (state.current_transition === null) {
-                    return null;
-                }
-                if (state.current_transition.from_id === null) {
-                    return this.$gettext("(New artifact)");
-                }
-                return this.all_target_states.find(
-                    from_state => from_state.id === state.current_transition.from_id
-                ).label;
-            },
-            to_state_label(state) {
-                if (state.current_transition === null) {
-                    return null;
-                }
-                return this.all_target_states.find(
-                    to_state => to_state.id === state.current_transition.to_id
-                ).label;
-            }
-        })
+        ...mapState("transitionModal", ["is_modal_save_running", "is_loading_modal"])
     },
     mounted() {
         const modal = createModal(this.$el);

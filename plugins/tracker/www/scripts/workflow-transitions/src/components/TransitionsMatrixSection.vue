@@ -23,9 +23,11 @@
             <thead>
                 <tr>
                     <th></th>
-                    <th v-for="to in all_target_states" v-bind:key="to.id">
-                        {{ to.label }}
-                    </th>
+                    <transition-matrix-column-header
+                        v-for="to in all_target_states"
+                        v-bind:key="to.id"
+                        v-bind:column="to"
+                    />
                 </tr>
             </thead>
             <tbody class="tracker-workflow-transition-tbody">
@@ -60,15 +62,16 @@
     </section>
 </template>
 <script>
-import { mapState, mapGetters } from "vuex";
+import { mapGetters, mapState } from "vuex";
 import TransitionMatrixContent from "./TransitionMatrixContent.vue";
+import TransitionMatrixColumnHeader from "./TransitionMatrixColumnHeader.vue";
 
 export default {
     name: "TransitionsMatrixSection",
-    components: { TransitionMatrixContent },
+    components: { TransitionMatrixColumnHeader, TransitionMatrixContent },
     computed: {
         ...mapState(["current_tracker"]),
-        ...mapGetters(["all_target_states"]),
+        ...mapGetters(["all_target_states", "current_workflow_transitions"]),
 
         all_source_values() {
             return [
@@ -91,7 +94,7 @@ export default {
     },
     methods: {
         findTransition(from, to) {
-            return this.current_tracker.workflow.transitions.find(
+            return this.current_workflow_transitions.find(
                 transition => transition.from_id === from.id && transition.to_id === to.id
             );
         }
