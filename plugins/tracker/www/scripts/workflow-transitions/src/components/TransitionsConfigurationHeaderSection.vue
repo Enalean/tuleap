@@ -37,7 +37,7 @@
                     <button
                         class="tlp-button-danger tlp-button-outline tlp-button-small tracker-workflow-transition-configuration-form-button"
                         data-target="modal-confirm-change-field"
-                        v-on:click="showModal()"
+                        v-on:click="confirmFieldChange()"
                         v-bind:disabled="is_operation_running"
                     >
                         <i class="fa fa-refresh tlp-button-icon"></i>
@@ -47,33 +47,7 @@
                     <change-field-confirmation-modal ref="modal"/>
                 </div>
             </div>
-            <div class="tlp-form-element tracker-workflow-transition-configuration-form-item"
-                 v-bind:class="{'tlp-form-element-disabled': is_operation_running}"
-            >
-                <label class="tlp-label" for="workflow-advanced-configuration">
-                    <span v-translate>Use advanced configuration</span>
-                    <span
-                        class="tlp-tooltip tlp-tooltip-top"
-                        v-bind:data-tlp-tooltip="advanced_configuration_tooltip"
-                    >
-                        <i class="fa fa-question-circle"></i>
-                    </span>
-                </label>
-                <div class="tlp-switch">
-                    <input
-                        type="checkbox"
-                        id="workflow-advanced-configuration"
-                        class="tlp-switch-checkbox"
-                        v-model="is_workflow_advanced"
-                        disabled
-                    >
-                    <label
-                        for="workflow-advanced-configuration"
-                        class="tlp-switch-button"
-                        aria-hidden=""
-                    ></label>
-                </div>
-            </div>
+            <workflow-mode-switch/>
             <div class="tlp-form-element tracker-workflow-transition-configuration-form-item"
                  v-bind:class="{'tlp-form-element-disabled': is_operation_running}"
             >
@@ -98,25 +72,23 @@
         </div>
     </section>
 </template>
-
 <script>
 import { mapGetters, mapState } from "vuex";
 import { modal as createModal } from "tlp";
 import ChangeFieldConfirmationModal from "./ChangeFieldConfirmationModal.vue";
+import WorkflowModeSwitch from "./Header/WorkflowModeSwitch.vue";
 
 export default {
     name: "TransitionsConfigurationHeaderSection",
-
     components: {
+        WorkflowModeSwitch,
         ChangeFieldConfirmationModal
     },
-
     data() {
         return {
             modal: null
         };
     },
-
     computed: {
         ...mapState(["is_operation_running", "is_rules_enforcement_running"]),
         ...mapGetters([
@@ -124,11 +96,6 @@ export default {
             "are_transition_rules_enforced",
             "is_workflow_advanced"
         ]),
-        advanced_configuration_tooltip() {
-            return this.$gettext(
-                "Use advanced configuration if you want to configure each transition independently."
-            );
-        },
         field_tooltip() {
             return this.$gettext("Transitions based field");
         },
@@ -144,12 +111,10 @@ export default {
             }
         }
     },
-
     mounted() {
         const modal = this.$refs.modal.$el;
         this.modal = createModal(modal);
     },
-
     methods: {
         showModal() {
             this.modal.toggle();

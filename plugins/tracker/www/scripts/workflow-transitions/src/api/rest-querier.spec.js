@@ -29,7 +29,8 @@ import {
     patchTransition,
     getPostActions,
     putPostActions,
-    deactivateLegacyTransitions
+    deactivateLegacyTransitions,
+    changeWorkflowMode
 } from "../api/rest-querier.js";
 import { create, createList } from "../support/factories.js";
 
@@ -175,6 +176,15 @@ describe("Rest queries:", () => {
                 expect(patch).toHaveBeenCalledWith(
                     "/api/trackers/1?query=%7B%22workflow%22%3A%7B%22is_legacy%22%3Afalse%7D%7D"
                 ));
+        });
+
+        describe("changeWorkflowMode()", () => {
+            it("calls tracker API with given workflow mode", () => {
+                changeWorkflowMode(49, true);
+                expect(patch).toHaveBeenCalledWith(
+                    "/api/trackers/49?query=%7B%22workflow%22%3A%7B%22is_advanced%22%3Atrue%7D%7D"
+                );
+            });
         });
 
         describe("patchTransition()", () => {

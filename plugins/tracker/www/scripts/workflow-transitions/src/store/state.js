@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -25,5 +25,6 @@ export default {
     operation_failure_message: null,
     is_operation_running: false,
     is_rules_enforcement_running: false,
-    is_workflow_creation_failed: false
+    is_workflow_creation_failed: false,
+    is_workflow_mode_change_running: false
 };

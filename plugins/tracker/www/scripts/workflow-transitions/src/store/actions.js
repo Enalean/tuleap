@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,7 +24,8 @@ import {
     resetWorkflowTransitions as restResetWorkflowTransitions,
     updateTransitionRulesEnforcement as restUpdateTransitionRulesEnforcement,
     deleteTransition as restDeleteTransition,
-    deactivateLegacyTransitions as restDeactivateLegacyTransitions
+    deactivateLegacyTransitions as restDeactivateLegacyTransitions,
+    changeWorkflowMode as restChangeWorkflowMode
 } from "../api/rest-querier.js";
 import { getErrorMessage } from "./exception-handler.js";
 
@@ -82,6 +83,22 @@ export async function updateTransitionRulesEnforcement(context, new_enforcement)
         context.commit("failOperation", error_message);
     } finally {
         context.commit("endTransitionRulesEnforcement");
+    }
+}
+
+export async function changeWorkflowMode(context, is_workflow_advanced) {
+    try {
+        context.commit("beginWorkflowModeChange");
+        const updated_tracker = await restChangeWorkflowMode(
+            context.getters.current_tracker_id,
+            is_workflow_advanced
+        );
+        context.commit("saveCurrentTracker", updated_tracker);
+    } catch (exception) {
+        const error_message = await getErrorMessage(exception);
+        context.commit("failOperation", error_message);
+    } finally {
+        context.commit("endWorkflowModeChange");
     }
 }
 
