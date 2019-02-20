@@ -36,6 +36,8 @@ use Tracker_Artifact_ChangesetValue_String;
 use Tracker_ArtifactFactory;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_Text;
+use Tuleap\Baseline\ArtifactPermissions;
+use Tuleap\Baseline\NotAuthorizedException;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\REST\I18NRestException;
 use Tuleap\REST\UserManager;
@@ -89,27 +91,27 @@ class BaselinesControllerTest extends TestCase
     private $tracker_repository;
 
     /**
-     * @var ArtifactPermissionsChecker|MockInterface
+     * @var ArtifactPermissions|MockInterface
      */
-    private $artifact_permissions_checker;
+    private $artifact_permissions;
 
     /**
      * @before
      */
     public function createInstance()
     {
-        $this->user_manager                 = Mockery::mock(UserManager::class);
-        $this->changeset_factory            = Mockery::mock(Tracker_Artifact_ChangesetFactory::class);
-        $this->artifact_factory             = Mockery::mock(Tracker_ArtifactFactory::class);
-        $this->tracker_repository           = Mockery::mock(FieldRepository::class);
-        $this->artifact_permissions_checker = Mockery::mock(ArtifactPermissionsChecker::class);
+        $this->user_manager         = Mockery::mock(UserManager::class);
+        $this->changeset_factory    = Mockery::mock(Tracker_Artifact_ChangesetFactory::class);
+        $this->artifact_factory     = Mockery::mock(Tracker_ArtifactFactory::class);
+        $this->tracker_repository   = Mockery::mock(FieldRepository::class);
+        $this->artifact_permissions = Mockery::mock(ArtifactPermissions::class);
 
         $this->controller = new BaselinesController(
             $this->user_manager,
             $this->changeset_factory,
             $this->artifact_factory,
             $this->tracker_repository,
-            $this->artifact_permissions_checker
+            $this->artifact_permissions
         );
 
         $this->user_manager
@@ -128,9 +130,8 @@ class BaselinesControllerTest extends TestCase
             ->andReturn($this->artifact)
             ->byDefault();
 
-        $this->artifact_permissions_checker->shouldReceive('checkRead')
+        $this->artifact_permissions->shouldReceive('checkRead')
             ->with($this->artifact)
-            ->andReturn(true)
             ->byDefault();
 
         $this->changeset = Mockery::mock(Tracker_Artifact_Changeset::class);
@@ -205,8 +206,8 @@ class BaselinesControllerTest extends TestCase
         $this->expectException(I18NRestException::class);
         $this->expectExceptionCode(403);
 
-        $this->artifact_permissions_checker->shouldReceive('checkRead')
-            ->andThrow(new I18NRestException(403, 'not authorized'));
+        $this->artifact_permissions->shouldReceive('checkRead')
+            ->andThrow(new NotAuthorizedException('not authorized'));
 
         $this->controller->getByArtifactIdAndDate(self::ARTIFACT_ID, self::INPUT_DATE);
     }

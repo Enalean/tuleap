@@ -22,6 +22,9 @@ namespace Tuleap\Baseline\REST;
 
 use Tracker_Artifact_ChangesetFactoryBuilder;
 use Tracker_ArtifactFactory;
+use Tuleap\Baseline\Adapter\ProjectPermissionsImpl;
+use Tuleap\Baseline\Adapter\SecurityContextImpl;
+use Tuleap\Baseline\ArtifactPermissions;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\I18NRestException;
 use Tuleap\REST\ProjectStatusVerificator;
@@ -61,7 +64,10 @@ class BaselinesResource extends AuthenticatedResource
             Tracker_Artifact_ChangesetFactoryBuilder::build(),
             Tracker_ArtifactFactory::instance(),
             new FieldRepository(),
-            new ArtifactPermissionsChecker(UserManager::build(), ProjectStatusVerificator::build())
+            new ArtifactPermissions(
+                new SecurityContextImpl(UserManager::build()),
+                new ProjectPermissionsImpl(ProjectStatusVerificator::build())
+            )
         );
         return $controller->getByArtifactIdAndDate($artifact_id, $date);
     }

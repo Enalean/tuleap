@@ -27,6 +27,8 @@ use Tracker;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetFactory;
 use Tracker_ArtifactFactory;
+use Tuleap\Baseline\ArtifactPermissions;
+use Tuleap\Baseline\NotAuthorizedException;
 use Tuleap\REST\I18NRestException;
 use Tuleap\REST\UserManager;
 
@@ -53,22 +55,22 @@ class BaselinesController
     private $tracker_repository;
 
     /**
-     * @var ArtifactPermissionsChecker
+     * @var ArtifactPermissions
      */
-    private $artifact_permissions_checker;
+    private $artifact_permissions;
 
     public function __construct(
         UserManager $user_manager,
         Tracker_Artifact_ChangesetFactory $changeset_factory,
         Tracker_ArtifactFactory $artifact_factory,
         FieldRepository $tracker_repository,
-        ArtifactPermissionsChecker $artifact_permissions_checker
+        ArtifactPermissions $artifact_permissions
     ) {
-        $this->user_manager                 = $user_manager;
-        $this->changeset_factory            = $changeset_factory;
-        $this->artifact_factory             = $artifact_factory;
-        $this->tracker_repository           = $tracker_repository;
-        $this->artifact_permissions_checker = $artifact_permissions_checker;
+        $this->user_manager         = $user_manager;
+        $this->changeset_factory    = $changeset_factory;
+        $this->artifact_factory     = $artifact_factory;
+        $this->tracker_repository   = $tracker_repository;
+        $this->artifact_permissions = $artifact_permissions;
     }
 
     /**
@@ -102,7 +104,11 @@ class BaselinesController
             );
         }
 
-        $this->artifact_permissions_checker->checkRead($artifact);
+        try {
+            $this->artifact_permissions->checkRead($artifact);
+        } catch (NotAuthorizedException $e) {
+            throw new I18NRestException(403, $e->getMessage());
+        }
 
         $changeSet = $this->changeset_factory->getChangesetAtTimestamp(
             $artifact,

@@ -19,7 +19,7 @@
  *
  */
 
-namespace Tuleap\Baseline\REST;
+namespace Tuleap\Baseline;
 
 require_once __DIR__ . '/../bootstrap.php';
 
@@ -31,44 +31,39 @@ use PHPUnit\Framework\TestCase;
 use Project;
 use Tracker;
 use Tracker_Artifact;
-use Tuleap\REST\I18NRestException;
-use Tuleap\REST\ProjectStatusVerificator;
-use Tuleap\REST\UserManager;
 
-class ArtifactPermissionsCheckerTest extends TestCase
+class ArtifactPermissionsTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
     /**
-     * @var UserManager|MockInterface
+     * @var ArtifactPermissions
      */
-    private $user_manager;
+    private $artifact_permissions;
+
+    /** @var SecurityContext|MockInterface */
+    private $security_context;
 
     /**
-     * @var ProjectStatusVerificator|MockInterface
+     * @var ProjectPermissions|MockInterface
      */
-    private $project_status_verificator;
-
-    /**
-     * @var ArtifactPermissionsChecker
-     */
-    private $artifact_permissions_checker;
+    private $project_permissions;
 
     /**
      * @before
      */
     public function createInstance()
     {
-        $this->user_manager               = Mockery::mock(UserManager::class);
-        $this->project_status_verificator = Mockery::mock(ProjectStatusVerificator::class);
+        $this->security_context    = Mockery::mock(SecurityContext::class);
+        $this->project_permissions = Mockery::mock(ProjectPermissions::class);
 
-        $this->artifact_permissions_checker = new ArtifactPermissionsChecker(
-            $this->user_manager,
-            $this->project_status_verificator
+        $this->artifact_permissions = new ArtifactPermissions(
+            $this->security_context,
+            $this->project_permissions
         );
 
         $current_user = Mockery::mock(PFUser::class);
-        $this->user_manager->shouldReceive('getCurrentUser')
+        $this->security_context->shouldReceive('getCurrentUser')
             ->andReturn($current_user);
     }
 
@@ -80,29 +75,26 @@ class ArtifactPermissionsCheckerTest extends TestCase
             ->andReturn(true);
         $artifact->getTracker()->shouldReceive('userCanView')
             ->andReturn(true);
-        $this->project_status_verificator->shouldReceive('checkProjectStatusAllowsAllUsersToAccessIt');
+        $this->project_permissions->shouldReceive('checkRead');
 
-        $this->artifact_permissions_checker->checkRead($artifact);
+        $this->artifact_permissions->checkRead($artifact);
     }
 
     public function testCheckReadThrowsWhenUserCannotViewGivenArtifact()
     {
-        $this->expectException(I18NRestException::class);
-        $this->expectExceptionCode(403);
+        $this->expectException(NotAuthorizedException::class);
 
         $artifact = $this->mockAnArtifact();
 
         $artifact->shouldReceive('userCanView')
             ->andReturn(false);
 
-        $this->artifact_permissions_checker->checkRead($artifact);
+        $this->artifact_permissions->checkRead($artifact);
     }
-
 
     public function testCheckReadThrowsWhenUserCannotViewTrackerOfGivenArtifact()
     {
-        $this->expectException(I18NRestException::class);
-        $this->expectExceptionCode(403);
+        $this->expectException(NotAuthorizedException::class);
 
         $artifact = $this->mockAnArtifact();
 
@@ -111,7 +103,7 @@ class ArtifactPermissionsCheckerTest extends TestCase
         $artifact->getTracker()->shouldReceive('userCanView')
             ->andReturn(false);
 
-        $this->artifact_permissions_checker->checkRead($artifact);
+        $this->artifact_permissions->checkRead($artifact);
     }
 
     /**
