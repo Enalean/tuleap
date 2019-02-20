@@ -37,12 +37,20 @@
     white-space: nowrap;
 }
 
-.document-tree-item-toggle-quicklook button {
-    visibility: hidden;
+.document-tree-item-toggle-quicklook {
+    .quick-look-button,
+    .document-dropdown-menu,
+    .document-dropdown-menu-button {
+        visibility: hidden;
+    }
 }
 
-.document-tree-item-toggle-quicklook:hover button {
-    visibility: visible;
+.document-tree-item-toggle-quicklook:hover {
+    .quick-look-button,
+    .document-dropdown-menu,
+    .document-dropdown-menu-button {
+        visibility: visible;
+    }
 }
 
 /* stylelint-disable selector-no-qualifying-type */

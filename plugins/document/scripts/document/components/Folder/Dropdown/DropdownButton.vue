@@ -19,9 +19,12 @@
   -->
 
 <template>
-    <div class="tlp-dropdown">
+    <div class="tlp-dropdown document-dropdown-menu-button">
         <button class="tlp-button-primary tlp-dropdown-split-button-caret"
-                v-bind:class="{'tlp-button-large': isInLargeMode}"
+                v-bind:class="{
+                    'tlp-button-large': isInLargeMode,
+                    'tlp-button-small tlp-button-outline': isInQuickLookMode
+                }"
                 ref="dropdownButton"
                 type="button"
         >
@@ -37,7 +40,8 @@ import { dropdown as createDropdown } from "tlp";
 export default {
     name: "DropdownButton",
     props: {
-        isInLargeMode: Boolean
+        isInLargeMode: Boolean,
+        isInQuickLookMode: Boolean
     },
     mounted() {
         createDropdown(this.$refs.dropdownButton);

@@ -27,12 +27,16 @@
                     v-bind:style="item_indentation"
                     v-bind:title="item.title"
                 />
-                <quick-look-button
-                    v-on:displayQuickLook="$emit('displayQuickLook', item)"
-                    v-bind:item="item"
-                    v-if="item_is_not_being_uploaded"
-                    class="quick-look-button"
-                />
+                <div class="document-tree-quick-look-button" v-if="item_is_not_being_uploaded">
+                    <quick-look-button
+                        class="quick-look-button"
+                        v-on:displayQuickLook="$emit('displayQuickLook', item)"
+                        v-bind:item="item"
+                    />
+                    <dropdown-button v-bind:is-in-quick-look-mode="true">
+                        <dropdown-menu-for-item-quick-look v-bind:item="item"/>
+                    </dropdown-button>
+                </div>
             </div>
         </td>
         <template v-if="item.is_uploading_in_collapsed_folder">
@@ -55,6 +59,9 @@ import { mapState } from "vuex";
 import UserBadge from "../User/UserBadge.vue";
 import QuickLookButton from "./QuickLook/QuickLookButton.vue";
 import UploadProgressBar from "./ProgressBar/UploadProgressBar.vue";
+import DropdownButton from "./Dropdown/DropdownButton.vue";
+import DropdownMenuForItemQuickLook from "./Dropdown/DropdownMenuForItemQuickLook.vue";
+
 import { TYPE_FILE, TYPE_FOLDER, TYPE_LINK, TYPE_WIKI } from "../../constants.js";
 import {
     formatDateUsingPreferredUserFormat,
@@ -63,7 +70,13 @@ import {
 
 export default {
     name: "FolderContentRow",
-    components: { QuickLookButton, UserBadge, UploadProgressBar },
+    components: {
+        DropdownMenuForItemQuickLook,
+        QuickLookButton,
+        UserBadge,
+        UploadProgressBar,
+        DropdownButton
+    },
     props: {
         item: Object
     },
