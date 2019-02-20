@@ -33,8 +33,6 @@ use Tuleap\Layout\CssAsset;
 
 class WorkflowTransitionController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
-    use FeatureFlag;
-
     private $tracker_factory;
     private $tracker_manager;
 
@@ -58,9 +56,6 @@ class WorkflowTransitionController implements DispatchableWithRequest, Dispatcha
         $tracker = $this->tracker_factory->getTrackerById($variables['tracker_id']);
         if (! $tracker) {
             throw new NotFoundException(dgettext('tuleap-tracker', "Tracker does not exist"));
-        }
-        if ($this->isNewWorkflowDisabled($tracker)) {
-            throw new ForbiddenException(dgettext('tuleap-tracker', 'This view is not available for this workflow.'));
         }
 
         $current_user = $request->getCurrentUser();

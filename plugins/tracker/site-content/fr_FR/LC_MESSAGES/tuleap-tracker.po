@@ -897,9 +897,6 @@ msgstr ""
 "Les ids d'actions 'set_field_value' avec type 'int' ne doivent pas être en "
 "doublons."
 
-msgid "This REST route is not available for this workflow."
-msgstr "Cette route REST n'est pas disponible pour ce workflow."
-
 msgid "This template does not use trackers"
 msgstr "Ce patron n'utilise pas les trackers"
 
@@ -915,9 +912,6 @@ msgstr "Ce tracker a été supprimé."
 msgid "This transition already exists."
 msgstr "Cette transition existe déjà."
 
-msgid "This view is not available for this workflow."
-msgstr "Cette page n'est pas disponible pour ce workflow."
-
 msgid ""
 "This workflow has an incoherent behaviour : pre conditions and post actions "
 "defined in transitions are processed even if the workflow is not activated."
@@ -930,7 +924,9 @@ msgid "This workflow is already in a functional state. Skipping."
 msgstr "Ce workflow est déjà fonctionnel. Cette modification est donc ignorée."
 
 msgid "This workflow is in simple mode and cannot be displayed in legacy UI."
-msgstr "Ce workflow est en mode simple et ne peut être affiché dans l'ancienne interface."
+msgstr ""
+"Ce workflow est en mode simple et ne peut être affiché dans l'ancienne "
+"interface."
 
 msgid "Time"
 msgstr "Date"

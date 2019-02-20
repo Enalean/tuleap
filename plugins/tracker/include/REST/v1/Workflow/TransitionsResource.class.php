@@ -74,8 +74,6 @@ use WorkflowFactory;
 
 class TransitionsResource extends AuthenticatedResource
 {
-    use FeatureFlag;
-
     /** @var UserManager */
     private $user_manager;
 
@@ -400,10 +398,6 @@ class TransitionsResource extends AuthenticatedResource
                 404,
                 dgettext('tuleap-tracker', 'Transition not found.')
             );
-        }
-
-        if ($this->isNewWorkflowDisabled($transition->getWorkflow()->getTracker())) {
-            throw new I18NRestException(403, dgettext('tuleap-tracker', 'This REST route is not available for this workflow.'));
         }
 
         try {
