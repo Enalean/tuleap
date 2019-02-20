@@ -35,7 +35,7 @@ class DocmanItemUpdatorTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
     /**
-     * @var Mockery\MockInterface|VersionToUploadVisitorBeforeUpdateValidator
+     * @var Mockery\MockInterface|FileVersionToUploadVisitorBeforeUpdateValidator
      */
     private $before_update_validator;
     /**
@@ -63,7 +63,7 @@ class DocmanItemUpdatorTest extends TestCase
         $this->approval_table_retriever = Mockery::mock(ApprovalTableRetriever::class);
         $this->lock_factory             = Mockery::mock(\Docman_LockFactory::class);
         $this->creator                  = Mockery::mock(VersionToUploadCreator::class);
-        $this->before_update_validator  = Mockery::mock(VersionToUploadVisitorBeforeUpdateValidator::class);
+        $this->before_update_validator  = Mockery::mock(FileVersionToUploadVisitorBeforeUpdateValidator::class);
 
         $this->updator = new DocmanItemUpdator(
             $this->approval_table_retriever,
@@ -83,7 +83,7 @@ class DocmanItemUpdatorTest extends TestCase
 
         $this->expectException(ExceptionDocumentHasApprovalTable::class);
 
-        $representation                  = new DocmanItemPATCHRepresentation();
+        $representation                  = new DocmanFilesPATCHRepresentation();
 
         $this->updator->update($item, $user, $representation, new \DateTimeImmutable());
     }
@@ -103,7 +103,7 @@ class DocmanItemUpdatorTest extends TestCase
 
         $this->expectException(ExceptionItemIsLockedByAnotherUser::class);
 
-        $representation                  = new DocmanItemPATCHRepresentation();
+        $representation                  = new DocmanFilesPATCHRepresentation();
 
         $this->updator->update($item, $user, $representation, new \DateTimeImmutable());
     }
@@ -122,7 +122,7 @@ class DocmanItemUpdatorTest extends TestCase
                            ->andReturn(null);
 
 
-        $representation                             = new DocmanItemPATCHRepresentation();
+        $representation                             = new DocmanFilesPATCHRepresentation();
         $representation->change_log                 = 'changelog';
         $representation->version_title              = 'version title';
         $representation->file_properties            = new FilePropertiesPOSTPATCHRepresentation();

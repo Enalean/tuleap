@@ -27,8 +27,6 @@ namespace Tuleap\Docman\REST\v1;
 use Docman_Item;
 use Docman_ItemDao;
 use Docman_ItemFactory;
-use Docman_LockFactory;
-use Docman_Log;
 use EventManager;
 use Luracast\Restler\RestException;
 use PluginManager;
@@ -37,18 +35,11 @@ use ProjectManager;
 use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\ApprovalTable\ApprovalTableStateMapper;
 use Tuleap\Docman\Item\ItemIsNotAFolderException;
-use Tuleap\Docman\Log\LogEventAdder;
-use Tuleap\Docman\Notifications\NotificationBuilders;
-use Tuleap\Docman\Notifications\NotificationEventAdder;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadDAO;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
 use Tuleap\Docman\Upload\Document\DocumentToUploadCreator;
 use Tuleap\Docman\Upload\DocumentUploadFinisher;
 use Tuleap\Docman\Upload\DocumentUploadPathAllocator;
-use Tuleap\Docman\Upload\UploadMaxSizeExceededException;
-use Tuleap\Docman\Upload\Version\DocumentOnGoingVersionToUploadDAO;
-use Tuleap\Docman\Upload\Version\VersionOngoingUploadRetriever;
-use Tuleap\Docman\Upload\Version\VersionToUploadCreator;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
@@ -172,7 +163,7 @@ class DocmanItemsResource extends AuthenticatedResource
     public function post(DocmanItemPOSTRepresentation $docman_item_post_representation)
     {
         $this->checkAccess();
-        $this->sendAllowHeadersWithPostPatch();
+        $this->sendAllowHeadersWithPost();
 
         $current_user = $this->rest_user_manager->getCurrentUser();
 
@@ -180,10 +171,12 @@ class DocmanItemsResource extends AuthenticatedResource
         $parent       = $item_request->getItem();
         $this->checkItemCanHaveSubitems($parent);
         $project = $item_request->getProject();
-        $this->checkUserCanWriteFolder($current_user, $project, $docman_item_post_representation->parent_id);
+        $this->getDocmanFolderPermissionChecker($project)
+             ->checkUserCanWriteFolder($current_user, $docman_item_post_representation->parent_id);
 
-        $this->addLogEvents();
-        $this->addNotificationEvents($project);
+        $event_adder = $this->getDocmanItemsEventAdder($project);
+        $event_adder->addLogEvents();
+        $event_adder->addNotificationEvents($project);
 
         $document_on_going_upload_dao   = new DocumentOngoingUploadDAO();
         $document_upload_path_allocator = new DocumentUploadPathAllocator();
@@ -236,80 +229,6 @@ class DocmanItemsResource extends AuthenticatedResource
         );
     }
 
-    /**
-     * Patch an element of document manager
-     *
-     * Create a new version of an existing document
-     *
-     * <pre>
-     * /!\ This route is under construction and will be subject to changes
-     * </pre>
-     *
-     * @url PATCH {id}
-     * @access hybrid
-     *
-     * @param int $id Id of the item
-     * @param DocmanItemPATCHRepresentation $representation {@from body}
-     *
-     * @return CreatedItemFilePropertiesRepresentation
-     *
-     * @status 200
-     * @throws 403
-     * @throws 501
-     */
-
-    public function patch(int $id, DocmanItemPATCHRepresentation $representation)
-    {
-        if (! \ForgeConfig::get('enable_patch_item_route')) {
-            throw new RestException(
-                501
-            );
-        }
-        $this->checkAccess();
-        $this->sendAllowHeadersWithPostPatch();
-
-        $current_user = $this->rest_user_manager->getCurrentUser();
-
-        $item_request = $this->request_builder->buildFromItemId($id);
-        $item         = $item_request->getItem();
-
-        $project = $item_request->getProject();
-        $this->checkUserCanWriteFolder($current_user, $project, $item->getParentId());
-
-        $this->addLogEvents();
-        $this->addNotificationEvents($project);
-
-        $docman_item_updator = new DocmanItemUpdator(
-            new ApprovalTableRetriever(new \Docman_ApprovalTableFactoriesFactory()),
-            new Docman_LockFactory(),
-            new VersionToUploadCreator(new DocumentOnGoingVersionToUploadDAO()),
-            new VersionToUploadVisitorBeforeUpdateValidator(new VersionOngoingUploadRetriever(new DocumentOnGoingVersionToUploadDAO()))
-        );
-
-        try {
-            return $docman_item_updator->update(
-                $item,
-                $current_user,
-                $representation,
-                new \DateTimeImmutable()
-            );
-        } catch (ExceptionDocumentHasApprovalTable $exception) {
-            throw new I18NRestException(
-                403,
-                dgettext('tuleap-docman', 'Update document with approval table is not possible yet.')
-            );
-        } catch (ExceptionItemIsLockedByAnotherUser $exception) {
-            throw new I18NRestException(
-                403,
-                dgettext('tuleap-docman', 'Document is locked by another user.')
-            );
-        } catch (UploadMaxSizeExceededException $exception) {
-            throw new RestException(
-                400,
-                $exception->getMessage()
-            );
-        }
-    }
 
     private function getItemFactory($group_id = null)
     {
@@ -336,7 +255,7 @@ class DocmanItemsResource extends AuthenticatedResource
     {
         $this->checkAccess();
 
-        $this->sendAllowHeadersWithPostPatch();
+        $this->sendAllowHeadersWithPost();
 
         $items_request = $this->request_builder->buildFromItemId($id);
         $folder        = $items_request->getItem();
@@ -365,7 +284,7 @@ class DocmanItemsResource extends AuthenticatedResource
      */
     public function optionsDocumentItems($id)
     {
-        $this->sendAllowHeadersWithPostPatch();
+        $this->sendAllowHeadersWithPost();
     }
 
     /**
@@ -445,9 +364,9 @@ class DocmanItemsResource extends AuthenticatedResource
         return \Docman_PermissionsManager::instance($project->getGroupId());
     }
 
-    private function sendAllowHeadersWithPostPatch()
+    private function sendAllowHeadersWithPost()
     {
-        Header::allowOptionsGetPostPatch();
+        Header::allowOptionsGetPost();
     }
 
     private function sendAllowHeaders()
@@ -503,51 +422,13 @@ class DocmanItemsResource extends AuthenticatedResource
         return $item_representation_builder;
     }
 
-    /**
-     * @throws I18NRestException
-     */
-    private function checkUserCanWriteFolder(\PFUser $current_user, Project $project, $folder_id)
+    private function getDocmanFolderPermissionChecker(Project $project): DocmanFolderPermissionChecker
     {
-        $docman_permissions_manager = $this->getDocmanPermissionManager($project);
-        if (!$docman_permissions_manager->userCanWrite($current_user, $folder_id)) {
-            throw new I18NRestException(
-                403,
-                sprintf(
-                    dgettext('tuleap-docman', "You are not allowed to write on folder with id '%d'"),
-                    $folder_id
-                )
-            );
-        }
+        return new DocmanFolderPermissionChecker($this->getDocmanPermissionManager($project));
     }
 
-    private function addNotificationEvents(Project $project)
+    private function getDocmanItemsEventAdder(): DocmanItemsEventAdder
     {
-        $feedback                    = new NullResponseFeedbackWrapper();
-        $notifications_builders      = new NotificationBuilders($feedback, $project, null);
-        $notification_manager        = $notifications_builders->buildNotificationManager();
-        $notification_manager_add    = $notifications_builders->buildNotificationManagerAdd();
-        $notification_manager_delete = $notifications_builders->buildNotificationManagerDelete();
-        $notification_manager_move   = $notifications_builders->buildNotificationManagerMove();
-        $notification_manager_subscribers = $notifications_builders->buildNotificationManagerSubsribers();
-
-        $adder = new NotificationEventAdder(
-            $this->event_manager,
-            $notification_manager,
-            $notification_manager_add,
-            $notification_manager_delete,
-            $notification_manager_move,
-            $notification_manager_subscribers
-        );
-
-
-        $adder->addNotificationManagement();
-    }
-
-    private function addLogEvents()
-    {
-        $logger = new Docman_Log();
-        $adder  = new LogEventAdder($this->event_manager, $logger);
-
-        $adder->addLogEventManagement();
+        return new DocmanItemsEventAdder($this->event_manager);
     }
 }

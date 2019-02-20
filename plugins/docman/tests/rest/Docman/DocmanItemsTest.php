@@ -105,7 +105,7 @@ class DocmanItemsTest extends DocmanBase
         $this->assertEquals(
             $items[$item_c_index]['file_properties']['html_url'],
             '/plugins/docman/?group_id=' . urlencode($this->project_id) .
-            '&action=show&id=' . urlencode($items[$item_c_index]['id']). '&switcholdui=true'
+            '&action=show&id=' . urlencode($items[$item_c_index]['id']) . '&switcholdui=true'
         );
         $this->assertEquals($items[$item_e_index]['file_properties'], null);
         $this->assertEquals($items[$item_f_index]['file_properties'], null);
@@ -235,7 +235,7 @@ class DocmanItemsTest extends DocmanBase
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
         );
 
-        $this->assertEquals(['OPTIONS', 'GET', 'POST', 'PATCH'], $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'GET', 'POST'], $response->getHeader('Allow')->normalize()->toArray());
     }
 
     /**
@@ -334,7 +334,7 @@ class DocmanItemsTest extends DocmanBase
     /**
      * @depends testGetRootId
      */
-    public function testPostFileDocument(int $root_id): void
+    public function testPostFileDocument(int $root_id) : void
     {
         $file_size = 123;
         $query     = json_encode([
@@ -392,7 +392,7 @@ class DocmanItemsTest extends DocmanBase
     /**
      * @depends testGetRootId
      */
-    public function testPostEmptyFileDocument(int $root_id): void
+    public function testPostEmptyFileDocument(int $root_id) : void
     {
         $query     = json_encode([
             'title'           => 'File2',
@@ -752,167 +752,5 @@ class DocmanItemsTest extends DocmanBase
             $this->client->post('docman_items', $headers, $query)
         );
         $this->assertEquals(400, $response->getStatusCode());
-    }
-
-    /**
-     * @depends testGetRootId
-     */
-    public function testPatchOnDocumentWithApprovalTableThrowException(int $root_id)
-    {
-        $response = $this->getResponseByName(
-            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->get('docman_items/' . $root_id . '/docman_items')
-        );
-        $folder = $response->json();
-
-        $put_resource = json_encode(
-            [
-                'version_title'   => 'My version title',
-                'changelog'       => 'I have changed',
-                'file_properties' => ['file_name' => 'file1', 'file_size' => 10]
-            ]
-        );
-
-        $response = $this->getResponseByName(
-            REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->client->patch(
-                'docman_items/'.$folder[0]["id"],
-                null,
-                $put_resource
-            )
-        );
-        $this->assertEquals(403, $response->getStatusCode());
-    }
-
-    /**
-     * @depends testGetRootId
-     */
-    public function testPatchOnDocumentLockedByAnOtherUserThrowException(int $root_id)
-    {
-        $response = $this->getResponseByName(
-            DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->get('docman_items/' . $root_id . '/docman_items')
-        );
-        $folder = $response->json();
-
-        $put_resource = json_encode(
-            [
-                'version_title'   => 'My version title',
-                'changelog'       => 'I have changed',
-                'file_properties' => ['file_name' => 'file1', 'file_size' => 10]
-            ]
-        );
-
-        $response = $this->getResponseByName(
-            REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->client->patch(
-                'docman_items/'.$folder[1]["id"],
-                null,
-                $put_resource
-            )
-        );
-        $this->assertEquals(403, $response->getStatusCode());
-    }
-
-    /**
-     * @depends testGetDocumentItemsForRegularUser
-     */
-    public function testPatchFileDocumentIsRejectedIfFileIsTooBig(array $items): void
-    {
-        $file = $this->findItemByTitle($items, 'file A');
-        $put_resource = json_encode(
-            [
-                'version_title'   => 'My version title',
-                'changelog'       => 'I have changed',
-                'file_properties' => ['file_name' => 'file1', 'file_size' => 999999999999]
-            ]
-        );
-
-        $response = $this->getResponseByName(
-            DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->patch('docman_items/' . $file['id'], null, $put_resource)
-        );
-        $this->assertEquals(400, $response->getStatusCode());
-    }
-
-    /**
-     * @depends testGetDocumentItemsForRegularUser
-     */
-    public function testPatchOnEmptyItemThrowAnException(array $items): void
-    {
-        $empty = $this->findItemByTitle($items, 'item A');
-
-        $put_resource = json_encode(
-            [
-                'version_title'   => 'My version title',
-                'changelog'       => 'I have changed',
-                'file_properties' => ['file_name' => 'file1', 'file_size' => 0]
-            ]
-        );
-
-        $response = $this->getResponseByName(
-            DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->patch('docman_items/' . $empty['id'], null, $put_resource)
-        );
-        $this->assertEquals(501, $response->getStatusCode());
-    }
-
-    /**
-     * @depends testGetDocumentItemsForRegularUser
-     */
-    public function testPACTHIsRejectedIfAFileIsBeingUploadedForTheSameNameByADifferentUser(array $items) : void
-    {
-        $file = $this->findItemByTitle($items, 'file A');
-        $put_resource = json_encode(
-            [
-                'version_title'   => 'My version title',
-                'changelog'       => 'I have changed',
-                'file_properties' => ['file_name' => 'file1', 'file_size' => 10]
-            ]
-        );
-
-        $response = $this->getResponseByName(
-            DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->patch('docman_items/' . $file['id'], null, $put_resource)
-        );
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals("/uploads/docman/version/1", $response->json()['upload_href']);
-
-
-        $put_resource = json_encode(
-            [
-                'version_title'   => 'My version title',
-                'changelog'       => 'I have changed',
-                'file_properties' => ['file_name' => 'file1', 'file_size' => 10]
-            ]
-        );
-
-        $response = $this->getResponseByName(
-            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->patch('docman_items/' . $file['id'], null, $put_resource)
-        );
-        $this->assertEquals(409, $response->getStatusCode());
-    }
-
-    /**
-     * @depends testGetDocumentItemsForRegularUser
-     */
-    public function testPatchFileDocumentReturnsFileRepresentation(array $items): void
-    {
-        $file = $this->findItemByTitle($items, 'file B');
-        $put_resource = json_encode(
-            [
-                'version_title'   => 'My version title',
-                'changelog'       => 'I have changed',
-                'file_properties' => ['file_name' => 'file1', 'file_size' => 10]
-            ]
-        );
-
-        $response = $this->getResponseByName(
-            DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->patch('docman_items/' . $file['id'], null, $put_resource)
-        );
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals("/uploads/docman/version/2", $response->json()['upload_href']);
     }
 }
