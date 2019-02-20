@@ -66,7 +66,7 @@ export const getSubfolderContent = async (context, folder_id) => {
     }
 };
 
-export const createNewItem = async (context, [item, parent]) => {
+export const createNewItem = async (context, [item, parent, current_folder]) => {
     try {
         if (item.type === TYPE_FILE) {
             await createNewFile(context, item, parent, true);
@@ -76,7 +76,7 @@ export const createNewItem = async (context, [item, parent]) => {
             const created_item = await getItem(item_reference.id);
             flagItemAsCreated(context, created_item);
 
-            if (!parent.is_expanded) {
+            if (!parent.is_expanded && parent.id !== current_folder.id) {
                 context.commit("addDocumentToFoldedFolder", [parent, created_item, false]);
             }
             return Promise.resolve(
