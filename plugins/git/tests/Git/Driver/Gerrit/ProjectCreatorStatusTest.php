@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../../../bootstrap.php';
+require_once __DIR__ .'/../../../bootstrap.php';
 
 class ProjectCreatorStatusTest extends TuleapTestCase {
 
@@ -29,7 +29,7 @@ class ProjectCreatorStatusTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
 
-        $this->dao        = mock('Git_Driver_Gerrit_ProjectCreatorStatusDao');
+        $this->dao        = \Mockery::spy(Git_Driver_Gerrit_ProjectCreatorStatusDao::class);
         $this->repository = mock('GitRepository');
 
         $this->gerrit_status = new Git_Driver_Gerrit_ProjectCreatorStatus($this->dao);

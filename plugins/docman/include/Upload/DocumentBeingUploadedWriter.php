@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\Upload;
 
+use Tuleap\DB\DBConnection;
 use Tuleap\Docman\Tus\CannotWriteFileException;
 use Tuleap\Docman\Tus\TusFileInformation;
 use Tuleap\Docman\Tus\TusWriter;
@@ -32,10 +33,15 @@ final class DocumentBeingUploadedWriter implements TusWriter
      * @var DocumentUploadPathAllocator
      */
     private $path_allocator;
+    /**
+     * @var DBConnection
+     */
+    private $db_connection;
 
-    public function __construct(DocumentUploadPathAllocator $path_allocator)
+    public function __construct(DocumentUploadPathAllocator $path_allocator, DBConnection $db_connection)
     {
         $this->path_allocator = $path_allocator;
+        $this->db_connection  = $db_connection;
     }
 
     /**
@@ -68,10 +74,22 @@ final class DocumentBeingUploadedWriter implements TusWriter
         $max_size_to_copy = $file_information->getLength() - $file_information->getOffset();
         $copied_size      = stream_copy_to_stream($input_source, $file_stream, $max_size_to_copy);
         \fclose($file_stream);
+
+        $this->handlePotentialDBReconnection();
+
         if ($copied_size === false) {
             throw new CannotWriteFileException();
         }
 
         return $copied_size;
+    }
+
+    private function handlePotentialDBReconnection() : void
+    {
+        // The copy of the file to the disk can be quite long so the DB
+        // server can decide to close the connection, we want to make sure
+        // the DB connection is still up at the end of the copy to not break
+        // the rest of the process
+        $this->db_connection->reconnectAfterALongRunningProcess();
     }
 }

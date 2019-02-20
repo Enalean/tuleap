@@ -38,7 +38,7 @@ class CodendiDataAccess
     public static function instance()
     {
         if (self::$_instance === null) {
-            self::$_instance = new CompatPDODataAccess(DBFactory::getMainTuleapDB());
+            self::$_instance = new CompatPDODataAccess(DBFactory::getMainTuleapDBConnection());
         }
         return self::$_instance;
     }

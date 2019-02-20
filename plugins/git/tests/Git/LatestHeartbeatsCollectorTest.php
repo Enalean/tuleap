@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,7 +20,7 @@
 
 namespace Tuleap\Git;
 
-require_once dirname(__FILE__).'/../bootstrap.php';
+require_once __DIR__ .'/../bootstrap.php';
 
 use Tuleap\Project\HeartbeatsEntryCollection;
 use TuleapTestCase;
@@ -49,16 +49,14 @@ class LatestHeartbeatsCollectorTest extends TuleapTestCase
         $this->project = aMockProject()->withId(101)->build();
         $this->user    = aUser()->withId(200)->build();
 
-        $dao = mock('Git_LogDao');
-        stub($dao)
-            ->searchLatestPushesInProject(
-                101,
-                HeartbeatsEntryCollection::NB_MAX_ENTRIES
-            )->returnsDar(
-                array('repository_id' => 1, 'user_id' => 101, 'push_date' => 1234, 'commits_number' => 1),
-                array('repository_id' => 2, 'user_id' => 101, 'push_date' => 1234, 'commits_number' => 1),
-                array('repository_id' => 3, 'user_id' => 101, 'push_date' => 1234, 'commits_number' => 1)
-            );
+        $dao = \Mockery::mock(\Git_LogDao::class);
+        $dao->shouldReceive('searchLatestPushesInProject')
+            ->with(101, HeartbeatsEntryCollection::NB_MAX_ENTRIES)
+            ->andReturn([
+                ['repository_id' => 1, 'user_id' => 101, 'push_date' => 1234, 'commits_number' => 1],
+                ['repository_id' => 2, 'user_id' => 101, 'push_date' => 1234, 'commits_number' => 1],
+                ['repository_id' => 3, 'user_id' => 101, 'push_date' => 1234, 'commits_number' => 1]
+            ]);
 
         $this->factory = mock('GitRepositoryFactory');
         $this->declareRepository(1, true);

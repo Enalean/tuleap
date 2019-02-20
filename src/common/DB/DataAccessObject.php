@@ -25,21 +25,18 @@ use ParagonIE\EasyDB\EasyDB;
 class DataAccessObject
 {
     /**
-     * @var EasyDB
+     * @var DBConnection
      */
-    private $db;
+    private $db_connection;
 
     public function __construct()
     {
-        $this->db = DBFactory::getMainTuleapDB();
+        $this->db_connection = DBFactory::getMainTuleapDBConnection();
     }
 
-    /**
-     * @return EasyDB
-     */
-    protected function getDB()
+    protected function getDB() : EasyDB
     {
-        return $this->db;
+        return $this->db_connection->getDB();
     }
 
     /**
@@ -48,9 +45,9 @@ class DataAccessObject
      *
      * @return int
      */
-    public function foundRows()
+    public function foundRows() : int
     {
-        return $this->db->single('SELECT FOUND_ROWS()');
+        return (int) $this->getDB()->single('SELECT FOUND_ROWS()');
     }
 
     /**

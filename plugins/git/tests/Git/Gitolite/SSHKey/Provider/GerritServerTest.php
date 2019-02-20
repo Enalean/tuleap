@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,6 +20,7 @@
 
 namespace Tuleap\Git\Gitolite\SSHKey\Provider;
 
+use Git_RemoteServer_Dao;
 use Git_RemoteServer_Gerrit_ReplicationSSHKey;
 use Tuleap\Git\Gitolite\SSHKey\Key;
 use TuleapTestCase;
@@ -52,7 +53,7 @@ class GerritServerTest extends TuleapTestCase
                 'ssh_key' => $server3_key->getKey()
             )
         ];
-        $gerrit_server_dao = mock('Git_RemoteServer_Dao');
+        $gerrit_server_dao = safe_mock(Git_RemoteServer_Dao::class);
         stub($gerrit_server_dao)->searchAllServersWithSSHKey()->returns($gerrit_server_access_result);
 
         $gerrit_server_provider = new GerritServer($gerrit_server_dao);
@@ -63,7 +64,7 @@ class GerritServerTest extends TuleapTestCase
 
     public function itThrowsAnExceptionIfGerritServerDataCanNotBeAccessed()
     {
-        $gerrit_server_dao = mock('Git_RemoteServer_Dao');
+        $gerrit_server_dao = safe_mock(Git_RemoteServer_Dao::class);
         stub($gerrit_server_dao)->searchAllServersWithSSHKey()->throws(new \PDOException);
 
         $this->expectException('Tuleap\Git\Gitolite\SSHKey\Provider\AccessException');

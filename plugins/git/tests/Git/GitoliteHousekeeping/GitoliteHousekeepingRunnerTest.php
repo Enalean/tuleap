@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,8 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../../bootstrap.php';
-require_once 'common/backend/BackendService.class.php';
+require_once __DIR__ .'/../../bootstrap.php';
 
 class Git_GitoliteHousekeeping_GitoliteHousekeepingRunnerTest extends TuleapTestCase {
 
@@ -27,7 +26,7 @@ class Git_GitoliteHousekeeping_GitoliteHousekeepingRunnerTest extends TuleapTest
         parent::setUp();
         $this->process_manager  = mock('SystemEventProcessManager');
         $this->process          = mock('SystemEventProcess');
-        $this->housekeeping_dao = mock('Git_GitoliteHousekeeping_GitoliteHousekeepingDao');
+        $this->housekeeping_dao = safe_mock(Git_GitoliteHousekeeping_GitoliteHousekeepingDao::class);
         $this->response         = mock('Git_GitoliteHousekeeping_GitoliteHousekeepingResponse');
         $this->backend_service  = mock('BackendService');
 

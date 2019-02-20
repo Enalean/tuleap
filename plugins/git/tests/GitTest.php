@@ -18,6 +18,9 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Git\Notifications\UgroupsToNotifyDao;
+use Tuleap\Git\Notifications\UsersToNotifyDao;
+
 require_once 'bootstrap.php';
 
 Mock::generate('PFUser');
@@ -189,8 +192,8 @@ abstract class Git_RouteBaseTestCase extends TuleapTestCase {
                 mock('Tuleap\Git\Permissions\RegexpFineGrainedEnabler'),
                 mock('Tuleap\Git\Permissions\RegexpFineGrainedDisabler'),
                 mock('Tuleap\Git\Permissions\RegexpPermissionFilter'),
-                mock('Tuleap\Git\Notifications\UsersToNotifyDao'),
-                mock('Tuleap\Git\Notifications\UgroupsToNotifyDao'),
+                safe_mock(UsersToNotifyDao::class),
+                safe_mock(UgroupsToNotifyDao::class),
                 mock('UGroupManager'),
                 mock(\Tuleap\Git\GitViews\Header\HeaderRenderer::class),
                 mock(\ThemeManager::class)

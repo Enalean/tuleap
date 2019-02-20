@@ -23,6 +23,7 @@ namespace Tuleap\GitLFS\Transfer\Basic;
 use League\Flysystem\FileExistsException;
 use League\Flysystem\FileNotFoundException;
 use League\Flysystem\FilesystemInterface;
+use Tuleap\DB\DBConnection;
 use Tuleap\GitLFS\LFSObject\LFSObject;
 use Tuleap\GitLFS\LFSObject\LFSObjectPathAllocator;
 use Tuleap\GitLFS\LFSObject\LFSObjectRetriever;
@@ -36,6 +37,10 @@ class LFSBasicTransferObjectSaver
      * @var FilesystemInterface
      */
     private $filesystem;
+    /**
+     * @var DBConnection
+     */
+    private $db_connection;
     /**
      * @var LFSObjectRetriever
      */
@@ -51,11 +56,13 @@ class LFSBasicTransferObjectSaver
 
     public function __construct(
         FilesystemInterface $filesystem,
+        DBConnection $db_connection,
         LFSObjectRetriever $lfs_object_retriever,
         LFSObjectPathAllocator $path_allocator,
         Prometheus $prometheus
     ) {
         $this->filesystem           = $filesystem;
+        $this->db_connection        = $db_connection;
         $this->lfs_object_retriever = $lfs_object_retriever;
         $this->path_allocator       = $path_allocator;
         $this->prometheus           = $prometheus;
@@ -86,6 +93,7 @@ class LFSBasicTransferObjectSaver
         $temporary_path = $this->path_allocator->getPathForSaveInProgressObject($repository, $lfs_object);
         try {
             $this->writeTemporaryObjectFile($temporary_path, $input_resource, $max_size_blocker_filter);
+            $this->handlePotentialDBReconnection();
             $this->checkTemporaryObjectFileMatchesExpectations($lfs_object, $max_size_blocker_filter, $sha256_processor_filter);
             $this->markAsReadyToBeAvailable($temporary_path, $ready_to_be_added_path, $repository, $lfs_object);
         } finally {
@@ -114,6 +122,15 @@ class LFSBasicTransferObjectSaver
         if (! $is_writing_temporary_file_success) {
             throw new \RuntimeException('Cannot write LFS object to the path temporary ' . $path);
         }
+    }
+
+    private function handlePotentialDBReconnection() : void
+    {
+        // The copy of the file to the disk can be quite long so the DB
+        // server can decide to close the connection, we want to make sure
+        // the DB connection is still up at the end of the copy to not break
+        // the rest of the process
+        $this->db_connection->reconnectAfterALongRunningProcess();
     }
 
     private function checkTemporaryObjectFileMatchesExpectations(

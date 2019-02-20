@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,7 +35,7 @@ class CommentCriterionValueSaverTest extends TuleapTestCase
     {
         parent::setUp();
 
-        $this->dao   = mock('Tuleap\Tracker\Report\AdditionalCriteria\CommentDao');
+        $this->dao   = \Mockery::mock('Tuleap\Tracker\Report\AdditionalCriteria\CommentDao');
         $this->saver = new CommentCriterionValueSaver($this->dao);
 
         $this->report = stub('Tracker_Report')->getId()->returns(1);

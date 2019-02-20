@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,30 +18,25 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\DB;
 
-final class DBFactory
+use PHPUnit\Framework\TestCase;
+use Tuleap\ForgeConfigSandbox;
+
+final class DBFactoryTest extends TestCase
 {
-    /**
-     * @var array<string, DBConnection>
-     */
-    private static $connections = [];
+    use ForgeConfigSandbox;
 
-    private function __construct()
+    public function testConnectionsAreOnlyCreatedOncePerDatabaseName() : void
     {
+        $this->assertSame(DBFactory::getMainTuleapDBConnection(), DBFactory::getMainTuleapDBConnection());
+        $this->assertSame(DBFactory::getDBConnection('my_db'), DBFactory::getDBConnection('my_db'));
     }
 
-    public static function getMainTuleapDBConnection() : DBConnection
+    public function testConnectionsForDifferentDatabaseNameAreDifferent() : void
     {
-        return self::getDBConnection(\ForgeConfig::get('sys_dbname'));
-    }
-
-    public static function getDBConnection(string $database_name) : DBConnection
-    {
-        if (! isset(self::$connections[$database_name])) {
-            self::$connections[$database_name] = new DBConnection(new DBCreator($database_name));
-        }
-
-        return self::$connections[$database_name];
+        $this->assertNotSame(DBFactory::getDBConnection('my_db'), DBFactory::getDBConnection('my_db2'));
     }
 }

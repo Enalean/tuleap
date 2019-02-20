@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2011. All Rights Reserved.
  *
  * This file is a part of tuleap.
@@ -28,7 +28,7 @@ class Git_PostReceiveMailManagerTest extends TuleapTestCase
     public function testRemoveMailByRepository()
     {
         $prm = partial_mock('Git_PostReceiveMailManager', array('addMail', '_getDao','_getGitDao', '_getGitRepository'));
-        $dao = mock('Git_PostReceiveMailDao');
+        $dao = \Mockery::mock(Git_PostReceiveMailDao::class);
         $prm->dao = $dao;
 
         $repo = mock('GitRepository');
@@ -36,7 +36,7 @@ class Git_PostReceiveMailManagerTest extends TuleapTestCase
         $backend = mock('GitBackend');
         $repo->SetReturnValue('getBackend', $backend);
 
-        $prm->dao->setReturnValue('removeNotification', True);
+        $prm->dao->shouldReceive('removeNotification')->andReturnTrue();
 
         $repo->expectOnce('loadNotifiedMails');
         $backend->expectOnce('changeRepositoryMailingList');

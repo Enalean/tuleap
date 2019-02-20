@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,8 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../bootstrap.php';
-require_once 'common/log/Logger.class.php';
+//phpcs:ignoreFile
+
+require_once __DIR__ .'/../bootstrap.php';
 
 abstract class SystemEvent_GIT_GERRIT_MIGRATION_BaseTest extends TuleapTestCase {
 
@@ -39,7 +40,7 @@ abstract class SystemEvent_GIT_GERRIT_MIGRATION_BaseTest extends TuleapTestCase 
     public function setUp() {
         parent::setUp();
 
-        $this->dao              = mock('GitDao');
+        $this->dao              = \Mockery::spy(GitDao::class);
         $this->gerrit_server    = mock('Git_RemoteServer_GerritServer');
         $this->server_factory   = mock('Git_RemoteServer_GerritServerFactory');
         $this->project_creator  = mock('Git_Driver_Gerrit_ProjectCreator');

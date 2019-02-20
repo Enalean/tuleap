@@ -114,6 +114,7 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
             $this->getLFSActionUserAccessRequestChecker(),
             new \Tuleap\GitLFS\Transfer\Basic\LFSBasicTransferObjectSaver(
                 $this->getFilesystem(),
+                \Tuleap\DB\DBFactory::getMainTuleapDBConnection(),
                 new LFSObjectRetriever(new \Tuleap\GitLFS\LFSObject\LFSObjectDAO()),
                 new LFSObjectPathAllocator(),
                 \Tuleap\Instrument\Prometheus\Prometheus::instance()

@@ -70,7 +70,7 @@ class DB_mysql_pdo extends DB_common // @codingStandardsIgnoreLine
 
     public function connect()
     {
-        $this->connection = DBFactory::getMainTuleapDB();
+        $this->connection = DBFactory::getMainTuleapDBConnection()->getDB();
         return DB_OK;
     }
 

@@ -25,6 +25,7 @@ namespace Tuleap\Docman\Upload;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
+use Tuleap\DB\DBConnection;
 use Tuleap\Docman\Tus\TusFileInformation;
 use Tuleap\ForgeConfigSandbox;
 
@@ -37,7 +38,10 @@ class DocumentBeingUploadedWriterTest extends TestCase
         \ForgeConfig::set('tmp_dir', vfsStream::setup()->url());
 
         $path_allocator = new DocumentUploadPathAllocator();
-        $writer         = new DocumentBeingUploadedWriter($path_allocator);
+        $db_connection  = \Mockery::mock(DBConnection::class);
+        $writer         = new DocumentBeingUploadedWriter($path_allocator, $db_connection);
+
+        $db_connection->shouldReceive('reconnectAfterALongRunningProcess')->twice();
 
         $item_id          = 12;
         $file_information = new DocumentBeingUploadedInformation($item_id, 123, 0);
@@ -66,7 +70,10 @@ class DocumentBeingUploadedWriterTest extends TestCase
         \ForgeConfig::set('tmp_dir', vfsStream::setup()->url());
 
         $path_allocator = new DocumentUploadPathAllocator();
-        $writer         = new DocumentBeingUploadedWriter($path_allocator);
+        $db_connection  = \Mockery::mock(DBConnection::class);
+        $writer         = new DocumentBeingUploadedWriter($path_allocator, $db_connection);
+
+        $db_connection->shouldReceive('reconnectAfterALongRunningProcess')->once();
 
         $item_id          = 12;
         $file_length      = 123;
@@ -88,7 +95,7 @@ class DocumentBeingUploadedWriterTest extends TestCase
 
     public function testInputThatIsNotAResourceIsRejected() : void
     {
-        $writer = new DocumentBeingUploadedWriter(new DocumentUploadPathAllocator());
+        $writer = new DocumentBeingUploadedWriter(new DocumentUploadPathAllocator(), \Mockery::mock(DBConnection::class));
 
         $this->expectException(\InvalidArgumentException::class);
 

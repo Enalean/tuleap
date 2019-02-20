@@ -123,7 +123,7 @@ class textualreportPlugin extends Plugin // @codingStandardsIgnoreLine
         if (empty($queries)) {
             $results = [];
         } else {
-            $db      = DBFactory::getMainTuleapDB();
+            $db      = DBFactory::getMainTuleapDBConnection()->getDB();
             $results = $db->run($queries[0]);
         }
 
