@@ -51,7 +51,9 @@ use Tuleap\Tracker\Report\Query\Advanced\SearchablesAreInvalidException;
 use Tuleap\Tracker\Report\Query\Advanced\SearchablesDoNotExistException;
 use Tuleap\Tracker\REST\Artifact\ParentArtifactReference;
 use Tuleap\Tracker\REST\ReportRepresentation;
+use Tuleap\Tracker\REST\v1\Workflow\ModeUpdater;
 use UserManager;
+use Workflow_Dao;
 use WorkflowFactory;
 
 /**
@@ -648,9 +650,8 @@ class TrackersResource extends AuthenticatedResource
 
     private function switchWorkflowToAdvancedMode(Tracker $tracker) : void
     {
-        $workflow_id = $tracker->getWorkflow()->getId();
-
-        (new \Workflow_Dao())->switchWorkflowToAdvancedMode($workflow_id);
+        $workflow_mode_updater = new ModeUpdater(new Workflow_Dao());
+        $workflow_mode_updater->switchWorkflowToAdvancedMode($tracker);
     }
 
     /**
