@@ -131,6 +131,7 @@ class ItemRepresentationBuilder
         }
 
         $user_can_write      = $this->permissions_manager->userCanWrite($current_user, $item->getId());
+        $can_user_manage     = $this->permissions_manager->userCanManage($current_user, $item->getId());
         $item_representation = new ItemRepresentation();
 
         $lock_info      = $this->getLockInformation($item);
@@ -144,6 +145,7 @@ class ItemRepresentationBuilder
             $user_can_write,
             $type,
             $is_expanded,
+            $can_user_manage,
             $metadata_representations,
             $approval_table,
             $lock_info,

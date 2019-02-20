@@ -145,6 +145,16 @@ class ItemRepresentationCollectionBuilderTest extends \PHPUnit\Framework\TestCas
         $this->permission_manager->shouldReceive("userCanRead")->withArgs([$user, 2])->andReturns(false);
         $this->permission_manager->shouldReceive("userCanRead")->withArgs([$user, 3])->andReturns(true);
 
+        $this->permission_manager->shouldReceive('userCanManage')
+            ->withArgs([$user, 1])
+            ->andReturns(true);
+        $this->permission_manager->shouldReceive('userCanManage')
+            ->withArgs([$user, 2])
+            ->andReturns(false);
+        $this->permission_manager->shouldReceive('userCanManage')
+            ->withArgs([$user, 3])
+            ->andReturns(false);
+
         $user_representation = Mockery::mock(MinimalUserRepresentation::class);
         $representation1     = new ItemRepresentation();
         $representation1->build(
@@ -153,6 +163,7 @@ class ItemRepresentationCollectionBuilderTest extends \PHPUnit\Framework\TestCas
             true,
             ItemRepresentation::TYPE_FOLDER,
             false,
+            true,
             [
                 new MetadataRepresentation(
                     'name',
@@ -194,6 +205,7 @@ class ItemRepresentationCollectionBuilderTest extends \PHPUnit\Framework\TestCas
             $user_representation,
             true,
             ItemRepresentation::TYPE_FILE,
+            false,
             false,
             [
                 new MetadataRepresentation(
@@ -269,6 +281,7 @@ class ItemRepresentationCollectionBuilderTest extends \PHPUnit\Framework\TestCas
         $user_representation = Mockery::mock(MinimalUserRepresentation::class);
 
         $this->permission_manager->shouldReceive('userCanRead')->andReturns(true);
+        $this->permission_manager->shouldReceive('userCanManage')->andReturns(false);
 
         $this->item_factory->shouldReceive('getItemFromDb')->withArgs([$item->getParentId()])->andReturn($docman_folder2);
         $this->item_factory->shouldReceive('getItemFromDb')->withArgs([$docman_folder2->getParentId()])->andReturn($docman_folder1);
@@ -281,6 +294,7 @@ class ItemRepresentationCollectionBuilderTest extends \PHPUnit\Framework\TestCas
             $user_representation,
             true,
             ItemRepresentation::TYPE_FOLDER,
+            false,
             false,
             [
                 new MetadataRepresentation(
@@ -299,6 +313,7 @@ class ItemRepresentationCollectionBuilderTest extends \PHPUnit\Framework\TestCas
             $user_representation,
             true,
             ItemRepresentation::TYPE_FOLDER,
+            false,
             false,
             [
                 new MetadataRepresentation(
@@ -344,7 +359,7 @@ class ItemRepresentationCollectionBuilderTest extends \PHPUnit\Framework\TestCas
         $project->shouldReceive('getID')->andReturn(101);
 
         $this->permission_manager->shouldReceive('userCanRead')->andReturns(true);
-
+        $this->permission_manager->shouldReceive('userCanManage')->andReturns(true);
 
         $representation = $this->item_representation_collection_builder->buildParents($item, $user, $project, 50, 0);
 

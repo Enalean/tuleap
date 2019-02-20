@@ -162,6 +162,10 @@ class ItemRepresentationBuilderTest extends \PHPUnit\Framework\TestCase
             ->withArgs([$current_user, $docman_item_id])
             ->andReturns(true);
 
+        $this->permissions_manager->shouldReceive('userCanManage')
+            ->withArgs([$current_user, $docman_item_id])
+            ->andReturns(true);
+
         $this->lock_factory->shouldReceive('getLockInfoForItem')
             ->withArgs([$docman_item])
             ->andReturns(["user_id" => $owner_id, "lock_date" => 1549461600]);
@@ -175,6 +179,7 @@ class ItemRepresentationBuilderTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($representation->title, 'My file.txt');
         $this->assertEquals($representation->is_expanded, false);
         $this->assertEquals($representation->user_can_write, true);
+        $this->assertEquals($representation->can_user_manage, true);
         $this->assertEquals($representation->lock_info->locked_by->id, $owner_id);
         $this->assertEquals($representation->lock_info->lock_date, '2019-02-06T15:00:00+01:00');
         $this->assertEquals($representation->file_properties, null);
