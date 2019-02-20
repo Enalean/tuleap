@@ -1185,9 +1185,6 @@ msgstr ""
 "Le projet %s n'est pas dans un état valide et ne peut pas être affiché dans "
 "la liste. Veuillez faire le nécessaire."
 
-msgid "The project is:"
-msgstr "Le projet est :"
-
 msgid "The requested dashboard does not exist."
 msgstr "Le tableau de bord demandé n’existe pas."
 

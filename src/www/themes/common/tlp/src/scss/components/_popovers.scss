@@ -31,6 +31,7 @@ $tlp-popover-transition: 75ms ease-out;
     transition: opacity $tlp-popover-transition,
         transform $tlp-popover-transition,
         box-shadow $tlp-popover-transition;
+    border-radius: $tlp-popover-radius;
     opacity: 0;
     box-shadow: none;
     pointer-events: none;
@@ -63,6 +64,11 @@ $tlp-popover-transition: 75ms ease-out;
 .tlp-popover-body {
     padding: $tlp-spacing;
     background: $tlp-ui-white;
+
+    &:last-child {
+        border-bottom-right-radius: $tlp-popover-radius;
+        border-bottom-left-radius: $tlp-popover-radius;
+    }
 }
 
 .tlp-popover-footer {
@@ -71,6 +77,8 @@ $tlp-popover-transition: 75ms ease-out;
     justify-content: flex-end;
     padding: $tlp-spacing;
     border-top: 1px solid $tlp-ui-border-light;
+    border-bottom-right-radius: $tlp-popover-radius;
+    border-bottom-left-radius: $tlp-popover-radius;
     background: $tlp-ui-white;
 
     > button {
@@ -139,6 +147,10 @@ $tlp-popover-transition: 75ms ease-out;
         border-bottom-color: transparent;
         border-left-color: transparent;
     }
+
+    &.tlp-popover-shown {
+        transform: translateY(-#{$tlp-popover-arrow-size});
+    }
 }
 
 .tlp-popover[x-placement^='bottom'] {
@@ -152,6 +164,10 @@ $tlp-popover-transition: 75ms ease-out;
         border-top-color: transparent;
         border-right-color: transparent;
         border-left-color: transparent;
+    }
+
+    &.tlp-popover-shown {
+        transform: translateY(#{$tlp-popover-arrow-size});
     }
 }
 
@@ -177,6 +193,10 @@ $tlp-popover-transition: 75ms ease-out;
         border-bottom-color: transparent;
         border-left-color: transparent;
     }
+
+    &.tlp-popover-shown {
+        transform: translateX(#{$tlp-popover-arrow-size});
+    }
 }
 
 .tlp-popover[x-placement^='left'] {
@@ -200,5 +220,9 @@ $tlp-popover-transition: 75ms ease-out;
         border-top-color: transparent;
         border-right-color: transparent;
         border-bottom-color: transparent;
+    }
+
+    &.tlp-popover-shown {
+        transform: translateX(-#{$tlp-popover-arrow-size});
     }
 }
