@@ -87,7 +87,6 @@ const fat_combined_files = [
         "src/www/scripts/tuleap/tuleap-standard-homepage.js",
         "src/www/scripts/tuleap/datetimepicker.js",
         "src/www/scripts/tuleap/svn.js",
-        "src/www/scripts/tuleap/trovecat.js",
         "src/www/scripts/tuleap/account-maintenance.js",
         "src/www/scripts/tuleap/search.js",
         "src/www/scripts/tuleap/tuleap-mention.js",

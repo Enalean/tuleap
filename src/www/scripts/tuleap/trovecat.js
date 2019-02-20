@@ -17,33 +17,35 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { modal as createModal } from "tlp";
+
 document.addEventListener("DOMContentLoaded", function() {
-    var modal_add_element = document.getElementById("trove-cat-add"),
+    const modal_add_element = document.getElementById("trove-cat-add"),
         button_modal_add_element = document.getElementById("add-project-category-button");
 
     if (modal_add_element) {
-        var modal_add = tlp.modal(modal_add_element);
+        const modal_add = createModal(modal_add_element);
 
         button_modal_add_element.addEventListener("click", function() {
             modal_add.toggle();
         });
     }
 
-    var matching_buttons = document.querySelectorAll(
+    const matching_buttons = document.querySelectorAll(
         ".trovecats-edit-button, .trovecats-delete-button"
     );
 
-    [].forEach.call(matching_buttons, function(button) {
-        var modal_element = document.getElementById(button.dataset.modalId);
+    for (const button of matching_buttons) {
+        const modal_element = document.getElementById(button.dataset.modalId);
 
         if (modal_element) {
-            var modal = tlp.modal(modal_element);
+            const modal = createModal(modal_element);
 
             button.addEventListener("click", function() {
                 modal.toggle();
             });
         }
-    });
+    }
 
     selectParentCategoryOption();
     bindNbMaxValuesToProjectFlag();
@@ -51,12 +53,12 @@ document.addEventListener("DOMContentLoaded", function() {
 
 function bindNbMaxValuesToProjectFlag() {
     const all_nb_max_input_elements = document.querySelectorAll(".trove-cats-nb-max-values-input");
-    [].forEach.call(all_nb_max_input_elements, function(nb_max_input) {
-        var is_project_flag_input = document.getElementById(
+    for (const nb_max_input of all_nb_max_input_elements) {
+        const is_project_flag_input = document.getElementById(
             nb_max_input.dataset.inputProjectFlagId
         );
         if (!is_project_flag_input) {
-            return;
+            continue;
         }
 
         if (is_project_flag_input.checked) {
@@ -65,7 +67,7 @@ function bindNbMaxValuesToProjectFlag() {
             markFormElementAsDisabled(is_project_flag_input);
         }
 
-        is_project_flag_input.addEventListener("click", function() {
+        is_project_flag_input.addEventListener("click", () => {
             if (is_project_flag_input.checked) {
                 markFormElementAsDisabled(nb_max_input);
             } else {
@@ -74,7 +76,7 @@ function bindNbMaxValuesToProjectFlag() {
         });
 
         ["change", "keyup"].forEach(function(event_type) {
-            nb_max_input.addEventListener(event_type, function() {
+            nb_max_input.addEventListener(event_type, () => {
                 if (nb_max_input.value === "1") {
                     markFormElementAsEnabled(is_project_flag_input);
                 } else {
@@ -82,16 +84,16 @@ function bindNbMaxValuesToProjectFlag() {
                 }
             });
         });
-    });
+    }
 }
 
 function markFormElementAsDisabled(input) {
     input.disabled = true;
-    var parent = input.closest(".tlp-form-element");
+    const parent = input.closest(".tlp-form-element");
     if (parent) {
         parent.classList.add("tlp-form-element-disabled");
     }
-    var warning = document.getElementById(input.dataset.warningId);
+    const warning = document.getElementById(input.dataset.warningId);
     if (warning) {
         warning.classList.add("shown");
     }
@@ -103,11 +105,11 @@ function markFormElementAsEnabled(input) {
     }
 
     input.disabled = false;
-    var parent = input.closest(".tlp-form-element");
+    const parent = input.closest(".tlp-form-element");
     if (parent) {
         parent.classList.remove("tlp-form-element-disabled");
     }
-    var warning = document.getElementById(input.dataset.warningId);
+    const warning = document.getElementById(input.dataset.warningId);
     if (warning) {
         warning.classList.remove("shown");
     }
