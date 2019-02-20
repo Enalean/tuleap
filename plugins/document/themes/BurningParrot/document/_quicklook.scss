@@ -43,12 +43,8 @@
     white-space: nowrap;
 }
 
-.document-quick-look-wiki-action,
-.document-quick-look-link-action,
-.document-quick-look-folder-action,
-.document-quick-look-file-action {
+.document-quick-look-document-action {
     display: flex;
-    margin: $tlp-spacing 0 0 0;
 }
 
 .document-quick-look-folder-action-new-folder-button {
@@ -60,7 +56,7 @@
 }
 
 .document-quick-look-icon {
-    padding: 0 0 $tlp-spacing;
+    margin: 0 0 $tlp-double-spacing;
     font-size: 100px;
     text-align: center;
 }
@@ -93,11 +89,12 @@
 
 .document-quick-look-image > img {
     max-width: 100%;
-    margin: 0 auto;
+    margin: 0 auto $tlp-double-spacing auto;
 }
 
 .document-quick-look-embedded {
     max-height: 50vh;
+    margin: 0 0 $tlp-double-spacing 0;
     padding: $tlp-spacing;
     overflow-y: auto;
     border-radius: 2px;
@@ -106,10 +103,6 @@
 
 .quick-look-button {
     margin: 0 0 0 $tlp-spacing;
-}
-
-.document-tree-quick-look-button {
-    display: flex;
 }
 
 @media screen and (max-width: 1200px) {

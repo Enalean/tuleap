@@ -264,6 +264,9 @@ msgstr "Titre"
 msgid "URL"
 msgstr "URL"
 
+msgid "Update"
+msgstr "Mettre à jour"
+
 msgid "Upload error"
 msgstr "Erreur de téléversement"
 

@@ -19,12 +19,17 @@
   -->
 
 <template>
-    <div class="document-quick-look-document-action">
-        <button v-if="item.user_can_write" type="button" class="tlp-button-primary tlp-button-small document-quick-look-folder-action-new-folder-button" v-on:click.prevent="showNewFolderModal">
-            <i class="fa fa-folder-open-o tlp-button-icon"></i> <translate> New folder </translate>
-        </button>
+    <div class="document-quick-look-folder-action">
         <div class="tlp-dropdown-split-button">
-            <new-item-button v-if="item.user_can_write" class="tlp-button-primary tlp-button-small tlp-button-outline" v-bind:item="item"/>
+            <button
+                type="button"
+                class="tlp-button-primary tlp-button-outline tlp-button-small tlp-dropdown-split-button-main"
+                v-on:click="goToUpdate"
+                v-if="item.user_can_write"
+            >
+                <i class="fa fa-mail-forward tlp-button-icon"></i>
+                <translate>Update</translate>
+            </button>
             <quick-look-go-to-document-details v-else v-bind:item="item"/>
             <dropdown-button v-bind:is-in-quick-look-mode="true">
                 <dropdown-menu v-bind:item="item" v-bind:is-in-quick-look-mode="true" v-bind:hide-item-title="true"/>
@@ -34,23 +39,31 @@
 </template>
 
 <script>
-import NewItemButton from "../NewItem/NewItemButton.vue";
+import { mapState } from "vuex";
 import DropdownButton from "../Dropdown/DropdownButton.vue";
 import DropdownMenu from "../Dropdown/DropdownMenu.vue";
+import { TYPE_EMPTY, TYPE_WIKI } from "../../../constants.js";
 import QuickLookGoToDocumentDetails from "./QuickLookGoToDocumentDetails.vue";
 
 export default {
-    name: "QuickLookFileProperties",
-    components: { NewItemButton, DropdownButton, DropdownMenu, QuickLookGoToDocumentDetails },
+    components: { QuickLookGoToDocumentDetails, DropdownButton, DropdownMenu },
     props: {
         item: Object
     },
+    computed: {
+        ...mapState(["project_id"])
+    },
     methods: {
-        showNewFolderModal() {
-            document.dispatchEvent(
-                new CustomEvent("show-new-folder-modal", {
-                    detail: { parent: this.item }
-                })
+        goToUpdate() {
+            const action =
+                this.item.type !== TYPE_WIKI && this.item.type !== TYPE_EMPTY
+                    ? "action_new_version"
+                    : "action_update";
+
+            window.location.assign(
+                `/plugins/docman/index.php?group_id=${this.project_id}&id=${
+                    this.item.id
+                }&action=${action}`
             );
         }
     }
