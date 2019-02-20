@@ -82,7 +82,7 @@ class BaselineServiceTest extends TestCase
 
     public function testCreate()
     {
-        $transient_baseline = new TransientBaseline('name', $this->buildARelease());
+        $transient_baseline = new TransientBaseline('name', $this->buildAMilestone());
 
         $created_baseline = $this->buildABaseline();
         $this->baseline_repository
@@ -104,8 +104,8 @@ class BaselineServiceTest extends TestCase
     {
         return new Baseline(
             1,
-            'Release startup',
-            $this->buildARelease(),
+            'Milestone startup',
+            $this->buildAMilestone(),
             $this->buildAUser(),
             $this->buildADateTime()
         );
@@ -119,7 +119,7 @@ class BaselineServiceTest extends TestCase
     /**
      * @return Tracker_Artifact|MockInterface
      */
-    private function buildARelease()
+    private function buildAMilestone()
     {
         return Mockery::mock(Tracker_Artifact::class);
     }

@@ -37,7 +37,7 @@ class BaselineRepository extends DataAccessObject
             'plugin_baseline_baseline',
             [
                 'name'          => $baseline->getName(),
-                'artifact_id'   => $baseline->getRelease()->getId(),
+                'artifact_id'   => $baseline->getMilestone()->getId(),
                 'user_id'       => $current_user->getId(),
                 'creation_date' => $creation_date->getTimestamp()
             ]
@@ -46,7 +46,7 @@ class BaselineRepository extends DataAccessObject
         return new Baseline(
             $id,
             $baseline->getName(),
-            $baseline->getRelease(),
+            $baseline->getMilestone(),
             $current_user,
             $creation_date
         );

@@ -32,12 +32,12 @@ class TransientBaseline
     private $name;
 
     /** @var Tracker_Artifact */
-    private $release;
+    private $milestone;
 
-    public function __construct(string $name, Tracker_Artifact $release)
+    public function __construct(string $name, Tracker_Artifact $milestone)
     {
-        $this->name    = $name;
-        $this->release = $release;
+        $this->name      = $name;
+        $this->milestone = $milestone;
     }
 
     public function getName(): string
@@ -45,8 +45,8 @@ class TransientBaseline
         return $this->name;
     }
 
-    public function getRelease(): Tracker_Artifact
+    public function getMilestone(): Tracker_Artifact
     {
-        return $this->release;
+        return $this->milestone;
     }
 }
