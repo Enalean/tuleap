@@ -24,6 +24,7 @@ namespace Tuleap\Tracker\REST\v1\Workflow\PostAction;
 
 use PFUser;
 use Transition;
+use Tuleap\DB\TransactionExecutor;
 use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\Tracker\REST\v1\Workflow\PostAction\Update\PostActionCollectionJsonParser;
 use Tuleap\Tracker\REST\v1\Workflow\PostActionsPUTRepresentation;
@@ -58,18 +59,25 @@ class PUTHandler
      */
     private $transition_retriever;
 
+    /**
+     * @var TransactionExecutor
+     */
+    private $transaction_executor;
+
     public function __construct(
         TransitionsPermissionsChecker $transitions_permissions_checker,
         ProjectStatusVerificator $project_status_verificator,
         PostActionCollectionJsonParser $post_action_collection_json_parser,
         PostActionCollectionUpdater $action_collection_updater,
-        TransitionRetriever $transition_retriever
+        TransitionRetriever $transition_retriever,
+        TransactionExecutor $transaction_executor
     ) {
         $this->transitions_permissions_checker    = $transitions_permissions_checker;
         $this->project_status_verificator         = $project_status_verificator;
         $this->post_action_collection_json_parser = $post_action_collection_json_parser;
         $this->action_collection_updater          = $action_collection_updater;
         $this->transition_retriever               = $transition_retriever;
+        $this->transaction_executor               = $transaction_executor;
     }
 
     /**
@@ -93,10 +101,18 @@ class PUTHandler
         $post_actions = $this->post_action_collection_json_parser->parse($workflow, $post_actions_representation->post_actions);
 
         if ($workflow->isAdvanced()) {
-            $this->action_collection_updater->updateByTransition($transition, $post_actions);
+            $this->transaction_executor->execute(
+                function () use ($transition, $post_actions) {
+                    $this->action_collection_updater->updateByTransition($transition, $post_actions);
+                }
+            );
         } else {
-            $all_transitions = $this->getAllSiblingsTransitions($transition);
-            $this->action_collection_updater->updateForAllSiblingsTransition($all_transitions, $post_actions);
+            $this->transaction_executor->execute(
+                function () use ($transition, $post_actions) {
+                    $all_transitions = $this->getAllSiblingsTransitions($transition);
+                    $this->action_collection_updater->updateForAllSiblingsTransition($all_transitions, $post_actions);
+                }
+            );
         }
     }
 

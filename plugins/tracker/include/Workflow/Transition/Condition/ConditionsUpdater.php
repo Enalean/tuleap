@@ -38,22 +38,16 @@ class ConditionsUpdater
     private $transition_factory;
 
     /**
-     * @var TransactionExecutor
-     */
-    private $transaction_executor;
-    /**
      * @var Workflow_Transition_ConditionFactory
      */
     private $condition_factory;
 
     public function __construct(
         TransitionFactory $transition_factory,
-        Workflow_Transition_ConditionFactory $condition_factory,
-        TransactionExecutor $transaction_executor
+        Workflow_Transition_ConditionFactory $condition_factory
     ) {
-        $this->transition_factory   = $transition_factory;
-        $this->transaction_executor = $transaction_executor;
-        $this->condition_factory    = $condition_factory;
+        $this->transition_factory = $transition_factory;
+        $this->condition_factory  = $condition_factory;
     }
 
     /**
@@ -66,16 +60,12 @@ class ConditionsUpdater
         $is_comment_required
     ) {
         try {
-            $this->transaction_executor->execute(
-                function () use ($transition, $not_empty_field_ids, $is_comment_required, $authorized_user_group_ids) {
-                    $this->condition_factory->addCondition(
-                        $transition,
-                        $not_empty_field_ids,
-                        $is_comment_required
-                    );
-                    $this->updatePermissions($transition, $authorized_user_group_ids);
-                }
+            $this->condition_factory->addCondition(
+                $transition,
+                $not_empty_field_ids,
+                $is_comment_required
             );
+            $this->updatePermissions($transition, $authorized_user_group_ids);
         } catch (Exception $exception) {
             throw new ConditionsUpdateException(
                 sprintf(

@@ -408,7 +408,8 @@ class TransitionsResource extends AuthenticatedResource
                 ProjectStatusVerificator::build(),
                 $this->getPostActionCollectionJsonParser(),
                 $this->getPostActionCollectionUpdater(),
-                $this->getTransitionRetriever()
+                $this->getTransitionRetriever(),
+                $this->getTransactionExecutor()
             );
 
             $handler->handle($current_user, $transition, $post_actions_representation);
@@ -484,7 +485,6 @@ class TransitionsResource extends AuthenticatedResource
         $form_element_factory = \Tracker_FormElementFactory::instance();
 
         return new PostActionCollectionUpdater(
-            $this->getTransactionExecutor(),
             new CIBuildUpdater(
                 new CIBuildRepository(
                     $this->getCIBuildDao()
@@ -539,8 +539,7 @@ class TransitionsResource extends AuthenticatedResource
     {
         return new ConditionsUpdater(
             $this->getTransitionFactory(),
-            $this->getConditionFactory(),
-            $this->getTransactionExecutor()
+            $this->getConditionFactory()
         );
     }
 
