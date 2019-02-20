@@ -2,9 +2,9 @@
 #  *
 #  * Top level scripts message catalog (English)
 #  *
-#  * Codendi
+#  * Tuleap
+#  * Copyright (c) Enalean, 2014-2019. All Rights Reserved.
 #  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
-#  * http://www.codendi.com
 #  *
 #  *
 #  */
@@ -36,19 +36,5 @@ homepage	create_account	Create account
 homepage	welcome_back	Welcome back
 homepage	welcome_title	Hello,<br> Welcome to $1!
 homepage	my_personal_page	My personal page
-#
-#-----------------------------------------------
-# Script: SF/www/sendmessage.php
-#
+
 sendmessage	title	Send a Message to $1
-sendmessage	message	Fill it out accurately and completely or the receiver may not be able to respond.<P><span class="highlight"><B>IF YOU ARE WRITING FOR HELP:</B> Did you read the site documentation? Did you include your <B>user_name?</B> If you are writing about a project, include your <B>project id</B> (<B>group_id</B>) and <B>Project Name</B>.</span>
-sendmessage	err_nouser	That user does not exist.
-sendmessage	err_host	You can only send to addresses @$1.
-sendmessage	err_noparam	Some variables were not provided (user ID or email address)
-sendmessage	title_sent	Message to $1 Sent
-sendmessage	email	Your Email Address
-sendmessage	name	Your Name
-sendmessage	subject	Subject
-sendmessage	message_body	Message
-sendmessage	send_btn	Send Message
-sendmessage	invalid_msg	Your message is not valid, you can not send the default message or an empty one.

@@ -35,13 +35,9 @@ To adapt LDAP / Tuleap behaviour you should copy one of the customization files
 area, /etc/tuleap/plugins/ldap/site-content/en_US.
 Once copied, you can adapt the file to fullfill your requirements.
 
-There are 3 files you can customize:
+There are 2 files you can customize:
 - (synchronize_user.txt) How Tuleap will synchronize user account & LDAP
   directory informations. By default, real name (cn), email and ldap login (uid)
   will be synchronized, everytime the user log on the platform.
-
-- In public user profile (http://tuleap.org/users/john_doe)
--- (user_home.txt) The info to display from the directory (phone number,
-   location, etc)
--- (directory_redirect.txt) The link on LDAP login in order to redirect on your
+- (directory_redirect.txt) The link on LDAP login in order to redirect on your
    directory web interface (if any).

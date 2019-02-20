@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -25,12 +25,13 @@ use HTTPRequest;
 use PFUser;
 use TemplateRendererFactory;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\NotFoundException;
 use UserHelper;
 use UserManager;
 
-class ProfileController implements DispatchableWithRequest
+class ProfileController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
     /**
      * @var ProfilePresenterBuilder
@@ -58,13 +59,6 @@ class ProfileController implements DispatchableWithRequest
 
             return;
         }
-
-        if (ForgeConfig::get('display_deprecated_user_home')) {
-            require_once('user_home.php');
-
-            return;
-        }
-
 
         $layout->header(['title' => UserHelper::instance()->getDisplayNameFromUser($user)]);
         $this->renderToPage($user, $current_user);
