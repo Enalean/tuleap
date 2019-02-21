@@ -1,6 +1,6 @@
 {{# current_project_navbar_info_presenter }}
 <nav id="current-project-nav">
-    <a href="{{ project_link }}" class="current-project-name" title="{{ project_name }}&#10;&#10;{{{ project_privacy }}}">
+    <a href="{{ project_link }}" class="current-project-name">
         {{# project_is_public }}
             <i class="fa fa-unlock current-project-icon"></i>
         {{/ project_is_public }}
@@ -10,6 +10,15 @@
 
         {{ project_name }}
     </a>
+    <section class="tlp-popover" id="current-project-nav-title-popover">
+        <div class="tlp-popover-arrow"></div>
+        <div class="tlp-popover-header">
+            <h1 class="tlp-popover-title">{{ project_name }}</h1>
+        </div>
+        <div class="tlp-popover-body">
+            <p class="current-project-nav-title-popover-description">{{ project_privacy }}</p>
+        </div>
+    </section>
     {{# has_project_flags }}
         <span class="current-project-nav-flag"
               id="current-project-nav-flag"

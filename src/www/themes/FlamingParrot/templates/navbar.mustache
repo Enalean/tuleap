@@ -6,7 +6,12 @@
             <ul class="nav header-navbar-container-project-nav">
                 {{# current_project_navbar_info }}
                     <li class="current-project">
-                        <a href="{{ project_link }}" class="project-title" title="{{ project_name }}&#10;&#10;{{ project_privacy }}">
+                        <a href="{{ project_link }}"
+                           class="project-title"
+                           id="header-navbar-project-title"
+                           title="{{ project_name }}"
+                           data-content="{{ project_privacy }}"
+                        >
                             {{# project_is_public }}
                                 <i class="fa fa-unlock"></i>
                             {{/ project_is_public }}

@@ -21,8 +21,8 @@ import $ from "jquery";
 import { render } from "mustache";
 
 document.addEventListener("DOMContentLoaded", () => {
-    const project_flags_element = document.querySelector(".current-project-nav-flag");
-    if (!project_flags_element) {
+    const project_title_element = document.getElementById("header-navbar-project-title");
+    if (!project_title_element) {
         return;
     }
 
@@ -32,37 +32,20 @@ document.addEventListener("DOMContentLoaded", () => {
                 <h3>{{ title }}</h3>
                 <div class="popover-content"></div>
         </div>`,
-        { title: project_flags_element.dataset.title }
-    );
-
-    const shield_icon_html = new XMLSerializer().serializeToString(
-        document.querySelector(".tuleap-svg-project-shield")
+        { title: project_title_element.title }
     );
 
     const content = render(
-        `{{# project_flags }}
-            <div class="current-project-nav-flag-popover-flag">
-                ${shield_icon_html}
-                <h2 class="current-project-nav-flag-popover-content-title">
-                    {{ label }}
-                </h2>
-                {{# description }}
-                    <p class="current-project-nav-flag-popover-content-description">
-                        {{ description }}
-                    </p>
-                {{/ description }}
-            </div>
-        {{/ project_flags }}`,
+        '<p class="current-project-nav-flag-popover-content-description">{{ content }}</p>',
         {
-            project_flags: JSON.parse(project_flags_element.dataset.projectFlags)
+            content: project_title_element.dataset.content
         }
     );
 
-    $(project_flags_element).popover({
-        title: project_flags_element.dataset.title,
+    $(project_title_element).popover({
         placement: "bottom",
-        html: true,
         trigger: "hover",
+        html: true,
         template,
         content
     });
