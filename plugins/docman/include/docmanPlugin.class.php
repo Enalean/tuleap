@@ -24,9 +24,13 @@
  *
  */
 
+use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\DB\DBFactory;
 use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\ApprovalTable\ApprovalTableStateMapper;
+use Tuleap\Docman\DocmanSettingsSiteAdmin\DocmanSettingsAdminController;
+use Tuleap\Docman\DocmanSettingsSiteAdmin\DocmanSettingsAdminSaveController;
+use Tuleap\Docman\DocmanSettingsSiteAdmin\DocumentSettingsSaver;
 use Tuleap\Docman\ExternalLinks\DocmanHTTPControllerProxy;
 use Tuleap\Docman\ExternalLinks\ExternalLink;
 use Tuleap\Docman\ExternalLinks\ExternalLinkParametersExtractor;
@@ -147,6 +151,7 @@ class DocmanPlugin extends Plugin
         $this->addHook(Event::SERVICE_CLASSNAMES);
         $this->addHook(NavigationDropdownQuickLinksCollector::NAME);
         $this->addHook(PermissionPerGroupPaneCollector::NAME);
+        $this->addHook('site_admin_option_hook');
     }
 
     public function getHooksAndCallbacks()
@@ -1361,6 +1366,24 @@ class DocmanPlugin extends Plugin
     {
         $event->getRouteCollector()->addRoute(['OPTIONS', 'HEAD', 'PATCH', 'DELETE'], '/uploads/docman/file/{id:\d+}', $this->getRouteHandler('routeUploadsDocmanFile'));
         $event->getRouteCollector()->addRoute(['OPTIONS', 'HEAD', 'PATCH', 'DELETE'], '/uploads/docman/version/{id:\d+}', $this->getRouteHandler('routeUploadsVersionFile'));
+        $event->getRouteCollector()->addRoute(['GET'], '/admin/document-settings', $this->getRouteHandler('routeGetDocumentSettings'));
+        $event->getRouteCollector()->addRoute(['POST'], '/admin/document-settings', $this->getRouteHandler('routePostDocumentSettings'));
+    }
+
+    public function routeGetDocumentSettings(): DocmanSettingsAdminController
+    {
+        return new DocmanSettingsAdminController(
+            new AdminPageRenderer()
+        );
+    }
+
+    public function routePostDocumentSettings(): DocmanSettingsAdminSaveController
+    {
+        return new DocmanSettingsAdminSaveController(
+            new DocumentSettingsSaver(
+                new ConfigDao()
+            )
+        );
     }
 
     private function cleanUnusedResources()
@@ -1370,5 +1393,14 @@ class DocmanPlugin extends Plugin
             new \Tuleap\Docman\Upload\Document\DocumentOngoingUploadDAO()
         );
         $cleaner->deleteDanglingDocumentToUpload(new \DateTimeImmutable());
+    }
+
+    // @codingStandardsIgnoreLine
+    public function site_admin_option_hook(array &$params)
+    {
+        $params['plugins'][] = [
+            'label' => dgettext('tuleap-docman', 'Document'),
+            'href'  => '/admin/document-settings'
+        ];
     }
 }
