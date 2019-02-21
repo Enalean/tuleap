@@ -20,7 +20,7 @@
 <template>
     <tr class="document-tree-item-toggle-quicklook" v-bind:class="row_classes" v-bind:data-item-id="item.id">
         <td v-bind:colspan="colspan">
-            <div v-bind:class="{ 'document-folder-content-title': item_is_not_being_uploaded }">
+            <div v-bind:class="{ 'document-folder-content-title': item_is_not_being_uploaded, 'document-folder-content-quick-look-and-item-uploading': is_item_uploading_in_quicklook_mode }">
                 <component
                     v-bind:is="cell_title_component_name"
                     v-bind:item="item"
@@ -39,13 +39,14 @@
                         </dropdown-button>
                     </div>
                 </div>
+                <upload-progress-bar v-if="is_item_uploading_in_quicklook_mode" v-bind:item="item"/>
             </div>
         </td>
-        <template v-if="item.is_uploading_in_collapsed_folder">
+        <template v-if="is_item_uploading_without_quick_look_mode">
             <td><upload-progress-bar v-bind:item="item"/></td>
             <td></td>
         </template>
-        <template v-else-if="! item.is_uploading">
+        <template v-else-if="is_not_item_uploading_and_not_quick_look">
             <td class="document-tree-cell-owner">
                 <user-badge v-bind:user="item.owner"/>
             </td>
@@ -80,7 +81,8 @@ export default {
         DropdownButton
     },
     props: {
-        item: Object
+        item: Object,
+        isQuickLookDisplayed: Boolean
     },
     computed: {
         ...mapState(["date_time_format", "folded_items_ids"]),
@@ -144,6 +146,15 @@ export default {
         },
         item_is_not_being_uploaded() {
             return !this.item.is_uploading_in_collapsed_folder && !this.item.is_uploading;
+        },
+        is_item_uploading_in_quicklook_mode() {
+            return this.item.is_uploading_in_collapsed_folder && this.isQuickLookDisplayed;
+        },
+        is_item_uploading_without_quick_look_mode() {
+            return this.item.is_uploading_in_collapsed_folder && !this.isQuickLookDisplayed;
+        },
+        is_not_item_uploading_and_not_quick_look() {
+            return !this.item.is_uploading && !this.isQuickLookDisplayed;
         }
     },
     mounted() {
