@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2018 - 2018. All Rights Reserved.
+  - Copyright (c) Enalean, 2019. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -15,31 +15,33 @@
   -
   - You should have received a copy of the GNU General Public License
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
-  -
   -->
 
 <template>
     <button
-        class="tlp-dropdown-split-button-main"
         type="button"
-        v-on:click="showNewDocumentModal()"
+        class="tlp-button-primary tlp-button-outline tlp-button-small tlp-dropdown-split-button-main"
+        v-on:click="goToDetails"
     >
-        <i class="fa fa-plus tlp-button-icon"></i>
-        <translate>New document</translate>
+        <i class="fa fa-list tlp-button-icon"></i>
+        <translate>Details</translate>
     </button>
 </template>
-
 <script>
+import { mapState } from "vuex";
 export default {
     props: {
         item: Object
     },
+    computed: {
+        ...mapState(["project_id"])
+    },
     methods: {
-        showNewDocumentModal() {
-            document.dispatchEvent(
-                new CustomEvent("show-new-document-modal", {
-                    detail: { parent: this.item }
-                })
+        goToDetails() {
+            window.location.assign(
+                `/plugins/docman/?group_id=${this.project_id}&id=${
+                    this.item.id
+                }&action=details&section=details`
             );
         }
     }

@@ -60,15 +60,23 @@ import {
     TYPE_FILE,
     TYPE_FOLDER,
     TYPE_LINK,
-    TYPE_WIKI
+    TYPE_WIKI,
+    TYPE_EMPTY
 } from "../../../constants.js";
 import { iconForMimeType } from "../../../helpers/icon-for-mime-type.js";
 import QuickLookDocumentMetadata from "./QuickLookDocumentMetadata.vue";
 import QuickLookDocumentPreview from "./QuickLookDocumentPreview.vue";
+import DropdownButton from "../Dropdown/DropdownButton.vue";
+import DropdownMenu from "../Dropdown/DropdownMenu.vue";
 
 export default {
     name: "QuicklookGlobal",
-    components: { QuickLookDocumentPreview, QuickLookDocumentMetadata },
+    components: {
+        QuickLookDocumentPreview,
+        QuickLookDocumentMetadata,
+        DropdownButton,
+        DropdownMenu
+    },
     props: {
         item: Object
     },
@@ -104,7 +112,10 @@ export default {
                 case TYPE_LINK:
                     name = "Link";
                     break;
+                case TYPE_EMPTY:
                 case TYPE_EMBEDDED:
+                    name = "EmptyOrEmbedded";
+                    break;
                 default:
                     return;
             }

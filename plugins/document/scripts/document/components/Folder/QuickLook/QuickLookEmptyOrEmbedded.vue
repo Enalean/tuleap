@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2018 - 2018. All Rights Reserved.
+  - Copyright (c) Enalean, 2019. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -14,34 +14,23 @@
   - GNU General Public License for more details.
   -
   - You should have received a copy of the GNU General Public License
-  - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+  - along with Tuleap. If not, see http://www.gnu.org/licenses/.
   -
   -->
 
 <template>
-    <button
-        class="tlp-dropdown-split-button-main"
-        type="button"
-        v-on:click="showNewDocumentModal()"
-    >
-        <i class="fa fa-plus tlp-button-icon"></i>
-        <translate>New document</translate>
-    </button>
+    <div class="document-quick-look-document-action">
+        <quick-look-document-action-button v-bind:item="item"/>
+    </div>
 </template>
 
 <script>
+import QuickLookDocumentActionButton from "./QuickLookDocumentActionButton.vue";
+
 export default {
+    components: { QuickLookDocumentActionButton },
     props: {
         item: Object
-    },
-    methods: {
-        showNewDocumentModal() {
-            document.dispatchEvent(
-                new CustomEvent("show-new-document-modal", {
-                    detail: { parent: this.item }
-                })
-            );
-        }
     }
 };
 </script>

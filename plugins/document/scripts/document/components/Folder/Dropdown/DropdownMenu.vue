@@ -27,10 +27,10 @@
          role="menu"
     >
         <slot></slot>
-        <span class="tlp-dropdown-menu-title document-dropdown-menu-title" role="menuitem">
+        <span v-if="! hideItemTitle" class="tlp-dropdown-menu-title document-dropdown-menu-title" role="menuitem">
             {{ item.title }}
         </span>
-        <a v-bind:href="getUrlForPane(DETAILS_PANE_NAME)" class="tlp-dropdown-menu-item" role="menuitem">
+        <a v-if="is_details_entry_displayed" v-bind:href="getUrlForPane(DETAILS_PANE_NAME)" class="tlp-dropdown-menu-item" role="menuitem">
             <i class="fa fa-fw fa-list tlp-dropdown-menu-item-icon"></i>
             <span v-translate>
                 Details
@@ -54,7 +54,7 @@
                 Permissions
             </span>
         </a>
-        <a v-bind:href="getUrlForPane(APPROVAL_TABLES_PANE_NAME)" class="tlp-dropdown-menu-item" role="menuitem">
+        <a v-if="! is_item_empty" v-bind:href="getUrlForPane(APPROVAL_TABLES_PANE_NAME)" class="tlp-dropdown-menu-item" role="menuitem">
             <i class="fa fa-fw fa-check-square-o tlp-dropdown-menu-item-icon"></i>
             <span v-translate>
                 Approval tables
@@ -64,12 +64,14 @@
 </template>
 <script>
 import { mapState } from "vuex";
+import { TYPE_EMPTY } from "../../../constants.js";
 
 export default {
     name: "DropDownMenu",
     props: {
         isInFolderEmptyState: Boolean,
         isInQuickLookMode: Boolean,
+        hideItemTitle: Boolean,
         item: Object
     },
     data() {
@@ -82,7 +84,13 @@ export default {
         };
     },
     computed: {
-        ...mapState(["project_id"])
+        ...mapState(["project_id"]),
+        is_details_entry_displayed() {
+            return !this.hideItemTitle || (this.hideItemTitle && this.item.user_can_write);
+        },
+        is_item_empty() {
+            return this.item.type === TYPE_EMPTY;
+        }
     },
     methods: {
         getUrlForPane(pane_name) {

@@ -27,15 +27,17 @@
                     v-bind:style="item_indentation"
                     v-bind:title="item.title"
                 />
-                <div class="document-tree-quick-look-button" v-if="item_is_not_being_uploaded">
-                    <quick-look-button
-                        class="quick-look-button"
-                        v-on:displayQuickLook="$emit('displayQuickLook', item)"
-                        v-bind:item="item"
-                    />
-                    <dropdown-button v-bind:is-in-quick-look-mode="true">
-                        <dropdown-menu-for-item-quick-look v-bind:item="item"/>
-                    </dropdown-button>
+                <div class="tlp-dropdown">
+                    <div class="tlp-dropdown-split-button" v-if="item_is_not_being_uploaded">
+                        <quick-look-button
+                            class="quick-look-button"
+                            v-on:displayQuickLook="$emit('displayQuickLook', item)"
+                            v-bind:item="item"
+                        />
+                        <dropdown-button v-bind:is-in-quick-look-mode="true">
+                            <dropdown-menu-for-item-quick-look v-bind:item="item"/>
+                        </dropdown-button>
+                    </div>
                 </div>
             </div>
         </td>

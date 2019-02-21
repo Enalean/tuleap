@@ -19,17 +19,21 @@
   -->
 
 <template>
-    <div class="document-quick-look-file-action">
+    <div class="document-quick-look-document-action">
         <button type="button" class="tlp-button-primary tlp-button-small document-quick-look-action-button-margin"
                 v-on:click="download_file">
             <i class="fa fa-download tlp-button-icon"></i> <translate>Download</translate>
         </button>
+        <quick-look-document-action-button v-bind:item="item"/>
     </div>
 </template>
 
 <script>
+import QuickLookDocumentActionButton from "./QuickLookDocumentActionButton.vue";
+
 export default {
     name: "QuickLookFileProperties",
+    components: { QuickLookDocumentActionButton },
     props: {
         item: Object
     },

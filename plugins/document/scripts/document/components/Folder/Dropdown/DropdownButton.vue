@@ -20,7 +20,7 @@
 
 <template>
     <div class="tlp-dropdown document-dropdown-menu-button">
-        <button class="tlp-button-primary tlp-dropdown-split-button-caret"
+        <button class="tlp-button-primary tlp-append tlp-dropdown-split-button-caret"
                 v-bind:class="{
                     'tlp-button-large': isInLargeMode,
                     'tlp-button-small tlp-button-outline': isInQuickLookMode
