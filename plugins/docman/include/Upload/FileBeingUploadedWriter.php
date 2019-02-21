@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -27,10 +27,10 @@ use Tuleap\Docman\Tus\CannotWriteFileException;
 use Tuleap\Docman\Tus\TusFileInformation;
 use Tuleap\Docman\Tus\TusWriter;
 
-final class DocumentBeingUploadedWriter implements TusWriter
+final class FileBeingUploadedWriter implements TusWriter
 {
     /**
-     * @var DocumentUploadPathAllocator
+     * @var UploadPathAllocator
      */
     private $path_allocator;
     /**
@@ -38,7 +38,7 @@ final class DocumentBeingUploadedWriter implements TusWriter
      */
     private $db_connection;
 
-    public function __construct(DocumentUploadPathAllocator $path_allocator, DBConnection $db_connection)
+    public function __construct(UploadPathAllocator $path_allocator, DBConnection $db_connection)
     {
         $this->path_allocator = $path_allocator;
         $this->db_connection  = $db_connection;

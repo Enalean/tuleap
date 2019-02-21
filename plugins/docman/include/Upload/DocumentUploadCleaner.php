@@ -25,7 +25,7 @@ use Tuleap\Docman\Upload\Document\DocumentOngoingUploadDAO;
 final class DocumentUploadCleaner
 {
     /**
-     * @var DocumentUploadPathAllocator
+     * @var UploadPathAllocator
      */
     private $path_allocator;
     /**
@@ -33,7 +33,7 @@ final class DocumentUploadCleaner
      */
     private $dao;
 
-    public function __construct(DocumentUploadPathAllocator $path_allocator, DocumentOngoingUploadDAO $dao)
+    public function __construct(UploadPathAllocator $path_allocator, DocumentOngoingUploadDAO $dao)
     {
         $this->path_allocator = $path_allocator;
         $this->dao            = $dao;

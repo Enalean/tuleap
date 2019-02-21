@@ -38,8 +38,8 @@ use Tuleap\Docman\Item\ItemIsNotAFolderException;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadDAO;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
 use Tuleap\Docman\Upload\Document\DocumentToUploadCreator;
-use Tuleap\Docman\Upload\DocumentUploadFinisher;
-use Tuleap\Docman\Upload\DocumentUploadPathAllocator;
+use Tuleap\Docman\Upload\Document\DocumentUploadFinisher;
+use Tuleap\Docman\Upload\Document\DocumentUploadPathAllocator;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
@@ -174,7 +174,7 @@ class DocmanItemsResource extends AuthenticatedResource
         $this->getDocmanFolderPermissionChecker($project)
              ->checkUserCanWriteFolder($current_user, $docman_item_post_representation->parent_id);
 
-        $event_adder = $this->getDocmanItemsEventAdder($project);
+        $event_adder = $this->getDocmanItemsEventAdder();
         $event_adder->addLogEvents();
         $event_adder->addNotificationEvents($project);
 

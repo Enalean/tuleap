@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,9 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Docman\Upload;
+namespace Tuleap\Docman\Upload\Document;
 
-final class DocumentUploadPathAllocator
+use Tuleap\Docman\Upload\UploadPathAllocator;
+
+final class DocumentUploadPathAllocator implements UploadPathAllocator
 {
     /**
      * @return string
@@ -33,15 +35,15 @@ final class DocumentUploadPathAllocator
     /**
      * @return string
      */
-    public function getPathForItemBeingUploaded($item_id)
+    public function getPathForItemBeingUploaded($id): string
     {
-        return $this->getBasePath() . $item_id;
+        return $this->getBasePath() . $id;
     }
 
     /**
      * @return array<string,string>
      */
-    public function getCurrentlyUsedAllocatedPathsPerExpectedItemIDs()
+    public function getCurrentlyUsedAllocatedPathsPerExpectedItemIDs(): array
     {
         $base_path = $this->getBasePath();
         if (! is_dir($base_path)) {

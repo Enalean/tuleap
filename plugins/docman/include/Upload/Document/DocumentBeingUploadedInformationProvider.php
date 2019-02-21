@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,11 +20,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Docman\Upload;
+namespace Tuleap\Docman\Upload\Document;
 
 use Tuleap\Docman\Tus\TusFileInformation;
 use Tuleap\Docman\Tus\TusFileInformationProvider;
-use Tuleap\Docman\Upload\Document\DocumentOngoingUploadDAO;
+use Tuleap\Docman\Upload\DocumentAlreadyUploadedInformation;
+use Tuleap\Docman\Upload\FileBeingUploadedInformation;
 
 final class DocumentBeingUploadedInformationProvider implements TusFileInformationProvider
 {
@@ -53,7 +54,7 @@ final class DocumentBeingUploadedInformationProvider implements TusFileInformati
 
     public function getFileInformation(\Psr\Http\Message\ServerRequestInterface $request) : ?TusFileInformation
     {
-        $item_id = $request->getAttribute('item_id');
+        $item_id = $request->getAttribute('id');
         $user_id = $request->getAttribute('user_id');
 
         if ($item_id === null || $user_id === null) {
@@ -77,6 +78,6 @@ final class DocumentBeingUploadedInformationProvider implements TusFileInformati
 
         $current_file_size = file_exists($allocated_path) ? filesize($allocated_path) : 0;
 
-        return new DocumentBeingUploadedInformation((int) $item_id, $document_row['filesize'], $current_file_size);
+        return new FileBeingUploadedInformation((int) $item_id, $document_row['filesize'], $current_file_size);
     }
 }

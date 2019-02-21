@@ -20,13 +20,14 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Docman\Upload;
+namespace Tuleap\Docman\Upload\Document;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use Tuleap\Docman\Tus\TusFileInformation;
+use Tuleap\Docman\Upload\DocumentBeingUploadedLocker;
 use Tuleap\ForgeConfigSandbox;
 
 class DocumentBeingUploadedLockerTest extends TestCase

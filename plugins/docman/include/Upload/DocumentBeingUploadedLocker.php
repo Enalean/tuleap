@@ -33,11 +33,11 @@ final class DocumentBeingUploadedLocker implements TusLocker
     private static $holded_semaphores = [];
 
     /**
-     * @var DocumentUploadPathAllocator
+     * @var UploadPathAllocator
      */
     private $path_allocator;
 
-    public function __construct(DocumentUploadPathAllocator $path_allocator)
+    public function __construct(UploadPathAllocator $path_allocator)
     {
         $this->path_allocator = $path_allocator;
     }
@@ -71,7 +71,7 @@ final class DocumentBeingUploadedLocker implements TusLocker
 
         $semaphore = sem_get($key);
         if (! is_resource($semaphore)) {
-            throw new DocumentBeingUploadedLockVerificationException($this->getPathForFile($file_information));
+            throw new UploadLockVerificationException($this->getPathForFile($file_information));
         }
         self::$holded_semaphores[$key] = $semaphore;
         return $semaphore;

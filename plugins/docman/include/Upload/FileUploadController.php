@@ -75,7 +75,7 @@ class FileUploadController implements DispatchableWithRequestNoAuthz
         $this->checkUserCanAccess();
 
         $server_request = ServerRequest::fromGlobals()
-            ->withAttribute('item_id', $variables['item_id'])
+            ->withAttribute('id', $variables['id'])
             ->withAttribute('user_id', $this->rest_user_manager->getCurrentUser()->getId());
 
         $dispatcher = new FileUploadDispatcher($this->tus_server, $this->tus_cors_middleware, $this->rest_cors_middleware);
