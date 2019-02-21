@@ -23,3 +23,4 @@ import "./sidebar.js";
 import "./motd.js";
 import "./keyboard-navigation.js";
 import "./project-flags.js";
+import "./project-privacy.js";
