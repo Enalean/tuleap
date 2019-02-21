@@ -45,7 +45,7 @@
                     id="workflow-advanced-configuration"
                     class="tlp-switch-checkbox"
                     v-bind:checked="is_workflow_advanced"
-                    v-bind:disabled="is_workflow_advanced || is_operation_running"
+                    v-bind:disabled="is_operation_running"
                 >
                 <label
                     class="tlp-switch-button"
@@ -55,57 +55,35 @@
                 ></label>
             </div>
         </div>
-        <div
-            class="tlp-modal tlp-modal-warning"
-            role="dialog"
-            aria-labelledyby="modal-confirm-workflow-mode-change-label"
-            ref="modal"
+        <workflow-mode-switch-modal
+            v-bind:confirm="confirm"
+            v-bind:is_operation_running="is_workflow_mode_change_running"
         >
-            <div class="tlp-modal-header">
-                <h1
-                    class="tlp-modal-title"
-                    id="modal-confirm-workflow-mode-change-label"
-                    v-translate
-                >
-                    Wait a minute...
-                </h1>
-                <div class="tlp-modal-close" data-dismiss="modal" aria-label="Close">&times;</div>
-            </div>
-            <div class="tlp-modal-body">
-                <p v-translate>You're about to switch to advanced configuration mode.</p>
+            <template slot="modal-body">
+                <p v-if="is_workflow_advanced" key="simple_text" v-translate>
+                    You're about to switch to simple configuration mode.
+                    The first configuration in the destination state column will be applied to the whole state.
+                </p>
+                <p v-else key="advanced_text" v-translate>
+                    You're about to switch to advanced configuration mode.
+                </p>
                 <p v-translate>Please confirm your action.</p>
-            </div>
-            <div class="tlp-modal-footer">
-                <button
-                    type="button"
-                    class="tlp-button-warning tlp-button-outline tlp-modal-action"
-                    data-dismiss="modal"
-                    v-translate
-                >
-                    Cancel
-                </button>
-                <button
-                    type="button"
-                    class="tlp-button-warning tlp-modal-action"
-                    v-on:click="confirm()"
-                    v-bind:disabled="is_workflow_mode_change_running"
-                >
-                    <i
-                        v-if="is_workflow_mode_change_running"
-                        class="tlp-button-icon fa fa-circle-o-notch fa-spin"
-                    ></i>
-                    <translate>Switch to advanced configuration</translate>
-                </button>
-            </div>
-        </div>
+            </template>
+            <template slot="switch-button-label">
+                <translate v-if="is_workflow_advanced" key="switch_to_simple">Switch to simple configuration</translate>
+                <translate v-else key="switch_to_advanced">Switch to advanced configuration</translate>
+            </template>
+        </workflow-mode-switch-modal>
     </div>
 </template>
 <script>
 import { mapState, mapGetters } from "vuex";
 import { modal as createModal } from "tlp";
+import WorkflowModeSwitchModal from "./WorkflowModeSwitchModal.vue";
 
 export default {
     name: "WorkflowModeSwitch",
+    components: { WorkflowModeSwitchModal },
     data() {
         return {
             modal: null
@@ -125,9 +103,6 @@ export default {
     },
     methods: {
         showModal() {
-            if (this.is_workflow_advanced) {
-                return;
-            }
             this.modal.show();
         },
         async confirm() {
