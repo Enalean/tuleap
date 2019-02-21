@@ -22,20 +22,34 @@ declare(strict_types = 1);
 
 namespace Tuleap\Docman\REST\v1;
 
-class DocmanItemPATCHRepresentation
+use Docman_PermissionsManager;
+use Tuleap\REST\I18NRestException;
+
+class DocmanFolderPermissionChecker
 {
     /**
-     * @var string Title of version {@from body} {@required true}
+     * @var Docman_PermissionsManager
      */
-    public $version_title;
+    private $permissions_manager;
+
+    public function __construct(Docman_PermissionsManager $permissions_manager)
+    {
+        $this->permissions_manager = $permissions_manager;
+    }
 
     /**
-     * @var string Description of changes {@from body} {@required false}
+     * @throws I18NRestException
      */
-    public $change_log = '';
-
-    /**
-     * @var FilePropertiesPOSTPATCHRepresentation File properties must be set when creating a new file {@from body} {@required false} {@type \Tuleap\Docman\REST\v1\FilePropertiesPOSTPATCHRepresentation}
-     */
-    public $file_properties = null;
+    public function checkUserCanWriteFolder(\PFUser $current_user, int $folder_id): void
+    {
+        if (! $this->permissions_manager->userCanWrite($current_user, $folder_id)) {
+            throw new I18NRestException(
+                403,
+                sprintf(
+                    dgettext('tuleap-docman', "You are not allowed to write on folder with id '%d'"),
+                    $folder_id
+                )
+            );
+        }
+    }
 }

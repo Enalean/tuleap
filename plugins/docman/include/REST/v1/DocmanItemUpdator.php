@@ -46,7 +46,7 @@ class DocmanItemUpdator
      */
     private $creator;
     /**
-     * @var VersionToUploadVisitorBeforeUpdateValidator
+     * @var FileVersionToUploadVisitorBeforeUpdateValidator
      */
     private $before_update_validator;
 
@@ -54,7 +54,7 @@ class DocmanItemUpdator
         ApprovalTableRetriever $approval_table_retriever,
         Docman_LockFactory $lock_factory,
         VersionToUploadCreator $creator,
-        VersionToUploadVisitorBeforeUpdateValidator $before_update_validator
+        FileVersionToUploadVisitorBeforeUpdateValidator $before_update_validator
     ) {
         $this->approval_table_retriever = $approval_table_retriever;
         $this->lock_factory             = $lock_factory;
@@ -71,7 +71,7 @@ class DocmanItemUpdator
     public function update(
         \Docman_Item $item,
         \PFUser $user,
-        DocmanItemPATCHRepresentation $patch_representation,
+        DocmanFilesPATCHRepresentation $patch_representation,
         \DateTimeImmutable $time
     ) : CreatedItemFilePropertiesRepresentation {
         $approval_table = $this->approval_table_retriever->retrieveByItem($item);

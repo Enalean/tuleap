@@ -30,21 +30,21 @@ use Docman_Wiki;
 use Luracast\Restler\RestException;
 use Tuleap\Docman\Item\ItemVisitor;
 
-class VersionToUploadVisitorBeforeUpdateValidator implements ItemVisitor
+class FileVersionToUploadVisitorBeforeUpdateValidator implements ItemVisitor
 {
     public function visitFolder(Docman_Folder $item, array $params = [])
     {
-        throw new RestException(501, 'Version creation for folder is not supported');
+        throw new RestException(400, 'Version creation for folder is not supported for docman_files route');
     }
 
     public function visitWiki(Docman_Wiki $item, array $params = [])
     {
-        throw new RestException(501, 'Version creation for wiki is not supported');
+        throw new RestException(400, 'Version creation for wiki is not supported for docman_files route');
     }
 
     public function visitLink(Docman_Link $item, array $params = [])
     {
-        throw new RestException(501, 'Version creation for link is not supported');
+        throw new RestException(400, 'Version creation for link is not supported for docman_files route');
     }
 
     public function visitFile(Docman_File $item, array $params = [])
@@ -53,16 +53,16 @@ class VersionToUploadVisitorBeforeUpdateValidator implements ItemVisitor
 
     public function visitEmbeddedFile(Docman_EmbeddedFile $item, array $params = [])
     {
-        throw new RestException(501, 'Version creation for embedded is not supported');
+        throw new RestException(400, 'Version creation for embedded is not supported for docman_files route');
     }
 
     public function visitEmpty(Docman_Empty $item, array $params = [])
     {
-        throw new RestException(501, 'Version creation for empty is not supported yet');
+        throw new RestException(400, 'Version creation for empty is not supported for docman_files route');
     }
 
     public function visitItem(Docman_Item $item, array $params = [])
     {
-        throw new RestException(501, 'Version creation for item is not supported yet');
+        throw new RestException(400, 'Version creation for item is not supported for docman_files route');
     }
 }
