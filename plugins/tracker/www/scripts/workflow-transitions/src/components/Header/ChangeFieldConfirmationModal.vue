@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2018. All Rights Reserved.
+  - Copyright (c) Enalean, 2018 - 2019. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -17,11 +17,12 @@
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<template>
+<template functional>
     <div
         class="tlp-modal tlp-modal-danger"
         role="dialog"
         aria-labelledby="modal-confirm-change-field-label"
+        ref="modal"
     >
         <div class="tlp-modal-header">
             <h1
@@ -32,11 +33,8 @@
             <div class="tlp-modal-close" data-dismiss="modal" aria-label="Close">&times;</div>
         </div>
         <div class="tlp-modal-body">
-            <p>
-                <span v-translate>Are you sure to change transitions based field?</span>
-                <br>
-                <span v-translate>This action will delete all transition rules! It is irreversible.</span>
-            </p>
+            <p v-translate>Are you sure you want to change the field used to define the transitions?</p>
+            <p v-translate>This action will delete all transition rules! It is irreversible.</p>
         </div>
         <div class="tlp-modal-footer">
             <button
@@ -48,40 +46,12 @@
             <button
                 type="button"
                 class="tlp-button-danger tlp-modal-action"
-                v-on:click="confirm()"
-                v-bind:disabled="is_operation_running"
-                data-dismiss="modal"
+                v-on:click="props.confirm()"
+                v-bind:disabled="props.is_operation_running"
             >
-                <i v-if="is_operation_running" class="tlp-button-icon fa fa-circle-o-notch fa-spin"></i>
-                <span v-translate>Confirm</span>
+                <i v-if="props.is_operation_running" class="tlp-button-icon fa fa-circle-o-notch fa-spin"></i>
+                <translate>Confirm</translate>
             </button>
         </div>
     </div>
 </template>
-
-<script>
-import { mapState, mapGetters } from "vuex";
-
-export default {
-    name: "ChangeFieldConfirmationModal",
-
-    computed: {
-        ...mapState(["is_operation_running"]),
-        ...mapGetters(["current_tracker_id"])
-    },
-
-    methods: {
-        async confirm() {
-            await this.$store.dispatch("resetWorkflowTransitions", this.current_tracker_id);
-            const feedback_box = document.getElementById("feedback");
-            const feedback_section_content = document.createElement("section");
-            feedback_section_content.classList.add("tlp-alert-info");
-            feedback_section_content.insertAdjacentText(
-                "afterbegin",
-                this.$gettext("Transitions rules was deleted. Workflow is reset.")
-            );
-            feedback_box.appendChild(feedback_section_content);
-        }
-    }
-};
-</script>
