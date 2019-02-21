@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,6 +24,7 @@ use EventManager;
 use PFUser;
 use Project;
 use ProjectUGroup;
+use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Project\UserPermissionsDao;
 use UGroupBinding;
 
@@ -33,6 +34,10 @@ class DynamicUGroupMembersUpdater
      * @var UserPermissionsDao
      */
     private $user_permissions_dao;
+    /**
+     * @var DBTransactionExecutor
+     */
+    private $transaction_executor;
     /**
      * @var UGroupBinding
      */
@@ -44,10 +49,12 @@ class DynamicUGroupMembersUpdater
 
     public function __construct(
         UserPermissionsDao $user_permissions_dao,
+        DBTransactionExecutor $transaction_executor,
         UGroupBinding $ugroup_binding,
         EventManager $event_manager
     ) {
         $this->user_permissions_dao = $user_permissions_dao;
+        $this->transaction_executor = $transaction_executor;
         $this->ugroup_binding       = $ugroup_binding;
         $this->event_manager        = $event_manager;
     }
@@ -110,13 +117,13 @@ class DynamicUGroupMembersUpdater
      */
     private function removeProjectAdministrator(Project $project, PFUser $user)
     {
-        $this->user_permissions_dao->wrapAtomicOperations(
-            function (UserPermissionsDao $dao) use ($project, $user) {
-                if (! $dao->isThereOtherProjectAdmin($project->getID(), $user->getId())) {
+        $this->transaction_executor->execute(
+            function () use ($project, $user) {
+                if (! $this->user_permissions_dao->isThereOtherProjectAdmin($project->getID(), $user->getId())) {
                     throw new CannotRemoveLastProjectAdministratorException($user, $project);
                 }
                 $this->event_manager->processEvent(new ApproveProjectAdministratorRemoval($project, $user));
-                $dao->removeUserFromProjectAdmin($project->getID(), $user->getId());
+                $this->user_permissions_dao->removeUserFromProjectAdmin($project->getID(), $user->getId());
             }
         );
         $this->event_manager->processEvent(new UserIsNoLongerProjectAdmin($project, $user));
@@ -139,7 +146,8 @@ class DynamicUGroupMembersUpdater
     private function ensureUserIsProjectMember(Project $project, PFUser $user)
     {
         if (! $this->user_permissions_dao->isUserPartOfProjectMembers($project->getID(), $user->getId())) {
-            account_add_user_to_group($project->getID(), $user->getUserName());
+            $username = $user->getUserName();
+            account_add_user_to_group($project->getID(), $username);
             $this->ugroup_binding->reloadUgroupBindingInProject($project);
         }
     }

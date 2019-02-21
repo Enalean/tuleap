@@ -30,7 +30,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
 use PHPUnit\Framework\TestCase;
 use Transition_PostAction_Field_DateDao;
-use Tuleap\DB\DataAccessObject;
+use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Tracker\Workflow\PostAction\Update\SetDateValue;
 use Tuleap\Tracker\Workflow\PostAction\Update\TransitionFactory;
 
@@ -49,27 +49,15 @@ class SetDateValueRepositoryTest extends TestCase
     private $set_date_value_dao;
 
     /**
-     * @var MockInterface
-     */
-    private $pdo_wrapper;
-
-    /**
      * @before
      */
     public function createRepository()
     {
         $this->set_date_value_dao = Mockery::mock(Transition_PostAction_Field_DateDao::class);
 
-        $this->pdo_wrapper = Mockery::mock(DataAccessObject::class);
-        $this->pdo_wrapper
-            ->shouldReceive('wrapAtomicOperations')
-            ->andReturnUsing(function (callable $operation) {
-                $operation();
-            });
-
         $this->set_date_value_repository = new SetDateValueRepository(
             $this->set_date_value_dao,
-            $this->pdo_wrapper
+            new DBTransactionExecutorPassthrough()
         );
     }
 

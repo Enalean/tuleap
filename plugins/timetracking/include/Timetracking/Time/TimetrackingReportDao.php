@@ -90,7 +90,7 @@ class TimetrackingReportDao extends DataAccessObject
 
     public function updateReport(int $report_id, array $trackers)
     {
-        $this->wrapAtomicOperations(function () use ($report_id, $trackers) {
+        $this->getDB()->tryFlatTransaction(function () use ($report_id, $trackers) : void {
             $this->getDB()->run(
                 'DELETE FROM plugin_timetracking_overview_report_tracker WHERE report_id = ?',
                 $report_id

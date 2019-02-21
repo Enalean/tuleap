@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,40 +16,27 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 declare(strict_types=1);
 
 namespace Tuleap\DB;
 
-use ParagonIE\EasyDB\EasyDB;
-
-abstract class DataAccessObject
+final class DBTransactionExecutorWithConnection implements DBTransactionExecutor
 {
     /**
      * @var DBConnection
      */
     private $db_connection;
 
-    public function __construct(?DBConnection $db_connection = null)
+    public function __construct(DBConnection $db_connection)
     {
         $this->db_connection = $db_connection;
-        if ($this->db_connection === null) {
-            $this->db_connection = DBFactory::getMainTuleapDBConnection();
-        }
     }
 
-    final protected function getDB() : EasyDB
+    public function execute(callable $atomic_operations) : void
     {
-        return $this->db_connection->getDB();
-    }
-
-    /**
-     * Returns the number of affected rows by the LAST query.
-     * Must be called immediately after performing a query.
-     */
-    public function foundRows() : int
-    {
-        return (int) $this->getDB()->single('SELECT FOUND_ROWS()');
+        $this->db_connection->getDB()->tryFlatTransaction($atomic_operations);
     }
 }

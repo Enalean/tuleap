@@ -21,6 +21,8 @@
 namespace Tuleap\ProjectOwnership\REST;
 
 use Luracast\Restler\RestException;
+use Tuleap\DB\DBFactory;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Project\REST\UserRESTReferenceRetriever;
 use Tuleap\ProjectOwnership\ProjectOwner\OnlyProjectAdministratorCanBeSetAsProjectOwnerException;
 use Tuleap\ProjectOwnership\ProjectOwner\ProjectOwnerDAO;
@@ -123,7 +125,10 @@ class ProjectOwnershipResource extends AuthenticatedResource
             );
         }
 
-        $project_owner_updater = new ProjectOwnerUpdater(new ProjectOwnerDAO());
+        $project_owner_updater = new ProjectOwnerUpdater(
+            new ProjectOwnerDAO(),
+            new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
+        );
         try {
             $project_owner_updater->updateProjectOwner($project, $project_owner);
         } catch (OnlyProjectAdministratorCanBeSetAsProjectOwnerException $ex) {

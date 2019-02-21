@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\REST\v1\Workflow;
 
-use Tuleap\DB\TransactionExecutor;
+use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\REST\I18NRestException;
 use Tuleap\Tracker\Workflow\Transition\Condition\ConditionsUpdateException;
 use Tuleap\Tracker\Workflow\Transition\Condition\ConditionsUpdater;
@@ -36,13 +36,13 @@ class TransitionPatcher
     private $conditions_updater;
     /** @var TransitionRetriever */
     private $transition_retriever;
-    /** @var TransactionExecutor */
+    /** @var DBTransactionExecutor */
     private $transaction_executor;
 
     public function __construct(
         ConditionsUpdater $transition_updater,
         TransitionRetriever $transition_retriever,
-        TransactionExecutor $transaction_executor
+        DBTransactionExecutor $transaction_executor
     ) {
         $this->conditions_updater   = $transition_updater;
         $this->transition_retriever = $transition_retriever;

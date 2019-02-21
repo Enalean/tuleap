@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,6 +24,7 @@ use League\Flysystem\FileNotFoundException;
 use League\Flysystem\FilesystemInterface;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
 class LFSObjectRemoverTest extends TestCase
 {
@@ -32,27 +33,23 @@ class LFSObjectRemoverTest extends TestCase
     private $filesystem;
     private $path_allocator;
     private $dao;
-    private $mockery_matcher_callback_wrapped_operations;
 
     protected function setUp() : void
     {
         $this->filesystem     = \Mockery::mock(FilesystemInterface::class);
         $this->path_allocator = \Mockery::mock(LFSObjectPathAllocator::class);
         $this->dao            = \Mockery::mock(LFSObjectDAO::class);
-        $this->mockery_matcher_callback_wrapped_operations = \Mockery::on(
-            function (callable $operations) {
-                $operations($this->dao);
-                return true;
-            }
-        );
     }
 
     public function testDanglingObjectsAreRemoved()
     {
-        $lfs_object_remover = new LFSObjectRemover($this->dao, $this->filesystem, $this->path_allocator);
+        $lfs_object_remover = new LFSObjectRemover(
+            $this->dao,
+            new DBTransactionExecutorPassthrough(),
+            $this->filesystem,
+            $this->path_allocator
+        );
 
-        $this->dao->shouldReceive('wrapAtomicOperations')
-            ->with($this->mockery_matcher_callback_wrapped_operations);
         $this->dao->shouldReceive('searchUnusedObjects')->andReturns([
             ['id' => 123, 'object_oid' => 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 'object_size' => 741],
             ['id' => 456, 'object_oid' => 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb', 'object_size' => 852],
@@ -68,10 +65,13 @@ class LFSObjectRemoverTest extends TestCase
 
     public function testRemovingADanglingObjectNotPresentOnTheFilesystemWorks()
     {
-        $lfs_object_remover = new LFSObjectRemover($this->dao, $this->filesystem, $this->path_allocator);
+        $lfs_object_remover = new LFSObjectRemover(
+            $this->dao,
+            new DBTransactionExecutorPassthrough(),
+            $this->filesystem,
+            $this->path_allocator
+        );
 
-        $this->dao->shouldReceive('wrapAtomicOperations')
-            ->with($this->mockery_matcher_callback_wrapped_operations);
         $this->dao->shouldReceive('searchUnusedObjects')->andReturns([
             ['id' => 123, 'object_oid' => 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 'object_size' => 741]
         ]);
@@ -86,10 +86,13 @@ class LFSObjectRemoverTest extends TestCase
 
     public function testReferenceToTheDanglingObjectIsKeptWhenDeletionFails()
     {
-        $lfs_object_remover = new LFSObjectRemover($this->dao, $this->filesystem, $this->path_allocator);
+        $lfs_object_remover = new LFSObjectRemover(
+            $this->dao,
+            new DBTransactionExecutorPassthrough(),
+            $this->filesystem,
+            $this->path_allocator
+        );
 
-        $this->dao->shouldReceive('wrapAtomicOperations')
-            ->with($this->mockery_matcher_callback_wrapped_operations);
         $this->dao->shouldReceive('searchUnusedObjects')->andReturns([
             ['id' => 123, 'object_oid' => 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 'object_size' => 741]
         ]);

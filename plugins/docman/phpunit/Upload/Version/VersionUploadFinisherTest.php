@@ -30,6 +30,7 @@ use PHPUnit\Framework\TestCase;
 use Tuleap\Docman\REST\v1\DocmanItemsEventAdder;
 use Tuleap\Docman\Upload\DocumentAlreadyUploadedInformation;
 use Tuleap\ForgeConfigSandbox;
+use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
 class VersionUploadFinisherTest extends TestCase
 {
@@ -72,6 +73,7 @@ class VersionUploadFinisherTest extends TestCase
             $this->version_factory,
             $this->event_manager,
             $this->on_going_upload_dao,
+            new DBTransactionExecutorPassthrough(),
             $this->file_storage,
             new \Docman_MIMETypeDetector(),
             $this->user_manager,

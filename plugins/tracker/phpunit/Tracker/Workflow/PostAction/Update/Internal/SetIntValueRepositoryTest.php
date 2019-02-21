@@ -31,6 +31,7 @@ use Mockery\MockInterface;
 use PHPUnit\Framework\TestCase;
 use Transition_PostAction_Field_IntDao;
 use Tuleap\DB\DataAccessObject;
+use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Tracker\Workflow\PostAction\Update\SetIntValue;
 use Tuleap\Tracker\Workflow\PostAction\Update\TransitionFactory;
 
@@ -49,27 +50,15 @@ class SetIntValueRepositoryTest extends TestCase
     private $set_int_value_dao;
 
     /**
-     * @var MockInterface
-     */
-    private $pdo_wrapper;
-
-    /**
      * @before
      */
     public function createRepository()
     {
         $this->set_int_value_dao = Mockery::mock(Transition_PostAction_Field_IntDao::class);
 
-        $this->pdo_wrapper = Mockery::mock(DataAccessObject::class);
-        $this->pdo_wrapper
-            ->shouldReceive('wrapAtomicOperations')
-            ->andReturnUsing(function (callable $operation) {
-                $operation();
-            });
-
         $this->set_int_value_repository = new SetIntValueRepository(
             $this->set_int_value_dao,
-            $this->pdo_wrapper
+            new DBTransactionExecutorPassthrough()
         );
     }
 

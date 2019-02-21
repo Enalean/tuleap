@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,34 +22,27 @@ declare(strict_types=1);
 
 namespace Tuleap\DB;
 
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use ParagonIE\EasyDB\EasyDB;
+use PHPUnit\Framework\TestCase;
 
-abstract class DataAccessObject
+final class DBTransactionExecutorWithConnectionTest extends TestCase
 {
-    /**
-     * @var DBConnection
-     */
-    private $db_connection;
+    use MockeryPHPUnitIntegration;
 
-    public function __construct(?DBConnection $db_connection = null)
+    public function testTransactionIsGivenToTheUnderlyingDB() : void
     {
-        $this->db_connection = $db_connection;
-        if ($this->db_connection === null) {
-            $this->db_connection = DBFactory::getMainTuleapDBConnection();
-        }
-    }
+        $db_connection = \Mockery::mock(DBConnection::class);
 
-    final protected function getDB() : EasyDB
-    {
-        return $this->db_connection->getDB();
-    }
+        $transaction_executor = new DBTransactionExecutorWithConnection($db_connection);
 
-    /**
-     * Returns the number of affected rows by the LAST query.
-     * Must be called immediately after performing a query.
-     */
-    public function foundRows() : int
-    {
-        return (int) $this->getDB()->single('SELECT FOUND_ROWS()');
+        $callable = function () {
+        };
+
+        $db = \Mockery::mock(EasyDB::class);
+        $db_connection->shouldReceive('getDB')->andReturn($db);
+        $db->shouldReceive('tryFlatTransaction')->with($callable)->once();
+
+        $transaction_executor->execute($callable);
     }
 }

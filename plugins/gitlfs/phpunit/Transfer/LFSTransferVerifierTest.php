@@ -28,6 +28,7 @@ use Tuleap\GitLFS\LFSObject\LFSObjectDAO;
 use Tuleap\GitLFS\LFSObject\LFSObjectID;
 use Tuleap\GitLFS\LFSObject\LFSObjectPathAllocator;
 use Tuleap\GitLFS\LFSObject\LFSObjectRetriever;
+use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
 class LFSTransferVerifierTest extends TestCase
 {
@@ -37,10 +38,6 @@ class LFSTransferVerifierTest extends TestCase
     private $lfs_object_retriever;
     private $path_allocator;
     private $dao;
-    /**
-     * @var \Mockery\Matcher\Closure
-     */
-    private $mockery_matcher_callback_wrapped_operations;
 
     protected function setUp() : void
     {
@@ -48,13 +45,6 @@ class LFSTransferVerifierTest extends TestCase
         $this->lfs_object_retriever = \Mockery::mock(LFSObjectRetriever::class);
         $this->path_allocator       = \Mockery::mock(LFSObjectPathAllocator::class);
         $this->dao                  = \Mockery::mock(LFSObjectDAO::class);
-
-        $this->mockery_matcher_callback_wrapped_operations = \Mockery::on(
-            function (callable $operations) {
-                $operations($this->dao);
-                return true;
-            }
-        );
     }
 
     public function testReadyObjectIsMarkedAsAvailable()
@@ -63,7 +53,8 @@ class LFSTransferVerifierTest extends TestCase
             $this->filesystem,
             $this->lfs_object_retriever,
             $this->path_allocator,
-            $this->dao
+            $this->dao,
+            new DBTransactionExecutorPassthrough()
         );
 
         $ready_path = 'ready-path';
@@ -74,9 +65,6 @@ class LFSTransferVerifierTest extends TestCase
         $this->lfs_object_retriever->shouldReceive('doesLFSObjectExistsForRepository')->andReturns(false);
         $this->filesystem->shouldReceive('has')->with($ready_path)->andReturns(true);
         $this->lfs_object_retriever->shouldReceive('doesLFSObjectExists')->andReturns(false);
-
-        $this->dao->shouldReceive('wrapAtomicOperations')
-            ->with($this->mockery_matcher_callback_wrapped_operations);
 
         $lfs_object = $lfs_object = new LFSObject(
             new LFSObjectID('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'),
@@ -98,7 +86,8 @@ class LFSTransferVerifierTest extends TestCase
             $this->filesystem,
             $this->lfs_object_retriever,
             $this->path_allocator,
-            $this->dao
+            $this->dao,
+            new DBTransactionExecutorPassthrough()
         );
 
         $ready_path = 'ready-path';
@@ -127,7 +116,8 @@ class LFSTransferVerifierTest extends TestCase
             $this->filesystem,
             $this->lfs_object_retriever,
             $this->path_allocator,
-            $this->dao
+            $this->dao,
+            new DBTransactionExecutorPassthrough()
         );
 
         $ready_path = 'ready-path';

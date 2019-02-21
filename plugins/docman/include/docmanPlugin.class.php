@@ -27,15 +27,14 @@
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\CLI\Events\GetWhitelistedKeys;
 use Tuleap\DB\DBFactory;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\ApprovalTable\ApprovalTableStateMapper;
 use Tuleap\Docman\DocmanSettingsSiteAdmin\DocmanSettingsAdminController;
 use Tuleap\Docman\DocmanSettingsSiteAdmin\DocmanSettingsAdminSaveController;
 use Tuleap\Docman\DocmanSettingsSiteAdmin\DocumentSettingsSaver;
 use Tuleap\Docman\ExternalLinks\DocmanHTTPControllerProxy;
-use Tuleap\Docman\ExternalLinks\ExternalLink;
 use Tuleap\Docman\ExternalLinks\ExternalLinkParametersExtractor;
-use Tuleap\Docman\ExternalLinks\LegacyLink;
 use Tuleap\Docman\Notifications\NotificationsForProjectMemberCleaner;
 use Tuleap\Docman\Notifications\NotifiedPeopleRetriever;
 use Tuleap\Docman\Notifications\UGroupsRetriever;
@@ -61,7 +60,6 @@ use Tuleap\Docman\Upload\Version\VersionUploadCleaner;
 use Tuleap\Docman\Upload\Version\VersionUploadFinisher;
 use Tuleap\Docman\Upload\Version\VersionUploadPathAllocator;
 use Tuleap\Http\HTTPFactoryBuilder;
-use Tuleap\Http\MessageFactoryBuilder;
 use Tuleap\Layout\PaginationPresenter;
 use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;
@@ -1298,7 +1296,7 @@ class DocmanPlugin extends Plugin
                     ),
                     new \Tuleap\Docman\Upload\FileBeingUploadedWriter(
                         $path_allocator,
-                        \Tuleap\DB\DBFactory::getMainTuleapDBConnection()
+                        DBFactory::getMainTuleapDBConnection()
                     ),
                     new \Tuleap\Docman\Upload\DocumentBeingUploadedLocker(
                         $path_allocator
@@ -1314,7 +1312,8 @@ class DocmanPlugin extends Plugin
                         new Docman_ItemDao(),
                         new Docman_FileStorage($root_path),
                         new Docman_MIMETypeDetector(),
-                        UserManager::instance()
+                        UserManager::instance(),
+                        new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
                     ),
                     new \Tuleap\Docman\Upload\Document\DocumentUploadCanceler(
                         $path_allocator,
@@ -1355,6 +1354,7 @@ class DocmanPlugin extends Plugin
                         new Docman_VersionFactory(),
                         $event_manager,
                         $version_to_upload_dao,
+                        new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
                         new Docman_FileStorage($root_path),
                         new Docman_MIMETypeDetector(),
                         UserManager::instance(),

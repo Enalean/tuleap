@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - 2019. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\DB\DBFactory;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\MembershipDelegationDao;
 use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
@@ -60,7 +62,12 @@ $user_manager        = UserManager::instance();
 $members_controller  = new MembersController(
     $request,
     $user_manager,
-    new DynamicUGroupMembersUpdater(new UserPermissionsDao(), $ugroup_binding, $event_manager)
+    new DynamicUGroupMembersUpdater(
+        new UserPermissionsDao(),
+        new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
+        $ugroup_binding,
+        $event_manager
+    )
 
 );
 

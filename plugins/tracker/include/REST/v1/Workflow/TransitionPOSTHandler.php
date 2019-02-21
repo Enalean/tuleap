@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\REST\v1\Workflow;
 
 use Luracast\Restler\RestException;
-use Tuleap\DB\TransactionExecutor;
+use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\REST\I18NRestException;
 use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\REST\UserManager;
@@ -51,7 +51,7 @@ class TransitionPOSTHandler
     private $transition_factory;
     /** @var TransitionValidator */
     private $validator;
-    /** @var TransactionExecutor */
+    /** @var DBTransactionExecutor */
     private $transaction_executor;
     /** @var TransitionReplicator */
     private $transition_replicator;
@@ -66,7 +66,7 @@ class TransitionPOSTHandler
         WorkflowFactory $workflow_factory,
         \TransitionFactory $transition_factory,
         TransitionValidator $validator,
-        TransactionExecutor $transaction_executor,
+        DBTransactionExecutor $transaction_executor,
         TransitionReplicator $conditions_replicator,
         TransitionRetriever $transition_retriever
     ) {

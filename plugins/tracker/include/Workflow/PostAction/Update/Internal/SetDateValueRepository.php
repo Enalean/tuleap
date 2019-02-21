@@ -24,7 +24,7 @@ namespace Tuleap\Tracker\Workflow\PostAction\Update\Internal;
 use DataAccessQueryException;
 use Transition;
 use Transition_PostAction_Field_DateDao;
-use Tuleap\DB\DataAccessObject;
+use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Tracker\Workflow\PostAction\Update\SetDateValue;
 
 /**
@@ -36,16 +36,17 @@ class SetDateValueRepository
      * @var Transition_PostAction_Field_DateDao
      */
     private $set_date_value_dao;
-
     /**
-     * @var DataAccessObject
+     * @var DBTransactionExecutor
      */
-    private $pdo_wrapper;
+    private $transaction_executor;
 
-    public function __construct(Transition_PostAction_Field_DateDao $set_date_value_dao, DataAccessObject $pdo_wrapper)
-    {
-        $this->set_date_value_dao = $set_date_value_dao;
-        $this->pdo_wrapper        = $pdo_wrapper;
+    public function __construct(
+        Transition_PostAction_Field_DateDao $set_date_value_dao,
+        DBTransactionExecutor $transaction_executor
+    ) {
+        $this->set_date_value_dao   = $set_date_value_dao;
+        $this->transaction_executor = $transaction_executor;
     }
 
     /**
@@ -53,7 +54,7 @@ class SetDateValueRepository
      */
     public function create(Transition $transition, SetDateValue $set_date_value)
     {
-        $this->pdo_wrapper->wrapAtomicOperations(function () use ($transition, $set_date_value) {
+        $this->transaction_executor->execute(function () use ($transition, $set_date_value) {
             $id_or_failure = $this->set_date_value_dao->create($transition->getId());
             if ($id_or_failure === false) {
                 throw new DataAccessQueryException(

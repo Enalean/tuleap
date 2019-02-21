@@ -20,6 +20,7 @@
 
 namespace Tuleap\Docman\Upload\Document;
 
+use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Docman\Upload\UploadCreationConflictException;
 use Tuleap\Docman\Upload\UploadCreationFileMismatchException;
 use Tuleap\Docman\Upload\UploadMaxSizeExceededException;
@@ -32,10 +33,15 @@ class DocumentToUploadCreator
      * @var DocumentOngoingUploadDAO
      */
     private $dao;
+    /**
+     * @var DBTransactionExecutor
+     */
+    private $transaction_executor;
 
-    public function __construct(DocumentOngoingUploadDAO $dao)
+    public function __construct(DocumentOngoingUploadDAO $dao, DBTransactionExecutor $transaction_executor)
     {
-        $this->dao = $dao;
+        $this->dao                  = $dao;
+        $this->transaction_executor = $transaction_executor;
     }
 
     public function create(
@@ -54,7 +60,7 @@ class DocumentToUploadCreator
             );
         }
 
-        $this->dao->wrapAtomicOperations(function (DocumentOngoingUploadDAO $dao) use (
+        $this->transaction_executor->execute(function () use (
             $parent_item,
             $user,
             $current_time,
@@ -64,7 +70,7 @@ class DocumentToUploadCreator
             $filesize,
             &$item_id
         ) {
-            $rows = $dao->searchDocumentOngoingUploadByParentIDTitleAndExpirationDate(
+            $rows = $this->dao->searchDocumentOngoingUploadByParentIDTitleAndExpirationDate(
                 $parent_item->getId(),
                 $title,
                 $current_time->getTimestamp()
@@ -86,7 +92,7 @@ class DocumentToUploadCreator
                 return;
             }
 
-            $item_id = $dao->saveDocumentOngoingUpload(
+            $item_id = $this->dao->saveDocumentOngoingUpload(
                 $this->getExpirationDate($current_time)->getTimestamp(),
                 $parent_item->getId(),
                 $title,

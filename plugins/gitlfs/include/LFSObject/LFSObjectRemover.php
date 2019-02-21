@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,6 +22,7 @@ namespace Tuleap\GitLFS\LFSObject;
 
 use League\Flysystem\FileNotFoundException;
 use League\Flysystem\FilesystemInterface;
+use Tuleap\DB\DBTransactionExecutor;
 
 class LFSObjectRemover
 {
@@ -29,6 +30,10 @@ class LFSObjectRemover
      * @var LFSObjectDAO
      */
     private $dao;
+    /**
+     * @var DBTransactionExecutor
+     */
+    private $transaction_executor;
     /**
      * @var FilesystemInterface
      */
@@ -40,18 +45,20 @@ class LFSObjectRemover
 
     public function __construct(
         LFSObjectDAO $dao,
+        DBTransactionExecutor $transaction_executor,
         FilesystemInterface $filesystem,
         LFSObjectPathAllocator $path_allocator
     ) {
-        $this->dao            = $dao;
-        $this->filesystem     = $filesystem;
-        $this->path_allocator = $path_allocator;
+        $this->dao                  = $dao;
+        $this->transaction_executor = $transaction_executor;
+        $this->filesystem           = $filesystem;
+        $this->path_allocator       = $path_allocator;
     }
 
     public function removeDanglingObjects()
     {
         $this->dao->deleteUnusableReferences();
-        $this->dao->wrapAtomicOperations(function () {
+        $this->transaction_executor->execute(function () {
             $unused_object_rows = $this->dao->searchUnusedObjects();
             foreach ($unused_object_rows as $unused_object_row) {
                 $lfs_object    = new LFSObject(

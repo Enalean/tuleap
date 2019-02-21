@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,6 +22,7 @@ namespace Tuleap\GitLFS\Transfer;
 
 use League\Flysystem\FileNotFoundException;
 use League\Flysystem\FilesystemInterface;
+use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\GitLFS\LFSObject\LFSObject;
 use Tuleap\GitLFS\LFSObject\LFSObjectDAO;
 use Tuleap\GitLFS\LFSObject\LFSObjectPathAllocator;
@@ -45,17 +46,23 @@ class LFSTransferVerifier
      * @var LFSObjectDAO
      */
     private $lfs_object_dao;
+    /**
+     * @var DBTransactionExecutor
+     */
+    private $transaction_executor;
 
     public function __construct(
         FilesystemInterface $filesystem,
         LFSObjectRetriever $lfs_object_retriever,
         LFSObjectPathAllocator $path_allocator,
-        LFSObjectDAO $lfs_object_dao
+        LFSObjectDAO $lfs_object_dao,
+        DBTransactionExecutor $transaction_executor
     ) {
         $this->filesystem           = $filesystem;
         $this->lfs_object_retriever = $lfs_object_retriever;
         $this->path_allocator       = $path_allocator;
         $this->lfs_object_dao       = $lfs_object_dao;
+        $this->transaction_executor = $transaction_executor;
     }
 
     public function verifyAndMarkLFSObjectAsAvailable(LFSObject $lfs_object, \GitRepository $repository)
@@ -87,9 +94,9 @@ class LFSTransferVerifier
             return;
         }
 
-        $this->lfs_object_dao->wrapAtomicOperations(function (LFSObjectDAO $dao) use ($lfs_object, $repository) {
-            $object_id = $dao->saveObject($lfs_object->getOID()->getValue(), $lfs_object->getSize());
-            $dao->saveObjectReference($object_id, $repository->getId());
+        $this->transaction_executor->execute(function () use ($lfs_object, $repository) {
+            $object_id = $this->lfs_object_dao->saveObject($lfs_object->getOID()->getValue(), $lfs_object->getSize());
+            $this->lfs_object_dao->saveObjectReference($object_id, $repository->getId());
             try {
                 $is_rename_success = $this->filesystem->rename(
                     $this->path_allocator->getPathForReadyToBeAvailableObject($repository, $lfs_object),

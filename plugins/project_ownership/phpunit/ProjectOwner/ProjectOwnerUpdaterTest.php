@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,6 +22,7 @@ namespace Tuleap\ProjectOwnership\ProjectOwner;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
 class ProjectOwnerUpdaterTest extends TestCase
 {
@@ -30,27 +31,15 @@ class ProjectOwnerUpdaterTest extends TestCase
      * @var \Mockery\MockInterface
      */
     private $dao;
-    /**
-     * @var \Mockery\Matcher\Closure
-     */
-    private $mockery_matcher_callback_wrapped_operations;
 
     protected function setUp() : void
     {
-        $this->dao                                         = \Mockery::mock(ProjectOwnerDAO::class);
-        $this->mockery_matcher_callback_wrapped_operations = \Mockery::on(
-            function (callable $operations) {
-                $operations($this->dao);
-                return true;
-            }
-        );
+        $this->dao = \Mockery::mock(ProjectOwnerDAO::class);
     }
 
     public function testProjectOwnerCanBeUpdated()
     {
         $this->dao->shouldReceive('save')->once();
-        $this->dao->shouldReceive('wrapAtomicOperations')
-            ->with($this->mockery_matcher_callback_wrapped_operations);
 
         $user = \Mockery::mock(\PFUser::class);
         $user->shouldReceive('getId')->andReturns('102');
@@ -58,15 +47,13 @@ class ProjectOwnerUpdaterTest extends TestCase
         $project = \Mockery::mock(\Project::class);
         $project->shouldReceive('getID')->andReturns('101');
 
-        $updater = new ProjectOwnerUpdater($this->dao);
+        $updater = new ProjectOwnerUpdater($this->dao, new DBTransactionExecutorPassthrough());
         $updater->updateProjectOwner($project, $user);
     }
 
     public function testProjectOwnerCannotBeSetIfNotAlreadyAProjectAdmin()
     {
         $this->dao->shouldReceive('save')->never();
-        $this->dao->shouldReceive('wrapAtomicOperations')
-            ->with($this->mockery_matcher_callback_wrapped_operations);
 
         $user = \Mockery::mock(\PFUser::class);
         $user->shouldReceive('getId')->andReturns('102');
@@ -74,7 +61,7 @@ class ProjectOwnerUpdaterTest extends TestCase
         $project = \Mockery::mock(\Project::class);
         $project->shouldReceive('getID')->andReturns('101');
 
-        $updater = new ProjectOwnerUpdater($this->dao);
+        $updater = new ProjectOwnerUpdater($this->dao, new DBTransactionExecutorPassthrough());
 
         $this->expectException(OnlyProjectAdministratorCanBeSetAsProjectOwnerException::class);
 

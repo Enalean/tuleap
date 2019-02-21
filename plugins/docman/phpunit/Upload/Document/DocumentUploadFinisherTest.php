@@ -28,6 +28,7 @@ use PHPUnit\Framework\TestCase;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadDAO;
 use Tuleap\Docman\Upload\DocumentAlreadyUploadedInformation;
 use Tuleap\ForgeConfigSandbox;
+use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
 class DocumentUploadFinisherTest extends TestCase
 {
@@ -74,7 +75,8 @@ class DocumentUploadFinisherTest extends TestCase
             $this->item_dao,
             $this->file_storage,
             new \Docman_MIMETypeDetector(),
-            $this->user_manager
+            $this->user_manager,
+            new DBTransactionExecutorPassthrough()
         );
 
 
@@ -82,14 +84,6 @@ class DocumentUploadFinisherTest extends TestCase
         $path_item_being_uploaded = $path_allocator->getPathForItemBeingUploaded($item_id_being_created);
         mkdir(dirname($path_item_being_uploaded), 0777, true);
         touch($path_item_being_uploaded);
-        $this->on_going_upload_dao->shouldReceive('wrapAtomicOperations')->with(
-            \Mockery::on(
-                function (callable $operations) {
-                    $operations($this->on_going_upload_dao);
-                    return true;
-                }
-            )
-        );
         $this->item_factory->shouldReceive('getItemFromDB')->andReturns(null, \Mockery::spy(\Docman_Item::class));
         $this->on_going_upload_dao->shouldReceive('searchDocumentOngoingUploadByItemID')->andReturns(
             [
