@@ -535,7 +535,6 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/crosstracker
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/document
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/project_ownership
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/projectlinks
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/tuleap_synchro
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/velocity
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/composer.json
@@ -1026,7 +1025,7 @@ fi
 %{APP_DIR}/src/www/assets/manifest.json
 %{APP_DIR}/src/www/assets/admindelegation
 %{APP_DIR}/src/www/assets/statistics
-%{APP_DIR}/src/www/assets/hudson
+%{APP_DIR}/src/www/assets/projectlinks
 %{APP_DIR}/src/www/assets/ckeditor-*
 %{APP_DIR}/src/www/codendi.css
 %{APP_DIR}/src/www/cvs
@@ -1218,6 +1217,7 @@ fi
 %files plugin-hudson
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/hudson
+%{APP_DIR}/src/www/assets/hudson
 
 %files plugin-hudson-svn
 %defattr(-,%{APP_USER},%{APP_USER},-)
