@@ -100,7 +100,7 @@ class Workflow_Dao extends DataAccessObject //phpcs:ignoreFile
     {
         $workflow_id = $this->da->escapeInt($workflow_id);
 
-        $sql = " UPDATE tracker_workflow SET is_legacy=0 WHERE workflow_id=$workflow_id";
+        $sql = "UPDATE tracker_workflow SET is_legacy=0 WHERE workflow_id=$workflow_id";
 
         return $this->update($sql);
     }
@@ -109,7 +109,16 @@ class Workflow_Dao extends DataAccessObject //phpcs:ignoreFile
     {
         $workflow_id = $this->da->escapeInt($workflow_id);
 
-        $sql = " UPDATE tracker_workflow SET is_advanced=1 WHERE workflow_id=$workflow_id";
+        $sql = "UPDATE tracker_workflow SET is_advanced=1 WHERE workflow_id=$workflow_id";
+
+        return $this->update($sql);
+    }
+
+    public function switchWorkflowToSimpleMode($workflow_id)
+    {
+        $workflow_id = $this->da->escapeInt($workflow_id);
+
+        $sql = "UPDATE tracker_workflow SET is_advanced=0 WHERE workflow_id=$workflow_id";
 
         return $this->update($sql);
     }

@@ -251,7 +251,7 @@ class TransitionFactory //phpcs:ignoreFile
      *
      * @param Workflow $workflow The workflow
      *
-     * @return Array of Transition
+     * @return Transition[]
      */
     public function getTransitions(Workflow $workflow)
     {
