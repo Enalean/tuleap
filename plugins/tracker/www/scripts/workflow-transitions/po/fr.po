@@ -150,6 +150,9 @@ msgstr "Commencez par en ajouter une."
 msgid "Switch to advanced configuration"
 msgstr "Passer à la configuration avancée"
 
+msgid "Switch to simple configuration"
+msgstr "Passer à la configuration simple"
+
 msgid "The field on which the transitions are based has no selectable value"
 msgstr ""
 "Le champ sur lequel sont basées les transitions ne contient aucune valeur"
@@ -213,6 +216,15 @@ msgstr "Attendez une minute..."
 
 msgid "You're about to switch to advanced configuration mode."
 msgstr "Vous êtes sur le point de passer à la configuration avancée."
+
+msgid ""
+"You're about to switch to simple configuration mode.\n"
+"                The first configuration in the destination state column will "
+"be applied to the whole state."
+msgstr ""
+"Vous êtes sur le point de passer à la configuration simple.\n"
+"La première configuration de la colonne de l'état destination sera copiée "
+"pour tout l'état."
 
 msgid ""
 "artifactId: identifier of the artifact where the transition happens (integer)"
