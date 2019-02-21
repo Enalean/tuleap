@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -27,6 +27,7 @@ use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
 use Tuleap\DB\DBConnection;
 use Tuleap\Docman\Tus\TusFileInformation;
+use Tuleap\Docman\Upload\Document\DocumentUploadPathAllocator;
 use Tuleap\ForgeConfigSandbox;
 
 class DocumentBeingUploadedWriterTest extends TestCase
@@ -39,12 +40,12 @@ class DocumentBeingUploadedWriterTest extends TestCase
 
         $path_allocator = new DocumentUploadPathAllocator();
         $db_connection  = \Mockery::mock(DBConnection::class);
-        $writer         = new DocumentBeingUploadedWriter($path_allocator, $db_connection);
+        $writer         = new FileBeingUploadedWriter($path_allocator, $db_connection);
 
         $db_connection->shouldReceive('reconnectAfterALongRunningProcess')->twice();
 
         $item_id          = 12;
-        $file_information = new DocumentBeingUploadedInformation($item_id, 123, 0);
+        $file_information = new FileBeingUploadedInformation($item_id, 123, 0);
 
         $content      = 'Body content';
         $input_stream = fopen('php://memory', 'rb+');
@@ -71,13 +72,13 @@ class DocumentBeingUploadedWriterTest extends TestCase
 
         $path_allocator = new DocumentUploadPathAllocator();
         $db_connection  = \Mockery::mock(DBConnection::class);
-        $writer         = new DocumentBeingUploadedWriter($path_allocator, $db_connection);
+        $writer         = new FileBeingUploadedWriter($path_allocator, $db_connection);
 
         $db_connection->shouldReceive('reconnectAfterALongRunningProcess')->once();
 
         $item_id          = 12;
         $file_length      = 123;
-        $file_information = new DocumentBeingUploadedInformation($item_id, $file_length, 0);
+        $file_information = new FileBeingUploadedInformation($item_id, $file_length, 0);
 
         $content      = str_repeat('A', $file_length * 2);
         $input_stream = fopen('php://memory', 'rb+');
@@ -95,7 +96,7 @@ class DocumentBeingUploadedWriterTest extends TestCase
 
     public function testInputThatIsNotAResourceIsRejected() : void
     {
-        $writer = new DocumentBeingUploadedWriter(new DocumentUploadPathAllocator(), \Mockery::mock(DBConnection::class));
+        $writer = new FileBeingUploadedWriter(new DocumentUploadPathAllocator(), \Mockery::mock(DBConnection::class));
 
         $this->expectException(\InvalidArgumentException::class);
 

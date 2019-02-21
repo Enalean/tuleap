@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,72 +20,72 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Docman\Upload;
+namespace Tuleap\Docman\Upload\Version;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
-use Tuleap\Docman\Upload\Document\DocumentOngoingUploadDAO;
 
-class DocumentBeingUploadedInformationProviderTest extends TestCase
+class VersionBeingUploadedInformationProviderTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
     public function testFileInformationCanBeProvided() : void
     {
-        $path_allocator = new DocumentUploadPathAllocator();
-        $dao            = \Mockery::mock(DocumentOngoingUploadDAO::class);
+        $path_allocator = new VersionUploadPathAllocator();
+        $dao            = \Mockery::mock(DocumentOnGoingVersionToUploadDAO::class);
         $item_factory   = \Mockery::mock(\Docman_ItemFactory::class);
-        $data_store     = new DocumentBeingUploadedInformationProvider($path_allocator, $dao, $item_factory);
+        $data_store     = new VersionBeingUploadedInformationProvider($dao, $item_factory, $path_allocator);
 
-        $dao->shouldReceive('searchDocumentOngoingUploadByItemIDUserIDAndExpirationDate')->andReturns([
-            'filesize' => 123456
+        $dao->shouldReceive('searchDocumentVersionOngoingUploadByVersionIdAndExpirationDate')->andReturns([
+            'filesize' => 123456,
+            'item_id' => 5
         ]);
         $item_factory->shouldReceive('getItemFromDb')->andReturns(null);
 
         $request = \Mockery::mock(ServerRequestInterface::class);
-        $item_id = 12;
-        $request->shouldReceive('getAttribute')->with('item_id')->andReturns((string) $item_id);
+        $id = 12;
+        $request->shouldReceive('getAttribute')->with('id')->andReturns((string) $id);
         $request->shouldReceive('getAttribute')->with('user_id')->andReturns('102');
 
         $file_information = $data_store->getFileInformation($request);
 
-        $this->assertSame($item_id, $file_information->getID());
+        $this->assertSame($id, $file_information->getID());
         $this->assertSame(123456, $file_information->getLength());
         $this->assertSame(0, $file_information->getOffset());
     }
 
     public function testFileInformationCanBeProvidedWhenTheFileHasAlreadyBeenUploaded() : void
     {
-        $path_allocator = new DocumentUploadPathAllocator();
-        $dao            = \Mockery::mock(DocumentOngoingUploadDAO::class);
+        $path_allocator = new VersionUploadPathAllocator();
+        $dao            = \Mockery::mock(DocumentOnGoingVersionToUploadDAO::class);
         $item_factory   = \Mockery::mock(\Docman_ItemFactory::class);
-        $data_store     = new DocumentBeingUploadedInformationProvider($path_allocator, $dao, $item_factory);
+        $data_store     = new VersionBeingUploadedInformationProvider($dao, $item_factory, $path_allocator);
 
-        $dao->shouldReceive('searchDocumentOngoingUploadByItemIDUserIDAndExpirationDate')->andReturns([
-            'filesize' => 123456
+        $dao->shouldReceive('searchDocumentVersionOngoingUploadByVersionIdAndExpirationDate')->andReturns([
+            'filesize' => 123456,
+            'item_id' => 5
         ]);
         $item_factory->shouldReceive('getItemFromDb')->andReturns(\Mockery::mock(\Docman_Item::class));
 
         $request = \Mockery::mock(ServerRequestInterface::class);
-        $item_id = 12;
-        $request->shouldReceive('getAttribute')->with('item_id')->andReturns((string) $item_id);
+        $id = 12;
+        $request->shouldReceive('getAttribute')->with('id')->andReturns((string) $id);
         $request->shouldReceive('getAttribute')->with('user_id')->andReturns('102');
 
         $file_information = $data_store->getFileInformation($request);
 
-        $this->assertSame($item_id, $file_information->getID());
+        $this->assertSame($id, $file_information->getID());
         $this->assertSame(123456, $file_information->getLength());
         $this->assertSame(123456, $file_information->getOffset());
     }
 
     public function testFileInformationCannotBeFoundIfRequestAttributesAreMissing() : void
     {
-        $data_store = new DocumentBeingUploadedInformationProvider(
-            new DocumentUploadPathAllocator(),
-            \Mockery::mock(DocumentOngoingUploadDAO::class),
-            \Mockery::mock(\Docman_ItemFactory::class)
-        );
+        $path_allocator = new VersionUploadPathAllocator();
+        $dao            = \Mockery::mock(DocumentOnGoingVersionToUploadDAO::class);
+        $item_factory   = \Mockery::mock(\Docman_ItemFactory::class);
+        $data_store     = new VersionBeingUploadedInformationProvider($dao, $item_factory, $path_allocator);
 
         $request = \Mockery::mock(ServerRequestInterface::class);
         $request->shouldReceive('getAttribute')->andReturns(null);
@@ -95,19 +95,16 @@ class DocumentBeingUploadedInformationProviderTest extends TestCase
 
     public function testFileInformationCannotBeFoundIfThereIsNotAValidEntryInTheDatabase() : void
     {
-        $dao           = \Mockery::mock(DocumentOngoingUploadDAO::class);
-        $item_factory  = \Mockery::mock(\Docman_ItemFactory::class);
-        $data_store = new DocumentBeingUploadedInformationProvider(
-            new DocumentUploadPathAllocator(),
-            $dao,
-            $item_factory
-        );
+        $path_allocator = new VersionUploadPathAllocator();
+        $dao            = \Mockery::mock(DocumentOnGoingVersionToUploadDAO::class);
+        $item_factory   = \Mockery::mock(\Docman_ItemFactory::class);
+        $data_store     = new VersionBeingUploadedInformationProvider($dao, $item_factory, $path_allocator);
 
-        $dao->shouldReceive('searchDocumentOngoingUploadByItemIDUserIDAndExpirationDate')->andReturns([]);
+        $dao->shouldReceive('searchDocumentVersionOngoingUploadByVersionIdAndExpirationDate')->andReturns([]);
         $item_factory->shouldReceive('getItemFromDb')->andReturns(null);
 
         $request = \Mockery::mock(ServerRequestInterface::class);
-        $request->shouldReceive('getAttribute')->with('item_id')->andReturns('12');
+        $request->shouldReceive('getAttribute')->with('id')->andReturns('12');
         $request->shouldReceive('getAttribute')->with('user_id')->andReturns('102');
 
 

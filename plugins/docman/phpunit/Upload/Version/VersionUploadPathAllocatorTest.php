@@ -18,14 +18,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace Tuleap\Docman\Upload\Version;
 
-namespace Tuleap\Docman\Upload;
+use PHPUnit\Framework\TestCase;
 
-final class DocumentBeingUploadedLockVerificationException extends \RuntimeException
+class VersionUploadPathAllocatorTest extends TestCase
 {
-    public function __construct(string $file_path)
+    public function testTheSamePathIsAlwaysAllocatedForAGivenItemID()
     {
-        parent::__construct("Could not verify the presence of lock for $file_path");
+        $allocator = new VersionUploadPathAllocator();
+
+        $this->assertSame(
+            $allocator->getPathForItemBeingUploaded(1),
+            $allocator->getPathForItemBeingUploaded(1)
+        );
     }
 }

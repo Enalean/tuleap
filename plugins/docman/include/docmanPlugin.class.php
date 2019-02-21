@@ -46,6 +46,12 @@ use Tuleap\Docman\REST\v1\MetadataRepresentationBuilder;
 use Tuleap\Docman\Tus\TusServer;
 use Tuleap\Docman\Upload\FileUploadController;
 use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\Docman\Upload\Version\DocumentOnGoingVersionToUploadDAO;
+use Tuleap\Docman\Upload\Version\VersionBeingUploadedInformationProvider;
+use Tuleap\Docman\Upload\FileBeingUploadedWriter;
+use Tuleap\Docman\Upload\Version\VersionDataStore;
+use Tuleap\Docman\Upload\Version\VersionUploadPathAllocator;
+use Tuleap\Http\MessageFactoryBuilder;
 use Tuleap\Layout\PaginationPresenter;
 use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;
@@ -1267,24 +1273,24 @@ class DocmanPlugin extends Plugin
 
         $document_ongoing_upload_dao = new \Tuleap\Docman\Upload\Document\DocumentOngoingUploadDAO();
         $root_path                   = $this->getPluginInfo()->getPropertyValueForName('docman_root');
-        $path_allocator              = new \Tuleap\Docman\Upload\DocumentUploadPathAllocator();
+        $path_allocator              = new \Tuleap\Docman\Upload\Document\DocumentUploadPathAllocator();
         return new FileUploadController(
             new TusServer(
                 HTTPFactoryBuilder::responseFactory(),
-                new \Tuleap\Docman\Upload\DocumentDataStore(
-                    new \Tuleap\Docman\Upload\DocumentBeingUploadedInformationProvider(
+                new \Tuleap\Docman\Upload\Document\DocumentDataStore(
+                    new \Tuleap\Docman\Upload\Document\DocumentBeingUploadedInformationProvider(
                         $path_allocator,
                         $document_ongoing_upload_dao,
                         $this->getItemFactory()
                     ),
-                    new \Tuleap\Docman\Upload\DocumentBeingUploadedWriter(
+                    new \Tuleap\Docman\Upload\FileBeingUploadedWriter(
                         $path_allocator,
                         \Tuleap\DB\DBFactory::getMainTuleapDBConnection()
                     ),
                     new \Tuleap\Docman\Upload\DocumentBeingUploadedLocker(
                         $path_allocator
                     ),
-                    new \Tuleap\Docman\Upload\DocumentUploadFinisher(
+                    new \Tuleap\Docman\Upload\Document\DocumentUploadFinisher(
                         new BackendLogger(),
                         $path_allocator,
                         $this->getItemFactory(),
@@ -1297,7 +1303,7 @@ class DocmanPlugin extends Plugin
                         new Docman_MIMETypeDetector(),
                         UserManager::instance()
                     ),
-                    new \Tuleap\Docman\Upload\DocumentUploadCanceler(
+                    new \Tuleap\Docman\Upload\Document\DocumentUploadCanceler(
                         $path_allocator,
                         $document_ongoing_upload_dao
                     )
@@ -1310,15 +1316,41 @@ class DocmanPlugin extends Plugin
         );
     }
 
+    public function routeUploadsVersionFile(): FileUploadController
+    {
+        $path_allocator = new VersionUploadPathAllocator();
+        return new FileUploadController(
+            new TusServer(
+                HTTPFactoryBuilder::build(),
+                new VersionDataStore(
+                    new VersionBeingUploadedInformationProvider(
+                        new DocumentOnGoingVersionToUploadDAO(),
+                        $this->getItemFactory(),
+                        $path_allocator
+                    ),
+                    new FileBeingUploadedWriter(
+                        $path_allocator,
+                        \Tuleap\DB\DBFactory::getMainTuleapDBConnection()
+                    )
+                )
+            ),
+            new \Tuleap\Docman\Tus\TusCORSMiddleware(),
+            new \Tuleap\REST\TuleapRESTCORSMiddleware(),
+            \Tuleap\REST\UserManager::build(),
+            new \Tuleap\REST\BasicAuthentication()
+        );
+    }
+
     public function collectRoutesEvent(CollectRoutesEvent $event)
     {
-        $event->getRouteCollector()->addRoute(['OPTIONS', 'HEAD', 'PATCH', 'DELETE'], '/uploads/docman/file/{item_id:\d+}', $this->getRouteHandler('routeUploadsDocmanFile'));
+        $event->getRouteCollector()->addRoute(['OPTIONS', 'HEAD', 'PATCH', 'DELETE'], '/uploads/docman/file/{id:\d+}', $this->getRouteHandler('routeUploadsDocmanFile'));
+        $event->getRouteCollector()->addRoute(['OPTIONS', 'HEAD', 'PATCH', 'DELETE'], '/uploads/docman/version/{id:\d+}', $this->getRouteHandler('routeUploadsVersionFile'));
     }
 
     private function cleanUnusedResources()
     {
         $cleaner = new \Tuleap\Docman\Upload\DocumentUploadCleaner(
-            new \Tuleap\Docman\Upload\DocumentUploadPathAllocator(),
+            new \Tuleap\Docman\Upload\Document\DocumentUploadPathAllocator(),
             new \Tuleap\Docman\Upload\Document\DocumentOngoingUploadDAO()
         );
         $cleaner->deleteDanglingDocumentToUpload(new \DateTimeImmutable());

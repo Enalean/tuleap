@@ -29,7 +29,7 @@ use Tuleap\Docman\rest\DocmanDataBuilder;
 
 require_once __DIR__ . '/../bootstrap.php';
 
-class DocmanFilesTest extends DocmanBase
+class DocmanItemsTestFiles extends DocmanBase
 {
     public function testGetRootId(): int
     {
@@ -226,6 +226,83 @@ class DocmanFilesTest extends DocmanBase
         );
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals("/uploads/docman/version/2", $response->json()['upload_href']);
+    }
+
+    /**
+     * @depends testGetRootId
+     */
+    public function testPatchFileDocument(int $root_id) : void
+    {
+        $query     = json_encode([
+                                     'title'           => 'File2',
+                                     'parent_id'       => $root_id,
+                                     'type'            => 'file',
+                                     'file_properties' => ['file_name' => 'file1', 'file_size' => 0]
+                                 ]);
+
+        $response1 = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post('docman_items', null, $query)
+        );
+        $this->assertEquals(201, $response1->getStatusCode());
+        $this->assertEmpty($response1->json()['file_properties']['upload_href']);
+
+        $file_item_response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->get($response1->json()['uri'])
+        );
+        $this->assertEquals(200, $file_item_response->getStatusCode());
+        $this->assertEquals('file', $file_item_response->json()['type']);
+
+        $file_id = $response1->json()['id'];
+
+        $file_size = 123;
+        $put_resource = json_encode(
+            [
+                'version_title'   => 'My version title',
+                'changelog'       => 'I have changed',
+                'file_properties' => ['file_name' => 'file1', 'file_size' => $file_size]
+            ]
+        );
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->patch('docman_files/' . $file_id, null, $put_resource)
+        );
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertNotEmpty($response->json()['upload_href']);
+
+        $response2 = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->patch('docman_files/' . $file_id, null, $put_resource)
+        );
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertSame(
+            $response->json()['upload_href'],
+            $response2->json()['upload_href']
+        );
+
+        $tus_client = new Client(
+            str_replace('/api/v1', '', $this->client->getBaseUrl()),
+            $this->client->getConfig()
+        );
+        $tus_client->setSslVerification(false, false, false);
+        $tus_response_upload = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $tus_client->patch(
+                $response->json()['upload_href'],
+                [
+                    'Tus-Resumable' => '1.0.0',
+                    'Content-Type'  => 'application/offset+octet-stream',
+                    'Upload-Offset' => '0'
+                ],
+                str_repeat('A', $file_size)
+            )
+        );
+
+
+        $this->assertEquals(204, $tus_response_upload->getStatusCode());
+        $this->assertEquals([$file_size], $tus_response_upload->getHeader('Upload-Offset')->toArray());
     }
 
     /**

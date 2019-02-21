@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,19 +18,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Docman\Upload;
 
-use PHPUnit\Framework\TestCase;
-
-class DocumentUploadPathAllocatorTest extends TestCase
+final class UploadLockVerificationException extends \RuntimeException
 {
-    public function testTheSamePathIsAlwaysAllocatedForAGivenItemID()
+    public function __construct(string $file_path)
     {
-        $allocator = new DocumentUploadPathAllocator();
-
-        $this->assertSame(
-            $allocator->getPathForItemBeingUploaded(1),
-            $allocator->getPathForItemBeingUploaded(1)
-        );
+        parent::__construct("Could not verify the presence of lock for $file_path");
     }
 }

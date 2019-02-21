@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Docman\Upload;
+namespace Tuleap\Docman\Upload\Document;
 
 use Docman_ItemFactory;
 use Docman_VersionFactory;
@@ -26,6 +26,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadDAO;
+use Tuleap\Docman\Upload\DocumentAlreadyUploadedInformation;
 use Tuleap\ForgeConfigSandbox;
 
 class DocumentUploadFinisherTest extends TestCase
