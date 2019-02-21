@@ -1014,5 +1014,90 @@
                 <permission scope="field" REF="F8457" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
             </permissions>
         </tracker>
+        <tracker id="T1678" parent_id="0" instantiate_for_new_projects="1">
+            <name><![CDATA[Simple workflow to switch]]></name>
+            <item_name>simple_workflow_to_switch</item_name>
+            <description><![CDATA[Simple workflow to switch]]></description>
+            <color>inca_silver</color>
+            <cannedResponses/>
+            <formElements>
+                <formElement type="sb" ID="F41702" rank="0">
+                    <name>status</name>
+                    <label><![CDATA[status]]></label>
+                    <bind type="static" is_rank_alpha="0">
+                        <items>
+                            <item ID="V36218" label="Open" is_hidden="0"/>
+                            <item ID="V36219" label="Closed" is_hidden="0"/>
+                        </items>
+                    </bind>
+                </formElement>
+            </formElements>
+            <semantics>
+                <semantic type="tooltip"/>
+                <semantic type="plugin_cardwall_card_fields"/>
+            </semantics>
+            <rules>
+                <date_rules/>
+                <list_rules/>
+            </rules>
+            <reports>
+                <report is_default="0">
+                    <name>Default</name>
+                    <description>The system default artifact report</description>
+                    <criterias/>
+                    <renderers>
+                        <renderer type="table" rank="0" chunksz="15">
+                            <name>Results</name>
+                            <columns/>
+                        </renderer>
+                    </renderers>
+                </report>
+            </reports>
+            <workflow>
+                <field_id REF="F41702"/>
+                <is_used>1</is_used>
+                <transitions>
+                    <transition>
+                        <from_id REF="null"/>
+                        <to_id REF="V36218"/>
+                        <conditions>
+                            <condition type="perms">
+                                <permissions>
+                                    <permission ugroup="UGROUP_PROJECT_MEMBERS"/>
+                                </permissions>
+                            </condition>
+                        </conditions>
+                    </transition>
+                    <transition>
+                        <from_id REF="V36218"/>
+                        <to_id REF="V36219"/>
+                        <conditions>
+                            <condition type="perms">
+                                <permissions>
+                                    <permission ugroup="UGROUP_PROJECT_MEMBERS"/>
+                                </permissions>
+                            </condition>
+                        </conditions>
+                    </transition>
+                    <transition>
+                        <from_id REF="V36219"/>
+                        <to_id REF="V36218"/>
+                        <conditions>
+                            <condition type="perms">
+                                <permissions>
+                                    <permission ugroup="UGROUP_PROJECT_MEMBERS"/>
+                                </permissions>
+                            </condition>
+                        </conditions>
+                    </transition>
+                </transitions>
+            </workflow>
+            <permissions>
+                <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+                <permission scope="field" REF="F41702" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+                <permission scope="field" REF="F41702" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+                <permission scope="field" REF="F41702" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+            </permissions>
+        </tracker>
     </trackers>
 </project>

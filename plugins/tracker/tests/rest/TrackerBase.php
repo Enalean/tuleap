@@ -34,15 +34,16 @@ class TrackerBase extends RestBase
     const TRACKER_ADMINISTRATOR_PROJECT_NAME = 'test-tracker-project-filter';
     const TRACKER_WORKFLOWS_PROJECT_NAME     = 'test-tracker-workflows';
 
-    const MOVE_TRACKER_SHORTNAME                      = 'ToMoveArtifacts';
-    const BASE_TRACKER_SHORTNAME                      = 'base';
-    const DELETE_TRACKER_SHORTNAME                    = 'diasabled_delete_artifacts_testing_2';
-    const TRACKER_FIELDS_TRACKER_SHORTNAME            = 'tracker_fields_tracker';
-    const SIMPLE_01_TRACKER_SHORTNAME                 = 'simple_tracker_01';
-    const SIMPLE_02_TRACKER_SHORTNAME                 = 'simple_tracker_02';
-    const TRACKER_WITH_WORKFLOWS_SHORTNAME            = 'workflows_tracker';
-    const TRACKER_WORKFLOW_WITH_TRANSITIONS_SHORTNAME = 'workflows_tracker_transitions';
-    const TRACKER_WORKFLOW_SIMPLE_MODE_SHORTNAME      = 'workflow_simple_mode';
+    const MOVE_TRACKER_SHORTNAME                           = 'ToMoveArtifacts';
+    const BASE_TRACKER_SHORTNAME                           = 'base';
+    const DELETE_TRACKER_SHORTNAME                         = 'diasabled_delete_artifacts_testing_2';
+    const TRACKER_FIELDS_TRACKER_SHORTNAME                 = 'tracker_fields_tracker';
+    const SIMPLE_01_TRACKER_SHORTNAME                      = 'simple_tracker_01';
+    const SIMPLE_02_TRACKER_SHORTNAME                      = 'simple_tracker_02';
+    const TRACKER_WITH_WORKFLOWS_SHORTNAME                 = 'workflows_tracker';
+    const TRACKER_WORKFLOW_WITH_TRANSITIONS_SHORTNAME      = 'workflows_tracker_transitions';
+    const TRACKER_WORKFLOW_SIMPLE_MODE_SHORTNAME           = 'workflow_simple_mode';
+    const TRACKER_WORKFLOW_SIMPLE_MODE_TO_SWITCH_SHORTNAME = 'simple_workflow_to_switch';
 
     protected $tracker_administrator_project_id;
     protected $tracker_workflows_project_id;
@@ -53,6 +54,7 @@ class TrackerBase extends RestBase
     protected $tracker_fields_tracker_id;
     protected $tracker_workflows_tracker_id;
     protected $simple_mode_workflow_tracker_id;
+    protected $simple_mode_workflow_to_switch_tracker_id;
 
     protected $base_artifact_ids   = [];
     protected $delete_artifact_ids = [];
@@ -67,13 +69,14 @@ class TrackerBase extends RestBase
         $this->tracker_administrator_project_id = $this->getProjectId(self::TRACKER_ADMINISTRATOR_PROJECT_NAME);
         $this->tracker_workflows_project_id     = $this->getProjectId(self::TRACKER_WORKFLOWS_PROJECT_NAME);
 
-        $this->move_tracker_id                         = $this->tracker_ids[$move_project_id][self::MOVE_TRACKER_SHORTNAME];
-        $this->base_tracker_id                         = $this->tracker_ids[$move_project_id][self::BASE_TRACKER_SHORTNAME];
-        $this->delete_tracker_id                       = $this->tracker_ids[$delete_project_id][self::DELETE_TRACKER_SHORTNAME];
-        $this->tracker_fields_tracker_id               = $this->tracker_ids[$tracker_fields_project_id][self::TRACKER_FIELDS_TRACKER_SHORTNAME];
-        $this->tracker_workflows_tracker_id            = $this->tracker_ids[$this->tracker_workflows_project_id][self::TRACKER_WITH_WORKFLOWS_SHORTNAME];
-        $this->tracker_workflow_transitions_tracker_id = $this->tracker_ids[$this->tracker_workflows_project_id][self::TRACKER_WORKFLOW_WITH_TRANSITIONS_SHORTNAME];
-        $this->simple_mode_workflow_tracker_id         = $this->tracker_ids[$this->tracker_workflows_project_id][self::TRACKER_WORKFLOW_SIMPLE_MODE_SHORTNAME];
+        $this->move_tracker_id                           = $this->tracker_ids[$move_project_id][self::MOVE_TRACKER_SHORTNAME];
+        $this->base_tracker_id                           = $this->tracker_ids[$move_project_id][self::BASE_TRACKER_SHORTNAME];
+        $this->delete_tracker_id                         = $this->tracker_ids[$delete_project_id][self::DELETE_TRACKER_SHORTNAME];
+        $this->tracker_fields_tracker_id                 = $this->tracker_ids[$tracker_fields_project_id][self::TRACKER_FIELDS_TRACKER_SHORTNAME];
+        $this->tracker_workflows_tracker_id              = $this->tracker_ids[$this->tracker_workflows_project_id][self::TRACKER_WITH_WORKFLOWS_SHORTNAME];
+        $this->tracker_workflow_transitions_tracker_id   = $this->tracker_ids[$this->tracker_workflows_project_id][self::TRACKER_WORKFLOW_WITH_TRANSITIONS_SHORTNAME];
+        $this->simple_mode_workflow_tracker_id           = $this->tracker_ids[$this->tracker_workflows_project_id][self::TRACKER_WORKFLOW_SIMPLE_MODE_SHORTNAME];
+        $this->simple_mode_workflow_to_switch_tracker_id = $this->tracker_ids[$this->tracker_workflows_project_id][self::TRACKER_WORKFLOW_SIMPLE_MODE_TO_SWITCH_SHORTNAME];
 
         $this->getBaseArtifactIds();
         $this->getDeleteArtifactIds();
