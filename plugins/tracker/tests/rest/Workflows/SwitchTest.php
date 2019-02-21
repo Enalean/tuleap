@@ -55,4 +55,35 @@ class SwitchTest extends TrackerBase
 
         $this->assertTrue($workflow_after_patch['is_advanced']);
     }
+
+    /**
+     * @depends testPATCHTrackerToSwitchWorkflowInAdvancedMode
+     */
+    public function testPATCHTrackerToSwitchWorkflowInSimpleMode() : void
+    {
+        $response_get = $this->getResponseByName(
+            \REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->setup_client->get("trackers/$this->simple_mode_workflow_to_switch_tracker_id")
+        );
+
+        $this->assertSame(200, $response_get->getStatusCode());
+
+        $tracker  = $response_get->json();
+        $workflow = $tracker['workflow'];
+
+        $this->assertTrue($workflow['is_advanced']);
+
+        $query          = '{"workflow": {"is_advanced": false}}';
+        $response_patch = $this->getResponseByName(
+            \REST_TestDataBuilder::TEST_USER_1_NAME,
+            $this->client->patch("trackers/" . $this->simple_mode_workflow_to_switch_tracker_id . '?query=' . urlencode($query), null, null)
+        );
+
+        $this->assertSame(200, $response_patch->getStatusCode());
+
+        $tracker_after_patch  = $response_patch->json();
+        $workflow_after_patch = $tracker_after_patch['workflow'];
+
+        $this->assertFalse($workflow_after_patch['is_advanced']);
+    }
 }
