@@ -21,53 +21,35 @@ import state from "./state.js";
 
 const initial_state = { ...state };
 
-export {
-    failOperation,
-    beginOperation,
-    endOperation,
-    startCurrentTrackerLoading,
-    failCurrentTrackerLoading,
-    stopCurrentTrackerLoading,
-    saveCurrentTracker,
-    addTransition,
-    deleteTransition,
-    markTransitionUpdated,
-    hideTransitionUpdated,
-    createWorkflow,
-    beginTransitionRulesEnforcement,
-    endTransitionRulesEnforcement,
-    resetState
-};
-
-function failOperation(state, message) {
+export function failOperation(state, message) {
     state.is_operation_failed = true;
     state.operation_failure_message = message;
 }
 
-function beginOperation(state) {
+export function beginOperation(state) {
     state.is_operation_running = true;
     state.is_operation_failed = false;
     state.operation_failure_message = null;
 }
 
-function endOperation(state) {
+export function endOperation(state) {
     state.is_operation_running = false;
 }
 
 // Current tracker loading
-function startCurrentTrackerLoading(state) {
+export function startCurrentTrackerLoading(state) {
     state.is_current_tracker_loading = true;
 }
 
-function failCurrentTrackerLoading(state) {
+export function failCurrentTrackerLoading(state) {
     state.is_current_tracker_load_failed = true;
 }
 
-function stopCurrentTrackerLoading(state) {
+export function stopCurrentTrackerLoading(state) {
     state.is_current_tracker_loading = false;
 }
 
-function saveCurrentTracker(state, tracker) {
+export function saveCurrentTracker(state, tracker) {
     const presented_transitions = [...tracker.workflow.transitions].map(presentTransition);
     state.current_tracker = {
         ...tracker,
@@ -79,7 +61,7 @@ function saveCurrentTracker(state, tracker) {
 }
 
 // Transition operations
-function addTransition(state, transition) {
+export function addTransition(state, transition) {
     if (!state.current_tracker || !state.current_tracker.workflow) {
         return;
     }
@@ -101,7 +83,7 @@ function presentTransition(transition) {
     };
 }
 
-function deleteTransition(state, transition_to_delete) {
+export function deleteTransition(state, transition_to_delete) {
     if (
         !state.current_tracker ||
         !state.current_tracker.workflow ||
@@ -114,14 +96,14 @@ function deleteTransition(state, transition_to_delete) {
     );
 }
 
-function markTransitionUpdated(state, { id }) {
+export function markTransitionUpdated(state, { id }) {
     const transition = findTransitionById(state, id);
     if (transition) {
         transition.updated = true;
     }
 }
 
-function hideTransitionUpdated(state, { id }) {
+export function hideTransitionUpdated(state, { id }) {
     const transition = findTransitionById(state, id);
     if (transition) {
         transition.updated = false;
@@ -132,7 +114,7 @@ function findTransitionById(state, id) {
     return state.current_tracker.workflow.transitions.find(element => element.id === id);
 }
 
-function createWorkflow(state, field_id) {
+export function createWorkflow(state, field_id) {
     if (!state.current_tracker) {
         return;
     }
@@ -144,16 +126,26 @@ function createWorkflow(state, field_id) {
 }
 
 // Transition rules enforcement
-function beginTransitionRulesEnforcement() {
+export function beginTransitionRulesEnforcement() {
     state.is_operation_running = true;
     state.is_rules_enforcement_running = true;
 }
 
-function endTransitionRulesEnforcement() {
+export function endTransitionRulesEnforcement() {
     state.is_operation_running = false;
     state.is_rules_enforcement_running = false;
 }
 
-function resetState(state) {
+export function beginWorkflowModeChange() {
+    state.is_operation_running = true;
+    state.is_workflow_mode_change_running = true;
+}
+
+export function endWorkflowModeChange() {
+    state.is_operation_running = false;
+    state.is_workflow_mode_change_running = false;
+}
+
+export function resetState(state) {
     Object.assign(state, initial_state);
 }

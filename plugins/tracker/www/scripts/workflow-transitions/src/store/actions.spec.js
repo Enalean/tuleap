@@ -25,7 +25,8 @@ import {
     createWorkflowTransitions,
     updateTransitionRulesEnforcement,
     deleteTransition,
-    deactivateLegacyTransitions
+    deactivateLegacyTransitions,
+    changeWorkflowMode
 } from "./actions.js";
 import {
     restore as restore$RestQuerier,
@@ -35,7 +36,8 @@ import {
     rewire$resetWorkflowTransitions,
     rewire$updateTransitionRulesEnforcement,
     rewire$deleteTransition,
-    rewire$deactivateLegacyTransitions
+    rewire$deactivateLegacyTransitions,
+    rewire$changeWorkflowMode
 } from "../api/rest-querier.js";
 import {
     restore as restore$ExceptionHandler,
@@ -192,6 +194,41 @@ describe("Store actions:", () => {
                 expect(getErrorMessage).toHaveBeenCalledWith(exception));
             it("fails operations with extracted message", () =>
                 expect(context.commit).toHaveBeenCalledWith("failOperation", "error message"));
+        });
+    });
+
+    describe("changeWorkflowMode()", () => {
+        let restChangeWorkflowMode;
+
+        beforeEach(() => {
+            context = {
+                ...context,
+                getters: { current_tracker_id: 7 }
+            };
+            restChangeWorkflowMode = jasmine.createSpy("changeWorkflowMode");
+            rewire$changeWorkflowMode(restChangeWorkflowMode);
+        });
+
+        it("when successful, it changes the workflow mode and updates the tracker", async () => {
+            const updated_tracker = create("tracker");
+
+            restChangeWorkflowMode.and.returnValue(Promise.resolve(updated_tracker));
+            const is_workflow_advanced = true;
+            await changeWorkflowMode(context, is_workflow_advanced);
+
+            expect(context.commit).toHaveBeenCalledWith("beginWorkflowModeChange");
+            expect(restChangeWorkflowMode).toHaveBeenCalledWith(7, is_workflow_advanced);
+            expect(context.commit).toHaveBeenCalledWith("saveCurrentTracker", updated_tracker);
+            expect(context.commit).toHaveBeenCalledWith("endWorkflowModeChange");
+        });
+
+        it("when there is an error, it marks the operation as failed with the error message", async () => {
+            const error = {};
+            restChangeWorkflowMode.and.returnValue(Promise.reject(error));
+            getErrorMessage.and.returnValue("error message");
+            await changeWorkflowMode(context, true);
+
+            expect(context.commit).toHaveBeenCalledWith("failOperation", "error message");
         });
     });
 

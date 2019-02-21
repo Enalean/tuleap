@@ -135,6 +135,9 @@ msgstr "Aucune action n'est encore définie."
 msgid "Please choose"
 msgstr "Veuillez choisir"
 
+msgid "Please confirm your action."
+msgstr "Veuillez confirmer votre action."
+
 msgid "Save and start configuration"
 msgstr "Sauvegarder et démarrer la configuration"
 
@@ -143,6 +146,9 @@ msgstr "Sauvegarder la configuration"
 
 msgid "Start by adding one."
 msgstr "Commencez par en ajouter une."
+
+msgid "Switch to advanced configuration"
+msgstr "Passer à la configuration avancée"
 
 msgid "The field on which the transitions are based has no selectable value"
 msgstr ""
@@ -201,6 +207,12 @@ msgid ""
 msgstr ""
 "Utilisez la configuration avancée si vous voulez configurer chaque "
 "transition indépendamment."
+
+msgid "Wait a minute..."
+msgstr "Attendez une minute..."
+
+msgid "You're about to switch to advanced configuration mode."
+msgstr "Vous êtes sur le point de passer à la configuration avancée."
 
 msgid ""
 "artifactId: identifier of the artifact where the transition happens (integer)"
