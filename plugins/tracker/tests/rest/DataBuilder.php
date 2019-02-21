@@ -50,7 +50,7 @@ class DataBuilder extends REST_TestDataBuilder
 
         $this->createUser();
         $this->setUpDeletableArtifactsLimit();
-        $this->setUpWorkflowInSimpleMode();
+        $this->setUpWorkflowsInSimpleMode();
     }
 
     private function setUpDeletableArtifactsLimit()
@@ -65,10 +65,12 @@ class DataBuilder extends REST_TestDataBuilder
         $this->user_manager->updateDb($user);
     }
 
-    private function setUpWorkflowInSimpleMode()
+    private function setUpWorkflowsInSimpleMode()
     {
         $sql        = 'UPDATE tracker_workflow JOIN tracker ON (tracker.id = tracker_workflow.tracker_id) SET is_advanced = 0 WHERE tracker.item_name = ?';
         $connection = \Tuleap\DB\DBFactory::getMainTuleapDBConnection();
+
         $connection->getDB()->single($sql, [TrackerBase::TRACKER_WORKFLOW_SIMPLE_MODE_SHORTNAME]);
+        $connection->getDB()->single($sql, [TrackerBase::TRACKER_WORKFLOW_SIMPLE_MODE_TO_SWITCH_SHORTNAME]);
     }
 }
