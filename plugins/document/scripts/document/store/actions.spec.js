@@ -26,9 +26,15 @@ import {
     loadRootFolder,
     setUserPreferenciesForFolder,
     setUserPreferenciesForUI,
-    unsetUnderConstructionUserPreference
+    unsetUnderConstructionUserPreference,
+    updateFile
 } from "./actions.js";
-import { restore as restoreUploadFile, rewire$uploadFile } from "./actions-helpers/upload-file.js";
+import {
+    restore as restoreUploadFile,
+    rewire$uploadFile,
+    restore as restoreUploadVersion,
+    rewire$uploadVersion
+} from "./actions-helpers/upload-file.js";
 import {
     restore as restoreRestQuerier,
     rewire$addNewDocument,
@@ -38,7 +44,8 @@ import {
     rewire$deleteUserPreferenciesForUnderConstructionModal,
     rewire$getItem,
     rewire$getProject,
-    rewire$patchUserPreferenciesForFolderInProject
+    rewire$patchUserPreferenciesForFolderInProject,
+    rewire$createNewVersion
 } from "../api/rest-querier.js";
 import {
     restore as restoreLoadFolderContent,
@@ -56,6 +63,7 @@ describe("Store actions", () => {
         restoreLoadFolderContent();
         restoreLoadAscendantHierarchy();
         restoreUploadFile();
+        restoreUploadVersion();
     });
 
     let context,
@@ -69,7 +77,9 @@ describe("Store actions", () => {
         deleteUserPreferenciesForUIInProject,
         addNewDocument,
         uploadFile,
-        cancelUpload;
+        cancelUpload,
+        createNewVersion,
+        uploadVersion;
 
     beforeEach(() => {
         const project_id = 101;
@@ -99,8 +109,14 @@ describe("Store actions", () => {
         uploadFile = jasmine.createSpy("uploadFile");
         rewire$uploadFile(uploadFile);
 
+        uploadVersion = jasmine.createSpy("uploadVersion");
+        rewire$uploadVersion(uploadVersion);
+
         cancelUpload = jasmine.createSpy("cancelUpload");
         rewire$cancelUpload(cancelUpload);
+
+        createNewVersion = jasmine.createSpy("createNewVersion");
+        rewire$createNewVersion(createNewVersion);
 
         deleteUserPreferenciesForFolderInProject = jasmine.createSpy(
             "deleteUserPreferenciesForFolderInProject"
@@ -807,6 +823,33 @@ describe("Store actions", () => {
             cancelUpload.and.throwError("Failed to fetch");
             await cancelFileUpload(context, item);
             expect(context.commit).toHaveBeenCalledWith("removeItemFromFolderContent", item);
+        });
+    });
+    describe("updateFile", () => {
+        it("does not trigger any upload if the file is empty", async () => {
+            const dropped_file = { name: "filename.txt", size: 0, type: "text/plain" };
+            const item = {};
+
+            createNewVersion.and.returnValue(Promise.resolve());
+
+            await updateFile(context, [item, dropped_file]);
+
+            expect(uploadVersion).not.toHaveBeenCalled();
+        });
+        it("upload a new version of file", async () => {
+            const item = { id: 45 };
+            context.state.folder_content = [{ id: 45 }];
+            const dropped_file = { name: "filename.txt", size: 123, type: "text/plain" };
+
+            const new_version = { upload_href: "/uploads/docman/version/42" };
+            createNewVersion.and.returnValue(Promise.resolve(new_version));
+
+            const uploader = {};
+            uploadVersion.and.returnValue(uploader);
+
+            await updateFile(context, [item, dropped_file]);
+
+            expect(uploadVersion).toHaveBeenCalled();
         });
     });
 });

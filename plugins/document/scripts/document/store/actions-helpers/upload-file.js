@@ -20,22 +20,27 @@
 import { Upload } from "tus-js-client";
 import { getItem } from "../../api/rest-querier.js";
 import { flagItemAsCreated } from "./flag-item-as-created.js";
+import { RETRY_DELAYS } from "../../constants.js";
+
+function updateParentProgress(bytes_total, fake_item, bytes_uploaded, context, parent) {
+    if (bytes_total === 0) {
+        fake_item.progress = 100;
+    } else {
+        fake_item.progress = Math.trunc((bytes_uploaded / bytes_total) * 100);
+    }
+    context.commit("updateFolderProgressbar", parent);
+}
 
 export function uploadFile(context, dropped_file, fake_item, docman_item, parent) {
     const uploader = new Upload(dropped_file, {
         uploadUrl: docman_item.file_properties.upload_href,
-        retryDelays: [0, 1000, 3000, 5000],
+        retryDelays: RETRY_DELAYS,
         metadata: {
             filename: dropped_file.name,
             filetype: dropped_file.type
         },
         onProgress: (bytes_uploaded, bytes_total) => {
-            if (bytes_total === 0) {
-                fake_item.progress = 100;
-            } else {
-                fake_item.progress = Math.trunc((bytes_uploaded / bytes_total) * 100);
-            }
-            context.commit("updateFolderProgressbar", parent);
+            updateParentProgress(bytes_total, fake_item, bytes_uploaded, context, parent);
         },
         onSuccess: async () => {
             const file = await getItem(docman_item.id);
@@ -56,4 +61,27 @@ export function uploadFile(context, dropped_file, fake_item, docman_item, parent
     uploader.start();
 
     return uploader;
+}
+
+export function uploadVersion(context, dropped_file, item, new_version) {
+    const uploader = new Upload(dropped_file, {
+        uploadUrl: new_version.upload_href,
+        retryDelays: RETRY_DELAYS,
+        metadata: {
+            filename: dropped_file.name,
+            filetype: dropped_file.type
+        },
+        onProgress: (bytes_uploaded, bytes_total) => {
+            updateParentProgress(bytes_total, item, bytes_uploaded, context, parent);
+        },
+        onSuccess: () => {
+            item.progress = null;
+            item.is_uploading_new_version = false;
+        },
+        onError: ({ originalRequest }) => {
+            item.upload_error = originalRequest.statusText;
+        }
+    });
+
+    uploader.start();
 }
