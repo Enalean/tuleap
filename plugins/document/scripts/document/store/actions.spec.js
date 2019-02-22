@@ -19,26 +19,26 @@
 
 import { mockFetchError } from "tlp-mocks";
 import {
-    loadRootFolder,
-    loadFolder,
-    setUserPreferenciesForFolder,
-    createNewItem,
-    setUserPreferenciesForUI,
     addNewUploadFile,
     cancelFileUpload,
+    createNewItem,
+    loadFolder,
+    loadRootFolder,
+    setUserPreferenciesForFolder,
+    setUserPreferenciesForUI,
     unsetUnderConstructionUserPreference
 } from "./actions.js";
 import { restore as restoreUploadFile, rewire$uploadFile } from "./actions-helpers/upload-file.js";
 import {
     restore as restoreRestQuerier,
+    rewire$addNewDocument,
+    rewire$cancelUpload,
+    rewire$deleteUserPreferenciesForFolderInProject,
+    rewire$deleteUserPreferenciesForUIInProject,
+    rewire$deleteUserPreferenciesForUnderConstructionModal,
     rewire$getItem,
     rewire$getProject,
-    rewire$deleteUserPreferenciesForFolderInProject,
-    rewire$deleteUserPreferenciesForUnderConstructionModal,
-    rewire$patchUserPreferenciesForFolderInProject,
-    rewire$deleteUserPreferenciesForUIInProject,
-    rewire$addNewDocument,
-    rewire$cancelUpload
+    rewire$patchUserPreferenciesForFolderInProject
 } from "../api/rest-querier.js";
 import {
     restore as restoreLoadFolderContent,
@@ -470,6 +470,48 @@ describe("Store actions", () => {
                 jasmine.any(Object)
             );
             expect(context.commit).toHaveBeenCalledWith("setModalError", error_message);
+        });
+
+        it("displays the created item when it is created in the current folder", async () => {
+            const created_item_reference = { id: 66 };
+            addNewDocument.and.returnValue(Promise.resolve(created_item_reference));
+
+            const item = { id: 66, title: "whatever" };
+            getItem.and.returnValue(Promise.resolve(item));
+
+            const folder_of_created_item = { id: 10 };
+            const current_folder = { id: 10 };
+
+            await createNewItem(context, [
+                ["title", "", "empty", 2],
+                folder_of_created_item,
+                current_folder
+            ]);
+
+            expect(context.commit).not.toHaveBeenCalledWith("addDocumentToFoldedFolder");
+            expect(context.commit).toHaveBeenCalledWith("addJustCreatedItemToFolderContent", item);
+        });
+        it("not displays the created item when it is created in a collapsed folder", async () => {
+            const created_item_reference = { id: 66 };
+            addNewDocument.and.returnValue(Promise.resolve(created_item_reference));
+
+            const item = { id: 66, title: "whatever" };
+            getItem.and.returnValue(Promise.resolve(item));
+
+            const current_folder = { id: 30 };
+            const collapsed_folder_of_created_item = { id: 10, parent_id: 30, is_expanded: false };
+
+            await createNewItem(context, [
+                ["title", "", "empty", 2],
+                collapsed_folder_of_created_item,
+                current_folder
+            ]);
+            expect(context.commit).toHaveBeenCalledWith("addDocumentToFoldedFolder", [
+                collapsed_folder_of_created_item,
+                item,
+                false
+            ]);
+            expect(context.commit).toHaveBeenCalledWith("addJustCreatedItemToFolderContent", item);
         });
     });
 
