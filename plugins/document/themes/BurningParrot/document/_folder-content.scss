@@ -180,7 +180,7 @@
 .document-folder-right-container {
     position: sticky;
     top: calc(#{$navbar-height} + #{$tlp-spacing});
-    min-width: 500px;
+    min-width: 400px;
     max-width: 35%;
     margin: 0 0 0 $tlp-spacing;
 }
