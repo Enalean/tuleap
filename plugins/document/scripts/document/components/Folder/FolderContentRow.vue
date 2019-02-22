@@ -27,8 +27,8 @@
                     v-bind:style="item_indentation"
                     v-bind:title="item.title"
                 />
-                <div class="tlp-dropdown">
-                    <div class="tlp-dropdown-split-button" v-if="item_is_not_being_uploaded">
+                <div class="tlp-dropdown" v-if="item_is_not_being_uploaded">
+                    <div class="tlp-dropdown-split-button">
                         <quick-look-button
                             class="quick-look-button"
                             v-on:displayQuickLook="$emit('displayQuickLook', item)"
