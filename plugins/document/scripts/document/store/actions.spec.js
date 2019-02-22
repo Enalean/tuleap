@@ -513,6 +513,171 @@ describe("Store actions", () => {
             ]);
             expect(context.commit).toHaveBeenCalledWith("addJustCreatedItemToFolderContent", item);
         });
+        it("displays the created item when it is created in a expanded folder which is not the same as the current folder", async () => {
+            const created_item_reference = { id: 66 };
+            addNewDocument.and.returnValue(Promise.resolve(created_item_reference));
+
+            const item = { id: 66, title: "whatever" };
+            getItem.and.returnValue(Promise.resolve(item));
+
+            const current_folder = { id: 18 };
+            const collapsed_folder_of_created_item = { id: 10, parent_id: 30, is_expanded: true };
+
+            await createNewItem(context, [
+                ["title", "", "empty", 2],
+                collapsed_folder_of_created_item,
+                current_folder
+            ]);
+            expect(context.commit).not.toHaveBeenCalledWith("addDocumentToFoldedFolder");
+            expect(context.commit).toHaveBeenCalledWith("addJustCreatedItemToFolderContent", item);
+        });
+        it("displays the created file when it is created in the current folder", async () => {
+            context.state.folder_content = [{ id: 10 }];
+            const created_item_reference = { id: 66 };
+
+            addNewDocument.and.returnValue(Promise.resolve(created_item_reference));
+            const file_name_properties = { name: "filename.txt", size: 10, type: "text/plain" };
+            const item = {
+                id: 66,
+                title: "filename.txt",
+                description: "",
+                type: TYPE_FILE,
+                file_properties: { file: file_name_properties }
+            };
+
+            getItem.and.returnValue(Promise.resolve(item));
+            const folder_of_created_item = { id: 10 };
+            const current_folder = { id: 10 };
+            const uploader = {};
+            uploadFile.and.returnValue(uploader);
+
+            const expected_fake_item_with_uploader = {
+                id: 66,
+                title: "filename.txt",
+                parent_id: 10,
+                type: TYPE_FILE,
+                file_type: "text/plain",
+                is_uploading: true,
+                progress: 0,
+                uploader,
+                upload_error: null
+            };
+
+            await createNewItem(context, [item, folder_of_created_item, current_folder]);
+
+            expect(uploadFile).toHaveBeenCalled();
+            expect(context.commit).toHaveBeenCalledWith(
+                "addJustCreatedItemToFolderContent",
+                expected_fake_item_with_uploader
+            );
+            expect(context.commit).toHaveBeenCalledWith("addDocumentToFoldedFolder", [
+                folder_of_created_item,
+                expected_fake_item_with_uploader,
+                true
+            ]);
+            expect(context.commit).toHaveBeenCalledWith(
+                "addFileInUploadsList",
+                expected_fake_item_with_uploader
+            );
+        });
+        it("not displays the created file when it is created in a collapsed folder", async () => {
+            context.state.folder_content = [{ id: 10 }];
+            const created_item_reference = { id: 66 };
+
+            addNewDocument.and.returnValue(Promise.resolve(created_item_reference));
+            const file_name_properties = { name: "filename.txt", size: 10, type: "text/plain" };
+            const item = {
+                id: 66,
+                title: "filename.txt",
+                description: "",
+                type: TYPE_FILE,
+                file_properties: { file: file_name_properties }
+            };
+
+            getItem.and.returnValue(Promise.resolve(item));
+            const current_folder = { id: 30 };
+            const collapsed_folder_of_created_item = { id: 10, parent_id: 30, is_expanded: false };
+            const uploader = {};
+            uploadFile.and.returnValue(uploader);
+
+            const expected_fake_item_with_uploader = {
+                id: 66,
+                title: "filename.txt",
+                parent_id: 10,
+                type: TYPE_FILE,
+                file_type: "text/plain",
+                is_uploading: true,
+                progress: 0,
+                uploader,
+                upload_error: null
+            };
+
+            await createNewItem(context, [item, collapsed_folder_of_created_item, current_folder]);
+
+            expect(uploadFile).toHaveBeenCalled();
+            expect(context.commit).toHaveBeenCalledWith(
+                "addJustCreatedItemToFolderContent",
+                expected_fake_item_with_uploader
+            );
+            expect(context.commit).toHaveBeenCalledWith("addDocumentToFoldedFolder", [
+                collapsed_folder_of_created_item,
+                expected_fake_item_with_uploader,
+                false
+            ]);
+            expect(context.commit).toHaveBeenCalledWith(
+                "addFileInUploadsList",
+                expected_fake_item_with_uploader
+            );
+        });
+        it("displays the created file when it is created in a extanded sub folder", async () => {
+            context.state.folder_content = [{ id: 10 }];
+            const created_item_reference = { id: 66 };
+
+            addNewDocument.and.returnValue(Promise.resolve(created_item_reference));
+            const file_name_properties = { name: "filename.txt", size: 10, type: "text/plain" };
+            const item = {
+                id: 66,
+                title: "filename.txt",
+                description: "",
+                type: TYPE_FILE,
+                file_properties: { file: file_name_properties }
+            };
+
+            getItem.and.returnValue(Promise.resolve(item));
+            const current_folder = { id: 30 };
+            const collapsed_folder_of_created_item = { id: 10, parent_id: 30, is_expanded: true };
+            const uploader = {};
+            uploadFile.and.returnValue(uploader);
+
+            const expected_fake_item_with_uploader = {
+                id: 66,
+                title: "filename.txt",
+                parent_id: 10,
+                type: TYPE_FILE,
+                file_type: "text/plain",
+                is_uploading: true,
+                progress: 0,
+                uploader,
+                upload_error: null
+            };
+
+            await createNewItem(context, [item, collapsed_folder_of_created_item, current_folder]);
+
+            expect(uploadFile).toHaveBeenCalled();
+            expect(context.commit).toHaveBeenCalledWith(
+                "addJustCreatedItemToFolderContent",
+                expected_fake_item_with_uploader
+            );
+            expect(context.commit).toHaveBeenCalledWith("addDocumentToFoldedFolder", [
+                collapsed_folder_of_created_item,
+                expected_fake_item_with_uploader,
+                true
+            ]);
+            expect(context.commit).toHaveBeenCalledWith(
+                "addFileInUploadsList",
+                expected_fake_item_with_uploader
+            );
+        });
     });
 
     describe("addNewUploadFile", () => {
