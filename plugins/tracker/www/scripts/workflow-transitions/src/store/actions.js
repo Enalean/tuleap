@@ -45,8 +45,8 @@ export async function createWorkflowTransitions(context, field_id) {
     try {
         context.commit("beginOperation");
         const tracker_id = context.getters.current_tracker_id;
-        await restCreateWorkflowTransitions(tracker_id, field_id);
-        context.commit("createWorkflow", field_id);
+        const tracker = await restCreateWorkflowTransitions(tracker_id, field_id);
+        context.commit("createWorkflow", tracker);
     } catch (exception) {
         const error_message = await getErrorMessage(exception);
         context.commit("failOperation", error_message);

@@ -30,7 +30,7 @@ export async function getTracker(tracker_id) {
     return response.json();
 }
 
-export function createWorkflowTransitions(tracker_id, field_id) {
+export async function createWorkflowTransitions(tracker_id, field_id) {
     const query = JSON.stringify({
         workflow: {
             set_transitions_rules: {
@@ -38,7 +38,8 @@ export function createWorkflowTransitions(tracker_id, field_id) {
             }
         }
     });
-    return patch(`/api/trackers/${tracker_id}?query=${encodeURIComponent(query)}`);
+    const response = await patch(`/api/trackers/${tracker_id}?query=${encodeURIComponent(query)}`);
+    return response.json();
 }
 
 export async function resetWorkflowTransitions(tracker_id) {

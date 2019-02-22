@@ -34,8 +34,9 @@ class Workflow_Dao extends DataAccessObject //phpcs:ignoreFile
         $tracker_id = $this->da->escapeInt($tracker_id);
         $field_id   = $this->da->escapeInt($field_id);
 
-        $sql        = "INSERT INTO tracker_workflow (tracker_id, field_id, is_advanced)
-                VALUES ($tracker_id, $field_id, 1)";
+        $sql = "INSERT INTO tracker_workflow (tracker_id, field_id, is_advanced)
+                VALUES ($tracker_id, $field_id, 0)";
+
         return $this->updateAndGetLastId($sql);
     }
 

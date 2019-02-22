@@ -114,15 +114,12 @@ function findTransitionById(state, id) {
     return state.current_tracker.workflow.transitions.find(element => element.id === id);
 }
 
-export function createWorkflow(state, field_id) {
+export function createWorkflow(state, tracker) {
     if (!state.current_tracker) {
         return;
     }
-    if (!state.current_tracker.workflow) {
-        state.current_tracker.workflow = {};
-    }
 
-    state.current_tracker.workflow.field_id = field_id;
+    state.current_tracker = tracker;
 }
 
 // Transition rules enforcement

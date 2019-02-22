@@ -203,39 +203,29 @@ describe("Store mutations:", () => {
     });
 
     describe("createWorkflow()", () => {
+        const tracker = create("tracker");
+
         beforeEach(() => {
             state.current_tracker = create("tracker", {
                 workflow: {
                     field_id: 1
                 }
             });
-            createWorkflow(state, 2);
+            createWorkflow(state, tracker);
         });
 
-        it("updates workflow field id", () => {
-            expect(state.current_tracker.workflow.field_id).toBe(2);
+        it("updates the tracker", () => {
+            expect(state.current_tracker).toBe(tracker);
         });
 
         describe("when no current tracker", () => {
             beforeEach(() => {
                 state.current_tracker = null;
-                createWorkflow(state, 2);
+                createWorkflow(state, tracker);
             });
 
             it("does nothing", () => {
                 expect(state.current_tracker).toBeNull();
-            });
-        });
-
-        describe("when no workflow", () => {
-            beforeEach(() => {
-                state.current_tracker = create("tracker", { workflow: null });
-                createWorkflow(state, 2);
-            });
-
-            it("creates workflow with given field id", () => {
-                expect(state.current_tracker.workflow).toEqual(jasmine.any(Object));
-                expect(state.current_tracker.workflow.field_id).toBe(2);
             });
         });
     });

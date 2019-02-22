@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { mockFetchError, mockFetchSuccess } from "tlp-mocks";
+import { mockFetchError } from "tlp-mocks";
 import {
     createTransition,
     loadTracker,
@@ -102,8 +102,10 @@ describe("Store actions:", () => {
         });
 
         describe("when workflow creation is successful", () => {
+            const tracker = create("tracker");
+
             beforeEach(async () => {
-                mockFetchSuccess(restCreateWorkflowTransitions);
+                restCreateWorkflowTransitions.and.returnValue(Promise.resolve(tracker));
                 await createWorkflowTransitions(context, 9);
             });
 
@@ -112,7 +114,7 @@ describe("Store actions:", () => {
             it("creates workflow", () =>
                 expect(restCreateWorkflowTransitions).toHaveBeenCalledWith(1, 9));
             it("creates workflow in store", () =>
-                expect(context.commit).toHaveBeenCalledWith("createWorkflow", 9));
+                expect(context.commit).toHaveBeenCalledWith("createWorkflow", tracker));
             it("ends operation", () => expect(context.commit).toHaveBeenCalledWith("endOperation"));
         });
     });
