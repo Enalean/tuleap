@@ -41,7 +41,9 @@ class VersionBeingUploadedInformationProviderTest extends TestCase
             'filesize' => 123456,
             'item_id' => 5
         ]);
-        $item_factory->shouldReceive('getItemFromDb')->andReturns(null);
+        $item = \Mockery::mock(\Docman_Item::class);
+        $item->shouldReceive('getId')->andReturn(5);
+        $item_factory->shouldReceive('getItemFromDb')->andReturns($item);
 
         $request = \Mockery::mock(ServerRequestInterface::class);
         $id = 12;
@@ -55,7 +57,7 @@ class VersionBeingUploadedInformationProviderTest extends TestCase
         $this->assertSame(0, $file_information->getOffset());
     }
 
-    public function testFileInformationCanBeProvidedWhenTheFileHasAlreadyBeenUploaded() : void
+    public function testFileInformationCannotBeFoundIfItemIsNoMoreFoundInBD(): void
     {
         $path_allocator = new VersionUploadPathAllocator();
         $dao            = \Mockery::mock(DocumentOnGoingVersionToUploadDAO::class);
@@ -66,18 +68,12 @@ class VersionBeingUploadedInformationProviderTest extends TestCase
             'filesize' => 123456,
             'item_id' => 5
         ]);
-        $item_factory->shouldReceive('getItemFromDb')->andReturns(\Mockery::mock(\Docman_Item::class));
+        $item_factory->shouldReceive('getItemFromDb')->andReturns(null);
 
-        $request = \Mockery::mock(ServerRequestInterface::class);
-        $id = 12;
-        $request->shouldReceive('getAttribute')->with('id')->andReturns((string) $id);
-        $request->shouldReceive('getAttribute')->with('user_id')->andReturns('102');
+         $request = \Mockery::mock(ServerRequestInterface::class);
+         $request->shouldReceive('getAttribute')->andReturns(null);
 
-        $file_information = $data_store->getFileInformation($request);
-
-        $this->assertSame($id, $file_information->getID());
-        $this->assertSame(123456, $file_information->getLength());
-        $this->assertSame(123456, $file_information->getOffset());
+        $this->assertNull($data_store->getFileInformation($request));
     }
 
     public function testFileInformationCannotBeFoundIfRequestAttributesAreMissing() : void

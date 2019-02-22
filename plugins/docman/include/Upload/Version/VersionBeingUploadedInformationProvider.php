@@ -72,10 +72,11 @@ class VersionBeingUploadedInformationProvider implements TusFileInformationProvi
             return null;
         }
 
-        $existing_item = $this->item_factory->getItemFromDb($document_row['item_id']);
-        if ($existing_item !== null) {
-            return new DocumentAlreadyUploadedInformation((int)$version_id, $document_row['filesize']);
+        $item = $this->item_factory->getItemFromDb($document_row['item_id']);
+        if (! $item) {
+            return null;
         }
+
         $allocated_path = $this->path_allocator->getPathForItemBeingUploaded($version_id);
 
         $current_file_size = file_exists($allocated_path) ? filesize($allocated_path) : 0;

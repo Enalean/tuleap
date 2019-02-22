@@ -78,4 +78,22 @@ class DocumentOnGoingVersionToUploadDAO extends DataAccessObject
 
         return $this->getDB()->run($sql, $id, $timestamp, $user_id);
     }
+
+    public function deleteByVersionID(int $version_id): void
+    {
+        $sql = 'DELETE
+                FROM plugin_docman_new_version_upload
+                WHERE item_id = ?';
+
+        $this->getDB()->run($sql, $version_id);
+    }
+
+    public function searchDocumentVersionOngoingUploadByVersionId(int $version_id) : array
+    {
+        $sql = 'SELECT *
+                FROM plugin_docman_new_version_upload
+                WHERE id = ?';
+
+        return $this->getDB()->row($sql, $version_id);
+    }
 }

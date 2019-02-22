@@ -24,11 +24,12 @@
  *
  */
 
+use Tuleap\DB\DBFactory;
 use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\ApprovalTable\ApprovalTableStateMapper;
+use Tuleap\Docman\ExternalLinks\DocmanHTTPControllerProxy;
 use Tuleap\Docman\ExternalLinks\ExternalLink;
 use Tuleap\Docman\ExternalLinks\ExternalLinkParametersExtractor;
-use Tuleap\Docman\ExternalLinks\DocmanHTTPControllerProxy;
 use Tuleap\Docman\ExternalLinks\LegacyLink;
 use Tuleap\Docman\Notifications\NotificationsForProjectMemberCleaner;
 use Tuleap\Docman\Notifications\NotifiedPeopleRetriever;
@@ -44,13 +45,14 @@ use Tuleap\Docman\REST\ResourcesInjector;
 use Tuleap\Docman\REST\v1\ItemRepresentationBuilder;
 use Tuleap\Docman\REST\v1\MetadataRepresentationBuilder;
 use Tuleap\Docman\Tus\TusServer;
+use Tuleap\Docman\Upload\FileBeingUploadedWriter;
 use Tuleap\Docman\Upload\FileUploadController;
-use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Docman\Upload\Version\DocumentOnGoingVersionToUploadDAO;
 use Tuleap\Docman\Upload\Version\VersionBeingUploadedInformationProvider;
-use Tuleap\Docman\Upload\FileBeingUploadedWriter;
 use Tuleap\Docman\Upload\Version\VersionDataStore;
+use Tuleap\Docman\Upload\Version\VersionUploadFinisher;
 use Tuleap\Docman\Upload\Version\VersionUploadPathAllocator;
+use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\MessageFactoryBuilder;
 use Tuleap\Layout\PaginationPresenter;
 use Tuleap\Mail\MailFilter;
@@ -1318,10 +1320,11 @@ class DocmanPlugin extends Plugin
 
     public function routeUploadsVersionFile(): FileUploadController
     {
+        $root_path      = $this->getPluginInfo()->getPropertyValueForName('docman_root');
         $path_allocator = new VersionUploadPathAllocator();
         return new FileUploadController(
             new TusServer(
-                HTTPFactoryBuilder::build(),
+                HTTPFactoryBuilder::responseFactory(),
                 new VersionDataStore(
                     new VersionBeingUploadedInformationProvider(
                         new DocumentOnGoingVersionToUploadDAO(),
@@ -1330,7 +1333,20 @@ class DocmanPlugin extends Plugin
                     ),
                     new FileBeingUploadedWriter(
                         $path_allocator,
-                        \Tuleap\DB\DBFactory::getMainTuleapDBConnection()
+                        DBFactory::getMainTuleapDBConnection()
+                    ),
+                    new VersionUploadFinisher(
+                        new BackendLogger(),
+                        $path_allocator,
+                        $this->getItemFactory(),
+                        new Docman_VersionFactory(),
+                        EventManager::instance(),
+                        new DocumentOnGoingVersionToUploadDAO(),
+                        new Docman_ItemDao(),
+                        new Docman_FileStorage($root_path),
+                        new Docman_MIMETypeDetector(),
+                        UserManager::instance(),
+                        new Docman_LockFactory()
                     )
                 )
             ),
