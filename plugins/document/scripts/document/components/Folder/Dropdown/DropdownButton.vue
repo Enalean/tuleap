@@ -43,8 +43,16 @@ export default {
         isInLargeMode: Boolean,
         isInQuickLookMode: Boolean
     },
+    data() {
+        return { dropdown: null };
+    },
+    methods: {
+        toggleDropdown() {
+            this.dropdown.toggle();
+        }
+    },
     mounted() {
-        createDropdown(this.$refs.dropdownButton);
+        this.dropdown = createDropdown(this.$refs.dropdownButton);
     }
 };
 </script>

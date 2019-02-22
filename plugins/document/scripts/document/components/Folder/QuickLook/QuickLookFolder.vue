@@ -25,8 +25,15 @@
         </button>
         <div class="tlp-dropdown-split-button">
             <new-item-button v-if="item.user_can_write" class="tlp-button-primary tlp-button-small tlp-button-outline" v-bind:item="item"/>
-            <quick-look-go-to-document-details v-else v-bind:item="item"/>
-            <dropdown-button v-bind:is-in-quick-look-mode="true">
+            <button
+                class="tlp-button-primary tlp-button-outline tlp-button-small tlp-dropdown-split-button-main"
+                type="button"
+                v-on:click="toggleNeighborDropdown"
+                v-else
+            >
+                <i class="fa fa-ellipsis-h"></i>
+            </button>
+            <dropdown-button ref="dropdown_button" v-bind:is-in-quick-look-mode="true">
                 <dropdown-menu v-bind:item="item" v-bind:is-in-quick-look-mode="true" v-bind:hide-item-title="true"/>
             </dropdown-button>
         </div>
@@ -37,11 +44,10 @@
 import NewItemButton from "../NewItem/NewItemButton.vue";
 import DropdownButton from "../Dropdown/DropdownButton.vue";
 import DropdownMenu from "../Dropdown/DropdownMenu.vue";
-import QuickLookGoToDocumentDetails from "./QuickLookGoToDocumentDetails.vue";
 
 export default {
     name: "QuickLookFileProperties",
-    components: { NewItemButton, DropdownButton, DropdownMenu, QuickLookGoToDocumentDetails },
+    components: { NewItemButton, DropdownButton, DropdownMenu },
     props: {
         item: Object
     },
@@ -52,6 +58,10 @@ export default {
                     detail: { parent: this.item }
                 })
             );
+        },
+        toggleNeighborDropdown(event) {
+            event.stopPropagation();
+            this.$refs.dropdown_button.toggleDropdown();
         }
     }
 };

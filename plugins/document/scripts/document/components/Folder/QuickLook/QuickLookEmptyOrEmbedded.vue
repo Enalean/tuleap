@@ -20,17 +20,24 @@
 
 <template>
     <div class="document-quick-look-document-action">
-        <quick-look-document-action-button v-bind:item="item"/>
+        <quick-look-go-to-document-details v-bind:item="item" v-if="is_details_button_shown"/>
+        <quick-look-document-action-button v-bind:item="item" v-bind:is-details-button-shown="is_details_button_shown"/>
     </div>
 </template>
 
 <script>
 import QuickLookDocumentActionButton from "./QuickLookDocumentActionButton.vue";
+import QuickLookGoToDocumentDetails from "./QuickLookGoToDocumentDetails.vue";
 
 export default {
-    components: { QuickLookDocumentActionButton },
+    components: { QuickLookDocumentActionButton, QuickLookGoToDocumentDetails },
     props: {
         item: Object
+    },
+    computed: {
+        is_details_button_shown() {
+            return !this.item.user_can_write;
+        }
     }
 };
 </script>

@@ -30,9 +30,22 @@
                 <i class="fa fa-mail-forward tlp-button-icon"></i>
                 <translate>Update</translate>
             </button>
-            <quick-look-go-to-document-details v-else v-bind:item="item"/>
-            <dropdown-button v-bind:is-in-quick-look-mode="true">
-                <dropdown-menu v-bind:item="item" v-bind:is-in-quick-look-mode="true" v-bind:hide-item-title="true"/>
+
+            <button
+                class="tlp-button-primary tlp-button-outline tlp-button-small tlp-dropdown-split-button-main"
+                type="button"
+                v-on:click="toggleNeighborDropdown"
+                v-else
+            >
+                <i class="fa fa-ellipsis-h"></i>
+            </button>
+            <dropdown-button ref="dropdown_button" v-bind:is-in-quick-look-mode="true">
+                <dropdown-menu
+                    v-bind:item="item"
+                    v-bind:is-in-quick-look-mode="true"
+                    v-bind:hide-item-title="true"
+                    v-bind:hide-details-entry="isDetailsButtonShown"
+                />
             </dropdown-button>
         </div>
     </div>
@@ -43,12 +56,12 @@ import { mapState } from "vuex";
 import DropdownButton from "../Dropdown/DropdownButton.vue";
 import DropdownMenu from "../Dropdown/DropdownMenu.vue";
 import { TYPE_EMPTY, TYPE_WIKI } from "../../../constants.js";
-import QuickLookGoToDocumentDetails from "./QuickLookGoToDocumentDetails.vue";
 
 export default {
-    components: { QuickLookGoToDocumentDetails, DropdownButton, DropdownMenu },
+    components: { DropdownButton, DropdownMenu },
     props: {
-        item: Object
+        item: Object,
+        isDetailsButtonShown: Boolean
     },
     computed: {
         ...mapState(["project_id"])
@@ -65,6 +78,10 @@ export default {
                     this.item.id
                 }&action=${action}`
             );
+        },
+        toggleNeighborDropdown(event) {
+            event.stopPropagation();
+            this.$refs.dropdown_button.toggleDropdown();
         }
     }
 };
