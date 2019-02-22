@@ -31,6 +31,10 @@ describe("TransitionMatrixContent", () => {
     let wrapper;
 
     beforeEach(() => {
+        store_options.getters = {
+            current_workflow_transitions: [],
+            is_workflow_advanced: true
+        };
         store = createStoreMock(store_options, { is_operation_running: false });
 
         wrapper = shallowMount(TransitionMatrixContent, {
@@ -40,8 +44,7 @@ describe("TransitionMatrixContent", () => {
             localVue,
             propsData: {
                 from: create("field_value"),
-                to: create("field_value"),
-                transition: null
+                to: create("field_value")
             }
         });
     });
@@ -50,6 +53,7 @@ describe("TransitionMatrixContent", () => {
 
     const create_transition_selector = '[data-test-action="create-transition"]';
     const delete_transition_selector = '[data-test-action="delete-transition"]';
+    const confirm_delete_transition_selector = '[data-test-action="confirm-delete-transition"]';
     const forbidden_selector = '[data-test-type="forbidden-transition"]';
     const spinner_selector = '[data-test-type="spinner"]';
     const transition_configuration_selector = '[data-test-action="configure-transition"]';
@@ -77,10 +81,6 @@ describe("TransitionMatrixContent", () => {
         });
 
         describe("without any transition", () => {
-            beforeEach(() => {
-                wrapper.setProps({ transition: null });
-            });
-
             it("transition creation is possible", () => {
                 expect(wrapper.contains(create_transition_selector)).toBeTruthy();
             });
@@ -143,15 +143,17 @@ describe("TransitionMatrixContent", () => {
         });
 
         describe("with a transition", () => {
-            const transition = create("transition");
+            const transition = {
+                from_id: 1,
+                to_id: 2
+            };
 
             beforeEach(() => {
-                wrapper.setProps({ transition });
-                store.getters.is_workflow_advanced = true;
+                store.getters.current_workflow_transitions = [transition];
             });
 
             it("shows transition", () => {
-                expect(wrapper.contains(delete_transition_selector)).toBeTruthy();
+                expect(wrapper.contains(confirm_delete_transition_selector)).toBeTruthy();
                 expect(wrapper.contains(transition_configuration_selector)).toBeTruthy();
             });
 
@@ -163,57 +165,39 @@ describe("TransitionMatrixContent", () => {
                 it("does not show the 'configure transition' button", () => {
                     expect(wrapper.contains(transition_configuration_selector)).toBeFalsy();
                 });
-            });
 
-            describe("during another operation running", () => {
-                beforeEach(() => {
-                    store.state.is_operation_running = true;
-                });
-
-                it("transition deletion is disabled", () => {
-                    expect(wrapper.find(delete_transition_selector).classes()).toContain(
-                        "tracker-workflow-transition-action-disabled"
-                    );
+                it("does not confirm the transition deletion button", () => {
+                    expect(wrapper.contains(confirm_delete_transition_selector)).toBeFalsy();
                 });
 
                 describe("when user clicks to delete transition", () => {
+                    let deleteTransitionResolve;
+
                     beforeEach(() => {
+                        store.dispatch.and.returnValue(
+                            new Promise(resolve => {
+                                deleteTransitionResolve = resolve;
+                            })
+                        );
                         wrapper.find(delete_transition_selector).trigger("click");
                     });
 
-                    it("does nothing", () => {
-                        expect(store.dispatch).not.toHaveBeenCalledWith("deleteTransition");
+                    it("shows a spinner", () => {
+                        expect(wrapper.contains(spinner_selector)).toBeTruthy();
                     });
-                });
-            });
-
-            describe("when user clicks to delete transition", () => {
-                let deleteTransitionResolve;
-
-                beforeEach(() => {
-                    store.dispatch.and.returnValue(
-                        new Promise(resolve => {
-                            deleteTransitionResolve = resolve;
-                        })
-                    );
-                    wrapper.find(delete_transition_selector).trigger("click");
-                });
-
-                it("shows a spinner", () => {
-                    expect(wrapper.contains(spinner_selector)).toBeTruthy();
-                });
-                it("deletes the transition", () => {
-                    expect(store.dispatch).toHaveBeenCalledWith("deleteTransition", transition);
-                });
-
-                describe("and transition successfully deleted", () => {
-                    beforeEach(async () => {
-                        deleteTransitionResolve();
-                        await wrapper.vm.$nextTick();
+                    it("deletes the transition", () => {
+                        expect(store.dispatch).toHaveBeenCalledWith("deleteTransition", transition);
                     });
 
-                    it("hides spinner", () => {
-                        expect(wrapper.contains(spinner_selector)).toBeFalsy();
+                    describe("and transition successfully deleted", () => {
+                        beforeEach(async () => {
+                            deleteTransitionResolve();
+                            await wrapper.vm.$nextTick();
+                        });
+
+                        it("hides spinner", () => {
+                            expect(wrapper.contains(spinner_selector)).toBeFalsy();
+                        });
                     });
                 });
             });
@@ -224,7 +208,7 @@ describe("TransitionMatrixContent", () => {
                 });
 
                 it("shows an 'updated' animation", () => {
-                    const delete_transition_icon = wrapper.find(delete_transition_selector);
+                    const delete_transition_icon = wrapper.find(confirm_delete_transition_selector);
                     const configure_transition_button = wrapper.find(
                         transition_configuration_selector
                     );

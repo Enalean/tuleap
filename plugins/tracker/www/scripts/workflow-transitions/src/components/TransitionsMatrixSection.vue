@@ -40,7 +40,6 @@
                         v-bind:key="to.id"
                         v-bind:from="from"
                         v-bind:to="to"
-                        v-bind:transition="findTransition(from, to)"
                     />
                 </tr>
             </tbody>
@@ -71,7 +70,7 @@ export default {
     components: { TransitionMatrixColumnHeader, TransitionMatrixContent },
     computed: {
         ...mapState(["current_tracker"]),
-        ...mapGetters(["all_target_states", "current_workflow_transitions"]),
+        ...mapGetters(["all_target_states"]),
 
         all_source_values() {
             return [
@@ -90,13 +89,6 @@ export default {
             const workflow_field_id = this.current_tracker.workflow.field_id;
 
             return `/plugins/tracker/?tracker=${tracker_id}&func=admin-formElement-update&formElement=${workflow_field_id}`;
-        }
-    },
-    methods: {
-        findTransition(from, to) {
-            return this.current_workflow_transitions.find(
-                transition => transition.from_id === from.id && transition.to_id === to.id
-            );
         }
     }
 };
