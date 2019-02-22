@@ -62,14 +62,14 @@ class DocmanItemsTest extends DocmanBase
         );
         $items = $response->json();
 
-        $this->assertEquals(count($items), 8);
+        $this->assertEquals(count($items), 9);
 
         $folder_2_index = 0;
-        $item_a_index = 3;
-        $item_c_index = 4;
-        $item_e_index = 5;
-        $item_f_index = 6;
-        $item_g_index = 7;
+        $item_a_index = 4;
+        $item_c_index = 5;
+        $item_e_index = 6;
+        $item_f_index = 7;
+        $item_g_index = 8;
 
 
         $this->assertEquals($items[$folder_2_index]['title'], 'folder 2');

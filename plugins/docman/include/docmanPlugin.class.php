@@ -50,6 +50,7 @@ use Tuleap\Docman\Upload\FileUploadController;
 use Tuleap\Docman\Upload\Version\DocumentOnGoingVersionToUploadDAO;
 use Tuleap\Docman\Upload\Version\VersionBeingUploadedInformationProvider;
 use Tuleap\Docman\Upload\Version\VersionDataStore;
+use Tuleap\Docman\Upload\Version\VersionUploadCanceler;
 use Tuleap\Docman\Upload\Version\VersionUploadFinisher;
 use Tuleap\Docman\Upload\Version\VersionUploadPathAllocator;
 use Tuleap\Http\HTTPFactoryBuilder;
@@ -1322,12 +1323,13 @@ class DocmanPlugin extends Plugin
     {
         $root_path      = $this->getPluginInfo()->getPropertyValueForName('docman_root');
         $path_allocator = new VersionUploadPathAllocator();
+        $version_to_upload_dao = new DocumentOnGoingVersionToUploadDAO();
         return new FileUploadController(
             new TusServer(
                 HTTPFactoryBuilder::responseFactory(),
                 new VersionDataStore(
                     new VersionBeingUploadedInformationProvider(
-                        new DocumentOnGoingVersionToUploadDAO(),
+                        $version_to_upload_dao,
                         $this->getItemFactory(),
                         $path_allocator
                     ),
@@ -1341,12 +1343,13 @@ class DocmanPlugin extends Plugin
                         $this->getItemFactory(),
                         new Docman_VersionFactory(),
                         EventManager::instance(),
-                        new DocumentOnGoingVersionToUploadDAO(),
+                        $version_to_upload_dao,
                         new Docman_FileStorage($root_path),
                         new Docman_MIMETypeDetector(),
                         UserManager::instance(),
                         new Docman_LockFactory()
-                    )
+                    ),
+                    new VersionUploadCanceler($path_allocator, $version_to_upload_dao)
                 )
             ),
             new \Tuleap\Docman\Tus\TusCORSMiddleware(),
