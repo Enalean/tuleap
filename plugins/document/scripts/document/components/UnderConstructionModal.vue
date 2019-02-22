@@ -61,6 +61,9 @@
                         </li>
                     </ul>
                 </li>
+                <li v-translate>
+                    List the performable actions for a given item via a dropdown menu.
+                </li>
             </ul>
             <p v-translate>
                 You can switch to the old Document Manager UI whenever you want. (The switch is at the bottom of the page)

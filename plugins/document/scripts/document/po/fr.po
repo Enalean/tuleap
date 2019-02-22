@@ -148,6 +148,10 @@ msgstr "Date de dernière mise à jour"
 msgid "Link"
 msgstr "Lien"
 
+msgid "List the performable actions for a given item via a dropdown menu."
+msgstr ""
+"Lister les actions réalisables pour un élément donné via un menu déroulant."
+
 msgid "My content..."
 msgstr "Mon contenu..."
 
