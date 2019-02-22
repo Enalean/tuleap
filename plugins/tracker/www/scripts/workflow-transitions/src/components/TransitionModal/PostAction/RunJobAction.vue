@@ -21,10 +21,12 @@
 <template>
     <post-action v-bind:post-action="post_action">
         <div class="tracker-workflow-transition-modal-action-details-element tlp-form-element">
-            <label v-bind:for="job_url_input_id" class="tlp-label" v-translate>Job url</label>
+            <label v-bind:for="job_url_input_id" class="tlp-label">
+                <translate>Job url</translate> <i class="fa fa-asterisk"></i>
+            </label>
             <input
                 v-bind:id="job_url_input_id"
-                type="text"
+                type="url"
                 class="tlp-input"
                 placeholder="https://www.example.com"
                 v-model="job_url"
@@ -42,7 +44,7 @@
                 <li v-translate="{ project_id: current_tracker.project.id }">
                     projectId: identifier of the current project (ie. %{ project_id }) (integer)
                 </li>
-                <li v-translate="{ tracker_id: current_tracker.id}">
+                <li v-translate="{ tracker_id: current_tracker.id }">
                     trackerId: identifier of the current tracker (ie. %{ tracker_id }) (integer)
                 </li>
                 <li v-translate>

@@ -89,6 +89,14 @@ describe("SetValueAction", () => {
         });
     });
 
+    describe("when there are no valid fields", () => {
+        it("shows a message", () => {
+            store.getters["transitionModal/set_value_action_fields"] = [];
+
+            expect(wrapper.contains("[data-test-type=no_fields]")).toBeTruthy();
+        });
+    });
+
     describe("when post action sets a date field", () => {
         const post_action = create("post_action", "presented", {
             type: "set_field_value",

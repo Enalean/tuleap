@@ -18,8 +18,9 @@
   -->
 <template>
     <h1 class="tlp-modal-title" id="configure-modal-title">
+        <translate v-if="!current_transition" key="loading_label">Loading transition</translate>
         <translate
-            v-if="is_workflow_advanced"
+            v-else-if="is_workflow_advanced"
             key="transition_label"
             v-bind:translate-params="{
                 from_state_label,
@@ -40,6 +41,7 @@ export default {
     name: "TransitionModalTitle",
     computed: {
         ...mapGetters(["all_target_states", "is_workflow_advanced"]),
+        ...mapState("transitionModal", ["current_transition"]),
         ...mapState("transitionModal", {
             from_state_label(state) {
                 if (state.current_transition === null) {

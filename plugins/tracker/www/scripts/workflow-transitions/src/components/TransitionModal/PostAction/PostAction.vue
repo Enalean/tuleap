@@ -25,6 +25,7 @@
                 class="tlp-select"
                 v-model="post_action_type"
                 v-bind:disabled="is_modal_save_running"
+                ref="select"
             >
                 <option v-bind:value="POST_ACTION_TYPE.RUN_JOB" v-translate>Launch a CI job</option>
                 <option v-bind:value="POST_ACTION_TYPE.SET_FIELD_VALUE" v-translate>Change the value of a field</option>
@@ -57,7 +58,10 @@ export default {
     props: {
         postAction: {
             type: Object,
-            mandatory: true
+            required: true
+        },
+        is_invalid: {
+            type: Boolean
         }
     },
     computed: {
@@ -75,6 +79,21 @@ export default {
                     type
                 });
             }
+        }
+    },
+    watch: {
+        is_invalid: {
+            async handler(new_value) {
+                await this.$nextTick();
+                if (new_value === true && this.$refs.select) {
+                    this.$refs.select.setCustomValidity(
+                        this.$gettext(
+                            "Your tracker doesn't seem to have integer, float or date fields."
+                        )
+                    );
+                }
+            },
+            immediate: true
         }
     },
     methods: {
