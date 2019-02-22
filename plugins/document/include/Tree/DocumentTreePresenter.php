@@ -45,6 +45,10 @@ class DocumentTreePresenter
      */
     public $max_size_upload;
     /**
+     * @var int
+     */
+    public $max_files_dragndrop;
+    /**
      * @var bool
      */
     public $is_under_construction;
@@ -63,7 +67,8 @@ class DocumentTreePresenter
         $this->project_name          = $project->getUnixNameLowerCase();
         $this->user_is_admin         = $user->isAdmin($project->getID());
         $this->user_can_create_wiki  = $project->usesWiki();
-        $this->max_size_upload       = \ForgeConfig::get("sys_max_size_upload");
+        $this->max_size_upload       = \ForgeConfig::get(PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING);
+        $this->max_files_dragndrop   = \ForgeConfig::get(PLUGIN_DOCMAN_MAX_NB_FILE_UPLOADS_SETTING);
         $this->is_under_construction = $is_under_construction;
         $this->embedded_are_allowed  = $embedded_are_allowed;
     }
