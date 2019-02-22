@@ -116,6 +116,31 @@
     );
 </script>
 
+<p>When the dom is updated for example with
+    <button type="button" id="popover-example-dom-update-button" class="tlp-button-primary">update the dom now!</button>,
+    then the popover always follows its
+    <a href="javascript:;" id="popover-example-dom-update" class="popover-example">target</a>.
+</p>
+
+<section class="tlp-popover tlp-popover-info" id="popover-example-dom-update-content">
+    <div class="tlp-popover-arrow"></div>
+    <div class="tlp-popover-header">
+        <h1 class="tlp-popover-title">This is a title of popover</h1>
+    </div>
+    <div class="tlp-popover-body">
+        <p>
+            This is an example of sentence that you can find on a popover.
+        </p>
+    </div>
+</section>
+
+<script>
+    tlp.createPopover(
+        document.getElementById("popover-example-dom-update"),
+        document.getElementById("popover-example-dom-update-content")
+    );
+</script>
+
 <p>You can decide where to place the popover relatively to the trigger element. Play with the following dots to see the various placement.</p>
 <div class="popover-examples-container">
     <i class="fa fa-circle popover-example" id="popover-placement-top-start" data-placement="top-start"></i>

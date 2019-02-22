@@ -23,11 +23,10 @@ import { findClosestElement } from "./dom-walker.js";
 const CLASS_TLP_POPOVER_SHOWN = "tlp-popover-shown";
 
 export default function createPopover(popover_trigger, popover_content, options = {}) {
-    listenTriggerEvents(popover_trigger, popover_content, options);
-
     const anchor = options.anchor || popover_trigger;
+    const popper = new Popper(anchor, popover_content, getPopperOptions(anchor, options));
 
-    return new Popper(anchor, popover_content, getPopperOptions(anchor, options));
+    listenTriggerEvents(popover_trigger, popover_content, options, popper);
 }
 
 function getPopperOptions(anchor, options) {
@@ -46,20 +45,20 @@ function getPopperOptions(anchor, options) {
     };
 }
 
-function listenTriggerEvents(popover_trigger, popover_content, options) {
+function listenTriggerEvents(popover_trigger, popover_content, options, popper) {
     const trigger = options.trigger || popover_trigger.dataset.trigger || "hover";
 
     if (trigger === "hover") {
-        listenHoverEvents(popover_trigger, popover_content);
+        listenHoverEvents(popover_trigger, popover_content, popper);
     } else if (trigger === "click") {
-        listenClickEvents(popover_trigger, popover_content);
+        listenClickEvents(popover_trigger, popover_content, popper);
     }
 }
 
-function listenHoverEvents(popover_trigger, popover_content) {
+function listenHoverEvents(popover_trigger, popover_content, popper) {
     popover_trigger.addEventListener("mouseover", () => {
         hideAllShownPopovers();
-        popover_content.classList.add(CLASS_TLP_POPOVER_SHOWN);
+        showPopover(popover_content, popper);
     });
     popover_trigger.addEventListener("mouseout", () => {
         hideAllShownPopovers();
@@ -67,12 +66,12 @@ function listenHoverEvents(popover_trigger, popover_content) {
     });
 }
 
-function listenClickEvents(popover_trigger, popover_content) {
+function listenClickEvents(popover_trigger, popover_content, popper) {
     popover_trigger.addEventListener("click", () => {
         const is_shown = popover_content.classList.contains(CLASS_TLP_POPOVER_SHOWN);
         hideAllShownPopovers();
         if (!is_shown) {
-            popover_content.classList.add(CLASS_TLP_POPOVER_SHOWN);
+            showPopover(popover_content, popper);
         }
     });
     document.addEventListener("click", event => {
@@ -93,4 +92,9 @@ function hideAllShownPopovers() {
     for (const popover of document.querySelectorAll("." + CLASS_TLP_POPOVER_SHOWN)) {
         popover.classList.remove(CLASS_TLP_POPOVER_SHOWN);
     }
+}
+
+function showPopover(popover_content, popper) {
+    popper.scheduleUpdate();
+    popover_content.classList.add(CLASS_TLP_POPOVER_SHOWN);
 }
