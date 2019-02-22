@@ -20,7 +20,7 @@
 <template>
     <button
         type="button"
-        class="tlp-button-primary tlp-button-outline tlp-button-small tlp-dropdown-split-button-main"
+        class="tlp-button-primary tlp-button-small document-quick-look-action-button-margin"
         v-on:click="goToDetails"
     >
         <i class="fa fa-list tlp-button-icon"></i>
