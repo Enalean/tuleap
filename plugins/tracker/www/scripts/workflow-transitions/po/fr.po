@@ -28,9 +28,11 @@ msgstr "Ajouter une nouvelle action"
 msgid "An error occurred"
 msgstr "Une erreur est survenue"
 
-msgid "Are you sure to change transitions based field?"
+msgid ""
+"Are you sure you want to change the field used to define the transitions?"
 msgstr ""
-"Êtes-vous sûr de changer le champ sur lequel les transitions sont basées ?"
+"Êtes-vous sûr de vouloir changer le champ utilisé pour définir les "
+"transitions ?"
 
 msgid ""
 "By clicking on \"Fully deactivate the workflow\", the workflow's behaviour "
@@ -193,7 +195,7 @@ msgstr "Champ sur lequel les transitions sont basées"
 msgid "Transitions rules configuration"
 msgstr "Configuration des règles de transitions"
 
-msgid "Transitions rules was deleted. Workflow is reset."
+msgid "Transitions rules were deleted. Workflow is reset."
 msgstr ""
 "Les règles de transitions ont été supprimées. Le workflow est réinitialisé."
 

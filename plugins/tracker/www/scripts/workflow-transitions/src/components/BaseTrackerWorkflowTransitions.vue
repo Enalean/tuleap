@@ -39,7 +39,7 @@
                     </div>
                     <template v-if="is_tracker_available">
                         <template v-if="is_base_field_configured">
-                            <transitions-configuration-header-section/>
+                            <header-section/>
                             <transitions-matrix-section/>
                         </template>
                         <first-configuration-sections v-else-if="has_selectbox_fields"/>
@@ -61,7 +61,7 @@
 <script>
 import { mapState, mapGetters } from "vuex";
 import FirstConfigurationSections from "./FirstConfiguration/FirstConfigurationSections.vue";
-import TransitionsConfigurationHeaderSection from "./TransitionsConfigurationHeaderSection.vue";
+import HeaderSection from "./Header/HeaderSection.vue";
 import TransitionsMatrixSection from "./TransitionsMatrixSection.vue";
 import TransitionModal from "./TransitionModal/TransitionModal.vue";
 import TransitionRulesEnforcementWarning from "./TransitionRulesEnforcementWarning.vue";
@@ -74,7 +74,7 @@ export default {
         FirstConfigurationImpossibleWarning,
         TransitionModal,
         FirstConfigurationSections,
-        TransitionsConfigurationHeaderSection,
+        HeaderSection,
         TransitionsMatrixSection
     },
 

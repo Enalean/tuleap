@@ -24,7 +24,7 @@ import { shallowMount } from "@vue/test-utils";
 import BaseTrackerWorkflowTransitions from "./BaseTrackerWorkflowTransitions.vue";
 import FirstConfigurationImpossibleWarning from "./FirstConfiguration/FirstConfigurationImpossibleWarning.vue";
 import FirstConfigurationSections from "./FirstConfiguration/FirstConfigurationSections.vue";
-import TransitionsConfigurationHeaderSection from "./TransitionsConfigurationHeaderSection.vue";
+import HeaderSection from "./Header/HeaderSection.vue";
 import TransitionsMatrixSection from "./TransitionsMatrixSection.vue";
 import TransitionRulesEnforcementWarning from "./TransitionRulesEnforcementWarning.vue";
 import store_options from "../store/index.js";
@@ -62,7 +62,7 @@ describe("BaseTrackerWorkflowTransitions", () => {
         });
         it("does not show anything else", () => {
             expect(wrapper.contains(FirstConfigurationSections)).toBeFalsy();
-            expect(wrapper.contains(TransitionsConfigurationHeaderSection)).toBeFalsy();
+            expect(wrapper.contains(HeaderSection)).toBeFalsy();
             expect(wrapper.contains(TransitionsMatrixSection)).toBeFalsy();
         });
     });
@@ -78,7 +78,7 @@ describe("BaseTrackerWorkflowTransitions", () => {
         });
         it("does not show anything else", () => {
             expect(wrapper.contains(FirstConfigurationSections)).toBeFalsy();
-            expect(wrapper.contains(TransitionsConfigurationHeaderSection)).toBeFalsy();
+            expect(wrapper.contains(HeaderSection)).toBeFalsy();
             expect(wrapper.contains(TransitionsMatrixSection)).toBeFalsy();
         });
     });
@@ -126,7 +126,7 @@ describe("BaseTrackerWorkflowTransitions", () => {
                 );
             });
             it("shows configuration header and matrix", () => {
-                expect(wrapper.contains(TransitionsConfigurationHeaderSection)).toBeTruthy();
+                expect(wrapper.contains(HeaderSection)).toBeTruthy();
                 expect(wrapper.contains(TransitionsMatrixSection)).toBeTruthy();
             });
             it("shows rules enforcement warning", () => {
