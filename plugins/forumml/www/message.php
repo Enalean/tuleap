@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2019. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2005. All Rights Reserved.
  *
  * Originally written by Jean-Philippe Giola, 2005
@@ -150,6 +150,11 @@ if ($p && $plugin_manager->isPluginAvailable($p) && $p->isAllowed(null)) {
     }
 	echo '<h2>'.$title.'</h2>';
 
+    $hp              = Codendi_HTMLPurifier::instance();
+    $purified_search = '';
+    if ($request->exist('search')) {
+        $purified_search = $hp->purify($request->get('search'));
+    }
 	if (! $request->exist('pv') || ($request->exist('pv') && $request->get('pv') == 0)) {
 		echo "<table border=0 width=100%>
 		<tr>";
@@ -164,11 +169,6 @@ if ($p && $plugin_manager->isPluginAvailable($p) && $p->isAllowed(null)) {
         }
         echo "</td>";
 
-        $hp = Codendi_HTMLPurifier::instance();
-        $purified_search = "";
-        if ($request->exist('search')) {
-            $purified_search = $hp->purify($request->get('search'));
-        }
         echo "
 			<td align='right'>
 				(<a href='/plugins/forumml/message.php?group_id=".$group_id."&list=".$list_id."&topic=".$topic."&offset=".$offset."&search=".$purified_search."&pv=1'>
