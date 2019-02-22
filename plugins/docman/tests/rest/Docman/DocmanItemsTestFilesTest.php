@@ -29,7 +29,7 @@ use Tuleap\Docman\rest\DocmanDataBuilder;
 
 require_once __DIR__ . '/../bootstrap.php';
 
-class DocmanItemsTestFiles extends DocmanBase
+class DocmanItemsTestFilesTest extends DocmanBase
 {
     public function testGetRootId(): int
     {
@@ -234,7 +234,7 @@ class DocmanItemsTestFiles extends DocmanBase
     public function testPatchFileDocument(int $root_id) : void
     {
         $query     = json_encode([
-                                     'title'           => 'File2',
+                                     'title'           => 'My new file',
                                      'parent_id'       => $root_id,
                                      'type'            => 'file',
                                      'file_properties' => ['file_name' => 'file1', 'file_size' => 0]
@@ -244,6 +244,7 @@ class DocmanItemsTestFiles extends DocmanBase
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
             $this->client->post('docman_items', null, $query)
         );
+
         $this->assertEquals(201, $response1->getStatusCode());
         $this->assertEmpty($response1->json()['file_properties']['upload_href']);
 
@@ -261,7 +262,7 @@ class DocmanItemsTestFiles extends DocmanBase
             [
                 'version_title'   => 'My version title',
                 'changelog'       => 'I have changed',
-                'file_properties' => ['file_name' => 'file1', 'file_size' => $file_size]
+                'file_properties' => ['file_name' => 'My new file', 'file_size' => $file_size]
             ]
         );
 
@@ -300,9 +301,15 @@ class DocmanItemsTestFiles extends DocmanBase
             )
         );
 
-
         $this->assertEquals(204, $tus_response_upload->getStatusCode());
         $this->assertEquals([$file_size], $tus_response_upload->getHeader('Upload-Offset')->toArray());
+
+        $response = $this->getResponse(
+            $this->client->get('docman_items/' . $file_id),
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
+        );
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals('file', $response->json()['type']);
     }
 
     /**
