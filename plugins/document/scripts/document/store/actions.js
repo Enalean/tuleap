@@ -69,7 +69,11 @@ export const getSubfolderContent = async (context, folder_id) => {
 export const createNewItem = async (context, [item, parent, current_folder]) => {
     try {
         if (item.type === TYPE_FILE) {
-            await createNewFile(context, item, parent, true);
+            let should_display_item = true;
+            if (!parent.is_expanded && parent.id !== current_folder.id) {
+                should_display_item = false;
+            }
+            await createNewFile(context, item, parent, should_display_item);
         } else {
             const item_reference = await addNewDocument(item, parent.id);
 
@@ -204,11 +208,9 @@ async function createNewFile(
 
         return Promise.resolve(context.commit("addJustCreatedItemToFolderContent", created_item));
     }
-
     if (context.state.folder_content.find(({ id }) => id === new_file.id)) {
         return;
     }
-
     const fake_item = {
         id: new_file.id,
         title: dropped_file.name,
