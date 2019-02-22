@@ -12,6 +12,9 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 2.0.6\n"
 
+msgid "An error occurred while deleting the file"
+msgstr "Une erreur est survenue lors de la suppression du fichier"
+
 msgid "Artifact linked to a Files release cannot be moved"
 msgstr ""
 "Les artéfacts liés à une version du service Fichiers ne peuvent pas être "

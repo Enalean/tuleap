@@ -5,6 +5,11 @@
     <service shortname="file" enabled="true"/>
   </services>
   <ugroups>
+    <ugroup name="project_members" description="Project members">
+      <members>
+        <member format="username">rest_api_tester_1</member>
+      </members>
+    </ugroup>
     <ugroup name="FRS_Admin" description="">
       <members>
           <member format="username">rest_api_tester_1</member>
@@ -33,15 +38,27 @@
                   <user format="username">rest_api_tester_1</user>
               </link>
               <file
-                  src="data/authors.txt"
-                  md5sum="7865eaef28db1b906eaf1e4fa353796d"
-                  name="BooksAuthors.txt"
-                  release-time="2015-12-03T14:55:00"
-                  post-date="2015-12-03T16:46:00"
-                  arch="x86_64"
-                  filetype="text"
+                      src="data/authors.txt"
+                      md5sum="7865eaef28db1b906eaf1e4fa353796d"
+                      name="BooksAuthors.txt"
+                      release-time="2015-12-03T14:55:00"
+                      post-date="2015-12-03T16:46:00"
+                      arch="x86_64"
+                      filetype="text"
               >
                   <description>List of book authors</description>
+                  <user format="username">rest_api_tester_1</user>
+              </file>
+              <file
+                      src="data/readme.mkd"
+                      md5sum="a6ac57b52bedbec36d967e4e1a27cdb6"
+                      name="readme.mkd"
+                      release-time="2015-12-03T14:55:00"
+                      post-date="2015-12-03T16:46:00"
+                      arch="x86_64"
+                      filetype="text"
+              >
+                  <description>Sample file</description>
                   <user format="username">rest_api_tester_1</user>
               </file>
           </release>
