@@ -63,6 +63,7 @@
                 <p v-if="is_workflow_advanced" key="simple_text" v-translate>
                     You're about to switch to simple configuration mode.
                     The first configuration in the destination state column will be applied to the whole state.
+                    Please check that each state configuration is correct.
                 </p>
                 <p v-else key="advanced_text" v-translate>
                     You're about to switch to advanced configuration mode.

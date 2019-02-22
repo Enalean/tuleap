@@ -19,78 +19,73 @@
   -->
 
 <template>
-    <post-action v-bind:post-action="post_action">
-        <div class="tracker-workflow-transition-modal-action-details-element tlp-form-element">
-            <label
-                v-bind:for="field_id_input_id"
-                class="tlp-label"
-                v-translate
-            >
-                Choose a field
-            </label>
-            <select
-                v-bind:id="field_id_input_id"
-                class="tlp-select"
-                data-test-type="field"
-                v-model="post_action_field"
-                required
-                v-bind:disabled="is_modal_save_running"
-            >
-                <option
-                    v-bind:value="null"
-                    v-translate
-                    disabled
+    <post-action v-bind:post-action="post_action" v-bind:is_invalid="!is_there_at_least_one_applicable_field">
+        <div
+            v-if="!is_there_at_least_one_applicable_field"
+            class="tracker-workflow-transition-modal-action-details-element tlp-property"
+        >
+            <p class="tlp-text-info" v-translate data-test-type="no_fields">
+                Your tracker doesn't seem to have integer, float or date fields.
+            </p>
+        </div>
+        <template v-else>
+            <div class="tracker-workflow-transition-modal-action-details-element tlp-form-element">
+                <label v-bind:for="field_id_input_id" class="tlp-label">
+                    <translate>Choose a field</translate> <i class="fa fa-asterisk"></i>
+                </label>
+                <select
+                    v-bind:id="field_id_input_id"
+                    class="tlp-select"
+                    data-test-type="field"
+                    v-model="post_action_field"
+                    required
+                    v-bind:disabled="is_modal_save_running"
                 >
-                    Please choose
-                </option>
-                <optgroup
-                    v-for="group in available_fields_by_groups"
-                    v-bind:key="group.label"
-                    v-bind:label="group.label"
-                    v-bind:data-test-type="`${group.type}-group`"
-                >
-                    <option
-                        v-for="field in group.fields"
-                        v-bind:key="field.field_id"
-                        v-bind:value="field"
-                        v-bind:disabled="field.disabled && field !== post_action_field"
-                        v-bind:data-test-type="`field_${field.field_id}`"
-                    >
-                        {{ field.label }}
+                    <option v-bind:value="null" v-translate disabled>
+                        Please choose
                     </option>
-                </optgroup>
-            </select>
-        </div>
+                    <optgroup
+                        v-for="group in available_fields_by_groups"
+                        v-bind:key="group.label"
+                        v-bind:label="group.label"
+                        v-bind:data-test-type="`${group.type}-group`"
+                    >
+                        <option
+                            v-for="field in group.fields"
+                            v-bind:key="field.field_id"
+                            v-bind:value="field"
+                            v-bind:disabled="field.disabled && field !== post_action_field"
+                            v-bind:data-test-type="`field_${field.field_id}`"
+                        >
+                            {{ field.label }}
+                        </option>
+                    </optgroup>
+                </select>
+            </div>
 
-        <div class="tracker-workflow-transition-modal-action-details-element tlp-form-element">
-            <label
-                v-bind:for="value_input_id"
-                class="tlp-label"
-                v-translate
-            >
-                New value
-            </label>
-            <component
-                v-bind:is="value_input_component"
-                v-bind:id="value_input_id"
-                v-model="value"
-                v-bind:disabled="is_modal_save_running"
-            />
-        </div>
+            <div class="tracker-workflow-transition-modal-action-details-element tlp-form-element">
+                <label v-bind:for="value_input_id" class="tlp-label">
+                    <translate>New value</translate> <i class="fa fa-asterisk"></i>
+                </label>
+                <component
+                    v-bind:is="value_input_component"
+                    v-bind:id="value_input_id"
+                    v-model="value"
+                    v-bind:disabled="is_modal_save_running"
+                />
+            </div>
+        </template>
     </post-action>
 </template>
-
 <script>
+import { mapState, mapGetters } from "vuex";
 import { DATE_FIELD, INT_FIELD, FLOAT_FIELD } from "../../../../../constants/fields-constants.js";
-import { DATE_FIELD_VALUE } from "../../../constants/workflow-constants.js";
+import { compare } from "../../../support/string.js";
 import PostAction from "./PostAction.vue";
 import DateInput from "./DateInput.vue";
 import FloatInput from "./FloatInput.vue";
 import IntInput from "./IntInput.vue";
 import PlaceholderInput from "./PlaceholderInput.vue";
-
-import { compare } from "../../../support/string.js";
-import { mapState, mapGetters } from "vuex";
 
 export default {
     name: "SetValueAction",
@@ -100,11 +95,6 @@ export default {
             type: Object,
             mandatory: true
         }
-    },
-    data() {
-        return {
-            DATE_FIELD_VALUE
-        };
     },
     computed: {
         ...mapState("transitionModal", ["current_transition", "is_modal_save_running"]),
@@ -131,6 +121,12 @@ export default {
                 }
             ].map(group => ({ ...group, fields: this.getAvailableFieldsOfType(group.type) }));
         },
+        is_there_at_least_one_applicable_field() {
+            const applicable_fields = this.available_fields.filter(({ type }) => {
+                return type === DATE_FIELD || type === INT_FIELD || type === FLOAT_FIELD;
+            });
+            return applicable_fields.length > 0;
+        },
         field_id_input_id() {
             return `post-action-${this.post_action.unique_id}-field-id`;
         },
@@ -144,9 +140,8 @@ export default {
                 return IntInput;
             } else if (this.post_action.field_type === FLOAT_FIELD) {
                 return FloatInput;
-            } else {
-                return PlaceholderInput;
             }
+            return PlaceholderInput;
         },
         post_action_field: {
             get() {

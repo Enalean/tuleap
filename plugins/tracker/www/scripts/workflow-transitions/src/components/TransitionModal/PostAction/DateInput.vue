@@ -21,8 +21,7 @@
 <template>
     <select
         class="tlp-select"
-        v-bind:value="value"
-        v-on:change="onChange"
+        v-model="field_value"
         v-bind:disabled="disabled"
         required
     >
@@ -68,9 +67,14 @@ export default {
             DATE_FIELD_VALUE
         };
     },
-    methods: {
-        onChange(event) {
-            return this.$emit("input", event.target.value);
+    computed: {
+        field_value: {
+            get() {
+                return this.value;
+            },
+            set(value) {
+                this.$emit("input", value);
+            }
         }
     }
 };
