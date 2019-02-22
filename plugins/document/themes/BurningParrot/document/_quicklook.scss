@@ -67,8 +67,9 @@
     margin: 0 $tlp-double-spacing 0 0;
 }
 
-#document-owner > .document-badge-avatar >.document-badge-avatar-username {
+#document-owner > .document-badge-avatar > .document-badge-avatar-username {
     color: $tlp-theme-color;
+    word-break: break-word;
 }
 
 .document-quick-look-property-empty {
@@ -78,7 +79,7 @@
 
 #item-description,
 .document-quick-look-properties-column > .tlp-property > p {
-    word-break: break-all;
+    word-break: break-word;
 }
 
 .document-quick-look-image > img {
@@ -98,19 +99,4 @@
 
 .quick-look-button {
     margin: 0 0 0 $tlp-spacing;
-}
-
-@media screen and (max-width: 1200px) {
-    .document-folder-content-quicklook {
-        flex-direction: column;
-    }
-
-    .document-folder-pane {
-        width: 100%;
-    }
-
-    .document-folder-right-container {
-        min-width: 100%;
-        margin: $tlp-spacing 0 0 0;
-    }
 }
