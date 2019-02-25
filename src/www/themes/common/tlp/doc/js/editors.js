@@ -173,6 +173,15 @@
                 );
             }
 
+            var popover_example_dom_update_button = document.getElementById(
+                "popover-example-dom-update-button"
+            );
+            if (popover_example_dom_update_button) {
+                popover_example_dom_update_button.addEventListener("click", function() {
+                    popover_example_dom_update_button.classList.toggle("tlp-button-large");
+                });
+            }
+
             var dropdown_trigger = document.getElementById("dropdown-example");
             if (dropdown_trigger) {
                 tlp.dropdown(dropdown_trigger);
