@@ -67,4 +67,13 @@ def runJavascriptCodingStandards() {
     sh 'docker run --rm -v $WORKSPACE/sources:/sources:ro $DOCKER_REGISTRY/prettier-checker "**/*.{js,vue}"'
 }
 
+def runPsalm(String configPath) {
+    dir ('sources') {
+        sh """
+        mkdir -p ../results/psalm/
+        scl enable php73 "src/vendor/bin/psalm --show-info=false --config='${configPath}' --report=../results/psalm/report.txt"
+        """
+    }
+}
+
 return this;

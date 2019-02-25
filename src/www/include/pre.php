@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011 - 2019. All rights reserved
+ * Copyright (c) Enalean, 2011 - Present. All rights reserved
  * Copyright 1999-2000 (c) The SourceForge Crew
  *
  * This file is a part of Tuleap.
@@ -28,7 +28,6 @@ if (PHP_VERSION_ID < 70200) {
     die('Tuleap must be run on a PHP 7.2 (or greater) engine.');
 }
 
-require_once __DIR__ . '/../../common/constants.php';
 require_once __DIR__ . '/../../vendor/autoload.php';
 
 date_default_timezone_set(TimezoneRetriever::getServerTimezone());
@@ -165,14 +164,6 @@ if (!$GLOBALS['sys_lang']) {
 }
 $Language = new BaseLanguage($GLOBALS['sys_supported_languages'], $GLOBALS['sys_lang']);
 
-//various html utilities
-require_once('utils.php');
-
-//security library
-require_once('session.php');
-
-//user functions like get_name, logged_in, etc
-require_once('user.php');
 $user_manager = UserManager::instance();
 $current_user = $user_manager->getCurrentUser();
 
@@ -180,18 +171,6 @@ $current_locale = $current_user->getLocale();
 setlocale(LC_CTYPE, "$current_locale.UTF-8");
 setlocale(LC_MESSAGES, "$current_locale.UTF-8");
 setlocale(LC_TIME, "$current_locale.UTF-8");
-
-//library to set up context help
-require_once('help.php');
-
-//exit_error library
-require_once('exit.php');
-
-//various html libs like button bar, themable
-require_once('html.php');
-
-// Permission stuff that need to cripple each and every hit
-require_once __DIR__.'/../project/admin/permissions.php';
 
 $event_manager = EventManager::instance();
 $event_manager->processEvent(

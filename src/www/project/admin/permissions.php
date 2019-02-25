@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean 2017 - 2018. All rights reserved
+ * Copyright (c) Enalean 2017 - Present. All rights reserved
  *
  * Originally written by Nicolas Guerin 2004, Codendi Team, Xerox
  *
@@ -42,8 +42,8 @@ use Tuleap\FRS\FRSPermissionDao;
 use Tuleap\FRS\FRSPermissionFactory;
 use Tuleap\FRS\FRSPermissionManager;
 
-require_once('www/project/admin/ugroup_utils.php');
-require_once('www/project/admin/project_admin_utils.php');
+require_once __DIR__ . '/ugroup_utils.php';
+require_once __DIR__ . '/project_admin_utils.php';
 
 
 /**
@@ -966,7 +966,7 @@ function permission_add_history($group_id, $permission_type, $object_id){
  *
  * @deprecated
  * @see PermissionsManager::savePermissions
- * @return a two elements array:
+ * @return array a two elements array:
  *  - First element is 'true' or 'false', depending on whether permissions where changed
  *  - Second element is an optional message to be displayed (warning or error)
  * Exemples: (false,"Cannot combine 'any registered user' with another group)

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -147,7 +147,8 @@ class DynamicUGroupMembersUpdater
     {
         if (! $this->user_permissions_dao->isUserPartOfProjectMembers($project->getID(), $user->getId())) {
             $username = $user->getUserName();
-            account_add_user_to_group($project->getID(), $username);
+            require_once __DIR__ . '/../../../../www/include/account.php';
+            \account_add_user_to_group($project->getID(), $username);
             $this->ugroup_binding->reloadUgroupBindingInProject($project);
         }
     }

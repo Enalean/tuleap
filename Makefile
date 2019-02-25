@@ -166,6 +166,22 @@ simpletest-72: ## Run SimpleTest with PHP 7.2
 simpletest-72-file: ## Run SimpleTest with PHP 7.2 on a given file or directory with FILE variable
 	@docker run --rm -v $(CURDIR):/tuleap:ro -u $(id -u):$(id -g) enalean/tuleap-simpletest:c6-php72 /opt/remi/php72/root/usr/bin/php /tuleap/tests/bin/simpletest11x.php run $(FILE)
 
+psalm: ## Run Psalm (PHP static analysis tool). Use FILES variables to execute on a given set of files or directories.
+	tests/psalm/psalm-config-plugins-git-ignore.php tests/psalm/psalm.xml ./src/vendor/bin/psalm --show-info=false -c={config_path} $(FILES)
+
+psalm-with-info: ## Run Psalm (PHP static analysis tool) with INFO findings. Use FILES variables to execute on a given set of files or directories.
+	tests/psalm/psalm-config-plugins-git-ignore.php tests/psalm/psalm.xml ./src/vendor/bin/psalm --show-info=false -c={config_path} $(FILES)
+
+psalm-baseline-update: ## Update the baseline used by Psalm (PHP static analysis tool).
+	$(eval TMPPSALM := $(shell mktemp -d))
+	git checkout-index -a --prefix="$(TMPPSALM)/"
+	$(MAKE) -C "$(TMPPSALM)/" composer npm-build
+	pushd "$(TMPPSALM)"; \
+	./src/vendor/bin/psalm -c=./tests/psalm/psalm.xml --update-baseline; \
+	popd
+	cp -f "$(TMPPSALM)"/tests/psalm/tuleap-baseline.xml ./tests/psalm/tuleap-baseline.xml
+	rm -rf "$(TMPPSALM)"
+
 bash-web: ## Give a bash on web container
 	@docker exec -e COLUMNS="`tput cols`" -e LINES="`tput lines`" -ti `docker-compose ps -q web` bash
 

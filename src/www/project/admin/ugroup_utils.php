@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * Originally written by Nicolas Guerin 2004, Codendi Team, Xerox
@@ -24,8 +24,8 @@
 use Tuleap\Project\Admin\ProjectUGroup\CannotCreateUGroupException;
 use Tuleap\Request\RestrictedUsersAreHandledByPluginEvent;
 
-require_once 'utils.php';
-require_once 'project_admin_utils.php';
+require_once __DIR__ . '/../../include/utils.php';
+require_once __DIR__ . '/project_admin_utils.php';
 
 // Predefined ugroups. Should be consistent with DB (table 'ugroup')
 /** @deprecated **/
@@ -225,7 +225,7 @@ function ugroup_get_name_from_id($ugroup_id) {
  * Check membership of the user to a specified ugroup
  * $group_id is necessary for automatic project groups like project member, release admin, etc.
  * $atid is necessary for trackers since the tracker admin role is different for each tracker.
- * @return true if user is member of the ugroup, false otherwise.
+ * @return bool true if user is member of the ugroup, false otherwise.
  */
 function ugroup_user_is_member($user_id, $ugroup_id, $group_id, $atid=0) {
     $user = UserManager::instance()->getUserById($user_id);

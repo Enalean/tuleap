@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,19 +16,19 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
-$basedir      = dirname(__DIR__, 2);
-$src_path     = $basedir.'/src';
-$include_path = $basedir.'/src/www/include';
-
-ini_set('include_path', ini_get('include_path').':'.$src_path.':'.$include_path);
+declare(strict_types=1);
 
 require_once __DIR__ . '/../../src/vendor/autoload.php';
-require_once __DIR__ . '/../../src/www/themes/BurningParrot/BurningParrotTheme.php';
-require_once __DIR__ . '/../lib/Network/HTTPResponseFunctionsOverload.php';
+require_once __DIR__ . '/../../src/www/themes/BurningParrot/vendor/autoload.php';
 
-foreach (glob(__DIR__ . '/../../plugins/*/phpunit/bootstrap.php') as $bootstrap_plugin) {
-    require_once $bootstrap_plugin;
+ini_set('include_path', ini_get('include_path').':' . __DIR__ . '/../../src:'. __DIR__ . '/../../src/www/include');
+
+$plugins_directory = __DIR__ . '/../../plugins/';
+foreach (array_diff(scandir($plugins_directory), array('..', '.')) as $plugin_name) {
+    $plugin_class_path = $plugins_directory . $plugin_name . "/include/${plugin_name}Plugin.class.php";
+    if (is_file($plugin_class_path)) {
+        require_once $plugin_class_path;
+    }
 }

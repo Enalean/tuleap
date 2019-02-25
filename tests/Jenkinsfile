@@ -118,7 +118,8 @@ pipeline {
                             } }
                         }
                         stage('Javascript coding standards') {
-                            steps { script { actions.runJavascriptCodingStandards() } } }
+                            steps { script { actions.runJavascriptCodingStandards() } }
+                        }
                     }
                 }
             }

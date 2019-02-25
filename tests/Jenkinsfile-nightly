@@ -46,6 +46,21 @@ pipeline {
                     steps { script { actions.runEndToEndTests('distlp') } }
                     post { always { junit 'results/e2e/distlp/*.xml' } }
                 }
+                stage('Psalm static analysis') {
+                    agent {
+                        dockerfile {
+                            dir 'sources/tests/psalm/'
+                            reuseNode true
+                        }
+                    }
+                    steps {
+                        script {
+                            try {
+                                actions.runPsalm('tests/psalm/psalm.xml')
+                            } catch (err) { }
+                        }
+                    }
+                }
             }
             post {
                 always {

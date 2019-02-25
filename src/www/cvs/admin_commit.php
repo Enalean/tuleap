@@ -1,11 +1,13 @@
 <?php
 //
-// Copyright (c) Enalean, 2016. All Rights Reserved.
+// Copyright (c) Enalean, 2016-Present. All Rights Reserved.
 // SourceForge: Breaking Down the Barriers to Open Source Development
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
 // 
+
+require_once __DIR__ . '/commit_utils.php';
 
 $request  = HTTPRequest::instance();
 $group_id = $request->get('group_id');

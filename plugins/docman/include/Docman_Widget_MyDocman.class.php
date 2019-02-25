@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017 - 2018. All rights reserved
+ * Copyright (c) Enalean, 2017 - Present. All rights reserved
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -21,6 +21,8 @@
 use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Layout\IncludeAssets;
+
+require_once __DIR__ . '/../../../src/www/my/my_utils.php';
 
 /**
  * Docman_Widget_MyDocman
