@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean SAS, 2015 - 2018. All rights reserved
+ * Copyright (c) Enalean SAS, 2015 - 2019. All rights reserved
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -95,7 +95,7 @@ class PluginManager {
     }
 
     public function loadPlugins() {
-        if (ForgeConfig::get(self::PLUGIN_HOOKS_CACHE_TYPE) === 'serialized') {
+        if (ForgeConfig::get(self::PLUGIN_HOOKS_CACHE_TYPE, 'serialized') === 'serialized') {
             (new PluginLoader($this->event_manager, $this->plugin_factory))->loadPlugins();
         } else {
             $injected_data = $this->getPluginsInjectedData();
@@ -521,7 +521,7 @@ class PluginManager {
 
     public function restoreOwnershipOnCacheFile(Logger $logger, Backend $backend)
     {
-        if (ForgeConfig::get(self::PLUGIN_HOOKS_CACHE_TYPE) === 'serialized') {
+        if (ForgeConfig::get(self::PLUGIN_HOOKS_CACHE_TYPE, 'serialized') === 'serialized') {
             PluginLoader::restoreOwnershipOnCacheFile($logger, $backend);
         } else {
             $plugin_cache_file = $this->getCacheFile();

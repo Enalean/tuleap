@@ -1,5 +1,5 @@
 #
-# Copyright (c) Enalean 2014-2018. All rights reserved
+# Copyright (c) Enalean 2014-2019. All rights reserved
 # Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 #
 # This file is a part of Tuleap.
@@ -601,7 +601,6 @@ INSERT INTO forgeconfig (name, value) VALUES ('access_mode', 'anonymous');
 INSERT INTO forgeconfig (name, value) VALUES ('sys_project_approval', '1');
 INSERT INTO forgeconfig (name, value) VALUES ('display_homepage_statistics', '1');
 INSERT INTO forgeconfig (name, value) VALUES ('display_homepage_news', '1');
-INSERT INTO forgeconfig (name, value) VALUES ('plugin_hooks_cache_type', 'serialized');
 
 INSERT INTO password_configuration (breached_password_enabled) VALUES (1);
 
