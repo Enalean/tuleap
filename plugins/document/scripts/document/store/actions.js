@@ -228,6 +228,15 @@ async function createNewFile(
     context.commit("addJustCreatedItemToFolderContent", fake_item);
     context.commit("addDocumentToFoldedFolder", [parent, fake_item, should_display_fake_item]);
     context.commit("addFileInUploadsList", fake_item);
+
+    let display_progress_bar_on_folder = true;
+    if (parent.is_expanded) {
+        display_progress_bar_on_folder = false;
+    }
+    context.commit("toggleCollapsedFolderHasUploadingContent", [
+        parent,
+        display_progress_bar_on_folder
+    ]);
 }
 
 export const addNewUploadFile = async (

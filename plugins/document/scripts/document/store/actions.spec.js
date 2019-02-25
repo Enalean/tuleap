@@ -580,7 +580,7 @@ describe("Store actions", () => {
                 expected_fake_item_with_uploader
             );
         });
-        it("not displays the created file when it is created in a collapsed folder", async () => {
+        it("not displays the created file when it is created in a collapsed folder and displays the progress bar along the folder", async () => {
             context.state.folder_content = [{ id: 10 }];
             const created_item_reference = { id: 66 };
 
@@ -628,8 +628,12 @@ describe("Store actions", () => {
                 "addFileInUploadsList",
                 expected_fake_item_with_uploader
             );
+            expect(context.commit).toHaveBeenCalledWith(
+                "toggleCollapsedFolderHasUploadingContent",
+                [collapsed_folder_of_created_item, true]
+            );
         });
-        it("displays the created file when it is created in a extanded sub folder", async () => {
+        it("displays the created file when it is created in a extanded sub folder and not displays the progress bar along the folder", async () => {
             context.state.folder_content = [{ id: 10 }];
             const created_item_reference = { id: 66 };
 
@@ -645,7 +649,7 @@ describe("Store actions", () => {
 
             getItem.and.returnValue(Promise.resolve(item));
             const current_folder = { id: 30 };
-            const collapsed_folder_of_created_item = { id: 10, parent_id: 30, is_expanded: true };
+            const extended_folder_of_created_item = { id: 10, parent_id: 30, is_expanded: true };
             const uploader = {};
             uploadFile.and.returnValue(uploader);
 
@@ -661,7 +665,7 @@ describe("Store actions", () => {
                 upload_error: null
             };
 
-            await createNewItem(context, [item, collapsed_folder_of_created_item, current_folder]);
+            await createNewItem(context, [item, extended_folder_of_created_item, current_folder]);
 
             expect(uploadFile).toHaveBeenCalled();
             expect(context.commit).toHaveBeenCalledWith(
@@ -669,13 +673,17 @@ describe("Store actions", () => {
                 expected_fake_item_with_uploader
             );
             expect(context.commit).toHaveBeenCalledWith("addDocumentToFoldedFolder", [
-                collapsed_folder_of_created_item,
+                extended_folder_of_created_item,
                 expected_fake_item_with_uploader,
                 true
             ]);
             expect(context.commit).toHaveBeenCalledWith(
                 "addFileInUploadsList",
                 expected_fake_item_with_uploader
+            );
+            expect(context.commit).toHaveBeenCalledWith(
+                "toggleCollapsedFolderHasUploadingContent",
+                [extended_folder_of_created_item, false]
             );
         });
     });
