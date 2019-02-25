@@ -83,7 +83,7 @@ class DocumentOnGoingVersionToUploadDAO extends DataAccessObject
     {
         $sql = 'DELETE
                 FROM plugin_docman_new_version_upload
-                WHERE item_id = ?';
+                WHERE id = ?';
 
         $this->getDB()->run($sql, $version_id);
     }
