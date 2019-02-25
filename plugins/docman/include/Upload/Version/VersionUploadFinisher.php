@@ -22,8 +22,8 @@ declare(strict_types = 1);
 
 namespace Tuleap\Docman\Upload\Version;
 
+use Docman_File;
 use Docman_Item;
-use Docman_Version;
 use Tuleap\Docman\Tus\TusFileInformation;
 use Tuleap\Docman\Tus\TusFinisherDataStore;
 
@@ -54,10 +54,6 @@ final class VersionUploadFinisher implements TusFinisherDataStore
      */
     private $version_to_upload_dao;
     /**
-     * @var \Docman_ItemDao
-     */
-    private $docman_item_dao;
-    /**
      * @var \Docman_FileStorage
      */
     private $docman_file_storage;
@@ -81,7 +77,6 @@ final class VersionUploadFinisher implements TusFinisherDataStore
         \Docman_VersionFactory $version_factory,
         \EventManager $event_manager,
         DocumentOnGoingVersionToUploadDAO $version_to_upload_dao,
-        \Docman_ItemDao $docman_item_dao,
         \Docman_FileStorage $docman_file_storage,
         \Docman_MIMETypeDetector $docman_mime_type_detector,
         \UserManager $user_manager,
@@ -93,7 +88,6 @@ final class VersionUploadFinisher implements TusFinisherDataStore
         $this->version_factory                = $version_factory;
         $this->event_manager                  = $event_manager;
         $this->version_to_upload_dao          = $version_to_upload_dao;
-        $this->docman_item_dao                = $docman_item_dao;
         $this->docman_file_storage            = $docman_file_storage;
         $this->docman_mime_type_detector      = $docman_mime_type_detector;
         $this->user_manager                   = $user_manager;
@@ -102,43 +96,39 @@ final class VersionUploadFinisher implements TusFinisherDataStore
 
     public function finishUpload(TusFileInformation $file_information): void
     {
-        $version_id = $file_information->getID();
+        $upload_id = $file_information->getID();
 
-        $uploaded_document_path   = $this->document_upload_path_allocator->getPathForItemBeingUploaded($version_id);
+        $uploaded_document_path   = $this->document_upload_path_allocator->getPathForItemBeingUploaded($upload_id);
         $current_value_user_abort = (bool)ignore_user_abort(true);
         try {
-            $this->createVersion($uploaded_document_path, $version_id);
+            $this->createVersion($uploaded_document_path, $upload_id);
         } finally {
             ignore_user_abort($current_value_user_abort);
         }
         \unlink($uploaded_document_path);
-        $this->version_to_upload_dao->deleteByVersionID($version_id);
+        $this->version_to_upload_dao->deleteByVersionID($upload_id);
     }
 
-    private function createVersion($uploaded_document_path, $version_id): void
+    private function createVersion(string $uploaded_document_path, int $upload_id): void
     {
         $this->version_to_upload_dao->wrapAtomicOperations(
-            function () use ($uploaded_document_path, $version_id) {
-                $item_row = $this->version_to_upload_dao->searchDocumentVersionOngoingUploadByVersionId($version_id);
-                if (empty($item_row)) {
-                    $this->logger->info("Version #$version_id could not found in the DB to be marked as uploaded");
+            function () use ($uploaded_document_path, $upload_id) {
+                $upload_row = $this->version_to_upload_dao->searchDocumentVersionOngoingUploadByUploadID($upload_id);
+                if (empty($upload_row)) {
+                    $this->logger->info("Upload #$upload_id could not found in the DB to be marked as uploaded");
                     return;
                 }
 
                 /**
-                 * @var $item Docman_Item|null
+                 * @var $item Docman_File|null
                  */
-                $item = $this->docman_item_factory->getItemFromDb($item_row['item_id']);
-                if (! $item) {
-                    $this->logger->info("Item #" . $item_row['item_id'] . " could not found in the DB to be marked as uploaded");
+                $item = $this->docman_item_factory->getItemFromDb($upload_row['item_id']);
+                if ($item === null) {
+                    $this->logger->info('Item #' . $upload_row['item_id'] . ' could not found in the DB to add a new version');
                     return;
                 }
 
-                /**
-                 * @var Docman_Version|null
-                 */
-                $next_version_id = $this->version_factory->getNextVersionNumber($item);
-
+                $next_version_id = (int) $this->version_factory->getNextVersionNumber($item);
 
                 /*
                  * Some tables of the docman plugin relies on the MyISAM engine so the DB transaction
@@ -154,7 +144,7 @@ final class VersionUploadFinisher implements TusFinisherDataStore
                     $next_version_id
                 );
                 if ($file_path === false) {
-                    throw new \RuntimeException('Could not copy uploaded item #' . $item->getId() . "version #" . $version_id);
+                    throw new \RuntimeException('Could not copy uploaded file for item #' . $item->getId() . ' of upload #' . $upload_id);
                 }
 
                 $current_time             = (new \DateTimeImmutable)->getTimestamp();
@@ -162,23 +152,23 @@ final class VersionUploadFinisher implements TusFinisherDataStore
                     [
                         'item_id'   => $item->getId(),
                         'number'    => $next_version_id,
-                        'user_id'   => $item_row['user_id'],
-                        'label'     => $item_row['version_title'],
-                        'changelog' => $item_row['changelog'],
+                        'user_id'   => $upload_row['user_id'],
+                        'label'     => $upload_row['version_title'],
+                        'changelog' => $upload_row['changelog'],
                         'filename'  => $item->getTitle(),
-                        'filesize'  => $item_row['filesize'],
+                        'filesize'  => $upload_row['filesize'],
                         'filetype'  => $this->getFiletype($file_path),
                         'path'      => $file_path,
                         'date'      => $current_time
                     ]
                 );
                 if (! $has_version_been_created) {
-                    $this->docman_item_dao->delete($version_id);
                     \unlink($file_path);
-                    throw new \RuntimeException('Not able to create the first version of item #' . $version_id);
+                    $item_id = (int) $item->getId();
+                    throw new \RuntimeException("Not able to create a new version for item #$item_id from upload #$upload_id");
                 }
 
-                $current_user = $this->user_manager->getUserById($item_row['user_id']);
+                $current_user = $this->user_manager->getUserById($upload_row['user_id']);
                 if ($this->lock_factory->getLockInfoForItem($item) !== false) {
                     $this->lock_factory->lock($item, $current_user);
                     $this->triggerLockEvents($item, $current_user);
@@ -194,10 +184,10 @@ final class VersionUploadFinisher implements TusFinisherDataStore
             }
         );
 
-        $this->logger->debug('Version #' . $version_id . ' has been created');
+        $this->logger->debug('New version from upload #' . $upload_id . ' has been created');
     }
 
-    private function getFiletype($path): string
+    private function getFiletype(string $path): string
     {
         $filename = basename($path);
         if ($this->docman_mime_type_detector->isAnOfficeFile($filename)) {

@@ -1342,7 +1342,6 @@ class DocmanPlugin extends Plugin
                         new Docman_VersionFactory(),
                         EventManager::instance(),
                         new DocumentOnGoingVersionToUploadDAO(),
-                        new Docman_ItemDao(),
                         new Docman_FileStorage($root_path),
                         new Docman_MIMETypeDetector(),
                         UserManager::instance(),

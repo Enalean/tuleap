@@ -41,7 +41,6 @@ class VersionUploadFinisherTest extends TestCase
     private $version_factory;
     private $event_manager;
     private $on_going_upload_dao;
-    private $item_dao;
     private $file_storage;
     private $user_manager;
 
@@ -52,7 +51,6 @@ class VersionUploadFinisherTest extends TestCase
         $this->version_factory     = Mockery::mock(Docman_VersionFactory::class);
         $this->event_manager       = Mockery::mock(\EventManager::class);
         $this->on_going_upload_dao = Mockery::mock(DocumentOnGoingVersionToUploadDAO::class);
-        $this->item_dao            = Mockery::mock(\Docman_ItemDao::class);
         $this->file_storage        = Mockery::mock(\Docman_FileStorage::class);
         $this->user_manager        = Mockery::mock(\UserManager::class);
         $this->lock_factory        = Mockery::mock(Docman_LockFactory::class);
@@ -72,7 +70,6 @@ class VersionUploadFinisherTest extends TestCase
             $this->version_factory,
             $this->event_manager,
             $this->on_going_upload_dao,
-            $this->item_dao,
             $this->file_storage,
             new \Docman_MIMETypeDetector(),
             $this->user_manager,
@@ -92,7 +89,7 @@ class VersionUploadFinisherTest extends TestCase
                 }
             )
         );
-        $this->on_going_upload_dao->shouldReceive('searchDocumentVersionOngoingUploadByVersionId')->andReturns(
+        $this->on_going_upload_dao->shouldReceive('searchDocumentVersionOngoingUploadByUploadID')->andReturns(
             [
                 'id'            => $item_id_being_created,
                 'parent_id'     => 3,
