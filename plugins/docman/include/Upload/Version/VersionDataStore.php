@@ -44,16 +44,21 @@ final class VersionDataStore implements TusDataStore
      * @var VersionUploadFinisher
      */
     private $version_upload_finisher;
+    /**
+     * @var VersionUploadCanceler
+     */
+    private $version_upload_canceler;
 
     public function __construct(
         VersionBeingUploadedInformationProvider $version_being_uploaded_information_provider,
         FileBeingUploadedWriter $version_being_uploaded_writer,
-        VersionUploadFinisher $version_upload_finisher
+        VersionUploadFinisher $version_upload_finisher,
+        VersionUploadCanceler $version_upload_canceler
     ) {
-
         $this->version_being_uploaded_information_provider = $version_being_uploaded_information_provider;
         $this->version_being_uploaded_writer               = $version_being_uploaded_writer;
         $this->version_upload_finisher                     = $version_upload_finisher;
+        $this->version_upload_canceler                     = $version_upload_canceler;
     }
 
     public function getFileInformationProvider() : TusFileInformationProvider
@@ -73,7 +78,7 @@ final class VersionDataStore implements TusDataStore
 
     public function getTerminater(): ?TusTerminaterDataStore
     {
-        return null;
+        return $this->version_upload_canceler;
     }
 
     public function getLocker() : ?TusLocker

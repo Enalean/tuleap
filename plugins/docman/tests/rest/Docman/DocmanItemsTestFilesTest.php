@@ -61,7 +61,7 @@ class DocmanItemsTestFilesTest extends DocmanBase
         );
         $items    = $response->json();
 
-        $this->assertEquals(count($items), 8);
+        $this->assertEquals(count($items), 9);
 
         return $items;
     }
@@ -311,6 +311,50 @@ class DocmanItemsTestFilesTest extends DocmanBase
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals('file', $response->json()['type']);
     }
+
+    /**
+     * @depends testGetDocumentItemsForRegularUser
+     */
+    public function testDocumentCreationWithASameNameIsNotRejectedWhenTheUploadHasBeenCanceled(array $items): void
+    {
+        $file         = $this->findItemByTitle($items, 'file C');
+        $put_resource = json_encode(
+            [
+                'version_title'   => 'My version title',
+                'changelog'       => 'I have changed',
+                'file_properties' => ['file_name' => 'My new file', 'file_size' => 123]
+            ]
+        );
+
+
+        $file_id  = $file['id'];
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->patch('docman_files/' . $file_id, null, $put_resource)
+        );
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $tus_client = new Client(
+            str_replace('/api/v1', '', $this->client->getBaseUrl()),
+            $this->client->getConfig()
+        );
+        $tus_client->setSslVerification(false, false, false);
+        $tus_response_cancel = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $tus_client->delete(
+                $response->json()['upload_href'],
+                ['Tus-Resumable' => '1.0.0']
+            )
+        );
+        $this->assertEquals(204, $tus_response_cancel->getStatusCode());
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->patch('docman_files/' . $file_id, null, $put_resource)
+        );
+        $this->assertEquals(200, $response->getStatusCode());
+    }
+
 
     /**
      * Find first item in given array of items which has given title.
