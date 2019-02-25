@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -37,7 +37,7 @@ class FileTest extends RestBase
     public function testOPTIONSFile()
     {
         $response = $this->getResponse($this->client->options('frs_files/1'));
-        $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'GET', 'DELETE'], $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testGETFile()
@@ -53,5 +53,13 @@ class FileTest extends RestBase
         $this->assertEquals('7865eaef28db1b906eaf1e4fa353796d', $file['computed_md5']);
         $this->assertEquals("/file/download.php/{$this->project_id}/1/BooksAuthors.txt", $file['download_url']);
         $this->assertEquals('rest_api_tester_1', $file['owner']['username']);
+    }
+
+    public function testDELETEFile()
+    {
+        $response = $this->getResponse($this->client->delete('frs_files/2'));
+        $this->assertEquals(202, $response->getStatusCode());
+        $response = $this->getResponse($this->client->get('frs_files/2'));
+        $this->assertEquals(404, $response->getStatusCode());
     }
 }
