@@ -67,6 +67,8 @@
                 </p>
                 <p v-else key="advanced_text" v-translate>
                     You're about to switch to advanced configuration mode.
+                    Each transition will be configurable independently.
+                    They will copy their state configuration during the switch.
                 </p>
                 <p v-translate>Please confirm your action.</p>
             </template>
