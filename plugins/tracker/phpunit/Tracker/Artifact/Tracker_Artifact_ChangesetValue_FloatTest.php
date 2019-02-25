@@ -71,7 +71,7 @@ final class Tracker_Artifact_ChangesetValue_FloatTest extends TestCase // phpcs:
 
         $null_float = new Tracker_Artifact_ChangesetValue_Float(111, $this->changeset, $this->field, false, null);
         $this->assertNull($null_float->getFloat());
-        $this->assertSame($null_float->getValue(), '');
+        $this->assertNull($null_float->getValue());
     }
 
     public function testNoDiff() : void
@@ -86,6 +86,8 @@ final class Tracker_Artifact_ChangesetValue_FloatTest extends TestCase // phpcs:
     {
         $GLOBALS['Language']->shouldReceive('getText')->with('plugin_tracker_artifact', 'changed_from')->andReturns('changed from');
         $GLOBALS['Language']->shouldReceive('getText')->with('plugin_tracker_artifact', 'to')->andReturns('to');
+        $GLOBALS['Language']->shouldReceive('getText')->with('plugin_tracker_artifact', 'cleared')->andReturns('cleared');
+        $GLOBALS['Language']->shouldReceive('getText')->with('plugin_tracker_artifact', 'set_to')->andReturns('set to');
 
         $float_1 = new Tracker_Artifact_ChangesetValue_Float(111, $this->changeset, $this->field, false, 987.321);
         $float_2 = new Tracker_Artifact_ChangesetValue_Float(111, $this->changeset, $this->field, false, 987);
@@ -102,6 +104,11 @@ final class Tracker_Artifact_ChangesetValue_FloatTest extends TestCase // phpcs:
         $float_6 = new Tracker_Artifact_ChangesetValue_Float(111, $this->changeset, $this->field, false, 987.4329);
         $this->assertEquals($float_5->diff($float_6), 'changed from 987.4329 to 987.4321');
         $this->assertEquals($float_6->diff($float_5), 'changed from 987.4321 to 987.4329');
+
+        $float_7 = new Tracker_Artifact_ChangesetValue_Float(456, $this->changeset, $this->field, false, 1);
+        $float_8 = new Tracker_Artifact_ChangesetValue_Float(789, $this->changeset, $this->field, false, null);
+        $this->assertEquals('set to 1.0000', $float_7->diff($float_8));
+        $this->assertEquals('cleared', $float_8->diff($float_7));
     }
 
     public function testTheRESTValueIsReturned() : void
