@@ -131,4 +131,35 @@ describe("Store actions", () => {
             expect(context.commit).toHaveBeenCalledWith("setErrorMessage", ERROR_OCCURRED);
         });
     });
+
+    describe("GetProjects - success", () => {
+        it("Given a success response, When projects are received, Then no message error is reveived", async () => {
+            const projects = [
+                { id: 765, label: "timetracking" },
+                { id: 239, label: "projectTest" }
+            ];
+
+            mockFetchSuccess(tlp.get, {
+                return_json: projects
+            });
+
+            await actions.getProjects(context);
+            expect(context.commit).toHaveBeenCalledWith("resetErrorMessage");
+            expect(context.commit).toHaveBeenCalledWith("setProjects", projects);
+        });
+    });
+
+    describe("GetTrackers - success", () => {
+        it("Given a success response, When trackers are received, Then no message error is reveived", async () => {
+            const trackers = [{ id: 16, label: "tracker_1" }, { id: 18, label: "tracker_2" }];
+
+            mockFetchSuccess(tlp.get, {
+                return_json: trackers
+            });
+
+            await actions.getTrackers(context);
+            expect(context.commit).toHaveBeenCalledWith("resetErrorMessage");
+            expect(context.commit).toHaveBeenCalledWith("setTrackers", trackers);
+        });
+    });
 });

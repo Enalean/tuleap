@@ -46,6 +46,7 @@ export default {
     mounted() {
         this.$store.commit("setReportId", this.reportId);
         this.$store.dispatch("initWidgetWithReport");
+        this.$store.dispatch("getProjects");
     }
 };
 </script>

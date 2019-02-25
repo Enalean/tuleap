@@ -21,9 +21,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { tlp, mockFetchSuccess } from "tlp-mocks";
+import { mockFetchSuccess, tlp } from "tlp-mocks";
 
-import { getTrackersFromReport } from "./rest-querier.js";
+import {
+    getProjectsWithTimetracking,
+    getTrackersFromReport,
+    getTrackersWithTimetracking
+} from "./rest-querier.js";
 
 describe("Get Report() -", () => {
     it("the REST API will be queried : report with its trackers is returned", async () => {
@@ -88,5 +92,49 @@ describe("Get Report's times() -", () => {
 
         expect(tlp.get).toHaveBeenCalledWith("/api/v1/timetracking_reports/1");
         expect(result).toEqual(trackers);
+    });
+});
+
+describe("getProjects() -", () => {
+    it("the REST route projects will be queried with with_time_tracking parameter and the projects returned", async () => {
+        const projects = [{ id: 765, label: "timetracking" }, { id: 239, label: "projectTest" }];
+        mockFetchSuccess(tlp.get, {
+            return_json: projects
+        });
+
+        const result = await getProjectsWithTimetracking();
+
+        expect(tlp.get).toHaveBeenCalledWith("/api/v1/projects", {
+            params: {
+                limit: 50,
+                offset: 0,
+                query: JSON.stringify({ with_time_tracking: true })
+            }
+        });
+        expect(result).toEqual([
+            { id: 765, label: "timetracking" },
+            { id: 239, label: "projectTest" }
+        ]);
+    });
+});
+
+describe("getTrackers() -", () => {
+    it("the  REST route projects/id/trackers will be queried project id and with_time_tracking parameter and the trackers returned", async () => {
+        const trackers = [{ id: 16, label: "tracker_1" }, { id: 18, label: "tracker_2" }];
+        mockFetchSuccess(tlp.get, {
+            return_json: trackers
+        });
+
+        const result = await getTrackersWithTimetracking(102);
+
+        expect(tlp.get).toHaveBeenCalledWith("/api/v1/projects/102/trackers", {
+            params: {
+                representation: "minimal",
+                limit: 50,
+                offset: 0,
+                query: JSON.stringify({ with_time_tracking: true })
+            }
+        });
+        expect(result).toEqual([{ id: 16, label: "tracker_1" }, { id: 18, label: "tracker_2" }]);
     });
 });

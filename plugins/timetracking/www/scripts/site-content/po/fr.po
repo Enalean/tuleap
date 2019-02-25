@@ -54,6 +54,9 @@ msgstr "Aucun élément séléctionné"
 msgid "Please check time's format (hh:mm)"
 msgstr "Vérifiez le format du temps (hh:mm)"
 
+msgid "Please choose..."
+msgstr "Veuillez choisir..."
+
 msgid "Project"
 msgstr "Projet"
 
