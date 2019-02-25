@@ -431,7 +431,8 @@ CREATE TABLE plugin_docman_new_version_upload(
     user_id INT(11) UNSIGNED NOT NULL,
     filename TEXT NULL,
     filesize INT(11) UNSIGNED NULL,
-    INDEX idx_expiration_date (expiration_date)
+    INDEX idx_expiration_date (expiration_date),
+    INDEX idx_item_id (item_id)
 ) ENGINE=InnoDB;
 
 INSERT INTO forgeconfig VALUES ('max_number_of_files', 50);
