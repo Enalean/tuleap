@@ -36,7 +36,13 @@ deploy-githooks:
 	fi
 
 all:
-	$(MAKE) rpm
+	$(MAKE) composer rpm
+
+# This will install phpcs in src folder.
+# Required by tuleap/tools/utils/githooks/pre-commit-02-phpcs, which is executed by
+# baseline git hook chain.
+composer:
+	composer install --working-dir=src/
 
 rpm: $(RPM_TMP)/RPMS/noarch/$(NAME_VERSION)-$(RELEASE).noarch.rpm
 	@echo "Results: $^"

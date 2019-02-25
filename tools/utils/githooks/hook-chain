@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/bin/bash
 
 realpath() {
     canonicalize_path "$(resolve_symlinks "$1")"
@@ -68,6 +68,24 @@ _canonicalize_file_path() {
     (cd "$dir" 2>/dev/null && printf '%s/%s\n' "$(pwd -P)" "$file")
 }
 
+hookname=$(basename "$0")
 script=$(realpath "$0")
-cd $(dirname "$script")/../../../../../
-./tools/utils/githooks/hook-chain
+path=$(dirname "$script")
+
+FILE=$(mktemp)
+trap 'rm -f "$FILE"' EXIT
+cat - > "$FILE"
+
+for hook in "$path/../../../../../tools/utils/githooks/$hookname"-*
+do
+    if test -x "$hook"; then
+        cat "$FILE" | . "$hook" "$@"
+        status=$?
+
+        if test "$status" -ne 0; then
+            hookname=$(basename "$hook")
+            echo "Hook $hookname failed with error code $status"
+            exit ${status}
+        fi
+    fi
+done
