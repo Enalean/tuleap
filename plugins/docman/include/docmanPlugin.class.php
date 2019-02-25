@@ -55,6 +55,7 @@ use Tuleap\Docman\Upload\Version\DocumentOnGoingVersionToUploadDAO;
 use Tuleap\Docman\Upload\Version\VersionBeingUploadedInformationProvider;
 use Tuleap\Docman\Upload\Version\VersionDataStore;
 use Tuleap\Docman\Upload\Version\VersionUploadCanceler;
+use Tuleap\Docman\Upload\Version\VersionUploadCleaner;
 use Tuleap\Docman\Upload\Version\VersionUploadFinisher;
 use Tuleap\Docman\Upload\Version\VersionUploadPathAllocator;
 use Tuleap\Http\HTTPFactoryBuilder;
@@ -1390,7 +1391,13 @@ class DocmanPlugin extends Plugin
 
     private function cleanUnusedResources()
     {
-        $cleaner = new \Tuleap\Docman\Upload\DocumentUploadCleaner(
+        $this->cleanUnusedDocumentResources();
+        $this->cleanUnusedVersionResources();
+    }
+
+    private function cleanUnusedDocumentResources(): void
+    {
+        $cleaner = new \Tuleap\Docman\Upload\Document\DocumentUploadCleaner(
             new \Tuleap\Docman\Upload\Document\DocumentUploadPathAllocator(),
             new \Tuleap\Docman\Upload\Document\DocumentOngoingUploadDAO()
         );
@@ -1404,5 +1411,14 @@ class DocmanPlugin extends Plugin
             'label' => dgettext('tuleap-docman', 'Document'),
             'href'  => '/admin/document-settings'
         ];
+    }
+
+    private function cleanUnusedVersionResources(): void
+    {
+        $cleaner = new VersionUploadCleaner(
+            new VersionUploadPathAllocator(),
+            new DocumentOnGoingVersionToUploadDAO()
+        );
+        $cleaner->deleteDanglingVersionToUpload(new \DateTimeImmutable());
     }
 }
