@@ -21,27 +21,26 @@
 
 namespace Tuleap\Baseline\Adapter;
 
-use DateTime;
 use Tracker_Artifact;
-use Tracker_Artifact_Changeset;
-use Tracker_Artifact_ChangesetFactory;
-use Tuleap\Baseline\ChangesetRepository;
+use Tracker_ArtifactFactory;
+use Tuleap\Baseline\MilestoneRepository;
 
-class ChangesetRepositoryImpl implements ChangesetRepository
+class MilestoneRepositoryAdapter implements MilestoneRepository
 {
-    /** @var Tracker_Artifact_ChangesetFactory */
-    private $changeset_factory;
+    /**
+     * @var Tracker_ArtifactFactory
+     */
+    private $artifact_factory;
 
-    public function __construct(Tracker_Artifact_ChangesetFactory $changeset_factory)
+    public function __construct(Tracker_ArtifactFactory $artifact_factory)
     {
-        $this->changeset_factory = $changeset_factory;
+        $this->artifact_factory = $artifact_factory;
     }
 
-    public function findByArtifactAndDate(Tracker_Artifact $artifact, DateTime $date): ?Tracker_Artifact_Changeset
+    public function findById(int $id): ?Tracker_Artifact
     {
-        return $this->changeset_factory->getChangesetAtTimestamp(
-            $artifact,
-            $date->getTimestamp()
-        );
+        $milestone = $this->artifact_factory->getArtifactById($id);
+        // TODO check $milestone is a milestone
+        return $milestone;
     }
 }

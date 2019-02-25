@@ -40,7 +40,7 @@ class ClockImplTest extends TestCase
      */
     public function createInstance()
     {
-        $this->clock = new ClockImpl();
+        $this->clock = new ClockAdapter();
     }
 
     public function testNowReturnsCurrentDateTime()

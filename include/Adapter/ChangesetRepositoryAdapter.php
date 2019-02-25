@@ -21,22 +21,27 @@
 
 namespace Tuleap\Baseline\Adapter;
 
-use PFUser;
-use Tuleap\Baseline\CurrentUserProvider;
-use Tuleap\REST\UserManager;
+use DateTime;
+use Tracker_Artifact;
+use Tracker_Artifact_Changeset;
+use Tracker_Artifact_ChangesetFactory;
+use Tuleap\Baseline\ChangesetRepository;
 
-class CurrentUserProviderImpl implements CurrentUserProvider
+class ChangesetRepositoryAdapter implements ChangesetRepository
 {
-    /** @var UserManager */
-    private $user_manager;
+    /** @var Tracker_Artifact_ChangesetFactory */
+    private $changeset_factory;
 
-    public function __construct(UserManager $user_manager)
+    public function __construct(Tracker_Artifact_ChangesetFactory $changeset_factory)
     {
-        $this->user_manager = $user_manager;
+        $this->changeset_factory = $changeset_factory;
     }
 
-    function getUser(): PFUser
+    public function findByArtifactAndDate(Tracker_Artifact $artifact, DateTime $date): ?Tracker_Artifact_Changeset
     {
-        return $this->user_manager->getCurrentUser();
+        return $this->changeset_factory->getChangesetAtTimestamp(
+            $artifact,
+            $date->getTimestamp()
+        );
     }
 }

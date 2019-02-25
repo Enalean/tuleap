@@ -27,7 +27,7 @@ use Tuleap\Baseline\NotAuthorizedException;
 use Tuleap\Baseline\ProjectPermissions;
 use Tuleap\REST\ProjectStatusVerificator;
 
-class ProjectPermissionsImpl implements ProjectPermissions
+class ProjectPermissionsAdapter implements ProjectPermissions
 {
     /** @var ProjectStatusVerificator */
     private $project_status_verificator;
@@ -40,7 +40,7 @@ class ProjectPermissionsImpl implements ProjectPermissions
     /**
      * @throws NotAuthorizedException
      */
-    function checkRead(Project $project)
+    public function checkRead(Project $project)
     {
         try {
             $this->project_status_verificator->checkProjectStatusAllowsAllUsersToAccessIt($project);

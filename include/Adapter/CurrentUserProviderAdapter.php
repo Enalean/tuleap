@@ -21,26 +21,22 @@
 
 namespace Tuleap\Baseline\Adapter;
 
-use Tracker_Artifact;
-use Tracker_ArtifactFactory;
-use Tuleap\Baseline\MilestoneRepository;
+use PFUser;
+use Tuleap\Baseline\CurrentUserProvider;
+use Tuleap\REST\UserManager;
 
-class MilestoneRepositoryImpl implements MilestoneRepository
+class CurrentUserProviderAdapter implements CurrentUserProvider
 {
-    /**
-     * @var Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
+    /** @var UserManager */
+    private $user_manager;
 
-    public function __construct(Tracker_ArtifactFactory $artifact_factory)
+    public function __construct(UserManager $user_manager)
     {
-        $this->artifact_factory = $artifact_factory;
+        $this->user_manager = $user_manager;
     }
 
-    public function findById(int $id): ?Tracker_Artifact
+    public function getUser(): PFUser
     {
-        $milestone = $this->artifact_factory->getArtifactById($id);
-        // TODO check $milestone is a milestone
-        return $milestone;
+        return $this->user_manager->getCurrentUser();
     }
 }

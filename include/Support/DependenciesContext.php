@@ -25,13 +25,13 @@ use ParagonIE\EasyDB\EasyDB;
 use Tracker_Artifact_ChangesetFactory;
 use Tracker_Artifact_ChangesetFactoryBuilder;
 use Tracker_ArtifactFactory;
-use Tuleap\Baseline\Adapter\BaselineRepositoryImpl;
-use Tuleap\Baseline\Adapter\ChangesetRepositoryImpl;
-use Tuleap\Baseline\Adapter\ClockImpl;
-use Tuleap\Baseline\Adapter\CurrentUserProviderImpl;
-use Tuleap\Baseline\Adapter\FieldRepositoryImpl;
-use Tuleap\Baseline\Adapter\MilestoneRepositoryImpl;
-use Tuleap\Baseline\Adapter\ProjectPermissionsImpl;
+use Tuleap\Baseline\Adapter\BaselineRepositoryAdapter;
+use Tuleap\Baseline\Adapter\ChangesetRepositoryAdapter;
+use Tuleap\Baseline\Adapter\ClockAdapter;
+use Tuleap\Baseline\Adapter\CurrentUserProviderAdapter;
+use Tuleap\Baseline\Adapter\FieldRepositoryAdapter;
+use Tuleap\Baseline\Adapter\MilestoneRepositoryAdapter;
+use Tuleap\Baseline\Adapter\ProjectPermissionsAdapter;
 use Tuleap\Baseline\BaselineRepository;
 use Tuleap\Baseline\BaselineService;
 use Tuleap\Baseline\ChangesetRepository;
@@ -142,7 +142,7 @@ class DependenciesContext
     public function getMilestoneRepository(): MilestoneRepository
     {
         if ($this->milestone_repository === null) {
-            $this->milestone_repository = new MilestoneRepositoryImpl(
+            $this->milestone_repository = new MilestoneRepositoryAdapter(
                 $this->getArtifactFactory()
             );
         }
@@ -157,7 +157,7 @@ class DependenciesContext
     public function getChangesetRepository(): ChangesetRepository
     {
         if ($this->changeset_repository === null) {
-            $this->changeset_repository = new ChangesetRepositoryImpl(
+            $this->changeset_repository = new ChangesetRepositoryAdapter(
                 $this->getChangesetFactory()
             );
         }
@@ -172,7 +172,7 @@ class DependenciesContext
     public function getBaselineRepository(): BaselineRepository
     {
         if ($this->baseline_repository === null) {
-            $this->baseline_repository = new BaselineRepositoryImpl(
+            $this->baseline_repository = new BaselineRepositoryAdapter(
                 $this->getDatabase()
             );
         }
@@ -187,7 +187,7 @@ class DependenciesContext
     public function getCurrentUserProvider(): CurrentUserProvider
     {
         if ($this->current_user_provider === null) {
-            $this->current_user_provider = new CurrentUserProviderImpl(
+            $this->current_user_provider = new CurrentUserProviderAdapter(
                 $this->getUserManager()
             );
         }
@@ -218,7 +218,7 @@ class DependenciesContext
     public function getProjectPermissions(): ProjectPermissions
     {
         if ($this->project_permissions === null) {
-            $this->project_permissions = new ProjectPermissionsImpl(
+            $this->project_permissions = new ProjectPermissionsAdapter(
                 $this->getProjectStatusVerificator()
             );
         }
@@ -272,7 +272,7 @@ class DependenciesContext
     public function getFieldRepository(): FieldRepository
     {
         if ($this->field_repository === null) {
-            $this->field_repository = new FieldRepositoryImpl();
+            $this->field_repository = new FieldRepositoryAdapter();
         }
         return $this->field_repository;
     }
@@ -298,7 +298,7 @@ class DependenciesContext
     public function getClock(): Clock
     {
         if ($this->clock === null) {
-            $this->clock = new ClockImpl();
+            $this->clock = new ClockAdapter();
         }
         return $this->clock;
     }

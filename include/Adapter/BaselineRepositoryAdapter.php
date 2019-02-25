@@ -28,7 +28,7 @@ use Tuleap\Baseline\Baseline;
 use Tuleap\Baseline\BaselineRepository;
 use Tuleap\Baseline\TransientBaseline;
 
-class BaselineRepositoryImpl implements BaselineRepository
+class BaselineRepositoryAdapter implements BaselineRepository
 {
     /** @var EasyDB */
     private $db;

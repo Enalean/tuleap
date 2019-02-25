@@ -24,7 +24,7 @@ namespace Tuleap\Baseline\Adapter;
 use DateTime;
 use Tuleap\Baseline\Clock;
 
-class ClockImpl implements Clock
+class ClockAdapter implements Clock
 {
     public function now(): DateTime
     {

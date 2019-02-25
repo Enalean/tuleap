@@ -30,7 +30,7 @@ use Tracker_Semantic_Status;
 use Tracker_Semantic_Title;
 use Tuleap\Baseline\FieldRepository;
 
-class FieldRepositoryImpl implements FieldRepository
+class FieldRepositoryAdapter implements FieldRepository
 {
     public function findTitleByTracker(Tracker $tracker): ?Tracker_FormElement_Field_Text
     {
