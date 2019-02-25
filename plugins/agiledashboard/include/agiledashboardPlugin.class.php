@@ -173,6 +173,7 @@ class AgileDashboardPlugin extends Plugin
             $this->addHook(MoveArtifactGetExternalSemanticCheckers::NAME);
             $this->addHook(MoveArtifactParseFieldChangeNodes::NAME);
             $this->addHook(MoveArtifactActionAllowedByPluginRetriever::NAME);
+            $this->addHook(\Tuleap\Request\CollectRoutesEvent::NAME);
         }
 
         if (defined('CARDWALL_BASE_URL')) {
@@ -690,27 +691,6 @@ class AgileDashboardPlugin extends Plugin
         );
     }
 
-    public function process(Codendi_Request $request)
-    {
-        $project = $request->getProject();
-
-        if ($project->isDeleted()) {
-            $GLOBALS['Response']->addFeedback(
-                Feedback::ERROR,
-                $GLOBALS['Language']->getText(
-                    'include_exit', 'project_status_' . $project->getStatus()
-                )
-            );
-
-            $GLOBALS['Response']->redirect('/');
-        }
-
-        $builder = new AgileDashboardRouterBuilder();
-        $router  = $builder->build($request);
-
-        $router->route($request);
-    }
-
     /**
      * Builds a new PlanningFactory instance.
      *
@@ -851,7 +831,7 @@ class AgileDashboardPlugin extends Plugin
         $request->set('project_id', $params['project_id']);
         $request->set('group_id', $params['project_id']);
 
-        $this->process($request);
+        $this->routeLegacyController()->process($request, $GLOBALS['Response'], []);
     }
 
     public function plugin_statistics_service_usage($params) {
@@ -1707,5 +1687,17 @@ class AgileDashboardPlugin extends Plugin
         if ($this->getSemanticInitialEffortFactory()->getByTracker($event->getTracker())->getFieldId() !== 0) {
             $event->hasExternalSemanticDefined();
         };
+    }
+
+    public function collectRoutesEvent(\Tuleap\Request\CollectRoutesEvent $event)
+    {
+        $event->getRouteCollector()->addGroup('/plugins/agiledashboard', function(FastRoute\RouteCollector $r) {
+            $r->addRoute(['GET', 'POST'], '[/[index.php]]', $this->getRouteHandler('routeLegacyController'));
+        });
+    }
+
+    public function routeLegacyController() : \Tuleap\AgileDashboard\AgileDashboardLegacyController
+    {
+        return new \Tuleap\AgileDashboard\AgileDashboardLegacyController();
     }
 }
