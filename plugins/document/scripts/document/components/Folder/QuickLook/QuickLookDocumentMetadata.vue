@@ -35,11 +35,11 @@
         <div class="document-quick-look-properties-column">
             <div class="tlp-property">
                 <label for="document-creation-date" class="tlp-label" v-translate>Creation date</label>
-                <p id="document-creation-date">{{ getFormattedDate(item.creation_date) }}</p>
+                <p id="document-creation-date" class="tlp-tooltip tlp-tooltip-left" v-bind:data-tlp-tooltip="getFormattedDate(item.creation_date)">{{ getFormattedDateForDisplay(item.creation_date) }}</p>
             </div>
             <div class="tlp-property">
                 <label for="document-last-update-date" class="tlp-label" v-translate>Last updated date</label>
-                <p id="document-last-update-date">{{ getFormattedDate(item.last_update_date) }}</p>
+                <p id="document-last-update-date" class="tlp-tooltip tlp-tooltip-left" v-bind:data-tlp-tooltip="getFormattedDate(item.last_update_date)">{{ getFormattedDateForDisplay(item.last_update_date) }}</p>
             </div>
             <quick-look-document-additional-metadata-list v-for="metadata in metadata_left_column" v-bind:metadata="metadata" v-bind:key="metadata.name"/>
         </div>
@@ -47,7 +47,10 @@
 </template>
 <script>
 import { mapState } from "vuex";
-import { formatDateUsingPreferredUserFormat } from "../../../helpers/date-formatter.js";
+import {
+    formatDateUsingPreferredUserFormat,
+    getElapsedTimeFromNow
+} from "../../../helpers/date-formatter.js";
 import UserBadge from "../../User/UserBadge.vue";
 import QuickLookDocumentAdditionalMetadataList from "./QuickLookDocumentAdditionalMetadataList.vue";
 
@@ -72,6 +75,9 @@ export default {
     methods: {
         getFormattedDate(date) {
             return formatDateUsingPreferredUserFormat(date, this.date_time_format);
+        },
+        getFormattedDateForDisplay(date) {
+            return getElapsedTimeFromNow(date);
         }
     }
 };
