@@ -12,6 +12,18 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 2.2.1\n"
 
+msgid "An error occurred during the update of the max file size"
+msgstr ""
+"Une erreur est survenue durant la mise à jour de la taille maximale des "
+"fichiers"
+
+msgid ""
+"An error occurred during the update of the number of files uploadable in "
+"parallel"
+msgstr ""
+"Une erreur est survenue durant la mise à jour du nombre de fichiers "
+"téléversables en parallèle"
+
 msgid "Approved"
 msgstr "Approuvé"
 
@@ -21,6 +33,9 @@ msgstr "Commenté"
 msgid "Declined"
 msgstr "Décliné"
 
+msgid "Document"
+msgstr "Document"
+
 msgid "Document is locked by another user."
 msgstr "Le document est reservé par un autre utilisateur."
 
@@ -29,6 +44,15 @@ msgstr "Gestionnaire de documents"
 
 msgid "Document manager administrators"
 msgstr "Administrateurs du gestionnaire de documents"
+
+msgid "Document settings"
+msgstr "Paramètres de documents"
+
+msgid "File upload limits"
+msgstr "Limites de téléversement"
+
+msgid "File upload settings"
+msgstr "Paramètres de téléversement"
 
 msgid "Global permissions"
 msgstr "Permissions globales"
@@ -41,6 +65,12 @@ msgstr "Version initiale"
 
 msgid "Items permissions are not listed."
 msgstr "Les permissions des éléments ne sont pas listées."
+
+msgid "Maximum files size (in Bytes)"
+msgstr "Taille maximum des fichiers  (en Octets)"
+
+msgid "Maximum number of files"
+msgstr "Nombre maximum de fichiers"
 
 msgid ""
 "New user interface is under construction and all feature are not available "
@@ -61,6 +91,12 @@ msgstr "Permission"
 msgid "Rejected"
 msgstr "Rejecté"
 
+msgid "Save settings"
+msgstr "Enregistrer"
+
+msgid "Settings have been saved successfully"
+msgstr "Les paramètres ont été sauvegardés avec succès"
+
 msgid "Switch to new user interface"
 msgstr "Basculer sur la nouvelle interface utilisateur"
 
@@ -78,6 +114,16 @@ msgstr "Il y a déjà un document en cours de téléversement pour cet élément
 msgid "There is already a version being uploaded for this document."
 msgstr "Il y a déjà une version en cours de téléversement pour ce document."
 
+msgid "This limit prevents a user to upload a file which size exceed x Bytes."
+msgstr ""
+"Cette limite empêche un utilisateur de téléverser un fichier dont le poids "
+"excède x Octets."
+
+msgid "This limit prevents a user to upload more than x files at a time."
+msgstr ""
+"Cette limite empêche un utilisateur de téléverser plus de x fichiers à la "
+"fois."
+
 msgid "Update document with approval table is not possible yet."
 msgstr ""
 "La mise à jour d'un document avec une table d'approbation n'est pas possible "
@@ -92,6 +138,9 @@ msgstr "Valider"
 #, php-format
 msgid "You are not allowed to write on folder with id '%d'"
 msgstr "Vous n'êtes pas autorisés à écrire dans le dossier ayant pour id '%d'"
+
+msgid "You should be site administrator to access this page"
+msgstr "Vous devez être administrateur site pour accéder à cette page"
 
 msgid "{{ user_group_name }} has no global permission"
 msgstr "{{ user_group_name }} n'a pas de permissions globales"

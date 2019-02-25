@@ -1,0 +1,75 @@
+<div class="tlp-framed-vertically">
+    <h1 class="tlp-framed-horizontally">{{# dgettext }}tuleap-docman | Document settings{{/ dgettext }}</h1>
+
+    <nav class="tlp-tabs">
+        <a class="tlp-tab" href="/plugins/document/document-settings">{{# dgettext }}tuleap-docman | File upload limits{{/ dgettext }}</a>
+    </nav>
+
+    <div class="tlp-framed-horizontally">
+        <form class="tlp-pane" method="post">
+            {{# csrf_token }}
+                {{> csrf_token_input }}
+            {{/ csrf_token }}
+            <div class="tlp-pane-container">
+                <div class="tlp-pane-header">
+                    <h1 class="tlp-pane-title">
+                        <i class="tlp-pane-title-icon fa fa-upload"></i>
+                        {{# dgettext }}tuleap-docman | File upload settings{{/ dgettext }}
+                    </h1>
+                </div>
+                <section class="tlp-pane-section">
+                    <div class="tlp-form-element">
+                        <label for="number-of-files" class="tlp-label">
+                            {{# dgettext }}
+                                tuleap-docman
+                                | Maximum number of files
+                            {{/ dgettext }}
+                        </label>
+                        <input
+                            id="number-of-files"
+                            class="tlp-input"
+                            name="number-of-files-in-parallel"
+                            type="number"
+                            min="0"
+                            size="5"
+                            value="{{ max_number_of_files }}"
+                        >
+                        <p class="tlp-text-info">
+                            <i class="fa fa-life-saver"></i>
+                            {{# dgettext }} tuleap-docman | This limit prevents a user to upload more than x files at a time.{{/ dgettext }}
+                        </p>
+                    </div>
+
+                    <div class="tlp-form-element">
+                        <label for="file-max-size" class="tlp-label">
+                            {{# dgettext }}
+                                tuleap-docman
+                                | Maximum files size (in Bytes)
+                            {{/ dgettext }}
+                        </label>
+                        <input
+                            id="file-max-size"
+                            class="tlp-input"
+                            name="max-file-size"
+                            type="number"
+                            min="0"
+                            size="5"
+                            value="{{ max_size_of_file }}"
+                        >
+                        <p class="tlp-text-info">
+                            <i class="fa fa-life-saver"></i>
+                            {{# dgettext }} tuleap-docman | This limit prevents a user to upload a file which size exceed x Bytes.{{/ dgettext }}
+                        </p>
+                    </div>
+
+                    <div class="tlp-pane-section-submit">
+                        <button class="tlp-button-primary" type="submit">
+                            <i class="fa fa-save tlp-button-icon"></i>
+                            {{# dgettext }} tuleap-docman | Save settings {{/ dgettext }}
+                        </button>
+                    </div>
+                </section>
+            </div>
+        </form>
+    </div>
+</div>

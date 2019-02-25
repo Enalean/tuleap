@@ -434,6 +434,10 @@ CREATE TABLE plugin_docman_new_version_upload(
     INDEX idx_expiration_date (expiration_date)
 ) ENGINE=InnoDB;
 
+INSERT INTO forgeconfig VALUES ('max_number_of_files', 50);
+-- 67108864 = 64MB
+INSERT INTO forgeconfig VALUES ('max_file_size', 67108864);
+
 -- Enable service for project 1 and 100
 INSERT INTO service(group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES ( 100 , 'plugin_docman:service_lbl_key' , 'plugin_docman:service_desc_key' , 'docman', '/plugins/docman/?group_id=$group_id', 1 , 0 , 'system',  95 );
 
