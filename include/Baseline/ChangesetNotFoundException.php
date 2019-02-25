@@ -34,6 +34,7 @@ class ChangesetNotFoundException extends Exception
 
     public function __construct(DateTime $date)
     {
+        parent::__construct();
         $this->date = $date;
     }
 
