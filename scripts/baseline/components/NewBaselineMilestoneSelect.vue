@@ -1,0 +1,84 @@
+<!--
+  - Copyright (c) Enalean, 2019. All Rights Reserved.
+  -
+  - This file is a part of Tuleap.
+  -
+  - Tuleap is free software; you can redistribute it and/or modify
+  - it under the terms of the GNU General Public License as published by
+  - the Free Software Foundation; either version 2 of the License, or
+  - (at your option) any later version.
+  -
+  - Tuleap is distributed in the hope that it will be useful,
+  - but WITHOUT ANY WARRANTY; without even the implied warranty of
+  - MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  - GNU General Public License for more details.
+  -
+  - You should have received a copy of the GNU General Public License
+  - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<template>
+    <div class="new-baseline-modal-milestone-list">
+        <div class="new-baseline-modal-milestone-list-scrollbar">
+            <div v-if="milestones.length === 0">
+                <p v-translate
+                   class="tlp-text-muted"
+                   data-test-type="empty-milestones"
+                >
+                    No milestone available
+                </p>
+            </div>
+            <div v-else
+                 v-for="milestone in sorted_milestones"
+                 v-bind:key="milestone.id"
+            >
+                <label class="tlp-label tlp-radio"
+                       data-test-type="milestone"
+                >
+                    <input type="radio"
+                           name="label"
+                           v-bind:value="milestone.id"
+                           v-on:change="onMilestoneSelected"
+                           required
+                    >
+                    {{ milestone.label }}
+                </label>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+export default {
+    name: "NewBaselineMilestoneSelect",
+
+    props: {
+        milestones: { mandatory: true, type: Array }
+    },
+
+    computed: {
+        sorted_milestones() {
+            return [...this.milestones].sort(function(milestone_a, milestone_b) {
+                const label_a = milestone_a.label.toUpperCase();
+                const label_b = milestone_b.label.toUpperCase();
+
+                if (label_a < label_b) {
+                    return -1;
+                }
+                if (label_a > label_b) {
+                    return 1;
+                }
+                return 0;
+            });
+        }
+    },
+
+    methods: {
+        onMilestoneSelected(event) {
+            const milestone_id = Number(event.target.value);
+            const milestone = this.milestones.find(milestone => milestone.id === milestone_id);
+            this.$emit("change", milestone);
+        }
+    }
+};
+</script>

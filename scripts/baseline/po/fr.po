@@ -12,6 +12,38 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 2.2.1\n"
 
-msgid "Cannot fetch data"
-msgstr "Impossible de charger les données"
+msgid "Cancel"
+msgstr "Annuler"
 
+msgid "Cannot create baseline"
+msgstr "Impossible de créer une baseline"
+
+msgid "Cannot fetch milestones"
+msgstr "Impossible de charger les milestones"
+
+msgid "Close"
+msgstr "Fermer"
+
+msgid "Create baseline"
+msgstr "Créer baseline"
+
+msgid "Milestone"
+msgstr "Milestone"
+
+msgid "Name"
+msgstr "Nom"
+
+msgid "New baseline"
+msgstr "Nouvelle baseline"
+
+msgid "No milestone available"
+msgstr "Aucune milestone disponible"
+
+msgid "Only open milestone are visible here"
+msgstr "Seuls les milestones ouvertes sont visible ici"
+
+msgid "Page under construction"
+msgstr "Page en construction"
+
+msgid "The baseline was created"
+msgstr "La baseline a été créée"

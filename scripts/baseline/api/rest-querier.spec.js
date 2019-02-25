@@ -17,33 +17,69 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { rewire$get } from "tlp-fetch";
+import { rewire$get, rewire$post } from "tlp-fetch";
 import { mockFetchSuccess } from "tlp-mocks";
-import { getBaseline } from "./rest-querier";
+import { getOpenMilestones, createBaseline } from "./rest-querier";
 
 describe("Rest queries:", () => {
-    describe("for GET actions:", () => {
+    let result;
+
+    describe("getOpenMilestones()", () => {
         let get;
-        const return_json = {
-            artifact_title: "I want to",
-            last_modification_date_before_baseline_date: 1234
-        };
-        let result;
 
-        beforeEach(() => {
+        const simplified_milestone = [
+            {
+                id: 3,
+                label: "milestone Label"
+            }
+        ];
+
+        beforeEach(async () => {
             get = jasmine.createSpy("get");
-            mockFetchSuccess(get, { return_json });
+            mockFetchSuccess(get, { return_json: simplified_milestone });
             rewire$get(get);
+            result = await getOpenMilestones(1);
         });
 
-        describe("getBaseline()", () => {
-            beforeEach(async () => {
-                result = await getBaseline(1, "1995-09-02");
+        it("calls projects API to get opened milestones", () =>
+            expect(get).toHaveBeenCalledWith('/api/projects/1/milestones?query={"status":"open"}'));
+
+        it("returns open milestones", () => expect(result).toEqual(simplified_milestone));
+    });
+
+    describe("saveBaseline()", () => {
+        let post;
+
+        const simplified_baseline = {
+            id: 1,
+            name: "My first baseline",
+            milestone_id: 3,
+            author_id: 2,
+            creation_date: 12344567
+        };
+
+        const headers = {
+            "content-type": "application/json"
+        };
+        const body = JSON.stringify({
+            name: "My first baseline",
+            milestone_id: 3
+        });
+
+        beforeEach(async () => {
+            post = jasmine.createSpy("post");
+            mockFetchSuccess(post, { return_json: simplified_baseline });
+            rewire$post(post);
+
+            result = await createBaseline("My first baseline", {
+                id: 3,
+                label: "milestone Label"
             });
-
-            it("calls baseline API", () =>
-                expect(get).toHaveBeenCalledWith("/api/baselines?artifact_id=1&date=1995-09-02"));
-            it("returns the baseline", () => expect(result).toEqual(return_json));
         });
+
+        it("calls baselines API to create baseline", () =>
+            expect(post).toHaveBeenCalledWith("/api/baselines/", { headers, body }));
+
+        it("returns created baseline", () => expect(result).toEqual(simplified_baseline));
     });
 });

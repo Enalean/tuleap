@@ -15,26 +15,13 @@
   -
   - You should have received a copy of the GNU General Public License
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
-  -
   -->
 
 <template functional>
-    <div>
-        <div class="tlp-pane-header">
-            <h1 class="tlp-pane-title">
-                <span class="tlp-skeleton-text"></span>
-            </h1>
-        </div>
-        <section class="tlp-pane-section">
-            <p>
-                <span class="tlp-skeleton-text"></span>
-            </p>
-            <p>
-                <span class="tlp-skeleton-text"></span>
-            </p>
-            <p>
-                <span class="tlp-skeleton-text"></span>
-            </p>
-        </section>
+    <div class="new-baseline-modal-milestone-list">
+        <div><span class="tlp-skeleton-text"></span></div>
+        <div><span class="tlp-skeleton-text"></span></div>
+        <div><span class="tlp-skeleton-text"></span></div>
+        <div><span class="tlp-skeleton-text"></span></div>
     </div>
 </template>

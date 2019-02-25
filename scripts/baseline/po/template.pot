@@ -5,5 +5,38 @@ msgstr ""
 "Generated-By: easygettext\n"
 "Project-Id-Version: \n"
 
-msgid "Cannot fetch data"
+msgid "Cancel"
+msgstr ""
+
+msgid "Cannot create baseline"
+msgstr ""
+
+msgid "Cannot fetch milestones"
+msgstr ""
+
+msgid "Close"
+msgstr ""
+
+msgid "Create baseline"
+msgstr ""
+
+msgid "Milestone"
+msgstr ""
+
+msgid "Name"
+msgstr ""
+
+msgid "New baseline"
+msgstr ""
+
+msgid "No milestone available"
+msgstr ""
+
+msgid "Only open milestone are visible here"
+msgstr ""
+
+msgid "Page under construction"
+msgstr ""
+
+msgid "The baseline was created"
 msgstr ""

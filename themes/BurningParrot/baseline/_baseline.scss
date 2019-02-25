@@ -1,5 +1,5 @@
 /*!
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,6 +17,29 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-.hello-world {
-    background-color: blue;
+.new-baseline-modal {
+    width: 26rem;
+}
+
+.baseline-section-new-baseline-button {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.baseline-section-content {
+    display: flex;
+    justify-content: center;
+}
+
+.new-baseline-modal-milestone-list {
+    margin-left: $tlp-spacing;
+}
+
+.new-baseline-modal-milestone-list-scrollbar {
+    max-height: 43vh;
+    overflow-y: auto;
+}
+
+.new-baseline-modal-fa-question-circle {
+    margin-left: $tlp-spacing;
 }

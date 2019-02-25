@@ -38,12 +38,10 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
+    const project_id = Number(vue_mount_point.dataset.projectId);
+
     const AppComponent = Vue.extend(App);
-    const url_params = new URLSearchParams(window.location.search);
     new AppComponent({
-        propsData: {
-            artifact_id: Number(url_params.get("artifact_id")),
-            date: url_params.get("date")
-        }
+        propsData: { project_id }
     }).$mount(vue_mount_point);
 });

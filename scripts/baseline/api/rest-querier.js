@@ -21,11 +21,29 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { get } from "tlp-fetch";
+import { get, post } from "tlp-fetch";
 
-export { getBaseline };
+export { getOpenMilestones, createBaseline };
 
-async function getBaseline(artifact_id, date) {
-    const response = await get(`/api/baselines?artifact_id=${artifact_id}&date=${date}`);
+async function getOpenMilestones(project_id) {
+    const response = await get(`/api/projects/${project_id}/milestones?query={"status":"open"}`);
+    return response.json();
+}
+
+async function createBaseline(name, milestone) {
+    const headers = {
+        "content-type": "application/json"
+    };
+
+    const body = JSON.stringify({
+        name,
+        milestone_id: milestone.id
+    });
+
+    const response = await post("/api/baselines/", {
+        headers,
+        body
+    });
+
     return response.json();
 }

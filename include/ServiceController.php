@@ -26,6 +26,7 @@ namespace Tuleap\Baseline;
 use HTTPRequest;
 use TemplateRenderer;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithProject;
@@ -66,6 +67,19 @@ class ServiceController implements DispatchableWithRequest, DispatchableWithBurn
         $layout->includeFooterJavascriptFile($include_assets->getFileURL('baseline.js'));
     }
 
+    private function includeCssFiles(BaseLayout $layout)
+    {
+        $layout->addCssAsset(
+            new CssAsset(
+                new IncludeAssets(
+                    __DIR__ . '/../../../src/www/assets/baseline/BurningParrot',
+                    '/assets/baseline/BurningParrot'
+                ),
+                'baseline'
+            )
+        );
+    }
+
     /**
      * Is able to process a request routed by FrontRouter
      *
@@ -82,11 +96,13 @@ class ServiceController implements DispatchableWithRequest, DispatchableWithBurn
 
         $project = $this->getProjectByName($variables['project_name']);
 
-        if (! $this->plugin->isAllowed($project->getID())) {
+        $project_id = $project->getID();
+        if (! $this->plugin->isAllowed($project_id)) {
             $layout->addFeedback(\Feedback::ERROR, dgettext('tuleap-baseline', 'Baseline service is disabled for this project'));
             $layout->redirect('/projects/'.$variables['project_name']);
         }
 
+        $this->includeCssFiles($layout);
         $this->includeJavascriptFiles($layout);
 
         $layout->header(
@@ -96,7 +112,7 @@ class ServiceController implements DispatchableWithRequest, DispatchableWithBurn
                 'toptab'       => \baselinePlugin::SERVICE_SHORTNAME,
             ]
         );
-        $this->template_renderer->renderToPage('project-service-index', []);
+        $this->template_renderer->renderToPage('project-service-index', ['project_id' => $project_id]);
         $layout->footer(["without_content" => true]);
     }
 

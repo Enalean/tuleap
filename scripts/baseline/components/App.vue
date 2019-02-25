@@ -17,75 +17,82 @@
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
 <template>
-    <div>
-        <main class="tlp-framed-vertically">
-            <h1 class="tlp-framed-horizontally">Simplified Baseline</h1>
-            <div class="tlp-framed-horizontally">
-                <section class="tlp-pane">
-                    <div class="tlp-pane-container">
-                        <div
-                            data-test-type="error-message"
-                            class="tlp-alert-danger"
-                            v-if="loading_error_message"
-                        >
-                            {{ this.loading_error_message }}
-                        </div>
-                        <skeleton-baseline
-                            v-else-if="is_loading"
-                        />
-                        <simplified-baseline
-                            v-else
-                            v-bind:baseline="baseline"
-                        />
-                    </div>
-                </section>
+    <main class="tlp-framed-vertically">
+        <h1 class="tlp-framed-horizontally">
+            Baselines
+        </h1>
+        <div class="tlp-framed-horizontally">
+            <div class="tlp-alert-success"
+                 data-test-type="successful-message"
+                 v-if="is_baseline_created"
+            >
+                <translate>The baseline was created</translate>
             </div>
-        </main>
-    </div>
+            <section class="tlp-pane">
+                <div class="tlp-pane-container">
+                    <section class="tlp-pane-section baseline-section-new-baseline-button">
+                        <button type="button"
+                                data-target="new-baseline-modal"
+                                class="tlp-button-primary"
+                                v-on:click="showNewBaselineModal"
+                        >
+                            <i class="fa fa-plus tlp-button-icon"></i>
+                            <translate>New baseline</translate>
+                        </button>
+                    </section>
+
+                    <new-baseline-modal id="new-baseline-modal"
+                                        ref="new_baseline_modal"
+                                        v-bind:project_id="project_id"
+                                        v-on:created="onBaselineCreated()"
+                    />
+                    <section class="tlp-pane-section baseline-section-content">
+                        <h2 class="tlp-pane-subtitle"
+                            v-translate
+                        >
+                            Page under construction
+                        </h2>
+                    </section>
+                </div>
+            </section>
+        </div>
+    </main>
 </template>
 
 <script>
-import { getBaseline } from "../api/rest-querier";
-import SkeletonBaseline from "./SkeletonBaseline.vue";
-import SimplifiedBaseline from "./SimplifiedBaseline.vue";
+import NewBaselineModal from "./NewBaselineModal.vue";
+import { modal as createModal } from "tlp";
 
 export default {
     name: "App",
 
-    components: {
-        SkeletonBaseline,
-        SimplifiedBaseline
-    },
+    components: { NewBaselineModal },
 
     props: {
-        artifact_id: { mandatory: true, type: Number },
-        date: { mandatory: true, type: String }
+        project_id: { mandatory: true, type: Number }
     },
 
     data() {
         return {
-            baseline: null,
-            loading_error_message: null,
-            is_loading: true
+            is_baseline_created: false,
+            modal: null
         };
     },
 
     mounted() {
-        this.fetchBaseline(this.artifact_id, this.date);
+        this.modal = createModal(this.$refs.new_baseline_modal.$el);
     },
 
     methods: {
-        async fetchBaseline(artifact_id, date) {
-            this.is_loading = true;
-            this.loading_error_message = null;
+        showNewBaselineModal() {
+            this.modal.show();
+            this.$refs.new_baseline_modal.reload();
+            this.is_baseline_created = false;
+        },
 
-            try {
-                this.baseline = await getBaseline(artifact_id, date);
-            } catch (e) {
-                this.loading_error_message = this.$gettext("Cannot fetch data");
-            } finally {
-                this.is_loading = false;
-            }
+        onBaselineCreated() {
+            this.is_baseline_created = true;
+            this.modal.hide();
         }
     }
 };
