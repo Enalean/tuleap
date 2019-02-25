@@ -20,7 +20,7 @@
 import { Upload } from "tus-js-client";
 import { getItem } from "../../api/rest-querier.js";
 import { flagItemAsCreated } from "./flag-item-as-created.js";
-import { RETRY_DELAYS } from "../../constants.js";
+import { RETRY_DELAYS, FILE_UPLOAD_UNKNOWN_ERROR } from "../../constants.js";
 
 function updateParentProgress(bytes_total, fake_item, bytes_uploaded, context, parent) {
     if (bytes_total === 0) {
@@ -43,12 +43,19 @@ export function uploadFile(context, dropped_file, fake_item, docman_item, parent
             updateParentProgress(bytes_total, fake_item, bytes_uploaded, context, parent);
         },
         onSuccess: async () => {
-            const file = await getItem(docman_item.id);
-            flagItemAsCreated(context, file);
-            file.level = fake_item.level;
-            context.commit("replaceUploadingFileWithActualFile", [fake_item, file]);
-            context.commit("removeFileFromUploadsList", fake_item);
-            context.commit("toggleCollapsedFolderHasUploadingContent", [parent, false]);
+            try {
+                const file = await getItem(docman_item.id);
+                flagItemAsCreated(context, file);
+                file.level = fake_item.level;
+                context.commit("replaceUploadingFileWithActualFile", [fake_item, file]);
+                context.commit("removeFileFromUploadsList", fake_item);
+            } catch (exception) {
+                fake_item.upload_error = FILE_UPLOAD_UNKNOWN_ERROR;
+                fake_item.is_uploading = false;
+                context.commit("removeItemFromFolderContent", fake_item);
+            } finally {
+                context.commit("toggleCollapsedFolderHasUploadingContent", [parent, false]);
+            }
         },
         onError: ({ originalRequest }) => {
             fake_item.is_uploading = false;

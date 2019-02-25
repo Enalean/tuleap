@@ -35,3 +35,5 @@ export const DOCMAN_FOLDER_EXPANDED_VALUE = 2;
 export const ITEM_TITLE_SUBSTRING_LENGTH = 15;
 
 export const RETRY_DELAYS = [0, 1000, 3000, 5000];
+
+export const FILE_UPLOAD_UNKNOWN_ERROR = "unknown error";

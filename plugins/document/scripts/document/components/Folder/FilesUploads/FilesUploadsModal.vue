@@ -41,7 +41,7 @@
                 <div class="document-uploads-file">
                     <span class="document-uploads-file-title">{{ file.title }}</span>
                     <span class="document-uploads-file-error-message" v-if="file.upload_error">
-                        {{ file.upload_error }}
+                        {{ getUploadErrorMessage(file) }}
                     </span>
                 </div>
                 <upload-progress-bar v-if="file.is_uploading" v-bind:item="file"/>
@@ -70,6 +70,7 @@
 <script>
 import { mapState } from "vuex";
 import UploadProgressBar from "../ProgressBar/UploadProgressBar.vue";
+import { FILE_UPLOAD_UNKNOWN_ERROR } from "../../../constants.js";
 
 export default {
     components: {
@@ -79,6 +80,13 @@ export default {
         ...mapState(["files_uploads_list"]),
         close() {
             return this.$gettext("Close");
+        }
+    },
+    methods: {
+        getUploadErrorMessage(file) {
+            return file.upload_error === FILE_UPLOAD_UNKNOWN_ERROR
+                ? this.$gettext("An error has occurred, please contact your administrator")
+                : file.upload_error;
         }
     }
 };
