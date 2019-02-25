@@ -1351,8 +1351,7 @@ class DocmanPlugin extends Plugin
                         $version_to_upload_dao,
                         new Docman_FileStorage($root_path),
                         new Docman_MIMETypeDetector(),
-                        UserManager::instance(),
-                        new Docman_LockFactory()
+                        UserManager::instance()
                     ),
                     new VersionUploadCanceler($path_allocator, $version_to_upload_dao)
                 )

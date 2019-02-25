@@ -35,7 +35,6 @@ class VersionUploadFinisherTest extends TestCase
 {
     use MockeryPHPUnitIntegration, ForgeConfigSandbox;
 
-    private $lock_factory;
     private $logger;
     private $item_factory;
     private $version_factory;
@@ -53,7 +52,6 @@ class VersionUploadFinisherTest extends TestCase
         $this->on_going_upload_dao = Mockery::mock(DocumentOnGoingVersionToUploadDAO::class);
         $this->file_storage        = Mockery::mock(\Docman_FileStorage::class);
         $this->user_manager        = Mockery::mock(\UserManager::class);
-        $this->lock_factory        = Mockery::mock(Docman_LockFactory::class);
     }
 
     public function testDocumentIsAddedToTheDocumentManagerWhenTheUploadIsComplete() : void
@@ -72,8 +70,7 @@ class VersionUploadFinisherTest extends TestCase
             $this->on_going_upload_dao,
             $this->file_storage,
             new \Docman_MIMETypeDetector(),
-            $this->user_manager,
-            $this->lock_factory
+            $this->user_manager
         );
 
 
@@ -121,7 +118,6 @@ class VersionUploadFinisherTest extends TestCase
         $this->logger->shouldReceive('debug');
 
         $this->on_going_upload_dao->shouldReceive('deleteByVersionID')->once();
-        $this->lock_factory->shouldReceive("getLockInfoForItem")->andReturn(false);
 
         $file_information = new DocumentAlreadyUploadedInformation($item_id_being_created, 123);
 
