@@ -22,12 +22,12 @@ namespace Tuleap\Docman\Upload\Version;
 
 use Docman_File;
 use Docman_ItemFactory;
-use Docman_LockFactory;
 use Docman_VersionFactory;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Docman\REST\v1\DocmanItemsEventAdder;
 use Tuleap\Docman\Upload\DocumentAlreadyUploadedInformation;
 use Tuleap\ForgeConfigSandbox;
 
@@ -35,6 +35,8 @@ class VersionUploadFinisherTest extends TestCase
 {
     use MockeryPHPUnitIntegration, ForgeConfigSandbox;
 
+    private $project_manager;
+    private $adder;
     private $logger;
     private $item_factory;
     private $version_factory;
@@ -52,6 +54,8 @@ class VersionUploadFinisherTest extends TestCase
         $this->on_going_upload_dao = Mockery::mock(DocumentOnGoingVersionToUploadDAO::class);
         $this->file_storage        = Mockery::mock(\Docman_FileStorage::class);
         $this->user_manager        = Mockery::mock(\UserManager::class);
+        $this->adder               = Mockery::mock(DocmanItemsEventAdder::class);
+        $this->project_manager     = Mockery::mock(\ProjectManager::class);
     }
 
     public function testDocumentIsAddedToTheDocumentManagerWhenTheUploadIsComplete() : void
@@ -70,7 +74,9 @@ class VersionUploadFinisherTest extends TestCase
             $this->on_going_upload_dao,
             $this->file_storage,
             new \Docman_MIMETypeDetector(),
-            $this->user_manager
+            $this->user_manager,
+            $this->adder,
+            $this->project_manager
         );
 
 
@@ -116,6 +122,12 @@ class VersionUploadFinisherTest extends TestCase
 
         $this->event_manager->shouldReceive('processEvent');
         $this->logger->shouldReceive('debug');
+        $this->version_factory->shouldReceive('getCurrentVersionForItem');
+
+        $this->project_manager->shouldReceive('getProject')->andReturn(Mockery::mock(\Project::class));
+
+        $this->adder->shouldReceive('addNotificationEvents');
+        $this->adder->shouldReceive('addLogEvents');
 
         $this->on_going_upload_dao->shouldReceive('deleteByVersionID')->once();
 
