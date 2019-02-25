@@ -96,4 +96,21 @@ class DocumentOnGoingVersionToUploadDAO extends DataAccessObject
 
         return $this->getDB()->row($sql, $version_id);
     }
+
+    public function deleteUnusableVersions(int $timestamp)
+    {
+        $this->getDB()->run(
+            'DELETE plugin_docman_new_version_upload.*
+             FROM plugin_docman_new_version_upload
+             JOIN plugin_docman_item ON (plugin_docman_item.item_id = plugin_docman_new_version_upload.item_id)
+             LEFT JOIN `groups` ON (`groups`.group_id = plugin_docman_item.group_id)
+             WHERE ? >= plugin_docman_new_version_upload.expiration_date OR `groups`.status = "D" OR `groups`.group_id IS NULL',
+            $timestamp
+        );
+    }
+
+    public function searchVersionOngoingUploadItemIDs()
+    {
+        return $this->getDB()->column('SELECT id FROM plugin_docman_new_version_upload');
+    }
 }
