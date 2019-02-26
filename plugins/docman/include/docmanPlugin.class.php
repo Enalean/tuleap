@@ -46,6 +46,7 @@ use Tuleap\Docman\Notifications\UsersToNotifyDao;
 use Tuleap\Docman\Notifications\UsersUpdater;
 use Tuleap\Docman\PermissionsPerGroup\PermissionPerGroupDocmanServicePaneBuilder;
 use Tuleap\Docman\REST\ResourcesInjector;
+use Tuleap\Docman\REST\v1\DocmanItemsEventAdder;
 use Tuleap\Docman\REST\v1\ItemRepresentationBuilder;
 use Tuleap\Docman\REST\v1\MetadataRepresentationBuilder;
 use Tuleap\Docman\Tus\TusServer;
@@ -1330,6 +1331,7 @@ class DocmanPlugin extends Plugin
         $root_path      = $this->getPluginInfo()->getPropertyValueForName('docman_root');
         $path_allocator = new VersionUploadPathAllocator();
         $version_to_upload_dao = new DocumentOnGoingVersionToUploadDAO();
+        $event_manager = EventManager::instance();
         return new FileUploadController(
             new TusServer(
                 HTTPFactoryBuilder::responseFactory(),
@@ -1348,11 +1350,13 @@ class DocmanPlugin extends Plugin
                         $path_allocator,
                         $this->getItemFactory(),
                         new Docman_VersionFactory(),
-                        EventManager::instance(),
+                        $event_manager,
                         $version_to_upload_dao,
                         new Docman_FileStorage($root_path),
                         new Docman_MIMETypeDetector(),
-                        UserManager::instance()
+                        UserManager::instance(),
+                        new DocmanItemsEventAdder($event_manager),
+                        ProjectManager::instance()
                     ),
                     new VersionUploadCanceler($path_allocator, $version_to_upload_dao)
                 )

@@ -60,7 +60,7 @@ class DocumentOnGoingVersionToUploadDAO extends DataAccessObject
         return $this->getDB()->run($sql, $id, $timestamp);
     }
 
-    public function searchDocumentVersionOngoingUploadByVersionIdAndExpirationDate(int $id, int $timestamp) : array
+    public function searchDocumentVersionOngoingUploadByVersionIdAndExpirationDate(int $id, int $timestamp) : ?array
     {
         $sql = 'SELECT *
                 FROM plugin_docman_new_version_upload

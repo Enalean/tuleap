@@ -24,11 +24,17 @@ namespace Tuleap\Docman\Upload\Version;
 
 use Docman_File;
 use Docman_Item;
+use ProjectManager;
+use Tuleap\Docman\REST\v1\DocmanItemsEventAdder;
 use Tuleap\Docman\Tus\TusFileInformation;
 use Tuleap\Docman\Tus\TusFinisherDataStore;
 
 final class VersionUploadFinisher implements TusFinisherDataStore
 {
+    /**
+     * @var DocmanItemsEventAdder
+     */
+    private $items_event_adder;
     /**
      * @var \Logger
      */
@@ -65,6 +71,10 @@ final class VersionUploadFinisher implements TusFinisherDataStore
      * @var \UserManager
      */
     private $user_manager;
+    /**
+     * @var ProjectManager
+     */
+    private $project_manager;
 
     public function __construct(
         \Logger $logger,
@@ -75,7 +85,9 @@ final class VersionUploadFinisher implements TusFinisherDataStore
         DocumentOnGoingVersionToUploadDAO $version_to_upload_dao,
         \Docman_FileStorage $docman_file_storage,
         \Docman_MIMETypeDetector $docman_mime_type_detector,
-        \UserManager $user_manager
+        \UserManager $user_manager,
+        DocmanItemsEventAdder $items_event_adder,
+        ProjectManager $project_manager
     ) {
         $this->logger                         = $logger;
         $this->document_upload_path_allocator = $document_upload_path_allocator;
@@ -86,6 +98,8 @@ final class VersionUploadFinisher implements TusFinisherDataStore
         $this->docman_file_storage            = $docman_file_storage;
         $this->docman_mime_type_detector      = $docman_mime_type_detector;
         $this->user_manager                   = $user_manager;
+        $this->items_event_adder              = $items_event_adder;
+        $this->project_manager                = $project_manager;
     }
 
     public function finishUpload(TusFileInformation $file_information): void
@@ -164,13 +178,7 @@ final class VersionUploadFinisher implements TusFinisherDataStore
 
                 $current_user = $this->user_manager->getUserById($upload_row['user_id']);
 
-                $params = [
-                    'item'     => $item,
-                    'user'     => $current_user,
-                    'group_id' => $item->getGroupId(),
-                    'parent'   => $this->docman_item_factory->getItemFromDb($item->getParentId())
-                ];
-                $this->triggerPostUpdateEvents($params);
+                $this->triggerPostUpdateEvents($item, $current_user);
             }
         );
 
@@ -186,9 +194,19 @@ final class VersionUploadFinisher implements TusFinisherDataStore
         return mime_content_type($path);
     }
 
-    private function triggerPostUpdateEvents(array $params): void
+    private function triggerPostUpdateEvents(Docman_Item $item, \PFUser $user): void
     {
-        $this->event_manager->processEvent('plugin_docman_event_add', $params);
+        $params = [
+            'item'     => $item,
+            'user'     => $user,
+            'group_id' => $item->getGroupId(),
+            'version'  => $this->version_factory->getCurrentVersionForItem($item)
+        ];
+
+        $this->items_event_adder->addNotificationEvents($this->project_manager->getProject($item->getGroupId()));
+        $this->items_event_adder->addLogEvents();
+
+        $this->event_manager->processEvent('plugin_docman_event_new_version', $params);
         $this->event_manager->processEvent('send_notifications', []);
     }
 }
