@@ -19,6 +19,9 @@
 
 <template>
     <div class="cross-timetracking-widget">
+        <div class="tlp-alert-info cross-tracker-report-success" v-if="has_success_message">
+            {{ success_message }}
+        </div>
         <time-tracking-overview-reading-mode v-if="reading_mode"/>
         <time-tracking-overview-writing-mode v-else/>
         <time-tracking-overview-table/>
@@ -26,7 +29,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapGetters } from "vuex";
 import TimeTrackingOverviewReadingMode from "./reading-mode/TimeTrackingOverviewReadingMode.vue";
 import TimeTrackingOverviewWritingMode from "./writing-mode/TimeTrackingOverviewWritingMode.vue";
 import TimeTrackingOverviewTable from "./TimeTrackingOverviewTable.vue";
@@ -41,7 +44,8 @@ export default {
         reportId: String
     },
     computed: {
-        ...mapState(["reading_mode"])
+        ...mapState(["reading_mode", "success_message"]),
+        ...mapGetters(["has_success_message"])
     },
     mounted() {
         this.$store.commit("setReportId", this.reportId);

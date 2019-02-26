@@ -60,6 +60,12 @@ msgstr "Veuillez choisir..."
 msgid "Project"
 msgstr "Projet"
 
+msgid "Report has been successfully saved"
+msgstr "Le rapport a été enregistré avec succès"
+
+msgid "Save report"
+msgstr "Enregistrer le rapport"
+
 msgid "Search"
 msgstr "Rechercher"
 

@@ -21,7 +21,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { get } from "tlp";
+import { get, put } from "tlp";
 import { formatDatetimeToISO } from "../../../time-formatters";
 
 export {
@@ -29,7 +29,12 @@ export {
     getTimesFromReport,
     getTimes,
     getProjectsWithTimetracking,
-    getTrackersWithTimetracking
+    getTrackersWithTimetracking,
+    saveNewReport
+};
+
+const headers = {
+    "content-type": "application/json"
 };
 
 async function getTrackersFromReport(report_id) {
@@ -52,11 +57,17 @@ async function getTimes(report_id, trackers_id, start_date, end_date) {
     return response.json();
 }
 
-async function getTimesFromReport(report_id) {
-    const response = await get(
-        "/api/v1/timetracking_reports/" + encodeURI(report_id) + "/times",
-        {}
-    );
+async function getTimesFromReport(report_id, start_date, end_date) {
+    const query = JSON.stringify({
+        start_date: formatDatetimeToISO(start_date),
+        end_date: formatDatetimeToISO(end_date)
+    });
+
+    const response = await get("/api/v1/timetracking_reports/" + encodeURI(report_id) + "/times", {
+        params: {
+            query
+        }
+    });
     return response.json();
 }
 
@@ -80,6 +91,19 @@ async function getTrackersWithTimetracking(project_id) {
             offset: 0,
             query: JSON.stringify({ with_time_tracking: true })
         }
+    });
+
+    return response.json();
+}
+
+async function saveNewReport(report_id, trackers_id) {
+    const body = JSON.stringify({
+        trackers_id: trackers_id
+    });
+
+    const response = await put("/api/v1/timetracking_reports/" + report_id, {
+        headers,
+        body
     });
 
     return response.json();

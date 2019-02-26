@@ -269,3 +269,13 @@
     margin: 0 3px 0 0;
     font-size: 12px;
 }
+
+.reading-mode-actions {
+    display: flex;
+    justify-content: center;
+    margin: $tlp-half-spacing $tlp-spacing $tlp-spacing;
+}
+
+.reading-mode-actions-cancel {
+    margin: 0 $tlp-spacing 0 0;
+}

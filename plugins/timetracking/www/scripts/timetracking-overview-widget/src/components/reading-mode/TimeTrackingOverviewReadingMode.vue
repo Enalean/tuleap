@@ -23,39 +23,50 @@
   -->
 
 <template>
-    <div class="timetracking-reading-mode"
-         v-on:click="toggleReadingMode()"
-    >
-        <div class="timetracking-reading-mode-dates">
-            <div class="tlp-property timetracking-reading-date">
-                <label class="tlp-label" v-translate>
-                    From
-                </label>
-                <span>{{ start_date }}</span>
-            </div>
-            <div class="tlp-property timetracking-reading-date">
-                <label class="tlp-label" v-translate>
-                    To
-                </label>
-                <span>{{ end_date }}</span>
-            </div>
+    <div>
+        <div class="timetracking-reading-mode"
+             v-on:click="toggleReadingMode()">
+            <time-tracking-overview-reading-dates/>
+            <time-tracking-overview-tracker-list/>
         </div>
-        <time-tracking-overview-tracker-list/>
+        <div class="reading-mode-actions"
+             v-if="! is_report_saved"
+        >
+            <button class="tlp-button-primary tlp-button-outline reading-mode-actions-cancel"
+                    v-translate
+                    v-on:click="discardReport()"
+            >Cancel
+            </button>
+            <button class="tlp-button-primary"
+                    v-on:click="saveReport()"
+            >
+                <i v-if="is_loading" class="tlp-button-icon fa fa-spinner fa-spin"></i>
+                <translate>Save report</translate>
+            </button>
+        </div>
     </div>
 </template>
 
 <script>
 import { mapMutations, mapState } from "vuex";
 import TimeTrackingOverviewTrackerList from "./TimeTrackingOverviewTrackerList.vue";
+import TimeTrackingOverviewReadingDates from "./TimeTrackingOverviewReadingDates.vue";
 
 export default {
     name: "TimeTrackingOverviewReadingMode",
-    components: { TimeTrackingOverviewTrackerList },
+    components: { TimeTrackingOverviewTrackerList, TimeTrackingOverviewReadingDates },
     computed: {
-        ...mapState(["start_date", "end_date"])
+        ...mapState(["is_report_saved", "is_loading"])
     },
     methods: {
-        ...mapMutations(["toggleReadingMode"])
+        ...mapMutations(["toggleReadingMode"]),
+        saveReport() {
+            this.$store.dispatch("saveReport", this.$gettext("Report has been successfully saved"));
+        },
+        async discardReport() {
+            await this.$store.dispatch("initWidgetWithReport");
+            this.$store.commit("setIsReportSave", true);
+        }
     }
 };
 </script>

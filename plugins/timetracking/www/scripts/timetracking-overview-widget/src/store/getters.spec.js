@@ -40,7 +40,7 @@ describe("Getters Timetracking Overview", () => {
         });
 
         it("Given a widget with state initialisation, Then we reset error has_error should be false", () => {
-            mutations.resetErrorMessage(state);
+            mutations.resetMessages(state);
             expect(getters.has_error(state)).toBe(false);
         });
     });

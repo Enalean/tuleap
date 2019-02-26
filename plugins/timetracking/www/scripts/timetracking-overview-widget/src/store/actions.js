@@ -26,13 +26,14 @@ import {
     getTimesFromReport,
     getTrackersFromReport,
     getTrackersWithTimetracking,
-    getTimes
+    getTimes,
+    saveNewReport
 } from "../api/rest-querier.js";
 import { ERROR_OCCURRED } from "../../../constants.js";
 
 export async function initWidgetWithReport(context) {
     try {
-        context.commit("resetErrorMessage");
+        context.commit("resetMessages");
 
         const report = await getTrackersFromReport(context.state.report_id);
         context.commit("setSelectedTrackers", report.trackers);
@@ -45,7 +46,7 @@ export async function initWidgetWithReport(context) {
 
 export async function getProjects(context) {
     try {
-        context.commit("resetErrorMessage");
+        context.commit("resetMessages");
         const projects = await getProjectsWithTimetracking();
         return context.commit("setProjects", projects);
     } catch (error) {
@@ -53,9 +54,28 @@ export async function getProjects(context) {
     }
 }
 
+export async function saveReport(context, message) {
+    try {
+        context.commit("resetMessages");
+        context.commit("setTrackersIds");
+        const report = await saveNewReport(
+            context.state.report_id,
+            context.state.trackers_ids ? context.state.trackers_ids : []
+        );
+        context.commit("setSelectedTrackers", report.trackers);
+        context.commit("setSuccessMessage", message);
+
+        context.commit("setIsReportSave", true);
+
+        return await loadTimes(context);
+    } catch (error) {
+        return showRestError(context, error);
+    }
+}
+
 export async function getTrackers(context, project_id) {
     try {
-        context.commit("resetErrorMessage");
+        context.commit("resetMessages");
         const trackers = await getTrackersWithTimetracking(project_id);
         return context.commit("setTrackers", trackers);
     } catch (error) {
@@ -75,7 +95,11 @@ async function showRestError(context, rest_error) {
 export async function loadTimes(context) {
     context.commit("setIsLoading", true);
 
-    const times = await getTimesFromReport(context.state.report_id);
+    const times = await getTimesFromReport(
+        context.state.report_id,
+        context.state.start_date,
+        context.state.end_date
+    );
 
     context.commit("setTrackersTimes", times);
     context.commit("setIsLoading", false);
@@ -93,6 +117,7 @@ export async function loadTimesWithNewParameters(context) {
     );
 
     context.commit("toggleReadingMode");
+    context.commit("setIsReportSave", false);
     context.commit("setTrackersTimes", times);
     context.commit("setIsLoading", false);
 }
