@@ -163,7 +163,7 @@ final class VersionUploadFinisher implements TusFinisherDataStore
                         'user_id'   => $upload_row['user_id'],
                         'label'     => $upload_row['version_title'],
                         'changelog' => $upload_row['changelog'],
-                        'filename'  => $item->getTitle(),
+                        'filename'  => $upload_row['filename'],
                         'filesize'  => $upload_row['filesize'],
                         'filetype'  => $this->getFiletype($upload_row['filename'], $file_path),
                         'path'      => $file_path,
