@@ -47,10 +47,10 @@ class DocumentToUploadCreator
         $filename,
         $filesize
     ) {
-        if ((int) $filesize > (int) \ForgeConfig::get('sys_max_size_upload')) {
+        if ((int) $filesize > (int) \ForgeConfig::get(PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING)) {
             throw new UploadMaxSizeExceededException(
                 (int) $filesize,
-                (int) \ForgeConfig::get('sys_max_size_upload')
+                (int) \ForgeConfig::get(PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING)
             );
         }
 
