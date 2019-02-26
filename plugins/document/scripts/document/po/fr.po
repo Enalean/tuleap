@@ -41,6 +41,9 @@ msgstr "Administration"
 msgid "Advanced"
 msgstr "Avancé"
 
+msgid "An error has occurred, please contact your administrator"
+msgstr "Une erreur est servenue, merci de contacter votre administrateur"
+
 msgid "Approval tables"
 msgstr "Tables d'approbation"
 
