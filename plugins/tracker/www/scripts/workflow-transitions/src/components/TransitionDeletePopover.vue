@@ -24,9 +24,14 @@
             <h1 class="tlp-popover-title" v-translate>Confirm deleting the transition</h1>
         </div>
         <div class="tlp-popover-body">
-            <p v-translate>
+            <p v-if="props.is_workflow_advanced" key="advanced-text" v-translate>
                 Are you sure you want to delete this transition? Its configuration will be lost and
                 cannot be recovered.
+            </p>
+            <p v-else key="simple-text" v-translate>
+                Are you sure you want to delete this transition? Since it is the last transition for
+                this state, deleting it will also delete the state's configuration. It cannot be
+                recovered.
             </p>
         </div>
         <div class="tlp-popover-footer">

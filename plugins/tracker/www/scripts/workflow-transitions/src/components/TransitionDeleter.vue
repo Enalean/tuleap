@@ -44,7 +44,10 @@
             >
                 ⤴
             </div>
-            <transition-delete-popover v-bind:delete-transition="deleteTransitionIfNothingElseIsRunning"/>
+            <transition-delete-popover
+                v-bind:delete-transition="deleteTransitionIfNothingElseIsRunning"
+                v-bind:is_workflow_advanced="is_workflow_advanced"
+            />
         </template>
     </div>
 </template>
