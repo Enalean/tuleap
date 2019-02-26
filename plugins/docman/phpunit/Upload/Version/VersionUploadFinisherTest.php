@@ -130,6 +130,7 @@ class VersionUploadFinisherTest extends TestCase
         $this->adder->shouldReceive('addLogEvents');
 
         $this->on_going_upload_dao->shouldReceive('deleteByVersionID')->once();
+        $this->item_factory->shouldReceive('update')->once()->andReturn(true);
 
         $file_information = new DocumentAlreadyUploadedInformation($item_id_being_created, 123);
 

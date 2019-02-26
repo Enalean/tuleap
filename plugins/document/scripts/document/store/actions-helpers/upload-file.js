@@ -84,8 +84,9 @@ export function uploadVersion(context, dropped_file, item, new_version) {
         onSuccess: () => {
             item.progress = null;
             item.is_uploading_new_version = false;
-            item.file_properties.html_url =
-                item.file_properties.html_url + "&update_time=" + Date.now();
+            const now = Date.now();
+            item.file_properties.html_url = item.file_properties.html_url + "&update_time=" + now;
+            item.last_update_date = now;
         },
         onError: ({ originalRequest }) => {
             item.upload_error = originalRequest.statusText;
