@@ -176,6 +176,14 @@ final class VersionUploadFinisher implements TusFinisherDataStore
                     throw new \RuntimeException("Not able to create a new version for item #$item_id from upload #$upload_id");
                 }
 
+                $last_update_date_change = $this->docman_item_factory->update(['id' => $item->getId()]);
+                if (! $last_update_date_change) {
+                    \unlink($file_path);
+                    $this->version_factory->deleteSpecificVersion($item, $next_version_id);
+                    $item_id = (int)$item->getId();
+                    throw new \RuntimeException("Not able to update last update date for item #$item_id from upload #$upload_id");
+                }
+
                 $current_user = $this->user_manager->getUserById($upload_row['user_id']);
 
                 $this->triggerPostUpdateEvents($item, $current_user);
