@@ -26,12 +26,18 @@ export {
     initializeFolderProperties,
     resetFolderIsUploading,
     toggleCollapsedFolderHasUploadingContent,
-    updateFolderProgressbar
+    updateFolderProgressbar,
+    removeVersionUploadProgress
 };
 
 function addFileInUploadsList(state, file) {
     removeFileFromUploadsList(state, file);
     state.files_uploads_list.unshift(file);
+}
+
+function removeVersionUploadProgress(state, uploaded_item) {
+    uploaded_item.progress = null;
+    uploaded_item.is_uploading_new_version = false;
 }
 
 function removeFileFromUploadsList(state, uploaded_file) {

@@ -57,11 +57,13 @@ export default {
         }
     },
     methods: {
-        ...mapActions(["cancelFileUpload", "cancelFolderUpload"]),
+        ...mapActions(["cancelFileUpload", "cancelFolderUpload", "cancelVersionUpload"]),
         cancel() {
             if (!this.is_canceled) {
                 this.is_canceled = true;
-                if (this.item.type !== TYPE_FOLDER) {
+                if (this.item.is_uploading_new_version) {
+                    this.cancelVersionUpload(this.item);
+                } else if (this.item.type !== TYPE_FOLDER) {
                     this.cancelFileUpload(this.item);
                 } else {
                     this.cancelFolderUpload(this.item);

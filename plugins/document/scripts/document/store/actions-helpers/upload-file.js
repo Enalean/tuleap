@@ -86,4 +86,6 @@ export function uploadVersion(context, dropped_file, item, new_version) {
     });
 
     uploader.start();
+
+    return uploader;
 }
