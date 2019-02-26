@@ -122,7 +122,7 @@ msgid "Time tracking is enabled for tracker."
 msgstr "Le suivi de temps est activé pour ce tracker."
 
 msgid "Timetracking overview"
-msgstr "Apperçu des suivis de temps"
+msgstr "Aperçu des suivis de temps"
 
 msgid "Update"
 msgstr "Mettre à jour"
