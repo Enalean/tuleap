@@ -57,7 +57,17 @@ class NewsDao extends \Tuleap\DB\DataAccessObject
 
     public function getNewsForSiteHomePage()
     {
-        $statement = EasyStatement::open()->in('?*', [\Project::ACCESS_PUBLIC, \Project::ACCESS_PUBLIC_UNRESTRICTED]);
+        return $this->getSiteNewsLimit(3);
+    }
+
+    public function getNewsForSitePublicRSSFeed()
+    {
+        return $this->getSiteNewsLimit(10);
+    }
+
+    private function getSiteNewsLimit(int $limit)
+    {
+        $where_statement = EasyStatement::open()->in('?*', [\Project::ACCESS_PUBLIC, \Project::ACCESS_PUBLIC_UNRESTRICTED]);
 
         $sql = "SELECT
                     groups.group_id,
@@ -72,10 +82,10 @@ class NewsDao extends \Tuleap\DB\DataAccessObject
                 INNER JOIN groups ON (news_bytes.group_id = groups.group_id)
             WHERE news_bytes.is_approved = 1
                 AND groups.status = 'A'
-                AND groups.access IN ($statement)
+                AND groups.access IN ($where_statement)
             GROUP BY news_bytes.forum_id
-            ORDER BY date DESC LIMIT 3";
+            ORDER BY date DESC LIMIT ? ";
 
-        return $this->getDB()->safeQuery($sql, $statement->values());
+        return $this->getDB()->safeQuery($sql, array_merge($where_statement->values(), [$limit]));
     }
 }

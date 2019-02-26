@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Poedit 2.2.1\n"
 
 #, php-format
 msgid ""
@@ -34,8 +34,24 @@ msgstr[0] "%d membre"
 msgstr[1] "%d membres"
 
 #, php-format
+msgid "%s full project listing"
+msgstr "Liste complète des projets %s"
+
+#, php-format
 msgid "%s has multiple corresponding users."
 msgstr "%s a plusieurs utilisateurs associés."
+
+#, php-format
+msgid "%s new projects"
+msgstr "Annonces %s"
+
+#, php-format
+msgid "%s news"
+msgstr "Annonces site %s"
+
+#, php-format
+msgid "%s project news highlights"
+msgstr "Annonces phares des projets %s"
 
 msgid ""
 "A non available service cannot be enabled. To enable this service, switch it "
@@ -317,6 +333,10 @@ msgstr "Contact (menu \"Aide\")"
 
 msgid "Content"
 msgstr "Contenu"
+
+#, php-format
+msgid "Copyright (c) %s, %s Team, 2001-%d. All Rights Reserved"
+msgstr "Copyright (c) %s, Equipe %s, 2001-%d. Tous droits réservés."
 
 msgid "Could not commit repository initial layout"
 msgstr "Impossible de commiter la structure initiale du dépôt"

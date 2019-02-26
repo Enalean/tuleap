@@ -68,8 +68,6 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
      */
     private $bgpri = array();
 
-    var $feeds;
-
     /**
      * Store custom css added on the fly
      *
@@ -553,26 +551,8 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
         );
         echo $this->getRssFeed(
             $hp->purify($GLOBALS['sys_name']. ' - ' .$GLOBALS['Language']->getText('include_layout','newest_projects_rss'), CODENDI_PURIFIER_CONVERT_HTML),
-            '/export/rss_sfprojects.php?type=rss&option=newest'
+            '/export/rss_sfprojects.php'
         );
-
-        // If in a project page, add a project news feed
-        if (isset($GLOBALS['group_id']) && $GLOBALS['group_id']) {
-            $pm = ProjectManager::instance();
-            $project = $pm->getProject($GLOBALS['group_id']);
-            echo $this->getRssFeed(
-                $hp->purify($project->getPublicName().' - '.$GLOBALS['Language']->getText('include_layout','latest_news_rss'), CODENDI_PURIFIER_CONVERT_HTML),
-                '/export/rss_sfnews.php?group_id='.$GLOBALS['group_id']
-            );
-        }
-
-        //Add additionnal feeds
-        foreach($this->feeds as $feed) {
-            echo $this->getRssFeed(
-                $hp->purify($feed['title'], CODENDI_PURIFIER_CONVERT_HTML),
-                $feed['href']
-            );
-        }
     }
 
     /**

@@ -11,6 +11,7 @@
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">
             <directory suffix=".php">../../src/common/</directory>
+            <directory suffix=".php">../../src/core/</directory>
             <directory suffix=".php">../../plugins/*/include/</directory>
             <directory suffix=".php">../../tests/lib/</directory>
             <exclude>
