@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -34,9 +34,9 @@ module.exports = function(config) {
     );
 
     Object.assign(base_config, {
-        files: ["src/**/*.spec.js"],
+        files: ["src/app.spec.js"],
         preprocessors: {
-            "src/**/*.spec.js": ["webpack"]
+            "src/app.spec.js": ["webpack"]
         }
     });
 
