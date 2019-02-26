@@ -480,6 +480,10 @@ done
 %{__install} -m 755 -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}
 %{__install} -m 700 -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/user
 %{__install} -m 755 -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/images
+%{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/ftp
+%{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/ftp/incoming
+%{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/ftp/codendi
+%{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/ftp/pub
 
 
 # Install systemd Unit
@@ -867,6 +871,10 @@ fi
 %dir %attr(755,%{APP_USER},%{APP_USER}) %{APP_DATA_DIR}
 %dir %attr(-,%{APP_USER},%{APP_USER}) %{APP_DATA_DIR}/user
 %dir %attr(-,%{APP_USER},%{APP_USER}) %{APP_DATA_DIR}/images
+%dir %attr(0755, root, %{ftp_group}) %{APP_DATA_DIR}/ftp
+%dir %attr(3777, %{APP_USER}, %{APP_USER}) %{APP_DATA_DIR}/ftp/incoming
+%dir %attr(0711, root, root) %{APP_DATA_DIR}/ftp/codendi
+%dir %attr(0755, %{ftpadmin_user}, %{ftpadmin_group}) %{APP_DATA_DIR}/ftp/pub
 
 # Executables (/usr/bin)
 %attr(00755,%{APP_USER},%{APP_USER}) %{_bindir}/tuleap
