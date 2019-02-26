@@ -49,7 +49,6 @@ export default {
             CREATION_ERROR: "creation_error",
             MAX_SIZE_ERROR: "max_size",
             ALREADY_EXISTS_ERROR: "already_exists",
-            FEATURE_UNDER_CONSTRUCTION: "feature_under_construction",
             EDITION_LOCKED: "edition_locked",
             DOCUMENT_NEEDS_APPROVAL: "document_needs_approval",
             highlighted_item_id: null
@@ -87,11 +86,6 @@ export default {
             if (this.error_modal_shown === this.CREATION_ERROR) {
                 return () =>
                     import(/* webpackChunkName: "document-max-size-dragndrop-error-modal" */ "./CreationErrorDragndropErrorModal.vue");
-            }
-
-            if (this.error_modal_shown === this.FEATURE_UNDER_CONSTRUCTION) {
-                return () =>
-                    import(/* webpackChunkName: "document-feature-under-construction-error-modal" */ "./FeatureUnderConstructionModal.vue");
             }
 
             if (this.error_modal_shown === this.EDITION_LOCKED) {
@@ -286,7 +280,18 @@ export default {
                 return;
             }
 
-            this.error_modal_shown = this.FEATURE_UNDER_CONSTRUCTION;
+            const files = event.dataTransfer.files;
+            const file = files[0];
+
+            if (file.size > this.max_size_upload) {
+                this.error_modal_shown = this.MAX_SIZE_ERROR;
+                return;
+            }
+
+            this.$store.dispatch("updateFile", [dropzone_item, file]).catch(error => {
+                this.error_modal_shown = this.CREATION_ERROR;
+                this.error_modal_reasons.push({ filename: file.name, message: error });
+            });
         }
     }
 };

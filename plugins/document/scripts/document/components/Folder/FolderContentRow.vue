@@ -46,7 +46,7 @@
             <td><upload-progress-bar v-bind:item="item"/></td>
             <td></td>
         </template>
-        <template v-else-if="is_not_item_uploading_and_not_quick_look">
+        <template v-else-if="is_not_uploading_and_is_not_in_quicklook">
             <td class="document-tree-cell-owner">
                 <user-badge v-bind:user="item.owner"/>
             </td>
@@ -145,16 +145,31 @@ export default {
             return this.item.is_uploading ? 4 : 1;
         },
         item_is_not_being_uploaded() {
-            return !this.item.is_uploading_in_collapsed_folder && !this.item.is_uploading;
+            return (
+                !this.item.is_uploading_in_collapsed_folder &&
+                !this.item.is_uploading &&
+                !this.item.is_uploading_new_version
+            );
         },
         is_item_uploading_in_quicklook_mode() {
-            return this.item.is_uploading_in_collapsed_folder && this.isQuickLookDisplayed;
+            return (
+                (this.item.is_uploading_in_collapsed_folder && this.isQuickLookDisplayed) ||
+                (this.item.is_uploading_new_version && this.isQuickLookDisplayed)
+            );
         },
         is_item_uploading_without_quick_look_mode() {
-            return this.item.is_uploading_in_collapsed_folder && !this.isQuickLookDisplayed;
+            return (
+                (this.item.is_uploading_in_collapsed_folder && !this.isQuickLookDisplayed) ||
+                (this.item.is_uploading_new_version && !this.isQuickLookDisplayed)
+            );
         },
-        is_not_item_uploading_and_not_quick_look() {
-            return !this.item.is_uploading && !this.isQuickLookDisplayed;
+        is_not_uploading_and_is_not_in_quicklook() {
+            return (
+                (!this.item.is_uploading && !this.isQuickLookDisplayed) ||
+                (!this.item.is_uploading_new_version &&
+                    !this.item.is_uploading &&
+                    !this.isQuickLookDisplayed)
+            );
         }
     },
     mounted() {

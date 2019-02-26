@@ -249,13 +249,6 @@ msgstr "Le dossier a été créé ci dessous."
 msgid "There is no upload in progress"
 msgstr "Il n'y a aucun téléversement en cours"
 
-msgid ""
-"This feature \"Upload a new file version\" is under construction. It is not "
-"ready yet to be used."
-msgstr ""
-"Cette fonctionnalité \"Téléverser une nouvelle version  de fichier\" est en "
-"cours de réalisation. Elle n'est pas encore prête pour l'utilisation."
-
 msgid "This folder is empty"
 msgstr "Ce dossier est vide"
 

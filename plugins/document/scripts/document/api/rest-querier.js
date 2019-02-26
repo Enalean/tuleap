@@ -36,7 +36,8 @@ export {
     deleteUserPreferenciesForUnderConstructionModal,
     addNewDocument,
     deleteUserPreferenciesForUIInProject,
-    cancelUpload
+    cancelUpload,
+    createNewVersion
 };
 
 async function getProject(project_id) {
@@ -90,6 +91,24 @@ async function addNewDocument(item, parent_id) {
             }
         });
     }
+}
+
+async function createNewVersion(item, version_title, changelog, dropped_file) {
+    const response = await patch(`/api/docman_files/${item.id}`, {
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            version_title,
+            changelog,
+            file_properties: {
+                file_name: dropped_file.name,
+                file_size: dropped_file.size
+            }
+        })
+    });
+
+    return response.json();
 }
 
 function getFolderContent(folder_id) {

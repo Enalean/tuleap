@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import Vue from "vue";
 import {
     addNewDocument,
     cancelUpload,
@@ -26,7 +27,8 @@ import {
     getFolderContent,
     getItem,
     getProject,
-    patchUserPreferenciesForFolderInProject
+    patchUserPreferenciesForFolderInProject,
+    createNewVersion
 } from "../api/rest-querier.js";
 
 import {
@@ -36,7 +38,7 @@ import {
 } from "./actions-helpers/handle-errors.js";
 import { loadFolderContent } from "./actions-helpers/load-folder-content.js";
 import { loadAscendantHierarchy } from "./actions-helpers/load-ascendant-hierarchy.js";
-import { uploadFile } from "./actions-helpers/upload-file.js";
+import { uploadFile, uploadVersion } from "./actions-helpers/upload-file.js";
 import { flagItemAsCreated } from "./actions-helpers/flag-item-as-created.js";
 import { TYPE_FILE } from "../constants.js";
 
@@ -158,6 +160,19 @@ export const loadFolder = (context, folder_id) => {
         return !current_folder || current_folder.id !== folder_id;
     }
 };
+
+export async function updateFile(context, [item, dropped_file]) {
+    const new_version = await createNewVersion(item, item.title, "", dropped_file);
+    if (dropped_file.size === 0) {
+        return;
+    }
+
+    const updated_item = context.state.folder_content.find(({ id }) => id === item.id);
+    Vue.set(updated_item, "progress", null);
+    Vue.set(updated_item, "is_uploading_new_version", true);
+
+    uploadVersion(context, dropped_file, item, new_version);
+}
 
 export const setUserPreferenciesForFolder = (context, [folder_id, should_be_closed]) => {
     if (context.state.user_id === 0) {

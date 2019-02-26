@@ -25,7 +25,8 @@ import {
     getParents,
     patchUserPreferenciesForFolderInProject,
     deleteUserPreferenciesForFolderInProject,
-    deleteUserPreferenciesForUIInProject
+    deleteUserPreferenciesForUIInProject,
+    createNewVersion
 } from "./rest-querier.js";
 
 import { tlp, mockFetchSuccess } from "tlp-mocks";
@@ -322,6 +323,28 @@ describe("rest-querier", () => {
                 headers: jasmine.objectContaining({ "content-type": "application/json" }),
                 body: item
             });
+        });
+    });
+
+    describe("createNewVersion()", () => {
+        it("Given data are valid, then a new version of item will be created", async () => {
+            const item = JSON.stringify({
+                version_title: "my document title",
+                changelog: "",
+                file_properties: {
+                    filename: "file",
+                    filesize: 123
+                }
+            });
+            const dropped_file = {
+                filename: "file",
+                filesize: 123
+            };
+
+            mockFetchSuccess(tlp.patch, JSON.stringify({ id: 10 }));
+
+            await createNewVersion(item, "my document title", "", dropped_file);
+            expect(tlp.patch).toHaveBeenCalled();
         });
     });
 });
