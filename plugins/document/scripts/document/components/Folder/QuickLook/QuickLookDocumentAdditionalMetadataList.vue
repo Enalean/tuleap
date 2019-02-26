@@ -19,16 +19,24 @@
 
 <template>
     <div class="tlp-property">
-        <label v-bind:for="metadata_label" class="tlp-label">{{ metadata.name }}</label>
+        <label v-bind:for="metadata_label" class="tlp-label">
+            {{ metadata.name }}
+        </label>
         <p v-bind:id="metadata_label">
             <template v-if="metadata.type === METADATA_LIST_TYPE && ! is_list_empty">
                 <ul v-if="metadata.list_value.length > 1">
-                    <li v-for="value in metadata.list_value" v-bind:key="value.id">{{ value.name }}</li>
+                    <li v-for="value in metadata.list_value" v-bind:key="value.id">
+                        {{ value.name }}
+                    </li>
                 </ul>
-                <template v-else>{{ metadata.list_value[0].name }}</template>
+                <template v-else>
+                    {{ metadata.list_value[0].name }}
+                </template>
             </template>
             <template v-else-if="metadata.type === METADATA_DATE_TYPE && is_date_valid">
-                {{ getFormattedDate(metadata.value) }}
+                <div class="tlp-tooltip tlp-tooltip-left" v-bind:data-tlp-tooltip="getFormattedDate(metadata.value)">
+                    {{ getFormattedDateForDisplay(metadata.value) }}
+                </div>
             </template>
             <span class="document-quick-look-property-empty" v-else-if="! has_metadata_a_value" v-translate>
                 Empty
@@ -43,7 +51,8 @@
 import { mapState } from "vuex";
 import {
     formatDateUsingPreferredUserFormat,
-    isDateValid
+    isDateValid,
+    getElapsedTimeFromNow
 } from "../../../helpers/date-formatter.js";
 
 export default {
@@ -85,6 +94,9 @@ export default {
     methods: {
         getFormattedDate(date) {
             return formatDateUsingPreferredUserFormat(date, this.date_time_format);
+        },
+        getFormattedDateForDisplay(date) {
+            return getElapsedTimeFromNow(date);
         }
     }
 };
