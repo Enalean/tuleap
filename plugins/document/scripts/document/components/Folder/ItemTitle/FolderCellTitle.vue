@@ -56,7 +56,7 @@ export default {
         };
     },
     computed: {
-        ...mapState(["folder_content"]),
+        ...mapState(["folder_content", "files_uploads_list"]),
         ...mapGetters(["is_uploading"]),
         folder_href() {
             const { href } = this.$router.resolve({
@@ -77,6 +77,13 @@ export default {
         },
         title() {
             return getTitleWithElipsisIfNeeded(this.item);
+        },
+        has_uploading_content() {
+            const uploading_content = this.files_uploads_list.find(
+                file => file.parent_id === this.item.id && file.progress > 0
+            );
+
+            return uploading_content;
         }
     },
     mounted() {
@@ -118,6 +125,11 @@ export default {
                 this.open();
             } else {
                 this.$store.commit("foldFolderContent", this.item.id);
+                this.$store.commit("toggleCollapsedFolderHasUploadingContent", [
+                    this.item,
+                    this.has_uploading_content
+                ]);
+
                 this.is_closed = true;
             }
 
