@@ -44,7 +44,7 @@
                         {{ getUploadErrorMessage(file) }}
                     </span>
                 </div>
-                <upload-progress-bar v-if="file.is_uploading" v-bind:item="file"/>
+                <upload-progress-bar v-if="file.is_uploading || file.is_uploading_new_version" v-bind:item="file"/>
                 <span v-else-if="file.upload_error !== null" class="tlp-badge-danger" v-translate>
                     Upload error
                 </span>

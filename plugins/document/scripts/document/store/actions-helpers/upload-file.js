@@ -87,6 +87,7 @@ export function uploadVersion(context, dropped_file, item, new_version) {
             const now = Date.now();
             item.file_properties.html_url = item.file_properties.html_url + "&update_time=" + now;
             item.last_update_date = now;
+            context.commit("removeFileFromUploadsList", item);
         },
         onError: ({ originalRequest }) => {
             item.upload_error = originalRequest.statusText;
