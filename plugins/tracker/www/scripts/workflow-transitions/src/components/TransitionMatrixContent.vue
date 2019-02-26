@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2018. All Rights Reserved.
+  - Copyright (c) Enalean, 2018-Present. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -43,22 +43,14 @@
             v-on:click="is_another_operation_running || createTransition()"
             data-test-action="create-transition"
         ></div>
-        <template v-else-if="transition && is_workflow_advanced">
-            <div
-                class="tracker-workflow-transition-mark"
-                v-bind:class="{
-                    'tracker-workflow-transition-action-disabled': is_another_operation_running,
-                    'tracker-workflow-transition-action-updated': is_transition_updated
-                }"
-                ref="transition_mark"
-                data-placement="top-start"
-                data-trigger="click"
-                data-test-action="confirm-delete-transition"
-            >
-                ⤴
-            </div>
-            <transition-delete-popover v-bind:delete-transition="deleteTransition"/>
+        <template v-else-if="transition">
+            <transition-deleter
+                v-bind:transition="transition"
+                v-bind:deleteTransition="deleteTransition"
+                v-bind:is_transition_updated="is_transition_updated"
+            />
             <button
+                v-if="is_workflow_advanced"
                 type="button"
                 class="tlp-button-primary tlp-button-mini tracker-workflow-advanced-transition-button"
                 v-bind:class="{ 'tlp-button-success': is_transition_updated }"
@@ -69,27 +61,15 @@
                 Configure
             </button>
         </template>
-        <div
-            v-else-if="transition && !is_workflow_advanced"
-            class="tracker-workflow-transition-mark"
-            v-bind:class="{
-                'tracker-workflow-transition-action-disabled': is_another_operation_running
-            }"
-            v-on:click="is_another_operation_running || deleteTransition()"
-            data-test-action="delete-transition"
-        >
-            ⤴
-        </div>
     </td>
 </template>
 <script>
 import { mapGetters, mapState } from "vuex";
-import { createPopover } from "tlp";
-import TransitionDeletePopover from "./TransitionDeletePopover.vue";
+import TransitionDeleter from "./TransitionDeleter.vue";
 
 export default {
     name: "TransitionMatrixContent",
-    components: { TransitionDeletePopover },
+    components: { TransitionDeleter },
     props: {
         from: {
             type: Object,
@@ -102,8 +82,7 @@ export default {
     },
     data() {
         return {
-            is_operation_running: false,
-            popover: null
+            is_operation_running: false
         };
     },
     computed: {
@@ -130,14 +109,6 @@ export default {
             return this.transition.updated;
         }
     },
-    mounted() {
-        if (this.transition) {
-            this.createPopover();
-        }
-    },
-    beforeDestroy() {
-        this.destroyPopoverIfExists();
-    },
     methods: {
         async createTransition() {
             this.is_operation_running = true;
@@ -147,7 +118,6 @@ export default {
             };
             try {
                 await this.$store.dispatch("createTransition", new_transition);
-                this.createPopover();
             } finally {
                 this.is_operation_running = false;
             }
@@ -156,7 +126,6 @@ export default {
             this.is_operation_running = true;
             try {
                 await this.$store.dispatch("deleteTransition", this.transition);
-                this.destroyPopoverIfExists();
             } finally {
                 this.is_operation_running = false;
             }
@@ -166,18 +135,6 @@ export default {
                 "transitionModal/showTransitionConfigurationModal",
                 this.transition
             );
-        },
-        async createPopover() {
-            await this.$nextTick();
-            if (this.popover === null && this.$refs.transition_mark && this.$refs.popover) {
-                this.popover = createPopover(this.$refs.transition_mark, this.$refs.popover);
-            }
-        },
-        destroyPopoverIfExists() {
-            if (this.popover !== null) {
-                this.popover.destroy();
-                this.popover = null;
-            }
         }
     }
 };
