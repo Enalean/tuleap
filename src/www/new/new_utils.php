@@ -19,27 +19,3 @@ function new_utils_get_new_projects ($start_time,$offset,$limit) {
   
   return($query);
 }
-
-function new_utils_get_new_releases_short($start_time) {
-    $frsrf = new FRSReleaseFactory();
-
-  $select = "SELECT groups.group_name AS group_name, "
-	  . "groups.group_id AS group_id, "
-	  . "groups.unix_group_name AS unix_group_name, "
-	  . "frs_release.release_id AS release_id, "
-	  . "frs_release.name AS release_version, "
-	  . "frs_release.release_date AS release_date, "
-          . "frs_package.package_id AS package_id ";
-
-  $from = "FROM groups,frs_package,frs_release ";
-
-  $where = "WHERE frs_release.release_date > ".db_ei($start_time)." "
-         . "AND frs_release.package_id = frs_package.package_id "
-	 . "AND frs_package.group_id = groups.group_id "
-         . "AND frs_release.status_id=".$frsrf->STATUS_ACTIVE." "
-         . "AND groups.access != '".db_es(Project::ACCESS_PRIVATE)."'";
-
-    $group = "GROUP BY frs_release.release_id "
-        . "ORDER BY frs_release.release_date DESC";
-    return $select.$from.$where.$group;
-}

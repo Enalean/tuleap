@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,10 +20,6 @@
  */
 class Admin_Homepage_Presenter
 {
-
-    /** @var boolean */
-    public $use_standard_homepage;
-
     /** @var Admin_Homepage_HeadlinePresenter[] */
     public $headlines;
 
@@ -43,9 +39,6 @@ class Admin_Homepage_Presenter
     public $placeholder_headline;
 
     /** @var string */
-    public $use_standard_homepage_label;
-
-    /** @var string */
     public $logo_help;
 
     /** @var string */
@@ -57,7 +50,6 @@ class Admin_Homepage_Presenter
     /** @var bool */
     public $use_custom_logo;
     public $standard_title;
-    public $customize_title;
     public $label_language;
     /** @var bool */
     public $display_statistics_on_home_page;
@@ -69,7 +61,6 @@ class Admin_Homepage_Presenter
     public function __construct(
         CSRFSynchronizerToken $csrf,
         $title,
-        $use_standard_homepage,
         $display_statistics_on_home_page,
         $display_news_on_home_page,
         array $headlines
@@ -77,7 +68,6 @@ class Admin_Homepage_Presenter
         $this->title                           = $title;
         $this->headlines                       = $headlines;
         $this->csrf_token                      = $csrf;
-        $this->use_standard_homepage           = $use_standard_homepage;
         $this->display_statistics_on_home_page = $display_statistics_on_home_page;
         $this->display_news_on_home_page       = $display_news_on_home_page;
 
@@ -96,9 +86,6 @@ class Admin_Homepage_Presenter
         $this->logo_help_end               = $GLOBALS['Language']->getText('admin_main', 'homepage_logo_help_end');
         $this->headline_help               = $GLOBALS['Language']->getText('admin_main', 'headline_help');
         $this->placeholder_headline        = $GLOBALS['Language']->getText('admin_main', 'placeholder_headline');
-        $this->use_standard_homepage_help  = $GLOBALS['Language']->getText('admin_main', 'use_standard_homepage_help');
-        $this->use_standard_homepage_label = $GLOBALS['Language']->getText('admin_main', 'use_standard_homepage_label');
-        $this->standard_title              = $GLOBALS['Language']->getText('admin_main', 'standard_title');
         $this->customize_title             = $GLOBALS['Language']->getText('admin_main', 'customize_title');
         $this->label_language              = $GLOBALS['Language']->getText('admin_main', 'label_language');
     }

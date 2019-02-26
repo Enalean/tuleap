@@ -1,6 +1,6 @@
 <?php
 /**
-  * Copyright (c) Enalean, 2015. All Rights Reserved.
+  * Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
   *
   * This file is a part of Tuleap.
   *
@@ -49,29 +49,6 @@ class Admin_Homepage_Dao extends DataAccessObject {
         }
 
         $sql = "REPLACE INTO homepage_headline(language_id, headline) VALUES ". implode(', ', $values);
-
-        return $this->update($sql);
-    }
-
-    /** @return bool */
-    public function isStandardHomepageUsed() {
-        $sql = "SELECT * FROM homepage";
-
-        $row = $this->retrieve($sql)->getRow();
-
-        return (bool)$row['use_standard_homepage'];
-    }
-
-    public function useStandardHomepage() {
-        $this->resetUsageOfStandardHomepage();
-
-        $sql = "REPLACE INTO homepage (use_standard_homepage) VALUES (1)";
-
-        return $this->update($sql);
-    }
-
-    private function resetUsageOfStandardHomepage() {
-        $sql = "TRUNCATE TABLE homepage";
 
         return $this->update($sql);
     }

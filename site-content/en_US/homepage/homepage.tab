@@ -1,32 +1,12 @@
-#/**
-#  *
-#  * Top level scripts message catalog (English)
-#  *
-#  * Tuleap
-#  * Copyright (c) Enalean, 2014-2019. All Rights Reserved.
-#  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
-#  *
-#  *
-#  */
-#
-#-----------------------------------------------
-# Script: SF/www/contact.php
-#
+# Copyright (c) Enalean, 2014-2019. All Rights Reserved.
+# Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+# This file is licensed under the GNU General Public License version 2. See the file COPYING.
+
+# Contact
 contact	title	Contact Us
-#
-#-----------------------------------------------
-# Script: SF/www/404.php
-#
-404	title	Requested Page not Found (Error 404)
-404	no_archive	No messages archived
-404	no_page	PAGE NOT FOUND
-#
-#-----------------------------------------------
-# Script: SF/www/index.php
-#
+
+# Homepage
 homepage	title	Welcome
-homepage	news_title	Latest News
-homepage	news_title2	Latest News - RSS Format
 homepage	username_placeholder	Username
 homepage	password_placeholder	Password
 homepage	sign_in_submit	Login
@@ -36,5 +16,3 @@ homepage	create_account	Create account
 homepage	welcome_back	Welcome back
 homepage	welcome_title	Hello,<br> Welcome to $1!
 homepage	my_personal_page	My personal page
-
-sendmessage	title	Send a Message to $1

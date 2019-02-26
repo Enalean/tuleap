@@ -18,9 +18,6 @@
 
 namespace Tuleap\Theme\BurningParrot;
 
-use Admin_Homepage_Dao;
-use CodendiDataAccess;
-use CSRFSynchronizerToken;
 use Event;
 use EventManager;
 use ForgeConfig;
@@ -28,31 +25,21 @@ use HTTPRequest;
 use PFUser;
 use Project;
 use ProjectManager;
-use SVN_LogDao;
 use TemplateRendererFactory;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbPresenterBuilder;
-use Tuleap\layout\HomePage\NewsCollectionBuilder;
-use Tuleap\layout\HomePage\StatisticsCollectionBuilder;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\SidebarPresenter;
-use Tuleap\News\NewsDao;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\Project\Flags\ProjectFlagsDao;
 use Tuleap\Theme\BurningParrot\Navbar\PresenterBuilder as NavbarPresenterBuilder;
 use URLRedirect;
-use User_LoginPresenterBuilder;
-use UserManager;
 use Widget_Static;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
 class BurningParrotTheme extends BaseLayout
 {
-    /**
-     * @var UserManager
-     */
-    private $user_manager;
     /** @var ProjectManager */
     private $project_manager;
 
@@ -79,7 +66,6 @@ class BurningParrotTheme extends BaseLayout
         parent::__construct($root);
         $this->user            = $user;
         $this->project_manager = ProjectManager::instance();
-        $this->user_manager    = UserManager::instance();
         $this->event_manager   = EventManager::instance();
         $this->request         = HTTPRequest::instance();
         $this->renderer        = TemplateRendererFactory::build()->getRenderer($this->getTemplateDir());
@@ -243,58 +229,6 @@ class BurningParrotTheme extends BaseLayout
     private function isInDebugMode()
     {
         return (ForgeConfig::get('DEBUG_MODE') && (ForgeConfig::get('DEBUG_DISPLAY_FOR_ALL') || user_ismember(1, 'A')));
-    }
-
-    public function displayStandardHomepage(
-        $display_new_account_button,
-        $login_url,
-        $is_secure
-    ) {
-        $homepage_dao = $this->getAdminHomepageDao();
-        $current_user = UserManager::instance()->getCurrentUser();
-
-        $headline = $homepage_dao->getHeadlineByLanguage($current_user->getLocale());
-
-        $most_secure_url = '';
-        if (ForgeConfig::get('sys_https_host')) {
-            $most_secure_url = 'https://'. ForgeConfig::get('sys_https_host');
-        }
-
-        $login_presenter_builder = new User_LoginPresenterBuilder();
-        $login_csrf              = new CSRFSynchronizerToken('/account/login.php');
-        $login_presenter         = $login_presenter_builder->buildForHomepage($is_secure, $login_csrf);
-
-        $display_new_account_button = ($current_user->isAnonymous() && $display_new_account_button);
-
-        $statistics_collection_builder = new StatisticsCollectionBuilder(
-            $this->project_manager,
-            $this->user_manager,
-            $this->event_manager,
-            new SVN_LogDao()
-        );
-        $statistics_collection = $statistics_collection_builder->build();
-
-        $news_collection_builder = new NewsCollectionBuilder(new NewsDao(), $this->project_manager, $this->user_manager, \Codendi_HTMLPurifier::instance());
-        $news_collection = $news_collection_builder->build();
-
-        $templates_dir = ForgeConfig::get('codendi_dir') . '/src/templates/homepage/';
-        $renderer      = TemplateRendererFactory::build()->getRenderer($templates_dir);
-        $presenter     = new HomePagePresenter(
-            $headline,
-            $current_user,
-            $most_secure_url,
-            $login_presenter,
-            $display_new_account_button,
-            $login_url,
-            $statistics_collection,
-            $news_collection
-        );
-        $renderer->renderToPage('homepage', $presenter);
-    }
-
-    private function getAdminHomepageDao()
-    {
-        return new Admin_Homepage_Dao();
     }
 
     private function getTuleapVersion()

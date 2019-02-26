@@ -21,7 +21,6 @@
     $(function() {
         var selector = $("#admin-headline-select-language");
 
-        bindSwitchStandardHomepage();
         bindSwitchStatisticsOnHomePage();
         bindSwitchNewsOnHomePage();
         initCKEditor();
@@ -52,12 +51,6 @@
                 } else {
                     cke_instance.hide();
                 }
-            });
-        }
-
-        function bindSwitchStandardHomepage() {
-            $("#use_standard_homepage").on("change", function() {
-                $("#admin-homepage").submit();
             });
         }
 
