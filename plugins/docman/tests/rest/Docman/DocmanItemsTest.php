@@ -107,6 +107,7 @@ class DocmanItemsTest extends DocmanBase
             '/plugins/docman/?group_id=' . urlencode($this->project_id) .
             '&action=show&id=' . urlencode($items[$item_c_index]['id']) . '&switcholdui=true'
         );
+        $this->assertEquals($items[$item_c_index]['file_properties']['file_size'], 3);
         $this->assertEquals($items[$item_e_index]['file_properties'], null);
         $this->assertEquals($items[$item_f_index]['file_properties'], null);
         $this->assertEquals($items[$item_g_index]['file_properties'], null);

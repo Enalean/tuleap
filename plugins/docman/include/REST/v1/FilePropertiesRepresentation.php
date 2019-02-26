@@ -34,9 +34,15 @@ class FilePropertiesRepresentation
      */
     public $html_url;
 
+    /**
+     * @var int
+     */
+    public $file_size;
+
     public function build(\Docman_Version $docman_version, $html_url)
     {
         $this->file_type = $docman_version->getFiletype();
         $this->html_url  = $html_url;
+        $this->file_size = $docman_version->getFilesize();
     }
 }

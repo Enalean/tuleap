@@ -21,11 +21,17 @@
     <section class="tlp-pane-section document-quick-look-properties">
         <div class="document-quick-look-properties-column">
             <div class="tlp-property">
-                <label for="document-id" class="tlp-label" v-translate>Id</label>
-                <p id="document-id">#{{ item.id }}</p>
+                <label for="document-id" class="tlp-label" v-translate>
+                    Id
+                </label>
+                <p id="document-id">
+                    #{{ item.id }}
+                </p>
             </div>
             <div class="tlp-property">
-                <label for="document-owner" class="tlp-label" v-translate>Owner</label>
+                <label for="document-owner" class="tlp-label" v-translate>
+                    Owner
+                </label>
                 <p id="document-owner">
                     <user-badge v-bind:user="item.owner"/>
                 </p>
@@ -34,24 +40,42 @@
         </div>
         <div class="document-quick-look-properties-column">
             <div class="tlp-property">
-                <label for="document-creation-date" class="tlp-label" v-translate>Creation date</label>
-                <p id="document-creation-date" class="tlp-tooltip tlp-tooltip-left" v-bind:data-tlp-tooltip="getFormattedDate(item.creation_date)">{{ getFormattedDateForDisplay(item.creation_date) }}</p>
+                <label for="document-creation-date" class="tlp-label" v-translate>
+                    Creation date
+                </label>
+                <p id="document-creation-date" class="tlp-tooltip tlp-tooltip-left" v-bind:data-tlp-tooltip="getFormattedDate(item.creation_date)">
+                    {{ getFormattedDateForDisplay(item.creation_date) }}
+                </p>
             </div>
             <div class="tlp-property">
-                <label for="document-last-update-date" class="tlp-label" v-translate>Last updated date</label>
-                <p id="document-last-update-date" class="tlp-tooltip tlp-tooltip-left" v-bind:data-tlp-tooltip="getFormattedDate(item.last_update_date)">{{ getFormattedDateForDisplay(item.last_update_date) }}</p>
+                <label for="document-last-update-date" class="tlp-label" v-translate>
+                    Last updated date
+                </label>
+                <p id="document-last-update-date" class="tlp-tooltip tlp-tooltip-left" v-bind:data-tlp-tooltip="getFormattedDate(item.last_update_date)">
+                    {{ getFormattedDateForDisplay(item.last_update_date) }}
+                </p>
+            </div>
+            <div v-if="is_file" class="tlp-property">
+                <label for="document-file-size" class="tlp-label" v-translate>
+                    File size
+                </label>
+                <p id="document-file-size">
+                    {{ file_size_in_mega_bytes }}
+                </p>
             </div>
             <quick-look-document-additional-metadata-list v-for="metadata in metadata_left_column" v-bind:metadata="metadata" v-bind:key="metadata.name"/>
         </div>
     </section>
 </template>
 <script>
+import prettyKibibytes from "pretty-kibibytes";
 import { mapState } from "vuex";
 import {
     formatDateUsingPreferredUserFormat,
     getElapsedTimeFromNow
 } from "../../../helpers/date-formatter.js";
 import UserBadge from "../../User/UserBadge.vue";
+import { TYPE_FILE } from "../../../constants.js";
 import QuickLookDocumentAdditionalMetadataList from "./QuickLookDocumentAdditionalMetadataList.vue";
 
 export default {
@@ -70,6 +94,12 @@ export default {
             const metadata_length = this.item.metadata.length;
 
             return this.item.metadata.slice(Math.ceil(metadata_length / 2), metadata_length);
+        },
+        is_file() {
+            return this.item.type === TYPE_FILE;
+        },
+        file_size_in_mega_bytes() {
+            return prettyKibibytes(parseInt(this.item.file_properties.file_size, 10));
         }
     },
     methods: {
