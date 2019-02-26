@@ -65,10 +65,6 @@ final class VersionUploadFinisher implements TusFinisherDataStore
      * @var \UserManager
      */
     private $user_manager;
-    /**
-     * @var \Docman_LockFactory
-     */
-    private $lock_factory;
 
     public function __construct(
         \Logger $logger,
@@ -79,8 +75,7 @@ final class VersionUploadFinisher implements TusFinisherDataStore
         DocumentOnGoingVersionToUploadDAO $version_to_upload_dao,
         \Docman_FileStorage $docman_file_storage,
         \Docman_MIMETypeDetector $docman_mime_type_detector,
-        \UserManager $user_manager,
-        \Docman_LockFactory $lock_factory
+        \UserManager $user_manager
     ) {
         $this->logger                         = $logger;
         $this->document_upload_path_allocator = $document_upload_path_allocator;
@@ -91,7 +86,6 @@ final class VersionUploadFinisher implements TusFinisherDataStore
         $this->docman_file_storage            = $docman_file_storage;
         $this->docman_mime_type_detector      = $docman_mime_type_detector;
         $this->user_manager                   = $user_manager;
-        $this->lock_factory                   = $lock_factory;
     }
 
     public function finishUpload(TusFileInformation $file_information): void
@@ -169,10 +163,6 @@ final class VersionUploadFinisher implements TusFinisherDataStore
                 }
 
                 $current_user = $this->user_manager->getUserById($upload_row['user_id']);
-                if ($this->lock_factory->getLockInfoForItem($item) !== false) {
-                    $this->lock_factory->lock($item, $current_user);
-                    $this->triggerLockEvents($item, $current_user);
-                }
 
                 $params = [
                     'item'     => $item,
@@ -200,15 +190,5 @@ final class VersionUploadFinisher implements TusFinisherDataStore
     {
         $this->event_manager->processEvent('plugin_docman_event_add', $params);
         $this->event_manager->processEvent('send_notifications', []);
-    }
-
-    private function triggerLockEvents(Docman_Item $item, \PFUser $user): void
-    {
-        $params = [
-            'group_id' => $item->getGroupId(),
-            'item'     => $item,
-            'user'     => $user
-        ];
-        $this->event_manager->processEvent('plugin_docman_event_lock_add', $params);
     }
 }

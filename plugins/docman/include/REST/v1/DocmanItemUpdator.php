@@ -81,7 +81,7 @@ class DocmanItemUpdator
 
         $lock_infos = $this->lock_factory->getLockInfoForItem($item);
 
-        if ($lock_infos && (int)$lock_infos['user_id'] !== $user->getId()) {
+        if ($lock_infos && (int)$lock_infos['user_id'] !== (int)$user->getId()) {
             throw new ExceptionItemIsLockedByAnotherUser();
         }
 
