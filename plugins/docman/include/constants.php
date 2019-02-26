@@ -132,5 +132,5 @@ define('PLUGIN_DOCMAN_APPROVAL_NOTIF_SEQUENTIAL', 2);
 
 define('PLUGIN_DOCMAN_METADATA_TYPE_DATE_LABEL', 'date');
 
-define('PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING', 'max_file_size');
-define('PLUGIN_DOCMAN_MAX_NB_FILE_UPLOADS_SETTING', 'max_number_of_files');
+define('PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING', 'plugin_docman_max_file_size');
+define('PLUGIN_DOCMAN_MAX_NB_FILE_UPLOADS_SETTING', 'plugin_docman_max_number_of_files');
