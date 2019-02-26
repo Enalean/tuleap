@@ -171,7 +171,7 @@ export async function updateFile(context, [item, dropped_file]) {
     Vue.set(updated_item, "progress", null);
     Vue.set(updated_item, "is_uploading_new_version", true);
 
-    uploadVersion(context, dropped_file, item, new_version);
+    item.uploader = uploadVersion(context, dropped_file, item, new_version);
 }
 
 export const setUserPreferenciesForFolder = (context, [folder_id, should_be_closed]) => {
@@ -277,6 +277,17 @@ export const cancelFileUpload = async (context, item) => {
     } finally {
         context.commit("removeItemFromFolderContent", item);
         context.commit("removeFileFromUploadsList", item);
+    }
+};
+
+export const cancelVersionUpload = async (context, item) => {
+    try {
+        item.uploader.abort();
+        await cancelUpload(item);
+    } catch (e) {
+        // do nothing
+    } finally {
+        context.commit("removeVersionUploadProgress", item);
     }
 };
 

@@ -21,6 +21,7 @@ import { mockFetchError } from "tlp-mocks";
 import {
     addNewUploadFile,
     cancelFileUpload,
+    cancelVersionUpload,
     createNewItem,
     loadFolder,
     loadRootFolder,
@@ -823,6 +824,23 @@ describe("Store actions", () => {
             cancelUpload.and.throwError("Failed to fetch");
             await cancelFileUpload(context, item);
             expect(context.commit).toHaveBeenCalledWith("removeItemFromFolderContent", item);
+        });
+    });
+
+    describe("cancelVersionUpload", () => {
+        let item;
+        beforeEach(() => {
+            item = {
+                uploader: {
+                    abort: jasmine.createSpy("abort")
+                }
+            };
+        });
+
+        it("asks to tus client to abort the upload", async () => {
+            await cancelVersionUpload(context, item);
+            expect(item.uploader.abort).toHaveBeenCalled();
+            expect(context.commit).toHaveBeenCalledWith("removeVersionUploadProgress", item);
         });
     });
     describe("updateFile", () => {
