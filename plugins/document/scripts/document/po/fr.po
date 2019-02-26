@@ -112,6 +112,9 @@ msgstr "Vide"
 msgid "File"
 msgstr "Fichier"
 
+msgid "File size"
+msgstr "Taille du fichier"
+
 msgid ""
 "Generic information: id, title, description, created by, last update date"
 msgstr ""
