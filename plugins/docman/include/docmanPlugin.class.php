@@ -25,6 +25,7 @@
  */
 
 use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\CLI\Events\GetWhitelistedKeys;
 use Tuleap\DB\DBFactory;
 use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\ApprovalTable\ApprovalTableStateMapper;
@@ -170,6 +171,8 @@ class DocmanPlugin extends Plugin
 
         $this->addHook(Event::REST_RESOURCES);
         $this->addHook(Event::REST_PROJECT_ADDITIONAL_INFORMATIONS);
+
+        $this->addHook(GetWhitelistedKeys::NAME);
 
         $this->addHook(CollectRoutesEvent::NAME);
 
@@ -1423,5 +1426,11 @@ class DocmanPlugin extends Plugin
             new DocumentOnGoingVersionToUploadDAO()
         );
         $cleaner->deleteDanglingVersionToUpload(new \DateTimeImmutable());
+    }
+
+    public function getWhitelistedKeys(GetWhitelistedKeys $event)
+    {
+        $event->addPluginsKeys(PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING);
+        $event->addPluginsKeys(PLUGIN_DOCMAN_MAX_NB_FILE_UPLOADS_SETTING);
     }
 }
