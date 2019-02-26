@@ -30,16 +30,10 @@
                 <i class="fa fa-mail-forward tlp-button-icon"></i>
                 <translate>Update</translate>
             </button>
-
-            <button
-                class="tlp-button-primary tlp-button-outline tlp-button-small tlp-dropdown-split-button-main"
-                type="button"
-                v-on:click="toggleNeighborDropdown"
-                v-else
+            <dropdown-button
+                v-bind:is-in-quick-look-mode="true"
+                v-bind:is-appended="item.user_can_write"
             >
-                <i class="fa fa-ellipsis-h"></i>
-            </button>
-            <dropdown-button ref="dropdown_button" v-bind:is-in-quick-look-mode="true">
                 <dropdown-menu
                     v-bind:item="item"
                     v-bind:is-in-quick-look-mode="true"
@@ -78,10 +72,6 @@ export default {
                     this.item.id
                 }&action=${action}`
             );
-        },
-        toggleNeighborDropdown(event) {
-            event.stopPropagation();
-            this.$refs.dropdown_button.toggleDropdown();
         }
     }
 };

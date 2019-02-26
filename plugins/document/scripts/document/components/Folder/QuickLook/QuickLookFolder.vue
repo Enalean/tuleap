@@ -33,7 +33,7 @@
             >
                 <i class="fa fa-ellipsis-h"></i>
             </button>
-            <dropdown-button ref="dropdown_button" v-bind:is-in-quick-look-mode="true">
+            <dropdown-button v-bind:is-in-quick-look-mode="true" v-bind:is-appended="item.user_can_write">
                 <dropdown-menu v-bind:item="item" v-bind:is-in-quick-look-mode="true" v-bind:hide-item-title="true"/>
             </dropdown-button>
         </div>
@@ -58,10 +58,6 @@ export default {
                     detail: { parent: this.item }
                 })
             );
-        },
-        toggleNeighborDropdown(event) {
-            event.stopPropagation();
-            this.$refs.dropdown_button.toggleDropdown();
         }
     }
 };
