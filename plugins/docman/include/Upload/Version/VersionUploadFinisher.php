@@ -165,7 +165,7 @@ final class VersionUploadFinisher implements TusFinisherDataStore
                         'changelog' => $upload_row['changelog'],
                         'filename'  => $item->getTitle(),
                         'filesize'  => $upload_row['filesize'],
-                        'filetype'  => $this->getFiletype($file_path),
+                        'filetype'  => $this->getFiletype($upload_row['filename'], $file_path),
                         'path'      => $file_path,
                         'date'      => $current_time
                     ]
@@ -193,11 +193,11 @@ final class VersionUploadFinisher implements TusFinisherDataStore
         $this->logger->debug('New version from upload #' . $upload_id . ' has been created');
     }
 
-    private function getFiletype(string $path): string
+    private function getFiletype(string $filename, string $path) : string
     {
-        $filename = basename($path);
-        if ($this->docman_mime_type_detector->isAnOfficeFile($filename)) {
-            return $this->docman_mime_type_detector->getRightOfficeType($filename);
+        $mime_type = $this->docman_mime_type_detector->getRightOfficeType($filename);
+        if ($mime_type !== null) {
+            return $mime_type;
         }
         return mime_content_type($path);
     }

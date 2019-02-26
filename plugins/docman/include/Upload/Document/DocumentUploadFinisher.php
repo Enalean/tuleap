@@ -183,7 +183,7 @@ final class DocumentUploadFinisher implements TusFinisherDataStore
                 'user_id'   => $document_row['user_id'],
                 'filename'  => $document_row['filename'],
                 'filesize'  => $document_row['filesize'],
-                'filetype'  => $this->getFiletype($file_path),
+                'filetype'  => $this->getFiletype($document_row['filename'], $file_path),
                 'path'      => $file_path,
                 'date'      => $current_time
             ]);
@@ -198,11 +198,11 @@ final class DocumentUploadFinisher implements TusFinisherDataStore
         $this->logger->debug('Item #' . $item_id . ' has been created');
     }
 
-    private function getFiletype($path) : string
+    private function getFiletype(string $filename, string $path) : string
     {
-        $filename = basename($path);
-        if ($this->docman_mime_type_detector->isAnOfficeFile($filename)) {
-            return $this->docman_mime_type_detector->getRightOfficeType($filename);
+        $mime_type = $this->docman_mime_type_detector->getRightOfficeType($filename);
+        if ($mime_type !== null) {
+            return $mime_type;
         }
         return mime_content_type($path);
     }
