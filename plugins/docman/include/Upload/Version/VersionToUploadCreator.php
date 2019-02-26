@@ -57,10 +57,10 @@ class VersionToUploadCreator
         int $filesize
     ) : VersionToUpload {
         $file_size = $filesize;
-        if ((int)$file_size > (int)\ForgeConfig::get('sys_max_size_upload')) {
+        if ((int)$file_size > (int)\ForgeConfig::get(PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING)) {
             throw new UploadMaxSizeExceededException(
                 (int)$file_size,
-                (int)\ForgeConfig::get('sys_max_size_upload')
+                (int)\ForgeConfig::get(PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING)
             );
         }
         $this->dao->wrapAtomicOperations(

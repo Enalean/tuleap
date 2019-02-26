@@ -57,7 +57,7 @@ class DocumentToUploadCreatorTest extends TestCase
         $this->dao->shouldReceive('wrapAtomicOperations')->with($this->mockery_matcher_callback_wrapped_operations);
         $creator = new DocumentToUploadCreator($this->dao);
 
-        \ForgeConfig::set('sys_max_size_upload', '999999');
+        \ForgeConfig::set(PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING, '999999');
         $parent_item = \Mockery::mock(\Docman_Item::class);
         $parent_item->shouldReceive('getId')->andReturns(11);
         $user = \Mockery::mock(\PFUser::class);
@@ -85,7 +85,7 @@ class DocumentToUploadCreatorTest extends TestCase
         $this->dao->shouldReceive('wrapAtomicOperations')->with($this->mockery_matcher_callback_wrapped_operations);
         $creator = new DocumentToUploadCreator($this->dao);
 
-        \ForgeConfig::set('sys_max_size_upload', '999999');
+        \ForgeConfig::set(PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING, '999999');
         $parent_item = \Mockery::mock(\Docman_Item::class);
         $parent_item->shouldReceive('getId')->andReturns(11);
         $user = \Mockery::mock(\PFUser::class);
@@ -114,7 +114,7 @@ class DocumentToUploadCreatorTest extends TestCase
         $this->dao->shouldReceive('wrapAtomicOperations')->with($this->mockery_matcher_callback_wrapped_operations);
         $creator = new DocumentToUploadCreator($this->dao);
 
-        \ForgeConfig::set('sys_max_size_upload', '999999');
+        \ForgeConfig::set(PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING, '999999');
         $parent_item = \Mockery::mock(\Docman_Item::class);
         $parent_item->shouldReceive('getId')->andReturns(11);
         $user = \Mockery::mock(\PFUser::class);
@@ -143,7 +143,7 @@ class DocumentToUploadCreatorTest extends TestCase
         $this->dao->shouldReceive('wrapAtomicOperations')->with($this->mockery_matcher_callback_wrapped_operations);
         $creator = new DocumentToUploadCreator($this->dao);
 
-        \ForgeConfig::set('sys_max_size_upload', '999999');
+        \ForgeConfig::set(PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING, '999999');
         $parent_item = \Mockery::mock(\Docman_Item::class);
         $parent_item->shouldReceive('getId')->andReturns(11);
         $user = \Mockery::mock(\PFUser::class);
@@ -171,7 +171,7 @@ class DocumentToUploadCreatorTest extends TestCase
     {
         $creator = new DocumentToUploadCreator($this->dao);
 
-        \ForgeConfig::set('sys_max_size_upload', '1');
+        \ForgeConfig::set(PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING, '1');
         $parent_item = \Mockery::mock(\Docman_Item::class);
         $user = \Mockery::mock(\PFUser::class);
         $current_time = new \DateTimeImmutable();
