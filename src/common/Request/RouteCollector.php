@@ -41,6 +41,7 @@ use Tuleap\Admin\ProjectCreationModerationUpdateController;
 use Tuleap\Admin\ProjectTemplatesController;
 use Tuleap\Error\PermissionDeniedMailSender;
 use Tuleap\Error\PlaceHolderBuilder;
+use Tuleap\FRS\FileDownloadController;
 use Tuleap\Layout\LegacySiteHomePageController;
 use Tuleap\Layout\SiteHomepageController;
 use Tuleap\Password\Administration\PasswordPolicyDisplayController;
@@ -233,6 +234,21 @@ class RouteCollector
         );
     }
 
+    public static function getSvnViewVC()
+    {
+        return new \Tuleap\SvnCore\ViewVC\ViewVCController();
+    }
+
+    public static function getCVSViewVC()
+    {
+        return new \Tuleap\CVS\ViewVC\ViewVCController();
+    }
+
+    public static function getFileDownload()
+    {
+        return new FileDownloadController();
+    }
+
     public function collect(FastRoute\RouteCollector $r)
     {
         $r->get('/', [__CLASS__, 'getSlash']);
@@ -282,6 +298,10 @@ class RouteCollector
 
         $r->post('/join-private-project-mail/', [__CLASS__, 'postJoinPrivateProjectMail']);
         $r->post('/join-project-restricted-user-mail/', [__CLASS__, 'postJoinRestrictedUserMail']);
+
+        $r->get('/svn/viewvc.php[/{path:.*}]', [__CLASS__, 'getSvnViewVC']);
+        $r->get('/cvs/viewvc.php[/{path:.*}]', [__CLASS__, 'getCVSViewVC']);
+        $r->get('/file/download.php/{group_id:\d+}/{file_id:\d+}[/{filename:.*}]', [__CLASS__, 'getFileDownload']);
 
         $collect_routes = new CollectRoutesEvent($r);
         $this->event_manager->processEvent($collect_routes);

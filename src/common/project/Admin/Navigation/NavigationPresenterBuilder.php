@@ -171,7 +171,7 @@ class NavigationPresenterBuilder
                 ),
                 new NavigationDropdownItemPresenter(
                     _('Access Logs'),
-                    '/project/stats/source_code_access.php/?' . http_build_query(array('group_id' => $project_id))
+                    '/project/stats/source_code_access.php?' . http_build_query(array('group_id' => $project_id))
                 )
             )
         );

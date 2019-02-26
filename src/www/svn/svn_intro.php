@@ -35,7 +35,7 @@ if (!$request->valid($vGroupId)) {
 
 $hp = Codendi_HTMLPurifier::instance();
 
-svn_header(array ('title'=>$Language->getText('svn_intro','info')));
+svn_header($request->getProject(), array ('title'=>$Language->getText('svn_intro','info')));
 
 // Table for summary info
 print '<TABLE width="100%"><TR valign="top"><TD width="65%">'."\n";

@@ -123,44 +123,22 @@ class ViewVCProxy
         return ForgeConfig::get('cvs_prefix') . DIRECTORY_SEPARATOR . $project->getUnixNameMixedCase();
     }
 
-    public function displayContent(Project $project, HTTPRequest $request)
+    public function displayContent(Project $project, HTTPRequest $request, string $path)
     {
         $user = $request->getCurrentUser();
-        if ($user->isAnonymous()) {
-            exit_error(
-                $GLOBALS['Language']->getText('cvs_viewvc', 'error_noaccess'),
-                $GLOBALS['Language']->getText(
-                    'cvs_viewvc',
-                    'error_noaccess_msg',
-                    session_make_url("/project/memberlist.php?group_id=" . urlencode($project->getID()))
-                )
-            );
-        }
 
         viewvc_utils_track_browsing($project->getID(), 'cvs');
-
-        //this is very important. default path must be /
-        $path = "/";
-
-        if ($request->getFromServer('PATH_INFO') != "") {
-            $path = $request->getFromServer('PATH_INFO');
-
-            // hack: path must always end with /
-            if (strrpos($path, "/") != (strlen($path) - 1)) {
-                $path .= "/";
-            }
-        }
 
         $command = 'REMOTE_USER_ID=' . escapeshellarg($user->getId()) . ' '.
             'REMOTE_USER=' . escapeshellarg($user->getUserName()) . ' '.
             'PATH_INFO='.$this->setLocaleOnFileName($path).' '.
             'QUERY_STRING='.escapeshellarg($this->buildQueryString($request)).' '.
-            'SCRIPT_NAME='.$this->escapeStringFromServer($request, 'SCRIPT_NAME').' '.
+            'SCRIPT_NAME=/cvs/viewvc.php '.
             'HTTP_ACCEPT_ENCODING='.$this->escapeStringFromServer($request, 'HTTP_ACCEPT_ENCODING').' '.
             'HTTP_ACCEPT_LANGUAGE='.$this->escapeStringFromServer($request, 'HTTP_ACCEPT_LANGUAGE').' '.
             'TULEAP_REPO_NAME='.escapeshellarg($project->getUnixNameMixedCase()).' '.
             'TULEAP_REPO_PATH='.escapeshellarg($this->getCVSRootPath($project)).' '.
-            ForgeConfig::get('tuleap_dir').'/src/common/cvs/ViewVC/viewvc-epel.cgi 2>&1';
+            __DIR__.'/viewvc-epel.cgi 2>&1';
 
         $content = $this->setLocaleOnCommand($command, $return_var);
 

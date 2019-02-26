@@ -96,7 +96,7 @@ echo $Language->getText('file_confirm_download', 'download_explain', array($GLOB
 <table width="100%" border="0" cellspacing="0" cellpadding="0" class="normal">
   <tr> 
     <td> 
-      <div align="center"><a href="javascript:<?php echo "$dlscript($group_id,$file_id"; ?>);"><b><?php echo $Language->getText('file_confirm_download','agree'); ?></b></a></div>
+      <div align="center"><a href="javascript:<?php echo "$dlscript($group_id,$file_id);"; ?>"><b><?php echo $Language->getText('file_confirm_download','agree'); ?></b></a></div>
     </td>
     <td> 
       <div align="center"><a href="javascript:<?php echo "$cancelscript"?>;"><b><?php echo $Language->getText('file_confirm_download','decline'); ?></b></a></div>

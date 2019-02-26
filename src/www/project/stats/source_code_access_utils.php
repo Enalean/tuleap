@@ -282,6 +282,7 @@ function cvsaccess_logs_daily($project, $span = 7, $who="allusers") {
 			. '<TD align><B>'.$GLOBALS['Language']->getText('project_stats_source_code_access_utils','browsing').'</B></TD>'
 			. '</TR>' . "\n";
 
+		$i = 0;
 		while ( $row = db_fetch_array($res) ) {
 			$i++;
 			print	'<TR class="' . util_get_alt_row_color($i) . '">'
