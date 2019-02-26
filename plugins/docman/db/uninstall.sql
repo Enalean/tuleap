@@ -26,3 +26,6 @@ DELETE FROM permissions WHERE permission_type LIKE 'PLUGIN_DOCMAN_%';
 DELETE FROM user_preferences WHERE preference_name LIKE 'plugin_docman%';
 
 DROP TABLE IF EXISTS plugin_docman_widget_embedded;
+
+DELETE FROM forgeconfig WHERE name = 'max_number_of_files';
+DELETE FROM forgeconfig WHERE name = 'max_file_size';
