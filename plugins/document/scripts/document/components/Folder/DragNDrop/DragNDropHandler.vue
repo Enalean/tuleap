@@ -230,7 +230,7 @@ export default {
             const target_drop_zones = [".document-tree-item-folder"];
 
             if (event.dataTransfer.items.length === 1) {
-                target_drop_zones.push(".document-tree-item-file");
+                // target_drop_zones.push(".document-tree-item-file");
             }
 
             const closest_row = event.target.closest(target_drop_zones);
