@@ -31,10 +31,10 @@
         <td class="tlp-table-cell-numeric">
             {{ get_formatted_aggregated_time(timeData) }}
         </td>
-        <td class="tlp-table-cell-actions timetracking-details-link-to-open-modal"
-            v-on:click="show_modal" v-translate
-        >
-            Details
+        <td class="tlp-table-cell-actions timetracking-details-link-to-open-modal">
+            <a v-on:click.prevent="show_modal" v-bind:href="link_to_artifact_timetracking" v-translate>
+                Details
+            </a>
         </td>
         <widget-modal-times
             ref="timetracking_modal"
@@ -64,7 +64,10 @@ export default {
         };
     },
     computed: {
-        ...mapGetters(["get_formatted_aggregated_time"])
+        ...mapGetters(["get_formatted_aggregated_time"]),
+        link_to_artifact_timetracking() {
+            return this.artifact.html_url + "&view=timetracking";
+        }
     },
     mounted() {
         const modal = this.$refs.timetracking_modal.$el;
