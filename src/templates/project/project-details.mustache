@@ -54,6 +54,7 @@
                                 id="form_shortdesc"
                                 name="form_shortdesc"
                                 required
+                                data-test="project-details-short-description-input"
                             >{{ project_short_description }}</textarea>
                             <p class="tlp-text-info">{{ short_description_info }}</p>
                         </div>
@@ -144,6 +145,7 @@
         <button
             type="submit"
             class="tlp-button-primary tlp-button-large project-admin-details-submit"
+            data-test="project-details-submit-button"
         >
             <i class="fa fa-save tlp-button-icon"></i> {{ update_button }}
         </button>

@@ -20,7 +20,7 @@
 describe("Docman", function() {
     before(() => {
         cy.clearCookie("__Host-TULEAP_session_hash");
-        cy.login();
+        cy.ProjectAdministratorLogin();
         cy.visitProjectService("docman-project", "Documents");
     });
 

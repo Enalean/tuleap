@@ -19,7 +19,7 @@
 
 describe("Agiledashboard", () => {
     it("should start scrum", function() {
-        cy.login();
+        cy.ProjectAdministratorLogin();
         cy.visitProjectService("permissions-project-01", "Agile Dashboard");
 
         cy.get("[data-test=start-scrum]").click();

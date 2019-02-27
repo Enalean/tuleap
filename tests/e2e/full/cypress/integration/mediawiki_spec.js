@@ -19,7 +19,7 @@
 
 describe("Mediawiki", function() {
     it("project is imported", function() {
-        cy.login();
+        cy.ProjectAdministratorLogin();
 
         cy.visit("/plugins/mediawiki/wiki/mediawiki-public-project/");
 

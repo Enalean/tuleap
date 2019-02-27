@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-Cypress.Commands.add("login", () => {
+Cypress.Commands.add("ProjectAdministratorLogin", () => {
     cy.visit("/");
     cy.get("#form_loginname").type("ProjectAdministrator");
     cy.get("#form_pw").type("Correct Horse Battery Staple{enter}");
@@ -27,6 +27,17 @@ Cypress.Commands.add("projectMemberLogin", () => {
     cy.visit("/");
     cy.get("#form_loginname").type("ProjectMember");
     cy.get("#form_pw").type("Correct Horse Battery Staple{enter}");
+});
+
+Cypress.Commands.add("platformAdminLogin", () => {
+    cy.visit("/");
+
+    cy.get("#form_loginname").type("admin");
+    cy.get("#form_pw").type("welcome0{enter}");
+});
+
+Cypress.Commands.add("userLogout", () => {
+    cy.get("[data-test=user_logout]").click({ force: true });
 });
 
 const cache_service_urls = {};

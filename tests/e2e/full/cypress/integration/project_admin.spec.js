@@ -20,7 +20,7 @@
 describe("Project admin", function() {
     before(() => {
         cy.clearCookie("__Host-TULEAP_session_hash");
-        cy.login();
+        cy.ProjectAdministratorLogin();
     });
 
     beforeEach(() => {
