@@ -116,91 +116,86 @@ function markFormElementAsEnabled(input) {
 }
 
 function selectParentCategoryOption() {
-    var select_categories = document.getElementsByClassName(
+    const select_categories = document.getElementsByClassName(
         "trove-cats-modal-select-parent-category"
     );
 
-    [].forEach.call(select_categories, function(select_element) {
-        if (select_element.dataset) {
-            var parent_id = select_element.dataset.parentTroveId;
-            var id = select_element.dataset.id;
-            var is_parent_hidden = false;
-
-            for (var i = 0; i < select_element.length; i++) {
-                var option = select_element[i];
-                var selected = select_element.options[select_element.selectedIndex];
-                var is_option_at_root_level = option.dataset.isTopLevelId;
-
-                if (Boolean(is_option_at_root_level) === true) {
-                    is_parent_hidden = false;
-                }
-
-                if (option.value === parent_id) {
-                    option.setAttribute("selected", true);
-                    allowMandatoryPropertyOnlyForRootCategories(option.value, id);
-
-                    var is_option_top_level_id = selected.getAttribute("data-is-top-level-id");
-                    var is_parent_mandatory = selected.getAttribute("data-is-parent-mandatory");
-                    allowDisableOptionForChildUnderFirstParent(
-                        is_option_top_level_id,
-                        id,
-                        is_parent_mandatory
-                    );
-                }
-
-                is_parent_hidden = hideChildren(id, option, is_parent_hidden);
-            }
-        }
-
-        select_element.addEventListener("change", function() {
-            if (select_element.dataset) {
-                allowMandatoryPropertyOnlyForRootCategories(select_element.value, id);
-
-                var selected = select_element.options[select_element.selectedIndex];
-                var is_option_top_level_id = selected.getAttribute("data-is-top-level-id");
-                var is_parent_mandatory = selected.getAttribute("data-is-parent-mandatory");
-                allowDisableOptionForChildUnderFirstParent(
-                    is_option_top_level_id,
-                    id,
-                    is_parent_mandatory
-                );
-            }
-        });
-    });
-}
-
-function hideChildren(id, option_children_id, is_parent_hidden) {
-    if (id === option_children_id.value || is_parent_hidden === true) {
-        option_children_id.classList.add("trove-cats-option-hidden");
-        option_children_id.setAttribute("disabled", true);
-        return true;
+    for (const select_category of select_categories) {
+        preselectOption(select_category);
+        listenChangeEvent(select_category);
     }
 }
 
+function preselectOption(select_category) {
+    const id = select_category.dataset.id;
+    const parent_id = select_category.dataset.parentTroveId;
+    let is_parent_hidden = false;
+    const length = select_category.options.length;
+    for (let i = 0; i < length; i++) {
+        const option = select_category.options[i];
+        const is_option_at_root_level = Boolean(option.dataset.isTopLevelId);
+        if (is_option_at_root_level || parent_id === option.dataset.parentId) {
+            is_parent_hidden = false;
+        }
+
+        if (parent_id === option.value) {
+            option.selected = true;
+            allowMandatoryPropertyOnlyForRootCategories(parent_id, id);
+            changeVisibilityOfDisplayAtProjectCreation(id, option);
+        }
+
+        is_parent_hidden = hideChildren(id, option, is_parent_hidden);
+    }
+}
+
+function listenChangeEvent(select_category) {
+    const id = select_category.dataset.id;
+    select_category.addEventListener("change", () => {
+        const option = select_category.options[select_category.selectedIndex];
+        allowMandatoryPropertyOnlyForRootCategories(option.value, id);
+        changeVisibilityOfDisplayAtProjectCreation(id, option);
+    });
+}
+
+function hideChildren(id, option, is_parent_hidden) {
+    if (is_parent_hidden || id === option.value) {
+        option.classList.add("trove-cats-option-hidden");
+        option.disabled = true;
+        return true;
+    }
+
+    return false;
+}
+
 function allowMandatoryPropertyOnlyForRootCategories(select_id, id) {
-    var mandatory_element = document.getElementById("is-mandatory-" + id),
-        mandatory_checkbox = document.getElementById("trove-cats-modal-mandatory-checkbox-" + id);
+    const mandatory_element = document.getElementById("is-mandatory-" + id);
+    const mandatory_checkbox = document.getElementById("trove-cats-modal-mandatory-checkbox-" + id);
 
     if (select_id !== "0") {
-        mandatory_element.setAttribute("disabled", true);
         mandatory_checkbox.classList.add("tlp-form-element-disabled");
+        mandatory_element.disabled = true;
         mandatory_element.checked = false;
     } else {
-        mandatory_element.removeAttribute("disabled");
+        mandatory_element.disabled = false;
         mandatory_checkbox.classList.remove("tlp-form-element-disabled");
     }
 }
 
-function allowDisableOptionForChildUnderFirstParent(select_is_top_level, id, is_parent_mandatory) {
-    var disable_element = document.getElementById("trove-cats-modal-is-disable-" + id),
-        disable_checkbox = document.getElementById("trove-cats-modal-disable-checkbox-" + id);
+function changeVisibilityOfDisplayAtProjectCreation(id, selected_option) {
+    const checkbox = document.getElementById("trove-cats-modal-display-at-project-creation-" + id);
+    const form_element = document.getElementById(
+        "trove-cats-modal-display-at-project-creation-form-element-" + id
+    );
 
-    if (Boolean(select_is_top_level) === false || Boolean(is_parent_mandatory) === false) {
-        disable_element.setAttribute("disabled", true);
-        disable_checkbox.classList.add("tlp-form-element-disabled");
-        disable_element.checked = false;
+    if (
+        Boolean(selected_option.dataset.isTopLevelId) === false ||
+        Boolean(selected_option.dataset.isParentMandatory) === false
+    ) {
+        form_element.classList.add("tlp-form-element-disabled");
+        checkbox.disabled = true;
+        checkbox.checked = false;
     } else {
-        disable_element.removeAttribute("disabled");
-        disable_checkbox.classList.remove("tlp-form-element-disabled");
+        checkbox.disabled = false;
+        form_element.classList.remove("tlp-form-element-disabled");
     }
 }

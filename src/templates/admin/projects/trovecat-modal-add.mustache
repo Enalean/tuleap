@@ -52,6 +52,7 @@
                                 value="{{ trove_cat_id }}"
                                 data-is-top-level-id="{{ is_top_level_id }}"
                                 data-is-parent-mandatory="{{ is_mandatory }}"
+                                data-parent-id="{{ parent }}"
                         >
                             {{ hierarchy }}
                         {{/ trovecats }}
@@ -79,13 +80,13 @@
                 </label>
                 <p class="tlp-text-info">{{ mandatory_info }}</p>
             </div>
-            <div class="tlp-form-element" id="trove-cats-modal-disable-checkbox-0">
+            <div class="tlp-form-element" id="trove-cats-modal-display-at-project-creation-form-element-0">
                 <label class="tlp-label tlp-checkbox">
                     <input
                         type="checkbox"
                         name="display-at-project-creation"
                         value="1"
-                        id="trove-cats-modal-is-disable-0"
+                        id="trove-cats-modal-display-at-project-creation-0"
                     > {{ label_display }}
                 </label>
                 <p class="tlp-text-info">{{ display_info }}</p>
