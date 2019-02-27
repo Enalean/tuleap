@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean SAS, 2014-2018. All Rights Reserved.
+ * Copyright (c) Enalean SAS, 2014-Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2006
@@ -510,22 +510,21 @@ class Docman_ItemDao extends DataAccessObject {
         }
         
         if ($id) {
-            $dar = $this->searchById($id);
-            if (!$dar->isError() && $dar->valid()) {
-                $current = $dar->current();
-                $set_array = array();
-                foreach($row as $key => $value) {
-                    if ($key != 'id' && $value != $current[$key]) {
-                        $set_array[] = $key .' = '. $this->da->quoteSmart($value);
-                    }
+            $set_array = array();
+            foreach($row as $key => $value) {
+                if ($key !== 'id') {
+                    $set_array[] = $key .' = '. $this->da->quoteSmart($value);
                 }
-                $sql = 'UPDATE plugin_docman_item'
-                    .' SET '.implode(' , ', $set_array)
-                    .' WHERE item_id='. $this->da->quoteSmart($id);
-                $updated = $this->update($sql);
-                if ($updated && $updateParent) {
-                    $this->_updateUpdateDateOfParent($this->da->quoteSmart($id));
-                }
+            }
+            if (empty($set_array)) {
+                return true;
+            }
+            $sql = 'UPDATE plugin_docman_item'
+                .' SET '.implode(' , ', $set_array)
+                .' WHERE item_id='. $this->da->quoteSmart($id);
+            $updated = $this->update($sql);
+            if ($updated && $updateParent) {
+                $this->_updateUpdateDateOfParent($this->da->quoteSmart($id));
             }
         }
         return $updated;
