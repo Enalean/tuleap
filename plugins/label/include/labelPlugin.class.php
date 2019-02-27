@@ -49,6 +49,7 @@ class labelPlugin extends Plugin // phpcs:ignore
         $this->addHook(RemoveLabel::NAME);
         $this->addHook(MergeLabels::NAME);
         $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
+        $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
 
         return parent::getHooksAndCallbacks();
     }
@@ -126,6 +127,19 @@ class labelPlugin extends Plugin // phpcs:ignore
             $assets = new IncludeAssets(LABEL_BASE_DIR . '/www/assets', LABEL_BASE_URL . '/assets');
 
             $params['javascript_files'][] = $assets->getFileURL('configure-widget.js');
+        }
+    }
+
+    public function burningParrotGetStylesheets(array $params)
+    {
+        if ($this->isInProjectDashboard()) {
+            $theme_include_assets = new IncludeAssets(
+                __DIR__ . '/../www/themes/BurningParrot/assets',
+                LABEL_BASE_URL . '/themes/BurningParrot/assets'
+            );
+
+            $variant = $params['variant'];
+            $params['stylesheets'][] = $theme_include_assets->getFileURL('style-' . $variant->getName() . '.css');
         }
     }
 

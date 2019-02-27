@@ -261,15 +261,6 @@ class ProjectLabeledItems extends Widget
         ];
     }
 
-    public function getStylesheetDependencies()
-    {
-        $theme_include_assets = new IncludeAssets(
-            __DIR__ . '/../../../www/themes/BurningParrot/assets',
-            LABEL_BASE_URL . '/themes/BurningParrot/assets'
-        );
-        return new CssAssetCollection([new CssAsset($theme_include_assets, 'style')]);
-    }
-
     /**
      * @return \Project
      */
