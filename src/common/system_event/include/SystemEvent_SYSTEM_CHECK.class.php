@@ -1,21 +1,22 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 
@@ -60,12 +61,6 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent {
         // actions
         
         $backendSystem->flushNscdAndFsCache();
-        
-        // remove deleted releases and released files
-        if (!$backendSystem->cleanupFRS()) {
-            $this->error("An error occured while moving FRS files");
-            return false;
-        }
         
         // Force global updates: aliases, CVS roots, SVN roots
         $backendAliases->setNeedUpdateMailAliases();
@@ -152,6 +147,14 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent {
         // If no codendi_svnroot.conf file, force recreate.
         if (!is_file(ForgeConfig::get('svn_root_file'))) {
             $backendSVN->setSVNApacheConfNeedUpdate();
+        }
+
+        // remove deleted releases and released files
+        // This is done after the verification all the project directories to avoid
+        // bad surprises when moving files
+        if (! $backendSystem->cleanupFRS()) {
+            $this->error('An error occurred while moving FRS files');
+            return false;
         }
 
         try {

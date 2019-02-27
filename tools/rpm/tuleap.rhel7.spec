@@ -483,6 +483,7 @@ done
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/ftp
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/ftp/incoming
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/ftp/codendi
+%{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/ftp/codendi/DELETED
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/ftp/pub
 
 
@@ -874,6 +875,7 @@ fi
 %dir %attr(0755, root, %{ftp_group}) %{APP_DATA_DIR}/ftp
 %dir %attr(3777, %{APP_USER}, %{APP_USER}) %{APP_DATA_DIR}/ftp/incoming
 %dir %attr(0711, root, root) %{APP_DATA_DIR}/ftp/codendi
+%dir %attr(0750, %{APP_USER}, %{APP_USER}) %{APP_DATA_DIR}/ftp/codendi/DELETED
 %dir %attr(0755, %{ftpadmin_user}, %{ftpadmin_group}) %{APP_DATA_DIR}/ftp/pub
 
 # Executables (/usr/bin)
