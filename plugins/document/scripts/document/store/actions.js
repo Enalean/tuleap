@@ -162,18 +162,25 @@ export const loadFolder = (context, folder_id) => {
 };
 
 export async function updateFile(context, [item, dropped_file]) {
-    const new_version = await createNewVersion(item, item.title, "", dropped_file);
-    if (dropped_file.size === 0) {
-        return;
+    try {
+        const new_version = await createNewVersion(item, item.title, "", dropped_file);
+
+        if (dropped_file.size === 0) {
+            return;
+        }
+
+        const updated_item = context.state.folder_content.find(({ id }) => id === item.id);
+        context.commit("addFileInUploadsList", updated_item);
+        Vue.set(updated_item, "progress", null);
+        Vue.set(updated_item, "upload_error", null);
+        Vue.set(updated_item, "is_uploading_new_version", true);
+
+        item.uploader = uploadVersion(context, dropped_file, item, new_version);
+    } catch (exception) {
+        context.commit("toggleCollapsedFolderHasUploadingContent", [parent, false]);
+        const error_json = await exception.response.json();
+        throw getErrorMessage(error_json);
     }
-
-    const updated_item = context.state.folder_content.find(({ id }) => id === item.id);
-    context.commit("addFileInUploadsList", updated_item);
-    Vue.set(updated_item, "progress", null);
-    Vue.set(updated_item, "upload_error", null);
-    Vue.set(updated_item, "is_uploading_new_version", true);
-
-    item.uploader = uploadVersion(context, dropped_file, item, new_version);
 }
 
 export const setUserPreferenciesForFolder = (context, [folder_id, should_be_closed]) => {
