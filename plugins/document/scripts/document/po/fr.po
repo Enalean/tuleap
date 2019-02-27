@@ -73,6 +73,9 @@ msgstr "Fermer"
 msgid "Content"
 msgstr "Contenu"
 
+msgid "Corrupted"
+msgstr "Corrompu"
+
 msgid ""
 "Create a new version of a file by dropping the updated version on the "
 "targeted document in the tree view (or on the quick look pane)."

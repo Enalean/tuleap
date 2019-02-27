@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2018. All Rights Reserved.
+  - Copyright (c) Enalean, 2019. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -14,9 +14,7 @@
   - GNU General Public License for more details.
   -
   - You should have received a copy of the GNU General Public License
-  - along with Tuleap. If not, see http://www.gnu.org/licenses/.
-  -
-  -
+  - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
 
 <template>
@@ -24,26 +22,32 @@
         <fake-caret v-bind:item="item"/>
         <i class="fa fa-fw document-folder-content-icon" v-bind:class="icon_class"></i>
         {{ title }}
+        <span class="tlp-badge-warning document-badge-corrupted" v-translate v-if="is_corrupted">
+            Corrupted
+        </span>
     </div>
 </template>
 
 <script>
-import { ICON_EMPTY } from "../../../constants.js";
+import { ICON_EMBEDDED } from "../../../constants.js";
 import FakeCaret from "./FakeCaret.vue";
 import { getTitleWithElipsisIfNeeded } from "../../../helpers/cell-title-formatter.js";
 
 export default {
-    name: "DocumentCellTitle",
+    name: "EmbeddedCellTitle",
     components: { FakeCaret },
     props: {
         item: Object
     },
     computed: {
         icon_class() {
-            return ICON_EMPTY;
+            return ICON_EMBEDDED;
         },
         title() {
             return getTitleWithElipsisIfNeeded(this.item);
+        },
+        is_corrupted() {
+            return !this.item.embedded_file_properties;
         }
     }
 };

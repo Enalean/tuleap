@@ -70,6 +70,7 @@ import {
     formatDateUsingPreferredUserFormat,
     getElapsedTimeFromNow
 } from "../../helpers/date-formatter.js";
+import { TYPE_EMBEDDED } from "../../constants";
 
 export default {
     name: "FolderContentRow",
@@ -129,6 +130,7 @@ export default {
                     }
 
                     break;
+                case TYPE_EMBEDDED:
                 case TYPE_FOLDER:
                 case TYPE_LINK:
                 case TYPE_WIKI:

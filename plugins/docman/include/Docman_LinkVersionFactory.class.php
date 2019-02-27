@@ -64,11 +64,14 @@ class Docman_LinkVersionFactory {
     }
 
     /**
-     * @return Docman_LinkVersion
+     * @return Docman_LinkVersion|null
      */
     public function getLatestVersion(Docman_Link $link) {
         $row = $this->dao->searchByItemId($link->getId())->getRow();
 
+        if (! $row) {
+            return null;
+        }
         return new Docman_LinkVersion($row);
     }
 }

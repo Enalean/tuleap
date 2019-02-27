@@ -28,6 +28,10 @@ import "./store/mutations.spec.js";
 
 import "./components/Folder/ItemTitle/FakeCaret.spec.js";
 import "./components/Folder/ItemTitle/FolderCellTitle.spec.js";
+import "./components/Folder/ItemTitle/EmbeddedCellTitle.spec.js";
+import "./components/Folder/ItemTitle/FileCellTitle.spec.js";
+import "./components/Folder/ItemTitle/LinkCellTitle.spec.js";
+
 import "./components/Folder/QuickLook/QuickLookDocumentPreview.spec.js";
 import "./components/Folder/ModalCommon/ModalFooter.spec.js";
 import "./components/Folder/DragNDrop/DragNDropHandler.spec.js";
