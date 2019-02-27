@@ -64,6 +64,8 @@ $tlp-popover-transition: 75ms ease-out;
 .tlp-popover-body {
     padding: $tlp-spacing;
     background: $tlp-ui-white;
+    font-weight: normal;
+    text-align: left;
 
     &:last-child {
         border-bottom-right-radius: $tlp-popover-radius;
