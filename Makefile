@@ -35,14 +35,19 @@ deploy-githooks:
 		};\
 	fi
 
-all:
-	$(MAKE) composer rpm
-
-# This will install phpcs in src folder.
-# Required by tuleap/tools/utils/githooks/pre-commit-02-phpcs, which is executed by
-# baseline git hook chain.
-composer:
+install:
+	# This will install phpcs in src folder.
+	# Required by tuleap/tools/utils/githooks/pre-commit-02-phpcs, which is executed by
+	# baseline git hook chain.
 	composer install --working-dir=src/
+	npm install
+	cp ../../.eslintrc.js .
+
+all:
+	$(MAKE) rpm
+
+npm:
+	npm install
 
 rpm: $(RPM_TMP)/RPMS/noarch/$(NAME_VERSION)-$(RELEASE).noarch.rpm
 	@echo "Results: $^"
