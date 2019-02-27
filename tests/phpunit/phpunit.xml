@@ -3,68 +3,45 @@
          failOnRisky="true" beStrictAboutChangesToGlobalState="true" beStrictAboutTestsThatDoNotTestAnything="true">
     <php>
         <ini name="date.timezone" value="Europe/Paris"/>
-        <ini name="memory_limit" value="512M" /><!-- Needed for PHP 5.6 -->
+        <ini name="memory_limit" value="1024M" /> <!-- This needs to be quite permissive to be able to generate coverage report -->
     </php>
     <listeners>
         <listener class="\Mockery\Adapter\Phpunit\TestListener"/>
     </listeners>
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">
-            <file>../../src/common/Dashboard/Dashboard.php</file>
-            <file>../../src/common/include/LoaderScheduler.php</file>
-            <file>../../src/common/include/CookieManager.php</file>
-            <file>../../plugins/git/include/Git/HTTP/HTTPAccessControl.php</file>
-            <file>../../plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_Numeric.class.php</file>
-            <file>../../plugins/tracker/include/Tracker/XML/Exporter/ChangesetValue/ChangesetValuePermissionsOnArtifactXMLExporter.class.php</file>
-            <file>../../plugins/tracker/include/Tracker/XML/Updater/MoveChangesetXMLUpdater.php</file>
-            <file>../../plugins/tracker/include/Tracker/Action/BeforeMoveArtifact.php</file>
-            <file>../../plugins/tracker/include/Tracker/Action/MoveStatusSemanticChecker.php</file>
-            <file>../../plugins/tracker/include/Tracker/Action/MoveTitleSemanticChecker.php</file>
-            <file>../../plugins/tracker/include/Tracker/Action/MoveDescriptionSemanticChecker.php</file>
-            <file>../../plugins/tracker/include/Tracker/Action/MoveContributorSemanticChecker.php</file>
-            <directory suffix=".php">../../src/common/Authentication</directory>
-            <directory suffix=".php">../../src/common/User</directory>
-            <directory suffix=".php">../../src/common/frs/PermissionsPerGroup</directory>
-            <directory suffix=".php">../../src/common/Password/</directory>
-            <directory suffix=".php">../../src/common/ForgeAccess/</directory>
-            <directory suffix=".php">../../src/common/Webhook/</directory>
-            <directory suffix=".php">../../src/common/session/</directory>
-            <directory suffix=".php">../../src/common/Redis/</directory>
-            <directory suffix=".php">../../plugins/pluginsadministration/include</directory>
-            <directory suffix=".php">../../plugins/proftpd/include</directory>
-            <directory suffix=".php">../../plugins/crosstracker/include</directory>
-            <directory suffix=".php">../../plugins/agiledashboard/include/</directory>
-            <directory suffix=".php">../../plugins/tracker/include/Tracker/FormElement/Field/ListFields</directory>
-            <directory suffix=".php">../../plugins/tracker/include/Tracker/FormElement/Field/Date</directory>
-            <directory suffix=".php">../../plugins/git/include/Git/PermissionsPerGroup</directory>
-            <directory suffix=".php">../../plugins/git/include/CommitMetadata/</directory>
-            <directory suffix=".php">../../plugins/git/include/GitPHP/git/</directory>
-            <directory suffix=".php">../../plugins/gitlfs/include/</directory>
-            <directory suffix=".php">../../plugins/dynamic_credentials/include/</directory>
-            <directory suffix=".php">../../plugins/velocity/include/</directory>
-            <directory suffix=".php">../../plugins/create_test_env/include/</directory>
-            <directory suffix=".php">../../plugins/timetracking/include/</directory>
-            <directory suffix=".php">../../plugins/pullrequest/include/</directory>
-            <directory suffix=".php">../../plugins/mfa/include/</directory>
-            <directory suffix=".php">../../plugins/captcha/include/</directory>
-            <directory suffix=".php">../../plugins/tracker/include/Tracker/Artifact/Changeset/</directory>
-            <directory suffix=".php">../../plugins/tracker/include/Tracker/FormElement/Field/Burndown/</directory>
-            <directory suffix=".php">../../plugins/tracker/include/REST/v1/Workflow</directory>
-            <directory suffix=".php">../../plugins/tracker/include/Workflow</directory>
-            <directory suffix=".php">../../plugins/cardwall/include/Cardwall</directory>
-            <directory suffix=".php">../../plugins/admindelegation/include</directory>
-            <directory suffix=".php">../../plugins/bugzilla_reference/include/Bugzilla</directory>
-            <directory suffix=".php">../../plugins/hudson/include/</directory>
-            <directory suffix=".php">../../plugins/archivedeleteditems/include/</directory>
-            <directory suffix=".php">../../plugins/forumml/include/</directory>
-            <directory suffix=".php">../../plugins/crosstracker/include/CrossTracker</directory>
-            <directory suffix=".php">../../plugins/hudson_svn/include</directory>
-            <directory suffix=".php">../../plugins/label/include</directory>
-            <directory suffix=".php">../../plugins/project_ownership/include</directory>
-            <directory suffix=".php">../../plugins/referencealias_core/include/ReferenceAliasCore/</directory>
-            <directory suffix=".php">../../plugins/docman/include/Tus/</directory>
-            <directory suffix=".php">../../plugins/docman/include/Upload/</directory>
-            <directory suffix=".php">../../plugins/docman/include/REST/</directory>
+            <directory suffix=".php">../../src/common/</directory>
+            <directory suffix=".php">../../plugins/*/include/</directory>
+            <directory suffix=".php">../../tests/lib/</directory>
+            <exclude>
+                <directory suffix=".php">../../src/common/tracker/</directory>
+                <directory suffix=".php">../../src/common/wiki/</directory>
+                <directory suffix=".php">../../src/common/chart/</directory>
+                <file>../../src/common/admin/Homepage/Controller.php</file>
+                <directory suffix=".php">../../plugins/fulltextsearch/include/</directory>
+                <directory suffix=".php">../../plugins/graphontrackers/include/</directory>
+                <file>../../plugins/docman/include/Docman_NodeToRootVisitor.class.php</file> <!-- To investigate -->
+                <file>../../plugins/docman/include/Docman_Sample.php</file> <!-- To investigate -->
+                <file>../../plugins/docman/include/soap.php</file>
+                <file>../../plugins/ldap/include/GroupSyncAdminEmailNotificationsManager.class.php</file> <!-- To investigate -->
+                <file>../../plugins/ldap/include/LDAP_SearchPeople.class.php</file>
+                <file>../../plugins/mediawiki/include/MediawikiInstantiater.class.php</file>
+                <file>../../plugins/mediawiki/include/mediawiki-init.php</file>
+                <file>../../plugins/git/include/Git/Statistics/FrequenciesSample.php</file> <!-- To investigate -->
+                <file>../../plugins/git/include/GitXmlImporter.class.php</file>
+                <file>../../plugins/statistics/include/DiskUsageProjectsSearchFieldsPresenter.php</file> <!-- To investigate -->
+                <file>../../plugins/statistics/include/Frequencies/GraphDataBuilders/CartifactSample.php</file> <!-- To investigate -->
+                <file>../../plugins/statistics/include/Frequencies/GraphDataBuilders/FiledSample.php</file> <!-- To investigate -->
+                <file>../../plugins/statistics/include/Frequencies/GraphDataBuilders/FilerSample.php</file> <!-- To investigate -->
+                <file>../../plugins/statistics/include/Frequencies/GraphDataBuilders/ForumSample.php</file> <!-- To investigate -->
+                <file>../../plugins/statistics/include/Frequencies/GraphDataBuilders/OartifactSample.php</file> <!-- To investigate -->
+                <file>../../plugins/statistics/include/Frequencies/GraphDataBuilders/ProjectSample.php</file> <!-- To investigate -->
+                <file>../../plugins/webdav/include/BrowserPlugin.class.php</file>
+                <directory suffix=".php">../../plugins/webdav/include/FS/</directory>
+                <file>../../plugins/webdav/include/WebDAVTree.class.php</file>
+                <file>../../plugins/webdav/include/exception/WebDAVExceptionServerError.class.php</file>
+                <file>../../tests/lib/TuleapDbTestCase.class.php</file>
+            </exclude>
         </whitelist>
     </filter>
     <testsuites>

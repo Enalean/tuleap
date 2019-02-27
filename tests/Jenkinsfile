@@ -48,7 +48,14 @@ pipeline {
                 }
                 stage('UT PHPUnit') {
                     stages {
-                        stage('UT PHPUnit PHP 7.2') { steps { script { actions.runPHPUnitTests('72') } } }
+                        stage('UT PHPUnit PHP 7.2') {
+                            steps { script { actions.runPHPUnitTests('72') } }
+                            post {
+                                always {
+                                    step([$class: 'CloverPublisher', cloverReportDir: 'results/ut-phpunit/php-72/coverage/', cloverReportFileName: 'clover.xml'])
+                                }
+                            }
+                        }
                     }
                     post { always { junit 'results/ut-phpunit/*/phpunit_tests_results.xml' } }
                 }
