@@ -68,7 +68,7 @@
     </section>
 </template>
 <script>
-import prettyKibibytes from "pretty-kibibytes";
+import prettyBytes from "pretty-bytes";
 import { mapState } from "vuex";
 import {
     formatDateUsingPreferredUserFormat,
@@ -99,7 +99,7 @@ export default {
             return this.item.type === TYPE_FILE;
         },
         file_size_in_mega_bytes() {
-            return prettyKibibytes(parseInt(this.item.file_properties.file_size, 10));
+            return prettyBytes(parseInt(this.item.file_properties.file_size, 10));
         }
     },
     methods: {
