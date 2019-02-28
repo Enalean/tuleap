@@ -10,7 +10,8 @@
         }
     },
     "require": {
-        "ext-gettext": "*"
+        "ext-gettext": "*",
+        "php-di/php-di": "^6.0"
     },
     "config": {
         "platform": {

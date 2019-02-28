@@ -29,8 +29,15 @@ use Mockery\MockInterface;
 use PHPUnit\Framework\TestCase;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_Text;
+use Tuleap\Baseline\BaselineRepository;
+use Tuleap\Baseline\ChangesetRepository;
+use Tuleap\Baseline\Clock;
+use Tuleap\Baseline\CurrentUserProvider;
 use Tuleap\Baseline\Factory\ChangesetFactory;
 use Tuleap\Baseline\Factory\MilestoneFactory;
+use Tuleap\Baseline\FieldRepository;
+use Tuleap\Baseline\MilestoneRepository;
+use Tuleap\Baseline\Permissions;
 use Tuleap\Baseline\Stub\BaselineRepositoryStub;
 use Tuleap\Baseline\Stub\ChangesetRepositoryStub;
 use Tuleap\Baseline\Stub\CurrentUserProviderStub;
@@ -38,7 +45,7 @@ use Tuleap\Baseline\Stub\FieldRepositoryStub;
 use Tuleap\Baseline\Stub\FrozenClock;
 use Tuleap\Baseline\Stub\MilestoneRepositoryStub;
 use Tuleap\Baseline\Stub\PermissionsStub;
-use Tuleap\Baseline\Support\DependenciesContext;
+use Tuleap\Baseline\Support\ContainerBuilderFactory;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\REST\I18NRestException;
 
@@ -74,30 +81,28 @@ class BaselineControllerIntTest extends TestCase
     /** @before */
     public function createContextWithStubs()
     {
-        $context = new DependenciesContext();
-
-        $this->field_repository = new FieldRepositoryStub();
-        $context->setFieldRepository($this->field_repository);
-
-        $this->milestone_repository = new MilestoneRepositoryStub();
-        $context->setMilestoneRepository($this->milestone_repository);
-
-        $this->changeset_repository = new ChangesetRepositoryStub();
-        $context->setChangesetRepository($this->changeset_repository);
-
-        $this->baseline_repository = new BaselineRepositoryStub();
-        $context->setBaselineRepository($this->baseline_repository);
-
-        $this->permissions = new PermissionsStub();
-        $context->setPermissions($this->permissions);
-
+        $this->field_repository      = new FieldRepositoryStub();
+        $this->milestone_repository  = new MilestoneRepositoryStub();
+        $this->changeset_repository  = new ChangesetRepositoryStub();
+        $this->baseline_repository   = new BaselineRepositoryStub();
+        $this->permissions           = new PermissionsStub();
         $this->current_user_provider = new CurrentUserProviderStub();
-        $context->setCurrentUserProvider($this->current_user_provider);
+        $this->clock                 = new FrozenClock();
 
-        $this->clock = new FrozenClock();
-        $context->setClock($this->clock);
-
-        $this->controller = $context->getBaselineController();
+        $this->controller = ContainerBuilderFactory::create()
+            ->addDefinitions(
+                [
+                    FieldRepository::class     => $this->field_repository,
+                    MilestoneRepository::class => $this->milestone_repository,
+                    ChangesetRepository::class => $this->changeset_repository,
+                    BaselineRepository::class  => $this->baseline_repository,
+                    Permissions::class         => $this->permissions,
+                    CurrentUserProvider::class => $this->current_user_provider,
+                    Clock::class               => $this->clock,
+                ]
+            )
+            ->build()
+            ->get(BaselineController::class);
     }
 
     public function testPost()

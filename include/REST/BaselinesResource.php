@@ -20,18 +20,19 @@
 
 namespace Tuleap\Baseline\REST;
 
-use Tuleap\Baseline\Support\DependenciesContext;
+use DI\Container;
+use Tuleap\Baseline\Support\ContainerBuilderFactory;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\I18NRestException;
 
 class BaselinesResource extends AuthenticatedResource
 {
-    /** @var DependenciesContext */
-    private $context;
+    /** @var Container */
+    private $container;
 
     public function __construct()
     {
-        $this->context = new DependenciesContext();
+        $this->container = ContainerBuilderFactory::create()->build();
     }
 
     /**
@@ -61,8 +62,8 @@ class BaselinesResource extends AuthenticatedResource
     public function post(string $name, int $milestone_id): BaselineRepresentation
     {
         $this->checkAccess();
-        return $this->context
-            ->getBaselineController()
+        return $this->container
+            ->get(BaselineController::class)
             ->post($name, $milestone_id);
     }
 
@@ -92,8 +93,8 @@ class BaselinesResource extends AuthenticatedResource
     public function getByArtifactIdAndDate(int $artifact_id, string $date): SimplifiedBaselineRepresentation
     {
         $this->checkAccess();
-        return $this->context
-            ->getBaselineController()
+        return $this->container
+            ->get(BaselineController::class)
             ->getByMilestoneIdAndDate($artifact_id, $date);
     }
 }
