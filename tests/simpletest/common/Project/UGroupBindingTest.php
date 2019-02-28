@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2012. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,8 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
-require_once 'common/project/UGroupBinding.class.php';
 
 Mock::generate('UGroupBinding');
 Mock::generatePartial('UGroupBinding', 'UGroupBindingTestVersion', array('getUGroupsByBindingSource', 'getUGroupManager', 'getUGroupUserDao'));

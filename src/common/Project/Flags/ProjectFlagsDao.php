@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\project\Flags;
+namespace Tuleap\Project\Flags;
 
 use Tuleap\DB\DataAccessObject;
 

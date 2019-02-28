@@ -36,7 +36,7 @@ class Tracker_URLVerification extends URLVerification {
      * @throws Project_AccessDeletedException
      * @throws Project_AccessRestrictedException
      * @throws Project_AccessPrivateException
-     * @throws \Tuleap\project\ProjectAccessSuspendedException
+     * @throws \Tuleap\Project\ProjectAccessSuspendedException
      */
     public function userCanAccessProject(PFUser $user, Project $project)
     {

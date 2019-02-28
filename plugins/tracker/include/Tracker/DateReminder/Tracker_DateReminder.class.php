@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics 2012. All rights reserved
  *
  * Tuleap is free software; you can redistribute it and/or modify
@@ -15,8 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
-require_once('common/project/UGroupManager.class.php');
 
 class Tracker_DateReminder {
 

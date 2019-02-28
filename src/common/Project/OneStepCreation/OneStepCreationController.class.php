@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,13 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
-require_once 'common/mvc2/Controller.class.php';
-require_once 'OneStepCreationPresenter.class.php';
-require_once 'OneStepCreationRequest.class.php';
-require_once 'OneStepCreationValidator.class.php';
-require_once 'common/project/CustomDescription/CustomDescriptionPresenter.class.php';
-require_once 'common/project/OneStepRegistration/OneStepRegistrationPresenterFactory.class.php';
 
 use Tuleap\Project\Label\LabelDao;
 use Tuleap\Project\UgroupDuplicator;

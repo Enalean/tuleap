@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -28,7 +28,6 @@ require_once('common/language/BaseLanguage.class.php');
 Mock::generate('PFUser');
 Mock::generate('UserManager');
 Mock::generate('EventManager');
-require_once('common/project/Project.class.php');
 Mock::generate('Project');
 Mock::generate('ProjectManager');
 Mock::generate('DataAccessResult');

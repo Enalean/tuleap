@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\project\Event;
+namespace Tuleap\Project\Event;
 
 use Project;
 use Tuleap\Event\Dispatchable;

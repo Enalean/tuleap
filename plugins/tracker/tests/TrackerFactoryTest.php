@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -42,11 +42,9 @@ Mock::generatePartial('TrackerFactory',
 );
 
 Mock::generate('TrackerDao');
-require_once('common/project/ProjectManager.class.php');
 Mock::generate('ProjectManager');
 require_once('common/reference/ReferenceManager.class.php');
 Mock::generate('ReferenceManager');
-require_once('common/project/Project.class.php');
 Mock::generate('Project');
 Mock::generate('Tracker_CannedResponseFactory');
 Mock::generate('Tracker_FormElementFactory');

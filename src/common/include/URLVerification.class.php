@@ -27,7 +27,7 @@ use Tuleap\Error\ProjectAccessSuspendedController;
 use Tuleap\Error\PermissionDeniedRestrictedAccountProjectController;
 use Tuleap\Error\PlaceHolderBuilder;
 use Tuleap\Project\Admin\MembershipDelegationDao;
-use Tuleap\project\ProjectAccessSuspendedException;
+use Tuleap\Project\ProjectAccessSuspendedException;
 use Tuleap\Request\RestrictedUsersAreHandledByPluginEvent;
 
 /**

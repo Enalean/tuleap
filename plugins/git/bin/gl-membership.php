@@ -1,7 +1,7 @@
 #!/usr/share/tuleap/src/utils/php-launcher.sh
 <?php
 /**
- * Copyright (c) Enalean, 2011-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2011-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -31,7 +31,6 @@
  */
 
 require_once 'pre.php';
-require_once 'common/project/UGroupLiteralizer.class.php';
 
 if (!isset($argv[1])) {
     echo "Usage: ".$argv[0]." username".PHP_EOL;

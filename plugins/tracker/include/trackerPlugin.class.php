@@ -29,7 +29,7 @@ use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupDisplayEvent;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
 use Tuleap\Project\Admin\TemplatePresenter;
 use Tuleap\Project\Event\GetProjectWithTrackerAdministrationPermission;
-use Tuleap\project\Event\ProjectRegistrationActivateService;
+use Tuleap\Project\Event\ProjectRegistrationActivateService;
 use Tuleap\Project\HeartbeatsEntryCollection;
 use Tuleap\Project\PaginatedProjects;
 use Tuleap\Project\XML\Export\NoArchive;

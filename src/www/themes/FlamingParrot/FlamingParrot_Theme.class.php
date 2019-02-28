@@ -22,8 +22,8 @@ use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbPresenterBuilder;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\OpenGraph\NoOpenGraphPresenter;
-use Tuleap\project\Flags\ProjectFlagsBuilder;
-use Tuleap\project\Flags\ProjectFlagsDao;
+use Tuleap\Project\Flags\ProjectFlagsBuilder;
+use Tuleap\Project\Flags\ProjectFlagsDao;
 
 require_once 'common/templating/TemplateRenderer.class.php';
 require_once 'common/templating/TemplateRendererFactory.class.php';
