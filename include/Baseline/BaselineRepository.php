@@ -26,7 +26,7 @@ use PFUser;
 
 interface BaselineRepository
 {
-    function create(
+    public function add(
         TransientBaseline $baseline,
         PFUser $current_user,
         DateTime $creation_date

@@ -38,7 +38,7 @@ class BaselineRepositoryAdapter implements BaselineRepository
         $this->db = $db;
     }
 
-    public function create(
+    public function add(
         TransientBaseline $baseline,
         PFUser $current_user,
         DateTime $creation_date

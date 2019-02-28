@@ -68,7 +68,7 @@ class BaselineService
     public function create(TransientBaseline $baseline): Baseline
     {
         $this->permissions->checkCreateBaseline($baseline);
-        return $this->baseline_repository->create(
+        return $this->baseline_repository->add(
             $baseline,
             $this->current_user_provider->getUser(),
             $this->clock->now()

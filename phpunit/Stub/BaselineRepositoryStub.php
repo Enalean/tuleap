@@ -38,7 +38,7 @@ class BaselineRepositoryStub implements BaselineRepository
     /** @var int */
     private $id_sequence = 1;
 
-    function create(TransientBaseline $baseline, PFUser $current_user, DateTime $creation_date): Baseline
+    public function add(TransientBaseline $baseline, PFUser $current_user, DateTime $creation_date): Baseline
     {
         $baseline           = new Baseline(
             $this->id_sequence++,
@@ -54,7 +54,7 @@ class BaselineRepositoryStub implements BaselineRepository
     /**
      * @return Baseline[]
      */
-    function findAll(): array
+    public function findAll(): array
     {
         return $this->baselines;
     }
