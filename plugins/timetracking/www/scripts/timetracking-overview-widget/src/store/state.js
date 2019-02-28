@@ -27,7 +27,8 @@ const state = {
     error_message: null,
     selected_trackers: [],
     trackers_times: [],
-    is_loading: false
+    is_loading: false,
+    reading_mode: true
 };
 
 export default state;
