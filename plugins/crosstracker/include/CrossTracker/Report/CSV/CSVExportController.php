@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -36,7 +36,6 @@ use Tuleap\CrossTracker\Report\SimilarField\SimilarFieldsMatcher;
 use Tuleap\Dashboard\Project\ProjectDashboardController;
 use Tuleap\Dashboard\User\UserDashboardController;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\project\ProjectAccessSuspendedException;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;

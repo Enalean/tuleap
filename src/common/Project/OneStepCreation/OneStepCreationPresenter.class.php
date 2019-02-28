@@ -1,6 +1,6 @@
 <?php
 /**
-  * Copyright (c) Enalean, 2013 - 2018. All rights reserved
+  * Copyright (c) Enalean, 2013 - 2019. All rights reserved
   *
   * This file is a part of Tuleap.
   *
@@ -19,12 +19,6 @@
   */
 
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
-
-require_once 'common/include/TemplateSingleton.class.php';
-require_once 'common/project/ProjectCreationTemplatePresenter.class.php';
-require_once 'common/valid/Rule.class.php';
-require_once 'common/project/CustomDescription/CustomDescriptionPresenter.class.php';
-require_once 'OneStepCreationRequest.class.php';
 
 /**
  * Presenter for one step creation project

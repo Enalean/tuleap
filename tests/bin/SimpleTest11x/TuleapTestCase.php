@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,8 +22,8 @@
 
 require_once __DIR__.'/../../simpletest/common/User/UserTestBuilder.php';
 require_once __DIR__.'/../../simpletest/common/include/builders/aRequest.php';
-require_once __DIR__.'/../../simpletest/common/project/aMockProject.php';
-require_once __DIR__.'/../../simpletest/common/project/aMockUGroup.php';
+require_once __DIR__.'/../../simpletest/common/Project/aMockProject.php';
+require_once __DIR__.'/../../simpletest/common/Project/aMockUGroup.php';
 require_once __DIR__.'/../../simpletest/common/system_event/builders/aSystemEvent.php';
 require_once __DIR__.'/../../lib/SimpleMockOngoingInterlligentStub.php';
 require_once __DIR__.'/../../lib/MockeryOngoingIntelligentStub.php';

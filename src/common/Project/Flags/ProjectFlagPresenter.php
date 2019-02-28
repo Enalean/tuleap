@@ -20,32 +20,22 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\project\Flags;
+namespace Tuleap\Project\Flags;
 
-use Project;
-
-class ProjectFlagsBuilder
+class ProjectFlagPresenter
 {
     /**
-     * @var ProjectFlagsDao
+     * @var string
      */
-    private $dao;
-
-    public function __construct(ProjectFlagsDao $dao)
-    {
-        $this->dao = $dao;
-    }
-
+    public $label;
     /**
-     * @return ProjectFlagPresenter[]
+     * @var string
      */
-    public function buildProjectFlags(Project $project): array
+    public $description;
+
+    public function __construct(string $label, string $description)
     {
-        return array_map(
-            function ($row) {
-                return new ProjectFlagPresenter($row['label'], $row['description']);
-            },
-            $this->dao->searchProjectFlags((int) $project->getID())
-        );
+        $this->label       = $label;
+        $this->description = $description;
     }
 }

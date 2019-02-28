@@ -1,7 +1,6 @@
 <?php
-
 /**
- * Copyright (c) Enalean, 2013 - 2015. All rights reserved
+ * Copyright (c) Enalean, 2013 - Present. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -18,8 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
-require_once 'common/project/OneStepCreation/OneStepCreationPresenter.class.php';
-require_once 'common/include/Response.class.php';
 
 class OneStepProjectCreationPresenter_FieldsTest extends TuleapTestCase {
     protected function aOneStepProjectCreationForm($request_data) {

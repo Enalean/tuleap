@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,15 +18,34 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\project;
+declare(strict_types=1);
 
-use Project_AccessException;
+namespace Tuleap\Project\Flags;
 
-class ProjectAccessSuspendedException extends Project_AccessException
+use Project;
+
+class ProjectFlagsBuilder
 {
-    public function __construct()
+    /**
+     * @var ProjectFlagsDao
+     */
+    private $dao;
+
+    public function __construct(ProjectFlagsDao $dao)
     {
-        $message = $GLOBALS['Language']->getText('include_exit', 'project_status_H');
-        parent::__construct($message);
+        $this->dao = $dao;
+    }
+
+    /**
+     * @return ProjectFlagPresenter[]
+     */
+    public function buildProjectFlags(Project $project): array
+    {
+        return array_map(
+            function ($row) {
+                return new ProjectFlagPresenter($row['label'], $row['description']);
+            },
+            $this->dao->searchProjectFlags((int) $project->getID())
+        );
     }
 }

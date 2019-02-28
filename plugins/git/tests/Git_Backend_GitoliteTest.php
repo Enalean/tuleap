@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011 - 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,8 +22,6 @@
 use Tuleap\Git\Gitolite\GitoliteAccessURLGenerator;
 
 require_once 'bootstrap.php';
-require_once 'common/project/Project.class.php';
-require_once 'common/backend/Backend.class.php';
 
 Mock::generate('Backend');
 Mock::generate('Git_GitoliteDriver');

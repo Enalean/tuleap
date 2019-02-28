@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,7 +19,6 @@
  */
 
 require_once dirname(__FILE__) .'/../../include/autoload.php';
-require_once 'common/project/ProjectManager.class.php';
 
 // For testing purpose
 class ElasticSearchClient {
