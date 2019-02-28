@@ -162,45 +162,23 @@ class ViewVCProxy
         return '/usr/bin/python';
     }
 
-    public function displayContent(Project $project, HTTPRequest $request)
+    public function displayContent(Project $project, HTTPRequest $request, string $path)
     {
         $user = $request->getCurrentUser();
-        if ($user->isAnonymous()) {
-            exit_error(
-                $GLOBALS['Language']->getText('svn_viewvc', 'access_denied'),
-                $GLOBALS['Language']->getText(
-                    'svn_viewvc',
-                    'acc_den_comment',
-                    session_make_url("/project/memberlist.php?group_id=" . urlencode($project->getID()))
-                )
-            );
-        }
 
         viewvc_utils_track_browsing($project->getID(), 'svn');
 
-        //this is very important. default path must be /
-        $path = "/";
-
-        if ($request->getFromServer('PATH_INFO') != "") {
-            $path = $request->getFromServer('PATH_INFO');
-
-            // hack: path must always end with /
-            if (strrpos($path, "/") != (strlen($path) - 1)) {
-                $path .= "/";
-            }
-        }
-
         $command = 'REMOTE_USER_ID=' . escapeshellarg($user->getId()) . ' '.
             'REMOTE_USER=' . escapeshellarg($this->getUsername($user, $project)) . ' '.
-            'PATH_INFO='.$this->setLocaleOnFileName($path).' '.
+            'PATH_INFO=' . $this->setLocaleOnFileName($path) . ' '.
             'QUERY_STRING='.escapeshellarg($this->buildQueryString($request)).' '.
-            'SCRIPT_NAME='.$this->escapeStringFromServer($request, 'SCRIPT_NAME').' '.
+            'SCRIPT_NAME=/svn/viewvc.php '.
             'HTTP_ACCEPT_ENCODING='.$this->escapeStringFromServer($request, 'HTTP_ACCEPT_ENCODING').' '.
             'HTTP_ACCEPT_LANGUAGE='.$this->escapeStringFromServer($request, 'HTTP_ACCEPT_LANGUAGE').' '.
             'TULEAP_PROJECT_NAME='.escapeshellarg($project->getUnixNameMixedCase()).' '.
             'TULEAP_REPO_NAME='.escapeshellarg($project->getUnixNameMixedCase()).' '.
             'TULEAP_REPO_PATH='.escapeshellarg($project->getSVNRootPath()).' '.
-            $this->getPythonLauncher() . ' ' . ForgeConfig::get('tuleap_dir').'/src/common/svn/viewvc/viewvc-epel.cgi 2>&1';
+            $this->getPythonLauncher() . ' ' . __DIR__.'/viewvc-epel.cgi 2>&1';
 
         $content = $this->setLocaleOnCommand($command, $return_var);
 
@@ -241,7 +219,7 @@ class ViewVCProxy
 
     private function display(Project $project, $path, $body)
     {
-        svn_header(array(
+        svn_header($project, array(
             'title' => $GLOBALS['Language']->getText('svn_utils', 'browse_tree'),
             'path' => urlencode($path),
             'body_class' => array('viewvc-epel')

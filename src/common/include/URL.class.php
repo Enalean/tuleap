@@ -122,7 +122,10 @@ class URL {
         }
         // File downloads. It might be a good idea to restrict access to shownotes.php too...
         if (strpos($req_uri,'/file/download.php') === 0) {
-            list(,$group_id, $file_id) = explode('/', $request->getFromServer('PATH_INFO'));
+            $url = parse_url($req_uri);
+            if ($url !== false) {
+                [$group_id,] = explode('/', str_replace('/file/download.php/', '', $url['path']));
+            }
         }
 
         // Artifact attachment download...

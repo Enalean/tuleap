@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * Originally written by Laurent Julliard 2004 Codendi Team, Xerox
@@ -21,10 +21,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-function svn_header($params) {
-    global $group_id, $Language, $there_are_specific_permissions;
+function svn_header(Project $project, $params) {
+    global $Language;
 
     \Tuleap\Project\ServiceInstrumentation::increment('svncore');
+
+    $service = $project->getService('svn');
+    if (!$service) {
+        exit_error($Language->getText('global','error'),$Language->getText('svn_utils','svn_off'));
+    }
+
+    $group_id = $project->getID();
 
     $params['toptab'] = 'svn';
     $params['group']  = $group_id;
@@ -36,11 +43,6 @@ function svn_header($params) {
         );
     }
 
-    $project = ProjectManager::instance()->getProject($group_id);
-    $service = $project->getService('svn');
-    if (!$service) {
-        exit_error($Language->getText('global','error'),$Language->getText('svn_utils','svn_off'));
-    }
 
     $toolbar = array();
     $toolbar[] = array('title' => $Language->getText('svn_utils','svn_info'),
