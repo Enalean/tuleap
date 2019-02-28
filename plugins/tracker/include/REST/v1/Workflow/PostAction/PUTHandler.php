@@ -24,7 +24,7 @@ namespace Tuleap\Tracker\REST\v1\Workflow\PostAction;
 
 use PFUser;
 use Transition;
-use Tuleap\DB\TransactionExecutor;
+use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\Tracker\REST\v1\Workflow\PostAction\Update\PostActionCollectionJsonParser;
 use Tuleap\Tracker\REST\v1\Workflow\PostActionsPUTRepresentation;
@@ -60,7 +60,7 @@ class PUTHandler
     private $transition_retriever;
 
     /**
-     * @var TransactionExecutor
+     * @var DBTransactionExecutor
      */
     private $transaction_executor;
 
@@ -70,7 +70,7 @@ class PUTHandler
         PostActionCollectionJsonParser $post_action_collection_json_parser,
         PostActionCollectionUpdater $action_collection_updater,
         TransitionRetriever $transition_retriever,
-        TransactionExecutor $transaction_executor
+        DBTransactionExecutor $transaction_executor
     ) {
         $this->transitions_permissions_checker    = $transitions_permissions_checker;
         $this->project_status_verificator         = $project_status_verificator;

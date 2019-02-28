@@ -36,7 +36,8 @@ use Tracker_REST_Artifact_ArtifactRepresentationBuilder;
 use Tracker_REST_TrackerRestBuilder;
 use TrackerFactory;
 use Tuleap\DB\DataAccessObject;
-use Tuleap\DB\TransactionExecutor;
+use Tuleap\DB\DBFactory;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Exceptions\LimitOutOfBoundsException;
 use Tuleap\REST\Header;
@@ -655,12 +656,13 @@ class TrackersResource extends AuthenticatedResource
             if ($workflow_query['is_advanced'] === true) {
                 return $workflow_mode_updater->switchWorkflowToAdvancedMode($tracker);
             } else {
-                $transaction_executor = new TransactionExecutor(new DataAccessObject());
-                return $transaction_executor->execute(
+                $transaction_executor = new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection());
+                $transaction_executor->execute(
                     function () use ($workflow_mode_updater, $tracker) {
                         $workflow_mode_updater->switchWorkflowToSimpleMode($tracker);
                     }
                 );
+                return;
             }
 
         }

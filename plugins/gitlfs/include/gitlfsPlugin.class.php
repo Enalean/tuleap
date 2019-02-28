@@ -23,6 +23,8 @@ use League\Flysystem\Filesystem;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\CLI\Events\GetWhitelistedKeys;
+use Tuleap\DB\DBFactory;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Git\CollectGitRoutesEvent;
 use Tuleap\Git\Permissions\AccessControlVerifier;
 use Tuleap\Git\Permissions\FineGrainedDao;
@@ -114,7 +116,7 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
             $this->getLFSActionUserAccessRequestChecker(),
             new \Tuleap\GitLFS\Transfer\Basic\LFSBasicTransferObjectSaver(
                 $this->getFilesystem(),
-                \Tuleap\DB\DBFactory::getMainTuleapDBConnection(),
+                DBFactory::getMainTuleapDBConnection(),
                 new LFSObjectRetriever(new \Tuleap\GitLFS\LFSObject\LFSObjectDAO()),
                 new LFSObjectPathAllocator(),
                 \Tuleap\Instrument\Prometheus\Prometheus::instance()
@@ -141,7 +143,8 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
                 $this->getFilesystem(),
                 new LFSObjectRetriever($lfs_object_dao),
                 new LFSObjectPathAllocator(),
-                $lfs_object_dao
+                $lfs_object_dao,
+                new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
             )
         );
     }
@@ -396,6 +399,7 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
         $path_allocator     = new LFSObjectPathAllocator();
         $lfs_object_remover = new \Tuleap\GitLFS\LFSObject\LFSObjectRemover(
             new \Tuleap\GitLFS\LFSObject\LFSObjectDAO(),
+            new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
             $filesystem,
             $path_allocator
         );

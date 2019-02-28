@@ -25,7 +25,7 @@ require_once __DIR__ . '/../../../bootstrap.php';
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Tuleap\DB\TransactionExecutor;
+use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Tracker\Workflow\Transition\Condition\ConditionsUpdater;
 use Tuleap\Tracker\Workflow\Transition\NoSiblingTransitionException;
 use Tuleap\Tracker\Workflow\Transition\Update\TransitionCollection;
@@ -48,11 +48,10 @@ class TransitionPatcherTest extends TestCase
     {
         $this->updater              = Mockery::mock(ConditionsUpdater::class);
         $this->retriever            = Mockery::mock(TransitionRetriever::class);
-        $this->transaction_executor = Mockery::mock(TransactionExecutor::class);
         $this->patcher              = new TransitionPatcher(
             $this->updater,
             $this->retriever,
-            $this->transaction_executor
+            new DBTransactionExecutorPassthrough()
         );
     }
 
@@ -71,7 +70,6 @@ class TransitionPatcherTest extends TestCase
 
     public function testPatchUpdatesSingleTransitionInAdvancedMode()
     {
-        $this->mockTransactionExecutor();
         $transition_from_advanced_workflow = $this->buildTransitionWithWorkflowMode(true);
         $patch_representation = new WorkflowTransitionPATCHRepresentation();
         $patch_representation->authorized_user_group_ids = ['704', '703_3'];
@@ -93,7 +91,6 @@ class TransitionPatcherTest extends TestCase
 
     public function testPatchUpdatesAllSiblingTransitionsInSimpleMode()
     {
-        $this->mockTransactionExecutor();
         $transition_from_simple_workflow = $this->buildTransitionWithWorkflowMode(false);
         $patch_representation = new WorkflowTransitionPATCHRepresentation();
         $patch_representation->authorized_user_group_ids = ['110_3', '374'];
@@ -120,7 +117,6 @@ class TransitionPatcherTest extends TestCase
 
     public function testPatchIgnoresNoSiblingTransitionException()
     {
-        $this->mockTransactionExecutor();
         $transition_from_simple_workflow = $this->buildTransitionWithWorkflowMode(false);
         $patch_representation = new WorkflowTransitionPATCHRepresentation();
         $patch_representation->authorized_user_group_ids = ['110_3', '374'];
@@ -141,17 +137,6 @@ class TransitionPatcherTest extends TestCase
             ->andThrow(new NoSiblingTransitionException());
 
         $this->patcher->patch($transition_from_simple_workflow, $patch_representation);
-    }
-
-    private function mockTransactionExecutor()
-    {
-        $this->transaction_executor
-            ->shouldReceive('execute')
-            ->andReturnUsing(
-                function (callable $operation) {
-                    $operation();
-                }
-            );
     }
 
     private function buildTransitionWithWorkflowMode(bool $is_advanced): Mockery\MockInterface

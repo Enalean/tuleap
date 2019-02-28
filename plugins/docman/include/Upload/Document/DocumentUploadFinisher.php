@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\Upload\Document;
 
+use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Docman\Tus\TusFileInformation;
 use Tuleap\Docman\Tus\TusFinisherDataStore;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadDAO;
@@ -72,6 +73,10 @@ final class DocumentUploadFinisher implements TusFinisherDataStore
      * @var \UserManager
      */
     private $user_manager;
+    /**
+     * @var DBTransactionExecutor
+     */
+    private $transaction_executor;
 
     public function __construct(
         \Logger $logger,
@@ -84,7 +89,8 @@ final class DocumentUploadFinisher implements TusFinisherDataStore
         \Docman_ItemDao $docman_item_dao,
         \Docman_FileStorage $docman_file_storage,
         \Docman_MIMETypeDetector $docman_mime_type_detector,
-        \UserManager $user_manager
+        \UserManager $user_manager,
+        DBTransactionExecutor $transaction_executor
     ) {
         $this->logger                         = $logger;
         $this->document_upload_path_allocator = $document_upload_path_allocator;
@@ -97,6 +103,7 @@ final class DocumentUploadFinisher implements TusFinisherDataStore
         $this->docman_file_storage            = $docman_file_storage;
         $this->docman_mime_type_detector      = $docman_mime_type_detector;
         $this->user_manager                   = $user_manager;
+        $this->transaction_executor           = $transaction_executor;
     }
 
     public function finishUpload(TusFileInformation $file_information) : void
@@ -116,7 +123,7 @@ final class DocumentUploadFinisher implements TusFinisherDataStore
 
     private function createDocument($uploaded_document_path, $item_id) : void
     {
-        $this->document_ongoing_upload_dao->wrapAtomicOperations(function () use ($uploaded_document_path, $item_id) {
+        $this->transaction_executor->execute(function () use ($uploaded_document_path, $item_id) {
             if ($this->docman_item_factory->getItemFromDb($item_id) !== null) {
                 $this->logger->warn("Item #$item_id was already marked as uploaded");
                 return;

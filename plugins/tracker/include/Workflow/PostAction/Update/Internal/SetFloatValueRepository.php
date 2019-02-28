@@ -24,7 +24,7 @@ namespace Tuleap\Tracker\Workflow\PostAction\Update\Internal;
 use DataAccessQueryException;
 use Transition;
 use Transition_PostAction_Field_FloatDao;
-use Tuleap\DB\DataAccessObject;
+use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Tracker\Workflow\PostAction\Update\SetFloatValue;
 
 /**
@@ -36,17 +36,17 @@ class SetFloatValueRepository
      * @var Transition_PostAction_Field_FloatDao
      */
     private $set_float_value_dao;
-
     /**
-     * @var DataAccessObject
+     * @var DBTransactionExecutor
      */
-    private $pdo_wrapper;
+    private $transaction_executor;
 
-    public function __construct(Transition_PostAction_Field_FloatDao $set_float_value_dao, DataAccessObject $pdo_wrapper
-    )
-    {
-        $this->set_float_value_dao = $set_float_value_dao;
-        $this->pdo_wrapper         = $pdo_wrapper;
+    public function __construct(
+        Transition_PostAction_Field_FloatDao $set_float_value_dao,
+        DBTransactionExecutor $transaction_executor
+    ) {
+        $this->set_float_value_dao  = $set_float_value_dao;
+        $this->transaction_executor = $transaction_executor;
     }
 
     /**
@@ -54,7 +54,7 @@ class SetFloatValueRepository
      */
     public function create(Transition $transition, SetFloatValue $set_float_value)
     {
-        $this->pdo_wrapper->wrapAtomicOperations(function () use ($transition, $set_float_value) {
+        $this->transaction_executor->execute(function () use ($transition, $set_float_value) {
             $id_or_failure = $this->set_float_value_dao->create($transition->getId());
             if ($id_or_failure === false) {
                 throw new DataAccessQueryException(

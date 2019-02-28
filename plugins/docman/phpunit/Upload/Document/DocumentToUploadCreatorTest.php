@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -25,26 +25,19 @@ use PHPUnit\Framework\TestCase;
 use Tuleap\Docman\Upload\UploadCreationConflictException;
 use Tuleap\Docman\Upload\UploadCreationFileMismatchException;
 use Tuleap\Docman\Upload\UploadMaxSizeExceededException;
+use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
 class DocumentToUploadCreatorTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
     private $dao;
-    private $mockery_matcher_callback_wrapped_operations;
 
     public function setUp() : void
     {
         \ForgeConfig::store();
 
         $this->dao = \Mockery::mock(DocumentOngoingUploadDAO::class);
-
-        $this->mockery_matcher_callback_wrapped_operations = \Mockery::on(
-            function (callable $operations) {
-                $operations($this->dao);
-                return true;
-            }
-        );
     }
 
     public function tearDown() : void
@@ -54,8 +47,7 @@ class DocumentToUploadCreatorTest extends TestCase
 
     public function testCreation()
     {
-        $this->dao->shouldReceive('wrapAtomicOperations')->with($this->mockery_matcher_callback_wrapped_operations);
-        $creator = new DocumentToUploadCreator($this->dao);
+        $creator = new DocumentToUploadCreator($this->dao, new DBTransactionExecutorPassthrough());
 
         \ForgeConfig::set(PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING, '999999');
         $parent_item = \Mockery::mock(\Docman_Item::class);
@@ -82,8 +74,7 @@ class DocumentToUploadCreatorTest extends TestCase
 
     public function testANewItemIsNotCreatedIfAnUploadIsOngoingWithTheSameFile()
     {
-        $this->dao->shouldReceive('wrapAtomicOperations')->with($this->mockery_matcher_callback_wrapped_operations);
-        $creator = new DocumentToUploadCreator($this->dao);
+        $creator = new DocumentToUploadCreator($this->dao, new DBTransactionExecutorPassthrough());
 
         \ForgeConfig::set(PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING, '999999');
         $parent_item = \Mockery::mock(\Docman_Item::class);
@@ -111,8 +102,7 @@ class DocumentToUploadCreatorTest extends TestCase
 
     public function testCreationIsRejectedWhenAnotherUserIsCreatingTheDocument()
     {
-        $this->dao->shouldReceive('wrapAtomicOperations')->with($this->mockery_matcher_callback_wrapped_operations);
-        $creator = new DocumentToUploadCreator($this->dao);
+        $creator = new DocumentToUploadCreator($this->dao, new DBTransactionExecutorPassthrough());
 
         \ForgeConfig::set(PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING, '999999');
         $parent_item = \Mockery::mock(\Docman_Item::class);
@@ -140,8 +130,7 @@ class DocumentToUploadCreatorTest extends TestCase
 
     public function testCreationIsRejectedWhenTheUserIsAlreadyCreatingTheDocumentWithAnotherFile()
     {
-        $this->dao->shouldReceive('wrapAtomicOperations')->with($this->mockery_matcher_callback_wrapped_operations);
-        $creator = new DocumentToUploadCreator($this->dao);
+        $creator = new DocumentToUploadCreator($this->dao, new DBTransactionExecutorPassthrough());
 
         \ForgeConfig::set(PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING, '999999');
         $parent_item = \Mockery::mock(\Docman_Item::class);
@@ -169,7 +158,7 @@ class DocumentToUploadCreatorTest extends TestCase
 
     public function testCreationIsRejectedIfTheFileIsBiggerThanTheConfigurationLimit()
     {
-        $creator = new DocumentToUploadCreator($this->dao);
+        $creator = new DocumentToUploadCreator($this->dao, new DBTransactionExecutorPassthrough());
 
         \ForgeConfig::set(PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING, '1');
         $parent_item = \Mockery::mock(\Docman_Item::class);

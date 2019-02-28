@@ -16,29 +16,18 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
-namespace Tuleap\DB;
+declare(strict_types=1);
 
-class TransactionExecutor
+namespace Tuleap\Test\DB;
+
+use Tuleap\DB\DBTransactionExecutor;
+
+final class DBTransactionExecutorPassthrough implements DBTransactionExecutor
 {
-
-    /**
-     * @var DataAccessObject
-     */
-    private $dao;
-
-    public function __construct(DataAccessObject $dao)
+    public function execute(callable $atomic_operations) : void
     {
-        $this->dao = $dao;
-    }
-
-    /**
-     * Execute given callable within a transaction.
-     */
-    public function execute(callable $atomic_operations)
-    {
-        $this->dao->wrapAtomicOperations($atomic_operations);
+        $atomic_operations();
     }
 }

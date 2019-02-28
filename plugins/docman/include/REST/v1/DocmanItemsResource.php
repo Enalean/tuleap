@@ -32,6 +32,8 @@ use Luracast\Restler\RestException;
 use PluginManager;
 use Project;
 use ProjectManager;
+use Tuleap\DB\DBFactory;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\ApprovalTable\ApprovalTableStateMapper;
 use Tuleap\Docman\Item\ItemIsNotAFolderException;
@@ -194,7 +196,10 @@ class DocmanItemsResource extends AuthenticatedResource
         $docman_item_creator = new DocmanItemCreator(
             $this->getItemFactory($project->getID()),
             new DocumentOngoingUploadRetriever($document_on_going_upload_dao),
-            new DocumentToUploadCreator($document_on_going_upload_dao),
+            new DocumentToUploadCreator(
+                $document_on_going_upload_dao,
+                new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
+            ),
             new AfterItemCreationVisitor(
                 $this->getPermissionManager(),
                 $this->event_manager,
@@ -214,7 +219,8 @@ class DocmanItemsResource extends AuthenticatedResource
                     $this->item_dao,
                     new \Docman_FileStorage($root_path),
                     new \Docman_MIMETypeDetector(),
-                    \UserManager::instance()
+                    \UserManager::instance(),
+                    new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
                 ),
                 $document_upload_path_allocator
             )
@@ -228,7 +234,6 @@ class DocmanItemsResource extends AuthenticatedResource
             $is_embedded_allowed
         );
     }
-
 
     private function getItemFactory($group_id = null)
     {

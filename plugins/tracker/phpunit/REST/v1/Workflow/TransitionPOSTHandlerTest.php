@@ -26,10 +26,11 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use TrackerFactory;
-use Tuleap\DB\TransactionExecutor;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\REST\I18NRestException;
 use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\REST\UserManager;
+use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Tracker\REST\WorkflowTransitionPOSTRepresentation;
 use Tuleap\Tracker\Workflow\Transition\TransitionCreationParameters;
 use Tuleap\Tracker\Workflow\Transition\Update\TransitionReplicator;
@@ -56,8 +57,6 @@ class TransitionPOSTHandlerTest extends TestCase
     /** @var Mockery\MockInterface */
     private $validator;
     /** @var Mockery\MockInterface */
-    private $transaction_executor;
-    /** @var Mockery\MockInterface */
     private $transition_replicator;
     /** @var Mockery\MockInterface */
     private $transition_retriever;
@@ -75,13 +74,6 @@ class TransitionPOSTHandlerTest extends TestCase
         $this->workflow_factory           = Mockery::mock(\WorkflowFactory::class);
         $this->transition_factory         = Mockery::mock(\TransitionFactory::class);
         $this->validator                  = Mockery::mock(TransitionValidator::class);
-        $this->transaction_executor       = Mockery::mock(TransactionExecutor::class);
-        $this->transaction_executor->shouldReceive('execute')
-            ->andReturnUsing(
-                function (callable $callback) {
-                    $callback();
-                }
-            );
         $this->transition_replicator = Mockery::mock(TransitionReplicator::class);
         $this->transition_retriever  = Mockery::mock(TransitionRetriever::class);
         $this->handler               = new TransitionPOSTHandler(
@@ -92,7 +84,7 @@ class TransitionPOSTHandlerTest extends TestCase
             $this->workflow_factory,
             $this->transition_factory,
             $this->validator,
-            $this->transaction_executor,
+            new DBTransactionExecutorPassthrough(),
             $this->transition_replicator,
             $this->transition_retriever
         );

@@ -26,6 +26,7 @@ use Docman_File;
 use Docman_Item;
 use ProjectManager;
 use Tuleap\Docman\REST\v1\DocmanItemsEventAdder;
+use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Docman\Tus\TusFileInformation;
 use Tuleap\Docman\Tus\TusFinisherDataStore;
 
@@ -60,6 +61,11 @@ final class VersionUploadFinisher implements TusFinisherDataStore
      */
     private $version_to_upload_dao;
     /**
+    /**
+     * @var DBTransactionExecutor
+     */
+    private $transaction_executor;
+    /**
      * @var \Docman_FileStorage
      */
     private $docman_file_storage;
@@ -83,6 +89,7 @@ final class VersionUploadFinisher implements TusFinisherDataStore
         \Docman_VersionFactory $version_factory,
         \EventManager $event_manager,
         DocumentOnGoingVersionToUploadDAO $version_to_upload_dao,
+        DBTransactionExecutor $transaction_executor,
         \Docman_FileStorage $docman_file_storage,
         \Docman_MIMETypeDetector $docman_mime_type_detector,
         \UserManager $user_manager,
@@ -95,6 +102,7 @@ final class VersionUploadFinisher implements TusFinisherDataStore
         $this->version_factory                = $version_factory;
         $this->event_manager                  = $event_manager;
         $this->version_to_upload_dao          = $version_to_upload_dao;
+        $this->transaction_executor           = $transaction_executor;
         $this->docman_file_storage            = $docman_file_storage;
         $this->docman_mime_type_detector      = $docman_mime_type_detector;
         $this->user_manager                   = $user_manager;
@@ -119,7 +127,7 @@ final class VersionUploadFinisher implements TusFinisherDataStore
 
     private function createVersion(string $uploaded_document_path, int $upload_id): void
     {
-        $this->version_to_upload_dao->wrapAtomicOperations(
+        $this->transaction_executor->execute(
             function () use ($uploaded_document_path, $upload_id) {
                 $upload_row = $this->version_to_upload_dao->searchDocumentVersionOngoingUploadByUploadID($upload_id);
                 if (empty($upload_row)) {

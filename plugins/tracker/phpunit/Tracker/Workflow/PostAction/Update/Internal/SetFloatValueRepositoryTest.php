@@ -31,6 +31,7 @@ use Mockery\MockInterface;
 use PHPUnit\Framework\TestCase;
 use Transition_PostAction_Field_FloatDao;
 use Tuleap\DB\DataAccessObject;
+use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Tracker\Workflow\PostAction\Update\SetFloatValue;
 use Tuleap\Tracker\Workflow\PostAction\Update\TransitionFactory;
 
@@ -49,27 +50,15 @@ class SetFloatValueRepositoryTest extends TestCase
     private $set_float_value_dao;
 
     /**
-     * @var MockInterface
-     */
-    private $pdo_wrapper;
-
-    /**
      * @before
      */
     public function createRepository()
     {
         $this->set_float_value_dao = Mockery::mock(Transition_PostAction_Field_FloatDao::class);
 
-        $this->pdo_wrapper = Mockery::mock(DataAccessObject::class);
-        $this->pdo_wrapper
-            ->shouldReceive('wrapAtomicOperations')
-            ->andReturnUsing(function (callable $operation) {
-                $operation();
-            });
-
         $this->set_float_value_repository = new SetFloatValueRepository(
             $this->set_float_value_dao,
-            $this->pdo_wrapper
+            new DBTransactionExecutorPassthrough()
         );
     }
 

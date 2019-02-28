@@ -26,10 +26,11 @@ use Docman_LockFactory;
 use Luracast\Restler\RestException;
 use Project;
 use ProjectManager;
+use Tuleap\DB\DBFactory;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\Upload\UploadMaxSizeExceededException;
 use Tuleap\Docman\Upload\Version\DocumentOnGoingVersionToUploadDAO;
-use Tuleap\Docman\Upload\Version\VersionOngoingUploadRetriever;
 use Tuleap\Docman\Upload\Version\VersionToUploadCreator;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
@@ -114,7 +115,10 @@ class DocmanFilesResource extends AuthenticatedResource
         $docman_item_updator = new DocmanItemUpdator(
             new ApprovalTableRetriever(new \Docman_ApprovalTableFactoriesFactory()),
             new Docman_LockFactory(),
-            new VersionToUploadCreator(new DocumentOnGoingVersionToUploadDAO()),
+            new VersionToUploadCreator(
+                new DocumentOnGoingVersionToUploadDAO(),
+                new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
+            ),
             new FileVersionToUploadVisitorBeforeUpdateValidator()
         );
 

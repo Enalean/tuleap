@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,6 +19,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\DB\DBFactory;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Project\Admin\ProjectUGroup\DynamicUGroupMembersUpdater;
 use Tuleap\Project\UserPermissionsDao;
 use Tuleap\Project\UserRemover;
@@ -114,6 +116,7 @@ class UGroupManager {
         if ($this->dynamic_ugroup_members_updater === null) {
             $this->dynamic_ugroup_members_updater = new DynamicUGroupMembersUpdater(
                 new UserPermissionsDao(),
+                new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
                 new UGroupBinding($this->getUGroupUserDao(), $this),
                 $this->getEventManager()
             );

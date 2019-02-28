@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,26 +20,33 @@
 
 namespace Tuleap\ProjectOwnership\ProjectOwner;
 
+use Tuleap\DB\DBTransactionExecutor;
+
 class ProjectOwnerUpdater
 {
     /**
      * @var ProjectOwnerDAO
      */
     private $dao;
+    /**
+     * @var DBTransactionExecutor
+     */
+    private $transaction_executor;
 
-    public function __construct(ProjectOwnerDAO $dao)
+    public function __construct(ProjectOwnerDAO $dao, DBTransactionExecutor $transaction_executor)
     {
-        $this->dao = $dao;
+        $this->dao                  = $dao;
+        $this->transaction_executor = $transaction_executor;
     }
 
     public function updateProjectOwner(\Project $project, \PFUser $new_project_owner)
     {
-        $this->dao->wrapAtomicOperations(
-            function (ProjectOwnerDAO $dao) use ($project, $new_project_owner) {
+        $this->transaction_executor->execute(
+            function () use ($project, $new_project_owner) {
                 if (! $new_project_owner->isAdmin($project->getID())) {
                     throw new OnlyProjectAdministratorCanBeSetAsProjectOwnerException($new_project_owner);
                 }
-                $dao->save($project->getID(), $new_project_owner->getId());
+                $this->dao->save($project->getID(), $new_project_owner->getId());
             }
         );
     }

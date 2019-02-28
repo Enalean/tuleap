@@ -22,6 +22,7 @@ declare(strict_types = 1);
 
 namespace Tuleap\Docman\Upload\Version;
 
+use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Docman\Upload\UploadCreationConflictException;
 use Tuleap\Docman\Upload\UploadCreationFileMismatchException;
 use Tuleap\Docman\Upload\UploadMaxSizeExceededException;
@@ -34,10 +35,15 @@ class VersionToUploadCreator
      * @var DocumentOnGoingVersionToUploadDAO
      */
     private $dao;
+    /**
+     * @var DBTransactionExecutor
+     */
+    private $transaction_executor;
 
-    public function __construct(DocumentOnGoingVersionToUploadDAO $dao)
+    public function __construct(DocumentOnGoingVersionToUploadDAO $dao, DBTransactionExecutor $transaction_executor)
     {
-        $this->dao = $dao;
+        $this->dao                  = $dao;
+        $this->transaction_executor = $transaction_executor;
     }
 
     /**
@@ -63,8 +69,8 @@ class VersionToUploadCreator
                 (int)\ForgeConfig::get(PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING)
             );
         }
-        $this->dao->wrapAtomicOperations(
-            function (DocumentOnGoingVersionToUploadDAO $dao) use (
+        $this->transaction_executor->execute(
+            function () use (
                 $item,
                 $user,
                 $current_time,
@@ -74,7 +80,7 @@ class VersionToUploadCreator
                 $filesize,
                 &$version_id
             ) {
-                $rows = $dao->searchDocumentVersionOngoingUploadByItemIdAndExpirationDate(
+                $rows = $this->dao->searchDocumentVersionOngoingUploadByItemIdAndExpirationDate(
                     $item->getId(),
                     $current_time->getTimestamp()
                 );
@@ -95,7 +101,7 @@ class VersionToUploadCreator
                     return;
                 }
 
-                $version_id = $dao->saveDocumentVersionOngoingUpload(
+                $version_id = $this->dao->saveDocumentVersionOngoingUpload(
                     $this->getExpirationDate($current_time)->getTimestamp(),
                     $item->getId(),
                     $version_title,

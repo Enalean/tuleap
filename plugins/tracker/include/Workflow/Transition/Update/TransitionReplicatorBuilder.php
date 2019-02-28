@@ -30,7 +30,8 @@ use Transition_PostAction_Field_FloatDao;
 use Transition_PostAction_Field_IntDao;
 use Transition_PostAction_FieldFactory;
 use TransitionFactory;
-use Tuleap\DB\DataAccessObject;
+use Tuleap\DB\DBFactory;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Tracker\Workflow\PostAction\PostActionsRetriever;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\CIBuildRepository;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\CIBuildUpdater;
@@ -58,6 +59,7 @@ class TransitionReplicatorBuilder
         $ids_validator        = new PostActionIdValidator();
         $field_ids_validator  = new PostActionFieldIdValidator();
         $form_element_factory = Tracker_FormElementFactory::instance();
+        $transaction_executor = new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection());
 
         return new TransitionReplicator(
             Workflow_Transition_ConditionFactory::build(),
@@ -84,21 +86,21 @@ class TransitionReplicatorBuilder
                 new SetDateValueUpdater(
                     new SetDateValueRepository(
                         new Transition_PostAction_Field_DateDao(),
-                        new DataAccessObject()
+                        $transaction_executor
                     ),
                     new SetDateValueValidator($ids_validator, $field_ids_validator, $form_element_factory)
                 ),
                 new SetIntValueUpdater(
                     new SetintValueRepository(
                         new Transition_PostAction_Field_IntDao(),
-                        new DataAccessObject()
+                        $transaction_executor
                     ),
                     new SetIntValueValidator($ids_validator, $field_ids_validator, $form_element_factory)
                 ),
                 new SetFloatValueUpdater(
                     new SetFloatValueRepository(
                         new Transition_PostAction_Field_FloatDao(),
-                        new DataAccessObject()
+                        $transaction_executor
                     ),
                     new SetFloatValueValidator($ids_validator, $field_ids_validator, $form_element_factory)
                 )
