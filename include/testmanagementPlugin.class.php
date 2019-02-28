@@ -24,7 +24,7 @@ use Tuleap\Glyph\GlyphLocation;
 use Tuleap\Glyph\GlyphLocationsCollector;
 use Tuleap\layout\HomePage\StatisticsCollectionCollector;
 use Tuleap\Layout\IncludeAssets;
-use Tuleap\project\Event\ProjectServiceBeforeActivation;
+use Tuleap\Project\Event\ProjectServiceBeforeActivation;
 use Tuleap\Project\XML\Export\ArchiveInterface;
 use Tuleap\TestManagement\Administration\StepFieldUsageDetector;
 use Tuleap\TestManagement\Config;
