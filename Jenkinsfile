@@ -12,6 +12,7 @@ pipeline {
             steps {
                 checkout changelog: false, poll: false, scm: [$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'CleanBeforeCheckout'], [$class: 'RelativeTargetDirectory', relativeTargetDir: 'sources']], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'gitolite-tuleap-net', url: 'ssh://gitolite@tuleap.net/tuleap/tuleap/stable.git']]]
                 checkout scm
+                sh 'GIT_DIR=sources_plugin/.git/ git checkout-index -f -a --prefix=sources/plugins/enalean_licensemanager/'
             }
         }
 
@@ -68,10 +69,6 @@ pipeline {
                         stage('SOAP PHP 7.2') { steps { script { actions.runSOAPTests('php-72', '4') } } }
                     }
                     post { always { junit "results/api-soap/*/soap_tests.xml" } }
-                }
-                stage('Distributed SVN integration') {
-                    steps { script { actions.runEndToEndTests('distlp') } }
-                    post { always { junit 'results/e2e/**/*.xml' } }
                 }
                 stage('Check translation files') {
                     steps { script {
