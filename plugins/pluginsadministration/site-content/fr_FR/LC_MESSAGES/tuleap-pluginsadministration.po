@@ -1,0 +1,204 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: Nicolas Terray <nicolas.terray@enalean.com>\n"
+"Language-Team: \n"
+"Language: fr_FR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 2.0.6\n"
+
+msgid "All locally available plugins have been installed."
+msgstr "Tous les plugins disponible localement ont été installés."
+
+msgid "All projects can now use this plugin."
+msgstr "Tous les projets ont maintenant la possibilité d'utiliser ce plugin."
+
+msgid "Allow access"
+msgstr "Autoriser"
+
+msgid "Allow all the projects to use this plugin"
+msgstr "Autoriser tous les projets à utiliser ce plugin"
+
+msgid "Available plugins"
+msgstr "Plugins disponibles"
+
+msgid "Can't restrict this plugin because of its system scope"
+msgstr "Impossible de restreindre ce plugin car il a une portée système"
+
+msgid "Cancel"
+msgstr "Annuler"
+
+msgid "Currently, there are no projects allowed to use this plugin."
+msgstr "Actuellement, il n'y a aucun projet autorisé à utiliser ce plugin."
+
+msgid "Dependencies"
+msgstr "Dépendances"
+
+msgid "Description"
+msgstr "Description"
+
+msgid "Details"
+msgstr "Détails"
+
+msgid ""
+"Editing plugin properties through the web UI present a security risk, it is "
+"strongly advised to disable it. Check the deployment guide for more "
+"information."
+msgstr ""
+"Éditer les propriétés d'un plugin par l'interface web pose des problèmes de "
+"sécurité, il est fortement conseillé de désactiver cette fonctionnalité. "
+"Veuillez consulter le guide déploiement pour plus d'informations."
+
+msgid "Enabled?"
+msgstr "Activé ?"
+
+msgid "Filter on name or description"
+msgstr "Nom, description"
+
+msgid "Filter on project id or name"
+msgstr "Filtrer sur l'id ou le nom du projet"
+
+msgid "Id"
+msgstr "Id"
+
+msgid "Install"
+msgstr "Installer"
+
+msgid "Install plugin"
+msgstr "Installer le plugin"
+
+msgid "Installed plugins"
+msgstr "Plugins installés"
+
+msgid "List of allowed projects"
+msgstr "Liste des projets autorisés"
+
+msgid "Name"
+msgstr "Nom"
+
+msgid "No"
+msgstr "Non"
+
+msgid "No dependencies"
+msgstr "Aucune dépendance"
+
+msgid "Now, only the allowed projects are able to use this plugin."
+msgstr ""
+"A partir de maintenant, seuls les projets autorisés pourront utiliser ce "
+"plugin."
+
+msgid "Offers a web interface for managing plugins."
+msgstr "Interface web d'administration des plugins."
+
+msgid "Plugin properties have been successfully updated"
+msgstr "Les propriétés du plugin ont été mises à jour avec succès"
+
+msgid "Plugins"
+msgstr "Plugins"
+
+msgid "Plugins Administration"
+msgstr "Administration des Plugins"
+
+msgid "Project name"
+msgstr "Nom du projet"
+
+msgid "Properties"
+msgstr "Propriétés"
+
+msgid "Readme"
+msgstr "Readme"
+
+msgid "Restrict"
+msgstr "Restreindre"
+
+msgid "Revoke access"
+msgstr "Supprimer l'autorisation"
+
+msgid "Scope"
+msgstr "Portée"
+
+msgid "Something went wrong during the update of the allowed project list."
+msgstr ""
+"Une erreur est survenue pendant la mise à jour de la liste des projets "
+"autorisés."
+
+msgid ""
+"Something went wrong during the update of the plugin restriction status."
+msgstr "Une erreur est survenue pendant la mise à jour du status de ce plugin."
+
+msgid "Submitted project can now use this plugin."
+msgstr "Le projet soumis peut maintenant utiliser ce plugin."
+
+msgid "Submitted projects will not be able to use this plugin."
+msgstr "Les projets soumis ne pourront plus utiliser ce plugin."
+
+msgid "The plugin has been successfully installed"
+msgstr "Le plugin a été installé avec succès"
+
+msgid ""
+"There are unmet dependencies that prevent you from installing these plugins:"
+msgstr "Impossible d'installer ce plugin sans avoir installé au préalable :"
+
+msgid "There isn't any matching plugins."
+msgstr "Il n'y a pas de plugins correspondant à votre filtre."
+
+msgid "Uninstall"
+msgstr "Désinstaller"
+
+msgid "Uninstall plugin"
+msgstr "Désinstaller le plugin"
+
+msgid "Update properties"
+msgstr "Mettre à jour les propriétés"
+
+msgid "Version"
+msgstr "Version"
+
+msgid "Warning"
+msgstr "Attention"
+
+msgid "Yes, revoke access"
+msgstr "Oui, interdire l'accès"
+
+msgid ""
+"You are about to revoke the access to this plugin to one or several "
+"projects. Are you sure you want to do this?"
+msgstr ""
+"Vous êtes sur le point d'interdire l'accès à ce plugin pour les projects "
+"sélectionnés. Êtes-vous sûr de vouloir faire celà ?"
+
+msgid ""
+"You can't uninstall this plugin since at least another plugin depends on it:"
+msgstr ""
+"Vous ne pouvez pas désinstaller ce plugin tant que ces plugins seront "
+"installés :"
+
+msgid "Your about to install a plugin. Please confirm your action."
+msgstr ""
+"Vous êtes sur le point d'installer un plugin. Veuillez confirmer votre "
+"action."
+
+msgid ""
+"Your about to uninstall a plugin. Please note the following points and "
+"confirm your action."
+msgstr ""
+"Vous êtes sur le point de désinstaller un plugin. Veuillez noter les points "
+"suivants et confirmer votre action."
+
+msgid "directory of this plugin will not be deleted"
+msgstr "le répertoire de ce plugin ne sera pas supprimé"
+
+msgid "script <code>db/uninstall.sql</code> of this plugin will be launched"
+msgstr "le script <code>db/uninstall.sql</code> de ce plugin sera executé"
+
+msgid ""
+"web space and cgi scripts of this plugin will remain accessible unless you "
+"move or remove corresponding directory"
+msgstr ""
+"l'espace web et les scripts cgi de ce plugin resteront accessible tant que "
+"vous ne supprimerez pas ou ne déplacerez pas les répertoires correspondants"

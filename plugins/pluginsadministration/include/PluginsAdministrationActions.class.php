@@ -83,7 +83,7 @@ class PluginsAdministrationActions extends Actions
             $plugin = $this->plugin_manager->installPlugin($name);
 
             if ($plugin) {
-                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_pluginsadministration', 'feedback_installed'));
+                $GLOBALS['Response']->addFeedback('info', dgettext('tuleap-pluginsadministration', 'The plugin has been successfully installed'));
 
                 $post_install = $this->plugin_manager->getPostInstall($name);
                 if ($post_install) {
@@ -224,7 +224,7 @@ class PluginsAdministrationActions extends Actions
                 $iter->next();
             }
             $plug_info->saveProperties();
-            $GLOBALS['Response']->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('plugin_pluginsadministration', 'properties_updated'));
+            $GLOBALS['Response']->addFeedback(Feedback::INFO, dgettext('tuleap-pluginsadministration', 'Plugin properties have been successfully updated'));
         }
 
         $GLOBALS['Response']->redirect($plugin_properties_url);
@@ -280,7 +280,7 @@ class PluginsAdministrationActions extends Actions
         if ($this->getPluginResourceRestrictor()->setPluginRestricted($plugin)) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::INFO,
-                $GLOBALS['Language']->getText('plugin_pluginsadministration', 'plugin_allowed_project_set_restricted')
+                dgettext('tuleap-pluginsadministration', 'Now, only the allowed projects are able to use this plugin.')
             );
         } else {
             $this->sendProjectRestrictedError();
@@ -291,7 +291,7 @@ class PluginsAdministrationActions extends Actions
         if ($this->getPluginResourceRestrictor()->unsetPluginRestricted($plugin)) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::INFO,
-                $GLOBALS['Language']->getText('plugin_pluginsadministration', 'plugin_allowed_project_unset_restricted')
+                dgettext('tuleap-pluginsadministration', 'All projects can now use this plugin.')
             );
         } else {
             $this->sendProjectRestrictedError();
@@ -301,7 +301,7 @@ class PluginsAdministrationActions extends Actions
     private function sendProjectRestrictedError() {
         $GLOBALS['Response']->addFeedback(
             Feedback::ERROR,
-            $GLOBALS['Language']->getText('plugin_pluginsadministration', 'plugin_allowed_project_restricted_error')
+            dgettext('tuleap-pluginsadministration', 'Something went wrong during the update of the plugin restriction status.')
         );
     }
 
@@ -342,7 +342,7 @@ class PluginsAdministrationActions extends Actions
         if ($project && $plugin_resource_restrictor->allowProjectOnPlugin($plugin, $project)) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::INFO,
-                $GLOBALS['Language']->getText('plugin_pluginsadministration', 'plugin_allowed_project_allow_project')
+                dgettext('tuleap-pluginsadministration', 'Submitted project can now use this plugin.')
             );
         } else {
             $this->sendUpdateProjectListError();
@@ -356,7 +356,7 @@ class PluginsAdministrationActions extends Actions
         if (count($project_ids) > 0 && $plugin_resource_restrictor->revokeProjectsFromPlugin($plugin, $project_ids)) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::INFO,
-                $GLOBALS['Language']->getText('plugin_pluginsadministration', 'plugin_allowed_project_revoke_projects')
+                dgettext('tuleap-pluginsadministration', 'Submitted projects will not be able to use this plugin.')
             );
         } else {
             $this->sendUpdateProjectListError();
@@ -367,7 +367,7 @@ class PluginsAdministrationActions extends Actions
     private function sendUpdateProjectListError() {
         $GLOBALS['Response']->addFeedback(
             Feedback::ERROR,
-            $GLOBALS['Language']->getText('plugin_pluginsadministration', 'plugin_allowed_project_update_project_list_error')
+            dgettext('tuleap-pluginsadministration', 'Something went wrong during the update of the allowed project list.')
         );
     }
 

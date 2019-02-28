@@ -32,6 +32,7 @@ class PluginsAdministrationPlugin extends Plugin
         $this->addHook(BurningParrotCompatiblePageEvent::NAME);
         $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
         $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
+        bindtextdomain('tuleap-pluginsadministration', __DIR__.'/../site-content');
     }
 
     public function burningParrotCompatiblePage(BurningParrotCompatiblePageEvent $event)

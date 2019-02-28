@@ -59,7 +59,7 @@ class PluginsAdministrationViews extends Views {
     }
 
     public function header() {
-        $title = $GLOBALS['Language']->getText('plugin_pluginsadministration','title');
+        $title = dgettext('tuleap-pluginsadministration', 'Plugins');
         $GLOBALS['HTML']->header(array('title'=>$title, 'selected_top_tab' => 'admin', 'main_classes' => array('tlp-framed')));
     }
 
@@ -85,7 +85,7 @@ class PluginsAdministrationViews extends Views {
                 $presenter = $this->getPluginResourceRestrictorPresenter($plugin, $plugin_resource_restrictor);
 
                 $renderer->renderAPresenter(
-                    $GLOBALS['Language']->getText('plugin_pluginsadministration', 'title'),
+                    dgettext('tuleap-pluginsadministration', 'Plugins'),
                     ForgeConfig::get('codendi_dir') . '/src/templates/resource_restrictor',
                     PluginsAdministration_ManageAllowedProjectsPresenter::TEMPLATE,
                     $presenter
@@ -107,7 +107,7 @@ class PluginsAdministrationViews extends Views {
                         );
 
                         $renderer->renderAPresenter(
-                            $GLOBALS['Language']->getText('plugin_pluginsadministration', 'title'),
+                            dgettext('tuleap-pluginsadministration', 'Plugins'),
                             PLUGINSADMINISTRATION_TEMPLATE_DIR,
                             'plugin-properties',
                             $presenter
@@ -120,7 +120,7 @@ class PluginsAdministrationViews extends Views {
             case 'available':
                 $this->_searchPlugins();
                 $renderer->renderANoFramedPresenter(
-                    $GLOBALS['Language']->getText('plugin_pluginsadministration', 'title'),
+                    dgettext('tuleap-pluginsadministration', 'Plugins'),
                     PLUGINSADMINISTRATION_TEMPLATE_DIR,
                     'available-plugins',
                     $this->getAvailablePluginsPresenter()
@@ -131,7 +131,7 @@ class PluginsAdministrationViews extends Views {
                 $this->_searchPlugins();
                 $renderer = new AdminPageRenderer();
                 $renderer->renderANoFramedPresenter(
-                    $GLOBALS['Language']->getText('plugin_pluginsadministration', 'title'),
+                    dgettext('tuleap-pluginsadministration', 'Plugins'),
                     PLUGINSADMINISTRATION_TEMPLATE_DIR,
                     'installed-plugins',
                     $this->getInstalledPluginsPresenter()

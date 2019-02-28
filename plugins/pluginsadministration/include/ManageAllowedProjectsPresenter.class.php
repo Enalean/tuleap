@@ -84,55 +84,55 @@ class PluginsAdministration_ManageAllowedProjectsPresenter {
     }
 
     public function resource_allowed_project_allow_all() {
-        return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'plugin_allowed_project_allow_all');
+        return dgettext('tuleap-pluginsadministration', 'Allow all the projects to use this plugin');
     }
 
     public function resource_allowed_project_list() {
-        return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'plugin_allowed_project_list');
+        return dgettext('tuleap-pluginsadministration', 'List of allowed projects');
     }
 
     public function resource_allowed_project_list_allow_placeholder() {
-        return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'plugin_allowed_project_list_allow_placeholder');
+        return dgettext('tuleap-pluginsadministration', 'Project name');
     }
 
     public function resource_allowed_project_list_filter_placeholder() {
-        return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'plugin_allowed_project_list_filter_placeholder');
+        return dgettext('tuleap-pluginsadministration', 'Filter on project id or name');
     }
 
     public function resource_allowed_project_list_allow_project() {
-        return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'plugin_allowed_project_list_allow_project');
+        return dgettext('tuleap-pluginsadministration', 'Allow access');
     }
 
     public function resource_allowed_project_list_revoke_projects() {
-        return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'plugin_allowed_project_list_revoke_projects');
+        return dgettext('tuleap-pluginsadministration', 'Revoke access');
     }
 
     public function resource_allowed_project_list_id() {
-        return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'plugin_allowed_project_list_id');
+        return dgettext('tuleap-pluginsadministration', 'Id');
     }
 
     public function resource_allowed_project_list_name() {
-        return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'plugin_allowed_project_list_name');
+        return dgettext('tuleap-pluginsadministration', 'Name');
     }
 
     public function resource_allowed_project_list_empty() {
-        return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'plugin_allowed_project_list_empty');
+        return dgettext('tuleap-pluginsadministration', 'Currently, there are no projects allowed to use this plugin.');
     }
 
     public function resource_allowed_project_revoke_title() {
-        return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'plugin_allowed_project_revoke_title');
+        return dgettext('tuleap-pluginsadministration', 'Warning');
     }
 
     public function resource_allowed_project_revoke_description() {
-        return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'plugin_allowed_project_revoke_description');
+        return dgettext('tuleap-pluginsadministration', 'You are about to revoke the access to this plugin to one or several projects. Are you sure you want to do this?');
     }
 
     public function resource_allowed_project_revoke_yes() {
-        return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'plugin_allowed_project_revoke_yes');
+        return dgettext('tuleap-pluginsadministration', 'Yes, revoke access');
     }
 
     public function resource_allowed_project_revoke_no() {
-        return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'plugin_allowed_project_revoke_no');
+        return dgettext('tuleap-pluginsadministration', 'No');
     }
 
     public function resource_allowed_project_filter_empty() {

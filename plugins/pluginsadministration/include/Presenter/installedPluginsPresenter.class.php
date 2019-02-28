@@ -30,116 +30,116 @@ class PluginsAdministration_Presenter_InstalledPluginsPresenter {
 
     public function title()
     {
-        return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'title');
+        return dgettext('tuleap-pluginsadministration', 'Plugins');
     }
 
     public function installed_tab_label()
     {
-        return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'installed_tab_label');
+        return dgettext('tuleap-pluginsadministration', 'Installed plugins');
     }
 
     public function not_installed_tab_label()
     {
-        return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'not_installed_tab_label');
+        return dgettext('tuleap-pluginsadministration', 'Available plugins');
     }
 
     public function installed_pane_label()
     {
-        return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'installed_pane_label');
+        return dgettext('tuleap-pluginsadministration', 'Plugins');
     }
 
     public function plugin_table_head()
     {
-        return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'plugin_table_head');
+        return dgettext('tuleap-pluginsadministration', 'Name');
     }
 
     public function version_table_head()
     {
-        return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'version_table_head');
+        return dgettext('tuleap-pluginsadministration', 'Version');
     }
 
     public function description_table_head()
     {
-        return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'description_table_head');
+        return dgettext('tuleap-pluginsadministration', 'Description');
     }
 
     public function available_table_head()
     {
-        return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'Available?');
+        return dgettext('tuleap-pluginsadministration', 'Enabled?');
     }
 
     public function scope_table_head()
     {
-        return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'Scope');
+        return dgettext('tuleap-pluginsadministration', 'Scope');
     }
 
     public function icon_label()
     {
-        return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'properties_icon_label');
+        return dgettext('tuleap-pluginsadministration', 'Details');
     }
 
     public function uninstall_icon_label()
     {
-        return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'uninstall_plugin_icon_label');
+        return dgettext('tuleap-pluginsadministration', 'Uninstall');
     }
 
     public function restrict_icon_label()
     {
-        return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'manage_restriction_by_project_icon_label');
+        return dgettext('tuleap-pluginsadministration', 'Restrict');
     }
 
     public function cant_restrict()
     {
-        return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'cant_restrict');
+        return dgettext('tuleap-pluginsadministration', 'Can\'t restrict this plugin because of its system scope');
     }
 
     public function uninstall_modal_title()
     {
-        return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'uninstall_modal_title');
+        return dgettext('tuleap-pluginsadministration', 'Uninstall plugin');
     }
 
     public function uninstall_modal_content()
     {
-        return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'uninstall_modal_content');
+        return dgettext('tuleap-pluginsadministration', 'Your about to uninstall a plugin. Please note the following points and confirm your action.');
     }
 
     public function uninstall_modal_cancel()
     {
-        return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'uninstall_modal_cancel');
+        return dgettext('tuleap-pluginsadministration', 'Cancel');
     }
 
     public function uninstall_modal_submit()
     {
-        return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'uninstall_modal_submit');
+        return dgettext('tuleap-pluginsadministration', 'Uninstall');
     }
 
     public function error_uninstall_dependency()
     {
-        return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'error_uninstall_dependency');
+        return dgettext('tuleap-pluginsadministration', 'You can\'t uninstall this plugin since at least another plugin depends on it:');
     }
 
     public function uninstall_modal_list_sql()
     {
-        return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'uninstall_modal_list_sql');
+        return dgettext('tuleap-pluginsadministration', 'script <code>db/uninstall.sql</code> of this plugin will be launched');
     }
 
     public function uninstall_modal_list_directory()
     {
-        return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'uninstall_modal_list_directory');
+        return dgettext('tuleap-pluginsadministration', 'directory of this plugin will not be deleted');
     }
 
     public function uninstall_modal_list_web_space()
     {
-        return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'uninstall_modal_list_web_space');
+        return dgettext('tuleap-pluginsadministration', 'web space and cgi scripts of this plugin will remain accessible unless you move or remove corresponding directory');
     }
 
     public function filter_label()
     {
-        return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'filter_label');
+        return dgettext('tuleap-pluginsadministration', 'Filter on name or description');
     }
 
     public function filter_empty_state()
     {
-        return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'filter_empty_state');
+        return dgettext('tuleap-pluginsadministration', 'There isn\'t any matching plugins.');
     }
 }
