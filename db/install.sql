@@ -20,3 +20,16 @@ CREATE TABLE IF NOT EXISTS plugin_baseline_baseline
 	user_id int not null,
 	creation_date int not null
 );
+
+-- Baseline entity
+CREATE TABLE IF NOT EXISTS plugin_baseline_role_assignment
+(
+	id int auto_increment primary key,
+	user_group_id int not null,
+	role varchar(255) not null,
+	project_id int not null
+);
+
+-- Allow all
+INSERT INTO plugin_baseline_role_assignment(user_group_id, role, project_id)
+SELECT DISTINCT ugroup_id, 'BASELINE_ADMIN', group_id FROM ugroup;

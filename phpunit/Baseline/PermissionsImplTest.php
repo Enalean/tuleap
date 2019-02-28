@@ -47,25 +47,28 @@ class PermissionsImplTest extends TestCase
     /** @var CurrentUserProvider|MockInterface */
     private $current_user_provider;
 
-    /**
-     * @var ProjectPermissions|MockInterface
-     */
+    /** @var ProjectPermissions|MockInterface */
     private $project_permissions;
+
+    /** @var RoleAssignmentRepository|MockInterface */
+    private $role_assignment_repository;
 
     /**
      * @before
      */
     public function createInstance()
     {
-        $this->current_user_provider = Mockery::mock(CurrentUserProvider::class)
+        $this->current_user_provider      = Mockery::mock(CurrentUserProvider::class)
             ->shouldReceive('getUser')
             ->andReturn(new PFUser())
             ->getMock();
-        $this->project_permissions   = Mockery::mock(ProjectPermissions::class);
+        $this->project_permissions        = Mockery::mock(ProjectPermissions::class);
+        $this->role_assignment_repository = Mockery::mock(RoleAssignmentRepository::class);
 
         $this->permissions = new PermissionsImpl(
             $this->current_user_provider,
-            $this->project_permissions
+            $this->project_permissions,
+            $this->role_assignment_repository
         );
     }
 

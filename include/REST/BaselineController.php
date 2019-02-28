@@ -59,7 +59,8 @@ class BaselineController
     }
 
     /**
-     * @throws I18NRestException
+     * @throws I18NRestException 404
+     * @throws I18NRestException 403
      * @throws \Luracast\Restler\RestException
      * @throws \Rest_Exception_InvalidTokenException
      * @throws \User_PasswordExpiredException
@@ -81,10 +82,19 @@ class BaselineController
             );
         }
 
-        $baseline         = new TransientBaseline($name, $milestone);
-        $created_baseline = $this->baseline_service->create($baseline);
-
-        return new BaselineRepresentation($created_baseline);
+        $baseline = new TransientBaseline($name, $milestone);
+        try {
+            $created_baseline = $this->baseline_service->create($baseline);
+            return new BaselineRepresentation($created_baseline);
+        } catch (NotAuthorizedException $exception) {
+            throw new I18NRestException(
+                403,
+                sprintf(
+                    dgettext('tuleap-baseline', 'This operation is not allowed. %s'),
+                    $exception->getMessage()
+                )
+            );
+        }
     }
 
     /**

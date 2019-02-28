@@ -21,6 +21,7 @@
 
 namespace Tuleap\Baseline;
 
+use Project;
 use Tracker_Artifact;
 
 class PermissionsImpl implements Permissions
@@ -28,22 +29,38 @@ class PermissionsImpl implements Permissions
     /** @var CurrentUserProvider */
     private $current_user_provider;
 
-    /**
-     * @var ProjectPermissions
-     */
+    /** @var ProjectPermissions */
     private $project_permissions;
 
-    public function __construct(CurrentUserProvider $current_user_provider, ProjectPermissions $project_permissions)
-    {
-        $this->current_user_provider = $current_user_provider;
-        $this->project_permissions   = $project_permissions;
+    /** @var RoleAssignmentRepository */
+    private $role_assignment_repository;
+
+    public function __construct(
+        CurrentUserProvider $current_user_provider,
+        ProjectPermissions $project_permissions,
+        RoleAssignmentRepository $role_assignment_repository
+    ) {
+        $this->current_user_provider      = $current_user_provider;
+        $this->project_permissions        = $project_permissions;
+        $this->role_assignment_repository = $role_assignment_repository;
     }
 
     /**
      * @throws NotAuthorizedException
      */
-    function checkCreateBaseline(TransientBaseline $baseline)
+    public function checkCreateBaseline(TransientBaseline $baseline)
     {
+        $project = $baseline->getMilestone()->getTracker()->getProject();
+
+        if (! $this->isCurrentUserAdminOf($project)
+            && ! $this->hasCurrentUserRole(Role::ADMIN, $project)) {
+            throw new NotAuthorizedException(
+                sprintf(
+                    "You cannot create a baseline on project with id %u",
+                    $project->getID()
+                )
+            );
+        }
         $this->checkReadArtifact($baseline->getMilestone());
     }
 
@@ -84,5 +101,24 @@ class PermissionsImpl implements Permissions
                 )
             );
         }
+    }
+
+    private function isCurrentUserAdminOf(Project $project)
+    {
+        $current_user = $this->current_user_provider->getUser();
+        return $current_user->isSuperUser() || $current_user->isAdmin($project->getId());
+    }
+
+    private function hasCurrentUserRole(string $role, Project $project)
+    {
+        $current_user = $this->current_user_provider->getUser();
+
+        $assignments = $this->role_assignment_repository->findByProjectAndRole($project, $role);
+        foreach ($assignments as $assignment) {
+            if ($current_user->isMemberOfUGroup($assignment->getUserGroupId(), $project->getID())) {
+                return true;
+            }
+        }
+        return false;
     }
 }

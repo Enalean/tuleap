@@ -32,6 +32,7 @@ use Tuleap\Baseline\Adapter\CurrentUserProviderAdapter;
 use Tuleap\Baseline\Adapter\FieldRepositoryAdapter;
 use Tuleap\Baseline\Adapter\MilestoneRepositoryAdapter;
 use Tuleap\Baseline\Adapter\ProjectPermissionsAdapter;
+use Tuleap\Baseline\Adapter\RoleAssignmentRepositoryAdapter;
 use Tuleap\Baseline\BaselineRepository;
 use Tuleap\Baseline\BaselineService;
 use Tuleap\Baseline\ChangesetRepository;
@@ -43,9 +44,11 @@ use Tuleap\Baseline\Permissions;
 use Tuleap\Baseline\PermissionsImpl;
 use Tuleap\Baseline\ProjectPermissions;
 use Tuleap\Baseline\REST\BaselineController;
+use Tuleap\Baseline\RoleAssignmentRepository;
 use Tuleap\DB\DBFactory;
 use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\REST\UserManager;
+use UGroupManager;
 
 /**
  * This class is responsible for dependency injections in all Baseline plugin.
@@ -93,8 +96,14 @@ class DependenciesContext
     /** @var FieldRepository */
     private $field_repository;
 
+    /** @var RoleAssignmentRepository */
+    private $role_assignment_repository;
+
     /** @var ProjectStatusVerificator */
     private $project_status_verificator;
+
+    /** @var UGroupManager */
+    private $user_group_manager;
 
     /** @var Clock */
     private $clock;
@@ -204,7 +213,8 @@ class DependenciesContext
         if ($this->permissions === null) {
             $this->permissions = new PermissionsImpl(
                 $this->getCurrentUserProvider(),
-                $this->getProjectPermissions()
+                $this->getProjectPermissions(),
+                $this->getRoleAssignmentRepository()
             );
         }
         return $this->permissions;
@@ -282,6 +292,21 @@ class DependenciesContext
         $this->field_repository = $field_repository;
     }
 
+    public function getRoleAssignmentRepository(): RoleAssignmentRepository
+    {
+        if ($this->role_assignment_repository === null) {
+            $this->role_assignment_repository = new RoleAssignmentRepositoryAdapter(
+                $this->getDatabase()
+            );
+        }
+        return $this->role_assignment_repository;
+    }
+
+    public function setRoleAssignmentRepository(RoleAssignmentRepository $role_assignment_repository): void
+    {
+        $this->role_assignment_repository = $role_assignment_repository;
+    }
+
     public function getProjectStatusVerificator(): ProjectStatusVerificator
     {
         if ($this->project_status_verificator === null) {
@@ -293,6 +318,19 @@ class DependenciesContext
     public function setProjectStatusVerificator(ProjectStatusVerificator $project_status_verificator): void
     {
         $this->project_status_verificator = $project_status_verificator;
+    }
+
+    public function getUserGroupManager(): UGroupManager
+    {
+        if ($this->user_group_manager === null) {
+            $this->user_group_manager = new UGroupManager();
+        }
+        return $this->user_group_manager;
+    }
+
+    public function setUserGroupManager(UGroupManager $user_group_manager): void
+    {
+        $this->user_group_manager = $user_group_manager;
     }
 
     public function getClock(): Clock

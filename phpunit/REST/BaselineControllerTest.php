@@ -34,7 +34,9 @@ use Tuleap\Baseline\BaselineService;
 use Tuleap\Baseline\CurrentUserProvider;
 use Tuleap\Baseline\Factory\BaselineFactory;
 use Tuleap\Baseline\MilestoneRepository;
+use Tuleap\Baseline\NotAuthorizedException;
 use Tuleap\GlobalLanguageMock;
+use Tuleap\REST\I18NRestException;
 
 class BaselineControllerTest extends TestCase
 {
@@ -163,5 +165,21 @@ class BaselineControllerTest extends TestCase
         $representation = $this->controller->post('first baseline', 3);
 
         $this->assertEquals('2019-03-21T14:47:03+01:00', $representation->creation_date);
+    }
+
+    public function testPostThrows403WhenNotAuthorized()
+    {
+        $this->expectException(I18NRestException::class);
+        $this->expectExceptionCode(403);
+
+        $this->milestone_repository
+            ->shouldReceive('findById')
+            ->andReturn($this->a_milestone);
+
+        $this->baseline_service
+            ->shouldReceive('create')
+            ->andThrow(new NotAuthorizedException('not authorized'));
+
+        $this->controller->post('new baseline', 3);
     }
 }
