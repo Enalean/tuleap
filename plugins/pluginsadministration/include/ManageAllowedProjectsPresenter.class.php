@@ -72,15 +72,15 @@ class PluginsAdministration_ManageAllowedProjectsPresenter {
     }
 
     public function resource_allowed_project_title() {
-        return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'plugin_allowed_project_title', array($this->plugin->getPluginInfo()->getPluginDescriptor()->getFullName()));
+        return sprintf(dgettext('tuleap-pluginsadministration', '%1$s projects restriction'), $this->plugin->getPluginInfo()->getPluginDescriptor()->getFullName());
     }
 
     public function resource_allowed_project_pane_title() {
-        return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'plugin_allowed_project_pane_title', array($this->plugin->getPluginInfo()->getPluginDescriptor()->getFullName()));
+        return sprintf(dgettext('tuleap-pluginsadministration', 'Projects allowed to use %1$s'), $this->plugin->getPluginInfo()->getPluginDescriptor()->getFullName());
     }
 
     public function resource_allowed_project_information() {
-        return $GLOBALS['Language']->getText('plugin_pluginsadministration', 'plugin_allowed_project_pane_information', array($this->plugin->getPluginInfo()->getPluginDescriptor()->getFullName()));
+        return sprintf(dgettext('tuleap-pluginsadministration', 'This section allows to define which projects will be able to use %1$s.'), $this->plugin->getPluginInfo()->getPluginDescriptor()->getFullName());
     }
 
     public function resource_allowed_project_allow_all() {
