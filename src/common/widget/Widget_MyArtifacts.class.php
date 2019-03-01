@@ -316,7 +316,7 @@ class Widget_MyArtifacts extends Widget {
         return $ajax_url;
     }
     function getCategory() {
-        return 'trackers';
+        return _('Trackers');
     }
     function getDescription() {
         return $GLOBALS['Language']->getText('widget_description_my_artifacts','description');

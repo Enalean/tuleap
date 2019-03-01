@@ -175,7 +175,7 @@ class Docman_Widget_MyDocman extends Widget
         return true;
     }
     function getCategory() {
-        return 'plugin_docman';
+        return dgettext('tuleap-docman', 'Document manager');
     }
 
     function getDescription() {

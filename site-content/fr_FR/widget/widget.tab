@@ -13,13 +13,6 @@ widget_add	already_used	Déjà utilisé
 
 widget_imageviewer	invalid_url	Seules les URLs http:// et https:// sont acceptées.
 
-widget_categ_label	forums	Forums
-widget_categ_label	frs	Files
-widget_categ_label	general	Général
-widget_categ_label	trackers	Outils de suivi
-widget_categ_label	scm	Gestion de code source
-widget_categ_label	wiki	Wiki
-
 widget_dashboard	updated	Votre <a href="$1">tableau de bord</a> a été modifié.
 
 widget_description_my_bookmarks	description	Affiche la liste de vos favoris (sur Tuleap ou externes).<br>A noter que ces pointeurs vers vos favoris peuvent être très sophistiqués. Ils permettent par exemple de mémoriser une requête multi-critères effectuée sur un outil de suivi.<br>Les marques-pages peuvent étre édités, ce qui signifie que vous pouvez modifier à la fois le titre et l'url.

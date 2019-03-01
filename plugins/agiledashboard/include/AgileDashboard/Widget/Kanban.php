@@ -212,7 +212,7 @@ abstract class Kanban extends Widget
 
     public function getCategory()
     {
-        return 'plugin_agiledashboard';
+        return dgettext('tuleap-agiledashboard', 'Agile dashboard');
     }
 
     public function destroy($id)

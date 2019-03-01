@@ -31,7 +31,7 @@ class Docman_Widget_MyDocmanSearch extends Widget
         parent::__construct('plugin_docman_mydocman_search');
         $this->_pluginPath = $pluginPath;
     }
-    
+
     function getTitle() {
         return $GLOBALS['Language']->getText('plugin_docman', 'my_docman_search');
     }
@@ -42,7 +42,7 @@ class Docman_Widget_MyDocmanSearch extends Widget
         $request = HTTPRequest::instance();
         $um = UserManager::instance();
         $user =$um->getCurrentUser();
-        
+
         $vFunc = new Valid_WhiteList('docman_func', array('show_docman'));
         $vFunc->required();
         if ($request->valid($vFunc)) {
@@ -85,28 +85,28 @@ class Docman_Widget_MyDocmanSearch extends Widget
                     $html .= '<p><a href="/plugins/docman/?group_id='.$res['group_id'].'&action=details&id='.$docman_id.'&section=properties">Show &quot;'.$res['title'].'&quot; Properties</a></p>';
                     return $html;
                 }
-            
+
             }
             $html .= '<p>'.$GLOBALS['Language']->getText('plugin_docman','perm_denied').'</p>';
-             
+
         }
-        
+
         return $html;
     }
 
     /**
      * Check if given document is in a project readable by user.
-     * 
+     *
      * Returns project info if:
      * * the document belongs to a public project
      * ** And the user is active (not restricted)
-     * ** Or user is restricted but member of the project. 
+     * ** Or user is restricted but member of the project.
      * * or a private one and the user is a member of it
      * else 0
-     * 
+     *
      * @param $docman_id int  Document Id
      * @param $user      User User Id
-     * @return group_id 
+     * @return group_id
      **/
     function returnAllowedGroupId($docman_id, $user){
         $sql_group = 'SELECT group_id,title FROM  plugin_docman_item WHERE'.
@@ -135,7 +135,7 @@ class Docman_Widget_MyDocmanSearch extends Widget
     }
 
     function getCategory() {
-        return 'plugin_docman';
+        return dgettext('tuleap-docman', 'Document manager');
     }
 
     function getDescription() {

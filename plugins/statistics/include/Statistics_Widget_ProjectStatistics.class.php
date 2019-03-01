@@ -104,7 +104,6 @@ class Statistics_Widget_ProjectStatistics extends Widget {
      * @see Widget::getCategory()
      */
     function getCategory() {
-        return 'plugin_statistics';
+        return dgettext('tuleap-statistics', 'Project statistics');
     }
 }
-?>

@@ -42,7 +42,7 @@ class Widget_ProjectSvnStats extends Widget
     }
 
     function getCategory() {
-        return 'scm';
+        return _('Source code management');
     }
 
     public function getContent()

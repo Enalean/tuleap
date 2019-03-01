@@ -201,7 +201,7 @@ abstract class GraphOnTrackersV5_Widget_Chart extends Widget {
     }
 
     function getCategory() {
-        return 'trackers';
+        return dgettext('tuleap-tracker', 'Trackers');
     }
 
     public function getJavascriptDependencies()

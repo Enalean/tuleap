@@ -57,7 +57,7 @@ class AdminDelegation_ShowProjectWidget extends Widget {
     }
 
     function getCategory() {
-        return 'plugin_admindelegation';
+        return dgettext('tuleap-admindelegation', 'Admin delegation');
     }
 
     function getAllProject($offset, $limit, $condition, $pattern) {

@@ -120,7 +120,7 @@ class Widget_MyMonitoredFp extends Widget {
     }
 
     function getCategory() {
-        return 'frs';
+        return _('Files');
     }
     function getDescription() {
         return $GLOBALS['Language']->getText('widget_description_my_monitored_fp','description');;

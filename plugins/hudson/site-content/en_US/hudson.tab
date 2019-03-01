@@ -117,8 +117,6 @@ plugin_hudson	widget_description_testtrend	Show the test result trend for the se
 plugin_hudson	widget_description_myjobs	Show an overview of all the jobs of all the projects you're member of. You can of course select the jobs you wish to display by selecting the preferences link of the widget.
 plugin_hudson	widget_description_jobsoverview	Shows an overview of all the jobs associated with this project. You can always choose the ones you want to display in the widget (preferences link).
 
-widget_categ_label	ci	Continuous Integration
-
 plugin_hudson	error_object_not_found	Error: Jenkins object not found.
 
 plugin_hudson	job_count	Number of jobs until $1

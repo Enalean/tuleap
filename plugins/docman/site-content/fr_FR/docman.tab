@@ -846,7 +846,6 @@ plugin_docman	docman_wiki_delete_wiki_page_failed	Erreur lors de la suppression 
 plugin_docman	docman_wiki_page_locked	Cette page wiki est réservée par $1. Vous ne pouvez pas la modifier tant que le propriétaire du verrou ou un gestionnaire du document ne l'a pas retiré.
 plugin_docman	docman_wiki_page_locked_elsewhere	Cette page wiki a été déjà vérouillée via "$1".
 
-widget_categ_label	plugin_docman	Gestionnaire de documents
 plugin_docman	widget_description_my_docman	Affiche la liste des documents en attente d'approbation.
 plugin_docman	widget_title_embedded	Visionneur du gestionnaire de document
 plugin_docman	widget_description_embedded	Permet d'afficher un élément du gestionnaire de document directement dans le dashboard. <br /><em>Pour le moment seuls les fichiers embarqués sont supportés</em>.

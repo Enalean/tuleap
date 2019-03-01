@@ -30,7 +30,7 @@ class WidgetsByCategoryPresenter
 
     public function __construct($name, array $widgets)
     {
-        $this->name    = $GLOBALS['Language']->getText('widget_categ_label', $name);
+        $this->name    = $name;
         $this->widgets = $widgets;
     }
 }

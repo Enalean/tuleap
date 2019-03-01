@@ -52,7 +52,7 @@ class Git_Widget_ProjectPushes extends Widget {
      *
      * @return string html
      */
-    public function getContent() {        
+    public function getContent() {
         $request = HTTPRequest::instance();
         $groupId = $request->get('group_id');
         $plugin = PluginManager::instance()->getPluginByName('git');
@@ -72,7 +72,7 @@ class Git_Widget_ProjectPushes extends Widget {
      * @return string
      */
     function getCategory() {
-        return 'scm';
+        return _('Source code management');
     }
 
     /**

@@ -148,7 +148,7 @@ class AddWidgetController
 
     private function sortCategoriesAlphabetically(array &$widgets_category_presenter)
     {
-        $general = $GLOBALS['Language']->getText('widget_categ_label', 'general');
+        $general = _('General');
 
         usort(
             $widgets_category_presenter,

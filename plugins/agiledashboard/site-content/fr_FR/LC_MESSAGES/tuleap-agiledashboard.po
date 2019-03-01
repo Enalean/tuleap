@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
 "PO-Revision-Date: \n"
-"Last-Translator: Thomas Gorka <thomas.gorka@enalean.com>\n"
+"Last-Translator: Nicolas Terray <nicolas.terray@enalean.com>\n"
 "Language-Team: \n"
 "Language: fr_FR\n"
 "MIME-Version: 1.0\n"
@@ -30,6 +30,9 @@ msgstr "Ajouter au tableau de bord du projet"
 
 msgid "Agile Dashboard"
 msgstr "Agile Dashboard"
+
+msgid "Agile dashboard"
+msgstr "Tableau de bord agile"
 
 msgid "Agiledashboard plannings"
 msgstr "Plannings du tableau de bord agile"
