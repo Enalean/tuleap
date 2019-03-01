@@ -1,13 +1,25 @@
 <?php
-//
-// Codendi
-// Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
-// http://www.codendi.com
-//
-// 
-//
-//      Originally written by Laurent Julliard 2004 Codendi Team, Xerox
-//
+/**
+ * Copyright (c) Enalean, 2013-2019. All Rights Reserved.
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ *
+ * Originally written by Laurent Julliard 2004 Codendi Team, Xerox
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 require_once('svn_utils.php');
 
@@ -71,7 +83,7 @@ function svn_data_get_revision_detail($group_id, $commit_id, $rev_id=0, $order='
     $forbidden = svn_utils_get_forbidden_paths(user_getname(), $project->getSVNRootPath());
     $where_forbidden = "";
     if (!empty($forbidden)) {
-      while (list($no_access,) = each($forbidden)) {
+      foreach ($forbidden as $no_access => $value) {
         $where_forbidden .= " AND svn_dirs.dir not like '%".db_es(substr($no_access,1))."%' ";
       }
     }
