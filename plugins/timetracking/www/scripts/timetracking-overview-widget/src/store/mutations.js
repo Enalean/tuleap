@@ -22,6 +22,14 @@ export default {
         state.selected_trackers = trackers;
     },
 
+    setTrackersTimes(state, times) {
+        state.trackers_times = times;
+    },
+
+    setIsLoading(state, is_loading) {
+        state.is_loading = is_loading;
+    },
+
     resetErrorMessage(state) {
         state.error_message = null;
     },

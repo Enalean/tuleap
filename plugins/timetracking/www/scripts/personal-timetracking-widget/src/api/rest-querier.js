@@ -22,7 +22,7 @@
  */
 
 import { get, post, put } from "tlp";
-import { formatDatetimeToISO } from "../time-formatters.js";
+import { formatDatetimeToISO } from "../../../time-formatters.js";
 
 export { getTrackedTimes, addTime, updateTime };
 

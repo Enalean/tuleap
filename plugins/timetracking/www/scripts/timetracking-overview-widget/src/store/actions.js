@@ -21,14 +21,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getTrackersFromReport } from "../api/rest-querier.js";
+import { getTimesFromReport, getTrackersFromReport } from "../api/rest-querier";
 import { ERROR_OCCURRED } from "../../../constants.js";
 
 export async function initWidgetWithReport(context) {
     try {
         context.commit("resetErrorMessage");
+
         const report = await getTrackersFromReport(context.state.report_id);
-        return context.commit("setSelectedTrackers", report.trackers);
+        context.commit("setSelectedTrackers", report.trackers);
+
+        return await loadTimes(context);
     } catch (error) {
         return showRestError(context, error);
     }
@@ -41,4 +44,18 @@ async function showRestError(context, rest_error) {
     } catch (error) {
         context.commit("setErrorMessage", ERROR_OCCURRED);
     }
+}
+
+export async function loadTimes(context) {
+    context.commit("setIsLoading", true);
+
+    const times = await getTimesFromReport(
+        context.state.report_id,
+        [],
+        context.state.start_date,
+        context.state.end_date
+    );
+
+    context.commit("setTrackersTimes", times);
+    context.commit("setIsLoading", false);
 }

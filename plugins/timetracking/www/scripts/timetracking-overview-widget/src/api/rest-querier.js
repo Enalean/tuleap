@@ -22,9 +22,26 @@
  */
 
 import { get } from "tlp";
-export { getTrackersFromReport };
+import { formatDatetimeToISO } from "../../../time-formatters";
+
+export { getTrackersFromReport, getTimesFromReport };
 
 async function getTrackersFromReport(report_id) {
     const response = await get("/api/v1/timetracking_reports/" + encodeURI(report_id));
+    return response.json();
+}
+
+async function getTimesFromReport(report_id, trackers_id, start_date, end_date) {
+    const query = JSON.stringify({
+        trackers_id: trackers_id,
+        start_date: formatDatetimeToISO(start_date),
+        end_date: formatDatetimeToISO(end_date)
+    });
+
+    const response = await get("/api/v1/timetracking_reports/" + encodeURI(report_id) + "/times", {
+        params: {
+            query
+        }
+    });
     return response.json();
 }

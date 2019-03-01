@@ -37,7 +37,7 @@ describe("Store actions", () => {
 
     describe("initWidgetWithReport - success", () => {
         it("Given a success response, When report is received, Then no message error is reveived", async () => {
-            const rapport = [
+            const report = [
                 {
                     id: 1,
                     uri: "timetracking_reports/1",
@@ -46,12 +46,12 @@ describe("Store actions", () => {
             ];
 
             mockFetchSuccess(tlp.get, {
-                return_json: rapport
+                return_json: report
             });
 
             await actions.initWidgetWithReport(context);
             expect(context.commit).toHaveBeenCalledWith("resetErrorMessage");
-            expect(context.commit).toHaveBeenCalledWith("setSelectedTrackers", rapport.trackers);
+            expect(context.commit).toHaveBeenCalledWith("setSelectedTrackers", report.trackers);
         });
     });
 
@@ -63,7 +63,51 @@ describe("Store actions", () => {
             expect(context.commit).toHaveBeenCalledWith("resetErrorMessage");
             expect(context.commit).toHaveBeenCalledWith("setErrorMessage", ERROR_OCCURRED);
         });
+    });
 
+    describe("loadTimes - success", () => {
+        it("Given a success response, When times are received, Then no message error is reveived", async () => {
+            let trackers = [
+                {
+                    artifacts: [
+                        {
+                            minutes: 20
+                        },
+                        {
+                            minutes: 40
+                        }
+                    ],
+                    id: "16",
+                    label: "tracker",
+                    project: {},
+                    uri: ""
+                },
+                {
+                    artifacts: [
+                        {
+                            minutes: 20
+                        }
+                    ],
+                    id: "18",
+                    label: "tracker 2",
+                    project: {},
+                    uri: ""
+                }
+            ];
+            context.state.trackers_times = trackers;
+
+            mockFetchSuccess(tlp.get, {
+                return_json: trackers
+            });
+
+            await actions.loadTimes(context);
+            expect(context.commit).toHaveBeenCalledWith("setIsLoading", true);
+            expect(context.commit).toHaveBeenCalledWith("setTrackersTimes", trackers);
+            expect(context.commit).toHaveBeenCalledWith("setIsLoading", false);
+        });
+    });
+
+    describe("loadTimes - rest errors", () => {
         it("Given a rest error, When a json error message is received, Then the message is extracted in the component 's error_message private property.", async () => {
             mockFetchError(tlp.get, {
                 error_json: {
@@ -77,6 +121,14 @@ describe("Store actions", () => {
             await actions.initWidgetWithReport(context);
             expect(context.commit).toHaveBeenCalledWith("resetErrorMessage");
             expect(context.commit).toHaveBeenCalledWith("setErrorMessage", "403 Forbidden");
+        });
+
+        it("Given a rest error, When a json error message is received, Then the message is extracted in the component 's error_message private property.", async () => {
+            mockFetchError(tlp.get, {});
+
+            await actions.initWidgetWithReport(context);
+            expect(context.commit).toHaveBeenCalledWith("resetErrorMessage");
+            expect(context.commit).toHaveBeenCalledWith("setErrorMessage", ERROR_OCCURRED);
         });
     });
 });
