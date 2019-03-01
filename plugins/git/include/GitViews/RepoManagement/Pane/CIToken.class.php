@@ -20,7 +20,6 @@
 
 namespace Tuleap\Git\GitViews\RepoManagement\Pane;
 
-use Tuleap\Git\AccessRightsPresenterOptionsBuilder;
 use Tuleap\Git\CIToken\Manager as CITokenManager;
 use Tuleap\Git\CIToken\Dao as CITokenDao;
 use Tuleap\Git\CIToken\Presenter as CITokenPresenter;

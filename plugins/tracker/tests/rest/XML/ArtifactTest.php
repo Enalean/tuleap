@@ -20,8 +20,6 @@
 
 namespace Tracker;
 
-use REST_TestDataBuilder;
-use TrackerDataBuilder;
 use RestBase;
 use \Guzzle\Http\Client;
 

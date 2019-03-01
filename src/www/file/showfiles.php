@@ -25,15 +25,6 @@ require_once ('www/file/file_utils.php');
 define("FRS_EXPANDED_ICON", util_get_image_theme("ic/toggle_minus.png"));
 define("FRS_COLLAPSED_ICON", util_get_image_theme("ic/toggle_plus.png"));
 
-use Tuleap\FRS\FRSPermissionDao;
-use Tuleap\FRS\FRSPermissionFactory;
-use Tuleap\FRS\FRSPermissionManager;
-use Tuleap\FRS\PackagePermissionManager;
-use Tuleap\FRS\ReleasePermissionManager;
-use Tuleap\FRS\UploadedLinkPresentersBuilder;
-use Tuleap\FRS\UploadedLinksDao;
-use Tuleap\FRS\UploadedLinksRetriever;
-use Tuleap\FRS\UploadedLinksTablePresenter;
 
 $authorized_user = false;
 

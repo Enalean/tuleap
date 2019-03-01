@@ -23,7 +23,6 @@ namespace Tuleap\AgileDashboard\Widget;
 use AgileDashboard_KanbanFactory;
 use AgileDashboard_PermissionsManager;
 use TrackerFactory;
-use Tuleap\AgileDashboard\Kanban\TrackerReport\TrackerReportBuilder;
 use Tuleap\Dashboard\User\UserDashboardController;
 use UserManager;
 

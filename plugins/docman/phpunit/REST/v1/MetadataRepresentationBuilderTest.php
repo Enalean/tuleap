@@ -34,7 +34,7 @@ class MetadataRepresentationBuilderTest extends TestCase
     {
         $item = Mockery::mock(\Docman_Item::class);
 
-        $factory = mockery::mock(Docman_MetadataFactory::class);
+        $factory = Mockery::mock(Docman_MetadataFactory::class);
         $builder = new MetadataRepresentationBuilder($factory);
 
         $simple_metadata = Mockery::mock(Docman_Metadata::class);

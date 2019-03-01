@@ -22,7 +22,6 @@ declare(strict_types = 1);
 
 namespace Tuleap\Docman\REST\v1;
 
-use Docman_Item;
 use Docman_LockFactory;
 use Luracast\Restler\RestException;
 use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;

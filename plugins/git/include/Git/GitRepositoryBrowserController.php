@@ -117,7 +117,7 @@ class GitRepositoryBrowserController implements DispatchableWithRequest, Dispatc
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $project = $this->getProject($request, $variables);
-        if (! $project->usesService(gitPlugin::SERVICE_SHORTNAME)) {
+        if (! $project->usesService(GitPlugin::SERVICE_SHORTNAME)) {
             throw new NotFoundException(dgettext("tuleap-git", "Git service is disabled."));
         }
 

@@ -10,9 +10,6 @@
  * @ingroup Skins
  */
 
-use Tuleap\BurningParrotCompatiblePageDetector;
-use Tuleap\Mediawiki\ForgeUserGroupPermission\MediawikiAdminAllProjects;
-use Tuleap\Request\CurrentPage;
 
 require_once MEDIAWIKI_BASE_DIR.'/MediawikiManager.class.php';
 

@@ -20,8 +20,6 @@
 
 namespace Tuleap\Theme\BurningParrot\Navbar;
 
-use PFUser;
-use Tuleap\BurningParrotCompatiblePageDetector;
 
 class Presenter
 {

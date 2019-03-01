@@ -20,7 +20,6 @@
 namespace User\XML\Import;
 
 use TuleapTestCase;
-use PFUser;
 
 class UsersToBeImportedCollection_toCSVTest extends TuleapTestCase {
 

@@ -120,6 +120,22 @@ pipeline {
                         stage('Javascript coding standards') {
                             steps { script { actions.runJavascriptCodingStandards() } }
                         }
+                        stage('PHP coding standards') {
+                            steps {
+                                script {
+                                    def filesToAnalyze = '.'
+                                    if (env.BRANCH_NAME != 'master') {
+                                        def helpers = load 'sources/tests/helpers.groovy'
+                                        filesToAnalyze = helpers.getModifiedFilesSinceFirstParentOfCurrentCommit('sources/')
+                                    }
+                                    actions.runPHPCodingStandards(
+                                        './src/vendor/bin/phpcs',
+                                        './tests/phpcs/tuleap-ruleset-minimal.xml',
+                                        filesToAnalyze
+                                    )
+                                }
+                            }
+                        }
                     }
                 }
             }

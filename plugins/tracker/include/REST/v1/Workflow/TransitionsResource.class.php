@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018 - 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -28,7 +28,6 @@ use Transition_PostAction_Field_DateDao;
 use Transition_PostAction_Field_FloatDao;
 use Transition_PostAction_Field_IntDao;
 use TransitionFactory;
-use Tuleap\DB\DataAccessObject;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
@@ -47,7 +46,6 @@ use Tuleap\Tracker\REST\v1\Workflow\PostAction\Update\SetDateValueJsonParser;
 use Tuleap\Tracker\REST\v1\Workflow\PostAction\Update\SetFloatValueJsonParser;
 use Tuleap\Tracker\REST\v1\Workflow\PostAction\Update\SetIntValueJsonParser;
 use Tuleap\Tracker\REST\WorkflowTransitionPOSTRepresentation;
-use Tuleap\Tracker\Workflow\FeatureFlag;
 use Tuleap\Tracker\Workflow\PostAction\PostActionsRetriever;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\CIBuildRepository;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\CIBuildUpdater;
@@ -502,7 +500,7 @@ class TransitionsResource extends AuthenticatedResource
                 new SetDateValueValidator($ids_validator, $field_ids_validator, $form_element_factory)
             ),
             new SetIntValueUpdater(
-                new SetintValueRepository(
+                new SetIntValueRepository(
                     $this->getFieldIntDao(),
                     $transaction_executor
                 ),

@@ -25,7 +25,6 @@ use Tracker;
 use Tracker_Artifact;
 use Tracker_FormElement_Field;
 use Tracker_FormElement_Chart_Field_Exception;
-use Tracker_FormElement_InvalidFieldException;
 use Tracker_FormElementFactory;
 
 class ChartConfigurationFieldRetriever

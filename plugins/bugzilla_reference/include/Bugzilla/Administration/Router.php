@@ -20,7 +20,6 @@
 
 namespace Tuleap\Bugzilla\Administration;
 
-use CSRFSynchronizerToken;
 use Feedback;
 use HTTPRequest;
 use PFUser;

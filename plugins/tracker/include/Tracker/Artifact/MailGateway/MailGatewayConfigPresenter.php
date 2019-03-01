@@ -21,9 +21,7 @@
 
 namespace Tuleap\Tracker\Artifact\MailGateway;
 
-use Tracker\FormElement\Field\ArtifactLink\Nature\NatureConfigPresenter;
 use Tuleap\Tracker\Config\EmailGateWayPresenter;
-use Tuleap\Tracker\Config\SectionsPresenter;
 use CSRFSynchronizerToken;
 
 class MailGatewayConfigPresenter {

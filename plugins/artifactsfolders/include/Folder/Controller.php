@@ -22,9 +22,6 @@ namespace Tuleap\ArtifactsFolders\Folder;
 
 use PFUser;
 use Tracker_Artifact;
-use Tracker_ArtifactFactory;
-use Tracker_FormElement_Field_ArtifactLink;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 
 class Controller
 {

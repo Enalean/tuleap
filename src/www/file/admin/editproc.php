@@ -25,10 +25,6 @@
 require_once('pre.php');
 require_once('www/file/file_utils.php');
 
-use Tuleap\FRS\ToolbarPresenter;
-use Tuleap\FRS\FRSPermissionFactory;
-use Tuleap\FRS\FRSPermissionManager;
-use Tuleap\FRS\FRSPermissionDao;
 
 $vGroupId = new Valid_GroupId();
 $vGroupId->required();

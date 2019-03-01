@@ -20,13 +20,10 @@
 
 namespace Tuleap\Theme\BurningParrot\Navbar;
 
-use Admin_Homepage_Dao;
 use HTTPRequest;
 use PFUser;
 use EventManager;
-use Tuleap\BurningParrotCompatiblePageDetector;
 use Tuleap\Glyph\GlyphFinder;
-use Tuleap\Request\CurrentPage;
 use Tuleap\Theme\BurningParrot\Navbar\MenuItem\Presenter as MenuItemPresenter;
 use Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Presenter as DropdownMenuItemPresenter;
 use Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Content\Projects\ProjectsPresenter;

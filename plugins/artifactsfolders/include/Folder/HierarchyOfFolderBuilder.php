@@ -20,7 +20,6 @@
 
 namespace Tuleap\ArtifactsFolders\Folder;
 
-use PFUser;
 use Tracker_Artifact;
 use Tracker_ArtifactFactory;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever;

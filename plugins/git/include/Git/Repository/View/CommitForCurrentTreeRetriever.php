@@ -20,7 +20,6 @@
 
 namespace Tuleap\Git\Repository\View;
 
-use GitRepository;
 use HTTPRequest;
 use Tuleap\Git\GitPHP\Commit;
 use Tuleap\Git\GitPHP\Project;

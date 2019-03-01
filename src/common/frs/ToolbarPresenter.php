@@ -22,7 +22,6 @@
 namespace Tuleap\FRS;
 
 use Project;
-use ServiceFile;
 
 class ToolbarPresenter extends BaseFrsPresenter
 {

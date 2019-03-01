@@ -23,7 +23,6 @@ use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
 use Tuleap\Project\Admin\ProjectUGroup\CannotCreateUGroupException;
 use Tuleap\Project\Admin\ProjectUGroup\UGroupListPresenterBuilder;
-use Tuleap\User\UserGroup\NameTranslator;
 
 require_once('pre.php');
 require_once('www/project/admin/permissions.php');

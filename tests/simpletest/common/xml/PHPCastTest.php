@@ -20,7 +20,6 @@
 
 namespace Tuleap\XML;
 
-use SimpleXMLElement;
 
 class PHPCastTest extends \TuleapTestCase
 {

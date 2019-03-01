@@ -20,8 +20,6 @@
 
 namespace Tuleap\Project\Label;
 
-use Project;
-use Tuleap\Event\Dispatchable;
 
 class CollectionOfLabelPresenter
 {

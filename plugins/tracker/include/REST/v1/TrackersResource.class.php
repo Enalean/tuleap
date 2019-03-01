@@ -35,7 +35,6 @@ use Tracker_ReportFactory;
 use Tracker_REST_Artifact_ArtifactRepresentationBuilder;
 use Tracker_REST_TrackerRestBuilder;
 use TrackerFactory;
-use Tuleap\DB\DataAccessObject;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\REST\AuthenticatedResource;

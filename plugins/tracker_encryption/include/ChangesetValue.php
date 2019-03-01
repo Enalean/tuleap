@@ -23,14 +23,11 @@ namespace Tuleap\TrackerEncryption;
 use Codendi_Diff;
 use Codendi_HTMLPurifier;
 use Codendi_HtmlUnifiedDiffFormatter;
-use Codendi_UnifiedDiffFormatter;
-use Encoding_SupportedXmlCharEncoding;
 use PFUser;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue;
 use Tracker_Artifact_ChangesetValueVisitor;
 use Tracker_FormElementFactory;
-use Tracker_XML_Exporter_ChangesetValue_ChangesetValueUnknownXMLExporter;
 use Tuleap;
 
 class ChangesetValue extends Tracker_Artifact_ChangesetValue

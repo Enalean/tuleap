@@ -21,7 +21,6 @@
 namespace Tuleap\GitLFS\Lock;
 
 use DateTimeImmutable;
-use GitRepository;
 use PFUser;
 
 class Lock

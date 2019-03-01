@@ -28,7 +28,6 @@ use HTTPRequest;
 use Project;
 use ProjectManager;
 use Rule_ProjectName;
-use SystemEvent;
 use SystemEventManager;
 use Tuleap\Project\Admin\ProjectDetailsPresenter;
 

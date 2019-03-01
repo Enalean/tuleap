@@ -20,7 +20,6 @@
 
 namespace Tuleap\Tracker\Artifact\Event;
 
-use Tracker_Artifact;
 use Tuleap\Event\Dispatchable;
 
 class ArtifactsReordered implements Dispatchable

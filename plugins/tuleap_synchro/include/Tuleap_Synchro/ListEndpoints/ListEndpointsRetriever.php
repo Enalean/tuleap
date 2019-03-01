@@ -22,7 +22,6 @@
 namespace Tuleap\TuleapSynchro\ListEndpoints;
 
 use Tuleap\TuleapSynchro\Dao\TuleapSynchroDao;
-use Tuleap\TuleapSynchro\Endpoint\Endpoint;
 use Tuleap\TuleapSynchro\Endpoint\EndpointBuilder;
 
 class ListEndpointsRetriever
