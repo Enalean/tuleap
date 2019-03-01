@@ -42,7 +42,6 @@ use Tuleap\Admin\ProjectTemplatesController;
 use Tuleap\Error\PermissionDeniedMailSender;
 use Tuleap\Error\PlaceHolderBuilder;
 use Tuleap\FRS\FileDownloadController;
-use Tuleap\Layout\LegacySiteHomePageController;
 use Tuleap\Layout\SiteHomepageController;
 use Tuleap\Password\Administration\PasswordPolicyDisplayController;
 use Tuleap\Password\Administration\PasswordPolicyUpdateController;
@@ -76,11 +75,12 @@ class RouteCollector
 
     public static function getSlash()
     {
-        $dao = new \Admin_Homepage_Dao();
-        if ($dao->isStandardHomepageUsed()) {
-            return new SiteHomepageController();
-        }
-        return new LegacySiteHomePageController();
+        return new SiteHomepageController(
+            new \Admin_Homepage_Dao(),
+            \ProjectManager::instance(),
+            \UserManager::instance(),
+            EventManager::instance()
+        );
     }
 
     public static function getOrPostProjectHome()

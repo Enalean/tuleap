@@ -84,7 +84,6 @@ class Admin_Homepage_Controller {
         $presenter = new Admin_Homepage_Presenter(
             $this->csrf,
             $title,
-            $this->dao->isStandardHomepageUsed(),
             ForgeConfig::get(StatisticsCollectionBuilder::CONFIG_DISPLAY_STATISTICS),
             ForgeConfig::get(NewsCollectionBuilder::CONFIG_DISPLAY_NEWS),
             $headlines
@@ -100,10 +99,6 @@ class Admin_Homepage_Controller {
 
     public function update() {
         $this->csrf->check();
-
-        if ($this->request->get('use_standard_homepage')) {
-            $this->dao->useStandardHomepage();
-        }
 
         if ($this->request->get('use_statistics_homepage')) {
             $this->config_dao->save(StatisticsCollectionBuilder::CONFIG_DISPLAY_STATISTICS, 1);

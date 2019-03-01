@@ -589,8 +589,6 @@ INSERT INTO forum_group_list (group_id,forum_name,is_public,description) VALUES 
 
 INSERT INTO system_events_followers (emails, types) VALUES ('admin', 'WARNING,ERROR');
 
-INSERT INTO homepage (use_standard_homepage) VALUES (1);
-
 INSERT INTO homepage_headline (language_id, headline) VALUES
 ('en_US', 'Tuleap helps teams to deliver awesome applications, better, faster, and easier.
 Here you plan, track, code, and collaborate on software projects.'),

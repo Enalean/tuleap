@@ -72,28 +72,6 @@ include_exit	project_status_s	This is a system project
 include_exit	project_suspended_cutom_message	All access to its resources are temporarily disabled.
 #
 #-----------------------------------------------
-# Script: SF/www/include/features_boxes.php
-#
-include_features_boxes	stats	Statistics
-include_features_boxes	top_download_yesterday	Top Downloads Yesterday
-include_features_boxes	newest_releases	Newest Releases
-include_features_boxes	rss_format	- RSS Format
-include_features_boxes	xml	XML
-include_features_boxes	newest_projects	Newest Projects
-include_features_boxes	most_active_week	Most Active This Week
-include_features_boxes	most_active	Most Active
-include_features_boxes	top_downloads	Top Downloads
-include_features_boxes	featured_projects	Featured Projects
-include_features_boxes	more	More
-include_features_boxes	no_projects	No Projects
-include_features_boxes	downloads_yesterday	Downloads Yesterday
-include_features_boxes	hosted_projects	Hosted Projects
-include_features_boxes	registered_users	Registered Users
-include_features_boxes	files_download	Files Downloaded
-include_features_boxes	pages_viewed	Pages Viewed
-
-#
-#-----------------------------------------------
 # Script: SF/www/include/group.php
 #
 include_group	g_not_found	Group Not Found

@@ -906,3 +906,5 @@ plugin_docman	doc_type_file	Fichier
 plugin_docman	doc_type_link	Lien
 plugin_docman	doc_type_wiki	Wiki
 plugin_docman	doc_type_item	Elément du docman
+
+plugin_docman	sendmessage_title	Envoyez un message à $1

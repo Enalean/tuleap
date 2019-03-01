@@ -66,27 +66,6 @@ include_exit	project_status_s	Ceci est un projet système
 include_exit	project_suspended_cutom_message	Tous les accès à ses ressources sont temporairement désactivés.
 #
 #-----------------------------------------------
-# Script: SF/www/include/features_boxes.php
-#
-include_features_boxes	stats	Statistiques
-include_features_boxes	top_download_yesterday	Top téléchargements hier
-include_features_boxes	newest_releases	Versions récentes
-include_features_boxes	rss_format	- Format RSS
-include_features_boxes	xml	XML
-include_features_boxes	newest_projects	Projets récents
-include_features_boxes	most_active_week	Les plus actifs cette semaine
-include_features_boxes	most_active	Les plus actifs
-include_features_boxes	top_downloads	Top des téléchargements
-include_features_boxes	featured_projects	Projets à l'affiche
-include_features_boxes	more	Plus
-include_features_boxes	no_projects	Aucun projet
-include_features_boxes	downloads_yesterday	Téléchargements hier
-include_features_boxes	hosted_projects	Projets hébergés
-include_features_boxes	registered_users	Comptes utilisateurs
-include_features_boxes	files_download	Fichiers téléchargés
-include_features_boxes	pages_viewed	Pages visitées
-#
-#-----------------------------------------------
 # Script: SF/www/include/group.php
 #
 include_group	g_not_found	Groupe introuvable

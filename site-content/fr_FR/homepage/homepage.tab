@@ -1,26 +1,12 @@
-#
 # Copyright (c) Enalean, 2014-2019. All Rights Reserved.
 # Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 # This file is licensed under the GNU General Public License version 2. See the file COPYING.
-#
-#-----------------------------------------------
-# Script: SF/www/contact.php
-#
+
+# Contact
 contact	title	Contactez-nous
-#
-#-----------------------------------------------
-# Script: SF/www/404.php
-#
-404	title	Page introuvable (Erreur 404)
-404	no_archive	Aucun message archivé
-404	no_page	PAGE INTROUVABLE
-#
-#-----------------------------------------------
-# Script: SF/www/index.php
-#
+
+# Homepage
 homepage	title	Bienvenue
-homepage	news_title	Dernières annonces
-homepage	news_title2	Dernières annonces - Format RSS
 homepage	username_placeholder	Nom d'utilisateur
 homepage	password_placeholder	Mot de passe
 homepage	sign_in_submit	Se connecter
@@ -30,5 +16,3 @@ homepage	create_account	Créer un compte
 homepage	welcome_back	Bienvenue
 homepage	welcome_title	Bonjour,<br/> Bienvenue sur $1 !
 homepage	my_personal_page	Ma page personnelle
-
-sendmessage	title	Envoyez un message à $1

@@ -907,3 +907,5 @@ plugin_docman	doc_type_file	File
 plugin_docman	doc_type_link	Link
 plugin_docman	doc_type_wiki	Wiki
 plugin_docman	doc_type_item	Docman item
+
+plugin_docman	sendmessage_title	Send a Message to $1

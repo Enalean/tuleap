@@ -181,12 +181,6 @@ $sys_lf = "\n";
 // Should be disabled if no DNS delegation
 $sys_disable_subdomains = 0;
 
-// Display boxes (Site stats, most active, ...) on Home Page
-$sys_display_homepage_boxes = 1;
-
-// Display site news on Home Page
-$sys_display_homepage_news = 1;
-
 //
 // Authentication scheme
 //

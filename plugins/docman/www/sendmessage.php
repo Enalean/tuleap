@@ -50,6 +50,6 @@ if ($request->isPost() && $request->exist('Submit') &&  $request->existAndNonEmp
 }
 
 
-$HTML->header(array('title'=>$Language->getText('sendmessage', 'title',array($to_msg))));
+$HTML->header(array('title'=>$Language->getText('plugin_docman', 'sendmessage_title',array($to_msg))));
 
 ?>

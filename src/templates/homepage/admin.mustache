@@ -8,30 +8,6 @@
         {{> csrf_token_input }}
     {{/ csrf_token }}
 
-    {{^ use_standard_homepage }}
-    <section class="tlp-pane">
-        <div class="tlp-pane-container">
-            <div class="tlp-pane-header">
-                <h1 class="tlp-pane-title">
-                    <i class="fa fa-desktop tlp-pane-title-icon"></i> {{ standard_title }}
-                </h1>
-            </div>
-            <section class="tlp-pane-section">
-                <p class="tlp-text-warning">{{ use_standard_homepage_help }}</p>
-
-                <div class="tlp-form-element">
-                    <label class="tlp-label" for="use_standard_homepage">{{ use_standard_homepage_label }}</label>
-                    <div class="tlp-switch">
-                        <input type="checkbox" id="use_standard_homepage" name="use_standard_homepage" value="1" class="tlp-switch-checkbox" {{# use_standard_homepage }}checked="checked"{{/ use_standard_homepage }}>
-                        <label for="use_standard_homepage" class="tlp-switch-button" aria-hidden>{{ use_standard_homepage_label }}</label>
-                    </div>
-                </div>
-            </section>
-        </div>
-    </section>
-    {{/ use_standard_homepage }}
-
-    {{# use_standard_homepage }}
     <section class="tlp-pane">
         <div class="tlp-pane-container">
             <div class="tlp-pane-header">
@@ -147,5 +123,4 @@
             </section>
         </div>
     </section>
-    {{/ use_standard_homepage }}
 </form>

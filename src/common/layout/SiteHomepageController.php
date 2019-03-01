@@ -21,14 +21,51 @@
 
 namespace Tuleap\Layout;
 
+use Admin_Homepage_Dao;
+use CSRFSynchronizerToken;
+use EventManager;
 use HTTPRequest;
 use ForgeConfig;
 use Event;
+use ProjectManager;
+use SVN_LogDao;
+use TemplateRendererFactory;
+use Tuleap\layout\HomePage\NewsCollectionBuilder;
+use Tuleap\layout\HomePage\StatisticsCollectionBuilder;
+use Tuleap\News\NewsDao;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
+use Tuleap\Theme\BurningParrot\HomePagePresenter;
+use User_LoginPresenterBuilder;
+use UserManager;
 
 class SiteHomepageController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
+
+    /**
+     * @var Admin_Homepage_Dao
+     */
+    private $dao;
+    /**
+     * @var ProjectManager
+     */
+    private $project_manager;
+    /**
+     * @var UserManager
+     */
+    private $user_manager;
+    /**
+     * @var EventManager
+     */
+    private $event_manager;
+
+    public function __construct(Admin_Homepage_Dao $dao, ProjectManager $project_manager, UserManager $user_manager, EventManager $event_manager)
+    {
+        $this->dao = $dao;
+        $this->project_manager = $project_manager;
+        $this->user_manager = $user_manager;
+        $this->event_manager = $event_manager;
+    }
 
     /**
      * Is able to process a request routed by FrontRouter
@@ -38,7 +75,7 @@ class SiteHomepageController implements DispatchableWithRequest, DispatchableWit
      */
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
-        $event_manager = \EventManager::instance();
+        $event_manager = EventManager::instance();
 
         $event_manager->processEvent(Event::DISPLAYING_HOMEPAGE, array());
 
@@ -54,11 +91,54 @@ class SiteHomepageController implements DispatchableWithRequest, DispatchableWit
         $header_params['body_class'] = array('homepage');
 
         $layout->header($header_params);
-        $layout->displayStandardHomepage(
+        $this->displayStandardHomepage(
             $display_new_account_button,
             $login_url,
             $request->isSecure()
         );
         $layout->footer(array());
+    }
+
+    private function displayStandardHomepage(bool $display_new_account_button, string $login_url, bool $is_secure) : void
+    {
+        $current_user = UserManager::instance()->getCurrentUser();
+
+        $headline = $this->dao->getHeadlineByLanguage($current_user->getLocale());
+
+        $most_secure_url = '';
+        if (ForgeConfig::get('sys_https_host')) {
+            $most_secure_url = 'https://'. ForgeConfig::get('sys_https_host');
+        }
+
+        $login_presenter_builder = new User_LoginPresenterBuilder();
+        $login_csrf              = new CSRFSynchronizerToken('/account/login.php');
+        $login_presenter         = $login_presenter_builder->buildForHomepage($is_secure, $login_csrf);
+
+        $display_new_account_button = ($current_user->isAnonymous() && $display_new_account_button);
+
+        $statistics_collection_builder = new StatisticsCollectionBuilder(
+            $this->project_manager,
+            $this->user_manager,
+            $this->event_manager,
+            new SVN_LogDao()
+        );
+        $statistics_collection = $statistics_collection_builder->build();
+
+        $news_collection_builder = new NewsCollectionBuilder(new NewsDao(), $this->project_manager, $this->user_manager, \Codendi_HTMLPurifier::instance());
+        $news_collection = $news_collection_builder->build();
+
+        $templates_dir = ForgeConfig::get('codendi_dir') . '/src/templates/homepage/';
+        $renderer      = TemplateRendererFactory::build()->getRenderer($templates_dir);
+        $presenter     = new HomePagePresenter(
+            $headline,
+            $current_user,
+            $most_secure_url,
+            $login_presenter,
+            $display_new_account_button,
+            $login_url,
+            $statistics_collection,
+            $news_collection
+        );
+        $renderer->renderToPage('homepage', $presenter);
     }
 }
