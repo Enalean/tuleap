@@ -129,6 +129,17 @@ $tlp-table-cell-padding: 10px;
             > .tlp-badge-danger {
                 margin: -4px 0 -3px;
             }
+
+            .tlp-avatar-jumbo,
+            .tlp-avatar-extra-large,
+            .tlp-avatar-large,
+            .tlp-avatar,
+            .tlp-avatar-small,
+            .tlp-avatar-mini {
+                width: 20px;
+                height: 20px;
+                background: url('images/tlp-avatar-mini.png');
+            }
         }
 
         > .tlp-table-last-row > td,
@@ -163,10 +174,18 @@ $tlp-table-cell-padding: 10px;
 }
 
 .tlp-table-cell-actions-button {
-    margin: -5px 0 -3px;
+    margin: -10px 0 -5px;
 
     + .tlp-table-cell-actions-button {
-        margin: -5px 0 -3px 5px;
+        margin: -10px 0 -5px 5px;
+
+        &.tlp-switch {
+            margin: -5px 0 -5px 5px;
+        }
+    }
+
+    &.tlp-switch {
+        margin: -5px 0;
     }
 }
 

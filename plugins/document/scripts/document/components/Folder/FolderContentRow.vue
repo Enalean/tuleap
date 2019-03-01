@@ -27,7 +27,7 @@
                     v-bind:style="item_indentation"
                     v-bind:title="item.title"
                 />
-                <div class="tlp-dropdown" v-if="item_is_not_being_uploaded">
+                <div class="tlp-dropdown tlp-table-cell-actions-button" v-if="item_is_not_being_uploaded">
                     <div class="tlp-dropdown-split-button">
                         <quick-look-button
                             class="quick-look-button"
