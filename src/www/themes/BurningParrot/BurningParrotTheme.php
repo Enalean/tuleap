@@ -19,6 +19,7 @@
 namespace Tuleap\Theme\BurningParrot;
 
 use Admin_Homepage_Dao;
+use CodendiDataAccess;
 use CSRFSynchronizerToken;
 use Event;
 use EventManager;
@@ -27,6 +28,7 @@ use HTTPRequest;
 use PFUser;
 use Project;
 use ProjectManager;
+use SVN_LogDao;
 use TemplateRendererFactory;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbPresenterBuilder;
@@ -267,7 +269,8 @@ class BurningParrotTheme extends BaseLayout
         $statistics_collection_builder = new StatisticsCollectionBuilder(
             $this->project_manager,
             $this->user_manager,
-            $this->event_manager
+            $this->event_manager,
+            new SVN_LogDao()
         );
         $statistics_collection = $statistics_collection_builder->build();
 

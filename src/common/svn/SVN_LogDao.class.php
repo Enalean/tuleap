@@ -71,4 +71,26 @@ class SVN_LogDao extends DataAccessObject {
 
         return $this->retrieve($sql)->count() > 0;
     }
+
+    public function countSVNCommits()
+    {
+        $sql = "SELECT sum(svn_commits) AS nb
+                FROM group_svn_full_history";
+
+        $row = $this->retrieve($sql)->getRow();
+
+        return $row['nb'];
+    }
+
+    public function countSVNCommitsBefore(int $timestamp)
+    {
+        $timestamp = $this->da->escapeInt($timestamp);
+        $sql       = "SELECT sum(svn_commits) AS nb
+                FROM group_svn_full_history
+                WHERE UNIX_TIMESTAMP(STR_TO_DATE(day, '%Y%m%d')) >= $timestamp";
+
+        $row = $this->retrieve($sql)->getRow();
+
+        return $row['nb'];
+    }
 }
