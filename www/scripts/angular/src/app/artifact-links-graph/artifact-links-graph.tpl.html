@@ -7,9 +7,9 @@
     <div class="tlp-modal-body artifact-links-graph-modal">
         <div ng-repeat="error in modal.errors track by $index" class="tlp-alert-danger">{{ error }}</div>
         <div id="artifact-links-graph-utils">
-            <button id="focus-graph" type="button" class="tlp-button-secondary tlp-button-mini" title="{{ 'Focus graph' | translate }}"><i class="fa fa-bullseye tlp-button-icon"></i></button>
-            <button id="zoomin-graph" type="button" class="tlp-button-secondary tlp-button-mini" title="{{ 'Zoom in' | translate }}"><i class="fa fa-search-plus tlp-button-icon"></i></button>
-            <button id="zoomout-graph" type="button" class="tlp-button-secondary tlp-button-mini" title="{{ 'Zoom out' | translate }}"><i class="fa fa-search-minus tlp-button-icon"></i></button>
+            <button id="focus-graph" type="button" class="tlp-button-secondary tlp-button-outline tlp-button-mini" title="{{ 'Focus graph' | translate }}"><i class="fa fa-bullseye tlp-button-icon"></i></button>
+            <button id="zoomin-graph" type="button" class="tlp-button-secondary tlp-button-outline tlp-button-mini" title="{{ 'Zoom in' | translate }}"><i class="fa fa-search-plus tlp-button-icon"></i></button>
+            <button id="zoomout-graph" type="button" class="tlp-button-secondary tlp-button-outline tlp-button-mini" title="{{ 'Zoom out' | translate }}"><i class="fa fa-search-minus tlp-button-icon"></i></button>
         </div>
         <graph id="artifact-links-graph" class="graph" model="modal.graph"></graph>
     </div>
