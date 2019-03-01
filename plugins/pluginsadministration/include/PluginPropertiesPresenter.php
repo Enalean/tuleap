@@ -68,7 +68,7 @@ class PluginPropertiesPresenter
         $this->name                         = $name;
         $this->version                      = $version;
         $this->description                  = $description;
-        $this->scope                        = $GLOBALS['Language']->getText('plugin_pluginsadministration', 'scope_'.$scope);
+        $this->scope                        = $this->getScopeLabel((int) $scope);
         $this->is_there_enable_switch       = $is_there_enable_switch;
         $this->enable_switch                = $enable_switch;
         $this->are_there_dependencies       = $are_there_dependencies;
@@ -93,5 +93,18 @@ class PluginPropertiesPresenter
         $this->properties_pane_readme_title       = dgettext('tuleap-pluginsadministration', 'Readme');
         $this->properties_edit_web_ui_security    = dgettext('tuleap-pluginsadministration', 'Editing plugin properties through the web UI present a security risk, it is strongly advised to disable it. Check the deployment guide for more information.');
         $this->can_submit                         = ! empty($properties) || ! empty($additional_options) || $this->scope == Plugin::SCOPE_PROJECT;
+    }
+
+    private function getScopeLabel(int $scope): string
+    {
+        if ($scope === Plugin::SCOPE_PROJECT) {
+            return dgettext('tuleap-pluginsadministration', 'Projects');
+        }
+
+        if ($scope === Plugin::SCOPE_USER) {
+            return dgettext('tuleap-pluginsadministration', 'Users');
+        }
+
+        return dgettext('tuleap-pluginsadministration', 'System');
     }
 }

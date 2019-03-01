@@ -5,8 +5,6 @@
 #
 #
 #
-plugin_pluginsadministration	change_to_unavailable	Do not avail this plugin
-plugin_pluginsadministration	change_to_available	Avail this plugin
 plugin_pluginsadministration	Description	Description
 plugin_pluginsadministration	unavailable	no
 plugin_pluginsadministration	available	yes
@@ -24,9 +22,6 @@ plugin_pluginsadministration	Priority	Priority
 plugin_pluginsadministration	uninstall	Uninstall
 plugin_pluginsadministration	upload	Upload Archive
 plugin_pluginsadministration	Version	Version
-plugin_pluginsadministration	scope_0	System
-plugin_pluginsadministration	scope_1	Projects
-plugin_pluginsadministration	scope_2	Users
 plugin_pluginsadministration	error_avail_dependency	Unable to unavail $1. Please unavail the following plugins before:  $2
 plugin_pluginsadministration	error_unavail_dependency	Unable to avail $1. Please avail the following plugins before: $2
 

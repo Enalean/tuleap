@@ -45,9 +45,9 @@ class Plugin implements PFO_Plugin {
 
     protected $filesystem_path = '';
 
-    const SCOPE_SYSTEM  = 0;
-    const SCOPE_PROJECT = 1;
-    const SCOPE_USER    = 2;
+    public const SCOPE_SYSTEM  = 0;
+    public const SCOPE_PROJECT = 1;
+    public const SCOPE_USER    = 2;
 
     /**
      * @var bool True if the plugin should be disabled for all projects on installation

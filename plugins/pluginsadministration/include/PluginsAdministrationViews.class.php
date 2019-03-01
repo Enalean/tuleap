@@ -328,7 +328,7 @@ class PluginsAdministrationViews extends Views {
                 'version'                     => $plugin['version'],
                 'description'                 => $plugin['description'],
                 'flags'                       => $this->getFlag($plugin['plugin_id'], $plugin['available'], $plugin['dont_touch'], 'installed'),
-                'scope'                       => $GLOBALS['Language']->getText('plugin_pluginsadministration', 'scope_'.$plugin['scope']),
+                'scope'                       => $this->getScopeLabel((int) $plugin['scope']),
                 'plugin_id'                   => $plugin['plugin_id'],
                 'dont_touch'                  => $plugin['dont_touch'],
                 'dont_restrict'               => $plugin['dont_restrict'],
@@ -343,20 +343,31 @@ class PluginsAdministrationViews extends Views {
         return new PluginsAdministration_Presenter_InstalledPluginsPresenter($plugins);
     }
 
+    private function getScopeLabel(int $scope): string
+    {
+        if ($scope === Plugin::SCOPE_PROJECT) {
+            return dgettext('tuleap-pluginsadministration', 'Projects');
+        }
+
+        if ($scope === Plugin::SCOPE_USER) {
+            return dgettext('tuleap-pluginsadministration', 'Users');
+        }
+
+        return dgettext('tuleap-pluginsadministration', 'System');
+    }
+
     private function getFlag($plugin_id, $is_active, $dont_touch, $view)
     {
         $output  = '';
         $checked = '';
-        $state   = 'unavailable';
+        $title   = dgettext('tuleap-pluginsadministration', 'Do not avail this plugin');
         $action  = 'available';
 
         if ($is_active) {
             $checked = 'checked';
-            $state   = 'available';
+            $title   = dgettext('tuleap-pluginsadministration', 'Avail this plugin');
             $action  = 'unavailable';
         }
-
-        $title = $GLOBALS['Language']->getText('plugin_pluginsadministration', 'change_to_'.$state);
 
         if (! $dont_touch) {
             $csrf_token = new CSRFSynchronizerToken('/plugins/pluginsadministration/');

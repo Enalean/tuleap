@@ -24,6 +24,9 @@ msgstr "Autoriser"
 msgid "Allow all the projects to use this plugin"
 msgstr "Autoriser tous les projets à utiliser ce plugin"
 
+msgid "Avail this plugin"
+msgstr "Utiliser le plugin"
+
 msgid "Available plugins"
 msgstr "Plugins disponibles"
 
@@ -44,6 +47,9 @@ msgstr "Description"
 
 msgid "Details"
 msgstr "Détails"
+
+msgid "Do not avail this plugin"
+msgstr "Ne pas utiliser le plugin"
 
 msgid ""
 "Editing plugin properties through the web UI present a security risk, it is "
@@ -107,6 +113,9 @@ msgstr "Administration des Plugins"
 msgid "Project name"
 msgstr "Nom du projet"
 
+msgid "Projects"
+msgstr "Projets"
+
 msgid "Properties"
 msgstr "Propriétés"
 
@@ -137,6 +146,9 @@ msgstr "Le projet soumis peut maintenant utiliser ce plugin."
 msgid "Submitted projects will not be able to use this plugin."
 msgstr "Les projets soumis ne pourront plus utiliser ce plugin."
 
+msgid "System"
+msgstr "Système"
+
 msgid "The plugin has been successfully installed"
 msgstr "Le plugin a été installé avec succès"
 
@@ -155,6 +167,9 @@ msgstr "Désinstaller le plugin"
 
 msgid "Update properties"
 msgstr "Mettre à jour les propriétés"
+
+msgid "Users"
+msgstr "Utilisateurs"
 
 msgid "Version"
 msgstr "Version"
