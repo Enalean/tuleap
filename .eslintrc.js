@@ -1,5 +1,5 @@
 module.exports = {
-    plugins: ["you-dont-need-lodash-underscore", "cypress", "vue"],
+    plugins: ["you-dont-need-lodash-underscore", "cypress", "vue", "jasmine"],
     extends: [
         "eslint:recommended",
         "plugin:you-dont-need-lodash-underscore/all",
@@ -97,6 +97,19 @@ module.exports = {
                 affix: true,
                 // jasmine-promise-matchers,
                 installPromiseMatchers: true
+            },
+            rules: {
+                "jasmine/expect-matcher": "error",
+                "jasmine/expect-single-argument": "error",
+                "jasmine/no-assign-spyon": "error",
+                "jasmine/no-disabled-tests": "error",
+                "jasmine/no-expect-in-setup-teardown": "error",
+                "jasmine/no-focused-tests": "error",
+                "jasmine/no-global-setup": "error",
+                "jasmine/no-promise-without-done-fail": "error",
+                "jasmine/no-suite-callback-args": "error",
+                "jasmine/no-unsafe-spy": "error",
+                "jasmine/prefer-jasmine-matcher": "error"
             }
         },
         {
