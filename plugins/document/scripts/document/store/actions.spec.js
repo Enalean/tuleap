@@ -28,7 +28,8 @@ import {
     setUserPreferenciesForFolder,
     setUserPreferenciesForUI,
     unsetUnderConstructionUserPreference,
-    updateFile
+    updateFile,
+    cancelFolderUpload
 } from "./actions.js";
 import {
     restore as restoreUploadFile,
@@ -868,6 +869,55 @@ describe("Store actions", () => {
             await updateFile(context, [item, dropped_file]);
 
             expect(uploadVersion).toHaveBeenCalled();
+        });
+    });
+    describe("cancelFolderUpload", () => {
+        let folder, item, context;
+
+        beforeEach(() => {
+            folder = {
+                title: "My folder",
+                id: 123
+            };
+
+            item = {
+                parent_id: folder.id,
+                is_uploading_new_version: false,
+                uploader: {
+                    abort: jasmine.createSpy("abort")
+                }
+            };
+
+            context = {
+                commit: jasmine.createSpy("commit"),
+                state: {
+                    files_uploads_list: [item]
+                }
+            };
+        });
+
+        it("should cancel the uploads of all the files being uploaded in the given folder.", async () => {
+            await cancelFolderUpload(context, folder);
+
+            expect(item.uploader.abort).toHaveBeenCalled();
+            expect(context.commit).toHaveBeenCalledWith("removeItemFromFolderContent", item);
+            expect(context.commit).toHaveBeenCalledWith("removeFileFromUploadsList", item);
+
+            expect(context.commit).toHaveBeenCalledWith("resetFolderIsUploading", folder);
+        });
+
+        it("should cancel the new version uploads of files being updated in the given folder.", async () => {
+            item.is_uploading_new_version = true;
+
+            await cancelFolderUpload(context, folder);
+
+            expect(item.uploader.abort).toHaveBeenCalled();
+            expect(context.commit).not.toHaveBeenCalledWith("removeItemFromFolderContent", item);
+            expect(context.commit).not.toHaveBeenCalledWith("removeFileFromUploadsList", item);
+
+            expect(context.commit).toHaveBeenCalledWith("removeVersionUploadProgress", item);
+
+            expect(context.commit).toHaveBeenCalledWith("resetFolderIsUploading", folder);
         });
     });
 });
