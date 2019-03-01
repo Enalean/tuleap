@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2004-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -27,7 +27,7 @@ class AdminDelegation_ShowProjectWidget extends Widget {
 
     /**
      * Constructor
-     * 
+     *
      * @param Plugin $plugin The plugin
      */
     function __construct(Plugin $plugin) {
@@ -42,7 +42,7 @@ class AdminDelegation_ShowProjectWidget extends Widget {
      * @return String
      */
     function getTitle() {
-        return $GLOBALS['Language']->getText('plugin_admindelegation', 'widget_projects_title');
+        return dgettext('tuleap-admindelegation', 'Admin delegation: search all projects');
     }
 
     /**
@@ -53,7 +53,7 @@ class AdminDelegation_ShowProjectWidget extends Widget {
      * @return String
      */
     function getDescription() {
-        return $GLOBALS['Language']->getText('plugin_admindelegation','widget_projects_description');
+        return dgettext('tuleap-admindelegation', 'Site admins can delegate view all projects to you');
     }
 
     function getCategory() {
@@ -71,7 +71,7 @@ class AdminDelegation_ShowProjectWidget extends Widget {
             }
             $statements .= db_es($condition[$i]).' LIKE "%'.db_es($pattern).'%") AND ';
         }
-        
+
         $sql = 'SELECT SQL_CALC_FOUND_ROWS group_name, group_id, unix_group_name, access FROM groups WHERE '.$statements.' status = "A" ORDER BY register_time DESC LIMIT '.db_ei($offset).', '.db_ei($limit);
         $res = db_query($sql);
 
@@ -84,9 +84,9 @@ class AdminDelegation_ShowProjectWidget extends Widget {
 
     protected function _showAllProject() {
         $request = HTTPRequest::instance();
-        
+
         $urlParam = '';
-        
+
         $vFunc = new Valid_WhiteList('plugin_admindelegation_func', array('show_projects'));
         $vFunc->required();
         if ($request->valid($vFunc)) {
@@ -131,29 +131,29 @@ class AdminDelegation_ShowProjectWidget extends Widget {
         $html .= '<form method="post" action="">';
 
         $html .= '<div class="tlp-form-element">';
-        $html .= '<label class="tlp-label" for="plugin_admindelegation_pattern">'.$GLOBALS['Language']->getText('plugin_admindelegation', 'widget_projects_label').'</label>';
+        $html .= '<label class="tlp-label" for="plugin_admindelegation_pattern">'.dgettext('tuleap-admindelegation', 'Show all projects containing:').'</label>';
         $html .= '<input type="hidden" name="plugin_admindelegation_func" value="show_projects" />';
-        $html .= '<input type="text" name="plugin_admindelegation_pattern" class="tlp-input" placeholder="'.$GLOBALS['Language']->getText('plugin_admindelegation', 'search').'" value="'.$pattern.'" size ="40" id="plugin_admindelegation_pattern" />';
+        $html .= '<input type="text" name="plugin_admindelegation_pattern" class="tlp-input" placeholder="'.dgettext('tuleap-admindelegation', 'Search').'" value="'.$pattern.'" size ="40" id="plugin_admindelegation_pattern" />';
         $html .= '</div>';
 
         $html .= '<div class="tlp-form-element">';
         $html .= '<label for="plugin_admindelegation_group_name" class="tlp-label tlp-checkbox">' .
             '<input type="checkbox" name="criteria[]" value="group_name" id="plugin_admindelegation_group_name" ' . $selectedCriteria['group_name'] . ' />' .
-            $GLOBALS['Language']->getText('plugin_admindelegation', 'widget_projects_crit_group_name') .
+            dgettext('tuleap-admindelegation', 'Group Name') .
             '</label>';
 
         $html .= '<label for="plugin_admindelegation_unix_group_name" class="tlp-label tlp-checkbox">' .
             '<input type="checkbox" name="criteria[]" value="unix_group_name" id="plugin_admindelegation_unix_group_name" ' . $selectedCriteria['unix_group_name'] . ' />' .
-            $GLOBALS['Language']->getText('plugin_admindelegation', 'widget_projects_crit_unix_group_name') .
+            dgettext('tuleap-admindelegation', 'Short Name') .
             '</label>';
 
         $html .= '<label for="plugin_admindelegation_short_description" class="tlp-label tlp-checkbox">' .
             '<input type="checkbox" name="criteria[]" value="short_description" id="plugin_admindelegation_short_description" ' . $selectedCriteria['short_description'] . ' />' .
-            $GLOBALS['Language']->getText('plugin_admindelegation', 'widget_projects_crit_short_description') .
+            dgettext('tuleap-admindelegation', 'Description') .
             '</label>';
         $html .= '</div>';
-        $html .= '<input type="submit" class="tlp-button-primary" value="'.$GLOBALS['Language']->getText('plugin_admindelegation', 'widget_btn_search').'"/>';
-        
+        $html .= '<input type="submit" class="tlp-button-primary" value="'.dgettext('tuleap-admindelegation', 'Search').'"/>';
+
         $html .= '</form>';
 
        if ($func == 'show_projects'){
@@ -163,8 +163,8 @@ class AdminDelegation_ShowProjectWidget extends Widget {
                 $html .= '<table width="100%" class="tlp-table">';
                 $html .= '<thead>';
                 $html .= '<tr>';
-                $html .= '<th>'.$GLOBALS['Language']->getText('plugin_admindelegation', 'widget_projects_col_project_name').'</th>';
-                $html .= '<th>'.$GLOBALS['Language']->getText('plugin_admindelegation', 'widget_projects_col_project_id').'</th>';
+                $html .= '<th>'.dgettext('tuleap-admindelegation', 'Project name').'</th>';
+                $html .= '<th>'.dgettext('tuleap-admindelegation', 'Project id').'</th>';
                 $html .= '</tr>';
                 $html .= '</thead>';
 
@@ -184,29 +184,29 @@ class AdminDelegation_ShowProjectWidget extends Widget {
                 $html .= '</tbody>';
 
                 $html .= '</table>';
-           
+
                 $html .= '<div style="text-align:center" class="'. util_get_alt_row_color($i++) .'">';
                 if ($offset > 0) {
-                    $html .= '<a href="?plugin_admindelegation_func=show_projects&offset='.($offset-$limit).$urlParam.'&plugin_admindelegation_pattern='.$pattern.'">[ '.$GLOBALS['Language']->getText('plugin_admindelegation', 'widget_projects_previous').' ]</a>';
+                    $html .= '<a href="?plugin_admindelegation_func=show_projects&offset='.($offset-$limit).$urlParam.'&plugin_admindelegation_pattern='.$pattern.'">[ '.dgettext('tuleap-admindelegation', 'Previous').' ]</a>';
                     $html .= '&nbsp;';
                 }
                 if (($offset + $limit) < $res['numrows']) {
                     $html .= '&nbsp;';
-                    $html .= '<a href="?plugin_admindelegation_func=show_projects&offset='.($offset+$limit).$urlParam.'&plugin_admindelegation_pattern='.$pattern.'">[ '.$GLOBALS['Language']->getText('plugin_admindelegation', 'widget_projects_next').' ]</a>';
+                    $html .= '<a href="?plugin_admindelegation_func=show_projects&offset='.($offset+$limit).$urlParam.'&plugin_admindelegation_pattern='.$pattern.'">[ '.dgettext('tuleap-admindelegation', 'Next').' ]</a>';
                 }
                 $html .= '</div>';
                 $html .= '<div style="text-align:left" class="'. util_get_alt_row_color($i++) .'">';
                 $html .= '(*)&nbsp;'.$GLOBALS['Language']->getText('my_index', 'priv_proj');
-                $html .= '&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;'.$GLOBALS['Language']->getText('plugin_admindelegation', 'widget_projects_nb_projects_found', array($res['numrows']));
+                $html .= '&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;'.sprintf(dgettext('tuleap-admindelegation', '%1$s project(s) found'), $res['numrows']);
                 $html .= '</div>';
             }
         }
         return $html;
     }
-    
+
     /**
      * Widget content
-     * 
+     *
      * @see src/common/widget/Widget#getContent()
      * @return String
      */
@@ -216,7 +216,7 @@ class AdminDelegation_ShowProjectWidget extends Widget {
             new AdminDelegation_UserServiceDao(),
             new AdminDelegation_UserServiceLogDao()
         );
-        
+
         if ($usm->isUserGrantedForService(UserManager::instance()->getCurrentUser(), AdminDelegation_Service::SHOW_PROJECTS)) {
             $html .= $this->_showAllProject();
         }

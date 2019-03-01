@@ -112,7 +112,7 @@ $services           = $delegation_builder->buildServices();
 $presenter          = new AdminDelegationPresenter($users, $services);
 $site_admin         = new AdminPageRenderer();
 $site_admin->renderAPresenter(
-    $GLOBALS['Language']->getText('plugin_admindelegation', 'permissions_page_title'),
+    dgettext('tuleap-admindelegation', 'Admin rights delegation'),
     ForgeConfig::get('codendi_dir') . '/plugins/admindelegation/templates',
     'permission-delegation',
     $presenter
