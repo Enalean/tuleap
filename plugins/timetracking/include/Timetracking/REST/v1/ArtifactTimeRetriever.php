@@ -23,7 +23,6 @@ namespace Tuleap\Timetracking\REST\v1;
 
 use Tracker_ArtifactFactory;
 use Tuleap\REST\ProjectStatusVerificator;
-use Tuleap\REST\v1\ArtifactTimeRepresentation;
 use Tuleap\Timetracking\Admin\AdminDao;
 use Tuleap\Timetracking\Admin\TimetrackingEnabler;
 use Tuleap\Timetracking\Admin\TimetrackingUgroupDao;
