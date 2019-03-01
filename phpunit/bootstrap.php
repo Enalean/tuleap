@@ -19,6 +19,7 @@
  *
  */
 
+require_once __DIR__ . '/../../../tests/phpunit/bootstrap.php';
 require_once __DIR__ . '/../include/baselinePlugin.class.php';
 
 foreach (['Factory', 'Stub'] as $folder) {

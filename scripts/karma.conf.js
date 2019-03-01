@@ -34,9 +34,25 @@ module.exports = function(config) {
     Object.assign(base_config, {
         files: ["baseline/**/*.spec.js"],
         preprocessors: {
-            "baseline/**/*.spec.js": ["webpack"]
+            "**/*.spec.js": ["webpack"]
         }
     });
+
+    if (process.env.NODE_ENV === "coverage") {
+        Object.assign(base_config, {
+            preprocessors: {
+                ...base_config.preprocessors,
+                "**/*.vue": ["coverage"],
+                "**/!(*spec).js": ["coverage"]
+            },
+            singleRun: true,
+            reporters: ["dots", "coverage"],
+            coverageReporter: {
+                dir: "coverage/",
+                reporters: [{ type: "lcovonly", subdir: "." }, { type: "text-summary" }]
+            }
+        });
+    }
 
     config.set(base_config);
 };

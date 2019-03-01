@@ -102,12 +102,17 @@ docker-run:
 	su --login --command "make -C /build/src/plugins/baseline all RELEASE=$(RELEASE)" build
 	install -o $(UID) -g $(GID) -m 0644 /build/rpmbuild/RPMS/noarch/*.rpm /output
 
-start-sonarqube: ## Start Sonarqube server
+sonarqube-start: ## Start Sonarqube server
 	@docker-compose up -d sonarqube
 	@echo "Sonarqube is starting.... Go to http://localhost:9000"
 
-stop-sonarqube: ## Start Sonarqube server
+sonarqube-stop: ## Start Sonarqube server
 	@docker-compose down
 
-sonarscanner: ## Analyze code with Sonarqube (Sonarqube must be started)
+sonarqube-analyze: ## Run tests and analyze code with Sonarqube (Sonarqube must be started)
+	@rm -Rf phpunit-output && mkdir phpunit-output
+	@docker run --rm -v $(CURDIR)/../..:/tuleap:ro -v $(CURDIR)/phpunit-output:/phpunit-output enalean/tuleap-test-phpunit:c6-php72 scl enable php72 "cd /tuleap && src/vendor/bin/phpunit -c plugins/baseline/phpunit/phpunit.xml --log-junit /phpunit-output/junit.xml --coverage-clover /phpunit-output/clover.xml --do-not-cache-result"
+	@sed -i.bak -e "s#<file name=\"/tuleap/plugins/baseline/#<file name=\"#g" phpunit-output/clover.xml
+	@cd scripts && npm run coverage
+	@sed -i.bak -e "s#^SF:.*/tuleap/plugins/baseline/scripts#SF:scripts#g" scripts/coverage/lcov.info
 	@docker-compose run sonarscanner
