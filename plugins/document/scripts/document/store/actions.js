@@ -168,7 +168,9 @@ export async function updateFile(context, [item, dropped_file]) {
     }
 
     const updated_item = context.state.folder_content.find(({ id }) => id === item.id);
+    context.commit("addFileInUploadsList", updated_item);
     Vue.set(updated_item, "progress", null);
+    Vue.set(updated_item, "upload_error", null);
     Vue.set(updated_item, "is_uploading_new_version", true);
 
     item.uploader = uploadVersion(context, dropped_file, item, new_version);

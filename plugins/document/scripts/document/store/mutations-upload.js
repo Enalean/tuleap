@@ -38,6 +38,7 @@ function addFileInUploadsList(state, file) {
 function removeVersionUploadProgress(state, uploaded_item) {
     uploaded_item.progress = null;
     uploaded_item.is_uploading_new_version = false;
+    removeFileFromUploadsList(state, uploaded_item);
 }
 
 function removeFileFromUploadsList(state, uploaded_file) {
