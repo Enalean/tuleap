@@ -12,6 +12,20 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 2.0.6\n"
 
+#, php-format
+msgid "%1$s is now available."
+msgstr "%1$s est maintenant disponible."
+
+#, php-format
+msgid "%1$s is now unavailable. Web space and CGI remain accessible!"
+msgstr ""
+"%1$s est maintenant indisponible. L'espace web et les scripts cgi sont "
+"toujours accessibles !"
+
+#, php-format
+msgid "%1$s projects restriction"
+msgstr "Restriction de projets pour %1$s"
+
 msgid "All locally available plugins have been installed."
 msgstr "Tous les plugins disponible localement ont été installés."
 
@@ -101,6 +115,14 @@ msgstr ""
 msgid "Offers a web interface for managing plugins."
 msgstr "Interface web d'administration des plugins."
 
+#, php-format
+msgid "Plugin \"%1$s\" have been uninstalled."
+msgstr "Le plugin \"%1$s\" a été désinstallé."
+
+#, php-format
+msgid "Plugin \"%1$s\" have not been uninstalled."
+msgstr "Le plugin \"%1$s\" n'a pas été désinstallé."
+
 msgid "Plugin properties have been successfully updated"
 msgstr "Les propriétés du plugin ont été mises à jour avec succès"
 
@@ -115,6 +137,10 @@ msgstr "Nom du projet"
 
 msgid "Projects"
 msgstr "Projets"
+
+#, php-format
+msgid "Projects allowed to use %1$s"
+msgstr "Projets autorisés à utiliser %1$s"
 
 msgid "Properties"
 msgstr "Propriétés"
@@ -158,6 +184,24 @@ msgstr "Impossible d'installer ce plugin sans avoir installé au préalable :"
 
 msgid "There isn't any matching plugins."
 msgstr "Il n'y a pas de plugins correspondant à votre filtre."
+
+#, php-format
+msgid "This section allows to define which projects will be able to use %1$s."
+msgstr ""
+"Cette section permet de définir les projets qui pourront utiliser ou non "
+"%1$s."
+
+#, php-format
+msgid "Unable to avail %1$s. Please avail the following plugins before: %2$s"
+msgstr ""
+"Impossible d'activer %1$s. Veuillez activer les plugins suivants : %2$s"
+
+#, php-format
+msgid ""
+"Unable to unavail %1$s. Please unavail the following plugins before:  %2$s"
+msgstr ""
+"Impossible de désactiver %1$s. Veuillez désactiver les plugins suivants : "
+"%2$s"
 
 msgid "Uninstall"
 msgstr "Désinstaller"

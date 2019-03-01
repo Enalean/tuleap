@@ -54,17 +54,13 @@ class PluginsAdministrationActions extends Actions
             $plugin_manager = $this->plugin_manager;
             $dependencies = $this->dependency_solver->getUnmetAvailableDependencies($plugin_data['plugin']);
             if ($dependencies) {
-                $error_msg = $GLOBALS['Language']->getText(
-                    'plugin_pluginsadministration',
-                    'error_unavail_dependency',
-                    array($plugin_data['plugin']->getName(), implode(', ', $dependencies))
-                );
+                $error_msg = sprintf(dgettext('tuleap-pluginsadministration', 'Unable to avail %1$s. Please avail the following plugins before: %2$s'), $plugin_data['plugin']->getName(), implode(', ', $dependencies));
                 $GLOBALS['Response']->addFeedback('error', $error_msg);
                 return;
             }
             if (!$plugin_manager->isPluginAvailable($plugin_data['plugin'])) {
                 $plugin_manager->availablePlugin($plugin_data['plugin']);
-                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_pluginsadministration', 'feedback_available', array($plugin_data['name'])));
+                $GLOBALS['Response']->addFeedback('info', sprintf(dgettext('tuleap-pluginsadministration', '%1$s is now available.'), $plugin_data['name']));
             }
         }
 
@@ -105,17 +101,13 @@ class PluginsAdministrationActions extends Actions
             $plugin_manager = $this->plugin_manager;
             $dependencies = $this->dependency_solver->getAvailableDependencies($plugin_data['plugin']);
             if ($dependencies) {
-                $error_msg = $GLOBALS['Language']->getText(
-                    'plugin_pluginsadministration',
-                    'error_avail_dependency',
-                    array($plugin_data['plugin']->getName(), implode(', ', $dependencies))
-                );
+                $error_msg = sprintf(dgettext('tuleap-pluginsadministration', 'Unable to unavail %1$s. Please unavail the following plugins before:  %2$s'), $plugin_data['plugin']->getName(), implode(', ', $dependencies));
                 $GLOBALS['Response']->addFeedback('error', $error_msg);
                 return;
             }
             if ($plugin_manager->isPluginAvailable($plugin_data['plugin'])) {
                 $plugin_manager->unavailablePlugin($plugin_data['plugin']);
-                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_pluginsadministration', 'feedback_unavailable', array($plugin_data['name'])));
+                $GLOBALS['Response']->addFeedback('info', sprintf(dgettext('tuleap-pluginsadministration', '%1$s is now unavailable. Web space and CGI remain accessible!'), $plugin_data['name']));
             }
         }
 
@@ -133,9 +125,9 @@ class PluginsAdministrationActions extends Actions
             $plugin_manager = $this->plugin_manager;
             $uninstalled = $plugin_manager->uninstallPlugin($plugin['plugin']);
             if (!$uninstalled) {
-                 $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_pluginsadministration', 'plugin_not_uninstalled', array($plugin['name'])));
+                 $GLOBALS['Response']->addFeedback(Feedback::ERROR, sprintf(dgettext('tuleap-pluginsadministration', 'Plugin "%1$s" have not been uninstalled.'), $plugin['name']));
             } else {
-                 $GLOBALS['Response']->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('plugin_pluginsadministration', 'plugin_uninstalled', array($plugin['name'])));
+                 $GLOBALS['Response']->addFeedback(Feedback::INFO, sprintf(dgettext('tuleap-pluginsadministration', 'Plugin "%1$s" have been uninstalled.'), $plugin['name']));
             }
         }
     }
