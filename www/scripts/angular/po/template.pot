@@ -72,10 +72,6 @@ msgstr ""
 msgid "Campaign label"
 msgstr ""
 
-#: src/app/campaign/campaign-list.tpl.html
-msgid "Campaign label or status..."
-msgstr ""
-
 #: src/app/campaign/campaign-controller.js
 msgid "Campaigns"
 msgstr ""
@@ -119,10 +115,6 @@ msgstr ""
 
 #: src/app/artifact-links-graph/artifact-links-graph.tpl.html
 msgid "Dependencies graph of &#34;{{ modal.title }}&#34;"
-msgstr ""
-
-#: src/app/campaign/campaign-list.tpl.html
-msgid "Details"
 msgstr ""
 
 #: src/app/execution/execution-list-header/execution-list-header.tpl.html
@@ -191,6 +183,10 @@ msgstr ""
 
 #: src/app/campaign/campaign-edit.tpl.html
 msgid "Job URL"
+msgstr ""
+
+#: src/app/campaign/campaign-list.tpl.html
+msgid "Label or status..."
 msgstr ""
 
 #: src/app/execution/execution-list-header/execution-list-header.tpl.html

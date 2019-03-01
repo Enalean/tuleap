@@ -17,81 +17,116 @@
 }
 
 .test-campaigns-search {
-    flex: 0 0 25%;
+    flex: 0 1 auto;
+    width: auto;
 }
 
-.tlp-pane-container {
-    overflow-y: auto;
+.test-campaign-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 
-    &.test-campaign-title-container {
-        flex: 0 0 25%;
-        justify-content: center;
-
-        .test-campaign-title {
-            margin: 0;
-            font-size: 22px;
-        }
+    @media screen and (max-width: 900px) {
+        flex-direction: column;
+        align-items: flex-start;
     }
 }
 
-.test-campaign-progression-container {
-    flex: 1 1 auto;
-    justify-content: center;
+.test-campaign-title {
+    margin: 0;
+    color: $tlp-theme-color;
+    font-size: 16px;
+    line-height: 20px;
 
-    > .tlp-pane-section {
-        display: table;
+    @media screen and (max-width: 900px) {
+        margin: 0 0 $tlp-spacing;
+    }
+}
+
+.test-campaign-progressions {
+    display: flex;
+    flex: 0 0 auto;
+    width: 50%;
+
+    @media screen and (max-width: 900px) {
         width: 100%;
     }
-}
 
-.test-campaign-progression {
-    display: table-row;
-    text-align: center;
-    border-radius: 15px;
-    font-size: 13px;
-    font-weight: 400;
-    letter-spacing: .5px;
+    > .test-campaign-progression {
+        margin: -$tlp-half-spacing 1px 0;
 
-    > div:first-child {
-        border-radius: 10px 0 0 10px;
-    }
-    > div:last-child {
-        border-radius: 0 10px 10px 0;
-    }
-    > div:only-child {
-        border-radius: 10px;
-    }
+        .test-campaign-progression-value {
+            margin: 0 0 3px;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: .5px;
+            text-align: center;
+        }
 
+        .test-campaign-progression-bar {
+            height: 6px;
+        }
 
-    > .tests-passed {
-        display: table-cell;
-        padding: 2px;
-        background: $tlp-ui-success;
-        color: $tlp-ui-white;
-    }
-    > .tests-failed {
-        display: table-cell;
-        padding: 2px;
-        background: $tlp-ui-danger;
-        color: $tlp-ui-white;
-    }
-    > .tests-blocked {
-        display: table-cell;
-        padding: 2px;
-        background: $tlp-ui-info;
-        color: $tlp-ui-white;
-    }
-    > .tests-notrun {
-        display: table-cell;
-        padding: 2px;
-        background: $tlp-ui-dimmed;
-        color: $tlp-ui-white;
-    }
-}
+        &:first-child > .test-campaign-progression-bar {
+            border-radius: 5px 0 0 5px;
+        }
 
-.test-campaign-actions {
-    flex: 0 0 auto;
-    justify-content: center;
+        &:last-child > .test-campaign-progression-bar {
+            border-radius: 0 5px 5px 0;
+        }
+
+        &:only-child > .test-campaign-progression-bar {
+            border-radius: 5px;
+        }
+
+        &.passed {
+            flex: 1 1 auto;
+
+            > .test-campaign-progression-value {
+                color: $tlp-ui-success;
+            }
+
+            > .test-campaign-progression-bar {
+                background-image: linear-gradient(45deg, $tlp-ui-success, mix($tlp-ui-success, $tlp-ui-white, 80%));
+            }
+        }
+
+        &.failed {
+            flex: 0 0 auto;
+
+            > .test-campaign-progression-value {
+                color: $tlp-ui-danger;
+            }
+
+            > .test-campaign-progression-bar {
+                background-image: linear-gradient(45deg, $tlp-ui-danger, mix($tlp-ui-danger, $tlp-ui-white, 80%));
+            }
+        }
+
+        &.blocked {
+            flex: 0 0 auto;
+
+            > .test-campaign-progression-value {
+                color: $tlp-ui-info;
+            }
+
+            > .test-campaign-progression-bar {
+                background-image: linear-gradient(45deg, $tlp-ui-info, mix($tlp-ui-info, $tlp-ui-white, 80%));
+            }
+        }
+
+        &.notrun {
+            flex: 0 0 auto;
+
+            > .test-campaign-progression-value {
+                color: $tlp-ui-dimmed;
+            }
+
+            > .test-campaign-progression-bar {
+                background-image: linear-gradient(45deg, $tlp-ui-border-dark, mix($tlp-ui-border-dark, $tlp-ui-white, 80%));
+            }
+        }
+    }
 }
 
 .no-campaign-info {
@@ -102,6 +137,7 @@
 .load-closed-campaigns {
     display: flex;
     justify-content: center;
+    font-size: 14px;
 }
 
 .edit-campaign-label-input,
