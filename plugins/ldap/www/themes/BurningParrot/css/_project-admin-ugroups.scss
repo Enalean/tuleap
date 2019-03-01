@@ -36,9 +36,18 @@
     }
 }
 
+.project-admin-ugroup-ldap-binding-modal-preview-add-alert::before {
+    content: '\f067'; // fa-plus
+}
+
+.project-admin-ugroup-ldap-binding-modal-preview-remove-alert::before {
+    content: '\f014'; // fa-trash-o
+}
+
 // scss-lint:disable QualifyingElement
 ul.project-admin-ugroup-ldap-binding-modal-preview-list {
-    margin: $tlp-spacing 0 0;
+    margin: $tlp-half-spacing 0 0;
+    padding: 0;
     list-style: none;
 }
 
