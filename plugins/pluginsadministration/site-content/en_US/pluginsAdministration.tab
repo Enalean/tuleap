@@ -2,129 +2,35 @@
 # Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 # This file is licensed under the GNU General Public License version 2. See the file COPYING.
 #
-plugin_pluginsadministration	descriptor_description	Offers a web interface for managing plugins.
-plugin_pluginsadministration	descriptor_name	Plugins Administration
 #
 #
 #
-plugin_pluginsadministration	installed_tab_label	Installed plugins
-plugin_pluginsadministration	not_installed_tab_label	Available plugins
-plugin_pluginsadministration	installed_pane_label	Plugins
-plugin_pluginsadministration	not_installed_pane_label	Plugins
 plugin_pluginsadministration	change_to_unavailable	Do not avail this plugin
 plugin_pluginsadministration	change_to_available	Avail this plugin
 plugin_pluginsadministration	Description	Description
-plugin_pluginsadministration	discard_changes	Discard changes ?
 plugin_pluginsadministration	unavailable	no
 plugin_pluginsadministration	available	yes
-plugin_pluginsadministration	feedback_installed	The plugin has been successfully installed
 plugin_pluginsadministration	feedback_available	$1 is now available.
 plugin_pluginsadministration	feedback_unavailable	$1 is now unavailable. Web space and CGI remain accessible!
-plugin_pluginsadministration	Hook:	Hook:
-plugin_pluginsadministration	hook_asterisk	* : hooks listened to by several plugins are followed by an asterisk.
-plugin_pluginsadministration	install_plugin	Install this Plugin
 plugin_pluginsadministration	install	Install a Plugin
-plugin_pluginsadministration	install_label	Install
 plugin_pluginsadministration	menu	Plugins
 plugin_pluginsadministration	not_yet_installed	Not Yet Installed Plugins
-plugin_pluginsadministration	plugin_table_head	Name
-plugin_pluginsadministration	version_table_head	Version
-plugin_pluginsadministration	description_table_head	Description
 plugin_pluginsadministration	Plugins	Plugins
 plugin_pluginsadministration	plugins	Installed Plugins
 plugin_pluginsadministration	plugin_uninstalled	Plugin "$1" have been uninstalled.
 plugin_pluginsadministration	plugin_not_uninstalled	Plugin "$1" have not been uninstalled.
 plugin_pluginsadministration	priorities	Priorities between plugins
 plugin_pluginsadministration	Priority	Priority
-plugin_pluginsadministration	properties_icon_label	Details
-plugin_pluginsadministration	select_hook	Select hook:
-plugin_pluginsadministration	select_install	Select the plugin you want to install. please read the corresponding <em>readme</em> file before processing.
-plugin_pluginsadministration	Available?	Enabled?
-plugin_pluginsadministration	title	Plugins
-plugin_pluginsadministration	filter_label	Filter on name or description
-plugin_pluginsadministration	there_is_no_plugin	<em>There is no plugin installed yet.</em>
 plugin_pluginsadministration	uninstall	Uninstall
-plugin_pluginsadministration	uninstall_plugin_icon_label	Uninstall
 plugin_pluginsadministration	upload	Upload Archive
-plugin_pluginsadministration	update_priorities	Update Priorities
 plugin_pluginsadministration	Version	Version
-plugin_pluginsadministration	Scope	Scope
 plugin_pluginsadministration	scope_0	System
 plugin_pluginsadministration	scope_1	Projects
 plugin_pluginsadministration	scope_2	Users
 plugin_pluginsadministration	error_avail_dependency	Unable to unavail $1. Please unavail the following plugins before:  $2
 plugin_pluginsadministration	error_unavail_dependency	Unable to avail $1. Please avail the following plugins before: $2
-plugin_pluginsadministration	error_install_dependency	There are unmet dependencies that prevent you from installing these plugins:
-plugin_pluginsadministration	error_uninstall_dependency	You can't uninstall this plugin since at least another plugin depends on it:
-plugin_pluginsadministration	manage_restriction_by_project_icon_label	Restrict
-plugin_pluginsadministration	cant_restrict	Can't restrict this plugin because of its system scope
-plugin_pluginsadministration	no_local_plugins	All locally available plugins have been installed.
-plugin_pluginsadministration	filter_empty_state	There isn't any matching plugins.
-plugin_pluginsadministration	install_modal_title	Install plugin
-plugin_pluginsadministration	install_modal_content	Your about to install a plugin. Please confirm your action.
-plugin_pluginsadministration	install_modal_cancel	Cancel
-plugin_pluginsadministration	install_modal_submit	Install
-plugin_pluginsadministration	uninstall_modal_title	Uninstall plugin
-plugin_pluginsadministration	uninstall_modal_content	Your about to uninstall a plugin. Please note the following points and confirm your action.
-plugin_pluginsadministration	uninstall_modal_cancel	Cancel
-plugin_pluginsadministration	uninstall_modal_submit	Uninstall
-plugin_pluginsadministration	uninstall_modal_list_sql	script <code>db/uninstall.sql</code> of this plugin will be launched
-plugin_pluginsadministration	uninstall_modal_list_directory	directory of this plugin will not be deleted
-plugin_pluginsadministration	uninstall_modal_list_web_space	web space and cgi scripts of this plugin will remain accessible unless you move or remove corresponding directory
 
-plugin_pluginsadministration	properties_updated	Plugin properties have been successfully updated
-plugin_pluginsadministration	properties_pane_title	Properties
-plugin_pluginsadministration	properties_pane_name	Name
-plugin_pluginsadministration	properties_pane_version	Version
-plugin_pluginsadministration	properties_pane_description	Description
-plugin_pluginsadministration	properties_pane_scope	Scope
-plugin_pluginsadministration	properties_pane_dependencies	Dependencies
-plugin_pluginsadministration	properties_pane_enabled	Enabled?
-plugin_pluginsadministration	properties_pane_update_label	Update properties
-plugin_pluginsadministration	properties_pane_empty_dependencies	No dependencies
-plugin_pluginsadministration	properties_pane_readme_title	Readme
 
 plugin_pluginsadministration	plugin_allowed_project_title	$1 projects restriction
 plugin_pluginsadministration	plugin_allowed_project_pane_title	Projects allowed to use $1
 plugin_pluginsadministration	plugin_allowed_project_pane_information	This section allows to define which projects will be able to use $1.
-plugin_pluginsadministration	plugin_allowed_project_allow_all	Allow all the projects to use this plugin
-plugin_pluginsadministration	plugin_allowed_project_list	List of allowed projects
-plugin_pluginsadministration	plugin_allowed_project_list_allow_placeholder	Project name
-plugin_pluginsadministration	plugin_allowed_project_list_allow_project	Allow access
-plugin_pluginsadministration	plugin_allowed_project_list_revoke_projects	Revoke access
-plugin_pluginsadministration	plugin_allowed_project_list_filter_placeholder	Filter on project id or name
-plugin_pluginsadministration	plugin_allowed_project_list_id	Id
-plugin_pluginsadministration	plugin_allowed_project_list_name	Name
-plugin_pluginsadministration	plugin_allowed_project_list_empty	Currently, there are no projects allowed to use this plugin.
-plugin_pluginsadministration	plugin_allowed_project_unset_restricted	All projects can now use this plugin.
-plugin_pluginsadministration	plugin_allowed_project_set_restricted	Now, only the allowed projects are able to use this plugin.
-plugin_pluginsadministration	plugin_allowed_project_restricted_error	Something went wrong during the update of the plugin restriction status.
-plugin_pluginsadministration	plugin_allowed_project_allow_project	Submitted project can now use this plugin.
-plugin_pluginsadministration	plugin_allowed_project_revoke_projects	Submitted projects will not be able to use this plugin.
-plugin_pluginsadministration	plugin_allowed_project_update_project_list_error	Something went wrong during the update of the allowed project list.
-plugin_pluginsadministration	plugin_allowed_project_revoke_title	Warning
-plugin_pluginsadministration	plugin_allowed_project_revoke_description	You are about to revoke the access to this plugin to one or several projects. Are you sure you want to do this?
-plugin_pluginsadministration	plugin_allowed_project_revoke_yes	Yes, revoke access
-plugin_pluginsadministration	plugin_allowed_project_revoke_no	No
-
-#
-#
-#
-plugin_pluginsadministration_properties	display_priorities	Display priorities of hook $1
-plugin_pluginsadministration_properties	properties_addproject	Add project:
-plugin_pluginsadministration_properties	properties_av_for_prj	Available for all projects
-plugin_pluginsadministration_properties	properties_delproject	Remove project:
-plugin_pluginsadministration_properties	properties_dependencies:	Dependencies:
-plugin_pluginsadministration_properties	properties_description:	Description:
-plugin_pluginsadministration_properties	properties_is_av_for_prj	This plugin available for all projects:
-plugin_pluginsadministration_properties	properties_hooks:	Listened Hooks:
-plugin_pluginsadministration_properties	properties_name:	Name:
-plugin_pluginsadministration_properties	properties_no	No
-plugin_pluginsadministration_properties	properties_no_prj_for_plugin	No project can use this plugin
-plugin_pluginsadministration_properties	properties_plugin	Properties of plugin "$1"
-plugin_pluginsadministration_properties	properties_projects:	Projects:
-plugin_pluginsadministration_properties	properties_scope:	Scope:
-plugin_pluginsadministration_properties	properties_version:	Version:
-plugin_pluginsadministration_properties	properties_yes	Yes
-plugin_pluginsadministration_properties	return	<< Return to plugins
-plugin_pluginsadministration_properties	edit_web_ui_security	Editing plugin properties through the web UI present a security risk, it is strongly advised to disable it. Check the deployment guide for more information.

@@ -43,22 +43,22 @@ class AvailablePluginsPresenter
     public function __construct(array $plugins, \CSRFSynchronizerToken $csrf_token)
     {
         $this->plugins                  = $plugins;
-        $this->title                    = $GLOBALS['Language']->getText('plugin_pluginsadministration', 'title');
-        $this->installed_tab_label      = $GLOBALS['Language']->getText('plugin_pluginsadministration', 'installed_tab_label');
-        $this->not_installed_tab_label  = $GLOBALS['Language']->getText('plugin_pluginsadministration', 'not_installed_tab_label');
-        $this->not_installed_pane_label = $GLOBALS['Language']->getText('plugin_pluginsadministration', 'not_installed_pane_label');
-        $this->plugin_table_head        = $GLOBALS['Language']->getText('plugin_pluginsadministration', 'plugin_table_head');
-        $this->version_table_head       = $GLOBALS['Language']->getText('plugin_pluginsadministration', 'version_table_head');
-        $this->description_table_head   = $GLOBALS['Language']->getText('plugin_pluginsadministration', 'description_table_head');
-        $this->install_label            = $GLOBALS['Language']->getText('plugin_pluginsadministration', 'install_label');
-        $this->install_modal_title      = $GLOBALS['Language']->getText('plugin_pluginsadministration', 'install_modal_title');
-        $this->install_modal_content    = $GLOBALS['Language']->getText('plugin_pluginsadministration', 'install_modal_content');
-        $this->error_install_dependency = $GLOBALS['Language']->getText('plugin_pluginsadministration', 'error_install_dependency');
-        $this->install_modal_submit     = $GLOBALS['Language']->getText('plugin_pluginsadministration', 'install_modal_submit');
-        $this->install_modal_cancel     = $GLOBALS['Language']->getText('plugin_pluginsadministration', 'install_modal_cancel');
-        $this->filter_label             = $GLOBALS['Language']->getText('plugin_pluginsadministration', 'filter_label');
-        $this->no_local_plugins         = $GLOBALS['Language']->getText('plugin_pluginsadministration', 'no_local_plugins');
-        $this->filter_empty_state       = $GLOBALS['Language']->getText('plugin_pluginsadministration', 'filter_empty_state');
+        $this->title                    = dgettext('tuleap-pluginsadministration', 'Plugins');
+        $this->installed_tab_label      = dgettext('tuleap-pluginsadministration', 'Installed plugins');
+        $this->not_installed_tab_label  = dgettext('tuleap-pluginsadministration', 'Available plugins');
+        $this->not_installed_pane_label = dgettext('tuleap-pluginsadministration', 'Plugins');
+        $this->plugin_table_head        = dgettext('tuleap-pluginsadministration', 'Name');
+        $this->version_table_head       = dgettext('tuleap-pluginsadministration', 'Version');
+        $this->description_table_head   = dgettext('tuleap-pluginsadministration', 'Description');
+        $this->install_label            = dgettext('tuleap-pluginsadministration', 'Install');
+        $this->install_modal_title      = dgettext('tuleap-pluginsadministration', 'Install plugin');
+        $this->install_modal_content    = dgettext('tuleap-pluginsadministration', 'Your about to install a plugin. Please confirm your action.');
+        $this->error_install_dependency = dgettext('tuleap-pluginsadministration', 'There are unmet dependencies that prevent you from installing these plugins:');
+        $this->install_modal_submit     = dgettext('tuleap-pluginsadministration', 'Install');
+        $this->install_modal_cancel     = dgettext('tuleap-pluginsadministration', 'Cancel');
+        $this->filter_label             = dgettext('tuleap-pluginsadministration', 'Filter on name or description');
+        $this->no_local_plugins         = dgettext('tuleap-pluginsadministration', 'All locally available plugins have been installed.');
+        $this->filter_empty_state       = dgettext('tuleap-pluginsadministration', 'There isn\'t any matching plugins.');
 
         $this->sortPlugins();
         $this->csrf_token = $csrf_token;
