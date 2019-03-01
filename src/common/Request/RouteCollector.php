@@ -263,9 +263,31 @@ class RouteCollector
         return new LatestNewsController(new NewsDao(), Codendi_HTMLPurifier::instance());
     }
 
+    public function getLegacyController(string $path)
+    {
+        return new LegacyRoutesController($path);
+    }
+
+    private function getLegacyControllerHandler(string $path) : array
+    {
+        return [
+            'core' => true,
+            'handler' => 'getLegacyController',
+            'params' => [$path]
+        ];
+    }
+
     public function collect(FastRoute\RouteCollector $r)
     {
         $r->get('/', [__CLASS__, 'getSlash']);
+
+        $r->get('/contact.php', $this->getLegacyControllerHandler(__DIR__.'/../../core/contact.php'));
+        $r->addRoute(['GET', 'POST'], '/goto[.php]', $this->getLegacyControllerHandler(__DIR__.'/../../core/goto.php'));
+        $r->get('/info.php', $this->getLegacyControllerHandler(__DIR__.'/../../core/info.php'));
+        $r->get('/robots.txt', $this->getLegacyControllerHandler(__DIR__.'/../../core/robots.php'));
+        $r->post('/make_links.php', $this->getLegacyControllerHandler(__DIR__.'/../../core/make_links.php'));
+        $r->post('/sparklines.php', $this->getLegacyControllerHandler(__DIR__.'/../../core/sparklines.php'));
+        $r->get('/toggler.php', $this->getLegacyControllerHandler(__DIR__.'/../../core/toggler.php'));
 
         $r->addGroup('/project/{id:\d+}/admin', function (FastRoute\RouteCollector $r) {
             $r->get('/categories', [__CLASS__, 'getProjectAdminIndexCategories']);

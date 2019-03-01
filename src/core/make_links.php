@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -17,6 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 /**
  * Simple API script available through HTTP
@@ -26,9 +27,6 @@
  *    text     : HTML input text
  * output: HTML text with embedded references (links to goto script)
 */
-require_once('pre.php');
-require_once('common/include/HTTPRequest.class.php');
-require_once('common/reference/ReferenceManager.class.php');
 
 header('Content-type: text/html');
 

@@ -88,8 +88,21 @@ class FrontRouter
                         $handler = $route_info[1]();
                         $this->routeHandler($request, $handler, $route_info);
                     } else {
-                        if (is_array($route_info[1]) && isset($route_info[1]['plugin']) && isset($route_info[1]['handler'])) {
-                            $this->routeHandler($request, $this->getPluginHandler($route_info[1]['plugin'], $route_info[1]['handler']), $route_info);
+                        if (is_array($route_info[1])) {
+                            if (isset($route_info[1]['core'])) {
+                                $handler_method = $route_info[1]['handler'];
+                                $this->routeHandler(
+                                    $request,
+                                    $this->route_collector->$handler_method(...$route_info[1]['params']),
+                                    $route_info
+                                );
+                            } elseif (isset($route_info[1]['plugin']) && isset($route_info[1]['handler'])) {
+                                $this->routeHandler(
+                                    $request,
+                                    $this->getPluginHandler($route_info[1]['plugin'], $route_info[1]['handler']),
+                                    $route_info
+                                );
+                            }
                         }
                     }
                     break;

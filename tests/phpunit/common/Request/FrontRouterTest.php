@@ -296,6 +296,25 @@ class FrontRouterTest extends TestCase
         $this->router->route($this->request);
     }
 
+    public function testItRoutesToRouteCollectorWithParams()
+    {
+        $url_verification = Mockery::mock(\URLVerification::class);
+        $url_verification->shouldReceive('assertValidUrl');
+        $this->url_verification_factory->shouldReceive('getURLVerification')->andReturn($url_verification);
+
+        $this->route_collector->shouldReceive('myHandler')->with('some_param1', 'some_param2')->andReturns(Mockery::spy(DispatchableWithRequest::class));
+
+        $this->route_collector->shouldReceive('collect')->with(Mockery::on(function (FastRoute\RouteCollector $r) {
+            $r->get('/stuff', [ 'core' => true, 'handler' => 'myHandler', 'params' => ['some_param1', 'some_param2']]);
+            return true;
+        }));
+
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+        $_SERVER['REQUEST_URI']    = '/stuff';
+
+        $this->router->route($this->request);
+    }
+
     /**
      * @testWith [200]
      *           [500]

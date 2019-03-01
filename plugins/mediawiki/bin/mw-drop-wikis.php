@@ -27,8 +27,7 @@ if ($argc < 2 ) {
 	exit (0);
 }
 
-require_once dirname(__FILE__) . '/../../../www/env.inc.php';
-require_once $gfcommon.'include/pre.php';
+require_once __DIR__.'/../../../src/www/include/pre.php';
 
 $projects_path = forge_get_config('projects_path', 'mediawiki');
 

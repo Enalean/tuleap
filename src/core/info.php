@@ -1,7 +1,6 @@
 <?php
 /**
- * Copyright (c) 1999-2000 The SourceForge Crew
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,13 +16,9 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-require_once('pre.php');
+HTTPRequest::instance()->checkUserIsSuperUser();
 
-$HTML->header(array(
-    'title'=>$Language->getText('contact', 'title'),
-    'main_classes' => array('tlp-framed')
-));
-$HTML->displayContactPage();
-$HTML->footer(array());
+phpinfo();

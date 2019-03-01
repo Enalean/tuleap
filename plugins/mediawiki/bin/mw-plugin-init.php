@@ -25,8 +25,7 @@
    mediawiki plugin.
   */
 
-require_once dirname(__FILE__) . '/../../../www/env.inc.php';
-require_once $gfcommon.'include/pre.php';
+require_once __DIR__.'/../../../src/www/include/pre.php';
 
 $echo_links = $argc >= 1;
 

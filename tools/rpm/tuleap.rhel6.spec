@@ -1000,8 +1000,7 @@ fi
 %{APP_DIR}/src/utils
 # Split src/www for src/www/themes
 %dir %{APP_DIR}/src/www
-%{APP_DIR}/src/www/*.php
-%{APP_DIR}/src/www/.htaccess
+%{APP_DIR}/src/www/index.php
 %{APP_DIR}/src/www/account
 %{APP_DIR}/src/www/admin
 # API Explorer is not packaged with the core
@@ -1017,7 +1016,6 @@ fi
 %{APP_DIR}/src/www/assets/statistics
 %{APP_DIR}/src/www/assets/projectlinks
 %{APP_DIR}/src/www/assets/ckeditor-*
-%{APP_DIR}/src/www/codendi.css
 %{APP_DIR}/src/www/cvs
 %{APP_DIR}/src/www/favicon.ico
 %{APP_DIR}/src/www/file
