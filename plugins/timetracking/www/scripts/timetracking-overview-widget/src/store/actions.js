@@ -59,3 +59,18 @@ export async function loadTimes(context) {
     context.commit("setTrackersTimes", times);
     context.commit("setIsLoading", false);
 }
+
+export async function loadTimesWithNewParameters(context) {
+    context.commit("setIsLoading", true);
+
+    const times = await getTimesFromReport(
+        context.state.report_id,
+        [],
+        context.state.start_date,
+        context.state.end_date
+    );
+
+    context.commit("toggleReadingMode");
+    context.commit("setTrackersTimes", times);
+    context.commit("setIsLoading", false);
+}

@@ -40,5 +40,17 @@ export default {
 
     setReportId(state, report_id) {
         state.report_id = report_id;
+    },
+
+    toggleReadingMode(state) {
+        state.reading_mode = !state.reading_mode;
+    },
+
+    setStartDate(state, start_date) {
+        state.start_date = start_date;
+    },
+
+    setEndDate(state, end_date) {
+        state.end_date = end_date;
     }
 };

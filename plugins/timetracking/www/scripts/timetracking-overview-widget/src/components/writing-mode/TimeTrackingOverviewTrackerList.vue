@@ -21,41 +21,30 @@
   -  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -
   -->
-
 <template>
-    <div class="timetracking-reading-mode"
-         v-on:click="toggleReadingMode()"
-    >
-        <div class="timetracking-reading-mode-dates">
-            <div class="tlp-property timetracking-reading-date">
-                <label class="tlp-label" v-translate>
-                    From
-                </label>
-                <span>{{ start_date }}</span>
-            </div>
-            <div class="tlp-property timetracking-reading-date">
-                <label class="tlp-label" v-translate>
-                    To
-                </label>
-                <span>{{ end_date }}</span>
-            </div>
-        </div>
-        <time-tracking-overview-tracker-list/>
+    <div class="timetracking-overview-form-trackers-selected">
+        <span
+            class="tlp-badge-primary tlp-badge-outline timetracking-overview-selected-tracker"
+            v-for="tracker of selected_trackers"
+            v-bind:key="tracker.id"
+        >
+            <span>
+                {{ tracker.label }}
+            </span>
+            <span>
+                <i class="fa fa-archive timetracking-archive"></i>{{ tracker.project.label }}
+            </span>
+        </span>
     </div>
 </template>
 
 <script>
-import { mapMutations, mapState } from "vuex";
-import TimeTrackingOverviewTrackerList from "./TimeTrackingOverviewTrackerList.vue";
+import { mapState } from "vuex";
 
 export default {
-    name: "TimeTrackingOverviewReadingMode",
-    components: { TimeTrackingOverviewTrackerList },
+    name: "TrackerListWritingMode",
     computed: {
-        ...mapState(["start_date", "end_date"])
-    },
-    methods: {
-        ...mapMutations(["toggleReadingMode"])
+        ...mapState(["selected_trackers"])
     }
 };
 </script>

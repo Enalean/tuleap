@@ -19,19 +19,29 @@
 
 <template>
     <div class="cross-timetracking-widget">
-        <time-tracking-overview-reading-mode/>
+        <time-tracking-overview-reading-mode v-if="reading_mode"/>
+        <time-tracking-overview-writing-mode v-else/>
         <time-tracking-overview-table/>
     </div>
 </template>
 
 <script>
+import { mapState } from "vuex";
 import TimeTrackingOverviewReadingMode from "./reading-mode/TimeTrackingOverviewReadingMode.vue";
+import TimeTrackingOverviewWritingMode from "./writing-mode/TimeTrackingOverviewWritingMode.vue";
 import TimeTrackingOverviewTable from "./TimeTrackingOverviewTable.vue";
 export default {
     name: "TimeTrackingOverview",
-    components: { TimeTrackingOverviewTable, TimeTrackingOverviewReadingMode },
+    components: {
+        TimeTrackingOverviewTable,
+        TimeTrackingOverviewReadingMode,
+        TimeTrackingOverviewWritingMode
+    },
     props: {
         reportId: String
+    },
+    computed: {
+        ...mapState(["reading_mode"])
     },
     mounted() {
         this.$store.commit("setReportId", this.reportId);
