@@ -24,7 +24,6 @@
 
 namespace Tuleap\Timetracking\REST\v1;
 
-use DateTime;
 use Luracast\Restler\RestException;
 use Tracker_ArtifactFactory;
 use Tuleap\REST\AuthenticatedResource;
@@ -101,7 +100,7 @@ class TimetrackingResource extends AuthenticatedResource
      * @access protected
      *
      * @param string $query A query
-     * @return array {@type ArtifactTimeRepresentation}
+     * @return array {@type Tuleap\Timetracking\REST\v1\ArtifactTimeRepresentation}
      *
      * @throws RestException 401
      * @throws RestException 403

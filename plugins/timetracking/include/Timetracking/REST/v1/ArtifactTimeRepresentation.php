@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,7 +19,7 @@
  *
  */
 
-namespace Tuleap\REST\v1;
+namespace Tuleap\Timetracking\REST\v1;
 
 use Tuleap\Timetracking\Time\Time;
 
