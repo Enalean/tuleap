@@ -48,34 +48,32 @@
     {{/ project_presenter }}
 </div>
 
-<div class="tlp-framed-vertically">
-    {{# has_dashboard }}
-        {{> dashboard-tabs }}
+{{# has_dashboard }}
+    {{> dashboard-tabs }}
 
-        {{# dashboards }}
-            {{# is_active }}
-                {{# has_widget }}
-                    {{> widgets }}
-                {{/ has_widget }}
-                {{^ has_widget }}
-                    <div class="empty-page">
-                        <p class="empty-page-text">{{ no_widget_label }}</p>
-                        {{# can_update_dashboards }}
-                            <p class="empty-page-text">{{{ purified_no_widget_action_label }}}</p>
-                            <button class="tlp-button-primary tlp-button-large add-widget-button"
-                                    data-target-modal-id="add-widget-modal"
-                                    data-href="{{ url_add_widget_content }}"
-                            >
-                                <i class="fa fa-plus tlp-button-icon"></i>
-                                {{ add_widget_title }}
-                            </button>
-                        {{/ can_update_dashboards }}
-                    </div>
-                {{/ has_widget }}
-            {{/ is_active }}
-        {{/ dashboards }}
-    {{/ has_dashboard }}
-</div>
+    {{# dashboards }}
+        {{# is_active }}
+            {{# has_widget }}
+                {{> widgets }}
+            {{/ has_widget }}
+            {{^ has_widget }}
+                <div class="empty-page">
+                    <p class="empty-page-text">{{ no_widget_label }}</p>
+                    {{# can_update_dashboards }}
+                        <p class="empty-page-text">{{{ purified_no_widget_action_label }}}</p>
+                        <button class="tlp-button-primary tlp-button-large add-widget-button"
+                                data-target-modal-id="add-widget-modal"
+                                data-href="{{ url_add_widget_content }}"
+                        >
+                            <i class="fa fa-plus tlp-button-icon"></i>
+                            {{ add_widget_title }}
+                        </button>
+                    {{/ can_update_dashboards }}
+                </div>
+            {{/ has_widget }}
+        {{/ is_active }}
+    {{/ dashboards }}
+{{/ has_dashboard }}
 
 {{^ has_dashboard }}
     <div class="empty-page">
