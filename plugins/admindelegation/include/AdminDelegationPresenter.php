@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -43,68 +43,29 @@ class AdminDelegationPresenter
         $this->users     = $users;
         $this->services  = $services;
 
-        $this->admindelegation_title = $GLOBALS['Language']->getText(
-            'plugin_admindelegation',
-            'permissions_page_title'
-        );
+        $this->admindelegation_title = dgettext('tuleap-admindelegation', 'Admin rights delegation');
 
-        $this->admindelegation_user       = $GLOBALS['Language']->getText(
-            'plugin_admindelegation',
-            'permissions_user_col'
-        );
-        $this->admindelegation_permission = $GLOBALS['Language']->getText(
-            'plugin_admindelegation',
-            'permissions_service_col'
-        );
+        $this->admindelegation_user       = dgettext('tuleap-admindelegation', 'User');
+        $this->admindelegation_permission = dgettext('tuleap-admindelegation', 'Service');
 
-        $this->no_permissions_granted = $GLOBALS['Language']->getText(
-            'plugin_admindelegation',
-            'no_permissions_granted'
-        );
+        $this->no_permissions_granted = dgettext('tuleap-admindelegation', 'There is nothing here,');
 
-        $this->no_permissions_granted_next_part = $GLOBALS['Language']->getText(
-            'plugin_admindelegation',
-            'no_permissions_granted_next_part'
-        );
+        $this->no_permissions_granted_next_part = dgettext('tuleap-admindelegation', 'start by granting a permission to somebody.');
 
-        $this->add_grant_permission = $GLOBALS['Language']->getText(
-            'plugin_admindelegation',
-            'add_grant_permission'
-        );
+        $this->add_grant_permission = dgettext('tuleap-admindelegation', 'Grant permission');
 
-        $this->delegation_table_title = $GLOBALS['Language']->getText(
-            'plugin_admindelegation',
-            'delegation_table_title'
-        );
+        $this->delegation_table_title = dgettext('tuleap-admindelegation', 'Granted users');
 
-        $this->admindelegation_avatar = $GLOBALS['Language']->getText(
-            'plugin_admindelegation',
-            'admindelegation_avatar'
-        );
+        $this->admindelegation_avatar = dgettext('tuleap-admindelegation', 'Avatar');
 
-        $this->cancel_grant_permission = $GLOBALS['Language']->getText(
-            'plugin_admindelegation',
-            'cancel_grant_permission'
-        );
+        $this->cancel_grant_permission = dgettext('tuleap-admindelegation', 'Cancel');
 
-        $this->label_grant_permission = $GLOBALS['Language']->getText(
-            'plugin_admindelegation',
-            'label_grant_permission'
-        );
+        $this->label_grant_permission = dgettext('tuleap-admindelegation', 'Grant permissions');
 
-        $this->label_username = $GLOBALS['Language']->getText(
-            'plugin_admindelegation',
-            'label_username'
-        );
+        $this->label_username = dgettext('tuleap-admindelegation', 'To user');
 
-        $this->revoke_permissions = $GLOBALS['Language']->getText(
-            'plugin_admindelegation',
-            'revoke_permissions'
-        );
+        $this->revoke_permissions = dgettext('tuleap-admindelegation', 'Revoke permissions');
 
-        $this->modal_revoke_warning = $GLOBALS['Language']->getText(
-            'plugin_admindelegation',
-            'modal_revoke_warning'
-        );
+        $this->modal_revoke_warning = dgettext('tuleap-admindelegation', 'Wow, wait a minute. Your about to revoke permission. Please confirm your action.');
     }
 }
