@@ -73,27 +73,6 @@ class Widget_ProjectLatestNews extends Widget {
     }
 
     /**
-     * Allow RSS display
-     *
-     * @return Boolean
-     */
-    public function hasRss() {
-        return true;
-    }
-
-    /**
-     * Display RSS
-     *
-     * @return Void
-     */
-    function displayRss() {
-        global $Language;
-        $request  = $this->getHTTPRequest();
-        $group_id = $request->get('group_id');
-        include('www/export/rss_sfnews.php');
-    }
-
-    /**
      * Does project has news
      *
      * @param Project $project The project

@@ -39,10 +39,14 @@ use Tuleap\Admin\ProjectCreation\WebhooksUpdateController;
 use Tuleap\Admin\ProjectCreationModerationDisplayController;
 use Tuleap\Admin\ProjectCreationModerationUpdateController;
 use Tuleap\Admin\ProjectTemplatesController;
+use Tuleap\Core\RSS\News\LatestNewsController;
+use Tuleap\Core\RSS\Project\LatestProjectController;
+use Tuleap\Core\RSS\Project\LatestProjectDao;
 use Tuleap\Error\PermissionDeniedMailSender;
 use Tuleap\Error\PlaceHolderBuilder;
 use Tuleap\FRS\FileDownloadController;
 use Tuleap\Layout\SiteHomepageController;
+use Tuleap\News\NewsDao;
 use Tuleap\Password\Administration\PasswordPolicyDisplayController;
 use Tuleap\Password\Administration\PasswordPolicyUpdateController;
 use Tuleap\Password\Configuration\PasswordConfigurationDAO;
@@ -249,6 +253,16 @@ class RouteCollector
         return new FileDownloadController();
     }
 
+    public static function getRssLatestProjects()
+    {
+        return new LatestProjectController(new LatestProjectDao(), \ProjectManager::instance(), Codendi_HTMLPurifier::instance());
+    }
+
+    public static function getRssLatestNews()
+    {
+        return new LatestNewsController(new NewsDao(), Codendi_HTMLPurifier::instance());
+    }
+
     public function collect(FastRoute\RouteCollector $r)
     {
         $r->get('/', [__CLASS__, 'getSlash']);
@@ -302,6 +316,9 @@ class RouteCollector
         $r->get('/svn/viewvc.php[/{path:.*}]', [__CLASS__, 'getSvnViewVC']);
         $r->get('/cvs/viewvc.php[/{path:.*}]', [__CLASS__, 'getCVSViewVC']);
         $r->get('/file/download.php/{group_id:\d+}/{file_id:\d+}[/{filename:.*}]', [__CLASS__, 'getFileDownload']);
+
+        $r->get('/export/rss_sfprojects.php', [__CLASS__, 'getRssLatestProjects']);
+        $r->get('/export/rss_sfnews.php', [__CLASS__, 'getRssLatestNews']);
 
         $collect_routes = new CollectRoutesEvent($r);
         $this->event_manager->processEvent($collect_routes);

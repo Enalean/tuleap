@@ -797,6 +797,7 @@ fi
 %dir %{APP_DIR}/src
 %{APP_DIR}/src/glyphs
 %{APP_DIR}/src/common
+%{APP_DIR}/src/core
 %{APP_DIR}/src/vendor
 %{APP_DIR}/src/embedded_vendor
 %{APP_DIR}/src/db
@@ -825,7 +826,6 @@ fi
 %{APP_DIR}/src/www/assets/ckeditor-*
 %{APP_DIR}/src/www/codendi.css
 %{APP_DIR}/src/www/cvs
-%{APP_DIR}/src/www/export
 %{APP_DIR}/src/www/favicon.ico
 %{APP_DIR}/src/www/file
 %{APP_DIR}/src/www/forum

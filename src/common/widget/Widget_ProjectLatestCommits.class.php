@@ -116,11 +116,6 @@ abstract class Widget_ProjectLatestCommits extends Widget
         return user_isloggedin() ? true : false;
     }
 
-    public function hasRss()
-    {
-        return false;
-    }
-
     public function getCategory()
     {
         return _('Source code management');
