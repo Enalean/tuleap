@@ -38,12 +38,12 @@ export default {
         state.error_message = error_message;
     },
 
-    setReportId(state, report_id) {
-        state.report_id = report_id;
-    },
-
     toggleReadingMode(state) {
         state.reading_mode = !state.reading_mode;
+    },
+
+    setProjects(state, projects) {
+        state.projects = projects;
     },
 
     setStartDate(state, start_date) {
@@ -52,5 +52,43 @@ export default {
 
     setEndDate(state, end_date) {
         state.end_date = end_date;
+    },
+
+    setTrackers(state, trackers) {
+        trackers.forEach(function(tracker) {
+            tracker.disabled = state.selected_trackers.find(
+                selected_tracker => selected_tracker.id === tracker.id
+            );
+        });
+        state.trackers = trackers;
+    },
+
+    setTrackersIds(state) {
+        state.trackers_ids = [];
+        state.selected_trackers.forEach(function(tracker) {
+            state.trackers_ids.push(tracker.id);
+        });
+    },
+
+    addSelectedTrackers(state, tracker_id) {
+        state.trackers.forEach(function(tracker) {
+            if (
+                tracker.id === parseInt(tracker_id, 10) &&
+                !state.selected_trackers.find(
+                    selected_tracker => selected_tracker.id === tracker.id
+                )
+            ) {
+                state.selected_trackers.push(tracker);
+                tracker.disabled = true;
+            }
+        });
+    },
+
+    removeSelectedTracker(state, tracker) {
+        state.selected_trackers.splice(state.selected_trackers.indexOf(tracker), 1);
+    },
+
+    setReportId(state, report_id) {
+        state.report_id = report_id;
     }
 };

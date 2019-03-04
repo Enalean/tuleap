@@ -20,6 +20,7 @@
     <div class="timetracking-overview-writing-mode">
         <div class="timetracking-overview-selector">
             <time-tracking-overview-writing-dates/>
+            <time-tracking-overview-writing-trackers/>
         </div>
         <time-tracking-overview-tracker-list/>
         <div class="timetracking-writing-mode-actions">
@@ -43,12 +44,14 @@
 
 <script>
 import TimeTrackingOverviewWritingDates from "./TimeTrackingOverviewWritingDates.vue";
+import TimeTrackingOverviewWritingTrackers from "./TimeTrackingOverviewWritingTrackers.vue";
 import TimeTrackingOverviewTrackerList from "./TimeTrackingOverviewTrackerList.vue";
 import { mapMutations } from "vuex";
 
 export default {
     name: "TimeTrackingOverviewWritingMode",
     components: {
+        TimeTrackingOverviewWritingTrackers,
         TimeTrackingOverviewWritingDates,
         TimeTrackingOverviewTrackerList
     },

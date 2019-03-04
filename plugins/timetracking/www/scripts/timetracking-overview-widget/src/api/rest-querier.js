@@ -24,7 +24,12 @@
 import { get } from "tlp";
 import { formatDatetimeToISO } from "../../../time-formatters";
 
-export { getTrackersFromReport, getTimesFromReport };
+export {
+    getTrackersFromReport,
+    getTimesFromReport,
+    getProjectsWithTimetracking,
+    getTrackersWithTimetracking
+};
 
 async function getTrackersFromReport(report_id) {
     const response = await get("/api/v1/timetracking_reports/" + encodeURI(report_id));
@@ -43,5 +48,30 @@ async function getTimesFromReport(report_id, trackers_id, start_date, end_date) 
             query
         }
     });
+    return response.json();
+}
+
+async function getProjectsWithTimetracking() {
+    const response = await get("/api/v1/projects", {
+        params: {
+            limit: 50,
+            offset: 0,
+            query: JSON.stringify({ with_time_tracking: true })
+        }
+    });
+
+    return response.json();
+}
+
+async function getTrackersWithTimetracking(project_id) {
+    const response = await get("/api/v1/projects/" + project_id + "/trackers", {
+        params: {
+            representation: "minimal",
+            limit: 50,
+            offset: 0,
+            query: JSON.stringify({ with_time_tracking: true })
+        }
+    });
+
     return response.json();
 }

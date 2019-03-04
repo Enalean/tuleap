@@ -22,38 +22,32 @@
   -
   -->
 <template>
-    <div class="timetracking-overview-form-trackers-selected">
-        <span
-            class="tlp-badge-primary tlp-badge-outline timetracking-overview-selected-tracker"
-            v-for="tracker of selected_trackers"
-            v-bind:key="tracker.id"
+    <select
+        class="timetracking-overview-trackers-selector-input tlp-select"
+        id="tracker"
+        name="tracker"
+        v-bind:disabled="is_tracker_select_disabled"
+    >
+        <option v-bind:value="null" v-translate>Please choose...</option>
+        <option v-for="tracker in trackers"
+                v-bind:disabled="tracker.disabled"
+                v-bind:value="tracker.id"
+                v-bind:key="tracker.id"
         >
-            <span>
-                <i class="fa fa-times tlp-badge-icon cross-tracker-remove-tracker"
-                   v-on:click="removeTracker(tracker)"
-                ></i> {{ tracker.tracker_label }}
-            </span>
-            <span>
-                {{ tracker.label }}
-            </span>
-            <span>
-                <i class="fa fa-archive timetracking-archive"></i>{{ tracker.project.label }}
-            </span>
-        </span>
-    </div>
+            {{ tracker.label }}
+        </option>
+
+    </select>
 </template>
 
 <script>
 import { mapState } from "vuex";
-
 export default {
-    name: "TrackerListWritingMode",
+    name: "TimeTrackingOverviewTrackersOptions",
     computed: {
-        ...mapState(["selected_trackers"])
-    },
-    methods: {
-        removeTracker(tracker) {
-            this.$store.commit("removeSelectedTracker", tracker);
+        ...mapState(["trackers"]),
+        is_tracker_select_disabled() {
+            return this.trackers.length === 0;
         }
     }
 };

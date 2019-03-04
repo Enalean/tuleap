@@ -21,7 +21,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getTimesFromReport, getTrackersFromReport } from "../api/rest-querier";
+import {
+    getProjectsWithTimetracking,
+    getTimesFromReport,
+    getTrackersFromReport,
+    getTrackersWithTimetracking
+} from "../api/rest-querier";
 import { ERROR_OCCURRED } from "../../../constants.js";
 
 export async function initWidgetWithReport(context) {
@@ -32,6 +37,26 @@ export async function initWidgetWithReport(context) {
         context.commit("setSelectedTrackers", report.trackers);
 
         return await loadTimes(context);
+    } catch (error) {
+        return showRestError(context, error);
+    }
+}
+
+export async function getProjects(context) {
+    try {
+        context.commit("resetErrorMessage");
+        const projects = await getProjectsWithTimetracking();
+        return context.commit("setProjects", projects);
+    } catch (error) {
+        return showRestError(context, error);
+    }
+}
+
+export async function getTrackers(context, project_id) {
+    try {
+        context.commit("resetErrorMessage");
+        const trackers = await getTrackersWithTimetracking(project_id);
+        return context.commit("setTrackers", trackers);
     } catch (error) {
         return showRestError(context, error);
     }
@@ -62,10 +87,11 @@ export async function loadTimes(context) {
 
 export async function loadTimesWithNewParameters(context) {
     context.commit("setIsLoading", true);
+    context.commit("setTrackersIds");
 
     const times = await getTimesFromReport(
         context.state.report_id,
-        [],
+        context.state.trackers_ids,
         context.state.start_date,
         context.state.end_date
     );

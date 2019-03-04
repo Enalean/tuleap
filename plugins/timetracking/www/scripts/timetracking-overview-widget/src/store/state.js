@@ -28,7 +28,10 @@ const state = {
     selected_trackers: [],
     trackers_times: [],
     is_loading: false,
-    reading_mode: true
+    reading_mode: true,
+    trackers: [],
+    trackers_ids: [],
+    projects: []
 };
 
 export default state;
