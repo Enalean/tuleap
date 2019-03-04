@@ -7,9 +7,9 @@
         <img ng-if="!graph.graphd3" src="/themes/BurningParrot/images/spinner.gif" class="loader loader-graph">
 
         <div id="graph-utils">
-            <button id="focus-graph" type="button" class="tlp-button-secondary tlp-button-mini" title="{{ 'Focus graph' | translate }}"><i class="fa fa-bullseye tlp-button-icon"></i></button>
-            <button id="zoomin-graph" type="button" class="tlp-button-secondary tlp-button-mini" title="{{ 'Zoom in' | translate }}"><i class="fa fa-search-plus tlp-button-icon"></i></button>
-            <button id="zoomout-graph" type="button" class="tlp-button-secondary tlp-button-mini" title="{{ 'Zoom out' | translate }}"><i class="fa fa-search-minus tlp-button-icon"></i></button>
+            <button id="focus-graph" type="button" class="tlp-button-secondary tlp-button-outline tlp-button-small" title="{{ 'Focus graph' | translate }}"><i class="fa fa-bullseye tlp-button-icon"></i></button>
+            <button id="zoomin-graph" type="button" class="tlp-button-secondary tlp-button-outline tlp-button-small" title="{{ 'Zoom in' | translate }}"><i class="fa fa-search-plus tlp-button-icon"></i></button>
+            <button id="zoomout-graph" type="button" class="tlp-button-secondary tlp-button-outline tlp-button-small" title="{{ 'Zoom out' | translate }}"><i class="fa fa-search-minus tlp-button-icon"></i></button>
         </div>
 
         <graph ng-if="graph.graphd3" class="graph" model="graph.graphd3"></graph>

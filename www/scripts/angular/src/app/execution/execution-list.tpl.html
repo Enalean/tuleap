@@ -34,7 +34,7 @@
                         <div class="tlp-button-bar-item">
                             <input type="checkbox" id="status-filter-passed" class="tlp-button-bar-checkbox">
                             <label for="status-filter-passed"
-                                   class="tlp-button-small tlp-button-secondary"
+                                   class="tlp-button-small tlp-button-outline tlp-button-success"
                                    ng-click="toggleStatus('passed')"
                                    title="{{ 'Passed' | translate }}">
                                 <i class="fa fa-fw fa-lg fa-check-circle test-status-icon passed"></i>
@@ -43,7 +43,7 @@
                         <div class="tlp-button-bar-item">
                             <input type="checkbox" id="status-filter-failed" class="tlp-button-bar-checkbox">
                             <label for="status-filter-failed"
-                                   class="tlp-button-small tlp-button-secondary"
+                                   class="tlp-button-small tlp-button-outline tlp-button-danger"
                                    ng-click="toggleStatus('failed')"
                                    title="{{ 'Failed' | translate }}">
                                 <i class="fa fa-fw fa-lg fa-times-circle test-status-icon failed"></i>
@@ -52,7 +52,7 @@
                         <div class="tlp-button-bar-item">
                             <input type="checkbox" id="status-filter-blocked" class="tlp-button-bar-checkbox">
                             <label for="status-filter-blocked"
-                                   class="tlp-button-small tlp-button-secondary"
+                                   class="tlp-button-small tlp-button-outline tlp-button-info"
                                    ng-click="toggleStatus('blocked')"
                                    title="{{ 'Blocked' | translate }}">
                                 <i class="fa fa-fw fa-lg fa-exclamation-circle test-status-icon blocked"></i>
@@ -61,7 +61,7 @@
                         <div class="tlp-button-bar-item">
                             <input type="checkbox" id="status-filter-notrun" class="tlp-button-bar-checkbox">
                             <label for="status-filter-notrun"
-                                   class="tlp-button-small tlp-button-secondary"
+                                   class="tlp-button-small tlp-button-outline tlp-button-secondary"
                                    ng-click="toggleStatus('notrun')"
                                    title="{{ 'Not run' | translate }}">
                                 <i class="fa fa-fw fa-lg fa-question-circle test-status-icon notrun"></i>
