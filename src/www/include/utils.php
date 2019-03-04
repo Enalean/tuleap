@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  * Copyright 1999-2000 (c) The SourceForge Crew
  *
  * This file is a part of Tuleap.
@@ -454,18 +454,26 @@ function util_multi_user_nolink ($usernames) {
 function util_double_diff_array($arr1, $arr2) {
     
     // first transform both arrays in hashes
-    reset($arr1); reset($arr2);
-    while ( list(,$v) = each($arr1)) { $h1[$v] = $v; }
-    while ( list(,$v) = each($arr2)) { $h2[$v] = $v; }
-
-    $deleted = array();
-    while ( list($k,) = each($h1)) {
-	if (!isset($h2[$k])) { $deleted[] = $k; }
+    $h1 = [];
+    $h2 = [];
+    foreach ($arr1 as $v) {
+        $h1[$v] = $v;
+    }
+    foreach ($arr2 as $v) {
+        $h2[$v] = $v;
     }
 
-    $added = array();
-    while ( list($k,) = each($h2)) {
-	if (!isset($h1[$k])) { $added[] = $k; }
+    $deleted = array();
+    foreach ($h1 as $k => $v) {
+        if (! isset($h2[$k])) {
+            $deleted[] = $k;
+        }
+    }
+    $added = [];
+    foreach ($h2 as $k => $v) {
+        if (!isset($h1[$k])) {
+            $added[] = $k;
+        }
     }
 
     return array($deleted, $added);
@@ -591,9 +599,11 @@ function validate_email ($address) {
 // Verification of comma separated list of email addresses
 function validate_emails ($addresses) {
     $arr = util_split_emails($addresses);
-    while (list(, $addr) = each ($arr)) {
-	if (!validate_email($addr)) { return false; echo "nV: $addr";}
-    }	    
+    foreach ($arr as $addr) {
+        if (! validate_email($addr)) {
+            return false;
+        }
+    }
     return true;
 }
 /**
