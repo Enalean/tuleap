@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015-2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -54,7 +54,7 @@ final class Tracker_FormElement_Field_FloatTest extends TestCase // phpcs:ignore
         $float_field = \Mockery::mock(Tracker_FormElement_Field_Float::class)->makePartial();
         $float_field->shouldReceive('getProperty')->with('default_value')->andReturn('12.34');
         $this->assertTrue($float_field->hasDefaultValue());
-        $this->assertEquals($float_field->getDefaultValue(), 12.34);
+        $this->assertEquals(12.34, $float_field->getDefaultValue());
     }
 
     public function testGetChangesetValue() : void
