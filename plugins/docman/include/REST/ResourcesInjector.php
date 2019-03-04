@@ -25,12 +25,14 @@
 namespace Tuleap\Docman\REST;
 
 use Tuleap\Docman\REST\v1\DocmanFilesResource;
+use Tuleap\Docman\REST\v1\DocmanFoldersResource;
 use Tuleap\Docman\REST\v1\DocmanItemsResource;
 
 class ResourcesInjector
 {
     const NAME       = 'docman_items';
     const FILES_NAME = 'docman_files';
+    const FOLDER_NAME = 'docman_folders';
 
     public function populate(\Luracast\Restler\Restler $restler)
     {
@@ -42,6 +44,11 @@ class ResourcesInjector
         $restler->addAPIClass(
             DocmanFilesResource::class,
             self::FILES_NAME
+        );
+
+        $restler->addAPIClass(
+            DocmanFoldersResource::class,
+            self::FOLDER_NAME
         );
     }
 }

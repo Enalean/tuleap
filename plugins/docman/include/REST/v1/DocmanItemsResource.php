@@ -32,16 +32,10 @@ use Luracast\Restler\RestException;
 use PluginManager;
 use Project;
 use ProjectManager;
-use Tuleap\DB\DBFactory;
-use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\ApprovalTable\ApprovalTableStateMapper;
-use Tuleap\Docman\Item\ItemIsNotAFolderException;
-use Tuleap\Docman\Upload\Document\DocumentOngoingUploadDAO;
-use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
-use Tuleap\Docman\Upload\Document\DocumentToUploadCreator;
-use Tuleap\Docman\Upload\Document\DocumentUploadFinisher;
-use Tuleap\Docman\Upload\Document\DocumentUploadPathAllocator;
+use Tuleap\Docman\REST\v1\Folders\DocmanItemCreatorBuilder;
+use Tuleap\Docman\REST\v1\Folders\ItemCanHaveSubItemsChecker;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
@@ -182,51 +176,12 @@ class DocmanItemsResource extends AuthenticatedResource
         $event_adder->addLogEvents();
         $event_adder->addNotificationEvents($project);
 
-        $document_on_going_upload_dao   = new DocumentOngoingUploadDAO();
-        $document_upload_path_allocator = new DocumentUploadPathAllocator();
-
         /** @var \docmanPlugin $docman_plugin */
-        $docman_plugin = \PluginManager::instance()->getPluginByName('docman');
-        $root_path     = $docman_plugin->getPluginInfo()->getPropertyValueForName('docman_root');
-
         $docman_plugin       = PluginManager::instance()->getPluginByName('docman');
-        $docman_root         = $docman_plugin->getPluginInfo()->getPropertyValueForName('docman_root');
         $is_embedded_allowed = $docman_plugin->getPluginInfo()->getPropertyValueForName('embedded_are_allowed');
 
-        $docman_file_storage = new \Docman_FileStorage($docman_root);
+        $docman_item_creator = DocmanItemCreatorBuilder::build($project);
 
-        $docman_item_creator = new DocmanItemCreator(
-            $this->getItemFactory($project->getID()),
-            new DocumentOngoingUploadRetriever($document_on_going_upload_dao),
-            new DocumentToUploadCreator(
-                $document_on_going_upload_dao,
-                new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
-            ),
-            new AfterItemCreationVisitor(
-                $this->getPermissionManager(),
-                $this->event_manager,
-                new \Docman_LinkVersionFactory(),
-                $docman_file_storage,
-                new \Docman_VersionFactory()
-            ),
-            new EmptyFileToUploadFinisher(
-                new DocumentUploadFinisher(
-                    new \BackendLogger(),
-                    $document_upload_path_allocator,
-                    $this->getItemFactory(),
-                    new \Docman_VersionFactory(),
-                    \PermissionsManager::instance(),
-                    $this->event_manager,
-                    $document_on_going_upload_dao,
-                    $this->item_dao,
-                    new \Docman_FileStorage($root_path),
-                    new \Docman_MIMETypeDetector(),
-                    \UserManager::instance(),
-                    new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
-                ),
-                $document_upload_path_allocator
-            )
-        );
         return $docman_item_creator->create(
             $parent,
             $current_user,
@@ -235,11 +190,6 @@ class DocmanItemsResource extends AuthenticatedResource
             new \DateTimeImmutable(),
             $is_embedded_allowed
         );
-    }
-
-    private function getItemFactory($group_id = null)
-    {
-        return new Docman_ItemFactory($group_id);
     }
 
     /**
@@ -347,18 +297,8 @@ class DocmanItemsResource extends AuthenticatedResource
      */
     private function checkItemCanHaveSubitems(\Docman_Item $item)
     {
-        $visitor = new ItemCanHaveSubitemsCheckerVisitor();
-        try {
-            $item->accept($visitor, []);
-        } catch (ItemIsNotAFolderException $e) {
-            throw new I18NRestException(
-                400,
-                sprintf(
-                    dgettext('tuleap-docman', 'The item %d is not a folder.'),
-                    $item->getId()
-                )
-            );
-        }
+        $item_checker = new ItemCanHaveSubItemsChecker();
+        $item_checker->checkItemCanHaveSubitems($item);
     }
 
     /**
@@ -405,11 +345,6 @@ class DocmanItemsResource extends AuthenticatedResource
             new \Docman_VersionFactory(),
             new \Docman_LinkVersionFactory()
         );
-    }
-
-    private function getPermissionManager()
-    {
-        return \PermissionsManager::instance();
     }
 
     private function getItemRepresentationBuilder(Docman_Item $item, Project $project)

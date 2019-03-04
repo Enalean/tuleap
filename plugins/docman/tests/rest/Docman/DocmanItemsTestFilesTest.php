@@ -242,7 +242,7 @@ class DocmanItemsTestFilesTest extends DocmanBase
 
         $response1 = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->post('docman_items', null, $query)
+            $this->client->post('docman_folders/' . $root_id . '/files', null, $query)
         );
 
         $this->assertEquals(201, $response1->getStatusCode());

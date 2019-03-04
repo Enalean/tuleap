@@ -24,9 +24,10 @@ use Luracast\Restler\RestException;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStreamDirectory;
 use PHPUnit\Framework\TestCase;
-use Tuleap\Docman\Upload\Document\DocumentToUploadCreator;
+use Tuleap\Docman\REST\v1\Folders\DocmanPOSTFilesRepresentation;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
 use Tuleap\Docman\Upload\Document\DocumentToUpload;
+use Tuleap\Docman\Upload\Document\DocumentToUploadCreator;
 
 class DocmanItemCreatorTest extends TestCase
 {
@@ -105,7 +106,6 @@ class DocmanItemCreatorTest extends TestCase
         );
 
         $this->assertSame(12, $created_item_representation->id);
-        $this->assertNull($created_item_representation->file_properties);
     }
 
     public function testWikiDocumentCanBeCreated()
@@ -160,7 +160,6 @@ class DocmanItemCreatorTest extends TestCase
         );
 
         $this->assertSame(12, $created_item_representation->id);
-        $this->assertNull($created_item_representation->file_properties);
     }
 
     public function testWikiDocumentCannotBeCreatedIfServiceWikiIsNotAvailable()
@@ -227,14 +226,13 @@ class DocmanItemCreatorTest extends TestCase
         );
 
         $parent_item  = \Mockery::mock(\Docman_Item::class);
+        $parent_item->shouldReceive('getId')->andReturns(3);
         $user         = \Mockery::mock(\PFUser::class);
-        $project      = \Mockery::mock(\Project::class);
         $current_time = new \DateTimeImmutable();
 
-        $post_representation                            = new DocmanItemPOSTRepresentation();
-        $post_representation->type                      = ItemRepresentation::TYPE_FILE;
+        $post_representation                            = new DocmanPOSTFilesRepresentation();
         $post_representation->title                     = 'Title';
-        $post_representation->parent_id                 = 11;
+        $post_representation->description               = '';
         $file_properties_post_representation            = new FilePropertiesPOSTPATCHRepresentation();
         $file_properties_post_representation->file_size = 123456;
         $file_properties_post_representation->file_name = 'myfile';
@@ -244,17 +242,57 @@ class DocmanItemCreatorTest extends TestCase
 
         $this->item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
 
-        $created_item_representation = $item_creator->create(
+        $created_item_representation = $item_creator->createFileDocument(
             $parent_item,
             $user,
-            $project,
-            $post_representation,
+            $post_representation->title,
+            $post_representation->description,
             $current_time,
-            true
+            $file_properties_post_representation
         );
 
         $this->assertSame(12, $created_item_representation->id);
         $this->assertNotNull($created_item_representation->file_properties);
+    }
+
+    public function testItThrowsAnExceptionWhenDocumentHasSameNameThanCreatedFile()
+    {
+        $item_creator = new DocmanItemCreator(
+            $this->item_factory,
+            $this->document_ongoing_upload_retriever,
+            $this->document_to_upload_creator,
+            $this->creator_visitor,
+            $this->empty_file_to_upload_finisher
+        );
+
+        $parent_item  = \Mockery::mock(\Docman_Item::class);
+        $parent_item->shouldReceive('getId')->andReturns(3);
+        $user         = \Mockery::mock(\PFUser::class);
+        $current_time = new \DateTimeImmutable();
+
+        $post_representation                            = new DocmanPOSTFilesRepresentation();
+        $post_representation->title                     = 'Title';
+        $post_representation->description               = '';
+        $file_properties_post_representation            = new FilePropertiesPOSTPATCHRepresentation();
+        $file_properties_post_representation->file_size = 123456;
+        $file_properties_post_representation->file_name = 'myfile';
+        $post_representation->file_properties           = $file_properties_post_representation;
+
+        $this->document_to_upload_creator->shouldReceive('create')->never();
+
+        $this->item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(true);
+
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(400);
+
+        $item_creator->createFileDocument(
+            $parent_item,
+            $user,
+            $post_representation->title,
+            $post_representation->description,
+            $current_time,
+            $file_properties_post_representation
+        );
     }
 
     public function testDocumentCreationWhenAFileIsBeingUploadedForItIsRejected()
@@ -354,7 +392,6 @@ class DocmanItemCreatorTest extends TestCase
         );
 
         $this->assertSame(12, $created_item_representation->id);
-        $this->assertNull($created_item_representation->file_properties);
     }
 
     public function testFolderCanBeCreated(): void
@@ -407,7 +444,6 @@ class DocmanItemCreatorTest extends TestCase
         );
 
         $this->assertSame(12, $created_item_representation->id);
-        $this->assertNull($created_item_representation->file_properties);
     }
 
     public function testEmbeddedFileCanBeCreated(): void
@@ -465,7 +501,6 @@ class DocmanItemCreatorTest extends TestCase
         );
 
         $this->assertSame(12, $created_item_representation->id);
-        $this->assertNull($created_item_representation->file_properties);
     }
 
     public function testEmbeddedFileCannotBeCreatedIfDocmanDoesNotAllowEmbedded(): void

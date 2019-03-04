@@ -40,6 +40,7 @@ import {
 import {
     restore as restoreRestQuerier,
     rewire$addNewDocument,
+    rewire$addNewFile,
     rewire$cancelUpload,
     rewire$deleteUserPreferenciesForFolderInProject,
     rewire$deleteUserPreferenciesForUIInProject,
@@ -57,7 +58,7 @@ import {
     restore as restoreLoadAscendantHierarchy,
     rewire$loadAscendantHierarchy
 } from "./actions-helpers/load-ascendant-hierarchy.js";
-import { TYPE_FILE } from "../constants";
+import { TYPE_FILE } from "../constants.js";
 
 describe("Store actions", () => {
     afterEach(() => {
@@ -78,6 +79,7 @@ describe("Store actions", () => {
         patchUserPreferenciesForFolderInProject,
         deleteUserPreferenciesForUIInProject,
         addNewDocument,
+        addNewFile,
         uploadFile,
         cancelUpload,
         createNewVersion,
@@ -107,6 +109,9 @@ describe("Store actions", () => {
 
         addNewDocument = jasmine.createSpy("addNewDocument");
         rewire$addNewDocument(addNewDocument);
+
+        addNewFile = jasmine.createSpy("addNewFile");
+        rewire$addNewFile(addNewFile);
 
         uploadFile = jasmine.createSpy("uploadFile");
         rewire$uploadFile(uploadFile);
@@ -553,7 +558,7 @@ describe("Store actions", () => {
             context.state.folder_content = [{ id: 10 }];
             const created_item_reference = { id: 66 };
 
-            addNewDocument.and.returnValue(Promise.resolve(created_item_reference));
+            addNewFile.and.returnValue(Promise.resolve(created_item_reference));
             const file_name_properties = { name: "filename.txt", size: 10, type: "text/plain" };
             const item = {
                 id: 66,
@@ -602,7 +607,7 @@ describe("Store actions", () => {
             context.state.folder_content = [{ id: 10 }];
             const created_item_reference = { id: 66 };
 
-            addNewDocument.and.returnValue(Promise.resolve(created_item_reference));
+            addNewFile.and.returnValue(Promise.resolve(created_item_reference));
             const file_name_properties = { name: "filename.txt", size: 10, type: "text/plain" };
             const item = {
                 id: 66,
@@ -655,7 +660,7 @@ describe("Store actions", () => {
             context.state.folder_content = [{ id: 10 }];
             const created_item_reference = { id: 66 };
 
-            addNewDocument.and.returnValue(Promise.resolve(created_item_reference));
+            addNewFile.and.returnValue(Promise.resolve(created_item_reference));
             const file_name_properties = { name: "filename.txt", size: 10, type: "text/plain" };
             const item = {
                 id: 66,
@@ -713,7 +718,7 @@ describe("Store actions", () => {
             const parent = { id: 42 };
 
             const created_item_reference = { id: 66 };
-            addNewDocument.and.returnValue(Promise.resolve(created_item_reference));
+            addNewFile.and.returnValue(Promise.resolve(created_item_reference));
             const uploader = {};
             uploadFile.and.returnValue(uploader);
 
@@ -741,7 +746,7 @@ describe("Store actions", () => {
             const parent = { id: 42 };
 
             const created_item_reference = { id: 66 };
-            addNewDocument.and.returnValue(Promise.resolve(created_item_reference));
+            addNewFile.and.returnValue(Promise.resolve(created_item_reference));
             const uploader = {};
             uploadFile.and.returnValue(uploader);
 
@@ -772,7 +777,7 @@ describe("Store actions", () => {
             const parent = { id: 42 };
 
             const created_item_reference = { id: 66 };
-            addNewDocument.and.returnValue(Promise.resolve(created_item_reference));
+            addNewFile.and.returnValue(Promise.resolve(created_item_reference));
 
             await addNewUploadFile(context, [dropped_file, parent, "filename.txt", "", true]);
 
@@ -785,7 +790,7 @@ describe("Store actions", () => {
             const parent = { id: 42 };
 
             const created_item_reference = { id: 66 };
-            addNewDocument.and.returnValue(Promise.resolve(created_item_reference));
+            addNewFile.and.returnValue(Promise.resolve(created_item_reference));
 
             const created_item = { id: 66, parent_id: 42, type: "file" };
             getItem.and.returnValue(Promise.resolve(created_item));

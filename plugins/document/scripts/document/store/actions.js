@@ -28,7 +28,8 @@ import {
     getItem,
     getProject,
     patchUserPreferenciesForFolderInProject,
-    createNewVersion
+    createNewVersion,
+    addNewFile
 } from "../api/rest-querier.js";
 
 import {
@@ -214,11 +215,10 @@ async function createNewFile(
     should_display_fake_item
 ) {
     const dropped_file = file_properties.file;
-    const new_file = await addNewDocument(
+    const new_file = await addNewFile(
         {
             title: title,
             description: description,
-            type: TYPE_FILE,
             file_properties: {
                 file_name: dropped_file.name,
                 file_size: dropped_file.size
