@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) STMicroelectronics, 2008. All Rights Reserved.
- * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2008
  *
@@ -22,7 +22,6 @@
  */
 
 require_once 'pre.php';
-require_once dirname(__FILE__).'/../include/LDAP_ProjectGroupManager.class.php';
 require_once 'www/project/admin/project_admin_utils.php';
 
 // Import very long user group may takes very long time.
