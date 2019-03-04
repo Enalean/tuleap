@@ -64,6 +64,34 @@ $progress-bar-background-color: $tlp-ui-border-normal;
 }
 
 /* stylelint-disable selector-no-qualifying-type */
+.tlp-table > tbody > tr.document-tree-item-hightlighted-forbidden > td {
+    border-bottom-color: transparentize($tlp-ui-danger, .15);
+    background: transparentize($tlp-ui-danger, .15);
+    color: $tlp-ui-white;
+
+    .document-folder-toggle,
+    .document-folder-content-fake-caret {
+        visibility: hidden;
+    }
+
+    .document-folder-content-icon {
+        transform: rotate(90deg);
+        animation: none;
+    }
+
+    .document-folder-content-icon::before {
+        content: '\f05e'; //fa-ban
+    }
+
+    .fa {
+        color: $tlp-ui-white;
+    }
+
+    .document-badge-avatar-username {
+        color: $tlp-ui-white;
+    }
+}
+
 .tlp-table > tbody > tr.document-tree-item-highlighted > td {
     border-bottom-color: transparentize($tlp-theme-color, .15);
     background: transparentize($tlp-theme-color, .15);
@@ -91,6 +119,7 @@ $progress-bar-background-color: $tlp-ui-border-normal;
         color: $tlp-ui-white;
     }
 }
+/* stylelint-enable selector-no-qualifying-type */
 
 .document-file-upload-progress {
     display: flex;
