@@ -24,6 +24,8 @@
 
 namespace Tuleap\REST;
 
+use DateTimeInterface;
+
 class JsonCast
 {
 
@@ -73,6 +75,17 @@ class JsonCast
         }
 
         return null;
+    }
+
+    /**
+     * Cast a date time to an ISO formatted date string
+     */
+    public static function fromDateTimeToDate(?DateTimeInterface $value): ?string
+    {
+        if ($value === null) {
+            return null;
+        }
+        return $value->format('c');
     }
 
     /**
