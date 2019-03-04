@@ -21,6 +21,9 @@
 
 namespace Tuleap\REST;
 
+use DateTime;
+use DateTimeImmutable;
+use DateTimeZone;
 use PHPUnit\Framework\TestCase;
 
 class JsonCastTest extends TestCase
@@ -43,5 +46,30 @@ class JsonCastTest extends TestCase
     public function testToArrayOfIntsReturnsGivenParameterWithArrayOfInts()
     {
         $this->assertEquals([1, 2, 3], JsonCast::toArrayOfInts([1, 2, 3]));
+    }
+
+    public function testFromDateTimeToDateWithDateTime()
+    {
+        $value = DateTime::createFromFormat(
+            'Y-m-d H:i:s',
+            '2019-03-21 14:47:03',
+            new DateTimeZone('+0400')
+        );
+        $this->assertEquals("2019-03-21T14:47:03+04:00", JsonCast::fromDateTimeToDate($value));
+    }
+
+    public function testFromDateTimeToDateWithDateTimeImmutable()
+    {
+        $value = DateTimeImmutable::createFromFormat(
+            'Y-m-d H:i:s',
+            '2019-03-21 14:47:03',
+            new DateTimeZone('+0400')
+        );
+        $this->assertEquals("2019-03-21T14:47:03+04:00", JsonCast::fromDateTimeToDate($value));
+    }
+
+    public function testFromDateTimeToDateReturnsNullWhenNullGiven()
+    {
+        $this->assertNull(JsonCast::fromDateTimeToDate(null));
     }
 }
