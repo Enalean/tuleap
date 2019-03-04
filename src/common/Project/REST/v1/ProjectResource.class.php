@@ -83,8 +83,8 @@ use WikiDao;
 /**
  * Wrapper for project related REST methods
  */
-
-class ProjectResource extends AuthenticatedResource {
+class ProjectResource extends AuthenticatedResource
+{
 
     const MAX_LIMIT = 50;
 
@@ -100,7 +100,7 @@ class ProjectResource extends AuthenticatedResource {
     /** @var UGroupManager */
     private $ugroup_manager;
 
-    /** @var ProjectCreator*/
+    /** @var ProjectCreator */
     private $project_creator;
 
     /** @var ReferenceManager */
@@ -124,7 +124,8 @@ class ProjectResource extends AuthenticatedResource {
      */
     private $forge_ugroup_permissions_manager;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->user_manager      = UserManager::instance();
         $this->project_manager   = ProjectManager::instance();
         $this->reference_manager = ReferenceManager::instance();
@@ -155,13 +156,16 @@ class ProjectResource extends AuthenticatedResource {
             $widget_factory
         );
 
-        $this->ugroup_duplicator        = new UgroupDuplicator(new UGroupDao(),
-                $this->ugroup_manager,
-        new UGroupBinding($ugroup_user_dao, $this->ugroup_manager),
-        $ugroup_user_dao, EventManager::instance());
-        $send_notifications = true;
-        $force_activation   = false;
-        $label_dao          = new LabelDao();
+        $this->ugroup_duplicator = new UgroupDuplicator(
+            new UGroupDao(),
+            $this->ugroup_manager,
+            new UGroupBinding($ugroup_user_dao, $this->ugroup_manager),
+            $ugroup_user_dao,
+            EventManager::instance()
+        );
+        $send_notifications      = true;
+        $force_activation        = false;
+        $label_dao               = new LabelDao();
 
         $this->project_creator = new ProjectCreator(
             $this->project_manager,
@@ -187,14 +191,14 @@ class ProjectResource extends AuthenticatedResource {
      *
      * Creates a new project in Tuleap. doesn't support custom fields nor project categories.
      *
-     * @url POST
+     * @url    POST
      * @status 201
      *
-     * @param string $shortname Name of the project
+     * @param string $shortname   Name of the project
      * @param string $description Full description of the project
-     * @param string $label A short description of the project
-     * @param bool $is_public Define the visibility of the project
-     * @param int $template_id Template for this project.
+     * @param string $label       A short description of the project
+     * @param bool   $is_public   Define the visibility of the project
+     * @param int    $template_id Template for this project.
      *
      *
      * @return ProjectRepresentation
@@ -280,7 +284,7 @@ class ProjectResource extends AuthenticatedResource {
      *   if you are not member of the REST project management delegation.
      * </p>
      *
-     * @url GET
+     * @url    GET
      * @access hybrid
      *
      * @param int    $limit  Number of elements displayed per page
@@ -312,10 +316,14 @@ class ProjectResource extends AuthenticatedResource {
         return $this->sendProjectRepresentations($paginated_projects, $limit, $offset, $user);
     }
 
-    private function sendProjectRepresentations(PaginatedProjects $paginated_projects, $limit, $offset, PFUser $current_user)
-    {
-        $project_representations = array();
-        foreach($paginated_projects->getProjects() as $project) {
+    private function sendProjectRepresentations(
+        PaginatedProjects $paginated_projects,
+        $limit,
+        $offset,
+        PFUser $current_user
+    ) {
+        $project_representations = [];
+        foreach ($paginated_projects->getProjects() as $project) {
             $project_representations[] = $this->getProjectRepresentation($project, $current_user);
         }
 
@@ -328,7 +336,8 @@ class ProjectResource extends AuthenticatedResource {
     /**
      * @url OPTIONS
      */
-    public function options() {
+    public function options()
+    {
         $this->sendAllowHeadersForProject();
     }
 
@@ -339,7 +348,8 @@ class ProjectResource extends AuthenticatedResource {
      *
      * @return Tuleap\Project\PaginatedProjects
      */
-    private function getMyAndPublicProjects(PFUser $user, $offset, $limit) {
+    private function getMyAndPublicProjects(PFUser $user, $offset, $limit)
+    {
         return $this->project_manager->getMyAndPublicProjectsForREST($user, $offset, $limit);
     }
 
@@ -398,7 +408,7 @@ class ProjectResource extends AuthenticatedResource {
      *
      * Get the definition of a given project
      *
-     * @url GET {id}
+     * @url    GET {id}
      * @access hybrid
      *
      * @param int $id Id of the project
@@ -409,7 +419,8 @@ class ProjectResource extends AuthenticatedResource {
      *
      * @return ProjectRepresentation
      */
-    public function getId($id) {
+    public function getId($id)
+    {
         $this->checkAccess();
 
         $this->sendAllowHeadersForProject();
@@ -427,14 +438,15 @@ class ProjectResource extends AuthenticatedResource {
     }
 
     /**
-     * @url OPTIONS {id}
+     * @url    OPTIONS {id}
      *
      * @param int $id Id of the project
      *
      * @throws 403
      * @throws 404
      */
-    public function optionsId($id) {
+    public function optionsId($id)
+    {
         $this->sendAllowHeadersForProject();
     }
 
@@ -444,7 +456,8 @@ class ProjectResource extends AuthenticatedResource {
      *
      * @return Project
      */
-    private function getProjectForUser($id) {
+    private function getProjectForUser($id)
+    {
         $project = $this->project_manager->getProject($id);
         $user    = $this->user_manager->getCurrentUser();
 
@@ -459,7 +472,8 @@ class ProjectResource extends AuthenticatedResource {
      *
      * @return Project
      */
-    private function getProjectForRestProjectManager($project_id) {
+    private function getProjectForRestProjectManager($project_id)
+    {
         $project = $this->project_manager->getProject($project_id);
 
         if ($project->isError()) {
@@ -475,7 +489,8 @@ class ProjectResource extends AuthenticatedResource {
      *
      * @return Project
      */
-    private function getProjectWithoutAuthorisation($id) {
+    private function getProjectWithoutAuthorisation($id)
+    {
         return $this->project_manager->getProject($id);
     }
 
@@ -487,28 +502,29 @@ class ProjectResource extends AuthenticatedResource {
      *
      * @return ProjectRepresentation
      */
-    private function getProjectRepresentation(Project $project, PFUser $current_user) {
-        $resources = array();
+    private function getProjectRepresentation(Project $project, PFUser $current_user)
+    {
+        $resources = [];
         $this->event_manager->processEvent(
             Event::REST_PROJECT_RESOURCES,
-            array(
+            [
                 'version'   => 'v1',
                 'project'   => $project,
                 'resources' => &$resources
-            )
+            ]
         );
 
         $resources_injector = new ResourcesInjector();
         $resources_injector->declareProjectResources($resources, $project);
 
-        $informations = array();
+        $informations = [];
         $this->event_manager->processEvent(
             Event::REST_PROJECT_ADDITIONAL_INFORMATIONS,
-            array(
-                'project' => $project,
+            [
+                'project'      => $project,
                 'current_user' => $current_user,
                 'informations' => &$informations
-            )
+            ]
         );
 
         $project_representation = new ProjectRepresentation();
@@ -527,7 +543,7 @@ class ProjectResource extends AuthenticatedResource {
      *
      * Get the plannings of a given project
      *
-     * @url GET {id}/plannings
+     * @url    GET {id}/plannings
      * @access hybrid
      *
      * @param int $id     Id of the project
@@ -536,7 +552,8 @@ class ProjectResource extends AuthenticatedResource {
      *
      * @return array {@type Tuleap\REST\v1\PlanningRepresentationBase}
      */
-    public function getPlannings($id, $limit = 10, $offset = 0) {
+    public function getPlannings($id, $limit = 10, $offset = 0)
+    {
         $this->checkAccess();
 
         $this->checkAgileEndpointsAvailable();
@@ -552,7 +569,8 @@ class ProjectResource extends AuthenticatedResource {
      *
      * @param int $id Id of the project
      */
-    public function optionsPlannings($id) {
+    public function optionsPlannings($id)
+    {
         $this->checkAgileEndpointsAvailable();
         $this->sendAllowHeadersForPlanning();
     }
@@ -562,14 +580,15 @@ class ProjectResource extends AuthenticatedResource {
      *
      * Get the latest activities of a given project
      *
-     * @url GET {id}/heartbeats
+     * @url    GET {id}/heartbeats
      * @access hybrid
      *
-     * @param int $id     Id of the project
+     * @param int $id Id of the project
      *
      * @return HeartbeatsRepresentation {@type HeartbeatsRepresentation}
      */
-    public function getHeartbeats($id) {
+    public function getHeartbeats($id)
+    {
         $this->checkAccess();
 
         $project = $this->getProjectForUser($id);
@@ -590,7 +609,8 @@ class ProjectResource extends AuthenticatedResource {
      *
      * @param int $id Id of the project
      */
-    public function optionsHeartbeats($id) {
+    public function optionsHeartbeats($id)
+    {
         $this->sendAllowHeadersForHeartBeat();
     }
 
@@ -601,21 +621,27 @@ class ProjectResource extends AuthenticatedResource {
      *
      * <p><code>query</code> parameter allows you to search for a particular label with wildcard</p>
      *
-     * @url GET {id}/labels
+     * @url    GET {id}/labels
      * @access hybrid
      *
-     * @param int $id Id of the project
-     * @param string $query Search particular label, if not used, returns all project labels
-     * @param int $limit  Number of elements displayed per page {@from path} {@min 1} {@max 50}
-     * @param int $offset Position of the first element to display {@from path} {@min 0}
+     * @param int    $id     Id of the project
+     * @param string $query  Search particular label, if not used, returns all project labels
+     * @param int    $limit  Number of elements displayed per page {@from path} {@min 1} {@max 50}
+     * @param int    $offset Position of the first element to display {@from path} {@min 0}
      *
      * @return array {@type LabelRepresentation}
      */
-    public function getLabels($id, $query = '', $limit = self::MAX_LIMIT, $offset = 0) {
+    public function getLabels($id, $query = '', $limit = self::MAX_LIMIT, $offset = 0)
+    {
         $this->checkAccess();
 
-        $project = $this->getProjectForUser($id);
-        $collection = $this->labels_retriever->getPaginatedMatchingLabelsForProject($project, $query, $limit, $offset);
+        $project               = $this->getProjectForUser($id);
+        $collection            = $this->labels_retriever->getPaginatedMatchingLabelsForProject(
+            $project,
+            $query,
+            $limit,
+            $offset
+        );
         $labels_representation = array_map(
             function (Label $label) {
                 $representation = new LabelRepresentation();
@@ -629,9 +655,9 @@ class ProjectResource extends AuthenticatedResource {
         $this->sendAllowHeadersForLabels();
         Header::sendPaginationHeaders($limit, $offset, $collection->getTotalSize(), self::MAX_LIMIT);
 
-        return array(
+        return [
             'labels' => $labels_representation
-        );
+        ];
     }
 
     /**
@@ -639,23 +665,25 @@ class ProjectResource extends AuthenticatedResource {
      *
      * @param int $id Id of the project
      */
-    public function optionsLabels($id) {
+    public function optionsLabels($id)
+    {
         $this->sendAllowHeadersForLabels();
     }
 
-    private function plannings($id, $limit, $offset, $event) {
+    private function plannings($id, $limit, $offset, $event)
+    {
         $project = $this->getProjectForUser($id);
-        $result  = array();
+        $result  = [];
 
         $this->event_manager->processEvent(
             $event,
-            array(
+            [
                 'version' => 'v1',
                 'project' => $project,
                 'limit'   => $limit,
                 'offset'  => $offset,
                 'result'  => &$result,
-            )
+            ]
         );
 
         return $result;
@@ -672,7 +700,7 @@ class ProjectResource extends AuthenticatedResource {
      * query={"status":"closed"} then only closed milestones are returned.
      * </p>
      *
-     * @url GET {id}/milestones
+     * @url    GET {id}/milestones
      * @access hybrid
      *
      * @param int    $id     Id of the project
@@ -697,9 +725,17 @@ class ProjectResource extends AuthenticatedResource {
         $this->checkAgileEndpointsAvailable();
 
         try {
-            $milestones = $this->milestones($id, $fields, $query, $limit, $offset, $order, Event::REST_GET_PROJECT_MILESTONES);
+            $milestones = $this->milestones(
+                $id,
+                $fields,
+                $query,
+                $limit,
+                $offset,
+                $order,
+                Event::REST_GET_PROJECT_MILESTONES
+            );
         } catch (\Planning_NoPlanningsException $e) {
-            $milestones = array();
+            $milestones = [];
         }
 
         $this->sendAllowHeadersForMilestones();
@@ -712,18 +748,20 @@ class ProjectResource extends AuthenticatedResource {
      *
      * @param int $id The id of the project
      */
-    public function optionsMilestones($id) {
+    public function optionsMilestones($id)
+    {
         $this->checkAgileEndpointsAvailable();
         $this->sendAllowHeadersForMilestones();
     }
 
-    private function milestones($id, $representation_type, $query, $limit, $offset, $order, $event) {
+    private function milestones($id, $representation_type, $query, $limit, $offset, $order, $event)
+    {
         $project = $this->getProjectForUser($id);
-        $result  = array();
+        $result  = [];
 
         $this->event_manager->processEvent(
             $event,
-            array(
+            [
                 'version'             => 'v1',
                 'project'             => $project,
                 'representation_type' => $representation_type,
@@ -732,7 +770,7 @@ class ProjectResource extends AuthenticatedResource {
                 'offset'              => $offset,
                 'order'               => $order,
                 'result'              => &$result,
-            )
+            ]
         );
 
         return $result;
@@ -794,7 +832,8 @@ class ProjectResource extends AuthenticatedResource {
      *
      * @param int $id Id of the project
      */
-    public function optionsTrackers($id) {
+    public function optionsTrackers($id)
+    {
         $this->sendAllowHeadersForTracker();
     }
 
@@ -828,7 +867,7 @@ class ProjectResource extends AuthenticatedResource {
      *
      * Get the list of packages in the project
      *
-     * @url GET {id}/frs_packages
+     * @url    GET {id}/frs_packages
      * @access hybrid
      *
      * @param int $id     Id of the project
@@ -839,25 +878,26 @@ class ProjectResource extends AuthenticatedResource {
      *
      * @throws 406
      */
-    public function getFRSPackages($id, $limit = 10, $offset = 0) {
+    public function getFRSPackages($id, $limit = 10, $offset = 0)
+    {
         $this->checkAccess();
         $this->checkLimitValueIsAcceptable($limit);
         $this->checkFRSEndpointsAvailable();
 
         $project    = $this->getProjectForUser($id);
-        $result     = array();
+        $result     = [];
         $total_size = 0;
 
         $this->event_manager->processEvent(
             Event::REST_GET_PROJECT_FRS_PACKAGES,
-            array(
+            [
                 'project'      => $project,
                 'current_user' => $this->user_manager->getCurrentUser(),
                 'limit'        => $limit,
                 'offset'       => $offset,
                 'result'       => &$result,
                 'total_size'   => &$total_size
-            )
+            ]
         );
 
         $this->sendAllowHeadersForFRSPackages();
@@ -871,7 +911,8 @@ class ProjectResource extends AuthenticatedResource {
      *
      * @param int $id Id of the project
      */
-    public function optionsFRSPackages($id) {
+    public function optionsFRSPackages($id)
+    {
         $this->checkFRSEndpointsAvailable();
         $this->sendAllowHeadersForFRSPackages();
     }
@@ -881,7 +922,7 @@ class ProjectResource extends AuthenticatedResource {
      *
      * Get the backlog items that can be planned in a top-milestone
      *
-     * @url GET {id}/backlog
+     * @url    GET {id}/backlog
      * @access hybrid
      *
      * @param int $id     Id of the project
@@ -892,15 +933,16 @@ class ProjectResource extends AuthenticatedResource {
      *
      * @throws 406
      */
-    public function getBacklog($id, $limit = 10, $offset = 0) {
+    public function getBacklog($id, $limit = 10, $offset = 0)
+    {
         $this->checkAccess();
 
         $this->checkAgileEndpointsAvailable();
 
         try {
-        $backlog_items = $this->backlogItems($id, $limit, $offset, Event::REST_GET_PROJECT_BACKLOG);
+            $backlog_items = $this->backlogItems($id, $limit, $offset, Event::REST_GET_PROJECT_BACKLOG);
         } catch (\Planning_NoPlanningsException $e) {
-            $backlog_items = array();
+            $backlog_items = [];
         }
 
         $this->sendAllowHeadersForBacklog();
@@ -912,7 +954,8 @@ class ProjectResource extends AuthenticatedResource {
      *
      * @param int $id Id of the project
      */
-    public function optionsBacklog($id) {
+    public function optionsBacklog($id)
+    {
         $this->checkAgileEndpointsAvailable();
         $this->sendAllowHeadersForBacklog();
     }
@@ -923,31 +966,32 @@ class ProjectResource extends AuthenticatedResource {
      * Order all backlog items in top backlog
      *
      * @access hybrid
-     * @url PUT {id}/backlog
+     * @url    PUT {id}/backlog
      *
-     * @param int $id    Id of the project
+     * @param int   $id  Id of the project
      * @param array $ids Ids of backlog items {@from body}
      *
      * @throws 500
      */
-    public function putBacklog($id, array $ids) {
+    public function putBacklog($id, array $ids)
+    {
         $this->checkAccess();
 
         $this->checkAgileEndpointsAvailable();
 
         $project = $this->getProjectForUser($id);
-        $result  = array();
+        $result  = [];
 
         ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt($project);
 
         $this->event_manager->processEvent(
             Event::REST_PUT_PROJECT_BACKLOG,
-            array(
+            [
                 'version' => 'v1',
                 'project' => $project,
                 'ids'     => $ids,
                 'result'  => &$result,
-            )
+            ]
         );
 
         $this->sendAllowHeadersForBacklog();
@@ -985,7 +1029,7 @@ class ProjectResource extends AuthenticatedResource {
      * <br>
      * Will remove element id 34 from milestone 56 backlog
      *
-     * @url PATCH {id}/backlog
+     * @url    PATCH {id}/backlog
      * @access hybrid
      *
      * @param int                                     $id    Id of the project
@@ -996,25 +1040,26 @@ class ProjectResource extends AuthenticatedResource {
      * @throws 409
      * @throws 400
      */
-    public function patchBacklog($id, OrderRepresentationBase $order = null, array $add = null) {
+    public function patchBacklog($id, OrderRepresentationBase $order = null, array $add = null)
+    {
         $this->checkAccess();
 
         $this->checkAgileEndpointsAvailable();
 
         $project = $this->getProjectForUser($id);
-        $result  = array();
+        $result  = [];
 
         ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt($project);
 
         $this->event_manager->processEvent(
             Event::REST_PATCH_PROJECT_BACKLOG,
-            array(
+            [
                 'version' => 'v1',
                 'project' => $project,
                 'order'   => $order,
                 'add'     => $add,
                 'result'  => &$result,
-            )
+            ]
         );
 
         $this->sendAllowHeadersForBacklog();
@@ -1038,11 +1083,11 @@ class ProjectResource extends AuthenticatedResource {
      * }
      * </pre>
      *
-     * @url PATCH {id}
+     * @url    PATCH {id}
      * @access hybrid
      * @status 200
      *
-     * @param int $id Id of the project
+     * @param int                        $id             Id of the project
      * @param PATCHProjectRepresentation $patch_resource {@from body} {@type Tuleap\Project\REST\v1\PATCHProjectRepresentation}
      *
      * @throws 400
@@ -1074,25 +1119,27 @@ class ProjectResource extends AuthenticatedResource {
         $this->sendAllowHeadersForProject();
     }
 
-    private function backlogItems($id, $limit, $offset, $event) {
+    private function backlogItems($id, $limit, $offset, $event)
+    {
         $project = $this->getProjectForUser($id);
-        $result  = array();
+        $result  = [];
 
         $this->event_manager->processEvent(
             $event,
-            array(
+            [
                 'version' => 'v1',
                 'project' => $project,
                 'limit'   => $limit,
                 'offset'  => $offset,
                 'result'  => &$result,
-            )
+            ]
         );
 
         return $result;
     }
 
-    private function limitValueIsAcceptable($limit) {
+    private function limitValueIsAcceptable($limit)
+    {
         return $limit <= self::MAX_LIMIT;
     }
 
@@ -1101,7 +1148,8 @@ class ProjectResource extends AuthenticatedResource {
      *
      * @param int $id Id of the project
      */
-    public function optionsUserGroups($id) {
+    public function optionsUserGroups($id)
+    {
         $this->sendAllowHeadersForUserGroups();
     }
 
@@ -1117,7 +1165,7 @@ class ProjectResource extends AuthenticatedResource {
      *
      * @url GET {id}/user_groups
      *
-     * @param int $id Id of the project
+     * @param int    $id    Id of the project
      * @param string $query JSON object of filtering options {@from path} {@required false}
      *
      * @return array {@type Tuleap\Project\REST\v1\UserGroupRepresentation}
@@ -1139,7 +1187,7 @@ class ProjectResource extends AuthenticatedResource {
                 ProjectUGroup::REGISTERED,
                 ProjectUGroup::AUTHENTICATED
             ];
-            $ugroups = $this->ugroup_manager->getUGroups($project, $excluded_ugroups_ids);
+            $ugroups              = $this->ugroup_manager->getUGroups($project, $excluded_ugroups_ids);
         }
         $user_groups = $this->getUserGroupsRepresentations($ugroups, $id);
 
@@ -1148,8 +1196,9 @@ class ProjectResource extends AuthenticatedResource {
         return $user_groups;
     }
 
-    private function getUserGroupsRepresentations(array $ugroups, $project_id) {
-        $user_groups = array();
+    private function getUserGroupsRepresentations(array $ugroups, $project_id)
+    {
+        $user_groups = [];
 
         foreach ($ugroups as $ugroup) {
             $representation = new UserGroupRepresentation();
@@ -1166,29 +1215,31 @@ class ProjectResource extends AuthenticatedResource {
      *
      * @return boolean
      */
-    private function userCanSeeUserGroups($project_id) {
-        $project      = $this->project_manager->getProject($project_id);
-        $user         = $this->user_manager->getCurrentUser();
+    private function userCanSeeUserGroups($project_id)
+    {
+        $project = $this->project_manager->getProject($project_id);
+        $user    = $this->user_manager->getCurrentUser();
         ProjectAuthorization::userCanAccessProjectAndIsProjectAdmin($user, $project);
 
         return true;
     }
 
     /**
-     * @url OPTIONS {id}/git
+     * @url    OPTIONS {id}/git
      *
      * @param int $id Id of the project
      *
      * @throws 404
      */
-    public function optionsGit($id) {
+    public function optionsGit($id)
+    {
         $activated = false;
 
         $this->event_manager->processEvent(
             Event::REST_PROJECT_OPTIONS_GIT,
-            array(
+            [
                 'activated' => &$activated
-            )
+            ]
         );
 
         if ($activated) {
@@ -1284,11 +1335,11 @@ class ProjectResource extends AuthenticatedResource {
      * @url    GET {id}/git
      * @access hybrid
      *
-     * @param int    $id     Id of the project
-     * @param int    $limit  Number of elements displayed per page {@from path}
-     * @param int    $offset Position of the first element to display {@from path}
-     * @param string $fields Whether you want to fetch permissions or just repository info {@from path}{@choice basic,all}
-     * @param string $query  Filter repositories {@from path}
+     * @param int    $id       Id of the project
+     * @param int    $limit    Number of elements displayed per page {@from path}
+     * @param int    $offset   Position of the first element to display {@from path}
+     * @param string $fields   Whether you want to fetch permissions or just repository info {@from path}{@choice basic,all}
+     * @param string $query    Filter repositories {@from path}
      * @param string $order_by {@from path}{@choice push_date,path}
      *
      * @return GitRepositoryListRepresentation
@@ -1311,7 +1362,7 @@ class ProjectResource extends AuthenticatedResource {
 
         $this->event_manager->processEvent(
             Event::REST_PROJECT_GET_GIT,
-            array(
+            [
                 'version'        => 'v1',
                 'project'        => $project,
                 'result'         => &$result,
@@ -1321,7 +1372,7 @@ class ProjectResource extends AuthenticatedResource {
                 'query'          => $query,
                 'order_by'       => $order_by,
                 'total_git_repo' => &$total_git_repositories
-            )
+            ]
         );
 
         if ($result->repositories !== null) {
@@ -1331,17 +1382,17 @@ class ProjectResource extends AuthenticatedResource {
         } else {
             throw new RestException(404, 'Git plugin not activated');
         }
-
     }
 
     /**
-     * @url OPTIONS {id}/svn
+     * @url    OPTIONS {id}/svn
      *
      * @param int $id Id of the project
      *
      * @throws 404
      */
-    public function optionsSvn($id) {
+    public function optionsSvn($id)
+    {
         $event = new ProjectOptionsSvn();
 
         $this->event_manager->processEvent($event);
@@ -1374,19 +1425,20 @@ class ProjectResource extends AuthenticatedResource {
      * <br/>
      * ?query must be a json object to search on name with exact match: {"name": "repository01"}
      *
-     * @url GET {id}/svn
+     * @url    GET {id}/svn
      * @access hybrid
      *
-     * @param int $id        Id of the project
+     * @param int    $id     Id of the project
      * @param string $query  Optional search string in json format {@from query}
-     * @param int $limit     Number of elements displayed per page {@from path}
-     * @param int $offset    Position of the first element to display {@from path}
+     * @param int    $limit  Number of elements displayed per page {@from path}
+     * @param int    $offset Position of the first element to display {@from path}
      *
      * @return array {@type Tuleap\REST\v1\SvnRepositoryRepresentationBase}
      *
      * @throws 404
      */
-    public function getSvn($id, $query = '', $limit = 10, $offset = 0) {
+    public function getSvn($id, $query = '', $limit = 10, $offset = 0)
+    {
         $this->checkAccess();
 
         $project                = $this->getProjectForUser($id);
@@ -1403,7 +1455,7 @@ class ProjectResource extends AuthenticatedResource {
         $this->sendAllowHeadersForSvn();
         $this->sendPaginationHeaders($limit, $offset, $event->getTotalRepositories());
 
-        return array('repositories' => $event->getRepositoriesRepresentations());
+        return ['repositories' => $event->getRepositoriesRepresentations()];
     }
 
     private function getRepositoryNameFromQuery($query)
@@ -1429,7 +1481,8 @@ class ProjectResource extends AuthenticatedResource {
      *
      * @param int $id Id of the project
      */
-    public function optionsWiki($id) {
+    public function optionsWiki($id)
+    {
         $this->sendAllowHeadersForWiki();
     }
 
@@ -1438,18 +1491,19 @@ class ProjectResource extends AuthenticatedResource {
      *
      * Get info about project non empty PhpWiki pages.
      *
-     * @url GET {id}/phpwiki
+     * @url    GET {id}/phpwiki
      *
      * @access hybrid
      *
-     * @param int $id          Id of the project
-     * @param int $limit       Number of elements displayed per page {@from path}
-     * @param int $offset      Position of the first element to display {@from path}
+     * @param int    $id       Id of the project
+     * @param int    $limit    Number of elements displayed per page {@from path}
+     * @param int    $offset   Position of the first element to display {@from path}
      * @param string $pagename Part of the pagename or the full pagename to search {@from path}
      *
      * @return array {@type Tuleap\REST\v1\PhpWikiPageRepresentation}
      */
-    public function getPhpWiki($id, $limit = 10, $offset = 0, $pagename = '') {
+    public function getPhpWiki($id, $limit = 10, $offset = 0, $pagename = '')
+    {
         $this->checkAccess();
         $this->getProjectForUser($id);
 
@@ -1457,9 +1511,9 @@ class ProjectResource extends AuthenticatedResource {
 
         $this->userCanAccessPhpWikiService($current_user, $id);
 
-        $wiki_pages = array(
-            'pages' => array()
-        );
+        $wiki_pages = [
+            'pages' => []
+        ];
 
         $wiki_pages_factory = new PaginatedWikiPagesFactory(new WikiDao());
         $all_pages          = $wiki_pages_factory->getPaginatedUserPages(
@@ -1492,14 +1546,15 @@ class ProjectResource extends AuthenticatedResource {
         }
     }
 
-    private function checkAgileEndpointsAvailable() {
+    private function checkAgileEndpointsAvailable()
+    {
         $available = false;
 
         $this->event_manager->processEvent(
             Event::REST_PROJECT_AGILE_ENDPOINTS,
-            array(
+            [
                 'available' => &$available
-            )
+            ]
         );
 
         if ($available === false) {
@@ -1507,14 +1562,15 @@ class ProjectResource extends AuthenticatedResource {
         }
     }
 
-    private function checkFRSEndpointsAvailable() {
+    private function checkFRSEndpointsAvailable()
+    {
         $available = false;
 
         $this->event_manager->processEvent(
             Event::REST_PROJECT_FRS_ENDPOINTS,
-            array(
+            [
                 'available' => &$available
-            )
+            ]
         );
 
         if ($available === false) {
@@ -1522,11 +1578,13 @@ class ProjectResource extends AuthenticatedResource {
         }
     }
 
-    private function sendAllowHeadersForProject() {
+    private function sendAllowHeadersForProject()
+    {
         Header::allowOptionsGetPostPatch();
     }
 
-    private function sendAllowHeadersForBacklog() {
+    private function sendAllowHeadersForBacklog()
+    {
         Header::allowOptionsGetPutPatch();
     }
 
@@ -1575,7 +1633,8 @@ class ProjectResource extends AuthenticatedResource {
         Header::allowOptionsGet();
     }
 
-    private function sendPaginationHeaders($limit, $offset, $size) {
+    private function sendPaginationHeaders($limit, $offset, $size)
+    {
         Header::sendPaginationHeaders($limit, $offset, $size, self::MAX_LIMIT);
     }
 
@@ -1586,14 +1645,17 @@ class ProjectResource extends AuthenticatedResource {
 
     private function checkLimitValueIsAcceptable($limit)
     {
-        if (!$this->limitValueIsAcceptable($limit)) {
+        if (! $this->limitValueIsAcceptable($limit)) {
             throw new RestException(406, 'Maximum value for limit exceeded');
         }
     }
 
     private function isUserDelegatedRestProjectManager(PFUser $user)
     {
-        return $this->forge_ugroup_permissions_manager->doesUserHavePermission($user, new RestProjectManagementPermission());
+        return $this->forge_ugroup_permissions_manager->doesUserHavePermission(
+            $user,
+            new RestProjectManagementPermission()
+        );
     }
 
     /**
