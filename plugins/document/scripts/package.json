@@ -10,6 +10,7 @@
     "moment": "^2.22.2",
     "moment-timezone": "^0.5.23",
     "phptomoment": "0.0.2",
+    "pretty-bytes": "^5.1.0",
     "pretty-kibibytes": "^4.0.4",
     "tus-js-client": "^1.5.2",
     "vue": "^2.5.17",
@@ -19,8 +20,7 @@
   },
   "devDependencies": {
     "@vue/test-utils": "^1.0.0-beta.27",
-    "moment-timezone-data-webpack-plugin": "^1.0.1",
-    "pretty-bytes": "^5.1.0"
+    "moment-timezone-data-webpack-plugin": "^1.0.1"
   },
   "config": {
     "bin": "../../../node_modules/.bin/"
