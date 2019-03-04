@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,12 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace Tuleap\Tus;
 
-namespace Tuleap\Docman\Tus;
-
-interface TusLocker
+final class TusServerIncompatibleVersionException extends TusServerException
 {
-    public function lock(TusFileInformation $file_information) : bool;
-    public function unlock(TusFileInformation $file_information) : void;
+    public function __construct($expected_version)
+    {
+        parent::__construct('Expected version of the tus.io protocol is ' . $expected_version, 412);
+    }
 }

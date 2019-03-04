@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\Upload;
 
-use Tuleap\Docman\Tus\TusFileInformation;
+use Tuleap\Tus\TusFileInformation;
 
 final class DocumentAlreadyUploadedInformation implements TusFileInformation
 {

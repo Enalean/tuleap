@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,11 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace Tuleap\Tus;
 
-namespace Tuleap\Docman\Tus;
-
-interface TusFinisherDataStore
+final class CannotWriteFileException extends TusServerException
 {
-    public function finishUpload(TusFileInformation $file_information) : void;
+    public function __construct()
+    {
+        parent::__construct('Saving the content of the request has failed', 500);
+    }
 }

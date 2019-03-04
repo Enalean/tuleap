@@ -23,8 +23,8 @@ namespace Tuleap\Docman\Upload;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
-use Tuleap\Docman\Tus\TusServer;
 use Psr\Http\Server\RequestHandlerInterface;
+use Tuleap\Tus\TusServer;
 
 final class FileUploadDispatcher implements RequestHandlerInterface
 {

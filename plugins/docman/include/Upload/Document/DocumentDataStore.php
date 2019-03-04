@@ -22,14 +22,14 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\Upload\Document;
 
-use Tuleap\Docman\Tus\TusDataStore;
-use Tuleap\Docman\Tus\TusFileInformationProvider;
-use Tuleap\Docman\Tus\TusFinisherDataStore;
-use Tuleap\Docman\Tus\TusLocker;
-use Tuleap\Docman\Tus\TusTerminaterDataStore;
-use Tuleap\Docman\Tus\TusWriter;
 use Tuleap\Docman\Upload\DocumentBeingUploadedLocker;
 use Tuleap\Docman\Upload\FileBeingUploadedWriter;
+use Tuleap\Tus\TusDataStore;
+use Tuleap\Tus\TusFileInformationProvider;
+use Tuleap\Tus\TusFinisherDataStore;
+use Tuleap\Tus\TusLocker;
+use Tuleap\Tus\TusTerminaterDataStore;
+use Tuleap\Tus\TusWriter;
 
 final class DocumentDataStore implements TusDataStore
 {

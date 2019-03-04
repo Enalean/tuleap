@@ -22,19 +22,19 @@ namespace Tuleap\Docman\Upload;
 
 use GuzzleHttp\Psr7\ServerRequest;
 use HTTPRequest;
-use Tuleap\Docman\Tus\TusCORSMiddleware;
-use Tuleap\Docman\Tus\TusServer;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\REST\BasicAuthentication;
 use Tuleap\REST\TuleapRESTCORSMiddleware;
 use Tuleap\REST\UserManager;
+use Tuleap\Tus\TusCORSMiddleware;
+use Tuleap\Tus\TusServer;
 
 class FileUploadController implements DispatchableWithRequestNoAuthz
 {
     /**
-     * @var TusServer
+     * @var \Tuleap\Tus\TusServer
      */
     private $tus_server;
     /**

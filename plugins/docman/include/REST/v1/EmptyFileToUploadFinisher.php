@@ -20,11 +20,11 @@
 
 namespace Tuleap\Docman\REST\v1;
 
-use Tuleap\Docman\Tus\CannotWriteFileException;
 use Tuleap\Docman\Upload\Document\DocumentToUpload;
-use Tuleap\Docman\Upload\DocumentAlreadyUploadedInformation;
 use Tuleap\Docman\Upload\Document\DocumentUploadFinisher;
 use Tuleap\Docman\Upload\Document\DocumentUploadPathAllocator;
+use Tuleap\Docman\Upload\DocumentAlreadyUploadedInformation;
+use Tuleap\Tus\CannotWriteFileException;
 
 class EmptyFileToUploadFinisher
 {

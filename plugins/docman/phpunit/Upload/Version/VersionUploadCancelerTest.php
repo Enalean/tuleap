@@ -25,8 +25,8 @@ namespace Tuleap\Docman\Upload\Version;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
-use Tuleap\Docman\Tus\TusFileInformation;
 use Tuleap\ForgeConfigSandbox;
+use Tuleap\Tus\TusFileInformation;
 
 class VersionUploadCancelerTest extends TestCase
 {

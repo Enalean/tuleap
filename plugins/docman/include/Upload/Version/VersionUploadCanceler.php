@@ -22,8 +22,8 @@ declare(strict_types = 1);
 
 namespace Tuleap\Docman\Upload\Version;
 
-use Tuleap\Docman\Tus\TusFileInformation;
-use Tuleap\Docman\Tus\TusTerminaterDataStore;
+use Tuleap\Tus\TusFileInformation;
+use Tuleap\Tus\TusTerminaterDataStore;
 
 final class VersionUploadCanceler implements TusTerminaterDataStore
 {

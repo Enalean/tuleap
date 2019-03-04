@@ -20,7 +20,7 @@
 
 namespace Tuleap\Docman\Upload;
 
-use Tuleap\Docman\Tus\TusFileInformation;
+use Tuleap\Tus\TusFileInformation;
 
 final class FileBeingUploadedInformation implements TusFileInformation
 {

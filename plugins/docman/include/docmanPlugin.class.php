@@ -1,7 +1,7 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2015 - Present.
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
- * Copyright (c) Enalean, 2015 - 2019.
  *
  * Originally written by Manuel Vacelet, 2006
  *
@@ -49,7 +49,6 @@ use Tuleap\Docman\REST\ResourcesInjector;
 use Tuleap\Docman\REST\v1\DocmanItemsEventAdder;
 use Tuleap\Docman\REST\v1\ItemRepresentationBuilder;
 use Tuleap\Docman\REST\v1\MetadataRepresentationBuilder;
-use Tuleap\Docman\Tus\TusServer;
 use Tuleap\Docman\Upload\FileBeingUploadedWriter;
 use Tuleap\Docman\Upload\FileUploadController;
 use Tuleap\Docman\Upload\Version\DocumentOnGoingVersionToUploadDAO;
@@ -69,6 +68,7 @@ use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupFormatter;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupRetriever;
 use Tuleap\Request\CollectRoutesEvent;
+use Tuleap\Tus\TusServer;
 use Tuleap\Widget\Event\GetPublicAreas;
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -1321,7 +1321,7 @@ class DocmanPlugin extends Plugin
                     )
                 )
             ),
-            new \Tuleap\Docman\Tus\TusCORSMiddleware(),
+            new \Tuleap\Tus\TusCORSMiddleware(),
             new \Tuleap\REST\TuleapRESTCORSMiddleware(),
             \Tuleap\REST\UserManager::build(),
             new \Tuleap\REST\BasicAuthentication()
@@ -1364,7 +1364,7 @@ class DocmanPlugin extends Plugin
                     new VersionUploadCanceler($path_allocator, $version_to_upload_dao)
                 )
             ),
-            new \Tuleap\Docman\Tus\TusCORSMiddleware(),
+            new \Tuleap\Tus\TusCORSMiddleware(),
             new \Tuleap\REST\TuleapRESTCORSMiddleware(),
             \Tuleap\REST\UserManager::build(),
             new \Tuleap\REST\BasicAuthentication()

@@ -26,9 +26,9 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
 use Tuleap\DB\DBConnection;
-use Tuleap\Docman\Tus\TusFileInformation;
 use Tuleap\Docman\Upload\Document\DocumentUploadPathAllocator;
 use Tuleap\ForgeConfigSandbox;
+use Tuleap\Tus\TusFileInformation;
 
 class DocumentBeingUploadedWriterTest extends TestCase
 {

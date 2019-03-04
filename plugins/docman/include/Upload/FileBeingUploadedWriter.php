@@ -23,9 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\Docman\Upload;
 
 use Tuleap\DB\DBConnection;
-use Tuleap\Docman\Tus\CannotWriteFileException;
-use Tuleap\Docman\Tus\TusFileInformation;
-use Tuleap\Docman\Tus\TusWriter;
+use Tuleap\Tus\CannotWriteFileException;
+use Tuleap\Tus\TusFileInformation;
+use Tuleap\Tus\TusWriter;
 
 final class FileBeingUploadedWriter implements TusWriter
 {
