@@ -118,7 +118,7 @@ class BaselineControllerIntTest extends TestCase
         $this->assertEquals('My first baseline', $baseline->getName());
         $this->assertEquals($milestone, $baseline->getMilestone());
         $this->assertEquals($this->current_user_provider->getUser(), $baseline->getAuthor());
-        $this->assertEquals($this->clock->now(), $baseline->getCreationDate());
+        $this->assertEquals($this->clock->now(), $baseline->getSnapshotDate());
     }
 
     public function testGetByMilestoneIdAndDate()

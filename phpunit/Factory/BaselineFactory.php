@@ -36,6 +36,6 @@ class BaselineFactory
             ->name('Milestone startup')
             ->milestone(MilestoneFactory::one()->build())
             ->author(new PFUser())
-            ->creationDate(DateTimeFactory::one());
+            ->snapshotDate(DateTimeFactory::one());
     }
 }

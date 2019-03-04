@@ -30,23 +30,23 @@ class Baseline extends TransientBaseline
     /** @var int */
     private $id;
 
+    /** @var DateTime */
+    private $snapshot_date;
+
     /** @var PFUser */
     private $author;
-
-    /** @var DateTime */
-    private $creation_date;
 
     public function __construct(
         int $id,
         string $name,
         Tracker_Artifact $milestone,
-        PFUser $author,
-        DateTime $creation_date
+        DateTime $snapshot_date,
+        PFUser $author
     ) {
         parent::__construct($name, $milestone);
         $this->id            = $id;
+        $this->snapshot_date = $snapshot_date;
         $this->author        = $author;
-        $this->creation_date = $creation_date;
     }
 
     public function getId(): int
@@ -54,13 +54,13 @@ class Baseline extends TransientBaseline
         return $this->id;
     }
 
+    public function getSnapshotDate(): DateTime
+    {
+        return $this->snapshot_date;
+    }
+
     public function getAuthor(): PFUser
     {
         return $this->author;
-    }
-
-    public function getCreationDate(): DateTime
-    {
-        return $this->creation_date;
     }
 }

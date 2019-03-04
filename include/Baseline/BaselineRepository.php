@@ -29,6 +29,6 @@ interface BaselineRepository
     public function add(
         TransientBaseline $baseline,
         PFUser $current_user,
-        DateTime $creation_date
+        DateTime $snapshot_date
     ): Baseline;
 }

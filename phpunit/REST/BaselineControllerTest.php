@@ -142,7 +142,7 @@ class BaselineControllerTest extends TestCase
         $this->assertEquals(99, $representation->author_id);
     }
 
-    public function testPostReturnsRepresentationOfBaselineCreationDateWithUserTimeZone()
+    public function testPostReturnsRepresentationOfBaselineSnapshotDateWithUserTimeZone()
     {
         $current_user = new PFUser(['user_id' => 99, 'timezone' => 'GMT+2']);
         $this->current_user_provider
@@ -158,13 +158,13 @@ class BaselineControllerTest extends TestCase
             ->shouldReceive('create')
             ->andReturn(
                 BaselineFactory::one()
-                    ->creationDate(DateTime::createFromFormat('Y-m-d H:i:s', '2019-03-21 14:47:03'))
+                    ->snapshotDate(DateTime::createFromFormat('Y-m-d H:i:s', '2019-03-21 14:47:03'))
                     ->build()
             );
 
         $representation = $this->controller->post('first baseline', 3);
 
-        $this->assertEquals('2019-03-21T14:47:03+01:00', $representation->creation_date);
+        $this->assertEquals('2019-03-21T14:47:03+01:00', $representation->snapshot_date);
     }
 
     public function testPostThrows403WhenNotAuthorized()

@@ -37,11 +37,11 @@ class BaselineBuilder
     /** @var Tracker_Artifact */
     private $milestone;
 
+    /** @var DateTime */
+    private $snapshot_date;
+
     /** @var PFUser */
     private $author;
-
-    /** @var DateTime */
-    private $creation_date;
 
     public function id(int $id): self
     {
@@ -61,15 +61,15 @@ class BaselineBuilder
         return $this;
     }
 
-    public function author(PFUser $author): self
+    public function snapshotDate(DateTime $snapshot_date): self
     {
-        $this->author = $author;
+        $this->snapshot_date = $snapshot_date;
         return $this;
     }
 
-    public function creationDate(DateTime $creation_date): self
+    public function author(PFUser $author): self
     {
-        $this->creation_date = $creation_date;
+        $this->author = $author;
         return $this;
     }
 
@@ -79,8 +79,8 @@ class BaselineBuilder
             $this->id,
             $this->name,
             $this->milestone,
-            $this->author,
-            $this->creation_date
+            $this->snapshot_date,
+            $this->author
         );
     }
 }

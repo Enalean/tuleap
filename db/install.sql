@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS plugin_baseline_baseline
 	name varchar(255) not null,
 	artifact_id int not null,
 	user_id int not null,
-	creation_date int not null
+	snapshot_date int not null
 );
 
 -- Baseline entity

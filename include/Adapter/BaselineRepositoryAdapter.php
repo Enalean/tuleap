@@ -41,7 +41,7 @@ class BaselineRepositoryAdapter implements BaselineRepository
     public function add(
         TransientBaseline $baseline,
         PFUser $current_user,
-        DateTime $creation_date
+        DateTime $snapshot_date
     ): Baseline {
 
         $id = (int) $this->db->insertReturnId(
@@ -50,7 +50,7 @@ class BaselineRepositoryAdapter implements BaselineRepository
                 'name'          => $baseline->getName(),
                 'artifact_id'   => $baseline->getMilestone()->getId(),
                 'user_id'       => $current_user->getId(),
-                'creation_date' => $creation_date->getTimestamp()
+                'snapshot_date' => $snapshot_date->getTimestamp()
             ]
         );
 
@@ -58,8 +58,8 @@ class BaselineRepositoryAdapter implements BaselineRepository
             $id,
             $baseline->getName(),
             $baseline->getMilestone(),
-            $current_user,
-            $creation_date
+            $snapshot_date,
+            $current_user
         );
     }
 }

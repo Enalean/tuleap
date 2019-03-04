@@ -30,8 +30,8 @@ class BaselinesResourceTest extends RestBase
     {
         $artifact = $this->fetchFirstArtifactByProjectName("baseline-test");
 
-        $url      = 'baselines/?' . http_build_query(['artifact_id' => $artifact['id'], "date" => "2017-09-02"]);
-        $response = $this->getResponse($this->client->get($url));
+        $url           = 'baselines/?' . http_build_query(['artifact_id' => $artifact['id'], "date" => "2017-09-02"]);
+        $response      = $this->getResponse($this->client->get($url));
         $json_response = $response->json();
 
         $this->assertEquals("old title", $json_response['artifact_title']);
@@ -44,7 +44,7 @@ class BaselinesResourceTest extends RestBase
     {
         $artifact = $this->fetchFirstArtifactByProjectName("baseline-test");
 
-        $response = $this->getResponseByName(
+        $response      = $this->getResponseByName(
             self::TEST_USER_NAME,
             $this->client->post(
                 'baselines',
@@ -62,7 +62,7 @@ class BaselinesResourceTest extends RestBase
         $this->assertNotNull($json_response['id']);
         $this->assertEquals('new baseline', $json_response['name']);
         $this->assertEquals($this->user_ids[self::TEST_USER_NAME], $json_response['author_id']);
-        $this->assertNotNull($json_response['creation_date']);
+        $this->assertNotNull($json_response['snapshot_date']);
     }
 
     private function fetchFirstArtifactByProjectName(string $project_name): array

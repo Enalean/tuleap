@@ -35,18 +35,18 @@ class BaselineRepresentation
     /** @var int */
     public $milestone_id;
 
+    /** @var DateTime */
+    public $snapshot_date;
+
     /** @var int */
     public $author_id;
-
-    /** @var DateTime */
-    public $creation_date;
 
     public function __construct(Baseline $baseline)
     {
         $this->id            = $baseline->getId();
         $this->name          = $baseline->getName();
         $this->milestone_id  = $baseline->getMilestone()->getId();
+        $this->snapshot_date = $baseline->getSnapshotDate()->format('c');
         $this->author_id     = $baseline->getAuthor()->getId();
-        $this->creation_date = $baseline->getCreationDate()->format('c');
     }
 }
