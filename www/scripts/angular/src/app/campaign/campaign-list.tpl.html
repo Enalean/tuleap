@@ -12,49 +12,45 @@
             <span translate>New campaign</span>
         </button>
         <div class="test-campaigns-header-spacer"></div>
-        <input type="search" class="tlp-search test-campaigns-search" placeholder="{{ 'Campaign label or status...' | translate }}" ng-model="search">
+        <input type="search" class="tlp-search test-campaigns-search" placeholder="{{ 'Label or status...' | translate }}" ng-model="search">
     </div>
 
-    <div class="tlp-pane"
-         ng-repeat="campaign in $ctrl.filtered_campaigns | InPropertiesFilter:search:['label', 'status'] track by campaign.id"
+    <a class="tlp-card tlp-card-selectable test-campaign-card"
+        ng-class="{'tlp-card-inactive': campaign.status !== 'Open'}"
+        ng-repeat="campaign in $ctrl.filtered_campaigns | InPropertiesFilter:search:['label', 'status'] track by campaign.id"
+        ui-sref="campaigns.executions({ id: campaign.id })"
     >
-        <div class="tlp-pane-container test-campaign-title-container">
-             <section class="tlp-pane-section">
-                <h2 class="test-campaign-title">{{ campaign.label }}</h2>
-            </section>
+        <h2 class="test-campaign-title">{{ campaign.label }}</h2>
+        <div class="test-campaign-progressions">
+            <div class="test-campaign-progression passed"
+                ng-if="campaign.nb_of_passed"
+            >
+                <div class="test-campaign-progression-value">{{ campaign.nb_of_passed }}</div>
+                <div class="test-campaign-progression-bar"></div>
+            </div>
+            <div class="test-campaign-progression failed"
+                style="width: {{ campaign.nb_of_failed * 100 / campaign.total }}%"
+                ng-if="campaign.nb_of_failed"
+            >
+                <div class="test-campaign-progression-value">{{ campaign.nb_of_failed }}</div>
+                <div class="test-campaign-progression-bar"></div>
+            </div>
+            <div class="test-campaign-progression blocked"
+                style="width: {{ campaign.nb_of_blocked * 100 / campaign.total }}%"
+                ng-if="campaign.nb_of_blocked"
+            >
+                <div class="test-campaign-progression-value">{{ campaign.nb_of_blocked }}</div>
+                <div class="test-campaign-progression-bar"></div>
+            </div>
+            <div class="test-campaign-progression notrun"
+                style="width: {{ campaign.nb_of_notrun * 100 / campaign.total }}%"
+                ng-if="campaign.nb_of_notrun"
+            >
+                <div class="test-campaign-progression-value">{{ campaign.nb_of_notrun }}</div>
+                <div class="test-campaign-progression-bar"></div>
+            </div>
         </div>
-        <div class="tlp-pane-container test-campaign-progression-container">
-            <section class="tlp-pane-section">
-                <div class="test-campaign-progression">
-                    <div class="tests-passed"
-                        ng-if="campaign.nb_of_passed"
-                    >{{ campaign.nb_of_passed }}</div>
-                    <div class="tests-failed"
-                        style="width: {{ campaign.nb_of_failed * 100 / campaign.total }}%"
-                        ng-if="campaign.nb_of_failed"
-                    >{{ campaign.nb_of_failed }}</div>
-                    <div class="tests-blocked"
-                        style="width: {{ campaign.nb_of_blocked * 100 / campaign.total }}%"
-                        ng-if="campaign.nb_of_blocked"
-                    >{{ campaign.nb_of_blocked }}</div>
-                    <div class="tests-notrun"
-                        style="width: {{ campaign.nb_of_notrun * 100 / campaign.total }}%"
-                        ng-if="campaign.nb_of_notrun"
-                    >{{ campaign.nb_of_notrun }}</div>
-                </div>
-            </section>
-        </div>
-        <div class="tlp-pane-container test-campaign-actions">
-            <section class="tlp-pane-section">
-                <a class="tlp-button-primary tlp-button-outline"
-                    ui-sref="campaigns.executions({ id: campaign.id })"
-                >
-                    <i class="fa fa-list tlp-button-icon"></i>
-                    <span translate>Details</span>
-                </a>
-            </section>
-        </div>
-    </div>
+    </a>
 
     <div class="tlp-framed no-campaign-info"
         ng-if="$ctrl.shouldShowNoCampaigns() || $ctrl.shouldShowNoOpenCampaigns()"
