@@ -306,12 +306,12 @@ export const cancelFolderUpload = (context, folder) => {
             item => item.parent_id === folder.id
         );
 
-        children.forEach(async child => {
-            child.uploader.abort();
-            await cancelUpload(child);
-
-            context.commit("removeItemFromFolderContent", child);
-            context.commit("removeFileFromUploadsList", child);
+        children.forEach(child => {
+            if (child.is_uploading_new_version) {
+                cancelVersionUpload(context, child);
+            } else {
+                cancelFileUpload(context, child);
+            }
         });
     } catch (e) {
         // do nothing

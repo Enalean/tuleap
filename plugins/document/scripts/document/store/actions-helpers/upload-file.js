@@ -70,7 +70,15 @@ export function uploadFile(context, dropped_file, fake_item, docman_item, parent
     return uploader;
 }
 
-export function uploadVersion(context, dropped_file, item, new_version) {
+export function uploadVersion(context, dropped_file, updated_file, new_version) {
+    let parent_folder = context.state.folder_content.find(
+        item => item.id === updated_file.parent_id
+    );
+
+    if (!parent_folder) {
+        parent_folder = context.state.current_folder;
+    }
+
     const uploader = new Upload(dropped_file, {
         uploadUrl: new_version.upload_href,
         retryDelays: RETRY_DELAYS,
@@ -79,18 +87,19 @@ export function uploadVersion(context, dropped_file, item, new_version) {
             filetype: dropped_file.type
         },
         onProgress: (bytes_uploaded, bytes_total) => {
-            updateParentProgress(bytes_total, item, bytes_uploaded, context, parent);
+            updateParentProgress(bytes_total, updated_file, bytes_uploaded, context, parent_folder);
         },
         onSuccess: () => {
-            item.progress = null;
-            item.is_uploading_new_version = false;
+            updated_file.progress = null;
+            updated_file.is_uploading_new_version = false;
             const now = Date.now();
-            item.file_properties.html_url = item.file_properties.html_url + "&update_time=" + now;
-            item.last_update_date = now;
-            context.commit("removeFileFromUploadsList", item);
+            updated_file.file_properties.html_url =
+                updated_file.file_properties.html_url + "&update_time=" + now;
+            updated_file.last_update_date = now;
+            context.commit("removeFileFromUploadsList", updated_file);
         },
         onError: ({ originalRequest }) => {
-            item.upload_error = originalRequest.statusText;
+            updated_file.upload_error = originalRequest.statusText;
         }
     });
 
