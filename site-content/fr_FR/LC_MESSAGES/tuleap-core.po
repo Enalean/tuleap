@@ -496,6 +496,9 @@ msgstr "Interdit"
 msgid "Forums"
 msgstr "Forums"
 
+msgid "General"
+msgstr "Général"
+
 msgid "Generate new key"
 msgstr "Générer une nouvelle clé"
 
@@ -1090,6 +1093,9 @@ msgstr "Page d'accueil"
 msgid "Site news"
 msgstr "News du site"
 
+msgid "Source code management"
+msgstr "Gestion de code source"
+
 msgid "Start by choosing a widget"
 msgstr "Commencez par choisir un widget"
 
@@ -1358,6 +1364,9 @@ msgstr "Aujourd'hui"
 
 msgid "Tracker"
 msgstr "Suivi"
+
+msgid "Trackers"
+msgstr "Outils de suivi"
 
 msgid "Trackers v3 import"
 msgstr "Import outils de suivi v3"

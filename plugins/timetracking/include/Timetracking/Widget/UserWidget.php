@@ -57,7 +57,7 @@ class UserWidget extends Widget
 
     public function getCategory()
     {
-        return 'plugin_timetracking';
+        return dgettext('tuleap-timetracking', 'Time tracking');
     }
 
     public function getContent()

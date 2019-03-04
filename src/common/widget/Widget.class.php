@@ -153,9 +153,11 @@ use Tuleap\Layout\CssAssetCollection;
     function destroy($id) {
     }
 
-    function getCategory() {
-        return 'general';
+    public function getCategory()
+    {
+        return _('General');
     }
+
     function getDescription() {
         return '';
     }

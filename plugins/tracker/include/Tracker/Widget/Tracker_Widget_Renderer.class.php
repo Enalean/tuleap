@@ -214,7 +214,7 @@ abstract class Tracker_Widget_Renderer extends Widget
     }
 
     function getCategory() {
-        return 'trackers';
+        return dgettext('tuleap-tracker', 'Trackers');
     }
 
     public function getJavascriptDependencies()

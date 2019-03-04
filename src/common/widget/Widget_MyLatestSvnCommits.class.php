@@ -168,7 +168,7 @@ class Widget_MyLatestSvnCommits extends Widget {
     }
 
     function getCategory() {
-        return 'scm';
+        return _('Source code management');
     }
     function getDescription() {
         return $GLOBALS['Language']->getText('widget_description_my_latest_svn_commits','description');

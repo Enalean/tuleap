@@ -23,7 +23,7 @@ require_once('Widget.class.php');
 
 /**
 * Widget_ProjectLatestFileReleases
-* 
+*
 */
 class Widget_ProjectLatestFileReleases extends Widget {
     var $content;
@@ -53,9 +53,9 @@ class Widget_ProjectLatestFileReleases extends Widget {
     {
         return $project->usesFile();
     }
-    
+
     function getCategory() {
-        return 'frs';
+        return _('Files');
     }
     function getDescription() {
         return $GLOBALS['Language']->getText('widget_description_project_latest_file_releases','description');

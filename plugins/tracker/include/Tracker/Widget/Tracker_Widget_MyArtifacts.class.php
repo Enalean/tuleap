@@ -209,7 +209,7 @@ class Tracker_Widget_MyArtifacts extends Widget {
     }
 
     function getCategory() {
-        return 'trackers';
+        return dgettext('tuleap-tracker', 'Trackers');
     }
 
     function getDescription() {

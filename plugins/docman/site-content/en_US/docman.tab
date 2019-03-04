@@ -847,7 +847,6 @@ plugin_docman	docman_wiki_delete_wiki_page_failed	Error while trying to delete t
 plugin_docman	docman_wiki_page_locked	$1 locked this page. You cannot modify it until the lock owner or a document manager release the lock.
 plugin_docman	docman_wiki_page_locked_elsewhere	This wiki page is already locked through "$1".
 
-widget_categ_label	plugin_docman	Document Manager
 plugin_docman	widget_description_my_docman	List the documents under review.
 plugin_docman	widget_title_embedded	Docman Viewer
 plugin_docman	widget_description_embedded	Display a docman item directly in the dashboard. <br /><em>For now, only embedded files are supported</em>.

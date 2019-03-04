@@ -146,7 +146,7 @@ class Git_Widget_UserPushes extends Widget {
      * @return String
      */
     function getCategory() {
-        return 'scm';
+        return _('Source code management');
     }
 
     /**

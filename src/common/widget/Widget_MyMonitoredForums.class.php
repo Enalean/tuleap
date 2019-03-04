@@ -126,7 +126,7 @@ class Widget_MyMonitoredForums extends Widget {
 
     public function getCategory()
     {
-        return 'forums';
+        return _('Forums');
     }
 
     public function getDescription()

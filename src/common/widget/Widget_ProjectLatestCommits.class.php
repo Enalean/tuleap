@@ -123,7 +123,7 @@ abstract class Widget_ProjectLatestCommits extends Widget
 
     public function getCategory()
     {
-        return 'scm';
+        return _('Source code management');
     }
 
     public function isAjax()

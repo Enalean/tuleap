@@ -62,7 +62,7 @@ class AdminDelegation_UserWidget extends Widget //phpcs:ignore
 
     public function getCategory()
     {
-        return 'plugin_admindelegation';
+        return dgettext('tuleap-admindelegation', 'Admin delegation');
     }
 
     public function getProjectAdmins($groupId)

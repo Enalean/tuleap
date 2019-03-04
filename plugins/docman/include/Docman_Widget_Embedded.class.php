@@ -274,7 +274,7 @@ class Docman_Widget_Embedded extends Widget /* implements Visitor */ {
      * @return string
      */
     function getCategory() {
-        return 'plugin_docman';
+        return dgettext('tuleap-docman', 'Document manager');
     }
 
     /**

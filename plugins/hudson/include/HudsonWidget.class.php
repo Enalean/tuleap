@@ -35,7 +35,7 @@ abstract class HudsonWidget extends Widget {
     }
 
     function getCategory() {
-        return 'ci';
+        return dgettext('tuleap-hudson', 'Continuous integration');
     }
 
     protected function getAvailableJobs()

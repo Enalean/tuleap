@@ -82,7 +82,7 @@ class ProjectCrossTrackerSearch extends Widget
 
     public function getCategory()
     {
-        return 'trackers';
+        return dgettext('tuleap-tracker', 'Trackers');
     }
 
     public function isUnique()
