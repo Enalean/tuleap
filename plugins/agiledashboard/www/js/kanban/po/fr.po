@@ -46,7 +46,7 @@ msgstr "Backlog"
 
 #: src/app/edit-kanban/edit-kanban-controller.js
 msgid "Based on the {{ trackerLink }} tracker."
-msgstr "Basé sur l’outil de suivi {{ tracker_link }}."
+msgstr "Basé sur l’outil de suivi {{ trackerLink }}."
 
 #: src/app/edit-kanban/edit-kanban.tpl.html src/app/error-modal/error.tpl.html
 msgid "Cancel"
