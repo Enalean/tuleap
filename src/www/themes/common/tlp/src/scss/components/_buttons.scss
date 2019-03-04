@@ -19,7 +19,6 @@
 
 
 $tlp-button-color: #ffffff;
-$tlp-button-box-shadow: rgba(0, 0, 0, .12);
 $tlp-button-box-shadow-timing: 75ms;
 $tlp-button-background-timing: 75ms;
 
@@ -47,16 +46,15 @@ $tlp-button-small-radius: 3px;
 $tlp-button-mini-height: 22px;
 $tlp-button-mini-line-height: 18px;
 $tlp-button-mini-font-size: 12px;
-$tlp-button-mini-font-weight: 600;
+$tlp-button-mini-font-weight: 400;
 $tlp-button-mini-padding: 0 8px;
 $tlp-button-mini-radius: 3px;
 
-$tlp-button-outline-hover-color: #fafafa;
+$tlp-button-outline-hover-color: #fcfcfc;
 
 $tlp-button-secondary-background: #e9e9e9;
 $tlp-button-secondary-color: #444444;
 $tlp-button-secondary-box-shadow: rgba(0, 0, 0, .05);
-$tlp-button-secondary-outline-border: #aaaaaa;
 $tlp-button-secondary-outline-color: #888888;
 
 
@@ -64,9 +62,11 @@ $tlp-button-secondary-outline-color: #888888;
     display: inline-block;
     height: $tlp-button-normal-height;
     padding: $tlp-button-normal-padding;
+    overflow: hidden;
     transition: box-shadow $tlp-button-box-shadow-timing ease-in-out, background $tlp-button-background-timing ease-in-out, border-color $tlp-button-background-timing ease-in-out;
     border: 1px solid transparent;
     border-radius: $tlp-button-normal-radius;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, .08), 0 1px 2px rgba(0, 0, 0, .1), 0 -1px 0 rgba(0, 0, 0, .03);
     color: $tlp-button-color;
     font-family: $tlp-font-family;
     font-size: $tlp-button-normal-font-size;
@@ -76,17 +76,15 @@ $tlp-button-secondary-outline-color: #888888;
     text-decoration: none;
     text-overflow: ellipsis;
     text-transform: none;
-    white-space: nowrap;
-    box-shadow: 0 1px 1px $tlp-button-box-shadow;
-    cursor: pointer;
-    overflow: hidden;
     vertical-align: middle;
+    white-space: nowrap;
+    cursor: pointer;
 
     &:hover,
     &:active,
     &:focus {
         transition: box-shadow $tlp-button-box-shadow-timing ease-in-out, background $tlp-button-background-timing ease-in-out, border-color $tlp-button-background-timing ease-in-out;
-        box-shadow: none;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, .08), 0 0 1px rgba(0, 0, 0, .08), 0 -1px 0 rgba(0, 0, 0, .03);
         text-decoration: none;
     }
 
@@ -116,9 +114,9 @@ $tlp-button-secondary-outline-color: #888888;
     color: transparentize($text-color, .4);
 }
 
-@mixin tlp-button-outline($outline-color, $outline-border-color: $outline-color) {
-    border: 1px solid $outline-border-color;
-    background: transparent;
+@mixin tlp-button-outline($outline-color) {
+    border: 1px solid $tlp-ui-white;
+    background: $tlp-ui-white;
     color: $outline-color;
 
     &:hover {
@@ -126,13 +124,16 @@ $tlp-button-secondary-outline-color: #888888;
     }
 
     &:active {
-        background: darken($tlp-button-outline-hover-color, 5%);
+        background: mix(transparentize($outline-color, .8), $tlp-ui-white);
     }
 
     &:disabled,
     &.disabled {
-        border-color: transparentize($outline-color, .4);
-        color: transparentize($outline-color, .4);
+        color: transparentize($outline-color, .5);
+
+        &:hover {
+            background: $tlp-ui-white;
+        }
     }
 }
 
@@ -171,7 +172,6 @@ $tlp-button-secondary-outline-color: #888888;
     border-color: $tlp-button-secondary-background;
     background: $tlp-button-secondary-background;
     color: $tlp-button-secondary-color;
-    box-shadow: 0 1px 1px $tlp-button-secondary-box-shadow;
 
     &:hover {
         @include tlp-button-darken($tlp-button-secondary-background, 5%);
@@ -187,7 +187,7 @@ $tlp-button-secondary-outline-color: #888888;
     }
 
     &.tlp-button-outline {
-        @include tlp-button-outline($tlp-button-secondary-outline-color, $tlp-button-secondary-outline-border);
+        @include tlp-button-outline($tlp-button-secondary-outline-color);
     }
 }
 
@@ -240,6 +240,7 @@ $tlp-button-secondary-outline-color: #888888;
     height: $tlp-button-mini-height;
     padding: $tlp-button-mini-padding;
     border-radius: $tlp-button-mini-radius;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, .08), 0 1px 1px rgba(0, 0, 0, .1), 0 -1px 0 rgba(0, 0, 0, .03);
     font-size: $tlp-button-mini-font-size;
     font-weight: $tlp-button-mini-font-weight;
     line-height: $tlp-button-mini-line-height;

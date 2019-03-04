@@ -670,6 +670,19 @@ span.select2-container--tlp-select2-large {
         padding: 0 $tlp-form-element-large-padding-horizontal;
         background: none;
     }
+
+    > .tlp-prepend[class*="tlp-button"],
+    > .tlp-prepend.tlp-dropdown > a[class*="tlp-button"],
+    > .tlp-prepend.tlp-dropdown > button[class*="tlp-button"],
+    > .tlp-append[class*="tlp-button"],
+    > .tlp-append.tlp-dropdown > a[class*="tlp-button"],
+    > .tlp-append.tlp-dropdown > button[class*="tlp-button"] {
+        box-shadow: 0 1px 2px rgba(0, 0, 0, .08);
+
+        &.tlp-button-outline {
+            border-color: $tlp-form-element-border-color;
+        }
+    }
 }
 
 .tlp-form-element-prepend {
