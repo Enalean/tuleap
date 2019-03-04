@@ -155,6 +155,8 @@ class DocmanItemsResource extends AuthenticatedResource
      * @access hybrid
      * @status 201
      *
+     * @deprecated this route will be splitted into smaller routes, easier to use (POST docman_folders/id/type)
+     *
      * @return CreatedItemRepresentation
      *
      * @throws 400
