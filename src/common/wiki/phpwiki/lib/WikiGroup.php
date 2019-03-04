@@ -153,7 +153,7 @@ class WikiGroup{
     	if ($this->specialGroup($group)) {
     	    return $this->isSpecialMember($group);
         } else {
-            trigger_error(__sprintf("Method '%s' not implemented in this GROUP_METHOD %s",
+            trigger_error(PHPWikiSprintf("Method '%s' not implemented in this GROUP_METHOD %s",
                                     'isMember', GROUP_METHOD),
                           E_USER_WARNING);
         }
@@ -185,7 +185,7 @@ class WikiGroup{
             case GROUP_CREATOR:
                 return false;
             default:
-                trigger_error(__sprintf("Undefined method %s for special group %s",
+                trigger_error(PHPWikiSprintf("Undefined method %s for special group %s",
                                         'isMember',$group),
                               E_USER_WARNING);
         }
@@ -200,7 +200,7 @@ class WikiGroup{
      * @return array Array of groups to which the user belongs (always empty).
      */ 
     function getAllGroupsIn(){
-        trigger_error(__sprintf("Method '%s' not implemented in this GROUP_METHOD %s",
+        trigger_error(PHPWikiSprintf("Method '%s' not implemented in this GROUP_METHOD %s",
                                 'getAllGroupsIn', GROUP_METHOD),
                       E_USER_WARNING);
         return array();
@@ -282,7 +282,7 @@ class WikiGroup{
     	if ($this->specialGroup($group)) {
     	    return $this->getSpecialMembersOf($group);
     	}
-        trigger_error(__sprintf("Method '%s' not implemented in this GROUP_METHOD %s",
+        trigger_error(PHPWikiSprintf("Method '%s' not implemented in this GROUP_METHOD %s",
                                 'getMembersOf', GROUP_METHOD),
                       E_USER_WARNING);
         return array();
@@ -326,7 +326,7 @@ class WikiGroup{
             // this could get complex so just return an empty array
             return false;
         default:
-            trigger_error(__sprintf("Unknown special group '%s'", $group),
+            trigger_error(PHPWikiSprintf("Unknown special group '%s'", $group),
                           E_USER_WARNING);
         }
     }
@@ -341,7 +341,7 @@ class WikiGroup{
      * @return bool On true user was added, false if not.
      */ 
     function setMemberOf($group, $user = false){
-        trigger_error(__sprintf("Method '%s' not implemented in this GROUP_METHOD %s",
+        trigger_error(PHPWikiSprintf("Method '%s' not implemented in this GROUP_METHOD %s",
                                 'setMemberOf', GROUP_METHOD),
                       E_USER_WARNING);
         return false;
@@ -357,7 +357,7 @@ class WikiGroup{
      * @return bool On true user was removed, false if not.
      */ 
     function removeMemberOf($group, $user = false){
-        trigger_error(__sprintf("Method '%s' not implemented in this GROUP_METHOD %s",
+        trigger_error(PHPWikiSprintf("Method '%s' not implemented in this GROUP_METHOD %s",
                                 'removeMemberOf', GROUP_METHOD),
                       E_USER_WARNING);
         return false;

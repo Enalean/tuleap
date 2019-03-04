@@ -1630,7 +1630,7 @@ class WikiDB_PageRevision
         }
         else {
             // else revision has been deleted... What to do?
-            return __sprintf("Oops! Revision %s of %s seems to have been deleted!",
+            return PHPWikiSprintf("Oops! Revision %s of %s seems to have been deleted!",
                              $version, $pagename);
         }
     }

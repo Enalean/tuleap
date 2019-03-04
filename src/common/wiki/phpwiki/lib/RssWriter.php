@@ -51,7 +51,7 @@ class RssWriter extends XmlElement
     // and can include:
     //  'URI'
     function channel($properties, $uri = false) {
-        $this->_channel = $this->__node('channel', $properties, $uri);
+        $this->_channel = $this->node('channel', $properties, $uri);
     }
     
     // Args should include:
@@ -59,7 +59,7 @@ class RssWriter extends XmlElement
     // and can include:
     //  'description', 'URI'
     function addItem($properties, $uri = false) {
-        $this->_items[] = $this->__node('item', $properties, $uri);
+        $this->_items[] = $this->node('item', $properties, $uri);
     }
 
     // Args should include:
@@ -67,7 +67,7 @@ class RssWriter extends XmlElement
     // and can include:
     //  'URI'
     function image($properties, $uri = false) {
-        $this->_image = $this->__node('image', $properties, $uri);
+        $this->_image = $this->node('image', $properties, $uri);
     }
 
     // Args should include:
@@ -75,7 +75,7 @@ class RssWriter extends XmlElement
     // and can include:
     //  'URI'
     function textinput($properties, $uri = false) {
-        $this->_textinput = $this->__node('textinput', $properties, $uri);
+        $this->_textinput = $this->node('textinput', $properties, $uri);
     }
 
     /**
@@ -91,16 +91,16 @@ class RssWriter extends XmlElement
         $seq = new XmlElement('rdf:Seq');
         if ($items) {
             foreach ($items as $item)
-                $seq->pushContent($this->__ref('rdf:li', $item));
+                $seq->pushContent($this->ref('rdf:li', $item));
         }
         $channel->pushContent(new XmlElement('items', false, $seq));
      
 	if (isset($this->_image)) {
-            $channel->pushContent($this->__ref('image', $this->_image));
+            $channel->pushContent($this->ref('image', $this->_image));
 	    $items[] = $this->_image;
 	}
 	if (isset($this->_textinput)) {
-            $channel->pushContent($this->__ref('textinput', $this->_textinput));
+            $channel->pushContent($this->ref('textinput', $this->_textinput));
 	    $items[] = $this->_textinput;
 	}
 
@@ -108,7 +108,7 @@ class RssWriter extends XmlElement
 	if ($items)
 	    $this->pushContent($items);
 
-        $this->__spew();
+        $this->spew();
         $this->_finished = true;
     }
             
@@ -116,7 +116,7 @@ class RssWriter extends XmlElement
     /**
      * Write output to HTTP client.
      */
-    function __spew() {
+    protected function spew() {
         header("Content-Type: application/xml; charset=" . RSS_ENCODING);
         printf("<?xml version=\"1.0\" encoding=\"%s\"?>\n", RSS_ENCODING);
         printf("<!-- generator=\"PhpWiki-%s\" -->\n", PHPWIKI_VERSION);
@@ -127,18 +127,18 @@ class RssWriter extends XmlElement
     /**
      * Create a new RDF <em>typedNode</em>.
      */
-    function __node($type, $properties, $uri = false) {
+    protected function node($type, $properties, $uri = false) {
 	if (! $uri)
 	    $uri = $properties['link'];
-	$attr['rdf:about'] = $this->__uniquify_uri($uri);
+	$attr['rdf:about'] = $this->uniquify_uri($uri);
 	return new XmlElement($type, $attr,
-                              $this->__elementize($properties));
+                              $this->elementize($properties));
     }
 
     /**
      * Check object URI for uniqueness, create a unique URI if needed.
      */
-    function __uniquify_uri ($uri) {
+    private function uniquify_uri ($uri) {
 	if (!$uri || isset($this->_uris_seen[$uri])) {
 	    $n = count($this->_uris_seen);
 	    $uri = $this->_channel->getAttr('rdf:about') . "#uri$n";
@@ -151,10 +151,10 @@ class RssWriter extends XmlElement
     /**
      * Convert hash of RDF properties to <em>propertyElt</em>s.
      */
-    function __elementize ($elements) {
+    protected function elementize ($elements) {
 	$out = array();
         foreach ($elements as $prop => $val) {
-	    $this->__check_predicate($prop);
+	    $this->check_predicate($prop);
 	    $out[] = new XmlElement($prop, false, $val);
 	}
 	return $out;
@@ -163,7 +163,7 @@ class RssWriter extends XmlElement
     /**
      * Check property predicates for XMLNS sanity.
      */
-    function __check_predicate ($name) {
+    private function check_predicate ($name) {
 	if (preg_match('/^([^:]+):[^:]/', $name, $m)) {
 	    $ns = $m[1];
 	    if (! $this->getAttr("xmlns:$ns")) {
@@ -177,7 +177,7 @@ class RssWriter extends XmlElement
     /**
      * Create a <em>propertyElt</em> which references another node in the RSS.
      */
-    function __ref($predicate, $reference) {
+    private function ref($predicate, $reference) {
         $attr['rdf:resource'] = $reference->getAttr('rdf:about');
         return new XmlElement($predicate, $attr);
     }

@@ -45,7 +45,7 @@ class Docman_View_ReportSettings extends Docman_View_Extra {
     /**
      *
      */
-    function __init($params) {
+    private function init($params) {
         $this->groupId     =  $params['group_id'];
         $this->defaultUrl  =  $params['default_url'];
         $this->controller  = $params['docman'];
@@ -261,7 +261,7 @@ class Docman_View_ReportSettings extends Docman_View_Extra {
     function _content($params) {
         $html = '';
         
-        $this->__init($params);
+        $this->init($params);
         
         $request = HTTPRequest::instance();
         if($request->exist('report_id')) {
