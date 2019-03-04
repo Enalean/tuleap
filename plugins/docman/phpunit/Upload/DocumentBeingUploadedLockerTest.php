@@ -26,9 +26,9 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
-use Tuleap\Docman\Tus\TusFileInformation;
 use Tuleap\Docman\Upload\DocumentBeingUploadedLocker;
 use Tuleap\ForgeConfigSandbox;
+use Tuleap\Tus\TusFileInformation;
 
 class DocumentBeingUploadedLockerTest extends TestCase
 {

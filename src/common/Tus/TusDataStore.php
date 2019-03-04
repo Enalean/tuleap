@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,9 +20,13 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Docman\Tus;
+namespace Tuleap\Tus;
 
-interface TusFileInformationProvider
+interface TusDataStore
 {
-    public function getFileInformation(\Psr\Http\Message\ServerRequestInterface $request) : ?TusFileInformation;
+    public function getFileInformationProvider() : TusFileInformationProvider;
+    public function getWriter() : TusWriter;
+    public function getFinisher() : ?TusFinisherDataStore;
+    public function getTerminater() : ?TusTerminaterDataStore;
+    public function getLocker() : ?TusLocker;
 }

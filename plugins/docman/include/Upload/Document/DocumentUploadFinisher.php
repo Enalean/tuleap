@@ -23,9 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\Docman\Upload\Document;
 
 use Tuleap\DB\DBTransactionExecutor;
-use Tuleap\Docman\Tus\TusFileInformation;
-use Tuleap\Docman\Tus\TusFinisherDataStore;
-use Tuleap\Docman\Upload\Document\DocumentOngoingUploadDAO;
+use Tuleap\Tus\TusFileInformation;
+use Tuleap\Tus\TusFinisherDataStore;
 
 final class DocumentUploadFinisher implements TusFinisherDataStore
 {

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,9 +20,13 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Docman\Tus;
+namespace Tuleap\Tus;
 
-interface TusTerminaterDataStore
+interface TusWriter
 {
-    public function terminateUpload(TusFileInformation $file_information) : void;
+    /**
+     * @param resource $input_source
+     * @throws CannotWriteFileException
+     */
+    public function writeChunk(TusFileInformation $file_information, int $offset, $input_source) : int;
 }

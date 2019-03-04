@@ -25,10 +25,10 @@ namespace Tuleap\Docman\Upload\Version;
 use Docman_File;
 use Docman_Item;
 use ProjectManager;
-use Tuleap\Docman\REST\v1\DocmanItemsEventAdder;
 use Tuleap\DB\DBTransactionExecutor;
-use Tuleap\Docman\Tus\TusFileInformation;
-use Tuleap\Docman\Tus\TusFinisherDataStore;
+use Tuleap\Docman\REST\v1\DocmanItemsEventAdder;
+use Tuleap\Tus\TusFileInformation;
+use Tuleap\Tus\TusFinisherDataStore;
 
 final class VersionUploadFinisher implements TusFinisherDataStore
 {
