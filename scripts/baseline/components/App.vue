@@ -1,57 +1,63 @@
-<!--
-  - Copyright (c) Enalean, 2019. All Rights Reserved.
-  -
-  - This file is a part of Tuleap.
-  -
-  - Tuleap is free software; you can redistribute it and/or modify
-  - it under the terms of the GNU General Public License as published by
-  - the Free Software Foundation; either version 2 of the License, or
-  - (at your option) any later version.
-  -
-  - Tuleap is distributed in the hope that it will be useful,
-  - but WITHOUT ANY WARRANTY; without even the implied warranty of
-  - MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  - GNU General Public License for more details.
-  -
-  - You should have received a copy of the GNU General Public License
-  - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
-  -->
 <template>
     <main class="tlp-framed-vertically">
-        <h1 class="tlp-framed-horizontally">
-            Baselines
-        </h1>
         <div class="tlp-framed-horizontally">
-            <div class="tlp-alert-success"
-                 data-test-type="successful-message"
-                 v-if="is_baseline_created"
+            <div class="tlp-card tlp-card-inactive">
+                <p class="tlp-text-muted" v-translate>
+                    Baselines features allow you to consult the state of your releases in a
+                    chosen date in the past.
+                </p>
+            </div>
+
+            <div
+                v-if="is_baseline_created"
+                class="tlp-alert-success tlp-framed-vertically"
+                data-test-type="successful-message"
             >
                 <translate>The baseline was created</translate>
             </div>
+
+            <div
+                v-if="is_loading_failed"
+                class="tlp-alert-alert tlp-framed-vertically"
+                data-test-type="successful-message"
+            >
+                <translate>Cannot fetch baselines</translate>
+            </div>
+
             <section class="tlp-pane">
                 <div class="tlp-pane-container">
-                    <section class="tlp-pane-section baseline-section-new-baseline-button">
-                        <button type="button"
-                                data-target="new-baseline-modal"
-                                class="tlp-button-primary"
-                                v-on:click="showNewBaselineModal"
+                    <div class="tlp-pane-header">
+                        <h2>
+                            <span class="baselines-title" v-translate>
+                                your baselines
+                            </span>
+                            <span v-if="baselines !== null"
+                                  class="tlp-tooltip tlp-tooltip-right"
+                                  v-bind:data-tlp-tooltip="baselines_tooltip"
+                            >
+                                ({{ baselines.length }})
+                            </span>
+                        </h2>
+                        <button
+                            type="button"
+                            data-target="new-baseline-modal"
+                            class="tlp-button-primary"
+                            v-on:click="showNewBaselineModal"
                         >
                             <i class="fa fa-plus tlp-button-icon"></i>
                             <translate>New baseline</translate>
                         </button>
-                    </section>
 
-                    <new-baseline-modal id="new-baseline-modal"
-                                        ref="new_baseline_modal"
-                                        v-bind:project_id="project_id"
-                                        v-on:created="onBaselineCreated()"
-                    />
-                    <section class="tlp-pane-section baseline-section-content">
-                        <h2 class="tlp-pane-subtitle"
-                            v-translate
-                        >
-                            Page under construction
-                        </h2>
+                        <new-baseline-modal
+                            id="new-baseline-modal"
+                            ref="new_baseline_modal"
+                            v-bind:project_id="project_id"
+                            v-on:created="onBaselineCreated()"
+                        />
+                    </div>
+
+                    <section class="tlp-pane-section">
+                        <baseline-table v-bind:baselines="baselines" v-bind:is_loading="is_loading"/>
                     </section>
                 </div>
             </section>
@@ -60,13 +66,15 @@
 </template>
 
 <script>
+import BaselineTable from "./BaselineTable.vue";
 import NewBaselineModal from "./NewBaselineModal.vue";
 import { modal as createModal } from "tlp";
+import { getBaselines } from "../api/rest-querier";
 
 export default {
     name: "App",
 
-    components: { NewBaselineModal },
+    components: { NewBaselineModal, BaselineTable },
 
     props: {
         project_id: { mandatory: true, type: Number }
@@ -75,12 +83,22 @@ export default {
     data() {
         return {
             is_baseline_created: false,
+            baselines: null,
+            is_loading: false,
+            is_loading_failed: false,
             modal: null
         };
     },
 
+    computed: {
+        baselines_tooltip() {
+            return this.$gettext("Baselines available");
+        }
+    },
+
     mounted() {
         this.modal = createModal(this.$refs.new_baseline_modal.$el);
+        this.fetchBaselines();
     },
 
     methods: {
@@ -93,6 +111,20 @@ export default {
         onBaselineCreated() {
             this.is_baseline_created = true;
             this.modal.hide();
+        },
+
+        async fetchBaselines() {
+            this.baselines = null;
+            this.is_loading = true;
+            this.is_loading_failed = false;
+
+            try {
+                this.baselines = await getBaselines(this.project_id);
+            } catch (e) {
+                this.is_loading_failed = false;
+            } finally {
+                this.is_loading = false;
+            }
         }
     }
 };

@@ -21,14 +21,17 @@
     width: 27rem;
 }
 
-.baseline-section-new-baseline-button {
-    display: flex;
-    justify-content: flex-end;
+.baselines-title {
+    text-transform: uppercase;
 }
 
-.baseline-section-content {
+.baselines-table-column-actions {
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
+}
+
+.baselines-table-column-name {
+    width: 35%;
 }
 
 .new-baseline-modal-milestone-list {

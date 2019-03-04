@@ -12,11 +12,31 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 2.2.1\n"
 
+msgid "Actions"
+msgstr "Actions"
+
+msgid "Author"
+msgstr "Auteur"
+
+msgid "Baselines available"
+msgstr "Baselines disponibles"
+
+msgid ""
+"Baselines features allow you to consult the state of your releases in a\n"
+"                chosen date in the past."
+msgstr ""
+"Les fonctionnalités de baselines vous permettent de consulter l'état de vos "
+"versions\n"
+"                    à une date choisie dans le passé."
+
 msgid "Cancel"
 msgstr "Annuler"
 
 msgid "Cannot create baseline"
 msgstr "Impossible de créer une baseline"
+
+msgid "Cannot fetch baselines"
+msgstr "Impossible de charger les baselines"
 
 msgid "Cannot fetch milestones"
 msgstr "Impossible de charger les milestones"
@@ -27,6 +47,9 @@ msgstr "Fermer"
 msgid "Create baseline"
 msgstr "Créer baseline"
 
+msgid "Id"
+msgstr "Id"
+
 msgid "Milestone"
 msgstr "Milestone"
 
@@ -36,14 +59,20 @@ msgstr "Nom"
 msgid "New baseline"
 msgstr "Nouvelle baseline"
 
+msgid "No baseline available"
+msgstr "Aucune baseline disponible"
+
 msgid "No milestone available"
 msgstr "Aucune milestone disponible"
 
 msgid "Only open milestone are visible here"
 msgstr "Seules les milestones ouvertes sont visibles ici"
 
-msgid "Page under construction"
-msgstr "Page en construction"
+msgid "Snapshot Date"
+msgstr "Date de la capture"
 
 msgid "The baseline was created"
 msgstr "La baseline a été créée"
+
+msgid "your baselines"
+msgstr "vos baselines"

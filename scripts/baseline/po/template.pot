@@ -5,10 +5,27 @@ msgstr ""
 "Generated-By: easygettext\n"
 "Project-Id-Version: \n"
 
+msgid "Actions"
+msgstr ""
+
+msgid "Author"
+msgstr ""
+
+msgid "Baselines available"
+msgstr ""
+
+msgid ""
+"Baselines features allow you to consult the state of your releases in a\n"
+"                chosen date in the past."
+msgstr ""
+
 msgid "Cancel"
 msgstr ""
 
 msgid "Cannot create baseline"
+msgstr ""
+
+msgid "Cannot fetch baselines"
 msgstr ""
 
 msgid "Cannot fetch milestones"
@@ -20,6 +37,9 @@ msgstr ""
 msgid "Create baseline"
 msgstr ""
 
+msgid "Id"
+msgstr ""
+
 msgid "Milestone"
 msgstr ""
 
@@ -29,14 +49,20 @@ msgstr ""
 msgid "New baseline"
 msgstr ""
 
+msgid "No baseline available"
+msgstr ""
+
 msgid "No milestone available"
 msgstr ""
 
 msgid "Only open milestone are visible here"
 msgstr ""
 
-msgid "Page under construction"
+msgid "Snapshot Date"
 msgstr ""
 
 msgid "The baseline was created"
+msgstr ""
+
+msgid "your baselines"
 msgstr ""

@@ -19,7 +19,7 @@
 
 import { rewire$get, rewire$post } from "tlp-fetch";
 import { mockFetchSuccess } from "tlp-mocks";
-import { getOpenMilestones, createBaseline } from "./rest-querier";
+import { getOpenMilestones, getBaselines, createBaseline } from "./rest-querier";
 
 describe("Rest queries:", () => {
     let result;
@@ -45,6 +45,29 @@ describe("Rest queries:", () => {
             expect(get).toHaveBeenCalledWith('/api/projects/1/milestones?query={"status":"open"}'));
 
         it("returns open milestones", () => expect(result).toEqual(simplified_milestone));
+    });
+
+    describe("getBaselines()", () => {
+        let get;
+
+        const baseline = {
+            id: 3,
+            name: "Baseline V1",
+            snapshot_date: "10/02/2019",
+            author: "Alban Jidibus"
+        };
+
+        beforeEach(async () => {
+            get = jasmine.createSpy("get");
+            mockFetchSuccess(get, { return_json: { baselines: [baseline] } });
+            rewire$get(get);
+            result = await getBaselines(1);
+        });
+
+        it("calls projects API to get baselines", () =>
+            expect(get).toHaveBeenCalledWith("/api/projects/1/baselines?limit=1000&offset=0"));
+
+        it("returns baselines", () => expect(result).toEqual([baseline]));
     });
 
     describe("saveBaseline()", () => {
