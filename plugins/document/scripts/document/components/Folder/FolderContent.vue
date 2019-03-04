@@ -39,18 +39,19 @@
                     </thead>
 
                     <tbody>
-                        <folder-content-row v-for="item of folder_content"
-                                            v-bind:key="item.id"
-                                            v-bind:item="item"
-                                            v-bind:is-quick-look-displayed="toggle_quick_look"
-                                            v-on:displayQuickLook="displayQuickLook(item)"
+                        <folder-content-row
+                            v-for="item of folder_content"
+                            v-bind:key="item.id"
+                            v-bind:item="item"
+                            v-bind:is-quick-look-displayed="toggle_quick_look"
+                            v-on:displayQuickLook="displayQuickLook(item)"
                         />
                     </tbody>
                 </table>
             </div>
         </section>
         <div v-if="toggle_quick_look" class="document-folder-right-container">
-            <section class="tlp-pane document-quick-look-pane">
+            <section class="tlp-pane document-quick-look-pane" v-bind:class="quick_look_dropzone_class" v-bind:data-item-id="item_id">
                 <quicklook-global v-on:closeQuickLookEvent="closeQuickLook" v-bind:item="quick_look_item"/>
             </section>
         </div>
@@ -61,6 +62,7 @@
 import { mapState } from "vuex";
 import FolderContentRow from "./FolderContentRow.vue";
 import QuicklookGlobal from "./QuickLook/QuickLookGlobal.vue";
+import { TYPE_FOLDER, TYPE_FILE } from "../../constants.js";
 
 export default {
     name: "FolderContent",
@@ -72,7 +74,24 @@ export default {
         };
     },
     computed: {
-        ...mapState(["folder_content"])
+        ...mapState(["folder_content"]),
+        item_id() {
+            if (!this.quick_look_item) {
+                return null;
+            }
+
+            return this.quick_look_item.id;
+        },
+        quick_look_dropzone_class() {
+            if (!this.quick_look_item) {
+                return;
+            }
+
+            return {
+                "document-quick-look-folder-dropzone": this.quick_look_item.type === TYPE_FOLDER,
+                "document-quick-look-file-dropzone": this.quick_look_item.type === TYPE_FILE
+            };
+        }
     },
     methods: {
         displayQuickLook(item) {

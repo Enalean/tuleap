@@ -103,6 +103,9 @@ msgstr[1] ""
 "Déposez jusqu'à %(nb_files)s fichiers pour les téléverser dans %(folder)s "
 "(la taille max est %(size)s)."
 
+msgid "Drop to upload"
+msgstr "Déposer pour téléverser"
+
 msgid "Dropping files in %s is forbidden."
 msgstr "Déposer des fichiers dans %s n'est pas permis."
 
@@ -291,10 +294,16 @@ msgstr[1] ""
 "Vous n'êtes pas autorisés à glisser-déposer plus de %{ nb } fichiers à la "
 "fois."
 
+msgid "You are not allowed to update this file"
+msgstr "Vous n'êtes pas autorisé à mettre à jour ce fichier"
+
 msgid "You are not allowed to upload files bigger than %s."
 msgstr ""
 "Vous n'êtes pas autorisés à téléverser des fichiers avec une taille excédant "
 "%s."
+
+msgid "You are not allowed to write in this folder"
+msgstr "Vous n'êtes pas autorisé à écrire dans ce dossier"
 
 msgid ""
 "You can drag 'n drop files from your desktop into the current folder to "
