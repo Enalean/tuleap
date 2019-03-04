@@ -221,7 +221,7 @@ class Docman_NotificationsManager
             $this->notifications[$msg] = new Notification(
                 array(),
                 $subject,
-                nl2br($msg),
+                Codendi_HTMLPurifier::instance()->purify($msg, CODENDI_PURIFIER_BASIC),
                 $msg,
                 $link,
                 'Documents'
@@ -290,6 +290,7 @@ class Docman_NotificationsManager
         $msg .= $GLOBALS['Language']->getText('plugin_docman', 'notif_footer_message_link')."\n";
         $monitoredItem = $this->_getMonitoredItemForUser($user, $params['item']);
         $msg .= $this->_url .'&action=details&section=notifications&id='. $monitoredItem->getId();
+
         return $msg;
     }
 
