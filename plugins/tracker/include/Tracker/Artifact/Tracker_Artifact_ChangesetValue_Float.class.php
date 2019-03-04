@@ -55,11 +55,11 @@ class Tracker_Artifact_ChangesetValue_Float extends Tracker_Artifact_ChangesetVa
     /**
      * Get the string value for this float
      *
-     * @return ?string The value of this artifact changeset value
+     * @return string|null The value of this artifact changeset value
      */
     public function getValue() {
         if ($this->getFloat() !== null) {
-            return number_format($this->getFloat(), Tracker_FormElement_Field_Float::FLOAT_DECIMALS, '.', '');
+            return (string) (float) number_format($this->getFloat(), Tracker_FormElement_Field_Float::FLOAT_DECIMALS, '.', '');
         }
         return null;
     }

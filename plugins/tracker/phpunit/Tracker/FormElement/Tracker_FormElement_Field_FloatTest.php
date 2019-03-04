@@ -125,8 +125,8 @@ final class Tracker_FormElement_Field_FloatTest extends TestCase // phpcs:ignore
     {
         $float_field = \Mockery::mock(Tracker_FormElement_Field_Float::class)->makePartial();
         $this->assertSame('3.1416', $float_field->fetchChangesetValue(123, 456, 3.14159));
-        $this->assertSame('0.0000', $float_field->fetchChangesetValue(123, 456, 0));
-        $this->assertSame('2.0000', $float_field->fetchChangesetValue(123, 456, 2));
+        $this->assertSame('0', $float_field->fetchChangesetValue(123, 456, 0));
+        $this->assertSame('2', $float_field->fetchChangesetValue(123, 456, 2));
         $this->assertSame('', $float_field->fetchChangesetValue(123, 456, null));
     }
 

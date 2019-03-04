@@ -60,14 +60,18 @@ final class Tracker_Artifact_ChangesetValue_FloatTest extends TestCase // phpcs:
         $this->assertEquals($int_float->getFloat(), 42.000);
         $this->assertSame($int_float->getFloat(), 42.000);
         $this->assertNotSame($int_float->getFloat(), '42');
-        $this->assertEquals($int_float->getValue(), '42.0000');
+        $this->assertEquals($int_float->getValue(), '42');
 
         $string_float = new Tracker_Artifact_ChangesetValue_Float(111, $this->changeset, $this->field, false, '123.456');
         $this->assertEquals($string_float->getFloat(), 123.456);
         $this->assertNotEquals($string_float->getFloat(), 123.457);
         $this->assertEquals($string_float->getFloat(), '123.456');
         $this->assertNotSame($string_float->getFloat(), '123.456');
-        $this->assertEquals($string_float->getValue(), '123.4560');
+        $this->assertEquals($string_float->getValue(), '123.456');
+
+        $zero_float = new Tracker_Artifact_ChangesetValue_Float(111, $this->changeset, $this->field, false, 0);
+        $this->assertEquals(0, $zero_float->getFloat());
+        $this->assertEquals('0', $zero_float->getValue());
 
         $null_float = new Tracker_Artifact_ChangesetValue_Float(111, $this->changeset, $this->field, false, null);
         $this->assertNull($null_float->getFloat());
@@ -92,8 +96,8 @@ final class Tracker_Artifact_ChangesetValue_FloatTest extends TestCase // phpcs:
         $float_1 = new Tracker_Artifact_ChangesetValue_Float(111, $this->changeset, $this->field, false, 987.321);
         $float_2 = new Tracker_Artifact_ChangesetValue_Float(111, $this->changeset, $this->field, false, 987);
 
-        $this->assertEquals($float_1->diff($float_2), 'changed from 987.0000 to 987.3210');
-        $this->assertEquals($float_2->diff($float_1), 'changed from 987.3210 to 987.0000');
+        $this->assertEquals($float_1->diff($float_2), 'changed from 987 to 987.321');
+        $this->assertEquals($float_2->diff($float_1), 'changed from 987.321 to 987');
 
         $float_3 = new Tracker_Artifact_ChangesetValue_Float(111, $this->changeset, $this->field, false, 456.54321);
         $float_4 = new Tracker_Artifact_ChangesetValue_Float(111, $this->changeset, $this->field, false, 456.54322);
@@ -107,7 +111,7 @@ final class Tracker_Artifact_ChangesetValue_FloatTest extends TestCase // phpcs:
 
         $float_7 = new Tracker_Artifact_ChangesetValue_Float(456, $this->changeset, $this->field, false, 1);
         $float_8 = new Tracker_Artifact_ChangesetValue_Float(789, $this->changeset, $this->field, false, null);
-        $this->assertEquals('set to 1.0000', $float_7->diff($float_8));
+        $this->assertEquals('set to 1', $float_7->diff($float_8));
         $this->assertEquals('cleared', $float_8->diff($float_7));
     }
 
