@@ -374,7 +374,7 @@ class PluginsAdministrationViews extends Views {
             $output = '
             <form id="plugin-switch-form-'.$plugin_id.'" action="?action='. $action .'&plugin_id='. $plugin_id .'&view='.$view.'" method="POST">
                 ' . $csrf_token->fetchHTMLInput() . '
-                <div class="tlp-switch">
+                <div class="tlp-switch tlp-table-cell-actions-button">
                     <input type="checkbox" data-form-id="plugin-switch-form-'.$plugin_id.'" id="plugin-switch-toggler-'.$plugin_id.'" class="tlp-switch-checkbox" '.$checked.'>
                     <label for="plugin-switch-toggler-'.$plugin_id.'" class="tlp-switch-button">'.$title.'</label>
                 </div>
