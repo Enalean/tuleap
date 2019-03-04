@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2017 - 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -37,14 +37,18 @@ const DATE_FIELD = "date";
 const INT_FIELD = "int";
 const FLOAT_FIELD = "float";
 const LIST_BIND_STATIC = "static";
+const LIST_BIND_UGROUPS = "ugroups";
+const LIST_BIND_USERS = "users";
 
 export {
     STRUCTURAL_FIELDS,
     READ_ONLY_FIELDS,
     COMPUTED_FIELD,
     SELECTBOX_FIELD,
-    LIST_BIND_STATIC,
     DATE_FIELD,
     INT_FIELD,
-    FLOAT_FIELD
+    FLOAT_FIELD,
+    LIST_BIND_STATIC,
+    LIST_BIND_UGROUPS,
+    LIST_BIND_USERS
 };

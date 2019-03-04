@@ -1,21 +1,28 @@
-import open_list_field_module from "./open-list-field.js";
-import angular from "angular";
-import "angular-mocks";
+/*
+ * Copyright (c) Enalean, 2017-present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+import { validateOpenListFieldValue } from "./open-list-field-validate-service.js";
 
 describe("TuleapArtifactModalOpenListFieldValidateService", function() {
-    let OpenListFieldValidateService;
-
-    beforeEach(function() {
-        angular.mock.module(open_list_field_module);
-
-        angular.mock.inject(function(_TuleapArtifactModalOpenListFieldValidateService_) {
-            OpenListFieldValidateService = _TuleapArtifactModalOpenListFieldValidateService_;
-        });
-    });
-
     describe("validateFieldValue() -", function() {
         it("Given a field value that was undefined, then it will return null", function() {
-            const result = OpenListFieldValidateService.validateFieldValue(undefined);
+            const result = validateOpenListFieldValue(undefined);
 
             expect(result).toBe(null);
         });
@@ -32,7 +39,7 @@ describe("TuleapArtifactModalOpenListFieldValidateService", function() {
                 }
             };
 
-            const result = OpenListFieldValidateService.validateFieldValue(value_model);
+            const result = validateOpenListFieldValue(value_model);
 
             expect(result).toEqual({
                 field_id: 628,
@@ -62,7 +69,7 @@ describe("TuleapArtifactModalOpenListFieldValidateService", function() {
                 }
             };
 
-            const result = OpenListFieldValidateService.validateFieldValue(value_model);
+            const result = validateOpenListFieldValue(value_model);
 
             expect(result).toEqual({
                 value: {
@@ -106,7 +113,7 @@ describe("TuleapArtifactModalOpenListFieldValidateService", function() {
                 }
             };
 
-            const result = OpenListFieldValidateService.validateFieldValue(value_model);
+            const result = validateOpenListFieldValue(value_model);
 
             expect(result).toEqual({
                 value: {
@@ -161,7 +168,7 @@ describe("TuleapArtifactModalOpenListFieldValidateService", function() {
                 }
             };
 
-            const result = OpenListFieldValidateService.validateFieldValue(value_model);
+            const result = validateOpenListFieldValue(value_model);
 
             expect(result).toEqual({
                 value: {
@@ -194,7 +201,7 @@ describe("TuleapArtifactModalOpenListFieldValidateService", function() {
                 }
             };
 
-            const result = OpenListFieldValidateService.validateFieldValue(value_model);
+            const result = validateOpenListFieldValue(value_model);
 
             expect(result).toEqual({
                 value: {
