@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011. All Rights Reserved.
+ * Copyright (c) Enalean, 2011-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,10 +18,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyDao;
+use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyFieldsFactory;
+
 /**
  * Collection of subfactories to CRUD postactions. Uniq entry point from the transition point of view.
  */
-class Transition_PostActionFactory {
+class Transition_PostActionFactory //phpcs:ignoreFile
+{
 
     private $shortnames_by_xml_tag_name = array(
         Transition_PostAction_Field_Float::XML_TAG_NAME => Transition_PostAction_Field_Float::SHORT_NAME,
@@ -35,6 +39,9 @@ class Transition_PostActionFactory {
 
     /** @var Transition_PostAction_CIBuildFactory */
     private $postaction_cibuild_factory;
+
+    /** @var ReadOnlyFieldsFactory */
+    private $read_only_fields_factory;
 
     /**
      * Get html code to let someone choose a post action for a transition
@@ -187,14 +194,33 @@ class Transition_PostActionFactory {
         return $this->postaction_cibuild_factory;
     }
 
+    private function getReadOnlyFieldsFactory(): ReadOnlyFieldsFactory
+    {
+        if (!$this->read_only_fields_factory) {
+            $this->read_only_fields_factory = new ReadOnlyFieldsFactory(new ReadOnlyDao());
+        }
+        return $this->read_only_fields_factory;
+    }
+
+    private function areNewActionsEnabled(): bool
+    {
+        $enabled = trim(ForgeConfig::get('sys_should_use_read_only_post_actions'));
+        if ($enabled === false || empty($enabled)) {
+            return false;
+        }
+
+        return true;
+    }
+
     /** @return Transition_PostActionSubFactories */
-    private function getSubFactories() {
-        return new Transition_PostActionSubFactories(
-            array(
-                $this->getFieldFactory(),
-                $this->getCIBuildFactory(),
-            )
-        );
+    private function getSubFactories()
+    {
+        $sub_factories = [$this->getFieldFactory(), $this->getCIBuildFactory()];
+
+        if ($this->areNewActionsEnabled()) {
+            $sub_factories[] = $this->getReadOnlyFieldsFactory();
+        }
+        return new Transition_PostActionSubFactories($sub_factories);
     }
 
     /** @return string */
@@ -204,4 +230,3 @@ class Transition_PostActionFactory {
         }
     }
 }
-?>

@@ -18,19 +18,32 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\Workflow\PostAction\ReadOnly;
 
 use Tuleap\DB\DataAccessObject;
 
 class ReadOnlyDao extends DataAccessObject
 {
-    public function isFieldUsedInPostAction($field_id)
+    public function isFieldUsedInPostAction($field_id): bool
     {
         $sql = 'SELECT NULL
             FROM plugin_tracker_workflow_transition_postactions_read_only_fields AS paf
             WHERE paf.field_id = ?';
-        $result = $this->getDB()->single($sql, [$field_id]);
+        $result = $this->getDB()->cell($sql, $field_id);
 
         return $result !== false;
+    }
+
+    public function searchByTransitionId(int $transition_id): array
+    {
+        $sql = 'SELECT paf.*
+            FROM plugin_tracker_workflow_transition_postactions_read_only_fields AS paf
+                 JOIN plugin_tracker_workflow_transition_postactions_read_only AS paro
+            ON (paro.id = paf.postaction_id)
+            WHERE paro.transition_id = ?';
+
+        return $this->getDB()->q($sql, $transition_id);
     }
 }

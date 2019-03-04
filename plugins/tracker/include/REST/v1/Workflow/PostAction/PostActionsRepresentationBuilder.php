@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,7 +16,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 namespace Tuleap\Tracker\REST\v1\Workflow\PostAction;
@@ -26,6 +25,7 @@ use Transition_PostAction_CIBuild;
 use Transition_PostAction_Field_Date;
 use Transition_PostAction_Field_Float;
 use Transition_PostAction_Field_Int;
+use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyFields;
 use Tuleap\Tracker\Workflow\PostAction\Visitor;
 
 class PostActionsRepresentationBuilder implements Visitor
@@ -97,6 +97,14 @@ class PostActionsRepresentationBuilder implements Visitor
             $post_action->getId(),
             $post_action->getFieldId(),
             $post_action->getValue()
+        );
+    }
+
+    public function visitReadOnlyFields(ReadOnlyFields $read_only_fields)
+    {
+        $this->post_action_representations[] = ReadOnlyFieldsRepresentation::build(
+            $read_only_fields->getId(),
+            $read_only_fields->getFieldIds()
         );
     }
 }

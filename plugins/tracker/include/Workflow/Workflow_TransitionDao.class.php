@@ -44,25 +44,30 @@ class Workflow_TransitionDao extends DataAccessObject //phpcs:ignoreFile
         $to          = $this->da->escapeInt($to);
 
         $sql = "DELETE tracker_workflow_transition, tracker_workflow_transition_condition_field_notempty,
-                  tracker_workflow_transition_condition_comment_notempty, tracker_workflow_transition_postactions_field_date,
-                  tracker_workflow_transition_postactions_field_int, tracker_workflow_transition_postactions_field_float,
-                  tracker_workflow_transition_postactions_cibuild
-                FROM tracker_workflow_transition
-                LEFT JOIN tracker_workflow_transition_condition_field_notempty
-                  ON tracker_workflow_transition_condition_field_notempty.transition_id = tracker_workflow_transition.transition_id
-                LEFT JOIN tracker_workflow_transition_condition_comment_notempty
-                  ON tracker_workflow_transition_condition_comment_notempty.transition_id = tracker_workflow_transition.transition_id
-                LEFT JOIN tracker_workflow_transition_postactions_field_date
-                  ON tracker_workflow_transition_postactions_field_date.transition_id = tracker_workflow_transition.transition_id
-                LEFT JOIN tracker_workflow_transition_postactions_field_int
-                  ON tracker_workflow_transition_postactions_field_int.transition_id = tracker_workflow_transition.transition_id
-                LEFT JOIN tracker_workflow_transition_postactions_field_float
-                  ON tracker_workflow_transition_postactions_field_float.transition_id = tracker_workflow_transition.transition_id
-                LEFT JOIN tracker_workflow_transition_postactions_cibuild
-                  ON tracker_workflow_transition_postactions_cibuild.transition_id = tracker_workflow_transition.transition_id
-                WHERE tracker_workflow_transition.from_id=$from
-                  AND tracker_workflow_transition.to_id=$to
-                  AND tracker_workflow_transition.workflow_id=$workflow_id";
+                tracker_workflow_transition_condition_comment_notempty, tracker_workflow_transition_postactions_field_date,
+                tracker_workflow_transition_postactions_field_int, tracker_workflow_transition_postactions_field_float,
+                tracker_workflow_transition_postactions_cibuild, paro, parof
+            FROM tracker_workflow_transition
+                 LEFT JOIN tracker_workflow_transition_condition_field_notempty
+            ON tracker_workflow_transition_condition_field_notempty.transition_id = tracker_workflow_transition.transition_id
+                 LEFT JOIN tracker_workflow_transition_condition_comment_notempty
+            ON tracker_workflow_transition_condition_comment_notempty.transition_id = tracker_workflow_transition.transition_id
+                 LEFT JOIN tracker_workflow_transition_postactions_field_date
+            ON tracker_workflow_transition_postactions_field_date.transition_id = tracker_workflow_transition.transition_id
+                 LEFT JOIN tracker_workflow_transition_postactions_field_int
+            ON tracker_workflow_transition_postactions_field_int.transition_id = tracker_workflow_transition.transition_id
+                 LEFT JOIN tracker_workflow_transition_postactions_field_float
+            ON tracker_workflow_transition_postactions_field_float.transition_id = tracker_workflow_transition.transition_id
+                 LEFT JOIN tracker_workflow_transition_postactions_cibuild
+            ON tracker_workflow_transition_postactions_cibuild.transition_id = tracker_workflow_transition.transition_id
+                 LEFT JOIN (
+                     plugin_tracker_workflow_transition_postactions_read_only AS paro
+                        JOIN plugin_tracker_workflow_transition_postactions_read_only_fields AS parof
+                     ON paro.id = parof.postaction_id
+                 )
+            ON paro.transition_id = tracker_workflow_transition.transition_id
+            WHERE tracker_workflow_transition.from_id = $from AND tracker_workflow_transition.to_id = $to AND
+                tracker_workflow_transition.workflow_id = $workflow_id";
         return $this->update($sql);
     }
 
@@ -71,23 +76,29 @@ class Workflow_TransitionDao extends DataAccessObject //phpcs:ignoreFile
         $workflow_id = $this->da->escapeInt($workflow_id);
 
         $sql = "DELETE tracker_workflow_transition, tracker_workflow_transition_condition_field_notempty,
-                  tracker_workflow_transition_condition_comment_notempty, tracker_workflow_transition_postactions_field_date,
-                  tracker_workflow_transition_postactions_field_int, tracker_workflow_transition_postactions_field_float,
-                  tracker_workflow_transition_postactions_cibuild
-                FROM tracker_workflow_transition
-                LEFT JOIN tracker_workflow_transition_condition_field_notempty
-                  ON tracker_workflow_transition_condition_field_notempty.transition_id = tracker_workflow_transition.transition_id
-                LEFT JOIN tracker_workflow_transition_condition_comment_notempty
-                  ON tracker_workflow_transition_condition_comment_notempty.transition_id = tracker_workflow_transition.transition_id
-                LEFT JOIN tracker_workflow_transition_postactions_field_date
-                  ON tracker_workflow_transition_postactions_field_date.transition_id = tracker_workflow_transition.transition_id
-                LEFT JOIN tracker_workflow_transition_postactions_field_int
-                  ON tracker_workflow_transition_postactions_field_int.transition_id = tracker_workflow_transition.transition_id
-                LEFT JOIN tracker_workflow_transition_postactions_field_float
-                  ON tracker_workflow_transition_postactions_field_float.transition_id = tracker_workflow_transition.transition_id
-                LEFT JOIN tracker_workflow_transition_postactions_cibuild
-                  ON tracker_workflow_transition_postactions_cibuild.transition_id = tracker_workflow_transition.transition_id
-                WHERE tracker_workflow_transition.workflow_id=$workflow_id";
+                tracker_workflow_transition_condition_comment_notempty, tracker_workflow_transition_postactions_field_date,
+                tracker_workflow_transition_postactions_field_int, tracker_workflow_transition_postactions_field_float,
+                tracker_workflow_transition_postactions_cibuild, paro, parof
+            FROM tracker_workflow_transition
+                 LEFT JOIN tracker_workflow_transition_condition_field_notempty
+            ON tracker_workflow_transition_condition_field_notempty.transition_id = tracker_workflow_transition.transition_id
+                 LEFT JOIN tracker_workflow_transition_condition_comment_notempty
+            ON tracker_workflow_transition_condition_comment_notempty.transition_id = tracker_workflow_transition.transition_id
+                 LEFT JOIN tracker_workflow_transition_postactions_field_date
+            ON tracker_workflow_transition_postactions_field_date.transition_id = tracker_workflow_transition.transition_id
+                 LEFT JOIN tracker_workflow_transition_postactions_field_int
+            ON tracker_workflow_transition_postactions_field_int.transition_id = tracker_workflow_transition.transition_id
+                 LEFT JOIN tracker_workflow_transition_postactions_field_float
+            ON tracker_workflow_transition_postactions_field_float.transition_id = tracker_workflow_transition.transition_id
+                 LEFT JOIN tracker_workflow_transition_postactions_cibuild
+            ON tracker_workflow_transition_postactions_cibuild.transition_id = tracker_workflow_transition.transition_id
+                 LEFT JOIN (
+                     plugin_tracker_workflow_transition_postactions_read_only AS paro
+                         JOIN plugin_tracker_workflow_transition_postactions_read_only_fields AS parof
+                     ON paro.id = parof.postaction_id
+                 )
+            ON paro.transition_id = tracker_workflow_transition.transition_id
+            WHERE tracker_workflow_transition.workflow_id = $workflow_id";
 
         return $this->update($sql);
     }

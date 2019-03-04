@@ -28,7 +28,6 @@ use Transition_PostAction_Field_DateDao;
 use Transition_PostAction_Field_FloatDao;
 use Transition_PostAction_Field_IntDao;
 use TransitionFactory;
-use Tuleap\DB\DataAccessObject;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
