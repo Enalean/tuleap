@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -180,7 +180,8 @@ class FRSFileFactory {
      * @param int $group_id the ID of the project the file belongs to
      * @return boolean true if a file named $file_basename already exists in the release $release_id, false otherwise
      */
-    function isFileBaseNameExists($file_basename, $release_id, $group_id) {
+    public function isFileBaseNameExists($file_basename, $release_id, $group_id)
+    {
         $release = $this->_getFRSReleaseFactory()->getFRSReleaseFromDb($release_id);
         $subdir = $this->getUploadSubDirectory($release);
         $file_name = $subdir.'/'.$file_basename;
@@ -193,11 +194,11 @@ class FRSFileFactory {
      *
      * @param String $basename
      * @param Integer $release_id
-     * @param Integer $group_id
      *
      * @return Boolean
      */
-    function isSameFileMarkedToBeRestored($basename, $release_id, $group_id) {
+    public function isSameFileMarkedToBeRestored($basename, $release_id)
+    {
         $dao = $this->_getFRSFileDao();
         $release = $this->_getFRSReleaseFactory()->getFRSReleaseFromDb($release_id, null, null, true);
         $subdir = $this->getUploadSubDirectory($release);
@@ -292,8 +293,14 @@ class FRSFileFactory {
             throw new FRSFileExistsException($file);
         }
 
-        if ($this->isSameFileMarkedToBeRestored($file->getFileName(), $rel->getReleaseID(), $rel->getGroupID())) {
+        if ($this->isSameFileMarkedToBeRestored($file->getFileName(), $rel->getReleaseID())) {
             throw new FRSFileToBeRestoredException($file);
+        }
+
+        $checker = new FRSOngoingUploadChecker($file);
+        EventManager::instance()->processEvent($checker);
+        if ($checker->isFileBeingUploaded()) {
+            throw new FRSFileOngoingUploadException($file);
         }
 
         clearstatcache();

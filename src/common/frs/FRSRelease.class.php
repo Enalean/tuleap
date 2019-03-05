@@ -1,7 +1,7 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -97,75 +97,76 @@ class FRSRelease {
             $this->initFromArray($data_array);
         }
     }
-    
-    function getReleaseID() {
-        return $this->release_id;
+
+    public function getReleaseID(): int
+    {
+        return (int) $this->release_id;
     }
-    
+
     function setReleaseID($release_id) {
         $this->release_id = (int) $release_id;
     }
-    
+
     function getPackageID() {
         return $this->package_id;
     }
-    
+
     function setPackageID($package_id) {
         $this->package_id = (int) $package_id;
     }
-    
+
     function getName() {
         return $this->name;
     }
-    
+
     function setName($name) {
         $this->name = $name;
     }
-    
+
     function getNotes() {
         return $this->notes;
     }
-    
+
     function setNotes($notes) {
         $this->notes = $notes;
     }
-    
+
     function getChanges() {
         return $this->changes;
     }
-    
+
     function setChanges($changes) {
         $this->changes = $changes;
     }
-    
+
     function getStatusID() {
         return $this->status_id;
     }
-    
+
     function setStatusID($status_id) {
         $this->status_id = $status_id;
     }
-    
+
     function getPreformatted() {
         return $this->preformatted;
     }
-    
+
     function setPreformatted($preformatted) {
         $this->preformatted = $preformatted;
     }
-    
+
     function getReleaseDate() {
         return $this->release_date;
     }
-    
+
     function setReleaseDate($release_date) {
         $this->release_date = $release_date;
     }
-    
+
     function getReleasedBy() {
         return $this->released_by;
     }
-    
+
     function setReleasedBy($released_by) {
         $this->released_by = $released_by;
     }
@@ -179,7 +180,7 @@ class FRSRelease {
         }
         return $this->project;
     }
-    
+
     function setProject($project) {
         $this->project = $project;
     }
@@ -192,7 +193,7 @@ class FRSRelease {
         $release_factory = new FRSReleaseFactory();
         return $this->getStatusID() == $release_factory->STATUS_ACTIVE;
     }
-    
+
     /**
      * Determines if the release is hidden or not
      * @return boolean true if the release is hidden, false otherwise
@@ -201,7 +202,7 @@ class FRSRelease {
         $release_factory = new FRSReleaseFactory();
         return $this->getStatusID() == $release_factory->STATUS_HIDDEN;
     }
-    
+
     /**
      * Determines if the release is deleted or not
      * @return boolean true if the release is boolean, false otherwise
@@ -210,7 +211,7 @@ class FRSRelease {
         $release_factory = new FRSReleaseFactory();
         return $this->getStatusID() == $release_factory->STATUS_DELETED;
     }
-    
+
     /**
      * Determines if the release notes and changes are preformatted or not
      * @return boolean true if the release notes and changes are preformatted, false otherwise
@@ -218,7 +219,7 @@ class FRSRelease {
     function isPreformatted() {
         return $this->getPreformatted() == 1;
     }
-    
+
     /**
      * Set group id
      */
@@ -248,7 +249,7 @@ class FRSRelease {
     {
         return $this->_getFRSPackageFactory()->getFRSPackageFromDb($this->getPackageID());
     }
-    
+
 	function initFromArray($array) {
 		if (isset($array['release_id']))      $this->setReleaseID($array['release_id']);
         if (isset($array['package_id']))      $this->setPackageID($array['package_id']);
@@ -296,13 +297,13 @@ class FRSRelease {
 		}
 		return $this->release_files;
 	}
-    
+
     public function userCanRead($user_id = 0) {
         $release_factory = new FRSReleaseFactory();
 
         return $release_factory->userCanRead($this->getGroupID(), $this->getPackageID(), $this->getReleaseID(), $user_id);
     }
-	
+
 	/**
      * Returns the HTML content for tooltip when hover a reference with the nature release
      * @returns string HTML content for release tooltip

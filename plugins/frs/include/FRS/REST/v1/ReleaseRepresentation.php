@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -114,7 +114,7 @@ class ReleaseRepresentation
     public function build(FRSRelease $release, Retriever $link_retriever, PFUser $user, UploadedLinksRetriever $uploaded_links_retriever)
     {
         $this->id           = JsonCast::toInt($release->getReleaseID());
-        $this->uri          = self::ROUTE ."/". urlencode($release->getReleaseID());
+        $this->uri          = self::ROUTE ."/". urlencode((string) $release->getReleaseID());
         $this->changelog    = $release->getChanges();
         $this->release_note = $release->getNotes();
         $this->name         = $release->getName();

@@ -118,7 +118,7 @@ class WebDAVTreeTest extends TuleapTestCase {
         $this->user            = mock('PFUser');
         $this->project         = stub('Project')->getID()->returns(101);
         $this->package         = mock('FRSPackage');
-        $this->release         = mock('FRSRelease');
+        $this->release         = \Mockery::spy(FRSRelease::class);
         $this->file            = mock('FRSFile');
         $this->docman_folder   = mock('Docman_Folder');
         $this->docman_document = mock('Docman_Document');
@@ -217,7 +217,7 @@ class WebDAVTreeTest extends TuleapTestCase {
 
         $node->expectOnce('setName');
         $node->expectNever('move');
-        
+
         $tree->move('project1/package1/release1', 'project1/package1/release2');
     }
 

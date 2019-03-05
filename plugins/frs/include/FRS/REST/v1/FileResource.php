@@ -21,14 +21,19 @@ declare(strict_types=1);
 
 namespace Tuleap\FRS\REST\v1;
 
+use ForgeConfig;
 use FRSFile;
 use FRSFileFactory;
 use FRSReleaseFactory;
 use Luracast\Restler\RestException;
 use PFUser;
+use Tuleap\DB\DBFactory;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\FRS\FRSPermissionDao;
 use Tuleap\FRS\FRSPermissionFactory;
 use Tuleap\FRS\FRSPermissionManager;
+use Tuleap\FRS\Upload\FileOngoingUploadDao;
+use Tuleap\FRS\Upload\FileToUploadCreator;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
@@ -62,7 +67,7 @@ class FileResource extends AuthenticatedResource
      *
      * Get FRS file information
      *
-     * @url GET {id}
+     * @url    GET {id}
      * @access hybrid
      *
      * @param int $id ID of the file
@@ -94,7 +99,7 @@ class FileResource extends AuthenticatedResource
 
     private function sendAllowOptionsForFile(): void
     {
-        Header::allowOptionsGetDelete();
+        Header::allowOptionsGetPostDelete();
     }
 
     /**
@@ -102,7 +107,7 @@ class FileResource extends AuthenticatedResource
      *
      * Delete file from FRS
      *
-     * @url DELETE {id}
+     * @url    DELETE {id}
      *
      * @param int $id The id of the file
      *
@@ -122,7 +127,7 @@ class FileResource extends AuthenticatedResource
             new FRSPermissionDao(),
             new FRSPermissionFactory(new FRSPermissionDao())
         );
-        $project = $file->getGroup();
+        $project                = $file->getGroup();
         if (! $frs_permission_manager->isAdmin($project, $user)) {
             throw new RestException(403);
         }
@@ -158,5 +163,76 @@ class FileResource extends AuthenticatedResource
         }
 
         return $file;
+    }
+
+    /**
+     * Create file
+     *
+     * Create a file in the release.
+     *
+     * <br>
+     * <pre>
+     * {<br>
+     * &nbsp;  "release_id": int,<br>
+     * &nbsp;  "name": "string",<br>
+     * &nbsp;  "file_size": int<br>
+     * }<br>
+     * </pre>
+     *
+     * You will get an URL where the file needs to be uploaded using the
+     * <a href="https://tus.io/protocols/resumable-upload.html">tus resumable upload protocol</a>
+     * to validate the item creation. You will need to use the same authentication mechanism you used
+     * to call this endpoint.
+     * Note: If the file is empty, then no URL will be returned.
+     *
+     * @param FilePOSTRepresentation $file_post_representation
+     *
+     * @return CreatedFileRepresentation
+     *
+     * @status 201
+     * @throws 400
+     * @throws 403
+     */
+    public function post(FilePOSTRepresentation $file_post_representation): CreatedFileRepresentation
+    {
+        $this->checkAccess();
+        $this->sendAllowOptionsForFile();
+
+        $user = $this->user_manager->getCurrentUser();
+
+        $release = $this->release_factory->getFRSReleaseFromDb($file_post_representation->release_id);
+        if (! $release) {
+            throw new I18NRestException(
+                400,
+                dgettext('tuleap-frs', 'The parent release cannot be found.')
+            );
+        }
+
+        $frs_permission_manager = new FRSPermissionManager(
+            new FRSPermissionDao(),
+            new FRSPermissionFactory(new FRSPermissionDao())
+        );
+        $project = $release->getProject();
+        if (! $frs_permission_manager->isAdmin($project, $user)) {
+            throw new RestException(403);
+        }
+
+        $file_ongoing_upload_dao = new FileOngoingUploadDao();
+
+        $file_item_creator = new FileCreator(
+            new FileToUploadCreator(
+                $this->file_factory,
+                $file_ongoing_upload_dao,
+                new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
+                (int) ForgeConfig::get('sys_max_size_upload')
+            )
+        );
+
+        return $file_item_creator->create(
+            $release,
+            $user,
+            $file_post_representation,
+            new \DateTimeImmutable()
+        );
     }
 }

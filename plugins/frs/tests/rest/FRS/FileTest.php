@@ -37,7 +37,7 @@ class FileTest extends RestBase
     public function testOPTIONSFile()
     {
         $response = $this->getResponse($this->client->options('frs_files/1'));
-        $this->assertEquals(['OPTIONS', 'GET', 'DELETE'], $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'GET', 'POST', 'DELETE'], $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testGETFile()
@@ -61,5 +61,30 @@ class FileTest extends RestBase
         $this->assertEquals(202, $response->getStatusCode());
         $response = $this->getResponse($this->client->get('frs_files/2'));
         $this->assertEquals(404, $response->getStatusCode());
+    }
+
+    public function testPOSTFile()
+    {
+        $query = [
+            'release_id'    => 1,
+            'name'          => 'File2',
+            'arch'          => 'x86_64',
+            'file_size'     => 123,
+            'type'          => 'text',
+            'reference_md5' => '7865eaef28db1b906eaf1e4fa353796d',
+            'comment'       => 'Awesome file'
+        ];
+
+        $response1 = $this->getResponse($this->client->post('frs_files', null, json_encode($query)));
+        $this->assertEquals(201, $response1->getStatusCode());
+        $this->assertNotEmpty($response1->json()['upload_href']);
+
+        $response2 = $this->getResponse($this->client->post('frs_files', null, json_encode($query)));
+        $this->assertEquals(201, $response1->getStatusCode());
+        $this->assertSame($response1->json()['upload_href'], $response2->json()['upload_href']);
+
+        $query['file_size'] = 456;
+        $response3 = $this->getResponse($this->client->post('frs_files', null, json_encode($query)));
+        $this->assertEquals(409, $response3->getStatusCode());
     }
 }
