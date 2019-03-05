@@ -140,13 +140,13 @@ export default {
             const dropzone_item = this.getDropZoneItem();
             this.clearHighlight();
 
-            if (dropzone_item.type === TYPE_FILE) {
-                this.uploadNewFileVersion(event, dropzone_item);
-
+            if (!this.user_can_dragndrop_in_current_folder || !dropzone_item.user_can_write) {
                 return;
             }
 
-            if (!this.user_can_dragndrop_in_current_folder) {
+            if (dropzone_item.type === TYPE_FILE) {
+                this.uploadNewFileVersion(event, dropzone_item);
+
                 return;
             }
 
@@ -217,8 +217,16 @@ export default {
             return Boolean(event.target.closest(".tlp-modal"));
         },
         clearHighlight() {
-            for (const element of document.querySelectorAll(".document-tree-item-highlighted")) {
-                element.classList.remove("document-tree-item-highlighted");
+            const highlighted_items = document.querySelectorAll(`
+                .document-tree-item-highlighted,
+                .document-tree-item-hightlighted-forbidden
+            `);
+
+            for (const element of highlighted_items) {
+                element.classList.remove(
+                    "document-tree-item-highlighted",
+                    "document-tree-item-hightlighted-forbidden"
+                );
             }
 
             this.is_dropzone_highlighted = false;
@@ -236,8 +244,13 @@ export default {
             const closest_row = event.target.closest(target_drop_zones);
 
             if (closest_row) {
-                closest_row.classList.add("document-tree-item-highlighted");
                 this.highlighted_item_id = parseInt(closest_row.dataset.itemId, 10);
+                const item = this.getDropZoneItem();
+                if (item.user_can_write) {
+                    closest_row.classList.add("document-tree-item-highlighted");
+                } else {
+                    closest_row.classList.add("document-tree-item-hightlighted-forbidden");
+                }
             } else {
                 this.is_dropzone_highlighted = true;
             }
@@ -257,7 +270,7 @@ export default {
 
             if (!is_document_locked_by_current_user) {
                 this.error_modal_shown = this.EDITION_LOCKED;
-                this.error_modal_reasons.OKpush({
+                this.error_modal_reasons.push({
                     filename: dropzone_item.title,
                     lock_owner: lock_info.locked_by
                 });
