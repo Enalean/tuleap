@@ -39,13 +39,13 @@
                      data-test-type="error-message"
                      v-if="is_loading_failed"
                 >
-                    Cannot fetch milestones
+                    <translate>Cannot fetch milestones</translate>
                 </div>
                 <div class="tlp-alert-danger"
                      data-test-type="error-message"
                      v-if="is_creating_failed"
                 >
-                    Cannot create baseline
+                    <translate>Cannot create baseline</translate>
                 </div>
 
                 <div class="tlp-form-element"
@@ -81,7 +81,7 @@
                           data-test-type="information_message"
                           v-else-if="is_loading_failed"
                     >
-                        Cannot fetch milestones
+                        <translate>Cannot fetch milestones</translate>
                     </span>
                     <new-baseline-milestone-select v-else-if="available_milestones !== null"
                                                    v-bind:milestones="available_milestones"
