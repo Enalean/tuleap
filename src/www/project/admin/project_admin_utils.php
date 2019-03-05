@@ -1,10 +1,10 @@
 <?php
 /**
- * Copyright Enalean (c) 2012 - 2018. All rights reserved.
+ * Copyright Enalean (c) 2012 - Present. All rights reserved.
  * SourceForge: Breaking Down the Barriers to Open Source Development
  * Copyright 1999-2000 (c) The SourceForge Crew
  *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
+ * Tuleap and Enalean names and logos are registered trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
  * owners.
  *
@@ -26,11 +26,6 @@
 
 use Tuleap\Project\Admin\GetProjectHistoryEntryValue;
 use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
-
-require_once('common/dao/ProjectHistoryDao.class.php');
-require_once('common/include/TemplateSingleton.class.php');
-require_once('common/html/HTML_Element_Selectbox.class.php');
-require_once('common/include/Toggler.class.php');
 
 function project_admin_header($params, $current_pane_shortname) {
     global $group_id;

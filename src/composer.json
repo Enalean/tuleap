@@ -6,7 +6,17 @@
     },
     "classmap": ["common/", "embedded_vendor/"],
     "exclude-from-classmap": ["common/wiki/phpwiki/"],
-    "files": ["www/include/database.php"]
+    "files": [
+      "common/constants.php",
+      "www/include/database.php",
+      "www/include/session.php",
+      "www/include/html.php",
+      "www/include/exit.php",
+      "www/include/help.php",
+      "www/include/utils.php",
+      "www/include/user.php",
+      "www/project/admin/permissions.php"
+    ]
   },
   "autoload-dev": {
     "psr-4": {
@@ -69,6 +79,7 @@
     "php-http/mock-client": "^1.2",
     "phpunit/phpunit": "^8",
     "simpletest/simpletest": "^1.1",
-    "squizlabs/php_codesniffer": "^3.3"
+    "squizlabs/php_codesniffer": "^3.3",
+    "vimeo/psalm": "^3.0"
   }
 }

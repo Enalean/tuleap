@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright Enalean (c) 2017 - 2018. All rights reserved.
+ * Copyright Enalean (c) 2017 - Present. All rights reserved.
  *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
+ * Tuleap and Enalean names and logos are registered trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
  * owners.
  *
@@ -150,7 +150,8 @@ class ProjectMembersController
             return;
         }
 
-        account_add_user_to_group($project->getID(), $form_unix_name);
+        require_once __DIR__ . '/../../../../www/include/account.php';
+        \account_add_user_to_group($project->getID(), $form_unix_name);
 
         $this->user_group_bindings->reloadUgroupBindingInProject($project);
     }

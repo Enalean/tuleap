@@ -1,6 +1,7 @@
+#!/usr/bin/env php
 <?php
 /**
- * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,19 +17,22 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
-$basedir      = dirname(__DIR__, 2);
-$src_path     = $basedir.'/src';
-$include_path = $basedir.'/src/www/include';
+declare(strict_types=1);
 
-ini_set('include_path', ini_get('include_path').':'.$src_path.':'.$include_path);
+use Tuleap\Test\Psalm\PsalmCommandLauncherWithIgnoreDirectory;
+use Tuleap\Test\Psalm\PsalmIgnoreGitExcludedTuleapPlugins;
 
 require_once __DIR__ . '/../../src/vendor/autoload.php';
-require_once __DIR__ . '/../../src/www/themes/BurningParrot/BurningParrotTheme.php';
-require_once __DIR__ . '/../lib/Network/HTTPResponseFunctionsOverload.php';
 
-foreach (glob(__DIR__ . '/../../plugins/*/phpunit/bootstrap.php') as $bootstrap_plugin) {
-    require_once $bootstrap_plugin;
-}
+$psalm_command_launcher = new PsalmCommandLauncherWithIgnoreDirectory(
+    sys_get_temp_dir(),
+    new PsalmIgnoreGitExcludedTuleapPlugins(new System_Command()),
+    function (string $command, int &$return_var) : void {
+        passthru($command, $return_var);
+    }
+);
+$exit_code = $psalm_command_launcher->execute(...$argv);
+
+exit($exit_code);

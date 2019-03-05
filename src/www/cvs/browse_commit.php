@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - Present. All Rights Reserved.
  * Copyright 1999-2000 (c) The SourceForge Crew
  *
  * This file is a part of Tuleap.
@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+
+require_once __DIR__ . '/commit_utils.php';
 
 $request  = HTTPRequest::instance();
 $group_id = $request->get('group_id');
