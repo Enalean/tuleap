@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,13 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import "tlp-mocks";
+import { createLocalVue } from "@vue/test-utils";
+import Vuex from "vuex";
+import GettextPlugin from "vue-gettext";
+import VueRouter from "vue-router";
 
-import "./api/rest-querier.spec.js";
-import "./store/actions.spec.js";
-import "./store/actions-helpers/load-ascendant-hierarchy.spec.js";
-import "./store/actions-helpers/load-folder-content.spec.js";
-import "./store/getters.spec.js";
-import "./store/mutations.spec.js";
-import "./components/Folder/ItemTitle/FakeCaret.spec.js";
-import "./components/Folder/ItemTitle/FolderCellTitle.spec.js";
+const localVue = createLocalVue();
+localVue.use(Vuex);
+localVue.use(VueRouter);
+localVue.use(GettextPlugin, {
+    translations: {},
+    silent: true
+});
+
+export default localVue;

@@ -20,7 +20,8 @@
   },
   "devDependencies": {
     "@vue/test-utils": "^1.0.0-beta.27",
-    "moment-timezone-data-webpack-plugin": "^1.0.1"
+    "moment-timezone-data-webpack-plugin": "^1.0.1",
+    "vuex-mock-store": "0.0.7"
   },
   "config": {
     "bin": "../../../node_modules/.bin/"

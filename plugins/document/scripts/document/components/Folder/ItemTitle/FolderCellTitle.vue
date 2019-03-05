@@ -24,6 +24,7 @@
         <i class="document-folder-icon-color fa fa-fw document-folder-toggle document-folder-content-icon"
            v-bind:class="{ 'fa-caret-down': !is_closed, 'fa-caret-right': is_closed }"
            v-on:click="toggle"
+           data-test="toggle"
         ></i>
         <i class="document-folder-icon-color fa fa-fw document-folder-content-icon"
            v-bind:class="{
