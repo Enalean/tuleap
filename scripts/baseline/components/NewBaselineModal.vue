@@ -17,51 +17,50 @@
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
 <template>
-    <div class="tlp-modal new-baseline-modal"
-         role="dialog"
-         aria-labelledby="modal-new-baseline"
-         ref="modal"
+    <div
+        class="tlp-modal new-baseline-modal"
+        role="dialog"
+        aria-labelledby="modal-new-baseline"
+        ref="modal"
     >
         <form v-on:submit.prevent="saveBaseline()">
             <div class="tlp-modal-header">
                 <h1 class="tlp-modal-title ">
                     <translate>New baseline</translate>
                 </h1>
-                <div class="tlp-modal-close"
-                     data-dismiss="modal"
-                     v-bind:aria-label="close_label"
-                >
+                <div class="tlp-modal-close" data-dismiss="modal" v-bind:aria-label="close_label">
                     ×
                 </div>
             </div>
             <div class="tlp-modal-body">
-                <div class="tlp-alert-danger"
-                     data-test-type="error-message"
-                     v-if="is_loading_failed"
+                <div
+                    class="tlp-alert-danger"
+                    data-test-type="error-message"
+                    v-if="is_loading_failed"
                 >
                     <translate>Cannot fetch milestones</translate>
                 </div>
-                <div class="tlp-alert-danger"
-                     data-test-type="error-message"
-                     v-if="is_creating_failed"
+                <div
+                    class="tlp-alert-danger"
+                    data-test-type="error-message"
+                    v-if="is_creating_failed"
                 >
                     <translate>Cannot create baseline</translate>
                 </div>
 
-                <div class="tlp-form-element"
-                     data-test-type="input-error-message"
-                >
+                <div class="tlp-form-element" data-test-type="input-error-message">
                     <label class="tlp-label" for="name">
                         <translate>Name</translate>
                         <i class="fa fa-asterisk"></i>
                     </label>
-                    <input ref="name-input"
-                           v-model="name"
-                           class="tlp-input"
-                           type="text"
-                           name="name"
-                           id="name"
-                           required
+                    <input
+                        ref="name-input"
+                        v-model="name"
+                        class="tlp-input"
+                        type="text"
+                        name="name"
+                        id="name"
+                        required
                     >
                 </div>
 
@@ -69,46 +68,51 @@
                     <label class="tlp-label baseline-modal-milestone-label">
                         <translate>Milestone</translate>
                         <i class="fa fa-asterisk"></i>
-                        <span class="tlp-tooltip tlp-tooltip-right"
-                              v-bind:data-tlp-tooltip="milestone_tooltip"
+                        <span
+                            class="tlp-tooltip tlp-tooltip-right"
+                            v-bind:data-tlp-tooltip="milestone_tooltip"
                         >
-                            <i class="fa fa-question-circle new-baseline-modal-fa-question-circle"></i>
+                            <i
+                                class="fa fa-question-circle new-baseline-modal-fa-question-circle"
+                            ></i>
                         </span>
-
                     </label>
                     <milestone-list-skeleton v-if="is_loading"/>
-                    <span class="tlp-text-muted"
-                          data-test-type="information_message"
-                          v-else-if="is_loading_failed"
+                    <span
+                        class="tlp-text-muted"
+                        data-test-type="information_message"
+                        v-else-if="is_loading_failed"
                     >
                         <translate>Cannot fetch milestones</translate>
                     </span>
-                    <new-baseline-milestone-select v-else-if="available_milestones !== null"
-                                                   v-bind:milestones="available_milestones"
-                                                   v-on:change="selectMilestoneSelected"
+                    <new-baseline-milestone-select
+                        v-else-if="available_milestones !== null"
+                        v-bind:milestones="available_milestones"
+                        v-on:change="selectMilestoneSelected"
                     />
                 </div>
             </div>
 
             <div class="tlp-modal-footer">
-                <button type="button"
-                        class="tlp-button-primary tlp-button-outline tlp-modal-action"
-                        data-dismiss="modal"
+                <button
+                    type="button"
+                    class="tlp-button-primary tlp-button-outline tlp-modal-action"
+                    data-dismiss="modal"
                 >
                     <translate>Cancel</translate>
                 </button>
-                <button type="submit"
-                        class="tlp-button-primary tlp-modal-action"
-                        v-bind:disabled="is_loading || !some_milestone_available || is_creating"
+                <button
+                    type="submit"
+                    class="tlp-button-primary tlp-modal-action"
+                    v-bind:disabled="is_loading || !some_milestone_available || is_creating"
                 >
-                    <i data-test-type="spinner"
-                       class="tlp-button-icon fa fa-spinner fa-spin"
-                       v-if="is_creating"
+                    <i
+                        data-test-type="spinner"
+                        class="tlp-button-icon fa fa-spinner fa-spin"
+                        v-if="is_creating"
                     >
                     </i>
-                    <i class="fa fa-save tlp-button-icon"
-                       v-else
-                    >
+                    <i class="fa fa-save tlp-button-icon" v-else>
                     </i>
                     <translate>Create baseline</translate>
                 </button>
