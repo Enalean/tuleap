@@ -48,22 +48,22 @@ class RSSWriter091 extends RssWriter
                     $channel->pushContent($i);
             }
         $this->pushContent($channel);
-        $this->__spew();
+        $this->spew();
         $this->_finished = true;
     }
 
     /**
      * Create a new RDF <em>typedNode</em>.
      */
-    function __node($type, $properties, $uri = false) {
+    function node($type, $properties, $uri = false) {
 	return new XmlElement($type, '',
-                              $this->__elementize($properties));
+                              $this->elementize($properties));
     }
 
     /**
      * Write output to HTTP client.
      */
-    function __spew() {
+    function spew() {
         header("Content-Type: application/xml; charset=" . RSS_ENCODING);
         printf("<?xml version=\"1.0\" encoding=\"%s\"?>\n", RSS_ENCODING);
 		print("<!DOCTYPE rss PUBLIC \"-//Netscape Communications//DTD RSS 0.91//EN\"\n");

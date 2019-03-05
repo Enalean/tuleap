@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -830,7 +830,8 @@ class MilestoneFactory_GetBareMilestoneByArtifactIdTest extends TuleapTestCase {
         );
     }
 
-    public function __only__itReturnsNullWhenUserCannotSeeArtifacts() {
+    public function itReturnsNullWhenUserCannotSeeArtifacts()
+    {
         stub($this->planning_factory)->getPlanningByPlanningTracker()->returns(aPlanning()->withId(4)->build());
 
         $artifact = aMockArtifact()->build();

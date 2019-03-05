@@ -1294,10 +1294,10 @@ function ByteFormatter ($bytes = 0, $longformat = false) {
  * Backslashes in the default string would be necessary to escape the
  * '$'s, and they'll cause all kinds of trouble....
  */ 
-function __printf ($fmt) {
+function PHPWikiPrintf ($fmt) {
     $args = func_get_args();
     array_shift($args);
-    echo __vsprintf($fmt, $args);
+    echo PHPWikiVsprintf($fmt, $args);
 }
 
 /**
@@ -1311,12 +1311,12 @@ function __printf ($fmt) {
  * <li> It supports the argument reordering extensions.
  * </ol>
  *
- * @see __printf
+ * @see PHPWikiPrintf
  */ 
-function __sprintf ($fmt) {
+function PHPWikiSprintf ($fmt) {
     $args = func_get_args();
     array_shift($args);
-    return __vsprintf($fmt, $args);
+    return PHPWikiVsprintf($fmt, $args);
 }
 
 /**
@@ -1330,9 +1330,9 @@ function __sprintf ($fmt) {
  * <li> It supports the argument reordering extensions.
  * </ol>
  *
- * @see __printf
+ * @see PHPWikiPrintf
  */ 
-function __vsprintf ($fmt, $args) {
+function PHPWikiVsprintf ($fmt, $args) {
     $fmt = gettext($fmt);
     // PHP's sprintf doesn't support variable with specifiers,
     // like sprintf("%*s", 10, "x"); --- so we won't either.

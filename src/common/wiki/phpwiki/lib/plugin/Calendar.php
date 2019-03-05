@@ -79,7 +79,7 @@ extends WikiPlugin
         }
     }
 
-    function __header($pagename, $time) {
+    private function header($pagename, $time) {
         $args = &$this->args;
 
         $t = localtime($time - SECONDS_PER_DAY, 1);
@@ -115,7 +115,7 @@ extends WikiPlugin
     }
 
 
-    function __daynames($start_wday) {
+    private function daynames($start_wday) {
         $time  = mktime(12, 0, 0, 1, 1, 2001);
         $t     = localtime($time, 1);
         $time += (7 + $start_wday - $t['tm_wday']) * SECONDS_PER_DAY;
@@ -135,7 +135,7 @@ extends WikiPlugin
         return $row;
     }
 
-    function __date($dbi, $time) {
+    private function date($dbi, $time) {
         $args = &$this->args;
 
         $page_for_date = $args['prefix'] . strftime($args['date_format'],
@@ -196,9 +196,9 @@ extends WikiPlugin
                                  'cellpadding' => 2,
                                  'class'       => 'cal'),
                            HTML::thead(
-                                       $this->__header($request->getArg('pagename'),
+                                       $this->header($request->getArg('pagename'),
                                                        $time),
-                                       $this->__daynames($args['start_wday'])));
+                                       $this->daynames($args['start_wday'])));
 
         $t = localtime($time, 1);
 
@@ -216,7 +216,7 @@ extends WikiPlugin
         $done = false;
 
         while (!$done) {
-            $row->pushContent($this->__date($dbi, $time));
+            $row->pushContent($this->date($dbi, $time));
 
             if (++$col % 7 == 0) {
                 $tbody->pushContent($row);

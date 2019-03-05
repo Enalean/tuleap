@@ -53,13 +53,13 @@ class RssWriter2 extends RssWriter
                 ? '80' 
                 : (SERVER_PROTOCOL == 'https' ? '443' : '80');
         if (!isset($properties['domain'])) $properties['domain'] = SERVER_NAME;
-        $this->_cloud = $this->__node('cloud', $properties);
+        $this->_cloud = $this->node('cloud', $properties);
     }
 
     /**
      * Write output to HTTP client.
      */
-    function __spew() {
+    function spew() {
         header("Content-Type: application/rss+xml; charset=" . RSS_ENCODING);
         printf("<?xml version=\"1.0\" encoding=\"%s\"?>\n", RSS_ENCODING);
         printf("<!-- generator=\"PhpWiki-%s\" -->\n", PHPWIKI_VERSION);
