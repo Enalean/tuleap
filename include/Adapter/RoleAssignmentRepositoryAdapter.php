@@ -56,7 +56,7 @@ class RoleAssignmentRepositoryAdapter implements RoleAssignmentRepository
                 $row['user_group_id'],
                 $row['role']
             );
-        };
+        }
 
         return $assignments;
     }
