@@ -40,17 +40,17 @@ class FieldRepositoryStub implements FieldRepository
     /** @var Tracker_FormElement_Field_List */
     private $status;
 
-    function findTitleByTracker(Tracker $tracker): ?Tracker_FormElement_Field_Text
+    public function findTitleByTracker(Tracker $tracker): ?Tracker_FormElement_Field_Text
     {
         return $this->title;
     }
 
-    function findDescriptionByTracker(Tracker $tracker): ?Tracker_FormElement_Field_Text
+    public function findDescriptionByTracker(Tracker $tracker): ?Tracker_FormElement_Field_Text
     {
         return $this->description;
     }
 
-    function findStatusByTracker(Tracker $tracker): ?Tracker_FormElement_Field_List
+    public function findStatusByTracker(Tracker $tracker): ?Tracker_FormElement_Field_List
     {
         return $this->status;
     }

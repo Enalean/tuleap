@@ -42,7 +42,7 @@ class CurrentUserProviderStub implements CurrentUserProvider
         $this->user = $current_user;
     }
 
-    function getUser(): PFUser
+    public function getUser(): PFUser
     {
         return $this->user;
     }

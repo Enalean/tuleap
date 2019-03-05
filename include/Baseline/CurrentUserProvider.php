@@ -25,5 +25,5 @@ use PFUser;
 
 interface CurrentUserProvider
 {
-    function getUser(): PFUser;
+    public function getUser(): PFUser;
 }

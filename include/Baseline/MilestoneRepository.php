@@ -25,5 +25,5 @@ use Tracker_Artifact;
 
 interface MilestoneRepository
 {
-    function findById(int $id): ?Tracker_Artifact;
+    public function findById(int $id): ?Tracker_Artifact;
 }

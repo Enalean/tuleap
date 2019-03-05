@@ -47,7 +47,7 @@ class PermissionsStub implements Permissions
     /**
      * @throws NotAuthorizedException
      */
-    function checkCreateBaseline(TransientBaseline $baseline)
+    public function checkCreateBaseline(TransientBaseline $baseline)
     {
         if (! $this->all_permitted) {
             throw new NotAuthorizedException('Baseline read not authorized');
@@ -57,7 +57,7 @@ class PermissionsStub implements Permissions
     /**
      * @throws NotAuthorizedException
      */
-    function checkReadSimpleBaseline(SimplifiedBaseline $baseline): void
+    public function checkReadSimpleBaseline(SimplifiedBaseline $baseline): void
     {
         if (! $this->all_permitted) {
             throw new NotAuthorizedException('Baseline read not authorized');

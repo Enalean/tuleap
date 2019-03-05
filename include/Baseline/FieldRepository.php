@@ -27,9 +27,9 @@ use Tracker_FormElement_Field_Text;
 
 interface FieldRepository
 {
-    function findTitleByTracker(Tracker $tracker): ?Tracker_FormElement_Field_Text;
+    public function findTitleByTracker(Tracker $tracker): ?Tracker_FormElement_Field_Text;
 
-    function findDescriptionByTracker(Tracker $tracker): ?Tracker_FormElement_Field_Text;
+    public function findDescriptionByTracker(Tracker $tracker): ?Tracker_FormElement_Field_Text;
 
-    function findStatusByTracker(Tracker $tracker): ?Tracker_FormElement_Field_List;
+    public function findStatusByTracker(Tracker $tracker): ?Tracker_FormElement_Field_List;
 }

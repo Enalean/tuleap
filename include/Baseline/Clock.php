@@ -25,5 +25,5 @@ use DateTime;
 
 interface Clock
 {
-    function now(): DateTime;
+    public function now(): DateTime;
 }

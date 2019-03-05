@@ -29,10 +29,10 @@ interface Permissions
     /**
      * @throws NotAuthorizedException
      */
-    function checkReadSimpleBaseline(SimplifiedBaseline $baseline): void;
+    public function checkReadSimpleBaseline(SimplifiedBaseline $baseline): void;
 
     /**
      * @throws NotAuthorizedException
      */
-    function checkCreateBaseline(TransientBaseline $baseline);
+    public function checkCreateBaseline(TransientBaseline $baseline);
 }

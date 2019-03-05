@@ -28,5 +28,5 @@ interface ProjectPermissions
     /**
      * @throws NotAuthorizedException
      */
-    function checkRead(Project $project);
+    public function checkRead(Project $project);
 }
