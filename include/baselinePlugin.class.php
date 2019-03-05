@@ -96,7 +96,7 @@ class baselinePlugin extends Plugin  // @codingStandardsIgnoreLine
     /**
      * @see REST_RESOURCES
      */
-    public function rest_resources($params)
+    public function rest_resources($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName
     {
         $injector = new BaselineRestResourcesInjector();
         $injector->populate($params['restler']);
