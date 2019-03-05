@@ -40,7 +40,7 @@ msgid "No milestone available"
 msgstr "Aucune milestone disponible"
 
 msgid "Only open milestone are visible here"
-msgstr "Seuls les milestones ouvertes sont visible ici"
+msgstr "Seules les milestones ouvertes sont visibles ici"
 
 msgid "Page under construction"
 msgstr "Page en construction"
