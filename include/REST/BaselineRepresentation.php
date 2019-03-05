@@ -21,8 +21,8 @@
 
 namespace Tuleap\Baseline\REST;
 
-use DateTime;
 use Tuleap\Baseline\Baseline;
+use Tuleap\REST\JsonCast;
 
 class BaselineRepresentation
 {
@@ -35,18 +35,29 @@ class BaselineRepresentation
     /** @var int */
     public $milestone_id;
 
-    /** @var DateTime */
+    /** @var string */
     public $snapshot_date;
 
     /** @var int */
     public $author_id;
 
-    public function __construct(Baseline $baseline)
+    public function __construct(int $id, string $name, int $milestone_id, string $snapshot_date, int $author_id)
     {
-        $this->id            = $baseline->getId();
-        $this->name          = $baseline->getName();
-        $this->milestone_id  = $baseline->getMilestone()->getId();
-        $this->snapshot_date = $baseline->getSnapshotDate()->format('c');
-        $this->author_id     = $baseline->getAuthor()->getId();
+        $this->id            = $id;
+        $this->name          = $name;
+        $this->milestone_id  = $milestone_id;
+        $this->snapshot_date = $snapshot_date;
+        $this->author_id     = $author_id;
+    }
+
+    public static function fromBaseline(Baseline $baseline): BaselineRepresentation
+    {
+        return new self(
+            JsonCast::toInt($baseline->getId()),
+            $baseline->getName(),
+            JsonCast::toInt($baseline->getMilestone()->getId()),
+            JsonCast::fromDateTimeToDate($baseline->getSnapshotDate()),
+            JsonCast::toInt($baseline->getAuthor()->getId())
+        );
     }
 }

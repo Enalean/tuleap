@@ -85,7 +85,7 @@ class BaselineController
         $baseline = new TransientBaseline($name, $milestone);
         try {
             $created_baseline = $this->baseline_service->create($baseline);
-            return new BaselineRepresentation($created_baseline);
+            return BaselineRepresentation::fromBaseline($created_baseline);
         } catch (NotAuthorizedException $exception) {
             throw new I18NRestException(
                 403,

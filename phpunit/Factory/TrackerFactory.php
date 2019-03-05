@@ -21,36 +21,14 @@
 
 namespace Tuleap\Baseline\Factory;
 
-use PFUser;
+use Mockery;
 use Project;
-use Tuleap\Baseline\Support\DateTimeFactory;
 
-/**
- * ObjectMother pattern applied to baselines
- */
-class BaselineFactory
+class TrackerFactory
 {
-    public static function one()
+    public static function one(): TrackerBuilder
     {
-        return (new BaselineBuilder())
-            ->id(1)
-            ->name('Milestone startup')
-            ->milestone(MilestoneFactory::one()->build())
-            ->author(new PFUser())
-            ->snapshotDate(DateTimeFactory::one());
-    }
-
-    public static function fromProject(Project $project)
-    {
-        return self::one()
-            ->milestone(
-                MilestoneFactory::one()
-                    ->tracker(
-                        TrackerFactory::one()
-                            ->project($project)
-                            ->build()
-                    )
-                    ->build()
-            );
+        return (new TrackerBuilder)
+            ->project(Mockery::mock(Project::class));
     }
 }

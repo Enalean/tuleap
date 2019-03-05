@@ -23,45 +23,30 @@ namespace Tuleap\Baseline\Factory;
 
 use Mockery;
 use Mockery\MockInterface;
+use Project;
 use Tracker;
-use Tracker_Artifact;
 
-class MilestoneBuilder
+class TrackerBuilder
 {
-    /** @var Tracker_Artifact|MockInterface */
-    private $milestone;
+    /** @var Tracker|MockInterface */
+    private $tracker;
 
-    /**
-     * MilestoneBuilder constructor.
-     */
     public function __construct()
     {
-        $this->milestone = Mockery::mock(Tracker_Artifact::class);
+        $this->tracker = Mockery::mock(Tracker::class);
     }
 
-    public function id(int $id): self
+    public function project(Project $project): self
     {
-        $this->milestone
-            ->shouldReceive('getId')
-            ->andReturn($id)
+        $this->tracker
+            ->shouldReceive('getProject')
+            ->andReturn($project)
             ->byDefault();
         return $this;
     }
 
-    public function tracker(Tracker $tracker): self
-    {
-        $this->milestone
-            ->shouldReceive('getTracker')
-            ->andReturn($tracker)
-            ->byDefault();
-        return $this;
-    }
-
-    /**
-     * @return Tracker_Artifact|MockInterface
-     */
     public function build()
     {
-        return $this->milestone;
+        return $this->tracker;
     }
 }

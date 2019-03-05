@@ -22,11 +22,13 @@
 namespace Tuleap\Baseline\REST;
 
 use Luracast\Restler\Restler;
+use Tuleap\Project\REST\ProjectRepresentation;
 
 class BaselineRestResourcesInjector
 {
     public function populate(Restler $restler)
     {
         $restler->addAPIClass('\\Tuleap\\Baseline\\REST\\BaselinesResource', 'baselines');
+        $restler->addAPIClass(ProjectBaselinesResource::class, ProjectRepresentation::ROUTE);
     }
 }

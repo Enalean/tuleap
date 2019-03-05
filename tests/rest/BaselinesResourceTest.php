@@ -65,6 +65,32 @@ class BaselinesResourceTest extends RestBase
         $this->assertNotNull($json_response['snapshot_date']);
     }
 
+    /**
+     * @depends testPost
+     */
+    public function testGetByProject()
+    {
+        $project_id    = $this->project_ids['baseline-test'];
+        $url           = 'projects/' . $project_id . '/baselines?limit=2';
+        $response      = $this->getResponseByName(
+            self::TEST_USER_NAME,
+            $this->client->get($url)
+        );
+        $json_response = $response->json();
+
+        $this->assertEquals(1, $json_response['total_count']);
+
+        $baselines_response = $json_response['baselines'];
+        $this->assertEquals(1, count($baselines_response));
+
+        $baseline_response = $baselines_response[0];
+        $this->assertNotNull($baseline_response['id']);
+        $this->assertEquals('new baseline', $baseline_response['name']);
+        $this->assertNotNull($baseline_response['milestone_id']);
+        $this->assertNotNull($baseline_response['snapshot_date']);
+        $this->assertNotNull($baseline_response['author_id']);
+    }
+
     private function fetchFirstArtifactByProjectName(string $project_name): array
     {
         $project_id = $this->project_ids[$project_name];

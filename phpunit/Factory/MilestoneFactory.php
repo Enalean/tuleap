@@ -28,6 +28,8 @@ class MilestoneFactory
 {
     public static function one(): MilestoneBuilder
     {
-        return (new MilestoneBuilder())->id(3);
+        return (new MilestoneBuilder())
+            ->id(3)
+            ->tracker(TrackerFactory::one()->build());
     }
 }
