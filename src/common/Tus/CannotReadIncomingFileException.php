@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,10 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Tus;
 
-abstract class TusServerException extends \RuntimeException
+final class CannotReadIncomingFileException extends TusServerException
 {
-    final public function getHTTPStatusCode() : int
+    public function __construct()
     {
-        return (int) $this->getCode();
+        parent::__construct('Cannot access to the content of incoming request', 500);
     }
 }
