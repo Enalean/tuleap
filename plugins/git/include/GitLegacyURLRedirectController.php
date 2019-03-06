@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -62,7 +62,7 @@ class GitLegacyURLRedirectController implements DispatchableWithRequest
         if (! $project || $project->isError()) {
             throw new NotFoundException();
         }
-        if (! $project->usesService(GitPlugin::SERVICE_SHORTNAME)) {
+        if (! $project->usesService(gitPlugin::SERVICE_SHORTNAME)) {
             throw new NotFoundException(dgettext("tuleap-git", "Git service is disabled."));
         }
 

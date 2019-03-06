@@ -30,6 +30,7 @@ use Project;
 use SimpleXMLElement;
 use XML_SimpleXMLCDATAFactory;
 use System_Command;
+use ForgeConfig;
 
 class XMLSvnExporter
 {

@@ -19,7 +19,10 @@
  *
  */
 
+use Tuleap\Dashboard\Widget\DashboardWidgetDao;
+use Tuleap\CrossTracker\CrossTrackerReportDao;
 use Tuleap\User\ForgeUserGroupPermission\RestProjectManagementPermission;
+use Tuleap\Widget\WidgetFactory;
 
 require_once __DIR__.'/../../lib/TestDataBuilder.php';
 

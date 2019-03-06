@@ -20,6 +20,7 @@
 
 namespace Tuleap\GitLFS\Lock\Response;
 
+use GitRepository;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use PHPUnit\Framework\TestCase;

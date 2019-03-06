@@ -21,6 +21,9 @@
 namespace Tuleap\FRS;
 
 use TuleapTestCase;
+use PermissionsDao;
+use Project;
+use PFUser;
 
 class FRSPermissionManagerTest extends TuleapTestCase
 {

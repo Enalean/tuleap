@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -95,7 +95,7 @@ class ServicesPresenterBuilder
         return $user->isSuperUser() && ! empty($service->getShortName());
     }
 
-    private function canUpdateIsActive(PFUser $user)
+    private function canUpdateIsActive(PFuser $user)
     {
         return $user->isSuperUser();
     }

@@ -20,7 +20,10 @@
 
 namespace Tuleap\SVN\Repository;
 
+use Mock;
 use TuleapTestCase;
+use Project;
+use Tuleap\SVN\Dao;
 
 require_once __DIR__ .'/../../bootstrap.php';
 

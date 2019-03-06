@@ -21,6 +21,8 @@
 namespace Tuleap\SVN\Admin;
 
 use Tuleap\SVN\Repository\Repository;
+use ProjectManager;
+use Project;
 
 class MailHeaderManager
 {

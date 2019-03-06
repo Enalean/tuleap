@@ -20,6 +20,7 @@
 
 namespace Tuleap\OpenGraph;
 
+use ForgeConfig;
 use ThemeVariantColor;
 
 class OpenGraphPresenter

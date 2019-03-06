@@ -20,6 +20,7 @@
 
 namespace Tuleap\AgileDashboard\Planning;
 
+use AgileDashboard_HierarchyChecker;
 use PFUser;
 use Planning;
 use Planning_TrackerPresenter;

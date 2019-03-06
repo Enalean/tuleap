@@ -23,6 +23,7 @@ namespace Tuleap\User\Admin;
 use ForgeAccess;
 use ForgeConfig;
 use PFUser;
+use UserDao;
 
 class UserStatusChecker
 {

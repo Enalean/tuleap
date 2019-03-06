@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -176,7 +176,7 @@ class PullRequestsResource extends AuthenticatedResource
      */
     private $git_pull_request_reference_updater;
     /**
-     * @var GitPlugin
+     * @var gitPlugin
      */
     private $git_plugin;
     /**
@@ -1285,28 +1285,28 @@ class PullRequestsResource extends AuthenticatedResource
 
     private function sendAllowHeadersForTimeline()
     {
-        Header::allowOptionsGet();
+        HEADER::allowOptionsGet();
     }
 
     private function sendAllowHeadersForCommits()
     {
-        Header::allowOptionsGet();
+        HEADER::allowOptionsGet();
     }
 
 
     private function sendAllowHeadersForLabels()
     {
-        Header::allowOptionsGetPatch();
+        HEADER::allowOptionsGetPatch();
     }
 
     private function sendAllowHeadersForComments()
     {
-        Header::allowOptionsGetPost();
+        HEADER::allowOptionsGetPost();
     }
 
     private function sendAllowHeadersForInlineComments()
     {
-        Header::allowOptionsGetPost();
+        HEADER::allowOptionsGetPost();
     }
 
     /**

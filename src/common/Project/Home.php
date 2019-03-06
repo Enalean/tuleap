@@ -31,6 +31,7 @@ use EventManager;
 use ForgeConfig;
 use User_ForgeUserGroupPermissionsManager;
 use User_ForgeUserGroupPermissionsDao;
+use Tuleap\Instrument\Collect;
 use Tuleap\Dashboard\AssetsIncluder;
 use Tuleap\Dashboard\Project\ProjectDashboardController;
 use Tuleap\Dashboard\Project\ProjectDashboardDao;

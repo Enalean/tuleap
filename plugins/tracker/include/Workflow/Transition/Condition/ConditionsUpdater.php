@@ -23,6 +23,7 @@ namespace Tuleap\Tracker\Workflow\Transition\Condition;
 
 use Exception;
 use TransitionFactory;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Tracker\Workflow\Transition\OrphanTransitionException;
 use Workflow_Transition_ConditionFactory;
 

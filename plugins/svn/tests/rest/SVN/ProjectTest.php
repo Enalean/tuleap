@@ -20,6 +20,7 @@
 
 namespace Tuleap\SVN\REST;
 
+use REST_TestDataBuilder;
 use Tuleap\SVN\REST\TestBase;
 
 require_once dirname(__FILE__).'/../bootstrap.php';

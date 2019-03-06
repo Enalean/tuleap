@@ -20,6 +20,7 @@
 namespace Tuleap\Project\REST;
 use \ProjectUGroup;
 use Tuleap\User\UserGroup\NameTranslator;
+use \User_ForgeUGroup;
 use \Exception;
 
 class UserGroupRepresentation {

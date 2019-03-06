@@ -23,6 +23,7 @@ namespace Tuleap\HudsonGit;
 use Tuleap\HudsonGit\Hook\HookDao;
 use Tuleap\HudsonGit\Hook\ModalsPresenter;
 use Tuleap\Git\Webhook\SectionOfWebhooksPresenter;
+use Tuleap\Git\Webhook\WebhookPresenter;
 use Tuleap\HudsonGit\Job\JobManager;
 use CSRFSynchronizerToken;
 use TemplateRendererFactory;

@@ -20,6 +20,7 @@
 
 namespace Tuleap\Tracker\FormElement;
 
+use Tracker;
 use Tracker_Artifact_ChangesetValue_List;
 use Tracker_FormElement_Field_List_BindValue;
 use TransitionFactory;

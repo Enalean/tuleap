@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,7 +22,7 @@ namespace Tuleap\Statistics;
 
 use Feedback;
 use ForgeConfig;
-use HTTPRequest;
+use HttpRequest;
 use Tuleap\Admin\AdminPageRenderer;
 
 class DataExportRouter

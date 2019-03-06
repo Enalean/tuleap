@@ -23,6 +23,7 @@ namespace Tuleap\Tracker\REST;
 use \Tracker_FormElement_Field_List_Value;
 use Tuleap\Project\REST\UserGroupRepresentation;
 use Tuleap\REST\JsonCast;
+use Project;
 
 class FieldListBindUGroupValueRepresentation {
     /**

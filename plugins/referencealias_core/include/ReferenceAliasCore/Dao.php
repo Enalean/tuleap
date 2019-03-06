@@ -22,6 +22,7 @@
 namespace Tuleap\ReferenceAliasCore;
 
 use DataAccessObject;
+use CodendiDataAccess;
 use Project;
 
 class Dao extends DataAccessObject

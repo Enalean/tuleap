@@ -33,6 +33,7 @@ use Tuleap\Git\Webhook\Webhook;
 use GitRepository;
 use Codendi_Request;
 use CSRFSynchronizerToken;
+use Codendi_HTMLPurifier;
 use EventManager;
 use TemplateRendererFactory;
 

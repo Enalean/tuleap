@@ -21,6 +21,7 @@
 namespace Tuleap\SVN\Service;
 
 use Service;
+use SvnPlugin;
 use TuleapTestCase;
 
 require_once __DIR__ .'/../../bootstrap.php';

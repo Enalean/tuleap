@@ -21,6 +21,7 @@
 namespace Tuleap\AgileDashboard\Milestone\Pane\Details;
 
 use AgileDashboard_Pane;
+use Planning_Milestone;
 use TemplateRendererFactory;
 
 /**

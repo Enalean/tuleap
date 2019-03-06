@@ -26,6 +26,7 @@ use PermissionsManager;
 use Git;
 use Tuleap\User\UserGroup\NameTranslator;
 use UGroupManager;
+use User_ForgeUGroup;
 use ProjectUGroup;
 use Project;
 

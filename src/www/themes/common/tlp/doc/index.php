@@ -3,6 +3,7 @@
 require_once('common/layout/IncludeAssets.php');
 require_once('common/layout/IncludeAssetsException.php');
 
+use Tuleap\Layout\IncludeAssets;
 
 function discoverSection($basepath) {
     $discovery = array();

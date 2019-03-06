@@ -20,6 +20,8 @@
 
 namespace Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Content\Projects;
 
+use PFUser;
+use Project;
 
 class ProjectPresenter
 {

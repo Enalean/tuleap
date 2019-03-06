@@ -19,6 +19,7 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields;
 
+use BaseLanguageFactory;
 use PFUser;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind_Users;

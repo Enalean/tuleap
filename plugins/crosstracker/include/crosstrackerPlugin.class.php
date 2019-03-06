@@ -19,6 +19,7 @@
  */
 
 use Tuleap\CrossTracker\CrossTrackerArtifactReportDao;
+use Tuleap\CrossTracker\CrossTrackerArtifactRepresentationFactory;
 use Tuleap\CrossTracker\CrossTrackerReportDao;
 use Tuleap\CrossTracker\CrossTrackerReportFactory;
 use Tuleap\CrossTracker\Permission\CrossTrackerPermissionGate;
@@ -68,7 +69,11 @@ use Tuleap\CrossTracker\Report\SimilarField\SimilarFieldsMatcher;
 use Tuleap\CrossTracker\Report\SimilarField\SupportedFieldsDao;
 use Tuleap\CrossTracker\REST\ResourcesInjector;
 use Tuleap\CrossTracker\Widget\ProjectCrossTrackerSearch;
+use Tuleap\Layout\CssAsset;
+use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\ThemeVariation;
 use Tuleap\Request\CollectRoutesEvent;
+use Tuleap\Request\CurrentPage;
 use Tuleap\Tracker\FormElement\Field\Date\CSVFormatter;
 use Tuleap\Tracker\Report\Query\Advanced\DateFormat;
 use Tuleap\Tracker\Report\Query\Advanced\ExpertQueryValidator;

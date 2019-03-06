@@ -20,6 +20,7 @@
 
 namespace Tuleap\FRS\Tests\REST;
 
+use REST_TestDataBuilder;
 use RestBase;
 
 class ReleaseTest extends RestBase

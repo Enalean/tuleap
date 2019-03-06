@@ -21,6 +21,7 @@
 namespace Tuleap\SystemEvent;
 
 use SystemEvent;
+use Codendi_HTMLPurifier;
 
 class SystemEventSearchPresenter
 {

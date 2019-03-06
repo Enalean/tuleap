@@ -22,6 +22,8 @@
 namespace Tuleap\Tracker\Artifact;
 
 use Tracker;
+use Tracker_Artifact;
+use Tracker_ArtifactFactory;
 use Tuleap\Tracker\DAO\TrackerArtifactSourceIdDao;
 
 class ExistingArtifactSourceIdFromTrackerExtractor

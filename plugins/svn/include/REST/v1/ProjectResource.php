@@ -23,6 +23,7 @@ namespace Tuleap\SVN\REST\v1;
 
 use Project;
 use Tuleap\SVN\Repository\RepositoryManager;
+use Tuleap\SVN\Dao;
 use Tuleap\SVN\Repository\RepositoryPaginatedCollection;
 
 class ProjectResource

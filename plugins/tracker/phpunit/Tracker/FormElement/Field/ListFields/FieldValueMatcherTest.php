@@ -28,6 +28,7 @@ use SimpleXMLElement;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind_Static;
 use Tracker_FormElement_Field_List_Bind_StaticValue;
+use Tracker_FormElement_Field_List_Bind_Users;
 use XMLImportHelper;
 
 require_once __DIR__ . '/../../../../bootstrap.php';

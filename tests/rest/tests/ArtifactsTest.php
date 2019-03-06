@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+use Guzzle\Http\Exception\BadResponseException;
 use Tuleap\REST\ArtifactBase;
 
 /**

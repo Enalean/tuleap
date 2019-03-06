@@ -22,10 +22,15 @@ namespace Tuleap\Tracker\Workflow;
 
 use Feedback;
 use HTTPRequest;
+use TemplateRendererFactory;
 use TrackerFactory;
+use TrackerManager;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\NotFoundException;
+use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\CssAsset;
 use Workflow_Dao;
 
 class WorkflowLegacyController implements DispatchableWithRequest

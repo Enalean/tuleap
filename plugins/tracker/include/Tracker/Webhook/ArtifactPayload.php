@@ -20,6 +20,7 @@
 
 namespace Tuleap\Tracker\Webhook;
 
+use Tracker_Artifact;
 use Tracker_Artifact_Changeset;
 use Tuleap\User\REST\MinimalUserRepresentation;
 use Tuleap\Webhook\Payload;

@@ -22,6 +22,7 @@ namespace Tuleap\Git\Permissions;
 
 use Tuleap\User\UserGroup\NameTranslator;
 use TuleapTestCase;
+use User_ForgeUGroup;
 use GitRepository;
 
 require_once dirname(__FILE__) . '/../../bootstrap.php';

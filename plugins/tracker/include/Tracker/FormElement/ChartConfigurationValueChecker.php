@@ -21,6 +21,7 @@
 namespace Tuleap\Tracker\FormElement;
 
 use PFUser;
+use Tracker;
 use Tracker_Artifact;
 use Tracker_Artifact_Changeset;
 use Tracker_FormElement_Field;

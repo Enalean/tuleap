@@ -24,6 +24,7 @@ require_once 'www/project/admin/permissions.php';
 
 use Project;
 use PFUser;
+use ProjectUGroup;
 use User_ForgeUserGroupFactory;
 use PermissionsManager;
 

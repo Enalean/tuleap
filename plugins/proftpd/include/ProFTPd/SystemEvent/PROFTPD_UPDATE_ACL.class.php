@@ -21,6 +21,7 @@
 
 namespace Tuleap\ProFTPd\SystemEvent;
 
+use Backend;
 use RuntimeException;
 use Tuleap\ProFTPd\Admin;
 use ProjectManager;

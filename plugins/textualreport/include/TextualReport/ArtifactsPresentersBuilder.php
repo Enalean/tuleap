@@ -20,6 +20,7 @@
 
 namespace Tuleap\TextualReport;
 
+use PDOStatement;
 use PFUser;
 use Tracker_Artifact_ChangesetValue_Text;
 use Tracker_ArtifactFactory;

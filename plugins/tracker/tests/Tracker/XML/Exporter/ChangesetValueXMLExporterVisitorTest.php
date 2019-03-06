@@ -20,6 +20,7 @@
 
 require_once __DIR__.'/../../../bootstrap.php';
 
+use Tuleap\Tracker\XML\Exporter\ChangesetValue\ChangesetValueComputedXMLExporter;
 
 class Tracker_XML_Exporter_ChangesetValueXMLExporterVisitorTest extends TuleapTestCase {
 

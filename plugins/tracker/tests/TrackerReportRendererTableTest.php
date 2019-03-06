@@ -22,6 +22,7 @@ namespace Tuleap\Tracker\Renderer;
 
 use TuleapTestCase;
 use SimpleXMLElement;
+use Tracker_Report_Renderer_Table;
 
 require_once 'bootstrap.php';
 

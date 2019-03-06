@@ -22,6 +22,7 @@
 namespace Tuleap\Tracker\Events;
 
 use Project;
+use SimpleXMLElement;
 use Tuleap\Event\Dispatchable;
 
 class XMLImportArtifactLinkTypeCanBeDisabled implements Dispatchable

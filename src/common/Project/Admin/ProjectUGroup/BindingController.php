@@ -22,6 +22,7 @@
 namespace Tuleap\Project\Admin\ProjectUGroup;
 
 use Codendi_Request;
+use EventManager;
 use Feedback;
 use ProjectHistoryDao;
 use ProjectManager;

@@ -20,6 +20,7 @@
 
 namespace Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem;
 
+use HTTPRequest;
 use Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Content\Presenter as ContentPresenter;
 
 class Presenter

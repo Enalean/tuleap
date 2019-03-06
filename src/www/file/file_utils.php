@@ -19,6 +19,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\FRS\FRSPackageController;
+use Tuleap\FRS\UploadedLinksDao;
+use Tuleap\FRS\UploadedLinksInvalidFormException;
+use Tuleap\FRS\UploadedLinksRequestFormatter;
+use Tuleap\FRS\UploadedLinksRetriever;
+use Tuleap\FRS\UploadedLinksUpdater;
+use Tuleap\FRS\UploadedLinkUpdateTablePresenter;
 
 function file_utils_header($params) {
     global $group_id,$Language;

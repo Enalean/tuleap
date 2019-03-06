@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright Enalean (c) 2018-Present. All rights reserved.
+ * Copyright Enalean (c) 2018-2019. All rights reserved.
  *
- * Tuleap and Enalean names and logos are registered trademarks owned by
+ * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
  * owners.
  *
@@ -83,7 +83,7 @@ class TimetrackingDataBuilder extends REST_TestDataBuilder
 
     private function installPlugin()
     {
-        $dbtables = new DBTablesDao();
+        $dbtables = new DBTablesDAO();
         $dbtables->updateFromFile(dirname(__FILE__) . '/../../db/install.sql');
     }
 

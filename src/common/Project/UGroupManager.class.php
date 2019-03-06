@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -161,16 +161,16 @@ class UGroupManager {
 
         return array_filter($user_groups, function (ProjectUGroup $ugroup) use ($project) {
 
-            if ($ugroup->getId() == ProjectUGroup::ANONYMOUS) {
+            if ($ugroup->getId() == ProjectUgroup::ANONYMOUS) {
                 return ForgeConfig::areAnonymousAllowed() && $project->isPublic();
             }
-            if ($ugroup->getId() == ProjectUGroup::AUTHENTICATED) {
+            if ($ugroup->getId() == ProjectUgroup::AUTHENTICATED) {
                 return ForgeConfig::areRestrictedUsersAllowed() && $project->allowsRestricted();
             }
-            if ($ugroup->getId() == ProjectUGroup::REGISTERED) {
+            if ($ugroup->getId() == ProjectUgroup::REGISTERED) {
                 return $project->isPublic();
             }
-            if ($ugroup->getId() == ProjectUGroup::NONE) {
+            if ($ugroup->getId() == ProjectUgroup::NONE) {
                 return false;
             }
 

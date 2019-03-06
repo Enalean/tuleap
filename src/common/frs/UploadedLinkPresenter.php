@@ -21,6 +21,7 @@
 
 namespace Tuleap\FRS;
 
+use Tuleap\Sanitizer\FTPSanitizer;
 use Tuleap\Sanitizer\URISanitizer;
 use Valid_FTPURI;
 use Valid_LocalURI;

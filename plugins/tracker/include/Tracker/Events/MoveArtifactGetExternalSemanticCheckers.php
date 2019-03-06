@@ -20,6 +20,7 @@
 
 namespace Tuleap\Tracker\Events;
 
+use Tracker;
 use Tuleap\Event\Dispatchable;
 use Tuleap\Tracker\Action\MoveSemanticChecker;
 

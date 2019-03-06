@@ -21,6 +21,7 @@
 namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata;
 
 use Tracker;
+use Tuleap\AgileDashboard\Semantic\SemanticDone;
 use Tuleap\CrossTracker\Report\Query\Advanced\AllowedMetadata;
 use Tuleap\CrossTracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;

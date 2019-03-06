@@ -20,6 +20,7 @@
 
 namespace Tuleap\Timetracking\REST;
 
+use REST_TestDataBuilder;
 use RestBase;
 
 class TimetrackingBase extends RestBase

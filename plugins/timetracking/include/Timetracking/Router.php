@@ -31,6 +31,7 @@ use TrackerFactory;
 use Tuleap\Timetracking\Admin\AdminController;
 use Tuleap\Timetracking\Exceptions\TimeTrackingBadTimeFormatException;
 use Tuleap\Timetracking\Exceptions\TimeTrackingBadDateFormatException;
+use Tuleap\Timetracking\Exceptions\TimeTrackingExistingDateException;
 use Tuleap\Timetracking\Exceptions\TimeTrackingMissingTimeException;
 use Tuleap\Timetracking\Exceptions\TimeTrackingNotAllowedToAddException;
 use Tuleap\Timetracking\Exceptions\TimeTrackingNotAllowedToDeleteException;

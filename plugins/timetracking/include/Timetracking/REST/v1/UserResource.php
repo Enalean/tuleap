@@ -24,7 +24,9 @@
 
 namespace Tuleap\Timetracking\REST\v1;
 
+use DateTime;
 use Luracast\Restler\RestException;
+use TrackerFactory;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\JsonDecoder;
