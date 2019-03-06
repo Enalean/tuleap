@@ -24,6 +24,7 @@ namespace Tuleap\Test\Psalm;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use System_Command_CommandException;
 
 final class PsalmIgnoreGitExcludedTuleapPluginsTest extends TestCase
 {
@@ -36,5 +37,28 @@ final class PsalmIgnoreGitExcludedTuleapPluginsTest extends TestCase
 
         $ignore_directory = new PsalmIgnoreGitExcludedTuleapPlugins($system_command);
         $this->assertEmpty($ignore_directory->getIgnoredDirectories());
+    }
+
+    public function testWhenNoPluginsIsExcludedItDoesNotCrash() : void
+    {
+        $system_command = \Mockery::mock(\System_Command::class);
+        $system_command->shouldReceive('exec')->andThrow(
+            new System_Command_CommandException('command', ['output'], 1)
+        );
+
+        $ignore_directory = new PsalmIgnoreGitExcludedTuleapPlugins($system_command);
+        $this->assertEmpty($ignore_directory->getIgnoredDirectories());
+    }
+
+    public function testGitFatalErrorsAreNotHidden() : void
+    {
+        $system_command = \Mockery::mock(\System_Command::class);
+        $system_command->shouldReceive('exec')->andThrow(
+            new System_Command_CommandException('command', ['output'], 128)
+        );
+
+        $ignore_directory = new PsalmIgnoreGitExcludedTuleapPlugins($system_command);
+        $this->expectException(System_Command_CommandException::class);
+        $ignore_directory->getIgnoredDirectories();
     }
 }
