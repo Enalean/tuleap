@@ -20,6 +20,7 @@
 
 namespace Tuleap\TextualReport;
 
+use PDOStatement;
 use PFUser;
 use TemplateRenderer;
 use Tracker;

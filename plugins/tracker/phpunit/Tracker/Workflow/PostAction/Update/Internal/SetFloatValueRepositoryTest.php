@@ -30,6 +30,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
 use PHPUnit\Framework\TestCase;
 use Transition_PostAction_Field_FloatDao;
+use Tuleap\DB\DataAccessObject;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Tracker\Workflow\PostAction\Update\SetFloatValue;
 use Tuleap\Tracker\Workflow\PostAction\Update\TransitionFactory;

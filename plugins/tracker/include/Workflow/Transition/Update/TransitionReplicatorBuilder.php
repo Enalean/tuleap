@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -91,7 +91,7 @@ class TransitionReplicatorBuilder
                     new SetDateValueValidator($ids_validator, $field_ids_validator, $form_element_factory)
                 ),
                 new SetIntValueUpdater(
-                    new SetIntValueRepository(
+                    new SetintValueRepository(
                         new Transition_PostAction_Field_IntDao(),
                         $transaction_executor
                     ),

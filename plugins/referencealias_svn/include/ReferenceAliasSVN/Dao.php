@@ -23,6 +23,7 @@
 namespace Tuleap\ReferenceAliasSVN;
 
 use DataAccessObject;
+use Project;
 
 class Dao extends DataAccessObject
 {

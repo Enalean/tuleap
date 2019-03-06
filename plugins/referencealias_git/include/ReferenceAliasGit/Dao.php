@@ -22,6 +22,7 @@
 namespace Tuleap\ReferenceAliasGit;
 
 use DataAccessObject;
+use Project;
 
 class Dao extends DataAccessObject
 {

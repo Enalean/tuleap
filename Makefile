@@ -182,15 +182,6 @@ psalm-baseline-update: ## Update the baseline used by Psalm (PHP static analysis
 	cp -f "$(TMPPSALM)"/tests/psalm/tuleap-baseline.xml ./tests/psalm/tuleap-baseline.xml
 	rm -rf "$(TMPPSALM)"
 
-
-phpcs: ## Execute PHPCS with the "strict" ruleset. Use FILES parameter to execute on specific file or directory.
-	$(eval FILES ?= .)
-	@./src/vendor/bin/phpcs --extensions=php --encoding=utf-8 --standard=tests/phpcs/tuleap-ruleset-minimal.xml -p $(FILES)
-
-phpcbf: ## Execute PHPCBF with the "strict" ruleset enforced on all the codebase. Use FILES parameter to execute on specific file or directory.
-	$(eval FILES ?= .)
-	@./src/vendor/bin/phpcbf --extensions=php --encoding=utf-8 --standard=tests/phpcs/tuleap-ruleset-minimal.xml -p $(FILES)
-
 bash-web: ## Give a bash on web container
 	@docker exec -e COLUMNS="`tput cols`" -e LINES="`tput lines`" -ti `docker-compose ps -q web` bash
 

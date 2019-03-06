@@ -20,6 +20,7 @@
 
 namespace Tuleap\SVN\REST;
 
+use REST_TestDataBuilder;
 use RestBase;
 
 /**

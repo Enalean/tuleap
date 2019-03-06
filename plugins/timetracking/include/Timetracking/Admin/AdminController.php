@@ -25,6 +25,7 @@ use CSRFSynchronizerToken;
 use Feedback;
 use PermissionsNormalizer;
 use PermissionsNormalizerOverrideCollection;
+use Project;
 use ProjectHistoryDao;
 use TemplateRendererFactory;
 use Tracker;

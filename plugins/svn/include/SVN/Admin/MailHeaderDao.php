@@ -21,6 +21,7 @@
 namespace Tuleap\SVN\Admin;
 
 use DataAccessObject;
+use Project;
 
 class MailHeaderDao extends DataAccessObject
 {

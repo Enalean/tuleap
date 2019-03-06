@@ -20,6 +20,8 @@
 
 namespace Tuleap\Tracker\Tests\REST\TQL;
 
+use Guzzle\Http\Exception\ClientErrorResponseException;
+use REST_TestDataBuilder;
 use RestBase;
 
 require_once dirname(__FILE__).'/../bootstrap.php';

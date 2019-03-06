@@ -21,6 +21,8 @@
 namespace Tuleap\PullRequest\InlineComment;
 
 use TuleapTestCase;
+use GitRepository;
+use ForgeConfig;
 use \Tuleap\PullRequest\FileUniDiff;
 use \Tuleap\PullRequest\FileNullDiff;
 use \Tuleap\PullRequest\UniDiffLine;

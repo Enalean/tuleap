@@ -21,7 +21,9 @@
 namespace Tuleap\OpenIDConnectClient\UserMapping;
 
 use CSRFSynchronizerToken;
+use Exception;
 use Feedback;
+use HTTPRequest;
 use Tuleap\OpenIDConnectClient\Provider\ProviderManager;
 use Tuleap\OpenIDConnectClient\Provider\ProviderNotFoundException;
 use UserManager;

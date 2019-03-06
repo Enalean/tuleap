@@ -21,6 +21,7 @@
 namespace Tuleap\TextualReport;
 
 use ForgeConfig;
+use PDOStatement;
 use PFUser;
 use ThemeVariant;
 use ThemeVariantColor;

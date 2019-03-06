@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\User\Password\Reset\ExpiredTokenException;
 
 require_once('pre.php');
 

@@ -23,6 +23,7 @@ namespace Tuleap\Tracker\Artifact;
 require_once('bootstrap.php');
 
 use TuleapTestCase;
+use Tracker_FormElement_Field_Computed;
 
 class ChangesetValueComputedTest extends TuleapTestCase
 {

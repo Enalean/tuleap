@@ -20,6 +20,9 @@
 
 namespace Tuleap\SVN\Admin;
 
+use Tuleap\SVN\Repository\Repository;
+use Tuleap\SVN\Admin\SectionsPresenter;
+use CSRFSynchronizerToken;
 
 class BaseAdminPresenter
 {

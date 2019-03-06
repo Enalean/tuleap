@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Tests\Selenium\SVN;
 
 use PHPUnit\Framework\TestCase;
-use SimpleXMLElement;
+use SimpleXmlElement;
 
 class SVNCLITest extends TestCase
 {

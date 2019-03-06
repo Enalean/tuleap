@@ -20,6 +20,7 @@
 
 namespace Tuleap\admin\ProjectCreation\ProjectVisibility;
 
+use ForgeAccess;
 use ForgeConfig;
 use Tuleap\Admin\ProjectCreationNavBarPresenter;
 

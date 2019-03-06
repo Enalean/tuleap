@@ -21,6 +21,8 @@
 namespace Tuleap\Tracker\Notifications\Settings;
 
 use HTTPRequest;
+use TemplateRenderer;
+use TemplateRendererFactory;
 use TrackerFactory;
 use TrackerManager;
 use Tuleap\Layout\BaseLayout;

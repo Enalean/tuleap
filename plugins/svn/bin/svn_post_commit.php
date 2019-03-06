@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright Enalean (c) 2016 - Present. All rights reserved.
+ * Copyright Enalean (c) 2016 - 2017. All rights reserved.
  *
- * Tuleap and Enalean names and logos are registered trademarks owned by
+ * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
  * owners.
  *
@@ -91,7 +91,7 @@ try {
             TemplateRendererFactory::build(),
             new MailFilter(UserManager::instance(), new URLVerification(), new MailLogger())
         ),
-        new CommitInfoEnhancer(new Svnlook(new System_Command()), new CommitInfo()),
+        new CommitInfoEnhancer(new SVNLook(new System_Command()), new CommitInfo()),
         new LastAccessUpdater(new LastAccessDao()),
         UserManager::instance(),
         EventManager::instance()

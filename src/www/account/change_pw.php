@@ -7,6 +7,8 @@
 //
 // 
 
+use Tuleap\User\Password\Change\PasswordChanger;
+use Tuleap\User\SessionManager;
 
 require_once('pre.php');
 require_once('account.php');

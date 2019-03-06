@@ -20,6 +20,7 @@
 
 namespace Tuleap\Tracker\Tests\REST\ArtifactsActions;
 
+use Guzzle\Http\Exception\BadResponseException;
 use Tuleap\Tracker\Tests\REST\TrackerBase;
 
 require_once __DIR__ . '/../bootstrap.php';

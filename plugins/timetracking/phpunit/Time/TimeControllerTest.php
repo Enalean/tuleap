@@ -25,6 +25,7 @@ use CSRFSynchronizerToken;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tracker;
+use Tuleap\Timetracking\Exceptions\TimeTrackingExistingDateException;
 use Tuleap\Timetracking\Exceptions\TimeTrackingNoTimeException;
 
 require_once __DIR__ . '/../bootstrap.php';

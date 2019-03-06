@@ -21,6 +21,7 @@
 namespace Tuleap\Tracker\Service;
 
 use Service;
+use trackerPlugin;
 use TuleapTestCase;
 
 require_once __DIR__ .'/../../bootstrap.php';

@@ -31,6 +31,7 @@ use Tuleap\Tracker\Admin\ArtifactsDeletion\UserDeletionRetriever;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalArtifactActionButtonsPresenterBuilder;
 use Tuleap\Tracker\Artifact\ActionButtons\ArtifactActionButtonPresenterBuilder;
 use Tuleap\Tracker\Artifact\ActionButtons\ArtifactCopyButtonPresenterBuilder;
+use Tuleap\Tracker\Artifact\ActionButtons\ArtifactGraphDependenciesButtonPresenterBuilder;
 use Tuleap\Tracker\Artifact\ActionButtons\ArtifactIncomingEmailButtonPresenterBuilder;
 use Tuleap\Tracker\Artifact\ActionButtons\ArtifactMoveButtonPresenterBuilder;
 use Tuleap\Tracker\Artifact\ActionButtons\ArtifactNotificationActionButtonPresenterBuilder;

@@ -27,6 +27,7 @@ use GitRepository;
 use PasswordHandler;
 use Tuleap\Git\RemoteServer\Gerrit\HttpUserValidator;
 use User_InvalidPasswordException;
+use Rule_UserName;
 
 class ReplicationHTTPUserAuthenticator
 {

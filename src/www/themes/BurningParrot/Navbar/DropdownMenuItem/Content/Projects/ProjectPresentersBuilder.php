@@ -20,6 +20,7 @@
 
 namespace Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Content\Projects;
 
+use HTTPRequest;
 use PFUser;
 use Project;
 use ProjectManager;

@@ -21,6 +21,7 @@
 namespace Tuleap\Git\BigObjectAuthorization;
 
 use ParagonIE\EasyDB\EasyStatement;
+use Project;
 
 class BigObjectAuthorizationDao extends \Tuleap\DB\DataAccessObject
 {

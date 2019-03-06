@@ -21,6 +21,7 @@
 namespace Tuleap\OpenIDConnectClient;
 
 use Feedback;
+use ForgeConfig;
 use HTTPRequest;
 
 class Router {

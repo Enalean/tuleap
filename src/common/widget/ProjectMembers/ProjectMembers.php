@@ -21,6 +21,7 @@
 
 namespace Tuleap\Widget\ProjectMembers;
 
+use ForgeConfig;
 use Widget;
 
 class ProjectMembers extends Widget

@@ -21,6 +21,7 @@
 namespace Tuleap\Label\Widget;
 
 use DataAccessException;
+use Tuleap\Dashboard\Project\ProjectDashboardController;
 
 class Dao extends \DataAccessObject
 {

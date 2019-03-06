@@ -23,6 +23,7 @@ namespace Tuleap\Tracker\Workflow\PostAction\Update;
 
 use DataAccessQueryException;
 use Transition;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\InvalidPostActionException;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\PostActionUpdater;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\UnknownPostActionIdsException;

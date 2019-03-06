@@ -22,6 +22,7 @@ namespace Tuleap\GitLFS\Authorization\Action;
 
 use ParagonIE\EasyDB\EasyStatement;
 use Tuleap\DB\DataAccessObject;
+use Tuleap\GitLFS\Authorization\Action\Type\ActionAuthorizationType;
 
 class ActionAuthorizationDAO extends DataAccessObject
 {

@@ -37,6 +37,7 @@ use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use \Tuleap\REST\Header;
 use \AgileDashboard_Milestone_MilestoneStatusCounter;
 use \AgileDashboard_BacklogItemDao;
+use \Planning_Milestone;
 use \AgileDashboard_Milestone_Backlog_BacklogFactory;
 use \PlanningPermissionsManager;
 use AgileDashboard_Milestone_MilestoneRepresentationBuilder;

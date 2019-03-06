@@ -21,6 +21,7 @@
 namespace Tuleap\GitLFS\Lock\Response;
 
 use Tuleap\GitLFS\Lock\Lock;
+use Tuleap\GitLFS\Lock\Request\LockListRequest;
 
 class LockResponseBuilder
 {

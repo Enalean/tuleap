@@ -22,8 +22,14 @@ namespace Tuleap\ArtifactsFolders\Converter;
 
 use Logger;
 use PFUser;
+use RuntimeException;
+use Tracker_Artifact;
 use Tracker_ArtifactFactory;
+use Tracker_FormElement_Field_Value_ArtifactLinkDao;
+use Tracker_NoChangeException;
+use Tuleap\ArtifactsFolders\Folder\Dao;
 use Tuleap\ArtifactsFolders\Folder\HierarchyOfFolderBuilder;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever;
 
 class ArtifactsFoldersToScrumV2Converter
 {

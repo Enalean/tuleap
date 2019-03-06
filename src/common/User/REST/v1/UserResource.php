@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,6 +21,7 @@ namespace Tuleap\User\REST\v1;
 
 use EventManager;
 use PFUser;
+use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\REST\v1\TimetrackingRepresentationBase;
 use Tuleap\User\AccessKey\AccessKeyDAO;
 use Tuleap\User\AccessKey\AccessKeyMetadataRetriever;
@@ -419,7 +420,7 @@ class UserResource extends AuthenticatedResource {
         return $this->user_manager->getUserById($user_id)->delPreference($key);
     }
 
-    private function checkUserCanSeeOtherUser(PFUser $watcher, PFUser $watchee) {
+    private function checkUserCanSeeOtherUser(PFUser $watcher, PFuser $watchee) {
         if ($watcher->isSuperUser()) {
             return true;
         }
@@ -493,12 +494,12 @@ class UserResource extends AuthenticatedResource {
     /**
      * Check if user has permission to update user details
      * @param PFUser $watcher
-     * @param PFUser $watchee
+     * @param PFUSER $watchee
      *
      * @return Boolean
      *
      */
-     private function checkUserCanUpdateOtherUser(PFUser $watcher, PFUser $watchee) {
+     private function checkUserCanUpdateOtherUser(PFUser $watcher, PFuser $watchee) {
         if ($watcher->isSuperUser()) {
             return true;
         }

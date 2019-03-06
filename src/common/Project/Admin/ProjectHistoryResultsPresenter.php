@@ -20,9 +20,14 @@
 
 namespace Tuleap\Project\Admin;
 
+use EventManager;
+use ForgeConfig;
+use Project;
+use ProjectManager;
 use TemplateSingleton;
 use UserManager;
 use UserHelper;
+use Tuleap\Layout\PaginationPresenter;
 
 class ProjectHistoryResultsPresenter
 {

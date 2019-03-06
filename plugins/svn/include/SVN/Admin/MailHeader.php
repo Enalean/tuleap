@@ -20,6 +20,7 @@
 
 namespace Tuleap\SVN\Admin;
 
+use Project;
 use Tuleap\SVN\Repository\Repository;
 
 class MailHeader

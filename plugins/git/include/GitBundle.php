@@ -26,6 +26,7 @@ use Logger;
 use System_Command;
 use System_Command_CommandException;
 use Tuleap\Project\XML\Export\ArchiveInterface;
+use Tuleap\Project\XML\Export\ZipArchive;
 
 class GitBundle
 {

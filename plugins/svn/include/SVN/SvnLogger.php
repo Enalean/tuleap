@@ -22,6 +22,8 @@ namespace Tuleap\SVN;
 
 use ForgeConfig;
 use BackendLogger;
+use Logger;
+use Feedback;
 use TruncateLevelLogger;
 
 class SvnLogger extends TruncateLevelLogger

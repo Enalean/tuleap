@@ -19,6 +19,7 @@
 
 namespace Tuleap\JWT\REST\v1;
 
+use Luracast\Restler\RestException;
 use Tuleap\REST\Header;
 use Tuleap\JWT\REST\JWTRepresentation;
 use Tuleap\JWT\Generators\JWTGenerator;

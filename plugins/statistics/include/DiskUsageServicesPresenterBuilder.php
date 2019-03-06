@@ -20,6 +20,8 @@
 
 namespace Tuleap\Statistics;
 
+use DateInterval;
+use DateTime;
 use ProjectManager;
 use Statistics_DiskUsageGraph;
 use Statistics_DiskUsageManager;

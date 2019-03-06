@@ -76,11 +76,4 @@ def runPsalm(String configPath) {
     }
 }
 
-def runPHPCodingStandards(String phpcsPath, String rulesetPath, String filesToAnalyze) {
-    sh """
-    docker run --rm -v $WORKSPACE/sources:/sources:ro -w /sources php:7.3-cli-alpine \
-        ${phpcsPath} --extensions=php --encoding=utf-8 --standard="${rulesetPath}" -p ${filesToAnalyze}
-    """
-}
-
 return this;

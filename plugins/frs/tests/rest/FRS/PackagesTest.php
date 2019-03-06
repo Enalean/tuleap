@@ -20,6 +20,8 @@
 
 namespace Tuleap\FRS\Tests\REST\Packages;
 
+use Guzzle\Http\Exception\ClientErrorResponseException;
+use REST_TestDataBuilder;
 use RestBase;
 
 /**

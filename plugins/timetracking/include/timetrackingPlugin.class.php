@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Layout\IncludeAssets;
+use Tuleap\Request\CurrentPage;
 use Tuleap\Timetracking\Admin\AdminController;
 use Tuleap\Timetracking\Admin\AdminDao;
 use Tuleap\Timetracking\Admin\TimetrackingEnabler;

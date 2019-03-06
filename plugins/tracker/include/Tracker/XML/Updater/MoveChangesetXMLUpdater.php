@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -375,7 +375,7 @@ class MoveChangesetXMLUpdater
     private function removeNonPossibleUserValues(
         Tracker_FormElement_Field $source_contributor_field,
         SimpleXMLElement $changeset_xml,
-        Tracker_FormElement_Field_List $target_contributor_field,
+        Tracker_FormElement_Field_list $target_contributor_field,
         $field_change_index,
         FeedbackFieldCollectorInterface $feedback_field_collector
     ) {

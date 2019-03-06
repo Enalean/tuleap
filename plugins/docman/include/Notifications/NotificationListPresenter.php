@@ -20,7 +20,9 @@
 
 namespace Tuleap\Docman\Notifications;
 
+use Codendi_HTMLPurifier;
 use Docman_Item;
+use Tuleap\Notifications\UgroupToBeNotifiedPresenter;
 use Tuleap\Notifications\UserInvolvedInNotificationPresenter;
 use UserManager;
 

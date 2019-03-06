@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -56,7 +56,7 @@ class GitPluginDefaultController implements DispatchableWithRequest
      */
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
-        if (! $request->getProject()->usesService(GitPlugin::SERVICE_SHORTNAME)) {
+        if (! $request->getProject()->usesService(gitPlugin::SERVICE_SHORTNAME)) {
             throw new \Tuleap\Request\NotFoundException(dgettext("tuleap-git", "Git service is disabled."));
         }
 
