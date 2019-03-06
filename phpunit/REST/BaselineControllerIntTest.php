@@ -21,88 +21,28 @@
 
 namespace Tuleap\Baseline\REST;
 
-require_once __DIR__ . '/../bootstrap.php';
+require_once __DIR__ . '/IntegrationTestCaseWithStubs.php';
 
 use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
-use PHPUnit\Framework\TestCase;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_Text;
-use Tuleap\Baseline\BaselineRepository;
-use Tuleap\Baseline\ChangesetRepository;
-use Tuleap\Baseline\Clock;
-use Tuleap\Baseline\CurrentUserProvider;
 use Tuleap\Baseline\Factory\ChangesetFactory;
 use Tuleap\Baseline\Factory\MilestoneFactory;
-use Tuleap\Baseline\FieldRepository;
-use Tuleap\Baseline\MilestoneRepository;
-use Tuleap\Baseline\Permissions;
-use Tuleap\Baseline\Stub\BaselineRepositoryStub;
-use Tuleap\Baseline\Stub\ChangesetRepositoryStub;
-use Tuleap\Baseline\Stub\CurrentUserProviderStub;
-use Tuleap\Baseline\Stub\FieldRepositoryStub;
-use Tuleap\Baseline\Stub\FrozenClock;
-use Tuleap\Baseline\Stub\MilestoneRepositoryStub;
-use Tuleap\Baseline\Stub\PermissionsStub;
-use Tuleap\Baseline\Support\ContainerBuilderFactory;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\REST\I18NRestException;
 
-class BaselineControllerIntTest extends TestCase
+class BaselineControllerIntTest extends IntegrationTestCaseWithStubs
 {
-    use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
 
     /** @var BaselineController */
     private $controller;
 
-    /** @var FieldRepositoryStub */
-    private $field_repository;
-
-    /** @var MilestoneRepositoryStub */
-    private $milestone_repository;
-
-    /** @var ChangesetRepositoryStub */
-    private $changeset_repository;
-
-    /** @var BaselineRepositoryStub */
-    private $baseline_repository;
-
-    /** @var PermissionsStub */
-    private $permissions;
-
-    /** @var CurrentUserProviderStub */
-    private $current_user_provider;
-
-    /** @var FrozenClock */
-    private $clock;
-
     /** @before */
-    public function createContextWithStubs()
+    public function getTestedComponent()
     {
-        $this->field_repository      = new FieldRepositoryStub();
-        $this->milestone_repository  = new MilestoneRepositoryStub();
-        $this->changeset_repository  = new ChangesetRepositoryStub();
-        $this->baseline_repository   = new BaselineRepositoryStub();
-        $this->permissions           = new PermissionsStub();
-        $this->current_user_provider = new CurrentUserProviderStub();
-        $this->clock                 = new FrozenClock();
-
-        $this->controller = ContainerBuilderFactory::create()
-            ->addDefinitions(
-                [
-                    FieldRepository::class     => $this->field_repository,
-                    MilestoneRepository::class => $this->milestone_repository,
-                    ChangesetRepository::class => $this->changeset_repository,
-                    BaselineRepository::class  => $this->baseline_repository,
-                    Permissions::class         => $this->permissions,
-                    CurrentUserProvider::class => $this->current_user_provider,
-                    Clock::class               => $this->clock,
-                ]
-            )
-            ->build()
-            ->get(BaselineController::class);
+        $this->controller = $this->getContainer()->get(BaselineController::class);
     }
 
     public function testPost()
