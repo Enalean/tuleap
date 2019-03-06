@@ -39,6 +39,13 @@ final class PsalmIgnoreGitExcludedTuleapPlugins implements PsalmIgnoreDirectory
      */
     public function getIgnoredDirectories(): array
     {
-        return $this->command->exec('git check-ignore ' . escapeshellarg(__DIR__ . '/../../../plugins/') . '*');
+        try {
+            return $this->command->exec('git check-ignore ' . escapeshellarg(__DIR__ . '/../../../plugins/') . '*');
+        } catch (\System_Command_CommandException $ex) {
+            if ($ex->getReturnValue() === 1) {
+                return [];
+            }
+            throw $ex;
+        }
     }
 }
