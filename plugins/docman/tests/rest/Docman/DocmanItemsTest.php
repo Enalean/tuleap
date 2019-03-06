@@ -289,48 +289,7 @@ class DocmanItemsTest extends DocmanBase
         $this->assertEquals($json_parents[2]['title'], 'folder 2');
     }
 
-    /**
-     * @depends testGetRootId
-     */
-    public function testPostEmptyDocument($root_id)
-    {
-        $headers = ['Content-Type' => 'application/json'];
-        $query = json_encode([
-            'title'       => 'Custom title',
-            'description' => 'A description',
-            'parent_id'   => $root_id,
-            'type'        => 'empty'
-        ]);
 
-        $response = $this->getResponseByName(
-            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->post('docman_items', $headers, $query)
-        );
-
-        $this->assertEquals(201, $response->getStatusCode());
-    }
-
-    /**
-     * @depends             testGetRootId
-     */
-    public function testPostDocumentIsRejectedIfDocumentAlreadyExists($root_id)
-    {
-        $headers = ['Content-Type' => 'application/json'];
-        $query   = json_encode(
-            [
-                'title'       => 'Custom title',
-                'description' => 'A description',
-                'parent_id'   => $root_id,
-                'type'        => 'empty'
-            ]
-        );
-
-        $response = $this->getResponseByName(
-            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->post('docman_items', $headers, $query)
-        );
-        $this->assertEquals(400, $response->getStatusCode());
-    }
 
     /**
      * @depends testGetRootId
@@ -428,31 +387,6 @@ class DocmanItemsTest extends DocmanBase
             $this->client->post('docman_items', $headers, $query)
         );
         $this->assertEquals(400, $response->getStatusCode());
-    }
-
-    /**
-     * @depends testGetRootId
-     */
-    public function testPostReturns403WhenPermissionDenied(int $root_id) : void
-    {
-        $stored_items = $this->getResponseByName(
-            REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->client->get('docman_items/' . $root_id . '/docman_items')
-        )->json();
-        $folder_3 = $this->findItemByTitle($stored_items, 'folder 3');
-
-        $query = json_encode([
-            'title' => 'A title',
-            'description' => 'A description',
-            'parent_id' => $folder_3['id'],
-            'type' => 'empty'
-        ]);
-
-        $response = $this->getResponseByName(
-            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->post('docman_items', null, $query)
-        );
-        $this->assertEquals(403, $response->getStatusCode());
     }
 
     /**

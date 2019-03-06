@@ -27,6 +27,7 @@ use Docman_PermissionsManager;
 use EventManager;
 use Project;
 use ProjectManager;
+use Tuleap\Docman\REST\v1\Folders\DocmanEmptyPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Folders\DocmanFolderPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Folders\DocmanItemCreatorBuilder;
 use Tuleap\Docman\REST\v1\Folders\DocmanPOSTFilesRepresentation;
@@ -154,6 +155,52 @@ class DocmanFoldersResource extends AuthenticatedResource
             $parent,
             $current_user,
             $folder_representation,
+            new \DateTimeImmutable(),
+            $project
+        );
+    }
+
+    /**
+     * Create new empty document
+     *
+     * @param int                                 $id   Id of the parent folder
+     * @param DocmanEmptyPOSTRepresentation $test representation test {@from body} {@type \Tuleap\Docman\REST\v1\Folders\DocmanEmptyPOSTRepresentation}
+     *
+     * @url    POST {id}/empties
+     * @access hybrid
+     * @status 201
+     *
+     * @return CreatedItemRepresentation
+     *
+     * @throws 400
+     * @throws 403
+     * @throws 404
+     * @throws 409
+     */
+    public function postEmpties(int $id, DocmanEmptyPOSTRepresentation $empty_representation): CreatedItemRepresentation
+    {
+        $this->checkAccess();
+        $this->sendAllowHeadersWithPost();
+
+        $current_user = $this->rest_user_manager->getCurrentUser();
+
+        $item_request = $this->request_builder->buildFromItemId($id);
+        $parent       = $item_request->getItem();
+        $this->checkItemCanHaveSubitems($parent);
+        $project = $item_request->getProject();
+        $this->getDocmanFolderPermissionChecker($project)
+             ->checkUserCanWriteFolder($current_user, $id);
+
+        $event_adder = $this->getDocmanItemsEventAdder();
+        $event_adder->addLogEvents();
+        $event_adder->addNotificationEvents($project);
+
+        $docman_item_creator = DocmanItemCreatorBuilder::build($project);
+
+        return $docman_item_creator->createEmpty(
+            $parent,
+            $current_user,
+            $empty_representation,
             new \DateTimeImmutable(),
             $project
         );
