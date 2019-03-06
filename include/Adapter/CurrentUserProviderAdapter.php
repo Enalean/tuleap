@@ -28,15 +28,15 @@ use Tuleap\REST\UserManager;
 class CurrentUserProviderAdapter implements CurrentUserProvider
 {
     /** @var UserManager */
-    private $user_manager;
+    private $current_user_manager;
 
-    public function __construct(UserManager $user_manager)
+    public function __construct(UserManager $current_user_manager)
     {
-        $this->user_manager = $user_manager;
+        $this->current_user_manager = $current_user_manager;
     }
 
     public function getUser(): PFUser
     {
-        return $this->user_manager->getCurrentUser();
+        return $this->current_user_manager->getCurrentUser();
     }
 }
