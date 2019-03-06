@@ -28,7 +28,6 @@ use \Luracast\Restler\RestException;
 use \Project_AccessProjectNotFoundException;
 use \Project_AccessException;
 use \Project_AccessNotAdminException;
-use \Tracker_URLVerification;
 
 class ProjectAuthorization {
 

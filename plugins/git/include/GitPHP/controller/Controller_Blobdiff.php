@@ -22,7 +22,6 @@
 namespace Tuleap\Git\GitPHP;
 
 use GitPHP\Commit\CommitPresenter;
-use GitPHP\Commit\FileDiffPresenter;
 use Tuleap\Git\CommitMetadata\CommitMetadataRetriever;
 use Tuleap\Git\CommitStatus\CommitStatusDAO;
 use Tuleap\Git\CommitStatus\CommitStatusRetriever;

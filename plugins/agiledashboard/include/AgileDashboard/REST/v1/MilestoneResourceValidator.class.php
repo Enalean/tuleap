@@ -28,7 +28,6 @@ namespace Tuleap\AgileDashboard\REST\v1;
 use \PlanningFactory;
 use \Tracker_ArtifactFactory;
 use \Tracker_Artifact;
-use \Tracker;
 use \Tracker_FormElementFactory;
 use \AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory;
 use \AgileDashboard_Milestone_Backlog_BacklogFactory;

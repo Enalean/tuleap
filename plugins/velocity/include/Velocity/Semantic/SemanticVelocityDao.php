@@ -20,7 +20,6 @@
 
 namespace Tuleap\Velocity\Semantic;
 
-use PDOException;
 use Tuleap\DB\DataAccessObject;
 
 class SemanticVelocityDao extends DataAccessObject

@@ -24,7 +24,6 @@
 
 namespace Tuleap\Timetracking\REST\v1;
 
-use Tuleap\Timetracking\Time\Time;
 
 class TimetrackingRepresentationBuilder
 {

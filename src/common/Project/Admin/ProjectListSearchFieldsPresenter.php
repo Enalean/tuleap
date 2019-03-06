@@ -20,7 +20,6 @@
 
 namespace Tuleap\Project\Admin;
 
-use Project;
 
 class ProjectListSearchFieldsPresenter
 {

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017 - 2018. All rights reserved
+ * Copyright (c) Enalean, 2017 - Present. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -25,7 +25,7 @@ use CSRFSynchronizerToken;
 use Exception;
 use Feedback;
 use ForgeConfig;
-use HttpRequest;
+use HTTPRequest;
 use PFUser;
 use Project;
 use ProjectManager;
@@ -178,9 +178,6 @@ class ProjectDashboardController
         $GLOBALS['Response']->footer(array());
     }
 
-    /**
-     * @param HttpRequest $request
-     */
     public function createDashboard(HTTPRequest $request)
     {
         $this->csrf->check();
@@ -227,9 +224,6 @@ class ProjectDashboardController
         $this->redirectToDefaultDashboard();
     }
 
-    /**
-     * @param HttpRequest $request
-     */
     public function editDashboard(HTTPRequest $request)
     {
         $this->csrf->check();
@@ -288,9 +282,6 @@ class ProjectDashboardController
         $this->redirectToDashboard($dashboard_id);
     }
 
-    /**
-     * @param HttpRequest $request
-     */
     public function deleteDashboard(HTTPRequest $request)
     {
         $this->csrf->check();

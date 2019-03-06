@@ -26,8 +26,6 @@ use DataAccessException;
 use Feedback;
 use HTTPRequest;
 use Project;
-use Tuleap\Layout\CssAsset;
-use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Label\LabelDao;
 use Widget;

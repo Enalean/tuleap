@@ -21,7 +21,6 @@ namespace User\XML\Import;
 
 use TuleapTestCase;
 use PFUser;
-use UserManager;
 
 class MappingFileOptimusPrimeTransformer_BaseTest extends TuleapTestCase {
 

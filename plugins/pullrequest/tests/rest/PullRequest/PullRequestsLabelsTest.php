@@ -20,7 +20,6 @@
 
 namespace Tuleap\PullRequest;
 
-use REST_TestDataBuilder;
 use RestBase;
 
 require_once dirname(__FILE__).'/../bootstrap.php';

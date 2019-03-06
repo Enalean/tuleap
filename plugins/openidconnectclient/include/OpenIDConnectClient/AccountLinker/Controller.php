@@ -22,7 +22,6 @@ namespace Tuleap\OpenIDConnectClient\AccountLinker;
 
 use Exception;
 use Feedback;
-use ForgeConfig;
 use HTTPRequest;
 use PFUser;
 use TemplateRendererFactory;

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -77,10 +77,10 @@ class UGroupManagerTest extends TestCase
         $this->user_group_user_dao = Mockery::mock(UGroupUserDao::class);
         $this->user_group_dao->shouldReceive('searchDynamicAndStaticByGroupId')
             ->andReturn([
-                ['ugroup_id' => ProjectUgroup::ANONYMOUS],
-                ['ugroup_id' => ProjectUgroup::AUTHENTICATED],
-                ['ugroup_id' => ProjectUgroup::REGISTERED],
-                ['ugroup_id' => ProjectUgroup::NONE],
+                ['ugroup_id' => ProjectUGroup::ANONYMOUS],
+                ['ugroup_id' => ProjectUGroup::AUTHENTICATED],
+                ['ugroup_id' => ProjectUGroup::REGISTERED],
+                ['ugroup_id' => ProjectUGroup::NONE],
             ])
             ->byDefault();
 
@@ -109,7 +109,7 @@ class UGroupManagerTest extends TestCase
 
         $user_groups = $this->user_group_manager->getAvailableUGroups($project);
 
-        $this->assertUgroupsContainsId($user_groups, ProjectUgroup::ANONYMOUS);
+        $this->assertUgroupsContainsId($user_groups, ProjectUGroup::ANONYMOUS);
     }
 
     public function testGetAvailableUgroupsDoesNotReturnAnonymousGroupWhenPlatformAccessIsRestricted()
@@ -119,7 +119,7 @@ class UGroupManagerTest extends TestCase
 
         $user_groups = $this->user_group_manager->getAvailableUGroups($project);
 
-        $this->assertUgroupsNotContainsId($user_groups, ProjectUgroup::ANONYMOUS);
+        $this->assertUgroupsNotContainsId($user_groups, ProjectUGroup::ANONYMOUS);
     }
 
     public function testGetAvailableUgroupsDoesNotReturnAnonymousGroupWhenPlatformAccessIsRegular()
@@ -129,7 +129,7 @@ class UGroupManagerTest extends TestCase
 
         $user_groups = $this->user_group_manager->getAvailableUGroups($project);
 
-        $this->assertUgroupsNotContainsId($user_groups, ProjectUgroup::ANONYMOUS);
+        $this->assertUgroupsNotContainsId($user_groups, ProjectUGroup::ANONYMOUS);
     }
 
     public function testGetAvailableUgroupsReturnsAuthenticatedGroupWhenPlatformAccessIsRestrictedAndProjectAllowsRestricted()
@@ -139,7 +139,7 @@ class UGroupManagerTest extends TestCase
 
         $user_groups = $this->user_group_manager->getAvailableUGroups($project);
 
-        $this->assertUgroupsContainsId($user_groups, ProjectUgroup::AUTHENTICATED);
+        $this->assertUgroupsContainsId($user_groups, ProjectUGroup::AUTHENTICATED);
     }
 
     public function testGetAvailableUgroupsDoesNotReturnAuthenticatedGroupWhenProjectDoesNotAllowRestricted()
@@ -149,7 +149,7 @@ class UGroupManagerTest extends TestCase
 
         $user_groups = $this->user_group_manager->getAvailableUGroups($project);
 
-        $this->assertUgroupsNotContainsId($user_groups, ProjectUgroup::AUTHENTICATED);
+        $this->assertUgroupsNotContainsId($user_groups, ProjectUGroup::AUTHENTICATED);
     }
 
     public function testGetAvailableUgroupsReturnsRegisteredGroupWhenProjectIsPublic()
@@ -158,7 +158,7 @@ class UGroupManagerTest extends TestCase
 
         $user_groups = $this->user_group_manager->getAvailableUGroups($project);
 
-        $this->assertUgroupsContainsId($user_groups, ProjectUgroup::REGISTERED);
+        $this->assertUgroupsContainsId($user_groups, ProjectUGroup::REGISTERED);
     }
 
     public function testGetAvailableUgroupsDoesNotReturnRegisteredGroupWhenProjectIsPrivate()
@@ -167,7 +167,7 @@ class UGroupManagerTest extends TestCase
 
         $user_groups = $this->user_group_manager->getAvailableUGroups($project);
 
-        $this->assertUgroupsNotContainsId($user_groups, ProjectUgroup::REGISTERED);
+        $this->assertUgroupsNotContainsId($user_groups, ProjectUGroup::REGISTERED);
     }
 
     public function testGetAvailableUgroupsDoesNotReturnNoneGroup()
@@ -176,7 +176,7 @@ class UGroupManagerTest extends TestCase
 
         $user_groups = $this->user_group_manager->getAvailableUGroups($project);
 
-        $this->assertUgroupsNotContainsId($user_groups, ProjectUgroup::NONE);
+        $this->assertUgroupsNotContainsId($user_groups, ProjectUGroup::NONE);
     }
 
     public function testGetAvailableUgroupsReturnsNonSystemGroups()

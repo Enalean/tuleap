@@ -24,7 +24,6 @@ namespace Tuleap\SVN\Reference;
 use Tuleap\SVN\Repository\Repository;
 use Project;
 use SvnPlugin;
-use BackendLogger;
 
 class Reference extends \Reference
 {

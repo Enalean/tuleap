@@ -18,9 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Tracker\FormElement\BurndownFieldPresenter;
 use Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever;
-use Tuleap\Tracker\FormElement\ChartConfigurationValueRetriever;
 
 require_once('bootstrap.php');
 

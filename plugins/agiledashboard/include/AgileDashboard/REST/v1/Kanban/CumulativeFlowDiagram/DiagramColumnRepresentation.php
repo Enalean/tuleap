@@ -20,7 +20,6 @@
 
 namespace Tuleap\AgileDashboard\REST\v1\Kanban\CumulativeFlowDiagram;
 
-use Tuleap\REST\JsonCast;
 
 class DiagramColumnRepresentation
 {

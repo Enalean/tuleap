@@ -21,9 +21,6 @@
 namespace Tuleap\FRS;
 
 use HTTPRequest;
-use TemplateRendererFactory;
-use ForgeConfig;
-use UGroupManager;
 use Project;
 use Feedback;
 use UserManager;

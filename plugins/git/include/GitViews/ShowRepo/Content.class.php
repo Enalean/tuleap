@@ -18,7 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Markdown\ContentInterpretor;
 use Tuleap\Git\History\GitPhpAccessLogger;
 
 class GitViews_ShowRepo_Content {

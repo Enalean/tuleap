@@ -20,7 +20,6 @@
 namespace User\XML\Import;
 
 use TuleapTestCase;
-use PFUser;
 
 class ReadyToBeImportedUsersCollection_getUserByXxxTest extends TuleapTestCase {
 

@@ -22,7 +22,6 @@
 namespace Tuleap\Git\Permissions;
 
 use Tuleap\User\UserGroup\NameTranslator;
-use User_ForgeUGroup;
 
 class DefaultFineGrainedPermission
 {

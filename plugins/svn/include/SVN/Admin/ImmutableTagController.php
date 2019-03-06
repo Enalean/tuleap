@@ -26,10 +26,8 @@ namespace Tuleap\SVN\Admin;
 
 use Feedback;
 use HTTPRequest;
-use ProjectHistoryDao;
 use System_Command_CommandException;
 use Tuleap\SVN\Commit\Svnlook;
-use Tuleap\SVN\Repository\ProjectHistoryFormatter;
 use Tuleap\SVN\Repository\RepositoryManager;
 use Tuleap\SVN\ServiceSvn;
 use Valid_String;

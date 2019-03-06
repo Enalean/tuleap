@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -58,7 +58,7 @@ class FieldValueMatcher
         return null;
     }
 
-    public function isSourceUserValueMathingATargetUserValue(Tracker_FormElement_Field_list $target_contributor_field, SimpleXMLElement $value)
+    public function isSourceUserValueMathingATargetUserValue(Tracker_FormElement_Field_List $target_contributor_field, SimpleXMLElement $value)
     {
         $user = $this->user_finder->getUser($value);
 

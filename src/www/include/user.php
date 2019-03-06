@@ -20,8 +20,6 @@
  */
 
 
-use Tuleap\Password\Configuration\PasswordConfigurationDAO;
-use Tuleap\Password\Configuration\PasswordConfigurationRetriever;
 
 $USER_RES=array();
 

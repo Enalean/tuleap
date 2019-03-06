@@ -22,7 +22,6 @@
 namespace Tuleap\CallMeBack;
 
 use Tuleap\DB\DataAccessObject;
-use PDOException;
 
 class CallMeBackMessageDao extends DataAccessObject
 {

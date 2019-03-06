@@ -22,7 +22,6 @@
 use Tuleap\Git\GitPHP\Config;
 use Tuleap\Git\GitPHP\Controller;
 use Tuleap\Git\GitPHP\Controller_Message;
-use Tuleap\Git\GitPHP\DiffExe;
 use Tuleap\Git\GitPHP\MessageException;
 use Tuleap\Git\GitPHP\ProjectList;
 

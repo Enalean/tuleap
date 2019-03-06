@@ -22,12 +22,10 @@ namespace Tuleap\admin\ProjectCreation\ProjectVisibility;
 
 use CSRFSynchronizerToken;
 use ForgeAccess_ForgePropertiesManager;
-use ForgeConfig;
 use HTTPRequest;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
-use Tuleap\Request\NotFoundException;
 
 class ProjectVisibilityConfigUpdateController implements DispatchableWithRequest
 {

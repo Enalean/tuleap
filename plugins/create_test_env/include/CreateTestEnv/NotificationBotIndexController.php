@@ -22,10 +22,8 @@
 namespace Tuleap\CreateTestEnv;
 
 use HTTPRequest;
-use TemplateRenderer;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\BotMattermost\Bot\BotFactory;
-use Tuleap\BotMattermost\Bot\BotDao;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequest;
 

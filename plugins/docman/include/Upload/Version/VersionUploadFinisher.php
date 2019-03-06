@@ -22,7 +22,6 @@ declare(strict_types = 1);
 
 namespace Tuleap\Docman\Upload\Version;
 
-use Docman_File;
 use Docman_Item;
 use ProjectManager;
 use Tuleap\DB\DBTransactionExecutor;

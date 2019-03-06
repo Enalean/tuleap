@@ -20,8 +20,6 @@
 
 namespace Tuleap\ProFTPd\Xferlog;
 
-use \Exception;
-use \PFUser;
 use \ProjectManager;
 use UserDao;
 use \UserManager;

@@ -21,8 +21,6 @@
 namespace Tuleap\Project\Label;
 
 use Project;
-use Tuleap\Label\Label;
-use Tuleap\Label\PaginatedCollectionsOfLabels;
 use Tuleap\Label\PaginatedCollectionsOfLabelsBuilder;
 
 class LabelsCurlyCoatedRetriever

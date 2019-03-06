@@ -18,7 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Git\Gerrit\ReplicationHTTPUserAuthenticator;
 use Tuleap\Git\Gitolite\VersionDetector;
 
 class Git_HTTP_CommandFactory

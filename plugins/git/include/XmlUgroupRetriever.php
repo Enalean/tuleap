@@ -22,7 +22,6 @@ namespace Tuleap\Git;
 
 use GitXmlImporter;
 use GitXmlImporterUGroupNotFoundException;
-use Tuleap\Project\UgroupDuplicator;
 use UGroupManager;
 use Logger;
 use SimpleXMLElement;

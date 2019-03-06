@@ -24,7 +24,6 @@ namespace Tuleap\CallMeBack\REST;
 use Tuleap\REST\Header;
 use Tuleap\REST\UserManager;
 use Tuleap\REST\AuthenticatedResource;
-use Luracast\Restler\RestException;
 use Tuleap\CallMeBack\CallMeBackMessageDao;
 
 class CallMeBackMessageResource extends AuthenticatedResource

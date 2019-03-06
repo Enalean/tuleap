@@ -19,8 +19,6 @@
   * along with Tuleap. If not, see <http://www.gnu.org/licenses/
   */
 
-use Tuleap\Admin\Homepage\NbUsersByStatusBuilder;
-use Tuleap\Admin\Homepage\UserCounterDao;
 use Tuleap\Dashboard\AssetsIncluder;
 use Tuleap\Dashboard\User\UserDashboardDeletor;
 use Tuleap\Dashboard\User\UserDashboardRouter;

@@ -19,14 +19,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/
  */
 
-use Tuleap\Git\AccessRightsPresenterOptionsBuilder;
-use Tuleap\Git\GitViews\Header\HeaderRenderer;
-use Tuleap\Git\History\GitPhpAccessLogger;
-use Tuleap\Git\Permissions\DefaultFineGrainedPermissionFactory;
-use Tuleap\Git\Permissions\FineGrainedPermissionFactory;
-use Tuleap\Git\Permissions\FineGrainedRepresentationBuilder;
-use Tuleap\Git\Permissions\FineGrainedRetriever;
-use Tuleap\Git\Permissions\RegexpFineGrainedRetriever;
 
 require_once 'www/project/admin/permissions.php';
 

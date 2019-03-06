@@ -22,15 +22,8 @@ namespace Tuleap\PullRequest;
 
 use Tuleap\PullRequest\Exception\PullRequestCannotBeAbandoned;
 use Tuleap\PullRequest\Exception\PullRequestCannotBeMerged;
-use Git_Command_Exception;
-use RecursiveIteratorIterator;
-use RecursiveDirectoryIterator;
-use FileSystemIterator;
 use PFUser;
 use GitRepository;
-use GitRepositoryFactory;
-use ForgeConfig;
-use User;
 
 class PullRequestCloser
 {

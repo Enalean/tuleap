@@ -27,7 +27,6 @@ use PHPUnit\Framework\TestCase;
 use Project;
 use Tracker_ArtifactFactory;
 use Tracker_FormElement_Field_ArtifactLink;
-use Tuleap\Layout\BaseLayout;
 
 require_once __DIR__. '/../../bootstrap.php';
 

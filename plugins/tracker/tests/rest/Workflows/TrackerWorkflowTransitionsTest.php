@@ -20,8 +20,6 @@
 
 namespace Tuleap\Tracker\Tests\REST\Workflows;
 
-use Guzzle\Http\Exception\BadResponseException;
-use Guzzle\Http\Exception\ClientErrorResponseException;
 use REST_TestDataBuilder;
 use Tuleap\Tracker\Tests\REST\TrackerBase;
 

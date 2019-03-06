@@ -21,7 +21,6 @@
 namespace Tuleap\Timetracking\Exceptions;
 
 use Exception;
-use Throwable;
 
 class TimeTrackingBadTimeFormatException extends Exception
 {
