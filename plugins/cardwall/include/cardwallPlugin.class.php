@@ -82,6 +82,7 @@ class cardwallPlugin extends Plugin
             $this->addHook(TRACKER_EVENT_EXPORT_FULL_XML);
             $this->addHook(IsFieldUsedInASemanticEvent::NAME);
             $this->addHook(ImportRendererFromXmlEvent::NAME);
+            $this->addHook(\Tuleap\Request\CollectRoutesEvent::NAME);
 
             if (defined('AGILEDASHBOARD_BASE_DIR')) {
                 $this->addHook(AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE);
@@ -603,52 +604,6 @@ class cardwallPlugin extends Plugin
         return new Cardwall_OnTop_ColumnMappingFieldValueDao();
     }
 
-    public function process(Codendi_Request $request) {
-        switch($request->get('action')) {
-            case 'toggle_user_autostack_column':
-                $display_preferences_controller = new Cardwall_UserPreferences_UserPreferencesController($request);
-                $display_preferences_controller->toggleAutostack();
-                break;
-
-            case 'toggle_user_display_avatar':
-                $display_preferences_controller = new Cardwall_UserPreferences_UserPreferencesController($request);
-                $display_preferences_controller->toggleUserDisplay();
-                break;
-
-            case 'get-card':
-                $bind_decorator_retriever = new BindDecoratorRetriever();
-                try {
-                    $single_card_builder = new Cardwall_SingleCardBuilder(
-                        $this->getConfigFactory(),
-                        new Cardwall_CardFields(
-                            UserManager::instance(),
-                            Tracker_FormElementFactory::instance()
-                        ),
-                        Tracker_ArtifactFactory::instance(),
-                        PlanningFactory::build(),
-                        new BackgroundColorBuilder($bind_decorator_retriever),
-                        new AccentColorBuilder(Tracker_FormElementFactory::instance(), $bind_decorator_retriever)
-                    );
-                    $controller = new Cardwall_CardController(
-                        $request,
-                        $single_card_builder->getSingleCard(
-                            $request->getCurrentUser(),
-                            $request->getValidated('id', 'uint', 0),
-                            $request->getValidated('planning_id', 'uint', 0)
-                        )
-                    );
-                    $controller->getCard();
-                } catch (Exception $exception) {
-                    $GLOBALS['Response']->addFeedback(Feedback::ERROR, $exception->getMessage());
-                    $GLOBALS['Response']->sendStatusCode(400);
-                }
-                break;
-
-            default:
-                echo 'Hello !';
-        }
-    }
-
     public function agiledashboard_event_rest_resources($params) {
         $injector = new Cardwall_REST_ResourcesInjector();
         $injector->populate($params['restler']);
@@ -663,5 +618,17 @@ class cardwallPlugin extends Plugin
         $allowed_types = $retriever->retrieveAllowedFieldType($event_retriever->getField());
 
         $event_retriever->setAllowedTypes($allowed_types);
+    }
+
+    public function collectRoutesEvent(\Tuleap\Request\CollectRoutesEvent $event)
+    {
+        $event->getRouteCollector()->addGroup('/plugins/cardwall', function(FastRoute\RouteCollector $r) {
+            $r->addRoute(['GET', 'POST'], '[/[index.php]]', $this->getRouteHandler('routeLegacyController'));
+        });
+    }
+
+    public function routeLegacyController() : \Tuleap\Cardwall\CardwallLegacyController
+    {
+        return new \Tuleap\Cardwall\CardwallLegacyController($this->config_factory);
     }
 }
