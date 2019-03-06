@@ -41,7 +41,8 @@ import { loadFolderContent } from "./actions-helpers/load-folder-content.js";
 import { loadAscendantHierarchy } from "./actions-helpers/load-ascendant-hierarchy.js";
 import { uploadFile, uploadVersion } from "./actions-helpers/upload-file.js";
 import { flagItemAsCreated } from "./actions-helpers/flag-item-as-created.js";
-import { TYPE_FILE } from "../constants.js";
+import { TYPE_FILE, TYPE_FOLDER } from "../constants.js";
+import { addNewFolder } from "../api/rest-querier";
 
 export const loadRootFolder = async context => {
     try {
@@ -70,6 +71,17 @@ export const getSubfolderContent = async (context, folder_id) => {
 };
 
 export const createNewItem = async (context, [item, parent, current_folder]) => {
+    async function adjustFileToContentAfterItemCreation(item_id) {
+        const created_item = await getItem(item_id);
+
+        flagItemAsCreated(context, created_item);
+
+        if (!parent.is_expanded && parent.id !== current_folder.id) {
+            context.commit("addDocumentToFoldedFolder", [parent, created_item, false]);
+        }
+        return Promise.resolve(context.commit("addJustCreatedItemToFolderContent", created_item));
+    }
+
     try {
         if (item.type === TYPE_FILE) {
             let should_display_item = true;
@@ -77,18 +89,14 @@ export const createNewItem = async (context, [item, parent, current_folder]) => 
                 should_display_item = false;
             }
             await createNewFile(context, item, parent, should_display_item);
+        } else if (item.type === TYPE_FOLDER) {
+            const item_reference = await addNewFolder(item, parent.id);
+
+            return adjustFileToContentAfterItemCreation(item_reference.id);
         } else {
             const item_reference = await addNewDocument(item, parent.id);
 
-            const created_item = await getItem(item_reference.id);
-            flagItemAsCreated(context, created_item);
-
-            if (!parent.is_expanded && parent.id !== current_folder.id) {
-                context.commit("addDocumentToFoldedFolder", [parent, created_item, false]);
-            }
-            return Promise.resolve(
-                context.commit("addJustCreatedItemToFolderContent", created_item)
-            );
+            return adjustFileToContentAfterItemCreation(item_reference.id);
         }
     } catch (exception) {
         return handleErrorsForModal(context, exception);

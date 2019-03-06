@@ -19,6 +19,7 @@
 
 import {
     addNewDocument,
+    addNewFolder,
     getFolderContent,
     getProject,
     getItem,
@@ -345,6 +346,31 @@ describe("rest-querier", () => {
 
             await createNewVersion(item, "my document title", "", dropped_file);
             expect(tlp.patch).toHaveBeenCalled();
+        });
+    });
+
+    describe("addNewFolder()", () => {
+        it("Create a new folder", async () => {
+            const item = JSON.stringify({
+                title: "my new folder",
+                description: "",
+                type: "folder"
+            });
+            mockFetchSuccess(tlp.post, { return_json: { id: 66, uri: "path/to/66" } });
+
+            await addNewFolder(
+                {
+                    title: "my new folder",
+                    description: "",
+                    type: "folder"
+                },
+                2
+            );
+
+            expect(tlp.post).toHaveBeenCalledWith("/api/docman_folders/2/folders", {
+                headers: jasmine.objectContaining({ "content-type": "application/json" }),
+                body: item
+            });
         });
     });
 });
