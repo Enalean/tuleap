@@ -38,7 +38,8 @@ export {
     deleteUserPreferenciesForUIInProject,
     cancelUpload,
     createNewVersion,
-    addNewFile
+    addNewFile,
+    addNewFolder
 };
 
 async function getProject(project_id) {
@@ -64,6 +65,21 @@ async function addNewFile(item, parent_id) {
     const body = JSON.stringify(json_body);
 
     const response = await post("/api/docman_folders/" + parent_id + "/files", { headers, body });
+
+    return response.json();
+}
+
+async function addNewFolder(item, parent_id) {
+    const headers = {
+        "content-type": "application/json"
+    };
+
+    const json_body = {
+        ...item
+    };
+    const body = JSON.stringify(json_body);
+
+    const response = await post("/api/docman_folders/" + parent_id + "/folders", { headers, body });
 
     return response.json();
 }

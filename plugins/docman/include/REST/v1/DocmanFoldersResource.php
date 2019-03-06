@@ -27,6 +27,7 @@ use Docman_PermissionsManager;
 use EventManager;
 use Project;
 use ProjectManager;
+use Tuleap\Docman\REST\v1\Folders\DocmanFolderPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Folders\DocmanItemCreatorBuilder;
 use Tuleap\Docman\REST\v1\Folders\DocmanPOSTFilesRepresentation;
 use Tuleap\Docman\REST\v1\Folders\ItemCanHaveSubItemsChecker;
@@ -69,7 +70,7 @@ class DocmanFoldersResource extends AuthenticatedResource
      * <br/>
      *
      * @param int  $id     Id of the parent folder
-     * @param DocmanPOSTFilesRepresentation  $test representation test {@from body} {@type \Tuleap\Docman\REST\v1\Folders\DocmanPOSTFilesRepresentation}
+     * @param DocmanPOSTFilesRepresentation  $files_representation {@from body} {@type \Tuleap\Docman\REST\v1\Folders\DocmanPOSTFilesRepresentation}
      *
      * @url    POST {id}/files
      * @access hybrid
@@ -109,6 +110,52 @@ class DocmanFoldersResource extends AuthenticatedResource
             $files_representation->description,
             new \DateTimeImmutable(),
             $files_representation->file_properties
+        );
+    }
+
+    /**
+     * Create new folder
+     *
+     * @param int  $id     Id of the parent folder
+     * @param DocmanFolderPOSTRepresentation  $test representation test {@from body} {@type \Tuleap\Docman\REST\v1\Folders\DocmanFolderPOSTRepresentation}
+     *
+     * @url    POST {id}/folders
+     * @access hybrid
+     * @status 201
+     *
+     * @return CreatedItemRepresentation
+     *
+     * @throws 400
+     * @throws 403
+     * @throws 404
+     * @throws 409
+     */
+    public function postFolders(int $id, DocmanFolderPOSTRepresentation $folder_representation): CreatedItemRepresentation
+    {
+        $this->checkAccess();
+        $this->sendAllowHeadersWithPost();
+
+        $current_user = $this->rest_user_manager->getCurrentUser();
+
+        $item_request = $this->request_builder->buildFromItemId($id);
+        $parent       = $item_request->getItem();
+        $this->checkItemCanHaveSubitems($parent);
+        $project = $item_request->getProject();
+        $this->getDocmanFolderPermissionChecker($project)
+             ->checkUserCanWriteFolder($current_user, $id);
+
+        $event_adder = $this->getDocmanItemsEventAdder();
+        $event_adder->addLogEvents();
+        $event_adder->addNotificationEvents($project);
+
+        $docman_item_creator = DocmanItemCreatorBuilder::build($project);
+
+        return $docman_item_creator->createFolder(
+            $parent,
+            $current_user,
+            $folder_representation,
+            new \DateTimeImmutable(),
+            $project
         );
     }
 

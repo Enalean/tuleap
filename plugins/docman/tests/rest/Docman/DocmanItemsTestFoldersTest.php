@@ -251,4 +251,49 @@ class DocmanItemsTestFoldersTest extends DocmanBase
         );
         $this->assertEquals(201, $response_creation_empty->getStatusCode());
     }
+
+    /**
+     * @depends testGetRootId
+     */
+    public function testPostFolderItem(int $root_id): void
+    {
+        $headers = ['Content-Type' => 'application/json'];
+        $query   = json_encode(
+            [
+                'title'       => 'My Folder',
+                'description' => 'A Folder description',
+                'parent_id'   => $root_id
+            ]
+        );
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post('docman_folders/' . $root_id . "/folders", $headers, $query)
+        );
+
+        $this->assertEquals(201, $response->getStatusCode());
+        $this->assertNull($response->json()['file_properties']);
+    }
+
+    /**
+     * @depends testGetRootId
+     */
+    public function testPostFolderFailIfFolderNameAlreadyExists(int $root_id): void
+    {
+        $headers = ['Content-Type' => 'application/json'];
+        $query   = json_encode(
+            [
+                'title'       => 'My Folder',
+                'description' => 'A Folder description',
+                'parent_id'   => $root_id
+            ]
+        );
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post('docman_folders/' . $root_id . "/folders", $headers, $query)
+        );
+
+        $this->assertEquals(400, $response->getStatusCode());
+    }
 }

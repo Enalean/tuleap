@@ -26,6 +26,7 @@ use Luracast\Restler\RestException;
 use PFUser;
 use Project;
 use Rule_Regexp;
+use Tuleap\Docman\REST\v1\Folders\DocmanFolderPOSTRepresentation;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
 use Tuleap\Docman\Upload\Document\DocumentToUploadCreator;
 use Tuleap\Docman\Upload\UploadCreationConflictException;
@@ -101,25 +102,6 @@ class DocmanItemCreator
         );
 
         switch ($docman_item_post_representation->type) {
-            case ItemRepresentation::TYPE_FOLDER:
-                if (!$this->checkAllItemPropertiesAreNull($docman_item_post_representation)) {
-                    throw new RestException(
-                        400,
-                        sprintf('The type "folder" and the properties given does not match')
-                    );
-                }
-                return $this->createDocument(
-                    PLUGIN_DOCMAN_ITEM_TYPE_FOLDER,
-                    $current_time,
-                    $parent_item,
-                    $user,
-                    $project,
-                    $docman_item_post_representation->title,
-                    $docman_item_post_representation->description,
-                    null,
-                    null,
-                    null
-                );
             case ItemRepresentation::TYPE_EMPTY:
                 if (!$this->checkAllItemPropertiesAreNull($docman_item_post_representation)) {
                     throw new RestException(
@@ -327,6 +309,43 @@ class DocmanItemCreator
         return $representation;
     }
 
+    /**
+     * @throws \Tuleap\Docman\CannotInstantiateItemWeHaveJustCreatedInDBException
+     * @throws RestException
+     */
+    public function createFolder(
+        Docman_Item $parent_item,
+        PFUser $user,
+        DocmanFolderPOSTRepresentation $representation,
+        \DateTimeImmutable $current_time,
+        Project $project
+    ): CreatedItemRepresentation {
+
+        if ($this->item_factory->doesTitleCorrespondToExistingFolder($representation->title, $parent_item->getId())) {
+            throw new RestException(400, "A folder with same title already exists in the given folder.");
+        }
+
+        $this->checkDocumentIsNotBeingUploaded(
+            $parent_item,
+            PLUGIN_DOCMAN_ITEM_TYPE_FOLDER,
+            $representation->title,
+            $current_time
+        );
+
+        return $this->createDocument(
+            PLUGIN_DOCMAN_ITEM_TYPE_FOLDER,
+            $current_time,
+            $parent_item,
+            $user,
+            $project,
+            $representation->title,
+            $representation->description,
+            null,
+            null,
+            null
+        );
+    }
+
     private function checkAllItemPropertiesAreNull(DocmanItemPOSTRepresentation $docman_item_post_representation)
     {
         return ($docman_item_post_representation->wiki_properties === null
@@ -344,12 +363,6 @@ class DocmanItemCreator
             && $this->item_factory->doesTitleCorrespondToExistingDocument($representation->title, $representation->parent_id)
         ) {
             throw new RestException(400, "A document with same title already exists in the given folder.");
-        }
-
-        if ($representation->type === \Tuleap\Docman\REST\v1\ItemRepresentation::TYPE_FOLDER
-            && $this->item_factory->doesTitleCorrespondToExistingFolder($representation->title, $representation->parent_id)
-        ) {
-            throw new RestException(400, "A folder with same title already exists in the given folder.");
         }
     }
 

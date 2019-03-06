@@ -24,6 +24,7 @@ use Luracast\Restler\RestException;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStreamDirectory;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Docman\REST\v1\Folders\DocmanFolderPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Folders\DocmanPOSTFilesRepresentation;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
 use Tuleap\Docman\Upload\Document\DocumentToUpload;
@@ -409,10 +410,9 @@ class DocmanItemCreatorTest extends TestCase
         $project      = \Mockery::mock(\Project::class);
         $current_time = new \DateTimeImmutable();
 
-        $post_representation            = new DocmanItemPOSTRepresentation();
-        $post_representation->type      = ItemRepresentation::TYPE_FOLDER;
-        $post_representation->title     = 'Title';
-        $post_representation->parent_id = 11;
+        $post_representation              = new DocmanFolderPOSTRepresentation();
+        $post_representation->title       = 'Title';
+        $post_representation->description = '';
 
         $this->document_ongoing_upload_retriever->shouldReceive('isThereAlreadyAnUploadOngoing')->andReturns(false);
         $parent_item->shouldReceive('getId')->andReturns(11);
@@ -434,13 +434,12 @@ class DocmanItemCreatorTest extends TestCase
 
         $this->creator_visitor->shouldReceive('visitFolder')->once();
 
-        $created_item_representation = $item_creator->create(
+        $created_item_representation = $item_creator->createFolder(
             $parent_item,
             $user,
-            $project,
             $post_representation,
             $current_time,
-            true
+            $project
         );
 
         $this->assertSame(12, $created_item_representation->id);
@@ -544,57 +543,6 @@ class DocmanItemCreatorTest extends TestCase
             $post_representation,
             $current_time,
             $is_embedded_allowed
-        );
-    }
-
-    public function testFolderCannotBeCreatedIfTheTypeGivenIsNotFolder()
-    {
-        $item_creator = new DocmanItemCreator(
-            $this->item_factory,
-            $this->document_ongoing_upload_retriever,
-            $this->document_to_upload_creator,
-            $this->creator_visitor,
-            $this->empty_file_to_upload_finisher
-        );
-
-        $parent_item  = \Mockery::mock(\Docman_Item::class);
-        $user         = \Mockery::mock(\PFUser::class);
-        $project      = \Mockery::mock(\Project::class);
-        $current_time = new \DateTimeImmutable();
-
-        $post_representation            = new DocmanItemPOSTRepresentation();
-        $post_representation->type      = ItemRepresentation::TYPE_FOLDER;
-        $post_representation->title     = 'Title';
-        $post_representation->parent_id = 11;
-        $post_representation->link_properties = json_decode(json_encode(['link_url' => 'https://my.example.test']));
-
-        $this->document_ongoing_upload_retriever->shouldReceive('isThereAlreadyAnUploadOngoing')->andReturns(false);
-        $parent_item->shouldReceive('getId')->andReturns(11);
-        $user->shouldReceive('getId')->andReturns(222);
-        $project->shouldReceive('getID')->andReturns(102);
-
-        $created_item = \Mockery::mock(\Docman_Empty::class);
-        $created_item->shouldReceive('getId')->andReturns(12);
-        $created_item->shouldReceive('getParentId')->andReturns(11);
-        $created_item->makePartial();
-
-        $this->item_factory
-            ->shouldReceive('createWithoutOrdering')
-            ->with('Title', '', 11, 100, 222, PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, null, null)
-            ->never();
-
-        $this->item_factory->shouldReceive('doesTitleCorrespondToExistingFolder')->andReturn(false);
-
-        $this->expectException(RestException::class);
-        $this->expectExceptionCode(400);
-
-        $item_creator->create(
-            $parent_item,
-            $user,
-            $project,
-            $post_representation,
-            $current_time,
-            true
         );
     }
 
