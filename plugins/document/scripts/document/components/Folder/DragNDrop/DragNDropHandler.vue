@@ -71,7 +71,7 @@ export default {
         },
         error_modal_name() {
             if (!this.error_modal_shown) {
-                return null;
+                return "";
             }
 
             if (this.error_modal_shown === this.MAX_SIZE_ERROR) {
@@ -129,10 +129,9 @@ export default {
 
             this.clearHighlight();
         },
-        ondrop(event) {
+        async ondrop(event) {
             event.preventDefault();
             event.stopPropagation();
-
             if (this.isDragNDropingOnAModal(event)) {
                 return;
             }
@@ -144,13 +143,11 @@ export default {
             if (!this.user_can_dragndrop_in_current_folder || !dropzone_item.user_can_write) {
                 return;
             }
-
             if (dropzone_item.type === TYPE_FILE) {
                 this.uploadNewFileVersion(event, dropzone_item);
 
                 return;
             }
-
             if (!event.dataTransfer.files) {
                 return;
             }
@@ -196,18 +193,18 @@ export default {
             }
 
             for (const file of files) {
-                this.$store
-                    .dispatch("addNewUploadFile", [
+                try {
+                    await this.$store.dispatch("addNewUploadFile", [
                         file,
                         dropzone_item,
                         file.name,
                         "",
                         should_display_fake_item
-                    ])
-                    .catch(error => {
-                        this.error_modal_shown = this.CREATION_ERROR;
-                        this.error_modal_reasons.push({ filename: file.name, message: error });
-                    });
+                    ]);
+                } catch (error) {
+                    this.error_modal_shown = this.CREATION_ERROR;
+                    this.error_modal_reasons.push({ filename: file.name, message: error });
+                }
             }
         },
         errorModalHasBeenClosed() {
@@ -271,7 +268,7 @@ export default {
 
             return this.folder_content.find(item => item.id === this.highlighted_item_id);
         },
-        uploadNewFileVersion(event, dropzone_item) {
+        async uploadNewFileVersion(event, dropzone_item) {
             const { lock_info, approval_table } = dropzone_item;
             const is_document_locked_by_current_user =
                 lock_info === null ||
@@ -310,10 +307,12 @@ export default {
                 return;
             }
 
-            this.$store.dispatch("updateFile", [dropzone_item, file]).catch(error => {
+            try {
+                await this.$store.dispatch("updateFile", [dropzone_item, file]);
+            } catch (error) {
                 this.error_modal_shown = this.CREATION_ERROR;
                 this.error_modal_reasons.push({ filename: file.name, message: error });
-            });
+            }
         }
     }
 };
