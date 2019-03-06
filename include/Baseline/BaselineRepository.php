@@ -23,6 +23,7 @@ namespace Tuleap\Baseline;
 
 use DateTime;
 use PFUser;
+use Project;
 
 interface BaselineRepository
 {
@@ -31,4 +32,14 @@ interface BaselineRepository
         PFUser $current_user,
         DateTime $snapshot_date
     ): Baseline;
+
+    /**
+     * Find all baselines on given project, ordered by snapshot date.
+     * @param int $page_size       Number of baselines to fetch
+     * @param int $baseline_offset Fetch baselines from this index (start with 0), then follow snapshot date order.
+     * @return Baseline[]
+     */
+    public function findByProject(Project $project, int $page_size, int $baseline_offset): array;
+
+    public function countByProject(Project $project): int;
 }

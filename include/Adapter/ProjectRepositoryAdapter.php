@@ -19,27 +19,24 @@
  *
  */
 
-namespace Tuleap\Baseline;
+namespace Tuleap\Baseline\Adapter;
 
 use Project;
+use ProjectManager;
+use Tuleap\Baseline\ProjectRepository;
 
-/**
- * Gather all security permissions.
- */
-interface Permissions
+class ProjectRepositoryAdapter implements ProjectRepository
 {
-    /**
-     * @throws NotAuthorizedException
-     */
-    public function checkReadSimpleBaseline(SimplifiedBaseline $baseline): void;
+    /** @var ProjectManager */
+    private $project_manager;
 
-    /**
-     * @throws NotAuthorizedException
-     */
-    public function checkCreateBaseline(TransientBaseline $baseline);
+    public function __construct(ProjectManager $project_manager)
+    {
+        $this->project_manager = $project_manager;
+    }
 
-    /**
-     * @throws NotAuthorizedException
-     */
-    public function checkReadBaselinesOn(Project $project);
+    public function findById(int $id): ?Project
+    {
+        return $this->project_manager->getProject($id);
+    }
 }

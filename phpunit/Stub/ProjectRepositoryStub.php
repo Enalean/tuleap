@@ -19,27 +19,32 @@
  *
  */
 
-namespace Tuleap\Baseline;
+namespace Tuleap\Baseline\Stub;
 
 use Project;
+use Tuleap\Baseline\ProjectRepository;
 
-/**
- * Gather all security permissions.
- */
-interface Permissions
+class ProjectRepositoryStub implements ProjectRepository
 {
-    /**
-     * @throws NotAuthorizedException
-     */
-    public function checkReadSimpleBaseline(SimplifiedBaseline $baseline): void;
+    /** @var array Project[] */
+    private $projects = [];
 
-    /**
-     * @throws NotAuthorizedException
-     */
-    public function checkCreateBaseline(TransientBaseline $baseline);
+    public function add(Project $project): void
+    {
+        $this->projects[] = $project;
+    }
 
-    /**
-     * @throws NotAuthorizedException
-     */
-    public function checkReadBaselinesOn(Project $project);
+    public function findById(int $id): ?Project
+    {
+        $matching_projects = array_filter(
+            $this->projects,
+            function (Project $project) use ($id) {
+                return $project->getId() === $id;
+            }
+        );
+        if (count($matching_projects) === 0) {
+            return null;
+        }
+        return $matching_projects[0];
+    }
 }

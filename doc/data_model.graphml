@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!--Created by yFiles for HTML 2.1.0.6-->
+<!--Created by yFiles for HTML 2.2-EAP5-->
 <graphml xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://www.yworks.com/xml/schema/graphml.html/2.0/ygraphml.xsd " xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:demostyle="http://www.yworks.com/yFilesHTML/demos/FlatDemoStyle/1.0" xmlns:bpmn="http://www.yworks.com/xml/yfiles-for-html/bpmn/2.0" xmlns:demotablestyle="http://www.yworks.com/yFilesHTML/demos/FlatDemoTableStyle/1.0" xmlns:uml="http://www.yworks.com/yFilesHTML/demos/UMLDemoStyle/1.0" xmlns:compat="http://www.yworks.com/xml/yfiles-compat-arrows/1.0" xmlns:GraphvizNodeStyle="http://www.yworks.com/yFilesHTML/graphviz-node-style/1.0" xmlns:VuejsNodeStyle="http://www.yworks.com/demos/yfiles-vuejs-node-style/1.0" xmlns:y="http://www.yworks.com/xml/yfiles-common/3.0" xmlns:x="http://www.yworks.com/xml/yfiles-common/markup/3.0" xmlns:yjs="http://www.yworks.com/xml/yfiles-for-html/2.0/xaml" xmlns:x0="http://www.yworks.com/yFilesHTML/demos/EntityRelationship/1.0" xmlns:sys="http://www.yworks.com/xml/yfiles-common/markup/primitives/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<key id="d0" for="node" attr.type="boolean" attr.name="Expanded" y:attr.uri="http://www.yworks.com/xml/yfiles-common/2.0/folding/Expanded">
 		<default>true</default>
@@ -34,13 +34,13 @@
 		<y:SharedData>
 			<yjs:SolidColorFill x:Key="1" color="{y:GraphMLReference 5}"/>
 			<yjs:SolidColorFill x:Key="2" color="{y:GraphMLReference 6}"/>
-			<yjs:Font x:Key="3" fontSize="12"/>
+			<yjs:Font x:Key="3" fontSize="12" fontFamily="'Arial'"/>
 			<demostyle:DemoGroupStyle x:Key="4" isCollapsible="true" borderColor="#68B0E3" folderFrontColor="#68B0E3" folderBackColor="#3C679B"/>
 			<yjs:Color x:Key="5" value="#FFE8EEF7"/>
 			<yjs:Color x:Key="6" value="#FFB7C9E3"/>
 			<y:RatioAnchoredLabelModelParameter x:Key="7" LayoutOffset="26.1953125,12.93359375"/>
 			<yjs:SolidColorFill x:Key="8" color="Black"/>
-			<yjs:Font x:Key="9" fontSize="12" fontFamily="Dialog"/>
+			<yjs:Font x:Key="9" fontSize="12" fontFamily="'Dialog'"/>
 			<yjs:LinearGradient x:Key="10" spreadMethod="PAD" startPoint="0,0" endPoint="1,1">
 				<yjs:GradientStop color="{y:GraphMLReference 5}" offset="0"/>
 				<yjs:GradientStop color="{y:GraphMLReference 6}" offset="1"/>
@@ -48,7 +48,7 @@
 			<yjs:Stroke x:Key="11" fill="#FF000000" miterLimit="1.45"/>
 			<y:RatioAnchoredLabelModelParameter x:Key="12" LayoutOffset="20.0576171875,12.93359375"/>
 			<yjs:SolidColorFill x:Key="13" color="Black"/>
-			<yjs:Font x:Key="14" fontSize="12" fontFamily="Dialog"/>
+			<yjs:Font x:Key="14" fontSize="12" fontFamily="'Dialog'"/>
 			<yjs:LinearGradient x:Key="15" spreadMethod="PAD" startPoint="0,0" endPoint="1,1">
 				<yjs:GradientStop color="{y:GraphMLReference 5}" offset="0"/>
 				<yjs:GradientStop color="{y:GraphMLReference 6}" offset="1"/>
@@ -85,7 +85,7 @@
 				</x:List>
 			</data>
 			<data key="d4">
-				<y:RectD X="852.25" Y="-36.8125" Width="367" Height="462.9375"/>
+				<y:RectD X="852.25" Y="-36.8125" Width="460.5625" Height="462.9375"/>
 			</data>
 			<data key="d6">
 				<y:GraphMLReference ResourceKey="4"/>
@@ -103,8 +103,8 @@
 									<x0:EntityRelationshipModel.attributes>
 										<x:Array Type="sys:Object">
 											<sys:String>id</sys:String>
+											<sys:String>snapshot_date</sys:String>
 											<sys:String>author</sys:String>
-											<sys:String>creation_date</sys:String>
 										</x:Array>
 									</x0:EntityRelationshipModel.attributes>
 								</x0:EntityRelationshipModel>
@@ -113,6 +113,7 @@
 					</data>
 					<port name="p0"/>
 					<port name="p1"/>
+					<port name="p2"/>
 				</node>
 				<node id="n0::n1">
 					<data key="d4">
@@ -159,6 +160,28 @@
 					</data>
 					<port name="p0"/>
 				</node>
+				<node id="n0::n3">
+					<data key="d4">
+						<y:RectD X="1122.8125" Y="295.75" Width="142.75" Height="82"/>
+					</data>
+					<data key="d6">
+						<x0:EntityNodeStyle fill="{y:GraphMLReference 1}" insetFill="{y:GraphMLReference 2}" stroke="BLACK">
+							<x0:EntityNodeStyle.model>
+								<x0:EntityRelationshipModel>
+									<x0:EntityRelationshipModel.title>BaselinesPage</x0:EntityRelationshipModel.title>
+									<x0:EntityRelationshipModel.attributes>
+										<x:Array Type="sys:Object">
+											<sys:String>page_size</sys:String>
+											<sys:String>baseline_offset</sys:String>
+											<sys:String>total_baseline_count</sys:String>
+										</x:Array>
+									</x0:EntityRelationshipModel.attributes>
+								</x0:EntityRelationshipModel>
+							</x0:EntityNodeStyle.model>
+						</x0:EntityNodeStyle>
+					</data>
+					<port name="p0"/>
+				</node>
 				<edge id="n0::e0" source="n0::n0" target="n0::n1" sourceport="p0" targetport="p1">
 					<data key="d12">
 						<yjs:PolylineEdgeStyle stroke="#FF0A0A0A">
@@ -171,6 +194,15 @@
 										<yjs:Stroke fill="#FF0A0A0A" thickness="1.5"/>
 									</yjs:Arrow.stroke>
 								</yjs:Arrow>
+							</yjs:PolylineEdgeStyle.sourceArrow>
+						</yjs:PolylineEdgeStyle>
+					</data>
+				</edge>
+				<edge id="n0::e1" source="n0::n0" target="n0::n3" sourceport="p2" targetport="p0">
+					<data key="d12">
+						<yjs:PolylineEdgeStyle>
+							<yjs:PolylineEdgeStyle.sourceArrow>
+								<x0:CrowsFootArrow type="CROWS_FOOT_MANY_OPTIONAL" scale="1"/>
 							</yjs:PolylineEdgeStyle.sourceArrow>
 						</yjs:PolylineEdgeStyle>
 					</data>
@@ -214,7 +246,7 @@
 								<y:Label.Style>
 									<yjs:DefaultLabelStyle horizontalTextAlignment="CENTER" autoFlip="false" textFill="#FF000000">
 										<yjs:DefaultLabelStyle.font>
-											<yjs:Font fontSize="12" fontFamily="Dialog"/>
+											<yjs:Font fontSize="12" fontFamily="'Dialog'"/>
 										</yjs:DefaultLabelStyle.font>
 									</yjs:DefaultLabelStyle>
 								</y:Label.Style>
@@ -256,7 +288,7 @@
 								<y:Label.Style>
 									<yjs:DefaultLabelStyle horizontalTextAlignment="CENTER" autoFlip="false" textFill="#FF000000">
 										<yjs:DefaultLabelStyle.font>
-											<yjs:Font fontSize="12" fontFamily="Dialog"/>
+											<yjs:Font fontSize="12" fontFamily="'Dialog'"/>
 										</yjs:DefaultLabelStyle.font>
 									</yjs:DefaultLabelStyle>
 								</y:Label.Style>
@@ -321,7 +353,7 @@
 								<y:Label.Style>
 									<yjs:DefaultLabelStyle horizontalTextAlignment="CENTER" autoFlip="false" textFill="#FF000000">
 										<yjs:DefaultLabelStyle.font>
-											<yjs:Font fontSize="12" fontFamily="Dialog"/>
+											<yjs:Font fontSize="12" fontFamily="'Dialog'"/>
 										</yjs:DefaultLabelStyle.font>
 									</yjs:DefaultLabelStyle>
 								</y:Label.Style>
@@ -360,7 +392,7 @@
 								<y:Label.Style>
 									<yjs:DefaultLabelStyle horizontalTextAlignment="CENTER" autoFlip="false" textFill="#FF000000">
 										<yjs:DefaultLabelStyle.font>
-											<yjs:Font fontSize="12" fontFamily="Dialog"/>
+											<yjs:Font fontSize="12" fontFamily="'Dialog'"/>
 										</yjs:DefaultLabelStyle.font>
 									</yjs:DefaultLabelStyle>
 								</y:Label.Style>
@@ -698,7 +730,7 @@
 						<y:Label.Style>
 							<yjs:DefaultLabelStyle textFill="BLACK">
 								<yjs:DefaultLabelStyle.font>
-									<yjs:Font fontSize="12"/>
+									<yjs:Font fontSize="12" fontFamily="'Arial'"/>
 								</yjs:DefaultLabelStyle.font>
 							</yjs:DefaultLabelStyle>
 						</y:Label.Style>
@@ -724,7 +756,7 @@
 						<y:Label.Style>
 							<yjs:DefaultLabelStyle textFill="BLACK">
 								<yjs:DefaultLabelStyle.font>
-									<yjs:Font fontSize="12"/>
+									<yjs:Font fontSize="12" fontFamily="'Arial'"/>
 								</yjs:DefaultLabelStyle.font>
 							</yjs:DefaultLabelStyle>
 						</y:Label.Style>
@@ -750,7 +782,7 @@
 						<y:Label.Style>
 							<yjs:DefaultLabelStyle textFill="BLACK">
 								<yjs:DefaultLabelStyle.font>
-									<yjs:Font fontSize="12"/>
+									<yjs:Font fontSize="12" fontFamily="'Arial'"/>
 								</yjs:DefaultLabelStyle.font>
 							</yjs:DefaultLabelStyle>
 						</y:Label.Style>

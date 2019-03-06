@@ -28,14 +28,18 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
 use PHPUnit\Framework\TestCase;
+use Project;
 use Tracker_Artifact;
+use Tuleap\Baseline\Factory\BaselineFactory;
 use Tuleap\Baseline\Factory\ChangesetFactory;
 use Tuleap\Baseline\Factory\MilestoneFactory;
 use Tuleap\Baseline\Support\DateTimeFactory;
+use Tuleap\GlobalLanguageMock;
 
 class BaselineServiceTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
 
     /** @var BaselineService */
     private $service;
@@ -78,6 +82,9 @@ class BaselineServiceTest extends TestCase
         );
     }
 
+    /** @var Project|MockInterface */
+    private $a_project;
+
     /** @var Tracker_Artifact */
     private $a_milestone;
 
@@ -87,6 +94,7 @@ class BaselineServiceTest extends TestCase
     /** @before */
     public function createEntities()
     {
+        $this->a_project   = Mockery::mock(Project::class);
         $this->a_milestone = MilestoneFactory::one()->build();
         $this->a_date      = DateTimeFactory::one();
     }
@@ -145,5 +153,25 @@ class BaselineServiceTest extends TestCase
         $baseline = $this->service->findSimplified($this->a_milestone, $this->a_date);
 
         $this->assertNull($baseline->getStatus());
+    }
+
+    public function testFinByProject()
+    {
+        $baselines = [BaselineFactory::one()->build()];
+        $this->baseline_repository
+            ->shouldReceive('findByProject')
+            ->with($this->a_project, 10, 3)
+            ->andReturn($baselines);
+        $this->baseline_repository
+            ->shouldReceive('countByProject')
+            ->with($this->a_project)
+            ->andReturn(233);
+
+        $baselines_page = $this->service->findByProject($this->a_project, 10, 3);
+
+        $this->assertEquals($baselines, $baselines_page->getBaselines());
+        $this->assertEquals(233, $baselines_page->getTotalBaselineCount());
+        $this->assertEquals(10, $baselines_page->getPageSize());
+        $this->assertEquals(3, $baselines_page->getBaselineOffset());
     }
 }

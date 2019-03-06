@@ -23,23 +23,7 @@ namespace Tuleap\Baseline;
 
 use Project;
 
-/**
- * Gather all security permissions.
- */
-interface Permissions
+interface ProjectRepository
 {
-    /**
-     * @throws NotAuthorizedException
-     */
-    public function checkReadSimpleBaseline(SimplifiedBaseline $baseline): void;
-
-    /**
-     * @throws NotAuthorizedException
-     */
-    public function checkCreateBaseline(TransientBaseline $baseline);
-
-    /**
-     * @throws NotAuthorizedException
-     */
-    public function checkReadBaselinesOn(Project $project);
+    public function findById(int $id): ?Project;
 }

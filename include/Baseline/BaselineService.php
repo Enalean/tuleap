@@ -22,6 +22,7 @@
 namespace Tuleap\Baseline;
 
 use DateTime;
+use Project;
 use Tracker;
 use Tracker_Artifact;
 use Tracker_Artifact_Changeset;
@@ -102,6 +103,20 @@ class BaselineService
 
         $this->permissions->checkReadSimpleBaseline($baseline);
         return $baseline;
+    }
+
+    /**
+     * Find baselines on given project, ordered by snapshot date.
+     * @param int $page_size       Number of baselines to fetch
+     * @param int $baseline_offset Fetch baselines from this index (start with 0), following snapshot date order.
+     * @throws NotAuthorizedException
+     */
+    public function findByProject(Project $project, int $page_size, int $baseline_offset): BaselinesPage
+    {
+        $this->permissions->checkReadBaselinesOn($project);
+        $baselines = $this->baseline_repository->findByProject($project, $page_size, $baseline_offset);
+        $count     = $this->baseline_repository->countByProject($project);
+        return new BaselinesPage($baselines, $page_size, $baseline_offset, $count);
     }
 
     private function getTrackerTitle(Tracker $tracker, Tracker_Artifact_Changeset $changeSet): ?string

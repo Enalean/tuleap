@@ -24,18 +24,31 @@ namespace Tuleap\Baseline\Adapter;
 use DateTime;
 use ParagonIE\EasyDB\EasyDB;
 use PFUser;
+use Project;
+use Tracker_ArtifactFactory;
 use Tuleap\Baseline\Baseline;
 use Tuleap\Baseline\BaselineRepository;
 use Tuleap\Baseline\TransientBaseline;
+use UserManager;
 
 class BaselineRepositoryAdapter implements BaselineRepository
 {
+    public const SQL_COUNT_ALIAS = 'nb';
+
     /** @var EasyDB */
     private $db;
 
-    public function __construct(EasyDB $db)
+    /** @var UserManager */
+    private $user_manager;
+
+    /** @var Tracker_ArtifactFactory */
+    private $artifact_factory;
+
+    public function __construct(EasyDB $db, UserManager $user_manager, Tracker_ArtifactFactory $artifact_factory)
     {
-        $this->db = $db;
+        $this->db               = $db;
+        $this->user_manager     = $user_manager;
+        $this->artifact_factory = $artifact_factory;
     }
 
     public function add(
@@ -61,5 +74,57 @@ class BaselineRepositoryAdapter implements BaselineRepository
             $snapshot_date,
             $current_user
         );
+    }
+
+    /**
+     * @return Baseline[]
+     */
+    public function findByProject(Project $project, int $page_size, int $baseline_offset): array
+    {
+        $rows = $this->db->safeQuery(
+            "SELECT baseline.id, baseline.name, baseline.artifact_id, baseline.user_id, baseline.snapshot_date
+            FROM plugin_baseline_baseline as baseline
+                 INNER JOIN tracker_artifact as artifact
+            ON artifact.id = baseline.artifact_id
+                 INNER JOIN tracker
+            ON tracker.id = artifact.tracker_id
+            WHERE tracker.group_id = ?
+            ORDER BY baseline.snapshot_date ASC
+            LIMIT ?
+            OFFSET ?",
+            [$project->getID(), $page_size, $baseline_offset]
+        );
+
+        return array_map(
+            function (array $row) {
+                $milestone     = $this->artifact_factory->getArtifactById($row['artifact_id']);
+                $author        = $this->user_manager->getUserById($row['user_id']);
+                $snapshot_date = new DateTime();
+                $snapshot_date->setTimestamp($row['snapshot_date']);
+                return new Baseline(
+                    $row['id'],
+                    $row['name'],
+                    $milestone,
+                    $snapshot_date,
+                    $author
+                );
+            },
+            $rows
+        );
+    }
+
+    public function countByProject(Project $project): int
+    {
+        $rows = $this->db->safeQuery(
+            "SELECT COUNT(baseline.id) as " . self::SQL_COUNT_ALIAS . "
+            FROM plugin_baseline_baseline as baseline
+                 INNER JOIN tracker_artifact as artifact
+            ON artifact.id = baseline.artifact_id
+                 INNER JOIN tracker
+            ON tracker.id = artifact.tracker_id
+            WHERE tracker.group_id = ?",
+            [$project->getID()]
+        );
+        return $rows[0][self::SQL_COUNT_ALIAS];
     }
 }

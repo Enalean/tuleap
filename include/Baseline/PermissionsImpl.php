@@ -75,6 +75,14 @@ class PermissionsImpl implements Permissions
     /**
      * @throws NotAuthorizedException
      */
+    public function checkReadBaselinesOn(Project $project): void
+    {
+        $this->project_permissions->checkRead($project);
+    }
+
+    /**
+     * @throws NotAuthorizedException
+     */
     private function checkReadArtifact(Tracker_Artifact $artifact): void
     {
         if (! $artifact->userCanView($this->current_user_provider->getUser())) {

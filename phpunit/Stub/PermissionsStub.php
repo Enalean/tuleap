@@ -21,6 +21,7 @@
 
 namespace Tuleap\Baseline\Stub;
 
+use Project;
 use Tuleap\Baseline\NotAuthorizedException;
 use Tuleap\Baseline\Permissions;
 use Tuleap\Baseline\SimplifiedBaseline;
@@ -50,7 +51,7 @@ class PermissionsStub implements Permissions
     public function checkCreateBaseline(TransientBaseline $baseline)
     {
         if (! $this->all_permitted) {
-            throw new NotAuthorizedException('Baseline read not authorized');
+            throw new NotAuthorizedException('Baseline creation not authorized');
         }
     }
 
@@ -60,7 +61,17 @@ class PermissionsStub implements Permissions
     public function checkReadSimpleBaseline(SimplifiedBaseline $baseline): void
     {
         if (! $this->all_permitted) {
-            throw new NotAuthorizedException('Baseline read not authorized');
+            throw new NotAuthorizedException('Simple baseline read not authorized');
+        }
+    }
+
+    /**
+     * @throws NotAuthorizedException
+     */
+    public function checkReadBaselinesOn(Project $project)
+    {
+        if (! $this->all_permitted) {
+            throw new NotAuthorizedException('Baseline read not authorized on given project');
         }
     }
 }

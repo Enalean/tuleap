@@ -32,6 +32,9 @@ msgstr "Aucune modification trouvée avant la date du %s"
 msgid "No milestone found with id %u"
 msgstr "Aucune milestone trouvée avec l'id %u"
 
+msgid "No project found with this id"
+msgstr "Aucun projet trouvé avec cet identifiant"
+
 msgid "Set and compare baseline of items"
 msgstr "Poser des baselines et les comparer"
 

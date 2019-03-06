@@ -23,6 +23,7 @@ namespace Tuleap\Baseline\Stub;
 
 use DateTime;
 use PFUser;
+use Project;
 use Tuleap\Baseline\Baseline;
 use Tuleap\Baseline\BaselineRepository;
 use Tuleap\Baseline\TransientBaseline;
@@ -40,13 +41,18 @@ class BaselineRepositoryStub implements BaselineRepository
 
     public function add(TransientBaseline $baseline, PFUser $current_user, DateTime $snapshot_date): Baseline
     {
-        $baseline           = new Baseline(
+        $baseline = new Baseline(
             $this->id_sequence++,
             $baseline->getName(),
             $baseline->getMilestone(),
             $snapshot_date,
             $current_user
         );
+        return $this->addBaseline($baseline);
+    }
+
+    public function addBaseline(Baseline $baseline): Baseline
+    {
         $this->baselines [] = $baseline;
         return $baseline;
     }
@@ -68,6 +74,25 @@ class BaselineRepositoryStub implements BaselineRepository
     }
 
     public function count(): int
+    {
+        return count($this->baselines);
+    }
+
+    /**
+     * @return Baseline[]
+     */
+    public function findByProject(Project $project, int $page_size, int $baseline_offset): array
+    {
+        $matching_baselines = array_filter(
+            $this->baselines,
+            function (Baseline $baseline) use ($project) {
+                return $baseline->getMilestone()->getTracker()->getProject() === $project;
+            }
+        );
+        return array_slice($matching_baselines, $baseline_offset, $page_size);
+    }
+
+    public function countByProject(Project $project): int
     {
         return count($this->baselines);
     }

@@ -19,6 +19,9 @@ msgstr ""
 msgid "No milestone found with id %u"
 msgstr ""
 
+msgid "No project found with this id"
+msgstr ""
+
 msgid "Set and compare baseline of items"
 msgstr ""
 
