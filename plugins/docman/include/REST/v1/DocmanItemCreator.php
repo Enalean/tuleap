@@ -27,9 +27,9 @@ use PFUser;
 use Project;
 use Rule_Regexp;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
+use Tuleap\Docman\Upload\Document\DocumentToUploadCreator;
 use Tuleap\Docman\Upload\UploadCreationConflictException;
 use Tuleap\Docman\Upload\UploadCreationFileMismatchException;
-use Tuleap\Docman\Upload\Document\DocumentToUploadCreator;
 use Tuleap\Docman\Upload\UploadMaxSizeExceededException;
 use Valid_FTPURI;
 use Valid_LocalURI;
@@ -159,16 +159,6 @@ class DocmanItemCreator
                     null,
                     null
                 );
-            case ItemRepresentation::TYPE_FILE:
-                $this->checkPropertiesByType($docman_item_post_representation, ItemRepresentation::TYPE_FILE);
-                return $this->createFileDocument(
-                    $parent_item,
-                    $user,
-                    $docman_item_post_representation->title,
-                    $docman_item_post_representation->description,
-                    $current_time,
-                    $docman_item_post_representation->file_properties
-                );
 
             case ItemRepresentation::TYPE_LINK:
                 $this->checkPropertiesByType($docman_item_post_representation, ItemRepresentation::TYPE_LINK);
@@ -290,7 +280,7 @@ class DocmanItemCreator
      *
      * @throws RestException
      */
-    private function createFileDocument(
+    public function createFileDocument(
         Docman_Item $parent_item,
         PFUser $user,
         $title,
@@ -298,6 +288,10 @@ class DocmanItemCreator
         \DateTimeImmutable $current_time,
         FilePropertiesPOSTPATCHRepresentation $file_properties
     ) {
+        if ($this->item_factory->doesTitleCorrespondToExistingDocument($title, $parent_item->getId())) {
+            throw new RestException(400, "A file with same title already exists in the given folder.");
+        }
+
         try {
             $document_to_upload = $this->document_to_upload_creator->create(
                 $parent_item,
@@ -336,7 +330,6 @@ class DocmanItemCreator
     private function checkAllItemPropertiesAreNull(DocmanItemPOSTRepresentation $docman_item_post_representation)
     {
         return ($docman_item_post_representation->wiki_properties === null
-            && $docman_item_post_representation->file_properties === null
             && $docman_item_post_representation->link_properties === null
             && $docman_item_post_representation->embedded_properties === null
         );
@@ -369,7 +362,6 @@ class DocmanItemCreator
     ) : void {
         $types_with_properties = [
             ItemRepresentation::TYPE_WIKI,
-            ItemRepresentation::TYPE_FILE,
             ItemRepresentation::TYPE_LINK,
             ItemRepresentation::TYPE_EMBEDDED
         ];

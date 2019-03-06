@@ -35,13 +35,9 @@ class DocmanItemPOSTRepresentation
      */
     public $parent_id;
     /**
-     * @var string Item type {@choice empty,wiki,file,link,embedded,folder} {@from body} {@required true}
+     * @var string Item type {@choice empty,wiki,link,embedded,folder} {@from body} {@required true}
      */
     public $type;
-    /**
-     * @var FilePropertiesPOSTPATCHRepresentation File properties must be set when creating a new file {@from body} {@required false} {@type \Tuleap\Docman\REST\v1\FilePropertiesPOSTPATCHRepresentation}
-     */
-    public $file_properties = null;
     /**
      * @var WikiPropertiesPOSTRepresentation {@type \Tuleap\Docman\REST\v1\WikiPropertiesPOSTRepresentation} {@from body} {@required false}
      */
