@@ -25,14 +25,6 @@
         </button>
         <div class="tlp-dropdown-split-button">
             <new-item-button v-if="item.user_can_write" class="tlp-button-primary tlp-button-small tlp-button-outline" v-bind:item="item"/>
-            <button
-                class="tlp-button-primary tlp-button-outline tlp-button-small tlp-dropdown-split-button-main"
-                type="button"
-                v-on:click="toggleNeighborDropdown"
-                v-else
-            >
-                <i class="fa fa-ellipsis-h"></i>
-            </button>
             <dropdown-button v-bind:is-in-quick-look-mode="true" v-bind:is-appended="item.user_can_write">
                 <dropdown-menu v-bind:item="item" v-bind:is-in-quick-look-mode="true" v-bind:hide-item-title="true"/>
             </dropdown-button>
