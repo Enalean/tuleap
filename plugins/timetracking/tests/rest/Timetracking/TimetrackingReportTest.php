@@ -119,6 +119,48 @@ class TimetrackingReportTest extends TimetrackingBase
         }
 
         $this->assertEquals($response->getStatusCode(), 200);
-        $this->assertEquals($total, 1200);
+        $this->assertEquals($total, 1400);
+    }
+
+    public function testGetTimesByReportReturnsTheSumOfTrackedTimesOfPeriod()
+    {
+        $query = urlencode(
+            json_encode([
+                            "start_date"  => "2010-03-01T00:00:00+01",
+                            "end_date"    => "2019-03-21T00:00:00+01"
+                        ])
+        );
+        $this->initUserId(TimetrackingDataBuilder::USER_TESTER_NAME);
+        $response = $this->getResponseByName(
+            TimetrackingDataBuilder::USER_TESTER_NAME,
+            $this->client->get("/api/v1/timetracking_reports/1/times?query=$query")
+        );
+        $result   = $response->json();
+        $total    = 0;
+
+        foreach ($result as $tracker) {
+            $total += $tracker["minutes"];
+        }
+
+        $this->assertEquals($response->getStatusCode(), 200);
+        $this->assertEquals($total, 1400);
+    }
+
+    public function testGetTimeByRetortsReturnsNoTrackedTimeForLastMonth()
+    {
+        $this->initUserId(TimetrackingDataBuilder::USER_TESTER_NAME);
+        $response = $this->getResponseByName(
+            TimetrackingDataBuilder::USER_TESTER_NAME,
+            $this->client->get("/api/v1/timetracking_reports/1/times")
+        );
+        $result   = $response->json();
+        $total    = 0;
+
+        foreach ($result as $tracker) {
+            $total += $tracker["minutes"];
+        }
+
+        $this->assertEquals($response->getStatusCode(), 200);
+        $this->assertEquals($total, 200);
     }
 }

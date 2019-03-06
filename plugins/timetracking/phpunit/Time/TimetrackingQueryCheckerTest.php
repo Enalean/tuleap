@@ -50,15 +50,10 @@ class TimetrackingQueryCheckerTest extends TestCase
         $this->assertNull($this->checker->checkQuery($json_query));
     }
 
-    public function testItRaiseExeptionWhenNoTrackers()
+    public function testPassWhenNoTrackers()
     {
         $json_query = ["start_date" => "2018-11-20T00:00:00+01", "end_date" => "2018-12-30T00:00:00+01"];
-
-        $this->expectException(RestException::class);
-        $this->expectExceptionCode(400);
-        $this->expectExceptionMessage('Please provide trackers\' ids');
-
-        $this->checker->checkQuery($json_query, true);
+        $this->assertNull($this->checker->checkQuery($json_query));
     }
 
     public function testItRaiseExeptionWhenBadDates()
