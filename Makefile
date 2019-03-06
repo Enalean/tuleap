@@ -111,7 +111,7 @@ sonarqube-stop: ## Start Sonarqube server
 
 sonarqube-analyze: ## Run tests and analyze code with Sonarqube (Sonarqube must be started)
 	@rm -Rf phpunit-output && mkdir phpunit-output
-	@docker run --rm -v $(CURDIR)/../..:/tuleap:ro -v $(CURDIR)/phpunit-output:/phpunit-output enalean/tuleap-test-phpunit:c6-php72 scl enable php72 "cd /tuleap && src/vendor/bin/phpunit -c plugins/baseline/phpunit/phpunit.xml --log-junit /phpunit-output/junit.xml --coverage-clover /phpunit-output/clover.xml --do-not-cache-result"
+	@docker run --rm -v $(CURDIR)/../..:/tuleap:ro -v $(CURDIR)/phpunit-output:/phpunit-output -w /tuleap enalean/tuleap-test-phpunit:c6-php72 scl enable php72 "php -d pcov.directory=. src/vendor/bin/phpunit -c plugins/baseline/phpunit/phpunit.xml --log-junit /phpunit-output/junit.xml --coverage-clover /phpunit-output/clover.xml --do-not-cache-result"
 	@sed -i.bak -e "s#<file name=\"/tuleap/plugins/baseline/#<file name=\"#g" phpunit-output/clover.xml
 	@cd scripts && npm run coverage
 	@sed -i.bak -e "s#^SF:.*/tuleap/plugins/baseline/scripts#SF:scripts#g" scripts/coverage/lcov.info
