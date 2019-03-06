@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2016 - 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -445,7 +445,7 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
     ?>
 
     <FORM id="frs_form" NAME="frsRelease" ENCTYPE="multipart/form-data" METHOD="POST" ACTION="<?php echo $url; ?>" CLASS="form-inline">
-        <INPUT TYPE="hidden" name="MAX_FILE_SIZE" value="<? echo $hp->purify(ForgeConfig::get('sys_max_size_upload')); ?>">
+        <INPUT TYPE="hidden" name="MAX_FILE_SIZE" value="<?php echo $hp->purify(ForgeConfig::get('sys_max_size_upload')); ?>">
         <input type="hidden" name="postReceived" value="" />
         <?php
         if ($release->getReleaseId()) {

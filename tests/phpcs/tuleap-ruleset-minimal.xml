@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<ruleset
+        name="Tuleap"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="../../src/vendor/squizlabs/php_codesniffer/phpcs.xsd"
+>
+    <description>Tuleap minimal coding standard.</description>
+
+    <config name="installed_paths" value="../../slevomat/coding-standard"/>
+
+    <exclude-pattern>*/vendor/*</exclude-pattern>
+
+    <!-- Forbid use of short open tags <? -->
+    <rule ref="Generic.PHP.DisallowShortOpenTag" />
+</ruleset>

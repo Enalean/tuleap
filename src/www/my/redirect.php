@@ -68,7 +68,7 @@ else {
 }
 ?>
 
-<p><big><?= $redirect; ?></big></p>
+<p><big><?php echo $redirect; ?></big></p>
 
 <?php
 ($pv == 2) ? $HTML->pv_footer(array()) : site_footer(array());

@@ -23,6 +23,6 @@
     Tuleap, outil de développement logiciel agile 100% open source. <a href="https://www.tuleap.org" target="_blank" rel="noreferrer">www.tuleap.org</a>.
 </p>
 <p class="footer-paragraph">
-    <?= $GLOBALS['Language']->getText('global', 'powered_by'); ?> version <?= $version ?>
-    <br><?= $GLOBALS['Language']->getText('global', 'copyright'); ?>.
+    <?php echo $GLOBALS['Language']->getText('global', 'powered_by'); ?> version <?php echo $version ?>
+    <br><?php echo $GLOBALS['Language']->getText('global', 'copyright'); ?>.
 </p>

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * SourceForge: Breaking Down the Barriers to Open Source Development
@@ -763,12 +763,12 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
         <!-- end content -->
         </tr>
 <!-- New row added for the thin black line at the bottom of the array -->
-<tr><td background="<? echo util_get_image_theme("black.png"); ?>" colspan="4" align="center"><img src="<? echo util_get_image_theme("clear.png"); ?>" width="2" height="2" alt=" "></td> </tr>
+<tr><td background="<?php echo util_get_image_theme("black.png"); ?>" colspan="4" align="center"><img src="<?php echo util_get_image_theme("clear.png"); ?>" width="2" height="2" alt=" "></td> </tr>
         </table>
 
                 </td>
 
-                <td background="<? echo util_get_image_theme("right_border.png"); ?>" valign="bottom"><img src="<? echo util_get_image_theme("bottom_right_corner.png"); ?>" width="16" height="16" alt=" "></td>
+                <td background="<?php echo util_get_image_theme("right_border.png"); ?>" valign="bottom"><img src="<?php echo util_get_image_theme("bottom_right_corner.png"); ?>" width="16" height="16" alt=" "></td>
         </tr>
 
 </table>

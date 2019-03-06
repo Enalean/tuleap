@@ -79,7 +79,7 @@
     "php-http/mock-client": "^1.2",
     "phpunit/phpunit": "^8",
     "simpletest/simpletest": "^1.1",
-    "squizlabs/php_codesniffer": "^3.3",
+    "squizlabs/php_codesniffer": "^3.4",
     "vimeo/psalm": "^3.0"
   }
 }

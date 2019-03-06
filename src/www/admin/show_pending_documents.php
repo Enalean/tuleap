@@ -99,20 +99,20 @@ $renderer->header($GLOBALS['Language']->getText('admin_groupedit', 'title'), fal
 
 ?>
 <div class="tlp-framed-vertically">
-    <h1 class="tlp-framed-horizontally"><?= $purifier->purify($project->getUnconvertedPublicName()) ?></h1>
+    <h1 class="tlp-framed-horizontally"><?php echo $purifier->purify($project->getUnconvertedPublicName()) ?></h1>
 
     <nav class="tlp-tabs">
-        <a href="/admin/groupedit.php?group_id=<?= (int)$group_id ?>" class="tlp-tab">
-            <?= $GLOBALS['Language']->getText('admin_project', 'information_label') ?>
+        <a href="/admin/groupedit.php?group_id=<?php echo (int)$group_id ?>" class="tlp-tab">
+            <?php echo $GLOBALS['Language']->getText('admin_project', 'information_label') ?>
         </a>
-        <a href="/admin/userlist.php?group_id=<?= (int)$group_id ?>" class="tlp-tab">
-            <?= $GLOBALS['Language']->getText('admin_project', 'members_label') ?>
+        <a href="/admin/userlist.php?group_id=<?php echo (int)$group_id ?>" class="tlp-tab">
+            <?php echo $GLOBALS['Language']->getText('admin_project', 'members_label') ?>
         </a>
-        <a href="/admin/projecthistory.php?group_id=<?= (int)$group_id ?>" class="tlp-tab">
-            <?= $GLOBALS['Language']->getText('admin_project', 'history_label') ?>
+        <a href="/admin/projecthistory.php?group_id=<?php echo (int)$group_id ?>" class="tlp-tab">
+            <?php echo $GLOBALS['Language']->getText('admin_project', 'history_label') ?>
         </a>
-        <a href="/admin/show_pending_documents.php?group_id=<?= (int)$group_id ?>" class="tlp-tab tlp-tab-active">
-            <?= $GLOBALS['Language']->getText('admin_project', 'pending_label') ?>
+        <a href="/admin/show_pending_documents.php?group_id=<?php echo (int)$group_id ?>" class="tlp-tab tlp-tab-active">
+            <?php echo $GLOBALS['Language']->getText('admin_project', 'pending_label') ?>
         </a>
     </nav>
 

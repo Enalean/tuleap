@@ -1,12 +1,23 @@
 <?php
-//
-// SourceForge: Breaking Down the Barriers to Open Source Development
-// Copyright 1999-2000 (c) The SourceForge Crew
-// http://sourceforge.net
-//
-// 
-
-
+/**
+ * Copyright (c) Enalean, 2015-Present. All Rights Reserved.
+ * Copyright 1999-2000 (c) The SourceForge Crew
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 /**
 * help_button() - Show a help button.
@@ -45,7 +56,7 @@ function help_header($title, $help_banner=true) {
 <HTML>
 <HEAD>
 <TITLE><?php print $title; ?></TITLE>
-<LINK rel="stylesheet" href="<? echo util_get_css_theme(); ?>" type="text/css">
+<LINK rel="stylesheet" href="<?php echo util_get_css_theme(); ?>" type="text/css">
 </HEAD>
 <BODY class="bg_help">
 <?php print ($help_banner ? '<H4>'.$GLOBALS['sys_name'].' '.$Language->getText('include_help','site_help_sys').'</H4>' : ''); ?>
