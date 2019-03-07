@@ -30,29 +30,20 @@ use Tuleap\Baseline\MilestoneRepository;
 class MilestoneRepositoryStub implements MilestoneRepository
 {
     /** @var Tracker_Artifact[] */
-    private $milestones = [];
+    private $milestones_by_id = [];
 
     public function add(Tracker_Artifact $milestone): void
     {
-        $this->milestones [] = $milestone;
+        $this->milestones_by_id [$milestone->getId()] = $milestone;
     }
 
     public function findById(int $id): ?Tracker_Artifact
     {
-        $matching_milestones = array_filter(
-            $this->milestones,
-            function (Tracker_Artifact $milestone) use ($id) {
-                return $milestone->getId() === $id;
-            }
-        );
-        if (count($matching_milestones) === 0) {
-            return null;
-        }
-        return $matching_milestones[0];
+        return $this->milestones_by_id[$id] ?? null;
     }
 
     public function removeAll()
     {
-        $this->milestones = [];
+        $this->milestones_by_id = [];
     }
 }
