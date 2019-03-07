@@ -39,12 +39,18 @@ pipeline {
                     }
                 }
                 stage('E2E tests') {
-                    steps { script { actions.runEndToEndTests('full') } }
-                    post { always { junit 'results/e2e/full/*.xml' } }
+                    options { retry(1) }
+                    steps {
+                        script { actions.runEndToEndTests('full') }
+                        junit 'results/e2e/full/*.xml'
+                    }
                 }
                 stage('Distributed SVN integration') {
-                    steps { script { actions.runEndToEndTests('distlp') } }
-                    post { always { junit 'results/e2e/distlp/*.xml' } }
+                    options { retry(1) }
+                    steps {
+                        script { actions.runEndToEndTests('distlp') }
+                        junit 'results/e2e/distlp/*.xml'
+                    }
                 }
                 stage('Psalm static analysis') {
                     agent {
