@@ -47,7 +47,7 @@ class ReadOnlyFields extends Transition_PostAction
         return self::SHORT_NAME;
     }
 
-    /** @¶eturn int[] */
+    /** @return int[] */
     public function getFieldIds(): array
     {
         return $this->field_ids;
