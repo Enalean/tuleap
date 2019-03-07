@@ -41,6 +41,7 @@ class ArchivedeleteditemsPlugin extends Plugin
         parent::__construct($id);
         $this->setScope(Plugin::SCOPE_SYSTEM);
         $this->addHook('archive_deleted_item', 'archive_deleted_item', false);
+        bindtextdomain('tuleap-archivedeleteditems', __DIR__ . '/../site-content');
     }
 
     private function getLogger()
