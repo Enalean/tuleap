@@ -36,6 +36,7 @@
 import { mapState, mapGetters } from "vuex";
 import CurrentFolderDropZone from "./CurrentFolderDropZone.vue";
 import { TYPE_FOLDER, TYPE_FILE } from "../../../constants.js";
+import { highlightItem } from "../../../helpers/highlight-items-helper.js";
 
 export default {
     components: { CurrentFolderDropZone },
@@ -219,13 +220,19 @@ export default {
         clearHighlight() {
             const highlighted_items = document.querySelectorAll(`
                 .document-tree-item-highlighted,
-                .document-tree-item-hightlighted-forbidden
+                .document-tree-item-hightlighted-forbidden,
+                .quick-look-pane-highlighted,
+                .quick-look-pane-highlighted-forbidden
             `);
 
             for (const element of highlighted_items) {
                 element.classList.remove(
                     "document-tree-item-highlighted",
-                    "document-tree-item-hightlighted-forbidden"
+                    "document-folder-highlighted",
+                    "document-file-highlighted",
+                    "document-tree-item-hightlighted-forbidden",
+                    "quick-look-pane-highlighted",
+                    "quick-look-pane-highlighted-forbidden"
                 );
             }
 
@@ -235,7 +242,11 @@ export default {
         highlightFolderDropZone(event) {
             this.clearHighlight();
 
-            const target_drop_zones = [".document-tree-item-folder"];
+            const target_drop_zones = [
+                ".document-tree-item-folder",
+                ".document-quick-look-folder-dropzone",
+                ".document-quick-look-file-dropzone"
+            ];
 
             if (event.dataTransfer.items.length === 1) {
                 target_drop_zones.push(".document-tree-item-file");
@@ -245,12 +256,10 @@ export default {
 
             if (closest_row) {
                 this.highlighted_item_id = parseInt(closest_row.dataset.itemId, 10);
+
                 const item = this.getDropZoneItem();
-                if (item.user_can_write) {
-                    closest_row.classList.add("document-tree-item-highlighted");
-                } else {
-                    closest_row.classList.add("document-tree-item-hightlighted-forbidden");
-                }
+
+                highlightItem(item, closest_row);
             } else {
                 this.is_dropzone_highlighted = true;
             }

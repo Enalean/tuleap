@@ -19,6 +19,16 @@
   -->
 <template>
     <div class="document-quick-look-image" v-if="is_an_image">
+        <div v-if="item.user_can_write" class="document-quick-look-image-overlay">
+            <i class="fa fa-cloud-upload"></i>
+            <br>
+            <translate>Drop to upload</translate>
+        </div>
+        <div v-else class="document-quick-look-image-overlay-forbidden">
+            <i class="fa fa-ban"></i>
+            <br>
+            <translate>You are not allowed to update this file</translate>
+        </div>
         <img v-bind:src="item.file_properties.html_url" v-bind:alt="item.title">
     </div>
     <!-- eslint-disable-next-line vue/no-v-html -->
@@ -27,12 +37,35 @@
          v-else-if="is_embedded"
     ></div>
     <div class="document-quick-look-icon" v-else>
-        <i class="fa" v-bind:class="iconClass"></i>
+        <i class="fa fa-icon" v-bind:class="iconClass"></i>
+        <br>
+        <span
+            v-if="item.user_can_write"
+            key="upload"
+            class="document-quick-look-dropzone-text"
+            v-translate
+        >
+            Drop to upload
+        </span>
+        <translate
+            v-else-if="is_a_folder"
+            key="folder"
+            class="document-quick-look-dropzone-text-forbidden"
+        >
+            You are not allowed to write in this folder
+        </translate>
+        <translate
+            v-else
+            key="file"
+            class="document-quick-look-dropzone-text-forbidden"
+        >
+            You are not allowed to update this file
+        </translate>
     </div>
 </template>
 <script>
 import dompurify from "dompurify";
-import { TYPE_EMBEDDED } from "../../../constants.js";
+import { TYPE_EMBEDDED, TYPE_FOLDER } from "../../../constants.js";
 
 export default {
     props: {
@@ -50,6 +83,9 @@ export default {
         },
         escaped_embedded_content() {
             return dompurify.sanitize(this.item.embedded_file_properties.content);
+        },
+        is_a_folder() {
+            return this.item.type === TYPE_FOLDER;
         }
     }
 };
