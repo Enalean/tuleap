@@ -1,10 +1,6 @@
 <?php
-
-use Tuleap\Git\BigObjectAuthorization\BigObjectAuthorizationManager;
-use Tuleap\Git\Gitolite\VersionDetector;
-
 /**
- * Copyright (c) Enalean, 2015 - 2018. All rights reserved
+ * Copyright (c) Enalean, 2015 - Present. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -21,6 +17,9 @@ use Tuleap\Git\Gitolite\VersionDetector;
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
+
+use Tuleap\Git\BigObjectAuthorization\BigObjectAuthorizationManager;
+use Tuleap\Git\Gitolite\VersionDetector;
 
 class Git_Gitolite_ProjectSerializer {
 
@@ -188,7 +187,7 @@ class Git_Gitolite_ProjectSerializer {
             return "";
         }
 
-        return " - VREF/MAX_NEWBIN_SIZE/" . self::OBJECT_SIZE_LIMIT ." = @all" . PHP_EOL;
+        return ' - VREF/TULEAP_MAX_NEWBIN_SIZE/' . self::OBJECT_SIZE_LIMIT ." = @all" . PHP_EOL;
     }
 
     /**
