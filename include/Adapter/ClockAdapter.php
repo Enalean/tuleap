@@ -28,6 +28,6 @@ class ClockAdapter implements Clock
 {
     public function now(): DateTime
     {
-        return new DateTime('now');
+        return new DateTime("@$_SERVER[REQUEST_TIME]");
     }
 }

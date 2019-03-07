@@ -45,9 +45,9 @@ class ClockImplTest extends TestCase
 
     public function testNowReturnsCurrentDateTime()
     {
-        $before_now = new DateTime('now');
+        $before_now = new DateTime("@$_SERVER[REQUEST_TIME]");
         $now        = $this->clock->now();
-        $after_now  = new DateTime('now');
+        $after_now  = new DateTime("@$_SERVER[REQUEST_TIME]");
 
         $this->assertGreaterThanOrEqual($before_now, $now);
         $this->assertLessThanOrEqual($after_now, $now);
