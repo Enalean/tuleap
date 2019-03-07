@@ -104,7 +104,8 @@ class UserNavPresenter
             $GLOBALS['Language']->getText('include_menu', 'login'),
             $this->url_redirect->buildReturnToLogin($_SERVER),
             'fa fa-sign-in',
-            ''
+            '',
+            []
         );
     }
 
@@ -114,7 +115,8 @@ class UserNavPresenter
             $GLOBALS['Language']->getText('include_menu', 'new_user'),
             '/account/register.php',
             'fa fa-user-plus',
-            ''
+            '',
+            []
         );
     }
 
@@ -139,7 +141,8 @@ class UserNavPresenter
                 $GLOBALS['Language']->getText('my_index', 'account_maintenance'),
                 '/account/',
                 'fa fa-cog',
-                'only-icon'
+                'only-icon',
+                []
             )
         );
     }

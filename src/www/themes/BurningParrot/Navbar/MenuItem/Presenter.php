@@ -34,11 +34,17 @@ class Presenter
     /** @var string */
     public $additional_classes;
 
-    public function __construct($label, $link, $icon, $additional_classes)
+    /**
+     * @var array
+     */
+    public $additional_attributes = [];
+
+    public function __construct($label, $link, $icon, $additional_classes, array $additional_attributes)
     {
-        $this->label              = $label;
-        $this->link               = $link;
-        $this->icon               = $icon;
-        $this->additional_classes = $additional_classes;
+        $this->label                 = $label;
+        $this->link                  = $link;
+        $this->icon                  = $icon;
+        $this->additional_classes    = $additional_classes;
+        $this->additional_attributes = $additional_attributes;
     }
 }

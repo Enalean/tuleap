@@ -6,7 +6,12 @@
 
     <form action="/admin/userlist.php" method="get" class="admin-sidebar-form">
         <div class="tlp-form-element">
-            <input type="search" class="tlp-search tlp-search-small admin-sidebar-search" name="user_name_search" placeholder="{{ users_search_placeholder }}">
+            <input type="search"
+                   class="tlp-search tlp-search-small admin-sidebar-search"
+                   name="user_name_search"
+                   placeholder="{{ users_search_placeholder }}"
+                   data-test="global-admin-search-user"
+            >
         </div>
     </form>
 

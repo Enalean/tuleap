@@ -4,7 +4,12 @@
     </h1>
 
     <nav class="admin-sidebar-section-nav">
-        <a href="/admin/forgeaccess.php" class="admin-sidebar-section-nav-item">{{ configuration_nav_global_access_rights }}</a>
+        <a href="/admin/forgeaccess.php"
+           class="admin-sidebar-section-nav-item"
+           data-test="global_access_right"
+        >
+            {{ configuration_nav_global_access_rights }}
+        </a>
         <a href="/admin/homepage.php" class="admin-sidebar-section-nav-item">{{ configuration_nav_homepage }}</a>
         <a href="/admin/svn/index.php?pane=index" class="admin-sidebar-section-nav-item">{{ configuration_nav_svn }}</a>
     </nav>
