@@ -20,16 +20,17 @@
 import Vue from "vue";
 import {
     addNewDocument,
+    addNewEmpty,
+    addNewFile,
     cancelUpload,
+    createNewVersion,
     deleteUserPreferenciesForFolderInProject,
     deleteUserPreferenciesForUIInProject,
     deleteUserPreferenciesForUnderConstructionModal,
     getFolderContent,
     getItem,
     getProject,
-    patchUserPreferenciesForFolderInProject,
-    createNewVersion,
-    addNewFile
+    patchUserPreferenciesForFolderInProject
 } from "../api/rest-querier.js";
 
 import {
@@ -41,7 +42,7 @@ import { loadFolderContent } from "./actions-helpers/load-folder-content.js";
 import { loadAscendantHierarchy } from "./actions-helpers/load-ascendant-hierarchy.js";
 import { uploadFile, uploadVersion } from "./actions-helpers/upload-file.js";
 import { flagItemAsCreated } from "./actions-helpers/flag-item-as-created.js";
-import { TYPE_FILE, TYPE_FOLDER } from "../constants.js";
+import { TYPE_EMPTY, TYPE_FILE, TYPE_FOLDER } from "../constants.js";
 import { addNewFolder } from "../api/rest-querier";
 
 export const loadRootFolder = async context => {
@@ -83,20 +84,27 @@ export const createNewItem = async (context, [item, parent, current_folder]) => 
     }
 
     try {
-        if (item.type === TYPE_FILE) {
-            let should_display_item = true;
-            if (!parent.is_expanded && parent.id !== current_folder.id) {
-                should_display_item = false;
-            }
-            await createNewFile(context, item, parent, should_display_item);
-        } else if (item.type === TYPE_FOLDER) {
-            const item_reference = await addNewFolder(item, parent.id);
+        let should_display_item = true;
+        let item_reference;
+        switch (item.type) {
+            case TYPE_FILE:
+                if (!parent.is_expanded && parent.id !== current_folder.id) {
+                    should_display_item = false;
+                }
+                await createNewFile(context, item, parent, should_display_item);
+                break;
+            case TYPE_FOLDER:
+                item_reference = await addNewFolder(item, parent.id);
 
-            return adjustFileToContentAfterItemCreation(item_reference.id);
-        } else {
-            const item_reference = await addNewDocument(item, parent.id);
+                return adjustFileToContentAfterItemCreation(item_reference.id);
+            case TYPE_EMPTY:
+                item_reference = await addNewEmpty(item, parent.id);
 
-            return adjustFileToContentAfterItemCreation(item_reference.id);
+                return adjustFileToContentAfterItemCreation(item_reference.id);
+            default:
+                item_reference = await addNewDocument(item, parent.id);
+
+                return adjustFileToContentAfterItemCreation(item_reference.id);
         }
     } catch (exception) {
         return handleErrorsForModal(context, exception);

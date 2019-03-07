@@ -39,7 +39,8 @@ export {
     cancelUpload,
     createNewVersion,
     addNewFile,
-    addNewFolder
+    addNewFolder,
+    addNewEmpty
 };
 
 async function getProject(project_id) {
@@ -65,6 +66,21 @@ async function addNewFile(item, parent_id) {
     const body = JSON.stringify(json_body);
 
     const response = await post("/api/docman_folders/" + parent_id + "/files", { headers, body });
+
+    return response.json();
+}
+
+async function addNewEmpty(item, parent_id) {
+    const headers = {
+        "content-type": "application/json"
+    };
+
+    const json_body = {
+        ...item
+    };
+    const body = JSON.stringify(json_body);
+
+    const response = await post("/api/docman_folders/" + parent_id + "/empties", { headers, body });
 
     return response.json();
 }

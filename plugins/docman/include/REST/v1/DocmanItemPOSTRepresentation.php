@@ -35,7 +35,7 @@ class DocmanItemPOSTRepresentation
      */
     public $parent_id;
     /**
-     * @var string Item type {@choice empty,wiki,link,embedded} {@from body} {@required true}
+     * @var string Item type {@choice wiki,link,embedded} {@from body} {@required true}
      */
     public $type;
     /**

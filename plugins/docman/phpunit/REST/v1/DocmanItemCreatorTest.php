@@ -24,6 +24,7 @@ use Luracast\Restler\RestException;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStreamDirectory;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Docman\REST\v1\Folders\DocmanEmptyPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Folders\DocmanFolderPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Folders\DocmanPOSTFilesRepresentation;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
@@ -72,7 +73,7 @@ class DocmanItemCreatorTest extends TestCase
         $project      = \Mockery::mock(\Project::class);
         $current_time = new \DateTimeImmutable();
 
-        $post_representation            = new DocmanItemPOSTRepresentation();
+        $post_representation            = new DocmanEmptyPOSTRepresentation();
         $post_representation->type      = ItemRepresentation::TYPE_EMPTY;
         $post_representation->title     = 'Title';
         $post_representation->parent_id = 11;
@@ -97,13 +98,12 @@ class DocmanItemCreatorTest extends TestCase
 
         $this->creator_visitor->shouldReceive('visitEmpty')->once();
 
-        $created_item_representation = $item_creator->create(
+        $created_item_representation = $item_creator->createEmpty(
             $parent_item,
             $user,
-            $project,
             $post_representation,
             $current_time,
-            true
+            $project
         );
 
         $this->assertSame(12, $created_item_representation->id);

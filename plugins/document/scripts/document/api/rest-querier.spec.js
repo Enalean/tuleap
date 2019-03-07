@@ -20,6 +20,7 @@
 import {
     addNewDocument,
     addNewFolder,
+    addNewEmpty,
     getFolderContent,
     getProject,
     getItem,
@@ -368,6 +369,31 @@ describe("rest-querier", () => {
             );
 
             expect(tlp.post).toHaveBeenCalledWith("/api/docman_folders/2/folders", {
+                headers: jasmine.objectContaining({ "content-type": "application/json" }),
+                body: item
+            });
+        });
+    });
+
+    describe("addNewEmpty()", () => {
+        it("Create a new empty document", async () => {
+            const item = JSON.stringify({
+                title: "my empty document",
+                description: "",
+                type: "empty"
+            });
+            mockFetchSuccess(tlp.post, { return_json: { id: 66, uri: "path/to/66" } });
+
+            await addNewEmpty(
+                {
+                    title: "my empty document",
+                    description: "",
+                    type: "empty"
+                },
+                2
+            );
+
+            expect(tlp.post).toHaveBeenCalledWith("/api/docman_folders/2/empties", {
                 headers: jasmine.objectContaining({ "content-type": "application/json" }),
                 body: item
             });

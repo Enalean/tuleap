@@ -26,6 +26,7 @@ use Luracast\Restler\RestException;
 use PFUser;
 use Project;
 use Rule_Regexp;
+use Tuleap\Docman\REST\v1\Folders\DocmanEmptyPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Folders\DocmanFolderPOSTRepresentation;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
 use Tuleap\Docman\Upload\Document\DocumentToUploadCreator;
@@ -102,25 +103,6 @@ class DocmanItemCreator
         );
 
         switch ($docman_item_post_representation->type) {
-            case ItemRepresentation::TYPE_EMPTY:
-                if (!$this->checkAllItemPropertiesAreNull($docman_item_post_representation)) {
-                    throw new RestException(
-                        400,
-                        sprintf('The type "empty" and the properties given does not match')
-                    );
-                }
-                return $this->createDocument(
-                    PLUGIN_DOCMAN_ITEM_TYPE_EMPTY,
-                    $current_time,
-                    $parent_item,
-                    $user,
-                    $project,
-                    $docman_item_post_representation->title,
-                    $docman_item_post_representation->description,
-                    null,
-                    null,
-                    null
-                );
             case ItemRepresentation::TYPE_WIKI:
                 if (! $project->usesWiki()) {
                     throw new RestException(
@@ -346,11 +328,39 @@ class DocmanItemCreator
         );
     }
 
-    private function checkAllItemPropertiesAreNull(DocmanItemPOSTRepresentation $docman_item_post_representation)
-    {
-        return ($docman_item_post_representation->wiki_properties === null
-            && $docman_item_post_representation->link_properties === null
-            && $docman_item_post_representation->embedded_properties === null
+    /**
+     * @throws RestException
+     * @throws \Tuleap\Docman\CannotInstantiateItemWeHaveJustCreatedInDBException
+     */
+    public function createEmpty(
+        Docman_Item $parent_item,
+        PFUser $user,
+        DocmanEmptyPOSTRepresentation $representation,
+        \DateTimeImmutable $current_time,
+        Project $project
+    ): CreatedItemRepresentation {
+        if ($this->item_factory->doesTitleCorrespondToExistingDocument($representation->title, $parent_item->getId())) {
+            throw new RestException(400, "A document with same title already exists in the given folder.");
+        }
+
+        $this->checkDocumentIsNotBeingUploaded(
+            $parent_item,
+            PLUGIN_DOCMAN_ITEM_TYPE_EMPTY,
+            $representation->title,
+            $current_time
+        );
+
+        return $this->createDocument(
+            PLUGIN_DOCMAN_ITEM_TYPE_EMPTY,
+            $current_time,
+            $parent_item,
+            $user,
+            $project,
+            $representation->title,
+            $representation->description,
+            null,
+            null,
+            null
         );
     }
 

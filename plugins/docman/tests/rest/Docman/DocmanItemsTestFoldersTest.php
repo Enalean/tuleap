@@ -23,6 +23,7 @@ declare(strict_types = 1);
 namespace Tuleap\Docman\rest\v1;
 
 use Guzzle\Http\Client;
+use REST_TestDataBuilder;
 use Tuleap\Docman\rest\DocmanBase;
 use Tuleap\Docman\rest\DocmanDataBuilder;
 
@@ -187,13 +188,12 @@ class DocmanItemsTestFoldersTest extends DocmanBase
 
         $response2 = $this->getResponse(
             $this->client->post(
-                'docman_items',
+                'docman_folders/' . $root_id . '/empties',
                 null,
                 json_encode(
                     [
                         'title'     => $document_name,
                         'parent_id' => $root_id,
-                        'type'      => 'empty'
                     ]
                 )
             )
@@ -262,7 +262,6 @@ class DocmanItemsTestFoldersTest extends DocmanBase
             [
                 'title'       => 'My Folder',
                 'description' => 'A Folder description',
-                'parent_id'   => $root_id
             ]
         );
 
@@ -285,7 +284,6 @@ class DocmanItemsTestFoldersTest extends DocmanBase
             [
                 'title'       => 'My Folder',
                 'description' => 'A Folder description',
-                'parent_id'   => $root_id
             ]
         );
 
@@ -295,5 +293,90 @@ class DocmanItemsTestFoldersTest extends DocmanBase
         );
 
         $this->assertEquals(400, $response->getStatusCode());
+    }
+
+    /**
+     * @depends testGetRootId
+     */
+    public function testPostEmptyDocument($root_id)
+    {
+        $headers = ['Content-Type' => 'application/json'];
+        $query   = json_encode(
+            [
+                'title'       => 'Custom title',
+                'description' => 'A description',
+            ]
+        );
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post('docman_folders/' . $root_id . '/empties', $headers, $query)
+        );
+
+        $this->assertEquals(201, $response->getStatusCode());
+    }
+
+    /**
+     * @depends testGetRootId
+     */
+    public function testPostDocumentIsRejectedIfDocumentAlreadyExists($root_id)
+    {
+        $stored_items = $this->getResponseByName(
+            REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('docman_items/' . $root_id . '/docman_items')
+        )->json();
+        $folder_1     = $this->findItemByTitle($stored_items, 'folder 1');
+
+        $headers = ['Content-Type' => 'application/json'];
+        $query   = json_encode(
+            [
+                'title'       => 'Item A',
+                'description' => 'A description',
+            ]
+        );
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post('docman_folders/' . $folder_1['id'] . '/empties', $headers, $query)
+        );
+        $this->assertEquals(400, $response->getStatusCode());
+    }
+
+    /**
+     * @depends testGetRootId
+     */
+    public function testPostReturns403WhenPermissionDenied(int $root_id): void
+    {
+        $stored_items = $this->getResponseByName(
+            REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('docman_items/' . $root_id . '/docman_items')
+        )->json();
+        $folder_3     = $this->findItemByTitle($stored_items, 'folder 3');
+
+        $query = json_encode(
+            [
+                'title'       => 'A title',
+                'description' => 'A description',
+            ]
+        );
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post('docman_folders/' . $folder_3['id'] . '/empties', null, $query)
+        );
+        $this->assertEquals(403, $response->getStatusCode());
+    }
+
+    /**
+     * Find first item in given array of items which has given title.
+     * @return array|null Found item. null otherwise.
+     */
+    private function findItemByTitle(array $items, $title)
+    {
+        $index = array_search($title, array_column($items, 'title'));
+        if ($index === false) {
+            return null;
+        }
+        return $items[$index];
     }
 }
