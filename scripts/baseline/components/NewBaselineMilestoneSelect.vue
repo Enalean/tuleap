@@ -21,25 +21,25 @@
     <div class="new-baseline-modal-milestone-list">
         <div class="new-baseline-modal-milestone-list-scrollbar">
             <div v-if="milestones.length === 0">
-                <p v-translate
-                   class="tlp-text-muted"
+                <p class="tlp-text-muted"
                    data-test-type="empty-milestones"
+                   v-translate
                 >
                     No milestone available
                 </p>
             </div>
-            <div v-else
+            <div v-bind:key="milestone.id"
+                 v-else
                  v-for="milestone in sorted_milestones"
-                 v-bind:key="milestone.id"
             >
                 <label class="tlp-label tlp-radio"
                        data-test-type="milestone"
                 >
-                    <input type="radio"
-                           name="label"
+                    <input name="label"
+                           required
+                           type="radio"
                            v-bind:value="milestone.id"
                            v-on:change="onMilestoneSelected"
-                           required
                     >
                     {{ milestone.label }}
                 </label>
