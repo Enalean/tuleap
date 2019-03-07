@@ -2,7 +2,8 @@
   "autoload": {
     "psr-4": {
       "Tuleap\\": ["common/"],
-      "Tuleap\\Core\\": ["core/"]
+      "Tuleap\\Core\\": ["core/"],
+      "TuleapCfg\\": ["tuleap-cfg/"]
     },
     "classmap": ["common/", "embedded_vendor/"],
     "exclude-from-classmap": ["common/wiki/phpwiki/"],

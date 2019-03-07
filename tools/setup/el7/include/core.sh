@@ -85,44 +85,6 @@ EOF
     fi
 }
 
-function _configureApache() {
-    local has_apache_been_configured="false"
-
-    if ! ${grep} --quiet "^User.*${tuleap_unix_user}" ${httpd_conf}; then
-        ${sed} --in-place "s@^User.*@User ${tuleap_unix_user}@g" ${httpd_conf}
-        has_apache_been_configured="true"
-    fi
-
-    if ! ${grep} --quiet "^Group.*${tuleap_unix_user}" ${httpd_conf}; then
-        ${sed} --in-place "s@^Group.*@Group ${tuleap_unix_user}@g" ${httpd_conf}
-        has_apache_been_configured="true"
-    fi
-
-    if ! ${grep} --quiet "Listen.*:8080" ${httpd_conf}; then
-        _phpConfigureModule "apache"
-        has_apache_been_configured="true"
-    fi
-
-    if [ -f ${httpd_conf_ssl} ] && \
-        ${grep} --quiet "SSLEngine.*on" ${httpd_conf_ssl}; then
-        ${sed} --in-place "s@^SSLEngine.*on@SSLEngine off@g" ${httpd_conf_ssl}
-        has_apache_been_configured="true"
-    fi
-
-    if [ -f ${httpd_conf_ssl} ] && \
-        ${grep} --quiet "^Listen" ${httpd_conf_ssl}; then
-        ${sed} --in-place "s@^Listen@#Listen@g" ${httpd_conf_ssl}
-        has_apache_been_configured="true"
-    fi
-
-    if [ ${has_apache_been_configured} = "true" ]; then
-        _serviceRestart "httpd.service"
-        _infoMessage "Apache has been configured"
-    else
-        _infoMessage "Apache is already configured"
-    fi
-}
-
 function _configureNSSMySQL() {
     local has_libnss_mysql_been_configured="false"
     local libnss_conf="/etc/libnss-mysql.cfg"

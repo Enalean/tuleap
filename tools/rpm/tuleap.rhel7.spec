@@ -502,6 +502,7 @@ done
 # Install Tuleap executables
 %{__install} -d $RPM_BUILD_ROOT/%{_bindir}
 %{__install} src/utils/tuleap $RPM_BUILD_ROOT/%{_bindir}/tuleap
+%{__ln_s} %{APP_DIR}/src/tuleap-cfg/tuleap-cfg.php $RPM_BUILD_ROOT/%{_bindir}/tuleap-cfg
 
 %{__install} -d $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
 %{__install} src/utils/gotohell $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
@@ -805,6 +806,7 @@ fi
 %{APP_DIR}/src/etc
 %{APP_DIR}/src/forgeupgrade
 %{APP_DIR}/src/templates
+%{APP_DIR}/src/tuleap-cfg
 %{APP_DIR}/src/utils
 # Split src/www for src/www/themes
 %dir %{APP_DIR}/src/www
@@ -881,6 +883,7 @@ fi
 
 # Executables (/usr/bin)
 %attr(00755,%{APP_USER},%{APP_USER}) %{_bindir}/tuleap
+%attr(00755,root,root) %{_bindir}/tuleap-cfg
 
 # Executables (/usr/lib/tuleap/bin)
 %attr(755,%{APP_USER},%{APP_USER}) %dir %{APP_LIB_DIR}
