@@ -41,8 +41,8 @@ describe("NewBaselineMilestoneSelect", () => {
         beforeEach(async () => {
             wrapper.setProps({
                 milestones: [
-                    { id: 1, label: "first milestone" },
                     { id: 2, label: "second milestone" },
+                    { id: 1, label: "first milestone" },
                     { id: 3, label: "a milestone" }
                 ]
             });
@@ -57,9 +57,9 @@ describe("NewBaselineMilestoneSelect", () => {
         describe("sorted_milestones", () => {
             it("Sorts milestones by label", () => {
                 expect(wrapper.vm.sorted_milestones).toEqual([
-                    { id: 3, label: "a milestone" },
                     { id: 1, label: "first milestone" },
-                    { id: 2, label: "second milestone" }
+                    { id: 2, label: "second milestone" },
+                    { id: 3, label: "a milestone" }
                 ]);
             });
         });

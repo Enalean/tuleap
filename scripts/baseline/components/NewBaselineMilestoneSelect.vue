@@ -59,13 +59,13 @@ export default {
     computed: {
         sorted_milestones() {
             return [...this.milestones].sort(function(milestone_a, milestone_b) {
-                const label_a = milestone_a.label.toUpperCase();
-                const label_b = milestone_b.label.toUpperCase();
+                const id_a = milestone_a.id;
+                const id_b = milestone_b.id;
 
-                if (label_a < label_b) {
+                if (id_a < id_b) {
                     return -1;
                 }
-                if (label_a > label_b) {
+                if (id_a > id_b) {
                     return 1;
                 }
                 return 0;
