@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2011-Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -235,16 +235,14 @@ class Plugin implements PFO_Plugin {
         $dirs   = array($dir.$GLOBALS['sys_user_theme'], $dir.'default');
         $dir    = '/'. $pluginName .'/themes/';
         $themes = array($dir.$GLOBALS['sys_user_theme'], $dir.'default');
-        $found = false;
-        while (!$found && (list($kd, $dir) = each($dirs))) {
-            reset($roots);
-            while (!$found && (list($kr, $root) = each($roots))) {
-                if (is_dir($root.$dir)) {
-                    $found = $paths[$kr].$themes[$kd];
+        foreach ($dirs as $kd => $dir) {
+            foreach ($roots as $kr => $root) {
+                if (is_dir($root.$dir) && $paths[$kr].$themes[$kd]) {
+                    return $paths[$kr].$themes[$kd];
                 }
             }
         }
-        return $found;
+        return false;
     }
 
     /**

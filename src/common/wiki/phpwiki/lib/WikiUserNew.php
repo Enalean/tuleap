@@ -1891,7 +1891,8 @@ class UserPreferences
             // fix old-style prefs
             } elseif (is_numeric($name) and is_array($packed_pref)) {
             	if (count($packed_pref) == 1) {
-            	    list($name,$value) = each($packed_pref);
+                    $name  = key($packed_pref);
+                    $value = current($packed_pref);
             	    $prefs[$name] = $value;
             	}
             } else {
