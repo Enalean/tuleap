@@ -35,13 +35,9 @@ class DocmanItemPOSTRepresentation
      */
     public $parent_id;
     /**
-     * @var string Item type {@choice wiki,link,embedded} {@from body} {@required true}
+     * @var string Item type {@choice link,embedded} {@from body} {@required true}
      */
     public $type;
-    /**
-     * @var WikiPropertiesPOSTRepresentation {@type \Tuleap\Docman\REST\v1\WikiPropertiesPOSTRepresentation} {@from body} {@required false}
-     */
-    public $wiki_properties = null;
     /**
      * @var LinkPropertiesPOSTRepresentation {@type \Tuleap\Docman\REST\v1\LinkPropertiesPOSTRepresentation} {@from body} {@required false}
      */

@@ -23,7 +23,6 @@
 namespace Tuleap\Docman\rest\v1;
 
 use Guzzle\Http\Client;
-use REST_TestDataBuilder;
 use Tuleap\Docman\rest\DocmanBase;
 use Tuleap\Docman\rest\DocmanDataBuilder;
 
@@ -289,57 +288,6 @@ class DocmanItemsTest extends DocmanBase
         $this->assertEquals($json_parents[2]['title'], 'folder 2');
     }
 
-
-
-    /**
-     * @depends testGetRootId
-     */
-    public function testPostWikiDocument(int $root_id): void
-    {
-        $headers = ['Content-Type' => 'application/json'];
-        $wiki_properties = ['page_name' => 'Ten steps to become a Tuleap'];
-        $query = json_encode(
-            [
-                'title'           => 'How to become a Tuleap',
-                'description'     => 'A description',
-                'parent_id'       => $root_id,
-                'type'            => 'wiki',
-                'wiki_properties' => $wiki_properties
-            ]
-        );
-
-        $response = $this->getResponseByName(
-            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->post('docman_items', $headers, $query)
-        );
-
-        $this->assertEquals(201, $response->getStatusCode());
-    }
-
-    /**
-     * @depends testGetRootId
-     */
-    public function testPostWikiReturns400IfTypeAndPropertiesDoesNotMatch(int $root_id): void
-    {
-        $headers = ['Content-Type' => 'application/json'];
-        $wiki_properties = ['page_name' => 'Ten steps to become a Tuleap'];
-        $query = json_encode(
-            [
-                'title'           => 'How to fail item creation',
-                'description'     => 'A description',
-                'parent_id'       => $root_id,
-                'type'            => 'empty',
-                'wiki_properties' => $wiki_properties
-            ]
-        );
-
-        $response = $this->getResponseByName(
-            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->post('docman_items', $headers, $query)
-        );
-        $this->assertEquals(400, $response->getStatusCode());
-    }
-
     /**
      * @depends testGetRootId
      */
@@ -370,15 +318,15 @@ class DocmanItemsTest extends DocmanBase
      */
     public function testPostLinkReturns400IfTypeAndPropertiesDoesNotMatch(int $root_id): void
     {
-        $headers         = ['Content-Type' => 'application/json'];
-        $wiki_properties = ['page_name' => 'Ten steps to become a Tuleap'];
-        $query           = json_encode(
+        $headers             = ['Content-Type' => 'application/json'];
+        $embedded_properties = ['content' => 'Ten steps to become a Tuleap'];
+        $query               = json_encode(
             [
-                'title'           => 'To the future',
-                'description'     => 'A description',
-                'parent_id'       => $root_id,
-                'type'            => 'link',
-                'wiki_properties' => $wiki_properties
+                'title'               => 'To the future',
+                'description'         => 'A description',
+                'parent_id'           => $root_id,
+                'type'                => 'link',
+                'embedded_properties' => $embedded_properties
             ]
         );
 

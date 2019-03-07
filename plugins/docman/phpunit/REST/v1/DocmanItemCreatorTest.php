@@ -27,6 +27,8 @@ use PHPUnit\Framework\TestCase;
 use Tuleap\Docman\REST\v1\Folders\DocmanEmptyPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Folders\DocmanFolderPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Folders\DocmanPOSTFilesRepresentation;
+use Tuleap\Docman\REST\v1\Folders\DocmanWikiPOSTRepresentation;
+use Tuleap\Docman\REST\v1\Folders\WikiPropertiesPOSTRepresentation;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
 use Tuleap\Docman\Upload\Document\DocumentToUpload;
 use Tuleap\Docman\Upload\Document\DocumentToUploadCreator;
@@ -124,11 +126,10 @@ class DocmanItemCreatorTest extends TestCase
         $project      = \Mockery::mock(\Project::class);
         $current_time = new \DateTimeImmutable();
 
-        $post_representation                  = new DocmanItemPOSTRepresentation();
-        $post_representation->type            = ItemRepresentation::TYPE_WIKI;
-        $post_representation->title           = 'Title';
-        $post_representation->parent_id       = 11;
-        $post_representation->wiki_properties = json_decode(json_encode(["page_name" => "Monchichi"]));
+        $post_representation                             = new DocmanWikiPOSTRepresentation();
+        $post_representation->title                      = 'Title';
+        $post_representation->wiki_properties            = new WikiPropertiesPOSTRepresentation();
+        $post_representation->wiki_properties->page_name = "Monchichi";
 
         $this->document_ongoing_upload_retriever->shouldReceive('isThereAlreadyAnUploadOngoing')->andReturns(false);
         $parent_item->shouldReceive('getId')->andReturns(11);
@@ -136,7 +137,7 @@ class DocmanItemCreatorTest extends TestCase
         $project->shouldReceive('getID')->andReturns(102);
         $project->shouldReceive('usesWiki')->andReturn(true);
 
-        $created_item = \Mockery::mock(\Docman_Empty::class);
+        $created_item = \Mockery::mock(\Docman_Wiki::class);
         $created_item->shouldReceive('getId')->andReturns(12);
         $created_item->shouldReceive('getParentId')->andReturns(11);
         $created_item->makePartial();
@@ -149,15 +150,14 @@ class DocmanItemCreatorTest extends TestCase
 
         $this->item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
 
-        $this->creator_visitor->shouldReceive('visitEmpty')->once();
+        $this->creator_visitor->shouldReceive('visitWiki')->once();
 
-        $created_item_representation = $item_creator->create(
+        $created_item_representation = $item_creator->createWiki(
             $parent_item,
             $user,
-            $project,
             $post_representation,
             $current_time,
-            true
+            $project
         );
 
         $this->assertSame(12, $created_item_representation->id);
@@ -178,11 +178,10 @@ class DocmanItemCreatorTest extends TestCase
         $project      = \Mockery::mock(\Project::class);
         $current_time = new \DateTimeImmutable();
 
-        $post_representation                  = new DocmanItemPOSTRepresentation();
-        $post_representation->type            = ItemRepresentation::TYPE_WIKI;
-        $post_representation->title           = 'Title';
-        $post_representation->parent_id       = 11;
-        $post_representation->wiki_properties = json_decode(json_encode(["page_name" => "Monchichi"]));
+        $post_representation                             = new DocmanWikiPOSTRepresentation();
+        $post_representation->title                      = 'Title';
+        $post_representation->wiki_properties            = new WikiPropertiesPOSTRepresentation();
+        $post_representation->wiki_properties->page_name = "Monchichi";
 
         $this->document_ongoing_upload_retriever->shouldReceive('isThereAlreadyAnUploadOngoing')->andReturns(false);
         $parent_item->shouldReceive('getId')->andReturns(11);
@@ -206,13 +205,12 @@ class DocmanItemCreatorTest extends TestCase
         $this->expectException(RestException::class);
         $this->expectExceptionCode(400);
 
-        $item_creator->create(
+        $item_creator->createWiki(
             $parent_item,
             $user,
-            $project,
             $post_representation,
             $current_time,
-            true
+            $project
         );
     }
 
