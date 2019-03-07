@@ -66,12 +66,12 @@ class FRSReleasePermissionManagerTest extends TuleapTestCase
 
         $this->project = aMockProject()->withId(100)->build();
         $this->user    = mock('PFUser');
-        $this->release = mock('FrsRelease');
+        $this->release = \Mockery::spy(\FRSRelease::class);
     }
 
     public function itReturnsTrueWhenReleaseIsHiddenAndUserIsFrsAdmin()
     {
-        stub($this->release)->isHidden()->returns(true);
+        $this->release->shouldReceive('isHidden')->andReturns(true);
         stub($this->release_factory)->userCanAdmin($this->user, $this->project->getID())->returns(true);
 
         $this->assertTrue(
@@ -81,7 +81,7 @@ class FRSReleasePermissionManagerTest extends TuleapTestCase
 
     public function itReturnsFalseWhenReleaseIsHiddenAndUserDoesntHaveAdminPermissions()
     {
-        stub($this->release)->isHidden()->returns(true);
+        $this->release->shouldReceive('isHidden')->andReturns(true);
         stub($this->release_factory)->userCanAdmin($this->user, $this->project->getID())->returns(false);
 
         $this->assertFalse(
@@ -91,7 +91,7 @@ class FRSReleasePermissionManagerTest extends TuleapTestCase
 
     public function itReturnsTrueWHenReleaseIsActiveAndUserCanAccessFrsServiceAndUserCanAccessRelease()
     {
-        stub($this->release)->isActive()->returns(true);
+        $this->release->shouldReceive('isActive')->andReturns(true);
         stub($this->frs_service_permission_manager)->userCanRead($this->project, $this->user)->returns(true);
         stub($this->release_factory)->userCanRead(
             $this->project->getID(),
@@ -106,7 +106,7 @@ class FRSReleasePermissionManagerTest extends TuleapTestCase
 
     public function itReturnsFalseWhenReleaseIsActiveAndUserCannotAccessFrsService()
     {
-        stub($this->release)->isActive()->returns(true);
+        $this->release->shouldReceive('isActive')->andReturns(true);
         stub($this->frs_service_permission_manager)->userCanRead($this->project, $this->user)->returns(false);
 
         $this->assertFalse(
@@ -116,7 +116,7 @@ class FRSReleasePermissionManagerTest extends TuleapTestCase
 
     public function itReturnsFalseWHenReleaseIsActiveAndUserCanAccessFrsServiceAndUserCanNotAccessRelease()
     {
-        stub($this->release)->isActive()->returns(true);
+        $this->release->shouldReceive('isActive')->andReturns(true);
         stub($this->frs_service_permission_manager)->userCanRead($this->project, $this->user)->returns(true);
         stub($this->release_factory)->userCanRead(
             $this->project->getID(),

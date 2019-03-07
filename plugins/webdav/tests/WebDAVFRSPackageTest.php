@@ -26,7 +26,6 @@ Mock::generate('FRSReleaseFactory');
 Mock::generate('PFUser');
 Mock::generate('Project');
 Mock::generate('FRSPackage');
-Mock::generate('FRSRelease');
 Mock::generate('WebDAVFRSRelease');
 Mock::generate('PermissionsManager');
 Mock::generate('WebDAVUtils');
@@ -64,7 +63,7 @@ class WebDAVFRSPackageTest extends TuleapTestCase {
         $webDAVFRSPackage = new WebDAVFRSPackageTestVersion($this);
         $webDAVFRSPackage->setReturnValue('getWebDAVRelease', $release);
 
-        $FRSRelease = new MockFRSRelease();
+        $FRSRelease = \Mockery::spy(FRSRelease::class);
         $webDAVFRSPackage->setReturnValue('getReleaseList', array($FRSRelease));
 
         $this->assertEqual($webDAVFRSPackage->getChildren(), array());
@@ -82,7 +81,7 @@ class WebDAVFRSPackageTest extends TuleapTestCase {
         $webDAVFRSPackage = new WebDAVFRSPackageTestVersion($this);
         $webDAVFRSPackage->setReturnValue('getWebDAVRelease', $release);
 
-        $FRSRelease = new MockFRSRelease();
+        $FRSRelease = \Mockery::spy(FRSRelease::class);
         $webDAVFRSPackage->setReturnValue('getReleaseList', array($FRSRelease));
 
         $this->assertEqual($webDAVFRSPackage->getChildren(), array($release));
@@ -94,7 +93,7 @@ class WebDAVFRSPackageTest extends TuleapTestCase {
      */
     function testGetChildFailWithNotExist() {
 
-        $FRSRelease = new MockFRSRelease();
+        $FRSRelease = \Mockery::spy(FRSRelease::class);
         $WebDAVRelease = new MockWebDAVFRSRelease();
         $WebDAVRelease->setReturnValue('exist', false);
 
@@ -115,7 +114,7 @@ class WebDAVFRSPackageTest extends TuleapTestCase {
      */
     function testGetChildFailWithUserCanNotRead() {
 
-        $FRSRelease = new MockFRSRelease();
+        $FRSRelease = \Mockery::spy(FRSRelease::class);
         $WebDAVRelease = new MockWebDAVFRSRelease();
         $WebDAVRelease->setReturnValue('exist', true);
         $WebDAVRelease->setReturnValue('userCanRead', false);
@@ -137,7 +136,7 @@ class WebDAVFRSPackageTest extends TuleapTestCase {
      */
     function testSucceedGetChild() {
 
-        $FRSRelease = new MockFRSRelease();
+        $FRSRelease = \Mockery::spy(FRSRelease::class);
         $WebDAVRelease = new MockWebDAVFRSRelease();
         $WebDAVRelease->setReturnValue('exist', true);
         $WebDAVRelease->setReturnValue('userCanRead', true);
@@ -401,7 +400,7 @@ class WebDAVFRSPackageTest extends TuleapTestCase {
 
         $webDAVFRSPackage = new WebDAVFRSPackageTestVersion($this);
         $webDAVFRSPackage->setReturnValue('userCanWrite', true);
-        $release = new MockFRSRelease();
+        $release = \Mockery::spy(FRSRelease::class);
         $webDAVFRSPackage->setReturnValue('getReleaseList', array($release));
         $this->expectException('Sabre_DAV_Exception_Forbidden');
 

@@ -206,7 +206,7 @@ XML;
         stub($this->package_dao)->createFromArray()->returns($package_id);
 
         $expected_release_array = array(
-            'release_id' => null,
+            'release_id' => 0,
             'package_id' => $package_id,
             'name' => 'release',
             'notes' => 'some notes',
@@ -245,9 +245,9 @@ XML;
 
         $user_id    = 42;
         $package_id = 1337;
-        $release    = mock('FRSRelease');
+        $release    = \Mockery::spy(FRSRelease::class);
 
-        stub($release)->getGroupID()->returns(123);
+        $release->shouldReceive('getGroupId')->andReturn(123);
         stub($this->user_finder)->getUser()->returns(new PFUser(array('user_id'=> $user_id)));
         stub($this->package_dao)->createFromArray()->returns($package_id);
         stub($this->release_dao)->createFromArray()->returns(47);
@@ -310,7 +310,7 @@ XML;
 
         $release_id=8665;
         $expected_release_array = array(
-            'release_id' => null,
+            'release_id' => 0,
             'package_id' => $package_id,
             'name' => 'release',
             'notes' => 'some notes',
@@ -357,8 +357,8 @@ XML;
         $expected_file_array_with_id['id'] = $file_id;
         stub($this->file_dao)->searchById($file_id)->returnsDar($expected_file_array_with_id);
 
-        $release = mock('FRSRelease');
-        stub($release)->getGroupID()->returns(123);
+        $release = \Mockery::spy(FRSRelease::class);
+        $release->shouldReceive('getGroupId')->andReturn(123);
         stub($this->release_factory)->getFRSReleaseFromDb()->returns($release);
 
         $frs_mapping = array();
@@ -414,7 +414,7 @@ XML;
 
         $release_id=8665;
         $expected_release_array = array(
-            'release_id' => null,
+            'release_id' => 0,
             'package_id' => $package_id,
             'name' => 'release',
             'notes' => 'some notes',
@@ -432,8 +432,8 @@ XML;
 
         stub($this->link_dao)->create()->returns(true);
 
-        $release = mock('FRSRelease');
-        stub($release)->getGroupID()->returns(123);
+        $release = \Mockery::spy(FRSRelease::class);
+        $release->shouldReceive('getGroupId')->andReturn(123);
         stub($this->release_factory)->getFRSReleaseFromDb()->returns($release);
 
         $frs_mapping = array();

@@ -27,7 +27,6 @@ Mock::generate('Project');
 Mock::generate('FRSPackage');
 Mock::generate('WebDAVFRSPackage');
 Mock::generate('FRSReleaseFactory');
-Mock::generate('FRSRelease');
 Mock::generate('FRSFileFactory');
 Mock::generate('FRSFile');
 Mock::generate('WebDAVFRSFile');
@@ -306,10 +305,10 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
     function testUserCanReadFailureReleaseDeletedUserHaveNoPermissions() {
 
         $webDAVFRSRelease = new WebDAVFRSReleaseTestVersion($this);
-        $release = new MockFRSRelease();
-        $release->setReturnValue('isActive', false);
-        $release->setReturnValue('userCanRead', false);
-        $release->setReturnValue('isHidden', false);
+        $release = \Mockery::spy(FRSRelease::class);
+        $release->shouldReceive('isActive')->andReturns(false);
+        $release->shouldReceive('userCanRead')->andReturns(false);
+        $release->shouldReceive('isHidden')->andReturns(false);
         $webDAVFRSRelease->setReturnValue('userIsAdmin', false);
 
         $webDAVFRSRelease->setReturnValue('getRelease', $release);
@@ -325,10 +324,10 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
     function testUserCanReadFailureActiveUserCanNotRead() {
 
         $webDAVFRSRelease = new WebDAVFRSReleaseTestVersion($this);
-        $release = new MockFRSRelease();
-        $release->setReturnValue('isActive', true);
-        $release->setReturnValue('userCanRead', false);
-        $release->setReturnValue('isHidden', false);
+        $release = \Mockery::spy(FRSRelease::class);
+        $release->shouldReceive('isActive')->andReturns(true);
+        $release->shouldReceive('userCanRead')->andReturns(false);
+        $release->shouldReceive('isHidden')->andReturns(false);
         $webDAVFRSRelease->setReturnValue('userIsAdmin', false);
 
         $webDAVFRSRelease->setReturnValue('getRelease', $release);
@@ -344,10 +343,10 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
     function testUserCanReadFailureDeletedUserCanRead() {
 
         $webDAVFRSRelease = new WebDAVFRSReleaseTestVersion($this);
-        $release = new MockFRSRelease();
-        $release->setReturnValue('isActive', false);
-        $release->setReturnValue('userCanRead', true);
-        $release->setReturnValue('isHidden', false);
+        $release = \Mockery::spy(FRSRelease::class);
+        $release->shouldReceive('isActive')->andReturns(false);
+        $release->shouldReceive('userCanRead')->andReturns(true);
+        $release->shouldReceive('isHidden')->andReturns(false);
         $webDAVFRSRelease->setReturnValue('userIsAdmin', false);
 
         $webDAVFRSRelease->setReturnValue('getRelease', $release);
@@ -363,10 +362,10 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
     function testUserCanReadSucceedActiveUserCanRead() {
 
         $webDAVFRSRelease = new WebDAVFRSReleaseTestVersion($this);
-        $release = new MockFRSRelease();
-        $release->setReturnValue('isActive', true);
-        $release->setReturnValue('userCanRead', true);
-        $release->setReturnValue('isHidden', false);
+        $release = \Mockery::spy(FRSRelease::class);
+        $release->shouldReceive('isActive')->andReturns(true);
+        $release->shouldReceive('userCanRead')->andReturns(true);
+        $release->shouldReceive('isHidden')->andReturns(false);
         $webDAVFRSRelease->setReturnValue('userIsAdmin', false);
 
         $webDAVFRSRelease->setReturnValue('getRelease', $release);
@@ -382,11 +381,10 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
     function testUserCanReadFailureHiddenNotAdmin() {
 
         $webDAVFRSRelease = new WebDAVFRSReleaseTestVersion($this);
-        $release = new MockFRSRelease();
-        $release->setReturnValue('isActive', false);
-        $release->setReturnValue('userCanRead', false);
-        $release->setReturnValue('isHidden', true);
-        $webDAVFRSRelease->setReturnValue('userIsAdmin', false);
+        $release = \Mockery::spy(FRSRelease::class);
+        $release->shouldReceive('isActive')->andReturns(false);
+        $release->shouldReceive('userCanRead')->andReturns(false);
+        $release->shouldReceive('isHidden')->andReturns(true);
 
         $webDAVFRSRelease->setReturnValue('getRelease', $release);
         $user = mock('PFUser');
@@ -401,10 +399,10 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
     function testUserCanReadFailureHiddenNotAdminUserCanRead() {
 
         $webDAVFRSRelease = new WebDAVFRSReleaseTestVersion($this);
-        $release = new MockFRSRelease();
-        $release->setReturnValue('isActive', false);
-        $release->setReturnValue('userCanRead', true);
-        $release->setReturnValue('isHidden', true);
+        $release = \Mockery::spy(FRSRelease::class);
+        $release->shouldReceive('isActive')->andReturns(false);
+        $release->shouldReceive('userCanRead')->andReturns(true);
+        $release->shouldReceive('isHidden')->andReturns(true);
         $webDAVFRSRelease->setReturnValue('userIsAdmin', false);
 
         $webDAVFRSRelease->setReturnValue('getRelease', $release);
@@ -420,10 +418,10 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
     function testUserCanReadFailureDeletedUserIsAdmin() {
 
         $webDAVFRSRelease = new WebDAVFRSReleaseTestVersion($this);
-        $release = new MockFRSRelease();
-        $release->setReturnValue('isActive', false);
-        $release->setReturnValue('userCanRead', false);
-        $release->setReturnValue('isHidden', false);
+        $release = \Mockery::spy(FRSRelease::class);
+        $release->shouldReceive('isActive')->andReturns(false);
+        $release->shouldReceive('userCanRead')->andReturns(false);
+        $release->shouldReceive('isHidden')->andReturns(false);
         $webDAVFRSRelease->setReturnValue('userIsAdmin', true);
 
         $webDAVFRSRelease->setReturnValue('getRelease', $release);
@@ -440,10 +438,10 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
     function testUserCanReadFailureAdminHaveNoPermission() {
 
         $webDAVFRSRelease = new WebDAVFRSReleaseTestVersion($this);
-        $release = new MockFRSRelease();
-        $release->setReturnValue('isActive', true);
-        $release->setReturnValue('userCanRead', false);
-        $release->setReturnValue('isHidden', false);
+        $release = \Mockery::spy(FRSRelease::class);
+        $release->shouldReceive('isActive')->andReturns(true);
+        $release->shouldReceive('userCanRead')->andReturns(false);
+        $release->shouldReceive('isHidden')->andReturns(false);
         $webDAVFRSRelease->setReturnValue('userIsAdmin', true);
 
         $webDAVFRSRelease->setReturnValue('getRelease', $release);
@@ -459,10 +457,10 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
     function testUserCanReadFailureDeletedCanReadIsAdmin() {
 
         $webDAVFRSRelease = new WebDAVFRSReleaseTestVersion($this);
-        $release = new MockFRSRelease();
-        $release->setReturnValue('isActive', false);
-        $release->setReturnValue('userCanRead', true);
-        $release->setReturnValue('isHidden', false);
+        $release = \Mockery::spy(FRSRelease::class);
+        $release->shouldReceive('isActive')->andReturns(false);
+        $release->shouldReceive('userCanRead')->andReturns(true);
+        $release->shouldReceive('isHidden')->andReturns(false);
         $webDAVFRSRelease->setReturnValue('userIsAdmin', true);
 
         $webDAVFRSRelease->setReturnValue('getRelease', $release);
@@ -478,10 +476,10 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
     function testUserCanReadSucceedActiveUserCanReadIsAdmin() {
 
         $webDAVFRSRelease = new WebDAVFRSReleaseTestVersion($this);
-        $release = new MockFRSRelease();
-        $release->setReturnValue('isActive', true);
-        $release->setReturnValue('userCanRead', true);
-        $release->setReturnValue('isHidden', false);
+        $release = \Mockery::spy(FRSRelease::class);
+        $release->shouldReceive('isActive')->andReturns(true);
+        $release->shouldReceive('userCanRead')->andReturns(true);
+        $release->shouldReceive('isHidden')->andReturns(false);
         $webDAVFRSRelease->setReturnValue('userIsAdmin', true);
 
         $webDAVFRSRelease->setReturnValue('getRelease', $release);
@@ -497,10 +495,10 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
     function testUserCanReadSucceedHiddenUserIsAdmin() {
 
         $webDAVFRSRelease = new WebDAVFRSReleaseTestVersion($this);
-        $release = new MockFRSRelease();
-        $release->setReturnValue('isActive', false);
-        $release->setReturnValue('userCanRead', false);
-        $release->setReturnValue('isHidden', true);
+        $release = \Mockery::spy(FRSRelease::class);
+        $release->shouldReceive('isActive')->andReturns(false);
+        $release->shouldReceive('userCanRead')->andReturns(false);
+        $release->shouldReceive('isHidden')->andReturns(true);
         $webDAVFRSRelease->setReturnValue('userIsAdmin', true);
 
         $webDAVFRSRelease->setReturnValue('getRelease', $release);
@@ -516,10 +514,10 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
     function testUserCanReadSucceedHiddenUserIsAdminCanRead() {
 
         $webDAVFRSRelease = new WebDAVFRSReleaseTestVersion($this);
-        $release = new MockFRSRelease();
-        $release->setReturnValue('isActive', false);
-        $release->setReturnValue('userCanRead', true);
-        $release->setReturnValue('isHidden', true);
+        $release = \Mockery::spy(FRSRelease::class);
+        $release->shouldReceive('isActive')->andReturns(false);
+        $release->shouldReceive('userCanRead')->andReturns(true);
+        $release->shouldReceive('isHidden')->andReturns(true);
         $webDAVFRSRelease->setReturnValue('userIsAdmin', true);
 
         $webDAVFRSRelease->setReturnValue('getRelease', $release);
@@ -641,9 +639,9 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
         $webDAVFRSRelease->setReturnValue('getUtils', $utils);
         $project = new MockProject();
         $webDAVFRSRelease->setReturnValue('getProject', $project);
-        $release = new MockFRSRelease();
+        $release = \Mockery::spy(FRSRelease::class);
         $webDAVFRSRelease->setReturnValue('getRelease', $release);
-        
+
         $webDAVFRSRelease->setName('newName');
 
     }
@@ -657,7 +655,7 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
         $source->setReturnValue('getUtils', $utils);
         $project = new MockProject();
         $source->setReturnValue('getProject', $project);
-        $release = new MockFRSRelease();
+        $release = \Mockery::spy(FRSRelease::class);
         $source->setReturnValue('getRelease', $release);
         $destination = new MockWebDAVFRSPackage();
         $destination->setReturnValue('userCanWrite', true);
@@ -678,7 +676,7 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
         $source->setReturnValue('getUtils', $utils);
         $project = new MockProject();
         $source->setReturnValue('getProject', $project);
-        $release = new MockFRSRelease();
+        $release = \Mockery::spy(FRSRelease::class);
         $source->setReturnValue('getRelease', $release);
         $destination = new MockWebDAVFRSPackage();
         $destination->setReturnValue('userCanWrite', false);
@@ -699,7 +697,7 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
         $source->setReturnValue('getUtils', $utils);
         $project = new MockProject();
         $source->setReturnValue('getProject', $project);
-        $release = new MockFRSRelease();
+        $release = \Mockery::spy(FRSRelease::class);
         $source->setReturnValue('getRelease', $release);
         $destination = new MockWebDAVFRSPackage();
         $destination->setReturnValue('userCanWrite', false);
@@ -721,7 +719,7 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
         $source->setReturnValue('getUtils', $utils);
         $project = new MockProject();
         $source->setReturnValue('getProject', $project);
-        $release = new MockFRSRelease();
+        $release = \Mockery::spy(FRSRelease::class);
         $source->setReturnValue('getRelease', $release);
         $destination = new MockWebDAVFRSPackage();
         $destination->setReturnValue('userCanWrite', true);
@@ -743,8 +741,8 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
         $source->setReturnValue('getUtils', $utils);
         $project = new MockProject();
         $source->setReturnValue('getProject', $project);
-        $release = new MockFRSRelease();
-        $release->setReturnValue('isHidden', false);
+        $release = \Mockery::spy(FRSRelease::class);
+        $release->shouldReceive('isHidden')->andReturns(false);
         $source->setReturnValue('getRelease', $release);
         $destination = new MockWebDAVFRSPackage();
         $destination->setReturnValue('userCanWrite', true);
@@ -767,8 +765,8 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
         $source->setReturnValue('getUtils', $utils);
         $project = new MockProject();
         $source->setReturnValue('getProject', $project);
-        $release = new MockFRSRelease();
-        $release->setReturnValue('isHidden', true);
+        $release = \Mockery::spy(FRSRelease::class);
+        $release->shouldReceive('isHidden')->andReturns(true);
         $source->setReturnValue('getRelease', $release);
         $destination = new MockWebDAVFRSPackage();
         $destination->setReturnValue('userCanWrite', true);
@@ -789,8 +787,8 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
         $source->setReturnValue('getUtils', $utils);
         $project = new MockProject();
         $source->setReturnValue('getProject', $project);
-        $release = new MockFRSRelease();
-        $release->setReturnValue('isHidden', true);
+        $release = \Mockery::spy(FRSRelease::class);
+        $release->shouldReceive('isHidden')->andReturns(true);
         $source->setReturnValue('getRelease', $release);
         $destination = new MockWebDAVFRSPackage();
         $destination->setReturnValue('userCanWrite', true);
@@ -811,8 +809,8 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
         $source->setReturnValue('getUtils', $utils);
         $project = new MockProject();
         $source->setReturnValue('getProject', $project);
-        $release = new MockFRSRelease();
-        $release->setReturnValue('isHidden', false);
+        $release = \Mockery::spy(FRSRelease::class);
+        $release->shouldReceive('isHidden')->andReturns(false);
         $source->setReturnValue('getRelease', $release);
         $destination = new MockWebDAVFRSPackage();
         $destination->setReturnValue('userCanWrite', true);
@@ -873,8 +871,8 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
         $frsff->setReturnValue('isFileBaseNameExists', false);
         $frsff->setReturnValue('createFile', true);
 
-        $release = new MockFRSRelease($this);
-        $release->setReturnValue('getReleaseID', 1234);
+        $release = \Mockery::spy(FRSRelease::class);
+        $release->shouldReceive('getReleaseID')->andReturns(1234);
         $webDAVFRSRelease->setReturnValue('getRelease', $release);
 
         $frsrf = new MockFRSReleaseFactory($this);
@@ -890,7 +888,7 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
         $user = mock('PFUser');
         $webDAVFRSRelease->setReturnValue('getUser', $user);
         $webDAVFRSRelease->setReturnValue('getUtils', $utils);
-        
+
         $data = fopen(dirname(__FILE__).'/_fixtures/test.txt', 'r');
         $webDAVFRSRelease->setReturnValue('getMaxFileSize', 64);
 

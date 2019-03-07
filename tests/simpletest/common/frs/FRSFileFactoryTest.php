@@ -33,7 +33,6 @@ Mock::generate('ProjectManager');
 Mock::generate('DataAccessResult');
 Mock::generate('FRSReleaseFactory');
 Mock::generate('FRSPackageFactory');
-Mock::generate('FRSRelease');
 Mock::generate('FRSFileDao');
 Mock::generate('FRSFile');
 Mock::generate('BackendSystem');
@@ -595,8 +594,8 @@ class FRSFileFactoryTest extends TuleapTestCase
         $fileFactory->setReturnValue('_getUserManager', $um);
         $em = new MockEventManager($this);
         $fileFactory->setReturnValue('_getEventManager', $em);
-        $release = new MockFRSRelease($this);
-        $release->setReturnValue('isDeleted', false);
+        $release = \Mockery::spy(FRSRelease::class);
+        $release->shouldReceive('isDeleted')->andReturns(false);
         $releaseFactory = new MockFRSReleaseFactory($this);
         $releaseFactory->setReturnValue('getFRSReleaseFromDb', $release);
         $fileFactory->setReturnValue('_getFRSReleaseFactory', $releaseFactory);
@@ -630,8 +629,8 @@ class FRSFileFactoryTest extends TuleapTestCase
         $backend = new MockBackendSystem($this);
         $backend->setReturnValue('chgrp', true);
 
-        $release = new MockFRSRelease($this);
-        $release->setReturnValue('isDeleted', false);
+        $release = \Mockery::spy(FRSRelease::class);
+        $release->shouldReceive('isDeleted')->andReturns(false);
         $releaseFactory = new MockFRSReleaseFactory($this);
         $releaseFactory->setReturnValue('getFRSReleaseFromDb', $release);
         $fileFactory->setReturnValue('_getFRSReleaseFactory', $releaseFactory);
@@ -675,8 +674,8 @@ class FRSFileFactoryTest extends TuleapTestCase
         $fileFactory->setReturnValue('_getUserManager', $um);
         $em = new MockEventManager($this);
         $fileFactory->setReturnValue('_getEventManager', $em);
-        $release = new MockFRSRelease($this);
-        $release->setReturnValue('isDeleted', false);
+        $release = \Mockery::spy(FRSRelease::class);
+        $release->shouldReceive('isDeleted')->andReturns(false);
         $releaseFactory = new MockFRSReleaseFactory($this);
         $releaseFactory->setReturnValue('getFRSReleaseFromDb', $release);
         $fileFactory->setReturnValue('_getFRSReleaseFactory', $releaseFactory);
@@ -721,8 +720,8 @@ class FRSFileFactoryTest extends TuleapTestCase
         $fileFactory->setReturnValue('_getUserManager', $um);
         $em = new MockEventManager($this);
         $fileFactory->setReturnValue('_getEventManager', $em);
-        $release = new MockFRSRelease($this);
-        $release->setReturnValue('isDeleted', false);
+        $release = \Mockery::spy(FRSRelease::class);
+        $release->shouldReceive('isDeleted')->andReturns(false);
         $releaseFactory = new MockFRSReleaseFactory($this);
         $releaseFactory->setReturnValue('getFRSReleaseFromDb', $release);
         $fileFactory->setReturnValue('_getFRSReleaseFactory', $releaseFactory);
@@ -745,8 +744,8 @@ class FRSFileFactoryTest extends TuleapTestCase
         touch($filepath);
         $this->assertTrue(is_dir(dirname($filepath)));
 
-        $release = new MockFRSRelease($this);
-        $release->setReturnValue('isDeleted', true);
+        $release = \Mockery::spy(FRSRelease::class);
+        $release->shouldReceive('isDeleted')->andReturns(true);
         $releaseFactory = new MockFRSReleaseFactory($this);
         $releaseFactory->setReturnValue('getFRSReleaseFromDb', $release);
         $fileFactory->setReturnValue('_getFRSReleaseFactory', $releaseFactory);
@@ -1232,11 +1231,11 @@ class FRSFileFactoryTest extends TuleapTestCase
     function testCreateFileCompareMD5Checksums(){
         $project = stub('Project')->getId()->returns(111);
 
-        $r = partial_mock('FRSRelease', array('getProject'));
+        $r = \Mockery::mock(FRSRelease::class.'[getProject]');
+        $r->shouldReceive('getProject')->andReturn($project);
         $r->setReleaseID(456);
         $r->setPackageID(123);
         $r->setGroupID(111);
-        stub($r)->getProject()->returns($project);
 
         $ff = new FRSFileFactoryTestCreateFiles();
         $ff->setLogger(mock('Logger'));
@@ -1266,11 +1265,11 @@ class FRSFileFactoryTest extends TuleapTestCase
     function testCreateFileMoveFileForgeKo(){
         $project = stub('Project')->getId()->returns(111);
 
-        $r = partial_mock('FRSRelease', array('getProject'));
+        $r = \Mockery::mock(FRSRelease::class.'[getProject]');
+        $r->shouldReceive('getProject')->andReturn($project);
         $r->setReleaseID(456);
         $r->setPackageID(123);
         $r->setGroupID(111);
-        stub($r)->getProject()->returns($project);
 
         $ff = new FRSFileFactoryTestCreateFiles();
         $ff->setLogger(mock('Logger'));

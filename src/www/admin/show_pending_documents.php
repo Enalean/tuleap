@@ -1,7 +1,7 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2010. All Rights Reserved.
- * Copyright (c) Enalean, 2016-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -284,7 +284,7 @@ function frs_file_restore_process($request, $group_id)
         $file_name   = $file->getFileName();
         $basename    = basename($file_name);
         $release_id  = $file->getReleaseID();
-        if (! $fileFactory->isSameFileMarkedToBeRestored($basename, $release_id, $group_id)) {
+        if (! $fileFactory->isSameFileMarkedToBeRestored($basename, $release_id)) {
             if (! $fileFactory->isFileNameExist($file_name, $group_id)) {
                 if ($fileFactory->markFileToBeRestored($file)) {
                     $GLOBALS['Response']->addFeedback(

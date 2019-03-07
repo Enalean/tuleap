@@ -37,7 +37,7 @@ use Tuleap\Layout\IncludeAssets;
 use Tuleap\Tracker\Artifact\ActionButtons\MoveArtifactActionAllowedByPluginRetriever;
 use Tuleap\Tracker\REST\v1\Event\ArtifactPartialUpdate;
 
-class frsPlugin extends \Plugin
+class frsPlugin extends \Plugin //phpcs:ignore
 {
 
     /**
@@ -69,6 +69,7 @@ class frsPlugin extends \Plugin
         $this->addHook(Event::REST_PROJECT_FRS_ENDPOINTS);
         $this->addHook(Event::REST_GET_PROJECT_FRS_PACKAGES);
         $this->addHook(Event::IMPORT_XML_PROJECT_TRACKER_DONE);
+        $this->addHook(FRSOngoingUploadChecker::NAME);
 
         if (defined('TRACKER_BASE_URL')) {
             $this->addHook(Tracker_Artifact_EditRenderer::EVENT_ADD_VIEW_IN_COLLECTION);
@@ -102,7 +103,21 @@ class frsPlugin extends \Plugin
         return $this->pluginInfo;
     }
 
-    public function frs_edit_form_additional_info($params)
+    public function frsOngoingUploadChecker(FRSOngoingUploadChecker $event)
+    {
+        $file = $event->getFile();
+        $current_time = new DateTimeImmutable();
+        $dao = new \Tuleap\FRS\Upload\FileOngoingUploadDao();
+        if (! empty($dao->searchFileOngoingUploadByReleaseIDNameAndExpirationDate(
+            $file->getRelease()->getReleaseID(),
+            $file->getFileName(),
+            $current_time->getTimestamp()
+        ))) {
+            $event->setIsFileBeingUploadedToTrue();
+        }
+    }
+
+    public function frs_edit_form_additional_info($params) //phpcs:ignore
     {
         $renderer  = TemplateRendererFactory::build()->getRenderer(FRS_BASE_DIR.'/templates');
 
@@ -115,7 +130,7 @@ class frsPlugin extends \Plugin
         $params['notes_in_markdown'] = true;
     }
 
-    public function frs_process_edit_form($params)
+    public function frs_process_edit_form($params) //phpcs:ignore
     {
         $release_request = $params['release_request'];
 
@@ -172,7 +187,7 @@ class frsPlugin extends \Plugin
         }
     }
 
-    public function javascript_file()
+    public function javascript_file() //phpcs:ignore
     {
         if ($this->isAFRSrequest()) {
             $include_assets = new IncludeAssets(
@@ -187,7 +202,7 @@ class frsPlugin extends \Plugin
     /**
      * @see FRS_RELEASE_VIEW
      */
-    public function frs_release_view($params)
+    public function frs_release_view($params) //phpcs:ignore
     {
         $release = $params['release'];
         $user    = $params['user'];
@@ -208,20 +223,20 @@ class frsPlugin extends \Plugin
         return TemplateRendererFactory::build()->getRenderer(FRS_BASE_DIR . '/templates');
     }
 
-    public function rest_resources($params)
+    public function rest_resources($params) //phpcs:ignore
     {
         $injector = new ResourcesInjector();
         $injector->populate($params['restler']);
     }
 
     /** @see \Event::REST_PROJECT_FRS_ENDPOINTS */
-    public function rest_project_frs_endpoints(array $params)
+    public function rest_project_frs_endpoints(array $params) //phpcs:ignore
     {
         $params['available'] = true;
     }
 
     /** @see \Event::REST_GET_PROJECT_FRS_PACKAGES */
-    public function rest_get_project_frs_packages(array $params)
+    public function rest_get_project_frs_packages(array $params) //phpcs:ignore
     {
         $project_resource = new \Tuleap\FRS\REST\v1\ProjectResource(FRSPackageFactory::instance());
 
@@ -236,13 +251,13 @@ class frsPlugin extends \Plugin
     }
 
     /** @see \Event::REST_PROJECT_RESOURCES */
-    public function rest_project_resources(array $params)
+    public function rest_project_resources(array $params) //phpcs:ignore
     {
         $injector = new ResourcesInjector();
         $injector->declareProjectResource($params['resources'], $params['project']);
     }
 
-    public function import_xml_project_tracker_done($params)
+    public function import_xml_project_tracker_done($params) //phpcs:ignore
     {
         $mappings            = $params['mappings_registery'];
         $artifact_id_mapping = $params['artifact_id_mapping'];
@@ -259,7 +274,7 @@ class frsPlugin extends \Plugin
     }
 
     /** @see Tracker_Artifact_EditRenderer::EVENT_ADD_VIEW_IN_COLLECTION */
-    public function tracker_artifact_editrenderer_add_view_in_collection(array $params)
+    public function tracker_artifact_editrenderer_add_view_in_collection(array $params) //phpcs:ignore
     {
         $user       = $params['user'];
         $request    = $params['request'];
@@ -273,7 +288,7 @@ class frsPlugin extends \Plugin
     }
 
     /** @see AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE */
-    public function agiledashboard_event_additional_panes_on_milestone($params)
+    public function agiledashboard_event_additional_panes_on_milestone($params) //phpcs:ignore
     {
         $milestone  = $params['milestone'];
         $release_id = $this->getLinkRetriever()->getLinkedReleaseId($milestone->getArtifact());
