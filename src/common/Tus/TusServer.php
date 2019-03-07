@@ -86,15 +86,14 @@ final class TusServer implements RequestHandlerInterface
             }
         } catch (TusServerIncompatibleVersionException $exception) {
             $response = $this->response_factory->createResponse(
-                $exception->getCode(),
-                $exception->getMessage(),
-                ['Tus-Version' => self::TUS_VERSION]
+                $exception->getHTTPStatusCode(),
+                $exception->getMessage()
             );
+            $response = $response->withHeader('Tus-Version', self::TUS_VERSION);
         } catch (TusServerException $exception) {
             $response = $this->response_factory->createResponse(
-                $exception->getCode(),
-                $exception->getMessage(),
-                ['Tus-Resumable' => self::TUS_VERSION]
+                $exception->getHTTPStatusCode(),
+                $exception->getMessage()
             );
         }
 
@@ -133,8 +132,8 @@ final class TusServer implements RequestHandlerInterface
     private function processHead(TusFileInformation $file_information) : ResponseInterface
     {
         return $this->response_factory->createResponse(204)
-            ->withHeader('Upload-Length', $file_information->getLength())
-            ->withHeader('Upload-Offset', $file_information->getOffset())
+            ->withHeader('Upload-Length', (string) $file_information->getLength())
+            ->withHeader('Upload-Offset', (string) $file_information->getOffset())
             ->withHeader('Cache-Control', 'no-cache');
     }
 
@@ -156,6 +155,11 @@ final class TusServer implements RequestHandlerInterface
             return $this->response_factory->createResponse(400);
         }
 
+        $incoming_stream = $request->getBody()->detach();
+        if ($incoming_stream === null) {
+            throw new CannotReadIncomingFileException();
+        }
+
         $copied_size = 0;
         $locker      = $this->data_store->getLocker();
         try {
@@ -170,7 +174,7 @@ final class TusServer implements RequestHandlerInterface
             $copied_size = $this->data_store->getWriter()->writeChunk(
                 $file_information,
                 $file_information->getOffset(),
-                $request->getBody()->detach()
+                $incoming_stream
             );
         } finally {
             if ($locker !== null) {
@@ -185,7 +189,7 @@ final class TusServer implements RequestHandlerInterface
         }
 
         return $this->response_factory->createResponse(204)
-            ->withHeader('Upload-Offset', $file_information->getOffset() + $copied_size);
+            ->withHeader('Upload-Offset', (string) ($file_information->getOffset() + $copied_size));
     }
 
     /**
