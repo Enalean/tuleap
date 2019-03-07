@@ -21,6 +21,7 @@ import {
     addNewDocument,
     addNewFolder,
     addNewEmpty,
+    addNewWiki,
     getFolderContent,
     getProject,
     getItem,
@@ -394,6 +395,31 @@ describe("rest-querier", () => {
             );
 
             expect(tlp.post).toHaveBeenCalledWith("/api/docman_folders/2/empties", {
+                headers: jasmine.objectContaining({ "content-type": "application/json" }),
+                body: item
+            });
+        });
+    });
+
+    describe("addNewWiki()", () => {
+        it("Create a new wiki document", async () => {
+            const item = JSON.stringify({
+                title: "my wiki document",
+                description: "",
+                type: "wiki"
+            });
+            mockFetchSuccess(tlp.post, { return_json: { id: 66, uri: "path/to/66" } });
+
+            await addNewWiki(
+                {
+                    title: "my wiki document",
+                    description: "",
+                    type: "wiki"
+                },
+                2
+            );
+
+            expect(tlp.post).toHaveBeenCalledWith("/api/docman_folders/2/wikis", {
                 headers: jasmine.objectContaining({ "content-type": "application/json" }),
                 body: item
             });

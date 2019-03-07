@@ -368,6 +368,30 @@ class DocmanItemsTestFoldersTest extends DocmanBase
     }
 
     /**
+     * @depends testGetRootId
+     */
+    public function testPostWikiDocument(int $root_id): void
+    {
+        $headers = ['Content-Type' => 'application/json'];
+        $wiki_properties = ['page_name' => 'Ten steps to become a Tuleap'];
+        $query = json_encode(
+            [
+                'title'           => 'How to become a Tuleap',
+                'description'     => 'A description',
+                'wiki_properties' => $wiki_properties
+            ]
+        );
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post('docman_folders/' . $root_id ."/wikis", $headers, $query)
+        );
+
+        $this->assertEquals(201, $response->getStatusCode());
+    }
+
+
+    /**
      * Find first item in given array of items which has given title.
      * @return array|null Found item. null otherwise.
      */

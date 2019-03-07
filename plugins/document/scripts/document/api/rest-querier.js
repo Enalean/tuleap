@@ -40,7 +40,8 @@ export {
     createNewVersion,
     addNewFile,
     addNewFolder,
-    addNewEmpty
+    addNewEmpty,
+    addNewWiki
 };
 
 async function getProject(project_id) {
@@ -81,6 +82,21 @@ async function addNewEmpty(item, parent_id) {
     const body = JSON.stringify(json_body);
 
     const response = await post("/api/docman_folders/" + parent_id + "/empties", { headers, body });
+
+    return response.json();
+}
+
+async function addNewWiki(item, parent_id) {
+    const headers = {
+        "content-type": "application/json"
+    };
+
+    const json_body = {
+        ...item
+    };
+    const body = JSON.stringify(json_body);
+
+    const response = await post("/api/docman_folders/" + parent_id + "/wikis", { headers, body });
 
     return response.json();
 }

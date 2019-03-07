@@ -28,6 +28,7 @@ use Project;
 use Rule_Regexp;
 use Tuleap\Docman\REST\v1\Folders\DocmanEmptyPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Folders\DocmanFolderPOSTRepresentation;
+use Tuleap\Docman\REST\v1\Folders\DocmanWikiPOSTRepresentation;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
 use Tuleap\Docman\Upload\Document\DocumentToUploadCreator;
 use Tuleap\Docman\Upload\UploadCreationConflictException;
@@ -103,27 +104,6 @@ class DocmanItemCreator
         );
 
         switch ($docman_item_post_representation->type) {
-            case ItemRepresentation::TYPE_WIKI:
-                if (! $project->usesWiki()) {
-                    throw new RestException(
-                        400,
-                        sprintf('The wiki service of the project: "%s" is not available', $project->getUnixName())
-                    );
-                }
-                $this->checkPropertiesByType($docman_item_post_representation, ItemRepresentation::TYPE_WIKI);
-                return $this->createDocument(
-                    PLUGIN_DOCMAN_ITEM_TYPE_WIKI,
-                    $current_time,
-                    $parent_item,
-                    $user,
-                    $project,
-                    $docman_item_post_representation->title,
-                    $docman_item_post_representation->description,
-                    $docman_item_post_representation->wiki_properties->page_name,
-                    null,
-                    null
-                );
-
             case ItemRepresentation::TYPE_LINK:
                 $this->checkPropertiesByType($docman_item_post_representation, ItemRepresentation::TYPE_LINK);
                 $link_url   = $docman_item_post_representation->link_properties->link_url;
@@ -366,6 +346,49 @@ class DocmanItemCreator
 
     /**
      * @throws RestException
+     * @throws \Tuleap\Docman\CannotInstantiateItemWeHaveJustCreatedInDBException
+     */
+    public function createWiki(
+        Docman_Item $parent_item,
+        PFUser $user,
+        DocmanWikiPOSTRepresentation $representation,
+        \DateTimeImmutable $current_time,
+        Project $project
+    ): CreatedItemRepresentation {
+        if ($this->item_factory->doesTitleCorrespondToExistingDocument($representation->title, $parent_item->getId())) {
+            throw new RestException(400, "A document with same title already exists in the given folder.");
+        }
+
+        if (! $project->usesWiki()) {
+            throw new RestException(
+                400,
+                sprintf('The wiki service of the project: "%s" is not available', $project->getUnixName())
+            );
+        }
+
+        $this->checkDocumentIsNotBeingUploaded(
+            $parent_item,
+            PLUGIN_DOCMAN_ITEM_TYPE_WIKI,
+            $representation->title,
+            $current_time
+        );
+
+        return $this->createDocument(
+            PLUGIN_DOCMAN_ITEM_TYPE_WIKI,
+            $current_time,
+            $parent_item,
+            $user,
+            $project,
+            $representation->title,
+            $representation->description,
+            $representation->wiki_properties->page_name,
+            null,
+            null
+        );
+    }
+
+    /**
+     * @throws RestException
      */
     private function checkDocumentDoesNotAlreadyExists(DocmanItemPOSTRepresentation $representation)
     {
@@ -384,7 +407,6 @@ class DocmanItemCreator
         $checked_type
     ) : void {
         $types_with_properties = [
-            ItemRepresentation::TYPE_WIKI,
             ItemRepresentation::TYPE_LINK,
             ItemRepresentation::TYPE_EMBEDDED
         ];
