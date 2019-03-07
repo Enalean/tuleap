@@ -28,7 +28,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Baseline\Clock;
 
-class ClockImplTest extends TestCase
+class ClockAdapterTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
