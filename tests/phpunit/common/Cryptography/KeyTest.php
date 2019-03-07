@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,19 +22,20 @@ declare(strict_types=1);
 
 namespace Tuleap\Cryptography;
 
+use PHPUnit\Framework\TestCase;
 use Tuleap\Cryptography\Exception\CannotSerializeKeyException;
 
-class KeyTest extends \TuleapTestCase
+final class KeyTest extends TestCase
 {
-    public function itRetrievesRawKeyMaterial() : void
+    public function testRawKeyMaterialCanBeRetrieved() : void
     {
         $key_material = 'key_material';
         $key          = new Key(new ConcealedString($key_material));
 
-        $this->assertEqual($key_material, $key->getRawKeyMaterial());
+        $this->assertEquals($key_material, $key->getRawKeyMaterial());
     }
 
-    public function itDoesNotSerialize() : void
+    public function testSerializationIsDisabled() : void
     {
         $key = new Key(new ConcealedString('key_material'));
 
@@ -42,16 +43,24 @@ class KeyTest extends \TuleapTestCase
         serialize($key);
     }
 
-    public function itDoesNotUnserialize() : void
+    public function testUnserializationIsDisabled() : void
     {
         $this->expectException(CannotSerializeKeyException::class);
         unserialize('O:23:"Tuleap\Cryptography\Key":0:{}');
     }
 
-    public function itIsNotTransformedToAString() : void
+    public function testKeyCanNotBeTransformedToAString() : void
     {
         $key = new Key(new ConcealedString('key_material'));
 
-        $this->assertEqual('', (string) $key);
+        $this->assertEquals('', (string) $key);
+    }
+
+    public function testKeyMaterialIsNotPresentInTheDebugInformation() : void
+    {
+        $key_material = 'key_material_value';
+        $key          = new Key(new ConcealedString($key_material));
+
+        $this->assertStringNotContainsString($key_material, print_r($key, true));
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,18 +22,22 @@ declare(strict_types=1);
 
 namespace Tuleap\Cryptography\Asymmetric;
 
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Cryptography\Exception\InvalidSignatureException;
 
-class AsymmetricCryptoTest extends \TuleapTestCase
+final class AsymmetricCryptoTest extends TestCase
 {
-    public function itCannotBeInstantiated() : void
+    use MockeryPHPUnitIntegration;
+
+    public function testItCannotBeInstantiated() : void
     {
-        $this->expectException('RuntimeException');
+        $this->expectException(\RuntimeException::class);
         new AsymmetricCrypto();
     }
 
-    public function itCanVerifyASignedMessage() : void
+    public function testASignedMessageCanBeVerified() : void
     {
         $key_pair   = \sodium_crypto_sign_keypair();
         $secret_key = new SignatureSecretKey(new ConcealedString(\sodium_crypto_sign_secretkey($key_pair)));
@@ -46,7 +50,7 @@ class AsymmetricCryptoTest extends \TuleapTestCase
         $this->assertTrue($is_signature_valid);
     }
 
-    public function itDoesNotVerifyAnInvalidSignedMessage() : void
+    public function testAnInvalidSignedMessageIsNotVerified() : void
     {
         $secret_key1 = new SignatureSecretKey(
             new ConcealedString(str_repeat('a', SODIUM_CRYPTO_SIGN_SECRETKEYBYTES))
@@ -62,7 +66,7 @@ class AsymmetricCryptoTest extends \TuleapTestCase
         $this->assertFalse($is_signature_valid);
     }
 
-    public function itRejectsInvalidSignature() : void
+    public function testInvalidSignatureIsRejected() : void
     {
         $public_key = \Mockery::mock(SignaturePublicKey::class);
 

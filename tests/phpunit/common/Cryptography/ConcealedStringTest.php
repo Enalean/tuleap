@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,14 +22,24 @@ declare(strict_types=1);
 
 namespace Tuleap\Cryptography;
 
-class ConcealedStringTest extends \TuleapTestCase
+use PHPUnit\Framework\TestCase;
+
+final class ConcealedStringTest extends TestCase
 {
-    public function itDoesNotAlterTheValue()
+    public function testValueIsNotAltered() : void
     {
         $value_to_hide    = 'my_cleartext_credential';
         $concealed_string = new ConcealedString($value_to_hide);
 
-        $this->assertEqual($value_to_hide, (string) $concealed_string);
-        $this->assertEqual($value_to_hide, $concealed_string->getString());
+        $this->assertEquals($value_to_hide, (string) $concealed_string);
+        $this->assertEquals($value_to_hide, $concealed_string->getString());
+    }
+
+    public function testValueIsNotPresentInTheDebugInformation() : void
+    {
+        $value_to_hide    = 'private';
+        $concealed_string = new ConcealedString($value_to_hide);
+
+        $this->assertStringNotContainsString($value_to_hide, print_r($concealed_string, true));
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,23 +20,24 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Cryptography\Symmetric;
+namespace Tuleap\Cryptography\Asymmetric;
 
+use PHPUnit\Framework\TestCase;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Cryptography\Exception\InvalidKeyException;
 
-class EncryptionKeyTest extends \TuleapTestCase
+final class SignaturePublicKeyTest extends TestCase
 {
-    public function itConstructsEncryptionKey() : void
+    public function testSignaturePublicKeyCanBeConstructed() : void
     {
-        $key = new EncryptionKey(new ConcealedString(str_repeat('a', SODIUM_CRYPTO_SECRETBOX_KEYBYTES)));
+        $key = new SignaturePublicKey(new ConcealedString(str_repeat('a', \SODIUM_CRYPTO_SIGN_PUBLICKEYBYTES)));
 
-        $this->assertEqual(SODIUM_CRYPTO_SECRETBOX_KEYBYTES, mb_strlen($key->getRawKeyMaterial()));
+        $this->assertEquals(\SODIUM_CRYPTO_SIGN_PUBLICKEYBYTES, mb_strlen($key->getRawKeyMaterial()));
     }
 
-    public function itDoesNotConstructAnEncryptionKeyWhenTheKeyMaterialIsWronglySized() : void
+    public function testSignaturePublicKeyWithAWronglySizedKeyMaterialIsNotConstructed() : void
     {
         $this->expectException(InvalidKeyException::class);
-        new EncryptionKey(new ConcealedString('wrongly_sized_key_material'));
+        new SignaturePublicKey(new ConcealedString('wrongly_sized_key_material'));
     }
 }

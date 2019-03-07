@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,25 +22,17 @@ declare(strict_types=1);
 
 namespace Tuleap\Cryptography;
 
-use Tuleap\Cryptography\Symmetric\EncryptionKey;
+use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\TestCase;
+use Tuleap\ForgeConfigSandbox;
 
-class KeyFactoryTest extends \TuleapTestCase
+final class KeyFactoryTest extends TestCase
 {
-    public function setUp() : void
-    {
-        parent::setUp();
-        \ForgeConfig::store();
-    }
+    use ForgeConfigSandbox;
 
-    public function tearDown() : void
+    public function testEncryptionKeyCanBeGenerated() : void
     {
-        \ForgeConfig::restore();
-        parent::tearDown();
-    }
-
-    public function itGetsEncryptionKey() : void
-    {
-        $temporary_dir       = $this->getTmpDir();
+        $temporary_dir       = vfsStream::setup()->url();
         $encryption_key_file = $temporary_dir . '/conf/encryption_secret.key';
         mkdir(dirname($encryption_key_file));
         \ForgeConfig::set('sys_custom_dir', $temporary_dir);
@@ -50,18 +42,16 @@ class KeyFactoryTest extends \TuleapTestCase
 
         $this->assertFileExists($encryption_key_file);
         $file_read_only_permission = 0100400;
-        $this->assertEqual(fileperms($encryption_key_file), $file_read_only_permission);
+        $this->assertEquals($file_read_only_permission, fileperms($encryption_key_file));
 
         $key_from_file = $key_factory->getEncryptionKey();
 
-        $this->assertIsA($key_generated, EncryptionKey::class);
-        $this->assertIsA($key_from_file, EncryptionKey::class);
-        $this->assertEqual($key_generated->getRawKeyMaterial(), $key_from_file->getRawKeyMaterial());
+        $this->assertEquals($key_generated->getRawKeyMaterial(), $key_from_file->getRawKeyMaterial());
     }
 
-    public function itGetsEncryptionKeyFromFile() : void
+    public function testEncryptionKeyCanBeRetrievedFromFile() : void
     {
-        $temporary_dir       = $this->getTmpDir();
+        $temporary_dir       = vfsStream::setup()->url();
         $encryption_key_file = $temporary_dir . '/conf/encryption_secret.key';
         mkdir(dirname($encryption_key_file));
         \ForgeConfig::set('sys_custom_dir', $temporary_dir);
@@ -73,13 +63,12 @@ class KeyFactoryTest extends \TuleapTestCase
         $key_factory = new KeyFactory();
         $key         = $key_factory->getEncryptionKey();
 
-        $this->assertIsA($key, EncryptionKey::class);
-        $this->assertEqual($key->getRawKeyMaterial(), $raw_key_material);
+        $this->assertEquals($raw_key_material, $key->getRawKeyMaterial());
     }
 
-    public function itGeneratesDifferentEncryptionKeysEachTimeAGenerationIsNeeded() : void
+    public function testADifferentEncryptionKeyIsGeneratedEachTimeAGenerationIsNeeded() : void
     {
-        $temporary_dir       = $this->getTmpDir();
+        $temporary_dir       = vfsStream::setup()->url();
         $encryption_key_file = $temporary_dir . '/conf/encryption_secret.key';
         mkdir(dirname($encryption_key_file));
         \ForgeConfig::set('sys_custom_dir', $temporary_dir);
@@ -91,6 +80,6 @@ class KeyFactoryTest extends \TuleapTestCase
 
         $key_generated_2 = $key_factory->getEncryptionKey();
 
-        $this->assertNotEqual($key_generated_1->getRawKeyMaterial(), $key_generated_2->getRawKeyMaterial());
+        $this->assertNotEquals($key_generated_1->getRawKeyMaterial(), $key_generated_2->getRawKeyMaterial());
     }
 }

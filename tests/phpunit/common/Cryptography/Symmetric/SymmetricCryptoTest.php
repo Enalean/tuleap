@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,18 +22,19 @@ declare(strict_types=1);
 
 namespace Tuleap\Cryptography\Symmetric;
 
+use PHPUnit\Framework\TestCase;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Cryptography\Exception\InvalidCiphertextException;
 
-class SymmetricCryptoTest extends \TuleapTestCase
+final class SymmetricCryptoTest extends TestCase
 {
-    public function itCannotBeInstantiated() : void
+    public function testItCannotBeInstantiated() : void
     {
-        $this->expectException('RuntimeException');
+        $this->expectException(\RuntimeException::class);
         new SymmetricCrypto();
     }
 
-    public function itDoesNotReuseNonces() : void
+    public function testNoncesAreNotReused() : void
     {
         $key       = new EncryptionKey(
             new ConcealedString(random_bytes(SODIUM_CRYPTO_SECRETBOX_KEYBYTES))
@@ -43,10 +44,10 @@ class SymmetricCryptoTest extends \TuleapTestCase
         $ciphertext_1 = SymmetricCrypto::encrypt($plaintext, $key);
         $ciphertext_2 = SymmetricCrypto::encrypt($plaintext, $key);
 
-        $this->assertNotEqual($ciphertext_1, $ciphertext_2);
+        $this->assertNotEquals($ciphertext_1, $ciphertext_2);
     }
 
-    public function itCanDecryptACiphertext() : void
+    public function testCiphertextCanBeDecrypted() : void
     {
         $key       = new EncryptionKey(
             new ConcealedString(random_bytes(SODIUM_CRYPTO_SECRETBOX_KEYBYTES))
@@ -56,11 +57,10 @@ class SymmetricCryptoTest extends \TuleapTestCase
         $ciphertext           = SymmetricCrypto::encrypt($plaintext, $key);
         $decrypted_ciphertext = SymmetricCrypto::decrypt($ciphertext, $key);
 
-        $this->assertIsA($decrypted_ciphertext, ConcealedString::class);
-        $this->assertEqual($plaintext->getString(), $decrypted_ciphertext->getString());
+        $this->assertEquals($plaintext->getString(), $decrypted_ciphertext->getString());
     }
 
-    public function itCannotDecryptACiphertextEncryptedWithADifferentKey() : void
+    public function testACiphertextEncryptedWithADifferentKeyCannotBeDecrypted() : void
     {
         $key_1     = new EncryptionKey(
             new ConcealedString(random_bytes(SODIUM_CRYPTO_SECRETBOX_KEYBYTES))
@@ -76,7 +76,7 @@ class SymmetricCryptoTest extends \TuleapTestCase
         SymmetricCrypto::decrypt($ciphertext, $key_2);
     }
 
-    public function itCannotDecryptAWronglyFormattedCiphertext() : void
+    public function testAWronglyFormattedCiphertextCannotBeDecrypted() : void
     {
         $key = new EncryptionKey(
             new ConcealedString(random_bytes(SODIUM_CRYPTO_SECRETBOX_KEYBYTES))
@@ -86,7 +86,7 @@ class SymmetricCryptoTest extends \TuleapTestCase
         SymmetricCrypto::decrypt('wrongly_formatted_exception', $key);
     }
 
-    public function itDecryptsAPreviouslyEncryptedValue() : void
+    public function testAPreviouslyEncryptedValueCanBeDecrypted() : void
     {
         $key = new EncryptionKey(new ConcealedString(base64_decode('8sgzyjKu2S90GmxShUuWcFOpum6nIZzlCAoxn3MZdwU=')));
 
@@ -95,6 +95,6 @@ class SymmetricCryptoTest extends \TuleapTestCase
             $key
         );
 
-        $this->assertEqual('Tuleap', $plaintext);
+        $this->assertEquals('Tuleap', $plaintext);
     }
 }
