@@ -39,6 +39,9 @@
                     You can drag 'n drop files from your desktop into the current folder to upload them.
                 </li>
                 <li v-translate>
+                    You can drag 'n drop files from your desktop into a sub-folder to upload them in this folder (or on the quick look preview of this folder).
+                </li>
+                <li v-translate>
                     Browsing of the whole folder hierarchy.
                 </li>
                 <li v-translate>
@@ -63,6 +66,9 @@
                 </li>
                 <li v-translate>
                     List the performable actions for a given item via a dropdown menu.
+                </li>
+                <li v-translate>
+                    Create a new version of a file by dropping the updated version on the targeted document in the tree view (or on the quick look pane).
                 </li>
             </ul>
             <p v-translate>
