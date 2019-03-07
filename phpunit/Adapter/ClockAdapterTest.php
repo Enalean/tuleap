@@ -19,6 +19,8 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Baseline\Adapter;
 
 require_once __DIR__ . '/../bootstrap.php';

@@ -19,6 +19,8 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Baseline\Stub;
 
 use DateTime;
@@ -48,5 +50,4 @@ class ChangesetRepositoryStub implements ChangesetRepository
     {
         $this->changeset = null;
     }
-
 }

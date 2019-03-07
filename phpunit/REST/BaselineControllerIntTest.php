@@ -19,6 +19,8 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Baseline\REST;
 
 require_once __DIR__ . '/IntegrationTestCaseWithStubs.php';

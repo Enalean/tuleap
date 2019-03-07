@@ -19,6 +19,8 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Baseline\REST;
 
 use Tuleap\Baseline\Baseline;

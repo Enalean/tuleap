@@ -19,10 +19,12 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Baseline;
 
 use DateTime;
-use League\Flysystem\Exception;
+use Exception;
 
 /**
  * No changeset found before a date.

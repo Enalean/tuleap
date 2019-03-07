@@ -19,6 +19,8 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Baseline;
 
 use DateTime;
@@ -91,7 +93,7 @@ class BaselineService
 
         $tracker        = $milestone->getTracker();
         $changeset_date = new DateTime();
-        $changeset_date->setTimestamp($change_set->getSubmittedOn());
+        $changeset_date->setTimestamp((int) $change_set->getSubmittedOn());
 
         $baseline = new SimplifiedBaseline(
             $milestone,

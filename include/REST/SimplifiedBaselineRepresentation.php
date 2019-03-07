@@ -18,11 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Baseline\REST;
 
 class SimplifiedBaselineRepresentation
 {
-
     /**
      * @var string|null
      */
@@ -48,8 +49,7 @@ class SimplifiedBaselineRepresentation
         ?string $artifact_description,
         ?string $artifact_status,
         int $last_modification_date_before_baseline_date
-    )
-    {
+    ) {
         $this->artifact_title                              = $artifact_title;
         $this->artifact_description                        = $artifact_description;
         $this->artifact_status                             = $artifact_status;
