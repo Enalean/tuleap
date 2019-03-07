@@ -49,7 +49,7 @@ class ClockImplTest extends TestCase
         $now        = $this->clock->now();
         $after_now  = new DateTime('now');
 
-        $this->assertGreaterThan($before_now, $now);
-        $this->assertLessThan($after_now, $now);
+        $this->assertGreaterThanOrEqual($before_now, $now);
+        $this->assertLessThanOrEqual($after_now, $now);
     }
 }
