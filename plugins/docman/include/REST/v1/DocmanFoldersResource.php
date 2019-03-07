@@ -25,8 +25,11 @@ namespace Tuleap\Docman\REST\v1;
 use Docman_Item;
 use Docman_PermissionsManager;
 use EventManager;
+use Luracast\Restler\RestException;
+use PluginManager;
 use Project;
 use ProjectManager;
+use Tuleap\Docman\REST\v1\Folders\DocmanEmbeddedPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Folders\DocmanEmptyPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Folders\DocmanFolderPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Folders\DocmanItemCreatorBuilder;
@@ -253,6 +256,60 @@ class DocmanFoldersResource extends AuthenticatedResource
         );
     }
 
+    /**
+     * Create new embedded document
+     *
+     * @param int                              $id   Id of the parent folder
+     * @param DocmanEmbeddedPOSTRepresentation $test representation test {@from body}
+     *                                               {@type \Tuleap\Docman\REST\v1\Folders\DocmanEmbeddedPOSTRepresentation}
+     *
+     * @url    POST {id}/embedded_files
+     * @access hybrid
+     * @status 201
+     *
+     * @return CreatedItemRepresentation
+     *
+     * @throws 400
+     * @throws 403
+     * @throws 404
+     * @throws 409
+     */
+    public function postEmbeds(int $id, DocmanEmbeddedPOSTRepresentation $embeds_representation): CreatedItemRepresentation
+    {
+        $this->checkAccess();
+        $this->sendAllowHeadersWithPost();
+
+        $current_user = $this->rest_user_manager->getCurrentUser();
+
+        $item_request = $this->request_builder->buildFromItemId($id);
+        $parent       = $item_request->getItem();
+        $this->checkItemCanHaveSubitems($parent);
+        $project = $item_request->getProject();
+        $this->getDocmanFolderPermissionChecker($project)
+             ->checkUserCanWriteFolder($current_user, $id);
+
+        $event_adder = $this->getDocmanItemsEventAdder();
+        $event_adder->addLogEvents();
+        $event_adder->addNotificationEvents($project);
+
+        $docman_item_creator = DocmanItemCreatorBuilder::build($project);
+
+        /** @var \docmanPlugin $docman_plugin */
+        $docman_plugin        = PluginManager::instance()->getPluginByName('docman');
+        $are_embedded_allowed = $docman_plugin->getPluginInfo()->getPropertyValueForName('embedded_are_allowed');
+
+        if ($are_embedded_allowed === false) {
+            throw new RestException(403, 'Embedded files are not allowed');
+        }
+
+        return $docman_item_creator->createEmbedded(
+            $parent,
+            $current_user,
+            $embeds_representation,
+            new \DateTimeImmutable(),
+            $project
+        );
+    }
     private function sendAllowHeadersWithPost()
     {
         Header::allowOptionsPost();

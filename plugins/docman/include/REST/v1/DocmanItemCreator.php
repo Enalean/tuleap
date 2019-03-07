@@ -26,6 +26,7 @@ use Luracast\Restler\RestException;
 use PFUser;
 use Project;
 use Rule_Regexp;
+use Tuleap\Docman\REST\v1\Folders\DocmanEmbeddedPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Folders\DocmanEmptyPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Folders\DocmanFolderPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Folders\DocmanWikiPOSTRepresentation;
@@ -89,8 +90,7 @@ class DocmanItemCreator
         PFUser $user,
         Project $project,
         DocmanItemPOSTRepresentation $docman_item_post_representation,
-        \DateTimeImmutable $current_time,
-        bool $is_embedded_allowed
+        \DateTimeImmutable $current_time
     ) {
         $this->checkDocumentDoesNotAlreadyExists(
             $docman_item_post_representation
@@ -128,25 +128,6 @@ class DocmanItemCreator
                     null
                 );
 
-            case ItemRepresentation::TYPE_EMBEDDED:
-                if ($is_embedded_allowed === false) {
-                    throw new RestException(403, 'Embedded files are not allowed');
-                }
-                $this->checkPropertiesByType($docman_item_post_representation, ItemRepresentation::TYPE_EMBEDDED);
-
-                return $this->createDocument(
-                    PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE,
-                    $current_time,
-                    $parent_item,
-                    $user,
-                    $project,
-                    $docman_item_post_representation->title,
-                    $docman_item_post_representation->description,
-                    null,
-                    null,
-                    $docman_item_post_representation->embedded_properties->content
-                );
-                break;
             default:
                 throw new \DomainException('Unknown document type: ' . $docman_item_post_representation->type);
         }
@@ -389,6 +370,42 @@ class DocmanItemCreator
 
     /**
      * @throws RestException
+     * @throws \Tuleap\Docman\CannotInstantiateItemWeHaveJustCreatedInDBException
+     */
+    public function createEmbedded(
+        Docman_Item $parent_item,
+        PFUser $user,
+        DocmanEmbeddedPOSTRepresentation $representation,
+        \DateTimeImmutable $current_time,
+        Project $project
+    ): CreatedItemRepresentation {
+        if ($this->item_factory->doesTitleCorrespondToExistingDocument($representation->title, $parent_item->getId())) {
+            throw new RestException(400, "A document with same title already exists in the given folder.");
+        }
+
+        $this->checkDocumentIsNotBeingUploaded(
+            $parent_item,
+            PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE,
+            $representation->title,
+            $current_time
+        );
+
+        return $this->createDocument(
+            PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE,
+            $current_time,
+            $parent_item,
+            $user,
+            $project,
+            $representation->title,
+            $representation->description,
+            null,
+            null,
+            $representation->embedded_properties->content
+        );
+    }
+
+    /**
+     * @throws RestException
      */
     private function checkDocumentDoesNotAlreadyExists(DocmanItemPOSTRepresentation $representation)
     {
@@ -407,8 +424,7 @@ class DocmanItemCreator
         $checked_type
     ) : void {
         $types_with_properties = [
-            ItemRepresentation::TYPE_LINK,
-            ItemRepresentation::TYPE_EMBEDDED
+            ItemRepresentation::TYPE_LINK
         ];
 
         foreach ($types_with_properties as $type) {

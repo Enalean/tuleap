@@ -24,10 +24,12 @@ use Luracast\Restler\RestException;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStreamDirectory;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Docman\REST\v1\Folders\DocmanEmbeddedPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Folders\DocmanEmptyPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Folders\DocmanFolderPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Folders\DocmanPOSTFilesRepresentation;
 use Tuleap\Docman\REST\v1\Folders\DocmanWikiPOSTRepresentation;
+use Tuleap\Docman\REST\v1\Folders\EmbeddedPropertiesPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Folders\WikiPropertiesPOSTRepresentation;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
 use Tuleap\Docman\Upload\Document\DocumentToUpload;
@@ -458,10 +460,8 @@ class DocmanItemCreatorTest extends TestCase
         $project      = \Mockery::mock(\Project::class);
         $current_time = new \DateTimeImmutable();
 
-        $post_representation                               = new DocmanItemPOSTRepresentation();
-        $post_representation->type                         = ItemRepresentation::TYPE_EMBEDDED;
+        $post_representation                               = new DocmanEmbeddedPOSTRepresentation();
         $post_representation->title                        = 'Embedded file';
-        $post_representation->parent_id                    = 11;
         $post_representation->embedded_properties          = new EmbeddedPropertiesPOSTRepresentation();
         $post_representation->embedded_properties->content = 'My original content :)';
 
@@ -487,61 +487,15 @@ class DocmanItemCreatorTest extends TestCase
 
         $this->creator_visitor->shouldReceive('visitEmbeddedFile')->once();
 
-        $is_embedded_allowed         = true;
-        $created_item_representation = $item_creator->create(
+        $created_item_representation = $item_creator->createEmbedded(
             $parent_item,
             $user,
-            $project,
             $post_representation,
             $current_time,
-            $is_embedded_allowed
+            $project
         );
 
         $this->assertSame(12, $created_item_representation->id);
-    }
-
-    public function testEmbeddedFileCannotBeCreatedIfDocmanDoesNotAllowEmbedded(): void
-    {
-        $item_creator = new DocmanItemCreator(
-            $this->item_factory,
-            $this->document_ongoing_upload_retriever,
-            $this->document_to_upload_creator,
-            $this->creator_visitor,
-            $this->empty_file_to_upload_finisher
-        );
-
-        $parent_item  = \Mockery::mock(\Docman_Item::class);
-        $user         = \Mockery::mock(\PFUser::class);
-        $project      = \Mockery::mock(\Project::class);
-        $current_time = new \DateTimeImmutable();
-
-        $post_representation                               = new DocmanItemPOSTRepresentation();
-        $post_representation->type                         = ItemRepresentation::TYPE_EMBEDDED;
-        $post_representation->title                        = 'Embedded file';
-        $post_representation->parent_id                    = 11;
-        $post_representation->embedded_properties          = new EmbeddedPropertiesPOSTRepresentation();
-        $post_representation->embedded_properties->content = 'My original content failed :(';
-
-        $this->document_ongoing_upload_retriever->shouldReceive('isThereAlreadyAnUploadOngoing')->andReturns(false);
-
-        $this->item_factory
-            ->shouldReceive('createWithoutOrdering')
-            ->never();
-        $this->item_factory->shouldReceive('doesTitleCorrespondToExistingFolder')->andReturn(false);
-        $this->item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
-
-        $this->expectException(RestException::class);
-        $this->expectExceptionCode(403);
-
-        $is_embedded_allowed = false;
-        $item_creator->create(
-            $parent_item,
-            $user,
-            $project,
-            $post_representation,
-            $current_time,
-            $is_embedded_allowed
-        );
     }
 
     public function testItemAreRejectedIfItemWIthSameNameAlreadyExists()

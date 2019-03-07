@@ -392,6 +392,29 @@ class DocmanItemsTestFoldersTest extends DocmanBase
 
 
     /**
+     * @depends testGetRootId
+     */
+    public function testPostEmbeddedDocument(int $root_id): void
+    {
+        $headers = ['Content-Type' => 'application/json'];
+        $embedded_properties = ['content' => 'step1 : Avoid to sort items in the docman'];
+        $query = json_encode(
+            [
+                'title'           => 'How to become a Tuleap (embedded version)',
+                'description'     => 'A description',
+                'embedded_properties' => $embedded_properties
+            ]
+        );
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post('docman_folders/'.$root_id.'/embedded_files', $headers, $query)
+        );
+
+        $this->assertEquals(201, $response->getStatusCode());
+    }
+
+    /**
      * Find first item in given array of items which has given title.
      * @return array|null Found item. null otherwise.
      */
