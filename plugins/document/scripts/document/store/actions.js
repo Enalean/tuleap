@@ -205,6 +205,21 @@ export async function updateFile(context, [item, dropped_file]) {
     }
 }
 
+export const updateFileFromModal = async (
+    context,
+    [item, uploaded_file, version_title, changelog]
+) => {
+    try {
+        const new_version = await createNewVersion(item, version_title, changelog, uploaded_file);
+        if (uploaded_file.size === 0) {
+            return;
+        }
+        item.uploader = uploadVersion(context, uploaded_file, item, new_version);
+    } catch (exception) {
+        return handleErrorsForModal(context, exception);
+    }
+};
+
 export const setUserPreferenciesForFolder = (context, [folder_id, should_be_closed]) => {
     if (context.state.user_id === 0) {
         return;

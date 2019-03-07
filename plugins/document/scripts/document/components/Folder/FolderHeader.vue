@@ -36,6 +36,7 @@
                 </div>
                 <new-item-modal/>
                 <new-folder-modal/>
+                <update-file-modal/>
             </div>
             <div class="document-header-spacer"></div>
             <file-upload-manager/>
@@ -53,10 +54,12 @@ import DropdownButton from "./Dropdown/DropdownButton.vue";
 import FileUploadManager from "./FilesUploads/FilesUploadsManager.vue";
 import NewFolderModal from "./NewItem/NewFolderModal.vue";
 import DropdownMenuCurrentFolder from "./Dropdown/DropdownMenuCurrentFolder.vue";
+import UpdateFileModal from "./UpdateItem/UpdateFileModal.vue";
 
 export default {
     name: "FolderHeader",
     components: {
+        UpdateFileModal,
         DropdownMenuCurrentFolder,
         NewFolderModal,
         DropdownButton,

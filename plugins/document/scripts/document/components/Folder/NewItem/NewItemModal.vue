@@ -25,7 +25,7 @@
           v-on:submit="addDocument"
           enctype="multipart/form-data"
     >
-        <modal-header v-bind:modal_title="modal_title"/>
+        <modal-header v-bind:modal-title="modal_title" v-bind:aria-labelled-by="aria_labelled_by"/>
         <modal-feedback/>
         <div class="tlp-modal-body document-new-item-modal-body" v-if="is_displayed">
             <type-selector v-model="item.type"/>
@@ -38,7 +38,7 @@
             </global-properties>
         </div>
 
-        <modal-footer v-bind:is_loading="is_loading" v-bind:submit_button_label="submit_button_label"/>
+        <modal-footer v-bind:is-loading="is_loading" v-bind:submit-button-label="submit_button_label" v-bind:aria-labelled-by="aria_labelled_by"/>
     </form>
 </template>
 
@@ -102,6 +102,9 @@ export default {
         },
         modal_title() {
             return this.$gettext("New document");
+        },
+        aria_labelled_by() {
+            return "document-new-item-modal";
         }
     },
     mounted() {

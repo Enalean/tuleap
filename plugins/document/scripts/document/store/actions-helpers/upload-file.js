@@ -96,6 +96,8 @@ export function uploadVersion(context, dropped_file, updated_file, new_version) 
             updated_file.file_properties.html_url =
                 updated_file.file_properties.html_url + "&update_time=" + now;
             updated_file.last_update_date = now;
+            updated_file.file_properties.file_size = dropped_file.size;
+            updated_file.file_properties.file_type = dropped_file.type;
             context.commit("removeFileFromUploadsList", updated_file);
         },
         onError: ({ originalRequest }) => {

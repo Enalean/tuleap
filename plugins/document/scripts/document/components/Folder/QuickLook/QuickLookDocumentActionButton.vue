@@ -49,7 +49,7 @@
 import { mapState } from "vuex";
 import DropdownButton from "../Dropdown/DropdownButton.vue";
 import DropdownMenu from "../Dropdown/DropdownMenu.vue";
-import { TYPE_EMPTY, TYPE_WIKI } from "../../../constants.js";
+import { TYPE_EMPTY, TYPE_WIKI, TYPE_FILE } from "../../../constants.js";
 
 export default {
     components: { DropdownButton, DropdownMenu },
@@ -62,6 +62,10 @@ export default {
     },
     methods: {
         goToUpdate() {
+            if (this.item.type === TYPE_FILE) {
+                this.showUpdateFileModal();
+                return;
+            }
             const action =
                 this.item.type !== TYPE_WIKI && this.item.type !== TYPE_EMPTY
                     ? "action_new_version"
@@ -71,6 +75,13 @@ export default {
                 `/plugins/docman/index.php?group_id=${this.project_id}&id=${
                     this.item.id
                 }&action=${action}`
+            );
+        },
+        showUpdateFileModal() {
+            document.dispatchEvent(
+                new CustomEvent("show-update-file-modal", {
+                    detail: { current_item: this.item }
+                })
             );
         }
     }
