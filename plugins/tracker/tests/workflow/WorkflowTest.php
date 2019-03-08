@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -39,16 +39,32 @@ class WorkflowTest extends TuleapTestCase {
 
     /** @var XML_Security */
     private $xml_security;
+    private $transition_factory_test;
+    private $transition_factory_instance;
 
     public function setUp() {
         parent::setUp();
 
         $this->xml_security = new XML_Security();
         $this->xml_security->enableExternalLoadOfEntities();
+        $this->transition_factory_instance = \Mockery::spy(TransitionFactory::class);
+        $this->transition_factory_test     = new class ($this->transition_factory_instance) extends TransitionFactory
+        {
+            public function __construct($transition_factory_instance)
+            {
+                parent::$_instance = $transition_factory_instance;
+            }
+
+            public function clearInstance() : void
+            {
+                parent::$_instance = null;
+            }
+        };
     }
 
     public function tearDown() {
         $this->xml_security->disableExternalLoadOfEntities();
+        $this->transition_factory_test->clearInstance();
 
         parent::tearDown();
     }
@@ -172,7 +188,9 @@ class WorkflowTest extends TuleapTestCase {
 
     }
 
-    public function testExport() {
+    public function testExport()
+    {
+        $this->transition_factory_instance->shouldReceive('getTransitions')->andReturn([]);
 
         $ft1 = new MockTracker_FormElement_Field_List();
         $ff2 = new MockTracker_FormElement_Field_List();
