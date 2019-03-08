@@ -46,36 +46,47 @@ class XML_RNGValidator {
         return $dom;
     }
 
-    private function extractErrors(DOMDocument $dom, $rng_path)
+    /**
+     * @param DOMDocument $dom
+     * @param             $rng_path
+     * @throws XML_ParseException
+     */
+    private function extractErrors(DOMDocument $dom, $rng_path): void
     {
-        $java_parser_output = [];
-
         $system_command = new System_Command();
         $temp           = tempnam(ForgeConfig::get('tmp_dir'), 'xml');
         $xml_file       = tempnam(ForgeConfig::get('tmp_dir'), 'xml_src_');
+
         try {
             file_put_contents($xml_file, $dom->saveXML());
-            $indent = __DIR__ .'/../../utils/xml/indent.xsl';
-            $jing   = __DIR__ .'/../../utils/xml/jing.jar';
-            $system_command->exec('xsltproc -o ' . escapeshellarg($temp) . ' ' . escapeshellarg($indent) . ' ' .escapeshellarg($xml_file));
-            $java_parser_output = $system_command->exec('java -jar ' . escapeshellarg($jing) . ' ' .  escapeshellarg($rng_path) . ' ' . escapeshellarg($temp));
+            $indent = __DIR__ . '/../../utils/xml/indent.xsl';
+            $system_command->exec(
+                'xsltproc -o ' . escapeshellarg($temp) . ' ' . escapeshellarg($indent) . ' ' . escapeshellarg($xml_file)
+            );
         } catch (System_Command_CommandException $ex) {
-            throw new XML_ParseException($rng_path, [], file($temp, FILE_IGNORE_NEW_LINES));
+            unlink($temp);
+            throw new \RuntimeException("Unable to generate pretty print version of XML file for error handling");
+        }
+
+        try {
+            $jing   = __DIR__ .'/../../utils/xml/jing.jar';
+            $system_command->exec('java -jar ' . escapeshellarg($jing) . ' ' .  escapeshellarg($rng_path) . ' ' . escapeshellarg($temp));
+        } catch (System_Command_CommandException $ex) {
+            $errors = [];
+            foreach($ex->getOutput() as $o) {
+                $matches = array();
+                if (preg_match('/:(\d+):(\d+):([^:]+):(.*)/', $o, $matches)) {
+                    //1 line
+                    //2 column
+                    //3 type
+                    //4 message
+                    $errors[] = new XML_ParseError($matches[1], $matches[2], $matches[3], $matches[4]);
+                }
+            }
+            throw new XML_ParseException($rng_path, $errors, file($temp, FILE_IGNORE_NEW_LINES));
         } finally {
             unlink($temp);
             unlink($xml_file);
         }
-
-        $errors = array();
-        foreach($java_parser_output as $o) {
-            $matches = array();
-            preg_match('/:(\d+):(\d+):([^:]+):(.*)/', $o, $matches);
-            //1 line
-            //2 column
-            //3 type
-            //4 message
-            $errors[] = new XML_ParseError($matches[1], $matches[2], $matches[3], $matches[4]);
-        }
-        throw new XML_ParseException($rng_path, $errors, file($temp, FILE_IGNORE_NEW_LINES));
     }
 }

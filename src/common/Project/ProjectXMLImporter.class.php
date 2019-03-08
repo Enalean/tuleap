@@ -161,12 +161,14 @@ class ProjectXMLImporter {
             100,
             $this->xml_validator,
             ServiceManager::instance(),
-            $this->project_manager
+            $this->project_manager,
+            $this->logger
         );
         if ($is_template) {
             $this->logger->info("The project will be a template");
             $data->setIsTemplate();
         }
+        $this->logger->debug("ProjectMetadata extrcted from XML, now create in DB");
         $project = $this->project_creator->build($data);
 
         $this->logger->info("Execute system events to finish creation of project {$project->getID()}, this can take a while...");

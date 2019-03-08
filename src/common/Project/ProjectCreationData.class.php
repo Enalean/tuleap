@@ -17,8 +17,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class ProjectCreationData {
+class ProjectCreationData
+{
 
+    private $logger;
     private $data_services;
     private $data_fields;
     private $full_name;
@@ -31,6 +33,15 @@ class ProjectCreationData {
     private $trove_data;
     private $is_unrestricted = false;
     private $inherit_from_template = true;
+
+    public function __construct(?Logger $logger = null)
+    {
+        if ($logger === null) {
+            $this->logger = new Log_NoopLogger();
+        } else {
+            $this->logger = new WrapperLogger($logger, self::class);
+        }
+    }
 
     /**
      * Returns true if the data should be inherited from template (in DB)
@@ -156,9 +167,10 @@ class ProjectCreationData {
         $template_id = 100,
         XML_RNGValidator $xml_validator = null,
         ServiceManager $service_manager = null,
-        ProjectManager $project_manager = null)
-    {
-        $instance = new ProjectCreationData();
+        ProjectManager $project_manager = null,
+        ?Logger $logger = null)
+        {
+        $instance = new ProjectCreationData($logger);
         $instance->fromXML($xml, $template_id, $xml_validator, $service_manager, $project_manager);
         return $instance;
     }
@@ -180,8 +192,10 @@ class ProjectCreationData {
             $project_manager = ProjectManager::instance();
         }
 
+        $this->logger->debug("Start import from XML, validate RNG");
         $rng_path = realpath(dirname(__FILE__).'/../xml/resources/project/project.rng');
         $xml_validator->validate($xml, $rng_path);
+        $this->logger->debug("RNG validated, feed the data");
 
         $long_description_tagname = 'long-description';
 
@@ -213,6 +227,7 @@ class ProjectCreationData {
         $this->markUsedServicesFromXML($xml, $template_id, $service_manager, $project_manager);
 
         $this->inherit_from_template = isset($attrs['inherit-from-template']) && (bool) $attrs['inherit-from-template'] === true;
+        $this->logger->debug("Data gathered from XML");
     }
 
     /**
