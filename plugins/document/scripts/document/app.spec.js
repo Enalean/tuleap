@@ -32,6 +32,7 @@ import "./components/Breadcrumb/DocumentBreadCrumb.spec.js";
 
 import "./components/Folder/FolderContentRow.spec.js";
 
+import "./components/Folder/DragNDrop/CurrentFolderDropZone.spec.js";
 import "./components/Folder/DragNDrop/DragNDropHandler.spec.js";
 
 import "./components/Folder/Dropdown/DropdownButton.spec.js";
