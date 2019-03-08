@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -25,6 +25,7 @@ use ForgeConfig;
 use Logger;
 use PFUser;
 use Tracker_Artifact;
+use Tuleap\DB\DBConnection;
 use Tuleap\Project\XML\Export\ZipArchive;
 use Tuleap\Tracker\Artifact\ArtifactWithTrackerStructureExporter;
 
@@ -43,6 +44,10 @@ class ArchiveAndDeleteArtifactTask
      */
     private $event_manager;
     /**
+     * @var DBConnection
+     */
+    private $db_connection;
+    /**
      * @var Logger
      */
     private $logger;
@@ -51,25 +56,27 @@ class ArchiveAndDeleteArtifactTask
         ArtifactWithTrackerStructureExporter $artifact_with_tracker_structure_exporter,
         ArtifactDependenciesDeletor $dependencies_deletor,
         EventManager $event_manager,
+        DBConnection $db_connection,
         Logger $logger
     ) {
         $this->artifact_with_tracker_structure_exporter = $artifact_with_tracker_structure_exporter;
         $this->dependencies_deletor                     = $dependencies_deletor;
         $this->event_manager                            = $event_manager;
+        $this->db_connection                            = $db_connection;
         $this->logger                                   = $logger;
     }
 
-    public function archive(\Tracker_Artifact $artifact, \PFUser $user)
+    public function archive(\Tracker_Artifact $artifact, \PFUser $user) : void
     {
         $this->tryToArchiveArtifact($artifact, $user);
         $this->dependencies_deletor->cleanDependencies($artifact);
     }
 
-    private function tryToArchiveArtifact(Tracker_Artifact $artifact, PFUser $user)
+    private function tryToArchiveArtifact(Tracker_Artifact $artifact, PFUser $user) : void
     {
+        $archive_path = ForgeConfig::get('tmp_dir') . '/artifact_' . $artifact->getId() . '_' . time() . '.zip';
         try {
-            $archive_path = ForgeConfig::get('tmp_dir') . '/artifact_' . $artifact->getId() . '_' . time() . '.zip';
-            $archive      = new ZipArchive($archive_path);
+            $archive = new ZipArchive($archive_path);
             $this->artifact_with_tracker_structure_exporter->exportArtifactAndTrackerStructureToXML($user, $artifact, $archive);
             $archive->close();
             $params = [
@@ -88,6 +95,7 @@ class ArchiveAndDeleteArtifactTask
             if (file_exists($archive_path)) {
                 unlink($archive_path);
             }
+            $this->db_connection->reconnectAfterALongRunningProcess();
         }
     }
 }
