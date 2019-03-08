@@ -27,7 +27,6 @@ Mock::generate('Project');
 Mock::generate('FRSPackage');
 Mock::generate('WebDAVFRSPackage');
 Mock::generate('FRSReleaseFactory');
-Mock::generate('FRSFileFactory');
 Mock::generate('FRSFile');
 Mock::generate('WebDAVFRSFile');
 Mock::generate('WebDAVUtils');
@@ -843,8 +842,8 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
         $webDAVFRSRelease = new WebDAVFRSReleaseTestVersion($this);
 
         $webDAVFRSRelease->setReturnValue('userCanWrite', true);
-        $frsff = new MockFRSFileFactory();
-        $frsff->setReturnValue('isFileBaseNameExists', false);
+        $frsff = \Mockery::mock(FRSFileFactory::class);
+        $frsff->shouldReceive('isFileBaseNameExists')->andReturn(false);
         $utils = new MockWebDAVUtils();
         $utils->setReturnValue('getFileFactory', $frsff);
         $utils->setReturnValue('getIncomingFileSize', 65);
@@ -867,9 +866,9 @@ class WebDAVFRSReleaseTest extends TuleapTestCase {
         $webDAVFRSRelease = new WebDAVFRSReleaseTestVersion($this);
 
         $webDAVFRSRelease->setReturnValue('userCanWrite', true);
-        $frsff = new MockFRSFileFactory();
-        $frsff->setReturnValue('isFileBaseNameExists', false);
-        $frsff->setReturnValue('createFile', true);
+        $frsff = \Mockery::mock(FRSFileFactory::class);
+        $frsff->shouldReceive('isFileBaseNameExists')->andReturn(false);
+        $frsff->shouldReceive('createFile')->andReturn(true);
 
         $release = \Mockery::spy(FRSRelease::class);
         $release->shouldReceive('getReleaseID')->andReturns(1234);

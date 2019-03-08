@@ -177,7 +177,7 @@ class DocmanItemCreator
             );
 
             if ($file_properties->file_size === 0) {
-                $this->empty_file_to_upload_finisher->createEmptyFile($document_to_upload);
+                $this->empty_file_to_upload_finisher->createEmptyFile($document_to_upload, $file_properties->file_name);
 
                 $representation = new CreatedItemRepresentation();
                 $representation->build($document_to_upload->getItemId());

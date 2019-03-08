@@ -23,8 +23,6 @@ Mock::generatePartial('SystemEvent_COMPUTE_MD5SUM', 'SystemEvent_COMPUTE_MD5SUM_
 
 Mock::generate('PFUser');
 
-Mock::generate('FRSFileFactory');
-
 Mock::generate('FRSFile');
 
 class SystemEvent_COMPUTE_MD5SUM_Test extends TuleapTestCase {
@@ -51,17 +49,17 @@ class SystemEvent_COMPUTE_MD5SUM_Test extends TuleapTestCase {
         $evt->__construct('1', SystemEvent::TYPE_COMPUTE_MD5SUM, SystemEvent::OWNER_ROOT, '100012', SystemEvent::PRIORITY_MEDIUM, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
 
         // The file
-        $fileFactory = new MockFRSFileFactory($this);
+        $fileFactory = \Mockery::mock(FRSFileFactory::class);
         $file = new MockFRSFile($this);
         $evt->setReturnValue('getFileFactory', $fileFactory);
-        $fileFactory->setReturnValue('getFRSFileFromDb', $file, array('100012'));
+        $fileFactory->shouldReceive('getFRSFileFromDB')->with('100012')->andReturn($file);
         $file->setReturnValue('getFileLocation', '/var/lib/codendi/ftp/codendi/project_1/p2952_r10819/test.dump');
 
         $evt->setReturnValue('computeFRSMd5Sum', 'd41d8cd98f00b204e9800998ecf8427e');
 
         // DB
         $evt->setReturnValue('updateDB', true);
-        
+
         //Checksum comparison
         $evt->setReturnValue('compareMd5Checksums', true);
         // Expect everything went OK
@@ -76,10 +74,10 @@ class SystemEvent_COMPUTE_MD5SUM_Test extends TuleapTestCase {
         $evt->__construct('1', SystemEvent::TYPE_COMPUTE_MD5SUM, SystemEvent::OWNER_ROOT, '100012', SystemEvent::PRIORITY_MEDIUM, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
 
         // The file
-        $fileFactory = new MockFRSFileFactory($this);
+        $fileFactory = \Mockery::mock(FRSFileFactory::class);
         $file = new MockFRSFile($this);
         $evt->setReturnValue('getFileFactory', $fileFactory);
-        $fileFactory->setReturnValue('getFRSFileFromDb', $file, array('100012'));
+        $fileFactory->shouldReceive('getFRSFileFromDB')->with('100012')->andReturn($file);
         $file->setReturnValue('getFileLocation', '/var/lib/codendi/ftp/codendi/project_1/p2952_r10819/test.dump');
         $file->setReturnValue('getUserID', 142);
 
@@ -106,10 +104,10 @@ class SystemEvent_COMPUTE_MD5SUM_Test extends TuleapTestCase {
         $evt->__construct('1', SystemEvent::TYPE_COMPUTE_MD5SUM, SystemEvent::OWNER_ROOT, '10013', SystemEvent::PRIORITY_MEDIUM, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
 
         // The file
-        $fileFactory = new MockFRSFileFactory($this);
+        $fileFactory = \Mockery::mock(FRSFileFactory::class);
         $file = new MockFRSFile($this);
         $evt->setReturnValue('getFileFactory', $fileFactory);
-        $fileFactory->setReturnValue('getFRSFileFromDb', $file);
+        $fileFactory->shouldReceive('getFRSFileFromDB')->andReturn($file);
         $file->setReturnValue('getFileLocation', '/var/lib/codendi/ftp/codendi/project_1/p1827_r6573/webkit-1.0.tar.gz');
 
         $evt->setReturnValue('computeFRSMd5Sum', 'd41d8cd98f00b204e9800998ecf8427e');
@@ -124,16 +122,16 @@ class SystemEvent_COMPUTE_MD5SUM_Test extends TuleapTestCase {
         $this->assertEqual($evt->getStatus(), SystemEvent::STATUS_ERROR);
         $this->assertPattern('/Could not update the computed checksum for file/i', $evt->getLog());
     }
-    
+
     public function testComparisonMd5sumFailure() {
         $evt = new SystemEvent_COMPUTE_MD5SUM_TestVersion($this);
         $evt->__construct('1', SystemEvent::TYPE_COMPUTE_MD5SUM, SystemEvent::OWNER_ROOT, '100012', SystemEvent::PRIORITY_MEDIUM, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
 
         // The file
-        $fileFactory = new MockFRSFileFactory($this);
+        $fileFactory = \Mockery::mock(FRSFileFactory::class);
         $file = new MockFRSFile($this);
         $evt->setReturnValue('getFileFactory', $fileFactory);
-        $fileFactory->setReturnValue('getFRSFileFromDb', $file, array('100012'));
+        $fileFactory->shouldReceive('getFRSFileFromDB')->with('100012')->andReturn($file);
         $file->setReturnValue('getFileLocation', '/var/lib/codendi/ftp/codendi/project_1/p2952_r10819/test.dump');
         $file->setReturnValue('getUserID', 142);
 

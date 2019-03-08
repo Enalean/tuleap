@@ -18,8 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\FRS\Tests\REST;
 
+use Guzzle\Http\Client;
 use RestBase;
 
 class FileTest extends RestBase
@@ -28,19 +31,22 @@ class FileTest extends RestBase
 
     private $project_id;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
         $this->project_id = $this->getProjectId(self::PROJECT_NAME);
     }
 
-    public function testOPTIONSFile()
+    public function testOPTIONSFile(): void
     {
         $response = $this->getResponse($this->client->options('frs_files/1'));
-        $this->assertEquals(['OPTIONS', 'GET', 'POST', 'DELETE'], $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(
+            ['OPTIONS', 'GET', 'POST', 'DELETE'],
+            $response->getHeader('Allow')->normalize()->toArray()
+        );
     }
 
-    public function testGETFile()
+    public function testGETFile(): void
     {
         $file = $this->getResponse($this->client->get('frs_files/1'))->json();
 
@@ -55,7 +61,7 @@ class FileTest extends RestBase
         $this->assertEquals('rest_api_tester_1', $file['owner']['username']);
     }
 
-    public function testDELETEFile()
+    public function testDELETEFile(): void
     {
         $response = $this->getResponse($this->client->delete('frs_files/2'));
         $this->assertEquals(202, $response->getStatusCode());
@@ -63,17 +69,18 @@ class FileTest extends RestBase
         $this->assertEquals(404, $response->getStatusCode());
     }
 
-    public function testPOSTFile()
+    public function testPOSTFile(): void
     {
+        $file_size = 123;
+
         $query = [
-            'release_id'    => 1,
-            'name'          => 'File2',
-            'arch'          => 'x86_64',
-            'file_size'     => 123,
-            'type'          => 'text',
-            'reference_md5' => '7865eaef28db1b906eaf1e4fa353796d',
-            'comment'       => 'Awesome file'
+            'release_id' => 1,
+            'name'       => 'file_creation_' . bin2hex(random_bytes(8)),
+            'file_size'  => $file_size
         ];
+
+        $response0 = $this->getResponse($this->client->get('frs_release/1/files'));
+        $nb_files  = count($response0->json()['files']);
 
         $response1 = $this->getResponse($this->client->post('frs_files', null, json_encode($query)));
         $this->assertEquals(201, $response1->getStatusCode());
@@ -84,7 +91,57 @@ class FileTest extends RestBase
         $this->assertSame($response1->json()['upload_href'], $response2->json()['upload_href']);
 
         $query['file_size'] = 456;
-        $response3 = $this->getResponse($this->client->post('frs_files', null, json_encode($query)));
+        $response3          = $this->getResponse($this->client->post('frs_files', null, json_encode($query)));
         $this->assertEquals(409, $response3->getStatusCode());
+
+        $tus_client = new Client(
+            str_replace('/api/v1', '', $this->client->getBaseUrl()),
+            $this->client->getConfig()
+        );
+        $tus_client->setSslVerification(false, false, false);
+        $tus_response_upload = $this->getResponse(
+            $tus_client->patch(
+                $response1->json()['upload_href'],
+                [
+                    'Tus-Resumable' => '1.0.0',
+                    'Content-Type'  => 'application/offset+octet-stream',
+                    'Upload-Offset' => '0'
+                ],
+                str_repeat('A', $file_size)
+            )
+        );
+        $this->assertEquals(204, $tus_response_upload->getStatusCode());
+        $this->assertEquals([$file_size], $tus_response_upload->getHeader('Upload-Offset')->toArray());
+
+        $response_files = $this->getResponse($this->client->get('frs_release/1/files'));
+        $this->assertCount($nb_files + 1, $response_files->json()['files']);
+    }
+
+    public function testFileCreationWithASameNameIsNotRejectedWhenTheUploadHasBeenCanceled(): void
+    {
+        $query = [
+            'release_id' => 1,
+            'name'       => 'file_not_conflict_after_cancel_' . bin2hex(random_bytes(8)),
+            'file_size'  => 123
+        ];
+
+        $response_creation_file = $this->getResponse($this->client->post('frs_files', null, json_encode($query)));
+        $this->assertEquals(201, $response_creation_file->getStatusCode());
+
+        $tus_client = new Client(
+            str_replace('/api/v1', '', $this->client->getBaseUrl()),
+            $this->client->getConfig()
+        );
+        $tus_client->setSslVerification(false, false, false);
+        $tus_response_upload = $this->getResponse(
+            $tus_client->delete(
+                $response_creation_file->json()['upload_href'],
+                ['Tus-Resumable' => '1.0.0',]
+            )
+        );
+        $this->assertEquals(204, $tus_response_upload->getStatusCode());
+
+        $response_creation_file = $this->getResponse($this->client->post('frs_files', null, json_encode($query)));
+        $this->assertEquals(201, $response_creation_file->getStatusCode());
     }
 }

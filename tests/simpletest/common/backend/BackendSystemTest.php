@@ -27,7 +27,6 @@ Mock::generate('UserManager');
 Mock::generate('PFUser');
 Mock::generate('ProjectManager');
 Mock::generate('Project');
-Mock::generate('FRSFileFactory');
 Mock::generate('WikiAttachment');
 Mock::generatePartial('BackendSystem', 'BackendTestVersion', array('getUserManager',
                                                              'getProjectManager',
@@ -380,8 +379,8 @@ class BackendSystemTest extends TuleapTestCase {
 
         $daysBefore     = $_SERVER['REQUEST_TIME'] - (24*3600*5);
 
-        $ff = new MockFRSFileFactory($this);
-        $ff->setReturnValue('moveFiles', true);
+        $ff = \Mockery::mock(FRSFileFactory::class);
+        $ff->shouldReceive('moveFiles')->andReturn(true);
         //$ff->expectOnce('moveFiles', array($daysBefore, $backend));
 
         $wiki = new MockWikiAttachment($this);

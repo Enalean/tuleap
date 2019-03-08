@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,16 +18,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Docman\Upload\Document;
+declare(strict_types=1);
+
+namespace Tuleap\FRS\Upload;
 
 use PHPUnit\Framework\TestCase;
 use Tuleap\Upload\FileBeingUploadedInformation;
 
-class DocumentUploadPathAllocatorTest extends TestCase
+class UploadPathAllocatorTest extends TestCase
 {
-    public function testTheSamePathIsAlwaysAllocatedForAGivenItemID()
+    public function testTheSamePathIsAlwaysAllocatedForAGivenItemID(): void
     {
-        $allocator = new DocumentUploadPathAllocator();
+        $allocator = new UploadPathAllocator();
 
         $this->assertSame(
             $allocator->getPathForItemBeingUploaded(new FileBeingUploadedInformation(1, 'Filename', 123, 0)),

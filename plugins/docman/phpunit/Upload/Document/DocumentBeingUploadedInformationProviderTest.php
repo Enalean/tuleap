@@ -38,7 +38,8 @@ class DocumentBeingUploadedInformationProviderTest extends TestCase
         $data_store     = new DocumentBeingUploadedInformationProvider($path_allocator, $dao, $item_factory);
 
         $dao->shouldReceive('searchDocumentOngoingUploadByItemIDUserIDAndExpirationDate')->andReturns([
-            'filesize' => 123456
+            'filesize' => 123456,
+            'filename' => 'readme.md'
         ]);
         $item_factory->shouldReceive('getItemFromDb')->andReturns(null);
 
@@ -62,7 +63,8 @@ class DocumentBeingUploadedInformationProviderTest extends TestCase
         $data_store     = new DocumentBeingUploadedInformationProvider($path_allocator, $dao, $item_factory);
 
         $dao->shouldReceive('searchDocumentOngoingUploadByItemIDUserIDAndExpirationDate')->andReturns([
-            'filesize' => 123456
+            'filesize' => 123456,
+            'filename' => 'readme.md'
         ]);
         $item_factory->shouldReceive('getItemFromDb')->andReturns(\Mockery::mock(\Docman_Item::class));
 
