@@ -1211,6 +1211,7 @@ fi
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/pullrequest
 %{APP_DIR}/src/www/assets/pullrequest
+%attr(00644,root,root) /etc/logrotate.d/tuleap_pullrequest
 %config(noreplace) /etc/logrotate.d/tuleap_pullrequest
 
 %files plugin-ldap
