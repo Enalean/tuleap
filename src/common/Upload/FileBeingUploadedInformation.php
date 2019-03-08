@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Docman\Upload;
+namespace Tuleap\Upload;
 
 use Tuleap\Tus\TusFileInformation;
 

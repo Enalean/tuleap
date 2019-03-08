@@ -20,12 +20,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Docman\Upload;
+namespace Tuleap\Upload;
 
 use Tuleap\Tus\TusFileInformation;
 use Tuleap\Tus\TusLocker;
 
-final class DocumentBeingUploadedLocker implements TusLocker
+final class FileBeingUploadedLocker implements TusLocker
 {
     /**
      * @var array<int, resource>
@@ -33,11 +33,11 @@ final class DocumentBeingUploadedLocker implements TusLocker
     private static $holded_semaphores = [];
 
     /**
-     * @var UploadPathAllocator
+     * @var PathAllocator
      */
     private $path_allocator;
 
-    public function __construct(UploadPathAllocator $path_allocator)
+    public function __construct(PathAllocator $path_allocator)
     {
         $this->path_allocator = $path_allocator;
     }

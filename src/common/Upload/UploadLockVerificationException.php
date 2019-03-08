@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Docman\Upload;
+namespace Tuleap\Upload;
 
 final class UploadLockVerificationException extends \RuntimeException
 {
