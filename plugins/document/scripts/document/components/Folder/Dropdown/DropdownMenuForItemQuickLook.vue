@@ -24,6 +24,7 @@
             class="tlp-dropdown-menu-item"
             role="menuitem"
             v-on:click.prevent="showNewFolderModal"
+            data-test="dropdown-menu-folder-creation"
         >
             <i class="fa fa-fw fa-folder-open-o tlp-dropdown-menu-item-icon"></i>
             <translate>New folder</translate>
@@ -33,6 +34,7 @@
             class="tlp-dropdown-menu-item"
             role="menuitem"
             v-on:click.prevent="showNewDocumentModal"
+            data-test="dropdown-menu-file-creation"
         >
             <i class="fa fa-fw fa-plus tlp-dropdown-menu-item-icon"></i>
             <translate>New document</translate>
