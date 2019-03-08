@@ -73,7 +73,7 @@ class ProjectBaselineControllerIntTest extends IntegrationTestCaseWithStubs
                         ->build()
                 )
                 ->snapshotDate(DateTime::createFromFormat('Y-m-d H:i:s', '2019-03-21 14:47:03'))
-                ->author(new PFuser(['user_id' => 22]))
+                ->author(new PFUser(['user_id' => 22]))
                 ->build()
         );
 
