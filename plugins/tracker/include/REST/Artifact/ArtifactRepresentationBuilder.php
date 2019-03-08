@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,11 +18,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\Tracker\REST\Artifact;
+
+use Closure;
+use PFUser;
+use Tracker_Artifact;
+use Tracker_Artifact_Changeset;
+use Tracker_Artifact_PaginatedArtifacts;
+use Tracker_ArtifactFactory;
+use Tracker_FormElement_Field;
+use Tracker_FormElement_Field_Alphanum;
+use Tracker_FormElementFactory;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenter;
+use Tuleap\Tracker\REST\ChangesetRepresentationCollection;
 
-class Tracker_REST_Artifact_ArtifactRepresentationBuilder {
-
+class ArtifactRepresentationBuilder
+{
     /**
      * @var Tracker_ArtifactFactory
      */
@@ -49,12 +61,13 @@ class Tracker_REST_Artifact_ArtifactRepresentationBuilder {
     /**
      * Return an artifact snapshot representation
      *
-     * @param PFUser $user
+     * @param PFUser           $user
      * @param Tracker_Artifact $artifact
-     * @return Tuleap\Tracker\REST\Artifact\ArtifactRepresentation
+     * @return ArtifactRepresentation
      */
-    public function getArtifactRepresentationWithFieldValues(PFUser $user, Tracker_Artifact $artifact) {
-        $artifact_representation = new Tuleap\Tracker\REST\Artifact\ArtifactRepresentation();
+    public function getArtifactRepresentationWithFieldValues(PFUser $user, Tracker_Artifact $artifact)
+    {
+        $artifact_representation = new ArtifactRepresentation();
         $artifact_representation->build(
             $user,
             $artifact,
@@ -68,12 +81,13 @@ class Tracker_REST_Artifact_ArtifactRepresentationBuilder {
     /**
      * Return an artifact snapshot representation
      *
-     * @param PFUser $user
+     * @param PFUser           $user
      * @param Tracker_Artifact $artifact
-     * @return Tuleap\Tracker\REST\Artifact\ArtifactRepresentation
+     * @return ArtifactRepresentation
      */
-    public function getArtifactRepresentationWithFieldValuesByFieldValues(PFUser $user, Tracker_Artifact $artifact) {
-        $artifact_representation = new Tuleap\Tracker\REST\Artifact\ArtifactRepresentation();
+    public function getArtifactRepresentationWithFieldValuesByFieldValues(PFUser $user, Tracker_Artifact $artifact)
+    {
+        $artifact_representation = new ArtifactRepresentation();
         $artifact_representation->build(
             $user,
             $artifact,
@@ -87,12 +101,13 @@ class Tracker_REST_Artifact_ArtifactRepresentationBuilder {
     /**
      * Return an artifact snapshot representation
      *
-     * @param PFUser $user
+     * @param PFUser           $user
      * @param Tracker_Artifact $artifact
-     * @return Tuleap\Tracker\REST\Artifact\ArtifactRepresentation
+     * @return ArtifactRepresentation
      */
-    public function getArtifactRepresentationWithFieldValuesInBothFormat(PFUser $user, Tracker_Artifact $artifact) {
-        $artifact_representation = new Tuleap\Tracker\REST\Artifact\ArtifactRepresentation();
+    public function getArtifactRepresentationWithFieldValuesInBothFormat(PFUser $user, Tracker_Artifact $artifact)
+    {
+        $artifact_representation = new ArtifactRepresentation();
         $artifact_representation->build(
             $user,
             $artifact,
@@ -106,12 +121,13 @@ class Tracker_REST_Artifact_ArtifactRepresentationBuilder {
     /**
      * Return an artifact snapshot representation
      *
-     * @param PFUser $user
+     * @param PFUser           $user
      * @param Tracker_Artifact $artifact
-     * @return Tuleap\Tracker\REST\Artifact\ArtifactRepresentation
+     * @return ArtifactRepresentation
      */
-    public function getArtifactRepresentation(PFUser $user, Tracker_Artifact $artifact) {
-        $artifact_representation = new Tuleap\Tracker\REST\Artifact\ArtifactRepresentation();
+    public function getArtifactRepresentation(PFUser $user, Tracker_Artifact $artifact)
+    {
+        $artifact_representation = new ArtifactRepresentation();
         $artifact_representation->build(
             $user,
             $artifact,
@@ -122,7 +138,8 @@ class Tracker_REST_Artifact_ArtifactRepresentationBuilder {
         return $artifact_representation;
     }
 
-    private function getFieldsValues(PFUser $user, Tracker_Artifact $artifact) {
+    private function getFieldsValues(PFUser $user, Tracker_Artifact $artifact)
+    {
         $changeset = $artifact->getLastChangeset();
         return $this->mapAndFilter(
             $this->formelement_factory->getUsedFieldsForREST($artifact->getTracker()),
@@ -130,15 +147,16 @@ class Tracker_REST_Artifact_ArtifactRepresentationBuilder {
         );
     }
 
-    private function getFieldValuesIndexedByName(PFUser $user, Tracker_Artifact $artifact) {
+    private function getFieldValuesIndexedByName(PFUser $user, Tracker_Artifact $artifact)
+    {
         $changeset = $artifact->getLastChangeset();
-        $values    = array();
+        $values    = [];
 
         foreach ($this->formelement_factory->getUsedFieldsForREST($artifact->getTracker()) as $field) {
             if (! $field->userCanRead($user) || ! $field instanceof Tracker_FormElement_Field_Alphanum) {
                 continue;
             }
-            $field_value = $field->getRESTValue($user, $changeset);
+            $field_value               = $field->getRESTValue($user, $changeset);
             $values[$field->getName()] = $field_value;
         }
 
@@ -149,12 +167,13 @@ class Tracker_REST_Artifact_ArtifactRepresentationBuilder {
      * Given a collection and a closure, apply on all elements, filter out the
      * empty results and normalize the array
      *
-     * @param array $collection
+     * @param array   $collection
      * @param Closure $function
      * @return array
      */
-    private function mapAndFilter(array $collection, Closure $function) {
-        $array = array();
+    private function mapAndFilter(array $collection, Closure $function)
+    {
+        $array = [];
         foreach ($collection as $item) {
             $array[] = $function($item);
         }
@@ -166,14 +185,16 @@ class Tracker_REST_Artifact_ArtifactRepresentationBuilder {
         );
     }
 
-    private function mapFilterSlice(array $collection, $offset, $limit, Closure $function) {
+    private function mapFilterSlice(array $collection, $offset, $limit, Closure $function)
+    {
         return $this->mapAndFilter(
             array_slice($collection, $offset, $limit),
             $function
         );
     }
 
-    private function getFieldsValuesFilter(PFUser $user, Tracker_Artifact_Changeset $changeset) {
+    private function getFieldsValuesFilter(PFUser $user, Tracker_Artifact_Changeset $changeset)
+    {
         return function (Tracker_FormElement_Field $field) use ($user, $changeset) {
             if ($field->userCanRead($user)) {
                 return $field->getRESTValue($user, $changeset);
@@ -186,22 +207,29 @@ class Tracker_REST_Artifact_ArtifactRepresentationBuilder {
     /**
      * Returns REST representation of artifact history
      *
-     * @param PFUser $user
+     * @param PFUser           $user
      * @param Tracker_Artifact $artifact
-     * @param string $fields
-     * @param int $offset
-     * @param int $limit
+     * @param string           $fields
+     * @param int              $offset
+     * @param int              $limit
      *
-     * @return Tuleap\Tracker\REST\ChangesetRepresentationCollection
+     * @return ChangesetRepresentationCollection
      */
-    public function getArtifactChangesetsRepresentation(PFUser $user, Tracker_Artifact $artifact, $fields, $offset, $limit, $reverse_order) {
+    public function getArtifactChangesetsRepresentation(
+        PFUser $user,
+        Tracker_Artifact $artifact,
+        $fields,
+        $offset,
+        $limit,
+        $reverse_order
+    ) {
         $all_changesets = $artifact->getChangesets();
 
         if ($reverse_order) {
             $all_changesets = array_reverse($all_changesets);
         }
 
-        return new Tuleap\Tracker\REST\ChangesetRepresentationCollection(
+        return new ChangesetRepresentationCollection(
             $this->mapFilterSlice(
                 $all_changesets,
                 $offset,
@@ -239,11 +267,14 @@ class Tracker_REST_Artifact_ArtifactRepresentationBuilder {
         }
 
         $total_size               = (int) $this->nature_dao->foundRows();
-        $artifact_representations = array();
+        $artifact_representations = [];
         foreach ($linked_artifacts_ids as $artifact_id) {
             $artifact = $this->artifact_factory->getArtifactByIdUserCanView($user, $artifact_id);
             if ($artifact) {
-                $artifact_representations[] = $this->getArtifactRepresentationWithFieldValuesInBothFormat($user, $artifact);
+                $artifact_representations[] = $this->getArtifactRepresentationWithFieldValuesInBothFormat(
+                    $user,
+                    $artifact
+                );
             }
         }
 

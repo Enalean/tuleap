@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -32,10 +32,8 @@ use Tracker_Report_InvalidRESTCriterionException as InvalidCriteriaException;
 use Tracker_Report_REST;
 use Tracker_ReportDao;
 use Tracker_ReportFactory;
-use Tracker_REST_Artifact_ArtifactRepresentationBuilder;
 use Tracker_REST_TrackerRestBuilder;
 use TrackerFactory;
-use Tuleap\DB\DataAccessObject;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\REST\AuthenticatedResource;
@@ -52,6 +50,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\SyntaxError;
 use Tuleap\Tracker\Report\Query\Advanced\LimitSizeIsExceededException;
 use Tuleap\Tracker\Report\Query\Advanced\SearchablesAreInvalidException;
 use Tuleap\Tracker\Report\Query\Advanced\SearchablesDoNotExistException;
+use Tuleap\Tracker\REST\Artifact\ArtifactRepresentationBuilder;
 use Tuleap\Tracker\REST\Artifact\ParentArtifactReference;
 use Tuleap\Tracker\REST\ReportRepresentation;
 use Tuleap\Tracker\REST\v1\Workflow\ModeUpdater;
@@ -402,7 +401,7 @@ class TrackersResource extends AuthenticatedResource
      */
     private function getListOfArtifactRepresentation(PFUser $user, $artifacts, $with_all_field_values)
     {
-        $builder = new Tracker_REST_Artifact_ArtifactRepresentationBuilder(
+        $builder = new ArtifactRepresentationBuilder(
             $this->formelement_factory,
             $this->tracker_artifact_factory,
             new NatureDao()

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -25,6 +25,7 @@ use Tuleap\REST\AuthenticatedResource;
 use \Tuleap\REST\Exceptions\LimitOutOfBoundsException;
 use \Luracast\Restler\RestException;
 use Tuleap\REST\ProjectStatusVerificator;
+use Tuleap\Tracker\REST\Artifact\ArtifactRepresentationBuilder;
 use \Tuleap\Tracker\REST\ReportRepresentation;
 use \Tracker_ReportFactory;
 use \Tracker_ArtifactFactory;
@@ -32,7 +33,6 @@ use \Tracker_FormElementFactory;
 use \UserManager;
 use \PFUser;
 use \Tuleap\REST\Header;
-use \Tracker_REST_Artifact_ArtifactRepresentationBuilder;
 use \Tracker_URLVerification;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 
@@ -47,7 +47,7 @@ class ReportsResource extends AuthenticatedResource
     const DEFAULT_VALUES = null;
     const ALL_VALUES     = 'all';
 
-    /** @var Tracker_REST_Artifact_ArtifactRepresentationBuilder */
+    /** @var ArtifactRepresentationBuilder */
     private $builder;
 
     /** @var ReportArtifactFactory */
@@ -56,7 +56,7 @@ class ReportsResource extends AuthenticatedResource
     public function __construct()
     {
         $artifact_factory = Tracker_ArtifactFactory::instance();
-        $this->builder    = new Tracker_REST_Artifact_ArtifactRepresentationBuilder(
+        $this->builder    = new ArtifactRepresentationBuilder(
             Tracker_FormElementFactory::instance(),
             $artifact_factory,
             new NatureDao()
