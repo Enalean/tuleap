@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -96,6 +96,8 @@ Mock::generate('PFUser');
 
 class Tracker_FormElement_Field_ListTest extends TuleapTestCase {
 
+    private $transition_factory_test;
+
     public function setUp()
     {
         parent::setUp();
@@ -105,6 +107,24 @@ class Tracker_FormElement_Field_ListTest extends TuleapTestCase {
         $this->cv_class               = 'Tracker_Artifact_ChangesetValue_List';
         $this->mockcv_class           = 'MockTracker_Artifact_ChangesetValue_List';
         $GLOBALS['Response'] = new MockResponse();
+
+        $this->transition_factory_test = new class extends TransitionFactory {
+            public function __construct()
+            {
+                parent::$_instance = \Mockery::spy(TransitionFactory::class);
+            }
+
+            public function clearInstance() : void
+            {
+                parent::$_instance = null;
+            }
+        };
+    }
+
+    public function tearDown() : void
+    {
+        parent::tearDown();
+        $this->transition_factory_test->clearInstance();
     }
 
     function testGetChangesetValue() {

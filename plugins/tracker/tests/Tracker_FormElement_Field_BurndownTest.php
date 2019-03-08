@@ -141,6 +141,8 @@ class Tracker_FormElement_Field_Burndown_JPGraphRender extends TuleapTestCase
 
         $this->user = \Mockery::spy(\PFUser::class);
         stub($this->burndown_field)->isCacheBurndownAlreadyAsked()->returns(false);
+
+        SystemEventManager::setInstance(\Mockery::spy(SystemEventManager::class));
     }
 
     private function getAStartDateField($value)
@@ -251,6 +253,7 @@ class Tracker_FormElement_Field_Burndown_JPGraphRender extends TuleapTestCase
 
     public function tearDown()
     {
+        SystemEventManager::clearInstance();
         Tracker_FormElementFactory::clearInstance();
         unset($_SERVER['REQUEST_URI']);
         parent::tearDown();
@@ -322,11 +325,14 @@ class Tracker_FormElement_Field_Burndown_D3Render extends TuleapTestCase
 
         $this->user = \Mockery::spy(\PFUser::class);
         stub($this->burndown_field)->isCacheBurndownAlreadyAsked()->returns(false);
+
+        SystemEventManager::setInstance(\Mockery::spy(SystemEventManager::class));
     }
 
     public function tearDown()
     {
         $GLOBALS['sys_user_theme'] = $this->old_user_theme;
+        SystemEventManager::clearInstance();
         Tracker_FormElementFactory::clearInstance();
         unset($_SERVER['REQUEST_URI']);
         unset($GLOBALS['Language']);
