@@ -18,7 +18,7 @@
  */
 
 import {
-    addNewDocument,
+    addNewLink,
     addNewFolder,
     addNewEmpty,
     addNewWiki,
@@ -33,7 +33,7 @@ import {
 } from "./rest-querier.js";
 
 import { tlp, mockFetchSuccess } from "tlp-mocks";
-import { DOCMAN_FOLDER_EXPANDED_VALUE } from "../constants";
+import { DOCMAN_FOLDER_EXPANDED_VALUE } from "../constants.js";
 
 describe("rest-querier", () => {
     afterEach(() => {
@@ -210,125 +210,6 @@ describe("rest-querier", () => {
         });
     });
 
-    describe("addNewDocument()", () => {
-        it("Given data are valid, then a new empty item will be added in docman", async () => {
-            const item = JSON.stringify({
-                title: "my empty document",
-                description: "",
-                type: "empty",
-                parent_id: 2
-            });
-            mockFetchSuccess(tlp.post, { return_json: { id: 66, uri: "path/to/66" } });
-
-            await addNewDocument({ title: "my empty document", description: "", type: "empty" }, 2);
-
-            expect(tlp.post).toHaveBeenCalledWith("/api/docman_items", {
-                headers: jasmine.objectContaining({ "content-type": "application/json" }),
-                body: item
-            });
-        });
-        it("Given data are valid, then a new wiki item will be added in docman", async () => {
-            const item = JSON.stringify({
-                title: "my wiki document",
-                description: "",
-                type: "wiki",
-                wiki_properties: { page_name: "My paqe" },
-                parent_id: 2
-            });
-            mockFetchSuccess(tlp.post, { return_json: { id: 66, uri: "path/to/66" } });
-
-            await addNewDocument(
-                {
-                    title: "my wiki document",
-                    description: "",
-                    type: "wiki",
-                    wiki_properties: { page_name: "My paqe" }
-                },
-                2
-            );
-
-            expect(tlp.post).toHaveBeenCalledWith("/api/docman_items", {
-                headers: jasmine.objectContaining({ "content-type": "application/json" }),
-                body: item
-            });
-        });
-        it("Given data are valid, then a new link item will be added in docman", async () => {
-            const item = JSON.stringify({
-                title: "my link document",
-                description: "",
-                type: "link",
-                link_properties: { link_url: "http://example.test" },
-                parent_id: 2
-            });
-            mockFetchSuccess(tlp.post, { return_json: { id: 66, uri: "path/to/66" } });
-
-            await addNewDocument(
-                {
-                    title: "my link document",
-                    description: "",
-                    type: "link",
-                    link_properties: { link_url: "http://example.test" }
-                },
-                2
-            );
-
-            expect(tlp.post).toHaveBeenCalledWith("/api/docman_items", {
-                headers: jasmine.objectContaining({ "content-type": "application/json" }),
-                body: item
-            });
-        });
-        it("Given data contains wiki stuff, and type is empty, then wiki stuff is not sent to the server", async () => {
-            const item = JSON.stringify({
-                title: "my empty document",
-                description: "",
-                type: "empty",
-                parent_id: 2
-            });
-            mockFetchSuccess(tlp.post, { return_json: { id: 66, uri: "path/to/66" } });
-
-            await addNewDocument(
-                {
-                    title: "my empty document",
-                    description: "",
-                    type: "empty",
-                    wiki_properties: { page_name: "My paqe" }
-                },
-                2
-            );
-
-            expect(tlp.post).toHaveBeenCalledWith("/api/docman_items", {
-                headers: jasmine.objectContaining({ "content-type": "application/json" }),
-                body: item
-            });
-        });
-        it("Given data contains wiki and link stuff, and type is wiki, then link stuff is not sent to the server", async () => {
-            const item = JSON.stringify({
-                title: "my wiki document",
-                description: "",
-                type: "wiki",
-                wiki_properties: { page_name: "My paqe" },
-                parent_id: 2
-            });
-            mockFetchSuccess(tlp.post, { return_json: { id: 66, uri: "path/to/66" } });
-
-            await addNewDocument(
-                {
-                    title: "my wiki document",
-                    description: "",
-                    type: "wiki",
-                    wiki_properties: { page_name: "My paqe" },
-                    link_properties: { link_url: "http://example.test" }
-                },
-                2
-            );
-
-            expect(tlp.post).toHaveBeenCalledWith("/api/docman_items", {
-                headers: jasmine.objectContaining({ "content-type": "application/json" }),
-                body: item
-            });
-        });
-    });
-
     describe("createNewVersion()", () => {
         it("Given data are valid, then a new version of item will be created", async () => {
             const item = JSON.stringify({
@@ -420,6 +301,33 @@ describe("rest-querier", () => {
             );
 
             expect(tlp.post).toHaveBeenCalledWith("/api/docman_folders/2/wikis", {
+                headers: jasmine.objectContaining({ "content-type": "application/json" }),
+                body: item
+            });
+        });
+    });
+
+    describe("addNewLink()", () => {
+        it("Create a new link document", async () => {
+            const item = JSON.stringify({
+                title: "my link document",
+                description: "",
+                type: "link",
+                link_properties: { link_url: "http://example.test" }
+            });
+            mockFetchSuccess(tlp.post, { return_json: { id: 66, uri: "path/to/66" } });
+
+            await addNewLink(
+                {
+                    title: "my link document",
+                    description: "",
+                    type: "link",
+                    link_properties: { link_url: "http://example.test" }
+                },
+                2
+            );
+
+            expect(tlp.post).toHaveBeenCalledWith("/api/docman_folders/2/links", {
                 headers: jasmine.objectContaining({ "content-type": "application/json" }),
                 body: item
             });

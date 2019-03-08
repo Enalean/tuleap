@@ -289,55 +289,6 @@ class DocmanItemsTest extends DocmanBase
     }
 
     /**
-     * @depends testGetRootId
-     */
-    public function testPostLinkDocument(int $root_id): void
-    {
-        $headers         = ['Content-Type' => 'application/json'];
-        $link_properties = ['link_url' => 'https://turfu.example.test'];
-        $query           = json_encode(
-            [
-                'title'           => 'To the future',
-                'description'     => 'A description',
-                'parent_id'       => $root_id,
-                'type'            => 'link',
-                'link_properties' => $link_properties
-            ]
-        );
-
-        $response = $this->getResponseByName(
-            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->post('docman_items', $headers, $query)
-        );
-
-        $this->assertEquals(201, $response->getStatusCode());
-    }
-
-    /**
-     * @depends             testGetRootId
-     */
-    public function testPostLinkReturns400IfTypeAndPropertiesDoesNotMatch(int $root_id): void
-    {
-        $headers             = ['Content-Type' => 'application/json'];
-        $embedded_properties = ['content' => 'Ten steps to become a Tuleap'];
-        $query               = json_encode(
-            [
-                'title'               => 'To the future',
-                'description'         => 'A description',
-                'parent_id'           => $root_id,
-                'type'                => 'link',
-                'embedded_properties' => $embedded_properties
-            ]
-        );
-
-        $response = $this->getResponseByName(
-            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->post('docman_items', $headers, $query)
-        );
-        $this->assertEquals(400, $response->getStatusCode());
-    }
-
-    /**
      * Find first item in given array of items which has given title.
      * @return array|null Found item. null otherwise.
      */

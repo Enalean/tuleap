@@ -33,6 +33,7 @@ use Tuleap\Docman\REST\v1\Folders\DocmanEmbeddedPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Folders\DocmanEmptyPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Folders\DocmanFolderPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Folders\DocmanItemCreatorBuilder;
+use Tuleap\Docman\REST\v1\Folders\DocmanLinkPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Folders\DocmanPOSTFilesRepresentation;
 use Tuleap\Docman\REST\v1\Folders\DocmanWikiPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Folders\ItemCanHaveSubItemsChecker;
@@ -122,7 +123,7 @@ class DocmanFoldersResource extends AuthenticatedResource
      * Create new folder
      *
      * @param int  $id     Id of the parent folder
-     * @param DocmanFolderPOSTRepresentation  $test representation test {@from body} {@type \Tuleap\Docman\REST\v1\Folders\DocmanFolderPOSTRepresentation}
+     * @param DocmanFolderPOSTRepresentation  $folder_representation {@from body} {@type \Tuleap\Docman\REST\v1\Folders\DocmanFolderPOSTRepresentation}
      *
      * @url    POST {id}/folders
      * @access hybrid
@@ -168,7 +169,7 @@ class DocmanFoldersResource extends AuthenticatedResource
      * Create new empty document
      *
      * @param int                                 $id   Id of the parent folder
-     * @param DocmanEmptyPOSTRepresentation $test representation test {@from body} {@type \Tuleap\Docman\REST\v1\Folders\DocmanEmptyPOSTRepresentation}
+     * @param DocmanEmptyPOSTRepresentation $empty_representation {@from body} {@type \Tuleap\Docman\REST\v1\Folders\DocmanEmptyPOSTRepresentation}
      *
      * @url    POST {id}/empties
      * @access hybrid
@@ -214,7 +215,7 @@ class DocmanFoldersResource extends AuthenticatedResource
      * Create new wiki document
      *
      * @param int                                 $id   Id of the parent folder
-     * @param DocmanWikiPOSTRepresentation $test representation test {@from body} {@type \Tuleap\Docman\REST\v1\Folders\DocmanWikiPOSTRepresentation}
+     * @param DocmanWikiPOSTRepresentation $wiki_representation {@from body} {@type \Tuleap\Docman\REST\v1\Folders\DocmanWikiPOSTRepresentation}
      *
      * @url    POST {id}/wikis
      * @access hybrid
@@ -260,7 +261,7 @@ class DocmanFoldersResource extends AuthenticatedResource
      * Create new embedded document
      *
      * @param int                              $id   Id of the parent folder
-     * @param DocmanEmbeddedPOSTRepresentation $test representation test {@from body}
+     * @param DocmanEmbeddedPOSTRepresentation $embeds_representation {@from body}
      *                                               {@type \Tuleap\Docman\REST\v1\Folders\DocmanEmbeddedPOSTRepresentation}
      *
      * @url    POST {id}/embedded_files
@@ -310,6 +311,54 @@ class DocmanFoldersResource extends AuthenticatedResource
             $project
         );
     }
+
+    /**
+     * Create new link document
+     *
+     * @param int                              $id   Id of the parent folder
+     * @param DocmanLinkPOSTRepresentation $links_representation {@from body}
+     *                                               {@type \Tuleap\Docman\REST\v1\Folders\DocmanLinkPOSTRepresentation}
+     *
+     * @url    POST {id}/links
+     * @access hybrid
+     * @status 201
+     *
+     * @return CreatedItemRepresentation
+     *
+     * @throws 400
+     * @throws 403
+     * @throws 404
+     * @throws 409
+     */
+    public function postLinks(int $id, DocmanLinkPOSTRepresentation $links_representation): CreatedItemRepresentation
+    {
+        $this->checkAccess();
+        $this->sendAllowHeadersWithPost();
+
+        $current_user = $this->rest_user_manager->getCurrentUser();
+
+        $item_request = $this->request_builder->buildFromItemId($id);
+        $parent       = $item_request->getItem();
+        $this->checkItemCanHaveSubitems($parent);
+        $project = $item_request->getProject();
+        $this->getDocmanFolderPermissionChecker($project)
+             ->checkUserCanWriteFolder($current_user, $id);
+
+        $event_adder = $this->getDocmanItemsEventAdder();
+        $event_adder->addLogEvents();
+        $event_adder->addNotificationEvents($project);
+
+        $docman_item_creator = DocmanItemCreatorBuilder::build($project);
+
+        return $docman_item_creator->createLink(
+            $parent,
+            $current_user,
+            $links_representation,
+            new \DateTimeImmutable(),
+            $project
+        );
+    }
+
     private function sendAllowHeadersWithPost()
     {
         Header::allowOptionsPost();

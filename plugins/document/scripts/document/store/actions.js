@@ -19,11 +19,11 @@
 
 import Vue from "vue";
 import {
-    addNewDocument,
     addNewEmpty,
     addNewWiki,
     addNewFile,
     addNewEmbedded,
+    addNewLink,
     cancelUpload,
     createNewVersion,
     deleteUserPreferenciesForFolderInProject,
@@ -44,7 +44,14 @@ import { loadFolderContent } from "./actions-helpers/load-folder-content.js";
 import { loadAscendantHierarchy } from "./actions-helpers/load-ascendant-hierarchy.js";
 import { uploadFile, uploadVersion } from "./actions-helpers/upload-file.js";
 import { flagItemAsCreated } from "./actions-helpers/flag-item-as-created.js";
-import { TYPE_EMBEDDED, TYPE_EMPTY, TYPE_FILE, TYPE_FOLDER, TYPE_WIKI } from "../constants.js";
+import {
+    TYPE_EMBEDDED,
+    TYPE_EMPTY,
+    TYPE_FILE,
+    TYPE_FOLDER,
+    TYPE_WIKI,
+    TYPE_LINK
+} from "../constants.js";
 import { addNewFolder } from "../api/rest-querier";
 
 export const loadRootFolder = async context => {
@@ -111,10 +118,12 @@ export const createNewItem = async (context, [item, parent, current_folder]) => 
                 item_reference = await addNewEmbedded(item, parent.id);
 
                 return adjustFileToContentAfterItemCreation(item_reference.id);
-            default:
-                item_reference = await addNewDocument(item, parent.id);
+            case TYPE_LINK:
+                item_reference = await addNewLink(item, parent.id);
 
                 return adjustFileToContentAfterItemCreation(item_reference.id);
+            default:
+                throw new Error("Item type " + item.type + " is not supported for creation");
         }
     } catch (exception) {
         return handleErrorsForModal(context, exception);

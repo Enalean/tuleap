@@ -29,12 +29,10 @@ use Docman_ItemDao;
 use Docman_ItemFactory;
 use EventManager;
 use Luracast\Restler\RestException;
-use PluginManager;
 use Project;
 use ProjectManager;
 use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\ApprovalTable\ApprovalTableStateMapper;
-use Tuleap\Docman\REST\v1\Folders\DocmanItemCreatorBuilder;
 use Tuleap\Docman\REST\v1\Folders\ItemCanHaveSubItemsChecker;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
@@ -110,81 +108,6 @@ class DocmanItemsResource extends AuthenticatedResource
                 $exception->getMessage()
             );
         }
-    }
-
-    /**
-     * Create new item
-     *
-     * <pre>
-     * /!\ Docman REST routes are under construction and subject to changes /!\
-     * </pre>
-     *
-     * When creating a new file, you will get an URL where the file needs
-     * to be uploaded using the
-     * <a href="https://tus.io/protocols/resumable-upload.html">tus resumable upload protocol</a>
-     * to validate the item creation. You will need to use the same authentication mechanism you used
-     * to call this endpoint.
-     * <br/>
-     * <br/>
-     * If you want to create an empty or a folder item, all keys xxx_properties must be null.
-     * <br/>
-     * If the document is not an empty or a folder item,'type = xxx' MUST match with the key 'xxx_properties'. The others properties types must not be written.
-     * <br/>
-     * <br/>
-     * Example with the creation of a wiki: <br/>
-     * <pre>
-     *{ <br/>
-     * &nbsp; "title": "My wiki", <br/>
-     * &nbsp; "parent_id": 1, <br/>
-     * &nbsp; "type": "wiki", <br/>
-     * &nbsp; "wiki_properties": { <br/>
-     * &nbsp; &nbsp; "page_name": "string" <br/>
-     * &nbsp; } <br/>
-     *}
-     * </pre>
-     *
-     * @param DocmanItemPOSTRepresentation $docman_item_post_representation
-     *
-     * @url    POST
-     * @access hybrid
-     * @status 201
-     *
-     * @deprecated this route will be splitted into smaller routes, easier to use (POST docman_folders/id/type)
-     *
-     * @return CreatedItemRepresentation
-     *
-     * @throws 400
-     * @throws 403
-     * @throws 404
-     * @throws 409
-     */
-    public function post(DocmanItemPOSTRepresentation $docman_item_post_representation)
-    {
-        $this->checkAccess();
-        $this->sendAllowHeadersWithPost();
-
-        $current_user = $this->rest_user_manager->getCurrentUser();
-
-        $item_request = $this->request_builder->buildFromItemId($docman_item_post_representation->parent_id);
-        $parent       = $item_request->getItem();
-        $this->checkItemCanHaveSubitems($parent);
-        $project = $item_request->getProject();
-        $this->getDocmanFolderPermissionChecker($project)
-             ->checkUserCanWriteFolder($current_user, $docman_item_post_representation->parent_id);
-
-        $event_adder = $this->getDocmanItemsEventAdder();
-        $event_adder->addLogEvents();
-        $event_adder->addNotificationEvents($project);
-
-        $docman_item_creator = DocmanItemCreatorBuilder::build($project);
-
-        return $docman_item_creator->create(
-            $parent,
-            $current_user,
-            $project,
-            $docman_item_post_representation,
-            new \DateTimeImmutable()
-        );
     }
 
     /**
@@ -288,6 +211,24 @@ class DocmanItemsResource extends AuthenticatedResource
     }
 
     /**
+     * Create new item
+     *
+     * @url    POST
+     * @access hybrid
+     *
+     * @deprecated this route will be split into smaller routes, easier to use (POST docman_folders/id/type)
+     *
+     * @throws 301
+     */
+    public function post()
+    {
+        throw new RestException(
+            301,
+            "This route have been split into smaller routes, please use POST docman_folders/id/type instead"
+        );
+    }
+
+    /**
      * @throws I18NRestException
      */
     private function checkItemCanHaveSubitems(\Docman_Item $item)
@@ -357,15 +298,5 @@ class DocmanItemsResource extends AuthenticatedResource
             new ApprovalTableRetriever(new \Docman_ApprovalTableFactoriesFactory())
         );
         return $item_representation_builder;
-    }
-
-    private function getDocmanFolderPermissionChecker(Project $project): DocmanFolderPermissionChecker
-    {
-        return new DocmanFolderPermissionChecker($this->getDocmanPermissionManager($project));
-    }
-
-    private function getDocmanItemsEventAdder(): DocmanItemsEventAdder
-    {
-        return new DocmanItemsEventAdder($this->event_manager);
     }
 }
