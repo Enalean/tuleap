@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -41,7 +41,6 @@ use Tracker_FormElement_RESTValueByField_NotImplementedException;
 use Tracker_FormElementFactory;
 use Tracker_NoChangeException;
 use Tracker_REST_Artifact_ArtifactCreator;
-use Tracker_REST_Artifact_ArtifactRepresentationBuilder;
 use Tracker_REST_Artifact_ArtifactUpdater;
 use Tracker_REST_Artifact_ArtifactValidator;
 use Tracker_URLVerification;
@@ -80,6 +79,7 @@ use Tuleap\Tracker\Exception\SemanticTitleNotDefinedException;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\FormElement\Field\ListFields\FieldValueMatcher;
 use Tuleap\Tracker\REST\Artifact\ArtifactReference;
+use Tuleap\Tracker\REST\Artifact\ArtifactRepresentationBuilder;
 use Tuleap\Tracker\REST\Artifact\MovedArtifactValueBuilder;
 use Tuleap\Tracker\REST\ChangesetCommentRepresentation;
 use Tuleap\Tracker\REST\TrackerReference;
@@ -122,7 +122,7 @@ class ArtifactsResource extends AuthenticatedResource {
     /** @var Tracker_ArtifactFactory */
     private $artifact_factory;
 
-    /** @var Tracker_REST_Artifact_ArtifactRepresentationBuilder */
+    /** @var ArtifactRepresentationBuilder */
     private $builder;
 
     /** @var Tracker_FormElementFactory */
@@ -154,7 +154,7 @@ class ArtifactsResource extends AuthenticatedResource {
         $this->tracker_factory     = TrackerFactory::instance();
         $this->formelement_factory = Tracker_FormElementFactory::instance();
         $this->artifact_factory    = Tracker_ArtifactFactory::instance();
-        $this->builder             = new Tracker_REST_Artifact_ArtifactRepresentationBuilder(
+        $this->builder             = new ArtifactRepresentationBuilder(
             $this->formelement_factory,
             $this->artifact_factory,
             new NatureDao()

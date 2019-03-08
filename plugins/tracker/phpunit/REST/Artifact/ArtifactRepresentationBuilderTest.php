@@ -28,7 +28,6 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tracker_Artifact_Changeset;
-use Tracker_REST_Artifact_ArtifactRepresentationBuilder;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\REST\ChangesetRepresentation;
@@ -39,7 +38,7 @@ final class ArtifactRepresentationBuilderTest extends TestCase
     use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
 
-    /** @var Tracker_REST_Artifact_ArtifactRepresentationBuilder */
+    /** @var ArtifactRepresentationBuilder */
     private $builder;
     /** @var Mockery\MockInterface */
     private $form_element_factory;
@@ -54,7 +53,7 @@ final class ArtifactRepresentationBuilderTest extends TestCase
         $this->form_element_factory = Mockery::mock(\Tracker_FormElementFactory::class);
         $this->artifact_factory     = Mockery::mock(\Tracker_ArtifactFactory::class);
         $this->nature_dao           = Mockery::mock(NatureDao::class);
-        $this->builder              = new Tracker_REST_Artifact_ArtifactRepresentationBuilder(
+        $this->builder              = new ArtifactRepresentationBuilder(
             $this->form_element_factory,
             $this->artifact_factory,
             $this->nature_dao

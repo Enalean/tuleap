@@ -25,12 +25,12 @@ use FRSRelease;
 use PFUser;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
-use Tracker_REST_Artifact_ArtifactRepresentationBuilder;
 use Tuleap\FRS\Link\Retriever;
 use Tuleap\FRS\UploadedLinksRetriever;
 use Tuleap\Project\REST\ProjectReference;
 use Tuleap\REST\JsonCast;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
+use Tuleap\Tracker\REST\Artifact\ArtifactRepresentationBuilder;
 
 class ReleaseRepresentation
 {
@@ -165,7 +165,7 @@ class ReleaseRepresentation
             return null;
         }
 
-        $tracker_artifact_builder = new Tracker_REST_Artifact_ArtifactRepresentationBuilder(
+        $tracker_artifact_builder = new ArtifactRepresentationBuilder(
             Tracker_FormElementFactory::instance(),
             Tracker_ArtifactFactory::instance(),
             new NatureDao()
