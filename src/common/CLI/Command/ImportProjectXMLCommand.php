@@ -187,10 +187,10 @@ class ImportProjectXMLCommand extends Command
         $security      = new XML_Security();
         $xml_validator = new XML_RNGValidator();
 
-        $transformer = new \User\XML\Import\MappingFileOptimusPrimeTransformer($user_manager, $use_lame_password);
-        $console     = new \TruncateLevelLogger(new Log_ConsoleLogger(), \ForgeConfig::get('sys_logger_level'));
-        $logger      = new ProjectXMLImporterLogger();
-        $broker_log  = new BrokerLogger(array($logger, $console));
+        $transformer    = new \User\XML\Import\MappingFileOptimusPrimeTransformer($user_manager, $use_lame_password);
+        $console_logger = new ConsoleLogger($output);
+        $file_logger    = new ProjectXMLImporterLogger();
+        $broker_log  = new BrokerLogger(array($file_logger, $console_logger));
         $builder     = new \User\XML\Import\UsersToBeImportedCollectionBuilder(
             $user_manager,
             $broker_log,
@@ -325,18 +325,21 @@ class ImportProjectXMLCommand extends Command
             } else {
                 $xml_importer->importFromArchive($configuration, $project_id, $archive);
             }
+            return 0;
         } catch (\XML_ParseException $exception) {
+            $broker_log->error($exception->getMessage());
             foreach ($exception->getErrors() as $parse_error) {
-                (new ConsoleLogger($output))->error('XML: '.$parse_error.' line:'.$exception->getSourceXMLForError($parse_error));
+                $broker_log->error('XML: '.$parse_error.' line:'.$exception->getSourceXMLForError($parse_error));
             }
         } catch (ImportNotValidException $exception) {
-            (new ConsoleLogger($output))->error("Some natures used in trackers are not created on plateform.");
+            $broker_log->error("Some natures used in trackers are not created on plateform.");
         } catch (\Exception $exception) {
-            (new ConsoleLogger($output))->error(get_class($exception).': '.$exception->getMessage().' in '.$exception->getFile().' L'.$exception->getLine());
+            $broker_log->error(get_class($exception).': '.$exception->getMessage().' in '.$exception->getFile().' L'.$exception->getLine());
         } finally {
             if ($archive) {
                 $archive->cleanUp();
             }
         }
+        return 1;
     }
 }
