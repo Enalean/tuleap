@@ -18,9 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'common/layout/Layout.class.php';
-
-require_once 'common/event/EventManager.class.php';
 Mock::generate('EventManager');
 
 /**

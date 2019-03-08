@@ -361,7 +361,6 @@ if ($request->isPost() && $request->exist('Register')) {
 }
 
 if($page != 'admin_creation'){
-   require_once('common/event/EventManager.class.php');
     $em = EventManager::instance();
     $em->processEvent('before_register',
         array(

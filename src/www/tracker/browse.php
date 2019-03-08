@@ -42,9 +42,6 @@
 // $pv = printable version (=1)
 //
 
-require_once('common/event/EventManager.class.php');
-
-
 //
 //  make sure this person has permission to view artifacts
 //

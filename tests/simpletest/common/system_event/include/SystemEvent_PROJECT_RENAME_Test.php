@@ -19,22 +19,15 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-require_once('common/system_event/include/SystemEvent_PROJECT_RENAME.class.php');
 Mock::generatePartial('SystemEvent_PROJECT_RENAME', 'SystemEvent_PROJECT_RENAME_TestVersion', array('getProject', 'getBackend', 'getEventManager', 'done', 'updateDB', 'addProjectHistory'));
 
 Mock::generate('Project');
 
-require_once('common/backend/BackendSystem.class.php');
 Mock::generate('BackendSystem');
 
-require_once('common/backend/BackendSVN.class.php');
 Mock::generate('BackendSVN');
 
-require_once('common/backend/BackendCVS.class.php');
 Mock::generate('BackendCVS');
-
-require_once('common/event/EventManager.class.php');
-Mock::generate('EventManager');
 
 class SystemEvent_PROJECT_RENAME_Test extends TuleapTestCase {
 
