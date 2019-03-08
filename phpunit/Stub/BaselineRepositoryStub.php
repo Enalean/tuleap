@@ -59,7 +59,7 @@ class BaselineRepositoryStub implements BaselineRepository
         return $baseline;
     }
 
-    public function findById(int $id): ?Baseline
+    public function findById(PFUser $current_user, int $id): ?Baseline
     {
         return $this->baselines_by_id[$id];
     }
@@ -88,7 +88,7 @@ class BaselineRepositoryStub implements BaselineRepository
     /**
      * @return Baseline[]
      */
-    public function findByProject(Project $project, int $page_size, int $baseline_offset): array
+    public function findByProject(PFUser $current_user, Project $project, int $page_size, int $baseline_offset): array
     {
         $matching_baselines = array_filter(
             $this->baselines_by_id,

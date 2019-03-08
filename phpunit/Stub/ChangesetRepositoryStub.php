@@ -36,8 +36,10 @@ class ChangesetRepositoryStub implements ChangesetRepository
     /** @var Tracker_Artifact_Changeset */
     private $changeset;
 
-    public function findByArtifactAndDate(Tracker_Artifact $artifact, DateTime $date): ?Tracker_Artifact_Changeset
-    {
+    public function findByArtifactAndDate(
+        Tracker_Artifact $artifact,
+        DateTime $date
+    ): ?Tracker_Artifact_Changeset {
         return $this->changeset;
     }
 

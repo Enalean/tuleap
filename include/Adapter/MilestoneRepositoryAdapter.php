@@ -23,25 +23,34 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\Adapter;
 
+use PFUser;
 use Tracker_Artifact;
 use Tracker_ArtifactFactory;
 use Tuleap\Baseline\MilestoneRepository;
 
 class MilestoneRepositoryAdapter implements MilestoneRepository
 {
-    /**
-     * @var Tracker_ArtifactFactory
-     */
+    /** @var Tracker_ArtifactFactory */
     private $artifact_factory;
 
-    public function __construct(Tracker_ArtifactFactory $artifact_factory)
+    /** @var AdapterPermissions */
+    private $adapter_permissions;
+
+    public function __construct(Tracker_ArtifactFactory $artifact_factory, AdapterPermissions $adapter_permissions)
     {
-        $this->artifact_factory = $artifact_factory;
+        $this->artifact_factory    = $artifact_factory;
+        $this->adapter_permissions = $adapter_permissions;
     }
 
-    public function findById(int $id): ?Tracker_Artifact
+    public function findById(PFUser $current_user, int $id): ?Tracker_Artifact
     {
         $milestone = $this->artifact_factory->getArtifactById($id);
+        if ($milestone === null) {
+            return null;
+        }
+        if (! $this->adapter_permissions->canUserReadArtifact($current_user, $milestone)) {
+            return null;
+        }
         // TODO check $milestone is a milestone
         return $milestone;
     }

@@ -23,11 +23,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\Stub;
 
+use PFUser;
 use Project;
 use Tuleap\Baseline\NotAuthorizedException;
 use Tuleap\Baseline\Permissions;
-use Tuleap\Baseline\SimplifiedBaseline;
-use Tuleap\Baseline\TransientBaseline;
 
 /**
  * Implementation of Permissions used for tests.
@@ -37,7 +36,14 @@ class PermissionsStub implements Permissions
     /** @var bool */
     private $all_permitted;
 
-    public function permitAll(): void
+    public function checkUserHasAdminRoleOn(PFUser $user, Project $project): void
+    {
+        if ($this->all_permitted !== true) {
+            throw new NotAuthorizedException("You're not allowed to execute this operation");
+        }
+    }
+
+    public function permitAll()
     {
         $this->all_permitted = true;
     }
@@ -45,35 +51,5 @@ class PermissionsStub implements Permissions
     public function denyAll()
     {
         $this->all_permitted = false;
-    }
-
-    /**
-     * @throws NotAuthorizedException
-     */
-    public function checkCreateBaseline(TransientBaseline $baseline)
-    {
-        if (! $this->all_permitted) {
-            throw new NotAuthorizedException('Baseline creation not authorized');
-        }
-    }
-
-    /**
-     * @throws NotAuthorizedException
-     */
-    public function checkReadSimpleBaseline(SimplifiedBaseline $baseline): void
-    {
-        if (! $this->all_permitted) {
-            throw new NotAuthorizedException('Simple baseline read not authorized');
-        }
-    }
-
-    /**
-     * @throws NotAuthorizedException
-     */
-    public function checkReadBaselinesOn(Project $project)
-    {
-        if (! $this->all_permitted) {
-            throw new NotAuthorizedException('Baseline read not authorized on given project');
-        }
     }
 }

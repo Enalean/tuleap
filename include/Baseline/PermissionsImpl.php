@@ -23,112 +23,34 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline;
 
+use PFUser;
 use Project;
-use Tracker_Artifact;
 
 class PermissionsImpl implements Permissions
 {
-    /** @var CurrentUserProvider */
-    private $current_user_provider;
-
-    /** @var ProjectPermissions */
-    private $project_permissions;
-
     /** @var RoleAssignmentRepository */
     private $role_assignment_repository;
 
-    public function __construct(
-        CurrentUserProvider $current_user_provider,
-        ProjectPermissions $project_permissions,
-        RoleAssignmentRepository $role_assignment_repository
-    ) {
-        $this->current_user_provider      = $current_user_provider;
-        $this->project_permissions        = $project_permissions;
+    public function __construct(RoleAssignmentRepository $role_assignment_repository)
+    {
         $this->role_assignment_repository = $role_assignment_repository;
     }
 
     /**
      * @throws NotAuthorizedException
      */
-    public function checkCreateBaseline(TransientBaseline $baseline)
+    public function checkUserHasAdminRoleOn(PFUser $user, Project $project): void
     {
-        $project = $baseline->getMilestone()->getTracker()->getProject();
-
-        if (! $this->isCurrentUserAdminOf($project)
-            && ! $this->hasCurrentUserRole(Role::ADMIN, $project)) {
-            throw new NotAuthorizedException(
-                sprintf(
-                    "You cannot create a baseline on project with id %u",
-                    $project->getID()
-                )
-            );
-        }
-        $this->checkReadArtifact($baseline->getMilestone());
-    }
-
-    /**
-     * @throws NotAuthorizedException
-     */
-    public function checkReadSimpleBaseline(SimplifiedBaseline $baseline): void
-    {
-        $this->checkReadArtifact($baseline->getMilestone());
-    }
-
-    /**
-     * @throws NotAuthorizedException
-     */
-    public function checkReadBaselinesOn(Project $project): void
-    {
-        $this->project_permissions->checkRead($project);
-    }
-
-    /**
-     * @throws NotAuthorizedException
-     */
-    private function checkReadArtifact(Tracker_Artifact $artifact): void
-    {
-        if (! $artifact->userCanView($this->current_user_provider->getUser())) {
-            throw new NotAuthorizedException(
-                dgettext('tuleap-baseline', 'You cannot read this artifact')
-            );
+        if ($user->isSuperUser() || $user->isAdmin($project->getId())) {
+            return;
         }
 
-        $tracker = $artifact->getTracker();
-        if (! $tracker->userCanView($this->current_user_provider->getUser())) {
-            throw new NotAuthorizedException(
-                dgettext('tuleap-baseline', 'You cannot read this artifact because you cannot access to its tracker')
-            );
-        }
-
-        $project = $tracker->getProject();
-        try {
-            $this->project_permissions->checkRead($project);
-        } catch (NotAuthorizedException $e) {
-            throw new NotAuthorizedException(
-                dgettext(
-                    'tuleap-baseline',
-                    'You cannot read this artifact because you cannot access to its project'
-                )
-            );
-        }
-    }
-
-    private function isCurrentUserAdminOf(Project $project)
-    {
-        $current_user = $this->current_user_provider->getUser();
-        return $current_user->isSuperUser() || $current_user->isAdmin($project->getId());
-    }
-
-    private function hasCurrentUserRole(string $role, Project $project)
-    {
-        $current_user = $this->current_user_provider->getUser();
-
-        $assignments = $this->role_assignment_repository->findByProjectAndRole($project, $role);
+        $assignments = $this->role_assignment_repository->findByProjectAndRole($project, Role::ADMIN);
         foreach ($assignments as $assignment) {
-            if ($current_user->isMemberOfUGroup($assignment->getUserGroupId(), $project->getID())) {
-                return true;
+            if ($user->isMemberOfUGroup($assignment->getUserGroupId(), $project->getID())) {
+                return;
             }
         }
-        return false;
+        throw new NotAuthorizedException("You're not allowed to execute this operation");
     }
 }

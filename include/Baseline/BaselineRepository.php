@@ -35,7 +35,7 @@ interface BaselineRepository
         DateTime $snapshot_date
     ): Baseline;
 
-    public function findById(int $id): ?Baseline;
+    public function findById(PFUser $current_user, int $id): ?Baseline;
 
     /**
      * Find all baselines on given project, ordered by snapshot date.
@@ -43,7 +43,7 @@ interface BaselineRepository
      * @param int $baseline_offset Fetch baselines from this index (start with 0), then follow snapshot date order.
      * @return Baseline[]
      */
-    public function findByProject(Project $project, int $page_size, int $baseline_offset): array;
+    public function findByProject(PFUser $current_user, Project $project, int $page_size, int $baseline_offset): array;
 
     public function countByProject(Project $project): int;
 }

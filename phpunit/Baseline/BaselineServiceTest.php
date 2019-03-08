@@ -29,6 +29,7 @@ use DateTime;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
+use PFUser;
 use PHPUnit\Framework\TestCase;
 use Project;
 use Tracker_Artifact;
@@ -84,6 +85,9 @@ class BaselineServiceTest extends TestCase
         );
     }
 
+    /** @var PFUser */
+    private $a_user;
+
     /** @var Project|MockInterface */
     private $a_project;
 
@@ -96,6 +100,7 @@ class BaselineServiceTest extends TestCase
     /** @before */
     public function createEntities()
     {
+        $this->a_user      = new PFUser();
         $this->a_project   = Mockery::mock(Project::class);
         $this->a_milestone = MilestoneFactory::one()->build();
         $this->a_date      = DateTimeFactory::one();
@@ -109,7 +114,7 @@ class BaselineServiceTest extends TestCase
             ->shouldReceive('findByArtifactAndDate')
             ->andReturn(null);
 
-        $this->service->findSimplified($this->a_milestone, $this->a_date);
+        $this->service->findSimplified($this->a_user, $this->a_milestone, $this->a_date);
     }
 
     public function testFindSimplifiedReturnsNullTitleWhenNoCorrespondingSemanticDefined()
@@ -122,7 +127,7 @@ class BaselineServiceTest extends TestCase
             ->shouldReceive('findTitleByTracker')
             ->andReturn(null);
 
-        $baseline = $this->service->findSimplified($this->a_milestone, $this->a_date);
+        $baseline = $this->service->findSimplified($this->a_user, $this->a_milestone, $this->a_date);
 
         $this->assertNull($baseline->getTitle());
     }
@@ -137,7 +142,7 @@ class BaselineServiceTest extends TestCase
             ->shouldReceive('findDescriptionByTracker')
             ->andReturn(null);
 
-        $baseline = $this->service->findSimplified($this->a_milestone, $this->a_date);
+        $baseline = $this->service->findSimplified($this->a_user, $this->a_milestone, $this->a_date);
 
         $this->assertNull($baseline->getDescription());
     }
@@ -152,7 +157,7 @@ class BaselineServiceTest extends TestCase
             ->shouldReceive('findStatusByTracker')
             ->andReturn(null);
 
-        $baseline = $this->service->findSimplified($this->a_milestone, $this->a_date);
+        $baseline = $this->service->findSimplified($this->a_user, $this->a_milestone, $this->a_date);
 
         $this->assertNull($baseline->getStatus());
     }
@@ -162,14 +167,14 @@ class BaselineServiceTest extends TestCase
         $baselines = [BaselineFactory::one()->build()];
         $this->baseline_repository
             ->shouldReceive('findByProject')
-            ->with($this->a_project, 10, 3)
+            ->with($this->a_user, $this->a_project, 10, 3)
             ->andReturn($baselines);
         $this->baseline_repository
             ->shouldReceive('countByProject')
             ->with($this->a_project)
             ->andReturn(233);
 
-        $baselines_page = $this->service->findByProject($this->a_project, 10, 3);
+        $baselines_page = $this->service->findByProject($this->a_user, $this->a_project, 10, 3);
 
         $this->assertEquals($baselines, $baselines_page->getBaselines());
         $this->assertEquals(233, $baselines_page->getTotalBaselineCount());

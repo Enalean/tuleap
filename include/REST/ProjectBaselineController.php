@@ -24,24 +24,30 @@ declare(strict_types=1);
 namespace Tuleap\Baseline\REST;
 
 use Tuleap\Baseline\BaselineService;
+use Tuleap\Baseline\CurrentUserProvider;
 use Tuleap\Baseline\NotAuthorizedException;
 use Tuleap\Baseline\ProjectRepository;
 use Tuleap\REST\I18NRestException;
 
 class ProjectBaselineController
 {
-    /**
-     * @var BaselineService
-     */
+    /** @var CurrentUserProvider */
+    private $current_user_provider;
+
+    /** @var BaselineService */
     private $baseline_service;
 
     /** @var ProjectRepository */
     private $project_repository;
 
-    public function __construct(BaselineService $baseline_service, ProjectRepository $project_repository)
-    {
-        $this->baseline_service   = $baseline_service;
-        $this->project_repository = $project_repository;
+    public function __construct(
+        CurrentUserProvider $current_user_provider,
+        BaselineService $baseline_service,
+        ProjectRepository $project_repository
+    ) {
+        $this->current_user_provider = $current_user_provider;
+        $this->baseline_service      = $baseline_service;
+        $this->project_repository    = $project_repository;
     }
 
     /**
@@ -50,7 +56,9 @@ class ProjectBaselineController
      */
     public function get(int $project_id, int $limit, int $offset): BaselinesPageRepresentation
     {
-        $project = $this->project_repository->findById($project_id);
+        $current_user = $this->current_user_provider->getUser();
+
+        $project = $this->project_repository->findById($current_user, $project_id);
         if ($project === null) {
             throw new I18NRestException(
                 404,
@@ -59,6 +67,7 @@ class ProjectBaselineController
         }
         try {
             $page = $this->baseline_service->findByProject(
+                $current_user,
                 $project,
                 $limit,
                 $offset

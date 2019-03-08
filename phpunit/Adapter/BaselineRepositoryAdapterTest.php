@@ -33,9 +33,9 @@ use ParagonIE\EasyDB\EasyDB;
 use PFUser;
 use PHPUnit\Framework\TestCase;
 use Project;
-use Tracker_ArtifactFactory;
 use Tuleap\Baseline\Baseline;
 use Tuleap\Baseline\Factory\MilestoneFactory;
+use Tuleap\Baseline\MilestoneRepository;
 use Tuleap\GlobalLanguageMock;
 use UserManager;
 
@@ -53,29 +53,38 @@ class BaselineRepositoryAdapterTest extends TestCase
     /** @var UserManager|MockInterface */
     private $user_manager;
 
-    /** @var Tracker_ArtifactFactory|MockInterface */
-    private $artifact_factory;
+    /** @var MilestoneRepository */
+    private $milestone_repository;
 
     /** @before */
     public function createInstance()
     {
-        $this->db               = Mockery::mock(EasyDB::class);
-        $this->user_manager     = Mockery::mock(UserManager::class);
-        $this->artifact_factory = Mockery::mock(Tracker_ArtifactFactory::class);
+        $this->db                   = Mockery::mock(EasyDB::class);
+        $this->user_manager         = Mockery::mock(UserManager::class);
+        $this->milestone_repository = Mockery::mock(MilestoneRepository::class);
 
         $this->repository = new BaselineRepositoryAdapter(
             $this->db,
             $this->user_manager,
-            $this->artifact_factory
+            $this->milestone_repository
         );
+    }
+
+    /** @var PFUser */
+    private $current_user;
+
+    /** @before */
+    public function createCurrentUser()
+    {
+        $this->current_user = new PFUser();
     }
 
     public function testFindById()
     {
         $milestone = MilestoneFactory::one()->build();
-        $this->artifact_factory
-            ->shouldReceive('getArtifactById')
-            ->with(10)
+        $this->milestone_repository
+            ->shouldReceive('findById')
+            ->with($this->current_user, 10)
             ->andReturn($milestone);
 
         $user = new PFUser();
@@ -99,7 +108,7 @@ class BaselineRepositoryAdapterTest extends TestCase
                 ]
             );
 
-        $baseline = $this->repository->findById(1);
+        $baseline = $this->repository->findById($this->current_user, 1);
 
         $expected_baseline = new Baseline(
             1,
@@ -118,7 +127,7 @@ class BaselineRepositoryAdapterTest extends TestCase
             ->with(Mockery::type('string'), [1])
             ->andReturn([]);
 
-        $baseline = $this->repository->findById(1);
+        $baseline = $this->repository->findById($this->current_user, 1);
 
         $this->assertNull($baseline);
     }
@@ -126,9 +135,9 @@ class BaselineRepositoryAdapterTest extends TestCase
     public function testFindByProject()
     {
         $milestone = MilestoneFactory::one()->build();
-        $this->artifact_factory
-            ->shouldReceive('getArtifactById')
-            ->with(10)
+        $this->milestone_repository
+            ->shouldReceive('findById')
+            ->with($this->current_user, 10)
             ->andReturn($milestone);
 
         $user = new PFUser();
@@ -157,7 +166,7 @@ class BaselineRepositoryAdapterTest extends TestCase
             ->andReturn(102)
             ->getMock();
 
-        $baselines = $this->repository->findByProject($project, 10, 3);
+        $baselines = $this->repository->findByProject($this->current_user, $project, 10, 3);
 
         $expected_baselines = [new Baseline(
             1,

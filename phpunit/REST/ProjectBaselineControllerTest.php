@@ -28,10 +28,12 @@ require_once __DIR__ . '/../bootstrap.php';
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
+use PFUser;
 use PHPUnit\Framework\TestCase;
 use Project;
 use Tuleap\Baseline\BaselineService;
 use Tuleap\Baseline\BaselinesPage;
+use Tuleap\Baseline\CurrentUserProvider;
 use Tuleap\Baseline\Factory\BaselineFactory;
 use Tuleap\Baseline\NotAuthorizedException;
 use Tuleap\Baseline\ProjectRepository;
@@ -45,6 +47,9 @@ class ProjectBaselineControllerTest extends TestCase
 
     /** @var ProjectBaselineController */
     private $controller;
+
+    /** @var CurrentUserProvider|MockInterface */
+    private $current_user_provider;
 
     /** @var BaselineService|MockInterface */
     private $baseline_service;
@@ -60,10 +65,12 @@ class ProjectBaselineControllerTest extends TestCase
      */
     public function createInstance()
     {
-        $this->baseline_service   = Mockery::mock(BaselineService::class);
-        $this->project_repository = Mockery::mock(ProjectRepository::class);
+        $this->current_user_provider = Mockery::mock(CurrentUserProvider::class)->shouldIgnoreMissing();
+        $this->baseline_service      = Mockery::mock(BaselineService::class);
+        $this->project_repository    = Mockery::mock(ProjectRepository::class);
 
         $this->controller = new ProjectBaselineController(
+            $this->current_user_provider,
             $this->baseline_service,
             $this->project_repository
         );
@@ -77,14 +84,19 @@ class ProjectBaselineControllerTest extends TestCase
 
     public function testGet()
     {
+        $current_user = new PFUser();
+        $this->current_user_provider
+            ->shouldReceive('getUser')
+            ->andReturn($current_user);
+
         $this->project_repository
             ->shouldReceive('findById')
-            ->with(102)
+            ->with($current_user, 102)
             ->andReturn($this->a_project);
 
         $this->baseline_service
             ->shouldReceive('findByProject')
-            ->with($this->a_project, 10, 7)
+            ->with($current_user, $this->a_project, 10, 7)
             ->andReturn(
                 new BaselinesPage(
                     [BaselineFactory::one()->build()],
@@ -105,9 +117,14 @@ class ProjectBaselineControllerTest extends TestCase
         $this->expectException(I18NRestException::class);
         $this->expectExceptionCode(404);
 
+        $current_user = new PFUser();
+        $this->current_user_provider
+            ->shouldReceive('getUser')
+            ->andReturn($current_user);
+
         $this->project_repository
             ->shouldReceive('findById')
-            ->with(102)
+            ->with($current_user, 102)
             ->andReturn(null);
 
         $this->controller->get(102, 10, 0);

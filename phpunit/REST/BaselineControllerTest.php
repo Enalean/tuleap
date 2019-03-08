@@ -104,7 +104,7 @@ class BaselineControllerTest extends TestCase
     {
         $this->milestone_repository
             ->shouldReceive('findById')
-            ->with(3)
+            ->with($this->current_user, 3)
             ->andReturn($this->a_milestone);
 
         $this->baseline_service
@@ -118,7 +118,7 @@ class BaselineControllerTest extends TestCase
     {
         $this->milestone_repository
             ->shouldReceive('findById')
-            ->with(3)
+            ->with($this->current_user, 3)
             ->andReturn($this->a_milestone);
 
         $this->a_milestone
@@ -154,7 +154,7 @@ class BaselineControllerTest extends TestCase
 
         $this->milestone_repository
             ->shouldReceive('findById')
-            ->with(3)
+            ->with($current_user, 3)
             ->andReturn($this->a_milestone);
 
         $this->baseline_service
@@ -196,7 +196,7 @@ class BaselineControllerTest extends TestCase
             ->build();
         $this->baseline_service
             ->shouldReceive('findById')
-            ->with(1)
+            ->with($this->current_user, 1)
             ->andReturn($baseline);
 
         $representation = $this->controller->getById(1);

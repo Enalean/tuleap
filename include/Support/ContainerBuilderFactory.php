@@ -29,13 +29,13 @@ use ProjectManager;
 use Tracker_Artifact_ChangesetFactory;
 use Tracker_Artifact_ChangesetFactoryBuilder;
 use Tracker_ArtifactFactory;
+use Tuleap\Baseline\Adapter\AdapterPermissions;
 use Tuleap\Baseline\Adapter\BaselineRepositoryAdapter;
 use Tuleap\Baseline\Adapter\ChangesetRepositoryAdapter;
 use Tuleap\Baseline\Adapter\ClockAdapter;
 use Tuleap\Baseline\Adapter\CurrentUserProviderAdapter;
 use Tuleap\Baseline\Adapter\FieldRepositoryAdapter;
 use Tuleap\Baseline\Adapter\MilestoneRepositoryAdapter;
-use Tuleap\Baseline\Adapter\ProjectPermissionsAdapter;
 use Tuleap\Baseline\Adapter\ProjectRepositoryAdapter;
 use Tuleap\Baseline\Adapter\RoleAssignmentRepositoryAdapter;
 use Tuleap\Baseline\BaselineRepository;
@@ -47,7 +47,6 @@ use Tuleap\Baseline\FieldRepository;
 use Tuleap\Baseline\MilestoneRepository;
 use Tuleap\Baseline\Permissions;
 use Tuleap\Baseline\PermissionsImpl;
-use Tuleap\Baseline\ProjectPermissions;
 use Tuleap\Baseline\ProjectRepository;
 use Tuleap\Baseline\REST\BaselineController;
 use Tuleap\Baseline\REST\ProjectBaselineController;
@@ -68,18 +67,19 @@ class ContainerBuilderFactory
         $container_builder = new ContainerBuilder();
         return $container_builder->addDefinitions(
             [
-                BaselineController::class        => create(BaselineController::class)
+                BaselineController::class                => create(BaselineController::class)
                     ->constructor(
                         get(CurrentUserProvider::class),
                         get(MilestoneRepository::class),
                         get(BaselineService::class)
                     ),
-                ProjectBaselineController::class => create(ProjectBaselineController::class)
+                ProjectBaselineController::class         => create(ProjectBaselineController::class)
                     ->constructor(
+                        get(CurrentUserProvider::class),
                         get(BaselineService::class),
                         get(ProjectRepository::class)
                     ),
-                BaselineService::class           => create(BaselineService::class)
+                BaselineService::class                   => create(BaselineService::class)
                     ->constructor(
                         get(FieldRepository::class),
                         get(Permissions::class),
@@ -88,18 +88,10 @@ class ContainerBuilderFactory
                         get(CurrentUserProvider::class),
                         get(Clock::class)
                     ),
-                Permissions::class               => function (
-                    CurrentUserProvider $current_user_provider,
-                    ProjectPermissions $project_permissions,
-                    RoleAssignmentRepository $role_assignment_repository
-                ) {
-                    return new PermissionsImpl(
-                        $current_user_provider,
-                        $project_permissions,
-                        $role_assignment_repository
-                    );
-                },
-                Clock::class                     => function () {
+                Permissions::class                       => create(PermissionsImpl::class)
+                    ->constructor(get(RoleAssignmentRepository::class))
+                ,
+                Clock::class                             => function () {
                     return new ClockAdapter();
                 },
                 UserManager::class                       => function () {
@@ -112,33 +104,27 @@ class ContainerBuilderFactory
                     ->constructor(
                         get(EasyDB::class),
                         get(\UserManager::class),
-                        get(Tracker_ArtifactFactory::class)
+                        get(MilestoneRepository::class)
                     ),
-                ChangesetRepository::class               => function (
-                    Tracker_Artifact_ChangesetFactory $changesetFactory
-                ) {
-                    return new ChangesetRepositoryAdapter($changesetFactory);
-                },
-                FieldRepository::class           => function () {
+                ChangesetRepository::class               => create(ChangesetRepositoryAdapter::class)
+                    ->constructor(get(Tracker_Artifact_ChangesetFactory::class)),
+                FieldRepository::class                   => function () {
                     return new FieldRepositoryAdapter();
                 },
-                MilestoneRepository::class       => function (Tracker_ArtifactFactory $artifact_factory) {
-                    return new MilestoneRepositoryAdapter($artifact_factory);
-                },
-                RoleAssignmentRepository::class  => function (EasyDB $db) {
+                MilestoneRepository::class               => create(MilestoneRepositoryAdapter::class)
+                    ->constructor(get(Tracker_ArtifactFactory::class), get(AdapterPermissions::class))
+                ,
+                RoleAssignmentRepository::class          => function (EasyDB $db) {
                     return new RoleAssignmentRepositoryAdapter($db);
                 },
-                ProjectRepository::class         => create(ProjectRepositoryAdapter::class)
-                    ->constructor(get(ProjectManager::class)),
-                ProjectPermissions::class        => function (
-                    ProjectStatusVerificator $project_status_verificator
-                ) {
-                    return new ProjectPermissionsAdapter($project_status_verificator);
-                },
-                ProjectManager::class            => function () {
+                ProjectRepository::class                 => create(ProjectRepositoryAdapter::class)
+                    ->constructor(get(ProjectManager::class), get(AdapterPermissions::class)),
+                AdapterPermissions::class                => create(AdapterPermissions::class)
+                    ->constructor(get(ProjectStatusVerificator::class)),
+                ProjectManager::class                    => function () {
                     return ProjectManager::instance();
                 },
-                ProjectStatusVerificator::class  => function () {
+                ProjectStatusVerificator::class          => function () {
                     return ProjectStatusVerificator::build();
                 },
                 Tracker_ArtifactFactory::class           => function () {

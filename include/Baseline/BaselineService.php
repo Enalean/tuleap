@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Baseline;
 
 use DateTime;
+use PFUser;
 use Project;
 use Tracker;
 use Tracker_Artifact;
@@ -68,9 +69,9 @@ class BaselineService
     /**
      * @throws NotAuthorizedException
      */
-    public function create(TransientBaseline $baseline): Baseline
+    public function create(PFUser $current_user, TransientBaseline $baseline): Baseline
     {
-        $this->permissions->checkCreateBaseline($baseline);
+        $this->permissions->checkUserHasAdminRoleOn($current_user, $baseline->getProject());
         return $this->baseline_repository->add(
             $baseline,
             $this->current_user_provider->getUser(),
@@ -84,8 +85,13 @@ class BaselineService
      * @throws ChangesetNotFoundException when given tracker did not exist on given date
      * @throws NotAuthorizedException
      */
-    public function findSimplified(Tracker_Artifact $milestone, DateTime $date): SimplifiedBaseline
-    {
+    public function findSimplified(
+        PFUser $current_user,
+        Tracker_Artifact $milestone,
+        DateTime $date
+    ): SimplifiedBaseline {
+        $project = $milestone->getTracker()->getProject();
+        $this->permissions->checkUserHasAdminRoleOn($current_user, $project);
         $change_set = $this->changeset_repository->findByArtifactAndDate($milestone, $date);
         if ($change_set === null) {
             throw new ChangesetNotFoundException($date);
@@ -103,16 +109,15 @@ class BaselineService
             $changeset_date
         );
 
-        $this->permissions->checkReadSimpleBaseline($baseline);
         return $baseline;
     }
 
     /**
      * @throws NotAuthorizedException
      */
-    public function findById(int $id): ?Baseline
+    public function findById(PFUser $current_user, int $id): ?Baseline
     {
-        return $this->baseline_repository->findById($id);
+        return $this->baseline_repository->findById($current_user, $id);
     }
 
     /**
@@ -121,10 +126,14 @@ class BaselineService
      * @param int $baseline_offset Fetch baselines from this index (start with 0), following snapshot date order.
      * @throws NotAuthorizedException
      */
-    public function findByProject(Project $project, int $page_size, int $baseline_offset): BaselinesPage
-    {
-        $this->permissions->checkReadBaselinesOn($project);
-        $baselines = $this->baseline_repository->findByProject($project, $page_size, $baseline_offset);
+    public function findByProject(
+        PFUser $current_user,
+        Project $project,
+        int $page_size,
+        int $baseline_offset
+    ): BaselinesPage {
+        $this->permissions->checkUserHasAdminRoleOn($current_user, $project);
+        $baselines = $this->baseline_repository->findByProject($current_user, $project, $page_size, $baseline_offset);
         $count     = $this->baseline_repository->countByProject($project);
         return new BaselinesPage($baselines, $page_size, $baseline_offset, $count);
     }

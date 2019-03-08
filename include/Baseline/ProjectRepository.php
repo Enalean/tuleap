@@ -23,9 +23,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline;
 
+use PFUser;
 use Project;
 
 interface ProjectRepository
 {
-    public function findById(int $id): ?Project;
+    public function findById(PFUser $current_user, int $id): ?Project;
 }

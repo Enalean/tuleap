@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\Stub;
 
+use PFUser;
 use Tracker_Artifact;
 use Tuleap\Baseline\MilestoneRepository;
 
@@ -39,7 +40,7 @@ class MilestoneRepositoryStub implements MilestoneRepository
         $this->milestones_by_id [$milestone->getId()] = $milestone;
     }
 
-    public function findById(int $id): ?Tracker_Artifact
+    public function findById(PFUser $current_user, int $id): ?Tracker_Artifact
     {
         return $this->milestones_by_id[$id] ?? null;
     }

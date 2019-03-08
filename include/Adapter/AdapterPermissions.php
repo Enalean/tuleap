@@ -24,12 +24,12 @@ declare(strict_types=1);
 namespace Tuleap\Baseline\Adapter;
 
 use Luracast\Restler\RestException;
+use PFUser;
 use Project;
-use Tuleap\Baseline\NotAuthorizedException;
-use Tuleap\Baseline\ProjectPermissions;
+use Tracker_Artifact;
 use Tuleap\REST\ProjectStatusVerificator;
 
-class ProjectPermissionsAdapter implements ProjectPermissions
+class AdapterPermissions
 {
     /** @var ProjectStatusVerificator */
     private $project_status_verificator;
@@ -39,20 +39,28 @@ class ProjectPermissionsAdapter implements ProjectPermissions
         $this->project_status_verificator = $project_status_verificator;
     }
 
-    /**
-     * @throws NotAuthorizedException
-     */
-    public function checkRead(Project $project)
+    public function canUserReadArtifact(PFUser $user, Tracker_Artifact $artifact): bool
+    {
+        if (! $artifact->userCanView($user)) {
+            return false;
+        }
+
+        $tracker = $artifact->getTracker();
+        if (! $tracker->userCanView($user)) {
+            return false;
+        }
+
+        $project = $tracker->getProject();
+        return $this->userCanReadProject($user, $project);
+    }
+
+    public function userCanReadProject(PFUser $user, Project $project): bool
     {
         try {
             $this->project_status_verificator->checkProjectStatusAllowsAllUsersToAccessIt($project);
+            return true;
         } catch (RestException $e) {
-            throw new NotAuthorizedException(
-                dgettext(
-                    'tuleap-baseline',
-                    'You cannot read this project'
-                )
-            );
+            return false;
         }
     }
 }

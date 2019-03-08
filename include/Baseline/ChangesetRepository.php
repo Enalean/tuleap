@@ -29,5 +29,8 @@ use Tracker_Artifact_Changeset;
 
 interface ChangesetRepository
 {
-    public function findByArtifactAndDate(Tracker_Artifact $artifact, DateTime $date): ?Tracker_Artifact_Changeset;
+    public function findByArtifactAndDate(
+        Tracker_Artifact $artifact,
+        DateTime $date
+    ): ?Tracker_Artifact_Changeset;
 }

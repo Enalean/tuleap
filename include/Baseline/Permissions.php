@@ -23,25 +23,13 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline;
 
+use PFUser;
 use Project;
 
-/**
- * Gather all security permissions.
- */
 interface Permissions
 {
     /**
      * @throws NotAuthorizedException
      */
-    public function checkReadSimpleBaseline(SimplifiedBaseline $baseline): void;
-
-    /**
-     * @throws NotAuthorizedException
-     */
-    public function checkCreateBaseline(TransientBaseline $baseline);
-
-    /**
-     * @throws NotAuthorizedException
-     */
-    public function checkReadBaselinesOn(Project $project);
+    public function checkUserHasAdminRoleOn(PFUser $user, Project $project): void;
 }

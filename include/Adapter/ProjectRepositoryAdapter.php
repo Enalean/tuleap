@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\Adapter;
 
+use PFUser;
 use Project;
 use ProjectManager;
 use Tuleap\Baseline\ProjectRepository;
@@ -32,13 +33,24 @@ class ProjectRepositoryAdapter implements ProjectRepository
     /** @var ProjectManager */
     private $project_manager;
 
-    public function __construct(ProjectManager $project_manager)
+    /** @var AdapterPermissions */
+    private $adapter_permissions;
+
+    public function __construct(ProjectManager $project_manager, AdapterPermissions $adapter_permissions)
     {
-        $this->project_manager = $project_manager;
+        $this->project_manager     = $project_manager;
+        $this->adapter_permissions = $adapter_permissions;
     }
 
-    public function findById(int $id): ?Project
+    public function findById(PFUser $current_user, int $id): ?Project
     {
-        return $this->project_manager->getProject($id);
+        $project = $this->project_manager->getProject($id);
+        if ($project === null) {
+            return null;
+        }
+        if (! $this->adapter_permissions->userCanReadProject($current_user, $project)) {
+            return null;
+        }
+        return $project;
     }
 }

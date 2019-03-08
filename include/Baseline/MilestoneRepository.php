@@ -23,9 +23,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline;
 
+use PFUser;
 use Tracker_Artifact;
 
 interface MilestoneRepository
 {
-    public function findById(int $id): ?Tracker_Artifact;
+    public function findById(PFUser $current_user, int $id): ?Tracker_Artifact;
 }

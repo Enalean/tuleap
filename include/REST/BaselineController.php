@@ -35,9 +35,7 @@ use Tuleap\REST\I18NRestException;
 
 class BaselineController
 {
-    /**
-     * @var CurrentUserProvider
-     */
+    /** @var CurrentUserProvider */
     private $current_user_provider;
 
     /**
@@ -73,7 +71,8 @@ class BaselineController
      */
     public function post(string $name, int $milestone_id): BaselineRepresentation
     {
-        $milestone = $this->milestone_repository->findById($milestone_id);
+        $current_user = $this->current_user_provider->getUser();
+        $milestone    = $this->milestone_repository->findById($current_user, $milestone_id);
         if ($milestone === null) {
             throw new I18NRestException(
                 404,
@@ -86,7 +85,7 @@ class BaselineController
 
         $baseline = new TransientBaseline($name, $milestone);
         try {
-            $created_baseline = $this->baseline_service->create($baseline);
+            $created_baseline = $this->baseline_service->create($current_user, $baseline);
             return BaselineRepresentation::fromBaseline($created_baseline);
         } catch (NotAuthorizedException $exception) {
             throw new I18NRestException(
@@ -106,7 +105,8 @@ class BaselineController
     public function getById(int $id): BaselineRepresentation
     {
         try {
-            $baseline = $this->baseline_service->findById($id);
+            $current_user = $this->current_user_provider->getUser();
+            $baseline     = $this->baseline_service->findById($current_user, $id);
             if ($baseline === null) {
                 throw new I18NRestException(
                     404,
@@ -143,10 +143,10 @@ class BaselineController
         int $milestone_id,
         string $last_modification_date_before_baseline_date
     ): SimplifiedBaselineRepresentation {
+        $date         = $this->parseDate($last_modification_date_before_baseline_date, "Y-m-d");
+        $current_user = $this->current_user_provider->getUser();
 
-        $date = $this->parseDate($last_modification_date_before_baseline_date, "Y-m-d");
-
-        $milestone = $this->milestone_repository->findById($milestone_id);
+        $milestone = $this->milestone_repository->findById($current_user, $milestone_id);
         if ($milestone === null) {
             throw new I18NRestException(
                 404,
@@ -159,6 +159,7 @@ class BaselineController
 
         try {
             $simplified_baseline = $this->baseline_service->findSimplified(
+                $current_user,
                 $milestone,
                 $this->setMidnight($date)
             );

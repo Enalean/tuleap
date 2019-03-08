@@ -39,8 +39,10 @@ class ChangesetRepositoryAdapter implements ChangesetRepository
         $this->changeset_factory = $changeset_factory;
     }
 
-    public function findByArtifactAndDate(Tracker_Artifact $artifact, DateTime $date): ?Tracker_Artifact_Changeset
-    {
+    public function findByArtifactAndDate(
+        Tracker_Artifact $artifact,
+        DateTime $date
+    ): ?Tracker_Artifact_Changeset {
         return $this->changeset_factory->getChangesetAtTimestamp(
             $artifact,
             $date->getTimestamp()
