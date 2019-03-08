@@ -49,8 +49,6 @@ use Tuleap\Docman\REST\ResourcesInjector;
 use Tuleap\Docman\REST\v1\DocmanItemsEventAdder;
 use Tuleap\Docman\REST\v1\ItemRepresentationBuilder;
 use Tuleap\Docman\REST\v1\MetadataRepresentationBuilder;
-use Tuleap\Docman\Upload\FileBeingUploadedWriter;
-use Tuleap\Docman\Upload\FileUploadController;
 use Tuleap\Docman\Upload\Version\DocumentOnGoingVersionToUploadDAO;
 use Tuleap\Docman\Upload\Version\VersionBeingUploadedInformationProvider;
 use Tuleap\Docman\Upload\Version\VersionDataStore;
@@ -69,6 +67,8 @@ use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupFormatter;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupRetriever;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Tus\TusServer;
+use Tuleap\Upload\FileBeingUploadedWriter;
+use Tuleap\Upload\FileUploadController;
 use Tuleap\Widget\Event\GetPublicAreas;
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -1285,46 +1285,39 @@ class DocmanPlugin extends Plugin
         $document_ongoing_upload_dao = new \Tuleap\Docman\Upload\Document\DocumentOngoingUploadDAO();
         $root_path                   = $this->getPluginInfo()->getPropertyValueForName('docman_root');
         $path_allocator              = new \Tuleap\Docman\Upload\Document\DocumentUploadPathAllocator();
-        return new FileUploadController(
-            new TusServer(
-                HTTPFactoryBuilder::responseFactory(),
-                new \Tuleap\Docman\Upload\Document\DocumentDataStore(
-                    new \Tuleap\Docman\Upload\Document\DocumentBeingUploadedInformationProvider(
-                        $path_allocator,
-                        $document_ongoing_upload_dao,
-                        $this->getItemFactory()
-                    ),
-                    new \Tuleap\Docman\Upload\FileBeingUploadedWriter(
-                        $path_allocator,
-                        DBFactory::getMainTuleapDBConnection()
-                    ),
-                    new \Tuleap\Docman\Upload\DocumentBeingUploadedLocker(
-                        $path_allocator
-                    ),
-                    new \Tuleap\Docman\Upload\Document\DocumentUploadFinisher(
-                        new BackendLogger(),
-                        $path_allocator,
-                        $this->getItemFactory(),
-                        new Docman_VersionFactory(),
-                        PermissionsManager::instance(),
-                        EventManager::instance(),
-                        $document_ongoing_upload_dao,
-                        new Docman_ItemDao(),
-                        new Docman_FileStorage($root_path),
-                        new Docman_MIMETypeDetector(),
-                        UserManager::instance(),
-                        new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
-                    ),
-                    new \Tuleap\Docman\Upload\Document\DocumentUploadCanceler(
-                        $path_allocator,
-                        $document_ongoing_upload_dao
-                    )
+        return FileUploadController::build(
+            new \Tuleap\Docman\Upload\Document\DocumentDataStore(
+                new \Tuleap\Docman\Upload\Document\DocumentBeingUploadedInformationProvider(
+                    $path_allocator,
+                    $document_ongoing_upload_dao,
+                    $this->getItemFactory()
+                ),
+                new \Tuleap\Upload\FileBeingUploadedWriter(
+                    $path_allocator,
+                    DBFactory::getMainTuleapDBConnection()
+                ),
+                new \Tuleap\Upload\FileBeingUploadedLocker(
+                    $path_allocator
+                ),
+                new \Tuleap\Docman\Upload\Document\DocumentUploadFinisher(
+                    new BackendLogger(),
+                    $path_allocator,
+                    $this->getItemFactory(),
+                    new Docman_VersionFactory(),
+                    PermissionsManager::instance(),
+                    EventManager::instance(),
+                    $document_ongoing_upload_dao,
+                    new Docman_ItemDao(),
+                    new Docman_FileStorage($root_path),
+                    new Docman_MIMETypeDetector(),
+                    UserManager::instance(),
+                    new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
+                ),
+                new \Tuleap\Docman\Upload\Document\DocumentUploadCanceler(
+                    $path_allocator,
+                    $document_ongoing_upload_dao
                 )
-            ),
-            new \Tuleap\Tus\TusCORSMiddleware(),
-            new \Tuleap\REST\TuleapRESTCORSMiddleware(),
-            \Tuleap\REST\UserManager::build(),
-            new \Tuleap\REST\BasicAuthentication()
+            )
         );
     }
 
@@ -1334,40 +1327,33 @@ class DocmanPlugin extends Plugin
         $path_allocator = new VersionUploadPathAllocator();
         $version_to_upload_dao = new DocumentOnGoingVersionToUploadDAO();
         $event_manager = EventManager::instance();
-        return new FileUploadController(
-            new TusServer(
-                HTTPFactoryBuilder::responseFactory(),
-                new VersionDataStore(
-                    new VersionBeingUploadedInformationProvider(
-                        $version_to_upload_dao,
-                        $this->getItemFactory(),
-                        $path_allocator
-                    ),
-                    new FileBeingUploadedWriter(
-                        $path_allocator,
-                        DBFactory::getMainTuleapDBConnection()
-                    ),
-                    new VersionUploadFinisher(
-                        new BackendLogger(),
-                        $path_allocator,
-                        $this->getItemFactory(),
-                        new Docman_VersionFactory(),
-                        $event_manager,
-                        $version_to_upload_dao,
-                        new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
-                        new Docman_FileStorage($root_path),
-                        new Docman_MIMETypeDetector(),
-                        UserManager::instance(),
-                        new DocmanItemsEventAdder($event_manager),
-                        ProjectManager::instance()
-                    ),
-                    new VersionUploadCanceler($path_allocator, $version_to_upload_dao)
-                )
-            ),
-            new \Tuleap\Tus\TusCORSMiddleware(),
-            new \Tuleap\REST\TuleapRESTCORSMiddleware(),
-            \Tuleap\REST\UserManager::build(),
-            new \Tuleap\REST\BasicAuthentication()
+        return FileUploadController::build(
+            new VersionDataStore(
+                new VersionBeingUploadedInformationProvider(
+                    $version_to_upload_dao,
+                    $this->getItemFactory(),
+                    $path_allocator
+                ),
+                new FileBeingUploadedWriter(
+                    $path_allocator,
+                    DBFactory::getMainTuleapDBConnection()
+                ),
+                new VersionUploadFinisher(
+                    new BackendLogger(),
+                    $path_allocator,
+                    $this->getItemFactory(),
+                    new Docman_VersionFactory(),
+                    $event_manager,
+                    $version_to_upload_dao,
+                    new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
+                    new Docman_FileStorage($root_path),
+                    new Docman_MIMETypeDetector(),
+                    UserManager::instance(),
+                    new DocmanItemsEventAdder($event_manager),
+                    ProjectManager::instance()
+                ),
+                new VersionUploadCanceler($path_allocator, $version_to_upload_dao)
+            )
         );
     }
 

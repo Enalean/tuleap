@@ -22,18 +22,18 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\Upload\Version;
 
-use Tuleap\Docman\Upload\FileBeingUploadedWriter;
 use Tuleap\Tus\TusDataStore;
 use Tuleap\Tus\TusFileInformationProvider;
 use Tuleap\Tus\TusFinisherDataStore;
 use Tuleap\Tus\TusLocker;
 use Tuleap\Tus\TusTerminaterDataStore;
 use Tuleap\Tus\TusWriter;
+use Tuleap\Upload\FileBeingUploadedWriter;
 
 final class VersionDataStore implements TusDataStore
 {
     /**
-     * @var FileBeingUploadedWriter
+     * @var \Tuleap\Upload\FileBeingUploadedWriter
      */
     private $version_being_uploaded_writer;
     /**

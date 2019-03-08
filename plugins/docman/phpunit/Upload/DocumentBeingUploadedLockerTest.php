@@ -26,9 +26,9 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
-use Tuleap\Docman\Upload\DocumentBeingUploadedLocker;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Tus\TusFileInformation;
+use Tuleap\Upload\FileBeingUploadedLocker;
 
 class DocumentBeingUploadedLockerTest extends TestCase
 {
@@ -66,7 +66,7 @@ class DocumentBeingUploadedLockerTest extends TestCase
     {
         \ForgeConfig::set('tmp_dir', $this->tmp_dir);
         $path_allocator = new DocumentUploadPathAllocator();
-        $locker         = new DocumentBeingUploadedLocker($path_allocator);
+        $locker         = new FileBeingUploadedLocker($path_allocator);
 
         $file_information = \Mockery::mock(TusFileInformation::class);
         $file_information->shouldReceive('getID')->andReturns(12);
@@ -79,7 +79,7 @@ class DocumentBeingUploadedLockerTest extends TestCase
     {
         \ForgeConfig::set('tmp_dir', $this->tmp_dir);
         $path_allocator = new DocumentUploadPathAllocator();
-        $locker         = new DocumentBeingUploadedLocker($path_allocator);
+        $locker         = new FileBeingUploadedLocker($path_allocator);
 
         $file_information = \Mockery::mock(TusFileInformation::class);
         $file_information->shouldReceive('getID')->andReturns(12);

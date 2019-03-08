@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,13 +20,9 @@
 
 declare(strict_types = 1);
 
-namespace Tuleap\Docman\Upload;
+namespace Tuleap\Upload;
 
-use Tuleap\Upload\PathAllocator;
-
-interface UploadPathAllocator extends PathAllocator
+interface PathAllocator
 {
     public function getPathForItemBeingUploaded($id): string;
-
-    public function getCurrentlyUsedAllocatedPathsPerExpectedItemIDs(): array;
 }

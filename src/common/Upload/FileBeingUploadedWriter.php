@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Docman\Upload;
+namespace Tuleap\Upload;
 
 use Tuleap\DB\DBConnection;
 use Tuleap\Tus\CannotWriteFileException;
@@ -30,7 +30,7 @@ use Tuleap\Tus\TusWriter;
 final class FileBeingUploadedWriter implements TusWriter
 {
     /**
-     * @var UploadPathAllocator
+     * @var PathAllocator
      */
     private $path_allocator;
     /**
@@ -38,7 +38,7 @@ final class FileBeingUploadedWriter implements TusWriter
      */
     private $db_connection;
 
-    public function __construct(UploadPathAllocator $path_allocator, DBConnection $db_connection)
+    public function __construct(PathAllocator $path_allocator, DBConnection $db_connection)
     {
         $this->path_allocator = $path_allocator;
         $this->db_connection  = $db_connection;

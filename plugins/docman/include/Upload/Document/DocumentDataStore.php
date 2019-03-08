@@ -22,14 +22,14 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\Upload\Document;
 
-use Tuleap\Docman\Upload\DocumentBeingUploadedLocker;
-use Tuleap\Docman\Upload\FileBeingUploadedWriter;
 use Tuleap\Tus\TusDataStore;
 use Tuleap\Tus\TusFileInformationProvider;
 use Tuleap\Tus\TusFinisherDataStore;
 use Tuleap\Tus\TusLocker;
 use Tuleap\Tus\TusTerminaterDataStore;
 use Tuleap\Tus\TusWriter;
+use Tuleap\Upload\FileBeingUploadedLocker;
+use Tuleap\Upload\FileBeingUploadedWriter;
 
 final class DocumentDataStore implements TusDataStore
 {
@@ -38,11 +38,11 @@ final class DocumentDataStore implements TusDataStore
      */
     private $document_being_uploaded_information_provider;
     /**
-     * @var FileBeingUploadedWriter
+     * @var \Tuleap\Upload\FileBeingUploadedWriter
      */
     private $document_being_uploaded_writer;
     /**
-     * @var DocumentBeingUploadedLocker
+     * @var FileBeingUploadedLocker
      */
     private $document_being_uploaded_locker;
     /**
@@ -57,7 +57,7 @@ final class DocumentDataStore implements TusDataStore
     public function __construct(
         DocumentBeingUploadedInformationProvider $document_being_uploaded_information_provider,
         FileBeingUploadedWriter $document_being_uploaded_writer,
-        DocumentBeingUploadedLocker $document_being_uploaded_locker,
+        FileBeingUploadedLocker $document_being_uploaded_locker,
         DocumentUploadFinisher $document_upload_finisher,
         DocumentUploadCanceler $document_upload_canceler
     ) {

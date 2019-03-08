@@ -20,25 +20,28 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Docman\Upload;
+namespace Tuleap\Upload;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
 use Tuleap\DB\DBConnection;
-use Tuleap\Docman\Upload\Document\DocumentUploadPathAllocator;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Tus\TusFileInformation;
 
-class DocumentBeingUploadedWriterTest extends TestCase
+class FileBeingUploadedWriterTest extends TestCase
 {
     use MockeryPHPUnitIntegration, ForgeConfigSandbox;
 
     public function testWriteChunk() : void
     {
-        \ForgeConfig::set('tmp_dir', vfsStream::setup()->url());
+        $tmp_dir = vfsStream::setup()->url();
+        \ForgeConfig::set('tmp_dir', $tmp_dir);
 
-        $path_allocator = new DocumentUploadPathAllocator();
+        $path_allocator = \Mockery::mock(PathAllocator::class);
+        $path_allocator
+            ->shouldReceive('getPathForItemBeingUploaded')
+            ->andReturn("$tmp_dir/12");
         $db_connection  = \Mockery::mock(DBConnection::class);
         $writer         = new FileBeingUploadedWriter($path_allocator, $db_connection);
 
@@ -68,9 +71,13 @@ class DocumentBeingUploadedWriterTest extends TestCase
 
     public function testCanNotWriteMoreThanTheFileSize() : void
     {
-        \ForgeConfig::set('tmp_dir', vfsStream::setup()->url());
+        $tmp_dir = vfsStream::setup()->url();
+        \ForgeConfig::set('tmp_dir', $tmp_dir);
 
-        $path_allocator = new DocumentUploadPathAllocator();
+        $path_allocator = \Mockery::mock(PathAllocator::class);
+        $path_allocator
+            ->shouldReceive('getPathForItemBeingUploaded')
+            ->andReturn("$tmp_dir/12");
         $db_connection  = \Mockery::mock(DBConnection::class);
         $writer         = new FileBeingUploadedWriter($path_allocator, $db_connection);
 
@@ -96,7 +103,7 @@ class DocumentBeingUploadedWriterTest extends TestCase
 
     public function testInputThatIsNotAResourceIsRejected() : void
     {
-        $writer = new FileBeingUploadedWriter(new DocumentUploadPathAllocator(), \Mockery::mock(DBConnection::class));
+        $writer = new FileBeingUploadedWriter(\Mockery::mock(PathAllocator::class), \Mockery::mock(DBConnection::class));
 
         $this->expectException(\InvalidArgumentException::class);
 

@@ -22,9 +22,9 @@ declare(strict_types = 1);
 
 namespace Tuleap\Docman\Upload\Version;
 
-use Tuleap\Docman\Upload\FileBeingUploadedInformation;
 use Tuleap\Tus\TusFileInformation;
 use Tuleap\Tus\TusFileInformationProvider;
+use Tuleap\Upload\FileBeingUploadedInformation;
 
 class VersionBeingUploadedInformationProvider implements TusFileInformationProvider
 {

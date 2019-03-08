@@ -18,10 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Docman\Upload;
+namespace Tuleap\Upload;
 
 use GuzzleHttp\Psr7\ServerRequest;
 use HTTPRequest;
+use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
 use Tuleap\Request\ForbiddenException;
@@ -29,6 +30,7 @@ use Tuleap\REST\BasicAuthentication;
 use Tuleap\REST\TuleapRESTCORSMiddleware;
 use Tuleap\REST\UserManager;
 use Tuleap\Tus\TusCORSMiddleware;
+use Tuleap\Tus\TusDataStore;
 use Tuleap\Tus\TusServer;
 
 class FileUploadController implements DispatchableWithRequestNoAuthz
@@ -54,7 +56,7 @@ class FileUploadController implements DispatchableWithRequestNoAuthz
      */
     private $rest_cors_middleware;
 
-    public function __construct(
+    private function __construct(
         TusServer $tus_server,
         TusCORSMiddleware $tus_cors_middleware,
         TuleapRESTCORSMiddleware $rest_cors_middleware,
@@ -66,6 +68,20 @@ class FileUploadController implements DispatchableWithRequestNoAuthz
         $this->rest_cors_middleware      = $rest_cors_middleware;
         $this->rest_user_manager         = $rest_user_manager;
         $this->basic_rest_authentication = $basic_rest_authentication;
+    }
+
+    public static function build(TusDataStore $data_store): self
+    {
+        return new self(
+            new TusServer(
+                HTTPFactoryBuilder::responseFactory(),
+                $data_store
+            ),
+            new \Tuleap\Tus\TusCORSMiddleware(),
+            new \Tuleap\REST\TuleapRESTCORSMiddleware(),
+            \Tuleap\REST\UserManager::build(),
+            new \Tuleap\REST\BasicAuthentication()
+        );
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)

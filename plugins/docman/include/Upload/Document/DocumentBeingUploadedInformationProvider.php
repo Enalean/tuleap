@@ -23,9 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\Docman\Upload\Document;
 
 use Tuleap\Docman\Upload\DocumentAlreadyUploadedInformation;
-use Tuleap\Docman\Upload\FileBeingUploadedInformation;
 use Tuleap\Tus\TusFileInformation;
 use Tuleap\Tus\TusFileInformationProvider;
+use Tuleap\Upload\FileBeingUploadedInformation;
 
 final class DocumentBeingUploadedInformationProvider implements TusFileInformationProvider
 {
