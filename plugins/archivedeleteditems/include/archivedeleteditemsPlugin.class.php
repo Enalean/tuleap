@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics 2012. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -23,10 +23,8 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 use Tuleap\ArchiveDeletedItems\ArchiveLogger;
 use Tuleap\ArchiveDeletedItems\FileCopier;
+use Tuleap\Event\Events\ArchiveDeletedItemEvent;
 
-/**
- * Archive
- */
 class ArchivedeleteditemsPlugin extends Plugin
 {
     /**
@@ -40,7 +38,7 @@ class ArchivedeleteditemsPlugin extends Plugin
     {
         parent::__construct($id);
         $this->setScope(Plugin::SCOPE_SYSTEM);
-        $this->addHook('archive_deleted_item', 'archive_deleted_item', false);
+        $this->addHook(\Tuleap\Event\Events\ArchiveDeletedItemEvent::NAME);
         bindtextdomain('tuleap-archivedeleteditems', __DIR__ . '/../site-content');
     }
 
@@ -75,61 +73,43 @@ class ArchivedeleteditemsPlugin extends Plugin
 
     /**
      * Copy files to the archiving directory
-     *
-     * @param Array $params Hook parameters
-     *
-     * @return Boolean
      */
-    public function archive_deleted_item($params)
+    public function archiveDeletedItem(ArchiveDeletedItemEvent $event) : void
     {
         $logger           = $this->getLogger();
-        $params['status'] = false;
-
-        if (!empty($params['source_path'])) {
-            $source_path = $params['source_path'];
-        } else {
-            $params['error'] = 'Missing argument source path';
-            return;
-        }
 
         $archive_path = $this->getWellFormattedArchivePath();
 
         if (! empty($archive_path)) {
             if (!is_dir($archive_path)) {
-                $params['error'] = 'Non-existing archive path';
+                $logger->error('Non-existing archive path');
+                $event->setFailure();
                 return;
             }
         } else {
-            $params['error'] = 'Missing argument archive path';
+            $logger->error('Missing argument archive path');
+            $event->setFailure();
             return;
         }
 
-        if (! empty($params['archive_prefix'])) {
-            $archive_prefix = $params['archive_prefix'];
-        } else {
-            $params['error'] = 'Missing argument archive prefix';
-            return;
-        }
-
-        $destination_path = $archive_path.$archive_prefix.'_'.basename($source_path);
+        $source_path = $event->getSourcePath();
+        $destination_path = $archive_path.$event->getArchivePrefix().'_'.basename($source_path);
 
         if (! file_exists($source_path)) {
-            $params['error'] = 'Skipping file "'.$source_path.'": not found in file system.';
-            $logger->error($params['error']);
+            $logger->error('Skipping file "'.$source_path.'": not found in file system.');
+            $event->setFailure();
             return;
         }
 
-        $skip_duplicated    = $params['skip_duplicated'];
         $file_copier        = new FileCopier($logger);
-        $is_copy_successful = $file_copier->copy($source_path, $destination_path, $skip_duplicated);
+        $is_copy_successful = $file_copier->copy($source_path, $destination_path, $event->mustSkipDuplicated());
 
         if ($is_copy_successful) {
             $logger->info('Archiving OK');
         } else {
-            $params['error'] = 'Archiving of "' . $source_path . '" in "' . $destination_path . '" failed';
+            $logger->error('Archiving of "' . $source_path . '" in "' . $destination_path . '" failed');
+            $event->setFailure();
         }
-
-        $params['status'] = $is_copy_successful;
     }
 
     private function getWellFormattedArchivePath() {

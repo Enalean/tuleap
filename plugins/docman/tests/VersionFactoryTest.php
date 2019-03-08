@@ -1,8 +1,7 @@
 <?php
-
 /**
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2010. All Rights Reserved.
- * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
  *
  * This file is a part of Codendi.
  *
@@ -20,8 +19,9 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'bootstrap.php';
+use Mockery as M;
 
+require_once 'bootstrap.php';
 
 Mock::generate('EventManager');
 
@@ -32,29 +32,21 @@ Mock::generate('Docman_VersionDao');
 Mock::generate('Docman_Version');
 Mock::generate('Docman_ItemFactory');
 Mock::generate('Docman_File');
-Mock::generatePartial('Docman_VersionFactory', 'Docman_VersionFactoryTestVersionDeleteFile', array('_getVersionDao', 'archiveBeforePurge'));
-
-Mock::generatePartial('Docman_VersionFactory', 'Docman_VersionFactoryTestVersion', array('purgeDeletedVersion', '_getVersionDao', '_purge', '_getEventManager', '_getItemFactory', '_getUserManager'));
-
 
 class Docman_VersionFactoryTest extends TuleapTestCase {
 
     function testPurgeDeletedVersionsWithNoVersions() {
-        $versionFactory = new Docman_VersionFactoryTestVersion($this);
-
         $dao = mock('Docman_VersionDao');
         expect($dao)->listVersionsToPurge()->once();
         stub($dao)->listVersionsToPurge()->returnsEmptyDar();
-        $versionFactory->setReturnValue('_getVersionDao', $dao);
 
-        $versionFactory->expectNever('purgeDeletedVersion');
+        $versionFactory = M::mock(Docman_VersionFactory::class, ['_getVersionDao' => $dao])->makePartial();
+        $versionFactory->shouldNotReceive('purgeDeletedVersion');
 
         $this->assertTrue($versionFactory->PurgeDeletedVersions(1234567890));
     }
 
     function testPurgeDeletedVersions() {
-        $versionFactory = new Docman_VersionFactoryTestVersion($this);
-
         $dao = mock('Docman_VersionDao');
         expect($dao)->listVersionsToPurge()->once();
         stub($dao)->listVersionsToPurge()->returnsDar(
@@ -72,15 +64,15 @@ class Docman_VersionFactoryTest extends TuleapTestCase {
                 'path'      => null
             )
         );
-        $versionFactory->setReturnValue('_getVersionDao', $dao);
+        $versionFactory = M::mock(Docman_VersionFactory::class, ['_getVersionDao' => $dao])->makePartial();
 
-        $versionFactory->expectOnce('purgeDeletedVersion');
+        $versionFactory->shouldReceive('purgeDeletedVersion')->once();
 
         $this->assertTrue($versionFactory->PurgeDeletedVersions(1234567890));
     }
 
     function testPurgeDeletedVersionFileNotFound() {
-        $versionFactory = new Docman_VersionFactoryTestVersionDeleteFile($this);
+        $versionFactory = M::mock(Docman_VersionFactory::class)->makePartial();
 
         $version = new Docman_Version(array('id'        => null,
                                             'user_id'   => null,
@@ -94,16 +86,15 @@ class Docman_VersionFactoryTest extends TuleapTestCase {
                                             'filetype'  => null,
                                             'path'      => $this->getTmpDir().'/noFile'));
 
-        $versionFactory->expectOnce('archiveBeforePurge', array($version));
+        $versionFactory->shouldReceive('archiveBeforePurge')->with($version)->once();
         $this->assertFalse($versionFactory->PurgeDeletedVersion($version));
     }
 
     function testPurgeDeletedVersion() {
-        $versionFactory = new Docman_VersionFactoryTestVersionDeleteFile($this);
-
         $dao = new MockDocman_VersionDao($this);
         $dao->setReturnValue('setPurgeDate', true);
-        $versionFactory->setReturnValue('_getVersionDao', $dao);
+
+        $versionFactory = M::mock(Docman_VersionFactory::class, ['_getVersionDao' => $dao])->makePartial();
 
         $version = new Docman_Version(array('id'        => null,
                                             'user_id'   => null,
@@ -119,19 +110,17 @@ class Docman_VersionFactoryTest extends TuleapTestCase {
 
         $fp = fopen($version->getPath(), 'w');
 
-        stub($versionFactory)->archiveBeforePurge()->returns(true);
-        $versionFactory->expectOnce('archiveBeforePurge', array($version));
+        $versionFactory->shouldReceive('archiveBeforePurge')->with($version)->once()->andReturn(true);
 
         $this->assertTrue($versionFactory->PurgeDeletedVersion($version));
         $this->assertFalse(file_exists($version->getPath()));
     }
 
     public function itDoesNotRemoveLocalFileIfPurgeFails() {
-        $versionFactory = new Docman_VersionFactoryTestVersionDeleteFile($this);
-
         $dao = new MockDocman_VersionDao($this);
         $dao->setReturnValue('setPurgeDate', true);
-        $versionFactory->setReturnValue('_getVersionDao', $dao);
+
+        $versionFactory = M::mock(Docman_VersionFactory::class, ['_getVersionDao' => $dao])->makePartial();
 
         $version = new Docman_Version(array(
             'id'        => null,
@@ -147,21 +136,18 @@ class Docman_VersionFactoryTest extends TuleapTestCase {
             'path'      => $this->getTmpDir().'/fileToPurge_txt'));
         fopen($version->getPath(), 'w');
 
-        stub($versionFactory)->archiveBeforePurge()->returns(false);
-        $versionFactory->expectNever('archiveBeforePurge', array($version));
+        $versionFactory->shouldNotReceive('archiveBeforePurge');
 
         $this->assertTrue(file_exists($version->getPath()));
 
         unlink($version->getPath());
     }
 
-
     function testRestoreOneVersion() {
         $filePath       = $this->getTmpDir().'/version.test';
         touch($filePath);
-        $versionFactory = new Docman_VersionFactoryTestVersion($this);
         $dao            = mock('Docman_VersionDao');
-        $versionFactory->setReturnValue('_getVersionDao', $dao);
+        $versionFactory = M::mock(Docman_VersionFactory::class, ['_getVersionDao' => $dao])->makePartial();
 
         stub($dao)->searchDeletedVersion(1664, 2)->returnsDar(array('purge_date' => null, 'label' => 'Ho hisse la saucisse', 'path' => $filePath));
 
@@ -170,16 +156,16 @@ class Docman_VersionFactoryTest extends TuleapTestCase {
         $if = new MockDocman_ItemFactory($this);
         $if->expectOnce('getItemFromDb', array(1664, array('ignore_deleted' => true)));
         $if->setReturnValue('getItemFromDb', $file);
-        $versionFactory->setReturnValue('_getItemFactory', $if);
+        $versionFactory->shouldReceive('_getItemFactory')->andReturn($if);
 
         $user = mock('PFUser');
         $um   = new MockUserManager($this);
         $um->setReturnValue('getCurrentUser', $user);
-        $versionFactory->setReturnValue('_getUserManager', $um);
+        $versionFactory->shouldReceive('_getUserManager')->andReturn($um);
 
         $em = new MockEventManager($this);
         $em->expectOnce('processEvent', array('plugin_docman_event_restore_version', array('group_id' => 114, 'item' => $file, 'old_value' => '2 (Ho hisse la saucisse)', 'user' => $user)));
-        $versionFactory->setReturnValue('_getEventManager', $em);
+        $versionFactory->shouldReceive('_getEventManager')->andReturn($em);
 
         $dao->expectOnce('restore', array(1664, 2));
         $dao->setReturnValue('restore', true);
@@ -194,15 +180,14 @@ class Docman_VersionFactoryTest extends TuleapTestCase {
 
     function testRestoreOneVersionButFileIsDeleted() {
         $filePath       = $this->getTmpDir().'/version.test';
-        $versionFactory = new Docman_VersionFactoryTestVersion($this);
         $dao            = mock('Docman_VersionDao');
-        $versionFactory->setReturnValue('_getVersionDao', $dao);
+        $versionFactory = M::mock(Docman_VersionFactory::class, ['_getVersionDao' => $dao])->makePartial();
 
         stub($dao)->searchDeletedVersion(1664, 2)->returnsDar(array('purge_date' => null, 'path' => $filePath));
 
         $em = new MockEventManager($this);
         $em->expectNever('processEvent', array('plugin_docman_event_restore_version'));
-        $versionFactory->setReturnValue('_getEventManager', $em);
+        $versionFactory->shouldReceive('_getEventManager')->andReturn($em);
 
         $dao->expectNever('restore', array(1664, 2));
 
@@ -216,15 +201,14 @@ class Docman_VersionFactoryTest extends TuleapTestCase {
 
     function testRestoreOneVersionAlreadyPurged() {
         $filePath       = $this->getTmpDir().'/version.test';
-        $versionFactory = new Docman_VersionFactoryTestVersion($this);
         $dao            = mock('Docman_VersionDao');
-        $versionFactory->setReturnValue('_getVersionDao', $dao);
+        $versionFactory = M::mock(Docman_VersionFactory::class, ['_getVersionDao' => $dao])->makePartial();
 
         stub($dao)->searchDeletedVersion(1664, 2)->returnsDar(array('purge_date' => 1234567890, 'path' => $filePath));
 
         $em = new MockEventManager($this);
         $em->expectNever('processEvent', array('plugin_docman_event_restore_version'));
-        $versionFactory->setReturnValue('_getEventManager', $em);
+        $versionFactory->shouldReceive('_getEventManager')->andReturn($em);
 
         $dao->expectNever('restore');
 
@@ -234,5 +218,4 @@ class Docman_VersionFactoryTest extends TuleapTestCase {
 
         $this->assertFalse($versionFactory->restore($version));
     }
-
 }

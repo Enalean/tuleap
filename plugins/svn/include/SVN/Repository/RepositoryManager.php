@@ -31,6 +31,9 @@ use ProjectManager;
 use System_Command;
 use SystemEvent;
 use SystemEventManager;
+use Tuleap\Event\Events\ArchiveDeletedItemEvent;
+use Tuleap\Event\Events\ArchiveDeletedItemFileProvider;
+use Tuleap\Git\GitPHP\Archive;
 use Tuleap\SVN\AccessControl\AccessFileHistoryFactory;
 use Tuleap\SVN\Dao;
 use Tuleap\SVN\Events\SystemEvent_SVN_RESTORE_REPOSITORY;
@@ -289,7 +292,7 @@ class RepositoryManager
 
     public function purgeArchivedRepositories()
     {
-        if (! ForgeConfig::get('sys_file_deletion_delay')) {
+        if (! ForgeConfig::exists('sys_file_deletion_delay')) {
             $this->logger->warn("Purge of archived SVN repositories is disabled: sys_file_deletion_delay is missing in local.inc file");
             return;
         }
@@ -351,32 +354,26 @@ class RepositoryManager
         }
     }
 
-    private function archiveBeforePurge(Repository $repository)
+    private function archiveBeforePurge(Repository $repository) : bool
     {
         $source_path = $repository->getBackupPath();
 
         if (dirname($source_path)) {
-            $status      = true;
-            $error       = null;
-            $params      = array(
-                'source_path'     => $source_path,
-                'archive_prefix'  => self::PREFIX,
-                'status'          => &$status,
-                'error'           => &$error,
-                'skip_duplicated' => false
-            );
+            $event = new ArchiveDeletedItemEvent(new ArchiveDeletedItemFileProvider($source_path, self::PREFIX));
 
-            $this->event_manager->processEvent('archive_deleted_item', $params);
+            $this->event_manager->processEvent($event);
 
-            if ($params['status']) {
+            if ($event->isSuccessful()) {
                 $this->logger->info('The repository' . $repository->getName() . ' has been moved to the archiving area before purge ');
                 $this->logger->info('Archive of the SVN repository: ' . $repository->getName() . ' done');
-            } else {
-                $this->logger->warn('Can not move the repository ' . $repository->getName() . ' to the archiving area before purge :[' . $params['error'] . ']');
-                $this->logger->warn('An error occured while archiving SVN repository: ' . $repository->getName());
+                return true;
             }
 
-            return $params['status'];
+            $this->logger->warn('Can not move the repository ' . $repository->getName() . ' to the archiving area before purge.');
+            $this->logger->warn('An error occured while archiving SVN repository: ' . $repository->getName());
+            return false;
         }
+
+        return false;
     }
 }

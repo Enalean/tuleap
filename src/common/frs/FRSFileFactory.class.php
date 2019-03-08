@@ -24,6 +24,8 @@ require_once 'FRSLog.class.php';
 require_once 'common/dao/FRSFileDao.class.php';
 require_once 'Exceptions.class.php';
 
+use Tuleap\Event\Events\ArchiveDeletedItemEvent;
+use Tuleap\Event\Events\ArchiveDeletedItemFileProvider;
 use Tuleap\FRS\FRSPermissionManager;
 use Tuleap\FRS\FRSPermissionDao;
 use Tuleap\FRS\FRSPermissionFactory;
@@ -702,23 +704,12 @@ class FRSFileFactory {
         $release = $this->_getFRSReleaseFactory()->getFRSReleaseFromDb($file->getReleaseId(), null, null, true);
         $sub_dir = $this->getUploadSubDirectory($release);
         $prefix  = $file->getGroup()->getGroupId().'_'.$sub_dir.'_'.$file->getFileID();
-        $status  = true;
-        $error   = array();
-        $params  = array(
-            'status'          => &$status,
-            'source_path'     => $this->getStagingPath($file),
-            'archive_prefix'  => $prefix,
-            'error'           => &$error,
-            'skip_duplicated' => true
-        );
 
-        $this->_getEventManager()->processEvent('archive_deleted_item', $params);
-        if ($params['status']) {
-            return true;
-        } else {
-            $backend->log($params['error'], Backend::LOG_ERROR);
-            return false;
-        }
+        $event = new ArchiveDeletedItemEvent(new ArchiveDeletedItemFileProvider($this->getStagingPath($file), $prefix), true);
+
+        $this->_getEventManager()->processEvent($event);
+
+        return $event->isSuccessful();
     }
 
     /**

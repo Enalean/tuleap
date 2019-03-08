@@ -26,6 +26,7 @@ use Logger;
 use PFUser;
 use Tracker_Artifact;
 use Tuleap\DB\DBConnection;
+use Tuleap\Event\Events\ArchiveDeletedItemEvent;
 use Tuleap\Project\XML\Export\ZipArchive;
 use Tuleap\Tracker\Artifact\ArtifactWithTrackerStructureExporter;
 
@@ -74,27 +75,19 @@ class ArchiveAndDeleteArtifactTask
 
     private function tryToArchiveArtifact(Tracker_Artifact $artifact, PFUser $user) : void
     {
-        $archive_path = ForgeConfig::get('tmp_dir') . '/artifact_' . $artifact->getId() . '_' . time() . '.zip';
+        $archive_file_provider = new ArchiveDeletedArtifactProvider(
+            $this->artifact_with_tracker_structure_exporter,
+            $artifact,
+            $user
+        );
         try {
-            $archive = new ZipArchive($archive_path);
-            $this->artifact_with_tracker_structure_exporter->exportArtifactAndTrackerStructureToXML($user, $artifact, $archive);
-            $archive->close();
-            $params = [
-                'source_path'     => $archive->getArchivePath(),
-                'archive_prefix'  => 'deleted_',
-                'status'          => true,
-                'error'           => null,
-                'skip_duplicated' => false
-            ];
-            $this->event_manager->processEvent('archive_deleted_item', $params);
+            $this->event_manager->processEvent(new ArchiveDeletedItemEvent($archive_file_provider));
         } catch (\Exception $exception) {
             $this->logger->debug(
                 "Unable to archive the artifact " . $artifact->getId() . ":" . $exception->getMessage()
             );
         } finally {
-            if (file_exists($archive_path)) {
-                unlink($archive_path);
-            }
+            $archive_file_provider->purge();
             $this->db_connection->reconnectAfterALongRunningProcess();
         }
     }

@@ -1,34 +1,33 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  * Originally written by Clément Plantier, 2008
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi; if not, write to the Free Software
+ * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+
+use Mockery as M;
 
 require_once 'bootstrap.php';
 
 Mock::generate('BaseLanguage');
 Mock::generate('Docman_SOAPController');
 Mock::generate('Feedback');
-Mock::generate('Docman_ItemFactory');
 Mock::generate('Docman_FolderFactory');
-Mock::generate('Docman_File');
-Mock::generate('Docman_Version');
-Mock::generate('Docman_VersionFactory');
 Mock::generate('Docman_FileStorage');
 Mock::generate('UserManager');
 Mock::generate('PFUser');
@@ -70,21 +69,18 @@ class Docman_SOAPActionsTest extends TuleapTestCase {
         $controller = new MockDocman_SOAPController();
         $controller->feedback = new MockFeedback();
 
-        $version = new MockDocman_Version();
-        $version->setReturnValue('getNumber', 0);
+        $version = new Docman_Version(['number' => 0]);
 
-        $this->itemFactory = new MockDocman_ItemFactory();
+        $this->itemFactory = M::spy(Docman_ItemFactory::class);
         $folderFactory = new MockDocman_FolderFactory();
         $this->fileStorage = new MockDocman_FileStorage();
 
         // Item MD5 Map: id => md5sum
         $this->MD5Map = array(128000 => '99999999999999999999999999999999');
         foreach ($this->MD5Map as $itemId => $md5) {
-            $file = new MockDocman_File();
-            $file->setReturnValue('getID', $itemId);
-            $file->setReturnValue('getCurrentVersion', $version);
-            $this->itemFactory->setReturnValue('getItemFromDb', $file, array($itemId));
-            $this->itemFactory->setReturnValue('getItemTypeForItem', PLUGIN_DOCMAN_ITEM_TYPE_FILE, array($file));
+            $file = M::spy(Docman_File::class, ['getID' => $itemId, 'getCurrentVersion' => $version]);
+            $this->itemFactory->shouldReceive('getItemFromDb')->with($itemId)->andReturn($file);
+            $this->itemFactory->shouldReceive('getItemTypeForItem')->with($file)->andReturn(PLUGIN_DOCMAN_ITEM_TYPE_FILE);
             $this->fileStorage->setReturnValue('getFileMD5sum', $md5);
         }
 
@@ -98,8 +94,7 @@ class Docman_SOAPActionsTest extends TuleapTestCase {
 
         $controller->setReturnValue('getUser', $user);
 
-        $versionFactory = new MockDocman_VersionFactory();
-        $versionFactory->setReturnValue('getAllVersionForItem', array($version));
+        $versionFactory = M::spy(Docman_VersionFactory::class, ['getAllVersionForItem' => [$version]]);
 
         $this->lockFactory = new MockDocman_LockFactory();
 
@@ -251,7 +246,7 @@ class Docman_SOAPActionsTest extends TuleapTestCase {
         $action->getControler()->request = $request;
 
         $action->expectOnce('_checkOwnerChange', array($params['item']['owner'], '*'));
-        $this->itemFactory->expectOnce('update');
+        $this->itemFactory->shouldReceive('update')->once();
         $action->event_manager->expectAt(0, 'processEvent', array('plugin_docman_event_metadata_update', '*'));
         $action->event_manager->expectAt(1, 'processEvent', array('send_notifications', '*'));
 
@@ -278,7 +273,7 @@ class Docman_SOAPActionsTest extends TuleapTestCase {
         $action->getControler()->request = $request;
 
         $this->fileStorage->expectOnce('store');
-        $this->itemFactory->expectOnce('update');
+        $this->itemFactory->shouldReceive('update');
         $action->event_manager->expectAt('1','processEvent', array('send_notifications', '*'));
         $action->event_manager->expectCallCount('processEvent','1');
         $action->new_version();
@@ -304,7 +299,7 @@ class Docman_SOAPActionsTest extends TuleapTestCase {
         $action->getControler()->request = $request;
 
         $this->fileStorage->expectOnce('store');
-        $this->itemFactory->expectNever('update');
+        $this->itemFactory->shouldNotReceive('update');
         $action->event_manager->expectAt('1','processEvent', array('send_notifications', '*'));
         $action->event_manager->expectCallCount('processEvent','1');
 
@@ -332,15 +327,13 @@ class Docman_SOAPActionsTest extends TuleapTestCase {
         $request->setReturnValue('get', $params['item'], array('item'));
         $request->setReturnValue('get', $params['group_id'], array('group_id'));
 
-        $this->itemFactory->setReturnValue('create', 128002);
-
         $action->getControler()->request = $request;
 
-        $this->itemFactory->expectOnce('create');
+        $this->itemFactory->shouldReceive('create')->once()->andReturn(128002);
 
         $item = partial_mock('Docman_Item', array('getEventManager'));
         $item->setReturnValue('getEventManager', $action->event_manager);
-        $this->itemFactory->setReturnValue('getItemFromDb', $item);
+        $this->itemFactory->shouldReceive('getItemFromDb')->andReturn($item);
 
         $this->permissionManager->expectOnce('clonePermissions');
         $action->event_manager->expectAt(0, 'processEvent', array('plugin_docman_event_add', '*'));
@@ -371,11 +364,11 @@ class Docman_SOAPActionsTest extends TuleapTestCase {
         $request->setReturnValue('get', $params['item'], array('item'));
         $request->setReturnValue('get', $params['group_id'], array('group_id'));
 
-        $this->itemFactory->setReturnValue('create', 128002);
+        $this->itemFactory->shouldReceive('create')->andReturn(128002);
 
         $item = partial_mock('Docman_Item', array('getEventManager'));
         $item->setReturnValue('getEventManager', $action->event_manager);
-        $this->itemFactory->setReturnValue('getItemFromDb', $item);
+        $this->itemFactory->shouldReceive('getItemFromDb')->andReturn($item);
 
         $action->getControler()->request = $request;
 
