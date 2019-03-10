@@ -114,7 +114,7 @@ final class VersionUploadFinisher implements TusFinisherDataStore
     {
         $upload_id = $file_information->getID();
 
-        $uploaded_document_path   = $this->document_upload_path_allocator->getPathForItemBeingUploaded($upload_id);
+        $uploaded_document_path   = $this->document_upload_path_allocator->getPathForItemBeingUploaded($file_information);
         $current_value_user_abort = (bool)ignore_user_abort(true);
         try {
             $this->createVersion($uploaded_document_path, $upload_id);

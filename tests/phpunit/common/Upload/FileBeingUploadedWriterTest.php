@@ -64,7 +64,7 @@ class FileBeingUploadedWriterTest extends TestCase
 
         $this->assertSame(
             $content,
-            file_get_contents($path_allocator->getPathForItemBeingUploaded($item_id))
+            file_get_contents($path_allocator->getPathForItemBeingUploaded($file_information))
         );
         $this->assertSame($written_size, strlen($content));
     }
@@ -96,7 +96,7 @@ class FileBeingUploadedWriterTest extends TestCase
 
         $this->assertSame(
             str_repeat('A', $file_length),
-            file_get_contents($path_allocator->getPathForItemBeingUploaded($item_id))
+            file_get_contents($path_allocator->getPathForItemBeingUploaded($file_information))
         );
         $this->assertSame($written_size, $file_length);
     }

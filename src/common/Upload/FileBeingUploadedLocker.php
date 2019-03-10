@@ -92,6 +92,6 @@ final class FileBeingUploadedLocker implements TusLocker
 
     private function getPathForFile(TusFileInformation $file_information) : string
     {
-        return $this->path_allocator->getPathForItemBeingUploaded($file_information->getID());
+        return $this->path_allocator->getPathForItemBeingUploaded($file_information);
     }
 }

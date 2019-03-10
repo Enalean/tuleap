@@ -43,9 +43,9 @@ class VersionUploadCancelerTest extends TestCase
         $file_information = \Mockery::mock(TusFileInformation::class);
         $item_id          = 12;
         $file_information->shouldReceive('getID')->andReturns($item_id);
-        $item_path = $path_allocator->getPathForItemBeingUploaded($item_id);
+        $item_path = $path_allocator->getPathForItemBeingUploaded($file_information);
         mkdir(dirname($item_path), 0777, true);
-        touch($path_allocator->getPathForItemBeingUploaded($item_id));
+        touch($item_path);
 
         $dao->shouldReceive('deleteByVersionID')->once();
 
@@ -64,7 +64,7 @@ class VersionUploadCancelerTest extends TestCase
         $file_information = \Mockery::mock(TusFileInformation::class);
         $item_id          = 12;
         $file_information->shouldReceive('getID')->andReturns($item_id);
-        $item_path = $path_allocator->getPathForItemBeingUploaded($item_id);
+        $item_path = $path_allocator->getPathForItemBeingUploaded($file_information);
 
         $dao->shouldReceive('deleteByVersionID')->once();
 

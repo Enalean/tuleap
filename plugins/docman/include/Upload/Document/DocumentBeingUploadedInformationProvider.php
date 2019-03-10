@@ -61,6 +61,8 @@ final class DocumentBeingUploadedInformationProvider implements TusFileInformati
             return null;
         }
 
+        $item_id = (int) $item_id;
+
         $document_row = $this->dao->searchDocumentOngoingUploadByItemIDUserIDAndExpirationDate(
             $item_id,
             $user_id,
@@ -70,14 +72,23 @@ final class DocumentBeingUploadedInformationProvider implements TusFileInformati
             return null;
         }
         $existing_item = $this->item_factory->getItemFromDb($item_id);
+        $length        = (int) $document_row['filesize'];
         if ($existing_item !== null) {
-            return new DocumentAlreadyUploadedInformation((int) $item_id, $document_row['filesize']);
+            return new DocumentAlreadyUploadedInformation($item_id, $length);
         }
 
-        $allocated_path = $this->path_allocator->getPathForItemBeingUploaded($item_id);
+        $current_file_size = $this->getCurrentFileSize($item_id, $length);
+
+        return new FileBeingUploadedInformation($item_id, $length, $current_file_size);
+    }
+
+    private function getCurrentFileSize(int $item_id, int $length): int
+    {
+        $temporary_file_information = new FileBeingUploadedInformation($item_id, $length, 0);
+        $allocated_path             = $this->path_allocator->getPathForItemBeingUploaded($temporary_file_information);
 
         $current_file_size = file_exists($allocated_path) ? filesize($allocated_path) : 0;
 
-        return new FileBeingUploadedInformation((int) $item_id, $document_row['filesize'], $current_file_size);
+        return $current_file_size;
     }
 }
