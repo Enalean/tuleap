@@ -55,6 +55,9 @@ msgstr ""
 msgid "No milestone available"
 msgstr ""
 
+msgid "Not found"
+msgstr ""
+
 msgid "Only open milestone are visible here"
 msgstr ""
 

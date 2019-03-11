@@ -70,7 +70,7 @@ import { modal as createModal } from "tlp";
 import { getBaselines } from "../api/rest-querier";
 
 export default {
-    name: "App",
+    name: "BaselinesPage",
 
     components: { NewBaselineModal, BaselineTable },
 

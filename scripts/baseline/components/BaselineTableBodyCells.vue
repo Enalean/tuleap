@@ -27,17 +27,11 @@
             <td>{{ baseline.snapshot_date }}</td>
             <td>{{ baseline.author }}</td>
             <td class="tlp-table-cell-actions baselines-table-column-actions">
-                <div class="tlp-dropdown">
-                    <button
-                        type="button"
-                        id="dropdown-example"
-                        class="tlp-button-secondary"
-                        disabled
-                    >
-                        <translate>Actions</translate>
-                        <i class="fa fa-caret-down tlp-button-icon-right"></i>
-                    </button>
-                </div>
+                <button v-on:click="goTo(`/${baseline.id}`)"
+                        class="tlp-button-small tlp-button-primary tlp-button-outline"
+                >
+                    Consult
+                </button>
             </td>
         </tr>
     </tbody>
@@ -46,7 +40,6 @@
 <script>
 export default {
     name: "BaselineTableBodyCells",
-
     props: {
         baselines: { required: true, type: Array }
     }

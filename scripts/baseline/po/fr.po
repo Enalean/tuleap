@@ -65,6 +65,9 @@ msgstr "Aucune baseline disponible"
 msgid "No milestone available"
 msgstr "Aucune milestone disponible"
 
+msgid "Not found"
+msgstr "Non trouvé"
+
 msgid "Only open milestone are visible here"
 msgstr "Seules les milestones ouvertes sont visibles ici"
 

@@ -18,7 +18,8 @@
  */
 
 import Vue from "vue";
-import App from "./components/App.vue";
+import Router from "./components/Router.vue";
+import RouterPlugin from "./components/RouterPlugin.js";
 import french_translations from "./po/fr.po";
 import GetTextPlugin from "vue-gettext";
 
@@ -40,8 +41,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const project_id = Number(vue_mount_point.dataset.projectId);
 
-    const AppComponent = Vue.extend(App);
-    new AppComponent({
+    Vue.use(RouterPlugin);
+
+    const RouteComponent = Vue.extend(Router);
+    new RouteComponent({
         propsData: { project_id }
     }).$mount(vue_mount_point);
 });
