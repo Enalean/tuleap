@@ -29,7 +29,7 @@ import "./store/mutations.spec.js";
 import "./components/Folder/ItemTitle/FakeCaret.spec.js";
 import "./components/Folder/ItemTitle/FolderCellTitle.spec.js";
 import "./components/Folder/QuickLook/QuickLookDocumentPreview.spec.js";
-import "./components/Folder/NewItem/ModalFooter.spec.js";
+import "./components/Folder/ModalCommon/ModalFooter.spec.js";
 import "./components/Folder/DragNDrop/DragNDropHandler.spec.js";
 
 import "./helpers/highlight-items-helper.spec.js";

@@ -34,9 +34,9 @@
 <script>
 import { mapState } from "vuex";
 import { modal as createModal } from "tlp";
-import ModalHeader from "../NewItem/ModalHeader.vue";
-import ModalFeedback from "../NewItem/ModalFeedback.vue";
-import ModalFooter from "../NewItem/ModalFooter.vue";
+import ModalHeader from "../ModalCommon/ModalHeader.vue";
+import ModalFeedback from "../ModalCommon/ModalFeedback.vue";
+import ModalFooter from "../ModalCommon/ModalFooter.vue";
 import FileProperties from "../NewItem/Property/FileProperties.vue";
 import FileUpdateProperties from "./FileUpdateProperties.vue";
 
