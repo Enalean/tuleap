@@ -91,11 +91,6 @@ class DocmanFilesResource extends AuthenticatedResource
 
     public function patch(int $id, DocmanFilesPATCHRepresentation $representation)
     {
-        if (! \ForgeConfig::get('enable_patch_item_route')) {
-            throw new RestException(
-                501
-            );
-        }
         $this->checkAccess();
         $this->getAllowOptionsPatch();
 

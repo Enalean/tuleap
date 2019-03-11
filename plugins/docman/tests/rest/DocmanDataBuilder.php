@@ -79,7 +79,6 @@ class DocmanDataBuilder extends REST_TestDataBuilder
         $this->createCustomMetadata();
         $this->addContent();
         $this->generateDocmanRegularUser();
-        $this->setFeatureFlag();
     }
 
     private function installPlugin()
@@ -327,22 +326,6 @@ class DocmanDataBuilder extends REST_TestDataBuilder
             PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED,
             false
         );
-    }
-
-    private function setFeatureFlag()
-    {
-        $local_inc = fopen('/etc/tuleap/conf/local.inc', 'a');
-        if ($local_inc === false) {
-            throw new \RuntimeException('Could not append feature flag to local.inc');
-        }
-        $write_result = fwrite(
-            $local_inc,
-            "\$enable_patch_item_route = 1;"
-        );
-        if ($write_result === false) {
-            throw new \RuntimeException('Could not append feature flag to local.inc');
-        }
-        fclose($local_inc);
     }
 
     private function lockItem(int $item_id)
