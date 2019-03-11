@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -30,14 +30,14 @@ class SVNCLITest extends TestCase
 {
     private $init_pwd;
 
-    public function setUp()
+    protected function setUp() : void
     {
         parent::setUp();
         $this->init_pwd = getcwd();
         system('/bin/rm -rf /tmp/sample');
     }
 
-    public function tearDown()
+    protected function tearDown() : void
     {
         parent::tearDown();
         chdir($this->init_pwd);
@@ -51,7 +51,7 @@ class SVNCLITest extends TestCase
         foreach ($output->list->entry as $entry) {
             $content[] = (string) $entry->name;
         }
-        $this->assertEquals(['tags', 'trunk', 'branches'], $content, '', 0, 10, true);
+        $this->assertEqualsCanonicalizing(['tags', 'trunk', 'branches'], $content);
     }
 
     private function getSvnCommand(string $username, string $command) : string
