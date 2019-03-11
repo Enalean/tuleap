@@ -19,11 +19,13 @@
   -->
 
 <template>
-    <form class="tlp-modal" role="dialog" aria-labelledby="document-new-folder-modal" v-on:submit="addFolder">
+    <form class="tlp-modal" role="dialog" aria-labelledby="document-item-modal" v-on:submit="updateFile">
         <modal-header v-bind:modal-title="modal_title" v-bind:aria-labelled-by="aria_labelled_by"/>
         <modal-feedback/>
-        <div class="tlp-modal-body document-new-item-modal-body" v-if="is_displayed">
-            <global-properties v-bind:item="item" v-bind:parent="parent"/>
+        <div class="tlp-modal-body">
+            <file-update-properties v-bind:version="version">
+                <file-properties v-model="uploaded_item.file_properties" v-bind:item="uploaded_item"/>
+            </file-update-properties>
         </div>
         <modal-footer v-bind:is-loading="is_loading" v-bind:submit-button-label="submit_button_label" v-bind:aria-labelled-by="aria_labelled_by"/>
     </form>
@@ -32,43 +34,45 @@
 <script>
 import { mapState } from "vuex";
 import { modal as createModal } from "tlp";
-import { TYPE_FOLDER } from "../../../constants.js";
-import ModalHeader from "./ModalHeader.vue";
-import ModalFeedback from "./ModalFeedback.vue";
-import ModalFooter from "./ModalFooter.vue";
-import GlobalProperties from "./Property/GlobalProperties.vue";
+import ModalHeader from "../NewItem/ModalHeader.vue";
+import ModalFeedback from "../NewItem/ModalFeedback.vue";
+import ModalFooter from "../NewItem/ModalFooter.vue";
+import FileProperties from "../NewItem/Property/FileProperties.vue";
+import FileUpdateProperties from "./FileUpdateProperties.vue";
 
 export default {
-    name: "NewFolderModal",
+    name: "UpdateFileModal",
     components: {
+        FileUpdateProperties,
         ModalFeedback,
         ModalHeader,
         ModalFooter,
-        GlobalProperties
+        FileProperties
     },
     data() {
         return {
-            item: {
+            item: {},
+            uploaded_item: {},
+            default_version: {
                 title: "",
-                description: "",
-                type: TYPE_FOLDER
+                changelog: ""
             },
+            version: {},
             is_loading: false,
             is_displayed: false,
-            modal: null,
-            parent: {}
+            modal: null
         };
     },
     computed: {
-        ...mapState(["current_folder", "has_modal_error"]),
+        ...mapState(["has_modal_error"]),
         submit_button_label() {
-            return this.$gettext("Create folder");
+            return this.$gettext("Update");
         },
         modal_title() {
-            return this.$gettext("New folder");
+            return this.$gettext("Update file");
         },
         aria_labelled_by() {
-            return "document-new-item-modal";
+            return "document-update-item-modal";
         }
     },
     mounted() {
@@ -77,16 +81,19 @@ export default {
     },
     methods: {
         registerEvents() {
-            document.addEventListener("show-new-folder-modal", this.show);
+            document.addEventListener("show-update-file-modal", this.show);
             this.$once("hook:beforeDestroy", () => {
-                document.removeEventListener("show-new-folder-modal", this.show);
+                document.removeEventListener("show-update-file-modal", this.show);
             });
             this.modal.addEventListener("tlp-modal-hidden", this.reset);
         },
         show(event) {
-            this.item.title = "";
-            this.item.description = "";
-            this.parent = event.detail.parent;
+            this.version = { ...this.default_version };
+            this.item = event.detail.current_item;
+            this.uploaded_item = {
+                type: this.item.type,
+                file_properties: {}
+            };
             this.is_displayed = true;
             this.modal.show();
         },
@@ -94,19 +101,22 @@ export default {
             this.$store.commit("resetModalError");
             this.is_displayed = false;
             this.is_loading = false;
+            this.uploaded_item = {};
         },
-        async addFolder(event) {
+        async updateFile(event) {
             event.preventDefault();
             this.is_loading = true;
             this.$store.commit("resetModalError");
 
-            await this.$store.dispatch("createNewItem", [
+            await this.$store.dispatch("updateFileFromModal", [
                 this.item,
-                this.parent,
-                this.current_folder
+                this.uploaded_item.file_properties.file,
+                this.version.title,
+                this.version.changelog
             ]);
             this.is_loading = false;
             if (this.has_modal_error === false) {
+                this.uploaded_item = {};
                 this.modal.hide();
             }
         }

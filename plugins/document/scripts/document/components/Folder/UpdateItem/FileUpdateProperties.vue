@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2018. All Rights Reserved.
+  - Copyright (c) Enalean, 2019. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -14,32 +14,27 @@
   - GNU General Public License for more details.
   -
   - You should have received a copy of the GNU General Public License
-  - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+  - along with Tuleap. If not, see http://www.gnu.org/licenses/.
   -
   -->
 
 <template>
-    <div class="tlp-modal-header">
-        <h1 class="tlp-modal-title" v-bind:id="ariaLabelledBy">
-            <i class="fa fa-plus tlp-modal-title-icon"></i>
-            {{ modalTitle }}
-        </h1>
-        <div class="tlp-modal-close" data-dismiss="modal" v-bind:aria-label="close">
-            &times;
-        </div>
+    <div>
+        <version-title-property v-model="version.title"/>
+        <changelog-property v-model="version.changelog"/>
+        <slot></slot>
     </div>
 </template>
+
 <script>
+import VersionTitleProperty from "./VersionTitleProperty.vue";
+import ChangelogProperty from "./ChangelogProperty.vue";
+
 export default {
-    name: "ModalHeader",
+    name: "FileUpdateProperties",
+    components: { ChangelogProperty, VersionTitleProperty },
     props: {
-        modalTitle: String,
-        ariaLabelledBy: String
-    },
-    computed: {
-        close() {
-            return this.$gettext("Close");
-        }
+        version: Object
     }
 };
 </script>

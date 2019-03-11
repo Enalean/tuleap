@@ -56,6 +56,9 @@ msgstr "Annuler"
 msgid "Cancel upload"
 msgstr "Annuler le téléversement"
 
+msgid "Changelog"
+msgstr "Description des changements"
+
 msgid "Close"
 msgstr "Fermer"
 
@@ -167,6 +170,9 @@ msgstr "Mon contenu..."
 msgid "My document"
 msgstr "Mon document"
 
+msgid "My new version name"
+msgstr "Mon nom de nouvelle version"
+
 msgid "My useful document description"
 msgstr "Ma description de document"
 
@@ -217,6 +223,9 @@ msgstr ""
 
 msgid "Permissions"
 msgstr "Permissions"
+
+msgid "Please describe the changes of the new version here"
+msgstr "Merci de décrire ici le changement de version."
 
 msgid "Please start again."
 msgstr "Merci de bien vouloir recommencer."
@@ -273,11 +282,17 @@ msgstr "URL"
 msgid "Update"
 msgstr "Mettre à jour"
 
+msgid "Update file"
+msgstr "Mettre à jour"
+
 msgid "Upload error"
 msgstr "Erreur de téléversement"
 
 msgid "Uploading documents"
 msgstr "Documents en cours de téléversement"
+
+msgid "Version name"
+msgstr "Nom de version"
 
 msgid "Welcome to the new documents manager"
 msgstr "Bienvenue dans le nouveau gestionnaire de documents"

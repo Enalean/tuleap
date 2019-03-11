@@ -19,7 +19,7 @@
   -->
 
 <template functional>
-    <div class="tlp-modal-footer">
+    <div v-bind:id="props.ariaLabelledBy" class="tlp-modal-footer">
         <button
             type="button"
             class="tlp-button-primary tlp-button-outline tlp-modal-action"
@@ -31,10 +31,11 @@
         <button
             type="submit"
             class="tlp-button-primary tlp-modal-action"
-            v-bind:disabled="props.is_loading"
+            v-bind:disabled="props.isLoading"
         >
-            <i v-if="props.is_loading" class="fa fa-plus tlp-button-icon fa-spin fa-circle-o-notch"></i>
-            {{ props.submit_button_label }}
+            <i v-if="props.isLoading" class="tlp-button-icon fa-spin fa-circle-o-notch"></i>
+            <i v-else class="fa fa-plus tlp-button-icon"></i>
+            {{ props.submitButtonLabel }}
         </button>
     </div>
 </template>

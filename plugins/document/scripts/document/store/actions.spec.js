@@ -21,6 +21,7 @@ import { mockFetchError } from "tlp-mocks";
 import {
     addNewUploadFile,
     cancelFileUpload,
+    cancelFolderUpload,
     cancelVersionUpload,
     createNewItem,
     loadFolder,
@@ -29,12 +30,12 @@ import {
     setUserPreferenciesForUI,
     unsetUnderConstructionUserPreference,
     updateFile,
-    cancelFolderUpload
+    updateFileFromModal
 } from "./actions.js";
 import {
     restore as restoreUploadFile,
-    rewire$uploadFile,
     restore as restoreUploadVersion,
+    rewire$uploadFile,
     rewire$uploadVersion
 } from "./actions-helpers/upload-file.js";
 import {
@@ -42,13 +43,13 @@ import {
     rewire$addNewDocument,
     rewire$addNewFile,
     rewire$cancelUpload,
+    rewire$createNewVersion,
     rewire$deleteUserPreferenciesForFolderInProject,
     rewire$deleteUserPreferenciesForUIInProject,
     rewire$deleteUserPreferenciesForUnderConstructionModal,
     rewire$getItem,
     rewire$getProject,
-    rewire$patchUserPreferenciesForFolderInProject,
-    rewire$createNewVersion
+    rewire$patchUserPreferenciesForFolderInProject
 } from "../api/rest-querier.js";
 import {
     restore as restoreLoadFolderContent,
@@ -874,6 +875,53 @@ describe("Store actions", () => {
             await updateFile(context, [item, dropped_file]);
 
             expect(uploadVersion).toHaveBeenCalled();
+        });
+    });
+    describe("updateFileFromModal", () => {
+        it("uploads a new version of a file", async () => {
+            const item = { id: 45 };
+            context.state.folder_content = [{ id: 45 }];
+            const updated_file = { name: "filename.txt", size: 123, type: "text/plain" };
+
+            const new_version = { upload_href: "/uploads/docman/version/42" };
+            createNewVersion.and.returnValue(Promise.resolve(new_version));
+
+            const uploader = {};
+            uploadVersion.and.returnValue(uploader);
+
+            const version_title = "My new version";
+            const version_changelog = "Changed the version because...";
+
+            await updateFileFromModal(context, [
+                item,
+                updated_file,
+                version_title,
+                version_changelog
+            ]);
+
+            expect(createNewVersion).toHaveBeenCalled();
+            expect(uploadVersion).toHaveBeenCalled();
+        });
+        it("throws an error when there is a problem with the version creation", async () => {
+            const item = { id: 45 };
+            context.state.folder_content = [{ id: 45 }];
+            const update_fail = {};
+
+            createNewVersion.and.throwError("An error occurred ");
+
+            const version_title = "My new version";
+            const version_changelog = "Changed the version because...";
+
+            await updateFileFromModal(context, [
+                item,
+                update_fail,
+                version_title,
+                version_changelog
+            ]);
+
+            expect(createNewVersion).toHaveBeenCalled();
+            expect(context.commit).toHaveBeenCalledWith("setModalError", jasmine.anything());
+            expect(uploadVersion).not.toHaveBeenCalled();
         });
     });
     describe("cancelFolderUpload", () => {
