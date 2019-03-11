@@ -59,15 +59,15 @@ class UserPreferencesPresenter {
     }
 
     public function title() {
-        return $GLOBALS['Language']->getText('plugin_openidconnectclient', 'title_user_preferences');
+        return dgettext('tuleap-openidconnectclient', 'OpenID Connect providers');
     }
 
     public function unlink() {
-        return $GLOBALS['Language']->getText('plugin_openidconnectclient', 'unlink');
+        return dgettext('tuleap-openidconnectclient', 'Unlink');
     }
 
     public function last_login() {
-        return $GLOBALS['Language']->getText('plugin_openidconnectclient', 'last_login');
+        return dgettext('tuleap-openidconnectclient', 'Last login date:');
     }
 
     public function form_action() {

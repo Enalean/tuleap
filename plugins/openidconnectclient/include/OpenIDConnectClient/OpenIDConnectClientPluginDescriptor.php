@@ -24,9 +24,9 @@ class OpenIDConnectClientPluginDescriptor extends \PluginDescriptor
     public function __construct()
     {
         parent::__construct(
-            $GLOBALS['Language']->getText('plugin_openidconnectclient', 'descriptor_name'),
+            dgettext('tuleap-openidconnectclient', 'OpenID Connect Client'),
             false,
-            $GLOBALS['Language']->getText('plugin_openidconnectclient', 'descriptor_description')
+            dgettext('tuleap-openidconnectclient', 'Authenticate users with OpenID Connect')
         );
         $this->setVersionFromFile(__DIR__ . '/../../VERSION');
     }

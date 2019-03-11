@@ -93,7 +93,7 @@ class Controller {
         );
 
         $this->admin_page_renderer->renderAPresenter(
-            $GLOBALS['Language']->getText('plugin_openidconnectclient_admin', 'title'),
+            dgettext('tuleap-openidconnectclient', 'OpenID Connect'),
             OPENIDCONNECTCLIENT_TEMPLATE_DIR,
             $presenter::TEMPLATE,
             $presenter
@@ -125,20 +125,16 @@ class Controller {
             );
         } catch (ProviderDataAccessException $ex) {
             $this->redirectAfterFailure(
-                $GLOBALS['Language']->getText('plugin_openidconnectclient_admin', 'add_new_provider_error')
+                dgettext('tuleap-openidconnectclient', 'An error occured while adding a new provider.')
             );
         } catch (ProviderMalformedDataException $ex) {
             $this->redirectAfterFailure(
-                $GLOBALS['Language']->getText('plugin_openidconnectclient_admin', 'malformed_data_error')
+                dgettext('tuleap-openidconnectclient', 'The data you provided are not valid.')
             );
         }
         $GLOBALS['Response']->addFeedback(
             Feedback::INFO,
-            $GLOBALS['Language']->getText(
-                'plugin_openidconnectclient_admin',
-                'add_new_provider_success',
-                array($provider->getName())
-            )
+            sprintf(dgettext('tuleap-openidconnectclient', 'The new provider %1$s have been successfully created.'), $provider->getName())
         );
 
         $GLOBALS['Response']->redirect(OPENIDCONNECTCLIENT_BASE_URL . '/admin');
@@ -153,7 +149,7 @@ class Controller {
             $provider = $this->provider_manager->getById($id);
         } catch (ProviderNotFoundException $ex) {
             $this->redirectAfterFailure(
-                $GLOBALS['Language']->getText('plugin_openidconnectclient_admin', 'malformed_data_error')
+                dgettext('tuleap-openidconnectclient', 'The data you provided are not valid.')
             );
         }
 
@@ -164,7 +160,7 @@ class Controller {
             )
         ) {
             $this->redirectAfterFailure(
-                $GLOBALS['Language']->getText('plugin_openidconnectclient_admin', 'malformed_data_error')
+                dgettext('tuleap-openidconnectclient', 'The data you provided are not valid.')
             );
         }
 
@@ -194,21 +190,17 @@ class Controller {
             $this->provider_manager->update($updated_provider);
         } catch (ProviderDataAccessException $ex) {
             $this->redirectAfterFailure(
-                $GLOBALS['Language']->getText('plugin_openidconnectclient_admin', 'update_provider_error')
+                dgettext('tuleap-openidconnectclient', 'An error occured while updating the provider %1$s.')
             );
         } catch (ProviderMalformedDataException $ex) {
             $this->redirectAfterFailure(
-                $GLOBALS['Language']->getText('plugin_openidconnectclient_admin', 'malformed_data_error')
+                dgettext('tuleap-openidconnectclient', 'The data you provided are not valid.')
             );
         }
 
         $GLOBALS['Response']->addFeedback(
             Feedback::INFO,
-            $GLOBALS['Language']->getText(
-                'plugin_openidconnectclient_admin',
-                'update_provider_success',
-                array($updated_provider->getName())
-            )
+            sprintf(dgettext('tuleap-openidconnectclient', 'The provider %1$s have been successfully updated.'), $updated_provider->getName())
         );
         $this->showAdministration($csrf_token, $request->getCurrentUser());
     }
@@ -222,24 +214,16 @@ class Controller {
             $this->provider_manager->remove($provider);
         } catch (ProviderNotFoundException $ex) {
             $this->redirectAfterFailure(
-                $GLOBALS['Language']->getText('plugin_openidconnectclient_admin', 'malformed_data_error')
+                dgettext('tuleap-openidconnectclient', 'The data you provided are not valid.')
             );
         } catch (ProviderDataAccessException $ex) {
             $this->redirectAfterFailure(
-                $GLOBALS['Language']->getText(
-                    'plugin_openidconnectclient_admin',
-                    'remove_provider_error',
-                    array($provider->getName())
-                )
+                sprintf(dgettext('tuleap-openidconnectclient', 'An error occured while removing the provider %1$s.'), $provider->getName())
             );
         }
         $GLOBALS['Response']->addFeedback(
             Feedback::INFO,
-            $GLOBALS['Language']->getText(
-                'plugin_openidconnectclient_admin',
-                'remove_provider_success',
-                array($provider->getName())
-            )
+            sprintf(dgettext('tuleap-openidconnectclient', 'The provider %1$s have been removed.'), $provider->getName())
         );
         $this->showAdministration($csrf_token, $user);
     }

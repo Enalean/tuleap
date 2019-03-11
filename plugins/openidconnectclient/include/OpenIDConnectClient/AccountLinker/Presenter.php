@@ -61,39 +61,21 @@ class Presenter
     }
 
     public function link_page_title() {
-        return $GLOBALS['Language']->getText(
-            'plugin_openidconnectclient',
-            'link_account',
-            array(ForgeConfig::get('sys_name'))
-        );
+        return sprintf(dgettext('tuleap-openidconnectclient', 'Link a %1$s account'), ForgeConfig::get('sys_name'));
     }
 
     public function link_page_title_to() {
-        return $GLOBALS['Language']->getText('plugin_openidconnectclient', 'link_account_to');
+        return dgettext('tuleap-openidconnectclient', 'to OpenID Connect');
     }
 
     public function link_page_header_with_registration()
     {
-        return $GLOBALS['Language']->getText(
-            'plugin_openidconnectclient',
-            'link_page_header_with_registration',
-            array(
-                $this->provider_name,
-                ForgeConfig::get('sys_name')
-            )
-        );
+        return sprintf(dgettext('tuleap-openidconnectclient', 'You have successfully been authenticated by %1$s. The only remaining step is to create a link with an existing %2$s account or register a new one.'), $this->provider_name, ForgeConfig::get('sys_name'));
     }
 
     public function link_page_header_without_registration()
     {
-        return $GLOBALS['Language']->getText(
-            'plugin_openidconnectclient',
-            'link_page_header_without_registration',
-            array(
-                $this->provider_name,
-                ForgeConfig::get('sys_name')
-            )
-        );
+        return sprintf(dgettext('tuleap-openidconnectclient', 'You have successfully been authenticated by %1$s. The only remaining step is to create a link with an existing %2$s account.'), $this->provider_name, ForgeConfig::get('sys_name'));
     }
 
     public function action() {
@@ -101,15 +83,11 @@ class Presenter
     }
 
     public function or_label() {
-        return $GLOBALS['Language']->getText(
-            'plugin_openidconnectclient',
-            'or_register_label',
-            array(ForgeConfig::get('sys_name'))
-        );
+        return sprintf(dgettext('tuleap-openidconnectclient', 'or'), ForgeConfig::get('sys_name'));
     }
 
     public function register() {
-        return $GLOBALS['Language']->getText('plugin_openidconnectclient', 'register');
+        return dgettext('tuleap-openidconnectclient', 'Register a new %1$s account');
     }
 
     public function link_to_register_page() {

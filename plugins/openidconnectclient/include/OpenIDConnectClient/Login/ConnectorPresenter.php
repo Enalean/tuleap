@@ -33,7 +33,7 @@ class ConnectorPresenter {
      * @return string
      */
     public function or_label() {
-        return $GLOBALS['Language']->getText('plugin_openidconnectclient', 'or_label');
+        return dgettext('tuleap-openidconnectclient', 'or login with');
     }
 
     public function are_there_providers() {
