@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.2.1\n"
+"X-Generator: Poedit 2.2\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 msgid ""
@@ -106,8 +106,11 @@ msgstr[1] ""
 "Déposez jusqu'à %(nb_files)s fichiers pour les téléverser dans %(folder)s "
 "(la taille max est %(size)s)."
 
-msgid "Drop to upload"
-msgstr "Déposer pour téléverser"
+msgid "Drop to upload a new version"
+msgstr "Déposer pour téléverser une nouvelle version"
+
+msgid "Drop to upload in folder"
+msgstr "Déposer pour téléverser dans le dossier"
 
 msgid "Dropping files in %s is forbidden."
 msgstr "Déposer des fichiers dans %s n'est pas permis."

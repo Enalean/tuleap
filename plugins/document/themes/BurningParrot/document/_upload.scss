@@ -69,8 +69,7 @@ $progress-bar-background-color: $tlp-ui-border-normal;
     background: transparentize($tlp-theme-color, .15);
     color: $tlp-ui-white;
 
-    .document-folder-toggle,
-    .document-folder-content-fake-caret {
+    .document-folder-toggle {
         visibility: hidden;
     }
 
@@ -94,8 +93,9 @@ $progress-bar-background-color: $tlp-ui-border-normal;
 /* stylelint-enable selector-no-qualifying-type */
 
 .document-file-highlighted {
-    .document-folder-content-icon::before {
-        content: '\f0ee'; // fa-cloud-upload
+    .document-folder-content-icon::after {
+        transform: scale(1);
+        opacity: 1;
     }
 }
 
@@ -103,10 +103,10 @@ $progress-bar-background-color: $tlp-ui-border-normal;
     .document-folder-content-icon {
         transform: rotate(90deg);
         animation: none;
-    }
 
-    .document-folder-content-icon::before {
-        content: '\f064'; //fa-mail-forward
+        &::before {
+            content: '\f064'; //fa-mail-forward
+        }
     }
 }
 

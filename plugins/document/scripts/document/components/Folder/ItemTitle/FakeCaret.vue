@@ -19,7 +19,7 @@
   -
   -->
 <template>
-    <i class="fa fa-fw document-folder-content-icon document-folder-content-fake-caret" v-if="can_be_displayed"></i>
+    <i class="fa fa-fw document-folder-toggle document-folder-content-fake-caret" v-if="can_be_displayed"></i>
 </template>
 <script>
 import { mapState } from "vuex";

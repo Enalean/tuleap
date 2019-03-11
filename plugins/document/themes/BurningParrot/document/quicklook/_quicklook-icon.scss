@@ -1,0 +1,95 @@
+/**
+ * Copyright (c) Enalean, 2019. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+
+.quick-look-pane-highlighted .document-quick-look-icon-container {
+    > .document-quick-look-dropzone-text {
+        opacity: .85;
+        color: $tlp-theme-color;
+    }
+
+    > .document-quick-look-icon {
+        opacity: .85;
+        color: $tlp-theme-color;
+
+        &::after {
+            transform: scale(1);
+        }
+    }
+}
+
+
+.quick-look-pane-highlighted-forbidden .document-quick-look-icon-container {
+    > .document-quick-look-dropzone-text {
+        opacity: .85;
+        color: $tlp-ui-danger;
+    }
+
+    > .document-quick-look-icon {
+        display: none;
+    }
+
+    > .fa-ban {
+        display: block;
+    }
+}
+
+.document-quick-look-icon-container {
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 0 $tlp-double-spacing;
+    transition: transform ease-in-out 100ms;
+    text-align: center;
+
+    > .document-quick-look-dropzone-text {
+        position: absolute;
+        bottom: 0;
+        transform: translateY(100%);
+    }
+
+    > .fa-ban {
+        display: none;
+        position: relative;
+        top: -10px;
+        transition: opacity ease-in-out 100ms;
+        opacity: .85;
+        color: $tlp-ui-danger;
+        font-size: 100px;
+    }
+}
+
+.document-quick-look-icon {
+    position: relative;
+    top: -10px;
+    transition: opacity ease-in-out 100ms;
+    font-size: 100px;
+
+    &::after {
+        content: '\f067'; // fa-plus
+        position: absolute;
+        top: -18px;
+        right: -18px;
+        transform: scale(0);
+        transition: opacity ease-in-out 100ms, transform ease-in-out 100ms;
+        font-family: FontAwesome;
+        font-size: 40px;
+    }
+}

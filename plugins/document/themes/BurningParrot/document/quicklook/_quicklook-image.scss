@@ -1,0 +1,94 @@
+/**
+ * Copyright (c) Enalean, 2019. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.quick-look-pane-highlighted .document-quick-look-image-container {
+    .document-quick-look-image-overlay {
+        opacity: .9;
+
+        > .document-quick-look-update-image-icon::after {
+            transform: scale(1);
+        }
+    }
+}
+
+.quick-look-pane-highlighted-forbidden .document-quick-look-image-container {
+    .document-quick-look-image-overlay {
+        opacity: .9;
+
+        > .document-quick-look-dropzone-text {
+            color: $tlp-ui-danger;
+        }
+    }
+}
+
+
+.document-quick-look-image-container {
+    position: relative;
+}
+
+.document-quick-look-image-overlay {
+    display: flex;
+    position: absolute;
+    top: 0;
+    left: 0;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    transition: opacity ease-in-out 100ms;
+    opacity: 0;
+    background: transparentize($tlp-ui-white, .1);
+    color: $tlp-theme-color;
+    text-align: center;
+    pointer-events: none;
+
+
+    > .document-quick-look-dropzone-text {
+        margin: $tlp-spacing 0 0;
+        opacity: 1;
+    }
+
+    > .document-quick-look-update-image-icon {
+        position: relative;
+        font-size: 80px;
+
+        &::after {
+            content: '\f067'; // fa-plus
+            position: absolute;
+            top: -18px;
+            right: -18px;
+            transform: scale(0);
+            transition: opacity ease-in-out 100ms, transform ease-in-out 100ms;
+            font-family: FontAwesome;
+            font-size: 40px;
+        }
+    }
+
+    > .fa-ban {
+        color: $tlp-ui-danger;
+        font-size: 80px;
+    }
+}
+
+.document-quick-look-image {
+    display: block;
+    max-width: 100%;
+    margin: 0 auto $tlp-double-spacing;
+}

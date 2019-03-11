@@ -52,9 +52,9 @@ describe("QuickLookDocumentPreview", () => {
 
         const wrapper = shallowMount(Preview, { store, ...component_options });
 
-        expect(wrapper.contains(".document-quick-look-image")).toBeTruthy();
+        expect(wrapper.contains(".document-quick-look-image-container")).toBeTruthy();
         expect(wrapper.contains(".document-quick-look-embedded")).toBeFalsy();
-        expect(wrapper.contains(".document-quick-look-icon")).toBeFalsy();
+        expect(wrapper.contains(".document-quick-look-icon-container")).toBeFalsy();
     });
 
     it("Renders some rich text html if the item is an embedded file", () => {
@@ -79,8 +79,8 @@ describe("QuickLookDocumentPreview", () => {
         const wrapper = shallowMount(Preview, { store, ...component_options });
 
         expect(wrapper.contains(".document-quick-look-embedded")).toBeTruthy();
-        expect(wrapper.contains(".document-quick-look-image")).toBeFalsy();
-        expect(wrapper.contains(".document-quick-look-icon")).toBeFalsy();
+        expect(wrapper.contains(".document-quick-look-image-container")).toBeFalsy();
+        expect(wrapper.contains(".document-quick-look-icon-container")).toBeFalsy();
     });
 
     it("Displays the icon passed in props otherwise", () => {
@@ -103,8 +103,8 @@ describe("QuickLookDocumentPreview", () => {
         const wrapper = shallowMount(Preview, { store, ...component_options });
 
         expect(wrapper.contains(".fa-link")).toBeTruthy();
-        expect(wrapper.contains(".document-quick-look-icon")).toBeTruthy();
-        expect(wrapper.contains(".document-quick-look-image")).toBeFalsy();
+        expect(wrapper.contains(".document-quick-look-icon-container")).toBeTruthy();
+        expect(wrapper.contains(".document-quick-look-image-container")).toBeFalsy();
         expect(wrapper.contains(".document-quick-look-embedded")).toBeFalsy();
     });
 });

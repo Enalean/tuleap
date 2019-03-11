@@ -18,56 +18,87 @@
   -
   -->
 <template>
-    <div class="document-quick-look-image" v-if="is_an_image">
-        <div v-if="item.user_can_write" class="document-quick-look-image-overlay">
-            <i class="fa fa-cloud-upload"></i>
-            <br>
-            <translate>Drop to upload</translate>
-        </div>
-        <div v-else class="document-quick-look-image-overlay-forbidden">
-            <i class="fa fa-ban"></i>
-            <br>
-            <translate>You are not allowed to update this file</translate>
-        </div>
-        <img v-bind:src="item.file_properties.html_url" v-bind:alt="item.title">
-    </div>
     <!-- eslint-disable-next-line vue/no-v-html -->
     <div v-html="escaped_embedded_content"
          class="document-quick-look-embedded"
-         v-else-if="is_embedded"
+         v-if="is_embedded"
     ></div>
-    <div class="document-quick-look-icon" v-else>
-        <i class="fa fa-icon" v-bind:class="iconClass"></i>
-        <br>
-        <span
-            v-if="item.user_can_write"
-            key="upload"
-            class="document-quick-look-dropzone-text"
-            v-translate
+
+    <div class="document-quick-look-image-container" v-else-if="is_an_image && item.user_can_write">
+        <div class="document-quick-look-image-overlay">
+            <i class="fa fa-file-image-o document-quick-look-update-image-icon"></i>
+            <span class="document-quick-look-dropzone-text" v-translate>
+                Drop to upload a new version
+            </span>
+        </div>
+        <img class="document-quick-look-image" v-bind:src="item.file_properties.html_url" v-bind:alt="item.title">
+    </div>
+    <div class="document-quick-look-image-container" v-else-if="is_an_image && ! item.user_can_write">
+        <div class="document-quick-look-image-overlay">
+            <i class="fa fa-ban"></i>
+            <span class="document-quick-look-dropzone-text" v-translate>
+                You are not allowed to update this file
+            </span>
+        </div>
+        <img class="document-quick-look-image" v-bind:src="item.file_properties.html_url" v-bind:alt="item.title">
+    </div>
+
+    <div class="document-quick-look-folder-container" v-else-if="is_a_folder && item.user_can_write">
+        <icon-quicklook-folder/>
+        <icon-quicklook-drop-into-folder/>
+        <span key="upload"
+              class="document-quick-look-dropzone-text"
+              v-translate
         >
-            Drop to upload
+            Drop to upload in folder
         </span>
-        <translate
-            v-else-if="is_a_folder"
-            key="folder"
-            class="document-quick-look-dropzone-text-forbidden"
+    </div>
+    <div class="document-quick-look-folder-container" v-else-if="is_a_folder && ! item.user_can_write">
+        <icon-quicklook-folder/>
+        <i class="fa fa-ban"></i>
+        <span key="folder"
+              class="document-quick-look-dropzone-text tlp-text-danger"
+              v-translate
         >
             You are not allowed to write in this folder
-        </translate>
-        <translate
-            v-else
-            key="file"
-            class="document-quick-look-dropzone-text-forbidden"
+        </span>
+    </div>
+
+    <div class="document-quick-look-icon-container" v-else-if="item.user_can_write">
+        <i class="fa document-quick-look-icon"
+           v-bind:class="iconClass"
+        ></i>
+        <span key="upload"
+              class="document-quick-look-dropzone-text"
+              v-translate
+        >
+            Drop to upload a new version
+        </span>
+    </div>
+    <div class="document-quick-look-icon-container" v-else>
+        <i class="fa document-quick-look-icon"
+           v-bind:class="iconClass"
+        ></i>
+        <i class="fa fa-ban"></i>
+        <span key="file"
+              class="document-quick-look-dropzone-text"
+              v-translate
         >
             You are not allowed to update this file
-        </translate>
+        </span>
     </div>
 </template>
 <script>
 import dompurify from "dompurify";
 import { TYPE_EMBEDDED, TYPE_FOLDER } from "../../../constants.js";
+import IconQuicklookFolder from "../../svg-icons/IconQuicklookFolder.vue";
+import IconQuicklookDropIntoFolder from "../../svg-icons/IconQuicklookDropIntoFolder.vue";
 
 export default {
+    components: {
+        IconQuicklookFolder,
+        IconQuicklookDropIntoFolder
+    },
     props: {
         item: Object,
         iconClass: String
