@@ -70,6 +70,59 @@ class BaselineRepositoryAdapterTest extends TestCase
         );
     }
 
+    public function testFindById()
+    {
+        $milestone = MilestoneFactory::one()->build();
+        $this->artifact_factory
+            ->shouldReceive('getArtifactById')
+            ->with(10)
+            ->andReturn($milestone);
+
+        $user = new PFUser();
+        $this->user_manager
+            ->shouldReceive('getUserById')
+            ->with(22)
+            ->andReturn($user);
+
+        $this->db
+            ->shouldReceive('safeQuery')
+            ->with(Mockery::type('string'), [1])
+            ->andReturn(
+                [
+                    [
+                        "id"            => 1,
+                        "name"          => "Persisted baseline",
+                        "artifact_id"   => 10,
+                        "user_id"       => 22,
+                        "snapshot_date" => 1553176023,
+                    ]
+                ]
+            );
+
+        $baseline = $this->repository->findById(1);
+
+        $expected_baseline = new Baseline(
+            1,
+            "Persisted baseline",
+            $milestone,
+            DateTime::createFromFormat('Y-m-d H:i:s', '2019-03-21 14:47:03'),
+            $user
+        );
+        $this->assertEquals($expected_baseline, $baseline);
+    }
+
+    public function testFindByIdReturnsNullWhenNotFound()
+    {
+        $this->db
+            ->shouldReceive('safeQuery')
+            ->with(Mockery::type('string'), [1])
+            ->andReturn([]);
+
+        $baseline = $this->repository->findById(1);
+
+        $this->assertNull($baseline);
+    }
+
     public function testFindByProject()
     {
         $milestone = MilestoneFactory::one()->build();

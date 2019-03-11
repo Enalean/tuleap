@@ -70,6 +70,36 @@ class BaselinesResource extends AuthenticatedResource
     }
 
     /**
+     * Get a Baseline
+     *
+     * Get a Baseline
+     *
+     * @url    GET {id}
+     * @access public
+     *
+     * @param int $id The baseline id
+     *
+     * @return Tuleap\Baseline\REST\BaselineRepresentation
+     * @throws \Rest_Exception_InvalidTokenException
+     * @throws I18NRestException 401
+     * @throws I18NRestException 403
+     * @throws I18NRestException 404
+     * @throws \User_PasswordExpiredException
+     * @throws \User_StatusDeletedException
+     * @throws \User_StatusInvalidException
+     * @throws \User_StatusPendingException
+     * @throws \User_StatusSuspendedException
+     * @throws \Luracast\Restler\RestException
+     */
+    public function getById(int $id): BaselineRepresentation
+    {
+        $this->checkAccess();
+        return $this->container
+            ->get(BaselineController::class)
+            ->getById($id);
+    }
+
+    /**
      * Get a virtual simplified Baseline
      *
      * Get a virtual Baseline based on artifact id and date

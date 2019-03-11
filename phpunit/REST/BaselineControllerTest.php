@@ -35,6 +35,7 @@ use Tracker_Artifact;
 use Tuleap\Baseline\BaselineService;
 use Tuleap\Baseline\CurrentUserProvider;
 use Tuleap\Baseline\Factory\BaselineFactory;
+use Tuleap\Baseline\Factory\MilestoneFactory;
 use Tuleap\Baseline\MilestoneRepository;
 use Tuleap\Baseline\NotAuthorizedException;
 use Tuleap\GlobalLanguageMock;
@@ -183,5 +184,50 @@ class BaselineControllerTest extends TestCase
             ->andThrow(new NotAuthorizedException('not authorized'));
 
         $this->controller->post('new baseline', 3);
+    }
+
+    public function testGetById()
+    {
+        $baseline = BaselineFactory::one()
+            ->id(1)
+            ->name('found baseline')
+            ->milestone(MilestoneFactory::one()->id(3)->build())
+            ->author(new PFUser(['user_id' => 99]))
+            ->build();
+        $this->baseline_service
+            ->shouldReceive('findById')
+            ->with(1)
+            ->andReturn($baseline);
+
+        $representation = $this->controller->getById(1);
+
+        $this->assertEquals(1, $representation->id);
+        $this->assertEquals('found baseline', $representation->name);
+        $this->assertEquals(3, $representation->milestone_id);
+        $this->assertEquals(99, $representation->author_id);
+    }
+
+    public function testGetByIdThrows404WhenNoBaselineFound()
+    {
+        $this->expectException(I18NRestException::class);
+        $this->expectExceptionCode(404);
+
+        $this->baseline_service
+            ->shouldReceive('findById')
+            ->andReturn(null);
+
+        $this->controller->getById(1);
+    }
+
+    public function testGetByIdThrows403WhenNotAuthorized()
+    {
+        $this->expectException(I18NRestException::class);
+        $this->expectExceptionCode(403);
+
+        $this->baseline_service
+            ->shouldReceive('findById')
+            ->andThrow(new NotAuthorizedException('not authorized'));
+
+        $this->controller->getById(1);
     }
 }

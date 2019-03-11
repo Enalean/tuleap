@@ -35,6 +35,8 @@ interface BaselineRepository
         DateTime $snapshot_date
     ): Baseline;
 
+    public function findById(int $id): ?Baseline;
+
     /**
      * Find all baselines on given project, ordered by snapshot date.
      * @param int $page_size       Number of baselines to fetch

@@ -36,7 +36,7 @@ use Tuleap\Baseline\TransientBaseline;
 class BaselineRepositoryStub implements BaselineRepository
 {
     /** @var Baseline[] */
-    private $baselines = [];
+    private $baselines_by_id = [];
 
     /** @var int */
     private $id_sequence = 1;
@@ -55,8 +55,13 @@ class BaselineRepositoryStub implements BaselineRepository
 
     public function addBaseline(Baseline $baseline): Baseline
     {
-        $this->baselines [] = $baseline;
+        $this->baselines_by_id[$baseline->getId()] = $baseline;
         return $baseline;
+    }
+
+    public function findById(int $id): ?Baseline
+    {
+        return $this->baselines_by_id[$id];
     }
 
     /**
@@ -64,20 +69,20 @@ class BaselineRepositoryStub implements BaselineRepository
      */
     public function findAll(): array
     {
-        return $this->baselines;
+        return $this->baselines_by_id;
     }
 
     public function findAny(): ?Baseline
     {
-        if (count($this->baselines) === 0) {
+        if (count($this->baselines_by_id) === 0) {
             return null;
         }
-        return $this->baselines[0];
+        return array_values($this->baselines_by_id)[0];
     }
 
     public function count(): int
     {
-        return count($this->baselines);
+        return count($this->baselines_by_id);
     }
 
     /**
@@ -86,7 +91,7 @@ class BaselineRepositoryStub implements BaselineRepository
     public function findByProject(Project $project, int $page_size, int $baseline_offset): array
     {
         $matching_baselines = array_filter(
-            $this->baselines,
+            $this->baselines_by_id,
             function (Baseline $baseline) use ($project) {
                 return $baseline->getMilestone()->getTracker()->getProject() === $project;
             }
@@ -96,6 +101,6 @@ class BaselineRepositoryStub implements BaselineRepository
 
     public function countByProject(Project $project): int
     {
-        return count($this->baselines);
+        return count($this->baselines_by_id);
     }
 }

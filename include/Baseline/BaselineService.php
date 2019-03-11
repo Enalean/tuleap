@@ -108,6 +108,14 @@ class BaselineService
     }
 
     /**
+     * @throws NotAuthorizedException
+     */
+    public function findById(int $id): ?Baseline
+    {
+        return $this->baseline_repository->findById($id);
+    }
+
+    /**
      * Find baselines on given project, ordered by snapshot date.
      * @param int $page_size       Number of baselines to fetch
      * @param int $baseline_offset Fetch baselines from this index (start with 0), following snapshot date order.

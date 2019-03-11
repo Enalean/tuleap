@@ -102,6 +102,35 @@ class BaselineController
     /**
      * @throws I18NRestException 403
      * @throws I18NRestException 404
+     */
+    public function getById(int $id): BaselineRepresentation
+    {
+        try {
+            $baseline = $this->baseline_service->findById($id);
+            if ($baseline === null) {
+                throw new I18NRestException(
+                    404,
+                    sprintf(
+                        dgettext('tuleap-baseline', 'No baseline found with id %u'),
+                        $id
+                    )
+                );
+            }
+            return BaselineRepresentation::fromBaseline($baseline);
+        } catch (NotAuthorizedException $exception) {
+            throw new I18NRestException(
+                403,
+                sprintf(
+                    dgettext('tuleap-baseline', 'This operation is not allowed. %s'),
+                    $exception->getMessage()
+                )
+            );
+        }
+    }
+
+    /**
+     * @throws I18NRestException 403
+     * @throws I18NRestException 404
      * @throws \Luracast\Restler\RestException
      * @throws \Rest_Exception_InvalidTokenException
      * @throws \User_PasswordExpiredException

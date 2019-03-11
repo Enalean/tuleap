@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Baseline\Adapter;
 
 use DateTime;
+use DateTimeZone;
 use ParagonIE\EasyDB\EasyDB;
 use PFUser;
 use Project;
@@ -78,13 +79,28 @@ class BaselineRepositoryAdapter implements BaselineRepository
         );
     }
 
+    public function findById(int $id): ?Baseline
+    {
+        $rows = $this->db->safeQuery(
+            'SELECT id, name, artifact_id, user_id, snapshot_date
+            FROM plugin_baseline_baseline
+            WHERE id = ?',
+            [$id]
+        );
+
+        if (count($rows) === 0) {
+            return null;
+        }
+        return $this->mapRow($rows[0]);
+    }
+
     /**
      * @return Baseline[]
      */
     public function findByProject(Project $project, int $page_size, int $baseline_offset): array
     {
         $rows = $this->db->safeQuery(
-            "SELECT baseline.id, baseline.name, baseline.artifact_id, baseline.user_id, baseline.snapshot_date
+            'SELECT baseline.id, baseline.name, baseline.artifact_id, baseline.user_id, baseline.snapshot_date
             FROM plugin_baseline_baseline as baseline
                  INNER JOIN tracker_artifact as artifact
             ON artifact.id = baseline.artifact_id
@@ -93,26 +109,11 @@ class BaselineRepositoryAdapter implements BaselineRepository
             WHERE tracker.group_id = ?
             ORDER BY baseline.snapshot_date ASC
             LIMIT ?
-            OFFSET ?",
+            OFFSET ?',
             [$project->getID(), $page_size, $baseline_offset]
         );
 
-        return array_map(
-            function (array $row) {
-                $milestone     = $this->artifact_factory->getArtifactById($row['artifact_id']);
-                $author        = $this->user_manager->getUserById($row['user_id']);
-                $snapshot_date = new DateTime();
-                $snapshot_date->setTimestamp($row['snapshot_date']);
-                return new Baseline(
-                    $row['id'],
-                    $row['name'],
-                    $milestone,
-                    $snapshot_date,
-                    $author
-                );
-            },
-            $rows
-        );
+        return array_map([$this, 'mapRow'], $rows);
     }
 
     public function countByProject(Project $project): int
@@ -128,5 +129,21 @@ class BaselineRepositoryAdapter implements BaselineRepository
             [$project->getID()]
         );
         return $rows[0][self::SQL_COUNT_ALIAS];
+    }
+
+    private function mapRow(array $row): Baseline
+    {
+        $milestone     = $this->artifact_factory->getArtifactById($row['artifact_id']);
+        $author        = $this->user_manager->getUserById($row['user_id']);
+        $snapshot_date = new DateTime();
+        $snapshot_date->setTimestamp($row['snapshot_date'])
+            ->setTimezone(new DateTimezone("UTC"));
+        return new Baseline(
+            $row['id'],
+            $row['name'],
+            $milestone,
+            $snapshot_date,
+            $author
+        );
     }
 }
