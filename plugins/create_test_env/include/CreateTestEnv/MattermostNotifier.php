@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -43,6 +43,7 @@ class MattermostNotifier
 
     public function __construct()
     {
+        require_once __DIR__ . '/../../../botmattermost/include/botmattermostPlugin.class.php';
         $this->bot_factory = new BotFactory(new BotDao());
         $this->sender      = new Sender(
             new EncoderMessage(),
