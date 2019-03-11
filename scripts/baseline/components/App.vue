@@ -11,15 +11,13 @@
             <div
                 v-if="is_baseline_created"
                 class="tlp-alert-success tlp-framed-vertically"
-                data-test-type="successful-message"
             >
                 <translate>The baseline was created</translate>
             </div>
 
             <div
                 v-if="is_loading_failed"
-                class="tlp-alert-alert tlp-framed-vertically"
-                data-test-type="successful-message"
+                class="tlp-alert-danger tlp-framed-vertically"
             >
                 <translate>Cannot fetch baselines</translate>
             </div>
@@ -121,7 +119,7 @@ export default {
             try {
                 this.baselines = await getBaselines(this.project_id);
             } catch (e) {
-                this.is_loading_failed = false;
+                this.is_loading_failed = true;
             } finally {
                 this.is_loading = false;
             }
