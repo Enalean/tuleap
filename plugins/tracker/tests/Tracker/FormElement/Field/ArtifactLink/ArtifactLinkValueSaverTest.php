@@ -242,8 +242,8 @@ class ArtifactLinkValueSaverTest extends TuleapTestCase {
 
         $value = array(
             'list_of_artifactlinkinfo' => array(
-                Tracker_ArtifactLinkInfo::buildFromArtifact($this->some_artifact, NULL),
-                Tracker_ArtifactLinkInfo::buildFromArtifact($this->other_artifact, NULL)
+                Tracker_ArtifactLinkInfo::buildFromArtifact($this->some_artifact, ''),
+                Tracker_ArtifactLinkInfo::buildFromArtifact($this->other_artifact, '')
             ),
             'removed_values' => array()
         );
@@ -267,8 +267,8 @@ class ArtifactLinkValueSaverTest extends TuleapTestCase {
 
         $value = array(
             'list_of_artifactlinkinfo' => array(
-                Tracker_ArtifactLinkInfo::buildFromArtifact($this->some_artifact, NULL),
-                Tracker_ArtifactLinkInfo::buildFromArtifact($this->other_artifact, NULL)
+                Tracker_ArtifactLinkInfo::buildFromArtifact($this->some_artifact, ''),
+                Tracker_ArtifactLinkInfo::buildFromArtifact($this->other_artifact, '')
             ),
             'removed_values' => array()
         );
@@ -318,8 +318,8 @@ class ArtifactLinkValueSaverTest extends TuleapTestCase {
 
         $value = array(
             'list_of_artifactlinkinfo' => array(
-                Tracker_ArtifactLinkInfo::buildFromArtifact($this->some_artifact, NULL),
-                Tracker_ArtifactLinkInfo::buildFromArtifact($this->other_artifact, NULL)
+                Tracker_ArtifactLinkInfo::buildFromArtifact($this->some_artifact, ''),
+                Tracker_ArtifactLinkInfo::buildFromArtifact($this->other_artifact, '')
             ),
             'removed_values' => array()
         );

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -75,10 +75,10 @@ class Tracker_Artifact_ChangesetValue_ArtifactLinkDiff
             $this->added_by_nature   = array();
             $this->updated_by_nature = array();
             foreach ($next as $key => $artifactlinkinfo) {
-                if (isset($previous[$key])) {
-                    $this->fillUpdatedByNature($previous[$key], $artifactlinkinfo, $tracker, $nature_factory, $formatter);
-                } else {
+                if (! isset($previous[$key])) {
                     $this->fillAddedByNature($artifactlinkinfo, $nature_factory, $formatter);
+                } elseif ($previous[$key]->getNature() !== $artifactlinkinfo->getNature()) {
+                    $this->fillUpdatedByNature($previous[$key], $artifactlinkinfo, $tracker, $nature_factory, $formatter);
                 }
             }
         }
@@ -127,7 +127,6 @@ class Tracker_Artifact_ChangesetValue_ArtifactLinkDiff
             return;
         }
 
-
         $previous_nature = $nature_factory->getFromShortname($previous_link->getNature());
         $next_nature     = $nature_factory->getFromShortname($next_link->getNature());
         if ($previous_nature == $next_nature) {
@@ -160,7 +159,7 @@ class Tracker_Artifact_ChangesetValue_ArtifactLinkDiff
         }
 
         if (empty($this->next)) {
-            return ' '.$GLOBALS['Language']->getText('plugin_tracker_artifact','cleared');
+            return ' '.dgettext('tuleap-tracker', 'cleared');
         }
 
         $formatted_messages = array();

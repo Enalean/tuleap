@@ -1,28 +1,27 @@
 <?php
 /**
+ * Copyright Enalean (c) 2012 - Present. All rights reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
- * This list is a part of Codendi.
+ * This list is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 require_once('bootstrap.php');
 
 Mock::generate('Tracker_Artifact');
-
-Mock::generate('Tracker_ArtifactLinkInfo');
 
 Mock::generatePartial(
     'Tracker_Artifact_ChangesetValue_ArtifactLink',
@@ -37,6 +36,15 @@ Mock::generate('Tracker_FormElement_Field_ArtifactLink');
 class Tracker_Artifact_ChangesetValue_ArtifactLinkTest extends TuleapTestCase {
 
     private $field_class;
+    private $artlink_info_123;
+    private $artlink_info_copy_of_123;
+    private $artlink_info_321;
+    private $artlink_info_copy_of_321;
+    private $artlink_info_666;
+    private $artlink_info_copy_of_666;
+    private $artlink_info_999;
+    private $artlink_info_copy_of_999;
+    private $user;
 
     public function setUp() {
         parent::setUp();
@@ -46,77 +54,105 @@ class Tracker_Artifact_ChangesetValue_ArtifactLinkTest extends TuleapTestCase {
         $user_manager = stub('UserManager')->getCurrentUser()->returns($this->user);
         UserManager::setInstance($user_manager);
 
-        $this->artlink_info_123 = new MockTracker_ArtifactLinkInfo();
-        $this->artlink_info_123->setReturnValue('getArtifactId', '123');
-        $this->artlink_info_123->setReturnValue('getKeyword', 'bug');
-        $this->artlink_info_123->setReturnValue('getUrl', '<a>bug #123</a>'); // for test
-        $this->artlink_info_123->setReturnValue('__toString', 'bug #123'); // for test
-        $this->artlink_info_123->setReturnValue('getLabel', 'bug #123');
-        $this->artlink_info_123->setReturnValue('userCanView', true, array($this->user));
+        $this->artlink_info_123 = Mockery::mock(
+            Tracker_ArtifactLinkInfo::class,
+            [
+                'getArtifactId' => '123',
+                'getKeyword' => 'bug',
+                'getUrl' => '<a>bug #123</a>',
+                '__toString' => 'bug #123',
+                'getLabel' => 'bug #123',
+                'userCanView' => true,
+            ]
+        );
 
-        $this->artlink_info_copy_of_123 = new MockTracker_ArtifactLinkInfo();
-        $this->artlink_info_copy_of_123->setReturnValue('getArtifactId', '123');
-        $this->artlink_info_copy_of_123->setReturnValue('getKeyword', 'bug');
-        $this->artlink_info_copy_of_123->setReturnValue('getUrl', '<a>bug #123</a>'); // for test
-        $this->artlink_info_copy_of_123->setReturnValue('__toString', 'bug #123'); // for test
-        $this->artlink_info_copy_of_123->setReturnValue('getLabel', 'bug #123');
-        $this->artlink_info_copy_of_123->setReturnValue('userCanView', true, array($this->user));
+        $this->artlink_info_copy_of_123 = Mockery::mock(
+            Tracker_ArtifactLinkInfo::class,
+            [
+                'getArtifactId' => '123',
+                'getKeyword' => 'bug',
+                'getUrl' => '<a>bug #123</a>',
+                '__toString' => 'bug #123',
+                'getLabel' => 'bug #123',
+                'userCanView' => true,
+            ]
+        );
 
-        $this->artlink_info_321 = new MockTracker_ArtifactLinkInfo();
-        $this->artlink_info_321->setReturnValue('getArtifactId', '321');
-        $this->artlink_info_321->setReturnValue('getKeyword', 'task');
-        $this->artlink_info_321->setReturnValue('getUrl', '<a>task #321</a>'); // for test
-        $this->artlink_info_321->setReturnValue('__toString', 'task #321'); // for test
-        $this->artlink_info_321->setReturnValue('getLabel', 'task #321');
-        $this->artlink_info_321->setReturnValue('userCanView', true, array($this->user));
+        $this->artlink_info_321 = Mockery::mock(
+            Tracker_ArtifactLinkInfo::class,
+            [
+                'getArtifactId' => '321',
+                'getKeyword' => 'task',
+                'getUrl' => '<a>task #321</a>',
+                '__toString' => 'task #321',
+                'getLabel' => 'task #321',
+                'userCanView' => true,
+            ]
+        );
 
-        $this->artlink_info_copy_of_321 = new MockTracker_ArtifactLinkInfo();
-        $this->artlink_info_copy_of_321->setReturnValue('getArtifactId', '321');
-        $this->artlink_info_copy_of_321->setReturnValue('getKeyword', 'task');
-        $this->artlink_info_copy_of_321->setReturnValue('getUrl', '<a>task #321</a>'); // for test
-        $this->artlink_info_copy_of_321->setReturnValue('__toString', 'task #321'); // for test
-        $this->artlink_info_copy_of_321->setReturnValue('getLabel', 'task #321');
-        $this->artlink_info_copy_of_321->setReturnValue('userCanView', true, array($this->user));
+        $this->artlink_info_copy_of_321 = Mockery::mock(
+            Tracker_ArtifactLinkInfo::class,
+            [
+                'getArtifactId' => '321',
+                'getKeyword' => 'task',
+                'getUrl' => '<a>task #321</a>',
+                '__toString' => 'task #321',
+                'getLabel' => 'task #321',
+                'userCanView' => true,
+            ]
+        );
 
-        $this->artlink_info_666 = new MockTracker_ArtifactLinkInfo();
-        $this->artlink_info_666->setReturnValue('getArtifactId', '666');
-        $this->artlink_info_666->setReturnValue('getKeyword', 'sr');
-        $this->artlink_info_666->setReturnValue('getUrl', '<a>sr #666</a>'); // for test
-        $this->artlink_info_666->setReturnValue('__toString', 'sr #666'); // for test
-        $this->artlink_info_666->setReturnValue('getLabel', 'sr #666');
-        $this->artlink_info_666->setReturnValue('userCanView', true, array($this->user));
+        $this->artlink_info_666 = Mockery::mock(
+            Tracker_ArtifactLinkInfo::class,
+            [
+                'getArtifactId' => '666',
+                'getKeyword' => 'sr',
+                'getUrl' => '<a>sr #666</a>',
+                '__toString' => 'sr #666',
+                'getLabel' => 'sr #666',
+                'userCanView' => true,
+            ]
+        );
 
-        $this->artlink_info_copy_of_666 = new MockTracker_ArtifactLinkInfo();
-        $this->artlink_info_copy_of_666->setReturnValue('getArtifactId', '666');
-        $this->artlink_info_copy_of_666->setReturnValue('getKeyword', 'sr');
-        $this->artlink_info_copy_of_666->setReturnValue('getUrl', '<a>sr #666</a>'); // for test
-        $this->artlink_info_copy_of_666->setReturnValue('__toString', 'sr #666'); // for test
-        $this->artlink_info_copy_of_666->setReturnValue('getLabel', 'sr #666');
-        $this->artlink_info_copy_of_666->setReturnValue('userCanView', true, array($this->user));
+        $this->artlink_info_copy_of_666 = Mockery::mock(
+            Tracker_ArtifactLinkInfo::class,
+            [
+                'getArtifactId' => '666',
+                'getKeyword' => 'sr',
+                'getUrl' => '<a>sr #666</a>',
+                '__toString' => 'sr #666',
+                'getLabel' => 'sr #666',
+                'userCanView' => true,
+            ]
+        );
 
-        $this->artlink_info_999 = new MockTracker_ArtifactLinkInfo();
-        $this->artlink_info_999->setReturnValue('getArtifactId', '999');
-        $this->artlink_info_999->setReturnValue('getKeyword', 'story');
-        $this->artlink_info_999->setReturnValue('getUrl', '<a>story #999</a>'); // for test
-        $this->artlink_info_999->setReturnValue('__toString', 'story #999'); // for test
-        $this->artlink_info_999->setReturnValue('getLabel', 'story #999');
-        $this->artlink_info_999->setReturnValue('userCanView', true, array($this->user));
+        $this->artlink_info_999 = Mockery::mock(
+            Tracker_ArtifactLinkInfo::class,
+            [
+                'getArtifactId' => '999',
+                'getKeyword' => 'story',
+                'getUrl' => '<a>story #999</a>',
+                '__toString' => 'story #999',
+                'getLabel' => 'story #999',
+                'userCanView' => true,
+            ]
+        );
 
-        $this->artlink_info_copy_of_999 = new MockTracker_ArtifactLinkInfo();
-        $this->artlink_info_copy_of_999->setReturnValue('getArtifactId', '999');
-        $this->artlink_info_copy_of_999->setReturnValue('getKeyword', 'story');
-        $this->artlink_info_copy_of_999->setReturnValue('getUrl', '<a>story #999</a>'); // for test
-        $this->artlink_info_copy_of_999->setReturnValue('__toString', 'story #999'); // for test
-        $this->artlink_info_copy_of_999->setReturnValue('getLabel', 'story #999');
-        $this->artlink_info_copy_of_999->setReturnValue('userCanView', true, array($this->user));
+        $this->artlink_info_copy_of_999 = Mockery::mock(
+            Tracker_ArtifactLinkInfo::class,
+            [
+                'getArtifactId' => '999',
+                'getKeyword' => 'story',
+                'getUrl' => '<a>story #999</a>',
+                '__toString' => 'story #999',
+                'getLabel' => 'story #999',
+                'userCanView' => true,
+            ]
+        );
     }
 
     public function tearDown() {
         parent::tearDown();
-        unset($this->artlink_info_123);
-        unset($this->artlink_info_321);
-        unset($this->artlink_info_666);
-        unset($this->artlink_info_999);
         UserManager::clearInstance();
     }
 
@@ -157,15 +193,15 @@ class Tracker_Artifact_ChangesetValue_ArtifactLink_HasChangesTest extends Tuleap
 
     public function itHasNoChangesWhenSameValues() {
         $old_values = array(
-            1 => mock('Tracker_ArtifactLinkInfo'),
-            2 => mock('Tracker_ArtifactLinkInfo')
+            1 => Mockery::spy(Tracker_ArtifactLinkInfo::class),
+            2 => Mockery::spy(Tracker_ArtifactLinkInfo::class)
         );
         $changeset_value = aChangesetValueArtifactLink()->withArtifactLinks($old_values)->build();
 
         $new_value = array(
             'list_of_artifactlinkinfo' => array(
-                2 => mock('Tracker_ArtifactLinkInfo'),
-                1 => mock('Tracker_ArtifactLinkInfo')
+                2 => Mockery::spy(Tracker_ArtifactLinkInfo::class),
+                1 => Mockery::spy(Tracker_ArtifactLinkInfo::class)
             )
         );
 
@@ -174,16 +210,16 @@ class Tracker_Artifact_ChangesetValue_ArtifactLink_HasChangesTest extends Tuleap
 
     public function itHasChangesWhenLinksAreAdded() {
         $old_values = array(
-            1 => mock('Tracker_ArtifactLinkInfo'),
-            2 => mock('Tracker_ArtifactLinkInfo')
+            1 => Mockery::mock(Tracker_ArtifactLinkInfo::class),
+            2 => Mockery::mock(Tracker_ArtifactLinkInfo::class)
         );
         $changeset_value = aChangesetValueArtifactLink()->withArtifactLinks($old_values)->build();
 
         $new_value = array(
             'list_of_artifactlinkinfo' => array(
-                1 => mock('Tracker_ArtifactLinkInfo'),
-                2 => mock('Tracker_ArtifactLinkInfo'),
-                3 => mock('Tracker_ArtifactLinkInfo')
+                1 => Mockery::mock(Tracker_ArtifactLinkInfo::class),
+                2 => Mockery::mock(Tracker_ArtifactLinkInfo::class),
+                3 => Mockery::mock(Tracker_ArtifactLinkInfo::class)
             )
         );
 
@@ -192,14 +228,14 @@ class Tracker_Artifact_ChangesetValue_ArtifactLink_HasChangesTest extends Tuleap
 
     public function itHasChangesWhenLinksAreRemoved() {
         $old_values = array(
-            1 => mock('Tracker_ArtifactLinkInfo'),
-            2 => mock('Tracker_ArtifactLinkInfo')
+            1 => Mockery::mock(Tracker_ArtifactLinkInfo::class),
+            2 => Mockery::mock(Tracker_ArtifactLinkInfo::class)
         );
         $changeset_value = aChangesetValueArtifactLink()->withArtifactLinks($old_values)->build();
 
         $new_value = array(
             'list_of_artifactlinkinfo' => array(
-                1 => mock('Tracker_ArtifactLinkInfo')
+                1 => Mockery::mock(Tracker_ArtifactLinkInfo::class)
             )
         );
 
@@ -208,15 +244,15 @@ class Tracker_Artifact_ChangesetValue_ArtifactLink_HasChangesTest extends Tuleap
 
     public function itHasChangesWhenNatureIsChanged() {
         $old_values = array(
-            1 => stub('Tracker_ArtifactLinkInfo')->getNature()->returns('_is_child'),
-            2 => stub('Tracker_ArtifactLinkInfo')->getNature()->returns('')
+            1 => Mockery::mock(Tracker_ArtifactLinkInfo::class, ['getNature' => '_is_child']),
+            2 => Mockery::mock(Tracker_ArtifactLinkInfo::class, ['getNature' => ''])
         );
         $changeset_value = aChangesetValueArtifactLink()->withArtifactLinks($old_values)->build();
 
         $new_value = array(
             'list_of_artifactlinkinfo' => array(
-            1 => stub('Tracker_ArtifactLinkInfo')->getNature()->returns('fixed_in'),
-            2 => stub('Tracker_ArtifactLinkInfo')->getNature()->returns('')
+            1 => Mockery::mock(Tracker_ArtifactLinkInfo::class, ['getNature' => 'fixed_in']),
+            2 => Mockery::mock(Tracker_ArtifactLinkInfo::class, ['getNature' => ''])
             )
         );
 

@@ -264,11 +264,13 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExporterT
     }
 
     private function anArtifactLinkInfo($artifact_id, $tracker_id, $nature) {
-        $artifact_link_info = mock('Tracker_ArtifactLinkInfo');
-        stub($artifact_link_info)->getArtifactId()->returns($artifact_id);
-        stub($artifact_link_info)->getTracker()->returns(TrackerFactory::instance()->getTrackerById($tracker_id));
-        stub($artifact_link_info)->getNature()->returns($nature);
-
-        return $artifact_link_info;
+        return Mockery::mock(
+            Tracker_ArtifactLinkInfo::class,
+            [
+                'getArtifactId' => $artifact_id,
+                'getTracker'    => TrackerFactory::instance()->getTrackerById($tracker_id),
+                'getNature'     => $nature,
+            ]
+        );
     }
 }
