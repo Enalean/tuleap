@@ -31,6 +31,7 @@ use Tuleap\Docman\REST\v1\DocmanItemsEventAdder;
 use Tuleap\Docman\Upload\DocumentAlreadyUploadedInformation;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
+use Tuleap\Upload\FileBeingUploadedInformation;
 
 class VersionUploadFinisherTest extends TestCase
 {
@@ -83,7 +84,8 @@ class VersionUploadFinisherTest extends TestCase
 
 
         $item_id_being_created    = 12;
-        $path_item_being_uploaded = $path_allocator->getPathForItemBeingUploaded($item_id_being_created);
+        $file_information = new FileBeingUploadedInformation($item_id_being_created, 123, 0);
+        $path_item_being_uploaded = $path_allocator->getPathForItemBeingUploaded($file_information);
         mkdir(dirname($path_item_being_uploaded), 0777, true);
         touch($path_item_being_uploaded);
         $this->on_going_upload_dao->shouldReceive('wrapAtomicOperations')->with(

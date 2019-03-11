@@ -62,8 +62,10 @@ class VersionBeingUploadedInformationProvider implements TusFileInformationProvi
             return null;
         }
 
+        $version_id = (int) $version_id;
+
         $document_row = $this->dao->searchDocumentVersionOngoingUploadByVersionIdAndExpirationDate(
-            (int) $version_id,
+            $version_id,
             (new \DateTimeImmutable())->getTimestamp()
         );
 
@@ -76,9 +78,19 @@ class VersionBeingUploadedInformationProvider implements TusFileInformationProvi
             return null;
         }
 
-        $allocated_path = $this->path_allocator->getPathForItemBeingUploaded($version_id);
+        $length            = (int) $document_row['filesize'];
+        $current_file_size = $this->getCurrentFileSize($version_id, $length);
+
+        return new FileBeingUploadedInformation($version_id, $length, $current_file_size);
+    }
+
+    private function getCurrentFileSize(int $version_id, int $length): int
+    {
+        $temporary_file_information = new FileBeingUploadedInformation($version_id, $length, 0);
+        $allocated_path             = $this->path_allocator->getPathForItemBeingUploaded($temporary_file_information);
 
         $current_file_size = file_exists($allocated_path) ? filesize($allocated_path) : 0;
-        return new FileBeingUploadedInformation((int)$version_id, $document_row['filesize'], $current_file_size);
+
+        return $current_file_size;
     }
 }

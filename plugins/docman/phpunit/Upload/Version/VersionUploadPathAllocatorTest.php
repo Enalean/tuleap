@@ -21,6 +21,7 @@
 namespace Tuleap\Docman\Upload\Version;
 
 use PHPUnit\Framework\TestCase;
+use Tuleap\Upload\FileBeingUploadedInformation;
 
 class VersionUploadPathAllocatorTest extends TestCase
 {
@@ -29,8 +30,8 @@ class VersionUploadPathAllocatorTest extends TestCase
         $allocator = new VersionUploadPathAllocator();
 
         $this->assertSame(
-            $allocator->getPathForItemBeingUploaded(1),
-            $allocator->getPathForItemBeingUploaded(1)
+            $allocator->getPathForItemBeingUploaded(new FileBeingUploadedInformation(1, 123, 0)),
+            $allocator->getPathForItemBeingUploaded(new FileBeingUploadedInformation(1, 123, 0))
         );
     }
 }

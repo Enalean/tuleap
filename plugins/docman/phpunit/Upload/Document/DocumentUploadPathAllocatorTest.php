@@ -21,6 +21,7 @@
 namespace Tuleap\Docman\Upload\Document;
 
 use PHPUnit\Framework\TestCase;
+use Tuleap\Upload\FileBeingUploadedInformation;
 
 class DocumentUploadPathAllocatorTest extends TestCase
 {
@@ -29,8 +30,8 @@ class DocumentUploadPathAllocatorTest extends TestCase
         $allocator = new DocumentUploadPathAllocator();
 
         $this->assertSame(
-            $allocator->getPathForItemBeingUploaded(1),
-            $allocator->getPathForItemBeingUploaded(1)
+            $allocator->getPathForItemBeingUploaded(new FileBeingUploadedInformation(1, 123, 0)),
+            $allocator->getPathForItemBeingUploaded(new FileBeingUploadedInformation(1, 123, 0))
         );
     }
 }

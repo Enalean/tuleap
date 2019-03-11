@@ -29,6 +29,7 @@ use Tuleap\Docman\Upload\Document\DocumentOngoingUploadDAO;
 use Tuleap\Docman\Upload\DocumentAlreadyUploadedInformation;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
+use Tuleap\Upload\FileBeingUploadedInformation;
 
 class DocumentUploadFinisherTest extends TestCase
 {
@@ -80,8 +81,9 @@ class DocumentUploadFinisherTest extends TestCase
         );
 
 
-        $item_id_being_created    = 12;
-        $path_item_being_uploaded = $path_allocator->getPathForItemBeingUploaded($item_id_being_created);
+        $item_id_being_created = 12;
+        $file_information = new FileBeingUploadedInformation($item_id_being_created, 123, 0);
+        $path_item_being_uploaded = $path_allocator->getPathForItemBeingUploaded($file_information);
         mkdir(dirname($path_item_being_uploaded), 0777, true);
         touch($path_item_being_uploaded);
         $this->item_factory->shouldReceive('getItemFromDB')->andReturns(null, \Mockery::spy(\Docman_Item::class));

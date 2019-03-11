@@ -48,8 +48,9 @@ class EmptyFileToUploadFinisher
     public function createEmptyFile(DocumentToUpload $document_to_upload)
     {
         $item_id = $document_to_upload->getItemId();
+        $file_information = new DocumentAlreadyUploadedInformation($item_id, 0);
 
-        $uploaded_document_path = $this->document_upload_path_allocator->getPathForItemBeingUploaded($item_id);
+        $uploaded_document_path = $this->document_upload_path_allocator->getPathForItemBeingUploaded($file_information);
 
         $allocated_path_directory = dirname($uploaded_document_path);
         if (! \is_dir($allocated_path_directory) &&
@@ -58,6 +59,6 @@ class EmptyFileToUploadFinisher
         }
         touch($uploaded_document_path);
 
-        $this->finisher->finishUpload(new DocumentAlreadyUploadedInformation($item_id, 0));
+        $this->finisher->finishUpload($file_information);
     }
 }

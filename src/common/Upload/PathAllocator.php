@@ -22,7 +22,9 @@ declare(strict_types = 1);
 
 namespace Tuleap\Upload;
 
+use Tuleap\Tus\TusFileInformation;
+
 interface PathAllocator
 {
-    public function getPathForItemBeingUploaded($id): string;
+    public function getPathForItemBeingUploaded(TusFileInformation $file_information): string;
 }

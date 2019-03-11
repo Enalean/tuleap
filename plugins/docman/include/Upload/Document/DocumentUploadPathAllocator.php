@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,6 +21,7 @@
 namespace Tuleap\Docman\Upload\Document;
 
 use Tuleap\Docman\Upload\UploadPathAllocator;
+use Tuleap\Tus\TusFileInformation;
 
 final class DocumentUploadPathAllocator implements UploadPathAllocator
 {
@@ -32,12 +33,9 @@ final class DocumentUploadPathAllocator implements UploadPathAllocator
         return \ForgeConfig::get('tmp_dir') . '/docman/ongoing-upload/';
     }
 
-    /**
-     * @return string
-     */
-    public function getPathForItemBeingUploaded($id): string
+    public function getPathForItemBeingUploaded(TusFileInformation $file_information): string
     {
-        return $this->getBasePath() . $id;
+        return $this->getBasePath() . $file_information->getID();
     }
 
     /**

@@ -55,7 +55,7 @@ final class FileBeingUploadedWriter implements TusWriter
             );
         }
 
-        $allocated_path = $this->path_allocator->getPathForItemBeingUploaded($file_information->getID());
+        $allocated_path = $this->path_allocator->getPathForItemBeingUploaded($file_information);
 
         $allocated_path_directory = dirname($allocated_path);
         if (! \is_dir($allocated_path_directory) &&

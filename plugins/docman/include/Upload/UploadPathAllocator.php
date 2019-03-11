@@ -22,11 +22,12 @@ declare(strict_types = 1);
 
 namespace Tuleap\Docman\Upload;
 
+use Tuleap\Tus\TusFileInformation;
 use Tuleap\Upload\PathAllocator;
 
 interface UploadPathAllocator extends PathAllocator
 {
-    public function getPathForItemBeingUploaded($id): string;
+    public function getPathForItemBeingUploaded(TusFileInformation $file_information): string;
 
     public function getCurrentlyUsedAllocatedPathsPerExpectedItemIDs(): array;
 }

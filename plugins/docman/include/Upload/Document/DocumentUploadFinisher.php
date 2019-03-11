@@ -109,7 +109,7 @@ final class DocumentUploadFinisher implements TusFinisherDataStore
     {
         $item_id = $file_information->getID();
 
-        $uploaded_document_path   = $this->document_upload_path_allocator->getPathForItemBeingUploaded($item_id);
+        $uploaded_document_path   = $this->document_upload_path_allocator->getPathForItemBeingUploaded($file_information);
         $current_value_user_abort = (bool) ignore_user_abort(true);
         try {
             $this->createDocument($uploaded_document_path, $item_id);
