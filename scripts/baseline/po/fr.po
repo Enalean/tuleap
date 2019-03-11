@@ -38,6 +38,9 @@ msgstr "Annuler"
 msgid "Cannot create baseline"
 msgstr "Impossible de créer une baseline"
 
+msgid "Cannot fetch baseline"
+msgstr "Impossible de charger la baseline"
+
 msgid "Cannot fetch baselines"
 msgstr "Impossible de charger les baselines"
 
@@ -49,6 +52,9 @@ msgstr "Fermer"
 
 msgid "Create baseline"
 msgstr "Créer baseline"
+
+msgid "Created by"
+msgstr "Créé par"
 
 msgid "Id"
 msgstr "Id"

@@ -20,6 +20,7 @@
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../support/local-vue.js";
 import Router from "./Router.vue";
+import BaselinePage from "./BaselinePage.vue";
 import BaselinesPage from "./BaselinesPage.vue";
 import NotFoundPage from "./NotFoundPage.vue";
 
@@ -32,18 +33,18 @@ describe("Router", () => {
         });
     });
 
-    it("shows App component", () => {
+    it("shows BaselinesPage component", () => {
         wrapper.setData({ current_route: "/plugins/baseline/project-name" });
         expect(wrapper.vm.route.component).toEqual(BaselinesPage);
     });
 
-    it("shows Not found component when route does not exist", () => {
-        wrapper.setData({ current_route: "/plugins/baselinetypo/project-name" });
-        expect(wrapper.vm.route.component).toEqual(NotFoundPage);
+    it("shows BaselinePage component when loading baseline details", () => {
+        wrapper.setData({ current_route: "/plugins/baseline/baselines/222" });
+        expect(wrapper.vm.route.component).toEqual(BaselinePage);
     });
 
-    it("shows Not found component when loading baseline details", () => {
-        wrapper.setData({ current_route: "/plugins/baselines/2" });
+    it("shows NotFound component when route does not exist", () => {
+        wrapper.setData({ current_route: "/plugins/baselinetypo/project-name" });
         expect(wrapper.vm.route.component).toEqual(NotFoundPage);
     });
 });

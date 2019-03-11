@@ -17,10 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import BaselinePage from "./BaselinePage.vue";
 import BaselinesPage from "./BaselinesPage.vue";
 import NotFoundPage from "./NotFoundPage.vue";
 
 export default {
     home: { title: "home", component: BaselinesPage },
+    baseline: { title: "Baseline", component: BaselinePage },
     not_found: { title: "NotFound", component: NotFoundPage }
 };

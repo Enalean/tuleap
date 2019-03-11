@@ -20,7 +20,9 @@
 
 import { getUser } from "../api/rest-querier";
 
-export async function presentBaselines(baselines) {
+export { presentBaseline, presentBaselines };
+
+async function presentBaselines(baselines) {
     const user_ids = baselines.map(baseline => baseline.author_id);
     const uniq_user_ids = [...new Set(user_ids)];
     const users = await Promise.all(uniq_user_ids.map(user_id => getUser(user_id)));
@@ -29,4 +31,9 @@ export async function presentBaselines(baselines) {
         const matching_users = users.filter(user => user.id === baseline.author_id);
         return { ...baseline, author: matching_users[0] };
     });
+}
+
+async function presentBaseline(baseline) {
+    const user = await getUser(baseline.author_id);
+    return { ...baseline, author: user };
 }

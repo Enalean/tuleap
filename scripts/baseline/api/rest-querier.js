@@ -23,7 +23,7 @@
 
 import { get, post } from "tlp-fetch";
 
-export { getOpenMilestones, createBaseline, getBaselines, getUser };
+export { getOpenMilestones, createBaseline, getBaseline, getBaselines, getUser };
 
 async function getOpenMilestones(project_id) {
     const response = await get(`/api/projects/${project_id}/milestones?query={"status":"open"}`);
@@ -45,6 +45,11 @@ async function createBaseline(name, milestone) {
         body
     });
 
+    return response.json();
+}
+
+async function getBaseline(id) {
+    const response = await get(`/api/baselines/${id}`);
     return response.json();
 }
 

@@ -19,11 +19,61 @@
  */
 
 import { restore, rewire$getUser } from "../api/rest-querier";
-import { presentBaselines } from "./baseline";
+import { presentBaseline, presentBaselines } from "./baseline";
 import { create, createList } from "../support/factories";
 
 describe("baseline presenter:", () => {
     afterEach(restore);
+
+    describe("presentBaseline()", () => {
+        let getUserResolve;
+        let getUserReject;
+        let presentation;
+
+        beforeEach(() => {
+            const getUser = jasmine.createSpy("getUser");
+            getUser.and.returnValue(
+                new Promise((resolve, reject) => {
+                    getUserResolve = resolve;
+                    getUserReject = reject;
+                })
+            );
+            rewire$getUser(getUser);
+
+            const baseline = create("baseline", { author_id: 1 });
+            presentation = presentBaseline(baseline);
+        });
+
+        describe("when getUser() is successful", () => {
+            const user = create("user", { id: 1, username: "John Doe" });
+
+            let presented_baseline;
+
+            beforeEach(async () => {
+                getUserResolve(user);
+                presented_baseline = await presentation;
+            });
+
+            it("returns baselines with author", () => {
+                expect(presented_baseline.author).toEqual(user);
+            });
+        });
+
+        describe("when getUser() fail", () => {
+            beforeEach(() => {
+                getUserReject("Exception reason");
+            });
+
+            it("throws exception", async () => {
+                try {
+                    await presentation;
+                    fail("No exception thrown");
+                } catch (exception) {
+                    expect(exception).toEqual("Exception reason");
+                }
+            });
+        });
+    });
 
     describe("presentBaselines()", () => {
         let getUser;

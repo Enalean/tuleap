@@ -28,6 +28,9 @@ msgstr ""
 msgid "Cannot create baseline"
 msgstr ""
 
+msgid "Cannot fetch baseline"
+msgstr ""
+
 msgid "Cannot fetch baselines"
 msgstr ""
 
@@ -38,6 +41,9 @@ msgid "Close"
 msgstr ""
 
 msgid "Create baseline"
+msgstr ""
+
+msgid "Created by"
 msgstr ""
 
 msgid "Id"

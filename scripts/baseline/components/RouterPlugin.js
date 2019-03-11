@@ -19,8 +19,8 @@
 
 const RouterPlugin = {
     install(Vue) {
-        Vue.prototype.goTo = function(route) {
-            this.$root.current_route = route;
+        Vue.prototype.goTo = function(route_path) {
+            this.$root.current_route = `/plugins/baseline/${route_path}`;
         };
     }
 };

@@ -27,8 +27,9 @@
             <td>{{ baseline.snapshot_date }}</td>
             <td>{{ baseline.author.username }}</td>
             <td class="tlp-table-cell-actions baselines-table-column-actions">
-                <button v-on:click="goTo(`/${baseline.id}`)"
-                        class="tlp-button-small tlp-button-primary tlp-button-outline"
+                <button
+                    v-on:click="goTo(`baselines/${baseline.id}`)"
+                    class="tlp-button-small tlp-button-primary tlp-button-outline"
                 >
                     Consult
                 </button>
