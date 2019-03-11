@@ -466,7 +466,7 @@ class Workflow_BeforeAfterTest extends TuleapTestCase {
         $this->workflow->after($fields_data, $new_changeset, $previous_changeset);
     }
 
-    public function testAfterShouldDoNothingIfWorkflowIsNotUsedAndIsNotLegacy()
+    public function testAfterShouldDoNothingButTriggersIfWorkflowIsNotUsedAndIsNotLegacy()
     {
         $previous_changeset = null;
         $new_changeset      = mock('Tracker_Artifact_Changeset');
@@ -479,7 +479,7 @@ class Workflow_BeforeAfterTest extends TuleapTestCase {
         expect($this->transition_null_to_open)->after()->never();
         expect($this->transition_open_to_close)->after()->never();
         expect($this->event_manager)->processEvent()->never();
-        expect($this->trigger_rules_manager)->processTriggers()->never();
+        expect($this->trigger_rules_manager)->processTriggers()->once();
 
         $this->unused_workflow->after($fields_data, $new_changeset, $previous_changeset);
     }

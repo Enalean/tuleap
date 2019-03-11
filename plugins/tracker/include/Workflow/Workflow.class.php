@@ -312,7 +312,7 @@ class Workflow //phpcs:ignoreFile
     {
         $artifact_id = $artifact->getId();
         if (! $this->is_used && ! $this->is_legacy) {
-            $this->logger->debug("Workflow for artifact #$artifact_id is disabled, skipping.");
+            $this->logger->debug("Workflow for artifact #$artifact_id is disabled, skipping transitions.");
             return;
         }
 
@@ -347,20 +347,20 @@ class Workflow //phpcs:ignoreFile
     ) {
         $artifact_id = $new_changeset->getArtifact()->getId();
 
-        if (! $this->is_used && ! $this->is_legacy) {
-            $this->logger->debug("Workflow for artifact #$artifact_id is disabled, skipping.");
-            return;
-        }
-
         $this->logger->defineFingerprint($artifact_id);
         $this->logger->start(__METHOD__, $new_changeset->getId(), ($previous_changeset ? $previous_changeset->getId() : 'null'));
 
-        if (isset($fields_data[$this->getFieldId()])) {
-            $transition = $this->getCurrentTransition($fields_data, $previous_changeset);
-            if ($transition) {
-                $transition->after($new_changeset);
+        if (! $this->is_used && ! $this->is_legacy) {
+            $this->logger->debug("Workflow for artifact #$artifact_id is disabled, skipping transitions.");
+        } else {
+            if (isset($fields_data[$this->getFieldId()])) {
+                $transition = $this->getCurrentTransition($fields_data, $previous_changeset);
+                if ($transition) {
+                    $transition->after($new_changeset);
+                }
             }
         }
+
         $this->trigger_rules_manager->processTriggers($new_changeset);
 
         $this->logger->end(__METHOD__, $new_changeset->getId(), ($previous_changeset ? $previous_changeset->getId() : 'null'));
