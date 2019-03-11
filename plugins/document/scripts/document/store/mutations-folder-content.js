@@ -152,6 +152,37 @@ function appendSubFolderContent(state, [folder_id, sub_items]) {
     );
 
     state.folder_content.splice(folder_index + 1, 0, ...filtered_sub_items);
+
+    const children_ids = filtered_sub_items.map(item => item.id);
+
+    if (isParentFoldedByOnOfIsAncestors(state, parent_folder)) {
+        state.folded_items_ids.push(...children_ids);
+
+        const folder = findAncestorFoldingFolder(state, folder_id);
+
+        if (folder) {
+            state.folded_by_map[folder[0]].push(...children_ids);
+        }
+    }
+
+    if (isFolderClosed(state, folder_id)) {
+        state.folded_items_ids.push(...children_ids);
+        state.folded_by_map[folder_id].push(...children_ids);
+    }
+}
+
+function findAncestorFoldingFolder(state, folder_id) {
+    return Object.entries(state.folded_by_map).find(([folder_key]) => {
+        return state.folded_by_map[folder_key].includes(folder_id);
+    });
+}
+
+function isParentFoldedByOnOfIsAncestors(state, parent_folder) {
+    return state.folded_items_ids.find(folded_item_id => folded_item_id === parent_folder.id);
+}
+
+function isFolderClosed(state, folder_id) {
+    return state.folded_by_map.hasOwnProperty(folder_id);
 }
 
 function foldFolderContent(state, folder_id) {

@@ -780,4 +780,113 @@ describe("Store mutations", () => {
             ]);
         });
     });
+
+    describe("appendSubFolderContent", () => {
+        const folder = {
+            id: 123,
+            title: "A sub-folder",
+            level: 3,
+            type: "folder",
+            parent_id: 42
+        };
+
+        const sub_item_1 = {
+            id: 1231,
+            title: "sub-item 1",
+            parent_id: folder.id,
+            type: "file"
+        };
+        const sub_item_2 = {
+            id: 1232,
+            title: "sub-item 1",
+            parent_id: folder.id,
+            type: "file"
+        };
+        const sub_item_3 = {
+            id: 1233,
+            title: "sub-item 1",
+            parent_id: folder.id,
+            type: "file"
+        };
+
+        it("should append the sub-items next to the parent in state.folder_content", () => {
+            const state = {
+                folder_content: [
+                    { id: 42, parent_id: 0, level: 2, type: "folder", title: "Folder" },
+                    { id: 45, parent_id: 42, level: 3, type: "wiki", title: "tata.txt" },
+                    folder,
+                    { id: 44, parent_id: 42, level: 3, type: "file", title: "titi.txt" },
+                    { id: 43, parent_id: 42, level: 3, type: "file", title: "tutu.txt" }
+                ],
+                folded_items_ids: [],
+                folded_by_map: {}
+            };
+
+            mutations.appendSubFolderContent(state, [
+                folder.id,
+                [sub_item_1, sub_item_2, sub_item_3]
+            ]);
+
+            expect(state.folder_content).toEqual([
+                { id: 42, parent_id: 0, level: 2, type: "folder", title: "Folder" },
+                { id: 45, parent_id: 42, level: 3, type: "wiki", title: "tata.txt" },
+                folder,
+                sub_item_1,
+                sub_item_2,
+                sub_item_3,
+                { id: 44, parent_id: 42, level: 3, type: "file", title: "titi.txt" },
+                { id: 43, parent_id: 42, level: 3, type: "file", title: "tutu.txt" }
+            ]);
+        });
+
+        it(`
+            When the sub-folder is being folded by another folder
+            Then the sub-items next should be placed next to the parent in state.folder_content
+            And they should be marked as folded by the same folder than their parent.
+        `, () => {
+            const state = {
+                folder_content: [
+                    { id: 42, parent_id: 0, level: 2, type: "folder", title: "Folder" },
+                    { id: 45, parent_id: 42, level: 3, type: "wiki", title: "tata.txt" },
+                    folder,
+                    { id: 44, parent_id: 42, level: 3, type: "file", title: "titi.txt" },
+                    { id: 43, parent_id: 42, level: 3, type: "file", title: "tutu.txt" }
+                ],
+                folded_items_ids: [43, 44, 45, folder.id],
+                folded_by_map: {
+                    "42": [43, 44, 45, folder.id]
+                }
+            };
+
+            mutations.appendSubFolderContent(state, [
+                folder.id,
+                [sub_item_1, sub_item_2, sub_item_3]
+            ]);
+
+            expect(state.folder_content).toEqual([
+                { id: 42, parent_id: 0, level: 2, type: "folder", title: "Folder" },
+                { id: 45, parent_id: 42, level: 3, type: "wiki", title: "tata.txt" },
+                folder,
+                sub_item_1,
+                sub_item_2,
+                sub_item_3,
+                { id: 44, parent_id: 42, level: 3, type: "file", title: "titi.txt" },
+                { id: 43, parent_id: 42, level: 3, type: "file", title: "tutu.txt" }
+            ]);
+
+            expect(state.folded_items_ids).toEqual([
+                43,
+                44,
+                45,
+                folder.id,
+                sub_item_1.id,
+                sub_item_2.id,
+                sub_item_3.id
+            ]);
+
+            expect(state.folded_by_map).toEqual({
+                "42": [43, 44, 45, folder.id, sub_item_1.id, sub_item_2.id, sub_item_3.id]
+            });
+        });
+    });
 });

@@ -229,7 +229,7 @@ describe("FolderCellTitle", () => {
         });
 
         it(`Given folder is expanded and given folder has uploading content
-        When we toogle it
+        When we toggle it
         Then we should store that folder is collapsed with uploading content`, async () => {
             const wrapper = shallowMount(FolderCellTitle, component_options);
             wrapper.find("[data-test=toggle]").trigger("click");
