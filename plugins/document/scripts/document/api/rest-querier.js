@@ -41,7 +41,8 @@ export {
     addNewFile,
     addNewFolder,
     addNewEmpty,
-    addNewWiki
+    addNewWiki,
+    addNewEmbedded
 };
 
 async function getProject(project_id) {
@@ -56,7 +57,7 @@ async function getItem(id) {
     return response.json();
 }
 
-async function addNewFile(item, parent_id) {
+async function addNewDocumentType(url, item) {
     const headers = {
         "content-type": "application/json"
     };
@@ -66,54 +67,29 @@ async function addNewFile(item, parent_id) {
     };
     const body = JSON.stringify(json_body);
 
-    const response = await post("/api/docman_folders/" + parent_id + "/files", { headers, body });
+    const response = await post(url, { headers, body });
 
     return response.json();
 }
 
-async function addNewEmpty(item, parent_id) {
-    const headers = {
-        "content-type": "application/json"
-    };
-
-    const json_body = {
-        ...item
-    };
-    const body = JSON.stringify(json_body);
-
-    const response = await post("/api/docman_folders/" + parent_id + "/empties", { headers, body });
-
-    return response.json();
+function addNewFile(item, parent_id) {
+    return addNewDocumentType("/api/docman_folders/" + parent_id + "/files", item);
 }
 
-async function addNewWiki(item, parent_id) {
-    const headers = {
-        "content-type": "application/json"
-    };
-
-    const json_body = {
-        ...item
-    };
-    const body = JSON.stringify(json_body);
-
-    const response = await post("/api/docman_folders/" + parent_id + "/wikis", { headers, body });
-
-    return response.json();
+function addNewEmpty(item, parent_id) {
+    return addNewDocumentType("/api/docman_folders/" + parent_id + "/empties", item);
 }
 
-async function addNewFolder(item, parent_id) {
-    const headers = {
-        "content-type": "application/json"
-    };
+function addNewEmbedded(item, parent_id) {
+    return addNewDocumentType("/api/docman_folders/" + parent_id + "/embedded_files", item);
+}
 
-    const json_body = {
-        ...item
-    };
-    const body = JSON.stringify(json_body);
+function addNewWiki(item, parent_id) {
+    return addNewDocumentType("/api/docman_folders/" + parent_id + "/wikis", item);
+}
 
-    const response = await post("/api/docman_folders/" + parent_id + "/folders", { headers, body });
-
-    return response.json();
+function addNewFolder(item, parent_id) {
+    return addNewDocumentType("/api/docman_folders/" + parent_id + "/folders", item);
 }
 
 async function addNewDocument(item, parent_id) {

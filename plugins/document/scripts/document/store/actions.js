@@ -23,6 +23,7 @@ import {
     addNewEmpty,
     addNewWiki,
     addNewFile,
+    addNewEmbedded,
     cancelUpload,
     createNewVersion,
     deleteUserPreferenciesForFolderInProject,
@@ -43,7 +44,7 @@ import { loadFolderContent } from "./actions-helpers/load-folder-content.js";
 import { loadAscendantHierarchy } from "./actions-helpers/load-ascendant-hierarchy.js";
 import { uploadFile, uploadVersion } from "./actions-helpers/upload-file.js";
 import { flagItemAsCreated } from "./actions-helpers/flag-item-as-created.js";
-import { TYPE_EMPTY, TYPE_FILE, TYPE_FOLDER, TYPE_WIKI } from "../constants.js";
+import { TYPE_EMBEDDED, TYPE_EMPTY, TYPE_FILE, TYPE_FOLDER, TYPE_WIKI } from "../constants.js";
 import { addNewFolder } from "../api/rest-querier";
 
 export const loadRootFolder = async context => {
@@ -104,6 +105,10 @@ export const createNewItem = async (context, [item, parent, current_folder]) => 
                 return adjustFileToContentAfterItemCreation(item_reference.id);
             case TYPE_WIKI:
                 item_reference = await addNewWiki(item, parent.id);
+
+                return adjustFileToContentAfterItemCreation(item_reference.id);
+            case TYPE_EMBEDDED:
+                item_reference = await addNewEmbedded(item, parent.id);
 
                 return adjustFileToContentAfterItemCreation(item_reference.id);
             default:

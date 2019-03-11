@@ -176,10 +176,6 @@ class DocmanItemsResource extends AuthenticatedResource
         $event_adder->addLogEvents();
         $event_adder->addNotificationEvents($project);
 
-        /** @var \docmanPlugin $docman_plugin */
-        $docman_plugin       = PluginManager::instance()->getPluginByName('docman');
-        $is_embedded_allowed = $docman_plugin->getPluginInfo()->getPropertyValueForName('embedded_are_allowed');
-
         $docman_item_creator = DocmanItemCreatorBuilder::build($project);
 
         return $docman_item_creator->create(
@@ -187,8 +183,7 @@ class DocmanItemsResource extends AuthenticatedResource
             $current_user,
             $project,
             $docman_item_post_representation,
-            new \DateTimeImmutable(),
-            $is_embedded_allowed
+            new \DateTimeImmutable()
         );
     }
 
