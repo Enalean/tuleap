@@ -73,6 +73,14 @@ msgstr "Fermer"
 msgid "Content"
 msgstr "Contenu"
 
+msgid ""
+"Create a new version of a file by dropping the updated version on the "
+"targeted document in the tree view (or on the quick look pane)."
+msgstr ""
+"Créer une nouvelle version d'un fichier en déposant la version mise à jour "
+"sur le document ciblé dans la vue arborescente (ou sur la fenêtre d'aperçu "
+"de ce fichier)."
+
 msgid "Create document"
 msgstr "Créer le document"
 
@@ -327,6 +335,14 @@ msgstr ""
 
 msgid "You are not allowed to write in this folder"
 msgstr "Vous n'êtes pas autorisé à écrire dans ce dossier"
+
+msgid ""
+"You can drag 'n drop files from your desktop into a sub-folder to upload "
+"them in this folder (or on the quick look preview of this folder)."
+msgstr ""
+"Vous pouvez glisser-déposer des fichiers depuis votre poste de travail dans "
+"un sous-dossier pour les y téléverser (ou sur la fenêtre d'aperçu de ce "
+"dossier)."
 
 msgid ""
 "You can drag 'n drop files from your desktop into the current folder to "
