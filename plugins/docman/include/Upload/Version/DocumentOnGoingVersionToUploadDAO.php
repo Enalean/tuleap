@@ -34,7 +34,8 @@ class DocumentOnGoingVersionToUploadDAO extends DataAccessObject
         string $changelog,
         int $user_id,
         string $filename,
-        int $filesize
+        int $filesize,
+        bool $is_file_locked
     ) : int {
         $version_id = $this->getDB()->insertReturnId(
             'plugin_docman_new_version_upload',
@@ -45,7 +46,8 @@ class DocumentOnGoingVersionToUploadDAO extends DataAccessObject
                 'changelog'       => $changelog,
                 'user_id'         => $user_id,
                 'filename'        => $filename,
-                'filesize'        => $filesize
+                'filesize'        => $filesize,
+                'is_file_locked'  => $is_file_locked
             ]
         );
         return (int)$version_id;

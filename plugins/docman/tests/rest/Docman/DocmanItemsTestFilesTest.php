@@ -79,9 +79,10 @@ class DocmanItemsTestFilesTest extends DocmanBase
 
         $put_resource = json_encode(
             [
-                'version_title'   => 'My version title',
-                'changelog'       => 'I have changed',
-                'file_properties' => ['file_name' => 'file1', 'file_size' => 10]
+                'version_title'    => 'My version title',
+                'changelog'        => 'I have changed',
+                'should_lock_file' => false,
+                'file_properties'  => ['file_name' => 'file1', 'file_size' => 10]
             ]
         );
 
@@ -109,9 +110,10 @@ class DocmanItemsTestFilesTest extends DocmanBase
 
         $put_resource = json_encode(
             [
-                'version_title'   => 'My version title',
-                'changelog'       => 'I have changed',
-                'file_properties' => ['file_name' => 'file1', 'file_size' => 10]
+                'version_title'    => 'My version title',
+                'changelog'        => 'I have changed',
+                'should_lock_file' => false,
+                'file_properties'  => ['file_name' => 'file1', 'file_size' => 10]
             ]
         );
 
@@ -134,9 +136,10 @@ class DocmanItemsTestFilesTest extends DocmanBase
         $file         = $this->findItemByTitle($items, 'file A');
         $put_resource = json_encode(
             [
-                'version_title'   => 'My version title',
-                'changelog'       => 'I have changed',
-                'file_properties' => ['file_name' => 'file1', 'file_size' => 999999999999]
+                'version_title'    => 'My version title',
+                'changelog'        => 'I have changed',
+                'should_lock_file' => false,
+                'file_properties'  => ['file_name' => 'file1', 'file_size' => 999999999999]
             ]
         );
 
@@ -156,9 +159,10 @@ class DocmanItemsTestFilesTest extends DocmanBase
 
         $put_resource = json_encode(
             [
-                'version_title'   => 'My version title',
-                'changelog'       => 'I have changed',
-                'file_properties' => ['file_name' => 'file1', 'file_size' => 0]
+                'version_title'    => 'My version title',
+                'changelog'        => 'I have changed',
+                'should_lock_file' => false,
+                'file_properties'  => ['file_name' => 'file1', 'file_size' => 0]
             ]
         );
 
@@ -177,9 +181,10 @@ class DocmanItemsTestFilesTest extends DocmanBase
         $file         = $this->findItemByTitle($items, 'file A');
         $put_resource = json_encode(
             [
-                'version_title'   => 'My version title',
-                'changelog'       => 'I have changed',
-                'file_properties' => ['file_name' => 'file1', 'file_size' => 10]
+                'version_title'    => 'My version title',
+                'changelog'        => 'I have changed',
+                'should_lock_file' => false,
+                'file_properties'  => ['file_name' => 'file1', 'file_size' => 10]
             ]
         );
 
@@ -193,9 +198,10 @@ class DocmanItemsTestFilesTest extends DocmanBase
 
         $put_resource = json_encode(
             [
-                'version_title'   => 'My version title',
-                'changelog'       => 'I have changed',
-                'file_properties' => ['file_name' => 'file1', 'file_size' => 10]
+                'version_title'    => 'My version title',
+                'changelog'        => 'I have changed',
+                'should_lock_file' => false,
+                'file_properties'  => ['file_name' => 'file1', 'file_size' => 10]
             ]
         );
 
@@ -214,9 +220,10 @@ class DocmanItemsTestFilesTest extends DocmanBase
         $file         = $this->findItemByTitle($items, 'file B');
         $put_resource = json_encode(
             [
-                'version_title'   => 'My version title',
-                'changelog'       => 'I have changed',
-                'file_properties' => ['file_name' => 'file1', 'file_size' => 10]
+                'version_title'    => 'My version title',
+                'changelog'        => 'I have changed',
+                'should_lock_file' => false,
+                'file_properties'  => ['file_name' => 'file1', 'file_size' => 10]
             ]
         );
 
@@ -233,12 +240,14 @@ class DocmanItemsTestFilesTest extends DocmanBase
      */
     public function testPatchFileDocument(int $root_id) : void
     {
-        $query     = json_encode([
-                                     'title'           => 'My new file',
-                                     'parent_id'       => $root_id,
-                                     'type'            => 'file',
-                                     'file_properties' => ['file_name' => 'file1', 'file_size' => 0]
-                                 ]);
+        $query = json_encode(
+            [
+                'title'           => 'My new file',
+                'parent_id'       => $root_id,
+                'type'            => 'file',
+                'file_properties' => ['file_name' => 'file1', 'file_size' => 0]
+            ]
+        );
 
         $response1 = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
@@ -260,9 +269,10 @@ class DocmanItemsTestFilesTest extends DocmanBase
         $file_size = 123;
         $put_resource = json_encode(
             [
-                'version_title'   => 'My version title',
-                'changelog'       => 'I have changed',
-                'file_properties' => ['file_name' => 'My new file', 'file_size' => $file_size]
+                'version_title'    => 'My version title',
+                'changelog'        => 'I have changed',
+                'should_lock_file' => false,
+                'file_properties'  => ['file_name' => 'My new file', 'file_size' => $file_size]
             ]
         );
 
@@ -310,6 +320,101 @@ class DocmanItemsTestFilesTest extends DocmanBase
         );
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals('file', $response->json()['type']);
+        $this->assertEquals(null, $response->json()['lock_info']);
+    }
+
+
+    /**
+     * @depends testGetRootId
+     */
+    public function testPatchFileDocumentAddLock(int $root_id): void
+    {
+        $query = json_encode(
+            [
+                'title'           => 'My second file',
+                'parent_id'       => $root_id,
+                'type'            => 'file',
+                'file_properties' => ['file_name' => 'file1', 'file_size' => 0]
+            ]
+        );
+
+        $response1 = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post('docman_folders/' . $root_id . '/files', null, $query)
+        );
+
+        $this->assertEquals(201, $response1->getStatusCode());
+        $this->assertEmpty($response1->json()['file_properties']['upload_href']);
+
+        $file_item_response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->get($response1->json()['uri'])
+        );
+
+        $this->assertEquals(200, $file_item_response->getStatusCode());
+        $this->assertEquals('file', $file_item_response->json()['type']);
+
+        $file_id = $response1->json()['id'];
+
+        $file_size = 123;
+
+        $put_resource = json_encode(
+            [
+                'version_title'    => 'My version title',
+                'changelog'        => 'I have changed',
+                'should_lock_file' => true,
+                'file_properties'  => ['file_name' => 'My new file', 'file_size' => $file_size]
+            ]
+        );
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->patch('docman_files/' . $file_id, null, $put_resource)
+        );
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertNotEmpty($response->json()['upload_href']);
+
+        $response2 = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->patch('docman_files/' . $file_id, null, $put_resource)
+        );
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertSame(
+            $response->json()['upload_href'],
+            $response2->json()['upload_href']
+        );
+
+        $tus_client = new Client(
+            str_replace('/api/v1', '', $this->client->getBaseUrl()),
+            $this->client->getConfig()
+        );
+        $tus_client->setSslVerification(false, false, false);
+        $tus_response_upload = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $tus_client->patch(
+                $response->json()['upload_href'],
+                [
+                    'Tus-Resumable' => '1.0.0',
+                    'Content-Type'  => 'application/offset+octet-stream',
+                    'Upload-Offset' => '0'
+                ],
+                str_repeat('A', $file_size)
+            )
+        );
+
+        $this->assertEquals(204, $tus_response_upload->getStatusCode());
+        $this->assertEquals([$file_size], $tus_response_upload->getHeader('Upload-Offset')->toArray());
+
+        $response = $this->getResponse(
+            $this->client->get('docman_items/' . $file_id),
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
+        );
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals('file', $response->json()['type']);
+        $this->assertEquals(110, $response->json()['lock_info']["locked_by"]["id"]);
     }
 
     /**
@@ -320,9 +425,10 @@ class DocmanItemsTestFilesTest extends DocmanBase
         $file         = $this->findItemByTitle($items, 'file C');
         $put_resource = json_encode(
             [
-                'version_title'   => 'My version title',
-                'changelog'       => 'I have changed',
-                'file_properties' => ['file_name' => 'My new file', 'file_size' => 123]
+                'version_title'    => 'My version title',
+                'changelog'        => 'I have changed',
+                'should_lock_file' => false,
+                'file_properties'  => ['file_name' => 'My new file', 'file_size' => 123]
             ]
         );
 

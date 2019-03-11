@@ -35,6 +35,11 @@ class DocmanFilesPATCHRepresentation
     public $change_log = '';
 
     /**
+     * @var bool Lock file while updating {@from body} {@required true} {@type bool}
+     */
+    public $should_lock_file;
+
+    /**
      * @var FilePropertiesPOSTPATCHRepresentation File properties must be set when creating a new file {@from body} {@type \Tuleap\Docman\REST\v1\FilePropertiesPOSTPATCHRepresentation} {@required true}
      */
     public $file_properties ;

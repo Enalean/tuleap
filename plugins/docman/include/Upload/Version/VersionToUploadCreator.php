@@ -60,7 +60,8 @@ class VersionToUploadCreator
         string $version_title,
         string $changelog,
         string $filename,
-        int $filesize
+        int $filesize,
+        bool $is_file_locked
     ) : VersionToUpload {
         $file_size = $filesize;
         if ((int)$file_size > (int)\ForgeConfig::get(PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING)) {
@@ -78,6 +79,7 @@ class VersionToUploadCreator
                 $changelog,
                 $filename,
                 $filesize,
+                $is_file_locked,
                 &$version_id
             ) {
                 $rows = $this->dao->searchDocumentVersionOngoingUploadByItemIdAndExpirationDate(
@@ -108,7 +110,8 @@ class VersionToUploadCreator
                     $changelog,
                     (int)$user->getId(),
                     $filename,
-                    $filesize
+                    $filesize,
+                    $is_file_locked
                 );
             }
         );

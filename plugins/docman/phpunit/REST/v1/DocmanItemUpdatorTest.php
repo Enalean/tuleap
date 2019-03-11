@@ -125,6 +125,7 @@ class DocmanItemUpdatorTest extends TestCase
         $representation                             = new DocmanFilesPATCHRepresentation();
         $representation->change_log                 = 'changelog';
         $representation->version_title              = 'version title';
+        $representation->should_lock_file           = false;
         $representation->file_properties            = new FilePropertiesPOSTPATCHRepresentation();
         $representation->file_properties->file_name = 'file';
         $representation->file_properties->file_size = 0;

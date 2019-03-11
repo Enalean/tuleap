@@ -61,6 +61,7 @@ class VersionToUploadCreatorTest extends TestCase
         $this->dao->shouldReceive('searchDocumentVersionOngoingUploadByItemIdAndExpirationDate')->andReturns([]);
         $this->dao->shouldReceive('saveDocumentVersionOngoingUpload')->once()->andReturns(12);
 
+        $is_file_locked = false;
         $document_to_upload = $creator->create(
             $item,
             $user,
@@ -68,7 +69,8 @@ class VersionToUploadCreatorTest extends TestCase
             'version title',
             'changelog',
             'filename',
-            123456
+            123456,
+            $is_file_locked
         );
 
         $this->assertSame(12, $document_to_upload->getVersionId());
@@ -91,6 +93,7 @@ class VersionToUploadCreatorTest extends TestCase
             ]
         );
 
+        $is_file_locked = false;
         $document_to_upload = $creator->create(
             $parent_item,
             $user,
@@ -98,7 +101,8 @@ class VersionToUploadCreatorTest extends TestCase
             'version title',
             'changelog',
             'filename',
-            123456
+            123456,
+            $is_file_locked
         );
 
         $this->assertSame(12, $document_to_upload->getVersionId());
@@ -123,6 +127,7 @@ class VersionToUploadCreatorTest extends TestCase
 
         $this->expectException(UploadCreationConflictException::class);
 
+        $is_file_locked = false;
         $creator->create(
             $parent_item,
             $user,
@@ -130,7 +135,8 @@ class VersionToUploadCreatorTest extends TestCase
             'version title',
             'changelog',
             'filename',
-            123456
+            123456,
+            $is_file_locked
         );
     }
 
@@ -153,6 +159,7 @@ class VersionToUploadCreatorTest extends TestCase
 
         $this->expectException(UploadCreationFileMismatchException::class);
 
+        $is_file_locked = false;
         $creator->create(
             $parent_item,
             $user,
@@ -160,7 +167,8 @@ class VersionToUploadCreatorTest extends TestCase
             'version title',
             'changelog',
             'filename2',
-            789
+            789,
+            $is_file_locked
         );
     }
 
@@ -175,6 +183,7 @@ class VersionToUploadCreatorTest extends TestCase
 
         $this->expectException(UploadMaxSizeExceededException::class);
 
+        $is_file_locked = false;
         $creator->create(
             $parent_item,
             $user,
@@ -182,7 +191,8 @@ class VersionToUploadCreatorTest extends TestCase
             'version title',
             'changelog',
             'filename',
-            2
+            2,
+            $is_file_locked
         );
     }
 }
