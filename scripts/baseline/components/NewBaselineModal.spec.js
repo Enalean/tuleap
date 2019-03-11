@@ -20,12 +20,7 @@
 import Vue from "vue";
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../support/local-vue.js";
-import {
-    createBaseline,
-    restore,
-    rewire$getOpenMilestones,
-    rewire$createBaseline
-} from "../api/rest-querier";
+import { restore, rewire$getOpenMilestones, rewire$createBaseline } from "../api/rest-querier";
 import NewBaselineModal from "./NewBaselineModal.vue";
 import MilestoneList from "./NewBaselineMilestoneSelect.vue";
 import MilestoneListSkeleton from "./MilestoneListSkeleton.vue";

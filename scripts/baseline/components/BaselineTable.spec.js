@@ -38,7 +38,7 @@ describe("BaselineTable", () => {
         });
     });
 
-    describe("when is loading baseline", () => {
+    describe("when is loading baselines", () => {
         beforeEach(async () => {
             wrapper.setProps({ baselines: null, is_loading: true });
             await Vue.nextTick();
@@ -65,19 +65,19 @@ describe("BaselineTable", () => {
                         id: 1,
                         name: "Baseline V1",
                         snapshot_date: "10/02/2019",
-                        author: "Alban Jidibus"
+                        author_id: 1
                     },
                     {
                         id: 2,
                         name: "Baseline V2",
                         snapshot_date: "11/02/2019",
-                        author: "Alban Jidibus"
+                        author_id: 2
                     },
                     {
                         id: 3,
                         name: "Baseline V3",
                         snapshot_date: "12/02/2019",
-                        author: "Alita"
+                        author_id: 3
                     }
                 ]
             });
