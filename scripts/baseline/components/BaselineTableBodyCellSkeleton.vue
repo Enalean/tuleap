@@ -28,16 +28,12 @@
         <td><span class="tlp-skeleton-text"></span></td>
         <td><span class="tlp-skeleton-text"></span></td>
         <td class="tlp-table-cell-actions baselines-table-column-actions">
-            <div class="tlp-dropdown">
-                <button
-                    type="button"
-                    class="tlp-button-secondary"
+            <button class="tlp-button-small tlp-button-primary tlp-button-outline"
+                    key="consult-skeleton"
                     disabled
-                >
-                    <translate>Actions</translate>
-                    <i class="fa fa-caret-down tlp-button-icon-right"></i>
-                </button>
-            </div>
+            >
+                Consult
+            </button>
         </td>
     </tr>
 </template>
