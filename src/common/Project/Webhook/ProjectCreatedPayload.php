@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -38,28 +38,36 @@ class ProjectCreatedPayload implements Payload
     {
         $creation_date = new \DateTime('@' . $project->getStartDate());
         $update_date   = new \DateTime("@$update_time");
+        $owner_id      = null;
+        $owner_email   = null;
+        $owner_name    = null;
         $owner         = $this->extractOwner($project);
-        return array(
+        if ($owner !== null) {
+            $owner_id    = (int) $owner->getId();
+            $owner_email = $owner->getEmail();
+            $owner_name  = $owner->getRealName();
+        }
+        return [
             'created_at'          => $creation_date->format('c'),
             'updated_at'          => $update_date->format('c'),
             'event_name'          => 'project_create',
             'name'                => $project->getUnconvertedPublicName(),
-            'owner_id'            => (int) $owner->getId(),
-            'owner_email'         => $owner->getEmail(),
-            'owner_name'          => $owner->getRealName(),
+            'owner_id'            => $owner_id,
+            'owner_email'         => $owner_email,
+            'owner_name'          => $owner_name,
             'path'                => $project->getUnixName(),
             'path_with_namespace' => $project->getUnixName(),
             'project_id'          => (int) $project->getID(),
             'project_visibility'  => $project->getAccess()
-        );
+        ];
     }
 
-    /**
-     * @return \PFUser
-     */
-    private function extractOwner(\Project $project)
+    private function extractOwner(\Project $project) : ?\PFUser
     {
         $admins = $project->getAdmins();
+        if (empty($admins)) {
+            return null;
+        }
         return $admins[0];
     }
 
