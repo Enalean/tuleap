@@ -19,7 +19,7 @@
   -->
 
 <template>
-    <div class="tlp-form-element">
+    <div class="tlp-form-element docman-item-version-title-update">
         <label
             class="tlp-label"
             for="document-update-version-title"
