@@ -127,7 +127,17 @@ export default {
             event.preventDefault();
             event.stopPropagation();
 
+            if (this.isInQuickLookPane()) {
+                return;
+            }
+
             this.clearHighlight();
+        },
+        isInQuickLookPane() {
+            return document.querySelector(`
+                .quick-look-pane-highlighted,
+                .quick-look-pane-highlighted-forbidden
+            `);
         },
         async ondrop(event) {
             event.preventDefault();
