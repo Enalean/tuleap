@@ -17,9 +17,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once 'common/event/EventManager.class.php';
-require_once 'SVN_Apache_Auth_Factory.class.php';
-
 /**
  * Manage generation of Apache svnroot.conf file with all project subversion
  * configuration

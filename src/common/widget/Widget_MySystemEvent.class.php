@@ -19,8 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('Widget.class.php');
-require_once('common/system_event/SystemEventManager.class.php');
 class Widget_MySystemEvent extends Widget {
     
     /**

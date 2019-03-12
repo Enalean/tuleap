@@ -20,8 +20,6 @@
  */
 
 require_once('bootstrap.php');
-require_once 'common/include/HTTPRequest.class.php';
-require_once 'common/event/EventManager.class.php';
 
 abstract class Tracker_FormElementFactoryAbstract extends TuleapTestCase {
 

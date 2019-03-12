@@ -37,8 +37,6 @@ use Tuleap\User\SessionManager;
 
 require_once('pre.php');
 require_once('account.php');
-require_once('common/event/EventManager.class.php');
-require_once('common/system_event/SystemEventManager.class.php');
 
 $request = HTTPRequest::instance();
 $request->checkUserIsSuperUser();

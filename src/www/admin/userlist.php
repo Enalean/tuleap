@@ -24,9 +24,6 @@ use Tuleap\Admin\AdminPageRenderer;
 require_once('pre.php');
 require_once('account.php');
 require_once('www/project/admin/ugroup_utils.php');
-require_once('common/event/EventManager.class.php');
-require_once('common/dao/UserDao.class.php');
-require_once('common/dao/SessionDao.class.php');
 
 $request = HTTPRequest::instance();
 $request->checkUserIsSuperUser();

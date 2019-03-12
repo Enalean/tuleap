@@ -21,9 +21,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/include/URL.class.php');
-require_once('common/event/EventManager.class.php');
-
 $vGroupId = new Valid_UInt('group_id');
 $vGroupId->required();
 

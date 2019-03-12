@@ -23,8 +23,6 @@ use Tuleap\Admin\AdminPageRenderer;
 
 require_once('pre.php');
 require_once('www/admin/admin_utils.php');
-require_once('common/event/EventManager.class.php');
-require_once('common/wiki/lib/WikiAttachment.class.php');
 
 $request = HTTPRequest::instance();
 $request->checkUserIsSuperUser();

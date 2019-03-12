@@ -34,7 +34,6 @@ require_once 'common/tracker/ArtifactReport.class.php';
 require_once 'common/tracker/ArtifactReportFactory.class.php';
 require_once 'common/reference/ReferenceManager.class.php';
 require_once 'trove.php';
-require_once 'common/event/EventManager.class.php';
 require_once 'common/wiki/lib/WikiCloner.class.php';
 
 define('PROJECT_APPROVAL_BY_ADMIN', 'P');

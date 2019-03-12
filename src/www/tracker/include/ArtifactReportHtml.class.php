@@ -22,9 +22,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/event/EventManager.class.php');
-
-
 class ArtifactReportHtml extends ArtifactReport {
     
     var $fields_per_line;

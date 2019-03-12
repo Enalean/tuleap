@@ -22,10 +22,6 @@
  *
  */
 
-
-require_once('common/backend/Backend.class.php');
-require_once('common/event/EventManager.class.php');
-
 //Create a fake backend class
 class BackendTest_FakeBackend {
 }
