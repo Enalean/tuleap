@@ -16,15 +16,24 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
-namespace Tuleap\Docman\REST\v1;
+declare(strict_types = 1);
 
-class LinkPropertiesPOSTRepresentation
+namespace Tuleap\Docman\REST\v1\Folders;
+
+class DocmanLinkPOSTRepresentation
 {
     /**
-     * @var string {@type string}
+     * @var string Item title {@from body} {@required true}
      */
-    public $link_url;
+    public $title;
+    /**
+     * @var string Item description {@from body} {@required false}
+     */
+    public $description = '';
+    /**
+     * @var LinkPropertiesPOSTRepresentation {@type \Tuleap\Docman\REST\v1\Folders\LinkPropertiesPOSTRepresentation} {@from body} {@required false}
+     */
+    public $link_properties = null;
 }

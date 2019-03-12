@@ -29,6 +29,7 @@ use Rule_Regexp;
 use Tuleap\Docman\REST\v1\Folders\DocmanEmbeddedPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Folders\DocmanEmptyPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Folders\DocmanFolderPOSTRepresentation;
+use Tuleap\Docman\REST\v1\Folders\DocmanLinkPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Folders\DocmanWikiPOSTRepresentation;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
 use Tuleap\Docman\Upload\Document\DocumentToUploadCreator;
@@ -78,59 +79,6 @@ class DocmanItemCreator
         $this->document_to_upload_creator        = $document_to_upload_creator;
         $this->creator_visitor                   = $creator_visitor;
         $this->empty_file_to_upload_finisher     = $empty_file_to_upload_finisher;
-    }
-
-    /**
-     * @return CreatedItemRepresentation
-     * @throws \Tuleap\Docman\CannotInstantiateItemWeHaveJustCreatedInDBException
-     * @throws RestException
-     */
-    public function create(
-        Docman_Item $parent_item,
-        PFUser $user,
-        Project $project,
-        DocmanItemPOSTRepresentation $docman_item_post_representation,
-        \DateTimeImmutable $current_time
-    ) {
-        $this->checkDocumentDoesNotAlreadyExists(
-            $docman_item_post_representation
-        );
-
-        $this->checkDocumentIsNotBeingUploaded(
-            $parent_item,
-            $docman_item_post_representation->type,
-            $docman_item_post_representation->title,
-            $current_time
-        );
-
-        switch ($docman_item_post_representation->type) {
-            case ItemRepresentation::TYPE_LINK:
-                $this->checkPropertiesByType($docman_item_post_representation, ItemRepresentation::TYPE_LINK);
-                $link_url   = $docman_item_post_representation->link_properties->link_url;
-                $valid_http = new Rule_Regexp(Valid_LocalURI::URI_REGEXP);
-                $valid_ftp  = new Rule_Regexp(Valid_FTPURI::URI_REGEXP);
-                if (!$valid_ftp->isValid($link_url) && !$valid_http->isValid($link_url)) {
-                    throw new RestException(
-                        400,
-                        sprintf('The link is not a valid URL')
-                    );
-                }
-                return $this->createDocument(
-                    PLUGIN_DOCMAN_ITEM_TYPE_LINK,
-                    $current_time,
-                    $parent_item,
-                    $user,
-                    $project,
-                    $docman_item_post_representation->title,
-                    $docman_item_post_representation->description,
-                    null,
-                    $link_url,
-                    null
-                );
-
-            default:
-                throw new \DomainException('Unknown document type: ' . $docman_item_post_representation->type);
-        }
     }
 
     /**
@@ -406,41 +354,47 @@ class DocmanItemCreator
 
     /**
      * @throws RestException
+     * @throws \Tuleap\Docman\CannotInstantiateItemWeHaveJustCreatedInDBException
      */
-    private function checkDocumentDoesNotAlreadyExists(DocmanItemPOSTRepresentation $representation)
-    {
-        if ($representation->type !== \Tuleap\Docman\REST\v1\ItemRepresentation::TYPE_FOLDER
-            && $this->item_factory->doesTitleCorrespondToExistingDocument($representation->title, $representation->parent_id)
-        ) {
+    public function createLink(
+        Docman_Item $parent_item,
+        PFUser $user,
+        DocmanLinkPOSTRepresentation $representation,
+        \DateTimeImmutable $current_time,
+        Project $project
+    ): CreatedItemRepresentation {
+        if ($this->item_factory->doesTitleCorrespondToExistingDocument($representation->title, $parent_item->getId())) {
             throw new RestException(400, "A document with same title already exists in the given folder.");
         }
-    }
 
-    /**
-     * @throws RestException
-     */
-    private function checkPropertiesByType(
-        DocmanItemPOSTRepresentation $docman_item_post_representation,
-        $checked_type
-    ) : void {
-        $types_with_properties = [
-            ItemRepresentation::TYPE_LINK
-        ];
-
-        foreach ($types_with_properties as $type) {
-            if ($type === $checked_type && $docman_item_post_representation->{$type . "_properties"} === null) {
-                throw new RestException(
-                    400,
-                    "Please provide " .$type . "_properties in order to create a $checked_type document."
-                );
-            }
-
-            if ($type !== $checked_type && $docman_item_post_representation->{$type . "_properties"} !== null) {
-                throw new RestException(
-                    400,
-                    $type . "_properties" . ' is not null while the given type is "' . $checked_type . '"'
-                );
-            }
+        $link_url   = $representation->link_properties->link_url;
+        $valid_http = new Rule_Regexp(Valid_LocalURI::URI_REGEXP);
+        $valid_ftp  = new Rule_Regexp(Valid_FTPURI::URI_REGEXP);
+        if (!$valid_ftp->isValid($link_url) && !$valid_http->isValid($link_url)) {
+            throw new RestException(
+                400,
+                sprintf('The link is not a valid URL')
+            );
         }
+
+        $this->checkDocumentIsNotBeingUploaded(
+            $parent_item,
+            PLUGIN_DOCMAN_ITEM_TYPE_LINK,
+            $representation->title,
+            $current_time
+        );
+
+        return $this->createDocument(
+            PLUGIN_DOCMAN_ITEM_TYPE_LINK,
+            $current_time,
+            $parent_item,
+            $user,
+            $project,
+            $representation->title,
+            $representation->description,
+            null,
+            $link_url,
+            null
+        );
     }
 }

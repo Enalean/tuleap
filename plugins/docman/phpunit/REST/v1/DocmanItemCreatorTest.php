@@ -27,6 +27,7 @@ use PHPUnit\Framework\TestCase;
 use Tuleap\Docman\REST\v1\Folders\DocmanEmbeddedPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Folders\DocmanEmptyPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Folders\DocmanFolderPOSTRepresentation;
+use Tuleap\Docman\REST\v1\Folders\DocmanLinkPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Folders\DocmanPOSTFilesRepresentation;
 use Tuleap\Docman\REST\v1\Folders\DocmanWikiPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Folders\EmbeddedPropertiesPOSTRepresentation;
@@ -307,14 +308,13 @@ class DocmanItemCreatorTest extends TestCase
         );
 
         $parent_item  = \Mockery::mock(\Docman_Item::class);
+        $parent_item->shouldReceive('getId')->andReturn(1);
         $user         = \Mockery::mock(\PFUser::class);
         $project      = \Mockery::mock(\Project::class);
         $current_time = new \DateTimeImmutable();
 
-        $post_representation            = new DocmanItemPOSTRepresentation();
-        $post_representation->type      = ItemRepresentation::TYPE_EMPTY;
-        $post_representation->title     = 'Title';
-        $post_representation->parent_id = 11;
+        $post_representation        = new DocmanEmptyPOSTRepresentation();
+        $post_representation->title = 'Title';
 
         $this->item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
 
@@ -323,13 +323,12 @@ class DocmanItemCreatorTest extends TestCase
         $this->expectException(RestException::class);
         $this->expectExceptionCode(409);
 
-        $item_creator->create(
+        $item_creator->createEmpty(
             $parent_item,
             $user,
-            $project,
             $post_representation,
             $current_time,
-            true
+            $project
         );
     }
 
@@ -348,11 +347,10 @@ class DocmanItemCreatorTest extends TestCase
         $project      = \Mockery::mock(\Project::class);
         $current_time = new \DateTimeImmutable();
 
-        $post_representation                  = new DocmanItemPOSTRepresentation();
-        $post_representation->type            = ItemRepresentation::TYPE_LINK;
-        $post_representation->title           = 'Mie faboulouse linke';
-        $post_representation->parent_id       = 11;
-        $post_representation->link_properties = json_decode(json_encode(['link_url' => 'https://my.example.test']));
+        $post_representation                            = new DocmanLinkPOSTRepresentation();
+        $post_representation->title                     = 'Mie faboulouse linke';
+        $post_representation->link_properties           = new LinkPropertiesRepresentation();
+        $post_representation->link_properties->link_url = 'https://my.example.test';
 
         $this->document_ongoing_upload_retriever->shouldReceive('isThereAlreadyAnUploadOngoing')->andReturns(false);
         $parent_item->shouldReceive('getId')->andReturns(11);
@@ -383,13 +381,12 @@ class DocmanItemCreatorTest extends TestCase
 
         $this->creator_visitor->shouldReceive('visitLink')->once();
 
-        $created_item_representation = $item_creator->create(
+        $created_item_representation = $item_creator->createLink(
             $parent_item,
             $user,
-            $project,
             $post_representation,
             $current_time,
-            true
+            $project
         );
 
         $this->assertSame(12, $created_item_representation->id);
@@ -509,27 +506,25 @@ class DocmanItemCreatorTest extends TestCase
         );
 
         $parent_item  = \Mockery::mock(\Docman_Item::class);
+        $parent_item->shouldReceive('getId')->andReturn(1);
         $user         = \Mockery::mock(\PFUser::class);
         $project      = \Mockery::mock(\Project::class);
         $current_time = new \DateTimeImmutable();
 
-        $post_representation            = new DocmanItemPOSTRepresentation();
-        $post_representation->type      = ItemRepresentation::TYPE_EMPTY;
+        $post_representation            = new DocmanEmptyPOSTRepresentation();
         $post_representation->title     = 'Title';
-        $post_representation->parent_id = 11;
 
         $this->item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(true);
 
         $this->expectException(RestException::class);
         $this->expectExceptionCode(400);
 
-        $item_creator->create(
+        $item_creator->createEmpty(
             $parent_item,
             $user,
-            $project,
             $post_representation,
             $current_time,
-            true
+            $project
         );
     }
 }

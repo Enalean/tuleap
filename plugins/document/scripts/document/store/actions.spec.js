@@ -40,7 +40,7 @@ import {
 } from "./actions-helpers/upload-file.js";
 import {
     restore as restoreRestQuerier,
-    rewire$addNewDocument,
+    rewire$addNewEmpty,
     rewire$addNewFile,
     rewire$cancelUpload,
     rewire$createNewVersion,
@@ -79,7 +79,7 @@ describe("Store actions", () => {
         deleteUserPreferenciesForUnderConstructionModal,
         patchUserPreferenciesForFolderInProject,
         deleteUserPreferenciesForUIInProject,
-        addNewDocument,
+        addNewEmpty,
         addNewFile,
         uploadFile,
         cancelUpload,
@@ -108,8 +108,8 @@ describe("Store actions", () => {
         loadAscendantHierarchy = jasmine.createSpy("loadAscendantHierarchy");
         rewire$loadAscendantHierarchy(loadAscendantHierarchy);
 
-        addNewDocument = jasmine.createSpy("addNewDocument");
-        rewire$addNewDocument(addNewDocument);
+        addNewEmpty = jasmine.createSpy("addNewEmpty");
+        rewire$addNewEmpty(addNewEmpty);
 
         addNewFile = jasmine.createSpy("addNewFile");
         rewire$addNewFile(addNewFile);
@@ -461,25 +461,23 @@ describe("Store actions", () => {
     describe("createNewItem", () => {
         it("Creates new document and reload folder content", async () => {
             const created_item_reference = { id: 66 };
-            addNewDocument.and.returnValue(Promise.resolve(created_item_reference));
+            addNewEmpty.and.returnValue(Promise.resolve(created_item_reference));
 
-            const item = { id: 66, title: "whatever" };
+            const item = { id: 66, title: "whatever", type: "empty" };
+            const parent = { id: 2, title: "my folder", type: "folder", is_expanded: true };
+            const current_folder = parent;
             getItem.and.returnValue(Promise.resolve(item));
 
-            await createNewItem(context, ["title", "", "empty", 2]);
+            await createNewItem(context, [item, parent, current_folder]);
 
             expect(getItem).toHaveBeenCalledWith(66);
-            expect(context.commit).toHaveBeenCalledWith(
-                "addJustCreatedItemToFolderContent",
-
-                item
-            );
+            expect(context.commit).toHaveBeenCalledWith("addJustCreatedItemToFolderContent", item);
             expect(context.commit).not.toHaveBeenCalledWith("setModalError");
         });
 
         it("Stores error when document creation fail", async () => {
             const error_message = "`title` is required.";
-            mockFetchError(addNewDocument, {
+            mockFetchError(addNewEmpty, {
                 status: 400,
                 error_json: {
                     error: {
@@ -487,7 +485,11 @@ describe("Store actions", () => {
                     }
                 }
             });
-            await createNewItem(context, ["", "", "empty", 2]);
+            const parent = { id: 2, title: "my folder", type: "folder", is_expanded: true };
+            const current_folder = parent;
+            const item = { id: 66, title: "", type: "empty" };
+
+            await createNewItem(context, [item, parent, current_folder]);
 
             expect(context.commit).not.toHaveBeenCalledWith(
                 "addJustCreatedItemToFolderContent",
@@ -498,38 +500,30 @@ describe("Store actions", () => {
 
         it("displays the created item when it is created in the current folder", async () => {
             const created_item_reference = { id: 66 };
-            addNewDocument.and.returnValue(Promise.resolve(created_item_reference));
+            addNewEmpty.and.returnValue(Promise.resolve(created_item_reference));
 
-            const item = { id: 66, title: "whatever" };
+            const item = { id: 66, title: "whatever", type: "empty" };
             getItem.and.returnValue(Promise.resolve(item));
 
             const folder_of_created_item = { id: 10 };
             const current_folder = { id: 10 };
 
-            await createNewItem(context, [
-                ["title", "", "empty", 2],
-                folder_of_created_item,
-                current_folder
-            ]);
+            await createNewItem(context, [item, folder_of_created_item, current_folder]);
 
             expect(context.commit).not.toHaveBeenCalledWith("addDocumentToFoldedFolder");
             expect(context.commit).toHaveBeenCalledWith("addJustCreatedItemToFolderContent", item);
         });
         it("not displays the created item when it is created in a collapsed folder", async () => {
             const created_item_reference = { id: 66 };
-            addNewDocument.and.returnValue(Promise.resolve(created_item_reference));
+            addNewEmpty.and.returnValue(Promise.resolve(created_item_reference));
 
-            const item = { id: 66, title: "whatever" };
+            const item = { id: 66, title: "whatever", type: "empty" };
             getItem.and.returnValue(Promise.resolve(item));
 
             const current_folder = { id: 30 };
             const collapsed_folder_of_created_item = { id: 10, parent_id: 30, is_expanded: false };
 
-            await createNewItem(context, [
-                ["title", "", "empty", 2],
-                collapsed_folder_of_created_item,
-                current_folder
-            ]);
+            await createNewItem(context, [item, collapsed_folder_of_created_item, current_folder]);
             expect(context.commit).toHaveBeenCalledWith("addDocumentToFoldedFolder", [
                 collapsed_folder_of_created_item,
                 item,
@@ -539,19 +533,15 @@ describe("Store actions", () => {
         });
         it("displays the created item when it is created in a expanded folder which is not the same as the current folder", async () => {
             const created_item_reference = { id: 66 };
-            addNewDocument.and.returnValue(Promise.resolve(created_item_reference));
+            addNewEmpty.and.returnValue(Promise.resolve(created_item_reference));
 
-            const item = { id: 66, title: "whatever" };
+            const item = { id: 66, title: "whatever", type: "empty" };
             getItem.and.returnValue(Promise.resolve(item));
 
             const current_folder = { id: 18 };
             const collapsed_folder_of_created_item = { id: 10, parent_id: 30, is_expanded: true };
 
-            await createNewItem(context, [
-                ["title", "", "empty", 2],
-                collapsed_folder_of_created_item,
-                current_folder
-            ]);
+            await createNewItem(context, [item, collapsed_folder_of_created_item, current_folder]);
             expect(context.commit).not.toHaveBeenCalledWith("addDocumentToFoldedFolder");
             expect(context.commit).toHaveBeenCalledWith("addJustCreatedItemToFolderContent", item);
         });
