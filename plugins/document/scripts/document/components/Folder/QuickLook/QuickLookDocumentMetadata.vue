@@ -68,7 +68,7 @@
     </section>
 </template>
 <script>
-import prettyBytes from "pretty-bytes";
+import prettyBytes from "pretty-bytes-es5";
 import { mapState } from "vuex";
 import {
     formatDateUsingPreferredUserFormat,
