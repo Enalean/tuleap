@@ -28,6 +28,7 @@ use Tuleap\Tus\TusFinisherDataStore;
 use Tuleap\Tus\TusLocker;
 use Tuleap\Tus\TusTerminaterDataStore;
 use Tuleap\Tus\TusWriter;
+use Tuleap\Upload\FileBeingUploadedLocker;
 use Tuleap\Upload\FileBeingUploadedWriter;
 
 final class VersionDataStore implements TusDataStore
@@ -48,17 +49,23 @@ final class VersionDataStore implements TusDataStore
      * @var VersionUploadCanceler
      */
     private $version_upload_canceler;
+    /**
+     * @var FileBeingUploadedLocker
+     */
+    private $version_being_uploaded_locker;
 
     public function __construct(
         VersionBeingUploadedInformationProvider $version_being_uploaded_information_provider,
         FileBeingUploadedWriter $version_being_uploaded_writer,
         VersionUploadFinisher $version_upload_finisher,
-        VersionUploadCanceler $version_upload_canceler
+        VersionUploadCanceler $version_upload_canceler,
+        FileBeingUploadedLocker $version_being_uploaded_locker
     ) {
         $this->version_being_uploaded_information_provider = $version_being_uploaded_information_provider;
         $this->version_being_uploaded_writer               = $version_being_uploaded_writer;
         $this->version_upload_finisher                     = $version_upload_finisher;
         $this->version_upload_canceler                     = $version_upload_canceler;
+        $this->version_being_uploaded_locker               = $version_being_uploaded_locker;
     }
 
     public function getFileInformationProvider() : TusFileInformationProvider
@@ -83,6 +90,6 @@ final class VersionDataStore implements TusDataStore
 
     public function getLocker() : ?TusLocker
     {
-        return null;
+        return $this->version_being_uploaded_locker;
     }
 }

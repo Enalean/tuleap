@@ -56,7 +56,6 @@ use Tuleap\Docman\Upload\Version\VersionUploadCanceler;
 use Tuleap\Docman\Upload\Version\VersionUploadCleaner;
 use Tuleap\Docman\Upload\Version\VersionUploadFinisher;
 use Tuleap\Docman\Upload\Version\VersionUploadPathAllocator;
-use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Layout\PaginationPresenter;
 use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;
@@ -66,7 +65,7 @@ use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupFormatter;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupRetriever;
 use Tuleap\Request\CollectRoutesEvent;
-use Tuleap\Tus\TusServer;
+use Tuleap\Upload\FileBeingUploadedLocker;
 use Tuleap\Upload\FileBeingUploadedWriter;
 use Tuleap\Upload\FileUploadController;
 use Tuleap\Widget\Event\GetPublicAreas;
@@ -1296,7 +1295,7 @@ class DocmanPlugin extends Plugin
                     $path_allocator,
                     DBFactory::getMainTuleapDBConnection()
                 ),
-                new \Tuleap\Upload\FileBeingUploadedLocker(
+                new FileBeingUploadedLocker(
                     $path_allocator
                 ),
                 new \Tuleap\Docman\Upload\Document\DocumentUploadFinisher(
@@ -1352,7 +1351,8 @@ class DocmanPlugin extends Plugin
                     new DocmanItemsEventAdder($event_manager),
                     ProjectManager::instance()
                 ),
-                new VersionUploadCanceler($path_allocator, $version_to_upload_dao)
+                new VersionUploadCanceler($path_allocator, $version_to_upload_dao),
+                new FileBeingUploadedLocker($path_allocator)
             )
         );
     }
