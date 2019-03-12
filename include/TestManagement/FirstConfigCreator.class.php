@@ -143,11 +143,7 @@ class FirstConfigCreator
                 # Tracker using this shortname is from TrackerEngine v3
                 $GLOBALS['Response']->addFeedback(
                     Feedback::WARN,
-                    $GLOBALS['Language']->getText(
-                        'plugin_testmanagement_first_config',
-                        'tracker_engine_version_error',
-                        $tracker_itemname
-                    )
+                    sprintf(dgettext('tuleap-testmanagement', 'We tried to configure Test Management for you but an existing tracker (%1$s) is using Tracker Engine v3 and prevented it.'), $tracker_itemname)
                 );
             }
         } else {
@@ -161,10 +157,7 @@ class FirstConfigCreator
     {
         $GLOBALS['Response']->addFeedback(
             Feedback::INFO,
-            $GLOBALS['Language']->getText(
-                'plugin_testmanagement_first_config',
-                'created'
-            )
+            dgettext('tuleap-testmanagement', 'We configured Test Management for you. Enjoy!')
         );
     }
 
@@ -177,10 +170,7 @@ class FirstConfigCreator
         if (! $tracker) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::WARN,
-                $GLOBALS['Language']->getText(
-                    'plugin_testmanagement_first_config',
-                    'internal_error'
-                )
+                dgettext('tuleap-testmanagement', 'We tried to configure Test Management for you but an internal error prevented it.')
             );
         }
 

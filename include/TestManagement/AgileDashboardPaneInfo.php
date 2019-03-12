@@ -54,7 +54,7 @@ class AgileDashboardPaneInfo extends PaneInfo
     /** @see PaneInfo::getTitle */
     public function getTitle()
     {
-        return $GLOBALS['Language']->getText('plugin_testmanagement', 'plugin_tab_title');
+        return dgettext('tuleap-testmanagement', 'Test Campaigns');
     }
 
     public function getUri()

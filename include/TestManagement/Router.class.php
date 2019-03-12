@@ -223,7 +223,7 @@ class Router {
      */
     private function getHeaderTitle($action_name) {
         $header_title = array(
-            'index' => $GLOBALS['Language']->getText('plugin_testmanagement', 'service_lbl_key'),
+            'index' => dgettext('tuleap-testmanagement', 'Test Management'),
             'admin' => $GLOBALS['Language']->getText('global', 'Admin'),
             'misconfiguration' => dgettext(
                 'tuleap-testmanagement',
@@ -268,7 +268,7 @@ class Router {
                 $GLOBALS['Language']->getText(
                     'project_service',
                     'service_not_used',
-                    $GLOBALS['Language']->getText('plugin_testmanagement', 'service_lbl_key'))
+                    dgettext('tuleap-testmanagement', 'Test Management'))
             );
         }
 

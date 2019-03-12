@@ -226,7 +226,7 @@ class testmanagementPlugin extends Plugin
             return;
         }
 
-        $link_label = $GLOBALS['Language']->getText('plugin_testmanagement', 'references_graph_url');
+        $link_label = dgettext('tuleap-testmanagement', 'See graph of dependencies');
 
         $url = $this->getPluginPath() . '/?'
             . http_build_query(['group_id' =>$tracker->getGroupId()])

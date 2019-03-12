@@ -107,11 +107,11 @@ class AdminPresenter
             );
 
         $this->title       = $GLOBALS['Language']->getText('global', 'Administration');
-        $this->campaigns   = $GLOBALS['Language']->getText('plugin_testmanagement', 'admin_campaign_tracker');
-        $this->definitions = $GLOBALS['Language']->getText('plugin_testmanagement', 'admin_definition_tracker');
-        $this->executions  = $GLOBALS['Language']->getText('plugin_testmanagement', 'admin_execution_tracker');
-        $this->issues      = $GLOBALS['Language']->getText('plugin_testmanagement', 'admin_issue_tracker');
+        $this->campaigns   = dgettext('tuleap-testmanagement', 'Test Campaigns Tracker');
+        $this->definitions = dgettext('tuleap-testmanagement', 'Test Definitions Tracker');
+        $this->executions  = dgettext('tuleap-testmanagement', 'Test Executions Tracker');
+        $this->issues      = dgettext('tuleap-testmanagement', 'Issue Tracker');
         $this->submit      = $GLOBALS['Language']->getText('global', 'btn_submit');
-        $this->placeholder = $GLOBALS['Language']->getText('plugin_testmanagement', 'admin_tracker_placeholder');
+        $this->placeholder = dgettext('tuleap-testmanagement', 'Enter the tracker id...');
     }
 }

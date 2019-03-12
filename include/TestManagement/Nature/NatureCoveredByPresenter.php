@@ -31,8 +31,8 @@ class NatureCoveredByPresenter extends NaturePresenter
     {
         parent::__construct(
             self::NATURE_COVERED_BY,
-            $GLOBALS['Language']->getText('plugin_testmanagement', '_covered_by_forward'),
-            $GLOBALS['Language']->getText('plugin_testmanagement', '_covered_by_reverse'),
+            dgettext('tuleap-testmanagement', 'Covered by'),
+            dgettext('tuleap-testmanagement', 'Covers'),
             true
         );
 

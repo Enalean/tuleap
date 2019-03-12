@@ -138,11 +138,7 @@ class AdminController extends TestManagementController
         if (! $is_valid_project_tracker_id) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::WARN,
-                $GLOBALS['Language']->getText(
-                    'plugin_testmanagement',
-                    'invalid_tracker_id_for_project',
-                    $submitted_id
-                )
+                sprintf(dgettext('tuleap-testmanagement', 'Invalid tracker id %1$s for this project'), $submitted_id)
             );
         }
 
