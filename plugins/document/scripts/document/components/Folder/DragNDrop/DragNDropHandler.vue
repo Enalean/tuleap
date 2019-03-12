@@ -52,6 +52,7 @@ export default {
             ALREADY_EXISTS_ERROR: "already_exists",
             EDITION_LOCKED: "edition_locked",
             DOCUMENT_NEEDS_APPROVAL: "document_needs_approval",
+            DROPPED_ITEM_IS_NOT_A_FILE: "dropped_item_is_not_a_file",
             highlighted_item_id: null
         };
     },
@@ -96,6 +97,11 @@ export default {
             if (this.error_modal_shown === this.DOCUMENT_NEEDS_APPROVAL) {
                 return () =>
                     import(/* webpackChunkName: "document-needs-approval-error-modal" */ "./DocumentNeedsApprovalErrorModal.vue");
+            }
+
+            if (this.error_modal_shown === this.DROPPED_ITEM_IS_NOT_A_FILE) {
+                return () =>
+                    import(/* webpackChunkName: "document-droppped-item-is-folder-error" */ "./DroppedItemIsAFolderErrorModal.vue");
             }
 
             return () =>
@@ -145,7 +151,6 @@ export default {
             if (this.isDragNDropingOnAModal(event)) {
                 return;
             }
-
             const is_uploading_in_subfolder = this.highlighted_item_id !== null;
             const dropzone_item = this.getDropZoneItem();
             this.clearHighlight();
@@ -153,12 +158,17 @@ export default {
             if (!this.user_can_dragndrop_in_current_folder || !dropzone_item.user_can_write) {
                 return;
             }
-            if (dropzone_item.type === TYPE_FILE) {
-                this.uploadNewFileVersion(event, dropzone_item);
+
+            if (!event.dataTransfer.files || event.dataTransfer.files.length === 0) {
+                this.error_modal_shown = this.DROPPED_ITEM_IS_NOT_A_FILE;
+                this.error_modal_reasons.push({ nb_dropped_files: 1 });
 
                 return;
             }
-            if (!event.dataTransfer.files) {
+
+            if (dropzone_item.type === TYPE_FILE) {
+                await this.uploadNewFileVersion(event, dropzone_item);
+
                 return;
             }
 
@@ -170,6 +180,14 @@ export default {
             }
 
             for (const file of files) {
+                const is_item_a_file = await this.isDroppedItemAFile(file);
+                if (!is_item_a_file) {
+                    this.error_modal_shown = this.DROPPED_ITEM_IS_NOT_A_FILE;
+                    this.error_modal_reasons.push({ nb_dropped_files: files.length });
+
+                    return;
+                }
+
                 if (file.size > this.max_size_upload) {
                     this.error_modal_shown = this.MAX_SIZE_ERROR;
                     return;
@@ -312,6 +330,14 @@ export default {
             const files = event.dataTransfer.files;
             const file = files[0];
 
+            const is_item_a_file = await this.isDroppedItemAFile(file);
+            if (!is_item_a_file) {
+                this.error_modal_shown = this.DROPPED_ITEM_IS_NOT_A_FILE;
+                this.error_modal_reasons.push({ nb_dropped_files: 1 });
+
+                return;
+            }
+
             if (file.size > this.max_size_upload) {
                 this.error_modal_shown = this.MAX_SIZE_ERROR;
                 return;
@@ -323,6 +349,29 @@ export default {
                 this.error_modal_shown = this.CREATION_ERROR;
                 this.error_modal_reasons.push({ filename: file.name, message: error });
             }
+        },
+        async isDroppedItemAFile(file) {
+            const read_file_operation = new Promise(resolve => {
+                const reader = new FileReader();
+
+                reader.onload = () => {
+                    resolve(true);
+                };
+
+                reader.onerror = () => {
+                    resolve(false);
+                };
+
+                try {
+                    reader.readAsText(file);
+                } catch (error) {
+                    resolve(false);
+                }
+            });
+
+            const is_a_file = await read_file_operation;
+
+            return is_a_file;
         }
     }
 };

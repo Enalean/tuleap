@@ -27,9 +27,20 @@ import Handler from "./DragNDropHandler.vue";
 describe("DragNDropHandler", () => {
     let main, store, wrapper, component_options, store_options, drop_event;
 
-    const file1 = { name: "file.txt", type: "text", size: 1000000 };
-    const file2 = { name: "file2.txt", type: "text", size: 1000000 };
-    const file3 = { name: "file3.txt", type: "text", size: 1000000 };
+    const file1 = new File([new Blob(["Some text in a file"])], "file.txt", {
+        type: "plain/text",
+        endings: "native"
+    });
+
+    const file2 = new File([new Blob(["Some text in a file"])], "file2.txt", {
+        type: "plain/text",
+        endings: "native"
+    });
+
+    const file3 = new File([new Blob(["Some text in a file"])], "file3.txt", {
+        type: "plain/text",
+        endings: "native"
+    });
 
     beforeEach(() => {
         store_options = {
@@ -78,29 +89,29 @@ describe("DragNDropHandler", () => {
 
     describe("Errors handling", () => {
         describe("new file upload", () => {
-            it("Shows an error modal if the number of files dropped exceeds the allowed size limit", () => {
+            it("Shows an error modal if the number of files dropped exceeds the allowed size limit", async () => {
                 drop_event.dataTransfer.files.push(file1, file2, file3);
 
                 store.state.max_files_dragndrop = 2;
 
-                wrapper.vm.ondrop(drop_event);
+                await wrapper.vm.ondrop(drop_event);
 
                 expect(wrapper.vm.error_modal_shown).toEqual(wrapper.vm.MAX_FILES_ERROR);
                 expect(store.dispatch).not.toHaveBeenCalledWith("addNewUploadFile");
             });
 
-            it("Shows an error modal if the file size exceeds the allowed size limit", () => {
+            it("Shows an error modal if the file size exceeds the allowed size limit", async () => {
                 drop_event.dataTransfer.files.push(file1);
 
-                store.state.max_size_upload = 1000;
+                store.state.max_size_upload = 0;
 
-                wrapper.vm.ondrop(drop_event);
+                await wrapper.vm.ondrop(drop_event);
 
                 expect(wrapper.vm.error_modal_shown).toEqual(wrapper.vm.MAX_SIZE_ERROR);
                 expect(store.dispatch).not.toHaveBeenCalledWith("addNewUploadFile");
             });
 
-            it("Shows an error modal if a file with the same name already exists in the current folder", () => {
+            it("Shows an error modal if a file with the same name already exists in the current folder", async () => {
                 drop_event.dataTransfer.files.push(file1);
 
                 store.state.folder_content.push({
@@ -110,18 +121,18 @@ describe("DragNDropHandler", () => {
                     type: TYPE_FILE
                 });
 
-                wrapper.vm.ondrop(drop_event);
+                await wrapper.vm.ondrop(drop_event);
 
                 expect(wrapper.vm.error_modal_shown).toEqual(wrapper.vm.ALREADY_EXISTS_ERROR);
                 expect(store.dispatch).not.toHaveBeenCalledWith("addNewUploadFile");
             });
 
-            it("Shows an error modal if a file cannot be uploaded", () => {
+            it("Shows an error modal if a file cannot be uploaded", async () => {
                 drop_event.dataTransfer.files.push(file1);
 
                 store.dispatch.and.throwError("it cannot");
 
-                wrapper.vm.ondrop(drop_event);
+                await wrapper.vm.ondrop(drop_event);
 
                 expect(store.dispatch).toHaveBeenCalledWith("addNewUploadFile", [
                     file1,
@@ -132,10 +143,24 @@ describe("DragNDropHandler", () => {
                 ]);
                 expect(wrapper.vm.error_modal_shown).toEqual(wrapper.vm.CREATION_ERROR);
             });
+
+            it("Shows an error if there is no file in the list", async () => {
+                await wrapper.vm.ondrop(drop_event);
+
+                expect(wrapper.vm.error_modal_shown).toEqual(wrapper.vm.DROPPED_ITEM_IS_NOT_A_FILE);
+            });
+
+            it("Shows an error if there item is not a file", async () => {
+                drop_event.dataTransfer.files.push("Some text I've just selected somewhere");
+
+                await wrapper.vm.ondrop(drop_event);
+
+                expect(wrapper.vm.error_modal_shown).toEqual(wrapper.vm.DROPPED_ITEM_IS_NOT_A_FILE);
+            });
         });
 
         describe("New version upload", () => {
-            it("Shows an error modal if a document is locked by someone else", () => {
+            it("Shows an error modal if a document is locked by someone else", async () => {
                 drop_event.dataTransfer.files.push(file1);
 
                 const target_file = {
@@ -155,13 +180,13 @@ describe("DragNDropHandler", () => {
                 store.state.folder_content.push(target_file);
                 wrapper.setData({ highlighted_item_id: target_file.id });
 
-                wrapper.vm.ondrop(drop_event);
+                await wrapper.vm.ondrop(drop_event);
 
                 expect(store.dispatch).not.toHaveBeenCalledWith("updateFile");
                 expect(wrapper.vm.error_modal_shown).toEqual(wrapper.vm.EDITION_LOCKED);
             });
 
-            it("Shows an error modal if a document is requested to be approved", () => {
+            it("Shows an error modal if a document is requested to be approved", async () => {
                 drop_event.dataTransfer.files.push(file1);
 
                 const target_file = {
@@ -178,13 +203,13 @@ describe("DragNDropHandler", () => {
                 store.state.folder_content.push(target_file);
                 wrapper.setData({ highlighted_item_id: target_file.id });
 
-                wrapper.vm.ondrop(drop_event);
+                await wrapper.vm.ondrop(drop_event);
 
                 expect(store.dispatch).not.toHaveBeenCalledWith("updateFile");
                 expect(wrapper.vm.error_modal_shown).toEqual(wrapper.vm.DOCUMENT_NEEDS_APPROVAL);
             });
 
-            it("Shows an error modal if the new version is too big", () => {
+            it("Shows an error modal if the new version is too big", async () => {
                 drop_event.dataTransfer.files.push(file1);
 
                 const target_file = {
@@ -196,18 +221,18 @@ describe("DragNDropHandler", () => {
                     approval_table: null
                 };
 
-                store.state.max_size_upload = 1000;
+                store.state.max_size_upload = 0;
                 store.state.folder_content.push(target_file);
 
                 wrapper.setData({ highlighted_item_id: target_file.id });
 
-                wrapper.vm.ondrop(drop_event);
+                await wrapper.vm.ondrop(drop_event);
 
                 expect(store.dispatch).not.toHaveBeenCalledWith("updateFile");
                 expect(wrapper.vm.error_modal_shown).toEqual(wrapper.vm.MAX_SIZE_ERROR);
             });
 
-            it("Shows an error modal if the new version can't be created", () => {
+            it("Shows an error modal if the new version can't be created", async () => {
                 drop_event.dataTransfer.files.push(file1);
 
                 const target_file = {
@@ -224,7 +249,7 @@ describe("DragNDropHandler", () => {
 
                 wrapper.setData({ highlighted_item_id: target_file.id });
 
-                wrapper.vm.ondrop(drop_event);
+                await wrapper.vm.ondrop(drop_event);
 
                 expect(store.dispatch).not.toHaveBeenCalledWith("updateFile");
                 expect(wrapper.vm.error_modal_shown).toEqual(wrapper.vm.CREATION_ERROR);
@@ -289,10 +314,10 @@ describe("DragNDropHandler", () => {
     });
 
     describe("Drop one file", () => {
-        it("Should upload a new file if it is dropped in a folder", () => {
+        it("Should upload a new file if it is dropped in a folder", async () => {
             drop_event.dataTransfer.files.push(file1);
 
-            wrapper.vm.ondrop(drop_event);
+            await wrapper.vm.ondrop(drop_event);
 
             expect(store.dispatch).toHaveBeenCalledWith("addNewUploadFile", [
                 file1,
@@ -303,7 +328,7 @@ describe("DragNDropHandler", () => {
             ]);
         });
 
-        it("Should upload a new version if it is dropped on a file", () => {
+        it("Should upload a new version if it is dropped on a file", async () => {
             drop_event.dataTransfer.files.push(file1);
 
             const target_file = {
@@ -325,7 +350,7 @@ describe("DragNDropHandler", () => {
             store.state.folder_content.push(target_file);
             wrapper.setData({ highlighted_item_id: target_file.id });
 
-            wrapper.vm.ondrop(drop_event);
+            await wrapper.vm.ondrop(drop_event);
 
             expect(store.dispatch).not.toHaveBeenCalledWith("addNewUploadFile");
             expect(store.dispatch).toHaveBeenCalledWith("updateFile", [target_file, file1]);
@@ -333,7 +358,7 @@ describe("DragNDropHandler", () => {
     });
 
     describe("It shouldn't upload", () => {
-        it("If the user hasn't the right to create a new file in the target folder", () => {
+        it("If the user hasn't the right to create a new file in the target folder", async () => {
             drop_event.dataTransfer.files.push(file1);
 
             const target_subfolder = {
@@ -348,12 +373,12 @@ describe("DragNDropHandler", () => {
 
             wrapper.setData({ highlighted_item_id: target_subfolder.id });
 
-            wrapper.vm.ondrop(drop_event);
+            await wrapper.vm.ondrop(drop_event);
 
-            expect(store.dispatch).not.toHaveBeenCalledWith("addNewUploadFile");
+            expect(store.dispatch).not.toHaveBeenCalledWith("addNewUploadFile", jasmine.any(Array));
         });
 
-        it("If the user hasn't the right to create a new version of the target file", () => {
+        it("If the user hasn't the right to create a new version of the target file", async () => {
             drop_event.dataTransfer.files.push(file1);
 
             const target_file = {
@@ -369,37 +394,29 @@ describe("DragNDropHandler", () => {
 
             wrapper.setData({ highlighted_item_id: target_file.id });
 
-            wrapper.vm.ondrop(drop_event);
+            await wrapper.vm.ondrop(drop_event);
 
-            expect(store.dispatch).not.toHaveBeenCalledWith("updateFile");
+            expect(store.dispatch).not.toHaveBeenCalledWith("updateFile", jasmine.any(Array));
         });
 
-        it("If the dropped item isn't a file", () => {
-            drop_event.dataTransfer.files.push("some text I've just selected somewhere");
-
-            wrapper.vm.ondrop(drop_event);
-
-            expect(store.dispatch).not.toHaveBeenCalledWith("addNewUploadFile");
-        });
-
-        it("If the user drops his file in a modal", () => {
+        it("If the user drops his file in a modal", async () => {
             drop_event.dataTransfer.files.push(file1);
 
             wrapper.vm.isDragNDropingOnAModal.and.returnValue(true);
 
-            wrapper.vm.ondrop(drop_event);
+            await wrapper.vm.ondrop(drop_event);
 
-            expect(store.dispatch).not.toHaveBeenCalledWith("addNewUploadFile");
+            expect(store.dispatch).not.toHaveBeenCalledWith("addNewUploadFile", jasmine.any(Array));
         });
 
-        it("If the user hasn't the right to write in the current folder", () => {
+        it("If the user hasn't the right to write in the current folder", async () => {
             drop_event.dataTransfer.files.push(file1);
 
             store.getters.user_can_dragndrop = false;
 
-            wrapper.vm.ondrop(drop_event);
+            await wrapper.vm.ondrop(drop_event);
 
-            expect(store.dispatch).not.toHaveBeenCalledWith("addNewUploadFile");
+            expect(store.dispatch).not.toHaveBeenCalledWith("addNewUploadFile", jasmine.any(Array));
         });
     });
 });
