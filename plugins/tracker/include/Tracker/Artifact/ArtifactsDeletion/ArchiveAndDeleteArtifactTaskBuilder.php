@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -40,6 +40,8 @@ use Tracker_Workflow_Trigger_RulesManager;
 use Tracker_Workflow_Trigger_RulesProcessor;
 use TrackerFactory;
 use TrackerXmlExport;
+use Tuleap\DB\DBConnection;
+use Tuleap\DB\DBFactory;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Artifact\ArtifactWithTrackerStructureExporter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
@@ -107,6 +109,7 @@ class ArchiveAndDeleteArtifactTaskBuilder
                 new PendingArtifactRemovalDao()
             ),
             $event_manager,
+            DBFactory::getMainTuleapDBConnection(),
             $logger
         );
     }
