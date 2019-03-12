@@ -55,10 +55,6 @@ class RemovedLinkCollection implements ICollectChangeOfLinksBetweenTwoChangesets
             return '';
         }
 
-        return $GLOBALS['Language']->getText(
-            'plugin_tracker',
-            'artlink_removed',
-            $this->formatter->format($this->removed, $user, $format, $ignore_perms)
-        );
+        return sprintf(dgettext('tuleap-tracker', 'Removed: %s'), $this->formatter->format($this->removed, $user, $format, $ignore_perms));
     }
 }

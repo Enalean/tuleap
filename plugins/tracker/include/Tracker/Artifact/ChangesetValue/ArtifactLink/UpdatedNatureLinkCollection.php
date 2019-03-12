@@ -1,6 +1,6 @@
 <?php
-/*
- * Copyright (C) Enalean SAS, 2016. All Rights Reserved.
+/**
+ * Copyright (C) Enalean SAS, 2016 - Present. All Rights Reserved.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -70,22 +70,14 @@ class UpdatedNatureLinkCollection implements ICollectChangeOfLinksBetweenTwoChan
     {
         $source = $this->source_nature->forward_label;
         if (! $source) {
-            $source = $GLOBALS['Language']->getText('plugin_tracker', 'artlink_no_nature');
+            $source = dgettext('tuleap-tracker', 'no type');
         }
 
         $target = $this->target_nature->forward_label;
         if (! $target) {
-            $target = $GLOBALS['Language']->getText('plugin_tracker', 'artlink_no_nature');
+            $target = dgettext('tuleap-tracker', 'no type');
         }
 
-        return $GLOBALS['Language']->getText(
-            'plugin_tracker',
-            'artlink_updated',
-            array(
-                $source,
-                $target,
-                $this->formatter->format($this->changed, $user, $format, $ignore_perms)
-            )
-        );
+        return sprintf(dgettext('tuleap-tracker', 'Changed type from %s to %s: %s'), $source, $target, $this->formatter->format($this->changed, $user, $format, $ignore_perms));
     }
 }

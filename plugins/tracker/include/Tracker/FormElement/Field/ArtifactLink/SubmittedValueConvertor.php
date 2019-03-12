@@ -193,7 +193,8 @@ class SubmittedValueConvertor {
         }
     }
 
-    private function extractNatureFromSubmittedValue(array $submitted_value, $artifact_id) {
+    private function extractNatureFromSubmittedValue(array $submitted_value, $artifact_id) : string
+    {
         if (isset($submitted_value['natures'])) {
             $natures = $submitted_value['natures'];
             if (isset($natures[$artifact_id])) {
@@ -201,7 +202,7 @@ class SubmittedValueConvertor {
             }
         }
 
-        return null;
+        return '';
     }
 
     private function extractNewValuesFromSubmittedValue(array $submitted_value) {

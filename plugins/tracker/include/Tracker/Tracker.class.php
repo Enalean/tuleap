@@ -122,6 +122,8 @@ class Tracker implements Tracker_Dispatchable_Interface
     public $workflow;
     public $webhooks = [];
 
+    private $is_project_allowed_to_use_nature;
+
     public function __construct(
         $id,
         $group_id,
@@ -906,9 +908,12 @@ class Tracker implements Tracker_Dispatchable_Interface
      * @return boolean
      */
     public function isProjectAllowedToUseNature() {
-        $artifact_links_usage_updater = new ArtifactLinksUsageUpdater(new ArtifactLinksUsageDao());
+        if ($this->is_project_allowed_to_use_nature === null) {
+            $artifact_links_usage_updater = new ArtifactLinksUsageUpdater(new ArtifactLinksUsageDao());
 
-        return $artifact_links_usage_updater->isProjectAllowedToUseArtifactLinkTypes($this->getProject());
+            $this->is_project_allowed_to_use_nature = $artifact_links_usage_updater->isProjectAllowedToUseArtifactLinkTypes($this->getProject());
+        }
+        return $this->is_project_allowed_to_use_nature;
     }
 
     /**

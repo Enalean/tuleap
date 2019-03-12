@@ -72,6 +72,14 @@ msgstr "Ajouter une notification"
 msgid "Add webhook"
 msgstr "Ajouter un Webhook"
 
+#, php-format
+msgid "Added %s: %s"
+msgstr "Ajout de %s : %s"
+
+#, php-format
+msgid "Added: %s"
+msgstr "Ajout : %s"
+
 msgid ""
 "After artifact edition, all the disabled types used will be cleared without "
 "removing the existing link."
@@ -214,6 +222,10 @@ msgid "Cannot update permissions of transition with id '%d'"
 msgstr ""
 "Impossible de mettre à jour les permissions de la transition ayant pour id "
 "'%d'"
+
+#, php-format
+msgid "Changed type from %s to %s: %s"
+msgstr "Changement de nature de %s à %s : %s"
 
 msgid "Check permissions?"
 msgstr "Vérifier les permissions ?"
@@ -447,6 +459,10 @@ msgstr "Prévisualisation"
 
 msgid "Remove"
 msgstr "Enlever"
+
+#, php-format
+msgid "Removed: %s"
+msgstr "Suppression : %s"
 
 msgid "Renderer id"
 msgstr "Id du rendu"
@@ -1113,3 +1129,9 @@ msgid ""
 msgstr ""
 "modifié. (Mais le texte étant trop gros, il nous est impossible de calculer "
 "les différences dans un temps raisonnable.)"
+
+msgid "cleared"
+msgstr "vidé"
+
+msgid "no type"
+msgstr "sans nature"

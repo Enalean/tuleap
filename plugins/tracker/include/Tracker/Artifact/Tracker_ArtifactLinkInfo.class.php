@@ -1,32 +1,36 @@
 <?php
 /**
+ * Copyright Enalean (c) 2014 - Present. All rights reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright Enalean (c) 2014 - 2016. All rights reserved.
  *
  * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_ArtifactLinkInfo {
-
+class Tracker_ArtifactLinkInfo
+{
     protected $artifact_id;
     protected $keyword;
     protected $group_id;
     protected $tracker_id;
     protected $last_changeset_id;
     private   $nature;
+    /**
+     * @var Tracker_Artifact
+     */
+    private   $artifact;
 
     /**
      * @param integer $artifact_id
@@ -44,14 +48,8 @@ class Tracker_ArtifactLinkInfo {
         $this->nature            = $nature;
     }
 
-    /**
-     * Instanciate a new object based on a artifact
-     *
-     * @param Tracker_Artifact $artifact
-     *
-     * @return Tracker_ArtifactLinkInfo
-     */
-    public static function buildFromArtifact(Tracker_Artifact $artifact, $nature) {
+    public static function buildFromArtifact(Tracker_Artifact $artifact, string $nature): self
+    {
         $tracker = $artifact->getTracker();
 
         $changeset_id   = 0;
@@ -60,14 +58,16 @@ class Tracker_ArtifactLinkInfo {
             $changeset_id = $last_changeset->getId();
         }
 
-        return new Tracker_ArtifactLinkInfo(
-            $artifact->getId(),
-            $tracker->getItemName(),
-            $tracker->getGroupId(),
-            $tracker->getId(),
-            $changeset_id,
-            $nature
-        );
+        return (
+            new Tracker_ArtifactLinkInfo(
+                $artifact->getId(),
+                $tracker->getItemName(),
+                $tracker->getGroupId(),
+                $tracker->getId(),
+                $changeset_id,
+                $nature
+            )
+        )->setArtifact($artifact);
     }
 
     /**
@@ -162,11 +162,19 @@ class Tracker_ArtifactLinkInfo {
         return $artifact->userCanView($user);
     }
 
-    /**
-     * @return Tracker_Artifact
-     */
-    public function getArtifact() {
-        return Tracker_ArtifactFactory::instance()->getArtifactById($this->artifact_id);
+    public function getArtifact() : Tracker_Artifact
+    {
+        if (! $this->artifact) {
+            $this->artifact = Tracker_ArtifactFactory::instance()->getArtifactById($this->artifact_id);
+        }
+        return $this->artifact;
+    }
+
+    private function setArtifact(Tracker_Artifact $artifact) : self
+    {
+        $this->artifact    = $artifact;
+        $this->artifact_id = $artifact->getId();
+        return $this;
     }
 
     public function __toString() {
