@@ -114,6 +114,12 @@ msgstr "Documents"
 msgid "Download"
 msgstr "Télécharger"
 
+msgid ""
+"Drag and drop is not supported under IE11. Please use a more recent browser."
+msgstr ""
+"Le glisser déposer n'est pas supporté pour IE11. Merci d'utiliser un "
+"navigateur plus récent. "
+
 msgid "Drop one file to upload it to %(folder)s (max size is %(size)s)."
 msgid_plural ""
 "Drop up to %(nb_files)s files to upload them to %(folder)s (max size is "
