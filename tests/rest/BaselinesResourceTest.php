@@ -44,7 +44,7 @@ class BaselinesResourceTest extends RestBase
 
     public function testPost()
     {
-        $response      = $this->getResponseByName(
+        $response = $this->getResponseByName(
             self::TEST_USER_NAME,
             $this->client->post(
                 'baselines',
@@ -57,6 +57,7 @@ class BaselinesResourceTest extends RestBase
                 )
             )
         );
+        $this->assertEquals(201, $response->getStatusCode());
         $json_response = $response->json();
 
         $this->assertNotNull($json_response['id']);

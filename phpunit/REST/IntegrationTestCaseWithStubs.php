@@ -69,9 +69,6 @@ abstract class IntegrationTestCaseWithStubs extends TestCase
     /** @var ProjectRepositoryStub */
     protected $project_repository;
 
-    /** @var PermissionsStub */
-    protected $permissions;
-
     /** @var CurrentUserProviderStub */
     protected $current_user_provider;
 
@@ -99,7 +96,6 @@ abstract class IntegrationTestCaseWithStubs extends TestCase
         $this->baseline_artifact_repository = new BaselineArtifactRepositoryStub();
         $this->baseline_repository          = new BaselineRepositoryStub();
         $this->project_repository           = new ProjectRepositoryStub();
-        $this->permissions                  = new PermissionsStub();
         $this->current_user_provider        = new CurrentUserProviderStub();
         $this->clock                        = new FrozenClock();
 
@@ -109,7 +105,6 @@ abstract class IntegrationTestCaseWithStubs extends TestCase
                     BaselineArtifactRepository::class => $this->baseline_artifact_repository,
                     BaselineRepository::class         => $this->baseline_repository,
                     ProjectRepository::class          => $this->project_repository,
-                    Permissions::class                => $this->permissions,
                     CurrentUserProvider::class        => $this->current_user_provider,
                     Clock::class                      => $this->clock,
                 ]

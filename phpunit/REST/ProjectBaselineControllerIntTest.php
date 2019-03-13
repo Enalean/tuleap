@@ -50,8 +50,6 @@ class ProjectBaselineControllerIntTest extends IntegrationTestCaseWithStubs
 
     public function testGet()
     {
-        $this->permissions->permitAll();
-
         $project = Mockery::mock(Project::class)
             ->shouldReceive('getID')
             ->andReturn(102)
@@ -88,8 +86,6 @@ class ProjectBaselineControllerIntTest extends IntegrationTestCaseWithStubs
 
     public function testGetReturnsPaginatedBaselines()
     {
-        $this->permissions->permitAll();
-
         $project = Mockery::mock(Project::class)
             ->shouldReceive('getID')
             ->andReturn(102)

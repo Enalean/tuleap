@@ -31,6 +31,7 @@ use Project;
 use Tuleap\Baseline\Baseline;
 use Tuleap\Baseline\BaselineArtifactRepository;
 use Tuleap\Baseline\BaselineRepository;
+use Tuleap\Baseline\NotAuthorizedException;
 use Tuleap\Baseline\TransientBaseline;
 use UserManager;
 
@@ -47,21 +48,39 @@ class BaselineRepositoryAdapter implements BaselineRepository
     /** @var BaselineArtifactRepository */
     private $baseline_artifact_repository;
 
+    /** @var AdapterPermissions */
+    private $adapter_permissions;
+
     public function __construct(
         EasyDB $db,
         UserManager $user_manager,
-        BaselineArtifactRepository $baseline_artifact_repository
+        BaselineArtifactRepository $baseline_artifact_repository,
+        AdapterPermissions $adapter_permissions
     ) {
         $this->db                           = $db;
         $this->user_manager                 = $user_manager;
         $this->baseline_artifact_repository = $baseline_artifact_repository;
+        $this->adapter_permissions          = $adapter_permissions;
     }
 
+    /**
+     * @throws NotAuthorizedException
+     */
     public function add(
         TransientBaseline $baseline,
         PFUser $current_user,
         DateTime $snapshot_date
     ): Baseline {
+
+        $project = $baseline->getProject();
+        if (! $this->adapter_permissions->canUserAdministrateBaselineOnProject($current_user, $project)) {
+            throw new NotAuthorizedException(
+                sprintf(
+                    dgettext('tuleap-baseline', "You're not allowed to add new baseline in project with id %u"),
+                    $project->getID()
+                )
+            );
+        }
 
         $id = (int) $this->db->insertReturnId(
             'plugin_baseline_baseline',
@@ -94,7 +113,13 @@ class BaselineRepositoryAdapter implements BaselineRepository
         if (count($rows) === 0) {
             return null;
         }
-        return $this->mapRow($current_user, $rows[0]);
+
+        $baseline = $this->mapRow($current_user, $rows[0]);
+
+        if (! $this->adapter_permissions->canUserReadBaselineOnProject($current_user, $baseline->getProject())) {
+            return null;
+        }
+        return $baseline;
     }
 
     /**
@@ -102,6 +127,10 @@ class BaselineRepositoryAdapter implements BaselineRepository
      */
     public function findByProject(PFUser $current_user, Project $project, int $page_size, int $baseline_offset): array
     {
+        if (! $this->adapter_permissions->canUserReadBaselineOnProject($current_user, $project)) {
+            return [];
+        }
+
         $rows = $this->db->safeQuery(
             'SELECT baseline.id, baseline.name, baseline.artifact_id, baseline.user_id, baseline.snapshot_date
             FROM plugin_baseline_baseline as baseline

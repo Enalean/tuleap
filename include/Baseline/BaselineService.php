@@ -28,9 +28,6 @@ use Project;
 
 class BaselineService
 {
-    /** @var Permissions */
-    private $permissions;
-
     /** @var BaselineRepository */
     private $baseline_repository;
 
@@ -41,12 +38,10 @@ class BaselineService
     private $clock;
 
     public function __construct(
-        Permissions $permissions,
         BaselineRepository $baseline_repository,
         CurrentUserProvider $current_user_provider,
         Clock $clock
     ) {
-        $this->permissions           = $permissions;
         $this->baseline_repository   = $baseline_repository;
         $this->current_user_provider = $current_user_provider;
         $this->clock                 = $clock;
@@ -57,7 +52,6 @@ class BaselineService
      */
     public function create(PFUser $current_user, TransientBaseline $baseline): Baseline
     {
-        $this->permissions->checkUserHasAdminRoleOn($current_user, $baseline->getProject());
         return $this->baseline_repository->add(
             $baseline,
             $this->current_user_provider->getUser(),
@@ -85,7 +79,6 @@ class BaselineService
         int $page_size,
         int $baseline_offset
     ): BaselinesPage {
-        $this->permissions->checkUserHasAdminRoleOn($current_user, $project);
         $baselines = $this->baseline_repository->findByProject($current_user, $project, $page_size, $baseline_offset);
         $count     = $this->baseline_repository->countByProject($project);
         return new BaselinesPage($baselines, $page_size, $baseline_offset, $count);

@@ -56,17 +56,22 @@ class BaselineRepositoryAdapterTest extends TestCase
     /** @var BaselineArtifactRepository|MockInterface */
     private $baseline_artifact_repository;
 
+    /** @var AdapterPermissions|MockInterface */
+    private $adapter_permissions;
+
     /** @before */
     public function createInstance()
     {
         $this->db                           = Mockery::mock(EasyDB::class);
         $this->user_manager                 = Mockery::mock(UserManager::class);
         $this->baseline_artifact_repository = Mockery::mock(BaselineArtifactRepository::class);
+        $this->adapter_permissions          = Mockery::mock(AdapterPermissions::class);
 
         $this->repository = new BaselineRepositoryAdapter(
             $this->db,
             $this->user_manager,
-            $this->baseline_artifact_repository
+            $this->baseline_artifact_repository,
+            $this->adapter_permissions
         );
     }
 
@@ -108,6 +113,10 @@ class BaselineRepositoryAdapterTest extends TestCase
                 ]
             );
 
+        $this->adapter_permissions
+            ->shouldReceive('canUserReadBaselineOnProject')
+            ->andReturn(true);
+
         $baseline = $this->repository->findById($this->current_user, 1);
 
         $expected_baseline = new Baseline(
@@ -126,6 +135,45 @@ class BaselineRepositoryAdapterTest extends TestCase
             ->shouldReceive('safeQuery')
             ->with(Mockery::type('string'), [1])
             ->andReturn([]);
+
+        $baseline = $this->repository->findById($this->current_user, 1);
+
+        $this->assertNull($baseline);
+    }
+
+    public function testFindByIdReturnsNullWhenGivenUserCannotReadBaselineOnProjetOfFoundBaseline()
+    {
+        $artifact = BaselineArtifactFactory::one()->build();
+        $this->baseline_artifact_repository
+            ->shouldReceive('findById')
+            ->with($this->current_user, 10)
+            ->andReturn($artifact);
+
+        $user = new PFUser();
+        $this->user_manager
+            ->shouldReceive('getUserById')
+            ->with(22)
+            ->andReturn($user);
+
+        $this->db
+            ->shouldReceive('safeQuery')
+            ->with(Mockery::type('string'), [1])
+            ->andReturn(
+                [
+                    [
+                        "id"            => 1,
+                        "name"          => "Persisted baseline",
+                        "artifact_id"   => 10,
+                        "user_id"       => 22,
+                        "snapshot_date" => 1553176023,
+                    ]
+                ]
+            );
+
+        $this->adapter_permissions
+            ->shouldReceive('canUserReadBaselineOnProject')
+            ->with($this->current_user, $artifact->getProject())
+            ->andReturn(false);
 
         $baseline = $this->repository->findById($this->current_user, 1);
 
@@ -165,6 +213,10 @@ class BaselineRepositoryAdapterTest extends TestCase
             ->shouldReceive('getID')
             ->andReturn(102)
             ->getMock();
+
+        $this->adapter_permissions
+            ->shouldReceive('canUserReadBaselineOnProject')
+            ->andReturn(true);
 
         $baselines = $this->repository->findByProject($this->current_user, $project, 10, 3);
 

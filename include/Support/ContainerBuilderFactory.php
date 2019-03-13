@@ -35,18 +35,15 @@ use Tuleap\Baseline\Adapter\BaselineRepositoryAdapter;
 use Tuleap\Baseline\Adapter\ClockAdapter;
 use Tuleap\Baseline\Adapter\CurrentUserProviderAdapter;
 use Tuleap\Baseline\Adapter\ProjectRepositoryAdapter;
-use Tuleap\Baseline\Adapter\RoleAssignmentRepositoryAdapter;
+use Tuleap\Baseline\Adapter\RoleAssignmentRepository;
 use Tuleap\Baseline\BaselineArtifactRepository;
 use Tuleap\Baseline\BaselineRepository;
 use Tuleap\Baseline\BaselineService;
 use Tuleap\Baseline\Clock;
 use Tuleap\Baseline\CurrentUserProvider;
-use Tuleap\Baseline\Permissions;
-use Tuleap\Baseline\PermissionsImpl;
 use Tuleap\Baseline\ProjectRepository;
 use Tuleap\Baseline\REST\BaselineController;
 use Tuleap\Baseline\REST\ProjectBaselineController;
-use Tuleap\Baseline\RoleAssignmentRepository;
 use Tuleap\DB\DBFactory;
 use Tuleap\REST\UserManager;
 use URLVerification;
@@ -63,58 +60,60 @@ class ContainerBuilderFactory
         $container_builder = new ContainerBuilder();
         return $container_builder->addDefinitions(
             [
-                BaselineController::class         => create(BaselineController::class)
+                BaselineController::class                => create(BaselineController::class)
                     ->constructor(
                         get(CurrentUserProvider::class),
                         get(BaselineService::class),
                         get(BaselineArtifactRepository::class)
                     ),
-                ProjectBaselineController::class  => create(ProjectBaselineController::class)
+                ProjectBaselineController::class         => create(ProjectBaselineController::class)
                     ->constructor(
                         get(CurrentUserProvider::class),
                         get(BaselineService::class),
                         get(ProjectRepository::class)
                     ),
-                BaselineService::class            => create(BaselineService::class)
+                BaselineService::class                   => create(BaselineService::class)
                     ->constructor(
-                        get(Permissions::class),
                         get(BaselineRepository::class),
                         get(CurrentUserProvider::class),
                         get(Clock::class)
                     ),
-                Permissions::class                       => create(PermissionsImpl::class)
-                    ->constructor(get(RoleAssignmentRepository::class))
-                ,
                 Clock::class                             => function () {
                     return new ClockAdapter();
                 },
-                UserManager::class                => function () {
+                UserManager::class                       => function () {
                     return UserManager::build();
                 },
-                CurrentUserProvider::class        => function (UserManager $user_manager) {
+                CurrentUserProvider::class               => function (UserManager $user_manager) {
                     return new CurrentUserProviderAdapter($user_manager);
                 },
-                BaselineRepository::class         => create(BaselineRepositoryAdapter::class)
+                BaselineRepository::class                => create(BaselineRepositoryAdapter::class)
                     ->constructor(
                         get(EasyDB::class),
                         get(\UserManager::class),
-                        get(BaselineArtifactRepository::class)
+                        get(BaselineArtifactRepository::class),
+                        get(AdapterPermissions::class)
                     ),
-                RoleAssignmentRepository::class   => function (EasyDB $db) {
-                    return new RoleAssignmentRepositoryAdapter($db);
+                RoleAssignmentRepository::class          => function (EasyDB $db) {
+                    return new RoleAssignmentRepository($db);
                 },
-                BaselineArtifactRepository::class => create(BaselineArtifactRepositoryAdapter::class)
+                BaselineArtifactRepository::class        => create(BaselineArtifactRepositoryAdapter::class)
                     ->constructor(
                         get(Tracker_ArtifactFactory::class),
                         get(AdapterPermissions::class),
                         get(Tracker_Artifact_ChangesetFactory::class),
                         get(Tracker_ArtifactFactory::class)
                     ),
-                ProjectRepository::class          => create(ProjectRepositoryAdapter::class)
+                ProjectRepository::class                 => create(ProjectRepositoryAdapter::class)
                     ->constructor(get(ProjectManager::class), get(AdapterPermissions::class)),
-                AdapterPermissions::class         => create(AdapterPermissions::class)
+                AdapterPermissions::class                => create(AdapterPermissions::class)
                     ->constructor(get(URLVerification::class)),
-                ProjectManager::class             => function () {
+                AdapterPermissions::class                => create(AdapterPermissions::class)
+                    ->constructor(
+                        get(URLVerification::class),
+                        get(RoleAssignmentRepository::class)
+                    ),
+                ProjectManager::class                    => function () {
                     return ProjectManager::instance();
                 },
                 Tracker_ArtifactFactory::class           => function () {

@@ -27,6 +27,7 @@ use PFUser;
 use Project;
 use Project_AccessException;
 use Tracker_Artifact;
+use Tuleap\Baseline\Role;
 use URLVerification;
 
 class AdapterPermissions
@@ -34,9 +35,15 @@ class AdapterPermissions
     /** @var URLVerification */
     private $url_verification;
 
-    public function __construct(URLVerification $url_verification)
-    {
-        $this->url_verification = $url_verification;
+    /** @var RoleAssignmentRepository */
+    private $role_assignment_repository;
+
+    public function __construct(
+        URLVerification $url_verification,
+        RoleAssignmentRepository $role_assignment_repository
+    ) {
+        $this->url_verification           = $url_verification;
+        $this->role_assignment_repository = $role_assignment_repository;
     }
 
     public function canUserReadArtifact(PFUser $user, Tracker_Artifact $artifact): bool
@@ -62,5 +69,27 @@ class AdapterPermissions
         } catch (Project_AccessException $e) {
             return false;
         }
+    }
+
+    public function canUserAdministrateBaselineOnProject(PFUser $user, Project $project): bool
+    {
+        return $user->isAdmin($project->getID()) || $this->hasUserRoleOnProject($user, Role::ADMIN, $project);
+    }
+
+    public function canUserReadBaselineOnProject(PFUser $user, Project $project): bool
+    {
+        return $this->canUserAdministrateBaselineOnProject($user, $project)
+            || $this->hasUserRoleOnProject($user, Role::READER, $project);
+    }
+
+    private function hasUserRoleOnProject(PFUser $user, string $role, Project $project): bool
+    {
+        $assignments = $this->role_assignment_repository->findByProjectAndRole($project, $role);
+        foreach ($assignments as $assignment) {
+            if ($user->isMemberOfUGroup($assignment->getUserGroupId(), $project->getID())) {
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -47,9 +47,6 @@ class BaselineServiceTest extends TestCase
     /** @var BaselineService */
     private $service;
 
-    /** @var Permissions|MockInterface */
-    private $permissions;
-
     /** @var BaselineRepository|MockInterface */
     private $baseline_repository;
 
@@ -62,13 +59,11 @@ class BaselineServiceTest extends TestCase
     /** @before */
     public function createInstance()
     {
-        $this->permissions           = Mockery::mock(Permissions::class)->shouldIgnoreMissing();
         $this->baseline_repository   = Mockery::mock(BaselineRepository::class);
         $this->current_user_provider = Mockery::mock(CurrentUserProvider::class);
         $this->clock                 = Mockery::mock(Clock::class);
 
         $this->service = new BaselineService(
-            $this->permissions,
             $this->baseline_repository,
             $this->current_user_provider,
             $this->clock

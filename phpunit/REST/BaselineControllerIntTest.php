@@ -43,7 +43,6 @@ class BaselineControllerIntTest extends IntegrationTestCaseWithStubs
 
     public function testPost()
     {
-        $this->permissions->permitAll();
         $milestone = BaselineArtifactFactory::one()->id(2)->build();
         $this->baseline_artifact_repository->add($milestone);
 
