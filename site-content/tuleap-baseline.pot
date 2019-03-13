@@ -12,6 +12,10 @@ msgid "Invalid date: %s. Expected format: %s"
 msgstr ""
 
 #, php-format
+msgid "No baseline found with id %u"
+msgstr ""
+
+#, php-format
 msgid "No changetset found before %s"
 msgstr ""
 

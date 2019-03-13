@@ -24,6 +24,9 @@ msgstr "Baselines"
 msgid "Invalid date: %s. Expected format: %s"
 msgstr "Date invalide %s. Format attendu : %s"
 
+msgid "No baseline found with id %u"
+msgstr "Aucune milestone trouvée avec l'id %u"
+
 #, php-format
 msgid "No changetset found before %s"
 msgstr "Aucune modification trouvée avant la date du %s"
@@ -46,10 +49,13 @@ msgid "You cannot read this artifact"
 msgstr "Vous ne pouvez pas accéder à cet artefact"
 
 msgid "You cannot read this artifact because you cannot access to its project"
-msgstr "Vous ne pouvez pas lire cette artefact car vous n'avez pas accès à son projet"
+msgstr ""
+"Vous ne pouvez pas lire cette artefact car vous n'avez pas accès à son projet"
 
 msgid "You cannot read this artifact because you cannot access to its tracker"
-msgstr "Vous ne pouvez pas lire cette artefact car vous n'y avez pas accès à son tracker"
+msgstr ""
+"Vous ne pouvez pas lire cette artefact car vous n'y avez pas accès à son "
+"tracker"
 
 msgid "You cannot read this project"
 msgstr "Vous ne pouvez pas accéder à ce projet"
