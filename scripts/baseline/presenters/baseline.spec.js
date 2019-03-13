@@ -20,6 +20,7 @@
 
 import { restore, rewire$getUser } from "../api/rest-querier";
 import { presentBaselines } from "./baseline";
+import { create, createList } from "../support/factories";
 
 describe("baseline presenter:", () => {
     afterEach(restore);
@@ -43,13 +44,13 @@ describe("baseline presenter:", () => {
 
         describe("when single baseline", () => {
             beforeEach(() => {
-                presentation = presentBaselines([{ author_id: 1 }]);
+                presentation = presentBaselines([create("baseline", { author_id: 1 })]);
             });
 
             it("calls getUser when author id", () => expect(getUser).toHaveBeenCalledWith(1));
 
             describe("when getUser() is successful", () => {
-                const user = { id: 1, username: "John Doe" };
+                const user = create("user", { id: 1 });
                 let presented_baselines;
 
                 beforeEach(async () => {
@@ -80,7 +81,7 @@ describe("baseline presenter:", () => {
 
         describe("when multiple baselines with same author", () => {
             beforeEach(() => {
-                presentation = presentBaselines([{ author_id: 1 }, { author_id: 1 }]);
+                presentation = presentBaselines(createList("baseline", 2, { author_id: 1 }));
             });
 
             it("calls getUser once", () => expect(getUser).toHaveBeenCalledTimes(1));
@@ -88,7 +89,10 @@ describe("baseline presenter:", () => {
 
         describe("when multiple baselines with different authors", () => {
             beforeEach(() => {
-                presentation = presentBaselines([{ author_id: 1 }, { author_id: 2 }]);
+                presentation = presentBaselines([
+                    create("baseline", { author_id: 1 }),
+                    create("baseline", { author_id: 2 })
+                ]);
             });
 
             it("calls getUser for each author", () => expect(getUser).toHaveBeenCalledTimes(2));

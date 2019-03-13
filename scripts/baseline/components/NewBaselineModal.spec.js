@@ -24,6 +24,7 @@ import { restore, rewire$getOpenMilestones, rewire$createBaseline } from "../api
 import NewBaselineModal from "./NewBaselineModal.vue";
 import MilestoneList from "./NewBaselineMilestoneSelect.vue";
 import MilestoneListSkeleton from "./MilestoneListSkeleton.vue";
+import { create } from "../support/factories";
 
 describe("NewBaselineModal", () => {
     const error_message_selector = '[data-test-type="error-message"]';
@@ -34,14 +35,8 @@ describe("NewBaselineModal", () => {
     let createBaseline;
     let wrapper;
 
-    const a_milestone = { id: 1, label: "release one" };
-    const a_baseline = {
-        id: 1,
-        name: "My first baseline",
-        milestone_id: 3,
-        author_id: 2,
-        creation_date: 12344567
-    };
+    const a_milestone = create("milestone");
+    const a_baseline = create("baseline");
 
     beforeEach(() => {
         getOpenMilestones = jasmine.createSpy("getOpenMilestones");

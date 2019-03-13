@@ -20,6 +20,7 @@
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../support/local-vue.js";
 import BaselineTableBodyCells from "./BaselineTableBodyCells.vue";
+import { createList } from "../support/factories";
 
 describe("BaselineTableBodyCells", () => {
     const baseline_selector = '[data-test-type="baseline"]';
@@ -29,26 +30,7 @@ describe("BaselineTableBodyCells", () => {
         wrapper = shallowMount(BaselineTableBodyCells, {
             localVue,
             propsData: {
-                baselines: [
-                    {
-                        id: 1,
-                        name: "Baseline V1",
-                        snapshot_date: "10/02/2019",
-                        author: { username: "Joe" }
-                    },
-                    {
-                        id: 2,
-                        name: "Baseline V2",
-                        snapshot_date: "11/02/2019",
-                        author: { username: "William" }
-                    },
-                    {
-                        id: 3,
-                        name: "Baseline V3",
-                        snapshot_date: "12/02/2019",
-                        author: { username: "Jack" }
-                    }
-                ]
+                baselines: createList("baseline", 3, "presented")
             }
         });
     });

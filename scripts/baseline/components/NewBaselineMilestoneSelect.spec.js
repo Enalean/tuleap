@@ -21,6 +21,7 @@ import Vue from "vue";
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../support/local-vue.js";
 import MilestoneList from "./NewBaselineMilestoneSelect.vue";
+import { create } from "../support/factories";
 
 describe("NewBaselineMilestoneSelect", () => {
     const milestone_selector = '[data-test-type="milestone"]';
@@ -38,13 +39,13 @@ describe("NewBaselineMilestoneSelect", () => {
     });
 
     describe("when many milestones", () => {
+        const milestone_1 = create("milestone", { id: 1, label: "first milestone" });
+        const milestone_2 = create("milestone", { id: 2, label: "second milestone" });
+        const milestone_3 = create("milestone", { id: 3, label: "a milestone" });
+
         beforeEach(async () => {
             wrapper.setProps({
-                milestones: [
-                    { id: 2, label: "second milestone" },
-                    { id: 1, label: "first milestone" },
-                    { id: 3, label: "a milestone" }
-                ]
+                milestones: [milestone_2, milestone_1, milestone_3]
             });
             await Vue.nextTick();
         });
@@ -57,9 +58,9 @@ describe("NewBaselineMilestoneSelect", () => {
         describe("sorted_milestones", () => {
             it("Sorts milestones by label", () => {
                 expect(wrapper.vm.sorted_milestones).toEqual([
-                    { id: 1, label: "first milestone" },
-                    { id: 2, label: "second milestone" },
-                    { id: 3, label: "a milestone" }
+                    milestone_1,
+                    milestone_2,
+                    milestone_3
                 ]);
             });
         });

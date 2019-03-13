@@ -23,6 +23,7 @@ import localVue from "../support/local-vue.js";
 import BaselineTable from "./BaselineTable.vue";
 import BaselineTableBodySkeleton from "./BaselineTableBodySkeleton.vue";
 import BaselineTableBodyCells from "./BaselineTableBodyCells.vue";
+import { createList } from "../support/factories";
 
 describe("BaselineTable", () => {
     const empty_baseline_selector = '[data-test-type="empty-baseline"]';
@@ -60,26 +61,7 @@ describe("BaselineTable", () => {
     describe("when many baselines", () => {
         beforeEach(async () => {
             wrapper.setProps({
-                baselines: [
-                    {
-                        id: 1,
-                        name: "Baseline V1",
-                        snapshot_date: "10/02/2019",
-                        author_id: 1
-                    },
-                    {
-                        id: 2,
-                        name: "Baseline V2",
-                        snapshot_date: "11/02/2019",
-                        author_id: 2
-                    },
-                    {
-                        id: 3,
-                        name: "Baseline V3",
-                        snapshot_date: "12/02/2019",
-                        author_id: 3
-                    }
-                ]
+                baselines: createList("baseline", 3)
             });
             await Vue.nextTick();
         });

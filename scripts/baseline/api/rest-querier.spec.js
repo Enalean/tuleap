@@ -20,6 +20,7 @@
 import { rewire$get, rewire$post } from "tlp-fetch";
 import { mockFetchSuccess } from "tlp-mocks";
 import { getOpenMilestones, getBaselines, createBaseline } from "./rest-querier";
+import { create, createList } from "../support/factories";
 
 describe("Rest queries:", () => {
     let result;
@@ -27,12 +28,7 @@ describe("Rest queries:", () => {
     describe("getOpenMilestones()", () => {
         let get;
 
-        const simplified_milestone = [
-            {
-                id: 3,
-                label: "milestone Label"
-            }
-        ];
+        const simplified_milestone = createList("milestone", 1);
 
         beforeEach(async () => {
             get = jasmine.createSpy("get");
@@ -50,12 +46,7 @@ describe("Rest queries:", () => {
     describe("getBaselines()", () => {
         let get;
 
-        const baseline = {
-            id: 3,
-            name: "Baseline V1",
-            snapshot_date: "10/02/2019",
-            author: "Alban Jidibus"
-        };
+        const baseline = create("baseline");
 
         beforeEach(async () => {
             get = jasmine.createSpy("get");
@@ -70,17 +61,10 @@ describe("Rest queries:", () => {
         it("returns baselines", () => expect(result).toEqual([baseline]));
     });
 
-    describe("saveBaseline()", () => {
+    describe("createBaseline()", () => {
         let post;
 
-        const simplified_baseline = {
-            id: 1,
-            name: "My first baseline",
-            milestone_id: 3,
-            author_id: 2,
-            creation_date: 12344567
-        };
-
+        const simplified_baseline = create("simplified_baseline");
         const headers = {
             "content-type": "application/json"
         };
