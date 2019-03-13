@@ -47,12 +47,17 @@
                     <translate>Cannot fetch baseline</translate>
                 </div>
                 <span v-else-if="is_loading" class="tlp-skeleton-text" data-test-type="baseline-header-skeleton"></span>
-                <h2 v-else data-test-type="baseline-header">
-                    Baseline #{{ baseline_id }} - {{ baseline.name }} <small>{{ baseline.snapshot_date }}</small>
-                    <span class="baseline-author">
-                        <small><translate>Created by</translate> {{ baseline.author.username }}</small>
-                    </span>
-                </h2>
+
+                <template v-else>
+                    <h2 data-test-type="baseline-header">
+                        Baseline #{{ baseline_id }} - {{ baseline.name }} <small>{{ baseline.snapshot_date }}</small>
+                        <span class="baseline-header-author">
+                            <small><translate>Created by</translate> {{ baseline.author.username }}</small>
+                        </span>
+                    </h2>
+
+                    <baseline-statistics/>
+                </template>
             </div>
         </main>
     </div>
@@ -61,9 +66,11 @@
 <script>
 import { getBaseline } from "../api/rest-querier";
 import { presentBaseline } from "../presenters/baseline";
+import BaselineStatistics from "./BaselineStatistics.vue";
 
 export default {
     name: "BaselinePage",
+    components: { BaselineStatistics },
     props: {
         baseline_id: { required: true, type: Number }
     },
