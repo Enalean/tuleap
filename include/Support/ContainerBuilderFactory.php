@@ -52,8 +52,8 @@ use Tuleap\Baseline\REST\BaselineController;
 use Tuleap\Baseline\REST\ProjectBaselineController;
 use Tuleap\Baseline\RoleAssignmentRepository;
 use Tuleap\DB\DBFactory;
-use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\REST\UserManager;
+use URLVerification;
 use function DI\create;
 use function DI\get;
 
@@ -120,12 +120,9 @@ class ContainerBuilderFactory
                 ProjectRepository::class                 => create(ProjectRepositoryAdapter::class)
                     ->constructor(get(ProjectManager::class), get(AdapterPermissions::class)),
                 AdapterPermissions::class                => create(AdapterPermissions::class)
-                    ->constructor(get(ProjectStatusVerificator::class)),
+                    ->constructor(get(URLVerification::class)),
                 ProjectManager::class                    => function () {
                     return ProjectManager::instance();
-                },
-                ProjectStatusVerificator::class          => function () {
-                    return ProjectStatusVerificator::build();
                 },
                 Tracker_ArtifactFactory::class           => function () {
                     return Tracker_ArtifactFactory::instance();
@@ -135,7 +132,8 @@ class ContainerBuilderFactory
                 },
                 EasyDB::class                            => function () {
                     return DBFactory::getMainTuleapDBConnection()->getDB();
-                }
+                },
+                URLVerification::class                   => create(URLVerification::class)->constructor()
             ]
         );
     }

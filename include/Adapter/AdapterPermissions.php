@@ -23,20 +23,20 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\Adapter;
 
-use Luracast\Restler\RestException;
 use PFUser;
 use Project;
+use Project_AccessException;
 use Tracker_Artifact;
-use Tuleap\REST\ProjectStatusVerificator;
+use URLVerification;
 
 class AdapterPermissions
 {
-    /** @var ProjectStatusVerificator */
-    private $project_status_verificator;
+    /** @var URLVerification */
+    private $url_verification;
 
-    public function __construct(ProjectStatusVerificator $project_status_verificator)
+    public function __construct(URLVerification $url_verification)
     {
-        $this->project_status_verificator = $project_status_verificator;
+        $this->url_verification = $url_verification;
     }
 
     public function canUserReadArtifact(PFUser $user, Tracker_Artifact $artifact): bool
@@ -57,9 +57,9 @@ class AdapterPermissions
     public function userCanReadProject(PFUser $user, Project $project): bool
     {
         try {
-            $this->project_status_verificator->checkProjectStatusAllowsAllUsersToAccessIt($project);
+            $this->url_verification->userCanAccessProject($user, $project);
             return true;
-        } catch (RestException $e) {
+        } catch (Project_AccessException $e) {
             return false;
         }
     }
