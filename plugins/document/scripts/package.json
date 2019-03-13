@@ -10,7 +10,7 @@
     "moment": "^2.22.2",
     "moment-timezone": "^0.5.23",
     "phptomoment": "0.0.2",
-    "pretty-bytes": "^5.1.0",
+    "pretty-bytes-es5": "^5.1.9",
     "pretty-kibibytes": "^4.0.4",
     "tus-js-client": "^1.5.2",
     "vue": "^2.5.17",
