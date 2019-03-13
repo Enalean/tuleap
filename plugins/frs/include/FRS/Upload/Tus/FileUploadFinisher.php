@@ -32,7 +32,7 @@ use Tuleap\FRS\Upload\UploadPathAllocator;
 use Tuleap\Tus\TusFileInformation;
 use Tuleap\Tus\TusFinisherDataStore;
 
-final class FileUploadFinisher implements TusFinisherDataStore
+class FileUploadFinisher implements TusFinisherDataStore
 {
     /**
      * @var UploadPathAllocator
