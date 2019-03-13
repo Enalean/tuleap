@@ -51,6 +51,8 @@ class ProjectBaselineController
     }
 
     /**
+     * @return BaselinesPageRepresentation requested baseline page, excluding not authorized baselines. More over, page
+     * total count is the real total count without any security filtering.
      * @throws I18NRestException 404
      * @throws I18NRestException 403
      */

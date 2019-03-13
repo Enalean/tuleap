@@ -44,13 +44,15 @@ class ProjectBaselinesResource extends AuthenticatedResource
     /**
      * Get baselines
      *
-     * Get all the baselines of a given project
+     * Get all the baselines of a given project.
+     * /!\ Some baseline may be filtered with security reason, but total count returned represents all available
+     * baselines INCLUDING the ones you're not authorized to see.
      *
      * @url    GET {id}/baselines
      * @access hybrid
      *
      * @param int $id     Id of the project
-     * @param int $limit  Number of elements displayed per page {@from path}
+     * @param int $limit  Number of elements to fetch (not authorized element are hidden, so you may get less element than requested) {@from path}
      * @param int $offset Position of the first element to display (first position is 0) {@from path}
      *
      * @return BaselinesPageRepresentation {@type Tuleap\Baseline\REST\BaselinesPageRepresentation}

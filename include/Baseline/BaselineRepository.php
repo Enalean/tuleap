@@ -41,9 +41,13 @@ interface BaselineRepository
      * Find all baselines on given project, ordered by snapshot date.
      * @param int $page_size       Number of baselines to fetch
      * @param int $baseline_offset Fetch baselines from this index (start with 0), then follow snapshot date order.
-     * @return Baseline[]
+     * @return Baseline[] requested baseline, excluding not authorized ones
      */
     public function findByProject(PFUser $current_user, Project $project, int $page_size, int $baseline_offset): array;
 
+    /**
+     * @return int total count of all available baseline in given project, excluding any security policy
+     * (for performances reasons)
+     */
     public function countByProject(Project $project): int;
 }
