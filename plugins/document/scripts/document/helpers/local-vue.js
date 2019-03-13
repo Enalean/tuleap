@@ -15,6 +15,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 import { createLocalVue } from "@vue/test-utils";
@@ -25,6 +26,7 @@ import VueRouter from "vue-router";
 const localVue = createLocalVue();
 localVue.use(Vuex);
 localVue.use(VueRouter);
+
 localVue.use(GettextPlugin, {
     translations: {},
     silent: true

@@ -23,9 +23,12 @@
     <div>
         <fake-caret v-bind:item="item"/>
         <i class="fa fa-fw document-folder-content-icon" v-bind:class="icon_class"></i>
-        <a v-bind:href="item.file_properties.html_url" class="document-folder-subitem-link">
+        <a v-bind:href="file_url" class="document-folder-subitem-link">
             {{ title }}
         </a>
+        <span class="tlp-badge-warning document-badge-corrupted" v-translate v-if="is_corrupted">
+            Corrupted
+        </span>
     </div>
 </template>
 
@@ -51,6 +54,15 @@ export default {
         },
         title() {
             return getTitleWithElipsisIfNeeded(this.item);
+        },
+        file_url() {
+            if (!this.item.file_properties) {
+                return;
+            }
+            return this.item.file_properties.html_url;
+        },
+        is_corrupted() {
+            return !this.item.file_properties;
         }
     }
 };

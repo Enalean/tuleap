@@ -89,20 +89,13 @@ class ItemRepresentationVisitor implements ItemVisitor
 
     public function visitLink(Docman_Link $item, array $params = [])
     {
-        $latest_link_version = $this->docman_link_version_factory->getLatestVersion($item);
-        $link_properties     = null;
-        if ($latest_link_version) {
-            $docman_link     = $this->buildDocmanUrl($item->getGroupId(), $latest_link_version->getItemId());
-            $link_properties = new LinkPropertiesRepresentation();
-            $link_properties->build($latest_link_version, $docman_link);
-        }
         return $this->item_representation_builder->buildItemRepresentation(
             $item,
             $params['current_user'],
             ItemRepresentation::TYPE_LINK,
             null,
             null,
-            $link_properties,
+            $this->buildLinkProperties($item),
             null
         );
     }
@@ -180,5 +173,25 @@ class ItemRepresentationVisitor implements ItemVisitor
         $wiki_html_url = '/plugins/docman/?group_id=' .
             urlencode($item->getGroupId()) . '&action=show&id=' . urlencode($item->getId()) . '&switcholdui=true';
         return $wiki_html_url;
+    }
+
+    /**
+     * @param Docman_Link $item
+     *
+     * @return LinkPropertiesRepresentation
+     */
+    private function buildLinkProperties(Docman_Link $item): LinkPropertiesRepresentation
+    {
+        $latest_link_version = $this->docman_link_version_factory->getLatestVersion($item);
+        $link_properties     = new LinkPropertiesRepresentation();
+        if (! $latest_link_version) {
+            $link_properties->build($item->getUrl(), null);
+            return $link_properties;
+        }
+
+        $docman_link     = $this->buildDocmanUrl($item->getGroupId(), $latest_link_version->getItemId());
+        $link_properties->build($docman_link, $latest_link_version);
+
+        return $link_properties;
     }
 }

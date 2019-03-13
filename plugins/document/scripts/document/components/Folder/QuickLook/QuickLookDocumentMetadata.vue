@@ -99,6 +99,9 @@ export default {
             return this.item.type === TYPE_FILE;
         },
         file_size_in_mega_bytes() {
+            if (!this.item.file_properties) {
+                return prettyBytes(0);
+            }
             return prettyBytes(parseInt(this.item.file_properties.file_size, 10));
         }
     },

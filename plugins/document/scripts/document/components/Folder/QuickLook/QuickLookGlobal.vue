@@ -92,6 +92,9 @@ export default {
                 case TYPE_EMBEDDED:
                     return ICON_EMBEDDED;
                 case TYPE_FILE:
+                    if (!this.item.file_properties) {
+                        return ICON_EMPTY;
+                    }
                     return iconForMimeType(this.item.file_properties.file_type);
                 default:
                     return ICON_EMPTY;

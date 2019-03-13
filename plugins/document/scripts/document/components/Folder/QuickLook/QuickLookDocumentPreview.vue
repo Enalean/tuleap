@@ -74,6 +74,9 @@ export default {
     },
     computed: {
         is_an_image() {
+            if (!this.item.file_properties) {
+                return false;
+            }
             return (
                 this.item.file_properties && this.item.file_properties.file_type.includes("image")
             );
@@ -82,6 +85,9 @@ export default {
             return this.item.type === TYPE_EMBEDDED;
         },
         escaped_embedded_content() {
+            if (!this.item.embedded_file_properties) {
+                return;
+            }
             return dompurify.sanitize(this.item.embedded_file_properties.content);
         },
         is_a_folder() {

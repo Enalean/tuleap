@@ -22,6 +22,8 @@
 
 namespace Tuleap\Docman\REST\v1;
 
+use Docman_LinkVersion;
+
 class LinkPropertiesRepresentation
 {
     /**
@@ -34,9 +36,9 @@ class LinkPropertiesRepresentation
      */
     public $html_url;
 
-    public function build(\Docman_LinkVersion $docman_link, $html_url)
+    public function build($html_url, ?Docman_LinkVersion $link)
     {
-        $this->link_url = $docman_link->getLink();
+        $this->link_url = ($link)? $link->getLink(): "";
         $this->html_url = $html_url;
     }
 }
