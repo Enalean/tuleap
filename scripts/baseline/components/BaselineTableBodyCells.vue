@@ -25,7 +25,7 @@
             </td>
             <td>{{ baseline.name }}</td>
             <td>{{ baseline.snapshot_date }}</td>
-            <td><user v-bind:id="baseline.author_id"/></td>
+            <td>{{ baseline.author.username }}</td>
             <td class="tlp-table-cell-actions baselines-table-column-actions">
                 <button v-on:click="goTo(`/${baseline.id}`)"
                         class="tlp-button-small tlp-button-primary tlp-button-outline"
@@ -38,12 +38,8 @@
 </template>
 
 <script>
-import User from "./User.vue";
-
 export default {
     name: "BaselineTableBodyCells",
-
-    components: { User },
 
     props: {
         baselines: { required: true, type: Array }

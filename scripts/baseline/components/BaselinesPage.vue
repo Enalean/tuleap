@@ -87,6 +87,7 @@ import BaselineTable from "./BaselineTable.vue";
 import NewBaselineModal from "./NewBaselineModal.vue";
 import { modal as createModal } from "tlp";
 import { getBaselines } from "../api/rest-querier";
+import { presentBaselines } from "../presenters/baseline";
 
 export default {
     name: "BaselinesPage",
@@ -136,7 +137,8 @@ export default {
             this.is_loading_failed = false;
 
             try {
-                this.baselines = await getBaselines(this.project_id);
+                const baselines = await getBaselines(this.project_id);
+                this.baselines = await presentBaselines(baselines);
             } catch (e) {
                 this.is_loading_failed = true;
             } finally {

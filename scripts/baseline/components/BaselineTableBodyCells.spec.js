@@ -34,19 +34,19 @@ describe("BaselineTableBodyCells", () => {
                         id: 1,
                         name: "Baseline V1",
                         snapshot_date: "10/02/2019",
-                        author_id: 1
+                        author: { username: "Joe" }
                     },
                     {
                         id: 2,
                         name: "Baseline V2",
                         snapshot_date: "11/02/2019",
-                        author_id: 2
+                        author: { username: "William" }
                     },
                     {
                         id: 3,
                         name: "Baseline V3",
                         snapshot_date: "12/02/2019",
-                        author_id: 3
+                        author: { username: "Jack" }
                     }
                 ]
             }
