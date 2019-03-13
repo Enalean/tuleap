@@ -97,6 +97,10 @@
     width: 300px;
 }
 
+.quick-look-button {
+    margin: 0 0 0 $tlp-spacing;
+}
+
 .document-badge-avatar {
     display: flex;
     align-items: center;
@@ -121,16 +125,34 @@
 }
 
 .document-folder-content-icon {
-    flex: 0 0 auto;
-    margin: 0 5px 0 0;
+    position: relative;
 
     &.document-wiki-icon {
         margin: 0 8px 0 1px;
         font-size: 13px;
     }
+
+    &::after {
+        content: '\f067';
+        position: absolute;
+        top: -7px;
+        right: -4px;
+        transform: scale(0);
+        transition: opacity ease-in-out 100ms, transform ease-in-out 100ms;
+        opacity: 0;
+        font-family: FontAwesome;
+        font-size: 12px;
+    }
+}
+
+.document-folder-content-fake-caret {
+    visibility: hidden;
 }
 
 .document-folder-toggle {
+    position: relative;
+    flex: 0 0 auto;
+    margin: 0 5px 0 0;
     color: $tlp-ui-dimmed;
     cursor: pointer;
 
@@ -175,7 +197,6 @@
     flex: 1 1 auto;
     margin: 0;
 }
-
 
 .document-folder-right-container {
     position: sticky;
