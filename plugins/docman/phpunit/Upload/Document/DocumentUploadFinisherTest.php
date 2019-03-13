@@ -25,10 +25,9 @@ use Docman_VersionFactory;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
-use Tuleap\Docman\Upload\Document\DocumentOngoingUploadDAO;
-use Tuleap\Docman\Upload\DocumentAlreadyUploadedInformation;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
+use Tuleap\Upload\FileAlreadyUploadedInformation;
 use Tuleap\Upload\FileBeingUploadedInformation;
 
 class DocumentUploadFinisherTest extends TestCase
@@ -82,7 +81,7 @@ class DocumentUploadFinisherTest extends TestCase
 
 
         $item_id_being_created = 12;
-        $file_information = new FileBeingUploadedInformation($item_id_being_created, 123, 0);
+        $file_information = new FileBeingUploadedInformation($item_id_being_created, 'Filename', 123, 0);
         $path_item_being_uploaded = $path_allocator->getPathForItemBeingUploaded($file_information);
         mkdir(dirname($path_item_being_uploaded), 0777, true);
         touch($path_item_being_uploaded);
@@ -112,7 +111,7 @@ class DocumentUploadFinisherTest extends TestCase
         $this->user_manager->shouldReceive('getUserByID')->andReturns(\Mockery::mock(\PFUser::class));
         $this->logger->shouldReceive('debug');
 
-        $file_information = new DocumentAlreadyUploadedInformation($item_id_being_created, 123);
+        $file_information = new FileAlreadyUploadedInformation($item_id_being_created, 'Filename', 123);
 
         $upload_finisher->finishUpload($file_information);
 

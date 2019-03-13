@@ -25,8 +25,11 @@ use Tuleap\DB\DataAccessObject;
 
 class FileOngoingUploadDao extends DataAccessObject
 {
-    public function searchFileOngoingUploadByReleaseIDNameAndExpirationDate(int $release_id, string $name, int $current_time)
-    {
+    public function searchFileOngoingUploadByReleaseIDNameAndExpirationDate(
+        int $release_id,
+        string $name,
+        int $current_time
+    ): array {
         $sql = 'SELECT *
                 FROM plugin_frs_file_upload
                 WHERE release_id = ? AND name = ? AND expiration_date > ?';
@@ -51,5 +54,28 @@ class FileOngoingUploadDao extends DataAccessObject
                 'file_size'       => $file_size
             ]
         );
+    }
+
+    public function searchFileOngoingUploadByIDUserIDAndExpirationDate(
+        int $id,
+        int $user_id,
+        int $current_time
+    ): array {
+        return $this->getDB()->row(
+            'SELECT * FROM plugin_frs_file_upload WHERE id = ? AND user_id = ? AND expiration_date > ?',
+            $id,
+            $user_id,
+            $current_time
+        );
+    }
+
+    public function deleteByItemID(int $id): void
+    {
+        $this->getDB()->delete('plugin_frs_file_upload', ['id' => $id]);
+    }
+
+    public function searchFileOngoingUploadById(int $id): array
+    {
+        return $this->getDB()->row('SELECT * FROM plugin_frs_file_upload WHERE id = ?', $id);
     }
 }

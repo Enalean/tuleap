@@ -79,14 +79,15 @@ class VersionBeingUploadedInformationProvider implements TusFileInformationProvi
         }
 
         $length            = (int) $document_row['filesize'];
-        $current_file_size = $this->getCurrentFileSize($version_id, $length);
+        $filename          = $document_row['filename'];
+        $current_file_size = $this->getCurrentFileSize($version_id, $filename, $length);
 
-        return new FileBeingUploadedInformation($version_id, $length, $current_file_size);
+        return new FileBeingUploadedInformation($version_id, $filename, $length, $current_file_size);
     }
 
-    private function getCurrentFileSize(int $version_id, int $length): int
+    private function getCurrentFileSize(int $version_id, string $name, int $length): int
     {
-        $temporary_file_information = new FileBeingUploadedInformation($version_id, $length, 0);
+        $temporary_file_information = new FileBeingUploadedInformation($version_id, $name, $length, 0);
         $allocated_path             = $this->path_allocator->getPathForItemBeingUploaded($temporary_file_information);
 
         $current_file_size = file_exists($allocated_path) ? filesize($allocated_path) : 0;

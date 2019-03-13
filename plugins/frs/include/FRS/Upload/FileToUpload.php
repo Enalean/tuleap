@@ -35,6 +35,6 @@ final class FileToUpload
 
     public function getUploadHref(): string
     {
-        return '/uploads/files/' . urlencode((string) $this->id);
+        return '/uploads/frs/file/' . urlencode((string) $this->id);
     }
 }

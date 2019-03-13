@@ -48,7 +48,7 @@ class FileBeingUploadedWriterTest extends TestCase
         $db_connection->shouldReceive('reconnectAfterALongRunningProcess')->twice();
 
         $item_id          = 12;
-        $file_information = new FileBeingUploadedInformation($item_id, 123, 0);
+        $file_information = new FileBeingUploadedInformation($item_id, 'Filename', 123, 0);
 
         $content      = 'Body content';
         $input_stream = fopen('php://memory', 'rb+');
@@ -85,7 +85,7 @@ class FileBeingUploadedWriterTest extends TestCase
 
         $item_id          = 12;
         $file_length      = 123;
-        $file_information = new FileBeingUploadedInformation($item_id, $file_length, 0);
+        $file_information = new FileBeingUploadedInformation($item_id, 'Filename', $file_length, 0);
 
         $content      = str_repeat('A', $file_length * 2);
         $input_stream = fopen('php://memory', 'rb+');

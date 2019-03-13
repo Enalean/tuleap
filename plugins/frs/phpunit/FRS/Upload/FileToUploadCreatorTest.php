@@ -119,7 +119,7 @@ class FileToUploadCreatorTest extends TestCase
             123
         );
 
-        $this->assertSame('/uploads/files/12', $document_to_upload->getUploadHref());
+        $this->assertSame('/uploads/frs/file/12', $document_to_upload->getUploadHref());
     }
 
     public function testANewItemIsNotCreatedIfAFileWithSameNameExists()
@@ -201,7 +201,7 @@ class FileToUploadCreatorTest extends TestCase
             123
         );
 
-        $this->assertSame('/uploads/files/12', $document_to_upload->getUploadHref());
+        $this->assertSame('/uploads/frs/file/12', $document_to_upload->getUploadHref());
     }
 
     public function testANewItemIsNotCreatedIfManyUploadsAreOngoingWithTheSameFileWhichShouldNeverHappen()

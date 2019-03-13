@@ -33,7 +33,7 @@ class FRSLog {
     protected function __construct() {
         $em = EventManager::instance();
         $packageEventToListen = array('frs_create_package',
-                                      'frs_update_package', 
+                                      'frs_update_package',
                                       'frs_delete_package'
         );
         foreach ($packageEventToListen as $event) {
@@ -41,7 +41,7 @@ class FRSLog {
         }
 
         $releaseEventToListen = array('frs_create_release',
-                                      'frs_update_release', 
+                                      'frs_update_release',
                                       'frs_delete_release'
         );
         foreach ($releaseEventToListen as $event) {
@@ -49,8 +49,8 @@ class FRSLog {
         }
 
         $fileEventToListen = array('frs_create_file',
-                                   'frs_update_file', 
-                                   'frs_delete_file', 
+                                   'frs_update_file',
+                                   'frs_delete_file',
                                    'frs_restore_file'
         );
         foreach ($fileEventToListen as $event) {
@@ -161,7 +161,7 @@ class FRSLog {
      */
     function _getFRSLogDao() {
         if (!$this->dao) {
-            $this->dao = new FRSLogDao(CodendiDataAccess::instance());
+            $this->dao = new FRSLogDao();
         }
         return $this->dao;
     }

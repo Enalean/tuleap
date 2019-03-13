@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,66 +20,59 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Docman\Upload\Document;
+namespace Tuleap\FRS\Upload\Tus;
 
+use Psr\Http\Message\ServerRequestInterface;
+use Tuleap\FRS\Upload\FileOngoingUploadDao;
+use Tuleap\FRS\Upload\UploadPathAllocator;
 use Tuleap\Tus\TusFileInformation;
 use Tuleap\Tus\TusFileInformationProvider;
-use Tuleap\Upload\FileAlreadyUploadedInformation;
 use Tuleap\Upload\FileBeingUploadedInformation;
 
-final class DocumentBeingUploadedInformationProvider implements TusFileInformationProvider
+final class FileBeingUploadedInformationProvider implements TusFileInformationProvider
 {
     /**
-     * @var DocumentUploadPathAllocator
+     * @var UploadPathAllocator
      */
     private $path_allocator;
     /**
-     * @var DocumentOngoingUploadDAO
+     * @var FileOngoingUploadDAO
      */
     private $dao;
-    /**
-     * @var \Docman_ItemFactory
-     */
-    private $item_factory;
 
     public function __construct(
-        DocumentUploadPathAllocator $path_allocator,
-        DocumentOngoingUploadDAO $dao,
-        \Docman_ItemFactory $item_factory
+        UploadPathAllocator $path_allocator,
+        FileOngoingUploadDAO $dao
     ) {
         $this->path_allocator = $path_allocator;
         $this->dao            = $dao;
-        $this->item_factory   = $item_factory;
     }
 
-    public function getFileInformation(\Psr\Http\Message\ServerRequestInterface $request) : ?TusFileInformation
+    public function getFileInformation(ServerRequestInterface $request): ?TusFileInformation
     {
-        $item_id = $request->getAttribute('id');
+        $id      = $request->getAttribute('id');
         $user_id = $request->getAttribute('user_id');
 
-        if ($item_id === null || $user_id === null) {
+        if ($id === null || $user_id === null) {
             return null;
         }
 
-        $item_id = (int) $item_id;
+        $id = (int) $id;
 
-        $document_row = $this->dao->searchDocumentOngoingUploadByItemIDUserIDAndExpirationDate(
-            $item_id,
-            $user_id,
+        $row = $this->dao->searchFileOngoingUploadByIDUserIDAndExpirationDate(
+            $id,
+            (int) $user_id,
             (new \DateTimeImmutable())->getTimestamp()
         );
-        if (empty($document_row)) {
+        if (empty($row)) {
             return null;
         }
-        $existing_item = $this->item_factory->getItemFromDb($item_id);
-        $length        = (int) $document_row['filesize'];
-        if ($existing_item !== null) {
-            return new FileAlreadyUploadedInformation($item_id, $document_row['filename'], $length);
-        }
 
-        $current_file_size = $this->getCurrentFileSize($item_id, $document_row['filename'], $length);
+        $file_size         = (int) $row['file_size'];
+        $name              = $row['name'];
+        $current_file_size = $this->getCurrentFileSize($id, $name, $file_size);
 
-        return new FileBeingUploadedInformation($item_id, $document_row['filename'], $length, $current_file_size);
+        return new FileBeingUploadedInformation($id, $name, $file_size, $current_file_size);
     }
 
     private function getCurrentFileSize(int $item_id, string $name, int $length): int

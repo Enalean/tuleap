@@ -41,7 +41,7 @@ setup_tuleap() {
 	> /etc/tuleap/conf/local.inc
 
 	cp /usr/share/tuleap/src/utils/svn/Tuleap.pm /usr/share/perl5/vendor_perl/Apache/Tuleap.pm
-	cp /usr/share/tuleap/src/utils/fileforge.pl /usr/lib/tuleap/bin/fileforge
+	install -m 04755 -o root -g root /usr/share/tuleap/src/utils/fileforge.pl /usr/lib/tuleap/bin/fileforge
 }
 
 setup_database() {

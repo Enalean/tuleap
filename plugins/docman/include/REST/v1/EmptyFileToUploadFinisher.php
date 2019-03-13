@@ -23,8 +23,8 @@ namespace Tuleap\Docman\REST\v1;
 use Tuleap\Docman\Upload\Document\DocumentToUpload;
 use Tuleap\Docman\Upload\Document\DocumentUploadFinisher;
 use Tuleap\Docman\Upload\Document\DocumentUploadPathAllocator;
-use Tuleap\Docman\Upload\DocumentAlreadyUploadedInformation;
 use Tuleap\Tus\CannotWriteFileException;
+use Tuleap\Upload\FileAlreadyUploadedInformation;
 
 class EmptyFileToUploadFinisher
 {
@@ -45,10 +45,10 @@ class EmptyFileToUploadFinisher
         $this->document_upload_path_allocator = $document_upload_path_allocator;
     }
 
-    public function createEmptyFile(DocumentToUpload $document_to_upload)
+    public function createEmptyFile(DocumentToUpload $document_to_upload, string $filename)
     {
         $item_id = $document_to_upload->getItemId();
-        $file_information = new DocumentAlreadyUploadedInformation($item_id, 0);
+        $file_information = new FileAlreadyUploadedInformation($item_id, $filename, 0);
 
         $uploaded_document_path = $this->document_upload_path_allocator->getPathForItemBeingUploaded($file_information);
 

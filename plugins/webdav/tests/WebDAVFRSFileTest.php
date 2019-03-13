@@ -24,7 +24,6 @@ require_once 'bootstrap.php';
 Mock::generate('BaseLanguage');
 Mock::generate('PFUser');
 Mock::generate('Project');
-Mock::generate('FRSFileFactory');
 Mock::generate('FRSFile');
 Mock::generate('WebDAVFRSRelease');
 Mock::generate('WebDAVUtils');
@@ -60,8 +59,8 @@ class WebDAVFRSFileTest extends TuleapTestCase
 
         $webDAVFile = new WebDAVFRSFileTestVersion($this);
         $webDAVFile->setReturnValue('userCanWrite', true);
-        $frsff = new MockFRSFileFactory();
-        $frsff->setReturnValue('delete_file', 0);
+        $frsff = \Mockery::mock(FRSFileFactory::class);
+        $frsff->shouldReceive('delete_file')->andReturn(0);
         $utils = new MockWebDAVUtils();
         $utils->setReturnValue('getFileFactory', $frsff);
         $project = new MockProject();
@@ -81,8 +80,8 @@ class WebDAVFRSFileTest extends TuleapTestCase
 
         $webDAVFile = new WebDAVFRSFileTestVersion($this);
         $webDAVFile->setReturnValue('userCanWrite', true);
-        $frsff = new MockFRSFileFactory();
-        $frsff->setReturnValue('delete_file', 1);
+        $frsff = \Mockery::mock(FRSFileFactory::class);
+        $frsff->shouldReceive('delete_file')->andReturn(1);
         $utils = new MockWebDAVUtils();
         $utils->setReturnValue('getFileFactory', $frsff);
         $project = new MockProject();

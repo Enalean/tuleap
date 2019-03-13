@@ -41,12 +41,12 @@ class VersionUploadCleanerTest extends TestCase
         \ForgeConfig::set('tmp_dir', $tmp_dir->url());
 
         $existing_version_id = 10;
-        $existing_file_information = new FileBeingUploadedInformation($existing_version_id, 10, 0);
+        $existing_file_information = new FileBeingUploadedInformation($existing_version_id, 'Filename', 10, 0);
         $existing_version_being_uploaded_path = $path_allocator->getPathForItemBeingUploaded($existing_file_information);
         mkdir(dirname($existing_version_being_uploaded_path), 0777, true);
         touch($existing_version_being_uploaded_path);
         $dao->shouldReceive('searchVersionOngoingUploadItemIDs')->andReturns([$existing_version_id]);
-        $non_existing_file_information = new FileBeingUploadedInformation(999999, 10, 0);
+        $non_existing_file_information = new FileBeingUploadedInformation(999999, 'Filename', 10, 0);
         $non_existing_item_path = $path_allocator->getPathForItemBeingUploaded($non_existing_file_information);
         touch($non_existing_item_path);
 

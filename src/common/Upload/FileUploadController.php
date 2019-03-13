@@ -73,14 +73,11 @@ class FileUploadController implements DispatchableWithRequestNoAuthz
     public static function build(TusDataStore $data_store): self
     {
         return new self(
-            new TusServer(
-                HTTPFactoryBuilder::responseFactory(),
-                $data_store
-            ),
-            new \Tuleap\Tus\TusCORSMiddleware(),
-            new \Tuleap\REST\TuleapRESTCORSMiddleware(),
-            \Tuleap\REST\UserManager::build(),
-            new \Tuleap\REST\BasicAuthentication()
+            new TusServer(HTTPFactoryBuilder::responseFactory(), $data_store),
+            new TusCORSMiddleware(),
+            new TuleapRESTCORSMiddleware(),
+            UserManager::build(),
+            new BasicAuthentication()
         );
     }
 

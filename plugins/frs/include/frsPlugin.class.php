@@ -23,19 +23,32 @@ require_once __DIR__ . '/../../tracker/include/trackerPlugin.class.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/constants.php';
 
-use Tuleap\FRS\PluginInfo;
+use Tuleap\DB\DBFactory;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\FRS\AdditionalInformationPresenter;
-use Tuleap\FRS\Link\Updater;
-use Tuleap\FRS\Link\Retriever;
 use Tuleap\FRS\Link\Dao;
-use Tuleap\FRS\REST\ResourcesInjector;
+use Tuleap\FRS\Link\Retriever;
+use Tuleap\FRS\Link\Updater;
+use Tuleap\FRS\PluginInfo;
 use Tuleap\FRS\ReleasePresenter;
+use Tuleap\FRS\REST\ResourcesInjector;
 use Tuleap\FRS\REST\v1\ReleaseRepresentation;
+use Tuleap\FRS\Upload\FileOngoingUploadDao;
+use Tuleap\FRS\Upload\Tus\FileBeingUploadedInformationProvider;
+use Tuleap\FRS\Upload\Tus\FileDataStore;
+use Tuleap\FRS\Upload\Tus\FileUploadCanceler;
+use Tuleap\FRS\Upload\Tus\FileUploadFinisher;
+use Tuleap\FRS\Upload\Tus\ToBeCreatedFRSFileBuilder;
+use Tuleap\FRS\Upload\UploadPathAllocator;
 use Tuleap\FRS\UploadedLinksDao;
 use Tuleap\FRS\UploadedLinksRetriever;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Tracker\Artifact\ActionButtons\MoveArtifactActionAllowedByPluginRetriever;
 use Tuleap\Tracker\REST\v1\Event\ArtifactPartialUpdate;
+use Tuleap\Upload\FileBeingUploadedLocker;
+use Tuleap\Upload\FileBeingUploadedWriter;
+use Tuleap\Upload\FileUploadController;
 
 class frsPlugin extends \Plugin //phpcs:ignore
 {
@@ -70,6 +83,7 @@ class frsPlugin extends \Plugin //phpcs:ignore
         $this->addHook(Event::REST_GET_PROJECT_FRS_PACKAGES);
         $this->addHook(Event::IMPORT_XML_PROJECT_TRACKER_DONE);
         $this->addHook(FRSOngoingUploadChecker::NAME);
+        $this->addHook(CollectRoutesEvent::NAME);
 
         if (defined('TRACKER_BASE_URL')) {
             $this->addHook(Tracker_Artifact_EditRenderer::EVENT_ADD_VIEW_IN_COLLECTION);
@@ -107,7 +121,7 @@ class frsPlugin extends \Plugin //phpcs:ignore
     {
         $file = $event->getFile();
         $current_time = new DateTimeImmutable();
-        $dao = new \Tuleap\FRS\Upload\FileOngoingUploadDao();
+        $dao = new FileOngoingUploadDao();
         if (! empty($dao->searchFileOngoingUploadByReleaseIDNameAndExpirationDate(
             $file->getRelease()->getReleaseID(),
             $file->getFileName(),
@@ -115,6 +129,54 @@ class frsPlugin extends \Plugin //phpcs:ignore
         ))) {
             $event->setIsFileBeingUploadedToTrue();
         }
+    }
+
+    public function collectRoutesEvent(CollectRoutesEvent $event)
+    {
+        $event->getRouteCollector()->addRoute(
+            ['OPTIONS', 'HEAD', 'PATCH', 'DELETE'],
+            '/uploads/frs/file/{id:\d+}',
+            $this->getRouteHandler('routeUploads')
+        );
+    }
+
+    public function routeUploads(): FileUploadController
+    {
+        $file_ongoing_upload_dao = new FileOngoingUploadDao();
+        $path_allocator          = new UploadPathAllocator();
+        $logger                  = new BackendLogger();
+        $db_connection           = DBFactory::getMainTuleapDBConnection();
+
+        return FileUploadController::build(
+            new FileDataStore(
+                new FileBeingUploadedInformationProvider(
+                    $path_allocator,
+                    $file_ongoing_upload_dao
+                ),
+                new FileBeingUploadedWriter(
+                    $path_allocator,
+                    $db_connection
+                ),
+                new FileBeingUploadedLocker(
+                    $path_allocator
+                ),
+                new FileUploadFinisher(
+                    $logger,
+                    $path_allocator,
+                    new FRSFileFactory($logger),
+                    new FRSReleaseFactory(),
+                    $file_ongoing_upload_dao,
+                    new DBTransactionExecutorWithConnection($db_connection),
+                    new FRSFileDao(),
+                    new FRSLogDao(),
+                    new ToBeCreatedFRSFileBuilder()
+                ),
+                new FileUploadCanceler(
+                    $path_allocator,
+                    $file_ongoing_upload_dao
+                )
+            )
+        );
     }
 
     public function frs_edit_form_additional_info($params) //phpcs:ignore

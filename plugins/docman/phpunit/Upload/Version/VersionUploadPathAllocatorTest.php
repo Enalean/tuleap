@@ -30,8 +30,8 @@ class VersionUploadPathAllocatorTest extends TestCase
         $allocator = new VersionUploadPathAllocator();
 
         $this->assertSame(
-            $allocator->getPathForItemBeingUploaded(new FileBeingUploadedInformation(1, 123, 0)),
-            $allocator->getPathForItemBeingUploaded(new FileBeingUploadedInformation(1, 123, 0))
+            $allocator->getPathForItemBeingUploaded(new FileBeingUploadedInformation(1, 'Filename', 123, 0)),
+            $allocator->getPathForItemBeingUploaded(new FileBeingUploadedInformation(1, 'Filename', 123, 0))
         );
     }
 }

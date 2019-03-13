@@ -389,15 +389,18 @@ class FRSFileFactory {
      *
      * @global $GLOBALS['codendi_bin_prefix']
      *
-     * @param int    $group_id       the ID of the project we want to upload the file
-     * @param string $file_name      the name of the file we want to upload
-     * @param string $upload_sub_dir the name of the sub-directory the file will be moved in
-     *
      * @return Boolean True if file is moved to it's final location (false otherwise)
      */
     public function moveFileForge(FRSFile $file) {
         $release  = $file->getRelease();
         $project  = $release->getProject();
+        $src_dir  = $this->getSrcDir($project);
+
+        return $this->moveFileForgeFromSrcDir($project, $release, $file, $src_dir);
+    }
+
+    public function moveFileForgeFromSrcDir(Project $project, FRSRelease $release, FRSFile $file, string $src_dir): bool
+    {
         $unixName = $project->getUnixName(false);
 
         $upload_sub_dir = $this->getUploadSubDirectory($release);
@@ -408,7 +411,7 @@ class FRSFileFactory {
             $cmdFilePath = escapeshellarg($unixName . '/' . $upload_sub_dir . '/' . $filePath);
             $ret_val     = null;
             $exec_res    = array();
-            $src_dir     = escapeshellarg($this->getSrcDir($project));
+            $src_dir     = escapeshellarg($src_dir);
             $dst_dir     = escapeshellarg(ForgeConfig::get('ftp_frs_dir_prefix'));
             $cmd         = $this->fileforge . " $fileName $cmdFilePath $src_dir $dst_dir 2>&1";
 

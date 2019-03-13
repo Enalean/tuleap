@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,42 +20,21 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Docman\Upload;
+namespace Tuleap\FRS\Upload;
 
+use ForgeConfig;
 use Tuleap\Tus\TusFileInformation;
+use Tuleap\Upload\PathAllocator;
 
-final class DocumentAlreadyUploadedInformation implements TusFileInformation
+class UploadPathAllocator implements PathAllocator
 {
-    /**
-     * @var int
-     */
-    private $id;
-    /**
-     * @var int
-     */
-    private $length;
-
-    public function __construct(int $id, int $length)
+    private function getBasePath(): string
     {
-        $this->id = $id;
-        if ($length < 0) {
-            throw new \UnexpectedValueException('The length must be positive');
-        }
-        $this->length = $length;
+        return ForgeConfig::get('tmp_dir') . '/frs/ongoing-upload/';
     }
 
-    public function getID(): int
+    public function getPathForItemBeingUploaded(TusFileInformation $file_information): string
     {
-        return $this->id;
-    }
-
-    public function getLength(): int
-    {
-        return $this->length;
-    }
-
-    public function getOffset(): int
-    {
-        return $this->length;
+        return $this->getBasePath() . $file_information->getID() . '/' . $file_information->getName();
     }
 }
