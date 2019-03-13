@@ -37,4 +37,32 @@ class UploadPathAllocator implements PathAllocator
     {
         return $this->getBasePath() . $file_information->getID() . '/' . $file_information->getName();
     }
+
+    /**
+     * @return array<string,string>
+     */
+    public function getCurrentlyUsedAllocatedPathsPerExpectedItemIDs(): array
+    {
+        $base_path = $this->getBasePath();
+        if (! is_dir($base_path)) {
+            return [];
+        }
+
+        $paths = [];
+
+        $directory_iterator = new \DirectoryIterator($base_path);
+        foreach ($directory_iterator as $file_info) {
+            /** @var \SplFileInfo $file_info */
+            if (! $file_info->isDir()) {
+                continue;
+            }
+            if (in_array($file_info->getFilename(), ['.', '..'], true)) {
+                continue;
+            }
+
+            $paths[$file_info->getFilename()] = $file_info->getPathname();
+        }
+
+        return $paths;
+    }
 }
