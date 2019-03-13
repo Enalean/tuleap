@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  * Copyright (c) 2010 Christopher Han <xiphux@gmail.com>
  *
  * This file is a part of Tuleap.
@@ -757,10 +757,9 @@ class Project
             }
             return null;
         }
-
-        if (preg_match('/[0-9a-f]{40}/i', $hash)) {
-            if (!isset($this->commitCache[$hash])) {
-                    $this->commitCache[$hash] = new Commit($this, $hash);
+        if (preg_match('/^[0-9a-f]{40}$/i', $hash)) {
+            if (! isset($this->commitCache[$hash])) {
+                $this->commitCache[$hash] = new Commit($this, $hash);
             }
 
             return $this->commitCache[$hash];
