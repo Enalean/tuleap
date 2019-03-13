@@ -48,11 +48,14 @@ class AdapterPermissions
 
     public function canUserReadArtifact(PFUser $user, Tracker_Artifact $artifact): bool
     {
+        $tracker = $artifact->getTracker();
+        if ($this->isUserAdminOnProject($user, $tracker->getProject())) {
+            return true;
+        }
         if (! $artifact->userCanView($user)) {
             return false;
         }
 
-        $tracker = $artifact->getTracker();
         if (! $tracker->userCanView($user)) {
             return false;
         }
@@ -63,6 +66,9 @@ class AdapterPermissions
 
     public function canUserReadProject(PFUser $user, Project $project): bool
     {
+        if ($this->isUserAdminOnProject($user, $project)) {
+            return true;
+        }
         try {
             $this->url_verification->userCanAccessProject($user, $project);
             return true;
@@ -73,11 +79,17 @@ class AdapterPermissions
 
     public function canUserAdministrateBaselineOnProject(PFUser $user, Project $project): bool
     {
-        return $user->isAdmin($project->getID()) || $this->hasUserRoleOnProject($user, Role::ADMIN, $project);
+        if ($this->isUserAdminOnProject($user, $project)) {
+            return true;
+        }
+        return $this->hasUserRoleOnProject($user, Role::ADMIN, $project);
     }
 
     public function canUserReadBaselineOnProject(PFUser $user, Project $project): bool
     {
+        if ($this->isUserAdminOnProject($user, $project)) {
+            return true;
+        }
         return $this->canUserAdministrateBaselineOnProject($user, $project)
             || $this->hasUserRoleOnProject($user, Role::READER, $project);
     }
@@ -91,5 +103,10 @@ class AdapterPermissions
             }
         }
         return false;
+    }
+
+    private function isUserAdminOnProject(PFUser $user, Project $project): bool
+    {
+        return $user->isSuperUser() || $user->isAdmin($project->getID());
     }
 }
