@@ -70,7 +70,8 @@ class VersionToUploadCreatorTest extends TestCase
             'changelog',
             'filename',
             123456,
-            $is_file_locked
+            $is_file_locked,
+            'copy'
         );
 
         $this->assertSame(12, $document_to_upload->getVersionId());
@@ -102,7 +103,8 @@ class VersionToUploadCreatorTest extends TestCase
             'changelog',
             'filename',
             123456,
-            $is_file_locked
+            $is_file_locked,
+            'copy'
         );
 
         $this->assertSame(12, $document_to_upload->getVersionId());
@@ -136,7 +138,8 @@ class VersionToUploadCreatorTest extends TestCase
             'changelog',
             'filename',
             123456,
-            $is_file_locked
+            $is_file_locked,
+            'empty'
         );
     }
 
@@ -168,7 +171,8 @@ class VersionToUploadCreatorTest extends TestCase
             'changelog',
             'filename2',
             789,
-            $is_file_locked
+            $is_file_locked,
+            'reset'
         );
     }
 
@@ -192,7 +196,8 @@ class VersionToUploadCreatorTest extends TestCase
             'changelog',
             'filename',
             2,
-            $is_file_locked
+            $is_file_locked,
+            'reset'
         );
     }
 }

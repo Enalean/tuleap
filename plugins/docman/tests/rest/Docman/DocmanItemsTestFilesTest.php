@@ -61,15 +61,275 @@ class DocmanItemsTestFilesTest extends DocmanBase
         );
         $items    = $response->json();
 
-        $this->assertEquals(count($items), 9);
+        $this->assertEquals(count($items), 10);
 
         return $items;
     }
 
     /**
+     * @depends testGetDocumentItemsForRegularUser
+     */
+    public function testPatchAFilewithApprovalTableCopyAction(array $items): void
+    {
+        $file = $this->findItemByTitle($items, 'file A');
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('docman_items/' . $file['id'])
+        );
+
+        $item_before_patch                           = $response->json();
+        $item_approval_table_before_patch            = $item_before_patch['approval_table'];
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertNotNull($item_approval_table_before_patch);
+
+        $file_size    = 305;
+        $put_resource = json_encode(
+            [
+                'version_title'         => 'My version title',
+                'changelog'             => 'I have changed',
+                'should_lock_file'      => false,
+                'file_properties'       => ['file_name' => 'file1', 'file_size' => $file_size],
+                'approval_table_action' => 'copy'
+            ]
+        );
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->patch('docman_files/' . $file['id'], null, $put_resource)
+        );
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $tus_client = new Client(
+            str_replace('/api/v1', '', $this->client->getBaseUrl()),
+            $this->client->getConfig()
+        );
+        $tus_client->setSslVerification(false, false, false);
+        $tus_response_upload = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $tus_client->patch(
+                $response->json()['upload_href'],
+                [
+                    'Tus-Resumable' => '1.0.0',
+                    'Content-Type'  => 'application/offset+octet-stream',
+                    'Upload-Offset' => '0'
+                ],
+                str_repeat('A', $file_size)
+            )
+        );
+        $this->assertEquals(204, $tus_response_upload->getStatusCode());
+        $response                        = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('docman_items/' . $file['id'])
+        );
+        $item_after_patch                = $response->json();
+        $item_approval_table_after_patch = $item_after_patch['approval_table'];
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertNotNull($item_approval_table_after_patch);
+
+        $this->assertEquals(
+            $item_approval_table_before_patch['approval_state'],
+            $item_approval_table_after_patch['approval_state']
+        );
+        $this->assertEquals(
+            $item_approval_table_before_patch['approval_request_date'],
+            $item_approval_table_after_patch['approval_request_date']
+        );
+        $this->assertEquals(
+            $item_approval_table_before_patch['has_been_approved'],
+            $item_approval_table_after_patch['has_been_approved']
+        );
+        $this->assertEquals(
+            $item_approval_table_before_patch['admin_url'],
+            $item_approval_table_after_patch['admin_url']
+        );
+    }
+
+    /**
+     * @depends testGetDocumentItemsForRegularUser
+     */
+    public function testPatchAFilewithApprovalTableResetAction(array $items): void
+    {
+        $file = $this->findItemByTitle($items, 'file B');
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('docman_items/' . $file['id'])
+        );
+
+        $item_before_patch                = $response->json();
+        $item_approval_table_before_patch = $item_before_patch['approval_table'];
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertNotNull($item_approval_table_before_patch);
+
+        $file_size    = 305;
+        $put_resource = json_encode(
+            [
+                'version_title'         => 'My version title',
+                'changelog'             => 'I have changed',
+                'should_lock_file'      => false,
+                'file_properties'       => ['file_name' => 'file1', 'file_size' => $file_size],
+                'approval_table_action' => 'reset'
+            ]
+        );
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->patch('docman_files/' . $file['id'], null, $put_resource)
+        );
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $tus_client = new Client(
+            str_replace('/api/v1', '', $this->client->getBaseUrl()),
+            $this->client->getConfig()
+        );
+        $tus_client->setSslVerification(false, false, false);
+        $tus_response_upload = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $tus_client->patch(
+                $response->json()['upload_href'],
+                [
+                    'Tus-Resumable' => '1.0.0',
+                    'Content-Type'  => 'application/offset+octet-stream',
+                    'Upload-Offset' => '0'
+                ],
+                str_repeat('A', $file_size)
+            )
+        );
+        $this->assertEquals(204, $tus_response_upload->getStatusCode());
+        $response                        = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('docman_items/' . $file['id'])
+        );
+        $item_after_patch                = $response->json();
+        $item_approval_table_after_patch = $item_after_patch['approval_table'];
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertNotNull($item_approval_table_after_patch);
+        $this->assertEquals($item_after_patch['id'], $item_before_patch['id']);
+        $this->assertNotEquals($item_approval_table_before_patch, $item_approval_table_after_patch);
+    }
+
+    /**
+     * @depends testGetDocumentItemsForRegularUser
+     */
+    public function testPatchAFilewithApprovalTableEmptyAction(array $items): void
+    {
+        $file = $this->findItemByTitle($items, 'file C');
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('docman_items/' . $file['id'])
+        );
+
+        $item_before_patch                           = $response->json();
+        $item_approval_table_before_patch            = $item_before_patch['approval_table'];
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertNotNull($item_approval_table_before_patch);
+
+        $file_size    = 305;
+        $put_resource = json_encode(
+            [
+                'version_title'         => 'My version title',
+                'changelog'             => 'I have changed',
+                'should_lock_file'      => false,
+                'file_properties'       => ['file_name' => 'file1', 'file_size' => $file_size],
+                'approval_table_action' => 'empty'
+            ]
+        );
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->patch('docman_files/' . $file['id'], null, $put_resource)
+        );
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $tus_client = new Client(
+            str_replace('/api/v1', '', $this->client->getBaseUrl()),
+            $this->client->getConfig()
+        );
+        $tus_client->setSslVerification(false, false, false);
+        $tus_response_upload = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $tus_client->patch(
+                $response->json()['upload_href'],
+                [
+                    'Tus-Resumable' => '1.0.0',
+                    'Content-Type'  => 'application/offset+octet-stream',
+                    'Upload-Offset' => '0'
+                ],
+                str_repeat('A', $file_size)
+            )
+        );
+        $this->assertEquals(204, $tus_response_upload->getStatusCode());
+        $response                        = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('docman_items/' . $file['id'])
+        );
+        $item_after_patch                = $response->json();
+        $item_approval_table_after_patch = $item_after_patch['approval_table'];
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $this->assertNotEquals(
+            $item_approval_table_before_patch,
+            $item_approval_table_after_patch
+        );
+
+        $this->assertNull($item_approval_table_after_patch);
+    }
+
+    /**
+     * @depends testGetDocumentItemsForRegularUser
+     */
+    public function testPatchThrowsExceptionWhenThereIsAnApprovalTableForTheItemAndNoApprovalAction(array $items): void
+    {
+        $file = $this->findItemByTitle($items, 'file A');
+
+        $file_size    = 305;
+        $put_resource = json_encode(
+            [
+                'version_title'    => 'My version title',
+                'changelog'        => 'I have changed',
+                'should_lock_file' => false,
+                'file_properties'  => ['file_name' => 'file1', 'file_size' => $file_size]
+            ]
+        );
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->patch('docman_files/' . $file['id'], null, $put_resource)
+        );
+        $this->assertEquals(400, $response->getStatusCode());
+    }
+
+    /**
+     * @depends testGetDocumentItemsForRegularUser
+     */
+    public function testPatchThrowsExceptionWhenThereIsNOTApprovalTableWhileThereIsApprovalAction(array $items): void
+    {
+        $file = $this->findItemByTitle($items, 'file D');
+
+        $file_size    = 305;
+        $put_resource = json_encode(
+            [
+                'version_title'         => 'My version title',
+                'changelog'             => 'I have changed',
+                'should_lock_file'      => false,
+                'file_properties'       => ['file_name' => 'file1', 'file_size' => $file_size],
+                'approval_table_action' => 'copy'
+            ]
+        );
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->patch('docman_files/' . $file['id'], null, $put_resource)
+        );
+        $this->assertEquals(400, $response->getStatusCode());
+    }
+
+    /**
      * @depends testGetRootId
      */
-    public function testPatchOnDocumentWithApprovalTableThrowException(int $root_id): void
+    public function testPatchOnDocumentWithBadMatchingBetweenThePatchedItemTypeAndAcceptedRouteType(int $root_id): void
     {
         $response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
@@ -94,7 +354,7 @@ class DocmanItemsTestFilesTest extends DocmanBase
                 $put_resource
             )
         );
-        $this->assertEquals(403, $response->getStatusCode());
+        $this->assertEquals(400, $response->getStatusCode());
     }
 
     /**
@@ -184,7 +444,8 @@ class DocmanItemsTestFilesTest extends DocmanBase
                 'version_title'    => 'My version title',
                 'changelog'        => 'I have changed',
                 'should_lock_file' => false,
-                'file_properties'  => ['file_name' => 'file1', 'file_size' => 10]
+                'file_properties'  => ['file_name' => 'file1', 'file_size' => 10],
+                'approval_table_action' => 'empty'
             ]
         );
 
@@ -193,15 +454,16 @@ class DocmanItemsTestFilesTest extends DocmanBase
             $this->client->patch('docman_files/' . $file['id'], null, $put_resource)
         );
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals("/uploads/docman/version/1", $response->json()['upload_href']);
+        $this->assertEquals("/uploads/docman/version/4", $response->json()['upload_href']);
 
 
         $put_resource = json_encode(
             [
-                'version_title'    => 'My version title',
-                'changelog'        => 'I have changed',
+                'version_title'   => 'My version title',
+                'changelog'       => 'I have changed',
                 'should_lock_file' => false,
-                'file_properties'  => ['file_name' => 'file1', 'file_size' => 10]
+                'file_properties' => ['file_name' => 'file1', 'file_size' => 10],
+                'approval_table_action' => 'empty'
             ]
         );
 
@@ -217,13 +479,13 @@ class DocmanItemsTestFilesTest extends DocmanBase
      */
     public function testPatchFileDocumentReturnsFileRepresentation(array $items) : void
     {
-        $file         = $this->findItemByTitle($items, 'file B');
+        $file         = $this->findItemByTitle($items, 'file D');
         $put_resource = json_encode(
             [
                 'version_title'    => 'My version title',
                 'changelog'        => 'I have changed',
                 'should_lock_file' => false,
-                'file_properties'  => ['file_name' => 'file1', 'file_size' => 10]
+                'file_properties'  => ['file_name' => 'file1', 'file_size' => 10],
             ]
         );
 
@@ -232,7 +494,7 @@ class DocmanItemsTestFilesTest extends DocmanBase
             $this->client->patch('docman_files/' . $file['id'], null, $put_resource)
         );
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals("/uploads/docman/version/2", $response->json()['upload_href']);
+        $this->assertEquals("/uploads/docman/version/5", $response->json()['upload_href']);
     }
 
     /**
@@ -425,13 +687,13 @@ class DocmanItemsTestFilesTest extends DocmanBase
         $file         = $this->findItemByTitle($items, 'file C');
         $put_resource = json_encode(
             [
-                'version_title'    => 'My version title',
-                'changelog'        => 'I have changed',
-                'should_lock_file' => false,
-                'file_properties'  => ['file_name' => 'My new file', 'file_size' => 123]
+                'version_title'         => 'My version title',
+                'changelog'             => 'I have changed',
+                'should_lock_file'      => false,
+                'file_properties'       => ['file_name' => 'My new file', 'file_size' => 123],
+                'approval_table_action' => 'empty'
             ]
         );
-
 
         $file_id  = $file['id'];
         $response = $this->getResponseByName(
@@ -460,7 +722,6 @@ class DocmanItemsTestFilesTest extends DocmanBase
         );
         $this->assertEquals(200, $response->getStatusCode());
     }
-
 
     /**
      * Find first item in given array of items which has given title.

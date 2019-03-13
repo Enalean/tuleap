@@ -22,7 +22,6 @@ declare(strict_types = 1);
 
 namespace Tuleap\Docman\REST\v1;
 
-use Docman_ApprovalTable;
 use Docman_Item;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -73,21 +72,6 @@ class DocmanItemUpdatorTest extends TestCase
         );
     }
 
-    public function testItThrowsAnExceptionWhenDocumentHasAnApprovalTable()
-    {
-        $item = Mockery::mock(Docman_Item::class);
-        $user = Mockery::mock(\PFUser::class);
-        $this->approval_table_retriever->shouldReceive('retrieveByItem')
-                                       ->with($item)
-                                       ->andReturn(Mockery::mock(Docman_ApprovalTable::class));
-
-        $this->expectException(ExceptionDocumentHasApprovalTable::class);
-
-        $representation                  = new DocmanFilesPATCHRepresentation();
-
-        $this->updator->update($item, $user, $representation, new \DateTimeImmutable());
-    }
-
     public function testItThrowsAnExceptionWhenDocumentIsLockedByAnotherUser()
     {
         $item = Mockery::mock(Docman_Item::class);
@@ -105,7 +89,7 @@ class DocmanItemUpdatorTest extends TestCase
 
         $representation                  = new DocmanFilesPATCHRepresentation();
 
-        $this->updator->update($item, $user, $representation, new \DateTimeImmutable());
+        $this->updator->updateFile($item, $user, $representation, new \DateTimeImmutable());
     }
 
     public function testItShouldStoreTheNewVersionWhenFileRepresentationIsCorrect()
@@ -129,6 +113,7 @@ class DocmanItemUpdatorTest extends TestCase
         $representation->file_properties            = new FilePropertiesPOSTPATCHRepresentation();
         $representation->file_properties->file_name = 'file';
         $representation->file_properties->file_size = 0;
+        $representation->approval_table_action      = 'copy';
 
         $version_id = 1;
         $version_to_upload = new VersionToUpload($version_id);
@@ -137,7 +122,7 @@ class DocmanItemUpdatorTest extends TestCase
         $time = new \DateTimeImmutable();
         $item->shouldReceive('accept')->withArgs([$this->before_update_validator, []]);
 
-        $created_version_representation = $this->updator->update($item, $user, $representation, $time);
+        $created_version_representation = $this->updator->updateFile($item, $user, $representation, $time);
 
         $this->assertEquals("/uploads/docman/version/1", $created_version_representation->upload_href);
     }

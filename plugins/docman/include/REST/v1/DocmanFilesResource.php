@@ -29,6 +29,9 @@ use ProjectManager;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
+use Tuleap\Docman\ApprovalTable\ApprovalTableUpdateActionChecker;
+use Tuleap\Docman\ApprovalTable\Exceptions\ItemHasApprovalTableButNoApprovalActionException;
+use Tuleap\Docman\ApprovalTable\Exceptions\ItemHasNoApprovalTableButHasApprovalActionException;
 use Tuleap\Docman\Upload\UploadMaxSizeExceededException;
 use Tuleap\Docman\Upload\Version\DocumentOnGoingVersionToUploadDAO;
 use Tuleap\Docman\Upload\Version\VersionToUploadCreator;
@@ -71,7 +74,6 @@ class DocmanFilesResource extends AuthenticatedResource
      * Patch an element of document manager
      *
      * Create a new version of an existing file document
-     *
      * <pre>
      * /!\ This route is under construction and will be subject to changes
      * </pre>
@@ -85,6 +87,7 @@ class DocmanFilesResource extends AuthenticatedResource
      * @return CreatedItemFilePropertiesRepresentation
      *
      * @status 200
+     * @throws 400
      * @throws 403
      * @throws 501
      */
@@ -107,8 +110,9 @@ class DocmanFilesResource extends AuthenticatedResource
         $event_adder->addLogEvents();
         $event_adder->addNotificationEvents($project);
 
-        $docman_item_updator = new DocmanItemUpdator(
-            new ApprovalTableRetriever(new \Docman_ApprovalTableFactoriesFactory()),
+        $docman_approval_table_retriever = new ApprovalTableRetriever(new \Docman_ApprovalTableFactoriesFactory());
+        $docman_item_updator             = new DocmanItemUpdator(
+            $docman_approval_table_retriever,
             new Docman_LockFactory(),
             new VersionToUploadCreator(
                 new DocumentOnGoingVersionToUploadDAO(),
@@ -118,16 +122,13 @@ class DocmanFilesResource extends AuthenticatedResource
         );
 
         try {
-            return $docman_item_updator->update(
+            $approval_check = new ApprovalTableUpdateActionChecker($docman_approval_table_retriever);
+            $approval_check->checkApprovalTableForItem($representation, $item);
+            return $docman_item_updator->updateFile(
                 $item,
                 $current_user,
                 $representation,
                 new \DateTimeImmutable()
-            );
-        } catch (ExceptionDocumentHasApprovalTable $exception) {
-            throw new I18NRestException(
-                403,
-                dgettext('tuleap-docman', 'Update document with approval table is not possible yet.')
             );
         } catch (ExceptionItemIsLockedByAnotherUser $exception) {
             throw new I18NRestException(
@@ -139,15 +140,34 @@ class DocmanFilesResource extends AuthenticatedResource
                 400,
                 $exception->getMessage()
             );
+        } catch (ItemHasApprovalTableButNoApprovalActionException $exception) {
+            throw new I18NRestException(
+                400,
+                sprintf(
+                    dgettext(
+                        'tuleap-docman',
+                        '%s has an approval table, you must provide an option to have approval table on new version creation.'
+                    ),
+                    $item->title
+                )
+            );
+        } catch (ItemHasNoApprovalTableButHasApprovalActionException $exception) {
+            throw new I18NRestException(
+                400,
+                dgettext(
+                    'tuleap-docman',
+                    'Impossible to update a file which already has an approval table without approval action.'
+                )
+            );
         }
     }
 
-    private function getDocmanFolderPermissionChecker(Project $project) : DocmanFolderPermissionChecker
+    private function getDocmanFolderPermissionChecker(Project $project): DocmanFolderPermissionChecker
     {
         return new DocmanFolderPermissionChecker(\Docman_PermissionsManager::instance($project->getGroupId()));
     }
 
-    private function getDocmanItemsEventAdder() : DocmanItemsEventAdder
+    private function getDocmanItemsEventAdder(): DocmanItemsEventAdder
     {
         return new DocmanItemsEventAdder($this->event_manager);
     }

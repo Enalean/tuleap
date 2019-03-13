@@ -48,7 +48,7 @@ class VersionToUploadCreator
 
     /**
      * @return VersionToUpload
-     *@throws UploadCreationConflictException
+     * @throws UploadCreationConflictException
      * @throws UploadCreationFileMismatchException
      *
      * @throws UploadMaxSizeExceededException
@@ -61,7 +61,8 @@ class VersionToUploadCreator
         string $changelog,
         string $filename,
         int $filesize,
-        bool $is_file_locked
+        bool $is_file_locked,
+        string $approval_table_action
     ) : VersionToUpload {
         $file_size = $filesize;
         if ((int)$file_size > (int)\ForgeConfig::get(PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING)) {
@@ -80,6 +81,7 @@ class VersionToUploadCreator
                 $filename,
                 $filesize,
                 $is_file_locked,
+                $approval_table_action,
                 &$version_id
             ) {
                 $rows = $this->dao->searchDocumentVersionOngoingUploadByItemIdAndExpirationDate(
@@ -111,7 +113,8 @@ class VersionToUploadCreator
                     (int)$user->getId(),
                     $filename,
                     $filesize,
-                    $is_file_locked
+                    $is_file_locked,
+                    $approval_table_action
                 );
             }
         );

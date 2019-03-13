@@ -26,6 +26,9 @@ use Docman_File;
 use Docman_Item;
 use ProjectManager;
 use Tuleap\DB\DBTransactionExecutor;
+use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
+use Tuleap\Docman\ApprovalTable\ApprovalTableUpdateActionChecker;
+use Tuleap\Docman\ApprovalTable\ApprovalTableUpdater;
 use Tuleap\Docman\Lock\LockUpdater;
 use Tuleap\Docman\REST\v1\DocmanItemsEventAdder;
 use Tuleap\Tus\TusFileInformation;
@@ -86,6 +89,18 @@ final class VersionUploadFinisher implements TusFinisherDataStore
      * @var LockUpdater
      */
     private $lock_updater;
+    /**
+     * @var ApprovalTableUpdater
+     */
+    private $approval_table_updater;
+    /**
+     * @var ApprovalTableRetriever
+     */
+    private $approval_table_retriever;
+    /**
+     * @var ApprovalTableUpdateActionChecker
+     */
+    private $approval_table_action_checker;
 
     public function __construct(
         \Logger $logger,
@@ -100,7 +115,10 @@ final class VersionUploadFinisher implements TusFinisherDataStore
         \UserManager $user_manager,
         DocmanItemsEventAdder $items_event_adder,
         ProjectManager $project_manager,
-        LockUpdater $lock_updater
+        LockUpdater $lock_updater,
+        ApprovalTableUpdater $approval_table_updater,
+        ApprovalTableRetriever $approval_table_retriever,
+        ApprovalTableUpdateActionChecker $approval_table_action_checker
     ) {
         $this->logger                         = $logger;
         $this->document_upload_path_allocator = $document_upload_path_allocator;
@@ -115,6 +133,9 @@ final class VersionUploadFinisher implements TusFinisherDataStore
         $this->items_event_adder              = $items_event_adder;
         $this->project_manager                = $project_manager;
         $this->lock_updater                   = $lock_updater;
+        $this->approval_table_updater         = $approval_table_updater;
+        $this->approval_table_retriever       = $approval_table_retriever;
+        $this->approval_table_action_checker = $approval_table_action_checker;
     }
 
     public function finishUpload(TusFileInformation $file_information): void
@@ -203,6 +224,15 @@ final class VersionUploadFinisher implements TusFinisherDataStore
                     throw new \RuntimeException("Not able to update last update date for item #$item_id from upload #$upload_id");
                 }
 
+                $current_user          = $this->user_manager->getUserById($upload_row['user_id']);
+                $approval_table_action = $upload_row['approval_table_action'];
+                if ($this->approval_table_retriever->hasApprovalTable($item)
+                    && $this->approval_table_action_checker->checkAvailableUpdateAction($approval_table_action)
+                ) {
+                    $item_current_version = $this->version_factory->getCurrentVersionForItem($item);
+                    $item->setCurrentVersion($item_current_version);
+                    $this->approval_table_updater->updateApprovalTable($item, $current_user, $approval_table_action);
+                }
                 $this->triggerPostUpdateEvents($item, $current_user);
             }
         );

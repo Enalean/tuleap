@@ -29,6 +29,11 @@ use Tuleap\User\REST\MinimalUserRepresentation;
 class ItemApprovalTableRepresentation
 {
     /**
+     * @var int
+     */
+    public $id;
+
+    /**
      * @var MinimalUserRepresentation
      */
     public $table_owner;
@@ -56,6 +61,7 @@ class ItemApprovalTableRepresentation
         ApprovalTableStateMapper $status_mapper,
         \Docman_Item $item
     ) {
+        $this->id                    = JsonCast::toInt($approval_table->getId());
         $this->table_owner           = $table_owner;
         $this->approval_state        = $status_mapper->getStatusStringFromStatusId((int) $approval_table->getApprovalState());
         $this->approval_request_date = JsonCast::toDate($approval_table->getDate());

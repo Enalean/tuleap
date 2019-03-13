@@ -99,4 +99,44 @@ class ApprovalTableRetrieverTest extends TestCase
 
         $this->assertEquals($table, $this->approval_table_retriever->retrieveByItem($item));
     }
+
+    public function testItReturnsTrueWhenTheItemHasAnApprovalTableRegardlessOfItsActivation(): void
+    {
+        $item    = Mockery::mock(\Docman_Item::class);
+        $factory = Mockery::mock(Docman_ApprovalTableItemFactory::class);
+        $table   = Mockery::mock(\Docman_ApprovalTable::class);
+
+        $this->approval_table_factory->shouldReceive('getSpecificFactoryFromItem')
+                                     ->with($item)
+                                     ->andReturn($factory);
+
+        $factory->shouldReceive('getTable')->andReturn($table);
+
+        $this->assertTrue($this->approval_table_retriever->hasApprovalTable($item));
+    }
+
+    public function testItReturnsFalseWhenTheItemHasNoApprovalTable(): void
+    {
+        $item    = Mockery::mock(\Docman_Item::class);
+        $factory = Mockery::mock(Docman_ApprovalTableItemFactory::class);
+
+        $this->approval_table_factory->shouldReceive('getSpecificFactoryFromItem')
+                                     ->with($item)
+                                     ->andReturn($factory);
+
+        $factory->shouldReceive('getTable')->andReturn(null);
+
+        $this->assertFalse($this->approval_table_retriever->hasApprovalTable($item));
+    }
+
+    public function testReturnsFalseWhenTheTableFactoryFailed(): void
+    {
+        $item = Mockery::mock(\Docman_Item::class);
+
+        $this->approval_table_factory->shouldReceive('getSpecificFactoryFromItem')
+                                     ->with($item)
+                                     ->andReturn(null);
+
+        $this->assertFalse($this->approval_table_retriever->hasApprovalTable($item));
+    }
 }

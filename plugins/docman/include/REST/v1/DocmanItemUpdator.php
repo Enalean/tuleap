@@ -22,7 +22,6 @@ declare(strict_types = 1);
 
 namespace Tuleap\Docman\REST\v1;
 
-use Docman_Item;
 use Docman_LockFactory;
 use Luracast\Restler\RestException;
 use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
@@ -63,21 +62,16 @@ class DocmanItemUpdator
     }
 
     /**
-     * @throws ExceptionDocumentHasApprovalTable
      * @throws ExceptionItemIsLockedByAnotherUser
      * @throws UploadMaxSizeExceededException
      * @throws RestException
      */
-    public function update(
+    public function updateFile(
         \Docman_Item $item,
         \PFUser $user,
         DocmanFilesPATCHRepresentation $patch_representation,
         \DateTimeImmutable $time
     ) : CreatedItemFilePropertiesRepresentation {
-        $approval_table = $this->approval_table_retriever->retrieveByItem($item);
-        if ($approval_table) {
-            throw new ExceptionDocumentHasApprovalTable();
-        }
 
         $lock_infos = $this->lock_factory->getLockInfoForItem($item);
 
@@ -96,7 +90,8 @@ class DocmanItemUpdator
                 $patch_representation->change_log,
                 $patch_representation->file_properties->file_name,
                 $patch_representation->file_properties->file_size,
-                $patch_representation->should_lock_file
+                $patch_representation->should_lock_file,
+                $patch_representation->approval_table_action
             );
         } catch (UploadCreationConflictException $exception) {
             throw new RestException(409, $exception->getMessage());
