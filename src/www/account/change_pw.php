@@ -1,11 +1,23 @@
 <?php
-//
-// Copyright (c) Enalean, 2015 - 2019. All Rights Reserved.
-// SourceForge: Breaking Down the Barriers to Open Source Development
-// Copyright 1999-2000 (c) The SourceForge Crew
-// http://sourceforge.net
-//
-// 
+/**
+ * Copyright (c) Enalean, 2015-Present. All Rights Reserved.
+ * Copyright 1999-2000 (c) The SourceForge Crew
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 use Tuleap\User\Password\Change\PasswordChanger;
 use Tuleap\User\SessionManager;
@@ -105,10 +117,10 @@ $user_id = is_numeric($request->get('user_id')) ? (int)$request->get('user_id') 
 if (register_valid($user_id, $csrf, $old_password_required)) {
     $HTML->header(array('title'=>$Language->getText('account_change_pw', 'title_success')));
 ?>
-<p><b><? echo $Language->getText('account_change_pw', 'title_success'); ?></b>
-<p><? echo $Language->getText('account_change_pw', 'message', array($GLOBALS['sys_name'])); ?>
+<p><b><?php echo $Language->getText('account_change_pw', 'title_success'); ?></b>
+<p><?php echo $Language->getText('account_change_pw', 'message', array($GLOBALS['sys_name'])); ?>
 
-<p><a href="/">[ <? echo $Language->getText('global', 'back_home');?> ]</a>
+<p><a href="/">[ <?php echo $Language->getText('global', 'back_home');?> ]</a>
 <?php
 } else { // not valid registration, or first time to page
 	$HTML->includeJavascriptFile('/scripts/check_pw.js');
@@ -129,7 +141,7 @@ if ($old_password_required) {
 <?php
 }
 user_display_choose_password('',is_numeric($request->get('user_id')) ? $request->get('user_id') : 0); ?>
-<p><input type="submit" class="btn btn-primary" name="Update" value="<? echo $Language->getText('global', 'btn_update'); ?>">
+<p><input type="submit" class="btn btn-primary" name="Update" value="<?php echo $Language->getText('global', 'btn_update'); ?>">
 </form>
 
 <?php

@@ -10,12 +10,12 @@
 global $WikiTheme;
 ?>
 <applet code="hypergraph.applications.hexplorer.HExplorerApplet.class" align="baseline" 
-        archive="<?= $WikiTheme->_finddata("hyperapplet.jar") ?>"
+        archive="<?php echo $WikiTheme->_finddata("hyperapplet.jar") ?>"
         width="160" height="360">
 <?php // the dynamic version: ?>
-  <!--param name="file" value="<?= WikiURL("LinkDatabase", array('format'=>'xml')) ?>" /-->
+  <!--param name="file" value="<?php echo WikiURL("LinkDatabase", array('format'=>'xml')) ?>" /-->
 <?php // The faster static version: dump it periodically ?>
-  <param name="file" value="<?= $WikiTheme->_finddata("LinkDatabase.xml") ?>" />
-  <!--param name="properties" value="<?= $WikiTheme->_finddata("hwiki.prop") ?>" /-->
-  <param name="center" value="<?= $page->getName() ?>" />
+  <param name="file" value="<?php echo $WikiTheme->_finddata("LinkDatabase.xml") ?>" />
+  <!--param name="properties" value="<?php echo $WikiTheme->_finddata("hwiki.prop") ?>" /-->
+  <param name="center" value="<?php echo $page->getName() ?>" />
 </applet>

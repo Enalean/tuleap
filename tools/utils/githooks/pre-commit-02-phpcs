@@ -9,7 +9,7 @@ cleanup_temporary_directory() {
 trap cleanup_temporary_directory EXIT
 
 get_list_of_files() {
-    git diff --cached --name-only --diff-filter=ACMRTUXB | grep \.php$
+    git diff --cached --name-only --diff-filter=ACMTUXB | grep \.php$
 }
 
 get_initial_commit() {
@@ -60,14 +60,26 @@ get_list_of_mandatory_psr2_files() {
 main() {
     local files_list
     files_list=$(get_list_of_files)
+    if [[ -z "${files_list}" ]]
+    then
+        exit 0
+    fi
+    ./src/vendor/bin/phpcs --standard=./tests/phpcs/tuleap-ruleset-minimal.xml --encoding=utf-8 -p ${files_list}
+    local status_strict=$?
+    if [[ ${status_strict} -ne 0 ]]
+    then
+        echo "This command can be launched to fix some errors automatically:\n \`\033[32mmake phpcbf FILES='$files_list'\e[0m\`"
+        exit ${status_strict}
+    fi
+
     local files_psr2_mandatory
     files_psr2_mandatory=$(get_list_of_mandatory_psr2_files "${files_list}")
     if [[ -n ${files_psr2_mandatory} ]]
     then
         local phpcs_output
-        phpcs_output=$(./src/vendor/bin/phpcs --standard=PSR2 --encoding=utf-8 --warning-severity=0 -p ${files_psr2_mandatory})
+        phpcs_output=$(./src/vendor/bin/phpcs --standard=./tests/phpcs/tuleap-ruleset.xml --encoding=utf-8 -p ${files_psr2_mandatory})
         local status=$?
-        if [ ${status} -ne 0 ]
+        if [[ ${status} -ne 0 ]]
         then
             echo "$phpcs_output" | less
         fi

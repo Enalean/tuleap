@@ -82,12 +82,12 @@ $tlp_script_tag = $include_asset->getHTMLSnippet('tlp.en_US.min.js');
         $selected_class = ($main === $current_section ? 'tlp-tab-active' : '');
         if (isset($section['children']) && count($section['children'])) {
             ?>
-            <div class="tlp-tab <?= $selected_class; ?>">
-                <?= $section['label'] ?> <i class="fa fa-caret-down"></i>
+            <div class="tlp-tab <?php echo $selected_class; ?>">
+                <?php echo $section['label'] ?> <i class="fa fa-caret-down"></i>
                 <nav class="tlp-tab-menu">
                     <?php foreach ($section['children'] as $id => $subsection) : ?>
-                        <a href="?section=<?= $main ?>#<?= $id ?>" class="tlp-tab-menu-item">
-                            <?= $subsection['label'] ?>
+                        <a href="?section=<?php echo $main ?>#<?php echo $id ?>" class="tlp-tab-menu-item">
+                            <?php echo $subsection['label'] ?>
                         </a>
                     <?php endforeach; ?>
                 </nav>
@@ -95,8 +95,8 @@ $tlp_script_tag = $include_asset->getHTMLSnippet('tlp.en_US.min.js');
             <?php
         } else {
             ?>
-            <a href="?section=<?= $main ?>" class="tlp-tab <?= $selected_class ?>">
-                <?= $section['label'] ?>
+            <a href="?section=<?php echo $main ?>" class="tlp-tab <?php echo $selected_class ?>">
+                <?php echo $section['label'] ?>
             </a>
             <?php
         }
@@ -121,22 +121,22 @@ $tlp_script_tag = $include_asset->getHTMLSnippet('tlp.en_US.min.js');
     {
         if ($documentation) { ?>
             <div class="doc-information">
-                <?= $documentation ?>
+                <?php echo $documentation ?>
             </div>
         <?php }
 
         if ($example) { ?>
             <div class="demo">
-                <div class="example" id="example-<?= "$section_id-$subsection_id" ?>"></div>
+                <div class="example" id="example-<?php echo "$section_id-$subsection_id" ?>"></div>
                 <div class="code">
-                    <textarea><?= htmlspecialchars($example) ?></textarea>
+                    <textarea><?php echo htmlspecialchars($example) ?></textarea>
                 </div>
             </div>
         <?php }
 
         if ($demo) { ?>
             <div class="demo">
-                <?= $demo ?></textarea>
+                <?php echo $demo ?></textarea>
             </div>
         <?php }
     }
@@ -152,11 +152,11 @@ $tlp_script_tag = $include_asset->getHTMLSnippet('tlp.en_US.min.js');
 
         if ($documentation) {
             ?>
-            <section class="doc-section" id="<?= $current_section ?>">
+            <section class="doc-section" id="<?php echo $current_section ?>">
                 <h2 class="doc-section-title">
-                    <?= $sections[$current_section]['label'] ?>
+                    <?php echo $sections[$current_section]['label'] ?>
                     <?php if (isset($sections[$current_section]['shortcode']) && $sections[$current_section]['shortcode']) : ?>
-                        <code class="code-inline"><?= $sections[$current_section]['shortcode'] ?></code>
+                        <code class="code-inline"><?php echo $sections[$current_section]['shortcode'] ?></code>
                     <?php endif; ?>
                 </h2>
                  <?php displaySectionContent($documentation, $example, $demo, ''); ?>
@@ -184,11 +184,11 @@ $tlp_script_tag = $include_asset->getHTMLSnippet('tlp.en_US.min.js');
             $demo = file_get_contents($demo_path);
         }
         ?>
-        <section class="doc-section" id="<?= $id ?>">
+        <section class="doc-section" id="<?php echo $id ?>">
             <h2 class="doc-section-title">
-                <?= $section['label'] ?>
+                <?php echo $section['label'] ?>
                 <?php if (isset($section['shortcode']) && $section['shortcode']) : ?>
-                    <code class="code-inline"><?= $section['shortcode'] ?></code>
+                    <code class="code-inline"><?php echo $section['shortcode'] ?></code>
                 <?php endif; ?>
             </h2>
             <?php
@@ -214,12 +214,12 @@ $tlp_script_tag = $include_asset->getHTMLSnippet('tlp.en_US.min.js');
                         $demo = file_get_contents($demo_path);
                     }
                     ?>
-                    <section class="doc-section" id="<?= $id ?>">
+                    <section class="doc-section" id="<?php echo $id ?>">
                         <?php if (isset($section['label'])) : ?>
                             <h3 class="doc-subsection-title">
-                                <?= $section['label'] ?>
+                                <?php echo $section['label'] ?>
                                 <?php if (isset($section['shortcode']) && $section['shortcode']) : ?>
-                                    <code class="code-inline"><?= $section['shortcode'] ?></code>
+                                    <code class="code-inline"><?php echo $section['shortcode'] ?></code>
                                 <?php endif; ?>
                             </h3>
                         <?php endif;

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-Present. All Rights Reserved.
  * Copyright 1999-2000 (c) The SourceForge Crew
  *
  * This file is a part of Tuleap.
@@ -266,7 +266,7 @@ function user_display_choose_password($page,$user_id = false) {
 	$purifier = Codendi_HTMLPurifier::instance();
 	?>
     <table><tr valign='top'><td>
-    <?
+    <?php
 
     if ($page == 'admin_creation') {
         echo $purifier->purify($GLOBALS['Language']->getText('account_change_pw', 'new_password'));
@@ -275,14 +275,14 @@ function user_display_choose_password($page,$user_id = false) {
      <script type="text/javascript" src="/scripts/user.js"></script>
 
 
-    <? } else { echo $purifier->purify($GLOBALS['Language']->getText('account_change_pw', 'new_password')); ?>:
+    <?php } else { echo $purifier->purify($GLOBALS['Language']->getText('account_change_pw', 'new_password')); ?>:
     <br><input type="password" value="" id="form_pw" name="form_pw" autocomplete="new-password">
-    <p><? echo $purifier->purify($GLOBALS['Language']->getText('account_change_pw', 'new_password2')); ?>:
+    <p><?php echo $purifier->purify($GLOBALS['Language']->getText('account_change_pw', 'new_password2')); ?>:
     <br><input type="password" value="" name="form_pw2" autocomplete="new-password">
-    <? } ?>
+    <?php } ?>
     </td><td>
     <div class="password_strategy">
-        <p class="robustness"><?=$purifier->purify($GLOBALS['Language']->getText('account_check_pw', 'password_robustness'))?>
+        <p class="robustness"><?php echo $purifier->purify($GLOBALS['Language']->getText('account_check_pw', 'password_robustness'))?>
 			<span class="password_strategy_good"><?php echo $purifier->purify($GLOBALS['Language']->getText('account_check_pw', 'good')); ?></span>
 			<span class="password_strategy_bad"><?php echo $purifier->purify($GLOBALS['Language']->getText('account_check_pw', 'bad')); ?></span>
             <img class="password_validators_loading" src="/themes/common/images/ic/spinner-16.gif">
@@ -306,7 +306,7 @@ function user_display_choose_password($page,$user_id = false) {
 		$password_validators_js[] = "'" . $purifier->purify($validator_key, CODENDI_PURIFIER_JS_QUOTE) . "'";
 	}
 	?>
-    var password_validators = [<?= implode(', ', $password_validators_js) ?>];
+    var password_validators = [<?php echo implode(', ', $password_validators_js) ?>];
     </script>
     <?php
     if ($user_id) {
