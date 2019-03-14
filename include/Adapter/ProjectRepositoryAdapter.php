@@ -48,7 +48,7 @@ class ProjectRepositoryAdapter implements ProjectRepository
         if ($project === null) {
             return null;
         }
-        if (! $this->adapter_permissions->userCanReadProject($current_user, $project)) {
+        if (! $this->adapter_permissions->canUserReadProject($current_user, $project)) {
             return null;
         }
         return $project;

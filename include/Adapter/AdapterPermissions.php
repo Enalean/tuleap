@@ -51,10 +51,10 @@ class AdapterPermissions
         }
 
         $project = $tracker->getProject();
-        return $this->userCanReadProject($user, $project);
+        return $this->canUserReadProject($user, $project);
     }
 
-    public function userCanReadProject(PFUser $user, Project $project): bool
+    public function canUserReadProject(PFUser $user, Project $project): bool
     {
         try {
             $this->url_verification->userCanAccessProject($user, $project);
