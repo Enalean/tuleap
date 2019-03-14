@@ -23,7 +23,9 @@ namespace Tuleap\FRS\REST\v1;
 
 use ForgeConfig;
 use FRSFile;
+use FRSFileDao;
 use FRSFileFactory;
+use FRSLogDao;
 use FRSReleaseFactory;
 use Luracast\Restler\RestException;
 use PFUser;
@@ -32,8 +34,12 @@ use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\FRS\FRSPermissionDao;
 use Tuleap\FRS\FRSPermissionFactory;
 use Tuleap\FRS\FRSPermissionManager;
+use Tuleap\FRS\Upload\EmptyFileToUploadFinisher;
 use Tuleap\FRS\Upload\FileOngoingUploadDao;
 use Tuleap\FRS\Upload\FileToUploadCreator;
+use Tuleap\FRS\Upload\Tus\FileUploadFinisher;
+use Tuleap\FRS\Upload\Tus\ToBeCreatedFRSFileBuilder;
+use Tuleap\FRS\Upload\UploadPathAllocator;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
@@ -212,6 +218,7 @@ class FileResource extends AuthenticatedResource
             new FRSPermissionDao(),
             new FRSPermissionFactory(new FRSPermissionDao())
         );
+
         $project = $release->getProject();
         if (! $frs_permission_manager->isAdmin($project, $user)) {
             throw new RestException(403);
@@ -219,12 +226,28 @@ class FileResource extends AuthenticatedResource
 
         $file_ongoing_upload_dao = new FileOngoingUploadDao();
 
-        $file_item_creator = new FileCreator(
+        $logger                = new \BackendLogger();
+        $upload_path_allocator = new UploadPathAllocator();
+        $file_item_creator     = new FileCreator(
             new FileToUploadCreator(
                 $this->file_factory,
                 $file_ongoing_upload_dao,
                 new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
                 (int) ForgeConfig::get('sys_max_size_upload')
+            ),
+            new EmptyFileToUploadFinisher(
+                new FileUploadFinisher(
+                    $logger,
+                    $upload_path_allocator,
+                    new FRSFileFactory($logger),
+                    new FRSReleaseFactory(),
+                    $file_ongoing_upload_dao,
+                    new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
+                    new FRSFileDao(),
+                    new FRSLogDao(),
+                    new ToBeCreatedFRSFileBuilder()
+                ),
+                $upload_path_allocator
             )
         );
 

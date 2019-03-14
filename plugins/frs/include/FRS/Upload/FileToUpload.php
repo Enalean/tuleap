@@ -37,4 +37,9 @@ final class FileToUpload
     {
         return '/uploads/frs/file/' . urlencode((string) $this->id);
     }
+
+    public function getId(): int
+    {
+        return $this->id;
+    }
 }

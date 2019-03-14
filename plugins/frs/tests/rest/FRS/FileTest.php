@@ -144,4 +144,28 @@ class FileTest extends RestBase
         $response_creation_file = $this->getResponse($this->client->post('frs_files', null, json_encode($query)));
         $this->assertEquals(201, $response_creation_file->getStatusCode());
     }
+
+    public function testEmptyFileCreation(): void
+    {
+        $name  = 'empty_file_' . bin2hex(random_bytes(8));
+        $query = [
+            'release_id' => 1,
+            'name'       => $name,
+            'file_size'  => 0
+        ];
+
+        $response_creation_file = $this->getResponse($this->client->post('frs_files', null, json_encode($query)));
+        $this->assertEquals(201, $response_creation_file->getStatusCode());
+        $this->assertEmpty($response_creation_file->json()['upload_href']);
+
+        $response_files = $this->getResponse($this->client->get('frs_release/1/files'));
+        $is_empty_file_found = false;
+        foreach ($response_files->json()['files'] as $file) {
+            if ($file['name'] === $name) {
+                $is_empty_file_found = true;
+                break;
+            }
+        }
+        $this->assertTrue($is_empty_file_found, 'Empty file should be created');
+    }
 }

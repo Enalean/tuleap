@@ -25,6 +25,7 @@ use DateTimeImmutable;
 use FRSRelease;
 use Luracast\Restler\RestException;
 use PFUser;
+use Tuleap\FRS\Upload\EmptyFileToUploadFinisher;
 use Tuleap\FRS\Upload\FileToUploadCreator;
 use Tuleap\FRS\Upload\UploadCreationConflictException;
 use Tuleap\FRS\Upload\UploadCreationFileMismatchException;
@@ -39,10 +40,17 @@ final class FileCreator
      * @var FileToUploadCreator
      */
     private $file_to_upload_creator;
+    /**
+     * @var EmptyFileToUploadFinisher
+     */
+    private $empty_file_to_upload_finisher;
 
-    public function __construct(FileToUploadCreator $file_to_upload_creator)
-    {
+    public function __construct(
+        FileToUploadCreator $file_to_upload_creator,
+        EmptyFileToUploadFinisher $empty_file_to_upload_finisher
+    ) {
         $this->file_to_upload_creator = $file_to_upload_creator;
+        $this->empty_file_to_upload_finisher = $empty_file_to_upload_finisher;
     }
 
     /**
@@ -66,6 +74,7 @@ final class FileCreator
             );
 
             if ($file_post_representation->file_size === 0) {
+                $this->empty_file_to_upload_finisher->createEmptyFile($file_to_upload, $file_post_representation->name);
                 return new CreatedFileRepresentation();
             }
         } catch (UploadCreationConflictException $exception) {
