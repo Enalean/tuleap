@@ -35,6 +35,7 @@ use Tuleap\Docman\DocmanSettingsSiteAdmin\DocmanSettingsAdminSaveController;
 use Tuleap\Docman\DocmanSettingsSiteAdmin\DocumentSettingsSaver;
 use Tuleap\Docman\ExternalLinks\DocmanHTTPControllerProxy;
 use Tuleap\Docman\ExternalLinks\ExternalLinkParametersExtractor;
+use Tuleap\Docman\Lock\LockUpdater;
 use Tuleap\Docman\Notifications\NotificationsForProjectMemberCleaner;
 use Tuleap\Docman\Notifications\NotifiedPeopleRetriever;
 use Tuleap\Docman\Notifications\UGroupsRetriever;
@@ -1349,7 +1350,8 @@ class DocmanPlugin extends Plugin
                     new Docman_MIMETypeDetector(),
                     UserManager::instance(),
                     new DocmanItemsEventAdder($event_manager),
-                    ProjectManager::instance()
+                    ProjectManager::instance(),
+                    new LockUpdater(new Docman_LockFactory())
                 ),
                 new VersionUploadCanceler($path_allocator, $version_to_upload_dao),
                 new FileBeingUploadedLocker($path_allocator)

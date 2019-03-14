@@ -95,7 +95,8 @@ class DocmanItemUpdator
                 $patch_representation->version_title,
                 $patch_representation->change_log,
                 $patch_representation->file_properties->file_name,
-                $patch_representation->file_properties->file_size
+                $patch_representation->file_properties->file_size,
+                $patch_representation->should_lock_file
             );
         } catch (UploadCreationConflictException $exception) {
             throw new RestException(409, $exception->getMessage());

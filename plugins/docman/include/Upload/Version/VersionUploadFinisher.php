@@ -26,6 +26,7 @@ use Docman_File;
 use Docman_Item;
 use ProjectManager;
 use Tuleap\DB\DBTransactionExecutor;
+use Tuleap\Docman\Lock\LockUpdater;
 use Tuleap\Docman\REST\v1\DocmanItemsEventAdder;
 use Tuleap\Tus\TusFileInformation;
 use Tuleap\Tus\TusFinisherDataStore;
@@ -81,6 +82,10 @@ final class VersionUploadFinisher implements TusFinisherDataStore
      * @var ProjectManager
      */
     private $project_manager;
+    /**
+     * @var LockUpdater
+     */
+    private $lock_updater;
 
     public function __construct(
         \Logger $logger,
@@ -94,7 +99,8 @@ final class VersionUploadFinisher implements TusFinisherDataStore
         \Docman_MIMETypeDetector $docman_mime_type_detector,
         \UserManager $user_manager,
         DocmanItemsEventAdder $items_event_adder,
-        ProjectManager $project_manager
+        ProjectManager $project_manager,
+        LockUpdater $lock_updater
     ) {
         $this->logger                         = $logger;
         $this->document_upload_path_allocator = $document_upload_path_allocator;
@@ -108,6 +114,7 @@ final class VersionUploadFinisher implements TusFinisherDataStore
         $this->user_manager                   = $user_manager;
         $this->items_event_adder              = $items_event_adder;
         $this->project_manager                = $project_manager;
+        $this->lock_updater                   = $lock_updater;
     }
 
     public function finishUpload(TusFileInformation $file_information): void
@@ -178,6 +185,10 @@ final class VersionUploadFinisher implements TusFinisherDataStore
                         'date'      => $current_time
                     ]
                 );
+
+                $current_user = $this->user_manager->getUserById($upload_row['user_id']);
+                $this->lock_updater->updateLockInformation($item, (bool)$upload_row['is_file_locked'], $current_user);
+
                 if (! $has_version_been_created) {
                     \unlink($file_path);
                     $item_id = (int) $item->getId();
@@ -191,8 +202,6 @@ final class VersionUploadFinisher implements TusFinisherDataStore
                     $item_id = (int)$item->getId();
                     throw new \RuntimeException("Not able to update last update date for item #$item_id from upload #$upload_id");
                 }
-
-                $current_user = $this->user_manager->getUserById($upload_row['user_id']);
 
                 $this->triggerPostUpdateEvents($item, $current_user);
             }

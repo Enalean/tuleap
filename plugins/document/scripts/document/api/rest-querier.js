@@ -101,7 +101,8 @@ async function createNewVersion(item, version_title, change_log, dropped_file) {
             file_properties: {
                 file_name: dropped_file.name,
                 file_size: dropped_file.size
-            }
+            },
+            should_lock_file: item.lock_info !== null
         })
     });
 

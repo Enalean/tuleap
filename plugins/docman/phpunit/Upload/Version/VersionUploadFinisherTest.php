@@ -27,6 +27,7 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Docman\Lock\LockUpdater;
 use Tuleap\Docman\REST\v1\DocmanItemsEventAdder;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
@@ -37,6 +38,7 @@ class VersionUploadFinisherTest extends TestCase
 {
     use MockeryPHPUnitIntegration, ForgeConfigSandbox;
 
+    private $lock_updater;
     private $project_manager;
     private $adder;
     private $logger;
@@ -58,6 +60,7 @@ class VersionUploadFinisherTest extends TestCase
         $this->user_manager        = Mockery::mock(\UserManager::class);
         $this->adder               = Mockery::mock(DocmanItemsEventAdder::class);
         $this->project_manager     = Mockery::mock(\ProjectManager::class);
+        $this->lock_updater        = Mockery::mock(LockUpdater::class);
     }
 
     public function testDocumentIsAddedToTheDocumentManagerWhenTheUploadIsComplete() : void
@@ -79,7 +82,8 @@ class VersionUploadFinisherTest extends TestCase
             new \Docman_MIMETypeDetector(),
             $this->user_manager,
             $this->adder,
-            $this->project_manager
+            $this->project_manager,
+            $this->lock_updater
         );
 
 
@@ -98,15 +102,16 @@ class VersionUploadFinisherTest extends TestCase
         );
         $this->on_going_upload_dao->shouldReceive('searchDocumentVersionOngoingUploadByUploadID')->andReturns(
             [
-                'id'            => $item_id_being_created,
-                'parent_id'     => 3,
-                'item_id'       => 20,
-                'user_id'       => 101,
-                'version_title' => 'Title',
-                'changelog'     => 'Description',
-                'filename'      => 'Filename',
-                'filesize'      => 123,
-                'filetype'      => 'Filetype',
+                'id'             => $item_id_being_created,
+                'parent_id'      => 3,
+                'item_id'        => 20,
+                'user_id'        => 101,
+                'version_title'  => 'Title',
+                'changelog'      => 'Description',
+                'filename'       => 'Filename',
+                'filesize'       => 123,
+                'filetype'       => 'Filetype',
+                'is_file_locked' => false
             ]
         );
         $item = Mockery::mock(Docman_File::class);
@@ -137,6 +142,7 @@ class VersionUploadFinisherTest extends TestCase
         $this->item_factory->shouldReceive('update')->once()->andReturn(true);
 
         $file_information = new FileAlreadyUploadedInformation($item_id_being_created, 'Filename', 123);
+        $this->lock_updater->shouldReceive('updateLockInformation');
 
         $upload_finisher->finishUpload($file_information);
 
