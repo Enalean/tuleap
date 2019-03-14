@@ -23,10 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\REST;
 
-use DateTime;
-use DateTimeZone;
 use Tuleap\Baseline\BaselineService;
-use Tuleap\Baseline\ChangesetNotFoundException;
 use Tuleap\Baseline\CurrentUserProvider;
 use Tuleap\Baseline\MilestoneRepository;
 use Tuleap\Baseline\NotAuthorizedException;
@@ -126,99 +123,5 @@ class BaselineController
                 )
             );
         }
-    }
-
-    /**
-     * @throws I18NRestException 403
-     * @throws I18NRestException 404
-     * @throws \Luracast\Restler\RestException
-     * @throws \Rest_Exception_InvalidTokenException
-     * @throws \User_PasswordExpiredException
-     * @throws \User_StatusDeletedException
-     * @throws \User_StatusInvalidException
-     * @throws \User_StatusPendingException
-     * @throws \User_StatusSuspendedException
-     */
-    public function getByMilestoneIdAndDate(
-        int $milestone_id,
-        string $last_modification_date_before_baseline_date
-    ): SimplifiedBaselineRepresentation {
-        $date         = $this->parseDate($last_modification_date_before_baseline_date, "Y-m-d");
-        $current_user = $this->current_user_provider->getUser();
-
-        $milestone = $this->milestone_repository->findById($current_user, $milestone_id);
-        if ($milestone === null) {
-            throw new I18NRestException(
-                404,
-                sprintf(
-                    dgettext('tuleap-baseline', 'No milestone found with id %u'),
-                    $milestone_id
-                )
-            );
-        }
-
-        try {
-            $simplified_baseline = $this->baseline_service->findSimplified(
-                $current_user,
-                $milestone,
-                $this->setMidnight($date)
-            );
-            return new SimplifiedBaselineRepresentation(
-                $simplified_baseline->getTitle(),
-                $simplified_baseline->getDescription(),
-                $simplified_baseline->getStatus(),
-                $simplified_baseline->getLastModificationDateBeforeBaselineDate()->getTimestamp()
-            );
-        } catch (NotAuthorizedException $exception) {
-            throw new I18NRestException(
-                403,
-                sprintf(
-                    dgettext('tuleap-baseline', 'This operation is not allowed. %s'),
-                    $exception->getMessage()
-                )
-            );
-        } catch (ChangesetNotFoundException $exception) {
-            throw new I18NRestException(
-                404,
-                sprintf(
-                    dgettext('tuleap-baseline', 'No changetset found before %s'),
-                    $exception->getDate()->format('Y-m-d H:i:s')
-                )
-            );
-        }
-    }
-
-    /**
-     * @throws I18NRestException
-     * @throws \Rest_Exception_InvalidTokenException
-     * @throws \User_PasswordExpiredException
-     * @throws \User_StatusDeletedException
-     * @throws \User_StatusInvalidException
-     * @throws \User_StatusPendingException
-     * @throws \User_StatusSuspendedException
-     */
-    private function parseDate(
-        string $date,
-        string $format
-    ): DateTime {
-        $user_timezone_code   = $this->current_user_provider->getUser()->getTimezone();
-        $user_timezone        = new DateTimeZone($user_timezone_code);
-        $date_time_or_failure = DateTime::createFromFormat($format, $date, $user_timezone);
-        if ($date_time_or_failure === false) {
-            throw new I18NRestException(
-                400,
-                sprintf(
-                    dgettext('tuleap-baseline', 'Invalid date: %s. Expected format: %s'),
-                    $date,
-                    $format
-                )
-            );
-        }
-        return $date_time_or_failure;
-    }
-
-    private function setMidnight(DateTime $date_time): DateTime
-    {
-        return $date_time->setTime(0, 0, 0, 0);
     }
 }

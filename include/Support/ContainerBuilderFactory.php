@@ -81,9 +81,7 @@ class ContainerBuilderFactory
                     ),
                 BaselineService::class                   => create(BaselineService::class)
                     ->constructor(
-                        get(FieldRepository::class),
                         get(Permissions::class),
-                        get(ChangesetRepository::class),
                         get(BaselineRepository::class),
                         get(CurrentUserProvider::class),
                         get(Clock::class)

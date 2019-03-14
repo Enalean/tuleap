@@ -23,23 +23,13 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline;
 
-use DateTime;
 use PFUser;
 use Project;
-use Tracker;
-use Tracker_Artifact;
-use Tracker_Artifact_Changeset;
 
 class BaselineService
 {
-    /** @var FieldRepository */
-    private $field_repository;
-
     /** @var Permissions */
     private $permissions;
-
-    /** @var ChangesetRepository */
-    private $changeset_repository;
 
     /** @var BaselineRepository */
     private $baseline_repository;
@@ -51,16 +41,12 @@ class BaselineService
     private $clock;
 
     public function __construct(
-        FieldRepository $field_repository,
         Permissions $permissions,
-        ChangesetRepository $changeset_repository,
         BaselineRepository $baseline_repository,
         CurrentUserProvider $current_user_provider,
         Clock $clock
     ) {
-        $this->field_repository      = $field_repository;
         $this->permissions           = $permissions;
-        $this->changeset_repository  = $changeset_repository;
         $this->baseline_repository   = $baseline_repository;
         $this->current_user_provider = $current_user_provider;
         $this->clock                 = $clock;
@@ -77,39 +63,6 @@ class BaselineService
             $this->current_user_provider->getUser(),
             $this->clock->now()
         );
-    }
-
-    /**
-     * Find simplified baseline on given milestone and given date time.
-     *
-     * @throws ChangesetNotFoundException when given tracker did not exist on given date
-     * @throws NotAuthorizedException
-     */
-    public function findSimplified(
-        PFUser $current_user,
-        Tracker_Artifact $milestone,
-        DateTime $date
-    ): SimplifiedBaseline {
-        $project = $milestone->getTracker()->getProject();
-        $this->permissions->checkUserHasAdminRoleOn($current_user, $project);
-        $change_set = $this->changeset_repository->findByArtifactAndDate($milestone, $date);
-        if ($change_set === null) {
-            throw new ChangesetNotFoundException($date);
-        }
-
-        $tracker        = $milestone->getTracker();
-        $changeset_date = new DateTime();
-        $changeset_date->setTimestamp((int) $change_set->getSubmittedOn());
-
-        $baseline = new SimplifiedBaseline(
-            $milestone,
-            $this->getTrackerTitle($tracker, $change_set),
-            $this->getTrackerDescription($tracker, $change_set),
-            $this->getTrackerStatus($tracker, $change_set),
-            $changeset_date
-        );
-
-        return $baseline;
     }
 
     /**
@@ -136,35 +89,5 @@ class BaselineService
         $baselines = $this->baseline_repository->findByProject($current_user, $project, $page_size, $baseline_offset);
         $count     = $this->baseline_repository->countByProject($project);
         return new BaselinesPage($baselines, $page_size, $baseline_offset, $count);
-    }
-
-    private function getTrackerTitle(Tracker $tracker, Tracker_Artifact_Changeset $changeSet): ?string
-    {
-        $title_field = $this->field_repository->findTitleByTracker($tracker);
-        if ($title_field === null) {
-            return null;
-        }
-
-        return $changeSet->getValue($title_field)->getValue();
-    }
-
-    private function getTrackerDescription(Tracker $tracker, Tracker_Artifact_Changeset $changeSet): ?string
-    {
-        $description_field = $this->field_repository->findDescriptionByTracker($tracker);
-        if ($description_field === null) {
-            return null;
-        }
-
-        return $changeSet->getValue($description_field)->getValue();
-    }
-
-    private function getTrackerStatus(Tracker $tracker, Tracker_Artifact_Changeset $changeSet): ?string
-    {
-        $status_field = $this->field_repository->findStatusByTracker($tracker);
-        if ($status_field === null) {
-            return null;
-        }
-
-        return $status_field->getFirstValueFor($changeSet);
     }
 }

@@ -25,14 +25,8 @@ namespace Tuleap\Baseline\REST;
 
 require_once __DIR__ . '/IntegrationTestCaseWithStubs.php';
 
-use Mockery;
-use Mockery\MockInterface;
-use Tracker_FormElement_Field_List;
-use Tracker_FormElement_Field_Text;
-use Tuleap\Baseline\Factory\ChangesetFactory;
 use Tuleap\Baseline\Factory\MilestoneFactory;
 use Tuleap\GlobalLanguageMock;
-use Tuleap\REST\I18NRestException;
 
 class BaselineControllerIntTest extends IntegrationTestCaseWithStubs
 {
@@ -61,115 +55,5 @@ class BaselineControllerIntTest extends IntegrationTestCaseWithStubs
         $this->assertEquals($milestone, $baseline->getMilestone());
         $this->assertEquals($this->current_user_provider->getUser(), $baseline->getAuthor());
         $this->assertEquals($this->clock->now(), $baseline->getSnapshotDate());
-    }
-
-    public function testGetByMilestoneIdAndDate()
-    {
-        $this->permissions->permitAll();
-        $this->milestone_repository->add(
-            MilestoneFactory::one()->id(3)->build()
-        );
-
-        $title_field       = $this->saveATitleField();
-        $description_field = $this->saveADescriptionField();
-        $status_field      = $this->saveAStatusField();
-
-        $this->changeset_repository->setSingleChangesetForAllDates(
-            ChangesetFactory::one()
-                ->submittedOn(1555459100)
-                ->textValue($title_field, 'My first baseline')
-                ->textValue($description_field, 'Baseline details')
-                ->firstListValue($status_field, 'On going')
-                ->build()
-        );
-
-        $simplified_baseline = $this->controller->getByMilestoneIdAndDate(3, '2019-03-21');
-
-        $this->assertNotNull($simplified_baseline);
-        $this->assertEquals('My first baseline', $simplified_baseline->artifact_title);
-        $this->assertEquals('Baseline details', $simplified_baseline->artifact_description);
-        $this->assertEquals('On going', $simplified_baseline->artifact_status);
-        $this->assertEquals(1555459100, $simplified_baseline->last_modification_date_before_baseline_date);
-    }
-
-    public function testGetByMilestoneIdAndDateThrowWhenUserCanNotViewArtifact()
-    {
-        $this->expectException(I18NRestException::class);
-        $this->expectExceptionCode(403);
-
-        $this->permissions->denyAll();
-        $this->milestone_repository->add(
-            MilestoneFactory::one()->id(3)->build()
-        );
-
-        $this->changeset_repository->setSingleChangesetForAllDates(ChangesetFactory::one()->build());
-
-        $this->controller->getByMilestoneIdAndDate(3, '2019-03-21');
-    }
-
-    public function testGetByMilestoneIdAndDateThrowsWhenGivenDateFormatIsInvalid()
-    {
-        $this->expectException(I18NRestException::class);
-        $this->expectExceptionCode(400);
-
-        $this->permissions->permitAll();
-
-        $this->controller->getByMilestoneIdAndDate(3, 'invalid date format');
-    }
-
-    public function testGetByMilestoneIdAndDateThrowsWhenNotArtifactExistWithGivenId()
-    {
-        $this->expectException(I18NRestException::class);
-        $this->expectExceptionCode(404);
-
-        $this->permissions->permitAll();
-        $this->milestone_repository->removeAll();
-
-        $this->controller->getByMilestoneIdAndDate(3, '2019-03-21');
-    }
-
-    public function testGetByMilestoneIdAndDateReturnsEmptyWhenNoChangeset()
-    {
-        $this->expectException(I18NRestException::class);
-        $this->expectExceptionCode(404);
-
-        $this->permissions->permitAll();
-        $this->milestone_repository->add(
-            MilestoneFactory::one()->id(3)->build()
-        );
-
-        $this->changeset_repository->removeAll();
-
-        $this->controller->getByMilestoneIdAndDate(3, '2019-03-21');
-    }
-
-    /**
-     * @return Tracker_FormElement_Field_Text|MockInterface
-     */
-    private function saveATitleField()
-    {
-        $field = Mockery::mock(Tracker_FormElement_Field_Text::class);
-        $this->field_repository->setTitleForAllTrackers($field);
-        return $field;
-    }
-
-    /**
-     * @return Tracker_FormElement_Field_Text|MockInterface
-     */
-    private function saveADescriptionField()
-    {
-        $field = Mockery::mock(Tracker_FormElement_Field_Text::class);
-        $this->field_repository->setDescriptionForAllTrackers($field);
-        return $field;
-    }
-
-    /**
-     * @return Tracker_FormElement_Field_List|MockInterface
-     */
-    private function saveAStatusField()
-    {
-        $field = Mockery::mock(Tracker_FormElement_Field_List::class);
-        $this->field_repository->setStatusForAllTrackers($field);
-        return $field;
     }
 }

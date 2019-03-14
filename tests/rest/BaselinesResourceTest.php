@@ -42,23 +42,6 @@ class BaselinesResourceTest extends RestBase
         $this->a_milestone_id  = $artifact_ids_by_title[self::ARTIFACT_TITLE];
     }
 
-    public function testGetByArtifactIdAndDate()
-    {
-        $url           = 'baselines/?' . http_build_query(
-                [
-                    'artifact_id' => $this->a_milestone_id,
-                    "date"        => "2017-09-02"
-                ]
-            );
-        $response      = $this->getResponse($this->client->get($url));
-        $json_response = $response->json();
-
-        $this->assertEquals("old title", $json_response['artifact_title']);
-        $this->assertEquals(1479378846, $json_response['last_modification_date_before_baseline_date']);
-        $this->assertEquals("To be done", $json_response['artifact_status']);
-        $this->assertEquals("Artifact that will be moved in another tracker", $json_response['artifact_description']);
-    }
-
     public function testPost()
     {
         $response      = $this->getResponseByName(
