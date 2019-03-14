@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
  * Originally written by Sabri LABBENE, 2007.
@@ -21,6 +21,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Mockery as M;
+
 require_once 'bootstrap.php';
 
 Mock::generate('EventManager');
@@ -29,7 +31,6 @@ Mock::generate('Docman_ItemDao');
 Mock::generate('Docman_Folder');
 Mock::generate('Docman_File');
 Mock::generate('Docman_Version');
-Mock::generate('Docman_VersionFactory');
 Mock::generate('PFUser');
 Mock::generate('UserManager');
 Mock::generatePartial('Docman_ItemFactory', 'Docman_ItemFactoryTestVersion', array('_getItemDao', 'purgeDeletedItem','getItemFromDb','isRoot'));
@@ -501,12 +502,10 @@ class Docman_ItemFactoryTest extends TuleapTestCase
         $v1 = new MockDocman_Version($this);
         $v2 = new MockDocman_Version($this);
 
-        $versionFactory = new MockDocman_VersionFactory($this);
-        $versionFactory->expectOnce('listVersionsToPurgeForItem', array($item));
-        $versionFactory->setReturnValue('listVersionsToPurgeForItem', array($v1, $v2));
-        $versionFactory->expectAt(0, 'restore', array($v1));
-        $versionFactory->expectAt(1, 'restore', array($v2));
-        $versionFactory->setReturnValue('restore', true);
+        $versionFactory = M::mock(Docman_VersionFactory::class);
+        $versionFactory->shouldReceive('listVersionsToPurgeForItem')->with($item)->andReturn([$v1, $v2]);
+        $versionFactory->shouldReceive('restore')->with($v1)->andReturn(true)->ordered();
+        $versionFactory->shouldReceive('restore')->with($v2)->andReturn(true)->ordered();
         $itemFactory->setReturnValue('_getVersionFactory', $versionFactory);
 
         // Event
@@ -533,10 +532,9 @@ class Docman_ItemFactoryTest extends TuleapTestCase
         $dao->expectNever('restore');
         $itemFactory->setReturnValue('_getItemDao', $dao);
 
-        $versionFactory = new MockDocman_VersionFactory($this);
-        $versionFactory->expectOnce('listVersionsToPurgeForItem', array($item));
-        $versionFactory->setReturnValue('listVersionsToPurgeForItem', false);
-        $versionFactory->expectNever('restore');
+        $versionFactory = M::mock(Docman_VersionFactory::class);
+        $versionFactory->shouldReceive('listVersionsToPurgeForItem')->with($item)->andReturn(false);
+        $versionFactory->shouldNotReceive('restore');
         $itemFactory->setReturnValue('_getVersionFactory', $versionFactory);
 
         // Event
@@ -561,13 +559,10 @@ class Docman_ItemFactoryTest extends TuleapTestCase
         $v1 = new MockDocman_Version($this);
         $v2 = new MockDocman_Version($this);
 
-        $versionFactory = new MockDocman_VersionFactory($this);
-        $versionFactory->expectOnce('listVersionsToPurgeForItem', array($item));
-        $versionFactory->setReturnValue('listVersionsToPurgeForItem', array($v1, $v2));
-        $versionFactory->expectAt(0, 'restore', array($v1));
-        $versionFactory->setReturnValueAt(0, 'restore', true);
-        $versionFactory->expectAt(1, 'restore', array($v2));
-        $versionFactory->setReturnValueAt(1, 'restore', false);
+        $versionFactory = M::mock(Docman_VersionFactory::class);
+        $versionFactory->shouldReceive('listVersionsToPurgeForItem')->with($item)->andReturn([$v1, $v2]);
+        $versionFactory->shouldReceive('restore')->with($v1)->andReturn(true)->ordered();
+        $versionFactory->shouldReceive('restore')->with($v2)->andReturn(false)->ordered();
         $itemFactory->setReturnValue('_getVersionFactory', $versionFactory);
 
         // Event
@@ -597,13 +592,10 @@ class Docman_ItemFactoryTest extends TuleapTestCase
         $v1 = new MockDocman_Version($this);
         $v2 = new MockDocman_Version($this);
 
-        $versionFactory = new MockDocman_VersionFactory($this);
-        $versionFactory->expectOnce('listVersionsToPurgeForItem', array($item));
-        $versionFactory->setReturnValue('listVersionsToPurgeForItem', array($v1, $v2));
-        $versionFactory->expectAt(0, 'restore', array($v1));
-        $versionFactory->setReturnValueAt(0, 'restore', false);
-        $versionFactory->expectAt(1, 'restore', array($v2));
-        $versionFactory->setReturnValueAt(1, 'restore', false);
+        $versionFactory = M::mock(Docman_VersionFactory::class);
+        $versionFactory->shouldReceive('listVersionsToPurgeForItem')->with($item)->andReturn([$v1, $v2]);
+        $versionFactory->shouldReceive('restore')->with($v1)->andReturn(false)->ordered();
+        $versionFactory->shouldReceive('restore')->with($v2)->andReturn(false)->ordered();
         $itemFactory->setReturnValue('_getVersionFactory', $versionFactory);
 
         // Event

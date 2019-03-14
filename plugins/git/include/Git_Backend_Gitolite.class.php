@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2011-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,6 +19,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Event\Events\ArchiveDeletedItemEvent;
+use Tuleap\Event\Events\ArchiveDeletedItemFileProvider;
 use Tuleap\Git\Gitolite\GitoliteAccessURLGenerator;
 
 class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backend_Interface {
@@ -374,30 +376,21 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
         $backup= $this->getGitPlugin()->getConfigurationParameter('git_backup_dir');
 
         if (dirname($backup)) {
-            $sourcePath = $backup.'/'.$repository->getBackupPath().'.tar.gz';
-            $status     = true;
-            $error      = null;
-            $params     = array(
-                'source_path'     => $sourcePath,
-                'archive_prefix'  => self::PREFIX,
-                'status'          => &$status,
-                'error'           => &$error,
-                'skip_duplicated' => false
-            );
+            $event = new ArchiveDeletedItemEvent(new ArchiveDeletedItemFileProvider($backup . '/' . $repository->getBackupPath() . '.tar.gz', self::PREFIX));
 
-            $this->getEventManager()->processEvent('archive_deleted_item', $params);
+            $this->getEventManager()->processEvent($event);
 
-            if ($params['status']) {
+            if ($event->isSuccessful()) {
                 $this->logger->info('The repository'.$repository->getName().' has been moved to the archiving area before purge ');
                 return true;
-            } else {
-                $this->logger->warn('Can not move the repository'.$repository->getName().' to the archiving area before purge :['.$params['error'].']');
-                return false;
             }
-        } else {
-           $this->logger->error('An error occured: The backup '.$backup.' is not a directory or does not exist');
+
+            $this->logger->warn('Can not move the repository'.$repository->getName().' to the archiving area before purge');
             return false;
         }
+
+        $this->logger->error('An error occured: The backup '.$backup.' is not a directory or does not exist');
+        return false;
     }
 
     private function getEventManager() {

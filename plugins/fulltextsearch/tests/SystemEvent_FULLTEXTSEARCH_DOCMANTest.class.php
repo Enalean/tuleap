@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Mockery as M;
+
 abstract class SystemEvent_FULLTEXTSEARCH_DOCMANTest extends TuleapTestCase {
 
     protected $klass;
@@ -34,7 +36,7 @@ abstract class SystemEvent_FULLTEXTSEARCH_DOCMANTest extends TuleapTestCase {
         $this->item_factory = mock('Docman_ItemFactory');
         stub($this->item_factory)->getItemFromDb(103, '*')->returns($this->item);
 
-        $this->version_factory = mock('Docman_VersionFactory');
+        $this->version_factory = M::spy(Docman_VersionFactory::class);
         stub($this->version_factory)->getSpecificVersion($this->item, 2)->returns($this->version);
 
         $this->link_version_factory = mock('Docman_LinkVersionFactory');

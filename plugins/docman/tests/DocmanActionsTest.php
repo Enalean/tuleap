@@ -1,24 +1,27 @@
 <?php
-/*
+/**
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2010. All Rights Reserved.
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once 'bootstrap.php';
 
+use Mockery as M;
+
+require_once 'bootstrap.php';
 
 Mock::generatePartial('Docman_Actions','Docman_ActionsTest', array('_getItemFactory',
                                                                    '_getFileStorage',
@@ -40,7 +43,6 @@ Mock::generate('Docman_ItemFactory');
 Mock::generate('Docman_Folder');
 Mock::generate('Docman_File');
 Mock::generate('Feedback');
-Mock::generate('Docman_VersionFactory');
 Mock::generate('Docman_Version');
 Mock::generate('Docman_Item');
 Mock::generate('Docman_NotificationsManager');
@@ -53,10 +55,6 @@ Mock::generate('UserManager');
 Mock::generate('PFUser');
 
 class DocmanActionsTest extends TuleapTestCase {
-
-    function __construct($name = 'DocmanActions test') {
-        parent::__construct($name);
-    }
 
     function testCannotDeleteVersionOnNonFile() {
         // Definition acceptance criteria:
@@ -121,14 +119,13 @@ class DocmanActionsTest extends TuleapTestCase {
         $actions->setReturnValue('_getItemFactory', $if);
         $actions->expectOnce('_getItemFactory', array(102));
 
-        $vf = new MockDocman_VersionFactory($this);
         $v1 = new MockDocman_Version($this);
         $v1->setReturnValue('getNumber', 0);
         $v1->setReturnValue('getLabel', 'label 4');
         $v2 = new MockDocman_Version($this);
         $v2->setReturnValue('getNumber', 1);
         $v2->setReturnValue('getLabel', 'label 5');
-        $vf->setReturnValue('getAllVersionForItem', array($v1, $v2));
+        $vf = M::mock(Docman_VersionFactory::class, ['getAllVersionForItem' => [$v1, $v2]]);
         $actions->setReturnValue('_getVersionFactory', $vf);
 
         $actions->setReturnValue('_getEventManager', new MockEventManager($this));
@@ -166,8 +163,7 @@ class DocmanActionsTest extends TuleapTestCase {
         $actions->setReturnValue('_getItemFactory', $if);
         $actions->expectOnce('_getItemFactory', array(102));
 
-        $vf = new MockDocman_VersionFactory($this);
-        $vf->setReturnValue('getAllVersionForItem', array(new MockDocman_Version($this)));
+        $vf = M::mock(Docman_VersionFactory::class, ['getAllVersionForItem' => [M::mock(Docman_Version::class)]]);
         $actions->setReturnValue('_getVersionFactory', $vf);
 
         $actions->setReturnValue('_getEventManager', new MockEventManager($this));
@@ -205,14 +201,13 @@ class DocmanActionsTest extends TuleapTestCase {
         $actions->setReturnValue('_getItemFactory', $if);
         $actions->expectOnce('_getItemFactory', array(102));
 
-        $vf = new MockDocman_VersionFactory($this);
         $v1 = new MockDocman_Version($this);
         $v1->setReturnValue('getNumber', 0);
         $v1->setReturnValue('getLabel', 'label 4');
         $v2 = new MockDocman_Version($this);
         $v2->setReturnValue('getNumber', 2);
         $v2->setReturnValue('getLabel', 'label 5');
-        $vf->setReturnValue('getAllVersionForItem', array($v1, $v2));
+        $vf = M::mock(Docman_VersionFactory::class, ['getAllVersionForItem' => [$v1, $v2]]);
         $actions->setReturnValue('_getVersionFactory', $vf);
 
         $actions->setReturnValue('_getEventManager', new MockEventManager($this));
