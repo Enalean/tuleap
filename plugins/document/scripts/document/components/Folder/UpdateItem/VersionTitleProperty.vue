@@ -25,7 +25,6 @@
             for="document-update-version-title"
         >
             <translate>Version name</translate>
-            <i class="fa fa-asterisk"></i>
         </label>
         <input
             type="text"
@@ -33,7 +32,6 @@
             id="document-update-version-title"
             name="version_title"
             v-bind:placeholder="placeholder"
-            required
             v-bind:value="value"
             v-on:input="$emit('input', $event.target.value)"
             ref="input"

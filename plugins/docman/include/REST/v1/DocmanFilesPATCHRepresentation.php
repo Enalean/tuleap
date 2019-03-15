@@ -25,9 +25,9 @@ namespace Tuleap\Docman\REST\v1;
 class DocmanFilesPATCHRepresentation
 {
     /**
-     * @var string Title of version {@from body} {@required true}
+     * @var string Title of version {@from body} {@required false}
      */
-    public $version_title;
+    public $version_title = "";
 
     /**
      * @var string Description of changes {@from body} {@required false}
