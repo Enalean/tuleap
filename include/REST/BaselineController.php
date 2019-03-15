@@ -23,9 +23,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\REST;
 
+use Tuleap\Baseline\BaselineArtifactRepository;
 use Tuleap\Baseline\BaselineService;
 use Tuleap\Baseline\CurrentUserProvider;
-use Tuleap\Baseline\MilestoneRepository;
 use Tuleap\Baseline\NotAuthorizedException;
 use Tuleap\Baseline\TransientBaseline;
 use Tuleap\REST\I18NRestException;
@@ -35,24 +35,20 @@ class BaselineController
     /** @var CurrentUserProvider */
     private $current_user_provider;
 
-    /**
-     * @var MilestoneRepository
-     */
-    private $milestone_repository;
-
-    /**
-     * @var BaselineService
-     */
+    /** @var BaselineService */
     private $baseline_service;
+
+    /** @var BaselineArtifactRepository */
+    private $baseline_artifact_repository;
 
     public function __construct(
         CurrentUserProvider $current_user_provider,
-        MilestoneRepository $milestone_repository,
-        BaselineService $baseline_service
+        BaselineService $baseline_service,
+        BaselineArtifactRepository $baseline_artifact_repository
     ) {
-        $this->current_user_provider = $current_user_provider;
-        $this->milestone_repository  = $milestone_repository;
-        $this->baseline_service      = $baseline_service;
+        $this->current_user_provider        = $current_user_provider;
+        $this->baseline_service             = $baseline_service;
+        $this->baseline_artifact_repository = $baseline_artifact_repository;
     }
 
     /**
@@ -69,7 +65,7 @@ class BaselineController
     public function post(string $name, int $milestone_id): BaselineRepresentation
     {
         $current_user = $this->current_user_provider->getUser();
-        $milestone    = $this->milestone_repository->findById($current_user, $milestone_id);
+        $milestone    = $this->baseline_artifact_repository->findById($current_user, $milestone_id);
         if ($milestone === null) {
             throw new I18NRestException(
                 404,

@@ -29,8 +29,8 @@ use ParagonIE\EasyDB\EasyDB;
 use PFUser;
 use Project;
 use Tuleap\Baseline\Baseline;
+use Tuleap\Baseline\BaselineArtifactRepository;
 use Tuleap\Baseline\BaselineRepository;
-use Tuleap\Baseline\MilestoneRepository;
 use Tuleap\Baseline\TransientBaseline;
 use UserManager;
 
@@ -44,14 +44,17 @@ class BaselineRepositoryAdapter implements BaselineRepository
     /** @var UserManager */
     private $user_manager;
 
-    /** @var MilestoneRepository */
-    private $milestone_repository;
+    /** @var BaselineArtifactRepository */
+    private $baseline_artifact_repository;
 
-    public function __construct(EasyDB $db, UserManager $user_manager, MilestoneRepository $milestone_repository)
-    {
-        $this->db                   = $db;
-        $this->user_manager         = $user_manager;
-        $this->milestone_repository = $milestone_repository;
+    public function __construct(
+        EasyDB $db,
+        UserManager $user_manager,
+        BaselineArtifactRepository $baseline_artifact_repository
+    ) {
+        $this->db                           = $db;
+        $this->user_manager                 = $user_manager;
+        $this->baseline_artifact_repository = $baseline_artifact_repository;
     }
 
     public function add(
@@ -138,7 +141,7 @@ class BaselineRepositoryAdapter implements BaselineRepository
 
     private function mapRow(PFUser $current_user, array $row): Baseline
     {
-        $milestone     = $this->milestone_repository->findById($current_user, $row['artifact_id']);
+        $milestone     = $this->baseline_artifact_repository->findById($current_user, $row['artifact_id']);
         $author        = $this->user_manager->getUserById($row['user_id']);
         $snapshot_date = new DateTime();
         $snapshot_date->setTimestamp($row['snapshot_date'])

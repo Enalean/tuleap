@@ -21,17 +21,14 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Baseline\Factory;
+namespace Tuleap\Baseline;
 
-/**
- * ObjectMother pattern applied to Milestone entity
- */
-class MilestoneFactory
+use DateTime;
+use PFUser;
+
+interface BaselineArtifactRepository
 {
-    public static function one(): MilestoneBuilder
-    {
-        return (new MilestoneBuilder())
-            ->id(3)
-            ->tracker(TrackerFactory::one()->build());
-    }
+    public function findById(PFUser $current_user, int $id): ?BaselineArtifact;
+
+    public function findAt(PFUser $current_user, BaselineArtifact $milestone, DateTime $date): ?BaselineArtifact;
 }

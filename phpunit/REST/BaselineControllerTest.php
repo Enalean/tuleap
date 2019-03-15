@@ -31,12 +31,12 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
 use PFUser;
 use PHPUnit\Framework\TestCase;
-use Tracker_Artifact;
+use Tuleap\Baseline\BaselineArtifact;
+use Tuleap\Baseline\BaselineArtifactRepository;
 use Tuleap\Baseline\BaselineService;
 use Tuleap\Baseline\CurrentUserProvider;
+use Tuleap\Baseline\Factory\BaselineArtifactFactory;
 use Tuleap\Baseline\Factory\BaselineFactory;
-use Tuleap\Baseline\Factory\MilestoneFactory;
-use Tuleap\Baseline\MilestoneRepository;
 use Tuleap\Baseline\NotAuthorizedException;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\REST\I18NRestException;
@@ -57,17 +57,14 @@ class BaselineControllerTest extends TestCase
     private $current_user_provider;
 
     /**
-     * @var MilestoneRepository|MockInterface
+     * @var BaselineArtifactRepository|MockInterface
      */
-    private $milestone_repository;
+    private $baseline_artifact_repository;
 
     /**
      * @var BaselineService|MockInterface
      */
     private $baseline_service;
-
-    /** @var Tracker_Artifact|MockInterface */
-    private $a_milestone;
 
     /** @var PFUser */
     private $current_user;
@@ -77,14 +74,14 @@ class BaselineControllerTest extends TestCase
      */
     public function createInstance()
     {
-        $this->current_user_provider = Mockery::mock(CurrentUserProvider::class);
-        $this->milestone_repository  = Mockery::mock(MilestoneRepository::class);
-        $this->baseline_service      = Mockery::mock(BaselineService::class);
+        $this->current_user_provider        = Mockery::mock(CurrentUserProvider::class);
+        $this->baseline_artifact_repository = Mockery::mock(BaselineArtifactRepository::class);
+        $this->baseline_service             = Mockery::mock(BaselineService::class);
 
         $this->controller = new BaselineController(
             $this->current_user_provider,
-            $this->milestone_repository,
-            $this->baseline_service
+            $this->baseline_service,
+            $this->baseline_artifact_repository
         );
 
         $this->current_user = new PFUser(['user_id' => 99]);
@@ -94,15 +91,18 @@ class BaselineControllerTest extends TestCase
             ->byDefault();
     }
 
+    /** @var BaselineArtifact */
+    private $a_milestone;
+
     /** @before */
     public function createAMilestone(): void
     {
-        $this->a_milestone = Mockery::mock(Tracker_Artifact::class);
+        $this->a_milestone = BaselineArtifactFactory::one()->build();
     }
 
     public function testPostCreatesNewBaseline()
     {
-        $this->milestone_repository
+        $this->baseline_artifact_repository
             ->shouldReceive('findById')
             ->with($this->current_user, 3)
             ->andReturn($this->a_milestone);
@@ -116,15 +116,14 @@ class BaselineControllerTest extends TestCase
 
     public function testPostReturnsRepresentationOfCreatedBaseline()
     {
-        $this->milestone_repository
+        $milestone = BaselineArtifactFactory::one()
+            ->id(3)
+            ->build();
+
+        $this->baseline_artifact_repository
             ->shouldReceive('findById')
             ->with($this->current_user, 3)
-            ->andReturn($this->a_milestone);
-
-        $this->a_milestone
-            ->shouldReceive('getId')
-            ->andReturn(3)
-            ->getMock();
+            ->andReturn($milestone);
 
         $this->baseline_service
             ->shouldReceive('create')
@@ -132,7 +131,7 @@ class BaselineControllerTest extends TestCase
                 BaselineFactory::one()
                     ->id(11)
                     ->name('first baseline')
-                    ->milestone($this->a_milestone)
+                    ->milestone($milestone)
                     ->author(new PFUser(['user_id' => 99]))
                     ->build()
             );
@@ -152,7 +151,7 @@ class BaselineControllerTest extends TestCase
             ->shouldReceive('getUser')
             ->andReturn($current_user);
 
-        $this->milestone_repository
+        $this->baseline_artifact_repository
             ->shouldReceive('findById')
             ->with($current_user, 3)
             ->andReturn($this->a_milestone);
@@ -175,7 +174,7 @@ class BaselineControllerTest extends TestCase
         $this->expectException(I18NRestException::class);
         $this->expectExceptionCode(403);
 
-        $this->milestone_repository
+        $this->baseline_artifact_repository
             ->shouldReceive('findById')
             ->andReturn($this->a_milestone);
 
@@ -191,7 +190,7 @@ class BaselineControllerTest extends TestCase
         $baseline = BaselineFactory::one()
             ->id(1)
             ->name('found baseline')
-            ->milestone(MilestoneFactory::one()->id(3)->build())
+            ->milestone(BaselineArtifactFactory::one()->id(3)->build())
             ->author(new PFUser(['user_id' => 99]))
             ->build();
         $this->baseline_service

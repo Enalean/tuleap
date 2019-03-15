@@ -25,7 +25,7 @@ namespace Tuleap\Baseline\REST;
 
 require_once __DIR__ . '/IntegrationTestCaseWithStubs.php';
 
-use Tuleap\Baseline\Factory\MilestoneFactory;
+use Tuleap\Baseline\Factory\BaselineArtifactFactory;
 use Tuleap\GlobalLanguageMock;
 
 class BaselineControllerIntTest extends IntegrationTestCaseWithStubs
@@ -44,8 +44,8 @@ class BaselineControllerIntTest extends IntegrationTestCaseWithStubs
     public function testPost()
     {
         $this->permissions->permitAll();
-        $milestone = MilestoneFactory::one()->id(2)->build();
-        $this->milestone_repository->add($milestone);
+        $milestone = BaselineArtifactFactory::one()->id(2)->build();
+        $this->baseline_artifact_repository->add($milestone);
 
         $this->controller->post('My first baseline', 2);
 

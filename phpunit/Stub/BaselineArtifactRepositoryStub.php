@@ -23,30 +23,37 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\Stub;
 
+use DateTime;
+use Exception;
 use PFUser;
-use Tracker_Artifact;
-use Tuleap\Baseline\MilestoneRepository;
+use Tuleap\Baseline\BaselineArtifact;
+use Tuleap\Baseline\BaselineArtifactRepository;
 
 /**
  * In memory implementation of MilestoneRepository used for tests
  */
-class MilestoneRepositoryStub implements MilestoneRepository
+class BaselineArtifactRepositoryStub implements BaselineArtifactRepository
 {
-    /** @var Tracker_Artifact[] */
+    /** @var BaselineArtifact[] */
     private $milestones_by_id = [];
 
-    public function add(Tracker_Artifact $milestone): void
+    public function add(BaselineArtifact $milestone): void
     {
         $this->milestones_by_id [$milestone->getId()] = $milestone;
     }
 
-    public function findById(PFUser $current_user, int $id): ?Tracker_Artifact
+    public function findById(PFUser $current_user, int $id): ?BaselineArtifact
     {
         return $this->milestones_by_id[$id] ?? null;
     }
 
-    public function removeAll()
+    public function removeAll(): void
     {
         $this->milestones_by_id = [];
+    }
+
+    public function findAt(PFUser $current_user, BaselineArtifact $milestone, DateTime $date): ?BaselineArtifact
+    {
+        throw new Exception("Method findAt not implemented yet");
     }
 }

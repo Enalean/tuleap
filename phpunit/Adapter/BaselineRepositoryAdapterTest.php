@@ -34,8 +34,8 @@ use PFUser;
 use PHPUnit\Framework\TestCase;
 use Project;
 use Tuleap\Baseline\Baseline;
-use Tuleap\Baseline\Factory\MilestoneFactory;
-use Tuleap\Baseline\MilestoneRepository;
+use Tuleap\Baseline\BaselineArtifactRepository;
+use Tuleap\Baseline\Factory\BaselineArtifactFactory;
 use Tuleap\GlobalLanguageMock;
 use UserManager;
 
@@ -53,20 +53,20 @@ class BaselineRepositoryAdapterTest extends TestCase
     /** @var UserManager|MockInterface */
     private $user_manager;
 
-    /** @var MilestoneRepository */
-    private $milestone_repository;
+    /** @var BaselineArtifactRepository|MockInterface */
+    private $baseline_artifact_repository;
 
     /** @before */
     public function createInstance()
     {
-        $this->db                   = Mockery::mock(EasyDB::class);
-        $this->user_manager         = Mockery::mock(UserManager::class);
-        $this->milestone_repository = Mockery::mock(MilestoneRepository::class);
+        $this->db                           = Mockery::mock(EasyDB::class);
+        $this->user_manager                 = Mockery::mock(UserManager::class);
+        $this->baseline_artifact_repository = Mockery::mock(BaselineArtifactRepository::class);
 
         $this->repository = new BaselineRepositoryAdapter(
             $this->db,
             $this->user_manager,
-            $this->milestone_repository
+            $this->baseline_artifact_repository
         );
     }
 
@@ -81,8 +81,8 @@ class BaselineRepositoryAdapterTest extends TestCase
 
     public function testFindById()
     {
-        $milestone = MilestoneFactory::one()->build();
-        $this->milestone_repository
+        $milestone = BaselineArtifactFactory::one()->build();
+        $this->baseline_artifact_repository
             ->shouldReceive('findById')
             ->with($this->current_user, 10)
             ->andReturn($milestone);
@@ -134,8 +134,8 @@ class BaselineRepositoryAdapterTest extends TestCase
 
     public function testFindByProject()
     {
-        $milestone = MilestoneFactory::one()->build();
-        $this->milestone_repository
+        $milestone = BaselineArtifactFactory::one()->build();
+        $this->baseline_artifact_repository
             ->shouldReceive('findById')
             ->with($this->current_user, 10)
             ->andReturn($milestone);

@@ -21,12 +21,21 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Baseline;
+namespace Tuleap\Baseline\Factory;
 
-use PFUser;
-use Tracker_Artifact;
+use Mockery;
+use Project;
 
-interface MilestoneRepository
+class BaselineArtifactFactory
 {
-    public function findById(PFUser $current_user, int $id): ?Tracker_Artifact;
+    public static function one(): BaselineArtifactBuilder
+    {
+        return (new BaselineArtifactBuilder())
+            ->id(1)
+            ->title("artifact title")
+            ->description("artifact comment")
+            ->initialEffort(2)
+            ->status("Done")
+            ->project(Mockery::mock(Project::class));
+    }
 }

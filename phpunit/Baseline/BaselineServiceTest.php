@@ -33,6 +33,7 @@ use PFUser;
 use PHPUnit\Framework\TestCase;
 use Project;
 use Tracker_Artifact;
+use Tuleap\Baseline\Factory\BaselineArtifactFactory;
 use Tuleap\Baseline\Factory\BaselineFactory;
 use Tuleap\Baseline\Factory\MilestoneFactory;
 use Tuleap\Baseline\Support\DateTimeFactory;
@@ -91,7 +92,7 @@ class BaselineServiceTest extends TestCase
     {
         $this->a_user      = new PFUser();
         $this->a_project   = Mockery::mock(Project::class);
-        $this->a_milestone = MilestoneFactory::one()->build();
+        $this->a_milestone = BaselineArtifactFactory::one()->build();
         $this->a_date      = DateTimeFactory::one();
     }
 

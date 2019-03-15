@@ -37,7 +37,7 @@ class BaselineFactory
         return (new BaselineBuilder())
             ->id(1)
             ->name('Milestone startup')
-            ->milestone(MilestoneFactory::one()->build())
+            ->milestone(BaselineArtifactFactory::one()->build())
             ->author(new PFUser())
             ->snapshotDate(DateTimeFactory::one());
     }
@@ -46,12 +46,8 @@ class BaselineFactory
     {
         return self::one()
             ->milestone(
-                MilestoneFactory::one()
-                    ->tracker(
-                        TrackerFactory::one()
-                            ->project($project)
-                            ->build()
-                    )
+                BaselineArtifactFactory::one()
+                    ->project($project)
                     ->build()
             );
     }

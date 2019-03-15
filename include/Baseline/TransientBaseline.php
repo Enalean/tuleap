@@ -24,17 +24,16 @@ declare(strict_types=1);
 namespace Tuleap\Baseline;
 
 use Project;
-use Tracker_Artifact;
 
 class TransientBaseline
 {
     /** @var string */
     private $name;
 
-    /** @var Tracker_Artifact */
+    /** @var BaselineArtifact */
     private $milestone;
 
-    public function __construct(string $name, Tracker_Artifact $milestone)
+    public function __construct(string $name, BaselineArtifact $milestone)
     {
         $this->name      = $name;
         $this->milestone = $milestone;
@@ -45,13 +44,13 @@ class TransientBaseline
         return $this->name;
     }
 
-    public function getMilestone(): Tracker_Artifact
+    public function getMilestone(): BaselineArtifact
     {
         return $this->milestone;
     }
 
     public function getProject(): Project
     {
-        return $this->milestone->getTracker()->getProject();
+        return $this->milestone->getProject();
     }
 }

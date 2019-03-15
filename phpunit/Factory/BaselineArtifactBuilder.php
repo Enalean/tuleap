@@ -23,27 +23,28 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\Factory;
 
-use DateTime;
-use PFUser;
-use Tuleap\Baseline\Baseline;
+use Project;
 use Tuleap\Baseline\BaselineArtifact;
 
-class BaselineBuilder
+class BaselineArtifactBuilder
 {
     /** @var int */
     private $id;
 
     /** @var string */
-    private $name;
+    private $title;
 
-    /** @var BaselineArtifact */
-    private $milestone;
+    /** @var string */
+    private $description;
 
-    /** @var DateTime */
-    private $snapshot_date;
+    /** @var int */
+    private $initial_effort;
 
-    /** @var PFUser */
-    private $author;
+    /** @var string */
+    private $status;
+
+    /** @var Project */
+    private $project;
 
     public function id(int $id): self
     {
@@ -51,38 +52,45 @@ class BaselineBuilder
         return $this;
     }
 
-    public function name(string $name): self
+    public function title(string $title): self
     {
-        $this->name = $name;
+        $this->title = $title;
         return $this;
     }
 
-    public function milestone(BaselineArtifact $milestone): self
+    public function description(string $description): self
     {
-        $this->milestone = $milestone;
+        $this->description = $description;
         return $this;
     }
 
-    public function snapshotDate(DateTime $snapshot_date): self
+    public function initialEffort(int $initial_effort): self
     {
-        $this->snapshot_date = $snapshot_date;
+        $this->initial_effort = $initial_effort;
         return $this;
     }
 
-    public function author(PFUser $author): self
+    public function status(string $status): self
     {
-        $this->author = $author;
+        $this->status = $status;
         return $this;
     }
 
-    public function build()
+    public function project(Project $project): self
     {
-        return new Baseline(
+        $this->project = $project;
+        return $this;
+    }
+
+    public function build(): BaselineArtifact
+    {
+        return new BaselineArtifact(
             $this->id,
-            $this->name,
-            $this->milestone,
-            $this->snapshot_date,
-            $this->author
+            $this->title,
+            $this->description,
+            $this->initial_effort,
+            $this->status,
+            $this->project
         );
     }
 }

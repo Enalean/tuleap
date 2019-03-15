@@ -47,6 +47,15 @@ class TrackerBuilder
         return $this;
     }
 
+    public function name(string $name): self
+    {
+        $this->tracker
+            ->shouldReceive('')
+            ->andReturn($name)
+            ->byDefault();
+        return $this;
+    }
+
     public function build()
     {
         return $this->tracker;

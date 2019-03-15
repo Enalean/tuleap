@@ -25,7 +25,6 @@ namespace Tuleap\Baseline;
 
 use DateTime;
 use PFUser;
-use Tracker_Artifact;
 
 class Baseline extends TransientBaseline
 {
@@ -41,7 +40,7 @@ class Baseline extends TransientBaseline
     public function __construct(
         int $id,
         string $name,
-        Tracker_Artifact $milestone,
+        BaselineArtifact $milestone,
         DateTime $snapshot_date,
         PFUser $author
     ) {
