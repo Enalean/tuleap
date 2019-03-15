@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
+/*!
+ * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,23 +16,23 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-@import 'headers';
-@import 'icons';
-@import 'folder-content';
-@import 'new-document';
-@import 'upload';
-@import 'under-the-fold-notification';
-@import 'switch-to-docman';
-@import 'quicklook';
-@import 'update-document';
-@import '../../../../../src/www/themes/BurningParrot/css/includes/global-variables';
 
-.document-app {
+.docman-item-title-update-property {
     display: flex;
-    flex-direction: column;
-    height: calc(100vh - #{$navbar-height});
+    justify-content: space-between;
+    margin: 0 0 $tlp-spacing;
+}
 
-    > .breadcrumb {
-        flex: 0 0 auto;
+.docman-item-version-title-update {
+    width: 100%;
+    margin: 0 $tlp-spacing 0 0;
+}
+
+.tlp-form-element.docman-item-lock-update {
+    margin: 0 $tlp-half-spacing 0 $tlp-half-spacing;
+
+    > .tlp-label {
+        margin: 0 0 13px;
+        white-space: nowrap;
     }
 }

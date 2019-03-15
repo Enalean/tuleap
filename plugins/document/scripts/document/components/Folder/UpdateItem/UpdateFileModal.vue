@@ -23,7 +23,7 @@
         <modal-header v-bind:modal-title="modal_title" v-bind:aria-labelled-by="aria_labelled_by"/>
         <modal-feedback/>
         <div class="tlp-modal-body">
-            <file-update-properties v-bind:version="version">
+            <file-update-properties v-bind:version="version" v-bind:item="item">
                 <file-properties v-model="uploaded_item.file_properties" v-bind:item="uploaded_item"/>
             </file-update-properties>
         </div>
@@ -53,10 +53,6 @@ export default {
         return {
             item: {},
             uploaded_item: {},
-            default_version: {
-                title: "",
-                changelog: ""
-            },
             version: {},
             is_loading: false,
             is_displayed: false,
@@ -88,8 +84,12 @@ export default {
             this.modal.addEventListener("tlp-modal-hidden", this.reset);
         },
         show(event) {
-            this.version = { ...this.default_version };
             this.item = event.detail.current_item;
+            this.version = {
+                title: "",
+                changelog: "",
+                is_file_locked: this.item.lock_info !== null
+            };
             this.uploaded_item = {
                 type: this.item.type,
                 file_properties: {}
@@ -112,7 +112,8 @@ export default {
                 this.item,
                 this.uploaded_item.file_properties.file,
                 this.version.title,
-                this.version.changelog
+                this.version.changelog,
+                this.version.is_file_locked
             ]);
             this.is_loading = false;
             if (this.has_modal_error === false) {

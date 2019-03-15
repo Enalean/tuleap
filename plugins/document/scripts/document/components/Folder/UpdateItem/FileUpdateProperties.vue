@@ -19,8 +19,11 @@
   -->
 
 <template>
-    <div>
-        <version-title-property v-model="version.title"/>
+    <div class="docman-item-update-property">
+        <div class="docman-item-title-update-property">
+            <version-title-property v-model="version.title"/>
+            <lock-property v-model="version.is_file_locked" v-bind:item="item"/>
+        </div>
         <changelog-property v-model="version.changelog"/>
         <slot></slot>
     </div>
@@ -29,12 +32,14 @@
 <script>
 import VersionTitleProperty from "./VersionTitleProperty.vue";
 import ChangelogProperty from "./ChangelogProperty.vue";
+import LockProperty from "./LockProperty.vue";
 
 export default {
     name: "FileUpdateProperties",
-    components: { ChangelogProperty, VersionTitleProperty },
+    components: { LockProperty, ChangelogProperty, VersionTitleProperty },
     props: {
-        version: Object
+        version: Object,
+        item: Object
     }
 };
 </script>

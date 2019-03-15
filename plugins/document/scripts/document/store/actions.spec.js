@@ -852,7 +852,7 @@ describe("Store actions", () => {
             expect(uploadVersion).not.toHaveBeenCalled();
         });
         it("upload a new version of file", async () => {
-            const item = { id: 45 };
+            const item = { id: 45, lock_info: null };
             context.state.folder_content = [{ id: 45 }];
             const dropped_file = { name: "filename.txt", size: 123, type: "text/plain" };
 
@@ -881,12 +881,14 @@ describe("Store actions", () => {
 
             const version_title = "My new version";
             const version_changelog = "Changed the version because...";
+            const is_version_locked = true;
 
             await updateFileFromModal(context, [
                 item,
                 updated_file,
                 version_title,
-                version_changelog
+                version_changelog,
+                is_version_locked
             ]);
 
             expect(createNewVersion).toHaveBeenCalled();

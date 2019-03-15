@@ -199,7 +199,13 @@ export const loadFolder = (context, folder_id) => {
 
 export async function updateFile(context, [item, dropped_file]) {
     try {
-        const new_version = await createNewVersion(item, item.title, "", dropped_file);
+        const new_version = await createNewVersion(
+            item,
+            item.title,
+            "",
+            dropped_file,
+            item.lock_info !== null
+        );
 
         if (dropped_file.size === 0) {
             return;
@@ -221,10 +227,16 @@ export async function updateFile(context, [item, dropped_file]) {
 
 export const updateFileFromModal = async (
     context,
-    [item, uploaded_file, version_title, changelog]
+    [item, uploaded_file, version_title, changelog, is_file_locked]
 ) => {
     try {
-        const new_version = await createNewVersion(item, version_title, changelog, uploaded_file);
+        const new_version = await createNewVersion(
+            item,
+            version_title,
+            changelog,
+            uploaded_file,
+            is_file_locked
+        );
         if (uploaded_file.size === 0) {
             return;
         }

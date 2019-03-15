@@ -179,6 +179,9 @@ msgstr "Le contenu de ce dossier n'a pas pu être chargé."
 msgid "It's time to add new documents!"
 msgstr "Il est temps d'ajouter des documents !"
 
+msgid "Keep lock?"
+msgstr "Garder le verrou?"
+
 msgid "Last update date"
 msgstr "Mis à jour"
 
