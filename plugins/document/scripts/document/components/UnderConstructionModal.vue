@@ -70,6 +70,9 @@
                 <li v-translate>
                     Create a new version of a file by dropping the updated version on the targeted document in the tree view (or on the quick look pane).
                 </li>
+                <li v-translate>
+                    Create a new version of a file with an update modal.
+                </li>
             </ul>
             <p v-translate>
                 You can switch to the old Document Manager UI whenever you want. (The switch is at the bottom of the page)

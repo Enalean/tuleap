@@ -84,6 +84,10 @@ msgstr ""
 "sur le document ciblé dans la vue arborescente (ou sur la fenêtre d'aperçu "
 "de ce fichier)."
 
+msgid "Create a new version of a file with an update modal."
+msgstr ""
+"Créer une nouvelle version d'un fichier avec une modale de mise à jour."
+
 msgid "Create document"
 msgstr "Créer le document"
 
