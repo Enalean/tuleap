@@ -20,6 +20,7 @@
  */
 
 use Tuleap\Tracker\Workflow\BeforeEvent;
+use Tuleap\Tracker\Workflow\Transition\Update\TransitionRetriever;
 
 class Workflow //phpcs:ignoreFile
 {
@@ -382,6 +383,24 @@ class Workflow //phpcs:ignoreFile
                 throw new Tracker_Workflow_Transition_InvalidConditionForTransitionException($transition);
             }
         }
+    }
+
+    /**
+     * @throws \Tuleap\Tracker\Workflow\Transition\NoTransitionForStateException
+     */
+    public function getFirstTransitionForCurrentState(Tracker_Artifact $artifact)
+    {
+        $current_value   = $artifact->getLastChangeset()->getValue($this->getField());
+        $current_status  = (int) current($current_value->getValue());
+
+        return $this->getTransitionRetriever()->getFirstTransitionForDestinationState($this, $current_status);
+    }
+
+    private function getTransitionRetriever() {
+        return new TransitionRetriever(
+            new Workflow_TransitionDao(),
+            TransitionFactory::instance()
+        );
     }
 
     private function getCurrentTransition($fields_data, Tracker_Artifact_Changeset $changeset = null) {

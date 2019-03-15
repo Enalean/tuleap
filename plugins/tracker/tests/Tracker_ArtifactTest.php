@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -21,6 +21,7 @@
 
 require_once __DIR__ . '/bootstrap.php';
 
+//phpcs:ignoreFile
 class MockWorkflow_Tracker_ArtifactTest_WorkflowNoPermsOnPostActionFields extends Workflow {
     function before(&$fields_data, $submitter, $artifact) {
         $fields_data[102] = '456';
@@ -28,8 +29,8 @@ class MockWorkflow_Tracker_ArtifactTest_WorkflowNoPermsOnPostActionFields extend
     }
 }
 
-class Tracker_ArtifactTest extends TuleapTestCase {
-
+class Tracker_ArtifactTest extends TuleapTestCase
+{
     function setUp() {
         parent::setUp();
         $this->setUpGlobalsMockery();
@@ -99,8 +100,8 @@ class Tracker_ArtifactTest extends TuleapTestCase {
     }
 }
 
-class Tracker_Artifact_delegatedCreateNewChangesetTest extends Tracker_ArtifactTest {
-
+class Tracker_Artifact_delegatedCreateNewChangesetTest extends Tracker_ArtifactTest
+{
     function testCreateNewChangesetWithWorkflowAndNoPermsOnPostActionField() {
         $email   = null; //not anonymous user
         $comment = '';
@@ -128,6 +129,10 @@ class Tracker_Artifact_delegatedCreateNewChangesetTest extends Tracker_ArtifactT
         $workflow->shouldReceive('before')->times(2);
         $workflow->shouldReceive('validate')->andReturns(true);
         $artifact->shouldReceive('getWorkflow')->andReturns($workflow);
+
+        $workflow_checker = \Mockery::mock(\Tuleap\Tracker\Workflow\WorkflowUpdateChecker::class);
+        $workflow_checker->shouldReceive('canFieldBeUpdated')->andReturnTrue();
+        $artifact->shouldReceive('getWorkflowUpdateChecker')->andReturns($workflow_checker);
 
         $field1  = \Mockery::mock(\Tracker_FormElement_Field::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $field1->shouldReceive('getId')->andReturns(101);
@@ -262,6 +267,10 @@ class Tracker_Artifact_delegatedCreateNewChangesetTest extends Tracker_ArtifactT
         $artifact->shouldReceive('getId')->andReturns(66);
         $artifact->shouldReceive('getLastChangeset')->andReturns($changeset);
 
+        $workflow_checker = \Mockery::mock(\Tuleap\Tracker\Workflow\WorkflowUpdateChecker::class);
+        $workflow_checker->shouldReceive('canFieldBeUpdated')->andReturnTrue();
+        $artifact->shouldReceive('getWorkflowUpdateChecker')->andReturns($workflow_checker);
+
         $workflow = \Mockery::spy(\Workflow::class);
         $workflow->shouldReceive('before')->never();
         $workflow->shouldReceive('validate')->andReturns(true);
@@ -277,8 +286,8 @@ class Tracker_Artifact_delegatedCreateNewChangesetTest extends Tracker_ArtifactT
     }
 }
 
-class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
-
+class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest
+{
     function testCreateNewChangeset() {
         $email   = null; //not annonymous user
         $comment = 'It did solve my problem, I let you close the artifact.';
@@ -366,6 +375,10 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         $artifact->shouldReceive('getReferenceManager')->andReturns($reference_manager);
         $artifact->shouldReceive('getArtifactFactory')->andReturns($art_factory);
         $artifact->shouldReceive('getHierarchyFactory')->andReturns($hierarchy_factory);
+
+        $workflow_checker = \Mockery::mock(\Tuleap\Tracker\Workflow\WorkflowUpdateChecker::class);
+        $workflow_checker->shouldReceive('canFieldBeUpdated')->andReturnTrue();
+        $artifact->shouldReceive('getWorkflowUpdateChecker')->andReturns($workflow_checker);
 
         stub($GLOBALS['Response'])->getFeedbackErrors()->returns(array());
 
@@ -482,6 +495,10 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         $artifact->shouldReceive('getArtifactFactory')->andReturns($art_factory);
         $artifact->shouldReceive('getHierarchyFactory')->andReturns($hierarchy_factory);
 
+        $workflow_checker = \Mockery::mock(\Tuleap\Tracker\Workflow\WorkflowUpdateChecker::class);
+        $workflow_checker->shouldReceive('canFieldBeUpdated')->andReturnTrue();
+        $artifact->shouldReceive('getWorkflowUpdateChecker')->andReturns($workflow_checker);
+
         $workflow = Mockery::spy(MockWorkflow_Tracker_ArtifactTest_WorkflowNoPermsOnPostActionFields::class);
         $workflow->shouldReceive('validate')->andReturns(true);
         $artifact->shouldReceive('getWorkflow')->andReturns($workflow);
@@ -596,6 +613,10 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
 
         stub($art_factory)->save()->returns(true);
         $art_factory->shouldReceive('save')->once();
+
+        $workflow_checker = \Mockery::mock(\Tuleap\Tracker\Workflow\WorkflowUpdateChecker::class);
+        $workflow_checker->shouldReceive('canFieldBeUpdated')->andReturnTrue();
+        $artifact->shouldReceive('getWorkflowUpdateChecker')->andReturns($workflow_checker);
 
         $workflow = \Mockery::spy(\Workflow::class);
         $workflow->shouldReceive('before')->times(2);

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -33,6 +33,8 @@ use TransitionFactory;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Tracker\Workflow\PostAction\PostActionsRetriever;
+use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyDao;
+use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyFieldsFactory;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\CIBuildRepository;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\CIBuildUpdater;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\CIBuildValidator;
@@ -74,7 +76,8 @@ class TransitionReplicatorBuilder
                     new Transition_PostAction_Field_DateDao(),
                     new Transition_PostAction_Field_IntDao(),
                     new Transition_PostAction_Field_FloatDao()
-                )
+                ),
+                new ReadOnlyFieldsFactory(new ReadOnlyDao())
             ),
             new PostActionCollectionUpdater(
                 new CIBuildUpdater(

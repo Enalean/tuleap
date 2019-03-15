@@ -64,7 +64,7 @@ class ReadOnlyFieldsFactory implements \Transition_PostActionSubFactory
      *
      * @return Transition_PostAction[]
      */
-    public function loadPostActions(Transition $transition)
+    public function loadPostActions(Transition $transition) : array
     {
         $rows = $this->read_only_dao->searchByTransitionId((int) $transition->getId());
 
