@@ -27,6 +27,7 @@ use FRSFileFactory;
 use FRSRelease;
 use LogicException;
 use PFUser;
+use Rule_FRSFileName;
 use Tuleap\DB\DBTransactionExecutor;
 
 final class FileToUploadCreator
@@ -137,6 +138,11 @@ final class FileToUploadCreator
         FRSRelease $release,
         string $name
     ): void {
+        $rule = new Rule_FRSFileName();
+        if (! $rule->isValid($name)) {
+            throw new UploadIllegalNameException();
+        }
+
         if ($this->file_factory->isFileBaseNameExists(
             $name,
             $release->getReleaseID(),

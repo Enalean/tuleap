@@ -31,6 +31,7 @@ use Tuleap\FRS\Upload\UploadCreationConflictException;
 use Tuleap\FRS\Upload\UploadCreationFileMismatchException;
 use Tuleap\FRS\Upload\UploadFileMarkedToBeRestoredException;
 use Tuleap\FRS\Upload\UploadFileNameAlreadyExistsException;
+use Tuleap\FRS\Upload\UploadIllegalNameException;
 use Tuleap\FRS\Upload\UploadMaxSizeExceededException;
 use Tuleap\REST\I18NRestException;
 
@@ -83,6 +84,11 @@ final class FileCreator
             throw new RestException(409, $exception->getMessage());
         } catch (UploadMaxSizeExceededException $exception) {
             throw new RestException(400, $exception->getMessage());
+        } catch (UploadIllegalNameException $exception) {
+            throw new I18NRestException(
+                400,
+                $GLOBALS['Language']->getText('file_admin_editreleases', 'illegal_file_name')
+            );
         } catch (UploadFileNameAlreadyExistsException $exception) {
             throw new I18NRestException(
                 400,
