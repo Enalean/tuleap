@@ -34,6 +34,7 @@ use Tuleap\FRS\ReleasePresenter;
 use Tuleap\FRS\REST\ResourcesInjector;
 use Tuleap\FRS\REST\v1\ReleaseRepresentation;
 use Tuleap\FRS\Upload\FileOngoingUploadDao;
+use Tuleap\FRS\Upload\FileUploadCleaner;
 use Tuleap\FRS\Upload\Tus\FileBeingUploadedInformationProvider;
 use Tuleap\FRS\Upload\Tus\FileDataStore;
 use Tuleap\FRS\Upload\Tus\FileUploadCanceler;
@@ -76,6 +77,7 @@ class frsPlugin extends \Plugin //phpcs:ignore
         $this->addHook('frs_process_edit_form');
         $this->addHook('cssfile');
         $this->addHook('javascript_file');
+        $this->addHook('codendi_daily_start');
         $this->addHook(self::FRS_RELEASE_VIEW);
         $this->addHook(Event::REST_RESOURCES);
         $this->addHook(Event::REST_PROJECT_RESOURCES);
@@ -115,6 +117,15 @@ class frsPlugin extends \Plugin //phpcs:ignore
             $this->pluginInfo = new PluginInfo($this);
         }
         return $this->pluginInfo;
+    }
+
+    public function codendiDailyStart()
+    {
+        $cleaner = new FileUploadCleaner(
+            new UploadPathAllocator(),
+            new FileOngoingUploadDao()
+        );
+        $cleaner->deleteDanglingFilesToUpload(new \DateTimeImmutable());
     }
 
     public function frsOngoingUploadChecker(FRSOngoingUploadChecker $event)

@@ -78,4 +78,14 @@ class FileOngoingUploadDao extends DataAccessObject
     {
         return $this->getDB()->row('SELECT * FROM plugin_frs_file_upload WHERE id = ?', $id);
     }
+
+    public function deleteUnusableFiles($current_time): void
+    {
+        $this->getDB()->run('DELETE FROM plugin_frs_file_upload WHERE ? >= expiration_date', $current_time);
+    }
+
+    public function searchFileOngoingUploadIds(): array
+    {
+        return $this->getDB()->column('SELECT id FROM plugin_frs_file_upload');
+    }
 }
