@@ -334,7 +334,7 @@ class LdapPlugin extends Plugin {
 
         if ($this->isLdapAuthType() && $query->getTypeOfSearch() == Search_SearchPeople::NAME) {
             $search = new LDAP_SearchPeople(UserManager::instance(), $this->getLdap());
-            $presenter = $search->search($query, $query->getNumberOfResults(), $result);
+            $presenter = $search->search($query, $result);
             $result->setResultsHtml($this->getSearchTemplateRenderer()->renderToString($presenter->getTemplate(), $presenter));
         }
     }
