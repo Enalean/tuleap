@@ -86,7 +86,7 @@ class BaselineRepositoryAdapter implements BaselineRepository
             'plugin_baseline_baseline',
             [
                 'name'          => $baseline->getName(),
-                'artifact_id'   => $baseline->getMilestone()->getId(),
+                'artifact_id'   => $baseline->getArtifact()->getId(),
                 'user_id'       => $current_user->getId(),
                 'snapshot_date' => $snapshot_date->getTimestamp()
             ]
@@ -95,7 +95,7 @@ class BaselineRepositoryAdapter implements BaselineRepository
         return new Baseline(
             $id,
             $baseline->getName(),
-            $baseline->getMilestone(),
+            $baseline->getArtifact(),
             $snapshot_date,
             $current_user
         );
@@ -170,7 +170,7 @@ class BaselineRepositoryAdapter implements BaselineRepository
 
     private function mapRow(PFUser $current_user, array $row): Baseline
     {
-        $milestone     = $this->baseline_artifact_repository->findById($current_user, $row['artifact_id']);
+        $artifact      = $this->baseline_artifact_repository->findById($current_user, $row['artifact_id']);
         $author        = $this->user_manager->getUserById($row['user_id']);
         $snapshot_date = new DateTime();
         $snapshot_date->setTimestamp($row['snapshot_date'])
@@ -178,7 +178,7 @@ class BaselineRepositoryAdapter implements BaselineRepository
         return new Baseline(
             $row['id'],
             $row['name'],
-            $milestone,
+            $artifact,
             $snapshot_date,
             $author
         );

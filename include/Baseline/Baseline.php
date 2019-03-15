@@ -40,11 +40,11 @@ class Baseline extends TransientBaseline
     public function __construct(
         int $id,
         string $name,
-        BaselineArtifact $milestone,
+        BaselineArtifact $artifact,
         DateTime $snapshot_date,
         PFUser $author
     ) {
-        parent::__construct($name, $milestone);
+        parent::__construct($name, $artifact);
         $this->id            = $id;
         $this->snapshot_date = $snapshot_date;
         $this->author        = $author;

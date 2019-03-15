@@ -78,31 +78,31 @@ class BaselineArtifactRepositoryAdapter implements BaselineArtifactRepository
             return null;
         }
 
-        return $this->buildMilestone(
+        return $this->buildArtifact(
             $id,
             $artifact->getTracker()->getProject(),
             $last_changeset
         );
     }
 
-    public function findAt(PFUser $current_user, BaselineArtifact $milestone, DateTime $date): ?BaselineArtifact
+    public function findAt(PFUser $current_user, BaselineArtifact $artifact, DateTime $date): ?BaselineArtifact
     {
-        $artifact = $this->tracker_factory->getArtifactById($milestone->getId());
-        if ($artifact === null) {
+        $tracker_artifact = $this->tracker_factory->getArtifactById($artifact->getId());
+        if ($tracker_artifact === null) {
             return null;
         }
-        $changeset = $this->changeset_factory->getChangesetAtTimestamp($artifact, $date->getTimestamp());
+        $changeset = $this->changeset_factory->getChangesetAtTimestamp($tracker_artifact, $date->getTimestamp());
         if ($changeset === null) {
             return null;
         }
-        return $this->buildMilestone(
-            $milestone->getId(),
-            $milestone->getProject(),
+        return $this->buildArtifact(
+            $artifact->getId(),
+            $artifact->getProject(),
             $changeset
         );
     }
 
-    private function buildMilestone(int $id, Project $project, Tracker_Artifact_Changeset $changeset): BaselineArtifact
+    private function buildArtifact(int $id, Project $project, Tracker_Artifact_Changeset $changeset): BaselineArtifact
     {
         $title          = $this->getTrackerTitle($changeset);
         $description    = $this->getTrackerDescription($changeset);

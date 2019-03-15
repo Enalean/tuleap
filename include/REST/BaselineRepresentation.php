@@ -35,7 +35,7 @@ class BaselineRepresentation
     public $name;
 
     /** @var int */
-    public $milestone_id;
+    public $artifact_id;
 
     /** @var string */
     public $snapshot_date;
@@ -43,11 +43,11 @@ class BaselineRepresentation
     /** @var int */
     public $author_id;
 
-    public function __construct(int $id, string $name, int $milestone_id, string $snapshot_date, int $author_id)
+    public function __construct(int $id, string $name, int $artifact_id, string $snapshot_date, int $author_id)
     {
         $this->id            = $id;
         $this->name          = $name;
-        $this->milestone_id  = $milestone_id;
+        $this->artifact_id   = $artifact_id;
         $this->snapshot_date = $snapshot_date;
         $this->author_id     = $author_id;
     }
@@ -57,7 +57,7 @@ class BaselineRepresentation
         return new self(
             JsonCast::toInt($baseline->getId()),
             $baseline->getName(),
-            JsonCast::toInt($baseline->getMilestone()->getId()),
+            JsonCast::toInt($baseline->getArtifact()->getId()),
             JsonCast::fromDateTimeToDate($baseline->getSnapshotDate()),
             JsonCast::toInt($baseline->getAuthor()->getId())
         );

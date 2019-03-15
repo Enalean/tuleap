@@ -70,7 +70,7 @@ describe("Rest queries:", () => {
         };
         const body = JSON.stringify({
             name: "My first baseline",
-            milestone_id: 3
+            artifact_id: 3
         });
 
         beforeEach(async () => {

@@ -86,11 +86,11 @@ class BaselineRepositoryAdapterTest extends TestCase
 
     public function testFindById()
     {
-        $milestone = BaselineArtifactFactory::one()->build();
+        $artifact = BaselineArtifactFactory::one()->build();
         $this->baseline_artifact_repository
             ->shouldReceive('findById')
             ->with($this->current_user, 10)
-            ->andReturn($milestone);
+            ->andReturn($artifact);
 
         $user = new PFUser();
         $this->user_manager
@@ -122,7 +122,7 @@ class BaselineRepositoryAdapterTest extends TestCase
         $expected_baseline = new Baseline(
             1,
             "Persisted baseline",
-            $milestone,
+            $artifact,
             DateTime::createFromFormat('Y-m-d H:i:s', '2019-03-21 14:47:03'),
             $user
         );
@@ -182,11 +182,11 @@ class BaselineRepositoryAdapterTest extends TestCase
 
     public function testFindByProject()
     {
-        $milestone = BaselineArtifactFactory::one()->build();
+        $artifact = BaselineArtifactFactory::one()->build();
         $this->baseline_artifact_repository
             ->shouldReceive('findById')
             ->with($this->current_user, 10)
-            ->andReturn($milestone);
+            ->andReturn($artifact);
 
         $user = new PFUser();
         $this->user_manager
@@ -223,7 +223,7 @@ class BaselineRepositoryAdapterTest extends TestCase
         $expected_baselines = [new Baseline(
             1,
             "Persisted baseline",
-            $milestone,
+            $artifact,
             DateTime::createFromFormat('Y-m-d H:i:s', '2019-03-21 14:47:03'),
             $user
         )];

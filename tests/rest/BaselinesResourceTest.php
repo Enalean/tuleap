@@ -32,14 +32,14 @@ class BaselinesResourceTest extends RestBase
     private const ARTIFACT_TITLE = 'new title';
 
     /** @var int */
-    private $a_milestone_id;
+    private $an_artifact_id;
 
     public function setUp(): void
     {
         parent::setUp();
 
         $artifact_ids_by_title = $this->getArtifactIdsIndexedByTitle(self::PROJECT_NAME, self::TRACKER_NAME);
-        $this->a_milestone_id  = $artifact_ids_by_title[self::ARTIFACT_TITLE];
+        $this->an_artifact_id  = $artifact_ids_by_title[self::ARTIFACT_TITLE];
     }
 
     public function testPost()
@@ -51,8 +51,8 @@ class BaselinesResourceTest extends RestBase
                 null,
                 json_encode(
                     [
-                        'name'         => 'new baseline',
-                        'milestone_id' => $this->a_milestone_id
+                        'name'        => 'new baseline',
+                        'artifact_id' => $this->an_artifact_id
                     ]
                 )
             )
@@ -81,7 +81,7 @@ class BaselinesResourceTest extends RestBase
 
         $this->assertEquals($baseline['id'], $json_response['id']);
         $this->assertEquals($baseline['name'], $json_response['name']);
-        $this->assertEquals($baseline['milestone_id'], $json_response['milestone_id']);
+        $this->assertEquals($baseline['artifact_id'], $json_response['artifact_id']);
         $this->assertEquals($baseline['snapshot_date'], $json_response['snapshot_date']);
         $this->assertEquals($baseline['author_id'], $json_response['author_id']);
     }
@@ -108,7 +108,7 @@ class BaselinesResourceTest extends RestBase
         $baseline_response = $baselines_response[0];
         $this->assertNotNull($baseline_response['id']);
         $this->assertNotNull($baseline_response['name']);
-        $this->assertNotNull($baseline_response['milestone_id']);
+        $this->assertNotNull($baseline_response['artifact_id']);
         $this->assertNotNull($baseline_response['snapshot_date']);
         $this->assertNotNull($baseline_response['author_id']);
     }
@@ -122,8 +122,8 @@ class BaselinesResourceTest extends RestBase
                 null,
                 json_encode(
                     [
-                        'name'         => 'created baseline',
-                        'milestone_id' => $this->a_milestone_id
+                        'name'        => 'created baseline',
+                        'artifact_id' => $this->an_artifact_id
                     ]
                 )
             )

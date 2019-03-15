@@ -37,7 +37,7 @@ class BaselineBuilder
     private $name;
 
     /** @var BaselineArtifact */
-    private $milestone;
+    private $artifact;
 
     /** @var DateTime */
     private $snapshot_date;
@@ -57,9 +57,9 @@ class BaselineBuilder
         return $this;
     }
 
-    public function milestone(BaselineArtifact $milestone): self
+    public function artifact(BaselineArtifact $artifact): self
     {
-        $this->milestone = $milestone;
+        $this->artifact = $artifact;
         return $this;
     }
 
@@ -80,7 +80,7 @@ class BaselineBuilder
         return new Baseline(
             $this->id,
             $this->name,
-            $this->milestone,
+            $this->artifact,
             $this->snapshot_date,
             $this->author
         );

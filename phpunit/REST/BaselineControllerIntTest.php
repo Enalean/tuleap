@@ -43,15 +43,15 @@ class BaselineControllerIntTest extends IntegrationTestCaseWithStubs
 
     public function testPost()
     {
-        $milestone = BaselineArtifactFactory::one()->id(2)->build();
-        $this->baseline_artifact_repository->add($milestone);
+        $artifact = BaselineArtifactFactory::one()->id(2)->build();
+        $this->baseline_artifact_repository->add($artifact);
 
         $this->controller->post('My first baseline', 2);
 
         $this->assertEquals(1, $this->baseline_repository->count());
         $baseline = $this->baseline_repository->findAny();
         $this->assertEquals('My first baseline', $baseline->getName());
-        $this->assertEquals($milestone, $baseline->getMilestone());
+        $this->assertEquals($artifact, $baseline->getArtifact());
         $this->assertEquals($this->current_user_provider->getUser(), $baseline->getAuthor());
         $this->assertEquals($this->clock->now(), $baseline->getSnapshotDate());
     }

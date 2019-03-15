@@ -31,12 +31,12 @@ class TransientBaseline
     private $name;
 
     /** @var BaselineArtifact */
-    private $milestone;
+    private $artifact;
 
-    public function __construct(string $name, BaselineArtifact $milestone)
+    public function __construct(string $name, BaselineArtifact $artifact)
     {
-        $this->name      = $name;
-        $this->milestone = $milestone;
+        $this->name     = $name;
+        $this->artifact = $artifact;
     }
 
     public function getName(): string
@@ -44,13 +44,13 @@ class TransientBaseline
         return $this->name;
     }
 
-    public function getMilestone(): BaselineArtifact
+    public function getArtifact(): BaselineArtifact
     {
-        return $this->milestone;
+        return $this->artifact;
     }
 
     public function getProject(): Project
     {
-        return $this->milestone->getProject();
+        return $this->artifact->getProject();
     }
 }

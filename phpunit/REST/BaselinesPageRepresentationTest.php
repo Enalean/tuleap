@@ -30,7 +30,6 @@ use PHPUnit\Framework\TestCase;
 use Tuleap\Baseline\BaselinesPage;
 use Tuleap\Baseline\Factory\BaselineArtifactFactory;
 use Tuleap\Baseline\Factory\BaselineFactory;
-use Tuleap\Baseline\Factory\MilestoneFactory;
 use Tuleap\GlobalLanguageMock;
 
 require_once __DIR__ . "/../bootstrap.php";
@@ -48,7 +47,7 @@ class BaselinesPageRepresentationTest extends TestCase
                     BaselineFactory::one()
                         ->id(3)
                         ->name('Represented baseline')
-                        ->milestone(BaselineArtifactFactory::one()->id(13)->build())
+                        ->artifact(BaselineArtifactFactory::one()->id(13)->build())
                         ->snapshotDate(DateTime::createFromFormat('Y-m-d H:i:s', '2019-03-21 14:47:03'))
                         ->author(new PFUser(['user_id' => 22]))
                         ->build()

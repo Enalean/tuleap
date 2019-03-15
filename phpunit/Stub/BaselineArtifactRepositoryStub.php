@@ -30,29 +30,29 @@ use Tuleap\Baseline\BaselineArtifact;
 use Tuleap\Baseline\BaselineArtifactRepository;
 
 /**
- * In memory implementation of MilestoneRepository used for tests
+ * In memory implementation of BaselineArtifactRepository used for tests
  */
 class BaselineArtifactRepositoryStub implements BaselineArtifactRepository
 {
     /** @var BaselineArtifact[] */
-    private $milestones_by_id = [];
+    private $artifacts_by_id = [];
 
-    public function add(BaselineArtifact $milestone): void
+    public function add(BaselineArtifact $artifact): void
     {
-        $this->milestones_by_id [$milestone->getId()] = $milestone;
+        $this->artifacts_by_id [$artifact->getId()] = $artifact;
     }
 
     public function findById(PFUser $current_user, int $id): ?BaselineArtifact
     {
-        return $this->milestones_by_id[$id] ?? null;
+        return $this->artifacts_by_id[$id] ?? null;
     }
 
     public function removeAll(): void
     {
-        $this->milestones_by_id = [];
+        $this->artifacts_by_id = [];
     }
 
-    public function findAt(PFUser $current_user, BaselineArtifact $milestone, DateTime $date): ?BaselineArtifact
+    public function findAt(PFUser $current_user, BaselineArtifact $artifact, DateTime $date): ?BaselineArtifact
     {
         throw new Exception("Method findAt not implemented yet");
     }

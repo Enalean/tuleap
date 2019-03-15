@@ -37,7 +37,7 @@ async function createBaseline(name, milestone) {
 
     const body = JSON.stringify({
         name,
-        milestone_id: milestone.id
+        artifact_id: milestone.id
     });
 
     const response = await post("/api/baselines/", {

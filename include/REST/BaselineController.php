@@ -62,21 +62,21 @@ class BaselineController
      * @throws \User_StatusPendingException
      * @throws \User_StatusSuspendedException
      */
-    public function post(string $name, int $milestone_id): BaselineRepresentation
+    public function post(string $name, int $artifact_id): BaselineRepresentation
     {
         $current_user = $this->current_user_provider->getUser();
-        $milestone    = $this->baseline_artifact_repository->findById($current_user, $milestone_id);
-        if ($milestone === null) {
+        $artifact     = $this->baseline_artifact_repository->findById($current_user, $artifact_id);
+        if ($artifact === null) {
             throw new I18NRestException(
                 404,
                 sprintf(
-                    dgettext('tuleap-baseline', 'No milestone found with id %u'),
-                    $milestone_id
+                    dgettext('tuleap-baseline', 'No artifact found with id %u'),
+                    $artifact_id
                 )
             );
         }
 
-        $baseline = new TransientBaseline($name, $milestone);
+        $baseline = new TransientBaseline($name, $artifact);
         try {
             $created_baseline = $this->baseline_service->create($current_user, $baseline);
             return BaselineRepresentation::fromBaseline($created_baseline);

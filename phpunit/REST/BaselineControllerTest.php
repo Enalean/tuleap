@@ -92,12 +92,12 @@ class BaselineControllerTest extends TestCase
     }
 
     /** @var BaselineArtifact */
-    private $a_milestone;
+    private $an_artifact;
 
     /** @before */
-    public function createAMilestone(): void
+    public function createAnArtifact(): void
     {
-        $this->a_milestone = BaselineArtifactFactory::one()->build();
+        $this->an_artifact = BaselineArtifactFactory::one()->build();
     }
 
     public function testPostCreatesNewBaseline()
@@ -105,7 +105,7 @@ class BaselineControllerTest extends TestCase
         $this->baseline_artifact_repository
             ->shouldReceive('findById')
             ->with($this->current_user, 3)
-            ->andReturn($this->a_milestone);
+            ->andReturn($this->an_artifact);
 
         $this->baseline_service
             ->shouldReceive('create')
@@ -116,14 +116,14 @@ class BaselineControllerTest extends TestCase
 
     public function testPostReturnsRepresentationOfCreatedBaseline()
     {
-        $milestone = BaselineArtifactFactory::one()
+        $artifact = BaselineArtifactFactory::one()
             ->id(3)
             ->build();
 
         $this->baseline_artifact_repository
             ->shouldReceive('findById')
             ->with($this->current_user, 3)
-            ->andReturn($milestone);
+            ->andReturn($artifact);
 
         $this->baseline_service
             ->shouldReceive('create')
@@ -131,7 +131,7 @@ class BaselineControllerTest extends TestCase
                 BaselineFactory::one()
                     ->id(11)
                     ->name('first baseline')
-                    ->milestone($milestone)
+                    ->artifact($artifact)
                     ->author(new PFUser(['user_id' => 99]))
                     ->build()
             );
@@ -140,7 +140,7 @@ class BaselineControllerTest extends TestCase
 
         $this->assertEquals(11, $representation->id);
         $this->assertEquals('first baseline', $representation->name);
-        $this->assertEquals(3, $representation->milestone_id);
+        $this->assertEquals(3, $representation->artifact_id);
         $this->assertEquals(99, $representation->author_id);
     }
 
@@ -154,7 +154,7 @@ class BaselineControllerTest extends TestCase
         $this->baseline_artifact_repository
             ->shouldReceive('findById')
             ->with($current_user, 3)
-            ->andReturn($this->a_milestone);
+            ->andReturn($this->an_artifact);
 
         $this->baseline_service
             ->shouldReceive('create')
@@ -176,7 +176,7 @@ class BaselineControllerTest extends TestCase
 
         $this->baseline_artifact_repository
             ->shouldReceive('findById')
-            ->andReturn($this->a_milestone);
+            ->andReturn($this->an_artifact);
 
         $this->baseline_service
             ->shouldReceive('create')
@@ -190,7 +190,7 @@ class BaselineControllerTest extends TestCase
         $baseline = BaselineFactory::one()
             ->id(1)
             ->name('found baseline')
-            ->milestone(BaselineArtifactFactory::one()->id(3)->build())
+            ->artifact(BaselineArtifactFactory::one()->id(3)->build())
             ->author(new PFUser(['user_id' => 99]))
             ->build();
         $this->baseline_service
@@ -202,7 +202,7 @@ class BaselineControllerTest extends TestCase
 
         $this->assertEquals(1, $representation->id);
         $this->assertEquals('found baseline', $representation->name);
-        $this->assertEquals(3, $representation->milestone_id);
+        $this->assertEquals(3, $representation->artifact_id);
         $this->assertEquals(99, $representation->author_id);
     }
 

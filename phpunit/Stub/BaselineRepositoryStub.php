@@ -46,7 +46,7 @@ class BaselineRepositoryStub implements BaselineRepository
         $baseline = new Baseline(
             $this->id_sequence++,
             $baseline->getName(),
-            $baseline->getMilestone(),
+            $baseline->getArtifact(),
             $snapshot_date,
             $current_user
         );
@@ -93,7 +93,7 @@ class BaselineRepositoryStub implements BaselineRepository
         $matching_baselines = array_filter(
             $this->baselines_by_id,
             function (Baseline $baseline) use ($project) {
-                return $baseline->getMilestone()->getProject() === $project;
+                return $baseline->getArtifact()->getProject() === $project;
             }
         );
         return array_slice($matching_baselines, $baseline_offset, $page_size);

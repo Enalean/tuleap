@@ -30,5 +30,5 @@ interface BaselineArtifactRepository
 {
     public function findById(PFUser $current_user, int $id): ?BaselineArtifact;
 
-    public function findAt(PFUser $current_user, BaselineArtifact $milestone, DateTime $date): ?BaselineArtifact;
+    public function findAt(PFUser $current_user, BaselineArtifact $artifact, DateTime $date): ?BaselineArtifact;
 }

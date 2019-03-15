@@ -32,10 +32,7 @@ use Mockery\MockInterface;
 use PFUser;
 use PHPUnit\Framework\TestCase;
 use Project;
-use Tracker_Artifact;
-use Tuleap\Baseline\Factory\BaselineArtifactFactory;
 use Tuleap\Baseline\Factory\BaselineFactory;
-use Tuleap\Baseline\Factory\MilestoneFactory;
 use Tuleap\Baseline\Support\DateTimeFactory;
 use Tuleap\GlobalLanguageMock;
 
@@ -76,19 +73,15 @@ class BaselineServiceTest extends TestCase
     /** @var Project|MockInterface */
     private $a_project;
 
-    /** @var Tracker_Artifact */
-    private $a_milestone;
-
     /** @var DateTime */
     private $a_date;
 
     /** @before */
     public function createEntities()
     {
-        $this->a_user      = new PFUser();
-        $this->a_project   = Mockery::mock(Project::class);
-        $this->a_milestone = BaselineArtifactFactory::one()->build();
-        $this->a_date      = DateTimeFactory::one();
+        $this->a_user    = new PFUser();
+        $this->a_project = Mockery::mock(Project::class);
+        $this->a_date    = DateTimeFactory::one();
     }
 
     public function testFinByProject()

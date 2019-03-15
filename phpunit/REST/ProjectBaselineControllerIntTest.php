@@ -31,7 +31,6 @@ use PFUser;
 use Project;
 use Tuleap\Baseline\Factory\BaselineArtifactFactory;
 use Tuleap\Baseline\Factory\BaselineFactory;
-use Tuleap\Baseline\Factory\MilestoneFactory;
 use Tuleap\Baseline\Support\DateTimeFactory;
 use Tuleap\GlobalLanguageMock;
 
@@ -60,7 +59,7 @@ class ProjectBaselineControllerIntTest extends IntegrationTestCaseWithStubs
             BaselineFactory::one()
                 ->id(3)
                 ->name('Matching baseline')
-                ->milestone(
+                ->artifact(
                     BaselineArtifactFactory::one()
                         ->id(13)
                         ->project($project)

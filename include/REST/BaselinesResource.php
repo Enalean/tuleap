@@ -46,8 +46,8 @@ class BaselinesResource extends AuthenticatedResource
      * @status 201
      * @access public
      *
-     * @param string $name         Name of the baseline {@from body}
-     * @param int    $milestone_id Id of a milestone {@from body}
+     * @param string $name        Name of the baseline {@from body}
+     * @param int    $artifact_id Id of an artifact {@from body}
      *
      * @return Tuleap\Baseline\REST\BaselineRepresentation
      * @throws \Rest_Exception_InvalidTokenException
@@ -61,12 +61,12 @@ class BaselinesResource extends AuthenticatedResource
      * @throws \User_StatusSuspendedException
      * @throws \Luracast\Restler\RestException
      */
-    public function post(string $name, int $milestone_id): BaselineRepresentation
+    public function post(string $name, int $artifact_id): BaselineRepresentation
     {
         $this->checkAccess();
         return $this->container
             ->get(BaselineController::class)
-            ->post($name, $milestone_id);
+            ->post($name, $artifact_id);
     }
 
     /**
