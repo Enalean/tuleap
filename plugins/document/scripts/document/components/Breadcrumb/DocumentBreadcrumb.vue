@@ -29,6 +29,7 @@
                     <a class="breadcrumb-dropdown-link"
                        v-bind:href="document_administration_url"
                        v-bind:title="document_administration_title"
+                       data-test="breadcrumb-administrator-link"
                     >
                         <i class="fa fa-cog fa-fw"></i> <translate>Administration</translate>
                     </a>
@@ -36,8 +37,10 @@
             </nav>
         </div>
 
-        <span class="breadcrumb-item breadcrumb-item-disabled" v-if="is_ellipsis_displayed">
-            <span class="breadcrumb-link" v-bind:title="ellipsis_title">...</span>
+        <span class="breadcrumb-item breadcrumb-item-disabled" v-if="is_ellipsis_displayed" data-test="breadcrumb-ellipsis">
+            <span class="breadcrumb-link" v-bind:title="ellipsis_title">
+                ...
+            </span>
         </span>
 
         <document-breadcrumb-element v-for="parent in current_folder_ascendant_hierarchy.slice(-max_nb_to_display)"

@@ -26,6 +26,8 @@ import "./store/actions-helpers/load-folder-content.spec.js";
 import "./store/getters.spec.js";
 import "./store/mutations.spec.js";
 
+import "./components/Breadcrumb/DocumentBreadCrumb.spec.js";
+
 import "./components/Folder/ItemTitle/FakeCaret.spec.js";
 import "./components/Folder/ItemTitle/FolderCellTitle.spec.js";
 import "./components/Folder/ItemTitle/EmbeddedCellTitle.spec.js";
