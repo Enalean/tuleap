@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,19 +24,18 @@
  *
  * The report returns a set of matching ids S1.
  * The plugin agiledashboard performed an additional query that returned another set S2
- * The plugin fulltextsearch      "     "     "        "     "     "        "     "  S3
  * etc.
  *
  * => The remaining result set is the intersection S = S1 ∩ S2 ∩ S3
  */
-class Tracker_Report_ResultJoiner {
+class Tracker_Report_ResultJoiner
+{
 
-    public function joinResults(array $matching_ids, array $other_results) {
+    public function joinResults(array $matching_ids, array $other_results)
+    {
         return call_user_func_array(
             'array_intersect_key',
             array_merge(array($matching_ids), $other_results)
         );
     }
 }
-
-?>

@@ -162,10 +162,6 @@ class DocmanPlugin extends Plugin
             $this->addHook(Statistics_Event::FREQUENCE_STAT_ENTRIES);
             $this->addHook(Statistics_Event::FREQUENCE_STAT_SAMPLE);
         }
-        if (defined('FULLTEXTSEARCH_BASE_URL')) {
-            $this->addHook(FULLTEXTSEARCH_EVENT_FETCH_ALL_DOCUMENT_SEARCH_TYPES);
-            $this->addHook(FULLTEXTSEARCH_EVENT_DOES_DOCMAN_SERVICE_USE_UGROUP);
-        }
 
         $this->addHook(Event::REST_RESOURCES);
         $this->addHook(Event::REST_PROJECT_ADDITIONAL_INFORMATIONS);
@@ -975,23 +971,6 @@ class DocmanPlugin extends Plugin
             $this->controller[$controller]->setRequest($request);
         }
         return $this->controller[$controller];
-    }
-
-    public function fulltextsearch_event_fetch_all_document_search_types($params) {
-        $params['all_document_search_types'][] = array(
-            'key'     => 'docman',
-            'name'    => $GLOBALS['Language']->getText('plugin_docman', 'search_type'),
-            'info'    => false,
-            'can_use' => true,
-            'special' => false,
-        );
-    }
-
-    public function fulltextsearch_event_does_docman_service_use_ugroup($params) {
-        $manager   = Docman_PermissionsManager::instance($params['project_id']);
-        $ugroup_id = $params['ugroup_id'];
-
-        $params['is_used'] = $manager->isUgroupUsed($ugroup_id);
     }
 
     public function proccess_system_check($params) {

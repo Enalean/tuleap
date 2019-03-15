@@ -897,8 +897,6 @@ plugin_docman	item_not_restored	The selected item has not been restored.
 
 plugin_docman	permission_requests_information	The selected group will not affect people notified for permission requests on documents service.<br> Only the <b>document managers</b> will be notified in that case.
 
-plugin_docman	search_type	Documents
-
 plugin_docman	doc_type_folder	Folder
 plugin_docman	doc_type_embedded	Embedded File
 plugin_docman	doc_type_empty	Empty

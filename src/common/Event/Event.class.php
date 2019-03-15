@@ -1,7 +1,7 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+//phpcs:ignoreFile
+
 class Event {
 
     /**
@@ -649,19 +652,12 @@ class Event {
      */
     const LAYOUT_SEARCH_ENTRY = 'layout_search_entry';
 
-    const PLUGINS_POWERED_SEARCH = 'plugins_powered_search';
-
     /**
      * Fetches the sidebar options for searching on the serach homepgae. This is
      * only for display; it does not execute any search query whilst fetching
      * the search sidebar options.
      */
     const SEARCH_TYPES_PRESENTERS = 'search_types_presenters';
-
-    /**
-     * Fetech another types of search
-     */
-    const FETCH_ADDITIONAL_SEARCH_TABS = 'fetch_additional_search_tabs';
 
     /**
      * Sends-out a search a query

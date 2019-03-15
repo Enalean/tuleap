@@ -1645,9 +1645,6 @@ plugin_tracker	disable_notifications_alternate_text	Ne plus recevoir les notific
 plugin_tracker	enable_notifications_alternate_text	Recevoir les notifications de cet artefact
 plugin_tracker	raw_email_button_title	Afficher l'email original
 
-plugin_tracker	tracker_artifacts	Artefacts de suivis
-plugin_tracker	tracker_fulltextsearch_info	Seulement disponible quand vous choisissez UN projet
-
 plugin_tracker	field_not_stored_exception	Le champs "$1" n'a pas pu être sauvegardé.
 plugin_tracker	comment_not_stored_exception	Le commentaire n'a pas pu être sauvegardé.
 plugin_tracker	changeset_not_stored_exception	Le changeset n'a pas pu être sauvegardé.
