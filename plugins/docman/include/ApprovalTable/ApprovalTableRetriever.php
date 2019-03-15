@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -52,5 +52,19 @@ class ApprovalTableRetriever
         }
 
         return $approval_table;
+    }
+
+    public function hasApprovalTable(Docman_Item $item): bool
+    {
+        $table_factory      = $this->approval_table_factory->getSpecificFactoryFromItem($item);
+        if ($table_factory === null) {
+            return false;
+        }
+
+        $approval_table = $table_factory->getTable();
+        if ($approval_table === null) {
+            return false;
+        }
+        return true;
     }
 }

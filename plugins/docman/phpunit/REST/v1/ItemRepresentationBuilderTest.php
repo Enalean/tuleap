@@ -148,6 +148,7 @@ class ItemRepresentationBuilderTest extends \PHPUnit\Framework\TestCase
         $item_approval_table->shouldReceive('getDate')->andReturns(1549462600);
         $item_approval_table->shouldReceive('isEnabled')->andReturns(true);
         $item_approval_table->shouldReceive('getApprovalState')->andReturns(0);
+        $item_approval_table->shouldReceive('getId')->andReturn(10);
 
 
         $this->approval_table_retriever->shouldReceive('retrieveByItem')->with($docman_item)->andReturn(
@@ -187,6 +188,7 @@ class ItemRepresentationBuilderTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($representation->link_properties, null);
         $this->assertEquals($representation->wiki_properties, null);
 
+        $this->assertEquals($representation->approval_table->id, 10);
         $this->assertEquals($representation->approval_table->approval_state, 'Not yet');
         $this->assertEquals($representation->approval_table->table_owner->id, $owner_id);
         $this->assertEquals($representation->approval_table->approval_request_date, '2019-02-06T15:16:40+01:00');

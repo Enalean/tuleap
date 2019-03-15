@@ -88,7 +88,37 @@ class DocmanDataBuilder extends REST_TestDataBuilder
         $this->activateWikiServiceForTheProject();
     }
 
-    private function addItem($user_id, $docman_root_id, $title, $item_type, $link_url = '', $file_path = '', $wiki_page = '')
+    private function createItemWithVersion(
+        $user_id,
+        $docman_root_id,
+        $title,
+        $item_type,
+        $link_url = '',
+        $file_path = '',
+        $wiki_page = ''
+    ) {
+        $item_id = $this->createItem($user_id, $docman_root_id, $title, $item_type, $link_url, $wiki_page);
+
+        switch ($item_type) {
+            case PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE:
+                $file_type = 'text/html';
+                $this->addItemVersion($item_id, $title, $file_type, $file_path);
+                break;
+            case PLUGIN_DOCMAN_ITEM_TYPE_FILE:
+                $file_type = 'application/pdf';
+                $this->addItemVersion($item_id, $title, $file_type);
+                break;
+            case PLUGIN_DOCMAN_ITEM_TYPE_LINK:
+                $this->addLinkVersion($item_id);
+                break;
+            default:
+                $file_type = null;
+                break;
+        }
+        return $item_id;
+    }
+
+    private function createItem($user_id, $docman_root_id, $title, $item_type, $link_url = '', $wiki_page = '')
     {
         $item = array(
             'parent_id'         => $docman_root_id,
@@ -107,28 +137,8 @@ class DocmanDataBuilder extends REST_TestDataBuilder
             'file_is_embedded'  => ''
         );
 
-        $item_id = $this->docman_item_factory->create($item, 1);
-
-        switch ($item_type) {
-            case PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE:
-                $file_type = 'text/html';
-                $this->addItemVersion($item_id, $title, $file_type, $file_path);
-                break;
-            case PLUGIN_DOCMAN_ITEM_TYPE_FILE:
-                $file_type = 'application/pdf';
-                $this->addItemVersion($item_id, $title, $file_type);
-                break;
-            case PLUGIN_DOCMAN_ITEM_TYPE_LINK:
-                $this->addLinkVersion($item_id);
-                break;
-            default:
-                $file_type = null;
-                break;
-        }
-
-        return $item_id;
+        return  $this->docman_item_factory->create($item, 1);
     }
-
     private function addItemVersion($item_id, $title, $item_type, $file_path = '')
     {
         $version         = array(
@@ -144,7 +154,7 @@ class DocmanDataBuilder extends REST_TestDataBuilder
             'path'      => $file_path
         );
         $version_factory = new \Docman_VersionFactory();
-        $version_factory->create($version);
+        return $version_factory->create($version);
     }
 
     private function addLinkVersion($item_id)
@@ -156,17 +166,16 @@ class DocmanDataBuilder extends REST_TestDataBuilder
         $version_link_factory->create($docman_link, 'changset1', 'test rest Change', time());
     }
 
-
     /**
      * To help understand tests structure, below a representation of folder hierarchy
      *
      *                                    Root
      *                                     +
      *                                     |
-     *                            +--------+---------+---------+---------+---------+
-     *                            |                  |         |         |         |
-     *                            +                  +         +         +         +
-     *                          folder 1           folder 3   file A    file B    file C
+     *         +------------------+---------------+--------------------+----------------+----------------+
+     *         |                  |               |                    |                |                |
+     *         +                  +               +                    +                +                +
+     *       file D           folder 1 (AT)    folder 3 (L)       file A (AT C)     file B (AT R)    file C (AT E)
      *                            +
      *                            |
      *  +---------------+---------+--------+---------------------+---------------------+-------------+-----------+
@@ -176,31 +185,95 @@ class DocmanDataBuilder extends REST_TestDataBuilder
      *                                                           |
      *                                                           +
      *                                                        Item D
+     * (L)    => Lock on this item
+     * (AT)   => Approval table on this item
+     * (AT C) => Copy Approval table on this item
+     * (AT R) => Reset Approval table on this item
+     * (AT E) => Empty Approval table on this item
+     *
      */
     private function addContent()
     {
         $docman_root = $this->docman_item_factory->getRoot($this->project->getID());
 
-        $folder_id   = $this->addItem(self::REGULAR_USER_ID, $docman_root->getId(), 'folder 1', PLUGIN_DOCMAN_ITEM_TYPE_FOLDER);
-        $folder_3_id = $this->addItem(self::REGULAR_USER_ID, $docman_root->getId(), 'folder 3', PLUGIN_DOCMAN_ITEM_TYPE_FOLDER);
+        $folder_id   = $this->createItemWithVersion(
+            self::REGULAR_USER_ID,
+            $docman_root->getId(),
+            'folder 1',
+            PLUGIN_DOCMAN_ITEM_TYPE_FOLDER
+        );
+        $folder_3_id = $this->createItemWithVersion(
+            self::REGULAR_USER_ID,
+            $docman_root->getId(),
+            'folder 3',
+            PLUGIN_DOCMAN_ITEM_TYPE_FOLDER
+        );
         $this->addWritePermissionOnItem($folder_id, \ProjectUGroup::PROJECT_MEMBERS);
 
-        $file_A_id = $this->addItem(self::REGULAR_USER_ID, $folder_id, 'file A', PLUGIN_DOCMAN_ITEM_TYPE_FILE);
+        $file_A_id         = $this->createItem(
+            self::REGULAR_USER_ID,
+            $folder_id,
+            'file A',
+            PLUGIN_DOCMAN_ITEM_TYPE_FILE
+        );
+        $file_A_version_id = $this->addItemVersion($file_A_id, 'First !', 'application/pdf');
+
         $this->addWritePermissionOnItem($file_A_id, \ProjectUGroup::PROJECT_MEMBERS);
-        $file_B_id = $this->addItem(self::REGULAR_USER_ID, $folder_id, 'file B', PLUGIN_DOCMAN_ITEM_TYPE_FILE);
+        $file_B_id = $this->createItem(
+            self::REGULAR_USER_ID,
+            $folder_id,
+            'file B',
+            PLUGIN_DOCMAN_ITEM_TYPE_FILE
+        );
+        $file_B_version_id = $this->addItemVersion($file_B_id, 'Second !', 'application/pdf');
         $this->addWritePermissionOnItem($file_B_id, \ProjectUGroup::PROJECT_MEMBERS);
-        $file_C_id = $this->addItem(self::REGULAR_USER_ID, $folder_id, 'file C', PLUGIN_DOCMAN_ITEM_TYPE_FILE);
+
+        $file_C_id = $this->createItem(
+            self::REGULAR_USER_ID,
+            $folder_id,
+            'file C',
+            PLUGIN_DOCMAN_ITEM_TYPE_FILE
+        );
+        $file_C_version_id = $this->addItemVersion($file_C_id, 'Third !', 'application/pdf');
         $this->addWritePermissionOnItem($file_C_id, \ProjectUGroup::PROJECT_MEMBERS);
 
-        $item_A_id = $this->addItem(self::ANON_ID, $folder_id, 'item A', PLUGIN_DOCMAN_ITEM_TYPE_EMPTY);
-        $item_B_id = $this->addItem(self::REGULAR_USER_ID, $folder_id, 'item B', PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE);
-        $item_C_id = $this->addItem(self::REGULAR_USER_ID, $folder_id, 'item C', PLUGIN_DOCMAN_ITEM_TYPE_FILE);
-        $folder_2_id = $this->addItem(self::REGULAR_USER_ID, $folder_id, 'folder 2', PLUGIN_DOCMAN_ITEM_TYPE_FOLDER);
+        $file_D_id = $this->createItemWithVersion(
+            self::REGULAR_USER_ID,
+            $folder_id,
+            'file D',
+            PLUGIN_DOCMAN_ITEM_TYPE_FILE
+        );
+        $this->addWritePermissionOnItem($file_D_id, \ProjectUGroup::PROJECT_MEMBERS);
+
+        $item_A_id   = $this->createItemWithVersion(self::ANON_ID, $folder_id, 'item A', PLUGIN_DOCMAN_ITEM_TYPE_EMPTY);
+        $item_B_id   = $this->createItemWithVersion(
+            self::REGULAR_USER_ID,
+            $folder_id,
+            'item B',
+            PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE
+        );
+        $item_C_id   = $this->createItemWithVersion(
+            self::REGULAR_USER_ID,
+            $folder_id,
+            'item C',
+            PLUGIN_DOCMAN_ITEM_TYPE_FILE
+        );
+        $folder_2_id = $this->createItemWithVersion(
+            self::REGULAR_USER_ID,
+            $folder_id,
+            'folder 2',
+            PLUGIN_DOCMAN_ITEM_TYPE_FOLDER
+        );
 
 
-        $item_D_id = $this->addItem(self::REGULAR_USER_ID, $folder_2_id, 'item D', PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE);
+        $item_D_id = $this->createItemWithVersion(
+            self::REGULAR_USER_ID,
+            $folder_2_id,
+            'item D',
+            PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE
+        );
 
-        $item_E_id = $this->addItem(
+        $item_E_id = $this->createItemWithVersion(
             self::REGULAR_USER_ID,
             $folder_id,
             'item E',
@@ -209,7 +282,7 @@ class DocmanDataBuilder extends REST_TestDataBuilder
         );
 
         $item_F_path = dirname(__FILE__) . '/_fixtures/docmanFile/embeddedFile';
-        $item_F_id = $this->addItem(
+        $item_F_id   = $this->createItemWithVersion(
             self::REGULAR_USER_ID,
             $folder_id,
             'item F',
@@ -218,7 +291,15 @@ class DocmanDataBuilder extends REST_TestDataBuilder
             $item_F_path
         );
 
-        $item_G_id = $this->addItem(self::REGULAR_USER_ID, $folder_id, 'item G', PLUGIN_DOCMAN_ITEM_TYPE_WIKI, '', '', 'MyWikiPage');
+        $item_G_id = $this->createItemWithVersion(
+            self::REGULAR_USER_ID,
+            $folder_id,
+            'item G',
+            PLUGIN_DOCMAN_ITEM_TYPE_WIKI,
+            '',
+            '',
+            'MyWikiPage'
+        );
 
         $this->addReadPermissionOnItem($item_A_id, \ProjectUGroup::PROJECT_MEMBERS);
         $this->addReadPermissionOnItem($item_B_id, \ProjectUGroup::PROJECT_ADMIN);
@@ -230,7 +311,11 @@ class DocmanDataBuilder extends REST_TestDataBuilder
         $this->addReadPermissionOnItem($folder_3_id, \ProjectUGroup::PROJECT_ADMIN);
         $this->addReadPermissionOnItem($item_G_id, \ProjectUGroup::PROJECT_MEMBERS);
 
-        $this->addApprovalTableForItem($folder_id);
+        $this->addApprovalTableForFolder($folder_id);
+        $this->addApprovalTableForFile((int)$file_A_version_id);
+        $this->addApprovalTableForFile((int)$file_B_version_id);
+        $this->addApprovalTableForFile((int)$file_C_version_id);
+
         $this->lockItem($folder_3_id);
 
 
@@ -314,12 +399,26 @@ class DocmanDataBuilder extends REST_TestDataBuilder
         $this->metadata_value_factory->create($metadata_value);
     }
 
-    private function addApprovalTableForItem(int $id): void
+    private function addApprovalTableForFolder(int $id): void
     {
         $dao = new Docman_ApprovalTableItemDao();
         $dao->createTable(
             'item_id',
             $id,
+            self::REGULAR_USER_ID,
+            "",
+            time(),
+            PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED,
+            false
+        );
+    }
+
+    private function addApprovalTableForFile(int $version_id): void
+    {
+        $dao = new Docman_ApprovalTableItemDao();
+        $dao->createTable(
+            'version_id',
+            $version_id,
             self::REGULAR_USER_ID,
             "",
             time(),

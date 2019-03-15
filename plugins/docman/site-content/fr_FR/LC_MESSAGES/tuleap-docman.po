@@ -12,6 +12,13 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 2.2.1\n"
 
+#, php-format
+msgid ""
+"%s has an approval table, you must provide an option to have approval table "
+"on new version creation."
+msgstr "%s a une table d'approbation, vous devez renseigner une option pour avoir "
+"une table d'approbation lors de la création de la  nouvelle version"
+
 msgid "An error occurred during the update of the max file size"
 msgstr ""
 "Une erreur est survenue durant la mise à jour de la taille maximale des "
@@ -59,6 +66,13 @@ msgstr "Permissions globales"
 
 msgid "Granted groups"
 msgstr "Groupes autorisés"
+
+msgid ""
+"Impossible to update a file which already has an approval table without "
+"approval action."
+msgstr ""
+"Impossible de mettre à jour un fichier ayant déjà une table d'approbation "
+"sans renseigner l'action d'approbation"
 
 msgid "Initial version"
 msgstr "Version initiale"
@@ -123,11 +137,6 @@ msgid "This limit prevents a user to upload more than x files at a time."
 msgstr ""
 "Cette limite empêche un utilisateur de téléverser plus de x fichiers à la "
 "fois."
-
-msgid "Update document with approval table is not possible yet."
-msgstr ""
-"La mise à jour d'un document avec une table d'approbation n'est pas possible "
-"pour l'instant"
 
 msgid "User, group"
 msgstr "Utilisateur, groupe"

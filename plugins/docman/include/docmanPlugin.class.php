@@ -30,6 +30,8 @@ use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\ApprovalTable\ApprovalTableStateMapper;
+use Tuleap\Docman\ApprovalTable\ApprovalTableUpdateActionChecker;
+use Tuleap\Docman\ApprovalTable\ApprovalTableUpdater;
 use Tuleap\Docman\DocmanSettingsSiteAdmin\DocmanSettingsAdminController;
 use Tuleap\Docman\DocmanSettingsSiteAdmin\DocmanSettingsAdminSaveController;
 use Tuleap\Docman\DocmanSettingsSiteAdmin\DocumentSettingsSaver;
@@ -1327,6 +1329,7 @@ class DocmanPlugin extends Plugin
         $path_allocator = new VersionUploadPathAllocator();
         $version_to_upload_dao = new DocumentOnGoingVersionToUploadDAO();
         $event_manager = EventManager::instance();
+        $approval_table_retriever = new ApprovalTableRetriever(new Docman_ApprovalTableFactoriesFactory());
         return FileUploadController::build(
             new VersionDataStore(
                 new VersionBeingUploadedInformationProvider(
@@ -1351,7 +1354,10 @@ class DocmanPlugin extends Plugin
                     UserManager::instance(),
                     new DocmanItemsEventAdder($event_manager),
                     ProjectManager::instance(),
-                    new LockUpdater(new Docman_LockFactory())
+                    new LockUpdater(new Docman_LockFactory()),
+                    new ApprovalTableUpdater($approval_table_retriever, new Docman_ApprovalTableFactoriesFactory()),
+                    $approval_table_retriever,
+                    new ApprovalTableUpdateActionChecker($approval_table_retriever)
                 ),
                 new VersionUploadCanceler($path_allocator, $version_to_upload_dao),
                 new FileBeingUploadedLocker($path_allocator)

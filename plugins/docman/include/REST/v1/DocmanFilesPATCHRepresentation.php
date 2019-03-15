@@ -43,4 +43,9 @@ class DocmanFilesPATCHRepresentation
      * @var FilePropertiesPOSTPATCHRepresentation File properties must be set when creating a new file {@from body} {@type \Tuleap\Docman\REST\v1\FilePropertiesPOSTPATCHRepresentation} {@required true}
      */
     public $file_properties ;
+
+    /**
+     * @var string action for approval table when an item is updated {@from body} {@required false} {@choice copy,reset,empty}
+     */
+    public $approval_table_action = '';
 }
