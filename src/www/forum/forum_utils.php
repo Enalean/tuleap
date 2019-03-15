@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  * Copyright 1999-2000 (c) The SourceForge Crew
  *
  * This file is a part of Tuleap.
@@ -908,7 +908,9 @@ function forum_can_be_public(Project $project)
 
 function forum_is_public_value_allowed(Project $project, $forum_status)
 {
-    return ($project->getAccess() == Project::ACCESS_PRIVATE && ($forum_status ==0 ||
-        $forum_status ==9)) || forum_can_be_public($project);
+    return (
+            in_array($project->getAccess(), [Project::ACCESS_PRIVATE, Project::ACCESS_PRIVATE_WO_RESTRICTED], true)
+            && ($forum_status ==0 || $forum_status ==9)
+        ) || forum_can_be_public($project);
 }
 ?>

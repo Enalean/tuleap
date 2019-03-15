@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -80,9 +80,9 @@ class NotificationsForProjectMemberCleaner
         }
     }
 
-    public function cleanNotificationsAfterProjectVisibilityChange(Project $project, $new_access)
+    public function cleanNotificationsAfterProjectVisibilityChange(Project $project, string $new_access): void
     {
-        if ($new_access !== Project::ACCESS_PRIVATE) {
+        if ($new_access !== Project::ACCESS_PRIVATE && $new_access !== Project::ACCESS_PRIVATE_WO_RESTRICTED) {
             return;
         }
 

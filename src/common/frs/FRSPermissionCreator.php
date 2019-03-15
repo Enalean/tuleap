@@ -78,7 +78,7 @@ class FRSPermissionCreator
 
     public function updateProjectAccess(Project $project, $old_access, $new_access)
     {
-        if ($new_access === Project::ACCESS_PRIVATE) {
+        if ($new_access === Project::ACCESS_PRIVATE || $new_access === Project::ACCESS_PRIVATE_WO_RESTRICTED) {
             $this->permission_dao->disableAnonymousRegisteredAuthenticated($project->getID());
         }
         if ($new_access === Project::ACCESS_PUBLIC && $old_access === Project::ACCESS_PUBLIC_UNRESTRICTED) {

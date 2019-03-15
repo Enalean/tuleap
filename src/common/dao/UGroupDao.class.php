@@ -1,7 +1,7 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -154,11 +154,12 @@ class UGroupDao extends DataAccessObject {
 
     public function searchByUserIdTakingAccountUserProjectMembership($user_id)
     {
-        $user_id      = $this->da->quoteSmart($user_id);
-        $restricted   = $this->da->quoteSmart(ForgeAccess::RESTRICTED);
-        $unrestricted = $this->da->quoteSmart(Project::ACCESS_PUBLIC_UNRESTRICTED);
-        $public       = $this->da->quoteSmart(Project::ACCESS_PUBLIC);
-        $private      = $this->da->quoteSmart(Project::ACCESS_PRIVATE);
+        $user_id               = $this->da->quoteSmart($user_id);
+        $restricted            = $this->da->quoteSmart(ForgeAccess::RESTRICTED);
+        $unrestricted          = $this->da->quoteSmart(Project::ACCESS_PUBLIC_UNRESTRICTED);
+        $public                = $this->da->quoteSmart(Project::ACCESS_PUBLIC);
+        $private               = $this->da->quoteSmart(Project::ACCESS_PRIVATE);
+        $private_wo_restricted = $this->da->quoteSmart(Project::ACCESS_PRIVATE_WO_RESTRICTED);
 
         $sql = "SELECT ug.*
                 FROM ugroup_user AS ug_u
@@ -185,7 +186,7 @@ class UGroupDao extends DataAccessObject {
                         AND (
                             user_group.group_id IS NOT NULL
                             OR
-                            g.access <> ($private)
+                            g.access NOT IN ($private, $private_wo_restricted)
                         )
                     )
                   )";

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -97,13 +97,14 @@ class GitPermissionsManager
         return $this->permissions_manager->getAuthorizedUgroupIds($project_id, Git::PERM_ADMIN);
     }
 
-    public function updateProjectAccess(Project $project, $old_access, $new_access) {
-        if ($new_access == Project::ACCESS_PRIVATE) {
+    public function updateProjectAccess(Project $project, $old_access, $new_access)
+    {
+        if ($new_access === Project::ACCESS_PRIVATE || $new_access === Project::ACCESS_PRIVATE_WO_RESTRICTED) {
             $this->git_permission_dao->disableAnonymousRegisteredAuthenticated($project->getID());
             $this->fine_grained_dao->disableAnonymousRegisteredAuthenticated($project->getID());
             $this->git_system_event_manager->queueProjectsConfigurationUpdate(array($project->getID()));
         }
-        if ($new_access == Project::ACCESS_PUBLIC && $old_access == Project::ACCESS_PUBLIC_UNRESTRICTED) {
+        if ($new_access === Project::ACCESS_PUBLIC && $old_access === Project::ACCESS_PUBLIC_UNRESTRICTED) {
             $this->git_permission_dao->disableAuthenticated($project->getID());
             $this->fine_grained_dao->disableAuthenticated($project->getID());
             $this->git_system_event_manager->queueProjectsConfigurationUpdate(array($project->getID()));

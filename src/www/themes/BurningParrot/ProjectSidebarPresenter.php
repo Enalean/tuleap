@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -40,10 +40,7 @@ class ProjectSidebarPresenter
     {
         $purifier = Codendi_HTMLPurifier::instance();
 
-        $this->project_privacy        = $purifier->purify(
-            $GLOBALS['Language']->getText('project_privacy', 'tooltip_' . $project_privacy),
-            CODENDI_PURIFIER_STRIP_HTML
-        );
+        $this->project_privacy        = $purifier->purify($project_privacy, CODENDI_PURIFIER_STRIP_HTML);
         $this->sidebar                = $sidebar;
         $this->is_sidebar_collapsable = $current_user->isLoggedIn();
         $this->project_link           = '/projects/' . $project->getUnixName() . '/';

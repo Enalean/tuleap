@@ -1073,7 +1073,8 @@ class DocmanPlugin extends Plugin
         $ugroups_to_notify_dao->deleteByUgroupId($project_id, $ugroup->getId());
     }
 
-    public function project_access_change($params)
+    /** @see Event::PROJECT_ACCESS_CHANGE */
+    public function projectAccessChange(array $params): void
     {
         $project_id = $params['project_id'];
         $old_access = $params['old_access'];

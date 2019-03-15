@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -89,7 +89,10 @@ class Widget_MyProjects extends Widget {
             $token = new CSRFSynchronizerToken('massmail_to_project_members.php');
             while ($row = db_fetch_array($result)) {
                 $tdClass = '';
-                if ($display_privacy && $prevIsPublic == 0 && $row['access'] != Project::ACCESS_PRIVATE) {
+                if ($display_privacy
+                    && $prevIsPublic == 0
+                    && ! in_array($row['access'], [Project::ACCESS_PRIVATE, Project::ACCESS_PRIVATE_WO_RESTRICTED], true)
+                ) {
                     $tdClass .= ' widget_my_projects_first_public';
                 }
 
@@ -97,7 +100,7 @@ class Widget_MyProjects extends Widget {
 
                 // Privacy
                 if ($display_privacy) {
-                    if ($row['access'] === Project::ACCESS_PRIVATE) {
+                    if (in_array($row['access'], [Project::ACCESS_PRIVATE, Project::ACCESS_PRIVATE_WO_RESTRICTED], true)) {
                         $privacy = 'fa fa-lock';
                     } else {
                         $privacy = 'fa fa-unlock';
@@ -187,7 +190,7 @@ class Widget_MyProjects extends Widget {
         } else {
             for ($i=0; $i<$rows; $i++) {
                 $title = db_result($result,$i,'group_name');
-                if ( db_result($result,$i,'access') == Project::ACCESS_PRIVATE ) {
+                if (in_array(db_result($result,$i,'access'), [Project::ACCESS_PRIVATE, Project::ACCESS_PRIVATE_WO_RESTRICTED], true)) {
                     $title .= ' (*)';
                 }
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -35,24 +35,24 @@ class UgroupsToNotifyUpdater
         $this->ugroups_dao = $ugroups_dao;
     }
 
-    public function updateProjectAccess($project_id, $old_access, $new_access)
+    public function updateProjectAccess(int $project_id, string $old_access, string $new_access): void
     {
-        if ($new_access == Project::ACCESS_PRIVATE) {
+        if ($new_access === Project::ACCESS_PRIVATE || $new_access === Project::ACCESS_PRIVATE_WO_RESTRICTED) {
             $this->ugroups_dao->disableAnonymousRegisteredAuthenticated($project_id);
         }
 
-        if ($new_access == Project::ACCESS_PUBLIC && $old_access == Project::ACCESS_PUBLIC_UNRESTRICTED) {
+        if ($new_access === Project::ACCESS_PUBLIC && $old_access === Project::ACCESS_PUBLIC_UNRESTRICTED) {
             $this->ugroups_dao->disableAuthenticated($project_id);
         }
     }
 
-    public function updateSiteAccess($old_access)
+    public function updateSiteAccess(string $old_access): void
     {
-        if ($old_access == ForgeAccess::ANONYMOUS) {
+        if ($old_access === ForgeAccess::ANONYMOUS) {
             $this->ugroups_dao->updateAllAnonymousAccessToRegistered();
         }
 
-        if ($old_access == ForgeAccess::RESTRICTED) {
+        if ($old_access === ForgeAccess::RESTRICTED) {
             $this->ugroups_dao->updateAllAuthenticatedAccessToRegistered();
         }
     }

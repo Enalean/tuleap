@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2018. All rights reserved
+ * Copyright (c) Enalean, 2014 - Present. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -151,16 +151,13 @@ class MediawikiManager {
         return $this->dao->saveAccessControl($project->getID(), $access, $ugroup_ids);
     }
 
-    public function updateAccessControlInProjectChangeContext(
-        Project $project,
-        $old_access,
-        $new_access
-    ) {
-        if ($new_access == Project::ACCESS_PRIVATE) {
-            return $this->dao->disableAnonymousRegisteredAuthenticated($project->getID());
+    public function updateAccessControlInProjectChangeContext(Project $project, $old_access, $new_access)
+    {
+        if ($new_access === Project::ACCESS_PRIVATE || $new_access === Project::ACCESS_PRIVATE_WO_RESTRICTED) {
+            $this->dao->disableAnonymousRegisteredAuthenticated($project->getID());
         }
-        if ($new_access == Project::ACCESS_PUBLIC && $old_access == Project::ACCESS_PUBLIC_UNRESTRICTED) {
-            return $this->dao->disableAuthenticated($project->getID());
+        if ($new_access === Project::ACCESS_PUBLIC && $old_access === Project::ACCESS_PUBLIC_UNRESTRICTED) {
+            $this->dao->disableAuthenticated($project->getID());
         }
     }
 

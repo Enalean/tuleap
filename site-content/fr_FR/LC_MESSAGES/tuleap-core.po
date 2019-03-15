@@ -231,6 +231,22 @@ msgstr "Au-delà de 3 colonnes, chaque colonne<br>aura la même taille."
 msgid "Block usage of passwords known as compromised"
 msgstr "Bloquer l'utilisation des mots de passe connus comme compromis"
 
+msgid "By default, its content is available to all authenticated users."
+msgstr "Par défaut, son contenu est accessible à tout utilisateur authentifié."
+
+msgid ""
+"By default, its content is available to all authenticated, but not "
+"restricted, users."
+msgstr ""
+"Par défaut, son contenu est accessible à tout utilisateur authentifié non "
+"restreint."
+
+msgid ""
+"By default, its content is available to everyone (authenticated or not)."
+msgstr ""
+"Par défaut, son contenu est accessible à tout utilisateur (authentifié ou "
+"non)."
+
 msgid "CVS"
 msgstr "CVS"
 
@@ -797,6 +813,9 @@ msgstr "Page non trouvée"
 msgid "Note"
 msgstr "Note"
 
+msgid "Only project members can access its content."
+msgstr "Seuls les membres du projet peuvent accéder à son contenu."
+
 msgid "Ooops an error occured"
 msgstr "Ouuups une erreur est survenue"
 
@@ -894,6 +913,12 @@ msgstr ""
 "Veuillez vous assurer que les utilisateurs qui seront importés sont déjà "
 "enregistrés et possèdent un compte actif."
 
+msgid ""
+"Please note that more restrictive permissions might exist on some items."
+msgstr ""
+"Veuillez noter que des permissions plus restrictives peuvent être apposées "
+"sur certains items."
+
 msgid "Please select a file to upload"
 msgstr "Veuillez sélectionner un fichier à téléverser"
 
@@ -902,6 +927,12 @@ msgstr "Veuillez soumettre un message pertinent afin d'aider l'administrateur."
 
 msgid "Please, enter a http:// or https:// link"
 msgstr "Veuillez utiliser un lien http:// ou https://"
+
+msgid "Private"
+msgstr "Privé"
+
+msgid "Private incl. restricted"
+msgstr "Privé incl. les utilisateurs restreints"
 
 msgid "Project"
 msgstr "Projet"
@@ -972,6 +1003,20 @@ msgstr "Le nom du projet ne doit pas dépasser 40 caractères."
 msgid "Project name..."
 msgstr "Nom du projet..."
 
+msgid "Project privacy set to private including restricted."
+msgstr ""
+"La visibilité du projet est : privé incluant les utilisateurs restreints."
+
+msgid "Project privacy set to private."
+msgstr "La visibilité du projet est : privé."
+
+msgid "Project privacy set to public including restricted."
+msgstr ""
+"La visibilité du projet est : publique incluant les utilisateurs restreints."
+
+msgid "Project privacy set to public."
+msgstr "La visibilité du projet est : publique."
+
 msgid "Project registration is disabled"
 msgstr "L'enregistrement de project est désactivé"
 
@@ -1008,6 +1053,12 @@ msgstr "Projets dans la catégorie selectionnée"
 msgid "Projects visibility"
 msgstr "Visibilité des projets"
 
+msgid "Public"
+msgstr "Publique"
+
+msgid "Public incl. restricted"
+msgstr "Publique, incluant les utilisateurs restreints"
+
 msgid "Public information"
 msgstr "Informations publiques"
 
@@ -1037,6 +1088,12 @@ msgstr "Supprimer du groupe"
 
 msgid "Remove group member"
 msgstr "Supprimer un membre du groupe"
+
+msgid "Restricted users are allowed in this project."
+msgstr "Les utilisateurs restreints sont autorisés dans ce projet."
+
+msgid "Restricted users are not allowed in this project."
+msgstr "Les utilisateurs restreints ne sont pas autorisés dans ce projet."
 
 msgid "Revoke selected access keys"
 msgstr "Révoquer les clés d'accès sélectionnées"

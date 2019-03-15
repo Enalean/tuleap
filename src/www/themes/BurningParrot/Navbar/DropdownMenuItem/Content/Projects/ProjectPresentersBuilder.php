@@ -78,6 +78,6 @@ class ProjectPresentersBuilder
 
     private function getProjectIsPrivate(Project $project)
     {
-        return $project->getAccess() === 'private';
+        return in_array($project->getAccess(), [Project::ACCESS_PRIVATE, Project::ACCESS_PRIVATE_WO_RESTRICTED], true);
     }
 }

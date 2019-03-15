@@ -22,12 +22,13 @@ namespace Tuleap\Project;
 
 use ForgeConfig;
 use Project;
+use Tuleap\Project\Admin\ProjectWithoutRestrictedFeatureFlag;
 
 class ProjectAccessPresenter
 {
 
     public $incl_restricted_label;
-    public $is_public_incl_restricted;
+    public $is_incl_restricted;
     public $is_wide_open;
     public $is_open;
     public $is_closed;
@@ -36,18 +37,19 @@ class ProjectAccessPresenter
     public function __construct($project_access)
     {
         if (ForgeConfig::areRestrictedUsersAllowed()) {
-            $this->is_public_incl_restricted = $project_access === Project::ACCESS_PUBLIC_UNRESTRICTED;
-            $this->is_wide_open              = $project_access === Project::ACCESS_PUBLIC_UNRESTRICTED;
-            $this->is_open                   = $project_access === Project::ACCESS_PUBLIC;
-            $this->is_closed                 = $project_access === Project::ACCESS_PRIVATE;
+            $this->is_incl_restricted = $project_access === Project::ACCESS_PUBLIC_UNRESTRICTED ||
+                (ProjectWithoutRestrictedFeatureFlag::isEnabled() && $project_access === Project::ACCESS_PRIVATE);
+            $this->is_wide_open               = $project_access === Project::ACCESS_PUBLIC_UNRESTRICTED;
+            $this->is_open                    = $project_access === Project::ACCESS_PUBLIC;
+            $this->is_closed                  = $project_access === Project::ACCESS_PRIVATE || $project_access === Project::ACCESS_PRIVATE_WO_RESTRICTED;
         } else {
-            $this->is_public_incl_restricted = false;
-            $this->is_wide_open              = $project_access === Project::ACCESS_PUBLIC;
-            $this->is_open                   = false;
-            $this->is_closed                 = $project_access === Project::ACCESS_PRIVATE;
+            $this->is_incl_restricted  = false;
+            $this->is_wide_open               = $project_access === Project::ACCESS_PUBLIC;
+            $this->is_open                    = false;
+            $this->is_closed                  = $project_access === Project::ACCESS_PRIVATE;
         }
 
-        if ($project_access === Project::ACCESS_PRIVATE) {
+        if ($project_access === Project::ACCESS_PRIVATE || $project_access === Project::ACCESS_PRIVATE_WO_RESTRICTED) {
             $this->access = $GLOBALS['Language']->getText('admin_project', 'private_label');
         } else {
             $this->access = $GLOBALS['Language']->getText('admin_project', 'public_label');

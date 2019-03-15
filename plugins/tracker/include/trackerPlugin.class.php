@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011 - 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - Present. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -1418,7 +1418,8 @@ class trackerPlugin extends Plugin {
         $cleaner->cleanNotificationsAfterUserRemoval($project, $user);
     }
 
-    public function project_access_change($params)
+    /** @see Event::PROJECT_ACCESS_CHANGE */
+    public function projectAccessChange(array $params): void
     {
         $updater = $this->getUgroupToNotifyUpdater();
         $updater->updateProjectAccess($params['project_id'], $params['old_access'], $params['access']);

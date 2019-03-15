@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - Present. All Rights Reserved.
  * Copyright 1999-2000 (c) The SourceForge Crew
  *
  * This file is a part of Tuleap.
@@ -25,15 +25,15 @@
 */
 
 /**
- * Status of news (a.k.a meaning of is_approved field): 
+ * Status of news (a.k.a meaning of is_approved field):
  * 0 => normal (nothing special, created, visible, no promtion asked)
  * 1 => promoted on server homepage
  * 2 => rejected for promotion on server homepage (by siteadmin)
  * 3 => pending for promotion (on server homepage)
- * 4 => deleted 
- * 
- * Status public/private is managed with PERMISSION 
- * 
+ * 4 => deleted
+ *
+ * Status public/private is managed with PERMISSION
+ *
  */
 
 require_once('www/project/admin/permissions.php');
@@ -93,12 +93,12 @@ function news_footer($params) {
 
 function news_show_latest($group_id = '', $limit = 10, $show_projectname = true, $allow_submit = true, $hide_nb_comments = false, $tail_headlines = 0) {
     global $sys_news_group, $Language;
-    
+
     $return  = "";
     if (!$group_id) {
         $group_id = $sys_news_group;
     }
-    
+
     /*
     Show a simple list of the latest news items with a link to the forum
     */
@@ -124,7 +124,7 @@ function news_show_latest($group_id = '', $limit = 10, $show_projectname = true,
               AND groups.status = 'A' 
             GROUP BY news_bytes.forum_id
             ORDER BY date DESC LIMIT ". db_ei($limit + $tail_headlines);
-    
+
     $result = db_query($sql);
     $rows   = db_numrows($result);
 
@@ -137,7 +137,7 @@ function news_show_latest($group_id = '', $limit = 10, $show_projectname = true,
             $forum_id = $data['forum_id'];
             if (news_check_permission($forum_id, $group_id)) {
                 $return .= news_fetch_a_news_summary_block($data, $group_id, $limit, $show_projectname, $hide_nb_comments);
-                
+
                 if ($limit == 1 && $tail_headlines) {
                     $return .= '<ul class="unstyled">';
                 }
@@ -156,14 +156,14 @@ function news_show_latest($group_id = '', $limit = 10, $show_projectname = true,
     } else {
         $archive_url = '/news/';
     }
-    
+
     if ($tail_headlines) {
         $return .= '</ul>'."\n";
     }
-    
+
     $return .= '<div align="center">
                     <a href="'.$archive_url.'">['.$Language->getText('news_utils','news_archive').']</a></div>';
-            
+
     if ($allow_submit && $group_id != $sys_news_group) {
         //you can only submit news from a project now
         //you used to be able to submit general news
@@ -173,7 +173,7 @@ function news_show_latest($group_id = '', $limit = 10, $show_projectname = true,
             </A>
         </div>';
     }
-    
+
     return $return;
 }
 
@@ -188,10 +188,10 @@ function news_fetch_a_news_summary_block($data, $group_id, $limit, $show_project
     } else {
         $details = $purifier->purify($arr[0], CODENDI_PURIFIER_BASIC, $group_id);
     }
-    
+
     $proj_name = '';
     if ($show_projectname && $limit) {
-        //show the project name 
+        //show the project name
         $proj_name = ' &middot; <a href="/projects/'. strtolower($data['unix_group_name']) .'/">'. $data['group_name'] .'</a>';
     }
 
@@ -211,10 +211,10 @@ function news_fetch_a_news_summary_block($data, $group_id, $limit, $show_project
             }
             $comments_txt .= ')</a>';
         }
-        
+
         $html .= '<div class="news">';
         $html .= '<span class="news_summary"><a href="'. $purifier->purify($forum_url) .'"><h4>'. $purifier->purify($data['summary']) . '</h4></a></span>';
-        
+
         $html .= '<blockquote>';
         $html .= '<div>' . $details . '</div>';
         $html .= '<small>
@@ -257,22 +257,22 @@ function get_news_name_from_forum_id($id) {
 }
 
 function news_submit($group_id, $summary, $details, $private_news, $send_news_to, $promote_news = 0) {
-        
+
     /*
 		Takes Summary and Details, and submit the corresponding news, in the right project, with the right permissions
 	*/
-    
+
 	$new_id=forum_create_forum($GLOBALS['sys_news_group'],$summary,1,0, '', $need_feedback = false);
     $sql="INSERT INTO news_bytes (group_id,submitted_by,is_approved,date,forum_id,summary,details) 
           VALUES (". db_ei($group_id) .", '". user_getid() ."', ". db_ei($promote_news) .", '".time()."',
                  '$new_id', '". db_es($summary) ."', '". db_es($details) ."')";
     $result=db_query($sql);
-    
+
 	if (!$result) {
         $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('news_submit','insert_err'));
     } else {
         // retrieve the id of the news
-        $news_bytes_id = db_insertid($result);    
+        $news_bytes_id = db_insertid($result);
         $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('news_submit','news_added'));
 	     // set permissions on this piece of news
 	    if ($private_news) {
@@ -282,11 +282,11 @@ function news_submit($group_id, $summary, $details, $private_news, $send_news_to
             // if the news is requested to be promoted, we notify the site admin about it
             news_notify_promotion_request($group_id,$news_bytes_id,$summary,$details);
         }
-        
+
         if ($send_news_to) {
             news_send_to_ugroups($send_news_to, $summary, $details, $group_id);
         }
-        // extract cross references           
+        // extract cross references
         $reference_manager = ReferenceManager::instance();
         $reference_manager->extractCrossRef($summary, $new_id, ReferenceManager::REFERENCE_NATURE_NEWS, $group_id);
         $reference_manager->extractCrossRef($details, $new_id, ReferenceManager::REFERENCE_NATURE_NEWS, $group_id);
@@ -297,9 +297,9 @@ function news_check_permission($forum_id,$group_id) {
 	/*
 		Takes a forum_id and checks if user is authorized to read the piece of news associated to this forum_id
 	*/
-	
+
 	//cast  input
-	
+
     if ($group_id == $GLOBALS['sys_news_group']) {
         //search for the real group_id of the news
         $sql = "SELECT g.access FROM news_bytes AS n INNER JOIN groups AS g USING(group_id) WHERE n.forum_id = ". db_ei($forum_id);
@@ -307,7 +307,7 @@ function news_check_permission($forum_id,$group_id) {
         if ($res && db_numrows($res)) {
             $row = db_fetch_array($res);
             //see if it is public to continue permissions check
-            if ($row['access'] === Project::ACCESS_PRIVATE) {
+            if (in_array($row['access'], [Project::ACCESS_PRIVATE, Project::ACCESS_PRIVATE_WO_RESTRICTED], true)) {
                 return false;
             }
         }
@@ -316,19 +316,19 @@ function news_check_permission($forum_id,$group_id) {
 	    return true;
         } else {
 	    return false;
-	}    
+	}
 }
 
 /**
- * insert for this forum_id a news_read permission for project members only 
+ * insert for this forum_id a news_read permission for project members only
  */
 function news_insert_permissions($forum_id,$group_id) {
-	
+
   global $Language,$UGROUP_PROJECT_MEMBERS;
-	
+
     //We force permission if user is project admin... beurk
     $force = user_ismember($group_id, 'A');
-    
+
 	if (permission_add_ugroup($group_id,'NEWS_READ',$forum_id,$UGROUP_PROJECT_MEMBERS, $force)) {
 	    $GLOBALS['Response']->addFeedback('info', $Language->getText('news_submit','news_perm_create_success'));
 	} else {
@@ -337,13 +337,13 @@ function news_insert_permissions($forum_id,$group_id) {
 }
 
 function news_update_permissions($forum_id,$is_private,$group_id) {
-	
+
 	global $Language,$UGROUP_PROJECT_MEMBERS;
-	
+
 	/*
 		Takes forum_id and permission, and updates the permission of the corresponding entry in 'permissions' table
 	*/
-	
+
 	if ($is_private == 3) {
 	  permission_clear_all($group_id, 'NEWS_READ', $forum_id, false);
 	  if (permission_add_ugroup($group_id,'NEWS_READ',$forum_id,$UGROUP_PROJECT_MEMBERS)) {
@@ -356,13 +356,13 @@ function news_update_permissions($forum_id,$is_private,$group_id) {
 	    $GLOBALS['Response']->addFeedback('info', $Language->getText('news_submit','news_perm_update_success'));
 	  } else {
 	    $GLOBALS['Response']->addFeedback('error', $Language->getText('news_admin_index','update_err'));
-	  }	
+	  }
 	}
-	
+
 }
 
 function news_read_permissions($forum_id) {
-	
+
 	/*
 		Takes forum_id and reads the permission of the corresponding news. Returns a result set.
 	*/
@@ -377,7 +377,7 @@ function news_notify_promotion_request($group_id,$news_bytes_id,$summary,$detail
     $group = $pm->getProject($group_id);
     // retrieve the user that submit the news
     $user = UserManager::instance()->getCurrentUser();
-    
+
     $mail = new Codendi_Mail();
     $mail->setFrom($GLOBALS['sys_noreply']);
     $mail->setTo($GLOBALS['sys_email_admin'],true); // Don't invalidate admin email!
@@ -391,7 +391,7 @@ function news_notify_promotion_request($group_id,$news_bytes_id,$summary,$detail
     $body .= $Language->getText('news_utils','news_request_mail_approve_link').$GLOBALS['sys_lf'];
     $body .= get_server_url()."/news/admin/?approve=1&id=".$news_bytes_id.$GLOBALS['sys_lf'];
     $mail->setBodyText($body);
-    
+
     $is_sent = $mail->send();
     if ($is_sent) {
         $GLOBALS['Response']->addFeedback('info', $Language->getText('news_utils','news_request_sent'));
