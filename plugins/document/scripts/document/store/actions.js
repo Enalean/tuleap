@@ -199,25 +199,13 @@ export const loadFolder = (context, folder_id) => {
 
 export async function updateFile(context, [item, dropped_file]) {
     try {
-        const new_version = await createNewVersion(
+        await uploadNewVersion(context, [
             item,
+            dropped_file,
             item.title,
             "",
-            dropped_file,
             item.lock_info !== null
-        );
-
-        if (dropped_file.size === 0) {
-            return;
-        }
-
-        const updated_item = context.state.folder_content.find(({ id }) => id === item.id);
-        context.commit("addFileInUploadsList", updated_item);
-        Vue.set(updated_item, "progress", null);
-        Vue.set(updated_item, "upload_error", null);
-        Vue.set(updated_item, "is_uploading_new_version", true);
-
-        item.uploader = uploadVersion(context, dropped_file, item, new_version);
+        ]);
     } catch (exception) {
         context.commit("toggleCollapsedFolderHasUploadingContent", [parent, false]);
         const error_json = await exception.response.json();
@@ -230,21 +218,42 @@ export const updateFileFromModal = async (
     [item, uploaded_file, version_title, changelog, is_file_locked]
 ) => {
     try {
-        const new_version = await createNewVersion(
+        await uploadNewVersion(context, [
             item,
+            uploaded_file,
             version_title,
             changelog,
-            uploaded_file,
             is_file_locked
-        );
-        if (uploaded_file.size === 0) {
-            return;
-        }
-        item.uploader = uploadVersion(context, uploaded_file, item, new_version);
+        ]);
     } catch (exception) {
         return handleErrorsForModal(context, exception);
     }
 };
+
+async function uploadNewVersion(
+    context,
+    [item, uploaded_file, version_title, changelog, is_file_locked]
+) {
+    const new_version = await createNewVersion(
+        item,
+        version_title,
+        changelog,
+        uploaded_file,
+        is_file_locked
+    );
+
+    if (uploaded_file.size === 0) {
+        return;
+    }
+
+    const updated_item = context.state.folder_content.find(({ id }) => id === item.id);
+    context.commit("addFileInUploadsList", updated_item);
+    Vue.set(updated_item, "progress", null);
+    Vue.set(updated_item, "upload_error", null);
+    Vue.set(updated_item, "is_uploading_new_version", true);
+
+    item.uploader = uploadVersion(context, uploaded_file, item, new_version);
+}
 
 export const setUserPreferenciesForFolder = (context, [folder_id, should_be_closed]) => {
     if (context.state.user_id === 0) {
