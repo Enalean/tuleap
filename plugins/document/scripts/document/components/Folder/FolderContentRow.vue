@@ -76,6 +76,12 @@ import {
     getElapsedTimeFromNow
 } from "../../helpers/date-formatter.js";
 import { TYPE_EMBEDDED } from "../../constants";
+import {
+    hasNoUploadingContent,
+    isItemUploadingInQuickLookMode,
+    isItemUploadingInTreeView,
+    isItemInTreeViewWithoutUpload
+} from "../../helpers/uploading-status-helper.js";
 
 export default {
     name: "FolderContentRow",
@@ -152,31 +158,16 @@ export default {
             return this.item.is_uploading ? 4 : 1;
         },
         item_is_not_being_uploaded() {
-            return (
-                !this.item.is_uploading_in_collapsed_folder &&
-                !this.item.is_uploading &&
-                !this.item.is_uploading_new_version
-            );
+            return hasNoUploadingContent(this.item);
         },
         is_item_uploading_in_quicklook_mode() {
-            return (
-                (this.item.is_uploading_in_collapsed_folder && this.isQuickLookDisplayed) ||
-                (this.item.is_uploading_new_version && this.isQuickLookDisplayed)
-            );
+            return isItemUploadingInQuickLookMode(this.item, this.isQuickLookDisplayed);
         },
         is_item_uploading_without_quick_look_mode() {
-            return (
-                (this.item.is_uploading_in_collapsed_folder && !this.isQuickLookDisplayed) ||
-                (this.item.is_uploading_new_version && !this.isQuickLookDisplayed)
-            );
+            return isItemUploadingInTreeView(this.item, this.isQuickLookDisplayed);
         },
         is_not_uploading_and_is_not_in_quicklook() {
-            return (
-                (!this.item.is_uploading && !this.isQuickLookDisplayed) ||
-                (!this.item.is_uploading_new_version &&
-                    !this.item.is_uploading &&
-                    !this.isQuickLookDisplayed)
-            );
+            return isItemInTreeViewWithoutUpload(this.item, this.isQuickLookDisplayed);
         }
     },
     mounted() {
