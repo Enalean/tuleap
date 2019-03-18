@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -31,7 +31,10 @@ class LDAP_SearchPeople extends Search_SearchPeople {
         $this->ldap    = $ldap;
     }
 
-    public function search(Search_SearchQuery $query, $limit, Search_SearchResults $result) {
+    public function search(Search_SearchQuery $query, Search_SearchResults $result)
+    {
+        $limit = $query->getNumberOfResults();
+
         if (! $this->ldap->connect()) {
             $users = array();
         } else {
