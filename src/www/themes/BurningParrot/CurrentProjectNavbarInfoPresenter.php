@@ -22,6 +22,7 @@ namespace Tuleap\Theme\BurningParrot;
 
 use Codendi_HTMLPurifier;
 use Project;
+use Tuleap\Project\Admin\ProjectWithoutRestrictedFeatureFlag;
 
 class CurrentProjectNavbarInfoPresenter
 {
@@ -41,6 +42,22 @@ class CurrentProjectNavbarInfoPresenter
      * @var string
      */
     public $project_flags_title;
+    /**
+     * @var bool
+     */
+    public $are_restricted_users_allowed;
+    /**
+     * @var bool
+     */
+    public $project_is_public_incl_restricted;
+    /**
+     * @var bool
+     */
+    public $project_is_private;
+    /**
+     * @var bool
+     */
+    public $project_is_private_incl_restricted;
 
     public function __construct(Project $project, $project_privacy, array $project_flags)
     {
@@ -55,5 +72,14 @@ class CurrentProjectNavbarInfoPresenter
         $this->has_project_flags = $nb_project_flags > 0;
 
         $this->project_flags_title = ngettext("Project flag", "Project flags", $nb_project_flags);
+
+        $this->are_restricted_users_allowed = \ForgeConfig::areRestrictedUsersAllowed()
+            && ProjectWithoutRestrictedFeatureFlag::isEnabled();
+        if ($this->are_restricted_users_allowed) {
+            $this->project_is_public                  = $project->getAccess() === Project::ACCESS_PUBLIC;
+            $this->project_is_public_incl_restricted  = $project->getAccess() === Project::ACCESS_PUBLIC_UNRESTRICTED;
+            $this->project_is_private                 = $project->getAccess() === Project::ACCESS_PRIVATE_WO_RESTRICTED;
+            $this->project_is_private_incl_restricted = $project->getAccess() === Project::ACCESS_PRIVATE;
+        }
     }
 }

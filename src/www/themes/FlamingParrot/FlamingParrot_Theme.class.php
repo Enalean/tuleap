@@ -335,7 +335,7 @@ class FlamingParrot_Theme extends Layout {
         $project_tabs        = null;
         $project_name        = null;
         $project_link        = null;
-        $project_is_public   = null;
+        $project             = null;
         $project_privacy     = null;
         $sidebar_collapsable = false;
 
@@ -347,7 +347,6 @@ class FlamingParrot_Theme extends Layout {
             $project_tabs        = $this->getProjectSidebar($params, $project);
             $project_name        = $project->getPublicName();
             $project_link        = $this->getProjectLink($project);
-            $project_is_public   = $project->isPublic();
             $project_privacy     = $this->getProjectPrivacy($project);
             $sidebar_collapsable = (! $current_user->isAnonymous() && $current_user->isLoggedIn()) ? true : false;
         }
@@ -361,13 +360,13 @@ class FlamingParrot_Theme extends Layout {
             $this->toolbar,
             $project_name,
             $project_link,
-            $project_is_public,
             $project_privacy,
             $project_tabs,
             $this->_feedback,
             $this->_getFeedback(),
             $this->getForgeVersion(),
-            $sidebar_collapsable
+            $sidebar_collapsable,
+            $project
         ));
 
         $this->keyboardModal();

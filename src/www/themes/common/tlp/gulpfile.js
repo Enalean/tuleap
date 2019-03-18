@@ -62,7 +62,7 @@ gulp.task("clean-dist", function() {
 gulp.task("build", ["clean-dist"], function(cb) {
     return runSequence(["assets", "sass:prod", "sass:doc"], cb);
 });
-gulp.task("watch", ["assets", "sass:watch"]);
+gulp.task("watch", ["assets:watch", "sass:watch"]);
 
 /************************************************
  * SASS
@@ -129,6 +129,11 @@ function compressForAGivenColor(color) {
  * Assets
  ***********************************************/
 gulp.task("assets", ["assets:fonts", "assets:images"]);
+
+gulp.task("assets:watch", ["assets:fonts", "assets:images"], function() {
+    gulp.watch("./src/fonts/**/*", ["assets:fonts"]);
+    gulp.watch("./src/images/**/*", ["assets:images"]);
+});
 
 gulp.task("assets:fonts", function() {
     return gulp.src("./src/fonts/**/*").pipe(gulp.dest(target_dir + "/fonts"));

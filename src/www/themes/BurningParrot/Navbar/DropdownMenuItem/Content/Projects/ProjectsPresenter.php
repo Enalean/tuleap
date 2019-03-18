@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,6 +20,7 @@
 
 namespace Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Content\Projects;
 
+use Tuleap\Project\Admin\ProjectWithoutRestrictedFeatureFlag;
 use Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Content\Presenter;
 
 class ProjectsPresenter extends Presenter
@@ -28,6 +29,14 @@ class ProjectsPresenter extends Presenter
 
     /** @var ProjectPresenter[] */
     public $projects;
+    public $are_restricted_users_allowed;
+    public $is_member_of_at_least_one_project;
+    public $browse_all;
+    public $add_project;
+    public $is_there_something_to_filter;
+    public $filter;
+    public $is_project_registration_enabled;
+    public $is_trove_cat_enabled;
 
     public function __construct(
         $id,
@@ -35,41 +44,18 @@ class ProjectsPresenter extends Presenter
     ) {
         parent::__construct($id);
 
-        $this->projects = $projects;
-    }
+        $this->are_restricted_users_allowed = \ForgeConfig::areRestrictedUsersAllowed()
+            && ProjectWithoutRestrictedFeatureFlag::isEnabled();
 
-    public function is_member_of_at_least_one_project()
-    {
-        return count($this->projects) > 0;
-    }
+        $this->projects    = $projects;
+        $this->browse_all  = $GLOBALS['Language']->getText('include_menu', 'browse_all');
+        $this->add_project = $GLOBALS['Language']->getText('include_menu', 'add_project');
+        $this->filter      = $GLOBALS['Language']->getText('include_menu', 'filter_projects');
 
-    public function browse_all()
-    {
-        return $GLOBALS['Language']->getText('include_menu', 'browse_all');
-    }
-
-    public function add_project()
-    {
-        return $GLOBALS['Language']->getText('include_menu', 'add_project');
-    }
-
-    public function is_there_something_to_filter()
-    {
-        return $this->is_member_of_at_least_one_project() || $this->is_trove_cat_enabled();
-    }
-
-    public function filter()
-    {
-        return $GLOBALS['Language']->getText('include_menu', 'filter_projects');
-    }
-
-    public function is_project_registration_enabled()
-    {
-        return \ForgeConfig::get('sys_use_project_registration', true);
-    }
-
-    public function is_trove_cat_enabled()
-    {
-        return \ForgeConfig::get('sys_use_trove');
+        $this->is_trove_cat_enabled              = \ForgeConfig::get('sys_use_trove');
+        $this->is_member_of_at_least_one_project = count($this->projects) > 0;
+        $this->is_project_registration_enabled   = \ForgeConfig::get('sys_use_project_registration', true);
+        $this->is_there_something_to_filter      = $this->is_member_of_at_least_one_project
+            || $this->is_trove_cat_enabled;
     }
 }

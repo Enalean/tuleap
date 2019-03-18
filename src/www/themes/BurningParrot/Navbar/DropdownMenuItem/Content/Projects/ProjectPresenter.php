@@ -22,6 +22,7 @@ namespace Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Content\Projects;
 
 use PFUser;
 use Project;
+use Tuleap\Project\Admin\ProjectWithoutRestrictedFeatureFlag;
 
 class ProjectPresenter
 {
@@ -42,20 +43,41 @@ class ProjectPresenter
 
     /** @var string */
     public $user_belongs;
+    /**
+     * @var bool
+     */
+    public $is_public;
+    /**
+     * @var bool
+     */
+    public $is_public_incl_restricted;
+    /**
+     * @var bool
+     */
+    public $is_private_incl_restricted;
 
     public function __construct(
         $project_name,
         $project_uri,
         $project_config_uri,
-        $is_private,
         $user_administers,
-        $user_belongs
+        $user_belongs,
+        Project $project
     ) {
         $this->project_name       = $project_name;
         $this->project_uri        = $project_uri;
         $this->project_config_uri = $project_config_uri;
-        $this->is_private         = $is_private;
+        $this->is_private         = ! $project->isPublic();
         $this->user_administers   = $user_administers;
         $this->user_belongs       = $user_belongs;
+
+        $are_restricted_users_allowed = \ForgeConfig::areRestrictedUsersAllowed()
+            && ProjectWithoutRestrictedFeatureFlag::isEnabled();
+        if ($are_restricted_users_allowed) {
+            $this->is_public                  = $project->getAccess() === Project::ACCESS_PUBLIC;
+            $this->is_public_incl_restricted  = $project->getAccess() === Project::ACCESS_PUBLIC_UNRESTRICTED;
+            $this->is_private                 = $project->getAccess() === Project::ACCESS_PRIVATE_WO_RESTRICTED;
+            $this->is_private_incl_restricted = $project->getAccess() === Project::ACCESS_PRIVATE;
+        }
     }
 }

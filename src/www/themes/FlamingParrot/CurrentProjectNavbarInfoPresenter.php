@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Project\Admin\ProjectWithoutRestrictedFeatureFlag;
+
 class FlamingParrot_CurrentProjectNavbarInfoPresenter  // phpcs:ignore
 {
     public $project_privacy;
@@ -40,6 +42,22 @@ class FlamingParrot_CurrentProjectNavbarInfoPresenter  // phpcs:ignore
      * @var string
      */
     public $project_flags_title;
+    /**
+     * @var bool
+     */
+    public $are_restricted_users_allowed;
+    /**
+     * @var bool
+     */
+    public $project_is_public_incl_restricted;
+    /**
+     * @var bool
+     */
+    public $project_is_private;
+    /**
+     * @var bool
+     */
+    public $project_is_private_incl_restricted;
 
     public function __construct(Project $project, $project_privacy, array $project_flags)
     {
@@ -56,5 +74,14 @@ class FlamingParrot_CurrentProjectNavbarInfoPresenter  // phpcs:ignore
         $this->json_encoded_project_flags = \json_encode($project_flags);
 
         $this->project_flags_title = ngettext("Project flag", "Project flags", $nb_project_flags);
+
+        $this->are_restricted_users_allowed = \ForgeConfig::areRestrictedUsersAllowed()
+            && ProjectWithoutRestrictedFeatureFlag::isEnabled();
+        if ($this->are_restricted_users_allowed) {
+            $this->project_is_public                  = $project->getAccess() === Project::ACCESS_PUBLIC;
+            $this->project_is_public_incl_restricted  = $project->getAccess() === Project::ACCESS_PUBLIC_UNRESTRICTED;
+            $this->project_is_private                 = $project->getAccess() === Project::ACCESS_PRIVATE_WO_RESTRICTED;
+            $this->project_is_private_incl_restricted = $project->getAccess() === Project::ACCESS_PRIVATE;
+        }
     }
 }
