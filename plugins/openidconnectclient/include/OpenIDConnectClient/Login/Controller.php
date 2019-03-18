@@ -94,7 +94,7 @@ class Controller {
             $this->logger->error($ex->getMessage());
             $this->logger->debug($ex->getTraceAsString());
             $this->redirectAfterFailure(
-                $GLOBALS['Language']->getText('plugin_openidconnectclient', 'invalid_request')
+                dgettext('tuleap-openidconnectclient', 'Request seems invalid, please retry')
             );
         }
 
@@ -135,7 +135,7 @@ class Controller {
         } catch (UserMappingDataAccessException $ex) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::WARN,
-                $GLOBALS['Language']->getText('plugin_openidconnectclient', 'unexpected_error')
+                dgettext('tuleap-openidconnectclient', 'An error occurred, please retry')
             );
         }
         \account_redirect_after_login($return_to);
@@ -169,7 +169,7 @@ class Controller {
             $this->logger->error($ex->getMessage());
             $this->logger->debug($ex->getTraceAsString());
             $this->redirectAfterFailure(
-                $GLOBALS['Language']->getText('plugin_openidconnectclient', 'unexpected_error')
+                dgettext('tuleap-openidconnectclient', 'An error occurred, please retry')
             );
         }
 
@@ -180,7 +180,7 @@ class Controller {
 
         $GLOBALS['Response']->addFeedback(
             Feedback::INFO,
-            $GLOBALS['Language']->getText('plugin_openidconnectclient', 'registered_waiting_for_admin')
+            dgettext('tuleap-openidconnectclient', 'Your account have been created but needs to be approved by an administrator')
         );
         $GLOBALS['Response']->redirect('/');
     }
@@ -192,7 +192,7 @@ class Controller {
             $unlinked_account  = $this->unlinked_account_manager->create($provider->getId(), $user_identifier);
         } catch (UnlinkedAccountDataAccessException $ex) {
             $this->redirectAfterFailure(
-                $GLOBALS['Language']->getText('plugin_openidconnectclient', 'unexpected_error')
+                dgettext('tuleap-openidconnectclient', 'An error occurred, please retry')
             );
         }
 

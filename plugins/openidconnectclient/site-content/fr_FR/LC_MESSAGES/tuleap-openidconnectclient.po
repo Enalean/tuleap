@@ -1,0 +1,229 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: Nicolas Terray <nicolas.terray@enalean.com>\n"
+"Language-Team: \n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 2.0.6\n"
+
+msgid "Add provider"
+msgstr "Ajouter un fournisseur"
+
+msgid "An error occured while adding a new provider."
+msgstr "Une erreur est survenue lors de la création du nouveau fournisseur."
+
+#, php-format
+msgid "An error occured while removing the provider %1$s."
+msgstr "Une erreur est survenue lors de la suppression du fournisseur %1$s."
+
+#, php-format
+msgid "An error occured while updating the provider %1$s."
+msgstr "Une erreur est survenue lors de la mise à jour du fournisseur %1$s."
+
+#, php-format
+msgid "An error occurred while removing the link with %1$s."
+msgstr "Une erreur est survenue lors de la suppression du lien avec %1$s."
+
+msgid "An error occurred, please retry"
+msgstr "Une erreur est survenue, merci de réessayer"
+
+msgid "Authenticate users with OpenID Connect"
+msgstr "Authentifie des utilisateurs à l'aide d'OpenID Connect"
+
+msgid "Authorization endpoint"
+msgstr "Route de gestion de l'autorisation"
+
+msgid ""
+"Be sure that your provider can provide the profile and email scopes "
+"otherwise users will not have an account created automatically."
+msgstr ""
+"Soyez certains que ce fournisseur est capable de fournir les scopes profile "
+"et email sans quoi les comptes utilisateur ne pourront pas être créés."
+
+msgid "Cancel"
+msgstr "Annuler"
+
+msgid "Client ID"
+msgstr "Id du client"
+
+msgid "Client secret"
+msgstr "Clé secrète du client"
+
+msgid "Color"
+msgstr "Couleur"
+
+msgid "Create the provider"
+msgstr "Créer le fournisseur"
+
+msgid "Delete"
+msgstr "Supprimer"
+
+msgid "Delete a provider"
+msgstr "Supprimer un fournisseur"
+
+msgid "Disabled"
+msgstr "Désactivé"
+
+msgid "Edit provider"
+msgstr "Éditer le fournisseur"
+
+msgid "Empty"
+msgstr "Vide"
+
+msgid ""
+"Following information have to be generated on the OpenID Connect provider "
+"side. You'll need to give a callback url to do that, here it is:"
+msgstr ""
+"Les informations suivantes doivent être générées du côté du fournisseur "
+"OpenID Connect. Vous allez avoir besoin d'une url de callback, la voici :"
+
+msgid "Icon"
+msgstr "Icône"
+
+msgid "Last login date:"
+msgstr "Dernière connexion :"
+
+#, php-format
+msgid "Link a %1$s account"
+msgstr "Liez un compte %1$s"
+
+msgid "Name"
+msgstr "Nom"
+
+msgid "OpenID Connect"
+msgstr "OpenID Connect"
+
+msgid "OpenID Connect Client"
+msgstr "OpenID Connect Client"
+
+msgid "OpenID Connect providers"
+msgstr "Fournisseurs OpenID Connect"
+
+msgid "Preview"
+msgstr "Aperçu"
+
+msgid "Preview of the login page button"
+msgstr "Aperçu du bouton de la page de connexion"
+
+#, php-format
+msgid "Register a new %1$s account"
+msgstr "Créer un nouveau compte %1$s"
+
+msgid "Request seems invalid, please retry"
+msgstr "La requête semble invalide, merci de réessayer"
+
+msgid ""
+"The OpenID Connect plugin can only be used if the platform is accessible "
+"with HTTPS"
+msgstr ""
+"Le plugin OpenID Connect peut seulement être utilisé si la plateforme est "
+"accessible en HTTPS"
+
+msgid "The data you provided are not valid."
+msgstr "Les données que vous avez fournies ne sont pas valides."
+
+#, php-format
+msgid "The link with %1$s have been removed."
+msgstr "Le lien avec %1$s a été supprimé."
+
+#, php-format
+msgid "The new provider %1$s have been successfully created."
+msgstr "Le nouveau fournisseur %1$s a été créé avec succès."
+
+#, php-format
+msgid "The provider %1$s have been removed."
+msgstr "Le fournisseur %1$s a été supprimé."
+
+#, php-format
+msgid "The provider %1$s have been successfully updated."
+msgstr "Le fournisseur %1$s a été mis à jour avec succès."
+
+msgid "There is nothing here,"
+msgstr "Il n'y a rien ici,"
+
+msgid "This provider is the only authentication method."
+msgstr "Ce fournisseur est le seul moyen d'authentification."
+
+msgid "Token endpoint"
+msgstr "Route de génération du jeton"
+
+msgid "Unique authentication source"
+msgstr "Source d'authentification unique"
+
+msgid "Unlink"
+msgstr "Supprimer le lien"
+
+msgid "Update the provider"
+msgstr "Mettre à jour le fournisseur"
+
+msgid "User information endpoint"
+msgstr "Route des informations utilisateur"
+
+msgid ""
+"You are about to delete a provider. This action is irreversible. Do you "
+"confirm this deletion?"
+msgstr ""
+"Vous êtes sur le point de supprimer un fournisseur. Cette action est "
+"irréversible. Veuillez confirmer votre action."
+
+msgid ""
+"You can only enable this provider as unique authentication method if you are "
+"yourself linked to it."
+msgstr ""
+"Vous ne pouvez activer ce fourniseur comme seul moyen d'authentification que "
+"si vous y êtes vous même lié."
+
+#, php-format
+msgid ""
+"You have successfully been authenticated by %1$s. The only remaining step is "
+"to create a link with an existing %2$s account or register a new one."
+msgstr ""
+"Vous avez été authentifié avec succès par %1$s. Vous devez maintenant créer "
+"un lien avec un compte %2$s existant ou en créer un nouveau."
+
+#, php-format
+msgid ""
+"You have successfully been authenticated by %1$s. The only remaining step is "
+"to create a link with an existing %2$s account."
+msgstr ""
+"Vous avez été authentifié avec succès par %1$s. Vous devez maintenant créer "
+"un lien avec un compte %2$s existant."
+
+#, php-format
+msgid "Your account has been successfully linked to %1$s"
+msgstr "Votre compte a bien été lié à %1$s"
+
+msgid ""
+"Your account have been created but needs to be approved by an administrator"
+msgstr "Votre compte a été créé mais doit être approuvé par un administrateur"
+
+#, php-format
+msgid ""
+"Your new user account will be linked with %1$s. You must provide a password "
+"to use %2$s services (CVS, SVN, Git, FTP, ...)."
+msgstr ""
+"Votre nouveau compte utilisateur sera lié avec %1$s. Vous devez fournir un "
+"mot de passe pour vous authentifier avec les services de %2$s (CVS, SVN, "
+"Git, FTP, …)"
+
+msgid "https://"
+msgstr "https://"
+
+#, php-format
+msgid "or"
+msgstr "ou"
+
+msgid "or login with"
+msgstr "ou connectez-vous avec"
+
+msgid "start by adding a provider."
+msgstr "commencez par ajouter un fournisseur."
+
+msgid "to OpenID Connect"
+msgstr "à OpenID Connect"

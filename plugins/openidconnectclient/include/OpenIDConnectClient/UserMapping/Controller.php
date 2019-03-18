@@ -64,7 +64,7 @@ class Controller {
             $user_mapping = $this->user_mapping_manager->getById($user_mapping_id);
         } catch (UserMappingNotFoundException $ex) {
             $this->redirectToAccountPage(
-                $GLOBALS['Language']->getText('plugin_openidconnectclient', 'invalid_request'),
+                dgettext('tuleap-openidconnectclient', 'Request seems invalid, please retry'),
                 Feedback::ERROR
             );
         }
@@ -72,18 +72,14 @@ class Controller {
             $provider = $this->provider_manager->getById($user_mapping->getProviderId());
         } catch (ProviderNotFoundException $ex) {
             $this->redirectToAccountPage(
-                $GLOBALS['Language']->getText('plugin_openidconnectclient', 'invalid_request'),
+                dgettext('tuleap-openidconnectclient', 'Request seems invalid, please retry'),
                 Feedback::ERROR
             );
         }
 
         if ($provider->isUniqueAuthenticationEndpoint()) {
             $this->redirectToAccountPage(
-                $GLOBALS['Language']->getText(
-                    'plugin_openidconnectclient',
-                    'delete_user_mapping_error',
-                    array($provider->getName())
-                ),
+                sprintf(dgettext('tuleap-openidconnectclient', 'An error occurred while removing the link with %1$s.'), $provider->getName()),
                 Feedback::ERROR
             );
         }
@@ -91,20 +87,12 @@ class Controller {
         try {
             $this->user_mapping_manager->remove($user_mapping);
             $this->redirectToAccountPage(
-                $GLOBALS['Language']->getText(
-                    'plugin_openidconnectclient',
-                    'delete_user_mapping_success',
-                    array($provider->getName())
-                ),
+                sprintf(dgettext('tuleap-openidconnectclient', 'The link with %1$s have been removed.'), $provider->getName()),
                 Feedback::INFO
             );
         } catch (UserMappingDataAccessException $ex) {
             $this->redirectToAccountPage(
-                $GLOBALS['Language']->getText(
-                    'plugin_openidconnectclient',
-                    'delete_user_mapping_error',
-                    array($provider->getName())
-                ),
+                sprintf(dgettext('tuleap-openidconnectclient', 'An error occurred while removing the link with %1$s.'), $provider->getName()),
                 Feedback::ERROR
             );
 

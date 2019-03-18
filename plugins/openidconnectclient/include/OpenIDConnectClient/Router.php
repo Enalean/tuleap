@@ -76,7 +76,7 @@ class Router {
         if(! $request->isSecure()) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,
-                $GLOBALS['Language']->getText('plugin_openidconnectclient', 'only_https_possible')
+                dgettext('tuleap-openidconnectclient', 'The OpenID Connect plugin can only be used if the platform is accessible with HTTPS')
             );
             $GLOBALS['Response']->redirect('/account/login.php');
         }

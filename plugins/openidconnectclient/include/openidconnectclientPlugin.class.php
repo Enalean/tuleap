@@ -60,6 +60,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 class openidconnectclientPlugin extends Plugin {
     public function __construct($id) {
         parent::__construct($id);
+        bindtextdomain('tuleap-openidconnectclient', __DIR__ . '/../site-content');
 
         $this->setScope(self::SCOPE_SYSTEM);
 
@@ -244,7 +245,7 @@ class openidconnectclientPlugin extends Plugin {
         if(! $params['is_secure']) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::WARN,
-                $GLOBALS['Language']->getText('plugin_openidconnectclient', 'only_https_possible')
+                dgettext('tuleap-openidconnectclient', 'The OpenID Connect plugin can only be used if the platform is accessible with HTTPS')
             );
             return;
         }
@@ -275,16 +276,12 @@ class openidconnectclientPlugin extends Plugin {
 
                 $GLOBALS['Response']->addFeedback(
                     Feedback::INFO,
-                    $GLOBALS['Language']->getText(
-                        'plugin_openidconnectclient',
-                        'info_registration',
-                        array($provider->getName(), ForgeConfig::get('sys_name'))
-                    )
+                    sprintf(dgettext('tuleap-openidconnectclient', 'Your new user account will be linked with %1$s. You must provide a password to use %2$s services (CVS, SVN, Git, FTP, ...).'), $provider->getName(), ForgeConfig::get('sys_name'))
                 );
             } catch (Exception $ex) {
                 $GLOBALS['Response']->addFeedback(
                     Feedback::ERROR,
-                    $GLOBALS['Language']->getText('plugin_openidconnectclient', 'unexpected_error')
+                    dgettext('tuleap-openidconnectclient', 'An error occurred, please retry')
                 );
                 $GLOBALS['Response']->redirect('/');
             }
@@ -345,7 +342,7 @@ class openidconnectclientPlugin extends Plugin {
     public function site_admin_option_hook($params)
     {
         $params['plugins'][] = array(
-            'label' => $GLOBALS['Language']->getText('plugin_openidconnectclient', 'descriptor_name'),
+            'label' => dgettext('tuleap-openidconnectclient', 'OpenID Connect Client'),
             'href'  => $this->getPluginPath() . '/admin/index.php'
         );
     }

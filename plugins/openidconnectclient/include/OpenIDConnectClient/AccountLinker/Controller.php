@@ -71,7 +71,7 @@ class Controller {
             $provider         = $this->provider_manager->getById($unlinked_account->getProviderId());
         } catch (Exception $ex) {
             $this->redirectAfterFailure(
-                $GLOBALS['Language']->getText('plugin_openidconnectclient', 'invalid_request')
+                dgettext('tuleap-openidconnectclient', 'Request seems invalid, please retry')
             );
         }
         $return_to               = $request->get('return_to');
@@ -87,7 +87,7 @@ class Controller {
         $renderer                = TemplateRendererFactory::build()->getRenderer(OPENIDCONNECTCLIENT_TEMPLATE_DIR);
 
         $GLOBALS['HTML']->header(
-            array('title' => $GLOBALS['Language']->getText('plugin_openidconnectclient', 'link_account'), 'body_class' => array('openid-connect-link'))
+            array('title' => dgettext('tuleap-openidconnectclient', 'Link a %1$s account'), 'body_class' => array('openid-connect-link'))
         );
         $renderer->renderToPage('linker', $presenter);
         $GLOBALS['HTML']->footer(array('without_content' => true));
@@ -118,7 +118,7 @@ class Controller {
             $provider         = $this->provider_manager->getById($unlinked_account->getProviderId());
         } catch (Exception $ex) {
             $this->redirectAfterFailure(
-                $GLOBALS['Language']->getText('plugin_openidconnectclient', 'invalid_request')
+                dgettext('tuleap-openidconnectclient', 'Request seems invalid, please retry')
             );
         }
 
@@ -131,11 +131,7 @@ class Controller {
 
             $GLOBALS['Response']->addFeedback(
                 Feedback::INFO,
-                $GLOBALS['Language']->getText(
-                    'plugin_openidconnectclient',
-                    'successfully_linked',
-                    array($provider->getName())
-                )
+                sprintf(dgettext('tuleap-openidconnectclient', 'Your account has been successfully linked to %1$s'), $provider->getName())
             );
             require_once('account.php');
             \account_redirect_after_login($request->get('return_to'));
@@ -152,7 +148,7 @@ class Controller {
         } catch (Exception $ex) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,
-                $GLOBALS['Language']->getText('plugin_openidconnectclient', 'invalid_request')
+                dgettext('tuleap-openidconnectclient', 'Request seems invalid, please retry')
             );
         }
 
@@ -169,7 +165,7 @@ class Controller {
             $this->unlinked_account_manager->removeById($unlinked_account->getId());
         } catch (Exception $ex) {
             $this->redirectAfterFailure(
-                $GLOBALS['Language']->getText('plugin_openidconnectclient', 'unexpected_error')
+                dgettext('tuleap-openidconnectclient', 'An error occurred, please retry')
             );
         }
     }
