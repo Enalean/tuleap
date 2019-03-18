@@ -118,6 +118,14 @@ class TimetrackingDataBuilder extends REST_TestDataBuilder
                 'test'
             );
         }
+
+        $time_dao->addTime(
+            $user->getId(),
+            $artifact->getId(),
+            date('Y-m-d', $_SERVER[ 'REQUEST_TIME' ]),
+            200,
+            'test'
+        );
     }
 
     private function setEnabledTrackers(Project $project)

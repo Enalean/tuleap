@@ -25,8 +25,9 @@ import {
     getProjectsWithTimetracking,
     getTimesFromReport,
     getTrackersFromReport,
-    getTrackersWithTimetracking
-} from "../api/rest-querier";
+    getTrackersWithTimetracking,
+    getTimes
+} from "../api/rest-querier.js";
 import { ERROR_OCCURRED } from "../../../constants.js";
 
 export async function initWidgetWithReport(context) {
@@ -74,12 +75,7 @@ async function showRestError(context, rest_error) {
 export async function loadTimes(context) {
     context.commit("setIsLoading", true);
 
-    const times = await getTimesFromReport(
-        context.state.report_id,
-        [],
-        context.state.start_date,
-        context.state.end_date
-    );
+    const times = await getTimesFromReport(context.state.report_id);
 
     context.commit("setTrackersTimes", times);
     context.commit("setIsLoading", false);
@@ -89,7 +85,7 @@ export async function loadTimesWithNewParameters(context) {
     context.commit("setIsLoading", true);
     context.commit("setTrackersIds");
 
-    const times = await getTimesFromReport(
+    const times = await getTimes(
         context.state.report_id,
         context.state.trackers_ids,
         context.state.start_date,

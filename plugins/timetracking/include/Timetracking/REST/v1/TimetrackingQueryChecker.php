@@ -42,13 +42,11 @@ class TimetrackingQueryChecker
             throw new RestException(400, "Please provide a start date and an end date");
         }
 
-        if (! isset($json_query["trackers_id"])) {
-            throw new RestException(400, "Please provide trackers' ids");
-        }
-
-        foreach ($json_query["trackers_id"] as $ids) {
-            if (! is_int($ids)) {
-                throw new RestException(400, "Please provide valid trackers' ids");
+        if (isset($json_query["trackers_id"])) {
+            foreach ($json_query["trackers_id"] as $ids) {
+                if (! is_int($ids)) {
+                    throw new RestException(400, "Please provide valid trackers' ids");
+                }
             }
         }
 

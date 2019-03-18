@@ -27,6 +27,7 @@ import { formatDatetimeToISO } from "../../../time-formatters";
 export {
     getTrackersFromReport,
     getTimesFromReport,
+    getTimes,
     getProjectsWithTimetracking,
     getTrackersWithTimetracking
 };
@@ -36,7 +37,7 @@ async function getTrackersFromReport(report_id) {
     return response.json();
 }
 
-async function getTimesFromReport(report_id, trackers_id, start_date, end_date) {
+async function getTimes(report_id, trackers_id, start_date, end_date) {
     const query = JSON.stringify({
         trackers_id: trackers_id,
         start_date: formatDatetimeToISO(start_date),
@@ -48,6 +49,14 @@ async function getTimesFromReport(report_id, trackers_id, start_date, end_date) 
             query
         }
     });
+    return response.json();
+}
+
+async function getTimesFromReport(report_id) {
+    const response = await get(
+        "/api/v1/timetracking_reports/" + encodeURI(report_id) + "/times",
+        {}
+    );
     return response.json();
 }
 

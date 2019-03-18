@@ -235,9 +235,9 @@ class TimetrackingTest extends TimetrackingBase
         $this->assertEquals($response->getStatusCode(), 200);
         $payload = $response->json();
         $this->assertTrue(count($payload) >= 2);
-        $this->assertEquals(600, $payload[0]['minutes']);
-        $this->assertEquals(671, $payload[1]['minutes']);
-        $this->assertEquals('etape', $payload[1]['step']);
+        $this->assertEquals(200, $payload[0]['minutes']);
+        $this->assertEquals(600, $payload[1]['minutes']);
+        $this->assertEquals('test', $payload[1]['step']);
     }
 
     public function testAddTimeReturnBadTimeFormatExceptionWrongSeparator()

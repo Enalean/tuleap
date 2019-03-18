@@ -30,6 +30,7 @@ use PFUser;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\JsonDecoder;
+use Tuleap\REST\QueryParameterException;
 use Tuleap\REST\QueryParameterParser;
 use Tuleap\REST\UserManager;
 use Tuleap\Timetracking\Admin\TimetrackingUgroupDao;
@@ -67,7 +68,17 @@ class TimetrackingReportResource extends AuthenticatedResource
     /**
      * @var TrackerReportExtractor
      */
-    private $extractor;
+    private $tracker_extractor;
+
+    /**
+     * @var JsonDecoder
+     */
+    private $json_decoder;
+
+    /**
+     * @var TimetrackingDatesExtractor
+     */
+    private $date_extractor;
 
     /**
      * @var TrackerRepresentationFactory
@@ -82,7 +93,9 @@ class TimetrackingReportResource extends AuthenticatedResource
             $this->report_dao,
             \TrackerFactory::instance()
         );
-        $this->extractor                      = new TrackerReportExtractor(\TrackerFactory::instance());
+        $this->tracker_extractor              = new TrackerReportExtractor(\TrackerFactory::instance());
+        $this->json_decoder                   = new JsonDecoder();
+        $this->date_extractor                 = new TimetrackingDatesExtractor($this->json_decoder);
         $this->tracker_representation_factory = new TrackerRepresentationFactory(
             new TimeDao(),
             new PermissionsRetriever(new TimetrackingUgroupRetriever(new TimetrackingUgroupDao())),
@@ -155,7 +168,7 @@ class TimetrackingReportResource extends AuthenticatedResource
      * @access protected
      *
      * @param int $id Id of the report
-     * @param string $query With a property "trackers_id","start_date" and "end_date" to search trackers' times. {@from path}
+     * @param string $query With a property "trackers_id","start_date" and "end_date" to search trackers' times. {@from path} {@required false}
      * @param int $limit
      * @param int $offset
      *
@@ -170,29 +183,28 @@ class TimetrackingReportResource extends AuthenticatedResource
      * @throws \User_StatusPendingException
      * @throws \User_StatusSuspendedException
      */
-    public function getIdTimes(int $id, string $query, int $limit = self::MAX_LIMIT, int $offset = self::DEFAULT_OFFSET)
+    public function getIdTimes(int $id, $query, int $limit = self::MAX_LIMIT, int $offset = self::DEFAULT_OFFSET)
     {
         $this->checkAccess();
         $this->sendAllowHeaders();
         try {
             $current_user = $this->rest_user_manager->getCurrentUser();
-            $json_decoder = new JsonDecoder();
-            $json_query   = $json_decoder->decodeAsAnArray('query', $query);
+            $report       = $this->getReport($id);
+            $trackers     = [];
 
-            $checker = new TimetrackingQueryChecker();
-            $checker->checkQuery($json_query);
-
-            $start_date = $json_query[ "start_date" ];
-            $end_date   = $json_query[ "end_date" ];
-
-            $report = $this->getReport($id);
-
-            $trackers = [];
             foreach ($this->getTrackersFromRoute($query, $report) as $tracker) {
                 $trackers[ $tracker->getId() ] = $tracker;
             }
 
-            return $this->tracker_representation_factory->getTrackersRepresentationWithTimes($trackers, $start_date, $end_date, $current_user, $limit, $offset);
+            $dates = $this->date_extractor->getDatesFromRoute($query);
+
+            return $this->tracker_representation_factory->getTrackersRepresentationWithTimes(
+                $trackers,
+                $dates,
+                $current_user,
+                $limit,
+                $offset
+            );
         } catch (TimetrackingReportNotFoundException $exception) {
             throw new RestException(404, "Report $id not found");
         }
@@ -226,7 +238,7 @@ class TimetrackingReportResource extends AuthenticatedResource
         $this->sendAllowHeaders();
 
         try {
-            $trackers = $this->extractor->extractTrackers($trackers_id);
+            $trackers = $this->tracker_extractor->extractTrackers($trackers_id);
 
             $report          = $this->getReport($id);
             $expected_report = new TimetrackingReport($report->getId(), $trackers);
@@ -282,18 +294,17 @@ class TimetrackingReportResource extends AuthenticatedResource
      */
     private function getTrackersFromRoute($query, TimetrackingReport $report) : array
     {
-        $query_parser = new QueryParameterParser(new JsonDecoder());
+        $query_parser = new QueryParameterParser($this->json_decoder);
+        $json_query   = $this->json_decoder->decodeAsAnArray('query', $query);
 
         $query = trim($query);
+        if (! isset($json_query[ "trackers_id" ])) {
+            return $report->getTrackers();
+        }
 
         try {
             $trackers_id = $query_parser->getArrayOfInt($query, 'trackers_id');
-
-            if (empty($trackers_id)) {
-                return $report->getTrackers();
-            }
-
-            return $this->extractor->extractTrackers($trackers_id);
+            return $this->tracker_extractor->extractTrackers($trackers_id);
         } catch (QueryParameterException $exception) {
             throw new RestException(400, $exception->getMessage());
         } catch (TrackerNotFoundException $exception) {

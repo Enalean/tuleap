@@ -63,7 +63,7 @@ class TrackerRepresentationFactory
         $this->artifact_factory      = $artifact_factory;
     }
 
-    public function getTrackersRepresentationWithTimes(array $trackers, $start_date, $end_date, \PFUser $user, int $limit, int $offset) : array
+    public function getTrackersRepresentationWithTimes(array $trackers, DateTrackingTimesPeriod $dates, \PFUser $user, int $limit, int $offset) : array
     {
         $authorized_trackers_ids = [];
         foreach ($trackers as $tracker) {
@@ -79,8 +79,8 @@ class TrackerRepresentationFactory
 
         $trackers_rows = $this->time_dao->getTotalTimeByTracker(
             $authorized_trackers_ids,
-            $start_date,
-            $end_date,
+            $dates->getStartDate(),
+            $dates->getEndDate(),
             $limit,
             $offset
         );
