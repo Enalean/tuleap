@@ -28,6 +28,8 @@ import "./store/mutations.spec.js";
 
 import "./components/Breadcrumb/DocumentBreadCrumb.spec.js";
 
+import "./components/Folder/DragNDrop/DragNDropHandler.spec.js";
+
 import "./components/Folder/Dropdown/DropdownButton.spec.js";
 import "./components/Folder/Dropdown/DropdownMenu.spec.js";
 import "./components/Folder/Dropdown/DropdownMenuForItemQuickLook.spec.js";
@@ -39,7 +41,8 @@ import "./components/Folder/ItemTitle/FileCellTitle.spec.js";
 import "./components/Folder/ItemTitle/LinkCellTitle.spec.js";
 
 import "./components/Folder/QuickLook/QuickLookDocumentPreview.spec.js";
+import "./components/Folder/UpdateItem/UpdateButton.spec.js";
+
 import "./components/Folder/ModalCommon/ModalFooter.spec.js";
-import "./components/Folder/DragNDrop/DragNDropHandler.spec.js";
 
 import "./helpers/highlight-items-helper.spec.js";

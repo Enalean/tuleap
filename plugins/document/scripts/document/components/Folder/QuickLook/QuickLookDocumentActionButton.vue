@@ -21,15 +21,10 @@
 <template>
     <div class="document-quick-look-folder-action">
         <div class="tlp-dropdown-split-button">
-            <button
-                type="button"
-                class="tlp-button-primary tlp-button-outline tlp-button-small tlp-dropdown-split-button-main"
-                v-on:click="goToUpdate"
-                v-if="item.user_can_write"
-            >
-                <i class="fa fa-mail-forward tlp-button-icon"></i>
-                <translate>Update</translate>
-            </button>
+            <update-button v-bind:item="item"
+                           v-bind:button-classes="button_classes"
+                           v-bind:icon-classes="icon_classes"
+            />
             <dropdown-button
                 v-bind:is-in-quick-look-mode="true"
                 v-bind:is-appended="item.user_can_write"
@@ -46,43 +41,22 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
 import DropdownButton from "../Dropdown/DropdownButton.vue";
 import DropdownMenu from "../Dropdown/DropdownMenu.vue";
-import { TYPE_EMPTY, TYPE_WIKI, TYPE_FILE } from "../../../constants.js";
+import UpdateButton from "../UpdateItem/UpdateButton.vue";
 
 export default {
-    components: { DropdownButton, DropdownMenu },
+    components: { UpdateButton, DropdownButton, DropdownMenu },
     props: {
         item: Object,
         isDetailsButtonShown: Boolean
     },
     computed: {
-        ...mapState(["project_id"])
-    },
-    methods: {
-        goToUpdate() {
-            if (this.item.type === TYPE_FILE) {
-                this.showUpdateFileModal();
-                return;
-            }
-            const action =
-                this.item.type !== TYPE_WIKI && this.item.type !== TYPE_EMPTY
-                    ? "action_new_version"
-                    : "action_update";
-
-            window.location.assign(
-                `/plugins/docman/index.php?group_id=${this.project_id}&id=${
-                    this.item.id
-                }&action=${action}`
-            );
+        button_classes() {
+            return "tlp-button-primary tlp-button-outline tlp-button-small tlp-dropdown-split-button-main";
         },
-        showUpdateFileModal() {
-            document.dispatchEvent(
-                new CustomEvent("show-update-file-modal", {
-                    detail: { current_item: this.item }
-                })
-            );
+        icon_classes() {
+            return "fa fa-mail-forward tlp-button-icon";
         }
     }
 };

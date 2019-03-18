@@ -1,0 +1,102 @@
+/*
+ * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+import { shallowMount } from "@vue/test-utils";
+import UpdateButton from "./UpdateButton.vue";
+
+import localVue from "../../../helpers/local-vue.js";
+import { rewire$redirect_to_url, restore } from "../../../helpers/location-helper.js";
+import { createStoreMock } from "../../../helpers/store-wrapper.spec-helper.js";
+
+describe("QuickLookDocumentPreview", () => {
+    let update_button_factory;
+    beforeEach(() => {
+        const store_options = {};
+
+        const store = createStoreMock(store_options);
+
+        update_button_factory = (props = {}) => {
+            return shallowMount(UpdateButton, {
+                localVue,
+                propsData: { ...props },
+                mocks: { $store: store }
+            });
+        };
+    });
+
+    afterEach(() => {
+        restore();
+    });
+
+    it(`Given item is a file
+        When we click on update button
+        Then file update modal is displayed`, () => {
+        spyOn(document, "dispatchEvent");
+
+        const wrapper = update_button_factory({
+            item: {
+                id: 1,
+                title: "my item title",
+                type: "file",
+                user_can_write: true
+            }
+        });
+
+        wrapper.find("[data-test=docman-item-update-button]").trigger("click");
+
+        expect(document.dispatchEvent).toHaveBeenCalledWith(
+            new CustomEvent("show-update-file-modal")
+        );
+    });
+
+    it(`Given item is not a file
+        When we click on update button
+        Then user should be redirected on legacy UI`, () => {
+        const redirect_to_url = jasmine.createSpy("redirect_to_url");
+        rewire$redirect_to_url(redirect_to_url);
+
+        const wrapper = update_button_factory({
+            item: {
+                id: 1,
+                title: "my item title",
+                type: "wiki",
+                user_can_write: true
+            }
+        });
+
+        wrapper.find("[data-test=docman-item-update-button]").trigger("click");
+
+        expect(redirect_to_url).toHaveBeenCalled();
+    });
+
+    it(`Given user can'it write in folder
+        Then update link is not available`, () => {
+        const wrapper = update_button_factory({
+            item: {
+                id: 1,
+                title: "my item title",
+                type: "file",
+                user_can_write: false
+            }
+        });
+
+        expect(wrapper.contains("[data-test=docman-item-update-button]")).toBeFalsy();
+        expect(wrapper.contains("[data-test=docman-folder-update-button]")).toBeFalsy();
+    });
+});

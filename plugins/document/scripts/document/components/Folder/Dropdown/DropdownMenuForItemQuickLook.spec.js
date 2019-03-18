@@ -119,4 +119,34 @@ describe("DropdownMenuForItemQuickLook", () => {
             new CustomEvent("show-new-folder-modal")
         );
     });
+
+    it(`Given item is a a file
+        When the dropdown is open
+        Then the dropdown should allow user to update element`, () => {
+        const wrapper = dropdown_quicklook_menu_factory({
+            item: {
+                id: 1,
+                title: "my file",
+                type: "file",
+                user_can_write: true
+            }
+        });
+
+        expect(wrapper.contains("[data-test=docman-dropdown-update-button]")).toBeTruthy();
+    });
+
+    it(`Given item is a folder
+        When the dropdown is open
+        Then user should not have the update option`, () => {
+        const wrapper = dropdown_quicklook_menu_factory({
+            item: {
+                id: 1,
+                title: "my folder",
+                type: "folder",
+                user_can_write: true
+            }
+        });
+
+        expect(wrapper.contains("[data-test=docman-dropdown-update-button]")).toBeFalsy();
+    });
 });
