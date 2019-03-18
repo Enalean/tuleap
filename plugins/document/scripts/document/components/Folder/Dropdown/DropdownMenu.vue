@@ -30,7 +30,12 @@
         <span v-if="! hideItemTitle" class="tlp-dropdown-menu-title document-dropdown-menu-title" role="menuitem">
             {{ item.title }}
         </span>
-        <a v-if="! hideDetailsEntry" v-bind:href="getUrlForPane(DETAILS_PANE_NAME)" class="tlp-dropdown-menu-item" role="menuitem">
+        <a v-if="! hideDetailsEntry"
+           v-bind:href="getUrlForPane(DETAILS_PANE_NAME)"
+           class="tlp-dropdown-menu-item"
+           role="menuitem"
+           data-test="docman-dropdown-details"
+        >
             <i class="fa fa-fw fa-list tlp-dropdown-menu-item-icon"></i>
             <span v-translate>
                 Details
@@ -48,13 +53,23 @@
                 History
             </span>
         </a>
-        <a v-if="item.can_user_manage" v-bind:href="getUrlForPane(PERMISSIONS_PANE_NAME)" class="tlp-dropdown-menu-item" role="menuitem">
+        <a v-if="item.can_user_manage"
+           v-bind:href="getUrlForPane(PERMISSIONS_PANE_NAME)"
+           class="tlp-dropdown-menu-item"
+           role="menuitem"
+           data-test=docman-dropdown-permissions
+        >
             <i class="fa fa-fw fa-lock tlp-dropdown-menu-item-icon"></i>
             <span v-translate>
                 Permissions
             </span>
         </a>
-        <a v-if="! is_item_type_empty" v-bind:href="getUrlForPane(APPROVAL_TABLES_PANE_NAME)" class="tlp-dropdown-menu-item" role="menuitem">
+        <a v-if="! is_item_type_empty"
+           v-bind:href="getUrlForPane(APPROVAL_TABLES_PANE_NAME)"
+           class="tlp-dropdown-menu-item"
+           role="menuitem"
+           data-test=docman-dropdown-approval-tables
+        >
             <i class="fa fa-fw fa-check-square-o tlp-dropdown-menu-item-icon"></i>
             <span v-translate>
                 Approval tables

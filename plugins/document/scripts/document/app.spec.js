@@ -28,6 +28,10 @@ import "./store/mutations.spec.js";
 
 import "./components/Breadcrumb/DocumentBreadCrumb.spec.js";
 
+import "./components/Folder/Dropdown/DropdownButton.spec.js";
+import "./components/Folder/Dropdown/DropdownMenu.spec.js";
+import "./components/Folder/Dropdown/DropdownMenuForItemQuickLook.spec.js";
+
 import "./components/Folder/ItemTitle/FakeCaret.spec.js";
 import "./components/Folder/ItemTitle/FolderCellTitle.spec.js";
 import "./components/Folder/ItemTitle/EmbeddedCellTitle.spec.js";
