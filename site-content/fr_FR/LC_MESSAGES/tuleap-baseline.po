@@ -21,19 +21,12 @@ msgid "Baselines"
 msgstr "Baselines"
 
 #, php-format
-msgid "Invalid date: %s. Expected format: %s"
-msgstr "Date invalide %s. Format attendu : %s"
+msgid "No artifact found with id %u"
+msgstr "Aucun artefact trouvée avec l'id %u"
 
+#, php-format
 msgid "No baseline found with id %u"
-msgstr "Aucune milestone trouvée avec l'id %u"
-
-#, php-format
-msgid "No changetset found before %s"
-msgstr "Aucune modification trouvée avant la date du %s"
-
-#, php-format
-msgid "No milestone found with id %u"
-msgstr "Aucune milestone trouvée avec l'id %u"
+msgstr "Aucune baseline trouvée avec l'id %u"
 
 msgid "No project found with this id"
 msgstr "Aucun projet trouvé avec cet identifiant"
@@ -45,17 +38,6 @@ msgstr "Poser des baselines et les comparer"
 msgid "This operation is not allowed. %s"
 msgstr "Cette opération n'est pas autorisée. %s"
 
-msgid "You cannot read this artifact"
-msgstr "Vous ne pouvez pas accéder à cet artefact"
-
-msgid "You cannot read this artifact because you cannot access to its project"
-msgstr ""
-"Vous ne pouvez pas lire cette artefact car vous n'avez pas accès à son projet"
-
-msgid "You cannot read this artifact because you cannot access to its tracker"
-msgstr ""
-"Vous ne pouvez pas lire cette artefact car vous n'y avez pas accès à son "
-"tracker"
-
-msgid "You cannot read this project"
-msgstr "Vous ne pouvez pas accéder à ce projet"
+#, php-format
+msgid "You're not allowed to add new baseline in project with id %u"
+msgstr "Vous n'êtes pas autorisé à ajouter une nouvelle baseline dans le projet ayant pour id %u"

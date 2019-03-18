@@ -29,9 +29,6 @@ msgstr ""
 "versions\n"
 "                    à une date choisie dans le passé."
 
-msgid "Can't fetch user name"
-msgstr "Impossible de charger le nom de l'utilisateur"
-
 msgid "Cancel"
 msgstr "Annuler"
 

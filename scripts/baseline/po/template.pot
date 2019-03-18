@@ -19,9 +19,6 @@ msgid ""
 "                chosen date in the past."
 msgstr ""
 
-msgid "Can't fetch user name"
-msgstr ""
-
 msgid "Cancel"
 msgstr ""
 
