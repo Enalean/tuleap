@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -279,7 +279,7 @@ class GitXmlImporter
                     break;
                 default:
                     $this->logger->debug('Unknown node found ' . $permission_xmlnode->getName());
-                    continue;
+                    break;
             }
 
             if (isset($permission_type)) {

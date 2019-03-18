@@ -29,12 +29,20 @@ pipeline {
         stage('Tests') {
             failFast false
             parallel {
-                stage('UT PHPUnit PHP 7.3') {
-                    steps { script { actions.runPHPUnitTests('73') } }
-                    post {
-                        always {
-                            junit 'results/ut-phpunit/*/phpunit_tests_results.xml'
-                            step([$class: 'CloverPublisher', cloverReportDir: 'results/ut-phpunit/php-73/coverage/', cloverReportFileName: 'clover.xml'])
+                stage ('PHP 7.3') {
+                    stages {
+                        stage('UT PHPUnit PHP 7.3') {
+                            steps { script { actions.runPHPUnitTests('73') } }
+                            post {
+                                always {
+                                    junit 'results/ut-phpunit/*/phpunit_tests_results.xml'
+                                    step([$class: 'CloverPublisher', cloverReportDir: 'results/ut-phpunit/php-73/coverage/', cloverReportFileName: 'clover.xml'])
+                                }
+                            }
+                        }
+                        stage('UT SimpleTest PHP 7.3') {
+                            steps { script { actions.runSimpleTestTests('73') } }
+                            post { always { junit 'results/ut-simpletest/php-73/results.xml' } }
                         }
                     }
                 }
