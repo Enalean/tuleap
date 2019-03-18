@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2006
@@ -20,6 +20,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+//phpcs:ignoreFile
 
 require_once('common/permission/PermissionsManager.class.php');
 
@@ -106,50 +108,5 @@ class Docman_PermissionsManagerDao extends DataAccessObject {
         } else {
             return false;
         }
-    }
-
-    public function isThereAnExplicitPermission($ugroup_id, $project_id) {
-        $ugroup_id  = $this->da->escapeInt($ugroup_id);
-        $project_id = $this->da->escapeInt($project_id);
-
-        $sql =
-            "SELECT * FROM permissions
-                JOIN plugin_docman_item ON permissions.object_id = plugin_docman_item.item_id
-            WHERE ugroup_id = $ugroup_id
-                AND permission_type LIKE 'PLUGIN_DOCMAN%'
-                AND group_id = $project_id
-            LIMIT 1
-            ";
-
-        return $this->retrieveFirstRow($sql);
-    }
-
-    public function doAllItemsHaveExplicitPermissions($project_id) {
-        $project_id = $this->da->escapeInt($project_id);
-
-        $sql =
-           "SELECT * FROM plugin_docman_item
-                LEFT JOIN permissions ON permissions.object_id = CAST(plugin_docman_item.item_id as CHAR CHARACTER SET utf8)
-            WHERE plugin_docman_item.group_id = $project_id
-                AND permission_type IS NULL
-            LIMIT 1
-            ";
-
-        $results = (bool) $this->retrieveFirstRow($sql);
-
-        return ! $results;
-    }
-
-    public function isThereADefaultPermissionThatUsesUgroup($ugroup_id) {
-        $ugroup_id  = $this->da->escapeInt($ugroup_id);
-
-        $sql =
-           "SELECT permissions_values.* FROM permissions_values
-            WHERE ugroup_id = $ugroup_id
-                AND permission_type LIKE 'PLUGIN_DOCMAN%'
-            LIMIT 1
-            ";
-
-        return (bool) $this->retrieveFirstRow($sql);
     }
 }

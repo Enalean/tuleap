@@ -78,6 +78,7 @@ Requires: bind-utils
 
 Obsoletes: php-restler, php-amqplib-amqplib, php-markdown
 Obsoletes: %{name}-plugin-im
+Obsoletes: %{name}-plugin-fulltextsearch
 
 # It's embedded in Tuleap thanks to npm.
 Obsoletes: ckeditor
@@ -316,16 +317,6 @@ Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-tracker, tule
 %description plugin-agiledashboard
 Agile Dashboard aims to provide an nice integration of Scrum/Kanban
 tool on top of Tracker.
-
-%package plugin-fulltextsearch
-Summary: Full-Text Search
-Group: Development/Tools
-Version: @@PLUGIN_FULLTEXTSEARCH_VERSION@@
-Release: @@VERSION@@_@@RELEASE@@%{?dist}
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
-Requires: php-elasticsearch
-%description plugin-fulltextsearch
-Allows documents of the docman to be searched in a full-text manner.
 
 %package plugin-archivedeleteditems
 Summary: Archiving plugin
@@ -697,11 +688,6 @@ touch $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitolite/projects.list
 
 # Plugin proftpd
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/secure_ftp
-
-# Plugin fulltextsearch
-%{__install} plugins/fulltextsearch/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_fulltextsearch
-%{__perl} -pi -e "s~%PROJECT_NAME%~%{APP_NAME}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_fulltextsearch
-%{__perl} -pi -e "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_fulltextsearch
 
 # Plugin bugzilla
 %{__install} plugins/bugzilla_reference/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_bugzilla_reference
@@ -1274,11 +1260,6 @@ fi
 %{APP_DIR}/src/www/assets/agiledashboard
 %attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_agiledashboard
 %config(noreplace) /etc/logrotate.d/%{APP_NAME}_agiledashboard
-
-%files plugin-fulltextsearch
-%defattr(-,%{APP_USER},%{APP_USER},-)
-%{APP_DIR}/plugins/fulltextsearch
-%attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_fulltextsearch
 
 %files plugin-archivedeleteditems
 %defattr(-,%{APP_USER},%{APP_USER},-)

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011 - 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - Present. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -228,11 +228,6 @@ class trackerPlugin extends Plugin {
         if (defined('STATISTICS_BASE_DIR')) {
             $this->addHook(Statistics_Event::FREQUENCE_STAT_ENTRIES);
             $this->addHook(Statistics_Event::FREQUENCE_STAT_SAMPLE);
-        }
-        if (defined('FULLTEXTSEARCH_BASE_URL')) {
-            $this->addHook(FULLTEXTSEARCH_EVENT_FETCH_ALL_DOCUMENT_SEARCH_TYPES);
-            $this->addHook(FULLTEXTSEARCH_EVENT_FETCH_PROJECT_TRACKER_FIELDS);
-            $this->addHook(FULLTEXTSEARCH_EVENT_DOES_TRACKER_SERVICE_USE_UGROUP);
         }
 
         $this->addHook(Event::LIST_DELETED_TRACKERS);
@@ -1242,46 +1237,10 @@ class trackerPlugin extends Plugin {
         }
     }
 
-    public function fulltextsearch_event_fetch_all_document_search_types($params) {
-        $params['all_document_search_types'][] = array(
-            'key'     => 'tracker',
-            'name'    => $GLOBALS['Language']->getText('plugin_tracker', 'tracker_artifacts'),
-            'info'    => $GLOBALS['Language']->getText('plugin_tracker', 'tracker_fulltextsearch_info'),
-            'can_use' => false,
-            'special' => true,
-        );
-    }
-
-    public function fulltextsearch_event_fetch_project_tracker_fields($params) {
-        $user     = $params['user'];
-        $trackers = $this->getTrackerFactory()->getTrackersByGroupIdUserCanView($params['project_id'], $user);
-        $fields   = $this->getTrackerFormElementFactory()->getUsedSearchableTrackerFieldsUserCanView($user, $trackers);
-
-        $params['fields'] = $fields;
-    }
-
     public function site_admin_configuration_tracker($params) {
         $label = $GLOBALS['Language']->getText('plugin_tracker', 'admin_tracker_template');
 
         $params['additional_entries'][] = '<a href="/plugins/tracker/?group_id=100" class="admin-sidebar-section-nav-item">'. $label .'</a>';
-    }
-
-    public function fulltextsearch_event_does_tracker_service_use_ugroup($params) {
-        $dao        = new Tracker_PermissionsDao();
-        $ugroup_id  = $params['ugroup_id'];
-        $project_id = $params['project_id'];
-
-        if ($dao->isThereAnExplicitPermission($ugroup_id, $project_id)) {
-            $params['is_used'] = true;
-            return;
-        }
-
-        if ($dao->doAllItemsHaveExplicitPermissions($project_id)) {
-            $params['is_used'] = false;
-            return;
-        }
-
-        $params['is_used'] = $dao->isThereADefaultPermissionThatUsesUgroup($ugroup_id);
     }
 
     public function export_xml_project($params) {

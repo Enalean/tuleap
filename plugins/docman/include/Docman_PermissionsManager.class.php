@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2006
@@ -20,6 +20,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+//phpcs:ignoreFile
 
 class Docman_PermissionsManager {
 
@@ -645,17 +647,5 @@ class Docman_PermissionsManager {
             }
         }
         return $userArray;
-    }
-
-    public function isUgroupUsed($ugroup_id) {
-        if ($this->getDao()->isThereAnExplicitPermission($ugroup_id, $this->groupId)) {
-            return true;
-        }
-
-        if ($this->getDao()->doAllItemsHaveExplicitPermissions($this->groupId)) {
-            return false;
-        }
-
-        return $this->getDao()->isThereADefaultPermissionThatUsesUgroup($ugroup_id);
     }
 }

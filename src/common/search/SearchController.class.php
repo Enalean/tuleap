@@ -118,7 +118,6 @@ class Search_SearchController {
     private function getSearchPresenter(Search_SearchQuery $query, $results) {
         $project_search_types   = array();
         $site_search_types      = array();
-        $additional_search_tabs = array();
         $redirect_to_services   = true;
 
         $this->event_manager->processEvent(
@@ -150,19 +149,11 @@ class Search_SearchController {
         }
         $search_panes[] = $this->getSiteWidePane($site_search_types);
 
-        $this->event_manager->processEvent(
-            Event::FETCH_ADDITIONAL_SEARCH_TABS,
-            array(
-                'additional_search_tabs' => &$additional_search_tabs
-            )
-        );
-
         return new Search_Presenter_SearchPresenter(
             $query->getTypeOfSearch(),
             $query->getWords(),
             $results,
             $search_panes,
-            $additional_search_tabs,
             $query->getProject()
         );
     }
@@ -170,7 +161,7 @@ class Search_SearchController {
     private function getAdditionnalProjectWidePresentersIfNeeded(Project $project, $words, $redirect_to_services) {
         $additionnal_presenters = array();
 
-        if ($project->usesService('wiki') && ! $this->useFulltextSearch()) {
+        if ($project->usesService('wiki')) {
             $search_wiki              = new Search_SearchWiki(new WikiDao());
             $additionnal_presenters[] = $search_wiki->getFacets($project->getID(), $words);
         }
@@ -239,15 +230,4 @@ class Search_SearchController {
 
         return $results;
     }
-
-    private function useFulltextSearch() {
-        $fulltext_plugin = $this->plugin_manager->getPluginByName('fulltextsearch');
-
-        if (! $fulltext_plugin) {
-            return false;
-        }
-
-        return $this->plugin_manager->isPluginAvailable($fulltext_plugin);
-    }
-
 }

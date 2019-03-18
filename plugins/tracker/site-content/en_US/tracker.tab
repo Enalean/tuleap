@@ -1651,9 +1651,6 @@ plugin_tracker	disable_notifications_alternate_text	Stop receiving notifications
 plugin_tracker	enable_notifications_alternate_text	Receive notifications for this artifact
 plugin_tracker	raw_email_button_title	Display original email
 
-plugin_tracker	tracker_artifacts	Tracker artifacts
-plugin_tracker	tracker_fulltextsearch_info	Only available if you select ONE project
-
 plugin_tracker	field_not_stored_exception	The field "$1" cannot be stored.
 plugin_tracker	comment_not_stored_exception	The comment cannot be stored.
 plugin_tracker	changeset_not_stored_exception	The changeset cannot be stored.

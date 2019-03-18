@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -777,22 +777,6 @@ class Tracker_FormElementFactory {
 
     public function getUsedTextFieldById($tracker, $field_id) {
         return $this->getUsedFieldByIdAndType($tracker, $field_id, array('text', 'string', 'ref'));
-    }
-
-    /**
-     * @param Tracker $tracker
-     * @return Tracker_FormElement_Field_Text[] All text formElements used by the tracker
-     */
-    public function getUsedTextFieldsUserCanRead(Tracker $tracker, PFUser $user) {
-        $fields = $this->getUsedFormElementsByType($tracker, array('text', 'string', 'ref'));
-
-        foreach ($fields as $key => $field) {
-            if (! $field->userCanRead($user)) {
-                unset($fields[$key]);
-            }
-        }
-
-        return $fields;
     }
 
     public function getUsedFieldsForExpertModeUserCanRead(Tracker $tracker, PFUser $user)
@@ -1692,27 +1676,6 @@ class Tracker_FormElementFactory {
         if ($dar && $row = $dar->getRow()) {
             return $this->getCachedInstanceFromRow($row);
         }
-    }
-
-    /**
-     * @param PFUser $user
-     * @param Tracker[] $trackers
-     *
-     * @return array
-     * e.g. array(
-     *      'TRACKER_ID_1' => array(FIELD1, FIELD2),
-     *      'TRACKER_ID_2' => array(FIELD3, FIELD4)
-     *      ...
-     * )
-     */
-    public function getUsedSearchableTrackerFieldsUserCanView(PFUser $user, array $trackers) {
-        $fields = array();
-
-        foreach ($trackers as $tracker) {
-            $fields[$tracker->getId()] = $this->getUsedTextFieldsUserCanRead($tracker, $user);
-        }
-
-        return $fields;
     }
 
     public function isFieldASimpleListField(Tracker_FormElement_Field $field)
