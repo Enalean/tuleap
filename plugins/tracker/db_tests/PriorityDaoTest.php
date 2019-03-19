@@ -29,11 +29,6 @@ class PriorityDaoTest extends TuleapDbTestCase {
         parent::__construct();
     }
 
-    public function skip()
-    {
-        $this->skipIf(true, 'Broken DB tests');
-    }
-
     public function setUp() {
         parent::setUp();
         $this->dao = new Tracker_Artifact_PriorityDao();
