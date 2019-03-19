@@ -63,10 +63,15 @@ final class PsalmCommandLauncherWithIgnoreDirectory
             }
         }
 
-        $config_file = array_shift($argv);
-        $config_xml  = @simplexml_load_file($config_file);
+        $config_file         = array_shift($argv);
+        $config_file_content = @file_get_contents($config_file);
+        if ($config_file_content === false) {
+            echo "$config_file can not be read\n";
+            return 1;
+        }
+        $config_xml = @simplexml_load_string($config_file_content);
         if ($config_xml === false) {
-            echo "$config_file does not exist or is not a valid XML file\n";
+            echo "$config_file is not a valid XML file\n";
             return 1;
         }
 

@@ -110,7 +110,7 @@ final class PsalmCommandLauncherWithIgnoreDirectoryTest extends TestCase
         );
 
         $this->assertGreaterThan(0, $exit_code);
-        $this->expectOutputRegex('/^' . preg_quote($config_path, '/') . ' does not exist/');
+        $this->expectOutputString("$config_path can not be read\n");
     }
 
     public function testFailsWhenConfigFileIsNotAValidXMLFile() : void
@@ -132,7 +132,7 @@ final class PsalmCommandLauncherWithIgnoreDirectoryTest extends TestCase
         );
 
         $this->assertGreaterThan(0, $exit_code);
-        $this->expectOutputRegex('/^' . preg_quote($config_path, '/') . ' .* is not a valid XML file/');
+        $this->expectOutputString("$config_path is not a valid XML file\n");
     }
 
     public function testUnknownPsalmCommandIsRejected() : void
