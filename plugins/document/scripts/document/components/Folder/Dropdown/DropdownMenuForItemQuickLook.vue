@@ -39,20 +39,33 @@
             <i class="fa fa-fw fa-plus tlp-dropdown-menu-item-icon"></i>
             <translate>New document</translate>
         </a>
+        <update-button v-bind:item="item"
+                       v-bind:button-classes="button_classes"
+                       v-bind:icon-classes="icon_classes"
+                       v-if="! is_item_a_folder"
+                       data-test="docman-dropdown-update-button"
+        />
     </dropdown-menu>
 </template>
 <script>
 import DropdownMenu from "./DropdownMenu.vue";
 import { TYPE_FOLDER } from "../../../constants.js";
+import UpdateButton from "../UpdateItem/UpdateButton.vue";
 
 export default {
-    components: { DropdownMenu },
+    components: { UpdateButton, DropdownMenu },
     props: {
         item: Object
     },
     computed: {
         is_item_a_folder() {
             return this.item.type === TYPE_FOLDER;
+        },
+        button_classes() {
+            return "tlp-dropdown-menu-item";
+        },
+        icon_classes() {
+            return "fa fa-mail-forward tlp-dropdown-menu-item-icon";
         }
     },
     methods: {
