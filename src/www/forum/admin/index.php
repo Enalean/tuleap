@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-Present. All Rights Reserved.
  * Copyright 1999-2000 (c) The SourceForge Crew
  *
  * This file is a part of Tuleap.
@@ -62,7 +62,7 @@ if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'
                     /*
                      Deleting messages or threads
                     */
-                    
+
                     // First, check if the message exists
                     $sql="SELECT forum_group_list.group_id, forum.group_forum_id FROM forum,forum_group_list ".
                         "WHERE forum.group_forum_id=forum_group_list.group_forum_id AND forum.msg_id=".db_ei($msg_id);
@@ -72,7 +72,7 @@ if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'
                     if (db_numrows($result) > 0) {
                         $message_group_id=db_result($result,0,'group_id');
                         $forum_id =  db_result($result,0,'group_forum_id');
-                        
+
                         $authorized_to_delete_message=false;
 
                         // Then, check if the message belongs to a news or a forum
@@ -91,7 +91,7 @@ if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'
 
                         if ($authorized_to_delete_message) {
                             //delete monitor settings on the corresponding thread, before deleting the message
-                            forum_thread_delete_monitor($forum_id,$msg_id);                            
+                            forum_thread_delete_monitor($forum_id,$msg_id);
 			                $feedback .= $Language->getText('forum_admin_index','msgs_del',recursive_delete($msg_id,$forum_id));
                         } else {
                             $feedback .= ' '.$Language->getText('forum_admin_index','msg_not_in_group').' ';
@@ -117,8 +117,10 @@ if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'
                 $description  = $request->get('description');
                 $is_monitored = $request->get('is_monitored');
 
-                if (($current_project->getAccess() == Project::ACCESS_PRIVATE && $is_public == 0) ||
-                    forum_can_be_public($current_project)) {
+                if (
+                    (in_array($current_project->getAccess(), [Project::ACCESS_PRIVATE, Project::ACCESS_PRIVATE_WO_RESTRICTED], true) && $is_public == 0)
+                    || forum_can_be_public($current_project)
+                ) {
 
                     $fid = forum_create_forum($group_id,$forum_name,$is_public,1,$description);
 
@@ -132,6 +134,7 @@ if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'
 			/*
 				Change a forum to public/private
 			*/
+            $is_public = $request->get('is_public');
             if (forum_is_public_value_allowed($current_project, $is_public)) {
                 $vGrpForum = new Valid_UInt('group_forum_id');
                 $vGrpForum->required();
@@ -142,7 +145,6 @@ if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'
                    $request->valid($vGrpForum)) {
 
                     $forum_name     = $request->get('forum_name');
-                    $is_public      = $request->get('is_public');
                     $description    = $request->get('description');
                     $group_forum_id = $request->get('group_forum_id');
 
@@ -209,7 +211,7 @@ if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'
 			<INPUT TYPE="TEXT" NAME="forum_name" VALUE="" SIZE="30" MAXLENGTH="50"><BR>
 			<B>'.$Language->getText('forum_admin_index','description').':</B><BR>
                         <INPUT TYPE="TEXT" NAME="description" VALUE="" SIZE="60" MAXLENGTH="255"><BR>';
-                        if ($current_project->getAccess() == Project::ACCESS_PRIVATE) {
+                        if (in_array($current_project->getAccess(), [Project::ACCESS_PRIVATE, Project::ACCESS_PRIVATE_WO_RESTRICTED], true)) {
                             echo '<INPUT TYPE="HIDDEN" NAME="is_public" VALUE="0" CHECKED>';
                         } else {
                             echo '<P><B>'.$Language->getText('forum_admin_index','is_public').'</B><BR>
@@ -255,7 +257,7 @@ if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'
 			$title_arr[]=$Language->getText('forum_admin_index','forum');
 			$title_arr[]=$Language->getText('global','status');
 			$title_arr[]=$Language->getText('forum_admin_index','update');
-		
+
 			echo html_build_list_table_top ($title_arr);
 
 			for ($i=0; $i<$rows; $i++) {
@@ -293,7 +295,7 @@ if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'
 
 	} else {
 		/*
-			Show main page for choosing 
+			Show main page for choosing
 			either moderotor or delete
 		*/
 		forum_header(array('title'=>$Language->getText('forum_admin_index','forum_admin'),

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2011 - 2018. All rights reserved.
+ * Copyright Enalean (c) 2011 - Present. All rights reserved.
  * Copyright 1999-2000 (c) The SourceForge Crew
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
@@ -61,9 +61,10 @@ class Project extends Group implements PFO_Project {
     const SITE_NEWS_PROJECT_ID = 46;
     const ADMIN_PROJECT_ID     = 100;
 
-    const ACCESS_PRIVATE             = 'private';
-    const ACCESS_PUBLIC_UNRESTRICTED = 'unrestricted';
-    const ACCESS_PUBLIC              = 'public';
+    public const ACCESS_PRIVATE               = 'private';
+    public const ACCESS_PRIVATE_WO_RESTRICTED = 'private-wo-restr';
+    public const ACCESS_PUBLIC_UNRESTRICTED   = 'unrestricted';
+    public const ACCESS_PUBLIC                = 'public';
 
     var $project_data_array;
 
@@ -386,7 +387,7 @@ class Project extends Group implements PFO_Project {
 
     public function isPublic() {
         $access = $this->data_array['access'];
-        return $access != Project::ACCESS_PRIVATE;
+        return $access !== Project::ACCESS_PRIVATE && $access !== Project::ACCESS_PRIVATE_WO_RESTRICTED;
     }
 
     /**

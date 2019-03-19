@@ -127,7 +127,7 @@ class FlamingParrot_ContainerPresenter
     }
 
     public function project_privacy() {
-        return $GLOBALS['Language']->getText('project_privacy', 'tooltip_' . $this->project_privacy);
+        return $this->project_privacy;
     }
 
     public function feedback() {

@@ -464,7 +464,7 @@ class ProjectManager
     }
 
     public function setAccess(Project $project, $access_level) {
-        $project_id = $project->getID();
+        $project_id = (int) $project->getID();
         $old_access = $project->getAccess();
 
         switch ($access_level) {
@@ -479,6 +479,10 @@ class ProjectManager
             case Project::ACCESS_PUBLIC_UNRESTRICTED:
                 $this->_getDao()->setUnrestricted($project_id);
                 $is_private = false;
+                break;
+            case Project::ACCESS_PRIVATE_WO_RESTRICTED:
+                $this->_getDao()->setIsPrivateWORestricted($project_id);
+                $is_private = true;
                 break;
             default:
                 $GLOBALS['Response']->addFeedback('error', 'bad value '.$access_level);
@@ -497,7 +501,7 @@ class ProjectManager
         ));
 
         $this->getFrsPermissionsCreator()->updateProjectAccess($project, $old_access, $access_level);
-        if ($access_level == Project::ACCESS_PRIVATE) {
+        if ($is_private) {
             $this->updateForumVisibilityToPrivate($project_id);
         }
     }

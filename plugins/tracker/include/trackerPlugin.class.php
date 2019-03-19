@@ -1377,7 +1377,8 @@ class trackerPlugin extends Plugin {
         $cleaner->cleanNotificationsAfterUserRemoval($project, $user);
     }
 
-    public function project_access_change($params)
+    /** @see Event::PROJECT_ACCESS_CHANGE */
+    public function projectAccessChange(array $params): void
     {
         $updater = $this->getUgroupToNotifyUpdater();
         $updater->updateProjectAccess($params['project_id'], $params['old_access'], $params['access']);

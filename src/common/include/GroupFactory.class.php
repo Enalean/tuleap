@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015-2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -40,19 +40,23 @@ class GroupFactory {
 	 *	@return	resultset
 	 */
 	function getAllGroups() {
-	        global $Language;
-		if (user_isloggedin()) {
-			// For  surperuser), we can see all the trackers (both public and non public)
-                    if ( user_is_super_user() ) {
-                            $access_condition = '';
-			} else {
-                            $access_condition = " AND access != '" . db_es(Project::ACCESS_PRIVATE)."' ";
-			}
-		} else {
-                    if (isset($GLOBALS['Language']))
-			$this->setError();
-                    return false;
-		}
+        global $Language;
+        if (user_isloggedin()) {
+            // For  surperuser), we can see all the trackers (both public and non public)
+            if (user_is_super_user()) {
+                $access_condition = '';
+            } else {
+                $access_condition = " AND access NOT IN ('" .
+                    db_es(Project::ACCESS_PRIVATE) . "', '" .
+                    db_es(Project::ACCESS_PRIVATE_WO_RESTRICTED) . "')";
+            }
+        } else {
+            if (isset($GLOBALS['Language'])) {
+                $this->setError();
+            }
+
+            return false;
+        }
 
 		$sql="SELECT group_id,group_name,unix_group_name FROM groups
 			WHERE group_id <> 100 AND status = 'A'
@@ -60,7 +64,7 @@ class GroupFactory {
 			ORDER BY group_name ASC";
 
 		//echo $sql;
-		
+
 		$result = db_query ($sql);
 
 		$rows = db_numrows($result);
@@ -92,7 +96,7 @@ class GroupFactory {
 			 "ORDER BY g.group_name ASC";
 
 		//echo $sql;
-		
+
 		$result = db_query ($sql);
 
 		$rows = db_numrows($result);

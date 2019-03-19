@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2016 - 2018. All rights reserved.
+ * Copyright Enalean (c) 2016 - Present. All rights reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -122,11 +122,7 @@ class SystemEvent_PROJECT_IS_PRIVATE extends SystemEvent
             $project->getUnixName()
         );
 
-        $body = $user_language->getText(
-            'project_privacy',
-            'email_visibility_change_body_' . $project->getAccess(),
-            $project->getUnconvertedPublicName()
-        );
+        $body = $this->getBody($project, $user_language);
 
         $body_text = $purifier->purify($body, CODENDI_PURIFIER_STRIP_HTML);
 
@@ -139,6 +135,44 @@ class SystemEvent_PROJECT_IS_PRIVATE extends SystemEvent
 
         $mail->send();
     }
-}
 
-?>
+    private function getBody(Project $project, BaseLanguage $user_language): string
+    {
+        if (\Tuleap\Project\Admin\ProjectWithoutRestrictedFeatureFlag::isEnabled() && ForgeConfig::areRestrictedUsersAllowed()) {
+            switch ($project->getAccess()) {
+                case Project::ACCESS_PUBLIC:
+                    return $user_language->getText(
+                        'project_privacy',
+                        'email_visibility_change_body_public',
+                        $project->getUnconvertedPublicName()
+                    );
+                case Project::ACCESS_PUBLIC_UNRESTRICTED:
+                    return $user_language->getText(
+                        'project_privacy',
+                        'email_visibility_change_body_unrestricted',
+                        $project->getUnconvertedPublicName()
+                    );
+                case Project::ACCESS_PRIVATE_WO_RESTRICTED:
+                    return $user_language->getText(
+                        'project_privacy',
+                        'email_visibility_change_body_private',
+                        $project->getUnconvertedPublicName()
+                    );
+                case Project::ACCESS_PRIVATE:
+                default:
+                    return $user_language->getText(
+                        'project_privacy',
+                        'email_visibility_change_body_private_unrestricted',
+                        $project->getUnconvertedPublicName()
+                    );
+
+            }
+        } else {
+            return $user_language->getText(
+                'project_privacy',
+                'email_visibility_change_body_' . $project->getAccess(),
+                $project->getUnconvertedPublicName()
+            );
+        }
+    }
+}

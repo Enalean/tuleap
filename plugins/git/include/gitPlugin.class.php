@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011 - 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -2273,9 +2273,8 @@ class GitPlugin extends Plugin
 
     /**
      * @see Event::PROJECT_ACCESS_CHANGE
-     * @param type $params
      */
-    public function project_access_change($params)
+    public function projectAccessChange(array $params): void
     {
         $project = ProjectManager::instance()->getProject($params['project_id']);
 

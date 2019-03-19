@@ -1,7 +1,7 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2016 - Present. All rights reserved
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2016 - 2018. All rights reserved
  *
  * This file is a part of Codendi.
  *
@@ -113,7 +113,11 @@ class ProjectDao extends DataAccessObject {
         $join    = '';
         $where   = '';
         $groupby = '';
-        $public  = ' g.access != '.$this->da->quoteSmart(Project::ACCESS_PRIVATE);
+
+        $access_private               = $this->da->quoteSmart(Project::ACCESS_PRIVATE);
+        $access_private_wo_restricted = $this->da->quoteSmart(Project::ACCESS_PRIVATE_WO_RESTRICTED);
+
+        $public         = ' g.access NOT IN ('. $access_private .', '. $access_private_wo_restricted . ')';
         if ($isPrivate) {
             $public  = ' 1 ';
         }
@@ -129,7 +133,10 @@ class ProjectDao extends DataAccessObject {
                 // Either public projects or private projects the user is member of
                 $join  .= ' LEFT JOIN user_group ug ON (ug.group_id = g.group_id)';
                 $where .= ' AND ('.$public.
-                          '      OR (g.access = '.$this->da->quoteSmart(Project::ACCESS_PRIVATE).' AND ug.user_id = '.$this->da->escapeInt($userId).'))';
+                          '     OR (g.access IN ('. $access_private .', '. $access_private_wo_restricted . ')
+                                    AND ug.user_id = '.$this->da->escapeInt($userId).'
+                                )
+                            )';
             }
             $groupby .= ' GROUP BY g.group_id';
         } else {
@@ -347,7 +354,9 @@ class ProjectDao extends DataAccessObject {
         $user_id      = $this->da->escapeInt($user->getId());
         $offset       = $this->da->escapeInt($offset);
         $limit        = $this->da->escapeInt($limit);
-        $private_type = $this->da->quoteSmart(Project::ACCESS_PRIVATE);
+
+        $private_type               = $this->da->quoteSmart(Project::ACCESS_PRIVATE);
+        $private_wo_restricted_type = $this->da->quoteSmart(Project::ACCESS_PRIVATE_WO_RESTRICTED);
 
         if ($user->isSuperUser()) {
             $sql = "SELECT SQL_CALC_FOUND_ROWS groups.*
@@ -362,7 +371,7 @@ class ProjectDao extends DataAccessObject {
                       JOIN user_group USING (group_id)
                     WHERE status = 'A'
                       AND group_id > 100
-                      AND (access != $private_type
+                      AND (access NOT IN ($private_type, $private_wo_restricted_type)
                         OR user_group.user_id = $user_id)
                     ORDER BY group_id ASC
                     LIMIT $offset, $limit";
@@ -391,11 +400,14 @@ class ProjectDao extends DataAccessObject {
 
     public function searchMyAndPublicProjectsForRESTByShortname($shortname, PFUser $user, $offset, $limit)
     {
-        $user_id      = $this->da->escapeInt($user->getId());
-        $offset       = $this->da->escapeInt($offset);
-        $limit        = $this->da->escapeInt($limit);
-        $private_type = $this->da->quoteSmart(Project::ACCESS_PRIVATE);
-        $shortname    = $this->da->quoteSmart($shortname);
+        $user_id   = $this->da->escapeInt($user->getId());
+        $offset    = $this->da->escapeInt($offset);
+        $limit     = $this->da->escapeInt($limit);
+        $shortname = $this->da->quoteSmart($shortname);
+
+        $private_type               = $this->da->quoteSmart(Project::ACCESS_PRIVATE);
+        $private_wo_restricted_type = $this->da->quoteSmart(Project::ACCESS_PRIVATE_WO_RESTRICTED);
+
 
         if ($user->isSuperUser()) {
             $sql = "SELECT SQL_CALC_FOUND_ROWS groups.*
@@ -412,7 +424,7 @@ class ProjectDao extends DataAccessObject {
                     WHERE status = 'A'
                       AND group_id > 100
                       AND unix_group_name = $shortname
-                      AND (access != $private_type
+                      AND (access NOT IN ($private_type, $private_wo_restricted_type)
                         OR user_group.user_id = $user_id)
                     ORDER BY group_id ASC
                     LIMIT $offset, $limit";
@@ -421,16 +433,19 @@ class ProjectDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function getAllMyAndPublicProjects(PFUser $user) {
-        $user_id      = $this->da->escapeInt($user->getId());
-        $private_type = $this->da->quoteSmart(Project::ACCESS_PRIVATE);
+    public function getAllMyAndPublicProjects(PFUser $user)
+    {
+        $user_id = $this->da->escapeInt($user->getId());
+
+        $private_type               = $this->da->quoteSmart(Project::ACCESS_PRIVATE);
+        $private_wo_restricted_type = $this->da->quoteSmart(Project::ACCESS_PRIVATE_WO_RESTRICTED);
 
         $sql = "SELECT DISTINCT groups.*
                 FROM groups
                   JOIN user_group USING (group_id)
                 WHERE status = 'A'
                   AND group_id > 100
-                  AND (access != $private_type
+                  AND (access NOT IN ($private_type, $private_wo_restricted_type)
                     OR user_group.user_id = $user_id)
                 ORDER BY group_id ASC";
 
@@ -439,9 +454,15 @@ class ProjectDao extends DataAccessObject {
 
     public function searchByPublicStatus($is_public){
         if ($is_public) {
-            $access_clause = 'access != '.$this->da->quoteSmart(Project::ACCESS_PRIVATE);
+            $access_clause = 'access NOT IN('.
+                $this->da->quoteSmart(Project::ACCESS_PRIVATE).', '.
+                $this->da->quoteSmart(Project::ACCESS_PRIVATE_WO_RESTRICTED).
+                ')';
         } else {
-            $access_clause = 'access = '.$this->da->quoteSmart(Project::ACCESS_PRIVATE);
+            $access_clause = 'access IN('.
+                $this->da->quoteSmart(Project::ACCESS_PRIVATE).', '.
+                $this->da->quoteSmart(Project::ACCESS_PRIVATE_WO_RESTRICTED).
+                ')';
         }
 
         $sql = "SELECT *
@@ -585,14 +606,15 @@ class ProjectDao extends DataAccessObject {
             $long_desc  = $this->searchExplodeMatch('unix_group_name', $words);
         }
 
-        $private = $this->da->quoteSmart(Project::ACCESS_PRIVATE);
+        $private               = $this->da->quoteSmart(Project::ACCESS_PRIVATE);
+        $private_wo_restricted = $this->da->quoteSmart(Project::ACCESS_PRIVATE_WO_RESTRICTED);
 
         $sql = "SELECT DISTINCT group_name, unix_group_name, groups.group_id, short_description
                 FROM groups
                     LEFT JOIN group_desc_value ON (group_desc_value.group_id = groups.group_id)
                     $from
                 WHERE status='A'
-                AND access != $private
+                AND access NOT IN ($private, $private_wo_restricted)
                 AND (
                         (group_name LIKE $group_name)
                      OR (short_description LIKE $short_desc)
@@ -607,6 +629,16 @@ class ProjectDao extends DataAccessObject {
 
     public function setIsPrivate($project_id) {
         $access     = $this->da->quoteSmart(Project::ACCESS_PRIVATE);
+        $project_id = $this->da->escapeInt($project_id);
+
+        $sql = "UPDATE groups SET access = $access WHERE group_id = $project_id";
+
+        return $this->update($sql);
+    }
+
+    public function setIsPrivateWORestricted($project_id)
+    {
+        $access     = $this->da->quoteSmart(Project::ACCESS_PRIVATE_WO_RESTRICTED);
         $project_id = $this->da->escapeInt($project_id);
 
         $sql = "UPDATE groups SET access = $access WHERE group_id = $project_id";

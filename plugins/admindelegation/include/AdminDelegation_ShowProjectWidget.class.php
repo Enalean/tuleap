@@ -174,7 +174,7 @@ class AdminDelegation_ShowProjectWidget extends Widget {
                     $html .= '<tr class="'. util_get_alt_row_color($i++) .'">';
                     $html .= '<td>';
                     $html .= '<a href="/projects/'.$row['unix_group_name'].'">'.$row['group_name'].'</a>';
-                    if ($row['access'] === Project::ACCESS_PRIVATE) {
+                    if ($row['access'] === Project::ACCESS_PRIVATE || $row['access'] === Project::ACCESS_PRIVATE_WO_RESTRICTED) {
                         $html .= '&nbsp;(*)';
                     }
                     $html .= '</td>';

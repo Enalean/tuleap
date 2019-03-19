@@ -1,10 +1,8 @@
 <?php
 /**
- * MediaWikiPlugin Class
- *
+ * Copyright (c) Enalean SAS 2014 - Present. All Rights Reserved.
  * Copyright 2000-2011, Fusionforge Team
  * Copyright 2012, Franck Villaume - TrivialDev
- * Copyright (c) Enalean SAS 2014 - 2018 All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -752,7 +750,8 @@ class MediaWikiPlugin extends Plugin {
     /**
      * @see Event::PROJECT_ACCESS_CHANGE
      */
-    public function project_access_change($params) {
+    public function projectAccessChange($params): void
+    {
         $project = ProjectManager::instance()->getProject($params['project_id']);
 
         $this->getMediawikiManager()->updateAccessControlInProjectChangeContext(

@@ -166,13 +166,13 @@
                                     {{# is_closed }}fa-lock{{/ is_closed }}
                                 "></i> {{ access }}
                             </p>
-                            {{# is_public_incl_restricted }}
+                            {{# is_incl_restricted }}
                                 <span class="tlp-badge-warning"
                                       id="siteadmin-project-information-additional-info-access-level-badge"
                                 >
                                     {{ incl_restricted_label }}
                                 </span>
-                            {{/ is_public_incl_restricted }}
+                            {{/ is_incl_restricted }}
                             <a href="/project/admin/editgroupinfo.php?group_id={{ id }}"
                                class="tlp-button-primary tlp-button-outline tlp-button-wide"
                                id="siteadmin-project-information-additional-info-access-button"

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,7 +17,14 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class ProjectVisibilityPresenter {
+namespace Tuleap\Project\Admin;
+
+use BaseLanguage;
+use Codendi_HTMLPurifier;
+use Project;
+
+class ProjectVisibilityPresenter
+{
 
     /**
      * @var array
@@ -57,11 +64,17 @@ class ProjectVisibilityPresenter {
         $platform_allows_restricted,
         $project_visibility
     ) {
-        $this->language = $language;
-        $this->platform_allows_restricted = (bool) $platform_allows_restricted;
-        $this->project_visibility         = $project_visibility;
-        $this->restricted_warning_message = $this->language->getText('project_admin_editgroupinfo', 'restricted_warning');
-        $this->general_warning_message    = $this->language->getText('project_admin_editgroupinfo', 'general_warning');
+        $this->language                         = $language;
+        $this->platform_allows_restricted       = (bool) $platform_allows_restricted;
+        $this->project_visibility               = $project_visibility;
+        $this->restricted_warning_message       = $this->language->getText(
+            'project_admin_editgroupinfo',
+            'restricted_warning'
+        );
+        $this->general_warning_message          = $this->language->getText(
+            'project_admin_editgroupinfo',
+            'general_warning'
+        );
         $this->purified_term_of_service_message = Codendi_HTMLPurifier::instance()->purify(
             $this->language->getOverridableText('project_admin_editgroupinfo', 'term_of_service'),
             CODENDI_PURIFIER_LIGHT
@@ -70,10 +83,15 @@ class ProjectVisibilityPresenter {
         $this->project_visibility_label = _('Project visibility');
         $this->accept_tos_message       = _("Please accept term of service");
 
-        $this->generateVisibilityOptions();
+        if (ProjectWithoutRestrictedFeatureFlag::isEnabled()) {
+            $this->generateVisibilityOptions();
+        } else {
+            $this->generateLegacyVisibilityOptions();
+        }
     }
 
-    private function generateVisibilityOptions() {
+    private function generateLegacyVisibilityOptions()
+    {
         $options = array(
             array(
                 'value'      => Project::ACCESS_PRIVATE,
@@ -96,5 +114,46 @@ class ProjectVisibilityPresenter {
         }
 
         $this->options = $options;
+    }
+
+    private function generateVisibilityOptions()
+    {
+        if ($this->platform_allows_restricted) {
+            $this->options = [
+                [
+                    'value'    => Project::ACCESS_PRIVATE_WO_RESTRICTED,
+                    'label'    => _('Private'),
+                    'selected' => ($this->project_visibility === Project::ACCESS_PRIVATE_WO_RESTRICTED) ? 'selected = "selected"' : '',
+                ],
+                [
+                    'value'    => Project::ACCESS_PRIVATE,
+                    'label'    => _('Private incl. restricted'),
+                    'selected' => ($this->project_visibility === Project::ACCESS_PRIVATE) ? 'selected = "selected"' : '',
+                ],
+                [
+                    'value'    => Project::ACCESS_PUBLIC,
+                    'label'    => _('Public'),
+                    'selected' => ($this->project_visibility === Project::ACCESS_PUBLIC) ? 'selected = "selected"' : '',
+                ],
+                [
+                    'value'    => Project::ACCESS_PUBLIC_UNRESTRICTED,
+                    'label'    => _('Public incl. restricted'),
+                    'selected' => ($this->project_visibility === Project::ACCESS_PUBLIC_UNRESTRICTED) ? 'selected = "selected"' : '',
+                ]
+            ];
+        } else {
+            $this->options = [
+                [
+                    'value'    => Project::ACCESS_PRIVATE,
+                    'label'    => _('Private'),
+                    'selected' => ($this->project_visibility === Project::ACCESS_PRIVATE) ? 'selected = "selected"' : '',
+                ],
+                [
+                    'value'    => Project::ACCESS_PUBLIC,
+                    'label'    => _('Public'),
+                    'selected' => ($this->project_visibility === Project::ACCESS_PUBLIC) ? 'selected = "selected"' : '',
+                ]
+            ];
+        }
     }
 }

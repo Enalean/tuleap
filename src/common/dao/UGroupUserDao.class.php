@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2017. All rights reserved.
+ * Copyright Enalean (c) 2017 - Present. All rights reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
@@ -229,12 +229,13 @@ class UGroupUserDao extends DataAccessObject {
 
     private function isTargetProjectPrivate($target_ugroup_id)
     {
-        $private_access = $this->da->quoteSmart(Project::ACCESS_PRIVATE);
+        $private               = $this->da->quoteSmart(Project::ACCESS_PRIVATE);
+        $private_wo_restricted = $this->da->quoteSmart(Project::ACCESS_PRIVATE_WO_RESTRICTED);
 
         $sql = "SELECT *
                 FROM ugroup
                 INNER JOIN groups USING (group_id)
-                WHERE groups.access = $private_access
+                WHERE groups.access IN ($private, $private_wo_restricted)
                 AND ugroup.ugroup_id = $target_ugroup_id";
 
         $dar = $this->retrieve($sql);

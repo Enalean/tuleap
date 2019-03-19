@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -797,7 +797,7 @@ class SvnPlugin extends Plugin
     }
 
     /** @see Event::PROJECT_ACCESS_CHANGE */
-    public function project_access_change(array $params)
+    public function projectAccessChange(array $params): void
     {
         $updater = $this->getUgroupToNotifyUpdater();
         $updater->updateProjectAccess($params['project_id'], $params['old_access'], $params['access']);

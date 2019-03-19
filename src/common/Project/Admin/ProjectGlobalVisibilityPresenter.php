@@ -26,7 +26,6 @@ namespace Tuleap\Project\Admin;
 
 use Project;
 use ProjectTruncatedEmailsPresenter;
-use ProjectVisibilityPresenter;
 use Tuleap\Project\ProjectAccessPresenter;
 
 class ProjectGlobalVisibilityPresenter

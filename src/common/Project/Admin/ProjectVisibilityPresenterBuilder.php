@@ -27,7 +27,6 @@ namespace Tuleap\Project\Admin;
 use ForgeConfig;
 use HTTPRequest;
 use ProjectTruncatedEmailsPresenter;
-use ProjectVisibilityPresenter;
 use Tuleap\Project\ProjectAccessPresenter;
 
 class ProjectVisibilityPresenterBuilder

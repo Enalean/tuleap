@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -68,12 +68,12 @@ class ProjectDao extends DataAccessObject
                       JOIN user_group USING (group_id)
                     WHERE status = 'A'
                       AND group_id > 100
-                      AND (access != ?
+                      AND (access NOT IN (?, ?)
                         OR user_group.user_id = ?)
                     ORDER BY group_id ASC
                     LIMIT ?
                     OFFSET ?";
 
-        return $this->getDB()->run($sql, Project::ACCESS_PRIVATE, $user->getId(), $limit, $offset);
+        return $this->getDB()->run($sql, Project::ACCESS_PRIVATE, Project::ACCESS_PRIVATE_WO_RESTRICTED, $user->getId(), $limit, $offset);
     }
 }
