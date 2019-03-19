@@ -148,7 +148,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
                         // look if our item is the first subitem
                         // if it is the case then select 'At the beginning of <parent>'
                         reset($item['subitems']);
-                        list(,$subitem) = each($item['subitems']);
+                        $subitem = current($item['subitems']);
                         if ($subitem['id'] == $id) {
                             $selected = 'selected="selected"';
                         }

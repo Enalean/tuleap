@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -76,15 +76,13 @@ class PermissionsManager implements IPermissionsManagerNG {
             $this->retrievePermissions($object_id, $ugroups);
         }
         //now we search for $permission_type
-        $has_permission = false;
-        reset($ugroups);
-        while (!$has_permission && (list(,$ugroup) = each($ugroups))) {
-		        	
-            if (isset($this->_permissions[$object_id][$ugroup])) {
-                $has_permission = in_array($permission_type, $this->_permissions[$object_id][$ugroup]);
+        foreach ($ugroups as $ugroup) {
+            if (isset($this->_permissions[$object_id][$ugroup]) &&
+                in_array($permission_type, $this->_permissions[$object_id][$ugroup])) {
+                return true;
             }
         }
-        return $has_permission;
+        return false;
     }
     
     /**

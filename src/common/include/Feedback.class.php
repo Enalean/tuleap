@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -96,22 +96,24 @@ class Feedback {
         return '<div id="feedback" data-test="feedback">'.$this->fetch().'</div>';
     }
 
-    function hasWarningsOrErrors() {
-    	   $found = false;
-       reset($this->logs);
-       while(!$found && list(,$log) = each($this->logs)) {
-            $found = ($log['level'] == self::WARN || $log['level'] == self::ERROR);
-       }
-       return $found;
+    public function hasWarningsOrErrors()
+    {
+        foreach ($this->logs as $log) {
+            if ($log['level'] === self::WARN || $log['level'] === self::ERROR) {
+                return true;
+            }
+        }
+        return false;
     }
     
-    function hasErrors() {
-       $found = false;
-       reset($this->logs);
-       while(!$found && list(,$log) = each($this->logs)) {
-            $found = ($log['level'] == self::ERROR);
+    public function hasErrors()
+    {
+       foreach ($this->logs as $log) {
+           if ($log['level'] === self::ERROR) {
+               return true;
+           }
        }
-       return $found;
+       return false;
     }
 
     public function clearErrors()

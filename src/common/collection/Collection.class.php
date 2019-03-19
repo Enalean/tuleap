@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -128,16 +128,14 @@ class Collection {
     function remove($wanted) {
         $compare_with_equals = method_exists($wanted, 'equals');
         //function in_array doesn't work with object ?!
-        $found = false;
-        reset($this->elements);
-        while((list($key, $value) = each($this->elements)) && !$found) {
-            if (($compare_with_equals && $wanted->equals($value)) 
-             || (!$compare_with_equals && ((method_exists($value, 'equals') && $value->equals($wanted)) || ($wanted === $value)))) {
+        foreach ($this->elements as $key => $value) {
+            if (($compare_with_equals && $wanted->equals($value))
+                || (!$compare_with_equals && ((method_exists($value, 'equals') && $value->equals($wanted)) || ($wanted === $value)))) {
                 unset($this->elements[$key]);
-                $found = true;
+                return true;
             }
         }
-        return $found;
+        return false;
     }
     
     
@@ -145,4 +143,3 @@ class Collection {
         return $this->elements;
     }
 }
-?>

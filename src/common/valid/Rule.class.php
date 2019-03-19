@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2007. All Rights Reserved.
  *
  * Originally written by Manuel VACELET, 2007.
@@ -283,15 +283,15 @@ extends Rule {
         if($this->separator !== null) {
             // If separator is defined, split the string and check each email.
             $emails = preg_split('/' . $this->separator . '/D', $val);
-            $valid = true;
-            while((list($key,$email) = each($emails)) && $valid) {
-                $valid = $valid & $this->validEmail(trim(rtrim($email)));
+            foreach ($emails as $email) {
+                if (! $this->validEmail(trim(rtrim($email)))) {
+                    return false;
+                }
             }
-        } else {
-            // $val must contains only one email address
-            $valid = $this->validEmail($val);
+            return true;
         }
-        return $valid;
+        // $val must contains only one email address
+        return $this->validEmail($val);
     }
 
     /**
