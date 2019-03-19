@@ -127,6 +127,7 @@ export default {
         },
 
         onBaselineCreated() {
+            this.fetchBaselines();
             this.is_baseline_created = true;
             this.modal.hide();
         },
