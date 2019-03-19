@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -480,7 +480,7 @@ class ReferenceManager {
             (?P<key>\w+)
             \s          #blank separator
             \#          #dash (2 en 1)
-            (?P<project_name>[\w-_]+:)? #optional project name (followed by a colon)
+            (?P<project_name>[\w\-]+:)? #optional project name (followed by a colon)
             (?P<value>(?:&amp;|\w|/|&)+?) #any combination of &, &amp;, a word or a slash
             (?P<after_reference>&(?:\#(?:\d+|[xX][[:xdigit:]]+)|quot);|(?=[^\w&/])|$) # Exclude HTML dec, hex and some (quot) named entities from the end of the reference
         `x";
