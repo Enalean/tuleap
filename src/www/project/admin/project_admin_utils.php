@@ -205,52 +205,6 @@ function get_history_entries() {
 }
 
 /**
- * Convert a php array to JS for project history subevents
- * It keeps the initial array as keys for the JS array
- * Values are retrieved from i18n file
- *
- * @param Array   $array     Array containing the items
- * @param Boolean $subevents Convert events array if false, convert subevents otherwise
- *
- * @return String
- */
-function convert_project_history_events($array, $subevents) {
-    $hp = Codendi_HTMLPurifier::instance();
-    $output = '{ }';
-    if (is_array($array)) {
-        if (count($array)) {
-            $output = '{';
-            reset($array);
-            $comma = '';
-            do {
-                if ($subevents) {
-                    if(list($key, $value) = each($array)) {
-                        if (is_string($value) && !empty($value)) {
-                            $value            = $hp->purify($value, CODENDI_PURIFIER_JS_QUOTE);
-                            $translated_value = $hp->purify($GLOBALS['Language']->getText('project_admin_utils', $value), CODENDI_PURIFIER_JS_QUOTE);
-
-                            $output .= $comma . "'$value': '$translated_value'";
-                            $comma = ', ';
-                        }
-                    }
-                } else {
-                    if(list($key, $value) = each($array)) {
-                        if (is_string($key)) {
-                            $key     = $hp->purify($key, CODENDI_PURIFIER_JS_QUOTE);
-                            $value   = convert_project_history_events($value, true);
-                            $output .= $comma . "'$key': $value";
-                            $comma   = ', ';
-                        }
-                    }
-                }
-            } while($value);
-            $output .= '}';
-        }
-    }
-    return $output;
-}
-
-/**
  * Display the retrieved reult set
  *
  * @param Integer $group_id Id of the project
@@ -334,7 +288,7 @@ function displayProjectHistoryResults($group_id, $res, $export = false, &$i = 1)
  * @param Integer $offset       Offset used for pagination
  * @param Integer $limit        Number of events by page
  * @param String  $event        Events category used to filter results
- * @param String  $subEventsBox Event used to filter results
+ * @param array|null  $subEventsBox Event used to filter results
  * @param String  $value        Value used to filter results
  * @param Integer $startDate    Start date used to filter results
  * @param Integer $endDate      End date used to filter results
@@ -400,7 +354,15 @@ function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEvent
     );
     echo $renderer->renderToString('project_history', $presenter);
 
-    $translatedEvents = convert_project_history_events(get_history_entries(), false);
+    $history_entries   = get_history_entries();
+    $translated_events = [];
+    foreach ($history_entries as $sub_event_category => $sub_events) {
+        $translated_sub_events = [];
+        foreach ($sub_events as $sub_event) {
+            $translated_sub_events[$sub_event] = $GLOBALS['Language']->getText('project_admin_utils', $sub_event);
+        }
+        $translated_events[$sub_event_category] = $translated_sub_events;
+    }
 
     if(isset($subEventsString)) {
         $selectedSubEvents = explode(",", $subEventsString);
@@ -409,10 +371,17 @@ function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEvent
         }
     }
 
-    $translatedSelectedEvents = convert_project_history_events($subEventsBox, true);
+    $translated_selected_sub_events = [];
+    if ($subEventsBox !== null) {
+        foreach (array_keys($subEventsBox) as $sub_event) {
+            if (is_string($sub_event)) {
+                $translated_selected_sub_events[$sub_event] = $GLOBALS['Language']->getText('project_admin_utils', $sub_event);
+            }
+        }
+    }
 
     $js = "new UserAutoCompleter('by', '".util_get_dir_image_theme()."', true);
-           new ProjectHistory(".$translatedEvents.", ".$translatedSelectedEvents.");";
+           new ProjectHistory(".json_encode($translated_events).", ".json_encode($translated_selected_sub_events).");";
 
     $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/codendi/ProjectHistory.js');
     $GLOBALS['Response']->includeFooterJavascriptSnippet($js);

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -81,7 +81,8 @@ if ($notification_to_delete) {
 $notification_to_update = $request->get('followers');
 if ($notification_to_update) {
     $token->check();
-    list($id, $info) = each($notification_to_update);
+    $id   = key($notification_to_update);
+    $info = current($notification_to_update);
     if (isset($info['emails']) && $info['emails']) {
         if (isset($info['types']) && is_array($info['types']) && count($info['types'])) {
             if ($dao->save($id, $info['emails'], implode(',', $info['types']))) {

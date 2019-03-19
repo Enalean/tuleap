@@ -989,7 +989,7 @@ function permission_process_selection_form($group_id, $permission_type, $object_
     
     // Check consistency of ugroup list
     $num_ugroups=0;
-    while (list(,$selected_ugroup) = each($ugroups)) {
+    foreach ($ugroups as $selected_ugroup) {
         $num_ugroups++;
         if ($selected_ugroup==$GLOBALS['UGROUP_ANONYMOUS']) { $anon_selected=1; }
         if ($selected_ugroup==$GLOBALS['UGROUP_REGISTERED']) { $any_selected=1; }
@@ -1019,8 +1019,7 @@ function permission_process_selection_form($group_id, $permission_type, $object_
             $msg.=$Language->getText('project_admin_permissions','ignore_g');
         }
     } else {
-        reset($ugroups);
-        while (list(,$selected_ugroup) = each($ugroups)) {
+        foreach ($ugroups as $selected_ugroup) {
             if ($selected_ugroup==$GLOBALS['UGROUP_NONE']) {
                 if ($num_ugroups>1) {
                     $msg .= $Language->getText('project_admin_permissions','g_nobody_ignored')." ";
