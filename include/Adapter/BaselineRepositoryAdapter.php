@@ -139,7 +139,7 @@ class BaselineRepositoryAdapter implements BaselineRepository
                  INNER JOIN tracker
             ON tracker.id = artifact.tracker_id
             WHERE tracker.group_id = ?
-            ORDER BY baseline.snapshot_date ASC
+            ORDER BY baseline.snapshot_date DESC
             LIMIT ?
             OFFSET ?',
             [$project->getID(), $page_size, $baseline_offset]
