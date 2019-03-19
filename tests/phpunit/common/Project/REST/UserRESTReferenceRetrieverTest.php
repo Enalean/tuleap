@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -62,7 +62,11 @@ class UserRESTReferenceRetrieverTest extends TestCase
 
     public function userReferenceProvider()
     {
-        $user = \Mockery::mock(\PFUser::class);
+        $user = new class extends \PFUser {
+            public function __construct()
+            {
+            }
+        };
         return [
             ['id', 'getUserById', $user, $user],
             ['id', 'getUserById', null, null],
