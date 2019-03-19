@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -165,5 +165,13 @@ class Tracker_FormElement_Field_Integer extends Tracker_FormElement_Field_Numeri
 
     public function accept(Tracker_FormElement_FieldVisitor $visitor) {
         return $visitor->visitInteger($this);
+    }
+
+    /**
+     * @see Tracker_FormElement_Field::hasChanges()
+     */
+    public function hasChanges(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $old_value, $new_value)
+    {
+        return (new \Tuleap\Tracker\FormElement\Field\Integer\ChangesChecker())->hasChanges($old_value, $new_value);
     }
 }
