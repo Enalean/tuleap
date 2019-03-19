@@ -23,16 +23,16 @@ namespace Tuleap\Tracker\Workflow;
 use Tracker_Artifact;
 use Tracker_Artifact_ChangesetValue;
 use Tracker_FormElement_Field;
-use Tuleap\Tracker\Workflow\PostAction\PostActionsRetriever;
+use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyFieldDetector;
 
 class WorkflowUpdateChecker
 {
-    /** @var PostActionsRetriever */
-    private $post_actions_retriever;
+    /** @var ReadOnlyFieldDetector */
+    private $read_only_field_detector;
 
-    public function __construct(PostActionsRetriever $post_actions_retriever)
+    public function __construct(ReadOnlyFieldDetector $read_only_field_detector)
     {
-        $this->post_actions_retriever = $post_actions_retriever;
+        $this->read_only_field_detector = $read_only_field_detector;
     }
 
     public function canFieldBeUpdated(
@@ -50,25 +50,7 @@ class WorkflowUpdateChecker
             return true;
         }
 
-        $workflow = $artifact->getWorkflow();
-
-        if ($workflow === null || ! $workflow->isUsed() || $workflow->isAdvanced()) {
-            return true;
-        }
-
-        try {
-            $current_state_transition     = $workflow->getFirstTransitionForCurrentState($artifact);
-            $read_only_fields_post_action = $this->post_actions_retriever->getReadOnlyFields($current_state_transition);
-        } catch (Transition\NoTransitionForStateException | PostAction\ReadOnly\NoReadOnlyFieldsPostActionException $e) {
-            return true;
-        }
-        $field_id = (int) $field->getId();
-
-        if (in_array($field_id, $read_only_fields_post_action->getFieldIds())) {
-            return false;
-        }
-
-        return true;
+        return ! $this->read_only_field_detector->isFieldReadOnly($artifact, $field);
     }
 
     private function fieldHasChanges(

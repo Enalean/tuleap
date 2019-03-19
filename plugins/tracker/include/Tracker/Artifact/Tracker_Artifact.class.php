@@ -56,6 +56,7 @@ use Tuleap\Tracker\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\Workflow\PostAction\PostActionsRetriever;
 use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyDao;
+use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyFieldDetector;
 use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyFieldsFactory;
 use Tuleap\Tracker\Workflow\WorkflowUpdateChecker;
 
@@ -2025,11 +2026,12 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     }
 
     /**
+     * Protected for test purposes
      * @return WorkflowUpdateChecker
      */
     protected function getWorkflowUpdateChecker()
     {
-        return new WorkflowUpdateChecker(
+        $read_only_detector = new ReadOnlyFieldDetector(
             new PostActionsRetriever(
                 new Transition_PostAction_CIBuildFactory(
                     new Transition_PostAction_CIBuildDao()
@@ -2043,5 +2045,6 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 new ReadOnlyFieldsFactory(new ReadOnlyDao())
             )
         );
+        return new WorkflowUpdateChecker($read_only_detector);
     }
 }
