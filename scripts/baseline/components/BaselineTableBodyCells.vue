@@ -21,7 +21,9 @@
     <tbody>
         <tr v-for="baseline in baselines" v-bind:key="baseline.id" data-test-type="baseline">
             <td class="tlp-table-cell-numeric">
-                {{ baseline.id }}
+                <a href="#" v-on:click.prevent="goTo(`baselines/${baseline.id}`)">
+                    {{ baseline.id }}
+                </a>
             </td>
             <td>{{ baseline.name }}</td>
             <td>{{ baseline.snapshot_date }}</td>
