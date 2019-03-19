@@ -171,4 +171,20 @@ class Workflow_TransitionDao extends DataAccessObject //phpcs:ignoreFile
                  AND transition_id != $transition_id";
         return $this->retrieve($sql);
     }
+
+    /**
+     * @return array|false
+     */
+    public function searchFirstTransition(int $workflow_id, int $to_id)
+    {
+        $workflow_id = $this->da->escapeInt($workflow_id);
+        $to_id       = $this->da->escapeInt($to_id);
+
+        $sql = "SELECT * FROM tracker_workflow_transition
+                WHERE to_id = $to_id
+                  AND workflow_id = $workflow_id
+                LIMIT 1";
+
+        return $this->retrieveFirstRow($sql);
+    }
 }

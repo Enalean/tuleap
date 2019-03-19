@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,19 +22,27 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Workflow\PostAction;
 
+use Tuleap\Tracker\Workflow\PostAction\ReadOnly\NoReadOnlyFieldsPostActionException;
+use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyFields;
+use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyFieldsFactory;
+
 class PostActionsRetriever
 {
     /** @var \Transition_PostAction_CIBuildFactory */
     private $cibuild_factory;
     /** @var \Transition_PostAction_FieldFactory */
     private $field_factory;
+    /** @var ReadOnlyFieldsFactory */
+    private $read_only_fields_factory;
 
     public function __construct(
         \Transition_PostAction_CIBuildFactory $cibuild_factory,
-        \Transition_PostAction_FieldFactory $field_factory
+        \Transition_PostAction_FieldFactory $field_factory,
+        ReadOnlyFieldsFactory $read_only_fields_factory
     ) {
-        $this->cibuild_factory = $cibuild_factory;
-        $this->field_factory   = $field_factory;
+        $this->cibuild_factory          = $cibuild_factory;
+        $this->field_factory            = $field_factory;
+        $this->read_only_fields_factory = $read_only_fields_factory;
     }
 
     /**
@@ -67,5 +75,18 @@ class PostActionsRetriever
     public function getSetIntFieldValues(\Transition $transition): array
     {
         return $this->field_factory->getSetIntFieldValues($transition);
+    }
+
+    /**
+     * @throws NoReadOnlyFieldsPostActionException
+     */
+    public function getReadOnlyFields(\Transition $transition): ReadOnlyFields
+    {
+        $post_actions = $this->read_only_fields_factory->loadPostActions($transition);
+        if (empty($post_actions)) {
+            throw new NoReadOnlyFieldsPostActionException();
+        }
+        // There is only one ReadOnlyFields post-action per transition
+        return $post_actions[0];
     }
 }

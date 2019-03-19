@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Workflow\Transition\Update;
 
 use Tuleap\Tracker\Workflow\Transition\NoSiblingTransitionException;
+use Tuleap\Tracker\Workflow\Transition\NoTransitionForStateException;
 
 class TransitionRetriever
 {
@@ -77,6 +78,22 @@ class TransitionRetriever
         }
 
         $row = $this->searchSiblingTransitionInRows($rows);
+        return $this->transition_factory->getInstanceFromRow($row);
+    }
+
+    /**
+     * @throws NoTransitionForStateException
+     */
+    public function getFirstTransitionForDestinationState(\Workflow $workflow, int $to): \Transition
+    {
+        $row = $this->transition_dao->searchFirstTransition(
+            (int) $workflow->getId(),
+            $to
+        );
+        if ($row === false) {
+            throw new NoTransitionForStateException();
+        }
+
         return $this->transition_factory->getInstanceFromRow($row);
     }
 

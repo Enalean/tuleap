@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018 - 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,7 +16,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 namespace Tuleap\Tracker\REST\v1\Workflow;
@@ -46,15 +45,12 @@ use Tuleap\Tracker\REST\v1\Workflow\PostAction\Update\SetDateValueJsonParser;
 use Tuleap\Tracker\REST\v1\Workflow\PostAction\Update\SetFloatValueJsonParser;
 use Tuleap\Tracker\REST\v1\Workflow\PostAction\Update\SetIntValueJsonParser;
 use Tuleap\Tracker\REST\WorkflowTransitionPOSTRepresentation;
-use Tuleap\Tracker\Workflow\FeatureFlag;
-use Tuleap\Tracker\Workflow\PostAction\PostActionsRetriever;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\CIBuildRepository;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\CIBuildUpdater;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\CIBuildValidator;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\InvalidPostActionException;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\PostActionFieldIdValidator;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\PostActionIdValidator;
-use Tuleap\Tracker\Workflow\PostAction\Update\Internal\PostActionsMapper;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\SetDateValueRepository;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\SetDateValueUpdater;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\SetDateValueValidator;
@@ -70,6 +66,7 @@ use Tuleap\Tracker\Workflow\Transition\Condition\ConditionsUpdateException;
 use Tuleap\Tracker\Workflow\Transition\Condition\ConditionsUpdater;
 use Tuleap\Tracker\Workflow\Transition\OrphanTransitionException;
 use Tuleap\Tracker\Workflow\Transition\Update\TransitionReplicator;
+use Tuleap\Tracker\Workflow\Transition\Update\TransitionReplicatorBuilder;
 use Tuleap\Tracker\Workflow\Transition\Update\TransitionRetriever;
 use WorkflowFactory;
 
@@ -128,21 +125,7 @@ class TransitionsResource extends AuthenticatedResource
             $this->getTransitionFactory(),
             new TransitionValidator(),
             $this->getTransactionExecutor(),
-            new TransitionReplicator(
-                $this->getConditionFactory(),
-                $this->getConditionsUpdater(),
-                new PostActionsRetriever(
-                    new \Transition_PostAction_CIBuildFactory($this->getCIBuildDao()),
-                    new \Transition_PostAction_FieldFactory(
-                        \Tracker_FormElementFactory::instance(),
-                        $this->getFieldDateDao(),
-                        $this->getFieldIntDao(),
-                        $this->getFieldFloatDao()
-                    )
-                ),
-                $this->getPostActionCollectionUpdater(),
-                new PostActionsMapper()
-            ),
+            $this->getTransitionReplicator(),
             $this->getTransitionRetriever()
         );
 
@@ -553,5 +536,10 @@ class TransitionsResource extends AuthenticatedResource
     private function getTransitionRetriever(): TransitionRetriever
     {
         return new TransitionRetriever(new \Workflow_TransitionDao(), $this->getTransitionFactory());
+    }
+
+    private function getTransitionReplicator(): TransitionReplicator
+    {
+        return TransitionReplicatorBuilder::build();
     }
 }

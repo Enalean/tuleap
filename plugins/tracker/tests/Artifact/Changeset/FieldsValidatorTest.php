@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,12 +20,12 @@
 
 require_once __DIR__.'/../../bootstrap.php';
 
-class Tracker_Artifact_Changeset_FieldsValidatorTest extends TuleapTestCase {
-
+class Tracker_Artifact_Changeset_FieldsValidatorTest extends TuleapTestCase //phpcs:ignoreFile
+{
     /** @var Tracker_Artifact_Changeset_NewChangesetFieldsValidator */
     private $new_changeset_fields_validator;
 
-    /** @var Tracker_Artifact_Changeset_NewChangesetFieldsValidator */
+    /** @var Tracker_Artifact_Changeset_InitialChangesetFieldsValidator */
     private $initial_changeset_fields_validator;
 
     /** @var Tracker_FormElementFactory */
@@ -61,10 +61,13 @@ class Tracker_Artifact_Changeset_FieldsValidatorTest extends TuleapTestCase {
     /** @var Tracker_Artifact_ChangesetValue */
     private $changeset_value3;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->factory = mock('Tracker_FormElementFactory');
-        $this->new_changeset_fields_validator = new Tracker_Artifact_Changeset_NewChangesetFieldsValidator($this->factory);
+        $workflow_checker = \Mockery::mock(\Tuleap\Tracker\Workflow\WorkflowUpdateChecker::class);
+        $workflow_checker->shouldReceive('canFieldBeUpdated')->andReturnTrue();
+        $this->new_changeset_fields_validator = new Tracker_Artifact_Changeset_NewChangesetFieldsValidator($this->factory, $workflow_checker);
         $this->initial_changeset_fields_validator = new Tracker_Artifact_Changeset_InitialChangesetFieldsValidator($this->factory);
 
         $this->field1 = $this->getFieldWithId(101);

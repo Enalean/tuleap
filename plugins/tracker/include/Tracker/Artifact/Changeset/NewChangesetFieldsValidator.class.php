@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,10 +18,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Workflow\WorkflowUpdateChecker;
+
 /**
  * I validate fields for new changeset (update of artifact)
  */
-class Tracker_Artifact_Changeset_NewChangesetFieldsValidator extends Tracker_Artifact_Changeset_FieldsValidator {
+class Tracker_Artifact_Changeset_NewChangesetFieldsValidator extends Tracker_Artifact_Changeset_FieldsValidator //phpcs:ignore
+{
+    private $workflow_update_checker;
+
+    public function __construct(
+        Tracker_FormElementFactory $form_element_factory,
+        WorkflowUpdateChecker $workflow_update_checker
+    ) {
+        parent::__construct($form_element_factory);
+        $this->workflow_update_checker = $workflow_update_checker;
+    }
 
     protected function canValidateField(
         Tracker_Artifact $artifact,
@@ -41,7 +53,20 @@ class Tracker_Artifact_Changeset_NewChangesetFieldsValidator extends Tracker_Art
         $is_submission        = false;
         $last_changeset_value = $this->getLastChangesetValue($artifact, $field);
 
-        return $field->validateFieldWithPermissionsAndRequiredStatus($artifact, $submitted_value, $last_changeset_value, $is_submission);
+        return
+            $this->workflow_update_checker->canFieldBeUpdated(
+                $artifact,
+                $field,
+                $last_changeset_value,
+                $submitted_value,
+                $is_submission
+            )
+            && $field->validateFieldWithPermissionsAndRequiredStatus(
+                $artifact,
+                $submitted_value,
+                $last_changeset_value,
+                $is_submission
+            );
     }
 
     private function getLastChangesetValue(

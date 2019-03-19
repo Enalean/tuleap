@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2011 - 2018. All rights reserved.
+ * Copyright Enalean (c) 2011-Present. All rights reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
@@ -31,7 +31,6 @@ use Tuleap\Tracker\Admin\ArtifactsDeletion\UserDeletionRetriever;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalArtifactActionButtonsPresenterBuilder;
 use Tuleap\Tracker\Artifact\ActionButtons\ArtifactActionButtonPresenterBuilder;
 use Tuleap\Tracker\Artifact\ActionButtons\ArtifactCopyButtonPresenterBuilder;
-use Tuleap\Tracker\Artifact\ActionButtons\ArtifactGraphDependenciesButtonPresenterBuilder;
 use Tuleap\Tracker\Artifact\ActionButtons\ArtifactIncomingEmailButtonPresenterBuilder;
 use Tuleap\Tracker\Artifact\ActionButtons\ArtifactMoveButtonPresenterBuilder;
 use Tuleap\Tracker\Artifact\ActionButtons\ArtifactNotificationActionButtonPresenterBuilder;
@@ -55,8 +54,13 @@ use Tuleap\Tracker\FormElement\Field\Burndown\BurndownRemainingEffortAdderForRES
 use Tuleap\Tracker\Notifications\UnsubscribersNotificationDAO;
 use Tuleap\Tracker\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\RecentlyVisited\VisitRecorder;
+use Tuleap\Tracker\Workflow\PostAction\PostActionsRetriever;
+use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyDao;
+use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyFieldsFactory;
+use Tuleap\Tracker\Workflow\WorkflowUpdateChecker;
 
-class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interface {
+class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interface //phpcs:ignoreFile
+{
     const REST_ROUTE        = 'artifacts';
     const NO_PARENT         = -1;
     const PERMISSION_ACCESS = 'PLUGIN_TRACKER_ARTIFACT_ACCESS';
@@ -1037,9 +1041,10 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      * @throws Tracker_NoChangeException In the validation
      * @return Tracker_Artifact_Changeset|Boolean The new changeset if update is done without error, false otherwise
      */
-    public function createNewChangeset($fields_data, $comment, PFUser $submitter, $send_notification = true, $comment_format = Tracker_Artifact_Changeset_Comment::TEXT_COMMENT) {
+    public function createNewChangeset($fields_data, $comment, PFUser $submitter, $send_notification = true, $comment_format = Tracker_Artifact_Changeset_Comment::TEXT_COMMENT)
+    {
         $submitted_on = $_SERVER['REQUEST_TIME'];
-        $validator    = new Tracker_Artifact_Changeset_NewChangesetFieldsValidator($this->getFormElementFactory());
+        $validator    = new Tracker_Artifact_Changeset_NewChangesetFieldsValidator($this->getFormElementFactory(), $this->getWorkflowUpdateChecker());
         $creator      = $this->getNewChangesetCreator($validator);
 
         return $creator->create($this, $fields_data, $comment, $submitter, $submitted_on, $send_notification, $comment_format);
@@ -2017,5 +2022,26 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     private function getBurndownCacheGenerator()
     {
         return new BurndownCacheGenerator(SystemEventManager::instance());
+    }
+
+    /**
+     * @return WorkflowUpdateChecker
+     */
+    protected function getWorkflowUpdateChecker()
+    {
+        return new WorkflowUpdateChecker(
+            new PostActionsRetriever(
+                new Transition_PostAction_CIBuildFactory(
+                    new Transition_PostAction_CIBuildDao()
+                ),
+                new Transition_PostAction_FieldFactory(
+                    Tracker_FormElementFactory::instance(),
+                    new Transition_PostAction_Field_DateDao(),
+                    new Transition_PostAction_Field_IntDao(),
+                    new Transition_PostAction_Field_FloatDao()
+                ),
+                new ReadOnlyFieldsFactory(new ReadOnlyDao())
+            )
+        );
     }
 }

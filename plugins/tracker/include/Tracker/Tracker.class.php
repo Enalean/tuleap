@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -56,6 +56,10 @@ use Tuleap\Tracker\Webhook\WebhookDao;
 use Tuleap\Tracker\Webhook\WebhookFactory;
 use Tuleap\Tracker\Webhook\WebhookLogsRetriever;
 use Tuleap\Tracker\Webhook\WebhookXMLExporter;
+use Tuleap\Tracker\Workflow\PostAction\PostActionsRetriever;
+use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyDao;
+use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyFieldsFactory;
+use Tuleap\Tracker\Workflow\WorkflowUpdateChecker;
 use Tuleap\Tracker\XML\Updater\FieldChange\FieldChangeComputedXMLUpdater;
 
 require_once('common/date/DateHelper.class.php');
@@ -63,7 +67,7 @@ require_once('common/widget/Widget_Static.class.php');
 
 require_once('json.php');
 
-class Tracker implements Tracker_Dispatchable_Interface
+class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignoreFile
 {
     const PERMISSION_ADMIN               = 'PLUGIN_TRACKER_ADMIN';
     const PERMISSION_FULL                = 'PLUGIN_TRACKER_ACCESS_FULL';
@@ -3096,7 +3100,7 @@ EOS;
                 if ($is_new_artifact) {
                     $fields_validator = new Tracker_Artifact_Changeset_InitialChangesetFieldsValidator($this->getFormElementFactory());
                 } else {
-                    $fields_validator = new Tracker_Artifact_Changeset_NewChangesetFieldsValidator($this->getFormElementFactory());
+                    $fields_validator = $this->getNewChangesetFieldsValidator();
                 }
                 if (! $fields_validator->validate($artifact, $data)) {
                      $has_error = true;
@@ -3762,5 +3766,27 @@ EOS;
         return new WebhookLogsRetriever(
             new WebhookDao()
         );
+    }
+
+    /**
+     * @return Tracker_Artifact_Changeset_NewChangesetFieldsValidator
+     */
+    private function getNewChangesetFieldsValidator()
+    {
+        $workflow_update_checker = new WorkflowUpdateChecker(
+            new PostActionsRetriever(
+                new Transition_PostAction_CIBuildFactory(
+                    new Transition_PostAction_CIBuildDao()
+                ),
+                new Transition_PostAction_FieldFactory(
+                    Tracker_FormElementFactory::instance(),
+                    new Transition_PostAction_Field_DateDao(),
+                    new Transition_PostAction_Field_IntDao(),
+                    new Transition_PostAction_Field_FloatDao()
+                ),
+                new ReadOnlyFieldsFactory(new ReadOnlyDao())
+            )
+        );
+        return new Tracker_Artifact_Changeset_NewChangesetFieldsValidator($this->getFormElementFactory(), $workflow_update_checker);
     }
 }
