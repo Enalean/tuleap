@@ -620,7 +620,7 @@ class cardwallPlugin extends Plugin
         $event_retriever->setAllowedTypes($allowed_types);
     }
 
-    public function collectRoutesEvent(\Tuleap\Request\CollectRoutesEvent $event)
+    public function collectRoutesEvent(\Tuleap\Request\CollectRoutesEvent $event) : void
     {
         $event->getRouteCollector()->addGroup('/plugins/cardwall', function(FastRoute\RouteCollector $r) {
             $r->addRoute(['GET', 'POST'], '[/[index.php]]', $this->getRouteHandler('routeLegacyController'));
@@ -629,6 +629,6 @@ class cardwallPlugin extends Plugin
 
     public function routeLegacyController() : \Tuleap\Cardwall\CardwallLegacyController
     {
-        return new \Tuleap\Cardwall\CardwallLegacyController($this->config_factory);
+        return new \Tuleap\Cardwall\CardwallLegacyController($this->getConfigFactory());
     }
 }
