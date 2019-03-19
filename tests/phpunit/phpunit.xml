@@ -43,6 +43,13 @@
                 <file>../../plugins/webdav/include/exception/WebDAVExceptionServerError.class.php</file>
                 <file>../../tests/lib/TuleapDbTestCase.class.php</file>
                 <file>../../src/tuleap-cfg/tuleap-cfg.php</file>
+                <file>../../src/core/contact.php</file>
+                <file>../../src/core/goto.php</file>
+                <file>../../src/core/info.php</file>
+                <file>../../src/core/make_links.php</file>
+                <file>../../src/core/robots.php</file>
+                <file>../../src/core/sparklines.php</file>
+                <file>../../src/core/toggler.php</file>
             </exclude>
         </whitelist>
     </filter>

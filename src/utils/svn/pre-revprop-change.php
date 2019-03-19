@@ -24,7 +24,6 @@
  */
 
 try {
-    require_once 'env.inc.php';
     require_once 'pre.php';
     require_once 'common/svn/hook/PreRevPropset.class.php';
 
@@ -43,5 +42,3 @@ try {
     fwrite(STDERR, $e->getMessage().PHP_EOL);
     exit(1);
 }
-
-?>

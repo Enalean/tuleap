@@ -80,7 +80,6 @@ SystemEventManager::fetchEvents() => not used
 *src/www/include/env.inc.php (vide)
 *src/www/include/plugins_utils.php
 */src/www/include/preplugins.php (vide)
-*/src/www/env.inc.php ($gfcommon)
 */FusionForge.php
 */cron_utils.php
 */externals.txt
