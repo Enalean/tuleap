@@ -26,7 +26,7 @@
         <div class="timetracking-writing-mode-actions">
             <button class="tlp-button-primary tlp-button-outline timetracking-overview-writing-mode-actions-cancel"
                     type="button"
-                    v-on:click="toggleReadingMode()"
+                    v-on:click="switchToReadingMode()"
                     v-translate
             >
                 Cancel
@@ -59,6 +59,10 @@ export default {
         ...mapMutations(["toggleReadingMode"]),
         loadTimes() {
             this.$store.dispatch("loadTimesWithNewParameters");
+        },
+        async switchToReadingMode() {
+            await this.$store.dispatch("initWidgetWithReport");
+            this.toggleReadingMode();
         }
     }
 };

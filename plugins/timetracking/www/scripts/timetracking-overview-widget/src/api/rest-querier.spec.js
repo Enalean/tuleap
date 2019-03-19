@@ -26,7 +26,8 @@ import { mockFetchSuccess, tlp } from "tlp-mocks";
 import {
     getProjectsWithTimetracking,
     getTrackersFromReport,
-    getTrackersWithTimetracking
+    getTrackersWithTimetracking,
+    saveNewReport
 } from "./rest-querier.js";
 
 describe("Get Report() -", () => {
@@ -136,5 +137,47 @@ describe("getTrackers() -", () => {
             }
         });
         expect(result).toEqual([{ id: 16, label: "tracker_1" }, { id: 18, label: "tracker_2" }]);
+    });
+});
+
+describe("Save new Report() -", () => {
+    it("the REST API will be queried : report with its new trackers is returned", async () => {
+        const report = [
+            {
+                id: 1,
+                uri: "timetracking_reports/1",
+                trackers: [
+                    { id: 1, label: "timetracking_tracker" },
+                    { id: 2, label: "timetracking_tracker_2" }
+                ]
+            }
+        ];
+
+        mockFetchSuccess(tlp.put, {
+            return_json: report
+        });
+        const headers = {
+            "content-type": "application/json"
+        };
+        const body = JSON.stringify({
+            trackers_id: [1, 2]
+        });
+
+        const result = await saveNewReport(1, [1, 2]);
+
+        expect(tlp.put).toHaveBeenCalledWith("/api/v1/timetracking_reports/1", {
+            headers,
+            body
+        });
+        expect(result).toEqual([
+            {
+                id: 1,
+                uri: "timetracking_reports/1",
+                trackers: [
+                    { id: 1, label: "timetracking_tracker" },
+                    { id: 2, label: "timetracking_tracker_2" }
+                ]
+            }
+        ]);
     });
 });

@@ -30,12 +30,17 @@ export default {
         state.is_loading = is_loading;
     },
 
-    resetErrorMessage(state) {
+    resetMessages(state) {
         state.error_message = null;
+        state.success_message = null;
     },
 
     setErrorMessage(state, error_message) {
         state.error_message = error_message;
+    },
+
+    setSuccessMessage(state, success_message) {
+        state.success_message = success_message;
     },
 
     toggleReadingMode(state) {
@@ -82,6 +87,10 @@ export default {
                 tracker.disabled = true;
             }
         });
+    },
+
+    setIsReportSave(state, is_report_saved) {
+        state.is_report_saved = is_report_saved;
     },
 
     removeSelectedTracker(state, tracker) {
