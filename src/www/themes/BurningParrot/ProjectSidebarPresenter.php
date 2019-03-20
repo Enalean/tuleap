@@ -23,6 +23,7 @@ namespace Tuleap\Theme\BurningParrot;
 use PFUser;
 use Project;
 use Codendi_HTMLPurifier;
+use Tuleap\Project\Admin\ProjectWithoutRestrictedFeatureFlag;
 
 class ProjectSidebarPresenter
 {
@@ -35,6 +36,22 @@ class ProjectSidebarPresenter
     public $project_id;
     public $powered_by;
     public $copyright;
+    /**
+     * @var bool
+     */
+    public $are_restricted_users_allowed;
+    /**
+     * @var bool
+     */
+    public $project_is_public_incl_restricted;
+    /**
+     * @var bool
+     */
+    public $project_is_private;
+    /**
+     * @var bool
+     */
+    public $project_is_private_incl_restricted;
 
     public function __construct(PFUser $current_user, Project $project, array $sidebar, $project_privacy)
     {
@@ -50,6 +67,15 @@ class ProjectSidebarPresenter
 
         $this->powered_by = $GLOBALS['Language']->getText('global', 'powered_by') . ' ' . $this->getVersion();
         $this->copyright  = $GLOBALS['Language']->getText('global', 'copyright');
+
+        $this->are_restricted_users_allowed = \ForgeConfig::areRestrictedUsersAllowed()
+            && ProjectWithoutRestrictedFeatureFlag::isEnabled();
+        if ($this->are_restricted_users_allowed) {
+            $this->project_is_public                  = $project->getAccess() === Project::ACCESS_PUBLIC;
+            $this->project_is_public_incl_restricted  = $project->getAccess() === Project::ACCESS_PUBLIC_UNRESTRICTED;
+            $this->project_is_private                 = $project->getAccess() === Project::ACCESS_PRIVATE_WO_RESTRICTED;
+            $this->project_is_private_incl_restricted = $project->getAccess() === Project::ACCESS_PRIVATE;
+        }
     }
 
     private function getVersion()

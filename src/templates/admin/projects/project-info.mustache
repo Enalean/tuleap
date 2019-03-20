@@ -161,9 +161,10 @@
                             <p id="siteadmin-project-information-additional-info-access-level">
                                 <i id="siteadmin-project-information-additional-info-access-level-icon"
                                    class="fa
-                                    {{# is_wide_open }}fa-unlock{{/ is_wide_open }}
-                                    {{# is_open }}fa-unlock-alt{{/ is_open }}
-                                    {{# is_closed }}fa-lock{{/ is_closed }}
+                                       {{# is_wide_open }}fa-tlp-unlock-plus-r{{/ is_wide_open }}
+                                       {{# is_open }}fa-unlock{{/ is_open }}
+                                       {{# is_closed }}fa-lock{{/ is_closed }}
+                                       {{# is_closed_incl_restricted }}fa-tlp-lock-plus-r{{/ is_closed_incl_restricted }}
                                 "></i> {{ access }}
                             </p>
                             {{# is_incl_restricted }}

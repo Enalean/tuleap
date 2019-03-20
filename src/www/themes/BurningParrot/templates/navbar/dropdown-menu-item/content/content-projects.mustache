@@ -20,8 +20,16 @@
             <div class="nav-dropdown-content-projects-list-project">
                 <a href="{{ project_uri }}" class="nav-dropdown-content-projects-list-project-name">
                     <i class="fa fa-fw
+                    {{# are_restricted_users_allowed }}
+                        {{# is_public }}fa-unlock{{/ is_public }}
+                        {{# is_public_incl_restricted }}fa-tlp-unlock-plus-r{{/ is_public_incl_restricted }}
+                        {{# is_private }}fa-lock{{/ is_private }}
+                        {{# is_private_incl_restricted }}fa-tlp-lock-plus-r{{/ is_private_incl_restricted }}
+                    {{/ are_restricted_users_allowed }}
+                    {{^ are_restricted_users_allowed }}
                         {{# is_private }}fa-lock{{/ is_private }}
                         {{^ is_private }}fa-unlock{{/ is_private }}
+                    {{/ are_restricted_users_allowed }}
                         nav-dropdown-content-projects-list-project-name-access"
                      ></i>{{ project_name }}
                 </a>

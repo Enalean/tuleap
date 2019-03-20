@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -62,7 +62,6 @@ class ProjectPresentersBuilder
         $project_id         = $project->getID();
         $project_name       = util_unconvert_htmlspecialchars($project->getPublicName());
         $project_config_uri = '/project/admin/?group_id=' . $project_id;
-        $is_private         = $this->getProjectIsPrivate($project);
         $user_administers   = $this->current_user->isAdmin($project_id);
         $user_belongs       = true;
 
@@ -70,14 +69,9 @@ class ProjectPresentersBuilder
             $project_name,
             $project->getUrl(),
             $project_config_uri,
-            $is_private,
             $user_administers,
-            $user_belongs
+            $user_belongs,
+            $project
         );
-    }
-
-    private function getProjectIsPrivate(Project $project)
-    {
-        return in_array($project->getAccess(), [Project::ACCESS_PRIVATE, Project::ACCESS_PRIVATE_WO_RESTRICTED], true);
     }
 }

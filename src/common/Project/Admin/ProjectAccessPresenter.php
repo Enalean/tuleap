@@ -32,6 +32,7 @@ class ProjectAccessPresenter
     public $is_wide_open;
     public $is_open;
     public $is_closed;
+    public $is_closed_incl_restricted;
     public $access;
 
     public function __construct($project_access)
@@ -39,14 +40,20 @@ class ProjectAccessPresenter
         if (ForgeConfig::areRestrictedUsersAllowed()) {
             $this->is_incl_restricted = $project_access === Project::ACCESS_PUBLIC_UNRESTRICTED ||
                 (ProjectWithoutRestrictedFeatureFlag::isEnabled() && $project_access === Project::ACCESS_PRIVATE);
-            $this->is_wide_open               = $project_access === Project::ACCESS_PUBLIC_UNRESTRICTED;
-            $this->is_open                    = $project_access === Project::ACCESS_PUBLIC;
-            $this->is_closed                  = $project_access === Project::ACCESS_PRIVATE || $project_access === Project::ACCESS_PRIVATE_WO_RESTRICTED;
+            $this->is_wide_open              = $project_access === Project::ACCESS_PUBLIC_UNRESTRICTED;
+            $this->is_open                   = $project_access === Project::ACCESS_PUBLIC;
+            $this->is_closed                 = $project_access === Project::ACCESS_PRIVATE || $project_access === Project::ACCESS_PRIVATE_WO_RESTRICTED;
+            $this->is_closed_incl_restricted = false;
+            if (ProjectWithoutRestrictedFeatureFlag::isEnabled()) {
+                $this->is_closed                 = $project_access === Project::ACCESS_PRIVATE_WO_RESTRICTED;
+                $this->is_closed_incl_restricted = $project_access === Project::ACCESS_PRIVATE;
+            }
         } else {
-            $this->is_incl_restricted  = false;
-            $this->is_wide_open               = $project_access === Project::ACCESS_PUBLIC;
-            $this->is_open                    = false;
-            $this->is_closed                  = $project_access === Project::ACCESS_PRIVATE;
+            $this->is_incl_restricted        = false;
+            $this->is_wide_open              = $project_access === Project::ACCESS_PUBLIC;
+            $this->is_open                   = false;
+            $this->is_closed                 = $project_access === Project::ACCESS_PRIVATE;
+            $this->is_closed_incl_restricted = false;
         }
 
         if ($project_access === Project::ACCESS_PRIVATE || $project_access === Project::ACCESS_PRIVATE_WO_RESTRICTED) {

@@ -24,6 +24,9 @@
 $fa-font-path: '../../common/tlp/dist/fonts/font-awesome-4.7.0/fonts';
 @import '../../../common/tlp/src/fonts/font-awesome-4.7.0/scss/font-awesome';
 
+$tlp-font-basepath: '../../common/tlp/dist';
+@import '../../../common/tlp/src/fonts/tlp-font/tlp-font';
+
 html, body {
     height: 100%;
 }

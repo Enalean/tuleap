@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Project\Admin\ProjectWithoutRestrictedFeatureFlag;
+
 class FlamingParrot_ContainerPresenter
 {
     /** @var array */
@@ -33,7 +35,7 @@ class FlamingParrot_ContainerPresenter
     private $project_link;
 
     /** @var boolean */
-    private $project_is_public;
+    public $project_is_public;
 
     /** @var string */
     private $project_privacy;
@@ -51,31 +53,56 @@ class FlamingParrot_ContainerPresenter
 
     /** @var boolean */
     private $sidebar_collapsable;
+    /**
+     * @var bool
+     */
+    public $are_restricted_users_allowed;
+    /**
+     * @var bool
+     */
+    public $project_is_public_incl_restricted;
+    /**
+     * @var bool
+     */
+    public $project_is_private;
+    /**
+     * @var bool
+     */
+    public $project_is_private_incl_restricted;
 
     public function __construct(
         array $breadcrumbs,
         $toolbar,
         $project_name,
         $project_link,
-        $project_is_public,
         $project_privacy,
         $project_tabs,
         $feedback,
         $feedback_content,
         $forge_version,
-        $sidebar_collapsable
+        $sidebar_collapsable,
+        Project $project = null
     ) {
         $this->breadcrumbs         = $breadcrumbs;
         $this->toolbar             = $toolbar;
         $this->project_name        = $project_name;
         $this->project_link        = $project_link;
-        $this->project_is_public   = $project_is_public;
+        $this->project_is_public   = $project !== null && $project->isPublic();
         $this->project_privacy     = $project_privacy;
         $this->project_tabs        = $project_tabs;
         $this->feedback            = $feedback;
         $this->feedback_content    = $feedback_content;
         $this->forge_version       = $forge_version;
         $this->sidebar_collapsable = $sidebar_collapsable;
+
+        $this->are_restricted_users_allowed = \ForgeConfig::areRestrictedUsersAllowed()
+            && ProjectWithoutRestrictedFeatureFlag::isEnabled();
+        if ($this->are_restricted_users_allowed && $project !== null) {
+            $this->project_is_public                  = $project->getAccess() === Project::ACCESS_PUBLIC;
+            $this->project_is_public_incl_restricted  = $project->getAccess() === Project::ACCESS_PUBLIC_UNRESTRICTED;
+            $this->project_is_private                 = $project->getAccess() === Project::ACCESS_PRIVATE_WO_RESTRICTED;
+            $this->project_is_private_incl_restricted = $project->getAccess() === Project::ACCESS_PRIVATE;
+        }
     }
 
     public function hasBreadcrumbs() {
@@ -120,10 +147,6 @@ class FlamingParrot_ContainerPresenter
 
     public function projectLink() {
         return $this->project_link;
-    }
-
-    public function projectIsPublic() {
-        return $this->project_is_public;
     }
 
     public function project_privacy() {
