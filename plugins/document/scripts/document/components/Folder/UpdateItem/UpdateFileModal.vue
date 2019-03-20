@@ -56,8 +56,7 @@ export default {
             version: {},
             is_loading: false,
             is_displayed: false,
-            modal: null,
-            approval_table_action: ""
+            modal: null
         };
     },
     computed: {
