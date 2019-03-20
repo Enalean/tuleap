@@ -15,37 +15,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
-
-.new-baseline-modal {
-    width: 27rem;
-}
-
-.baselines-title {
-    text-transform: uppercase;
-}
-
-.baselines-table-column-actions {
-    text-align: left;
-    vertical-align: middle;
-}
-
-.baselines-table-column-name {
-    width: 35%;
-}
-
-.new-baseline-modal-milestone-list {
-    margin-left: $tlp-spacing;
-}
-
-.new-baseline-modal-milestone-list-scrollbar {
-    max-height: 43vh;
-    overflow-y: auto;
-}
-
-.baseline-tooltip-icon {
-    margin-left: $tlp-spacing;
-}
 
 .baseline-breadcrumb-link {
     cursor: pointer;

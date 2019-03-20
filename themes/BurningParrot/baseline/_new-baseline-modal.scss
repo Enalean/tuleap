@@ -1,5 +1,5 @@
 /*!
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,6 +15,22 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
-@import 'variables/variables-orange-condensed';
-@import 'baseline';
+
+.new-baseline-modal {
+    width: 27rem;
+}
+
+.new-baseline-modal-milestone-list {
+    margin-left: $tlp-spacing;
+}
+
+.new-baseline-modal-milestone-list-scrollbar {
+    max-height: 43vh;
+    overflow-y: auto;
+}
+
+.new-baseline-modal-fa-question-circle {
+    margin-left: $tlp-spacing;
+}
