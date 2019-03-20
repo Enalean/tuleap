@@ -1,7 +1,7 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2015-Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,7 +18,11 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\Tracker\Workflow\PostAction\PostActionsRetriever;
 use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyDao;
+use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyFieldDetector;
+use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyFieldsFactory;
 
 /**
  * The base class for fields in trackers. From int and string to selectboxes.
@@ -392,19 +396,22 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      *
      * @return string html
      */
-    private function fetchArtifactField(Tracker_Artifact $artifact, $html_value, array $additional_classes) {
+    private function fetchArtifactField(Tracker_Artifact $artifact, $html_value, array $additional_classes)
+    {
+        $is_field_read_only = $this->getReadOnlyFieldDetector()->isFieldReadOnly($artifact, $this);
         $purifier = Codendi_HTMLPurifier::instance();
         $html = '';
         if ($this->userCanRead()) {
             $required = $this->required ? ' <span class="highlight">*</span>' : '';
-            $html .= '<div class="'. $this->getClassNames($additional_classes) .'"
+            $html .= '<div class="'. $this->getClassNames($additional_classes, $is_field_read_only) .'"
                 data-field-id="'. $this->id .'"
                 data-is-required="'. ($this->required ? 'true' : 'false') .'">';
 
-            if ($this->userCanUpdate()) {
+            if ($this->userCanUpdate() && ! $is_field_read_only) {
                 $title = $purifier->purify($GLOBALS['Language']->getText('plugin_tracker_artifact', 'edit_field', array($this->getLabel())));
                 $html .= '<button type="button" title="' . $title . '" class="tracker_formelement_edit">' . $purifier->purify($this->getLabel())  . $required . '</button>';
             }
+
             $html .= '<label id="tracker_artifact_'. $this->id .'" for="tracker_artifact_'. $this->id .'" title="'. $purifier->purify($this->description) .'" class="tracker_formelement_label">'.  $purifier->purify($this->getLabel())  . $required .'</label>';
 
             $html .= $html_value;
@@ -485,7 +492,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         $html = '';
         if ($this->userCanUpdate()) {
             $required = $this->required ? ' <span class="highlight">*</span>' : '';
-            $html .= '<div class="field-masschange '. $this->getClassNames(array()) .'">';
+            $html .= '<div class="field-masschange '. $this->getClassNames(array(), false) .'">';
             $html .= '<label for="tracker_artifact_'. $this->id .'" title="'. $hp->purify($this->description, CODENDI_PURIFIER_CONVERT_HTML) .'"  class="tracker_formelement_label">'.  $hp->purify($this->getLabel(), CODENDI_PURIFIER_CONVERT_HTML)  . $required .'</label>';
 
             $html .= $this->fetchSubmitValueMasschange();
@@ -495,13 +502,14 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         return $html;
     }
 
-    private function getClassNames(array $additional_classes) {
+    private function getClassNames(array $additional_classes, bool $is_field_read_only)
+    {
         $classnames = 'tracker_artifact_field';
         $classnames .= ' tracker_artifact_field-'. $this->getFormElementFactory()->getType($this);
         if ($this->has_errors) {
             $classnames .= ' has_errors';
         }
-        if ($this->userCanUpdate()) {
+        if ($this->userCanUpdate() && ! $is_field_read_only) {
             $classnames .= ' editable';
         }
 
@@ -1433,5 +1441,26 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     public function formatAggregateResult($function, $result)
     {
         return '';
+    }
+
+    /**
+     * @return ReadOnlyFieldDetector
+     */
+    private function getReadOnlyFieldDetector()
+    {
+        return new ReadOnlyFieldDetector(
+            new PostActionsRetriever(
+                new Transition_PostAction_CIBuildFactory(
+                    new Transition_PostAction_CIBuildDao()
+                ),
+                new Transition_PostAction_FieldFactory(
+                    Tracker_FormElementFactory::instance(),
+                    new Transition_PostAction_Field_DateDao(),
+                    new Transition_PostAction_Field_IntDao(),
+                    new Transition_PostAction_Field_FloatDao()
+                ),
+                new ReadOnlyFieldsFactory(new ReadOnlyDao())
+            )
+        );
     }
 }

@@ -27,10 +27,7 @@ require_once __DIR__ . '/../../bootstrap.php';
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Tuleap\Tracker\Workflow\PostAction\PostActionsRetriever;
-use Tuleap\Tracker\Workflow\PostAction\ReadOnly\NoReadOnlyFieldsPostActionException;
-use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyFields;
-use Tuleap\Tracker\Workflow\Transition\NoTransitionForStateException;
+use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyFieldDetector;
 
 final class WorkflowUpdateCheckerTest extends TestCase
 {
@@ -39,12 +36,12 @@ final class WorkflowUpdateCheckerTest extends TestCase
     /** @var WorkflowUpdateChecker */
     private $workflow_update_checker;
     /** @var Mockery\MockInterface */
-    private $post_actions_retriever;
+    private $read_only_field_detector;
 
     protected function setUp(): void
     {
-        $this->post_actions_retriever  = Mockery::mock(PostActionsRetriever::class);
-        $this->workflow_update_checker = new WorkflowUpdateChecker($this->post_actions_retriever);
+        $this->read_only_field_detector = Mockery::mock(ReadOnlyFieldDetector::class);
+        $this->workflow_update_checker  = new WorkflowUpdateChecker($this->read_only_field_detector);
     }
 
     public function testCanFieldBeUpdatedReturnsTrueWhenInitialSubmission()
@@ -109,162 +106,45 @@ final class WorkflowUpdateCheckerTest extends TestCase
         );
     }
 
-    public function testCanFieldBeUpdatedReturnsTrueWhenNoWorkflow()
+    public function testCanFieldBeUpdatedReturnsTrueWhenGivenFieldIsReadOnly()
     {
         $artifact             = Mockery::mock(\Tracker_Artifact::class);
-        $field                = $this->mockFieldWithChanges();
+        $field                = Mockery::mock(\Tracker_FormElement_Field::class);
         $last_changeset_value = Mockery::mock(\Tracker_Artifact_ChangesetValue::class);
         $submitted_value      = 'Arguslike';
         $is_submission        = false;
 
-        $artifact->shouldReceive('getWorkflow')->andReturnNull();
-
-        $this->assertTrue(
-            $this->workflow_update_checker->canFieldBeUpdated(
-                $artifact,
-                $field,
-                $last_changeset_value,
-                $submitted_value,
-                $is_submission
-            )
-        );
-    }
-
-    public function testCanFieldBeUpdatedReturnsTrueWhenWorkflowIsNotUsed()
-    {
-        $artifact             = Mockery::mock(\Tracker_Artifact::class);
-        $field                = $this->mockFieldWithChanges();
-        $last_changeset_value = Mockery::mock(\Tracker_Artifact_ChangesetValue::class);
-        $submitted_value      = 'Arguslike';
-        $is_submission        = false;
-
-        $workflow = Mockery::mock(\Workflow::class);
-        $workflow->shouldReceive('isUsed')->andReturnFalse();
-        $artifact->shouldReceive('getWorkflow')->andReturns($workflow);
-
-        $this->assertTrue(
-            $this->workflow_update_checker->canFieldBeUpdated(
-                $artifact,
-                $field,
-                $last_changeset_value,
-                $submitted_value,
-                $is_submission
-            )
-        );
-    }
-
-    public function testCanFieldBeUpdatedReturnsTrueWhenWorkflowIsAdvanced()
-    {
-        $artifact             = Mockery::mock(\Tracker_Artifact::class);
-        $field                = $this->mockFieldWithChanges();
-        $last_changeset_value = Mockery::mock(\Tracker_Artifact_ChangesetValue::class);
-        $submitted_value      = 'Arguslike';
-        $is_submission        = false;
-
-        $workflow = Mockery::mock(\Workflow::class);
-        $workflow->shouldReceive('isUsed')->andReturnTrue();
-        $workflow->shouldReceive('isAdvanced')->andReturnTrue();
-        $artifact->shouldReceive('getWorkflow')->andReturns($workflow);
-
-        $this->assertTrue(
-            $this->workflow_update_checker->canFieldBeUpdated(
-                $artifact,
-                $field,
-                $last_changeset_value,
-                $submitted_value,
-                $is_submission
-            )
-        );
-    }
-
-    public function testCanFieldBeUpdatedReturnsTrueWhenNoTransitionIsDefinedForCurrentState()
-    {
-        $field                = $this->mockFieldWithChanges();
-        $last_changeset_value = Mockery::mock(\Tracker_Artifact_ChangesetValue::class);
-        $submitted_value      = 'Arguslike';
-        $is_submission        = false;
-
-        $artifact = Mockery::mock(\Tracker_Artifact::class);
-        $workflow = $this->mockSimpleModeWorkflow();
-        $workflow->shouldReceive('getFirstTransitionForCurrentState')
-            ->with($artifact)
-            ->andThrows(new NoTransitionForStateException());
-        $artifact->shouldReceive('getWorkflow')->andReturns($workflow);
-
-        $this->assertTrue(
-            $this->workflow_update_checker->canFieldBeUpdated(
-                $artifact,
-                $field,
-                $last_changeset_value,
-                $submitted_value,
-                $is_submission
-            )
-        );
-    }
-
-    public function testCanFieldBeUpdatedReturnsTrueWhenNoReadOnlyFieldsPostAction()
-    {
-        $field                = $this->mockFieldWithChanges();
-        $last_changeset_value = Mockery::mock(\Tracker_Artifact_ChangesetValue::class);
-        $submitted_value      = 'Arguslike';
-        $is_submission        = false;
-
-        $transition = Mockery::mock(\Transition::class);
-        $artifact   = Mockery::mock(\Tracker_Artifact::class);
-        $workflow   = $this->mockSimpleModeWorkflow();
-        $workflow->shouldReceive('getFirstTransitionForCurrentState')
-            ->andReturns($transition);
-        $artifact->shouldReceive('getWorkflow')->andReturns($workflow);
-        $this->post_actions_retriever
-            ->shouldReceive('getReadOnlyFields')
-            ->with($transition)
-            ->andThrows(new NoReadOnlyFieldsPostActionException());
-
-        $this->assertTrue(
-            $this->workflow_update_checker->canFieldBeUpdated(
-                $artifact,
-                $field,
-                $last_changeset_value,
-                $submitted_value,
-                $is_submission
-            )
-        );
-    }
-
-    public function testCanFieldBeUpdatedReturnsTrueWhenGivenFieldIsNotAmongReadOnlyFields()
-    {
-        $field                = $this->mockFieldWithChanges();
-        $last_changeset_value = Mockery::mock(\Tracker_Artifact_ChangesetValue::class);
-        $submitted_value      = 'Arguslike';
-        $is_submission        = false;
-        $artifact             = $this->mockArtifactWithWorkflow();
-
-        $this->mockReadOnlyFields(242, 566);
-        $field->shouldReceive('getId')->andReturns('312');
-
-        $this->assertTrue(
-            $this->workflow_update_checker->canFieldBeUpdated(
-                $artifact,
-                $field,
-                $last_changeset_value,
-                $submitted_value,
-                $is_submission
-            )
-        );
-    }
-
-    public function testCanFieldBeUpdatedReturnsFalseWhenGivenFieldIsReadOnly()
-    {
-        $field                = $this->mockFieldWithChanges();
-        $last_changeset_value = Mockery::mock(\Tracker_Artifact_ChangesetValue::class);
-        $submitted_value      = 'Arguslike';
-        $is_submission        = false;
-        $artifact             = $this->mockArtifactWithWorkflow();
-
-        $this->mockReadOnlyFields(242, 312, 566);
-        $field->shouldReceive('getId')->andReturns('312');
+        $field->shouldReceive('hasChanges')->andReturnTrue();
+        $this->read_only_field_detector
+            ->shouldReceive('isFieldReadOnly')
+            ->with($artifact, $field)
+            ->andReturnTrue();
 
         $this->assertFalse(
+            $this->workflow_update_checker->canFieldBeUpdated(
+                $artifact,
+                $field,
+                $last_changeset_value,
+                $submitted_value,
+                $is_submission
+            )
+        );
+    }
+
+    public function testCanFieldBeUpdatedReturnsFalseWhenFieldIsNotReadOnly()
+    {
+        $artifact             = Mockery::mock(\Tracker_Artifact::class);
+        $field                = Mockery::mock(\Tracker_FormElement_Field::class);
+        $last_changeset_value = Mockery::mock(\Tracker_Artifact_ChangesetValue::class);
+        $submitted_value      = 'Arguslike';
+        $is_submission        = false;
+
+        $field->shouldReceive('hasChanges')->andReturnTrue();
+        $this->read_only_field_detector
+            ->shouldReceive('isFieldReadOnly')
+            ->andReturnFalse();
+
+        $this->assertTrue(
             $this->workflow_update_checker->canFieldBeUpdated(
                 $artifact,
                 $field,
@@ -282,7 +162,10 @@ final class WorkflowUpdateCheckerTest extends TestCase
         $last_changeset_value = null;
         $submitted_value      = 'Arguslike';
         $is_submission        = false;
-        $artifact->shouldReceive('getWorkflow')->andReturnNull();
+
+        $this->read_only_field_detector
+            ->shouldReceive('isFieldReadOnly')
+            ->andReturnFalse();
 
         $this->assertTrue(
             $this->workflow_update_checker->canFieldBeUpdated(
@@ -302,7 +185,10 @@ final class WorkflowUpdateCheckerTest extends TestCase
         $last_changeset_value = Mockery::mock(\Tracker_Artifact_ChangesetValue::class);
         $submitted_value      = null;
         $is_submission        = false;
-        $artifact->shouldReceive('getWorkflow')->andReturnNull();
+
+        $this->read_only_field_detector
+            ->shouldReceive('isFieldReadOnly')
+            ->andReturnFalse();
 
         $this->assertTrue(
             $this->workflow_update_checker->canFieldBeUpdated(
@@ -313,45 +199,5 @@ final class WorkflowUpdateCheckerTest extends TestCase
                 $is_submission
             )
         );
-    }
-
-    private function mockFieldWithChanges(): Mockery\MockInterface
-    {
-        return Mockery::mock(\Tracker_FormElement_Field::class)
-            ->shouldReceive('hasChanges')
-            ->andReturnTrue()
-            ->getMock();
-    }
-
-    private function mockSimpleModeWorkflow(): Mockery\MockInterface
-    {
-        $workflow = Mockery::mock(\Workflow::class);
-        $workflow->shouldReceive('isUsed')->andReturnTrue();
-        $workflow->shouldReceive('isAdvanced')->andReturnFalse();
-
-        return $workflow;
-    }
-
-    private function mockArtifactWithWorkflow(): Mockery\MockInterface
-    {
-        $transition = Mockery::mock(\Transition::class);
-        $artifact   = Mockery::mock(\Tracker_Artifact::class);
-        $workflow   = $this->mockSimpleModeWorkflow();
-        $workflow->shouldReceive('getFirstTransitionForCurrentState')
-            ->andReturns($transition);
-        $artifact->shouldReceive('getWorkflow')->andReturns($workflow);
-
-        return $artifact;
-    }
-
-    private function mockReadOnlyFields(int ...$field_ids): void
-    {
-        $read_only_fields_post_action = Mockery::mock(ReadOnlyFields::class);
-        $this->post_actions_retriever
-            ->shouldReceive('getReadOnlyFields')
-            ->andReturns($read_only_fields_post_action);
-        $read_only_fields_post_action
-            ->shouldReceive('getFieldIds')
-            ->andReturns($field_ids);
     }
 }

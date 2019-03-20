@@ -58,6 +58,7 @@ use Tuleap\Tracker\Webhook\WebhookLogsRetriever;
 use Tuleap\Tracker\Webhook\WebhookXMLExporter;
 use Tuleap\Tracker\Workflow\PostAction\PostActionsRetriever;
 use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyDao;
+use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyFieldDetector;
 use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyFieldsFactory;
 use Tuleap\Tracker\Workflow\WorkflowUpdateChecker;
 use Tuleap\Tracker\XML\Updater\FieldChange\FieldChangeComputedXMLUpdater;
@@ -324,7 +325,7 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignoreFile
     }
 
     /**
-     * @return array of formElements used by this tracker
+     * @return Tracker_FormElement[] array of formElements used by this tracker
      */
     public function getFormElements() {
         return Tracker_FormElementFactory::instance()->getUsedFormElementForTracker($this);
@@ -3773,7 +3774,7 @@ EOS;
      */
     private function getNewChangesetFieldsValidator()
     {
-        $workflow_update_checker = new WorkflowUpdateChecker(
+        $read_only_detector = new ReadOnlyFieldDetector(
             new PostActionsRetriever(
                 new Transition_PostAction_CIBuildFactory(
                     new Transition_PostAction_CIBuildDao()
@@ -3787,6 +3788,10 @@ EOS;
                 new ReadOnlyFieldsFactory(new ReadOnlyDao())
             )
         );
-        return new Tracker_Artifact_Changeset_NewChangesetFieldsValidator($this->getFormElementFactory(), $workflow_update_checker);
+        $workflow_update_checker = new WorkflowUpdateChecker($read_only_detector);
+        return new Tracker_Artifact_Changeset_NewChangesetFieldsValidator(
+            $this->getFormElementFactory(),
+            $workflow_update_checker
+        );
     }
 }
