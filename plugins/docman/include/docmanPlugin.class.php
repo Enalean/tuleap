@@ -32,9 +32,9 @@ use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\ApprovalTable\ApprovalTableStateMapper;
 use Tuleap\Docman\ApprovalTable\ApprovalTableUpdateActionChecker;
 use Tuleap\Docman\ApprovalTable\ApprovalTableUpdater;
-use Tuleap\Docman\DocmanSettingsSiteAdmin\DocmanSettingsAdminController;
-use Tuleap\Docman\DocmanSettingsSiteAdmin\DocmanSettingsAdminSaveController;
-use Tuleap\Docman\DocmanSettingsSiteAdmin\DocumentSettingsSaver;
+use Tuleap\Docman\DocmanSettingsSiteAdmin\FilesUploadLimits\DocmanFilesUploadLimitsAdminController;
+use Tuleap\Docman\DocmanSettingsSiteAdmin\FilesUploadLimits\DocmanFilesUploadLimitsAdminSaveController;
+use Tuleap\Docman\DocmanSettingsSiteAdmin\FilesUploadLimits\DocumentFilesUploadLimitsSaver;
 use Tuleap\Docman\ExternalLinks\DocmanHTTPControllerProxy;
 use Tuleap\Docman\ExternalLinks\ExternalLinkParametersExtractor;
 use Tuleap\Docman\Lock\LockUpdater;
@@ -81,6 +81,8 @@ class DocmanPlugin extends Plugin
     const TRUNCATED_SERVICE_NAME = 'Documents';
     const SYSTEM_NATURE_NAME     = 'document';
     const SERVICE_SHORTNAME      = 'docman';
+
+    const ADMIN_BASE_URL = '/admin/document';
 
     /**
      * Store docman root items indexed by groupId
@@ -1349,21 +1351,22 @@ class DocmanPlugin extends Plugin
     {
         $event->getRouteCollector()->addRoute(['OPTIONS', 'HEAD', 'PATCH', 'DELETE'], '/uploads/docman/file/{id:\d+}', $this->getRouteHandler('routeUploadsDocmanFile'));
         $event->getRouteCollector()->addRoute(['OPTIONS', 'HEAD', 'PATCH', 'DELETE'], '/uploads/docman/version/{id:\d+}', $this->getRouteHandler('routeUploadsVersionFile'));
-        $event->getRouteCollector()->addRoute(['GET'], '/admin/document-settings', $this->getRouteHandler('routeGetDocumentSettings'));
-        $event->getRouteCollector()->addRoute(['POST'], '/admin/document-settings', $this->getRouteHandler('routePostDocumentSettings'));
+
+        $event->getRouteCollector()->addRoute(['GET'], self::ADMIN_BASE_URL . "/files-upload-limits", $this->getRouteHandler('routeGetDocumentSettings'));
+        $event->getRouteCollector()->addRoute(['POST'], self::ADMIN_BASE_URL . "/files-upload-limits", $this->getRouteHandler('routePostDocumentSettings'));
     }
 
-    public function routeGetDocumentSettings(): DocmanSettingsAdminController
+    public function routeGetDocumentSettings(): DocmanFilesUploadLimitsAdminController
     {
-        return new DocmanSettingsAdminController(
+        return new DocmanFilesUploadLimitsAdminController(
             new AdminPageRenderer()
         );
     }
 
-    public function routePostDocumentSettings(): DocmanSettingsAdminSaveController
+    public function routePostDocumentSettings(): DocmanFilesUploadLimitsAdminSaveController
     {
-        return new DocmanSettingsAdminSaveController(
-            new DocumentSettingsSaver(
+        return new DocmanFilesUploadLimitsAdminSaveController(
+            new DocumentFilesUploadLimitsSaver(
                 new ConfigDao()
             )
         );
@@ -1389,7 +1392,7 @@ class DocmanPlugin extends Plugin
     {
         $params['plugins'][] = [
             'label' => dgettext('tuleap-docman', 'Document'),
-            'href'  => '/admin/document-settings'
+            'href'  => self::ADMIN_BASE_URL . '/files-upload-limits'
         ];
     }
 

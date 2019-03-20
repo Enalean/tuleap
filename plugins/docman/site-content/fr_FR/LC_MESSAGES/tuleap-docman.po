@@ -16,7 +16,8 @@ msgstr ""
 msgid ""
 "%s has an approval table, you must provide an option to have approval table "
 "on new version creation."
-msgstr "%s a une table d'approbation, vous devez renseigner une option pour avoir "
+msgstr ""
+"%s a une table d'approbation, vous devez renseigner une option pour avoir "
 "une table d'approbation lors de la création de la  nouvelle version"
 
 msgid "An error occurred during the update of the max file size"
@@ -57,9 +58,6 @@ msgstr "Paramètres de documents"
 
 msgid "File upload limits"
 msgstr "Limites de téléversement"
-
-msgid "File upload settings"
-msgstr "Paramètres de téléversement"
 
 msgid "Global permissions"
 msgstr "Permissions globales"

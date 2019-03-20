@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,9 +20,9 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Docman\DocmanSettingsSiteAdmin;
+namespace Tuleap\Docman\DocmanSettingsSiteAdmin\FilesUploadLimits;
 
-class DocmanSettingsAdminPresenter
+class DocmanFilesUploadLimitsAdminPresenter
 {
     /**
      * @var \CSRFSynchronizerToken

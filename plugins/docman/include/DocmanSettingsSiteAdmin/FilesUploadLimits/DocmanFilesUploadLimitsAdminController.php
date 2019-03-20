@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Docman\DocmanSettingsSiteAdmin;
+namespace Tuleap\Docman\DocmanSettingsSiteAdmin\FilesUploadLimits;
 
 use CSRFSynchronizerToken;
 use Feedback;
@@ -30,7 +30,7 @@ use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
 
-class DocmanSettingsAdminController implements DispatchableWithRequest, DispatchableWithBurningParrot
+class DocmanFilesUploadLimitsAdminController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
     /**
      * @var AdminPageRenderer
@@ -66,9 +66,9 @@ class DocmanSettingsAdminController implements DispatchableWithRequest, Dispatch
 
         $this->admin_page_renderer->renderANoFramedPresenter(
             dgettext('tuleap-docman', 'Document settings'),
-            __DIR__.'/../../templates',
+            __DIR__ . '/../../../templates',
             'document-settings',
-            new DocmanSettingsAdminPresenter(
+            new DocmanFilesUploadLimitsAdminPresenter(
                 $csrf_token,
                 (int) \ForgeConfig::get(PLUGIN_DOCMAN_MAX_NB_FILE_UPLOADS_SETTING),
                 (int) \ForgeConfig::get(PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING)
