@@ -52,6 +52,9 @@ msgstr "Avancé"
 msgid "An error has occurred, please contact your administrator"
 msgstr "Une erreur est servenue, merci de contacter votre administrateur"
 
+msgid "Approval table"
+msgstr "Tables d'approbation"
+
 msgid "Approval tables"
 msgstr "Tables d'approbation"
 
@@ -73,8 +76,14 @@ msgstr "Fermer"
 msgid "Content"
 msgstr "Contenu"
 
+msgid "Copy the previous approval table."
+msgstr "Copier la table d'approbation précedente."
+
 msgid "Corrupted"
 msgstr "Corrompu"
+
+msgid "Create a new empty approval table."
+msgstr "Créer une nouvelle table d'approbation vide."
 
 msgid ""
 "Create a new version of a file by dropping the updated version on the "
@@ -186,6 +195,9 @@ msgstr "Il est temps d'ajouter des documents !"
 msgid "Keep lock?"
 msgstr "Garder le verrou?"
 
+msgid "Keep reviewers, comments and commitments."
+msgstr "Garder les approbateurs, commentaires et les engagements."
+
 msgid "Last update date"
 msgstr "Mis à jour"
 
@@ -235,6 +247,13 @@ msgstr "OK, compris"
 msgid "Obsolescence date and status"
 msgstr "Date d'obsolescence et status"
 
+msgid ""
+"Only the table structure will be kept. Reviewer comments and commitments "
+"will be discarded."
+msgstr ""
+"Seul la structure de la table sera gardé. Les approbateurs et les engagements "
+"seront annulés."
+
 msgid "Oops, there's an issue."
 msgstr "Oups, il y a eu un problème."
 
@@ -277,6 +296,9 @@ msgstr "Aperçu"
 msgid "Quick look of documents or folders with:"
 msgstr "Aperçu des documents ou des dossiers avec :"
 
+msgid "Reset the approval cycle."
+msgstr "Recommencer le cycle d'approbation."
+
 msgid "Searching for items (will redirect you to the old results page)."
 msgstr ""
 "Rechercher des éléments (vous serez redirigés vers l'ancienne page de "
@@ -289,6 +311,9 @@ msgid "Some files are being uploaded, click here to see the whole list."
 msgstr ""
 "Des fichiers sont en cours de téléversement, cliquez ici pour voir la liste "
 "complète."
+
+msgid "Start over with a completely new approval table."
+msgstr "Commencer avec une nouvelle table d'approbation."
 
 msgid "Switch to old user interface"
 msgstr "Basculer sur l'ancienne interface utilisateur"

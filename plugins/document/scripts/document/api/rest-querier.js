@@ -90,7 +90,14 @@ function addNewFolder(item, parent_id) {
     return addNewDocumentType("/api/docman_folders/" + parent_id + "/folders", item);
 }
 
-async function createNewVersion(item, version_title, change_log, dropped_file, should_lock_file) {
+async function createNewVersion(
+    item,
+    version_title,
+    change_log,
+    dropped_file,
+    should_lock_file,
+    approval_table_action
+) {
     const response = await patch(`/api/docman_files/${item.id}`, {
         headers: {
             "Content-Type": "application/json"
@@ -102,7 +109,8 @@ async function createNewVersion(item, version_title, change_log, dropped_file, s
                 file_name: dropped_file.name,
                 file_size: dropped_file.size
             },
-            should_lock_file
+            should_lock_file,
+            approval_table_action
         })
     });
 

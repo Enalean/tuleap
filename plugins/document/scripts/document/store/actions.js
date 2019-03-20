@@ -215,7 +215,7 @@ export async function updateFile(context, [item, dropped_file]) {
 
 export const updateFileFromModal = async (
     context,
-    [item, uploaded_file, version_title, changelog, is_file_locked]
+    [item, uploaded_file, version_title, changelog, is_file_locked, approval_table_action]
 ) => {
     try {
         await uploadNewVersion(context, [
@@ -223,7 +223,8 @@ export const updateFileFromModal = async (
             uploaded_file,
             version_title,
             changelog,
-            is_file_locked
+            is_file_locked,
+            approval_table_action
         ]);
     } catch (exception) {
         return handleErrorsForModal(context, exception);
@@ -232,14 +233,15 @@ export const updateFileFromModal = async (
 
 async function uploadNewVersion(
     context,
-    [item, uploaded_file, version_title, changelog, is_file_locked]
+    [item, uploaded_file, version_title, changelog, is_file_locked, approval_table_action]
 ) {
     const new_version = await createNewVersion(
         item,
         version_title,
         changelog,
         uploaded_file,
-        is_file_locked
+        is_file_locked,
+        approval_table_action
     );
 
     if (uploaded_file.size === 0) {

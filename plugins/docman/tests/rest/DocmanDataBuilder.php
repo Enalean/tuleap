@@ -157,13 +157,15 @@ class DocmanDataBuilder extends REST_TestDataBuilder
         return $version_factory->create($version);
     }
 
-    private function addLinkVersion($item_id)
+    private function addLinkVersion(int $item_id)
     {
         $docman_factory = new Docman_ItemFactory();
         $docman_link    = $docman_factory->getItemFromDb($item_id);
         $docman_link->setUrl('https://my.example.test');
         $version_link_factory = new \Docman_LinkVersionFactory();
         $version_link_factory->create($docman_link, 'changset1', 'test rest Change', time());
+        $link_version = $version_link_factory->getLatestVersion($docman_link);
+        return $link_version->getId();
     }
 
     /**
@@ -172,10 +174,10 @@ class DocmanDataBuilder extends REST_TestDataBuilder
      *                                    Root
      *                                     +
      *                                     |
-     *         +------------------+---------------+--------------------+----------------+----------------+
-     *         |                  |               |                    |                |                |
-     *         +                  +               +                    +                +                +
-     *       file D           folder 1 (AT)    folder 3 (L)       file A (AT C)     file B (AT R)    file C (AT E)
+     *    +-----------+-------------+-----------------+--------------------+----------------+----------------+
+     *    |           |             |                 |                    |                |                |
+     *    +           +             +                 +                    +                +                +
+     * file E (AT)   file D    folder 1 (AT)       folder 3 (L)       file A (AT C)     file B (AT R)    file C (AT E)
      *                            +
      *                            |
      *  +---------------+---------+--------+---------------------+---------------------+-------------+-----------+
@@ -245,6 +247,15 @@ class DocmanDataBuilder extends REST_TestDataBuilder
         );
         $this->addWritePermissionOnItem($file_D_id, \ProjectUGroup::PROJECT_MEMBERS);
 
+        $file_E_id         = $this->createItem(
+            self::REGULAR_USER_ID,
+            $folder_id,
+            'file E',
+            PLUGIN_DOCMAN_ITEM_TYPE_FILE
+        );
+        $file_E_version_id = $this->addItemVersion($file_E_id, ':o !', 'application/pdf');
+        $this->addWritePermissionOnItem($file_E_id, \ProjectUGroup::PROJECT_MEMBERS);
+
         $item_A_id   = $this->createItemWithVersion(self::ANON_ID, $folder_id, 'item A', PLUGIN_DOCMAN_ITEM_TYPE_EMPTY);
         $item_B_id   = $this->createItemWithVersion(
             self::REGULAR_USER_ID,
@@ -312,12 +323,12 @@ class DocmanDataBuilder extends REST_TestDataBuilder
         $this->addReadPermissionOnItem($item_G_id, \ProjectUGroup::PROJECT_MEMBERS);
 
         $this->addApprovalTableForFolder($folder_id);
-        $this->addApprovalTableForFile((int)$file_A_version_id);
-        $this->addApprovalTableForFile((int)$file_B_version_id);
-        $this->addApprovalTableForFile((int)$file_C_version_id);
+        $this->addApprovalTableForFile((int)$file_A_version_id, PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED);
+        $this->addApprovalTableForFile((int)$file_B_version_id, PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED);
+        $this->addApprovalTableForFile((int)$file_C_version_id, PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED);
+        $this->addApprovalTableForFile((int)$file_E_version_id, PLUGIN_DOCMAN_APPROVAL_TABLE_DISABLED);
 
         $this->lockItem($folder_3_id);
-
 
         $this->appendCustomMetadataValueToItem($item_A_id, "custom value for item_A");
         $this->appendCustomMetadataValueToItem($item_B_id, "custom value for item_B");
@@ -413,7 +424,7 @@ class DocmanDataBuilder extends REST_TestDataBuilder
         );
     }
 
-    private function addApprovalTableForFile(int $version_id): void
+    private function addApprovalTableForFile(int $version_id, int $status): void
     {
         $dao = new Docman_ApprovalTableItemDao();
         $dao->createTable(
@@ -422,7 +433,7 @@ class DocmanDataBuilder extends REST_TestDataBuilder
             self::REGULAR_USER_ID,
             "",
             time(),
-            PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED,
+            $status,
             false
         );
     }

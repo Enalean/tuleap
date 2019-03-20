@@ -23,7 +23,7 @@
         <modal-header v-bind:modal-title="modal_title" v-bind:aria-labelled-by="aria_labelled_by"/>
         <modal-feedback/>
         <div class="tlp-modal-body">
-            <file-update-properties v-bind:version="version" v-bind:item="item">
+            <file-update-properties v-bind:version="version" v-bind:item="item" v-on:approvalTableActionChange="setApprovalUpdateAction">
                 <file-properties v-model="uploaded_item.file_properties" v-bind:item="uploaded_item"/>
             </file-update-properties>
         </div>
@@ -56,7 +56,8 @@ export default {
             version: {},
             is_loading: false,
             is_displayed: false,
-            modal: null
+            modal: null,
+            approval_table_action: ""
         };
     },
     computed: {
@@ -76,6 +77,9 @@ export default {
         this.registerEvents();
     },
     methods: {
+        setApprovalUpdateAction(value) {
+            this.approval_table_action = value;
+        },
         registerEvents() {
             document.addEventListener("show-update-file-modal", this.show);
             this.$once("hook:beforeDestroy", () => {
@@ -113,7 +117,8 @@ export default {
                 this.uploaded_item.file_properties.file,
                 this.version.title,
                 this.version.changelog,
-                this.version.is_file_locked
+                this.version.is_file_locked,
+                this.approval_table_action
             ]);
             this.is_loading = false;
             if (this.has_modal_error === false) {

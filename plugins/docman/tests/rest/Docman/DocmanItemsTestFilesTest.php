@@ -61,7 +61,7 @@ class DocmanItemsTestFilesTest extends DocmanBase
         );
         $items    = $response->json();
 
-        $this->assertEquals(count($items), 10);
+        $this->assertEquals(count($items), 11);
 
         return $items;
     }

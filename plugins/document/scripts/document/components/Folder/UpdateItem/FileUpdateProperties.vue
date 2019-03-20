@@ -26,6 +26,7 @@
         </div>
         <changelog-property v-model="version.changelog"/>
         <slot></slot>
+        <approval-update-properties v-if="item.has_approval_table" v-on:approvalTableActionChange="emitApprovalUpdateAction" data-test="update-approval-properties"/>
     </div>
 </template>
 
@@ -33,13 +34,19 @@
 import VersionTitleProperty from "./VersionTitleProperty.vue";
 import ChangelogProperty from "./ChangelogProperty.vue";
 import LockProperty from "./LockProperty.vue";
+import ApprovalUpdateProperties from "./ApprovalUpdateProperties.vue";
 
 export default {
     name: "FileUpdateProperties",
-    components: { LockProperty, ChangelogProperty, VersionTitleProperty },
+    components: { LockProperty, ChangelogProperty, VersionTitleProperty, ApprovalUpdateProperties },
     props: {
         version: Object,
         item: Object
+    },
+    methods: {
+        emitApprovalUpdateAction(action) {
+            this.$emit("approvalTableActionChange", action);
+        }
     }
 };
 </script>

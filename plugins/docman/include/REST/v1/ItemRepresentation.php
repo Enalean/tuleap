@@ -116,6 +116,16 @@ class ItemRepresentation
     public $metadata;
 
     /**
+     * @var bool {@type bool}
+     */
+    public $has_approval_table;
+
+    /**
+     * @var bool {@type bool}
+     */
+    public $is_approval_table_enabled;
+
+    /**
      * @var ItemApprovalTableRepresentation | null
      */
     public $approval_table;
@@ -128,6 +138,8 @@ class ItemRepresentation
         bool $is_expanded,
         bool $can_user_manage,
         array $metadata_representations,
+        bool $has_approval_table,
+        bool $is_approval_table_enabled,
         ItemApprovalTableRepresentation $approval_table = null,
         ItemLockInfoRepresentation $lock_info = null,
         FilePropertiesRepresentation $file_properties = null,
@@ -135,23 +147,25 @@ class ItemRepresentation
         LinkPropertiesRepresentation $link_properties = null,
         WikiPropertiesRepresentation $wiki_properties = null
     ) {
-        $this->id                       = JsonCast::toInt($item->getId());
-        $this->title                    = $item->getTitle();
-        $this->description              = $item->getDescription();
-        $this->owner                    = $owner;
-        $this->last_update_date         = JsonCast::toDate($item->getUpdateDate());
-        $this->creation_date            = JsonCast::toDate($item->getCreateDate());
-        $this->user_can_write           = $user_can_write;
-        $this->can_user_manage          = $can_user_manage;
-        $this->type                     = $type;
-        $this->file_properties          = $file_properties;
-        $this->embedded_file_properties = $embedded_file_properties;
-        $this->link_properties          = $link_properties;
-        $this->wiki_properties          = $wiki_properties;
-        $this->is_expanded              = $is_expanded;
-        $this->approval_table           = $approval_table;
-        $this->lock_info                = $lock_info;
-        $this->metadata                 = $metadata_representations;
+        $this->id                        = JsonCast::toInt($item->getId());
+        $this->title                     = $item->getTitle();
+        $this->description               = $item->getDescription();
+        $this->owner                     = $owner;
+        $this->last_update_date          = JsonCast::toDate($item->getUpdateDate());
+        $this->creation_date             = JsonCast::toDate($item->getCreateDate());
+        $this->user_can_write            = $user_can_write;
+        $this->can_user_manage           = $can_user_manage;
+        $this->type                      = $type;
+        $this->file_properties           = $file_properties;
+        $this->embedded_file_properties  = $embedded_file_properties;
+        $this->link_properties           = $link_properties;
+        $this->wiki_properties           = $wiki_properties;
+        $this->is_expanded               = $is_expanded;
+        $this->approval_table            = $approval_table;
+        $this->lock_info                 = $lock_info;
+        $this->metadata                  = $metadata_representations;
+        $this->has_approval_table        = $has_approval_table;
+        $this->is_approval_table_enabled = $is_approval_table_enabled;
 
         $parent_id = JsonCast::toInt($item->getParentId());
 

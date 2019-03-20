@@ -43,8 +43,11 @@ import "./components/Folder/ItemTitle/FileCellTitle.spec.js";
 import "./components/Folder/ItemTitle/LinkCellTitle.spec.js";
 
 import "./components/Folder/QuickLook/QuickLookDocumentPreview.spec.js";
-import "./components/Folder/UpdateItem/UpdateButton.spec.js";
 
 import "./components/Folder/ModalCommon/ModalFooter.spec.js";
+
+import "./components/Folder/UpdateItem/UpdateButton.spec.js";
+import "./components/Folder/UpdateItem/ApprovalUpdateProperties.spec.js";
+import "./components/Folder/UpdateItem/FileUpdateProperties.spec.js";
 
 import "./helpers/highlight-items-helper.spec.js";

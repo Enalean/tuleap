@@ -134,8 +134,10 @@ class ItemRepresentationBuilder
         $can_user_manage     = $this->permissions_manager->userCanManage($current_user, $item->getId());
         $item_representation = new ItemRepresentation();
 
-        $lock_info      = $this->getLockInformation($item);
-        $approval_table = $this->getApprovalTable($item);
+        $lock_info                 = $this->getLockInformation($item);
+        $approval_table            = $this->getApprovalTable($item);
+        $has_approval_item         = $this->approval_table_retriever->hasApprovalTable($item);
+        $is_approval_table_enabled = $approval_table !== null;
 
         $metadata_representations = $this->metadata_representation_builder->build($item);
 
@@ -147,6 +149,8 @@ class ItemRepresentationBuilder
             $is_expanded,
             $can_user_manage,
             $metadata_representations,
+            $has_approval_item,
+            $is_approval_table_enabled,
             $approval_table,
             $lock_info,
             $file_properties,

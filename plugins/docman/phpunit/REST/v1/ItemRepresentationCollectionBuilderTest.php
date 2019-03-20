@@ -174,7 +174,8 @@ class ItemRepresentationCollectionBuilderTest extends \PHPUnit\Framework\TestCas
                     true
                 )
             ],
-            null,
+            false,
+            false,
             null
         );
 
@@ -217,6 +218,8 @@ class ItemRepresentationCollectionBuilderTest extends \PHPUnit\Framework\TestCas
                     true
                 )
             ],
+            false,
+            false,
             null,
             null,
             $file_properties
@@ -305,7 +308,9 @@ class ItemRepresentationCollectionBuilderTest extends \PHPUnit\Framework\TestCas
                     [],
                     true
                 )
-            ]
+            ],
+            false,
+            false
         );
         $representation2 = new ItemRepresentation();
         $representation2->build(
@@ -324,7 +329,9 @@ class ItemRepresentationCollectionBuilderTest extends \PHPUnit\Framework\TestCas
                     [],
                     true
                 )
-            ]
+            ],
+            false,
+            false
         );
 
         $this->item_representation_builder->shouldReceive('buildItemRepresentation')
