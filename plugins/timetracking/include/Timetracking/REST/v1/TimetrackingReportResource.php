@@ -115,7 +115,7 @@ class TimetrackingReportResource extends AuthenticatedResource
     /**
      * Get timetracking report
      *
-     * Get the definition of the given report id
+     * Get the report and report's trackers of the given report id
      *
      * @url    GET {id}
      * @access protected
@@ -151,16 +151,21 @@ class TimetrackingReportResource extends AuthenticatedResource
      * <br><br>
      * Notes on the query parameter
      * <ol>
-     *  <li>You have to specify a start_date and an end_date</li>
+     *  <li>The query parameter is optional</li>
+     *  <li>You can specify trackers'id. If you don't, report's default trackers will be searched</li>
+     *  <li>You can specify a start_date and an end_date. If you don't, the times will be recovered on the last month</li>
      *  <li>One day minimum between the two dates</li>
      *  <li>end_date must be greater than start_date</li>
      *  <li>Dates must be in ISO date format</li>
      * </ol>
      *
-     *  Example of query:
+     * Examples of queries:
      * <br><br>
-     * {"trackers_id":[16,22],"start_date":"2019-01-01T00:00:00+01","end_date":"2019-01-20T00:00:00+01"}
-     *
+     * <ul>
+     *  <li>{"trackers_id":[16,22],"start_date":"2019-01-01T00:00:00+01","end_date":"2019-01-20T00:00:00+01"}</li>
+     *  <li>{"start_date":"2019-01-01T00:00:00+01","end_date":"2019-01-20T00:00:00+01"}</li>
+     *  <li>{"trackers_id":[16,22]}</li>
+     * </ul>
      * @url GET {id}/times
      *
      * @status 200
@@ -213,12 +218,7 @@ class TimetrackingReportResource extends AuthenticatedResource
     /**
      * Update a timetracking report
      *
-     * <br>
-     * <pre>
-     * {<br>
-     *   &nbsp;"trackers_id": [1, 2, 3],<br>
-     * }<br>
-     * </pre>
+     * Use this route to update given report's trackers.
      *
      * @url PUT {id}
      *
