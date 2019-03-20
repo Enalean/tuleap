@@ -8,6 +8,9 @@
     <listeners>
         <listener class="\Mockery\Adapter\Phpunit\TestListener"/>
     </listeners>
+    <extensions>
+        <extension class="\Tuleap\Test\PHPUnit\NoMockeryMockInDataProviderExtension"/>
+    </extensions>
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">
             <directory suffix=".php">../../src/common/</directory>

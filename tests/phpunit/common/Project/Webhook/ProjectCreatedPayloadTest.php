@@ -32,7 +32,7 @@ final class ProjectCreatedPayloadTest extends TestCase
     /**
      * @dataProvider ownerDataProvider
      */
-    public function testPayloadCreation(?\PFUser $owner = null) : void
+    public function testPayloadCreation(bool $has_owner) : void
     {
         $project = \Mockery::mock(\Project::class);
         $project->shouldReceive('getStartDate')->andReturn(0);
@@ -40,7 +40,12 @@ final class ProjectCreatedPayloadTest extends TestCase
         $project->shouldReceive('getUnixName')->andReturn('unix_name');
         $project->shouldReceive('getID')->andReturn(101);
         $project->shouldReceive('getAccess')->andReturn('private');
-        if ($owner !== null) {
+        $owner = null;
+        if ($has_owner) {
+            $owner = \Mockery::mock(\PFUser::class);
+            $owner->shouldReceive('getId')->andReturn(10);
+            $owner->shouldReceive('getEmail')->andReturn('tuleap@example.com');
+            $owner->shouldReceive('getRealName')->andReturn('user realname');
             $project->shouldReceive('getAdmins')->andReturn([$owner]);
         } else {
             $project->shouldReceive('getAdmins')->andReturn([]);
@@ -67,13 +72,9 @@ final class ProjectCreatedPayloadTest extends TestCase
 
     public function ownerDataProvider() : array
     {
-        $admin = \Mockery::mock(\PFUser::class);
-        $admin->shouldReceive('getId')->andReturn(10);
-        $admin->shouldReceive('getEmail')->andReturn('tuleap@example.com');
-        $admin->shouldReceive('getRealName')->andReturn('user realname');
         return [
-            [$admin],
-            [null]
+            [true],
+            [false]
         ];
     }
 }

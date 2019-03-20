@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -56,12 +56,10 @@ class UserNotificationSettingsTest extends TestCase
         $this->assertEquals($expected_notify_onstatus_change, $notification_settings->isInNotifyOnStatusChange());
     }
 
-    public function notificationModeProvider()
+    public function notificationModeProvider() : array
     {
-        $global_notification = \Mockery::mock(GlobalNotification::class);
-        $global_notification->shouldReceive('isOnAllUpdates')->andReturn(false);
-        $global_notification_all_updates = \Mockery::mock(GlobalNotification::class);
-        $global_notification_all_updates->shouldReceive('isOnAllUpdates')->andReturn(true);
+        $global_notification             = new GlobalNotification(false);
+        $global_notification_all_updates = new GlobalNotification(true);
 
         return [
             [true, false, [$global_notification], Tracker::NOTIFICATIONS_LEVEL_DEFAULT, true, false, false, false, false],
