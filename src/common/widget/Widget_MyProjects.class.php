@@ -88,6 +88,14 @@ class Widget_MyProjects extends Widget {
             $prevIsPublic = -1;
             $token = new CSRFSynchronizerToken('massmail_to_project_members.php');
             while ($row = db_fetch_array($result)) {
+                if (
+                    $row['access'] === Project::ACCESS_PRIVATE_WO_RESTRICTED &&
+                    \Tuleap\Project\Admin\ProjectWithoutRestrictedFeatureFlag::isEnabled() &&
+                    ForgeConfig::areRestrictedUsersAllowed() &&
+                    $user->isRestricted()
+                ) {
+                    continue;
+                }
                 $tdClass = '';
                 if ($display_privacy
                     && $prevIsPublic == 0

@@ -468,7 +468,7 @@ class URLVerification_RedirectionTests extends URLVerificationBaseTest {
         $this->assertTrue($url_verification->restrictedUserCanAccessUrl($user, $url, '/blah'));
     }
 
-    public function testRestrictedUserCanNotAccessProjectWhichDoesntAllowResticted() {
+    public function testRestrictedUserCanNotAccessProjectWhichDoesntAllowRestricted() {
         $user            = new MockPFUser();
         $project         = mock('Project');
         $url_verification = new URLVerification();
@@ -483,6 +483,62 @@ class URLVerification_RedirectionTests extends URLVerificationBaseTest {
         $this->expectException('Project_AccessRestrictedException');
 
         $url_verification->userCanAccessProject($user, $project);
+    }
+
+    public function testRestrictedUserCanNotAccessAProjectMarkedAsPrivateWithoutRestrictedEvenSheIsMemberOf()
+    {
+        ForgeConfig::set('feature_flag_project_without_restricted', 1);
+        ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
+        $user             = Mockery::mock(PFUser::class);
+        $project          = Mockery::mock(Project::class);
+        $url_verification = new URLVerification();
+
+        $project->shouldReceive(
+            [
+                'getID'     => 42,
+                'isError'   => false,
+                'isActive'  => true,
+                'getAccess' => Project::ACCESS_PRIVATE_WO_RESTRICTED
+            ]
+        );
+        $user->shouldReceive(
+            [
+                'isSuperUser'  => false,
+                'isMember'     => true,
+                'isRestricted' => true
+            ]
+        );
+
+        $this->expectException(Project_AccessProjectNotFoundException::class);
+
+        $url_verification->userCanAccessProject($user, $project);
+    }
+
+    public function testRestrictedUserCanAccessAProjectMarkedAsPrivateEvenSheIsMemberOf()
+    {
+        ForgeConfig::set('feature_flag_project_without_restricted', 1);
+        ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
+        $user             = Mockery::mock(PFUser::class);
+        $project          = Mockery::mock(Project::class);
+        $url_verification = new URLVerification();
+
+        $project->shouldReceive(
+            [
+                'getID'     => 42,
+                'isError'   => false,
+                'isActive'  => true,
+                'getAccess' => Project::ACCESS_PRIVATE
+            ]
+        );
+        $user->shouldReceive(
+            [
+                'isSuperUser'  => false,
+                'isMember'     => true,
+                'isRestricted' => true
+            ]
+        );
+
+        $this->assertTrue($url_verification->userCanAccessProject($user, $project));
     }
 
     public function testRestrictedUserCanNotAccessForbiddenServiceInProjectWhichAllowsResticted() {
