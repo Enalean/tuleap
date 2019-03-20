@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\FormElement\Field\FloatingPointNumber\ChangesChecker;
+
 class Tracker_FormElement_Field_Float extends Tracker_FormElement_Field_Numeric {
 
     const FLOAT_DECIMALS = 4;
@@ -192,6 +194,6 @@ class Tracker_FormElement_Field_Float extends Tracker_FormElement_Field_Numeric 
      */
     public function hasChanges(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $old_value, $new_value)
     {
-        return (new \Tuleap\Tracker\FormElement\Field\Float\ChangesChecker())->hasChanges($old_value, $new_value);
+        return (new ChangesChecker())->hasChanges($old_value, $new_value);
     }
 }
