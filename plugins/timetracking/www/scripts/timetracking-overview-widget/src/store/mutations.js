@@ -26,6 +26,10 @@ export default {
         state.trackers_times = times;
     },
 
+    setLoadingTrackers(state, is_loading_trackers) {
+        state.is_loading_trackers = is_loading_trackers;
+    },
+
     setIsLoading(state, is_loading) {
         state.is_loading = is_loading;
     },

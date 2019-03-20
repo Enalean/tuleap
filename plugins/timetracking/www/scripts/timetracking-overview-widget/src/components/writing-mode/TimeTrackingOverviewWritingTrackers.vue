@@ -37,11 +37,12 @@
                 <button
                     type="button"
                     class="tlp-append tlp-button-primary tlp-button-outline"
-                    v-bind:disabled="is_tracker_or_project_select_disabled"
+                    v-bind:disabled="!is_tracker_available"
                     v-on:click="addTracker()"
                 >
                     <i v-if="is_tracker_or_project_select_disabled" class="tlp-button-icon fa fa-spinner fa-spin"></i>
-                    <i v-else class="tlp-button-icon fa fa-plus"></i>
+                    <i v-else-if="is_tracker_available" class="tlp-button-icon fa fa-plus"></i>
+                    <i v-else class="tlp-button-icon fa fa-ban"></i>
                     <translate>Add</translate>
                 </button>
             </div>
@@ -57,12 +58,18 @@ export default {
     name: "TimeTrackingOverviewWritingTrackers",
     components: { TimeTrackingOverviewProjectOption, TimeTrackingOverviewTrackersOptions },
     computed: {
-        ...mapState(["projects", "trackers"]),
+        ...mapState(["projects", "trackers", "is_loading_tracker"]),
         is_project_select_disabled() {
             return this.projects.length === 0;
         },
         is_tracker_or_project_select_disabled() {
-            return this.trackers.length === 0 || this.projects.length === 0;
+            return (
+                (this.trackers.length === 0 || this.projects.length === 0) &&
+                this.is_loading_tracker
+            );
+        },
+        is_tracker_available() {
+            return this.trackers.length > 0 && !this.is_loading_tracker;
         }
     },
     methods: {
