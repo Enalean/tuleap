@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import BaselinePage from "./BaselinePage.vue";
+import BaselinePage from "./baseline-page/BaselinePage.vue";
 import BaselinesPage from "./BaselinesPage.vue";
 import NotFoundPage from "./NotFoundPage.vue";
 

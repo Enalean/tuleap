@@ -43,7 +43,7 @@
     overflow-y: auto;
 }
 
-.new-baseline-modal-fa-question-circle {
+.baseline-tooltip-icon {
     margin-left: $tlp-spacing;
 }
 
@@ -105,4 +105,60 @@
 .baseline-statistics-label-title {
     display: block;
     font-size: 45%;
+}
+
+.baseline-content {
+    ol {
+        list-style: none;
+        counter-reset: artifact-counter;
+    }
+
+    li {
+        margin-top: $tlp-spacing;
+        counter-increment: artifact-counter;
+
+        &::before {
+            content: counters(artifact-counter, '.');
+            margin-right: .3rem;
+            padding-right: .5rem;
+            border-right: 1px solid $tlp-swatch-firemist-silver;
+            color: $tlp-theme-color;
+            font-size: 1.3rem;
+        }
+    }
+}
+
+.baseline-content-artifact {
+    display: initial;
+    color: $tlp-theme-color;
+    font-size: 1.3rem;
+}
+
+.baseline-content-artifact-label {
+    margin-right: .2rem;
+    margin-left: .2rem;
+}
+
+.baseline-content-artifacts-information-message {
+    color: transparentize($tlp-theme-color, .7);
+    font-style: italic;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.baseline-content-artifact-error-message {
+    color: $tlp-swatch-red-wine-border;
+}
+
+.baseline-content-artifact-body {
+    margin-left: $tlp-spacing;
+}
+
+.baseline-content-artifact-field-label {
+    margin-top: $tlp-spacing;
+    margin-bottom: $tlp-half-spacing;
+}
+
+.baseline-content-body-content {
+    color: $tlp-typo-default-text-color;
 }

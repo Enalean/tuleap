@@ -15,14 +15,15 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../support/local-vue.js";
-import { restore, rewire$getBaseline } from "../api/rest-querier";
-import { rewire$presentBaseline } from "../presenters/baseline";
+import localVue from "../../support/local-vue.js";
+import { restore, rewire$getBaseline } from "../../api/rest-querier";
+import { rewire$presentBaseline } from "../../presenters/baseline";
 import BaselinePage from "./BaselinePage.vue";
-import { create } from "../support/factories";
+import { create } from "../../support/factories";
 
 describe("BaselinePage", () => {
     const error_message_selector = '[data-test-type="error-message"]';

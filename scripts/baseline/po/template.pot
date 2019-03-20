@@ -28,7 +28,13 @@ msgstr ""
 msgid "Cannot fetch baseline"
 msgstr ""
 
+msgid "Cannot fetch baseline artifacts"
+msgstr ""
+
 msgid "Cannot fetch baselines"
+msgstr ""
+
+msgid "Cannot fetch linked artifacts"
 msgstr ""
 
 msgid "Cannot fetch milestones"
@@ -43,6 +49,9 @@ msgstr ""
 msgid "Created by"
 msgstr ""
 
+msgid "Description"
+msgstr ""
+
 msgid "Id"
 msgstr ""
 
@@ -53,6 +62,9 @@ msgid "Name"
 msgstr ""
 
 msgid "New baseline"
+msgstr ""
+
+msgid "No artifacts"
 msgstr ""
 
 msgid "No baseline available"

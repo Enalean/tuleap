@@ -23,7 +23,15 @@
 
 import { get, post } from "tlp-fetch";
 
-export { getOpenMilestones, createBaseline, getBaseline, getBaselines, getUser };
+export {
+    getOpenMilestones,
+    createBaseline,
+    getBaseline,
+    getBaselines,
+    getUser,
+    getBaselineArtifacts,
+    getBaselineArtifactsByIds
+};
 
 async function getOpenMilestones(project_id) {
     const response = await get(`/api/projects/${project_id}/milestones?query={"status":"open"}`);
@@ -62,4 +70,23 @@ async function getBaselines(project_id) {
 async function getUser(user_id) {
     const response = await get(`/api/users/${user_id}`);
     return response.json();
+}
+
+async function getBaselineArtifacts(baseline_id) {
+    const response = await get(`/api/baselines/${baseline_id}/artifacts`);
+    let json_response = await response.json();
+    return json_response.artifacts;
+}
+
+async function getBaselineArtifactsByIds(baseline_id, artifact_ids) {
+    const query = JSON.stringify({
+        ids: artifact_ids
+    });
+
+    const response = await get(
+        `/api/baselines/${baseline_id}/artifacts?query=${encodeURIComponent(query)}`
+    );
+
+    let json_response = await response.json();
+    return json_response.artifacts;
 }

@@ -15,6 +15,7 @@
   -
   - You should have received a copy of the GNU General Public License
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+  -
   -->
 
 <template>
@@ -47,30 +48,38 @@
                     <translate>Cannot fetch baseline</translate>
                 </div>
                 <span v-else-if="is_loading" class="tlp-skeleton-text" data-test-type="baseline-header-skeleton"></span>
+                <h2 v-else data-test-type="baseline-header">
+                    Baseline #{{ baseline_id }} - {{ baseline.name }} <small>{{ baseline.snapshot_date }}</small>
+                    <span class="baseline-author">
+                        <small><translate>Created by</translate> {{ baseline.author.username }}</small>
+                    </span>
+                </h2>
 
-                <template v-else>
-                    <h2 data-test-type="baseline-header">
-                        Baseline #{{ baseline_id }} - {{ baseline.name }} <small>{{ baseline.snapshot_date }}</small>
-                        <span class="baseline-header-author">
-                            <small><translate>Created by</translate> {{ baseline.author.username }}</small>
-                        </span>
-                    </h2>
+                <baseline-statistics/>
 
-                    <baseline-statistics/>
-                </template>
+                <div class="tlp-framed-vertically">
+                    <section class="tlp-pane">
+                        <div class="tlp-pane-container">
+                            <section class="tlp-pane-section baseline-content">
+                                <baseline-content v-bind:baseline_id="baseline_id"/>
+                            </section>
+                        </div>
+                    </section>
+                </div>
             </div>
         </main>
     </div>
 </template>
 
 <script>
-import { getBaseline } from "../api/rest-querier";
-import { presentBaseline } from "../presenters/baseline";
+import { getBaseline } from "../../api/rest-querier";
+import { presentBaseline } from "../../presenters/baseline";
 import BaselineStatistics from "./BaselineStatistics.vue";
+import BaselineContent from "./BaselineContent.vue";
 
 export default {
     name: "BaselinePage",
-    components: { BaselineStatistics },
+    components: { BaselineContent, BaselineStatistics },
     props: {
         baseline_id: { required: true, type: Number }
     },

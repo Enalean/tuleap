@@ -47,6 +47,16 @@ const factories = {
             creation_date: 12344567
         }
     },
+    artifact: {
+        default: {
+            id: identity,
+            title: "Sprint-1",
+            tracker_name: "Sprint",
+            description:
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit labore et dolore magna aliqua",
+            linked_artifact_ids: []
+        }
+    },
     user: {
         default: {
             id: identity,

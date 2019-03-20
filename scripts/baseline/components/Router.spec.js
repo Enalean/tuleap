@@ -20,7 +20,7 @@
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../support/local-vue.js";
 import Router from "./Router.vue";
-import BaselinePage from "./BaselinePage.vue";
+import BaselinePage from "./baseline-page/BaselinePage.vue";
 import BaselinesPage from "./BaselinesPage.vue";
 import NotFoundPage from "./NotFoundPage.vue";
 

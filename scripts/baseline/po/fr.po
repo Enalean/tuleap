@@ -38,8 +38,14 @@ msgstr "Impossible de créer une baseline"
 msgid "Cannot fetch baseline"
 msgstr "Impossible de charger la baseline"
 
+msgid "Cannot fetch baseline artifacts"
+msgstr "Impossible de charger les artefacts de la baseline"
+
 msgid "Cannot fetch baselines"
 msgstr "Impossible de charger les baselines"
+
+msgid "Cannot fetch linked artifacts"
+msgstr "Impossible de charger les artefacts liés"
 
 msgid "Cannot fetch milestones"
 msgstr "Impossible de charger les milestones"
@@ -53,6 +59,9 @@ msgstr "Créer baseline"
 msgid "Created by"
 msgstr "Créé par"
 
+msgid "Description"
+msgstr "Description"
+
 msgid "Id"
 msgstr "Id"
 
@@ -64,6 +73,9 @@ msgstr "Nom"
 
 msgid "New baseline"
 msgstr "Nouvelle baseline"
+
+msgid "No artifacts"
+msgstr "Aucun artefact disponible"
 
 msgid "No baseline available"
 msgstr "Aucune baseline disponible"
@@ -85,3 +97,6 @@ msgstr "La baseline a été créée"
 
 msgid "your baselines"
 msgstr "vos baselines"
+
+#~ msgid "Cannot fetch children artifacts"
+#~ msgstr "Impossible de charger les artefacts enfants"

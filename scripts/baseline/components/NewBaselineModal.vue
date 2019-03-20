@@ -73,7 +73,7 @@
                             v-bind:data-tlp-tooltip="milestone_tooltip"
                         >
                             <i
-                                class="fa fa-question-circle new-baseline-modal-fa-question-circle"
+                                class="fa fa-question-circle baseline-tooltip-icon"
                             ></i>
                         </span>
                     </label>

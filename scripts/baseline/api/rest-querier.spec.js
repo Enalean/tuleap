@@ -19,7 +19,12 @@
 
 import { rewire$get, rewire$post } from "tlp-fetch";
 import { mockFetchSuccess } from "tlp-mocks";
-import { getOpenMilestones, getBaselines, createBaseline } from "./rest-querier";
+import {
+    getOpenMilestones,
+    getBaselines,
+    getBaselineArtifactsByIds,
+    createBaseline
+} from "./rest-querier";
 import { create, createList } from "../support/factories";
 
 describe("Rest queries:", () => {
@@ -88,5 +93,22 @@ describe("Rest queries:", () => {
             expect(post).toHaveBeenCalledWith("/api/baselines/", { headers, body }));
 
         it("returns created baseline", () => expect(result).toEqual(simplified_baseline));
+    });
+
+    describe("getBaselineArtifactsByIds()", () => {
+        let get;
+
+        beforeEach(async () => {
+            get = jasmine.createSpy("get");
+            mockFetchSuccess(get, { return_json: {} });
+            rewire$get(get);
+
+            result = await getBaselineArtifactsByIds(1, [1, 2, 3, 4]);
+        });
+
+        it("calls baselines API to get baseline artifacts by ids", () =>
+            expect(get).toHaveBeenCalledWith(
+                "/api/baselines/1/artifacts?query=%7B%22ids%22%3A%5B1%2C2%2C3%2C4%5D%7D"
+            ));
     });
 });
