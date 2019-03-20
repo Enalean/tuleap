@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Docman\DocmanSettingsSiteAdmin;
+namespace Tuleap\Docman\DocmanSettingsSiteAdmin\FilesUploadLimits;
 
 use HTTPRequest;
 use Feedback;
@@ -28,15 +28,15 @@ use CSRFSynchronizerToken;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequest;
 
-class DocmanSettingsAdminSaveController implements DispatchableWithRequest
+class DocmanFilesUploadLimitsAdminSaveController implements DispatchableWithRequest
 {
     /**
-     * @var DocumentSettingsSaver
+     * @var DocumentFilesUploadLimitsSaver
      */
     private $docman_settings_saver;
 
     public function __construct(
-        DocumentSettingsSaver $saver
+        DocumentFilesUploadLimitsSaver $saver
     ) {
         $this->docman_settings_saver = $saver;
     }
