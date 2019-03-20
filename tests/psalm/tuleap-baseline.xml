@@ -2659,14 +2659,6 @@
       <code>PLUGIN_DOCMAN_METADATA_TYPE_DATE</code>
     </UndefinedConstant>
   </file>
-  <file src="plugins/docman/include/Docman_NodeToRootVisitor.class.php">
-    <MissingFile occurrences="1">
-      <code>require_once('common/collection/Visitor.class.php')</code>
-    </MissingFile>
-    <UndefinedClass occurrences="1">
-      <code>Visitor</code>
-    </UndefinedClass>
-  </file>
   <file src="plugins/docman/include/Docman_NotificationsManager.class.php">
     <InvalidArgument occurrences="1">
       <code>$this-&gt;project-&gt;getID()</code>
