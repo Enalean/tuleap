@@ -59,7 +59,7 @@
                             type="button"
                             data-target="new-baseline-modal"
                             class="tlp-button-primary"
-                            v-on:click="showNewBaselineModal"
+                            v-on:click="showNewBaselineModal()"
                         >
                             <i class="fa fa-plus tlp-button-icon"></i>
                             <translate>New baseline</translate>
@@ -78,6 +78,33 @@
                     </section>
                 </div>
             </section>
+
+            <section class="tlp-pane">
+                <div class="tlp-pane-container">
+                    <div class="tlp-pane-header">
+                        <h2>
+                            <span class="baselines-title" v-translate>Comparisons</span>
+                        </h2>
+                        <button
+                            type="button"
+                            data-target="new-comparison-modal"
+                            class="tlp-button-primary"
+                            v-bind:disabled="is_loading || !are_baselines_available"
+                            v-on:click="showNewComparisonModal()"
+                        >
+                            <i class="fa fa-plus tlp-button-icon"></i>
+                            <translate>Compare baselines</translate>
+                        </button>
+
+                        <new-comparison-modal
+                            id="new-comparison-modal"
+                            ref="new_comparison_modal"
+                            v-bind:baselines="baselines"
+                        />
+                    </div>
+                </div>
+            </section>
+
         </div>
     </main>
 </template>
@@ -85,6 +112,7 @@
 <script>
 import BaselineTable from "./BaselineTable.vue";
 import NewBaselineModal from "./NewBaselineModal.vue";
+import NewComparisonModal from "./comparison/NewComparisonModal.vue";
 import { modal as createModal } from "tlp";
 import { getBaselines } from "../api/rest-querier";
 import { presentBaselines } from "../presenters/baseline";
@@ -92,7 +120,7 @@ import { presentBaselines } from "../presenters/baseline";
 export default {
     name: "BaselinesPage",
 
-    components: { NewBaselineModal, BaselineTable },
+    components: { NewBaselineModal, BaselineTable, NewComparisonModal },
 
     props: {
         project_id: { mandatory: true, type: Number }
@@ -104,24 +132,29 @@ export default {
             baselines: null,
             is_loading: false,
             is_loading_failed: false,
-            modal: null
+            new_baseline_modal: null,
+            new_comparison_modal: null
         };
     },
 
     computed: {
         baselines_tooltip() {
             return this.$gettext("Baselines available");
+        },
+        are_baselines_available() {
+            return this.baselines !== null && this.baselines.length > 0;
         }
     },
 
     mounted() {
-        this.modal = createModal(this.$refs.new_baseline_modal.$el);
+        this.new_baseline_modal = createModal(this.$refs.new_baseline_modal.$el);
+        this.new_comparison_modal = createModal(this.$refs.new_comparison_modal.$el);
         this.fetchBaselines();
     },
 
     methods: {
         showNewBaselineModal() {
-            this.modal.show();
+            this.new_baseline_modal.show();
             this.$refs.new_baseline_modal.reload();
             this.is_baseline_created = false;
         },
@@ -129,7 +162,7 @@ export default {
         onBaselineCreated() {
             this.fetchBaselines();
             this.is_baseline_created = true;
-            this.modal.hide();
+            this.new_baseline_modal.hide();
         },
 
         async fetchBaselines() {
@@ -145,6 +178,10 @@ export default {
             } finally {
                 this.is_loading = false;
             }
+        },
+
+        showNewComparisonModal() {
+            this.new_comparison_modal.show();
         }
     }
 };

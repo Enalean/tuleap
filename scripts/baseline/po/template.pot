@@ -43,6 +43,12 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
+msgid "Compare baselines"
+msgstr ""
+
+msgid "Comparisons"
+msgstr ""
+
 msgid "Create baseline"
 msgstr ""
 
@@ -64,6 +70,9 @@ msgstr ""
 msgid "New baseline"
 msgstr ""
 
+msgid "New comparison"
+msgstr ""
+
 msgid "No artifacts"
 msgstr ""
 
@@ -77,6 +86,12 @@ msgid "Not found"
 msgstr ""
 
 msgid "Only open milestone are visible here"
+msgstr ""
+
+msgid "Please choose two baselines to compare"
+msgstr ""
+
+msgid "Show comparison"
 msgstr ""
 
 msgid "Snapshot Date"

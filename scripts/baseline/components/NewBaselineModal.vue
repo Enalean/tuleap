@@ -17,21 +17,8 @@
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
 <template>
-    <div
-        class="tlp-modal new-baseline-modal"
-        role="dialog"
-        aria-labelledby="modal-new-baseline"
-        ref="modal"
-    >
+    <modal v-bind:title="title" class="new-baseline-modal">
         <form v-on:submit.prevent="saveBaseline()">
-            <div class="tlp-modal-header">
-                <h1 class="tlp-modal-title ">
-                    <translate>New baseline</translate>
-                </h1>
-                <div class="tlp-modal-close" data-dismiss="modal" v-bind:aria-label="close_label">
-                    ×
-                </div>
-            </div>
             <div class="tlp-modal-body">
                 <div
                     class="tlp-alert-danger"
@@ -118,18 +105,19 @@
                 </button>
             </div>
         </form>
-    </div>
+    </modal>
 </template>
 
 <script>
 import { getOpenMilestones, createBaseline } from "../api/rest-querier";
 import NewBaselineMilestoneSelect from "./NewBaselineMilestoneSelect.vue";
 import MilestoneListSkeleton from "./MilestoneListSkeleton.vue";
+import Modal from "./common/Modal.vue";
 
 export default {
     name: "NewBaselineModal",
 
-    components: { NewBaselineMilestoneSelect, MilestoneListSkeleton },
+    components: { Modal, NewBaselineMilestoneSelect, MilestoneListSkeleton },
 
     props: {
         project_id: { mandatory: true, type: Number }
@@ -148,8 +136,8 @@ export default {
     },
 
     computed: {
-        close_label() {
-            return this.$gettext("Close");
+        title() {
+            return this.$gettext("New baseline");
         },
         some_milestone_available() {
             return this.available_milestones !== null && this.available_milestones.length > 0;

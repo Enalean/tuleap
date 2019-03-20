@@ -17,11 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  *
  */
-@import 'baseline/baseline-content';
-@import 'baseline/baselines-list';
-@import 'baseline/new-baseline-modal';
-@import 'baseline/new-comparison-modal';
 
-.baseline-tooltip-icon {
-    margin-left: $tlp-spacing;
+.new-comparison-modal-baselines-list-scrollbar {
+    max-height: 43vh;
+    overflow-y: auto;
 }
