@@ -26,26 +26,22 @@ namespace Tuleap\Baseline\REST;
 require_once __DIR__ . '/../bootstrap.php';
 
 use DI\Container;
+use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Baseline\BaselineArtifactRepository;
 use Tuleap\Baseline\BaselineRepository;
-use Tuleap\Baseline\ChangesetRepository;
 use Tuleap\Baseline\Clock;
 use Tuleap\Baseline\CurrentUserProvider;
-use Tuleap\Baseline\FieldRepository;
-use Tuleap\Baseline\Permissions;
 use Tuleap\Baseline\ProjectRepository;
 use Tuleap\Baseline\Stub\BaselineArtifactRepositoryStub;
 use Tuleap\Baseline\Stub\BaselineRepositoryStub;
-use Tuleap\Baseline\Stub\ChangesetRepositoryStub;
 use Tuleap\Baseline\Stub\CurrentUserProviderStub;
-use Tuleap\Baseline\Stub\FieldRepositoryStub;
 use Tuleap\Baseline\Stub\FrozenClock;
-use Tuleap\Baseline\Stub\PermissionsStub;
 use Tuleap\Baseline\Stub\ProjectRepositoryStub;
 use Tuleap\Baseline\Support\ContainerBuilderFactory;
 use Tuleap\GlobalLanguageMock;
+use Tuleap\REST\RESTLogger;
 
 /**
  * Useful class to write integration test with full container
@@ -93,20 +89,21 @@ abstract class IntegrationTestCaseWithStubs extends TestCase
 
     private function buildContainer(): Container
     {
-        $this->baseline_artifact_repository = new BaselineArtifactRepositoryStub();
+        $this->clock                        = new FrozenClock();
         $this->baseline_repository          = new BaselineRepositoryStub();
         $this->project_repository           = new ProjectRepositoryStub();
+        $this->baseline_artifact_repository = new BaselineArtifactRepositoryStub($this->clock);
         $this->current_user_provider        = new CurrentUserProviderStub();
-        $this->clock                        = new FrozenClock();
 
         return ContainerBuilderFactory::create()
             ->addDefinitions(
                 [
-                    BaselineArtifactRepository::class => $this->baseline_artifact_repository,
                     BaselineRepository::class         => $this->baseline_repository,
                     ProjectRepository::class          => $this->project_repository,
+                    BaselineArtifactRepository::class => $this->baseline_artifact_repository,
                     CurrentUserProvider::class        => $this->current_user_provider,
                     Clock::class                      => $this->clock,
+                    RESTLogger::class                 => Mockery::mock(RESTLogger::class)->shouldIgnoreMissing()
                 ]
             )
             ->build();

@@ -71,7 +71,7 @@ class BaselinesResourceTest extends RestBase
      */
     public function testGetById()
     {
-        $baseline = $this->createABaseline();
+        $baseline = $this->createABaseline($this->an_artifact_id);
 
         $response      = $this->getResponseByName(
             self::TEST_USER_NAME,
@@ -113,7 +113,47 @@ class BaselinesResourceTest extends RestBase
         $this->assertNotNull($baseline_response['author_id']);
     }
 
-    private function createABaseline(): array
+    public function testGetBaselineArtifacts()
+    {
+        $baseline = $this->createABaseline($this->an_artifact_id);
+
+        $response = $this->getResponseByName(
+            self::TEST_USER_NAME,
+            $this->client->get('baselines/' . $baseline['id'] . '/artifacts')
+        );
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $json_response = $response->json();
+
+        $this->assertNotNull($json_response['artifacts']);
+        $this->assertGreaterThanOrEqual(0, count($json_response['artifacts']));
+    }
+
+    public function testGetBaselineArtifactsWithIds()
+    {
+        $baseline = $this->createABaseline($this->an_artifact_id);
+
+        $query    = json_encode(["ids" => [$this->an_artifact_id]]);
+        $url      = 'baselines/' . $baseline['id'] . '/artifacts?query=' . urlencode($query);
+        $response = $this->getResponseByName(
+            self::TEST_USER_NAME,
+            $this->client->get($url)
+        );
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $json_response = $response->json();
+
+        $this->assertNotNull($json_response['artifacts']);
+        $artifacts_response = $json_response['artifacts'];
+        $this->assertCount(1, $artifacts_response);
+
+        $artifact_response = $artifacts_response[0];
+        $this->assertEquals($this->an_artifact_id, $artifact_response['id']);
+        $this->assertNotNull('new title', $artifact_response['title']);
+        $this->assertNotNull('Base', $artifact_response['tracker_name']);
+    }
+
+    private function createABaseline(int $artifact_id): array
     {
         $response = $this->getResponseByName(
             self::TEST_USER_NAME,
@@ -123,7 +163,7 @@ class BaselinesResourceTest extends RestBase
                 json_encode(
                     [
                         'name'        => 'created baseline',
-                        'artifact_id' => $this->an_artifact_id
+                        'artifact_id' => $artifact_id
                     ]
                 )
             )

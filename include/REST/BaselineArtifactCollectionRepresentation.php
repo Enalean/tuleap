@@ -23,15 +23,26 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\REST;
 
-use Luracast\Restler\Restler;
-use Tuleap\Project\REST\ProjectRepresentation;
+use Tuleap\Baseline\BaselineArtifact;
 
-class BaselineRestResourcesInjector
+class BaselineArtifactCollectionRepresentation
 {
-    public function populate(Restler $restler)
+    /** @var BaselineArtifactRepresentation[] */
+    public $artifacts;
+
+    /**
+     * @param BaselineArtifactRepresentation[] $artifacts
+     */
+    private function __construct(array $artifacts)
     {
-        $restler->addAPIClass('\\Tuleap\\Baseline\\REST\\BaselinesResource', 'baselines');
-        $restler->addAPIClass(ProjectBaselinesResource::class, ProjectRepresentation::ROUTE);
-        $restler->addAPIClass(BaselineArtifactsResource::class, 'baselines');
+        $this->artifacts = $artifacts;
+    }
+
+    /**
+     * @param BaselineArtifact[] $artifacts
+     */
+    public static function fromArtifacts(array $artifacts): self
+    {
+        return new self(array_map([BaselineArtifactRepresentation::class, 'fromArtifact'], $artifacts));
     }
 }

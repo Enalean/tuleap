@@ -46,6 +46,12 @@ class BaselineArtifactBuilder
     /** @var Project */
     private $project;
 
+    /**  @var string */
+    private $tracker_name;
+
+    /** @var int[] */
+    private $linked_artifact_ids = [];
+
     public function id(int $id): self
     {
         $this->id = $id;
@@ -82,6 +88,21 @@ class BaselineArtifactBuilder
         return $this;
     }
 
+    public function trackerName(string $tracker_name): self
+    {
+        $this->tracker_name = $tracker_name;
+        return $this;
+    }
+
+    /**
+     * @param int[] $ids
+     */
+    public function linkedArtifactIds(array $ids): self
+    {
+        $this->linked_artifact_ids = $ids;
+        return $this;
+    }
+
     public function build(): BaselineArtifact
     {
         return new BaselineArtifact(
@@ -90,7 +111,9 @@ class BaselineArtifactBuilder
             $this->description,
             $this->initial_effort,
             $this->status,
-            $this->project
+            $this->project,
+            $this->tracker_name,
+            $this->linked_artifact_ids
         );
     }
 }

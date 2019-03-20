@@ -36,6 +36,8 @@ class BaselineArtifactFactory
             ->description("artifact comment")
             ->initialEffort(2)
             ->status("Done")
-            ->project(Mockery::mock(Project::class));
+            ->project(Mockery::mock(Project::class))
+            ->trackerName('Epic')
+            ->linkedArtifactIds([]);
     }
 }

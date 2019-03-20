@@ -24,9 +24,10 @@ declare(strict_types=1);
 namespace Tuleap\Baseline\Adapter;
 
 use AgileDashBoard_Semantic_InitialEffort;
-use DateTime;
+use DateTimeInterface;
 use PFUser;
 use Project;
+use Tracker_Artifact;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetFactory;
 use Tracker_ArtifactFactory;
@@ -79,15 +80,16 @@ class BaselineArtifactRepositoryAdapter implements BaselineArtifactRepository
         }
 
         return $this->buildArtifact(
+            $current_user,
             $id,
             $artifact->getTracker()->getProject(),
             $last_changeset
         );
     }
 
-    public function findAt(PFUser $current_user, BaselineArtifact $artifact, DateTime $date): ?BaselineArtifact
+    public function findByIdAt(PFUser $current_user, int $id, DateTimeInterface $date): ?BaselineArtifact
     {
-        $tracker_artifact = $this->tracker_factory->getArtifactById($artifact->getId());
+        $tracker_artifact = $this->tracker_factory->getArtifactById($id);
         if ($tracker_artifact === null) {
             return null;
         }
@@ -96,18 +98,34 @@ class BaselineArtifactRepositoryAdapter implements BaselineArtifactRepository
             return null;
         }
         return $this->buildArtifact(
-            $artifact->getId(),
-            $artifact->getProject(),
+            $current_user,
+            $id,
+            $tracker_artifact->getTracker()->getProject(),
             $changeset
         );
     }
 
-    private function buildArtifact(int $id, Project $project, Tracker_Artifact_Changeset $changeset): BaselineArtifact
-    {
+    private function buildArtifact(
+        PFUser $current_user,
+        int $id,
+        Project $project,
+        Tracker_Artifact_Changeset $changeset
+    ): BaselineArtifact {
         $title          = $this->getTrackerTitle($changeset);
         $description    = $this->getTrackerDescription($changeset);
         $initial_effort = $this->getTrackerInitialEffort($changeset);
         $status         = $this->getTrackerStatus($changeset);
+
+        $tracker_artifact = $changeset->getArtifact();
+        $tracker_name     = $tracker_artifact->getTracker()->getName();
+
+        $tracker_artifacts   = $tracker_artifact->getLinkedArtifacts($current_user);
+        $linked_artifact_ids = array_map(
+            function (Tracker_Artifact $tracker_artifact) {
+                return $tracker_artifact->getId();
+            },
+            $tracker_artifacts
+        );
 
         return new BaselineArtifact(
             $id,
@@ -115,7 +133,9 @@ class BaselineArtifactRepositoryAdapter implements BaselineArtifactRepository
             $description,
             $initial_effort,
             $status,
-            $project
+            $project,
+            $tracker_name,
+            $linked_artifact_ids
         );
     }
 
@@ -127,7 +147,11 @@ class BaselineArtifactRepositoryAdapter implements BaselineArtifactRepository
             return null;
         }
 
-        return $changeset->getValue($title_field)->getValue();
+        $changed_value = $changeset->getValue($title_field);
+        if ($changed_value === null) {
+            return null;
+        }
+        return $changed_value->getValue();
     }
 
     private function getTrackerDescription(Tracker_Artifact_Changeset $changeset): ?string
@@ -140,7 +164,11 @@ class BaselineArtifactRepositoryAdapter implements BaselineArtifactRepository
             return null;
         }
 
-        return $changeset->getValue($description_field)->getValue();
+        $changed_value = $changeset->getValue($description_field);
+        if ($changed_value === null) {
+            return null;
+        }
+        return $changed_value->getValue();
     }
 
     private function getTrackerInitialEffort(Tracker_Artifact_Changeset $changeset): ?int
@@ -153,7 +181,11 @@ class BaselineArtifactRepositoryAdapter implements BaselineArtifactRepository
             return null;
         }
 
-        return (int) $changeset->getValue($description_field)->getValue();
+        $changed_value = $changeset->getValue($description_field);
+        if ($changed_value === null) {
+            return null;
+        }
+        return (int) $changed_value->getValue();
     }
 
     private function getTrackerStatus(Tracker_Artifact_Changeset $changeset): ?string

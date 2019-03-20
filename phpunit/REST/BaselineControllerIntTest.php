@@ -44,7 +44,7 @@ class BaselineControllerIntTest extends IntegrationTestCaseWithStubs
     public function testPost()
     {
         $artifact = BaselineArtifactFactory::one()->id(2)->build();
-        $this->baseline_artifact_repository->add($artifact);
+        $this->baseline_artifact_repository->addAt($artifact, $this->clock->now());
 
         $this->controller->post('My first baseline', 2);
 

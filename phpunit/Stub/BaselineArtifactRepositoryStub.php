@@ -23,37 +23,67 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\Stub;
 
-use DateTime;
-use Exception;
+use DateTimeInterface;
 use PFUser;
 use Tuleap\Baseline\BaselineArtifact;
 use Tuleap\Baseline\BaselineArtifactRepository;
+use Tuleap\Baseline\Clock;
 
 /**
  * In memory implementation of BaselineArtifactRepository used for tests
  */
 class BaselineArtifactRepositoryStub implements BaselineArtifactRepository
 {
-    /** @var BaselineArtifact[] */
-    private $artifacts_by_id = [];
+    /** @var ArtifactHistory[] */
+    private $artifact_histories_by_id = [];
 
-    public function add(BaselineArtifact $artifact): void
+    /** @var Clock */
+    private $clock;
+
+    public function __construct(Clock $clock)
     {
-        $this->artifacts_by_id [$artifact->getId()] = $artifact;
+        $this->clock = $clock;
+    }
+
+    /**
+     * Add new artifact version at given date
+     */
+    public function addAt(BaselineArtifact $artifact, DateTimeInterface $date): void
+    {
+        $history = $this->findHistoryOrCreateNewOne($artifact);
+        $history->add($artifact, $date);
     }
 
     public function findById(PFUser $current_user, int $id): ?BaselineArtifact
     {
-        return $this->artifacts_by_id[$id] ?? null;
+        $history = $this->artifact_histories_by_id[$id];
+        if ($history === null) {
+            return null;
+        }
+        return $history->findAt($this->clock->now());
+    }
+
+    public function findByIdAt(PFUser $current_user, int $id, DateTimeInterface $date): ?BaselineArtifact
+    {
+        /** @var ArtifactHistory $history */
+        $history = $this->artifact_histories_by_id[$id];
+        if ($history === null) {
+            return null;
+        }
+        return $history->findAt($date);
     }
 
     public function removeAll(): void
     {
-        $this->artifacts_by_id = [];
+        $this->artifact_histories_by_id = [];
     }
 
-    public function findAt(PFUser $current_user, BaselineArtifact $artifact, DateTime $date): ?BaselineArtifact
+    private function findHistoryOrCreateNewOne(BaselineArtifact $artifact): ArtifactHistory
     {
-        throw new Exception("Method findAt not implemented yet");
+        $artifact_id = $artifact->getId();
+        if (! isset($this->artifact_histories_by_id[$artifact_id])) {
+            $this->artifact_histories_by_id[$artifact_id] = new ArtifactHistory();
+        }
+        return $this->artifact_histories_by_id[$artifact_id];
     }
 }

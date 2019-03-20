@@ -21,17 +21,35 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Baseline\REST;
+namespace Tuleap\Baseline\Stub;
 
-use Luracast\Restler\Restler;
-use Tuleap\Project\REST\ProjectRepresentation;
+use DateTimeInterface;
+use Tuleap\Baseline\BaselineArtifact;
 
-class BaselineRestResourcesInjector
+/**
+ * Snapshot of an artifact at a precise date.
+ */
+class BaselineChangeSet
 {
-    public function populate(Restler $restler)
+    /** @var DateTimeInterface */
+    private $date;
+
+    /** @var BaselineArtifact */
+    private $artifact;
+
+    public function __construct(DateTimeInterface $date, BaselineArtifact $artifact)
     {
-        $restler->addAPIClass('\\Tuleap\\Baseline\\REST\\BaselinesResource', 'baselines');
-        $restler->addAPIClass(ProjectBaselinesResource::class, ProjectRepresentation::ROUTE);
-        $restler->addAPIClass(BaselineArtifactsResource::class, 'baselines');
+        $this->date     = $date;
+        $this->artifact = $artifact;
+    }
+
+    public function getArtifact(): BaselineArtifact
+    {
+        return $this->artifact;
+    }
+
+    public function isLaterThan(DateTimeInterface $date): bool
+    {
+        return $this->date > $date;
     }
 }

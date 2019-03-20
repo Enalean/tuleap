@@ -21,17 +21,10 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Baseline\REST;
+namespace Tuleap\Baseline;
 
-use Luracast\Restler\Restler;
-use Tuleap\Project\REST\ProjectRepresentation;
+use Exception;
 
-class BaselineRestResourcesInjector
+class BaselineArtifactNotFoundException extends Exception
 {
-    public function populate(Restler $restler)
-    {
-        $restler->addAPIClass('\\Tuleap\\Baseline\\REST\\BaselinesResource', 'baselines');
-        $restler->addAPIClass(ProjectBaselinesResource::class, ProjectRepresentation::ROUTE);
-        $restler->addAPIClass(BaselineArtifactsResource::class, 'baselines');
-    }
 }

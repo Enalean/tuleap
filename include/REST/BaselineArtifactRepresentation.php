@@ -21,99 +21,56 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Baseline;
+namespace Tuleap\Baseline\REST;
 
-use Project;
+use Tuleap\Baseline\BaselineArtifact;
+use Tuleap\REST\JsonCast;
 
-class BaselineArtifact
+class BaselineArtifactRepresentation
 {
     /** @var int */
-    private $id;
+    public $id;
 
     /** @var string|null */
-    private $title;
+    public $title;
 
     /** @var string|null */
-    private $description;
-
-    /** @var int|null */
-    private $initial_effort;
+    public $description;
 
     /** @var string|null */
-    private $status;
+    public $status;
 
-    /** @var Project */
-    private $project;
-
-    /**  @var string */
-    private $tracker_name;
+    /** @var string */
+    public $tracker_name;
 
     /** @var int[] */
-    private $linked_artifact_ids;
+    public $linked_artifact_ids;
 
-    /**
-     * @param int[] $linked_artifact_ids
-     */
-    public function __construct(
+    private function __construct(
         int $id,
         ?string $title,
         ?string $description,
-        ?int $initial_effort,
         ?string $status,
-        Project $project,
         string $tracker_name,
         array $linked_artifact_ids
     ) {
         $this->id                  = $id;
         $this->title               = $title;
         $this->description         = $description;
-        $this->initial_effort      = $initial_effort;
         $this->status              = $status;
-        $this->project             = $project;
         $this->tracker_name        = $tracker_name;
         $this->linked_artifact_ids = $linked_artifact_ids;
     }
 
-    public function getId(): int
+    public static function fromArtifact(BaselineArtifact $artifact): BaselineArtifactRepresentation
     {
-        return $this->id;
-    }
-
-    public function getTitle(): ?string
-    {
-        return $this->title;
-    }
-
-    public function getDescription(): ?string
-    {
-        return $this->description;
-    }
-
-    public function getInitialEffort(): ?int
-    {
-        return $this->initial_effort;
-    }
-
-    public function getStatus(): ?string
-    {
-        return $this->status;
-    }
-
-    public function getProject(): Project
-    {
-        return $this->project;
-    }
-
-    public function getTrackerName(): string
-    {
-        return $this->tracker_name;
-    }
-
-    /**
-     * @return int[]
-     */
-    public function getLinkedArtifactIds(): array
-    {
-        return $this->linked_artifact_ids;
+        return new self(
+            JsonCast::toInt($artifact->getId()),
+            $artifact->getTitle(),
+            $artifact->getDescription(),
+            $artifact->getStatus(),
+            $artifact->getTrackerName(),
+            JsonCast::toArrayOfInts($artifact->getLinkedArtifactIds())
+        );
     }
 }
