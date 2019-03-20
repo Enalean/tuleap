@@ -22,7 +22,6 @@
 
 namespace Tuleap\Docman\rest\v1;
 
-use Guzzle\Http\Client;
 use Tuleap\Docman\rest\DocmanBase;
 use Tuleap\Docman\rest\DocmanDataBuilder;
 
@@ -61,14 +60,14 @@ class DocmanItemsTest extends DocmanBase
         );
         $items = $response->json();
 
-        $this->assertEquals(count($items), 10);
+        $this->assertEquals(count($items), 11);
 
         $folder_2_index = 0;
-        $item_a_index = 5;
-        $item_c_index = 6;
-        $item_e_index = 7;
-        $item_f_index = 8;
-        $item_g_index = 9;
+        $item_a_index = 6;
+        $item_c_index = 7;
+        $item_e_index = 8;
+        $item_f_index = 9;
+        $item_g_index = 10;
 
 
         $this->assertEquals($items[$folder_2_index]['title'], 'folder 2');
@@ -286,6 +285,63 @@ class DocmanItemsTest extends DocmanBase
         $this->assertEquals($json_parents[0]['title'], 'Project Documentation');
         $this->assertEquals($json_parents[1]['title'], 'folder 1');
         $this->assertEquals($json_parents[2]['title'], 'folder 2');
+    }
+
+    /**
+     * @depends testGetDocumentItemsForRegularUser
+     */
+    public function testItemHasDisabledApprovalTable(array $items)
+    {
+        $file_E = $this->findItemByTitle($items, 'file E');
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->get('docman_items/' . $file_E['id'])
+        );
+
+        $item = $response->json();
+
+        $this->assertTrue($item['has_approval_table']);
+        $this->assertFalse($item['is_approval_table_enabled']);
+        $this->assertNull($item['approval_table']);
+    }
+
+    /**
+     * @depends testGetDocumentItemsForRegularUser
+     */
+    public function testItemHasEnabledApprovalTable(array $items)
+    {
+        $file_B = $this->findItemByTitle($items, 'file A');
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->get('docman_items/' . $file_B['id'])
+        );
+
+        $item = $response->json();
+
+        $this->assertTrue($item['has_approval_table']);
+        $this->assertTrue($item['is_approval_table_enabled']);
+        $this->assertNotNull($item['approval_table']);
+    }
+
+    /**
+     * @depends testGetDocumentItemsForRegularUser
+     */
+    public function testItemHasNoApprovalTable(array $items)
+    {
+        $file_D = $this->findItemByTitle($items, 'file D');
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->get('docman_items/' . $file_D['id'])
+        );
+
+        $item = $response->json();
+
+        $this->assertFalse($item['has_approval_table']);
+        $this->assertFalse($item['is_approval_table_enabled']);
+        $this->assertNull($item['approval_table']);
     }
 
     /**

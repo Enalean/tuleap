@@ -150,6 +150,9 @@ class ItemRepresentationBuilderTest extends \PHPUnit\Framework\TestCase
         $item_approval_table->shouldReceive('getApprovalState')->andReturns(0);
         $item_approval_table->shouldReceive('getId')->andReturn(10);
 
+        $this->approval_table_retriever->shouldReceive('hasApprovalTable')->with($docman_item)->andReturn(
+            true
+        );
 
         $this->approval_table_retriever->shouldReceive('retrieveByItem')->with($docman_item)->andReturn(
             $item_approval_table
