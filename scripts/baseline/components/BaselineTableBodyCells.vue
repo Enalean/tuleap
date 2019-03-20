@@ -21,7 +21,7 @@
     <tbody>
         <tr v-for="baseline in baselines" v-bind:key="baseline.id" data-test-type="baseline">
             <td class="tlp-table-cell-numeric">
-                <a href="#" v-on:click.prevent="goTo(`baselines/${baseline.id}`)">
+                <a href="#" v-on:click.prevent="showBaseline(baseline)">
                     {{ baseline.id }}
                 </a>
             </td>
@@ -30,7 +30,7 @@
             <td>{{ baseline.author.username }}</td>
             <td class="tlp-table-cell-actions baselines-table-column-actions">
                 <button
-                    v-on:click="goTo(`baselines/${baseline.id}`)"
+                    v-on:click="showBaseline(baseline)"
                     class="tlp-button-small tlp-button-primary tlp-button-outline"
                 >
                     Consult
@@ -46,6 +46,12 @@ export default {
 
     props: {
         baselines: { required: true, type: Array }
+    },
+
+    methods: {
+        showBaseline(baseline) {
+            this.$router.push({ name: "BaselinePage", params: { baseline_id: baseline.id } });
+        }
     }
 };
 </script>

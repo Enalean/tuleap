@@ -20,11 +20,13 @@
 
 import { createLocalVue } from "@vue/test-utils";
 import GettextPlugin from "vue-gettext";
+import VueRouter from "vue-router";
 
 const localVue = createLocalVue();
 localVue.use(GettextPlugin, {
     translations: {},
     silent: true
 });
+localVue.use(VueRouter);
 
 export default localVue;

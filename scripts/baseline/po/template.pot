@@ -11,6 +11,12 @@ msgstr ""
 msgid "Author"
 msgstr ""
 
+msgid "Baseline"
+msgstr ""
+
+msgid "Baselines"
+msgstr ""
+
 msgid "Baselines available"
 msgstr ""
 
@@ -80,9 +86,6 @@ msgid "No baseline available"
 msgstr ""
 
 msgid "No milestone available"
-msgstr ""
-
-msgid "Not found"
 msgstr ""
 
 msgid "Only open milestone are visible here"

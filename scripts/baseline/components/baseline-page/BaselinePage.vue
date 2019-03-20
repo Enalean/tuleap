@@ -22,19 +22,25 @@
     <div>
         <nav class="breadcrumb">
             <div class="breadcrumb-item">
-                <button type="button" class="breadcrumb-link baseline-breadcrumb-link" title="Baselines">
+                <router-link
+                    v-bind:to="{ name: 'BaselinesPage' }"
+                    tag="button"
+                    class="breadcrumb-link baseline-breadcrumb-link "
+                    title="Baselines"
+                    v-translate
+                >
                     Baselines
-                </button>
+                </router-link>
             </div>
             <div class="breadcrumb-item">
-                <button
-                    v-on:click="goTo(`baselines/${baseline_id}`)"
-                    type="button"
+                <router-link
+                    v-bind:to="{ name: 'BaselinePage', params: { baseline_id } }"
+                    tag="button"
                     class="breadcrumb-link baseline-breadcrumb-link "
                     title="Baseline"
                 >
-                    Baseline
-                </button>
+                    <translate>Baseline</translate> #{{ baseline_id }}
+                </router-link>
             </div>
         </nav>
 

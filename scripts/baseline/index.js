@@ -15,13 +15,14 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 import Vue from "vue";
-import Router from "./components/Router.vue";
-import RouterPlugin from "./components/RouterPlugin.js";
 import french_translations from "./po/fr.po";
 import GetTextPlugin from "vue-gettext";
+import router from "./router";
+import App from "./components/App.vue";
 
 document.addEventListener("DOMContentLoaded", () => {
     Vue.use(GetTextPlugin, {
@@ -41,10 +42,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const project_id = Number(vue_mount_point.dataset.projectId);
 
-    Vue.use(RouterPlugin);
-
-    const RouteComponent = Vue.extend(Router);
-    new RouteComponent({
-        propsData: { project_id }
+    const AppComponent = Vue.extend(App);
+    new AppComponent({
+        propsData: { project_id },
+        router
     }).$mount(vue_mount_point);
 });

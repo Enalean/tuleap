@@ -15,11 +15,11 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../../support/local-vue.js";
+import VueRouter from "vue-router";
 import { restore, rewire$getBaseline } from "../../api/rest-querier";
 import { rewire$presentBaseline } from "../../presenters/baseline";
 import BaselinePage from "./BaselinePage.vue";
@@ -49,6 +49,7 @@ describe("BaselinePage", () => {
 
         wrapper = shallowMount(BaselinePage, {
             localVue,
+            router: new VueRouter(),
             propsData: { baseline_id: 1 }
         });
     });

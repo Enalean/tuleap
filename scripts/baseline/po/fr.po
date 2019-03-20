@@ -18,6 +18,12 @@ msgstr "Actions"
 msgid "Author"
 msgstr "Auteur"
 
+msgid "Baseline"
+msgstr "Baseline"
+
+msgid "Baselines"
+msgstr "Baselines"
+
 msgid "Baselines available"
 msgstr "Baselines disponibles"
 
@@ -91,9 +97,6 @@ msgstr "Aucune baseline disponible"
 
 msgid "No milestone available"
 msgstr "Aucune milestone disponible"
-
-msgid "Not found"
-msgstr "Non trouvé"
 
 msgid "Only open milestone are visible here"
 msgstr "Seules les milestones ouvertes sont visibles ici"
