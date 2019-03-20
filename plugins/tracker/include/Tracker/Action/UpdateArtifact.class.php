@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -54,7 +54,6 @@ class Tracker_Action_UpdateArtifact {
     public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, PFUser $current_user) {
          //TODO : check permissions on this action?
         $comment_format = $this->artifact->validateCommentFormat($request, 'comment_formatnew');
-        $this->artifact->setUseArtifactPermissions( $request->get('use_artifact_permissions') ? 1 : 0 );
 
         $fields_data = $request->get('artifact');
         $fields_data['request_method_called'] = 'artifact-update';
