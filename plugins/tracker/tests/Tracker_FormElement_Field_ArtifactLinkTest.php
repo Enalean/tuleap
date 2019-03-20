@@ -636,7 +636,8 @@ class Tracker_FormElement_Field_ArtifactLink_AugmentDataFromRequestTest extends 
         $this->assertEqual($fields_data[$this->art_link_id]['natures'], array('356' => '_is_child'));
     }
 
-    public function itReturnsEmptyArrayIfNoParentAndNoNewValues() {
+    public function itDoesNotAddPropertiesIfNoParentAndNoNewValues()
+    {
         $fields_data = array();
 
         stub($this->tracker)->isProjectAllowedToUseNature()->returns(true);
