@@ -33,17 +33,22 @@
                             class="quick-look-button"
                             v-on:displayQuickLook="$emit('displayQuickLook', item)"
                             v-bind:item="item"
+                            data-test="quick-look-button"
                         />
-                        <dropdown-button v-bind:is-in-quick-look-mode="true">
-                            <dropdown-menu-for-item-quick-look v-bind:item="item"/>
+                        <dropdown-button v-bind:is-in-quick-look-mode="true" data-test="dropdown-button">
+                            <dropdown-menu-for-item-quick-look v-bind:item="item" data-test="dropdown-menu"/>
                         </dropdown-button>
                     </div>
                 </div>
-                <upload-progress-bar v-if="is_item_uploading_in_quicklook_mode" v-bind:item="item"/>
+                <upload-progress-bar
+                    v-if="is_item_uploading_in_quicklook_mode"
+                    v-bind:item="item"
+                    data-test="progress-bar-quick-look-pane-open"
+                />
             </div>
         </td>
         <template v-if="is_item_uploading_without_quick_look_mode">
-            <td><upload-progress-bar v-bind:item="item"/></td>
+            <td><upload-progress-bar v-bind:item="item" data-test="progress-bar-quick-look-pane-closed"/></td>
             <td></td>
         </template>
         <template v-else-if="is_not_uploading_and_is_not_in_quicklook">
