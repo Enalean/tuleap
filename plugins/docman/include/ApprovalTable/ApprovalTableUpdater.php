@@ -45,7 +45,7 @@ class ApprovalTableUpdater
         $this->approval_table_factories_factory = $approval_table_factories_factory;
     }
 
-    public function updateApprovalTable(\Docman_File $item, \PFUser $user, string $approval_table_action): void
+    public function updateApprovalTable(\Docman_Item $item, \PFUser $user, string $approval_table_action): void
     {
         if (! $this->approval_table_retriever->hasApprovalTable($item)) {
             return;

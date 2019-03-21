@@ -24,15 +24,17 @@
 
 namespace Tuleap\Docman\REST;
 
+use Tuleap\Docman\REST\v1\DocmanEmbeddedFilesResource;
 use Tuleap\Docman\REST\v1\DocmanFilesResource;
 use Tuleap\Docman\REST\v1\DocmanFoldersResource;
 use Tuleap\Docman\REST\v1\DocmanItemsResource;
 
 class ResourcesInjector
 {
-    const NAME       = 'docman_items';
-    const FILES_NAME = 'docman_files';
-    const FOLDER_NAME = 'docman_folders';
+    const NAME          = 'docman_items';
+    const FILES_NAME    = 'docman_files';
+    const FOLDER_NAME   = 'docman_folders';
+    const EMBEDDED_NAME = 'docman_embedded_files';
 
     public function populate(\Luracast\Restler\Restler $restler)
     {
@@ -49,6 +51,11 @@ class ResourcesInjector
         $restler->addAPIClass(
             DocmanFoldersResource::class,
             self::FOLDER_NAME
+        );
+
+        $restler->addAPIClass(
+            DocmanEmbeddedFilesResource::class,
+            self::EMBEDDED_NAME
         );
     }
 }

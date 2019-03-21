@@ -459,7 +459,7 @@ class DocmanItemCreatorTest extends TestCase
 
         $post_representation                               = new DocmanEmbeddedPOSTRepresentation();
         $post_representation->title                        = 'Embedded file';
-        $post_representation->embedded_properties          = new EmbeddedPropertiesPOSTRepresentation();
+        $post_representation->embedded_properties          = new EmbeddedPropertiesPOSTPATCHRepresentation();
         $post_representation->embedded_properties->content = 'My original content :)';
 
         $this->document_ongoing_upload_retriever->shouldReceive('isThereAlreadyAnUploadOngoing')->andReturns(false);

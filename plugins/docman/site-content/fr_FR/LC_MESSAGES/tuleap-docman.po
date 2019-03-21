@@ -14,6 +14,24 @@ msgstr ""
 
 #, php-format
 msgid ""
+"%s does not have an approval table. The parameter \"approval_table_action\" "
+"must not be present."
+msgstr ""
+"%s n'a pasde table d'approbation. Le paramètre \"approval_table_action\" ne "
+"doit pas être fourni."
+
+#, php-format
+msgid ""
+"%s has an approval table, you must provide \"approval_table_action\" "
+"parameter to choose the option creation of table (possible values: copy,"
+"reset,empty)."
+msgstr ""
+"%s a une table d'approbation, vous devez renseigner le paramètre  "
+"\"approval_table_action\" pour choisir l'option de la création de la table à "
+"la création de la version (valeurs possibles : copy,reset,empty)"
+
+#, php-format
+msgid ""
 "%s has an approval table, you must provide an option to have approval table "
 "on new version creation."
 msgstr ""
