@@ -25,8 +25,8 @@ use Tuleap\Baseline\REST\BaselineRestResourcesInjector;
 use Tuleap\Baseline\ServiceController;
 use Tuleap\Layout\ServiceUrlCollector;
 
-require_once __DIR__.'/../vendor/autoload.php';
-require_once __DIR__.'/../../tracker/include/trackerPlugin.class.php';
+require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../../tracker/include/trackerPlugin.class.php';
 
 class baselinePlugin extends Plugin  // @codingStandardsIgnoreLine
 {
@@ -38,20 +38,20 @@ class baselinePlugin extends Plugin  // @codingStandardsIgnoreLine
         parent::__construct($id);
         $this->setScope(self::SCOPE_PROJECT);
         $this->addHook(Event::REST_RESOURCES);
-        bindtextdomain('tuleap-baseline', __DIR__.'/../site-content');
+        bindtextdomain('tuleap-baseline', __DIR__ . '/../site-content');
     }
 
-    public function getDependencies() : array
+    public function getDependencies(): array
     {
         return ['tracker'];
     }
 
-    public function getServiceShortname() : string
+    public function getServiceShortname(): string
     {
         return self::SERVICE_SHORTNAME;
     }
 
-    public function getHooksAndCallbacks() : Collection
+    public function getHooksAndCallbacks(): Collection
     {
         $this->addHook(\Tuleap\Request\CollectRoutesEvent::NAME);
 
@@ -73,11 +73,13 @@ class baselinePlugin extends Plugin  // @codingStandardsIgnoreLine
     public function serviceUrlCollector(ServiceUrlCollector $collector)
     {
         if ($collector->getServiceShortname() === $this->getServiceShortname()) {
-            $collector->setUrl($this->getPluginPath() . "/" . urlencode($collector->getProject()->getUnixNameLowerCase()));
+            $collector->setUrl(
+                $this->getPluginPath() . "/" . urlencode($collector->getProject()->getUnixNameLowerCase())
+            );
         }
     }
 
-    public function routeGetSlash() : ServiceController
+    public function routeGetSlash(): ServiceController
     {
         return new ServiceController(
             ProjectManager::instance(),
@@ -86,11 +88,14 @@ class baselinePlugin extends Plugin  // @codingStandardsIgnoreLine
         );
     }
 
-    public function collectRoutesEvent(\Tuleap\Request\CollectRoutesEvent $event) : void
+    public function collectRoutesEvent(\Tuleap\Request\CollectRoutesEvent $event): void
     {
-        $event->getRouteCollector()->addGroup($this->getPluginPath(), function (FastRoute\RouteCollector $r) {
-            $r->get('/{project_name}[/]', $this->getRouteHandler('routeGetSlash'));
-        });
+        $event->getRouteCollector()->addGroup(
+            $this->getPluginPath(),
+            function (FastRoute\RouteCollector $r) {
+                $r->get('/{project_name}[/]', $this->getRouteHandler('routeGetSlash'));
+            }
+        );
     }
 
     /**
