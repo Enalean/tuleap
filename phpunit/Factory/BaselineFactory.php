@@ -32,7 +32,7 @@ use Tuleap\Baseline\Support\DateTimeFactory;
  */
 class BaselineFactory
 {
-    public static function one()
+    public static function one(): BaselineBuilder
     {
         return (new BaselineBuilder())
             ->id(1)
@@ -42,7 +42,7 @@ class BaselineFactory
             ->snapshotDate(DateTimeFactory::one());
     }
 
-    public static function fromProject(Project $project)
+    public static function fromProject(Project $project): BaselineBuilder
     {
         return self::one()
             ->artifact(

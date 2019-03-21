@@ -75,7 +75,7 @@ class BaselineBuilder
         return $this;
     }
 
-    public function build()
+    public function build(): Baseline
     {
         return new Baseline(
             $this->id,

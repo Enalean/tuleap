@@ -56,6 +56,9 @@ class TrackerBuilder
         return $this;
     }
 
+    /**
+     * @return Tracker|MockInterface
+     */
     public function build()
     {
         return $this->tracker;
