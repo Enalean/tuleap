@@ -108,10 +108,25 @@ class Widget_MyProjects extends Widget {
 
                 // Privacy
                 if ($display_privacy) {
-                    if (in_array($row['access'], [Project::ACCESS_PRIVATE, Project::ACCESS_PRIVATE_WO_RESTRICTED], true)) {
-                        $privacy = 'fa fa-lock';
+                    if (
+                        \Tuleap\Project\Admin\ProjectWithoutRestrictedFeatureFlag::isEnabled() &&
+                        ForgeConfig::areRestrictedUsersAllowed()
+                    ) {
+                        if ($row['access'] === Project::ACCESS_PUBLIC_UNRESTRICTED) {
+                            $privacy = 'fa fa-tlp-unlock-plus-r';
+                        } else if ($row['access'] === Project::ACCESS_PRIVATE) {
+                            $privacy = 'fa fa-tlp-lock-plus-r';
+                        } else if ($row['access'] === Project::ACCESS_PRIVATE_WO_RESTRICTED) {
+                            $privacy = 'fa fa-lock';
+                        } else {
+                            $privacy = 'fa fa-unlock';
+                        }
                     } else {
-                        $privacy = 'fa fa-unlock';
+                        if (in_array($row['access'], [Project::ACCESS_PRIVATE, Project::ACCESS_PRIVATE_WO_RESTRICTED], true)) {
+                            $privacy = 'fa fa-lock';
+                        } else {
+                            $privacy = 'fa fa-unlock';
+                        }
                     }
                     $html .= '<td class="widget_my_projects_privacy'.$tdClass.'"><i class="'.$privacy.' dashboard-widget-my-projects-icons"></i></td>';
                 }
@@ -152,8 +167,26 @@ class Widget_MyProjects extends Widget {
                 $html .= '<tr>';
                 $html .= '<td colspan="5" class="widget_my_projects_legend">';
                 $html .= '<span class="widget_my_projects_legend_title dashboard-widget-my-projects-legend-title">'.$GLOBALS['Language']->getText('my_index', 'my_projects_legend').'</span>';
-                $html .= '<span class="dashboard-widget-my-projects-legend-content"><i class="fa fa-lock dashboard-widget-my-projects-icons"></i> '.$GLOBALS['Language']->getText('project_privacy', 'private').'</span> ';
-                $html .= '<span class="dashboard-widget-my-projects-legend-content"><i class="fa fa-unlock dashboard-widget-my-projects-icons"></i> '.$GLOBALS['Language']->getText('project_privacy', 'public').'</span>';
+                $icons = [
+                    ['classname' => 'fa-lock', 'label' => $GLOBALS['Language']->getText('project_privacy', 'private')],
+                    ['classname' => 'fa-unlock', 'label' => $GLOBALS['Language']->getText('project_privacy', 'public')]
+                ];
+                if (
+                    \Tuleap\Project\Admin\ProjectWithoutRestrictedFeatureFlag::isEnabled() &&
+                    ForgeConfig::areRestrictedUsersAllowed()
+                ) {
+                    $icons = [
+                        ['classname' => 'fa-lock', 'label' => _('Private')],
+                        ['classname' => 'fa-tlp-lock-plus-r', 'label' => _('Private incl. restricted')],
+                        ['classname' => 'fa-unlock', 'label' => _('Public')],
+                        ['classname' => 'fa-tlp-unlock-plus-r', 'label' => _('Public incl. restricted')]
+                    ];
+                }
+                foreach ($icons as $icon) {
+                    $html .= '<span class="dashboard-widget-my-projects-legend-content">
+                        <i class="fa '. $icon['classname'] .' dashboard-widget-my-projects-icons"></i>' . $icon['label']
+                        . '</span> ';
+                }
                 $html .= '</td>';
                 $html .= '</tr>';
             }
