@@ -119,13 +119,7 @@ class BaselineArtifactRepositoryAdapter implements BaselineArtifactRepository
         $tracker_artifact = $changeset->getArtifact();
         $tracker_name     = $tracker_artifact->getTracker()->getName();
 
-        $tracker_artifacts   = $tracker_artifact->getLinkedArtifacts($current_user);
-        $linked_artifact_ids = array_map(
-            function (Tracker_Artifact $tracker_artifact) {
-                return $tracker_artifact->getId();
-            },
-            $tracker_artifacts
-        );
+        $linked_artifact_ids = $this->getLinkedArtifactIds($current_user, $changeset);
 
         return new BaselineArtifact(
             $id,
@@ -206,5 +200,27 @@ class BaselineArtifactRepositoryAdapter implements BaselineArtifactRepository
         }
 
         return $field;
+    }
+
+    /**
+     * @return int[]
+     */
+    private function getLinkedArtifactIds(
+        PFUser $current_user,
+        Tracker_Artifact_Changeset $changeset
+    ): array {
+        $artifact_link_field = $changeset->getArtifact()->getAnArtifactLinkField($current_user);
+        if ($artifact_link_field === null) {
+            return [];
+        }
+
+        $tracker_artifacts   = $artifact_link_field->getLinkedArtifacts($changeset, $current_user);
+        $linked_artifact_ids = array_map(
+            function (Tracker_Artifact $tracker_artifact) {
+                return $tracker_artifact->getId();
+            },
+            $tracker_artifacts
+        );
+        return $linked_artifact_ids;
     }
 }
