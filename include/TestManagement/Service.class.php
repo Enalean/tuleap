@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,19 +22,27 @@ namespace Tuleap\TestManagement;
 
 use Service as CoreService;
 
-class Service extends CoreService {
+class Service extends CoreService
+{
+    public function getInternationalizedName()
+    {
+        $label = $this->getLabel();
 
-    /**
-     * Display header for service tracker
-     *
-     * @param string $title       The title
-     * @param array  $breadcrumbs array of breadcrumbs (array of 'url' => string, 'title' => string)
-     * @param array  $toolbar     array of toolbars (array of 'url' => string, 'title' => string)
-     *
-     * @return void
-     */
-    public function displayHeader($title, $breadcrumbs, $toolbar, $params = array()) {
-        parent::displayHeader($title, $breadcrumbs, $toolbar, $params);
+        if ($label === 'plugin_testmanagement:service_lbl_key') {
+            return dgettext('tuleap-testmanagement', 'Test Management');
+        }
+
+        return $label;
     }
 
+    public function getInternationalizedDescription()
+    {
+        $description = $this->getDescription();
+
+        if ($description === 'plugin_testmanagement:service_desc_key') {
+            return dgettext('tuleap-testmanagement', 'Test Management');
+        }
+
+        return $description;
+    }
 }
