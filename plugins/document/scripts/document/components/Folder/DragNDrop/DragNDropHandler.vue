@@ -33,9 +33,9 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from "vuex";
+import { mapGetters, mapState } from "vuex";
 import CurrentFolderDropZone from "./CurrentFolderDropZone.vue";
-import { TYPE_FOLDER, TYPE_FILE } from "../../../constants.js";
+import { TYPE_FILE, TYPE_FOLDER } from "../../../constants.js";
 import { highlightItem } from "../../../helpers/highlight-items-helper.js";
 
 export default {
@@ -331,7 +331,7 @@ export default {
                     filename: dropzone_item.title,
                     approval_table_owner: approval_table.table_owner,
                     approval_table_state: approval_table.approval_state,
-                    approval_table_admin_url: approval_table.admin_url
+                    item_id: dropzone_item.id
                 });
 
                 return;

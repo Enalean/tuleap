@@ -139,10 +139,6 @@ class DocmanItemsTestFilesTest extends DocmanBase
             $item_approval_table_before_patch['has_been_approved'],
             $item_approval_table_after_patch['has_been_approved']
         );
-        $this->assertEquals(
-            $item_approval_table_before_patch['admin_url'],
-            $item_approval_table_after_patch['admin_url']
-        );
     }
 
     /**

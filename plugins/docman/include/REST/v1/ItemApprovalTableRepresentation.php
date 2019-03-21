@@ -50,16 +50,11 @@ class ItemApprovalTableRepresentation
      * @var bool
      */
     public $has_been_approved;
-    /**
-     * @var string
-     */
-    public $admin_url;
 
     public function __construct(
         \Docman_ApprovalTable $approval_table,
         MinimalUserRepresentation $table_owner,
-        ApprovalTableStateMapper $status_mapper,
-        \Docman_Item $item
+        ApprovalTableStateMapper $status_mapper
     ) {
         $this->id                    = JsonCast::toInt($approval_table->getId());
         $this->table_owner           = $table_owner;
@@ -67,14 +62,6 @@ class ItemApprovalTableRepresentation
         $this->approval_request_date = JsonCast::toDate($approval_table->getDate());
         $this->has_been_approved     = JsonCast::toBoolean(
             $approval_table->getApprovalState() === PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED
-        );
-        $this->admin_url             = DOCMAN_BASE_URL . "/?" . http_build_query(
-            [
-                "group_id" => $item->getGroupId(),
-                "id"       => $item->getId(),
-                "action"   => "details",
-                "section"  => "approval"
-            ]
         );
     }
 }
