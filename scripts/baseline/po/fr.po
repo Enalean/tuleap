@@ -47,6 +47,9 @@ msgstr ""
 "versions\n"
 "                    à une date choisie dans le passé."
 
+msgid "Bugs"
+msgstr "Bugs"
+
 msgid "Cancel"
 msgstr "Annuler"
 
@@ -86,6 +89,9 @@ msgstr "Créé par"
 msgid "Description"
 msgstr "Description"
 
+msgid "Epics"
+msgstr "Epics"
+
 msgid "Id"
 msgstr "Id"
 
@@ -102,7 +108,7 @@ msgid "New baseline"
 msgstr "Nouvelle baseline"
 
 msgid "New comparison"
-msgstr "Nouvelle comparison"
+msgstr "Nouvelle comparaison"
 
 msgid "No artifacts"
 msgstr "Aucun artefact disponible"
@@ -125,8 +131,14 @@ msgstr "Afficher la comparaison"
 msgid "Snapshot Date"
 msgstr "Date de la capture"
 
+msgid "Tasks"
+msgstr "Tâches"
+
 msgid "The baseline was created"
 msgstr "La baseline a été créée"
+
+msgid "User stories"
+msgstr "User stories"
 
 msgid "your baselines"
 msgstr "vos baselines"

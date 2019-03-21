@@ -12,6 +12,10 @@ msgid "No artifact found with id %u"
 msgstr ""
 
 #, php-format
+msgid "No artifact found with id %u on %s"
+msgstr ""
+
+#, php-format
 msgid "No baseline found with id %u"
 msgstr ""
 
