@@ -26,8 +26,12 @@ use Tuleap\Error\PermissionDeniedRestrictedAccountController;
 use Tuleap\Error\ProjectAccessSuspendedController;
 use Tuleap\Error\PermissionDeniedRestrictedAccountProjectController;
 use Tuleap\Error\PlaceHolderBuilder;
+use Tuleap\Layout\ErrorRendering;
 use Tuleap\Project\Admin\MembershipDelegationDao;
+use Tuleap\Project\Admin\ProjectWithoutRestrictedFeatureFlag;
 use Tuleap\Project\ProjectAccessSuspendedException;
+use Tuleap\Request\NotFoundException;
+use Tuleap\Request\RequestInstrumentation;
 use Tuleap\Request\RestrictedUsersAreHandledByPluginEvent;
 
 /**
@@ -559,10 +563,15 @@ class URLVerification {
                 }
                 $this->displayPrivateProjectError($user, $project);
             } catch (Project_AccessProjectNotFoundException $exception) {
-                $this->exitError(
-                    $GLOBALS['Language']->getText('include_html','g_not_exist'),
+                RequestInstrumentation::increment(404);
+                (new ErrorRendering())->rendersError(
+                    $this->getThemeManager()->getBurningParrot($request->getCurrentUser()),
+                    $request,
+                    404,
+                    _('Not found'),
                     $exception->getMessage()
                 );
+                exit;
             } catch (Project_AccessDeletedException $exception) {
                 $this->exitError(
                     $GLOBALS['Language']->getText('include_session', 'insufficient_g_access'),
@@ -603,6 +612,14 @@ class URLVerification {
 
             throw new Project_AccessDeletedException($project);
         } elseif ($user->isMember($project->getID())) {
+            if (
+                $project->getAccess() === Project::ACCESS_PRIVATE_WO_RESTRICTED &&
+                ProjectWithoutRestrictedFeatureFlag::isEnabled() &&
+                ForgeConfig::areRestrictedUsersAllowed() &&
+                $user->isRestricted()
+            ) {
+                throw new Project_AccessProjectNotFoundException(_('Project does not exist'));
+            }
             return true;
         } elseif ($this->getPermissionsOverriderManager()->doesOverriderAllowUserToAccessProject($user, $project)) {
             return true;

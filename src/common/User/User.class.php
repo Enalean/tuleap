@@ -898,9 +898,18 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
      *
      * @return array groups id the user is member of
      */
-    function getProjects($return_all_data = false) {
+    public function getProjects($return_all_data = false)
+    {
         $projects = array();
         foreach($this->getUserGroupDao()->searchActiveGroupsByUserId($this->user_id) as $data) {
+            if (
+                $data['access'] === Project::ACCESS_PRIVATE_WO_RESTRICTED &&
+                \Tuleap\Project\Admin\ProjectWithoutRestrictedFeatureFlag::isEnabled() &&
+                ForgeConfig::areRestrictedUsersAllowed() &&
+                $this->isRestricted()
+            ) {
+                continue;
+            }
             if ($return_all_data) {
                 $projects[] = $data;
             } else {
