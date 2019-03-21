@@ -21,8 +21,8 @@
     <a v-bind:href="artifact.html_url">
         <span class="tlp-badge-outline timetracking-badge-direct-link-to-artifact"
               v-bind:class="badge_color"
-        >{{ artifact.xref }}</span>
-        <span>{{ artifact.title }}</span>
+        >{{ artifact.xref }}
+        </span>{{ artifact.title }}
     </a>
 </template>
 <script>

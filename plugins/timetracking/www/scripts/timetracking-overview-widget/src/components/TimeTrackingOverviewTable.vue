@@ -41,7 +41,6 @@
                             <i class="fa fa-question-circle"></i>
                         </span>
                     </th>
-                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -63,7 +62,6 @@
                     <th class="tlp-table-cell-numeric timetracking-total-sum">
                         ∑ {{ get_formatted_total_sum }}
                     </th>
-                    <th></th>
                 </tr>
             </tfoot>
         </table>
