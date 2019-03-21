@@ -330,7 +330,7 @@ class DocmanItemsTestFoldersTest extends DocmanBase
         $headers = ['Content-Type' => 'application/json'];
         $query   = json_encode(
             [
-                'title'       => 'Item A',
+                'title'       => 'empty',
                 'description' => 'A description',
             ]
         );
@@ -351,7 +351,7 @@ class DocmanItemsTestFoldersTest extends DocmanBase
             REST_TestDataBuilder::ADMIN_USER_NAME,
             $this->client->get('docman_items/' . $root_id . '/docman_items')
         )->json();
-        $folder_3     = $this->findItemByTitle($stored_items, 'folder 3');
+        $folder_3     = $this->findItemByTitle($stored_items, 'Folder File');
 
         $query = json_encode(
             [
