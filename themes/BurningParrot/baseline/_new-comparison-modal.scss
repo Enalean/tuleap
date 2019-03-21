@@ -17,8 +17,29 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  *
  */
+@import 'statistics';
 
 .new-comparison-modal-baselines-list-scrollbar {
     max-height: 43vh;
     overflow-y: auto;
+}
+
+.comparison-statistic-added-artifacts {
+    @extend %statistic;
+    background-color: $tlp-theme-blue;
+}
+
+.comparison-statistic-deleted-artifacts {
+    @extend %statistic;
+    background-color: $tlp-theme-red;
+}
+
+.comparison-statistic-modified-artifacts {
+    @extend %statistic;
+    background-color: $tlp-theme-orange;
+}
+
+.comparison-statistic-initial-effort {
+    @extend %statistic;
+    background-color: $tlp-theme-grey;
 }

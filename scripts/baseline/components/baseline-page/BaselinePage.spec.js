@@ -23,12 +23,12 @@ import VueRouter from "vue-router";
 import { restore, rewire$getBaseline } from "../../api/rest-querier";
 import { rewire$presentBaseline } from "../../presenters/baseline";
 import BaselinePage from "./BaselinePage.vue";
+import BaselineLabel from "../common/BaselineLabel.vue";
 import { create } from "../../support/factories";
 
 describe("BaselinePage", () => {
     const error_message_selector = '[data-test-type="error-message"]';
     const baseline_header_skeleton_selector = '[data-test-type="baseline-header-skeleton"]';
-    const baseline_header_selector = '[data-test-type="baseline-header"]';
 
     let getBaseline;
     let presentBaseline;
@@ -118,9 +118,7 @@ describe("BaselinePage", () => {
                 });
 
                 it("shows baseline header content", () => {
-                    expect(wrapper.find(baseline_header_selector).text()).toEqual(
-                        "Baseline #1 - Baseline V1 09/02/1995 Created by Alita"
-                    );
+                    expect(wrapper.contains(BaselineLabel)).toBeTruthy();
                 });
             });
 

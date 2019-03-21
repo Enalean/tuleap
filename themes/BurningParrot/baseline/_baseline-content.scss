@@ -17,66 +17,35 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  *
  */
+@import 'statistics';
 
 .baseline-breadcrumb-link {
     cursor: pointer;
 }
 
-.baseline-header-author {
-    display: block;
-}
-
-.baseline-statistics {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: start;
-    color: $tlp-ui-white;
-}
-
-%baseline-statistics-component {
-    display: flex;
-    width: 12em;
-    min-width: 12em;
-    height: 7em;
-    margin-right: 2em;
-    margin-bottom: 2em;
-    padding-left: 1em;
-    border-radius: .2em;
-}
-
-.baseline-statistics-epics {
-    @extend %baseline-statistics-component;
+.baseline-statistic-epics {
+    @extend %statistic;
     background-color: $tlp-theme-blue;
 }
 
-.baseline-statistics-user-stories {
-    @extend %baseline-statistics-component;
+.baseline-statistic-user-stories {
+    @extend %statistic;
     background-color: $tlp-theme-green;
 }
 
-.baseline-statistics-bugs {
-    @extend %baseline-statistics-component;
+.baseline-statistic-bugs {
+    @extend %statistic;
     background-color: $tlp-theme-orange;
 }
 
-.baseline-statistics-tasks {
-    @extend %baseline-statistics-component;
+.baseline-statistic-tasks {
+    @extend %statistic;
     background-color: $tlp-theme-grey;
 }
 
-.baseline-statistics-initial-effort {
-    @extend %baseline-statistics-component;
+.baseline-statistic-initial-effort {
+    @extend %statistic;
     background-color: $tlp-theme-purple;
-}
-
-.baseline-statistics-label {
-    margin-top: auto;
-    margin-bottom: auto;
-}
-
-.baseline-statistics-label-title {
-    display: block;
-    font-size: 45%;
 }
 
 .baseline-content {

@@ -15,6 +15,15 @@ msgstr ""
 msgid "Actions"
 msgstr "Actions"
 
+msgid "Artifact added"
+msgstr "Artefact ajouté"
+
+msgid "Artifacts deleted"
+msgstr "Artefacts supprimés"
+
+msgid "Artifacts modified"
+msgstr "Artefacts modifiés"
+
 msgid "Author"
 msgstr "Auteur"
 
@@ -26,6 +35,9 @@ msgstr "Baselines"
 
 msgid "Baselines available"
 msgstr "Baselines disponibles"
+
+msgid "Baselines comparison:"
+msgstr "Comparaison de baselines :"
 
 msgid ""
 "Baselines features allow you to consult the state of your releases in a\n"
@@ -76,6 +88,9 @@ msgstr "Description"
 
 msgid "Id"
 msgstr "Id"
+
+msgid "Initial effort"
+msgstr "Effort initial"
 
 msgid "Milestone"
 msgstr "Milestone"

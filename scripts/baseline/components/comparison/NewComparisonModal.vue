@@ -19,7 +19,7 @@
   -->
 <template>
     <modal v-bind:title="title">
-        <form>
+        <form v-on:submit.prevent="openComparison()">
             <div class="tlp-modal-body">
                 <h2 v-translate class="tlp-modal-subtitle">
                     Please choose two baselines to compare
@@ -54,9 +54,10 @@
                     <translate>Cancel</translate>
                 </button>
                 <button
-                    disabled="disabled"
+                    v-bind:disabled="!is_form_valid"
                     type="submit"
                     class="tlp-button-primary tlp-modal-action"
+                    data-dismiss="modal"
                 >
                     <translate>Show comparison</translate>
                 </button>
@@ -89,6 +90,20 @@ export default {
         },
         is_selection_count_exceed_limit() {
             return this.selected_baselines.length > EXPECTED_SELECTION_COUNT;
+        },
+        is_form_valid() {
+            return this.selected_baselines.length === EXPECTED_SELECTION_COUNT;
+        }
+    },
+
+    methods: {
+        openComparison() {
+            const from_baseline_id = this.selected_baselines[0].id;
+            const to_baseline_id = this.selected_baselines[1].id;
+            this.$router.push({
+                name: "ComparisonPage",
+                params: { from_baseline_id, to_baseline_id }
+            });
         }
     }
 };

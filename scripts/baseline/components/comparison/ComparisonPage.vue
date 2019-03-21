@@ -34,12 +34,12 @@
             </div>
             <div class="breadcrumb-item">
                 <router-link
-                    v-bind:to="{ name: 'BaselinePage', params: { baseline_id } }"
+                    v-bind:to="{ name: 'ComparisonPage', params: { from_baseline_id, to_baseline_id } }"
                     tag="button"
                     class="breadcrumb-link baseline-breadcrumb-link"
                     title="Baseline"
                 >
-                    <translate>Baseline</translate> #{{ baseline_id }}
+                    <translate>Baselines comparison:</translate> #{{ from_baseline_id }} / #{{ to_baseline_id }}
                 </router-link>
             </div>
         </nav>
@@ -50,19 +50,26 @@
                     v-if="is_loading_failed"
                     class="tlp-alert-danger tlp-framed-vertically"
                     data-test-type="error-message"
+                    v-translate
                 >
-                    <translate>Cannot fetch baseline</translate>
+                    Cannot fetch baselines
                 </div>
-                <span v-else-if="is_loading" class="tlp-skeleton-text" data-test-type="baseline-header-skeleton"></span>
-                <baseline-label v-else v-bind:baseline="baseline"/>
+                <template v-else-if="is_loading">
+                    <baseline-label-skeleton key="from"/>
+                    <baseline-label-skeleton key="to"/>
+                </template>
+                <template v-else>
+                    <baseline-label v-bind:baseline="from_baseline" key="from"/>
+                    <baseline-label v-bind:baseline="to_baseline" key="to"/>
+                </template>
 
-                <baseline-statistics/>
+                <comparison-statistics/>
 
                 <div class="tlp-framed-vertically">
                     <section class="tlp-pane">
                         <div class="tlp-pane-container">
-                            <section class="tlp-pane-section baseline-content">
-                                <baseline-content v-bind:baseline_id="baseline_id"/>
+                            <section class="tlp-pane-section comparison-content">
+                                <!-- comparison content -->
                             </section>
                         </div>
                     </section>
@@ -75,43 +82,51 @@
 <script>
 import { getBaseline } from "../../api/rest-querier";
 import { presentBaseline } from "../../presenters/baseline";
-import BaselineStatistics from "./BaselineStatistics.vue";
-import BaselineContent from "./BaselineContent.vue";
 import BaselineLabel from "../common/BaselineLabel.vue";
+import BaselineLabelSkeleton from "../common/BaselineLabelSkeleton.vue";
+import ComparisonStatistics from "./ComparisonStatistics.vue";
 
 export default {
-    name: "BaselinePage",
-    components: { BaselineLabel, BaselineContent, BaselineStatistics },
+    name: "ComparisonPage",
+    components: { BaselineLabel, BaselineLabelSkeleton, ComparisonStatistics },
     props: {
-        baseline_id: { required: true, type: Number }
+        from_baseline_id: { required: true, type: Number },
+        to_baseline_id: { required: true, type: Number }
     },
 
     data() {
         return {
-            baseline: null,
+            from_baseline: null,
+            to_baseline: null,
             is_loading: true,
             is_loading_failed: false
         };
     },
 
     mounted() {
-        this.fetchBaseline();
+        this.fetchBaselines();
     },
 
     methods: {
-        async fetchBaseline() {
-            this.baseline = null;
+        async fetchBaselines() {
             this.is_loading = true;
             this.is_loading_failed = false;
 
             try {
-                const baseline = await getBaseline(this.baseline_id);
-                this.baseline = await presentBaseline(baseline);
+                const from_baseline = this.getPresentedBaseline(this.from_baseline_id);
+                const to_baseline = this.getPresentedBaseline(this.to_baseline_id);
+                this.to_baseline = await to_baseline;
+                this.from_baseline = await from_baseline;
             } catch (e) {
                 this.is_loading_failed = true;
             } finally {
                 this.is_loading = false;
             }
+        },
+
+        async getPresentedBaseline(baseline_id) {
+            const baseline = await getBaseline(baseline_id);
+            return presentBaseline(baseline);
         }
     }
 };

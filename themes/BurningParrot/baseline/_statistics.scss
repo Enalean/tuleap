@@ -17,15 +17,32 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  *
  */
-@import 'baseline/baseline-content';
-@import 'baseline/baselines-list';
-@import 'baseline/new-baseline-modal';
-@import 'baseline/new-comparison-modal';
 
-.baseline-tooltip-icon {
-    margin-left: $tlp-spacing;
+.statistics {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: start;
+    color: $tlp-ui-white;
 }
 
-.baseline-label-author {
+%statistic {
+    display: flex;
+    width: 12em;
+    min-width: 12em;
+    height: 7em;
+    margin-right: 2em;
+    margin-bottom: 2em;
+    padding-right: 1em;
+    padding-left: 1em;
+    border-radius: .2em;
+}
+
+.statistic-label {
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.statistic-label-title {
     display: block;
+    font-size: 45%;
 }

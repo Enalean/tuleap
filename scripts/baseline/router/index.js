@@ -23,6 +23,7 @@ import VueRouter from "vue-router";
 import NotFoundPage from "./NotFoundPage.vue";
 import BaselinePage from "../components/baseline-page/BaselinePage.vue";
 import BaselinesPage from "../components/BaselinesPage.vue";
+import ComparisonPage from "../components/comparison/ComparisonPage.vue";
 
 Vue.use(VueRouter);
 
@@ -44,6 +45,13 @@ const router = new VueRouter({
             path: "/plugins/baseline/:project_name/baselines/:baseline_id",
             name: "BaselinePage",
             component: BaselinePage,
+            props: true
+        },
+
+        {
+            path: "/plugins/baseline/:project_name/comparisons/:from_baseline_id/:to_baseline_id",
+            name: "ComparisonPage",
+            component: ComparisonPage,
             props: true
         }
     ],
