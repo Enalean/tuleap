@@ -32,11 +32,14 @@ use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\ApprovalTable\ApprovalTableStateMapper;
 use Tuleap\Docman\ApprovalTable\ApprovalTableUpdateActionChecker;
 use Tuleap\Docman\ApprovalTable\ApprovalTableUpdater;
+use Tuleap\Docman\DocmanLegacyController;
 use Tuleap\Docman\DocmanSettingsSiteAdmin\FilesUploadLimits\DocmanFilesUploadLimitsAdminController;
 use Tuleap\Docman\DocmanSettingsSiteAdmin\FilesUploadLimits\DocmanFilesUploadLimitsAdminSaveController;
 use Tuleap\Docman\DocmanSettingsSiteAdmin\FilesUploadLimits\DocumentFilesUploadLimitsSaver;
 use Tuleap\Docman\ExternalLinks\DocmanHTTPControllerProxy;
 use Tuleap\Docman\ExternalLinks\ExternalLinkParametersExtractor;
+use Tuleap\Docman\LegacyRestoreDocumentsController;
+use Tuleap\Docman\LegacySendMessageController;
 use Tuleap\Docman\Lock\LockUpdater;
 use Tuleap\Docman\Notifications\NotificationsForProjectMemberCleaner;
 use Tuleap\Docman\Notifications\NotifiedPeopleRetriever;
@@ -1347,13 +1350,38 @@ class DocmanPlugin extends Plugin
         );
     }
 
-    public function collectRoutesEvent(CollectRoutesEvent $event)
+    public function routeLegacyRestoreDocumentsController() : LegacyRestoreDocumentsController
     {
-        $event->getRouteCollector()->addRoute(['OPTIONS', 'HEAD', 'PATCH', 'DELETE'], '/uploads/docman/file/{id:\d+}', $this->getRouteHandler('routeUploadsDocmanFile'));
-        $event->getRouteCollector()->addRoute(['OPTIONS', 'HEAD', 'PATCH', 'DELETE'], '/uploads/docman/version/{id:\d+}', $this->getRouteHandler('routeUploadsVersionFile'));
+        return new LegacyRestoreDocumentsController($this);
+    }
 
-        $event->getRouteCollector()->addRoute(['GET'], self::ADMIN_BASE_URL . "/files-upload-limits", $this->getRouteHandler('routeGetDocumentSettings'));
-        $event->getRouteCollector()->addRoute(['POST'], self::ADMIN_BASE_URL . "/files-upload-limits", $this->getRouteHandler('routePostDocumentSettings'));
+    public function routeLegacySendMessageController() : LegacySendMessageController
+    {
+        return new LegacySendMessageController(ProjectManager::instance());
+    }
+
+    public function routeLegacyController() : DocmanLegacyController
+    {
+        return new DocmanLegacyController($this);
+    }
+
+
+    public function collectRoutesEvent(CollectRoutesEvent $event) : void
+    {
+        $route_collector = $event->getRouteCollector();
+
+        $route_collector->addRoute(['OPTIONS', 'HEAD', 'PATCH', 'DELETE'], '/uploads/docman/file/{id:\d+}', $this->getRouteHandler('routeUploadsDocmanFile'));
+        $route_collector->addRoute(['OPTIONS', 'HEAD', 'PATCH', 'DELETE'], '/uploads/docman/version/{id:\d+}', $this->getRouteHandler('routeUploadsVersionFile'));
+
+        $route_collector->addRoute(['GET'], self::ADMIN_BASE_URL . "/files-upload-limits", $this->getRouteHandler('routeGetDocumentSettings'));
+        $route_collector->addRoute(['POST'], self::ADMIN_BASE_URL . "/files-upload-limits", $this->getRouteHandler('routePostDocumentSettings'));
+
+        $route_collector->addGroup('/plugins/docman', function(FastRoute\RouteCollector $r) {
+            $r->addRoute(['GET', 'POST'], '/restore_documents.php', $this->getRouteHandler('routeLegacyRestoreDocumentsController'));
+            $r->post('/sendmessage.php', $this->getRouteHandler('routeLegacySendMessageController'));
+            $r->addRoute(['GET', 'POST'], '[/[index.php]]', $this->getRouteHandler('routeLegacyController'));
+        });
+
     }
 
     public function routeGetDocumentSettings(): DocmanFilesUploadLimitsAdminController
