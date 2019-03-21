@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Reference\ReferenceDescriptionTranslation;
 use Tuleap\reference\ReferenceValidator;
 use Tuleap\reference\ReservedKeywordsRetriever;
 
@@ -507,26 +508,10 @@ class ReferenceManager {
         $purifier = Codendi_HTMLPurifier::instance();
         $ref      = $ref_instance->getReference();
 
-        if (strpos($ref->getDescription(), "_desc_key") !== false) {
-            $desc = $this->getTranslatedDescription($ref);
-        } else {
-            $desc = $ref->getDescription();
-        }
+        $reference_description_translation = new ReferenceDescriptionTranslation($ref);
 
-        return '<a href="'.$ref_instance->getFullGotoLink().'" title="'. $purifier->purify($desc) .'" class="cross-reference">'
-                . $purifier->purify($ref_instance->getMatch()) ."</a>";
-    }
-
-    private function getTranslatedDescription(Reference $reference) {
-        $reference_matches = array();
-        if (preg_match('/(.*):(.*)/', $reference->getDescription(), $reference_matches)) {
-            if ($GLOBALS['Language']->hasText($reference_matches[1], $reference_matches[2])) {
-                return $GLOBALS['Language']->getText($reference_matches[1], $reference_matches[2]);
-            }
-        } else {
-            return $GLOBALS['Language']->getText('project_reference', $reference->getDescription());
-        }
-        throw new Exception('Missing translation for ' . $reference->getDescription());
+        return '<a href="'.$ref_instance->getFullGotoLink().'" title="'. $purifier->purify($reference_description_translation->getTranslatedDescription()) .
+            '" class="cross-reference">' . $purifier->purify($ref_instance->getMatch()) . '</a>';
     }
 
     /**
