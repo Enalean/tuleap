@@ -32,6 +32,11 @@ class ChangesChecker
             return true;
         }
 
+        if ((bool) $old_value->getUsed() === false &&
+            (bool) $old_value->getUsed() === (bool) $new_value[Tracker_FormElement_Field_PermissionsOnArtifact::USE_IT]) {
+            return false;
+        }
+
         $ugroups_diff = array_diff($old_value->getPerms(), $new_value['u_groups']);
         return count($ugroups_diff) > 0;
     }
