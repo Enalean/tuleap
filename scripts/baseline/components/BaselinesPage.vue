@@ -83,7 +83,9 @@
                 <div class="tlp-pane-container">
                     <div class="tlp-pane-header">
                         <h2>
-                            <span class="baselines-title" v-translate>Comparisons</span>
+                            <span class="baselines-title" v-translate>
+                                Comparisons
+                            </span>
                         </h2>
                         <button
                             type="button"
@@ -97,6 +99,7 @@
                         </button>
 
                         <new-comparison-modal
+                            v-if="are_baselines_available"
                             id="new-comparison-modal"
                             ref="new_comparison_modal"
                             v-bind:baselines="baselines"
@@ -104,7 +107,6 @@
                     </div>
                 </div>
             </section>
-
         </div>
     </main>
 </template>
@@ -146,9 +148,17 @@ export default {
         }
     },
 
+    watch: {
+        are_baselines_available: async function(val) {
+            if (val) {
+                await this.$nextTick();
+                this.new_comparison_modal = createModal(this.$refs.new_comparison_modal.$el);
+            }
+        }
+    },
+
     mounted() {
         this.new_baseline_modal = createModal(this.$refs.new_baseline_modal.$el);
-        this.new_comparison_modal = createModal(this.$refs.new_comparison_modal.$el);
         this.fetchBaselines();
     },
 
