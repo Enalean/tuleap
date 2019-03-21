@@ -19,6 +19,11 @@
  */
 @import 'statistics';
 
+.baseline-pane-header {
+    display: flex;
+    justify-content: space-between;
+}
+
 .baseline-breadcrumb-link {
     cursor: pointer;
 }

@@ -43,7 +43,7 @@
 
             <section class="tlp-pane">
                 <div class="tlp-pane-container">
-                    <div class="tlp-pane-header">
+                    <div class="tlp-pane-header baseline-pane-header">
                         <h2>
                             <span class="baselines-title" v-translate>
                                 your baselines
@@ -81,7 +81,7 @@
 
             <section class="tlp-pane">
                 <div class="tlp-pane-container">
-                    <div class="tlp-pane-header">
+                    <div class="tlp-pane-header baseline-pane-header">
                         <h2>
                             <span class="baselines-title" v-translate>
                                 Comparisons
