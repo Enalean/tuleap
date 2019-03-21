@@ -127,22 +127,8 @@ class Project extends Group implements PFO_Project {
                 $short_name = $j++;
             }
 
-            // needed for localisation
-            $matches = array();
-            if ($res_row['description'] == "service_" . $short_name . "_desc_key") {
-                $res_row['description'] = $GLOBALS['Language']->getText('project_admin_editservice', $res_row['description']);
-            } elseif (preg_match('/(.*):(.*)/', $res_row['description'], $matches)) {
-                if ($GLOBALS['Language']->hasText($matches[1], $matches[2])) {
-                    $res_row['description'] = $GLOBALS['Language']->getText($matches[1], $matches[2]);
-                }
-            }
-            if ($res_row['label'] == "service_" . $short_name . "_lbl_key") {
-                $res_row['label'] = $GLOBALS['Language']->getText('project_admin_editservice', $res_row['label']);
-            } elseif (preg_match('/(.*):(.*)/', $res_row['label'], $matches)) {
-                if ($GLOBALS['Language']->hasText($matches[1], $matches[2])) {
-                    $res_row['label'] = $GLOBALS['Language']->getText($matches[1], $matches[2]);
-                }
-            }
+            $res_row['label']       = $service->getInternationalizedName();
+            $res_row['description'] = $service->getInternationalizedDescription();
 
             $this->service_data_array[$short_name] = $res_row;
             $this->services[$short_name] = $service;
