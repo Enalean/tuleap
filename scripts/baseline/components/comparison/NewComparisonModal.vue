@@ -25,23 +25,64 @@
                     Please choose two baselines to compare
                 </h2>
 
-                <div
-                    class="tlp-form-element new-comparison-modal-baselines-list-scrollbar"
-                    v-bind:class="{ 'tlp-form-element-error': is_selection_count_exceed_limit }"
-                >
-                    <label
-                        v-for="baseline in baselines"
-                        v-bind:key="baseline.id"
-                        class="tlp-label tlp-checkbox"
-                    >
-                        <input
-                            type="checkbox"
-                            name="baseline"
-                            v-bind:value="baseline"
-                            v-model="selected_baselines"
+                <div class="new-comparison-modal-body">
+                    <div class="tlp-form-element new-comparison-modal-body-form-element">
+                        <h3 v-translate>
+                            Reference…
+                        </h3>
+                        <div class="new-comparison-modal-baselines-list-scrollbar">
+                            <label
+                                v-for="baseline in baselines"
+                                v-bind:key="baseline.id"
+                                class="tlp-label tlp-radio"
+                            >
+                                <input
+                                    type="radio"
+                                    name="base"
+                                    v-bind:value="baseline"
+                                    v-model="base_baseline"
+                                    required
+                                >
+                                {{ baseline.name }}
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="tlp-form-element new-comparison-modal-body-form-element">
+                        <h3 v-translate>
+                            … compared to
+                        </h3>
+                        <span
+                            v-if="baselines_to_compare === null"
+                            class="tlp-text-muted"
+                            v-translate
                         >
-                        {{ baseline.name }}
-                    </label>
+                            Please choose a reference baseline
+                        </span>
+                        <span
+                            v-else-if="baselines_to_compare.length === 0"
+                            class="tlp-text-muted"
+                            v-translate
+                        >
+                            No other baseline available on same artifact.
+                        </span>
+                        <div v-else class="new-comparison-modal-baselines-list-scrollbar">
+                            <label
+                                v-for="baseline in baselines_to_compare"
+                                v-bind:key="baseline.id"
+                                class="tlp-label tlp-radio"
+                            >
+                                <input
+                                    type="radio"
+                                    name="baseline_to_compare"
+                                    v-bind:value="baseline"
+                                    v-model="baseline_to_compare"
+                                    required
+                                >
+                                {{ baseline.name }}
+                            </label>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -69,8 +110,6 @@
 <script>
 import Modal from "../common/Modal.vue";
 
-const EXPECTED_SELECTION_COUNT = 2;
-
 export default {
     name: "NewComparisonModal",
     components: { Modal },
@@ -80,7 +119,8 @@ export default {
 
     data() {
         return {
-            selected_baselines: []
+            base_baseline: null,
+            baseline_to_compare: null
         };
     },
 
@@ -88,21 +128,27 @@ export default {
         title() {
             return this.$gettext("New comparison");
         },
-        is_selection_count_exceed_limit() {
-            return this.selected_baselines.length > EXPECTED_SELECTION_COUNT;
-        },
         is_form_valid() {
-            return this.selected_baselines.length === EXPECTED_SELECTION_COUNT;
+            return this.base_baseline !== null && this.baseline_to_compare !== null;
+        },
+        baselines_to_compare() {
+            if (this.base_baseline === null) {
+                return null;
+            }
+            return this.baselines
+                .filter(baseline => baseline.artifact_id === this.base_baseline.artifact_id)
+                .filter(baseline => baseline !== this.base_baseline);
         }
     },
 
     methods: {
         openComparison() {
-            const from_baseline_id = this.selected_baselines[0].id;
-            const to_baseline_id = this.selected_baselines[1].id;
             this.$router.push({
                 name: "ComparisonPage",
-                params: { from_baseline_id, to_baseline_id }
+                params: {
+                    from_baseline_id: this.base_baseline.id,
+                    to_baseline_id: this.baseline_to_compare.id
+                }
             });
         }
     }

@@ -119,11 +119,20 @@ msgstr "Aucune baseline disponible"
 msgid "No milestone available"
 msgstr "Aucune milestone disponible"
 
+msgid "No other baseline available on same artifact."
+msgstr "Aucune autre baseline disponible posée sur le même artefact."
+
 msgid "Only open milestone are visible here"
 msgstr "Seules les milestones ouvertes sont visibles ici"
 
+msgid "Please choose a reference baseline"
+msgstr "Veuillez choisir une baseline de référence"
+
 msgid "Please choose two baselines to compare"
 msgstr "Veuillez choisir deux baselines à comparer"
+
+msgid "Reference…"
+msgstr "Référence…"
 
 msgid "Show comparison"
 msgstr "Afficher la comparaison"
@@ -142,3 +151,6 @@ msgstr "User stories"
 
 msgid "your baselines"
 msgstr "vos baselines"
+
+msgid "… compared to"
+msgstr "… comparée à"

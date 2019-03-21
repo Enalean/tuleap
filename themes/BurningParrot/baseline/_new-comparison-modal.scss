@@ -19,6 +19,16 @@
  */
 @import 'statistics';
 
+.new-comparison-modal-body {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.new-comparison-modal-body-form-element {
+    width: 30%;
+}
+
 .new-comparison-modal-baselines-list-scrollbar {
     max-height: 43vh;
     overflow-y: auto;
