@@ -1,0 +1,66 @@
+/*!
+ * Copyright (c) Enalean, 2019. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
+.comparison-content {
+    ol {
+        list-style: none;
+        counter-reset: artifact-counter;
+    }
+
+    li {
+        margin-top: $tlp-spacing;
+        counter-increment: artifact-counter;
+
+        &::before {
+            content: counters(artifact-counter, '.');
+            margin-right: .3rem;
+            padding-right: .5rem;
+            border-right: 1px solid $tlp-swatch-firemist-silver;
+            color: $tlp-theme-color;
+            font-size: 1.3rem;
+        }
+
+    }
+
+    .comparison-content-artifact-added::before {
+        color: $tlp-ui-success;
+    }
+
+    .comparison-content-artifact-removed::before {
+        color: $tlp-ui-danger;
+    }
+}
+
+.comparison-content-artifact-header {
+    display: initial;
+    color: $tlp-theme-color;
+    font-size: 1.3rem;
+}
+
+.comparison-content-artifact-added-title {
+    background-color: $tlp-ui-success;
+    color: $tlp-ui-white;
+}
+
+.comparison-content-artifact-removed-title {
+    background-color: $tlp-ui-danger;
+    color: $tlp-ui-white;
+    text-decoration: line-through;
+}

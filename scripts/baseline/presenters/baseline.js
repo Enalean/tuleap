@@ -20,7 +20,7 @@
 
 import { getUser } from "../api/rest-querier";
 
-export { presentBaseline, presentBaselines };
+export { presentBaseline, presentBaselines, presentArtifacts };
 
 async function presentBaselines(baselines) {
     const user_ids = baselines.map(baseline => baseline.author_id);
@@ -36,4 +36,8 @@ async function presentBaselines(baselines) {
 async function presentBaseline(baseline) {
     const user = await getUser(baseline.author_id);
     return { ...baseline, author: user };
+}
+
+function presentArtifacts(artifacts, baseline_id) {
+    return artifacts.map(artifact => ({ ...artifact, baseline_id }));
 }

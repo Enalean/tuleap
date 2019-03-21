@@ -27,6 +27,10 @@ import ComparisonPage from "../components/comparison/ComparisonPage.vue";
 
 Vue.use(VueRouter);
 
+function toInt(string) {
+    return parseInt(string, 10);
+}
+
 const router = new VueRouter({
     mode: "history",
     routes: [
@@ -52,7 +56,10 @@ const router = new VueRouter({
             path: "/plugins/baseline/:project_name/comparisons/:from_baseline_id/:to_baseline_id",
             name: "ComparisonPage",
             component: ComparisonPage,
-            props: true
+            props: route => ({
+                from_baseline_id: toInt(route.params.from_baseline_id),
+                to_baseline_id: toInt(route.params.to_baseline_id)
+            })
         }
     ],
     scrollBehavior: (to, from, savedPosition) => {

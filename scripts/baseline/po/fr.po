@@ -110,6 +110,9 @@ msgstr "Nouvelle baseline"
 msgid "New comparison"
 msgstr "Nouvelle comparaison"
 
+msgid "No artifact to compare"
+msgstr "Aucun artefact à comparer"
+
 msgid "No artifacts"
 msgstr "Aucun artefact disponible"
 

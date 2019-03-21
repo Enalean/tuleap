@@ -56,6 +56,9 @@ const factories = {
             description:
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit labore et dolore magna aliqua",
             linked_artifact_ids: []
+        },
+        presented: {
+            baseline_id: 1
         }
     },
     user: {
