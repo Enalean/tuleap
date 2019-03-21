@@ -82,4 +82,16 @@ final class ChangesCheckerTest extends \PHPUnit\Framework\TestCase
 
         $this->assertFalse($this->checker->hasChanges($this->old_value, $new_values));
     }
+
+    public function testShouldBeFalseIfStillNotUsed()
+    {
+        $this->old_value->shouldReceive('getUsed')->andReturn("0");
+        $this->old_value->shouldReceive('getPerms')->andReturn([]);
+
+        $new_values = [
+            'use_artifact_permissions' => "0",
+        ];
+
+        $this->assertFalse($this->checker->hasChanges($this->old_value, $new_values));
+    }
 }
