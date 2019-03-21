@@ -38,7 +38,7 @@ class BaselineArtifactService
     /**
      * @return array BaselineArtifact[] All artifacts directly linked to given baseline's artifact, as they were at
      * baseline's snapshot date.
-     * @throws BaselineArtifactNotFoundException
+     * @throws BaselineRootArtifactNotFoundException
      */
     public function findFirstLevelByBaseline(PFUser $current_user, Baseline $baseline): array
     {
@@ -48,7 +48,7 @@ class BaselineArtifactService
             $baseline->getSnapshotDate()
         );
         if ($baseline_artifact === null) {
-            throw new BaselineArtifactNotFoundException();
+            throw new BaselineRootArtifactNotFoundException();
         }
         return $this->findByBaselineAndIds(
             $current_user,
@@ -59,16 +59,27 @@ class BaselineArtifactService
 
     /**
      * @return array BaselineArtifact[] Artifacts with given ids, as they were at baseline's snapshot date.
+     * @throws BaselineArtifactNotFoundException when at least one artifact is not found
      */
     public function findByBaselineAndIds(PFUser $current_user, ?Baseline $baseline, array $artifact_ids): array
     {
         return array_map(
             function (int $id) use ($current_user, $baseline) {
-                return $this->baseline_artifact_repository->findByIdAt(
+                $baseline_artifact = $this->baseline_artifact_repository->findByIdAt(
                     $current_user,
                     $id,
                     $baseline->getSnapshotDate()
                 );
+                if ($baseline_artifact === null) {
+                    throw new BaselineArtifactNotFoundException(
+                        sprintf(
+                            dgettext('tuleap-baseline', 'No artifact found with id %u on %s'),
+                            $id,
+                            $baseline->getSnapshotDate()->format('c')
+                        )
+                    );
+                }
+                return $baseline_artifact;
             },
             $artifact_ids
         );

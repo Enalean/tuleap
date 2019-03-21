@@ -26,6 +26,7 @@ namespace Tuleap\Baseline\REST;
 use Luracast\Restler\RestException;
 use Tuleap\Baseline\BaselineArtifactNotFoundException;
 use Tuleap\Baseline\BaselineArtifactService;
+use Tuleap\Baseline\BaselineRootArtifactNotFoundException;
 use Tuleap\Baseline\BaselineService;
 use Tuleap\Baseline\CurrentUserProvider;
 use Tuleap\Baseline\NotAuthorizedException;
@@ -112,9 +113,11 @@ class BaselineArtifactController
                 );
             }
             return BaselineArtifactCollectionRepresentation::fromArtifacts($artifacts);
-        } catch (BaselineArtifactNotFoundException $exception) {
+        } catch (BaselineRootArtifactNotFoundException $exception) {
             $this->logger->error('Cannot get baseline artifacts', $exception);
             throw new RestException(520);
+        } catch (BaselineArtifactNotFoundException $exception) {
+            throw new I18NRestException(404, $exception->getMessage());
         } catch (NotAuthorizedException $exception) {
             throw new I18NRestException(
                 403,
