@@ -49,7 +49,9 @@ const router = new VueRouter({
             path: "/plugins/baseline/:project_name/baselines/:baseline_id",
             name: "BaselinePage",
             component: BaselinePage,
-            props: true
+            props: route => ({
+                baseline_id: toInt(route.params.baseline_id)
+            })
         },
 
         {
