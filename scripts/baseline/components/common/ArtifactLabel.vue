@@ -20,9 +20,11 @@
 
 <template>
     <span>
-        <span class="baseline-artifact-badge tlp-badge-primary tlp-badge-outline">
-            {{ artifact.tracker_name }} #{{ artifact.id }}
-        </span>
+        <a v-bind:href="url">
+            <span class="baseline-artifact-badge tlp-badge-primary tlp-badge-outline">
+                {{ artifact.tracker_name }} #{{ artifact.id }}
+            </span>
+        </a>
         <span class="baseline-artifact-title">
             {{ artifact.title }}
         </span>
@@ -33,6 +35,11 @@ export default {
     name: "ArtifactLabel",
     props: {
         artifact: { required: true, type: Object }
+    },
+    computed: {
+        url() {
+            return `/plugins/tracker/?aid=${this.artifact.id}`;
+        }
     }
 };
 </script>
