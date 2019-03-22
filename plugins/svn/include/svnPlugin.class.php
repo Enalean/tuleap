@@ -284,7 +284,7 @@ class SvnPlugin extends Plugin
         $old_ugroup_name = null;
         $user            = $params['user'];
 
-        $projects = $this->getProjectManager()->getAllProjectsForUser($user);
+        $projects = $this->getProjectManager()->getAllProjectsForUserIncludingTheOnesSheDoesNotHaveAccessTo($user);
 
         foreach ($projects as $project) {
             $this->updateAllAccessFileOfProject($project, $new_ugroup_name, $old_ugroup_name);

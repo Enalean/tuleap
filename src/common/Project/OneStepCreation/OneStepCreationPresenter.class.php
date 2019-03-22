@@ -1,6 +1,6 @@
 <?php
 /**
-  * Copyright (c) Enalean, 2013 - 2019. All rights reserved
+  * Copyright (c) Enalean, 2013 - Present. All rights reserved
   *
   * This file is a part of Tuleap.
   *
@@ -17,8 +17,6 @@
   * You should have received a copy of the GNU General Public License
   * along with Tuleap. If not, see <http://www.gnu.org/licenses/
   */
-
-use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 
 /**
  * Presenter for one step creation project
@@ -335,11 +333,10 @@ class Project_OneStepCreation_OneStepCreationPresenter {
     }
 
     /**
-     *
-     * @param resource $db_data
+     * @param Project[] $projects
      * @return ProjectCreationTemplatePresenter[]
      */
-    private function generateTemplatesFromParsedDbData(LegacyDataAccessResultInterface $projects) {
+    private function generateTemplatesFromParsedDbData(array $projects) {
         $templates = array();
         foreach ($projects as $project) {
             /* @var $project Project */

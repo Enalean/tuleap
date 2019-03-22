@@ -433,25 +433,6 @@ class ProjectDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function getAllMyAndPublicProjects(PFUser $user)
-    {
-        $user_id = $this->da->escapeInt($user->getId());
-
-        $private_type               = $this->da->quoteSmart(Project::ACCESS_PRIVATE);
-        $private_wo_restricted_type = $this->da->quoteSmart(Project::ACCESS_PRIVATE_WO_RESTRICTED);
-
-        $sql = "SELECT DISTINCT groups.*
-                FROM groups
-                  JOIN user_group USING (group_id)
-                WHERE status = 'A'
-                  AND group_id > 100
-                  AND (access NOT IN ($private_type, $private_wo_restricted_type)
-                    OR user_group.user_id = $user_id)
-                ORDER BY group_id ASC";
-
-        return $this->retrieve($sql);
-    }
-
     public function searchByPublicStatus($is_public){
         if ($is_public) {
             $access_clause = 'access NOT IN('.
