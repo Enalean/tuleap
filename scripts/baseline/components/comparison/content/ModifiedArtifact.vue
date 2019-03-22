@@ -24,7 +24,8 @@
         <div>
             <field-comparison
                 v-if="reference.description !== compared_to.description"
-                title="description"
+                semantic="description"
+                v-bind:tracker_id="compared_to.tracker_id"
                 v-bind:reference="reference.description"
                 v-bind:compare_to="compared_to.description"
             />

@@ -27,6 +27,7 @@ export {
     getOpenMilestones,
     createBaseline,
     getBaseline,
+    getTracker,
     getBaselines,
     getUser,
     getBaselineArtifacts,
@@ -58,6 +59,11 @@ async function createBaseline(name, milestone) {
 
 async function getBaseline(id) {
     const response = await get(`/api/baselines/${id}`);
+    return response.json();
+}
+
+async function getTracker(id) {
+    const response = await get(`/api/trackers/${id}`);
     return response.json();
 }
 

@@ -40,6 +40,9 @@ class BaselineArtifactRepresentation
     /** @var string|null */
     public $status;
 
+    /** @var int */
+    public $tracker_id;
+
     /** @var string */
     public $tracker_name;
 
@@ -51,6 +54,7 @@ class BaselineArtifactRepresentation
         ?string $title,
         ?string $description,
         ?string $status,
+        int $tracker_id,
         string $tracker_name,
         array $linked_artifact_ids
     ) {
@@ -58,6 +62,7 @@ class BaselineArtifactRepresentation
         $this->title               = $title;
         $this->description         = $description;
         $this->status              = $status;
+        $this->tracker_id          = $tracker_id;
         $this->tracker_name        = $tracker_name;
         $this->linked_artifact_ids = $linked_artifact_ids;
     }
@@ -69,6 +74,7 @@ class BaselineArtifactRepresentation
             $artifact->getTitle(),
             $artifact->getDescription(),
             $artifact->getStatus(),
+            JsonCast::toInt($artifact->getTrackerId()),
             $artifact->getTrackerName(),
             JsonCast::toArrayOfInts($artifact->getLinkedArtifactIds())
         );

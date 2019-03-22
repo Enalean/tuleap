@@ -20,23 +20,20 @@
 
 <template>
     <div>
-        <h3 class="comparison-content-artifact-body-field-label">
+        <h3 class="baseline-content-artifact-body-field-label">
             <semantic-field-label v-bind:semantic="semantic" v-bind:tracker_id="tracker_id"/>
         </h3>
-        <p v-html="reference || '-'" class="comparison-content-field-value-reference"/>
-        <p v-html="compare_to" class="comparison-content-field-value-compare-to"/>
+        <p v-html="value" class="baseline-content-artifact-body-field-value">
+        </p>
     </div>
 </template>
 
 <script>
-import SemanticFieldLabel from "../../common/SemanticFieldLabel.vue";
-
+import SemanticFieldLabel from "../common/SemanticFieldLabel.vue";
 export default {
-    name: "FieldComparison",
+    name: "Field",
 
-    components: {
-        SemanticFieldLabel
-    },
+    components: { SemanticFieldLabel },
 
     props: {
         semantic: {
@@ -47,11 +44,7 @@ export default {
             required: true,
             type: Number
         },
-        reference: {
-            required: true,
-            type: String
-        },
-        compare_to: {
+        value: {
             required: true,
             type: String
         }

@@ -45,6 +45,9 @@ class BaselineArtifact
     /** @var Project */
     private $project;
 
+    /**  @var int */
+    private $tracker_id;
+
     /**  @var string */
     private $tracker_name;
 
@@ -61,6 +64,7 @@ class BaselineArtifact
         ?int $initial_effort,
         ?string $status,
         Project $project,
+        int $tracker_id,
         string $tracker_name,
         array $linked_artifact_ids
     ) {
@@ -70,6 +74,7 @@ class BaselineArtifact
         $this->initial_effort      = $initial_effort;
         $this->status              = $status;
         $this->project             = $project;
+        $this->tracker_id          = $tracker_id;
         $this->tracker_name        = $tracker_name;
         $this->linked_artifact_ids = $linked_artifact_ids;
     }
@@ -102,6 +107,11 @@ class BaselineArtifact
     public function getProject(): Project
     {
         return $this->project;
+    }
+
+    public function getTrackerId(): int
+    {
+        return $this->tracker_id;
     }
 
     public function getTrackerName(): string

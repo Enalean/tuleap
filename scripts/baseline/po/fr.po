@@ -86,9 +86,6 @@ msgstr "Créer baseline"
 msgid "Created by"
 msgstr "Créé par"
 
-msgid "Description"
-msgstr "Description"
-
 msgid "Epics"
 msgstr "Epics"
 
@@ -142,9 +139,6 @@ msgstr "Afficher la comparaison"
 
 msgid "Snapshot Date"
 msgstr "Date de la capture"
-
-msgid "Status"
-msgstr "Statut"
 
 msgid "Tasks"
 msgstr "Tâches"

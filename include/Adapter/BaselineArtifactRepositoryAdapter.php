@@ -116,8 +116,9 @@ class BaselineArtifactRepositoryAdapter implements BaselineArtifactRepository
         $initial_effort = $this->getTrackerInitialEffort($changeset);
         $status         = $this->getTrackerStatus($changeset);
 
-        $tracker_artifact = $changeset->getArtifact();
-        $tracker_name     = $tracker_artifact->getTracker()->getName();
+        $tracker      = $changeset->getArtifact()->getTracker();
+        $tracker_id   = (int) $tracker->getId();
+        $tracker_name = $tracker->getName();
 
         $linked_artifact_ids = $this->getLinkedArtifactIds($current_user, $changeset);
 
@@ -128,6 +129,7 @@ class BaselineArtifactRepositoryAdapter implements BaselineArtifactRepository
             $initial_effort,
             $status,
             $project,
+            $tracker_id,
             $tracker_name,
             $linked_artifact_ids
         );

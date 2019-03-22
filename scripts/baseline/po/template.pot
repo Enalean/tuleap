@@ -76,9 +76,6 @@ msgstr ""
 msgid "Created by"
 msgstr ""
 
-msgid "Description"
-msgstr ""
-
 msgid "Epics"
 msgstr ""
 
@@ -131,9 +128,6 @@ msgid "Show comparison"
 msgstr ""
 
 msgid "Snapshot Date"
-msgstr ""
-
-msgid "Status"
 msgstr ""
 
 msgid "Tasks"

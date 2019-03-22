@@ -20,6 +20,8 @@
 
 import { mount } from "@vue/test-utils";
 import localVue from "../../support/local-vue.js";
+import { createStoreMock } from "../../support/store-wrapper.spec-helper.js";
+import store_options from "../../store/index.js";
 import { restore, rewire$getBaselineArtifactsByIds } from "../../api/rest-querier";
 import { create } from "../../support/factories";
 import BaselineArtifact from "./BaselineArtifact.vue";
@@ -40,10 +42,13 @@ describe("BaselineArtifact", () => {
         rewire$getBaselineArtifactsByIds(getBaselineArtifactsByIds);
 
         wrapper = mount(BaselineArtifact, {
-            localVue,
             propsData: {
                 baseline_id: 1,
                 artifact: create("artifact", { title: "Epic", linked_artifact_ids: [9] })
+            },
+            localVue,
+            mocks: {
+                $store: createStoreMock(store_options)
             }
         });
         await wrapper.vm.$nextTick();

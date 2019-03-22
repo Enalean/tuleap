@@ -1,5 +1,4 @@
-<?php
-/**
+/*
  * Copyright (c) Enalean, 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -19,26 +18,25 @@
  *
  */
 
-declare(strict_types=1);
+import { Store } from "vuex-mock-store";
 
-namespace Tuleap\Baseline\Factory;
+/**
+ * Create a Vuex Store with all actions, mutations and getters mocked.
+ * Modules are handled with actions, mutations and getters also mocked.
+ *
+ * @param store_options
+ * @param custom_state
+ * @returns Store
+ */
+export function createStoreMock(store_options, custom_state = {}) {
+    const state = Object.assign({}, store_options.state, custom_state);
+    const options = Object.assign({}, store_options, {
+        state,
+        spy: {
+            create: () => jasmine.createSpy(), //eslint-disable-line jasmine/no-unsafe-spy
+            reset: spy => spy.and.stub()
+        }
+    });
 
-use Mockery;
-use Project;
-
-class BaselineArtifactFactory
-{
-    public static function one(): BaselineArtifactBuilder
-    {
-        return (new BaselineArtifactBuilder())
-            ->id(1)
-            ->title("artifact title")
-            ->description("artifact comment")
-            ->initialEffort(2)
-            ->status("Done")
-            ->project(Mockery::mock(Project::class))
-            ->trackerId(3)
-            ->trackerName('Epic')
-            ->linkedArtifactIds([]);
-    }
+    return new Store(options);
 }

@@ -51,10 +51,14 @@ export default {
     },
 
     mounted() {
+        this.resetSemanticFields();
         this.fetchArtifacts();
     },
 
     methods: {
+        resetSemanticFields() {
+            this.$store.commit("resetSemanticFields");
+        },
         async fetchArtifacts() {
             this.is_loading = true;
             this.is_loading_failed = false;

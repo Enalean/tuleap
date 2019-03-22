@@ -19,6 +19,8 @@
 
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../../support/local-vue.js";
+import { createStoreMock } from "../../support/store-wrapper.spec-helper.js";
+import store_options from "../../store/index.js";
 import { restore, rewire$getBaselineArtifacts } from "../../api/rest-querier";
 import BaselineContent from "./BaselineContent.vue";
 
@@ -34,9 +36,12 @@ describe("BaselineContent", () => {
         rewire$getBaselineArtifacts(getBaselineArtifacts);
 
         wrapper = shallowMount(BaselineContent, {
-            localVue,
             propsData: {
                 baseline_id: 1
+            },
+            localVue,
+            mocks: {
+                $store: createStoreMock(store_options)
             }
         });
 

@@ -33,25 +33,20 @@
         </span>
 
         <div class="baseline-content-artifact-body" data-test-type="artifact-fields">
-            <template v-if="is_description_available">
-                <h3 class="baseline-content-artifact-body-field-label" v-translate>
-                    Description
-                </h3>
-                <p
-                    v-html="artifact.description"
-                    class="baseline-content-body-content"
-                    data-test-type="artifact-description">
-                </p>
-            </template>
-
-            <template v-if="is_status_available">
-                <h3 class="baseline-content-artifact-body-field-label" v-translate>
-                    Status
-                </h3>
-                <p class="baseline-content-body-content" data-test-type="artifact-status">
-                    {{ artifact.status }}
-                </p>
-            </template>
+            <field
+                v-if="is_description_available"
+                semantic="description"
+                v-bind:tracker_id="artifact.tracker_id"
+                v-bind:value="artifact.description"
+                data-test-type="artifact-description"
+            />
+            <field
+                v-if="is_status_available"
+                semantic="status"
+                v-bind:tracker_id="artifact.tracker_id"
+                v-bind:value="artifact.status"
+                data-test-type="artifact-status"
+            />
         </div>
 
         <baseline-artifacts-skeleton v-if="is_loading"/>
@@ -69,11 +64,12 @@ import { getBaselineArtifactsByIds } from "../../api/rest-querier";
 import BaselineArtifacts from "./BaselineArtifacts.vue";
 import BaselineArtifactsSkeleton from "./BaselineArtifactsSkeleton.vue";
 import ArtifactLabel from "../common/ArtifactLabel.vue";
+import Field from "./Field.vue";
 
 export default {
     name: "BaselineArtifact",
 
-    components: { ArtifactLabel, BaselineArtifacts, BaselineArtifactsSkeleton },
+    components: { ArtifactLabel, BaselineArtifacts, BaselineArtifactsSkeleton, Field },
 
     props: {
         baseline_id: {

@@ -47,11 +47,37 @@ const factories = {
             creation_date: 12344567
         }
     },
+    tracker: {
+        default: {
+            id: identity,
+            fields: [
+                {
+                    field_id: 22,
+                    label: "Description"
+                }
+            ],
+            semantics: {
+                description: {
+                    field_id: 22
+                }
+            }
+        },
+        without_semantic: {
+            semantics: {}
+        }
+    },
+    field: {
+        default: {
+            field_id: 1,
+            label: "Description"
+        }
+    },
     artifact: {
         default: {
             id: identity,
             title: "Sprint-1",
             status: "Planned",
+            tracker_id: 1,
             tracker_name: "Sprint",
             description:
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit labore et dolore magna aliqua",

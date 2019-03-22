@@ -46,6 +46,9 @@ class BaselineArtifactBuilder
     /** @var Project */
     private $project;
 
+    /**  @var int */
+    private $tracker_id;
+
     /**  @var string */
     private $tracker_name;
 
@@ -88,6 +91,12 @@ class BaselineArtifactBuilder
         return $this;
     }
 
+    public function trackerId(int $tracker_id): self
+    {
+        $this->tracker_id = $tracker_id;
+        return $this;
+    }
+
     public function trackerName(string $tracker_name): self
     {
         $this->tracker_name = $tracker_name;
@@ -112,6 +121,7 @@ class BaselineArtifactBuilder
             $this->initial_effort,
             $this->status,
             $this->project,
+            $this->tracker_id,
             $this->tracker_name,
             $this->linked_artifact_ids
         );
