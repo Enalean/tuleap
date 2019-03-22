@@ -47,6 +47,15 @@
                     {{ artifact.description }}
                 </p>
             </template>
+
+            <template v-if="is_status_available">
+                <h3 class="baseline-content-artifact-body-field-label" v-translate>
+                    Status
+                </h3>
+                <p class="baseline-content-body-content" data-test-type="artifact-status">
+                    {{ artifact.status }}
+                </p>
+            </template>
         </div>
 
         <baseline-artifacts-skeleton v-if="is_loading"/>
@@ -91,6 +100,10 @@ export default {
     computed: {
         is_description_available() {
             return this.artifact.description !== null && this.artifact.description.length > 0;
+        },
+
+        is_status_available() {
+            return this.artifact.status !== null && this.artifact.status.length > 0;
         },
 
         error_message_tooltip() {

@@ -51,6 +51,7 @@ const factories = {
         default: {
             id: identity,
             title: "Sprint-1",
+            status: "Planned",
             tracker_name: "Sprint",
             description:
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit labore et dolore magna aliqua",

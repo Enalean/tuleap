@@ -130,6 +130,9 @@ msgstr ""
 msgid "Snapshot Date"
 msgstr ""
 
+msgid "Status"
+msgstr ""
+
 msgid "Tasks"
 msgstr ""
 

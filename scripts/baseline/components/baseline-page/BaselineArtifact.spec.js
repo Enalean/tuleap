@@ -28,6 +28,7 @@ describe("BaselineArtifact", () => {
     const artifact_selector = '[data-test-type="artifact"]';
     const artifact_fields_selector = '[data-test-type="artifact-fields"]';
     const artifact_description_selector = '[data-test-type="artifact-description"]';
+    const artifact_status_selector = '[data-test-type="artifact-status"]';
 
     let getBaselineArtifactsByIds;
     let wrapper;
@@ -50,7 +51,7 @@ describe("BaselineArtifact", () => {
 
     afterEach(restore);
 
-    describe("when artifacts has description", () => {
+    describe("when artifact has description", () => {
         beforeEach(() => {
             wrapper.setProps({ artifact: create("artifact", { description: "my description" }) });
         });
@@ -70,6 +71,30 @@ describe("BaselineArtifact", () => {
         it("does not show description", () => {
             expect(
                 wrapper.find(artifact_fields_selector).contains(artifact_description_selector)
+            ).toBeFalsy();
+        });
+    });
+
+    describe("when artifact has status", () => {
+        beforeEach(() => {
+            wrapper.setProps({ artifact: create("artifact", { status: "my status" }) });
+        });
+        it("shows artifact status", () => {
+            expect(wrapper.contains(artifact_status_selector)).toBeTruthy();
+        });
+    });
+
+    describe("when artifact has no status", () => {
+        beforeEach(async () => {
+            wrapper.setProps({
+                artifact: create("artifact", { status: null })
+            });
+            await wrapper.vm.$nextTick();
+        });
+
+        it("does not show status", () => {
+            expect(
+                wrapper.find(artifact_fields_selector).contains(artifact_status_selector)
             ).toBeFalsy();
         });
     });
