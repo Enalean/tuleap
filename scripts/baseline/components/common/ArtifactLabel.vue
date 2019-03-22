@@ -19,23 +19,20 @@
   -->
 
 <template>
-    <span class="comparison-content-artifact-header">
-        <span class="tlp-badge-success tlp-badge-outline">
+    <span>
+        <span class="baseline-artifact-badge tlp-badge-primary tlp-badge-outline">
             {{ artifact.tracker_name }} #{{ artifact.id }}
         </span>
-
-        <span class="comparison-content-artifact-added-title">
+        <span class="baseline-artifact-title">
             {{ artifact.title }}
         </span>
     </span>
 </template>
-
 <script>
 export default {
-    name: "AddedArtifact",
-
+    name: "ArtifactLabel",
     props: {
-        artifact: { require: true, type: Object }
+        artifact: { required: true, type: Object }
     }
 };
 </script>

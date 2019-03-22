@@ -28,27 +28,26 @@
             v-bind:key="artifact.id"
             class="comparison-content-artifact-added"
         >
-            <added-artifact v-bind:artifact="artifact"/>
+            <artifact-label v-bind:artifact="artifact" class="comparison-content-artifact-header"/>
         </li>
         <li
             v-for="artifact in removed_artifacts"
             v-bind:key="artifact.id"
             class="comparison-content-artifact-removed"
         >
-            <removed-artifact v-bind:artifact="artifact"/>
+            <artifact-label v-bind:artifact="artifact" class="comparison-content-artifact-header"/>
         </li>
     </ol>
 </template>
 
 <script>
 import ModifiedArtifact from "./ModifiedArtifact.vue";
-import AddedArtifact from "./AddedArtifact.vue";
-import RemovedArtifact from "./RemovedArtifact.vue";
+import ArtifactLabel from "../../common/ArtifactLabel.vue";
 
 export default {
     name: "ArtifactsComparison",
 
-    components: { ModifiedArtifact, AddedArtifact, RemovedArtifact },
+    components: { ModifiedArtifact, ArtifactLabel },
 
     props: {
         reference_artifacts: { require: true, type: Array },

@@ -51,15 +51,39 @@
             color: $tlp-theme-color;
             font-size: 1.3rem;
         }
+    }
+}
 
+.comparison-content-artifact-added {
+    &::before {
+        color: $tlp-ui-success !important;
     }
 
-    .comparison-content-artifact-added::before {
+    .baseline-artifact-badge {
+        border-color: $tlp-ui-success;
         color: $tlp-ui-success;
     }
 
-    .comparison-content-artifact-removed::before {
+    .baseline-artifact-title {
+        background-color: $tlp-ui-success;
+        color: $tlp-ui-white;
+    }
+}
+
+.comparison-content-artifact-removed {
+    &::before {
+        color: $tlp-ui-danger !important;
+    }
+
+    .baseline-artifact-badge {
+        border-color: $tlp-ui-danger;
         color: $tlp-ui-danger;
+    }
+
+    .baseline-artifact-title {
+        background-color: $tlp-ui-danger;
+        color: $tlp-ui-white;
+        text-decoration: line-through;
     }
 }
 
@@ -73,14 +97,6 @@
     margin-top: $tlp-spacing;
     margin-bottom: $tlp-half-spacing;
     color: $tlp-swatch-firemist-silver;
-}
-
-.comparison-content-artifact-removed-title {
-    @extend %comparison-removed;
-}
-
-.comparison-content-artifact-added-title {
-    @extend %comparison-added;
 }
 
 .comparison-content-field-value-reference {

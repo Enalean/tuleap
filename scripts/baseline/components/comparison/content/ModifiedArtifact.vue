@@ -20,16 +20,7 @@
 
 <template>
     <span>
-        <span class="comparison-content-artifact-header">
-            <span class="tlp-badge-primary tlp-badge-outline">
-                {{ reference.tracker_name }} #{{ reference.id }}
-            </span>
-
-            <span data-test-type="artifact-title">
-                {{ reference.title }}
-            </span>
-        </span>
-
+        <artifact-label v-bind:artifact="reference" class="comparison-content-artifact-header"/>
         <div>
             <field-comparison
                 v-if="reference.description !== compared_to.description"
@@ -63,11 +54,17 @@ import { presentArtifacts } from "../../../presenters/baseline";
 import ArtifactsComparisonSkeleton from "./ArtifactsComparisonSkeleton.vue";
 import ArtifactsComparison from "./ArtifactsComparison.vue";
 import FieldComparison from "./FieldComparison.vue";
+import ArtifactLabel from "../../common/ArtifactLabel.vue";
 
 export default {
     name: "ModifiedArtifact",
 
-    components: { FieldComparison, ArtifactsComparisonSkeleton, ArtifactsComparison },
+    components: {
+        ArtifactLabel,
+        FieldComparison,
+        ArtifactsComparisonSkeleton,
+        ArtifactsComparison
+    },
 
     props: {
         reference: { require: true, type: Object },

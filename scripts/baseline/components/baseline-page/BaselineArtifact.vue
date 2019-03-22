@@ -20,13 +20,7 @@
 
 <template>
     <div class="baseline-content-artifact" data-test-type="artifact">
-        <span class="baseline-content-artifact-label tlp-badge-primary tlp-badge-outline">
-            {{ artifact.tracker_name }} #{{ artifact.id }}
-        </span>
-
-        <span data-test-type="artifact-title">
-            {{ artifact.title }}
-        </span>
+        <artifact-label v-bind:artifact="artifact" class="baseline-content-artifact-label"/>
 
         <span
             v-if="is_loading_failed"
@@ -74,11 +68,12 @@
 import { getBaselineArtifactsByIds } from "../../api/rest-querier";
 import BaselineArtifacts from "./BaselineArtifacts.vue";
 import BaselineArtifactsSkeleton from "./BaselineArtifactsSkeleton.vue";
+import ArtifactLabel from "../common/ArtifactLabel.vue";
 
 export default {
     name: "BaselineArtifact",
 
-    components: { BaselineArtifacts, BaselineArtifactsSkeleton },
+    components: { ArtifactLabel, BaselineArtifacts, BaselineArtifactsSkeleton },
 
     props: {
         baseline_id: {
