@@ -20,7 +20,7 @@
 
 <template>
     <h2>
-        Baseline #{{ baseline.id }} - {{ baseline.name }} <small>{{ baseline.snapshot_date }}</small>
+        Baseline #{{ baseline.id }} - {{ baseline.name }} <small><humanized-date v-bind:date="baseline.snapshot_date"/></small>
         <span class="baseline-label-author">
             <small><translate>Created by</translate> {{ baseline.author.username }}</small>
         </span>
@@ -28,8 +28,10 @@
 </template>
 
 <script>
+import HumanizedDate from "./HumanizedDate.vue";
 export default {
     name: "BaselineLabel",
+    components: { HumanizedDate },
     props: {
         baseline: { required: true, type: Object }
     }

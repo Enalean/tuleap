@@ -15,34 +15,33 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
-import { mount } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
 import localVue from "../../support/local-vue.js";
-import BaselineLabel from "./BaselineLabel.vue";
-import { create } from "../../support/factories";
+import HumanizedDate from "./HumanizedDate.vue";
 
-describe("BaselineLabel", () => {
+describe("HumanizedDate", () => {
     let wrapper;
 
     beforeEach(() => {
-        wrapper = mount(BaselineLabel, {
+        wrapper = shallowMount(HumanizedDate, {
             localVue,
             propsData: {
-                baseline: create("baseline", {
-                    id: 1,
-                    name: "Baseline V1",
-                    snapshot_date: "2019-03-22T10:01:48+00:00",
-                    author: create("user", { username: "Alita" })
-                })
+                date: "2019-03-22T09:01:48+00:00"
             }
         });
     });
 
-    it("shows baseline information", () => {
-        expect(wrapper.text()).toEqual(
-            "Baseline #1 - Baseline V1 March 22, 2019 at 11h 01mn 48s Created by Alita"
-        );
+    it("shows humanized date", () => {
+        expect(wrapper.text()).toEqual("March 22, 2019 at 10h 01mn 48s");
+    });
+
+    it("pads hour until 9", () => {
+        expect(wrapper.vm.padHour(9)).toEqual("09");
+    });
+
+    it("does not pad hour after 10", () => {
+        expect(wrapper.vm.padHour(10)).toEqual(10);
     });
 });

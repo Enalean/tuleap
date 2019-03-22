@@ -6,6 +6,7 @@
   "license": "GPL-2.0+",
   "private": true,
   "dependencies": {
+    "sprintf-js": "^1.1.2",
     "vue": "^2.5.17",
     "vue-gettext": "^2.1.0",
     "vue-router": "^3.0.2",

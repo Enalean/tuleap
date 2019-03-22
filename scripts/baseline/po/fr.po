@@ -12,8 +12,14 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 2.2.1\n"
 
+msgid "%(month)s %(day)s, %(year)s at %(hours)sh %(minutes)smn %(seconds)ss"
+msgstr "%(day)s %(month)s %(year)s à %(hours)sh %(minutes)smn %(seconds)ss"
+
 msgid "Actions"
 msgstr "Actions"
+
+msgid "April"
+msgstr "Avril"
 
 msgid "Artifact added"
 msgstr "Artefact ajouté"
@@ -23,6 +29,9 @@ msgstr "Artefacts supprimés"
 
 msgid "Artifacts modified"
 msgstr "Artefacts modifiés"
+
+msgid "August"
+msgstr "Août"
 
 msgid "Author"
 msgstr "Auteur"
@@ -86,14 +95,35 @@ msgstr "Créer baseline"
 msgid "Created by"
 msgstr "Créé par"
 
+msgid "December"
+msgstr "Décembre"
+
 msgid "Epics"
 msgstr "Epics"
+
+msgid "February"
+msgstr "Février"
 
 msgid "Id"
 msgstr "Id"
 
 msgid "Initial effort"
 msgstr "Effort initial"
+
+msgid "January"
+msgstr "Janvier"
+
+msgid "July"
+msgstr "Juillet"
+
+msgid "Jun"
+msgstr "Juin"
+
+msgid "March"
+msgstr "Mars"
+
+msgid "May"
+msgstr "Mai"
 
 msgid "Milestone"
 msgstr "Milestone"
@@ -122,6 +152,12 @@ msgstr "Aucune milestone disponible"
 msgid "No other baseline available on same artifact."
 msgstr "Aucune autre baseline disponible posée sur le même artefact."
 
+msgid "November"
+msgstr "Novembre"
+
+msgid "October"
+msgstr "Octobre"
+
 msgid "Only open milestone are visible here"
 msgstr "Seules les milestones ouvertes sont visibles ici"
 
@@ -133,6 +169,9 @@ msgstr "Veuillez choisir deux baselines à comparer"
 
 msgid "Reference…"
 msgstr "Référence…"
+
+msgid "September"
+msgstr "Sptembre"
 
 msgid "Show comparison"
 msgstr "Afficher la comparaison"

@@ -31,7 +31,7 @@ const factories = {
         default: {
             id: identity,
             name: "Baseline label",
-            snapshot_date: "10/02/2019",
+            snapshot_date: "2019-03-22T10:01:48+00:00",
             author_id: 3
         },
         presented: {

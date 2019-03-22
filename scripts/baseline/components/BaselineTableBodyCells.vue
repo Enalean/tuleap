@@ -26,7 +26,9 @@
                 </a>
             </td>
             <td>{{ baseline.name }}</td>
-            <td>{{ baseline.snapshot_date }}</td>
+            <td>
+                <humanized-date v-bind:date="baseline.snapshot_date"/>
+            </td>
             <td>{{ baseline.author.username }}</td>
             <td class="tlp-table-cell-actions baselines-table-column-actions">
                 <button
@@ -41,9 +43,10 @@
 </template>
 
 <script>
+import HumanizedDate from "./common/HumanizedDate.vue";
 export default {
     name: "BaselineTableBodyCells",
-
+    components: { HumanizedDate },
     props: {
         baselines: { required: true, type: Array }
     },
