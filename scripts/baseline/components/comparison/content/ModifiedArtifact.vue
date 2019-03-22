@@ -30,6 +30,15 @@
             </span>
         </span>
 
+        <div>
+            <field-comparison
+                v-if="reference.description !== compared_to.description"
+                title="description"
+                v-bind:reference="reference.description"
+                v-bind:compare_to="compared_to.description"
+            />
+        </div>
+
         <artifacts-comparison-skeleton v-if="is_loading"/>
         <span
             v-else-if="is_loading_failed"
@@ -53,11 +62,12 @@ import { getBaselineArtifactsByIds } from "../../../api/rest-querier";
 import { presentArtifacts } from "../../../presenters/baseline";
 import ArtifactsComparisonSkeleton from "./ArtifactsComparisonSkeleton.vue";
 import ArtifactsComparison from "./ArtifactsComparison.vue";
+import FieldComparison from "./FieldComparison.vue";
 
 export default {
     name: "ModifiedArtifact",
 
-    components: { ArtifactsComparisonSkeleton, ArtifactsComparison },
+    components: { FieldComparison, ArtifactsComparisonSkeleton, ArtifactsComparison },
 
     props: {
         reference: { require: true, type: Object },
