@@ -314,13 +314,12 @@ class Workflow //phpcs:ignoreFile
         $artifact_id = $artifact->getId();
         if (! $this->is_used && ! $this->is_legacy) {
             $this->logger->debug("Workflow for artifact #$artifact_id is disabled, skipping transitions.");
-            return;
-        }
-
-        if (isset($fields_data[$this->getFieldId()])) {
-            $transition = $this->getCurrentTransition($fields_data, $artifact->getLastChangeset());
-            if ($transition) {
-                $transition->before($fields_data, $current_user);
+        } else {
+            if (isset($fields_data[$this->getFieldId()])) {
+                $transition = $this->getCurrentTransition($fields_data, $artifact->getLastChangeset());
+                if ($transition) {
+                    $transition->before($fields_data, $current_user);
+                }
             }
         }
 
