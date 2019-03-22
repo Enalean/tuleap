@@ -20,7 +20,7 @@
 
 <template>
     <span>
-        <artifact-label v-bind:artifact="reference" class="comparison-content-artifact-header"/>
+        <artifact-label v-bind:artifact="compared_to" class="comparison-content-artifact-header"/>
         <div>
             <field-comparison
                 v-if="reference.description !== compared_to.description"
