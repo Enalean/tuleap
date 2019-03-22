@@ -43,8 +43,10 @@
                 <h3 class="baseline-content-artifact-body-field-label" v-translate>
                     Description
                 </h3>
-                <p class="baseline-content-body-content" data-test-type="artifact-description">
-                    {{ artifact.description }}
+                <p
+                    v-html="artifact.description"
+                    class="baseline-content-body-content"
+                    data-test-type="artifact-description">
                 </p>
             </template>
 
