@@ -53,24 +53,22 @@
     background-color: $tlp-theme-purple;
 }
 
-.baseline-content {
-    ol {
-        list-style: none;
-        counter-reset: artifact-counter;
-    }
+.baseline-content-artifact-ol {
+    list-style: none;
+    counter-reset: artifact-counter;
+}
 
-    li {
-        margin-top: $tlp-spacing;
-        counter-increment: artifact-counter;
+.baseline-content-artifact-li {
+    margin-top: $tlp-spacing;
+    counter-increment: artifact-counter;
 
-        &::before {
-            content: counters(artifact-counter, '.');
-            margin-right: .3rem;
-            padding-right: .5rem;
-            border-right: 1px solid $tlp-swatch-firemist-silver;
-            color: $tlp-theme-color;
-            font-size: 1.3rem;
-        }
+    &::before {
+        content: counters(artifact-counter, '.');
+        margin-right: .3rem;
+        padding-right: .5rem;
+        border-right: 1px solid $tlp-swatch-firemist-silver;
+        color: $tlp-theme-color;
+        font-size: 1.3rem;
     }
 }
 

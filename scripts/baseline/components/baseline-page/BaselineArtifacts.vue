@@ -1,6 +1,9 @@
 <template>
-    <ol>
-        <li v-for="artifact in artifacts" v-bind:key="artifact.id">
+    <ol class="baseline-content-artifact-ol">
+        <li
+            v-for="artifact in artifacts" v-bind:key="artifact.id"
+            class="baseline-content-artifact-li"
+        >
             <baseline-artifact v-bind:baseline_id="baseline_id" v-bind:artifact="artifact"/>
         </li>
     </ol>

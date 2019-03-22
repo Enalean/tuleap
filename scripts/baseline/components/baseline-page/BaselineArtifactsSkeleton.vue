@@ -19,10 +19,10 @@
   -->
 
 <template>
-    <ol>
-        <li><baseline-artifact-skeleton/></li>
-        <li><baseline-artifact-skeleton/></li>
-        <li><baseline-artifact-skeleton/></li>
+    <ol class="baseline-content-artifact-ol">
+        <li class="baseline-content-artifact-li"><baseline-artifact-skeleton/></li>
+        <li class="baseline-content-artifact-li"><baseline-artifact-skeleton/></li>
+        <li class="baseline-content-artifact-li"><baseline-artifact-skeleton/></li>
     </ol>
 </template>
 
