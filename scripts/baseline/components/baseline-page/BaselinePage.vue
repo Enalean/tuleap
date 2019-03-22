@@ -63,7 +63,7 @@
                 <div class="tlp-framed-vertically">
                     <section class="tlp-pane">
                         <div class="tlp-pane-container">
-                            <section class="tlp-pane-section baseline-content">
+                            <section class="tlp-pane-section">
                                 <baseline-content v-bind:baseline_id="baseline_id"/>
                             </section>
                         </div>

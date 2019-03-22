@@ -30,10 +30,10 @@
     width: 12em;
     min-width: 12em;
     height: 7em;
-    margin-right: 2em;
-    margin-bottom: 2em;
-    padding-right: 1em;
-    padding-left: 1em;
+    margin-right: $tlp-spacing;
+    margin-bottom: $tlp-spacing;
+    padding-right: $tlp-half-spacing;
+    padding-left: $tlp-half-spacing;
     border-radius: .2em;
 }
 

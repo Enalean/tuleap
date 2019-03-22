@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="baseline-content">
         <div v-if="is_loading_failed">
             <div class="tlp-alert-danger">
                 <translate>Cannot fetch baseline artifacts</translate>

@@ -21,7 +21,7 @@
 <template>
     <span>
         <artifact-label v-bind:artifact="compared_to" class="comparison-content-artifact-header"/>
-        <div>
+        <div class="comparison-content-artifact-body">
             <field-comparison
                 v-if="reference.description !== compared_to.description"
                 semantic="description"
@@ -37,16 +37,13 @@
                 v-bind:compare_to="compared_to.status"
             />
         </div>
-
         <artifacts-comparison-skeleton v-if="is_loading"/>
         <span
             v-else-if="is_loading_failed"
-            class="tlp-tooltip tlp-tooltip-right baseline-content-artifact-error-message"
+            class="tlp-tooltip tlp-tooltip-right comparison-content-artifact-error-message"
             v-bind:data-tlp-tooltip="error_message_tooltip"
         >
-            <i
-                class="fa fa-exclamation-circle baseline-tooltip-icon"
-            ></i>
+            <i class="fa fa-exclamation-circle baseline-tooltip-icon"></i>
         </span>
         <artifacts-comparison
             v-else

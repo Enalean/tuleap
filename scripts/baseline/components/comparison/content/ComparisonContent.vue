@@ -19,10 +19,10 @@
   -->
 
 <template>
-    <div class="tlp-framed-vertically comparison-content">
+    <div class="tlp-framed-vertically">
         <section class="tlp-pane">
             <div class="tlp-pane-container">
-                <section class="tlp-pane-section">
+                <section class="tlp-pane-section comparison-content">
 
                     <artifacts-comparison-skeleton v-if="is_loading"/>
 

@@ -19,6 +19,8 @@
  */
 @import 'statistics';
 
+$artifact-body-padding: $tlp-spacing;
+
 .baseline-pane-header {
     display: flex;
     justify-content: space-between;
@@ -54,6 +56,7 @@
 }
 
 .baseline-content-artifact-ol {
+    padding-left: $artifact-body-padding;
     list-style: none;
     counter-reset: artifact-counter;
 }
@@ -70,6 +73,10 @@
         color: $tlp-theme-color;
         font-size: 1.3rem;
     }
+}
+
+.baseline-content > .baseline-content-artifact-ol > .baseline-content-artifact-li:first-child {
+    margin-top: 0;
 }
 
 .baseline-content-artifact {
@@ -95,7 +102,7 @@
 }
 
 .baseline-content-artifact-body {
-    margin-left: $tlp-spacing;
+    padding-left: $artifact-body-padding;
 }
 
 .baseline-content-artifact-body-field-label {

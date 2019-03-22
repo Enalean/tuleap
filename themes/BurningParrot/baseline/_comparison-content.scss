@@ -18,6 +18,8 @@
  *
  */
 
+$artifact-body-padding: $tlp-spacing;
+
 %comparison-removed {
     padding-right: $tlp-spacing;
     padding-left: $tlp-spacing;
@@ -33,12 +35,13 @@
     color: $tlp-ui-white;
 }
 
-.baseline-content-artifact-ol {
+.comparison-content-artifact-ol {
+    padding-left: $artifact-body-padding;
     list-style: none;
     counter-reset: artifact-counter;
 }
 
-.baseline-content-artifact-li {
+.comparison-content-artifact-li {
     margin-top: $tlp-double-spacing;
     counter-increment: artifact-counter;
 
@@ -50,6 +53,10 @@
         color: $tlp-theme-color;
         font-size: 1.3rem;
     }
+}
+
+.comparison-content > .comparison-content-artifact-ol > .comparison-content-artifact-li:first-child {
+    margin-top: 0;
 }
 
 .comparison-content-artifact-added {
@@ -85,10 +92,18 @@
     }
 }
 
+.comparison-content-artifact-error-message {
+    color: $tlp-swatch-red-wine-border;
+}
+
 .comparison-content-artifact-header {
     display: initial;
     color: $tlp-theme-color;
     font-size: 1.3rem;
+}
+
+.comparison-content-artifact-body {
+    padding-left: $artifact-body-padding;
 }
 
 .comparison-content-artifact-body-field-label {

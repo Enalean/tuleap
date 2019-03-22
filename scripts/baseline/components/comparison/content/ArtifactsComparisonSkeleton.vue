@@ -19,10 +19,10 @@
   -->
 
 <template>
-    <ol class="baseline-content-artifact-ol">
-        <li class="baseline-content-artifact-li"><modified-artifact-skeleton/></li>
-        <li class="baseline-content-artifact-li"><modified-artifact-skeleton/></li>
-        <li class="baseline-content-artifact-li"><modified-artifact-skeleton/></li>
+    <ol class="comparison-content-artifact-ol">
+        <li class="comparison-content-artifact-li"><modified-artifact-skeleton/></li>
+        <li class="comparison-content-artifact-li"><modified-artifact-skeleton/></li>
+        <li class="comparison-content-artifact-li"><modified-artifact-skeleton/></li>
     </ol>
 </template>
 

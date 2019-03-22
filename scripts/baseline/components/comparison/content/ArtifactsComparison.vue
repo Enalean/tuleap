@@ -19,25 +19,25 @@
   -->
 
 <template>
-    <ol class="baseline-content-artifact-ol">
+    <ol class="comparison-content-artifact-ol">
         <li
             v-for="comparison in artifact_comparisons"
             v-bind:key="comparison.reference.id"
-            class="baseline-content-artifact-li"
+            class="comparison-content-artifact-li"
         >
             <modified-artifact v-bind:reference="comparison.reference" v-bind:compared_to="comparison.compared_to"/>
         </li>
         <li
             v-for="artifact in added_artifacts"
             v-bind:key="artifact.id"
-            class="baseline-content-artifact-li comparison-content-artifact-added"
+            class="comparison-content-artifact-li comparison-content-artifact-added"
         >
             <artifact-label v-bind:artifact="artifact" class="comparison-content-artifact-header"/>
         </li>
         <li
             v-for="artifact in removed_artifacts"
             v-bind:key="artifact.id"
-            class="baseline-content-artifact-li comparison-content-artifact-removed"
+            class="comparison-content-artifact-li comparison-content-artifact-removed"
         >
             <artifact-label v-bind:artifact="artifact" class="comparison-content-artifact-header"/>
         </li>
