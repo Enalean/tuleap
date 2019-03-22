@@ -119,7 +119,7 @@ class TimetrackingReportTest extends TimetrackingBase
         }
 
         $this->assertEquals($response->getStatusCode(), 200);
-        $this->assertEquals($total, 1400);
+        $this->assertEquals($total, 1200);
     }
 
     public function testGetTimesByReportReturnsTheSumOfTrackedTimesOfPeriod()
@@ -143,7 +143,7 @@ class TimetrackingReportTest extends TimetrackingBase
         }
 
         $this->assertEquals($response->getStatusCode(), 200);
-        $this->assertEquals($total, 1400);
+        $this->assertEquals($total, 1200);
     }
 
     public function testGetTimeByRetortsReturnsNoTrackedTimeForLastMonth()
