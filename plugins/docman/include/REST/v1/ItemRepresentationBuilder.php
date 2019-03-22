@@ -190,8 +190,7 @@ class ItemRepresentationBuilder
         return new ItemApprovalTableRepresentation(
             $approval_table,
             $table_owner,
-            $this->approval_table_state_mapper,
-            $item
+            $this->approval_table_state_mapper
         );
     }
 

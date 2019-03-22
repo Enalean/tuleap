@@ -33,12 +33,14 @@
 
 <script>
 import ErrorModal from "./ErrorModal.vue";
+import { mapState } from "vuex";
 export default {
     components: { ErrorModal },
     props: {
         reasons: Array
     },
     computed: {
+        ...mapState(["project_id"]),
         filename() {
             return this.reasons[0].filename;
         },
@@ -49,7 +51,13 @@ export default {
             return this.reasons[0].approval_table_state;
         },
         approval_table_url() {
-            return this.reasons[0].approval_table_admin_url;
+            return (
+                "/plugins/docman/?group_id=" +
+                this.project_id +
+                "&id=" +
+                this.reasons[0].item_id +
+                "&action=details&section=approval"
+            );
         }
     },
     methods: {
