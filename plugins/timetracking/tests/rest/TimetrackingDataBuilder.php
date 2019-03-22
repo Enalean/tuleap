@@ -110,15 +110,28 @@ class TimetrackingDataBuilder extends REST_TestDataBuilder
         $time_dao = new TimeDao();
 
         foreach ($artifacts as $artifact) {
-            $time_dao->addTime(
-                $user->getId(),
-                $artifact->getId(),
-                date('Y-m-d', $artifact->getSubmittedOn()),
-                600,
-                'test'
-            );
+            $this->addTimesIn2018($time_dao, $artifact, $user);
         }
 
+        $this->addTimeOnLastMonthPeriod($time_dao, $artifact, $user);
+    }
+
+    private function addTimesIn2018(TimeDao $time_dao, \Tracker_Artifact $artifact, PFUser $user)
+    {
+        $time_dao->addTime(
+            $user->getId(),
+            $artifact->getId(),
+            '2018-04-01',
+            600,
+            'test'
+        );
+    }
+
+    private function addTimeOnLastMonthPeriod(
+        TimeDao $time_dao,
+        \Tracker_Artifact $artifact,
+        PFUser $user
+    ) {
         $time_dao->addTime(
             $user->getId(),
             $artifact->getId(),
