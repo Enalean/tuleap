@@ -29,6 +29,13 @@
                 v-bind:reference="reference.description"
                 v-bind:compare_to="compared_to.description"
             />
+            <field-comparison
+                v-if="reference.status !== compared_to.status"
+                semantic="status"
+                v-bind:tracker_id="compared_to.tracker_id"
+                v-bind:reference="reference.status"
+                v-bind:compare_to="compared_to.status"
+            />
         </div>
 
         <artifacts-comparison-skeleton v-if="is_loading"/>

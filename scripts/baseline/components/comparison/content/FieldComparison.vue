@@ -24,7 +24,7 @@
             <semantic-field-label v-bind:semantic="semantic" v-bind:tracker_id="tracker_id"/>
         </h3>
         <p v-html="reference || '-'" class="comparison-content-field-value-reference"/>
-        <p v-html="compare_to" class="comparison-content-field-value-compare-to"/>
+        <p v-html="compare_to || '-'" class="comparison-content-field-value-compare-to"/>
     </div>
 </template>
 
@@ -48,11 +48,11 @@ export default {
             type: Number
         },
         reference: {
-            required: true,
+            required: false,
             type: String
         },
         compare_to: {
-            required: true,
+            required: false,
             type: String
         }
     }
