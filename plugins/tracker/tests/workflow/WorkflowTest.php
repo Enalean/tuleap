@@ -393,7 +393,7 @@ class Workflow_BeforeAfterTest extends TuleapTestCase {
         $this->workflow->before($fields_data, $this->current_user, $this->artifact);
     }
 
-    public function testBeforeShouldDoNothingIfWorkflowIsNotUsedAndIsNotLegacy()
+    public function testBeforeShouldDoNothingButProcessTheEventIfWorkflowIsNotUsedAndIsNotLegacy()
     {
         $changeset = new MockTracker_Artifact_Changeset_Null();
         $this->artifact->setReturnValue('getLastChangeset', $changeset);
@@ -404,7 +404,7 @@ class Workflow_BeforeAfterTest extends TuleapTestCase {
 
         expect($this->transition_null_to_open)->before()->never();
         expect($this->transition_open_to_close)->before()->never();
-        expect($this->event_manager)->processEvent()->never();
+        expect($this->event_manager)->processEvent()->once();
 
         $this->unused_workflow->before($fields_data, $this->current_user, $this->artifact);
     }
