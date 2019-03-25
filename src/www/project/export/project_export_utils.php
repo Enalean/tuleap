@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -72,11 +72,10 @@ function get_csv_separator() {
 function build_csv_header($col_list, $lbl_list) {
     $line      = '';
     $separator = get_csv_separator();
-    reset($col_list);
-    while (list(,$col) = each($col_list)) {
-    	if (isset($lbl_list[$col])) {
-			$line .= tocsv($lbl_list[$col], $separator) . $separator;
-    	}
+    foreach ($col_list as $col) {
+        if (isset($lbl_list[$col])) {
+            $line .= tocsv($lbl_list[$col], $separator) . $separator;
+        }
     }
     $line = substr($line,0,-1);
     return $line;
@@ -85,9 +84,8 @@ function build_csv_header($col_list, $lbl_list) {
 function build_csv_record($col_list, $record) {
     $line      = '';
     $separator = get_csv_separator();
-    reset($col_list);
-    while (list(,$col) = each($col_list)) {
-	$line .= tocsv($record[$col], $separator) . $separator;
+    foreach ($col_list as $col) {
+        $line .= tocsv($record[$col], $separator) . $separator;
     }
     $line = substr($line,0,-1);
     return $line;
@@ -104,9 +102,8 @@ function display_exported_fields($col_list,$lbl_list,$dsc_list,$sample_val,$mand
     $purifier = Codendi_HTMLPurifier::instance();
 
     echo html_build_list_table_top ($title_arr);
-    reset($col_list);
     $cnt = 0;
-    while (list(,$col) = each($col_list)) {
+    foreach ($col_list as $col) {
       $star = (($mand_list && isset($mand_list[$col]) && $mand_list[$col]) ? ' <span class="highlight"><big>*</big></b></span>':'');
       echo '<tr class="'.util_get_alt_row_color($cnt++).'">'.
 	'<td><b>'.$lbl_list[$col].'</b>'.$star.
@@ -130,9 +127,9 @@ function pick_a_record_at_random($result, $numrows, $col_list) {
     }
 
     // Build the array with the record picked at random
-    reset($col_list); $record = array();
-    while (list(,$col) = each($col_list)) {
-	$record[$col] = db_result($result,$pickone,$col);
+    $record = array();
+    foreach ($col_list as $col) {
+	    $record[$col] = db_result($result,$pickone,$col);
     }
 
     return $record;
@@ -142,49 +139,6 @@ function prepare_textarea($textarea) {
     // Turn all HTML entities in ASCII and remove all \r characters
     // because even MS Office apps don't like it in text cells (Excel)
     return( str_replace(chr(13),"",util_unconvert_htmlspecialchars($textarea)) );
-}
-
-function prepare_bug_record($group_id, &$col_list, &$record) {
-
-    global $datetime_fmt;
-    /*
-           Prepare the column values in the bug record
-           Input: a row from the bug table (passed by reference.
-          Output: the same row with values transformed for export
-       */
-	
-   reset($col_list);
-    $line = '';
-    while (list(,$col) = each($col_list)) {
-
- 	if (bug_data_is_text_field($col) || bug_data_is_text_area($col)) {
-	    // all text fields converted from HTML to ASCII
-	    $record[$col] = prepare_textarea($record[$col]);
-
-	} else if (bug_data_is_select_box($col) && ($col != 'severity') &&
-		  !bug_data_is_username_field($col) ) {
-	    // All value_ids transformed in human readable values 
-	    // except severity that remains a number and usernames
-	    // which are already in clear
-	    $record[$col] = bug_data_get_cached_field_value($col, $group_id, $record[$col]);
-	} else if (bug_data_is_date_field($col)) {
-	    // replace the date fields (unix time) with human readable dates that
-	    // is also accepted as a valid format in future import
-	    if ($record[$col] == '')
-		// if date undefined then set datetime to 0. Ideally should
-		// NULL as well but if we pass NULL it is interpreted as a string
-		// later in the process
-		$record[$col] = '0';
-	    else
-		$record[$col] = format_date($datetime_fmt,$record[$col]);
-	}
-    }
-
-    $bug_id = $record['bug_id'];
-    $record['follow_ups'] = pe_utils_format_bug_followups($group_id,$bug_id);
-    $record['is_dependent_on_task_id'] = pe_utils_format_bug_task_dependencies($group_id,$bug_id);
-    $record['is_dependent_on_bug_id'] = pe_utils_format_bug_bug_dependencies($group_id,$bug_id);
-
 }
 
 /**
@@ -204,9 +158,8 @@ function prepare_artifact_record($at,$fields,$group_artifact_id, &$record, $expo
        Output: the same row with values transformed for export
     */
 	
-    reset($fields);
     $line = '';
-    while (list(,$field) = each($fields)) {
+    foreach ($fields as $field) {
 
 		if ( $field->isSelectBox() || $field->isMultiSelectBox() ) {
 			$values = array();

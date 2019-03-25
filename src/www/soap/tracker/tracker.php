@@ -1479,7 +1479,7 @@ function artifacttype_to_soap($at) {
             $fields_in_fieldset = $result_fieldset->getAllUsedFields();     
             $group_id = $at->Group->getID();
             $group_artifact_id = $at->getID();
-            while ( list($key, $field) = each($fields_in_fieldset) ) {
+            foreach ($fields_in_fieldset as $key => $field) {
                     
                 if ($field->userCanRead($group_id,$group_artifact_id,$user_id)) {
                     $availablevalues = array();
@@ -1810,7 +1810,7 @@ function artifact_to_soap($artifact) {
         $extrafieldvalues = array();
         $extrafielddata   = $artifact->getExtraFieldData();
         if (is_array($extrafielddata) && count($extrafielddata) > 0 ) {
-            while(list($field_id, $value) = each($extrafielddata)) {
+            foreach ($extrafielddata as $field_id => $value) {
                 $field = $art_field_fact->getFieldFromId($field_id);
                 if ($field->userCanRead($artifact->ArtifactType->Group->getID(),$artifact->ArtifactType->getID(), user_getid())) {
                     $extrafieldvalues[] = array (    
@@ -2554,7 +2554,7 @@ function artifactreports_to_soap($artifactreports) {
             } else {
                 $report_fields = $artifactreport->getSortedFields();    
                 if(is_array($report_fields) && count($report_fields) > 0 ) {
-                    while(list($key, $field) = each($report_fields)) {
+                    foreach ($report_fields as $field) {
                         $fields[] = array (
                             'report_id'      => $artifactreport->getID(),
                             'field_name'     => $field->getName(),

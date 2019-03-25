@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -204,19 +204,18 @@ class FlamingParrot_NavBarPresenter
 
     private function getClassnameNavItemActive($pathsToDetect, $toptab = null) {
         if ($toptab === $this->selected_top_tab) {
-            $class = 'active';
+            return 'active';
         } else {
             if (!is_array($pathsToDetect)) {
                 $pathsToDetect = array($pathsToDetect);
             }
-            $class = '';
-            while (!$class && (list(,$path) = each($pathsToDetect))) {
+            foreach ($pathsToDetect as $path) {
                 if (strpos($this->request_uri, $path) === 0) {
-                    $class = 'active';
+                    return 'active';
                 }
             }
         }
-        return $class;
+        return '';
     }
 
     public function login_url()
