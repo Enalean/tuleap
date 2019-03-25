@@ -53,7 +53,9 @@
                 >
                     <translate>Cannot fetch baseline</translate>
                 </div>
-                <span v-else-if="is_loading" class="tlp-skeleton-text" data-test-type="baseline-header-skeleton"></span>
+
+                <baseline-label-skeleton v-else-if="is_loading" data-test-type="baseline-header-skeleton"/>
+
                 <baseline-label v-else v-bind:baseline="baseline"/>
 
                 <baseline-statistics/>
@@ -78,10 +80,11 @@ import { presentBaseline } from "../../presenters/baseline";
 import BaselineStatistics from "./BaselineStatistics.vue";
 import BaselineContent from "./BaselineContent.vue";
 import BaselineLabel from "../common/BaselineLabel.vue";
+import BaselineLabelSkeleton from "../common/BaselineLabelSkeleton.vue";
 
 export default {
     name: "BaselinePage",
-    components: { BaselineLabel, BaselineContent, BaselineStatistics },
+    components: { BaselineLabelSkeleton, BaselineLabel, BaselineContent, BaselineStatistics },
     props: {
         baseline_id: { required: true, type: Number }
     },
