@@ -31,11 +31,13 @@ const factories = {
         default: {
             id: identity,
             name: "Baseline label",
+            artifact_id: 9,
             snapshot_date: "2019-03-22T10:01:48+00:00",
             author_id: 3
         },
         presented: {
-            author: association("user", { id: 3 })
+            author: association("user", { id: 3 }),
+            artifact: association("artifact", { id: 9 })
         }
     },
     simplified_baseline: {

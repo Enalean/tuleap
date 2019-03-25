@@ -26,6 +26,7 @@
                 </a>
             </td>
             <td>{{ baseline.name }}</td>
+            <td>{{ baseline.artifact.title }}</td>
             <td>
                 <humanized-date v-bind:date="baseline.snapshot_date"/>
             </td>

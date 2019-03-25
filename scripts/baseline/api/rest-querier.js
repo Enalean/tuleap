@@ -30,6 +30,7 @@ export {
     getTracker,
     getBaselines,
     getUser,
+    getArtifact,
     getBaselineArtifacts,
     getBaselineArtifactsByIds
 };
@@ -75,6 +76,11 @@ async function getBaselines(project_id) {
 
 async function getUser(user_id) {
     const response = await get(`/api/users/${user_id}`);
+    return response.json();
+}
+
+async function getArtifact(artifact_id) {
+    const response = await get(`/api/artifacts/${artifact_id}`);
     return response.json();
 }
 

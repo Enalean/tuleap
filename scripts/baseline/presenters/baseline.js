@@ -18,19 +18,41 @@
  *
  */
 
-import { getUser } from "../api/rest-querier";
+import { getUser, getArtifact } from "../api/rest-querier";
+import ArrayUtils from "../support/array-utils";
 
 export { presentBaseline, presentBaselines, presentArtifacts };
 
 async function presentBaselines(baselines) {
-    const user_ids = baselines.map(baseline => baseline.author_id);
-    const uniq_user_ids = [...new Set(user_ids)];
-    const users = await Promise.all(uniq_user_ids.map(user_id => getUser(user_id)));
+    let users_loading = fetchUsers(baselines);
+    let artifacts_loading = fetchArtifacts(baselines);
+
+    const users = await users_loading;
+    const artifacts = await artifacts_loading;
 
     return baselines.map(baseline => {
-        const matching_users = users.filter(user => user.id === baseline.author_id);
-        return { ...baseline, author: matching_users[0] };
+        const author = ArrayUtils.find(users, user => user.id === baseline.author_id);
+        const artifact = ArrayUtils.find(
+            artifacts,
+            artifact => artifact.id === baseline.artifact_id
+        );
+        return { ...baseline, author, artifact };
     });
+}
+
+function fetchUsers(baselines) {
+    const user_ids = baselines.map(baseline => baseline.author_id);
+    return fetchById(user_ids, getUser);
+}
+
+function fetchArtifacts(baselines) {
+    const user_ids = baselines.map(baseline => baseline.artifact_id);
+    return fetchById(user_ids, getArtifact);
+}
+
+function fetchById(ids, fetcher) {
+    const uniq_ids = [...new Set(ids)];
+    return Promise.all(uniq_ids.map(fetcher));
 }
 
 async function presentBaseline(baseline) {

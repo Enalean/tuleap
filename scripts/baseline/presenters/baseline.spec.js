@@ -18,7 +18,7 @@
  *
  */
 
-import { restore, rewire$getUser } from "../api/rest-querier";
+import { restore, rewire$getUser, rewire$getArtifact } from "../api/rest-querier";
 import { presentBaseline, presentBaselines } from "./baseline";
 import { create, createList } from "../support/factories";
 
@@ -78,60 +78,53 @@ describe("baseline presenter:", () => {
     describe("presentBaselines()", () => {
         let getUser;
         let getUserResolve;
-        let getUserReject;
-        let presentation;
+
+        let getArtifact;
+        let getArtifactResolve;
 
         beforeEach(() => {
             getUser = jasmine.createSpy("getUser");
             getUser.and.returnValue(
-                new Promise((resolve, reject) => {
+                new Promise(resolve => {
                     getUserResolve = resolve;
-                    getUserReject = reject;
                 })
             );
             rewire$getUser(getUser);
+
+            getArtifact = jasmine.createSpy("getArtifact");
+            getArtifact.and.returnValue(
+                new Promise(resolve => {
+                    getArtifactResolve = resolve;
+                })
+            );
+            rewire$getArtifact(getArtifact);
         });
 
         describe("when single baseline", () => {
-            beforeEach(() => {
-                presentation = presentBaselines([create("baseline", { author_id: 1 })]);
+            const user = create("user", { id: 1 });
+            const artifact = create("artifact", { id: 9 });
+            let presented_baselines;
+
+            beforeEach(async () => {
+                getUserResolve(user);
+                getArtifactResolve(artifact);
+
+                presented_baselines = await presentBaselines([
+                    create("baseline", { author_id: 1, artifact_id: 9 })
+                ]);
             });
 
-            it("calls getUser when author id", () => expect(getUser).toHaveBeenCalledWith(1));
-
-            describe("when getUser() is successful", () => {
-                const user = create("user", { id: 1 });
-                let presented_baselines;
-
-                beforeEach(async () => {
-                    getUserResolve(user);
-                    presented_baselines = await presentation;
-                });
-
-                it("returns baselines with author", () => {
-                    expect(presented_baselines[0].author).toEqual(user);
-                });
+            it("returns baselines with author", () => {
+                expect(presented_baselines[0].author).toEqual(user);
             });
-
-            describe("when getUser() fail", () => {
-                beforeEach(() => {
-                    getUserReject("Exception reason");
-                });
-
-                it("throws exception", async () => {
-                    try {
-                        await presentation;
-                        fail("No exception thrown");
-                    } catch (exception) {
-                        expect(exception).toEqual("Exception reason");
-                    }
-                });
+            it("returns baselines with artifact", () => {
+                expect(presented_baselines[0].artifact).toEqual(artifact);
             });
         });
 
         describe("when multiple baselines with same author", () => {
             beforeEach(() => {
-                presentation = presentBaselines(createList("baseline", 2, { author_id: 1 }));
+                presentBaselines(createList("baseline", 2, { author_id: 1 }));
             });
 
             it("calls getUser once", () => expect(getUser).toHaveBeenCalledTimes(1));
@@ -139,13 +132,33 @@ describe("baseline presenter:", () => {
 
         describe("when multiple baselines with different authors", () => {
             beforeEach(() => {
-                presentation = presentBaselines([
+                presentBaselines([
                     create("baseline", { author_id: 1 }),
                     create("baseline", { author_id: 2 })
                 ]);
             });
 
             it("calls getUser for each author", () => expect(getUser).toHaveBeenCalledTimes(2));
+        });
+
+        describe("when multiple baselines with same artifact", () => {
+            beforeEach(() => {
+                presentBaselines(createList("baseline", 2, { artifact_id: 9 }));
+            });
+
+            it("calls getArtifact once", () => expect(getArtifact).toHaveBeenCalledTimes(1));
+        });
+
+        describe("when multiple baselines with different artifacts", () => {
+            beforeEach(() => {
+                presentBaselines([
+                    create("baseline", { artifact_id: 9 }),
+                    create("baseline", { artifact_id: 10 })
+                ]);
+            });
+
+            it("calls getArtifact for each author", () =>
+                expect(getArtifact).toHaveBeenCalledTimes(2));
         });
     });
 });

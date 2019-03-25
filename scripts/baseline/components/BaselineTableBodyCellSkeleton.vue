@@ -27,6 +27,7 @@
         </td>
         <td><span class="tlp-skeleton-text"></span></td>
         <td><span class="tlp-skeleton-text"></span></td>
+        <td><span class="tlp-skeleton-text"></span></td>
         <td class="tlp-table-cell-actions baselines-table-column-actions">
             <button class="tlp-button-small tlp-button-primary tlp-button-outline"
                     key="consult-skeleton"

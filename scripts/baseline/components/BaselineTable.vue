@@ -28,6 +28,9 @@
                     Name
                 </th>
                 <th v-translate>
+                    Milestone
+                </th>
+                <th v-translate>
                     Snapshot Date
                 </th>
                 <th v-translate>
