@@ -846,6 +846,12 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
                     return;
                 }
 
+                $target_tracker_id = $renderer_data['tracker_id'];
+                $tracker = $this->getTrackerFactory()->getTrackerById($target_tracker_id);
+                if (! $tracker->userCanView($current_user)) {
+                    return;
+                }
+
                 if ($renderer_data['reverse_artifact_links']) {
                     $artifact_links_to_render = $this->getReverseArtifactLinksToRender($artifact);
                 } else {
@@ -854,8 +860,6 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
                     );
                 }
 
-                $target_tracker_id = $renderer_data['tracker_id'];
-                $tracker = $this->getTrackerFactory()->getTrackerById($target_tracker_id);
                 $artifact_links_per_tracker = $artifact_links_to_render->getArtifactLinksForAGivenTracker($tracker);
                 if (! $artifact_links_per_tracker) {
                     return;

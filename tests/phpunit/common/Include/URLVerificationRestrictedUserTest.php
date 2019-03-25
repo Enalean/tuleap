@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,14 +16,14 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
- * @codingStandardsIgnoreFile
  */
+
+declare(strict_types=1);
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 
-class URLVerificationRestrictedUserTest extends TestCase
+class URLVerificationRestrictedUserTest extends TestCase //phpcs:ignore
 {
     use MockeryPHPUnitIntegration;
 
@@ -36,13 +36,12 @@ class URLVerificationRestrictedUserTest extends TestCase
     /**
      * @test
      */
-    public function it_allows_restricted_user_to_access_project_dashboard()
+    public function itAllowsRestrictedUserToAccessProjectDashboard(): void
     {
         $_SERVER['REQUEST_URI'] = '/projects/demo-pr';
         $user = \Mockery::mock(PFUser::class, ['isSuperUser' => false, 'isMember' => false, 'isRestricted' => true]);
         $project = \Mockery::mock(Project::class, ['isError' => false, 'isActive' => true, 'getID' => 101, 'allowsRestricted' => true]);
         $url_verification = new URLVerification();
-        $url_verification->userCanAccessProject($user, $project);
-        $this->assertTrue(true);
+        $this->assertTrue($url_verification->userCanAccessProject($user, $project));
     }
 }

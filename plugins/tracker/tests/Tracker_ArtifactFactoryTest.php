@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2011, 2012, 2013. All rights reserved.
+ * Copyright Enalean (c) 2011 - Present. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -108,8 +108,12 @@ class Tracker_ArtifactFactory_GetChildrenTest extends TuleapTestCase {
     }
 
     public function itFetchAllChildren() {
-        $tracker = mock('Tracker');
-        stub($tracker)->userIsAdmin($this->user)->returns(true);
+        $project = \Mockery::mock(\Project::class);
+
+        $tracker = \Mockery::mock(Tracker::class);
+        $tracker->shouldReceive('userIsAdmin')->with($this->user)->andReturn(true);
+        $tracker->shouldReceive('getId')->andReturn(101);
+        $tracker->shouldReceive('getProject')->andReturn($project);
 
         $artifacts = array(
             anArtifact()->withId(11)->withTracker($tracker)->build(),
@@ -123,8 +127,10 @@ class Tracker_ArtifactFactory_GetChildrenTest extends TuleapTestCase {
             $artiafct_as_dar2
         );
 
-        $child_artifact1 = anArtifact()->withId(22)->withTracker($tracker)->build();
-        $child_artifact2 = anArtifact()->withId(88)->withTracker($tracker)->build();
+        $child_artifact1 = \Mockery::mock(\Tracker_Artifact::class);
+        $child_artifact1->shouldReceive('userCanView')->andReturn(true);
+        $child_artifact2 = \Mockery::mock(\Tracker_Artifact::class);
+        $child_artifact2->shouldReceive('userCanView')->andReturn(true);
 
         stub($this->artifact_factory)->getInstanceFromRow($artiafct_as_dar1)->returns($child_artifact1);
         stub($this->artifact_factory)->getInstanceFromRow($artiafct_as_dar2)->returns($child_artifact2);
@@ -132,5 +138,3 @@ class Tracker_ArtifactFactory_GetChildrenTest extends TuleapTestCase {
         $this->artifact_factory->getChildrenForArtifacts($this->user, $artifacts);
     }
 }
-
-?>

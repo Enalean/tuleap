@@ -359,10 +359,8 @@ class URLVerification_RedirectionTests extends URLVerificationBaseTest {
 
     function testRestrictedUserCanAccessSearchOnTracker() {
         $_REQUEST['type_of_search'] = 'tracker';
-        $urlVerification = TestHelper::getPartialMock('URLVerification', array('getUrl', 'getCurrentUser', 'displayRestrictedUserProjectError'));
+        $urlVerification = TestHelper::getPartialMock('URLVerification', array('getCurrentUser', 'displayRestrictedUserProjectError'));
         $GLOBALS['group_id'] = 120;
-
-        $urlVerification->setReturnValue('getUrl', '/search/');
 
         $user = new MockPFUser();
         $user->setReturnValue('isRestricted', true);
@@ -468,85 +466,15 @@ class URLVerification_RedirectionTests extends URLVerificationBaseTest {
         $this->assertTrue($url_verification->restrictedUserCanAccessUrl($user, $url, '/blah'));
     }
 
-    public function testRestrictedUserCanNotAccessProjectWhichDoesntAllowRestricted() {
-        $user            = new MockPFUser();
-        $project         = mock('Project');
-        $url_verification = new URLVerification();
-
-        stub($project)->isError()->returns(false);
-        stub($project)->isActive()->returns(true);
-        stub($project)->allowsRestricted()->returns(false);
-        stub($user)->isSuperUser()->returns(false);
-        stub($user)->isMember()->returns(false);
-        stub($user)->isRestricted()->returns(true);
-
-        $this->expectException('Project_AccessRestrictedException');
-
-        $url_verification->userCanAccessProject($user, $project);
-    }
-
-    public function testRestrictedUserCanNotAccessAProjectMarkedAsPrivateWithoutRestrictedEvenSheIsMemberOf()
+    public function testRestrictedUserCanNotAccessForbiddenServiceInProjectWhichAllowsResticted()
     {
-        ForgeConfig::set('feature_flag_project_without_restricted', 1);
-        ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
-        $user             = Mockery::mock(PFUser::class);
-        $project          = Mockery::mock(Project::class);
+        $user             = new MockPFUser();
+        $project          = mock('Project');
         $url_verification = new URLVerification();
 
-        $project->shouldReceive(
-            [
-                'getID'     => 42,
-                'isError'   => false,
-                'isActive'  => true,
-                'getAccess' => Project::ACCESS_PRIVATE_WO_RESTRICTED
-            ]
-        );
-        $user->shouldReceive(
-            [
-                'isSuperUser'  => false,
-                'isMember'     => true,
-                'isRestricted' => true
-            ]
-        );
-
-        $this->expectException(Project_AccessProjectNotFoundException::class);
-
-        $url_verification->userCanAccessProject($user, $project);
-    }
-
-    public function testRestrictedUserCanAccessAProjectMarkedAsPrivateEvenSheIsMemberOf()
-    {
-        ForgeConfig::set('feature_flag_project_without_restricted', 1);
-        ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
-        $user             = Mockery::mock(PFUser::class);
-        $project          = Mockery::mock(Project::class);
-        $url_verification = new URLVerification();
-
-        $project->shouldReceive(
-            [
-                'getID'     => 42,
-                'isError'   => false,
-                'isActive'  => true,
-                'getAccess' => Project::ACCESS_PRIVATE
-            ]
-        );
-        $user->shouldReceive(
-            [
-                'isSuperUser'  => false,
-                'isMember'     => true,
-                'isRestricted' => true
-            ]
-        );
-
-        $this->assertTrue($url_verification->userCanAccessProject($user, $project));
-    }
-
-    public function testRestrictedUserCanNotAccessForbiddenServiceInProjectWhichAllowsResticted() {
-        $user            = new MockPFUser();
-        $project         = mock('Project');
-        $url_verification = partial_mock('URLVerification', array('getUrl', 'restrictedUserCanAccessUrl'));
-
-        stub($url_verification)->restrictedUserCanAccessUrl()->returns(false);
+        stub($GLOBALS['Language'])
+            ->getContent('include/restricted_user_permissions', 'en_US')
+            ->returns(__DIR__ . '/../../../../site-content/en_US/include/restricted_user_permissions.txt');
 
         stub($project)->isError()->returns(false);
         stub($project)->isActive()->returns(true);
@@ -594,101 +522,6 @@ class URLVerification_PrivateRestrictedTest extends TuleapTestCase {
     {
         ForgeConfig::restore();
         parent::tearDown();
-    }
-
-    public function itGrantsAccessToProjectMembers() {
-        stub($this->project)->getID()->returns(110);
-        stub($this->user)->isMember(110)->returns(true);
-        stub($this->project)->isActive()->returns(true);
-
-        $this->assertTrue(
-            $this->url_verification->userCanAccessProject($this->user, $this->project)
-        );
-    }
-
-    public function itGrantsAccessToNonProjectMembersForPublicProjects() {
-        stub($this->project)->getID()->returns(110);
-        stub($this->user)->isMember()->returns(false);
-        stub($this->project)->isPublic()->returns(true);
-        stub($this->project)->isActive()->returns(true);
-
-        $this->assertTrue(
-            $this->url_verification->userCanAccessProject($this->user, $this->project)
-        );
-    }
-
-    public function itForbidsAccessToRestrictedUsersNotProjectMembers() {
-        stub($this->project)->getID()->returns(110);
-        stub($this->user)->isMember()->returns(false);
-        stub($this->user)->isRestricted()->returns(true);
-        stub($this->project)->isActive()->returns(true);
-
-        $this->expectException('Project_AccessRestrictedException');
-        $this->url_verification->userCanAccessProject($this->user, $this->project);
-    }
-
-    public function itGrantsAccessToRestrictedUsersThatAreProjectMembers() {
-        stub($this->project)->getID()->returns(110);
-        stub($this->user)->isMember()->returns(true);
-        stub($this->user)->isRestricted()->returns(true);
-        stub($this->project)->isActive()->returns(true);
-
-        $this->assertTrue(
-            $this->url_verification->userCanAccessProject($this->user, $this->project)
-        );
-    }
-
-    public function itForbidsAccessToActiveUsersThatAreNotPrivateProjectMembers() {
-        stub($this->project)->getID()->returns(110);
-        stub($this->project)->isPublic()->returns(false);
-        stub($this->user)->isRestricted()->returns(false);
-        stub($this->project)->isActive()->returns(true);
-
-        $this->expectException('Project_AccessPrivateException');
-        $this->url_verification->userCanAccessProject($this->user, $this->project);
-    }
-
-    public function itForbidsRestrictedUsersToAccessProjectsTheyAreNotMemberOf() {
-        stub($this->project)->getID()->returns(110);
-        stub($this->user)->isMember()->returns(false);
-        stub($this->project)->isPublic()->returns(true);
-        stub($this->user)->isRestricted()->returns(true);
-        stub($this->project)->isActive()->returns(true);
-
-        $this->expectException('Project_AccessRestrictedException');
-        $this->url_verification->userCanAccessProject($this->user, $this->project);
-    }
-
-    public function itForbidsAccessToDeletedProjects() {
-        stub($this->project)->getID()->returns(110);
-        stub($this->user)->isMember()->returns(true);
-        stub($this->project)->isPublic()->returns(true);
-        stub($this->project)->isActive()->returns(false);
-
-        $this->expectException('Project_AccessDeletedException');
-        $this->url_verification->userCanAccessProject($this->user, $this->project);
-    }
-
-    public function itForbidsAccessToNonExistantProject() {
-        stub($this->project)->getID()->returns(110);
-        stub($this->project)->isError()->returns(true);
-        stub($this->project)->isPublic()->returns(true);
-        stub($this->project)->isActive()->returns(true);
-
-        $this->expectException('Project_AccessProjectNotFoundException');
-        $this->url_verification->userCanAccessProject($this->user, $this->project);
-    }
-
-    public function itBlindlyGrantAccessForSiteAdmin() {
-        stub($this->project)->getID()->returns(110);
-        stub($this->user)->isSuperUser()->returns(true);
-        stub($this->user)->isMember()->returns(false);
-        stub($this->project)->isPublic()->returns(false);
-        stub($this->project)->isActive()->returns(false);
-
-        $this->assertTrue(
-            $this->url_verification->userCanAccessProject($this->user, $this->project)
-        );
     }
 
     public function itChecksUriInternal() {

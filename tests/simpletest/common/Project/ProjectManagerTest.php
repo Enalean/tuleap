@@ -181,63 +181,55 @@ class ProjectManagerTest extends TuleapTestCase {
     }
 
     function testCheckRestrictedAccessNoRestricted () {
-        $this->assertTrue($this->project_manager_test_version->checkRestrictedAccess(null));
+        $this->assertTrue($this->project_manager_test_version->checkRestrictedAccess(null, null));
     }
 
     function testCheckRestrictedAccessRestrictedNotAllowed () {
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::REGULAR);
 
-        $this->assertTrue($this->project_manager_test_version->checkRestrictedAccess(null));
+        $this->assertTrue($this->project_manager_test_version->checkRestrictedAccess(null, null));
     }
 
     function testCheckRestrictedAccessNoGroup () {
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
 
-        $this->assertFalse($this->project_manager_test_version->checkRestrictedAccess(null));
+        $this->assertFalse($this->project_manager_test_version->checkRestrictedAccess(null, null));
     }
 
     function testCheckRestrictedAccessNoUser () {
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
-        $this->user_manager->setReturnValue('getCurrentUser', null);
-        $project = new MockProject();
-        $this->project_manager_test_version->expectOnce('_getUserManager');
+        $project = \Mockery::mock(\Project::class);
 
-        $this->assertFalse($this->project_manager_test_version->checkRestrictedAccess($project));
+        $this->assertFalse($this->project_manager_test_version->checkRestrictedAccess($project, null));
     }
 
     function testCheckRestrictedAccessUserNotRestricted () {
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
-        $user = mock('PFUser');
-        $user->setReturnValue('isRestricted', false);
-        $this->user_manager->setReturnValue('getCurrentUser', $user);
-        $project = new MockProject();
-        $this->project_manager_test_version->expectOnce('_getUserManager');
+        $user = \Mockery::mock(\PFUser::class);
+        $user->shouldReceive('isRestricted')->andReturn(false);
+        $project = \Mockery::mock(\Project::class);
 
-        $this->assertTrue($this->project_manager_test_version->checkRestrictedAccess($project));
+        $this->assertTrue($this->project_manager_test_version->checkRestrictedAccess($project, $user));
     }
 
     function testCheckRestrictedAccessUserNotMember () {
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
-        $user = mock('PFUser');
-        $user->setReturnValue('isRestricted', true);
-        $this->user_manager->setReturnValue('getCurrentUser', $user);
-        $project = new MockProject();
-        $project->setReturnValue('userIsMember', false);
-        $this->project_manager_test_version->expectOnce('_getUserManager');
+        $user = \Mockery::mock(\PFUser::class);
+        $user->shouldReceive('isRestricted')->andReturn(true);
+        $project = \Mockery::mock(\Project::class);
+        $project->shouldReceive('userIsMember')->andReturn(false);
 
-        $this->assertFalse($this->project_manager_test_version->checkRestrictedAccess($project));
+        $this->assertFalse($this->project_manager_test_version->checkRestrictedAccess($project, $user));
     }
 
     function testCheckRestrictedAccessUserIsMember () {
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
-        $user = mock('PFUser');
-        $user->setReturnValue('isRestricted', true);
-        $this->user_manager->setReturnValue('getCurrentUser', $user);
-        $project = new MockProject();
-        $project->setReturnValue('userIsMember', true);
-        $this->project_manager_test_version->expectOnce('_getUserManager');
+        $user = \Mockery::mock(\PFUser::class);
+        $user->shouldReceive('isRestricted')->andReturn(true);
+        $project = \Mockery::mock(\Project::class);
+        $project->shouldReceive('userIsMember')->andReturn(true);
 
-        $this->assertTrue($this->project_manager_test_version->checkRestrictedAccess($project));
+        $this->assertTrue($this->project_manager_test_version->checkRestrictedAccess($project, $user));
     }
 
     public function testGetActiveProjectsForUserExcludesProjectsARestrictedUserDontHaveAccessTo()
