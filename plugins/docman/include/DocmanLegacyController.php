@@ -23,6 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\Docman;
 
 use HTTPRequest;
+use Tuleap\Docman\ExternalLinks\DocmanHTTPControllerProxy;
+use Tuleap\Docman\ExternalLinks\ExternalLinkParametersExtractor;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequest;
 
@@ -32,21 +34,38 @@ final class DocmanLegacyController implements DispatchableWithRequest
      * @var \DocmanPlugin
      */
     private $plugin;
+    /**
+     * @var \EventManager
+     */
+    private $event_manager;
+    /**
+     * @var ExternalLinkParametersExtractor
+     */
+    private $link_parameters_extractor;
 
-    public function __construct(\DocmanPlugin $plugin)
-    {
-        $this->plugin = $plugin;
+    public function __construct(
+        \DocmanPlugin $plugin,
+        \EventManager $event_manager,
+        ExternalLinkParametersExtractor $link_parameters_extractor
+    ) {
+        $this->plugin                    = $plugin;
+        $this->event_manager             = $event_manager;
+        $this->link_parameters_extractor = $link_parameters_extractor;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables) : void
     {
         (
-            new \Docman_HTTPController(
-                $this->plugin,
-                $this->plugin->getPluginPath(),
-                $this->plugin->getThemePath(),
-                $request
+            new DocmanHTTPControllerProxy(
+                $this->event_manager,
+                $this->link_parameters_extractor,
+                new \Docman_HTTPController(
+                    $this->plugin,
+                    $this->plugin->getPluginPath(),
+                    $this->plugin->getThemePath(),
+                    $request
+                )
             )
-        )->process();
+        )->process($request, $request->getCurrentUser());
     }
 }

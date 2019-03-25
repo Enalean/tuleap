@@ -1362,7 +1362,7 @@ class DocmanPlugin extends Plugin
 
     public function routeLegacyController() : DocmanLegacyController
     {
-        return new DocmanLegacyController($this);
+        return new DocmanLegacyController($this, EventManager::instance(), new ExternalLinkParametersExtractor());
     }
 
 
