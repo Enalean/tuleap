@@ -785,7 +785,8 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         $is_autocomputed            = $this->isArtifactValueAutocomputed($artifact);
         $purifier                   = Codendi_HTMLPurifier::instance();
 
-        if ($this->userCanUpdate()) {
+        $is_field_read_only = $this->getReadOnlyFieldDetector()->isFieldReadOnly($artifact, $this);
+        if ($this->userCanUpdate() && ! $is_field_read_only) {
             $data_field_id              = 'data-field-id="'. $purifier->purify($this->getId()) .'"';
             $data_field_type            = 'data-field-type="'. $purifier->purify($this->getFormElementFactory()->getType($this)) .'"';
             $data_field_is_autocomputed = 'data-field-is-autocomputed="'.$is_autocomputed.'"';
