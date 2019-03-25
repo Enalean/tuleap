@@ -38,6 +38,7 @@
             />
         </div>
         <artifacts-comparison-skeleton v-if="is_loading"/>
+
         <span
             v-else-if="is_loading_failed"
             class="tlp-tooltip tlp-tooltip-right comparison-content-artifact-error-message"
@@ -45,8 +46,12 @@
         >
             <i class="fa fa-exclamation-circle baseline-tooltip-icon"></i>
         </span>
+
+        <baseline-maximum-depth-reached-message v-else-if="is_depth_limit_reached && are_linked_artifact_ids_available"/>
+
         <artifacts-comparison
             v-else
+            v-bind:current_depth="current_depth + 1"
             v-bind:reference_artifacts="reference_linked_artifacts"
             v-bind:compared_artifacts="compared_linked_artifacts"
         />
@@ -60,11 +65,14 @@ import ArtifactsComparisonSkeleton from "./ArtifactsComparisonSkeleton.vue";
 import ArtifactsComparison from "./ArtifactsComparison.vue";
 import FieldComparison from "./FieldComparison.vue";
 import ArtifactLabel from "../../common/ArtifactLabel.vue";
+import { ARTIFACTS_EXPLORATION_DEPTH_LIMIT } from "../../../constants/index";
+import BaselineMaximumDepthReachedMessage from "../../common/BaselineDepthLimitReachedMessage.vue";
 
 export default {
     name: "ModifiedArtifact",
 
     components: {
+        BaselineMaximumDepthReachedMessage,
         ArtifactLabel,
         FieldComparison,
         ArtifactsComparisonSkeleton,
@@ -73,7 +81,8 @@ export default {
 
     props: {
         reference: { require: true, type: Object },
-        compared_to: { required: true, type: Object }
+        compared_to: { required: true, type: Object },
+        current_depth: { required: true, type: Number }
     },
 
     data() {
@@ -85,17 +94,32 @@ export default {
         };
     },
 
+    computed: {
+        error_message_tooltip() {
+            return this.$gettext("Cannot fetch linked artifacts");
+        },
+        is_depth_limit_reached() {
+            return this.current_depth > ARTIFACTS_EXPLORATION_DEPTH_LIMIT;
+        },
+        are_linked_artifact_ids_available() {
+            return (
+                (this.reference.linked_artifact_ids !== null &&
+                    this.reference.linked_artifact_ids.length > 0) ||
+                (this.compared_to.linked_artifact_ids !== null &&
+                    this.compared_to.linked_artifact_ids.length > 0)
+            );
+        }
+    },
+
     beforeCreate() {
         this.$options.components.ArtifactsComparison = ArtifactsComparison;
     },
 
     mounted() {
-        this.fetchLinkedArtifacts();
-    },
-
-    computed: {
-        error_message_tooltip() {
-            return this.$gettext("Cannot fetch linked artifacts");
+        if (this.is_depth_limit_reached || !this.are_linked_artifact_ids_available) {
+            this.is_loading = false;
+        } else {
+            this.fetchLinkedArtifacts();
         }
     },
 

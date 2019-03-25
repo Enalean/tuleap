@@ -25,7 +25,11 @@
             v-bind:key="comparison.reference.id"
             class="comparison-content-artifact-li"
         >
-            <modified-artifact v-bind:reference="comparison.reference" v-bind:compared_to="comparison.compared_to"/>
+            <modified-artifact
+                v-bind:reference="comparison.reference"
+                v-bind:compared_to="comparison.compared_to"
+                v-bind:current_depth="current_depth"
+            />
         </li>
         <li
             v-for="artifact in added_artifacts"
@@ -55,7 +59,8 @@ export default {
 
     props: {
         reference_artifacts: { require: true, type: Array },
-        compared_artifacts: { require: true, type: Array }
+        compared_artifacts: { require: true, type: Array },
+        current_depth: { required: true, type: Number }
     },
 
     computed: {

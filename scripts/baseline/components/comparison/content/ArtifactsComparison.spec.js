@@ -29,7 +29,11 @@ describe("ArtifactsComparison", () => {
     beforeEach(() => {
         wrapper = shallowMount(ArtifactsComparison, {
             localVue,
-            propsData: { reference_artifacts: [], compared_artifacts: [] }
+            propsData: {
+                reference_artifacts: [],
+                compared_artifacts: [],
+                current_depth: 1
+            }
         });
     });
 

@@ -101,6 +101,10 @@ $artifact-body-padding: $tlp-spacing;
     color: $tlp-swatch-red-wine-border;
 }
 
+.baseline-content-artifact-depth-reached-message {
+    margin-top: $tlp-spacing;
+}
+
 .baseline-content-artifact-body {
     padding-left: $artifact-body-padding;
 }

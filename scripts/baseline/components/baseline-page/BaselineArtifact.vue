@@ -51,8 +51,11 @@
 
         <baseline-artifacts-skeleton v-if="is_loading"/>
 
+        <baseline-depth-limit-reached-message v-else-if="is_depth_limit_reached && are_linked_artifact_ids_available"/>
+
         <baseline-artifacts
             v-else-if="!is_loading_failed"
+            v-bind:current_depth="current_depth + 1"
             v-bind:artifacts="linked_artifacts"
             v-bind:baseline_id="baseline_id"
         />
@@ -65,11 +68,19 @@ import BaselineArtifacts from "./BaselineArtifacts.vue";
 import BaselineArtifactsSkeleton from "./BaselineArtifactsSkeleton.vue";
 import ArtifactLabel from "../common/ArtifactLabel.vue";
 import Field from "./Field.vue";
+import { ARTIFACTS_EXPLORATION_DEPTH_LIMIT } from "../../constants/index";
+import BaselineDepthLimitReachedMessage from "../common/BaselineDepthLimitReachedMessage.vue";
 
 export default {
     name: "BaselineArtifact",
 
-    components: { ArtifactLabel, BaselineArtifacts, BaselineArtifactsSkeleton, Field },
+    components: {
+        ArtifactLabel,
+        BaselineArtifacts,
+        BaselineArtifactsSkeleton,
+        Field,
+        BaselineDepthLimitReachedMessage
+    },
 
     props: {
         baseline_id: {
@@ -78,6 +89,10 @@ export default {
         },
         artifact: {
             type: Object,
+            required: true
+        },
+        current_depth: {
+            type: Number,
             required: true
         }
     },
@@ -101,6 +116,17 @@ export default {
 
         error_message_tooltip() {
             return this.$gettext("Cannot fetch linked artifacts");
+        },
+
+        is_depth_limit_reached() {
+            return this.current_depth >= ARTIFACTS_EXPLORATION_DEPTH_LIMIT;
+        },
+
+        are_linked_artifact_ids_available() {
+            return (
+                this.artifact.linked_artifact_ids !== null &&
+                this.artifact.linked_artifact_ids.length > 0
+            );
         }
     },
 
@@ -109,7 +135,7 @@ export default {
     },
 
     mounted() {
-        if (this.artifact.linked_artifact_ids && this.artifact.linked_artifact_ids.length > 0) {
+        if (this.are_linked_artifact_ids_available && !this.is_depth_limit_reached) {
             this.fetchLinkedArtifacts();
         } else {
             this.linked_artifacts = [];

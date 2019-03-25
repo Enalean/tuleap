@@ -4,7 +4,11 @@
             v-for="artifact in artifacts" v-bind:key="artifact.id"
             class="baseline-content-artifact-li"
         >
-            <baseline-artifact v-bind:baseline_id="baseline_id" v-bind:artifact="artifact"/>
+            <baseline-artifact
+                v-bind:baseline_id="baseline_id"
+                v-bind:artifact="artifact"
+                v-bind:current_depth="current_depth"
+            />
         </li>
     </ol>
 </template>
@@ -16,13 +20,14 @@ export default {
 
     components: { BaselineArtifact },
 
-    beforeCreate() {
-        this.$options.components.BaselineArtifact = BaselineArtifact;
-    },
-
     props: {
         artifacts: { required: false, type: Array },
-        baseline_id: { required: true, type: Number }
+        baseline_id: { required: true, type: Number },
+        current_depth: { required: true, type: Number }
+    },
+
+    beforeCreate() {
+        this.$options.components.BaselineArtifact = BaselineArtifact;
     }
 };
 </script>

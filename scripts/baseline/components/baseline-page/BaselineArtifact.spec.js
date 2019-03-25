@@ -25,6 +25,8 @@ import store_options from "../../store/index.js";
 import { restore, rewire$getBaselineArtifactsByIds } from "../../api/rest-querier";
 import { create } from "../../support/factories";
 import BaselineArtifact from "./BaselineArtifact.vue";
+import BaselineDepthLimitReachedMessage from "../common/BaselineDepthLimitReachedMessage.vue";
+import BaselineArtifacts from "../baseline-page/BaselineArtifacts.vue";
 
 describe("BaselineArtifact", () => {
     const artifact_selector = '[data-test-type="artifact"]';
@@ -44,7 +46,11 @@ describe("BaselineArtifact", () => {
         wrapper = mount(BaselineArtifact, {
             propsData: {
                 baseline_id: 1,
-                artifact: create("artifact", { title: "Epic", linked_artifact_ids: [9] })
+                artifact: create("artifact", {
+                    title: "Epic",
+                    linked_artifact_ids: [linked_artifact.id]
+                }),
+                current_depth: 1
             },
             localVue,
             mocks: {
@@ -106,5 +112,39 @@ describe("BaselineArtifact", () => {
 
     it("shows linked artifacts", () => {
         expect(wrapper.find(artifact_selector).contains(artifact_selector)).toBeTruthy();
+    });
+
+    describe("when artifacts tree has reached depth limit", () => {
+        beforeEach(async () => {
+            wrapper.setProps({ current_depth: 10000 });
+            await wrapper.vm.$nextTick();
+        });
+
+        it("shows information message", () => {
+            expect(wrapper.contains(BaselineDepthLimitReachedMessage)).toBeTruthy();
+        });
+
+        it("does not show linked artifact", () => {
+            expect(wrapper.contains(BaselineArtifacts)).toBeFalsy();
+        });
+
+        it("does not call fetchLinkedArtifacts", () => {
+            expect(getBaselineArtifactsByIds).not.toHaveBeenCalled;
+        });
+
+        describe("when artifacts doest not have linked artifact", () => {
+            beforeEach(async () => {
+                wrapper.setProps({ artifact: create("artifact"), linked_artifact_ids: [] });
+                await wrapper.vm.$nextTick();
+            });
+
+            it("does not show information message", () => {
+                expect(wrapper.contains(BaselineDepthLimitReachedMessage)).toBeFalsy();
+            });
+
+            it("does not call fetchLinkedArtifacts", () => {
+                expect(getBaselineArtifactsByIds).not.toHaveBeenCalled;
+            });
+        });
     });
 });

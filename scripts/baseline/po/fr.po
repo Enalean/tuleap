@@ -119,6 +119,9 @@ msgstr "Juillet"
 msgid "Jun"
 msgstr "Juin"
 
+msgid "Linked artifacts are skipped because depth limit has been reached."
+msgstr "Les artefacts liés sont ignorés parce que la limite de profondeur a été atteinte."
+
 msgid "March"
 msgstr "Mars"
 

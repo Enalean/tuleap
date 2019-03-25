@@ -16,6 +16,7 @@
 
         <baseline-artifacts-skeleton v-if="is_loading"/>
         <baseline-artifacts v-else-if="!is_loading_failed"
+                            v-bind:current_depth="1"
                             v-bind:artifacts="artifacts"
                             v-bind:baseline_id="baseline_id"
         />

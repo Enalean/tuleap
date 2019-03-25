@@ -38,6 +38,7 @@
 
                     <artifacts-comparison
                         v-else
+                        v-bind:current_depth="1"
                         v-bind:reference_artifacts="reference_artifacts"
                         v-bind:compared_artifacts="compared_artifacts"
                     />
