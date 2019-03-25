@@ -343,7 +343,8 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         $submitted_values = array(),
         $additional_classes = array()
     ) {
-        if ($this->userCanUpdate()) {
+        $is_field_read_only = $this->getReadOnlyFieldDetector()->isFieldReadOnly($artifact, $this);
+        if ($this->userCanUpdate() && ! $is_field_read_only) {
             $last_changeset = $artifact->getLastChangeset();
             if ($last_changeset) {
                 $value       = $last_changeset->getValue($this);

@@ -59,15 +59,11 @@ class WorkflowUpdateChecker
         ?Tracker_Artifact_ChangesetValue $last_changeset_value,
         $submitted_value
     ) : bool {
-        if ($last_changeset_value === null && $submitted_value === null) {
+        if ($submitted_value === null) {
             return false;
         }
 
         if ($last_changeset_value === null && $submitted_value !== null) {
-            return true;
-        }
-
-        if ($last_changeset_value !== null && $submitted_value === null) {
             return true;
         }
 

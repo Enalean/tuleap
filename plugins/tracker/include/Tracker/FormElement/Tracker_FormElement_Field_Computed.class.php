@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,8 +23,12 @@ use Tuleap\Tracker\DAO\ComputedDao;
 use Tuleap\Tracker\FormElement\ComputedFieldCalculator;
 use Tuleap\Tracker\FormElement\FieldCalculator;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldComputedValueFullRepresentation;
+use Tuleap\Tracker\Workflow\PostAction\PostActionsRetriever;
+use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyDao;
+use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyFieldDetector;
+use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyFieldsFactory;
 
-class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
+class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float //phpcs:ignore
 {
     const FIELD_VALUE_IS_AUTOCOMPUTED = 'is_autocomputed';
     const FIELD_VALUE_MANUAL          = 'manual_value';
@@ -701,49 +705,49 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         $required  = $this->required ? ' <span class="highlight">*</span>' : '';
 
         $html = "";
-        if ($this->userCanRead()) {
-            if (! $this->userCanUpdate()) {
+        if (! $this->userCanRead()) {
+            return $html;
+        }
 
-                if (isset($changeset) && $changeset->getValue() !== null) {
-                    $computed_value     = $changeset->getValue();
-                    $autocomputed_label = '';
-                    $class              = '';
-                }
-
-                if (isset($submitted_values[0][$this->getId()][self::FIELD_VALUE_MANUAL])) {
-                    $computed_value     = $submitted_values[0][$this->getId()][self::FIELD_VALUE_MANUAL];
-                    $autocomputed_label = '';
-                    $class              = '';
-                }
+        $is_field_read_only = $this->getReadOnlyFieldDetector()->isFieldReadOnly($artifact, $this);
+        if (! $this->userCanUpdate() || $is_field_read_only) {
+            if (isset($changeset) && $changeset->getValue() !== null) {
+                $computed_value     = $changeset->getValue();
+                $autocomputed_label = '';
+                $class              = '';
             }
 
-            if (! $this->userCanUpdate()) {
-                $html .= '<div class="tracker_artifact_field tracker_artifact_field-computed">';
-                $html .= '<label for="tracker_artifact_' . $this->id .'" title="'. $purifier->purify($this->description) .
-                        '" class="tracker_formelement_label">' . $purifier->purify($this->getLabel()) . $required .'</label>';
-
-                $html .= '<span class="'. $class .'">' . $computed_value . $autocomputed_label . '</span></div>';
-
-                return $html;
+            if (isset($submitted_values[0][$this->getId()][self::FIELD_VALUE_MANUAL])) {
+                $computed_value     = $submitted_values[0][$this->getId()][self::FIELD_VALUE_MANUAL];
+                $autocomputed_label = '';
+                $class              = '';
             }
 
-            $html .= '<div class="tracker_artifact_field tracker_artifact_field-computed editable">';
-
-            $title = $purifier->purify($GLOBALS['Language']->getText('plugin_tracker_artifact', 'edit_field', array($this->getLabel())));
-            $html .= '<button type="button" title="' . $title . '" class="tracker_formelement_edit tracker-formelement-edit-for-modal">' . $purifier->purify($this->getLabel())  . $required . '</button>';
+            $html .= '<div class="tracker_artifact_field tracker_artifact_field-computed">';
             $html .= '<label for="tracker_artifact_' . $this->id .'" title="'. $purifier->purify($this->description) .
                     '" class="tracker_formelement_label">' . $purifier->purify($this->getLabel()) . $required .'</label>';
 
-            $html .= '<span class="auto-computed auto-computed-for-modal">' . $computed_value .' (' .
-            $GLOBALS['Language']->getText('plugin_tracker', 'autocomputed_field').')</span>';
+            $html .= '<span class="'. $class .'">' . $computed_value . $autocomputed_label . '</span></div>';
 
-            $html .= '<div class="input-append add-field" data-field-id="' . $this->getId() . '">';
-            $html .= $this->fetchArtifactValue($artifact, $changeset, $submitted_values);
-            $html .= $this->fetchBackToAutocomputedButton(false);
-            $html .= $this->fetchComputedValueWithLabel($computed_value);
-
-            $html .= '</div></div>';
+            return $html;
         }
+
+        $html .= '<div class="tracker_artifact_field tracker_artifact_field-computed editable">';
+
+        $title = $purifier->purify($GLOBALS['Language']->getText('plugin_tracker_artifact', 'edit_field', array($this->getLabel())));
+        $html .= '<button type="button" title="' . $title . '" class="tracker_formelement_edit tracker-formelement-edit-for-modal">' . $purifier->purify($this->getLabel())  . $required . '</button>';
+        $html .= '<label for="tracker_artifact_' . $this->id .'" title="'. $purifier->purify($this->description) .
+                '" class="tracker_formelement_label">' . $purifier->purify($this->getLabel()) . $required .'</label>';
+
+        $html .= '<span class="auto-computed auto-computed-for-modal">' . $computed_value .' (' .
+        $GLOBALS['Language']->getText('plugin_tracker', 'autocomputed_field').')</span>';
+
+        $html .= '<div class="input-append add-field" data-field-id="' . $this->getId() . '">';
+        $html .= $this->fetchArtifactValue($artifact, $changeset, $submitted_values);
+        $html .= $this->fetchBackToAutocomputedButton(false);
+        $html .= $this->fetchComputedValueWithLabel($computed_value);
+
+        $html .= '</div></div>';
 
         return $html;
     }
@@ -1003,5 +1007,26 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
     private function isAnEmptyValue($value)
     {
         return ! is_array($value) && $value === null;
+    }
+
+    /**
+     * @return ReadOnlyFieldDetector
+     */
+    private function getReadOnlyFieldDetector()
+    {
+        return new ReadOnlyFieldDetector(
+            new PostActionsRetriever(
+                new Transition_PostAction_CIBuildFactory(
+                    new Transition_PostAction_CIBuildDao()
+                ),
+                new Transition_PostAction_FieldFactory(
+                    Tracker_FormElementFactory::instance(),
+                    new Transition_PostAction_Field_DateDao(),
+                    new Transition_PostAction_Field_IntDao(),
+                    new Transition_PostAction_Field_FloatDao()
+                ),
+                new ReadOnlyFieldsFactory(new ReadOnlyDao())
+            )
+        );
     }
 }
