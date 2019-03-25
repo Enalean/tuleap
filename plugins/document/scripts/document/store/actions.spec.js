@@ -47,6 +47,7 @@ import {
     rewire$createNewVersion,
     rewire$deleteUserPreferenciesForFolderInProject,
     rewire$deleteUserPreferenciesForUIInProject,
+    rewire$addUserLegacyUIPreferency,
     rewire$deleteUserPreferenciesForUnderConstructionModal,
     rewire$getItem,
     rewire$getProject,
@@ -81,6 +82,7 @@ describe("Store actions", () => {
         deleteUserPreferenciesForUnderConstructionModal,
         patchUserPreferenciesForFolderInProject,
         deleteUserPreferenciesForUIInProject,
+        addUserLegacyUIPreferency,
         addNewEmpty,
         addNewFile,
         uploadFile,
@@ -153,6 +155,9 @@ describe("Store actions", () => {
 
         patchEmbeddedFile = jasmine.createSpy("patchEmbeddedFile");
         rewire$patchEmbeddedFile(patchEmbeddedFile);
+
+        addUserLegacyUIPreferency = jasmine.createSpy("addUserLegacyUIPreferency");
+        rewire$addUserLegacyUIPreferency(addUserLegacyUIPreferency);
     });
 
     describe("loadRootFolder()", () => {
@@ -443,7 +448,7 @@ describe("Store actions", () => {
 
             await setUserPreferenciesForUI(context);
 
-            expect(deleteUserPreferenciesForUIInProject).toHaveBeenCalled();
+            expect(addUserLegacyUIPreferency).toHaveBeenCalled();
         });
     });
 

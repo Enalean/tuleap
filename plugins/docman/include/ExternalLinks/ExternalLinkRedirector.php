@@ -76,21 +76,19 @@ class ExternalLinkRedirector implements Dispatchable
         return $this->should_redirect_user;
     }
 
-    public function checkAndStoreIfUserHasToBeenRedirected()
+    public function checkAndStoreIfUserHasToBeenRedirected(bool $should_use_document_url): void
     {
         if ($this->user->isAnonymous()) {
             return;
         }
 
-        $preference_name              = "plugin_docman_display_new_ui_" . $this->project->getID();
         $is_request_for_legacy_docman = $this->request->exist("action");
-
-        if ((bool)$this->user->getPreference($preference_name) === true && !$is_request_for_legacy_docman) {
-            $this->should_redirect_user = true;
+        if ($is_request_for_legacy_docman) {
+            $this->should_redirect_user = false;
             return;
         }
 
-        $this->should_redirect_user = false;
+        $this->should_redirect_user = $should_use_document_url;
     }
 
     /**

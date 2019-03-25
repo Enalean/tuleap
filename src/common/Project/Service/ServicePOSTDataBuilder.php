@@ -69,8 +69,10 @@ class ServicePOSTDataBuilder
             $link = '';
         } else {
             $link = $request->getValidated('link', 'localuri', '');
-            $this->checkLink($link);
-            $link = $this->substituteVariablesInLink($project, $link);
+            if ($link) {
+                $this->checkLink($link);
+                $link = $this->substituteVariablesInLink($project, $link);
+            }
         }
 
         if (! $is_active) {

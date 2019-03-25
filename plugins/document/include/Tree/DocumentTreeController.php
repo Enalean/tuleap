@@ -59,6 +59,7 @@ class DocumentTreeController implements DispatchableWithRequest, DispatchableWit
 
         $user = $request->getCurrentUser();
         $user->setPreference("plugin_docman_display_new_ui_" . $project->getID(), true);
+        $user->delPreference("plugin_docman_display_legacy_ui_" . $project->getID());
 
         $this->includeCssFiles($layout);
         $this->includeHeaderAndNavigationBar($layout, $project);
