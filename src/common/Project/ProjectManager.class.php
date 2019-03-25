@@ -1,7 +1,7 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2011 - Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2011 - 2019. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -744,38 +744,62 @@ class ProjectManager
      * @return Project[]
      */
     public function getSiteTemplates() {
-        return $this->_getDao()
-            ->searchSiteTemplates()
-            ->instanciateWith(array($this, 'getProjectFromDbRow'));
+        $projects = [];
+        foreach ($this->_getDao()->searchSiteTemplates() as $row) {
+            $projects[] = $this->getProjectFromDbRow($row);
+        }
+
+        return $projects;
     }
 
     /**
      * @return Project[]
      */
-    public function getProjectsUserIsAdmin(PFUser $user) {
-        // Why not use method in User class?
-        return $this->_getDao()
-            ->searchProjectsUserIsAdmin($user->getId())
-            ->instanciateWith(array($this, 'getProjectFromDbRow'));
+    public function getProjectsUserIsAdmin(PFUser $user)
+    {
+        return $this->instantiateProjectsForUser(
+            $this->_getDao()->searchProjectsUserIsAdmin($user->getId()),
+            $user
+        );
     }
 
     /**
      * @return Project[]
      */
-    public function getActiveProjectsForUser(PFUser $user) {
-        return $this->_getDao()
-            ->searchActiveProjectsForUser($user->getId())
-            ->instanciateWith(array($this, 'getProjectFromDbRow'));
+    public function getActiveProjectsForUser(PFUser $user)
+    {
+        return $this->instantiateProjectsForUser(
+            $this->_getDao()->searchActiveProjectsForUser($user->getId()),
+            $user
+        );
     }
 
     /**
      * @return Project[]
      */
-    public function getAllProjectsForUser(PFUser $user)
+    public function getAllProjectsForUserIncludingTheOnesSheDoesNotHaveAccessTo(PFUser $user)
     {
         return $this->_getDao()
             ->searchAllActiveProjectsForUser($user->getId())
             ->instanciateWith(array($this, 'getProjectFromDbRow'));
+    }
+
+    private function instantiateProjectsForUser(LegacyDataAccessResultInterface $projects_results, PFUser $user)
+    {
+        $projects = [];
+        foreach ($projects_results as $row) {
+            if (
+                $row['access'] === Project::ACCESS_PRIVATE_WO_RESTRICTED &&
+                \Tuleap\Project\Admin\ProjectWithoutRestrictedFeatureFlag::isEnabled() &&
+                ForgeConfig::areRestrictedUsersAllowed() &&
+                $user->isRestricted()
+            ) {
+                continue;
+            }
+            $projects[] = $this->getProjectFromDbRow($row);
+        }
+
+        return $projects;
     }
 
     /**
@@ -786,7 +810,7 @@ class ProjectManager
         $matching_projects = $this->_getDao()->getMyAndPublicProjectsForREST($user, $offset, $limit);
         $total_size        = $this->_getDao()->foundRows();
 
-        return $this->getPaginatedProjects($matching_projects, $total_size);
+        return $this->getPaginatedProjects($matching_projects, $user, $total_size);
     }
 
     /**
@@ -797,7 +821,7 @@ class ProjectManager
         $matching_projects = $this->_getDao()->getMyProjectsForREST($user, $offset, $limit);
         $total_size        = $this->_getDao()->foundRows();
 
-        return $this->getPaginatedProjects($matching_projects, $total_size);
+        return $this->getPaginatedProjects($matching_projects, $user, $total_size);
     }
 
     public function getMyAndPublicProjectsForRESTByShortname($shortname, PFUser $user, $offset, $limit)
@@ -807,10 +831,10 @@ class ProjectManager
         $matching_projects = $dao->searchMyAndPublicProjectsForRESTByShortname($shortname, $user, $offset, $limit);
         $total_size        = $dao->foundRows();
 
-        return $this->getPaginatedProjects($matching_projects, $total_size);
+        return $this->getPaginatedProjects($matching_projects, $user, $total_size);
     }
 
-    public function getProjectsWithStatusForREST($project_status, $offset, $limit)
+    public function getProjectsWithStatusForREST($project_status, PFUser $user, $offset, $limit)
     {
         $matching_projects = $this->_getDao()->getProjectsWithStatusForREST(
             $project_status,
@@ -820,33 +844,25 @@ class ProjectManager
 
         $total_size = $this->_getDao()->foundRows();
 
-        return $this->getPaginatedProjects($matching_projects, $total_size);
+        return $this->getPaginatedProjects($matching_projects, $user, $total_size);
     }
 
-    private function getPaginatedProjects(LegacyDataAccessResultInterface $result, $total_size)
+    private function getPaginatedProjects(LegacyDataAccessResultInterface $result, PFUser $user, $total_size)
     {
         $projects = array();
         foreach ($result as $row) {
+            if (
+                $row['access'] === Project::ACCESS_PRIVATE_WO_RESTRICTED &&
+                \Tuleap\Project\Admin\ProjectWithoutRestrictedFeatureFlag::isEnabled() &&
+                ForgeConfig::areRestrictedUsersAllowed() &&
+                $user->isRestricted()
+            ) {
+                continue;
+            }
             $projects[] = $this->getProjectFromDbRow($row);
         }
 
         return new Tuleap\Project\PaginatedProjects($projects, $total_size);
-    }
-
-    /**
-     * @return Project[]
-     */
-    public function getAllMyAndPublicProjects(PFUser $user) {
-        $rows = $this->_getDao()
-            ->getAllMyAndPublicProjects($user);
-
-        $projects = array();
-        foreach ($rows as $row) {
-            $project = $this->getProjectFromDbRow($row);
-            $projects[$project->getID()] = $project;
-        }
-
-        return $projects;
     }
 
     /**

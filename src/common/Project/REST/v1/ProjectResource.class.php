@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - Present. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -386,6 +386,7 @@ class ProjectResource extends AuthenticatedResource
             $with_status = $json_query['with_status'];
             return $this->project_manager->getProjectsWithStatusForREST(
                 ProjectStatusMapper::getProjectStatusFlagFromStatusLabel($with_status),
+                $user,
                 $offset,
                 $limit
             );

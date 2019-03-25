@@ -37,6 +37,7 @@ class ProjectManagerTest extends TuleapTestCase {
     /** @var UserManager */
     private $user_manager;
 
+    /** @var ProjectManager */
     private $project_manager_test_version;
 
     function setUp() {
@@ -88,7 +89,7 @@ class ProjectManagerTest extends TuleapTestCase {
         $p->expectAt(0, 'createProjectInstance', array(1));
         $p->expectAt(1, 'createProjectInstance', array(2));
         $p->expectAt(2, 'createProjectInstance', array(1));
-        
+
         $p->getProject(1);
         $p->getProject(1);
         $p->getProject(2);
@@ -97,7 +98,7 @@ class ProjectManagerTest extends TuleapTestCase {
         $p->getProject(1);
     }
     /**/
-    
+
     function testRename() {
         $p1 = new MockProject($this);
         $p1->setReturnValue('getId', '1');
@@ -113,7 +114,7 @@ class ProjectManagerTest extends TuleapTestCase {
 
         $this->assertTrue($pm->renameProject($p1, 'TestProj'));
         $this->assertFalse($pm->isCached($p1->getId()));
-        
+
     }
 
     function testGetGroupByIdForSoapNoProject() {
@@ -175,7 +176,7 @@ class ProjectManagerTest extends TuleapTestCase {
         $project->setReturnValue('isActive', true);
         $pm->setReturnValue('getProject', $project);
         $pm->setReturnValue('checkRestrictedAccess', true);
-        
+
         $pm->getGroupByIdForSoap(1, '');
     }
 
@@ -237,6 +238,36 @@ class ProjectManagerTest extends TuleapTestCase {
         $this->project_manager_test_version->expectOnce('_getUserManager');
 
         $this->assertTrue($this->project_manager_test_version->checkRestrictedAccess($project));
+    }
+
+    public function testGetActiveProjectsForUserExcludesProjectsARestrictedUserDontHaveAccessTo()
+    {
+        ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
+        ForgeConfig::set('feature_flag_project_without_restricted', 1);
+
+        $user = \Mockery::mock(\PFUser::class);
+        $user->shouldReceive([
+            'getId' => 69,
+            'isRestricted' => true
+        ]);
+
+        $dao = new MockProjectDao($this);
+        stub($dao)->searchActiveProjectsForUser(69)->returnsDar(
+            ['group_id' => 101, 'access' => Project::ACCESS_PRIVATE_WO_RESTRICTED],
+            ['group_id' => 102, 'access' => Project::ACCESS_PRIVATE],
+            ['group_id' => 103, 'access' => Project::ACCESS_PUBLIC],
+            ['group_id' => 104, 'access' => Project::ACCESS_PUBLIC_UNRESTRICTED]
+        );
+        stub($this->project_manager_test_version)->_getDao()->returns($dao);
+
+        stub($this->project_manager_test_version)->createProjectInstance(['group_id' => 102, 'access' => Project::ACCESS_PRIVATE])->at(0);
+        stub($this->project_manager_test_version)->createProjectInstance(['group_id' => 103, 'access' => Project::ACCESS_PUBLIC])->at(1);
+        stub($this->project_manager_test_version)->createProjectInstance(['group_id' => 104, 'access' => Project::ACCESS_PUBLIC_UNRESTRICTED])->at(2);
+        stub($this->project_manager_test_version)->createProjectInstance()->count(3);
+
+        $projects = $this->project_manager_test_version->getActiveProjectsForUser($user);
+
+        $this->assertCount($projects, 3);
     }
 }
 

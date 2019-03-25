@@ -1,7 +1,7 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2014. All Rights Reserved.
- * Copyright (c) Enalean, 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -128,7 +128,7 @@ class LDAP_CleanUpManager {
      */
     private function getUserProjects($userId) {
         $pm = $this->_getProjectManager();
-        return $pm->getAllProjectsForUser($userId);
+        return $pm->getAllProjectsForUserIncludingTheOnesSheDoesNotHaveAccessTo($userId);
     }
 
     /**
