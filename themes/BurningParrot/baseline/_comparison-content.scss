@@ -119,3 +119,14 @@ $artifact-body-padding: $tlp-spacing;
 .comparison-content-field-value-compare-to {
     @extend %comparison-added;
 }
+
+ins {
+    background-color: $tlp-ui-success;
+    color: $tlp-ui-white;
+}
+
+del {
+    background-color: $tlp-ui-danger;
+    color: $tlp-ui-white;
+    text-decoration: line-through;
+}
