@@ -15,13 +15,14 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 import Vue from "vue";
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../support/local-vue.js";
+import localVue from "../../support/local-vue.js";
 import MilestoneList from "./NewBaselineMilestoneSelect.vue";
-import { create } from "../support/factories";
+import { create } from "../../support/factories";
 
 describe("NewBaselineMilestoneSelect", () => {
     const milestone_selector = '[data-test-type="milestone"]';

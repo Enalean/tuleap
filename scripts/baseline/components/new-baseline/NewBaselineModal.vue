@@ -15,6 +15,7 @@
   -
   - You should have received a copy of the GNU General Public License
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+  -
   -->
 <template>
     <modal v-bind:title="title" class="new-baseline-modal">
@@ -109,10 +110,10 @@
 </template>
 
 <script>
-import { getOpenMilestones, createBaseline } from "../api/rest-querier";
+import { getOpenMilestones, createBaseline } from "../../api/rest-querier";
 import NewBaselineMilestoneSelect from "./NewBaselineMilestoneSelect.vue";
 import MilestoneListSkeleton from "./MilestoneListSkeleton.vue";
-import Modal from "./common/Modal.vue";
+import Modal from "../common/Modal.vue";
 
 export default {
     name: "NewBaselineModal",

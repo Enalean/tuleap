@@ -113,7 +113,7 @@
 
 <script>
 import BaselineTable from "./BaselineTable.vue";
-import NewBaselineModal from "./NewBaselineModal.vue";
+import NewBaselineModal from "./new-baseline/NewBaselineModal.vue";
 import NewComparisonModal from "./comparison/NewComparisonModal.vue";
 import { modal as createModal } from "tlp";
 import { getBaselines } from "../api/rest-querier";
