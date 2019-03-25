@@ -20831,43 +20831,43 @@
       <code>parent::isEmptyValue($file['name'])</code>
     </UndefinedMethod>
   </file>
-  <file src="src/common/widget/Event/GetProjectsWithCriteria.php">
+  <file src="src/common/Widget/Event/GetProjectsWithCriteria.php">
     <InvalidArgument occurrences="1">
       <code>$this-&gt;projects_with_criteria</code>
     </InvalidArgument>
   </file>
-  <file src="src/common/widget/Note/ProjectNote.php">
+  <file src="src/common/Widget/Note/ProjectNote.php">
     <InvalidReturnType occurrences="1">
       <code>create</code>
     </InvalidReturnType>
   </file>
-  <file src="src/common/widget/ProjectMembers/AdministratorPresenter.php">
+  <file src="src/common/Widget/ProjectMembers/AdministratorPresenter.php">
     <PossiblyNullReference occurrences="1">
       <code>getBadgeLabel</code>
     </PossiblyNullReference>
   </file>
-  <file src="src/common/widget/ProjectMembers/AdministratorPresenterBuilder.php">
+  <file src="src/common/Widget/ProjectMembers/AdministratorPresenterBuilder.php">
     <InvalidArgument occurrences="2">
       <code>\ProjectUGroup::PROJECT_ADMIN</code>
       <code>$project-&gt;getID()</code>
     </InvalidArgument>
   </file>
-  <file src="src/common/widget/ProjectMembers/ProjectMembersPresenter.php">
+  <file src="src/common/Widget/ProjectMembers/ProjectMembersPresenter.php">
     <InvalidScalarArgument occurrences="1">
       <code>$project-&gt;getID()</code>
     </InvalidScalarArgument>
   </file>
-  <file src="src/common/widget/Rule_Widget.class.php">
+  <file src="src/common/Widget/Rule_Widget.class.php">
     <InvalidReturnType occurrences="1">
       <code>isValid</code>
     </InvalidReturnType>
   </file>
-  <file src="src/common/widget/WidgetFactory.php">
+  <file src="src/common/Widget/WidgetFactory.php">
     <PossiblyUndefinedVariable occurrences="1">
       <code>$can_access</code>
     </PossiblyUndefinedVariable>
   </file>
-  <file src="src/common/widget/Widget_MyArtifacts.class.php">
+  <file src="src/common/Widget/Widget_MyArtifacts.class.php">
     <PossiblyUndefinedArrayOffset occurrences="3">
       <code>$artifact_types[$group_id][$atid]['user_can_view_at']</code>
       <code>$artifact_types[$group_id][$atid]['user_can_view_summary_or_aid']</code>
@@ -20880,32 +20880,32 @@
       <code>$user_can_view_summary</code>
     </PossiblyUndefinedVariable>
   </file>
-  <file src="src/common/widget/Widget_MyBookmarks.class.php">
+  <file src="src/common/Widget/Widget_MyBookmarks.class.php">
     <UndefinedFunction occurrences="1">
       <code>my_has_URL_invalid_content($bookmark_url)</code>
     </UndefinedFunction>
   </file>
-  <file src="src/common/widget/Widget_MyLatestSvnCommits.class.php">
+  <file src="src/common/Widget/Widget_MyLatestSvnCommits.class.php">
     <UndefinedFunction occurrences="1">
       <code>my_hide_url('my_svn_group', $project_id, $request-&gt;get('hide_item_id'), count($project_ids), $request-&gt;get('hide_my_svn_group'), $request-&gt;get('dashboard_id'))</code>
     </UndefinedFunction>
   </file>
-  <file src="src/common/widget/Widget_MyMonitoredForums.class.php">
+  <file src="src/common/Widget/Widget_MyMonitoredForums.class.php">
     <UndefinedFunction occurrences="1">
       <code>my_hide_url('forum',$group_id,$hide_item_id,$rows2,$hide_forum, $request-&gt;get('dashboard_id'))</code>
     </UndefinedFunction>
   </file>
-  <file src="src/common/widget/Widget_MyMonitoredFp.class.php">
+  <file src="src/common/Widget/Widget_MyMonitoredFp.class.php">
     <UndefinedFunction occurrences="1">
       <code>my_hide_url('frs',$group_id,$hide_item_id,$rows2,$hide_frs, $request-&gt;get('dashboard_id'))</code>
     </UndefinedFunction>
   </file>
-  <file src="src/common/widget/Widget_ProjectLatestFileReleases.class.php">
+  <file src="src/common/Widget/Widget_ProjectLatestFileReleases.class.php">
     <UndefinedMethod occurrences="1">
       <code>getSummaryPageContent</code>
     </UndefinedMethod>
   </file>
-  <file src="src/common/widget/Widget_ProjectLatestNews.class.php">
+  <file src="src/common/Widget/Widget_ProjectLatestNews.class.php">
     <InvalidReturnStatement occurrences="2">
       <code>return $this-&gt;content ? true : false;</code>
       <code>return true;</code>
@@ -20920,14 +20920,14 @@
       <code>Boolean</code>
     </UndefinedClass>
   </file>
-  <file src="src/common/widget/Widget_ProjectSvnStats.class.php">
+  <file src="src/common/Widget/Widget_ProjectSvnStats.class.php">
     <InvalidArgument occurrences="3">
       <code>$nb_commiters</code>
       <code>$chartWidth</code>
       <code>$chartHeigh</code>
     </InvalidArgument>
   </file>
-  <file src="src/common/widget/Widget_ProjectSvnStats_Layout.class.php">
+  <file src="src/common/Widget/Widget_ProjectSvnStats_Layout.class.php">
     <InvalidReturnStatement occurrences="3">
       <code>return $this-&gt;hasOnlyOneColumn() ? 400 : 550;</code>
       <code>return $this-&gt;legend_ratio &lt; 1;</code>
@@ -20947,7 +20947,7 @@
       <code>Boolean</code>
     </UndefinedClass>
   </file>
-  <file src="src/common/widget/Widget_Static.class.php">
+  <file src="src/common/Widget/Widget_Static.class.php">
     <InvalidPropertyAssignmentValue occurrences="2">
       <code>$rss</code>
       <code>""</code>

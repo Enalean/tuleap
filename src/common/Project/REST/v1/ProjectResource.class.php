@@ -67,7 +67,7 @@ use Tuleap\REST\v1\OrderRepresentationBase;
 use Tuleap\REST\v1\PhpWikiPageRepresentation;
 use Tuleap\Service\ServiceCreator;
 use Tuleap\User\ForgeUserGroupPermission\RestProjectManagementPermission;
-use Tuleap\widget\Event\GetProjectsWithCriteria;
+use Tuleap\Widget\Event\GetProjectsWithCriteria;
 use Tuleap\Widget\WidgetFactory;
 use UGroupBinding;
 use UGroupDao;

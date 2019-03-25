@@ -38,7 +38,7 @@ class AdminDelegation_ShowProjectWidget extends Widget {
     /**
      * Widget title
      *
-     * @see src/common/widget/Widget#getTitle()
+     * @see src/common/Widget/Widget#getTitle()
      * @return String
      */
     function getTitle() {
@@ -48,7 +48,7 @@ class AdminDelegation_ShowProjectWidget extends Widget {
     /**
      * Widget description
      *
-     * @see src/common/widget/Widget#getDescription()
+     * @see src/common/Widget/Widget#getDescription()
      *
      * @return String
      */
@@ -207,7 +207,7 @@ class AdminDelegation_ShowProjectWidget extends Widget {
     /**
      * Widget content
      *
-     * @see src/common/widget/Widget#getContent()
+     * @see src/common/Widget/Widget#getContent()
      * @return String
      */
     public function getContent() {

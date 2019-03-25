@@ -1,7 +1,7 @@
 <?php
 /**
   * Copyright 1999-2000 (c) The SourceForge Crew
-  * Copyright (c) Enalean, 2011 - 2018. All Rights Reserved.
+  * Copyright (c) Enalean, 2011 - Present. All Rights Reserved.
   *
   * This file is a part of Tuleap.
   *
@@ -28,7 +28,6 @@ use Tuleap\Layout\IncludeAssets;
 
 require_once('pre.php');
 require_once('www/admin/admin_utils.php');
-require_once('common/widget/Widget_Static.class.php');
 
 $request = HTTPRequest::instance();
 $request->checkUserIsSuperUser();

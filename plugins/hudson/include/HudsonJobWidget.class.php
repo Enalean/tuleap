@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -20,10 +20,6 @@
  */
 
 use Tuleap\Dashboard\Project\ProjectDashboardController;
-
-require_once('HudsonWidget.class.php');
-require_once('common/widget/Widget.class.php');
-require_once('PluginHudsonJobDao.class.php');
 
 abstract class HudsonJobWidget extends HudsonWidget {
 

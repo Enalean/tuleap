@@ -63,9 +63,6 @@ use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyFieldsFactory;
 use Tuleap\Tracker\Workflow\WorkflowUpdateChecker;
 use Tuleap\Tracker\XML\Updater\FieldChange\FieldChangeComputedXMLUpdater;
 
-require_once('common/date/DateHelper.class.php');
-require_once('common/widget/Widget_Static.class.php');
-
 require_once('json.php');
 
 class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignoreFile

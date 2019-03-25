@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2008. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet. 2008
@@ -27,10 +27,6 @@ use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Layout\IncludeAssets;
 
-require_once 'common/widget/Widget.class.php';
-require_once 'common/include/Toggler.class.php';
-require_once 'ProjectLinksDao.class.php';
-
 /**
  * Display links from and to a project on the summary page.
  */
@@ -52,7 +48,7 @@ class ProjectLinks_Widget_HomePageLinks extends Widget {
     /**
      * Widget title
      * 
-     * @see src/common/widget/Widget#getTitle()
+     * @see src/common/Widget/Widget#getTitle()
      * @return String
      */
     public function getTitle() {
@@ -67,7 +63,7 @@ class ProjectLinks_Widget_HomePageLinks extends Widget {
     /**
      * Widget content
      * 
-     * @see src/common/widget/Widget#getContent()
+     * @see src/common/Widget/Widget#getContent()
      * @return String
      */
     function getContent() {
