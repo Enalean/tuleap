@@ -795,16 +795,17 @@ class Docman_ItemFactory
         return $dao->updateFromRow($row);
     }
 
-    public function updateLink(Docman_Link $link, array $version_data) {
+    public function updateLink(Docman_Link $link, array $version_data)
+    {
         $update = $this->update(
-            array(
+            [
                 'id'        => $link->getId(),
                 'group_id'  => $link->getGroupId(),
                 'title'     => $link->getTitle(),
                 'user_id'   => $link->getOwnerId(),
                 'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_LINK,
-                'link_url'  => $link->getUrl(),
-            )
+                'link_url'  => $version_data['link_url'],
+            ]
         );
 
         $link_version_factory = new Docman_LinkVersionFactory();

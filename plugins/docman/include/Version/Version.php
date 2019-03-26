@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,30 +15,13 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see http://www.gnu.org/licenses/.
- *
- *
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Docman\REST\v1;
+declare(strict_types = 1);
 
-use Docman_LinkVersion;
+namespace Tuleap\Docman\Version;
 
-class LinkPropertiesRepresentation
+interface Version
 {
-    /**
-     * @var string
-     */
-    public $link_url;
-
-    /**
-     * @var string
-     */
-    public $html_url;
-
-    public function build($html_url, ?Docman_LinkVersion $link)
-    {
-        $this->link_url = ($link)? $link->getLink(): "";
-        $this->html_url = $html_url;
-    }
 }

@@ -64,6 +64,23 @@ class Docman_LinkVersionDao extends DataAccessObject {
         return $this->update($sql);
     }
 
+    public function createLinkWithSpecificVersion(Docman_Link $link, $label, $changelog, $date, $version)
+    {
+        $label     = $this->da->quoteSmart($label);
+        $changelog = $this->da->quoteSmart($changelog);
+        $date      = $this->da->escapeInt($date);
+        $version   = $this->da->escapeInt($version);
+        $link_url  = $this->da->quoteSmart($link->getUrl());
+        $item_id   = $this->da->escapeInt($link->getId());
+        $user_id   = $this->da->escapeInt($link->getOwnerId());
+
+
+        $sql = "INSERT INTO plugin_docman_link_version (id, item_id, number, user_id, label, changelog, date, link_url) VALUES
+               ($version, $item_id, $version, $user_id, $label, $changelog, $date, $link_url)";
+
+        return $this->update($sql);
+    }
+
     private function getNextVersionNumber($item_id) {
         $item_id = $this->da->quoteSmart($item_id);
 

@@ -28,10 +28,12 @@ use Tuleap\Docman\REST\v1\EmbeddedFiles\DocmanEmbeddedPOSTRepresentation;
 use Tuleap\Docman\REST\v1\EmbeddedFiles\EmbeddedPropertiesPOSTPATCHRepresentation;
 use Tuleap\Docman\REST\v1\Folders\DocmanEmptyPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Folders\DocmanFolderPOSTRepresentation;
-use Tuleap\Docman\REST\v1\Folders\DocmanLinkPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Folders\DocmanPOSTFilesRepresentation;
 use Tuleap\Docman\REST\v1\Wiki\DocmanWikiPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Wiki\WikiPropertiesPOSTPATCHRepresentation;
+use Tuleap\Docman\REST\v1\Links\DocmanLinkPOSTRepresentation;
+use Tuleap\Docman\REST\v1\Links\DocmanLinksValidityChecker;
+use Tuleap\Docman\REST\v1\Links\LinkPropertiesRepresentation;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
 use Tuleap\Docman\Upload\Document\DocumentToUpload;
 use Tuleap\Docman\Upload\Document\DocumentToUploadCreator;
@@ -40,6 +42,7 @@ class DocmanItemCreatorTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
+    private $link_validity_checker;
     private $type_retriever;
     private $creator_visitor;
     private $item_factory;
@@ -61,6 +64,8 @@ class DocmanItemCreatorTest extends TestCase
         $this->document_to_upload_creator        = \Mockery::mock(DocumentToUploadCreator::class);
 
         $this->empty_file_to_upload_finisher     = \Mockery::mock(EmptyFileToUploadFinisher::class);
+
+        $this->link_validity_checker = \Mockery::mock(DocmanLinksValidityChecker::class);
     }
 
     public function testEmptyDocumentCanBeCreated()
@@ -70,7 +75,8 @@ class DocmanItemCreatorTest extends TestCase
             $this->document_ongoing_upload_retriever,
             $this->document_to_upload_creator,
             $this->creator_visitor,
-            $this->empty_file_to_upload_finisher
+            $this->empty_file_to_upload_finisher,
+            $this->link_validity_checker
         );
 
         $parent_item  = \Mockery::mock(\Docman_Item::class);
@@ -121,7 +127,8 @@ class DocmanItemCreatorTest extends TestCase
             $this->document_ongoing_upload_retriever,
             $this->document_to_upload_creator,
             $this->creator_visitor,
-            $this->empty_file_to_upload_finisher
+            $this->empty_file_to_upload_finisher,
+            $this->link_validity_checker
         );
 
         $parent_item  = \Mockery::mock(\Docman_Item::class);
@@ -173,7 +180,8 @@ class DocmanItemCreatorTest extends TestCase
             $this->document_ongoing_upload_retriever,
             $this->document_to_upload_creator,
             $this->creator_visitor,
-            $this->empty_file_to_upload_finisher
+            $this->empty_file_to_upload_finisher,
+            $this->link_validity_checker
         );
 
         $parent_item  = \Mockery::mock(\Docman_Item::class);
@@ -224,7 +232,8 @@ class DocmanItemCreatorTest extends TestCase
             $this->document_ongoing_upload_retriever,
             $this->document_to_upload_creator,
             $this->creator_visitor,
-            $this->empty_file_to_upload_finisher
+            $this->empty_file_to_upload_finisher,
+            $this->link_validity_checker
         );
 
         $parent_item  = \Mockery::mock(\Docman_Item::class);
@@ -264,7 +273,8 @@ class DocmanItemCreatorTest extends TestCase
             $this->document_ongoing_upload_retriever,
             $this->document_to_upload_creator,
             $this->creator_visitor,
-            $this->empty_file_to_upload_finisher
+            $this->empty_file_to_upload_finisher,
+            $this->link_validity_checker
         );
 
         $parent_item  = \Mockery::mock(\Docman_Item::class);
@@ -304,7 +314,8 @@ class DocmanItemCreatorTest extends TestCase
             $this->document_ongoing_upload_retriever,
             $this->document_to_upload_creator,
             $this->creator_visitor,
-            $this->empty_file_to_upload_finisher
+            $this->empty_file_to_upload_finisher,
+            $this->link_validity_checker
         );
 
         $parent_item  = \Mockery::mock(\Docman_Item::class);
@@ -339,7 +350,8 @@ class DocmanItemCreatorTest extends TestCase
             $this->document_ongoing_upload_retriever,
             $this->document_to_upload_creator,
             $this->creator_visitor,
-            $this->empty_file_to_upload_finisher
+            $this->empty_file_to_upload_finisher,
+            $this->link_validity_checker
         );
 
         $parent_item  = \Mockery::mock(\Docman_Item::class);
@@ -381,6 +393,8 @@ class DocmanItemCreatorTest extends TestCase
 
         $this->creator_visitor->shouldReceive('visitLink')->once();
 
+        $this->link_validity_checker->shouldReceive("checkLinkValidity");
+
         $created_item_representation = $item_creator->createLink(
             $parent_item,
             $user,
@@ -399,7 +413,8 @@ class DocmanItemCreatorTest extends TestCase
             $this->document_ongoing_upload_retriever,
             $this->document_to_upload_creator,
             $this->creator_visitor,
-            $this->empty_file_to_upload_finisher
+            $this->empty_file_to_upload_finisher,
+            $this->link_validity_checker
         );
 
         $parent_item  = \Mockery::mock(\Docman_Item::class);
@@ -449,7 +464,8 @@ class DocmanItemCreatorTest extends TestCase
             $this->document_ongoing_upload_retriever,
             $this->document_to_upload_creator,
             $this->creator_visitor,
-            $this->empty_file_to_upload_finisher
+            $this->empty_file_to_upload_finisher,
+            $this->link_validity_checker
         );
 
         $parent_item  = \Mockery::mock(\Docman_Item::class);
@@ -502,7 +518,8 @@ class DocmanItemCreatorTest extends TestCase
             $this->document_ongoing_upload_retriever,
             $this->document_to_upload_creator,
             $this->creator_visitor,
-            $this->empty_file_to_upload_finisher
+            $this->empty_file_to_upload_finisher,
+            $this->link_validity_checker
         );
 
         $parent_item  = \Mockery::mock(\Docman_Item::class);

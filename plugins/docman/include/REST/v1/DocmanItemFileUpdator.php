@@ -105,6 +105,7 @@ class DocmanItemFileUpdator
 
         $file_properties_representation = new CreatedItemFilePropertiesRepresentation();
         $file_properties_representation->build($document_to_upload->getUploadHref());
+
         return $file_properties_representation;
     }
 }

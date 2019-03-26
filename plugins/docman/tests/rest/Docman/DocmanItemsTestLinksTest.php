@@ -28,7 +28,7 @@ use Tuleap\Docman\rest\DocmanDataBuilder;
 
 require_once __DIR__ . '/../bootstrap.php';
 
-class DocmanItemsTestFilesEmbeddedTest extends DocmanBase
+class DocmanItemsTestLinksTest extends DocmanBase
 {
     public function testGetRootId(): int
     {
@@ -51,21 +51,24 @@ class DocmanItemsTestFilesEmbeddedTest extends DocmanBase
         );
         $folder   = $response->json();
 
-        $folder_1_id    = $folder[0]['id'];
+        $folder_content = $this->findItemByTitle($folder, 'folder 1');
+
+        $folder_1_id    = $folder_content['id'];
         $response       = $this->getResponseByName(
             REST_TestDataBuilder::ADMIN_USER_NAME,
             $this->client->get('docman_items/' . $folder_1_id . '/docman_items')
         );
         $items_folder_1 = $response->json();
 
-        $folder_embedded_id = $folder[2]['id'];
-        $response           = $this->getResponseByName(
+        $folder_content = $this->findItemByTitle($folder, 'Folder D Link');
+        $folder_links_id = $folder_content['id'];
+        $response        = $this->getResponseByName(
             REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->client->get('docman_items/' . $folder_embedded_id . '/docman_items')
+            $this->client->get('docman_items/' . $folder_links_id . '/docman_items')
         );
-        $items_embedded     = $response->json();
+        $items_link      = $response->json();
 
-        $items = array_merge($items_folder_1, $items_embedded);
+        $items = array_merge($items_folder_1, $items_link);
 
         $this->assertEquals(count($items), 12);
 
@@ -75,13 +78,13 @@ class DocmanItemsTestFilesEmbeddedTest extends DocmanBase
     /**
      * @depends testGetDocumentItemsForAdminUser
      */
-    public function testPatchAEmbeddedWithApprovalTableCopyAction(array $items): void
+    public function testPatchALinksWithApprovalTableCopyAction(array $items): void
     {
-        $embedded = $this->findItemByTitle($items, 'embedded AT C');
+        $links = $this->findItemByTitle($items, 'link AT C');
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->get('docman_items/' . $embedded['id'])
+            $this->client->get('docman_items/' . $links['id'])
         );
 
         $item_before_patch                = $response->json();
@@ -94,20 +97,20 @@ class DocmanItemsTestFilesEmbeddedTest extends DocmanBase
                 'version_title'         => 'My version title',
                 'changelog'             => 'I have changed',
                 'should_lock_file'      => false,
-                'embedded_properties'   => ['content' => 'my new content'],
+                'link_properties'      => ['link_url' => 'https://example.com'],
                 'approval_table_action' => 'copy'
             ]
         );
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->patch('docman_embedded_files/' . $embedded['id'], null, $put_resource)
+            $this->client->patch('docman_links/' . $links['id'], null, $put_resource)
         );
         $this->assertEquals(200, $response->getStatusCode());
 
         $response                        = $this->getResponseByName(
             DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->get('docman_items/' . $embedded['id'])
+            $this->client->get('docman_items/' . $links['id'])
         );
         $item_after_patch                = $response->json();
         $item_approval_table_after_patch = $item_after_patch['approval_table'];
@@ -131,13 +134,13 @@ class DocmanItemsTestFilesEmbeddedTest extends DocmanBase
     /**
      * @depends testGetDocumentItemsForAdminUser
      */
-    public function testPatchEmbeddedWithApprovalTableResetAction(array $items): void
+    public function testPatchLinksWithApprovalTableResetAction(array $items): void
     {
-        $embedded = $this->findItemByTitle($items, 'embedded AT R');
+        $links = $this->findItemByTitle($items, 'link AT R');
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->get('docman_items/' . $embedded['id'])
+            $this->client->get('docman_items/' . $links['id'])
         );
 
         $item_before_patch                = $response->json();
@@ -150,20 +153,20 @@ class DocmanItemsTestFilesEmbeddedTest extends DocmanBase
                 'version_title'         => 'My version title',
                 'changelog'             => 'I have changed',
                 'should_lock_file'      => false,
-                'embedded_properties'   => ['content' => 'my new content'],
+                'link_properties'      => ['link_url' => 'https://example.com'],
                 'approval_table_action' => 'reset'
             ]
         );
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->patch('docman_embedded_files/' . $embedded['id'], null, $put_resource)
+            $this->client->patch('docman_links/' . $links['id'], null, $put_resource)
         );
         $this->assertEquals(200, $response->getStatusCode());
 
         $response                        = $this->getResponseByName(
             DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->get('docman_items/' . $embedded['id'])
+            $this->client->get('docman_items/' . $links['id'])
         );
         $item_after_patch                = $response->json();
         $item_approval_table_after_patch = $item_after_patch['approval_table'];
@@ -176,13 +179,13 @@ class DocmanItemsTestFilesEmbeddedTest extends DocmanBase
     /**
      * @depends testGetDocumentItemsForAdminUser
      */
-    public function testPatchEmbeddedWithApprovalTableEmptyAction(array $items): void
+    public function testPatchLinksWithApprovalTableEmptyAction(array $items): void
     {
-        $embedded = $this->findItemByTitle($items, 'embedded AT E');
+        $links = $this->findItemByTitle($items, 'link AT E');
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->get('docman_items/' . $embedded['id'])
+            $this->client->get('docman_items/' . $links['id'])
         );
 
         $item_before_patch                = $response->json();
@@ -195,20 +198,20 @@ class DocmanItemsTestFilesEmbeddedTest extends DocmanBase
                 'version_title'         => 'My version title',
                 'changelog'             => 'I have changed',
                 'should_lock_file'      => false,
-                'embedded_properties'   => ['content' => 'my new content'],
+                'link_properties'      => ['link_url' => 'https://example.com'],
                 'approval_table_action' => 'empty'
             ]
         );
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->patch('docman_embedded_files/' . $embedded['id'], null, $put_resource)
+            $this->client->patch('docman_links/' . $links['id'], null, $put_resource)
         );
         $this->assertEquals(200, $response->getStatusCode());
 
         $response                        = $this->getResponseByName(
             DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->get('docman_items/' . $embedded['id'])
+            $this->client->get('docman_items/' . $links['id'])
         );
         $item_after_patch                = $response->json();
         $item_approval_table_after_patch = $item_after_patch['approval_table'];
@@ -222,20 +225,20 @@ class DocmanItemsTestFilesEmbeddedTest extends DocmanBase
      */
     public function testPatchThrowsExceptionWhenThereIsAnApprovalTableForTheItemAndNoApprovalAction(array $items): void
     {
-        $embedded = $this->findItemByTitle($items, 'embedded AT C');
+        $links = $this->findItemByTitle($items, 'link AT C');
 
         $put_resource = json_encode(
             [
-                'version_title'       => 'My version title',
-                'changelog'           => 'I have changed',
-                'should_lock_file'    => false,
-                'embedded_properties' => ['content' => 'my new content']
+                'version_title'    => 'My version title',
+                'changelog'        => 'I have changed',
+                'should_lock_file' => false,
+                'link_properties' => ['link_url' => 'https://example.com']
             ]
         );
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->patch('docman_embedded_files/' . $embedded['id'], null, $put_resource)
+            $this->client->patch('docman_links/' . $links['id'], null, $put_resource)
         );
         $this->assertEquals(400, $response->getStatusCode());
     }
@@ -245,21 +248,21 @@ class DocmanItemsTestFilesEmbeddedTest extends DocmanBase
      */
     public function testPatchThrowsExceptionWhenThereIsNOTApprovalTableWhileThereIsApprovalAction(array $items): void
     {
-        $embedded = $this->findItemByTitle($items, 'embedded NO AT');
+        $links = $this->findItemByTitle($items, 'link NO AT');
 
         $put_resource = json_encode(
             [
                 'version_title'         => 'My version title',
                 'changelog'             => 'I have changed',
                 'should_lock_file'      => false,
-                'embedded_properties'   => ['content' => 'my new content'],
+                'link_properties'      => ['link_url' => 'https://example.com'],
                 'approval_table_action' => 'copy'
             ]
         );
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->patch('docman_embedded_files/' . $embedded['id'], null, $put_resource)
+            $this->client->patch('docman_links/' . $links['id'], null, $put_resource)
         );
         $this->assertEquals(400, $response->getStatusCode());
     }
@@ -273,17 +276,17 @@ class DocmanItemsTestFilesEmbeddedTest extends DocmanBase
 
         $put_resource = json_encode(
             [
-                'version_title'       => 'My version title',
-                'changelog'           => 'I have changed',
-                'should_lock_file'    => false,
-                'embedded_properties' => ['content' => 'my new content']
+                'version_title'    => 'My version title',
+                'changelog'        => 'I have changed',
+                'should_lock_file' => false,
+                'link_properties' => ['link_url' => 'https://example.com']
             ]
         );
 
         $response = $this->getResponseByName(
             REST_TestDataBuilder::ADMIN_USER_NAME,
             $this->client->patch(
-                'docman_embedded_files/' . $empty_document["id"],
+                'docman_links/' . $empty_document["id"],
                 null,
                 $put_resource
             )
@@ -296,21 +299,21 @@ class DocmanItemsTestFilesEmbeddedTest extends DocmanBase
      */
     public function testPatchThrowsExceptionWhenADocumentIsLockedByAnOtherUser(array $items): void
     {
-        $locked_embedded = $this->findItemByTitle($items, 'embedded L');
+        $locked_links = $this->findItemByTitle($items, 'link L');
 
         $put_resource = json_encode(
             [
-                'version_title'       => 'My version title',
-                'changelog'           => 'I have changed',
-                'should_lock_file'    => false,
-                'embedded_properties' => ['content' => 'my new content']
+                'version_title'    => 'My version title',
+                'changelog'        => 'I have changed',
+                'should_lock_file' => false,
+                'link_properties' => ['link_url' => 'https://example.com']
             ]
         );
 
         $response = $this->getResponseByName(
             REST_TestDataBuilder::ADMIN_USER_NAME,
             $this->client->patch(
-                'docman_embedded_files/' . $locked_embedded["id"],
+                'docman_links/' . $locked_links["id"],
                 null,
                 $put_resource
             )
@@ -319,82 +322,58 @@ class DocmanItemsTestFilesEmbeddedTest extends DocmanBase
     }
 
     /**
-     * @depends testGetDocumentItemsForAdminUser
-     */
-    public function testPatchOnEmptyItemThrowAnException(array $items): void
-    {
-        $empty = $this->findItemByTitle($items, 'empty');
-
-        $put_resource = json_encode(
-            [
-                'version_title'       => 'My version title',
-                'changelog'           => 'I have changed',
-                'should_lock_file'    => false,
-                'embedded_properties' => ['content' => 'my new content']
-            ]
-        );
-
-        $response = $this->getResponseByName(
-            DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->patch('docman_embedded_files/' . $empty['id'], null, $put_resource)
-        );
-        $this->assertEquals(400, $response->getStatusCode());
-    }
-
-    /**
      * @depends testGetRootId
      */
-    public function testPatchEmbeddedDocument(int $root_id): void
+    public function testPatchLinksDocument(int $root_id): void
     {
         $query = json_encode(
             [
-                'title'               => 'My new embedded',
-                'parent_id'           => $root_id,
-                'type'                => 'embedded',
-                'embedded_properties' => ['content' => 'my new content']
+                'title'            => 'My new link',
+                'parent_id'        => $root_id,
+                'type'             => 'links',
+                'link_properties' => ['link_url' => 'https://example.com']
             ]
         );
 
         $response1 = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->post('docman_folders/' . $root_id . '/embedded_files', null, $query)
+            $this->client->post('docman_folders/' . $root_id . '/links', null, $query)
         );
 
         $this->assertEquals(201, $response1->getStatusCode());
 
-        $embedded_item_response = $this->getResponseByName(
+        $links_item_response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
             $this->client->get($response1->json()['uri'])
         );
-        $this->assertEquals(200, $embedded_item_response->getStatusCode());
-        $this->assertEquals('embedded', $embedded_item_response->json()['type']);
+        $this->assertEquals(200, $links_item_response->getStatusCode());
+        $this->assertEquals('link', $links_item_response->json()['type']);
 
-        $embedded_id = $response1->json()['id'];
+        $links_id = $response1->json()['id'];
 
         $put_resource = json_encode(
             [
-                'version_title'       => 'My version title',
-                'changelog'           => 'I have changed',
-                'should_lock_file'    => false,
-                'embedded_properties' => ['content' => 'my new content']
+                'version_title'    => 'My version title',
+                'changelog'        => 'I have changed',
+                'should_lock_file' => false,
+                'link_properties' => ['link_url' => 'https://example.com']
             ]
         );
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->patch('docman_embedded_files/' . $embedded_id, null, $put_resource)
+            $this->client->patch('docman_links/' . $links_id, null, $put_resource)
         );
         $this->assertEquals(200, $response->getStatusCode());
 
         $response = $this->getResponse(
-            $this->client->get('docman_items/' . $embedded_id),
+            $this->client->get('docman_items/' . $links_id),
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
         );
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals('embedded', $response->json()['type']);
+        $this->assertEquals('link', $response->json()['type']);
         $this->assertEquals(null, $response->json()['lock_info']);
     }
-
 
     /**
      * @depends testGetRootId
@@ -403,53 +382,53 @@ class DocmanItemsTestFilesEmbeddedTest extends DocmanBase
     {
         $query = json_encode(
             [
-                'title'               => 'My second embedded',
-                'parent_id'           => $root_id,
-                'type'                => 'embedded',
-                'embedded_properties' => ['content' => 'my new content']
+                'title'            => 'My second link',
+                'parent_id'        => $root_id,
+                'type'             => 'links',
+                'link_properties' => ['link_url' => 'https://example.com']
             ]
         );
 
         $response1 = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->post('docman_folders/' . $root_id . '/embedded_files', null, $query)
+            $this->client->post('docman_folders/' . $root_id . '/links', null, $query)
         );
 
         $this->assertEquals(201, $response1->getStatusCode());
 
-        $embedded_item_response = $this->getResponseByName(
+        $links_item_response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
             $this->client->get($response1->json()['uri'])
         );
 
-        $this->assertEquals(200, $embedded_item_response->getStatusCode());
-        $this->assertEquals('embedded', $embedded_item_response->json()['type']);
+        $this->assertEquals(200, $links_item_response->getStatusCode());
+        $this->assertEquals('link', $links_item_response->json()['type']);
 
-        $embedded_id = $response1->json()['id'];
+        $links_id = $response1->json()['id'];
 
         $put_resource = json_encode(
             [
-                'version_title'       => 'My version title',
-                'changelog'           => 'I have changed',
-                'should_lock_file'    => true,
-                'embedded_properties' => ['content' => 'my new content']
+                'version_title'    => 'My version title',
+                'changelog'        => 'I have changed',
+                'should_lock_file' => true,
+                'link_properties' => ['link_url' => 'https://example.com']
             ]
         );
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->patch('docman_embedded_files/' . $embedded_id, null, $put_resource)
+            $this->client->patch('docman_links/' . $links_id, null, $put_resource)
         );
 
         $this->assertEquals(200, $response->getStatusCode());
 
         $response = $this->getResponse(
-            $this->client->get('docman_items/' . $embedded_id),
+            $this->client->get('docman_items/' . $links_id),
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
         );
 
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals('embedded', $response->json()['type']);
+        $this->assertEquals('link', $response->json()['type']);
         $this->assertEquals(110, $response->json()['lock_info']["locked_by"]["id"]);
     }
 
@@ -461,7 +440,7 @@ class DocmanItemsTestFilesEmbeddedTest extends DocmanBase
     {
         $index = array_search($title, array_column($items, 'title'));
         if ($index === false) {
-            return null;
+            $this->fail();
         }
         return $items[$index];
     }

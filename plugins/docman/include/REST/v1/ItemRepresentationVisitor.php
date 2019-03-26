@@ -31,6 +31,7 @@ use Tuleap\Docman\Item\ItemVisitor;
 use Tuleap\Docman\REST\v1\EmbeddedFiles\EmbeddedFilePropertiesRepresentation;
 use Tuleap\Docman\View\DocmanViewURLBuilder;
 use Tuleap\Docman\REST\v1\Wiki\WikiPropertiesRepresentation;
+use Tuleap\Docman\REST\v1\Links\LinkPropertiesRepresentation;
 
 class ItemRepresentationVisitor implements ItemVisitor
 {

@@ -52,7 +52,7 @@ class DocmanItemsTest extends DocmanBase
         $folder   = $response->json();
 
         $folder_1_id = $folder[0]['id'];
-        $this->assertEquals(count($folder), 4);
+        $this->assertEquals(count($folder), 5);
         $this->assertEquals($folder[0]['user_can_write'], true);
 
         $response       = $this->getResponseByName(

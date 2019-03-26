@@ -28,6 +28,7 @@ use Tuleap\Docman\REST\v1\DocmanEmbeddedFilesResource;
 use Tuleap\Docman\REST\v1\DocmanFilesResource;
 use Tuleap\Docman\REST\v1\DocmanFoldersResource;
 use Tuleap\Docman\REST\v1\DocmanItemsResource;
+use Tuleap\Docman\REST\v1\DocmanLinksResource;
 use Tuleap\Docman\REST\v1\DocmanWikiResource;
 
 class ResourcesInjector
@@ -37,6 +38,7 @@ class ResourcesInjector
     const FOLDER_NAME   = 'docman_folders';
     const EMBEDDED_NAME = 'docman_embedded_files';
     const WIKI_NAME     = 'docman_wikis';
+    const LINK_NAME     = 'docman_links';
 
     public function populate(\Luracast\Restler\Restler $restler)
     {
@@ -63,6 +65,11 @@ class ResourcesInjector
         $restler->addAPIClass(
             DocmanWikiResource::class,
             self::WIKI_NAME
+        );
+
+        $restler->addAPIClass(
+            DocmanLinksResource::class,
+            self::LINK_NAME
         );
     }
 }

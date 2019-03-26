@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,7 +20,7 @@
 
 declare(strict_types = 1);
 
-namespace Tuleap\Docman\REST\v1\Folders;
+namespace Tuleap\Docman\REST\v1\Links;
 
 class DocmanLinkPOSTRepresentation
 {
@@ -33,7 +33,7 @@ class DocmanLinkPOSTRepresentation
      */
     public $description = '';
     /**
-     * @var LinkPropertiesPOSTRepresentation {@type \Tuleap\Docman\REST\v1\Folders\LinkPropertiesPOSTRepresentation} {@from body} {@required false}
+     * @var LinkPropertiesPOSTPATCHRepresentation {@type \Tuleap\Docman\REST\v1\Links\LinkPropertiesPOSTPATCHRepresentation} {@from body} {@required false}
      */
     public $link_properties = null;
 }

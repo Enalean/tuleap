@@ -25,19 +25,17 @@ use Docman_Item;
 use Luracast\Restler\RestException;
 use PFUser;
 use Project;
-use Rule_Regexp;
 use Tuleap\Docman\REST\v1\EmbeddedFiles\DocmanEmbeddedPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Folders\DocmanEmptyPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Folders\DocmanFolderPOSTRepresentation;
-use Tuleap\Docman\REST\v1\Folders\DocmanLinkPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Wiki\DocmanWikiPOSTRepresentation;
+use Tuleap\Docman\REST\v1\Links\DocmanLinkPOSTRepresentation;
+use Tuleap\Docman\REST\v1\Links\DocmanLinksValidityChecker;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
 use Tuleap\Docman\Upload\Document\DocumentToUploadCreator;
 use Tuleap\Docman\Upload\UploadCreationConflictException;
 use Tuleap\Docman\Upload\UploadCreationFileMismatchException;
 use Tuleap\Docman\Upload\UploadMaxSizeExceededException;
-use Valid_FTPURI;
-use Valid_LocalURI;
 
 class DocmanItemCreator
 {
@@ -66,19 +64,25 @@ class DocmanItemCreator
      * @var EmptyFileToUploadFinisher
      */
     private $empty_file_to_upload_finisher;
+    /**
+     * @var DocmanLinksValidityChecker
+     */
+    private $links_validity_checker;
 
     public function __construct(
         \Docman_ItemFactory $item_factory,
         DocumentOngoingUploadRetriever $document_ongoing_upload_retriever,
         DocumentToUploadCreator $document_to_upload_creator,
         AfterItemCreationVisitor $creator_visitor,
-        EmptyFileToUploadFinisher $empty_file_to_upload_finisher
+        EmptyFileToUploadFinisher $empty_file_to_upload_finisher,
+        DocmanLinksValidityChecker $links_validity_checker
     ) {
         $this->item_factory                      = $item_factory;
         $this->document_ongoing_upload_retriever = $document_ongoing_upload_retriever;
         $this->document_to_upload_creator        = $document_to_upload_creator;
         $this->creator_visitor                   = $creator_visitor;
         $this->empty_file_to_upload_finisher     = $empty_file_to_upload_finisher;
+        $this->links_validity_checker            = $links_validity_checker;
     }
 
     /**
@@ -367,15 +371,8 @@ class DocmanItemCreator
             throw new RestException(400, "A document with same title already exists in the given folder.");
         }
 
-        $link_url   = $representation->link_properties->link_url;
-        $valid_http = new Rule_Regexp(Valid_LocalURI::URI_REGEXP);
-        $valid_ftp  = new Rule_Regexp(Valid_FTPURI::URI_REGEXP);
-        if (!$valid_ftp->isValid($link_url) && !$valid_http->isValid($link_url)) {
-            throw new RestException(
-                400,
-                sprintf('The link is not a valid URL')
-            );
-        }
+        $link_url = $representation->link_properties->link_url;
+        $this->links_validity_checker->checkLinkValidity($link_url);
 
         $this->checkDocumentIsNotBeingUploaded(
             $parent_item,
