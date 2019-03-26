@@ -23,12 +23,13 @@
         <h3 class="comparison-content-artifact-body-field-label">
             <semantic-field-label v-bind:semantic="semantic" v-bind:tracker_id="tracker_id"/>
         </h3>
-        <p v-html="value_diff"></p>
+        <p v-html="sanitized_value_diff"></p>
     </div>
 </template>
 
 <script>
 import SemanticFieldLabel from "../../common/SemanticFieldLabel.vue";
+import DOMPurify from "dompurify";
 import diff from "node-htmldiff";
 
 export default {
@@ -58,8 +59,9 @@ export default {
     },
 
     computed: {
-        value_diff() {
-            return diff(this.reference, this.compare_to);
+        sanitized_value_diff() {
+            const value_diff = diff(this.reference, this.compare_to);
+            return DOMPurify.sanitize(value_diff);
         }
     }
 };

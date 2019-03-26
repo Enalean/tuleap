@@ -39,6 +39,7 @@
                 v-bind:tracker_id="artifact.tracker_id"
                 v-bind:value="artifact.description"
                 data-test-type="artifact-description"
+                v-bind:html_content="true"
             />
             <field
                 v-if="is_status_available"

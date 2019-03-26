@@ -8,6 +8,7 @@
   "dependencies": {
     "moment": "^2.24.0",
     "moment-timezone": "^0.5.23",
+    "dompurify": "^1.0.10",
     "node-htmldiff": "^0.9.3",
     "phptomoment": "0.0.2",
     "sprintf-js": "^1.1.2",

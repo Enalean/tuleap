@@ -23,13 +23,14 @@
         <h3 class="baseline-content-artifact-body-field-label">
             <semantic-field-label v-bind:semantic="semantic" v-bind:tracker_id="tracker_id"/>
         </h3>
-        <p v-html="value" class="baseline-content-artifact-body-field-value">
-        </p>
+        <p v-if="html_content" v-html="sanitized_value" class="baseline-content-artifact-body-field-value"></p>
+        <p v-else class="baseline-content-artifact-body-field-value">{{ value }}</p>
     </div>
 </template>
 
 <script>
 import SemanticFieldLabel from "../common/SemanticFieldLabel.vue";
+import DOMPurify from "dompurify";
 export default {
     name: "Field",
 
@@ -47,6 +48,16 @@ export default {
         value: {
             required: true,
             type: String
+        },
+        html_content: {
+            default: false,
+            type: Boolean
+        }
+    },
+
+    computed: {
+        sanitized_value() {
+            return DOMPurify.sanitize(this.value);
         }
     }
 };
