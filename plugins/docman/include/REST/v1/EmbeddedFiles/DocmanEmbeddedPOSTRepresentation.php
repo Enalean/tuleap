@@ -18,12 +18,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Docman\REST\v1;
+declare(strict_types = 1);
 
-class EmbeddedPropertiesPOSTPATCHRepresentation
+namespace Tuleap\Docman\REST\v1\EmbeddedFiles;
+
+class DocmanEmbeddedPOSTRepresentation
 {
     /**
-     * @var string {@type string} {@required false}
+     * @var string Item title {@from body} {@required true}
      */
-    public $content;
+    public $title;
+    /**
+     * @var string Item description {@from body} {@required false}
+     */
+    public $description = '';
+    /**
+     * @var EmbeddedPropertiesPOSTPATCHRepresentation {@type \Tuleap\Docman\REST\v1\EmbeddedFiles\EmbeddedPropertiesPOSTPATCHRepresentation} {@from body} {@required true}
+     */
+    public $embedded_properties;
 }

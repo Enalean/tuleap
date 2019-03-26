@@ -29,7 +29,7 @@ use Luracast\Restler\RestException;
 use PluginManager;
 use Project;
 use ProjectManager;
-use Tuleap\Docman\REST\v1\Folders\DocmanEmbeddedPOSTRepresentation;
+use Tuleap\Docman\REST\v1\EmbeddedFiles\DocmanEmbeddedPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Folders\DocmanEmptyPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Folders\DocmanFolderPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Folders\DocmanItemCreatorBuilder;
@@ -262,7 +262,7 @@ class DocmanFoldersResource extends AuthenticatedResource
      *
      * @param int                              $id   Id of the parent folder
      * @param DocmanEmbeddedPOSTRepresentation $embeds_representation {@from body}
-     *                                               {@type \Tuleap\Docman\REST\v1\Folders\DocmanEmbeddedPOSTRepresentation}
+     *                                               {@type \Tuleap\Docman\REST\v1\EmbeddedFiles\DocmanEmbeddedPOSTRepresentation}
      *
      * @url    POST {id}/embedded_files
      * @access hybrid

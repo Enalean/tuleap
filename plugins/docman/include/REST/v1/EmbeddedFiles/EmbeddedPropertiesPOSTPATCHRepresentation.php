@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,24 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types = 1);
+namespace Tuleap\Docman\REST\v1\EmbeddedFiles;
 
-namespace Tuleap\Docman\REST\v1\Folders;
-
-use Tuleap\Docman\REST\v1\EmbeddedPropertiesPOSTPATCHRepresentation;
-
-class DocmanEmbeddedPOSTRepresentation
+class EmbeddedPropertiesPOSTPATCHRepresentation
 {
     /**
-     * @var string Item title {@from body} {@required true}
+     * @var string {@type string} {@required false}
      */
-    public $title;
-    /**
-     * @var string Item description {@from body} {@required false}
-     */
-    public $description = '';
-    /**
-     * @var EmbeddedPropertiesPOSTPATCHRepresentation {@type \Tuleap\Docman\REST\v1\EmbeddedPropertiesPOSTPATCHRepresentation} {@from body} {@required true}
-     */
-    public $embedded_properties;
+    public $content;
 }

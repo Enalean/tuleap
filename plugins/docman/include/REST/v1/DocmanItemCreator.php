@@ -26,7 +26,7 @@ use Luracast\Restler\RestException;
 use PFUser;
 use Project;
 use Rule_Regexp;
-use Tuleap\Docman\REST\v1\Folders\DocmanEmbeddedPOSTRepresentation;
+use Tuleap\Docman\REST\v1\EmbeddedFiles\DocmanEmbeddedPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Folders\DocmanEmptyPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Folders\DocmanFolderPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Folders\DocmanLinkPOSTRepresentation;

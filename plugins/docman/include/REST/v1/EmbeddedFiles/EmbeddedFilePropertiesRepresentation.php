@@ -20,7 +20,7 @@
  *
  */
 
-namespace Tuleap\Docman\REST\v1;
+namespace Tuleap\Docman\REST\v1\EmbeddedFiles;
 
 class EmbeddedFilePropertiesRepresentation
 {

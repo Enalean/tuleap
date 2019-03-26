@@ -28,6 +28,7 @@ use Docman_Item;
 use Docman_Link;
 use Docman_Wiki;
 use Tuleap\Docman\Item\ItemVisitor;
+use Tuleap\Docman\REST\v1\EmbeddedFiles\EmbeddedFilePropertiesRepresentation;
 
 class ItemRepresentationVisitor implements ItemVisitor
 {
