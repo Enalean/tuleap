@@ -118,7 +118,7 @@ class BaselineArtifactRepositoryAdapter implements BaselineArtifactRepository
 
         $tracker      = $changeset->getArtifact()->getTracker();
         $tracker_id   = (int) $tracker->getId();
-        $tracker_name = $tracker->getName();
+        $tracker_name = $tracker->getItemName();
 
         $linked_artifact_ids = $this->getLinkedArtifactIds($current_user, $changeset);
 

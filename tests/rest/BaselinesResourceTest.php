@@ -150,7 +150,7 @@ class BaselinesResourceTest extends RestBase
         $artifact_response = $artifacts_response[0];
         $this->assertEquals($this->an_artifact_id, $artifact_response['id']);
         $this->assertNotNull('new title', $artifact_response['title']);
-        $this->assertNotNull('Base', $artifact_response['tracker_name']);
+        $this->assertNotNull('base', $artifact_response['tracker_name']);
     }
 
     private function createABaseline(int $artifact_id): array
