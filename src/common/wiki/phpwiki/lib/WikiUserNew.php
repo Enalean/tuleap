@@ -1129,73 +1129,11 @@ extends _AnonUser
      * TODO: remove crypt() function check from config.php:396 ??
      */
     function _checkPass($submitted_password, $stored_password) {
-        if (!empty($submitted_password)) {
-            // This works only on plaintext passwords.
-            if (!ENCRYPTED_PASSWD and (strlen($stored_password) < PASSWORD_LENGTH_MINIMUM)) {
-                // With the EditMetaData plugin
-                trigger_error(_("The length of the stored password is shorter than the system policy allows. Sorry, you cannot login.\n You have to ask the System Administrator to reset your password."));
-                return false;
-            }
-            if (!$this->_checkPassLength($submitted_password)) {
-                return false;
-            }
-            if (ENCRYPTED_PASSWD) {
-                // Verify against encrypted password.
-                if (function_exists('crypt')) {
-                    if (crypt($submitted_password, $stored_password) == $stored_password )
-                        return true; // matches encrypted password
-                    else
-                        return false;
-                }
-                else {
-                    trigger_error(_("The crypt function is not available in this version of PHP.") . " "
-                                  . _("Please set ENCRYPTED_PASSWD to false in config/config.ini and probably change ADMIN_PASSWD."),
-                                  E_USER_WARNING);
-                    return false;
-                }
-            }
-            else {
-                // Verify against cleartext password.
-                if ($submitted_password == $stored_password)
-                    return true;
-                else {
-                    // Check whether we forgot to enable ENCRYPTED_PASSWD
-                    if (function_exists('crypt')) {
-                        if (crypt($submitted_password, $stored_password) == $stored_password) {
-                            trigger_error(_("Please set ENCRYPTED_PASSWD to true in config/config.ini."),
-                                          E_USER_WARNING);
-                            return true;
-                        }
-                    }
-                }
-            }
-        }
         return false;
     }
 
-    /** The default method is storing the password in prefs. 
-     *  Child methods (DB, File) may store in external auth also, but this 
-     *  must be explicitly enabled.
-     *  This may be called by plugin/UserPreferences or by ->SetPreferences()
-     */
     function changePass($submitted_password) {
-        $stored_password = $this->_prefs->get('passwd');
-        // check if authenticated
-        if (!$this->isAuthenticated()) return false;
-        if (ENCRYPTED_PASSWD) {
-            $submitted_password = crypt($submitted_password);
-        }
-        // check other restrictions, with side-effects only.
-        $result = $this->_checkPass($submitted_password, $stored_password);
-        if ($stored_password != $submitted_password) {
-            $this->_prefs->set('passwd', $submitted_password);
-            //update the storage (session, homepage, ...)
-            $this->SetPreferences($this->_prefs);
-            return true;
-        }
-        //Todo: return an error msg to the caller what failed? 
-        // same password or no privilege
-        return ENCRYPTED_PASSWD ? true : false;
+        return false;
     }
 
     function _tryNextPass($submitted_password) {
