@@ -25,6 +25,7 @@ namespace Tuleap\Baseline\REST;
 use DI\Container;
 use Tuleap\Baseline\Support\ContainerBuilderFactory;
 use Tuleap\REST\AuthenticatedResource;
+use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
 
 class BaselinesResource extends AuthenticatedResource
@@ -70,6 +71,14 @@ class BaselinesResource extends AuthenticatedResource
     }
 
     /**
+     * @url OPTIONS
+     */
+    public function options()
+    {
+        Header::allowOptionsPost();
+    }
+
+    /**
      * Get a Baseline
      *
      * Get a Baseline
@@ -97,5 +106,13 @@ class BaselinesResource extends AuthenticatedResource
         return $this->container
             ->get(BaselineController::class)
             ->getById($id);
+    }
+
+    /**
+     * @url OPTIONS {id}
+     */
+    public function optionsId($id)
+    {
+        Header::allowOptionsGet();
     }
 }

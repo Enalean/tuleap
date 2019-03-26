@@ -26,6 +26,7 @@ namespace Tuleap\Baseline\REST;
 use DI\Container;
 use Tuleap\Baseline\Support\ContainerBuilderFactory;
 use Tuleap\REST\AuthenticatedResource;
+use Tuleap\REST\Header;
 
 class BaselineArtifactsResource extends AuthenticatedResource
 {
@@ -76,5 +77,13 @@ class BaselineArtifactsResource extends AuthenticatedResource
         return $this->container
             ->get(BaselineArtifactController::class)
             ->get($id, $query);
+    }
+
+    /**
+     * @url OPTIONS {id}/artifacts
+     */
+    public function optionsArtifacts($id)
+    {
+        Header::allowOptionsGet();
     }
 }
