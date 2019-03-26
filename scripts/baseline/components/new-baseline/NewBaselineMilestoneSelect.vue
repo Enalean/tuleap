@@ -63,10 +63,10 @@ export default {
                 const id_b = milestone_b.id;
 
                 if (id_a < id_b) {
-                    return -1;
+                    return 1;
                 }
                 if (id_a > id_b) {
-                    return 1;
+                    return -1;
                 }
                 return 0;
             });

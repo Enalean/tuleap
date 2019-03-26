@@ -57,11 +57,11 @@ describe("NewBaselineMilestoneSelect", () => {
         });
 
         describe("sorted_milestones", () => {
-            it("Sorts milestones by label", () => {
+            it("Sorts milestones by label in reverse order", () => {
                 expect(wrapper.vm.sorted_milestones).toEqual([
-                    milestone_1,
+                    milestone_3,
                     milestone_2,
-                    milestone_3
+                    milestone_1
                 ]);
             });
         });
