@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,22 +20,31 @@
 
 declare(strict_types = 1);
 
-namespace Tuleap\Docman\REST\v1\Folders;
+namespace Tuleap\Docman\Lock;
 
-use Tuleap\Docman\REST\v1\EmbeddedPropertiesPOSTPATCHRepresentation;
+use Tuleap\Docman\REST\v1\ExceptionItemIsLockedByAnotherUser;
 
-class DocmanEmbeddedPOSTRepresentation
+class LockChecker
 {
     /**
-     * @var string Item title {@from body} {@required true}
+     * @var \Docman_LockFactory
      */
-    public $title;
+    private $lock_factory;
+
+    public function __construct(\Docman_LockFactory $lock_factory)
+    {
+        $this->lock_factory = $lock_factory;
+    }
+
     /**
-     * @var string Item description {@from body} {@required false}
+     * @throws ExceptionItemIsLockedByAnotherUser
      */
-    public $description = '';
-    /**
-     * @var EmbeddedPropertiesPOSTPATCHRepresentation {@type \Tuleap\Docman\REST\v1\EmbeddedPropertiesPOSTPATCHRepresentation} {@from body} {@required true}
-     */
-    public $embedded_properties;
+    public function checkItemIsLocked(\Docman_Item $item, \PFUser $user): void
+    {
+        $lock_infos = $this->lock_factory->getLockInfoForItem($item);
+
+        if ($lock_infos && (int)$lock_infos['user_id'] !== (int)$user->getId()) {
+            throw new ExceptionItemIsLockedByAnotherUser();
+        }
+    }
 }

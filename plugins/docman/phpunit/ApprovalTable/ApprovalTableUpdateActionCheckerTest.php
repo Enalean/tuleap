@@ -56,13 +56,14 @@ class ApprovalTableUpdateActionCheckerTest extends TestCase
 
         $this->approval_table_retriever->shouldReceive('hasApprovalTable')->andReturn(true);
 
-        $approval_checker->checkApprovalTableForItem($representation, $item);
+        $approval_checker->checkApprovalTableForItem($representation->approval_table_action, $item);
     }
 
     public function testCheckApprovalTableThrowsExceptionWhenItemHasApprovalTableButNoApprovalAction(): void
     {
         $approval_checker                      = new ApprovalTableUpdateActionChecker($this->approval_table_retriever);
         $item                                  = Mockery::mock(\Docman_Item::class);
+        $item->shouldReceive('getTitle')->andReturn("my item title");
         $representation                        = new DocmanFilesPATCHRepresentation();
         $representation->approval_table_action = '';
 
@@ -70,13 +71,14 @@ class ApprovalTableUpdateActionCheckerTest extends TestCase
 
         $this->expectException(ItemHasApprovalTableButNoApprovalActionException::class);
 
-        $approval_checker->checkApprovalTableForItem($representation, $item);
+        $approval_checker->checkApprovalTableForItem($representation->approval_table_action, $item);
     }
 
     public function testCheckApprovalTableThrowsExceptionWhenItemHasNoApprovalTableButApprovalAction(): void
     {
         $approval_checker                      = new ApprovalTableUpdateActionChecker($this->approval_table_retriever);
         $item                                  = Mockery::mock(\Docman_Item::class);
+        $item->shouldReceive('getTitle')->andReturn("my item title");
         $representation                        = new DocmanFilesPATCHRepresentation();
         $representation->approval_table_action = 'reset';
 
@@ -84,7 +86,7 @@ class ApprovalTableUpdateActionCheckerTest extends TestCase
 
         $this->expectException(ItemHasNoApprovalTableButHasApprovalActionException::class);
 
-        $approval_checker->checkApprovalTableForItem($representation, $item);
+        $approval_checker->checkApprovalTableForItem($representation->approval_table_action, $item);
     }
 
     public function testIfTheUpdateActionIsAvailable(): void

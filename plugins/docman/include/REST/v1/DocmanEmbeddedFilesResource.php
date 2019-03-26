@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,26 +22,31 @@ declare(strict_types = 1);
 
 namespace Tuleap\Docman\REST\v1;
 
+use Docman_ApprovalTableFactoriesFactory;
+use Docman_FileStorage;
 use Docman_LockFactory;
-use Luracast\Restler\RestException;
+use Docman_VersionFactory;
+use PluginManager;
 use Project;
 use ProjectManager;
-use Tuleap\DB\DBFactory;
-use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\ApprovalTable\ApprovalTableUpdateActionChecker;
+use Tuleap\Docman\ApprovalTable\ApprovalTableUpdater;
 use Tuleap\Docman\ApprovalTable\Exceptions\ItemHasApprovalTableButNoApprovalActionException;
 use Tuleap\Docman\ApprovalTable\Exceptions\ItemHasNoApprovalTableButHasApprovalActionException;
-use Tuleap\Docman\Upload\UploadMaxSizeExceededException;
-use Tuleap\Docman\Upload\Version\DocumentOnGoingVersionToUploadDAO;
-use Tuleap\Docman\Upload\Version\VersionToUploadCreator;
+use Tuleap\Docman\Lock\LockChecker;
+use Tuleap\Docman\Lock\LockUpdater;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
 use Tuleap\REST\UserManager as RestUserManager;
 
-class DocmanFilesResource extends AuthenticatedResource
+class DocmanEmbeddedFilesResource extends AuthenticatedResource
 {
+    /**
+     * @var ProjectManager
+     */
+    private $project_manager;
     /**
      * @var \EventManager
      */
@@ -58,8 +63,9 @@ class DocmanFilesResource extends AuthenticatedResource
     public function __construct()
     {
         $this->rest_user_manager = RestUserManager::build();
-        $this->request_builder   = new DocmanItemsRequestBuilder($this->rest_user_manager, ProjectManager::instance());
-        $this->event_manager = \EventManager::instance();
+        $this->project_manager   = ProjectManager::instance();
+        $this->request_builder   = new DocmanItemsRequestBuilder($this->rest_user_manager, $this->project_manager);
+        $this->event_manager     = \EventManager::instance();
     }
 
     /**
@@ -71,20 +77,26 @@ class DocmanFilesResource extends AuthenticatedResource
     }
 
     /**
-     * Patch an element of document manager
+     * Create a new version of an existing embedded file document
      *
-     * Create a new version of an existing file document
      * <pre>
      * /!\ This route is under construction and will be subject to changes
+     * </pre>
+     *
+     * <br>
+     * <pre>
+     * approval_table_action should be provided only if item has an existing approval table.<br>
+     * Possible values:<br>
+     *  * copy: Creates an approval table based on the previous one<br>
+     *  * reset: Reset the current approval table<br>
+     *  * empty: No approbation needed for the new version of this document<br>
      * </pre>
      *
      * @url    PATCH {id}
      * @access hybrid
      *
-     * @param int                            $id             Id of the item
-     * @param DocmanFilesPATCHRepresentation $representation {@from body}
-     *
-     * @return CreatedItemFilePropertiesRepresentation
+     * @param int                                    $id             Id of the item
+     * @param DocmanEmbeddedFilesPATCHRepresentation $representation {@from body}
      *
      * @status 200
      * @throws 400
@@ -92,7 +104,7 @@ class DocmanFilesResource extends AuthenticatedResource
      * @throws 501
      */
 
-    public function patch(int $id, DocmanFilesPATCHRepresentation $representation)
+    public function patch(int $id, DocmanEmbeddedFilesPATCHRepresentation $representation)
     {
         $this->checkAccess();
         $this->getAllowOptionsPatch();
@@ -111,53 +123,44 @@ class DocmanFilesResource extends AuthenticatedResource
         $event_adder->addNotificationEvents($project);
 
         $docman_approval_table_retriever = new ApprovalTableRetriever(new \Docman_ApprovalTableFactoriesFactory());
-        $docman_item_updator             = new DocmanItemUpdator(
-            $docman_approval_table_retriever,
-            new Docman_LockFactory(),
-            new VersionToUploadCreator(
-                new DocumentOnGoingVersionToUploadDAO(),
-                new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
-            ),
-            new FileVersionToUploadVisitorBeforeUpdateValidator()
+
+        $docman_plugin       = PluginManager::instance()->getPluginByName('docman');
+        $docman_root         = $docman_plugin->getPluginInfo()->getPropertyValueForName('docman_root');
+        $version_factory     = new Docman_VersionFactory();
+        $docman_item_updator = new DocmanEmbeddedFileUpdator(
+            new Docman_FileStorage($docman_root),
+            $version_factory,
+            new ApprovalTableUpdater($docman_approval_table_retriever, new Docman_ApprovalTableFactoriesFactory()),
+            new ApprovalTableUpdateActionChecker($docman_approval_table_retriever),
+            new LockChecker(new Docman_LockFactory()),
+            new PostUpdateEventAdder($version_factory, $this->project_manager, $this->getDocmanItemsEventAdder(), $this->event_manager),
+            new \Docman_ItemFactory(),
+            new EmbeddedFileVersionCreationBeforeUpdateValidator(),
+            new LockUpdater(new Docman_LockFactory())
         );
 
         try {
             $approval_check = new ApprovalTableUpdateActionChecker($docman_approval_table_retriever);
             $approval_check->checkApprovalTableForItem($representation->approval_table_action, $item);
-            return $docman_item_updator->updateFile(
+            $docman_item_updator->updateEmbeddedFile(
                 $item,
                 $current_user,
-                $representation,
-                new \DateTimeImmutable()
+                $representation
             );
         } catch (ExceptionItemIsLockedByAnotherUser $exception) {
             throw new I18NRestException(
                 403,
                 dgettext('tuleap-docman', 'Document is locked by another user.')
             );
-        } catch (UploadMaxSizeExceededException $exception) {
-            throw new RestException(
-                400,
-                $exception->getMessage()
-            );
         } catch (ItemHasApprovalTableButNoApprovalActionException $exception) {
             throw new I18NRestException(
                 400,
-                sprintf(
-                    dgettext(
-                        'tuleap-docman',
-                        '%s has an approval table, you must provide an option to have approval table on new version creation.'
-                    ),
-                    $item->title
-                )
+                $exception->getMessage()
             );
         } catch (ItemHasNoApprovalTableButHasApprovalActionException $exception) {
             throw new I18NRestException(
                 400,
-                dgettext(
-                    'tuleap-docman',
-                    'Impossible to update a file which already has an approval table without approval action.'
-                )
+                $exception->getMessage()
             );
         }
     }

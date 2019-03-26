@@ -351,7 +351,7 @@ class DocmanItemsTestFoldersTest extends DocmanBase
             REST_TestDataBuilder::ADMIN_USER_NAME,
             $this->client->get('docman_items/' . $root_id . '/docman_items')
         )->json();
-        $folder_3     = $this->findItemByTitle($stored_items, 'Folder File');
+        $folder_3     = $this->findItemByTitle($stored_items, 'Folder A File');
 
         $query = json_encode(
             [

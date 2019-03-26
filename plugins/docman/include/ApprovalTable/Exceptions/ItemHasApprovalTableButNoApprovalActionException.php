@@ -25,4 +25,16 @@ namespace Tuleap\Docman\ApprovalTable\Exceptions;
 
 class ItemHasApprovalTableButNoApprovalActionException extends \Exception
 {
+    public function __construct($item_title)
+    {
+        parent::__construct(
+            sprintf(
+                dgettext(
+                    'tuleap-docman',
+                    '%s has an approval table, you must provide "approval_table_action" parameter to choose the option creation of table (possible values: copy,reset,empty).'
+                ),
+                $item_title
+            )
+        );
+    }
 }
