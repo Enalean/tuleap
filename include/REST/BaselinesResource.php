@@ -45,7 +45,7 @@ class BaselinesResource extends AuthenticatedResource
      *
      * @url    POST
      * @status 201
-     * @access public
+     * @access protected
      *
      * @param string $name        Name of the baseline {@from body}
      * @param int    $artifact_id Id of an artifact {@from body}
@@ -62,7 +62,7 @@ class BaselinesResource extends AuthenticatedResource
      * @throws \User_StatusSuspendedException
      * @throws \Luracast\Restler\RestException
      */
-    public function post(string $name, int $artifact_id): BaselineRepresentation
+    protected function post(string $name, int $artifact_id): BaselineRepresentation
     {
         $this->checkAccess();
         return $this->container
@@ -84,7 +84,7 @@ class BaselinesResource extends AuthenticatedResource
      * Get a Baseline
      *
      * @url    GET {id}
-     * @access public
+     * @access hybrid
      *
      * @param int $id The baseline id
      *
