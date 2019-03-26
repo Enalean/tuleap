@@ -1,6 +1,6 @@
 <?php
 /**
-  * Copyright (c) Enalean, 2015 - 2016. All Rights Reserved.
+  * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
   *
   * This file is a part of Tuleap.
   *
@@ -170,7 +170,6 @@ class Admin_Homepage_Controller {
 
         switch ($uploaded_logo['error']) {
             case UPLOAD_ERR_OK:
-                continue;
                 break;
             case UPLOAD_ERR_NO_FILE:
                 return;

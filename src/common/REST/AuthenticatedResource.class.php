@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-Present. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,7 +32,8 @@ class AuthenticatedResource  implements iUseAuthentication {
 
     protected $is_authenticated;
 
-    public function __setAuthenticationStatus($is_authenticated = false) {
+    public function __setAuthenticationStatus($is_authenticated = false) // phpcs:ignore
+    {
         $this->is_authenticated = $is_authenticated;
     }
 

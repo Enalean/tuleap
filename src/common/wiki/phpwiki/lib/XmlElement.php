@@ -416,8 +416,9 @@ class RawXml {
 
 class FormattedText {
     function __construct ($fs /* , ... */) {
+        $args = func_get_args();
         if ($fs !== false) {
-            $this->_init(func_get_args());
+            $this->_init($args);
         }
     }
 
