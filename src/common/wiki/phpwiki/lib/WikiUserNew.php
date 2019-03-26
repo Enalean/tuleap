@@ -1796,17 +1796,7 @@ class UserPreferences
     // For now convert just array of objects => array of values
     // Todo: the specialized subobjects must override this.
     function store() {
-        $prefs = array();
-        foreach ($this->_prefs as $name => $object) {
-            if ($value = $object->getraw($name))
-                $prefs[$name] = $value;
-            if ($name == 'email' and ($value = $object->getraw('emailVerified')))
-                $prefs['emailVerified'] = $value;
-            if ($name == 'passwd' and $value and ENCRYPTED_PASSWD) {
-            	$prefs['passwd'] = crypt($value);
-            }
-        }
-        return $this->pack($prefs);
+        return $this->pack([]);
     }
 
     // packed string or array of values => array of values
