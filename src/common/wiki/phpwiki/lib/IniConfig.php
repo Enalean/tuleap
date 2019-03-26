@@ -110,7 +110,7 @@ function IniConfig($file) {
         ('ENABLE_USER_NEW', 'ENABLE_PAGEPERM', 'ENABLE_EDIT_TOOLBAR', 'JS_SEARCHREPLACE',
          'ENABLE_XHTML_XML', 'ENABLE_DOUBLECLICKEDIT', 'ENABLE_LIVESEARCH',
          'USECACHE', 'WIKIDB_NOCACHE_MARKUP',
-         'ENABLE_REVERSE_DNS', 'ENCRYPTED_PASSWD', 'ZIPDUMP_AUTH', 
+         'ENABLE_REVERSE_DNS', 'ZIPDUMP_AUTH',
          'ENABLE_RAW_HTML', 'ENABLE_RAW_HTML_LOCKEDONLY', 'ENABLE_RAW_HTML_SAFE', 
          'STRICT_MAILABLE_PAGEDUMPS', 'COMPRESS_OUTPUT',
          'ALLOW_ANON_USER', 'ALLOW_ANON_EDIT',
@@ -398,18 +398,6 @@ function fixup_static_configs($file) {
 
     if (!defined('THEME'))
         define('THEME', 'default');
-
-    // check whether the crypt() function is needed and present
-    if (defined('ENCRYPTED_PASSWD') && !function_exists('crypt')) {
-        $error = sprintf("Encrypted passwords cannot be used: %s.",
-                         "'function crypt()' not available in this version of php");
-        trigger_error($error, E_USER_WARNING);
-        if (!preg_match("/config\-dist\.ini$/", $file)) { // protect against recursion
-            include_once(dirname(__FILE__)."/install.php");
-            run_install("_part1");
-            exit();
-        }
-    }
 
     // Basic configurator validation
     if (!defined('ADMIN_USER') or ADMIN_USER == '') {

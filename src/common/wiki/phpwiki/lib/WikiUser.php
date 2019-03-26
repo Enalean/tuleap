@@ -228,93 +228,6 @@ class WikiUser {
      * Check password.
      */
     function _pwcheck ($userid, $passwd) {
-        global $WikiNameRegexp;
-
-        if (!empty($userid) && $userid == ADMIN_USER) {
-            // $this->_authmethod = 'pagedata';
-            if (defined('ENCRYPTED_PASSWD') && ENCRYPTED_PASSWD)
-                if ( !empty($passwd)
-                     && crypt($passwd, ADMIN_PASSWD) == ADMIN_PASSWD )
-                    return WIKIAUTH_ADMIN;
-                else
-                    return false;
-            if (!empty($passwd)) {
-                if ($passwd == ADMIN_PASSWD)
-                  return WIKIAUTH_ADMIN;
-                else {
-                    // maybe we forgot to enable ENCRYPTED_PASSWD?
-                    if ( function_exists('crypt')
-                         && crypt($passwd, ADMIN_PASSWD) == ADMIN_PASSWD ) {
-                        trigger_error(_("You forgot to set ENCRYPTED_PASSWD to true. Please update your config/config.ini"),
-                                      E_USER_WARNING);
-                        return WIKIAUTH_ADMIN;
-                    }
-                }
-            }
-            return false;
-        }
-        // HTTP Authentication
-        elseif (ALLOW_HTTP_AUTH_LOGIN && !empty($PHP_AUTH_USER)) {
-            // if he ignored the password field, because he is already
-            // authenticated try the previously given password.
-            if (empty($passwd))
-                $passwd = $PHP_AUTH_PW;
-        }
-
-        // WikiDB_User DB/File Authentication from $DBAuthParams
-        // Check if we have the user. If not try other methods.
-        if (ALLOW_USER_LOGIN) { // && !empty($passwd)) {
-            if (!$this->isValidName($userid)) {
-                trigger_error(_("Invalid username."), E_USER_WARNING);
-                return false;
-            }
-            $request = $this->_request;
-            // first check if the user is known
-            if ($this->exists($userid)) {
-                $this->_authmethod = 'pagedata';
-                return ($this->checkPassword($passwd)) ? WIKIAUTH_USER : false;
-            } else {
-                // else try others such as LDAP authentication:
-                if (ALLOW_LDAP_LOGIN && defined(LDAP_AUTH_HOST) && !empty($passwd) && !strstr($userid,'*')) {
-                    if ($ldap = ldap_connect(LDAP_AUTH_HOST)) { // must be a valid LDAP server!
-                        $r = @ldap_bind($ldap); // this is an anonymous bind
-                        $st_search = "uid=$userid";
-                        // Need to set the right root search information. see ../index.php
-                        $sr = ldap_search($ldap, LDAP_BASE_DN,
-                                          "$st_search");
-                        $info = ldap_get_entries($ldap, $sr); // there may be more hits with this userid. try every
-                        for ($i = 0; $i < $info["count"]; $i++) {
-                            $dn = $info[$i]["dn"];
-                            // The password is still plain text.
-                            if ($r = @ldap_bind($ldap, $dn, $passwd)) {
-                                // ldap_bind will return TRUE if everything matches
-                                ldap_close($ldap);
-                                $this->_authmethod = 'LDAP';
-                                return WIKIAUTH_USER;
-                            }
-                        }
-                    } else {
-                        trigger_error("Unable to connect to LDAP server "
-                                      . LDAP_AUTH_HOST, E_USER_WARNING);
-                    }
-                }
-                // imap authentication. added by limako
-                if (ALLOW_IMAP_LOGIN && !empty($passwd)) {
-                    $mbox = @imap_open( "{" . IMAP_AUTH_HOST . "}INBOX",
-                                        $userid, $passwd, OP_HALFOPEN );
-                    if($mbox) {
-                        imap_close($mbox);
-                        $this->_authmethod = 'IMAP';
-                        return WIKIAUTH_USER;
-                    }
-                }
-            }
-        }
-        if ( ALLOW_BOGO_LOGIN
-             && preg_match('/\A' . $WikiNameRegexp . '\z/', $userid) ) {
-            $this->_authmethod = 'BOGO';
-            return WIKIAUTH_BOGO;
-        }
         return false;
     }
 
@@ -502,25 +415,9 @@ class WikiUser {
     }
 
     function changePassword($newpasswd, $passwd2 = false) {
-        if (! $this->mayChangePass() ) {
-            trigger_error(sprintf("Attempt to change an external password for '%s'. Not allowed!",
-                                  $this->_userid), E_USER_ERROR);
-            return false;
-        }
-        if ($passwd2 && $passwd2 != $newpasswd) {
-            trigger_error("The second password must be the same as the first to change it",
-                          E_USER_ERROR);
-            return false;
-        }
-        if (!$this->isAuthenticated()) return false;
-
-        $prefs = $this->getPreferences();
-        if (ENCRYPTED_PASSWD)
-            $prefs->set('passwd', crypt($newpasswd));
-        else 
-            $prefs->set('passwd', $newpasswd);
-        $this->setPreferences($prefs);
-        return true;
+        trigger_error(sprintf("Attempt to change an external password for '%s'. Not allowed!",
+            $this->_userid), E_USER_ERROR);
+        return false;
     }
 
     function mayChangePass() {
