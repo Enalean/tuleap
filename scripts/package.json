@@ -6,7 +6,10 @@
   "license": "GPL-2.0+",
   "private": true,
   "dependencies": {
+    "moment": "^2.24.0",
+    "moment-timezone": "^0.5.23",
     "node-htmldiff": "^0.9.3",
+    "phptomoment": "0.0.2",
     "sprintf-js": "^1.1.2",
     "vue": "^2.5.17",
     "vue-gettext": "^2.1.0",

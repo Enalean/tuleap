@@ -25,6 +25,7 @@ import GetTextPlugin from "vue-gettext";
 import router from "./router";
 import App from "./components/App.vue";
 import store_options from "./store";
+import DateUtils from "./support/date-utils";
 
 document.addEventListener("DOMContentLoaded", () => {
     Vue.use(Vuex);
@@ -35,7 +36,14 @@ document.addEventListener("DOMContentLoaded", () => {
         silent: true
     });
 
-    Vue.config.language = document.body.dataset.userLocale;
+    let user_locale = document.body.dataset.userLocale;
+    Vue.config.language = user_locale;
+
+    DateUtils.setOptions({
+        user_locale,
+        user_timezone: document.body.dataset.userTimezone,
+        format: document.body.dataset.dateTimeFormat
+    });
 
     const vue_mount_point = document.getElementById("baseline-container");
 

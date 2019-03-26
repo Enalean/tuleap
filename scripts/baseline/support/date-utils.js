@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright (c) Enalean, 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,17 +17,26 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  *
  */
-@import 'baseline/baseline-content';
-@import 'baseline/baselines-list';
-@import 'baseline/comparison-content';
-@import 'baseline/new-baseline-modal';
-@import 'baseline/new-comparison-modal';
 
-.baseline-tooltip-icon {
-    margin-left: $tlp-spacing;
-}
+import moment from "moment";
+import phptomoment from "phptomoment";
+import "moment-timezone";
+import "moment/locale/fr";
 
-.baseline-label-author {
-    display: block;
-    font-size: 14px;
-}
+let format = "d/m/Y H:i";
+
+export default {
+    setOptions(preferences) {
+        let user_locale_for_moment = preferences.user_locale.replace(/_/g, "-");
+        moment.tz(preferences.user_timezone).locale(user_locale_for_moment);
+        format = preferences.format;
+    },
+
+    format(date) {
+        return moment(date).format(phptomoment(format));
+    },
+
+    getFromNow(date) {
+        return moment(date).fromNow();
+    }
+};

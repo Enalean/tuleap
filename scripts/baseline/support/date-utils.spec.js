@@ -18,38 +18,35 @@
  *
  */
 
-import { mount } from "@vue/test-utils";
-import localVue from "../../support/local-vue.js";
-import BaselineLabel from "./BaselineLabel.vue";
-import { create } from "../../support/factories";
-import DateFormatter from "../../support/date-utils";
+import DateFormatter from "./date-utils";
+import moment from "moment";
 
-describe("BaselineLabel", () => {
-    let wrapper;
+describe("DateUtils:", () => {
+    const now = moment("2019/02/23 09:37:20 +0001", "YYYY/MM/DD HH:mm:ss Z").toDate();
 
     beforeEach(() => {
+        //spyOn(window, "Date").andCallFake(() => now);
+        //var today = moment('2015-10-19').toDate();
+        jasmine.clock().mockDate(now);
+
         DateFormatter.setOptions({
             user_locale: "fr_FR",
             user_timezone: "Europe/Paris",
             format: "d/m/Y H:i"
         });
+    });
 
-        wrapper = mount(BaselineLabel, {
-            localVue,
-            propsData: {
-                baseline: create("baseline", {
-                    id: 1,
-                    name: "Baseline V1",
-                    snapshot_date: "2019-03-22T10:01:48+00:00",
-                    author: create("user", { username: "Alita" })
-                })
-            }
+    afterEach(jasmine.clock().uninstall);
+
+    describe("#format", () => {
+        it("format date", () => {
+            expect(DateFormatter.format("2019-03-22T10:01:48+00:00")).toEqual("22/03/2019 11:01");
         });
     });
 
-    it("shows baseline information", () => {
-        expect(wrapper.text()).toMatch(
-            /Baseline #1 - Baseline V1\s*Created by\s*Alita\s*il y a 4 jours/
-        );
+    describe("#getFromNow", () => {
+        it("formats date and returns interval from now", () => {
+            expect(DateFormatter.getFromNow("2016-01-01T23:35:01")).toEqual("il y a 3 ans");
+        });
     });
 });

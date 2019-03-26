@@ -20,9 +20,11 @@
 
 <template>
     <h2>
-        Baseline #{{ baseline.id }} - {{ baseline.name }} <small><humanized-date v-bind:date="baseline.snapshot_date"/></small>
-        <span class="baseline-label-author">
-            <small><translate>Created by</translate> {{ baseline.author.username }}</small>
+        Baseline #{{ baseline.id }} - {{ baseline.name }}
+        <span class="tlp-text-muted baseline-label-author">
+            <span v-translate>Created by</span>
+            {{ baseline.author.username }}
+            <humanized-date v-bind:date="baseline.snapshot_date"/>
         </span>
     </h2>
 </template>
