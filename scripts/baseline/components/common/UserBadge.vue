@@ -19,24 +19,34 @@
   -->
 
 <template>
-    <h2>
-        Baseline #{{ baseline.id }} - {{ baseline.name }}
-        <span class="baseline-label-author tlp-text-muted">
-            <span v-translate>Created by</span>
-            <user-badge v-bind:user="baseline.author" class="baseline-label-author-badge"/>
-            <humanized-date v-bind:date="baseline.snapshot_date"/>
+    <div>
+        <div class="tlp-avatar-small">
+            <img v-bind:src="user.avatar_url" v-if="user.has_avatar">
+        </div>
+        <span
+            v-if="user.is_anonymous"
+            class="baseline-user-badge-avatar-username"
+        >
+            {{ user.display_name }}
         </span>
-    </h2>
+        <a
+            v-else
+            v-bind:href="user.user_url"
+            class="baseline-user-badge-avatar-username"
+        >
+            {{ user.display_name }}
+        </a>
+    </div>
 </template>
 
 <script>
-import HumanizedDate from "./HumanizedDate.vue";
-import UserBadge from "./UserBadge.vue";
 export default {
-    name: "BaselineLabel",
-    components: { HumanizedDate, UserBadge },
+    name: "UserBadge",
     props: {
-        baseline: { required: true, type: Object }
+        user: {
+            required: true,
+            type: Object
+        }
     }
 };
 </script>

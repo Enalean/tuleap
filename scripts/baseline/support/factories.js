@@ -92,7 +92,10 @@ const factories = {
     user: {
         default: {
             id: identity,
-            username: "John Doe"
+            display_name: "John Doe",
+            has_avatar: false,
+            is_anonymous: false,
+            user_url: "http://example.com/user/1"
         }
     }
 };

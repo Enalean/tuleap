@@ -29,5 +29,17 @@
 
 .baseline-label-author {
     display: block;
+    height: 25px;
     font-size: 14px;
+}
+
+.baseline-label-author-badge {
+    display: inline;
+    margin: 0 4px;
+}
+
+.baseline-user-badge-avatar-username {
+    &:not(:hover) {
+        color: $tlp-ui-dimmed;
+    }
 }

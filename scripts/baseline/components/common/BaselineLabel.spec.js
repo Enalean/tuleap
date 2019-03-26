@@ -44,7 +44,7 @@ describe("BaselineLabel", () => {
                     id: 1,
                     name: "Baseline V1",
                     snapshot_date: past_snapshot_date.toISOString(),
-                    author: create("user", { username: "Alita" })
+                    author: create("user", { display_name: "Alita" })
                 })
             }
         });

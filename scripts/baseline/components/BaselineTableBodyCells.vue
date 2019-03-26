@@ -30,7 +30,7 @@
             <td>
                 <humanized-date v-bind:date="baseline.snapshot_date"/>
             </td>
-            <td>{{ baseline.author.username }}</td>
+            <td><user-badge v-bind:user="baseline.author"/></td>
             <td class="tlp-table-cell-actions baselines-table-column-actions">
                 <button
                     v-on:click="showBaseline(baseline)"
@@ -45,9 +45,10 @@
 
 <script>
 import HumanizedDate from "./common/HumanizedDate.vue";
+import UserBadge from "./common/UserBadge.vue";
 export default {
     name: "BaselineTableBodyCells",
-    components: { HumanizedDate },
+    components: { HumanizedDate, UserBadge },
     props: {
         baselines: { required: true, type: Array }
     },
