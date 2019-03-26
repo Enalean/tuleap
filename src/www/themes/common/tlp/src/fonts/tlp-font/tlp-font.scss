@@ -28,7 +28,9 @@ $tlp-font-basepath: '.' !default;
 
 $tlp-fontawesome-icons: (
     lock-plus-r: '\f000',
-    unlock-plus-r: '\f001'
+    unlock-plus-r: '\f001',
+    baseline: '\f002',
+    baseline-comparison: '\f003'
 );
 
 @each $label, $unicode in $tlp-fontawesome-icons {
