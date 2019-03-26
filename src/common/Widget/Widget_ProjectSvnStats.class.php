@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean 2017 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean 2017 - Present. All Rights Reserved.
  * Copyright (c) Xerox, 2009. All Rights Reserved.
  *
  * Originally written by Nicolas Terray, 2009. Xerox Codendi Team.
@@ -23,11 +23,6 @@
 
 use Tuleap\Chart\ColorsForCharts;
 use Tuleap\Dashboard\Project\ProjectDashboardController;
-
-require_once('common/dao/SvnCommitsDao.class.php');
-require_once('common/chart/Chart.class.php');
-require_once('common/chart/ErrorChart.class.php');
-require_once('common/widget/Widget_ProjectSvnStats_Layout.class.php');
 
 class Widget_ProjectSvnStats extends Widget
 {

@@ -40,7 +40,7 @@ class AdminDelegation_UserWidget extends Widget //phpcs:ignore
     /**
      * Widget title
      *
-     * @see src/common/widget/Widget#getTitle()
+     * @see src/common/Widget/Widget#getTitle()
      * @return String
      */
     public function getTitle()
@@ -51,7 +51,7 @@ class AdminDelegation_UserWidget extends Widget //phpcs:ignore
     /**
      * Widget description
      *
-     * @see src/common/widget/Widget#getDescription()
+     * @see src/common/Widget/Widget#getDescription()
      *
      * @return String
      */
@@ -156,7 +156,7 @@ class AdminDelegation_UserWidget extends Widget //phpcs:ignore
     /**
      * Widget content
      *
-     * @see src/common/widget/Widget#getContent()
+     * @see src/common/Widget/Widget#getContent()
      * @return String
      */
     public function getContent()
