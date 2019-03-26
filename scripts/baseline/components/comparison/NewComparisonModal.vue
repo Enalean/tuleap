@@ -66,6 +66,7 @@
                         >
                             No other baseline available on same artifact.
                         </span>
+
                         <div v-else class="new-comparison-modal-baselines-list-scrollbar">
                             <label
                                 v-for="baseline in baselines_to_compare"
@@ -142,6 +143,10 @@ export default {
     },
 
     methods: {
+        reload() {
+            this.base_baseline = null;
+            this.baseline_to_compare = null;
+        },
         openComparison() {
             this.$router.push({
                 name: "ComparisonPage",

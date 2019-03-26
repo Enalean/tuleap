@@ -192,6 +192,7 @@ export default {
 
         showNewComparisonModal() {
             this.new_comparison_modal.show();
+            this.$refs.new_comparison_modal.reload();
         }
     }
 };
