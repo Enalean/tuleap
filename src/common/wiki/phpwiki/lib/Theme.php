@@ -232,9 +232,6 @@ class Theme {
             return $this->_default_theme->_findFile($file, $missing_okay);
         }
         else if (!$missing_okay) {
-            if (DEBUG & function_exists('debug_backtrace')) { // >= 4.3.0
-                echo "<pre>", printSimpleTrace(debug_backtrace()), "</pre>\n";
-            }
             trigger_error("$this->_theme/$file: not found", E_USER_NOTICE);
         }
         return false;

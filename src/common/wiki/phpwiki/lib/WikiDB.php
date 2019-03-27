@@ -602,13 +602,8 @@ class WikiDB_Page
         $this->_pagename = $pagename;
         if (DEBUG) {
             if (!(is_string($pagename) and $pagename != '')) {
-                if (function_exists("xdebug_get_function_stack")) {
-                    echo "xdebug_get_function_stack(): "; var_dump(xdebug_get_function_stack());
-                } elseif (function_exists("debug_backtrace")) { // >= 4.3.0
-                    printSimpleTrace(debug_backtrace());
-                }
                 trigger_error("empty pagename", E_USER_WARNING);
-                return false;
+                return;
             }
         } else {
             assert(is_string($pagename) and $pagename != '');

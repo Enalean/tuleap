@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-Present. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,7 +24,8 @@ use \Luracast\Restler\InvalidAuthCredentials;
 
 class BasicAuthentication implements iAuthenticate
 {
-    public function __isAllowed() {
+    public function __isAllowed() // phpcs:ignore
+    {
         if (isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW'])) {
             $current_user = \UserManager::instance()->login($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']);
 
@@ -36,14 +37,15 @@ class BasicAuthentication implements iAuthenticate
         }
     }
 
-    public static function __getMaximumSupportedVersion() {
+    public static function __getMaximumSupportedVersion() // phpcs:ignore
+    {
         return 2;
     }
 
     /**
      * Needed due to iAuthenticate interface since Restler v3.0.0-RC6
      */
-    public function __getWWWAuthenticateString()
+    public function __getWWWAuthenticateString() // phpcs:ignore
     {
         return 'Basic realm="'.AuthenticatedResource::REALM.'" Token realm="'.AuthenticatedResource::REALM.'" AccessKey realm="'.AuthenticatedResource::REALM.'"';
     }

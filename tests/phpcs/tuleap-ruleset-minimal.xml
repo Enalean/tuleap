@@ -6,10 +6,14 @@
 >
     <description>Tuleap minimal coding standard.</description>
 
-    <config name="installed_paths" value="../../slevomat/coding-standard"/>
+    <config name="installed_paths" value="../../slevomat/coding-standard,../../phpcompatibility/php-compatibility"/>
 
     <exclude-pattern>*/vendor/*</exclude-pattern>
 
     <!-- Forbid use of short open tags <? -->
     <rule ref="Generic.PHP.DisallowShortOpenTag" />
+
+    <!-- Ensure code is compatible with the targeted version of PHP -->
+    <rule ref="PHPCompatibility"/>
+    <config name="testVersion" value="7.2-7.3"/>
 </ruleset>

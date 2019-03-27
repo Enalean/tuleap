@@ -889,12 +889,6 @@ class Block_oldlists extends Block_list
                         echo "_content: "; var_dump ($c->_content);
                         echo "_properties: "; var_dump ($c->_properties);
                     }
-                    debug_print_backtrace();
-                    if (DEBUG & _DEBUG_APD) {
-                        if (function_exists("xdebug_get_function_stack")) {
-                            var_dump (xdebug_get_function_stack());
-                        }
-                    }
                     echo "</pre>";
                 }
             }

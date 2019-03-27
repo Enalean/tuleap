@@ -79,7 +79,6 @@ extends WikiPlugin
                      'string'  => ini_get("highlight.string"),  //'#00CC00',
                      'comment' => ini_get("highlight.comment"), //'#FF9900',
                      'keyword' => ini_get("highlight.keyword"), //'#006600',
-                     'bg'      => ini_get("highlight.bg"),      //'#FFFFFF',
                      'default' => ini_get("highlight.default"), //'#0000CC',
                      'html'    => ini_get("highlight.html")     //'#000000'
                      );
