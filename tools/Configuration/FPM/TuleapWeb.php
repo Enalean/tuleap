@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -54,15 +54,30 @@ class TuleapWeb
 
     public static function buildForPHP72(
         LoggerInterface $logger,
-        $application_user,
-        $development
-    ) {
+        string $application_user,
+        bool $development
+    ) : self {
         return new self(
             $logger,
             $application_user,
             $development,
             '/etc/opt/remi/php72',
             '/usr/share/tuleap/src/etc/fpm72',
+            []
+        );
+    }
+
+    public static function buildForPHP73(
+        LoggerInterface $logger,
+        string $application_user,
+        bool $development
+    ) : self {
+        return new self(
+            $logger,
+            $application_user,
+            $development,
+            '/etc/opt/remi/php73',
+            '/usr/share/tuleap/src/etc/fpm73',
             []
         );
     }

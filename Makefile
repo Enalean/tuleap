@@ -103,6 +103,9 @@ generate-mo: ## Compile translated strings into binary format
 tests_rest_72: ## Run all REST tests with PHP FPM 7.2
 	$(DOCKER) run -ti --rm -v $(CURDIR):/usr/share/tuleap:ro,cached --mount type=tmpfs,destination=/tmp enalean/tuleap-test-rest:c6-php72-mysql57
 
+tests_rest_73: ## Run all REST tests with PHP FPM 7.3
+	$(DOCKER) run -ti --rm -v $(CURDIR):/usr/share/tuleap:ro,cached --mount type=tmpfs,destination=/tmp enalean/tuleap-test-rest:c6-php73-mysql57
+
 tests_soap_72: ## Run all SOAP tests in PHP 7.2
 	$(DOCKER) run -ti --rm -v $(CURDIR):/usr/share/tuleap:ro,cached --mount type=tmpfs,destination=/tmp enalean/tuleap-test-soap:4
 

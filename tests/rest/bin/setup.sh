@@ -153,6 +153,10 @@ if [ "$FPM_DAEMON" == 'php72-php-fpm' ]; then
     echo "Deploy PHP FPM 7.2"
     "$PHP_CLI" /usr/share/tuleap/tools/utils/php72/run.php --modules=nginx,fpm
 fi
+if [ "$FPM_DAEMON" == 'php73-php-fpm' ]; then
+    echo "Deploy PHP FPM 7.3"
+    "$PHP_CLI" /usr/share/tuleap/tools/utils/php73/run.php --modules=nginx,fpm
+fi
 service "$FPM_DAEMON" start
 service nginx start
 setup_database

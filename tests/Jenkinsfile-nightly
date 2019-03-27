@@ -44,6 +44,10 @@ pipeline {
                             steps { script { actions.runSimpleTestTests('73') } }
                             post { always { junit 'results/ut-simpletest/php-73/results.xml' } }
                         }
+                        stage('REST CentOS 6 PHP 7.3') {
+                            steps { script { actions.runRESTTests('c6-php73-mysql57') } }
+                            post { always { junit 'results/api-rest/*/rest_tests.xml' } }
+                        }
                     }
                 }
                 stage('E2E tests') {
