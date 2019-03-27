@@ -655,15 +655,16 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      *
      * @return string
      */
-    public function fetchCard(Tracker_Artifact $artifact, Tracker_CardDisplayPreferences $display_preferences) {
-
+    public function fetchCard(Tracker_Artifact $artifact, Tracker_CardDisplayPreferences $display_preferences)
+    {
         $value           = $this->fetchCardValue($artifact, $display_preferences);
         $data_field_id   = '';
         $data_field_type = '';
 
         $purifier        = Codendi_HTMLPurifier::instance();
 
-        if ($this->userCanUpdate()) {
+        $is_field_read_only = $this->getReadOnlyFieldDetector()->isFieldReadOnly($artifact, $this);
+        if ($this->userCanUpdate() && ! $is_field_read_only) {
             $data_field_id   = 'data-field-id="'. $purifier->purify($this->getId()) .'"';
             $data_field_type = 'data-field-type="'. $purifier->purify($this->getFormElementFactory()->getType($this)) .'"';
         }
