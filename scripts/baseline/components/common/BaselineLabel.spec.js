@@ -34,13 +34,16 @@ describe("BaselineLabel", () => {
             format: "d/m/Y H:i"
         });
 
+        const past_snapshot_date = new Date();
+        past_snapshot_date.setDate(past_snapshot_date.getDate() - 4);
+
         wrapper = mount(BaselineLabel, {
             localVue,
             propsData: {
                 baseline: create("baseline", {
                     id: 1,
                     name: "Baseline V1",
-                    snapshot_date: "2019-03-22T10:01:48+00:00",
+                    snapshot_date: past_snapshot_date.toISOString(),
                     author: create("user", { username: "Alita" })
                 })
             }
