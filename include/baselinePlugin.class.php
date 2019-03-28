@@ -37,7 +37,6 @@ class baselinePlugin extends Plugin  // @codingStandardsIgnoreLine
     {
         parent::__construct($id);
         $this->setScope(self::SCOPE_PROJECT);
-        $this->addHook(Event::REST_RESOURCES);
         bindtextdomain('tuleap-baseline', __DIR__ . '/../site-content');
     }
 
@@ -53,10 +52,13 @@ class baselinePlugin extends Plugin  // @codingStandardsIgnoreLine
 
     public function getHooksAndCallbacks(): Collection
     {
+        $this->addHook(Event::REST_RESOURCES);
+
         $this->addHook(\Tuleap\Request\CollectRoutesEvent::NAME);
 
         $this->addHook(ServiceUrlCollector::NAME);
         $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
+        $this->addHook(Event::SERVICE_CLASSNAMES);
 
         return parent::getHooksAndCallbacks();
     }
@@ -68,6 +70,11 @@ class baselinePlugin extends Plugin  // @codingStandardsIgnoreLine
         }
 
         return $this->pluginInfo;
+    }
+
+    public function service_classnames(array &$params) : void // phpcs:ignore PSR1.Methods.CamelCapsMethodName
+    {
+        $params['classnames'][self::SERVICE_SHORTNAME] = \Tuleap\Baseline\BaselineTuleapService::class;
     }
 
     public function serviceUrlCollector(ServiceUrlCollector $collector)
