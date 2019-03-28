@@ -344,7 +344,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         $additional_classes = array()
     ) {
         $is_field_read_only = $this->getReadOnlyFieldDetector()->isFieldReadOnly($artifact, $this);
-        if ($this->userCanUpdate() && ! $is_field_read_only) {
+        if (! $is_field_read_only && $this->userCanUpdate()) {
             $last_changeset = $artifact->getLastChangeset();
             if ($last_changeset) {
                 $value       = $last_changeset->getValue($this);
@@ -399,16 +399,16 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      */
     private function fetchArtifactField(Tracker_Artifact $artifact, $html_value, array $additional_classes)
     {
-        $is_field_read_only = $this->getReadOnlyFieldDetector()->isFieldReadOnly($artifact, $this);
         $purifier = Codendi_HTMLPurifier::instance();
         $html = '';
         if ($this->userCanRead()) {
+            $is_field_read_only = $this->getReadOnlyFieldDetector()->isFieldReadOnly($artifact, $this);
             $required = $this->required ? ' <span class="highlight">*</span>' : '';
             $html .= '<div class="'. $this->getClassNames($additional_classes, $is_field_read_only) .'"
                 data-field-id="'. $this->id .'"
                 data-is-required="'. ($this->required ? 'true' : 'false') .'">';
 
-            if ($this->userCanUpdate() && ! $is_field_read_only) {
+            if (! $is_field_read_only && $this->userCanUpdate()) {
                 $title = $purifier->purify($GLOBALS['Language']->getText('plugin_tracker_artifact', 'edit_field', array($this->getLabel())));
                 $html .= '<button type="button" title="' . $title . '" class="tracker_formelement_edit">' . $purifier->purify($this->getLabel())  . $required . '</button>';
             }
@@ -510,7 +510,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         if ($this->has_errors) {
             $classnames .= ' has_errors';
         }
-        if ($this->userCanUpdate() && ! $is_field_read_only) {
+        if (! $is_field_read_only && $this->userCanUpdate()) {
             $classnames .= ' editable';
         }
 
@@ -581,7 +581,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      */
     public function fetchArtifactValueForWebDisplay(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
         $is_field_read_only = $this->getReadOnlyFieldDetector()->isFieldReadOnly($artifact, $this);
-        if ($this->userCanUpdate() && ! $is_field_read_only) {
+        if (! $is_field_read_only && $this->userCanUpdate()) {
             return $this->fetchArtifactValueWithEditionFormIfEditable($artifact, $value, $submitted_values);
         }
         return $this->fetchArtifactValueReadOnly($artifact, $value);
