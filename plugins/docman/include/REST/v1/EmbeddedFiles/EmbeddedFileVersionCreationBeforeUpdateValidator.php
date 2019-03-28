@@ -20,7 +20,7 @@
 
 declare(strict_types = 1);
 
-namespace Tuleap\Docman\REST\v1;
+namespace Tuleap\Docman\REST\v1\EmbeddedFiles;
 
 use Docman_EmbeddedFile;
 use Docman_Empty;

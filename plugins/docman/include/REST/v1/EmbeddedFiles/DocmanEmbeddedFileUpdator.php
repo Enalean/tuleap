@@ -20,7 +20,7 @@
 
 declare(strict_types = 1);
 
-namespace Tuleap\Docman\REST\v1;
+namespace Tuleap\Docman\REST\v1\EmbeddedFiles;
 
 use Docman_FileStorage;
 use Docman_ItemFactory;
@@ -28,6 +28,8 @@ use Tuleap\Docman\ApprovalTable\ApprovalTableUpdateActionChecker;
 use Tuleap\Docman\ApprovalTable\ApprovalTableUpdater;
 use Tuleap\Docman\Lock\LockChecker;
 use Tuleap\Docman\Lock\LockUpdater;
+use Tuleap\Docman\REST\v1\ExceptionItemIsLockedByAnotherUser;
+use Tuleap\Docman\REST\v1\PostUpdateEventAdder;
 
 class DocmanEmbeddedFileUpdator
 {

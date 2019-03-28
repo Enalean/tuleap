@@ -20,7 +20,7 @@
 
 declare(strict_types = 1);
 
-namespace Tuleap\Docman\REST\v1;
+namespace Tuleap\Docman\REST\v1\EmbeddedFiles;
 
 class DocmanEmbeddedFilesPATCHRepresentation
 {
@@ -45,7 +45,7 @@ class DocmanEmbeddedFilesPATCHRepresentation
     public $approval_table_action = '';
 
     /**
-     * @var EmbeddedPropertiesPOSTPATCHRepresentation File properties must be set when creating a new file {@from body} {@type \Tuleap\Docman\REST\v1\EmbeddedPropertiesPOSTPATCHRepresentation} {@required true}
+     * @var EmbeddedPropertiesPOSTPATCHRepresentation File properties must be set when creating a new file {@from body} {@type \Tuleap\Docman\REST\v1\EmbeddedFiles\EmbeddedPropertiesPOSTPATCHRepresentation} {@required true}
      */
     public $embedded_properties ;
 }

@@ -36,6 +36,9 @@ use Tuleap\Docman\ApprovalTable\Exceptions\ItemHasApprovalTableButNoApprovalActi
 use Tuleap\Docman\ApprovalTable\Exceptions\ItemHasNoApprovalTableButHasApprovalActionException;
 use Tuleap\Docman\Lock\LockChecker;
 use Tuleap\Docman\Lock\LockUpdater;
+use Tuleap\Docman\REST\v1\EmbeddedFiles\DocmanEmbeddedFilesPATCHRepresentation;
+use Tuleap\Docman\REST\v1\EmbeddedFiles\DocmanEmbeddedFileUpdator;
+use Tuleap\Docman\REST\v1\EmbeddedFiles\EmbeddedFileVersionCreationBeforeUpdateValidator;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;

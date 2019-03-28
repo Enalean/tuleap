@@ -24,10 +24,10 @@
 
 namespace Tuleap\Docman\REST;
 
-use Tuleap\Docman\REST\v1\DocmanEmbeddedFilesResource;
 use Tuleap\Docman\REST\v1\DocmanFilesResource;
 use Tuleap\Docman\REST\v1\DocmanFoldersResource;
 use Tuleap\Docman\REST\v1\DocmanItemsResource;
+use Tuleap\Docman\REST\v1\DocmanEmbeddedFilesResource;
 
 class ResourcesInjector
 {
