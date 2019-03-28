@@ -57,7 +57,7 @@ _pluginGit() {
     fi
 
     if ! $(_serviceIsActive sshd); then
-        _errorMessage "Start sshd service"
+        _errorMessage "Please, start the SSHD service to continue"
         exit 1
     fi
 
