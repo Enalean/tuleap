@@ -48,6 +48,6 @@ import "./components/Folder/ModalCommon/ModalFooter.spec.js";
 
 import "./components/Folder/UpdateItem/UpdateButton.spec.js";
 import "./components/Folder/UpdateItem/ApprovalUpdateProperties.spec.js";
-import "./components/Folder/UpdateItem/FileUpdateProperties.spec.js";
+import "./components/Folder/UpdateItem/ItemUpdateProperties.spec.js";
 
 import "./helpers/highlight-items-helper.spec.js";

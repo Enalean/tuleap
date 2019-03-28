@@ -37,7 +37,7 @@ import LockProperty from "./LockProperty.vue";
 import ApprovalUpdateProperties from "./ApprovalUpdateProperties.vue";
 
 export default {
-    name: "FileUpdateProperties",
+    name: "ItemUpdateProperties",
     components: { LockProperty, ChangelogProperty, VersionTitleProperty, ApprovalUpdateProperties },
     props: {
         version: Object,

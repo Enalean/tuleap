@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2019. All Rights Reserved.
+  - Copyright (c) Enalean, 2019 - present. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -14,16 +14,17 @@
   - GNU General Public License for more details.
   -
   - You should have received a copy of the GNU General Public License
-  - along with Tuleap. If not, see http://www.gnu.org/licenses/.
-  -
+  - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
 
 <template>
-    <form class="tlp-modal" role="dialog" aria-labelledby="document-new-folder-modal" v-on:submit="addFolder">
+    <form class="tlp-modal" role="dialog" aria-labelledby="document-item-modal" v-on:submit="updateEmbeddedFile">
         <modal-header v-bind:modal-title="modal_title" v-bind:aria-labelled-by="aria_labelled_by"/>
         <modal-feedback/>
-        <div class="tlp-modal-body document-new-item-modal-body" v-if="is_displayed">
-            <global-properties v-bind:item="item" v-bind:parent="parent"/>
+        <div class="tlp-modal-body">
+            <item-update-properties v-bind:version="version" v-bind:item="item" v-on:approvalTableActionChange="setApprovalUpdateAction">
+                <embedded-properties v-if="embedded_file_model" v-model="embedded_file_model" v-bind:item="item" key="embedded-props"/>
+            </item-update-properties>
         </div>
         <modal-footer v-bind:is-loading="is_loading" v-bind:submit-button-label="submit_button_label" v-bind:aria-labelled-by="aria_labelled_by"/>
     </form>
@@ -32,43 +33,43 @@
 <script>
 import { mapState } from "vuex";
 import { modal as createModal } from "tlp";
-import { TYPE_FOLDER } from "../../../constants.js";
 import ModalHeader from "../ModalCommon/ModalHeader.vue";
 import ModalFeedback from "../ModalCommon/ModalFeedback.vue";
 import ModalFooter from "../ModalCommon/ModalFooter.vue";
-import GlobalProperties from "../Property/GlobalProperties.vue";
+import EmbeddedProperties from "../Property/EmbeddedProperties.vue";
+import ItemUpdateProperties from "./ItemUpdateProperties.vue";
 
 export default {
-    name: "NewFolderModal",
+    name: "UpdateEmbeddedFileModal",
     components: {
+        ItemUpdateProperties,
         ModalFeedback,
         ModalHeader,
         ModalFooter,
-        GlobalProperties
+        EmbeddedProperties
+    },
+    props: {
+        item: Object
     },
     data() {
         return {
-            item: {
-                title: "",
-                description: "",
-                type: TYPE_FOLDER
-            },
+            embedded_file_model: null,
+            version: {},
             is_loading: false,
             is_displayed: false,
-            modal: null,
-            parent: {}
+            modal: null
         };
     },
     computed: {
-        ...mapState(["current_folder", "has_modal_error"]),
+        ...mapState(["has_modal_error"]),
         submit_button_label() {
-            return this.$gettext("Create folder");
+            return this.$gettext("Update");
         },
         modal_title() {
-            return this.$gettext("New folder");
+            return this.$gettext("Update embedded file");
         },
         aria_labelled_by() {
-            return "document-new-item-modal";
+            return "document-update-item-modal";
         }
     },
     mounted() {
@@ -76,17 +77,23 @@ export default {
         this.registerEvents();
     },
     methods: {
-        registerEvents() {
-            document.addEventListener("show-new-folder-modal", this.show);
-            this.$once("hook:beforeDestroy", () => {
-                document.removeEventListener("show-new-folder-modal", this.show);
-            });
-            this.modal.addEventListener("tlp-modal-hidden", this.reset);
+        setApprovalUpdateAction(value) {
+            this.approval_table_action = value;
         },
-        show(event) {
-            this.item.title = "";
-            this.item.description = "";
-            this.parent = event.detail.parent;
+        registerEvents() {
+            this.modal.addEventListener("tlp-modal-hidden", this.reset);
+
+            this.show();
+        },
+        show() {
+            this.version = {
+                title: "",
+                changelog: "",
+                is_file_locked: this.item.lock_info !== null
+            };
+
+            this.embedded_file_model = this.item.embedded_file_properties;
+
             this.is_displayed = true;
             this.modal.show();
         },
@@ -94,19 +101,26 @@ export default {
             this.$store.commit("resetModalError");
             this.is_displayed = false;
             this.is_loading = false;
+            this.embedded_file_model = null;
         },
-        async addFolder(event) {
+        async updateEmbeddedFile(event) {
             event.preventDefault();
             this.is_loading = true;
             this.$store.commit("resetModalError");
 
-            await this.$store.dispatch("createNewItem", [
+            await this.$store.dispatch("updateEmbeddedFileFromModal", [
                 this.item,
-                this.parent,
-                this.current_folder
+                this.embedded_file_model.content,
+                this.version.title,
+                this.version.changelog,
+                this.version.is_file_locked,
+                this.approval_table_action
             ]);
+
             this.is_loading = false;
             if (this.has_modal_error === false) {
+                this.item.embedded_file_properties.content = this.embedded_file_model.content;
+                this.embedded_file_model = null;
                 this.modal.hide();
             }
         }

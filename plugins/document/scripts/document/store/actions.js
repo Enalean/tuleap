@@ -32,7 +32,8 @@ import {
     getFolderContent,
     getItem,
     getProject,
-    patchUserPreferenciesForFolderInProject
+    patchUserPreferenciesForFolderInProject,
+    patchEmbeddedFile
 } from "../api/rest-querier.js";
 
 import {
@@ -226,6 +227,24 @@ export const updateFileFromModal = async (
             is_file_locked,
             approval_table_action
         ]);
+    } catch (exception) {
+        return handleErrorsForModal(context, exception);
+    }
+};
+
+export const updateEmbeddedFileFromModal = async (
+    context,
+    [item, new_html_content, version_title, changelog, is_file_locked, approval_table_action]
+) => {
+    try {
+        await patchEmbeddedFile(
+            item,
+            new_html_content,
+            version_title,
+            changelog,
+            is_file_locked,
+            approval_table_action
+        );
     } catch (exception) {
         return handleErrorsForModal(context, exception);
     }

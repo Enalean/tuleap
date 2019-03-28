@@ -45,7 +45,7 @@
 </template>
 <script>
 import { mapState } from "vuex";
-import { TYPE_FOLDER } from "../../../../constants.js";
+import { TYPE_FOLDER } from "../../../constants.js";
 export default {
     props: {
         value: String,

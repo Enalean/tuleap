@@ -36,7 +36,7 @@
                 </div>
                 <new-item-modal/>
                 <new-folder-modal/>
-                <update-file-modal/>
+                <update-item-modal v-bind:is="shown_modal" v-bind:item="updated_item"/>
             </div>
             <div class="document-header-spacer"></div>
             <file-upload-manager/>
@@ -55,10 +55,12 @@ import FileUploadManager from "./FilesUploads/FilesUploadsManager.vue";
 import NewFolderModal from "./NewItem/NewFolderModal.vue";
 import DropdownMenuCurrentFolder from "./Dropdown/DropdownMenuCurrentFolder.vue";
 import UpdateFileModal from "./UpdateItem/UpdateFileModal.vue";
+import UpdateEmbeddedFileModal from "./UpdateItem/UpdateEmbeddedFileModal.vue";
 
 export default {
     name: "FolderHeader",
     components: {
+        UpdateEmbeddedFileModal,
         UpdateFileModal,
         DropdownMenuCurrentFolder,
         NewFolderModal,
@@ -67,6 +69,12 @@ export default {
         NewItemButton,
         NewItemModal,
         FileUploadManager
+    },
+    data() {
+        return {
+            shown_modal: "",
+            updated_item: null
+        };
     },
     computed: {
         ...mapState(["is_loading_ascendant_hierarchy", "current_folder"]),
@@ -84,6 +92,33 @@ export default {
         },
         can_display_new_document_button() {
             return this.current_folder && this.current_folder.user_can_write;
+        }
+    },
+    mounted() {
+        document.addEventListener("show-update-file-modal", this.showUpdateFileModal);
+        document.addEventListener(
+            "show-update-embedded-file-modal",
+            this.showUpdateEmbeddedFileModal
+        );
+
+        this.$once("hook:beforeDestroy", () => {
+            document.removeEventListener("show-update-file-modal", this.showUpdateFileModal);
+            document.removeEventListener(
+                "show-update-embedded-file-modal",
+                this.showUpdateEmbeddedFileModal
+            );
+        });
+    },
+    methods: {
+        showUpdateFileModal(event) {
+            this.updated_item = event.detail.current_item;
+            this.shown_modal = () =>
+                import(/* webpackChunkName: "document-update-file-modal" */ "./UpdateItem/UpdateFileModal.vue");
+        },
+        showUpdateEmbeddedFileModal(event) {
+            this.updated_item = event.detail.current_item;
+            this.shown_modal = () =>
+                import(/* webpackChunkName: "document-update-embedded-file-modal" */ "./UpdateItem/UpdateEmbeddedFileModal.vue");
         }
     }
 };

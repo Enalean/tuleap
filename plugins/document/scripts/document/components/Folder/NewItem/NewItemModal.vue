@@ -45,15 +45,15 @@
 <script>
 import { mapState } from "vuex";
 import { modal as createModal } from "tlp";
-import GlobalProperties from "./Property/GlobalProperties.vue";
-import LinkProperties from "./Property/LinkProperties.vue";
-import WikiProperties from "./Property/WikiProperties.vue";
+import GlobalProperties from "../Property/GlobalProperties.vue";
+import LinkProperties from "../Property/LinkProperties.vue";
+import WikiProperties from "../Property/WikiProperties.vue";
 import TypeSelector from "./TypeSelector.vue";
 import ModalHeader from "../ModalCommon/ModalHeader.vue";
 import ModalFooter from "../ModalCommon/ModalFooter.vue";
 import ModalFeedback from "../ModalCommon/ModalFeedback.vue";
-import EmbeddedProperties from "./Property/EmbeddedProperties.vue";
-import FileProperties from "./Property/FileProperties.vue";
+import EmbeddedProperties from "../Property/EmbeddedProperties.vue";
+import FileProperties from "../Property/FileProperties.vue";
 import { TYPE_FILE } from "../../../constants.js";
 
 export default {

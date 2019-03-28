@@ -28,7 +28,9 @@
             <i class="fa fa-asterisk"></i>
         </label>
         <div class="tlp-form-element tlp-form-element-prepend">
-            <span class="tlp-prepend"><i class="fa fa-globe"></i></span>
+            <span class="tlp-prepend">
+                <i class="fa fa-globe"></i>
+            </span>
             <input
                 type="url"
                 pattern="(https?|ftps?)://.+"
@@ -44,7 +46,7 @@
     </div>
 </template>
 <script>
-import { TYPE_LINK } from "../../../../constants.js";
+import { TYPE_LINK } from "../../../constants.js";
 export default {
     name: "LinkProperties",
     props: {

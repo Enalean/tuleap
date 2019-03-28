@@ -28,7 +28,9 @@
             <i class="fa fa-asterisk"></i>
         </label>
         <div class="tlp-form-element tlp-form-element-prepend">
-            <span class="tlp-prepend"><i class="fa fa-wikipedia-w"></i></span>
+            <span class="tlp-prepend">
+                <i class="fa fa-wikipedia-w"></i>
+            </span>
             <input
                 type="text"
                 class="tlp-input"
@@ -43,7 +45,7 @@
     </div>
 </template>
 <script>
-import { TYPE_WIKI } from "../../../../constants.js";
+import { TYPE_WIKI } from "../../../constants.js";
 export default {
     props: {
         value: Object,

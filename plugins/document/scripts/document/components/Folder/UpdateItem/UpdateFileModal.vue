@@ -23,9 +23,9 @@
         <modal-header v-bind:modal-title="modal_title" v-bind:aria-labelled-by="aria_labelled_by"/>
         <modal-feedback/>
         <div class="tlp-modal-body">
-            <file-update-properties v-bind:version="version" v-bind:item="item" v-on:approvalTableActionChange="setApprovalUpdateAction">
+            <item-update-properties v-bind:version="version" v-bind:item="item" v-on:approvalTableActionChange="setApprovalUpdateAction">
                 <file-properties v-model="uploaded_item.file_properties" v-bind:item="uploaded_item"/>
-            </file-update-properties>
+            </item-update-properties>
         </div>
         <modal-footer v-bind:is-loading="is_loading" v-bind:submit-button-label="submit_button_label" v-bind:aria-labelled-by="aria_labelled_by"/>
     </form>
@@ -37,21 +37,23 @@ import { modal as createModal } from "tlp";
 import ModalHeader from "../ModalCommon/ModalHeader.vue";
 import ModalFeedback from "../ModalCommon/ModalFeedback.vue";
 import ModalFooter from "../ModalCommon/ModalFooter.vue";
-import FileProperties from "../NewItem/Property/FileProperties.vue";
-import FileUpdateProperties from "./FileUpdateProperties.vue";
+import FileProperties from "../Property/FileProperties.vue";
+import ItemUpdateProperties from "./ItemUpdateProperties.vue";
 
 export default {
     name: "UpdateFileModal",
     components: {
-        FileUpdateProperties,
+        ItemUpdateProperties,
         ModalFeedback,
         ModalHeader,
         ModalFooter,
         FileProperties
     },
+    props: {
+        item: Object
+    },
     data() {
         return {
-            item: {},
             uploaded_item: {},
             version: {},
             is_loading: false,
@@ -74,20 +76,17 @@ export default {
     mounted() {
         this.modal = createModal(this.$el);
         this.registerEvents();
+
+        this.show();
     },
     methods: {
         setApprovalUpdateAction(value) {
             this.approval_table_action = value;
         },
         registerEvents() {
-            document.addEventListener("show-update-file-modal", this.show);
-            this.$once("hook:beforeDestroy", () => {
-                document.removeEventListener("show-update-file-modal", this.show);
-            });
             this.modal.addEventListener("tlp-modal-hidden", this.reset);
         },
-        show(event) {
-            this.item = event.detail.current_item;
+        show() {
             this.version = {
                 title: "",
                 changelog: "",

@@ -30,7 +30,8 @@
 </template>
 <script>
 import { mapState } from "vuex";
-import { TYPE_EMPTY, TYPE_FILE, TYPE_WIKI } from "../../../constants.js";
+import { TYPE_EMPTY, TYPE_FILE, TYPE_WIKI, TYPE_EMBEDDED } from "../../../constants.js";
+
 import { redirect_to_url } from "../../../helpers/location-helper.js";
 export default {
     name: "UpdatButton",
@@ -44,7 +45,7 @@ export default {
     },
     methods: {
         goToUpdate() {
-            if (this.item.type === TYPE_FILE) {
+            if (this.item.type === TYPE_FILE || this.item.type === TYPE_EMBEDDED) {
                 this.showUpdateFileModal();
                 return;
             }
@@ -60,8 +61,19 @@ export default {
             );
         },
         showUpdateFileModal() {
+            let event_name;
+
+            switch (this.item.type) {
+                case TYPE_FILE:
+                    event_name = "show-update-file-modal";
+                    break;
+                case TYPE_EMBEDDED:
+                    event_name = "show-update-embedded-file-modal";
+                    break;
+            }
+
             document.dispatchEvent(
-                new CustomEvent("show-update-file-modal", {
+                new CustomEvent(event_name, {
                     detail: { current_item: this.item }
                 })
             );
