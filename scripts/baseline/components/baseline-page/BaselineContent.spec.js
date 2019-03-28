@@ -23,6 +23,7 @@ import { createStoreMock } from "../../support/store-wrapper.spec-helper.js";
 import store_options from "../../store/index.js";
 import { restore, rewire$getBaselineArtifacts } from "../../api/rest-querier";
 import BaselineContent from "./BaselineContent.vue";
+import { createList } from "../../support/factories";
 
 describe("BaselineContent", () => {
     let getBaselineArtifacts;
@@ -30,9 +31,9 @@ describe("BaselineContent", () => {
 
     const information_message_selector = '[data-test-type="information-message"]';
 
-    beforeEach(async () => {
+    beforeEach(() => {
         getBaselineArtifacts = jasmine.createSpy("getBaselineArtifacts");
-        getBaselineArtifacts.and.returnValue(Promise.resolve([]));
+        getBaselineArtifacts.and.returnValue(Promise.resolve(createList("artifact", 2)));
         rewire$getBaselineArtifacts(getBaselineArtifacts);
 
         wrapper = shallowMount(BaselineContent, {
@@ -44,15 +45,20 @@ describe("BaselineContent", () => {
                 $store: createStoreMock(store_options)
             }
         });
-
-        await wrapper.vm.$nextTick();
     });
 
     afterEach(restore);
 
-    describe("when baselines has not artifacts", () => {
-        it("shows information message", () => {
-            expect(wrapper.contains(information_message_selector)).toBeTruthy();
+    describe("#fetchArtifacts", () => {
+        describe("when baseline has no artifact", () => {
+            beforeEach(() => {
+                getBaselineArtifacts.and.returnValue(Promise.resolve([]));
+                return wrapper.vm.fetchArtifacts();
+            });
+
+            it("shows information message", () => {
+                expect(wrapper.contains(information_message_selector)).toBeTruthy();
+            });
         });
     });
 });
