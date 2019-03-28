@@ -48,6 +48,10 @@ pipeline {
                             steps { script { actions.runRESTTests('c6-php73-mysql57') } }
                             post { always { junit 'results/api-rest/*/rest_tests.xml' } }
                         }
+                        stage ('SOAP PHP 7.3') {
+                            steps { script { actions.runSOAPTests('php-73', '5') } }
+                            post { always { junit "results/api-soap/*/soap_tests.xml" } }
+                        }
                     }
                 }
                 stage('E2E tests') {

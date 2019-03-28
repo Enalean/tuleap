@@ -109,6 +109,9 @@ tests_rest_73: ## Run all REST tests with PHP FPM 7.3
 tests_soap_72: ## Run all SOAP tests in PHP 7.2
 	$(DOCKER) run -ti --rm -v $(CURDIR):/usr/share/tuleap:ro,cached --mount type=tmpfs,destination=/tmp enalean/tuleap-test-soap:4
 
+tests_soap_73: ## Run all SOAP tests in PHP 7.3
+	$(DOCKER) run -ti --rm -v $(CURDIR):/usr/share/tuleap:ro,cached --mount type=tmpfs,destination=/tmp enalean/tuleap-test-soap:5
+
 tests_cypress: ## Run Cypress tests
 	@tests/e2e/full/wrap.sh
 
