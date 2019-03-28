@@ -102,6 +102,10 @@ $artifact-body-padding: $tlp-spacing;
     font-size: 1.3rem;
 }
 
+.comparison-content-artifact {
+    display: inline;
+}
+
 .comparison-content-artifact-body {
     padding-left: $artifact-body-padding;
 }

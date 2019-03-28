@@ -19,7 +19,7 @@
   -->
 
 <template>
-    <span>
+    <div class="comparison-content-artifact">
         <artifact-label v-bind:artifact="compared_to" class="comparison-content-artifact-header"/>
         <div class="comparison-content-artifact-body">
             <field-comparison
@@ -55,7 +55,7 @@
             v-bind:reference_artifacts="reference_linked_artifacts"
             v-bind:compared_artifacts="compared_linked_artifacts"
         />
-    </span>
+    </div>
 </template>
 
 <script>
