@@ -21,7 +21,7 @@
     <div class="new-baseline-modal-milestone-list">
         <div class="new-baseline-modal-milestone-list-scrollbar">
             <div v-if="milestones.length === 0">
-                <p class="tlp-text-muted"
+                <p class="baseline-empty-information-message"
                    data-test-type="empty-milestones"
                    v-translate
                 >

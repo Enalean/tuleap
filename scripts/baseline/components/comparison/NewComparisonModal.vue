@@ -54,14 +54,14 @@
                         </h3>
                         <span
                             v-if="baselines_to_compare === null"
-                            class="tlp-text-muted"
+                            class="baseline-empty-information-message"
                             v-translate
                         >
                             Please choose a reference baseline
                         </span>
                         <span
                             v-else-if="baselines_to_compare.length === 0"
-                            class="tlp-text-muted"
+                            class="baseline-empty-information-message"
                             v-translate
                         >
                             No other baseline available on same artifact.

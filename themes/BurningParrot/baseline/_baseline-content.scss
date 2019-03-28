@@ -90,13 +90,6 @@ $artifact-body-padding: $tlp-spacing;
     margin-left: .2rem;
 }
 
-.baseline-content-artifacts-information-message {
-    color: transparentize($tlp-theme-color, .7);
-    font-style: italic;
-    text-align: center;
-    vertical-align: middle;
-}
-
 .baseline-content-artifact-error-message {
     color: $tlp-swatch-red-wine-border;
 }

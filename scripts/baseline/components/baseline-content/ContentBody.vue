@@ -8,7 +8,7 @@
 
         <div
             v-else-if="!is_loading && !are_some_artifacts_available"
-            class="baseline-content-artifacts-information-message"
+            class="baseline-empty-information-message"
             data-test-type="information-message"
         >
             <translate>No artifacts</translate>

@@ -32,9 +32,13 @@
                         </div>
                     </div>
 
-                    <div v-else-if="!are_some_artifacts_available">
-                        <translate>No artifact to compare</translate>
-                    </div>
+                    <span
+                        v-else-if="!are_some_artifacts_available"
+                        class="baseline-empty-information-message"
+                        v-translate
+                    >
+                        No artifact to compare
+                    </span>
 
                     <artifacts-list-comparison
                         v-else
