@@ -31,20 +31,13 @@ class BaselineService
     /** @var BaselineRepository */
     private $baseline_repository;
 
-    /** @var CurrentUserProvider */
-    private $current_user_provider;
-
     /** @var Clock */
     private $clock;
 
-    public function __construct(
-        BaselineRepository $baseline_repository,
-        CurrentUserProvider $current_user_provider,
-        Clock $clock
-    ) {
-        $this->baseline_repository   = $baseline_repository;
-        $this->current_user_provider = $current_user_provider;
-        $this->clock                 = $clock;
+    public function __construct(BaselineRepository $baseline_repository, Clock $clock)
+    {
+        $this->baseline_repository = $baseline_repository;
+        $this->clock               = $clock;
     }
 
     /**
@@ -54,7 +47,7 @@ class BaselineService
     {
         return $this->baseline_repository->add(
             $baseline,
-            $this->current_user_provider->getUser(),
+            $current_user,
             $this->clock->now()
         );
     }
