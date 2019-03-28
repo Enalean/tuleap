@@ -116,6 +116,7 @@ describe("BaselineArtifact", () => {
 
     describe("when artifacts tree has reached depth limit", () => {
         beforeEach(async () => {
+            getBaselineArtifactsByIds.calls.reset();
             wrapper.setProps({ current_depth: 10000 });
             await wrapper.vm.$nextTick();
         });
@@ -129,7 +130,7 @@ describe("BaselineArtifact", () => {
         });
 
         it("does not call fetchLinkedArtifacts", () => {
-            expect(getBaselineArtifactsByIds).not.toHaveBeenCalled;
+            expect(getBaselineArtifactsByIds).not.toHaveBeenCalled();
         });
 
         describe("when artifacts doest not have linked artifact", () => {
@@ -143,7 +144,7 @@ describe("BaselineArtifact", () => {
             });
 
             it("does not call fetchLinkedArtifacts", () => {
-                expect(getBaselineArtifactsByIds).not.toHaveBeenCalled;
+                expect(getBaselineArtifactsByIds).not.toHaveBeenCalled();
             });
         });
     });

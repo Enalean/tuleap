@@ -52,7 +52,7 @@ describe("ModifiedArtifact", () => {
         });
 
         it("does not call fetchLinkedArtifacts", () => {
-            expect(fetchLinkedArtifacts).not.toHaveBeenCalled;
+            expect(fetchLinkedArtifacts).not.toHaveBeenCalled();
         });
     });
 
