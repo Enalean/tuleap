@@ -22,17 +22,16 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Workflow\PostAction\ReadOnly;
 
-use Tuleap\Tracker\Workflow\PostAction\PostActionsRetriever;
 use Tuleap\Tracker\Workflow\Transition\NoTransitionForStateException;
 
 class ReadOnlyFieldDetector
 {
-    /** @var PostActionsRetriever */
-    private $post_actions_retriever;
+    /** @var ReadOnlyFieldsRetriever */
+    private $read_only_fields_retriever;
 
-    public function __construct(PostActionsRetriever $post_actions_retriever)
+    public function __construct(ReadOnlyFieldsRetriever $read_only_fields_retriever)
     {
-        $this->post_actions_retriever = $post_actions_retriever;
+        $this->read_only_fields_retriever = $read_only_fields_retriever;
     }
 
     public function isFieldReadOnly(\Tracker_Artifact $artifact, \Tracker_FormElement_Field $field): bool
@@ -45,7 +44,7 @@ class ReadOnlyFieldDetector
 
         try {
             $current_state_transition     = $workflow->getFirstTransitionForCurrentState($artifact);
-            $read_only_fields_post_action = $this->post_actions_retriever->getReadOnlyFields($current_state_transition);
+            $read_only_fields_post_action = $this->read_only_fields_retriever->getReadOnlyFields($current_state_transition);
         } catch (NoTransitionForStateException | NoReadOnlyFieldsPostActionException $e) {
             return false;
         }
