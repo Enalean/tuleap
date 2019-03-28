@@ -15,40 +15,19 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
-@import 'baseline/baseline-content';
-@import 'baseline/baselines-list';
-@import 'baseline/comparison-content';
-@import 'baseline/new-baseline-modal';
-@import 'baseline/new-comparison-modal';
-@import 'baseline/form';
 
-.baseline-tooltip-icon {
-    margin-left: $tlp-spacing;
+/*
+* When VueJS initialize the value of a form input with v-model it assigns a value that can be null.
+* So, if this input is required, Firefox display a box-shadow around the input even if the user did not interact yet.
+* This removes the box-shadow decoration in such case.
+* box-shadow is still shown after invalid user input.
+*/
+
+:not(output):-moz-ui-invalid:not(:focus) {
+    box-shadow: none;
 }
 
-.baseline-label-author {
-    display: block;
-    height: 25px;
-    font-size: 14px;
-}
-
-.baseline-label-author-badge {
-    display: inline;
-    margin: 0 4px;
-}
-
-.baseline-user-badge-avatar-username {
-    &:not(:hover) {
-        color: $tlp-ui-dimmed;
-    }
-}
-
-.baseline-empty-information-message {
-    display: block;
-    color: transparentize($tlp-theme-color, .7);
-    font-style: italic;
-    text-align: center;
-    vertical-align: middle;
+:not(output):-moz-ui-invalid:-moz-focusring:not(:focus) {
+    box-shadow: none;
 }
