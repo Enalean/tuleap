@@ -36,13 +36,19 @@ const router = new VueRouter({
     routes: [
         {
             path: "*",
-            component: NotFoundPage
+            component: NotFoundPage,
+            meta: {
+                title: () => "Page not found"
+            }
         },
 
         {
             path: "/plugins/baseline/:project_name",
             name: "BaselinesPage",
-            component: BaselinesPage
+            component: BaselinesPage,
+            meta: {
+                title: () => "Baselines"
+            }
         },
 
         {
@@ -51,7 +57,10 @@ const router = new VueRouter({
             component: BaselineContentPage,
             props: route => ({
                 baseline_id: toInt(route.params.baseline_id)
-            })
+            }),
+            meta: {
+                title: ({ baseline_id }) => `Baseline #${baseline_id}`
+            }
         },
 
         {
@@ -61,7 +70,11 @@ const router = new VueRouter({
             props: route => ({
                 from_baseline_id: toInt(route.params.from_baseline_id),
                 to_baseline_id: toInt(route.params.to_baseline_id)
-            })
+            }),
+            meta: {
+                title: ({ from_baseline_id, to_baseline_id }) =>
+                    `Baselines comparison #${from_baseline_id}/#${to_baseline_id}`
+            }
         }
     ],
     scrollBehavior: (to, from, savedPosition) => {
@@ -71,6 +84,12 @@ const router = new VueRouter({
 
         return { x: 0, y: 0 };
     }
+});
+
+router.beforeEach((to, from, next) => {
+    const title = to.meta.title(to.params);
+    document.title = `${title} - Tuleap`;
+    next();
 });
 
 export default router;
