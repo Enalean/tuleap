@@ -50,7 +50,7 @@
         <baseline-maximum-depth-reached-message v-else-if="is_depth_limit_reached && are_linked_artifact_ids_available"/>
 
         <artifacts-list-comparison
-            v-else
+            v-else-if="are_linked_artifact_ids_available"
             v-bind:current_depth="current_depth + 1"
             v-bind:reference_artifacts="reference_linked_artifacts"
             v-bind:compared_artifacts="compared_linked_artifacts"
