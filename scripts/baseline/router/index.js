@@ -21,7 +21,7 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import NotFoundPage from "./NotFoundPage.vue";
-import BaselinePage from "../components/baseline-page/BaselinePage.vue";
+import BaselineContentPage from "../components/baseline-content/ContentPage.vue";
 import BaselinesPage from "../components/BaselinesPage.vue";
 import ComparisonPage from "../components/comparison/ComparisonPage.vue";
 
@@ -47,8 +47,8 @@ const router = new VueRouter({
 
         {
             path: "/plugins/baseline/:project_name/baselines/:baseline_id",
-            name: "BaselinePage",
-            component: BaselinePage,
+            name: "BaselineContentPage",
+            component: BaselineContentPage,
             props: route => ({
                 baseline_id: toInt(route.params.baseline_id)
             })

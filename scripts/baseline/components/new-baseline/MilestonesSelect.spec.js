@@ -21,10 +21,10 @@
 import Vue from "vue";
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../../support/local-vue.js";
-import MilestoneList from "./NewBaselineMilestoneSelect.vue";
+import MilestoneList from "./MilestonesSelect.vue";
 import { create } from "../../support/factories";
 
-describe("NewBaselineMilestoneSelect", () => {
+describe("MilestonesSelect", () => {
     const milestone_selector = '[data-test-type="milestone"]';
 
     let wrapper;

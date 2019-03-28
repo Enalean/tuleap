@@ -20,14 +20,14 @@
 
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../../../support/local-vue.js";
-import ArtifactsComparison from "./ArtifactsComparison.vue";
+import ArtifactsListComparison from "./ArtifactsListComparison.vue";
 import { create } from "../../../support/factories";
 
-describe("ArtifactsComparison", () => {
+describe("ArtifactsListComparison", () => {
     let wrapper;
 
     beforeEach(() => {
-        wrapper = shallowMount(ArtifactsComparison, {
+        wrapper = shallowMount(ArtifactsListComparison, {
             localVue,
             propsData: {
                 reference_artifacts: [],

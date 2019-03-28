@@ -23,8 +23,8 @@ import { shallowMount } from "@vue/test-utils";
 import localVue from "../../support/local-vue.js";
 import { restore, rewire$getOpenMilestones, rewire$createBaseline } from "../../api/rest-querier";
 import NewBaselineModal from "./NewBaselineModal.vue";
-import MilestoneList from "./NewBaselineMilestoneSelect.vue";
-import MilestoneListSkeleton from "./MilestoneListSkeleton.vue";
+import MilestonesSelect from "./MilestonesSelect.vue";
+import MilestonesSelectSkeleton from "./MilestonesSelectSkeleton.vue";
 import { create } from "../../support/factories";
 
 describe("NewBaselineModal", () => {
@@ -90,7 +90,7 @@ describe("NewBaselineModal", () => {
         });
 
         it("shows skeleton", () => {
-            expect(wrapper.contains(MilestoneListSkeleton)).toBeTruthy();
+            expect(wrapper.contains(MilestonesSelectSkeleton)).toBeTruthy();
         });
 
         describe("when getOpenMilestones() fail", () => {
@@ -108,7 +108,7 @@ describe("NewBaselineModal", () => {
             });
 
             it("does not show skeleton", () => {
-                expect(wrapper.contains(MilestoneListSkeleton)).toBeFalsy();
+                expect(wrapper.contains(MilestonesSelectSkeleton)).toBeFalsy();
             });
         });
 
@@ -123,15 +123,15 @@ describe("NewBaselineModal", () => {
             });
 
             it("does not show skeleton", () => {
-                expect(wrapper.contains(MilestoneListSkeleton)).toBeFalsy();
+                expect(wrapper.contains(MilestonesSelectSkeleton)).toBeFalsy();
             });
 
             it("shows a list of milestones", () => {
-                expect(wrapper.contains(MilestoneList)).toBeTruthy();
+                expect(wrapper.contains(MilestonesSelect)).toBeTruthy();
             });
 
             it("passes milestones returned by getOpenMilestones() to MilestoneList", () => {
-                expect(wrapper.find(MilestoneList).props().milestones).toEqual([a_milestone]);
+                expect(wrapper.find(MilestonesSelect).props().milestones).toEqual([a_milestone]);
             });
         });
     });

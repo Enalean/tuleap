@@ -22,11 +22,11 @@ import localVue from "../../support/local-vue.js";
 import VueRouter from "vue-router";
 import { restore, rewire$getBaseline } from "../../api/rest-querier";
 import { rewire$presentBaseline } from "../../presenters/baseline";
-import BaselinePage from "./BaselinePage.vue";
+import ContentPage from "./ContentPage.vue";
 import BaselineLabel from "../common/BaselineLabel.vue";
 import { create } from "../../support/factories";
 
-describe("BaselinePage", () => {
+describe("ContentPage", () => {
     const error_message_selector = '[data-test-type="error-message"]';
     const baseline_header_skeleton_selector = '[data-test-type="baseline-header-skeleton"]';
 
@@ -47,7 +47,7 @@ describe("BaselinePage", () => {
         presentBaseline.and.returnValue(presented_baseline);
         rewire$presentBaseline(presentBaseline);
 
-        wrapper = shallowMount(BaselinePage, {
+        wrapper = shallowMount(ContentPage, {
             localVue,
             router: new VueRouter(),
             propsData: { baseline_id: 1 }

@@ -65,7 +65,7 @@
                             ></i>
                         </span>
                     </label>
-                    <milestone-list-skeleton v-if="is_loading"/>
+                    <milestones-select-skeleton v-if="is_loading"/>
                     <span
                         class="tlp-text-muted"
                         data-test-type="information_message"
@@ -73,7 +73,7 @@
                     >
                         <translate>Cannot fetch milestones</translate>
                     </span>
-                    <new-baseline-milestone-select
+                    <milestones-select
                         v-else-if="available_milestones !== null"
                         v-bind:milestones="available_milestones"
                         v-on:change="selectMilestoneSelected"
@@ -111,14 +111,14 @@
 
 <script>
 import { getOpenMilestones, createBaseline } from "../../api/rest-querier";
-import NewBaselineMilestoneSelect from "./NewBaselineMilestoneSelect.vue";
-import MilestoneListSkeleton from "./MilestoneListSkeleton.vue";
+import MilestonesSelect from "./MilestonesSelect.vue";
+import MilestonesSelectSkeleton from "./MilestonesSelectSkeleton.vue";
 import Modal from "../common/Modal.vue";
 
 export default {
     name: "NewBaselineModal",
 
-    components: { Modal, NewBaselineMilestoneSelect, MilestoneListSkeleton },
+    components: { Modal, MilestonesSelect, MilestonesSelectSkeleton },
 
     props: {
         project_id: { mandatory: true, type: Number }

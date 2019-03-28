@@ -19,19 +19,19 @@
   -->
 
 <template>
-    <ol class="baseline-content-artifact-ol">
-        <li class="baseline-content-artifact-li"><baseline-artifact-skeleton/></li>
-        <li class="baseline-content-artifact-li"><baseline-artifact-skeleton/></li>
-        <li class="baseline-content-artifact-li"><baseline-artifact-skeleton/></li>
+    <ol class="comparison-content-artifact-ol">
+        <li class="comparison-content-artifact-li"><artifact-comparison-skeleton/></li>
+        <li class="comparison-content-artifact-li"><artifact-comparison-skeleton/></li>
+        <li class="comparison-content-artifact-li"><artifact-comparison-skeleton/></li>
     </ol>
 </template>
 
 <script>
-import BaselineArtifactSkeleton from "./BaselineArtifactSkeleton.vue";
+import ArtifactComparisonSkeleton from "./ArtifactComparisonSkeleton.vue";
 
 export default {
-    name: "BaselineArtifactsSkeleton",
+    name: "ArtifactsListComparisonSkeleton",
 
-    components: { BaselineArtifactSkeleton }
+    components: { ArtifactComparisonSkeleton }
 };
 </script>

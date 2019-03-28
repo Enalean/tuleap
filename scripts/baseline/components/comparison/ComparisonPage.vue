@@ -51,7 +51,7 @@
                     v-bind:to_baseline_id="to_baseline_id"
                 />
 
-                <comparison-statistics/>
+                <statistics/>
 
                 <comparison-content
                     v-bind:from_baseline_id="from_baseline_id"
@@ -63,13 +63,13 @@
 </template>
 
 <script>
-import ComparisonStatistics from "./ComparisonStatistics.vue";
+import Statistics from "./Statistics.vue";
 import ComparisonContent from "./content/ComparisonContent.vue";
 import ComparisonHeader from "./ComparisonHeader.vue";
 
 export default {
     name: "ComparisonPage",
-    components: { ComparisonHeader, ComparisonContent, ComparisonStatistics },
+    components: { ComparisonHeader, ComparisonContent, Statistics },
     props: {
         from_baseline_id: { required: true, type: Number },
         to_baseline_id: { required: true, type: Number }

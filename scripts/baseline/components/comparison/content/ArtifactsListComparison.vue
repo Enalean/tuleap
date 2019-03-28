@@ -25,7 +25,7 @@
             v-bind:key="comparison.reference.id"
             class="comparison-content-artifact-li"
         >
-            <modified-artifact
+            <artifact-comparison
                 v-bind:reference="comparison.reference"
                 v-bind:compared_to="comparison.compared_to"
                 v-bind:current_depth="current_depth"
@@ -49,13 +49,13 @@
 </template>
 
 <script>
-import ModifiedArtifact from "./ModifiedArtifact.vue";
+import ArtifactComparison from "./ArtifactComparison.vue";
 import ArtifactLabel from "../../common/ArtifactLabel.vue";
 
 export default {
     name: "ArtifactsComparison",
 
-    components: { ModifiedArtifact, ArtifactLabel },
+    components: { ArtifactComparison, ArtifactLabel },
 
     props: {
         reference_artifacts: { require: true, type: Array },

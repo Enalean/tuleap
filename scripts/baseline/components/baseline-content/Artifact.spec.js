@@ -24,11 +24,11 @@ import { createStoreMock } from "../../support/store-wrapper.spec-helper.js";
 import store_options from "../../store/index.js";
 import { restore, rewire$getBaselineArtifactsByIds } from "../../api/rest-querier";
 import { create } from "../../support/factories";
-import BaselineArtifact from "./BaselineArtifact.vue";
 import BaselineDepthLimitReachedMessage from "../common/BaselineDepthLimitReachedMessage.vue";
-import BaselineArtifacts from "../baseline-page/BaselineArtifacts.vue";
+import Artifact from "./Artifact.vue";
+import ArtifactsList from "./ArtifactsList.vue";
 
-describe("BaselineArtifact", () => {
+describe("Artifact", () => {
     const artifact_selector = '[data-test-type="artifact"]';
     const artifact_fields_selector = '[data-test-type="artifact-fields"]';
     const artifact_description_selector = '[data-test-type="artifact-description"]';
@@ -43,7 +43,7 @@ describe("BaselineArtifact", () => {
         getBaselineArtifactsByIds.and.returnValue(Promise.resolve([linked_artifact]));
         rewire$getBaselineArtifactsByIds(getBaselineArtifactsByIds);
 
-        wrapper = mount(BaselineArtifact, {
+        wrapper = mount(Artifact, {
             propsData: {
                 baseline_id: 1,
                 artifact: create("artifact", {
@@ -126,7 +126,7 @@ describe("BaselineArtifact", () => {
         });
 
         it("does not show linked artifact", () => {
-            expect(wrapper.contains(BaselineArtifacts)).toBeFalsy();
+            expect(wrapper.contains(ArtifactsList)).toBeFalsy();
         });
 
         it("does not call fetchLinkedArtifacts", () => {

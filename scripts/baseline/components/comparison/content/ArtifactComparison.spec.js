@@ -20,19 +20,19 @@
 import { create } from "../../../support/factories";
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../../../support/local-vue";
-import ModifiedArtifact from "./ModifiedArtifact.vue";
+import ArtifactComparison from "./ArtifactComparison.vue";
 import { createStoreMock } from "../../../support/store-wrapper.spec-helper";
 import store_options from "../../../store";
 import BaselineMaximumDepthReachedMessage from "../../common/BaselineDepthLimitReachedMessage.vue";
 
-describe("ModifiedArtifact", () => {
+describe("ArtifactComparison", () => {
     let wrapper;
     let fetchLinkedArtifacts;
 
     beforeEach(async () => {
         fetchLinkedArtifacts = jasmine.createSpy("fetchLinkedArtifacts");
 
-        wrapper = shallowMount(ModifiedArtifact, {
+        wrapper = shallowMount(ArtifactComparison, {
             localVue,
             propsData: {
                 reference: create("artifact", { linked_artifact_ids: [1] }),

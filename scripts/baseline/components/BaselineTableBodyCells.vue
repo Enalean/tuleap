@@ -55,7 +55,10 @@ export default {
 
     methods: {
         showBaseline(baseline) {
-            this.$router.push({ name: "BaselinePage", params: { baseline_id: baseline.id } });
+            this.$router.push({
+                name: "BaselineContentPage",
+                params: { baseline_id: baseline.id }
+            });
         }
     }
 };

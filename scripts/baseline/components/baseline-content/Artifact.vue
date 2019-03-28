@@ -50,11 +50,11 @@
             />
         </div>
 
-        <baseline-artifacts-skeleton v-if="is_loading"/>
+        <artifacts-list-skeleton v-if="is_loading"/>
 
         <baseline-depth-limit-reached-message v-else-if="is_depth_limit_reached && are_linked_artifact_ids_available"/>
 
-        <baseline-artifacts
+        <artifacts-list
             v-else-if="!is_loading_failed"
             v-bind:current_depth="current_depth + 1"
             v-bind:artifacts="linked_artifacts"
@@ -65,8 +65,8 @@
 
 <script>
 import { getBaselineArtifactsByIds } from "../../api/rest-querier";
-import BaselineArtifacts from "./BaselineArtifacts.vue";
-import BaselineArtifactsSkeleton from "./BaselineArtifactsSkeleton.vue";
+import ArtifactsList from "./ArtifactsList.vue";
+import ArtifactsListSkeleton from "./ArtifactsListSkeleton.vue";
 import ArtifactLabel from "../common/ArtifactLabel.vue";
 import Field from "./Field.vue";
 import { ARTIFACTS_EXPLORATION_DEPTH_LIMIT } from "../../constants/index";
@@ -77,8 +77,8 @@ export default {
 
     components: {
         ArtifactLabel,
-        BaselineArtifacts,
-        BaselineArtifactsSkeleton,
+        ArtifactsList,
+        ArtifactsListSkeleton,
         Field,
         BaselineDepthLimitReachedMessage
     },
@@ -132,7 +132,7 @@ export default {
     },
 
     beforeCreate() {
-        this.$options.components.BaselineArtifacts = BaselineArtifacts;
+        this.$options.components.ArtifactsList = ArtifactsList;
     },
 
     mounted() {

@@ -37,7 +37,7 @@
                 v-bind:compare_to="compared_to.status"
             />
         </div>
-        <artifacts-comparison-skeleton v-if="is_loading"/>
+        <artifacts-list-comparison-skeleton v-if="is_loading"/>
 
         <span
             v-else-if="is_loading_failed"
@@ -49,7 +49,7 @@
 
         <baseline-maximum-depth-reached-message v-else-if="is_depth_limit_reached && are_linked_artifact_ids_available"/>
 
-        <artifacts-comparison
+        <artifacts-list-comparison
             v-else
             v-bind:current_depth="current_depth + 1"
             v-bind:reference_artifacts="reference_linked_artifacts"
@@ -61,8 +61,8 @@
 <script>
 import { getBaselineArtifactsByIds } from "../../../api/rest-querier";
 import { presentArtifacts } from "../../../presenters/baseline";
-import ArtifactsComparisonSkeleton from "./ArtifactsComparisonSkeleton.vue";
-import ArtifactsComparison from "./ArtifactsComparison.vue";
+import ArtifactsListComparisonSkeleton from "./ArtifactsListComparisonSkeleton.vue";
+import ArtifactsListComparison from "./ArtifactsListComparison.vue";
 import FieldComparison from "./FieldComparison.vue";
 import ArtifactLabel from "../../common/ArtifactLabel.vue";
 import { ARTIFACTS_EXPLORATION_DEPTH_LIMIT } from "../../../constants/index";
@@ -75,8 +75,8 @@ export default {
         BaselineMaximumDepthReachedMessage,
         ArtifactLabel,
         FieldComparison,
-        ArtifactsComparisonSkeleton,
-        ArtifactsComparison
+        ArtifactsListComparisonSkeleton,
+        ArtifactsListComparison
     },
 
     props: {
@@ -112,7 +112,7 @@ export default {
     },
 
     beforeCreate() {
-        this.$options.components.ArtifactsComparison = ArtifactsComparison;
+        this.$options.components.ArtifactsListComparison = ArtifactsListComparison;
     },
 
     mounted() {

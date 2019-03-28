@@ -58,13 +58,13 @@
 
                 <baseline-label v-else v-bind:baseline="baseline"/>
 
-                <baseline-statistics/>
+                <statistics/>
 
                 <div class="tlp-framed-vertically">
                     <section class="tlp-pane">
                         <div class="tlp-pane-container">
                             <section class="tlp-pane-section">
-                                <baseline-content v-bind:baseline_id="baseline_id"/>
+                                <content-body v-bind:baseline_id="baseline_id"/>
                             </section>
                         </div>
                     </section>
@@ -77,14 +77,14 @@
 <script>
 import { getBaseline } from "../../api/rest-querier";
 import { presentBaseline } from "../../presenters/baseline";
-import BaselineStatistics from "./BaselineStatistics.vue";
-import BaselineContent from "./BaselineContent.vue";
+import Statistics from "./Statistics.vue";
+import ContentBody from "./ContentBody.vue";
 import BaselineLabel from "../common/BaselineLabel.vue";
 import BaselineLabelSkeleton from "../common/BaselineLabelSkeleton.vue";
 
 export default {
     name: "BaselinePage",
-    components: { BaselineLabelSkeleton, BaselineLabel, BaselineContent, BaselineStatistics },
+    components: { BaselineLabelSkeleton, BaselineLabel, ContentBody, Statistics },
     props: {
         baseline_id: { required: true, type: Number }
     },

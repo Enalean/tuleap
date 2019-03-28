@@ -24,7 +24,7 @@
             <div class="tlp-pane-container">
                 <section class="tlp-pane-section comparison-content">
 
-                    <artifacts-comparison-skeleton v-if="is_loading"/>
+                    <artifacts-list-comparison-skeleton v-if="is_loading"/>
 
                     <div v-else-if="is_loading_failed">
                         <div class="tlp-alert-danger">
@@ -36,7 +36,7 @@
                         <translate>No artifact to compare</translate>
                     </div>
 
-                    <artifacts-comparison
+                    <artifacts-list-comparison
                         v-else
                         v-bind:current_depth="1"
                         v-bind:reference_artifacts="reference_artifacts"
@@ -52,13 +52,13 @@
 <script>
 import { getBaselineArtifacts } from "../../../api/rest-querier";
 import { presentArtifacts } from "../../../presenters/baseline";
-import ArtifactsComparisonSkeleton from "./ArtifactsComparisonSkeleton.vue";
-import ArtifactsComparison from "./ArtifactsComparison.vue";
+import ArtifactsListComparisonSkeleton from "./ArtifactsListComparisonSkeleton.vue";
+import ArtifactsListComparison from "./ArtifactsListComparison.vue";
 
 export default {
     name: "ComparisonContent",
 
-    components: { ArtifactsComparisonSkeleton, ArtifactsComparison },
+    components: { ArtifactsListComparisonSkeleton, ArtifactsListComparison },
 
     props: {
         from_baseline_id: { require: true, type: Number },

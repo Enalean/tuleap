@@ -22,10 +22,10 @@ import localVue from "../../support/local-vue.js";
 import { createStoreMock } from "../../support/store-wrapper.spec-helper.js";
 import store_options from "../../store/index.js";
 import { restore, rewire$getBaselineArtifacts } from "../../api/rest-querier";
-import BaselineContent from "./BaselineContent.vue";
+import ContentBody from "./ContentBody.vue";
 import { createList } from "../../support/factories";
 
-describe("BaselineContent", () => {
+describe("ContentBody", () => {
     let getBaselineArtifacts;
     let wrapper;
 
@@ -36,7 +36,7 @@ describe("BaselineContent", () => {
         getBaselineArtifacts.and.returnValue(Promise.resolve(createList("artifact", 2)));
         rewire$getBaselineArtifacts(getBaselineArtifacts);
 
-        wrapper = shallowMount(BaselineContent, {
+        wrapper = shallowMount(ContentBody, {
             propsData: {
                 baseline_id: 1
             },
