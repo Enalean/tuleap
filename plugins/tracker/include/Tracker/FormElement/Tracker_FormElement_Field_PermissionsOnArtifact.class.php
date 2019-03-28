@@ -25,6 +25,10 @@ use Tuleap\Tracker\FormElement\PermissionsOnArtifactUGroupRetriever;
 use Tuleap\Tracker\FormElement\PermissionsOnArtifactUsageFormatter;
 use Tuleap\Tracker\FormElement\PermissionsOnArtifactValidator;
 use Tuleap\Tracker\REST\v1\TrackerFieldsRepresentations\PermissionsOnArtifacts;
+use Tuleap\Tracker\Workflow\PostAction\PostActionsRetriever;
+use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyDao;
+use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyFieldDetector;
+use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyFieldsFactory;
 use Tuleap\User\UserGroup\NameTranslator;
 
 class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElement_Field {
@@ -229,10 +233,10 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         Tracker_Artifact_ChangesetValue $value = null,
         $submitted_values = array()
     ) {
-        $is_read_only = false;
+        $is_field_read_only = $this->getReadOnlyFieldDetector()->isFieldReadOnly($artifact, $this);
 
         return '<div class="tracker_hidden_edition_field" data-field-id="' . $this->getId() . '">' .
-                $this->fetchArtifactValueCommon($is_read_only, $artifact, $value, $submitted_values) .
+                $this->fetchArtifactValueCommon($is_field_read_only, $artifact, $value, $submitted_values) .
             '</div>';
     }
 
@@ -882,8 +886,9 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
 
         $html = '<p class="tracker_field_permissionsonartifact ' . $empty_value_class . '">';
         if ($this->isRequired() == false) {
-            $html .= '<input type="hidden" name="artifact[' . $this->getId(
-                ) . '][use_artifact_permissions]" value="0" />';
+            if (! $disabled) {
+                $html .= '<input type="hidden" name="artifact[' . $this->getId() . '][use_artifact_permissions]" value="0" />';
+            }
             $html .= '<label class="checkbox" for="artifact_' . $this->getId() . '_use_artifact_permissions">';
             $html .= '<input type="checkbox"
                         name="artifact[' . $this->getId() . '][use_artifact_permissions]"
@@ -906,5 +911,26 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
     public function isCSVImportable()
     {
         return false;
+    }
+
+    /**
+     * @return ReadOnlyFieldDetector
+     */
+    private function getReadOnlyFieldDetector()
+    {
+        return new ReadOnlyFieldDetector(
+            new PostActionsRetriever(
+                new Transition_PostAction_CIBuildFactory(
+                    new Transition_PostAction_CIBuildDao()
+                ),
+                new Transition_PostAction_FieldFactory(
+                    Tracker_FormElementFactory::instance(),
+                    new Transition_PostAction_Field_DateDao(),
+                    new Transition_PostAction_Field_IntDao(),
+                    new Transition_PostAction_Field_FloatDao()
+                ),
+                new ReadOnlyFieldsFactory(new ReadOnlyDao())
+            )
+        );
     }
 }
