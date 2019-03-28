@@ -710,7 +710,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         }
 
         $is_field_read_only = $this->getReadOnlyFieldDetector()->isFieldReadOnly($artifact, $this);
-        if (! $this->userCanUpdate() || $is_field_read_only) {
+        if ($is_field_read_only || ! $this->userCanUpdate()) {
             if (isset($changeset) && $changeset->getValue() !== null) {
                 $computed_value     = $changeset->getValue();
                 $autocomputed_label = '';
