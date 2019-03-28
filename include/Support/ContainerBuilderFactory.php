@@ -29,26 +29,20 @@ use ProjectManager;
 use Tracker_Artifact_ChangesetFactory;
 use Tracker_Artifact_ChangesetFactoryBuilder;
 use Tracker_ArtifactFactory;
-use Tuleap\Baseline\Adapter\AdapterPermissions;
 use Tuleap\Baseline\Adapter\BaselineArtifactRepositoryAdapter;
 use Tuleap\Baseline\Adapter\BaselineRepositoryAdapter;
 use Tuleap\Baseline\Adapter\ClockAdapter;
 use Tuleap\Baseline\Adapter\CurrentUserProviderAdapter;
 use Tuleap\Baseline\Adapter\ProjectRepositoryAdapter;
-use Tuleap\Baseline\Adapter\RoleAssignmentRepository;
 use Tuleap\Baseline\BaselineArtifactRepository;
 use Tuleap\Baseline\BaselineRepository;
-use Tuleap\Baseline\BaselineService;
 use Tuleap\Baseline\Clock;
 use Tuleap\Baseline\CurrentUserProvider;
 use Tuleap\Baseline\ProjectRepository;
-use Tuleap\Baseline\REST\BaselineController;
-use Tuleap\Baseline\REST\ProjectBaselineController;
 use Tuleap\DB\DBFactory;
 use Tuleap\REST\UserManager;
-use URLVerification;
-use function DI\create;
-use function DI\get;
+use function DI\autowire;
+use function DI\factory;
 
 /**
  * Configure all dependencies for injections.
@@ -60,72 +54,20 @@ class ContainerBuilderFactory
         $container_builder = new ContainerBuilder();
         return $container_builder->addDefinitions(
             [
-                BaselineController::class                => create(BaselineController::class)
-                    ->constructor(
-                        get(CurrentUserProvider::class),
-                        get(BaselineService::class),
-                        get(BaselineArtifactRepository::class)
-                    ),
-                ProjectBaselineController::class         => create(ProjectBaselineController::class)
-                    ->constructor(
-                        get(CurrentUserProvider::class),
-                        get(BaselineService::class),
-                        get(ProjectRepository::class)
-                    ),
-                BaselineService::class                   => create(BaselineService::class)
-                    ->constructor(
-                        get(BaselineRepository::class),
-                        get(CurrentUserProvider::class),
-                        get(Clock::class)
-                    ),
-                Clock::class                             => function () {
-                    return new ClockAdapter();
-                },
-                UserManager::class                       => function () {
-                    return UserManager::build();
-                },
-                CurrentUserProvider::class               => function (UserManager $user_manager) {
-                    return new CurrentUserProviderAdapter($user_manager);
-                },
-                BaselineRepository::class                => create(BaselineRepositoryAdapter::class)
-                    ->constructor(
-                        get(EasyDB::class),
-                        get(\UserManager::class),
-                        get(BaselineArtifactRepository::class),
-                        get(AdapterPermissions::class)
-                    ),
-                RoleAssignmentRepository::class          => function (EasyDB $db) {
-                    return new RoleAssignmentRepository($db);
-                },
-                BaselineArtifactRepository::class        => create(BaselineArtifactRepositoryAdapter::class)
-                    ->constructor(
-                        get(Tracker_ArtifactFactory::class),
-                        get(AdapterPermissions::class),
-                        get(Tracker_Artifact_ChangesetFactory::class),
-                        get(Tracker_ArtifactFactory::class)
-                    ),
-                ProjectRepository::class                 => create(ProjectRepositoryAdapter::class)
-                    ->constructor(get(ProjectManager::class), get(AdapterPermissions::class)),
-                AdapterPermissions::class                => create(AdapterPermissions::class)
-                    ->constructor(get(URLVerification::class)),
-                AdapterPermissions::class                => create(AdapterPermissions::class)
-                    ->constructor(
-                        get(URLVerification::class),
-                        get(RoleAssignmentRepository::class)
-                    ),
-                ProjectManager::class                    => function () {
-                    return ProjectManager::instance();
-                },
-                Tracker_ArtifactFactory::class           => function () {
-                    return Tracker_ArtifactFactory::instance();
-                },
-                Tracker_Artifact_ChangesetFactory::class => function () {
-                    return Tracker_Artifact_ChangesetFactoryBuilder::build();
-                },
-                EasyDB::class                            => function () {
+                Clock::class                             => autowire(ClockAdapter::class),
+                UserManager::class                       => factory([UserManager::class, 'build']),
+                CurrentUserProvider::class               => autowire(CurrentUserProviderAdapter::class),
+                BaselineRepository::class                => autowire(BaselineRepositoryAdapter::class),
+                BaselineArtifactRepository::class        => autowire(BaselineArtifactRepositoryAdapter::class),
+                ProjectRepository::class                 => autowire(ProjectRepositoryAdapter::class),
+                ProjectManager::class                    => factory([ProjectManager::class, 'instance']),
+                Tracker_ArtifactFactory::class           => factory([Tracker_ArtifactFactory::class, 'instance']),
+                Tracker_Artifact_ChangesetFactory::class => factory(
+                    [Tracker_Artifact_ChangesetFactoryBuilder::class, 'build']
+                ),
+                EasyDB::class                            => static function () {
                     return DBFactory::getMainTuleapDBConnection()->getDB();
-                },
-                URLVerification::class                   => create(URLVerification::class)->constructor()
+                }
             ]
         );
     }
