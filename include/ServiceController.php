@@ -36,6 +36,8 @@ use Tuleap\Request\NotFoundException;
 
 class ServiceController implements DispatchableWithRequest, DispatchableWithBurningParrot, DispatchableWithProject
 {
+    public const PROJECT_NAME_VARIABLE_NAME = 'project_name';
+
     /**
      * @var TemplateRenderer
      */
@@ -94,12 +96,16 @@ class ServiceController implements DispatchableWithRequest, DispatchableWithBurn
     {
         \Tuleap\Project\ServiceInstrumentation::increment(\baselinePlugin::NAME);
 
-        $project = $this->getProjectByName($variables['project_name']);
+        $project_name = $variables[self::PROJECT_NAME_VARIABLE_NAME];
+        $project      = $this->getProjectByName($project_name);
 
         $project_id = $project->getID();
         if (! $this->plugin->isAllowed($project_id)) {
-            $layout->addFeedback(\Feedback::ERROR, dgettext('tuleap-baseline', 'Baseline service is disabled for this project'));
-            $layout->redirect('/projects/'.$variables['project_name']);
+            $layout->addFeedback(
+                \Feedback::ERROR,
+                dgettext('tuleap-baseline', 'Baseline service is disabled for this project')
+            );
+            $layout->redirect('/projects/' . $project_name);
         }
 
         $this->includeCssFiles($layout);
@@ -130,7 +136,7 @@ class ServiceController implements DispatchableWithRequest, DispatchableWithBurn
      */
     public function getProject(\HTTPRequest $request, array $variables)
     {
-        return $this->getProjectByName($variables['project_name']);
+        return $this->getProjectByName($variables[self::PROJECT_NAME_VARIABLE_NAME]);
     }
 
     /**

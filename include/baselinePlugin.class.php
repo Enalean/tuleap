@@ -100,7 +100,10 @@ class baselinePlugin extends Plugin  // @codingStandardsIgnoreLine
         $event->getRouteCollector()->addGroup(
             $this->getPluginPath(),
             function (FastRoute\RouteCollector $r) {
-                $r->get('/{project_name}[/{vue-routing:.*}]', $this->getRouteHandler('routeGetSlash'));
+                $r->get(
+                    '/{' . ServiceController::PROJECT_NAME_VARIABLE_NAME . '}[/{vue-routing:.*}]',
+                    $this->getRouteHandler('routeGetSlash')
+                );
             }
         );
     }

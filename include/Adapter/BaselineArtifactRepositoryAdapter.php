@@ -216,13 +216,12 @@ class BaselineArtifactRepositoryAdapter implements BaselineArtifactRepository
             return [];
         }
 
-        $tracker_artifacts   = $artifact_link_field->getLinkedArtifacts($changeset, $current_user);
-        $linked_artifact_ids = array_map(
+        $tracker_artifacts = $artifact_link_field->getLinkedArtifacts($changeset, $current_user);
+        return array_map(
             function (Tracker_Artifact $tracker_artifact) {
                 return $tracker_artifact->getId();
             },
             $tracker_artifacts
         );
-        return $linked_artifact_ids;
     }
 }
