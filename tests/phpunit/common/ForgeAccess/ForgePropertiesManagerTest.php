@@ -20,25 +20,83 @@
 
 namespace Tuleap\ForgeAccess;
 
+use ConfigDao;
+use Event;
+use EventManager;
+use ForgeAccess;
+use ForgeAccess_ForgePropertiesManager;
+use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Mockery\MockInterface;
+use PermissionsManager;
 use PHPUnit\Framework\TestCase;
+use ProjectManager;
+use Tuleap\FRS\FRSPermissionCreator;
 
 class ForgePropertiesManagerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
+    /**
+     * @var ForgeAccess_ForgePropertiesManager
+     */
+    private $forge_properties_manager;
+    /**
+     * @var MockInterface|ProjectManager
+     */
+    private $project_manager;
+    /**
+     * @var MockInterface|ConfigDao
+     */
+    private $config_dao;
+    /**
+     * @var MockInterface|PermissionsManager
+     */
+    private $permissions_manager;
+    /**
+     * @var MockInterface|EventManager
+     */
+    private $event_manager;
+    /**
+     * @var MockInterface|FRSPermissionCreator
+     */
+    private $frs_permissions_manager;
+
+    protected function setUp(): void
+    {
+        $this->config_dao              = Mockery::mock(ConfigDao::class);
+        $this->project_manager         = Mockery::mock(ProjectManager::class);
+        $this->permissions_manager     = Mockery::mock(PermissionsManager::class);
+        $this->event_manager           = Mockery::mock(EventManager::class);
+        $this->frs_permissions_manager = Mockery::mock(FRSPermissionCreator::class);
+
+        $this->forge_properties_manager = new ForgeAccess_ForgePropertiesManager(
+            $this->config_dao,
+            $this->project_manager,
+            $this->permissions_manager,
+            $this->event_manager,
+            $this->frs_permissions_manager
+        );
+    }
+
     public function testUnknownAccessValueIsRejected()
     {
-        $forge_properties_manager = new \ForgeAccess_ForgePropertiesManager(
-            \Mockery::mock(\ConfigDao::class),
-            \Mockery::mock(\ProjectManager::class),
-            \Mockery::mock(\PermissionsManager::class),
-            \Mockery::mock(\EventManager::class),
-            \Mockery::mock(\Tuleap\FRS\FRSPermissionCreator::class)
-        );
-
         $this->expectException(UnknownForgeAccessValueException::class);
 
-        $forge_properties_manager->updateAccess('not_valid_access_value', 'anonymous');
+        $this->forge_properties_manager->updateAccess('not_valid_access_value', 'anonymous');
+    }
+
+    public function testUpdateFromRestrictedToAnonymous()
+    {
+        $this->config_dao->shouldReceive('save')->with(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
+
+        $this->event_manager->shouldReceive('processEvent')->with(Event::SITE_ACCESS_CHANGE, ['old_value' => ForgeAccess::ANONYMOUS, 'new_value' => ForgeAccess::RESTRICTED]);
+
+        $this->frs_permissions_manager->shouldReceive('updateSiteAccess')->with(ForgeAccess::ANONYMOUS);
+
+        $this->permissions_manager->shouldReceive('disableRestrictedAccess');
+
+        $this->project_manager->shouldReceive('disableAllowRestrictedForAll')->once();
+        $this->forge_properties_manager->updateAccess(ForgeAccess::RESTRICTED, ForgeAccess::ANONYMOUS);
     }
 }
