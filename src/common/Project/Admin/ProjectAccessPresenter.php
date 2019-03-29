@@ -50,8 +50,8 @@ class ProjectAccessPresenter
             }
         } else {
             $this->is_incl_restricted        = false;
-            $this->is_wide_open              = $project_access === Project::ACCESS_PUBLIC;
-            $this->is_open                   = false;
+            $this->is_wide_open              = false;
+            $this->is_open                   = $project_access === Project::ACCESS_PUBLIC;
             $this->is_closed                 = $project_access === Project::ACCESS_PRIVATE;
             $this->is_closed_incl_restricted = false;
         }
