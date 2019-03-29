@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project unix-name="kanbansampleproject" full-name="Kanban Sample project" description="Control project workflow and focus on what’s hot with a card board. Connect it to development tools." access="public">
+    <long-description></long-description>
+    <services>
+        <service shortname="summary" enabled="1"/>
+        <service shortname="plugin_agiledashboard" enabled="1"/>
+        <service shortname="plugin_tracker" enabled="1"/>
+        <service shortname="plugin_git" enabled="1"/>
+        <service shortname="admin" enabled="1"/>
+        <service shortname="plugin_mediawiki" enabled="0"/>
+        <service shortname="file" enabled="0"/>
+        <service shortname="docman" enabled="0"/>
+        <service shortname="plugin_svn" enabled="0"/>
+        <service shortname="mail" enabled="0"/>
+    </services>
+</project>
