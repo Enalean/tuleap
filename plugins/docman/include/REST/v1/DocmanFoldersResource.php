@@ -35,8 +35,8 @@ use Tuleap\Docman\REST\v1\Folders\DocmanFolderPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Folders\DocmanItemCreatorBuilder;
 use Tuleap\Docman\REST\v1\Folders\DocmanLinkPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Folders\DocmanPOSTFilesRepresentation;
-use Tuleap\Docman\REST\v1\Folders\DocmanWikiPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Folders\ItemCanHaveSubItemsChecker;
+use Tuleap\Docman\REST\v1\Wiki\DocmanWikiPOSTRepresentation;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
@@ -215,7 +215,7 @@ class DocmanFoldersResource extends AuthenticatedResource
      * Create new wiki document
      *
      * @param int                                 $id   Id of the parent folder
-     * @param DocmanWikiPOSTRepresentation $wiki_representation {@from body} {@type \Tuleap\Docman\REST\v1\Folders\DocmanWikiPOSTRepresentation}
+     * @param DocmanWikiPOSTRepresentation $wiki_representation {@from body} {@type \Tuleap\Docman\REST\v1\Wiki\DocmanWikiPOSTRepresentation}
      *
      * @url    POST {id}/wikis
      * @access hybrid

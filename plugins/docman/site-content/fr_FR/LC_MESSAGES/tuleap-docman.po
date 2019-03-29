@@ -93,6 +93,10 @@ msgstr ""
 msgid "Initial version"
 msgstr "Version initiale"
 
+msgid "It is not possible to update a wiki page with approval table."
+msgstr ""
+"Impossible de mettre à jour un wiki qui possède une table d'approbation."
+
 msgid "Items permissions are not listed."
 msgstr "Les permissions des éléments ne sont pas listées."
 

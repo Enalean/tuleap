@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,88 +22,95 @@ declare(strict_types = 1);
 
 namespace Tuleap\Docman\REST\v1;
 
-use Docman_LockFactory;
-use Luracast\Restler\RestException;
-use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
-use Tuleap\Docman\Upload\UploadCreationConflictException;
-use Tuleap\Docman\Upload\UploadCreationFileMismatchException;
-use Tuleap\Docman\Upload\UploadMaxSizeExceededException;
-use Tuleap\Docman\Upload\Version\VersionToUploadCreator;
+use Docman_ItemFactory;
+use Docman_Version;
+use Tuleap\Docman\ApprovalTable\ApprovalTableUpdateActionChecker;
+use Tuleap\Docman\ApprovalTable\ApprovalTableUpdater;
+use Tuleap\Docman\Lock\LockChecker;
+use Tuleap\Docman\Lock\LockUpdater;
 
 class DocmanItemUpdator
 {
     /**
-     * @var ApprovalTableRetriever
+     * @var ApprovalTableUpdater
      */
-    private $approval_table_retriever;
+    private $approval_table_updater;
     /**
-     * @var Docman_LockFactory
+     * @var ApprovalTableUpdateActionChecker
      */
-    private $lock_factory;
+    private $approval_table_action_checker;
     /**
-     * @var VersionToUploadCreator
+     * @var LockChecker
      */
-    private $creator;
+    private $lock_checker;
     /**
-     * @var FileVersionToUploadVisitorBeforeUpdateValidator
+     * @var PostUpdateEventAdder
      */
-    private $before_update_validator;
+    private $post_update_event_adder;
+    /**
+     * @var Docman_ItemFactory
+     */
+    private $docman_item_factory;
+    /**
+     * @var LockUpdater
+     */
+    private $lock_updater;
 
     public function __construct(
-        ApprovalTableRetriever $approval_table_retriever,
-        Docman_LockFactory $lock_factory,
-        VersionToUploadCreator $creator,
-        FileVersionToUploadVisitorBeforeUpdateValidator $before_update_validator
+        ApprovalTableUpdater $approval_table_updater,
+        ApprovalTableUpdateActionChecker $approval_table_action_checker,
+        LockChecker $lock_checker,
+        PostUpdateEventAdder $post_update_event_adder,
+        Docman_ItemFactory $docman_item_factory,
+        LockUpdater $lock_updater
     ) {
-        $this->approval_table_retriever = $approval_table_retriever;
-        $this->lock_factory             = $lock_factory;
-        $this->creator                  = $creator;
-        $this->before_update_validator  = $before_update_validator;
+
+        $this->approval_table_updater        = $approval_table_updater;
+        $this->approval_table_action_checker = $approval_table_action_checker;
+        $this->lock_checker                  = $lock_checker;
+        $this->post_update_event_adder       = $post_update_event_adder;
+        $this->docman_item_factory           = $docman_item_factory;
+        $this->lock_updater                  = $lock_updater;
+    }
+
+    public function updateCommonData(
+        \Docman_Item $item,
+        bool $should_lock_item,
+        \PFUser $user,
+        string $approval_table_action,
+        ?Docman_Version $version
+    ): void {
+        $this->updateApprovalTable($item, $user, $approval_table_action);
+        $this->updateCommonDataWithoutApprovalTable($item, $should_lock_item, $user, $version);
+    }
+
+    public function updateCommonDataWithoutApprovalTable(
+        \Docman_Item $item,
+        bool $should_lock_item,
+        \PFUser $user,
+        ?Docman_Version $version
+    ): void {
+        $this->updateLock($item, $should_lock_item, $user);
+        $this->post_update_event_adder->triggerPostUpdateEvents($item, $user, $version);
     }
 
     /**
-     * @throws ExceptionItemIsLockedByAnotherUser
-     * @throws UploadMaxSizeExceededException
-     * @throws RestException
+     * @param \Docman_Item $item
+     * @param bool         $should_lock_item
+     * @param \PFUser      $user
      */
-    public function updateFile(
-        \Docman_Item $item,
-        \PFUser $user,
-        DocmanFilesPATCHRepresentation $patch_representation,
-        \DateTimeImmutable $time
-    ) : CreatedItemFilePropertiesRepresentation {
+    private function updateLock(\Docman_Item $item, bool $should_lock_item, \PFUser $user): void
+    {
+        $this->lock_updater->updateLockInformation($item, $should_lock_item, $user);
+    }
 
-        $lock_infos = $this->lock_factory->getLockInfoForItem($item);
+    private function updateApprovalTable(\Docman_Item $item, \PFUser $user, string $approval_table_action): void
+    {
+        $this->docman_item_factory->update(['id' => $item->getId()]);
 
-        if ($lock_infos && (int)$lock_infos['user_id'] !== (int)$user->getId()) {
-            throw new ExceptionItemIsLockedByAnotherUser();
+        $item = $this->docman_item_factory->getItemFromDb($item->getId());
+        if ($this->approval_table_action_checker->checkAvailableUpdateAction($approval_table_action)) {
+            $this->approval_table_updater->updateApprovalTable($item, $user, $approval_table_action);
         }
-
-        $item->accept($this->before_update_validator, []);
-
-        try {
-            $document_to_upload = $this->creator->create(
-                $item,
-                $user,
-                $time,
-                $patch_representation->version_title,
-                $patch_representation->change_log,
-                $patch_representation->file_properties->file_name,
-                $patch_representation->file_properties->file_size,
-                $patch_representation->should_lock_file,
-                $patch_representation->approval_table_action
-            );
-        } catch (UploadCreationConflictException $exception) {
-            throw new RestException(409, $exception->getMessage());
-        } catch (UploadCreationFileMismatchException $exception) {
-            throw new RestException(409, $exception->getMessage());
-        } catch (UploadMaxSizeExceededException $exception) {
-            throw new RestException(400, $exception->getMessage());
-        }
-
-        $file_properties_representation = new CreatedItemFilePropertiesRepresentation();
-        $file_properties_representation->build($document_to_upload->getUploadHref());
-
-        return $file_properties_representation;
     }
 }

@@ -127,19 +127,18 @@ class DocmanEmbeddedFilesResource extends AuthenticatedResource
 
         $docman_approval_table_retriever = new ApprovalTableRetriever(new \Docman_ApprovalTableFactoriesFactory());
 
+        $builder             = new DocmanItemUpdatorBuilder();
+        $docman_item_updator = $builder->build($this->event_manager);
+
         $docman_plugin       = PluginManager::instance()->getPluginByName('docman');
         $docman_root         = $docman_plugin->getPluginInfo()->getPropertyValueForName('docman_root');
         $version_factory     = new Docman_VersionFactory();
         $docman_item_updator = new DocmanEmbeddedFileUpdator(
             new Docman_FileStorage($docman_root),
             $version_factory,
-            new ApprovalTableUpdater($docman_approval_table_retriever, new Docman_ApprovalTableFactoriesFactory()),
-            new ApprovalTableUpdateActionChecker($docman_approval_table_retriever),
             new LockChecker(new Docman_LockFactory()),
-            new PostUpdateEventAdder($version_factory, $this->project_manager, $this->getDocmanItemsEventAdder(), $this->event_manager),
-            new \Docman_ItemFactory(),
             new EmbeddedFileVersionCreationBeforeUpdateValidator(),
-            new LockUpdater(new Docman_LockFactory())
+            $docman_item_updator
         );
 
         try {

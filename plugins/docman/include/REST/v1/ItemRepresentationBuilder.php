@@ -26,6 +26,7 @@ use Project;
 use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\ApprovalTable\ApprovalTableStateMapper;
 use Tuleap\Docman\REST\v1\EmbeddedFiles\EmbeddedFilePropertiesRepresentation;
+use Tuleap\Docman\REST\v1\Wiki\WikiPropertiesRepresentation;
 use Tuleap\User\REST\MinimalUserRepresentation;
 
 class ItemRepresentationBuilder

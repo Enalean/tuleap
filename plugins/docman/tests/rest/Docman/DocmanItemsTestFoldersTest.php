@@ -27,6 +27,8 @@ use REST_TestDataBuilder;
 use Tuleap\Docman\rest\DocmanBase;
 use Tuleap\Docman\rest\DocmanDataBuilder;
 
+require_once __DIR__ . '/../bootstrap.php';
+
 class DocmanItemsTestFoldersTest extends DocmanBase
 {
     public function testGetRootId()

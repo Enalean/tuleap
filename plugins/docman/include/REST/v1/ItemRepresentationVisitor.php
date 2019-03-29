@@ -30,6 +30,7 @@ use Docman_Wiki;
 use Tuleap\Docman\Item\ItemVisitor;
 use Tuleap\Docman\REST\v1\EmbeddedFiles\EmbeddedFilePropertiesRepresentation;
 use Tuleap\Docman\View\DocmanViewURLBuilder;
+use Tuleap\Docman\REST\v1\Wiki\WikiPropertiesRepresentation;
 
 class ItemRepresentationVisitor implements ItemVisitor
 {

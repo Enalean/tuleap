@@ -27,12 +27,17 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
+use Tuleap\Docman\Lock\LockChecker;
 use Tuleap\Docman\Upload\Version\VersionToUpload;
 use Tuleap\Docman\Upload\Version\VersionToUploadCreator;
 
-class DocmanItemUpdatorTest extends TestCase
+class DocmanItemFileUpdatorTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+    /**
+     * @var Mockery\MockInterface|LockChecker
+     */
+    private $lock_checker;
     /**
      * @var Mockery\MockInterface|FileVersionToUploadVisitorBeforeUpdateValidator
      */
@@ -63,33 +68,16 @@ class DocmanItemUpdatorTest extends TestCase
         $this->lock_factory             = Mockery::mock(\Docman_LockFactory::class);
         $this->creator                  = Mockery::mock(VersionToUploadCreator::class);
         $this->before_update_validator  = Mockery::mock(FileVersionToUploadVisitorBeforeUpdateValidator::class);
+        $this->lock_checker             = Mockery::mock(LockChecker::class);
 
-        $this->updator = new DocmanItemUpdator(
+        $this->updator = new DocmanItemFileUpdator(
             $this->approval_table_retriever,
             $this->lock_factory,
             $this->creator,
-            $this->before_update_validator
+            $this->before_update_validator,
+            $this->lock_checker
+
         );
-    }
-
-    public function testItThrowsAnExceptionWhenDocumentIsLockedByAnotherUser()
-    {
-        $item = Mockery::mock(Docman_Item::class);
-        $user = Mockery::mock(\PFUser::class);
-        $user->shouldReceive('getId')->andReturn(101);
-        $this->approval_table_retriever->shouldReceive('retrieveByItem')
-                                       ->with($item)
-                                       ->andReturn(null);
-
-        $this->lock_factory->shouldReceive('getLockInfoForItem')
-            ->with($item)
-            ->andReturn(["user_id" => 106]);
-
-        $this->expectException(ExceptionItemIsLockedByAnotherUser::class);
-
-        $representation                  = new DocmanFilesPATCHRepresentation();
-
-        $this->updator->updateFile($item, $user, $representation, new \DateTimeImmutable());
     }
 
     public function testItShouldStoreTheNewVersionWhenFileRepresentationIsCorrect()
@@ -100,6 +88,8 @@ class DocmanItemUpdatorTest extends TestCase
         $this->approval_table_retriever->shouldReceive('retrieveByItem')
                                        ->with($item)
                                        ->andReturn(null);
+
+        $this->lock_checker->shouldReceive('checkItemIsLocked');
 
         $this->lock_factory->shouldReceive('getLockInfoForItem')
                            ->with($item)
