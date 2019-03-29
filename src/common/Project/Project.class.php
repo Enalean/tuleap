@@ -384,7 +384,7 @@ class Project extends Group implements PFO_Project {
             || $this->isSuperPublic();
     }
 
-    private function isSuperPublic() {
+    public function isSuperPublic() {
         $super_public_projects = ForgeConfig::getSuperPublicProjectsFromRestrictedFile();
 
         return in_array($this->getID(), $super_public_projects);

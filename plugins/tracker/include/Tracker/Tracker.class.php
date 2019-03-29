@@ -20,6 +20,8 @@
  */
 
 use Tracker\Artifact\XMLArtifactSourcePlatformExtractor;
+use Tuleap\Project\ProjectAccessChecker;
+use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactDeletorBuilder;
@@ -2300,8 +2302,13 @@ EOS;
             }
         }
 
-        $project_manager    = ProjectManager::instance();
-        $permission_checker = new Tracker_Permission_PermissionChecker($user_manager, $project_manager);
+        $permission_checker = new Tracker_Permission_PermissionChecker(
+            $user_manager,
+            new ProjectAccessChecker(
+                PermissionsOverrider_PermissionsOverriderManager::instance(),
+                new RestrictedUserCanAccessProjectVerifier()
+            )
+        );
 
         return $permission_checker->userCanViewTracker($user, $this);
     }

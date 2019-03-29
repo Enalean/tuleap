@@ -22,6 +22,7 @@
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Project\ProjectAccessSuspendedException;
 
 class URLVerification_AssertValidUrlTest extends TestCase
 {
@@ -99,10 +100,11 @@ class URLVerification_AssertValidUrlTest extends TestCase
     public function testCheckNotActiveAndNotSuspendedProjectError()
     {
         $GLOBALS['group_id'] = 1;
-        $project = Mockery::mock(Project::class, ['isActive' => false, 'isSuspended' => false, 'isPublic' => true, 'isError' => false, 'getStatus' => 'S']);
+        $project = Mockery::mock(Project::class, ['getStatus' => 'S']);
         $project_manager = Mockery::mock(ProjectManager::class);
         $project_manager->shouldReceive('getProject')->andReturn($project);
         $this->url_verification->shouldReceive('getProjectManager')->andReturn($project_manager);
+        $this->url_verification->shouldReceive('userCanAccessProject')->andThrow(new Project_AccessDeletedException($project));
 
         $this->url_verification->shouldReceive('exitError')->once();
         $this->url_verification->shouldReceive('displayRestrictedUserProjectError')->never();
@@ -118,6 +120,7 @@ class URLVerification_AssertValidUrlTest extends TestCase
         $project_manager = Mockery::mock(ProjectManager::class);
         $project_manager->shouldReceive('getProject')->andReturn($project);
         $this->url_verification->shouldReceive('getProjectManager')->andReturn($project_manager);
+        $this->url_verification->shouldReceive('userCanAccessProject')->andThrow(new ProjectAccessSuspendedException($project));
 
         $this->url_verification->shouldReceive('displaySuspendedProjectError')->once();
 
@@ -131,6 +134,7 @@ class URLVerification_AssertValidUrlTest extends TestCase
         $project_manager = Mockery::mock(ProjectManager::class);
         $project_manager->shouldReceive('getProject')->andReturn($project);
         $this->url_verification->shouldReceive('getProjectManager')->andReturn($project_manager);
+        $this->url_verification->shouldReceive('userCanAccessProject');
 
         $this->url_verification->shouldReceive('exitError')->never();
         $this->url_verification->shouldReceive('displayRestrictedUserProjectError')->never();
@@ -142,21 +146,6 @@ class URLVerification_AssertValidUrlTest extends TestCase
     public function testUserCanAccessPrivateShouldLetUserPassWhenNotInAProject()
     {
         $this->url_verification->shouldReceive('getUrl')->andReturn(Mockery::spy(URL::class));
-
-        $this->url_verification->shouldReceive('exitError')->never();
-        $this->url_verification->shouldReceive('displayRestrictedUserProjectError')->never();
-        $this->url_verification->shouldReceive('displayPrivateProjectError')->never();
-
-        $this->url_verification->assertValidUrl(array('SCRIPT_NAME' => '/stuff', 'REQUEST_URI' => '/stuff'), $this->request);
-    }
-
-    public function testUserCanAccessPrivateShouldLetUserPassWhenProjectIsPublic()
-    {
-        $GLOBALS['group_id'] = 120;
-        $project = Mockery::mock(Project::class, ['isActive' => true, 'isPublic' => true, 'isError' => false, 'getID' => 120]);
-        $project_manager = Mockery::mock(ProjectManager::class);
-        $project_manager->shouldReceive('getProject')->andReturn($project);
-        $this->url_verification->shouldReceive('getProjectManager')->andReturn($project_manager);
 
         $this->url_verification->shouldReceive('exitError')->never();
         $this->url_verification->shouldReceive('displayRestrictedUserProjectError')->never();

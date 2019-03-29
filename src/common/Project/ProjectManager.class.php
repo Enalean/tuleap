@@ -23,6 +23,7 @@ use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\FRS\FRSPermissionDao;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\Project\Admin\ProjectWithoutRestrictedFeatureFlag;
 use Tuleap\Project\Webhook\Log\StatusLogger as WebhookStatusLogger;
 use Tuleap\Project\Webhook\Log\WebhookLoggerDao;
 use Tuleap\Project\Webhook\ProjectCreatedPayload;
@@ -640,7 +641,7 @@ class ProjectManager
         } elseif (!$group->isActive()) {
             throw new SoapFault(get_group_fault, $group->getUnixName().' : '.$GLOBALS['Language']->getText('include_exit', 'project_status_'.$group->getStatus()), $method);
         }
-        if (!$this->checkRestrictedAccess($group)) {
+        if (!$this->checkRestrictedAccess($group, $this->_getUserManager()->getCurrentUser())) {
             throw new SoapFault(get_group_fault, 'Restricted user: permission denied.', $method);
         }
         return $group;
@@ -657,14 +658,6 @@ class ProjectManager
         $this->getGroupByIdForSoap($groupId, $method, $byUnixName);
     }
 
-    public function checkRestrictedAccess($group) {
-        return $this->getRestrictedAccessForUserInGroup($group, $this->_getUserManager()->getCurrentUser());
-    }
-
-    public function checkRestrictedAccessForUser($group, PFUser $user) {
-        return $this->getRestrictedAccessForUserInGroup($group, $user);
-    }
-
     /**
      * Checks if the user can access the project $group,
      * regarding the restricted access
@@ -674,24 +667,29 @@ class ProjectManager
      *
      * @return boolean true if the current session user has access to this project, false otherwise
      */
-    private function getRestrictedAccessForUserInGroup($group, $user) {
-        if (ForgeConfig::areRestrictedUsersAllowed()) {
-            if ($group) {
-                if ($user) {
-                    if ($user->isRestricted()) {
-                        return $group->userIsMember();
-                    } else {
-                        return true;
-                    }
-                } else {
-                    return false;
-                }
-            } else {
-                return false;
-            }
-        } else {
+    public function checkRestrictedAccess($group, $user)
+    {
+        if (! ForgeConfig::areRestrictedUsersAllowed()) {
             return true;
         }
+
+        if (! $group) {
+            return false;
+        }
+
+        if (! $user) {
+            return false;
+        }
+
+        if (! $user->isRestricted()) {
+            return true;
+        }
+
+        if (ProjectWithoutRestrictedFeatureFlag::isEnabled() && $group->getAccess() === Project::ACCESS_PRIVATE_WO_RESTRICTED) {
+            return false;
+        }
+
+        return $group->userIsMember();
     }
 
     /**
@@ -790,7 +788,7 @@ class ProjectManager
         foreach ($projects_results as $row) {
             if (
                 $row['access'] === Project::ACCESS_PRIVATE_WO_RESTRICTED &&
-                \Tuleap\Project\Admin\ProjectWithoutRestrictedFeatureFlag::isEnabled() &&
+                ProjectWithoutRestrictedFeatureFlag::isEnabled() &&
                 ForgeConfig::areRestrictedUsersAllowed() &&
                 $user->isRestricted()
             ) {
@@ -853,7 +851,7 @@ class ProjectManager
         foreach ($result as $row) {
             if (
                 $row['access'] === Project::ACCESS_PRIVATE_WO_RESTRICTED &&
-                \Tuleap\Project\Admin\ProjectWithoutRestrictedFeatureFlag::isEnabled() &&
+                ProjectWithoutRestrictedFeatureFlag::isEnabled() &&
                 ForgeConfig::areRestrictedUsersAllowed() &&
                 $user->isRestricted()
             ) {

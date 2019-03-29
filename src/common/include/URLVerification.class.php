@@ -29,7 +29,9 @@ use Tuleap\Error\PlaceHolderBuilder;
 use Tuleap\Layout\ErrorRendering;
 use Tuleap\Project\Admin\MembershipDelegationDao;
 use Tuleap\Project\Admin\ProjectWithoutRestrictedFeatureFlag;
+use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\ProjectAccessSuspendedException;
+use Tuleap\Project\RestrictedUserCanAccessUrlOrProjectVerifier;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Request\RequestInstrumentation;
 use Tuleap\Request\RestrictedUsersAreHandledByPluginEvent;
@@ -274,166 +276,11 @@ class URLVerification {
      * @param String $request_uri
      * @return Boolean False if user not allowed to see the content
      */
-    protected function restrictedUserCanAccessUrl($user, $url, $request_uri, Project $project = null) {
-        // This assume that we already checked that project is accessible to restricted prior to function call.
-        // Hence, summary page is ALWAYS accessible
-        if (strpos($request_uri, '/projects/') !== false) {
-            return true;
-        }
+    protected function restrictedUserCanAccessUrl(PFUser $user, URL $url, string $request_uri, Project $project = null)
+    {
+        $verifier = new RestrictedUserCanAccessUrlOrProjectVerifier($this->getEventManager(), $url, $request_uri);
 
-        if ($project !== null) {
-            $group_id = $project->getID();
-        } else {
-            $group_id =  (isset($GLOBALS['group_id'])) ? $GLOBALS['group_id'] : $url->getGroupIdFromUrl($request_uri);
-        }
-
-        // Make sure the URI starts with a single slash
-        $req_uri='/'.trim($request_uri, "/");
-        $user_is_allowed=false;
-        /* Examples of input params:
-         Script: /projects, Uri=/projects/ljproj/
-         Script: /project/admin/index.php, Uri=/project/admin/?group_id=101
-         Script: /tracker/index.php, Uri=/tracker/index.php?group_id=101
-         Script: /tracker/index.php, Uri=/tracker/?func=detail&aid=14&atid=101&group_id=101
-        */
-
-        // Restricted users cannot access any page belonging to a project they are not a member of.
-        // In addition, the following URLs are forbidden (value overriden in site-content file)
-        $forbidden_url = array(
-          '/new/',        // list of the newest releases made on the Codendi site ('/news' must be allowed...)
-          '/project/register.php',    // Register a new project
-          '/export',      // Codendi XML feeds
-          '/info.php'     // PHP info
-          );
-        // Default values are very restrictive, but they can be overriden in the site-content file
-        // Default support project is project 1.
-        $allow_welcome_page=false;       // Allow access to welcome page
-        $allow_news_browsing=false;      // Allow restricted users to read/comment news, including for their project
-        $allow_user_browsing=false;      // Allow restricted users to access other user's page (Developer Profile)
-        $allow_access_to_project_forums      = array(1); // Support project help forums are accessible through the 'Discussion Forums' link
-        $allow_access_to_project_trackers    = array(1); // Support project trackers are used for support requests
-        $allow_access_to_project_docs        = array(1); // Support project documents and wiki (Note that the User Guide is always accessible)
-        $allow_access_to_project_mail        = array(1); // Support project mailing lists (Developers Channels)
-        $allow_access_to_project_frs         = array(1); // Support project file releases
-        $allow_access_to_project_refs        = array(1); // Support project references
-        $allow_access_to_project_news        = array(1); // Support project news
-        $allow_access_to_project_trackers_v5 = array(1); //Support project trackers v5 are used for support requests
-        // List of fully public projects (same access for restricted and unrestricted users)
-
-        // Customizable security settings for restricted users:
-        include($GLOBALS['Language']->getContent('include/restricted_user_permissions','en_US'));
-        // End of customization
-
-        // For convenient reasons, admin can customize those variables as arrays
-        // but for performances reasons we prefer to use hashes (avoid in_array)
-        // so we transform array(101) => array(101=>0)
-        $allow_access_to_project_forums      = array_flip($allow_access_to_project_forums);
-        $allow_access_to_project_trackers    = array_flip($allow_access_to_project_trackers);
-        $allow_access_to_project_docs        = array_flip($allow_access_to_project_docs);
-        $allow_access_to_project_mail        = array_flip($allow_access_to_project_mail);
-        $allow_access_to_project_frs         = array_flip($allow_access_to_project_frs);
-        $allow_access_to_project_refs        = array_flip($allow_access_to_project_refs);
-        $allow_access_to_project_news        = array_flip($allow_access_to_project_news);
-        $allow_access_to_project_trackers_v5 = array_flip($allow_access_to_project_trackers_v5);
-
-        foreach ($forbidden_url as $str) {
-            $pos = strpos($req_uri, $str);
-            if ($pos === false) {
-                // Not found
-            } else {
-                if ($pos == 0) {
-                    // beginning of string
-                    return false;
-                }
-            }
-        }
-
-        // Welcome page
-        if (! $allow_welcome_page && $request_uri === '/') {
-            return false;
-        }
-
-        //Forbid search unless it's on a tracker
-        if (strpos($req_uri,'/search') === 0 && isset($_REQUEST['type_of_search']) && $_REQUEST['type_of_search'] == 'tracker') {
-            return true;
-        } elseif( strpos($req_uri,'/search') === 0 ) {
-            return false;
-        }
-
-        // Forbid access to other user's page (Developer Profile)
-        if ((strpos($req_uri,'/users/') === 0)&&(!$allow_user_browsing)) {
-            if ($req_uri != '/users/'.$user->getName()) {
-                return false;
-            }
-        }
-
-        // Forum and news. Each published news is a special forum of project 'news'
-        if (strpos($req_uri,'/news/') === 0 &&
-            isset($allow_access_to_project_news[$group_id])) {
-            $user_is_allowed=true;
-        }
-
-        if (strpos($req_uri,'/news/') === 0 &&
-            $allow_news_browsing) {
-            $user_is_allowed=true;
-         }
-
-        if (strpos($req_uri,'/forum/') === 0 &&
-            isset($allow_access_to_project_forums[$group_id])) {
-              $user_is_allowed=true;
-         }
-
-        // Codendi trackers
-        if (strpos($req_uri,'/tracker/') === 0 &&
-            isset($allow_access_to_project_trackers[$group_id])) {
-            $user_is_allowed=true;
-        }
-
-        // Trackers v5
-        if (strpos($req_uri,'/plugins/tracker/') === 0 &&
-            isset($allow_access_to_project_trackers_v5[$group_id])) {
-            $user_is_allowed=true;
-        }
-
-        // Codendi documents and wiki
-        if (((strpos($req_uri,'/docman/') === 0) ||
-            (strpos($req_uri,'/plugins/docman/') === 0) ||
-            (strpos($req_uri,'/wiki/') === 0)) &&
-            isset($allow_access_to_project_docs[$group_id])) {
-            $user_is_allowed=true;
-        }
-
-        // Codendi mailing lists page
-        if (strpos($req_uri,'/mail/') === 0 &&
-            isset($allow_access_to_project_mail[$group_id])) {
-            $user_is_allowed=true;
-        }
-
-        // Codendi file releases
-        if (strpos($req_uri,'/file/') === 0 &&
-            isset($allow_access_to_project_frs[$group_id])) {
-            $user_is_allowed=true;
-        }
-
-        // References
-        if (strpos($req_uri,'/goto') === 0 &&
-            isset($allow_access_to_project_refs[$group_id])) {
-            $user_is_allowed=true;
-        }
-
-        if (! $user_is_allowed) {
-            $event = new RestrictedUsersAreHandledByPluginEvent($request_uri);
-            $this->getEventManager()->processEvent($event);
-            $user_is_allowed = $event->getPluginHandleRestricted();
-        }
-
-        if ($group_id && ! $user_is_allowed) {
-            if (in_array($group_id, ForgeConfig::getSuperPublicProjectsFromRestrictedFile())) {
-                return true;
-            }
-            return false;
-        }
-        return true;
+        return $verifier->isRestrictedUserAllowedToAccess($user, $project);
     }
 
     /**
@@ -601,40 +448,20 @@ class URLVerification {
      * @throws ProjectAccessSuspendedException
      */
     public function userCanAccessProject(PFUser $user, Project $project) {
-        if ($project->isError()) {
-            throw new Project_AccessProjectNotFoundException();
-        } elseif ($user->isSuperUser()) {
-            return true;
-        } elseif (! $project->isActive()) {
-            if ($project->isSuspended()) {
-                throw new ProjectAccessSuspendedException();
-            }
+        $checker = new ProjectAccessChecker(
+            $this->getPermissionsOverriderManager(),
+            new RestrictedUserCanAccessUrlOrProjectVerifier($this->getEventManager(), $this->getUrl(), $_SERVER['REQUEST_URI'])
+        );
 
-            throw new Project_AccessDeletedException($project);
-        } elseif ($user->isMember($project->getID())) {
-            if (
-                $project->getAccess() === Project::ACCESS_PRIVATE_WO_RESTRICTED &&
-                ProjectWithoutRestrictedFeatureFlag::isEnabled() &&
-                ForgeConfig::areRestrictedUsersAllowed() &&
-                $user->isRestricted()
-            ) {
-                throw new Project_AccessProjectNotFoundException(_('Project does not exist'));
+        try {
+            $checker->checkUserCanAccessProject($user, $project);
+        } catch (Project_AccessPrivateException $exception) {
+            if ($this->userHasBeenDelegatedAccess($user)) {
+                return true;
             }
-            return true;
-        } elseif ($this->getPermissionsOverriderManager()->doesOverriderAllowUserToAccessProject($user, $project)) {
-            return true;
-        } elseif ($user->isRestricted()) {
-            if ( ! $project->allowsRestricted() ||
-                ! $this->restrictedUserCanAccessUrl($user, $this->getUrl(), $_SERVER['REQUEST_URI'], $project)) {
-                throw new Project_AccessRestrictedException();
-            }
-            return true;
-        } elseif ($project->isPublic()) {
-            return true;
-        } elseif ($this->userHasBeenDelegatedAccess($user)) {
-            return true;
+            throw $exception;
         }
-        throw new Project_AccessPrivateException();
+        return true;
     }
 
     private function userHasBeenDelegatedAccess(PFUser $user) {

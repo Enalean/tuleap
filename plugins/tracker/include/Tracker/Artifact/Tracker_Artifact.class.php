@@ -25,6 +25,8 @@
 
 require_once(dirname(__FILE__).'/../../constants.php');
 
+use Tuleap\Project\ProjectAccessChecker;
+use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfig;
 use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfigDAO;
 use Tuleap\Tracker\Admin\ArtifactsDeletion\UserDeletionRetriever;
@@ -203,7 +205,13 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     public function userCanView(PFUser $user = null)
     {
         $user_manager       = $this->getUserManager();
-        $permission_checker = new Tracker_Permission_PermissionChecker($user_manager, $this->getProjectManager());
+        $permission_checker = new Tracker_Permission_PermissionChecker(
+            $user_manager,
+            new ProjectAccessChecker(
+                PermissionsOverrider_PermissionsOverriderManager::instance(),
+                new RestrictedUserCanAccessProjectVerifier()
+            )
+        );
 
         if ($user === null) {
             $user = $user_manager->getCurrentUser();
@@ -1474,15 +1482,6 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
 
     private function getCurrentUser() {
         return $this->getUserManager()->getCurrentUser();
-    }
-
-    /**
-     * Get the ProjectManager instance
-     *
-     * @return ProjectManager
-     */
-    private function getProjectManager() {
-        return ProjectManager::instance();
     }
 
     /**
