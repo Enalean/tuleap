@@ -1290,7 +1290,8 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      *
      * @return mixed
      */
-    public function getFieldDataFromCSVValue($csv_value) {
+    public function getFieldDataFromCSVValue($csv_value, Tracker_Artifact $artifact = null)
+    {
         return $this->getFieldData($csv_value);
     }
 

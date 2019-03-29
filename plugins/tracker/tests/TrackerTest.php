@@ -1029,23 +1029,22 @@ class TrackerTest extends TuleapTestCase {
         $field1->shouldReceive('getId')->andReturns(1);
         $field2->shouldReceive('getId')->andReturns(2);
 
-        $field1->shouldReceive('getFieldDataFromCSVValue')->with('summary 1')->andReturns('summary 1');
-        $field1->shouldReceive('getFieldDataFromCSVValue')->with('summary 2')->andReturns('summary 2');
+        $artifact = \Mockery::spy(\Tracker_Artifact::class);
+        $af = \Mockery::spy(\Tracker_ArtifactFactory::class);
+        $this->tracker->shouldReceive('getTrackerArtifactFactory')->andReturns($af);
+        $this->tracker->shouldReceive('aidExists')->with('0')->andReturns(false);
 
-        $field2->shouldReceive('getFieldDataFromCSVValue')->with('details 1')->andReturns('details 1');
-        $field2->shouldReceive('getFieldDataFromCSVValue')->with('details 2')->andReturns('details 2');
+        $field1->shouldReceive('getFieldDataFromCSVValue')->with('summary 1', $artifact)->andReturns('summary 1');
+        $field1->shouldReceive('getFieldDataFromCSVValue')->with('summary 2', $artifact)->andReturns('summary 2');
+
+        $field2->shouldReceive('getFieldDataFromCSVValue')->with('details 1', $artifact)->andReturns('details 1');
+        $field2->shouldReceive('getFieldDataFromCSVValue')->with('details 2', $artifact)->andReturns('details 2');
 
         $field1->shouldReceive('isCSVImportable')->andReturns(true);
         $field2->shouldReceive('isCSVImportable')->andReturns(true);
 
         $this->formelement_factory->shouldReceive('getUsedFieldByName')->with(110, 'summary')->andReturns($field1);
         $this->formelement_factory->shouldReceive('getUsedFieldByName')->with(110, 'details')->andReturns($field2);
-
-        $artifact = \Mockery::spy(\Tracker_Artifact::class);
-
-        $af = \Mockery::spy(\Tracker_ArtifactFactory::class);
-        $this->tracker->shouldReceive('getTrackerArtifactFactory')->andReturns($af);
-        $this->tracker->shouldReceive('aidExists')->with('0')->andReturns(false);
 
         $um = \Mockery::spy(\UserManager::class);
         $u = \Mockery::spy(\PFUser::class);

@@ -265,10 +265,15 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
      *
      * @return array
      */
-    public function getFieldData($string_value, Tracker_Artifact $artifact = null) {
+    public function getFieldData($string_value, Tracker_Artifact $artifact = null)
+    {
         $submitted_ids = $this->getFieldDataBuilder()->getArrayOfIdsFromString($string_value);
         return $this->getDataLikeWebUI($submitted_ids, array($string_value), $artifact);
+    }
 
+    public function getFieldDataFromCSVValue($csv_value, Tracker_Artifact $artifact = null)
+    {
+        return $this->getFieldData($csv_value, $artifact);
     }
 
     /**
@@ -327,7 +332,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
     {
         $link_ids = [];
 
-        if ($artifact) {
+        if ($artifact && $artifact->getLastChangeset()) {
             foreach ($this->getChangesetValues($artifact->getLastChangeset()->getId()) as $link_info) {
                 $link_ids[] = $link_info->getArtifactId();
             }

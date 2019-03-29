@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2011, 2012, 2013. All rights reserved.
+ * Copyright Enalean (c) 2011 - Present. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -63,10 +63,8 @@ class Tracker_FormElement_Field_RadiobuttonTest extends TuleapTestCase {
     public function itReplaceCSVNullValueByNone() {
         $field = aRadiobuttonField()->build();
         $this->assertEqual(
-            $field->getFieldDataFromCSVValue(null),
+            $field->getFieldDataFromCSVValue(null, null),
             Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID
         );
     }
 }
-
-?>

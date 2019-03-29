@@ -139,11 +139,13 @@ class Tracker_FormElement_Field_MultiSelectbox extends Tracker_FormElement_Field
         return true;
     }
 
-    public function getFieldDataFromCSVValue($csv_value) {
+    public function getFieldDataFromCSVValue($csv_value, Tracker_Artifact $artifact = null)
+    {
         if ($csv_value == null) {
             return array(Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID);
         }
-        return parent::getFieldDataFromCSVValue($csv_value);
+
+        return parent::getFieldDataFromCSVValue($csv_value, $artifact);
     }
 
     public function getFieldDataFromRESTValue(array $value, Tracker_Artifact $artifact = null) {

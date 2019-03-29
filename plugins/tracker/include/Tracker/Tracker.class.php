@@ -3082,7 +3082,7 @@ EOS;
                             )
                         );
                         if ($line[$idx]!='') {
-                            $data[$field->getId()] = $field->getFieldDataFromCSVValue($line[$idx]);
+                            $data[$field->getId()] = $field->getFieldDataFromCSVValue($line[$idx], $artifact);
 
                             if ($data[$field->getId()] === null) {
                                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'unknown_value', array($line[$idx], $field_name)));
@@ -3196,8 +3196,9 @@ EOS;
             $nb_artifact_creation = 0;
             $nb_artifact_update = 0;
             foreach ($lines as $line_number => $data_line) {
-                $mode = 'creation';
+                $mode        = 'creation';
                 $fields_data = array();
+                $artifact    = null;
                 foreach ($data_line as $idx => $data_cell) {
 
                     if (($fields[$idx]) === null) {
@@ -3205,14 +3206,21 @@ EOS;
                     } else if ($fields[$idx] === 'aid') {
                         if ($data_cell) {
                             $mode = 'update';
+
                             $artifact_id = (int) $data_cell;
-                        } else {
-                            $artifact_id = 0;
+                            $artifact    = $af->getArtifactById($artifact_id);
+                            if (! $artifact) {
+                                $GLOBALS['Response']->addFeedback(
+                                    Feedback::ERROR,
+                                    $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'unknown_artifact', array($artifact_id))
+                                );
+                                $is_error = true;
+                            }
                         }
                     } else if (is_a($fields[$idx], 'Tracker_FormElement')) {
                         $field = $fields[$idx];
                         if ($field->isCSVImportable()) {
-                            $fields_data[$field->getId()] = $field->getFieldDataFromCSVValue($data_cell);
+                            $fields_data[$field->getId()] = $field->getFieldDataFromCSVValue($data_cell, $artifact);
                         } else {
                             $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'field_not_taken_account', $field->getName()));
                         }
@@ -3227,9 +3235,7 @@ EOS;
                         $is_error = true;
                     }
                 } else {
-                    $artifact = $af->getArtifactById($artifact_id);
                     if ($artifact) {
-
                         if ($artifact->getTracker()->getId() !== $this->getId()) {
                             $GLOBALS['Response']->addFeedback(
                                 Feedback::ERROR,
@@ -3253,9 +3259,6 @@ EOS;
                             $GLOBALS['Response']->addFeedback('error', $e->getMessage());
                             $is_error = true;
                         }
-                    } else {
-                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'unknown_artifact', array($artifact_id)));
-                        $is_error = true;
                     }
                 }
             }
