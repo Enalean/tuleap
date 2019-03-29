@@ -1,29 +1,30 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2006
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi; if not, write to the Free Software
+ * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  *
  */
-require_once('Docman_View_GetActionOnIconVisitor.class.php');
-require_once('Docman_View_GetClassForLinkVisitor.class.php');
+
+use Tuleap\Docman\View\DocmanViewURLBuilder;
 
 class Docman_View_ItemTreeUlVisitor /* implements Visitor*/ {
     var $html;
@@ -149,8 +150,12 @@ class Docman_View_ItemTreeUlVisitor /* implements Visitor*/ {
                     if ($class) {
                         $class .= $open;
                     }
-                    $url = Docman_View_View::buildUrl($this->params['default_url'], array('action' => $action,
-                                                                                          'id' => $item->getId()));
+                    $url = DocmanViewURLBuilder::buildActionUrl(
+                        $item,
+                        $this->params,
+                        ['action' => $action,  'id' => $item->getId()]
+                    );
+
                     $this->html .= '<a href="'.$url.'" id="docman_item_link_'.$item->getId().'" class="'. $class .'">';
                 }
                 $this->html .=  $icon;
@@ -163,11 +168,13 @@ class Docman_View_ItemTreeUlVisitor /* implements Visitor*/ {
                 }
                 $this->html .=  '<span class="docman_item_title">';
                 if ($action) {
-                    $url = Docman_View_View::buildActionUrl($this->params,
-                                                            array('action' => 'show',
-                                                                  'id' => $item->getId()),
-                                                            false,
-                                                            isset($params['popup_doc']) ? true : false);
+                    $url = DocmanViewURLBuilder::buildActionUrl(
+                        $item,
+                        $this->params,
+                        ['action' => 'show',  'id' => $item->getId()],
+                        false,
+                        isset($params['popup_doc'])
+                    );
                     $this->html .= '<a href="'.$url.'" id="docman_item_title_link_'.$item->getId().'">';
                 }
 

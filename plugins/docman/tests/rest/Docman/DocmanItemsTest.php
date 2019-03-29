@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -115,8 +115,7 @@ class DocmanItemsTest extends DocmanBase
         $this->assertEquals($items[$file_index]['file_properties']['file_type'], 'application/pdf');
         $this->assertEquals(
             $items[$file_index]['file_properties']['html_url'],
-            '/plugins/docman/?group_id=' . urlencode($this->project_id) .
-            '&action=show&id=' . urlencode($items[$file_index]['id']) . '&switcholdui=true'
+            '/plugins/docman/download/' . urlencode($items[$file_index]['id'])
         );
         $this->assertEquals($items[$file_index]['file_properties']['file_size'], 3);
         $this->assertEquals($items[$link_index]['file_properties'], null);
@@ -129,8 +128,8 @@ class DocmanItemsTest extends DocmanBase
         $this->assertEquals($items[$link_index]['link_properties']['link_url'], 'https://my.example.test');
         $this->assertEquals(
             $items[$link_index]['link_properties']['html_url'],
-            '/plugins/docman/?group_id=' . urlencode($this->project_id) .
-            '&action=show&id=' . urlencode($items[$link_index]['id']) . '&switcholdui=true'
+            '/plugins/docman/?action=show&switcholdui=true&group_id=' . urlencode($this->project_id) .
+            '&id=' . urlencode($items[$link_index]['id'])
         );
         $this->assertEquals($items[$embedded_index]['link_properties'], null);
         $this->assertEquals($items[$embedded_index]['link_properties'], null);
@@ -162,8 +161,8 @@ class DocmanItemsTest extends DocmanBase
         $this->assertEquals($items[$wiki_index]['wiki_properties']['page_name'], 'MyWikiPage');
         $this->assertEquals(
             $items[$wiki_index]['wiki_properties']['html_url'],
-            '/plugins/docman/?group_id=' . urlencode($this->project_id) . '&action=show&id=' .
-            urlencode($items[$wiki_index]['id']) . '&switcholdui=true'
+            '/plugins/docman/?action=show&switcholdui=true&group_id=' . urlencode($this->project_id) .
+            '&id=' . urlencode($items[$wiki_index]['id'])
         );
 
         $this->assertEquals(

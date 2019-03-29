@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -18,10 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
-require_once('Docman_ItemDao.class.php');
-require_once('Docman_ItemFactory.class.php');
-require_once('Docman_PermissionsManager.class.php');
 
 /**
  * Embed an item in the dashboard
@@ -341,7 +337,7 @@ class Docman_Widget_Embedded extends Widget /* implements Visitor */ {
             $html .= $hp->purify(file_get_contents($version->getPath()), CODENDI_PURIFIER_FULL);
             $html .= '</'. $balise .'>';
         } else {
-            $html .= '<em>'. $GLOBALS['Language']->getText('plugin_docman', 'error_filenotfound') .'</em>';
+            $html .= '<em>'. dgettext('tuleap-docman', 'The file cannot be found.') .'</em>';
         }
         return $html;
     }
@@ -355,4 +351,3 @@ class Docman_Widget_Embedded extends Widget /* implements Visitor */ {
     }
 
 }
-?>

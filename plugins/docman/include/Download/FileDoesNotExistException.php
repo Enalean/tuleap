@@ -1,7 +1,6 @@
 <?php
 /**
  * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
- * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -19,23 +18,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Docman\View\DocmanViewURLBuilder;
+declare(strict_types=1);
 
-/* abstract */ class Docman_View_RedirectAfterCrud extends Docman_View_View {
-    
-    function _content($params) {
-        if (isset($params['redirect_to'])) {
-            $url = $params['redirect_to'];
-        } else if (isset($params['default_url_params'])) {
-            $url = DocmanViewURLBuilder::buildUrl($params['default_url'], $params['default_url_params'], false);
-        } else {
-            $url = $params['default_url'];
-        }
-        
-        if (isset($params['redirect_anchor'])) {
-            $url .= $params['redirect_anchor'];
-        }
+namespace Tuleap\Docman\Download;
 
-        $GLOBALS['Response']->redirect($url);
+use Docman_Version;
+
+final class FileDoesNotExistException extends FileDownloadException
+{
+    public function __construct(Docman_Version $version)
+    {
+        parent::__construct(
+            'File (' . $version->getPath() . ') does not exist on the filesystem for file #' . $version->getItemId() . ' version #' . $version->getId()
+        );
     }
 }

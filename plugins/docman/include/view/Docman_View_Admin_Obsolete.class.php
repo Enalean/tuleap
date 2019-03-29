@@ -1,6 +1,9 @@
 <?php
+
+use Tuleap\Docman\View\DocmanViewURLBuilder;
+
 /**
- * Copyright © Enalean, 2011 - 2018. All Rights Reserved.
+ * Copyright © Enalean, 2011 - Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2007. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2007
@@ -21,8 +24,6 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
-require_once('Docman_View_Extra.class.php');
 
 class Docman_View_Admin_Obsolete extends Docman_View_Extra {
 
@@ -63,11 +64,13 @@ class Docman_View_Admin_Obsolete extends Docman_View_Extra {
                 $table .= "<td>";
                 $table .= '<span style="white-space: nowrap;">';
                 $table .= $icon;
-                $url = $this->buildActionUrl($params,
-                                             array('action' => 'details',
-                                                   'id' => $item->getId()),
-                                             false,
-                                             true);
+                $url    = DocmanViewURLBuilder::buildActionUrl(
+                    $item,
+                    $params,
+                    ['action' => 'details', 'id' => $item->getId()],
+                    false,
+                    true
+                );
                 $table .= '<a href="'.$url.'">';
                 $table .= htmlentities($item->getTitle(), ENT_QUOTES, 'UTF-8');
                 $table .= '</a>';

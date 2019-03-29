@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Parent. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Docman\View\DocmanViewURLBuilder;
 use Tuleap\Docman\view\DocumentFooterPresenterBuilder;
 
 /* abstract */ class Docman_View_Display extends Docman_View_Docman
@@ -61,6 +62,7 @@ use Tuleap\Docman\view\DocumentFooterPresenterBuilder;
         while ($item->getParentId() != 0) {
             $item = $item_factory->getItemFromDb($item->getParentId());
             $parents[] = array(
+                'item'  => $item,
                 'id'    => $item->getId(),
                 'title' => $item->getTitle()
             );
@@ -83,11 +85,11 @@ use Tuleap\Docman\view\DocumentFooterPresenterBuilder;
         $parents = array_reverse($parents);
         foreach($parents as $parent) {
             $urlParams['id'] = $parent['id'];
-            $url = $this->buildActionUrl($params, $urlParams);
-            $html .= '&nbsp;<a href="'.$url.'">'.  $hp->purify($parent['title'], CODENDI_PURIFIER_CONVERT_HTML)  .'</a>&nbsp;/';
+            $url             = DocmanViewURLBuilder::buildActionUrl($parent['item'], $params, $urlParams);
+            $html           .= '&nbsp;<a href="'.$url.'">'.  $hp->purify($parent['title'], CODENDI_PURIFIER_CONVERT_HTML)  .'</a>&nbsp;/';
         }
         $urlParams['id'] = $id;
-        $url = $this->buildActionUrl($params, $urlParams);
+        $url = DocmanViewURLBuilder::buildActionUrl($params['item'], $params, $urlParams);
         $html .= '&nbsp;<a href="'.$url.'"><b>'.  $hp->purify($current_item_title, CODENDI_PURIFIER_CONVERT_HTML)  .'</b></a>';
         $html .= $this->getItemMenu($current_item, $params, $bc = true);
         $this->javascript .= $this->getActionForItem($current_item); 

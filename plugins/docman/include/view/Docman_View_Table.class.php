@@ -53,8 +53,6 @@ class Docman_View_Table extends Docman_View_Browse {
         
         // Default URL
         $this->_getDefaultUrlParams($params);
-        $baseUrl = $this->buildActionUrl($params, array_merge($this->dfltParams, 
-                                                              $this->dfltSearchParams));
         
         // Generate table header 
         $ci = $params['filter']->getColumnIterator();

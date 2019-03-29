@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015-2018. All rights reserved
+ * Copyright (c) Enalean, 2015-Present. All rights reserved
  * Copyright (c) STMicroelectronics, 2007. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2007
@@ -20,6 +20,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\Docman\View\DocmanViewURLBuilder;
 
 class Docman_ReportColumn {
     var $md;
@@ -155,8 +157,8 @@ extends Docman_ReportColumn {
             // Replace in the current url the id of the root item.
             $dfltParams = $view->_getDefaultUrlParams($params);
             $dfltParams['id'] = $id;
-            $url = $view->buildActionUrl($params, $dfltParams);
-            
+            $url              = DocmanViewURLBuilder::buildActionUrl($params['item'], $params, $dfltParams);
+
             $href = '<a href="'.$url.'">'. $hp->purify($title, CODENDI_PURIFIER_CONVERT_HTML) .'</a>';
             $pathUrl[] = $href;
         }
@@ -178,11 +180,13 @@ extends Docman_ReportColumn {
         $icon = '<img src="'. $icon_src .'" class="docman_item_icon" />';
         $html .= '<span style="white-space: nowrap;">';
         $html .= $icon;
-        $url = $view->buildActionUrl($params, 
-                                     array('action' => 'show',
-                                           'id' => $item->getId()), 
-                                     false,
-                                     true);
+        $url   = DocmanViewURLBuilder::buildActionUrl(
+            $item,
+            $params,
+            ['action' => 'show', 'id' => $item->getId()],
+            false,
+            true
+        );
         $html .= '<a href="'.$url.'" id="docman_item_title_link_'.$item->getId().'">';
         $html .=  htmlentities($item->getTitle(), ENT_QUOTES, 'UTF-8');
         $html .=  '</a>';

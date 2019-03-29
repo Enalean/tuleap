@@ -438,7 +438,6 @@ plugin_docman	error_delete_notempty	Can't delete folder $1 because it is not emp
 plugin_docman	error_field_link_required	The URL is required.
 plugin_docman	error_field_title_required	The Title is required.
 plugin_docman	error_field_wiki_required	The page name is required.
-plugin_docman	error_filenotfound	The file cannot be found.
 plugin_docman	error_invalid_md	Invalid property
 plugin_docman	error_item_not_deleted	Can't delete item.
 plugin_docman	error_item_not_deleted_no_w	Cannot delete this item because it contains items you are not allowed to modify (no 'Write' access, you may even not be able to read them). Please contact your document manager administrator.

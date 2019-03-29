@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -19,9 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('Docman_View_Browse.class.php');
-require_once('Docman_View_RawTree.class.php');
-require_once('Docman_View_GetMenuItemsVisitor.class.php');
+use Tuleap\Docman\View\DocmanViewURLBuilder;
 
 class Docman_View_Icons extends Docman_View_Browse {
     
@@ -112,15 +110,20 @@ class Docman_View_Icons extends Docman_View_Browse {
         
         $icon_src = $params['docman_icons']->getIconForItem($item, $params);
         $icon = '<img src="'. $icon_src .'" class="docman_item_icon" style="vertical-align:middle; text-decoration:none;" />';
-        
-        $icon_url = $this->buildUrl($params['default_url'], array(
-            'action' => $item->accept($params['get_action_on_icon'], array('view' => $this)),
-            'id'     => $item->getId()
-        ));
-        $title_url = $this->buildUrl($params['default_url'], array(
-            'action' => 'show',
-            'id'     => $item->getId()
-        ));
+
+        $icon_url = DocmanViewURLBuilder::buildActionUrl(
+            $item,
+            $params,
+            [
+                'action' => $item->accept($params['get_action_on_icon'], ['view' => $this]),
+                'id'     => $item->getId()
+            ]
+        );
+        $title_url = DocmanViewURLBuilder::buildActionUrl(
+            $item,
+            $params,
+            ['action' => 'show', 'id' => $item->getId()]
+        );
         $html .= '<div><a href="'. $icon_url .'">'. $icon .'</a>';
         $html .= '<span class="docman_item_title"><a href="'. $title_url .'" id="docman_item_title_link_'.$item->getId().'">'.  $hp->purify($item->getTitle(), CODENDI_PURIFIER_CONVERT_HTML)  .'</a></span>';
         $html .= '</a>';
@@ -137,5 +140,3 @@ class Docman_View_Icons extends Docman_View_Browse {
         return $html;
     }
 }
-
-?>

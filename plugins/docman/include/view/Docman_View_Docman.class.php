@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2013 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +18,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\Docman\View\DocmanViewURLBuilder;
 
 class Docman_View_Docman extends Docman_View_ProjectHeader
 {
@@ -59,7 +61,7 @@ class Docman_View_Docman extends Docman_View_ProjectHeader
             }
             $tools[] = array(
                 'title' => $GLOBALS['Language']->getText('plugin_docman', 'new_document'),
-                'url'   => $this->buildUrl($params['default_url'], $url_params)
+                'url'   => DocmanViewURLBuilder::buildUrl($params['default_url'], $url_params)
             );
         }
     }

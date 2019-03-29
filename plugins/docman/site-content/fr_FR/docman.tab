@@ -438,7 +438,6 @@ plugin_docman	error_delete_notempty	Impossible de supprimer le dossier $1 car il
 plugin_docman	error_field_link_required	L'URL est requise.
 plugin_docman	error_field_title_required	Le titre est requis.
 plugin_docman	error_field_wiki_required	Le nom de la page wiki est requis.
-plugin_docman	error_filenotfound	Le fichier ne peut être trouvé.
 plugin_docman	error_invalid_md	Propriété invalide
 plugin_docman	error_item_not_deleted	Impossible de supprimer l'élément.
 plugin_docman	error_item_not_deleted_no_w	Impossible de supprimer cet élément car il contient des items que vous ne pouvez pas modifier (pas d'accès 'Rédacteur', il se peut que vous ne puissiez pas non plus les lire). Merci de contacter votre administrateur de gestionnaire de documents

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015-2018. All rights reserved
+ * Copyright (c) Enalean, 2015-Present. All rights reserved
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -228,7 +228,11 @@ class Docman_Controller extends Controler {
         return $this->groupId;
     }
 
-    function getDefaultUrl() {
+    /**
+     * @return string
+     */
+    public function getDefaultUrl()
+    {
         $_gid = $this->getGroupId();
         return $this->pluginPath.'/?group_id='.$_gid;
     }

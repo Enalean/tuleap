@@ -36,6 +36,8 @@ use Tuleap\Docman\DocmanLegacyController;
 use Tuleap\Docman\DocmanSettingsSiteAdmin\FilesUploadLimits\DocmanFilesUploadLimitsAdminController;
 use Tuleap\Docman\DocmanSettingsSiteAdmin\FilesUploadLimits\DocmanFilesUploadLimitsAdminSaveController;
 use Tuleap\Docman\DocmanSettingsSiteAdmin\FilesUploadLimits\DocumentFilesUploadLimitsSaver;
+use Tuleap\Docman\Download\DocmanFileDownloadController;
+use Tuleap\Docman\Download\DocmanFileDownloadResponseGenerator;
 use Tuleap\Docman\ExternalLinks\DocmanHTTPControllerProxy;
 use Tuleap\Docman\ExternalLinks\ExternalLinkParametersExtractor;
 use Tuleap\Docman\LegacyRestoreDocumentsController;
@@ -1365,6 +1367,16 @@ class DocmanPlugin extends Plugin
         return new DocmanLegacyController($this, EventManager::instance(), new ExternalLinkParametersExtractor());
     }
 
+    public function routeFileDownload() : DocmanFileDownloadController
+    {
+        return new DocmanFileDownloadController(
+            ProjectManager::instance(),
+            new Docman_ItemFactory(),
+            new DocmanFileDownloadResponseGenerator(new Docman_VersionFactory()),
+            new BackendLogger()
+        );
+    }
+
 
     public function collectRoutesEvent(CollectRoutesEvent $event) : void
     {
@@ -1380,6 +1392,7 @@ class DocmanPlugin extends Plugin
             $r->addRoute(['GET', 'POST'], '/restore_documents.php', $this->getRouteHandler('routeLegacyRestoreDocumentsController'));
             $r->post('/sendmessage.php', $this->getRouteHandler('routeLegacySendMessageController'));
             $r->addRoute(['GET', 'POST'], '[/[index.php]]', $this->getRouteHandler('routeLegacyController'));
+            $r->get('/download/{file_id:\d+}[/{version_id:\d+}]', $this->getRouteHandler('routeFileDownload'));
         });
 
     }

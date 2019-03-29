@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © Enalean, 2011 - 2018. All Rights Reserved.
+ * Copyright © Enalean, 2011 - Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
  * Originally written by Nicolas Terray, 2006
@@ -26,10 +26,13 @@
     var $id;
     var $title;
     var $item;
-    var $url;
+    /**
+     * @var string
+     */
+    protected $url;
     var $hp;
 
-    function __construct($item, $url, $id, $title) {
+    function __construct($item, string $url, $id, $title) {
         $this->id     = $id;
         $this->title  = $title;
         $this->item   = $item;

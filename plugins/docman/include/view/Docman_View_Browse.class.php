@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © Enalean, 2011 - 2018. All Rights Reserved.
+ * Copyright © Enalean, 2011 - Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -19,10 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('Docman_View_Display.class.php');
-
-require_once(dirname(__FILE__).'/../Docman_SettingsBo.class.php');
-require_once(dirname(__FILE__).'/../Docman_ReportHtml.class.php');
+use Tuleap\Docman\View\DocmanViewURLBuilder;
 
 /* abstract */ class Docman_View_Browse extends Docman_View_Display {
     
@@ -122,7 +119,7 @@ require_once(dirname(__FILE__).'/../Docman_ReportHtml.class.php');
      */
     function _buildSearchUrl($params, $extraParams = array()) {
         $parameters = array_merge($this->_getDefaultUrlParams($params), $extraParams);
-        return $this->buildActionUrl($params, $parameters);
+        return DocmanViewURLBuilder::buildActionUrl($params['item'], $params, $parameters);
     }
         
     /**
