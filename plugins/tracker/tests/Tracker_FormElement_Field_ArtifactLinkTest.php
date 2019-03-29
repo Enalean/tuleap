@@ -684,11 +684,22 @@ class Tracker_FormElement_Field_ArtifactLink_getFieldData extends TuleapTestCase
         $this->field->getFieldData('55');
     }
 
-    public function itOnlyAddNewValuesWhenNoArifactGiven()
+    public function itOnlyAddsNewValuesWhenNoArtifactGiven()
     {
         $this->assertEqual(
             $this->field->getFieldData('55'),
             array('new_values' => '55', 'removed_values' => array(), 'natures' => array())
+        );
+    }
+
+    public function itOnlyAddsNewValuesWhenEmptyArtifactGivenAtCSVArtifactCreation()
+    {
+        $artifact_without_changeset = anArtifact()->withId(0)->build();
+        $artifact_without_changeset->setChangesets([]);
+
+        $this->assertEqual(
+            $this->field->getFieldData('55, 56', $artifact_without_changeset),
+            array('new_values' => '55,56', 'removed_values' => array(), 'natures' => array())
         );
     }
 

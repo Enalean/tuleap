@@ -1044,7 +1044,8 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
      *
      * @return array
      */
-    public function getFieldDataFromCSVValue($csv_value) {
+    public function getFieldDataFromCSVValue($csv_value, Tracker_Artifact $artifact = null)
+    {
         return array();
     }
 
