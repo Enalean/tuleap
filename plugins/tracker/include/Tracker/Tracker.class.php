@@ -56,10 +56,9 @@ use Tuleap\Tracker\Webhook\WebhookDao;
 use Tuleap\Tracker\Webhook\WebhookFactory;
 use Tuleap\Tracker\Webhook\WebhookLogsRetriever;
 use Tuleap\Tracker\Webhook\WebhookXMLExporter;
-use Tuleap\Tracker\Workflow\PostAction\PostActionsRetriever;
 use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyDao;
 use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyFieldDetector;
-use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyFieldsFactory;
+use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyFieldsRetriever;
 use Tuleap\Tracker\Workflow\WorkflowUpdateChecker;
 use Tuleap\Tracker\XML\Updater\FieldChange\FieldChangeComputedXMLUpdater;
 
@@ -3772,18 +3771,7 @@ EOS;
     private function getNewChangesetFieldsValidator()
     {
         $read_only_detector = new ReadOnlyFieldDetector(
-            new PostActionsRetriever(
-                new Transition_PostAction_CIBuildFactory(
-                    new Transition_PostAction_CIBuildDao()
-                ),
-                new Transition_PostAction_FieldFactory(
-                    Tracker_FormElementFactory::instance(),
-                    new Transition_PostAction_Field_DateDao(),
-                    new Transition_PostAction_Field_IntDao(),
-                    new Transition_PostAction_Field_FloatDao()
-                ),
-                new ReadOnlyFieldsFactory(new ReadOnlyDao())
-            )
+            new ReadOnlyFieldsRetriever(new ReadOnlyDao())
         );
         $workflow_update_checker = new WorkflowUpdateChecker($read_only_detector);
         return new Tracker_Artifact_Changeset_NewChangesetFieldsValidator(

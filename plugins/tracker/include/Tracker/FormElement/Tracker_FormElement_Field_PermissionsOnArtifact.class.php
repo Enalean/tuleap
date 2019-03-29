@@ -25,10 +25,9 @@ use Tuleap\Tracker\FormElement\PermissionsOnArtifactUGroupRetriever;
 use Tuleap\Tracker\FormElement\PermissionsOnArtifactUsageFormatter;
 use Tuleap\Tracker\FormElement\PermissionsOnArtifactValidator;
 use Tuleap\Tracker\REST\v1\TrackerFieldsRepresentations\PermissionsOnArtifacts;
-use Tuleap\Tracker\Workflow\PostAction\PostActionsRetriever;
 use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyDao;
 use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyFieldDetector;
-use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyFieldsFactory;
+use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyFieldsRetriever;
 use Tuleap\User\UserGroup\NameTranslator;
 
 class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElement_Field {
@@ -919,18 +918,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
     private function getReadOnlyFieldDetector()
     {
         return new ReadOnlyFieldDetector(
-            new PostActionsRetriever(
-                new Transition_PostAction_CIBuildFactory(
-                    new Transition_PostAction_CIBuildDao()
-                ),
-                new Transition_PostAction_FieldFactory(
-                    Tracker_FormElementFactory::instance(),
-                    new Transition_PostAction_Field_DateDao(),
-                    new Transition_PostAction_Field_IntDao(),
-                    new Transition_PostAction_Field_FloatDao()
-                ),
-                new ReadOnlyFieldsFactory(new ReadOnlyDao())
-            )
+            new ReadOnlyFieldsRetriever(new ReadOnlyDao())
         );
     }
 }

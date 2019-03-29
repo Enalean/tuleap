@@ -37,12 +37,12 @@ final class ReadOnlyFieldDetectorTest extends TestCase
     /** @var ReadOnlyFieldDetector */
     private $read_only_field_detector;
     /** @var Mockery\MockInterface */
-    private $post_actions_retriever;
+    private $read_only_fields_retriever;
 
     protected function setUp(): void
     {
-        $this->post_actions_retriever   = Mockery::mock(PostActionsRetriever::class);
-        $this->read_only_field_detector = new ReadOnlyFieldDetector($this->post_actions_retriever);
+        $this->read_only_fields_retriever = Mockery::mock(ReadOnlyFieldsRetriever::class);
+        $this->read_only_field_detector   = new ReadOnlyFieldDetector($this->read_only_fields_retriever);
     }
 
     public function testIsFieldReadOnlyReturnsFalseWhenNoWorkflow()
@@ -112,7 +112,7 @@ final class ReadOnlyFieldDetectorTest extends TestCase
         $workflow->shouldReceive('getFirstTransitionForCurrentState')
             ->andReturns($transition);
         $artifact->shouldReceive('getWorkflow')->andReturns($workflow);
-        $this->post_actions_retriever
+        $this->read_only_fields_retriever
             ->shouldReceive('getReadOnlyFields')
             ->with($transition)
             ->andThrows(new NoReadOnlyFieldsPostActionException());
@@ -172,7 +172,7 @@ final class ReadOnlyFieldDetectorTest extends TestCase
     private function mockReadOnlyFields(int ...$field_ids): void
     {
         $read_only_fields_post_action = Mockery::mock(ReadOnlyFields::class);
-        $this->post_actions_retriever
+        $this->read_only_fields_retriever
             ->shouldReceive('getReadOnlyFields')
             ->andReturns($read_only_fields_post_action);
         $read_only_fields_post_action

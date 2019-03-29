@@ -23,10 +23,9 @@ use Tuleap\Tracker\DAO\ComputedDao;
 use Tuleap\Tracker\FormElement\ComputedFieldCalculator;
 use Tuleap\Tracker\FormElement\FieldCalculator;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldComputedValueFullRepresentation;
-use Tuleap\Tracker\Workflow\PostAction\PostActionsRetriever;
 use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyDao;
 use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyFieldDetector;
-use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyFieldsFactory;
+use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyFieldsRetriever;
 
 class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float //phpcs:ignore
 {
@@ -1016,18 +1015,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
     private function getReadOnlyFieldDetector()
     {
         return new ReadOnlyFieldDetector(
-            new PostActionsRetriever(
-                new Transition_PostAction_CIBuildFactory(
-                    new Transition_PostAction_CIBuildDao()
-                ),
-                new Transition_PostAction_FieldFactory(
-                    Tracker_FormElementFactory::instance(),
-                    new Transition_PostAction_Field_DateDao(),
-                    new Transition_PostAction_Field_IntDao(),
-                    new Transition_PostAction_Field_FloatDao()
-                ),
-                new ReadOnlyFieldsFactory(new ReadOnlyDao())
-            )
+            new ReadOnlyFieldsRetriever(new ReadOnlyDao())
         );
     }
 }

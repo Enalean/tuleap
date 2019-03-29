@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\Workflow\PostAction;
 use Tuleap\Tracker\Workflow\PostAction\ReadOnly\NoReadOnlyFieldsPostActionException;
 use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyFields;
 use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyFieldsFactory;
+use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyFieldsRetriever;
 
 class PostActionsRetriever
 {
@@ -32,17 +33,17 @@ class PostActionsRetriever
     private $cibuild_factory;
     /** @var \Transition_PostAction_FieldFactory */
     private $field_factory;
-    /** @var ReadOnlyFieldsFactory */
-    private $read_only_fields_factory;
+    /** @var ReadOnlyFieldsRetriever */
+    private $read_only_fields_retriever;
 
     public function __construct(
         \Transition_PostAction_CIBuildFactory $cibuild_factory,
         \Transition_PostAction_FieldFactory $field_factory,
-        ReadOnlyFieldsFactory $read_only_fields_factory
+        ReadOnlyFieldsRetriever $read_only_fields_retriever
     ) {
-        $this->cibuild_factory          = $cibuild_factory;
-        $this->field_factory            = $field_factory;
-        $this->read_only_fields_factory = $read_only_fields_factory;
+        $this->cibuild_factory            = $cibuild_factory;
+        $this->field_factory              = $field_factory;
+        $this->read_only_fields_retriever = $read_only_fields_retriever;
     }
 
     /**
@@ -82,11 +83,6 @@ class PostActionsRetriever
      */
     public function getReadOnlyFields(\Transition $transition): ReadOnlyFields
     {
-        $post_actions = $this->read_only_fields_factory->loadPostActions($transition);
-        if (empty($post_actions)) {
-            throw new NoReadOnlyFieldsPostActionException();
-        }
-        // There is only one ReadOnlyFields post-action per transition
-        return $post_actions[0];
+        return $this->read_only_fields_retriever->getReadOnlyFields($transition);
     }
 }
