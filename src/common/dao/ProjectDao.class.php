@@ -645,10 +645,21 @@ class ProjectDao extends DataAccessObject {
         return $this->update($sql);
     }
 
-    public function disableAllowRestrictedForAll() {
-        $public       = $this->da->quoteSmart(Project::ACCESS_PUBLIC);
-        $unrestricted = $this->da->quoteSmart(Project::ACCESS_PUBLIC_UNRESTRICTED);
-        $sql = "UPDATE groups SET access = $public WHERE access = $unrestricted";
+    public function switchUnrestrictedToPublic()
+    {
+        return $this->switchAccess(Project::ACCESS_PUBLIC_UNRESTRICTED, Project::ACCESS_PUBLIC);
+    }
+
+    public function switchPrivateWithoutRestrictedToPrivate()
+    {
+        return $this->switchAccess(Project::ACCESS_PRIVATE_WO_RESTRICTED, Project::ACCESS_PRIVATE);
+    }
+
+    private function switchAccess($old, $new)
+    {
+        $new_access = $this->da->quoteSmart($new);
+        $old_access = $this->da->quoteSmart($old);
+        $sql = "UPDATE groups SET access = $new_access WHERE access = $old_access";
 
         return $this->update($sql);
     }

@@ -16,6 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * phpcs:ignoreFile
  */
 
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
@@ -522,8 +524,10 @@ class ProjectManager
         group_add_history('truncated_emails', $usage, $project_id);
     }
 
-    public function disableAllowRestrictedForAll() {
-        $this->_getDao()->disableAllowRestrictedForAll();
+    public function disableAllowRestrictedForAll()
+    {
+        $this->_getDao()->switchUnrestrictedToPublic();
+        $this->_getDao()->switchPrivateWithoutRestrictedToPrivate();
     }
 
     /**
