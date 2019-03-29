@@ -71,6 +71,16 @@ class Docman_PermissionsManager {
         return self::$instance[$groupId];
     }
 
+    public static function setInstance(int $group_id, self $permissions_manager)
+    {
+        self::$instance[$group_id] = $permissions_manager;
+    }
+
+    public static function clearInstances()
+    {
+        self::$instance = [];
+    }
+
     /**
      * A singleton cannot be cloned.
      *

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - Present. All Rights Reserved.
  * Copyright © STMicroelectronics, 2006. All Rights Reserved.
  * 
  * Originally written by Manuel VACELET, 2006.
@@ -21,10 +21,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('Docman_View_Extra.class.php');
-
-require_once(dirname(__FILE__).'/../Docman_MetaMetadataHtml.class.php');
-require_once('Docman_View_LoveDetails.class.php');
+use Tuleap\Docman\View\DocmanViewURLBuilder;
 
 class Docman_View_Admin_MetadataDetails extends Docman_View_Extra {
     
@@ -57,7 +54,7 @@ class Docman_View_Admin_MetadataDetails extends Docman_View_Extra {
         $mdContent .= '</table>';
 
         if($sthCanChange) {
-            $act_url = $this->buildUrl($params['default_url'], array());
+            $act_url = DocmanViewURLBuilder::buildUrl($params['default_url'], array());
             echo '<form name="md_details_update" method="POST" action="'.$act_url.'" class="docman_form">';
             echo '<input type="hidden" name="label" value="'.$md->getLabel().'" />';
             echo '<input type="hidden" name="action" value="admin_md_details_update" />';
@@ -115,7 +112,7 @@ class Docman_View_Admin_MetadataDetails extends Docman_View_Extra {
                     // Name
                     $name = Docman_MetadataHtmlList::_getElementName($e);
                     if($e->getId() > 100) {
-                        $url = $this->buildUrl($params['default_url'], array('action' => 'admin_display_love',
+                        $url = DocmanViewURLBuilder::buildUrl($params['default_url'], array('action' => 'admin_display_love',
                                                                              'md' => $md->getLabel(),
                                                                              'loveid' => $e->getId()));
                         $href = '<a href="'.$url.'">'.$name.'</a>';
@@ -170,7 +167,7 @@ class Docman_View_Admin_MetadataDetails extends Docman_View_Extra {
             }
         }
 
-        $backUrl  = $this->buildUrl($params['default_url'],
+        $backUrl  = DocmanViewURLBuilder::buildUrl($params['default_url'],
                                     array('action' => 'admin_metadata'));
         echo '<p><a href="'.$backUrl.'">'.$GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_backtomenu').'</a></p>';
     }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -32,7 +32,7 @@ interface DispatchableWithProject
      * @param \HTTPRequest $request
      * @param array $variables
      *
-     * @return Project
+     * @return \Project
      */
     public function getProject(\HTTPRequest $request, array $variables);
 }

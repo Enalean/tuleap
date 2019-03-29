@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © Enalean, 2011 - 2018. All Rights Reserved.
+ * Copyright © Enalean, 2011 - Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2007. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2007
@@ -20,6 +20,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\Docman\View\DocmanViewURLBuilder;
 
 class Docman_View_ItemDetailsSectionApproval
 extends Docman_View_ItemDetailsSection {
@@ -54,13 +56,6 @@ extends Docman_View_ItemDetailsSection {
         $this->table = $this->atf->getTable();
     }
 
-    function buildUrl($prefix, $parameters, $amp = true) {
-        if($this->version !== null) {
-            $parameters['version'] = $this->version;
-        }
-        return Docman_View_View::buildUrl($prefix, $parameters, $amp);
-    }
-
     function _getItemVersionLink($version, $noLink=false) {
         $html = '';
         if($version !== null) {
@@ -73,10 +68,11 @@ extends Docman_View_ItemDetailsSection {
                 $vFactory = new Docman_VersionFactory();
                 $v = $vFactory->getSpecificVersion($this->item, $version);
                 if($v) {
-                    $url = Docman_View_View::buildUrl($this->url, 
-                                                      array('action' => 'show',
-                                                            'id'     => $this->item->getId(),
-                                                            'version_number' => $v->getNumber()));
+                    $url = DocmanViewURLBuilder::buildActionUrl(
+                        $this->item,
+                        ['default_url' => $this->url],
+                        ['action' => 'show', 'id' => $this->item->getId(), 'version_number' => $v->getNumber()]
+                    );
                     if($v->getLabel()) {
                         $title .= $this->hp->purify($v->getLabel()).' - ';
                     }
@@ -189,11 +185,11 @@ extends Docman_View_ItemDetailsSection {
                 // Review
                 $_reviewHtml = $this->atf->getReviewStateName($reviewer->getState());
                 if(!$readOnly) {
-                    $_reviewUrl = $this->buildUrl($this->url,
-                                                  array('action'  => 'details',
-                                                        'id'      => $this->item->getId(),
-                                                        'section' => 'approval',
-                                                        'review'  => '1'));
+                    $_reviewUrl = DocmanViewURLBuilder::buildActionUrl(
+                        $this->item,
+                        ['default_url' => $this->url],
+                        ['action' => 'details', 'id' => $this->item->getId(), 'section' => 'approval', 'review'  => '1']
+                    );
                     $_reviewHtml = '<a href="'.$_reviewUrl.'">'.$this->atf->getReviewStateName($reviewer->getState()).'</a>';
                 }
                 $html .= '<td'.$_trClass.'>'.$_reviewHtml.'</td>';
@@ -263,9 +259,11 @@ extends Docman_View_ItemDetailsSection {
         $html .= '<td>';
         $html .=  $this->hp->purify($this->item->getTitle(), CODENDI_PURIFIER_CONVERT_HTML) ;
         if($itemCurrentVersion == null) {
-            $url = Docman_View_View::buildUrl($this->url, 
-                                              array('action' => 'show',
-                                                    'id'     => $this->item->getId()));
+            $url = DocmanViewURLBuilder::buildActionUrl(
+                $this->item,
+                ['default_url' => $this->url],
+                ['action' => 'show', 'id' => $this->item->getId()]
+            );
             $html .= ' - ';
             $html .= '<a href="'.$url.'">'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_doc_review_link').'</a>';
         }
@@ -345,10 +343,11 @@ extends Docman_View_ItemDetailsSection {
 
         $html .= '<tr>';
         $html .= '<td>'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_review_table').'</td>';
-        $url = $this->buildUrl($this->url,
-                               array('action'  => 'details',
-                                     'section' => 'approval',
-                                     'id'     => $this->item->getId()));
+        $url   = DocmanViewURLBuilder::buildActionUrl(
+            $this->item,
+            ['default_url' => $this->url],
+            ['action' => 'details', 'section' => 'approval', 'id' => $this->item->getId()]
+        );
         $html .= '<td>';
         $html .= '<a href="'.$url.'">'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_review_table_link').'</a>';
         $html .= '</td>';
@@ -440,11 +439,16 @@ extends Docman_View_ItemDetailsSection {
             foreach($allTables as $table) {
                 $html .= '<tr class="'.html_get_alt_row_color($rowColorIdx++).'">';
                 if($this->table->getVersionNumber() != $table->getVersionNumber()) {
-                    $url = Docman_View_View::buildUrl($this->url,
-                    array('action'  => 'details',
-                                             'section' => 'approval',
-                                             'id'      => $this->item->getId(),
-                                             'version' => $table->getVersionNumber()));
+                    $url = DocmanViewURLBuilder::buildActionUrl(
+                        $this->item,
+                        ['default_url' => $this->url],
+                        [
+                            'action'  => 'details',
+                            'section' => 'approval',
+                            'id'      => $this->item->getId(),
+                            'version' => $table->getVersionNumber()
+                        ]
+                    );
                     $href = '<a href="'.$url.'">'.$table->getVersionNumber().'</a>';
                 } else {
                     $href = $table->getVersionNumber();
@@ -465,9 +469,11 @@ extends Docman_View_ItemDetailsSection {
         $user = $this->_getCurrentUser();
         $dpm  = $this->_getPermissionsManager();
         if($dpm->userCanWrite($user, $this->item->getId())) {
-            $url = $this->buildUrl($this->url,
-                                   array('action'  => 'approval_create',
-                                         'id'      => $this->item->getId()));
+            $url = DocmanViewURLBuilder::buildActionUrl(
+                $this->item,
+                ['default_url' => $this->url],
+                ['action' => 'approval_create', 'id' => $this->item->getId()]
+            );
             $adminLink = '<a href="'.$url.'">'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_admin').'</a>';
             $html = '<strong>'.$adminLink.'</strong><br />';
         }
@@ -500,9 +506,11 @@ extends Docman_View_ItemDetailsSection {
             $html .= '<p>';
             $html .= $GLOBALS['Language']->getText('plugin_docman', 'details_approval_no_table');
             if($dpm->userCanWrite($user, $this->item->getId())) {
-                $url = $this->buildUrl($this->url,
-                                       array('action'  => 'approval_create',
-                                             'id'      => $this->item->getId()));
+                $url = DocmanViewURLBuilder::buildActionUrl(
+                    $this->item,
+                    ['default_url' => $this->url],
+                    ['action' => 'approval_create', 'id' => $this->item->getId()]
+                );
                 $adminLink = '<a href="'.$url.'">'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_no_table_create').'</a>';
                 $html .= ' <strong>'.$adminLink.'</strong><br />';
             }

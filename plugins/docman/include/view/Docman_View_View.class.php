@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2011 - 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -96,80 +96,6 @@
     function &_getItemFactory($params) {
         $f = new Docman_ItemFactory();
         return $f;
-    }
-    /* static */ function buildUrl($prefix, $parameters, $amp = true) {
-        $et = $amp ? '&amp;' : '&';
-        $url = '';
-        if ($prefix) {
-            $url = $prefix;
-        }
-        if (count($parameters)) {
-            if ($url) {
-                $url .= $et;
-            }
-            $i = 0;
-            $nb = count($parameters);
-            foreach($parameters as $key => $value) {
-                $i++;
-                if(is_array($value)) {
-                    $iVals  = 0;
-                    $nbVals = count($value);
-                    if($nbVals > 0) {
-                        foreach($value as $v) {
-                            $iVals++;
-                            $url .= $key.'[]='.$v . ($iVals == $nbVals ? '' : $et);
-                        }
-                    } else {
-                        $url .= $key.'[]=';
-                    }
-                } else {
-                    $url .= $key.'='.$value;
-                }
-                $url .= ($i == $nb ? '' : $et);
-            }
-        }
-        return $url;
-    }
-
-    /* static */ function buildPopupUrl($prefix, $parameters, $injs = false) {
-        $url = Docman_View_View::buildUrl($prefix, $parameters, !$injs);
-        
-        $jsEscape[false] = '\'';
-        $jsEscape[true]  = '\\\'';
-
-        $escapedU = $jsEscape[$injs].$url.$jsEscape[$injs];
-
-        $url = 'javascript:help_window('.$escapedU.')';
-
-
-        return $url;
-    }
-
-    /* static */ function buildActionUrl($params, $parameters, $injs = false, $popup = false) {
-        $output = '';
-
-        $prefix = '';
-        if(isset($params['default_url']) 
-           && $params['default_url'] != false 
-           && $params['default_url'] !== null) {
-            $prefix = $params['default_url'];
-        }
-
-        if(isset($params['pv']) 
-           && $params['pv'] !== false 
-           && $popup) {
-            $output = Docman_View_View::buildPopupUrl($prefix, $parameters, $injs);
-        }
-        else {
-            if(isset($params['pv']) && $params['pv'] !== false) {
-                $parameters['pv'] = $params['pv'];
-            }
-            if(isset($params['report']) && $params['report'] !== false) {
-                $parameters['report'] = $params['report'];
-            }
-            $output = Docman_View_View::buildUrl($prefix, $parameters, !$injs);
-        }
-        return $output;
     }
 
     /**

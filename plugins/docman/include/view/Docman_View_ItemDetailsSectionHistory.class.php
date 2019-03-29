@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © Enalean, 2011 - 2018. All Rights Reserved.
+ * Copyright © Enalean, 2011 - Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
  * Originally written by Nicolas Terray, 2006
@@ -18,6 +18,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\Docman\View\DocmanViewURLBuilder;
 
 class Docman_View_ItemDetailsSectionHistory extends Docman_View_ItemDetailsSection {
 
@@ -68,16 +70,16 @@ class Docman_View_ItemDetailsSectionHistory extends Docman_View_ItemDetailsSecti
                 $odd_even = array('boxitem', 'boxitemalt');
                 $i = 0;
                 foreach ($versions as $key => $nop) {
-                    $download = Docman_View_View::buildUrl($this->url, array(
-                        'action' => 'show',
-                        'id'     => $this->item->getId(),
-                        'version_number' => $versions[$key]->getNumber()
-                    ));
-                    $delete = Docman_View_View::buildUrl($this->url, array (
-                        'action' =>'confirmDelete',
-                        'id'     => $this->item->getId(),
-                        'version' => $versions[$key]->getNumber()
-                    ));
+                    $download = DocmanViewURLBuilder::buildActionUrl(
+                        $this->item,
+                        ['default_url' => $this->url],
+                        ['action' => 'show', 'id' => $this->item->getId(), 'version_number' => $versions[$key]->getNumber()]
+                    );
+                    $delete = DocmanViewURLBuilder::buildActionUrl(
+                        $this->item,
+                        ['default_url' => $this->url],
+                        ['action' => 'confirmDelete', 'id' => $this->item->getId(), 'version' => $versions[$key]->getNumber()]
+                    );
                     $user = $versions[$key]->getAuthorId() ? $uh->getDisplayNameFromUserId($versions[$key]->getAuthorId()) : $GLOBALS['Language']->getText('plugin_docman','details_history_anonymous');
                     $content .= '<tr class="'. $odd_even[$i++ % count($odd_even)] .'">';
                     $content .= '<td align="center"><a href="'. $download .'">'. $versions[$key]->getNumber() .'</a></td>';
@@ -88,12 +90,16 @@ class Docman_View_ItemDetailsSectionHistory extends Docman_View_ItemDetailsSecti
 
                     $table = $approvalFactory->getTableFromVersion($versions[$key]);
                     if($table != null) {
-                        $appTable = Docman_View_View::buildUrl($this->url, array(
-                            'action' => 'details',
-                            'section' => 'approval',
-                            'id' => $this->item->getId(),
-                            'version' => $versions[$key]->getNumber(),
-                        ));
+                        $appTable = DocmanViewURLBuilder::buildActionUrl(
+                            $this->item,
+                            ['default_url' => $this->url],
+                            [
+                                'action'  => 'details',
+                                'section' => 'approval',
+                                'id'      => $this->item->getId(),
+                                'version' => $versions[$key]->getNumber(),
+                            ]
+                        );
                         $content .= '<td align="center"><a href="'.$appTable.'">'.$titles[] = $GLOBALS['Language']->getText('plugin_docman','details_history_versions_approval_show').'</a></td>';
                     } else {
                         $content .= '<td></td>';
@@ -133,11 +139,11 @@ class Docman_View_ItemDetailsSectionHistory extends Docman_View_ItemDetailsSecti
             $i = 0;
 
             foreach (array_keys($versions) as $key) {
-                $download = Docman_View_View::buildUrl($this->url, array(
-                    'action'         => 'show',
-                    'id'             => $this->item->getId(),
-                    'version_number' => $versions[$key]->getNumber()
-                ));
+                $download = DocmanViewURLBuilder::buildActionUrl(
+                    $this->item,
+                    ['default_url' => $this->url],
+                    ['action' => 'show', 'id' => $this->item->getId(), 'version_number' => $versions[$key]->getNumber()]
+                );
                 $user = $versions[$key]->getAuthorId() ? $uh->getDisplayNameFromUserId($versions[$key]->getAuthorId()) : $GLOBALS['Language']->getText('plugin_docman','details_history_anonymous');
                 $content .= '<tr class="'. $odd_even[$i++ % count($odd_even)] .'">';
                 $content .= '<td align="center"><a href="'. $download .'">'. $versions[$key]->getNumber().'</a></td>';

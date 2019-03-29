@@ -219,7 +219,10 @@ class Docman_Item {
         $row['obsolescence_date'] = $this->getObsolescenceDate();
         return $row;
     }
-    
+
+    /**
+     * @return mixed|void
+     */
     public function accept($visitor, $params = array())
     {
     }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -29,6 +29,7 @@ use Docman_Link;
 use Docman_Wiki;
 use Tuleap\Docman\Item\ItemVisitor;
 use Tuleap\Docman\REST\v1\EmbeddedFiles\EmbeddedFilePropertiesRepresentation;
+use Tuleap\Docman\View\DocmanViewURLBuilder;
 
 class ItemRepresentationVisitor implements ItemVisitor
 {
@@ -74,7 +75,7 @@ class ItemRepresentationVisitor implements ItemVisitor
         $wiki_representation = null;
         if ($item->getPagename() !== null) {
             $wiki_representation = new WikiPropertiesRepresentation();
-            $wiki_html_url       = $this->buildWikiUrl($item);
+            $wiki_html_url       = $this->buildDirectAccessURL($item);
             $wiki_representation->build($item, $wiki_html_url);
         }
         return $this->item_representation_builder->buildItemRepresentation(
@@ -107,7 +108,7 @@ class ItemRepresentationVisitor implements ItemVisitor
         $file_properties = null;
         if ($item_version) {
             $file_properties = new FilePropertiesRepresentation();
-            $download_url    = $this->buildDocmanUrl($item->getGroupId(), $item_version->getItemId());
+            $download_url    = $this->buildDirectAccessURL($item);
             $file_properties->build($item_version, $download_url);
         }
         return $this->item_representation_builder->buildItemRepresentation(
@@ -159,21 +160,14 @@ class ItemRepresentationVisitor implements ItemVisitor
         return $this->item_representation_builder->buildItemRepresentation($item, null, null);
     }
 
-    private function buildDocmanUrl($project_id, $item_id): string
+    private function buildDirectAccessURL(Docman_Item $item) : string
     {
-        return '/plugins/docman/?group_id=' . urlencode($project_id) . '&action=show&id=' . urlencode($item_id) . '&switcholdui=true';
-    }
-
-    /**
-     * @param Docman_Wiki $item
-     *
-     * @return string
-     */
-    private function buildWikiUrl(Docman_Wiki $item): string
-    {
-        $wiki_html_url = '/plugins/docman/?group_id=' .
-            urlencode($item->getGroupId()) . '&action=show&id=' . urlencode($item->getId()) . '&switcholdui=true';
-        return $wiki_html_url;
+        return DocmanViewURLBuilder::buildActionUrl(
+            $item,
+            ['default_url' => '/plugins/docman/?'],
+            ['action' => 'show', 'switcholdui' => 'true', 'group_id' => $item->getGroupId(), 'id' => $item->getId()],
+            true
+        );
     }
 
     /**
@@ -190,8 +184,7 @@ class ItemRepresentationVisitor implements ItemVisitor
             return $link_properties;
         }
 
-        $docman_link     = $this->buildDocmanUrl($item->getGroupId(), $latest_link_version->getItemId());
-        $link_properties->build($docman_link, $latest_link_version);
+        $link_properties->build($this->buildDirectAccessURL($item), $latest_link_version);
 
         return $link_properties;
     }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -20,9 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once('Docman_View_ItemDetailsSection.class.php');
-require_once('Docman_View_GetFieldsVisitor.class.php');
-require_once dirname(__FILE__).'/../Docman_LockFactory.class.php';
+use Tuleap\Docman\View\DocmanViewURLBuilder;
 
 class Docman_View_ItemDetailsSectionProperties extends Docman_View_ItemDetailsSection {
     var $user_can_write;
@@ -74,9 +72,13 @@ class Docman_View_ItemDetailsSectionProperties extends Docman_View_ItemDetailsSe
             $dpm = Docman_PermissionsManager::instance($this->item->getGroupId());
             $um = UserManager::instance();
             $user = $um->getCurrentUser();
+            $href = '';
             if(!$this->item->isObsolete() || ($this->item->isObsolete() && $dpm->userCanAdmin($user))) {
-                $label = $GLOBALS['Language']->getText('plugin_docman','details_properties_view_doc_lbl');
-                $url = $this->url.'&action=show&id='.$this->item->getId();
+                $url = DocmanViewURLBuilder::buildActionUrl(
+                    $this->item,
+                    ['default_url' => $this->url],
+                    ['action' => 'show', 'id' => $this->item->getId()]
+                );
                 $href = '<a href="'.$url.'">'.$GLOBALS['Language']->getText('plugin_docman','details_properties_view_doc_val').'</a>';
             }
             $html = $this->_getPropertyRow($GLOBALS['Language']->getText('plugin_docman','details_properties_view_doc_lbl'),

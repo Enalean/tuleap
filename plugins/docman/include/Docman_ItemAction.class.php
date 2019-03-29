@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -18,6 +18,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\Docman\View\DocmanViewURLBuilder;
 
 
 /**
@@ -53,10 +55,13 @@ class Docman_ItemAction {
         $dfltUrlParams = array('action' => $this->action,
                                'id' => $this->item->getId());
         $_urlParams = array_merge($dfltUrlParams, $this->extraUrlParams);
-        $url = Docman_View_View::buildActionUrl($params, 
-                                                $_urlParams,
-                                                true,
-                                                true);
+        $url = DocmanViewURLBuilder::buildActionUrl(
+            $this->item,
+            $params,
+            $_urlParams,
+            true,
+            true
+        );
         $html  = '<a href="'.$url.'" class="'. $this->classes .'" title="'. $this->title .'">';
         $html .= '<img src="'. $params['docman_icons']->getActionIcon($this->action) .'" class="docman_item_icon" alt="['. $this->title .']" />';
         $html .= '</a>&nbsp;';

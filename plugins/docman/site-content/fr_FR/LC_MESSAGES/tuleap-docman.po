@@ -130,9 +130,15 @@ msgstr "Les paramètres ont été sauvegardés avec succès"
 msgid "Switch to new user interface"
 msgstr "Basculer sur la nouvelle interface utilisateur"
 
+msgid "The file cannot be found."
+msgstr "Le fichier ne peut être trouvé."
+
 #, php-format
 msgid "The item %d is not a folder."
 msgstr "L'objet %d n'est pas un dossier."
+
+msgid "The requested version of this file cannot be found."
+msgstr "La version demandée de ce fichier ne peut être trouvé."
 
 #, php-format
 msgid "The resource %d does not exist."

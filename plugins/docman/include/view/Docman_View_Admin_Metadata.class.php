@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © Enalean, 2018. All Rights Reserved.
+ * Copyright © Enalean, 2018-Present. All Rights Reserved.
  * Copyright © STMicroelectronics, 2006. All Rights Reserved.
  *
  * Originally written by Manuel VACELET, 2006.
@@ -22,9 +22,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once('Docman_View_Extra.class.php');
-
-require_once(dirname(__FILE__).'/../Docman_MetaMetadataHtml.class.php');
+use Tuleap\Docman\View\DocmanViewURLBuilder;
 
 class Docman_View_Admin_Metadata extends Docman_View_Extra {
     
@@ -63,7 +61,7 @@ class Docman_View_Admin_Metadata extends Docman_View_Extra {
             $trclass = html_get_alt_row_color($altRowClass++);
             $content .= '<tr class="'.$trclass.'">';
 
-            $nameUrl  = $this->buildUrl($defaultUrl,
+            $nameUrl  = DocmanViewURLBuilder::buildUrl($defaultUrl,
                                         array('action' => 'admin_md_details',
                                               'md'     => $md->getLabel()));
             $nameHref = '<a href="'.$nameUrl.'">'.$this->hp->purify($md->getName()).'</a>';
@@ -87,7 +85,7 @@ class Docman_View_Admin_Metadata extends Docman_View_Extra {
             
             $trash = '-';
             if($canDelete) {
-                $link = $this->buildUrl($defaultUrl, 
+                $link = DocmanViewURLBuilder::buildUrl($defaultUrl,
                                         array('action' => 'admin_delete_metadata',
                                               'md' => $md->getLabel()));
                 
