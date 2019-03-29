@@ -613,10 +613,22 @@ span.select2-container--tlp-select2-large {
     line-height: 14px;
 }
 
-.tlp-checkbox > input,
-.tlp-radio > input {
-    margin: 0 3px 0 0;
-    vertical-align: bottom;
+.tlp-checkbox,
+.tlp-radio {
+    margin: 0 0 $tlp-half-spacing;
+
+    > input {
+        margin: 0 3px 0 0;
+        vertical-align: bottom;
+    }
+
+    + .tlp-text-muted,
+    + .tlp-text-info,
+    + .tlp-text-success,
+    + .tlp-text-warning,
+    + .tlp-text-danger {
+        margin: -5px 0 0 18px;
+    }
 }
 
 /**
