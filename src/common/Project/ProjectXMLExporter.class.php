@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,15 +16,14 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
+ * phpcs:disable PSR1.Classes.ClassDeclaration
  */
 
 use Tuleap\Project\XML\Export\ArchiveInterface;
 
-/**
- * This class export a project to xml format
- */
-class ProjectXMLExporter {
-
+class ProjectXMLExporter
+{
     /** @var EventManager */
     private $event_manager;
 
@@ -54,13 +53,12 @@ class ProjectXMLExporter {
         $this->logger            = $logger;
     }
 
-    private function exportProjectInfo(Project $project, SimpleXMLElement $project_node) {
-        $access_value = $project->isPublic() ? Project::ACCESS_PUBLIC : Project::ACCESS_PRIVATE;
-
+    private function exportProjectInfo(Project $project, SimpleXMLElement $project_node)
+    {
         $project_node->addAttribute('unix-name', $project->getUnixName());
         $project_node->addAttribute('full-name', $project->getPublicName());
         $project_node->addAttribute('description', $project->getDescription());
-        $project_node->addAttribute('access', $access_value);
+        $project_node->addAttribute('access', $project->getAccess());
 
         $project_node->addChild('long-description', '');
 
@@ -72,7 +70,8 @@ class ProjectXMLExporter {
         }
     }
 
-    private function exportProjectUgroups(Project $project, SimpleXMLElement $into_xml) {
+    private function exportProjectUgroups(Project $project, SimpleXMLElement $into_xml)
+    {
         $ugroups_node = $into_xml->addChild('ugroups');
 
         $this->logger->debug('Exporting project_admins ugroup');
@@ -134,7 +133,8 @@ class ProjectXMLExporter {
         );
     }
 
-    public function export(Project $project, array $options, PFUser $user, ArchiveInterface $archive, $temporary_dump_path_on_filesystem) {
+    public function export(Project $project, array $options, PFUser $user, ArchiveInterface $archive, $temporary_dump_path_on_filesystem)
+    {
         $this->logger->info("Start exporting project " . $project->getPublicName());
 
         $xml_element = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
@@ -154,7 +154,8 @@ class ProjectXMLExporter {
      *
      * @return String
      */
-    private function convertToXml(SimpleXMLElement $xml_element) {
+    private function convertToXml(SimpleXMLElement $xml_element)
+    {
         $dom = dom_import_simplexml($xml_element)->ownerDocument;
         $dom->formatOutput = true;
 
