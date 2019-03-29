@@ -51,3 +51,4 @@ import "./components/Folder/UpdateItem/ApprovalUpdateProperties.spec.js";
 import "./components/Folder/UpdateItem/FileUpdateProperties.spec.js";
 
 import "./helpers/highlight-items-helper.spec.js";
+import "./helpers/uploading-status-helper.spec.js";
