@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,8 +20,8 @@
 
 require_once __DIR__.'/../bootstrap.php';
 
-class Tracker_ArtifactCreator_createTest extends TuleapTestCase {
-
+class Tracker_ArtifactCreator_createTest extends TuleapTestCase //phpcs:ignoreFile
+{
     /** @var Tracker_Artifact_Changeset_InitialChangesetCreatorBase */
     private $changeset_creator;
 
@@ -91,6 +91,7 @@ class Tracker_ArtifactCreator_createTest extends TuleapTestCase {
                         $artifact->getSubmittedOn() === $this->bare_artifact->getSubmittedOn() &&
                         $artifact->getSubmittedBy() === $this->bare_artifact->getSubmittedBy();
                 }),
+                $this->user,
                 $this->fields_data
             )
             ->once();

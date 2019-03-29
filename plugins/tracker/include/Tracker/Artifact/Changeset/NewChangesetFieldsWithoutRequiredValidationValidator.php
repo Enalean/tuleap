@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -39,6 +39,7 @@ class NewChangesetFieldsWithoutRequiredValidationValidator extends Tracker_Artif
     protected function validateField(
         Tracker_Artifact $artifact,
         Tracker_FormElement_Field $field,
+        \PFUser $user,
         $submitted_value
     ) {
         return $field->validateField($artifact, $submitted_value);

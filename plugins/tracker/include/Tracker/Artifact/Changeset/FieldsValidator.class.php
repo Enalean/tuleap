@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,8 +21,8 @@
 /**
  * I validate fields
  */
-abstract class Tracker_Artifact_Changeset_FieldsValidator {
-
+abstract class Tracker_Artifact_Changeset_FieldsValidator //phpcs:ignore
+{
     /** @var Tracker_FormElementFactory */
     protected $formelement_factory;
 
@@ -40,13 +40,14 @@ abstract class Tracker_Artifact_Changeset_FieldsValidator {
      *
      * @return boolean true if all fields are valid, false otherwise. This function update $field_data (set values to null if not valid)
      */
-    public function validate(Tracker_Artifact $artifact, $fields_data) {
+    public function validate(Tracker_Artifact $artifact, \PFUser $user, $fields_data)
+    {
         $is_valid    = true;
         $used_fields = $this->formelement_factory->getUsedFields($artifact->getTracker());
         foreach ($used_fields as $field) {
             $submitted_value = $this->getSubmittedValue($field, $fields_data);
             if ($this->canValidateField($artifact, $field)) {
-                $is_valid = $this->validateField($artifact, $field, $submitted_value) && $is_valid;
+                $is_valid = $this->validateField($artifact, $field, $user, $submitted_value) && $is_valid;
             }
         }
 
@@ -56,7 +57,7 @@ abstract class Tracker_Artifact_Changeset_FieldsValidator {
     /**
      * @return bool
      */
-    protected abstract function canValidateField(
+    abstract protected function canValidateField(
         Tracker_Artifact $artifact,
         Tracker_FormElement_Field $field
     );
@@ -64,13 +65,15 @@ abstract class Tracker_Artifact_Changeset_FieldsValidator {
     /**
      * @return bool
      */
-    protected abstract function validateField(
+    abstract protected function validateField(
         Tracker_Artifact $artifact,
         Tracker_FormElement_Field $field,
+        \PFUser $user,
         $submitted_value
     );
 
-    private function getSubmittedValue(Tracker_FormElement_Field $field, $fields_data) {
+    private function getSubmittedValue(Tracker_FormElement_Field $field, $fields_data)
+    {
         $submitted_value = null;
         if ($this->isFieldSubmitted($field, $fields_data)) {
             $submitted_value = $fields_data[$field->getId()];
@@ -82,7 +85,8 @@ abstract class Tracker_Artifact_Changeset_FieldsValidator {
     /**
      * @return bool
      */
-    private function isFieldSubmitted(Tracker_FormElement_Field $field, array $fields_data) {
+    private function isFieldSubmitted(Tracker_FormElement_Field $field, array $fields_data)
+    {
         return isset($fields_data[$field->getId()]);
     }
 }

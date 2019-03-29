@@ -40,9 +40,10 @@ class WorkflowUpdateChecker
         Tracker_FormElement_Field $field,
         ?Tracker_Artifact_ChangesetValue $last_changeset_value,
         $submitted_value,
-        bool $is_submission
+        bool $is_submission,
+        \PFUser $user
     ) : bool {
-        if ($is_submission) {
+        if ($is_submission || $user instanceof \Tracker_Workflow_WorkflowUser) {
             return true;
         }
 

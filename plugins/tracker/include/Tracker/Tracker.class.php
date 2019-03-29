@@ -3099,7 +3099,7 @@ EOS;
                 } else {
                     $fields_validator = $this->getNewChangesetFieldsValidator();
                 }
-                if (! $fields_validator->validate($artifact, $data)) {
+                if (! $fields_validator->validate($artifact, $this->getUserManager()->getCurrentuser(), $data)) {
                      $has_error = true;
                 }
             }

@@ -48,6 +48,7 @@ class Tracker_Artifact_Changeset_NewChangesetFieldsValidator extends Tracker_Art
     protected function validateField(
         Tracker_Artifact $artifact,
         Tracker_FormElement_Field $field,
+        \PFUser $user,
         $submitted_value
     ) {
         $is_submission        = false;
@@ -59,7 +60,8 @@ class Tracker_Artifact_Changeset_NewChangesetFieldsValidator extends Tracker_Art
                 $field,
                 $last_changeset_value,
                 $submitted_value,
-                $is_submission
+                $is_submission,
+                $user
             )
             && $field->validateFieldWithPermissionsAndRequiredStatus(
                 $artifact,

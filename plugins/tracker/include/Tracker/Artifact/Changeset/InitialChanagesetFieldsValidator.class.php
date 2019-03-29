@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,8 +21,8 @@
 /**
  * I validate fields for initial changeset
  */
-class Tracker_Artifact_Changeset_InitialChangesetFieldsValidator extends Tracker_Artifact_Changeset_FieldsValidator {
-
+class Tracker_Artifact_Changeset_InitialChangesetFieldsValidator extends Tracker_Artifact_Changeset_FieldsValidator //phpcs:ignore
+{
     protected function canValidateField(
         Tracker_Artifact $artifact,
         Tracker_FormElement_Field $field
@@ -34,6 +34,7 @@ class Tracker_Artifact_Changeset_InitialChangesetFieldsValidator extends Tracker
     protected function validateField(
         Tracker_Artifact $artifact,
         Tracker_FormElement_Field $field,
+        \PFUser $user,
         $submitted_value
     ) {
         $last_changeset_value = null;

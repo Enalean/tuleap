@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -25,8 +25,8 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationCollectionB
 /**
  * I am a Template Method to create a new changeset (update of an artifact)
  */
-abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracker_Artifact_Changeset_ChangesetCreatorBase {
-
+abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracker_Artifact_Changeset_ChangesetCreatorBase //phpcs:ignore
+{
     /** @var Tracker_Artifact_ChangesetDao */
     protected $changeset_dao;
 
@@ -247,7 +247,7 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
             throw new Tracker_Exception($message);
         }
 
-        if (! $this->fields_validator->validate($artifact, $fields_data)) {
+        if (! $this->fields_validator->validate($artifact, $submitter, $fields_data)) {
             $errors_from_feedback = $GLOBALS['Response']->getFeedbackErrors();
             $GLOBALS['Response']->clearFeedbackErrors();
 

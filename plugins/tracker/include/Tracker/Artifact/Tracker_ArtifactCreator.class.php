@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,8 +24,8 @@ use Tuleap\Tracker\RecentlyVisited\VisitRecorder;
 /**
  * I create artifact from the request in a Tracker
  */
-class Tracker_ArtifactCreator {
-
+class Tracker_ArtifactCreator //phpcs:ignore
+{
     /** @var Tracker_ArtifactDao */
     private $artifact_dao;
 
@@ -82,7 +82,7 @@ class Tracker_ArtifactCreator {
         $submitted_on,
         $send_notification
     ) {
-        if(!$this->fields_validator->validate($artifact, $fields_data)) {
+        if (!$this->fields_validator->validate($artifact, $user, $fields_data)) {
             return;
         }
 
@@ -91,7 +91,8 @@ class Tracker_ArtifactCreator {
             $fields_data,
             $user,
             $submitted_on,
-            $send_notification);
+            $send_notification
+        );
     }
 
     /**
@@ -139,7 +140,7 @@ class Tracker_ArtifactCreator {
     ) {
         $artifact = $this->getBareArtifact($tracker, $submitted_on, $user->getId(), 0);
 
-        if(!$this->fields_validator->validate($artifact, $fields_data)) {
+        if (!$this->fields_validator->validate($artifact, $user, $fields_data)) {
             return false;
         }
 
