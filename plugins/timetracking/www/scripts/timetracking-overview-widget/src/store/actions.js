@@ -76,8 +76,10 @@ export async function saveReport(context, message) {
 export async function getTrackers(context, project_id) {
     try {
         context.commit("resetMessages");
+        context.commit("setLoadingTrackers", true);
         const trackers = await getTrackersWithTimetracking(project_id);
-        return context.commit("setTrackers", trackers);
+        context.commit("setTrackers", trackers);
+        return context.commit("setLoadingTrackers", false);
     } catch (error) {
         return showRestError(context, error);
     }

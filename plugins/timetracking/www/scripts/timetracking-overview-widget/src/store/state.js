@@ -29,6 +29,7 @@ const state = {
     selected_trackers: [],
     trackers_times: [],
     is_loading: false,
+    is_loading_trackers: false,
     is_report_saved: true,
     reading_mode: true,
     trackers: [],
