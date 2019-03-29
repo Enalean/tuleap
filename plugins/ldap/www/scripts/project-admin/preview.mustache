@@ -2,8 +2,8 @@
 <h2 class="tlp-modal-subtitle project-admin-ugroup-ldap-binding-modal-preview-title">{{ title }}</h2>
 
 {{# nb_to_add }}
-    <div class="tlp-alert-success">
-        <i class="fa fa-plus tlp-alert-icon"></i> {{ nb_to_add_text }}
+    <div class="tlp-alert-success project-admin-ugroup-ldap-binding-modal-preview-add-alert">
+        {{ nb_to_add_text }}
         <ul class="project-admin-ugroup-ldap-binding-modal-preview-list">
             {{# users_to_add }}
                 <li class="project-admin-ugroup-ldap-binding-modal-preview-list-item">
@@ -19,8 +19,8 @@
     </div>
 {{/ nb_to_add }}
 {{# nb_to_remove }}
-    <div class="tlp-alert-danger">
-        <i class="fa fa-trash-o tlp-alert-icon"></i> {{ nb_to_remove_text }}
+    <div class="tlp-alert-danger project-admin-ugroup-ldap-binding-modal-preview-remove-alert">
+        {{ nb_to_remove_text }}
         <ul class="project-admin-ugroup-ldap-binding-modal-preview-list">
             {{# users_to_remove }}
                 <li class="project-admin-ugroup-ldap-binding-modal-preview-list-item">

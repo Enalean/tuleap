@@ -10,9 +10,9 @@
                         <input type="hidden" name="inconsistent-artifacts-ids[]" value="{{id}}"/>
                     {{/ inconsistent_collection }}
 
-                    <i class="fa fa-warning tlp-alert-icon"></i> {{ inconsistent_items_intro }}
+                    {{ inconsistent_items_intro }}
                     <input type="submit"
-                           class="tlp-button-warning agiledashboard-milestone-details-items-inconsistent-button"
+                           class="tlp-button-warning tlp-button-small agiledashboard-milestone-details-items-inconsistent-button"
                            value="{{ solve_inconsistencies_button }}"/>
                 </form>
             {{/ has_something_inconsistent }}

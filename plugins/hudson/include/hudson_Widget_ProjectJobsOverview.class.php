@@ -99,7 +99,7 @@ class hudson_Widget_ProjectJobsOverview extends HudsonOverviewWidget
             $html .= $GLOBALS['Language']->getText('plugin_hudson', 'widget_no_job_project', $purifier->purify($this->group_id));
         }
         if ($nb_jobs_in_error > 0) {
-            $html_error_string  = '<div class="tlp-alert-warning"><i class="fa fa-warning tlp-alert-icon"></i>';
+            $html_error_string  = '<div class="tlp-alert-warning">';
             $html_error_string .= dngettext(
                 'tuleap-hudson',
                 'An issue have been encountered while retrieving information, a job can not be displayed',

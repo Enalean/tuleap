@@ -11,7 +11,6 @@
                 </div>
                 <section class="tlp-pane-section">
                     <div class="tlp-alert-warning">
-                        <i class="fa fa-exclamation-triangle tlp-alert-icon" aria-hidden="true"></i>
                         {{# dgettext }}
                             tuleap-tracker
                             | Be careful: An artifact deletion is an action hardly reversible. Choose wisely.
@@ -20,7 +19,6 @@
 
                     {{# is_archiving_enabled }}
                         <div class="tlp-alert-info">
-                            <i class="fa fa-info-circle tlp-alert-icon" aria-hidden="true"></i>
                             {{# dgettext }}
                                 tuleap-tracker
                                 |  Archive deleted items plugin is enabled. Each deleted artifact will be archived in the folder defined in the plugin configuration.
@@ -29,7 +27,6 @@
                     {{/ is_archiving_enabled }}
                     {{^ is_archiving_enabled }}
                         <div class="tlp-alert-info">
-                            <i class="fa fa-info-circle tlp-alert-icon" aria-hidden="true"></i>
                             {{# dgettext }}
                                 tuleap-tracker
                                 |  Archive deleted items plugin is not installed or enabled. Each deleted artifact will be exported and placed in the temporary folder defined in the local.inc file. They will be purged automatically accordingly to the settings of the machine on which the server is running.
