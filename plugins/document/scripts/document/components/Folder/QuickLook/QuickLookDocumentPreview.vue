@@ -21,6 +21,7 @@
     <div v-dompurify-html="currently_previewed_item.embedded_file_properties.content"
          class="document-quick-look-embedded"
          v-if="is_item_an_embedded_file(currently_previewed_item)"
+         data-test="document-quick-look-embedded"
     ></div>
 
     <div class="document-quick-look-image-container" v-else-if="is_an_image && currently_previewed_item.user_can_write">

@@ -18,7 +18,12 @@
   -->
 
 <template>
-    <form class="tlp-modal" role="dialog" v-bind:aria-labelled-by="aria_labelled_by" v-on:submit="createNewLinkVersion">
+    <form class="tlp-modal"
+          role="dialog"
+          v-bind:aria-labelled-by="aria_labelled_by"
+          v-on:submit="createNewLinkVersion"
+          data-test="document-new-item-version-modal"
+    >
         <modal-header v-bind:modal-title="modal_title"
                       v-bind:aria-labelled-by="aria_labelled_by"
                       v-bind:icon-header-class="'fa-plus'"
@@ -26,7 +31,11 @@
         <modal-feedback/>
         <div class="tlp-modal-body">
             <item-update-properties v-bind:version="version" v-bind:item="item" v-on:approvalTableActionChange="setApprovalUpdateAction">
-                <link-properties v-if="link_model" v-model="link_model" v-bind:item="item" key="link-props"/>
+                <link-properties
+                    v-if="link_model"
+                    v-model="link_model"
+                    v-bind:item="item"
+                    key="link-props"/>
             </item-update-properties>
         </div>
         <modal-footer v-bind:is-loading="is_loading"

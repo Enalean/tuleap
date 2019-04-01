@@ -38,7 +38,7 @@
                         </tr>
                     </thead>
 
-                    <tbody>
+                    <tbody data-test="document-tree-content">
                         <folder-content-row
                             v-for="item of folder_content"
                             v-bind:key="item.id"

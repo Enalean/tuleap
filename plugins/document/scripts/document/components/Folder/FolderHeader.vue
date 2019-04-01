@@ -26,7 +26,7 @@
                 {{ folder_title }}
             </span>
         </h1>
-        <div class="document-header-actions">
+        <div class="document-header-actions" data-test="document-header-actions">
             <div class="tlp-dropdown" v-if="can_display_new_document_button">
                 <folder-header-action v-bind:item="current_folder"/>
                 <new-item-modal/>

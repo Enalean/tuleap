@@ -28,6 +28,7 @@
                 }"
                 ref="dropdownButton"
                 type="button"
+                data-test="document-drop-down-button"
         >
             <i class="fa fa-ellipsis-h" v-if="! isAppended"></i>
             <i class="fa fa-caret-down" v-bind:class="{ 'tlp-button-icon-right': ! isAppended }"></i>

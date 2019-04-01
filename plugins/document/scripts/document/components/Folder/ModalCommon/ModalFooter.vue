@@ -32,6 +32,7 @@
             type="submit"
             class="tlp-button-primary tlp-modal-action"
             v-bind:disabled="props.isLoading"
+            data-test="document-modal-submit-button"
         >
             <i v-if="props.isLoading" class="tlp-button-icon fa fa-spin fa-circle-o-notch" data-test="document-modal-footer-spinner"></i>
             <i v-else class="fa tlp-button-icon" v-bind:class="props.iconSubmitButtonClass" data-test="document-modal-footer-icon"></i>

@@ -70,6 +70,7 @@ setup_database() {
     $MYSQL -e "CREATE DATABASE $MYSQL_DBNAME CHARACTER SET utf8"
     $MYSQL $MYSQL_DBNAME < "/usr/share/tuleap/src/db/mysql/database_structure.sql"
     $MYSQL $MYSQL_DBNAME < "/usr/share/tuleap/src/db/mysql/database_initvalues.sql"
+    $MYSQL $MYSQL_DBNAME < "/usr/share/tuleap/tests/e2e/full/tuleap/cypress_database_init_values.sql"
 
     mysql -e "GRANT SELECT ON $MYSQL_DBNAME.user to dbauthuser@'localhost' identified by '$MYSQL_PASSWORD';"
     mysql -e "GRANT SELECT ON $MYSQL_DBNAME.groups to dbauthuser@'localhost';"
@@ -100,10 +101,12 @@ seed_data() {
     su -c "/usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/tools/utils/admin/activate_plugin.php git" -l codendiadm
     su -c "/usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/tools/utils/admin/activate_plugin.php docman" -l codendiadm
     su -c "/usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/tools/utils/admin/activate_plugin.php mediawiki" -l codendiadm
+    su -c "/usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/tools/utils/admin/activate_plugin.php document" -l codendiadm
     sed -i -e 's#/var/lib/codendi#/var/lib/tuleap#g' /etc/tuleap/plugins/docman/etc/docman.inc
 
     load_project /usr/share/tuleap/tests/e2e/_fixtures/permission_project
     load_project /usr/share/tuleap/tests/e2e/_fixtures/docman_project
+    load_project /usr/share/tuleap/tests/e2e/_fixtures/document_project
     load_project /usr/share/tuleap/tests/e2e/_fixtures/git_project
     load_project /usr/share/tuleap/tests/e2e/_fixtures/frs_project
     load_project /usr/share/tuleap/tests/e2e/_fixtures/project_administration

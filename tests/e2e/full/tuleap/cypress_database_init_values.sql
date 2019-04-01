@@ -1,0 +1,1 @@
+insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (19, 100, 'wiki', 'wiki', 'wiki', '/wiki/?group_id=$group_id', 1, 1, 'system', 30);

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,7 +21,11 @@ describe("Docman", function() {
     before(() => {
         cy.clearCookie("__Host-TULEAP_session_hash");
         cy.ProjectAdministratorLogin();
-        cy.visitProjectService("docman-project", "Documents");
+
+        //document is available on new instance, so we must switch back to old UI
+        //because, even if we call old UI, as the project has no custom metadata we'll be redirected on new UI
+        cy.visit("/plugins/docman/?group_id=102");
+        cy.get("[data-test=document-switch-to-old-ui]").click();
     });
 
     beforeEach(() => {
@@ -115,7 +119,6 @@ describe("Docman", function() {
         });
 
         it("create a new version of a document", function() {
-            cy.visitProjectService("docman-project", "Documents");
             cy.get(
                 `[data-test=document_item][data-test-document-id=${this.embedded_document_id}]`
             ).click();
@@ -130,7 +133,6 @@ describe("Docman", function() {
         });
 
         it("delete a given version of a document", function() {
-            cy.visitProjectService("docman-project", "Documents");
             cy.get(
                 `[data-test=document_item][data-test-document-id=${this.embedded_document_id}]`
             ).click();
@@ -146,7 +148,6 @@ describe("Docman", function() {
         });
 
         it("throw an error when you try to delete the last version of a document", function() {
-            cy.visitProjectService("docman-project", "Documents");
             cy.get(
                 `[data-test=document_item][data-test-document-id=${this.embedded_document_id}]`
             ).click();
@@ -181,7 +182,6 @@ describe("Docman", function() {
 
     context("easy search", function() {
         it("should search items by name", function() {
-            cy.visitProjectService("docman-project", "Documents");
             cy.get("[data-test=docman_search]").type("folder");
             cy.get("[data-test=docman_search_button]").click();
 
@@ -189,7 +189,6 @@ describe("Docman", function() {
         });
 
         it("should expand result", function() {
-            cy.visitProjectService("docman-project", "Documents");
             cy.get("[data-test=docman_report_search]").click();
             cy.get("[data-test=docman_search]").should("be.disabled");
             cy.get("[data-test=docman_form_table]").contains("Global text search");

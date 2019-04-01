@@ -34,6 +34,7 @@
             v-bind:placeholder="placeholder"
             v-bind:value="value"
             v-on:input="$emit('input', $event.target.value)"
+            data-test="document-metadata-description"
         ></textarea>
     </div>
 </template>

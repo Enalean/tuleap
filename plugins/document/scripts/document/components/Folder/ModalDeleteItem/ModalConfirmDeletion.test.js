@@ -171,7 +171,7 @@ describe("ModalConfirmDeletion", () => {
         store.getters.is_item_a_folder = () => true;
 
         const deletion_modal = getDeletionModal({ item, additional_options });
-        deletion_modal.find("[data-test=confirm-deletion-button]").trigger("click");
+        deletion_modal.find("[data-test=document-confirm-deletion-button]").trigger("click");
 
         await deletion_modal.vm.$nextTick().then(() => {});
         expect(store.dispatch).toHaveBeenCalledWith("deleteItem", [item, additional_options]);

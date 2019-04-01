@@ -91,21 +91,29 @@ export default {
             ]
         });
 
-        this.editor.on("change", this.onChange);
-
-        this.editor.on("mode", () => {
-            if (this.editor.mode === "source") {
-                const editable = this.editor.editable();
-                editable.attachListener(editable, "input", () => {
-                    this.onChange();
-                });
-            }
-        });
+        this.editor.on("instanceReady", this.onInstanceReady);
     },
     methods: {
         onChange() {
             const new_content = this.editor.getData();
             this.$emit("input", { content: new_content });
+        },
+        onInstanceReady() {
+            this.editor.on("change", this.onChange);
+
+            this.editor.on("mode", () => {
+                if (this.editor.mode === "source") {
+                    const editable = this.editor.editable();
+                    editable.attachListener(editable, "input", () => {
+                        this.onChange();
+                    });
+                }
+            });
+        },
+        beforeDestroy() {
+            if (this.editor) {
+                this.editor.destroy();
+            }
         }
     }
 };

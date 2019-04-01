@@ -40,6 +40,7 @@
                 required
                 v-bind:value="value.page_name"
                 v-on:input="$emit('input', { page_name: $event.target.value })"
+                data-test="document-new-item-wiki-page-name"
             >
         </div>
     </div>
