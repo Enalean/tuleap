@@ -66,13 +66,9 @@ class BaselinesResourceTest extends RestBase
         $this->assertNotNull($json_response['snapshot_date']);
     }
 
-    /**
-     * @depends testPost
-     */
     public function testGetById()
     {
-        $baseline = $this->createABaseline($this->an_artifact_id);
-
+        $baseline      = $this->createABaseline($this->an_artifact_id);
         $response      = $this->getResponseByName(
             self::TEST_USER_NAME,
             $this->client->get('baselines/' . $baseline['id'])
@@ -84,6 +80,23 @@ class BaselinesResourceTest extends RestBase
         $this->assertEquals($baseline['artifact_id'], $json_response['artifact_id']);
         $this->assertEquals($baseline['snapshot_date'], $json_response['snapshot_date']);
         $this->assertEquals($baseline['author_id'], $json_response['author_id']);
+    }
+
+    public function testDelete()
+    {
+        $baseline = $this->createABaseline($this->an_artifact_id);
+
+        $delete_response = $this->getResponseByName(
+            self::TEST_USER_NAME,
+            $this->client->delete('baselines/' . $baseline['id'])
+        );
+        $this->assertEquals(200, $delete_response->getStatusCode());
+
+        $get_response = $this->getResponseByName(
+            self::TEST_USER_NAME,
+            $this->client->get('baselines/' . $baseline['id'])
+        );
+        $this->assertEquals(404, $get_response->getStatusCode());
     }
 
     /**
@@ -132,7 +145,6 @@ class BaselinesResourceTest extends RestBase
     public function testGetBaselineArtifactsWithIds()
     {
         $baseline = $this->createABaseline($this->an_artifact_id);
-
         $query    = json_encode(["ids" => [$this->an_artifact_id]]);
         $url      = 'baselines/' . $baseline['id'] . '/artifacts?query=' . urlencode($query);
         $response = $this->getResponseByName(

@@ -79,6 +79,34 @@ class BaselinesResource extends AuthenticatedResource
     }
 
     /**
+     * Delete a Baseline
+     *
+     * Delete a Baseline by id.
+     *
+     * @url    DELETE{id}
+     * @status 200
+     * @access protected
+     *
+     * @param int $id
+     * @throws \Rest_Exception_InvalidTokenException
+     * @throws I18NRestException 404
+     * @throws \User_PasswordExpiredException
+     * @throws \User_StatusDeletedException
+     * @throws \User_StatusInvalidException
+     * @throws \User_StatusPendingException
+     * @throws \User_StatusSuspendedException
+     * @throws \Luracast\Restler\RestException
+     *
+     */
+    protected function delete(int $id)
+    {
+        $this->checkAccess();
+        return $this->container
+            ->get(BaselineController::class)
+            ->delete($id);
+    }
+
+    /**
      * Get a Baseline
      *
      * Get a Baseline

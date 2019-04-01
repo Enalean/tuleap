@@ -48,4 +48,12 @@ msgstr "Cette opération n'est pas autorisée. %s"
 
 #, php-format
 msgid "You're not allowed to add new baseline in project with id %u"
-msgstr "Vous n'êtes pas autorisé à ajouter une nouvelle baseline dans le projet ayant pour id %u"
+msgstr ""
+"Vous n'êtes pas autorisé à ajouter une nouvelle baseline dans le projet "
+"ayant pour id %u"
+
+#, php-format
+msgid "You're not allowed to delete baseline in project with id %u"
+msgstr ""
+"Vous n'êtes pas autorisé à supprimer une baseline dans le projet "
+"ayant pour id %u"

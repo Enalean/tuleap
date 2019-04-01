@@ -64,10 +64,16 @@ class BaselineRepositoryStub implements BaselineRepository
         return $this->baselines_by_id[$id];
     }
 
+    public function delete(Baseline $baseline, PFUser $current_user): void
+    {
+        unset($this->baselines_by_id[$baseline->getId()]);
+    }
+
     /**
+     * It returns a Baseline array with the baseline id as the key
      * @return Baseline[]
      */
-    public function findAll(): array
+    public function findAllById(): array
     {
         return $this->baselines_by_id;
     }

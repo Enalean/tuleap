@@ -121,6 +121,24 @@ class BaselineRepositoryAdapter implements BaselineRepository
     }
 
     /**
+     * @throws NotAuthorizedException
+     */
+    public function delete(Baseline $baseline, PFUser $current_user): void
+    {
+        $project = $baseline->getProject();
+
+        if (! $this->adapter_permissions->canUserAdministrateBaselineOnProject($current_user, $project)) {
+            throw new NotAuthorizedException(
+                sprintf(
+                    dgettext('tuleap-baseline', "You're not allowed to delete baseline in project with id %u"),
+                    $project->getID()
+                )
+            );
+        }
+        $this->db->delete('plugin_baseline_baseline', ['id' => $baseline->getId()]);
+    }
+
+    /**
      * @return Baseline[]
      */
     public function findByProject(PFUser $current_user, Project $project, int $page_size, int $baseline_offset): array

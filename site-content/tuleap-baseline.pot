@@ -36,3 +36,7 @@ msgstr ""
 #, php-format
 msgid "You're not allowed to add new baseline in project with id %u"
 msgstr ""
+
+#, php-format
+msgid "You're not allowed to delete baseline in project with id %u"
+msgstr ""

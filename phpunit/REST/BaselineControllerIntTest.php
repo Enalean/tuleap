@@ -26,6 +26,7 @@ namespace Tuleap\Baseline\REST;
 require_once __DIR__ . '/IntegrationTestCaseWithStubs.php';
 
 use Tuleap\Baseline\Factory\BaselineArtifactFactory;
+use Tuleap\Baseline\Factory\BaselineFactory;
 use Tuleap\GlobalLanguageMock;
 
 class BaselineControllerIntTest extends IntegrationTestCaseWithStubs
@@ -54,5 +55,13 @@ class BaselineControllerIntTest extends IntegrationTestCaseWithStubs
         $this->assertEquals($artifact, $baseline->getArtifact());
         $this->assertEquals($this->current_user_provider->getUser(), $baseline->getAuthor());
         $this->assertEquals($this->clock->now(), $baseline->getSnapshotDate());
+    }
+
+    public function testDelete()
+    {
+        $baseline = BaselineFactory::one()->id(2)->build();
+        $this->baseline_repository->addBaseline($baseline);
+        $this->controller->delete(2);
+        $this->assertNotContains(2, array_keys($this->baseline_repository->findAllById()));
     }
 }

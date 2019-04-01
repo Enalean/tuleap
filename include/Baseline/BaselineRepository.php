@@ -37,6 +37,8 @@ interface BaselineRepository
 
     public function findById(PFUser $current_user, int $id): ?Baseline;
 
+    public function delete(Baseline $baseline, PFUser $current_user);
+
     /**
      * Find all baselines on given project, ordered by snapshot date.
      * @param int $page_size       Number of baselines to fetch

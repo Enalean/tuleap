@@ -81,13 +81,26 @@ class BaselineController
             $created_baseline = $this->baseline_service->create($current_user, $baseline);
             return BaselineRepresentation::fromBaseline($created_baseline);
         } catch (NotAuthorizedException $exception) {
-            throw new I18NRestException(
-                403,
-                sprintf(
-                    dgettext('tuleap-baseline', 'This operation is not allowed. %s'),
-                    $exception->getMessage()
-                )
-            );
+            $this->throw403Exception($exception);
+        }
+    }
+
+    /**
+     * @throws I18NRestException 404
+     * @throws I18NRestException 403
+     */
+    public function delete(int $id): void
+    {
+        $current_user = $this->current_user_provider->getUser();
+        $baseline     = $this->baseline_service->findById($current_user, $id);
+        if ($baseline === null) {
+            $this->throw404Exception($id);
+        }
+
+        try {
+            $this->baseline_service->delete($current_user, $baseline);
+        } catch (NotAuthorizedException $exception) {
+            $this->throw403Exception($exception);
         }
     }
 
@@ -101,23 +114,39 @@ class BaselineController
             $current_user = $this->current_user_provider->getUser();
             $baseline     = $this->baseline_service->findById($current_user, $id);
             if ($baseline === null) {
-                throw new I18NRestException(
-                    404,
-                    sprintf(
-                        dgettext('tuleap-baseline', 'No baseline found with id %u'),
-                        $id
-                    )
-                );
+                $this->throw404Exception($id);
             }
             return BaselineRepresentation::fromBaseline($baseline);
         } catch (NotAuthorizedException $exception) {
-            throw new I18NRestException(
-                403,
-                sprintf(
-                    dgettext('tuleap-baseline', 'This operation is not allowed. %s'),
-                    $exception->getMessage()
-                )
-            );
+            $this->throw403Exception($exception);
         }
+    }
+
+    /**
+     * @throws I18NRestException 404
+     */
+    private function throw404Exception($id): void
+    {
+        throw new I18NRestException(
+            404,
+            sprintf(
+                dgettext('tuleap-baseline', 'No baseline found with id %u'),
+                $id
+            )
+        );
+    }
+
+    /**
+     * @throws I18NRestException 403
+     */
+    private function throw403Exception($exception): void
+    {
+        throw new I18NRestException(
+            403,
+            sprintf(
+                dgettext('tuleap-baseline', 'This operation is not allowed. %s'),
+                $exception->getMessage()
+            )
+        );
     }
 }

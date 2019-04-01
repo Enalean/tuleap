@@ -61,6 +61,14 @@ class BaselineService
     }
 
     /**
+     * @throws NotAuthorizedException
+     */
+    public function delete(PFUser $current_user, Baseline $baseline)
+    {
+        return $this->baseline_repository->delete($baseline, $current_user);
+    }
+
+    /**
      * Find baselines on given project, ordered by snapshot date.
      * @param int $page_size       Number of baselines to return
      * @param int $baseline_offset Fetch baselines from this index (start with 0), following snapshot date order.

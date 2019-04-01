@@ -229,4 +229,51 @@ class BaselineControllerTest extends TestCase
 
         $this->controller->getById(1);
     }
+
+    public function testPostDeletesBaseline()
+    {
+        $baseline = BaselineFactory::one()
+            ->id(2)
+            ->build();
+
+        $this->baseline_service
+            ->shouldReceive('findById')
+            ->andReturn($baseline);
+
+        $this->baseline_service
+            ->shouldReceive('delete')
+            ->with($this->current_user, $baseline);
+
+        $this->controller->delete(2);
+    }
+
+    public function testDeleteThrows404WhenBaselineNotFound()
+    {
+        $this->expectException(I18NRestException::class);
+        $this->expectExceptionCode(404);
+
+        $this->baseline_service
+            ->shouldReceive('findById')
+            ->andReturn(null);
+
+        $this->controller->delete(2);
+    }
+
+    public function testDeleteThrows403WhenNotAllowed()
+    {
+        $this->expectException(I18NRestException::class);
+        $this->expectExceptionCode(403);
+
+        $this->baseline_service
+            ->shouldReceive('findById')
+            ->andReturn(
+                BaselineFactory::one()->build()
+            );
+
+        $this->baseline_service
+            ->shouldReceive('delete')
+            ->andThrow(new NotAuthorizedException('not allowed'));
+
+        $this->controller->delete(2);
+    }
 }
