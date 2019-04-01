@@ -56,33 +56,7 @@ class ExternalLinkRedirectorTest extends TestCase
         $this->request->shouldReceive("getProject")->andReturn($this->project);
     }
 
-    public function testItShouldNotRedirectUserIfItsPreferenceIsLegacyUI()
-    {
-        $folder_id = 10;
-        $redirector = new ExternalLinkRedirector($this->user, $this->request, $folder_id);
-
-        $this->request->shouldReceive("exist")->with("action")->andReturn(false);
-        $this->user->shouldReceive('isAnonymous')->andReturn(false);
-        $this->user->shouldReceive('getPreference')->with("plugin_docman_display_new_ui_102")->andReturn(false);
-
-        $redirector->checkAndStoreIfUserHasToBeenRedirected();
-        $this->assertFalse($redirector->shouldRedirectUserOnNewUI());
-    }
-
-    public function testItShouldRedirectUserIfItsPreferenceIsNewUI()
-    {
-        $folder_id = 10;
-        $redirector = new ExternalLinkRedirector($this->user, $this->request, $folder_id);
-
-        $this->request->shouldReceive("exist")->with("action")->andReturn(false);
-        $this->user->shouldReceive('isAnonymous')->andReturn(false);
-        $this->user->shouldReceive('getPreference')->with("plugin_docman_display_new_ui_102")->andReturn(true);
-
-        $redirector->checkAndStoreIfUserHasToBeenRedirected();
-        $this->assertTrue($redirector->shouldRedirectUserOnNewUI());
-    }
-
-    public function testItShouldDoNothingIfUserIsAnonymous()
+    public function testItShouldDoNothingIfUserIsAnonymous(): void
     {
         $folder_id = 10;
         $redirector = new ExternalLinkRedirector($this->user, $this->request, $folder_id);
@@ -90,12 +64,11 @@ class ExternalLinkRedirectorTest extends TestCase
         $this->request->shouldReceive("exist")->with("action")->andReturn(false);
         $this->user->shouldReceive('isAnonymous')->andReturn(true);
 
-        $redirector->checkAndStoreIfUserHasToBeenRedirected();
-        $this->user->shouldReceive('getPreference')->never();
+        $redirector->checkAndStoreIfUserHasToBeenRedirected(true);
         $this->assertFalse($redirector->shouldRedirectUserOnNewUI());
     }
 
-    public function testItShouldNotRedirectWhenUserPreferenceIsForNewDocmanAndRequestIsForDocmanAdministrationUI()
+    public function testItShouldNotRedirectWhenUserPreferenceIsForNewDocmanAndRequestIsForDocmanAdministrationUI(): void
     {
         $folder_id = 10;
         $redirector = new ExternalLinkRedirector($this->user, $this->request, $folder_id);
@@ -103,9 +76,31 @@ class ExternalLinkRedirectorTest extends TestCase
         $this->request->shouldReceive("exist")->with("action")->andReturn(true);
         $this->user->shouldReceive('isAnonymous')->andReturn(false);
 
-        $this->user->shouldReceive('getPreference')->with("plugin_docman_display_new_ui_102")->andReturn(true);
+        $redirector->checkAndStoreIfUserHasToBeenRedirected(true);
+        $this->assertFalse($redirector->shouldRedirectUserOnNewUI());
+    }
 
-        $redirector->checkAndStoreIfUserHasToBeenRedirected();
+    public function testItShouldRedirectUserWhenShouldRedirectUserIsSetToTrue(): void
+    {
+        $folder_id = 10;
+        $redirector = new ExternalLinkRedirector($this->user, $this->request, $folder_id);
+
+        $this->request->shouldReceive("exist")->with("action")->andReturn(false);
+        $this->user->shouldReceive('isAnonymous')->andReturn(false);
+
+        $redirector->checkAndStoreIfUserHasToBeenRedirected(true);
+        $this->assertTrue($redirector->shouldRedirectUserOnNewUI());
+    }
+
+    public function testItShouldNotRedirectUserWhenShouldRedirectUserIsSetToFalse(): void
+    {
+        $folder_id = 10;
+        $redirector = new ExternalLinkRedirector($this->user, $this->request, $folder_id);
+
+        $this->request->shouldReceive("exist")->with("action")->andReturn(false);
+        $this->user->shouldReceive('isAnonymous')->andReturn(false);
+
+        $redirector->checkAndStoreIfUserHasToBeenRedirected(false);
         $this->assertFalse($redirector->shouldRedirectUserOnNewUI());
     }
 }

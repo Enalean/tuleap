@@ -29,7 +29,7 @@ import {
     patchEmbeddedFile,
     patchUserPreferenciesForFolderInProject,
     deleteUserPreferenciesForFolderInProject,
-    deleteUserPreferenciesForUIInProject,
+    addUserLegacyUIPreferency,
     createNewVersion
 } from "./rest-querier.js";
 
@@ -200,13 +200,12 @@ describe("rest-querier", () => {
             });
         });
 
-        describe("deleteUserPreferenciesForUIInProject() -", () => {
+        describe("addUserLegacyUIPreferency() -", () => {
             it("should set the current user's preferencies to old UI", async () => {
-                await deleteUserPreferenciesForUIInProject(user_id, project_id, folder_id);
+                mockFetchSuccess(tlp.patch, JSON.stringify({ id: 10 }));
 
-                expect(tlp.del).toHaveBeenCalledWith(
-                    "/api/users/102/preferences?key=plugin_docman_display_new_ui_110"
-                );
+                await addUserLegacyUIPreferency(user_id, project_id, folder_id);
+                expect(tlp.patch).toHaveBeenCalled();
             });
         });
     });

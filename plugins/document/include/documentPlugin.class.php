@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,9 +21,11 @@
 use Tuleap\Docman\ExternalLinks\ExternalLinkRedirector;
 use Tuleap\Docman\ExternalLinks\ExternalLinksManager;
 use Tuleap\Docman\ExternalLinks\Link;
+use Tuleap\Document\DocumentUsageRetriever;
 use Tuleap\Document\Tree\DocumentTreeController;
 use Tuleap\Document\Tree\DocumentTreeProjectExtractor;
 use Tuleap\Document\Tree\DocumentTreeUnderConstructionController;
+use Tuleap\Layout\ServiceUrlCollector;
 use Tuleap\Request\CollectRoutesEvent;
 
 require_once __DIR__ . '/../../docman/include/docmanPlugin.class.php';
@@ -49,6 +51,7 @@ class documentPlugin extends Plugin // phpcs:ignore
         $this->addHook(CollectRoutesEvent::NAME);
         $this->addHook(ExternalLinksManager::NAME);
         $this->addHook(ExternalLinkRedirector::NAME);
+        $this->addHook(ServiceUrlCollector::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -68,8 +71,7 @@ class documentPlugin extends Plugin // phpcs:ignore
     public function getOldPluginInfo() : DocmanPluginInfo
     {
         if (!$this->old_docman_plugin_info) {
-            $plugin                       = PluginManager::instance()->getPluginByName('docman');
-            $this->old_docman_plugin_info = new DocmanPluginInfo($plugin);
+            $this->old_docman_plugin_info = new DocmanPluginInfo($this->getDocmanPlugin());
         }
         return $this->old_docman_plugin_info;
     }
@@ -115,11 +117,51 @@ class documentPlugin extends Plugin // phpcs:ignore
             return;
         }
 
-        $external_link_redirector->checkAndStoreIfUserHasToBeenRedirected();
+        $external_link_redirector->checkAndStoreIfUserHasToBeenRedirected(
+            $this->shouldUseDocumentUrl($external_link_redirector->getProject())
+        );
     }
 
     public function getProjectExtractor() : DocumentTreeProjectExtractor
     {
         return new DocumentTreeProjectExtractor(ProjectManager::instance());
+    }
+
+    public function serviceUrlCollector(ServiceUrlCollector $collector): void
+    {
+        if (! PluginManager::instance()->isPluginAllowedForProject($this, $collector->getProject()->getID())) {
+            return;
+        }
+
+        if ($collector->getServiceShortname() !== $this->getDocmanPlugin()->getServiceShortname()) {
+            return;
+        }
+
+        if (! $this->shouldUseDocumentUrl($collector->getProject())) {
+            return;
+        }
+
+        $collector->setUrl("/plugins/document/" . urlencode($collector->getProject()->getUnixNameLowerCase()) . "/");
+    }
+
+    /**
+     * @return mixed
+     */
+    private function getDocmanPlugin(): DocmanPlugin
+    {
+        return PluginManager::instance()->getPluginByName('docman');
+    }
+
+    private function getCurrentUser(): PFUser
+    {
+        $user_manager = UserManager::instance();
+        return $user_manager->getCurrentUser();
+    }
+
+    private function shouldUseDocumentUrl(Project $project): bool
+    {
+        $retriever = new DocumentUsageRetriever(new Docman_MetadataFactory($project->getID()));
+        $user      = $this->getCurrentUser();
+        return $retriever->shouldUseDocument($user, $project);
     }
 }

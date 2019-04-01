@@ -65,6 +65,7 @@ use Tuleap\Docman\Upload\Version\VersionUploadCleaner;
 use Tuleap\Docman\Upload\Version\VersionUploadFinisher;
 use Tuleap\Docman\Upload\Version\VersionUploadPathAllocator;
 use Tuleap\Layout\PaginationPresenter;
+use Tuleap\Layout\ServiceUrlCollector;
 use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;
 use Tuleap\Project\Admin\Navigation\NavigationDropdownItemPresenter;
@@ -178,6 +179,8 @@ class DocmanPlugin extends Plugin
         $this->addHook(GetWhitelistedKeys::NAME);
 
         $this->addHook(CollectRoutesEvent::NAME);
+
+        $this->addHook(ServiceUrlCollector::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -1450,5 +1453,14 @@ class DocmanPlugin extends Plugin
     {
         $event->addPluginsKeys(PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING);
         $event->addPluginsKeys(PLUGIN_DOCMAN_MAX_NB_FILE_UPLOADS_SETTING);
+    }
+
+    public function serviceUrlCollector(ServiceUrlCollector $collector): void
+    {
+        if ($collector->getServiceShortname() !== $this->getServiceShortname()) {
+            return;
+        }
+
+        $collector->setUrl(DOCMAN_BASE_URL . "?group_id=" . $collector->getProject()->getID());
     }
 }
