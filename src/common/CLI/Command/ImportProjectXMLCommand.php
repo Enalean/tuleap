@@ -332,7 +332,11 @@ class ImportProjectXMLCommand extends Command
                 $broker_log->error('XML: '.$parse_error.' line:'.$exception->getSourceXMLForError($parse_error));
             }
         } catch (ImportNotValidException $exception) {
-            $broker_log->error("Some natures used in trackers are not created on plateform.");
+            if ($exception->getMessage() !== '') {
+                $broker_log->error($exception->getMessage());
+            } else {
+                $broker_log->error("Some natures used in trackers are not created on plateform.");
+            }
         } catch (\Exception $exception) {
             $broker_log->error(get_class($exception).': '.$exception->getMessage().' in '.$exception->getFile().' L'.$exception->getLine());
         } finally {

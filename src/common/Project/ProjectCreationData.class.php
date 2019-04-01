@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,14 +25,13 @@ class ProjectCreationData
     private $data_fields;
     private $full_name;
     private $unix_name;
-    private $is_public;
     private $is_test;
     private $is_template;
     private $short_description;
     private $built_from_template;
     private $trove_data;
-    private $is_unrestricted = false;
     private $inherit_from_template = true;
+    private $access;
 
     public function __construct(?Logger $logger = null)
     {
@@ -71,15 +70,9 @@ class ProjectCreationData
         $this->unix_name = $name;
     }
 
-    public function getAccess() {
-        if ($this->is_unrestricted) {
-            return Project::ACCESS_PUBLIC_UNRESTRICTED;
-        }
-        if ($this->is_public === null || ForgeConfig::get('sys_user_can_choose_project_privacy') === '0') {
-            return ForgeConfig::get('sys_is_project_public') ? Project::ACCESS_PUBLIC : Project::ACCESS_PRIVATE;
-        } else {
-            return $this->is_public ? Project::ACCESS_PUBLIC : Project::ACCESS_PRIVATE;
-        }
+    public function getAccess()
+    {
+        return $this->access;
     }
 
     public function isTest() {
@@ -156,10 +149,27 @@ class ProjectCreationData
         $this->short_description   = isset($project['form_short_description']) ? $project['form_short_description'] : null;
         $this->built_from_template = isset($project['built_from_template'])    ? $project['built_from_template']    : null;
         $this->is_test             = isset($project['is_test'])                ? $project['is_test']                : null;
-        $this->is_public           = isset($project['is_public'])              ? $project['is_public']              : null;
+        $this->access              = $this->getAccessFromProjectArrayData($project);
         $this->trove_data          = isset($project['trove'])                  ? $project['trove']                  : array();
         $this->data_services       = isset($project['services'])               ? $project['services']               : array();
         $this->data_fields         = $project;
+
+    }
+
+    private function getAccessFromProjectArrayData(array $project)
+    {
+        if ((int) ForgeConfig::get('sys_user_can_choose_project_privacy') === 0) {
+            return $this->getDefaultAccessOfPlatform();
+        }
+        if (isset($project['is_public'])) {
+            return (string )$project['is_public'] === '1' ? Project::ACCESS_PUBLIC : Project::ACCESS_PRIVATE;
+        }
+        return $this->getDefaultAccessOfPlatform();
+    }
+
+    private function getDefaultAccessOfPlatform()
+    {
+        return ForgeConfig::get('sys_is_project_public') ? Project::ACCESS_PUBLIC : Project::ACCESS_PRIVATE;
     }
 
     public static function buildFromXML(
@@ -205,7 +215,6 @@ class ProjectCreationData
         $this->short_description   = (string) $attrs['description'];
         $this->built_from_template = (int) $template_id;
         $this->is_test       = (bool) false;
-        $this->is_public     = null;
         $this->trove_data    = array();
         $this->data_services = array();
         $this->data_fields   = array(
@@ -214,14 +223,26 @@ class ProjectCreationData
 
         switch ($attrs['access']) {
             case 'unrestricted':
-                $this->is_unrestricted = true;
+                if (! ForgeConfig::areRestrictedUsersAllowed()) {
+                    throw new \Tuleap\Project\XML\Import\ImportNotValidException('Project access set to unrestricted but Restricted users not allowed on this platform');
+                }
+                $this->access = Project::ACCESS_PUBLIC_UNRESTRICTED;
+                break;
+            case 'private-wo-restr':
+                if (! ForgeConfig::areRestrictedUsersAllowed()) {
+                    throw new \Tuleap\Project\XML\Import\ImportNotValidException('Project access set to private-wo-restr but Restricted users not allowed on this platform');
+                }
+                $this->access = Project::ACCESS_PRIVATE_WO_RESTRICTED;
                 break;
             case 'public':
-                $this->is_public = true;
+                $this->access = Project::ACCESS_PUBLIC;
                 break;
             case 'private':
-                $this->is_public = false;
+                $this->access = Project::ACCESS_PRIVATE;
                 break;
+
+            default:
+                $this->access = $this->getDefaultAccessOfPlatform();
         }
 
         $this->markUsedServicesFromXML($xml, $template_id, $service_manager, $project_manager);
