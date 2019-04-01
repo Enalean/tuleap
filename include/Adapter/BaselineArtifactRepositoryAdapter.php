@@ -23,18 +23,12 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\Adapter;
 
-use AgileDashBoard_Semantic_InitialEffort;
 use DateTimeInterface;
 use PFUser;
 use Project;
-use Tracker_Artifact;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetFactory;
 use Tracker_ArtifactFactory;
-use Tracker_FormElement_Field;
-use Tracker_Semantic_Description;
-use Tracker_Semantic_Status;
-use Tracker_Semantic_Title;
 use Tuleap\Baseline\BaselineArtifact;
 use Tuleap\Baseline\BaselineArtifactRepository;
 
@@ -49,19 +43,24 @@ class BaselineArtifactRepositoryAdapter implements BaselineArtifactRepository
     /** @var Tracker_Artifact_ChangesetFactory */
     private $changeset_factory;
 
-    /** @var Tracker_ArtifactFactory */
-    private $tracker_factory;
+    /** @var SemanticValueAdapter */
+    private $semantic_value_adapter;
+
+    /** @var ArtifactLinkRepository */
+    private $artifact_link_adapter;
 
     public function __construct(
         Tracker_ArtifactFactory $artifact_factory,
         AdapterPermissions $adapter_permissions,
         Tracker_Artifact_ChangesetFactory $changeset_factory,
-        Tracker_ArtifactFactory $tracker_factory
+        SemanticValueAdapter $semantic_value_adapter,
+        ArtifactLinkRepository $artifact_link_adapter
     ) {
-        $this->artifact_factory    = $artifact_factory;
-        $this->adapter_permissions = $adapter_permissions;
-        $this->changeset_factory   = $changeset_factory;
-        $this->tracker_factory     = $tracker_factory;
+        $this->artifact_factory       = $artifact_factory;
+        $this->adapter_permissions    = $adapter_permissions;
+        $this->changeset_factory      = $changeset_factory;
+        $this->semantic_value_adapter = $semantic_value_adapter;
+        $this->artifact_link_adapter  = $artifact_link_adapter;
     }
 
     public function findById(PFUser $current_user, int $id): ?BaselineArtifact
@@ -89,7 +88,7 @@ class BaselineArtifactRepositoryAdapter implements BaselineArtifactRepository
 
     public function findByIdAt(PFUser $current_user, int $id, DateTimeInterface $date): ?BaselineArtifact
     {
-        $tracker_artifact = $this->tracker_factory->getArtifactById($id);
+        $tracker_artifact = $this->artifact_factory->getArtifactById($id);
         if ($tracker_artifact === null) {
             return null;
         }
@@ -111,16 +110,16 @@ class BaselineArtifactRepositoryAdapter implements BaselineArtifactRepository
         Project $project,
         Tracker_Artifact_Changeset $changeset
     ): BaselineArtifact {
-        $title          = $this->getTrackerTitle($changeset);
-        $description    = $this->getTrackerDescription($changeset);
-        $initial_effort = $this->getTrackerInitialEffort($changeset);
-        $status         = $this->getTrackerStatus($changeset);
+        $title          = $this->semantic_value_adapter->findTitle($changeset);
+        $description    = $this->semantic_value_adapter->findDescription($changeset);
+        $initial_effort = $this->semantic_value_adapter->findInitialEffort($changeset);
+        $status         = $this->semantic_value_adapter->findStatus($changeset);
 
         $tracker      = $changeset->getArtifact()->getTracker();
         $tracker_id   = (int) $tracker->getId();
         $tracker_name = $tracker->getItemName();
 
-        $linked_artifact_ids = $this->getLinkedArtifactIds($current_user, $changeset);
+        $linked_artifact_ids = $this->artifact_link_adapter->findLinkedArtifactIds($current_user, $changeset);
 
         return new BaselineArtifact(
             $id,
@@ -132,96 +131,6 @@ class BaselineArtifactRepositoryAdapter implements BaselineArtifactRepository
             $tracker_id,
             $tracker_name,
             $linked_artifact_ids
-        );
-    }
-
-    private function getTrackerTitle(Tracker_Artifact_Changeset $changeset): ?string
-    {
-        $tracker     = $changeset->getTracker();
-        $title_field = $this->getNullIfNotAllowed(Tracker_Semantic_Title::load($tracker)->getField());
-        if ($title_field === null) {
-            return null;
-        }
-
-        $changed_value = $changeset->getValue($title_field);
-        if ($changed_value === null) {
-            return null;
-        }
-        return $changed_value->getValue();
-    }
-
-    private function getTrackerDescription(Tracker_Artifact_Changeset $changeset): ?string
-    {
-        $tracker           = $changeset->getTracker();
-        $description_field = $this->getNullIfNotAllowed(
-            Tracker_Semantic_Description::load($tracker)->getField()
-        );
-        if ($description_field === null) {
-            return null;
-        }
-
-        $changed_value = $changeset->getValue($description_field);
-        if ($changed_value === null) {
-            return null;
-        }
-        return $changed_value->getValue();
-    }
-
-    private function getTrackerInitialEffort(Tracker_Artifact_Changeset $changeset): ?int
-    {
-        $tracker           = $changeset->getTracker();
-        $description_field = $this->getNullIfNotAllowed(
-            AgileDashBoard_Semantic_InitialEffort::load($tracker)->getField()
-        );
-        if ($description_field === null) {
-            return null;
-        }
-
-        $changed_value = $changeset->getValue($description_field);
-        if ($changed_value === null) {
-            return null;
-        }
-        return (int) $changed_value->getValue();
-    }
-
-    private function getTrackerStatus(Tracker_Artifact_Changeset $changeset): ?string
-    {
-        $tracker      = $changeset->getTracker();
-        $status_field = $this->getNullIfNotAllowed(Tracker_Semantic_Status::load($tracker)->getField());
-        if ($status_field === null) {
-            return null;
-        }
-
-        return $status_field->getFirstValueFor($changeset);
-    }
-
-    private function getNullIfNotAllowed(?Tracker_FormElement_Field $field): ?Tracker_FormElement_Field
-    {
-        if ($field === null || ! $field->userCanRead()) {
-            return null;
-        }
-
-        return $field;
-    }
-
-    /**
-     * @return int[]
-     */
-    private function getLinkedArtifactIds(
-        PFUser $current_user,
-        Tracker_Artifact_Changeset $changeset
-    ): array {
-        $artifact_link_field = $changeset->getArtifact()->getAnArtifactLinkField($current_user);
-        if ($artifact_link_field === null) {
-            return [];
-        }
-
-        $tracker_artifacts = $artifact_link_field->getLinkedArtifacts($changeset, $current_user);
-        return array_map(
-            function (Tracker_Artifact $tracker_artifact) {
-                return $tracker_artifact->getId();
-            },
-            $tracker_artifacts
         );
     }
 }

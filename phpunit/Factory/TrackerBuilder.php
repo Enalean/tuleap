@@ -38,6 +38,15 @@ class TrackerBuilder
         $this->tracker = Mockery::mock(Tracker::class);
     }
 
+    public function id(int $id): self
+    {
+        $this->tracker
+            ->shouldReceive('getId')
+            ->andReturn($id)
+            ->byDefault();
+        return $this;
+    }
+
     public function project(Project $project): self
     {
         $this->tracker
@@ -47,10 +56,10 @@ class TrackerBuilder
         return $this;
     }
 
-    public function name(string $name): self
+    public function itemName(string $name): self
     {
         $this->tracker
-            ->shouldReceive('')
+            ->shouldReceive('getItemName')
             ->andReturn($name)
             ->byDefault();
         return $this;
