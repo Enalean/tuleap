@@ -673,12 +673,23 @@ class ProjectDao extends DataAccessObject {
         return $this->update($sql);
     }
 
-    public function getProjectMembers($project_id) {
+    public function getProjectMembers($project_id)
+    {
+        $project_id                 = $this->da->quoteSmart($project_id);
+        $private_without_restricted = $this->da->quoteSmart(Project::ACCESS_PRIVATE_WO_RESTRICTED);
+
         return $this->retrieve(
             "SELECT user.user_id AS user_id, user.user_name AS user_name, user.realname AS realname
-             FROM user_group INNER JOIN user USING(user_id)
-             WHERE user_group.group_id=". $this->da->quoteSmart($project_id) ."
-                 AND user.status IN ('A', 'R')");
+             FROM user_group INNER JOIN user USING(user_id) INNER JOIN groups USING(group_id)
+             WHERE user_group.group_id = $project_id
+                 AND (
+                    user.status = 'A'
+                    OR (
+                        user.status = 'R'
+                        AND groups.access <> $private_without_restricted
+                    )
+                 )
+             ");
     }
 
     public function getProjectsWithStatusForREST($project_status, $offset, $limit)
