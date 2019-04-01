@@ -26,6 +26,7 @@ export {
     getItem,
     getParents,
     patchUserPreferenciesForFolderInProject,
+    patchEmbeddedFile,
     deleteUserPreferenciesForFolderInProject,
     deleteUserPreferenciesForUnderConstructionModal,
     deleteUserPreferenciesForUIInProject,
@@ -143,6 +144,30 @@ async function patchUserPreferenciesForFolderInProject(user_id, project_id, fold
         body: JSON.stringify({
             key: `plugin_docman_hide_${project_id}_${folder_id}`,
             value: DOCMAN_FOLDER_EXPANDED_VALUE
+        })
+    });
+}
+
+function patchEmbeddedFile(
+    item,
+    content,
+    version_title,
+    change_log,
+    should_lock_file,
+    approval_table_action
+) {
+    return patch(`/api/docman_embedded_files/${item.id}`, {
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            version_title,
+            change_log,
+            embedded_properties: {
+                content
+            },
+            should_lock_file,
+            approval_table_action
         })
     });
 }

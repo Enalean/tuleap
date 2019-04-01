@@ -38,7 +38,7 @@
 </template>
 
 <script>
-import { TYPE_EMBEDDED } from "../../../../constants.js";
+import { TYPE_EMBEDDED } from "../../../constants.js";
 
 export default {
     name: "EmbeddedProperties",

@@ -26,6 +26,7 @@ import {
     getProject,
     getItem,
     getParents,
+    patchEmbeddedFile,
     patchUserPreferenciesForFolderInProject,
     deleteUserPreferenciesForFolderInProject,
     deleteUserPreferenciesForUIInProject,
@@ -331,6 +332,33 @@ describe("rest-querier", () => {
                 headers: jasmine.objectContaining({ "content-type": "application/json" }),
                 body: item
             });
+        });
+    });
+
+    describe("patchEmbeddedFile()", () => {
+        it("", async () => {
+            const item = JSON.stringify({
+                title: "Hello",
+                description: "Howdy!",
+                type: "embedded"
+            });
+
+            const content = "<h1>Hello world!</h1>";
+            const version_title = "Hi!";
+            const change_log = "update the message";
+            const should_lock_file = true;
+            const approval_table_action = null;
+
+            mockFetchSuccess(tlp.patch);
+
+            await patchEmbeddedFile(
+                item,
+                content,
+                version_title,
+                change_log,
+                should_lock_file,
+                approval_table_action
+            );
         });
     });
 });

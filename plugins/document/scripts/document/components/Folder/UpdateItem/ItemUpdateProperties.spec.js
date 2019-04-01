@@ -19,13 +19,13 @@
  */
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../../../helpers/local-vue.js";
-import FileUpdateProperties from "./FileUpdateProperties.vue";
+import ItemUpdateProperties from "./ItemUpdateProperties.vue";
 
-describe("FileUpdateProperties", () => {
+describe("ItemUpdateProperties", () => {
     let file_properties_update_factory;
     beforeEach(() => {
         file_properties_update_factory = (item = {}) => {
-            return shallowMount(FileUpdateProperties, {
+            return shallowMount(ItemUpdateProperties, {
                 localVue,
                 propsData: {
                     version: {

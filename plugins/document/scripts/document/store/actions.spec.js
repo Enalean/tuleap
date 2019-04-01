@@ -30,7 +30,8 @@ import {
     setUserPreferenciesForUI,
     unsetUnderConstructionUserPreference,
     updateFile,
-    updateFileFromModal
+    updateFileFromModal,
+    updateEmbeddedFileFromModal
 } from "./actions.js";
 import {
     restore as restoreUploadFile,
@@ -49,7 +50,8 @@ import {
     rewire$deleteUserPreferenciesForUnderConstructionModal,
     rewire$getItem,
     rewire$getProject,
-    rewire$patchUserPreferenciesForFolderInProject
+    rewire$patchUserPreferenciesForFolderInProject,
+    rewire$patchEmbeddedFile
 } from "../api/rest-querier.js";
 import {
     restore as restoreLoadFolderContent,
@@ -84,7 +86,8 @@ describe("Store actions", () => {
         uploadFile,
         cancelUpload,
         createNewVersion,
-        uploadVersion;
+        uploadVersion,
+        patchEmbeddedFile;
 
     beforeEach(() => {
         const project_id = 101;
@@ -147,6 +150,9 @@ describe("Store actions", () => {
             "deleteUserPreferenciesForUIInProject"
         );
         rewire$deleteUserPreferenciesForUIInProject(deleteUserPreferenciesForUIInProject);
+
+        patchEmbeddedFile = jasmine.createSpy("patchEmbeddedFile");
+        rewire$patchEmbeddedFile(patchEmbeddedFile);
     });
 
     describe("loadRootFolder()", () => {
@@ -916,6 +922,51 @@ describe("Store actions", () => {
             expect(uploadVersion).not.toHaveBeenCalled();
         });
     });
+
+    describe("updateEmbeddedFileFromModal", () => {
+        it("updates an embedded file", async () => {
+            const item = { id: 45 };
+            context.state.folder_content = [{ id: 45 }];
+            const new_html_content = { content: "<h1>Hello world!</h1>}}" };
+
+            const version_title = "My new version";
+            const version_changelog = "Changed the version because...";
+            const is_version_locked = true;
+
+            await updateEmbeddedFileFromModal(context, [
+                item,
+                new_html_content,
+                version_title,
+                version_changelog,
+                is_version_locked
+            ]);
+
+            expect(patchEmbeddedFile).toHaveBeenCalled();
+        });
+        it("throws an error when there is a problem with the update", async () => {
+            const item = { id: 45 };
+            context.state.folder_content = [{ id: 45 }];
+            const new_html_content = { content: "<h1>Hello world!</h1>}}" };
+
+            const version_title = "My new version";
+            const version_changelog = "Changed the version because...";
+            const is_version_locked = true;
+
+            patchEmbeddedFile.and.throwError("nope");
+
+            await updateEmbeddedFileFromModal(context, [
+                item,
+                new_html_content,
+                version_title,
+                version_changelog,
+                is_version_locked
+            ]);
+
+            expect(patchEmbeddedFile).toHaveBeenCalled();
+            expect(context.commit).toHaveBeenCalledWith("setModalError", jasmine.anything());
+        });
+    });
+
     describe("cancelFolderUpload", () => {
         let folder, item, context;
 
