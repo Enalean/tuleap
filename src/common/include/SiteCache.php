@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015-2017. All rights reserved
+ * Copyright (c) Enalean, 2015-Present. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -17,6 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\Plugin\PluginLoader;
 
 class SiteCache {
 
@@ -68,7 +70,7 @@ class SiteCache {
 
     private function invalidatePlugin() {
         $this->logger->info('Invalidate Plugin hooks');
-        PluginManager::instance()->invalidateCache();
+        PluginLoader::invalidateCache();
     }
 
     public function restoreCacheDirectories() {
@@ -121,6 +123,6 @@ class SiteCache {
 
         \Tuleap\Request\FrontRouter::restoreOwnership($this->logger, $backend);
 
-        PluginManager::instance()->restoreOwnershipOnCacheFile($this->logger, $backend);
+        PluginLoader::restoreOwnershipOnCacheFile($this->logger, $backend);
     }
 }

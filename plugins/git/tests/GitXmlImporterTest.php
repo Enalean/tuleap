@@ -153,7 +153,6 @@ class GitXmlImporterTest extends TuleapTestCase {
 
         $plugin_manager = new PluginManager(
             $plugin_factory,
-            EventManager::instance(),
             new SiteCache($this->logger),
             new ForgeUpgradeConfig(new System_Command()),
             new ContentInterpretor()

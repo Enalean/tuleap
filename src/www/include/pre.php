@@ -21,6 +21,7 @@
 
 use Tuleap\BurningParrotCompatiblePageDetector;
 use Tuleap\CookieManager;
+use Tuleap\Plugin\PluginLoader;
 use Tuleap\Request\CurrentPage;
 use Tuleap\TimezoneRetriever;
 
@@ -121,11 +122,15 @@ if (! file_exists(ForgeConfig::get('codendi_cache_dir'))) {
 $system_event_manager = SystemEventManager::instance();
 
 //Load plugins
+$event_manager  = EventManager::instance();
 $plugin_manager = PluginManager::instance();
-
+$plugin_loader  = new PluginLoader(
+    $event_manager,
+    PluginFactory::instance()
+);
 $cookie_manager = new CookieManager();
 
-$loader_scheduler = new LoaderScheduler($cookie_manager, $plugin_manager);
+$loader_scheduler = new LoaderScheduler($cookie_manager, $plugin_loader);
 $loader_scheduler->loadPluginsThenStartSession(IS_SCRIPT);
 
 if (!IS_SCRIPT) {
@@ -140,7 +145,7 @@ if (!IS_SCRIPT) {
     header('X-Content-Type-Options: nosniff');
     header('X-XSS-Protection: 1; mode=block');
     $whitelist_scripts = array();
-    EventManager::instance()->processEvent(
+    $event_manager->processEvent(
         Event::CONTENT_SECURITY_POLICY_SCRIPT_WHITELIST,
         array(
             'whitelist_scripts' => &$whitelist_scripts
@@ -172,7 +177,6 @@ setlocale(LC_CTYPE, "$current_locale.UTF-8");
 setlocale(LC_MESSAGES, "$current_locale.UTF-8");
 setlocale(LC_TIME, "$current_locale.UTF-8");
 
-$event_manager = EventManager::instance();
 $event_manager->processEvent(
     Event::HIT,
     array(

@@ -1,9 +1,6 @@
 <?php
-
-use Tuleap\CookieManager;
-
 /**
- * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,26 +18,32 @@ use Tuleap\CookieManager;
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class LoaderScheduler {
+use Tuleap\CookieManager;
+use Tuleap\Plugin\PluginLoader;
+
+class LoaderScheduler
+{
 
     private $cookie_manager;
-    private $plugin_manager;
+    /**
+     * @var PluginLoader
+     */
+    private $plugin_loader;
 
-    public function __construct(CookieManager $cookie_manager, PluginManager $plugin_manager) {
+    public function __construct(CookieManager $cookie_manager, PluginLoader $plugin_loader)
+    {
         $this->cookie_manager = $cookie_manager;
-        $this->plugin_manager = $plugin_manager;
+        $this->plugin_loader  = $plugin_loader;
     }
 
-    public function loadPluginsThenStartSession($is_script) {
-        $this->loadPlugins();
+    public function loadPluginsThenStartSession($is_script) : void
+    {
+        $this->plugin_loader->loadPlugins();
         $this->startSession($is_script);
     }
 
-    private function loadPlugins() {
-        $this->plugin_manager->loadPlugins();
-    }
-
-    private function startSession($is_script) {
+    private function startSession($is_script) : void
+    {
         if (! $is_script) {
             PHP_Session::start();
             $GLOBALS['session_hash'] = $this->cookie_manager->isCookie('session_hash') ?
