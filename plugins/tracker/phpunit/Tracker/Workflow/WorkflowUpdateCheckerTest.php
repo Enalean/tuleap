@@ -50,6 +50,7 @@ final class WorkflowUpdateCheckerTest extends TestCase
         $field                = Mockery::mock(\Tracker_FormElement_Field::class);
         $last_changeset_value = null;
         $submitted_value      = null;
+        $user                 = Mockery::mock(\PFUser::class);
 
         $is_submission = true;
 
@@ -59,7 +60,29 @@ final class WorkflowUpdateCheckerTest extends TestCase
                 $field,
                 $last_changeset_value,
                 $submitted_value,
-                $is_submission
+                $is_submission,
+                $user
+            )
+        );
+    }
+
+    public function testCanFieldBeUpdatedReturnsTrueWhenUserIsWorkflowUser()
+    {
+        $artifact             = Mockery::mock(\Tracker_Artifact::class);
+        $field                = Mockery::mock(\Tracker_FormElement_Field::class);
+        $last_changeset_value = null;
+        $submitted_value      = null;
+        $is_submission        = false;
+        $user                 = Mockery::mock(\Tracker_Workflow_WorkflowUser::class);
+
+        $this->assertTrue(
+            $this->workflow_update_checker->canFieldBeUpdated(
+                $artifact,
+                $field,
+                $last_changeset_value,
+                $submitted_value,
+                $is_submission,
+                $user
             )
         );
     }
@@ -71,6 +94,7 @@ final class WorkflowUpdateCheckerTest extends TestCase
         $last_changeset_value = null;
         $submitted_value      = null;
         $is_submission        = false;
+        $user                 = Mockery::mock(\PFUser::class);
 
         $this->assertTrue(
             $this->workflow_update_checker->canFieldBeUpdated(
@@ -78,7 +102,8 @@ final class WorkflowUpdateCheckerTest extends TestCase
                 $field,
                 $last_changeset_value,
                 $submitted_value,
-                $is_submission
+                $is_submission,
+                $user
             )
         );
     }
@@ -90,6 +115,7 @@ final class WorkflowUpdateCheckerTest extends TestCase
         $last_changeset_value = Mockery::mock(\Tracker_Artifact_ChangesetValue::class);
         $submitted_value      = 'Arguslike';
         $is_submission        = false;
+        $user                 = Mockery::mock(\PFUser::class);
 
         $field->shouldReceive('hasChanges')
             ->with($artifact, $last_changeset_value, $submitted_value)
@@ -101,7 +127,8 @@ final class WorkflowUpdateCheckerTest extends TestCase
                 $field,
                 $last_changeset_value,
                 $submitted_value,
-                $is_submission
+                $is_submission,
+                $user
             )
         );
     }
@@ -113,6 +140,7 @@ final class WorkflowUpdateCheckerTest extends TestCase
         $last_changeset_value = Mockery::mock(\Tracker_Artifact_ChangesetValue::class);
         $submitted_value      = 'Arguslike';
         $is_submission        = false;
+        $user                 = Mockery::mock(\PFUser::class);
 
         $field->shouldReceive('hasChanges')->andReturnTrue();
         $this->read_only_field_detector
@@ -126,7 +154,8 @@ final class WorkflowUpdateCheckerTest extends TestCase
                 $field,
                 $last_changeset_value,
                 $submitted_value,
-                $is_submission
+                $is_submission,
+                $user
             )
         );
     }
@@ -138,6 +167,7 @@ final class WorkflowUpdateCheckerTest extends TestCase
         $last_changeset_value = Mockery::mock(\Tracker_Artifact_ChangesetValue::class);
         $submitted_value      = 'Arguslike';
         $is_submission        = false;
+        $user                 = Mockery::mock(\PFUser::class);
 
         $field->shouldReceive('hasChanges')->andReturnTrue();
         $this->read_only_field_detector
@@ -150,7 +180,8 @@ final class WorkflowUpdateCheckerTest extends TestCase
                 $field,
                 $last_changeset_value,
                 $submitted_value,
-                $is_submission
+                $is_submission,
+                $user
             )
         );
     }
@@ -162,6 +193,7 @@ final class WorkflowUpdateCheckerTest extends TestCase
         $last_changeset_value = null;
         $submitted_value      = 'Arguslike';
         $is_submission        = false;
+        $user                 = Mockery::mock(\PFUser::class);
 
         $this->read_only_field_detector
             ->shouldReceive('isFieldReadOnly')
@@ -173,7 +205,8 @@ final class WorkflowUpdateCheckerTest extends TestCase
                 $field,
                 $last_changeset_value,
                 $submitted_value,
-                $is_submission
+                $is_submission,
+                $user
             )
         );
     }
@@ -185,6 +218,7 @@ final class WorkflowUpdateCheckerTest extends TestCase
         $last_changeset_value = Mockery::mock(\Tracker_Artifact_ChangesetValue::class);
         $submitted_value      = null;
         $is_submission        = false;
+        $user                 = Mockery::mock(\PFUser::class);
 
         $this->read_only_field_detector
             ->shouldReceive('isFieldReadOnly')
@@ -196,7 +230,8 @@ final class WorkflowUpdateCheckerTest extends TestCase
                 $field,
                 $last_changeset_value,
                 $submitted_value,
-                $is_submission
+                $is_submission,
+                $user
             )
         );
     }

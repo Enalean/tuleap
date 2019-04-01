@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,8 +21,8 @@
 /**
  * I validate fields for both initial and new changesets but in the past (thus no check on required or permissions)
  */
-class Tracker_Artifact_Changeset_AtGivenDateFieldsValidator extends Tracker_Artifact_Changeset_FieldsValidator {
-
+class Tracker_Artifact_Changeset_AtGivenDateFieldsValidator extends Tracker_Artifact_Changeset_FieldsValidator //phpcs:ignore
+{
     protected function canValidateField(
         Tracker_Artifact $artifact,
         Tracker_FormElement_Field $field
@@ -33,6 +33,7 @@ class Tracker_Artifact_Changeset_AtGivenDateFieldsValidator extends Tracker_Arti
     protected function validateField(
         Tracker_Artifact $artifact,
         Tracker_FormElement_Field $field,
+        \PFUser $user,
         $submitted_value
     ) {
         return $field->validateField($artifact, $submitted_value);

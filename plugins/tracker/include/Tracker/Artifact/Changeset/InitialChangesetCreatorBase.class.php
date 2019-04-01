@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,8 +23,8 @@ use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
 /**
  * I am a Template Method to create an initial changeset.
  */
-abstract class Tracker_Artifact_Changeset_InitialChangesetCreatorBase extends Tracker_Artifact_Changeset_ChangesetCreatorBase {
-
+abstract class Tracker_Artifact_Changeset_InitialChangesetCreatorBase extends Tracker_Artifact_Changeset_ChangesetCreatorBase //phpcs:ignore
+{
     /** @var Tracker_Artifact_ChangesetDao */
     protected $changeset_dao;
 
@@ -127,7 +127,7 @@ abstract class Tracker_Artifact_Changeset_InitialChangesetCreatorBase extends Tr
             return false;
         }
 
-        if (! $this->fields_validator->validate($artifact, $fields_data)) {
+        if (! $this->fields_validator->validate($artifact, $submitter, $fields_data)) {
             return false;
         }
 

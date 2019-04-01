@@ -121,8 +121,9 @@ class Tracker_Artifact_Changeset_FieldsValidatorTest extends TuleapTestCase //ph
         stub($this->field3)->isValid()->returns(true);
         stub($this->workflow)->validate()->returns(true);
 
+        $user = mock(\PFUser::class);
         $fields_data = array();
-        $this->assertTrue($this->initial_changeset_fields_validator->validate($this->artifact, $fields_data));
+        $this->assertTrue($this->initial_changeset_fields_validator->validate($this->artifact, $user, $fields_data));
         $this->assertNotNull($fields_data);
         $this->assertFalse(isset($fields_data[101]));
         $this->assertFalse(isset($fields_data[102]));
@@ -136,8 +137,9 @@ class Tracker_Artifact_Changeset_FieldsValidatorTest extends TuleapTestCase //ph
         stub($this->field3)->isValid()->returns(true);
         stub($this->workflow)->validate()->returns(true);
 
+        $user = mock(\PFUser::class);
         $fields_data = array('101' => 444);
-        $this->assertTrue($this->initial_changeset_fields_validator->validate($this->artifact, $fields_data));
+        $this->assertTrue($this->initial_changeset_fields_validator->validate($this->artifact, $user, $fields_data));
         $this->assertNotNull($fields_data[101]);
         $this->assertEqual($fields_data[101], 444);
     }
@@ -150,8 +152,9 @@ class Tracker_Artifact_Changeset_FieldsValidatorTest extends TuleapTestCase //ph
         stub($this->field3)->isValid()->returns(true);
         stub($this->workflow)->validate()->returns(true);
 
+        $user = mock(\PFUser::class);
         $fields_data = array();
-        $this->assertTrue($this->initial_changeset_fields_validator->validate($this->artifact, $fields_data));
+        $this->assertTrue($this->initial_changeset_fields_validator->validate($this->artifact, $user, $fields_data));
         $this->assertFalse(isset($fields_data[101]));
     }
 
@@ -161,8 +164,9 @@ class Tracker_Artifact_Changeset_FieldsValidatorTest extends TuleapTestCase //ph
         stub($this->field3)->isValid()->returns(true);
         stub($this->workflow)->validate()->returns(true);
 
+        $user = mock(\PFUser::class);
         $fields_data = array();
-        $this->assertTrue($this->initial_changeset_fields_validator->validate($this->artifact, $fields_data));
+        $this->assertTrue($this->initial_changeset_fields_validator->validate($this->artifact, $user, $fields_data));
         $this->assertFalse(isset($fields_data[101]));
     }
 
@@ -173,8 +177,9 @@ class Tracker_Artifact_Changeset_FieldsValidatorTest extends TuleapTestCase //ph
         stub($this->field3)->isValid()->returns(true);
         stub($this->workflow)->validate()->returns(true);
 
+        $user = mock(\PFUser::class);
         $fields_data = array('101' => 666);
-        $this->assertTrue($this->initial_changeset_fields_validator->validate($this->artifact, $fields_data));
+        $this->assertTrue($this->initial_changeset_fields_validator->validate($this->artifact, $user, $fields_data));
         $this->assertNotNull($fields_data[101]);
         $this->assertEqual($fields_data[101], 666);
     }
@@ -191,8 +196,9 @@ class Tracker_Artifact_Changeset_FieldsValidatorTest extends TuleapTestCase //ph
 
         $GLOBALS['Language']->expectOnce('getText', array('plugin_tracker_common_artifact', 'err_required', $this->field1->getLabel() .' ('. $this->field1->getName() .')'));
 
+        $user = mock(\PFUser::class);
         $fields_data = array();
-        $this->assertFalse($this->initial_changeset_fields_validator->validate($this->artifact, $fields_data));
+        $this->assertFalse($this->initial_changeset_fields_validator->validate($this->artifact, $user, $fields_data));
         $this->assertFalse(isset($fields_data[101]));
     }
 
@@ -207,8 +213,9 @@ class Tracker_Artifact_Changeset_FieldsValidatorTest extends TuleapTestCase //ph
 
         $GLOBALS['Language']->expectOnce('getText', array('plugin_tracker_common_artifact', 'err_required', $this->field1->getLabel() .' ('. $this->field1->getName() .')'));
 
+        $user = mock(\PFUser::class);
         $fields_data = array();
-        $this->assertFalse($this->initial_changeset_fields_validator->validate($this->artifact, $fields_data));
+        $this->assertFalse($this->initial_changeset_fields_validator->validate($this->artifact, $user, $fields_data));
     }
 
     // ARTIFACT MODIFICATION
@@ -219,8 +226,9 @@ class Tracker_Artifact_Changeset_FieldsValidatorTest extends TuleapTestCase //ph
         stub($this->field3)->isValid()->returns(true);
         stub($this->workflow)->validate()->returns(true);
 
+        $user = mock(\PFUser::class);
         $fields_data = array('101' => 666);
-        $this->assertTrue($this->new_changeset_fields_validator->validate($this->artifact_update, $fields_data));
+        $this->assertTrue($this->new_changeset_fields_validator->validate($this->artifact_update, $user, $fields_data));
         $this->assertNotNull($fields_data[101]);
         $this->assertEqual($fields_data[101], 666);
     }
@@ -236,8 +244,9 @@ class Tracker_Artifact_Changeset_FieldsValidatorTest extends TuleapTestCase //ph
 
         $GLOBALS['Language']->expectNever('getText', array('plugin_tracker_common_artifact', 'err_required', '*'));
 
+        $user = mock(\PFUser::class);
         $fields_data = array();
-        $this->assertTrue($this->new_changeset_fields_validator->validate($this->artifact_update, $fields_data));
+        $this->assertTrue($this->new_changeset_fields_validator->validate($this->artifact_update, $user, $fields_data));
         $this->assertFalse(isset($fields_data[101]));
     }
 
@@ -250,11 +259,12 @@ class Tracker_Artifact_Changeset_FieldsValidatorTest extends TuleapTestCase //ph
         stub($this->field3)->userCanSubmit()->returns(true);
         stub($this->workflow)->validate()->returns(true);
 
+        $user = mock(\PFUser::class);
         // field 101 and 102 are missing
         // 101 has a default value
         // 102 has no default value
         $fields_data = array('103' => 444);
-        $this->assertTrue($this->initial_changeset_fields_validator->validate($this->artifact, $fields_data));
+        $this->assertTrue($this->initial_changeset_fields_validator->validate($this->artifact, $user, $fields_data));
         $this->assertFalse(isset($fields_data[101]));
         $this->assertFalse(isset($fields_data[102]));
         $this->assertNotNull($fields_data[103]);
@@ -273,10 +283,11 @@ class Tracker_Artifact_Changeset_FieldsValidatorTest extends TuleapTestCase //ph
         stub($this->changeset)->getValue($this->field2)->returns($this->changeset_value2);
         stub($this->changeset)->getValue($this->field3)->returns($this->changeset_value3);
 
+        $user = mock(\PFUser::class);
         // field 102 is missing
         $fields_data = array('101' => 'foo',
                              '103' => 'bar');
-        $this->assertTrue($this->new_changeset_fields_validator->validate($this->artifact_update, $fields_data));
+        $this->assertTrue($this->new_changeset_fields_validator->validate($this->artifact_update, $user, $fields_data));
         $this->assertFalse(isset($fields_data[102]));
     }
 
@@ -292,10 +303,11 @@ class Tracker_Artifact_Changeset_FieldsValidatorTest extends TuleapTestCase //ph
         stub($this->changeset)->getValue($this->field2)->returns(null);
         stub($this->changeset)->getValue($this->field3)->returns($this->changeset_value3);
 
+        $user = mock(\PFUser::class);
         // field 102 is missing
         $fields_data = array('101' => 'foo',
                              '103' => 'bar');
-        $this->assertTrue($this->new_changeset_fields_validator->validate($this->artifact_update, $fields_data));
+        $this->assertTrue($this->new_changeset_fields_validator->validate($this->artifact_update, $user, $fields_data));
         $this->assertFalse(isset($fields_data[102]));
     }
 
@@ -309,9 +321,10 @@ class Tracker_Artifact_Changeset_FieldsValidatorTest extends TuleapTestCase //ph
         stub($this->field3)->userCanSubmit()->returns(true);
         stub($this->workflow)->validate()->returns(true);
 
+        $user = mock(\PFUser::class);
         // field 102 is missing
         $fields_data = array();
-        $this->assertFalse($this->initial_changeset_fields_validator->validate($this->artifact, $fields_data));
+        $this->assertFalse($this->initial_changeset_fields_validator->validate($this->artifact, $user, $fields_data));
         $this->assertFalse(isset($fields_data[101]));
         $this->assertFalse(isset($fields_data[102]));
         $this->assertFalse(isset($fields_data[103]));
@@ -327,17 +340,18 @@ class Tracker_Artifact_Changeset_FieldsValidatorTest extends TuleapTestCase //ph
         stub($this->field3)->userCanSubmit()->returns(true);
         stub($this->workflow)->validate()->returns(true);
 
+        $user = mock(\PFUser::class);
         $fields_data = array(
             102 => '123',
         );
-        $this->assertTrue($this->initial_changeset_fields_validator->validate($this->artifact, $fields_data));
+        $this->assertTrue($this->initial_changeset_fields_validator->validate($this->artifact, $user, $fields_data));
         $this->assertFalse(isset($fields_data[101]));
         $this->assertFalse(isset($fields_data[103]));
 
         $fields_data = array(
             102 => '456',
         );
-        $this->assertFalse($this->initial_changeset_fields_validator->validate($this->artifact, $fields_data));
+        $this->assertFalse($this->initial_changeset_fields_validator->validate($this->artifact, $user, $fields_data));
         $this->assertFalse(isset($fields_data[101]));
         $this->assertFalse(isset($fields_data[103]));
     }
