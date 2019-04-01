@@ -24,11 +24,11 @@ namespace Tuleap\Tracker\REST\v1\Workflow;
 
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\REST\I18NRestException;
+use Tuleap\Tracker\Workflow\SimpleMode\TransitionRetriever;
 use Tuleap\Tracker\Workflow\Transition\Condition\ConditionsUpdateException;
 use Tuleap\Tracker\Workflow\Transition\Condition\ConditionsUpdater;
 use Tuleap\Tracker\Workflow\Transition\NoSiblingTransitionException;
 use Tuleap\Tracker\Workflow\Transition\OrphanTransitionException;
-use Tuleap\Tracker\Workflow\Transition\Update\TransitionRetriever;
 
 class TransitionPatcher
 {

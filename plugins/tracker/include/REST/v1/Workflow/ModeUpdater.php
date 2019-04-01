@@ -24,9 +24,9 @@ namespace Tuleap\Tracker\REST\v1\Workflow;
 use Tracker;
 use Transition;
 use TransitionFactory;
+use Tuleap\Tracker\Workflow\SimpleMode\TransitionReplicator;
+use Tuleap\Tracker\Workflow\SimpleMode\TransitionRetriever;
 use Tuleap\Tracker\Workflow\Transition\NoSiblingTransitionException;
-use Tuleap\Tracker\Workflow\Transition\Update\TransitionReplicator;
-use Tuleap\Tracker\Workflow\Transition\Update\TransitionRetriever;
 use Workflow;
 use Workflow_Dao;
 

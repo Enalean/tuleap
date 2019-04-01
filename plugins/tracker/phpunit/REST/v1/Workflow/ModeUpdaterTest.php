@@ -28,8 +28,8 @@ use Tracker;
 use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Transition;
 use TransitionFactory;
-use Tuleap\Tracker\Workflow\Transition\Update\TransitionReplicator;
-use Tuleap\Tracker\Workflow\Transition\Update\TransitionRetriever;
+use Tuleap\Tracker\Workflow\SimpleMode\TransitionReplicator;
+use Tuleap\Tracker\Workflow\SimpleMode\TransitionRetriever;
 use Workflow;
 use Workflow_Dao;
 

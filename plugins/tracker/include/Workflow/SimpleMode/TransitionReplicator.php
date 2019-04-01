@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Workflow\Transition\Update;
+namespace Tuleap\Tracker\Workflow\SimpleMode;
 
 use Transition;
 use Tuleap\Tracker\Workflow\PostAction\PostActionsRetriever;
