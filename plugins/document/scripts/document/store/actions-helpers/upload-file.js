@@ -20,7 +20,7 @@
 import { Upload } from "tus-js-client";
 import { getItem } from "../../api/rest-querier.js";
 import { flagItemAsCreated } from "./flag-item-as-created.js";
-import { RETRY_DELAYS, FILE_UPLOAD_UNKNOWN_ERROR } from "../../constants.js";
+import { FILE_UPLOAD_UNKNOWN_ERROR, RETRY_DELAYS } from "../../constants.js";
 
 function updateParentProgress(bytes_total, fake_item, bytes_uploaded, context, parent) {
     if (bytes_total === 0) {
@@ -89,16 +89,14 @@ export function uploadVersion(context, dropped_file, updated_file, new_version) 
         onProgress: (bytes_uploaded, bytes_total) => {
             updateParentProgress(bytes_total, updated_file, bytes_uploaded, context, parent_folder);
         },
-        onSuccess: () => {
+        onSuccess: async () => {
             updated_file.progress = null;
             updated_file.is_uploading_new_version = false;
-            const now = Date.now();
-            updated_file.file_properties.html_url =
-                updated_file.file_properties.html_url + "&update_time=" + now;
-            updated_file.last_update_date = now;
-            updated_file.file_properties.file_size = dropped_file.size;
-            updated_file.file_properties.file_type = dropped_file.type;
+            updated_file.last_update_date = Date.now();
             context.commit("removeFileFromUploadsList", updated_file);
+
+            const new_item_version = await getItem(updated_file.id);
+            context.commit("replaceFileWithNewVersion", [updated_file, new_item_version]);
         },
         onError: ({ originalRequest }) => {
             updated_file.upload_error = originalRequest.statusText;

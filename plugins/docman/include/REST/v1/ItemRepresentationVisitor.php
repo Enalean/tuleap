@@ -163,10 +163,16 @@ class ItemRepresentationVisitor implements ItemVisitor
 
     private function buildDirectAccessURL(Docman_Item $item) : string
     {
+        $parameters = ['action' => 'show', 'switcholdui' => 'true', 'group_id' => $item->getGroupId(), 'id' => $item->getId()];
+        $version    = $this->docman_version_factory->getCurrentVersionForItem($item);
+        if ($version) {
+            $parameters['version_number'] = $version->getNumber();
+        }
+
         return DocmanViewURLBuilder::buildActionUrl(
             $item,
             ['default_url' => '/plugins/docman/?'],
-            ['action' => 'show', 'switcholdui' => 'true', 'group_id' => $item->getGroupId(), 'id' => $item->getId()],
+            $parameters,
             true
         );
     }

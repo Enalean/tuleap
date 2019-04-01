@@ -268,4 +268,46 @@ describe("Store mutations", () => {
             ]);
         });
     });
+
+    describe("replaceFileWithNewVersion", () => {
+        it("it should override item properties with the uploaded ones", () => {
+            const random_item = {
+                id: 1,
+                title: "tutu.txt",
+                is_uploading_in_collapsed_folder: false,
+                progress: 0
+            };
+            const existing_item = {
+                id: 2,
+                title: "titi.txt",
+                file_properties: {
+                    html_url: "plugins/document/2/1",
+                    file_size: 123,
+                    file_type: "image/jpeg"
+                },
+                lock_info: {
+                    locked_by: { id: 137, uri: "users/137", user_url: "/users/user_url" },
+                    lock_date: "2019-04-01T18:17:07+04:00"
+                }
+            };
+            const new_version = {
+                id: 2,
+                title: "titi.txt",
+                file_properties: {
+                    html_url: "plugins/document/2/2",
+                    file_size: 456,
+                    file_type: "image/jpeg"
+                },
+                lock_info: null
+            };
+
+            const state = {
+                folder_content: [random_item, existing_item]
+            };
+
+            mutations.replaceFileWithNewVersion(state, [existing_item, new_version]);
+
+            expect(state.folder_content).toEqual([random_item, new_version]);
+        });
+    });
 });
