@@ -23,16 +23,12 @@ declare(strict_types = 1);
 namespace Tuleap\Docman\REST\v1;
 
 use Docman_Item;
-use Docman_VersionFactory;
+use Docman_Version;
 use EventManager;
 use ProjectManager;
 
 class PostUpdateEventAdder
 {
-    /**
-     * @var Docman_VersionFactory
-     */
-    private $version_factory;
     /**
      * @var ProjectManager
      */
@@ -47,30 +43,31 @@ class PostUpdateEventAdder
     private $event_manager;
 
     public function __construct(
-        Docman_VersionFactory $version_factory,
         ProjectManager $project_manager,
         DocmanItemsEventAdder $items_event_adder,
         EventManager $event_manager
     ) {
-        $this->version_factory   = $version_factory;
         $this->project_manager   = $project_manager;
         $this->items_event_adder = $items_event_adder;
         $this->event_manager     = $event_manager;
     }
 
-    public function triggerPostUpdateEvents(Docman_Item $item, \PFUser $user): void
+    public function triggerPostUpdateEvents(Docman_Item $item, \PFUser $user, ?Docman_Version $version): void
     {
         $params = [
             'item'     => $item,
             'user'     => $user,
-            'group_id' => $item->getGroupId(),
-            'version'  => $this->version_factory->getCurrentVersionForItem($item)
+            'group_id' => $item->getGroupId()
         ];
+        if ($version) {
+            $params['version'] = $version;
+            $this->event_manager->processEvent(PLUGIN_DOCMAN_EVENT_NEW_FILE_VERSION, $params);
+        }
 
         $this->items_event_adder->addNotificationEvents($this->project_manager->getProject($item->getGroupId()));
         $this->items_event_adder->addLogEvents();
 
-        $this->event_manager->processEvent('plugin_docman_event_new_version', $params);
+
         $this->event_manager->processEvent('send_notifications', []);
     }
 }

@@ -30,8 +30,8 @@ use Tuleap\Docman\REST\v1\Folders\DocmanEmptyPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Folders\DocmanFolderPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Folders\DocmanLinkPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Folders\DocmanPOSTFilesRepresentation;
-use Tuleap\Docman\REST\v1\Folders\DocmanWikiPOSTRepresentation;
-use Tuleap\Docman\REST\v1\Folders\WikiPropertiesPOSTRepresentation;
+use Tuleap\Docman\REST\v1\Wiki\DocmanWikiPOSTRepresentation;
+use Tuleap\Docman\REST\v1\Wiki\WikiPropertiesPOSTPATCHRepresentation;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
 use Tuleap\Docman\Upload\Document\DocumentToUpload;
 use Tuleap\Docman\Upload\Document\DocumentToUploadCreator;
@@ -131,7 +131,7 @@ class DocmanItemCreatorTest extends TestCase
 
         $post_representation                             = new DocmanWikiPOSTRepresentation();
         $post_representation->title                      = 'Title';
-        $post_representation->wiki_properties            = new WikiPropertiesPOSTRepresentation();
+        $post_representation->wiki_properties            = new WikiPropertiesPOSTPATCHRepresentation();
         $post_representation->wiki_properties->page_name = "Monchichi";
 
         $this->document_ongoing_upload_retriever->shouldReceive('isThereAlreadyAnUploadOngoing')->andReturns(false);
@@ -183,7 +183,7 @@ class DocmanItemCreatorTest extends TestCase
 
         $post_representation                             = new DocmanWikiPOSTRepresentation();
         $post_representation->title                      = 'Title';
-        $post_representation->wiki_properties            = new WikiPropertiesPOSTRepresentation();
+        $post_representation->wiki_properties            = new WikiPropertiesPOSTPATCHRepresentation();
         $post_representation->wiki_properties->page_name = "Monchichi";
 
         $this->document_ongoing_upload_retriever->shouldReceive('isThereAlreadyAnUploadOngoing')->andReturns(false);

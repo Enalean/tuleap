@@ -24,10 +24,11 @@
 
 namespace Tuleap\Docman\REST;
 
+use Tuleap\Docman\REST\v1\DocmanEmbeddedFilesResource;
 use Tuleap\Docman\REST\v1\DocmanFilesResource;
 use Tuleap\Docman\REST\v1\DocmanFoldersResource;
 use Tuleap\Docman\REST\v1\DocmanItemsResource;
-use Tuleap\Docman\REST\v1\DocmanEmbeddedFilesResource;
+use Tuleap\Docman\REST\v1\DocmanWikiResource;
 
 class ResourcesInjector
 {
@@ -35,6 +36,7 @@ class ResourcesInjector
     const FILES_NAME    = 'docman_files';
     const FOLDER_NAME   = 'docman_folders';
     const EMBEDDED_NAME = 'docman_embedded_files';
+    const WIKI_NAME     = 'docman_wikis';
 
     public function populate(\Luracast\Restler\Restler $restler)
     {
@@ -56,6 +58,11 @@ class ResourcesInjector
         $restler->addAPIClass(
             DocmanEmbeddedFilesResource::class,
             self::EMBEDDED_NAME
+        );
+
+        $restler->addAPIClass(
+            DocmanWikiResource::class,
+            self::WIKI_NAME
         );
     }
 }

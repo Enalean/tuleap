@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace Tuleap\Docman\rest;
 
 use Docman_ApprovalTableItemDao;
+use Docman_ApprovalTableWikiDao;
 use Docman_ItemFactory;
 use Docman_MetadataValueFactory;
 use PluginManager;
@@ -176,13 +177,13 @@ class DocmanDataBuilder extends REST_TestDataBuilder
      *         Root
      *          +
      *          |
-     *    +-----+-----+---------------+
-     *    |           |               |
-     *    +           +               +
-     * folder 1   Folder A File   Folder B Embedded
-     *    +           +               +
-     *    |           |               |
-     *   ...         ...             ...
+     *    +-----+-----+---------------+---------------------+
+     *    |           |               |                     |
+     *    +           +               +                     +
+     * folder 1   Folder A File   Folder B Embedded   Folder C wiki
+     *    +           +               +                     +
+     *    |           |               |                     |
+     *   ...         ...             ...                   ...
      */
     private function addContent()
     {
@@ -191,6 +192,7 @@ class DocmanDataBuilder extends REST_TestDataBuilder
         $this->createFolder1WithSubContent($docman_root);
         $this->createFolderFileWithContent($docman_root);
         $this->createFolderEmbeddedWithContent($docman_root);
+        $this->createFolderWikiWithContent($docman_root);
     }
 
     private function addReadPermissionOnItem($object_id, $ugroup_name)
@@ -582,5 +584,70 @@ class DocmanDataBuilder extends REST_TestDataBuilder
 
         $version_factory = new \Docman_VersionFactory();
         return $version_factory->create($version);
+    }
+
+
+    /**
+     * To help understand tests structure, below a representation of folder hierarchy
+     *
+     *                     Folder C Wiki
+     *                          +
+     *                          |
+     *                          +
+     *             +------------------------+
+     *             |                        |
+     *             +                        +
+     *          wiki AT                   wiki L
+     *
+     * (L)    => Lock on this item
+     * (AT)   => Approval table on this item
+     *
+     */
+    private function createFolderWikiWithContent($docman_root): void
+    {
+        $folder_wiki_id = $this->createItemWithVersion(
+            self::REGULAR_USER_ID,
+            $docman_root->getId(),
+            'Folder C Wiki',
+            PLUGIN_DOCMAN_ITEM_TYPE_FOLDER
+        );
+
+        $wiki_ATC_id         = $this->createItem(
+            self::REGULAR_USER_ID,
+            $folder_wiki_id,
+            'wiki AT',
+            PLUGIN_DOCMAN_ITEM_TYPE_WIKI
+        );
+
+        $this->addWritePermissionOnItem($wiki_ATC_id, ProjectUGroup::PROJECT_MEMBERS);
+
+        $wiki_L_id = $this->createItem(
+            self::REGULAR_USER_ID,
+            $folder_wiki_id,
+            'wiki L',
+            PLUGIN_DOCMAN_ITEM_TYPE_WIKI
+        );
+
+        $this->addApprovalTableForWiki((int)$wiki_ATC_id, PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED);
+        $this->addReadPermissionOnItem($folder_wiki_id, \ProjectUGroup::PROJECT_ADMIN);
+
+        $this->lockItem($wiki_L_id);
+
+        $this->appendCustomMetadataValueToItem($folder_wiki_id, "custom value for folder_3");
+        $this->appendCustomMetadataValueToItem($wiki_ATC_id, "custom value for wiki AT");
+    }
+
+    private function addApprovalTableForWiki(int $item_id, int $status): void
+    {
+        $dao = new Docman_ApprovalTableWikiDao();
+        $dao->createTable(
+            $item_id,
+            0,
+            self::REGULAR_USER_ID,
+            "",
+            time(),
+            $status,
+            false
+        );
     }
 }

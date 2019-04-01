@@ -20,19 +20,15 @@
 
 declare(strict_types = 1);
 
-namespace Tuleap\Docman\REST\v1\EmbeddedFiles;
+namespace Tuleap\Docman\REST\v1\Wiki;
 
-use Docman_FileStorage;
+use Docman_ItemFactory;
 use Tuleap\Docman\Lock\LockChecker;
 use Tuleap\Docman\REST\v1\DocmanItemUpdator;
 use Tuleap\Docman\REST\v1\ExceptionItemIsLockedByAnotherUser;
 
-class DocmanEmbeddedFileUpdator
+class DocmanWikiUpdator
 {
-    /**
-     * @var \Docman_FileStorage
-     */
-    private $file_storage;
     /**
      * @var \Docman_VersionFactory
      */
@@ -42,35 +38,45 @@ class DocmanEmbeddedFileUpdator
      */
     private $lock_checker;
     /**
-     * @var EmbeddedFileVersionCreationBeforeUpdateValidator
+     * @var \Docman_ItemFactory
+     */
+    private $docman_item_factory;
+    /**
+     * @var WikiVersionCreationBeforeUpdateValidator
      */
     private $before_update_validator;
+    /**
+     * @var \EventManager
+     */
+    private $event_manager;
     /**
      * @var DocmanItemUpdator
      */
     private $updator;
 
     public function __construct(
-        Docman_FileStorage $file_storage,
         \Docman_VersionFactory $version_factory,
         LockChecker $lock_checker,
-        EmbeddedFileVersionCreationBeforeUpdateValidator $before_update_validator,
+        Docman_ItemFactory $docman_item_factory,
+        WikiVersionCreationBeforeUpdateValidator $before_update_validator,
+        \EventManager $event_manager,
         DocmanItemUpdator $updator
     ) {
-        $this->file_storage            = $file_storage;
         $this->version_factory         = $version_factory;
         $this->lock_checker            = $lock_checker;
+        $this->docman_item_factory     = $docman_item_factory;
         $this->before_update_validator = $before_update_validator;
+        $this->event_manager           = $event_manager;
         $this->updator                 = $updator;
     }
 
     /**
      * @throws ExceptionItemIsLockedByAnotherUser
      */
-    public function updateEmbeddedFile(
+    public function updateWiki(
         \Docman_Item $item,
         \PFUser $current_user,
-        DocmanEmbeddedFilesPATCHRepresentation $representation
+        DocmanWikiPATCHRepresentation $representation
     ): void {
         $this->lock_checker->checkItemIsLocked($item, $current_user);
 
@@ -78,36 +84,45 @@ class DocmanEmbeddedFileUpdator
 
         $next_version_id = (int)$this->version_factory->getNextVersionNumber($item);
 
-        $created_file_path = $this->file_storage->store(
-            $representation->embedded_properties->content,
-            $item->getGroupId(),
-            $item->getId(),
-            $next_version_id
-        );
-
-        $date = new \DateTimeImmutable();
-
-        $new_embedded_version_row = [
+        $new_link_version_row = [
             'item_id'   => $item->getId(),
-            'number'    => $next_version_id,
             'user_id'   => $current_user->getId(),
-            'label'     => '',
-            'changelog' => $representation->change_log,
-            'date'      => $date->getTimestamp(),
-            'filename'  => basename($created_file_path),
-            'filesize'  => filesize($created_file_path),
-            'filetype'  => 'text/html',
-            'path'      => $created_file_path
+            'wiki_page' => $representation->wiki_properties->page_name
+
         ];
 
-        $this->version_factory->create($new_embedded_version_row);
+        $this->docman_item_factory->update($new_link_version_row);
 
-        $this->updator->updateCommonData(
+        $documents = $this->docman_item_factory->getWikiPageReferencers($item->getPagename(), $item->getGroupId());
+        foreach ($documents as $document) {
+            $this->event_manager->processEvent(
+                'plugin_docman_event_wikipage_update',
+                [
+                    'group_id'  => $item->getGroupId(),
+                    'item'      => $document,
+                    'user'      => $current_user,
+                    'wiki_page' => $representation->wiki_properties->page_name,
+                    'old_value' => $next_version_id - 1,
+                    'new_value' => $next_version_id
+                ]
+            );
+        }
+
+        $last_version = $this->version_factory->getCurrentVersionForItem($item);
+        $this->event_manager->processEvent(
+            'plugin_docman_event_edit',
+            [
+                'group_id' => $item->getGroupId(),
+                'item'     => $item,
+                'user'     => $current_user
+            ]
+        );
+
+        $this->updator->updateCommonDataWithoutApprovalTable(
             $item,
             $representation->should_lock_file,
             $current_user,
-            $representation->approval_table_action,
-            $this->version_factory->getCurrentVersionForItem($item)
+            $last_version
         );
     }
 }

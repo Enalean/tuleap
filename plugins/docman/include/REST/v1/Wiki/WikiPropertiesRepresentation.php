@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,22 +18,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types = 1);
+namespace Tuleap\Docman\REST\v1\Wiki;
 
-namespace Tuleap\Docman\REST\v1\Folders;
-
-class DocmanWikiPOSTRepresentation
+class WikiPropertiesRepresentation
 {
     /**
-     * @var string Item title {@from body} {@required true}
+     * @var string
      */
-    public $title;
+    public $page_name;
+
     /**
-     * @var string Item description {@from body} {@required false}
+     * @var string
      */
-    public $description = '';
-    /**
-     * @var WikiPropertiesPOSTRepresentation {@type \Tuleap\Docman\REST\v1\Folders\WikiPropertiesPOSTRepresentation} {@from body} {@required true}
-     */
-    public $wiki_properties;
+    public $html_url;
+
+    public function build(\Docman_Wiki $docman_wiki, $wiki_html_url)
+    {
+        $this->page_name = $docman_wiki->getPagename();
+        $this->html_url  = $wiki_html_url;
+    }
 }
