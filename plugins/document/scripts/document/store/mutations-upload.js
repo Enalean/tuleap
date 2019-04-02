@@ -27,7 +27,8 @@ export {
     resetFolderIsUploading,
     toggleCollapsedFolderHasUploadingContent,
     updateFolderProgressbar,
-    removeVersionUploadProgress
+    removeVersionUploadProgress,
+    replaceFileWithNewVersion
 };
 
 function addFileInUploadsList(state, file) {
@@ -122,4 +123,9 @@ function resetFolderIsUploading(state, folder) {
     folder.progress = 0;
 
     state.folder_content.splice(folder_index, 1, folder);
+}
+
+function replaceFileWithNewVersion(state, [existing_item, new_version]) {
+    existing_item.file_properties = new_version.file_properties;
+    existing_item.lock_info = new_version.lock_info;
 }

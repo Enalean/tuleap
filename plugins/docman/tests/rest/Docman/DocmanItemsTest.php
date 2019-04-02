@@ -115,7 +115,7 @@ class DocmanItemsTest extends DocmanBase
         $this->assertEquals($items[$file_index]['file_properties']['file_type'], 'application/pdf');
         $this->assertEquals(
             $items[$file_index]['file_properties']['html_url'],
-            '/plugins/docman/download/' . urlencode($items[$file_index]['id'])
+            '/plugins/docman/download/' . urlencode($items[$file_index]['id']).'/1'
         );
         $this->assertEquals($items[$file_index]['file_properties']['file_size'], 3);
         $this->assertEquals($items[$link_index]['file_properties'], null);
