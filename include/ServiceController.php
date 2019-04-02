@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Baseline;
 
 use HTTPRequest;
+use Project;
 use TemplateRenderer;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAsset;
@@ -128,13 +129,11 @@ class ServiceController implements DispatchableWithRequest, DispatchableWithBurn
      * This part of controller is needed when you implement a new route without providing a $group_id.
      * It's the preferred way to deal with those kind of URLs over Event::GET_PROJECTID_FROM_URL
      *
-     * @param \HTTPRequest $request
      * @param array        $variables
      *
-     * @return Project
      * @throws NotFoundException
      */
-    public function getProject(\HTTPRequest $request, array $variables)
+    public function getProject(array $variables) : Project
     {
         return $this->getProjectByName($variables[self::PROJECT_NAME_VARIABLE_NAME]);
     }
@@ -144,7 +143,7 @@ class ServiceController implements DispatchableWithRequest, DispatchableWithBurn
      * @return Project
      * @throws NotFoundException
      */
-    private function getProjectByName(string $name): \Project
+    private function getProjectByName(string $name): Project
     {
         $project = $this->project_manager->getProjectByUnixName($name);
         if (! $project) {
