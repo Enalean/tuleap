@@ -51,14 +51,16 @@ class DocmanItemsTestWikiTest extends DocmanBase
         );
         $folder   = $response->json();
 
-        $folder_1_id    = $folder[0]['id'];
+        $folder_content = $this->findItemByTitle($folder, 'folder 1');
+        $folder_1_id    = $folder_content['id'];
         $response       = $this->getResponseByName(
             REST_TestDataBuilder::ADMIN_USER_NAME,
             $this->client->get('docman_items/' . $folder_1_id . '/docman_items')
         );
         $items_folder_1 = $response->json();
 
-        $folder_wiki_id = $folder[3]['id'];
+        $folder_wiki = $this->findItemByTitle($folder, 'Folder C Wiki');
+        $folder_wiki_id = $folder_wiki['id'];
         $response       = $this->getResponseByName(
             REST_TestDataBuilder::ADMIN_USER_NAME,
             $this->client->get('docman_items/' . $folder_wiki_id . '/docman_items')
