@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,6 +20,7 @@
 
 use Tuleap\Dashboard\Project\ProjectDashboardRetriever;
 use Tuleap\Dashboard\Widget\DashboardWidgetRetriever;
+use Tuleap\Plugin\PluginLoader;
 use Tuleap\Project\Label\LabelDao;
 use Tuleap\Project\UgroupDuplicator;
 use Tuleap\FRS\FRSPermissionCreator;
@@ -49,7 +50,7 @@ class ProjectImportTest extends TuleapDbTestCase
     public function setUp()
     {
         parent::setUp();
-        PluginManager::instance()->invalidateCache();
+        PluginLoader::invalidateCache();
         PluginFactory::clearInstance();
         UserManager::clearInstance();
         $user_manager = UserManager::instance();
@@ -99,7 +100,7 @@ class ProjectImportTest extends TuleapDbTestCase
         $GLOBALS['sys_pluginsroot'] = $this->old_sys_pluginsroot;
         $GLOBALS['sys_custompluginsroot'] = $this->old_sys_custompluginsroot;
         EventManager::clearInstance();
-        PluginManager::instance()->invalidateCache();
+        PluginLoader::invalidateCache();
         PluginFactory::clearInstance();
         UserManager::clearInstance();
         $GLOBALS = $this->old_globals;

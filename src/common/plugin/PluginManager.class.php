@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean SAS, 2015 - 2019. All rights reserved
+ * Copyright (c) Enalean SAS, 2015 - Present. All rights reserved
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -20,24 +20,16 @@
  */
 
 use Tuleap\Markdown\ContentInterpretor;
-use Tuleap\Plugin\PluginLoader;
-use Tuleap\Plugin\PluginProxyInjectedData;
 
 /**
  * PluginManager
  */
-class PluginManager {
-
-    const PLUGIN_HOOK_CACHE_FILE  = 'hooks.json';
-    public const PLUGIN_HOOKS_CACHE_TYPE = 'plugin_hooks_cache_type';
-
+class PluginManager
+{
     /**
      * @var ContentInterpretor
      */
     private $markdown_content_interpretor;
-
-    /** @var EventManager */
-    private $event_manager;
 
     /** @var PluginFactory */
     private $plugin_factory;
@@ -55,13 +47,11 @@ class PluginManager {
 
     public function __construct(
         PluginFactory $plugin_factory,
-        EventManager $event_manager,
         SiteCache $site_cache,
         ForgeUpgradeConfig $forgeupgrade_config,
         ContentInterpretor $markdown_content_interpretor
     ) {
         $this->plugin_factory               = $plugin_factory;
-        $this->event_manager                = $event_manager;
         $this->site_cache                   = $site_cache;
         $this->forgeupgrade_config          = $forgeupgrade_config;
         $this->markdown_content_interpretor = $markdown_content_interpretor;
@@ -72,9 +62,8 @@ class PluginManager {
      */
     public static function instance() {
         if (! self::$instance) {
-            self::$instance = new PluginManager(
+            self::$instance = new self(
                 PluginFactory::instance(),
-                EventManager::instance(),
                 new SiteCache(),
                 new ForgeUpgradeConfig(
                     new System_Command()
@@ -92,95 +81,6 @@ class PluginManager {
 
     public static function clearInstance() {
         self::$instance = null;
-    }
-
-    public function loadPlugins() {
-        if (ForgeConfig::get(self::PLUGIN_HOOKS_CACHE_TYPE, 'serialized') === 'serialized') {
-            (new PluginLoader($this->event_manager, $this->plugin_factory))->loadPlugins();
-        } else {
-            $injected_data = $this->getPluginsInjectedData();
-            foreach ($this->getHooksCache() as $plugin) {
-                $this->loadPluginFiles($plugin['path']);
-                $proxy = new PluginProxy($plugin['class'], $plugin['id'], $injected_data);
-                foreach ($plugin['hooks'] as $hook) {
-                    $this->addListener($hook, $proxy);
-                }
-            }
-        }
-    }
-
-    private function getPluginsInjectedData()
-    {
-        $injected_data = [];
-        foreach ($this->plugin_factory->getAvailablePluginsWithoutOrder() as $row) {
-            $injected_data[$row['id']] = new PluginProxyInjectedData($row);
-        }
-        return $injected_data;
-    }
-
-    private function loadPluginFiles($path)
-    {
-        if (file_exists($path)) {
-            include_once $path;
-        }
-        $autoload = dirname($path).'/autoload.php';
-        if (file_exists($autoload)) {
-            include_once $autoload;
-        }
-    }
-
-    private function addListener($hook, PluginProxy $proxy) {
-        $proxy->addListener(
-            $hook['event'],
-            $hook['callback'],
-            $hook['recall_event']
-        );
-        $this->event_manager->addListener(
-            $hook['event'],
-            $proxy,
-            'processEvent',
-            true
-        );
-    }
-
-    private function getHooksCache() {
-        $hooks_cache_file = $this->getCacheFile();
-        if (! file_exists($hooks_cache_file)) {
-            $hooks_cache = $this->getHooksOfAvailablePlugins();
-            file_put_contents($hooks_cache_file, json_encode($hooks_cache));
-            return $hooks_cache;
-        }
-
-        $hooks_cache = json_decode(file_get_contents($hooks_cache_file), true);
-        if ($hooks_cache === null) {
-            return $this->getHooksOfAvailablePlugins();
-        }
-
-        return $hooks_cache;
-    }
-
-    private function getCacheFile() {
-        return ForgeConfig::get('codendi_cache_dir').'/'.self::PLUGIN_HOOK_CACHE_FILE;
-    }
-
-    private function getHooksOfAvailablePlugins() {
-        $hooks_cache = array();
-        foreach($this->plugin_factory->getAvailablePlugins() as $plugin) {
-            $hooks_cache[$plugin->getName()] = array(
-                'id'    => $plugin->getId(),
-                'class' => $this->plugin_factory->getClassName($plugin->getName()),
-                'path'  => $this->plugin_factory->getClassPath($plugin->getName()),
-                'hooks' => array()
-            );
-            foreach ($plugin->getHooksAndCallbacks()->iterator() as $hook) {
-                $hooks_cache[$plugin->getName()]['hooks'][] = array(
-                    'event'        => $hook['hook'],
-                    'callback'     => $hook['callback'],
-                    'recall_event' => $hook['recallHook'],
-                );
-            }
-        }
-        return $hooks_cache;
     }
 
     public function getAvailablePlugins() {
@@ -508,33 +408,6 @@ class PluginManager {
             } else if(!$file->isDot() && $file->isDir()) {
                 $this->copyDirectory($file->getRealPath(), "$destination/$file");
             }
-        }
-    }
-
-    public function invalidateCache()
-    {
-        if (file_exists($this->getCacheFile())) {
-            unlink($this->getCacheFile());
-        }
-        PluginLoader::invalidateCache();
-    }
-
-    public function restoreOwnershipOnCacheFile(Logger $logger, Backend $backend)
-    {
-        if (ForgeConfig::get(self::PLUGIN_HOOKS_CACHE_TYPE, 'serialized') === 'serialized') {
-            PluginLoader::restoreOwnershipOnCacheFile($logger, $backend);
-        } else {
-            $plugin_cache_file = $this->getCacheFile();
-            if (! file_exists($plugin_cache_file)) {
-                touch($plugin_cache_file);
-            }
-            $logger->debug('Restore ownership to ' . $plugin_cache_file);
-            $backend->changeOwnerGroupMode(
-                $plugin_cache_file,
-                ForgeConfig::getApplicationUserLogin(),
-                ForgeConfig::getApplicationUserLogin(),
-                0600
-            );
         }
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -54,7 +54,6 @@ class PluginManagerTest extends TuleapTestCase {
         //The plugins manager
         $pm = new PluginManager(
             $plugin_factory,
-            mock('EventManager'),
             mock('SiteCache'),
             mock('ForgeUpgradeConfig'),
             mock('Tuleap\Markdown\ContentInterpretor')
@@ -76,7 +75,6 @@ class PluginManagerTest extends TuleapTestCase {
         //The plugins manager
         $pm = new PluginManager(
             $plugin_factory,
-            mock('EventManager'),
             mock('SiteCache'),
             mock('ForgeUpgradeConfig'),
             mock('Tuleap\Markdown\ContentInterpretor')
@@ -101,7 +99,6 @@ class PluginManagerTest extends TuleapTestCase {
         //The plugins manager
         $pm = new PluginManager(
             $plugin_factory,
-            mock('EventManager'),
             $site_cache,
             mock('ForgeUpgradeConfig'),
             mock('Tuleap\Markdown\ContentInterpretor')
@@ -123,7 +120,6 @@ class PluginManagerTest extends TuleapTestCase {
         //The plugins manager
         $pm = new PluginManager(
             $plugin_factory,
-            mock('EventManager'),
             $site_cache,
             mock('ForgeUpgradeConfig'),
             mock('Tuleap\Markdown\ContentInterpretor')
@@ -159,7 +155,6 @@ class PluginManagerTest extends TuleapTestCase {
         //The plugins manager
         $pm = new PluginManager(
             $plugin_factory,
-            mock('EventManager'),
             mock('SiteCache'),
             $forgeupgrade_config,
             mock('Tuleap\Markdown\ContentInterpretor')
@@ -177,7 +172,6 @@ class PluginManagerTest extends TuleapTestCase {
     function testIsNameValide() {
         $pm = new PluginManager(
             mock('PluginFactory'),
-            mock('EventManager'),
             mock('SiteCache'),
             mock('ForgeUpgradeConfig'),
             mock('Tuleap\Markdown\ContentInterpretor')
@@ -200,188 +194,11 @@ class PluginManagerTest extends TuleapTestCase {
         //The plugins manager
         $pm = new PluginManager(
             $plugin_factory,
-            mock('EventManager'),
             mock('SiteCache'),
             mock('ForgeUpgradeConfig'),
             mock('Tuleap\Markdown\ContentInterpretor')
         );
 
         $pm->getPluginByName('plugin_name');
-    }
-}
-
-class PluginManager_LoadPluginTest extends TuleapTestCase {
-    private $plugin_factory;
-    private $event_manager;
-    private $plugin_manager;
-
-    public function setUp() {
-        parent::setUp();
-        ForgeConfig::store();
-        ForgeConfig::set('codendi_cache_dir', '/tmp');
-        ForgeConfig::set(PluginManager::PLUGIN_HOOKS_CACHE_TYPE, 'json');
-
-        $this->plugin_factory = mock('PluginFactory');
-        $this->event_manager  = mock('EventManager');
-        $this->plugin_manager = new PluginManager(
-            $this->plugin_factory,
-            $this->event_manager,
-            mock('SiteCache'),
-            mock('ForgeUpgradeConfig'),
-            mock('Tuleap\Markdown\ContentInterpretor')
-        );
-
-        $plugin = mock('Plugin');
-        stub($plugin)->getName()->returns('DatPlugin');
-        $hooks_and_callback = mock('Collection');
-        stub($hooks_and_callback)->iterator()->returns(array(
-            array('hook' => 'this_event', 'callback' => 'myFunction', 'recallHook' => false)
-        ));
-        stub($plugin)->getHooksAndCallbacks()->returns($hooks_and_callback);
-
-        stub($this->plugin_factory)->getAvailablePlugins()->returns(
-            array($plugin)
-        );
-        stub($this->plugin_factory)->getAvailablePluginsWithoutOrder()->returns([
-            [ 'id' => 1, 'name' => 'dat-plugin', 'prj_restricted' => 0 ]
-        ]);
-        stub($this->plugin_factory)->getClassName()->returns('DatPlugin');
-        stub($this->plugin_factory)->getClassPath()->returns(dirname(__FILE__).'/_fixtures/DatPlugin.php');
-    }
-
-    public function tearDown() {
-        unlink('/tmp/hooks.json');
-        ForgeConfig::restore();
-        parent::tearDown();
-    }
-
-    public function itGenerateCacheOfHookDefinitions() {
-        $this->plugin_manager->loadPlugins();
-
-        $json_cache = json_decode(file_get_contents('/tmp/hooks.json'), true);
-        $this->assertCount($json_cache['DatPlugin']['hooks'], 1);
-        $this->assertEqual($json_cache['DatPlugin']['hooks'][0]['event'], 'this_event');
-    }
-
-    public function itCachesHooksDefinitions() {
-        expect($this->plugin_factory)->getAvailablePlugins()->once();
-
-        $this->plugin_manager->loadPlugins();
-        $this->plugin_manager->loadPlugins();
-    }
-
-    public function itLoadsClassesFromCacheFile() {
-        $this->assertTrue(class_exists('DatPlugin'));
-        $this->assertFalse(class_exists('NotLoaded'));
-
-        $fake_json = array(
-            'NotLoaded' => array(
-                'id'    => 0,
-                'class' => 'NotLoaded',
-                'path'  => dirname(__FILE__).'/_fixtures/NotLoaded.php',
-                'hooks' => array()
-            )
-        );
-        file_put_contents('/tmp/hooks.json', json_encode($fake_json));
-        $this->plugin_manager->loadPlugins();
-
-        $this->assertTrue(class_exists('DatPlugin'));
-        $this->assertTrue(class_exists('NotLoaded'));
-
-    }
-}
-
-class PluginManager_LoadPluginWithSerialiazedProxyTest extends TuleapTestCase {
-    private $plugin_factory;
-    private $event_manager;
-    private $plugin_manager;
-
-    public function setUp() {
-        parent::setUp();
-        ForgeConfig::store();
-        ForgeConfig::set('codendi_cache_dir', '/tmp');
-        ForgeConfig::set(PluginManager::PLUGIN_HOOKS_CACHE_TYPE, 'serialized');
-
-        $this->plugin_factory = Mockery::mock(PluginFactory::class);
-        $this->event_manager  = Mockery::mock(EventManager::class);
-        $this->plugin_manager = new PluginManager(
-            $this->plugin_factory,
-            $this->event_manager,
-            Mockery::mock(SiteCache::class),
-            Mockery::mock(ForgeUpgradeConfig::class),
-            Mockery::mock(Tuleap\Markdown\ContentInterpretor::class)
-        );
-
-        $plugin = Mockery::mock(Plugin::class);
-        stub($plugin)->getId()->returns(42);
-        stub($plugin)->getName()->returns('DatPlugin');
-        stub($plugin)->isRestricted()->returns(false);
-        $hooks_and_callback = Mockery::mock(Collection::class);
-        stub($hooks_and_callback)->iterator()->returns(array(
-            array('hook' => 'this_event', 'callback' => 'setRandomInteger', 'recallHook' => false)
-        ));
-        stub($plugin)->getHooksAndCallbacks()->returns($hooks_and_callback);
-
-        stub($this->plugin_factory)->getAvailablePlugins()->returns(
-            array($plugin)
-        );
-        stub($this->plugin_factory)->getAvailablePluginsWithoutOrder()->returns([
-            [ 'id' => 1, 'name' => 'dat-another-plugin', 'prj_restricted' => 0 ]
-        ]);
-        stub($this->plugin_factory)->getClassName()->returns('DatAnotherPlugin');
-        stub($this->plugin_factory)->getClassPath()->returns(__DIR__.'/_fixtures/DatAnotherPlugin.php');
-    }
-
-    public function tearDown() {
-        unlink('/tmp/'.\Tuleap\Plugin\PluginLoader::HOOK_CACHE_KEY);
-        ForgeConfig::restore();
-        parent::tearDown();
-    }
-
-    public function itGenerateCacheOfHookDefinitions()
-    {
-        expect($this->event_manager)->addClosureOnEvent()->once();
-        $this->plugin_manager->loadPlugins();
-
-        $this->assertFileExists('/tmp/'.\Tuleap\Plugin\PluginLoader::HOOK_CACHE_KEY);
-    }
-
-    public function itCachesHooksDefinitions()
-    {
-        $this->event_manager->shouldReceive('addClosureOnEvent')->twice();
-
-        $this->plugin_manager->loadPlugins();
-        $this->plugin_manager->loadPlugins();
-        $this->plugin_factory->shouldHaveReceived('getAvailablePlugins')->once();
-    }
-
-    public function itDoesNotInstantiateClassesOnLoad()
-    {
-        expect($this->event_manager)->addClosureOnEvent()->once();
-
-        $this->plugin_manager->loadPlugins();
-
-        $this->assertFalse(class_exists('DatAnotherPlugin'));
-    }
-
-    public function itInstantiatePluginsOnEventCall()
-    {
-        $event_manager = new EventManager();
-
-        $plugin_manager = new PluginManager(
-            $this->plugin_factory,
-            $event_manager,
-            Mockery::mock(SiteCache::class),
-            Mockery::mock(ForgeUpgradeConfig::class),
-            Mockery::mock(Tuleap\Markdown\ContentInterpretor::class)
-        );
-
-        $plugin_manager->loadPlugins();
-
-        $this->assertFalse(class_exists('DatAnotherPlugin'));
-
-        $event_manager->processEvent('this_event', []);
-
-        $this->assertTrue(class_exists('DatAnotherPlugin'));
     }
 }
