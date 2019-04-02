@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -41,13 +41,7 @@ class Tracker_FileInfoFactory {
         $this->artifact_factory    = $artifact_factory;
     }
 
-    /**
-     *
-     * @param type $id
-     *
-     * @return Tracker_FileInfo
-     */
-    public function getById($id)
+    public function getById(int $id) : ?Tracker_FileInfo
     {
         static $cache = array();
 
@@ -57,21 +51,21 @@ class Tracker_FileInfoFactory {
 
         $row = $this->dao->searchById($id)->getRow();
         if (! $row) {
-            return;
+            return null;
         }
 
         $field_id = $this->dao->searchFieldIdByFileInfoId($id);
         if (! $field_id) {
-            return;
+            return null;
         }
 
         $field = $this->formelement_factory->getFormElementById($field_id);
         if (! $field) {
-            return;
+            return null;
         }
 
         if (! $field->isUsed()) {
-            return;
+            return null;
         }
 
         $file_info = new Tracker_FileInfo(
@@ -90,21 +84,19 @@ class Tracker_FileInfoFactory {
     }
 
     /**
-     *
-     * @param type $id
-     *
      * @return Tracker_Artifact
      * @throws Tracker_FileInfo_InvalidFileInfoException
      * @throws Tracker_FileInfo_UnauthorisedException
      */
-    public function getArtifactByFileInfoIdAndUser(PFUser $user, $id) {
+    public function getArtifactByFileInfoIdAndUser(PFUser $user, int $id) : Tracker_Artifact
+    {
         $row = $this->dao->searchArtifactIdByFileInfoIdInLastChangeset($id)->getRow();
         if (! $row) {
             throw new Tracker_FileInfo_InvalidFileInfoException('File does not exist');
         }
 
         $artifact = $this->artifact_factory->getArtifactByIdUserCanView($user, $row['artifact_id']);
-        if ($artifact == null) {
+        if ($artifact === null) {
             throw new Tracker_FileInfo_UnauthorisedException('User can\'t access the artifact the file is attached to');
         }
         return $artifact;
@@ -161,5 +153,3 @@ class Tracker_FileInfoFactory {
         );
     }
 }
-
-?>

@@ -145,38 +145,6 @@ class Tracker_Artifact_Attachment_TemporaryFileManager {
     }
 
     /**
-     * Get chunk of a file
-     *
-     * TO_REFACTOR: This has nothing to do with temporary file. Should be moved in a dedicated object.
-     *
-     * @param int    $attachment_id
-     * @param PFUser $current_user
-     * @param int    $offset
-     * @param int    $size
-     *
-     * @return \Tracker_Artifact_Attachment_PermissionDeniedOnFieldException
-     *
-     * @throws Tracker_Artifact_Attachment_PermissionDeniedOnFieldException
-     * @throws Tracker_Artifact_Attachment_FileNotFoundException
-     */
-    public function getAttachedFileChunk($attachment_id, PFUser $current_user, $offset, $size) {
-        $file_info = $this->file_info_factory->getById($attachment_id);
-
-        if ($file_info && $file_info->fileExists()) {
-            $field = $file_info->getField();
-
-            if ($field->userCanRead($current_user)) {
-                return $file_info->getContent($offset, $size);
-
-            } else {
-                throw new Tracker_Artifact_Attachment_PermissionDeniedOnFieldException('Permission denied: you cannot access this field');
-            }
-        }
-
-        throw new Tracker_Artifact_Attachment_FileNotFoundException();
-    }
-
-    /**
      * Returns encoded content chunk of file
      *
      * @param Tracker_Artifact_Attachment_TemporaryFile $file
@@ -266,19 +234,6 @@ class Tracker_Artifact_Attachment_TemporaryFileManager {
 
     private function getUserTemporaryFilePrefix(PFUser $user) {
         return self::TEMP_FILE_PREFIX . $user->getId() . '_';
-    }
-
-    /**
-     * TO_REFACTOR: This has nothing to do with temporary file. Should be moved in a dedicated object.
-     */
-    public function getAttachedFileSize($id) {
-        $file_info = $this->file_info_factory->getById($id);
-
-        if ($file_info && $file_info->fileExists()) {
-            return $file_info->getFilesize();
-        }
-
-        throw new Tracker_Artifact_Attachment_FileNotFoundException();
     }
 
     /**
