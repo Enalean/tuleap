@@ -23,11 +23,11 @@ msgstr ""
 
 msgid ""
 "<b>The new interface is under construction</b>, all features are not "
-"available for now. Here's the list of what have already been migrated:"
+"available for now. Here's the list of what is yet to be implemented:"
 msgstr ""
 "<b>La nouvelle interface est en cours de construction</b>, toutes les "
-"fonctionnalités ne sont pas disponibles pour le moment. Voici ce qui est "
-"déjà disponible :"
+"fonctionnalités ne sont pas disponibles pour le moment. Voici ce qu'il reste "
+"à implémenter:"
 
 msgid "A document already exists with the same title."
 msgstr "Un document existe déjà avec le même titre."
@@ -58,9 +58,6 @@ msgstr "Tables d'approbation"
 msgid "Approval tables"
 msgstr "Tables d'approbation"
 
-msgid "Browsing of the whole folder hierarchy."
-msgstr "Parcours de la hierarchie des documents."
-
 msgid "Cancel"
 msgstr "Annuler"
 
@@ -85,18 +82,6 @@ msgstr "Corrompu"
 msgid "Create a new empty approval table."
 msgstr "Créer une nouvelle table d'approbation vide."
 
-msgid ""
-"Create a new version of a file by dropping the updated version on the "
-"targeted document in the tree view (or on the quick look pane)."
-msgstr ""
-"Créer une nouvelle version d'un fichier en déposant la version mise à jour "
-"sur le document ciblé dans la vue arborescente (ou sur la fenêtre d'aperçu "
-"de ce fichier)."
-
-msgid "Create a new version of a file with an update modal."
-msgstr ""
-"Créer une nouvelle version d'un fichier avec une modale de mise à jour."
-
 msgid "Create document"
 msgstr "Créer le document"
 
@@ -106,14 +91,11 @@ msgstr "Créer le dossier"
 msgid "Creation date"
 msgstr "Date de création"
 
-msgid "Creation of folder, file, wiki page, link, empty item."
-msgstr "Création de dossier, fichier, page wiki, de lien, d'élément vide."
-
 msgid "Current approval table state: {{ table_state }}."
 msgstr "État de la table d’approbation actuel: {{ table_state }}"
 
-msgid "Customs metadata"
-msgstr "Métadonnées personnalisées"
+msgid "Cut / Copy / Paste documents"
+msgstr "Couper / Copier / Coller des documents"
 
 msgid "Description"
 msgstr "Description"
@@ -165,12 +147,6 @@ msgstr "Fichier"
 msgid "File size"
 msgstr "Taille du fichier"
 
-msgid ""
-"Generic information: id, title, description, created by, last update date"
-msgstr ""
-"Informations génériques : id, titre, description, créateur, date de dernière "
-"mise à jour"
-
 msgid "Go to my home page"
 msgstr "Aller à la page d'accueil"
 
@@ -179,6 +155,13 @@ msgstr "Aller au dossier parent"
 
 msgid "Go to the wiki page"
 msgstr "Aller à la page wiki"
+
+msgid "Have a button to delete a document"
+msgstr "Avoir un bouton permettant de supprimer un document"
+
+msgid "Have the state of approval tables displayed in the tree view"
+msgstr ""
+"Visualiser le status des tables d'approbations dans la vue arborescente"
 
 msgid "History"
 msgstr "Historique"
@@ -206,10 +189,6 @@ msgstr "Date de dernière mise à jour"
 
 msgid "Link"
 msgstr "Lien"
-
-msgid "List the performable actions for a given item via a dropdown menu."
-msgstr ""
-"Lister les actions réalisables pour un élément donné via un menu déroulant."
 
 msgid "My content..."
 msgstr "Mon contenu..."
@@ -243,9 +222,6 @@ msgstr "Notifications"
 
 msgid "OK, got it"
 msgstr "OK, compris"
-
-msgid "Obsolescence date and status"
-msgstr "Date d'obsolescence et status"
 
 msgid ""
 "Only the table structure will be kept. Reviewer comments and commitments "
@@ -284,25 +260,31 @@ msgstr "Merci de décrire ici le changement de version."
 msgid "Please start again."
 msgstr "Merci de bien vouloir recommencer."
 
-msgid "Preview for images and embedded document"
-msgstr "Aperçu des images et des fichiers embarqués"
-
 msgid "Project documentation"
 msgstr "Documentation du projet"
 
 msgid "Quick look"
 msgstr "Aperçu"
 
-msgid "Quick look of documents or folders with:"
-msgstr "Aperçu des documents ou des dossiers avec :"
-
 msgid "Reset the approval cycle."
 msgstr "Recommencer le cycle d'approbation."
 
-msgid "Searching for items (will redirect you to the old results page)."
+msgid "See if a document is locked"
+msgstr "Voir si un document est verrouillé"
+
+msgid "Set the read and write permissions of a document in the document "
+"creation and update modals"
+msgstr "Configurer les permissions de lecture et d'écriture d'un document "
+"dans les modales de création et de mise à jour de documents"
+msgid ""
+"Set the values of custom document properties in the document creation and "
+"update modals"
 msgstr ""
-"Rechercher des éléments (vous serez redirigés vers l'ancienne page de "
-"résultat)."
+"Configurer les valeurs des propriétés personnalisées dans les modales de "
+"création et de mise à jour de documents"
+
+msgid "Share the preview url of a document"
+msgstr "Partager l'url de prévisualisation d'un document"
 
 msgid "Show error details"
 msgstr "Voir les détails de l'erreur"
@@ -368,6 +350,9 @@ msgstr "Mettre à jour un fichier embarqué"
 msgid "Update file"
 msgstr "Mettre à jour"
 
+msgid "Update modal for documents of type \"empty\""
+msgstr "Modale de mise à jour des documents de type \"vide\""
+
 msgid "Update wiki page"
 msgstr "Mettre à jour la page wiki"
 
@@ -405,21 +390,6 @@ msgstr ""
 
 msgid "You are not allowed to write in this folder"
 msgstr "Vous n'êtes pas autorisé à écrire dans ce dossier"
-
-msgid ""
-"You can drag 'n drop files from your desktop into a sub-folder to upload "
-"them in this folder (or on the quick look preview of this folder)."
-msgstr ""
-"Vous pouvez glisser-déposer des fichiers depuis votre poste de travail dans "
-"un sous-dossier pour les y téléverser (ou sur la fenêtre d'aperçu de ce "
-"dossier)."
-
-msgid ""
-"You can drag 'n drop files from your desktop into the current folder to "
-"upload them."
-msgstr ""
-"Vous pouvez glisser-déposer des fichiers depuis votre poste de travail vers "
-"le dossier courant pour les téléverser."
 
 msgid ""
 "You can switch to the old Document Manager UI whenever you want. (The switch "

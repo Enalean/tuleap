@@ -29,50 +29,17 @@
         </div>
         <div class="tlp-modal-body">
             <p v-translate>
-                <b>The new interface is under construction</b>, all features are not available for now. Here's the list of what have already been migrated:
+                <b>The new interface is under construction</b>, all features are not available for now. Here's the list of what is yet to be implemented:
             </p>
             <ul>
-                <li v-translate>
-                    Creation of folder, file, wiki page, link, empty item.
-                </li>
-                <li v-translate>
-                    You can drag 'n drop files from your desktop into the current folder to upload them.
-                </li>
-                <li v-translate>
-                    You can drag 'n drop files from your desktop into a sub-folder to upload them in this folder (or on the quick look preview of this folder).
-                </li>
-                <li v-translate>
-                    Browsing of the whole folder hierarchy.
-                </li>
-                <li v-translate>
-                    Searching for items (will redirect you to the old results page).
-                </li>
-                <li>
-                    <translate> Quick look of documents or folders with:</translate>
-                    <ul>
-                        <li>
-                            <translate>Preview for images and embedded document</translate>
-                        </li>
-                        <li>
-                            <translate>Generic information: id, title, description, created by, last update date</translate>
-                        </li>
-                        <li>
-                            <translate>Obsolescence date and status</translate>
-                        </li>
-                        <li>
-                            <translate>Customs metadata</translate>
-                        </li>
-                    </ul>
-                </li>
-                <li v-translate>
-                    List the performable actions for a given item via a dropdown menu.
-                </li>
-                <li v-translate>
-                    Create a new version of a file by dropping the updated version on the targeted document in the tree view (or on the quick look pane).
-                </li>
-                <li v-translate>
-                    Create a new version of a file with an update modal.
-                </li>
+                <li v-translate>Cut / Copy / Paste documents</li>
+                <li v-translate>Update modal for documents of type "empty"</li>
+                <li v-translate>Set the values of custom document properties in the document creation and update modals</li>
+                <li v-translate>Set the read and write permissions of a document in the document creation and update modals</li>
+                <li v-translate>Have the state of approval tables displayed in the tree view</li>
+                <li v-translate>See if a document is locked</li>
+                <li v-translate>Have a button to delete a document</li>
+                <li v-translate>Share the preview url of a document</li>
             </ul>
             <p v-translate>
                 You can switch to the old Document Manager UI whenever you want. (The switch is at the bottom of the page)
