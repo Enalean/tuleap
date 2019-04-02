@@ -237,9 +237,9 @@ class BaselineRepositoryAdapterTest extends TestCase
             ->andReturn(102)
             ->getMock();
         $this->db
-            ->shouldReceive('safeQuery')
+            ->shouldReceive('single')
             ->with(Mockery::type('string'), [102])
-            ->andReturn([[BaselineRepositoryAdapter::SQL_COUNT_ALIAS => 233]]);
+            ->andReturn(233);
 
         $count = $this->repository->countByProject($project);
 

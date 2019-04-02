@@ -37,8 +37,6 @@ use UserManager;
 
 class BaselineRepositoryAdapter implements BaselineRepository
 {
-    public const SQL_COUNT_ALIAS = 'nb';
-
     /** @var EasyDB */
     private $db;
 
@@ -155,17 +153,16 @@ class BaselineRepositoryAdapter implements BaselineRepository
 
     public function countByProject(Project $project): int
     {
-        $rows = $this->db->safeQuery(
-            "SELECT COUNT(baseline.id) as " . self::SQL_COUNT_ALIAS . "
+        return $this->db->single(
+            'SELECT COUNT(baseline.id) as nb 
             FROM plugin_baseline_baseline as baseline
                  INNER JOIN tracker_artifact as artifact
             ON artifact.id = baseline.artifact_id
                  INNER JOIN tracker
             ON tracker.id = artifact.tracker_id
-            WHERE tracker.group_id = ?",
+            WHERE tracker.group_id = ?',
             [$project->getID()]
         );
-        return $rows[0][self::SQL_COUNT_ALIAS];
     }
 
     private function mapRow(PFUser $current_user, array $row): Baseline
