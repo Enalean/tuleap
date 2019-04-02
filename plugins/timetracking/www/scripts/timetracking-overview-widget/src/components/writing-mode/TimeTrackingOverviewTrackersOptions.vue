@@ -26,7 +26,9 @@
         class="timetracking-overview-trackers-selector-input tlp-select"
         id="tracker"
         name="tracker"
+        ref="select"
         v-bind:disabled="is_tracker_select_disabled"
+        v-on:input="setSelected($event)"
     >
         <option v-bind:value="null" v-translate>Please choose...</option>
         <option v-for="tracker in trackers"
@@ -36,18 +38,29 @@
         >
             {{ tracker.label }}
         </option>
-
     </select>
 </template>
-
 <script>
 import { mapState } from "vuex";
 export default {
     name: "TimeTrackingOverviewTrackersOptions",
     computed: {
-        ...mapState(["trackers"]),
+        ...mapState(["trackers", "is_added_tracker"]),
         is_tracker_select_disabled() {
             return this.trackers.length === 0;
+        }
+    },
+    watch: {
+        is_added_tracker: {
+            handler() {
+                this.$refs.select.options.selectedIndex = 0;
+            },
+            deep: true
+        }
+    },
+    methods: {
+        setSelected($event) {
+            this.$emit("input", $event.target.value);
         }
     }
 };

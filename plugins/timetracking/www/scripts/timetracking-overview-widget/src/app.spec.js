@@ -20,5 +20,10 @@
 import "tlp-mocks";
 
 import "./api/rest-querier.spec.js";
-import "./store/actions.spec.js";
-import "./store/getters.spec.js";
+import "./tests/store/actions.spec.js";
+import "./tests/store/getters.spec.js";
+import "./tests/components/TimeTrackingOverview.spec";
+import "./tests/components/TimetrackingOverviewTable.spec";
+import "./tests/components/reading-mode/TimeTrackingOverviewReadingMode.spec";
+import "./tests/components/reading-mode/TimeTrackingOverviewTrackerList.spec";
+import "./tests/components/writing-mode/TimeTrackingOverviewWritingTrackers.spec";

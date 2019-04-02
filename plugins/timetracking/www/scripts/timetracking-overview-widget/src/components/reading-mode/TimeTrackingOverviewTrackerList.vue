@@ -30,7 +30,10 @@
                 </span>
             </div>
         </div>
-        <div class="timetracking-overview-reading-mode-trackers-empty" v-if="has_no_trackers_in_report" v-translate>
+        <div class="timetracking-overview-reading-mode-trackers-empty"
+             v-if="has_no_trackers_in_report"
+             data-test="timetracking-overview-reading-mode-trackers-empty"
+             v-translate>
             No trackers selected
         </div>
     </div>

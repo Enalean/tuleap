@@ -21,10 +21,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as actions from "./actions.js";
-import initial_state from "./state.js";
+import * as actions from "../../store/actions.js";
+import initial_state from "../../store/state.js";
 import { mockFetchError, mockFetchSuccess, tlp } from "tlp-mocks";
-import { ERROR_OCCURRED } from "../../../constants.js";
+import { ERROR_OCCURRED } from "../../../../constants.js";
 
 describe("Store actions", () => {
     let context;

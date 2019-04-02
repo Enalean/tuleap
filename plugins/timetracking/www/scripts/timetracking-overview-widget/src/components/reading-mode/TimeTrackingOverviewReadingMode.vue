@@ -31,6 +31,7 @@
         </div>
         <div class="reading-mode-actions"
              v-if="! is_report_saved"
+             data-test="reading-mode-actions"
         >
             <button class="tlp-button-primary tlp-button-outline reading-mode-actions-cancel"
                     v-translate
@@ -40,7 +41,7 @@
             <button class="tlp-button-primary"
                     v-on:click="saveReport()"
             >
-                <i v-if="is_loading" class="tlp-button-icon fa fa-spinner fa-spin"></i>
+                <i v-if="is_loading" class="tlp-button-icon fa fa-spinner fa-spin" data-test="icon-spinner"></i>
                 <translate>Save report</translate>
             </button>
         </div>

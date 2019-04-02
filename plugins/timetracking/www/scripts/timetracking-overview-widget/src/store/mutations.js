@@ -80,6 +80,7 @@ export default {
     },
 
     addSelectedTrackers(state, tracker_id) {
+        state.is_added_tracker = false;
         state.trackers.forEach(function(tracker) {
             if (
                 tracker.id === parseInt(tracker_id, 10) &&
@@ -91,6 +92,7 @@ export default {
                 tracker.disabled = true;
             }
         });
+        state.is_added_tracker = true;
     },
 
     setIsReportSave(state, is_report_saved) {
