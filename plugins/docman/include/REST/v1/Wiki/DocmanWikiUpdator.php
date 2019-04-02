@@ -43,10 +43,6 @@ class DocmanWikiUpdator
      */
     private $docman_item_factory;
     /**
-     * @var WikiVersionCreationBeforeUpdateValidator
-     */
-    private $before_update_validator;
-    /**
      * @var \EventManager
      */
     private $event_manager;
@@ -63,7 +59,6 @@ class DocmanWikiUpdator
         \Docman_VersionFactory $version_factory,
         LockChecker $lock_checker,
         Docman_ItemFactory $docman_item_factory,
-        WikiVersionCreationBeforeUpdateValidator $before_update_validator,
         \EventManager $event_manager,
         DocmanItemUpdator $updator,
         DBTransactionExecutor $transaction_executor
@@ -71,7 +66,6 @@ class DocmanWikiUpdator
         $this->version_factory         = $version_factory;
         $this->lock_checker            = $lock_checker;
         $this->docman_item_factory     = $docman_item_factory;
-        $this->before_update_validator = $before_update_validator;
         $this->event_manager           = $event_manager;
         $this->updator                 = $updator;
         $this->transaction_executor = $transaction_executor;
@@ -86,8 +80,6 @@ class DocmanWikiUpdator
         DocmanWikiPATCHRepresentation $representation
     ): void {
         $this->lock_checker->checkItemIsLocked($item, $current_user);
-
-        $item->accept($this->before_update_validator, []);
 
         $this->transaction_executor->execute(
             function () use ($item, $current_user, $representation) {

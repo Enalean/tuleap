@@ -111,10 +111,13 @@ class DocmanEmbeddedFilesResource extends AuthenticatedResource
         $this->checkAccess();
         $this->getAllowOptionsPatch();
 
-        $current_user = $this->rest_user_manager->getCurrentUser();
-
         $item_request = $this->request_builder->buildFromItemId($id);
         $item         = $item_request->getItem();
+
+        $validator = new EmbeddedFileVersionCreationBeforeUpdateValidator();
+        $item->accept($validator, []);
+
+        $current_user = $this->rest_user_manager->getCurrentUser();
 
         $project = $item_request->getProject();
         $this->getDocmanFolderPermissionChecker($project)
@@ -136,7 +139,6 @@ class DocmanEmbeddedFilesResource extends AuthenticatedResource
             new Docman_FileStorage($docman_root),
             $version_factory,
             new LockChecker(new Docman_LockFactory()),
-            new EmbeddedFileVersionCreationBeforeUpdateValidator(),
             $docman_item_updator,
             new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
         );

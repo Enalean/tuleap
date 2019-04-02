@@ -110,10 +110,13 @@ class DocmanFilesResource extends AuthenticatedResource
         $this->checkAccess();
         $this->getAllowOptionsPatch();
 
-        $current_user = $this->rest_user_manager->getCurrentUser();
-
         $item_request = $this->request_builder->buildFromItemId($id);
         $item         = $item_request->getItem();
+
+        $validator = new FileVersionToUploadVisitorBeforeUpdateValidator();
+        $item->accept($validator, []);
+
+        $current_user = $this->rest_user_manager->getCurrentUser();
 
         $project = $item_request->getProject();
         $this->getDocmanFolderPermissionChecker($project)
@@ -123,6 +126,7 @@ class DocmanFilesResource extends AuthenticatedResource
         $event_adder->addLogEvents();
         $event_adder->addNotificationEvents($project);
 
+
         $docman_approval_table_retriever = new ApprovalTableRetriever(new \Docman_ApprovalTableFactoriesFactory());
         $docman_item_updator             = new DocmanItemFileUpdator(
             $docman_approval_table_retriever,
@@ -131,7 +135,6 @@ class DocmanFilesResource extends AuthenticatedResource
                 new DocumentOnGoingVersionToUploadDAO(),
                 new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
             ),
-            new FileVersionToUploadVisitorBeforeUpdateValidator(),
             new LockChecker(new Docman_LockFactory())
         );
 

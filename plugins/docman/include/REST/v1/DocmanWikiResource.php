@@ -96,10 +96,13 @@ class DocmanWikiResource extends AuthenticatedResource
         $this->checkAccess();
         $this->getAllowOptionsPatch();
 
-        $current_user = $this->rest_user_manager->getCurrentUser();
-
         $item_request = $this->request_builder->buildFromItemId($id);
         $item         = $item_request->getItem();
+
+        $validator = new WikiVersionCreationBeforeUpdateValidator();
+        $item->accept($validator, []);
+
+        $current_user = $this->rest_user_manager->getCurrentUser();
 
         $project = $item_request->getProject();
         $this->getDocmanFolderPermissionChecker($project)
@@ -118,7 +121,6 @@ class DocmanWikiResource extends AuthenticatedResource
             new \Docman_VersionFactory(),
             new LockChecker(new \Docman_LockFactory()),
             new \Docman_ItemFactory(),
-            new WikiVersionCreationBeforeUpdateValidator(),
             $this->event_manager,
             $docman_item_updator,
             new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())

@@ -43,10 +43,6 @@ class DocmanEmbeddedFileUpdator
      */
     private $lock_checker;
     /**
-     * @var EmbeddedFileVersionCreationBeforeUpdateValidator
-     */
-    private $before_update_validator;
-    /**
      * @var DocmanItemUpdator
      */
     private $updator;
@@ -59,14 +55,12 @@ class DocmanEmbeddedFileUpdator
         Docman_FileStorage $file_storage,
         \Docman_VersionFactory $version_factory,
         LockChecker $lock_checker,
-        EmbeddedFileVersionCreationBeforeUpdateValidator $before_update_validator,
         DocmanItemUpdator $updator,
         DBTransactionExecutor $transaction_executor
     ) {
         $this->file_storage            = $file_storage;
         $this->version_factory         = $version_factory;
         $this->lock_checker            = $lock_checker;
-        $this->before_update_validator = $before_update_validator;
         $this->updator                 = $updator;
         $this->transaction_executor = $transaction_executor;
     }
@@ -80,8 +74,6 @@ class DocmanEmbeddedFileUpdator
         DocmanEmbeddedFilesPATCHRepresentation $representation
     ): void {
         $this->lock_checker->checkItemIsLocked($item, $current_user);
-
-        $item->accept($this->before_update_validator, []);
 
         $this->transaction_executor->execute(
             function () use ($item, $current_user, $representation) {

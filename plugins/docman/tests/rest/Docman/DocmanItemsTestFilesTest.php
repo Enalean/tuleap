@@ -70,7 +70,7 @@ class DocmanItemsTestFilesTest extends DocmanBase
 
         $items = array_merge($items_folder_1, $items_file);
 
-        $this->assertEquals(count($items), 11);
+        $this->assertEquals(count($items), 12);
 
         return $items;
     }
@@ -363,15 +363,11 @@ class DocmanItemsTestFilesTest extends DocmanBase
     }
 
     /**
-     * @depends testGetRootId
+     * @depends testGetDocumentItemsForAdminUser
      */
-    public function testPatchOnDocumentLockedByAnOtherUserThrowException(int $root_id): void
+    public function testPatchOnDocumentLockedByAnOtherUserThrowException(array $items): void
     {
-        $response = $this->getResponseByName(
-            DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->get('docman_items/' . $root_id . '/docman_items')
-        );
-        $folder   = $response->json();
+        $file         = $this->findItemByTitle($items, 'file L');
 
         $put_resource = json_encode(
             [
@@ -385,7 +381,7 @@ class DocmanItemsTestFilesTest extends DocmanBase
         $response = $this->getResponseByName(
             REST_TestDataBuilder::ADMIN_USER_NAME,
             $this->client->patch(
-                'docman_files/' . $folder[1]["id"],
+                'docman_files/' . $file['id'],
                 null,
                 $put_resource
             )
