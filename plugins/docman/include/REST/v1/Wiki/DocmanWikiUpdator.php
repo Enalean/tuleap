@@ -23,6 +23,7 @@ declare(strict_types = 1);
 namespace Tuleap\Docman\REST\v1\Wiki;
 
 use Docman_ItemFactory;
+use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Docman\Lock\LockChecker;
 use Tuleap\Docman\REST\v1\DocmanItemUpdator;
 use Tuleap\Docman\REST\v1\ExceptionItemIsLockedByAnotherUser;
@@ -53,6 +54,10 @@ class DocmanWikiUpdator
      * @var DocmanItemUpdator
      */
     private $updator;
+    /**
+     * @var DBTransactionExecutor
+     */
+    private $transaction_executor;
 
     public function __construct(
         \Docman_VersionFactory $version_factory,
@@ -60,7 +65,8 @@ class DocmanWikiUpdator
         Docman_ItemFactory $docman_item_factory,
         WikiVersionCreationBeforeUpdateValidator $before_update_validator,
         \EventManager $event_manager,
-        DocmanItemUpdator $updator
+        DocmanItemUpdator $updator,
+        DBTransactionExecutor $transaction_executor
     ) {
         $this->version_factory         = $version_factory;
         $this->lock_checker            = $lock_checker;
@@ -68,6 +74,7 @@ class DocmanWikiUpdator
         $this->before_update_validator = $before_update_validator;
         $this->event_manager           = $event_manager;
         $this->updator                 = $updator;
+        $this->transaction_executor = $transaction_executor;
     }
 
     /**
@@ -82,47 +89,52 @@ class DocmanWikiUpdator
 
         $item->accept($this->before_update_validator, []);
 
-        $next_version_id = (int)$this->version_factory->getNextVersionNumber($item);
+        $this->transaction_executor->execute(
+            function () use ($item, $current_user, $representation) {
+                $next_version_id = (int)$this->version_factory->getNextVersionNumber($item);
 
-        $new_link_version_row = [
-            'item_id'   => $item->getId(),
-            'user_id'   => $current_user->getId(),
-            'wiki_page' => $representation->wiki_properties->page_name
+                $new_link_version_row = [
+                    'item_id'   => $item->getId(),
+                    'user_id'   => $current_user->getId(),
+                    'wiki_page' => $representation->wiki_properties->page_name
 
-        ];
+                ];
 
-        $this->docman_item_factory->update($new_link_version_row);
 
-        $documents = $this->docman_item_factory->getWikiPageReferencers($item->getPagename(), $item->getGroupId());
-        foreach ($documents as $document) {
-            $this->event_manager->processEvent(
-                'plugin_docman_event_wikipage_update',
-                [
-                    'group_id'  => $item->getGroupId(),
-                    'item'      => $document,
-                    'user'      => $current_user,
-                    'wiki_page' => $representation->wiki_properties->page_name,
-                    'old_value' => $next_version_id - 1,
-                    'new_value' => $next_version_id
-                ]
-            );
-        }
+                $this->docman_item_factory->update($new_link_version_row);
 
-        $last_version = $this->version_factory->getCurrentVersionForItem($item);
-        $this->event_manager->processEvent(
-            'plugin_docman_event_edit',
-            [
-                'group_id' => $item->getGroupId(),
-                'item'     => $item,
-                'user'     => $current_user
-            ]
-        );
+                $documents = $this->docman_item_factory->getWikiPageReferencers($item->getPagename(), $item->getGroupId());
+                foreach ($documents as $document) {
+                    $this->event_manager->processEvent(
+                        'plugin_docman_event_wikipage_update',
+                        [
+                            'group_id'  => $item->getGroupId(),
+                            'item'      => $document,
+                            'user'      => $current_user,
+                            'wiki_page' => $representation->wiki_properties->page_name,
+                            'old_value' => $next_version_id - 1,
+                            'new_value' => $next_version_id
+                        ]
+                    );
+                }
 
-        $this->updator->updateCommonDataWithoutApprovalTable(
-            $item,
-            $representation->should_lock_file,
-            $current_user,
-            $last_version
+                $last_version = $this->version_factory->getCurrentVersionForItem($item);
+                $this->event_manager->processEvent(
+                    'plugin_docman_event_edit',
+                    [
+                        'group_id' => $item->getGroupId(),
+                        'item'     => $item,
+                        'user'     => $current_user
+                    ]
+                );
+
+                $this->updator->updateCommonDataWithoutApprovalTable(
+                    $item,
+                    $representation->should_lock_file,
+                    $current_user,
+                    $last_version
+                );
+            }
         );
     }
 }
