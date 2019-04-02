@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -36,13 +36,13 @@ class ProjectPresenter
     public $project_config_uri;
 
     /** @var string */
-    public $is_private;
-
-    /** @var string */
     public $user_administers;
 
     /** @var string */
     public $user_belongs;
+
+    /** @var bool */
+    public $is_private;
     /**
      * @var bool
      */
