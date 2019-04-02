@@ -79,6 +79,14 @@ class DocmanFilesResource extends AuthenticatedResource
      * /!\ This route is under construction and will be subject to changes
      * </pre>
      *
+     * <pre>
+     * approval_table_action should be provided only if item has an existing approval table.<br>
+     * Possible values:<br>
+     *  * copy: Creates an approval table based on the previous one<br>
+     *  * reset: Reset the current approval table<br>
+     *  * empty: No approbation needed for the new version of this document<br>
+     * </pre>
+     *
      * @url    PATCH {id}
      * @access hybrid
      *
