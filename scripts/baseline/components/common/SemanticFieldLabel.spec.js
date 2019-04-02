@@ -21,9 +21,8 @@
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../../support/local-vue.js";
 import { createStoreMock } from "../../support/store-wrapper.spec-helper.js";
-import store_options from "../../store/index.js";
 import SemanticFieldLabel from "./SemanticFieldLabel.vue";
-import { create } from "../../support/factories";
+import store_options from "../../store/index.js";
 
 describe("SemanticFieldLabel", () => {
     const skeleton_selector = '[data-test-type="skeleton"]';
@@ -32,7 +31,13 @@ describe("SemanticFieldLabel", () => {
     let wrapper;
 
     beforeEach(() => {
-        store = createStoreMock(store_options);
+        store = createStoreMock({
+            ...store_options,
+            getters: {
+                "semantics/field_label": () => "My description",
+                "semantics/is_field_label_available": () => true
+            }
+        });
         wrapper = shallowMount(SemanticFieldLabel, {
             propsData: {
                 semantic: "description",
@@ -46,63 +51,29 @@ describe("SemanticFieldLabel", () => {
     });
 
     it("loads semantic fields on mount", () => {
-        expect(store.dispatch).toHaveBeenCalledWith("loadSemanticFields", 1);
+        expect(store.dispatch).toHaveBeenCalledWith("semantics/loadByTrackerId", 1);
     });
 
-    describe("with initial store", () => {
+    describe("when semantic is not available", () => {
         beforeEach(() => {
-            store.state = store_options.state;
+            store.getters["semantics/is_field_label_available"] = () => false;
         });
 
         it("shows only skeleton", () => {
             expect(wrapper.contains(skeleton_selector)).toBeTruthy();
+
             expect(wrapper.text()).toEqual("");
         });
     });
 
-    describe("when semantic is loading", () => {
+    describe("when semantic is available", () => {
         beforeEach(() => {
-            store.state.is_semantic_fields_by_tracker_id_loading[1] = true;
+            store.getters["semantics/is_field_label_available"] = () => true;
+            store.getters["semantics/field_label"] = () => "Status";
         });
 
-        it("shows only skeleton", () => {
-            expect(wrapper.contains(skeleton_selector)).toBeTruthy();
-            expect(wrapper.text()).toEqual("");
-        });
-    });
-
-    describe("when semantics are loaded", () => {
-        beforeEach(() => {
-            store.state.is_semantic_fields_by_tracker_id_loading = { 1: false };
-        });
-
-        describe("and a semantic exists", () => {
-            beforeEach(() => {
-                store.state.semantic_fields_by_tracker_id = {
-                    1: {
-                        description: create("field", {
-                            label: "Status"
-                        })
-                    }
-                };
-            });
-
-            it("shows only field label", () => {
-                expect(wrapper.text()).toEqual("Status");
-            });
-        });
-
-        describe("and no semantic exists", () => {
-            beforeEach(() => {
-                store.state.semantic_fields_by_tracker_id = {
-                    1: {}
-                };
-            });
-
-            it("shows only skeleton", () => {
-                expect(wrapper.contains(skeleton_selector)).toBeTruthy();
-                expect(wrapper.text()).toEqual("");
-            });
+        it("shows only field label", () => {
+            expect(wrapper.text()).toEqual("Status");
         });
     });
 });

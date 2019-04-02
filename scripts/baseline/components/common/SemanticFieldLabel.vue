@@ -20,14 +20,16 @@
 
 <template>
     <div>
-        <template v-if="is_semantic_field_label_available">
-            {{ semantic_field_label }}
+        <template v-if="is_label_available">
+            {{ label }}
         </template>
         <span v-else class="tlp-skeleton-text" data-test-type="skeleton"></span>
     </div>
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 export default {
     name: "SemanticFieldLabel",
 
@@ -43,23 +45,12 @@ export default {
     },
 
     computed: {
-        is_semantic_field_label_available() {
-            return (
-                this.$store.state.is_semantic_fields_by_tracker_id_loading[this.tracker_id] ===
-                    false && this.semantic_field_label !== null
-            );
+        ...mapGetters("semantics", ["field_label", "is_field_label_available"]),
+        is_label_available() {
+            return this.is_field_label_available(this.tracker_id, this.semantic);
         },
-        semantic_field_label() {
-            if (
-                !this.$store.state.semantic_fields_by_tracker_id.hasOwnProperty(this.tracker_id) ||
-                !this.$store.state.semantic_fields_by_tracker_id[this.tracker_id].hasOwnProperty(
-                    this.semantic
-                )
-            ) {
-                return null;
-            }
-            return this.$store.state.semantic_fields_by_tracker_id[this.tracker_id][this.semantic]
-                .label;
+        label() {
+            return this.field_label(this.tracker_id, this.semantic);
         }
     },
 
@@ -69,7 +60,7 @@ export default {
 
     methods: {
         loadSemanticField() {
-            this.$store.dispatch("loadSemanticFields", this.tracker_id);
+            this.$store.dispatch("semantics/loadByTrackerId", this.tracker_id);
         }
     }
 };

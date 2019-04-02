@@ -43,6 +43,14 @@ describe("Artifact", () => {
         getBaselineArtifactsByIds.and.returnValue(Promise.resolve([linked_artifact]));
         rewire$getBaselineArtifactsByIds(getBaselineArtifactsByIds);
 
+        const store = createStoreMock({
+            ...store_options,
+            getters: {
+                "semantics/field_label": () => "My description",
+                "semantics/is_field_label_available": () => true
+            }
+        });
+
         wrapper = mount(Artifact, {
             propsData: {
                 baseline_id: 1,
@@ -54,7 +62,7 @@ describe("Artifact", () => {
             },
             localVue,
             mocks: {
-                $store: createStoreMock(store_options)
+                $store: store
             }
         });
         await wrapper.vm.$nextTick();

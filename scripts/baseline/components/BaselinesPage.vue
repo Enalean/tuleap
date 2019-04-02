@@ -35,7 +35,7 @@
             </div>
 
             <div
-                v-if="is_loading_failed"
+                v-if="is_baselines_loading_failed"
                 class="tlp-alert-danger tlp-framed-vertically"
             >
                 <translate>Cannot fetch baselines</translate>
@@ -74,7 +74,7 @@
                     </div>
 
                     <section class="tlp-pane-section">
-                        <baseline-table v-bind:baselines="baselines" v-bind:is_loading="is_loading"/>
+                        <baseline-table v-bind:baselines="baselines" v-bind:is_loading="are_baselines_loading"/>
                     </section>
                 </div>
             </section>
@@ -91,7 +91,7 @@
                             type="button"
                             data-target="new-comparison-modal"
                             class="tlp-button-primary"
-                            v-bind:disabled="is_loading || !are_baselines_available"
+                            v-bind:disabled="are_baselines_loading || !are_baselines_available"
                             v-on:click="showNewComparisonModal()"
                         >
                             <i class="fa fa-plus tlp-button-icon"></i>
@@ -116,8 +116,7 @@ import BaselineTable from "./BaselineTable.vue";
 import NewBaselineModal from "./new-baseline/NewBaselineModal.vue";
 import NewComparisonModal from "./comparison/NewComparisonModal.vue";
 import { modal as createModal } from "tlp";
-import { getBaselines } from "../api/rest-querier";
-import { presentBaselines } from "../presenters/baseline";
+import { mapState } from "vuex";
 
 export default {
     name: "BaselinesPage",
@@ -131,20 +130,24 @@ export default {
     data() {
         return {
             is_baseline_created: false,
-            baselines: null,
-            is_loading: false,
-            is_loading_failed: false,
             new_baseline_modal: null,
             new_comparison_modal: null
         };
     },
 
     computed: {
+        ...mapState("baselines", [
+            "baselines",
+            "are_baselines_loading",
+            "is_baselines_loading_failed"
+        ]),
         baselines_tooltip() {
             return this.$gettext("Baselines available");
         },
         are_baselines_available() {
-            return this.baselines !== null && this.baselines.length > 0;
+            return (
+                !this.are_baselines_loading && this.baselines !== null && this.baselines.length > 0
+            );
         }
     },
 
@@ -175,24 +178,13 @@ export default {
             this.new_baseline_modal.hide();
         },
 
-        async fetchBaselines() {
-            this.baselines = null;
-            this.is_loading = true;
-            this.is_loading_failed = false;
-
-            try {
-                const baselines = await getBaselines(this.project_id);
-                this.baselines = await presentBaselines(baselines);
-            } catch (e) {
-                this.is_loading_failed = true;
-            } finally {
-                this.is_loading = false;
-            }
-        },
-
         showNewComparisonModal() {
             this.new_comparison_modal.show();
             this.$refs.new_comparison_modal.reload();
+        },
+
+        fetchBaselines() {
+            this.$store.dispatch("baselines/load", { project_id: this.project_id });
         }
     }
 };
