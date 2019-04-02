@@ -56,11 +56,13 @@
 }
 
 /* stylelint-disable selector-no-qualifying-type */
-.tlp-table > tbody > tr.document-tree-item-created:nth-child(odd) > td {
+.tlp-table > tbody > tr.document-tree-item-created:nth-child(odd) > td,
+.tlp-table > tbody > tr.document-tree-item-updated:nth-child(odd) > td {
     animation: 5s ease-in-out document-created-item-animation-odd;
 }
 
-.tlp-table > tbody > tr.document-tree-item-created:nth-child(even) > td {
+.tlp-table > tbody > tr.document-tree-item-created:nth-child(even) > td,
+.tlp-table > tbody > tr.document-tree-item-updated:nth-child(even) > td {
     animation: 5s ease-in-out document-created-item-animation-even;
 }
 /* stylelint-enable selector-no-qualifying-type */
