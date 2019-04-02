@@ -1,39 +1,25 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2013 - Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2010. All Rights Reserved.
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'bootstrap.php';
-
-Mock::generate('BaseLanguage');
-Mock::generate('PFUser');
-Mock::generate('FRSPackage');
-Mock::generate('FRSPackageFactory');
-Mock::generate('PermissionsManager');
-Mock::generate('WebDAVUtils');
-Mock::generate('WebDAVFRSPackage');
-Mock::generate('Project');
-Mock::generatePartial(
-    'WebDAVProject',
-    'WebDAVProjectTestVersion',
-array('getGroupId', 'getProject', 'getUser', 'getUtils', 'getPackageList','getFRSPackageFromName', 'getWebDAVPackage', 'usesFile', 'userCanWrite')
-);
-Mock::generate('EventManager');
+require_once __DIR__.'/bootstrap.php';
 
 /**
  * This is the unit test of WebDAVProject
@@ -44,14 +30,14 @@ class WebDAVProjectTest extends TuleapTestCase {
      * Testing when The project have no active services
      */
     function testGetChildrenNoServices() {
-        $webDAVProject = new WebDAVProjectTestVersion($this);
+        $webDAVProject = \Mockery::mock(\WebDAVProject::class)->makePartial()->shouldAllowMockingProtectedMethods();
         
-        $utils = new MockWebDAVUtils();
-        $webDAVProject->setReturnValue('getUtils', $utils);
-        $em = new MockEventManager();
-        $utils->setReturnValue('getEventManager', $em);
+        $utils = \Mockery::spy(\WebDAVUtils::class);
+        $webDAVProject->shouldReceive('getUtils')->andReturns($utils);
+        $em = \Mockery::spy(\EventManager::class);
+        $utils->shouldReceive('getEventManager')->andReturns($em);
         
-        $webDAVProject->setReturnValue('usesFile', false);
+        $webDAVProject->shouldReceive('usesFile')->andReturns(false);
         $this->assertEqual($webDAVProject->getChildren(), array());
 
     }
@@ -70,176 +56,62 @@ class WebDAVProjectTest extends TuleapTestCase {
      * Testing when the service doesn't exist
      */
     function testGetChildFailWithNotExist() {
-        $webDAVProject = new WebDAVProjectTestVersion($this);
+        $webDAVProject = \Mockery::mock(\WebDAVProject::class)->makePartial()->shouldAllowMockingProtectedMethods();
         
-        $utils = new MockWebDAVUtils();
-        $webDAVProject->setReturnValue('getUtils', $utils);
-        $em = new MockEventManager();
-        $utils->setReturnValue('getEventManager', $em);
+        $utils = \Mockery::spy(\WebDAVUtils::class);
+        $webDAVProject->shouldReceive('getUtils')->andReturns($utils);
+        $em = \Mockery::spy(\EventManager::class);
+        $utils->shouldReceive('getEventManager')->andReturns($em);
         
-        $webDAVProject->setReturnValue('usesFile', false);
+        $webDAVProject->shouldReceive('usesFile')->andReturns(false);
         $this->expectException('Sabre_DAV_Exception_FileNotFound');
         $webDAVProject->getChild('Files');
 
     }
 
-    /**
-     * Testing when project is not public and user is not member and not restricted
-     */
-    function testUserCanReadWhenNotPublicNotMemberNotRestricted() {
+    function testUserCanReadWithAccessCheckerSuccessfull()
+    {
+        $user =  \Mockery::spy(PFUser::class);
+        $project = \Mockery::spy(Project::class);
 
-        $webDAVProject = new WebDAVProjectTestVersion($this);
-        $project = new MockProject();
-        $project->setReturnValue('isPublic', false);
-        $project->setReturnValue('userIsMember', false);
-        $webDAVProject->setReturnValue('getProject', $project);
+        $access_checker = \Mockery::mock(\Tuleap\Project\ProjectAccessChecker::class);
 
-        $utils = new MockWebDAVUtils();
-        $webDAVProject->setReturnValue('getUtils', $utils);
-        $user = mock('PFUser');
-        $user->setReturnValue('isRestricted', false);
-        $webDAVProject->setReturnValue('getUser', $user);
-        $this->assertEqual($webDAVProject->userCanRead(), false);
+        $webDAVProject = \Mockery::mock(
+            \WebDAVProject::class,
+            [
+                $user,
+                $project,
+                0,
+                $access_checker
+            ]
+        )->makePartial()->shouldAllowMockingProtectedMethods();
 
+
+        $access_checker->shouldReceive('checkUserCanAccessProject')->with($user, $project)->once();
+
+        $this->assertTrue($webDAVProject->userCanRead());
     }
 
-    /**
-     * Testing when project is not public and user is member and not restricted
-     */
-    function testUserCanReadWhenNotPublicMemberNotRestricted() {
+    function testUserCanReadWithAccessCheckerThrowingException()
+    {
+        $user =  \Mockery::spy(PFUser::class);
+        $project = \Mockery::spy(Project::class);
 
-        $webDAVProject = new WebDAVProjectTestVersion($this);
-        $project = new MockProject();
-        $project->setReturnValue('isPublic', false);
-        $project->setReturnValue('userIsMember', true);
-        $webDAVProject->setReturnValue('getProject', $project);
+        $access_checker = \Mockery::mock(\Tuleap\Project\ProjectAccessChecker::class);
 
-        $utils = new MockWebDAVUtils();
-        $webDAVProject->setReturnValue('getUtils', $utils);
-        $user = mock('PFUser');
-        $user->setReturnValue('isRestricted', false);
-        $webDAVProject->setReturnValue('getUser', $user);
-        $this->assertEqual($webDAVProject->userCanRead(), true);
+        $webDAVProject = \Mockery::mock(
+            \WebDAVProject::class,
+            [
+                $user,
+                $project,
+                0,
+                $access_checker
+            ]
+        )->makePartial()->shouldAllowMockingProtectedMethods();
 
-    }
 
-    /**
-     * Testing when project is not public and user is not member and restricted
-     */
-    function testUserCanReadWhenNotPublicNotMemberRestricted() {
+        $access_checker->shouldReceive('checkUserCanAccessProject')->with($user, $project)->andThrow(new Project_AccessPrivateException());
 
-        $webDAVProject = new WebDAVProjectTestVersion($this);
-        $project = new MockProject();
-        $project->setReturnValue('isPublic', false);
-        $project->setReturnValue('userIsMember', false);
-        $webDAVProject->setReturnValue('getProject', $project);
-
-        $utils = new MockWebDAVUtils();
-        $webDAVProject->setReturnValue('getUtils', $utils);
-        $user = mock('PFUser');
-        $user->setReturnValue('isRestricted', true);
-        $webDAVProject->setReturnValue('getUser', $user);
-        $this->assertEqual($webDAVProject->userCanRead(), false);
-
-    }
-
-    /**
-     * Testing when project is not public and user is member and restricted
-     */
-    function testUserCanReadWhenNotPublicMemberRestricted() {
-
-        $webDAVProject = new WebDAVProjectTestVersion($this);
-        $project = new MockProject();
-        $project->setReturnValue('isPublic', false);
-        $project->setReturnValue('userIsMember', true);
-        $webDAVProject->setReturnValue('getProject', $project);
-
-        $utils = new MockWebDAVUtils();
-        $webDAVProject->setReturnValue('getUtils', $utils);
-        $user = mock('PFUser');
-        $user->setReturnValue('isRestricted', true);
-        $webDAVProject->setReturnValue('getUser', $user);
-        $this->assertEqual($webDAVProject->userCanRead(), true);
-
-    }
-
-    /**
-     * Testing when project is public and user is not member and not restricted
-     */
-    function testUserCanReadWhenPublicNotMemberNotRestricted() {
-
-        $webDAVProject = new WebDAVProjectTestVersion($this);
-        $project = new MockProject();
-        $project->setReturnValue('isPublic', true);
-        $project->setReturnValue('userIsMember', false);
-        $webDAVProject->setReturnValue('getProject', $project);
-
-        $utils = new MockWebDAVUtils();
-        $webDAVProject->setReturnValue('getUtils', $utils);
-        $user = mock('PFUser');
-        $user->setReturnValue('isRestricted', false);
-        $webDAVProject->setReturnValue('getUser', $user);
-        $this->assertEqual($webDAVProject->userCanRead(), true);
-
-    }
-
-    /**
-     * Testing when project is public and user is member and not restricted
-     */
-    function testUserCanReadWhenPublicMemberNotRestricted() {
-
-        $webDAVProject = new WebDAVProjectTestVersion($this);
-        $project = new MockProject();
-        $project->setReturnValue('isPublic', true);
-        $project->setReturnValue('userIsMember', true);
-        $webDAVProject->setReturnValue('getProject', $project);
-
-        $utils = new MockWebDAVUtils();
-        $webDAVProject->setReturnValue('getUtils', $utils);
-        $user = mock('PFUser');
-        $user->setReturnValue('isRestricted', false);
-        $webDAVProject->setReturnValue('getUser', $user);
-        $this->assertEqual($webDAVProject->userCanRead(), true);
-
-    }
-
-    /**
-     * Testing when project is public and user is not member and restricted
-     */
-    function testUserCanReadWhenPublicNotMemberRestricted() {
-
-        $webDAVProject = new WebDAVProjectTestVersion($this);
-        $project = new MockProject();
-        $project->setReturnValue('isPublic', true);
-        $project->setReturnValue('userIsMember', false);
-        $webDAVProject->setReturnValue('getProject', $project);
-
-        $utils = new MockWebDAVUtils();
-        $webDAVProject->setReturnValue('getUtils', $utils);
-        $user = mock('PFUser');
-        $user->setReturnValue('isRestricted', true);
-        $webDAVProject->setReturnValue('getUser', $user);
-        $this->assertEqual($webDAVProject->userCanRead(), false);
-
-    }
-
-    /**
-     * Testing when project is public and user is member and restricted
-     */
-    function testUserCanReadWhenPublicMemberRestricted() {
-
-        $webDAVProject = new WebDAVProjectTestVersion($this);
-        $project = new MockProject();
-        $project->setReturnValue('isPublic', true);
-        $project->setReturnValue('userIsMember', true);
-        $webDAVProject->setReturnValue('getProject', $project);
-
-        $utils = new MockWebDAVUtils();
-        $webDAVProject->setReturnValue('getUtils', $utils);
-        $user = mock('PFUser');
-        $user->setReturnValue('isRestricted', true);
-        $webDAVProject->setReturnValue('getUser', $user);
-        $this->assertEqual($webDAVProject->userCanRead(), true);
-
+        $this->assertFalse($webDAVProject->userCanRead());
     }
 }
