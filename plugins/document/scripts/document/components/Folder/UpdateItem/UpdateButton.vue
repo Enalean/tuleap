@@ -31,7 +31,7 @@
 </template>
 <script>
 import { mapState } from "vuex";
-import { TYPE_EMPTY, TYPE_LINK, TYPE_WIKI } from "../../../constants.js";
+import { TYPE_EMPTY, TYPE_WIKI } from "../../../constants.js";
 
 import { redirect_to_url } from "../../../helpers/location-helper.js";
 export default {
@@ -65,13 +65,11 @@ export default {
                 return;
             }
 
-            if (this.item.type === TYPE_EMPTY || this.item.type === TYPE_LINK) {
-                const action =
-                    this.item.type !== TYPE_EMPTY ? "action_new_version" : "action_update";
+            if (this.item.type === TYPE_EMPTY) {
                 return redirect_to_url(
                     `/plugins/docman/index.php?group_id=${this.project_id}&id=${
                         this.item.id
-                    }&action=${action}`
+                    }&action=action_update`
                 );
             }
 

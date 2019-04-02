@@ -35,7 +35,8 @@ import {
     getProject,
     patchUserPreferenciesForFolderInProject,
     patchEmbeddedFile,
-    patchWiki
+    patchWiki,
+    patchLink
 } from "../api/rest-querier.js";
 
 import {
@@ -261,6 +262,30 @@ export const updateWikiFromModal = async (
     } catch (exception) {
         return handleErrorsForModal(context, exception);
     }
+};
+
+export const updateLinkFromModal = async (
+    context,
+    [item, new_link_url, version_title, changelog, is_file_locked, approval_table_action]
+) => {
+    try {
+        await patchLink(
+            item,
+            new_link_url,
+            version_title,
+            changelog,
+            is_file_locked,
+            approval_table_action
+        );
+    } catch (exception) {
+        return handleErrorsForModal(context, exception);
+    }
+};
+
+export const refreshItem = async (context, item_to_refresh) => {
+    const up_to_date_item = await getItem(item_to_refresh.id);
+
+    context.commit("replaceLinkWithNewVersion", [item_to_refresh, up_to_date_item]);
 };
 
 async function uploadNewVersion(

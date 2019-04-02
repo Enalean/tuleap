@@ -380,4 +380,31 @@ describe("rest-querier", () => {
             await patchWiki(item, page_name, version_title, change_log, should_lock_file);
         });
     });
+
+    describe("patchLink()", () => {
+        it("", async () => {
+            const item = JSON.stringify({
+                title: "A link to the past",
+                description: "Time travel machine is here",
+                type: "link"
+            });
+
+            const link_url = "https://archive.org/web/web.php";
+            const version_title = "Marty, get in the DeLorean!";
+            const change_log = "Let's go doc!";
+            const should_lock_file = true;
+            const approval_table_action = null;
+
+            mockFetchSuccess(tlp.patch);
+
+            await patchWiki(
+                item,
+                link_url,
+                version_title,
+                change_log,
+                should_lock_file,
+                approval_table_action
+            );
+        });
+    });
 });

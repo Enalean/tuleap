@@ -350,6 +350,9 @@ msgstr "Mettre à jour un fichier embarqué"
 msgid "Update file"
 msgstr "Mettre à jour"
 
+msgid "Update link"
+msgstr "Mettre à jour un lien"
+
 msgid "Update modal for documents of type \"empty\""
 msgstr "Modale de mise à jour des documents de type \"vide\""
 
