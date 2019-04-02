@@ -22,9 +22,12 @@
         <modal-header v-bind:modal-title="modal_title" v-bind:aria-labelled-by="aria_labelled_by"/>
         <modal-feedback/>
         <div class="tlp-modal-body">
-            <item-update-properties v-bind:version="version" v-bind:item="item" v-on:approvalTableActionChange="setApprovalUpdateAction">
-                <wiki-properties v-model="wiki_model.wiki_properties" v-bind:item="wiki_model"/>
-            </item-update-properties>
+            <div class="docman-item-update-property">
+                <div class="docman-item-title-update-property">
+                    <wiki-properties v-model="wiki_model.wiki_properties" v-bind:item="wiki_model"/>
+                    <lock-property v-model="version.is_file_locked" v-bind:item="item"/>
+                </div>
+            </div>
         </div>
         <modal-footer v-bind:is-loading="is_loading" v-bind:submit-button-label="submit_button_label" v-bind:aria-labelled-by="aria_labelled_by"/>
     </form>
@@ -36,17 +39,17 @@ import { modal as createModal } from "tlp";
 import ModalHeader from "../ModalCommon/ModalHeader.vue";
 import ModalFeedback from "../ModalCommon/ModalFeedback.vue";
 import ModalFooter from "../ModalCommon/ModalFooter.vue";
-import ItemUpdateProperties from "./ItemUpdateProperties.vue";
 import WikiProperties from "../Property/WikiProperties.vue";
+import LockProperty from "./LockProperty.vue";
 
 export default {
     name: "UpdateWikiModal",
     components: {
         WikiProperties,
-        ItemUpdateProperties,
         ModalFeedback,
         ModalHeader,
-        ModalFooter
+        ModalFooter,
+        LockProperty
     },
     props: {
         item: Object
@@ -120,6 +123,7 @@ export default {
             this.is_loading = false;
             if (this.has_modal_error === false) {
                 this.item.wiki_properties.page_name = this.wiki_model.wiki_properties.page_name;
+                this.$store.dispatch("refreshWiki", this.item);
                 this.wiki_model = {};
                 this.modal.hide();
             }
