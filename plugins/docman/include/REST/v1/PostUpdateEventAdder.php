@@ -23,9 +23,9 @@ declare(strict_types = 1);
 namespace Tuleap\Docman\REST\v1;
 
 use Docman_Item;
-use Docman_Version;
 use EventManager;
 use ProjectManager;
+use Tuleap\Docman\Version\Version;
 
 class PostUpdateEventAdder
 {
@@ -52,7 +52,7 @@ class PostUpdateEventAdder
         $this->event_manager     = $event_manager;
     }
 
-    public function triggerPostUpdateEvents(Docman_Item $item, \PFUser $user, ?Docman_Version $version): void
+    public function triggerPostUpdateEvents(Docman_Item $item, \PFUser $user, ?Version $version): void
     {
         $params = [
             'item'     => $item,
@@ -66,7 +66,6 @@ class PostUpdateEventAdder
 
         $this->items_event_adder->addNotificationEvents($this->project_manager->getProject($item->getGroupId()));
         $this->items_event_adder->addLogEvents();
-
 
         $this->event_manager->processEvent('send_notifications', []);
     }

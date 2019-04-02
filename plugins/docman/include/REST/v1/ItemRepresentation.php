@@ -22,6 +22,7 @@ namespace Tuleap\Docman\REST\v1;
 
 use Tuleap\Docman\REST\v1\EmbeddedFiles\EmbeddedFilePropertiesRepresentation;
 use Tuleap\Docman\REST\v1\Wiki\WikiPropertiesRepresentation;
+use Tuleap\Docman\REST\v1\Links\LinkPropertiesRepresentation;
 use Tuleap\REST\JsonCast;
 use Tuleap\User\REST\MinimalUserRepresentation;
 

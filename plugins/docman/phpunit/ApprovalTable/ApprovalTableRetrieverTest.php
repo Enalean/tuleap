@@ -24,6 +24,7 @@ namespace Tuleap\Docman\ApprovalTable;
 
 use Docman_ApprovalTableFactoriesFactory;
 use Docman_ApprovalTableItemFactory;
+use Docman_VersionFactory;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
@@ -31,6 +32,10 @@ use PHPUnit\Framework\TestCase;
 class ApprovalTableRetrieverTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+    /**
+     * @var Docman_VersionFactory|Mockery\MockInterface
+     */
+    private $version_factory;
     /**
      * @var ApprovalTableRetriever
      */

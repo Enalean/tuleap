@@ -51,7 +51,7 @@ class DocmanItemFileUpdatorTest extends TestCase
      */
     private $lock_factory;
     /**
-     * @var DocmanItemUpdator
+     * @var DocmanItemFileUpdator
      */
     private $updator;
 

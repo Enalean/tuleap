@@ -36,6 +36,7 @@ use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Docman\REST\v1\AfterItemCreationVisitor;
 use Tuleap\Docman\REST\v1\DocmanItemCreator;
 use Tuleap\Docman\REST\v1\EmptyFileToUploadFinisher;
+use Tuleap\Docman\REST\v1\Links\DocmanLinksValidityChecker;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadDAO;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
 use Tuleap\Docman\Upload\Document\DocumentToUploadCreator;
@@ -91,7 +92,8 @@ class DocmanItemCreatorBuilder
                     $transaction_executor
                 ),
                 $document_upload_path_allocator
-            )
+            ),
+            new DocmanLinksValidityChecker()
         );
     }
 }

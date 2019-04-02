@@ -63,6 +63,10 @@ class Docman_LinkVersionFactory {
         return $this->dao->createNewLinkVersion($link, $label, $changelog, $date);
     }
 
+    public function createLinkWithSpecificVersion(Docman_Link $link, string $label, string $changelog, int $date, int $version) {
+        return $this->dao->createLinkWithSpecificVersion($link, $label, $changelog, $date, $version);
+    }
+
     /**
      * @return Docman_LinkVersion|null
      */

@@ -33,10 +33,10 @@ use Tuleap\Docman\REST\v1\EmbeddedFiles\DocmanEmbeddedPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Folders\DocmanEmptyPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Folders\DocmanFolderPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Folders\DocmanItemCreatorBuilder;
-use Tuleap\Docman\REST\v1\Folders\DocmanLinkPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Folders\DocmanPOSTFilesRepresentation;
 use Tuleap\Docman\REST\v1\Folders\ItemCanHaveSubItemsChecker;
 use Tuleap\Docman\REST\v1\Wiki\DocmanWikiPOSTRepresentation;
+use Tuleap\Docman\REST\v1\Links\DocmanLinkPOSTRepresentation;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
@@ -317,7 +317,7 @@ class DocmanFoldersResource extends AuthenticatedResource
      *
      * @param int                              $id   Id of the parent folder
      * @param DocmanLinkPOSTRepresentation $links_representation {@from body}
-     *                                               {@type \Tuleap\Docman\REST\v1\Folders\DocmanLinkPOSTRepresentation}
+     *                                               {@type \Tuleap\Docman\REST\v1\Links\DocmanLinkPOSTRepresentation}
      *
      * @url    POST {id}/links
      * @access hybrid

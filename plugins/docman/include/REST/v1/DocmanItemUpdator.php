@@ -28,6 +28,7 @@ use Tuleap\Docman\ApprovalTable\ApprovalTableUpdateActionChecker;
 use Tuleap\Docman\ApprovalTable\ApprovalTableUpdater;
 use Tuleap\Docman\Lock\LockChecker;
 use Tuleap\Docman\Lock\LockUpdater;
+use Tuleap\Docman\Version\Version;
 
 class DocmanItemUpdator
 {
@@ -78,7 +79,7 @@ class DocmanItemUpdator
         bool $should_lock_item,
         \PFUser $user,
         string $approval_table_action,
-        ?Docman_Version $version
+        ?Version $version
     ): void {
         $this->updateApprovalTable($item, $user, $approval_table_action);
         $this->updateCommonDataWithoutApprovalTable($item, $should_lock_item, $user, $version);
@@ -88,7 +89,7 @@ class DocmanItemUpdator
         \Docman_Item $item,
         bool $should_lock_item,
         \PFUser $user,
-        ?Docman_Version $version
+        ?Version $version
     ): void {
         $this->updateLock($item, $should_lock_item, $user);
         $this->post_update_event_adder->triggerPostUpdateEvents($item, $user, $version);
