@@ -21,6 +21,7 @@
 namespace Tuleap\Docman\REST\v1;
 
 use Tuleap\Docman\REST\ResourcesInjector;
+use Tuleap\Docman\REST\v1\Files\CreatedItemFilePropertiesRepresentation;
 use Tuleap\REST\JsonCast;
 
 final class CreatedItemRepresentation

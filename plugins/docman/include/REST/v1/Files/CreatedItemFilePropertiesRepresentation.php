@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,34 +15,22 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see http://www.gnu.org/licenses/.
- *
- *
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Docman\REST\v1;
+namespace Tuleap\Docman\REST\v1\Files;
 
-class FilePropertiesRepresentation
+final class CreatedItemFilePropertiesRepresentation
 {
     /**
-     * @var string
+     * @var string URL to upload the file using the tus resumable upload protocol
+     *
+     * @see https://tus.io/protocols/resumable-upload.html
      */
-    public $file_type;
+    public $upload_href;
 
-    /**
-     * @var string
-     */
-    public $download_href;
-
-    /**
-     * @var int
-     */
-    public $file_size;
-
-    public function build(\Docman_Version $docman_version, $download_href)
+    public function build($upload_href)
     {
-        $this->file_type    = $docman_version->getFiletype();
-        $this->download_href = $download_href;
-        $this->file_size    = $docman_version->getFilesize();
+        $this->upload_href = $upload_href;
     }
 }

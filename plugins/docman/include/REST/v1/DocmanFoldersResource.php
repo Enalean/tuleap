@@ -30,10 +30,10 @@ use PluginManager;
 use Project;
 use ProjectManager;
 use Tuleap\Docman\REST\v1\EmbeddedFiles\DocmanEmbeddedPOSTRepresentation;
+use Tuleap\Docman\REST\v1\Files\DocmanPOSTFilesRepresentation;
 use Tuleap\Docman\REST\v1\Folders\DocmanEmptyPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Folders\DocmanFolderPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Folders\DocmanItemCreatorBuilder;
-use Tuleap\Docman\REST\v1\Folders\DocmanPOSTFilesRepresentation;
 use Tuleap\Docman\REST\v1\Folders\ItemCanHaveSubItemsChecker;
 use Tuleap\Docman\REST\v1\Wiki\DocmanWikiPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Links\DocmanLinkPOSTRepresentation;
@@ -76,7 +76,7 @@ class DocmanFoldersResource extends AuthenticatedResource
      * <br/>
      *
      * @param int  $id     Id of the parent folder
-     * @param DocmanPOSTFilesRepresentation  $files_representation {@from body} {@type \Tuleap\Docman\REST\v1\Folders\DocmanPOSTFilesRepresentation}
+     * @param DocmanPOSTFilesRepresentation  $files_representation {@from body} {@type \Tuleap\Docman\REST\v1\Files\DocmanPOSTFilesRepresentation}
      *
      * @url    POST {id}/files
      * @access hybrid

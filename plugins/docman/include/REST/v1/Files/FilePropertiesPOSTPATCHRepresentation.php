@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,19 +18,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Docman\REST\v1;
+namespace Tuleap\Docman\REST\v1\Files;
 
-final class CreatedItemFilePropertiesRepresentation
+final class FilePropertiesPOSTPATCHRepresentation
 {
     /**
-     * @var string URL to upload the file using the tus resumable upload protocol
-     *
-     * @see https://tus.io/protocols/resumable-upload.html
+     * @var string Name of the file {@from body} {@required true}
      */
-    public $upload_href;
-
-    public function build($upload_href)
-    {
-        $this->upload_href = $upload_href;
-    }
+    public $file_name;
+    /**
+     * @var int Size of the file {@from body} {@required true} {@min 0}
+     */
+    public $file_size;
 }
