@@ -27,6 +27,7 @@ export {
     getParents,
     patchUserPreferenciesForFolderInProject,
     patchEmbeddedFile,
+    patchWiki,
     deleteUserPreferenciesForFolderInProject,
     deleteUserPreferenciesForUnderConstructionModal,
     deleteUserPreferenciesForUIInProject,
@@ -169,6 +170,22 @@ function patchEmbeddedFile(
             },
             should_lock_file,
             approval_table_action
+        })
+    });
+}
+
+function patchWiki(item, page_name, version_title, change_log, should_lock_file) {
+    return patch(`/api/docman_wikis/${item.id}`, {
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            version_title,
+            change_log,
+            wiki_properties: {
+                page_name
+            },
+            should_lock_file
         })
     });
 }

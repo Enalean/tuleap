@@ -34,7 +34,8 @@ import {
     getItem,
     getProject,
     patchUserPreferenciesForFolderInProject,
-    patchEmbeddedFile
+    patchEmbeddedFile,
+    patchWiki
 } from "../api/rest-querier.js";
 
 import {
@@ -246,6 +247,17 @@ export const updateEmbeddedFileFromModal = async (
             is_file_locked,
             approval_table_action
         );
+    } catch (exception) {
+        return handleErrorsForModal(context, exception);
+    }
+};
+
+export const updateWikiFromModal = async (
+    context,
+    [item, new_wiki_page, version_title, changelog, is_file_locked]
+) => {
+    try {
+        await patchWiki(item, new_wiki_page, version_title, changelog, is_file_locked);
     } catch (exception) {
         return handleErrorsForModal(context, exception);
     }

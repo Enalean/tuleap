@@ -36,3 +36,13 @@
         white-space: nowrap;
     }
 }
+
+.document-update-button-disabled {
+    box-shadow: none;
+    color: transparentize($tlp-theme-color, .5);
+    cursor: not-allowed;
+
+    &:hover {
+        background: $tlp-ui-white;
+    }
+}

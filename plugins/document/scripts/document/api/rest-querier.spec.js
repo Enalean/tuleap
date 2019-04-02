@@ -28,6 +28,7 @@ import {
     getParents,
     patchEmbeddedFile,
     patchUserPreferenciesForFolderInProject,
+    patchWiki,
     deleteUserPreferenciesForFolderInProject,
     addUserLegacyUIPreferency,
     createNewVersion
@@ -358,6 +359,25 @@ describe("rest-querier", () => {
                 should_lock_file,
                 approval_table_action
             );
+        });
+    });
+
+    describe("patchWiki()", () => {
+        it("", async () => {
+            const item = JSON.stringify({
+                title: "Kinky wiki",
+                description: "Not for children",
+                type: "wiki"
+            });
+
+            const page_name = "nsfw";
+            const version_title = "a title";
+            const change_log = "change title to nsfw";
+            const should_lock_file = true;
+
+            mockFetchSuccess(tlp.patch);
+
+            await patchWiki(item, page_name, version_title, change_log, should_lock_file);
         });
     });
 });

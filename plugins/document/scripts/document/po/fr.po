@@ -350,6 +350,9 @@ msgstr "Ce dossier est vide"
 msgid "This is a private folder."
 msgstr "Ce dossier est privé."
 
+msgid "This wiki has a approval table, you can't update it."
+msgstr "Ce wiki a une table d'approbation, vous ne pouvez pas mettre à jour."
+
 msgid "Title"
 msgstr "Titre"
 
@@ -364,6 +367,9 @@ msgstr "Mettre à jour un fichier embarqué"
 
 msgid "Update file"
 msgstr "Mettre à jour"
+
+msgid "Update wiki page"
+msgstr "Mettre à jour la page wiki"
 
 msgid "Upload error"
 msgstr "Erreur de téléversement"

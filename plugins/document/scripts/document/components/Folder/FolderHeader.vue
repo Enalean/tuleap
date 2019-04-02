@@ -47,6 +47,7 @@
 
 <script>
 import { mapGetters, mapState } from "vuex";
+import { TYPE_FILE, TYPE_EMBEDDED, TYPE_WIKI } from "../../constants.js";
 import SearchBox from "./SearchBox.vue";
 import NewItemButton from "./NewItem/NewItemButton.vue";
 import NewItemModal from "./NewItem/NewItemModal.vue";
@@ -95,30 +96,31 @@ export default {
         }
     },
     mounted() {
-        document.addEventListener("show-update-file-modal", this.showUpdateFileModal);
-        document.addEventListener(
-            "show-update-embedded-file-modal",
-            this.showUpdateEmbeddedFileModal
-        );
+        document.addEventListener("show-update-item-modal", this.showUpdateFileModal);
+        document.addEventListener("show-update-item-modal", this.showUpdateItemModal);
 
         this.$once("hook:beforeDestroy", () => {
-            document.removeEventListener("show-update-file-modal", this.showUpdateFileModal);
-            document.removeEventListener(
-                "show-update-embedded-file-modal",
-                this.showUpdateEmbeddedFileModal
-            );
+            document.removeEventListener("show-update-item-modal", this.showUpdateItemModal);
         });
     },
     methods: {
-        showUpdateFileModal(event) {
+        showUpdateItemModal(event) {
             this.updated_item = event.detail.current_item;
-            this.shown_modal = () =>
-                import(/* webpackChunkName: "document-update-file-modal" */ "./UpdateItem/UpdateFileModal.vue");
-        },
-        showUpdateEmbeddedFileModal(event) {
-            this.updated_item = event.detail.current_item;
-            this.shown_modal = () =>
-                import(/* webpackChunkName: "document-update-embedded-file-modal" */ "./UpdateItem/UpdateEmbeddedFileModal.vue");
+
+            switch (this.updated_item.type) {
+                case TYPE_FILE:
+                    this.shown_modal = () =>
+                        import(/* webpackChunkName: "document-update-file-modal" */ "./UpdateItem/UpdateFileModal.vue");
+                    break;
+                case TYPE_EMBEDDED:
+                    this.shown_modal = () =>
+                        import(/* webpackChunkName: "document-update-embedded-file-modal" */ "./UpdateItem/UpdateEmbeddedFileModal.vue");
+                    break;
+                case TYPE_WIKI:
+                    this.shown_modal = () =>
+                        import(/* webpackChunkName: "document-update-wiki-modal" */ "./UpdateItem/UpdateWikiModal.vue");
+                    break;
+            }
         }
     }
 };
