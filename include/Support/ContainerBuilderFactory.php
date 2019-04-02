@@ -29,6 +29,8 @@ use ProjectManager;
 use Tracker_Artifact_ChangesetFactory;
 use Tracker_Artifact_ChangesetFactoryBuilder;
 use Tracker_ArtifactFactory;
+use Tracker_FormElementFactory;
+use TrackerFactory;
 use Tuleap\Baseline\Adapter\BaselineArtifactRepositoryAdapter;
 use Tuleap\Baseline\Adapter\BaselineRepositoryAdapter;
 use Tuleap\Baseline\Adapter\ClockAdapter;
@@ -67,7 +69,9 @@ class ContainerBuilderFactory
                 ),
                 EasyDB::class                            => static function () {
                     return DBFactory::getMainTuleapDBConnection()->getDB();
-                }
+                },
+                TrackerFactory::class                    => factory([TrackerFactory::class, 'instance']),
+                Tracker_FormElementFactory::class        => factory([Tracker_FormElementFactory::class, 'instance'])
             ]
         );
     }

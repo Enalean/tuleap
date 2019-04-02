@@ -24,13 +24,24 @@ declare(strict_types=1);
 namespace Tuleap\Baseline\Adapter;
 
 use PFUser;
+use Planning;
+use PlanningFactory;
 use Tracker_Artifact;
 use Tracker_Artifact_Changeset;
 
 class ArtifactLinkRepository
 {
+    /** @var PlanningFactory */
+    private $planning_factory;
+
+    public function __construct(PlanningFactory $planning_factory)
+    {
+        $this->planning_factory = $planning_factory;
+    }
+
     /**
      * Find ids of all artifacts linked to a given artifact at a given date time (i.e. given change set).
+     * Warning: artifacts from tracker associated to a planning (on changeset project) as milestone are skipped.
      * @return int[]
      */
     public function findLinkedArtifactIds(
@@ -43,11 +54,43 @@ class ArtifactLinkRepository
         }
 
         $tracker_artifacts = $artifact_link_field->getLinkedArtifacts($changeset, $current_user);
-        return array_map(
-            function (Tracker_Artifact $tracker_artifact) {
-                return $tracker_artifact->getId();
-            },
-            $tracker_artifacts
+
+        $project_id            = (int) $changeset->getTracker()->getGroupId();
+        $milestone_tracker_ids = $this->findMilestoneTrackerIds($current_user, $project_id);
+
+        $backlog_artifacts = array_filter(
+            $tracker_artifacts,
+            static function (Tracker_Artifact $tracker_artifact) use ($milestone_tracker_ids) {
+                return ! in_array($tracker_artifact->getTrackerId(), $milestone_tracker_ids, true);
+            }
         );
+
+        return array_values(
+            array_map(
+                static function (Tracker_Artifact $tracker_artifact) {
+                    return $tracker_artifact->getId();
+                },
+                $backlog_artifacts
+            )
+        );
+    }
+
+    /**
+     * @return int[]
+     */
+    private function findMilestoneTrackerIds(PFUser $current_user, int $project_id): array
+    {
+        $plannings = $this->planning_factory->getPlannings(
+            $current_user,
+            $project_id
+        );
+
+        $milestone_tracker_ids = array_map(
+            static function (Planning $planning) {
+                return $planning->getPlanningTrackerId();
+            },
+            $plannings
+        );
+        return $milestone_tracker_ids;
     }
 }
