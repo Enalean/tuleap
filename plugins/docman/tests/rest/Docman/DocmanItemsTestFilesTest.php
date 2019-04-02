@@ -52,14 +52,16 @@ class DocmanItemsTestFilesTest extends DocmanBase
         );
         $folder = $response->json();
 
-        $folder_1_id = $folder[0]['id'];
+        $folder_content = $this->findItemByTitle($folder, 'folder 1');
+        $folder_1_id    = $folder_content['id'];
         $response = $this->getResponseByName(
             REST_TestDataBuilder::ADMIN_USER_NAME,
             $this->client->get('docman_items/' . $folder_1_id . '/docman_items')
         );
         $items_folder_1 = $response->json();
 
-        $folder_file_id = $folder[1]['id'];
+        $folder_file = $this->findItemByTitle($folder, 'Folder A File');
+        $folder_file_id = $folder_file['id'];
         $response = $this->getResponseByName(
             REST_TestDataBuilder::ADMIN_USER_NAME,
             $this->client->get('docman_items/' . $folder_file_id . '/docman_items')

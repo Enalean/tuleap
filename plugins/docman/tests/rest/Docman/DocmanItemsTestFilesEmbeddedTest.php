@@ -51,14 +51,16 @@ class DocmanItemsTestFilesEmbeddedTest extends DocmanBase
         );
         $folder   = $response->json();
 
-        $folder_1_id    = $folder[0]['id'];
+        $folder_content = $this->findItemByTitle($folder, 'folder 1');
+        $folder_1_id    = $folder_content['id'];
         $response       = $this->getResponseByName(
             REST_TestDataBuilder::ADMIN_USER_NAME,
             $this->client->get('docman_items/' . $folder_1_id . '/docman_items')
         );
         $items_folder_1 = $response->json();
 
-        $folder_embedded_id = $folder[2]['id'];
+        $folder_embedded = $this->findItemByTitle($folder, 'Folder B Embedded');
+        $folder_embedded_id = $folder_embedded['id'];
         $response           = $this->getResponseByName(
             REST_TestDataBuilder::ADMIN_USER_NAME,
             $this->client->get('docman_items/' . $folder_embedded_id . '/docman_items')
