@@ -113,6 +113,9 @@ class BaselineRepositoryAdapter implements BaselineRepository
         }
 
         $baseline = $this->mapRow($current_user, $rows[0]);
+        if ($baseline === null) {
+            return null;
+        }
 
         if (! $this->adapter_permissions->canUserReadBaselineOnProject($current_user, $baseline->getProject())) {
             return null;
@@ -161,11 +164,13 @@ class BaselineRepositoryAdapter implements BaselineRepository
             [$project->getID(), $page_size, $baseline_offset]
         );
 
-        return array_map(
-            function (array $row) use ($current_user) {
-                return $this->mapRow($current_user, $row);
-            },
-            $rows
+        return array_filter(
+            array_map(
+                function (array $row) use ($current_user) {
+                    return $this->mapRow($current_user, $row);
+                },
+                $rows
+            )
         );
     }
 
@@ -183,9 +188,12 @@ class BaselineRepositoryAdapter implements BaselineRepository
         );
     }
 
-    private function mapRow(PFUser $current_user, array $row): Baseline
+    private function mapRow(PFUser $current_user, array $row): ?Baseline
     {
-        $artifact      = $this->baseline_artifact_repository->findById($current_user, $row['artifact_id']);
+        $artifact = $this->baseline_artifact_repository->findById($current_user, $row['artifact_id']);
+        if ($artifact === null) {
+            return null;
+        }
         $author        = $this->user_manager->getUserById($row['user_id']);
         $snapshot_date = new DateTime();
         $snapshot_date->setTimestamp($row['snapshot_date'])

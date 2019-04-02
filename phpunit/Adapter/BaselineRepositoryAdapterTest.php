@@ -180,6 +180,39 @@ class BaselineRepositoryAdapterTest extends TestCase
         $this->assertNull($baseline);
     }
 
+    public function testFindByIdReturnsNullWhenBaselineArtifactIsNotFound()
+    {
+        $this->baseline_artifact_repository
+            ->shouldReceive('findById')
+            ->with($this->current_user, 10)
+            ->andReturn(null);
+
+        $user = new PFUser();
+        $this->user_manager
+            ->shouldReceive('getUserById')
+            ->with(22)
+            ->andReturn($user);
+
+        $this->db
+            ->shouldReceive('safeQuery')
+            ->with(Mockery::type('string'), [1])
+            ->andReturn(
+                [
+                    [
+                        "id"            => 1,
+                        "name"          => "Persisted baseline",
+                        "artifact_id"   => 10,
+                        "user_id"       => 22,
+                        "snapshot_date" => 1553176023,
+                    ]
+                ]
+            );
+
+        $baseline = $this->repository->findById($this->current_user, 1);
+
+        $this->assertNull($baseline);
+    }
+
     public function testFindByProject()
     {
         $artifact = BaselineArtifactFactory::one()->build();
@@ -228,6 +261,48 @@ class BaselineRepositoryAdapterTest extends TestCase
             $user
         )];
         $this->assertEquals($expected_baselines, $baselines);
+    }
+
+    public function testFindByProjectIgnoresBaselinesWhereArtifactIsNotFound()
+    {
+        $this->baseline_artifact_repository
+            ->shouldReceive('findById')
+            ->with($this->current_user, 10)
+            ->andReturn(null);
+
+        $user = new PFUser();
+        $this->user_manager
+            ->shouldReceive('getUserById')
+            ->with(22)
+            ->andReturn($user);
+
+        $this->db
+            ->shouldReceive('safeQuery')
+            ->with(Mockery::type('string'), [102, 10, 3])
+            ->andReturn(
+                [
+                    [
+                        "id"            => 1,
+                        "name"          => "Persisted baseline",
+                        "artifact_id"   => 10,
+                        "user_id"       => 22,
+                        "snapshot_date" => 1553176023,
+                    ]
+                ]
+            );
+
+        $project = Mockery::mock(Project::class)
+            ->shouldReceive('getID')
+            ->andReturn(102)
+            ->getMock();
+
+        $this->adapter_permissions
+            ->shouldReceive('canUserReadBaselineOnProject')
+            ->andReturn(true);
+
+        $baselines = $this->repository->findByProject($this->current_user, $project, 10, 3);
+
+        $this->assertEquals([], $baselines);
     }
 
     public function testCountByProject()
