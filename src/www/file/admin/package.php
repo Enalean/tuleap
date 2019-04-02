@@ -48,10 +48,7 @@ $router = new FRSPackageRouter(
         PermissionsManager::instance()
     ),
     FRSPackageFactory::instance(),
-    new FRSPermissionManager(
-        new FRSPermissionDao(),
-        new FRSPermissionFactory(new FRSPermissionDao())
-    )
+    FRSPermissionManager::build()
 );
 
 $router->route($request, $project, $user);

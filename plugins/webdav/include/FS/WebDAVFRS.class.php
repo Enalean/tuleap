@@ -229,10 +229,7 @@ class WebDAVFRS extends Sabre_DAV_Directory {
     /** @protected for testing purpose */
     protected function getPermissionsManager()
     {
-        return new FRSPermissionManager(
-            new FRSPermissionDao(),
-            new FRSPermissionFactory(new FRSPermissionDao())
-        );
+        return FRSPermissionManager::build();
     }
 
     /**

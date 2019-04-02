@@ -102,9 +102,10 @@ class Tracker_ArtifactFactory {
      * @param PFUser    $user
      * @param Integer $id
      * 
-     * @return Tracker_Artifact
+     * @return Tracker_Artifact|null
      */
-    public function getArtifactByIdUserCanView(PFUser $user, $id) {
+    public function getArtifactByIdUserCanView(PFUser $user, $id)
+    {
         $artifact = $this->getArtifactById($id);
         if ($artifact && $artifact->userCanView($user)) {
             return $artifact;

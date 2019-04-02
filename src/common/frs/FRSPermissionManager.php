@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,54 +20,90 @@
 
 namespace Tuleap\FRS;
 
+use PermissionsOverrider_PermissionsOverriderManager;
 use Project;
 use PFUser;
+use Tuleap\Project\ProjectAccessChecker;
+use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 
 class FRSPermissionManager
 {
-    /** @var PermissionDao */
+    /** @var FRSPermissionDao */
     private $permission_dao;
     /** @var FRSPermissionFactory */
     private $permission_factory;
+    /**
+     * @var ProjectAccessChecker
+     */
+    private $access_checker;
 
     public function __construct(
         FRSPermissionDao $permission_dao,
-        FRSPermissionFactory $permission_factory
+        FRSPermissionFactory $permission_factory,
+        ProjectAccessChecker $access_checker
     ) {
         $this->permission_dao     = $permission_dao;
         $this->permission_factory = $permission_factory;
+        $this->access_checker     = $access_checker;
+    }
+
+    /**
+     * @return FRSPermissionManager
+     */
+    public static function build()
+    {
+        return new self(
+            new FRSPermissionDao(),
+            new FRSPermissionFactory(new FRSPermissionDao()),
+            new ProjectAccessChecker(
+                PermissionsOverrider_PermissionsOverriderManager::instance(),
+                new RestrictedUserCanAccessProjectVerifier()
+            )
+        );
     }
 
     public function isAdmin(Project $project, PFUser $user)
     {
-        if ($user->isSuperUser() || $user->isAdmin($project->getId())) {
-            return true;
-        }
+        try {
+            $this->access_checker->checkUserCanAccessProject($user, $project);
 
-        $permissions = $this->permission_factory->getFrsUgroupsByPermission($project, FRSPermission::FRS_ADMIN);
-
-        foreach ($permissions as $permission) {
-            if ($user->isMemberOfUGroup($permission->getUGroupId(), $project->getID())) {
+            if ($user->isSuperUser() || $user->isAdmin($project->getId())) {
                 return true;
             }
-        }
 
-        return false;
+            $permissions = $this->permission_factory->getFrsUgroupsByPermission($project, FRSPermission::FRS_ADMIN);
+
+            foreach ($permissions as $permission) {
+                if ($user->isMemberOfUGroup($permission->getUGroupId(), $project->getID())) {
+                    return true;
+                }
+            }
+
+            return false;
+        } catch (\Exception $exception) {
+            return false;
+        }
     }
 
     public function userCanRead(Project $project, PFUser $user)
     {
-        if ($this->isAdmin($project, $user)) {
-            return true;
-        }
+        try {
+            $this->access_checker->checkUserCanAccessProject($user, $project);
 
-        $permissions = $this->permission_dao->searchPermissionsForProjectByType($project->getID(), FRSPermission::FRS_READER);
-        foreach ($permissions as $permission) {
-            if ($user->isMemberOfUGroup($permission['ugroup_id'], $project->getID())) {
+            if ($this->isAdmin($project, $user)) {
                 return true;
             }
-        }
 
-        return false;
+            $permissions = $this->permission_dao->searchPermissionsForProjectByType($project->getID(), FRSPermission::FRS_READER);
+            foreach ($permissions as $permission) {
+                if ($user->isMemberOfUGroup($permission['ugroup_id'], $project->getID())) {
+                    return true;
+                }
+            }
+
+            return false;
+        } catch (\Exception $exception) {
+            return false;
+        }
     }
 }

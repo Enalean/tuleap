@@ -39,10 +39,7 @@ if($request->valid($vGroupId)) {
     exit_no_group();
 }
 
-$permission_manager = new FRSPermissionManager(
-    new FRSPermissionDao(),
-    new FRSPermissionFactory(new FRSPermissionDao())
-);
+$permission_manager = FRSPermissionManager::build();
 
 $user            = UserManager::instance()->getCurrentUser();
 $project_manager = ProjectManager::instance();

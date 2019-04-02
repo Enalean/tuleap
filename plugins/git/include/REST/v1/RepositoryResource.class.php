@@ -461,7 +461,7 @@ class RepositoryResource extends AuthenticatedResource
         );
 
         if (! $this->git_permission_manager->userIsGitAdmin($user, $project)) {
-            throw new RestException(401, "User does not have permissions to create a Git Repository");
+            throw new RestException(403, "User does not have permissions to create a Git Repository");
         }
         try {
             $repository = $this->repository_creator->create($project, $user, $name);

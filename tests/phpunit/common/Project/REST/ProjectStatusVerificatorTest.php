@@ -23,20 +23,29 @@ namespace Tuleap\Project\REST;
 use Luracast\Restler\RestException;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\GlobalLanguageMock;
+use Tuleap\Project\ProjectAccessChecker;
+use Tuleap\Project\ProjectAccessSuspendedException;
 use Tuleap\REST\ProjectStatusVerificator;
 
 class ProjectStatusVerificatorTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
 
     /**
      * @var ProjectStatusVerificator
      */
     private $verificator;
+    /**
+     * @var \Mockery\MockInterface|ProjectAccessChecker
+     */
+    private $access_checker;
 
     protected function setUp() : void
     {
-        $this->verificator = ProjectStatusVerificator::build();
+        $this->access_checker = \Mockery::mock(ProjectAccessChecker::class);
+        $this->verificator = new ProjectStatusVerificator($this->access_checker);
     }
 
     public function testEverybodyCanAccessANotSuspendedProject()
@@ -62,10 +71,10 @@ class ProjectStatusVerificatorTest extends TestCase
     public function testRegularUsersCantAccessASuspendedProject()
     {
         $project = \Mockery::mock(\Project::class);
-        $project->shouldReceive('isSuspended')->andReturn(true);
 
         $user = \Mockery::mock(\PFUser::class);
-        $user->shouldReceive('isSuperUser')->andReturn(false);
+
+        $this->access_checker->shouldReceive('checkUserCanAccessProject')->with($user, $project)->andThrow(ProjectAccessSuspendedException::class);
 
         $this->expectException(RestException::class);
         $this->expectExceptionCode(403);
@@ -80,10 +89,10 @@ class ProjectStatusVerificatorTest extends TestCase
     public function testSiteAdminUsersCanAccessASuspendedProject()
     {
         $project = \Mockery::mock(\Project::class);
-        $project->shouldReceive('isSuspended')->andReturn(true);
 
         $user = \Mockery::mock(\PFUser::class);
-        $user->shouldReceive('isSuperUser')->andReturn(true);
+
+        $this->access_checker->shouldReceive('checkUserCanAccessProject')->with($user, $project);
 
         $this->verificator->checkProjectStatusAllowsOnlySiteAdminToAccessIt(
             $user,

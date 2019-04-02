@@ -53,6 +53,10 @@ class GerritResource extends AuthenticatedResource {
      * @var ProjectManager
      */
     private $project_manager;
+    /**
+     * @var ServerPermissionManager
+     */
+    private $server_permission_manager;
 
     public function __construct() {
         $git_dao               = new GitDao();

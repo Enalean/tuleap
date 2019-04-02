@@ -193,10 +193,7 @@ $GLOBALS['Response']->includeFooterJavascriptSnippet($js);
 echo '<INPUT class="btn" type="submit" name ="searchUser" value="'.$Language->getText('admin_main', 'search').'"></div>';
 echo '</FORM>';
 
-$frs_permission_manager = new FRSPermissionManager(
-    new FRSPermissionDao(),
-    new FRSPermissionFactory(new FRSPermissionDao())
-);
+$frs_permission_manager = FRSPermissionManager::build();
 
 if ($res_dev && db_numrows($res_dev) > 0 && $number_per_page > 0) {
 

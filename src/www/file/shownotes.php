@@ -38,10 +38,7 @@ $frsrf   = new FRSReleaseFactory();
 $user    = UserManager::instance()->getCurrentUser();
 $release = $frsrf->getFRSReleaseFromDb($release_id);
 
-$permission_manager = new FRSPermissionManager(
-    new FRSPermissionDao(),
-    new FRSPermissionFactory(new FRSPermissionDao())
-);
+$permission_manager = FRSPermissionManager::build();
 $release_permission_manager = new ReleasePermissionManager($permission_manager , $frsrf);
 if ($release === null ||
     $release_permission_manager->canUserSeeRelease($user, $release, $release->getProject()) === false) {

@@ -39,10 +39,7 @@ if ($request->valid($vFilemodule_id)) {
     $current_user       = $um->getCurrentUser();
     $package_factory    = new FRSPackageFactory();
     $fmmf               = new FileModuleMonitorFactory();
-    $permission_manager = new FRSPermissionManager(
-        new FRSPermissionDao(),
-        new FRSPermissionFactory(new FRSPermissionDao())
-    );
+    $permission_manager = FRSPermissionManager::build();
 
     $package_permission_manager = new PackagePermissionManager($permission_manager, $package_factory);
     $package                    = $package_factory->getFRSPackageFromDb($filemodule_id);

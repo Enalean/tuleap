@@ -592,8 +592,12 @@ class KanbanResource extends AuthenticatedResource
         KanbanAddRepresentation $add = null,
         $from_column = null
     ) {
-        $current_user = UserManager::instance()->getCurrentUser();
-        $kanban       = $this->kanban_factory->getKanban($current_user, $id);
+        try {
+            $current_user = UserManager::instance()->getCurrentUser();
+            $kanban       = $this->kanban_factory->getKanban($current_user, $id);
+        } catch (AgileDashboard_KanbanCannotAccessException|AgileDashboard_KanbanNotFoundException $exception) {
+            throw new RestException(404);
+        }
 
         ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
             $this->getKanbanProject($kanban)
@@ -829,8 +833,12 @@ class KanbanResource extends AuthenticatedResource
         KanbanAddRepresentation $add = null,
         $from_column = null
     ) {
-        $current_user = UserManager::instance()->getCurrentUser();
-        $kanban       = $this->kanban_factory->getKanban($current_user, $id);
+        try {
+            $current_user = UserManager::instance()->getCurrentUser();
+            $kanban       = $this->kanban_factory->getKanban($current_user, $id);
+        } catch (AgileDashboard_KanbanCannotAccessException|AgileDashboard_KanbanNotFoundException $exception) {
+            throw new RestException(404);
+        }
 
         ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
             $this->getKanbanProject($kanban)
@@ -1016,8 +1024,12 @@ class KanbanResource extends AuthenticatedResource
         KanbanAddRepresentation $add = null,
         $from_column = null
     ) {
-        $current_user = UserManager::instance()->getCurrentUser();
-        $kanban       = $this->kanban_factory->getKanban($current_user, $id);
+        try {
+            $current_user = UserManager::instance()->getCurrentUser();
+            $kanban       = $this->kanban_factory->getKanban($current_user, $id);
+        } catch (AgileDashboard_KanbanCannotAccessException|AgileDashboard_KanbanNotFoundException $exception) {
+            throw new RestException(404);
+        }
 
         ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
             $this->getKanbanProject($kanban)

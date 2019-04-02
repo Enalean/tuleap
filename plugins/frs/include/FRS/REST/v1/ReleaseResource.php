@@ -172,7 +172,6 @@ class ReleaseResource extends AuthenticatedResource
      * </pre>
      *
      * @url POST
-     * @access hybrid
      *
      * @param ReleasePOSTRepresentation $body
      *
@@ -181,7 +180,7 @@ class ReleaseResource extends AuthenticatedResource
      *
      * @throws RestException 403
      */
-    public function post(ReleasePOSTRepresentation $body)
+    protected function post(ReleasePOSTRepresentation $body)
     {
         $this->sendAllowOptions();
 
@@ -239,14 +238,13 @@ class ReleaseResource extends AuthenticatedResource
      * </pre>
      *
      * @url PATCH {id}
-     * @access hybrid
      *
      * @param int $id
      * @param ReleasePATCHRepresentation $body
      *
      * @throws RestException 403
      */
-    public function patchId($id, ReleasePATCHRepresentation $body)
+    protected function patchId($id, ReleasePATCHRepresentation $body)
     {
         $this->sendAllowOptionsForRelease();
 
