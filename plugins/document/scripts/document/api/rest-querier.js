@@ -28,6 +28,7 @@ export {
     patchUserPreferenciesForFolderInProject,
     patchEmbeddedFile,
     patchWiki,
+    patchLink,
     deleteUserPreferenciesForFolderInProject,
     deleteUserPreferenciesForUnderConstructionModal,
     deleteUserPreferenciesForUIInProject,
@@ -186,6 +187,30 @@ function patchWiki(item, page_name, version_title, change_log, should_lock_file)
                 page_name
             },
             should_lock_file
+        })
+    });
+}
+
+function patchLink(
+    item,
+    link_url,
+    version_title,
+    change_log,
+    should_lock_file,
+    approval_table_action
+) {
+    return patch(`/api/docman_links/${item.id}`, {
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            version_title,
+            change_log,
+            link_properties: {
+                link_url
+            },
+            should_lock_file,
+            approval_table_action
         })
     });
 }

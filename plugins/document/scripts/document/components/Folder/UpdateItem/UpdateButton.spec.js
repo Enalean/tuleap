@@ -46,7 +46,7 @@ describe("QuickLookDocumentPreview", () => {
 
     it(`Given item is a file
         When we click on update button
-        Then file update modal is displayed`, () => {
+        Then item update event should be dispatched`, () => {
         spyOn(document, "dispatchEvent");
 
         const wrapper = update_button_factory({
@@ -61,13 +61,13 @@ describe("QuickLookDocumentPreview", () => {
         wrapper.find("[data-test=docman-item-update-button]").trigger("click");
 
         expect(document.dispatchEvent).toHaveBeenCalledWith(
-            new CustomEvent("show-update-file-modal")
+            new CustomEvent("show-update-item-modal")
         );
     });
 
     it(`Given item is an embedded file
         When we click on update button
-        Then file update modal is displayed`, () => {
+        Then item update event should be dispatched`, () => {
         spyOn(document, "dispatchEvent");
 
         const wrapper = update_button_factory({
@@ -82,13 +82,13 @@ describe("QuickLookDocumentPreview", () => {
         wrapper.find("[data-test=docman-item-update-button]").trigger("click");
 
         expect(document.dispatchEvent).toHaveBeenCalledWith(
-            new CustomEvent("show-update-file-modal")
+            new CustomEvent("show-update-item-modal")
         );
     });
 
     it(`Given item is a wiki with no approval table
         When we click on update button
-        Then file update modal is displayed`, () => {
+        Then item update event should be dispatched`, () => {
         spyOn(document, "dispatchEvent");
 
         const wrapper = update_button_factory({
@@ -104,7 +104,7 @@ describe("QuickLookDocumentPreview", () => {
         wrapper.find("[data-test=docman-item-update-button]").trigger("click");
 
         expect(document.dispatchEvent).toHaveBeenCalledWith(
-            new CustomEvent("show-update-file-modal")
+            new CustomEvent("show-update-item-modal")
         );
     });
 
@@ -152,9 +152,8 @@ describe("QuickLookDocumentPreview", () => {
 
     it(`Given item is a link document
         When we click on update button
-        Then user should be redirected on legacy UI`, () => {
-        const redirect_to_url = jasmine.createSpy("redirect_to_url");
-        rewire$redirect_to_url(redirect_to_url);
+        Then update item event should be dispatched`, () => {
+        spyOn(document, "dispatchEvent");
 
         const wrapper = update_button_factory({
             item: {
@@ -167,7 +166,9 @@ describe("QuickLookDocumentPreview", () => {
 
         wrapper.find("[data-test=docman-item-update-button]").trigger("click");
 
-        expect(redirect_to_url).toHaveBeenCalled();
+        expect(document.dispatchEvent).toHaveBeenCalledWith(
+            new CustomEvent("show-update-item-modal")
+        );
     });
 
     it(`Given user can't write in folder

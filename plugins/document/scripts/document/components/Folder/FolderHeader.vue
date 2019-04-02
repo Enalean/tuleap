@@ -47,7 +47,7 @@
 
 <script>
 import { mapGetters, mapState } from "vuex";
-import { TYPE_FILE, TYPE_EMBEDDED, TYPE_WIKI } from "../../constants.js";
+import { TYPE_FILE, TYPE_EMBEDDED, TYPE_WIKI, TYPE_LINK } from "../../constants.js";
 import SearchBox from "./SearchBox.vue";
 import NewItemButton from "./NewItem/NewItemButton.vue";
 import NewItemModal from "./NewItem/NewItemModal.vue";
@@ -120,6 +120,9 @@ export default {
                     this.shown_modal = () =>
                         import(/* webpackChunkName: "document-update-wiki-modal" */ "./UpdateItem/UpdateWikiModal.vue");
                     break;
+                case TYPE_LINK:
+                    this.shown_modal = () =>
+                        import(/* webpackChunkName: "document-update-wiki-modal" */ "./UpdateItem/UpdateLinkModal.vue");
             }
         }
     }

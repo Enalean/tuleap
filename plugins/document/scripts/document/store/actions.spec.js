@@ -32,7 +32,8 @@ import {
     updateFile,
     updateFileFromModal,
     updateEmbeddedFileFromModal,
-    updateWikiFromModal
+    updateWikiFromModal,
+    updateLinkFromModal
 } from "./actions.js";
 import {
     restore as restoreUploadFile,
@@ -54,7 +55,8 @@ import {
     rewire$getProject,
     rewire$patchUserPreferenciesForFolderInProject,
     rewire$patchEmbeddedFile,
-    rewire$patchWiki
+    rewire$patchWiki,
+    rewire$patchLink
 } from "../api/rest-querier.js";
 import {
     restore as restoreLoadFolderContent,
@@ -92,7 +94,8 @@ describe("Store actions", () => {
         createNewVersion,
         uploadVersion,
         patchEmbeddedFile,
-        patchWiki;
+        patchWiki,
+        patchLink;
 
     beforeEach(() => {
         const project_id = 101;
@@ -164,6 +167,9 @@ describe("Store actions", () => {
 
         patchWiki = jasmine.createSpy("patchWiki");
         rewire$patchWiki(patchWiki);
+
+        patchLink = jasmine.createSpy("patchLink");
+        rewire$patchLink(patchLink);
     });
 
     describe("loadRootFolder()", () => {
@@ -1018,6 +1024,50 @@ describe("Store actions", () => {
             ]);
 
             expect(patchWiki).toHaveBeenCalled();
+            expect(context.commit).toHaveBeenCalledWith("setModalError", jasmine.anything());
+        });
+    });
+
+    describe("updateLinkFromModal", () => {
+        it("updates a link url", async () => {
+            const item = { id: 45 };
+            context.state.folder_content = [{ id: 45 }];
+            const new_link_url = "https://moogle.fr";
+
+            const version_title = "My new version";
+            const version_changelog = "Changed the version because...";
+            const is_version_locked = true;
+
+            await updateLinkFromModal(context, [
+                item,
+                new_link_url,
+                version_title,
+                version_changelog,
+                is_version_locked
+            ]);
+
+            expect(patchLink).toHaveBeenCalled();
+        });
+        it("throws an error when there is a problem with the update", async () => {
+            const item = { id: 45 };
+            context.state.folder_content = [{ id: 45 }];
+            const new_link_url = "https://moogle.fr";
+
+            const version_title = "My new version";
+            const version_changelog = "Changed the version because...";
+            const is_version_locked = true;
+
+            patchLink.and.throwError("nope");
+
+            await updateLinkFromModal(context, [
+                item,
+                new_link_url,
+                version_title,
+                version_changelog,
+                is_version_locked
+            ]);
+
+            expect(patchLink).toHaveBeenCalled();
             expect(context.commit).toHaveBeenCalledWith("setModalError", jasmine.anything());
         });
     });

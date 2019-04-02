@@ -28,7 +28,8 @@ export {
     toggleCollapsedFolderHasUploadingContent,
     updateFolderProgressbar,
     removeVersionUploadProgress,
-    replaceFileWithNewVersion
+    replaceFileWithNewVersion,
+    replaceLinkWithNewVersion
 };
 
 function addFileInUploadsList(state, file) {
@@ -127,5 +128,10 @@ function resetFolderIsUploading(state, folder) {
 
 function replaceFileWithNewVersion(state, [existing_item, new_version]) {
     existing_item.file_properties = new_version.file_properties;
+    existing_item.lock_info = new_version.lock_info;
+}
+
+function replaceLinkWithNewVersion(state, [existing_item, new_version]) {
+    existing_item.link_properties = new_version.link_properties;
     existing_item.lock_info = new_version.lock_info;
 }
