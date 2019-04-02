@@ -25,6 +25,7 @@ declare(strict_types=1);
 use Mockery as M;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Configuration\Logger\LoggerInterface;
+use Tuleap\Project\XML\Import\ImportNotValidException;
 
 class ProjectCreationDataTest extends TestCase
 {
@@ -84,27 +85,127 @@ class ProjectCreationDataTest extends TestCase
 
     public function testItLoadsPublicWithRestrictedProjects()
     {
+        ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
+
         $xml = simplexml_load_file(__DIR__.'/_fixtures/ProjectCreationData/project_with_services.xml');
         $xml['access'] = 'unrestricted';
         $project_data = ProjectCreationData::buildFromXML($xml, 100, $this->xml_rngvalidator, $this->service_manager, $this->project_manager);
         $this->assertEquals(Project::ACCESS_PUBLIC_UNRESTRICTED, $project_data->getAccess());
     }
 
-    public function testItLoadsPrivateProjectWhenNoAccessSpecifiedAndPlatformDefaultsToPrivate()
+    public function testItLoadsPrivateWithRestrictedProjects()
     {
+        ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
+
+        $xml = simplexml_load_file(__DIR__.'/_fixtures/ProjectCreationData/project_with_services.xml');
+        $xml['access'] = 'private-wo-restr';
+        $project_data = ProjectCreationData::buildFromXML($xml, 100, $this->xml_rngvalidator, $this->service_manager, $this->project_manager);
+        $this->assertEquals(Project::ACCESS_PRIVATE_WO_RESTRICTED, $project_data->getAccess());
+    }
+
+    public function testItThrowAnExceptionWithUnrestrictedProjectsOnNonRestrictedPlatform()
+    {
+        ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
+
+        $xml = simplexml_load_file(__DIR__.'/_fixtures/ProjectCreationData/project_with_services.xml');
+        $xml['access'] = 'unrestricted';
+
+        $this->expectException(Tuleap\Project\XML\Import\ImportNotValidException::class);
+
+        ProjectCreationData::buildFromXML($xml, 100, $this->xml_rngvalidator, $this->service_manager, $this->project_manager);
+    }
+
+    public function testItThrowAnExceptionWithPrivateWoRestrictedProjectsOnNonRestrictedPlatform()
+    {
+        ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
+
+        $xml = simplexml_load_file(__DIR__.'/_fixtures/ProjectCreationData/project_with_services.xml');
+        $xml['access'] = 'private-wo-restr';
+
+        $this->expectException(Tuleap\Project\XML\Import\ImportNotValidException::class);
+
+        ProjectCreationData::buildFromXML($xml, 100, $this->xml_rngvalidator, $this->service_manager, $this->project_manager);
+    }
+
+    public function testItCreatesProjectWithDefaultPlatformAccessWhenDataNotInXML()
+    {
+        ForgeConfig::set('sys_is_project_public', 1);
+
         $xml = simplexml_load_file(__DIR__.'/_fixtures/ProjectCreationData/project_with_services.xml');
         unset($xml['access']);
-        ForgeConfig::set('sys_is_project_public', 0);
+
         $project_data = ProjectCreationData::buildFromXML($xml, 100, $this->xml_rngvalidator, $this->service_manager, $this->project_manager);
+        $this->assertEquals(Project::ACCESS_PUBLIC, $project_data->getAccess());
+    }
+
+    public function testItCreatesAPrivateProjectFromWebPayload()
+    {
+        $project_data = ProjectCreationData::buildFromFormArray(
+            [
+                'project' => [
+                    'is_public' => '0',
+                 ],
+            ]
+        );
+
         $this->assertEquals(Project::ACCESS_PRIVATE, $project_data->getAccess());
     }
 
-    public function testItLoadsPublicProjectWhenNoAccessSpecifiedAndPlatformDefaultsToPublic()
+
+    public function testItCreatesAPublicProjectFromWebPayload()
     {
-        $xml = simplexml_load_file(__DIR__.'/_fixtures/ProjectCreationData/project_with_services.xml');
-        unset($xml['access']);
-        ForgeConfig::set('sys_is_project_public', 1);
-        $project_data = ProjectCreationData::buildFromXML($xml, 100, $this->xml_rngvalidator, $this->service_manager, $this->project_manager);
+        ForgeConfig::set('sys_user_can_choose_project_privacy', 1);
+
+        $project_data = ProjectCreationData::buildFromFormArray(
+            [
+                'project' => [
+                    'is_public' => '1',
+                ],
+            ]
+        );
+
         $this->assertEquals(Project::ACCESS_PUBLIC, $project_data->getAccess());
+    }
+
+    public function testItTakesPublicWhenSiteAdminDecidedToMakeAllProjectsPublicByDefault()
+    {
+        ForgeConfig::set('sys_user_can_choose_project_privacy', 0);
+        ForgeConfig::set('sys_is_project_public', 1);
+
+        $project_data = ProjectCreationData::buildFromFormArray(
+            [
+                'project' => [
+                    'is_public' => '0',
+                ],
+            ]
+        );
+
+        $this->assertEquals(Project::ACCESS_PUBLIC, $project_data->getAccess());
+    }
+
+    public function testItTakesPrivateWhenSiteAdminDecidedToMakeAllProjectsPrivateByDefault()
+    {
+        ForgeConfig::set('sys_user_can_choose_project_privacy', 0);
+        ForgeConfig::set('sys_is_project_public', 0);
+
+        $project_data = ProjectCreationData::buildFromFormArray(
+            [
+                'project' => [
+                    'is_public' => '1',
+                ],
+            ]
+        );
+
+        $this->assertEquals(Project::ACCESS_PRIVATE, $project_data->getAccess());
+    }
+
+    public function testItTakesPlatformConfigWhenNoDataSent()
+    {
+        ForgeConfig::set('sys_user_can_choose_project_privacy', 1);
+        ForgeConfig::set('sys_is_project_public', 0);
+
+        $project_data = ProjectCreationData::buildFromFormArray([]);
+
+        $this->assertEquals(Project::ACCESS_PRIVATE, $project_data->getAccess());
     }
 }

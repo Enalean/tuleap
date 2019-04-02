@@ -85,6 +85,10 @@ setup_database() {
     done
 }
 
+tuleap_db_config() {
+    PHP="$PHP_CLI" /usr/share/tuleap/src/utils/tuleap --platform-access-control restricted
+}
+
 load_project() {
     base_dir=$1
 
@@ -160,6 +164,7 @@ fi
 service "$FPM_DAEMON" start
 service nginx start
 setup_database
+tuleap_db_config
 seed_data
 service "$FPM_DAEMON" restart
 service nginx reload
