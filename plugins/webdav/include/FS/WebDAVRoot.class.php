@@ -18,6 +18,9 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Project\ProjectAccessChecker;
+use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
+
 require_once ('WebDAVProject.class.php');
 require_once (dirname(__FILE__).'/../WebDAVUtils.class.php');
 require_once ('common/dao/ProjectDao.class.php');
@@ -192,12 +195,17 @@ class WebDAVRoot extends Sabre_DAV_Directory {
      *
      * @return WebDAVProject
      */
-    function getWebDAVProject($groupId) {
-
-        $utils = WebDAVUtils::getInstance();
-        $project = $utils->getProjectManager()->getProject($groupId);
-        return new WebDAVProject($this->getUser(), $project, $this->getMaxFileSize());
-
+    public function getWebDAVProject($groupId)
+    {
+        return new WebDAVProject(
+            $this->getUser(),
+            WebDAVUtils::getInstance()->getProjectManager()->getProject($groupId),
+            $this->getMaxFileSize(),
+            new ProjectAccessChecker(
+                PermissionsOverrider_PermissionsOverriderManager::instance(),
+                new RestrictedUserCanAccessProjectVerifier()
+            )
+        );
     }
 
     /**
