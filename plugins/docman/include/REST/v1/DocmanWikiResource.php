@@ -24,6 +24,8 @@ namespace Tuleap\Docman\REST\v1;
 
 use Project;
 use ProjectManager;
+use Tuleap\DB\DBFactory;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\Lock\LockChecker;
 use Tuleap\Docman\REST\v1\Wiki\DocmanWikiPATCHRepresentation;
@@ -118,7 +120,8 @@ class DocmanWikiResource extends AuthenticatedResource
             new \Docman_ItemFactory(),
             new WikiVersionCreationBeforeUpdateValidator(),
             $this->event_manager,
-            $docman_item_updator
+            $docman_item_updator,
+            new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
         );
 
         if ($docman_approval_table_retriever->hasApprovalTable($item)) {

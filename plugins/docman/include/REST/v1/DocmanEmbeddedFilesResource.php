@@ -22,20 +22,19 @@ declare(strict_types = 1);
 
 namespace Tuleap\Docman\REST\v1;
 
-use Docman_ApprovalTableFactoriesFactory;
 use Docman_FileStorage;
 use Docman_LockFactory;
 use Docman_VersionFactory;
 use PluginManager;
 use Project;
 use ProjectManager;
+use Tuleap\DB\DBFactory;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\ApprovalTable\ApprovalTableUpdateActionChecker;
-use Tuleap\Docman\ApprovalTable\ApprovalTableUpdater;
 use Tuleap\Docman\ApprovalTable\Exceptions\ItemHasApprovalTableButNoApprovalActionException;
 use Tuleap\Docman\ApprovalTable\Exceptions\ItemHasNoApprovalTableButHasApprovalActionException;
 use Tuleap\Docman\Lock\LockChecker;
-use Tuleap\Docman\Lock\LockUpdater;
 use Tuleap\Docman\REST\v1\EmbeddedFiles\DocmanEmbeddedFilesPATCHRepresentation;
 use Tuleap\Docman\REST\v1\EmbeddedFiles\DocmanEmbeddedFileUpdator;
 use Tuleap\Docman\REST\v1\EmbeddedFiles\EmbeddedFileVersionCreationBeforeUpdateValidator;
@@ -138,7 +137,8 @@ class DocmanEmbeddedFilesResource extends AuthenticatedResource
             $version_factory,
             new LockChecker(new Docman_LockFactory()),
             new EmbeddedFileVersionCreationBeforeUpdateValidator(),
-            $docman_item_updator
+            $docman_item_updator,
+            new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
         );
 
         try {
