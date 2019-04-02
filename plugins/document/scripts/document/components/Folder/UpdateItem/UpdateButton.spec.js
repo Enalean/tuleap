@@ -65,7 +65,72 @@ describe("QuickLookDocumentPreview", () => {
         );
     });
 
-    it(`Given item is not a file
+    it(`Given item is an embedded file
+        When we click on update button
+        Then file update modal is displayed`, () => {
+        spyOn(document, "dispatchEvent");
+
+        const wrapper = update_button_factory({
+            item: {
+                id: 1,
+                title: "my item title",
+                type: "embedded",
+                user_can_write: true
+            }
+        });
+
+        wrapper.find("[data-test=docman-item-update-button]").trigger("click");
+
+        expect(document.dispatchEvent).toHaveBeenCalledWith(
+            new CustomEvent("show-update-file-modal")
+        );
+    });
+
+    it(`Given item is a wiki with no approval table
+        When we click on update button
+        Then file update modal is displayed`, () => {
+        spyOn(document, "dispatchEvent");
+
+        const wrapper = update_button_factory({
+            item: {
+                id: 1,
+                title: "my item title",
+                type: "wiki",
+                user_can_write: true,
+                approval_table: null
+            }
+        });
+
+        wrapper.find("[data-test=docman-item-update-button]").trigger("click");
+
+        expect(document.dispatchEvent).toHaveBeenCalledWith(
+            new CustomEvent("show-update-file-modal")
+        );
+    });
+
+    it(`Given item is a wiki with an approval table
+        When we click on update button
+        Then no event should be dispatched`, () => {
+        spyOn(document, "dispatchEvent");
+
+        const wrapper = update_button_factory({
+            item: {
+                id: 1,
+                title: "my item title",
+                type: "wiki",
+                user_can_write: true,
+                approval_table: {
+                    approval_state: "not yet"
+                }
+            }
+        });
+
+        wrapper.find("[data-test=docman-item-update-button]").trigger("click");
+
+        expect(document.dispatchEvent).not.toHaveBeenCalled();
+    });
+
+    it(`Given item is an empty document
         When we click on update button
         Then user should be redirected on legacy UI`, () => {
         const redirect_to_url = jasmine.createSpy("redirect_to_url");
@@ -75,7 +140,7 @@ describe("QuickLookDocumentPreview", () => {
             item: {
                 id: 1,
                 title: "my item title",
-                type: "wiki",
+                type: "empty",
                 user_can_write: true
             }
         });
@@ -85,7 +150,27 @@ describe("QuickLookDocumentPreview", () => {
         expect(redirect_to_url).toHaveBeenCalled();
     });
 
-    it(`Given user can'it write in folder
+    it(`Given item is a link document
+        When we click on update button
+        Then user should be redirected on legacy UI`, () => {
+        const redirect_to_url = jasmine.createSpy("redirect_to_url");
+        rewire$redirect_to_url(redirect_to_url);
+
+        const wrapper = update_button_factory({
+            item: {
+                id: 1,
+                title: "my item title",
+                type: "link",
+                user_can_write: true
+            }
+        });
+
+        wrapper.find("[data-test=docman-item-update-button]").trigger("click");
+
+        expect(redirect_to_url).toHaveBeenCalled();
+    });
+
+    it(`Given user can't write in folder
         Then update link is not available`, () => {
         const wrapper = update_button_factory({
             item: {

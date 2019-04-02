@@ -24,10 +24,11 @@
             <update-button v-bind:item="item"
                            v-bind:button-classes="button_classes"
                            v-bind:icon-classes="icon_classes"
+                           v-if="! is_item_a_wiki_with_approval_table"
             />
             <dropdown-button
                 v-bind:is-in-quick-look-mode="true"
-                v-bind:is-appended="item.user_can_write"
+                v-bind:is-appended="item.user_can_write && ! is_item_a_wiki_with_approval_table"
             >
                 <dropdown-menu
                     v-bind:item="item"
@@ -41,6 +42,7 @@
 </template>
 
 <script>
+import { TYPE_WIKI } from "../../../constants.js";
 import DropdownButton from "../Dropdown/DropdownButton.vue";
 import DropdownMenu from "../Dropdown/DropdownMenu.vue";
 import UpdateButton from "../UpdateItem/UpdateButton.vue";
@@ -57,6 +59,9 @@ export default {
         },
         icon_classes() {
             return "fa fa-mail-forward tlp-button-icon";
+        },
+        is_item_a_wiki_with_approval_table() {
+            return this.item.type === TYPE_WIKI && this.item.approval_table !== null;
         }
     }
 };

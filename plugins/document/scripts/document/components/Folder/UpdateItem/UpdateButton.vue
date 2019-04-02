@@ -19,9 +19,10 @@
 
 <template>
     <a
-        v-bind:class="buttonClasses"
-        v-on:click="goToUpdate"
         v-if="item.user_can_write"
+        v-bind:class="button_classes"
+        v-bind:data-tlp-tooltip="cannot_update_wiki_beacause_approval_table"
+        v-on:click="goToUpdate"
         data-test="docman-item-update-button"
     >
         <i v-bind:class="iconClasses"></i>
@@ -30,7 +31,7 @@
 </template>
 <script>
 import { mapState } from "vuex";
-import { TYPE_EMPTY, TYPE_FILE, TYPE_WIKI, TYPE_EMBEDDED } from "../../../constants.js";
+import { TYPE_EMPTY, TYPE_LINK, TYPE_WIKI } from "../../../constants.js";
 
 import { redirect_to_url } from "../../../helpers/location-helper.js";
 export default {
@@ -41,39 +42,44 @@ export default {
         iconClasses: String
     },
     computed: {
-        ...mapState(["project_id"])
+        ...mapState(["project_id"]),
+        is_item_a_wiki_with_approval_table() {
+            return this.item.type === TYPE_WIKI && this.item.approval_table !== null;
+        },
+        cannot_update_wiki_beacause_approval_table() {
+            return this.$gettext("This wiki has a approval table, you can't update it.");
+        },
+        button_classes() {
+            let classes = this.buttonClasses;
+
+            if (this.is_item_a_wiki_with_approval_table) {
+                classes += " document-update-button-disabled tlp-tooltip tlp-tooltip-left";
+            }
+
+            return classes;
+        }
     },
     methods: {
         goToUpdate() {
-            if (this.item.type === TYPE_FILE || this.item.type === TYPE_EMBEDDED) {
-                this.showUpdateFileModal();
+            if (this.is_item_a_wiki_with_approval_table) {
                 return;
             }
-            const action =
-                this.item.type !== TYPE_WIKI && this.item.type !== TYPE_EMPTY
-                    ? "action_new_version"
-                    : "action_update";
 
-            redirect_to_url(
-                `/plugins/docman/index.php?group_id=${this.project_id}&id=${
-                    this.item.id
-                }&action=${action}`
-            );
-        },
-        showUpdateFileModal() {
-            let event_name;
-
-            switch (this.item.type) {
-                case TYPE_FILE:
-                    event_name = "show-update-file-modal";
-                    break;
-                case TYPE_EMBEDDED:
-                    event_name = "show-update-embedded-file-modal";
-                    break;
+            if (this.item.type === TYPE_EMPTY || this.item.type === TYPE_LINK) {
+                const action =
+                    this.item.type !== TYPE_EMPTY ? "action_new_version" : "action_update";
+                return redirect_to_url(
+                    `/plugins/docman/index.php?group_id=${this.project_id}&id=${
+                        this.item.id
+                    }&action=${action}`
+                );
             }
 
+            this.showUpdateFileModal();
+        },
+        showUpdateFileModal() {
             document.dispatchEvent(
-                new CustomEvent(event_name, {
+                new CustomEvent("show-update-item-modal", {
                     detail: { current_item: this.item }
                 })
             );

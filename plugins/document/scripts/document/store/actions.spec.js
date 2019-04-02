@@ -31,7 +31,8 @@ import {
     unsetUnderConstructionUserPreference,
     updateFile,
     updateFileFromModal,
-    updateEmbeddedFileFromModal
+    updateEmbeddedFileFromModal,
+    updateWikiFromModal
 } from "./actions.js";
 import {
     restore as restoreUploadFile,
@@ -52,7 +53,8 @@ import {
     rewire$getItem,
     rewire$getProject,
     rewire$patchUserPreferenciesForFolderInProject,
-    rewire$patchEmbeddedFile
+    rewire$patchEmbeddedFile,
+    rewire$patchWiki
 } from "../api/rest-querier.js";
 import {
     restore as restoreLoadFolderContent,
@@ -89,7 +91,8 @@ describe("Store actions", () => {
         cancelUpload,
         createNewVersion,
         uploadVersion,
-        patchEmbeddedFile;
+        patchEmbeddedFile,
+        patchWiki;
 
     beforeEach(() => {
         const project_id = 101;
@@ -158,6 +161,9 @@ describe("Store actions", () => {
 
         addUserLegacyUIPreferency = jasmine.createSpy("addUserLegacyUIPreferency");
         rewire$addUserLegacyUIPreferency(addUserLegacyUIPreferency);
+
+        patchWiki = jasmine.createSpy("patchWiki");
+        rewire$patchWiki(patchWiki);
     });
 
     describe("loadRootFolder()", () => {
@@ -968,6 +974,50 @@ describe("Store actions", () => {
             ]);
 
             expect(patchEmbeddedFile).toHaveBeenCalled();
+            expect(context.commit).toHaveBeenCalledWith("setModalError", jasmine.anything());
+        });
+    });
+
+    describe("updateWikiFromModal", () => {
+        it("updates a wiki page name", async () => {
+            const item = { id: 45 };
+            context.state.folder_content = [{ id: 45 }];
+            const page_name = "kinky wiki";
+
+            const version_title = "NSFW";
+            const version_changelog = "Changed title to NSFW";
+            const is_version_locked = true;
+
+            await updateWikiFromModal(context, [
+                item,
+                page_name,
+                version_title,
+                version_changelog,
+                is_version_locked
+            ]);
+
+            expect(patchWiki).toHaveBeenCalled();
+        });
+        it("throws an error when there is a problem with the update", async () => {
+            const item = { id: 45 };
+            context.state.folder_content = [{ id: 45 }];
+            const page_name = "kinky wiki";
+
+            const version_title = "NSFW";
+            const version_changelog = "Changed title to NSFW";
+            const is_version_locked = true;
+
+            patchWiki.and.throwError("nope");
+
+            await updateWikiFromModal(context, [
+                item,
+                page_name,
+                version_title,
+                version_changelog,
+                is_version_locked
+            ]);
+
+            expect(patchWiki).toHaveBeenCalled();
             expect(context.commit).toHaveBeenCalledWith("setModalError", jasmine.anything());
         });
     });
