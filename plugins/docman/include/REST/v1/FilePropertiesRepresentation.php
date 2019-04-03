@@ -32,17 +32,17 @@ class FilePropertiesRepresentation
     /**
      * @var string
      */
-    public $html_url;
+    public $download_href;
 
     /**
      * @var int
      */
     public $file_size;
 
-    public function build(\Docman_Version $docman_version, $html_url)
+    public function build(\Docman_Version $docman_version, $download_href)
     {
-        $this->file_type = $docman_version->getFiletype();
-        $this->html_url  = $html_url;
-        $this->file_size = $docman_version->getFilesize();
+        $this->file_type    = $docman_version->getFiletype();
+        $this->download_href = $download_href;
+        $this->file_size    = $docman_version->getFilesize();
     }
 }

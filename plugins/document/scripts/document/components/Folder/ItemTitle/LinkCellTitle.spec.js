@@ -30,7 +30,7 @@ describe("LinkCellTitle", () => {
         Then we should display corrupted badge`, () => {
         const item = {
             id: 42,
-            title: "my corrupted embedded document",
+            title: "my corrupted link",
             link_properties: null,
             type: TYPE_LINK
         };
@@ -53,10 +53,9 @@ describe("LinkCellTitle", () => {
         Then we should display corrupted badge`, () => {
         const item = {
             id: 42,
-            title: "my corrupted embedded document",
+            title: "my corrupted link",
             link_properties: {
-                link_url: null,
-                html_url: "https://example.com"
+                link_url: null
             },
             type: TYPE_LINK
         };
@@ -79,10 +78,9 @@ describe("LinkCellTitle", () => {
         Then we should not display corrupted badge`, () => {
         const item = {
             id: 42,
-            title: "my corrupted embedded document",
+            title: "my corrupted link",
             link_properties: {
-                link_url: "https://example.com",
-                html_url: "/plugins/docman/?group_id=119&action=show&id=42&switcholdui=true"
+                link_url: "https://example.com"
             },
             type: TYPE_LINK
         };

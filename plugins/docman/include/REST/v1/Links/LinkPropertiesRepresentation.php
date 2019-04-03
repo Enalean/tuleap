@@ -29,14 +29,8 @@ class LinkPropertiesRepresentation
      */
     public $link_url;
 
-    /**
-     * @var string
-     */
-    public $html_url;
-
-    public function build($html_url, ?Docman_LinkVersion $link)
+    public function build(?Docman_LinkVersion $link)
     {
         $this->link_url = ($link)? $link->getLink(): "";
-        $this->html_url = $html_url;
     }
 }

@@ -114,7 +114,7 @@ class DocmanItemsTest extends DocmanBase
         $this->assertEquals($items[$empty_index]['file_properties'], null);
         $this->assertEquals($items[$file_index]['file_properties']['file_type'], 'application/pdf');
         $this->assertEquals(
-            $items[$file_index]['file_properties']['html_url'],
+            $items[$file_index]['file_properties']['download_href'],
             '/plugins/docman/download/' . urlencode($items[$file_index]['id']).'/1'
         );
         $this->assertEquals($items[$file_index]['file_properties']['file_size'], 3);
@@ -126,11 +126,7 @@ class DocmanItemsTest extends DocmanBase
         $this->assertEquals($items[$empty_index]['link_properties'], null);
         $this->assertEquals($items[$file_index]['link_properties'], null);
         $this->assertEquals($items[$link_index]['link_properties']['link_url'], 'https://my.example.test');
-        $this->assertEquals(
-            $items[$link_index]['link_properties']['html_url'],
-            '/plugins/docman/?action=show&switcholdui=true&group_id=' . urlencode($this->project_id) .
-            '&id=' . urlencode($items[$link_index]['id'])
-        );
+
         $this->assertEquals($items[$embedded_index]['link_properties'], null);
         $this->assertEquals($items[$embedded_index]['link_properties'], null);
 
@@ -159,11 +155,6 @@ class DocmanItemsTest extends DocmanBase
         $this->assertEquals($items[$link_index]['wiki_properties'], null);
         $this->assertEquals($items[$embedded_index]['wiki_properties'], null);
         $this->assertEquals($items[$wiki_index]['wiki_properties']['page_name'], 'MyWikiPage');
-        $this->assertEquals(
-            $items[$wiki_index]['wiki_properties']['html_url'],
-            '/plugins/docman/?action=show&switcholdui=true&group_id=' . urlencode($this->project_id) .
-            '&id=' . urlencode($items[$wiki_index]['id'])
-        );
 
         $this->assertEquals(
             $items[$folder_2_index]['metadata'][0],

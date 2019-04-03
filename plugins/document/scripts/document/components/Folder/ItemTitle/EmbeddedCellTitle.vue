@@ -21,7 +21,9 @@
     <div>
         <fake-caret v-bind:item="item"/>
         <i class="fa fa-fw document-folder-content-icon" v-bind:class="icon_class"></i>
-        {{ title }}
+        <a v-bind:href="document_link_url" class="document-folder-subitem-link">
+            {{ title }}
+        </a>
         <span class="tlp-badge-warning document-badge-corrupted" v-translate v-if="is_corrupted">
             Corrupted
         </span>
@@ -29,6 +31,7 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 import { ICON_EMBEDDED } from "../../../constants.js";
 import FakeCaret from "./FakeCaret.vue";
 import { getTitleWithElipsisIfNeeded } from "../../../helpers/cell-title-formatter.js";
@@ -40,6 +43,7 @@ export default {
         item: Object
     },
     computed: {
+        ...mapState(["project_id"]),
         icon_class() {
             return ICON_EMBEDDED;
         },
@@ -48,6 +52,9 @@ export default {
         },
         is_corrupted() {
             return !this.item.embedded_file_properties;
+        },
+        document_link_url() {
+            return `/plugins/docman/?group_id=${this.project_id}&action=show&id=${this.item.id}`;
         }
     }
 };

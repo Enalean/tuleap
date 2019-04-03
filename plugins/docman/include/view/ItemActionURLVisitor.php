@@ -53,11 +53,11 @@ final class ItemActionURLVisitor implements ItemVisitor
         if (! isset($params['action']) || $params['action'] !== 'show') {
             return null;
         }
-        $download_url = '/plugins/docman/download/' . urlencode((string) $item->getId());
+        $download_href = '/plugins/docman/download/' . urlencode((string) $item->getId());
         if (isset($params['version_number'])) {
-            $download_url .= '/' . urlencode((string) $params['version_number']);
+            $download_href .= '/' . urlencode((string) $params['version_number']);
         }
-        return $download_url;
+        return $download_href;
     }
 
     public function visitEmbeddedFile(Docman_EmbeddedFile $item, array $params = []) : ?string

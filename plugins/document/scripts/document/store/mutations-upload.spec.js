@@ -281,7 +281,7 @@ describe("Store mutations", () => {
                 id: 2,
                 title: "titi.txt",
                 file_properties: {
-                    html_url: "plugins/document/2/1",
+                    download_href: "plugins/document/2/1",
                     file_size: 123,
                     file_type: "image/jpeg"
                 },
@@ -294,7 +294,7 @@ describe("Store mutations", () => {
                 id: 2,
                 title: "titi.txt",
                 file_properties: {
-                    html_url: "plugins/document/2/2",
+                    download_href: "plugins/document/2/2",
                     file_size: 456,
                     file_type: "image/jpeg"
                 },
