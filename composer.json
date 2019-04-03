@@ -3,7 +3,7 @@
         "psr-4": {
             "Tuleap\\Baseline\\": [
                 "include/",
-                "include/Baseline/",
+                "include/Domain/",
                 "include/Adapter/",
                 "include/Support/"
             ]

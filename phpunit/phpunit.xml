@@ -31,7 +31,7 @@
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">
             <directory suffix=".php">../include/Adapter</directory>
-            <directory suffix=".php">../include/Baseline</directory>
+            <directory suffix=".php">../include/Domain</directory>
             <directory suffix=".php">../include/REST</directory>
             <directory suffix=".php">../include/Support</directory>
         </whitelist>
