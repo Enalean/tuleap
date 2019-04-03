@@ -27,6 +27,7 @@
             <input
                 v-bind:id="job_url_input_id"
                 type="url"
+                pattern="^https?://.+"
                 class="tlp-input"
                 placeholder="https://www.example.com"
                 v-model="job_url"
