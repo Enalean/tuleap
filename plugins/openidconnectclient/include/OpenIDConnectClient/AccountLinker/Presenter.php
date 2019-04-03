@@ -87,7 +87,7 @@ class Presenter
     }
 
     public function register() {
-        return dgettext('tuleap-openidconnectclient', 'Register a new %1$s account');
+        return dgettext('tuleap-openidconnectclient', 'Register a new account');
     }
 
     public function link_to_register_page() {
