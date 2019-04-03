@@ -210,6 +210,7 @@ export async function updateFile(context, [item, dropped_file]) {
             "",
             item.lock_info !== null
         ]);
+        Vue.set(item, "updated", true);
     } catch (exception) {
         context.commit("toggleCollapsedFolderHasUploadingContent", [parent, false]);
         const error_json = await exception.response.json();
@@ -230,6 +231,7 @@ export const updateFileFromModal = async (
             is_file_locked,
             approval_table_action
         ]);
+        Vue.set(item, "updated", true);
     } catch (exception) {
         return handleErrorsForModal(context, exception);
     }
@@ -248,6 +250,7 @@ export const updateEmbeddedFileFromModal = async (
             is_file_locked,
             approval_table_action
         );
+        Vue.set(item, "updated", true);
     } catch (exception) {
         return handleErrorsForModal(context, exception);
     }
@@ -259,6 +262,7 @@ export const updateWikiFromModal = async (
 ) => {
     try {
         await patchWiki(item, new_wiki_page, version_title, changelog, is_file_locked);
+        Vue.set(item, "updated", true);
     } catch (exception) {
         return handleErrorsForModal(context, exception);
     }
@@ -277,6 +281,7 @@ export const updateLinkFromModal = async (
             is_file_locked,
             approval_table_action
         );
+        Vue.set(item, "updated", true);
     } catch (exception) {
         return handleErrorsForModal(context, exception);
     }

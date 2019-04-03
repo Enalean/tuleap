@@ -125,6 +125,7 @@ export default {
             return {
                 "document-tree-item-hidden": this.is_folded,
                 "document-tree-item-created": this.item.created,
+                "document-tree-item-updated": this.item.updated,
                 "document-tree-item-uploading": this.item.is_uploading,
                 "document-tree-item-folder": this.item.type === TYPE_FOLDER,
                 "document-tree-item-file": this.item.type === TYPE_FILE
