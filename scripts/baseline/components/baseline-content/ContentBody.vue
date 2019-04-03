@@ -30,7 +30,7 @@ import ArtifactsList from "./ArtifactsList.vue";
 import ArtifactsListSkeleton from "./ArtifactsListSkeleton.vue";
 
 export default {
-    name: "BaselineContent",
+    name: "ContentBody",
 
     components: { ArtifactsList, ArtifactsListSkeleton },
 
