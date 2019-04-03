@@ -23,9 +23,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline;
 
-use DateTime;
+use DateTimeImmutable;
 
 interface Clock
 {
-    public function now(): DateTime;
+    public function now(): DateTimeImmutable;
 }

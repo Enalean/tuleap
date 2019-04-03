@@ -23,7 +23,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\Stub;
 
-use DateTime;
+use DateTimeImmutable;
+use DateTimeInterface;
 use Tuleap\Baseline\Clock;
 use Tuleap\Baseline\Support\DateTimeFactory;
 
@@ -32,7 +33,7 @@ use Tuleap\Baseline\Support\DateTimeFactory;
  */
 class FrozenClock implements Clock
 {
-    /** @var DateTime */
+    /** @var DateTimeInterface */
     private $now;
 
     public function __construct()
@@ -40,12 +41,12 @@ class FrozenClock implements Clock
         $this->now = DateTimeFactory::one();
     }
 
-    public function setNow(DateTime $now): void
+    public function setNow(DateTimeInterface $now): void
     {
         $this->now = $now;
     }
 
-    public function now(): DateTime
+    public function now(): DateTimeImmutable
     {
         return $this->now;
     }

@@ -25,7 +25,7 @@ namespace Tuleap\Baseline;
 
 require_once __DIR__ . '/../bootstrap.php';
 
-use DateTime;
+use DateTimeInterface;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
@@ -68,7 +68,7 @@ class BaselineServiceTest extends TestCase
     /** @var Project|MockInterface */
     private $a_project;
 
-    /** @var DateTime */
+    /** @var DateTimeInterface */
     private $a_date;
 
     /** @before */

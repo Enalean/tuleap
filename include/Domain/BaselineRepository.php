@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline;
 
-use DateTime;
+use DateTimeInterface;
 use PFUser;
 use Project;
 
@@ -32,7 +32,7 @@ interface BaselineRepository
     public function add(
         TransientBaseline $baseline,
         PFUser $current_user,
-        DateTime $snapshot_date
+        DateTimeInterface $snapshot_date
     ): Baseline;
 
     public function findById(PFUser $current_user, int $id): ?Baseline;

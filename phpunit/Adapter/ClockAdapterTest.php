@@ -25,7 +25,7 @@ namespace Tuleap\Baseline\Adapter;
 
 require_once __DIR__ . '/../bootstrap.php';
 
-use DateTime;
+use DateTimeImmutable;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Baseline\Clock;
@@ -47,9 +47,9 @@ class ClockAdapterTest extends TestCase
 
     public function testNowReturnsCurrentDateTime()
     {
-        $before_now = new DateTime("@$_SERVER[REQUEST_TIME]");
+        $before_now = new DateTimeImmutable("@$_SERVER[REQUEST_TIME]");
         $now        = $this->clock->now();
-        $after_now  = new DateTime("@$_SERVER[REQUEST_TIME]");
+        $after_now  = new DateTimeImmutable("@$_SERVER[REQUEST_TIME]");
 
         $this->assertGreaterThanOrEqual($before_now, $now);
         $this->assertLessThanOrEqual($after_now, $now);

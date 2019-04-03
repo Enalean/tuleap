@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\REST;
 
-use DateTime;
+use DateTimeImmutable;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use PHPUnit\Framework\TestCase;
@@ -48,7 +48,7 @@ class BaselinesPageRepresentationTest extends TestCase
                         ->id(3)
                         ->name('Represented baseline')
                         ->artifact(BaselineArtifactFactory::one()->id(13)->build())
-                        ->snapshotDate(DateTime::createFromFormat('Y-m-d H:i:s', '2019-03-21 14:47:03'))
+                        ->snapshotDate(DateTimeImmutable::createFromFormat('Y-m-d H:i:s', '2019-03-21 14:47:03'))
                         ->author(new PFUser(['user_id' => 22]))
                         ->build()
 

@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\Factory;
 
-use DateTime;
+use DateTimeInterface;
 use PFUser;
 use Tuleap\Baseline\Baseline;
 use Tuleap\Baseline\BaselineArtifact;
@@ -39,7 +39,7 @@ class BaselineBuilder
     /** @var BaselineArtifact */
     private $artifact;
 
-    /** @var DateTime */
+    /** @var DateTimeInterface */
     private $snapshot_date;
 
     /** @var PFUser */
@@ -63,7 +63,7 @@ class BaselineBuilder
         return $this;
     }
 
-    public function snapshotDate(DateTime $snapshot_date): self
+    public function snapshotDate(DateTimeInterface $snapshot_date): self
     {
         $this->snapshot_date = $snapshot_date;
         return $this;

@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\Stub;
 
-use DateTime;
+use DateTimeInterface;
 use PFUser;
 use Project;
 use Tuleap\Baseline\Baseline;
@@ -41,7 +41,7 @@ class BaselineRepositoryStub implements BaselineRepository
     /** @var int */
     private $id_sequence = 1;
 
-    public function add(TransientBaseline $baseline, PFUser $current_user, DateTime $snapshot_date): Baseline
+    public function add(TransientBaseline $baseline, PFUser $current_user, DateTimeInterface $snapshot_date): Baseline
     {
         $baseline = new Baseline(
             $this->id_sequence++,

@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline;
 
-use DateTime;
+use DateTimeInterface;
 use Exception;
 
 /**
@@ -31,16 +31,16 @@ use Exception;
  */
 class ChangesetNotFoundException extends Exception
 {
-    /** @var DateTime */
+    /** @var DateTimeInterface */
     private $date;
 
-    public function __construct(DateTime $date)
+    public function __construct(DateTimeInterface $date)
     {
         parent::__construct();
         $this->date = $date;
     }
 
-    public function getDate(): DateTime
+    public function getDate(): DateTimeInterface
     {
         return $this->date;
     }

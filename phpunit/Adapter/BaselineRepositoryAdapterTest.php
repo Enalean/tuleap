@@ -25,7 +25,7 @@ namespace Tuleap\Baseline\Adapter;
 
 require_once __DIR__ . '/../bootstrap.php';
 
-use DateTime;
+use DateTimeImmutable;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
@@ -36,6 +36,7 @@ use Project;
 use Tuleap\Baseline\Baseline;
 use Tuleap\Baseline\BaselineArtifactRepository;
 use Tuleap\Baseline\Factory\BaselineArtifactFactory;
+use Tuleap\Baseline\Support\DateTimeFactory;
 use Tuleap\GlobalLanguageMock;
 use UserManager;
 
@@ -59,6 +60,9 @@ class BaselineRepositoryAdapterTest extends TestCase
     /** @var AdapterPermissions|MockInterface */
     private $adapter_permissions;
 
+    /** @var ClockAdapter|MockInterface */
+    private $clock;
+
     /** @before */
     public function createInstance()
     {
@@ -66,12 +70,15 @@ class BaselineRepositoryAdapterTest extends TestCase
         $this->user_manager                 = Mockery::mock(UserManager::class);
         $this->baseline_artifact_repository = Mockery::mock(BaselineArtifactRepository::class);
         $this->adapter_permissions          = Mockery::mock(AdapterPermissions::class);
+        $this->clock                        = Mockery::mock(ClockAdapter::class);
+        $this->clock->allows(['at' => DateTimeFactory::one()]);
 
         $this->repository = new BaselineRepositoryAdapter(
             $this->db,
             $this->user_manager,
             $this->baseline_artifact_repository,
-            $this->adapter_permissions
+            $this->adapter_permissions,
+            $this->clock
         );
     }
 
@@ -123,7 +130,7 @@ class BaselineRepositoryAdapterTest extends TestCase
             1,
             "Persisted baseline",
             $artifact,
-            DateTime::createFromFormat('Y-m-d H:i:s', '2019-03-21 14:47:03'),
+            DateTimeImmutable::createFromFormat('Y-m-d H:i:s', '2019-03-21 14:47:03'),
             $user
         );
         $this->assertEquals($expected_baseline, $baseline);
@@ -257,7 +264,7 @@ class BaselineRepositoryAdapterTest extends TestCase
             1,
             "Persisted baseline",
             $artifact,
-            DateTime::createFromFormat('Y-m-d H:i:s', '2019-03-21 14:47:03'),
+            DateTimeImmutable::createFromFormat('Y-m-d H:i:s', '2019-03-21 14:47:03'),
             $user
         )];
         $this->assertEquals($expected_baselines, $baselines);

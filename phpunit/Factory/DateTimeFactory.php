@@ -23,12 +23,12 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\Support;
 
-use DateTime;
+use DateTimeImmutable;
 
 class DateTimeFactory
 {
-    public static function one(): DateTime
+    public static function one(): DateTimeImmutable
     {
-        return DateTime::createFromFormat('Y-m-d H:i:s', '2019-03-21 14:47:03');
+        return DateTimeImmutable::createFromFormat('Y-m-d H:i:s', '2019-03-21 14:47:03');
     }
 }

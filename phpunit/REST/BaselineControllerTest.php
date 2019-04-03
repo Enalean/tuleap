@@ -25,7 +25,7 @@ namespace Tuleap\Baseline\REST;
 
 require_once __DIR__ . "/../bootstrap.php";
 
-use DateTime;
+use DateTimeImmutable;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
@@ -160,7 +160,7 @@ class BaselineControllerTest extends TestCase
             ->shouldReceive('create')
             ->andReturn(
                 BaselineFactory::one()
-                    ->snapshotDate(DateTime::createFromFormat('Y-m-d H:i:s', '2019-03-21 14:47:03'))
+                    ->snapshotDate(DateTimeImmutable::createFromFormat('Y-m-d H:i:s', '2019-03-21 14:47:03'))
                     ->build()
             );
 

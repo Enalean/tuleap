@@ -23,8 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\Adapter;
 
-use DateTime;
-use DateTimeZone;
+use DateTimeInterface;
 use ParagonIE\EasyDB\EasyDB;
 use PFUser;
 use Project;
@@ -49,16 +48,21 @@ class BaselineRepositoryAdapter implements BaselineRepository
     /** @var AdapterPermissions */
     private $adapter_permissions;
 
+    /** @var ClockAdapter */
+    private $clock;
+
     public function __construct(
         EasyDB $db,
         UserManager $user_manager,
         BaselineArtifactRepository $baseline_artifact_repository,
-        AdapterPermissions $adapter_permissions
+        AdapterPermissions $adapter_permissions,
+        ClockAdapter $clock
     ) {
         $this->db                           = $db;
         $this->user_manager                 = $user_manager;
         $this->baseline_artifact_repository = $baseline_artifact_repository;
         $this->adapter_permissions          = $adapter_permissions;
+        $this->clock                        = $clock;
     }
 
     /**
@@ -67,7 +71,7 @@ class BaselineRepositoryAdapter implements BaselineRepository
     public function add(
         TransientBaseline $baseline,
         PFUser $current_user,
-        DateTime $snapshot_date
+        DateTimeInterface $snapshot_date
     ): Baseline {
 
         $project = $baseline->getProject();
@@ -195,9 +199,7 @@ class BaselineRepositoryAdapter implements BaselineRepository
             return null;
         }
         $author        = $this->user_manager->getUserById($row['user_id']);
-        $snapshot_date = new DateTime();
-        $snapshot_date->setTimestamp($row['snapshot_date'])
-            ->setTimezone(new DateTimezone("UTC"));
+        $snapshot_date = $this->clock->at($row['snapshot_date']);
         return new Baseline(
             $row['id'],
             $row['name'],
