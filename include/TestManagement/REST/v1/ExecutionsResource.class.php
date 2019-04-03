@@ -237,15 +237,14 @@ class ExecutionsResource
 
         $user     = $this->user_manager->getCurrentUser();
         $artifact = $this->artifact_factory->getArtifactByIdUserCanView($user, $id);
+        if (! $artifact) {
+            throw new RestException(404);
+        }
 
         ProjectStatusVerificator::build()->checkProjectStatusAllowsOnlySiteAdminToAccessIt(
             $user,
             $artifact->getTracker()->getProject()
         );
-
-        if (! $artifact) {
-            throw new RestException(404);
-        }
 
         return $this->getExecutionRepresentation($user, $artifact);
     }

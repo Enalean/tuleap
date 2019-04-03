@@ -54,7 +54,7 @@ class ArtifactFactory
         return $this->tracker_artifact_factory->getArtifactById($id);
     }
 
-    public function getArtifactByIdUserCanView(PFUser $user, $id)
+    public function getArtifactByIdUserCanView(PFUser $user, $id): ?Tracker_Artifact
     {
         return $this->tracker_artifact_factory->getArtifactByIdUserCanView($user, $id);
     }
