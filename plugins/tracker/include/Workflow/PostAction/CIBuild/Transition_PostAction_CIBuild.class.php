@@ -35,7 +35,7 @@ class Transition_PostAction_CIBuild extends Transition_PostAction
     /**
      * @var string Pattern to validate a job url
      */
-    const JOB_URL_PATTERN = 'https?://.+';
+    const JOB_URL_PATTERN = '^https?://.+';
 
     /**
      *

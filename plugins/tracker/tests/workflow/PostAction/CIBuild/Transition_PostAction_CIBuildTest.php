@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -44,6 +44,28 @@ class Transition_PostAction_CIBuildTest extends TuleapTestCase {
         $id               = 123;
         $job_url          = 'http://www.example.com';
         $new_job_url      = 'not_an_url';
+        $client           = mock('Jenkins_Client');
+        $condendi_request = aRequest()
+            ->with('remove_postaction', array())
+            ->with('workflow_postaction_ci_build', array($id => $new_job_url))
+            ->build();
+
+        $ci_build_dao = mock('Transition_PostAction_CIBuildDao');
+
+        $post_action_ci_build = partial_mock('Transition_PostAction_CIBuild', array('getDao'), array($transition, $id, $job_url, $client));
+        stub($post_action_ci_build)->getDao()->returns($ci_build_dao);
+
+        expect($ci_build_dao)->updatePostAction()->never();
+        expect($GLOBALS['Response'])->addFeedback('error', '*')->once();
+        $post_action_ci_build->process($condendi_request);
+    }
+
+    public function itDoesNotUpdateThePostActionIfJobURLStartsByAWhitespace()
+    {
+        $transition       = mock('Transition');
+        $id               = 123;
+        $job_url          = 'http://www.example.com';
+        $new_job_url      = ' https://www.example.com';
         $client           = mock('Jenkins_Client');
         $condendi_request = aRequest()
             ->with('remove_postaction', array())
