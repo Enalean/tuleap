@@ -34,7 +34,7 @@
             </div>
             <div class="breadcrumb-item">
                 <router-link
-                    v-bind:to="{ name: 'BaselinePage', params: { baseline_id } }"
+                    v-bind:to="{ name: 'BaselineContentPage', params: { baseline_id } }"
                     tag="button"
                     class="breadcrumb-link baseline-breadcrumb-link"
                     title="Baseline"
