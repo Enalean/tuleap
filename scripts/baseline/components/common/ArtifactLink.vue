@@ -19,21 +19,20 @@
   -->
 
 <template>
-    <span>
-        <artifact-link v-bind:artifact="artifact">
-            <span class="baseline-artifact-badge tlp-badge-primary tlp-badge-outline">
-                {{ artifact.tracker_name }} #{{ artifact.id }}
-            </span><span class="baseline-artifact-title">{{ artifact.title }}</span>
-        </artifact-link>
-    </span>
+    <a v-bind:href="url">
+        <slot/>
+    </a>
 </template>
 <script>
-import ArtifactLink from "./ArtifactLink.vue";
 export default {
-    name: "ArtifactLabel",
-    components: { ArtifactLink },
+    name: "ArtifactLink",
     props: {
         artifact: { required: true, type: Object }
+    },
+    computed: {
+        url() {
+            return `/plugins/tracker/?aid=${this.artifact.id}`;
+        }
     }
 };
 </script>

@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright (c) Enalean, 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -18,19 +18,26 @@
  *
  */
 
-.baselines-title {
-    text-transform: uppercase;
-}
+import { shallowMount } from "@vue/test-utils";
+import localVue from "../../support/local-vue.js";
+import ArtifactBadge from "./ArtifactBadge.vue";
+import { create } from "../../support/factories";
 
-.baselines-table-column-actions {
-    text-align: left;
-    vertical-align: middle;
-}
+describe("ArtifactBadge", () => {
+    let wrapper;
 
-.baselines-table-column-name {
-    width: 35%;
-}
+    beforeEach(() => {
+        wrapper = shallowMount(ArtifactBadge, {
+            localVue,
+            propsData: {
+                artifact: create("artifact", {
+                    tracker: create("tracker", { color_name: "blue_cyan" })
+                })
+            }
+        });
+    });
 
-.baselines-table-column-milestone {
-    color: inherit;
-}
+    it("shows tlp badge custom class", () => {
+        expect(wrapper.contains(".tlp-badge-blue-cyan")).toBeTruthy();
+    });
+});

@@ -18,7 +18,12 @@
  *
  */
 
-import { restore, rewire$getUser, rewire$getArtifact } from "../api/rest-querier";
+import {
+    restore,
+    rewire$getUser,
+    rewire$getArtifact,
+    rewire$getTracker
+} from "../api/rest-querier";
 import { presentBaseline, presentBaselines } from "./baseline";
 import { create, createList } from "../support/factories";
 
@@ -82,6 +87,9 @@ describe("baseline presenter:", () => {
         let getArtifact;
         let getArtifactResolve;
 
+        let getTracker;
+        let getTrackerResolve;
+
         beforeEach(() => {
             getUser = jasmine.createSpy("getUser");
             getUser.and.returnValue(
@@ -98,27 +106,83 @@ describe("baseline presenter:", () => {
                 })
             );
             rewire$getArtifact(getArtifact);
+
+            getTracker = jasmine.createSpy("getTracker");
+            getTracker.and.returnValue(
+                new Promise(resolve => {
+                    getTrackerResolve = resolve;
+                })
+            );
+            rewire$getTracker(getTracker);
         });
 
-        describe("when single baseline", () => {
+        describe("when all request are resolved", () => {
             const user = create("user", { id: 1 });
-            const artifact = create("artifact", { id: 9 });
-            let presented_baselines;
+            const artifact = create("artifact", { id: 9, tracker_id: 2 });
+            const tracker = create("tracker", { id: 2 });
 
-            beforeEach(async () => {
+            beforeEach(() => {
                 getUserResolve(user);
                 getArtifactResolve(artifact);
-
-                presented_baselines = await presentBaselines([
-                    create("baseline", { author_id: 1, artifact_id: 9 })
-                ]);
+                getTrackerResolve(tracker);
             });
 
-            it("returns baselines with author", () => {
-                expect(presented_baselines[0].author).toEqual(user);
+            describe("when single baseline", () => {
+                let presented_baselines;
+
+                beforeEach(async () => {
+                    presented_baselines = await presentBaselines([
+                        create("baseline", { author_id: 1, artifact_id: 9 })
+                    ]);
+                });
+
+                it("returns baselines with author", () => {
+                    expect(presented_baselines[0].author).toEqual(user);
+                });
+                it("returns baselines with artifact", () => {
+                    expect(presented_baselines[0].artifact).toEqual(artifact);
+                });
+                it("returns baselines with artifact tracker", () => {
+                    expect(presented_baselines[0].artifact.tracker).toEqual(tracker);
+                });
             });
-            it("returns baselines with artifact", () => {
-                expect(presented_baselines[0].artifact).toEqual(artifact);
+
+            describe("when multiple baselines with same tracker", () => {
+                beforeEach(async () => {
+                    getTracker.calls.reset();
+                    await presentBaselines(createList("baseline", 2, { artifact_id: 9 }));
+                });
+
+                it("calls getTracker once", () => expect(getTracker).toHaveBeenCalledTimes(1));
+            });
+
+            describe("when multiple baselines with different trackers", () => {
+                beforeEach(async () => {
+                    getArtifact.calls.reset();
+                    getArtifact
+                        .withArgs(9)
+                        .and.returnValue(
+                            Promise.resolve(create("artifact", { id: 9, tracker: { id: 1 } }))
+                        );
+                    getArtifact
+                        .withArgs(10)
+                        .and.returnValue(
+                            Promise.resolve(create("artifact", { id: 10, tracker: { id: 2 } }))
+                        );
+
+                    rewire$getArtifact(getArtifact);
+
+                    getUserResolve(user);
+                    getTrackerResolve(tracker);
+
+                    await presentBaselines([
+                        create("baseline", { artifact_id: 9 }),
+                        create("baseline", { artifact_id: 10 })
+                    ]);
+                });
+
+                it("calls getTracker for each author", () =>
+                    expect(getTracker).toHaveBeenCalledTimes(2));
             });
         });
 

@@ -37,7 +37,9 @@ const factories = {
         },
         presented: {
             author: association("user", { id: 3 }),
-            artifact: association("artifact", { id: 9 })
+            artifact: association("artifact", {
+                id: 9
+            })
         }
     },
     simplified_baseline: {
@@ -52,6 +54,7 @@ const factories = {
     tracker: {
         default: {
             id: identity,
+            color_name: "blue_ocean",
             fields: [
                 {
                     field_id: 22,
@@ -76,6 +79,12 @@ const factories = {
     },
     artifact: {
         default: {
+            id: 1,
+            tracker: association("tracker")
+        }
+    },
+    baseline_artifact: {
+        default: {
             id: identity,
             title: "Sprint-1",
             status: "Planned",
@@ -84,9 +93,6 @@ const factories = {
             description:
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit labore et dolore magna aliqua",
             linked_artifact_ids: []
-        },
-        presented: {
-            baseline_id: 1
         }
     },
     user: {

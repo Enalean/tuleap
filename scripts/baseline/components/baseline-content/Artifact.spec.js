@@ -38,7 +38,7 @@ describe("Artifact", () => {
     let wrapper;
 
     beforeEach(async () => {
-        const linked_artifact = create("artifact", { title: "Story" });
+        const linked_artifact = create("baseline_artifact", { title: "Story" });
         getBaselineArtifactsByIds = jasmine.createSpy("getBaselineArtifactsByIds");
         getBaselineArtifactsByIds.and.returnValue(Promise.resolve([linked_artifact]));
         rewire$getBaselineArtifactsByIds(getBaselineArtifactsByIds);
@@ -54,7 +54,7 @@ describe("Artifact", () => {
         wrapper = mount(Artifact, {
             propsData: {
                 baseline_id: 1,
-                artifact: create("artifact", {
+                artifact: create("baseline_artifact", {
                     title: "Epic",
                     linked_artifact_ids: [linked_artifact.id]
                 }),
@@ -72,7 +72,9 @@ describe("Artifact", () => {
 
     describe("when artifact has description", () => {
         beforeEach(() => {
-            wrapper.setProps({ artifact: create("artifact", { description: "my description" }) });
+            wrapper.setProps({
+                artifact: create("baseline_artifact", { description: "my description" })
+            });
         });
         it("shows artifact descriptions", () => {
             expect(wrapper.contains(artifact_description_selector)).toBeTruthy();
@@ -82,7 +84,7 @@ describe("Artifact", () => {
     describe("when artifact has no description", () => {
         beforeEach(async () => {
             wrapper.setProps({
-                artifact: create("artifact", { description: null })
+                artifact: create("baseline_artifact", { description: null })
             });
             await wrapper.vm.$nextTick();
         });
@@ -96,7 +98,7 @@ describe("Artifact", () => {
 
     describe("when artifact has status", () => {
         beforeEach(() => {
-            wrapper.setProps({ artifact: create("artifact", { status: "my status" }) });
+            wrapper.setProps({ artifact: create("baseline_artifact", { status: "my status" }) });
         });
         it("shows artifact status", () => {
             expect(wrapper.contains(artifact_status_selector)).toBeTruthy();
@@ -106,7 +108,7 @@ describe("Artifact", () => {
     describe("when artifact has no status", () => {
         beforeEach(async () => {
             wrapper.setProps({
-                artifact: create("artifact", { status: null })
+                artifact: create("baseline_artifact", { status: null })
             });
             await wrapper.vm.$nextTick();
         });
@@ -143,7 +145,10 @@ describe("Artifact", () => {
 
         describe("when artifacts doest not have linked artifact", () => {
             beforeEach(async () => {
-                wrapper.setProps({ artifact: create("artifact"), linked_artifact_ids: [] });
+                wrapper.setProps({
+                    artifact: create("baseline_artifact"),
+                    linked_artifact_ids: []
+                });
                 await wrapper.vm.$nextTick();
             });
 

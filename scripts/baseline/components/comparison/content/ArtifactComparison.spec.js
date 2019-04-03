@@ -37,8 +37,8 @@ describe("ArtifactComparison", () => {
         wrapper = shallowMount(ArtifactComparison, {
             localVue,
             propsData: {
-                reference: create("artifact", { linked_artifact_ids: [1] }),
-                compared_to: create("artifact"),
+                reference: create("baseline_artifact", { linked_artifact_ids: [1] }),
+                compared_to: create("baseline_artifact"),
                 current_depth: 1
             }
         });
@@ -65,8 +65,8 @@ describe("ArtifactComparison", () => {
             getBaselineArtifactsByIds.calls.reset();
 
             wrapper.setProps({
-                reference: create("artifact", { linked_artifact_ids: [] }),
-                compared_to: create("artifact", { linked_artifact_ids: [] })
+                reference: create("baseline_artifact", { linked_artifact_ids: [] }),
+                compared_to: create("baseline_artifact", { linked_artifact_ids: [] })
             });
 
             await wrapper.vm.$nextTick();

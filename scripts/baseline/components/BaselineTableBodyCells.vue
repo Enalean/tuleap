@@ -26,7 +26,11 @@
                 </a>
             </td>
             <td>{{ baseline.name }}</td>
-            <td>{{ baseline.artifact.title }}</td>
+            <td>
+                <artifact-link class="baselines-table-column-milestone" v-bind:artifact="baseline.artifact">
+                    <artifact-badge v-bind:artifact="baseline.artifact"/>{{ baseline.artifact.title }}
+                </artifact-link>
+            </td>
             <td>
                 <humanized-date v-bind:date="baseline.snapshot_date"/>
             </td>
@@ -45,10 +49,13 @@
 
 <script>
 import HumanizedDate from "./common/HumanizedDate.vue";
+import ArtifactLink from "./common/ArtifactLink.vue";
 import UserBadge from "./common/UserBadge.vue";
+import ArtifactBadge from "./common/ArtifactBadge.vue";
+
 export default {
     name: "BaselineTableBodyCells",
-    components: { HumanizedDate, UserBadge },
+    components: { ArtifactBadge, HumanizedDate, UserBadge, ArtifactLink },
     props: {
         baselines: { required: true, type: Array }
     },

@@ -38,8 +38,8 @@ describe("ArtifactsListComparison", () => {
     });
 
     describe("#artifact_comparisons", () => {
-        const reference = create("artifact", { id: 1, description: "old description" });
-        const compared_to = create("artifact", { id: 1, description: "new description" });
+        const reference = create("baseline_artifact", { id: 1, description: "old description" });
+        const compared_to = create("baseline_artifact", { id: 1, description: "new description" });
 
         beforeEach(() => {
             wrapper.setProps({
@@ -55,7 +55,7 @@ describe("ArtifactsListComparison", () => {
         describe("when artifact removed", () => {
             beforeEach(() => {
                 wrapper.setProps({
-                    reference_artifacts: [create("artifact")],
+                    reference_artifacts: [create("baseline_artifact")],
                     compared_artifacts: []
                 });
             });
@@ -67,7 +67,7 @@ describe("ArtifactsListComparison", () => {
     });
 
     describe("#added_artifacts", () => {
-        const added_artifact = create("artifact");
+        const added_artifact = create("baseline_artifact");
 
         beforeEach(() => {
             wrapper.setProps({ reference_artifacts: [], compared_artifacts: [added_artifact] });
@@ -79,7 +79,7 @@ describe("ArtifactsListComparison", () => {
     });
 
     describe("#removed_artifacts", () => {
-        const removed_artifact = create("artifact");
+        const removed_artifact = create("baseline_artifact");
 
         beforeEach(() => {
             wrapper.setProps({ reference_artifacts: [removed_artifact], compared_artifacts: [] });

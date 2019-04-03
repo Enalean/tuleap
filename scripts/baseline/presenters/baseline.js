@@ -18,7 +18,7 @@
  *
  */
 
-import { getUser, getArtifact } from "../api/rest-querier";
+import { getUser, getArtifact, getTracker } from "../api/rest-querier";
 import ArrayUtils from "../support/array-utils";
 
 export { presentBaseline, presentBaselines, presentArtifacts };
@@ -29,6 +29,7 @@ async function presentBaselines(baselines) {
 
     const users = await users_loading;
     const artifacts = await artifacts_loading;
+    const trackers = await fetchTrackers(artifacts);
 
     return baselines.map(baseline => {
         const author = ArrayUtils.find(users, user => user.id === baseline.author_id);
@@ -36,6 +37,8 @@ async function presentBaselines(baselines) {
             artifacts,
             artifact => artifact.id === baseline.artifact_id
         );
+        artifact.tracker = ArrayUtils.find(trackers, tracker => tracker.id === artifact.tracker.id);
+
         return { ...baseline, author, artifact };
     });
 }
@@ -50,13 +53,19 @@ function fetchArtifacts(baselines) {
     return fetchById(user_ids, getArtifact);
 }
 
+function fetchTrackers(artifacts) {
+    const simplified_tracker_ids = artifacts.map(artifact => artifact.tracker.id);
+    return fetchById(simplified_tracker_ids, getTracker);
+}
+
 function fetchById(ids, fetcher) {
     const uniq_ids = [...new Set(ids)];
-    return Promise.all(uniq_ids.map(fetcher));
+    return Promise.all(uniq_ids.map(id => fetcher(id)));
 }
 
 async function presentBaseline(baseline) {
     const user = await getUser(baseline.author_id);
+
     return { ...baseline, author: user };
 }
 
