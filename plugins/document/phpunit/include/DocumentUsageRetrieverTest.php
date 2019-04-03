@@ -64,6 +64,8 @@ class DocumentUsageRetrieverTest extends TestCase
         $project->shouldReceive('getId')->andReturn(102);
         $user->shouldReceive('getPreference')->with('plugin_docman_display_legacy_ui_102')->andReturn(true);
 
+        ForgeConfig::set('disable_new_document_ui_by_default', true);
+
         $this->assertFalse($this->retriever->shouldUseDocument($user, $project));
     }
 
@@ -74,6 +76,8 @@ class DocumentUsageRetrieverTest extends TestCase
         $project->shouldReceive('getId')->andReturn(102);
         $user->shouldReceive('getPreference')->with('plugin_docman_display_legacy_ui_102')->andReturn(false);
         $user->shouldReceive('getPreference')->with('plugin_docman_display_new_ui_102')->andReturn(true);
+
+        ForgeConfig::set('disable_new_document_ui_by_default', true);
 
         $this->metadata_factory->shouldReceive('getRealMetadataList')->never();
 
@@ -90,6 +94,23 @@ class DocumentUsageRetrieverTest extends TestCase
 
         $this->assertFalse($this->retriever->shouldUseDocument($user, $project));
     }
+
+    public function testItShouldUseOldUIIfPlatformDisabledBewUI(): void
+    {
+        $user    = \Mockery::mock(\PFUser::class);
+        $project = \Mockery::mock(\Project::class);
+        $project->shouldReceive('getId')->andReturn(102);
+
+        $user->shouldReceive('getPreference')->with('plugin_docman_display_legacy_ui_102')->andReturn(null);
+        $user->shouldReceive('getPreference')->with('plugin_docman_display_new_ui_102')->andReturn(null);
+
+        ForgeConfig::set('disable_new_document_ui_by_default', true);
+
+        $this->metadata_factory->shouldReceive('getRealMetadataList')->never();
+
+        $this->assertFalse($this->retriever->shouldUseDocument($user, $project));
+    }
+
 
     public function testItShouldUseOldUIWhenUserDoesNotHavePreferencesAndWhenProjectUsesRequiredMetadata(): void
     {

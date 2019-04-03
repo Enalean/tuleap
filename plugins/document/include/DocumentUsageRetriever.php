@@ -23,6 +23,7 @@ declare(strict_types = 1);
 namespace Tuleap\Document;
 
 use Docman_MetadataFactory;
+use ForgeConfig;
 use PFUser;
 use Project;
 
@@ -52,7 +53,11 @@ class DocumentUsageRetriever
             return true;
         }
 
-        $blacklist_projects = \ForgeConfig::get('sys_project_blacklist_which_uses_legacy_ui_by_default');
+        if (ForgeConfig::get('disable_new_document_ui_by_default')) {
+            return false;
+        }
+
+        $blacklist_projects = ForgeConfig::get('sys_project_blacklist_which_uses_legacy_ui_by_default');
         if ($blacklist_projects && in_array($project->getID(), $blacklist_projects)) {
             return false;
         }
