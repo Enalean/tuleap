@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!--Created by yFiles for HTML 2.2-EAP5-->
+<!--Created by yFiles for HTML 2.2-EAP8-->
 <graphml xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://www.yworks.com/xml/schema/graphml.html/2.0/ygraphml.xsd " xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:demostyle="http://www.yworks.com/yFilesHTML/demos/FlatDemoStyle/1.0" xmlns:bpmn="http://www.yworks.com/xml/yfiles-for-html/bpmn/2.0" xmlns:demotablestyle="http://www.yworks.com/yFilesHTML/demos/FlatDemoTableStyle/1.0" xmlns:uml="http://www.yworks.com/yFilesHTML/demos/UMLDemoStyle/1.0" xmlns:compat="http://www.yworks.com/xml/yfiles-compat-arrows/1.0" xmlns:GraphvizNodeStyle="http://www.yworks.com/yFilesHTML/graphviz-node-style/1.0" xmlns:VuejsNodeStyle="http://www.yworks.com/demos/yfiles-vuejs-node-style/1.0" xmlns:y="http://www.yworks.com/xml/yfiles-common/3.0" xmlns:x="http://www.yworks.com/xml/yfiles-common/markup/3.0" xmlns:yjs="http://www.yworks.com/xml/yfiles-for-html/2.0/xaml" xmlns:x0="http://www.yworks.com/yFilesHTML/demos/EntityRelationship/1.0" xmlns:sys="http://www.yworks.com/xml/yfiles-common/markup/primitives/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<key id="d0" for="node" attr.type="boolean" attr.name="Expanded" y:attr.uri="http://www.yworks.com/xml/yfiles-common/2.0/folding/Expanded">
 		<default>true</default>
@@ -85,7 +85,7 @@
 				</x:List>
 			</data>
 			<data key="d4">
-				<y:RectD X="852.25" Y="-36.8125" Width="460.5625" Height="462.9375"/>
+				<y:RectD X="852.25" Y="-70.5" Width="490.0625" Height="657.375"/>
 			</data>
 			<data key="d6">
 				<y:GraphMLReference ResourceKey="4"/>
@@ -139,29 +139,6 @@
 				</node>
 				<node id="n0::n2">
 					<data key="d4">
-						<y:RectD X="886.8125" Y="45.875" Width="282.75" Height="95.75"/>
-					</data>
-					<data key="d6">
-						<x0:EntityNodeStyle fill="{y:GraphMLReference 1}" insetFill="{y:GraphMLReference 2}" stroke="BLACK">
-							<x0:EntityNodeStyle.model>
-								<x0:EntityRelationshipModel>
-									<x0:EntityRelationshipModel.title>SimplifiedBaseline</x0:EntityRelationshipModel.title>
-									<x0:EntityRelationshipModel.attributes>
-										<x:Array Type="sys:Object">
-											<sys:String>title</sys:String>
-											<sys:String>author</sys:String>
-											<sys:String>status</sys:String>
-											<sys:String>last_modification_date_before_baseline_date</sys:String>
-										</x:Array>
-									</x0:EntityRelationshipModel.attributes>
-								</x0:EntityRelationshipModel>
-							</x0:EntityNodeStyle.model>
-						</x0:EntityNodeStyle>
-					</data>
-					<port name="p0"/>
-				</node>
-				<node id="n0::n3">
-					<data key="d4">
 						<y:RectD X="1122.8125" Y="295.75" Width="142.75" Height="82"/>
 					</data>
 					<data key="d6">
@@ -182,6 +159,34 @@
 					</data>
 					<port name="p0"/>
 				</node>
+				<node id="n0::n3">
+					<data key="d4">
+						<y:RectD X="911.3125" Y="-22.25" Width="142.75" Height="162.25"/>
+					</data>
+					<data key="d6">
+						<x0:EntityNodeStyle fill="{y:GraphMLReference 1}" insetFill="{y:GraphMLReference 2}" stroke="BLACK">
+							<x0:EntityNodeStyle.model>
+								<x0:EntityRelationshipModel>
+									<x0:EntityRelationshipModel.title>BaselineArtifact</x0:EntityRelationshipModel.title>
+									<x0:EntityRelationshipModel.attributes>
+										<x:Array Type="sys:Object">
+											<sys:String>id</sys:String>
+											<sys:String>title</sys:String>
+											<sys:String>description</sys:String>
+											<sys:String>initial_effort</sys:String>
+											<sys:String>status</sys:String>
+											<sys:String>tracker_id</sys:String>
+											<sys:String>tracker_name</sys:String>
+											<sys:String>linked_artifact_ids</sys:String>
+										</x:Array>
+									</x0:EntityRelationshipModel.attributes>
+								</x0:EntityRelationshipModel>
+							</x0:EntityNodeStyle.model>
+						</x0:EntityNodeStyle>
+					</data>
+					<port name="p0"/>
+					<port name="p1"/>
+				</node>
 				<edge id="n0::e0" source="n0::n0" target="n0::n1" sourceport="p0" targetport="p1">
 					<data key="d12">
 						<yjs:PolylineEdgeStyle stroke="#FF0A0A0A">
@@ -198,13 +203,18 @@
 						</yjs:PolylineEdgeStyle>
 					</data>
 				</edge>
-				<edge id="n0::e1" source="n0::n0" target="n0::n3" sourceport="p2" targetport="p0">
+				<edge id="n0::e1" source="n0::n0" target="n0::n2" sourceport="p2" targetport="p0">
 					<data key="d12">
 						<yjs:PolylineEdgeStyle>
 							<yjs:PolylineEdgeStyle.sourceArrow>
 								<x0:CrowsFootArrow type="CROWS_FOOT_MANY_OPTIONAL" scale="1"/>
 							</yjs:PolylineEdgeStyle.sourceArrow>
 						</yjs:PolylineEdgeStyle>
+					</data>
+				</edge>
+				<edge id="n0::e2" source="n0::n3" target="n0::n1" sourceport="p1" targetport="p0">
+					<data key="d12">
+						<y:GraphMLReference ResourceKey="21"/>
 					</data>
 				</edge>
 			</graph>
@@ -273,8 +283,6 @@
 					<port name="p1"/>
 					<port name="p2"/>
 					<port name="p3"/>
-					<port name="p4"/>
-					<port name="p5"/>
 				</node>
 				<node id="n1::n1">
 					<data key="d2"><![CDATA[]]></data>
@@ -438,6 +446,7 @@
 					<port name="p0"/>
 					<port name="p1"/>
 					<port name="p2"/>
+					<port name="p3"/>
 				</node>
 				<node id="n1::n6">
 					<data key="d2"><![CDATA[]]></data>
@@ -715,33 +724,7 @@
 				</edge>
 			</graph>
 		</node>
-		<edge id="e0" source="n1::n0" target="n0::n1" sourceport="p4" targetport="p0">
-			<data key="d10">
-				<x:List>
-					<y:Label>
-						<y:Label.Text>milestone</y:Label.Text>
-						<y:Label.LayoutParameter>
-							<y:SmartEdgeLabelModelParameter Distance="5">
-								<y:SmartEdgeLabelModelParameter.Model>
-									<y:SmartEdgeLabelModel/>
-								</y:SmartEdgeLabelModelParameter.Model>
-							</y:SmartEdgeLabelModelParameter>
-						</y:Label.LayoutParameter>
-						<y:Label.Style>
-							<yjs:DefaultLabelStyle textFill="BLACK">
-								<yjs:DefaultLabelStyle.font>
-									<yjs:Font fontSize="12" fontFamily="'Arial'"/>
-								</yjs:DefaultLabelStyle.font>
-							</yjs:DefaultLabelStyle>
-						</y:Label.Style>
-					</y:Label>
-				</x:List>
-			</data>
-			<data key="d12">
-				<y:GraphMLReference ResourceKey="21"/>
-			</data>
-		</edge>
-		<edge id="e1" source="n1::n7" target="n0::n0" sourceport="p0" targetport="p1">
+		<edge id="e0" source="n1::n7" target="n0::n0" sourceport="p0" targetport="p1">
 			<data key="d10">
 				<x:List>
 					<y:Label>
@@ -767,28 +750,7 @@
 				<y:GraphMLReference ResourceKey="21"/>
 			</data>
 		</edge>
-		<edge id="e2" source="n1::n0" target="n0::n2" sourceport="p5" targetport="p0">
-			<data key="d10">
-				<x:List>
-					<y:Label>
-						<y:Label.Text>milestone</y:Label.Text>
-						<y:Label.LayoutParameter>
-							<y:SmartEdgeLabelModelParameter Distance="5">
-								<y:SmartEdgeLabelModelParameter.Model>
-									<y:SmartEdgeLabelModel/>
-								</y:SmartEdgeLabelModelParameter.Model>
-							</y:SmartEdgeLabelModelParameter>
-						</y:Label.LayoutParameter>
-						<y:Label.Style>
-							<yjs:DefaultLabelStyle textFill="BLACK">
-								<yjs:DefaultLabelStyle.font>
-									<yjs:Font fontSize="12" fontFamily="'Arial'"/>
-								</yjs:DefaultLabelStyle.font>
-							</yjs:DefaultLabelStyle>
-						</y:Label.Style>
-					</y:Label>
-				</x:List>
-			</data>
+		<edge id="e1" source="n1::n5" target="n0::n3" sourceport="p3" targetport="p0">
 			<data key="d12">
 				<yjs:PolylineEdgeStyle sourceArrow="{y:GraphMLReference 20}"/>
 			</data>
