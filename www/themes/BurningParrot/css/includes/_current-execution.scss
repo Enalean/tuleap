@@ -7,6 +7,10 @@
     margin: 0;
     overflow: hidden;
 
+    > .tlp-pane-container {
+        overflow-y: auto;
+    }
+
     &.passed > .tlp-pane-container > .current-test-header {
         background: $tlp-ui-success;
         color: $tlp-ui-white;
