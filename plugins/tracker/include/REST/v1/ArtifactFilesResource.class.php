@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 — 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 — Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,11 +21,10 @@
 namespace Tuleap\Tracker\REST\v1;
 
 use \Luracast\Restler\RestException;
-use \Tracker_Artifact_Attachment_TemporaryFileManager             as FileManager;
-use \Tracker_Artifact_Attachment_TemporaryFileManagerDao          as FileManagerDao;
-use \Tracker_Artifact_Attachment_FileNotFoundException            as FileNotFoundException;
-use \Tuleap\Tracker\REST\Artifact\FileDataRepresentation          as FileDataRepresentation;
-use \Tracker_Artifact_Attachment_PermissionDeniedOnFieldException as PermissionDeniedOnFieldException;
+use Tracker_FileInfo;
+use Tracker_FileInfo_InvalidFileInfoException;
+use Tracker_FileInfo_UnauthorisedException;
+use \Tuleap\Tracker\REST\Artifact\FileDataRepresentation;
 use \Tuleap\REST\Exceptions\LimitOutOfBoundsException;
 use \Tuleap\REST\Header;
 use \UserManager;
@@ -34,35 +33,16 @@ use \Tracker_ArtifactFactory;
 use \Tracker_FormElementFactory;
 use \Tracker_FileInfoFactory;
 use \Tracker_FileInfoDao;
-use \System_Command;
-use \ForgeConfig;
 
-class ArtifactFilesResource {
-
-    const DEFAULT_LIMIT = 1048576; // 1Mo
+class ArtifactFilesResource
+{
+    private const DEFAULT_LIMIT = 1048576; // 1Mo
 
     /** @var PFUser */
     private $user;
 
-    /** @var Tracker_Artifact_Attachment_TemporaryFileManager */
-    private $file_manager;
-
     public function __construct() {
         $this->user          = UserManager::instance()->getCurrentUser();
-        $artifact_factory    = Tracker_ArtifactFactory::instance();
-        $formelement_factory = Tracker_FormElementFactory::instance();
-        $fileinfo_factory    = new Tracker_FileInfoFactory(
-            new Tracker_FileInfoDao(),
-            $formelement_factory,
-            $artifact_factory
-        );
-        $this->file_manager = new FileManager(
-            UserManager::instance(),
-            new FileManagerDao(),
-            $fileinfo_factory,
-            new System_Command(),
-            ForgeConfig::get('sys_file_deletion_delay')
-        );
     }
 
     /**
@@ -84,38 +64,53 @@ class ArtifactFilesResource {
      *
      * @return \Tuleap\Tracker\REST\Artifact\FileDataRepresentation
      *
-     * @throws 401
-     * @throws 403
-     * @throws 404
-     * @throws 406
+     * @throws RestException 401
+     * @throws RestException 403
+     * @throws RestException 404
+     * @throws RestException 406
      */
-    protected function getId($id, $offset = 0, $limit = self::DEFAULT_LIMIT) {
+    protected function getId($id, $offset = 0, $limit = self::DEFAULT_LIMIT) : FileDataRepresentation
+    {
         $this->checkLimitValue($limit);
 
-        $chunk = $this->getAttachedFileContent($id, $offset, $limit);
-        $size  = $this->getAttachedFileSize($id);
+        $file_info = $this->getAttachedFileInfo($id);
+        $size      = $file_info->getFilesize();
 
         $this->sendAllowHeadersForArtifactFilesId();
         $this->sendPaginationHeaders($limit, $offset, $size);
 
         $file_data_representation = new FileDataRepresentation();
 
-        return $file_data_representation->build($chunk);
+        return $file_data_representation->build($file_info->getContent($offset, $limit));
     }
 
     /**
-     * @throws 403
-     * @throws 404
+     * @throws RestException 404
      */
-    private function getAttachedFileContent($id, $offset, $limit) {
-        try {
-            return $this->file_manager->getAttachedFileChunk($id, $this->user, $offset, $limit);
+    private function getAttachedFileInfo(int $id) : Tracker_FileInfo
+    {
+        $file_info_factory = new Tracker_FileInfoFactory(
+            new Tracker_FileInfoDao(),
+            Tracker_FormElementFactory::instance(),
+            Tracker_ArtifactFactory::instance()
+        );
 
-        } catch (PermissionDeniedOnFieldException $e) {
-            throw new RestException(403);
-        } catch (FileNotFoundException $e) {
-            throw new RestException(404);
+        $file_info = $file_info_factory->getById($id);
+        if ($file_info === null) {
+            throw new RestException('404');
         }
+
+        try {
+            $file_info_factory->getArtifactByFileInfoIdAndUser($this->user, $file_info->getId());
+        } catch (Tracker_FileInfo_InvalidFileInfoException | Tracker_FileInfo_UnauthorisedException $exception) {
+            throw new RestException('404');
+        }
+
+        if (! $file_info->getField()->userCanRead($this->user)) {
+            throw new RestException('404');
+        }
+
+        return $file_info;
     }
 
     /**
@@ -133,18 +128,6 @@ class ArtifactFilesResource {
     }
 
     private function sendPaginationHeaders($limit, $offset, $size) {
-        Header::sendPaginationHeaders($limit, $offset, $size, $this->file_manager->getMaximumChunkSize());
-    }
-
-    /**
-     * @throws 404
-     */
-    private function getAttachedFileSize($id) {
-        try {
-            return $this->file_manager->getAttachedFileSize($id);
-
-        } catch (FileNotFoundException $e) {
-            throw new RestException(404);
-        }
+        Header::sendPaginationHeaders($limit, $offset, $size, self::DEFAULT_LIMIT);
     }
 }

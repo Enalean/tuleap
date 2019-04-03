@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 — 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 — Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,30 +20,27 @@
 
 namespace Tuleap\Tracker\REST\v1;
 
-use Tuleap\REST\ProjectAuthorization;
 use Luracast\Restler\RestException;
 use Tracker_Artifact_Attachment_TemporaryFile                    as TemporaryFile;
 use Tracker_Artifact_Attachment_TemporaryFileManager             as FileManager;
 use Tracker_Artifact_Attachment_TemporaryFileManagerDao          as FileManagerDao;
-use Tuleap\Tracker\REST\Artifact\FileInfoRepresentation          as FileInfoRepresentation;
-use Tuleap\Tracker\REST\Artifact\FileDataRepresentation          as FileDataRepresentation;
 use Tracker_Artifact_Attachment_CannotCreateException            as CannotCreateException;
 use Tracker_Artifact_Attachment_ChunkTooBigException             as ChunkTooBigException;
 use Tracker_Artifact_Attachment_InvalidPathException             as InvalidPathException;
 use Tracker_Artifact_Attachment_FileNotFoundException            as FileNotFoundException;
 use Tracker_Artifact_Attachment_InvalidOffsetException           as InvalidOffsetException;
 use Tracker_FileInfo_InvalidFileInfoException                    as InvalidFileInfoException;
-use Tracker_FileInfo_UnauthorisedException                       as UnauthorisedException;
 use Tuleap\Tracker\Artifact\Attachment\QuotaExceededException;
 use Tuleap\REST\Exceptions\LimitOutOfBoundsException;
 use Tuleap\REST\Header;
+use Tuleap\Tracker\REST\Artifact\FileDataRepresentation;
+use Tuleap\Tracker\REST\Artifact\FileInfoRepresentation;
 use UserManager;
 use PFUser;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
 use Tracker_FileInfoFactory;
 use Tracker_FileInfoDao;
-use Tracker_URLVerification;
 use System_Command;
 use ForgeConfig;
 
@@ -96,7 +93,7 @@ class ArtifactTemporaryFilesResource {
      *
      * @url GET
      *
-     * @return Array {@type \Tuleap\Tracker\REST\Artifact\FileInfoRepresentation}
+     * @return array {@type \Tuleap\Tracker\REST\Artifact\FileInfoRepresentation}
      * @param int    $limit  Number of elements displayed per page {@from path}{@min 1}
      * @param int    $offset Position of the first element to display {@from path}{@min 0}
      *
@@ -130,7 +127,7 @@ class ArtifactTemporaryFilesResource {
      * @param int $offset Where to start to read the file
      * @param int $limit  How much to read the file
      *
-     * @return \Tuleap\Tracker\REST\Artifact\FileDataRepresentation
+     * @return FileDataRepresentation
      *
      * @throws 404
      * @throws 406
@@ -381,26 +378,6 @@ class ArtifactTemporaryFilesResource {
 
     private function sendPaginationHeaders($limit, $offset, $size) {
         Header::sendPaginationHeaders($limit, $offset, $size, $this->file_manager->getMaximumChunkSize());
-    }
-
-    /**
-     * @param int $fileinfo_id
-     *
-     * @return Tracker_Artifact
-     */
-    private function getArtifactByFileInfoId($fileinfo_id) {
-        try {
-            $artifact = $this->fileinfo_factory->getArtifactByFileInfoIdInLastChangeset($this->user, $fileinfo_id);
-        } catch (InvalidFileInfoException $e) {
-            $this->raiseError(404, $e->getMessage());
-        } catch (UnauthorisedException $e) {
-            $this->raiseError(403, $e->getMessage());
-        }
-
-        if ($artifact) {
-            ProjectAuthorization::userCanAccessProject($this->user, $artifact->getTracker()->getProject(), new Tracker_URLVerification());
-            return $artifact;
-        }
     }
 
     private function removeTemporaryFile($id) {

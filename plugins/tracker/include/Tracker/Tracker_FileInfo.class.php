@@ -94,8 +94,8 @@ class Tracker_FileInfo {
     /**
      * Returns encoded content chunk of file
      *
-     * @param Integer $offset Where to start reading
-     * @param Integer $size   How much to read
+     * @param int $offset Where to start reading
+     * @param int $size   How much to read
      *
      * @return String Base64 encoded content
      */
