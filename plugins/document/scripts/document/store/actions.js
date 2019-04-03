@@ -282,10 +282,16 @@ export const updateLinkFromModal = async (
     }
 };
 
-export const refreshItem = async (context, item_to_refresh) => {
+export const refreshLink = async (context, item_to_refresh) => {
     const up_to_date_item = await getItem(item_to_refresh.id);
 
     context.commit("replaceLinkWithNewVersion", [item_to_refresh, up_to_date_item]);
+};
+
+export const refreshWiki = async (context, item_to_refresh) => {
+    const up_to_date_item = await getItem(item_to_refresh.id);
+
+    context.commit("replaceWikiWithNewVersion", [item_to_refresh, up_to_date_item]);
 };
 
 async function uploadNewVersion(

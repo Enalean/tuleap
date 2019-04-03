@@ -181,8 +181,6 @@ function patchWiki(item, page_name, version_title, change_log, should_lock_file)
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
-            version_title,
-            change_log,
             wiki_properties: {
                 page_name
             },

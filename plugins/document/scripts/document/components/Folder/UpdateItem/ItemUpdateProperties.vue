@@ -26,12 +26,11 @@
         </div>
         <changelog-property v-model="version.changelog"/>
         <slot></slot>
-        <approval-update-properties v-if="item.has_approval_table && ! isItemAWiki" v-on:approvalTableActionChange="emitApprovalUpdateAction" data-test="update-approval-properties"/>
+        <approval-update-properties v-if="item.has_approval_table" v-on:approvalTableActionChange="emitApprovalUpdateAction" data-test="update-approval-properties"/>
     </div>
 </template>
 
 <script>
-import { TYPE_WIKI } from "../../../constants.js";
 import VersionTitleProperty from "./VersionTitleProperty.vue";
 import ChangelogProperty from "./ChangelogProperty.vue";
 import LockProperty from "./LockProperty.vue";
@@ -43,11 +42,6 @@ export default {
     props: {
         version: Object,
         item: Object
-    },
-    computed: {
-        isItemAWiki() {
-            return this.item.type === TYPE_WIKI;
-        }
     },
     methods: {
         emitApprovalUpdateAction(action) {

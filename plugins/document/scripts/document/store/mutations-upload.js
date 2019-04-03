@@ -29,7 +29,8 @@ export {
     updateFolderProgressbar,
     removeVersionUploadProgress,
     replaceFileWithNewVersion,
-    replaceLinkWithNewVersion
+    replaceLinkWithNewVersion,
+    replaceWikiWithNewVersion
 };
 
 function addFileInUploadsList(state, file) {
@@ -134,4 +135,9 @@ function replaceFileWithNewVersion(state, [existing_item, new_version]) {
 function replaceLinkWithNewVersion(state, [existing_item, new_version]) {
     existing_item.link_properties = new_version.link_properties;
     existing_item.lock_info = new_version.lock_info;
+}
+
+function replaceWikiWithNewVersion(state, [existing_item, new_version]) {
+    existing_item.lock_info = new_version.lock_info;
+    existing_item.wiki_properties = new_version.wiki_properties;
 }

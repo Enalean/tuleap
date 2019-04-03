@@ -119,7 +119,7 @@ export default {
 
             this.is_loading = false;
             if (this.has_modal_error === false) {
-                this.$store.dispatch("refreshItem", this.item);
+                this.$store.dispatch("refreshLink", this.item);
                 this.link_model = null;
                 this.modal.hide();
             }

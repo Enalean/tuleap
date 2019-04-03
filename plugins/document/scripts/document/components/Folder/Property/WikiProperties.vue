@@ -19,7 +19,7 @@
   -->
 
 <template>
-    <div class="tlp-form-element" v-if="is_displayed">
+    <div class="tlp-form-element docman-item-wiki-update-property" v-if="is_displayed">
         <label
             class="tlp-label"
             for="document-new-item-wiki-page-name"
