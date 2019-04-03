@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -64,8 +64,9 @@ class VersionBeingUploadedInformationProvider implements TusFileInformationProvi
 
         $version_id = (int) $version_id;
 
-        $document_row = $this->dao->searchDocumentVersionOngoingUploadByVersionIdAndExpirationDate(
+        $document_row = $this->dao->searchDocumentVersionOngoingUploadByVersionIDUserIDAndExpirationDate(
             $version_id,
+            (int) $user_id,
             (new \DateTimeImmutable())->getTimestamp()
         );
 

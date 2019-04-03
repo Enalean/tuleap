@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -115,7 +115,7 @@ class DocmanItemsTestFilesTest extends DocmanBase
         );
         $tus_client->setSslVerification(false, false, false);
         $tus_response_upload = $this->getResponseByName(
-            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            DocmanDataBuilder::ADMIN_USER_NAME,
             $tus_client->patch(
                 $response->json()['upload_href'],
                 [
@@ -190,7 +190,7 @@ class DocmanItemsTestFilesTest extends DocmanBase
         );
         $tus_client->setSslVerification(false, false, false);
         $tus_response_upload = $this->getResponseByName(
-            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            DocmanDataBuilder::ADMIN_USER_NAME,
             $tus_client->patch(
                 $response->json()['upload_href'],
                 [
@@ -254,7 +254,7 @@ class DocmanItemsTestFilesTest extends DocmanBase
         );
         $tus_client->setSslVerification(false, false, false);
         $tus_response_upload = $this->getResponseByName(
-            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            DocmanDataBuilder::ADMIN_USER_NAME,
             $tus_client->patch(
                 $response->json()['upload_href'],
                 [

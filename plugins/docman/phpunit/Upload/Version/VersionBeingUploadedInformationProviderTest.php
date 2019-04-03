@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -37,7 +37,7 @@ class VersionBeingUploadedInformationProviderTest extends TestCase
         $item_factory   = \Mockery::mock(\Docman_ItemFactory::class);
         $data_store     = new VersionBeingUploadedInformationProvider($dao, $item_factory, $path_allocator);
 
-        $dao->shouldReceive('searchDocumentVersionOngoingUploadByVersionIdAndExpirationDate')->andReturns([
+        $dao->shouldReceive('searchDocumentVersionOngoingUploadByVersionIDUserIDAndExpirationDate')->andReturns([
             'filesize' => 123456,
             'item_id' => 5,
             'filename' => 'readme.md'
@@ -65,7 +65,7 @@ class VersionBeingUploadedInformationProviderTest extends TestCase
         $item_factory   = \Mockery::mock(\Docman_ItemFactory::class);
         $data_store     = new VersionBeingUploadedInformationProvider($dao, $item_factory, $path_allocator);
 
-        $dao->shouldReceive('searchDocumentVersionOngoingUploadByVersionIdAndExpirationDate')->andReturns([
+        $dao->shouldReceive('searchDocumentVersionOngoingUploadByVersionIDUserIDAndExpirationDate')->andReturns([
             'filesize' => 123456,
             'item_id' => 5,
             'filename' => 'readme.md'
@@ -98,7 +98,7 @@ class VersionBeingUploadedInformationProviderTest extends TestCase
         $item_factory   = \Mockery::mock(\Docman_ItemFactory::class);
         $data_store     = new VersionBeingUploadedInformationProvider($dao, $item_factory, $path_allocator);
 
-        $dao->shouldReceive('searchDocumentVersionOngoingUploadByVersionIdAndExpirationDate')->andReturns([]);
+        $dao->shouldReceive('searchDocumentVersionOngoingUploadByVersionIDUserIDAndExpirationDate')->andReturns([]);
         $item_factory->shouldReceive('getItemFromDb')->andReturns(null);
 
         $request = \Mockery::mock(ServerRequestInterface::class);
