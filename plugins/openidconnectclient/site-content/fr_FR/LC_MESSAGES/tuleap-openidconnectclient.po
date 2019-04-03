@@ -111,9 +111,8 @@ msgstr "Aperçu"
 msgid "Preview of the login page button"
 msgstr "Aperçu du bouton de la page de connexion"
 
-#, php-format
-msgid "Register a new %1$s account"
-msgstr "Créer un nouveau compte %1$s"
+msgid "Register a new account"
+msgstr "Créer un nouveau compte"
 
 msgid "Request seems invalid, please retry"
 msgstr "La requête semble invalide, merci de réessayer"
