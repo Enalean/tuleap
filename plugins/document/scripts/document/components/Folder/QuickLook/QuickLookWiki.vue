@@ -21,25 +21,28 @@
 <template>
     <div class="document-quick-look-document-action">
         <button type="button" class="tlp-button-primary tlp-button-small document-quick-look-action-button-margin"
-                v-on:click="wiki_page_redirect">
+                v-on:click="wikiPageRedirect">
             <i class="fa fa-long-arrow-right tlp-button-icon"></i>
             <translate>Go to the wiki page</translate>
         </button>
         <quick-look-document-action-button v-bind:item="item"/>
+        <div class="document-header-spacer"></div>
+        <quick-look-delete-button v-bind:item="item"/>
     </div>
 </template>
 
 <script>
 import QuickLookDocumentActionButton from "./QuickLookDocumentActionButton.vue";
+import QuickLookDeleteButton from "./QuickLookDeleteButton.vue";
 
 export default {
     name: "QuickLookWiki",
-    components: { QuickLookDocumentActionButton },
+    components: { QuickLookDocumentActionButton, QuickLookDeleteButton },
     props: {
         item: Object
     },
     methods: {
-        wiki_page_redirect() {
+        wikiPageRedirect() {
             window.location.assign(encodeURI(this.item.wiki_properties.html_url));
         }
     }

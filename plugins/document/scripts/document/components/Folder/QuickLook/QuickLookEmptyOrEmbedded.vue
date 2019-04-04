@@ -22,15 +22,22 @@
     <div class="document-quick-look-document-action">
         <quick-look-go-to-document-details v-bind:item="item" v-if="is_details_button_shown"/>
         <quick-look-document-action-button v-bind:item="item" v-bind:is-details-button-shown="is_details_button_shown"/>
+        <div class="document-header-spacer"></div>
+        <quick-look-delete-button v-bind:item="item"/>
     </div>
 </template>
 
 <script>
 import QuickLookDocumentActionButton from "./QuickLookDocumentActionButton.vue";
 import QuickLookGoToDocumentDetails from "./QuickLookGoToDocumentDetails.vue";
+import QuickLookDeleteButton from "./QuickLookDeleteButton.vue";
 
 export default {
-    components: { QuickLookDocumentActionButton, QuickLookGoToDocumentDetails },
+    components: {
+        QuickLookDocumentActionButton,
+        QuickLookGoToDocumentDetails,
+        QuickLookDeleteButton
+    },
     props: {
         item: Object
     },
