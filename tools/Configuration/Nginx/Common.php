@@ -77,21 +77,34 @@ class Common
 
         $this->createDirectoryIfNotExists($tuleap_plugins_dir);
 
-        $plugin_conf_template = file_get_contents($this->tuleap_base_dir.'/src/etc/nginx/plugin.conf.dist');
         foreach (new DirectoryIterator($this->tuleap_base_dir.'/plugins') as $file) {
             if (! $file->isDot()) {
-                $plugin = $file->getBasename();
-                $conf_file = $file->getPathname().'/etc/nginx/'.$plugin.'.conf';
-                $plugin_conf_file = $tuleap_plugins_dir.'/'.basename($conf_file);
+                $plugin           = $file->getBasename();
+                $conf_file        = $file->getPathname() . '/etc/nginx/' . $plugin . '.conf';
+                $plugin_conf_file = $tuleap_plugins_dir . '/' . basename($conf_file);
                 if (is_file($conf_file)) {
                     copy($conf_file, $plugin_conf_file);
-                } else {
-                    if (is_dir($file->getPathname().'/www')) {
-                        file_put_contents($plugin_conf_file, str_replace('%name%', $plugin, $plugin_conf_template));
+                } elseif (is_dir($file->getPathname().'/www')) {
+                    if (is_file($file->getPathname().'/.use-front-controller')) {
+                        $this->writeFromTemplate($plugin_conf_file, $plugin, $this->tuleap_base_dir.'/src/etc/nginx/plugin-frontcontroller.conf.dist');
+                    } else {
+                        $this->writeFromTemplate($plugin_conf_file, $plugin, $this->tuleap_base_dir.'/src/etc/nginx/plugin.conf.dist');
                     }
                 }
             }
         }
+    }
+
+    private function writeFromTemplate(string $target_path, string $plugin_name, string $template_path) : void
+    {
+        file_put_contents(
+            $target_path,
+            str_replace(
+                '%name%',
+                $plugin_name,
+                file_get_contents($template_path)
+            )
+        );
     }
 
     public function deployMainNginxConf()
