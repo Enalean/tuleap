@@ -47,9 +47,11 @@ setup_tuleap() {
     -e 's#/home/groups##' \
     > /etc/tuleap/conf/local.inc
 
+    echo '$disable_forge_upgrade_warnings=1;' >> /etc/tuleap/conf/local.inc
+
     cp /usr/share/tuleap/src/utils/svn/Tuleap.pm /usr/share/perl5/vendor_perl/Apache/Tuleap.pm
     cp /usr/share/tuleap/src/utils/fileforge.pl /usr/lib/tuleap/bin/fileforge
-    }
+}
 
 setup_database() {
     MYSQL_HOST=localhost
