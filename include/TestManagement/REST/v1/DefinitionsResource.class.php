@@ -40,9 +40,6 @@ class DefinitionsResource {
     /** @var ArtifactFactory */
     private $testmanagement_artifact_factory;
 
-    /** @var Tracker_FormElementFactory */
-    private $tracker_form_element_factory;
-
     /** @var DefinitionRepresentationBuilder */
     private $definition_representation_builder;
 
@@ -59,13 +56,11 @@ class DefinitionsResource {
             $artifact_dao
         );
 
-        $this->tracker_form_element_factory = Tracker_FormElementFactory::instance();
-
         $retriever = new RequirementRetriever($artifact_factory, $artifact_dao, $config);
 
         $this->definition_representation_builder = new DefinitionRepresentationBuilder(
             $this->user_manager,
-            $this->tracker_form_element_factory,
+            Tracker_FormElementFactory::instance(),
             $conformance_validator,
             $retriever
         );
@@ -94,6 +89,9 @@ class DefinitionsResource {
     protected function getId($id) {
         $user       = $this->user_manager->getCurrentUser();
         $definition = $this->testmanagement_artifact_factory->getArtifactByIdUserCanView($user, $id);
+        if ($definition === null) {
+            throw new RestException(404, 'The test definition does not exist or is not visible');
+        }
 
         ProjectStatusVerificator::build()->checkProjectStatusAllowsOnlySiteAdminToAccessIt(
             $user,
