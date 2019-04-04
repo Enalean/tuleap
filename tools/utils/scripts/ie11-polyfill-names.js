@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2017 - 2018, Enalean. All rights reserved
+ * Copyright (c) 2017-Present, Enalean. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-const polyfills_for_fetch = ["@babel/polyfill", "whatwg-fetch"];
+const polyfills_for_fetch = ["whatwg-fetch"];
 
 module.exports = {
     polyfills_for_fetch
