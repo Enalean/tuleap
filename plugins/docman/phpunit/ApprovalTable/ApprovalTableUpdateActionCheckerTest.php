@@ -28,7 +28,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Docman\ApprovalTable\Exceptions\ItemHasApprovalTableButNoApprovalActionException;
 use Tuleap\Docman\ApprovalTable\Exceptions\ItemHasNoApprovalTableButHasApprovalActionException;
-use Tuleap\Docman\REST\v1\DocmanFilesPATCHRepresentation;
+use Tuleap\Docman\REST\v1\Files\DocmanFilesPATCHRepresentation;
 
 class ApprovalTableUpdateActionCheckerTest extends TestCase
 {

@@ -20,7 +20,7 @@
 
 declare(strict_types = 1);
 
-namespace Tuleap\Docman\REST\v1;
+namespace Tuleap\Docman\REST\v1\Files;
 
 use Docman_LockFactory;
 use Luracast\Restler\RestException;
@@ -69,7 +69,7 @@ class DocmanItemFileUpdator
     }
 
     /**
-     * @throws ExceptionItemIsLockedByAnotherUser
+     * @throws \Tuleap\Docman\REST\v1\ExceptionItemIsLockedByAnotherUser
      * @throws UploadMaxSizeExceededException
      * @throws RestException
      */

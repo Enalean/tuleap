@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,7 +20,7 @@
 
 declare(strict_types = 1);
 
-namespace Tuleap\Docman\REST\v1;
+namespace Tuleap\Docman\REST\v1\Files;
 
 class DocmanFilesPATCHRepresentation
 {
@@ -40,7 +40,7 @@ class DocmanFilesPATCHRepresentation
     public $should_lock_file;
 
     /**
-     * @var FilePropertiesPOSTPATCHRepresentation File properties must be set when creating a new file {@from body} {@type \Tuleap\Docman\REST\v1\FilePropertiesPOSTPATCHRepresentation} {@required true}
+     * @var FilePropertiesPOSTPATCHRepresentation File properties must be set when creating a new file {@from body} {@type \Tuleap\Docman\REST\v1\Files\FilePropertiesPOSTPATCHRepresentation} {@required true}
      */
     public $file_properties ;
 

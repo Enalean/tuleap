@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,16 +18,29 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Docman\REST\v1;
+namespace Tuleap\Docman\REST\v1\Files;
 
-final class FilePropertiesPOSTPATCHRepresentation
+class FilePropertiesRepresentation
 {
     /**
-     * @var string Name of the file {@from body} {@required true}
+     * @var string
      */
-    public $file_name;
+    public $file_type;
+
     /**
-     * @var int Size of the file {@from body} {@required true} {@min 0}
+     * @var string
+     */
+    public $download_href;
+
+    /**
+     * @var int
      */
     public $file_size;
+
+    public function build(\Docman_Version $docman_version, $download_href)
+    {
+        $this->file_type     = $docman_version->getFiletype();
+        $this->download_href = $download_href;
+        $this->file_size     = $docman_version->getFilesize();
+    }
 }

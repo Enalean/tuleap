@@ -28,6 +28,7 @@ use Docman_PermissionsManager;
 use Mockery;
 use PFUser;
 use Tuleap\Docman\Item\PaginatedDocmanItemCollection;
+use Tuleap\Docman\REST\v1\Files\FilePropertiesRepresentation;
 use Tuleap\User\REST\MinimalUserRepresentation;
 use UserManager;
 
