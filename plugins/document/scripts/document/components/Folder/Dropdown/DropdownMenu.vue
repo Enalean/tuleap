@@ -75,6 +75,15 @@
                 Approval tables
             </span>
         </a>
+        <span class="tlp-dropdown-menu-separator" role="separator"></span>
+        <a v-if="item.user_can_write"
+           v-bind:href="delete_url"
+           class="tlp-dropdown-menu-item tlp-dropdown-menu-item-danger"
+           role="menuitem"
+        >
+            <i class="fa fa-fw fa-trash-o tlp-dropdown-menu-item-icon"></i>
+            <span v-translate> Delete </span>
+        </a>
     </div>
 </template>
 <script>
@@ -103,6 +112,11 @@ export default {
         ...mapState(["project_id"]),
         is_item_type_empty() {
             return this.item.type === TYPE_EMPTY;
+        },
+        delete_url() {
+            return `/plugins/docman/?group_id=${this.project_id}&action=confirmDelete&id=${
+                this.item.id
+            }`;
         }
     },
     methods: {

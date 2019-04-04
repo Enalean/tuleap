@@ -29,6 +29,8 @@
                 <dropdown-menu v-bind:item="item" v-bind:is-in-quick-look-mode="true" v-bind:hide-item-title="true"/>
             </dropdown-button>
         </div>
+        <div class="document-header-spacer"></div>
+        <quick-look-delete-button v-bind:item="item"/>
     </div>
 </template>
 
@@ -36,10 +38,11 @@
 import NewItemButton from "../NewItem/NewItemButton.vue";
 import DropdownButton from "../Dropdown/DropdownButton.vue";
 import DropdownMenu from "../Dropdown/DropdownMenu.vue";
+import QuickLookDeleteButton from "./QuickLookDeleteButton.vue";
 
 export default {
     name: "QuickLookFileProperties",
-    components: { NewItemButton, DropdownButton, DropdownMenu },
+    components: { NewItemButton, DropdownButton, DropdownMenu, QuickLookDeleteButton },
     props: {
         item: Object
     },

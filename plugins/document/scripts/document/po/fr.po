@@ -97,6 +97,9 @@ msgstr "État de la table d’approbation actuel: {{ table_state }}"
 msgid "Cut / Copy / Paste documents"
 msgstr "Couper / Copier / Coller des documents"
 
+msgid "Delete"
+msgstr "Supprimer"
+
 msgid "Description"
 msgstr "Description"
 

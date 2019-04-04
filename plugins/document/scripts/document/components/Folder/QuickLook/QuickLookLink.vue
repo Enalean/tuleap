@@ -21,23 +21,27 @@
 <template>
     <div class="document-quick-look-document-action">
         <button type="button" class="tlp-button-primary tlp-button-small document-quick-look-action-button-margin"
-                v-on:click="redirect_url">
+                v-on:click="redirectUrl">
             <i class="fa fa-external-link tlp-button-icon"></i> <translate>Open link</translate>
         </button>
         <quick-look-document-action-button v-bind:item="item"/>
+        <div class="document-header-spacer"></div>
+        <quick-look-delete-button v-bind:item="item"/>
     </div>
 </template>
 
 <script>
 import QuickLookDocumentActionButton from "./QuickLookDocumentActionButton.vue";
+import QuickLookDeleteButton from "./QuickLookDeleteButton.vue";
+
 export default {
     name: "QuickLookLink",
-    components: { QuickLookDocumentActionButton },
+    components: { QuickLookDocumentActionButton, QuickLookDeleteButton },
     props: {
         item: Object
     },
     methods: {
-        redirect_url() {
+        redirectUrl() {
             window.location.assign(encodeURI(this.item.link_properties.html_url));
         }
     }
