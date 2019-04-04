@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -28,7 +28,7 @@ use UnexpectedValueException;
 use Url;
 use Valid_Text;
 
-class PermissionDeniedMailSender extends Error_PermissionDenied implements DispatchableWithRequest
+abstract class PermissionDeniedMailSender extends Error_PermissionDenied implements DispatchableWithRequest
 {
     /**
      * @var PlaceHolderBuilder
@@ -61,16 +61,6 @@ class PermissionDeniedMailSender extends Error_PermissionDenied implements Dispa
         }
 
         $this->processMail($request->get('msg_private_project'));
-    }
-
-    /**
-     * Returns the type of the error to manage
-     *
-     * @return String
-     */
-    public function getType()
-    {
-        return 'private_project';
     }
 
     public function returnBuildInterfaceParam()
