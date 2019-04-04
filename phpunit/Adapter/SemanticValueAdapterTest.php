@@ -28,6 +28,7 @@ require_once __DIR__ . '/../bootstrap.php';
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
+use PFUser;
 use PHPUnit\Framework\TestCase;
 use Tracker;
 use Tracker_Artifact_Changeset;
@@ -44,6 +45,11 @@ abstract class SemanticValueAdapterTest extends TestCase
 
     /** @var SemanticFieldRepository|MockInterface */
     protected $semantic_field_repository;
+
+    /**
+     * @var PFUser
+     */
+    protected $current_user;
 
     /** @before */
     protected function createInstance(): void
@@ -62,6 +68,12 @@ abstract class SemanticValueAdapterTest extends TestCase
     {
         $this->changeset = Mockery::mock(Tracker_Artifact_Changeset::class);
         $this->tracker   = Mockery::mock(Tracker::class);
+    }
+
+    /** @before */
+    public function createCurrentUser(): void
+    {
+        $this->current_user = new PFUser();
     }
 
     /**

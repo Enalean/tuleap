@@ -48,20 +48,7 @@ class AdapterPermissions
 
     public function canUserReadArtifact(PFUser $user, Tracker_Artifact $artifact): bool
     {
-        $tracker = $artifact->getTracker();
-        if ($this->isUserAdminOnProject($user, $tracker->getProject())) {
-            return true;
-        }
-        if (! $artifact->userCanView($user)) {
-            return false;
-        }
-
-        if (! $tracker->userCanView($user)) {
-            return false;
-        }
-
-        $project = $tracker->getProject();
-        return $this->canUserReadProject($user, $project);
+        return $artifact->userCanView($user);
     }
 
     public function canUserReadProject(PFUser $user, Project $project): bool

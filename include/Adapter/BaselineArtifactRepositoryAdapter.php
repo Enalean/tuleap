@@ -110,10 +110,10 @@ class BaselineArtifactRepositoryAdapter implements BaselineArtifactRepository
         Project $project,
         Tracker_Artifact_Changeset $changeset
     ): BaselineArtifact {
-        $title          = $this->semantic_value_adapter->findTitle($changeset);
-        $description    = $this->semantic_value_adapter->findDescription($changeset);
-        $initial_effort = $this->semantic_value_adapter->findInitialEffort($changeset);
-        $status         = $this->semantic_value_adapter->findStatus($changeset);
+        $title          = $this->semantic_value_adapter->findTitle($changeset, $current_user);
+        $description    = $this->semantic_value_adapter->findDescription($changeset, $current_user);
+        $initial_effort = $this->semantic_value_adapter->findInitialEffort($changeset, $current_user);
+        $status         = $this->semantic_value_adapter->findStatus($changeset, $current_user);
 
         $tracker      = $changeset->getArtifact()->getTracker();
         $tracker_id   = (int) $tracker->getId();

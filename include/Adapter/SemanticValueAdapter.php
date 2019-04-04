@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\Adapter;
 
+use PFUser;
 use Tracker_Artifact_Changeset;
 
 class SemanticValueAdapter
@@ -38,11 +39,11 @@ class SemanticValueAdapter
     /**
      * Find value of title field for a given artifact at a given date time (i.e. given change set).
      */
-    public function findTitle(Tracker_Artifact_Changeset $changeset): ?string
+    public function findTitle(Tracker_Artifact_Changeset $changeset, PFUser $current_user): ?string
     {
         $tracker     = $changeset->getTracker();
         $title_field = $this->semantic_field_repository->findTitleByTracker($tracker);
-        if ($title_field === null || ! $title_field->userCanRead()) {
+        if ($title_field === null || ! $title_field->userCanRead($current_user)) {
             return null;
         }
 
@@ -56,11 +57,11 @@ class SemanticValueAdapter
     /**
      * Find value of description field for a given artifact at a given date time (i.e. given change set).
      */
-    public function findDescription(Tracker_Artifact_Changeset $changeset): ?string
+    public function findDescription(Tracker_Artifact_Changeset $changeset, PFUser $current_user): ?string
     {
         $tracker           = $changeset->getTracker();
         $description_field = $this->semantic_field_repository->findDescriptionByTracker($tracker);
-        if ($description_field === null || ! $description_field->userCanRead()) {
+        if ($description_field === null || ! $description_field->userCanRead($current_user)) {
             return null;
         }
 
@@ -74,11 +75,11 @@ class SemanticValueAdapter
     /**
      * Find value of initial effort field for a given artifact at a given date time (i.e. given change set).
      */
-    public function findInitialEffort(Tracker_Artifact_Changeset $changeset): ?int
+    public function findInitialEffort(Tracker_Artifact_Changeset $changeset, PFUser $current_user): ?int
     {
         $tracker              = $changeset->getTracker();
         $initial_effort_field = $this->semantic_field_repository->findInitialEffortByTracker($tracker);
-        if ($initial_effort_field === null || ! $initial_effort_field->userCanRead()) {
+        if ($initial_effort_field === null || ! $initial_effort_field->userCanRead($current_user)) {
             return null;
         }
 
@@ -92,11 +93,11 @@ class SemanticValueAdapter
     /**
      * Find value of status field for a given artifact at a given date time (i.e. given change set).
      */
-    public function findStatus(Tracker_Artifact_Changeset $changeset): ?string
+    public function findStatus(Tracker_Artifact_Changeset $changeset, PFUser $current_user): ?string
     {
         $tracker      = $changeset->getTracker();
         $status_field = $this->semantic_field_repository->findStatusByTracker($tracker);
-        if ($status_field === null || ! $status_field->userCanRead()) {
+        if ($status_field === null || ! $status_field->userCanRead($current_user)) {
             return null;
         }
 

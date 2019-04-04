@@ -49,7 +49,7 @@ class SemanticValueAdapterFindInitialEffortTest extends SemanticValueAdapterTest
             ->with($field)
             ->andReturn($this->mockChangesetValue(5));
 
-        $title = $this->adapter->findInitialEffort($this->changeset);
+        $title = $this->adapter->findInitialEffort($this->changeset, $this->current_user);
 
         $this->assertEquals(5, $title);
     }
@@ -67,7 +67,7 @@ class SemanticValueAdapterFindInitialEffortTest extends SemanticValueAdapterTest
             ->with($this->tracker)
             ->andReturn($field);
 
-        $title = $this->adapter->findInitialEffort($this->changeset);
+        $title = $this->adapter->findInitialEffort($this->changeset, $this->current_user);
 
         $this->assertNull($title);
     }
@@ -81,7 +81,7 @@ class SemanticValueAdapterFindInitialEffortTest extends SemanticValueAdapterTest
             ->with($this->tracker)
             ->andReturn(null);
 
-        $title = $this->adapter->findInitialEffort($this->changeset);
+        $title = $this->adapter->findInitialEffort($this->changeset, $this->current_user);
 
         $this->assertNull($title);
     }
@@ -104,7 +104,7 @@ class SemanticValueAdapterFindInitialEffortTest extends SemanticValueAdapterTest
             ->with($field)
             ->andReturn(null);
 
-        $title = $this->adapter->findInitialEffort($this->changeset);
+        $title = $this->adapter->findInitialEffort($this->changeset, $this->current_user);
 
         $this->assertNull($title);
     }

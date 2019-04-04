@@ -49,7 +49,7 @@ class SemanticValueAdapterFindTitleTest extends SemanticValueAdapterTest
             ->with($field)
             ->andReturn($this->mockChangesetValue('Custom title'));
 
-        $title = $this->adapter->findTitle($this->changeset);
+        $title = $this->adapter->findTitle($this->changeset, $this->current_user);
 
         $this->assertEquals('Custom title', $title);
     }
@@ -67,7 +67,7 @@ class SemanticValueAdapterFindTitleTest extends SemanticValueAdapterTest
             ->with($this->tracker)
             ->andReturn($field);
 
-        $title = $this->adapter->findTitle($this->changeset);
+        $title = $this->adapter->findTitle($this->changeset, $this->current_user);
 
         $this->assertNull($title);
     }
@@ -81,7 +81,7 @@ class SemanticValueAdapterFindTitleTest extends SemanticValueAdapterTest
             ->with($this->tracker)
             ->andReturn(null);
 
-        $title = $this->adapter->findTitle($this->changeset);
+        $title = $this->adapter->findTitle($this->changeset, $this->current_user);
 
         $this->assertNull($title);
     }
@@ -104,7 +104,7 @@ class SemanticValueAdapterFindTitleTest extends SemanticValueAdapterTest
             ->with($field)
             ->andReturn(null);
 
-        $title = $this->adapter->findTitle($this->changeset);
+        $title = $this->adapter->findTitle($this->changeset, $this->current_user);
 
         $this->assertNull($title);
     }

@@ -49,7 +49,7 @@ class SemanticValueAdapterFindStatusTest extends SemanticValueAdapterTest
             ->with($this->changeset)
             ->andReturn('Custom status');
 
-        $title = $this->adapter->findStatus($this->changeset);
+        $title = $this->adapter->findStatus($this->changeset, $this->current_user);
 
         $this->assertEquals('Custom status', $title);
     }
@@ -67,7 +67,7 @@ class SemanticValueAdapterFindStatusTest extends SemanticValueAdapterTest
             ->with($this->tracker)
             ->andReturn($field);
 
-        $title = $this->adapter->findStatus($this->changeset);
+        $title = $this->adapter->findStatus($this->changeset, $this->current_user);
 
         $this->assertNull($title);
     }
@@ -81,7 +81,7 @@ class SemanticValueAdapterFindStatusTest extends SemanticValueAdapterTest
             ->with($this->tracker)
             ->andReturn(null);
 
-        $title = $this->adapter->findStatus($this->changeset);
+        $title = $this->adapter->findStatus($this->changeset, $this->current_user);
 
         $this->assertNull($title);
     }
@@ -104,7 +104,7 @@ class SemanticValueAdapterFindStatusTest extends SemanticValueAdapterTest
             ->with($this->changeset)
             ->andReturn(null);
 
-        $title = $this->adapter->findStatus($this->changeset);
+        $title = $this->adapter->findStatus($this->changeset, $this->current_user);
 
         $this->assertNull($title);
     }

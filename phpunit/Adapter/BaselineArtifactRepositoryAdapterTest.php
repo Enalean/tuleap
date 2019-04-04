@@ -62,6 +62,11 @@ class BaselineArtifactRepositoryAdapterTest extends TestCase
     /** @var ArtifactLinkRepository|MockInterface */
     private $artifact_link_adapter;
 
+    /**
+     * @var PFUser
+     */
+    private $current_user;
+
     /** @before */
     public function createInstance()
     {
@@ -79,8 +84,6 @@ class BaselineArtifactRepositoryAdapterTest extends TestCase
             $this->artifact_link_adapter
         );
     }
-
-    private $current_user;
 
     /** @before */
     public function createCurrentUser()
@@ -126,7 +129,7 @@ class BaselineArtifactRepositoryAdapterTest extends TestCase
                     'findInitialEffort' => 5
                 ]
             )
-            ->with($changeset);
+            ->with($changeset, $this->current_user);
 
         $this->artifact_link_adapter
             ->shouldReceive('findLinkedArtifactIds')
@@ -181,7 +184,7 @@ class BaselineArtifactRepositoryAdapterTest extends TestCase
                     'findInitialEffort' => 5
                 ]
             )
-            ->with($changeset);
+            ->with($changeset, $this->current_user);
 
         $this->artifact_link_adapter
             ->shouldReceive('findLinkedArtifactIds')
