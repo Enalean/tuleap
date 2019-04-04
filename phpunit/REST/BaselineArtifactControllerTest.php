@@ -35,8 +35,8 @@ use Tuleap\Baseline\BaselineArtifactService;
 use Tuleap\Baseline\BaselineService;
 use Tuleap\Baseline\CurrentUserProvider;
 use Tuleap\Baseline\Factory\BaselineFactory;
+use Tuleap\Baseline\REST\Exception\NotFoundRestException;
 use Tuleap\GlobalLanguageMock;
-use Tuleap\REST\I18NRestException;
 use Tuleap\REST\JsonDecoder;
 use Tuleap\REST\QueryParameterParser;
 use Tuleap\REST\RESTLogger;
@@ -89,8 +89,7 @@ class BaselineArtifactControllerTest extends TestCase
 
     public function testGetThrows404WhenNoArtifactFound()
     {
-        $this->expectException(I18NRestException::class);
-        $this->expectExceptionCode(404);
+        $this->expectException(NotFoundRestException::class);
 
         $this->baseline_service
             ->shouldReceive('findById')

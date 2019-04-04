@@ -38,8 +38,9 @@ use Tuleap\Baseline\CurrentUserProvider;
 use Tuleap\Baseline\Factory\BaselineArtifactFactory;
 use Tuleap\Baseline\Factory\BaselineFactory;
 use Tuleap\Baseline\NotAuthorizedException;
+use Tuleap\Baseline\REST\Exception\ForbiddenRestException;
+use Tuleap\Baseline\REST\Exception\NotFoundRestException;
 use Tuleap\GlobalLanguageMock;
-use Tuleap\REST\I18NRestException;
 
 class BaselineControllerTest extends TestCase
 {
@@ -171,8 +172,7 @@ class BaselineControllerTest extends TestCase
 
     public function testPostThrows403WhenNotAuthorized()
     {
-        $this->expectException(I18NRestException::class);
-        $this->expectExceptionCode(403);
+        $this->expectException(ForbiddenRestException::class);
 
         $this->baseline_artifact_repository
             ->shouldReceive('findById')
@@ -208,8 +208,7 @@ class BaselineControllerTest extends TestCase
 
     public function testGetByIdThrows404WhenNoBaselineFound()
     {
-        $this->expectException(I18NRestException::class);
-        $this->expectExceptionCode(404);
+        $this->expectException(NotFoundRestException::class);
 
         $this->baseline_service
             ->shouldReceive('findById')
@@ -220,8 +219,7 @@ class BaselineControllerTest extends TestCase
 
     public function testGetByIdThrows403WhenNotAuthorized()
     {
-        $this->expectException(I18NRestException::class);
-        $this->expectExceptionCode(403);
+        $this->expectException(ForbiddenRestException::class);
 
         $this->baseline_service
             ->shouldReceive('findById')
@@ -249,8 +247,7 @@ class BaselineControllerTest extends TestCase
 
     public function testDeleteThrows404WhenBaselineNotFound()
     {
-        $this->expectException(I18NRestException::class);
-        $this->expectExceptionCode(404);
+        $this->expectException(NotFoundRestException::class);
 
         $this->baseline_service
             ->shouldReceive('findById')
@@ -261,8 +258,7 @@ class BaselineControllerTest extends TestCase
 
     public function testDeleteThrows403WhenNotAllowed()
     {
-        $this->expectException(I18NRestException::class);
-        $this->expectExceptionCode(403);
+        $this->expectException(ForbiddenRestException::class);
 
         $this->baseline_service
             ->shouldReceive('findById')

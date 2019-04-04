@@ -30,7 +30,8 @@ use Tuleap\Baseline\BaselineRootArtifactNotFoundException;
 use Tuleap\Baseline\BaselineService;
 use Tuleap\Baseline\CurrentUserProvider;
 use Tuleap\Baseline\NotAuthorizedException;
-use Tuleap\REST\I18NRestException;
+use Tuleap\Baseline\REST\Exception\ForbiddenRestException;
+use Tuleap\Baseline\REST\Exception\NotFoundRestException;
 use Tuleap\REST\QueryParameterException;
 use Tuleap\REST\QueryParameterParser;
 use Tuleap\REST\RESTLogger;
@@ -70,8 +71,8 @@ class BaselineArtifactController
 
     /**
      * @return BaselineArtifactCollectionRepresentation
-     * @throws I18NRestException 403
-     * @throws I18NRestException 404
+     * @throws ForbiddenRestException
+     * @throws NotFoundRestException
      * @throws RestException 520
      */
     public function get(int $baseline_id, ?string $query): BaselineArtifactCollectionRepresentation
@@ -81,8 +82,7 @@ class BaselineArtifactController
         try {
             $baseline = $this->baseline_service->findById($current_user, $baseline_id);
             if ($baseline === null) {
-                throw new I18NRestException(
-                    404,
+                throw new NotFoundRestException(
                     sprintf(
                         dgettext('tuleap-baseline', 'No baseline found with id %u'),
                         $baseline_id
@@ -98,8 +98,7 @@ class BaselineArtifactController
                     throw new RestException(400, $ex->getMessage());
                 }
                 if (count($artifact_ids) > self::MAX_ARTIFACTS_COUNT) {
-                    throw new I18NRestException(
-                        403,
+                    throw new ForbiddenRestException(
                         sprintf(
                             dgettext('tuleap-baseline', 'No more than %u artifacts can be requested at once.'),
                             self::MAX_ARTIFACTS_COUNT
@@ -117,10 +116,9 @@ class BaselineArtifactController
             $this->logger->error('Cannot get baseline artifacts', $exception);
             throw new RestException(520);
         } catch (BaselineArtifactNotFoundException $exception) {
-            throw new I18NRestException(404, $exception->getMessage());
+            throw new NotFoundRestException($exception->getMessage());
         } catch (NotAuthorizedException $exception) {
-            throw new I18NRestException(
-                403,
+            throw new ForbiddenRestException(
                 sprintf(
                     dgettext('tuleap-baseline', 'This operation is not allowed. %s'),
                     $exception->getMessage()

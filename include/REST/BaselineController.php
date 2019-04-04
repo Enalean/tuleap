@@ -27,8 +27,9 @@ use Tuleap\Baseline\BaselineArtifactRepository;
 use Tuleap\Baseline\BaselineService;
 use Tuleap\Baseline\CurrentUserProvider;
 use Tuleap\Baseline\NotAuthorizedException;
+use Tuleap\Baseline\REST\Exception\ForbiddenRestException;
+use Tuleap\Baseline\REST\Exception\NotFoundRestException;
 use Tuleap\Baseline\TransientBaseline;
-use Tuleap\REST\I18NRestException;
 
 class BaselineController
 {
@@ -52,8 +53,8 @@ class BaselineController
     }
 
     /**
-     * @throws I18NRestException 404
-     * @throws I18NRestException 403
+     * @throws NotFoundRestException 404
+     * @throws ForbiddenRestException 403
      * @throws \Luracast\Restler\RestException
      * @throws \Rest_Exception_InvalidTokenException
      * @throws \User_PasswordExpiredException
@@ -67,8 +68,7 @@ class BaselineController
         $current_user = $this->current_user_provider->getUser();
         $artifact     = $this->baseline_artifact_repository->findById($current_user, $artifact_id);
         if ($artifact === null) {
-            throw new I18NRestException(
-                404,
+            throw new NotFoundRestException(
                 sprintf(
                     dgettext('tuleap-baseline', 'No artifact found with id %u'),
                     $artifact_id
@@ -86,8 +86,8 @@ class BaselineController
     }
 
     /**
-     * @throws I18NRestException 404
-     * @throws I18NRestException 403
+     * @throws NotFoundRestException 404
+     * @throws ForbiddenRestException 403
      */
     public function delete(int $id): void
     {
@@ -105,8 +105,8 @@ class BaselineController
     }
 
     /**
-     * @throws I18NRestException 403
-     * @throws I18NRestException 404
+     * @throws NotFoundRestException 404
+     * @throws ForbiddenRestException 403
      */
     public function getById(int $id): BaselineRepresentation
     {
@@ -123,12 +123,11 @@ class BaselineController
     }
 
     /**
-     * @throws I18NRestException 404
+     * @throws NotFoundRestException 404
      */
     private function throw404Exception($id): void
     {
-        throw new I18NRestException(
-            404,
+        throw new NotFoundRestException(
             sprintf(
                 dgettext('tuleap-baseline', 'No baseline found with id %u'),
                 $id
@@ -137,12 +136,11 @@ class BaselineController
     }
 
     /**
-     * @throws I18NRestException 403
+     * @throws ForbiddenRestException 403
      */
     private function throw403Exception($exception): void
     {
-        throw new I18NRestException(
-            403,
+        throw new ForbiddenRestException(
             sprintf(
                 dgettext('tuleap-baseline', 'This operation is not allowed. %s'),
                 $exception->getMessage()

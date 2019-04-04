@@ -27,7 +27,8 @@ use Tuleap\Baseline\BaselineService;
 use Tuleap\Baseline\CurrentUserProvider;
 use Tuleap\Baseline\NotAuthorizedException;
 use Tuleap\Baseline\ProjectRepository;
-use Tuleap\REST\I18NRestException;
+use Tuleap\Baseline\REST\Exception\ForbiddenRestException;
+use Tuleap\Baseline\REST\Exception\NotFoundRestException;
 
 class ProjectBaselineController
 {
@@ -53,8 +54,8 @@ class ProjectBaselineController
     /**
      * @return BaselinesPageRepresentation requested baseline page, excluding not authorized baselines. More over, page
      * total count is the real total count without any security filtering.
-     * @throws I18NRestException 404
-     * @throws I18NRestException 403
+     * @throws NotFoundRestException 404
+     * @throws ForbiddenRestException 403
      */
     public function get(int $project_id, int $limit, int $offset): BaselinesPageRepresentation
     {
@@ -62,8 +63,7 @@ class ProjectBaselineController
 
         $project = $this->project_repository->findById($current_user, $project_id);
         if ($project === null) {
-            throw new I18NRestException(
-                404,
+            throw new NotFoundRestException(
                 dgettext('tuleap-baseline', 'No project found with this id')
             );
         }
@@ -76,8 +76,7 @@ class ProjectBaselineController
             );
             return BaselinesPageRepresentation::build($page);
         } catch (NotAuthorizedException $exception) {
-            throw new I18NRestException(
-                403,
+            throw new ForbiddenRestException(
                 sprintf(
                     dgettext('tuleap-baseline', 'This operation is not allowed. %s'),
                     $exception->getMessage()

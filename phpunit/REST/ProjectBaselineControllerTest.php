@@ -37,8 +37,9 @@ use Tuleap\Baseline\CurrentUserProvider;
 use Tuleap\Baseline\Factory\BaselineFactory;
 use Tuleap\Baseline\NotAuthorizedException;
 use Tuleap\Baseline\ProjectRepository;
+use Tuleap\Baseline\REST\Exception\ForbiddenRestException;
+use Tuleap\Baseline\REST\Exception\NotFoundRestException;
 use Tuleap\GlobalLanguageMock;
-use Tuleap\REST\I18NRestException;
 
 class ProjectBaselineControllerTest extends TestCase
 {
@@ -114,8 +115,7 @@ class ProjectBaselineControllerTest extends TestCase
 
     public function testGetThrows404WhenNoProjectFound()
     {
-        $this->expectException(I18NRestException::class);
-        $this->expectExceptionCode(404);
+        $this->expectException(NotFoundRestException::class);
 
         $current_user = new PFUser();
         $this->current_user_provider
@@ -132,8 +132,7 @@ class ProjectBaselineControllerTest extends TestCase
 
     public function testGetThrows403WhenNotAuthorized()
     {
-        $this->expectException(I18NRestException::class);
-        $this->expectExceptionCode(403);
+        $this->expectException(ForbiddenRestException::class);
 
         $this->project_repository
             ->shouldReceive('findById')
