@@ -20,7 +20,8 @@
 
 <template>
     <button v-if="item.user_can_write" type="button" class="tlp-button-small tlp-button-outline tlp-button-danger"
-            v-on:click="redirectDeleteUrl">
+            v-on:click="redirectDeleteUrl"
+            data-test="quick-look-delete-button">
         <i class="fa fa-trash-o tlp-button-icon"></i>
         <translate>Delete</translate>
     </button>
