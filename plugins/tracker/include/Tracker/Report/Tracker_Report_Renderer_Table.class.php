@@ -2183,8 +2183,9 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
     private function canFieldBeExportedToCSV(Tracker_FormElement_Field $field) {
         return $field->isUsed()
             && $field->userCanRead()
-            && (! is_a($field, 'Tracker_FormElement_Field_ArtifactId')
-                || is_a($field, 'Tracker_FormElement_Field_PerTrackerArtifactId')
+            && ! ($field instanceof Tracker_FormElement_Field_ArtifactId
+                || $field instanceof Tracker_FormElement_Field_PerTrackerArtifactId
+                || $field instanceof Tracker_FormElement_Field_Burndown
             );
     }
 
