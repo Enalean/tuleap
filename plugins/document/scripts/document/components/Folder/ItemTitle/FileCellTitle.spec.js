@@ -56,7 +56,7 @@ describe("FileCellTitle", () => {
             title: "my corrupted embedded document",
             file_properties: {
                 file_type: "image/png",
-                html_url: "/plugins/docman/?group_id=119&action=show&id=42&switcholdui=true",
+                download_href: "/plugins/docman/download/119/42",
                 file_size: "109768"
             },
             type: TYPE_FILE

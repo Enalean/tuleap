@@ -33,6 +33,7 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 import FakeCaret from "./FakeCaret.vue";
 import { ICON_LINK } from "../../../constants.js";
 import { getTitleWithElipsisIfNeeded } from "../../../helpers/cell-title-formatter.js";
@@ -44,11 +45,9 @@ export default {
         item: Object
     },
     computed: {
+        ...mapState(["project_id"]),
         document_link_url() {
-            if (!this.item.link_properties) {
-                return;
-            }
-            return this.item.link_properties.html_url;
+            return `/plugins/docman/?group_id=${this.project_id}&action=show&id=${this.item.id}`;
         },
         icon() {
             return ICON_LINK;

@@ -31,7 +31,7 @@
                 Drop to upload a new version
             </span>
         </div>
-        <img class="document-quick-look-image" v-bind:src="item.file_properties.html_url" v-bind:alt="item.title">
+        <img class="document-quick-look-image" v-bind:src="item.file_properties.download_href" v-bind:alt="item.title">
     </div>
     <div class="document-quick-look-image-container" v-else-if="is_an_image && ! item.user_can_write">
         <div class="document-quick-look-image-overlay">
@@ -40,7 +40,7 @@
                 You are not allowed to update this file
             </span>
         </div>
-        <img class="document-quick-look-image" v-bind:src="item.file_properties.html_url" v-bind:alt="item.title">
+        <img class="document-quick-look-image" v-bind:src="item.file_properties.download_href" v-bind:alt="item.title">
     </div>
 
     <div class="document-quick-look-folder-container" v-else-if="is_a_folder && item.user_can_write">

@@ -59,7 +59,7 @@ export default {
             if (!this.item.file_properties) {
                 return;
             }
-            return this.item.file_properties.html_url;
+            return this.item.file_properties.download_href;
         },
         is_corrupted() {
             return !this.item.file_properties;

@@ -42,7 +42,7 @@ export default {
     },
     methods: {
         downloadFile() {
-            window.location.assign(encodeURI(this.item.file_properties.html_url));
+            window.location.assign(encodeURI(this.item.file_properties.download_href));
         }
     }
 };

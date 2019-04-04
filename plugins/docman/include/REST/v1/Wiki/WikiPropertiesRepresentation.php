@@ -27,14 +27,8 @@ class WikiPropertiesRepresentation
      */
     public $page_name;
 
-    /**
-     * @var string
-     */
-    public $html_url;
-
-    public function build(\Docman_Wiki $docman_wiki, $wiki_html_url)
+    public function build(\Docman_Wiki $docman_wiki)
     {
         $this->page_name = $docman_wiki->getPagename();
-        $this->html_url  = $wiki_html_url;
     }
 }

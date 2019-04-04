@@ -77,8 +77,7 @@ class ItemRepresentationVisitor implements ItemVisitor
         $wiki_representation = null;
         if ($item->getPagename() !== null) {
             $wiki_representation = new WikiPropertiesRepresentation();
-            $wiki_html_url       = $this->buildDirectAccessURL($item);
-            $wiki_representation->build($item, $wiki_html_url);
+            $wiki_representation->build($item);
         }
         return $this->item_representation_builder->buildItemRepresentation(
             $item,
@@ -110,8 +109,8 @@ class ItemRepresentationVisitor implements ItemVisitor
         $file_properties = null;
         if ($item_version) {
             $file_properties = new FilePropertiesRepresentation();
-            $download_url    = $this->buildDirectAccessURL($item);
-            $file_properties->build($item_version, $download_url);
+            $download_href    = $this->buildFileDirectAccessURL($item);
+            $file_properties->build($item_version, $download_href);
         }
         return $this->item_representation_builder->buildItemRepresentation(
             $item,
@@ -162,7 +161,7 @@ class ItemRepresentationVisitor implements ItemVisitor
         return $this->item_representation_builder->buildItemRepresentation($item, null, null);
     }
 
-    private function buildDirectAccessURL(Docman_Item $item) : string
+    private function buildFileDirectAccessURL(Docman_Item $item) : string
     {
         $parameters = ['action' => 'show', 'switcholdui' => 'true', 'group_id' => $item->getGroupId(), 'id' => $item->getId()];
         $version    = $this->docman_version_factory->getCurrentVersionForItem($item);
@@ -188,11 +187,11 @@ class ItemRepresentationVisitor implements ItemVisitor
         $latest_link_version = $this->docman_link_version_factory->getLatestVersion($item);
         $link_properties     = new LinkPropertiesRepresentation();
         if (! $latest_link_version) {
-            $link_properties->build($item->getUrl(), null);
+            $link_properties->build(null);
             return $link_properties;
         }
 
-        $link_properties->build($this->buildDirectAccessURL($item), $latest_link_version);
+        $link_properties->build($latest_link_version);
 
         return $link_properties;
     }

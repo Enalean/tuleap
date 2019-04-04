@@ -32,6 +32,7 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 import QuickLookDocumentActionButton from "./QuickLookDocumentActionButton.vue";
 import QuickLookDeleteButton from "./QuickLookDeleteButton.vue";
 
@@ -41,9 +42,16 @@ export default {
     props: {
         item: Object
     },
+    computed: {
+        ...mapState(["project_id"])
+    },
     methods: {
         wikiPageRedirect() {
-            window.location.assign(encodeURI(this.item.wiki_properties.html_url));
+            window.location.assign(
+                encodeURI(
+                    `/plugins/docman/?group_id=${this.project_id}&action=show&id=${this.item.id}`
+                )
+            );
         }
     }
 };
