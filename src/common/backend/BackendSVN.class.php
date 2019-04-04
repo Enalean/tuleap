@@ -1,7 +1,7 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2016-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -36,7 +36,7 @@ class BackendSVN extends Backend {
 
     /**
      * For mocking (unit tests)
-     * 
+     *
      * @return UGroupDao
      */
     protected function getUGroupDao() {
@@ -54,7 +54,7 @@ class BackendSVN extends Backend {
      * For mocking (unit tests)
      *
      * @param array $row a row from the db for a ugroup
-     * 
+     *
      * @return ProjectUGroup
      */
     protected function getUGroupFromRow($row) {
@@ -62,7 +62,7 @@ class BackendSVN extends Backend {
     }
     /**
      * For mocking (unit tests)
-     * 
+     *
      * @return ServiceDao
      */
     function _getServiceDao() {
@@ -78,7 +78,7 @@ class BackendSVN extends Backend {
 
     /**
      * Wrapper for Config
-     * 
+     *
      * @return ForgeConfig
      */
     protected function getConfig($var) {
@@ -88,9 +88,9 @@ class BackendSVN extends Backend {
     /**
      * Create project SVN repository
      * If the directory already exists, nothing is done.
-     * 
+     *
      * @param int $group_id The id of the project to work on
-     * 
+     *
      * @return boolean true if repo is successfully created, false otherwise
      */
     public function createProjectSVN($group_id) {
@@ -277,9 +277,9 @@ class BackendSVN extends Backend {
     /**
      * Put in place the svn post-commit hook for email notification
      * if not present (if the file does not exist it is created)
-     * 
+     *
      * @param Project $project The project to work on
-     * 
+     *
      * @return boolean true on success or false on failure
      */
     public function updateHooks(Project $project, $system_path, $can_change_svn_log, $hook_commit_path, $post_commit_file, $post_commit_launcher, $pre_commit_file) {
@@ -532,7 +532,7 @@ class BackendSVN extends Backend {
             $this->log("Can't update SVN Access file: project SVN repo is missing: ".$project->getSVNRootPath(), Backend::LOG_ERROR);
             return false;
         }
-        
+
         $svnaccess_file = $project->getSVNRootPath()."/.SVNAccessFile";
 
         if (!is_file($svnaccess_file)) {
@@ -584,18 +584,22 @@ class BackendSVN extends Backend {
      *
      * @return String
      */
-    function getSVNAccessUserGroupMembers(Project $project) {
-        $conf            = "";
-        $ugroup_dao      = $this->getUGroupDao();
-        $dar             = $ugroup_dao->searchByGroupId($project->getId());
-        $project_members = $project->getMembers($this->getUGroupManager());
+    function getSVNAccessUserGroupMembers(Project $project)
+    {
+        $conf       = "";
+        $ugroup_dao = $this->getUGroupDao();
+        $dar        = $ugroup_dao->searchByGroupId($project->getId());
+
         foreach ($dar as $row) {
             $ugroup          = $this->getUGroupFromRow($row);
             $ugroup_members  = $ugroup->getMembers();
             $valid_members   = array();
             foreach ($ugroup_members as $ugroup_member) {
-                if ($project->isPublic() || in_array($ugroup_member, $project_members)) {
+                try {
+                    $this->getProjectAccessChecker()->checkUserCanAccessProject($ugroup_member, $project);
                     $valid_members[] = $ugroup_member->getUserName();
+                } catch (Project_AccessException $exception) {
+                    //do not add user
                 }
             }
             // User names must be in lowercase
@@ -606,6 +610,14 @@ class BackendSVN extends Backend {
         }
         $conf .= "\n";
         return $conf;
+    }
+
+    protected function getProjectAccessChecker()
+    {
+        return new \Tuleap\Project\ProjectAccessChecker(
+            PermissionsOverrider_PermissionsOverriderManager::instance(),
+            new \Tuleap\Project\RestrictedUserCanAccessProjectVerifier()
+        );
     }
 
     /**
@@ -628,17 +640,17 @@ class BackendSVN extends Backend {
 
     /**
      * Update SVN access files into all projects that a given user belongs to
-     * 
+     *
      * It includes:
-     * + projects the user is member of 
+     * + projects the user is member of
      * + projects that have user groups that contains the user
-     * 
+     *
      * @param PFUser $user
-     * 
+     *
      * @return Boolean
      */
     public function updateSVNAccessForGivenMember($user) {
-        $projects = $user->getAllProjects(); 
+        $projects = $user->getAllProjects();
         if (isset($projects)) {
             foreach ($projects as $groupId) {
                 $project = $this->getProjectManager()->getProject($groupId);
@@ -650,9 +662,9 @@ class BackendSVN extends Backend {
 
     /**
      * Update SVNAccessFile of a project
-     * 
+     *
      * @param Project $project The project to update
-     * 
+     *
      * @return Boolean
      */
     public function updateProjectSVNAccessFile(Project $project) {
@@ -673,7 +685,7 @@ class BackendSVN extends Backend {
 
     /**
      * Say if apache conf need update
-     * 
+     *
      * @return boolean
      */
     public function getSVNApacheConfNeedUpdate() {
@@ -681,9 +693,9 @@ class BackendSVN extends Backend {
     }
 
     /**
-     * Add Subversion DAV definition for all projects in a dedicated Apache 
+     * Add Subversion DAV definition for all projects in a dedicated Apache
      * configuration file
-     * 
+     *
      * @return boolean true on success or false on failure
      */
     public function generateSVNApacheConf() {
@@ -721,19 +733,19 @@ class BackendSVN extends Backend {
 
         return $conf->getFullConf();
     }
-    
+
     protected function getSVNApacheAuthFactory() {
         return new SVN_Apache_Auth_Factory(
             EventManager::instance(),
             $this->getSVNCacheParameters()
         );
     }
-    
+
     /**
      * Archive SVN repository: stores a tgz in temp dir, and remove the directory
      *
      * @param int $group_id The id of the project to work on
-     * 
+     *
      * @return boolean true on success or false on failure
      */
     public function archiveProjectSVN($group_id) {
@@ -754,13 +766,13 @@ class BackendSVN extends Backend {
         }
         return true;
     }
-    
+
     /**
      * Make the cvs repository of the project private or public
-     * 
+     *
      * @param Project $project    The project to work on
      * @param boolean $is_private true if the repository is private
-     * 
+     *
      * @return boolean true if success
      */
     public function setSVNPrivacy(Project $project, $is_private) {
@@ -770,11 +782,11 @@ class BackendSVN extends Backend {
     }
 
 
-    /** 
-     * Check ownership/mode/privacy of repository 
-     * 
+    /**
+     * Check ownership/mode/privacy of repository
+     *
      * @param Project $project The project to work on
-     * 
+     *
      * @return boolean true if success
      */
     public function checkSVNMode(Project $project) {
@@ -787,12 +799,12 @@ class BackendSVN extends Backend {
                 $this->log("Restoring privacy on SVN dir: $svnroot", Backend::LOG_WARNING);
                $this->setSVNPrivacy($project, $is_private);
             }
-        } 
+        }
         // Sometimes, there might be a bad ownership on file (e.g. chmod failed, maintenance done as root...)
         $files_to_check=array('db/current', 'hooks/pre-commit', 'hooks/post-commit', 'db/rep-cache.db');
         $need_owner_update = false;
         foreach ($files_to_check as $file) {
-            // Get file stat 
+            // Get file stat
             if (file_exists("$svnroot/$file")) {
                 $stat = stat("$svnroot/$file");
                 if ( ($stat['uid'] != $this->getHTTPUserUID())
@@ -834,22 +846,22 @@ class BackendSVN extends Backend {
 
     /**
      * Check if given name is not used by a repository or a file or a link
-     * 
+     *
      * @param String $name
-     * 
+     *
      * @return false if repository or file  or link already exists, true otherwise
      */
     function isNameAvailable($name) {
         $path = $GLOBALS['svn_prefix']."/".$name;
         return (!$this->fileExists($path));
     }
-    
+
     /**
      * Rename svn repository (following project unix_name change)
-     * 
+     *
      * @param Project $project
      * @param String  $newName
-     * 
+     *
      * @return Boolean
      */
     public function renameSVNRepository(Project $project, $newName) {

@@ -17,7 +17,7 @@
 ## along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 ##
 
-## This script has been written against the Redmine 
+## This script has been written against the Redmine
 ## see <http://www.redmine.org/projects/redmine/repository/entry/trunk/extra/svn/Redmine.pm>
 
 package Apache::Authn::Tuleap;
@@ -505,7 +505,7 @@ sub can_user_access_project {
     JOIN user_group ON user_group.user_id=user.user_id
     JOIN groups ON user_group.group_id = groups.group_id
         AND groups.status = 'A'
-    WHERE user.status='R' AND user_name=? AND user_group.group_id=?;
+    WHERE user.status='R' AND user_name=? AND user_group.group_id=? AND groups.access <> 'private-wo-restr';
 EOF
     my $statement = $dbh->prepare($query);
     $statement->bind_param(1, $username, SQL_VARCHAR);

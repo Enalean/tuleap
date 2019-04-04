@@ -167,6 +167,7 @@ class SvnPlugin extends Plugin
         $this->addHook('plugin_statistics_disk_usage_service_label');
         $this->addHook('plugin_statistics_color');
         $this->addHook('SystemEvent_USER_RENAME', 'systemevent_user_rename');
+        $this->addHook(SystemEvent_PROJECT_IS_PRIVATE::class, 'changeProjectRepositoriesAccess');
         $this->addHook(Event::GET_REFERENCE);
         $this->addHook(Event::SVN_REPOSITORY_CREATED);
         $this->addHook(ProjectCreator::PROJECT_CREATION_REMOVE_LEGACY_SERVICES);
@@ -276,6 +277,15 @@ class SvnPlugin extends Plugin
         $old_ugroup_name = null;
 
         $this->updateAllAccessFileOfProject($project, $new_ugroup_name, $old_ugroup_name);
+    }
+
+    /** @see SystemEvent_PROJECT_IS_PRIVATE */
+    public function changeProjectRepositoriesAccess(array $params)
+    {
+        $project_id = $params[0];
+        $project = ProjectManager::instance()->getProject($project_id);
+
+        $this->updateAllAccessFileOfProject($project, null, null);
     }
 
     public function systemevent_user_rename(array $params)
