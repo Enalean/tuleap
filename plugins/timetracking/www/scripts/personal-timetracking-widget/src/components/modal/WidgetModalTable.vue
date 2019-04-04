@@ -26,7 +26,7 @@
                 <th v-translate> Times </th>
             </tr>
         </thead>
-        <tbody>
+        <tbody v-if="has_times_on_artifact">
             <widget-modal-edit-time
                 v-if="is_add_mode"
                 v-on:swapMode="setAddMode"
@@ -38,7 +38,19 @@
                 v-bind:time-data="time"
             />
         </tbody>
-        <tfoot>
+        <tbody v-else>
+            <widget-modal-edit-time
+                v-if="is_add_mode"
+                v-on:swapMode="setAddMode"
+                v-on:validateTime="addNewTime"
+            />
+            <tr>
+                <td colspan="4" class="tlp-table-cell-empty" v-translate>
+                    No tracked times have been found for this period and artifact
+                </td>
+            </tr>
+        </tbody>
+        <tfoot v-if="has_times_on_artifact">
             <tr>
                 <th></th>
                 <th></th>
@@ -58,7 +70,10 @@ export default {
     components: { WidgetModalRow, WidgetModalEditTime },
     computed: {
         ...mapState(["is_add_mode", "current_times"]),
-        ...mapGetters(["get_formatted_aggregated_time"])
+        ...mapGetters(["get_formatted_aggregated_time"]),
+        has_times_on_artifact() {
+            return this.current_times[0].minutes;
+        }
     },
     methods: {
         setAddMode() {

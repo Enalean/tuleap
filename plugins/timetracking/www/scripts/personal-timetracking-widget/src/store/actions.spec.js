@@ -24,7 +24,12 @@
 import * as actions from "./actions.js";
 import { rewire$loadFirstBatchOfTimes } from "./actions.js";
 import { tlp, mockFetchError, mockFetchSuccess } from "tlp-mocks";
-import { REST_FEEDBACK_ADD, REST_FEEDBACK_EDIT, ERROR_OCCURRED } from "../../../constants.js";
+import {
+    REST_FEEDBACK_ADD,
+    REST_FEEDBACK_EDIT,
+    REST_FEEDBACK_DELETE,
+    ERROR_OCCURRED
+} from "../../../constants.js";
 
 describe("Store actions", () => {
     let context;
@@ -207,6 +212,53 @@ describe("Store actions", () => {
                 expect(context.commit).toHaveBeenCalledWith("replaceInCurrentTimes", [
                     time,
                     REST_FEEDBACK_EDIT
+                ]);
+                expect(loadFirstBatchOfTimes).toHaveBeenCalled();
+                expect(context.commit).not.toHaveBeenCalledWith("setRestFeedback");
+            });
+        });
+
+        describe("deleteTime - rest errors", () => {
+            it("Given a rest error, When a json error message is received, Then it should add the json error message on rest_feedback", async () => {
+                mockFetchError(tlp.del, {
+                    error_json: {
+                        error: {
+                            code: 403,
+                            message: "Forbidden"
+                        }
+                    }
+                });
+
+                await actions.deleteTime(context, 1);
+                expect(context.commit).toHaveBeenCalledWith("setRestFeedback", [
+                    "403 Forbidden",
+                    "danger"
+                ]);
+            });
+
+            it("Given a rest error ,When no error message is provided, Then it should add a generic error message on rest_feedback", async () => {
+                mockFetchError(tlp.del, {});
+
+                await actions.deleteTime(context, 1);
+                expect(context.commit).toHaveBeenCalledWith("setRestFeedback", [
+                    ERROR_OCCURRED,
+                    "danger"
+                ]);
+            });
+        });
+
+        describe("deleteTime - success", () => {
+            it("Given no rest error, then a success message is displayed", async () => {
+                const loadFirstBatchOfTimes = jasmine.createSpy("loadFirstBatchOfTimes");
+                rewire$loadFirstBatchOfTimes(loadFirstBatchOfTimes);
+
+                mockFetchSuccess(tlp.del, {});
+
+                const time_id = 1;
+                await actions.deleteTime(context, time_id);
+                expect(context.commit).toHaveBeenCalledWith("deleteInCurrentTimes", [
+                    time_id,
+                    REST_FEEDBACK_DELETE
                 ]);
                 expect(loadFirstBatchOfTimes).toHaveBeenCalled();
                 expect(context.commit).not.toHaveBeenCalledWith("setRestFeedback");
