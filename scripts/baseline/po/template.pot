@@ -5,13 +5,7 @@ msgstr ""
 "Generated-By: easygettext\n"
 "Project-Id-Version: \n"
 
-msgid "%(month)s %(day)s, %(year)s at %(hours)sh %(minutes)smn %(seconds)ss"
-msgstr ""
-
 msgid "Actions"
-msgstr ""
-
-msgid "April"
 msgstr ""
 
 msgid "Artifact added"
@@ -21,9 +15,6 @@ msgid "Artifacts deleted"
 msgstr ""
 
 msgid "Artifacts modified"
-msgstr ""
-
-msgid "August"
 msgstr ""
 
 msgid "Author"
@@ -85,13 +76,7 @@ msgstr ""
 msgid "Created by"
 msgstr ""
 
-msgid "December"
-msgstr ""
-
 msgid "Epics"
-msgstr ""
-
-msgid "February"
 msgstr ""
 
 msgid "Id"
@@ -100,22 +85,7 @@ msgstr ""
 msgid "Initial effort"
 msgstr ""
 
-msgid "January"
-msgstr ""
-
-msgid "July"
-msgstr ""
-
-msgid "Jun"
-msgstr ""
-
 msgid "Linked artifacts are skipped because depth limit has been reached."
-msgstr ""
-
-msgid "March"
-msgstr ""
-
-msgid "May"
 msgstr ""
 
 msgid "Milestone"
@@ -145,12 +115,6 @@ msgstr ""
 msgid "No other baseline available on same artifact."
 msgstr ""
 
-msgid "November"
-msgstr ""
-
-msgid "October"
-msgstr ""
-
 msgid "Only open milestone are visible here"
 msgstr ""
 
@@ -161,9 +125,6 @@ msgid "Please choose two baselines to compare"
 msgstr ""
 
 msgid "Reference…"
-msgstr ""
-
-msgid "September"
 msgstr ""
 
 msgid "Show comparison"
