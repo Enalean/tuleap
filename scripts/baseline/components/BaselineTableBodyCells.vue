@@ -39,6 +39,7 @@
                 <button
                     v-on:click="showBaseline(baseline)"
                     class="tlp-button-small tlp-button-primary tlp-button-outline"
+                    v-translate
                 >
                     Consult
                 </button>

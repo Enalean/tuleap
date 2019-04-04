@@ -70,6 +70,9 @@ msgstr ""
 msgid "Comparisons"
 msgstr ""
 
+msgid "Consult"
+msgstr ""
+
 msgid "Create baseline"
 msgstr ""
 

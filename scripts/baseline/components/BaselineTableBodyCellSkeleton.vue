@@ -32,6 +32,7 @@
             <button class="tlp-button-small tlp-button-primary tlp-button-outline"
                     key="consult-skeleton"
                     disabled
+                    v-translate
             >
                 Consult
             </button>

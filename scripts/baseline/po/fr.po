@@ -80,6 +80,9 @@ msgstr "Comparer des baselines"
 msgid "Comparisons"
 msgstr "Comparaisons"
 
+msgid "Consult"
+msgstr "Consulter"
+
 msgid "Create baseline"
 msgstr "Créer baseline"
 
