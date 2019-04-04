@@ -61,7 +61,7 @@ class Presenter
     }
 
     public function link_page_title() {
-        return sprintf(dgettext('tuleap-openidconnectclient', 'Link a %1$s account'), ForgeConfig::get('sys_name'));
+        return dgettext('tuleap-openidconnectclient', 'Link an account');
     }
 
     public function link_page_title_to() {
@@ -83,7 +83,7 @@ class Presenter
     }
 
     public function or_label() {
-        return sprintf(dgettext('tuleap-openidconnectclient', 'or'), ForgeConfig::get('sys_name'));
+        return dgettext('tuleap-openidconnectclient', 'or');
     }
 
     public function register() {

@@ -190,7 +190,7 @@ class Controller {
             $this->provider_manager->update($updated_provider);
         } catch (ProviderDataAccessException $ex) {
             $this->redirectAfterFailure(
-                dgettext('tuleap-openidconnectclient', 'An error occured while updating the provider %1$s.')
+                dgettext('tuleap-openidconnectclient', 'An error occured while updating the provider.')
             );
         } catch (ProviderMalformedDataException $ex) {
             $this->redirectAfterFailure(

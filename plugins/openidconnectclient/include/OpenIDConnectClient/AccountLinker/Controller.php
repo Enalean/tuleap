@@ -22,7 +22,6 @@ namespace Tuleap\OpenIDConnectClient\AccountLinker;
 
 use Exception;
 use Feedback;
-use ForgeConfig;
 use HTTPRequest;
 use PFUser;
 use TemplateRendererFactory;
@@ -87,7 +86,10 @@ class Controller {
         $renderer                = TemplateRendererFactory::build()->getRenderer(OPENIDCONNECTCLIENT_TEMPLATE_DIR);
 
         $GLOBALS['HTML']->header(
-            array('title' => dgettext('tuleap-openidconnectclient', 'Link a %1$s account'), 'body_class' => array('openid-connect-link'))
+            [
+                'title'      => dgettext('tuleap-openidconnectclient', 'Link an account'),
+                'body_class' => ['openid-connect-link']
+            ]
         );
         $renderer->renderToPage('linker', $presenter);
         $GLOBALS['HTML']->footer(array('without_content' => true));
