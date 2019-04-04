@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -42,7 +42,8 @@ use Tuleap\Admin\ProjectTemplatesController;
 use Tuleap\Core\RSS\News\LatestNewsController;
 use Tuleap\Core\RSS\Project\LatestProjectController;
 use Tuleap\Core\RSS\Project\LatestProjectDao;
-use Tuleap\Error\PermissionDeniedMailSender;
+use Tuleap\Error\PermissionDeniedPrivateProjectMailSender;
+use Tuleap\Error\PermissionDeniedRestrictedMemberMailSender;
 use Tuleap\Error\PlaceHolderBuilder;
 use Tuleap\FRS\FileDownloadController;
 use Tuleap\Layout\SiteHomepageController;
@@ -207,7 +208,7 @@ class RouteCollector
 
     public static function postJoinPrivateProjectMail()
     {
-        return new PermissionDeniedMailSender(
+        return new PermissionDeniedPrivateProjectMailSender(
             new PlaceHolderBuilder(\ProjectManager::instance()),
             new \CSRFSynchronizerToken("/join-private-project-mail/")
         );
@@ -215,7 +216,7 @@ class RouteCollector
 
     public static function postJoinRestrictedUserMail()
     {
-        return new PermissionDeniedMailSender(
+        return new PermissionDeniedRestrictedMemberMailSender(
             new PlaceHolderBuilder(\ProjectManager::instance()),
             new \CSRFSynchronizerToken("/join-project-restricted-user-mail/")
         );
