@@ -50,12 +50,12 @@ class WebhookAddController extends WebhookController
         if ($this->dao->create($repository->getId(), $webhook_url)) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::INFO,
-                $GLOBALS['Language']->getText('plugin_git', 'settings_hooks_add_success')
+                dgettext('tuleap-git', 'Webhook added')
             );
         } else {
             $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,
-                $GLOBALS['Language']->getText('plugin_git', 'settings_hooks_add_error')
+                dgettext('tuleap-git', 'Error while adding the webhook :(')
             );
         }
 

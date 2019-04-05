@@ -116,9 +116,9 @@ class GitForkPermissionsManager {
     private function displayForkDestinationMessage($params) {
         if ($params['scope'] == 'project') {
             $project         = $this->getProjectManager()->getProject($params['group_id']);
-            $destinationHTML = $GLOBALS['Language']->getText('plugin_git', 'fork_destination_project_message',  array($project->getPublicName()));
+            $destinationHTML = sprintf(dgettext('tuleap-git', 'Into project <b>%1$s</b>'), $project->getPublicName());
         } else {
-            $destinationHTML = $GLOBALS['Language']->getText('plugin_git', 'fork_destination_personal_message');
+            $destinationHTML = dgettext('tuleap-git', 'As personal fork');
         }
         return $destinationHTML;
     }
@@ -154,8 +154,8 @@ class GitForkPermissionsManager {
     public function displayRepositoriesPermissionsForm($params, $groupId, $userName) {
         $repository_ids  = explode(',', $params['repos']);
         $sourceReposHTML = $this->displayForkSourceRepositories($repository_ids);
-        $form  = '<h2>'.$GLOBALS['Language']->getText('plugin_git', 'fork_repositories').'</h2>';
-        $form .= $GLOBALS['Language']->getText('plugin_git', 'fork_repository_message', array($sourceReposHTML));
+        $form  = '<h2>'.dgettext('tuleap-git', 'Fork repositories').'</h2>';
+        $form .= sprintf(dgettext('tuleap-git', 'You are going to fork repository: %1$s'), $sourceReposHTML);
         $form .= $this->displayForkDestinationMessage($params);
         $form .= '<h3>Set permissions for the repository to be created</h3>';
         $form .= '<form action="" method="POST">';
@@ -173,7 +173,7 @@ class GitForkPermissionsManager {
         } else {
             $form .= $this->displayAccessControlWhileForkingASingleRepository($groupId);
         }
-        $form .= '<input type="submit" class="btn btn-primary" value="'.$GLOBALS['Language']->getText('plugin_git', 'fork_repositories').'" />';
+        $form .= '<input type="submit" class="btn btn-primary" value="'.dgettext('tuleap-git', 'Fork repositories').'" />';
         $form .= '</form>';
         return $form;
     }
@@ -351,23 +351,11 @@ class GitForkPermissionsManager {
     private function getWarningContentForRegexpDisableModal(GitRepository $repository)
     {
         if ($this->regexp_retriever->areRegexpRepositoryConflitingWithPlateform($repository)) {
-            $warning[]['message'] = $GLOBALS['Language']->getText(
-                'plugin_git',
-                'warning_conflit_regexp_configuration'
-            );
-            $warning[]['message'] = $GLOBALS['Language']->getText(
-                'plugin_git',
-                'warning_conflit_regexp_configuration_part_two'
-            );
-            $warning[]['message'] = $GLOBALS['Language']->getText(
-                'plugin_git',
-                'warning_conflit_regexp_configuration_confirm'
-            );
+            $warning[]['message'] = dgettext('tuleap-git', 'The regular expressions option has been disabled at plateform level.');
+            $warning[]['message'] = dgettext('tuleap-git', 'All rules containing regular expressions will be deleted and you won\'t be able to activate the option again. If you don\'t save your modifications, the current state will still work.');
+            $warning[]['message'] = dgettext('tuleap-git', 'Please confirm your action.');
         } else {
-            $warning[]['message'] = $GLOBALS['Language']->getText(
-                'plugin_git',
-                'warning_regexp_uncheck'
-            );
+            $warning[]['message'] = dgettext('tuleap-git', 'All rules containing regular expressions will be deleted. Please confirm the desactivation of regular expressions.');
         }
 
         return $warning;

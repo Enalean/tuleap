@@ -35,13 +35,13 @@ class Presenter
 
     public function __construct($token, $project_id, $repository_id)
     {
-        $this->title           = $GLOBALS['Language']->getText('plugin_git', 'view_repo_ci_token_title');
+        $this->title           = dgettext('tuleap-git', 'Token for Continuous Integration');
         $this->token           = $token;
         $this->project_id      = $project_id;
         $this->repository_id   = $repository_id;
-        $this->generate_button = $GLOBALS['Language']->getText('plugin_git', 'regenerate_ci_token');
+        $this->generate_button = dgettext('tuleap-git', 'Reset token');
         $csrf_synchro          = new CSRFSynchronizerToken('plugins/git/?group_id='. $project_id .'&pane=citoken');
         $this->csrf            = $csrf_synchro->fetchHTMLInput();
-        $this->description     = $GLOBALS['Language']->getText('plugin_git', 'ci_token_description');
+        $this->description     = dgettext('tuleap-git', 'This token is used to authenticate CIs like Jenkins when calling the build status update APIs');
     }
 }

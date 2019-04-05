@@ -58,13 +58,13 @@ class WebhookSettingsPresenter
 
         $this->has_sections = count($sections) > 0;
 
-        $this->last_push       = $GLOBALS['Language']->getText('plugin_git', 'settings_hooks_last_push');
-        $this->url             = $GLOBALS['Language']->getText('plugin_git', 'settings_hooks_url');
-        $this->empty_hooks     = $GLOBALS['Language']->getText('plugin_git', 'settings_hooks_empty_hooks');
+        $this->last_push       = dgettext('tuleap-git', 'Last push');
+        $this->url             = dgettext('tuleap-git', 'URL');
+        $this->empty_hooks     = dgettext('tuleap-git', 'No defined webhooks yet');
 
-        $this->logs            = $GLOBALS['Language']->getText('plugin_git', 'settings_hooks_logs');
+        $this->logs            = dgettext('tuleap-git', 'Logs');
         $this->edit_hook       = $GLOBALS['Language']->getText('global', 'btn_edit');
-        $this->remove          = $GLOBALS['Language']->getText('plugin_git', 'settings_hooks_remove');
+        $this->remove          = dgettext('tuleap-git', 'Remove');
 
         $this->btn_close       = $GLOBALS['Language']->getText('global', 'btn_close');
         $this->btn_cancel      = $GLOBALS['Language']->getText('global', 'btn_cancel');

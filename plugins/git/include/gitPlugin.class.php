@@ -199,6 +199,7 @@ class GitPlugin extends Plugin
         $this->addHook('project_is_suspended');
         $this->addHook('project_is_active');
         $this->addHook('file_exists_in_data_dir',                         'file_exists_in_data_dir',                      false);
+        $this->addHook(Event::SERVICE_CLASSNAMES);
         $this->addHook(Event::SERVICE_ICON);
         $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
 
@@ -309,6 +310,11 @@ class GitPlugin extends Plugin
         return parent::getHooksAndCallbacks();
     }
 
+    public function serviceClassnames(array $params)
+    {
+        $params['classnames'][$this->getServiceShortname()] = \Tuleap\Git\GitService::class;
+    }
+
     public function export_xml_project($params)
     {
         $this->getGitExporter($params['project'])->exportToXml(
@@ -349,7 +355,7 @@ class GitPlugin extends Plugin
     public function site_admin_option_hook($params)
     {
         $params['plugins'][] = array(
-            'label' => $GLOBALS['Language']->getText('plugin_git', 'descriptor_name'),
+            'label' => dgettext('tuleap-git', 'Git'),
             'href'  => GIT_SITE_ADMIN_BASE_URL
         );
     }
@@ -667,7 +673,7 @@ class GitPlugin extends Plugin
             array(
                 Git::REFERENCE_NATURE => array(
                     'keyword' => Git::REFERENCE_KEYWORD,
-                    'label'   => $GLOBALS['Language']->getText('plugin_git', 'reference_commit_nature_key')
+                    'label'   => dgettext('tuleap-git', 'Git commit')
                 )
             )
         );
@@ -712,7 +718,7 @@ class GitPlugin extends Plugin
         $backend_gitshell = Backend::instance('Git','GitBackend', array($this->getGitRepositoryUrlManager()));
 
         if (! $backend_gitolite->isNameAvailable($newName) && ! $backend_gitshell->isNameAvailable($newName)) {
-            $error = $GLOBALS['Language']->getText('plugin_git', 'actions_name_not_available');
+            $error = dgettext('tuleap-git', 'A file already exists with this name under gitroot');
             return false;
         }
 
@@ -1022,7 +1028,7 @@ class GitPlugin extends Plugin
         if (count($remote_servers) > 0) {
             $purifier = Codendi_HTMLPurifier::instance();
             $html     = '<br />'.
-                $purifier->purify($GLOBALS['Language']->getText('plugin_git', 'push_ssh_keys_info')) .
+                $purifier->purify(dgettext('tuleap-git', 'Old keys need to be pushed manually. All new keys are automatically pushed to the following Gerrit servers:')) .
                 '<ul>';
 
             foreach ($remote_servers as $server) {
@@ -1037,8 +1043,8 @@ class GitPlugin extends Plugin
                 <form action="" method="post">
                     <input type="submit"
                         class="btn btn-small"
-                        title="'. $purifier->purify($GLOBALS['Language']->getText('plugin_git', 'push_ssh_keys_button_title')) .'"
-                        value="'. $purifier->purify($GLOBALS['Language']->getText('plugin_git', 'push_ssh_keys_button_value')) .'"
+                        title="'. $purifier->purify(dgettext('tuleap-git', 'Push SSH keys to remote servers')) .'"
+                        value="'. $purifier->purify(dgettext('tuleap-git', 'Manually push SSH keys')) .'"
                         name="ssh_key_push"/>
                 </form>';
         }
@@ -1065,7 +1071,7 @@ class GitPlugin extends Plugin
                 $user
             );
         } catch (Git_UserSynchronisationException $e) {
-            $message = $GLOBALS['Language']->getText('plugin_git','push_ssh_keys_error');
+            $message = dgettext('tuleap-git', 'Error pushing SSH Keys. Please add them manually.');
             $GLOBALS['Response']->addFeedback('error', $message);
 
             $this->getLogger()->error('Unable to push ssh keys: ' . $e->getMessage());
@@ -1088,13 +1094,13 @@ class GitPlugin extends Plugin
         if (!$params['name']) {
             switch($params['permission_type']) {
                 case 'PLUGIN_GIT_READ':
-                    $params['name'] = $GLOBALS['Language']->getText('plugin_git', 'perm_R');
+                    $params['name'] = dgettext('tuleap-git', 'Read');
                     break;
                 case 'PLUGIN_GIT_WRITE':
-                    $params['name'] = $GLOBALS['Language']->getText('plugin_git', 'perm_W');
+                    $params['name'] = dgettext('tuleap-git', 'Write');
                     break;
                 case 'PLUGIN_GIT_WPLUS':
-                    $params['name'] = $GLOBALS['Language']->getText('plugin_git', 'perm_W+');
+                    $params['name'] = dgettext('tuleap-git', 'Rewind');
                     break;
                 default:
                     break;
@@ -1282,10 +1288,10 @@ class GitPlugin extends Plugin
                     if($params['request']->valid($vRepoId)) {
                         $ci = new Git_Ci();
                         if (!$ci->saveTrigger($params['job_id'], $repositoryId)) {
-                            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git','ci_trigger_not_saved'));
+                            $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-git', 'Git trigger not saved'));
                         }
                     } else {
-                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git','ci_bad_repo_id'));
+                        $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-git', 'Bad repository id'));
                     }
                 }
             }
@@ -1312,15 +1318,15 @@ class GitPlugin extends Plugin
                     $vRepoId->required();
                     if ($params['request']->valid($vRepoId)) {
                         if (!$ci->saveTrigger($jobId, $repositoryId)) {
-                            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git','ci_trigger_not_saved'));
+                            $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-git', 'Git trigger not saved'));
                         }
                     } else {
                         if (!$ci->deleteTrigger($jobId)) {
-                            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git','ci_trigger_not_deleted'));
+                            $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-git', 'Git trigger not deleted'));
                         }
                     }
                 } else {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git','ci_bad_repo_id'));
+                    $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-git', 'Bad repository id'));
                 }
             }
         }
@@ -1337,7 +1343,7 @@ class GitPlugin extends Plugin
         if (isset($params['job_id']) && !empty($params['job_id'])) {
             $ci = new Git_Ci();
             if (!$ci->deleteTrigger($params['job_id'])) {
-                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git','ci_trigger_not_deleted'));
+                $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-git', 'Git trigger not deleted'));
             }
         }
     }
@@ -1470,7 +1476,7 @@ class GitPlugin extends Plugin
 
             $this->getGerritUmbrellaProjectManager()->recursivelyCreateUmbrellaProjects($gerrit_servers, $project);
         } catch (Git_Driver_Gerrit_Exception $exception) {
-            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_git', 'gerrit_remote_exception', $exception->getMessage()));
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, sprintf(dgettext('tuleap-git', 'An error occured while trying to access Gerrit server, maybe the server is down, please check with administrators: %1$s'), $exception->getMessage()));
         } catch (Exception $exception) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, $exception->getMessage());
         }
@@ -2209,16 +2215,16 @@ class GitPlugin extends Plugin
         $tab_content .= '<section class="tlp-pane">
         <div class="tlp-pane-container">
             <div class="tlp-pane-header">
-                <h1 class="tlp-pane-title">'. $GLOBALS['Language']->getText('plugin_git', 'archived_repositories') .'</h1>
+                <h1 class="tlp-pane-title">'. dgettext('tuleap-git', 'Deleted git repositories') .'</h1>
             </div>
             <section class="tlp-pane-section">
                 <table class="tlp-table">
                     <thead>
                         <tr>
-                            <th>'.$GLOBALS['Language']->getText('plugin_git', 'archived_repositories_name').'</th>
-                            <th>'.$GLOBALS['Language']->getText('plugin_git', 'archived_repositories_date').'</th>
-                            <th>'.$GLOBALS['Language']->getText('plugin_git', 'archived_repositories_creator').'</th>
-                            <th>'.$GLOBALS['Language']->getText('plugin_git', 'archived_repositories_date_delete').'</th>
+                            <th>'.dgettext('tuleap-git', 'Repository name').'</th>
+                            <th>'.dgettext('tuleap-git', 'Creation date').'</th>
+                            <th>'.dgettext('tuleap-git', 'Creator').'</th>
+                            <th>'.dgettext('tuleap-git', 'Deletion date').'</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -2233,13 +2239,13 @@ class GitPlugin extends Plugin
                 $tab_content .= '<td>'.$html_purifier->purify($archived_repository->getDeletionDate()).'</td>';
                 $tab_content .= '<td class="tlp-table-cell-actions">
                                     <form method="post" action="/plugins/git/"
-                                    onsubmit="return confirm(\'' . $html_purifier->purify($GLOBALS['Language']->getText('plugin_git', 'restore_confirmation'), CODENDI_PURIFIER_JS_QUOTE).'\')">
+                                    onsubmit="return confirm(\'' . $html_purifier->purify(dgettext('tuleap-git', 'Confirm restore of this Git repository'), CODENDI_PURIFIER_JS_QUOTE).'\')">
                                         ' . $params['csrf_token']->fetchHTMLInput() . '
                                         <input type="hidden" name="action" value="restore">
                                         <input type="hidden" name="group_id" value="'. $html_purifier->purify($group_id) .'">
                                         <input type="hidden" name="repo_id" value="'. $html_purifier->purify($archived_repository->getId()) .'">
                                         <button class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline">
-                                            <i class="fa fa-repeat tlp-button-icon"></i> '. $html_purifier->purify($GLOBALS['Language']->getText('plugin_git', 'archived_repositories_restore')) .'
+                                            <i class="fa fa-repeat tlp-button-icon"></i> '. $html_purifier->purify(dgettext('tuleap-git', 'Restore')) .'
                                         </button>
                                     </form>
                                  </td>';
@@ -2248,7 +2254,7 @@ class GitPlugin extends Plugin
         } else {
             $tab_content .= '<tr>
                 <td class="tlp-table-cell-empty" colspan="5">
-                    '. $GLOBALS['Language']->getText('plugin_git', 'restore_no_repo_found') .'
+                    '. dgettext('tuleap-git', 'No restorable git repositories found') .'
                 </td>
             </tr>';
         }
@@ -2323,7 +2329,7 @@ class GitPlugin extends Plugin
     public function services_truncated_emails(array $params) {
         $project = $params['project'];
         if ($project->usesService($this->getServiceShortname())) {
-            $params['services'][] = $GLOBALS['Language']->getText('plugin_git', 'service_lbl_key');
+            $params['services'][] = dgettext('tuleap-git', 'Git');
         }
     }
 

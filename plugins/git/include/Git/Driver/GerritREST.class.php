@@ -511,7 +511,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
         } catch (Guzzle\Http\Exception\ClientErrorResponseException $exception) {
             $this->logger->error('Gerrit REST driver: Cannot delete project ' . $gerrit_project_full_name . ': There are open changes');
             throw new ProjectDeletionException(
-                $GLOBALS['Language']->getText('plugin_git', 'project_deletion_open_elements')
+                dgettext('tuleap-git', 'There are open changes for this project.')
             );
         } catch (Exception $exception) {
             $this->throwGerritException("Gerrit REST driver: Cannot delete project $gerrit_project_full_name. (".$exception->getMessage().")");
@@ -708,11 +708,11 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
                     $this->getRequestOptions()
                 )
             );
-            $this->logger->info($GLOBALS['Language']->getText('plugin_git', 'gerrit_user_suspension_successful', array($user->getId(), $user->getUserName(), $server)));
+            $this->logger->info(sprintf(dgettext('tuleap-git', 'Gerrit: (%1$s) %2$s has been successfully suspended from gerrit server %3$s'), $user->getId(), $user->getUserName(), $server));
 
             return true;
         } catch (Exception $exception) {
-            $this->logger->error($GLOBALS['Language']->getText('plugin_git', 'gerrit_user_suspension_error', array($user->getId(), $user->getUserName(), $server, $exception->getMessage())));
+            $this->logger->error(sprintf(dgettext('tuleap-git', 'Error when suspending (%1$s) %2$s from gerrit server %3$s, more details : %4$s'), $user->getId(), $user->getUserName(), $server, $exception->getMessage()));
         }
     }
 }

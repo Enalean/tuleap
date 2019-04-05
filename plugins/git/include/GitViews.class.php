@@ -136,10 +136,6 @@ class GitViews extends PluginViews {
         $GLOBALS['HTML']->footer(array());
     }
 
-    public function getText($key, $params=array() ) {
-        return $GLOBALS['Language']->getText('plugin_git', $key, $params);
-    }
-
     /**
      * REPOSITORY MANAGEMENT VIEW
      */
@@ -191,13 +187,13 @@ class GitViews extends PluginViews {
         if ( $this->getController()->isAPermittedAction('save') ) :
         ?>
         <div class="confirm">
-        <h3><?php echo $this->getText('set_private_confirm'); ?></h3>
+        <h3><?php echo dgettext('tuleap-git', 'Do you confirm change of repository access to private ?'); ?></h3>
         <form id="confirm_private" method="POST" action="/plugins/git/?group_id=<?php echo $this->groupId; ?>" >
         <input type="hidden" id="action" name="action" value="set_private" />
         <input type="hidden" id="repo_id" name="repo_id" value="<?php echo $repoId; ?>" />
-        <input type="submit" id="submit" name="submit" value="<?php echo $this->getText('yes') ?>"/><span><input type="button" value="<?php echo $this->getText('no')?>" onclick="window.location='/plugins/git/?action=view&group_id=<?php echo $this->groupId;?>&repo_id=<?php echo $repoId?>'"/> </span>
+        <input type="submit" id="submit" name="submit" value="<?php echo dgettext('tuleap-git', 'Yes') ?>"/><span><input type="button" value="<?php echo dgettext('tuleap-git', 'No')?>" onclick="window.location='/plugins/git/?action=view&group_id=<?php echo $this->groupId;?>&repo_id=<?php echo $repoId?>'"/> </span>
         </form>
-        <h3><?php echo $this->getText('set_private_mails'); ?></h3>
+        <h3><?php echo dgettext('tuleap-git', 'List of mails to remove from notification'); ?></h3>
     <table>
         <?php
         $i = 0;
@@ -228,11 +224,11 @@ class GitViews extends PluginViews {
     protected function forkRepositories() {
         $params = $this->getData();
 
-        echo '<h1>'. $this->getText('fork_repositories') .'</h1>';
+        echo '<h1>'. dgettext('tuleap-git', 'Fork repositories') .'</h1>';
         if ($this->user->isMember($this->groupId)) {
-            echo $this->getText('fork_personal_repositories_desc');
+            echo dgettext('tuleap-git', '<p>You can create personal forks of any reference repositories. By default forks will end up into your personal area of this project.</p></p>');
         }
-        echo $this->getText('fork_project_repositories_desc');
+        echo dgettext('tuleap-git', '<p>You might choose to fork into another project. In this case, fork creates new "References" in the target project.<br />You need to be administrator of the target project to do so and Git service must be activated.</p>');
         if ( !empty($params['repository_list']) ) {
             echo '<form action="" method="POST">';
             echo '<input type="hidden" name="group_id" value="'. (int)$this->groupId .'" />';
@@ -244,13 +240,13 @@ class GitViews extends PluginViews {
             echo '<thead>';
             echo '<tr valign="top">';
             echo '<td class="first">';
-            echo '<label style="font-weight: bold;">'. $this->getText('fork_repositories_select') .'</label>';
+            echo '<label style="font-weight: bold;">'. dgettext('tuleap-git', 'Select repositories to fork') .'</label>';
             echo '</td>';
             echo '<td>';
-            echo '<label style="font-weight: bold;">'. $this->getText('fork_destination_project') .'</label>';
+            echo '<label style="font-weight: bold;">'. dgettext('tuleap-git', 'Choose a destination project') .'</label>';
             echo '</td>';
             echo '<td>';
-            echo '<label style="font-weight: bold;">'. $this->getText('fork_repositories_path') .'</label>';
+            echo '<label style="font-weight: bold;">'. dgettext('tuleap-git', 'Choose the path for the forks') .'</label>';
             echo '</td>';
             echo '<td class="last">&nbsp;</td>';
             echo '</tr>';
@@ -269,7 +265,7 @@ class GitViews extends PluginViews {
             }
             echo '<div>
                 <input id="choose_personal" type="radio" name="choose_destination" value="'. Git::SCOPE_PERSONAL .'" '.$options.' />
-                <label class="radio" for="choose_personal">'.$this->getText('fork_choose_destination_personal').'</label>
+                <label class="radio" for="choose_personal">'.dgettext('tuleap-git', 'Create personal repositories in this project').'</label>
             </div>';
 
             echo $this->fetchCopyToAnotherProject();
@@ -277,13 +273,13 @@ class GitViews extends PluginViews {
             echo '</td>';
 
             echo '<td>';
-            $placeholder = $this->getText('fork_repositories_placeholder');
+            $placeholder = dgettext('tuleap-git', 'Enter a path or leave it blank');
             echo '<input type="text" title="'. $placeholder .'" placeholder="'. $placeholder .'" id="fork_repositories_path" name="path" />';
             echo '<input type="hidden" id="fork_repositories_prefix" value="u/'. $this->user->getName() .'" />';
             echo '</td>';
 
             echo '<td class="last">';
-            echo '<input type="submit" class="btn btn-primary" value="'. $this->getText('fork_repositories') .'" />';
+            echo '<input type="submit" class="btn btn-primary" value="'. dgettext('tuleap-git', 'Fork repositories') .'" />';
             echo '</td>';
 
             echo '</tr></tbody></table>';
@@ -472,7 +468,7 @@ class GitViews extends PluginViews {
             $html .= '<div>
             <label class="radio">
                 <input id="choose_project" type="radio" name="choose_destination" value="project" '.$options.' />
-                '.$this->getText('fork_choose_destination_project').'</label>
+                '.dgettext('tuleap-git', 'Copy to another project').'</label>
             </div>';
 
             $html .= '<select name="to_project" id="fork_destination">';

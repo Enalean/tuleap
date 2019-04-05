@@ -31,8 +31,8 @@ class CreateWebhookModalPresenter extends WebhookModalPresenter
     {
         parent::__construct($repository);
 
-        $this->title       = $GLOBALS['Language']->getText('plugin_git', 'settings_hooks_create');
-        $this->save        = $GLOBALS['Language']->getText('plugin_git', 'settings_hooks_create');
+        $this->title       = dgettext('tuleap-git', 'Add generic webhook');
+        $this->save        = dgettext('tuleap-git', 'Add generic webhook');
         $this->webhook_url = '';
         $this->id          = '';
         $this->action      = 'add-webhook';

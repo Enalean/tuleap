@@ -45,7 +45,7 @@ class Git_PostReceiveMailManager {
         try {
             $this->dao->createNotification($repositoryId, $mail);
         } catch (PDOException $e) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git', 'dao_error_create_notification'));
+            $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-git', 'Mail to notify not added'));
             return false;
         }
         return true;
@@ -65,7 +65,7 @@ class Git_PostReceiveMailManager {
             $repository->loadNotifiedMails();
             return $repository->getBackend()->changeRepositoryMailingList($repository);
         } else {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git', 'dao_error_remove_notification'));
+            $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-git', 'Mail not removed'));
             return false;
         }
     }

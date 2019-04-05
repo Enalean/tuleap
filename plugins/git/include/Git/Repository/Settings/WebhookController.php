@@ -36,7 +36,7 @@ abstract class WebhookController extends SettingsController
         if (! $request->valid($valid_url)) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,
-                $GLOBALS['Language']->getText('plugin_git', 'actions_params_error')
+                dgettext('tuleap-git', 'Empty required parameter(s)')
             );
             $GLOBALS['Response']->redirect($redirect_url);
         }

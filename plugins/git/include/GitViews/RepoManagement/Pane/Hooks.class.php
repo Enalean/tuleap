@@ -88,7 +88,7 @@ class Hooks extends Pane
      */
     public function getTitle()
     {
-        return $GLOBALS['Language']->getText('plugin_git', 'settings_hooks_title');
+        return dgettext('tuleap-git', 'Webhooks');
     }
 
     /**
@@ -96,7 +96,7 @@ class Hooks extends Pane
      */
     public function getContent()
     {
-        $description    = $GLOBALS['Language']->getText('plugin_git', 'settings_hooks_desc');
+        $description    = dgettext('tuleap-git', 'You can define several generic webhooks.');
 
         $create_buttons       = array();
         $sections             = array();
@@ -137,7 +137,7 @@ class Hooks extends Pane
     {
         $create_buttons[] = new CreateWebhookButtonPresenter();
 
-        $label               = $GLOBALS['Language']->getText('plugin_git', 'settings_hooks_generic');
+        $label               = dgettext('tuleap-git', 'Generic webhooks');
         $webhooks_presenters = array();
 
         $webhooks = $this->webhook_factory->getWebhooksForRepository($this->repository);

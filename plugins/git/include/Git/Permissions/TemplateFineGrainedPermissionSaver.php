@@ -57,7 +57,7 @@ class TemplateFineGrainedPermissionSaver
         if ($this->dao->getPermissionIdByPatternForProject($permission->getProjectId(), $pattern)) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::WARN,
-                $GLOBALS['Language']->getText('plugin_git', 'add_permission_duplicate_pattern', $pattern)
+                sprintf(dgettext('tuleap-git', 'Pattern %1$s is already existing.'), $pattern)
             );
 
             return;

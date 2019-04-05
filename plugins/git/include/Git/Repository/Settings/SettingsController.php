@@ -48,13 +48,13 @@ abstract class SettingsController
         } catch (GitRepoNotFoundException $exception) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,
-                $GLOBALS['Language']->getText('plugin_git', 'actions_repo_not_found')
+                dgettext('tuleap-git', 'The repository does not exist')
             );
             $GLOBALS['Response']->redirect('/plugins/git/?action=index&group_id=' . $request->getProject()->getID());
         } catch (UserCannotAdministrateRepositoryException $exception) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,
-                $GLOBALS['Language']->getText('plugin_git', 'controller_access_denied')
+                dgettext('tuleap-git', 'You are not allowed to access this page')
             );
             $GLOBALS['Response']->redirect('/plugins/git/' . urlencode($request->getProject()->getUnixNameLowerCase()));
         }

@@ -458,7 +458,7 @@ class Git_Driver_GerritLegacy implements Git_Driver_Gerrit {
     private function throwMeaningfullException(Git_Driver_Gerrit_RemoteSSHCommandFailure $exception) {
         if ($this->isGerritFailure($exception)) {
             throw new ProjectDeletionException(
-                $GLOBALS['Language']->getText('plugin_git', 'project_deletion_open_elements')
+                dgettext('tuleap-git', 'There are open changes for this project.')
             );
         }
 
@@ -486,9 +486,9 @@ class Git_Driver_GerritLegacy implements Git_Driver_Gerrit {
         $query = self::COMMAND . ' set-account --inactive ' . $user->getUserName();
         try {
             $this->ssh->execute($server, $query);
-            $this->logger->info($GLOBALS['Language']->getText('plugin_git', 'gerrit_user_suspension_successful', array($user->getId(), $user->getUserName(), $server)));
+            $this->logger->info(sprintf(dgettext('tuleap-git', 'Gerrit: (%1$s) %2$s has been successfully suspended from gerrit server %3$s'), $user->getId(), $user->getUserName(), $server));
         } catch (Git_Driver_Gerrit_RemoteSSHCommandFailure $exception) {
-            $this->logger->error($GLOBALS['Language']->getText('plugin_git', 'gerrit_user_suspension_error', array($user->getId(), $user->getUserName(), $server, $exception->getStdErr())));
+            $this->logger->error(sprintf(dgettext('tuleap-git', 'Error when suspending (%1$s) %2$s from gerrit server %3$s, more details : %4$s'), $user->getId(), $user->getUserName(), $server, $exception->getStdErr()));
         }
     }
 }

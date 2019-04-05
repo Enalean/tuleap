@@ -35,44 +35,44 @@ abstract class Git_AdminMirrorPresenter extends Git_AdminPresenter {
     }
 
     public function mirror_section_title() {
-        return $GLOBALS['Language']->getText('plugin_git','mirror_section_title');
+        return dgettext('tuleap-git', 'Git mirror administration');
     }
 
     public function url_label() {
-        return $GLOBALS['Language']->getText('plugin_git','url_label');
+        return dgettext('tuleap-git', 'SSH Host');
     }
 
     public function hostname_label() {
-        return $GLOBALS['Language']->getText('plugin_git','hostname_label');
+        return dgettext('tuleap-git', 'Hostname');
     }
 
     public function owner_label() {
-        return $GLOBALS['Language']->getText('plugin_git','owner_label');
+        return dgettext('tuleap-git', 'Owner');
     }
 
     public function ssh_key_label() {
-        return $GLOBALS['Language']->getText('plugin_git','ssh_key_label');
+        return dgettext('tuleap-git', 'Owner\'s SSH Key');
     }
 
     public function pwd_label() {
-        return $GLOBALS['Language']->getText('plugin_git','pwd_label');
+        return dgettext('tuleap-git', 'Owner\'s Password');
     }
 
     public function identifier() {
-        return $GLOBALS['Language']->getText('plugin_git', 'identifier');
+        return dgettext('tuleap-git', 'Identifier');
     }
 
     public function reserved_hostnames_help() {
-        return $GLOBALS['Language']->getText('plugin_git', 'reserved_hostnames_help');
+        return dgettext('tuleap-git', 'Must be unique. The name "projects" and the hostname defined in .gitolite.rc file cannot be used.');
     }
 
     public function add_mirror() {
-        return $GLOBALS['Language']->getText('plugin_git','add_mirror');
+        return dgettext('tuleap-git', 'Add mirror');
     }
 
     public function no_specified_mirror_name()
     {
-        return $GLOBALS['Language']->getText('plugin_git','no_specified_mirror_name');
+        return dgettext('tuleap-git', 'Not specified mirror name');
     }
 
     public function btn_edit()

@@ -58,15 +58,15 @@ class WebhookPresenter
 
         $this->repository_id = $repository->getId();
 
-        $this->modal_logs_time_label = $GLOBALS['Language']->getText('plugin_git', 'settings_hooks_time_label');
-        $this->modal_logs_info_label = $GLOBALS['Language']->getText('plugin_git', 'settings_hooks_info_label');
+        $this->modal_logs_time_label = dgettext('tuleap-git', 'Time');
+        $this->modal_logs_info_label = dgettext('tuleap-git', 'Return type');
 
-        $this->remove_webhook_desc    = $GLOBALS['Language']->getText('plugin_git', 'settings_hooks_remove_webhook_desc');
-        $this->remove_webhook_confirm = $GLOBALS['Language']->getText('plugin_git', 'settings_hooks_remove_webhook_confirm');
+        $this->remove_webhook_desc    = dgettext('tuleap-git', 'You are about to remove the webhook. Please confirm your action.');
+        $this->remove_webhook_confirm = dgettext('tuleap-git', 'Confirm deletion');
         $this->remove_form_action     = GIT_BASE_URL .'/?group_id='. (int)$repository->getProjectId();
 
-        $this->logs_for   = $GLOBALS['Language']->getText('plugin_git', 'settings_hooks_logs_for', $webhook_url);
-        $this->empty_logs = $GLOBALS['Language']->getText('plugin_git', 'settings_hooks_empty_logs');
+        $this->logs_for   = sprintf(dgettext('tuleap-git', 'Logs for %1$s'), $webhook_url);
+        $this->empty_logs = dgettext('tuleap-git', 'No logs yet');
 
         if (count($hooklogs) > 0) {
             $this->purified_last_push_info = $hooklogs[0]->purified_information;

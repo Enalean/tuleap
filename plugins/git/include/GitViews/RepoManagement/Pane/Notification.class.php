@@ -67,7 +67,7 @@ class Notification extends Pane
      */
     public function getTitle()
     {
-        return $GLOBALS['Language']->getText('plugin_git', 'admin_mail');
+        return dgettext('tuleap-git', 'Notifications');
     }
 
     /**

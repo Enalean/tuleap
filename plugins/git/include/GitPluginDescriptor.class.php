@@ -28,7 +28,7 @@
 class GitPluginDescriptor extends PluginDescriptor {
     
     function __construct() {
-        parent::__construct($GLOBALS['Language']->getText('plugin_git', 'descriptor_name'), false, $GLOBALS['Language']->getText('plugin_git', 'descriptor_description'));
+        parent::__construct(dgettext('tuleap-git', 'Git'), false, dgettext('tuleap-git', 'Plugin which provides Git support for Tuleap'));
         $this->setVersionFromFile(dirname(__FILE__).'/../VERSION');
     }
 }

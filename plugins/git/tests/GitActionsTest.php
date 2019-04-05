@@ -79,13 +79,12 @@ class GitActionsTest extends TuleapTestCase {
     }
 
     function testNotificationUpdatePrefixFail() {
-        $this->gitAction->shouldReceive('getText')->with('actions_params_error')->andReturns('actions_params_error');
         $git = \Mockery::spy(\Git::class);
         $this->gitAction->setController($git);
         $gitRepository = \Mockery::spy(\GitRepository::class);
         $this->gitAction->shouldReceive('getGitRepository')->andReturns($gitRepository);
 
-        $git->shouldReceive('addError')->with('actions_params_error')->once();
+        $git->shouldReceive('addError')->with('Empty required parameter(s)')->once();
         $git->shouldReceive('addInfo')->never();
         $gitRepository->shouldReceive('setMailPrefix')->never();
         $gitRepository->shouldReceive('changeMailPrefix')->never();
@@ -95,14 +94,13 @@ class GitActionsTest extends TuleapTestCase {
     }
 
     function testNotificationUpdatePrefixPass() {
-        $this->gitAction->shouldReceive('getText')->with('mail_prefix_updated')->andReturns('mail_prefix_updated');
         $git = \Mockery::spy(\Git::class);
         $this->gitAction->setController($git);
         $gitRepository = \Mockery::spy(\GitRepository::class);
         $this->gitAction->shouldReceive('getGitRepository')->andReturns($gitRepository);
 
         $git->shouldReceive('addError')->never();
-        $git->shouldReceive('addInfo')->with('mail_prefix_updated')->once();
+        $git->shouldReceive('addInfo')->with('Mail prefix updated')->once();
         $gitRepository->shouldReceive('setMailPrefix')->once();
         $gitRepository->shouldReceive('changeMailPrefix')->once();
         $this->gitAction->shouldReceive('addData')->times(2);
@@ -111,13 +109,12 @@ class GitActionsTest extends TuleapTestCase {
     }
 
     function testNotificationAddMailFailNoRepoId() {
-        $this->gitAction->shouldReceive('getText')->with('actions_params_error')->andReturns('actions_params_error');
         $git = \Mockery::spy(\Git::class);
         $this->gitAction->setController($git);
         $gitRepository = \Mockery::spy(\GitRepository::class);
         $this->gitAction->shouldReceive('getGitRepository')->andReturns($gitRepository);
 
-        $git->shouldReceive('addError')->with('actions_params_error')->once();
+        $git->shouldReceive('addError')->with('Empty required parameter(s)')->once();
         $git->shouldReceive('addInfo')->never();
 
         $mails = array('john.doe@acme.com');
@@ -125,13 +122,12 @@ class GitActionsTest extends TuleapTestCase {
     }
 
     function testNotificationAddMailFailNoMails() {
-        $this->gitAction->shouldReceive('getText')->with('actions_params_error')->andReturns('actions_params_error');
         $git = \Mockery::spy(\Git::class);
         $this->gitAction->setController($git);
         $gitRepository = \Mockery::spy(\GitRepository::class);
         $this->gitAction->shouldReceive('getGitRepository')->andReturns($gitRepository);
 
-        $git->shouldReceive('addError')->with('actions_params_error')->once();
+        $git->shouldReceive('addError')->with('Empty required parameter(s)')->once();
         $git->shouldReceive('addInfo')->never();
 
         $this->assertFalse($this->gitAction->notificationAddMail(1, 1, null, 'a_pane'));
@@ -163,8 +159,6 @@ class GitActionsTest extends TuleapTestCase {
     }
 
     function testNotificationAddMailPartialPass() {
-        $this->gitAction->shouldReceive('getText')->with('mail_not_added', array('john.doe@acme.com'))->andReturns('mail_not_added john.doe@acme.com');
-        $this->gitAction->shouldReceive('getText')->with('mail_not_added', array('john.smith@acme.com'))->andReturns('mail_not_added john.smith@acme.com');
         $git = \Mockery::spy(\Git::class);
         $this->gitAction->setController($git);
         $gitRepository = \Mockery::spy(\GitRepository::class);
@@ -175,8 +169,8 @@ class GitActionsTest extends TuleapTestCase {
         $this->gitAction->shouldReceive('getGitRepository')->andReturns($gitRepository);
 
         $git->shouldReceive('addError')->times(2);
-        $git->shouldReceive('addError')->with('mail_not_added john.doe@acme.com')->ordered();
-        $git->shouldReceive('addError')->with('mail_not_added john.smith@acme.com')->ordered();
+        $git->shouldReceive('addError')->with('Could not remove mail john.doe@acme.com')->ordered();
+        $git->shouldReceive('addError')->with('Could not remove mail john.smith@acme.com')->ordered();
         $git->shouldReceive('addInfo')->never();
 
         $mails = array('john.doe@acme.com',
@@ -186,7 +180,6 @@ class GitActionsTest extends TuleapTestCase {
     }
 
     function testNotificationAddMailPass() {
-        $this->gitAction->shouldReceive('getText')->with('mail_added')->andReturns('mail_added');
         $git = \Mockery::spy(\Git::class);
         $this->gitAction->setController($git);
         $gitRepository = \Mockery::spy(\GitRepository::class);
@@ -197,7 +190,7 @@ class GitActionsTest extends TuleapTestCase {
         $this->gitAction->shouldReceive('getGitRepository')->andReturns($gitRepository);
 
         $git->shouldReceive('addError')->never();
-        $git->shouldReceive('addInfo')->with('mail_added')->once();
+        $git->shouldReceive('addInfo')->with('Mail added')->once();
 
         $mails = array('john.doe@acme.com',
                        'jane.doe@acme.com',
@@ -206,47 +199,43 @@ class GitActionsTest extends TuleapTestCase {
     }
 
     function testNotificationRemoveMailFailNoRepoId() {
-        $this->gitAction->shouldReceive('getText')->with('actions_params_error')->andReturns('actions_params_error');
         $git = \Mockery::spy(\Git::class);
         $this->gitAction->setController($git);
         $gitRepository = \Mockery::spy(\GitRepository::class);
         $this->gitAction->shouldReceive('getGitRepository')->andReturns($gitRepository);
 
-        $git->shouldReceive('addError')->with('actions_params_error')->once();
+        $git->shouldReceive('addError')->with('Empty required parameter(s)')->once();
         $git->shouldReceive('addInfo')->never();
 
         $this->assertFalse($this->gitAction->notificationRemoveMail(1, null, 'john.doe@acme.com', 'a_pane'));
     }
 
     function testNotificationRemoveMailFailNoMail() {
-        $this->gitAction->shouldReceive('getText')->with('actions_params_error')->andReturns('actions_params_error');
         $git = \Mockery::spy(\Git::class);
         $this->gitAction->setController($git);
         $gitRepository = \Mockery::spy(\GitRepository::class);
         $this->gitAction->shouldReceive('getGitRepository')->andReturns($gitRepository);
 
-        $git->shouldReceive('addError')->with('actions_params_error')->once();
+        $git->shouldReceive('addError')->with('Empty required parameter(s)')->once();
         $git->shouldReceive('addInfo')->never();
 
         $this->assertFalse($this->gitAction->notificationRemoveMail(1, 1, null, 'a_pane'));
     }
 
     function testNotificationRemoveMailFailMailNotRemoved() {
-        $this->gitAction->shouldReceive('getText')->with('mail_not_removed', array('john.doe@acme.com'))->andReturns('mail_not_removed john.doe@acme.com');
         $git = \Mockery::spy(\Git::class);
         $this->gitAction->setController($git);
         $gitRepository = \Mockery::spy(\GitRepository::class);
         $gitRepository->shouldReceive('notificationRemoveMail')->andReturns(false);
         $this->gitAction->shouldReceive('getGitRepository')->andReturns($gitRepository);
 
-        $git->shouldReceive('addError')->with('mail_not_removed john.doe@acme.com')->once();
+        $git->shouldReceive('addError')->with('Could not remove mail john.doe@acme.com')->once();
         $git->shouldReceive('addInfo')->never();
 
         $this->assertFalse($this->gitAction->notificationRemoveMail(1, 1, array('john.doe@acme.com'), 'a_pane'));
     }
 
     function testNotificationRemoveMailFailMailPass() {
-        $this->gitAction->shouldReceive('getText')->with('mail_removed', array('john.doe@acme.com'))->andReturns('mail_removed john.doe@acme.com');
         $git = \Mockery::spy(\Git::class);
         $this->gitAction->setController($git);
         $gitRepository = \Mockery::spy(\GitRepository::class);
@@ -254,19 +243,18 @@ class GitActionsTest extends TuleapTestCase {
         $this->gitAction->shouldReceive('getGitRepository')->andReturns($gitRepository);
 
         $git->shouldReceive('addError')->never();
-        $git->shouldReceive('addInfo')->with('mail_removed john.doe@acme.com')->once();
+        $git->shouldReceive('addInfo')->with('Mail john.doe@acme.com removed')->once();
 
         $this->assertTrue($this->gitAction->notificationRemoveMail(1, 1, array('john.doe@acme.com'), 'a_pane'));
     }
 
     function testConfirmPrivateFailNoRepoId() {
-        $this->gitAction->shouldReceive('getText')->with('actions_params_error')->andReturns('actions_params_error');
         $git = \Mockery::spy(\Git::class);
         $this->gitAction->setController($git);
         $gitRepository = \Mockery::spy(\GitRepository::class);
         $this->gitAction->shouldReceive('getGitRepository')->andReturns($gitRepository);
 
-        $git->shouldReceive('addError')->with('actions_params_error')->once();
+        $git->shouldReceive('addError')->with('Empty required parameter(s)')->once();
         $git->shouldReceive('addWarn')->never();
         $gitRepository->shouldReceive('getNonMemberMails')->never();
         $gitRepository->shouldReceive('setDescription')->never();
@@ -278,13 +266,12 @@ class GitActionsTest extends TuleapTestCase {
 
     function testConfirmPrivateFailNoAccess() {
         $gitAction = \Mockery::mock(\GitActions::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $gitAction->shouldReceive('getText')->with('actions_params_error')->andReturns('actions_params_error');
         $git = \Mockery::spy(\Git::class);
         $gitAction->setController($git);
         $gitRepository = \Mockery::spy(\GitRepository::class);
         $gitAction->shouldReceive('getGitRepository')->andReturns($gitRepository);
 
-        $git->shouldReceive('addError')->with('actions_params_error')->once();
+        $git->shouldReceive('addError')->with('Empty required parameter(s)')->once();
         $git->shouldReceive('addWarn')->never();
         $gitRepository->shouldReceive('getNonMemberMails')->never();
         $gitRepository->shouldReceive('setDescription')->never();
@@ -296,13 +283,12 @@ class GitActionsTest extends TuleapTestCase {
 
     function testConfirmPrivateFailNoDesc() {
         $gitAction = \Mockery::mock(\GitActions::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $gitAction->shouldReceive('getText')->with('actions_params_error')->andReturns('actions_params_error');
         $git = \Mockery::spy(\Git::class);
         $gitAction->setController($git);
         $gitRepository = \Mockery::spy(\GitRepository::class);
         $gitAction->shouldReceive('getGitRepository')->andReturns($gitRepository);
 
-        $git->shouldReceive('addError')->with('actions_params_error')->once();
+        $git->shouldReceive('addError')->with('Empty required parameter(s)')->once();
         $git->shouldReceive('addWarn')->never();
         $gitRepository->shouldReceive('getNonMemberMails')->never();
         $gitRepository->shouldReceive('setDescription')->never();
@@ -368,7 +354,6 @@ class GitActionsTest extends TuleapTestCase {
 
     function testConfirmPrivate() {
         $gitAction = \Mockery::mock(\GitActions::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $gitAction->shouldReceive('getText')->andReturns('set_private_warn');
         $git = \Mockery::spy(\Git::class);
         $gitAction->setController($git);
         $gitRepository = \Mockery::spy(\GitRepository::class);
@@ -376,7 +361,7 @@ class GitActionsTest extends TuleapTestCase {
         $gitAction->shouldReceive('getGitRepository')->andReturns($gitRepository);
 
         $git->shouldReceive('addError')->never();
-        $git->shouldReceive('addWarn')->with('set_private_warn')->once();
+        $git->shouldReceive('addWarn')->with('Making the repository access private will remove notification for all mail addresses that doesn\'t correspond to a user member of this project.')->once();
         $gitRepository->shouldReceive('getNonMemberMails')->once()->andReturns(array('john.doe@acme.com'));
         $gitRepository->shouldReceive('setDescription')->once();
         $gitRepository->shouldReceive('save')->once();

@@ -114,12 +114,12 @@ class Git_LastPushesGraph {
         $graph->SetScale('textint');
         $graph->img->SetMargin(40, 20, 20, 80 + 16 * $graph_margin);
         $graph->SetMarginColor('white');
-        $graph->title->Set($GLOBALS['Language']->getText('plugin_git', 'widget_project_pushes_title'));
+        $graph->title->Set(dgettext('tuleap-git', 'Last Git pushes'));
         $graph->xaxis->SetLabelMargin(30);
         $graph->xaxis->SetLabelAlign('right', 'center');
         $graph->xaxis->SetTickLabels($this->dates);
         $graph->yaxis->SetPos('min');
-        $graph->yaxis->SetTitle($GLOBALS['Language']->getText('plugin_git', 'widget_project_pushes_label'), 'center');
+        $graph->yaxis->SetTitle(dgettext('tuleap-git', 'Pushes'), 'center');
         $graph->yaxis->title->SetAngle(90);
         $graph->yaxis->title->Align('center', 'top');
         $graph->yaxis->SetTitleMargin(30);
@@ -231,7 +231,7 @@ class Git_LastPushesGraph {
         if ($this->displayChart) {
             $this->displayAccumulatedGraph($bplot, $graph);
         } else {
-            $graph->displayMessage($GLOBALS['Language']->getText('plugin_git', 'widget_project_pushes_error', $this->weeksNumber));
+            $graph->displayMessage(sprintf(dgettext('tuleap-git', 'There is no logged pushes in the last %1$s week(s)'), $this->weeksNumber));
         }
         die();
     }

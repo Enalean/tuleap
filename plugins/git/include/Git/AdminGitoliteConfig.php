@@ -111,7 +111,7 @@ class Git_AdminGitoliteConfig {
             default:
                 $GLOBALS['Response']->addFeedback(
                     'error',
-                    $GLOBALS['Language']->getText('plugin_git', 'regenerate_config_bad_request')
+                    dgettext('tuleap-git', 'Bad request.')
                 );
         }
 
@@ -125,7 +125,7 @@ class Git_AdminGitoliteConfig {
         if (! $project) {
             $GLOBALS['Response']->addFeedback(
                 'error',
-                $GLOBALS['Language']->getText('plugin_git', 'regenerate_config_project_not_exist')
+                dgettext('tuleap-git', 'Project does not exist.')
             );
             return;
         }
@@ -134,7 +134,7 @@ class Git_AdminGitoliteConfig {
 
         $GLOBALS['Response']->addFeedback(
             'info',
-            $GLOBALS['Language']->getText('plugin_git', 'regenerate_config_waiting', array($project->getPublicName()))
+            sprintf(dgettext('tuleap-git', 'Regenerating Gitolite config for project %1$s. Please wait few minutes.'), $project->getPublicName())
         );
     }
 
@@ -153,7 +153,7 @@ class Git_AdminGitoliteConfig {
         $this->system_event_manager->queueMigrateToTuleapSSHKeyManagement();
         $GLOBALS['Response']->addFeedback(
             Feedback::INFO,
-            $GLOBALS['Language']->getText('plugin_git', 'migrate_to_tuleap_ssh_keys_management_feedback')
+            dgettext('tuleap-git', 'The migration to Tuleap SSH keys management has been started and will be done in a few minutes')
         );
     }
 
@@ -213,7 +213,7 @@ class Git_AdminGitoliteConfig {
     }
 
     public function display(Codendi_Request $request) {
-        $title    = $GLOBALS['Language']->getText('plugin_git', 'descriptor_name');
+        $title    = dgettext('tuleap-git', 'Git');
         $template_path = dirname(GIT_BASE_DIR).'/templates';
 
         $GLOBALS['HTML']->includeFooterJavascriptFile($this->include_assets->getFileURL('admin-gitolite.js'));

@@ -141,11 +141,7 @@ class GitRepositoryManager {
     private function initRepository(GitRepository $repository, GitRepositoryCreator $creator) {
         if (!$creator->isNameValid($repository->getName())) {
             throw new GitRepositoryNameIsInvalidException(
-                $GLOBALS['Language']->getText(
-                'plugin_git',
-                'actions_input_format_error',
-                array($creator->getAllowedCharsInNamePattern(), GitDao::REPO_NAME_MAX_LENGTH)
-            ));
+                sprintf(dgettext('tuleap-git', 'Repository name is not well formatted. Allowed characters: %1$s and max length is %2$s, no slashes at the beginning or the end, it also must not finish with ".git".'), $creator->getAllowedCharsInNamePattern(), GitDao::REPO_NAME_MAX_LENGTH));
         }
 
         $this->assertRepositoryNameNotAlreadyUsed($repository);
@@ -286,7 +282,7 @@ class GitRepositoryManager {
 
             $this->git_system_event_manager->queueRepositoryFork($repository, $clone);
         } else {
-            throw new Exception($GLOBALS['Language']->getText('plugin_git', 'actions_no_repository_forked'));
+            throw new Exception(dgettext('tuleap-git', 'No repository has been forked.'));
         }
 
         $this->mirrorForkedRepository($clone, $repository);
@@ -328,7 +324,7 @@ class GitRepositoryManager {
     {
         if ($this->isRepositoryNameAlreadyUsed($repository)) {
             throw new GitRepositoryAlreadyExistsException(
-                $GLOBALS['Language']->getText('plugin_git', 'actions_create_repo_exists', [$repository->getName()])
+                sprintf(dgettext('tuleap-git', 'Repository %1$s already exists or would override an existing path'), $repository->getName())
             );
         }
     }
@@ -352,7 +348,7 @@ class GitRepositoryManager {
         if (count($repos) > 0 && $this->isNamespaceValid($repos[0], $namespace)) {
             return $this->forkAllRepositories($repos, $user, $namespace, $scope, $to_project, $forkPermissions);
         }
-        throw new Exception($GLOBALS['Language']->getText('plugin_git', 'actions_no_repository_forked'));
+        throw new Exception(dgettext('tuleap-git', 'No repository has been forked.'));
     }
 
     private function isNamespaceValid(GitRepository $repository, $namespace) {
@@ -361,7 +357,7 @@ class GitRepositoryManager {
             foreach ($ns_chunk as $chunk) {
                 //TODO use creator
                 if (!$repository->getBackend()->isNameValid($chunk)) {
-                    throw new Exception($GLOBALS['Language']->getText('plugin_git', 'fork_repository_invalid_namespace'));
+                    throw new Exception(dgettext('tuleap-git', 'Invalid namespace, please only use alphanumeric characters.'));
                 }
             }
         }
@@ -383,7 +379,7 @@ class GitRepositoryManager {
                     $forked = true;
                 }
             } catch (GitRepositoryAlreadyExistsException $e) {
-                $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('plugin_git', 'fork_repository_exists', array($repo->getName())));
+                $GLOBALS['Response']->addFeedback('warning', sprintf(dgettext('tuleap-git', 'Repository %1$s already exists on target, skipped.'), $repo->getName()));
             } catch (Exception $e) {
                 $GLOBALS['Response']->addFeedback('warning', 'Got an unexpected error while forking ' . $repo->getName() . ': ' . $e->getMessage());
             }

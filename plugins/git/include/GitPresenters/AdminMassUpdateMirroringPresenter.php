@@ -40,14 +40,14 @@ class GitPresenters_AdminMassUdpdateMirroringPresenter {
     }
 
     public function mirroring_title() {
-        return $GLOBALS['Language']->getText('plugin_git', 'mirroring_title');
+        return dgettext('tuleap-git', 'Mirroring');
     }
 
     public function mirroring_mirror_name() {
-        return $GLOBALS['Language']->getText('plugin_git', 'mirroring_mirror_name');
+        return dgettext('tuleap-git', 'Name');
     }
 
     public function mirroring_mirror_url() {
-        return $GLOBALS['Language']->getText('plugin_git', 'mirroring_mirror_url');
+        return dgettext('tuleap-git', 'URL');
     }
 }

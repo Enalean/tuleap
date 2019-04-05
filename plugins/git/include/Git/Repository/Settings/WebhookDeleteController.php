@@ -51,12 +51,12 @@ class WebhookDeleteController extends WebhookController
         if ($this->dao->deleteByRepositoryIdAndWebhookId($repository->getId(), $webhook_id)) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::INFO,
-                $GLOBALS['Language']->getText('plugin_git', 'settings_hooks_delete_success')
+                dgettext('tuleap-git', 'Webhook removed')
             );
         } else {
             $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,
-                $GLOBALS['Language']->getText('plugin_git', 'settings_hooks_delete_error')
+                dgettext('tuleap-git', 'Error while removing the webhook :(')
             );
         }
 
@@ -70,7 +70,7 @@ class WebhookDeleteController extends WebhookController
         if (! $request->valid($valid_id)) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,
-                $GLOBALS['Language']->getText('plugin_git', 'actions_params_error')
+                dgettext('tuleap-git', 'Empty required parameter(s)')
             );
             $GLOBALS['Response']->redirect($redirect_url);
         }

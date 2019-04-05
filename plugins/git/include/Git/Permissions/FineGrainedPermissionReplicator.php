@@ -129,7 +129,7 @@ class FineGrainedPermissionReplicator
         }
 
         if (count($warnings) > 0) {
-            $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('plugin_git', 'feedback_permissions_not_duplicated', implode(',', $warnings)));
+            $GLOBALS['Response']->addFeedback('warning', sprintf(dgettext('tuleap-git', 'Your platform does not allow regular expression usage, permissions %1$s not duplicated.'), implode(',', $warnings)));
         }
     }
 
@@ -177,7 +177,7 @@ class FineGrainedPermissionReplicator
         }
 
         if (count($warnings) > 0) {
-            $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('plugin_git', 'feedback_permissions_not_duplicated', implode(',', $warnings)));
+            $GLOBALS['Response']->addFeedback('warning', sprintf(dgettext('tuleap-git', 'Your platform does not allow regular expression usage, permissions %1$s not duplicated.'), implode(',', $warnings)));
         }
     }
 

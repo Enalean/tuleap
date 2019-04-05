@@ -40,8 +40,8 @@ class GeneralSettingsPresenter extends Git_AdminPresenter
         $this->csrf_token   = $csrf;
         $this->is_activated = $is_activated;
 
-        $this->access_control_title     = $GLOBALS['Language']->getText('plugin_git', 'access_control_title');
-        $this->allow_regexp_info        = $GLOBALS['Language']->getText('plugin_git', 'allow_regexp_info');
-        $this->warning_admin_activation = $GLOBALS['Language']->getText('plugin_git', 'warning_admin_activation');
+        $this->access_control_title     = dgettext('tuleap-git', 'Access control settings');
+        $this->allow_regexp_info        = dgettext('tuleap-git', 'Allow usage of regular expressions in branches and tags during repository permission definition');
+        $this->warning_admin_activation = dgettext('tuleap-git', 'Enabling this option can have security implications, with this feature a git administrator can do a denial of service attack. Please also note that this option might end up in non working state. Invalid regular expressions will be ignored silently.');
     }
 }

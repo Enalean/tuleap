@@ -52,8 +52,8 @@ class GitLog
                 $params['logs_cond'],
                 $this->getGitReadLogFilter($params['group_id'], $params['who'], $params['span'])
             ),
-            'field' => $GLOBALS['Language']->getText('plugin_git', 'logsdaily_field'),
-            'title' => $GLOBALS['Language']->getText('plugin_git', 'logsdaily_title')
+            'field' => dgettext('tuleap-git', 'Repository'),
+            'title' => dgettext('tuleap-git', 'Git access')
         );
     }
 

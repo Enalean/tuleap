@@ -105,7 +105,7 @@ class Git_AdminGerritController {
     }
 
     public function display(Codendi_Request $request) {
-        $title = $GLOBALS['Language']->getText('plugin_git', 'descriptor_name');
+        $title = dgettext('tuleap-git', 'Git');
 
         switch ($request->get('action')) {
             case 'manage-allowed-projects':
@@ -124,7 +124,7 @@ class Git_AdminGerritController {
                 } catch (Git_RemoteServer_NotFoundException $exception) {
                     $GLOBALS['Response']->addFeedback(
                         Feedback::ERROR,
-                        $GLOBALS['Language']->getText('plugin_git', 'gerrit_servers_id_does_not_exist')
+                        dgettext('tuleap-git', 'The requested Gerrit server does not exist.')
                     );
 
                     $this->renderGerritServerList($title);

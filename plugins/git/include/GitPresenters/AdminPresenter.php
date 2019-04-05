@@ -37,23 +37,23 @@ abstract class GitPresenters_AdminPresenter {
     }
 
     public function git_admin() {
-        return $GLOBALS['Language']->getText('plugin_git', 'view_admin_title');
+        return dgettext('tuleap-git', 'Git Administration');
     }
 
     public function tab_gerrit_templates() {
-        return $GLOBALS['Language']->getText('plugin_git', 'view_admin_tab_gerrit_templates');
+        return dgettext('tuleap-git', 'Gerrit Templates');
     }
 
     public function tab_git_admins() {
-        return $GLOBALS['Language']->getText('plugin_git', 'view_admin_tab_git_admins');
+        return dgettext('tuleap-git', 'Git administrators');
     }
 
     public function tab_mass_update() {
-        return $GLOBALS['Language']->getText('plugin_git', 'view_admin_tab_mass_update');
+        return dgettext('tuleap-git', 'Mass update of repositories');
     }
 
     public function tab_template_settings() {
-        return $GLOBALS['Language']->getText('plugin_git', 'view_admin_tab_template_settings');
+        return dgettext('tuleap-git', 'Git settings template');
     }
 
     public function manage_mass_update_active() {

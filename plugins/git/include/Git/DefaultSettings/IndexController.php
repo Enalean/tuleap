@@ -139,7 +139,7 @@ class IndexController
 
         $panes = new DefaultSettingsPanesCollection($project, $current_pane);
 
-        $panes->add(new DisabledPane($GLOBALS['Language']->getText('plugin_git', 'admin_settings')));
+        $panes->add(new DisabledPane(dgettext('tuleap-git', 'General settings')));
         $panes->add(
             new AccessControl(
                 $this->access_rights_builder,
@@ -153,14 +153,14 @@ class IndexController
                 $current_pane === AccessControl::NAME
             )
         );
-        $panes->add(new DisabledPane($GLOBALS['Language']->getText('plugin_git', 'view_repo_ci_token')));
+        $panes->add(new DisabledPane(dgettext('tuleap-git', 'CI Token')));
 
         if ($are_mirrors_defined) {
             $panes->add(new Mirroring($this->mirror_data_mapper, $project, $current_pane === Mirroring::NAME));
         }
 
-        $panes->add(new DisabledPane($GLOBALS['Language']->getText('plugin_git', 'admin_mail')));
-        $panes->add(new DisabledPane($GLOBALS['Language']->getText('plugin_git', 'settings_hooks_title')));
+        $panes->add(new DisabledPane(dgettext('tuleap-git', 'Notifications')));
+        $panes->add(new DisabledPane(dgettext('tuleap-git', 'Webhooks')));
 
         $this->event_manager->processEvent($panes);
 
