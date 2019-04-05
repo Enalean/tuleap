@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,6 +23,7 @@ declare(strict_types = 1);
 namespace Tuleap\Document\Tree;
 
 use HTTPRequest;
+use Project;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithProject;
 use Tuleap\Request\DispatchableWithRequest;
@@ -51,14 +52,12 @@ class DocumentTreeUnderConstructionController implements DispatchableWithRequest
     }
 
     /**
-     * @param HTTPRequest $request
      * @param array       $variables
      *
-     * @return \Project
      * @throws NotFoundException
      */
-    public function getProject(\HTTPRequest $request, array $variables)
+    public function getProject(array $variables) : Project
     {
-        return $this->project_extractor->getProject($request, $variables);
+        return $this->project_extractor->getProject($variables);
     }
 }

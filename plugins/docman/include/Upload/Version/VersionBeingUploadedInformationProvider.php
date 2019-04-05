@@ -22,13 +22,14 @@ declare(strict_types = 1);
 
 namespace Tuleap\Docman\Upload\Version;
 
+use PFUser;
+use Tuleap\REST\RESTCurrentUserMiddleware;
 use Tuleap\Tus\TusFileInformation;
 use Tuleap\Tus\TusFileInformationProvider;
 use Tuleap\Upload\FileBeingUploadedInformation;
 
 class VersionBeingUploadedInformationProvider implements TusFileInformationProvider
 {
-
     /**
      * @var DocumentOnGoingVersionToUploadDAO
      */
@@ -47,7 +48,6 @@ class VersionBeingUploadedInformationProvider implements TusFileInformationProvi
         \Docman_ItemFactory $item_factory,
         VersionUploadPathAllocator $path_allocator
     ) {
-
         $this->dao            = $dao;
         $this->item_factory   = $item_factory;
         $this->path_allocator = $path_allocator;
@@ -56,17 +56,18 @@ class VersionBeingUploadedInformationProvider implements TusFileInformationProvi
     public function getFileInformation(\Psr\Http\Message\ServerRequestInterface $request): ?TusFileInformation
     {
         $version_id = $request->getAttribute('id');
-        $user_id    = $request->getAttribute('user_id');
 
-        if ($version_id === null || $user_id === null) {
+        if ($version_id === null) {
             return null;
         }
 
         $version_id = (int) $version_id;
+        /** @var PFUser $current_user */
+        $current_user = $request->getAttribute(RESTCurrentUserMiddleware::class);
 
         $document_row = $this->dao->searchDocumentVersionOngoingUploadByVersionIDUserIDAndExpirationDate(
             $version_id,
-            (int) $user_id,
+            (int) $current_user->getId(),
             (new \DateTimeImmutable())->getTimestamp()
         );
 

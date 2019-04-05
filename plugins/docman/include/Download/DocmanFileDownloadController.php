@@ -30,11 +30,16 @@ use Logger;
 use LogicException;
 use Project;
 use ProjectManager;
-use function session_write_close;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\MiddlewareInterface;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Request\DispatchablePSR15Compatible;
 use Tuleap\Request\DispatchableWithProject;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\NotFoundException;
+use UserManager;
+use Zend\HttpHandlerRunner\Emitter\EmitterInterface;
 
 final class DocmanFileDownloadController implements DispatchableWithRequest, DispatchableWithProject
 {
@@ -101,7 +106,7 @@ final class DocmanFileDownloadController implements DispatchableWithRequest, Dis
         $file_response->send();
     }
 
-    public function getProject(\HTTPRequest $request, array $variables) : Project
+    public function getProject(array $variables) : Project
     {
         if ($this->item !== null) {
             throw new LogicException(

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,22 +16,18 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
-namespace Tuleap\Request;
+declare(strict_types=1);
 
-use Project;
+namespace Tuleap\Http\Server;
 
-interface DispatchableWithProject
+use RuntimeException;
+
+final class EmptyMiddlewareStackException extends RuntimeException
 {
-    /**
-     * Return the project that corresponds to current URI
-     *
-     * This part of controller is needed when you implement a new route without providing a $group_id.
-     * It's the preferred way to deal with those kind of URLs over Event::GET_PROJECTID_FROM_URL
-     *
-     * @param array $variables
-     */
-    public function getProject(array $variables) : Project;
+    public function __construct()
+    {
+        parent::__construct('The middleware stack cannot be empty');
+    }
 }

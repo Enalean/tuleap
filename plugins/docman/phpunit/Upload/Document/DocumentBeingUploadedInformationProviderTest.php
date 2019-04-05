@@ -25,6 +25,9 @@ namespace Tuleap\Docman\Upload\Document;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
+use Tuleap\Http\Server\NullServerRequest;
+use Tuleap\REST\RESTCurrentUserMiddleware;
+use UserManager;
 
 class DocumentBeingUploadedInformationProviderTest extends TestCase
 {
@@ -35,6 +38,9 @@ class DocumentBeingUploadedInformationProviderTest extends TestCase
         $path_allocator = new DocumentUploadPathAllocator();
         $dao            = \Mockery::mock(DocumentOngoingUploadDAO::class);
         $item_factory   = \Mockery::mock(\Docman_ItemFactory::class);
+        $user_manager   = \Mockery::mock(UserManager::class);
+        $current_user   = \Mockery::mock(\PFUser::class);
+        $user_manager->shouldReceive('getCurrentUser')->andReturn($current_user);
         $data_store     = new DocumentBeingUploadedInformationProvider($path_allocator, $dao, $item_factory);
 
         $dao->shouldReceive('searchDocumentOngoingUploadByItemIDUserIDAndExpirationDate')->andReturns([
@@ -43,12 +49,13 @@ class DocumentBeingUploadedInformationProviderTest extends TestCase
         ]);
         $item_factory->shouldReceive('getItemFromDb')->andReturns(null);
 
-        $request = \Mockery::mock(ServerRequestInterface::class);
-        $item_id = 12;
-        $request->shouldReceive('getAttribute')->with('id')->andReturns((string) $item_id);
-        $request->shouldReceive('getAttribute')->with('user_id')->andReturns('102');
+        $item_id      = 12;
+        $current_user = \Mockery::mock(\PFUser::class);
+        $current_user->shouldReceive('getID')->andReturn('102');
+        $server_request = (new NullServerRequest())->withAttribute('id', (string) $item_id)
+            ->withAttribute(RESTCurrentUserMiddleware::class, $current_user);
 
-        $file_information = $data_store->getFileInformation($request);
+        $file_information = $data_store->getFileInformation($server_request);
 
         $this->assertSame($item_id, $file_information->getID());
         $this->assertSame(123456, $file_information->getLength());
@@ -68,12 +75,13 @@ class DocumentBeingUploadedInformationProviderTest extends TestCase
         ]);
         $item_factory->shouldReceive('getItemFromDb')->andReturns(\Mockery::mock(\Docman_Item::class));
 
-        $request = \Mockery::mock(ServerRequestInterface::class);
-        $item_id = 12;
-        $request->shouldReceive('getAttribute')->with('id')->andReturns((string) $item_id);
-        $request->shouldReceive('getAttribute')->with('user_id')->andReturns('102');
+        $item_id      = 12;
+        $current_user = \Mockery::mock(\PFUser::class);
+        $current_user->shouldReceive('getID')->andReturn('102');
+        $server_request = (new NullServerRequest())->withAttribute('id', (string) $item_id)
+            ->withAttribute(RESTCurrentUserMiddleware::class, $current_user);
 
-        $file_information = $data_store->getFileInformation($request);
+        $file_information = $data_store->getFileInformation($server_request);
 
         $this->assertSame($item_id, $file_information->getID());
         $this->assertSame(123456, $file_information->getLength());
@@ -98,7 +106,7 @@ class DocumentBeingUploadedInformationProviderTest extends TestCase
     {
         $dao           = \Mockery::mock(DocumentOngoingUploadDAO::class);
         $item_factory  = \Mockery::mock(\Docman_ItemFactory::class);
-        $data_store = new DocumentBeingUploadedInformationProvider(
+        $data_store    = new DocumentBeingUploadedInformationProvider(
             new DocumentUploadPathAllocator(),
             $dao,
             $item_factory
@@ -107,11 +115,12 @@ class DocumentBeingUploadedInformationProviderTest extends TestCase
         $dao->shouldReceive('searchDocumentOngoingUploadByItemIDUserIDAndExpirationDate')->andReturns([]);
         $item_factory->shouldReceive('getItemFromDb')->andReturns(null);
 
-        $request = \Mockery::mock(ServerRequestInterface::class);
-        $request->shouldReceive('getAttribute')->with('id')->andReturns('12');
-        $request->shouldReceive('getAttribute')->with('user_id')->andReturns('102');
+        $current_user = \Mockery::mock(\PFUser::class);
+        $current_user->shouldReceive('getID')->andReturn('102');
+        $server_request = (new NullServerRequest())->withAttribute('id', '12')
+            ->withAttribute(RESTCurrentUserMiddleware::class, $current_user);
 
 
-        $this->assertNull($data_store->getFileInformation($request));
+        $this->assertNull($data_store->getFileInformation($server_request));
     }
 }

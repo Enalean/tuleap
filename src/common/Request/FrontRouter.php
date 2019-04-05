@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -223,10 +223,7 @@ class FrontRouter
         } else {
             $project = null;
             if ($handler instanceof DispatchableWithProject) {
-                $project = $handler->getProject($request, $route_info[2]);
-                if (! $project instanceof \Project) {
-                    throw new \RuntimeException('DispatchableWithProject::getProject must return a project, null received');
-                }
+                $project = $handler->getProject($route_info[2]);
             }
             $url_verification = $this->url_verification_factory->getURLVerification($_SERVER);
             $url_verification->assertValidUrl($_SERVER, $request, $project);

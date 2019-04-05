@@ -25,6 +25,8 @@ namespace Tuleap\Docman\Upload\Version;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
+use Tuleap\Http\Server\NullServerRequest;
+use Tuleap\REST\RESTCurrentUserMiddleware;
 
 class VersionBeingUploadedInformationProviderTest extends TestCase
 {
@@ -46,12 +48,13 @@ class VersionBeingUploadedInformationProviderTest extends TestCase
         $item->shouldReceive('getId')->andReturn(5);
         $item_factory->shouldReceive('getItemFromDb')->andReturns($item);
 
-        $request = \Mockery::mock(ServerRequestInterface::class);
-        $id = 12;
-        $request->shouldReceive('getAttribute')->with('id')->andReturns((string) $id);
-        $request->shouldReceive('getAttribute')->with('user_id')->andReturns('102');
+        $id      = 12;
+        $user    = \Mockery::mock(\PFUser::class);
+        $user->shouldReceive('getId')->andReturn('102');
+        $server_request = (new NullServerRequest())->withAttribute('id', (string) $id)
+            ->withAttribute(RESTCurrentUserMiddleware::class, $user);
 
-        $file_information = $data_store->getFileInformation($request);
+        $file_information = $data_store->getFileInformation($server_request);
 
         $this->assertSame($id, $file_information->getID());
         $this->assertSame(123456, $file_information->getLength());
@@ -101,11 +104,11 @@ class VersionBeingUploadedInformationProviderTest extends TestCase
         $dao->shouldReceive('searchDocumentVersionOngoingUploadByVersionIDUserIDAndExpirationDate')->andReturns([]);
         $item_factory->shouldReceive('getItemFromDb')->andReturns(null);
 
-        $request = \Mockery::mock(ServerRequestInterface::class);
-        $request->shouldReceive('getAttribute')->with('id')->andReturns('12');
-        $request->shouldReceive('getAttribute')->with('user_id')->andReturns('102');
+        $user = \Mockery::mock(\PFUser::class);
+        $user->shouldReceive('getId')->andReturn('102');
+        $server_request = (new NullServerRequest())->withAttribute('id', '12')
+            ->withAttribute(RESTCurrentUserMiddleware::class, $user);
 
-
-        $this->assertNull($data_store->getFileInformation($request));
+        $this->assertNull($data_store->getFileInformation($server_request));
     }
 }

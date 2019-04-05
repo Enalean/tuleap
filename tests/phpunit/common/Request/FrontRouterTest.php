@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -196,41 +196,6 @@ class FrontRouterTest extends TestCase
 
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_SERVER['REQUEST_URI']    = '/stuff';
-
-        $this->router->route($this->request, $this->layout);
-    }
-
-
-    public function testItRaisesAnErrorWhenDispatchWithProjectWithoutProject()
-    {
-        $handler = \Mockery::mock(DispatchableWithRequest::class.', '.DispatchableWithProject::class);
-        $handler->shouldReceive('process')->never();
-
-        $handler->shouldReceive('getProject')->andReturn(null);
-
-        $url_verification = Mockery::mock(\URLVerification::class);
-        $url_verification->shouldReceive('assertValidUrl')->never();
-        $this->url_verification_factory->shouldReceive('getURLVerification')->andReturn($url_verification);
-
-        $this->route_collector->shouldReceive('collect')->with(Mockery::on(function (FastRoute\RouteCollector $r) use ($handler) {
-            $r->get('/stuff', function () use ($handler) {
-                return $handler;
-            });
-            return true;
-        }));
-
-        $_SERVER['REQUEST_METHOD'] = 'GET';
-        $_SERVER['REQUEST_URI']    = '/stuff';
-
-        $this->logger->shouldReceive('error')->once();
-        $this->error_rendering->shouldReceive('rendersErrorWithException')->once()->with(
-            Mockery::any(),
-            Mockery::any(),
-            500,
-            Mockery::any(),
-            Mockery::any(),
-            Mockery::any()
-        );
 
         $this->router->route($this->request, $this->layout);
     }
