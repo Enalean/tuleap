@@ -22,9 +22,8 @@ msgstr "Une erreur est survenue lors de la création du nouveau fournisseur."
 msgid "An error occured while removing the provider %1$s."
 msgstr "Une erreur est survenue lors de la suppression du fournisseur %1$s."
 
-#, php-format
-msgid "An error occured while updating the provider %1$s."
-msgstr "Une erreur est survenue lors de la mise à jour du fournisseur %1$s."
+msgid "An error occured while updating the provider."
+msgstr "Une erreur est survenue lors de la mise à jour du fournisseur."
 
 #, php-format
 msgid "An error occurred while removing the link with %1$s."
@@ -89,9 +88,8 @@ msgstr "Icône"
 msgid "Last login date:"
 msgstr "Dernière connexion :"
 
-#, php-format
-msgid "Link a %1$s account"
-msgstr "Liez un compte %1$s"
+msgid "Link an account"
+msgstr "Liez un compte"
 
 msgid "Name"
 msgstr "Nom"
@@ -214,7 +212,6 @@ msgstr ""
 msgid "https://"
 msgstr "https://"
 
-#, php-format
 msgid "or"
 msgstr "ou"
 
