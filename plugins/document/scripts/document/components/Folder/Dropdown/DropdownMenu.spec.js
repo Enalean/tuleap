@@ -108,6 +108,32 @@ describe("DropdownMenu", () => {
         expect(wrapper.contains("[data-test=docman-dropdown-details]")).toBeTruthy();
     });
 
+    it(`Given user is docman writer
+        When we display the menu
+        Then the delete button should be available`, () => {
+        const wrapper = dropdown_menu_factory({
+            hideDetailsEntry: false,
+            item: {
+                user_can_write: true
+            }
+        });
+
+        expect(wrapper.contains("[data-test=docman-dropdown-delete]")).toBeTruthy();
+    });
+
+    it(`Given user is NOT docman writer
+        When we display the menu
+        Then the delete button should NOT be available`, () => {
+        const wrapper = dropdown_menu_factory({
+            hideDetailsEntry: false,
+            item: {
+                user_can_write: false
+            }
+        });
+
+        expect(wrapper.contains("[data-test=docman-dropdown-delete]")).toBeFalsy();
+    });
+
     it(`Given user is administrator
         When we display the menu
         Then the permission link should be available`, () => {

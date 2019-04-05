@@ -80,6 +80,7 @@
            v-bind:href="delete_url"
            class="tlp-dropdown-menu-item tlp-dropdown-menu-item-danger"
            role="menuitem"
+           data-test="docman-dropdown-delete"
         >
             <i class="fa fa-fw fa-trash-o tlp-dropdown-menu-item-icon"></i>
             <span v-translate> Delete </span>
