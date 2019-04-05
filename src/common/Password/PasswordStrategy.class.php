@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Http\HttpClientFactory;
+use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Password\Configuration\PasswordConfiguration;
 use Tuleap\Password\HaveIBeenPwned\PwnedPasswordChecker;
 use Tuleap\Password\HaveIBeenPwned\PwnedPasswordRangeRetriever;
@@ -41,7 +43,11 @@ class PasswordStrategy {
         $this->errors     = array();
 
         if ($password_configuration->isBreachedPasswordVerificationEnabled()) {
-            $pwned_password_range_retriever = new PwnedPasswordRangeRetriever(new Http_Client(), new BackendLogger());
+            $pwned_password_range_retriever = new PwnedPasswordRangeRetriever(
+                HttpClientFactory::createClient(),
+                HTTPFactoryBuilder::requestFactory(),
+                new BackendLogger()
+            );
             $pwned_password_checker         = new PwnedPasswordChecker($pwned_password_range_retriever);
             $password_compromise_validator  = new PasswordCompromiseValidator($pwned_password_checker);
             $this->add($password_compromise_validator);
