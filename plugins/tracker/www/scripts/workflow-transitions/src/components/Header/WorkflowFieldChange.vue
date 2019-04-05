@@ -40,7 +40,6 @@
                     <i class="fa fa-refresh tlp-button-icon"></i>
                     <span v-translate>Change or remove</span>
                 </button>
-
             </div>
         </div>
         <change-field-confirmation-modal
@@ -55,7 +54,7 @@ import { mapState, mapGetters } from "vuex";
 import ChangeFieldConfirmationModal from "./ChangeFieldConfirmationModal.vue";
 
 export default {
-    name: "field-change",
+    name: "WorkflowFieldChange",
     components: { ChangeFieldConfirmationModal },
     data() {
         return {

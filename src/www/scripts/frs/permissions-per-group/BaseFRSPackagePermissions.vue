@@ -47,7 +47,7 @@ import { getPackagesPermissions } from "./rest-querier.js";
 import PackagePermissionsTable from "./FRSPackagePermissionsTable.vue";
 
 export default {
-    name: "FrsPackagesPermissions",
+    name: "BaseFRSPackagePermissions",
     components: {
         PackagePermissionsTable
     },

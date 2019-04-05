@@ -34,7 +34,7 @@
 import PackagePermissions from "./FRSPackagePermissionsTablePackage.vue";
 
 export default {
-    name: "PackagePermissionsTable",
+    name: "FRSPackagePermissionsTable",
     components: {
         PackagePermissions
     },

@@ -19,17 +19,17 @@
 
 <template>
     <div>
-        <git-breadcrumbs />
+        <git-breadcrumbs/>
         <div class="tlp-framed">
             <h1><translate>Git repositories</translate></h1>
-            <action-bar />
-            <error-message />
-            <git-repository-create />
-            <folder-repository-list v-if="isFolderDisplayMode" />
-            <repository-list v-else />
-            <repository-list-spinner />
-            <filter-empty-state />
-            <no-repository-empty-state />
+            <action-bar/>
+            <error-message/>
+            <git-repository-create/>
+            <folder-repository-list v-if="isFolderDisplayMode"/>
+            <repository-list v-else/>
+            <repository-list-spinner/>
+            <filter-empty-state/>
+            <no-repository-empty-state/>
         </div>
     </div>
 </template>

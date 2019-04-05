@@ -44,7 +44,7 @@ import GitRepositoryTableFineGrainedPermissionsRepository from "./GitRepositoryT
 import GitRepositoryTableFineGrainedPermission from "./GitRepositoryTableFineGrainedPermission.vue";
 
 export default {
-    name: "GitPermissionsTableGlobal",
+    name: "GitPermissionsTableRepository",
     components: {
         GitRepositoryTableSimplePermissions,
         GitRepositoryTableFineGrainedPermissionsRepository,

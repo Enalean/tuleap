@@ -79,7 +79,7 @@ import { getNewsPermissions } from "./rest-querier.js";
 import VisibilityLabel from "./NewsPermissionsVisibilityLabel.vue";
 
 export default {
-    name: "NewsPermissions",
+    name: "BaseNewsPermissions",
     components: {
         VisibilityLabel
     },

@@ -39,7 +39,7 @@
 import { mapState } from "vuex";
 
 export default {
-    name: "TrackerListReadingMode",
+    name: "TimeTrackingOverviewTrackerList",
     computed: {
         ...mapState(["selected_trackers"]),
         has_no_trackers_in_report() {

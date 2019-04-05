@@ -39,13 +39,13 @@ import { mapGetters } from "vuex";
 
 export default {
     name: "TransitionRulesEnforcementWarning",
-    computed: {
-        ...mapGetters(["are_transition_rules_enforced", "is_workflow_legacy"])
-    },
     data() {
         return {
             is_loading: false
         };
+    },
+    computed: {
+        ...mapGetters(["are_transition_rules_enforced", "is_workflow_legacy"])
     },
     methods: {
         async deactivateLegacyTransitions() {

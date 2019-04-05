@@ -19,8 +19,8 @@
 
 <template>
     <div>
-        <error-message />
-        <error-inactive-project-message />
+        <error-message/>
+        <error-inactive-project-message/>
         <div class="tlp-alert-info cross-tracker-report-success" v-if="has_success_message">
             {{ success_message }}
         </div>

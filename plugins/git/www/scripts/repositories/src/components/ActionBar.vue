@@ -28,13 +28,13 @@
             <translate>Add project repository</translate>
         </button>
 
-        <select-owner />
+        <select-owner/>
 
         <div class="git-repository-list-actions-spacer"></div>
 
         <template v-if="! isCurrentRepositoryListEmpty">
-            <display-mode-switcher />
-            <list-filter />
+            <display-mode-switcher/>
+            <list-filter/>
         </template>
     </div>
 </template>

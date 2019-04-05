@@ -8,7 +8,7 @@ module.exports = {
     parser: "vue-eslint-parser",
     parserOptions: {
         parser: "babel-eslint",
-        ecmaVersion: 2018,
+        ecmaVersion: 2019,
         sourceType: "module"
     },
     env: {
@@ -77,10 +77,17 @@ module.exports = {
             }
         ],
         "vue/html-indent": ["error", 4],
+        "vue/match-component-file-name": "error",
         "vue/max-attributes-per-line": "off",
+        "vue/multiline-html-element-content-newline": "off", // Just annoying and would be better adressed with prettier
         "vue/no-spaces-around-equal-signs-in-attribute": "error",
+        "vue/no-unused-components": "off", // This rule is too flaky, sometimes false positives, sometimes false negatives...
+        "vue/order-in-components": "error",
         "vue/prop-name-casing": "off",
+        "vue/require-component-is": "off", // There is a bug, it always reports an error. See https://github.com/vuejs/eslint-plugin-vue/issues/869
         "vue/require-default-prop": "off",
+        "vue/require-direct-export": "error",
+        "vue/singleline-html-element-content-newline": "off", // Just annoying and would be better adressed with prettier
         "vue/v-bind-style": ["error", "longform"],
         "vue/v-on-style": ["error", "longform"]
     },

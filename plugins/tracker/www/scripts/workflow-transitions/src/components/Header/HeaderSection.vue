@@ -50,7 +50,7 @@ import WorkflowModeSwitch from "./WorkflowModeSwitch.vue";
 import WorkflowFieldChange from "./WorkflowFieldChange.vue";
 
 export default {
-    name: "TransitionsConfigurationHeaderSection",
+    name: "HeaderSection",
     components: {
         WorkflowFieldChange,
         WorkflowModeSwitch

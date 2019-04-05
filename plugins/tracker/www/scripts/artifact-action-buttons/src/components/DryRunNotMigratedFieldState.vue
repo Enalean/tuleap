@@ -23,7 +23,7 @@
         <translate v-bind:translate-n="not_migrated_fields_count"
                    translate-plural="%{ not_migrated_fields_count } fields do not match with the targeted tracker. If you confirm your action, their values will be lost forever:"
         >1 field does not match with the targeted tracker. If you confirm your action, its value will be lost forever:</translate>
-        <field-error-message v-bind:fields="not_migrated_fields" v-bind:type="'not-migrated'" />
+        <field-error-message v-bind:fields="not_migrated_fields" v-bind:type="'not-migrated'"/>
     </div>
 </template>
 

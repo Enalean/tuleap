@@ -75,7 +75,7 @@ import { datePicker } from "tlp";
 import { mapGetters } from "vuex";
 
 export default {
-    name: "WigetModalEditTime",
+    name: "WidgetModalEditTime",
     props: {
         timeData: Object
     },

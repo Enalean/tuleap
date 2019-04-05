@@ -52,13 +52,13 @@ export default {
     data() {
         return { dropdown: null };
     },
+    mounted() {
+        this.dropdown = createDropdown(this.$refs.dropdownButton);
+    },
     methods: {
         toggleDropdown() {
             this.dropdown.toggle();
         }
-    },
-    mounted() {
-        this.dropdown = createDropdown(this.$refs.dropdownButton);
     }
 };
 </script>

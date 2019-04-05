@@ -23,7 +23,7 @@
         <translate v-bind:translate-n="fully_migrated_fields_count"
                    translate-plural="%{ fully_migrated_fields_count } fields will be fully migrated:"
         >1 field will be fully migrated:</translate>
-        <field-error-message v-bind:fields="fully_migrated_fields" v-bind:type="'fully-migrated'" />
+        <field-error-message v-bind:fields="fully_migrated_fields" v-bind:type="'fully-migrated'"/>
     </div>
 </template>
 

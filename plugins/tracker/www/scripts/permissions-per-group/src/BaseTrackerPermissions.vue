@@ -44,7 +44,7 @@ import { getTrackerPermissions } from "./rest-querier.js";
 import TrackerPermissionsTable from "./TrackerPermissionsTable.vue";
 
 export default {
-    name: "TrackerPermissions",
+    name: "BaseTrackerPermissions",
     components: {
         TrackerPermissionsTable
     },

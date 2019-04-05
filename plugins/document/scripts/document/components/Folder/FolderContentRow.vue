@@ -70,12 +70,11 @@ import UploadProgressBar from "./ProgressBar/UploadProgressBar.vue";
 import DropdownButton from "./ActionsDropDown/DropdownButton.vue";
 import DropdownMenuForItemQuickLook from "./ActionsDropDown/DropdownMenuForItemQuickLook.vue";
 
-import { TYPE_FILE, TYPE_FOLDER, TYPE_LINK, TYPE_WIKI } from "../../constants.js";
+import { TYPE_FILE, TYPE_FOLDER, TYPE_LINK, TYPE_WIKI, TYPE_EMBEDDED } from "../../constants.js";
 import {
     formatDateUsingPreferredUserFormat,
     getElapsedTimeFromNow
 } from "../../helpers/date-formatter.js";
-import { TYPE_EMBEDDED } from "../../constants";
 import {
     hasNoUploadingContent,
     isItemUploadingInQuickLookMode,
@@ -112,7 +111,7 @@ export default {
         },
         item_indentation() {
             if (!this.item.level) {
-                return;
+                return {};
             }
 
             const indentation_size = this.item.level * 23;

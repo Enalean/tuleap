@@ -19,9 +19,9 @@
 
 <template>
     <div>
-        <create-pullrequest-button v-bind:show-modal="showModal" />
-        <create-pullrequest-modal ref="modal" />
-        <create-pullrequest-error-modal ref="error_modal" />
+        <create-pullrequest-button v-bind:show-modal="showModal"/>
+        <create-pullrequest-modal ref="modal"/>
+        <create-pullrequest-error-modal ref="error_modal"/>
     </div>
 </template>
 
