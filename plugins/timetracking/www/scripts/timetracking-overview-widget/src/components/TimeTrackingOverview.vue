@@ -29,10 +29,11 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from "vuex";
+import { mapGetters, mapState } from "vuex";
 import TimeTrackingOverviewReadingMode from "./reading-mode/TimeTrackingOverviewReadingMode.vue";
 import TimeTrackingOverviewWritingMode from "./writing-mode/TimeTrackingOverviewWritingMode.vue";
 import TimeTrackingOverviewTable from "./TimeTrackingOverviewTable.vue";
+
 export default {
     name: "TimeTrackingOverview",
     components: {
@@ -55,6 +56,15 @@ export default {
         this.$store.commit("setDisplayVoidTrackers", this.areVoidTrackersHidden);
         this.$store.dispatch("initWidgetWithReport");
         this.$store.dispatch("getProjects");
+        document.addEventListener("timeUpdated", this.reloadTimes);
+    },
+    destroyed() {
+        document.removeEventListener("timeUpdated", this.reloadTimes);
+    },
+    methods: {
+        reloadTimes() {
+            this.$store.dispatch("reloadTimetrackingOverviewTimes");
+        }
     }
 };
 </script>
