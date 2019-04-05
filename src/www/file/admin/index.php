@@ -41,10 +41,7 @@ $permission_dao     = new FRSPermissionDao();
 $permission_factory = new FRSPermissionFactory(
     $permission_dao
 );
-$permission_manager = new FRSPermissionManager(
-    $permission_dao,
-    $permission_factory
-);
+$permission_manager = FRSPermissionManager::build();
 
 $project_manager = ProjectManager::instance();
 $project         = $project_manager->getProject($group_id);

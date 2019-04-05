@@ -97,12 +97,19 @@ class TrackerFieldsResource extends AuthenticatedResource
         }
 
         $tracker = $field->getTracker();
+        if (! $tracker) {
+            throw new RestException(404);
+        }
+        if (! $tracker->userCanView($user)) {
+            throw new RestException(404);
+        }
+
         ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
             $tracker->getProject()
         );
 
         if (! $tracker->userIsAdmin($user)) {
-            throw new RestException(401, "User is not tracker administrator.");
+            throw new RestException(403, "User is not tracker administrator.");
         }
 
         if (! $field->isUsed()) {

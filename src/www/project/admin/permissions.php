@@ -269,10 +269,7 @@ function permission_user_allowed_to_change($project_id, $permission_type, $objec
         $at = new ArtifactType($project, (int)$object_id);
         return $at->userIsAdmin();
     } else if ($permission_type == 'PACKAGE_READ') {
-        $permission_dao     = new FRSPermissionDao();
-        $permission_factory = new FRSPermissionFactory($permission_dao);
-
-        $permission_manager = new FRSPermissionManager($permission_dao, $permission_factory);
+        $permission_manager = FRSPermissionManager::build();
 
         return $permission_manager->isAdmin($project, $user);
     } else if ($permission_type == 'RELEASE_READ') {

@@ -63,7 +63,6 @@ class PackageResource extends AuthenticatedResource
      * The package will be active, and will be placed at the beginning of existing ones.
      *
      * @url POST
-     * @access hybrid
      * @status 201
      *
      * @param int    $project_id The id of the project where we should create the package {@from body}
@@ -75,7 +74,7 @@ class PackageResource extends AuthenticatedResource
      * @throws 409 Conflict Package with the same label already exists in this project
      * @throws 500 Error Unable to create the package
      */
-    public function post($project_id, $label)
+    protected function post($project_id, $label)
     {
         $project = $this->getProject($project_id);
 

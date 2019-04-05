@@ -204,9 +204,6 @@ class ServiceFile extends Service
 
     private function getFrsPermissionManager()
     {
-        return new FRSPermissionManager(
-            new FRSPermissionDao(),
-            new FRSPermissionFactory(new FRSPermissionDao())
-        );
+        return FRSPermissionManager::build();
     }
 }

@@ -333,10 +333,7 @@ class FRSPackageFactory {
     /** @protected for testing purpose */
     protected function getFRSPermissionManager()
     {
-        return new FRSPermissionManager(
-            new FRSPermissionDao(),
-            new FRSPermissionFactory(new FRSPermissionDao())
-        );
+        return FRSPermissionManager::build();
     }
 
     public function userCanRead($project_id, $package_id, $user_id = false)

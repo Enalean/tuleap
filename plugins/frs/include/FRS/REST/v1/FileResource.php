@@ -122,17 +122,14 @@ class FileResource extends AuthenticatedResource
      * @throws 403
      * @throws 404
      */
-    public function deleteId(int $id): void
+    protected function deleteId(int $id): void
     {
         $this->sendAllowOptionsForFile();
 
         $user = $this->user_manager->getCurrentUser();
         $file = $this->getFile($id, $user);
 
-        $frs_permission_manager = new FRSPermissionManager(
-            new FRSPermissionDao(),
-            new FRSPermissionFactory(new FRSPermissionDao())
-        );
+        $frs_permission_manager = FRSPermissionManager::build();
         $project                = $file->getGroup();
         if (! $frs_permission_manager->isAdmin($project, $user)) {
             throw new RestException(403);
@@ -152,11 +149,6 @@ class FileResource extends AuthenticatedResource
         if (! $file || $file->isDeleted()) {
             throw new RestException(404);
         }
-
-        ProjectStatusVerificator::build()->checkProjectStatusAllowsOnlySiteAdminToAccessIt(
-            $user,
-            $file->getGroup()
-        );
 
         $is_user_able_to_read_file = $this->release_factory->userCanRead(
             $file->getGroup()->getID(),
@@ -199,7 +191,7 @@ class FileResource extends AuthenticatedResource
      * @throws 400
      * @throws 403
      */
-    public function post(FilePOSTRepresentation $file_post_representation): CreatedFileRepresentation
+    protected function post(FilePOSTRepresentation $file_post_representation): CreatedFileRepresentation
     {
         $this->checkAccess();
         $this->sendAllowOptionsForFile();
@@ -214,10 +206,7 @@ class FileResource extends AuthenticatedResource
             );
         }
 
-        $frs_permission_manager = new FRSPermissionManager(
-            new FRSPermissionDao(),
-            new FRSPermissionFactory(new FRSPermissionDao())
-        );
+        $frs_permission_manager = FRSPermissionManager::build();
 
         $project = $release->getProject();
         if (! $frs_permission_manager->isAdmin($project, $user)) {

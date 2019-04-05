@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,13 +21,32 @@
 namespace Tuleap\REST;
 
 use Luracast\Restler\RestException;
+use PermissionsOverrider_PermissionsOverriderManager;
 use Project;
+use Tuleap\Project\ProjectAccessChecker;
+use Tuleap\Project\ProjectAccessSuspendedException;
+use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 
 class ProjectStatusVerificator
 {
+    /**
+     * @var ProjectAccessChecker
+     */
+    private $access_checker;
+
+    public function __construct(ProjectAccessChecker $access_checker)
+    {
+        $this->access_checker = $access_checker;
+    }
+
     public static function build()
     {
-        return new self();
+        return new self(
+            new ProjectAccessChecker(
+                PermissionsOverrider_PermissionsOverriderManager::instance(),
+                new RestrictedUserCanAccessProjectVerifier()
+            )
+        );
     }
 
     /**
@@ -41,12 +60,17 @@ class ProjectStatusVerificator
     }
 
     /**
+     * @deprecated You should be checking permissions at the resource level directly (Artifact, File, Document, etc).
      * @throws RestException
      */
-    public function checkProjectStatusAllowsOnlySiteAdminToAccessIt(\PFUser $user, Project $project)
+    public function checkProjectStatusAllowsOnlySiteAdminToAccessIt(\PFUser $user, Project $project) : void
     {
-        if ($project->isSuspended() && ! $user->isSuperUser()) {
+        try {
+            $this->access_checker->checkUserCanAccessProject($user, $project);
+        } catch (ProjectAccessSuspendedException $exception) {
             $this->blockRestAccess();
+        } catch (\Exception $exception) {
+            throw new RestException(404);
         }
     }
 
