@@ -1,4 +1,5 @@
 vendor/
+*.pot
 *.mo
 test-results.xml
 *~

@@ -12,7 +12,7 @@ pipeline {
             steps {
                 checkout changelog: false, poll: false, scm: [$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'CleanBeforeCheckout'], [$class: 'RelativeTargetDirectory', relativeTargetDir: 'sources']], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'gitolite-tuleap-net', url: 'ssh://gitolite@tuleap.net/tuleap/tuleap/stable.git']]]
                 checkout scm
-                sh 'GIT_DIR=sources_plugin/.git/ git checkout-index -f -a --prefix=sources/plugins/baseline/'
+                sh 'git clone sources_plugin/ sources/plugins/baseline/'
             }
         }
 
@@ -30,9 +30,7 @@ pipeline {
 
         stage('Check lockfiles') {
             steps { script {
-                dir ('sources/plugins/baseline') {
-                    sh "../../tests/files_status_checker/verify.sh lockfiles package-lock.json composer.lock"
-                }
+                actions.runFilesStatusChangesDetection('plugins/baseline', 'lockfiles', 'package-lock.json composer.lock')
             } }
             post {
                 failure {
@@ -113,6 +111,15 @@ pipeline {
                         subject: "Tuleap ${currentBuild.fullDisplayName} is unstable",
                         body: "See ${env.BUILD_URL}"
                     }
+                }
+            }
+        }
+        stage('Code conformity') {
+            stages {
+                stage('Check translation files') {
+                    steps { script {
+                        actions.runFilesStatusChangesDetection('plugins/baseline', 'translation files', '"*.po\$"')
+                    } }
                 }
             }
         }
