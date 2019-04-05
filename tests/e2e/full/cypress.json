@@ -6,7 +6,8 @@
     },
     "screenshotsFolder": "/output/screenshots",
     "videosFolder": "/output/videos",
-    "video": false,
+    "video": true,
+    "videoUploadOnPasses": false,
     "pluginsFile": false,
     "pageLoadTimeout": 120000
 }
