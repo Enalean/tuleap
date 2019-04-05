@@ -27,8 +27,8 @@ msgstr "Artefacts modifiés"
 msgid "Author"
 msgstr "Auteur"
 
-msgid "Baseline"
-msgstr "Baseline"
+msgid "Baseline #%u"
+msgstr "Baselines #%u"
 
 msgid "Baselines"
 msgstr "Baselines"
@@ -36,8 +36,8 @@ msgstr "Baselines"
 msgid "Baselines available"
 msgstr "Baselines disponibles"
 
-msgid "Baselines comparison:"
-msgstr "Comparaison de baselines :"
+msgid "Baselines comparison #%u/#%u"
+msgstr "Comparison de baselines #%u/#%u"
 
 msgid ""
 "Baselines features allow you to consult the state of your releases in a\n"

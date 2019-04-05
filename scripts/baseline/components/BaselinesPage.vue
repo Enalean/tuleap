@@ -160,6 +160,10 @@ export default {
         }
     },
 
+    created() {
+        this.$emit("title", this.$gettext("Baselines"));
+    },
+
     mounted() {
         this.new_baseline_modal = createModal(this.$refs.new_baseline_modal.$el);
         this.fetchBaselines();

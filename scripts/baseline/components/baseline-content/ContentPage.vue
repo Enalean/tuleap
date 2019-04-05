@@ -19,62 +19,37 @@
   -->
 
 <template>
-    <div>
-        <nav class="breadcrumb">
-            <div class="breadcrumb-item">
-                <router-link
-                    v-bind:to="{ name: 'BaselinesPage' }"
-                    tag="button"
-                    class="breadcrumb-link baseline-breadcrumb-link"
-                    title="Baselines"
-                    v-translate
-                >
-                    Baselines
-                </router-link>
+    <main class="tlp-framed-vertically">
+        <div class="tlp-framed-horizontally">
+            <div
+                v-if="is_loading_failed"
+                class="tlp-alert-danger tlp-framed-vertically"
+                data-test-type="error-message"
+            >
+                <translate>Cannot fetch baseline</translate>
             </div>
-            <div class="breadcrumb-item">
-                <router-link
-                    v-bind:to="{ name: 'BaselineContentPage', params: { baseline_id } }"
-                    tag="button"
-                    class="breadcrumb-link baseline-breadcrumb-link"
-                    title="Baseline"
-                >
-                    <translate>Baseline</translate> #{{ baseline_id }}
-                </router-link>
+
+            <baseline-label-skeleton v-else-if="is_loading" data-test-type="baseline-header-skeleton"/>
+
+            <baseline-label v-else v-bind:baseline="baseline"/>
+
+            <statistics/>
+
+            <div class="tlp-framed-vertically">
+                <section class="tlp-pane">
+                    <div class="tlp-pane-container">
+                        <section class="tlp-pane-section">
+                            <content-body v-bind:baseline_id="baseline_id"/>
+                        </section>
+                    </div>
+                </section>
             </div>
-        </nav>
-
-        <main class="tlp-framed-vertically">
-            <div class="tlp-framed-horizontally">
-                <div
-                    v-if="is_loading_failed"
-                    class="tlp-alert-danger tlp-framed-vertically"
-                    data-test-type="error-message"
-                >
-                    <translate>Cannot fetch baseline</translate>
-                </div>
-
-                <baseline-label-skeleton v-else-if="is_loading" data-test-type="baseline-header-skeleton"/>
-
-                <baseline-label v-else v-bind:baseline="baseline"/>
-
-                <statistics/>
-
-                <div class="tlp-framed-vertically">
-                    <section class="tlp-pane">
-                        <div class="tlp-pane-container">
-                            <section class="tlp-pane-section">
-                                <content-body v-bind:baseline_id="baseline_id"/>
-                            </section>
-                        </div>
-                    </section>
-                </div>
-            </div>
-        </main>
-    </div>
+        </div>
+    </main>
 </template>
 
 <script>
+import { sprintf } from "sprintf-js";
 import { getBaseline } from "../../api/rest-querier";
 import { presentBaseline } from "../../presenters/baseline";
 import Statistics from "./Statistics.vue";
@@ -95,6 +70,11 @@ export default {
             is_loading: true,
             is_loading_failed: false
         };
+    },
+
+    created() {
+        const title = sprintf(this.$gettext("Baseline #%u"), this.baseline_id);
+        this.$emit("title", title);
     },
 
     mounted() {

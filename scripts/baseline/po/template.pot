@@ -20,7 +20,7 @@ msgstr ""
 msgid "Author"
 msgstr ""
 
-msgid "Baseline"
+msgid "Baseline #%u"
 msgstr ""
 
 msgid "Baselines"
@@ -29,7 +29,7 @@ msgstr ""
 msgid "Baselines available"
 msgstr ""
 
-msgid "Baselines comparison:"
+msgid "Baselines comparison #%u/#%u"
 msgstr ""
 
 msgid ""

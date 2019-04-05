@@ -20,7 +20,29 @@
 
 <template>
     <div>
-        <router-view v-bind:project_id="project_id"/>
+        <nav class="breadcrumb">
+            <div class="breadcrumb-item">
+                <router-link
+                    v-bind:to="{ name: 'BaselinesPage' }"
+                    tag="button"
+                    class="breadcrumb-link baseline-breadcrumb-link"
+                    v-translate
+                >
+                    Baselines
+                </router-link>
+            </div>
+            <div v-if="!is_current_page_root" class="breadcrumb-item">
+                <router-link
+                    to=""
+                    tag="button"
+                    class="breadcrumb-link baseline-breadcrumb-link"
+                >
+                    {{ current_page_title }}
+                </router-link>
+            </div>
+        </nav>
+
+        <router-view v-bind:project_id="project_id" v-on:title="changeTitle"/>
     </div>
 </template>
 
@@ -31,6 +53,22 @@ export default {
         project_id: {
             required: false,
             type: Number
+        }
+    },
+    data() {
+        return {
+            current_page_title: null
+        };
+    },
+    computed: {
+        is_current_page_root() {
+            return this.$route.name === "BaselinesPage";
+        }
+    },
+    methods: {
+        changeTitle(title) {
+            this.current_page_title = title;
+            document.title = `${title} - Tuleap`;
         }
     }
 };

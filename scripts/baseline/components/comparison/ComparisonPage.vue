@@ -19,50 +19,25 @@
   -->
 
 <template>
-    <div>
-        <nav class="breadcrumb">
-            <div class="breadcrumb-item">
-                <router-link
-                    v-bind:to="{ name: 'BaselinesPage' }"
-                    tag="button"
-                    class="breadcrumb-link baseline-breadcrumb-link"
-                    title="Baselines"
-                    v-translate
-                >
-                    Baselines
-                </router-link>
-            </div>
-            <div class="breadcrumb-item">
-                <router-link
-                    v-bind:to="{ name: 'ComparisonPage', params: { from_baseline_id, to_baseline_id } }"
-                    tag="button"
-                    class="breadcrumb-link baseline-breadcrumb-link"
-                    title="Baseline"
-                >
-                    <translate>Baselines comparison:</translate> #{{ from_baseline_id }} / #{{ to_baseline_id }}
-                </router-link>
-            </div>
-        </nav>
+    <main class="tlp-framed-vertically">
+        <div class="tlp-framed-horizontally">
+            <comparison-header
+                v-bind:from_baseline_id="from_baseline_id"
+                v-bind:to_baseline_id="to_baseline_id"
+            />
 
-        <main class="tlp-framed-vertically">
-            <div class="tlp-framed-horizontally">
-                <comparison-header
-                    v-bind:from_baseline_id="from_baseline_id"
-                    v-bind:to_baseline_id="to_baseline_id"
-                />
+            <statistics/>
 
-                <statistics/>
-
-                <comparison-content
-                    v-bind:from_baseline_id="from_baseline_id"
-                    v-bind:to_baseline_id="to_baseline_id"
-                />
-            </div>
-        </main>
-    </div>
+            <comparison-content
+                v-bind:from_baseline_id="from_baseline_id"
+                v-bind:to_baseline_id="to_baseline_id"
+            />
+        </div>
+    </main>
 </template>
 
 <script>
+import { sprintf } from "sprintf-js";
 import Statistics from "./Statistics.vue";
 import ComparisonContent from "./content/ComparisonContent.vue";
 import ComparisonHeader from "./ComparisonHeader.vue";
@@ -73,6 +48,14 @@ export default {
     props: {
         from_baseline_id: { required: true, type: Number },
         to_baseline_id: { required: true, type: Number }
+    },
+    created() {
+        const title = sprintf(
+            this.$gettext("Baselines comparison #%u/#%u"),
+            this.from_baseline_id,
+            this.to_baseline_id
+        );
+        this.$emit("title", title);
     }
 };
 </script>

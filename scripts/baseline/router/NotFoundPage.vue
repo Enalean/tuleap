@@ -18,12 +18,17 @@
   -
   -->
 
-<template functional>
-    <p v-translate>Page not found</p>
+<template>
+    <p v-translate>
+        Page not found
+    </p>
 </template>
 
 <script>
 export default {
-    name: "NotFoundPage"
+    name: "NotFoundPage",
+    created() {
+        this.$emit("title", this.$gettext("Page not found"));
+    }
 };
 </script>
