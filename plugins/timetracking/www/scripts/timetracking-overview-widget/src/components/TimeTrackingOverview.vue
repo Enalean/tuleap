@@ -41,7 +41,9 @@ export default {
         TimeTrackingOverviewWritingMode
     },
     props: {
-        reportId: String
+        reportId: String,
+        userId: Number,
+        areVoidTrackersHidden: Boolean
     },
     computed: {
         ...mapState(["reading_mode", "success_message"]),
@@ -49,6 +51,8 @@ export default {
     },
     mounted() {
         this.$store.commit("setReportId", this.reportId);
+        this.$store.commit("initUserId", this.userId);
+        this.$store.commit("setDisplayVoidTrackers", this.areVoidTrackersHidden);
         this.$store.dispatch("initWidgetWithReport");
         this.$store.dispatch("getProjects");
     }

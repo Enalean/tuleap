@@ -55,6 +55,7 @@ describe("Given a timetracking overview widget", () => {
         expect(wrapper.contains("[data-test=overview-table]")).toBeTruthy();
         expect(wrapper.contains("[data-test=empty-cell]")).toBeFalsy();
         expect(wrapper.contains("[data-test=table-row]")).toBeTruthy();
+        expect(wrapper.contains("[data-test=table-action]")).toBeTruthy();
         expect(wrapper.contains("[data-test=tfoot]")).toBeTruthy();
     });
 
@@ -67,6 +68,7 @@ describe("Given a timetracking overview widget", () => {
         expect(wrapper.contains("[data-test=overview-table]")).toBeTruthy();
         expect(wrapper.contains("[data-test=empty-cell]")).toBeTruthy();
         expect(wrapper.contains("[data-test=table-row]")).toBeFalsy();
+        expect(wrapper.contains("[data-test=table-action]")).toBeFalsy();
         expect(wrapper.contains("[data-test=tfoot]")).toBeFalsy();
     });
 

@@ -22,6 +22,14 @@
         <div v-if="has_error" class="tlp-alert-danger" data-test="alert-danger">
             {{ error_message }}
         </div>
+        <div v-if="has_data_to_display && !has_error" class="tlp-table-actions" data-test="table-action">
+            <button class="tlp-button-small tlp-button-primary tlp-button-outline tlp-table-actions-element"
+                    v-on:click="setAreVoidTrackersHidden"
+            >
+                <i v-bind:class="[are_void_trackers_hidden ? 'fa fa-eye' : 'fa fa-eye-slash']"></i>
+                {{ display_button_text }}
+            </button>
+        </div>
         <div v-if="is_loading" class="timetracking-loader" data-test="timetracking-loader"></div>
         <table v-if="can_results_be_displayed" class="tlp-table" data-test="overview-table">
             <thead>
@@ -77,12 +85,22 @@ export default {
     components: { TimeTrackingOverviewTableRow },
     computed: {
         ...mapGetters(["get_formatted_total_sum", "has_error", "can_results_be_displayed"]),
-        ...mapState(["trackers_times", "error_message", "is_loading"]),
+        ...mapState(["trackers_times", "error_message", "is_loading", "are_void_trackers_hidden"]),
         time_format_tooltip() {
             return this.$gettext("The time is displayed in hours:minutes");
         },
         has_data_to_display() {
             return this.trackers_times.length > 0;
+        },
+        display_button_text() {
+            return this.are_void_trackers_hidden
+                ? this.$gettext("Show void trackers")
+                : this.$gettext("Hide void trackers");
+        }
+    },
+    methods: {
+        setAreVoidTrackersHidden() {
+            this.$store.dispatch("setPreference");
         }
     }
 };

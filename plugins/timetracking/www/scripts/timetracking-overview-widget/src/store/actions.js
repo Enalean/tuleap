@@ -27,7 +27,8 @@ import {
     getTrackersFromReport,
     getTrackersWithTimetracking,
     getTimes,
-    saveNewReport
+    saveNewReport,
+    setDisplayPreference
 } from "../api/rest-querier.js";
 import { ERROR_OCCURRED } from "../../../constants.js";
 
@@ -122,4 +123,17 @@ export async function loadTimesWithNewParameters(context) {
     context.commit("setIsReportSave", false);
     context.commit("setTrackersTimes", times);
     context.commit("setIsLoading", false);
+}
+
+export async function setPreference(context) {
+    try {
+        await setDisplayPreference(
+            context.state.report_id,
+            context.state.user_id,
+            !context.state.are_void_trackers_hidden
+        );
+        return context.commit("toggleDisplayVoidTrackers");
+    } catch (rest_error) {
+        return showRestError(context, rest_error);
+    }
 }

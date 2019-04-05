@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <tr>
+    <tr v-if="display_void_trackers">
         <td>
             <a v-bind:href="html_url">
                 <span>{{ time.label }}</span>
@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapState } from "vuex";
 
 export default {
     name: "TimeTrackingOverviewTableRow",
@@ -40,9 +40,13 @@ export default {
         time: Object
     },
     computed: {
+        ...mapState(["are_void_trackers_hidden"]),
         ...mapGetters(["get_formatted_time"]),
         html_url() {
             return "/plugins/tracker/?tracker=" + this.time.id;
+        },
+        display_void_trackers() {
+            return !(this.are_void_trackers_hidden && this.time.minutes === 0);
         }
     }
 };

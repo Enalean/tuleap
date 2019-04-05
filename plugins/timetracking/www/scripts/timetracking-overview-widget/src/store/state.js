@@ -20,6 +20,8 @@ import { DateTime } from "luxon";
 
 const state = {
     report_id: null,
+    user_id: null,
+    are_void_trackers_hidden: null,
     start_date: DateTime.local()
         .minus({ months: 1 })
         .toISODate(),
