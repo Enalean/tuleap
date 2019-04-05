@@ -16,6 +16,6 @@ location ^~ /plugins/%name%/ {
     }
 
     location ^~ /plugins/%name%/assets/ {
-        expires 12h;
+        expires max;
     }
 }
