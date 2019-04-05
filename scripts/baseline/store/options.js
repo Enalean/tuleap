@@ -17,10 +17,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  *
  */
-import Vue from "vue";
-import Vuex from "vuex";
-import options from "./options";
 
-Vue.use(Vuex);
+import baselines from "./baselines";
+import semantics from "./semantics";
 
-export default new Vuex.Store(options);
+export default {
+    state: {
+        notification: null
+    },
+    mutations: {
+        notify: (state, message) => (state.notification = message),
+        clearNotification: state => (state.notification = null)
+    },
+    modules: {
+        baselines,
+        semantics
+    },
+    strict: process.env.NODE_ENV !== "production" // eslint-disable-line no-undef
+};

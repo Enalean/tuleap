@@ -103,6 +103,12 @@ const factories = {
             is_anonymous: false,
             user_url: "http://example.com/user/1"
         }
+    },
+    notification: {
+        default: {
+            text: "This is a failure notification",
+            class: "danger"
+        }
     }
 };
 

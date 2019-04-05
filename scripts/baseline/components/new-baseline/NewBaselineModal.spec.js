@@ -26,6 +26,8 @@ import NewBaselineModal from "./NewBaselineModal.vue";
 import MilestonesSelect from "./MilestonesSelect.vue";
 import MilestonesSelectSkeleton from "./MilestonesSelectSkeleton.vue";
 import { create } from "../../support/factories";
+import store_options from "../../store/options.js";
+import { createStoreMock } from "../../support/store-wrapper.spec-helper";
 
 describe("NewBaselineModal", () => {
     const error_message_selector = '[data-test-type="error-message"]';
@@ -34,6 +36,7 @@ describe("NewBaselineModal", () => {
 
     let getOpenMilestones;
     let createBaseline;
+    let store;
     let wrapper;
 
     const a_milestone = create("milestone");
@@ -48,9 +51,14 @@ describe("NewBaselineModal", () => {
         createBaseline.and.returnValue(Promise.resolve(a_baseline));
         rewire$createBaseline(createBaseline);
 
+        store = createStoreMock(store_options);
+
         wrapper = shallowMount(NewBaselineModal, {
+            propsData: { project_id: 1 },
             localVue,
-            propsData: { project_id: 1 }
+            mocks: {
+                $store: store
+            }
         });
     });
 

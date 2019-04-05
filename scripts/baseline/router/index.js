@@ -24,6 +24,7 @@ import NotFoundPage from "./NotFoundPage.vue";
 import BaselineContentPage from "../components/baseline-content/ContentPage.vue";
 import BaselinesPage from "../components/BaselinesPage.vue";
 import ComparisonPage from "../components/comparison/ComparisonPage.vue";
+import store from "../store";
 
 Vue.use(VueRouter);
 
@@ -71,6 +72,11 @@ const router = new VueRouter({
 
         return { x: 0, y: 0 };
     }
+});
+
+router.beforeEach((to, from, next) => {
+    store.commit("clearNotification");
+    next();
 });
 
 export default router;

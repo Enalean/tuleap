@@ -20,15 +20,13 @@
 
 import Vue from "vue";
 import french_translations from "./po/fr.po";
-import Vuex from "vuex";
 import GetTextPlugin from "vue-gettext";
 import router from "./router";
 import App from "./components/App.vue";
-import store_options from "./store";
+import store from "./store";
 import DateUtils from "./support/date-utils";
 
 document.addEventListener("DOMContentLoaded", () => {
-    Vue.use(Vuex);
     Vue.use(GetTextPlugin, {
         translations: {
             fr: french_translations.messages
@@ -55,10 +53,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const AppComponent = Vue.extend(App);
     new AppComponent({
-        store: new Vuex.Store({
-            ...store_options,
-            strict: process.env.NODE_ENV !== "production" // eslint-disable-line no-undef
-        }),
+        store,
         propsData: { project_id },
         router
     }).$mount(vue_mount_point);

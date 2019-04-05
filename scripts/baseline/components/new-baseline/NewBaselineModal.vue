@@ -180,6 +180,11 @@ export default {
 
             try {
                 await createBaseline(this.name, this.milestone);
+                const notification = {
+                    text: this.$gettext("The baseline was created"),
+                    class: "success"
+                };
+                this.$store.commit("notify", notification);
                 this.$emit("created");
             } catch (e) {
                 this.is_creating_failed = true;

@@ -31,7 +31,10 @@
                     Baselines
                 </router-link>
             </div>
-            <div v-if="!is_current_page_root" class="breadcrumb-item">
+            <div
+                v-if="!is_current_page_root"
+                class="breadcrumb-item"
+            >
                 <router-link
                     to=""
                     tag="button"
@@ -42,13 +45,22 @@
             </div>
         </nav>
 
-        <router-view v-bind:project_id="project_id" v-on:title="changeTitle"/>
+        <main class="tlp-framed-vertically">
+            <div class="tlp-framed-horizontally">
+                <notification v-if="notification" v-bind:notification="notification"/>
+                <router-view v-bind:project_id="project_id" v-on:title="changeTitle"/>
+            </div>
+        </main>
     </div>
 </template>
 
 <script>
+import { mapState } from "vuex";
+import Notification from "./Notification.vue";
+
 export default {
     name: "App",
+    components: { Notification },
     props: {
         project_id: {
             required: false,
@@ -61,6 +73,7 @@ export default {
         };
     },
     computed: {
+        ...mapState(["notification"]),
         is_current_page_root() {
             return this.$route.name === "BaselinesPage";
         }

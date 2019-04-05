@@ -22,32 +22,24 @@ import { shallowMount } from "@vue/test-utils";
 import localVue from "../support/local-vue.js";
 import App from "./App.vue";
 import router from "../router";
+import { createStoreMock } from "../support/store-wrapper.spec-helper";
+import store_options from "../store/options";
+import { create } from "../support/factories";
+import Notification from "./Notification.vue";
 
 describe("App", () => {
+    let store;
     let wrapper;
 
     beforeEach(() => {
+        store = createStoreMock(store_options);
+
         wrapper = shallowMount(App, {
             localVue,
-            router
-        });
-    });
-
-    describe("when navigating to BaselinesPage", () => {
-        beforeEach(() =>
-            router.push({ name: "BaselinesPage", params: { project_name: "my project" } }));
-
-        it("shows only one breadcrumb item", () => {
-            expect(wrapper.findAll(".breadcrumb-item").length).toEqual(1);
-        });
-    });
-
-    describe("when navigating to BaselineContentPage", () => {
-        beforeEach(() =>
-            router.push({ name: "BaselineContentPage", params: { baseline_id: "1" } }));
-
-        it("shows 2 breadcrumb items", () => {
-            expect(wrapper.findAll(".breadcrumb-item").length).toEqual(2);
+            router,
+            mocks: {
+                $store: store
+            }
         });
     });
 
@@ -56,6 +48,20 @@ describe("App", () => {
 
         it('changes document title and suffix with "Tuleap"', () => {
             expect(document.title).toEqual("new title - Tuleap");
+        });
+    });
+
+    describe("With notification", () => {
+        beforeEach(() => (store.state.notification = create("notification")));
+        it("Show notification", () => {
+            expect(wrapper.contains(Notification)).toBeTruthy();
+        });
+    });
+
+    describe("Without notification", () => {
+        beforeEach(() => (store.state.notification = null));
+        it("Show notification", () => {
+            expect(wrapper.contains(Notification)).toBeFalsy();
         });
     });
 });
