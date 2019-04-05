@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -29,7 +29,8 @@ const babel_preset_env_ie_config = [
             ie: 11
         },
         modules: false,
-        useBuiltIns: "entry"
+        useBuiltIns: "entry",
+        corejs: "3"
     }
 ];
 
@@ -40,7 +41,8 @@ const babel_preset_env_chrome_config = [
             browsers: ["last 2 Chrome versions"]
         },
         modules: false,
-        useBuiltIns: "usage"
+        useBuiltIns: "usage",
+        corejs: "3"
     }
 ];
 
