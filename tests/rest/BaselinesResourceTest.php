@@ -68,13 +68,15 @@ class BaselinesResourceTest extends RestBase
 
     public function testGetById()
     {
-        $baseline      = $this->createABaseline($this->an_artifact_id);
-        $response      = $this->getResponseByName(
+        $baseline = $this->createABaseline($this->an_artifact_id);
+        $response = $this->getResponseByName(
             self::TEST_USER_NAME,
             $this->client->get('baselines/' . $baseline['id'])
         );
-        $json_response = $response->json();
 
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $json_response = $response->json();
         $this->assertEquals($baseline['id'], $json_response['id']);
         $this->assertEquals($baseline['name'], $json_response['name']);
         $this->assertEquals($baseline['artifact_id'], $json_response['artifact_id']);
@@ -104,14 +106,16 @@ class BaselinesResourceTest extends RestBase
      */
     public function testGetByProject()
     {
-        $project_id    = $this->project_ids[self::PROJECT_NAME];
-        $url           = 'projects/' . $project_id . '/baselines?limit=2';
-        $response      = $this->getResponseByName(
+        $project_id = $this->project_ids[self::PROJECT_NAME];
+        $url        = 'projects/' . $project_id . '/baselines?limit=2';
+        $response   = $this->getResponseByName(
             self::TEST_USER_NAME,
             $this->client->get($url)
         );
-        $json_response = $response->json();
 
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $json_response = $response->json();
         $this->assertGreaterThanOrEqual(1, $json_response['total_count']);
 
         $baselines_response = $json_response['baselines'];
