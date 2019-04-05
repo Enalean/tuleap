@@ -55,7 +55,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const AppComponent = Vue.extend(App);
     new AppComponent({
-        store: new Vuex.Store(store_options),
+        store: new Vuex.Store({
+            ...store_options,
+            strict: process.env.NODE_ENV !== "production" // eslint-disable-line no-undef
+        }),
         propsData: { project_id },
         router
     }).$mount(vue_mount_point);
