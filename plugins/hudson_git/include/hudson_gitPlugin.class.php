@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016-2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -32,8 +32,9 @@ use Tuleap\HudsonGit\GitWebhooksSettingsEnhancer;
 use Tuleap\Git\GitViews\RepoManagement\Pane\Hooks;
 use Tuleap\HudsonGit\PollingResponseFactory;
 use Tuleap\Jenkins\JenkinsCSRFCrumbRetriever;
+use Tuleap\Plugin\PluginWithLegacyInternalRouting;
 
-class hudson_gitPlugin extends Plugin
+class hudson_gitPlugin extends PluginWithLegacyInternalRouting
 {
     const DISPLAY_HUDSON_ADDITION_INFO = 'display_hudson_addition_info';
 
@@ -41,6 +42,8 @@ class hudson_gitPlugin extends Plugin
     {
         parent::__construct($id);
         $this->setScope(self::SCOPE_PROJECT);
+
+        $this->listenToCollectRouteEventWithDefaultController();
 
         if (defined('GIT_BASE_URL')) {
             $this->addHook(Hooks::ADDITIONAL_WEBHOOKS);
@@ -83,7 +86,8 @@ class hudson_gitPlugin extends Plugin
         }
     }
 
-    public function process() {
+    public function process() : void
+    {
         $request = HTTPRequest::instance();
         $action  = $request->get('action');
 

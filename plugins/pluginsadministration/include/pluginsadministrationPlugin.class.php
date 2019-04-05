@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * Tuleap is free software; you can redistribute it and/or modify
@@ -17,12 +17,14 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+
 use Tuleap\BurningParrotCompatiblePageEvent;
+use Tuleap\Plugin\PluginWithLegacyInternalRouting;
 
 require_once __DIR__ . '/constants.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
-class PluginsAdministrationPlugin extends Plugin
+class PluginsAdministrationPlugin extends PluginWithLegacyInternalRouting
 {
 
     public function __construct($id)
@@ -32,6 +34,7 @@ class PluginsAdministrationPlugin extends Plugin
         $this->addHook(BurningParrotCompatiblePageEvent::NAME);
         $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
         $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
+        $this->listenToCollectRouteEventWithDefaultController();
         bindtextdomain('tuleap-pluginsadministration', __DIR__.'/../site-content');
     }
 
@@ -74,7 +77,8 @@ class PluginsAdministrationPlugin extends Plugin
         }
     }
 
-    function process() {
+    function process() : void
+    {
         require_once('PluginsAdministration.class.php');
         $controler = new PluginsAdministration();
         $controler->process();

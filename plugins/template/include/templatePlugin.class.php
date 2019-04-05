@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,12 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'autoload.php';
-require_once 'constants.php';
+require_once __DIR__.'/autoload.php';
 
-class templatePlugin extends Plugin {
-
-    public function __construct($id) {
+class templatePlugin extends Plugin
+{
+    public function __construct($id)
+    {
         parent::__construct($id);
         $this->setScope(self::SCOPE_PROJECT);
     }
@@ -31,19 +31,16 @@ class templatePlugin extends Plugin {
     /**
      * @return Tuleap\Template\Plugin\PluginInfo
      */
-    public function getPluginInfo() {
+    public function getPluginInfo()
+    {
         if (!$this->pluginInfo) {
             $this->pluginInfo = new Tuleap\Template\Plugin\PluginInfo($this);
         }
         return $this->pluginInfo;
     }
 
-    public function getServiceShortname() {
+    public function getServiceShortname()
+    {
         return 'plugin_template';
-    }
-
-    public function process() {
-        $renderer = TemplateRendererFactory::build()->getRenderer(TEMPLATE_BASE_DIR.'/template');
-        $renderer->renderToPage('index', array('world' => 'World'));
     }
 }

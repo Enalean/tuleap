@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -28,6 +28,7 @@ use Tuleap\ArtifactsFolders\Folder\PostSaveNewChangesetCommand;
 use Tuleap\ArtifactsFolders\Folder\Controller;
 use Tuleap\ArtifactsFolders\Folder\Router;
 use Tuleap\ArtifactsFolders\Nature\NatureInFolderPresenter;
+use Tuleap\Plugin\PluginWithLegacyInternalRouting;
 use Tuleap\Tracker\Events\ArtifactLinkTypeCanBeUnused;
 use Tuleap\Tracker\Events\GetEditableTypesInProject;
 use Tuleap\Tracker\Events\XMLImportArtifactLinkTypeCanBeDisabled;
@@ -43,7 +44,7 @@ require_once __DIR__ . '/../../tracker/include/trackerPlugin.class.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once 'constants.php';
 
-class ArtifactsFoldersPlugin extends Plugin // phpcs:ignore
+class ArtifactsFoldersPlugin extends PluginWithLegacyInternalRouting // phpcs:ignore
 {
     public function __construct($id)
     {
@@ -70,6 +71,8 @@ class ArtifactsFoldersPlugin extends Plugin // phpcs:ignore
             $this->addHook(GetEditableTypesInProject::NAME);
             $this->addHook(ArtifactLinkTypeCanBeUnused::NAME);
             $this->addHook(XMLImportArtifactLinkTypeCanBeDisabled::NAME);
+
+            $this->listenToCollectRouteEventWithDefaultController();
         }
 
         return parent::getHooksAndCallbacks();
@@ -240,7 +243,7 @@ class ArtifactsFoldersPlugin extends Plugin // phpcs:ignore
         }
     }
 
-    public function process(HTTPRequest $request)
+    public function process() : void
     {
         if (! defined('TRACKER_BASE_URL')) {
             return;
@@ -252,7 +255,7 @@ class ArtifactsFoldersPlugin extends Plugin // phpcs:ignore
             new Controller($this->getPresenterBuilder())
         );
 
-        $router->route($request);
+        $router->route(HTTPRequest::instance());
     }
 
     public function tracker_add_system_natures($params) // phpcs:ignore

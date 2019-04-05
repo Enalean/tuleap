@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -19,12 +19,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Plugin\PluginWithLegacyInternalRouting;
 use Tuleap\TrackerEncryption\Dao\ValueDao;
 
 require_once __DIR__ . '/../../tracker/include/trackerPlugin.class.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
-class tracker_encryptionPlugin extends Plugin
+class tracker_encryptionPlugin extends PluginWithLegacyInternalRouting
 {
     public function __construct($id)
     {
@@ -43,6 +44,7 @@ class tracker_encryptionPlugin extends Plugin
         $this->addHook('fill_project_history_sub_events');
         $this->addHook('javascript_file');
         $this->addHook('cssfile');
+        $this->listenToCollectRouteEventWithDefaultController();
 
         return parent::getHooksAndCallbacks();
     }
@@ -132,8 +134,9 @@ class tracker_encryptionPlugin extends Plugin
                     );
     }
 
-    public function process(HTTPRequest $request)
+    public function process() : void
     {
+        $request = HTTPRequest::instance();
         $func       = $request->get('func');
         $tracker_id = $request->get('tracker');
         $tracker = TrackerFactory::instance()->getTrackerById($tracker_id);
