@@ -46,10 +46,6 @@ class DocmanItemFileUpdator
      */
     private $creator;
     /**
-     * @var FileVersionToUploadVisitorBeforeUpdateValidator
-     */
-    private $before_update_validator;
-    /**
      * @var LockChecker
      */
     private $lock_checker;
@@ -58,13 +54,11 @@ class DocmanItemFileUpdator
         ApprovalTableRetriever $approval_table_retriever,
         Docman_LockFactory $lock_factory,
         VersionToUploadCreator $creator,
-        FileVersionToUploadVisitorBeforeUpdateValidator $before_update_validator,
         LockChecker $lock_checker
     ) {
         $this->approval_table_retriever = $approval_table_retriever;
         $this->lock_factory             = $lock_factory;
         $this->creator                  = $creator;
-        $this->before_update_validator  = $before_update_validator;
         $this->lock_checker             = $lock_checker;
     }
 
@@ -80,8 +74,6 @@ class DocmanItemFileUpdator
         \DateTimeImmutable $time
     ): CreatedItemFilePropertiesRepresentation {
         $this->lock_checker->checkItemIsLocked($item, $user);
-
-        $item->accept($this->before_update_validator, []);
 
         try {
             $document_to_upload = $this->creator->create(

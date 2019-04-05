@@ -39,10 +39,6 @@ class DocmanItemFileUpdatorTest extends TestCase
      */
     private $lock_checker;
     /**
-     * @var Mockery\MockInterface|FileVersionToUploadVisitorBeforeUpdateValidator
-     */
-    private $before_update_validator;
-    /**
      * @var Mockery\MockInterface|VersionToUploadCreator
      */
     private $creator;
@@ -67,16 +63,13 @@ class DocmanItemFileUpdatorTest extends TestCase
         $this->approval_table_retriever = Mockery::mock(ApprovalTableRetriever::class);
         $this->lock_factory             = Mockery::mock(\Docman_LockFactory::class);
         $this->creator                  = Mockery::mock(VersionToUploadCreator::class);
-        $this->before_update_validator  = Mockery::mock(FileVersionToUploadVisitorBeforeUpdateValidator::class);
         $this->lock_checker             = Mockery::mock(LockChecker::class);
 
         $this->updator = new DocmanItemFileUpdator(
             $this->approval_table_retriever,
             $this->lock_factory,
             $this->creator,
-            $this->before_update_validator,
             $this->lock_checker
-
         );
     }
 
@@ -110,7 +103,6 @@ class DocmanItemFileUpdatorTest extends TestCase
         $this->creator->shouldReceive('create')->once()->andReturn($version_to_upload);
 
         $time = new \DateTimeImmutable();
-        $item->shouldReceive('accept')->withArgs([$this->before_update_validator, []]);
 
         $created_version_representation = $this->updator->updateFile($item, $user, $representation, $time);
 

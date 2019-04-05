@@ -304,10 +304,10 @@ class DocmanDataBuilder extends REST_TestDataBuilder
      *                                            +
      *                                            |
      *                                            +
-     *                  +----------------+--------+-------+----------------+---------------+
-     *                  |                |                |                |               |
-     *                  +                +                +                +               +
-     *              file AT C       file AT R         file AT E        file DIS AT      file NO AT
+     *                  +----------------+--------+-------+----------------+---------------+--------------+
+     *                  |                |                |                |               |              |
+     *                  +                +                +                +               +              +
+     *              file AT C       file AT R         file AT E        file DIS AT      file NO AT     file L
      *
      * (L)    => Lock on this item
      * (AT)   => Approval table on this item
@@ -370,13 +370,19 @@ class DocmanDataBuilder extends REST_TestDataBuilder
             PLUGIN_DOCMAN_ITEM_TYPE_FILE
         );
 
+        $file_L_id = $this->createItem(
+            self::REGULAR_USER_ID,
+            $folder_3_id,
+            'file L',
+            PLUGIN_DOCMAN_ITEM_TYPE_FILE
+        );
 
         $this->addApprovalTable("file_ATC", (int)$file_ATC_version_id, PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED);
         $this->addApprovalTable("file_ATR", (int)$file_ATR_version_id, PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED);
         $this->addApprovalTable("file_ATE", (int)$file_ATE_version_id, PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED);
         $this->addReadPermissionOnItem($folder_3_id, \ProjectUGroup::PROJECT_ADMIN);
 
-        $this->lockItem($folder_3_id);
+        $this->lockItem($file_L_id);
 
         $this->appendCustomMetadataValueToItem($folder_3_id, "custom value for folder_3");
 
