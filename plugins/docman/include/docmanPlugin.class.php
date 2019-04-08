@@ -56,7 +56,7 @@ use Tuleap\Docman\PermissionsPerGroup\PermissionPerGroupDocmanServicePaneBuilder
 use Tuleap\Docman\REST\ResourcesInjector;
 use Tuleap\Docman\REST\v1\DocmanItemsEventAdder;
 use Tuleap\Docman\REST\v1\ItemRepresentationBuilder;
-use Tuleap\Docman\REST\v1\MetadataRepresentationBuilder;
+use Tuleap\Docman\REST\v1\Metadata\MetadataRepresentationBuilder;
 use Tuleap\Docman\Upload\Version\DocumentOnGoingVersionToUploadDAO;
 use Tuleap\Docman\Upload\Version\VersionBeingUploadedInformationProvider;
 use Tuleap\Docman\Upload\Version\VersionDataStore;

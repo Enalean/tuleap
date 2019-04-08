@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,28 +15,12 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see http://www.gnu.org/licenses/.
+ *
  */
 
-declare(strict_types = 1);
+namespace Tuleap\Docman\REST\v1\Metadata;
 
-namespace Tuleap\Docman\REST\v1;
-
-class MetadataListValueRepresentation
+class UnknownMetadataException extends \Exception
 {
-    /**
-     * @var int
-     */
-    public $id;
-    /**
-     * @var string
-     */
-    public $name;
-
-    public function __construct(int $id, string $name)
-    {
-
-        $this->id   = $id;
-        $this->name = $name;
-    }
 }

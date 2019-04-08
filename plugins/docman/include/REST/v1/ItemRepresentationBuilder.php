@@ -27,6 +27,8 @@ use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\ApprovalTable\ApprovalTableStateMapper;
 use Tuleap\Docman\REST\v1\EmbeddedFiles\EmbeddedFilePropertiesRepresentation;
 use Tuleap\Docman\REST\v1\Files\FilePropertiesRepresentation;
+use Tuleap\Docman\REST\v1\Metadata\MetadataRepresentationBuilder;
+use Tuleap\Docman\REST\v1\Metadata\UnknownMetadataException;
 use Tuleap\Docman\REST\v1\Wiki\WikiPropertiesRepresentation;
 use Tuleap\Docman\REST\v1\Links\LinkPropertiesRepresentation;
 use Tuleap\User\REST\MinimalUserRepresentation;
@@ -87,9 +89,8 @@ class ItemRepresentationBuilder
     }
 
     /**
-     * @param Project $project
-     *
      * @return ItemRepresentation|null
+     * @throws UnknownMetadataException
      */
     public function buildRootId(Project $project, \PFUser $current_user)
     {

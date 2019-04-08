@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -29,6 +29,7 @@ use Mockery;
 use PFUser;
 use Tuleap\Docman\Item\PaginatedDocmanItemCollection;
 use Tuleap\Docman\REST\v1\Files\FilePropertiesRepresentation;
+use Tuleap\Docman\REST\v1\Metadata\MetadataRepresentation;
 use Tuleap\User\REST\MinimalUserRepresentation;
 use UserManager;
 

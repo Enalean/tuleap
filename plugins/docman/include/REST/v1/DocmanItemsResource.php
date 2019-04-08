@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2018-2019. All rights reserved.
+ * Copyright Enalean (c) 2018 - present. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -34,6 +34,8 @@ use ProjectManager;
 use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\ApprovalTable\ApprovalTableStateMapper;
 use Tuleap\Docman\REST\v1\Folders\ItemCanHaveSubItemsChecker;
+use Tuleap\Docman\REST\v1\Metadata\MetadataRepresentationBuilder;
+use Tuleap\Docman\REST\v1\Metadata\UnknownMetadataException;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
