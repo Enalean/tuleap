@@ -125,6 +125,7 @@ seed_data() {
     load_project /usr/share/tuleap/tests/rest/_fixtures/10-permissions-on-artifacts
     load_project /usr/share/tuleap/tests/rest/_fixtures/11-delegated-rest-project-managers
     load_project /usr/share/tuleap/tests/rest/_fixtures/12-suspended-project
+    load_project /usr/share/tuleap/tests/rest/_fixtures/13-project-services
 
     echo "Load initial data"
     "$PHP_CLI" -d include_path=/usr/share/tuleap/src/www/include:/usr/share/tuleap/src /usr/share/tuleap/tests/rest/bin/init_data.php

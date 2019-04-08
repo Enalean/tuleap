@@ -84,6 +84,7 @@ class TestDataBuilder
     const PROJECT_BURNDOWN                 = 'burndown-generation';
     const PROJECT_DELETED_SHORTNAME        = 'deleted-project';
     const PROJECT_SUSPENDED_SHORTNAME      = 'suspended-project';
+    public const PROJECT_SERVICES          = 'project-services';
 
     const STATIC_UGROUP_1_ID    = 101;
     const STATIC_UGROUP_1_LABEL = 'static_ugroup_1';
