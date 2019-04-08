@@ -70,6 +70,10 @@ pipeline {
                     }
                     post { always { junit "results/api-soap/*/soap_tests.xml" } }
                 }
+                stage ('Karma') {
+                    steps { script { actions.runKarmaTests('baseline', 'plugins/baseline/scripts/') } }
+                    post { always { junit 'results/karma/test-*-results.xml' } }
+                }
                 stage('Check translation files') {
                     steps { script {
                         dir ('sources/plugins/baseline') {
