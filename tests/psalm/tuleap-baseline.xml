@@ -19633,15 +19633,6 @@
       <code>3600</code>
     </InvalidArgument>
   </file>
-  <file src="src/common/soap/SOAP_RequestValidator.class.php">
-    <InvalidArgument occurrences="1">
-      <code>true</code>
-    </InvalidArgument>
-    <InvalidScalarArgument occurrences="2">
-      <code>'3001'</code>
-      <code>'3002'</code>
-    </InvalidScalarArgument>
-  </file>
   <file src="src/common/soap/SOAP_UserManager.class.php">
     <InvalidScalarArgument occurrences="1">
       <code>'Invalid session'</code>

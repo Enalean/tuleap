@@ -1,25 +1,25 @@
 <?php
 /**
+ * Copyright (c) Enalean 2012-Present. All rights reserved
  * Copyright (c) STMicroelectronics, 2011. All Rights Reserved.
  * 
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  * 
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  * 
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with Codendi; if not, write to the Free Software
+ * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once('common/frs/FRSReleaseFactory.class.php');
 
 Mock::generate('PFUser');
 Mock::generate('UserManager');
@@ -52,12 +52,26 @@ class FRSReleaseFactoryTest extends TuleapTestCase
 
     public function setUp()
     {
-        $this->user                = mock('PFUser');
+        parent::setUp();
+        $this->user  = mock('PFUser');
         $this->frs_release_factory = new FRSReleaseFactoryTestVersion($this);
         $this->user_manager        = new MockUserManager($this);
         $this->permission_manager  = new MockPermissionsManager($this);
         stub($this->user_manager)->getUserById()->returns($this->user);
         stub($this->frs_release_factory)->getUserManager()->returns($this->user_manager);
+        $project = Mockery::spy(Project::class);
+        $project->shouldReceive('getID')->andReturn($this->group_id);
+        $project->shouldReceive('isActive')->andReturn(true);
+        $project->shouldReceive('isPublic')->andReturn(true);
+        $project_manager = Mockery::mock(ProjectManager::class);
+        $project_manager->shouldReceive('getProject')->andReturn($project);
+        ProjectManager::setInstance($project_manager);
+    }
+
+    public function tearDown() : void
+    {
+        parent::tearDown();
+        ProjectManager::clearInstance();
     }
 
     public function testAdminHasAlwaysAccessToReleases()

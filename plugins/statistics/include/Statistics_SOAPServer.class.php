@@ -24,7 +24,7 @@
 class Statistics_SOAPServer {
     
     /**
-     * @var SOAP_RequestValidator
+     * @var SOAPRequestValidator
      */
     private $soap_request_validator;
 
@@ -38,7 +38,7 @@ class Statistics_SOAPServer {
      */
     private $project_quota_manager;
 
-    public function __construct(SOAP_RequestValidator $soap_request_validator, Statistics_DiskUsageManager $disk_usage_manager, ProjectQuotaManager $project_quota_manager) {
+    public function __construct(SOAPRequestValidator $soap_request_validator, Statistics_DiskUsageManager $disk_usage_manager, ProjectQuotaManager $project_quota_manager) {
         $this->soap_request_validator = $soap_request_validator;
         $this->disk_usage_manager     = $disk_usage_manager;
         $this->project_quota_manager  = $project_quota_manager;

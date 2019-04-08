@@ -628,7 +628,7 @@ class ProjectManager
      *
      * @param Integer $groupId    Id of the project
      * @param String  $method     Name of the callback method
-     * @param Boolean $byUnixName Optional, Search the project by its unix name instead of its id
+     * @param bool $byUnixName Optional, Search the project by its unix name instead of its id
      *
      * @return Project or SoapFault
      */

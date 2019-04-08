@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean 2017 - 2019. All rights reserved
+ * Copyright (c) Enalean 2017 - Present. All rights reserved
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -25,6 +25,8 @@ use Tuleap\FRS\UploadedLinkDeletor;
 use Tuleap\FRS\UploadedLinksDao;
 use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;
+use Tuleap\Project\ProjectAccessChecker;
+use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 
 require_once ('FRSRelease.class.php');
 require_once ('common/dao/FRSReleaseDao.class.php');
@@ -351,7 +353,10 @@ class FRSReleaseFactory {
         return $this->_getFRSPackageFactory()->userCanAdmin($user, $project_id);
     }
 
-    function userCanRead($group_id, $package_id, $release_id, $user_id = false)
+    /**
+     * @return bool
+     */
+    public function userCanRead($group_id, $package_id, $release_id, $user_id = false)
     {
         $um = $this->getUserManager();
         if (! $user_id) {
@@ -360,19 +365,41 @@ class FRSReleaseFactory {
             $user = $um->getUserById($user_id);    
         }
 
+        if ($user === null) {
+            return false;
+        }
+
         if ($this->userCanAdmin($user, $group_id)) {
             return true;
-        } else {
-            $pm = $this->getPermissionsManager();
-            if ($pm->isPermissionExist($release_id, FRSRelease::PERM_READ)) {
-                $ok = $pm->userHasPermission($release_id, FRSRelease::PERM_READ, $user->getUgroups($group_id, array()));
-            } else {
-                $frspf = $this->_getFRSPackageFactory();
-                $ok    = $frspf->userCanRead($group_id, $package_id, $user->getId());
-            }
-
-            return $ok;
         }
+
+        $project = ProjectManager::instance()->getProject($group_id);
+        if ($project === null) {
+            return false;
+        }
+
+        $project_access_checker = new ProjectAccessChecker(
+            PermissionsOverrider_PermissionsOverriderManager::instance(),
+            new RestrictedUserCanAccessProjectVerifier()
+        );
+
+        try {
+            $project_access_checker->checkUserCanAccessProject($user, $project);
+        } catch (Project_AccessException $exception) {
+            return false;
+        }
+
+        $pm = $this->getPermissionsManager();
+        if ($pm->isPermissionExist($release_id, FRSRelease::PERM_READ)) {
+            return $pm->userHasPermission(
+                $release_id,
+                FRSRelease::PERM_READ,
+                $user->getUgroups($project->getID(), array())
+            );
+        }
+
+        $frspf = $this->_getFRSPackageFactory();
+        return $frspf->userCanRead($project->getID(), $package_id, $user->getId());
     }
 
     /** 

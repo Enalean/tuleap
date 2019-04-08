@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2008. All Rights Reserved.
  *
  * Originally written by Manuel VACELET, 2008
@@ -27,8 +27,11 @@ use Tuleap\Project\Admin\Navigation\NavigationDropdownItemPresenter;
 use Tuleap\Project\Admin\Navigation\NavigationPresenter;
 use Tuleap\Project\Admin\Navigation\NavigationPresenterBuilder;
 use Tuleap\Project\Admin\ProjectDetailsPresenter;
+use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\Quota\ProjectQuotaInformation;
 use Tuleap\Project\Quota\ProjectQuotaRequester;
+use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
+use Tuleap\SOAP\SOAPRequestValidatorImplementation;
 use Tuleap\SVN\DiskUsage\Collector as SVNCollector;
 use Tuleap\SVN\DiskUsage\Retriever as SVNRetriever;
 use Tuleap\CVS\DiskUsage\Retriever as CVSRetriever;
@@ -263,11 +266,17 @@ class StatisticsPlugin extends Plugin
     }
 
     private function instantiateSOAPServer($uri, $service_class) {
-        require_once 'common/soap/SOAP_RequestValidator.class.php';
         require_once 'Statistics_DiskUsageManager.class.php';
         $user_manager           = UserManager::instance();
         $project_manager        = ProjectManager::instance();
-        $soap_request_validator = new SOAP_RequestValidator($project_manager, $user_manager);
+        $soap_request_validator = new SOAPRequestValidatorImplementation(
+            $project_manager,
+            $user_manager,
+            new ProjectAccessChecker(
+                new PermissionsOverrider_PermissionsOverriderManager(),
+                new RestrictedUserCanAccessProjectVerifier()
+            )
+        );
         $disk_usage_manager     = $this->getDiskUsageManager();
         $project_quota_manager  = new ProjectQuotaManager();
 

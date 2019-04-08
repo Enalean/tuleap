@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2019. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,7 +16,8 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-require_once 'common/svn/SVN_SOAPServer.class.php';
+
+use Tuleap\SOAP\SOAPRequestValidator;
 
 class SVN_SOAPServerBaseTest extends TuleapTestCase {
         
@@ -28,7 +29,7 @@ class SVN_SOAPServerBaseTest extends TuleapTestCase {
         $this->project = mock('Project');
         $this->user = mock('PFUser');
 
-        $this->soap_request_valid     = mock('SOAP_RequestValidator');
+        $this->soap_request_valid     = Mockery::mock(SOAPRequestValidator::class);
         stub($this->soap_request_valid)->getProjectById($this->group_id, '*')->returns($this->project);
         stub($this->soap_request_valid)->continueSession($this->session_key)->returns($this->user);
     }
@@ -39,6 +40,7 @@ class SVN_SOAPServer_GetSvnPath_Test extends SVN_SOAPServerBaseTest {
         $svn_repository_listing = mock('SVN_RepositoryListing');
         $svn_repository_listing->expectOnce('getSvnPaths', array($this->user, $this->project, $this->svn_path));
 
+        $this->soap_request_valid->shouldReceive('assertUserCanAccessProject')->once();
         $svn_soap = new SVN_SOAPServer($this->soap_request_valid, $svn_repository_listing);
         $svn_soap->getSvnPath($this->session_key, $this->group_id, $this->svn_path);
     }
@@ -59,7 +61,7 @@ class SVN_SOAPServer_GetSvnPathWithLogDetails_Test extends SVN_SOAPServerBaseTes
     }
 
     public function itThrowsSoapFaultIfUserHasWrongPermissions() {
-        $soap_request_valid     = mock('SOAP_RequestValidator');
+        $soap_request_valid     = Mockery::mock(SOAPRequestValidator::class);
         stub($soap_request_valid)->getProjectById($this->group_id, '*')->returns($this->project);
         stub($soap_request_valid)->continueSession($this->session_key)->returns($this->user);
         stub($soap_request_valid)->assertUserCanAccessProject($this->user, $this->project)->returns(new Exception());
@@ -73,4 +75,3 @@ class SVN_SOAPServer_GetSvnPathWithLogDetails_Test extends SVN_SOAPServerBaseTes
         $svn_soap->getSvnPathsWithLogDetails($this->session_key, $this->group_id, $this->svn_path, $this->order);
     }
 }
-?>

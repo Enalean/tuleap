@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +18,9 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+
+use Tuleap\Project\ProjectAccessChecker;
+use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 
 require_once 'pre.php';
 require_once 'common/svn/SVN_SOAPServer.class.php';
@@ -39,7 +42,14 @@ if ($request->exist('wsdl')) {
     $wsdlGen = new SOAP_NusoapWSDL($serviceClass, 'TuleapSubversionAPI', $uri);
     $wsdlGen->dumpWSDL();
 } else {
-    $soap_request_validator = new SOAP_RequestValidator(ProjectManager::instance(), UserManager::instance());
+    $soap_request_validator = $soap_request_validator = new SOAPRequestValidator(
+        $project_manager,
+        $user_manager,
+        new ProjectAccessChecker(
+            new PermissionsOverrider_PermissionsOverriderManager(),
+            new RestrictedUserCanAccessProjectVerifier()
+        )
+    );
     $svn_repository_listing = new SVN_RepositoryListing(new SVN_PermissionsManager(), new SVN_Svnlook(), UserManager::instance());
     
     $server = new TuleapSOAPServer($uri.'/?wsdl',
