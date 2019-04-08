@@ -23,6 +23,9 @@ import * as getters from "./error-getters.js";
 export default {
     namespaced: true,
     state: {
+        has_document_permission_error: false,
+        has_document_loading_error: false,
+        document_loading_error: null,
         has_folder_permission_error: false,
         has_folder_loading_error: false,
         folder_loading_error: null,

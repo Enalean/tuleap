@@ -21,7 +21,8 @@
     <div class="document-app">
         <permission-error v-if="has_folder_permission_error"/>
         <document-breadcrumb v-if="! has_folder_permission_error"/>
-        <loading-error v-if="has_folder_loading_error"/>
+        <loading-error v-if="has_folder_loading_error || has_document_loading_error"/>
+        <item-permission-error v-if="has_document_permission_error"/>
         <router-view/>
         <switch-to-old-u-i v-if="user_id !== 0"/>
     </div>
@@ -29,8 +30,9 @@
 <script>
 import { mapState, mapGetters } from "vuex";
 import DocumentBreadcrumb from "./Breadcrumb/DocumentBreadcrumb.vue";
-import PermissionError from "./Folder/EmptyState/PermissionError.vue";
-import LoadingError from "./Folder/EmptyState/LoadingError.vue";
+import PermissionError from "./Folder/Error/PermissionError.vue";
+import ItemPermissionError from "./Folder/Error/ItemPermissionError.vue";
+import LoadingError from "./Folder/Error/LoadingError.vue";
 import SwitchToOldUI from "./Folder/SwitchToOldUI.vue";
 
 export default {
@@ -39,7 +41,8 @@ export default {
         DocumentBreadcrumb,
         PermissionError,
         LoadingError,
-        SwitchToOldUI
+        SwitchToOldUI,
+        ItemPermissionError
     },
     props: {
         user_id: Number,
@@ -53,7 +56,12 @@ export default {
         embedded_are_allowed: Boolean
     },
     computed: {
-        ...mapState("error", ["has_folder_permission_error", "has_folder_loading_error"]),
+        ...mapState("error", [
+            "has_folder_permission_error",
+            "has_folder_loading_error",
+            "has_document_permission_error",
+            "has_document_loading_error"
+        ]),
         ...mapGetters(["is_uploading"])
     },
     created() {

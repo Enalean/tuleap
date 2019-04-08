@@ -42,7 +42,8 @@ import {
 import {
     getErrorMessage,
     handleErrors,
-    handleErrorsForModal
+    handleErrorsForModal,
+    handleErrorsForDocument
 } from "./actions-helpers/handle-errors.js";
 import { loadFolderContent } from "./actions-helpers/load-folder-content.js";
 import { loadAscendantHierarchy } from "./actions-helpers/load-ascendant-hierarchy.js";
@@ -131,6 +132,18 @@ export const createNewItem = async (context, [item, parent, current_folder]) => 
         }
     } catch (exception) {
         return handleErrorsForModal(context, exception);
+    }
+};
+
+export const loadDocumentWithAscendentHierarchy = async (context, item_id) => {
+    try {
+        const item = await getItem(item_id);
+        const loading_current_folder_promise = getItem(item.parent_id);
+        loadAscendantHierarchy(context, item.parent_id, loading_current_folder_promise);
+
+        return item;
+    } catch (exception) {
+        return handleErrorsForDocument(context, exception);
     }
 };
 

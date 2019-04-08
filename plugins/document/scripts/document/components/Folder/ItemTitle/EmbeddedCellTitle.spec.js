@@ -19,12 +19,43 @@
  */
 
 import Vuex from "vuex";
+import VueRouter from "vue-router";
 import { shallowMount } from "@vue/test-utils";
 import EmbeddedCellTitle from "./EmbeddedCellTitle.vue";
 import localVue from "../../../helpers/local-vue";
 import { TYPE_EMBEDDED } from "../../../constants.js";
 
 describe("EmbeddedCellTitle", () => {
+    let embedded_cell_title_factory, store;
+
+    beforeEach(() => {
+        const router = new VueRouter({
+            routes: [
+                {
+                    path: "/folder/1/42",
+                    name: "item"
+                }
+            ]
+        });
+
+        store = new Vuex.Store();
+        store.state.current_folder = {
+            id: 1,
+            title: "My current folder"
+        };
+
+        store.getters.current_folder_title = "My folder";
+
+        embedded_cell_title_factory = (props = {}) => {
+            return shallowMount(EmbeddedCellTitle, {
+                localVue,
+                router,
+                propsData: { ...props },
+                mocks: { $store: store }
+            });
+        };
+    });
+
     it(`Given embedded_file_properties is not set
         When we display item title
         Then we should display corrupted badge`, () => {
@@ -35,15 +66,9 @@ describe("EmbeddedCellTitle", () => {
             type: TYPE_EMBEDDED
         };
 
-        const component_options = {
-            localVue,
-            propsData: {
-                item
-            }
-        };
-
-        const store = new Vuex.Store();
-        const wrapper = shallowMount(EmbeddedCellTitle, { store, ...component_options });
+        const wrapper = embedded_cell_title_factory({
+            item
+        });
 
         expect(wrapper.contains(".document-badge-corrupted")).toBeTruthy();
     });
@@ -61,15 +86,9 @@ describe("EmbeddedCellTitle", () => {
             }
         };
 
-        const component_options = {
-            localVue,
-            propsData: {
-                item
-            }
-        };
-
-        const store = new Vuex.Store();
-        const wrapper = shallowMount(EmbeddedCellTitle, { store, ...component_options });
+        const wrapper = embedded_cell_title_factory({
+            item
+        });
 
         expect(wrapper.contains(".document-badge-corrupted")).toBeFalsy();
     });
