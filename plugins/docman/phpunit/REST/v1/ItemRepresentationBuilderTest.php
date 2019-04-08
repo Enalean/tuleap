@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -28,6 +28,8 @@ use Mockery;
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface;
 use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\ApprovalTable\ApprovalTableStateMapper;
+use Tuleap\Docman\REST\v1\Metadata\MetadataRepresentation;
+use Tuleap\Docman\REST\v1\Metadata\MetadataRepresentationBuilder;
 
 class ItemRepresentationBuilderTest extends \PHPUnit\Framework\TestCase
 {

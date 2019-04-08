@@ -25,6 +25,9 @@ use Docman_Metadata;
 use Docman_MetadataFactory;
 use Mockery;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Docman\REST\v1\Metadata\MetadataListValueRepresentation;
+use Tuleap\Docman\REST\v1\Metadata\MetadataRepresentation;
+use Tuleap\Docman\REST\v1\Metadata\MetadataRepresentationBuilder;
 
 class MetadataRepresentationBuilderTest extends TestCase
 {
