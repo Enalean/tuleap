@@ -2,6 +2,7 @@
 
 use Tuleap\FRS\UploadedLinksDao;
 use Tuleap\FRS\UploadedLinksRetriever;
+use Tuleap\URI\URIModifier;
 
 require_once ('pre.php');
 require_once ('session.php');
@@ -1194,31 +1195,46 @@ function addFile($sessionKey, $group_id, $package_id, $release_id, $filename, $b
  * @param string $filename the name of the file we want to add
  * @param string $contents the content of the chunk, encoded in base64
  * @param boolean $first_chunk indicates if the chunk to add is the first
- * @return int size of the chunk if added, or a soap fault if:
+ * @return int|SoapFault size of the chunk if added, or a soap fault if:
  *              - the sessionKey is not valid, 
  *              - the file creation failed.
  */
 function addFileChunk($sessionKey, $filename, $contents, $first_chunk) {
-    if (session_continue($sessionKey)) {
-        // if it's the first chunk overwrite the existing (if exists) file with the same name
-        if ($first_chunk) {
-            $mode = 'w';
-        } else {
-            $mode = 'a';
-        }
-        $fp = fopen($GLOBALS['ftp_incoming_dir'].'/'.$filename, $mode);
-        $chunk = base64_decode($contents);
-        $cLength = strlen($chunk);
-        $written = fwrite($fp, $chunk);
-        fclose($fp);
-        if ($written != $cLength) {
-            return new SoapFault(invalid_file_fault,'Sent '.$cLength.' of data but only '.$written.' saved in the server', 'addFileChunk');
-        } else {
-            return $written;
-        }
-    } else {
+    if (! session_continue($sessionKey)) {
         return new SoapFault(invalid_session_fault,'Invalid Session', 'addFileChunk');
     }
+    // if it's the first chunk overwrite the existing (if exists) file with the same name
+    if ($first_chunk) {
+        $mode = 'w';
+    } else {
+        $mode = 'a';
+    }
+
+    $ftp_incoming_dir = ForgeConfig::get('ftp_incoming_dir');
+    if ($ftp_incoming_dir === false) {
+        return new SoapFault(invalid_file_fault,'Incoming directory is not set', 'addFileChunk');
+    }
+    $minimal_ftp_incoming_dir_path = URIModifier::removeDotSegments(URIModifier::removeEmptySegments($ftp_incoming_dir));
+    if ($minimal_ftp_incoming_dir_path === '' || $minimal_ftp_incoming_dir_path === '/') {
+        return new SoapFault(invalid_file_fault,'Incoming directory is misconfigured', 'addFileChunk');
+    }
+    if (strpos($filename, '/') !== false) {
+        return new SoapFault(invalid_file_fault,'Filename can not contain /', 'addFileChunk');
+    }
+    $incoming_file_path = URIModifier::removeDotSegments(URIModifier::removeEmptySegments($ftp_incoming_dir . '/' . $filename));
+    if (strpos($incoming_file_path, $ftp_incoming_dir) !== 0) {
+        return new SoapFault(invalid_file_fault,'Filename is invalid', 'addFileChunk');
+    }
+
+    $fp = fopen($incoming_file_path, $mode);
+    $chunk = base64_decode($contents);
+    $cLength = strlen($chunk);
+    $written = fwrite($fp, $chunk);
+    fclose($fp);
+    if ($written != $cLength) {
+        return new SoapFault(invalid_file_fault,'Sent '.$cLength.' of data but only '.$written.' saved in the server', 'addFileChunk');
+    }
+    return $written;
 }
 
 /**
