@@ -61,7 +61,6 @@ class AdminDelegation_ShowProjectWidget extends Widget {
     }
 
     function getAllProject($offset, $limit, $condition, $pattern) {
-        $projects = array();
         if (count($condition)> 0){
             $statements   = '(';
             $i            = 0;
@@ -187,12 +186,12 @@ class AdminDelegation_ShowProjectWidget extends Widget {
 
                 $html .= '<div style="text-align:center" class="'. util_get_alt_row_color($i++) .'">';
                 if ($offset > 0) {
-                    $html .= '<a href="?plugin_admindelegation_func=show_projects&offset='.($offset-$limit).$urlParam.'&plugin_admindelegation_pattern='.$pattern.'">[ '.dgettext('tuleap-admindelegation', 'Previous').' ]</a>';
+                    $html .= '<a href="?plugin_admindelegation_func=show_projects&offset='.($offset-$limit).$urlParam.'&plugin_admindelegation_pattern='.$pattern. '&dashboard_id=' . urlencode($this->getDashboardId()) . '">[ '.dgettext('tuleap-admindelegation', 'Previous').' ]</a>';
                     $html .= '&nbsp;';
                 }
                 if (($offset + $limit) < $res['numrows']) {
                     $html .= '&nbsp;';
-                    $html .= '<a href="?plugin_admindelegation_func=show_projects&offset='.($offset+$limit).$urlParam.'&plugin_admindelegation_pattern='.$pattern.'">[ '.dgettext('tuleap-admindelegation', 'Next').' ]</a>';
+                    $html .= '<a href="?plugin_admindelegation_func=show_projects&offset='.($offset+$limit).$urlParam.'&plugin_admindelegation_pattern='.$pattern . '&dashboard_id=' . urlencode($this->getDashboardId()) . '">[ '.dgettext('tuleap-admindelegation', 'Next').' ]</a>';
                 }
                 $html .= '</div>';
                 $html .= '<div style="text-align:left" class="'. util_get_alt_row_color($i++) .'">';

@@ -36,6 +36,11 @@ use Tuleap\Layout\CssAssetCollection;
     protected $dashboard_widget_id;
 
     /**
+     * @var int
+     */
+    protected $dashboard_id;
+
+    /**
     * Constructor
     */
     public function __construct($id) {
@@ -243,5 +248,18 @@ use Tuleap\Layout\CssAssetCollection;
     public function setDashboardWidgetId($dashboard_widget_id)
     {
         $this->dashboard_widget_id = $dashboard_widget_id;
+    }
+
+    public function setDashboardId($dashboard_id)
+    {
+        $this->dashboard_id = $dashboard_id;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDashboardId()
+    {
+        return $this->dashboard_id;
     }
 }
