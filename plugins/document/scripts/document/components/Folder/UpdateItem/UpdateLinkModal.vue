@@ -61,7 +61,7 @@ export default {
         };
     },
     computed: {
-        ...mapState(["has_modal_error"]),
+        ...mapState("error", ["has_modal_error"]),
         submit_button_label() {
             return this.$gettext("Update");
         },

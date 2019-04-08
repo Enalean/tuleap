@@ -115,7 +115,7 @@ describe("loadAscendantHierarchy", () => {
         await loadAscendantHierarchy(context);
 
         expect(context.commit).not.toHaveBeenCalledWith("saveAscendantHierarchy");
-        expect(context.commit).toHaveBeenCalledWith("setFolderLoadingError", error_message);
+        expect(context.commit).toHaveBeenCalledWith("error/setFolderLoadingError", error_message);
         expect(context.commit).toHaveBeenCalledWith("stopLoadingAscendantHierarchy");
     });
 
@@ -141,7 +141,7 @@ describe("loadAscendantHierarchy", () => {
         );
 
         expect(context.commit).not.toHaveBeenCalledWith("saveAscendantHierarchy");
-        expect(context.commit).toHaveBeenCalledWith("setFolderLoadingError", error_message);
+        expect(context.commit).toHaveBeenCalledWith("error/setFolderLoadingError", error_message);
         expect(context.commit).toHaveBeenCalledWith("stopLoadingAscendantHierarchy");
     });
 
@@ -168,7 +168,7 @@ describe("loadAscendantHierarchy", () => {
         await loadAscendantHierarchy(context, 3, Promise.resolve(item));
 
         expect(context.commit).not.toHaveBeenCalledWith("saveAscendantHierarchy");
-        expect(context.commit).toHaveBeenCalledWith("switchFolderPermissionError");
+        expect(context.commit).toHaveBeenCalledWith("error/switchFolderPermissionError");
         expect(context.commit).toHaveBeenCalledWith("stopLoadingAscendantHierarchy");
     });
 });

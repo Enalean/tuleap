@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,9 +20,11 @@
 export {
     resetErrors,
     switchFolderPermissionError,
+    switchItemPermissionError,
     setFolderLoadingError,
     setModalError,
-    resetModalError
+    resetModalError,
+    setItemLoadingError
 };
 
 function resetErrors(state) {
@@ -35,9 +37,18 @@ function switchFolderPermissionError(state) {
     state.has_folder_permission_error = true;
 }
 
+function switchItemPermissionError(state) {
+    state.has_item_permission_error = true;
+}
+
 function setFolderLoadingError(state, message) {
     state.has_folder_loading_error = true;
     state.folder_loading_error = message;
+}
+
+function setItemLoadingError(state, message) {
+    state.has_item_loading_error = true;
+    state.item_loading_error = message;
 }
 
 function setModalError(state, error_message) {

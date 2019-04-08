@@ -53,7 +53,7 @@ export default {
         embedded_are_allowed: Boolean
     },
     computed: {
-        ...mapState(["has_folder_permission_error", "has_folder_loading_error"]),
+        ...mapState("error", ["has_folder_permission_error", "has_folder_loading_error"]),
         ...mapGetters(["is_uploading"])
     },
     created() {

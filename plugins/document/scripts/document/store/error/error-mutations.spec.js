@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,22 +17,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue from "vue";
-import Vuex from "vuex";
-import * as mutations from "./mutations.js";
-import * as getters from "./getters.js";
-import * as actions from "./actions.js";
-import state from "./state.js";
-import error from "./error/module.js";
+import * as mutations from "./error-mutations.js";
 
-Vue.use(Vuex);
+describe("Store mutations", () => {
+    describe("resetErrors()", () => {
+        it("resets all errors", () => {
+            const state = {
+                has_folder_permission_error: true,
+                has_folder_loading_error: true,
+                folder_loading_error: "Not found"
+            };
 
-export default new Vuex.Store({
-    state,
-    getters,
-    mutations,
-    actions,
-    modules: {
-        error
-    }
+            mutations.resetErrors(state);
+
+            expect(state.has_folder_permission_error).toBe(false);
+            expect(state.has_folder_loading_error).toBe(false);
+            expect(state.folder_loading_error).toBeNull();
+        });
+    });
 });

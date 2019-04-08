@@ -61,7 +61,7 @@ export default {
         };
     },
     computed: {
-        ...mapState(["folder_loading_error", "has_folder_loading_error"]),
+        ...mapState("error", ["folder_loading_error", "has_folder_loading_error"]),
         can_go_to_root() {
             return this.$route.name !== "root_folder";
         }

@@ -85,7 +85,7 @@ describe("loadFolderContent", () => {
         await loadFolderContent(context);
 
         expect(context.commit).not.toHaveBeenCalledWith("saveFolderContent");
-        expect(context.commit).toHaveBeenCalledWith("setFolderLoadingError", error_message);
+        expect(context.commit).toHaveBeenCalledWith("error/setFolderLoadingError", error_message);
         expect(context.commit).toHaveBeenCalledWith("stopLoading");
     });
 
@@ -102,7 +102,7 @@ describe("loadFolderContent", () => {
         await loadFolderContent(context);
 
         expect(context.commit).not.toHaveBeenCalledWith("saveFolderContent");
-        expect(context.commit).toHaveBeenCalledWith("switchFolderPermissionError");
+        expect(context.commit).toHaveBeenCalledWith("error/switchFolderPermissionError");
         expect(context.commit).toHaveBeenCalledWith("stopLoading");
     });
 });

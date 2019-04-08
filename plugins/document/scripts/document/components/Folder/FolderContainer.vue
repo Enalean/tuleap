@@ -33,7 +33,8 @@ export default {
     components: { FolderView },
     computed: {
         ...mapState(["is_loading_folder"]),
-        ...mapGetters(["does_folder_have_any_error", "is_folder_empty"]),
+        ...mapGetters(["is_folder_empty"]),
+        ...mapGetters("error", ["does_folder_have_any_error"]),
         classes() {
             return {
                 "document-folder-container-empty": !this.is_loading_folder && this.is_folder_empty
