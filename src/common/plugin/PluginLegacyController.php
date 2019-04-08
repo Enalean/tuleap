@@ -24,21 +24,20 @@ declare(strict_types=1);
 namespace Tuleap\Plugin;
 
 use HTTPRequest;
-use Plugin;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Project\ServiceInstrumentation;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
 
-class PluginLegacyController implements DispatchableWithRequest
+final class PluginLegacyController implements DispatchableWithRequest
 {
-
     /**
-     * @var Plugin
+     * @var PluginWithLegacyInternalRouting
      */
     private $plugin;
 
-    public function __construct(Plugin $plugin)
+    public function __construct(PluginWithLegacyInternalRouting $plugin)
     {
         $this->plugin = $plugin;
     }
@@ -53,7 +52,7 @@ class PluginLegacyController implements DispatchableWithRequest
      * @throws ForbiddenException
      * @throws NotFoundException
      */
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(HTTPRequest $request, BaseLayout $layout, array $variables) : void
     {
         ServiceInstrumentation::increment($this->plugin->getName());
         $this->plugin->process();
