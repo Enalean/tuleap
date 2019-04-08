@@ -30,7 +30,11 @@ $tlp-fontawesome-icons: (
     lock-plus-r: '\f000',
     unlock-plus-r: '\f001',
     baseline: '\f002',
-    baseline-comparison: '\f003'
+    baseline-comparison: '\f003',
+    gavel-pending: '\f004',
+    gavel-approved: '\f005',
+    gavel-rejected: '\f006',
+    gavel-comment: '\f007'
 );
 
 @each $label, $unicode in $tlp-fontawesome-icons {
