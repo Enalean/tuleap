@@ -113,20 +113,21 @@ $renderer->header($GLOBALS['Language']->getText('admin_groupedit', 'title'), fal
             <?php echo $GLOBALS['Language']->getText('admin_project', 'pending_label') ?>
         </a>
     </nav>
+    <main role="main" class="tlp-framed">
+    <?php
+        $project = $pm->getProject($group_id,false,true);
+        echo '<div class="tlp-alert-info">'.$GLOBALS['Language']->getText('admin_show_pending_documents','delay_info', array($GLOBALS['sys_file_deletion_delay'])).'</div>';
+        echo '<div class="tlp-alert-info"><p>'.$GLOBALS['Language']->getText('admin_show_pending_documents','note_intro').'<br />';
+        echo $GLOBALS['Language']->getText('admin_show_pending_documents','note_intro_system').' <a href="/admin/system_events/">system event</a> ';
+        echo $GLOBALS['Language']->getText('admin_show_pending_documents','note_intro_system_end') . '</p>';
+        echo '<p>'.$GLOBALS['Language']->getText('admin_show_pending_documents','note_intro_restaure').'</p></div>';
 
-<?php
-    $project = $pm->getProject($group_id,false,true);
-    echo '<div class="tlp-alert-info">'.$GLOBALS['Language']->getText('admin_show_pending_documents','delay_info', array($GLOBALS['sys_file_deletion_delay'])).'</div>';
-    echo '<div class="tlp-alert-info"><p>'.$GLOBALS['Language']->getText('admin_show_pending_documents','note_intro').'<br />';
-    echo $GLOBALS['Language']->getText('admin_show_pending_documents','note_intro_system').' <a href="/admin/system_events/">system event</a> ';
-    echo $GLOBALS['Language']->getText('admin_show_pending_documents','note_intro_system_end') . '</p>';
-    echo '<p>'.$GLOBALS['Language']->getText('admin_show_pending_documents','note_intro_restaure').'</p></div>';
-
-    foreach($params['html'] as $html) {
-        echo $html;
-    }
-?>
-</div>
+        foreach($params['html'] as $html) {
+            echo $html;
+        }
+    ?>
+    </div>
+</main>
 <?php
 $renderer->footer();
 
