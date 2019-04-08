@@ -23,20 +23,26 @@ import phptomoment from "phptomoment";
 import "moment-timezone";
 import "moment/locale/fr";
 
+let time_zone = "CET";
 let format = "d/m/Y H:i";
 
 export default {
     setOptions(preferences) {
-        let user_locale_for_moment = preferences.user_locale.replace(/_/g, "-");
-        moment.tz(preferences.user_timezone).locale(user_locale_for_moment);
-        format = preferences.format;
+        const locale = preferences.user_locale.replace(/_/g, "-");
+        moment.locale(locale);
+        time_zone = preferences.user_timezone;
+        format = phptomoment(preferences.format);
     },
 
     format(date) {
-        return moment(date).format(phptomoment(format));
+        return moment(date)
+            .tz(time_zone)
+            .format(format);
     },
 
     getFromNow(date) {
-        return moment(date).fromNow();
+        return moment(date)
+            .tz(time_zone)
+            .fromNow();
     }
 };

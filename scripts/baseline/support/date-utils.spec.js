@@ -25,13 +25,11 @@ describe("DateUtils:", () => {
     const now = moment("2019/02/23 09:37:20 +0001", "YYYY/MM/DD HH:mm:ss Z").toDate();
 
     beforeEach(() => {
-        //spyOn(window, "Date").andCallFake(() => now);
-        //var today = moment('2015-10-19').toDate();
         jasmine.clock().mockDate(now);
 
         DateFormatter.setOptions({
-            user_locale: "fr_FR",
-            user_timezone: "Europe/Paris",
+            user_locale: "de",
+            user_timezone: "America/Chicago",
             format: "d/m/Y H:i"
         });
     });
@@ -40,13 +38,13 @@ describe("DateUtils:", () => {
 
     describe("#format", () => {
         it("format date", () => {
-            expect(DateFormatter.format("2019-03-22T10:01:48+00:00")).toEqual("22/03/2019 11:01");
+            expect(DateFormatter.format("2019-03-22T10:01:48+00:00")).toEqual("22/03/2019 05:01");
         });
     });
 
     describe("#getFromNow", () => {
         it("formats date and returns interval from now", () => {
-            expect(DateFormatter.getFromNow("2016-01-01T23:35:01")).toEqual("il y a 3 ans");
+            expect(DateFormatter.getFromNow("2016-01-01T23:35:01")).toEqual("vor 3 Jahren");
         });
     });
 });
