@@ -217,7 +217,7 @@ describe("Store actions", () => {
 
             await loadRootFolder(context);
 
-            expect(context.commit).toHaveBeenCalledWith("switchFolderPermissionError");
+            expect(context.commit).toHaveBeenCalledWith("error/switchFolderPermissionError");
             expect(context.commit).toHaveBeenCalledWith("stopLoading");
         });
 
@@ -234,7 +234,10 @@ describe("Store actions", () => {
 
             await loadRootFolder(context);
 
-            expect(context.commit).toHaveBeenCalledWith("setFolderLoadingError", error_message);
+            expect(context.commit).toHaveBeenCalledWith(
+                "error/setFolderLoadingError",
+                error_message
+            );
             expect(context.commit).toHaveBeenCalledWith("stopLoading");
         });
     });
@@ -495,7 +498,7 @@ describe("Store actions", () => {
 
             expect(getItem).toHaveBeenCalledWith(66);
             expect(context.commit).toHaveBeenCalledWith("addJustCreatedItemToFolderContent", item);
-            expect(context.commit).not.toHaveBeenCalledWith("setModalError");
+            expect(context.commit).not.toHaveBeenCalledWith("error/setModalError");
         });
 
         it("Stores error when document creation fail", async () => {
@@ -518,7 +521,7 @@ describe("Store actions", () => {
                 "addJustCreatedItemToFolderContent",
                 jasmine.any(Object)
             );
-            expect(context.commit).toHaveBeenCalledWith("setModalError", error_message);
+            expect(context.commit).toHaveBeenCalledWith("error/setModalError", error_message);
         });
 
         it("displays the created item when it is created in the current folder", async () => {
@@ -935,7 +938,7 @@ describe("Store actions", () => {
             ]);
 
             expect(createNewVersion).toHaveBeenCalled();
-            expect(context.commit).toHaveBeenCalledWith("setModalError", jasmine.anything());
+            expect(context.commit).toHaveBeenCalledWith("error/setModalError", jasmine.anything());
             expect(uploadVersion).not.toHaveBeenCalled();
         });
     });
@@ -980,7 +983,7 @@ describe("Store actions", () => {
             ]);
 
             expect(patchEmbeddedFile).toHaveBeenCalled();
-            expect(context.commit).toHaveBeenCalledWith("setModalError", jasmine.anything());
+            expect(context.commit).toHaveBeenCalledWith("error/setModalError", jasmine.anything());
         });
     });
 
@@ -1024,7 +1027,7 @@ describe("Store actions", () => {
             ]);
 
             expect(patchWiki).toHaveBeenCalled();
-            expect(context.commit).toHaveBeenCalledWith("setModalError", jasmine.anything());
+            expect(context.commit).toHaveBeenCalledWith("error/setModalError", jasmine.anything());
         });
     });
 
@@ -1068,7 +1071,7 @@ describe("Store actions", () => {
             ]);
 
             expect(patchLink).toHaveBeenCalled();
-            expect(context.commit).toHaveBeenCalledWith("setModalError", jasmine.anything());
+            expect(context.commit).toHaveBeenCalledWith("error/setModalError", jasmine.anything());
         });
     });
 

@@ -17,9 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export const does_folder_have_any_error = state =>
-    state.has_folder_permission_error || state.has_folder_loading_error;
-
 export const is_folder_empty = state => state.folder_content.length === 0;
 
 export const current_folder_title = state => {

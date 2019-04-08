@@ -60,7 +60,8 @@ export default {
         };
     },
     computed: {
-        ...mapState(["current_folder", "has_modal_error"]),
+        ...mapState(["current_folder"]),
+        ...mapState("error", ["has_modal_error"]),
         submit_button_label() {
             return this.$gettext("Create folder");
         },

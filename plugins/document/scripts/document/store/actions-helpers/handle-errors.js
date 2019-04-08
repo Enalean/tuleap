@@ -20,35 +20,35 @@
 export async function handleErrors(context, exception) {
     const message = "Internal server error";
     if (exception.response === undefined) {
-        context.commit("setFolderLoadingError", message);
+        context.commit("error/setFolderLoadingError", message);
         return;
     }
 
     const status = exception.response.status;
     if (status === 403) {
-        context.commit("switchFolderPermissionError");
+        context.commit("error/switchFolderPermissionError");
         return;
     }
 
     try {
         const json = await exception.response.json();
-        context.commit("setFolderLoadingError", getErrorMessage(json));
+        context.commit("error/setFolderLoadingError", getErrorMessage(json));
     } catch (error) {
-        context.commit("setFolderLoadingError", message);
+        context.commit("error/setFolderLoadingError", message);
     }
 }
 
 export async function handleErrorsForModal(context, exception) {
     const message = "Internal server error";
     if (exception.response === undefined) {
-        context.commit("setModalError", message);
+        context.commit("error/setModalError", message);
         return;
     }
     try {
         const json = await exception.response.json();
-        context.commit("setModalError", getErrorMessage(json));
+        context.commit("error/setModalError", getErrorMessage(json));
     } catch (error) {
-        context.commit("setModalError", message);
+        context.commit("error/setModalError", message);
     }
 }
 

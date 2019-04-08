@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,22 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as mutations from "./mutations-errors.js";
-
-describe("Store mutations", () => {
-    describe("resetErrors()", () => {
-        it("resets all errors", () => {
-            const state = {
-                has_folder_permission_error: true,
-                has_folder_loading_error: true,
-                folder_loading_error: "Not found"
-            };
-
-            mutations.resetErrors(state);
-
-            expect(state.has_folder_permission_error).toBe(false);
-            expect(state.has_folder_loading_error).toBe(false);
-            expect(state.folder_loading_error).toBeNull();
-        });
-    });
-});
+export const does_folder_have_any_error = state => {
+    return state.has_folder_permission_error || state.has_folder_loading_error;
+};

@@ -20,4 +20,3 @@
 export * from "./mutations-global.spec.js";
 export * from "./mutations-folder-content.spec.js";
 export * from "./mutations-upload.spec.js";
-export * from "./mutations-errors.spec.js";

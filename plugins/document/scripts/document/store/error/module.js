@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,6 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export * from "./mutations-global.js";
-export * from "./mutations-folder-content.js";
-export * from "./mutations-upload.js";
+import * as mutations from "./error-mutations.js";
+import * as getters from "./error-getters.js";
+
+export default {
+    namespaced: true,
+    state: {
+        has_folder_permission_error: false,
+        has_folder_loading_error: false,
+        folder_loading_error: null,
+        has_modal_error: false,
+        modal_error: null
+    },
+    getters,
+    mutations
+};
