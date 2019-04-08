@@ -309,11 +309,7 @@ class DefaultFineGrainedPermissionFactory
                 if (! $this->validator->isValidForDefault($project, $pattern, $are_we_activating_regexp)) {
                     $GLOBALS['Response']->addFeedback(
                         Feedback::WARN,
-                        $GLOBALS['Language']->getText(
-                            'plugin_git',
-                            'fine_grained_bad_pattern',
-                            $pattern
-                        )
+                        sprintf(dgettext('tuleap-git', 'The pattern %1$s is not well formed. Skipping.'), $pattern)
                     );
 
                     continue;

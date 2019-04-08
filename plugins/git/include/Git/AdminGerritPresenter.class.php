@@ -81,38 +81,38 @@ class Git_AdminGerritPresenter extends Git_AdminPresenter {
         parent::__construct($title, $csrf_token);
 
         $this->list_of_servers               = $list_of_gerrits;
-        $this->add_server                    = $GLOBALS['Language']->getText('plugin_git', 'add_server');
-        $this->gerrit_add_server             = $GLOBALS['Language']->getText('plugin_git', 'gerrit_add_server');
-        $this->list_of_servers_empty_message = $GLOBALS['Language']->getText('plugin_git', 'gerrit_no_servers');
+        $this->add_server                    = dgettext('tuleap-git', 'Add server');
+        $this->gerrit_add_server             = dgettext('tuleap-git', 'Add gerrit server');
+        $this->list_of_servers_empty_message = dgettext('tuleap-git', 'There is nothing here,<br> start by adding a gerrit server.');
         $this->btn_edit                      = $GLOBALS['Language']->getText('global', 'btn_edit');
         $this->btn_delete                    = $GLOBALS['Language']->getText('global', 'btn_delete');
         $this->btn_cancel                    = $GLOBALS['Language']->getText('global', 'btn_cancel');
-        $this->btn_delete_title              = $GLOBALS['Language']->getText('plugin_git', 'btn_delete_title');
-        $this->empty_content                 = $GLOBALS['Language']->getText('plugin_git', 'empty_content');
-        $this->not_specified_host            = $GLOBALS['Language']->getText('plugin_git', 'not_specified_host');
+        $this->btn_delete_title              = dgettext('tuleap-git', 'This server is already used by some repositories.');
+        $this->empty_content                 = dgettext('tuleap-git', 'Empty');
+        $this->not_specified_host            = dgettext('tuleap-git', 'Not specified host');
 
-        $this->gerrit_label_host                    = $GLOBALS['Language']->getText('plugin_git', 'gerrit_label_host');
-        $this->gerrit_label_http_port               = $GLOBALS['Language']->getText('plugin_git', 'gerrit_label_http_port');
-        $this->gerrit_label_ssh_port                = $GLOBALS['Language']->getText('plugin_git', 'gerrit_label_ssh_port');
-        $this->gerrit_label_replication_key         = $GLOBALS['Language']->getText('plugin_git', 'gerrit_label_replication_key');
-        $this->gerrit_label_replication_key_infos   = $GLOBALS['Language']->getText('plugin_git', 'gerrit_label_replication_key_infos');
+        $this->gerrit_label_host                    = dgettext('tuleap-git', 'Host');
+        $this->gerrit_label_http_port               = dgettext('tuleap-git', 'HTTP port');
+        $this->gerrit_label_ssh_port                = dgettext('tuleap-git', 'SSH port');
+        $this->gerrit_label_replication_key         = dgettext('tuleap-git', 'Replication SSH Key');
+        $this->gerrit_label_replication_key_infos   = dgettext('tuleap-git', 'Replication SSH Key (SSH key of the user who runs gerrit server)');
 
-        $this->gerrit_label_use_ssl              = $GLOBALS['Language']->getText('plugin_git', 'gerrit_label_use_ssl');
-        $this->gerrit_label_login                = $GLOBALS['Language']->getText('plugin_git', 'gerrit_label_login');
-        $this->gerrit_label_identity_file        = $GLOBALS['Language']->getText('plugin_git', 'gerrit_label_identity_file');
-        $this->gerrit_label_gerrit_version       = $GLOBALS['Language']->getText('plugin_git', 'gerrit_label_gerrit_version');
-        $this->gerrit_label_http_password        = $GLOBALS['Language']->getText('plugin_git', 'gerrit_label_http_password');
-        $this->gerrit_label_replication_password = $GLOBALS['Language']->getText('plugin_git', 'gerrit_label_replication_password');
-        $this->gerrit_label_auth_type            = $GLOBALS['Language']->getText('plugin_git', 'gerrit_label_auth_type');
-        $this->gerrit_replication_information    = $GLOBALS['Language']->getText('plugin_git', 'gerrit_replication_information');
+        $this->gerrit_label_use_ssl              = dgettext('tuleap-git', 'Use SSL?');
+        $this->gerrit_label_login                = dgettext('tuleap-git', 'Login');
+        $this->gerrit_label_identity_file        = dgettext('tuleap-git', 'Identity file');
+        $this->gerrit_label_gerrit_version       = dgettext('tuleap-git', 'Gerrit server version');
+        $this->gerrit_label_http_password        = dgettext('tuleap-git', 'HTTP password');
+        $this->gerrit_label_replication_password = dgettext('tuleap-git', 'Replication password');
+        $this->gerrit_label_auth_type            = dgettext('tuleap-git', 'Authentication type');
+        $this->gerrit_replication_information    = dgettext('tuleap-git', 'It is either SSH or password replication for replication');
 
-        $this->gerrit_label_http_password_edit        = $GLOBALS['Language']->getText('plugin_git', 'gerrit_label_http_password_edit');
-        $this->gerrit_label_replication_password_edit = $GLOBALS['Language']->getText('plugin_git', 'gerrit_label_replication_password_edit');
+        $this->gerrit_label_http_password_edit        = dgettext('tuleap-git', 'Change HTTP password');
+        $this->gerrit_label_replication_password_edit = dgettext('tuleap-git', 'Change replication password');
 
-        $this->yes            = $GLOBALS['Language']->getText('plugin_git', 'yes');
-        $this->no             = $GLOBALS['Language']->getText('plugin_git', 'no');
-        $this->basic          = $GLOBALS['Language']->getText('plugin_git', 'basic');
-        $this->digest         = $GLOBALS['Language']->getText('plugin_git', 'digest');
+        $this->yes            = dgettext('tuleap-git', 'Yes');
+        $this->no             = dgettext('tuleap-git', 'No');
+        $this->basic          = dgettext('tuleap-git', 'Basic');
+        $this->digest         = dgettext('tuleap-git', 'Digest');
         $this->btn_restrict   = $GLOBALS['Language']->getText('global','btn_restrict');
     }
 

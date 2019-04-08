@@ -88,13 +88,11 @@ class Git_ForkCrossProject_Test extends TuleapTestCase {
         $project = Mockery::mock(Project::class);
         $project->shouldReceive('getID')->andReturns(11);
         $project->shouldReceive('getUnixNameLowerCase')->andReturns('projectname');
-        $invalidRequestError = 'Invalid request';
-        $GLOBALS['Language']->setReturnValue('getText', $invalidRequestError, array('plugin_git', 'missing_parameter_repos', '*'));
 
         $git = TestHelper::getPartialMock('Git', array('definePermittedActions', '_informAboutPendingEvents', 'addError', 'redirect', 'checkSynchronizerToken'));
         $git->setProject($project);
         $git->setFactory(new MockGitRepositoryFactory());
-        $git->expectOnce('addError', array($invalidRequestError));
+        $git->expectOnce('addError', array('No repository selected for the fork'));
         $git->expectOnce('redirect', array('/plugins/git/projectname/'));
 
         $request = new Codendi_Request(array('to_project' => 234, 'repo_access' => array()));
@@ -108,12 +106,9 @@ class Git_ForkCrossProject_Test extends TuleapTestCase {
         $project->shouldReceive('getID')->andReturns(11);
         $project->shouldReceive('getUnixNameLowerCase')->andReturns('projectname');
 
-        $invalidRequestError = 'Invalid request';
-        $GLOBALS['Language']->setReturnValue('getText', $invalidRequestError, array('plugin_git', 'missing_parameter_to_project', '*'));
-
         $git = TestHelper::getPartialMock('Git', array('definePermittedActions', '_informAboutPendingEvents', 'addError', 'redirect', 'checkSynchronizerToken'));
         $git->setProject($project);
-        $git->expectOnce('addError', array($invalidRequestError));
+        $git->expectOnce('addError', array('No project selected for the fork'));
         $git->expectOnce('redirect', array('/plugins/git/projectname/'));
 
         $request = new Codendi_Request(array(
@@ -137,21 +132,26 @@ class Git_ForkCrossProject_Test extends TuleapTestCase {
         $project->shouldReceive('getID')->andReturns(123);
         $project->shouldReceive('getUnixNameLowerCase')->andReturns('projectname');
 
-        $adminMsg = 'must_be_admin_to_create_project_repo';
-        $GLOBALS['Language']->setReturnValue('getText', $adminMsg, array('plugin_git', $adminMsg, '*'));
-
         $user = mock('PFUser');
-        $user->setReturnValue('isMember', false, array(666, 'A'));
+
+        $to_project = Mockery::mock(Project::class);
+        $project_manager = Mockery::mock(ProjectManager::class);
+        $project_manager->shouldReceive('getProject')->with(666)->andReturn($to_project);
+
+        $permissions_manager = Mockery::mock(GitPermissionsManager::class);
+        $permissions_manager->shouldReceive('userIsGitAdmin')->with($user, $to_project)->andReturn(false);
 
         $request = new Codendi_Request(array(
             'to_project'  => 666,
-            'repos'       => array(1),
+            'repos'       => "1",
             'repo_access' => array()
         ));
 
         $git = TestHelper::getPartialMock('Git', array('checkSynchronizerToken', 'addError', 'addAction', 'getText'));
         $git->setProject($project);
-        $git->expectOnce('addError', array($git->getText($adminMsg)));
+        $git->setPermissionsManager($permissions_manager);
+        $git->setProjectManager($project_manager);
+        $git->expectOnce('addError', array('Only project administrator can create repositories'));
         $git->expectNever('addAction');
 
         $git->_doDispatchForkCrossProject($request, $user);

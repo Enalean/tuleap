@@ -1,6 +1,6 @@
 <?php
 /**
-  * Copyright (c) Enalean, 2011-2018. All Rights Reserved.
+  * Copyright (c) Enalean, 2011 - Present. All Rights Reserved.
   * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
   *
   * This file is a part of Tuleap.
@@ -430,10 +430,6 @@ class Git extends PluginController
         $this->permittedActions = $permittedActions;
     }
 
-    protected function getText($key, $params = array()) {
-        return $GLOBALS['Language']->getText('plugin_git', $key, $params);
-    }
-
     /**
      * @return GitPlugin
      */
@@ -549,7 +545,7 @@ class Git extends PluginController
 
         //check permissions
         if ( empty($this->permittedActions) || !$this->isAPermittedAction($this->action) ) {
-            $this->addError($this->getText('controller_access_denied'));
+            $this->addError(dgettext('tuleap-git', 'You are not allowed to access this page'));
             $this->redirect('/plugins/git/' . urlencode($this->project->getUnixNameLowerCase()) . '/');
             return;
         }
@@ -583,7 +579,7 @@ class Git extends PluginController
                 break;
             case 'edit':
                 if (empty($repository)) {
-                    $this->addError($this->getText('actions_params_error'));
+                    $this->addError(dgettext('tuleap-git', 'Empty required parameter(s)'));
                     $this->redirect('/plugins/git/?action=index&group_id='. $this->groupId);
                     return false;
                 }
@@ -656,7 +652,7 @@ class Git extends PluginController
                     );
                     $this->addView('view');
                 } else {
-                    $this->addError( $this->getText('controller_access_denied') );
+                    $this->addError( dgettext('tuleap-git', 'You are not allowed to access this page') );
                     $this->redirect('/plugins/git/' . urlencode($this->project->getUnixNameLowerCase()) . '/');
                 }
                 break;
@@ -719,10 +715,10 @@ class Git extends PluginController
                         if ($select_project_ids) {
                             $this->addAction('updateGitAdminGroups', array($project, $user, $select_project_ids));
                         } else {
-                            $this->addError($this->getText('no_data_retrieved'));
+                            $this->addError(dgettext('tuleap-git', 'No data retrieved from the request'));
                         }
                     } else {
-                        $this->addError($this->getText('not_valid_request'));
+                        $this->addError(dgettext('tuleap-git', 'The request is not valid.'));
                     }
                 }
 
@@ -763,7 +759,7 @@ class Git extends PluginController
                         array($this->areMirrorsEnabledForProject())
                     );
                 } else {
-                    $this->addError($this->getText('controller_access_denied'));
+                    $this->addError(dgettext('tuleap-git', 'You are not allowed to access this page'));
                     $this->redirect('/plugins/git/?action=index&group_id='. $this->groupId);
                     return false;
                 }
@@ -844,7 +840,7 @@ class Git extends PluginController
                     $this->addAction('forkRepositoriesPermissions', array($repos, $toProject, $path, $scope));
                     $this->addView('forkRepositoriesPermissions');
                 } else {
-                    $this->addError($this->getText('actions_params_error'));
+                    $this->addError(dgettext('tuleap-git', 'Empty required parameter(s)'));
                     $this->addAction('getProjectRepositoryList', array($this->groupId));
                     $this->addView('forkRepositories');
                 }
@@ -855,13 +851,13 @@ class Git extends PluginController
                         if ($this->user->isMember($this->groupId)) {
                             $this->_doDispatchForkRepositories($this->request, $user);
                         } else {
-                            $this->addError($this->getText('controller_access_denied'));
+                            $this->addError(dgettext('tuleap-git', 'You are not allowed to access this page'));
                         }
                     } else {
                         $this->_doDispatchForkCrossProject($this->request, $user);
                     }
                 } catch (MalformedPathException $e) {
-                    $this->addError($this->getText('fork_malformed_path'));
+                    $this->addError(dgettext('tuleap-git', 'Path cannot contain double dots (..)'));
                 }
                 $this->addAction('getProjectRepositoryList', array($this->groupId));
                 $this->addView('forkRepositories');
@@ -892,27 +888,27 @@ class Git extends PluginController
                 $gerrit_template_id    = $this->getValidatedGerritTemplateId($repository);
 
                 if (empty($repository) || empty($remote_server_id) || empty($gerrit_template_id)) {
-                    $this->addError($this->getText('actions_params_error'));
+                    $this->addError(dgettext('tuleap-git', 'Empty required parameter(s)'));
                     $this->redirect('/plugins/git/' . urlencode($this->project->getUnixNameLowerCase()) . '/');
                 } else {
                     try {
                         $project_exists = $this->gerritProjectAlreadyExists($remote_server_id, $repository);
                         if ($project_exists) {
-                            $this->addError($this->getText('gerrit_project_exists'));
+                            $this->addError(dgettext('tuleap-git', 'A Gerrit project with that name already exists on that server'));
                         } else {
                             $this->addAction('migrateToGerrit', array($repository, $remote_server_id, $gerrit_template_id, $user));
                         }
                     } catch (Git_Driver_Gerrit_Exception $e) {
-                        $this->addError($this->getText('gerrit_server_down').' '.$e->getMessage());
+                        $this->addError(dgettext('tuleap-git', 'Cannot connect to remote Gerrit server').' '.$e->getMessage());
                     } catch (Git_RemoteServer_NotFoundException $e) {
-                        $this->addError($this->getText('gerrit_servers_id_does_not_exist').' '.$e->getMessage());
+                        $this->addError(dgettext('tuleap-git', 'The requested Gerrit server does not exist.').' '.$e->getMessage());
                     }
                     $this->addAction('redirectToRepoManagementWithMigrationAccessRightInformation', array($this->groupId, $repository->getId(), $pane));
                 }
                 break;
             case 'disconnect_gerrit':
                 if (empty($repository)) {
-                    $this->addError($this->getText('actions_params_error'));
+                    $this->addError(dgettext('tuleap-git', 'Empty required parameter(s)'));
                     $this->redirect('/plugins/git/' . urlencode($this->project->getUnixNameLowerCase()) . '/');
                 } else {
                     $this->addAction('disconnectFromGerrit', array($repository));
@@ -926,15 +922,9 @@ class Git extends PluginController
                 try {
                     $this->driver_factory->getDriver($server)->deleteProject($server, $project_gerrit_name);
                 } catch (ProjectDeletionException $exception) {
-                    $this->addError($this->getText(
-                        'project_deletion_not_possible',
-                        array(
-                            $project_gerrit_name,
-                            $exception->getMessage()
-                        )
-                    ));
+                    $this->addError(sprintf(dgettext('tuleap-git', 'Cannot delete project %1$s on Gerrit: %2$s.'), $project_gerrit_name, $exception->getMessage()));
                 } catch (Git_Driver_Gerrit_Exception $e) {
-                    $this->addError($this->getText('gerrit_server_down'));
+                    $this->addError(dgettext('tuleap-git', 'Cannot connect to remote Gerrit server'));
                 }
                 $migrate_access_right = $this->request->existAndNonEmpty('migrate_access_right');
                 $this->addAction('redirectToRepoManagementWithMigrationAccessRightInformation', array($this->groupId, $repository->getId(), $pane));
@@ -942,7 +932,7 @@ class Git extends PluginController
 
             case 'update_mirroring':
                 if (! $repository) {
-                    $this->addError($this->getText('actions_repo_not_found'));
+                    $this->addError(dgettext('tuleap-git', 'The repository does not exist'));
                 }
 
                 $selected_mirror_ids = $this->request->get('selected_mirror_ids');
@@ -954,7 +944,7 @@ class Git extends PluginController
                         $selected_mirror_ids
                     ));
                 } else {
-                    $this->addError($this->getText('actions_mirror_ids_not_valid'));
+                    $this->addError(dgettext('tuleap-git', 'This request is not valid (invalid mirror ids).'));
                 }
 
                 $this->addAction('redirectToRepoManagement', array($this->groupId, $repository->getId(), $pane));
@@ -974,7 +964,7 @@ class Git extends PluginController
                 if (is_array($selected_mirror_ids)) {
                     $this->addAction('updateDefaultMirroring', array($project, $selected_mirror_ids));
                 } else {
-                    $this->addError($this->getText('actions_mirror_ids_not_valid'));
+                    $this->addError(dgettext('tuleap-git', 'This request is not valid (invalid mirror ids).'));
                 }
 
                 $this->addRedirectToDefaultSettingsAction();
@@ -1050,18 +1040,12 @@ class Git extends PluginController
         if ($deleted) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::INFO,
-                $GLOBALS['Language']->getText(
-                    'plugin_git',
-                    'fine_grained_delete_ok'
-                )
+                dgettext('tuleap-git', 'Permission successfully deleted.')
             );
         } else {
             $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,
-                $GLOBALS['Language']->getText(
-                    'plugin_git',
-                    'fine_grained_delete_error'
-                )
+                dgettext('tuleap-git', 'An error occured while deleting permission.')
             );
         }
     }
@@ -1072,10 +1056,7 @@ class Git extends PluginController
         if (! $permission_id) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,
-                $GLOBALS['Language']->getText(
-                    'plugin_git',
-                    'fine_grained_bad_request'
-                )
+                dgettext('tuleap-git', 'Bad request.')
             );
 
             return;
@@ -1198,11 +1179,11 @@ class Git extends PluginController
             $deleted_repository = $this->factory->getDeletedRepository($p[1]);
             switch($row['type']) {
             case 'GIT_REPO_CREATE':
-                $GLOBALS['Response']->addFeedback('info', $this->getText('feedback_event_create', array($p[1])));
+                $GLOBALS['Response']->addFeedback('info', sprintf(dgettext('tuleap-git', 'There is an event in queue for a repository creation (%1$s), it will be processed in one minute or two. Please be patient!'), $p[1]));
                 break;
 
             case 'GIT_REPO_DELETE':
-                $GLOBALS['Response']->addFeedback('info', $this->getText('feedback_event_delete', array($deleted_repository->getFullName())));
+                $GLOBALS['Response']->addFeedback('info', sprintf(dgettext('tuleap-git', 'There is an event in queue for repository \'%1$s\' deletion, it will be processed in one minute or two. Please be patient!'), $deleted_repository->getFullName()));
                 break;
             }
         }
@@ -1210,7 +1191,7 @@ class Git extends PluginController
         if ($repository && $repository->getId() !== 0) {
             $dar = $sem->_getDao()->searchWithParam('head', $repository->getId(), array('GIT_REPO_ACCESS'), array(SystemEvent::STATUS_NEW, SystemEvent::STATUS_RUNNING));
             foreach ($dar as $row) {
-                $GLOBALS['Response']->addFeedback('info', $this->getText('feedback_event_access'));
+                $GLOBALS['Response']->addFeedback('info', dgettext('tuleap-git', 'There is an event in queue for a repository permissions change, it will be processed in one minute or two. Please be patient!'));
             }
         }
     }
@@ -1273,7 +1254,13 @@ class Git extends PluginController
         foreach ($validators as $validator) {
             $validator->required();
             if (!$request->valid($validator)) {
-                $this->addError($this->getText('missing_parameter_'. $validator->key));
+                if ($validator->key === 'to_project') {
+                    $this->addError(dgettext('tuleap-git', 'No project selected for the fork'));
+                } else if ($validator->key === 'repos') {
+                    $this->addError(dgettext('tuleap-git', 'No repository selected for the fork'));
+                } else {
+                    $this->addError(dgettext('tuleap-git', 'No access selected for the fork'));
+                }
                 $this->redirect('/plugins/git/' . urlencode($this->project->getUnixNameLowerCase()) . '/');
                 return;
             }
@@ -1290,12 +1277,12 @@ class Git extends PluginController
 
             $this->addAction('fork', array($repos, $to_project, $namespace, $scope, $user, $GLOBALS['HTML'], $redirect_url, $forkPermissions));
         } else {
-            $this->addError($this->getText('must_be_admin_to_create_project_repo'));
+            $this->addError(dgettext('tuleap-git', 'Only project administrator can create repositories'));
         }
     }
 
     public function redirectNoRepositoryError() {
-        $this->addError($this->getText('actions_repo_not_found'));
+        $this->addError(dgettext('tuleap-git', 'The repository does not exist'));
         $this->redirect('/plugins/git/?action=index&group_id='. $this->groupId);
     }
 

@@ -60,15 +60,15 @@ class Git_AdminMirrorEditPresenter extends Git_AdminMirrorPresenter{
     }
 
     public function update_button() {
-        return $GLOBALS['Language']->getText('plugin_git','admin_update_button');
+        return dgettext('tuleap-git', 'Update');
     }
 
     public function delete_button() {
-        return $GLOBALS['Language']->getText('plugin_git','admin_delete_button');
+        return dgettext('tuleap-git', 'Delete');
     }
 
     public function or_action() {
-        return $GLOBALS['Language']->getText('plugin_git','or');
+        return dgettext('tuleap-git', 'or');
     }
 
     public function ssh_key() {
@@ -76,6 +76,6 @@ class Git_AdminMirrorEditPresenter extends Git_AdminMirrorPresenter{
     }
 
     public function change() {
-        return $GLOBALS['Language']->getText('plugin_git','change_pwd');
+        return dgettext('tuleap-git', 'click here to change');
     }
 }

@@ -100,7 +100,7 @@ class AccessControl extends Pane
      */
     public function getTitle()
     {
-        return $GLOBALS['Language']->getText('plugin_git', 'view_repo_access_control');
+        return dgettext('tuleap-git', 'Access control');
     }
 
     /**
@@ -129,7 +129,7 @@ class AccessControl extends Pane
         $html .= '<p><input type="submit" name="save" data-are-regexp-enabled="' . $are_regexp_enabled . '"
                 data-are-regexp-confliting="' . $are_regexp_conflicting . '"
                 class="btn btn-primary save-permissions-with-regexp" value="' .
-            $GLOBALS['Language']->getText('plugin_git', 'save_access_control') . '" /></p>';
+            dgettext('tuleap-git', 'Save permissions') . '" /></p>';
         $html .= '</form>';
 
         return $html;
@@ -154,9 +154,9 @@ class AccessControl extends Pane
             $html .= '<input type="hidden" id="action" name="action" value="confirm_private" />';
         }
         $html .= '<p id="plugin_git_access">';
-        $html .= $GLOBALS['Language']->getText('plugin_git', 'view_repo_access');
+        $html .= dgettext('tuleap-git', 'Access');
         $html .= ': <span><input type="radio" name="repo_access" value="private" '. $private .'/> ';
-        $html .= $GLOBALS['Language']->getText('plugin_git', 'view_repo_access_private');
+        $html .= dgettext('tuleap-git', 'Private');
         $html .= '<input type="radio" name="repo_access" value="public" '. $public .'/> Public';
         $html .= '</span>';
         $html .= '</p>';

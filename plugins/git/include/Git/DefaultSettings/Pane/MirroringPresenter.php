@@ -43,17 +43,11 @@ class MirroringPresenter
         $this->project_id        = $project->getID();
         $this->mirror_presenters = $mirror_presenters;
 
-        $this->mirroring_title            = $GLOBALS['Language']->getText('plugin_git', 'mirroring_title');
-        $this->mirroring_info             = $GLOBALS['Language']->getText('plugin_git', 'mirroring_default_info');
-        $this->mirroring_mirror_url       = $GLOBALS['Language']->getText('plugin_git', 'identifier');
-        $this->mirroring_mirror_used      = $GLOBALS['Language']->getText(
-            'plugin_git',
-            'mirroring_mirror_default_used'
-        );
-        $this->mirroring_update_mirroring = $GLOBALS['Language']->getText(
-            'plugin_git',
-            'mirroring_update_default_mirroring'
-        );
+        $this->mirroring_title            = dgettext('tuleap-git', 'Mirroring');
+        $this->mirroring_info             = dgettext('tuleap-git', 'Select the mirrors where the new repositories will be replicated by default:');
+        $this->mirroring_mirror_url       = dgettext('tuleap-git', 'Identifier');
+        $this->mirroring_mirror_used      = dgettext('tuleap-git', 'Used by default?');
+        $this->mirroring_update_mirroring = dgettext('tuleap-git', 'Update default mirroring');
 
         $this->csrf_token = new \CSRFSynchronizerToken('?action=admin-default-settings&pane=mirroring&group_id=' . urlencode($this->project_id));
     }

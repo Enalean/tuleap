@@ -46,9 +46,9 @@ class RepositoryPaneNotificationPresenter
         $this->repository_id         = $repository->getId();
         $this->mail_prefix           = $repository->getMailPrefix();
 
-        $this->title                = $GLOBALS['Language']->getText('plugin_git', 'admin_mail');
-        $this->mail_prefix_label    = $GLOBALS['Language']->getText('plugin_git', 'mail_prefix_label');
-        $this->notified_mails_title = $GLOBALS['Language']->getText('plugin_git', 'notified_mails_title');
+        $this->title                = dgettext('tuleap-git', 'Notifications');
+        $this->mail_prefix_label    = dgettext('tuleap-git', 'Notification Prefix');
+        $this->notified_mails_title = dgettext('tuleap-git', 'List of notified mails');
         $this->btn_submit           = $GLOBALS['Language']->getText('global', 'btn_submit');
         $this->notified_people      = dgettext('tuleap-git', 'Notified people');
         $this->empty_notification   = dgettext('tuleap-git', 'No notifications set');

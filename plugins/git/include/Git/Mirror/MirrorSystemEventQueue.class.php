@@ -36,7 +36,7 @@ class Git_Mirror_MirrorSystemEventQueue extends SystemEventQueue {
     }
 
     public function getLabel() {
-        return $GLOBALS['Language']->getText('plugin_git', 'mirror_system_event_queue');
+        return dgettext('tuleap-git', 'Grok Mirror');
     }
 
     public function getLogger() {

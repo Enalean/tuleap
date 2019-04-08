@@ -110,114 +110,60 @@ class AccessControlPresenter
         $this->branches_permissions = $branches_permissions_representation;
         $this->tags_permissions     = $tags_permissions_representation;
 
-        $this->default_permissions_title = $GLOBALS['Language']->getText(
-            'plugin_git',
-            'default_permissions_title'
-        );
+        $this->default_permissions_title = dgettext('tuleap-git', 'Default permissions');
 
-        $this->fine_grained_permissions_title = $GLOBALS['Language']->getText(
-            'plugin_git',
-            'fine_grained_permissions_title'
-        );
+        $this->fine_grained_permissions_title = dgettext('tuleap-git', 'Fine-grained permissions');
 
-        $this->branches_title = $GLOBALS['Language']->getText(
-            'plugin_git',
-            'fine_grained_permissions_branches_title'
-        );
+        $this->branches_title = dgettext('tuleap-git', 'Branches');
 
-        $this->tags_title = $GLOBALS['Language']->getText(
-            'plugin_git',
-            'fine_grained_permissions_tags_title'
-        );
+        $this->tags_title = dgettext('tuleap-git', 'Tags');
 
-        $this->add_branch_permission = $GLOBALS['Language']->getText(
-            'plugin_git',
-            'add_branch_permission'
-        );
+        $this->add_branch_permission = dgettext('tuleap-git', 'Add permission on a new branch');
 
-        $this->add_tag_permission = $GLOBALS['Language']->getText(
-            'plugin_git',
-            'add_tag_permission'
-        );
+        $this->add_tag_permission = dgettext('tuleap-git', 'Add permission on a new tag');
 
-        $this->pattern_column = $GLOBALS['Language']->getText(
-            'plugin_git',
-            'fine_grained_permissions_pattern_column'
-        );
+        $this->pattern_column = dgettext('tuleap-git', 'Pattern');
 
-        $this->actions_column = $GLOBALS['Language']->getText(
-            'plugin_git',
-            'fine_grained_permissions_actions_column'
-        );
+        $this->actions_column = dgettext('tuleap-git', 'Actions');
 
-        $this->empty = $GLOBALS['Language']->getText(
-            'plugin_git',
-            'fine_grained_permissions_empty'
-        );
+        $this->empty = dgettext('tuleap-git', 'No permission defined yet.');
 
         $this->new_fine_grained_ugroups = $new_fine_grained_ugroups;
         $this->remove_form_action       = $delete_url;
         $this->delete_challenge         = $csrf_delete->getToken();
 
-        $this->remove_fine_grained_permission_delete = $GLOBALS['Language']->getText(
-            'plugin_git',
-            'fine_grained_remove_button'
-        );
+        $this->remove_fine_grained_permission_delete = dgettext('tuleap-git', 'Delete');
 
-        $this->remove_fine_grained_permission_desc = $GLOBALS['Language']->getText(
-            'plugin_git',
-            'fine_grained_remove_desc'
-        );
+        $this->remove_fine_grained_permission_desc = dgettext('tuleap-git', 'You are about to remove this permission. Please confirm your action.');
 
-        $this->remove_fine_grained_permission_confirm = $GLOBALS['Language']->getText(
-            'plugin_git',
-            'fine_grained_remove_confirm'
-        );
+        $this->remove_fine_grained_permission_confirm = dgettext('tuleap-git', 'Confirm deletion');
 
-        $this->regexp_permission_label  = $GLOBALS['Language']->getText(
-            'plugin_git',
-            'regexp_permission_label'
-        );
-        $this->regexp_incoherence_label = $GLOBALS['Language']->getText(
-            'plugin_git',
-            'regexp_incoherence_label'
-        );
+        $this->regexp_permission_label  = dgettext('tuleap-git', 'Enable regular expressions in branches and tags pattern');
+        $this->regexp_incoherence_label = dgettext('tuleap-git', 'Enabling this option might end up in non working state. Invalid regular expressions will be ignored without errors.');
 
-        $this->title_warning_regexp_uncheck = $GLOBALS['Language']->getText(
-            'plugin_git',
-            'title_warning_regexp_uncheck'
-        );
+        $this->title_warning_regexp_uncheck = dgettext('tuleap-git', 'Some rules may be deleted');
 
         $this->btn_cancel       = $GLOBALS['Language']->getText('global', 'btn_cancel');
-        $this->save_permissions = $GLOBALS['Language']->getText('plugin_git', 'save_access_control');
+        $this->save_permissions = dgettext('tuleap-git', 'Save permissions');
         $this->is_fork          = false;
         $this->disabled         = '';
         $this->warnings         = $this->getWarningContentForRegexpDisableModal();
 
         $this->is_control_limited         = false;
-        $this->template_git_access_rights = $GLOBALS['Language']->getText(
-            'plugin_git',
-            'view_admin_tab_template_access_rights'
-        );
+        $this->template_git_access_rights = dgettext('tuleap-git', 'Git access control template');
 
         $this->default_access_rights_form_action = '/plugins/git/?group_id=' . $this->project_id . '&action=admin-default-access-rights';
 
-        $this->label_read  = $GLOBALS['Language']->getText('plugin_git', 'perm_R');
-        $this->label_write = $GLOBALS['Language']->getText('plugin_git', 'perm_W');
-        $this->label_rw    = $GLOBALS['Language']->getText('plugin_git', 'perm_W+');
+        $this->label_read  = dgettext('tuleap-git', 'Read');
+        $this->label_write = dgettext('tuleap-git', 'Write');
+        $this->label_rw    = dgettext('tuleap-git', 'Rewind');
 
         $this->read_select_box_id    = 'default_access_rights[' . Git::DEFAULT_PERM_READ . ']';
         $this->write_select_box_id   = 'default_access_rights[' . Git::DEFAULT_PERM_WRITE . ']';
         $this->rewrite_select_box_id = 'default_access_rights[' . Git::DEFAULT_PERM_WPLUS . ']';
 
-        $this->submit_default_access_rights            = $GLOBALS['Language']->getText(
-            'plugin_git',
-            'admin_save_submit'
-        );
-        $this->fine_grained_permissions_checkbox_label = $GLOBALS['Language']->getText(
-            'plugin_git',
-            'fine_grained_permissions_checkbox_label'
-        );
+        $this->submit_default_access_rights            = dgettext('tuleap-git', 'Save');
+        $this->fine_grained_permissions_checkbox_label = dgettext('tuleap-git', 'Enable fine-grained permissions');
 
         $this->has_branches_permissions = count($this->branches_permissions) > 0;
         $this->has_tags_permissions     = count($this->tags_permissions) > 0;
@@ -227,23 +173,11 @@ class AccessControlPresenter
     private function getWarningContentForRegexpDisableModal()
     {
         if ($this->are_regexp_permission_conflicting_at_site_level) {
-            $warning[]['message'] = $GLOBALS['Language']->getText(
-                'plugin_git',
-                'warning_conflit_regexp_configuration'
-            );
-            $warning[]['message'] = $GLOBALS['Language']->getText(
-                'plugin_git',
-                'warning_conflit_regexp_configuration_part_two'
-            );
-            $warning[]['message'] = $GLOBALS['Language']->getText(
-                'plugin_git',
-                'warning_conflit_regexp_configuration_confirm'
-            );
+            $warning[]['message'] = dgettext('tuleap-git', 'The regular expressions option has been disabled at plateform level.');
+            $warning[]['message'] = dgettext('tuleap-git', 'All rules containing regular expressions will be deleted and you won\'t be able to activate the option again. If you don\'t save your modifications, the current state will still work.');
+            $warning[]['message'] = dgettext('tuleap-git', 'Please confirm your action.');
         } else {
-            $warning[]['message'] = $GLOBALS['Language']->getText(
-                'plugin_git',
-                'warning_regexp_uncheck'
-            );
+            $warning[]['message'] = dgettext('tuleap-git', 'All rules containing regular expressions will be deleted. Please confirm the desactivation of regular expressions.');
         }
 
         return $warning;

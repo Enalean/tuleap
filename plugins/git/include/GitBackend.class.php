@@ -203,7 +203,7 @@ class GitBackend extends Backend implements Git_Backend_Interface, GitRepository
         //create the gitroot directory
         if ( !is_dir($gitRootPath) ) {
             if ( !mkdir($gitRootPath, 0755) ) {
-                throw new GitBackendException( $GLOBALS['Language']->getText('plugin_git', 'backend_gitroot_mkdir_error').' -> '.$gitRootPath );
+                throw new GitBackendException( dgettext('tuleap-git', 'Error while creating root for Git repositories (Contact the site admin)').' -> '.$gitRootPath );
             }            
         }
         return true;
@@ -216,11 +216,11 @@ class GitBackend extends Backend implements Git_Backend_Interface, GitRepository
         if ( !is_dir($gitProjectPath) ) {
 
             if ( !mkdir($gitProjectPath, 0775, true) ) {
-                throw new GitBackendException($GLOBALS['Language']->getText('plugin_git', 'backend_projectroot_mkdir_error').' -> '.$gitProjectPath);
+                throw new GitBackendException(dgettext('tuleap-git', 'Error while creating project root for Git repository (Contact the site admin)').' -> '.$gitProjectPath);
             }
 
             if ( !$this->chgrp($gitProjectPath, $groupName ) ) {
-                throw new GitBackendException($GLOBALS['Language']->getText('plugin_git', 'backend_projectroot_chgrp_error').$gitProjectPath.' group='.$groupName);
+                throw new GitBackendException(dgettext('tuleap-git', 'Error while setting project root permissions (Contact the site admin)').$gitProjectPath.' group='.$groupName);
             }            
         }
         return true;
@@ -386,7 +386,7 @@ class GitBackend extends Backend implements Git_Backend_Interface, GitRepository
         }
 
         $header = array($GLOBALS['Language']->getText('plugin_statistics', 'scm_month'));
-        $line   = array($GLOBALS['Language']->getText('plugin_git', 'stats_read'));
+        $line   = array(dgettext('tuleap-git', 'Total number of git read access'));
         foreach ($stats as $row) {
             $header[] = $row['month']." ".$row['year'];
             $line[]   = intval($row['nb']);

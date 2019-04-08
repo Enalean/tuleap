@@ -81,7 +81,7 @@ class AdminGerritBuilder
         if (strpos($ssh_key, "\n") !== false) {
             $GLOBALS['Response']->addFeedback(
                 \Feedback::WARN,
-                $GLOBALS['Language']->getText('plugin_git', 'gerrit_servers_only_one_ssh_replication_key')
+                dgettext('tuleap-git', 'Only one replication SSH key is allowed by server')
             );
             return '';
         }

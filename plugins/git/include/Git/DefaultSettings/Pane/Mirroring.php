@@ -40,7 +40,7 @@ class Mirroring extends Pane
     public function __construct(Git_Mirror_MirrorDataMapper $mirror_data_mapper, Project $project, $is_active)
     {
         parent::__construct(
-            ucfirst($GLOBALS['Language']->getText('plugin_git', 'admin_mirroring')),
+            ucfirst(dgettext('tuleap-git', 'Mirroring')),
             "?" . http_build_query(
                 [
                     'action'   => 'admin-default-settings',

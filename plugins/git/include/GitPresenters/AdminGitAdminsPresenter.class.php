@@ -43,15 +43,15 @@ class GitPresenters_AdminGitAdminsPresenter extends GitPresenters_AdminPresenter
     }
 
     public function git_admins_section() {
-        return $GLOBALS['Language']->getText('plugin_git', 'view_admin_git_admins');
+        return dgettext('tuleap-git', 'Git administrators');
     }
 
     public function git_admins_description() {
-        return $GLOBALS['Language']->getText('plugin_git', 'view_admin_git_admins_description');
+        return dgettext('tuleap-git', 'This section allows you to select Git service administrators, in addition to project administrators.');
     }
 
     public function git_admins_submit_button() {
-        return $GLOBALS['Language']->getText('plugin_git', 'view_admin_git_admins_submit_button');
+        return dgettext('tuleap-git', 'Submit');
     }
 
     public function git_admins_form_action() {

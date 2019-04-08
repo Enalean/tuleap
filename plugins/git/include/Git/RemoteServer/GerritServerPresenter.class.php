@@ -62,12 +62,12 @@ class Git_RemoteServer_GerritServerPresenter
         $this->replication_key_ellipsis_value = substr($this->replication_key, 0, 40).'...'.substr($this->replication_key, -40);
 
 
-        $this->edit_title           = $GLOBALS['Language']->getText('plugin_git', 'edit_gerrit_title', $server->getHost());
-        $this->delete_title         = $GLOBALS['Language']->getText('plugin_git', 'delete_gerrit_title', $server->getHost());
+        $this->edit_title           = sprintf(dgettext('tuleap-git', 'Edit %1$s'), $server->getHost());
+        $this->delete_title         = sprintf(dgettext('tuleap-git', 'Delete %1$s'), $server->getHost());
 
-        $this->warning_no_possible_go_back  = $GLOBALS['Language']->getText('plugin_git', 'warning_no_possible_go_back');
+        $this->warning_no_possible_go_back  = dgettext('tuleap-git', 'Once migrated, you will no more able to go back in version 2.5');
         $this->purified_delete_desc = Codendi_HTMLPurifier::instance()->purify(
-            $GLOBALS['Language']->getText('plugin_git', 'delete_gerrit_desc', $server->getHost()),
+            sprintf(dgettext('tuleap-git', 'Wow, wait a minute. You are about to delete the <b>%1$s</b> server. Please confirm your action.'), $server->getHost()),
             CODENDI_PURIFIER_LIGHT
         );
     }

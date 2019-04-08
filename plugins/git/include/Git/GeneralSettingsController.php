@@ -81,7 +81,7 @@ class GeneralSettingsController
 
     public function display()
     {
-        $title     = $GLOBALS['Language']->getText('plugin_git', 'descriptor_name');
+        $title     = dgettext('tuleap-git', 'Git');
         $presenter = new GeneralSettingsPresenter(
             $title,
             $this->csrf,
@@ -100,7 +100,7 @@ class GeneralSettingsController
     {
         $this->csrf->check();
         if (! $this->regexp_enabler->enable()) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git', 'update_error'));
+            $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-git', 'An error occurred while activating regular expressions option for Git fine grained permission.'));
         }
     }
 
@@ -108,7 +108,7 @@ class GeneralSettingsController
     {
         $this->csrf->check();
         if (! $this->regexp_disabler->disableAtSiteLevel()) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git', 'update_error'));
+            $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-git', 'An error occurred while activating regular expressions option for Git fine grained permission.'));
         }
     }
 }

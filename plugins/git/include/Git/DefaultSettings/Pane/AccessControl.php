@@ -80,7 +80,7 @@ class AccessControl extends Pane
         $is_active
     ) {
         parent::__construct(
-            $GLOBALS['Language']->getText('plugin_git', 'view_repo_access_control'),
+            dgettext('tuleap-git', 'Access control'),
             "?" . http_build_query(
                 [
                     'action'   => 'admin-default-settings',

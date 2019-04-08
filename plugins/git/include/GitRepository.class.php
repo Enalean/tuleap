@@ -678,7 +678,7 @@ class GitRepository implements DVCSRepository
         if ($this->canBeDeleted()) {
             $this->forceMarkAsDeleted();
         } else {
-            throw new GitBackendException($GLOBALS['Language']->getText('plugin_git', 'backend_delete_path_error'));
+            throw new GitBackendException(dgettext('tuleap-git', 'Unable to delete repository: path outside project repository root'));
         }
     }
 

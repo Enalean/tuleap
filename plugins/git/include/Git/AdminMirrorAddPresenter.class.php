@@ -41,6 +41,6 @@ class Git_AdminMirrorAddPresenter extends Git_AdminMirrorPresenter{
     }
 
     public function add_mirror() {
-        return $GLOBALS['Language']->getText('plugin_git','add_mirror');
+        return dgettext('tuleap-git', 'Add mirror');
     }
 }

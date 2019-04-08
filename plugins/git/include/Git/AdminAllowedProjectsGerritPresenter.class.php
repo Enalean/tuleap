@@ -91,17 +91,17 @@ class AdminAllowedProjectsGerritPresenter
 
     public function resource_allowed_project_back_link_title()
     {
-        return $GLOBALS['Language']->getText('plugin_git', 'gerrit_servers_allowed_project_back_link_title');
+        return dgettext('tuleap-git', 'Back to Gerrit servers list');
     }
 
     public function resource_allowed_project_title()
     {
-        return $GLOBALS['Language']->getText('plugin_git', 'gerrit_servers_allowed_project_title', $this->gerrit->getHost());
+        return sprintf(dgettext('tuleap-git', '%1$s projects restriction'), $this->gerrit->getHost());
     }
 
     public function resource_allowed_project_pane_title()
     {
-        return $GLOBALS['Language']->getText('plugin_git', 'gerrit_servers_allowed_project_pane_title', $this->gerrit->getHost());
+        return sprintf(dgettext('tuleap-git', 'Projects allowed to use %1$s'), $this->gerrit->getHost());
     }
 
     public function resource_allowed_project_information()
@@ -111,61 +111,61 @@ class AdminAllowedProjectsGerritPresenter
 
     public function resource_allowed_project_allow_all()
     {
-        return $GLOBALS['Language']->getText('plugin_git', 'gerrit_servers_allowed_project_allow_all');
+        return dgettext('tuleap-git', 'Allow all the projects to use this Gerrit server.');
     }
 
     public function resource_allowed_project_allow_all_submit()
     {
-        return $GLOBALS['Language']->getText('plugin_git', 'gerrit_servers_allowed_project_allow_all_submit');
+        return dgettext('tuleap-git', 'Save');
     }
 
     public function resource_allowed_project_list()
     {
-        return $GLOBALS['Language']->getText('plugin_git', 'gerrit_servers_allowed_project_list');
+        return dgettext('tuleap-git', 'List of allowed projects');
     }
 
     public function resource_allowed_project_list_allow_placeholder() {
-        return $GLOBALS['Language']->getText('plugin_git', 'gerrit_servers_allowed_project_list_allow_placeholder');
+        return dgettext('tuleap-git', 'Project name');
     }
 
     public function resource_allowed_project_list_filter_placeholder() {
-        return $GLOBALS['Language']->getText('plugin_git', 'gerrit_servers_allowed_project_list_filter_placeholder');
+        return dgettext('tuleap-git', 'Filter on project id or name');
     }
 
     public function resource_allowed_project_list_allow_project() {
-        return $GLOBALS['Language']->getText('plugin_git', 'gerrit_servers_allowed_project_list_allow_project');
+        return dgettext('tuleap-git', 'Allow access');
     }
 
     public function resource_allowed_project_list_revoke_projects() {
-        return $GLOBALS['Language']->getText('plugin_git', 'gerrit_servers_allowed_project_list_revoke_projects');
+        return dgettext('tuleap-git', 'Revoke access to selected');
     }
 
     public function resource_allowed_project_list_id() {
-        return $GLOBALS['Language']->getText('plugin_git', 'gerrit_servers_allowed_project_list_id');
+        return dgettext('tuleap-git', 'Id');
     }
 
     public function resource_allowed_project_list_name() {
-        return $GLOBALS['Language']->getText('plugin_git', 'gerrit_servers_allowed_project_list_name');
+        return dgettext('tuleap-git', 'Name');
     }
 
     public function resource_allowed_project_list_empty() {
-        return $GLOBALS['Language']->getText('plugin_git', 'gerrit_servers_allowed_project_list_empty');
+        return dgettext('tuleap-git', 'Currently, there\'s no project allowed to use this Gerrit server.');
     }
 
     public function resource_allowed_project_revoke_title() {
-        return $GLOBALS['Language']->getText('plugin_git', 'gerrit_servers_allowed_project_revoke_title');
+        return dgettext('tuleap-git', 'Warning');
     }
 
     public function resource_allowed_project_revoke_description() {
-        return $GLOBALS['Language']->getText('plugin_git', 'gerrit_servers_allowed_project_revoke_description');
+        return dgettext('tuleap-git', 'You are about to revoke the access to this Gerrit server to one or several projects. Are you sure you want to do this?');
     }
 
     public function resource_allowed_project_revoke_yes() {
-        return $GLOBALS['Language']->getText('plugin_git', 'gerrit_servers_allowed_project_revoke_yes');
+        return dgettext('tuleap-git', 'Yes, revoke access');
     }
 
     public function resource_allowed_project_revoke_no() {
-        return $GLOBALS['Language']->getText('plugin_git', 'gerrit_servers_allowed_project_revoke_no');
+        return dgettext('tuleap-git', 'No');
     }
 
     public function resource_allowed_project_filter_empty()

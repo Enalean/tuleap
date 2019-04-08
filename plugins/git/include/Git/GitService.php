@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,18 +18,33 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Git\Webhook;
+declare(strict_types=1);
 
-use GitRepository;
+namespace Tuleap\Git;
 
-class EditWebhookModalPresenter extends WebhookModalPresenter
+use Service;
+
+class GitService extends Service
 {
-    public function __construct(GitRepository $repository)
+    public function getInternationalizedName()
     {
-        parent::__construct($repository);
+        $label = $this->getLabel();
 
-        $this->title  = dgettext('tuleap-git', 'Edit generic webhook');
-        $this->save   = dgettext('tuleap-git', 'Save generic webhook');
-        $this->action = 'edit-webhook';
+        if ($label === 'plugin_git:service_lbl_key') {
+            return dgettext('tuleap-git', 'Git');
+        }
+
+        return $label;
+    }
+
+    public function getInternationalizedDescription()
+    {
+        $description = $this->getDescription();
+
+        if ($description === 'plugin_git:service_desc_key') {
+            return dgettext('tuleap-git', 'Git');
+        }
+
+        return $description;
     }
 }

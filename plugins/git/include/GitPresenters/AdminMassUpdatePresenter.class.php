@@ -67,7 +67,7 @@ class GitPresenters_AdminMassUpdatePresenter extends GitPresenters_AdminPresente
     }
 
     public function title() {
-        return $GLOBALS['Language']->getText('plugin_git', 'view_admin_mass_update_title');
+        return dgettext('tuleap-git', 'Mass update of repositories');
     }
 
     public function has_more_than_one_repository() {
@@ -77,28 +77,28 @@ class GitPresenters_AdminMassUpdatePresenter extends GitPresenters_AdminPresente
     public function info_mass_update() {
         $nb_selected_repositories = count($this->repositories);
         if ($nb_selected_repositories > 1) {
-            return $GLOBALS['Language']->getText('plugin_git', 'view_admin_mass_update_selected_repositories', $nb_selected_repositories);
+            return sprintf(dgettext('tuleap-git', 'You are about to update <span>%1$s repositories</span>. For now, only mirroring settings can be updated.'), $nb_selected_repositories);
         }
 
         $repository = $this->repositories[0];
 
-        return $GLOBALS['Language']->getText('plugin_git', 'view_admin_mass_update_selected_repository', $repository->name);
+        return sprintf(dgettext('tuleap-git', 'You are about to update the repository <b>%1$s</b>. For now, only mirroring settings can be updated.'), $repository->name);
     }
 
     public function submit_mass_change() {
-        return $GLOBALS['Language']->getText('plugin_git', 'view_admin_mass_update_submit_mass_change');
+        return dgettext('tuleap-git', 'Update repositories');
     }
 
     public function previous_state_used() {
-        return $GLOBALS['Language']->getText('plugin_git', 'view_admin_mass_update_previous_state_used');
+        return dgettext('tuleap-git', 'Was used');
     }
 
     public function previous_state_unused() {
-        return $GLOBALS['Language']->getText('plugin_git', 'view_admin_mass_update_previous_state_unused');
+        return dgettext('tuleap-git', 'Was unused');
     }
 
     public function exceed_max_input_vars_message() {
-        return $GLOBALS['Language']->getText('plugin_git', 'exceed_max_input_vars_message', count($this->repositories));
+        return sprintf(dgettext('tuleap-git', 'We cannot handle the mass update of all selected repositoies therefore we kept only %1$s repositories in your selection.'), count($this->repositories));
     }
 
     public function form_action() {

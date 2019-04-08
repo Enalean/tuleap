@@ -72,7 +72,7 @@ class GitDao extends \Tuleap\DB\DataAccessObject
         try {
             $this->getDB()->run($sql, $repositoryId);
         } catch (PDOException $ex) {
-            throw new GitDaoException( $GLOBALS['Language']->getText('plugin_git', 'dao_update_error'));
+            throw new GitDaoException( dgettext('tuleap-git', 'Unable to update Repository data'));
         }
         return true;
     }
@@ -115,7 +115,7 @@ class GitDao extends \Tuleap\DB\DataAccessObject
                     ['repository_id' => $id]
                 );
             } catch (PDOException $ex) {
-                throw new GitDaoException( $GLOBALS['Language']->getText('plugin_git', 'dao_update_error'));
+                throw new GitDaoException( dgettext('tuleap-git', 'Unable to update Repository data'));
             }
             return true;
         }
@@ -145,7 +145,7 @@ class GitDao extends \Tuleap\DB\DataAccessObject
                 ]
             );
         } catch (PDOException $ex) {
-            throw new GitDaoException( $GLOBALS['Language']->getText('plugin_git', 'dao_update_error'));
+            throw new GitDaoException( dgettext('tuleap-git', 'Unable to update Repository data'));
         }
 
         return $this->getDB()->lastInsertId();
@@ -155,7 +155,7 @@ class GitDao extends \Tuleap\DB\DataAccessObject
         $id        = $repository->getId();
         $projectId = $repository->getProjectId();
         if ( empty($id) || empty($projectId) ) {
-            throw new GitDaoException( $GLOBALS['Language']->getText('plugin_git', 'dao_delete_params') );
+            throw new GitDaoException( dgettext('tuleap-git', 'Missing repository id or project id') );
         }
         $deletionDate = $repository->getDeletionDate();
         $projectName  = $repository->getProject()->getUnixName();
@@ -308,11 +308,11 @@ class GitDao extends \Tuleap\DB\DataAccessObject
         $projectId      = $repository->getProjectId();
         $repositoryPath = $repository->getPathWithoutLazyLoading();
         if ( empty($projectId) || empty($repositoryPath)  )  {
-            throw new GitDaoException( $GLOBALS['Language']->getText('plugin_git', 'dao_search_params') );
+            throw new GitDaoException( dgettext('tuleap-git', 'Repository not found : missing repository name or project id') );
         }
         $row = $this->searchProjectRepositoryByPath($projectId, $repositoryPath);
         if (empty($row)) {
-            throw new GitDaoException($GLOBALS['Language']->getText('plugin_git', 'dao_search_error'));
+            throw new GitDaoException(dgettext('tuleap-git', 'Repository not found'));
         }
         $this->hydrateRepositoryObject($repository, $row);
         return true;
@@ -335,7 +335,7 @@ class GitDao extends \Tuleap\DB\DataAccessObject
     {
         $repoId = $repository->getId();
         if ( empty($repoId) ) {
-            throw new GitDaoException( $GLOBALS['Language']->getText('plugin_git', 'dao_child_params') );
+            throw new GitDaoException( dgettext('tuleap-git', 'Repository child search failed : missing repository id') );
         }
         $query = 'SELECT repository_id'.
                  ' FROM plugin_git'.
@@ -387,7 +387,7 @@ class GitDao extends \Tuleap\DB\DataAccessObject
         }
         $row = $this->searchProjectRepositoryById($id);
         if (empty($row)) {
-            throw new GitDaoException($GLOBALS['Language']->getText('plugin_git', 'dao_search_error'));
+            throw new GitDaoException(dgettext('tuleap-git', 'Repository not found'));
         }
         $this->hydrateRepositoryObject($repository, $row);
         return true;

@@ -90,7 +90,7 @@ class Git_Ci {
                 $this->getEventManager()->processEvent('display_hudson_addition_info', $parameters);
                 if ($parameters['installed']) {
                     $warning = '<div class="alert alert-warning"> '.
-                        $GLOBALS['Language']->getText('plugin_git', 'deprecated').
+                        dgettext('tuleap-git', 'Starting Tuleap 8.14, we recommend you to use polling jobs. Please see <a href="/doc/en/git.html?#jenkins-webhooks">Hudson Git Plugin</a>.').
                         ' </div>';
                 }
 
@@ -121,7 +121,7 @@ class Git_Ci {
                                  </div>
                                  <div id="hudson_use_plugin_git_trigger_form">
                                      '.$warning.'
-                                     <label for="hudson_use_plugin_git_trigger">'.$GLOBALS['Language']->getText('plugin_git', 'ci_repo_id').': </label>
+                                     <label for="hudson_use_plugin_git_trigger">'.dgettext('tuleap-git', 'repository').': </label>
                                      '.$selectBox.'
                                  </div>
                                  <script>
@@ -131,9 +131,9 @@ class Git_Ci {
                                      Element.toggle(\'hudson_use_plugin_git_trigger_form\', \'slide\', { duration: 0.3 })
                                  </script>
                              </p>';
-                $editForm = $warning.'<label for="hudson_use_plugin_git_trigger">'.$GLOBALS['Language']->getText('plugin_git', 'ci_field_description').': </label>'.$selectBox;
+                $editForm = $warning.'<label for="hudson_use_plugin_git_trigger">'.dgettext('tuleap-git', 'Trigger a build after Git pushes in repository').': </label>'.$selectBox;
                 return array('service'       => GitPlugin::SERVICE_SHORTNAME,
-                             'title'         => $GLOBALS['Language']->getText('plugin_git', 'ci_trigger'),
+                             'title'         => dgettext('tuleap-git', 'Git trigger'),
                              'used'          => $used,
                              'add_form'      => $addForm,
                              'edit_form'     => $editForm);
@@ -154,7 +154,7 @@ class Git_Ci {
         if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
             return $this->getDao()->saveTrigger($jobId, $repositoryId);
         } else {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git', 'ci_repository_not_in_project'));
+            $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-git', 'Git repository does not belong to the project'));
             return false;
         }
     }

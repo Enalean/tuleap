@@ -53,9 +53,9 @@ class GitViewHeader
 
         $layout->header(
             array(
-                'title'      => $GLOBALS['Language']->getText('plugin_git', 'title'),
+                'title'      => dgettext('tuleap-git', 'Git'),
                 'group'      => $project->getID(),
-                'toptab'     => $GLOBALS['Language']->getText('plugin_git', 'title'),
+                'toptab'     => dgettext('tuleap-git', 'Git'),
                 'body_class' => $this->getAdditionalBodyClasses($request)
             )
         );

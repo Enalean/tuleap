@@ -63,7 +63,7 @@ class Mirroring extends Pane
      */
     public function getTitle()
     {
-        return ucfirst($GLOBALS['Language']->getText('plugin_git', 'admin_mirroring'));
+        return ucfirst(dgettext('tuleap-git', 'Mirroring'));
     }
 
     /**

@@ -36,7 +36,7 @@ class Git_SystemEventQueue extends SystemEventQueue {
     }
 
     public function getLabel() {
-        return $GLOBALS['Language']->getText('plugin_git', 'system_event_queue');
+        return dgettext('tuleap-git', 'Git');
     }
 
     public function getLogger() {

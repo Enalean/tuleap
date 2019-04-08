@@ -41,18 +41,18 @@ class Git_AdminPresenter {
     }
 
     public function gerrit_tab_name() {
-        return $GLOBALS['Language']->getText('plugin_git','gerrit_tab_name');
+        return dgettext('tuleap-git', 'Gerrit');
     }
 
     public function general_settings_tab_name() {
-        return $GLOBALS['Language']->getText('plugin_git','general_settings_tab_name');
+        return dgettext('tuleap-git', 'General settings');
     }
 
     public function mirror_tab_name() {
-        return $GLOBALS['Language']->getText('plugin_git','mirror_tab_name');
+        return dgettext('tuleap-git', 'Mirrors');
     }
 
     public function gitolite_config_tab_name() {
-        return $GLOBALS['Language']->getText('plugin_git','gitolite_config_tab_name');
+        return dgettext('tuleap-git', 'Gitolite');
     }
 }

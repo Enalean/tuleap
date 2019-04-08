@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (c) Enalean, 2015 - 2016. All rights reserved
+ * Copyright (c) Enalean, 2015 - Presenter. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -97,11 +97,11 @@ class GitPresenters_AccessControlPresenter
         $warnings
     ) {
         $this->is_control_limited     = $is_control_limited;
-        $this->limited_control_notice = $GLOBALS['Language']->getText('plugin_git', 'permissions_on_remote_server');
+        $this->limited_control_notice = sprintf(dgettext('tuleap-git', 'You can only change <strong>READ</strong> permissions since this repository is managed by a remote Gerrit server. Please note that those modifications are local to %1$s <strong>ARE NOT propagated to Gerrit</strong>.'), \ForgeConfig::get('sys_name'));
 
-        $this->label_read  = $GLOBALS['Language']->getText('plugin_git', 'perm_R');
-        $this->label_write = $GLOBALS['Language']->getText('plugin_git', 'perm_W');
-        $this->label_rw    = $GLOBALS['Language']->getText('plugin_git', 'perm_W+');
+        $this->label_read  = dgettext('tuleap-git', 'Read');
+        $this->label_write = dgettext('tuleap-git', 'Write');
+        $this->label_rw    = dgettext('tuleap-git', 'Rewind');
 
         $this->read_select_box_id    = $read_select_box_id;
         $this->write_select_box_id   = $write_select_box_id;
@@ -116,102 +116,51 @@ class GitPresenters_AccessControlPresenter
         $this->cannot_define_per_repo_permissions   = ($is_control_limited || $are_fine_grained_permissions_defined);
         $this->is_fork                              = $is_fork;
 
-        $this->fine_grained_permissions_checkbox_label = $GLOBALS['Language']->getText(
-            'plugin_git',
-            'fine_grained_permissions_checkbox_label'
-        );
+        $this->fine_grained_permissions_checkbox_label = dgettext('tuleap-git', 'Enable fine-grained permissions');
 
         $this->are_regexp_permission_activated_at_site_level = $are_regexp_permission_activated_at_site_level;
         $this->is_regexp_enabled                             = $is_regexp_enabled;
-        $this->regexp_permission_label                       = $GLOBALS['Language']->getText(
-            'plugin_git',
-            'regexp_permission_label'
-        );
-        $this->regexp_incoherence_label                      = $GLOBALS['Language']->getText(
-            'plugin_git',
-            'regexp_incoherence_label'
-        );
+        $this->regexp_permission_label                       = dgettext('tuleap-git', 'Enable regular expressions in branches and tags pattern');
+        $this->regexp_incoherence_label                      = dgettext('tuleap-git', 'Enabling this option might end up in non working state. Invalid regular expressions will be ignored without errors.');
 
-        $this->fine_grained_permissions_fork_warning .= $GLOBALS['Language']->getText(
-            'plugin_git',
-            'fine_grained_permissions_fork_warning'
-        );
+        $this->fine_grained_permissions_fork_warning .= dgettext('tuleap-git', 'Please note that when forking a single repository to another project, user-defined static user groups will not be copied.');
 
         $this->branches_permissions = $branches_permissions_representation;
         $this->tags_permissions     = $tags_permissions_representation;
 
-        $this->default_permissions_title = $GLOBALS['Language']->getText(
-            'plugin_git',
-            'default_permissions_title'
-        );
+        $this->default_permissions_title = dgettext('tuleap-git', 'Default permissions');
 
-        $this->fine_grained_permissions_title = $GLOBALS['Language']->getText(
-            'plugin_git',
-            'fine_grained_permissions_title'
-        );
+        $this->fine_grained_permissions_title = dgettext('tuleap-git', 'Fine-grained permissions');
 
-        $this->branches_title = $GLOBALS['Language']->getText(
-            'plugin_git',
-            'fine_grained_permissions_branches_title'
-        );
+        $this->branches_title = dgettext('tuleap-git', 'Branches');
 
-        $this->tags_title = $GLOBALS['Language']->getText(
-            'plugin_git',
-            'fine_grained_permissions_tags_title'
-        );
+        $this->tags_title = dgettext('tuleap-git', 'Tags');
 
-        $this->add_branch_permission = $GLOBALS['Language']->getText(
-            'plugin_git',
-            'add_branch_permission'
-        );
+        $this->add_branch_permission = dgettext('tuleap-git', 'Add permission on a new branch');
 
-        $this->add_tag_permission = $GLOBALS['Language']->getText(
-            'plugin_git',
-            'add_tag_permission'
-        );
+        $this->add_tag_permission = dgettext('tuleap-git', 'Add permission on a new tag');
 
-        $this->pattern_column = $GLOBALS['Language']->getText(
-            'plugin_git',
-            'fine_grained_permissions_pattern_column'
-        );
+        $this->pattern_column = dgettext('tuleap-git', 'Pattern');
 
-        $this->actions_column = $GLOBALS['Language']->getText(
-            'plugin_git',
-            'fine_grained_permissions_actions_column'
-        );
+        $this->actions_column = dgettext('tuleap-git', 'Actions');
 
-        $this->empty = $GLOBALS['Language']->getText(
-            'plugin_git',
-            'fine_grained_permissions_empty'
-        );
+        $this->empty = dgettext('tuleap-git', 'No permission defined yet.');
 
         $this->new_fine_grained_ugroups = $new_fine_grained_ugroups;
         $this->remove_form_action       = $delete_url;
         $this->delete_challenge         = $csrf->getToken();
 
-        $this->remove_fine_grained_permission_delete = $GLOBALS['Language']->getText(
-            'plugin_git',
-            'fine_grained_remove_button'
-        );
+        $this->remove_fine_grained_permission_delete = dgettext('tuleap-git', 'Delete');
 
-        $this->remove_fine_grained_permission_desc = $GLOBALS['Language']->getText(
-            'plugin_git',
-            'fine_grained_remove_desc'
-        );
+        $this->remove_fine_grained_permission_desc = dgettext('tuleap-git', 'You are about to remove this permission. Please confirm your action.');
 
-        $this->remove_fine_grained_permission_confirm = $GLOBALS['Language']->getText(
-            'plugin_git',
-            'fine_grained_remove_confirm'
-        );
+        $this->remove_fine_grained_permission_confirm = dgettext('tuleap-git', 'Confirm deletion');
 
-        $this->title_warning_regexp_uncheck = $GLOBALS['Language']->getText(
-            'plugin_git',
-            'title_warning_regexp_uncheck'
-        );
+        $this->title_warning_regexp_uncheck = dgettext('tuleap-git', 'Some rules may be deleted');
         $this->warnings = $warnings;
 
         $this->btn_cancel       = $GLOBALS['Language']->getText('global', 'btn_cancel');
-        $this->save_permissions = $GLOBALS['Language']->getText('plugin_git', 'save_access_control');
+        $this->save_permissions = dgettext('tuleap-git', 'Save permissions');
         $this->disabled         = '';
         if ($is_fork) {
             $this->disabled = 'disabled="disabled"';

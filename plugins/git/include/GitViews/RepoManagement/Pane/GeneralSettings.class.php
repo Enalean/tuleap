@@ -38,7 +38,7 @@ class GeneralSettings extends Pane
      */
     public function getTitle()
     {
-        return $GLOBALS['Language']->getText('plugin_git', 'admin_settings');
+        return dgettext('tuleap-git', 'General settings');
     }
 
     /**
@@ -73,7 +73,7 @@ class GeneralSettings extends Pane
 
     public function repository_description_label()
     {
-        return $GLOBALS['Language']->getText('plugin_git', 'view_repo_description');
+        return dgettext('tuleap-git', 'Description');
     }
 
     public function description()
@@ -83,6 +83,6 @@ class GeneralSettings extends Pane
 
     public function save_label()
     {
-        return $GLOBALS['Language']->getText('plugin_git', 'admin_save_submit');
+        return dgettext('tuleap-git', 'Save');
     }
 }

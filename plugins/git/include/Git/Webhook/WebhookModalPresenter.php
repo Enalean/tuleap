@@ -38,10 +38,10 @@ class WebhookModalPresenter
         $this->project_id     = $repository->getProjectId();
         $this->repository_id  = $repository->getId();
 
-        $this->title      = $GLOBALS['Language']->getText('plugin_git', 'settings_hooks_create');
-        $this->desc       = $GLOBALS['Language']->getText('plugin_git', 'settings_hooks_create_desc');
-        $this->label      = $GLOBALS['Language']->getText('plugin_git', 'settings_hooks_create_label');
-        $this->save       = $GLOBALS['Language']->getText('plugin_git', 'settings_hooks_create');
+        $this->title      = dgettext('tuleap-git', 'Add generic webhook');
+        $this->desc       = dgettext('tuleap-git', 'Add a target which will be called everytime a git push will be done. The URL will be called using HTTP POST method.');
+        $this->label      = dgettext('tuleap-git', 'Target URL:');
+        $this->save       = dgettext('tuleap-git', 'Add generic webhook');
         $this->btn_cancel = $GLOBALS['Language']->getText('global', 'btn_cancel');
     }
 }

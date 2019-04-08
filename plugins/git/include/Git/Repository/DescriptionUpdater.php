@@ -52,7 +52,7 @@ class DescriptionUpdater
         if (strlen($description) > self::MAX_LENGTH) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,
-                $GLOBALS['Language']->getText('plugin_git', 'actions_long_description')
+                dgettext('tuleap-git', 'Too long description')
             );
 
             $this->redirect($repository);
@@ -71,7 +71,7 @@ class DescriptionUpdater
 
             $GLOBALS['Response']->addFeedback(
                 Feedback::INFO,
-                $GLOBALS['Language']->getText('plugin_git', 'actions_save_repo_process')
+                dgettext('tuleap-git', 'Repository informations have been saved')
             );
 
             $this->redirect($repository);

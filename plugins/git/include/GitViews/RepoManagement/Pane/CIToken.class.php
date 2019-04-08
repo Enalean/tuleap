@@ -43,12 +43,12 @@ class GitViewsRepoManagementPaneCIToken extends Pane
      */
     public function getTitle()
     {
-        return $GLOBALS['Language']->getText('plugin_git', 'view_repo_ci_token_title');
+        return dgettext('tuleap-git', 'Token for Continuous Integration');
     }
 
     public function getLabel()
     {
-        return $GLOBALS['Language']->getText('plugin_git', 'view_repo_ci_token');
+        return dgettext('tuleap-git', 'CI Token');
     }
 
     /**
@@ -59,7 +59,7 @@ class GitViewsRepoManagementPaneCIToken extends Pane
         $token_manager = new CITokenManager(new CITokenDao());
         $token         = $token_manager->getToken($this->repository);
         if ($token === null) {
-            $token = $GLOBALS['Language']->getText('plugin_git', 'no_ci_token');
+            $token = dgettext('tuleap-git', 'No CI Token');
         }
         $renderer  = TemplateRendererFactory::build()->getRenderer(GIT_TEMPLATE_DIR);
         $presenter =  new CITokenPresenter(

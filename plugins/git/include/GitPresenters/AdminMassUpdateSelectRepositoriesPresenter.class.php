@@ -41,19 +41,19 @@ class GitPresenters_AdminMassUpdateSelectRepositoriesPresenter extends GitPresen
     }
 
     public function title() {
-        return $GLOBALS['Language']->getText('plugin_git', 'view_admin_mass_update_title');
+        return dgettext('tuleap-git', 'Mass update of repositories');
     }
 
     public function select_repositories() {
-        return $GLOBALS['Language']->getText('plugin_git', 'view_admin_mass_update_select_repositories');
+        return dgettext('tuleap-git', 'Select the repositories you want to update. You will be able to apply mass changes on the next page.');
     }
 
     public function repository_list_name() {
-        return $GLOBALS['Language']->getText('plugin_git', 'view_admin_mass_update_repository_list_name');
+        return dgettext('tuleap-git', 'Repository name');
     }
 
     public function mass_change() {
-        return $GLOBALS['Language']->getText('plugin_git', 'view_admin_mass_update_go_to_mass_change');
+        return dgettext('tuleap-git', 'Update selected repositories');
     }
 
     public function form_action() {

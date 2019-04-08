@@ -386,9 +386,9 @@ class GitRepositoryManager_ForkTest extends TuleapTestCase {
 
     public function itThrowsAnExceptionWhenBackendReturnsNoId() {
         stub($this->backend)->fork()->returns(false);
-        
+
         $this->expectException();
-        
+
         $this->manager->fork($this->repository, mock('Project'), mock('PFUser'), 'namespace', GitRepository::REPO_SCOPE_INDIVIDUAL, $this->forkPermissions);
     }
 
@@ -501,9 +501,7 @@ class GitRepositoryManager_ForkTest extends TuleapTestCase {
         $this->backend->throwAt(0, 'fork', new GitRepositoryAlreadyExistsException(''));
         $this->backend->setReturnValueAt(1, 'fork', 667);
 
-        $errorMessage = 'Repository Xxx already exists';
-        $GLOBALS['Language']->setReturnValue('getText', $errorMessage);
-        $GLOBALS['Response']->expectOnce('addFeedback', array('warning', $errorMessage));
+        $GLOBALS['Response']->expectOnce('addFeedback', array('warning', 'Repository my-repo-123 already exists on target, skipped.'));
         $repo1 = $this->GivenARepository(123);
 
         $repo2 = $this->GivenARepository(456);
@@ -513,11 +511,9 @@ class GitRepositoryManager_ForkTest extends TuleapTestCase {
     }
 
     function testForkShouldTellTheUserIfTheRepositoryAlreadyExists() {
-        $errorMessage = 'Repository Xxx already exists';
-        $GLOBALS['Language']->setReturnValue('getText', $errorMessage);
         $repo2 = $this->GivenARepository(456);
 
-        $GLOBALS['Response']->expectOnce('addFeedback', array('warning', $errorMessage));
+        $GLOBALS['Response']->expectOnce('addFeedback', array('warning', 'Repository my-repo-456 already exists on target, skipped.'));
         $this->backend->setReturnValueAt(0, 'fork', 667);
         $this->backend->throwAt(1, 'fork', new GitRepositoryAlreadyExistsException($repo2->getName()));
 
@@ -554,6 +550,7 @@ class GitRepositoryManager_ForkTest extends TuleapTestCase {
     private function GivenARepository($id) {
         $repo = new MockGitRepository();
         $repo->setReturnValue('getId', $id);
+        $repo->setReturnValue('getName', "my-repo-$id");
         $repo->setReturnValue('userCanRead', true);
         $repo->setReturnValue('getProject', \Mockery::spy(Project::class));
         $this->backend->setReturnValue('isNameValid', true);

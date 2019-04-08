@@ -72,7 +72,7 @@ class GitViews_ShowRepo_Content {
     {
         $html = '<div class="tlp-alert-info">';
 
-        $html .= $GLOBALS['Language']->getText('plugin_git', 'waiting_for_repo_creation');
+        $html .= dgettext('tuleap-git', 'The repository is in queue for creation. Please check back here in a few minutes');
 
         $default_mirrors = $this->mirror_data_mapper->fetchAllRepositoryMirrors($this->repository);
 
@@ -83,11 +83,7 @@ class GitViews_ShowRepo_Content {
             );
 
             $html .= '<br/>';
-            $html .= $GLOBALS['Language']->getText(
-                'plugin_git',
-                'waiting_for_repo_creation_default_mirrors',
-                implode(', ', $default_mirrors_names)
-            );
+            $html .= sprintf(dgettext('tuleap-git', 'The repository will be automatically mirrored on: %1$s.'), implode(', ', $default_mirrors_names));
         }
 
         $html .= '</div>';
