@@ -172,6 +172,14 @@ class ProjectTest extends ProjectBase
             $json_projects[0]['resources']
         );
 
+        $this->assertContains(
+            array(
+                'uri' => 'projects/'.$this->project_private_member_id.'/project_services',
+                'type' => 'project_services',
+            ),
+            $json_projects[0]['resources']
+        );
+
         $this->assertArrayHasKey('id', $json_projects[0]);
         $this->assertEquals($this->project_private_member_id, $json_projects[0]['id']);
 

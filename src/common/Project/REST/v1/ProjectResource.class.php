@@ -31,6 +31,7 @@ use ProjectCreator;
 use ProjectManager;
 use ProjectUGroup;
 use ReferenceManager;
+use ServiceManager;
 use Tuleap\Dashboard\Project\ProjectDashboardDao;
 use Tuleap\Dashboard\Project\ProjectDashboardDuplicator;
 use Tuleap\Dashboard\Project\ProjectDashboardRetriever;
@@ -382,7 +383,7 @@ class ProjectResource extends AuthenticatedResource
             $this->event_manager->processEvent($event);
 
             return $event->getPaginatedProjects();
-        } else if (isset($json_query['with_status'])) {
+        } elseif (isset($json_query['with_status'])) {
             $with_status = $json_query['with_status'];
             return $this->project_manager->getProjectsWithStatusForREST(
                 ProjectStatusMapper::getProjectStatusFlagFromStatusLabel($with_status),
@@ -390,7 +391,7 @@ class ProjectResource extends AuthenticatedResource
                 $offset,
                 $limit
             );
-        } else if (isset($json_query['is_member_of'])) {
+        } elseif (isset($json_query['is_member_of'])) {
             return $this->project_manager->getMyProjectsForREST(
                 $user,
                 $offset,
@@ -1537,6 +1538,59 @@ class ProjectResource extends AuthenticatedResource
 
         return $wiki_pages;
     }
+
+    /**
+     * @url OPTIONS {id}/project_services
+     *
+     * @param int $id Id of the project
+     */
+    public function optionServices(int $id)
+    {
+        $this->sendAllowHeadersForProjectServices();
+    }
+
+    /**
+     * Get services
+     *
+     * Get all services that are available in the projects.
+     *
+     * @url GET {id}/project_services
+     * @access hybrid
+     *
+     * @param int $id     Id of the project
+     * @param int $limit  Number of elements displayed per page {@from path} {@min 0} {@max 50}
+     * @param int $offset Position of the first element to display {@from path} {@min 0}
+     *
+     * @return array {@type Tuleap\Project\REST\v1\ServiceRepresentation}
+     * @throws 401
+     * @throws 403
+     * @throws 404
+     */
+    public function getServices(int $id, int $limit = 10, int $offset = 0): array
+    {
+        $this->checkAccess();
+        $project = $this->getProjectForUser($id);
+
+        $current_user = $this->user_manager->getCurrentUser();
+
+        if (! $current_user->isAdmin($id)) {
+            throw new RestException(403);
+        }
+        $this->sendAllowHeadersForProjectServices();
+
+        $builder  = new ServiceRepresentationCollectionBuilder(ServiceManager::instance());
+        $services = $builder->getServiceRepresentationCollectionForProject($project, $current_user);
+
+        $this->sendPaginationHeaders($limit, $offset, count($services));
+
+        return array_slice($services, $offset, $limit);
+    }
+
+    private function sendAllowHeadersForProjectServices()
+    {
+        Header::allowOptionsGet();
+    }
+
 
     private function userCanAccessPhpWikiService(PFUser $user, $project_id)
     {

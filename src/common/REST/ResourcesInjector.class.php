@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - Present. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,6 +23,7 @@ use Luracast\Restler\Restler;
 use Tuleap\JWT\REST\JWTRepresentation;
 use Tuleap\Label\REST\LabelRepresentation;
 use \Tuleap\Project\REST\ProjectRepresentation;
+use Tuleap\Project\REST\v1\ServiceRepresentation;
 use \Tuleap\Token\REST\TokenRepresentation;
 use \Tuleap\Project\REST\UserGroupRepresentation;
 use Tuleap\User\AccessKey\REST\AccessKeyResource;
@@ -53,10 +54,19 @@ class ResourcesInjector {
 
     public function declareProjectResources(array &$resources, Project $project)
     {
+        $this->declareProjectServicesResource($resources, $project);
         $this->declareProjectUserGroupResource($resources, $project);
         $this->declarePhpWikiResource($resources, $project);
         $this->declareHeartbeatResource($resources, $project);
         $this->declareLabelsResource($resources, $project);
+    }
+
+    private function declareProjectServicesResource(array &$resources, Project $project): void
+    {
+        $resource_reference = new ProjectResourceReference();
+        $resource_reference->build($project, ServiceRepresentation::ROUTE);
+
+        $resources[] = $resource_reference;
     }
 
     private function declareHeartbeatResource(array &$resources, Project $project) {
