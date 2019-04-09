@@ -108,7 +108,7 @@ class AdminDelegation_ShowProjectWidget extends Widget {
         }
         foreach ($criteria as $val) {
             $condition[] = $val;
-            $urlParam   .= '&criteria[]='.$val;
+            $urlParam   .= '&criteria[]='.urlencode($val);
             $selectedCriteria[$val] = 'checked="checked"';
         }
 
@@ -126,28 +126,30 @@ class AdminDelegation_ShowProjectWidget extends Widget {
         }
         $limit  = 10;
 
+        $purifier = Codendi_HTMLPurifier::instance();
+
         $html = '';
         $html .= '<form method="post" action="">';
 
         $html .= '<div class="tlp-form-element">';
         $html .= '<label class="tlp-label" for="plugin_admindelegation_pattern">'.dgettext('tuleap-admindelegation', 'Show all projects containing:').'</label>';
         $html .= '<input type="hidden" name="plugin_admindelegation_func" value="show_projects" />';
-        $html .= '<input type="text" name="plugin_admindelegation_pattern" class="tlp-input" placeholder="'.dgettext('tuleap-admindelegation', 'Search').'" value="'.$pattern.'" size ="40" id="plugin_admindelegation_pattern" />';
+        $html .= '<input type="text" name="plugin_admindelegation_pattern" class="tlp-input" placeholder="'.dgettext('tuleap-admindelegation', 'Search').'" value="'.$purifier->purify($pattern).'" size ="40" id="plugin_admindelegation_pattern" />';
         $html .= '</div>';
 
         $html .= '<div class="tlp-form-element">';
         $html .= '<label for="plugin_admindelegation_group_name" class="tlp-label tlp-checkbox">' .
-            '<input type="checkbox" name="criteria[]" value="group_name" id="plugin_admindelegation_group_name" ' . $selectedCriteria['group_name'] . ' />' .
+            '<input type="checkbox" name="criteria[]" value="group_name" id="plugin_admindelegation_group_name" ' . $purifier->purify($selectedCriteria['group_name']) . ' />' .
             dgettext('tuleap-admindelegation', 'Group Name') .
             '</label>';
 
         $html .= '<label for="plugin_admindelegation_unix_group_name" class="tlp-label tlp-checkbox">' .
-            '<input type="checkbox" name="criteria[]" value="unix_group_name" id="plugin_admindelegation_unix_group_name" ' . $selectedCriteria['unix_group_name'] . ' />' .
+            '<input type="checkbox" name="criteria[]" value="unix_group_name" id="plugin_admindelegation_unix_group_name" ' . $purifier->purify($selectedCriteria['unix_group_name']) . ' />' .
             dgettext('tuleap-admindelegation', 'Short Name') .
             '</label>';
 
         $html .= '<label for="plugin_admindelegation_short_description" class="tlp-label tlp-checkbox">' .
-            '<input type="checkbox" name="criteria[]" value="short_description" id="plugin_admindelegation_short_description" ' . $selectedCriteria['short_description'] . ' />' .
+            '<input type="checkbox" name="criteria[]" value="short_description" id="plugin_admindelegation_short_description" ' . $purifier->purify($selectedCriteria['short_description']) . ' />' .
             dgettext('tuleap-admindelegation', 'Description') .
             '</label>';
         $html .= '</div>';
@@ -172,12 +174,12 @@ class AdminDelegation_ShowProjectWidget extends Widget {
                 while ($row = db_fetch_array($res['projects'])) {
                     $html .= '<tr class="'. util_get_alt_row_color($i++) .'">';
                     $html .= '<td>';
-                    $html .= '<a href="/projects/'.$row['unix_group_name'].'">'.$row['group_name'].'</a>';
+                    $html .= '<a href="/projects/'.$purifier->purify(urlencode($row['unix_group_name'])).'">'.$purifier->purify(html_entity_decode($row['group_name'])).'</a>';
                     if ($row['access'] === Project::ACCESS_PRIVATE || $row['access'] === Project::ACCESS_PRIVATE_WO_RESTRICTED) {
                         $html .= '&nbsp;(*)';
                     }
                     $html .= '</td>';
-                    $html .= '<td>'.$row['group_id'].'</td>';
+                    $html .= '<td>'.$purifier->purify($row['group_id']).'</td>';
                     $html .= '</tr>';
                 }
                 $html .= '</tbody>';
@@ -186,17 +188,19 @@ class AdminDelegation_ShowProjectWidget extends Widget {
 
                 $html .= '<div style="text-align:center" class="'. util_get_alt_row_color($i++) .'">';
                 if ($offset > 0) {
-                    $html .= '<a href="?plugin_admindelegation_func=show_projects&offset='.($offset-$limit).$urlParam.'&plugin_admindelegation_pattern='.$pattern. '&dashboard_id=' . urlencode($this->getDashboardId()) . '">[ '.dgettext('tuleap-admindelegation', 'Previous').' ]</a>';
+                    $href  = '?plugin_admindelegation_func=show_projects&offset='.urlencode($offset-$limit).$urlParam.'&plugin_admindelegation_pattern='.urlencode($pattern). '&dashboard_id=' . urlencode($this->getDashboardId());
+                    $html .= '<a href="' . $purifier->purify($href) . '">[ '.dgettext('tuleap-admindelegation', 'Previous').' ]</a>';
                     $html .= '&nbsp;';
                 }
                 if (($offset + $limit) < $res['numrows']) {
+                    $href  = '?plugin_admindelegation_func=show_projects&offset='.urlencode($offset+$limit).$urlParam.'&plugin_admindelegation_pattern='.urlencode($pattern) . '&dashboard_id=' . urlencode($this->getDashboardId());
                     $html .= '&nbsp;';
-                    $html .= '<a href="?plugin_admindelegation_func=show_projects&offset='.($offset+$limit).$urlParam.'&plugin_admindelegation_pattern='.$pattern . '&dashboard_id=' . urlencode($this->getDashboardId()) . '">[ '.dgettext('tuleap-admindelegation', 'Next').' ]</a>';
+                    $html .= '<a href="' . $purifier->purify($href) . '">[ '.dgettext('tuleap-admindelegation', 'Next').' ]</a>';
                 }
                 $html .= '</div>';
                 $html .= '<div style="text-align:left" class="'. util_get_alt_row_color($i++) .'">';
                 $html .= '(*)&nbsp;'.$GLOBALS['Language']->getText('my_index', 'priv_proj');
-                $html .= '&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;'.sprintf(dgettext('tuleap-admindelegation', '%1$s project(s) found'), $res['numrows']);
+                $html .= '&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;'. $purifier->purify(sprintf(dgettext('tuleap-admindelegation', '%1$s project(s) found'), $res['numrows']));
                 $html .= '</div>';
             }
         }

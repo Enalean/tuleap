@@ -97,7 +97,7 @@ class AdminDelegation_UserWidget extends Widget //phpcs:ignore
             $pm      = ProjectManager::instance();
             $project = $pm->getProjectFromAutocompleter($request->get('plugin_admindelegation_group'));
             if ($project && $project->isActive()) {
-                $groupValue = $project->getPublicName().' ('.$project->getUnixName().')';
+                $groupValue = $project->getUnconvertedPublicName().' ('.$project->getUnixName().')';
             } else {
                 $groupValue = '';
             }
@@ -110,7 +110,7 @@ class AdminDelegation_UserWidget extends Widget //phpcs:ignore
         $html .= '<div class="tlp-form-element">';
         $html .= '<label class="tlp-label" for="plugin_admindelegation_func">'.dgettext('tuleap-admindelegation', 'Show administrators of project:').'</label>';
         $html .= '<input type="hidden" name="plugin_admindelegation_func" value="show_admins" />';
-        $html .= '<input type="text" class="tlp-input" name="plugin_admindelegation_group" value="'.$groupValue.'" size ="40" id="plugin_admindelegation_group" />';
+        $html .= '<input type="text" class="tlp-input" name="plugin_admindelegation_group" value="'.$hp->purify($groupValue).'" size ="40" id="plugin_admindelegation_group" />';
         $html .= '</div>';
         $html .= '<input type="submit" class="tlp-button-primary" value="'.dgettext('tuleap-admindelegation', 'Search').'"/>';
         $html .= '</form>';
@@ -137,7 +137,7 @@ class AdminDelegation_UserWidget extends Widget //phpcs:ignore
                     $allAdmins[] = $mailto;
                     $html .= '<tr class="'. util_get_alt_row_color($i++) .'">';
                     $html .= '<td>'.$hp->purify($uh->getDisplayNameFromUser($u)).'</td>';
-                    $html .= '<td><a href="mailto:'.$mailto.'">'.$u->getEmail().'</a></td>';
+                    $html .= '<td><a href="mailto:'.$hp->purify($mailto).'">'.$hp->purify($u->getEmail()).'</a></td>';
                     $html .= '</tr>';
                 }
                 $html .= '</tbody>';
@@ -145,7 +145,7 @@ class AdminDelegation_UserWidget extends Widget //phpcs:ignore
 
                 // Mail to all admins
                 $html .= '<div style="text-align:center" class="'. util_get_alt_row_color($i++) .'">';
-                $html .= '<a href="mailto:'.implode(',', $allAdmins).'?Subject='.sprintf(dgettext('tuleap-admindelegation', '[%1$s] Project %2$s:'), $GLOBALS['sys_name'], $project->getPublicName()).'">'.dgettext('tuleap-admindelegation', 'Mail to all admins').'</a>';
+                $html .= '<a href="mailto:'.$hp->purify(implode(',', $allAdmins)).'?Subject='.$hp->purify(sprintf(dgettext('tuleap-admindelegation', '[%1$s] Project %2$s:'), ForgeConfig::get('sys_name'), $project->getUnconvertedPublicName())).'">'.dgettext('tuleap-admindelegation', 'Mail to all admins').'</a>';
                 $html .= '</div>';
             }
         }
