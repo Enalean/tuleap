@@ -37,7 +37,7 @@ msgid "Baselines available"
 msgstr "Baselines disponibles"
 
 msgid "Baselines comparison #%u/#%u"
-msgstr "Comparison de baselines #%u/#%u"
+msgstr "Comparaison de baselines #%u/#%u"
 
 msgid ""
 "Baselines features allow you to consult the state of your releases in a\n"
