@@ -15,15 +15,19 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
-const find = (values, predicate) => values.filter(predicate)[0];
-const mapAttribute = (values, attribute) =>
-    values.map(value => value[attribute] || null).filter(Boolean);
-const unique = values => [...new Set(values)];
-const clone = values =>
-    values.map(value => {
-        return { ...value };
+/**
+ * @param current_found_nodes Allows to transmit positive results by the recursive algorithm
+ */
+const filter = (nodes, branch_attribute, predicate, current_found_nodes = []) => {
+    let found_nodes = current_found_nodes;
+    nodes.forEach(value => {
+        predicate(value) && found_nodes.push(value);
+        found_nodes = filter(value[branch_attribute], branch_attribute, predicate, found_nodes);
     });
-export default { find, unique, clone, mapAttribute };
+
+    return found_nodes;
+};
+
+export default { findAllNodes: filter };

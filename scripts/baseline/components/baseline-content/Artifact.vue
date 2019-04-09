@@ -22,16 +22,6 @@
     <div class="baseline-content-artifact" data-test-type="artifact">
         <artifact-label v-bind:artifact="artifact" class="baseline-content-artifact-label"/>
 
-        <span
-            v-if="is_loading_failed"
-            class="tlp-tooltip tlp-tooltip-right baseline-content-artifact-error-message"
-            v-bind:data-tlp-tooltip="error_message_tooltip"
-        >
-            <i
-                class="fa fa-exclamation-circle baseline-tooltip-icon"
-            ></i>
-        </span>
-
         <div class="baseline-content-artifact-body" data-test-type="artifact-fields">
             <field
                 v-if="is_description_available"
@@ -50,26 +40,19 @@
             />
         </div>
 
-        <artifacts-list-skeleton v-if="is_loading"/>
-
-        <baseline-depth-limit-reached-message v-else-if="is_depth_limit_reached && are_linked_artifact_ids_available"/>
+        <baseline-depth-limit-reached-message v-if="artifact.is_depth_limit_reached"/>
 
         <artifacts-list
-            v-else-if="!is_loading_failed"
-            v-bind:current_depth="current_depth + 1"
-            v-bind:artifacts="linked_artifacts"
-            v-bind:baseline_id="baseline_id"
+            v-else-if="artifact.linked_artifacts.length > 0"
+            v-bind:artifacts="artifact.linked_artifacts"
         />
     </div>
 </template>
 
 <script>
-import { getBaselineArtifactsByIds } from "../../api/rest-querier";
 import ArtifactsList from "./ArtifactsList.vue";
-import ArtifactsListSkeleton from "./ArtifactsListSkeleton.vue";
 import ArtifactLabel from "../common/ArtifactLabel.vue";
 import Field from "./Field.vue";
-import { ARTIFACTS_EXPLORATION_DEPTH_LIMIT } from "../../constants/index";
 import BaselineDepthLimitReachedMessage from "../common/BaselineDepthLimitReachedMessage.vue";
 
 export default {
@@ -78,29 +61,19 @@ export default {
     components: {
         ArtifactLabel,
         ArtifactsList,
-        ArtifactsListSkeleton,
         Field,
         BaselineDepthLimitReachedMessage
     },
 
     props: {
-        baseline_id: {
-            type: Number,
-            required: true
-        },
         artifact: {
             type: Object,
-            required: true
-        },
-        current_depth: {
-            type: Number,
             required: true
         }
     },
 
     data() {
         return {
-            linked_artifacts: null,
             is_loading: true,
             is_loading_failed: false
         };
@@ -113,50 +86,11 @@ export default {
 
         is_status_available() {
             return this.artifact.status !== null && this.artifact.status.length > 0;
-        },
-
-        error_message_tooltip() {
-            return this.$gettext("Cannot fetch linked artifacts");
-        },
-
-        is_depth_limit_reached() {
-            return this.current_depth >= ARTIFACTS_EXPLORATION_DEPTH_LIMIT;
-        },
-
-        are_linked_artifact_ids_available() {
-            return (
-                this.artifact.linked_artifact_ids !== null &&
-                this.artifact.linked_artifact_ids.length > 0
-            );
         }
     },
 
     beforeCreate() {
         this.$options.components.ArtifactsList = ArtifactsList;
-    },
-
-    mounted() {
-        if (this.are_linked_artifact_ids_available && !this.is_depth_limit_reached) {
-            this.fetchLinkedArtifacts();
-        } else {
-            this.linked_artifacts = [];
-            this.is_loading = false;
-        }
-    },
-
-    methods: {
-        async fetchLinkedArtifacts() {
-            try {
-                this.linked_artifacts = await getBaselineArtifactsByIds(
-                    this.baseline_id,
-                    this.artifact.linked_artifact_ids
-                );
-            } catch (e) {
-                this.is_loading_failed = true;
-            } finally {
-                this.is_loading = false;
-            }
-        }
     }
 };
 </script>

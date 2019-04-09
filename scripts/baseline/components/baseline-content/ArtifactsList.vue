@@ -5,9 +5,7 @@
             class="baseline-content-artifact-li"
         >
             <artifact
-                v-bind:baseline_id="baseline_id"
                 v-bind:artifact="artifact"
-                v-bind:current_depth="current_depth"
             />
         </li>
     </ol>
@@ -16,14 +14,12 @@
 import Artifact from "./Artifact.vue";
 
 export default {
-    name: "Artifacts",
+    name: "ArtifactList",
 
     components: { Artifact },
 
     props: {
-        artifacts: { required: false, type: Array },
-        baseline_id: { required: true, type: Number },
-        current_depth: { required: true, type: Number }
+        artifacts: { required: true, type: Array }
     },
 
     beforeCreate() {

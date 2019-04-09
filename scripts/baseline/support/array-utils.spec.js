@@ -37,4 +37,35 @@ describe("ArrayUtils:", () => {
             expect(ArrayUtils.find([], ALWAYS_TRUE)).toBeUndefined();
         });
     });
+
+    describe("mapAttribute", () => {
+        it("returns specifics objects attribute", () => {
+            expect(
+                ArrayUtils.mapAttribute(
+                    [{ id: 1, title: "Scra" }, { id: 2, title: "Jibidus" }],
+                    "id"
+                )
+            ).toEqual([1, 2]);
+        });
+
+        it("returns empty array when no element match with given attribute", () => {
+            expect(ArrayUtils.mapAttribute([{ id: 1, title: "Scra" }], "not_exist")).toEqual([]);
+        });
+
+        it("returns empty array when array is empty", () => {
+            expect(ArrayUtils.mapAttribute([], "id")).toEqual([]);
+        });
+    });
+
+    describe("unique", () => {
+        const obj = { id: 1, title: "Scra" };
+
+        it("returns clones", () => {
+            expect(ArrayUtils.clone([obj])).not.toBe([obj]);
+        });
+
+        it("returns empty array when array is empty", () => {
+            expect(ArrayUtils.clone([])).not.toBe([]);
+        });
+    });
 });

@@ -22,7 +22,6 @@ import { mount } from "@vue/test-utils";
 import localVue from "../../support/local-vue.js";
 import { createStoreMock } from "../../support/store-wrapper.spec-helper.js";
 import store_options from "../../store/options.js";
-import { restore, rewire$getBaselineArtifactsByIds } from "../../api/rest-querier";
 import { create } from "../../support/factories";
 import BaselineDepthLimitReachedMessage from "../common/BaselineDepthLimitReachedMessage.vue";
 import Artifact from "./Artifact.vue";
@@ -34,14 +33,10 @@ describe("Artifact", () => {
     const artifact_description_selector = '[data-test-type="artifact-description"]';
     const artifact_status_selector = '[data-test-type="artifact-status"]';
 
-    let getBaselineArtifactsByIds;
     let wrapper;
 
-    beforeEach(async () => {
+    beforeEach(() => {
         const linked_artifact = create("baseline_artifact", { title: "Story" });
-        getBaselineArtifactsByIds = jasmine.createSpy("getBaselineArtifactsByIds");
-        getBaselineArtifactsByIds.and.returnValue(Promise.resolve([linked_artifact]));
-        rewire$getBaselineArtifactsByIds(getBaselineArtifactsByIds);
 
         const store = createStoreMock({
             ...store_options,
@@ -53,29 +48,28 @@ describe("Artifact", () => {
 
         wrapper = mount(Artifact, {
             propsData: {
-                baseline_id: 1,
-                artifact: create("baseline_artifact", {
+                artifact: create("baseline_artifact", "presented", {
                     title: "Epic",
-                    linked_artifact_ids: [linked_artifact.id]
-                }),
-                current_depth: 1
+                    linked_artifact_ids: [linked_artifact.id],
+                    linked_artifact: { linked_artifact }
+                })
             },
             localVue,
             mocks: {
                 $store: store
             }
         });
-        await wrapper.vm.$nextTick();
     });
-
-    afterEach(restore);
 
     describe("when artifact has description", () => {
         beforeEach(() => {
             wrapper.setProps({
-                artifact: create("baseline_artifact", { description: "my description" })
+                artifact: create("baseline_artifact", "presented", {
+                    description: "my description"
+                })
             });
         });
+
         it("shows artifact descriptions", () => {
             expect(wrapper.contains(artifact_description_selector)).toBeTruthy();
         });
@@ -84,7 +78,7 @@ describe("Artifact", () => {
     describe("when artifact has no description", () => {
         beforeEach(async () => {
             wrapper.setProps({
-                artifact: create("baseline_artifact", { description: null })
+                artifact: create("baseline_artifact", "presented", { description: null })
             });
             await wrapper.vm.$nextTick();
         });
@@ -98,8 +92,11 @@ describe("Artifact", () => {
 
     describe("when artifact has status", () => {
         beforeEach(() => {
-            wrapper.setProps({ artifact: create("baseline_artifact", { status: "my status" }) });
+            wrapper.setProps({
+                artifact: create("baseline_artifact", "presented", { status: "my status" })
+            });
         });
+
         it("shows artifact status", () => {
             expect(wrapper.contains(artifact_status_selector)).toBeTruthy();
         });
@@ -108,7 +105,7 @@ describe("Artifact", () => {
     describe("when artifact has no status", () => {
         beforeEach(async () => {
             wrapper.setProps({
-                artifact: create("baseline_artifact", { status: null })
+                artifact: create("baseline_artifact", "presented", { status: null })
             });
             await wrapper.vm.$nextTick();
         });
@@ -126,12 +123,15 @@ describe("Artifact", () => {
 
     describe("when artifacts tree has reached depth limit", () => {
         beforeEach(async () => {
-            getBaselineArtifactsByIds.calls.reset();
-            wrapper.setProps({ current_depth: 10000 });
+            wrapper.setProps({
+                artifact: create("baseline_artifact", "presented", {
+                    is_depth_limit_reached: true
+                })
+            });
             await wrapper.vm.$nextTick();
         });
 
-        it("shows information message", () => {
+        it("shows depth limit reached message", () => {
             expect(wrapper.contains(BaselineDepthLimitReachedMessage)).toBeTruthy();
         });
 
@@ -139,25 +139,18 @@ describe("Artifact", () => {
             expect(wrapper.contains(ArtifactsList)).toBeFalsy();
         });
 
-        it("does not call fetchLinkedArtifacts", () => {
-            expect(getBaselineArtifactsByIds).not.toHaveBeenCalled();
-        });
-
         describe("when artifacts doest not have linked artifact", () => {
             beforeEach(async () => {
                 wrapper.setProps({
-                    artifact: create("baseline_artifact"),
-                    linked_artifact_ids: []
+                    artifact: create("baseline_artifact", "presented"),
+                    linked_artifact_ids: [],
+                    linked_artifacts: []
                 });
                 await wrapper.vm.$nextTick();
             });
 
-            it("does not show information message", () => {
-                expect(wrapper.contains(BaselineDepthLimitReachedMessage)).toBeFalsy();
-            });
-
-            it("does not call fetchLinkedArtifacts", () => {
-                expect(getBaselineArtifactsByIds).not.toHaveBeenCalled();
+            it("does not show artifacts list component", () => {
+                expect(wrapper.contains(ArtifactsList)).toBeFalsy();
             });
         });
     });

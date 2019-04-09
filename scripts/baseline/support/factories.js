@@ -39,7 +39,8 @@ const factories = {
             author: association("user", { id: 3 }),
             artifact: association("artifact", {
                 id: 9
-            })
+            }),
+            first_level_artifacts: []
         }
     },
     simplified_baseline: {
@@ -93,6 +94,10 @@ const factories = {
             description:
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit labore et dolore magna aliqua",
             linked_artifact_ids: []
+        },
+        presented: {
+            linked_artifacts: [],
+            is_depth_limit_reached: false
         }
     },
     user: {

@@ -19,6 +19,7 @@
  */
 
 import Vue from "vue";
+import baseline from "./baseline";
 import baselines from "./baselines";
 import semantics from "./semantics";
 
@@ -37,6 +38,7 @@ export default {
         hideModal: state => (state.modal = null)
     },
     modules: {
+        baseline,
         baselines,
         semantics
     },

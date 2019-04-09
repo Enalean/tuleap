@@ -30,7 +30,7 @@
 import ArtifactSkeleton from "./ArtifactSkeleton.vue";
 
 export default {
-    name: "BaselineArtifactsSkeleton",
+    name: "ContentBodySkeleton",
 
     components: { ArtifactSkeleton }
 };

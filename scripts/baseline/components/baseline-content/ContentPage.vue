@@ -22,54 +22,63 @@
     <main class="tlp-framed-vertically">
         <div class="tlp-framed-horizontally">
             <div
-                v-if="is_loading_failed"
+                v-if="is_baseline_loading_failed"
                 class="tlp-alert-danger tlp-framed-vertically"
                 data-test-type="error-message"
             >
                 <translate>Cannot fetch baseline</translate>
             </div>
 
-            <baseline-label-skeleton v-else-if="is_loading" data-test-type="baseline-header-skeleton"/>
+            <template v-else>
+                <baseline-label-skeleton v-if="!is_baseline_available" data-test-type="baseline-header-skeleton"/>
 
-            <baseline-label v-else v-bind:baseline="baseline"/>
+                <baseline-label v-else v-bind:baseline="baseline"/>
 
-            <statistics/>
+                <statistics/>
 
-            <div class="tlp-framed-vertically">
-                <section class="tlp-pane">
-                    <div class="tlp-pane-container">
-                        <section class="tlp-pane-section">
-                            <content-body v-bind:baseline_id="baseline_id"/>
-                        </section>
-                    </div>
-                </section>
-            </div>
+                <div class="tlp-framed-vertically">
+                    <section class="tlp-pane">
+                        <div class="tlp-pane-container">
+                            <section class="tlp-pane-section">
+                                <content-body-skeleton v-if="!is_baseline_available"/>
+                                <content-body v-else v-bind:first_level_artifacts="baseline.first_level_artifacts"/>
+                            </section>
+                        </div>
+                    </section>
+                </div>
+            </template>
         </div>
     </main>
 </template>
 
 <script>
 import { sprintf } from "sprintf-js";
-import { getBaseline } from "../../api/rest-querier";
-import { presentBaseline } from "../../presenters/baseline";
+import { mapState } from "vuex";
 import Statistics from "./Statistics.vue";
 import ContentBody from "./ContentBody.vue";
 import BaselineLabel from "../common/BaselineLabel.vue";
 import BaselineLabelSkeleton from "../common/BaselineLabelSkeleton.vue";
+import ContentBodySkeleton from "./ContentBodySkeleton.vue";
 
 export default {
-    name: "BaselinePage",
-    components: { BaselineLabelSkeleton, BaselineLabel, ContentBody, Statistics },
+    name: "ContentPage",
+    components: {
+        BaselineLabelSkeleton,
+        BaselineLabel,
+        ContentBody,
+        Statistics,
+        ContentBodySkeleton
+    },
     props: {
         baseline_id: { required: true, type: Number }
     },
 
-    data() {
-        return {
-            baseline: null,
-            is_loading: true,
-            is_loading_failed: false
-        };
+    computed: {
+        ...mapState("baseline", ["baseline", "is_baseline_loading_failed", "is_baseline_loading"]),
+
+        is_baseline_available() {
+            return !this.is_baseline_loading && this.baseline;
+        }
     },
 
     created() {
@@ -78,24 +87,7 @@ export default {
     },
 
     mounted() {
-        this.fetchBaseline();
-    },
-
-    methods: {
-        async fetchBaseline() {
-            this.baseline = null;
-            this.is_loading = true;
-            this.is_loading_failed = false;
-
-            try {
-                const baseline = await getBaseline(this.baseline_id);
-                this.baseline = await presentBaseline(baseline);
-            } catch (e) {
-                this.is_loading_failed = true;
-            } finally {
-                this.is_loading = false;
-            }
-        }
+        this.$store.dispatch("baseline/load", this.baseline_id);
     }
 };
 </script>

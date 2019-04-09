@@ -18,7 +18,7 @@
  *
  */
 
-import { getUser, getArtifact, getTracker } from "../api/rest-querier";
+import { getArtifact, getTracker, getUser } from "../api/rest-querier";
 import ArrayUtils from "../support/array-utils";
 
 export { presentBaseline, presentBaselines, presentArtifacts };
@@ -59,7 +59,7 @@ function fetchTrackers(artifacts) {
 }
 
 function fetchById(ids, fetcher) {
-    const uniq_ids = [...new Set(ids)];
+    const uniq_ids = ArrayUtils.unique(ids);
     return Promise.all(uniq_ids.map(id => fetcher(id)));
 }
 
