@@ -10,9 +10,9 @@ def prepareSources(def credentialsId) {
     }
 }
 
-def runFilesStatusChangesDetection(String name_of_verified_files, String verified_files) {
+def runFilesStatusChangesDetection(String repository_to_inspect, String name_of_verified_files, String verified_files) {
     dir ('sources') {
-        sh "tests/files_status_checker/verify.sh '${name_of_verified_files}' ${verified_files}"
+        sh "tests/files_status_checker/verify.sh '${repository_to_inspect}' '${name_of_verified_files}' ${verified_files}"
     }
 }
 
