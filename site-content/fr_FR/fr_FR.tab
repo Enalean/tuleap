@@ -26,6 +26,7 @@ system	strfdatefmt	%e %B %Y
 system	strfdateshortfmt	%e %b %Y
 system	datefmt	d/m/Y H:i
 system	datefmt_full	d/m/Y H:i:s
+system	datefmt_time	d/m/Y H:i
 system	datefmt_short	d/m/Y
 system	datefmt_day_and_month	j M
 system	decimal_separator	,
