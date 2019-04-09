@@ -135,6 +135,9 @@ msgstr "Ajouter un widget"
 msgid "Adding a non-project member"
 msgstr "Ajouter un utilisateur non membre du projet"
 
+msgid "Admin service cannot be disabled."
+msgstr "Le service admin ne peut pas être désactivé."
+
 msgid "Administrator"
 msgstr "Administrateur"
 
@@ -616,6 +619,9 @@ msgstr "Importer"
 
 msgid "Import members"
 msgstr "Importer des membres"
+
+msgid "Inactive service cannot be enabled."
+msgstr "Un service indisponible ne peut pas être activé."
 
 msgid "Inherited?"
 msgstr "Hérité?"
@@ -1137,6 +1143,9 @@ msgstr "Envoyer un email lorsque la visibilité d'un projet change"
 msgid "Send confirmation to new address"
 msgstr "Envoyer la confirmation"
 
+msgid "Service is not allowed in project."
+msgstr "Le service n'est pas autorisé dans le projet."
+
 msgid "Service news is disabled for this project."
 msgstr "Le service annonces est désactivé pour ce projet."
 
@@ -1475,6 +1484,12 @@ msgstr "La mise à jour a échoué"
 
 msgid "Update label"
 msgstr "Mettre à jour le label"
+
+msgid "Update of service label is not supported"
+msgstr "La mise à jour du label du service n'est pas supportée"
+
+msgid "Update of service name is not supported"
+msgstr "La mise à jour du nom du service n'est pas supportée"
 
 msgid "Update successful"
 msgstr "Mis à jour avec succès"

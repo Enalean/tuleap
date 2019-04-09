@@ -24,6 +24,7 @@ use Tuleap\JWT\REST\JWTRepresentation;
 use Tuleap\Label\REST\LabelRepresentation;
 use \Tuleap\Project\REST\ProjectRepresentation;
 use Tuleap\Project\REST\v1\ServiceRepresentation;
+use Tuleap\Project\REST\v1\ServiceResource;
 use \Tuleap\Token\REST\TokenRepresentation;
 use \Tuleap\Project\REST\UserGroupRepresentation;
 use Tuleap\User\AccessKey\REST\AccessKeyResource;
@@ -50,6 +51,7 @@ class ResourcesInjector {
         $restler->addAPIClass('\\Tuleap\\JWT\\REST\\v1\\JWTResource',  JWTRepresentation::ROUTE);
         $restler->addAPIClass('\\Tuleap\\SystemEvent\\REST\\v1\\SystemEventResource',  SystemEventRepresentation::ROUTE);
         $restler->addAPIClass(AccessKeyResource::class,  AccessKeyResource::ROUTE);
+        $restler->addAPIClass(ServiceResource::class, ServiceRepresentation::ROUTE);
     }
 
     public function declareProjectResources(array &$resources, Project $project)

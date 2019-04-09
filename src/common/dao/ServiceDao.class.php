@@ -176,4 +176,13 @@ class ServiceDao extends DataAccessObject
 
         $this->update($sql);
     }
+
+    public function searchById(int $id)
+    {
+        $id = $this->da->escapeInt($id);
+
+        $sql = "SELECT * FROM service WHERE service_id = $id";
+
+        return $this->retrieve($sql);
+    }
 }

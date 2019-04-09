@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -38,6 +38,7 @@ class ServicePresenter
     public $can_see_shortname;
     public $is_scope_project;
     public $can_update_is_active;
+    public $can_update_is_used;
     public $link;
     public $is_summary;
     public $is_in_iframe;
@@ -77,6 +78,7 @@ class ServicePresenter
         $this->can_see_shortname    = $can_see_shortname;
         $this->is_scope_project     = $is_scope_project;
         $this->can_update_is_active = $can_update_is_active;
+        $this->can_update_is_used   = $service->getShortName() !== 'admin' || ! $this->is_used;
         $this->is_summary           = $service->getShortName() === 'summary';
         $this->is_link_customizable = $service_link === null;
     }

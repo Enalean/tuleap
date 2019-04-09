@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -132,16 +132,22 @@ class EditController
      */
     private function checkServiceCanBeUpdated(Project $project, ServicePOSTData $service_data)
     {
-        if ($service_data->isSystemService()) {
-            $updatable = $this->service_manager->checkServiceCanBeUpdated(
+        if (! $service_data->isSystemService()) {
+            return;
+        }
+
+        try {
+            $this->service_manager->checkServiceCanBeUpdated(
                 $project,
                 $service_data->getShortName(),
                 $service_data->isUsed()
             );
-
-            if (! $updatable) {
-                $this->redirectToServiceAdministration($project);
-            }
+        } catch (ServiceCannotBeUpdatedException $exception) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::WARN,
+                $exception->getMessage()
+            );
+            $this->redirectToServiceAdministration($project);
         }
     }
 }

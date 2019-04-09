@@ -34,7 +34,7 @@ class ProjectServicesTest extends ProjectBase
         $url = 'projects/' . $this->getProjectId(REST_TestDataBuilder::PROJECT_SERVICES) . '/project_services';
 
         $response = $this->getResponse($this->client->get($url));
-        $this->assertEquals($response->getStatusCode(), 200);
+        $this->assertEquals(200, $response->getStatusCode());
 
         $services = $response->json();
 
@@ -49,7 +49,7 @@ class ProjectServicesTest extends ProjectBase
                     $this->assertEquals(
                         $value,
                         $service[$property],
-                        "${service['name']} should have $property set to ". var_export($value, true)
+                        "${service['name']} should have $property set to " . var_export($value, true)
                     );
                 }
                 unset($expected[$service['name']]);
@@ -57,7 +57,50 @@ class ProjectServicesTest extends ProjectBase
         }
         $this->assertEmpty(
             $expected,
-            'Following services not found in response: '. implode(', ', array_keys($expected))
+            'Following services not found in response: ' . implode(', ', array_keys($expected))
         );
+    }
+
+    public function testPUTProjectServices()
+    {
+        $service = $this->getService('file');
+
+        $new_is_enabled_value = ! $service['is_enabled'];
+        $body                 = json_encode(['is_enabled' => $new_is_enabled_value]);
+
+        $response = $this->getResponse($this->client->put($service['uri'], null, $body));
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $updated_service = $this->getService('file');
+        $this->assertEquals($new_is_enabled_value, $updated_service['is_enabled']);
+    }
+
+    public function testAdminServiceCannotBeDisabled()
+    {
+        $service = $this->getService('admin');
+
+        $body = json_encode(['is_enabled' => false]);
+
+        $response = $this->getResponse($this->client->put($service['uri'], null, $body));
+        $this->assertEquals(400, $response->getStatusCode());
+    }
+
+    /**
+     * @return array
+     */
+    private function getService(string $name): array
+    {
+        $url      = 'projects/' . $this->getProjectId(REST_TestDataBuilder::PROJECT_SERVICES) . '/project_services';
+        $response = $this->getResponse($this->client->get($url));
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $services = $response->json();
+        foreach ($services as $service) {
+            if ($service['name'] === $name) {
+                return $service;
+            }
+        }
+
+        $this->assertFalse("Cannot find $name service");
     }
 }
