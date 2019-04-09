@@ -26,8 +26,8 @@ namespace Tuleap\Baseline\REST;
 use Luracast\Restler\RestException;
 use Tuleap\Baseline\BaselineArtifactNotFoundException;
 use Tuleap\Baseline\BaselineArtifactService;
+use Tuleap\Baseline\BaselineRepository;
 use Tuleap\Baseline\BaselineRootArtifactNotFoundException;
-use Tuleap\Baseline\BaselineService;
 use Tuleap\Baseline\CurrentUserProvider;
 use Tuleap\Baseline\NotAuthorizedException;
 use Tuleap\Baseline\REST\Exception\ForbiddenRestException;
@@ -40,8 +40,8 @@ class BaselineArtifactController
 {
     public const MAX_ARTIFACTS_COUNT = 100;
 
-    /** @var BaselineService */
-    private $baseline_service;
+    /** @var BaselineRepository */
+    private $baseline_repository;
 
     /** @var BaselineArtifactService */
     private $baseline_artifact_service;
@@ -56,13 +56,13 @@ class BaselineArtifactController
     private $logger;
 
     public function __construct(
-        BaselineService $baseline_service,
+        BaselineRepository $baseline_repository,
         BaselineArtifactService $baseline_artifact_service,
         CurrentUserProvider $current_user_provider,
         QueryParameterParser $query_parser,
         RESTLogger $logger
     ) {
-        $this->baseline_service          = $baseline_service;
+        $this->baseline_repository       = $baseline_repository;
         $this->baseline_artifact_service = $baseline_artifact_service;
         $this->current_user_provider     = $current_user_provider;
         $this->query_parser              = $query_parser;
@@ -80,7 +80,7 @@ class BaselineArtifactController
         $current_user = $this->current_user_provider->getUser();
 
         try {
-            $baseline = $this->baseline_service->findById($current_user, $baseline_id);
+            $baseline = $this->baseline_repository->findById($current_user, $baseline_id);
             if ($baseline === null) {
                 throw new NotFoundRestException(
                     sprintf(

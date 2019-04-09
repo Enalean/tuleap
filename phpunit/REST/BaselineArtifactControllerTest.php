@@ -32,7 +32,7 @@ use PFUser;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Baseline\BaselineArtifactNotFoundException;
 use Tuleap\Baseline\BaselineArtifactService;
-use Tuleap\Baseline\BaselineService;
+use Tuleap\Baseline\BaselineRepository;
 use Tuleap\Baseline\CurrentUserProvider;
 use Tuleap\Baseline\Factory\BaselineFactory;
 use Tuleap\Baseline\REST\Exception\NotFoundRestException;
@@ -49,8 +49,8 @@ class BaselineArtifactControllerTest extends TestCase
     /** @var BaselineArtifactController */
     private $controller;
 
-    /** @var BaselineService|MockInterface */
-    private $baseline_service;
+    /** @var BaselineRepository|MockInterface */
+    private $baseline_repository;
 
     /** @var BaselineArtifactService|MockInterface */
     private $baseline_artifact_service;
@@ -69,7 +69,7 @@ class BaselineArtifactControllerTest extends TestCase
     {
         $this->current_user = new PFUser();
 
-        $this->baseline_service          = Mockery::mock(BaselineService::class);
+        $this->baseline_repository       = Mockery::mock(BaselineRepository::class);
         $this->baseline_artifact_service = Mockery::mock(BaselineArtifactService::class);
         $this->current_user_provider     = Mockery::mock(CurrentUserProvider::class);
         $this->current_user_provider
@@ -79,7 +79,7 @@ class BaselineArtifactControllerTest extends TestCase
         $this->logger = Mockery::mock(RESTLogger::class);
 
         $this->controller = new BaselineArtifactController(
-            $this->baseline_service,
+            $this->baseline_repository,
             $this->baseline_artifact_service,
             $this->current_user_provider,
             new QueryParameterParser(new JsonDecoder()),
@@ -91,7 +91,7 @@ class BaselineArtifactControllerTest extends TestCase
     {
         $this->expectException(NotFoundRestException::class);
 
-        $this->baseline_service
+        $this->baseline_repository
             ->shouldReceive('findById')
             ->andReturn(BaselineFactory::one()->build());
 
