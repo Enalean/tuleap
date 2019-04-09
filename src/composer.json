@@ -43,7 +43,7 @@
     "gumlet/php-image-resize": "^1.9",
     "http-interop/http-factory-guzzle": "^1.0",
     "jimdo/prometheus_client_php": "^0.9.1",
-    "luracast/restler": "dev-3.0.0-RC6-July2018-FixURLDecoding",
+    "luracast/restler": "dev-master-tuleap#20190410",
     "michelf/php-markdown": "^1.1",
     "mustache/mustache": "dev-feature/strict-variables",
     "nikic/fast-route": "^1.2",

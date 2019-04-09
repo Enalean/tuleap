@@ -75,7 +75,7 @@ class DocmanWikiUpdator
      * @throws ExceptionItemIsLockedByAnotherUser
      */
     public function updateWiki(
-        \Docman_Item $item,
+        \Docman_Wiki $item,
         \PFUser $current_user,
         DocmanWikiPATCHRepresentation $representation
     ): void {

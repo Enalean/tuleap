@@ -100,9 +100,9 @@ class DocmanFilesResource extends AuthenticatedResource
      * @return CreatedItemFilePropertiesRepresentation
      *
      * @status 200
-     * @throws 400
-     * @throws 403
-     * @throws 501
+     * @throws RestException 400
+     * @throws RestException 403
+     * @throws RestException 501
      */
 
     public function patch(int $id, DocmanFilesPATCHRepresentation $representation)

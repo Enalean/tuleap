@@ -101,6 +101,7 @@ class DocmanWikiResource extends AuthenticatedResource
 
         $validator = new WikiVersionCreationBeforeUpdateValidator();
         $item->accept($validator, []);
+        /** @var \Docman_Wiki $item */
 
         $current_user = $this->rest_user_manager->getCurrentUser();
 

@@ -67,7 +67,7 @@ final class LegacyRestoreDocumentsController implements DispatchableWithRequest
                 case 'confirm_restore_item':
                     $itemFactory = new Docman_ItemFactory($groupId);
                     $item = $itemFactory->getItemFromDb($id, array('ignore_deleted' => true));
-                    if ($itemFactory->restore($item)) {
+                    if ($item !== null && $itemFactory->restore($item)) {
                         $url = $this->plugin->getPluginPath().'/?group_id='.$groupId.'&action=details&id='.$id.'&section=properties';
                         $layout->addFeedback('info', $GLOBALS['Language']->getText('plugin_docman', 'item_restored', array($url)), CODENDI_PURIFIER_DISABLED);
                         $layout->redirect('/admin/show_pending_documents.php?group_id='.$groupId.'&focus=item');

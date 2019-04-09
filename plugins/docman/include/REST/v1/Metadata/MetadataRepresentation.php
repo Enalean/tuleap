@@ -40,7 +40,7 @@ class MetadataRepresentation
      */
     public $value;
     /**
-     * @var array {@type Tuleap\Docman\REST\v1\Metadata\MetadataListValueRepresentation}
+     * @var array|null {@type Tuleap\Docman\REST\v1\Metadata\MetadataListValueRepresentation}
      */
     public $list_value;
     /**

@@ -90,7 +90,7 @@ class DocmanLinkUpdator
      * @throws \Luracast\Restler\RestException
      */
     public function updateLink(
-        \Docman_Item $item,
+        \Docman_Link $item,
         \PFUser $current_user,
         DocmanLinkPATCHRepresentation $representation
     ): void {

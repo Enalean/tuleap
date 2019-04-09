@@ -116,6 +116,7 @@ class DocmanLinksResource extends AuthenticatedResource
 
         $validator =  new LinkVersionCreationBeforeUpdateValidator();
         $item->accept($validator, []);
+        /** @var \Docman_Link $item */
 
         $current_user = $this->rest_user_manager->getCurrentUser();
 

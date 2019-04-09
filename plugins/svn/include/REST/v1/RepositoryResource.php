@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -462,7 +462,7 @@ class RepositoryResource extends AuthenticatedResource
         try {
             $this->repository_updater->update($repository, $repository_settings);
         } catch (CannotCreateMailHeaderException $exception) {
-            throw new RestException('500', 'An error occured while saving the notifications.');
+            throw new RestException(500, 'An error occurred while saving the notifications.');
         }
 
         return $this->representation_builder->build($repository, $user);
@@ -477,12 +477,12 @@ class RepositoryResource extends AuthenticatedResource
             $repository = $this->repository_manager->getRepositoryById($id);
 
             if ($repository->isDeleted()) {
-                throw new RestException('404', 'Repository not found');
+                throw new RestException(404, 'Repository not found');
             }
 
             return $repository;
         } catch (CannotFindRepositoryException $e) {
-            throw new RestException('404', 'Repository not found');
+            throw new RestException(404, 'Repository not found');
         }
     }
 
@@ -530,14 +530,14 @@ class RepositoryResource extends AuthenticatedResource
             $this->checkUserIsAdmin($repository->getProject(), $current_user);
 
             if ($this->isDeletionAlreadyQueued($repository)) {
-                throw new RestException('400', 'Repository already in queue for deletion');
+                throw new RestException(400, 'Repository already in queue for deletion');
 
                 return;
             }
 
             $this->repository_deleter->queueRepositoryDeletion($repository);
         } catch (CannotFindRepositoryException $e) {
-            throw new RestException('404', 'Repository not found');
+            throw new RestException(404, 'Repository not found');
         }
     }
 

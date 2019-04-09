@@ -295,7 +295,7 @@ class DocmanFoldersResource extends AuthenticatedResource
 
         $docman_item_creator = DocmanItemCreatorBuilder::build($project);
 
-        /** @var \docmanPlugin $docman_plugin */
+        /** @var \DocmanPlugin $docman_plugin */
         $docman_plugin        = PluginManager::instance()->getPluginByName('docman');
         $are_embedded_allowed = $docman_plugin->getPluginInfo()->getPropertyValueForName('embedded_are_allowed');
 

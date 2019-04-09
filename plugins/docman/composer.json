@@ -3,7 +3,10 @@
     "psr-4": {
       "Tuleap\\Docman\\": "include/"
     },
-    "classmap": ["include/"]
+    "classmap": ["include/"],
+    "files": [
+      "include/constants.php"
+    ]
   },
   "config": {
     "sort-packages": true

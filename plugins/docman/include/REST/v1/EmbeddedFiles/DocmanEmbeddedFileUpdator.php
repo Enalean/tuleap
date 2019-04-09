@@ -69,7 +69,7 @@ class DocmanEmbeddedFileUpdator
      * @throws ExceptionItemIsLockedByAnotherUser
      */
     public function updateEmbeddedFile(
-        \Docman_Item $item,
+        \Docman_File $item,
         \PFUser $current_user,
         DocmanEmbeddedFilesPATCHRepresentation $representation
     ): void {

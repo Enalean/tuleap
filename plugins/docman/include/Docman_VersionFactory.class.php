@@ -112,7 +112,7 @@ class Docman_VersionFactory {
     /**
      * Retrieve the next available version number for a file
      *
-     * @param Docman_File $item
+     * @param Docman_Item $item
      *
      * @return Integer
      */
@@ -124,7 +124,7 @@ class Docman_VersionFactory {
     /**
      * Delete given version of document
      * 
-     * @param Docman_Version $item
+     * @param Docman_Item $item
      * @param Integer        $number
      * 
      * @return Boolean

@@ -297,7 +297,7 @@ class DocmanItemsResource extends AuthenticatedResource
             new MetadataRepresentationBuilder(
                 new \Docman_MetadataFactory($project->getID())
             ),
-            new ApprovalTableRetriever(new \Docman_ApprovalTableFactoriesFactory(), new \Docman_VersionFactory())
+            new ApprovalTableRetriever(new \Docman_ApprovalTableFactoriesFactory())
         );
         return $item_representation_builder;
     }

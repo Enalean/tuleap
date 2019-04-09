@@ -144,9 +144,6 @@ class documentPlugin extends Plugin // phpcs:ignore
         $collector->setUrl("/plugins/document/" . urlencode($collector->getProject()->getUnixNameLowerCase()) . "/");
     }
 
-    /**
-     * @return mixed
-     */
     private function getDocmanPlugin(): DocmanPlugin
     {
         return PluginManager::instance()->getPluginByName('docman');

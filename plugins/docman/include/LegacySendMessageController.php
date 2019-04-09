@@ -64,6 +64,7 @@ final class LegacySendMessageController implements DispatchableWithRequest
                 $messageToAdmin = $request->get('msg_docman_access');
             } else {
                 exit_error($GLOBALS['Language']->getText('plugin_docman', 'error'), $GLOBALS['Language']->getText('plugin_docman', 'invalid_msg'));
+                return;
             }
             $sendMail->processMail($messageToAdmin);
         }

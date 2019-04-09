@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -134,3 +134,11 @@ define('PLUGIN_DOCMAN_METADATA_TYPE_DATE_LABEL', 'date');
 
 define('PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING', 'plugin_docman_max_file_size');
 define('PLUGIN_DOCMAN_MAX_NB_FILE_UPLOADS_SETTING', 'plugin_docman_max_number_of_files');
+
+define('PLUGIN_DOCMAN_METADATA_TYPE_TEXT', 1);
+define('PLUGIN_DOCMAN_METADATA_TYPE_STRING', 6);
+define('PLUGIN_DOCMAN_METADATA_TYPE_DATE', 4);
+define('PLUGIN_DOCMAN_METADATA_TYPE_LIST', 5);
+
+define('PLUGIN_DOCMAN_METADATA_UNUSED', 0);
+define('PLUGIN_DOCMAN_METADATA_USED', 1);
