@@ -24,11 +24,12 @@ use Tuleap\Dashboard\User\UserDashboardController;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Hudson\HudsonJobBuilder;
+use Tuleap\Plugin\PluginWithLegacyInternalRouting;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/constants.php';
 
-class hudsonPlugin extends Plugin
+class hudsonPlugin extends PluginWithLegacyInternalRouting
 {
     const ICONS_PATH = '/plugins/hudson/themes/default/images/ic/';
 
@@ -363,7 +364,8 @@ class hudsonPlugin extends Plugin
         }
     }
 
-    function process() {
+    public function process() : void
+    {
         require_once('hudson.class.php');
         $controler = new hudson();
         $controler->process();

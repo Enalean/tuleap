@@ -397,24 +397,4 @@ class Plugin implements PFO_Plugin {
             'handler' => $handler,
         ];
     }
-
-    protected function listenToCollectRouteEventWithDefaultController() : void
-    {
-        $this->addHook(\Tuleap\Request\CollectRoutesEvent::NAME, 'defaultCollectRoutesEvent');
-    }
-
-    public function defaultCollectRoutesEvent(\Tuleap\Request\CollectRoutesEvent $event)
-    {
-        $event->getRouteCollector()->addGroup($this->getPluginPath(), function(FastRoute\RouteCollector $r) {
-            $r->addRoute(['GET', 'POST'], '[/[index.php]]', $this->getRouteHandler('routePluginLegacyController'));
-        });
-    }
-
-    /**
-     * @return \Tuleap\Plugin\PluginLegacyController
-     */
-    public function routePluginLegacyController()
-    {
-        return new \Tuleap\Plugin\PluginLegacyController($this);
-    }
 }
