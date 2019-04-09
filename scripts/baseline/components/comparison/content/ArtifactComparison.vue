@@ -69,7 +69,7 @@ import { ARTIFACTS_EXPLORATION_DEPTH_LIMIT } from "../../../constants/index";
 import BaselineMaximumDepthReachedMessage from "../../common/BaselineDepthLimitReachedMessage.vue";
 
 export default {
-    name: "ModifiedArtifact",
+    name: "ArtifactComparison",
 
     components: {
         BaselineMaximumDepthReachedMessage,
