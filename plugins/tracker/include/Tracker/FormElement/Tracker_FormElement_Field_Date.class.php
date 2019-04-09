@@ -407,8 +407,9 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
         return new Tracker_Report_Criteria_Date_ValueDao();
     }
 
-    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report=null, $from_aid = null) {
-        return $this->formatDate($value);
+    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report=null, $from_aid = null)
+    {
+        return $this->formatDateForDisplay($value);
     }
 
     public function fetchCSVChangesetValue($artifact_id, $changeset_id, $value, $report) {
