@@ -24,8 +24,7 @@
             <div class="breadcrumb-item">
                 <router-link
                     v-bind:to="{ name: 'BaselinesPage' }"
-                    tag="button"
-                    class="breadcrumb-link baseline-breadcrumb-link"
+                    class="breadcrumb-link"
                     v-translate
                 >
                     Baselines
@@ -37,8 +36,7 @@
             >
                 <router-link
                     to=""
-                    tag="button"
-                    class="breadcrumb-link baseline-breadcrumb-link"
+                    class="breadcrumb-link"
                 >
                     {{ current_page_title }}
                 </router-link>

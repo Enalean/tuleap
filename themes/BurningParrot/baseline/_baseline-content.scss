@@ -26,10 +26,6 @@ $artifact-body-padding: $tlp-spacing;
     justify-content: space-between;
 }
 
-.baseline-breadcrumb-link {
-    cursor: pointer;
-}
-
 .baseline-statistic-epics {
     @extend %statistic;
     background-color: $tlp-theme-blue;
