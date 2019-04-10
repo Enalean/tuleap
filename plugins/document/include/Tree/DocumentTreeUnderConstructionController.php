@@ -43,7 +43,7 @@ class DocumentTreeUnderConstructionController implements DispatchableWithRequest
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
-        $project = $this->getProject($request, $variables);
+        $project = $this->getProject($variables);
 
         $user = $request->getCurrentUser();
         $user->setPreference("plugin_document_set_display_under_construction_modal_" . $project->getID(), true);
