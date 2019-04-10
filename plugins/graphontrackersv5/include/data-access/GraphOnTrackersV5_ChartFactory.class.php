@@ -22,7 +22,8 @@ require_once('GraphOnTrackersV5_ChartDao.class.php');
 require_once(TRACKER_BASE_DIR .'/Tracker/Report/Tracker_Report_Session.class.php');
 
 class GraphOnTrackersV5_ChartFactory {
-    
+    private const CHART_REMOVED = 'removed';
+
     protected $charts;
     protected $chart_factories;
     
@@ -65,14 +66,14 @@ class GraphOnTrackersV5_ChartFactory {
                 //$dao = new GraphOnTrackers_ChartDao(CodendiDataAccess::instance());
                 //$charts_data = $dao->searchByReportId($renderer->id);
             } else {
-                uasort($charts_data, array($this, 'sortArrayByRank'));
+                uasort($charts_data, [$this, 'sortArrayByRank']);
                 if ($store_in_session) {
                     $this->report_session->set("charts", $charts_data);
                 }
             }
             if ($charts_data) {
                 foreach($charts_data as $row) {
-                    if ($row !== 'removed') {
+                    if ($row !== self::CHART_REMOVED) {
                         if ($c = $this->instanciateChart($row, $renderer, $store_in_session)) {
                             $this->charts[$renderer->id][$row['id']] = $c;
                         }
@@ -102,6 +103,10 @@ class GraphOnTrackersV5_ChartFactory {
     }
 
     public function sortArrayByRank($a, $b) {
+        if ($a === self::CHART_REMOVED || $b === self::CHART_REMOVED) {
+            return 0;
+        }
+
         return $a['rank'] - $b['rank'];
     }
     
@@ -155,7 +160,7 @@ class GraphOnTrackersV5_ChartFactory {
         $session = new Tracker_Report_Session($renderer->report->id);
         $session->changeSessionNamespace("renderers.{$renderer->id}");
         if (isset($session->charts[$id])) {
-            $session->set("charts.$id", 'removed');
+            $session->set("charts.$id", self::CHART_REMOVED);
             $session->setHasChanged();
         } else if ($user_can_update_report) {
             $this->deleteDb($renderer,  $id);
@@ -315,6 +320,5 @@ class GraphOnTrackersV5_ChartFactory {
         $chart->setSpecificPropertiesFromXML($xml, $formsMapping);
         return $chart;
     }
-
 }
 ?>
