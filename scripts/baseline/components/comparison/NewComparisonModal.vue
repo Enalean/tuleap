@@ -18,102 +18,97 @@
   -
   -->
 <template>
-    <modal v-bind:title="title">
-        <form v-on:submit.prevent="openComparison()">
-            <div class="tlp-modal-body">
-                <h2 v-translate class="tlp-modal-subtitle">
-                    Please choose two baselines to compare
-                </h2>
+    <form v-on:submit.prevent="openComparison()">
+        <div class="tlp-modal-body">
+            <h2 v-translate class="tlp-modal-subtitle">
+                Please choose two baselines to compare
+            </h2>
 
-                <div class="new-comparison-modal-body">
-                    <div class="tlp-form-element new-comparison-modal-body-form-element">
-                        <h3 v-translate>
-                            Reference…
-                        </h3>
-                        <div class="new-comparison-modal-baselines-list-scrollbar">
-                            <label
-                                v-for="baseline in baselines"
-                                v-bind:key="baseline.id"
-                                class="tlp-label tlp-radio"
+            <div class="new-comparison-modal-body">
+                <div class="tlp-form-element new-comparison-modal-body-form-element">
+                    <h3 v-translate>
+                        Reference…
+                    </h3>
+                    <div class="new-comparison-modal-baselines-list-scrollbar">
+                        <label
+                            v-for="baseline in baselines"
+                            v-bind:key="baseline.id"
+                            class="tlp-label tlp-radio"
+                        >
+                            <input
+                                type="radio"
+                                name="base"
+                                v-bind:value="baseline"
+                                v-model="base_baseline"
+                                required
                             >
-                                <input
-                                    type="radio"
-                                    name="base"
-                                    v-bind:value="baseline"
-                                    v-model="base_baseline"
-                                    required
-                                >
-                                {{ baseline.name }}
-                            </label>
-                        </div>
+                            {{ baseline.name }}
+                        </label>
                     </div>
+                </div>
 
-                    <div class="tlp-form-element new-comparison-modal-body-form-element">
-                        <h3 v-translate>
-                            … compared to
-                        </h3>
-                        <span
-                            v-if="baselines_to_compare === null"
-                            class="baseline-empty-information-message"
-                            v-translate
-                        >
-                            Please choose a reference baseline
-                        </span>
-                        <span
-                            v-else-if="baselines_to_compare.length === 0"
-                            class="baseline-empty-information-message"
-                            v-translate
-                        >
-                            No other baseline available on same artifact.
-                        </span>
+                <div class="tlp-form-element new-comparison-modal-body-form-element">
+                    <h3 v-translate>
+                        … compared to
+                    </h3>
+                    <span
+                        v-if="baselines_to_compare === null"
+                        class="baseline-empty-information-message"
+                        v-translate
+                    >
+                        Please choose a reference baseline
+                    </span>
+                    <span
+                        v-else-if="baselines_to_compare.length === 0"
+                        class="baseline-empty-information-message"
+                        v-translate
+                    >
+                        No other baseline available on same artifact.
+                    </span>
 
-                        <div v-else class="new-comparison-modal-baselines-list-scrollbar">
-                            <label
-                                v-for="baseline in baselines_to_compare"
-                                v-bind:key="baseline.id"
-                                class="tlp-label tlp-radio"
+                    <div v-else class="new-comparison-modal-baselines-list-scrollbar">
+                        <label
+                            v-for="baseline in baselines_to_compare"
+                            v-bind:key="baseline.id"
+                            class="tlp-label tlp-radio"
+                        >
+                            <input
+                                type="radio"
+                                name="baseline_to_compare"
+                                v-bind:value="baseline"
+                                v-model="baseline_to_compare"
+                                required
                             >
-                                <input
-                                    type="radio"
-                                    name="baseline_to_compare"
-                                    v-bind:value="baseline"
-                                    v-model="baseline_to_compare"
-                                    required
-                                >
-                                {{ baseline.name }}
-                            </label>
-                        </div>
+                            {{ baseline.name }}
+                        </label>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div class="tlp-modal-footer">
-                <button
-                    type="button"
-                    class="tlp-button-primary tlp-button-outline tlp-modal-action"
-                    data-dismiss="modal"
-                >
-                    <translate>Cancel</translate>
-                </button>
-                <button
-                    v-bind:disabled="!is_form_valid"
-                    type="submit"
-                    class="tlp-button-primary tlp-modal-action"
-                    data-dismiss="modal"
-                >
-                    <translate>Show comparison</translate>
-                </button>
-            </div>
-        </form>
-    </modal>
+        <div class="tlp-modal-footer">
+            <button
+                type="button"
+                class="tlp-button-primary tlp-button-outline tlp-modal-action"
+                data-dismiss="modal"
+            >
+                <translate>Cancel</translate>
+            </button>
+            <button
+                v-bind:disabled="!is_form_valid"
+                type="submit"
+                class="tlp-button-primary tlp-modal-action"
+                data-dismiss="modal"
+            >
+                <translate>Show comparison</translate>
+            </button>
+        </div>
+    </form>
 </template>
 
 <script>
-import Modal from "../common/Modal.vue";
-
 export default {
     name: "NewComparisonModal",
-    components: { Modal },
     props: {
         baselines: { required: true, type: Array }
     },
@@ -126,9 +121,6 @@ export default {
     },
 
     computed: {
-        title() {
-            return this.$gettext("New comparison");
-        },
         is_form_valid() {
             return this.base_baseline !== null && this.baseline_to_compare !== null;
         },
@@ -143,10 +135,6 @@ export default {
     },
 
     methods: {
-        reload() {
-            this.base_baseline = null;
-            this.baseline_to_compare = null;
-        },
         openComparison() {
             this.$router.push({
                 name: "ComparisonPage",

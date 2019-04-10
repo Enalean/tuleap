@@ -49,16 +49,19 @@
                 <router-view v-bind:project_id="project_id" v-on:title="changeTitle"/>
             </div>
         </main>
+
+        <modal/>
     </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
 import Notification from "./Notification.vue";
+import Modal from "./layout/Modal.vue";
 
 export default {
     name: "App",
-    components: { Notification },
+    components: { Modal, Notification },
     props: {
         project_id: {
             required: false,

@@ -18,16 +18,23 @@
  *
  */
 
+import Vue from "vue";
 import baselines from "./baselines";
 import semantics from "./semantics";
 
 export default {
     state: {
-        notification: null
+        notification: null,
+        modal: null
     },
     mutations: {
         notify: (state, message) => (state.notification = message),
-        clearNotification: state => (state.notification = null)
+        clearNotification: state => (state.notification = null),
+        showModal: (state, modal) =>
+            // Vue.extend() is required here to prevent store mutation when given component is mounted
+            // (which is a bad practice, identified when strict mode is enabled)
+            (state.modal = { ...modal, component: Vue.extend(modal.component) }),
+        hideModal: state => (state.modal = null)
     },
     modules: {
         baselines,

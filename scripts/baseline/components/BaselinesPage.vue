@@ -43,18 +43,12 @@
                         type="button"
                         data-target="new-baseline-modal"
                         class="tlp-button-primary"
+                        data-test-action="new-baseline"
                         v-on:click="showNewBaselineModal()"
                     >
                         <i class="fa fa-plus tlp-button-icon"></i>
                         <translate>New baseline</translate>
                     </button>
-
-                    <new-baseline-modal
-                        id="new-baseline-modal"
-                        ref="new_baseline_modal"
-                        v-bind:project_id="project_id"
-                        v-on:created="onBaselineCreated()"
-                    />
                 </div>
 
                 <section class="tlp-pane-section">
@@ -75,19 +69,13 @@
                         type="button"
                         data-target="new-comparison-modal"
                         class="tlp-button-primary"
+                        data-test-action="show-comparison"
                         v-bind:disabled="are_baselines_loading || !are_baselines_available"
                         v-on:click="showNewComparisonModal()"
                     >
                         <i class="fa fa-plus tlp-button-icon"></i>
                         <translate>Compare baselines</translate>
                     </button>
-
-                    <new-comparison-modal
-                        v-if="are_baselines_available"
-                        id="new-comparison-modal"
-                        ref="new_comparison_modal"
-                        v-bind:baselines="baselines"
-                    />
                 </div>
             </div>
         </section>
@@ -98,13 +86,12 @@
 import BaselineTable from "./BaselineTable.vue";
 import NewBaselineModal from "./new-baseline/NewBaselineModal.vue";
 import NewComparisonModal from "./comparison/NewComparisonModal.vue";
-import { modal as createModal } from "tlp";
 import { mapState } from "vuex";
 
 export default {
     name: "BaselinesPage",
 
-    components: { NewBaselineModal, BaselineTable, NewComparisonModal },
+    components: { BaselineTable },
 
     props: {
         project_id: { mandatory: true, type: Number }
@@ -129,38 +116,29 @@ export default {
         }
     },
 
-    watch: {
-        are_baselines_available: async function(val) {
-            if (val) {
-                await this.$nextTick();
-                this.new_comparison_modal = createModal(this.$refs.new_comparison_modal.$el);
-            }
-        }
-    },
-
     created() {
         this.$emit("title", this.$gettext("Baselines"));
     },
 
     mounted() {
-        this.new_baseline_modal = createModal(this.$refs.new_baseline_modal.$el);
         this.fetchBaselines();
     },
 
     methods: {
         showNewBaselineModal() {
-            this.new_baseline_modal.show();
-            this.$refs.new_baseline_modal.reload();
-        },
-
-        onBaselineCreated() {
-            this.fetchBaselines();
-            this.new_baseline_modal.hide();
+            this.$store.commit("showModal", {
+                component: NewBaselineModal,
+                title: this.$gettext("New baseline"),
+                props: { project_id: this.project_id }
+            });
         },
 
         showNewComparisonModal() {
-            this.new_comparison_modal.show();
-            this.$refs.new_comparison_modal.reload();
+            this.$store.commit("showModal", {
+                component: NewComparisonModal,
+                title: this.$gettext("New comparison"),
+                props: { baselines: this.baselines }
+            });
         },
 
         fetchBaselines() {

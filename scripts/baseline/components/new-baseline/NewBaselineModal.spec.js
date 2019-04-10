@@ -42,9 +42,17 @@ describe("NewBaselineModal", () => {
     const a_milestone = create("milestone");
     const a_baseline = create("baseline");
 
-    beforeEach(() => {
+    let getOpenMilestonesResolve;
+    let getOpenMilestonesReject;
+
+    beforeEach(async () => {
         getOpenMilestones = jasmine.createSpy("getOpenMilestones");
-        getOpenMilestones.and.returnValue(Promise.resolve([a_milestone]));
+        getOpenMilestones.and.returnValue(
+            new Promise((resolve, reject) => {
+                getOpenMilestonesResolve = resolve;
+                getOpenMilestonesReject = reject;
+            })
+        );
         rewire$getOpenMilestones(getOpenMilestones);
 
         createBaseline = jasmine.createSpy("createBaseline");
@@ -60,87 +68,54 @@ describe("NewBaselineModal", () => {
                 $store: store
             }
         });
+        await wrapper.vm.$nextTick();
     });
 
     afterEach(restore);
 
-    describe("reload()", () => {
-        beforeEach(() => {
-            wrapper.setData({
-                name: "My baseline",
-                milestone: a_milestone
-            });
-            wrapper.vm.reload();
+    it("shows skeleton", () => {
+        expect(wrapper.contains(MilestonesSelectSkeleton)).toBeTruthy();
+    });
+
+    describe("when getOpenMilestones() fail", () => {
+        beforeEach(async () => {
+            getOpenMilestonesReject("rejection");
+            await Vue.nextTick();
         });
 
-        it("resets inputs", () => {
-            expect(wrapper.vm.name).toBeNull();
-            expect(wrapper.vm.milestone).toBeNull();
+        it("shows error message", () => {
+            expect(wrapper.contains(error_message_selector)).toBeTruthy();
         });
 
-        it("Fetches milestones", () => {
-            expect(getOpenMilestones).toHaveBeenCalled();
+        it("shows information message", () => {
+            expect(wrapper.contains(information_message_selector)).toBeTruthy();
+        });
+
+        it("does not show skeleton", () => {
+            expect(wrapper.contains(MilestonesSelectSkeleton)).toBeFalsy();
         });
     });
 
-    describe("fetchMilestones()", () => {
-        let getOpenMilestonesResolve;
-        let getOpenMilestonesReject;
-
-        beforeEach(() => {
-            getOpenMilestones.and.returnValue(
-                new Promise((resolve, reject) => {
-                    getOpenMilestonesResolve = resolve;
-                    getOpenMilestonesReject = reject;
-                })
-            );
-            wrapper.vm.fetchMilestones();
+    describe("when getOpenMilestones() is successful", () => {
+        beforeEach(async () => {
+            getOpenMilestonesResolve([a_milestone]);
+            await Vue.nextTick();
         });
 
-        it("shows skeleton", () => {
-            expect(wrapper.contains(MilestonesSelectSkeleton)).toBeTruthy();
+        it("does not show error message", () => {
+            expect(wrapper.contains(error_message_selector)).toBeFalsy();
         });
 
-        describe("when getOpenMilestones() fail", () => {
-            beforeEach(async () => {
-                getOpenMilestonesReject("rejection");
-                await Vue.nextTick();
-            });
-
-            it("shows error message", () => {
-                expect(wrapper.contains(error_message_selector)).toBeTruthy();
-            });
-
-            it("shows information message", () => {
-                expect(wrapper.contains(information_message_selector)).toBeTruthy();
-            });
-
-            it("does not show skeleton", () => {
-                expect(wrapper.contains(MilestonesSelectSkeleton)).toBeFalsy();
-            });
+        it("does not show skeleton", () => {
+            expect(wrapper.contains(MilestonesSelectSkeleton)).toBeFalsy();
         });
 
-        describe("when getOpenMilestones() is successful", () => {
-            beforeEach(async () => {
-                getOpenMilestonesResolve([a_milestone]);
-                await Vue.nextTick();
-            });
+        it("shows a list of milestones", () => {
+            expect(wrapper.contains(MilestonesSelect)).toBeTruthy();
+        });
 
-            it("does not show error message", () => {
-                expect(wrapper.contains(error_message_selector)).toBeFalsy();
-            });
-
-            it("does not show skeleton", () => {
-                expect(wrapper.contains(MilestonesSelectSkeleton)).toBeFalsy();
-            });
-
-            it("shows a list of milestones", () => {
-                expect(wrapper.contains(MilestonesSelect)).toBeTruthy();
-            });
-
-            it("passes milestones returned by getOpenMilestones() to MilestoneList", () => {
-                expect(wrapper.find(MilestonesSelect).props().milestones).toEqual([a_milestone]);
-            });
+        it("passes milestones returned by getOpenMilestones() to MilestoneList", () => {
+            expect(wrapper.find(MilestonesSelect).props().milestones).toEqual([a_milestone]);
         });
     });
 
@@ -179,8 +154,14 @@ describe("NewBaselineModal", () => {
                 await Vue.nextTick();
             });
 
-            it("sends event", () => {
-                expect(wrapper.emitted().created).toBeTruthy();
+            it("notify user with successful creation", () => {
+                expect(store.commit).toHaveBeenCalledWith("notify", jasmine.any(Object));
+            });
+            it("reloads all baselines", () => {
+                expect(store.dispatch).toHaveBeenCalledWith("baselines/load", { project_id: 1 });
+            });
+            it("hides modal", () => {
+                expect(store.commit).toHaveBeenCalledWith("hideModal");
             });
         });
     });
