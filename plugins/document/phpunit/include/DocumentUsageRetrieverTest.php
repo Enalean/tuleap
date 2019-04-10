@@ -47,7 +47,6 @@ class DocumentUsageRetrieverTest extends TestCase
         $this->retriever        = new DocumentUsageRetriever($this->metadata_factory);
 
         ForgeConfig::store();
-        ForgeConfig::set('sys_project_blacklist_which_uses_legacy_ui_by_default', []);
     }
 
     protected function tearDown(): void
@@ -138,7 +137,41 @@ class DocumentUsageRetrieverTest extends TestCase
         $metadata = \Mockery::mock(\Docman_Metadata::class);
         $metadata->shouldReceive('isEmptyAllowed')->andReturn(true);
 
-        ForgeConfig::set('sys_project_blacklist_which_uses_legacy_ui_by_default', [102]);
+        ForgeConfig::set('sys_project_blacklist_which_uses_legacy_ui_by_default', '100,102');
+
+        $this->metadata_factory->shouldReceive('getRealMetadataList')->andReturn([$metadata]);
+        $this->assertFalse($this->retriever->shouldUseDocument($user, $project));
+    }
+
+    public function testItShouldUseLegacyUIWhenProjectIsInBlackListForDefaultPreferencesWithSpaces(): void
+    {
+        $user    = \Mockery::mock(\PFUser::class);
+        $project = \Mockery::mock(\Project::class);
+        $project->shouldReceive('getId')->andReturn(102);
+        $user->shouldReceive('getPreference')->with('plugin_docman_display_legacy_ui_102')->andReturn(false);
+        $user->shouldReceive('getPreference')->with('plugin_docman_display_new_ui_102')->andReturn(false);
+
+        $metadata = \Mockery::mock(\Docman_Metadata::class);
+        $metadata->shouldReceive('isEmptyAllowed')->andReturn(true);
+
+        ForgeConfig::set('sys_project_blacklist_which_uses_legacy_ui_by_default', ' 100 , 102 ');
+
+        $this->metadata_factory->shouldReceive('getRealMetadataList')->andReturn([$metadata]);
+        $this->assertFalse($this->retriever->shouldUseDocument($user, $project));
+    }
+
+    public function testItShouldUseLegacyUIWhenProjectIsTheOnlyOneInBlackListForDefaultPreferences(): void
+    {
+        $user    = \Mockery::mock(\PFUser::class);
+        $project = \Mockery::mock(\Project::class);
+        $project->shouldReceive('getId')->andReturn(102);
+        $user->shouldReceive('getPreference')->with('plugin_docman_display_legacy_ui_102')->andReturn(false);
+        $user->shouldReceive('getPreference')->with('plugin_docman_display_new_ui_102')->andReturn(false);
+
+        $metadata = \Mockery::mock(\Docman_Metadata::class);
+        $metadata->shouldReceive('isEmptyAllowed')->andReturn(true);
+
+        ForgeConfig::set('sys_project_blacklist_which_uses_legacy_ui_by_default', '102');
 
         $this->metadata_factory->shouldReceive('getRealMetadataList')->andReturn([$metadata]);
         $this->assertFalse($this->retriever->shouldUseDocument($user, $project));
