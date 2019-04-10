@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2011-Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2005. All Rights Reserved.
  *
  * Originally written by Jean-Philippe Giola, 2005
@@ -23,6 +23,10 @@
  *
  * $Id$
  */
+
+use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\Http\Response\BinaryFileResponseBuilder;
+use Zend\HttpHandlerRunner\Emitter\SapiStreamEmitter;
 
 require_once('pre.php');
 require_once('www/mail/mail_utils.php');
@@ -65,11 +69,12 @@ if ($p && $plugin_manager->isPluginAvailable($p) && $p->isAllowed(null)) {
         $fmlAttch = new ForumML_Attachment();
         $attch = $fmlAttch->getById($attchmentId);
         if ($attch && file_exists($attch['file_path'])) {
-            $response = new \Tuleap\Http\BinaryFileResponse($attch['file_path'], $attch['file_name'], $attch['type']);
-            $response->send();
-        } else {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS["Language"]->getText('plugin_forumml','attchment_not_found'));
+            $response_builder = new BinaryFileResponseBuilder(HTTPFactoryBuilder::responseFactory(), HTTPFactoryBuilder::streamFactory());
+            $response         = $response_builder->fromFilePath($attch['file_path'], $attch['file_name'], $attch['type']);
+            (new SapiStreamEmitter())->emit($response);
+            exit();
         }
+        $GLOBALS['Response']->addFeedback('error', $GLOBALS["Language"]->getText('plugin_forumml','attchment_not_found'));
     } else {
         $GLOBALS['Response']->addFeedback('error', $GLOBALS["Language"]->getText('plugin_forumml','missing_param'));
     }

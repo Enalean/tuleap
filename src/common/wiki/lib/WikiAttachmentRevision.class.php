@@ -1,6 +1,6 @@
 <?php
-/*
- * Copyright (c) Enalean, 2012-2018. All Rights Reserved.
+/**
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  * Copyright 2005, 2006, STMicroelectronics
  *
  * Originally written by Manuel Vacelet
@@ -21,7 +21,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Http\BinaryFileResponse;
+use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\Http\Response\BinaryFileResponseBuilder;
+use Zend\HttpHandlerRunner\Emitter\SapiStreamEmitter;
 
 /**
  *
@@ -57,6 +59,10 @@ class WikiAttachmentRevision {
     var $file;
     var $gid;
     var $basedir;
+    /**
+     * @var string
+     */
+    private $displayFilename;
 
 
     /**
@@ -148,10 +154,13 @@ class WikiAttachmentRevision {
     /**
      *
      */
-    function htmlDump() {
-        if($this->exist()){
-            $binary_reponse = new BinaryFileResponse($this->getFilePath(), $this->displayFilename, $this->getMimeType());
-            $binary_reponse->send();
+    public function htmlDump()
+    {
+        if ($this->exist()) {
+            $response_builder = new BinaryFileResponseBuilder(HTTPFactoryBuilder::responseFactory(), HTTPFactoryBuilder::streamFactory());
+            $response         = $response_builder->fromFilePath($this->getFilePath(), $this->getDisplayFilename(), $this->getMimeType());
+            (new SapiStreamEmitter())->emit($response);
+            exit();
         }
     }
 
@@ -274,6 +283,12 @@ class WikiAttachmentRevision {
             $this->filename       = $wa->getFilesystemName();
         }
         return $this->filename;
+    }
+
+    private function getDisplayFilename() : string
+    {
+        $this->getFilename();
+        return $this->displayFilename;
     }
 
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2018. All rights reserved
+ * Copyright (c) Enalean, 2012 - Present. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -20,7 +20,8 @@
 
 namespace Tuleap\ProFTPd\Explorer;
 
-use Tuleap\Http\BinaryFileResponse;
+use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\Http\Response\BinaryFileResponseBuilder;
 use Tuleap\ProFTPd\Directory\DirectoryParser;
 use Tuleap\ProFTPd\Directory\DirectoryPathParser;
 use Tuleap\ProFTPd\Presenter\ExplorerPresenter;
@@ -30,6 +31,7 @@ use Tuleap\ProFTPd\Xferlog\Dao;
 use HTTPRequest;
 use PFUser;
 use Project;
+use Zend\HttpHandlerRunner\Emitter\SapiStreamEmitter;
 
 class ExplorerController {
     const NAME = 'explorer';
@@ -96,8 +98,10 @@ class ExplorerController {
             $project_path
         );
 
-        $binary_reponse = new BinaryFileResponse($full_path, basename($full_path));
-        $binary_reponse->send();
+        $response_builder = new BinaryFileResponseBuilder(HTTPFactoryBuilder::responseFactory(), HTTPFactoryBuilder::streamFactory());
+        $response         = $response_builder->fromFilePath($full_path, basename($full_path));
+        (new SapiStreamEmitter())->emit($response);
+        exit();
     }
 
     private function renderDirectoryContent(ServiceProFTPd $service, HTTPRequest $request, DirectoryPathParser $path_parser, Project $project, $path) {

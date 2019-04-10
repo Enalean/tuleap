@@ -100,12 +100,21 @@ class Docman_Version implements Version {
     function setDate($date) { 
         $this->date = $date;
     }
-    
+
+    /**
+     * @var null|string
+     */
     var $filename;
-    function getFilename() { 
-        return $this->filename; 
+    /**
+     * @return string
+     */
+    public function getFilename()
+    {
+        return $this->filename ?? '';
     }
-    function setFilename($filename) { 
+
+    public function setFilename(?string $filename)
+    {
         $this->filename = $filename;
     }
     
@@ -116,20 +125,40 @@ class Docman_Version implements Version {
     function setFilesize($filesize) { 
         $this->filesize = $filesize;
     }
-    
+
+    /**
+     * @var null|string
+     */
     var $filetype;
-    function getFiletype() { 
-        return $this->filetype; 
+
+    /**
+     * @return string
+     */
+    public function getFiletype()
+    {
+        return $this->filetype ?? 'application/octet-stream';
     }
-    function setFiletype($filetype) { 
+
+    public function setFiletype(?string $filetype)
+    {
         $this->filetype = $filetype;
     }
-    
+
+    /**
+     * @var string|null
+     */
     var $path;
-    function getPath() { 
-        return $this->path; 
+
+    /**
+     * @return string
+     */
+    public function getPath()
+    {
+        return $this->path ?? '';
     }
-    function setPath($path) { 
+
+    public function setPath(?string $path)
+    {
         $this->path = $path;
     }
 

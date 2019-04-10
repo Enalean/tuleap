@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2010. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -19,7 +19,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Http\BinaryFileResponse;
+use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\Http\Response\BinaryFileResponseBuilder;
+use Zend\HttpHandlerRunner\Emitter\SapiStreamEmitter;
 
 require_once ('common/include/MIME.class.php');
 require_once ('www/project/admin/permissions.php');
@@ -70,10 +72,12 @@ class WebDAVFRSFile extends Sabre_DAV_File {
         $this->logDownload($this->getUser());
 
         // Start download
-        $binary_file_response = new BinaryFileResponse($this->getFileLocation(), $this->getName(), $this->getContentType());
-        header('ETag: ' . $this->getETag());
-        header('Last-Modified: ' . $this->getLastModified());
-        $binary_file_response->send();
+        $response_builder = new BinaryFileResponseBuilder(HTTPFactoryBuilder::responseFactory(), HTTPFactoryBuilder::streamFactory());
+        $response         = $response_builder->fromFilePath($this->getFileLocation(), $this->getName(), $this->getContentType())
+            ->withHeader('ETag', $this->getETag())
+            ->withHeader('Last-Modified', $this->getLastModified());
+        (new SapiStreamEmitter())->emit($response);
+        exit();
     }
 
     public function put($data) {

@@ -31,6 +31,8 @@ use Mockery\MockInterface;
 use org\bovigo\vfs\vfsStream;
 use PFUser;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\Http\Response\BinaryFileResponseBuilder;
 
 final class DocmanFileDownloadResponseGeneratorTest extends TestCase
 {
@@ -38,6 +40,10 @@ final class DocmanFileDownloadResponseGeneratorTest extends TestCase
 
     private const TEST_PROJECT_ID = 101;
 
+    /**
+     * @var BinaryFileResponseBuilder
+     */
+    private $binary_file_response_factory;
     /**
      * @var Docman_VersionFactory|MockInterface
      */
@@ -57,9 +63,13 @@ final class DocmanFileDownloadResponseGeneratorTest extends TestCase
 
     protected function setUp() : void
     {
-        $this->version_factory     = Mockery::mock(Docman_VersionFactory::class);
-        $this->current_user        = Mockery::mock(PFUser::class);
-        $this->docman_file         = Mockery::mock(Docman_File::class);
+        $this->binary_file_response_factory = new BinaryFileResponseBuilder(
+            HTTPFactoryBuilder::responseFactory(),
+            HTTPFactoryBuilder::streamFactory()
+        );
+        $this->version_factory              = Mockery::mock(Docman_VersionFactory::class);
+        $this->current_user                 = Mockery::mock(PFUser::class);
+        $this->docman_file                  = Mockery::mock(Docman_File::class);
         $this->docman_file->shouldReceive('getGroupId')->andReturn(self::TEST_PROJECT_ID);
         $this->permissions_manager = Mockery::mock(Docman_PermissionsManager::class);
         Docman_PermissionsManager::setInstance(self::TEST_PROJECT_ID, $this->permissions_manager);
@@ -72,7 +82,7 @@ final class DocmanFileDownloadResponseGeneratorTest extends TestCase
 
     public function testUserCanNotDownloadTheFileWithoutTheNeededPermissions() : void
     {
-        $response_generator = new DocmanFileDownloadResponseGenerator($this->version_factory);
+        $response_generator = new DocmanFileDownloadResponseGenerator($this->version_factory, $this->binary_file_response_factory);
 
         $this->docman_file->shouldReceive('getId')->andReturn(1);
         $this->current_user->shouldReceive('getId')->andReturn(456);
@@ -88,7 +98,7 @@ final class DocmanFileDownloadResponseGeneratorTest extends TestCase
      */
     public function testFileCanNotBeDownloadedIfTheVersionCannotBeFound(?int $version_id) : void
     {
-        $response_generator = new DocmanFileDownloadResponseGenerator($this->version_factory);
+        $response_generator = new DocmanFileDownloadResponseGenerator($this->version_factory, $this->binary_file_response_factory);
 
         $this->docman_file->shouldReceive('getId')->andReturn(1);
         $this->current_user->shouldReceive('getId')->andReturn(456);
@@ -103,7 +113,7 @@ final class DocmanFileDownloadResponseGeneratorTest extends TestCase
 
     public function testFileCanNotBeDownloadedIfItIsNotPresentOnTheFilesystem() : void
     {
-        $response_generator = new DocmanFileDownloadResponseGenerator($this->version_factory);
+        $response_generator = new DocmanFileDownloadResponseGenerator($this->version_factory, $this->binary_file_response_factory);
 
         $this->docman_file->shouldReceive('getId')->andReturn(1);
         $this->current_user->shouldReceive('getId')->andReturn(456);
@@ -123,7 +133,7 @@ final class DocmanFileDownloadResponseGeneratorTest extends TestCase
 
     public function testFileResponseCanBeGenerated() : void
     {
-        $response_generator = new DocmanFileDownloadResponseGenerator($this->version_factory);
+        $response_generator = new DocmanFileDownloadResponseGenerator($this->version_factory, $this->binary_file_response_factory);
 
         $this->docman_file->shouldReceive('getId')->andReturn(1);
         $this->current_user->shouldReceive('getId')->andReturn(456);

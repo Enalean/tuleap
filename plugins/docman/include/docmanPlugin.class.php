@@ -37,6 +37,7 @@ use Tuleap\Docman\DocmanSettingsSiteAdmin\FilesUploadLimits\DocmanFilesUploadLim
 use Tuleap\Docman\DocmanSettingsSiteAdmin\FilesUploadLimits\DocmanFilesUploadLimitsAdminSaveController;
 use Tuleap\Docman\DocmanSettingsSiteAdmin\FilesUploadLimits\DocumentFilesUploadLimitsSaver;
 use Tuleap\Docman\Download\DocmanFileDownloadController;
+use Tuleap\Docman\Download\DocmanFileDownloadCORS;
 use Tuleap\Docman\Download\DocmanFileDownloadResponseGenerator;
 use Tuleap\Docman\ExternalLinks\DocmanHTTPControllerProxy;
 use Tuleap\Docman\ExternalLinks\ExternalLinkParametersExtractor;
@@ -64,6 +65,9 @@ use Tuleap\Docman\Upload\Version\VersionUploadCanceler;
 use Tuleap\Docman\Upload\Version\VersionUploadCleaner;
 use Tuleap\Docman\Upload\Version\VersionUploadFinisher;
 use Tuleap\Docman\Upload\Version\VersionUploadPathAllocator;
+use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\Http\Response\BinaryFileResponseBuilder;
+use Tuleap\Http\Server\SessionWriteCloseMiddleware;
 use Tuleap\Layout\PaginationPresenter;
 use Tuleap\Layout\ServiceUrlCollector;
 use Tuleap\Mail\MailFilter;
@@ -74,10 +78,14 @@ use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupFormatter;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupRetriever;
 use Tuleap\Request\CollectRoutesEvent;
+use Tuleap\REST\BasicAuthentication;
+use Tuleap\REST\RESTCurrentUserMiddleware;
+use Tuleap\REST\TuleapRESTCORSMiddleware;
 use Tuleap\Upload\FileBeingUploadedLocker;
 use Tuleap\Upload\FileBeingUploadedWriter;
 use Tuleap\Upload\FileUploadController;
 use Tuleap\Widget\Event\GetPublicAreas;
+use Zend\HttpHandlerRunner\Emitter\SapiStreamEmitter;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/constants.php';
@@ -1372,11 +1380,20 @@ class DocmanPlugin extends Plugin
 
     public function routeFileDownload() : DocmanFileDownloadController
     {
+        $response_factory = HTTPFactoryBuilder::responseFactory();
         return new DocmanFileDownloadController(
+            new SapiStreamEmitter(),
             ProjectManager::instance(),
             new Docman_ItemFactory(),
-            new DocmanFileDownloadResponseGenerator(new Docman_VersionFactory()),
-            new BackendLogger()
+            new DocmanFileDownloadResponseGenerator(
+                new Docman_VersionFactory(),
+                new BinaryFileResponseBuilder($response_factory, HTTPFactoryBuilder::streamFactory())
+            ),
+            new BackendLogger(),
+            new SessionWriteCloseMiddleware(),
+            new RESTCurrentUserMiddleware(\Tuleap\REST\UserManager::build(), new BasicAuthentication()),
+            new TuleapRESTCORSMiddleware(),
+            new DocmanFileDownloadCORS($response_factory)
         );
     }
 

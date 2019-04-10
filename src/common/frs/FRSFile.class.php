@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015-2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +18,10 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\Http\Response\BinaryFileResponseBuilder;
+use Zend\HttpHandlerRunner\Emitter\SapiStreamEmitter;
 
 
 class FRSFile {
@@ -481,8 +485,10 @@ class FRSFile {
      */
     public function download()
     {
-        $binary_file_response = new \Tuleap\Http\BinaryFileResponse($this->getFileLocation(), basename($this->getFileName()));
-        $binary_file_response->send();
+        $response_builder = new BinaryFileResponseBuilder(HTTPFactoryBuilder::responseFactory(), HTTPFactoryBuilder::streamFactory());
+        $response         = $response_builder->fromFilePath($this->getFileLocation(), basename($this->getFileName()));
+        (new SapiStreamEmitter())->emit($response);
+        exit();
     }
 
     /**
