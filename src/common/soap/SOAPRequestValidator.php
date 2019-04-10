@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -37,16 +37,11 @@ use Project;
 interface SOAPRequestValidator
 {
     /**
-     *
      * @see session_continue
-     *
-     * @param String $session_key
-     *
-     * @return PFUser
      */
-    public function continueSession($session_key);
+    public function continueSession(string $session_key) : PFUser;
 
-    public function assertUserCanAccessProject(PFUser $user, Project $project);
+    public function assertUserCanAccessProject(PFUser $user, Project $project) : void;
 
     public function getProjectById($project_id, $method_name);
 

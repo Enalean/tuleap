@@ -1,5 +1,9 @@
 <?php
 
+use Tuleap\Project\ProjectAccessChecker;
+use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
+use Tuleap\SOAP\SOAPRequestValidatorImplementation;
+
 require_once('user.php');
 require_once('common/include/GroupFactory.class.php');
 
@@ -287,11 +291,16 @@ function getGroupUgroups($sessionKey, $group_id) {
 
 function getProjectGroupsAndUsers($session_key, $group_id) {
     try {
-        require_once 'common/soap/SOAP_RequestValidator.class.php';
-
         $project_manager        = ProjectManager::instance();
         $user_manager           = UserManager::instance();
-        $soap_request_validator = new SOAP_RequestValidator($project_manager, $user_manager);
+        $soap_request_validator = new SOAPRequestValidatorImplementation(
+            $project_manager,
+            $user_manager,
+            new ProjectAccessChecker(
+                new PermissionsOverrider_PermissionsOverriderManager(),
+                new RestrictedUserCanAccessProjectVerifier()
+            )
+        );
 
         $user    = $soap_request_validator->continueSession($session_key);
         $project = $soap_request_validator->getProjectById($group_id, 'getProjectGroupsAndUsers');
