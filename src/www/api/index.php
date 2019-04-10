@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - Present. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,20 +30,14 @@ use Luracast\Restler\Restler;
 use Luracast\Restler\Explorer\v2\Explorer;
 use Luracast\Restler\Defaults;
 use Luracast\Restler\Format\JsonFormat;
+use Zend\HttpHandlerRunner\Emitter\SapiEmitter;
 
-if (! headers_sent()) {
-    $message_factory = \Tuleap\Http\HTTPFactoryBuilder::responseFactory();
-    $request_handler = new \Tuleap\Http\Server\AlwaysSuccessfulRequestHandler($message_factory);
-    $cors_middleware = new \Tuleap\REST\TuleapRESTCORSMiddleware();
-    $minimal_request = new \Tuleap\Http\Server\NullServerRequest();
-    $response        = $cors_middleware->process($minimal_request, $request_handler);
-    foreach ($response->getHeaders() as $header => $values) {
-        foreach ($values as $value) {
-            header("$header: $value", false);
-        }
-    }
-}
-
+$message_factory = \Tuleap\Http\HTTPFactoryBuilder::responseFactory();
+$request_handler = new \Tuleap\Http\Server\AlwaysSuccessfulRequestHandler($message_factory);
+$cors_middleware = new \Tuleap\REST\TuleapRESTCORSMiddleware();
+$minimal_request = new \Tuleap\Http\Server\NullServerRequest();
+$response        = $cors_middleware->process($minimal_request, $request_handler);
+(new SapiEmitter())->emit($response);
 
 $http_request = HTTPRequest::instance();
 try {

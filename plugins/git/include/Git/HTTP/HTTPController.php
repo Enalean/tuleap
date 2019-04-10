@@ -86,13 +86,11 @@ class HTTPController implements DispatchableWithRequestNoAuthz, DispatchableWith
     /**
      * Return the project that corresponds to current URI
      *
-     * @param \HTTPRequest $request
      * @param array $variables
      *
-     * @return Project
      * @throws NotFoundException
      */
-    public function getProject(\HTTPRequest $request, array $variables)
+    public function getProject(array $variables) : Project
     {
         $project = $this->project_manager->getProjectByCaseInsensitiveUnixName($variables['project_name']);
         if (! $project || $project->isError()) {

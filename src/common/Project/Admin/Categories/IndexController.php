@@ -53,7 +53,7 @@ class IndexController implements DispatchableWithRequest, DispatchableWithProjec
     /**
      * @throws NotFoundException
      */
-    public function getProject(\HTTPRequest $request, array $variables): Project
+    public function getProject(array $variables): Project
     {
         $project = ProjectManager::instance()->getProject($variables['id']);
         if (!$project || $project->isError()) {
@@ -69,7 +69,7 @@ class IndexController implements DispatchableWithRequest, DispatchableWithProjec
      */
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
-        $project = $this->getProject($request, $variables);
+        $project = $this->getProject($variables);
         if (! $request->getCurrentUser()->isAdmin($project->getId())) {
             throw new ForbiddenException(_("You don't have permission to access administration of this project."));
         }

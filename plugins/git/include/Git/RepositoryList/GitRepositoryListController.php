@@ -66,14 +66,11 @@ class GitRepositoryListController implements Request\DispatchableWithRequest, Re
     }
 
     /**
-     * @param HTTPRequest $request
      * @param array       $variables
      *
      * @throws Request\NotFoundException
-     *
-     * @return null|Project
      */
-    public function getProject(HTTPRequest $request, array $variables)
+    public function getProject(array $variables) : Project
     {
         $this->project = $this->project_manager->getProjectByCaseInsensitiveUnixName($variables['project_name']);
         if (! $this->project || $this->project->isError()) {

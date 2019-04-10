@@ -27,6 +27,7 @@ use GitRepository;
 use GitViews_GitPhpViewer;
 use GitViews_ShowRepo_Content;
 use HTTPRequest;
+use Project;
 use TemplateRendererFactory;
 use Tuleap\Git\Repository\GitRepositoryHeaderDisplayer;
 use Tuleap\Git\Repository\View\FilesHeaderPresenterBuilder;
@@ -87,13 +88,11 @@ class GitRepositoryBrowserController implements DispatchableWithRequest, Dispatc
     }
 
     /**
-     * @param HTTPRequest $request
      * @param array       $variables
      *
-     * @return \Project
      * @throws NotFoundException
      */
-    public function getProject(HTTPRequest $request, array $variables)
+    public function getProject(array $variables) : Project
     {
         $project = $this->project_manager->getProjectByCaseInsensitiveUnixName($variables['project_name']);
         if (! $project || $project->isError()) {

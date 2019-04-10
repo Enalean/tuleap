@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -55,11 +55,10 @@ class DocumentTreeController implements DispatchableWithRequest, DispatchableWit
     {
         \Tuleap\Project\ServiceInstrumentation::increment('document');
 
-        $project = $this->getProject($request, $variables);
+        $project = $this->getProject($variables);
 
         $user = $request->getCurrentUser();
         $user->setPreference("plugin_docman_display_new_ui_" . $project->getID(), true);
-        $user->delPreference("plugin_docman_display_legacy_ui_" . $project->getID());
 
         $this->includeCssFiles($layout);
         $this->includeHeaderAndNavigationBar($layout, $project);
@@ -82,15 +81,13 @@ class DocumentTreeController implements DispatchableWithRequest, DispatchableWit
     }
 
     /**
-     * @param HTTPRequest $request
      * @param array       $variables
      *
-     * @return \Project
      * @throws NotFoundException
      */
-    public function getProject(\HTTPRequest $request, array $variables)
+    public function getProject(array $variables) : Project
     {
-        return $this->project_extractor->getProject($request, $variables);
+        return $this->project_extractor->getProject($variables);
     }
 
     /**

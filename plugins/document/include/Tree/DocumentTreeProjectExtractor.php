@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,7 +20,7 @@
 
 namespace Tuleap\Document\Tree;
 
-use HTTPRequest;
+use Project;
 use Tuleap\Request\NotFoundException;
 
 class DocumentTreeProjectExtractor
@@ -36,13 +36,11 @@ class DocumentTreeProjectExtractor
     }
 
     /**
-     * @param HTTPRequest $request
      * @param array       $variables
      *
-     * @return \Project
      * @throws NotFoundException
      */
-    public function getProject(\HTTPRequest $request, array $variables)
+    public function getProject(array $variables) : Project
     {
         $project = $this->project_manager->getProjectByUnixName($variables['project_name']);
         if (! $project) {

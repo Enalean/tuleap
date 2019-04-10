@@ -22,9 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\FRS\Upload\Tus;
 
+use PFUser;
 use Psr\Http\Message\ServerRequestInterface;
 use Tuleap\FRS\Upload\FileOngoingUploadDao;
 use Tuleap\FRS\Upload\UploadPathAllocator;
+use Tuleap\REST\RESTCurrentUserMiddleware;
 use Tuleap\Tus\TusFileInformation;
 use Tuleap\Tus\TusFileInformationProvider;
 use Tuleap\Upload\FileBeingUploadedInformation;
@@ -50,18 +52,19 @@ final class FileBeingUploadedInformationProvider implements TusFileInformationPr
 
     public function getFileInformation(ServerRequestInterface $request): ?TusFileInformation
     {
-        $id      = $request->getAttribute('id');
-        $user_id = $request->getAttribute('user_id');
+        $id = $request->getAttribute('id');
 
-        if ($id === null || $user_id === null) {
+        if ($id === null) {
             return null;
         }
 
         $id = (int) $id;
+        /** @var PFUser $current_user */
+        $current_user = $request->getAttribute(RESTCurrentUserMiddleware::class);
 
         $row = $this->dao->searchFileOngoingUploadByIDUserIDAndExpirationDate(
             $id,
-            (int) $user_id,
+            (int) $current_user->getId(),
             (new \DateTimeImmutable())->getTimestamp()
         );
         if (empty($row)) {

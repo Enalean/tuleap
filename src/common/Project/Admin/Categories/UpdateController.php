@@ -52,7 +52,7 @@ class UpdateController implements DispatchableWithRequest, DispatchableWithProje
     /**
      * @throws NotFoundException
      */
-    public function getProject(\HTTPRequest $request, array $variables): Project
+    public function getProject(array $variables): Project
     {
         $project = $this->project_manager->getProject($variables['id']);
         if (! $project || $project->isError()) {
@@ -68,7 +68,7 @@ class UpdateController implements DispatchableWithRequest, DispatchableWithProje
      */
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
-        $project = $this->getProject($request, $variables);
+        $project = $this->getProject($variables);
         if (! $request->getCurrentUser()->isAdmin($project->getId())) {
             throw new ForbiddenException(gettext("You don't have permission to access administration of this project."));
         }

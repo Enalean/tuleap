@@ -1273,10 +1273,10 @@ class DocmanPlugin extends Plugin
 
     public function routeUploadsDocmanFile(): FileUploadController
     {
-
         $document_ongoing_upload_dao = new \Tuleap\Docman\Upload\Document\DocumentOngoingUploadDAO();
         $root_path                   = $this->getPluginInfo()->getPropertyValueForName('docman_root');
         $path_allocator              = new \Tuleap\Docman\Upload\Document\DocumentUploadPathAllocator();
+        $user_manager                = UserManager::instance();
         return FileUploadController::build(
             new \Tuleap\Docman\Upload\Document\DocumentDataStore(
                 new \Tuleap\Docman\Upload\Document\DocumentBeingUploadedInformationProvider(
@@ -1302,7 +1302,7 @@ class DocmanPlugin extends Plugin
                     new Docman_ItemDao(),
                     new Docman_FileStorage($root_path),
                     new Docman_MIMETypeDetector(),
-                    UserManager::instance(),
+                    $user_manager,
                     new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
                 ),
                 new \Tuleap\Docman\Upload\Document\DocumentUploadCanceler(
@@ -1315,10 +1315,10 @@ class DocmanPlugin extends Plugin
 
     public function routeUploadsVersionFile(): FileUploadController
     {
-        $root_path      = $this->getPluginInfo()->getPropertyValueForName('docman_root');
-        $path_allocator = new VersionUploadPathAllocator();
-        $version_to_upload_dao = new DocumentOnGoingVersionToUploadDAO();
-        $event_manager = EventManager::instance();
+        $root_path                = $this->getPluginInfo()->getPropertyValueForName('docman_root');
+        $path_allocator           = new VersionUploadPathAllocator();
+        $version_to_upload_dao    = new DocumentOnGoingVersionToUploadDAO();
+        $event_manager            = EventManager::instance();
         $approval_table_retriever = new ApprovalTableRetriever(new Docman_ApprovalTableFactoriesFactory(), new Docman_VersionFactory());
         return FileUploadController::build(
             new VersionDataStore(

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\Upload\Document;
 
+use PFUser;
+use Tuleap\REST\RESTCurrentUserMiddleware;
 use Tuleap\Tus\TusFileInformation;
 use Tuleap\Tus\TusFileInformationProvider;
 use Tuleap\Upload\FileAlreadyUploadedInformation;
@@ -55,17 +57,18 @@ final class DocumentBeingUploadedInformationProvider implements TusFileInformati
     public function getFileInformation(\Psr\Http\Message\ServerRequestInterface $request) : ?TusFileInformation
     {
         $item_id = $request->getAttribute('id');
-        $user_id = $request->getAttribute('user_id');
 
-        if ($item_id === null || $user_id === null) {
+        if ($item_id === null) {
             return null;
         }
 
         $item_id = (int) $item_id;
+        /** @var PFUser $current_user */
+        $current_user = $request->getAttribute(RESTCurrentUserMiddleware::class);
 
         $document_row = $this->dao->searchDocumentOngoingUploadByItemIDUserIDAndExpirationDate(
             $item_id,
-            $user_id,
+            (int) $current_user->getId(),
             (new \DateTimeImmutable())->getTimestamp()
         );
         if (empty($document_row)) {

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,20 +20,25 @@
 
 namespace Tuleap\Upload;
 
-use GuzzleHttp\Psr7\ServerRequest;
-use HTTPRequest;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\MiddlewareInterface;
 use Tuleap\Http\HTTPFactoryBuilder;
-use Tuleap\Layout\BaseLayout;
+use Tuleap\Http\Server\SessionWriteCloseMiddleware;
+use Tuleap\Request\DispatchablePSR15Compatible;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\REST\BasicAuthentication;
 use Tuleap\REST\TuleapRESTCORSMiddleware;
-use Tuleap\REST\UserManager;
+use Tuleap\REST\RESTCurrentUserMiddleware;
 use Tuleap\Tus\TusCORSMiddleware;
 use Tuleap\Tus\TusDataStore;
 use Tuleap\Tus\TusServer;
+use UserManager;
+use Zend\HttpHandlerRunner\Emitter\EmitterInterface;
+use Zend\HttpHandlerRunner\Emitter\SapiEmitter;
 
-class FileUploadController implements DispatchableWithRequestNoAuthz
+final class FileUploadController extends DispatchablePSR15Compatible implements DispatchableWithRequestNoAuthz
 {
     /**
      * @var \Tuleap\Tus\TusServer
@@ -42,74 +47,38 @@ class FileUploadController implements DispatchableWithRequestNoAuthz
     /**
      * @var UserManager
      */
-    private $rest_user_manager;
-    /**
-     * @var BasicAuthentication
-     */
-    private $basic_rest_authentication;
-    /**
-     * @var TusCORSMiddleware
-     */
-    private $tus_cors_middleware;
-    /**
-     * @var TuleapRESTCORSMiddleware
-     */
-    private $rest_cors_middleware;
+    private $user_manager;
 
     private function __construct(
         TusServer $tus_server,
-        TusCORSMiddleware $tus_cors_middleware,
-        TuleapRESTCORSMiddleware $rest_cors_middleware,
-        UserManager $rest_user_manager,
-        BasicAuthentication $basic_rest_authentication
+        UserManager $user_manager,
+        EmitterInterface $emitter,
+        MiddlewareInterface ...$middleware_stack
     ) {
-        $this->tus_server                = $tus_server;
-        $this->tus_cors_middleware       = $tus_cors_middleware;
-        $this->rest_cors_middleware      = $rest_cors_middleware;
-        $this->rest_user_manager         = $rest_user_manager;
-        $this->basic_rest_authentication = $basic_rest_authentication;
+        parent::__construct($emitter, ...$middleware_stack);
+        $this->tus_server   = $tus_server;
+        $this->user_manager = $user_manager;
     }
 
     public static function build(TusDataStore $data_store): self
     {
         return new self(
             new TusServer(HTTPFactoryBuilder::responseFactory(), $data_store),
-            new TusCORSMiddleware(),
+            UserManager::instance(),
+            new SapiEmitter(),
+            new SessionWriteCloseMiddleware(),
+            new RESTCurrentUserMiddleware(\Tuleap\REST\UserManager::build(), new BasicAuthentication()),
             new TuleapRESTCORSMiddleware(),
-            UserManager::build(),
-            new BasicAuthentication()
+            new TusCORSMiddleware()
         );
     }
 
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function handle(ServerRequestInterface $request) : ResponseInterface
     {
-        \session_write_close();
-
-        $this->checkUserCanAccess();
-
-        $server_request = ServerRequest::fromGlobals()
-            ->withAttribute('id', $variables['id'])
-            ->withAttribute('user_id', $this->rest_user_manager->getCurrentUser()->getId());
-
-        $dispatcher = new FileUploadDispatcher($this->tus_server, $this->tus_cors_middleware, $this->rest_cors_middleware);
-        $response   = $dispatcher->handle($server_request);
-
-        http_response_code($response->getStatusCode());
-        foreach ($response->getHeaders() as $header => $values) {
-            foreach ($values as $value) {
-                header("$header: $value", false);
-            }
-        }
-        echo $response->getBody();
-    }
-
-    private function checkUserCanAccess() : void
-    {
-        $this->basic_rest_authentication->__isAllowed();
-        $current_user = $this->rest_user_manager->getCurrentUser();
-
-        if ($current_user->isAnonymous()) {
+        if ($this->user_manager->getCurrentUser()->isAnonymous()) {
             throw new ForbiddenException();
         }
+
+        return $this->tus_server->handle($request);
     }
 }
