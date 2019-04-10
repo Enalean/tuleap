@@ -24,6 +24,7 @@ use Tuleap\Glyph\GlyphLocation;
 use Tuleap\Glyph\GlyphLocationsCollector;
 use Tuleap\layout\HomePage\StatisticsCollectionCollector;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Plugin\PluginWithLegacyInternalRouting;
 use Tuleap\Project\Event\ProjectServiceBeforeActivation;
 use Tuleap\Project\XML\Export\ArchiveInterface;
 use Tuleap\TestManagement\Administration\StepFieldUsageDetector;
@@ -53,7 +54,7 @@ use Tuleap\Tracker\FormElement\View\Admin\FilterFormElementsThatCanBeCreatedForT
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__.'/../../tracker/include/trackerPlugin.class.php';
 
-class testmanagementPlugin extends Plugin
+class testmanagementPlugin extends PluginWithLegacyInternalRouting
 {
     public function __construct($id)
     {
@@ -66,6 +67,8 @@ class testmanagementPlugin extends Plugin
 
     public function getHooksAndCallbacks()
     {
+        $this->listenToCollectRouteEventWithDefaultController();
+
         $this->addHook(Event::REST_PROJECT_RESOURCES);
         $this->addHook(Event::REST_RESOURCES);
         $this->addHook(Event::SERVICE_CLASSNAMES);
@@ -386,8 +389,9 @@ class testmanagementPlugin extends Plugin
         }
     }
 
-    public function process(Codendi_Request $request)
+    public function process() : void
     {
+        $request              = HTTPRequest::instance();
         $config               = $this->getConfig();
         $tracker_factory      = TrackerFactory::instance();
         $project_manager      = ProjectManager::instance();
