@@ -114,6 +114,7 @@
             <input type="hidden" name="is_active" value="{{# is_active }}1{{/ is_active }}{{^ is_active }}0{{/ is_active }}">
         {{/ can_update_is_active }}
 
+        {{# can_update_is_used }}
         <div class="tlp-form-element">
             <label class="tlp-label tlp-checkbox">
                 <input type="checkbox"
@@ -125,6 +126,7 @@
                 {{# gettext }}Enabled{{/ gettext }}
             </label>
         </div>
+        {{/ can_update_is_used }}
 
         {{# is_scope_project }}
             <div class="tlp-form-element">

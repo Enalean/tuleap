@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - Present. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,6 +18,8 @@
  */
 
 use Tuleap\Project\Event\ProjectServiceBeforeActivation;
+use Tuleap\Project\Service\ServiceCannotBeUpdatedException;
+use Tuleap\Project\Service\ServiceNotFoundException;
 
 class ServiceManager {
 
@@ -46,9 +48,15 @@ class ServiceManager {
 
     /** @var ServiceManager */
     private static $instance;
+    /**
+     * @var ProjectManager
+     */
+    private $project_manager;
 
-    public function __construct(ServiceDao $dao) {
-        $this->dao = $dao;
+    private function __construct(ServiceDao $dao, ProjectManager $project_manager)
+    {
+        $this->dao             = $dao;
+        $this->project_manager = $project_manager;
     }
 
     /**
@@ -58,7 +66,7 @@ class ServiceManager {
     public static function instance() {
         if (!isset(self::$instance)) {
             $c = __CLASS__;
-            self::$instance = new $c(new ServiceDao());
+            self::$instance = new $c(new ServiceDao(), ProjectManager::instance());
         }
         return self::$instance;
     }
@@ -94,9 +102,9 @@ class ServiceManager {
             );
 
             foreach ($allowed_services_dar as $row) {
-                $classname = $project->getServiceClassName($row['short_name']);
                 try {
-                    $this->list_of_services_per_project[$project->getID()][$row['service_id']] = new $classname($project, $row);
+                    $service = $this->instantiateFromRow($project, $row);
+                    $this->list_of_services_per_project[$project->getID()][$row['service_id']] = $service;
                 } catch (ServiceNotAllowedForProjectException $e) {
                     //don't display the row for this servce
                 }
@@ -154,26 +162,22 @@ class ServiceManager {
         );
     }
 
-    /**
-     * @return bool
-     */
     public function checkServiceCanBeUpdated(Project $project, $short_name, $is_used)
     {
-        if ($this->doesServiceUsageChange($project, $short_name, $is_used) && $is_used) {
-            $event = new ProjectServiceBeforeActivation($project, $short_name);
-            EventManager::instance()->processEvent($event);
-
-            if ($event->doesPluginSetAValue() && ! $event->canServiceBeActivated()) {
-                $GLOBALS['Response']->addFeedback(
-                    Feedback::WARN,
-                    $event->getWarningMessage()
-                );
-
-                return false;
-            }
+        if ($short_name === 'admin' && ! $is_used) {
+            throw new ServiceCannotBeUpdatedException(_('Admin service cannot be disabled.'));
         }
 
-        return true;
+        if (! $this->doesServiceUsageChange($project, $short_name, $is_used) && $is_used) {
+            return;
+        }
+
+        $event = new ProjectServiceBeforeActivation($project, $short_name);
+        EventManager::instance()->processEvent($event);
+
+        if ($event->doesPluginSetAValue() && ! $event->canServiceBeActivated()) {
+            throw new ServiceCannotBeUpdatedException($event->getWarningMessage());
+        }
     }
 
     /**
@@ -184,5 +188,34 @@ class ServiceManager {
         $previous_is_used = $project->getService($short_name);
 
         return $previous_is_used != $is_used;
+    }
+
+    /**
+     * @return Service
+     * @throws ServiceNotAllowedForProjectException
+     */
+    public function getService(int $id)
+    {
+        $row = $this->dao->searchById($id)->getRow();
+        if (! $row) {
+            throw new ServiceNotFoundException();
+        }
+
+        $project = $this->project_manager->getProject($row['group_id']);
+        if ($project->isError()) {
+            throw new ServiceNotFoundException();
+        }
+
+        return $this->instantiateFromRow($project, $row);
+    }
+
+    /**
+     * @return Service
+     */
+    private function instantiateFromRow(Project $project, array $row)
+    {
+        $classname = $project->getServiceClassName($row['short_name']);
+
+        return new $classname($project, $row);
     }
 }

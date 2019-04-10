@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -57,7 +57,89 @@ class ServicePOSTDataBuilder
         $is_used           = $request->getValidated('is_used', 'uint', false);
         $is_in_iframe      = $request->get('is_in_iframe') ? 1 : 0;
         $is_system_service = $this->isSystemService($request, $short_name);
-        $scope             = $is_system_service ? Service::SCOPE_SYSTEM : Service::SCOPE_PROJECT;
+        $submitted_link    = $request->getValidated('link', 'localuri', '');
+
+        if (! $is_active) {
+            if ($is_used) {
+                $GLOBALS['Response']->addFeedback(
+                    Feedback::WARN,
+                    _(
+                        'A non available service cannot be enabled. To enable this service, switch it to available before.'
+                    )
+                );
+                $is_used = false;
+            }
+        }
+
+        return $this->createServicePOSTData(
+            $project,
+            $service_id,
+            $short_name,
+            $label,
+            $description,
+            $rank,
+            $submitted_link,
+            $is_active,
+            $is_used,
+            $is_in_iframe,
+            $is_system_service
+        );
+    }
+
+    /**
+     * @throws InvalidServicePOSTDataException
+     */
+    public function buildFromService(Service $service, bool $submitted_is_used): ServicePOSTData
+    {
+        if (! $service->isActive() && $submitted_is_used) {
+            $submitted_is_used = false;
+        }
+
+        return $this->createServicePOSTData(
+            $service->getProject(),
+            $service->getId(),
+            $service->getShortName(),
+            $service->getLabel(),
+            $service->getDescription(),
+            $service->getRank(),
+            $service->getUrl(),
+            $service->isActive(),
+            $submitted_is_used,
+            $service->isIFrame(),
+            $service->getScope() === Service::SCOPE_SYSTEM
+        );
+    }
+
+    /**
+     * @param Project $project
+     * @param         $short_name
+     * @param         $label
+     * @param         $rank
+     * @param         $submitted_link
+     * @param         $is_active
+     * @param         $is_used
+     * @param         $service_id
+     * @param         $description
+     * @param int     $is_in_iframe
+     * @param bool    $is_system_service
+     *
+     * @return ServicePOSTData
+     * @throws InvalidServicePOSTDataException
+     */
+    private function createServicePOSTData(
+        Project $project,
+        $service_id,
+        $short_name,
+        $label,
+        $description,
+        $rank,
+        $submitted_link,
+        $is_active,
+        $is_used,
+        int $is_in_iframe,
+        bool $is_system_service
+    ): ServicePOSTData {
+        $scope = $is_system_service ? Service::SCOPE_SYSTEM : Service::SCOPE_PROJECT;
 
         $this->checkShortname($project, $short_name);
         $this->checkLabel($label);
@@ -65,24 +147,10 @@ class ServicePOSTDataBuilder
 
         $service_url_collector = new ServiceUrlCollector($project, $short_name);
         $this->event_manager->processEvent($service_url_collector);
-        if ($service_url_collector->hasUrl()) {
-            $link = '';
-        } else {
-            $link = $request->getValidated('link', 'localuri', '');
-            if ($link) {
-                $this->checkLink($link);
-                $link = $this->substituteVariablesInLink($project, $link);
-            }
-        }
-
-        if (! $is_active) {
-            if ($is_used) {
-                $GLOBALS['Response']->addFeedback(
-                    Feedback::WARN,
-                    _('A non available service cannot be enabled. To enable this service, switch it to available before.')
-                );
-                $is_used = false;
-            }
+        $link = '';
+        if (! $service_url_collector->hasUrl() && $submitted_link) {
+            $this->checkLink($submitted_link);
+            $link = $this->substituteVariablesInLink($project, $submitted_link);
         }
 
         return new ServicePOSTData(

@@ -30,23 +30,23 @@ class ServiceRepresentation
     public const ROUTE = 'project_services';
 
     /**
-     * @var int
+     * @var int {@required false}
      */
     public $id;
     /**
-     * @var string
+     * @var string {@required false}
      */
     public $uri;
     /**
-     * @var string
+     * @var string {@required false}
      */
     public $name;
     /**
-     * @var string
+     * @var string {@required false}
      */
     public $label;
     /**
-     * @var bool
+     * @var bool {@required true}
      */
     public $is_enabled;
 
