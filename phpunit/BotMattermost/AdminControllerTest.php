@@ -29,6 +29,7 @@ use HTTPRequest;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\BotMattermost\Bot\Bot;
+use Tuleap\Layout\BaseLayout;
 use Tuleap\Theme\BurningParrot\BurningParrotTheme;
 
 class AdminControllerTest extends TestCase
@@ -52,14 +53,11 @@ class AdminControllerTest extends TestCase
         $this->csrf                 = \Mockery::spy(CSRFSynchronizerToken::class);
         $this->bot_factory          = \Mockery::spy(\Tuleap\BotMattermost\Bot\BotFactory::class);
         $this->event_manager        = \Mockery::spy(EventManager::class);
-        $this->burning_parrot_theme = \Mockery::spy(BurningParrotTheme::class);
-        $this->language             = \Mockery::spy(BaseLanguage::class);
         $this->admin_controller     = new AdminController(
             $this->csrf,
             $this->bot_factory,
             $this->event_manager,
-            $this->burning_parrot_theme,
-            $this->language
+            \Mockery::spy(BaseLanguage::class)
         );
 
         $this->http_request     = \Mockery::spy(HTTPRequest::class);
@@ -86,6 +84,6 @@ class AdminControllerTest extends TestCase
         $this_event_manager_processEvent = $this->event_manager->shouldReceive('processEvent');
         $this_event_manager_processEvent->times(1);
 
-        $this->admin_controller->deleteBot($this->http_request);
+        $this->admin_controller->deleteBot($this->http_request, \Mockery::spy(BaseLayout::class));
     }
 }

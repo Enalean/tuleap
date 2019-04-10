@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,8 +19,9 @@
  */
 
 use Tuleap\BotMattermost\Controller\AdminController;
+use Tuleap\Request\DispatchableWithRequest;
 
-class Router
+class Router implements DispatchableWithRequest
 {
     private $admin_controller;
 
@@ -30,23 +31,33 @@ class Router
         $this->admin_controller = $admin_controller;
     }
 
-    public function route(HTTPRequest $request)
+    /**
+     * Is able to process a request routed by FrontRouter
+     *
+     * @param HTTPRequest               $request
+     * @param \Tuleap\Layout\BaseLayout $layout
+     * @param array                     $variables
+     * @return void
+     * @throws \Tuleap\Request\ForbiddenException
+     * @throws \Tuleap\Request\NotFoundException
+     */
+    public function process(HTTPRequest $request, \Tuleap\Layout\BaseLayout $layout, array $variables)
     {
         $current_user = $request->getCurrentUser();
         $this->checkUserIsSiteAdmin($current_user);
 
         switch ($request->get('action')) {
             case 'add_bot':
-                $this->admin_controller->addBot($request);
+                $this->admin_controller->addBot($request, $layout);
                 break;
             case 'edit_bot':
-                $this->admin_controller->editBot($request);
+                $this->admin_controller->editBot($request, $layout);
                 break;
             case 'delete_bot':
-                $this->admin_controller->deleteBot($request);
+                $this->admin_controller->deleteBot($request, $layout);
                 break;
             default:
-                $this->admin_controller->displayIndex();
+                $this->admin_controller->displayIndex($layout);
         }
     }
 

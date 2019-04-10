@@ -30,7 +30,7 @@ use Feedback;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\BotMattermost\BotMattermostDeleted;
 use Tuleap\BotMattermost\Presenter\AdminPresenter;
-use Tuleap\Theme\BurningParrot\BurningParrotTheme;
+use Tuleap\Layout\BaseLayout;
 use Valid_HTTPURI;
 use Tuleap\BotMattermost\Bot\BotFactory;
 use Tuleap\BotMattermost\Exception\CannotCreateBotException;
@@ -49,11 +49,6 @@ class AdminController
     private $event_manager;
 
     /**
-     * @var BurningParrotTheme
-     */
-    private $burning_parrot_theme;
-
-    /**
      * @var BaseLanguage
      */
     private $language;
@@ -62,17 +57,15 @@ class AdminController
         CSRFSynchronizerToken $csrf,
         BotFactory $bot_factory,
         EventManager $event_manager,
-        BurningParrotTheme $burning_parrot_theme,
         BaseLanguage $language
     ) {
         $this->csrf                 = $csrf;
         $this->bot_factory          = $bot_factory;
         $this->event_manager        = $event_manager;
-        $this->burning_parrot_theme = $burning_parrot_theme;
         $this->language             = $language;
     }
 
-    public function displayIndex()
+    public function displayIndex(BaseLayout $response)
     {
         try {
             $admin_presenter     = new AdminPresenter($this->csrf, $this->bot_factory->getBots());
@@ -84,55 +77,55 @@ class AdminController
                 $admin_presenter
             );
         } catch (BotNotFoundException $e) {
-            $this->redirectToAdminSectionWithErrorFeedback($e);
+            $this->redirectToAdminSectionWithErrorFeedback($e, $response);
         } catch (ChannelsNotFoundException $e) {
-            $this->redirectToAdminSectionWithErrorFeedback($e);
+            $this->redirectToAdminSectionWithErrorFeedback($e, $response);
         }
     }
 
-    public function addBot(HTTPRequest $request)
+    public function addBot(HTTPRequest $request, BaseLayout $response)
     {
         $this->csrf->check();
-        if ($this->validPostArgument($request)) {
+        if ($this->validPostArgument($request, $response)) {
             try {
                 $this->bot_factory->save(
                     $request->get('bot_name'),
                     $request->get('webhook_url'),
                     $request->get('avatar_url')
                 );
-                $this->burning_parrot_theme->addFeedback(Feedback::INFO, $this->language->getText('plugin_botmattermost', 'alert_success_add_bot'));
+                $response->addFeedback(Feedback::INFO, $this->language->getText('plugin_botmattermost', 'alert_success_add_bot'));
             } catch (CannotCreateBotException $e) {
-                $this->burning_parrot_theme->addFeedback(Feedback::ERROR, $e->getMessage());
+                $response->addFeedback(Feedback::ERROR, $e->getMessage());
             } catch (BotAlreadyExistException $e) {
-                $this->burning_parrot_theme->addFeedback(Feedback::ERROR, $e->getMessage());
+                $response->addFeedback(Feedback::ERROR, $e->getMessage());
             }
         }
-        $this->redirectToIndex();
+        $this->redirectToIndex($response);
     }
 
-    public function deleteBot(HTTPRequest $request)
+    public function deleteBot(HTTPRequest $request, BaseLayout $response)
     {
         $this->csrf->check();
         $id = $request->get('bot_id');
-        if ($this->validBotId($id)) {
+        if ($this->validBotId($response, $id)) {
             try {
                 $bot   = $this->bot_factory->getBotById($id);
                 $event = new BotMattermostDeleted($bot);
                 $this->bot_factory->deleteBotById($bot->getId());
                 $this->event_manager->processEvent($event);
-                $this->burning_parrot_theme->addFeedback(Feedback::INFO, $this->language->getText('plugin_botmattermost','alert_success_delete_bot'));
+                $response->addFeedback(Feedback::INFO, $this->language->getText('plugin_botmattermost','alert_success_delete_bot'));
             } catch (CannotDeleteBotException $e) {
-                $this->burning_parrot_theme->addFeedback(Feedback::ERROR, $e->getMessage());
+                $response->addFeedback(Feedback::ERROR, $e->getMessage());
             }
         }
-        $this->redirectToIndex();
+        $this->redirectToIndex($response);
     }
 
-    public function editBot(HTTPRequest $request)
+    public function editBot(HTTPRequest $request, BaseLayout $response)
     {
         $this->csrf->check();
         $id = $request->get('bot_id');
-        if ($this->validPostArgument($request) && $this->validBotId($id)) {
+        if ($this->validPostArgument($request, $response) && $this->validBotId($response, $id)) {
             try {
                 $this->bot_factory->update(
                     $request->get('bot_name'),
@@ -140,65 +133,66 @@ class AdminController
                     $request->get('avatar_url'),
                     $id
                 );
-                $this->burning_parrot_theme->addFeedback(Feedback::INFO, $this->language->getText('plugin_botmattermost', 'alert_success_edit_bot'));
+                $response->addFeedback(Feedback::INFO, $this->language->getText('plugin_botmattermost', 'alert_success_edit_bot'));
             } catch (CannotUpdateBotException $e) {
-                $this->burning_parrot_theme->addFeedback(Feedback::ERROR, $e->getMessage());
+                $response->addFeedback(Feedback::ERROR, $e->getMessage());
             }
         }
-        $this->redirectToIndex();
+        $this->redirectToIndex($response);
     }
 
-    private function validPostArgument(HTTPRequest $request)
+    private function validPostArgument(HTTPRequest $request, BaseLayout $response)
     {
         if (! $request->existAndNonEmpty('bot_name') || ! $request->existAndNonEmpty('webhook_url')) {
-            $this->burning_parrot_theme->addFeedback(Feedback::ERROR, $this->language->getText('plugin_botmattermost', 'alert_error_empty_input'));
+            $response->addFeedback(Feedback::ERROR, $this->language->getText('plugin_botmattermost', 'alert_error_empty_input'));
             return false;
         }
 
         return (
-            $this->validUrl($request->get('webhook_url')) &&
-            $this->validOptionnalUrl($request->get('avatar_url'))
+            $this->validUrl($response, $request->get('webhook_url')) &&
+            $this->validOptionalUrl($response, $request->get('avatar_url'))
         );
     }
 
-    private function validOptionnalUrl($url) {
+    private function validOptionalUrl(BaseLayout $response, $url)
+    {
         if (! $url) {
             return true;
         }
 
-        return $this->validUrl($url);
+        return $this->validUrl($response, $url);
     }
 
-    private function validUrl($url)
+    private function validUrl(BaseLayout $response, $url)
     {
         $valid_url = new Valid_HTTPURI();
         if ($valid_url->validate($url)) {
             return true;
         } else {
-            $this->burning_parrot_theme->addFeedback(Feedback::ERROR, $this->language->getText('plugin_botmattermost', 'alert_error_invalid_url'));
+            $response->addFeedback(Feedback::ERROR, $this->language->getText('plugin_botmattermost', 'alert_error_invalid_url'));
             return false;
         }
     }
 
-    private function validBotId($id)
+    private function validBotId(BaseLayout $response, $id)
     {
 
         if ($this->bot_factory->getBotById($id)) {
             return true;
         } else {
-            $this->burning_parrot_theme->addFeedback(Feedback::ERROR, $this->language->getText('plugin_botmattermost', 'alert_error_invalid_id'));
+            $response->addFeedback(Feedback::ERROR, $this->language->getText('plugin_botmattermost', 'alert_error_invalid_id'));
             return false;
         }
     }
 
-    private function redirectToAdminSectionWithErrorFeedback(Exception $e)
+    private function redirectToAdminSectionWithErrorFeedback(Exception $e, BaseLayout $response) : void
     {
-        $this->burning_parrot_theme->addFeedback(Feedback::ERROR, $e->getMessage());
-        $this->burning_parrot_theme->redirect('/admin/');
+        $response->addFeedback(Feedback::ERROR, $e->getMessage());
+        $response->redirect('/admin/');
     }
 
-    private function redirectToIndex()
+    private function redirectToIndex(BaseLayout $response) : void
     {
-        $this->burning_parrot_theme->redirect(BOT_MATTERMOST_BASE_URL.'/admin/');
+        $response->redirect(BOT_MATTERMOST_BASE_URL.'/admin/');
     }
 }

@@ -18,12 +18,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use FastRoute\RouteCollector;
 use Tuleap\BotMattermost\Bot\BotDao;
 use Tuleap\BotMattermost\Bot\BotFactory;
 use Tuleap\BotMattermost\Controller\AdminController;
 use Tuleap\BurningParrotCompatiblePageEvent;
-use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Request\CollectRoutesEvent;
 
 require_once 'constants.php';
 require_once 'autoload.php';
@@ -39,6 +40,7 @@ class BotMattermostPlugin extends Plugin
         $this->addHook(BurningParrotCompatiblePageEvent::NAME);
         $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
         $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
+        $this->addHook(CollectRoutesEvent::NAME, 'defaultCollectRoutesEvent');
     }
 
     /**
@@ -90,18 +92,22 @@ class BotMattermostPlugin extends Plugin
         }
     }
 
-    public function process()
+    public function routeAdmin() : \Tuleap\Request\DispatchableWithRequest
     {
-        $request = HTTPRequest::instance();
-        $router = new Router(
+        return new Router(
             new AdminController(
                 new CSRFSynchronizerToken('/plugins/botmattermost/admin/'),
                 new BotFactory(new BotDao()),
                 EventManager::instance(),
-                $GLOBALS['Response'],
                 $GLOBALS['Language']
-            ));
+            )
+        );
+    }
 
-        $router->route($request);
+    public function defaultCollectRoutesEvent(CollectRoutesEvent $event) : void
+    {
+        $event->getRouteCollector()->addGroup($this->getPluginPath(), function (RouteCollector $r) {
+            $r->addRoute(['GET', 'POST'], '/admin/[index.php]', $this->getRouteHandler('routeAdmin'));
+        });
     }
 }
