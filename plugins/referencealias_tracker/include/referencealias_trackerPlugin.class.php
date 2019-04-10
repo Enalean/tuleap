@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -67,12 +67,6 @@ class referencealias_trackerPlugin extends Plugin //phpcs:ignore
             $this->pluginInfo = new Tuleap\ReferenceAliasTracker\Plugin\PluginInfo($this);
         }
         return $this->pluginInfo;
-    }
-
-    public function process()
-    {
-        $renderer = TemplateRendererFactory::build()->getRenderer(REFERENCEALIAS_TRACKER_BASE_DIR.'/template');
-        $renderer->renderToPage('index', array());
     }
 
     public function importCompatRefXML($params)

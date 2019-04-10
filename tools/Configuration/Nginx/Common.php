@@ -84,12 +84,10 @@ class Common
                 $plugin_conf_file = $tuleap_plugins_dir . '/' . basename($conf_file);
                 if (is_file($conf_file)) {
                     copy($conf_file, $plugin_conf_file);
+                } elseif (is_file($file->getPathname().'/.use-front-controller')) {
+                    $this->writeFromTemplate($plugin_conf_file, $plugin, $this->tuleap_base_dir.'/src/etc/nginx/plugin-frontcontroller.conf.dist');
                 } elseif (is_dir($file->getPathname().'/www')) {
-                    if (is_file($file->getPathname().'/.use-front-controller')) {
-                        $this->writeFromTemplate($plugin_conf_file, $plugin, $this->tuleap_base_dir.'/src/etc/nginx/plugin-frontcontroller.conf.dist');
-                    } else {
-                        $this->writeFromTemplate($plugin_conf_file, $plugin, $this->tuleap_base_dir.'/src/etc/nginx/plugin.conf.dist');
-                    }
+                    $this->writeFromTemplate($plugin_conf_file, $plugin, $this->tuleap_base_dir.'/src/etc/nginx/plugin.conf.dist');
                 }
             }
         }

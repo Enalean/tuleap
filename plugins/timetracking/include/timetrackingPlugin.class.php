@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Plugin\PluginWithLegacyInternalRouting;
 use Tuleap\Request\CurrentPage;
 use Tuleap\Timetracking\Admin\AdminController;
 use Tuleap\Timetracking\Admin\AdminDao;
@@ -47,7 +48,7 @@ require_once __DIR__ . '/../../tracker/include/trackerPlugin.class.php';
 require_once 'constants.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
-class timetrackingPlugin extends Plugin // @codingStandardsIgnoreLine
+class timetrackingPlugin extends PluginWithLegacyInternalRouting // @codingStandardsIgnoreLine
 {
     public function __construct($id)
     {
@@ -70,6 +71,8 @@ class timetrackingPlugin extends Plugin // @codingStandardsIgnoreLine
         $this->addHook(\Tuleap\Widget\Event\GetTrackersWithCriteria::NAME);
         $this->addHook('fill_project_history_sub_events');
         $this->addHook(Event::REST_RESOURCES);
+
+        $this->listenToCollectRouteEventWithDefaultController();
 
         if (defined('TRACKER_BASE_URL')) {
             $this->addHook(TRACKER_EVENT_FETCH_ADMIN_BUTTONS);
@@ -121,7 +124,7 @@ class timetrackingPlugin extends Plugin // @codingStandardsIgnoreLine
         );
     }
 
-    public function process(Codendi_Request $request)
+    public function process() : void
     {
         $router = new Router(
             TrackerFactory::instance(),
@@ -130,7 +133,7 @@ class timetrackingPlugin extends Plugin // @codingStandardsIgnoreLine
             $this->getTimeController()
         );
 
-        $router->route($request);
+        $router->route(HTTPRequest::instance());
     }
 
     /**
