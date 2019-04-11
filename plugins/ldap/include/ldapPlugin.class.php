@@ -456,7 +456,11 @@ class LdapPlugin extends Plugin {
                 // (uid, email, common name)
                 $lri  = $ldap->searchUser($params['ident']);
             }
-            $params['user'] = $this->getLdapUserManager()->getUserFromLdapIterator($lri);
+            if ($lri !== false) {
+                $params['user'] = $this->getLdapUserManager()->getUserFromLdapIterator($lri);
+            } else {
+                $params['user'] = null;
+            }
         }
     }
 
@@ -480,6 +484,9 @@ class LdapPlugin extends Plugin {
     {
         if ($this->isLdapAuthType() && $this->isLDAPUserManagementEnabled()) {
             $lri  = $this->getLdap()->searchLogin($event->getLoginName());
+            if ($lri === false) {
+                return;
+            }
             $user = $this->getLdapUserManager()->getUserFromLdapIterator($lri);
             if ($user !== null) {
                 $event->setUser($user);

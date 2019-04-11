@@ -178,7 +178,7 @@ class LDAP {
      * @param String $binddn DN to use to bind with
      * @param String $bindpw Password associated to the DN
      * 
-     * @return Boolean true if bind was successful, false otherwise.
+     * @return bool true if bind was successful, false otherwise.
      */
     function bind($binddn=null, $bindpw=null) {
         if(!$this->bound) {
@@ -243,7 +243,7 @@ class LDAP {
     /**
      * Return last error state
      * 
-     * @return Integer
+     * @return int
      */
     function getErrno() {
         return ldap_errno($this->ds);
@@ -255,10 +255,10 @@ class LDAP {
      * First search the DN of the user based on its login then try to bind
      * with this DN and the given password
      *
-     * @param String $login  Login name to authenticate with
-     * @param String $passwd Password associated to the login
+     * @param string $login  Login name to authenticate with
+     * @param string $passwd Password associated to the login
      * 
-     * @return Boolean true if the login and password match, false otherwise
+     * @return bool true if the login and password match, false otherwise
      */
     function authenticate($login, $passwd) {
         if (!$passwd) {
@@ -279,28 +279,28 @@ class LDAP {
         // /!\ Be sure not to reuse a previously bound connexion (otherwise
         // authentication will always be successfull.
         $this->unbind();
-        if (!$this->bind($auth_dn,$passwd)) {
-            //$this->setError($Language->getText('ldap_class','err_badpasswd'));
-            return false;
+        try {
+            return $this->bind($auth_dn,$passwd);
+        } finally {
+            $this->unbind();
         }
-        return true;
     }
     
     /**
      * Search in the LDAP directory
      * 
      * @see http://php.net/ldap_search
-     * 
-     * @param String  $baseDn     Base DN where to search
-     * @param String  $filter     Specific LDAP query
-     * @param Integer $scope      How to search (SCOPE_ SUBTREE, ONELEVEL or BASE)
-     * @param Array   $attributes LDAP fields to retreive
-     * @param Integer $attrsOnly  Retreive both field value and name (keep it to 0)
-     * @param Integer $sizeLimit  Limit the size of the result set
-     * @param Integer $timeLimit  Limit the time spend to search for results
+     *
+     * @param string  $baseDn     Base DN where to search
+     * @param string  $filter     Specific LDAP query
+     * @param integer $scope      How to search (SCOPE_ SUBTREE, ONELEVEL or BASE)
+     * @param array   $attributes LDAP fields to retreive
+     * @param integer $attrsOnly  Retreive both field value and name (keep it to 0)
+     * @param integer $sizeLimit  Limit the size of the result set
+     * @param integer $timeLimit  Limit the time spend to search for results
      * @param integer $deref      Dereference result
      * 
-     * @return LDAPResultIterator
+     * @return LDAPResultIterator|false
      */
     public function search($baseDn, $filter, $scope=self::SCOPE_SUBTREE, $attributes=array(), $attrsOnly=0, $sizeLimit=0, $timeLimit=0, $deref=LDAP_DEREF_NEVER) {
         $this->trapErrors();
@@ -352,10 +352,10 @@ class LDAP {
     /**
      * Search a specific Distinguish Name
      *
-     * @param String $dn         DN to retreive
-     * @param Array  $attributes Restrict the LDAP fields to fetch
+     * @param string $dn         DN to retreive
+     * @param array  $attributes Restrict the LDAP fields to fetch
      * 
-     * @return LDAPResultIterator
+     * @return LDAPResultIterator|false
      */
     function searchDn($dn, $attributes=array()) {
         $attributes = count($attributes) > 0 ? $attributes : $this->getDefaultAttributes();
@@ -366,10 +366,10 @@ class LDAP {
      * Search if given argument correspond to a LDAP login (generally this
      * correspond to ldap 'uid' field).
      *
-     * @param String $name login
+     * @param string $name login
      * @param array $attributes
      *
-     * @return LDAPResultIterator
+     * @return LDAPResultIterator|false
      */    
     public function searchLogin($name, $attributes = array()) {
         $name = $this->query_escaper->escapeFilter($name);
@@ -385,9 +385,9 @@ class LDAP {
      * Search if given argument correspond to a LDAP Identifier. This is the
      * uniq number that represent a user.
      *
-     * @param String $name LDAP Id
+     * @param string $name LDAP Id
      * 
-     * @return LDAPResultIterator
+     * @return LDAPResultIterator|false
      */  
     function searchEdUid($name) {
         $name = $this->query_escaper->escapeFilter($name);
@@ -400,7 +400,7 @@ class LDAP {
      *
      * @param String $words User name to search
      * 
-     * @return LDAPResultIterator
+     * @return LDAPResultIterator|false
      */
     function searchUser($words) {
         $words = $this->query_escaper->escapeFilter($words);
@@ -413,7 +413,7 @@ class LDAP {
      *
      * @param String $name Common name to search
      * 
-     * @return LDAPResultIterator
+     * @return LDAPResultIterator|false
      */
     function searchCommonName($name) {
         $name = $this->query_escaper->escapeFilter($name);
@@ -426,7 +426,7 @@ class LDAP {
      *
      * @param String $name Group name to search
      * 
-     * @return LDAPResultIterator
+     * @return LDAPResultIterator|false
      */
     function searchGroup($name) {
         $name = $this->query_escaper->escapeFilter($name);
@@ -443,9 +443,9 @@ class LDAP {
     /**
      * List members of a LDAP group
      * 
-     * @param String $groupDn Group DN
+     * @param string $groupDn Group DN
      * 
-     * @return LDAPResultIterator
+     * @return LDAPResultIterator|false
      */
     function searchGroupMembers($groupDn) {
         return $this->search($groupDn, 'objectClass=*', self::SCOPE_SUBTREE, array($this->ldapParams['grp_member']));
@@ -459,7 +459,7 @@ class LDAP {
      * @param String   $name      Name of the group to look for
      * @param Integer  $sizeLimit Limit the amount of result sent
      * 
-     * @return LDAPResultIterator
+     * @return AppendIterator
      */
     function searchUserAsYouType($name, $sizeLimit, $validEmail=false) {
         $apIt  = new AppendIterator();

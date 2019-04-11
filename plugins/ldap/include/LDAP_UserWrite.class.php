@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -135,7 +135,7 @@ class LDAP_UserWrite {
 
     private function getLDAPPassword(PFUser $user) {
         $ldap_result_iterator = $this->ldap->searchDn($this->getUserDN($user), array('userPassword'));
-        if (count($ldap_result_iterator) == 1) {
+        if ($ldap_result_iterator !== false && count($ldap_result_iterator) === 1) {
             $ldap_result = $ldap_result_iterator->current();
             if (count($ldap_result)) {
                 return base64_decode($ldap_result->get('userPassword'));
