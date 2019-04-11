@@ -35,8 +35,8 @@ use Tuleap\Docman\REST\v1\Folders\DocmanEmptyPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Folders\DocmanFolderPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Folders\DocmanItemCreatorBuilder;
 use Tuleap\Docman\REST\v1\Folders\ItemCanHaveSubItemsChecker;
-use Tuleap\Docman\REST\v1\Wiki\DocmanWikiPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Links\DocmanLinkPOSTRepresentation;
+use Tuleap\Docman\REST\v1\Wiki\DocmanWikiPOSTRepresentation;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
@@ -156,13 +156,19 @@ class DocmanFoldersResource extends AuthenticatedResource
 
         $docman_item_creator = DocmanItemCreatorBuilder::build($project);
 
-        return $docman_item_creator->createFolder(
-            $parent,
-            $current_user,
-            $folder_representation,
-            new \DateTimeImmutable(),
-            $project
-        );
+        try {
+            return $docman_item_creator->createFolder(
+                $parent,
+                $current_user,
+                $folder_representation,
+                new \DateTimeImmutable(),
+                $project
+            );
+        } catch (Metadata\StatusNotFoundException $e) {
+            throw new RestException(400, $e->getMessage());
+        } catch (Metadata\ItemStatusUsageMismatchException $e) {
+            throw new RestException(403, 'The "Status" property is not activated for this item.');
+        }
     }
 
     /**

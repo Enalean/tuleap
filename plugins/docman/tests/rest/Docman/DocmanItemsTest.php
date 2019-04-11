@@ -237,7 +237,6 @@ class DocmanItemsTest extends DocmanBase
             $this->client->get('docman_items/' . $root_id . '/docman_items')
         );
         $folder   = $response->json();
-
         $this->assertEquals(count($folder), 1);
     }
 

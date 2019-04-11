@@ -26,7 +26,6 @@ namespace Tuleap\Docman\rest;
 
 use Docman_ApprovalTableItemDao;
 use Docman_ApprovalTableWikiDao;
-use Docman_ItemFactory;
 use ProjectUGroup;
 use Tuleap\Docman\rest\v1\DocmanDataBuildCommon;
 
@@ -35,24 +34,16 @@ require_once __DIR__ . '/helper/DocmanDataBuildCommon.php';
 
 class DocmanDataBuilder extends DocmanDataBuildCommon
 {
-    const         PROJECT_NAME                 = 'DocmanProject';
-    const         DOCMAN_REGULAR_USER_NAME     = 'docman_regular_user';
-    private const ANON_ID                      = 0;
-    private const REGULAR_USER_ID              = 102;
+    const PROJECT_NAME = 'DocmanProject';
 
-    /**
-     * @var Docman_ItemFactory
-     */
-    private $docman_item_factory;
+    private const ANON_ID = 0;
 
     public function setUp(): void
     {
         echo 'Setup Docman REST Tests configuration' . PHP_EOL;
 
-        $this->docman_item_factory    = Docman_ItemFactory::instance($this->project->getID());
-
         $this->installPlugin($this->project);
-        $this->generateDocmanRegularUser(self::DOCMAN_REGULAR_USER_NAME);
+        $this->generateDocmanRegularUser();
         $this->createCustomMetadata();
         $this->addContent();
     }
@@ -71,6 +62,8 @@ class DocmanDataBuilder extends DocmanDataBuildCommon
      *    +           +               +                     +
      *    |           |               |                     |
      *   ...         ...             ...                   ...
+     *
+     * * HM => Hardcoded Metadata
      */
     private function addContent()
     {
