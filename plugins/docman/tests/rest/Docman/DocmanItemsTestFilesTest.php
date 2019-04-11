@@ -554,21 +554,22 @@ class DocmanItemsTestFilesTest extends DocmanBase
             $response2->json()['upload_href']
         );
 
-        $tus_client = new Client(
+        $general_use_http_client = new Client(
             str_replace('/api/v1', '', $this->client->getBaseUrl()),
             $this->client->getConfig()
         );
-        $tus_client->setSslVerification(false, false, false);
+        $general_use_http_client->setSslVerification(false, false, false);
+        $file_content        = str_repeat('A', $file_size);
         $tus_response_upload = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $tus_client->patch(
+            $general_use_http_client->patch(
                 $response->json()['upload_href'],
                 [
                     'Tus-Resumable' => '1.0.0',
                     'Content-Type'  => 'application/offset+octet-stream',
                     'Upload-Offset' => '0'
                 ],
-                str_repeat('A', $file_size)
+                $file_content
             )
         );
 
@@ -582,8 +583,14 @@ class DocmanItemsTestFilesTest extends DocmanBase
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals('file', $response->json()['type']);
         $this->assertEquals(null, $response->json()['lock_info']);
-    }
 
+        $file_content_response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $general_use_http_client->get($response->json()['file_properties']['download_href'])
+        );
+        $this->assertEquals(200, $file_content_response->getStatusCode());
+        $this->assertEquals($file_content, $file_content_response->getBody());
+    }
 
     /**
      * @depends testGetRootId

@@ -25,23 +25,21 @@ namespace Tuleap\Docman\Download;
 use Docman_File;
 use Docman_Item;
 use Docman_ItemFactory;
-use HTTPRequest;
 use Logger;
 use LogicException;
+use PFUser;
 use Project;
 use ProjectManager;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
-use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchablePSR15Compatible;
 use Tuleap\Request\DispatchableWithProject;
-use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\NotFoundException;
-use UserManager;
+use Tuleap\REST\RESTCurrentUserMiddleware;
 use Zend\HttpHandlerRunner\Emitter\EmitterInterface;
 
-final class DocmanFileDownloadController implements DispatchableWithRequest, DispatchableWithProject
+final class DocmanFileDownloadController extends DispatchablePSR15Compatible implements DispatchableWithProject
 {
     /**
      * @var ProjectManager
@@ -65,34 +63,41 @@ final class DocmanFileDownloadController implements DispatchableWithRequest, Dis
     private $item;
 
     public function __construct(
+        EmitterInterface $emitter,
         ProjectManager $project_manager,
         Docman_ItemFactory $item_factory,
         DocmanFileDownloadResponseGenerator $file_download_response_generator,
-        Logger $logger
+        Logger $logger,
+        MiddlewareInterface ...$middleware_stack
     ) {
+        parent::__construct(
+            $emitter,
+            ...$middleware_stack
+        );
         $this->project_manager                  = $project_manager;
         $this->item_factory                     = $item_factory;
         $this->file_download_response_generator = $file_download_response_generator;
         $this->logger                           = $logger;
     }
 
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables) : void
+    public function handle(ServerRequestInterface $request) : ResponseInterface
     {
         if ($this->item === null) {
             throw new LogicException(
                 'self::getProject() must be called before starting the request processing'
             );
         }
-
         if (! $this->item instanceof Docman_File) {
             throw new NotFoundException(dgettext('tuleap-docman', 'The file cannot be found.'));
         }
-
         try {
-            $file_response = $this->file_download_response_generator->generateResponse(
-                $request->getCurrentUser(),
+            $attribute_version_id = $request->getAttribute('version_id');
+            /** @var PFUser $current_user */
+            $current_user = $request->getAttribute(RESTCurrentUserMiddleware::class);
+            return $this->file_download_response_generator->generateResponse(
+                $current_user,
                 $this->item,
-                isset($variables['version_id']) ? (int) $variables['version_id'] : null
+                $attribute_version_id !== null ? (int) $attribute_version_id : null
             );
         } catch (VersionNotFoundException $exception) {
             $this->logger->debug($exception->getMessage());
@@ -101,9 +106,6 @@ final class DocmanFileDownloadController implements DispatchableWithRequest, Dis
             $this->logger->debug($exception->getMessage());
             throw new NotFoundException(dgettext('tuleap-docman', 'The file cannot be found.'));
         }
-
-        session_write_close();
-        $file_response->send();
     }
 
     public function getProject(array $variables) : Project

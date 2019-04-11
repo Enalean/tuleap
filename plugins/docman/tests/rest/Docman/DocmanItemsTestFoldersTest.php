@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -91,21 +91,22 @@ class DocmanItemsTestFoldersTest extends DocmanBase
             $response2->json()['file_properties']['upload_href']
         );
 
-        $tus_client = new Client(
+        $general_use_http_client = new Client(
             str_replace('/api/v1', '', $this->client->getBaseUrl()),
             $this->client->getConfig()
         );
-        $tus_client->setSslVerification(false, false, false);
+        $general_use_http_client->setSslVerification(false, false, false);
+        $file_content        = str_repeat('A', $file_size);
         $tus_response_upload = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $tus_client->patch(
+            $general_use_http_client->patch(
                 $response1->json()['file_properties']['upload_href'],
                 [
                     'Tus-Resumable' => '1.0.0',
                     'Content-Type'  => 'application/offset+octet-stream',
                     'Upload-Offset' => '0'
                 ],
-                str_repeat('A', $file_size)
+                $file_content
             )
         );
         $this->assertEquals(204, $tus_response_upload->getStatusCode());
@@ -117,6 +118,13 @@ class DocmanItemsTestFoldersTest extends DocmanBase
         );
         $this->assertEquals(200, $file_item_response->getStatusCode());
         $this->assertEquals('file', $file_item_response->json()['type']);
+
+        $file_content_response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $general_use_http_client->get($file_item_response->json()['file_properties']['download_href'])
+        );
+        $this->assertEquals(200, $file_content_response->getStatusCode());
+        $this->assertEquals($file_content, $file_content_response->getBody());
     }
 
     /**
