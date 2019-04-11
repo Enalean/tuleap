@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2018. All Rights Reserved.
+  - Copyright (c) Enalean, 2019 - present. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -15,29 +15,27 @@
   -
   - You should have received a copy of the GNU General Public License
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
-  -
   -->
 
 <template>
-    <div class="tlp-form-element">
-        <div class="tlp-form-element">
-            <label
-                class="tlp-label"
-                for="document-new-item-description"
-                v-translate
-            >
-                Description
-            </label>
-            <textarea
-                type="text"
-                class="tlp-textarea"
-                id="document-new-item-description"
-                name="description"
-                v-bind:placeholder="placeholder"
-                v-bind:value="value"
-                v-on:input="$emit('input', $event.target.value)"
-            ></textarea>
-        </div>
+    <div class="tlp-form-element docman-item-version-title-update">
+        <label
+            class="tlp-label"
+            for="document-update-version-title"
+            v-translate
+        >
+            Version name
+        </label>
+        <input
+            type="text"
+            class="tlp-input"
+            id="document-update-version-title"
+            name="version_title"
+            v-bind:placeholder="placeholder"
+            v-bind:value="value"
+            v-on:input="$emit('input', $event.target.value)"
+            ref="input"
+        >
     </div>
 </template>
 <script>
@@ -47,8 +45,11 @@ export default {
     },
     computed: {
         placeholder() {
-            return this.$gettext("My useful document description");
+            return this.$gettext("My new version name");
         }
+    },
+    mounted() {
+        this.$refs.input.focus();
     }
 };
 </script>

@@ -40,7 +40,7 @@ import ModalHeader from "../ModalCommon/ModalHeader.vue";
 import ModalFeedback from "../ModalCommon/ModalFeedback.vue";
 import ModalFooter from "../ModalCommon/ModalFooter.vue";
 import WikiProperties from "../Property/WikiProperties.vue";
-import LockProperty from "./LockProperty.vue";
+import LockProperty from "../Property/LockProperty.vue";
 
 export default {
     name: "UpdateWikiModal",

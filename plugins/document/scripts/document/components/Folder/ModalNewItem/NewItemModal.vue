@@ -30,12 +30,12 @@
         <div class="tlp-modal-body document-new-item-modal-body" v-if="is_displayed">
             <type-selector v-model="item.type"/>
 
-            <global-properties v-bind:item="item" v-bind:parent="parent">
+            <global-metadata v-bind:item="item" v-bind:parent="parent">
                 <link-properties v-model="item.link_properties" v-bind:item="item"/>
                 <wiki-properties v-model="item.wiki_properties" v-bind:item="item"/>
                 <embedded-properties v-model="item.embedded_properties" v-bind:item="item"/>
                 <file-properties v-model="item.file_properties" v-bind:item="item"/>
-            </global-properties>
+            </global-metadata>
         </div>
 
         <modal-footer v-bind:is-loading="is_loading" v-bind:submit-button-label="submit_button_label" v-bind:aria-labelled-by="aria_labelled_by"/>
@@ -45,7 +45,7 @@
 <script>
 import { mapState } from "vuex";
 import { modal as createModal } from "tlp";
-import GlobalProperties from "../Property/GlobalProperties.vue";
+import GlobalMetadata from "../Metadata/GlobalMetadata.vue";
 import LinkProperties from "../Property/LinkProperties.vue";
 import WikiProperties from "../Property/WikiProperties.vue";
 import TypeSelector from "./TypeSelector.vue";
@@ -63,7 +63,7 @@ export default {
         EmbeddedProperties,
         ModalFooter,
         ModalHeader,
-        GlobalProperties,
+        GlobalMetadata,
         LinkProperties,
         WikiProperties,
         TypeSelector,

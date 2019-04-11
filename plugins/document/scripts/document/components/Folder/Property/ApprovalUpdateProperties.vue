@@ -14,8 +14,7 @@
   - GNU General Public License for more details.
   -
   - You should have received a copy of the GNU General Public License
-  - along with Tuleap. If not, see http://www.gnu.org/licenses/.
-  -
+  - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
 
 <template>
@@ -30,8 +29,11 @@
         <div id="document-new-file-upload-approval-table-action">
             <div class="tlp-form-element">
                 <label class="tlp-label tlp-radio" for="document-new-file-upload-approval-table-action-copy">
-                    <input id="document-new-file-upload-approval-table-action-copy" type="radio"
-                           name="approval-update-action" value="copy" v-on:change="$emit('approvalTableActionChange',$event.target.value)"
+                    <input id="document-new-file-upload-approval-table-action-copy"
+                           type="radio"
+                           name="approval-update-action"
+                           value="copy"
+                           v-on:change="$emit('approvalTableActionChange',$event.target.value)"
                            required
                     >
                     <translate>Copy the previous approval table.</translate>
@@ -42,26 +44,30 @@
             </div>
             <div class="tlp-form-element">
                 <label class="tlp-label tlp-radio" for="document-new-file-upload-approval-table-action-reset">
-                    <input id="document-new-file-upload-approval-table-action-reset" type="radio"
-                           name="approval-update-action" value="reset" v-on:change="$emit('approvalTableActionChange',$event.target.value)"
+                    <input id="document-new-file-upload-approval-table-action-reset"
+                           type="radio"
+                           name="approval-update-action"
+                           value="reset"
+                           v-on:change="$emit('approvalTableActionChange',$event.target.value)"
                     >
                     <translate>Reset the approval cycle.</translate>
                 </label>
-                <p class="tlp-text-info">
-                    <translate>
-                        Only the table structure will be kept. Reviewer comments and commitments will be discarded.
-                    </translate>
+                <p class="tlp-text-info" v-translate>
+                    Only the table structure will be kept. Reviewer comments and commitments will be discarded.
                 </p>
             </div>
             <div class="tlp-form-element">
                 <label class="tlp-label tlp-radio" for="document-new-file-upload-approval-table-action-empty">
-                    <input id="document-new-file-upload-approval-table-action-empty" type="radio"
-                           name="approval-update-action" value="empty" v-on:change="$emit('approvalTableActionChange',$event.target.value)"
+                    <input id="document-new-file-upload-approval-table-action-empty"
+                           type="radio"
+                           name="approval-update-action"
+                           value="empty"
+                           v-on:change="$emit('approvalTableActionChange',$event.target.value)"
                     >
                     <translate>Create a new empty approval table.</translate>
                 </label>
-                <p class="tlp-text-info">
-                    <translate>Start over with a completely new approval table.</translate>
+                <p class="tlp-text-info" v-translate>
+                    Start over with a completely new approval table.
                 </p>
             </div>
         </div>

@@ -14,8 +14,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see http://www.gnu.org/licenses/.
- *
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../../../helpers/local-vue.js";

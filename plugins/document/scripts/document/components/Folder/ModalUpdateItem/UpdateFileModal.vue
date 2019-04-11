@@ -38,7 +38,7 @@ import ModalHeader from "../ModalCommon/ModalHeader.vue";
 import ModalFeedback from "../ModalCommon/ModalFeedback.vue";
 import ModalFooter from "../ModalCommon/ModalFooter.vue";
 import FileProperties from "../Property/FileProperties.vue";
-import ItemUpdateProperties from "./ItemUpdateProperties.vue";
+import ItemUpdateProperties from "../Property/ItemUpdateProperties.vue";
 
 export default {
     name: "UpdateFileModal",

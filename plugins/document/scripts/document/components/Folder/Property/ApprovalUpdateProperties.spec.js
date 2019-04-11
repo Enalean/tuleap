@@ -14,13 +14,12 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see http://www.gnu.org/licenses/.
- *
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import localVue from "../../../helpers/local-vue";
+import localVue from "../../../helpers/local-vue.js";
 import { shallowMount } from "@vue/test-utils";
-import ApprovalUpdateProperties from "../ModalUpdateItem/ApprovalUpdateProperties.vue";
+import ApprovalUpdateProperties from "./ApprovalUpdateProperties.vue";
 
 describe("ApprovalUpdateProperties", () => {
     let approval_update_factory;

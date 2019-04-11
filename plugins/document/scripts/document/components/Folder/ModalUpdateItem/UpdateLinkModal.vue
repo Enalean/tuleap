@@ -36,7 +36,7 @@ import { modal as createModal } from "tlp";
 import ModalHeader from "../ModalCommon/ModalHeader.vue";
 import ModalFeedback from "../ModalCommon/ModalFeedback.vue";
 import ModalFooter from "../ModalCommon/ModalFooter.vue";
-import ItemUpdateProperties from "./ItemUpdateProperties.vue";
+import ItemUpdateProperties from "../Property/ItemUpdateProperties.vue";
 import LinkProperties from "../Property/LinkProperties.vue";
 
 export default {

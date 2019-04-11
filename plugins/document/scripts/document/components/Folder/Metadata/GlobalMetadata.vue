@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2019. All Rights Reserved.
+  - Copyright (c) Enalean, 2019 - present. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -14,27 +14,26 @@
   - GNU General Public License for more details.
   -
   - You should have received a copy of the GNU General Public License
-  - along with Tuleap. If not, see http://www.gnu.org/licenses/.
-  -
+  - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
 
 <template>
     <div class="document-new-item-properties">
-        <property-title v-model="item.title" v-bind:type="item.type" v-bind:parent="parent"/>
-        <property-description v-model="item.description"/>
+        <title-metadata v-model="item.title" v-bind:type="item.type" v-bind:parent="parent"/>
+        <description-metadata v-model="item.description"/>
         <slot></slot>
     </div>
 </template>
 
 <script>
-import PropertyTitle from "./PropertyTitle.vue";
-import PropertyDescription from "./PropertyDescription.vue";
+import TitleMetadata from "./TitleMetadata.vue";
+import DescriptionMetadata from "./DescriptionMetadata.vue";
 
 export default {
-    name: "GlobalProperties",
+    name: "GlobalMetadata",
     components: {
-        PropertyTitle,
-        PropertyDescription
+        TitleMetadata,
+        DescriptionMetadata
     },
     props: {
         item: Object,

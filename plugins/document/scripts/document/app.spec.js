@@ -58,8 +58,10 @@ import "./components/Folder/QuickLook/QuickLookDocumentPreview.spec.js";
 
 import "./components/Folder/ModalCommon/ModalFooter.spec.js";
 
-import "./components/Folder/ModalUpdateItem/ApprovalUpdateProperties.spec.js";
-import "./components/Folder/ModalUpdateItem/ItemUpdateProperties.spec.js";
+import "./components/Folder/Property/ApprovalUpdateProperties.spec.js";
+import "./components/Folder/Property/ItemUpdateProperties.spec.js";
+
+import "./components/Folder/Metadata/TitleMetadata.spec.js";
 
 import "./helpers/highlight-items-helper.spec.js";
 import "./helpers/uploading-status-helper.spec.js";

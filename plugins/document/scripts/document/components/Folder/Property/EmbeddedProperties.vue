@@ -23,11 +23,14 @@
         <label
             class="tlp-label"
             for="document-new-item-embedded"
+            v-translate
         >
-            <translate>Content</translate>
+            Content
         </label>
         <div class="tlp-form-element">
-            <textarea type="text" class="tlp-textarea" id="document-new-item-embedded" name="embedded-content"
+            <textarea class="tlp-textarea"
+                      id="document-new-item-embedded"
+                      name="embedded-content"
                       ref="embedded_editor"
                       v-bind:placeholder="placeholder"
                       v-bind:value="value.content"

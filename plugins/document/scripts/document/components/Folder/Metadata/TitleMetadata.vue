@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2018. All Rights Reserved.
+  - Copyright (c) Enalean, 2019 - present. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -15,7 +15,6 @@
   -
   - You should have received a copy of the GNU General Public License
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
-  -
   -->
 
 <template>
@@ -37,8 +36,9 @@
             v-bind:value="value"
             v-on:input="$emit('input', $event.target.value)"
             ref="input"
+            data-test="document-new-item-title"
         >
-        <p class="tlp-text-danger" v-if="error_message.length > 0">
+        <p class="tlp-text-danger" v-if="error_message.length > 0" data-test="title-error-message">
             {{ error_message }}
         </p>
     </div>
