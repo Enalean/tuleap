@@ -45,7 +45,7 @@ export function cumulativeflow(id, graph) {
         "#bdbdbd"
     ];
 
-    const margin = { top: 20, right: 20, bottom: 40, left: 40 },
+    const margin = { top: 20, right: 20, bottom: 60, left: 40 },
         width = graph.width - margin.left - margin.right,
         height = graph.height - margin.top - margin.bottom,
         color = scaleOrdinal().range(schemeCategory20cWithoutLightest),
@@ -63,6 +63,7 @@ export function cumulativeflow(id, graph) {
     drawAxis();
     drawAreas();
     drawLegend();
+    rotateAxisLabels();
 
     function drawAreas() {
         svg.selectAll(".area")
@@ -184,7 +185,8 @@ export function cumulativeflow(id, graph) {
             .tickFormat(date =>
                 date.toLocaleDateString(locale, {
                     month: "2-digit",
-                    day: "2-digit"
+                    day: "2-digit",
+                    year: "2-digit"
                 })
             )
             .tickValues(ticks);
@@ -279,5 +281,9 @@ export function cumulativeflow(id, graph) {
 
         alert.append("h3").text(graph.error.message);
         alert.append("p").text(graph.error.cause);
+    }
+
+    function rotateAxisLabels() {
+        svg.selectAll(".x-axis .tick > text").attr("transform", "rotate(-45), translate(-20, 0)");
     }
 }
