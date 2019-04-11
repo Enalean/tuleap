@@ -96,11 +96,11 @@
                 >
                     <i
                         data-test-type="spinner"
-                        class="tlp-button-icon fa fa-spinner fa-spin"
+                        class="tlp-button-icon fa fa-fw fa-spinner fa-spin"
                         v-if="is_creating"
                     >
                     </i>
-                    <i class="fa fa-save tlp-button-icon" v-else>
+                    <i class="fa fa-fw fa-save tlp-button-icon" v-else>
                     </i>
                     <translate>Create baseline</translate>
                 </button>
