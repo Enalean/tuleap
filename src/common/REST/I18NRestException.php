@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,8 +24,7 @@ use Luracast\Restler\RestException;
 
 class I18NRestException extends RestException
 {
-
-    public function __construct($httpStatusCode, $i18n_message)
+    public function __construct(int $httpStatusCode, string $i18n_message)
     {
         parent::__construct(
             $httpStatusCode,

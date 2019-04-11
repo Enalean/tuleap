@@ -1,6 +1,6 @@
 <?php
-/*
- * Copyright (c) Enalean, 2011 - 2019. All Rights Reserved.
+/**
+ * Copyright (c) Enalean, 2011 - Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2006
@@ -25,24 +25,6 @@ use Tuleap\Docman\CannotInstantiateItemWeHaveJustCreatedInDBException;
 use Tuleap\Docman\Notifications\UgroupsToNotifyDao;
 use Tuleap\Docman\Notifications\UsersToNotifyDao;
 use Tuleap\PHPWiki\WikiPage;
-
-require_once('common/dao/CodendiDataAccess.class.php');
-require_once('common/reference/ReferenceManager.class.php');
-
-require_once('Docman_Item.class.php');
-require_once('Docman_ItemDao.class.php');
-require_once('Docman_Folder.class.php');
-require_once('Docman_File.class.php');
-require_once('Docman_Link.class.php');
-require_once('Docman_EmbeddedFile.class.php');
-require_once('Docman_Wiki.class.php');
-require_once('Docman_Empty.class.php');
-require_once('Docman_Version.class.php');
-require_once('Docman_CloneItemsVisitor.class.php');
-require_once('Docman_SubItemsRemovalVisitor.class.php');
-require_once('Docman_PermissionsManager.class.php');
-require_once('Docman_BuildItemMappingVisitor.class.php');
-require_once('Docman_ActionsDeleteVisitor.class.php');
 
 class Docman_ItemFactory
 {
@@ -231,7 +213,7 @@ class Docman_ItemFactory
     }
 
     /**
-    * @return wiki page id or null if the page is not yet created in wiki.
+    * @return int|null wiki page id or null if the page is not yet created in wiki.
     */
     function getIdInWikiOfWikiPageItem($pagename, $group_id) {
         $wiki_page = $this->getWikiPage($group_id, $pagename);

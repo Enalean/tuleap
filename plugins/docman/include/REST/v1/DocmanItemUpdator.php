@@ -110,7 +110,7 @@ class DocmanItemUpdator
         $this->docman_item_factory->update(['id' => $item->getId()]);
 
         $item = $this->docman_item_factory->getItemFromDb($item->getId());
-        if ($this->approval_table_action_checker->checkAvailableUpdateAction($approval_table_action)) {
+        if ($item !== null && $this->approval_table_action_checker->checkAvailableUpdateAction($approval_table_action)) {
             $this->approval_table_updater->updateApprovalTable($item, $user, $approval_table_action);
         }
     }

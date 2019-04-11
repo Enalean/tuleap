@@ -80,7 +80,6 @@ use Tuleap\Upload\FileUploadController;
 use Tuleap\Widget\Event\GetPublicAreas;
 
 require_once __DIR__ . '/../vendor/autoload.php';
-require_once __DIR__ . '/constants.php';
 
 class DocmanPlugin extends Plugin
 {
@@ -1253,7 +1252,7 @@ class DocmanPlugin extends Plugin
             new MetadataRepresentationBuilder(
                 new Docman_MetadataFactory($project->getID())
             ),
-            new ApprovalTableRetriever(new Docman_ApprovalTableFactoriesFactory(), new Docman_VersionFactory())
+            new ApprovalTableRetriever(new Docman_ApprovalTableFactoriesFactory())
         );
 
         $item_representation = $item_representation_builder->buildRootId($project, $current_user);
@@ -1319,7 +1318,7 @@ class DocmanPlugin extends Plugin
         $path_allocator           = new VersionUploadPathAllocator();
         $version_to_upload_dao    = new DocumentOnGoingVersionToUploadDAO();
         $event_manager            = EventManager::instance();
-        $approval_table_retriever = new ApprovalTableRetriever(new Docman_ApprovalTableFactoriesFactory(), new Docman_VersionFactory());
+        $approval_table_retriever = new ApprovalTableRetriever(new Docman_ApprovalTableFactoriesFactory());
         return FileUploadController::build(
             new VersionDataStore(
                 new VersionBeingUploadedInformationProvider(

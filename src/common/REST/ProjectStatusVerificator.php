@@ -81,6 +81,6 @@ class ProjectStatusVerificator
     {
         $status_suspended_label = Project::STATUS_SUSPENDED_LABEL;
 
-        throw new RestException('403', "This project is $status_suspended_label");
+        throw new RestException(403, "This project is $status_suspended_label");
     }
 }

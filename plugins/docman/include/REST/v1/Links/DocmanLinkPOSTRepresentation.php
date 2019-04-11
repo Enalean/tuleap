@@ -33,7 +33,7 @@ class DocmanLinkPOSTRepresentation
      */
     public $description = '';
     /**
-     * @var LinkPropertiesPOSTPATCHRepresentation {@type \Tuleap\Docman\REST\v1\Links\LinkPropertiesPOSTPATCHRepresentation} {@from body} {@required false}
+     * @var LinkPropertiesPOSTPATCHRepresentation {@type \Tuleap\Docman\REST\v1\Links\LinkPropertiesPOSTPATCHRepresentation} {@from body}
      */
-    public $link_properties = null;
+    public $link_properties;
 }

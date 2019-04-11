@@ -25,6 +25,7 @@ namespace Tuleap\Docman\REST\v1;
 use Docman_FileStorage;
 use Docman_LockFactory;
 use Docman_VersionFactory;
+use Luracast\Restler\RestException;
 use PluginManager;
 use Project;
 use ProjectManager;
@@ -116,6 +117,7 @@ class DocmanEmbeddedFilesResource extends AuthenticatedResource
 
         $validator = new EmbeddedFileVersionCreationBeforeUpdateValidator();
         $item->accept($validator, []);
+        /** @var \Docman_EmbeddedFile $item */
 
         $current_user = $this->rest_user_manager->getCurrentUser();
 

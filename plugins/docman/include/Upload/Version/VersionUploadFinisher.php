@@ -164,7 +164,7 @@ final class VersionUploadFinisher implements TusFinisherDataStore
                 }
 
                 /**
-                 * @var $item Docman_File|null
+                 * @var Docman_File|null $item
                  */
                 $item = $this->docman_item_factory->getItemFromDb($upload_row['item_id']);
                 if ($item === null) {
@@ -208,6 +208,9 @@ final class VersionUploadFinisher implements TusFinisherDataStore
                 );
 
                 $current_user = $this->user_manager->getUserById($upload_row['user_id']);
+                if ($current_user === null) {
+                    throw new \RuntimeException('Can not find user ID #' . $upload_row['user_id']);
+                }
                 $this->lock_updater->updateLockInformation($item, (bool)$upload_row['is_file_locked'], $current_user);
 
                 if (! $has_version_been_created) {
@@ -224,7 +227,6 @@ final class VersionUploadFinisher implements TusFinisherDataStore
                     throw new \RuntimeException("Not able to update last update date for item #$item_id from upload #$upload_id");
                 }
 
-                $current_user          = $this->user_manager->getUserById($upload_row['user_id']);
                 $approval_table_action = $upload_row['approval_table_action'];
                 if ($this->approval_table_retriever->hasApprovalTable($item)
                     && $this->approval_table_action_checker->checkAvailableUpdateAction($approval_table_action)

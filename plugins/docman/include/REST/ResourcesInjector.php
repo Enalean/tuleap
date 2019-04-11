@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright Enalean (c) 2018. All rights reserved.
+ * Copyright Enalean (c) 2018-Present. All rights reserved.
  *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
+ * Tuleap and Enalean names and logos are registered trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
  * owners.
  *
@@ -24,6 +24,7 @@
 
 namespace Tuleap\Docman\REST;
 
+use Luracast\Restler\Restler;
 use Tuleap\Docman\REST\v1\DocmanEmbeddedFilesResource;
 use Tuleap\Docman\REST\v1\DocmanFilesResource;
 use Tuleap\Docman\REST\v1\DocmanFoldersResource;
@@ -40,7 +41,7 @@ class ResourcesInjector
     const WIKI_NAME     = 'docman_wikis';
     const LINK_NAME     = 'docman_links';
 
-    public function populate(\Luracast\Restler\Restler $restler)
+    public function populate(Restler $restler)
     {
         $restler->addAPIClass(
             DocmanItemsResource::class,

@@ -97,17 +97,17 @@ class ArtifactFilesResource
 
         $file_info = $file_info_factory->getById($id);
         if ($file_info === null) {
-            throw new RestException('404');
+            throw new RestException(404);
         }
 
         try {
             $file_info_factory->getArtifactByFileInfoIdAndUser($this->user, $file_info->getId());
         } catch (Tracker_FileInfo_InvalidFileInfoException | Tracker_FileInfo_UnauthorisedException $exception) {
-            throw new RestException('404');
+            throw new RestException(404);
         }
 
         if (! $file_info->getField()->userCanRead($this->user)) {
-            throw new RestException('404');
+            throw new RestException(404);
         }
 
         return $file_info;
