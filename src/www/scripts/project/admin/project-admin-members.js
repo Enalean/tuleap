@@ -1,7 +1,7 @@
 /**
- * Copyright Enalean (c) 2017. All rights reserved.
+ * Copyright Enalean (c) 2017-Present. All rights reserved.
  *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
+ * Tuleap and Enalean names and logos are registered trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
  * owners.
  *
@@ -96,7 +96,8 @@ function initProjectMembersSelect2() {
     }
 
     autocomplete_users_for_select2(select_element, {
-        internal_users_only: false
+        internal_users_only: false,
+        project_id: select_element.dataset.projectId
     });
 }
 
