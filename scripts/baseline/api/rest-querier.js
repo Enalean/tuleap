@@ -21,12 +21,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { get, post } from "tlp-fetch";
+import { get, post, del } from "tlp-fetch";
 
 export {
     getOpenMilestones,
     createBaseline,
     getBaseline,
+    deleteBaseline,
     getTracker,
     getBaselines,
     getUser,
@@ -61,6 +62,10 @@ async function createBaseline(name, milestone) {
 async function getBaseline(id) {
     const response = await get(`/api/baselines/${id}`);
     return response.json();
+}
+
+async function deleteBaseline(id) {
+    await del(`/api/baselines/${id}`);
 }
 
 async function getTracker(id) {

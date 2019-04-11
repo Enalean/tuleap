@@ -22,15 +22,13 @@
     text-transform: uppercase;
 }
 
-.baselines-table-column-actions {
-    text-align: left;
-    vertical-align: middle;
-}
-
 .baselines-table-column-name {
-    width: 35%;
+    width: 100%;
 }
 
-.baselines-table-column-milestone {
+.baselines-table-column-milestone,
+.baselines-table-column-snapshot-date,
+.baselines-table-column-author {
     color: inherit;
+    white-space: nowrap;
 }

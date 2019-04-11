@@ -12,9 +12,6 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 2.2.1\n"
 
-msgid "Actions"
-msgstr "Actions"
-
 msgid "Artifact added"
 msgstr "Artefact ajouté"
 
@@ -89,6 +86,12 @@ msgstr "Créer baseline"
 msgid "Created by"
 msgstr "Créé par"
 
+msgid "Delete"
+msgstr "Supprimer"
+
+msgid "Delete baseline"
+msgstr "Supprimer la baseline"
+
 msgid "Epics"
 msgstr "Epics"
 
@@ -139,6 +142,9 @@ msgstr "Veuillez choisir une baseline de référence"
 msgid "Please choose two baselines to compare"
 msgstr "Veuillez choisir deux baselines à comparer"
 
+msgid "Please confirm your action."
+msgstr "Veuillez confirmer votre action."
+
 msgid "Reference…"
 msgstr "Référence…"
 
@@ -154,8 +160,17 @@ msgstr "Tâches"
 msgid "The baseline was created"
 msgstr "La baseline a été créée"
 
+msgid "The baseline was deleted"
+msgstr "La baseline a été supprimée"
+
 msgid "User stories"
 msgstr "User stories"
+
+msgid ""
+"You are about to delete the baseline <strong>%{ baseline.name }</strong>."
+msgstr ""
+"Vous êtes sur le point de supprimer la baseline <strong>%{ baseline.name }</"
+"strong>."
 
 msgid "your baselines"
 msgstr "vos baselines"

@@ -24,20 +24,19 @@
                 <th class="tlp-table-cell-numeric" v-translate>
                     Id
                 </th>
-                <th class="baselines-table-column-name" v-translate>
+                <th v-translate class="baselines-table-column-name">
                     Name
                 </th>
-                <th v-translate>
+                <th v-translate class="baselines-table-column-milestone">
                     Milestone
                 </th>
-                <th v-translate>
+                <th v-translate class="baselines-table-column-snapshot-date">
                     Snapshot Date
                 </th>
-                <th v-translate>
+                <th v-translate class="baselines-table-column-author">
                     Author
                 </th>
-                <th v-translate>
-                    Actions
+                <th>
                 </th>
             </tr>
         </thead>

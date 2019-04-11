@@ -25,24 +25,21 @@
                     {{ baseline.id }}
                 </a>
             </td>
-            <td>{{ baseline.name }}</td>
-            <td>
+            <td class="baselines-table-column-name">{{ baseline.name }}</td>
+            <td class="baselines-table-column-milestone">
                 <artifact-link class="baselines-table-column-milestone" v-bind:artifact="baseline.artifact">
                     <artifact-badge v-bind:artifact="baseline.artifact"/>{{ baseline.artifact.title }}
                 </artifact-link>
             </td>
-            <td>
+            <td class="baselines-table-column-snapshot-date">
                 <humanized-date v-bind:date="baseline.snapshot_date"/>
             </td>
-            <td><user-badge v-bind:user="baseline.author"/></td>
-            <td class="tlp-table-cell-actions baselines-table-column-actions">
-                <button
-                    v-on:click="showBaseline(baseline)"
-                    class="tlp-button-small tlp-button-primary tlp-button-outline"
-                    v-translate
-                >
-                    Consult
-                </button>
+            <td class="baselines-table-column-author">
+                <user-badge v-bind:user="baseline.author"/>
+            </td>
+            <td class="tlp-table-cell-actions">
+                <show-baseline-button class="tlp-table-cell-actions-button" v-bind:baseline="baseline"/>
+                <delete-baseline-button class="tlp-table-cell-actions-button" v-bind:baseline="baseline"/>
             </td>
         </tr>
     </tbody>
@@ -50,17 +47,25 @@
 
 <script>
 import HumanizedDate from "./common/HumanizedDate.vue";
-import ArtifactLink from "./common/ArtifactLink.vue";
 import UserBadge from "./common/UserBadge.vue";
+import ArtifactLink from "./common/ArtifactLink.vue";
 import ArtifactBadge from "./common/ArtifactBadge.vue";
+import DeleteBaselineButton from "./DeleteBaselineButton.vue";
+import ShowBaselineButton from "./ShowBaselineButton.vue";
 
 export default {
     name: "BaselineTableBodyCells",
-    components: { ArtifactBadge, HumanizedDate, UserBadge, ArtifactLink },
+    components: {
+        ShowBaselineButton,
+        ArtifactLink,
+        ArtifactBadge,
+        HumanizedDate,
+        UserBadge,
+        DeleteBaselineButton
+    },
     props: {
         baselines: { required: true, type: Array }
     },
-
     methods: {
         showBaseline(baseline) {
             this.$router.push({

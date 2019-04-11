@@ -60,6 +60,11 @@ export default {
         },
         updateBaselines: (state, baselines) => {
             state.baselines = baselines;
+        },
+        delete: (state, baseline_to_delete) => {
+            state.baselines = state.baselines.filter(
+                baseline => baseline.id !== baseline_to_delete.id
+            );
         }
     }
 };

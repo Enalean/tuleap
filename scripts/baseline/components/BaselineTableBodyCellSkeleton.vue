@@ -17,7 +17,7 @@
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<template functional>
+<template>
     <tr>
         <td class="tlp-table-cell-numeric">
             <span class="tlp-skeleton-text"></span>
@@ -25,17 +25,33 @@
         <td class="baselines-table-column-name">
             <span class="tlp-skeleton-text"></span>
         </td>
-        <td><span class="tlp-skeleton-text"></span></td>
-        <td><span class="tlp-skeleton-text"></span></td>
-        <td><span class="tlp-skeleton-text"></span></td>
-        <td class="tlp-table-cell-actions baselines-table-column-actions">
-            <button class="tlp-button-small tlp-button-primary tlp-button-outline"
-                    key="consult-skeleton"
-                    disabled
-                    v-translate
-            >
-                Consult
-            </button>
+        <td class="baselines-table-column-milestone">
+            <span class="tlp-skeleton-text"></span>
+        </td>
+        <td class="baselines-table-column-snapshot-date">
+            <span class="tlp-skeleton-text"></span>
+        </td>
+        <td class="baselines-table-column-author">
+            <span class="tlp-skeleton-text"></span>
+        </td>
+        <td class="tlp-table-cell-actions">
+            <baseline-button icon="eye" v-bind:disabled="true">
+                <span v-translate>
+                    Consult
+                </span>
+            </baseline-button>
+            <baseline-button icon="trash-o" v-bind:disabled="true" class="tlp-button-danger">
+                <span v-translate>
+                    Delete
+                </span>
+            </baseline-button>
         </td>
     </tr>
 </template>
+<script>
+import BaselineButton from "./BaselineButton.vue";
+export default {
+    name: "BaselineTableBodyCellSkeleton",
+    components: { BaselineButton }
+};
+</script>

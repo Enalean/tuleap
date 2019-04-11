@@ -20,6 +20,7 @@
 <template>
     <div
         class="tlp-modal"
+        v-bind:class="modal_class"
         role="dialog"
         aria-labelledby="modal-label"
         ref="modal"
@@ -65,6 +66,12 @@ export default {
         ...mapState({ modal_content: "modal" }),
         close_label() {
             return this.$gettext("Close");
+        },
+        modal_class() {
+            if (this.modal_content) {
+                return this.modal_content.class;
+            }
+            return null;
         }
     },
 
