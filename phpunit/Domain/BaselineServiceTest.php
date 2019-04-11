@@ -33,6 +33,7 @@ use PFUser;
 use PHPUnit\Framework\TestCase;
 use Project;
 use Tuleap\Baseline\Factory\BaselineFactory;
+use Tuleap\Baseline\Factory\ProjectFactory;
 use Tuleap\Baseline\Support\DateTimeFactory;
 use Tuleap\GlobalLanguageMock;
 
@@ -75,7 +76,7 @@ class BaselineServiceTest extends TestCase
     public function createEntities()
     {
         $this->a_user    = new PFUser();
-        $this->a_project = Mockery::mock(Project::class);
+        $this->a_project = ProjectFactory::one();
         $this->a_date    = DateTimeFactory::one();
     }
 

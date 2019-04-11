@@ -30,11 +30,11 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
 use PFUser;
 use PHPUnit\Framework\TestCase;
-use Project;
 use Tracker_Artifact;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetFactory;
 use Tracker_ArtifactFactory;
+use Tuleap\Baseline\Factory\ProjectFactory;
 use Tuleap\Baseline\Factory\TrackerFactory;
 use Tuleap\Baseline\Support\DateTimeFactory;
 use Tuleap\GlobalLanguageMock;
@@ -95,7 +95,7 @@ class BaselineArtifactRepositoryAdapterTest extends TestCase
     {
         $artifact = Mockery::mock(Tracker_Artifact::class);
         $artifact->shouldReceive('getTracker->getProject')
-            ->andReturn(Mockery::mock(Project::class));
+            ->andReturn(ProjectFactory::one());
 
         $this->artifact_factory
             ->shouldReceive('getArtifactById')
@@ -150,7 +150,7 @@ class BaselineArtifactRepositoryAdapterTest extends TestCase
         $date     = DateTimeFactory::one();
         $artifact = Mockery::mock(Tracker_Artifact::class);
         $artifact->shouldReceive('getTracker->getProject')
-            ->andReturn(Mockery::mock(Project::class));
+            ->andReturn(ProjectFactory::one());
 
         $this->artifact_factory
             ->shouldReceive('getArtifactById')

@@ -23,11 +23,23 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\Factory;
 
-class TrackerFactory
+use Mockery;
+use Mockery\MockInterface;
+use Project;
+
+class ProjectFactory
 {
-    public static function one(): TrackerBuilder
+    /**
+     * @return Project|MockInterface
+     */
+    public static function one(): Project
     {
-        return (new TrackerBuilder)
-            ->project(ProjectFactory::one());
+        return self::oneWithId(103);
+    }
+
+    public static function oneWithId(int $id): Project
+    {
+        return Mockery::mock(Project::class)
+            ->allows(['getID' => $id]);
     }
 }

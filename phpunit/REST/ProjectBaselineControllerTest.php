@@ -35,6 +35,7 @@ use Tuleap\Baseline\BaselineService;
 use Tuleap\Baseline\BaselinesPage;
 use Tuleap\Baseline\CurrentUserProvider;
 use Tuleap\Baseline\Factory\BaselineFactory;
+use Tuleap\Baseline\Factory\ProjectFactory;
 use Tuleap\Baseline\NotAuthorizedException;
 use Tuleap\Baseline\ProjectRepository;
 use Tuleap\Baseline\REST\Exception\ForbiddenRestException;
@@ -80,7 +81,7 @@ class ProjectBaselineControllerTest extends TestCase
     /** @before */
     public function createEntities()
     {
-        $this->a_project = Mockery::mock(Project::class);
+        $this->a_project = ProjectFactory::one();
     }
 
     public function testGet()

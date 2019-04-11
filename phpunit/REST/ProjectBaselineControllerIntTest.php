@@ -26,11 +26,10 @@ namespace Tuleap\Baseline\REST;
 require_once __DIR__ . '/IntegrationTestCaseWithStubs.php';
 
 use DateTimeImmutable;
-use Mockery;
 use PFUser;
-use Project;
 use Tuleap\Baseline\Factory\BaselineArtifactFactory;
 use Tuleap\Baseline\Factory\BaselineFactory;
+use Tuleap\Baseline\Factory\ProjectFactory;
 use Tuleap\Baseline\Support\DateTimeFactory;
 use Tuleap\GlobalLanguageMock;
 
@@ -49,10 +48,7 @@ class ProjectBaselineControllerIntTest extends IntegrationTestCaseWithStubs
 
     public function testGet()
     {
-        $project = Mockery::mock(Project::class)
-            ->shouldReceive('getID')
-            ->andReturn(102)
-            ->getMock();
+        $project = ProjectFactory::oneWithId(102);
         $this->project_repository->add($project);
 
         $this->baseline_repository->addBaseline(
@@ -85,10 +81,7 @@ class ProjectBaselineControllerIntTest extends IntegrationTestCaseWithStubs
 
     public function testGetReturnsPaginatedBaselines()
     {
-        $project = Mockery::mock(Project::class)
-            ->shouldReceive('getID')
-            ->andReturn(102)
-            ->getMock();
+        $project = ProjectFactory::oneWithId(102);
         $this->project_repository->add($project);
 
         $snapshot_date = DateTimeFactory::one();

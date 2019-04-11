@@ -32,10 +32,10 @@ use Mockery\MockInterface;
 use ParagonIE\EasyDB\EasyDB;
 use PFUser;
 use PHPUnit\Framework\TestCase;
-use Project;
 use Tuleap\Baseline\Baseline;
 use Tuleap\Baseline\BaselineArtifactRepository;
 use Tuleap\Baseline\Factory\BaselineArtifactFactory;
+use Tuleap\Baseline\Factory\ProjectFactory;
 use Tuleap\Baseline\Support\DateTimeFactory;
 use Tuleap\GlobalLanguageMock;
 use UserManager;
@@ -249,10 +249,7 @@ class BaselineRepositoryAdapterTest extends TestCase
                 ]
             );
 
-        $project = Mockery::mock(Project::class)
-            ->shouldReceive('getID')
-            ->andReturn(102)
-            ->getMock();
+        $project = ProjectFactory::oneWithId(102);
 
         $this->adapter_permissions
             ->shouldReceive('canUserReadBaselineOnProject')
@@ -298,10 +295,7 @@ class BaselineRepositoryAdapterTest extends TestCase
                 ]
             );
 
-        $project = Mockery::mock(Project::class)
-            ->shouldReceive('getID')
-            ->andReturn(102)
-            ->getMock();
+        $project = ProjectFactory::oneWithId(102);
 
         $this->adapter_permissions
             ->shouldReceive('canUserReadBaselineOnProject')
@@ -314,10 +308,7 @@ class BaselineRepositoryAdapterTest extends TestCase
 
     public function testCountByProject()
     {
-        $project = Mockery::mock(Project::class)
-            ->shouldReceive('getID')
-            ->andReturn(102)
-            ->getMock();
+        $project = ProjectFactory::oneWithId(102);
         $this->db
             ->shouldReceive('single')
             ->with(Mockery::type('string'), [102])

@@ -23,9 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\Factory;
 
-use Mockery;
-use Project;
-
 class BaselineArtifactFactory
 {
     public static function one(): BaselineArtifactBuilder
@@ -36,7 +33,7 @@ class BaselineArtifactFactory
             ->description("artifact comment")
             ->initialEffort(2)
             ->status("Done")
-            ->project(Mockery::mock(Project::class))
+            ->project(ProjectFactory::one())
             ->trackerId(3)
             ->trackerName('Epic')
             ->linkedArtifactIds([]);
