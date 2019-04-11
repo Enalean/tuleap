@@ -49,14 +49,14 @@
 import { mapGetters, mapState } from "vuex";
 import { TYPE_FILE, TYPE_EMBEDDED, TYPE_WIKI, TYPE_LINK } from "../../constants.js";
 import SearchBox from "./SearchBox.vue";
-import NewItemButton from "./NewItem/NewItemButton.vue";
-import NewItemModal from "./NewItem/NewItemModal.vue";
-import DropdownButton from "./Dropdown/DropdownButton.vue";
+import NewItemButton from "./ActionsButton/NewItemButton.vue";
+import DropdownButton from "./ActionsDropDown/DropdownButton.vue";
+import DropdownMenuCurrentFolder from "./ActionsDropDown/DropdownMenuCurrentFolder.vue";
 import FileUploadManager from "./FilesUploads/FilesUploadsManager.vue";
-import NewFolderModal from "./NewItem/NewFolderModal.vue";
-import DropdownMenuCurrentFolder from "./Dropdown/DropdownMenuCurrentFolder.vue";
-import UpdateFileModal from "./UpdateItem/UpdateFileModal.vue";
-import UpdateEmbeddedFileModal from "./UpdateItem/UpdateEmbeddedFileModal.vue";
+import NewItemModal from "./ModalNewItem/NewItemModal.vue";
+import NewFolderModal from "./ModalNewItem/NewFolderModal.vue";
+import UpdateFileModal from "./ModalUpdateItem/UpdateFileModal.vue";
+import UpdateEmbeddedFileModal from "./ModalUpdateItem/UpdateEmbeddedFileModal.vue";
 
 export default {
     name: "FolderHeader",
@@ -110,19 +110,19 @@ export default {
             switch (this.updated_item.type) {
                 case TYPE_FILE:
                     this.shown_modal = () =>
-                        import(/* webpackChunkName: "document-update-file-modal" */ "./UpdateItem/UpdateFileModal.vue");
+                        import(/* webpackChunkName: "document-update-file-modal" */ "./ModalUpdateItem/UpdateFileModal.vue");
                     break;
                 case TYPE_EMBEDDED:
                     this.shown_modal = () =>
-                        import(/* webpackChunkName: "document-update-embedded-file-modal" */ "./UpdateItem/UpdateEmbeddedFileModal.vue");
+                        import(/* webpackChunkName: "document-update-embedded-file-modal" */ "./ModalUpdateItem/UpdateEmbeddedFileModal.vue");
                     break;
                 case TYPE_WIKI:
                     this.shown_modal = () =>
-                        import(/* webpackChunkName: "document-update-wiki-modal" */ "./UpdateItem/UpdateWikiModal.vue");
+                        import(/* webpackChunkName: "document-update-wiki-modal" */ "./ModalUpdateItem/UpdateWikiModal.vue");
                     break;
                 case TYPE_LINK:
                     this.shown_modal = () =>
-                        import(/* webpackChunkName: "document-update-wiki-modal" */ "./UpdateItem/UpdateLinkModal.vue");
+                        import(/* webpackChunkName: "document-update-wiki-modal" */ "./ModalUpdateItem/UpdateLinkModal.vue");
             }
         }
     }

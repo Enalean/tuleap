@@ -14,36 +14,34 @@
   - GNU General Public License for more details.
   -
   - You should have received a copy of the GNU General Public License
-  - along with Tuleap. If not, see http://www.gnu.org/licenses/.
-  -
+  - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
 
 <template>
-    <button v-if="item.user_can_write" type="button" class="tlp-button-small tlp-button-outline tlp-button-danger"
-            v-on:click="redirectDeleteUrl"
-            data-test="quick-look-delete-button">
-        <i class="fa fa-trash-o tlp-button-icon"></i>
-        <translate>Delete</translate>
-    </button>
+    <dropdown-menu v-bind:is-in-folder-empty-state="isInFolderEmptyState" v-bind:item="current_folder">
+        <a href="#" v-on:click.prevent="showNewFolderModal" class="tlp-dropdown-menu-item" role="menuitem">
+            <i class="fa fa-fw fa-folder-open-o tlp-dropdown-menu-item-icon"></i>
+            <translate>New folder</translate>
+        </a>
+    </dropdown-menu>
 </template>
-
 <script>
 import { mapState } from "vuex";
-
+import DropdownMenu from "./DropdownMenu.vue";
 export default {
-    name: "QuickLookDeleteButton",
+    components: { DropdownMenu },
     props: {
-        item: Object
+        isInFolderEmptyState: Boolean
     },
     computed: {
-        ...mapState(["project_id"])
+        ...mapState(["current_folder"])
     },
     methods: {
-        redirectDeleteUrl() {
-            window.location.assign(
-                `/plugins/docman/?group_id=${this.project_id}&action=confirmDelete&id=${
-                    this.item.id
-                }`
+        showNewFolderModal() {
+            document.dispatchEvent(
+                new CustomEvent("show-new-folder-modal", {
+                    detail: { parent: this.current_folder }
+                })
             );
         }
     }

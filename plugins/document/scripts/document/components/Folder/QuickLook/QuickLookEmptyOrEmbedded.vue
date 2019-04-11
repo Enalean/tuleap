@@ -28,9 +28,9 @@
 </template>
 
 <script>
-import QuickLookDocumentActionButton from "./QuickLookDocumentActionButton.vue";
-import QuickLookGoToDocumentDetails from "./QuickLookGoToDocumentDetails.vue";
-import QuickLookDeleteButton from "./QuickLookDeleteButton.vue";
+import QuickLookDocumentActionButton from "../ActionsQuickLookButton/QuickLookDocumentActionButton.vue";
+import QuickLookGoToDocumentDetails from "../ActionsQuickLookButton/QuickLookGoToDocumentDetails.vue";
+import QuickLookDeleteButton from "../ActionsQuickLookButton/QuickLookDeleteButton.vue";
 
 export default {
     components: {

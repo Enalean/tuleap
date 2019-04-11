@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2019. All Rights Reserved.
+  - Copyright (c) Enalean, 2019 - present. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -50,7 +50,7 @@
 <script>
 import DropdownMenu from "./DropdownMenu.vue";
 import { TYPE_FOLDER } from "../../../constants.js";
-import UpdateButton from "../UpdateItem/UpdateButton.vue";
+import UpdateButton from "../ActionsButton/UpdateButton.vue";
 
 export default {
     components: { UpdateButton, DropdownMenu },

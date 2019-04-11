@@ -20,7 +20,7 @@
 
 import localVue from "../../../helpers/local-vue";
 import { shallowMount } from "@vue/test-utils";
-import ApprovalUpdateProperties from "../UpdateItem/ApprovalUpdateProperties.vue";
+import ApprovalUpdateProperties from "../ModalUpdateItem/ApprovalUpdateProperties.vue";
 
 describe("ApprovalUpdateProperties", () => {
     let approval_update_factory;

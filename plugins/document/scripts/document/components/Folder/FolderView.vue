@@ -40,7 +40,7 @@ import FolderContent from "./FolderContent.vue";
 import EmptyFolderForWriters from "./EmptyState/EmptyFolderForWriters.vue";
 import EmptyFolderForReaders from "./EmptyState/EmptyFolderForReaders.vue";
 import DragNDropHandler from "./DragNDrop/DragNDropHandler.vue";
-import UnderTheFoldNotification from "./NewItem/UnderTheFoldNotification.vue";
+import UnderTheFoldNotification from "./ModalNewItem/UnderTheFoldNotification.vue";
 
 export default {
     name: "FolderView",
