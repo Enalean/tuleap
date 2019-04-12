@@ -36,12 +36,12 @@ use Tracker;
 use Tracker_Artifact;
 use Tracker_Artifact_Changeset;
 use Tracker_FormElement_Field_ArtifactLink;
-use Tuleap\GlobalLanguageMock;
+use Tuleap\Baseline\Support\CurrentUserContext;
 
 class ArtifactLinkRepositoryTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
-    use GlobalLanguageMock;
+    use CurrentUserContext;
 
     /** @var ArtifactLinkRepository */
     private $repository;
@@ -56,17 +56,12 @@ class ArtifactLinkRepositoryTest extends TestCase
         $this->repository       = new ArtifactLinkRepository($this->planning_factory);
     }
 
-    /** @var PFUser */
-    private $current_user;
-
     /** @var Tracker_Artifact_Changeset|MockInterface */
     protected $changeset;
 
     /** @before */
     protected function createEntities(): void
     {
-        $this->current_user = new PFUser();
-
         $this->changeset = Mockery::mock(Tracker_Artifact_Changeset::class);
         $this->changeset->allows(['getTracker->getGroupId' => 200]);
     }

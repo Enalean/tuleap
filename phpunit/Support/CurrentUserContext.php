@@ -21,12 +21,21 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/../../../tests/phpunit/bootstrap.php';
-require_once __DIR__ . '/../include/baselinePlugin.class.php';
+namespace Tuleap\Baseline\Support;
 
-foreach (['Factory', 'Stub', 'Support'] as $folder) {
-    $files = glob(__DIR__ . '/' . $folder . '/*.php');
-    foreach ($files as $file) {
-        require_once($file);
+use PFUser;
+use Tuleap\GlobalLanguageMock;
+
+trait CurrentUserContext
+{
+    use GlobalLanguageMock;
+
+    /** @var PFUser */
+    protected $current_user;
+
+    /** @before */
+    protected function buildCurrentUser(): void
+    {
+        $this->current_user = new PFUser();
     }
 }

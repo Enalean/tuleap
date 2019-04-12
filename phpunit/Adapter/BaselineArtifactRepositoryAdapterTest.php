@@ -28,7 +28,6 @@ require_once __DIR__ . '/../bootstrap.php';
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
-use PFUser;
 use PHPUnit\Framework\TestCase;
 use Tracker_Artifact;
 use Tracker_Artifact_Changeset;
@@ -36,13 +35,13 @@ use Tracker_Artifact_ChangesetFactory;
 use Tracker_ArtifactFactory;
 use Tuleap\Baseline\Factory\ProjectFactory;
 use Tuleap\Baseline\Factory\TrackerFactory;
+use Tuleap\Baseline\Support\CurrentUserContext;
 use Tuleap\Baseline\Support\DateTimeFactory;
-use Tuleap\GlobalLanguageMock;
 
 class BaselineArtifactRepositoryAdapterTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
-    use GlobalLanguageMock;
+    use CurrentUserContext;
 
     /** @var  BaselineArtifactRepositoryAdapter */
     private $adapter;
@@ -62,11 +61,6 @@ class BaselineArtifactRepositoryAdapterTest extends TestCase
     /** @var ArtifactLinkRepository|MockInterface */
     private $artifact_link_adapter;
 
-    /**
-     * @var PFUser
-     */
-    private $current_user;
-
     /** @before */
     public function createInstance()
     {
@@ -83,12 +77,6 @@ class BaselineArtifactRepositoryAdapterTest extends TestCase
             $this->semantic_value_adapter,
             $this->artifact_link_adapter
         );
-    }
-
-    /** @before */
-    public function createCurrentUser()
-    {
-        $this->current_user = new PFUser();
     }
 
     public function testFindById()

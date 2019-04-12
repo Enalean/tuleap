@@ -40,12 +40,12 @@ use Tuleap\Baseline\Factory\BaselineFactory;
 use Tuleap\Baseline\NotAuthorizedException;
 use Tuleap\Baseline\REST\Exception\ForbiddenRestException;
 use Tuleap\Baseline\REST\Exception\NotFoundRestException;
-use Tuleap\GlobalLanguageMock;
+use Tuleap\Baseline\Support\CurrentUserContext;
 
 class BaselineControllerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
-    use GlobalLanguageMock;
+    use CurrentUserContext;
 
     /**
      * @var BaselineController
@@ -67,15 +67,15 @@ class BaselineControllerTest extends TestCase
      */
     private $baseline_service;
 
-    /** @var PFUser */
-    private $current_user;
-
     /**
      * @before
      */
     public function createInstance()
     {
-        $this->current_user_provider        = Mockery::mock(CurrentUserProvider::class);
+        $this->current_user_provider = Mockery::mock(CurrentUserProvider::class);
+        $this->current_user_provider
+            ->allows(['getUser' => $this->current_user])
+            ->byDefault();
         $this->baseline_artifact_repository = Mockery::mock(BaselineArtifactRepository::class);
         $this->baseline_service             = Mockery::mock(BaselineService::class);
 
@@ -84,12 +84,6 @@ class BaselineControllerTest extends TestCase
             $this->baseline_service,
             $this->baseline_artifact_repository
         );
-
-        $this->current_user = new PFUser(['user_id' => 99]);
-        $this->current_user_provider
-            ->shouldReceive('getUser')
-            ->andReturn($this->current_user)
-            ->byDefault();
     }
 
     /** @var BaselineArtifact */

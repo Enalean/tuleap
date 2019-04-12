@@ -36,14 +36,14 @@ use Tuleap\Baseline\Baseline;
 use Tuleap\Baseline\BaselineArtifactRepository;
 use Tuleap\Baseline\Factory\BaselineArtifactFactory;
 use Tuleap\Baseline\Factory\ProjectFactory;
+use Tuleap\Baseline\Support\CurrentUserContext;
 use Tuleap\Baseline\Support\DateTimeFactory;
-use Tuleap\GlobalLanguageMock;
 use UserManager;
 
 class BaselineRepositoryAdapterTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
-    use GlobalLanguageMock;
+    use CurrentUserContext;
 
     /** @var BaselineRepositoryAdapter */
     private $repository;
@@ -80,15 +80,6 @@ class BaselineRepositoryAdapterTest extends TestCase
             $this->adapter_permissions,
             $this->clock
         );
-    }
-
-    /** @var PFUser */
-    private $current_user;
-
-    /** @before */
-    public function createCurrentUser()
-    {
-        $this->current_user = new PFUser();
     }
 
     public function testFindById()

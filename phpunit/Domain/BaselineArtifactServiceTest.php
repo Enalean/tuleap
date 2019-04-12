@@ -32,12 +32,12 @@ use PFUser;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Baseline\Factory\BaselineArtifactFactory;
 use Tuleap\Baseline\Factory\BaselineFactory;
-use Tuleap\GlobalLanguageMock;
+use Tuleap\Baseline\Support\CurrentUserContext;
 
 class BaselineArtifactServiceTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
-    use GlobalLanguageMock;
+    use CurrentUserContext;
 
     /** @var BaselineArtifactService */
     private $service;
@@ -50,15 +50,6 @@ class BaselineArtifactServiceTest extends TestCase
     {
         $this->baseline_artifact_repository = Mockery::mock(BaselineArtifactRepository::class);
         $this->service                      = new BaselineArtifactService($this->baseline_artifact_repository);
-    }
-
-    /** @var PFUser */
-    private $a_user;
-
-    /** @before */
-    public function createAUser()
-    {
-        $this->a_user = new PFUser();
     }
 
     public function testFindByBaselineAndIds()

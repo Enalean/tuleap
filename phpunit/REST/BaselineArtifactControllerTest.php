@@ -28,7 +28,6 @@ require_once __DIR__ . '/../bootstrap.php';
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
-use PFUser;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Baseline\BaselineArtifactNotFoundException;
 use Tuleap\Baseline\BaselineArtifactService;
@@ -36,7 +35,7 @@ use Tuleap\Baseline\BaselineRepository;
 use Tuleap\Baseline\CurrentUserProvider;
 use Tuleap\Baseline\Factory\BaselineFactory;
 use Tuleap\Baseline\REST\Exception\NotFoundRestException;
-use Tuleap\GlobalLanguageMock;
+use Tuleap\Baseline\Support\CurrentUserContext;
 use Tuleap\REST\JsonDecoder;
 use Tuleap\REST\QueryParameterParser;
 use Tuleap\REST\RESTLogger;
@@ -44,7 +43,7 @@ use Tuleap\REST\RESTLogger;
 class BaselineArtifactControllerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
-    use GlobalLanguageMock;
+    use CurrentUserContext;
 
     /** @var BaselineArtifactController */
     private $controller;
@@ -61,14 +60,9 @@ class BaselineArtifactControllerTest extends TestCase
     /** @var RESTLogger|MockInterface */
     private $logger;
 
-    /** @var PFUser */
-    private $current_user;
-
     /** @before */
     public function createInstance()
     {
-        $this->current_user = new PFUser();
-
         $this->baseline_repository       = Mockery::mock(BaselineRepository::class);
         $this->baseline_artifact_service = Mockery::mock(BaselineArtifactService::class);
         $this->current_user_provider     = Mockery::mock(CurrentUserProvider::class);
