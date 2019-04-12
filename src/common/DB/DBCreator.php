@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -39,11 +39,11 @@ class DBCreator
 
     public function createDB() : EasyDB
     {
-        return Factory::create(
+        return Factory::fromArray([
             $this->getDSN(),
             \ForgeConfig::get('sys_dbuser'),
             \ForgeConfig::get('sys_dbpasswd')
-        );
+        ]);
     }
 
     private function getDSN() : string

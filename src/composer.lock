@@ -954,16 +954,16 @@
         },
         {
             "name": "paragonie/easydb",
-            "version": "v2.8.0",
+            "version": "v2.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/paragonie/easydb.git",
-                "reference": "daeaac952ba5f036a520b31d87b089679f09ae24"
+                "reference": "67ee07647f0836d98b31281ea18baf5725627347"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paragonie/easydb/zipball/daeaac952ba5f036a520b31d87b089679f09ae24",
-                "reference": "daeaac952ba5f036a520b31d87b089679f09ae24",
+                "url": "https://api.github.com/repos/paragonie/easydb/zipball/67ee07647f0836d98b31281ea18baf5725627347",
+                "reference": "67ee07647f0836d98b31281ea18baf5725627347",
                 "shasum": ""
             },
             "require": {
@@ -1011,7 +1011,7 @@
                 "security",
                 "sql"
             ],
-            "time": "2019-01-03T20:31:26+00:00"
+            "time": "2019-03-12T14:18:08+00:00"
         },
         {
             "name": "php-amqplib/php-amqplib",
@@ -5276,7 +5276,7 @@
                 },
                 {
                     "name": "Gert de Pagter",
-                    "email": "BackEndTea@gmail.com"
+                    "email": "backendtea@gmail.com"
                 }
             ],
             "description": "Symfony polyfill for ctype functions",
