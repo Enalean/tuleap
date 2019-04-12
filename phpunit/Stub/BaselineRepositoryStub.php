@@ -41,12 +41,15 @@ class BaselineRepositoryStub implements BaselineRepository
     /** @var int */
     private $id_sequence = 1;
 
-    public function add(TransientBaseline $baseline, PFUser $current_user, DateTimeInterface $snapshot_date): Baseline
-    {
+    public function add(
+        TransientBaseline $transient_baseline,
+        PFUser $current_user,
+        DateTimeInterface $snapshot_date
+    ): Baseline {
         $baseline = new Baseline(
             $this->id_sequence++,
-            $baseline->getName(),
-            $baseline->getArtifact(),
+            $transient_baseline->getName(),
+            $transient_baseline->getArtifact(),
             $snapshot_date,
             $current_user
         );
