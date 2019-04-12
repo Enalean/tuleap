@@ -24,7 +24,7 @@ use Tuleap\REST\ResourceReference;
 use Tuleap\REST\v1\PlanningRepresentationBase;
 use Tuleap\Project\REST\ProjectReference;
 use Tuleap\Tracker\REST\TrackerReference;
-use Tuleap\Tracker\REST\TrackerRepresentation;
+use Tuleap\Tracker\REST\CompleteTrackerRepresentation;
 
 /**
  * Basic representation of a planning
@@ -46,7 +46,7 @@ class PlanningRepresentation extends PlanningRepresentationBase {
         $this->backlog_trackers = array_map(
             function ($id) {
                 $reference = new ResourceReference();
-                $reference->build($id, TrackerRepresentation::ROUTE);
+                $reference->build($id, CompleteTrackerRepresentation::ROUTE);
 
                 return $reference;
             },

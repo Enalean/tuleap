@@ -30,6 +30,10 @@ use TrackerFactory;
 use Tuleap\REST\Header;
 use Tuleap\REST\JsonDecoder;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
+use Tuleap\Tracker\REST\PermissionsExporter;
+use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyDao;
+use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyFieldDetector;
+use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyFieldsRetriever;
 use Tuleap\Widget\Event\GetTrackersWithCriteria;
 
 /**
@@ -152,7 +156,16 @@ class ProjectTrackersResource
             $user
         );
         $trackers                = array_slice($all_trackers, $offset, $limit);
-        $builder                 = new Tracker_REST_TrackerRestBuilder(Tracker_FormElementFactory::instance());
+        $builder                 = new Tracker_REST_TrackerRestBuilder(
+            Tracker_FormElementFactory::instance(),
+            new PermissionsExporter(
+                new ReadOnlyFieldDetector(
+                    new ReadOnlyFieldsRetriever(
+                        new ReadOnlyDao()
+                    )
+                )
+            )
+        );
         $tracker_representations = [];
 
         foreach ($trackers as $tracker) {
@@ -164,7 +177,7 @@ class ProjectTrackersResource
                 $tracker_minimal_representation->build($tracker);
                 $tracker_representations[] = $tracker_minimal_representation;
             } else {
-                $tracker_representations[] = $builder->getTrackerRepresentation($user, $tracker);
+                $tracker_representations[] = $builder->getTrackerRepresentationWithoutWorkflowComputedPermissions($user, $tracker);
             }
         }
 

@@ -24,6 +24,7 @@ use Luracast\Restler\RestException;
 use PermissionsManager;
 use PFUser;
 use Tracker;
+use Tracker_Artifact;
 use Tracker_Artifact_PossibleParentsRetriever;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
@@ -52,8 +53,13 @@ use Tuleap\Tracker\Report\Query\Advanced\SearchablesAreInvalidException;
 use Tuleap\Tracker\Report\Query\Advanced\SearchablesDoNotExistException;
 use Tuleap\Tracker\REST\Artifact\ArtifactRepresentationBuilder;
 use Tuleap\Tracker\REST\Artifact\ParentArtifactReference;
+use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
+use Tuleap\Tracker\REST\PermissionsExporter;
 use Tuleap\Tracker\REST\ReportRepresentation;
 use Tuleap\Tracker\REST\v1\Workflow\ModeUpdater;
+use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyDao;
+use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyFieldDetector;
+use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyFieldsRetriever;
 use Tuleap\Tracker\Workflow\Transition\Update\TransitionReplicator;
 use Tuleap\Tracker\Workflow\Transition\Update\TransitionReplicatorBuilder;
 use Tuleap\Tracker\Workflow\Transition\Update\TransitionRetriever;
@@ -140,7 +146,7 @@ class TrackersResource extends AuthenticatedResource
      *
      * @param int $id Id of the tracker
      *
-     * @return Tuleap\Tracker\REST\TrackerRepresentation
+     * @return Tuleap\Tracker\REST\CompleteTrackerRepresentation
      * @throws RestException 403
      * @throws RestException 404
      */
@@ -148,7 +154,16 @@ class TrackersResource extends AuthenticatedResource
     {
         $this->checkAccess();
 
-        $builder = new Tracker_REST_TrackerRestBuilder($this->formelement_factory);
+        $builder = new Tracker_REST_TrackerRestBuilder(
+            $this->formelement_factory,
+            new PermissionsExporter(
+                new ReadOnlyFieldDetector(
+                    new ReadOnlyFieldsRetriever(
+                        new ReadOnlyDao()
+                    )
+                )
+            )
+        );
         $user    = $this->user_manager->getCurrentUser();
         $tracker = $this->getTrackerById($user, $id);
 
@@ -159,7 +174,7 @@ class TrackersResource extends AuthenticatedResource
 
         $this->sendAllowHeaderForTracker();
 
-        return $builder->getTrackerRepresentation($user, $tracker);
+        return $builder->getTrackerRepresentationWithoutWorkflowComputedPermissions($user, $tracker);
     }
 
     /**
@@ -407,7 +422,7 @@ class TrackersResource extends AuthenticatedResource
             new NatureDao()
         );
 
-        $build_artifact_representation = function ($artifact) use (
+        $build_artifact_representation = function (?Tracker_Artifact $artifact) use (
             $builder,
             $user,
             $with_all_field_values
@@ -417,7 +432,10 @@ class TrackersResource extends AuthenticatedResource
             }
 
             if ($with_all_field_values) {
-                return $builder->getArtifactRepresentationWithFieldValues($user, $artifact);
+                $tracker_representation = new MinimalTrackerRepresentation();
+                $tracker_representation->build($artifact->getTracker());
+
+                return $builder->getArtifactRepresentationWithFieldValues($user, $artifact, $tracker_representation);
             } else {
                 return $builder->getArtifactRepresentation($user, $artifact);
             }
@@ -578,7 +596,7 @@ class TrackersResource extends AuthenticatedResource
      * @param int    $id    Id of the tracker.
      * @param string $query JSON object of search criteria properties {@from query}
      *
-     * @return Tuleap\Tracker\REST\TrackerRepresentation
+     * @return Tuleap\Tracker\REST\CompleteTrackerRepresentation
      *
      * @throws I18NRestException 500
      * @throws I18NRestException 400
@@ -609,8 +627,17 @@ class TrackersResource extends AuthenticatedResource
             $this->getWorkflowFactory()->clearTrackerWorkflowFromCache($tracker);
             $tracker->workflow = null;
 
-            $builder = new Tracker_REST_TrackerRestBuilder($this->formelement_factory);
-            return $builder->getTrackerRepresentation($user, $tracker);
+            $builder = new Tracker_REST_TrackerRestBuilder(
+                $this->formelement_factory,
+                new PermissionsExporter(
+                    new ReadOnlyFieldDetector(
+                        new ReadOnlyFieldsRetriever(
+                            new ReadOnlyDao()
+                        )
+                    )
+                )
+            );
+            return $builder->getTrackerRepresentationWithoutWorkflowComputedPermissions($user, $tracker);
         } catch (InvalidParameterTypeException $e) {
             throw new I18NRestException(400, dgettext('tuleap-tracker', 'Please provide a valid query.'));
         } catch (MissingMandatoryParameterException $e) {

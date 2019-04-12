@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,7 +24,8 @@ use Tuleap\REST\JsonCast;
 use \Tracker;
 use Tuleap\Project\REST\ProjectReference;
 
-class TrackerRepresentation {
+class CompleteTrackerRepresentation implements TrackerRepresentation
+{
 
     const ROUTE = 'trackers';
 

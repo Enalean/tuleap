@@ -20,12 +20,14 @@
 
 namespace Tuleap\Tracker\REST\v1;
 
+use Tracker_Artifact;
 use \Tuleap\REST\ProjectAuthorization;
 use Tuleap\REST\AuthenticatedResource;
 use \Tuleap\REST\Exceptions\LimitOutOfBoundsException;
 use \Luracast\Restler\RestException;
 use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\Tracker\REST\Artifact\ArtifactRepresentationBuilder;
+use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 use \Tuleap\Tracker\REST\ReportRepresentation;
 use \Tracker_ReportFactory;
 use \Tracker_ArtifactFactory;
@@ -189,7 +191,7 @@ class ReportsResource extends AuthenticatedResource
     private function getListOfArtifactRepresentation(PFUser $user, $artifacts, $with_all_field_values) {
         $builder = $this->builder;
 
-        $build_artifact_representation = function ($artifact) use (
+        $build_artifact_representation = function (?Tracker_Artifact $artifact) use (
             $builder,
             $user,
             $with_all_field_values
@@ -199,7 +201,10 @@ class ReportsResource extends AuthenticatedResource
             }
 
             if ($with_all_field_values) {
-                return $builder->getArtifactRepresentationWithFieldValues($user, $artifact);
+                $tracker_representation = new MinimalTrackerRepresentation();
+                $tracker_representation->build($artifact->getTracker());
+
+                return $builder->getArtifactRepresentationWithFieldValues($user, $artifact, $tracker_representation);
             } else {
                 return $builder->getArtifactRepresentation($user, $artifact);
             }

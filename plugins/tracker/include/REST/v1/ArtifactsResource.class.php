@@ -82,8 +82,14 @@ use Tuleap\Tracker\REST\Artifact\ArtifactReference;
 use Tuleap\Tracker\REST\Artifact\ArtifactRepresentationBuilder;
 use Tuleap\Tracker\REST\Artifact\MovedArtifactValueBuilder;
 use Tuleap\Tracker\REST\ChangesetCommentRepresentation;
+use Tuleap\Tracker\REST\CompleteTrackerRepresentation;
+use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
+use Tuleap\Tracker\REST\PermissionsExporter;
 use Tuleap\Tracker\REST\TrackerReference;
 use Tuleap\Tracker\REST\v1\Event\ArtifactPartialUpdate;
+use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyDao;
+use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyFieldDetector;
+use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyFieldsRetriever;
 use Tuleap\Tracker\XML\Updater\MoveChangesetXMLUpdater;
 use UserManager;
 use UserXMLExportedCollection;
@@ -100,10 +106,14 @@ class ArtifactsResource extends AuthenticatedResource {
     const ORDER_ASC          = 'asc';
     const ORDER_DESC         = 'desc';
 
-    const VALUES_FORMAT_COLLECTION = 'collection';
-    const VALUES_FORMAT_BY_FIELD   = 'by_field';
-    const VALUES_FORMAT_ALL        = 'all';
-    const VALUES_DEFAULT           = null;
+    const VALUES_FORMAT_COLLECTION  = 'collection';
+    const VALUES_FORMAT_BY_FIELD    = 'by_field';
+    const VALUES_FORMAT_ALL         = 'all';
+    const VALUES_DEFAULT            = null;
+
+    const DEFAULT_TRACKER_STRUCTURE  = self::MINIMAL_TRACKER_STRUCTURE;
+    const MINIMAL_TRACKER_STRUCTURE  = 'minimal';
+    const COMPLETE_TRACKER_STRUCTURE = 'complete';
 
     const EMPTY_TYPE = '';
     /**
@@ -149,6 +159,11 @@ class ArtifactsResource extends AuthenticatedResource {
      */
     private $event_manager;
 
+    /**
+     * @var \Tracker_REST_TrackerRestBuilder
+     */
+    private $tracker_rest_builder;
+
     public function __construct()
     {
         $this->tracker_factory     = TrackerFactory::instance();
@@ -178,6 +193,17 @@ class ArtifactsResource extends AuthenticatedResource {
 
         $this->post_move_action = new PostMoveArticfactRESTAction(
             new FeedbackDao()
+        );
+
+        $this->tracker_rest_builder = new \Tracker_REST_TrackerRestBuilder(
+            $this->formelement_factory,
+            new PermissionsExporter(
+                new ReadOnlyFieldDetector(
+                    new ReadOnlyFieldsRetriever(
+                        new ReadOnlyDao()
+                    )
+                )
+            )
         );
     }
 
@@ -226,23 +252,28 @@ class ArtifactsResource extends AuthenticatedResource {
             array_slice($requested_artifact_ids, $offset, $limit)
         );
 
-        if (count($artifacts) > 0) {
-            $first_artifact = $artifacts[0];
-
-            ProjectStatusVerificator::build()->checkProjectStatusAllowsOnlySiteAdminToAccessIt(
-                $user,
-                $first_artifact->getTracker()->getProject()
-            );
+        if (! count($artifacts) > 0) {
+            Header::sendPaginationHeaders($limit, $offset, count($requested_artifact_ids), self::MAX_ARTIFACT_BATCH);
+            return array(self::VALUES_FORMAT_COLLECTION => $artifact_representations);
         }
+
+        $first_artifact = $artifacts[0];
+
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsOnlySiteAdminToAccessIt(
+            $user,
+            $first_artifact->getTracker()->getProject()
+        );
+
+        $tracker_representation = new MinimalTrackerRepresentation();
+        $tracker_representation->build($first_artifact->getTracker());
 
         foreach ($artifacts as $artifact) {
             if ($artifact->userCanView($user)) {
-                $artifact_representations[] = $this->builder->getArtifactRepresentationWithFieldValuesInBothFormat($user, $artifact);
+                $artifact_representations[] = $this->builder->getArtifactRepresentationWithFieldValuesInBothFormat($user, $artifact, $tracker_representation);
             }
         }
 
         Header::sendPaginationHeaders($limit, $offset, count($requested_artifact_ids), self::MAX_ARTIFACT_BATCH);
-
         return array(self::VALUES_FORMAT_COLLECTION => $artifact_representations);
     }
 
@@ -301,12 +332,13 @@ class ArtifactsResource extends AuthenticatedResource {
      *
      * @param int $id Id of the artifact
      * @param string $values_format The format of the value {@from query} {@choice ,collection,by_field,all}
+     * @param string $tracker_structure_format The format of the structure {@from query} {@choice ,minimal,complete}
      *
      * @return Tuleap\Tracker\REST\Artifact\ArtifactRepresentation
      *
      * @throws RestException 403
      */
-    public function getId($id, $values_format = self::VALUES_DEFAULT) {
+    public function getId($id, $values_format = self::VALUES_DEFAULT, $tracker_structure_format = self::DEFAULT_TRACKER_STRUCTURE) {
         $this->checkAccess();
 
         $user     = $this->user_manager->getCurrentUser();
@@ -321,12 +353,23 @@ class ArtifactsResource extends AuthenticatedResource {
         $this->sendLastModifiedHeader($artifact);
         $this->sendETagHeader($artifact);
 
+        if ($tracker_structure_format === self::COMPLETE_TRACKER_STRUCTURE) {
+            $tracker_representation = $this->tracker_rest_builder->getTrackerRepresentationWithWorkflowComputedPermissions(
+                $user,
+                $artifact->getTracker(),
+                $artifact
+            );
+        } else {
+            $tracker_representation = new MinimalTrackerRepresentation();
+            $tracker_representation->build($artifact->getTracker());
+        }
+
         if ($values_format === self::VALUES_DEFAULT || $values_format === self::VALUES_FORMAT_COLLECTION) {
-            $representation = $this->builder->getArtifactRepresentationWithFieldValues($user, $artifact);
+            $representation = $this->builder->getArtifactRepresentationWithFieldValues($user, $artifact, $tracker_representation);
         } elseif ($values_format === self::VALUES_FORMAT_BY_FIELD) {
-            $representation = $this->builder->getArtifactRepresentationWithFieldValuesByFieldValues($user, $artifact);
+            $representation = $this->builder->getArtifactRepresentationWithFieldValuesByFieldValues($user, $artifact, $tracker_representation);
         } elseif ($values_format === self::VALUES_FORMAT_ALL) {
-            $representation = $this->builder->getArtifactRepresentationWithFieldValuesInBothFormat($user, $artifact);
+            $representation = $this->builder->getArtifactRepresentationWithFieldValuesInBothFormat($user, $artifact, $tracker_representation);
         }
 
         return $representation;

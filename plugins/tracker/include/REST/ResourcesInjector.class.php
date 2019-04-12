@@ -20,7 +20,7 @@
 
 use Tuleap\Project\REST\ProjectResourceReference;
 use Tuleap\Tracker\REST\ReportRepresentation;
-use Tuleap\Tracker\REST\TrackerRepresentation;
+use Tuleap\Tracker\REST\CompleteTrackerRepresentation;
 
 /**
   * Inject resource into restler
@@ -41,7 +41,7 @@ class Tracker_REST_ResourcesInjector
     public function declareProjectPlanningResource(array &$resources, Project $project)
     {
         $resource_reference = new ProjectResourceReference();
-        $resource_reference->build($project, TrackerRepresentation::ROUTE);
+        $resource_reference->build($project, CompleteTrackerRepresentation::ROUTE);
 
         $resources[] = $resource_reference;
     }
