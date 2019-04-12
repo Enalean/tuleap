@@ -1,4 +1,5 @@
 {
+  "name": "tuleap/plugin-statistics",
   "autoload": {
     "psr-4": {
       "Tuleap\\Statistics\\": "include/"

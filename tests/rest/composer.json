@@ -1,4 +1,5 @@
 {
+    "name": "tuleap/test-rest",
     "autoload": {
         "psr-4": {
             "Tuleap\\REST\\": ["lib/"]

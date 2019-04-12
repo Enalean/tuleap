@@ -1,4 +1,5 @@
 {
+  "name": "tuleap/plugin-timetracking",
   "autoload": {
     "psr-4": {
       "Tuleap\\Timetracking\\": "include/Timetracking"

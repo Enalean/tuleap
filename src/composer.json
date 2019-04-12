@@ -1,4 +1,5 @@
 {
+  "name": "tuleap/tuleap",
   "autoload": {
     "psr-4": {
       "Tuleap\\": ["common/"],

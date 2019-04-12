@@ -1,4 +1,5 @@
 {
+  "name": "tuleap/configuration",
   "autoload": {
     "psr-4": {
       "Tuleap\\Configuration\\": "."

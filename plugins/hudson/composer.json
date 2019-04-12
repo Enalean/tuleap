@@ -1,4 +1,5 @@
 {
+  "name": "tuleap/plugin-hudson",
   "autoload": {
     "psr-4": {
       "Tuleap\\Hudson\\": ["include/"]

@@ -1,4 +1,5 @@
 {
+  "name": "tuleap/plugin-gitlfs",
   "autoload": {
     "psr-4": {
       "Tuleap\\GitLFS\\": "include/"

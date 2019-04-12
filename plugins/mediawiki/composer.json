@@ -1,4 +1,5 @@
 {
+  "name": "tuleap/plugin-mediawiki",
   "autoload": {
     "psr-4": {
       "Tuleap\\Mediawiki\\": ["include/"]

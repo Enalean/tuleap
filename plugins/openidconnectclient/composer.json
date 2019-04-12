@@ -1,4 +1,5 @@
 {
+  "name": "tuleap/plugin-openidconnectclient",
   "autoload": {
     "psr-4": {
       "Tuleap\\OpenIDConnectClient\\": "include/OpenIDConnectClient/"

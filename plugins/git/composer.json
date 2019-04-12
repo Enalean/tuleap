@@ -1,4 +1,5 @@
 {
+  "name": "tuleap/plugin-git",
   "autoload": {
     "psr-4": {
       "Tuleap\\Git\\": ["include/", "include/Git/"]

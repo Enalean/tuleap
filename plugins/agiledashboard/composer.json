@@ -1,4 +1,5 @@
 {
+  "name": "tuleap/plugin-agiledashboard",
   "autoload": {
     "psr-4": {
       "Tuleap\\AgileDashboard\\": ["include/", "include/AgileDashboard/"]

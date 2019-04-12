@@ -1,4 +1,5 @@
 {
+  "name": "tuleap/plugin-frs",
   "autoload": {
     "psr-4": {
       "Tuleap\\FRS\\": ["include/", "include/FRS/"]

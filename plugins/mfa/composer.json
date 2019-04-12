@@ -1,4 +1,5 @@
 {
+  "name": "tuleap/plugin-mfa",
   "autoload": {
     "psr-4": {
       "Tuleap\\MFA\\": "include/"
