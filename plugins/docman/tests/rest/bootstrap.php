@@ -22,3 +22,4 @@
 
 require_once __DIR__.'/DocmanBase.php';
 require_once __DIR__.'/DocmanDataBuilder.php';
+require_once __DIR__.'/helper/DocmanDataBuildCommon.php';
