@@ -23,5 +23,5 @@ require_once __DIR__ . '/DocmanDataBuilder.php';
 
 use Tuleap\Docman\rest\DocmanDataBuilder;
 
-$data_builder = new DocmanDataBuilder();
+$data_builder = new DocmanDataBuilder(DocmanDataBuilder::PROJECT_NAME);
 $data_builder->setUp();
