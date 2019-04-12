@@ -20,10 +20,10 @@
 <template>
     <div class="document-quick-look-folder-action">
         <div class="tlp-dropdown-split-button">
-            <update-button v-bind:item="item"
-                           v-bind:button-classes="button_classes"
-                           v-bind:icon-classes="icon_classes"
-                           v-if="! is_item_a_wiki_with_approval_table"
+            <update-item-button v-bind:item="item"
+                                v-bind:button-classes="button_classes"
+                                v-bind:icon-classes="icon_classes"
+                                v-if="! is_item_a_wiki_with_approval_table"
             />
             <dropdown-button
                 v-bind:is-in-quick-look-mode="true"
@@ -44,10 +44,10 @@
 import { TYPE_WIKI } from "../../../constants.js";
 import DropdownButton from "../ActionsDropDown/DropdownButton.vue";
 import DropdownMenu from "../ActionsDropDown/DropdownMenu.vue";
-import UpdateButton from "../ActionsButton/UpdateButton.vue";
+import UpdateItemButton from "../ActionsButton/UpdateItemButton.vue";
 
 export default {
-    components: { UpdateButton, DropdownButton, DropdownMenu },
+    components: { UpdateItemButton, DropdownButton, DropdownMenu },
     props: {
         item: Object,
         isDetailsButtonShown: Boolean

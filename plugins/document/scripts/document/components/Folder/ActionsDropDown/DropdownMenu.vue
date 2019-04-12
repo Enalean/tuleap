@@ -74,7 +74,7 @@
                 Approval tables
             </span>
         </a>
-        <span class="tlp-dropdown-menu-separator" role="separator"></span>
+        <span class="tlp-dropdown-menu-separator" role="separator" v-if="item.user_can_write"></span>
         <a v-if="item.user_can_write"
            v-bind:href="delete_url"
            class="tlp-dropdown-menu-item tlp-dropdown-menu-item-danger"

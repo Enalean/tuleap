@@ -20,8 +20,15 @@
 
 <template>
     <div class="document-quick-look-document-action">
-        <quick-look-go-to-document-details v-bind:item="item" v-if="is_details_button_shown"/>
-        <quick-look-document-action-button v-bind:item="item" v-bind:is-details-button-shown="is_details_button_shown"/>
+        <details-item-button
+            v-bind:item="item"
+            v-bind:button-class="'tlp-button-small document-quick-look-action-button-margin'"
+            v-if="is_details_button_shown"
+        />
+        <quick-look-document-action-button
+            v-bind:item="item"
+            v-bind:is-details-button-shown="!item.user_can_write"
+        />
         <div class="document-header-spacer"></div>
         <quick-look-delete-button v-bind:item="item"/>
     </div>
@@ -29,13 +36,13 @@
 
 <script>
 import QuickLookDocumentActionButton from "../ActionsQuickLookButton/QuickLookDocumentActionButton.vue";
-import QuickLookGoToDocumentDetails from "../ActionsQuickLookButton/QuickLookGoToDocumentDetails.vue";
 import QuickLookDeleteButton from "../ActionsQuickLookButton/QuickLookDeleteButton.vue";
+import DetailsItemButton from "../ActionsButton/DetailsItemButton.vue";
 
 export default {
     components: {
+        DetailsItemButton,
         QuickLookDocumentActionButton,
-        QuickLookGoToDocumentDetails,
         QuickLookDeleteButton
     },
     props: {

@@ -54,11 +54,6 @@ export default {
     },
     mounted() {
         this.dropdown = createDropdown(this.$refs.dropdownButton);
-    },
-    methods: {
-        toggleDropdown() {
-            this.dropdown.toggle();
-        }
     }
 };
 </script>

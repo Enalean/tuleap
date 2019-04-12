@@ -19,21 +19,47 @@
 
 <template>
     <div class="tlp-framed">
-        <h1>{{ embedded_title }}</h1>
+        <div class="document-header">
+            <div class="embedded-document-header-title">
+                <h1>{{ embedded_title }}</h1>
+            </div>
+
+            <actions-header v-bind:item="embedded_file"/>
+        </div>
+
         <section class="tlp-pane">
             <div class="tlp-pane-container">
                 <section class="tlp-pane-section" v-html="embedded_content"></section>
             </div>
         </section>
+
+        <update-embedded-file-modal v-bind:is="shown_modal" v-bind:item="embedded_file"/>
     </div>
 </template>
 
 <script>
 import dompurify from "dompurify";
+import DropdownButton from "../ActionsDropDown/DropdownButton.vue";
+import DropdownMenu from "../ActionsDropDown/DropdownMenu.vue";
+import UpdateItemButton from "../ActionsButton/UpdateItemButton.vue";
+import UpdateEmbeddedFileModal from "../ModalUpdateItem/UpdateEmbeddedFileModal.vue";
+import ActionsHeader from "./ActionsHeader.vue";
 export default {
     name: "DisplayEmbeddedContent",
+    components: {
+        ActionsHeader,
+        UpdateEmbeddedFileModal,
+        DropdownMenu,
+        UpdateItemButton,
+        DropdownButton
+    },
     props: {
         embedded_file: Object
+    },
+    data() {
+        return {
+            shown_modal: ""
+        };
     },
     computed: {
         embedded_title() {
@@ -45,6 +71,19 @@ export default {
             }
 
             return dompurify.sanitize(this.embedded_file.embedded_file_properties.content);
+        }
+    },
+    mounted() {
+        document.addEventListener("show-update-item-modal", this.showUpdateItemModal);
+
+        this.$once("hook:beforeDestroy", () => {
+            document.removeEventListener("show-update-item-modal", this.showUpdateItemModal);
+        });
+    },
+    methods: {
+        showUpdateItemModal() {
+            this.shown_modal = () =>
+                import(/* webpackChunkName: "document-update-embedded-file-modal" */ "../ModalUpdateItem/UpdateEmbeddedFileModal.vue");
         }
     }
 };

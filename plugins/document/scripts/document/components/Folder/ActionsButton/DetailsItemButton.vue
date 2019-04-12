@@ -19,19 +19,21 @@
 
 <template>
     <button
-        type="button"
-        class="tlp-button-primary tlp-button-small document-quick-look-action-button-margin"
         v-on:click="goToDetails"
+        class="tlp-button-primary"
+        v-bind:class="buttonClass"
     >
         <i class="fa fa-list tlp-button-icon"></i>
         <translate>Details</translate>
     </button>
 </template>
+
 <script>
 import { mapState } from "vuex";
 export default {
     props: {
-        item: Object
+        item: Object,
+        buttonClass: String
     },
     computed: {
         ...mapState(["project_id"])

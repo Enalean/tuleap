@@ -98,7 +98,7 @@ export default {
             this.modal.show();
         },
         reset() {
-            this.$store.commit("resetModalError");
+            this.$store.commit("error/resetModalError");
             this.is_displayed = false;
             this.is_loading = false;
             this.link_model = null;
@@ -106,7 +106,7 @@ export default {
         async updateLink(event) {
             event.preventDefault();
             this.is_loading = true;
-            this.$store.commit("resetModalError");
+            this.$store.commit("error/resetModalError");
 
             await this.$store.dispatch("updateLinkFromModal", [
                 this.item,

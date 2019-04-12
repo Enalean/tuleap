@@ -98,7 +98,7 @@ export default {
             this.modal.show();
         },
         reset() {
-            this.$store.commit("resetModalError");
+            this.$store.commit("error/resetModalError");
             this.is_displayed = false;
             this.is_loading = false;
             this.embedded_file_model = null;
@@ -106,7 +106,7 @@ export default {
         async updateEmbeddedFile(event) {
             event.preventDefault();
             this.is_loading = true;
-            this.$store.commit("resetModalError");
+            this.$store.commit("error/resetModalError");
 
             await this.$store.dispatch("updateEmbeddedFileFromModal", [
                 this.item,
