@@ -1,4 +1,5 @@
 {
+    "name": "tuleap/plugin-baseline",
     "autoload": {
         "psr-4": {
             "Tuleap\\Baseline\\": [
