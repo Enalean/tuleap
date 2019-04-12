@@ -31,6 +31,9 @@ function resetErrors(state) {
     state.has_folder_permission_error = false;
     state.has_folder_loading_error = false;
     state.folder_loading_error = null;
+    state.has_document_permission_error = false;
+    state.has_document_loading_error = false;
+    state.document_loading_error = null;
 }
 
 function switchFolderPermissionError(state) {
@@ -38,7 +41,7 @@ function switchFolderPermissionError(state) {
 }
 
 function switchItemPermissionError(state) {
-    state.has_item_permission_error = true;
+    state.has_document_permission_error = true;
 }
 
 function setFolderLoadingError(state, message) {
@@ -47,8 +50,8 @@ function setFolderLoadingError(state, message) {
 }
 
 function setItemLoadingError(state, message) {
-    state.has_item_loading_error = true;
-    state.item_loading_error = message;
+    state.has_document_loading_error = true;
+    state.document_loading_error = message;
 }
 
 function setModalError(state, error_message) {

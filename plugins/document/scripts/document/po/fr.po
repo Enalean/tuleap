@@ -150,6 +150,9 @@ msgstr "Fichier"
 msgid "File size"
 msgstr "Taille du fichier"
 
+msgid "Go to Document manager home page"
+msgstr "Aller à la page d'accueil du service gestion de documents"
+
 msgid "Go to my home page"
 msgstr "Aller à la page d'accueil"
 
@@ -172,8 +175,8 @@ msgstr "Historique"
 msgid "Id"
 msgstr "Id"
 
-msgid "It seems the contents of this folder can't be loaded."
-msgstr "Le contenu de ce dossier n'a pas pu être chargé."
+msgid "It seems the content of this element can't be loaded."
+msgstr "Le contenu de cet élément n'a pas pu être chargé."
 
 msgid "It's time to add new documents!"
 msgstr "Il est temps d'ajouter des documents !"
@@ -275,10 +278,13 @@ msgstr "Recommencer le cycle d'approbation."
 msgid "See if a document is locked"
 msgstr "Voir si un document est verrouillé"
 
-msgid "Set the read and write permissions of a document in the document "
-"creation and update modals"
-msgstr "Configurer les permissions de lecture et d'écriture d'un document "
-"dans les modales de création et de mise à jour de documents"
+msgid ""
+"Set the read and write permissions of a document in the document creation "
+"and update modals"
+msgstr ""
+"Configurer les permissions de lecture et d'écriture d'un document dans les "
+"modales de création et de mise à jour de documents"
+
 msgid ""
 "Set the values of custom document properties in the document creation and "
 "update modals"
@@ -410,6 +416,9 @@ msgid ""
 msgstr ""
 "Vous ne pouvez pas téléverser de nouvelle version tant que la table "
 "d'approbation n'a pas été close."
+
+msgid "You don't have read permission for this item."
+msgstr "Vous n'avez pas le droit de lecture sur ces éléments"
 
 msgid "You may only access documents you are granted read permission on."
 msgstr ""

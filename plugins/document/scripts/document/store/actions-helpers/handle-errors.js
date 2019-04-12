@@ -38,6 +38,27 @@ export async function handleErrors(context, exception) {
     }
 }
 
+export async function handleErrorsForDocument(context, exception) {
+    const message = "Internal server error";
+    if (exception.response === undefined) {
+        context.commit("error/setItemLoadingError", message);
+        return;
+    }
+
+    const status = exception.response.status;
+    if (status === 403) {
+        context.commit("error/switchItemPermissionError");
+        return;
+    }
+
+    try {
+        const json = await exception.response.json();
+        context.commit("error/setItemLoadingError", getErrorMessage(json));
+    } catch (error) {
+        context.commit("error/setItemLoadingError", message);
+    }
+}
+
 export async function handleErrorsForModal(context, exception) {
     const message = "Internal server error";
     if (exception.response === undefined) {

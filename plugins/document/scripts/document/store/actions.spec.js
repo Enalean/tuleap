@@ -25,6 +25,7 @@ import {
     cancelVersionUpload,
     createNewItem,
     loadFolder,
+    loadDocumentWithAscendentHierarchy,
     loadRootFolder,
     setUserPreferenciesForFolder,
     setUserPreferenciesForUI,
@@ -1122,6 +1123,50 @@ describe("Store actions", () => {
             expect(context.commit).toHaveBeenCalledWith("removeVersionUploadProgress", item);
 
             expect(context.commit).toHaveBeenCalledWith("resetFolderIsUploading", folder);
+        });
+    });
+
+    describe("loadDocumentWithAscendentHierarchy", () => {
+        it("loads ascendant hierarchy and content of item", async () => {
+            const current_folder = {
+                id: 3,
+                title: "Project Documentation",
+                owner: {
+                    id: 101,
+                    display_name: "user (login)"
+                },
+                last_update_date: "2018-08-21T17:01:49+02:00"
+            };
+
+            const item = {
+                id: 42,
+                title: "My embedded file",
+                owner: {
+                    id: 101,
+                    display_name: "user (login)"
+                },
+                last_update_date: "2018-08-21T17:01:49+02:00"
+            };
+
+            context.state.current_folder = current_folder;
+
+            getItem.and.returnValue(Promise.resolve(item));
+            loadFolderContent.and.returnValue(Promise.resolve(current_folder));
+
+            await loadDocumentWithAscendentHierarchy(42);
+            expect(loadAscendantHierarchy).toHaveBeenCalled();
+        });
+
+        it("throw error if something went wrong", async () => {
+            getItem.and.throwError("nope");
+
+            await loadDocumentWithAscendentHierarchy(context, 42);
+            expect(loadAscendantHierarchy).not.toHaveBeenCalled();
+
+            expect(context.commit).toHaveBeenCalledWith(
+                "error/setItemLoadingError",
+                "Internal server error"
+            );
         });
     });
 });

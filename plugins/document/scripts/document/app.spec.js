@@ -30,6 +30,9 @@ import "./store/error/error-mutations.spec.js";
 
 import "./components/Breadcrumb/DocumentBreadCrumb.spec.js";
 
+import "./components/Folder/Error/GoBackToRootButton.spec.js";
+import "./components/Folder/Error/ShowErrorDetails.spec.js";
+
 import "./components/Folder/FolderContentRow.spec.js";
 
 import "./components/Folder/DragNDrop/CurrentFolderDropZone.spec.js";
@@ -38,6 +41,8 @@ import "./components/Folder/DragNDrop/DragNDropHandler.spec.js";
 import "./components/Folder/Dropdown/DropdownButton.spec.js";
 import "./components/Folder/Dropdown/DropdownMenu.spec.js";
 import "./components/Folder/Dropdown/DropdownMenuForItemQuickLook.spec.js";
+
+import "./components/Folder/ItemDisplay/DisplayEmbedded.spec.js";
 
 import "./components/Folder/ItemTitle/FakeCaret.spec.js";
 import "./components/Folder/ItemTitle/FolderCellTitle.spec.js";

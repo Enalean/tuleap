@@ -22,6 +22,7 @@ import VueRouter from "vue-router";
 import store from "../store/index.js";
 import RootFolder from "../components/Folder/RootFolder.vue";
 import ChildFolder from "../components/Folder/ChildFolder.vue";
+import DisplayEmbedded from "../components/Folder/ItemDisplay/DisplayEmbedded.vue";
 import { abortCurrentUploads } from "../helpers/abort-current-uploads.js";
 
 Vue.use(VueRouter);
@@ -40,6 +41,11 @@ export function createRouter(project_name) {
                 path: "/folder/:item_id",
                 name: "folder",
                 component: ChildFolder
+            },
+            {
+                path: "/folder/:folder_id/:item_id",
+                name: "item",
+                component: DisplayEmbedded
             }
         ]
     });

@@ -43,7 +43,7 @@ export default {
         item: Object
     },
     computed: {
-        ...mapState(["project_id"]),
+        ...mapState(["project_id", "current_folder"]),
         icon_class() {
             return ICON_EMBEDDED;
         },
@@ -54,7 +54,15 @@ export default {
             return !this.item.embedded_file_properties;
         },
         document_link_url() {
-            return `/plugins/docman/?group_id=${this.project_id}&action=show&id=${this.item.id}`;
+            const { href } = this.$router.resolve({
+                name: "item",
+                params: {
+                    folder_id: this.current_folder.id,
+                    item_id: this.item.id
+                }
+            });
+
+            return href;
         }
     }
 };
