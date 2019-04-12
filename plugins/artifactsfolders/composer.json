@@ -1,4 +1,5 @@
 {
+  "name": "tuleap/plugin-artifactsfolders",
   "autoload": {
     "psr-4": {
       "Tuleap\\ArtifactsFolders\\": "include/"

@@ -1,4 +1,5 @@
 {
+  "name": "tuleap/plugin-pullrequest",
   "autoload": {
     "psr-4": {
       "Tuleap\\PullRequest\\": ["include/", "include/PullRequest/"]

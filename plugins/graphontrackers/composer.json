@@ -1,4 +1,5 @@
 {
+  "name": "tuleap/plugin-graphontrackers",
   "autoload": {
     "classmap": ["include/"]
   },

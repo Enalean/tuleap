@@ -1,4 +1,5 @@
 {
+  "name": "tuleap/plugin-tracker-encryption",
   "autoload": {
     "psr-4": {
       "Tuleap\\TrackerEncryption\\": ["include/", "include/TrackerEncryption/"]

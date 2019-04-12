@@ -1,4 +1,5 @@
 {
+  "name": "tuleap/theme-burningparrot",
   "autoload": {
     "psr-4": {
       "Tuleap\\Theme\\BurningParrot\\": ["."]

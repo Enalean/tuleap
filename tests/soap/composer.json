@@ -1,4 +1,5 @@
 {
+  "name": "tuleap/test-soap",
   "autoload": {
     "classmap": ["lib/"]
   }

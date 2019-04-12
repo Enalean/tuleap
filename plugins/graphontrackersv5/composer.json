@@ -1,4 +1,5 @@
 {
+  "name": "tuleap/plugin-graphontrackersv5",
   "autoload": {
     "psr-4": {
       "Tuleap\\GraphOnTrackersV5\\": ["include/"]
