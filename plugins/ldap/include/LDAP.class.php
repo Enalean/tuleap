@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011 - 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -298,7 +298,7 @@ class LDAP {
      * @param Integer $attrsOnly  Retreive both field value and name (keep it to 0)
      * @param Integer $sizeLimit  Limit the size of the result set
      * @param Integer $timeLimit  Limit the time spend to search for results
-     * @param Integer $deref      Dereference result
+     * @param integer $deref      Dereference result
      * 
      * @return LDAPResultIterator
      */

@@ -473,7 +473,7 @@ class Project extends Group implements PFO_Project {
     }
 
     /**
-     * @return array of User members of the project
+     * @return PFUser[] array of User members of the project
      */
     public function getMembers(UGroupManager $ugm = null) {
         if(is_null($ugm)) {
