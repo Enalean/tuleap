@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,7 +17,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
+use Tuleap\SOAP\SOAPRequestValidator;
+
 /**
  * Wrapper for statistics related SOAP methods
  */
@@ -34,7 +36,7 @@ class Statistics_SOAPServer {
     private $disk_usage_manager;
     
     /**
-     * @var Statistics_ProjectQuotaManager
+     * @var ProjectQuotaManager
      */
     private $project_quota_manager;
 
@@ -108,7 +110,7 @@ class Statistics_SOAPServer {
     }
     
     private function assertUserCanAccessProject(PFUser $user, $group_id) {
-        $project = $this->soap_request_validator->getProjectById($group_id);
+        $project = $this->soap_request_validator->getProjectById($group_id, 'statistics');
         $this->soap_request_validator->assertUserCanAccessProject($user, $project);
     }
     
@@ -128,4 +130,3 @@ class Statistics_SOAPServer {
         return ($user->isSuperUser() || $user->isMember($group_id, 'A'));
     }
 }
-?>
