@@ -41,6 +41,10 @@ msgid "No baseline found with id %u"
 msgstr "Aucune baseline trouvée avec l'id %u"
 
 #, php-format
+msgid "No comparison found with id %u"
+msgstr "Aucune comparaison trouvée avec l'id %u"
+
+#, php-format
 msgid "No more than %u artifacts can be requested at once."
 msgstr "Un maximum de %u artefacts peuvent être demandés en une seule fois."
 

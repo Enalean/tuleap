@@ -22,15 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\Tests\REST;
 
+require_once __DIR__ . '/BaselineFixtureData.php';
+
 use RestBase;
 
 class BaselinesResourceTest extends RestBase
 {
-    private const TEST_USER_NAME = 'rest_api_tester_1';
-    private const PROJECT_NAME = "baseline-test";
-    private const TRACKER_NAME = "base";
-    private const ARTIFACT_TITLE = 'new title';
-
     /** @var int */
     private $an_artifact_id;
 
@@ -38,14 +35,17 @@ class BaselinesResourceTest extends RestBase
     {
         parent::setUp();
 
-        $artifact_ids_by_title = $this->getArtifactIdsIndexedByTitle(self::PROJECT_NAME, self::TRACKER_NAME);
-        $this->an_artifact_id  = $artifact_ids_by_title[self::ARTIFACT_TITLE];
+        $artifact_ids_by_title = $this->getArtifactIdsIndexedByTitle(
+            BaselineFixtureData::PROJECT_NAME,
+            BaselineFixtureData::TRACKER_NAME
+        );
+        $this->an_artifact_id  = $artifact_ids_by_title[BaselineFixtureData::ARTIFACT_TITLE];
     }
 
     public function testPost()
     {
         $response = $this->getResponseByName(
-            self::TEST_USER_NAME,
+            BaselineFixtureData::TEST_USER_NAME,
             $this->client->post(
                 'baselines',
                 null,
@@ -62,7 +62,7 @@ class BaselinesResourceTest extends RestBase
 
         $this->assertNotNull($json_response['id']);
         $this->assertEquals('new baseline', $json_response['name']);
-        $this->assertEquals($this->user_ids[self::TEST_USER_NAME], $json_response['author_id']);
+        $this->assertEquals($this->user_ids[BaselineFixtureData::TEST_USER_NAME], $json_response['author_id']);
         $this->assertNotNull($json_response['snapshot_date']);
     }
 
@@ -70,7 +70,7 @@ class BaselinesResourceTest extends RestBase
     {
         $baseline = $this->createABaseline($this->an_artifact_id);
         $response = $this->getResponseByName(
-            self::TEST_USER_NAME,
+            BaselineFixtureData::TEST_USER_NAME,
             $this->client->get('baselines/' . $baseline['id'])
         );
 
@@ -89,13 +89,13 @@ class BaselinesResourceTest extends RestBase
         $baseline = $this->createABaseline($this->an_artifact_id);
 
         $delete_response = $this->getResponseByName(
-            self::TEST_USER_NAME,
+            BaselineFixtureData::TEST_USER_NAME,
             $this->client->delete('baselines/' . $baseline['id'])
         );
         $this->assertEquals(200, $delete_response->getStatusCode());
 
         $get_response = $this->getResponseByName(
-            self::TEST_USER_NAME,
+            BaselineFixtureData::TEST_USER_NAME,
             $this->client->get('baselines/' . $baseline['id'])
         );
         $this->assertEquals(404, $get_response->getStatusCode());
@@ -106,10 +106,10 @@ class BaselinesResourceTest extends RestBase
      */
     public function testGetByProject()
     {
-        $project_id = $this->project_ids[self::PROJECT_NAME];
+        $project_id = $this->project_ids[BaselineFixtureData::PROJECT_NAME];
         $url        = 'projects/' . $project_id . '/baselines?limit=2';
         $response   = $this->getResponseByName(
-            self::TEST_USER_NAME,
+            BaselineFixtureData::TEST_USER_NAME,
             $this->client->get($url)
         );
 
@@ -135,7 +135,7 @@ class BaselinesResourceTest extends RestBase
         $baseline = $this->createABaseline($this->an_artifact_id);
 
         $response = $this->getResponseByName(
-            self::TEST_USER_NAME,
+            BaselineFixtureData::TEST_USER_NAME,
             $this->client->get('baselines/' . $baseline['id'] . '/artifacts')
         );
 
@@ -152,7 +152,7 @@ class BaselinesResourceTest extends RestBase
         $query    = json_encode(["ids" => [$this->an_artifact_id]]);
         $url      = 'baselines/' . $baseline['id'] . '/artifacts?query=' . urlencode($query);
         $response = $this->getResponseByName(
-            self::TEST_USER_NAME,
+            BaselineFixtureData::TEST_USER_NAME,
             $this->client->get($url)
         );
 
@@ -169,40 +169,10 @@ class BaselinesResourceTest extends RestBase
         $this->assertNotNull('base', $artifact_response['tracker_name']);
     }
 
-    public function testPostBaselineComparison()
-    {
-        $base_baseline        = $this->createABaseline($this->an_artifact_id);
-        $compared_to_baseline = $this->createABaseline($this->an_artifact_id);
-
-        $response = $this->getResponseByName(
-            self::TEST_USER_NAME,
-            $this->client->post(
-                'baselines/comparisons',
-                null,
-                json_encode(
-                    [
-                        'name'                    => 'new comparison',
-                        'comment'                 => 'used fo tests',
-                        'base_baseline_id'        => $base_baseline['id'],
-                        'compared_to_baseline_id' => $compared_to_baseline['id']
-                    ]
-                )
-            )
-        );
-        $this->assertEquals(201, $response->getStatusCode());
-        $json_response = $response->json();
-
-        $this->assertNotNull($json_response['id']);
-        $this->assertEquals('new comparison', $json_response['name']);
-        $this->assertEquals('used fo tests', $json_response['comment']);
-        $this->assertEquals($base_baseline['id'], $json_response['base_baseline_id']);
-        $this->assertEquals($compared_to_baseline['id'], $json_response['compared_to_baseline_id']);
-    }
-
     private function createABaseline(int $artifact_id): array
     {
         $response = $this->getResponseByName(
-            self::TEST_USER_NAME,
+            BaselineFixtureData::TEST_USER_NAME,
             $this->client->post(
                 'baselines',
                 null,

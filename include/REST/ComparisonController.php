@@ -86,6 +86,24 @@ class ComparisonController
     /**
      * @throws NotFoundRestException
      */
+    public function getById(int $id): ComparisonRepresentation
+    {
+        $current_user = $this->current_user_provider->getUser();
+        $comparison   = $this->comparison_service->findById($current_user, $id);
+        if ($comparison === null) {
+            throw new NotFoundRestException(
+                sprintf(
+                    dgettext('tuleap-baseline', 'No comparison found with id %u'),
+                    $id
+                )
+            );
+        }
+        return ComparisonRepresentation::fromComparison($comparison);
+    }
+
+    /**
+     * @throws NotFoundRestException
+     */
     private function findBaselineByIdOrThrow(PFUser $current_user, int $baseline_id): Baseline
     {
         $base_baseline = $this->baseline_repository->findById($current_user, $baseline_id);

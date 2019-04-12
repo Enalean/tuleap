@@ -58,4 +58,9 @@ class ComparisonService
 
         return $this->comparison_repository->add($transient_comparison, $current_user);
     }
+
+    public function findById(PFUser $current_user, int $id): ?Comparison
+    {
+        return $this->comparison_repository->findById($current_user, $id);
+    }
 }

@@ -30,6 +30,9 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
 use ParagonIE\EasyDB\EasyDB;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Baseline\BaselineRepository;
+use Tuleap\Baseline\Comparison;
+use Tuleap\Baseline\Factory\BaselineFactory;
 use Tuleap\Baseline\Factory\ProjectFactory;
 use Tuleap\Baseline\Factory\TransientComparisonFactory;
 use Tuleap\Baseline\NotAuthorizedException;
@@ -49,6 +52,9 @@ class ComparisonRepositoryAdapterTest extends TestCase
     /** @var AdapterPermissions|MockInterface */
     private $adapter_permissions;
 
+    /** @var BaselineRepository|MockInterface */
+    private $baseline_repository;
+
     /** @before */
     public function createInstance()
     {
@@ -56,8 +62,13 @@ class ComparisonRepositoryAdapterTest extends TestCase
         $this->adapter_permissions = Mockery::mock(AdapterPermissions::class);
         $this->adapter_permissions->allows(['canUserAdministrateBaselineOnProject' => true])
             ->byDefault();
+        $this->baseline_repository = Mockery::mock(BaselineRepository::class);
 
-        $this->repository = new ComparisonRepositoryAdapter($this->db, $this->adapter_permissions);
+        $this->repository = new ComparisonRepositoryAdapter(
+            $this->db,
+            $this->adapter_permissions,
+            $this->baseline_repository
+        );
     }
 
     public function testAddReturnsComparisonBasedOnGivenTransientComparison()
@@ -107,5 +118,160 @@ class ComparisonRepositoryAdapterTest extends TestCase
             TransientComparisonFactory::fromProject($project)->build(),
             $this->current_user
         );
+    }
+
+    public function testFindById()
+    {
+        $base_baseline = BaselineFactory::one()->build();
+        $this->baseline_repository
+            ->shouldReceive('findById')
+            ->with($this->current_user, 1)
+            ->andReturn($base_baseline);
+
+        $compared_to_baseline = BaselineFactory::one()->build();
+        $this->baseline_repository
+            ->shouldReceive('findById')
+            ->with($this->current_user, 2)
+            ->andReturn($compared_to_baseline);
+
+        $this->db
+            ->shouldReceive('safeQuery')
+            ->with(Mockery::type('string'), [1])
+            ->andReturn(
+                [
+                    [
+                        "id"                      => 1,
+                        "name"                    => "Persisted comparison",
+                        "comment"                 => null,
+                        "base_baseline_id"        => 1,
+                        "compared_to_baseline_id" => 2,
+                    ]
+                ]
+            );
+
+        $this->adapter_permissions
+            ->shouldReceive('canUserReadBaselineOnProject')
+            ->andReturn(true);
+
+        $comparison = $this->repository->findById($this->current_user, 1);
+
+        $expected_comparison = new Comparison(
+            1,
+            "Persisted comparison",
+            null,
+            $base_baseline,
+            $compared_to_baseline
+        );
+        $this->assertEquals($expected_comparison, $comparison);
+    }
+
+    public function testFindByIdReturnsNullWhenNotFound()
+    {
+        $this->db
+            ->shouldReceive('safeQuery')
+            ->with(Mockery::type('string'), [1])
+            ->andReturn([]);
+
+        $comparison = $this->repository->findById($this->current_user, 1);
+
+        $this->assertNull($comparison);
+    }
+
+    public function testFindByIdReturnsNullWhenGivenUserCannotReadBaselineOnProjetOfFoundBaseline()
+    {
+        $base_baseline = BaselineFactory::one()->build();
+        $this->baseline_repository
+            ->shouldReceive('findById')
+            ->with($this->current_user, 1)
+            ->andReturn($base_baseline);
+
+        $compared_to_baseline = BaselineFactory::one()->build();
+        $this->baseline_repository
+            ->shouldReceive('findById')
+            ->with($this->current_user, 2)
+            ->andReturn($compared_to_baseline);
+
+        $this->db
+            ->shouldReceive('safeQuery')
+            ->with(Mockery::type('string'), [1])
+            ->andReturn(
+                [
+                    [
+                        "id"                      => 1,
+                        "name"                    => "Persisted comparison",
+                        "comment"                 => null,
+                        "base_baseline_id"        => 1,
+                        "compared_to_baseline_id" => 2,
+                    ]
+                ]
+            );
+
+        $this->adapter_permissions
+            ->shouldReceive('canUserReadBaselineOnProject')
+            ->with($this->current_user, $base_baseline->getProject())
+            ->andReturn(false);
+
+        $baseline = $this->repository->findById($this->current_user, 1);
+
+        $this->assertNull($baseline);
+    }
+
+    public function testFindByIdReturnsNullWhenBaseBaselineIsNotFound()
+    {
+        $this->baseline_repository
+            ->shouldReceive('findById')
+            ->with($this->current_user, 1)
+            ->andReturn(null);
+
+        $this->db
+            ->shouldReceive('safeQuery')
+            ->with(Mockery::type('string'), [1])
+            ->andReturn(
+                [
+                    [
+                        "id"                      => 1,
+                        "name"                    => "Persisted comparison",
+                        "comment"                 => null,
+                        "base_baseline_id"        => 1,
+                        "compared_to_baseline_id" => 2,
+                    ]
+                ]
+            );
+
+        $baseline = $this->repository->findById($this->current_user, 1);
+
+        $this->assertNull($baseline);
+    }
+
+    public function testFindByIdReturnsNullWhenComparedToBaselineIsNotFound()
+    {
+        $this->baseline_repository
+            ->shouldReceive('findById')
+            ->with($this->current_user, 1)
+            ->andReturn(BaselineFactory::one()->build());
+
+        $this->baseline_repository
+            ->shouldReceive('findById')
+            ->with($this->current_user, 2)
+            ->andReturn(null);
+
+        $this->db
+            ->shouldReceive('safeQuery')
+            ->with(Mockery::type('string'), [1])
+            ->andReturn(
+                [
+                    [
+                        "id"                      => 1,
+                        "name"                    => "Persisted comparison",
+                        "comment"                 => null,
+                        "base_baseline_id"        => 1,
+                        "compared_to_baseline_id" => 2,
+                    ]
+                ]
+            );
+
+        $baseline = $this->repository->findById($this->current_user, 1);
+
+        $this->assertNull($baseline);
     }
 }

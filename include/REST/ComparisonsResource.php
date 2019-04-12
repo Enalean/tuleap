@@ -75,10 +75,39 @@ class ComparisonsResource extends AuthenticatedResource
     }
 
     /**
+     * Get a Comparison
+     *
+     * Get a comparison between two baselines
+     *
+     * @url    GET /comparisons/{id}
+     * @access hybrid
+     *
+     * @param int $id The comparison id
+     *
+     * @return Tuleap\Baseline\REST\ComparisonRepresentation
+     * @throws \Rest_Exception_InvalidTokenException
+     * @throws I18NRestException 401
+     * @throws NotFoundRestException 404
+     * @throws \User_PasswordExpiredException
+     * @throws \User_StatusDeletedException
+     * @throws \User_StatusInvalidException
+     * @throws \User_StatusPendingException
+     * @throws \User_StatusSuspendedException
+     * @throws \Luracast\Restler\RestException
+     */
+    public function getById(int $id): ComparisonRepresentation
+    {
+        $this->checkAccess();
+        return $this->container
+            ->get(ComparisonController::class)
+            ->getById($id);
+    }
+
+    /**
      * @url OPTIONS /comparisons
      */
     public function optionsArtifacts()
     {
-        Header::allowOptionsPost();
+        Header::allowOptionsGetPost();
     }
 }

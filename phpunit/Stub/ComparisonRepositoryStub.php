@@ -24,14 +24,13 @@ declare(strict_types=1);
 namespace Tuleap\Baseline\Stub;
 
 use PFUser;
-use Tuleap\Baseline\Baseline;
 use Tuleap\Baseline\Comparison;
 use Tuleap\Baseline\ComparisonRepository;
 use Tuleap\Baseline\TransientComparison;
 
 class ComparisonRepositoryStub implements ComparisonRepository
 {
-    /** @var Baseline[] */
+    /** @var Comparison[] */
     private $comparisons_by_id = [];
 
     /** @var int */
@@ -49,6 +48,14 @@ class ComparisonRepositoryStub implements ComparisonRepository
 
         $this->comparisons_by_id[$comparison->getId()] = $comparison;
         return $comparison;
+    }
+
+    public function findById(PFUser $current_user, int $id): ?Comparison
+    {
+        if (! isset($this->comparisons_by_id[$id])) {
+            return null;
+        }
+        return $this->comparisons_by_id[$id];
     }
 
     public function count(): int

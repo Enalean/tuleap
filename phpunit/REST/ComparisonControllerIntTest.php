@@ -26,6 +26,7 @@ namespace Tuleap\Baseline\REST;
 require_once __DIR__ . '/IntegrationTestCaseWithStubs.php';
 
 use Tuleap\Baseline\Factory\BaselineFactory;
+use Tuleap\Baseline\Factory\TransientComparisonFactory;
 use Tuleap\Baseline\REST\Exception\NotFoundRestException;
 use Tuleap\Baseline\Support\DateTimeFactory;
 
@@ -111,5 +112,26 @@ class ComparisonControllerIntTest extends IntegrationTestCaseWithStubs
             $based_baseline->getId(),
             999
         );
+    }
+
+    public function testGet()
+    {
+        $comparison = $this->comparison_repository->add(
+            TransientComparisonFactory::one()
+                ->name('My first comparison')
+                ->comment(null)
+                ->base(BaselineFactory::one()->id(1)->build())
+                ->comparedTo(BaselineFactory::one()->id(2)->build())
+                ->build(),
+            $this->current_user
+        );
+
+        $representation = $this->controller->getById($comparison->getId());
+
+        $this->assertEquals($comparison->getId(), $representation->id);
+        $this->assertEquals('My first comparison', $representation->name);
+        $this->assertNull($representation->comment);
+        $this->assertEquals(1, $representation->base_baseline_id);
+        $this->assertEquals(2, $representation->compared_to_baseline_id);
     }
 }
