@@ -126,4 +126,9 @@ class BaselineArtifact
     {
         return $this->linked_artifact_ids;
     }
+
+    public function equals(BaselineArtifact $artifact): bool
+    {
+        return $this->id === $artifact->getId();
+    }
 }

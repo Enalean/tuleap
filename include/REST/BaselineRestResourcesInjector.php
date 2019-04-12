@@ -33,5 +33,6 @@ class BaselineRestResourcesInjector
         $restler->addAPIClass('\\Tuleap\\Baseline\\REST\\BaselinesResource', 'baselines');
         $restler->addAPIClass(ProjectBaselinesResource::class, ProjectRepresentation::ROUTE);
         $restler->addAPIClass(BaselineArtifactsResource::class, 'baselines');
+        $restler->addAPIClass(ComparisonsResource::class, 'baselines');
     }
 }

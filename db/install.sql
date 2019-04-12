@@ -21,7 +21,17 @@ CREATE TABLE IF NOT EXISTS plugin_baseline_baseline
 	snapshot_date int not null
 );
 
--- Baseline entity
+-- Comparison entity
+CREATE TABLE IF NOT EXISTS plugin_baseline_comparison
+(
+	id int auto_increment primary key,
+	name varchar(255) not null,
+	comment varchar(255) null,
+	base_baseline_id int not null,
+	compared_to_baseline_id int not null
+);
+
+-- Role Assignment entity
 CREATE TABLE IF NOT EXISTS plugin_baseline_role_assignment
 (
 	id int auto_increment primary key,

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!--Created by yFiles for HTML 2.2-EAP8-->
+<!--Created by yFiles for HTML 2.2-->
 <graphml xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://www.yworks.com/xml/schema/graphml.html/2.0/ygraphml.xsd " xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:demostyle="http://www.yworks.com/yFilesHTML/demos/FlatDemoStyle/1.0" xmlns:bpmn="http://www.yworks.com/xml/yfiles-for-html/bpmn/2.0" xmlns:demotablestyle="http://www.yworks.com/yFilesHTML/demos/FlatDemoTableStyle/1.0" xmlns:uml="http://www.yworks.com/yFilesHTML/demos/UMLDemoStyle/1.0" xmlns:compat="http://www.yworks.com/xml/yfiles-compat-arrows/1.0" xmlns:GraphvizNodeStyle="http://www.yworks.com/yFilesHTML/graphviz-node-style/1.0" xmlns:VuejsNodeStyle="http://www.yworks.com/demos/yfiles-vuejs-node-style/1.0" xmlns:y="http://www.yworks.com/xml/yfiles-common/3.0" xmlns:x="http://www.yworks.com/xml/yfiles-common/markup/3.0" xmlns:yjs="http://www.yworks.com/xml/yfiles-for-html/2.0/xaml" xmlns:x0="http://www.yworks.com/yFilesHTML/demos/EntityRelationship/1.0" xmlns:sys="http://www.yworks.com/xml/yfiles-common/markup/primitives/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<key id="d0" for="node" attr.type="boolean" attr.name="Expanded" y:attr.uri="http://www.yworks.com/xml/yfiles-common/2.0/folding/Expanded">
 		<default>true</default>
@@ -32,37 +32,46 @@
 	<key id="d18" attr.name="SharedData" y:attr.uri="http://www.yworks.com/xml/yfiles-common/2.0/SharedData"/>
 	<data key="d18">
 		<y:SharedData>
-			<yjs:SolidColorFill x:Key="1" color="{y:GraphMLReference 5}"/>
-			<yjs:SolidColorFill x:Key="2" color="{y:GraphMLReference 6}"/>
-			<yjs:Font x:Key="3" fontSize="12" fontFamily="'Arial'"/>
-			<demostyle:DemoGroupStyle x:Key="4" isCollapsible="true" borderColor="#68B0E3" folderFrontColor="#68B0E3" folderBackColor="#3C679B"/>
-			<yjs:Color x:Key="5" value="#FFE8EEF7"/>
-			<yjs:Color x:Key="6" value="#FFB7C9E3"/>
-			<y:RatioAnchoredLabelModelParameter x:Key="7" LayoutOffset="26.1953125,12.93359375"/>
-			<yjs:SolidColorFill x:Key="8" color="Black"/>
-			<yjs:Font x:Key="9" fontSize="12" fontFamily="'Dialog'"/>
-			<yjs:LinearGradient x:Key="10" spreadMethod="PAD" startPoint="0,0" endPoint="1,1">
-				<yjs:GradientStop color="{y:GraphMLReference 5}" offset="0"/>
-				<yjs:GradientStop color="{y:GraphMLReference 6}" offset="1"/>
+			<yjs:SolidColorFill x:Key="1" color="{y:GraphMLReference 8}"/>
+			<yjs:SolidColorFill x:Key="2" color="{y:GraphMLReference 9}"/>
+			<y:SmartEdgeLabelModelParameter x:Key="3" Distance="5">
+				<y:SmartEdgeLabelModelParameter.Model>
+					<y:SmartEdgeLabelModel/>
+				</y:SmartEdgeLabelModelParameter.Model>
+			</y:SmartEdgeLabelModelParameter>
+			<yjs:DefaultLabelStyle x:Key="4" textFill="BLACK">
+				<yjs:DefaultLabelStyle.font>
+					<yjs:Font fontSize="12" fontFamily="'Arial'"/>
+				</yjs:DefaultLabelStyle.font>
+			</yjs:DefaultLabelStyle>
+			<x0:CrowsFootArrow x:Key="5" type="CROWS_FOOT_ONE" scale="1"/>
+			<yjs:Font x:Key="6" fontSize="12" fontFamily="'Arial'"/>
+			<demostyle:DemoGroupStyle x:Key="7" isCollapsible="true" borderColor="#68B0E3" folderFrontColor="#68B0E3" folderBackColor="#3C679B"/>
+			<yjs:Color x:Key="8" value="#FFE8EEF7"/>
+			<yjs:Color x:Key="9" value="#FFB7C9E3"/>
+			<y:RatioAnchoredLabelModelParameter x:Key="10" LayoutOffset="26.1953125,12.93359375"/>
+			<yjs:SolidColorFill x:Key="11" color="Black"/>
+			<yjs:Font x:Key="12" fontSize="12" fontFamily="'Dialog'"/>
+			<yjs:LinearGradient x:Key="13" spreadMethod="PAD" startPoint="0,0" endPoint="1,1">
+				<yjs:GradientStop color="{y:GraphMLReference 8}" offset="0"/>
+				<yjs:GradientStop color="{y:GraphMLReference 9}" offset="1"/>
 			</yjs:LinearGradient>
-			<yjs:Stroke x:Key="11" fill="#FF000000" miterLimit="1.45"/>
-			<y:RatioAnchoredLabelModelParameter x:Key="12" LayoutOffset="20.0576171875,12.93359375"/>
-			<yjs:SolidColorFill x:Key="13" color="Black"/>
-			<yjs:Font x:Key="14" fontSize="12" fontFamily="'Dialog'"/>
-			<yjs:LinearGradient x:Key="15" spreadMethod="PAD" startPoint="0,0" endPoint="1,1">
-				<yjs:GradientStop color="{y:GraphMLReference 5}" offset="0"/>
-				<yjs:GradientStop color="{y:GraphMLReference 6}" offset="1"/>
+			<yjs:Stroke x:Key="14" fill="#FF000000" miterLimit="1.45"/>
+			<y:RatioAnchoredLabelModelParameter x:Key="15" LayoutOffset="20.0576171875,12.93359375"/>
+			<yjs:SolidColorFill x:Key="16" color="Black"/>
+			<yjs:Font x:Key="17" fontSize="12" fontFamily="'Dialog'"/>
+			<yjs:LinearGradient x:Key="18" spreadMethod="PAD" startPoint="0,0" endPoint="1,1">
+				<yjs:GradientStop color="{y:GraphMLReference 8}" offset="0"/>
+				<yjs:GradientStop color="{y:GraphMLReference 9}" offset="1"/>
 			</yjs:LinearGradient>
-			<yjs:Stroke x:Key="16" fill="#FF000000" miterLimit="1.45"/>
-			<yjs:Arrow x:Key="17" type="NONE"/>
-			<yjs:SolidColorFill x:Key="18" color="Black"/>
-			<yjs:PolylineEdgeStyle x:Key="19" sourceArrow="{y:GraphMLReference 20}"/>
-			<x0:CrowsFootArrow x:Key="20" type="CROWS_FOOT_ONE" scale="1"/>
-			<yjs:PolylineEdgeStyle x:Key="21">
-				<yjs:PolylineEdgeStyle.sourceArrow>
-					<x0:CrowsFootArrow type="CROWS_FOOT_ONE" scale="1"/>
-				</yjs:PolylineEdgeStyle.sourceArrow>
-			</yjs:PolylineEdgeStyle>
+			<yjs:Stroke x:Key="19" fill="#FF000000" miterLimit="1.45"/>
+			<yjs:Arrow x:Key="20" type="NONE"/>
+			<yjs:Stroke x:Key="21" fill="#FF000000" miterLimit="1.45"/>
+			<x0:CrowsFootArrow x:Key="22" type="CROWS_FOOT_ONE" stroke="#FF000000" scale="1"/>
+			<yjs:SolidColorFill x:Key="23" color="Black"/>
+			<yjs:PolylineEdgeStyle x:Key="24" sourceArrow="{y:GraphMLReference 25}"/>
+			<x0:CrowsFootArrow x:Key="25" type="CROWS_FOOT_ONE" scale="1"/>
+			<yjs:PolylineEdgeStyle x:Key="26" sourceArrow="{y:GraphMLReference 5}"/>
 		</y:SharedData>
 	</data>
 	<graph id="G" edgedefault="directed">
@@ -79,7 +88,7 @@
 							</y:InteriorStretchLabelModelParameter>
 						</y:Label.LayoutParameter>
 						<y:Label.Style>
-							<yjs:DefaultLabelStyle wrapping="WORD_ELLIPSIS" font="{y:GraphMLReference 3}" textFill="WHITE"/>
+							<yjs:DefaultLabelStyle wrapping="WORD_ELLIPSIS" font="{y:GraphMLReference 6}" textFill="WHITE"/>
 						</y:Label.Style>
 					</y:Label>
 				</x:List>
@@ -88,7 +97,7 @@
 				<y:RectD X="852.25" Y="-70.5" Width="490.0625" Height="657.375"/>
 			</data>
 			<data key="d6">
-				<y:GraphMLReference ResourceKey="4"/>
+				<y:GraphMLReference ResourceKey="7"/>
 			</data>
 			<graph id="n0:" edgedefault="directed">
 				<node id="n0::n0">
@@ -114,6 +123,8 @@
 					<port name="p0"/>
 					<port name="p1"/>
 					<port name="p2"/>
+					<port name="p3"/>
+					<port name="p4"/>
 				</node>
 				<node id="n0::n1">
 					<data key="d4">
@@ -187,6 +198,29 @@
 					<port name="p0"/>
 					<port name="p1"/>
 				</node>
+				<node id="n0::n4">
+					<data key="d4">
+						<y:RectD X="911.3125" Y="464.25" Width="142.75" Height="82"/>
+					</data>
+					<data key="d6">
+						<x0:EntityNodeStyle fill="{y:GraphMLReference 1}" insetFill="{y:GraphMLReference 2}" stroke="BLACK">
+							<x0:EntityNodeStyle.model>
+								<x0:EntityRelationshipModel>
+									<x0:EntityRelationshipModel.title>Comparison</x0:EntityRelationshipModel.title>
+									<x0:EntityRelationshipModel.attributes>
+										<x:Array Type="sys:Object">
+											<sys:String>id</sys:String>
+											<sys:String>name</sys:String>
+											<sys:String>comment</sys:String>
+										</x:Array>
+									</x0:EntityRelationshipModel.attributes>
+								</x0:EntityRelationshipModel>
+							</x0:EntityNodeStyle.model>
+						</x0:EntityNodeStyle>
+					</data>
+					<port name="p0"/>
+					<port name="p1"/>
+				</node>
 				<edge id="n0::e0" source="n0::n0" target="n0::n1" sourceport="p0" targetport="p1">
 					<data key="d12">
 						<yjs:PolylineEdgeStyle stroke="#FF0A0A0A">
@@ -214,7 +248,41 @@
 				</edge>
 				<edge id="n0::e2" source="n0::n3" target="n0::n1" sourceport="p1" targetport="p0">
 					<data key="d12">
-						<y:GraphMLReference ResourceKey="21"/>
+						<y:GraphMLReference ResourceKey="26"/>
+					</data>
+				</edge>
+				<edge id="n0::e3" source="n0::n0" target="n0::n4" sourceport="p3" targetport="p0">
+					<data key="d10">
+						<x:List>
+							<y:Label LayoutParameter="{y:GraphMLReference 3}" Style="{y:GraphMLReference 4}">
+								<y:Label.Text>base</y:Label.Text>
+							</y:Label>
+						</x:List>
+					</data>
+					<data key="d11">
+						<x:List>
+							<y:Bend Location="931,412.0625"/>
+						</x:List>
+					</data>
+					<data key="d12">
+						<yjs:PolylineEdgeStyle stroke="{y:GraphMLReference 21}" smoothingLength="20" targetArrow="{y:GraphMLReference 20}" sourceArrow="{y:GraphMLReference 22}"/>
+					</data>
+				</edge>
+				<edge id="n0::e4" source="n0::n0" target="n0::n4" sourceport="p4" targetport="p1">
+					<data key="d10">
+						<x:List>
+							<y:Label LayoutParameter="{y:GraphMLReference 3}" Style="{y:GraphMLReference 4}">
+								<y:Label.Text><![CDATA[compared to]]></y:Label.Text>
+							</y:Label>
+						</x:List>
+					</data>
+					<data key="d11">
+						<x:List>
+							<y:Bend Location="1030.5,409.25"/>
+						</x:List>
+					</data>
+					<data key="d12">
+						<yjs:PolylineEdgeStyle smoothingLength="20" sourceArrow="{y:GraphMLReference 5}"/>
 					</data>
 				</edge>
 			</graph>
@@ -232,16 +300,16 @@
 							</y:InteriorStretchLabelModelParameter>
 						</y:Label.LayoutParameter>
 						<y:Label.Style>
-							<yjs:DefaultLabelStyle wrapping="WORD_ELLIPSIS" font="{y:GraphMLReference 3}" textFill="WHITE"/>
+							<yjs:DefaultLabelStyle wrapping="WORD_ELLIPSIS" font="{y:GraphMLReference 6}" textFill="WHITE"/>
 						</y:Label.Style>
 					</y:Label>
 				</x:List>
 			</data>
 			<data key="d4">
-				<y:RectD X="271.3125" Y="-70.5" Width="548.625" Height="616.75"/>
+				<y:RectD X="271.3125" Y="-70.5" Width="548.625" Height="657.375"/>
 			</data>
 			<data key="d6">
-				<y:GraphMLReference ResourceKey="4"/>
+				<y:GraphMLReference ResourceKey="7"/>
 			</data>
 			<graph id="n1:" edgedefault="directed">
 				<node id="n1::n0">
@@ -270,8 +338,8 @@
 						<x0:ErdNodeStyle type="Entity">
 							<x0:ErdNodeStyle.fill>
 								<yjs:LinearGradient spreadMethod="PAD" startPoint="0,0" endPoint="1,1">
-									<yjs:GradientStop color="{y:GraphMLReference 5}" offset="0"/>
-									<yjs:GradientStop color="{y:GraphMLReference 6}" offset="1"/>
+									<yjs:GradientStop color="{y:GraphMLReference 8}" offset="0"/>
+									<yjs:GradientStop color="{y:GraphMLReference 9}" offset="1"/>
 								</yjs:LinearGradient>
 							</x0:ErdNodeStyle.fill>
 							<x0:ErdNodeStyle.stroke>
@@ -310,8 +378,8 @@
 						<x0:ErdNodeStyle type="Entity">
 							<x0:ErdNodeStyle.fill>
 								<yjs:LinearGradient spreadMethod="PAD" startPoint="0,0" endPoint="1,1">
-									<yjs:GradientStop color="{y:GraphMLReference 5}" offset="0"/>
-									<yjs:GradientStop color="{y:GraphMLReference 6}" offset="1"/>
+									<yjs:GradientStop color="{y:GraphMLReference 8}" offset="0"/>
+									<yjs:GradientStop color="{y:GraphMLReference 9}" offset="1"/>
 								</yjs:LinearGradient>
 							</x0:ErdNodeStyle.fill>
 							<x0:ErdNodeStyle.stroke>
@@ -331,10 +399,10 @@
 					<data key="d2"><![CDATA[]]></data>
 					<data key="d3">
 						<x:List>
-							<y:Label LayoutParameter="{y:GraphMLReference 7}">
+							<y:Label LayoutParameter="{y:GraphMLReference 10}">
 								<y:Label.Text>Field</y:Label.Text>
 								<y:Label.Style>
-									<yjs:DefaultLabelStyle horizontalTextAlignment="CENTER" font="{y:GraphMLReference 9}" autoFlip="false" textFill="{y:GraphMLReference 8}"/>
+									<yjs:DefaultLabelStyle horizontalTextAlignment="CENTER" font="{y:GraphMLReference 12}" autoFlip="false" textFill="{y:GraphMLReference 11}"/>
 								</y:Label.Style>
 							</y:Label>
 						</x:List>
@@ -343,7 +411,7 @@
 						<y:RectD X="558.1875" Y="234.75" Width="80" Height="40"/>
 					</data>
 					<data key="d6">
-						<x0:ErdNodeStyle type="Entity" fill="{y:GraphMLReference 10}" stroke="{y:GraphMLReference 11}"/>
+						<x0:ErdNodeStyle type="Entity" fill="{y:GraphMLReference 13}" stroke="{y:GraphMLReference 14}"/>
 					</data>
 					<port name="p0"/>
 					<port name="p1"/>
@@ -375,8 +443,8 @@
 						<x0:ErdNodeStyle type="Entity">
 							<x0:ErdNodeStyle.fill>
 								<yjs:LinearGradient spreadMethod="PAD" startPoint="0,0" endPoint="1,1">
-									<yjs:GradientStop color="{y:GraphMLReference 5}" offset="0"/>
-									<yjs:GradientStop color="{y:GraphMLReference 6}" offset="1"/>
+									<yjs:GradientStop color="{y:GraphMLReference 8}" offset="0"/>
+									<yjs:GradientStop color="{y:GraphMLReference 9}" offset="1"/>
 								</yjs:LinearGradient>
 							</x0:ErdNodeStyle.fill>
 							<x0:ErdNodeStyle.stroke>
@@ -414,8 +482,8 @@
 						<x0:ErdNodeStyle type="Entity">
 							<x0:ErdNodeStyle.fill>
 								<yjs:LinearGradient spreadMethod="PAD" startPoint="0,0" endPoint="1,1">
-									<yjs:GradientStop color="{y:GraphMLReference 5}" offset="0"/>
-									<yjs:GradientStop color="{y:GraphMLReference 6}" offset="1"/>
+									<yjs:GradientStop color="{y:GraphMLReference 8}" offset="0"/>
+									<yjs:GradientStop color="{y:GraphMLReference 9}" offset="1"/>
 								</yjs:LinearGradient>
 							</x0:ErdNodeStyle.fill>
 							<x0:ErdNodeStyle.stroke>
@@ -429,10 +497,10 @@
 					<data key="d2"><![CDATA[]]></data>
 					<data key="d3">
 						<x:List>
-							<y:Label LayoutParameter="{y:GraphMLReference 12}">
+							<y:Label LayoutParameter="{y:GraphMLReference 15}">
 								<y:Label.Text>Project</y:Label.Text>
 								<y:Label.Style>
-									<yjs:DefaultLabelStyle horizontalTextAlignment="CENTER" font="{y:GraphMLReference 14}" autoFlip="false" textFill="{y:GraphMLReference 13}"/>
+									<yjs:DefaultLabelStyle horizontalTextAlignment="CENTER" font="{y:GraphMLReference 17}" autoFlip="false" textFill="{y:GraphMLReference 16}"/>
 								</y:Label.Style>
 							</y:Label>
 						</x:List>
@@ -441,7 +509,7 @@
 						<y:RectD X="558.1875" Y="-43.5" Width="80" Height="40"/>
 					</data>
 					<data key="d6">
-						<x0:ErdNodeStyle type="Entity" fill="{y:GraphMLReference 15}" stroke="{y:GraphMLReference 16}"/>
+						<x0:ErdNodeStyle type="Entity" fill="{y:GraphMLReference 18}" stroke="{y:GraphMLReference 19}"/>
 					</data>
 					<port name="p0"/>
 					<port name="p1"/>
@@ -457,8 +525,8 @@
 						<x0:EntityNodeStyle insetFill="#FFB7C9E3">
 							<x0:EntityNodeStyle.fill>
 								<yjs:LinearGradient spreadMethod="PAD" startPoint="0,0" endPoint="1,1">
-									<yjs:GradientStop color="{y:GraphMLReference 5}" offset="0"/>
-									<yjs:GradientStop color="{y:GraphMLReference 6}" offset="1"/>
+									<yjs:GradientStop color="{y:GraphMLReference 8}" offset="0"/>
+									<yjs:GradientStop color="{y:GraphMLReference 9}" offset="1"/>
 								</yjs:LinearGradient>
 							</x0:EntityNodeStyle.fill>
 							<x0:EntityNodeStyle.stroke>
@@ -484,10 +552,10 @@
 					<data key="d2"><![CDATA[]]></data>
 					<data key="d3">
 						<x:List>
-							<y:Label LayoutParameter="{y:GraphMLReference 7}">
+							<y:Label LayoutParameter="{y:GraphMLReference 10}">
 								<y:Label.Text>PFUser</y:Label.Text>
 								<y:Label.Style>
-									<yjs:DefaultLabelStyle horizontalTextAlignment="CENTER" font="{y:GraphMLReference 9}" autoFlip="false" textFill="{y:GraphMLReference 8}"/>
+									<yjs:DefaultLabelStyle horizontalTextAlignment="CENTER" font="{y:GraphMLReference 12}" autoFlip="false" textFill="{y:GraphMLReference 11}"/>
 								</y:Label.Style>
 							</y:Label>
 						</x:List>
@@ -496,7 +564,7 @@
 						<y:RectD X="677.6875" Y="457.625" Width="80" Height="40"/>
 					</data>
 					<data key="d6">
-						<x0:ErdNodeStyle type="Entity" fill="{y:GraphMLReference 10}" stroke="{y:GraphMLReference 11}"/>
+						<x0:ErdNodeStyle type="Entity" fill="{y:GraphMLReference 13}" stroke="{y:GraphMLReference 14}"/>
 					</data>
 					<port name="p0"/>
 				</node>
@@ -504,10 +572,10 @@
 					<data key="d2"><![CDATA[]]></data>
 					<data key="d3">
 						<x:List>
-							<y:Label LayoutParameter="{y:GraphMLReference 12}">
+							<y:Label LayoutParameter="{y:GraphMLReference 15}">
 								<y:Label.Text>Documents</y:Label.Text>
 								<y:Label.Style>
-									<yjs:DefaultLabelStyle horizontalTextAlignment="CENTER" font="{y:GraphMLReference 14}" autoFlip="false" textFill="{y:GraphMLReference 13}"/>
+									<yjs:DefaultLabelStyle horizontalTextAlignment="CENTER" font="{y:GraphMLReference 17}" autoFlip="false" textFill="{y:GraphMLReference 16}"/>
 								</y:Label.Style>
 							</y:Label>
 						</x:List>
@@ -516,7 +584,7 @@
 						<y:RectD X="438.6875" Y="65.375" Width="80" Height="40"/>
 					</data>
 					<data key="d6">
-						<x0:ErdNodeStyle type="Entity" fill="{y:GraphMLReference 15}" stroke="{y:GraphMLReference 16}"/>
+						<x0:ErdNodeStyle type="Entity" fill="{y:GraphMLReference 18}" stroke="{y:GraphMLReference 19}"/>
 					</data>
 					<port name="p0"/>
 					<port name="p1"/>
@@ -525,10 +593,10 @@
 					<data key="d2"><![CDATA[]]></data>
 					<data key="d3">
 						<x:List>
-							<y:Label LayoutParameter="{y:GraphMLReference 12}">
+							<y:Label LayoutParameter="{y:GraphMLReference 15}">
 								<y:Label.Text>Document</y:Label.Text>
 								<y:Label.Style>
-									<yjs:DefaultLabelStyle horizontalTextAlignment="CENTER" font="{y:GraphMLReference 14}" autoFlip="false" textFill="{y:GraphMLReference 13}"/>
+									<yjs:DefaultLabelStyle horizontalTextAlignment="CENTER" font="{y:GraphMLReference 17}" autoFlip="false" textFill="{y:GraphMLReference 16}"/>
 								</y:Label.Style>
 							</y:Label>
 						</x:List>
@@ -537,7 +605,7 @@
 						<y:RectD X="438.6875" Y="170.0625" Width="80" Height="40"/>
 					</data>
 					<data key="d6">
-						<x0:ErdNodeStyle type="Entity" fill="{y:GraphMLReference 15}" stroke="{y:GraphMLReference 16}"/>
+						<x0:ErdNodeStyle type="Entity" fill="{y:GraphMLReference 18}" stroke="{y:GraphMLReference 19}"/>
 					</data>
 					<port name="p0"/>
 				</node>
@@ -545,10 +613,10 @@
 					<data key="d2"><![CDATA[]]></data>
 					<data key="d3">
 						<x:List>
-							<y:Label LayoutParameter="{y:GraphMLReference 12}">
+							<y:Label LayoutParameter="{y:GraphMLReference 15}">
 								<y:Label.Text>Realeases</y:Label.Text>
 								<y:Label.Style>
-									<yjs:DefaultLabelStyle horizontalTextAlignment="CENTER" font="{y:GraphMLReference 14}" autoFlip="false" textFill="{y:GraphMLReference 13}"/>
+									<yjs:DefaultLabelStyle horizontalTextAlignment="CENTER" font="{y:GraphMLReference 17}" autoFlip="false" textFill="{y:GraphMLReference 16}"/>
 								</y:Label.Style>
 							</y:Label>
 						</x:List>
@@ -557,7 +625,7 @@
 						<y:RectD X="308.3125" Y="65.375" Width="80" Height="40"/>
 					</data>
 					<data key="d6">
-						<x0:ErdNodeStyle type="Entity" fill="{y:GraphMLReference 15}" stroke="{y:GraphMLReference 16}"/>
+						<x0:ErdNodeStyle type="Entity" fill="{y:GraphMLReference 18}" stroke="{y:GraphMLReference 19}"/>
 					</data>
 					<port name="p0"/>
 					<port name="p1"/>
@@ -566,10 +634,10 @@
 					<data key="d2"><![CDATA[]]></data>
 					<data key="d3">
 						<x:List>
-							<y:Label LayoutParameter="{y:GraphMLReference 12}">
+							<y:Label LayoutParameter="{y:GraphMLReference 15}">
 								<y:Label.Text>Release</y:Label.Text>
 								<y:Label.Style>
-									<yjs:DefaultLabelStyle horizontalTextAlignment="CENTER" font="{y:GraphMLReference 14}" autoFlip="false" textFill="{y:GraphMLReference 13}"/>
+									<yjs:DefaultLabelStyle horizontalTextAlignment="CENTER" font="{y:GraphMLReference 17}" autoFlip="false" textFill="{y:GraphMLReference 16}"/>
 								</y:Label.Style>
 							</y:Label>
 						</x:List>
@@ -578,14 +646,14 @@
 						<y:RectD X="308.3125" Y="170.0625" Width="80" Height="40"/>
 					</data>
 					<data key="d6">
-						<x0:ErdNodeStyle type="Entity" fill="{y:GraphMLReference 15}" stroke="{y:GraphMLReference 16}"/>
+						<x0:ErdNodeStyle type="Entity" fill="{y:GraphMLReference 18}" stroke="{y:GraphMLReference 19}"/>
 					</data>
 					<port name="p0"/>
 				</node>
 				<edge id="n1::e0" source="n1::n1" target="n1::n0" sourceport="p0" targetport="p0">
 					<data key="d9"><![CDATA[]]></data>
 					<data key="d12">
-						<yjs:PolylineEdgeStyle smoothingLength="20" targetArrow="{y:GraphMLReference 17}">
+						<yjs:PolylineEdgeStyle smoothingLength="20" targetArrow="{y:GraphMLReference 20}">
 							<yjs:PolylineEdgeStyle.stroke>
 								<yjs:Stroke fill="#FF000000" miterLimit="1.45"/>
 							</yjs:PolylineEdgeStyle.stroke>
@@ -598,7 +666,7 @@
 				<edge id="n1::e1" source="n1::n0" target="n1::n6" sourceport="p1" targetport="p0">
 					<data key="d9"><![CDATA[]]></data>
 					<data key="d12">
-						<yjs:PolylineEdgeStyle smoothingLength="20" targetArrow="{y:GraphMLReference 17}">
+						<yjs:PolylineEdgeStyle smoothingLength="20" targetArrow="{y:GraphMLReference 20}">
 							<yjs:PolylineEdgeStyle.stroke>
 								<yjs:Stroke fill="#FF000000" miterLimit="1.45"/>
 							</yjs:PolylineEdgeStyle.stroke>
@@ -611,7 +679,7 @@
 				<edge id="n1::e2" source="n1::n5" target="n1::n1" sourceport="p0" targetport="p1">
 					<data key="d9"><![CDATA[]]></data>
 					<data key="d12">
-						<yjs:PolylineEdgeStyle smoothingLength="20" targetArrow="{y:GraphMLReference 17}">
+						<yjs:PolylineEdgeStyle smoothingLength="20" targetArrow="{y:GraphMLReference 20}">
 							<yjs:PolylineEdgeStyle.stroke>
 								<yjs:Stroke fill="#FF000000" miterLimit="1.45"/>
 							</yjs:PolylineEdgeStyle.stroke>
@@ -624,7 +692,7 @@
 				<edge id="n1::e3" source="n1::n1" target="n1::n2" sourceport="p2" targetport="p0">
 					<data key="d9"><![CDATA[]]></data>
 					<data key="d12">
-						<yjs:PolylineEdgeStyle smoothingLength="20" targetArrow="{y:GraphMLReference 17}">
+						<yjs:PolylineEdgeStyle smoothingLength="20" targetArrow="{y:GraphMLReference 20}">
 							<yjs:PolylineEdgeStyle.stroke>
 								<yjs:Stroke fill="#FF000000" miterLimit="1.45"/>
 							</yjs:PolylineEdgeStyle.stroke>
@@ -637,7 +705,7 @@
 				<edge id="n1::e4" source="n1::n0" target="n1::n6" sourceport="p3" targetport="p2">
 					<data key="d9"><![CDATA[]]></data>
 					<data key="d12">
-						<yjs:PolylineEdgeStyle smoothingLength="20" targetArrow="{y:GraphMLReference 17}">
+						<yjs:PolylineEdgeStyle smoothingLength="20" targetArrow="{y:GraphMLReference 20}">
 							<yjs:PolylineEdgeStyle.stroke>
 								<yjs:Stroke fill="#FF000000" miterLimit="1.45"/>
 							</yjs:PolylineEdgeStyle.stroke>
@@ -650,7 +718,7 @@
 				<edge id="n1::e5" source="n1::n4" target="n1::n2" sourceport="p0" targetport="p1">
 					<data key="d9"><![CDATA[]]></data>
 					<data key="d12">
-						<yjs:PolylineEdgeStyle smoothingLength="20" targetArrow="{y:GraphMLReference 17}">
+						<yjs:PolylineEdgeStyle smoothingLength="20" targetArrow="{y:GraphMLReference 20}">
 							<yjs:PolylineEdgeStyle.stroke>
 								<yjs:Stroke fill="#FF000000" miterLimit="1.45"/>
 							</yjs:PolylineEdgeStyle.stroke>
@@ -663,20 +731,13 @@
 				<edge id="n1::e6" source="n1::n2" target="n1::n3" sourceport="p2" targetport="p0">
 					<data key="d9"><![CDATA[]]></data>
 					<data key="d12">
-						<yjs:PolylineEdgeStyle smoothingLength="20" targetArrow="{y:GraphMLReference 17}">
-							<yjs:PolylineEdgeStyle.stroke>
-								<yjs:Stroke fill="#FF000000" miterLimit="1.45"/>
-							</yjs:PolylineEdgeStyle.stroke>
-							<yjs:PolylineEdgeStyle.sourceArrow>
-								<x0:CrowsFootArrow type="CROWS_FOOT_ONE" stroke="#FF000000" scale="1"/>
-							</yjs:PolylineEdgeStyle.sourceArrow>
-						</yjs:PolylineEdgeStyle>
+						<yjs:PolylineEdgeStyle stroke="{y:GraphMLReference 21}" smoothingLength="20" targetArrow="{y:GraphMLReference 20}" sourceArrow="{y:GraphMLReference 22}"/>
 					</data>
 				</edge>
 				<edge id="n1::e7" source="n1::n3" target="n1::n6" sourceport="p1" targetport="p1">
 					<data key="d9"><![CDATA[]]></data>
 					<data key="d12">
-						<yjs:PolylineEdgeStyle targetArrow="{y:GraphMLReference 17}">
+						<yjs:PolylineEdgeStyle targetArrow="{y:GraphMLReference 20}">
 							<yjs:PolylineEdgeStyle.stroke>
 								<yjs:Stroke fill="#FF000000" miterLimit="1.45"/>
 							</yjs:PolylineEdgeStyle.stroke>
@@ -691,35 +752,35 @@
 					<data key="d12">
 						<yjs:PolylineEdgeStyle>
 							<yjs:PolylineEdgeStyle.stroke>
-								<yjs:Stroke fill="{y:GraphMLReference 18}" miterLimit="1.45"/>
+								<yjs:Stroke fill="{y:GraphMLReference 23}" miterLimit="1.45"/>
 							</yjs:PolylineEdgeStyle.stroke>
 							<yjs:PolylineEdgeStyle.targetArrow>
 								<x0:CrowsFootArrow type="CROWS_FOOT_ONE_OPTIONAL" stroke="#FF000000" scale="1"/>
 							</yjs:PolylineEdgeStyle.targetArrow>
 							<yjs:PolylineEdgeStyle.sourceArrow>
-								<yjs:Arrow type="NONE" stroke="#FF000000" fill="{y:GraphMLReference 18}"/>
+								<yjs:Arrow type="NONE" stroke="#FF000000" fill="{y:GraphMLReference 23}"/>
 							</yjs:PolylineEdgeStyle.sourceArrow>
 						</yjs:PolylineEdgeStyle>
 					</data>
 				</edge>
 				<edge id="n1::e9" source="n1::n5" target="n1::n8" sourceport="p1" targetport="p0">
 					<data key="d12">
-						<y:GraphMLReference ResourceKey="19"/>
+						<y:GraphMLReference ResourceKey="24"/>
 					</data>
 				</edge>
 				<edge id="n1::e10" source="n1::n8" target="n1::n9" sourceport="p1" targetport="p0">
 					<data key="d12">
-						<y:GraphMLReference ResourceKey="19"/>
+						<y:GraphMLReference ResourceKey="24"/>
 					</data>
 				</edge>
 				<edge id="n1::e11" source="n1::n10" target="n1::n11" sourceport="p0" targetport="p0">
 					<data key="d12">
-						<yjs:PolylineEdgeStyle sourceArrow="{y:GraphMLReference 20}"/>
+						<yjs:PolylineEdgeStyle sourceArrow="{y:GraphMLReference 25}"/>
 					</data>
 				</edge>
 				<edge id="n1::e12" source="n1::n5" target="n1::n10" sourceport="p2" targetport="p1">
 					<data key="d12">
-						<y:GraphMLReference ResourceKey="19"/>
+						<y:GraphMLReference ResourceKey="24"/>
 					</data>
 				</edge>
 			</graph>
@@ -747,12 +808,12 @@
 				</x:List>
 			</data>
 			<data key="d12">
-				<y:GraphMLReference ResourceKey="21"/>
+				<y:GraphMLReference ResourceKey="26"/>
 			</data>
 		</edge>
 		<edge id="e1" source="n1::n5" target="n0::n3" sourceport="p3" targetport="p0">
 			<data key="d12">
-				<yjs:PolylineEdgeStyle sourceArrow="{y:GraphMLReference 20}"/>
+				<yjs:PolylineEdgeStyle sourceArrow="{y:GraphMLReference 25}"/>
 			</data>
 		</edge>
 	</graph>

@@ -11,6 +11,14 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 2.2.1\n"
 
+#, php-format
+msgid ""
+"Base baseline is not on same artifact (id %u) than compared to baseline (id "
+"%u)"
+msgstr ""
+"La baseline de référence n'est pas sur le même artefact (id %u) que la "
+"baseline à comparer (id %u)"
+
 msgid "Baseline"
 msgstr "Baseline"
 
@@ -53,7 +61,13 @@ msgstr ""
 "ayant pour id %u"
 
 #, php-format
+msgid "You're not allowed to add new comparison in project with id %u"
+msgstr ""
+"Vous n'êtes pas autorisé à ajouter une nouvelle comparison dans le projet "
+"ayant pour id %u"
+
+#, php-format
 msgid "You're not allowed to delete baseline in project with id %u"
 msgstr ""
-"Vous n'êtes pas autorisé à supprimer une baseline dans le projet "
-"ayant pour id %u"
+"Vous n'êtes pas autorisé à supprimer une baseline dans le projet ayant pour "
+"id %u"

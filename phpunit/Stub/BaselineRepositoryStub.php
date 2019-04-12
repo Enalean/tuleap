@@ -64,6 +64,9 @@ class BaselineRepositoryStub implements BaselineRepository
 
     public function findById(PFUser $current_user, int $id): ?Baseline
     {
+        if (! isset($this->baselines_by_id[$id])) {
+            return null;
+        }
         return $this->baselines_by_id[$id];
     }
 

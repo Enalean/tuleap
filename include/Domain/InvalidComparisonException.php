@@ -21,23 +21,11 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Baseline\Factory;
+namespace Tuleap\Baseline;
 
-class BaselineArtifactFactory
+use Exception;
+
+class InvalidComparisonException extends Exception
 {
-    private static $id_offset = 1;
 
-    public static function one(): BaselineArtifactBuilder
-    {
-        return (new BaselineArtifactBuilder())
-            ->id(self::$id_offset++)
-            ->title("artifact title")
-            ->description("artifact comment")
-            ->initialEffort(2)
-            ->status("Done")
-            ->project(ProjectFactory::one())
-            ->trackerId(3)
-            ->trackerName('Epic')
-            ->linkedArtifactIds([]);
-    }
 }

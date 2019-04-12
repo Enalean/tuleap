@@ -32,15 +32,17 @@ use PHPUnit\Framework\TestCase;
 use Tuleap\Baseline\BaselineArtifactRepository;
 use Tuleap\Baseline\BaselineRepository;
 use Tuleap\Baseline\Clock;
+use Tuleap\Baseline\ComparisonRepository;
 use Tuleap\Baseline\CurrentUserProvider;
 use Tuleap\Baseline\ProjectRepository;
 use Tuleap\Baseline\Stub\BaselineArtifactRepositoryStub;
 use Tuleap\Baseline\Stub\BaselineRepositoryStub;
+use Tuleap\Baseline\Stub\ComparisonRepositoryStub;
 use Tuleap\Baseline\Stub\CurrentUserProviderStub;
 use Tuleap\Baseline\Stub\FrozenClock;
 use Tuleap\Baseline\Stub\ProjectRepositoryStub;
 use Tuleap\Baseline\Support\ContainerBuilderFactory;
-use Tuleap\GlobalLanguageMock;
+use Tuleap\Baseline\Support\CurrentUserContext;
 use Tuleap\REST\RESTLogger;
 
 /**
@@ -51,7 +53,7 @@ use Tuleap\REST\RESTLogger;
 abstract class IntegrationTestCaseWithStubs extends TestCase
 {
     use MockeryPHPUnitIntegration;
-    use GlobalLanguageMock;
+    use CurrentUserContext;
 
     /** @var Container */
     private $container;
@@ -61,6 +63,9 @@ abstract class IntegrationTestCaseWithStubs extends TestCase
 
     /** @var BaselineRepositoryStub */
     protected $baseline_repository;
+
+    /** @var ComparisonRepositoryStub */
+    protected $comparison_repository;
 
     /** @var ProjectRepositoryStub */
     protected $project_repository;
@@ -91,6 +96,7 @@ abstract class IntegrationTestCaseWithStubs extends TestCase
     {
         $this->clock                        = new FrozenClock();
         $this->baseline_repository          = new BaselineRepositoryStub();
+        $this->comparison_repository        = new ComparisonRepositoryStub();
         $this->project_repository           = new ProjectRepositoryStub();
         $this->baseline_artifact_repository = new BaselineArtifactRepositoryStub($this->clock);
         $this->current_user_provider        = new CurrentUserProviderStub();
@@ -99,6 +105,7 @@ abstract class IntegrationTestCaseWithStubs extends TestCase
             ->addDefinitions(
                 [
                     BaselineRepository::class         => $this->baseline_repository,
+                    ComparisonRepository::class       => $this->comparison_repository,
                     ProjectRepository::class          => $this->project_repository,
                     BaselineArtifactRepository::class => $this->baseline_artifact_repository,
                     CurrentUserProvider::class        => $this->current_user_provider,

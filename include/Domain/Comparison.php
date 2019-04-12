@@ -21,23 +21,26 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Baseline\Factory;
+namespace Tuleap\Baseline;
 
-class BaselineArtifactFactory
+class Comparison extends TransientComparison
 {
-    private static $id_offset = 1;
+    /** @var int */
+    private $id;
 
-    public static function one(): BaselineArtifactBuilder
+    public function __construct(
+        int $id,
+        string $name,
+        ?string $comment,
+        Baseline $base_baseline,
+        Baseline $compared_to_baseline
+    ) {
+        parent::__construct($name, $comment, $base_baseline, $compared_to_baseline);
+        $this->id = $id;
+    }
+
+    public function getId(): int
     {
-        return (new BaselineArtifactBuilder())
-            ->id(self::$id_offset++)
-            ->title("artifact title")
-            ->description("artifact comment")
-            ->initialEffort(2)
-            ->status("Done")
-            ->project(ProjectFactory::one())
-            ->trackerId(3)
-            ->trackerName('Epic')
-            ->linkedArtifactIds([]);
+        return $this->id;
     }
 }

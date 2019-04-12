@@ -169,6 +169,36 @@ class BaselinesResourceTest extends RestBase
         $this->assertNotNull('base', $artifact_response['tracker_name']);
     }
 
+    public function testPostBaselineComparison()
+    {
+        $base_baseline        = $this->createABaseline($this->an_artifact_id);
+        $compared_to_baseline = $this->createABaseline($this->an_artifact_id);
+
+        $response = $this->getResponseByName(
+            self::TEST_USER_NAME,
+            $this->client->post(
+                'baselines/comparisons',
+                null,
+                json_encode(
+                    [
+                        'name'                    => 'new comparison',
+                        'comment'                 => 'used fo tests',
+                        'base_baseline_id'        => $base_baseline['id'],
+                        'compared_to_baseline_id' => $compared_to_baseline['id']
+                    ]
+                )
+            )
+        );
+        $this->assertEquals(201, $response->getStatusCode());
+        $json_response = $response->json();
+
+        $this->assertNotNull($json_response['id']);
+        $this->assertEquals('new comparison', $json_response['name']);
+        $this->assertEquals('used fo tests', $json_response['comment']);
+        $this->assertEquals($base_baseline['id'], $json_response['base_baseline_id']);
+        $this->assertEquals($compared_to_baseline['id'], $json_response['compared_to_baseline_id']);
+    }
+
     private function createABaseline(int $artifact_id): array
     {
         $response = $this->getResponseByName(

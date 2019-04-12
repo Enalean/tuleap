@@ -34,11 +34,13 @@ use TrackerFactory;
 use Tuleap\Baseline\Adapter\BaselineArtifactRepositoryAdapter;
 use Tuleap\Baseline\Adapter\BaselineRepositoryAdapter;
 use Tuleap\Baseline\Adapter\ClockAdapter;
+use Tuleap\Baseline\Adapter\ComparisonRepositoryAdapter;
 use Tuleap\Baseline\Adapter\CurrentUserProviderAdapter;
 use Tuleap\Baseline\Adapter\ProjectRepositoryAdapter;
 use Tuleap\Baseline\BaselineArtifactRepository;
 use Tuleap\Baseline\BaselineRepository;
 use Tuleap\Baseline\Clock;
+use Tuleap\Baseline\ComparisonRepository;
 use Tuleap\Baseline\CurrentUserProvider;
 use Tuleap\Baseline\ProjectRepository;
 use Tuleap\DB\DBFactory;
@@ -60,6 +62,7 @@ class ContainerBuilderFactory
                 UserManager::class                       => factory([UserManager::class, 'build']),
                 CurrentUserProvider::class               => autowire(CurrentUserProviderAdapter::class),
                 BaselineRepository::class                => autowire(BaselineRepositoryAdapter::class),
+                ComparisonRepository::class              => autowire(ComparisonRepositoryAdapter::class),
                 BaselineArtifactRepository::class        => autowire(BaselineArtifactRepositoryAdapter::class),
                 ProjectRepository::class                 => autowire(ProjectRepositoryAdapter::class),
                 ProjectManager::class                    => factory([ProjectManager::class, 'instance']),
