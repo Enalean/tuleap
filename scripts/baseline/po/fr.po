@@ -68,8 +68,14 @@ msgstr "Impossible de charger les artefacts liés"
 msgid "Cannot fetch milestones"
 msgstr "Impossible de charger les milestones"
 
+msgid "Cannot save comparison"
+msgstr "Impossible de sauvegarder la comparaison"
+
 msgid "Close"
 msgstr "Fermer"
+
+msgid "Comment"
+msgstr "Commentaire"
 
 msgid "Compare baselines"
 msgstr "Comparer des baselines"
@@ -148,6 +154,12 @@ msgstr "Veuillez confirmer votre action."
 msgid "Reference…"
 msgstr "Référence…"
 
+msgid "Save"
+msgstr "Sauvegarder"
+
+msgid "Save comparison"
+msgstr "Sauvegarder la comparaison"
+
 msgid "Show comparison"
 msgstr "Afficher la comparaison"
 
@@ -162,6 +174,9 @@ msgstr "La baseline a été créée"
 
 msgid "The baseline was deleted"
 msgstr "La baseline a été supprimée"
+
+msgid "The comparison was saved"
+msgstr "La comparaison a été sauvegardée"
 
 msgid "User stories"
 msgstr "User stories"

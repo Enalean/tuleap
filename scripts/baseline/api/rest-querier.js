@@ -33,7 +33,12 @@ export {
     getUser,
     getArtifact,
     getBaselineArtifacts,
-    getBaselineArtifactsByIds
+    getBaselineArtifactsByIds,
+    createComparison
+};
+
+const JSON_HEADERS = {
+    "content-type": "application/json"
 };
 
 async function getOpenMilestones(project_id) {
@@ -42,17 +47,13 @@ async function getOpenMilestones(project_id) {
 }
 
 async function createBaseline(name, milestone) {
-    const headers = {
-        "content-type": "application/json"
-    };
-
     const body = JSON.stringify({
         name,
         artifact_id: milestone.id
     });
 
     const response = await post("/api/baselines/", {
-        headers,
+        headers: JSON_HEADERS,
         body
     });
 
@@ -106,4 +107,20 @@ async function getBaselineArtifactsByIds(baseline_id, artifact_ids) {
 
     let json_response = await response.json();
     return json_response.artifacts;
+}
+
+async function createComparison(name, comment, base_baseline_id, compared_to_baseline_id) {
+    const body = JSON.stringify({
+        name,
+        comment,
+        base_baseline_id,
+        compared_to_baseline_id
+    });
+
+    const response = await post("/api/baselines/comparisons/", {
+        headers: JSON_HEADERS,
+        body
+    });
+
+    return response.json();
 }
