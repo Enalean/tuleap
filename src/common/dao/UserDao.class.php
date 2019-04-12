@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -418,7 +418,7 @@ class UserDao extends DataAccessObject {
     {
         $name = $this->getDa()->quoteLikeValueSurround($name);
 
-        $sql = "SELECT SQL_CALC_FOUND_ROWS user_id, realname, user_name, has_avatar".
+        $sql = "SELECT SQL_CALC_FOUND_ROWS *".
             " FROM user".
             " WHERE (realname LIKE $name".
             " OR user_name LIKE $name)".

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2008. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2008
@@ -22,6 +22,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Project\Admin\ProjectWithoutRestrictedFeatureFlag;
 use Tuleap\User\RequestFromAutocompleter;
 use Tuleap\User\UserAutocompletePostSearchEvent;
 
@@ -47,6 +48,26 @@ if($request->valid($vCodendiUserOnly)) {
     if($request->get('codendi_user_only') == 1) {
         $codendiUserOnly = true;
     }
+}
+
+$display_restricted_user = true;
+$requested_project_id    = $request->get('project_id');
+if ($requested_project_id !== '' && $requested_project_id !== false) {
+    $display_restricted_user = (static function(int $project_id) : bool {
+        $project = ProjectManager::instance()->getProject($project_id);
+
+        if ($project->isError()) {
+            return true;
+        }
+
+        return ! ($project->getAccess() === Project::ACCESS_PRIVATE_WO_RESTRICTED && ForgeConfig::areRestrictedUsersAllowed() &&
+            ProjectWithoutRestrictedFeatureFlag::isEnabled()
+        );
+    }) ($requested_project_id);
+}
+
+if (! $display_restricted_user) {
+    $codendiUserOnly = true;
 }
 
 $json_format = false;
@@ -80,13 +101,16 @@ if (count($userList) < $limit) {
 
     $dar = $userDao->searchUserNameLike($userName, $sql_limit);
     while($dar->valid()) {
-        $row = $dar->current();
-        $userList[] = array(
-            'display_name' => $row['realname']." (".$row['user_name'].")",
-            'login'        => $row['user_name'],
-            'has_avatar'   => $row['has_avatar'],
-            'user_id'      => $row['user_id'],
-        );
+        $row  = $dar->current();
+        $is_user_restricted = (new PFUser($row))->isRestricted();
+        if (! $is_user_restricted || ($is_user_restricted && $display_restricted_user)) {
+            $userList[] = array(
+                'display_name' => $row['realname']." (".$row['user_name'].")",
+                'login'        => $row['user_name'],
+                'has_avatar'   => $row['has_avatar'],
+                'user_id'      => $row['user_id'],
+            );
+        }
 
         $dar->next();
     }

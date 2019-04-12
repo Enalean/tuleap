@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -77,7 +77,8 @@ function autocomplete_users_for_select2(element, options) {
                 return_type: "json_for_select_2",
                 name: params.term,
                 page: params.page || 1,
-                codendi_user_only: options.internal_users_only
+                codendi_user_only: options.internal_users_only,
+                project_id: options.project_id || ""
             };
         }
     };
