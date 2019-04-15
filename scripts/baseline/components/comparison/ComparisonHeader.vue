@@ -7,27 +7,24 @@
         >
             Cannot fetch baselines
         </div>
-        <template v-else-if="is_loading">
-            <baseline-label-skeleton key="from"/>
-            <baseline-label-skeleton key="to"/>
-        </template>
-        <template v-else>
-            <baseline-label v-bind:baseline="from_baseline" key="from"/>
-            <baseline-label v-bind:baseline="to_baseline" key="to"/>
-        </template>
+        <h2 v-else-if="is_loading">
+            <span class="tlp-skeleton-text"></span>
+            <i class="fa fa-tlp-baseline-comparison baseline-comparison-separator"></i>
+            <span class="tlp-skeleton-text"></span>
+        </h2>
+        <h2 v-else>
+            {{ from_baseline.name }}
+            <i class="fa fa-tlp-baseline-comparison baseline-comparison-separator"></i>
+            {{ to_baseline.name }}
+        </h2>
     </div>
 </template>
 
 <script>
 import { getBaseline } from "../../api/rest-querier";
-import { presentBaseline } from "../../presenters/baseline";
-import BaselineLabel from "../common/BaselineLabel.vue";
-import BaselineLabelSkeleton from "../common/BaselineLabelSkeleton.vue";
 
 export default {
     name: "ComparisonHeader",
-
-    components: { BaselineLabel, BaselineLabelSkeleton },
 
     props: {
         from_baseline_id: { required: true, type: Number },
@@ -53,8 +50,8 @@ export default {
             this.is_loading_failed = false;
 
             try {
-                const from_baseline = this.getPresentedBaseline(this.from_baseline_id);
-                const to_baseline = this.getPresentedBaseline(this.to_baseline_id);
+                const from_baseline = getBaseline(this.from_baseline_id);
+                const to_baseline = getBaseline(this.to_baseline_id);
                 this.to_baseline = await to_baseline;
                 this.from_baseline = await from_baseline;
             } catch (e) {
@@ -62,11 +59,6 @@ export default {
             } finally {
                 this.is_loading = false;
             }
-        },
-
-        async getPresentedBaseline(baseline_id) {
-            const baseline = await getBaseline(baseline_id);
-            return presentBaseline(baseline);
         }
     }
 };

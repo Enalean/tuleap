@@ -19,33 +19,31 @@
   -->
 
 <template>
-    <main class="tlp-framed-vertically">
-        <div class="tlp-framed-horizontally">
-            <comparison-header
-                v-bind:from_baseline_id="from_baseline_id"
-                v-bind:to_baseline_id="to_baseline_id"
-            />
+    <div>
+        <comparison-header
+            v-bind:from_baseline_id="from_baseline_id"
+            v-bind:to_baseline_id="to_baseline_id"
+        />
 
-            <statistics/>
+        <statistics/>
 
-            <div class="comparison-actions">
-                <button
-                    v-on:click="openSaveModal"
-                    type="button"
-                    class="tlp-button-primary"
-                    data-test-action="save-comparison"
-                >
-                    <i class="fa fa-save tlp-button-icon"></i>
-                    <translate>Save</translate>
-                </button>
-            </div>
-
-            <comparison-content
-                v-bind:from_baseline_id="from_baseline_id"
-                v-bind:to_baseline_id="to_baseline_id"
-            />
+        <div class="comparison-actions">
+            <button
+                v-on:click="openSaveModal"
+                type="button"
+                class="tlp-button-primary"
+                data-test-action="save-comparison"
+            >
+                <i class="fa fa-save tlp-button-icon"></i>
+                <translate>Save</translate>
+            </button>
         </div>
-    </main>
+
+        <comparison-content
+            v-bind:from_baseline_id="from_baseline_id"
+            v-bind:to_baseline_id="to_baseline_id"
+        />
+    </div>
 </template>
 
 <script>
