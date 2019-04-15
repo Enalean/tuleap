@@ -197,8 +197,8 @@ class LDAP_UserGroupManager extends LDAP_GroupManager
 
         $project = $this->project_manager->getProject($this->project_id);
         if (! $project->isPublic()) {
-            $this->logger->warn("The synchornisation for ugroup #$this->id is done in a private projects.");
-            $this->logger->warn("Non project members will not be added or will be removed of this ugroup.");
+            $this->logger->warn("The synchronisation for ugroup #$this->id is done in a private projects.\n" .
+                'Non project members will not be added or will be removed of this ugroup.');
 
             $project_member_ids = $project->getMembersId();
 

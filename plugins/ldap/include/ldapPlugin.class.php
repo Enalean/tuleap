@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2008. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2008
@@ -32,6 +32,7 @@ use Tuleap\LDAP\GroupSyncAdminEmailNotificationsManager;
 use Tuleap\LDAP\LdapLogger;
 use Tuleap\LDAP\LinkModalContentPresenter;
 use Tuleap\LDAP\NonUniqueUidRetriever;
+use Tuleap\LDAP\ProjectGroupManagerRestrictedUserFilter;
 use Tuleap\Project\Admin\ProjectMembers\MembersEditProcessAction;
 use Tuleap\Project\Admin\ProjectMembers\ProjectMembersAdditionalModalCollectionPresenter;
 use Tuleap\LDAP\Project\UGroup\Binding\AdditionalModalPresenterBuilder;
@@ -1207,14 +1208,16 @@ class LdapPlugin extends Plugin {
      */
     private function buildLdapProjectGroupManager(\Tuleap\LDAP\GroupSyncNotificationsManager $notifications_manager)
     {
-        $user_manager    = $this->getLdapUserManager();
+        $user_manager    = UserManager::instance();
         $project_manager = ProjectManager::instance();
         $manager = new LDAP_ProjectGroupManager(
             $this->getLdap(),
-            $user_manager,
+            $this->getLdapUserManager(),
             $this->getLdapProjectGroupDao(),
             $project_manager,
-            $notifications_manager
+            $user_manager,
+            $notifications_manager,
+            new ProjectGroupManagerRestrictedUserFilter($user_manager)
         );
         return $manager;
     }
