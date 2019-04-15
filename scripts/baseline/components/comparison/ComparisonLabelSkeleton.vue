@@ -19,15 +19,13 @@
   -->
 
 <template functional>
-    <h2>
-        <span class="tlp-skeleton-text" key="title"></span>
-        <span class="baseline-label-author" key="author">
-            <span class="tlp-skeleton-text"></span>
-        </span>
-    </h2>
+    <h1 class="comparison-label">
+        <span class="tlp-skeleton-text"></span>
+    </h1>
 </template>
+
 <script>
 export default {
-    name: "BaselineLabelSkeleton"
+    name: "ComparisonLabelSkeleton"
 };
 </script>

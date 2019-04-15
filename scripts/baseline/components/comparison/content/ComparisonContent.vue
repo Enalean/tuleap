@@ -19,37 +19,29 @@
   -->
 
 <template>
-    <div class="tlp-framed-vertically">
-        <section class="tlp-pane">
-            <div class="tlp-pane-container">
-                <section class="tlp-pane-section comparison-content">
+    <div>
+        <artifacts-list-comparison-skeleton v-if="is_loading"/>
 
-                    <artifacts-list-comparison-skeleton v-if="is_loading"/>
-
-                    <div v-else-if="is_loading_failed">
-                        <div class="tlp-alert-danger">
-                            <translate>Cannot fetch baseline artifacts</translate>
-                        </div>
-                    </div>
-
-                    <span
-                        v-else-if="!are_some_artifacts_available"
-                        class="baseline-empty-information-message"
-                        v-translate
-                    >
-                        No artifact to compare
-                    </span>
-
-                    <artifacts-list-comparison
-                        v-else
-                        v-bind:current_depth="1"
-                        v-bind:reference_artifacts="reference_artifacts"
-                        v-bind:compared_artifacts="compared_artifacts"
-                    />
-
-                </section>
+        <div v-else-if="is_loading_failed">
+            <div class="tlp-alert-danger">
+                <translate>Cannot fetch baseline artifacts</translate>
             </div>
-        </section>
+        </div>
+
+        <span
+            v-else-if="!are_some_artifacts_available"
+            class="baseline-empty-information-message"
+            v-translate
+        >
+            No artifact to compare
+        </span>
+
+        <artifacts-list-comparison
+            v-else
+            v-bind:current_depth="1"
+            v-bind:reference_artifacts="reference_artifacts"
+            v-bind:compared_artifacts="compared_artifacts"
+        />
     </div>
 </template>
 

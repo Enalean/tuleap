@@ -18,16 +18,23 @@
   -
   -->
 
-<template functional>
-    <h2>
-        <span class="tlp-skeleton-text" key="title"></span>
-        <span class="baseline-label-author" key="author">
-            <span class="tlp-skeleton-text"></span>
-        </span>
-    </h2>
+<template>
+    <div>
+        <comparison-label-skeleton/>
+        <h2>
+            <span class="tlp-skeleton-text" key="from"></span>
+            <i class="fa fa-tlp-baseline-comparison baseline-comparison-separator"></i>
+            <span class="tlp-skeleton-text" key="to"></span>
+        </h2>
+    </div>
 </template>
+
 <script>
+import ComparisonLabelSkeleton from "./ComparisonLabelSkeleton.vue";
+
 export default {
-    name: "BaselineLabelSkeleton"
+    name: "ComparisonHeaderSkeleton",
+
+    components: { ComparisonLabelSkeleton }
 };
 </script>

@@ -21,9 +21,9 @@
 <template>
     <div>
         <comparison-header-async
-            v-bind:comparison="comparison"
-            v-bind:from_baseline_id="comparison.base_baseline_id"
-            v-bind:to_baseline_id="comparison.compared_to_baseline_id"
+            v-bind:comparison="null"
+            v-bind:from_baseline_id="from_baseline_id"
+            v-bind:to_baseline_id="to_baseline_id"
         />
 
         <statistics/>
@@ -33,8 +33,8 @@
                 <div class="tlp-pane-container">
                     <section class="tlp-pane-section comparison-content">
                         <comparison-content
-                            v-bind:from_baseline_id="comparison.base_baseline_id"
-                            v-bind:to_baseline_id="comparison.compared_to_baseline_id"
+                            v-bind:from_baseline_id="from_baseline_id"
+                            v-bind:to_baseline_id="to_baseline_id"
                         />
                     </section>
                 </div>
@@ -44,15 +44,28 @@
 </template>
 
 <script>
-import ComparisonHeaderAsync from "./ComparisonHeaderAsync.vue";
+import { sprintf } from "sprintf-js";
 import Statistics from "./Statistics.vue";
 import ComparisonContent from "./content/ComparisonContent.vue";
+import ComparisonHeaderAsync from "./ComparisonHeaderAsync.vue";
 
 export default {
-    name: "ComparisonPage",
+    name: "TransientComparisonPage",
+
     components: { ComparisonHeaderAsync, ComparisonContent, Statistics },
+
     props: {
-        comparison: { required: true, type: Object }
+        from_baseline_id: { required: true, type: Number },
+        to_baseline_id: { required: true, type: Number }
+    },
+
+    created() {
+        const title = sprintf(
+            this.$gettext("Baselines comparison #%u/#%u"),
+            this.from_baseline_id,
+            this.to_baseline_id
+        );
+        this.$emit("title", title);
     }
 };
 </script>

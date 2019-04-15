@@ -20,12 +20,12 @@
 
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../../support/local-vue.js";
-import ComparisonPage from "./ComparisonPage.vue";
+import TransientComparisonLabel from "./TransientComparisonLabel.vue";
 import { createStoreMock } from "../../support/store-wrapper.spec-helper";
 import store_options from "../../store/options";
 import SaveComparisonModal from "./SaveComparisonModal.vue";
 
-describe("ComparisonPage", () => {
+describe("TransientComparisonLabel", () => {
     const save_comparison_selector = '[data-test-action="save-comparison"]';
     let $store;
     let wrapper;
@@ -33,7 +33,7 @@ describe("ComparisonPage", () => {
     beforeEach(() => {
         $store = createStoreMock(store_options);
 
-        wrapper = shallowMount(ComparisonPage, {
+        wrapper = shallowMount(TransientComparisonLabel, {
             propsData: {
                 from_baseline_id: 1,
                 to_baseline_id: 2

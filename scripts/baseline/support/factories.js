@@ -109,6 +109,13 @@ const factories = {
             text: "This is a failure notification",
             class: "danger"
         }
+    },
+    comparison: {
+        default: {
+            id: identity,
+            name: "comparison label",
+            comment: null
+        }
     }
 };
 

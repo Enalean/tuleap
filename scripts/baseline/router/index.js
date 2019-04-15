@@ -23,7 +23,8 @@ import VueRouter from "vue-router";
 import NotFoundPage from "./NotFoundPage.vue";
 import BaselineContentPage from "../components/baseline-content/ContentPage.vue";
 import BaselinesPage from "../components/BaselinesPage.vue";
-import ComparisonPage from "../components/comparison/ComparisonPage.vue";
+import TransientComparisonPage from "../components/comparison/TransientComparisonPage.vue";
+import ComparisonPageAsync from "../components/comparison/ComparisonPageAsync.vue";
 import store from "../store";
 
 Vue.use(VueRouter);
@@ -57,11 +58,20 @@ const router = new VueRouter({
 
         {
             path: "/plugins/baseline/:project_name/comparisons/:from_baseline_id/:to_baseline_id",
-            name: "ComparisonPage",
-            component: ComparisonPage,
+            name: "TransientComparisonPage",
+            component: TransientComparisonPage,
             props: route => ({
                 from_baseline_id: toInt(route.params.from_baseline_id),
                 to_baseline_id: toInt(route.params.to_baseline_id)
+            })
+        },
+
+        {
+            path: "/plugins/baseline/:project_name/comparisons/:comparison_id",
+            name: "ComparisonPage",
+            component: ComparisonPageAsync,
+            props: route => ({
+                comparison_id: toInt(route.params.comparison_id)
             })
         }
     ],

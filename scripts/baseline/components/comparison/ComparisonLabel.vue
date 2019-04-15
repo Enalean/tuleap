@@ -18,16 +18,26 @@
   -
   -->
 
-<template functional>
-    <h2>
-        <span class="tlp-skeleton-text" key="title"></span>
-        <span class="baseline-label-author" key="author">
-            <span class="tlp-skeleton-text"></span>
-        </span>
-    </h2>
+<template>
+    <div>
+        <h1>
+            {{ comparison.name }}
+        </h1>
+        <div
+            v-if="comparison.comment !== null"
+            class="comparison-comment tlp-text-muted"
+        >{{ comparison.comment }}</div>
+    </div>
 </template>
 <script>
 export default {
-    name: "BaselineLabelSkeleton"
+    name: "ComparisonLabel",
+
+    props: {
+        comparison: {
+            required: true,
+            type: Object
+        }
+    }
 };
 </script>

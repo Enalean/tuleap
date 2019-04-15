@@ -169,7 +169,7 @@ export default {
         },
         openComparison() {
             this.$router.push({
-                name: "ComparisonPage",
+                name: "TransientComparisonPage",
                 params: {
                     from_baseline_id: this.base_baseline.id,
                     to_baseline_id: this.baseline_to_compare.id

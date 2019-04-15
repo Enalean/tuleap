@@ -51,9 +51,10 @@
                 <textarea
                     id="comment"
                     v-model="comment"
-                    class="tlp-textarea tlp-textarea-large"
+                    class="tlp-textarea"
                     type="text"
                     name="comment"
+                    rows="5"
                     v-bind:disabled="is_saving"
                 >
                 </textarea>
@@ -112,12 +113,18 @@ export default {
             this.is_saving_failed = false;
 
             try {
-                await createComparison(
+                const comparison = await createComparison(
                     this.name,
                     this.comment,
                     this.base_baseline_id,
                     this.compared_to_baseline_id
                 );
+                this.$router.push({
+                    name: "ComparisonPage",
+                    params: {
+                        comparison_id: comparison.id
+                    }
+                });
                 const notification = {
                     text: this.$gettext("The comparison was saved"),
                     class: "success"

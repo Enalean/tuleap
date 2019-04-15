@@ -19,18 +19,20 @@
  */
 
 import Vue from "vue";
-import { shallowMount } from "@vue/test-utils";
-import localVue from "../../support/local-vue.js";
+import { createLocalVue, shallowMount } from "@vue/test-utils";
 import { restore, rewire$createComparison } from "../../api/rest-querier";
 import SaveComparisonModal from "./SaveComparisonModal.vue";
 import store_options from "../../store/options.js";
 import { createStoreMock } from "../../support/store-wrapper.spec-helper";
+import GettextPlugin from "vue-gettext";
+import { create } from "../../support/factories";
 
 describe("SaveComparisonModal", () => {
     const error_message_selector = '[data-test-type="error-message"]';
     const spinner_selector = '[data-test-type="spinner"]';
 
     let createComparison;
+    let $router;
     let $store;
     let wrapper;
 
@@ -39,11 +41,18 @@ describe("SaveComparisonModal", () => {
         rewire$createComparison(createComparison);
 
         $store = createStoreMock(store_options);
+        $router = { push: jasmine.createSpy("$router.push") };
+
+        const localVue = createLocalVue();
+        localVue.use(GettextPlugin, {
+            translations: {},
+            silent: true
+        });
 
         wrapper = shallowMount(SaveComparisonModal, {
             propsData: { base_baseline_id: 1, compared_to_baseline_id: 2 },
             localVue,
-            mocks: { $store }
+            mocks: { $store, $router }
         });
     });
 
@@ -84,10 +93,18 @@ describe("SaveComparisonModal", () => {
 
         describe("when createComparison() is successful", () => {
             beforeEach(async () => {
-                createComparisonResolve();
+                createComparisonResolve(create("comparison", { id: 10 }));
                 await Vue.nextTick();
             });
 
+            it("Navigates to comparison page", () => {
+                expect($router.push).toHaveBeenCalledWith({
+                    name: "ComparisonPage",
+                    params: {
+                        comparison_id: 10
+                    }
+                });
+            });
             it("notify user with successful message", () => {
                 expect($store.commit).toHaveBeenCalledWith(
                     "notify",

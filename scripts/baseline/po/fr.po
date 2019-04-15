@@ -33,6 +33,9 @@ msgstr "Baselines"
 msgid "Baselines available"
 msgstr "Baselines disponibles"
 
+msgid "Baselines comparison #%u"
+msgstr "Comparaison de baselines #%u"
+
 msgid "Baselines comparison #%u/#%u"
 msgstr "Comparaison des baselines #%u/#%u"
 

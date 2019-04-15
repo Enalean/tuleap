@@ -27,6 +27,7 @@ export {
     getOpenMilestones,
     createBaseline,
     getBaseline,
+    getComparison,
     deleteBaseline,
     getTracker,
     getBaselines,
@@ -62,6 +63,11 @@ async function createBaseline(name, milestone) {
 
 async function getBaseline(id) {
     const response = await get(`/api/baselines/${id}`);
+    return response.json();
+}
+
+async function getComparison(id) {
+    const response = await get(`/api/baselines/comparisons/${id}`);
     return response.json();
 }
 

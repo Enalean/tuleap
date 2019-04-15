@@ -20,11 +20,7 @@
 
 <template>
     <div>
-        <comparison-header-async
-            v-bind:comparison="comparison"
-            v-bind:from_baseline_id="comparison.base_baseline_id"
-            v-bind:to_baseline_id="comparison.compared_to_baseline_id"
-        />
+        <comparison-header-skeleton/>
 
         <statistics/>
 
@@ -32,10 +28,7 @@
             <section class="tlp-pane">
                 <div class="tlp-pane-container">
                     <section class="tlp-pane-section comparison-content">
-                        <comparison-content
-                            v-bind:from_baseline_id="comparison.base_baseline_id"
-                            v-bind:to_baseline_id="comparison.compared_to_baseline_id"
-                        />
+                        <artifacts-list-comparison-skeleton/>
                     </section>
                 </div>
             </section>
@@ -44,15 +37,13 @@
 </template>
 
 <script>
-import ComparisonHeaderAsync from "./ComparisonHeaderAsync.vue";
+import ComparisonHeaderSkeleton from "./ComparisonHeaderSkeleton.vue";
 import Statistics from "./Statistics.vue";
-import ComparisonContent from "./content/ComparisonContent.vue";
+import ArtifactsListComparisonSkeleton from "./content/ArtifactsListComparisonSkeleton.vue";
 
 export default {
-    name: "ComparisonPage",
-    components: { ComparisonHeaderAsync, ComparisonContent, Statistics },
-    props: {
-        comparison: { required: true, type: Object }
-    }
+    name: "ComparisonPageSkeleton",
+
+    components: { ComparisonHeaderSkeleton, Statistics, ArtifactsListComparisonSkeleton }
 };
 </script>
