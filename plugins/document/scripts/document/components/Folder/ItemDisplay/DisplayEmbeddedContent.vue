@@ -22,11 +22,11 @@
         <div class="document-header">
             <document-title-lock-info v-bind:item="embedded_file"/>
 
-            <div class="embedded-document-header-title">
-                <h1>{{ embedded_title }}</h1>
-            </div>
+            <h1 class="embedded-document-header-title">{{ embedded_title }}</h1>
 
             <actions-header v-bind:item="embedded_file"/>
+
+            <approval-table-badge v-bind:item="embedded_file"/>
         </div>
 
         <section class="tlp-pane">
@@ -46,9 +46,11 @@ import UpdateItemButton from "../ActionsButton/UpdateItemButton.vue";
 import UpdateEmbeddedFileModal from "../ModalUpdateItem/UpdateEmbeddedFileModal.vue";
 import ActionsHeader from "./ActionsHeader.vue";
 import DocumentTitleLockInfo from "../LockInfo/DocumentTitleLockInfo.vue";
+import ApprovalTableBadge from "../ApprovalTables/ApprovalTableBadge.vue";
 export default {
     name: "DisplayEmbeddedContent",
     components: {
+        ApprovalTableBadge,
         DocumentTitleLockInfo,
         ActionsHeader,
         UpdateEmbeddedFileModal,

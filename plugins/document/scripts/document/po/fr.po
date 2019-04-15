@@ -73,6 +73,9 @@ msgstr "Description des changements"
 msgid "Close"
 msgstr "Fermer"
 
+msgid "Commented"
+msgstr "Commenté"
+
 msgid "Content"
 msgstr "Contenu"
 
@@ -99,6 +102,9 @@ msgstr "État de la table d’approbation actuel: {{ table_state }}"
 
 msgid "Cut / Copy / Paste documents"
 msgstr "Couper / Copier / Coller des documents"
+
+msgid "Declined"
+msgstr "Décliné"
 
 msgid "Delete"
 msgstr "Supprimer"
@@ -234,6 +240,9 @@ msgstr "Nouveau dossier"
 
 msgid "None"
 msgstr "Aucun"
+
+msgid "Not yet"
+msgstr "Pas encore"
 
 msgid "Notifications"
 msgstr "Notifications"

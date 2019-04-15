@@ -81,6 +81,17 @@
     color: $tlp-ui-white;
 }
 
+.document-header-embedded-actions {
+    display: flex;
+    flex: 1 1 auto;
+
+}
+
 .document-display-lock-icon {
     margin: $tlp-half-spacing 13px;
+}
+
+.document-approval-badge {
+    height: 25px;
+    align-self: center;
 }
