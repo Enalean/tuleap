@@ -71,6 +71,15 @@ msgstr "Impossible de charger les milestones"
 msgid "Cannot save comparison"
 msgstr "Impossible de sauvegarder la comparaison"
 
+msgid "Choose a baseline to compare…"
+msgstr "Choisissez une baseline à comparer…"
+
+msgid "Choose a baseline…"
+msgstr "Choisissez une baseline…"
+
+msgid "Choose a reference baseline…"
+msgstr "Choisissez une baseline de référence…"
+
 msgid "Close"
 msgstr "Fermer"
 
@@ -141,9 +150,6 @@ msgstr "Aucune autre baseline disponible posée sur le même artefact."
 
 msgid "Only open milestone are visible here"
 msgstr "Seules les milestones ouvertes sont visibles ici"
-
-msgid "Please choose a reference baseline"
-msgstr "Veuillez choisir une baseline de référence"
 
 msgid "Please choose two baselines to compare"
 msgstr "Veuillez choisir deux baselines à comparer"

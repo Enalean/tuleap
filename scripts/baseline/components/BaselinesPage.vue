@@ -72,9 +72,9 @@
                         data-test-action="show-comparison"
                         v-bind:disabled="are_baselines_loading || !are_baselines_available"
                         v-on:click="showNewComparisonModal()"
+                        v-translate
                     >
-                        <i class="fa fa-plus tlp-button-icon"></i>
-                        <translate>Compare baselines</translate>
+                        Compare baselines
                     </button>
                 </div>
             </div>

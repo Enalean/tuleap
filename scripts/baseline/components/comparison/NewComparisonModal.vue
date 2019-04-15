@@ -20,68 +20,84 @@
 <template>
     <form v-on:submit.prevent="openComparison()">
         <div class="tlp-modal-body">
-            <h2 v-translate class="tlp-modal-subtitle">
+            <p v-translate class="tlp-modal-subtitle">
                 Please choose two baselines to compare
-            </h2>
+            </p>
 
             <div class="new-comparison-modal-body">
                 <div class="tlp-form-element new-comparison-modal-body-form-element">
-                    <h3 v-translate>
+                    <label class="tlp-label" for="base_baseline" v-translate>
                         Reference…
-                    </h3>
-                    <div class="new-comparison-modal-baselines-list-scrollbar">
-                        <label
+                    </label>
+                    <select
+                        id="base_baseline"
+                        ref="base_baseline"
+                        class="tlp-select"
+                        name="base_baseline"
+                        v-model="base_baseline_id"
+                        required
+                        data-test-type="date-baseline-select"
+                    >
+                        <option value="" selected disabled v-translate>Choose a baseline…</option>
+                        <option
                             v-for="baseline in baselines"
                             v-bind:key="baseline.id"
-                            class="tlp-label tlp-radio"
+                            v-bind:value="baseline.id"
                         >
-                            <input
-                                type="radio"
-                                name="base"
-                                v-bind:value="baseline"
-                                v-model="base_baseline"
-                                required
-                            >
                             {{ baseline.name }}
-                        </label>
-                    </div>
+                        </option>
+                    </select>
                 </div>
 
                 <div class="tlp-form-element new-comparison-modal-body-form-element">
-                    <h3 v-translate>
+                    <label class="tlp-label" for="baseline_to_compare" v-translate>
                         … compared to
-                    </h3>
+                    </label>
                     <span
-                        v-if="baselines_to_compare === null"
+                        v-if="baselines_to_compare !== null && baselines_to_compare.length === 0"
                         class="baseline-empty-information-message"
-                        v-translate
-                    >
-                        Please choose a reference baseline
-                    </span>
-                    <span
-                        v-else-if="baselines_to_compare.length === 0"
-                        class="baseline-empty-information-message"
+                        data-test-type="no-baseline-to-compare-message"
                         v-translate
                     >
                         No other baseline available on same artifact.
                     </span>
-
-                    <div v-else class="new-comparison-modal-baselines-list-scrollbar">
-                        <label
+                    <select
+                        v-else
+                        id="baseline_to_compare"
+                        ref="baseline_to_compare"
+                        class="tlp-select"
+                        name="baseline_to_compare"
+                        v-model="baseline_to_compare_id"
+                        required
+                    >
+                        <option
+                            v-if="baselines_to_compare === null"
+                            value=""
+                            selected
+                            disabled
+                            key="choose-reference"
+                            v-translate
+                        >
+                            Choose a reference baseline…
+                        </option>
+                        <option
+                            v-else
+                            value=""
+                            selected
+                            disabled
+                            key="choose-compare-to"
+                            v-translate
+                        >
+                            Choose a baseline to compare…
+                        </option>
+                        <option
                             v-for="baseline in baselines_to_compare"
                             v-bind:key="baseline.id"
-                            class="tlp-label tlp-radio"
+                            v-bind:value="baseline.id"
                         >
-                            <input
-                                type="radio"
-                                name="baseline_to_compare"
-                                v-bind:value="baseline"
-                                v-model="baseline_to_compare"
-                                required
-                            >
                             {{ baseline.name }}
-                        </label>
-                    </div>
+                        </option>
+                    </select>
                 </div>
             </div>
         </div>
@@ -91,6 +107,8 @@
                 type="button"
                 class="tlp-button-primary tlp-button-outline tlp-modal-action"
                 data-dismiss="modal"
+                key="cancel"
+
             >
                 <translate>Cancel</translate>
             </button>
@@ -99,6 +117,8 @@
                 type="submit"
                 class="tlp-button-primary tlp-modal-action"
                 data-dismiss="modal"
+                data-test-action="submit"
+                key="submit"
             >
                 <translate>Show comparison</translate>
             </button>
@@ -107,6 +127,8 @@
 </template>
 
 <script>
+import ArrayUtils from "../../support/array-utils";
+
 export default {
     name: "NewComparisonModal",
     props: {
@@ -115,8 +137,8 @@ export default {
 
     data() {
         return {
-            base_baseline: null,
-            baseline_to_compare: null
+            base_baseline_id: null,
+            baseline_to_compare_id: null
         };
     },
 
@@ -131,10 +153,20 @@ export default {
             return this.baselines
                 .filter(baseline => baseline.artifact_id === this.base_baseline.artifact_id)
                 .filter(baseline => baseline !== this.base_baseline);
+        },
+        base_baseline() {
+            return this.findBaselineById(this.base_baseline_id);
+        },
+        baseline_to_compare() {
+            return this.findBaselineById(this.baseline_to_compare_id);
         }
     },
 
     methods: {
+        findBaselineById(id) {
+            let found_baseline = ArrayUtils.find(this.baselines, baseline => baseline.id === id);
+            return found_baseline || null;
+        },
         openComparison() {
             this.$router.push({
                 name: "ComparisonPage",
