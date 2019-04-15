@@ -21,6 +21,7 @@
 
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
+use Tuleap\Project\Admin\ProjectUGroup\CannotAddRestrictedUserToProjectNotAllowingRestricted;
 use Tuleap\Project\Admin\ProjectUGroup\DynamicUGroupMembersUpdater;
 use Tuleap\Project\UserPermissionsDao;
 use Tuleap\Project\UserRemover;
@@ -466,12 +467,9 @@ class UGroupManager {
         return ugroup_create($project_id, $ugroup_name, $ugroup_description, "cx_empty");
     }
 
-    public function addUserToUgroup($project_id, $ugroup_id, $user_id) {
-        return ugroup_add_user_to_ugroup($project_id, $ugroup_id, $user_id);
-    }
-
     /**
      * @throws \Tuleap\Project\Admin\ProjectUGroup\CannotRemoveUserMembershipToUserGroupException
+     * @throws CannotAddRestrictedUserToProjectNotAllowingRestricted
      */
     public function syncUgroupMembers(ProjectUGroup $user_group, array $users_from_references)
     {
@@ -513,6 +511,10 @@ class UGroupManager {
         return array_diff($users_from_references, $current_members);
     }
 
+    /**
+     * @throws UGroup_Invalid_Exception
+     * @throws CannotAddRestrictedUserToProjectNotAllowingRestricted
+     */
     private function addUserToUserGroup(ProjectUGroup $user_group, PFUser $user)
     {
         switch ((int) $user_group->getId()) {

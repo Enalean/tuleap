@@ -105,6 +105,14 @@ msgstr "Les accès d'il y a moins de %s peuvent ne pas apparaître"
 msgid "Accessibility"
 msgstr "Accessibilité"
 
+#, php-format
+msgid ""
+"Account %s is restricted and the project does not allow restricted users. "
+"User not added."
+msgstr ""
+"Le compte %s est restreint et le project n'autorise pas les utilisateurs restreints. "
+"L'utilisateur n'a pas été ajouté."
+
 msgid "Add binding"
 msgstr "Ajouter le lien"
 

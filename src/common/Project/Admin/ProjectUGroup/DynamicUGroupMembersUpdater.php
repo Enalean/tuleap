@@ -21,10 +21,12 @@
 namespace Tuleap\Project\Admin\ProjectUGroup;
 
 use EventManager;
+use ForgeConfig;
 use PFUser;
 use Project;
 use ProjectUGroup;
 use Tuleap\DB\DBTransactionExecutor;
+use Tuleap\Project\Admin\ProjectWithoutRestrictedFeatureFlag;
 use Tuleap\Project\UserPermissionsDao;
 use UGroupBinding;
 
@@ -59,8 +61,16 @@ class DynamicUGroupMembersUpdater
         $this->event_manager        = $event_manager;
     }
 
-    public function addUser(Project $project, ProjectUGroup $ugroup, PFUser $user)
+    /**
+     * @throws CannotAddRestrictedUserToProjectNotAllowingRestricted
+     */
+    public function addUser(Project $project, ProjectUGroup $ugroup, PFUser $user) : void
     {
+        if ($project->getAccess() === Project::ACCESS_PRIVATE_WO_RESTRICTED && ForgeConfig::areRestrictedUsersAllowed() &&
+            ProjectWithoutRestrictedFeatureFlag::isEnabled() && $user->isRestricted()) {
+            throw new CannotAddRestrictedUserToProjectNotAllowingRestricted($user, $project);
+        }
+
         switch ($ugroup->getId()) {
             case ProjectUGroup::PROJECT_ADMIN:
                 $this->addProjectAdministrator($project, $user);

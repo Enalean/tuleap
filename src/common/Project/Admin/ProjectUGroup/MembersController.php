@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -60,10 +60,10 @@ class MembersController
         }
 
         $this->removeUserFromUGroup($project, $ugroup);
-        $this->addUserToUGroup($project, $ugroup);
+        $this->addUserToUGroup($ugroup);
     }
 
-    private function addUserToUGroup(Project $project, ProjectUGroup $ugroup)
+    private function addUserToUGroup(ProjectUGroup $ugroup)
     {
         $add_user_name = $this->request->get('add_user_name');
         if (! $add_user_name) {
@@ -76,13 +76,17 @@ class MembersController
                 $GLOBALS['Language']->getText('include_account', 'user_not_exist')
             );
         }
-        if ($ugroup->isStatic()) {
-            ugroup_add_user_to_ugroup($project->getID(), $ugroup->getId(), $user->getId());
-
-            return;
+        try {
+            $ugroup->addUser($user);
+        } catch (CannotAddRestrictedUserToProjectNotAllowingRestricted $ex) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                sprintf(
+                    _('Account %s is restricted and the project does not allow restricted users. User not added.'),
+                    $ex->getRestrictedUser()->getUserName()
+                )
+            );
         }
-
-        $this->dynamic_ugroup_members_updater->addUser($project, $ugroup, $user);
     }
 
     /**
