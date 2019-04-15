@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © Enalean, 2011 - 2018. All Rights Reserved.
+ * Copyright © Enalean, 2011 - Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2006
@@ -1055,10 +1055,12 @@ class Docman_Actions extends Actions {
                 )
             );
 
-            $project_id = (int) $this->_controler->request->get('group_id');
-            $url        = DOCMAN_BASE_URL . "/?group_id=".urlencode($project_id)."&action=details&id=".urlencode($id)."&section=permissions";
-
-            $GLOBALS['Response']->redirect($url);
+            $this->_controler->view = 'RedirectAfterCrud';
+            $this->_controler->_viewParams['default_url_params'] = [
+                'action'  => 'details',
+                'section' => 'permissions',
+                'id'      => $id,
+            ];
         }
     }
 
