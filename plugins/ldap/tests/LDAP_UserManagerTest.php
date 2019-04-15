@@ -202,7 +202,7 @@ class LDAP_UserManager_AuthenticatTest extends TuleapTestCase {
         $this->ldap = partial_mock(
             'LDAP',
             array('search', 'authenticate', 'searchLogin'),
-            array($this->ldap_params, mock('TruncateLevelLogger'), new LdapQueryEscaper())
+            array($this->ldap_params, mock('TruncateLevelLogger'))
         );
         $this->user_sync         = mock('LDAP_UserSync');
         $this->user_manager      = mock('UserManager');

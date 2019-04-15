@@ -45,7 +45,7 @@ class LDAP_RetrieveAllArguementsTest extends TuleapTestCase {
         $this->ldap = partial_mock(
             'LDAP',
             array('search'),
-            array($this->ldap_params, mock('TruncateLevelLogger'), new LdapQueryEscaper()));
+            array($this->ldap_params, mock('TruncateLevelLogger')));
     }
 
     function tearDown() {

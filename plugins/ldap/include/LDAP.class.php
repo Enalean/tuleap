@@ -62,7 +62,6 @@ class LDAP {
     private $bound;
     private $errorsTrapped;
     private $ldapParams;
-    private $query_escaper;
 
     /** @var Logger */
     private $logger;
@@ -70,12 +69,12 @@ class LDAP {
     /**
      * LDAP object constructor. Use gloabals for initialization.
      */
-    function __construct(array $ldapParams, Logger $logger, LdapQueryEscaper $query_escaper) {
+    public function __construct(array $ldapParams, Logger $logger)
+    {
         $this->ldapParams    =  $ldapParams;
         $this->bound         = false;
         $this->errorsTrapped = true;
         $this->logger        = $logger;
-        $this->query_escaper = $query_escaper;
     }
     
     /**
@@ -372,12 +371,11 @@ class LDAP {
      * @return LDAPResultIterator|false
      */    
     public function searchLogin($name, $attributes = array()) {
-        $name = $this->query_escaper->escapeFilter($name);
         if (! $attributes) {
             $attributes = $this->getDefaultAttributes();
         }
 
-        $filter = $this->ldapParams['uid'].'='.$name;
+        $filter = $this->ldapParams['uid'].'=' . ldap_escape($name, '', LDAP_ESCAPE_FILTER);
         return $this->search($this->ldapParams['dn'], $filter, self::SCOPE_SUBTREE, $attributes);
     }
     
@@ -390,20 +388,19 @@ class LDAP {
      * @return LDAPResultIterator|false
      */  
     function searchEdUid($name) {
-        $name = $this->query_escaper->escapeFilter($name);
-        $filter = $this->ldapParams['eduid'].'='.$name;
+        $filter = $this->ldapParams['eduid'].'='. ldap_escape($name, '', LDAP_ESCAPE_FILTER);
         return $this->search($this->ldapParams['dn'], $filter, self::SCOPE_SUBTREE, $this->getDefaultAttributes());
     }
 
     /**
      * Search if a LDAP user match a filter defined in local conf.
      *
-     * @param String $words User name to search
+     * @param string $words User name to search
      * 
      * @return LDAPResultIterator|false
      */
     function searchUser($words) {
-        $words = $this->query_escaper->escapeFilter($words);
+        $words = ldap_escape($words, '', LDAP_ESCAPE_FILTER);
         $filter = str_replace("%words%", $words, $this->ldapParams['search_user']);
         return $this->search($this->ldapParams['dn'], $filter, self::SCOPE_SUBTREE, $this->getDefaultAttributes());
     }
@@ -411,25 +408,24 @@ class LDAP {
     /**
      * Search if given identifier match a Common Name in the LDAP.
      *
-     * @param String $name Common name to search
+     * @param string $name Common name to search
      * 
      * @return LDAPResultIterator|false
      */
     function searchCommonName($name) {
-        $name = $this->query_escaper->escapeFilter($name);
-        $filter = $this->ldapParams['cn'].'='.$name;
+        $filter = $this->ldapParams['cn'].'='. ldap_escape($name, '', LDAP_ESCAPE_FILTER);
         return $this->search($this->ldapParams['dn'], $filter, self::SCOPE_SUBTREE, $this->getDefaultAttributes());
     }
 
     /**
      * Search ldap group by name
      *
-     * @param String $name Group name to search
+     * @param string $name Group name to search
      * 
      * @return LDAPResultIterator|false
      */
     function searchGroup($name) {
-        $name = $this->query_escaper->escapeFilter($name);
+        $name = ldap_escape($name, '', LDAP_ESCAPE_FILTER);
 
         if (isset($this->ldapParams['server_type']) && $this->ldapParams['server_type'] === self::SERVER_TYPE_ACTIVE_DIRECTORY) {
             $filter = $this->ldapParams['grp_uid'] . '=' . $name;
@@ -456,7 +452,7 @@ class LDAP {
      *
      * This method is designed for speed and to limit the number of returned values.
      * 
-     * @param String   $name      Name of the group to look for
+     * @param string   $name      Name of the group to look for
      * @param Integer  $sizeLimit Limit the amount of result sent
      * 
      * @return AppendIterator
@@ -464,7 +460,7 @@ class LDAP {
     function searchUserAsYouType($name, $sizeLimit, $validEmail=false) {
         $apIt  = new AppendIterator();
         if($name && $this->_connectAndBind()) {
-            $name = $this->query_escaper->escapeFilter($name);
+            $name = ldap_escape($name, '', LDAP_ESCAPE_FILTER);
             if (isset($this->ldapParams['tooltip_search_user'])) {
                 $filter = str_replace("%words%", $name, $this->ldapParams['tooltip_search_user']);
             } else {
@@ -472,7 +468,7 @@ class LDAP {
             }
             if($validEmail) {
                 // Only search people with a non empty mail field
-                $mail = $this->query_escaper->escapeFilter($this->ldapParams['mail']);
+                $mail = ldap_escape($this->ldapParams['mail'], '', LDAP_ESCAPE_FILTER);
                 $filter = '(&'.$filter.'('.$mail.'=*))';
             }
             // We only care about Common name and Login (lower the amount of data
@@ -527,7 +523,7 @@ class LDAP {
      *
      * This method is designed for speed and to limit the number of returned values.
      * 
-     * @param String   $name      Name of the group to look for
+     * @param string   $name      Name of the group to look for
      * @param Integer $sizeLimit Limit the amount of result sent
      * 
      * @return LDAPResultIterator
@@ -535,7 +531,7 @@ class LDAP {
     function searchGroupAsYouType($name, $sizeLimit) {
         $lri = false;
         if($this->_connectAndBind()) {
-            $name = $this->query_escaper->escapeFilter($name);
+            $name = ldap_escape($name, '', LDAP_ESCAPE_FILTER);
             // Use display name if setting is found. Otherwise, fall back on old hard-coded filter.
             if (isset($this->ldapParams['tooltip_search_grp'])) {
                 $filter = str_replace("%words%", $name, $this->ldapParams['tooltip_search_grp']);

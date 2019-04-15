@@ -188,8 +188,7 @@ class LdapPlugin extends Plugin {
     private function instanciateLDAP() {
         return new LDAP(
             $this->getLDAPParams(),
-            $this->getLogger(),
-            $this->getQueryEscaper()
+            $this->getLogger()
         );
     }
 
@@ -248,10 +247,6 @@ class LdapPlugin extends Plugin {
             $this->_ldapUmInstance = new LDAP_UserManager($this->getLdap(), LDAP_UserSync::instance());
         }
         return $this->_ldapUmInstance;
-    }
-
-    public function getQueryEscaper() {
-        return new LdapQueryEscaper();
     }
 
     /**
