@@ -106,6 +106,9 @@ msgstr "Description"
 msgid "Details"
 msgstr "Détails"
 
+msgid "Document locked by %s."
+msgstr "Document verrouillé par %s."
+
 msgid "Documents"
 msgstr "Documents"
 

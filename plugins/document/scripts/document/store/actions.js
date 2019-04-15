@@ -312,6 +312,12 @@ export const refreshWiki = async (context, item_to_refresh) => {
     context.commit("replaceWikiWithNewVersion", [item_to_refresh, up_to_date_item]);
 };
 
+export const refreshEmbeddedFile = async (context, item_to_refresh) => {
+    const up_to_date_item = await getItem(item_to_refresh.id);
+
+    context.commit("replaceEmbeddedFilesWithNewVersion", [item_to_refresh, up_to_date_item]);
+};
+
 async function uploadNewVersion(
     context,
     [item, uploaded_file, version_title, changelog, is_file_locked, approval_table_action]
