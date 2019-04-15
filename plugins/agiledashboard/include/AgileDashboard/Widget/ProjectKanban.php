@@ -39,7 +39,8 @@ class ProjectKanban extends Kanban
         TrackerFactory $tracker_factory,
         AgileDashboard_PermissionsManager $permissions_manager,
         WidgetKanbanConfigRetriever $widget_kanban_config_retriever,
-        WidgetKanbanConfigUpdater $widget_kanban_config_updater
+        WidgetKanbanConfigUpdater $widget_kanban_config_updater,
+        \Tracker_ReportFactory $tracker_report_factory
     ) {
         parent::__construct(
             self::NAME,
@@ -52,7 +53,8 @@ class ProjectKanban extends Kanban
             $tracker_factory,
             $permissions_manager,
             $widget_kanban_config_retriever,
-            $widget_kanban_config_updater
+            $widget_kanban_config_updater,
+            $tracker_report_factory
         );
     }
 }
