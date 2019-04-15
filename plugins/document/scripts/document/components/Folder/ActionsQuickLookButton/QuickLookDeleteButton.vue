@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2019. All Rights Reserved.
+  - Copyright (c) Enalean, 2019 - present. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -18,30 +18,31 @@
   -->
 
 <template>
-    <dropdown-menu v-bind:is-in-folder-empty-state="isInFolderEmptyState" v-bind:item="current_folder">
-        <a href="#" v-on:click.prevent="showNewFolderModal" class="tlp-dropdown-menu-item" role="menuitem">
-            <i class="fa fa-fw fa-folder-open-o tlp-dropdown-menu-item-icon"></i>
-            <translate>New folder</translate>
-        </a>
-    </dropdown-menu>
+    <button v-if="item.user_can_write" type="button" class="tlp-button-small tlp-button-outline tlp-button-danger"
+            v-on:click="redirectDeleteUrl"
+            data-test="quick-look-delete-button">
+        <i class="fa fa-trash-o tlp-button-icon"></i>
+        <translate>Delete</translate>
+    </button>
 </template>
+
 <script>
 import { mapState } from "vuex";
-import DropdownMenu from "./DropdownMenu.vue";
+
 export default {
-    components: { DropdownMenu },
+    name: "QuickLookDeleteButton",
     props: {
-        isInFolderEmptyState: Boolean
+        item: Object
     },
     computed: {
-        ...mapState(["current_folder"])
+        ...mapState(["project_id"])
     },
     methods: {
-        showNewFolderModal() {
-            document.dispatchEvent(
-                new CustomEvent("show-new-folder-modal", {
-                    detail: { parent: this.current_folder }
-                })
+        redirectDeleteUrl() {
+            window.location.assign(
+                `/plugins/docman/?group_id=${this.project_id}&action=confirmDelete&id=${
+                    this.item.id
+                }`
             );
         }
     }

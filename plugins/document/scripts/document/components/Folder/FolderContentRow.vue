@@ -65,10 +65,10 @@
 <script>
 import { mapState } from "vuex";
 import UserBadge from "../User/UserBadge.vue";
-import QuickLookButton from "./QuickLook/QuickLookButton.vue";
+import QuickLookButton from "./ActionsQuickLookButton/QuickLookButton.vue";
 import UploadProgressBar from "./ProgressBar/UploadProgressBar.vue";
-import DropdownButton from "./Dropdown/DropdownButton.vue";
-import DropdownMenuForItemQuickLook from "./Dropdown/DropdownMenuForItemQuickLook.vue";
+import DropdownButton from "./ActionsDropDown/DropdownButton.vue";
+import DropdownMenuForItemQuickLook from "./ActionsDropDown/DropdownMenuForItemQuickLook.vue";
 
 import { TYPE_FILE, TYPE_FOLDER, TYPE_LINK, TYPE_WIKI } from "../../constants.js";
 import {

@@ -66,8 +66,8 @@ import {
 import { iconForMimeType } from "../../../helpers/icon-for-mime-type.js";
 import QuickLookDocumentMetadata from "./QuickLookDocumentMetadata.vue";
 import QuickLookDocumentPreview from "./QuickLookDocumentPreview.vue";
-import DropdownButton from "../Dropdown/DropdownButton.vue";
-import DropdownMenu from "../Dropdown/DropdownMenu.vue";
+import DropdownButton from "../ActionsDropDown/DropdownButton.vue";
+import DropdownMenu from "../ActionsDropDown/DropdownMenu.vue";
 
 export default {
     name: "QuicklookGlobal",

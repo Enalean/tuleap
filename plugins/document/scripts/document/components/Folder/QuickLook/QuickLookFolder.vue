@@ -35,13 +35,12 @@
 </template>
 
 <script>
-import NewItemButton from "../NewItem/NewItemButton.vue";
-import DropdownButton from "../Dropdown/DropdownButton.vue";
-import DropdownMenu from "../Dropdown/DropdownMenu.vue";
-import QuickLookDeleteButton from "./QuickLookDeleteButton.vue";
+import NewItemButton from "../ActionsButton/NewItemButton.vue";
+import DropdownButton from "../ActionsDropDown/DropdownButton.vue";
+import DropdownMenu from "../ActionsDropDown/DropdownMenu.vue";
+import QuickLookDeleteButton from "../ActionsQuickLookButton/QuickLookDeleteButton.vue";
 
 export default {
-    name: "QuickLookFileProperties",
     components: { NewItemButton, DropdownButton, DropdownMenu, QuickLookDeleteButton },
     props: {
         item: Object

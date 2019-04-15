@@ -33,8 +33,8 @@
 
 <script>
 import { mapState } from "vuex";
-import QuickLookDocumentActionButton from "./QuickLookDocumentActionButton.vue";
-import QuickLookDeleteButton from "./QuickLookDeleteButton.vue";
+import QuickLookDocumentActionButton from "../ActionsQuickLookButton/QuickLookDocumentActionButton.vue";
+import QuickLookDeleteButton from "../ActionsQuickLookButton/QuickLookDeleteButton.vue";
 
 export default {
     name: "QuickLookWiki",
