@@ -44,17 +44,17 @@ class ApprovalTableUpdateActionChecker
      * @throws ItemHasNoApprovalTableButHasApprovalActionException
      */
     public function checkApprovalTableForItem(
-        string $approval_table_action,
+        ?string $approval_table_action,
         \Docman_Item $item
     ): void {
         if ($this->docman_approval_table_retriever->hasApprovalTable($item)
-            && $approval_table_action === ''
+            && ($approval_table_action === null)
         ) {
             throw new ItemHasApprovalTableButNoApprovalActionException($item->getTitle());
         }
 
         if (!$this->docman_approval_table_retriever->hasApprovalTable($item)
-            && $approval_table_action !== ''
+            && $approval_table_action !== null
         ) {
             throw new ItemHasNoApprovalTableButHasApprovalActionException($item->getTitle());
         }

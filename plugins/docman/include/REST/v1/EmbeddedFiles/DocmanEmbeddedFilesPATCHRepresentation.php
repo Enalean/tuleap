@@ -40,12 +40,12 @@ class DocmanEmbeddedFilesPATCHRepresentation
     public $should_lock_file;
 
     /**
-     * @var string action for approval table when an item is updated {@from body} {@required false} {@choice copy,reset,empty}
+     * @var string | null action for approval table when an item is updated {@from body} {@required false} {@choice copy,reset,empty}
      */
-    public $approval_table_action = '';
+    public $approval_table_action;
 
     /**
      * @var EmbeddedPropertiesPOSTPATCHRepresentation File properties must be set when creating a new file {@from body} {@type \Tuleap\Docman\REST\v1\EmbeddedFiles\EmbeddedPropertiesPOSTPATCHRepresentation} {@required true}
      */
-    public $embedded_properties ;
+    public $embedded_properties;
 }
