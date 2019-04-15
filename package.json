@@ -54,7 +54,7 @@
     "stylelint": "^9.9.0",
     "stylelint-config-property-sort-order-smacss": "^4.0.2",
     "stylelint-config-sass-guidelines": "^5.3.0",
-    "vue-eslint-parser": "^6.0.3",
+    "vue-eslint-parser": "^5.0.0",
     "vue-loader": "^15.4.2",
     "webpack": "^4.20.2",
     "webpack-assets-manifest": "^3.1.1",

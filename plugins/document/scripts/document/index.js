@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,6 +19,7 @@
 
 import Vue from "vue";
 import GetTextPlugin from "vue-gettext";
+import VueDOMPurifyHTML from "vue-dompurify-html";
 
 import french_translations from "./po/fr.po";
 import App from "./components/App.vue";
@@ -28,6 +29,7 @@ import moment from "moment";
 import "moment-timezone";
 
 document.addEventListener("DOMContentLoaded", () => {
+    Vue.use(VueDOMPurifyHTML);
     Vue.use(GetTextPlugin, {
         translations: {
             fr: french_translations.messages

@@ -29,7 +29,7 @@
 
         <section class="tlp-pane">
             <div class="tlp-pane-container">
-                <section class="tlp-pane-section" v-html="embedded_content"></section>
+                <section class="tlp-pane-section" v-dompurify-html="embedded_content"></section>
             </div>
         </section>
 
@@ -38,7 +38,6 @@
 </template>
 
 <script>
-import dompurify from "dompurify";
 import DropdownButton from "../ActionsDropDown/DropdownButton.vue";
 import DropdownMenu from "../ActionsDropDown/DropdownMenu.vue";
 import UpdateItemButton from "../ActionsButton/UpdateItemButton.vue";
@@ -67,10 +66,10 @@ export default {
         },
         embedded_content() {
             if (!this.embedded_file.embedded_file_properties) {
-                return;
+                return "";
             }
 
-            return dompurify.sanitize(this.embedded_file.embedded_file_properties.content);
+            return this.embedded_file.embedded_file_properties.content;
         }
     },
     mounted() {

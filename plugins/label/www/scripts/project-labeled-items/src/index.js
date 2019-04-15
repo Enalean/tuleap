@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,11 +18,17 @@
  */
 
 import Vue from "vue";
+import VueDOMPurifyHTML from "vue-dompurify-html";
 import GetTextPlugin from "vue-gettext";
 import french_translations from "../po/fr.po";
 import LabeledItemsList from "./LabeledItemsList.vue";
 
 document.addEventListener("DOMContentLoaded", () => {
+    Vue.use(VueDOMPurifyHTML, {
+        svg: {
+            USE_PROFILES: { svg: true }
+        }
+    });
     Vue.use(GetTextPlugin, {
         translations: {
             fr: french_translations.messages

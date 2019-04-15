@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2019. All Rights Reserved.
+  - Copyright (c) Enalean, 2019-Present. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -18,8 +18,7 @@
   -
   -->
 <template>
-    <!-- eslint-disable-next-line vue/no-v-html -->
-    <div v-html="escaped_embedded_content"
+    <div v-dompurify-html="item.embedded_file_properties.content"
          class="document-quick-look-embedded"
          v-if="is_embedded"
     ></div>
@@ -89,7 +88,6 @@
     </div>
 </template>
 <script>
-import dompurify from "dompurify";
 import { TYPE_EMBEDDED, TYPE_FOLDER } from "../../../constants.js";
 import IconQuicklookFolder from "../../svg-icons/IconQuicklookFolder.vue";
 import IconQuicklookDropIntoFolder from "../../svg-icons/IconQuicklookDropIntoFolder.vue";
@@ -115,11 +113,11 @@ export default {
         is_embedded() {
             return this.item.type === TYPE_EMBEDDED;
         },
-        escaped_embedded_content() {
+        embedded_content() {
             if (!this.item.embedded_file_properties) {
-                return;
+                return "";
             }
-            return dompurify.sanitize(this.item.embedded_file_properties.content);
+            return this.item.embedded_file_properties.content;
         },
         is_a_folder() {
             return this.item.type === TYPE_FOLDER;

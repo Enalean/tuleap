@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,13 +19,14 @@
 
 import "tlp-mocks";
 import Vue from "vue";
+import VueDOMPurifyHTML from "vue-dompurify-html";
 import GetTextPlugin from "vue-gettext";
 
+Vue.use(VueDOMPurifyHTML);
 Vue.use(GetTextPlugin, {
     translations: {},
     silent: true
 });
 
 import "./LabeledItemsList.spec.js";
-import "./LabeledItem.spec.js";
 import "./rest-querier.spec.js";
