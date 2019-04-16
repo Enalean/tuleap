@@ -26,7 +26,8 @@
 use Tuleap\Project\DescriptionFieldsFactory;
 use Tuleap\Project\DescriptionFieldsDao;
 
-class Project extends Group implements PFO_Project {
+class Project extends Group implements PFO_Project  // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+{
 
     /**
      * The project is active
@@ -66,7 +67,7 @@ class Project extends Group implements PFO_Project {
     public const ACCESS_PUBLIC_UNRESTRICTED   = 'unrestricted';
     public const ACCESS_PUBLIC                = 'public';
 
-    var $project_data_array;
+    private $project_data_array;
 
     // All data concerning services for this project
     private $service_data_array = null;
@@ -79,10 +80,11 @@ class Project extends Group implements PFO_Project {
     private $serviceClassnames;
 
     /*
-		basically just call the parent to set up everything
+        basically just call the parent to set up everything
                 and set up services arrays
     */
-    function __construct($param) {
+    public function __construct($param)
+    {
         parent::__construct($param);
 
         //for right now, just point our prefs array at Group's data array
@@ -107,7 +109,8 @@ class Project extends Group implements PFO_Project {
         );
     }
 
-    private function cacheServices() {
+    private function cacheServices()
+    {
         if ($this->services !== null) {
             return;
         }
@@ -139,21 +142,25 @@ class Project extends Group implements PFO_Project {
         }
     }
 
-    public function getMinimalRank() {
+    public function getMinimalRank()
+    {
         // get it, no matter if summary is enabled or not
         $this->cacheServices();
         return $this->services[Service::SUMMARY]->getRank();
     }
 
-    public function getServiceLabel($short_name) {
+    public function getServiceLabel($short_name)
+    {
         return $this->getService($short_name)->getLabel();
     }
 
-    private function getServiceLink($short_name) {
+    private function getServiceLink($short_name)
+    {
         return $this->getService($short_name)->getUrl();
     }
 
-    public function getServicesData() {
+    public function getServicesData()
+    {
         $this->cacheServices();
         return $this->service_data_array;
     }
@@ -184,7 +191,8 @@ class Project extends Group implements PFO_Project {
      *
      * @return Service
      */
-    public function getService($service_name) {
+    public function getService($service_name)
+    {
         $this->cacheServices();
         return $this->usesService($service_name) ? $this->services[$service_name] : null;
     }
@@ -193,9 +201,10 @@ class Project extends Group implements PFO_Project {
      *
      * @return array
      */
-    public function getAllUsedServices() {
+    public function getAllUsedServices()
+    {
         $used_services = array();
-        foreach($this->getServices() as $service) {
+        foreach ($this->getServices() as $service) {
             if ($service->isUsed()) {
                 $used_services[] = $service->getShortName();
             }
@@ -207,68 +216,81 @@ class Project extends Group implements PFO_Project {
     /**
      * @return Service[]
      */
-    public function getServices() {
+    public function getServices()
+    {
         $this->cacheServices();
         return $this->services;
     }
 
-    public function getActiveServices() {
+    public function getActiveServices()
+    {
         $this->cacheServices();
         return $this->cache_active_services;
     }
 
-    function usesHomePage() {
+    public function usesHomePage()
+    {
         return $this->usesService(Service::HOMEPAGE);
     }
 
-    function usesAdmin() {
+    public function usesAdmin()
+    {
         return $this->usesService(Service::ADMIN);
     }
 
-    function usesSummary() {
+    public function usesSummary()
+    {
         return $this->usesService(Service::SUMMARY);
     }
 
-    function usesTracker() {
+    public function usesTracker()
+    {
         return $this->usesService(Service::TRACKERV3);
     }
 
-    function usesCVS() {
+    public function usesCVS()
+    {
         return $this->usesService(Service::CVS);
     }
 
-    function usesSVN() {
+    public function usesSVN()
+    {
         return $this->usesService(Service::SVN);
     }
 
-    function usesFile() {
+    public function usesFile()
+    {
         return $this->usesService(Service::FILE);
     }
 
     //whether or not this group has opted to use mailing lists
-    function usesMail() {
+    public function usesMail()
+    {
         return $this->usesService(Service::ML);
     }
 
     //whether or not this group has opted to use news
-    function usesNews() {
+    public function usesNews()
+    {
         return $this->usesService(Service::NEWS);
     }
 
     //whether or not this group has opted to use discussion forums
-    function usesForum() {
+    public function usesForum()
+    {
         return $this->usesService(Service::FORUM);
     }
 
     //whether or not this group has opted to use wiki
-    function usesWiki() {
+    public function usesWiki()
+    {
         return $this->usesService(Service::WIKI);
     }
 
 
     // Generic versions
-
-    function usesService($service_short_name) {
+    public function usesService($service_short_name)
+    {
         $data = $this->getServicesData();
         return isset($data[$service_short_name]) && $data[$service_short_name]['is_used'];
     }
@@ -276,31 +298,38 @@ class Project extends Group implements PFO_Project {
     /*
         The URL for this project's home page
     */
-    function getHomePage() {
+    public function getHomePage()
+    {
         return $this->usesHomePage() ? $this->getServiceLink(Service::HOMEPAGE) : '';
     }
 
-    function getWikiPage(){
+    public function getWikiPage()
+    {
         return $this->getServiceLink(Service::WIKI);
     }
 
-    function getForumPage(){
+    public function getForumPage()
+    {
         return $this->getServiceLink(Service::FORUM);
     }
 
-    function getMailPage(){
+    public function getMailPage()
+    {
         return $this->getServiceLink(Service::ML);
     }
 
-    function getCvsPage(){
+    public function getCvsPage()
+    {
         return $this->getServiceLink(Service::CVS);
     }
 
-    function getSvnPage(){
+    public function getSvnPage()
+    {
         return $this->getServiceLink(Service::SVN);
     }
 
-    function getTrackerPage(){
+    public function getTrackerPage()
+    {
         return $this->getServiceLink(Service::TRACKERV3);
     }
 
@@ -310,68 +339,84 @@ class Project extends Group implements PFO_Project {
 
     */
 
-    function cvsMailingList() {
+    public function cvsMailingList()
+    {
         return $this->project_data_array['cvs_events_mailing_list'];
     }
 
-    function getCVSMailingHeader() {
+    public function getCVSMailingHeader()
+    {
         return $this->project_data_array['cvs_events_mailing_header'];
     }
 
-    function isCVSTracked() {
+    public function isCVSTracked()
+    {
         return $this->project_data_array['cvs_tracker'];
     }
 
-    function getCVSWatchMode() {
+    public function getCVSWatchMode()
+    {
         return $this->project_data_array['cvs_watch_mode'];
     }
 
-    function getCVSpreamble() {
+    public function getCVSpreamble()
+    {
         return $this->project_data_array['cvs_preamble'];
     }
 
-    function isCVSPrivate() {
+    public function isCVSPrivate()
+    {
         return $this->project_data_array['cvs_is_private'];
     }
 
-    function getSVNMailingHeader() {
+    public function getSVNMailingHeader()
+    {
         return $this->project_data_array['svn_events_mailing_header'];
     }
 
-    function isSVNTracked() {
+    public function isSVNTracked()
+    {
         return $this->project_data_array['svn_tracker'];
     }
 
-    function isSVNMandatoryRef() {
+    public function isSVNMandatoryRef()
+    {
         return $this->project_data_array['svn_mandatory_ref'];
     }
 
-    function canChangeSVNLog(){
+    public function canChangeSVNLog()
+    {
         return $this->project_data_array['svn_can_change_log'];
     }
 
-    function getSVNpreamble() {
+    public function getSVNpreamble()
+    {
         return $this->project_data_array['svn_preamble'];
     }
 
-    function isSVNPrivate() {
+    public function isSVNPrivate()
+    {
         // TODO XXXX not implemented yet.
         return false;
     }
 
-    function getSVNAccess() {
+    public function getSVNAccess()
+    {
         return $this->project_data_array['svn_accessfile'];
     }
 
-    public function getAccess() {
+    public function getAccess()
+    {
         return $this->data_array['access'];
     }
 
-    public function getTruncatedEmailsUsage() {
+    public function getTruncatedEmailsUsage()
+    {
         return $this->data_array['truncated_emails'];
     }
 
-    public function isPublic() {
+    public function isPublic()
+    {
         $access = $this->data_array['access'];
         return $access !== Project::ACCESS_PRIVATE && $access !== Project::ACCESS_PRIVATE_WO_RESTRICTED;
     }
@@ -379,12 +424,14 @@ class Project extends Group implements PFO_Project {
     /**
      * @return boolean
      */
-    public function allowsRestricted() {
+    public function allowsRestricted()
+    {
         return $this->getAccess() === self::ACCESS_PUBLIC_UNRESTRICTED
             || $this->isSuperPublic();
     }
 
-    public function isSuperPublic() {
+    public function isSuperPublic()
+    {
         $super_public_projects = ForgeConfig::getSuperPublicProjectsFromRestrictedFile();
 
         return in_array($this->getID(), $super_public_projects);
@@ -395,15 +442,17 @@ class Project extends Group implements PFO_Project {
      *
      * @return String
      */
-    public function getSVNRootPath() {
+    public function getSVNRootPath()
+    {
         return ForgeConfig::get('svn_prefix') . DIRECTORY_SEPARATOR . $this->getUnixNameMixedCase();
     }
 
-    function getProjectsCreatedFrom() {
+    public function getProjectsCreatedFrom()
+    {
         $sql = 'SELECT * FROM groups WHERE built_from_template = '. $this->getGroupId() ." AND status <> 'D'";
         $subprojects = array();
         if ($res = db_query($sql)) {
-            while($data = db_fetch_array($res)) {
+            while ($data = db_fetch_array($res)) {
                 $subprojects[] = $data;
             }
         }
@@ -416,7 +465,7 @@ class Project extends Group implements PFO_Project {
 
         $descfieldsvalue = array();
         if ($res = db_query($sql)) {
-            while($data = db_fetch_array($res)) {
+            while ($data = db_fetch_array($res)) {
                 $descfieldsvalue[] = $data;
             }
         }
@@ -424,49 +473,48 @@ class Project extends Group implements PFO_Project {
         return $descfieldsvalue;
     }
 
-    function displayProjectsDescFieldsValue(){
+    public function displayProjectsDescFieldsValue()
+    {
         $descfieldsvalue = $this->getProjectsDescFieldsValue();
         $fields_factory  = new DescriptionFieldsFactory(new DescriptionFieldsDao());
         $descfields      = $fields_factory->getAllDescriptionFields();
 
         $hp = Codendi_HTMLPurifier::instance();
 
-    	for($i=0;$i<sizeof($descfields);$i++){
+        for ($i=0; $i<sizeof($descfields); $i++) {
+            $displayfieldname[$i]=$descfields[$i]['desc_name'];
+            $displayfieldvalue[$i]='';
+            for ($j=0; $j<sizeof($descfieldsvalue); $j++) {
+                if ($descfieldsvalue[$j]['group_desc_id']==$descfields[$i]['group_desc_id']) {
+                    $displayfieldvalue[$i]=$descfieldsvalue[$j]['value'];
+                }
+            }
 
-			$displayfieldname[$i]=$descfields[$i]['desc_name'];
-			$displayfieldvalue[$i]='';
-			for($j=0;$j<sizeof($descfieldsvalue);$j++){
+            $descname=$displayfieldname[$i];
+            if (preg_match('/(.*):(.*)/', $descname, $matches)) {
+                if ($GLOBALS['Language']->hasText($matches[1], $matches[2])) {
+                    $descname = $GLOBALS['Language']->getText($matches[1], $matches[2]);
+                }
+            }
 
-				if($descfieldsvalue[$j]['group_desc_id']==$descfields[$i]['group_desc_id']){
-					$displayfieldvalue[$i]=$descfieldsvalue[$j]['value'];
-				}
-			}
-
-			$descname=$displayfieldname[$i];
-                        if (preg_match('/(.*):(.*)/', $descname, $matches)) {
-                            if ($GLOBALS['Language']->hasText($matches[1], $matches[2])) {
-                                $descname = $GLOBALS['Language']->getText($matches[1], $matches[2]);
-                            }
-                        }
-
-			echo "<h3>".$hp->purify($descname,CODENDI_PURIFIER_LIGHT,$this->getGroupId())."</h3>";
-			echo "<p>";
-			echo ($displayfieldvalue[$i] == '') ? $GLOBALS['Language']->getText('global','none') : $hp->purify($displayfieldvalue[$i], CODENDI_PURIFIER_LIGHT,$this->getGroupId())  ;
-			echo "</p>";
-
-		}
-
+            echo "<h3>".$hp->purify($descname, CODENDI_PURIFIER_LIGHT, $this->getGroupId())."</h3>";
+            echo "<p>";
+            echo ($displayfieldvalue[$i] == '') ? $GLOBALS['Language']->getText('global', 'none') : $hp->purify($displayfieldvalue[$i], CODENDI_PURIFIER_LIGHT, $this->getGroupId())  ;
+            echo "</p>";
+        }
     }
 
-    private function getUGroupManager() {
+    private function getUGroupManager()
+    {
         return new UGroupManager();
     }
 
     /**
      * @return array of User admin of the project
      */
-    public function getAdmins(UGroupManager $ugm = null) {
-        if(is_null($ugm)) {
+    public function getAdmins(UGroupManager $ugm = null)
+    {
+        if (is_null($ugm)) {
             $ugm = $this->getUGroupManager();
         }
         return $ugm->getDynamicUGroupsMembers(ProjectUGroup::PROJECT_ADMIN, $this->getID());
@@ -475,8 +523,9 @@ class Project extends Group implements PFO_Project {
     /**
      * @return PFUser[] array of User members of the project
      */
-    public function getMembers(UGroupManager $ugm = null) {
-        if(is_null($ugm)) {
+    public function getMembers(UGroupManager $ugm = null)
+    {
+        if (is_null($ugm)) {
             $ugm = $this->getUGroupManager();
         }
         return $ugm->getDynamicUGroupsMembers(ProjectUGroup::PROJECT_MEMBERS, $this->getID());
@@ -485,11 +534,13 @@ class Project extends Group implements PFO_Project {
     /**
      * Alias of @see getMembers()
      */
-    public function getUsers() {
+    public function getUsers()
+    {
         return $this->getMembers();
     }
 
-    public function projectsMustBeApprovedByAdmin() {
+    public function projectsMustBeApprovedByAdmin()
+    {
         return (int) ForgeConfig::get(\ProjectManager::CONFIG_PROJECT_APPROVAL, 1) === 1;
     }
 
