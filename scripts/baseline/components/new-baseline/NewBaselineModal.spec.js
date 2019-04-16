@@ -33,6 +33,8 @@ describe("NewBaselineModal", () => {
     const error_message_selector = '[data-test-type="error-message"]';
     const information_message_selector = '[data-test-type="information_message"]';
     const spinner_selector = '[data-test-type="spinner"]';
+    const cancel_selector = '[data-test-action="cancel"]';
+    const submit_selector = '[data-test-action="submit"]';
 
     let getOpenMilestones;
     let createBaseline;
@@ -137,6 +139,11 @@ describe("NewBaselineModal", () => {
             expect(wrapper.contains(spinner_selector)).toBeTruthy();
         });
 
+        it("disables buttons", () => {
+            expect(wrapper.find(cancel_selector).attributes("disabled")).toEqual("disabled");
+            expect(wrapper.find(submit_selector).attributes("disabled")).toEqual("disabled");
+        });
+
         describe("when createBaseline() fail", () => {
             beforeEach(async () => {
                 createBaselineReject("rejection");
@@ -145,6 +152,11 @@ describe("NewBaselineModal", () => {
 
             it("shows an error message", () => {
                 expect(wrapper.find(error_message_selector).text).not.toBe(null);
+            });
+            it("enables cancel buttons", () => {
+                expect(wrapper.find(cancel_selector).attributes("disabled")).not.toEqual(
+                    "disabled"
+                );
             });
         });
 
