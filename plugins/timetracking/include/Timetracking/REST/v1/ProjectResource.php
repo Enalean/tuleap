@@ -36,6 +36,10 @@ use Tuleap\Timetracking\Admin\TimetrackingUgroupRetriever;
 use Tuleap\Timetracking\Permissions\PermissionsRetriever;
 use Tuleap\Timetracking\Time\TimeDao;
 use Tuleap\Timetracking\Time\TimeRetriever;
+use Tuleap\Tracker\REST\PermissionsExporter;
+use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyDao;
+use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyFieldDetector;
+use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyFieldsRetriever;
 
 class ProjectResource
 {
@@ -72,7 +76,16 @@ class ProjectResource
             new AdminDao(),
             $this->permissions_retriever,
             TrackerFactory::instance(),
-            new Tracker_REST_TrackerRestBuilder(Tracker_FormElementFactory::instance())
+            new Tracker_REST_TrackerRestBuilder(
+                Tracker_FormElementFactory::instance(),
+                new PermissionsExporter(
+                    new ReadOnlyFieldDetector(
+                        new ReadOnlyFieldsRetriever(
+                            new ReadOnlyDao()
+                        )
+                    )
+                )
+            )
         );
     }
 

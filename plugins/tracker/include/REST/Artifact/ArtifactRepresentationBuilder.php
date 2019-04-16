@@ -32,6 +32,8 @@ use Tracker_FormElementFactory;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenter;
 use Tuleap\Tracker\REST\ChangesetRepresentationCollection;
+use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
+use Tuleap\Tracker\REST\TrackerRepresentation;
 
 class ArtifactRepresentationBuilder
 {
@@ -61,18 +63,20 @@ class ArtifactRepresentationBuilder
     /**
      * Return an artifact snapshot representation
      *
-     * @param PFUser           $user
+     * @param PFUser $user
      * @param Tracker_Artifact $artifact
+     * @param TrackerRepresentation $tracker_representation
      * @return ArtifactRepresentation
      */
-    public function getArtifactRepresentationWithFieldValues(PFUser $user, Tracker_Artifact $artifact)
+    public function getArtifactRepresentationWithFieldValues(PFUser $user, Tracker_Artifact $artifact, TrackerRepresentation $tracker_representation)
     {
         $artifact_representation = new ArtifactRepresentation();
         $artifact_representation->build(
             $user,
             $artifact,
             $this->getFieldsValues($user, $artifact),
-            null
+            null,
+            $tracker_representation
         );
 
         return $artifact_representation;
@@ -81,18 +85,20 @@ class ArtifactRepresentationBuilder
     /**
      * Return an artifact snapshot representation
      *
-     * @param PFUser           $user
+     * @param PFUser $user
      * @param Tracker_Artifact $artifact
+     * @param TrackerRepresentation $tracker_representation
      * @return ArtifactRepresentation
      */
-    public function getArtifactRepresentationWithFieldValuesByFieldValues(PFUser $user, Tracker_Artifact $artifact)
+    public function getArtifactRepresentationWithFieldValuesByFieldValues(PFUser $user, Tracker_Artifact $artifact, TrackerRepresentation $tracker_representation)
     {
         $artifact_representation = new ArtifactRepresentation();
         $artifact_representation->build(
             $user,
             $artifact,
             null,
-            $this->getFieldValuesIndexedByName($user, $artifact)
+            $this->getFieldValuesIndexedByName($user, $artifact),
+            $tracker_representation
         );
 
         return $artifact_representation;
@@ -101,18 +107,20 @@ class ArtifactRepresentationBuilder
     /**
      * Return an artifact snapshot representation
      *
-     * @param PFUser           $user
+     * @param PFUser $user
      * @param Tracker_Artifact $artifact
+     * @param TrackerRepresentation $tracker_representation
      * @return ArtifactRepresentation
      */
-    public function getArtifactRepresentationWithFieldValuesInBothFormat(PFUser $user, Tracker_Artifact $artifact)
+    public function getArtifactRepresentationWithFieldValuesInBothFormat(PFUser $user, Tracker_Artifact $artifact, TrackerRepresentation $tracker_representation)
     {
         $artifact_representation = new ArtifactRepresentation();
         $artifact_representation->build(
             $user,
             $artifact,
             $this->getFieldsValues($user, $artifact),
-            $this->getFieldValuesIndexedByName($user, $artifact)
+            $this->getFieldValuesIndexedByName($user, $artifact),
+            $tracker_representation
         );
 
         return $artifact_representation;
@@ -127,12 +135,16 @@ class ArtifactRepresentationBuilder
      */
     public function getArtifactRepresentation(PFUser $user, Tracker_Artifact $artifact)
     {
+        $tracker_representation  = new MinimalTrackerRepresentation();
+        $tracker_representation->build($artifact->getTracker());
+
         $artifact_representation = new ArtifactRepresentation();
         $artifact_representation->build(
             $user,
             $artifact,
             null,
-            null
+            null,
+            $tracker_representation
         );
 
         return $artifact_representation;
@@ -271,9 +283,13 @@ class ArtifactRepresentationBuilder
         foreach ($linked_artifacts_ids as $artifact_id) {
             $artifact = $this->artifact_factory->getArtifactByIdUserCanView($user, $artifact_id);
             if ($artifact) {
+                $tracker_representation = new MinimalTrackerRepresentation();
+                $tracker_representation->build($artifact->getTracker());
+
                 $artifact_representations[] = $this->getArtifactRepresentationWithFieldValuesInBothFormat(
                     $user,
-                    $artifact
+                    $artifact,
+                    $tracker_representation
                 );
             }
         }

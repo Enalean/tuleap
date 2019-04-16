@@ -24,7 +24,7 @@ use Tracker;
 use Tuleap\Project\REST\ProjectReference;
 use Tuleap\REST\JsonCast;
 
-class MinimalTrackerRepresentation
+class MinimalTrackerRepresentation implements TrackerRepresentation
 {
     /**
      * @var int ID of the tracker {@type int} {@required true}
@@ -54,7 +54,7 @@ class MinimalTrackerRepresentation
     public function build(Tracker $tracker)
     {
         $this->id         = JsonCast::toInt($tracker->getId());
-        $this->uri        = TrackerRepresentation::ROUTE . '/' . $this->id;
+        $this->uri        = CompleteTrackerRepresentation::ROUTE . '/' . $this->id;
         $this->label      = $tracker->getName();
         $this->color_name = $tracker->getNormalizedColor();
 

@@ -34,6 +34,8 @@ use TrackerFactory;
 use Tuleap\Timetracking\Admin\AdminDao;
 use Tuleap\Timetracking\Permissions\PermissionsRetriever;
 use Tuleap\Timetracking\REST\v1\TimetrackingOverviewRepresentationsBuilder;
+use Tuleap\Tracker\REST\CompleteTrackerRepresentation;
+use Tuleap\Tracker\REST\TrackerRepresentation;
 
 class TimetrackingOverviewRepresentationsBuilderTest extends TestCase
 {
@@ -144,6 +146,9 @@ class TimetrackingOverviewRepresentationsBuilderTest extends TestCase
 
     public function testGetTrackersFullRepresentationWithTimetracking()
     {
+        $tracker_representation     = \Mockery::mock(CompleteTrackerRepresentation::class);
+        $tracker_representation->id = $this->tracker->getId();
+
         $this->permissions_retriever->allows()->userCanSeeAggregatedTimesInTracker(
             $this->user,
             $this->tracker
@@ -157,10 +162,10 @@ class TimetrackingOverviewRepresentationsBuilderTest extends TestCase
         );
 
         $this->tracker_factory->shouldReceive('getTrackerById')->with(16)->andReturn($this->tracker);
-        $this->tracker_rest_builder->shouldReceive('getTrackerRepresentation')->with(
+        $this->tracker_rest_builder->shouldReceive('getTrackerRepresentationWithoutWorkflowComputedPermissions')->with(
             $this->user,
             $this->tracker
-        )->andReturn($this->tracker);
+        )->andReturn($tracker_representation);
 
         $this->tracker->shouldReceive('userCanView')->with($this->user)->andReturn(true);
         $result = $this->timetracking_overview_representations_builder->getTrackersFullRepresentationsWithTimetracking(
@@ -170,7 +175,7 @@ class TimetrackingOverviewRepresentationsBuilderTest extends TestCase
             0
         );
 
-        $this->assertEquals($this->tracker, $result["trackers"][0]);
+        $this->assertEquals($tracker_representation->id, $result["trackers"][0]->id);
         $this->assertEquals(1, $result["total_trackers"]);
     }
 }

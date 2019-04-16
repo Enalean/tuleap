@@ -47,7 +47,7 @@ class TrackerReference {
 
     public function build(Tracker $tracker) {
         $this->id    = JsonCast::toInt($tracker->getId());
-        $this->uri   = TrackerRepresentation::ROUTE . '/' . $this->id;
+        $this->uri   = CompleteTrackerRepresentation::ROUTE . '/' . $this->id;
         $this->label = $tracker->getName();
 
         $project           = $tracker->getProject();

@@ -26,6 +26,7 @@ use Tuleap\Project\REST\ProjectReference;
 use Tuleap\REST\JsonCast;
 use Tuleap\Tracker\REST\ChangesetRepresentation;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
+use Tuleap\Tracker\REST\TrackerRepresentation;
 use Tuleap\User\REST\MinimalUserRepresentation;
 
 class ArtifactRepresentation
@@ -49,7 +50,7 @@ class ArtifactRepresentation
     public $xref;
 
     /**
-     * @var Tuleap\Tracker\REST\TrackerReference Reference to tracker the artifact belongs to {@type Tuleap\Tracker\REST\MinimalTrackerRepresentation} {@required true}
+     * @var TrackerRepresentation  {@type Tuleap\Tracker\REST\TrackerRepresentation} {@required true}
      */
     public $tracker;
 
@@ -113,15 +114,12 @@ class ArtifactRepresentation
      */
     public $assignees;
 
-    public function build(PFUser $current_user, Tracker_Artifact $artifact, $values, $values_by_field)
+    public function build(PFUser $current_user, Tracker_Artifact $artifact, $values, $values_by_field, TrackerRepresentation $tracker_representation)
     {
         $this->id             = JsonCast::toInt($artifact->getId());
         $this->uri            = self::ROUTE . '/' . $artifact->getId();
         $this->xref           = $artifact->getXRef();
-
-        $this->tracker        = new MinimalTrackerRepresentation();
-        $this->tracker->build($artifact->getTracker());
-
+        $this->tracker        = $tracker_representation;
         $this->project        = new ProjectReference();
         $this->project->build($artifact->getTracker()->getProject());
 

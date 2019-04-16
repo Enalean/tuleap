@@ -31,7 +31,8 @@ use Tracker_Artifact_Changeset;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\REST\ChangesetRepresentation;
-use Tuleap\Tracker\REST\TrackerRepresentation;
+use Tuleap\Tracker\REST\CompleteTrackerRepresentation;
+use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 
 final class ArtifactRepresentationBuilderTest extends TestCase
 {
@@ -102,7 +103,7 @@ final class ArtifactRepresentationBuilderTest extends TestCase
         );
         $this->assertEquals(888, $representation->tracker->id);
         $this->assertEquals(
-            TrackerRepresentation::ROUTE . '/' . 888,
+            CompleteTrackerRepresentation::ROUTE . '/' . 888,
             $representation->tracker->uri
         );
         $this->assertEquals(1478, $representation->project->id);
@@ -125,7 +126,7 @@ final class ArtifactRepresentationBuilderTest extends TestCase
         $artifact     = $this->buildBasicArtifactMock();
         $this->form_element_factory->shouldReceive('getUsedFieldsForREST')->andReturn([])->once();
 
-        $this->builder->getArtifactRepresentationWithFieldValues($current_user, $artifact);
+        $this->builder->getArtifactRepresentationWithFieldValues($current_user, $artifact, new MinimalTrackerRepresentation());
     }
 
     public function testGetArtifactRepresentationWithFieldValuesDoesntIncludeFieldsUserCantRead()
@@ -160,7 +161,7 @@ final class ArtifactRepresentationBuilderTest extends TestCase
         );
         $artifact = $this->buildBasicArtifactMock();
 
-        $this->builder->getArtifactRepresentationWithFieldValues($current_user, $artifact);
+        $this->builder->getArtifactRepresentationWithFieldValues($current_user, $artifact, new MinimalTrackerRepresentation());
     }
 
     public function testGetArtifactRepresentationWithFieldValuesReturnsOnlyForFieldsWithValues()
@@ -192,7 +193,7 @@ final class ArtifactRepresentationBuilderTest extends TestCase
         $current_user = Mockery::mock(\PFUser::class);
         $artifact     = $this->buildBasicArtifactMock();
 
-        $representation = $this->builder->getArtifactRepresentationWithFieldValues($current_user, $artifact);
+        $representation = $this->builder->getArtifactRepresentationWithFieldValues($current_user, $artifact, new MinimalTrackerRepresentation());
 
         $this->assertEquals(['whatever'], $representation->values);
         $this->assertNull($representation->values_by_field);
@@ -227,7 +228,8 @@ final class ArtifactRepresentationBuilderTest extends TestCase
 
         $representation = $this->builder->getArtifactRepresentationWithFieldValuesByFieldValues(
             $current_user,
-            $artifact
+            $artifact,
+            new MinimalTrackerRepresentation()
         );
 
         $this->assertNull($representation->values);
@@ -263,7 +265,8 @@ final class ArtifactRepresentationBuilderTest extends TestCase
 
         $representation = $this->builder->getArtifactRepresentationWithFieldValuesInBothFormat(
             $current_user,
-            $artifact
+            $artifact,
+            new MinimalTrackerRepresentation()
         );
 
         $this->assertEquals(['01', 'whatever'], $representation->values);

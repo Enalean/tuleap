@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Tracker\REST\TrackerRepresentation;
+use Tuleap\Tracker\REST\CompleteTrackerRepresentation;
+use Tuleap\Tracker\REST\PermissionsExporter;
 use Tuleap\Tracker\REST\StructureElementRepresentation;
 use Tuleap\Tracker\REST\WorkflowRepresentation;
 use Tuleap\Tracker\REST\WorkflowTransitionRepresentation;
@@ -26,21 +27,56 @@ use Tuleap\Tracker\REST\WorkflowRulesRepresentation;
 use Tuleap\Tracker\REST\WorkflowRuleDateRepresentation;
 use Tuleap\Tracker\REST\WorkflowRuleListRepresentation;
 
-class Tracker_REST_TrackerRestBuilder {
+class Tracker_REST_TrackerRestBuilder
+{
     /** @var Tracker_FormElementFactory */
     private $formelement_factory;
 
-    public function __construct(Tracker_FormElementFactory $formelement_factory) {
+    /** @var PermissionsExporter */
+    private $permissions_exporter;
+
+    public function __construct(
+        Tracker_FormElementFactory $formelement_factory,
+        PermissionsExporter $permissions_exporter
+    )
+    {
         $this->formelement_factory = $formelement_factory;
+        $this->permissions_exporter = $permissions_exporter;
     }
 
-    public function getTrackerRepresentation(PFUser $user, Tracker $tracker) {
-        $semantic_manager = $this->getSemanticManager($tracker);
+    public function getTrackerRepresentationWithoutWorkflowComputedPermissions(PFUser $user, Tracker $tracker) : CompleteTrackerRepresentation
+    {
+        return $this->buildTrackerRepresentation(
+            $user,
+            $tracker,
+            $this->getRESTFieldsUserCanRead(
+                $user,
+                $tracker,
+                $this->getFunctionToExportPermissionsWithoutWorkflowComputedPermissions($user)
+            )
+        );
+    }
 
-        $tracker_representation = new TrackerRepresentation();
+    public function getTrackerRepresentationWithWorkflowComputedPermissions(PFUser $user, Tracker $tracker, Tracker_Artifact $artifact) : CompleteTrackerRepresentation
+    {
+        return $this->buildTrackerRepresentation(
+            $user,
+            $tracker,
+            $this->getRESTFieldsUserCanRead(
+                $user,
+                $tracker,
+                $this->getFunctionToExportPermissionsWithWorkflowComputedPermissions($user, $artifact)
+            )
+        );
+    }
+
+    private function buildTrackerRepresentation(PFUser $user, Tracker $tracker, array $rest_fields): CompleteTrackerRepresentation
+    {
+        $semantic_manager = $this->getSemanticManager($tracker);
+        $tracker_representation = new CompleteTrackerRepresentation();
         $tracker_representation->build(
             $tracker,
-            $this->getRESTFieldsUserCanRead($user, $tracker),
+            $rest_fields,
             $this->getStructureRepresentation($tracker),
             $semantic_manager->exportToREST($user),
             $this->getWorkflowRepresentation($tracker->getWorkflow(), $user, $tracker->getGroupId())
@@ -171,22 +207,24 @@ class Tracker_REST_TrackerRestBuilder {
         return $workflow_representation;
     }
 
-    private function getRESTFieldsUserCanRead(PFUser $user, Tracker $tracker) {
+    private function getRESTFieldsUserCanRead(PFUser $user, Tracker $tracker, callable $field_permissions_export_function)
+    {
         return
             array_values(
                 array_filter(
                     array_map(
-                        $this->getFunctionToFilterOutFieldsUserCannotRead($user),
+                        $this->getFunctionToFilterOutFieldsUserCannotRead($user, $field_permissions_export_function),
                         $this->formelement_factory->getAllUsedFormElementOfAnyTypesForTracker($tracker)
                     )
                 )
-        );
+            );
     }
 
-    private function getFunctionToFilterOutFieldsUserCannotRead(PFUser $user) {
+    private function getFunctionToFilterOutFieldsUserCannotRead(PFUser $user, callable $field_permissions_export_function)
+    {
         $formelement_factory = $this->formelement_factory;
 
-        return function (Tracker_FormElement $field) use ($user, $formelement_factory) {
+        return function (Tracker_FormElement $field) use ($user, $formelement_factory, $field_permissions_export_function) {
             if (! $field->userCanRead($user)) {
                 return false;
             }
@@ -202,10 +240,28 @@ class Tracker_REST_TrackerRestBuilder {
             $field_representation->build(
                 $field,
                 $formelement_factory->getType($field),
-                $field->exportCurrentUserPermissionsToREST($user)
+                $field_permissions_export_function($field)
             );
 
             return $field_representation;
+        };
+    }
+
+    private function getFunctionToExportPermissionsWithoutWorkflowComputedPermissions(PFUser $user) : callable
+    {
+        return function (Tracker_FormElement $field) use ($user) {
+            return $this->permissions_exporter->exportUserPermissionsForFieldWithoutWorkflowComputedPermissions($user, $field);
+        };
+    }
+
+    private function getFunctionToExportPermissionsWithWorkflowComputedPermissions(PFUser $user, Tracker_Artifact $artifact) : callable
+    {
+        return function (Tracker_FormElement $field) use ($user, $artifact) {
+            return $this->permissions_exporter->exportUserPermissionsForFieldWithWorkflowComputedPermissions(
+                $user,
+                $field,
+                $artifact
+            );
         };
     }
 }

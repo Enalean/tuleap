@@ -27,6 +27,7 @@ class TrackerRestBuilderTest extends TuleapTestCase {
     private $tracker;
     private $user;
     private $semantic_manager;
+    private $permissions_exporter;
 
     public function setUp() {
         parent::setUp();
@@ -34,10 +35,16 @@ class TrackerRestBuilderTest extends TuleapTestCase {
         $this->tracker               = mock('Tracker');
         $this->user                  = mock('PFUser');
         $this->semantic_manager      = mock('Tracker_SemanticManager');
-        $this->builder               = partial_mock('Tracker_REST_TrackerRestBuilder', array('getSemanticManager'), array($this->formelement_factory));
         $this->workflow              = mock('Workflow');
+        $this->permissions_exporter  = \Mockery::mock(\Tuleap\Tracker\REST\PermissionsExporter::class);
+        $this->builder               = partial_mock(
+            'Tracker_REST_TrackerRestBuilder',
+            array('getSemanticManager'),
+            array($this->formelement_factory, $this->permissions_exporter)
+        );
 
         stub($this->builder)->getSemanticManager()->returns($this->semantic_manager);
+        $this->permissions_exporter->shouldReceive('exportUserPermissionsForFieldWithoutWorkflowComputedPermissions')->andReturn(array());
     }
 
     public function itReturnsAnArrayEvenWhenFieldsAreNotReadable() {
@@ -45,15 +52,12 @@ class TrackerRestBuilderTest extends TuleapTestCase {
 
         $field1 = aMockField()->withId(1)->build();
         stub($field1)->userCanRead()->returns(true);
-        stub($field1)->exportCurrentUserPermissionsToREST()->returns(array());
         stub($field1)->getRESTBindingProperties()->returns(aStringField()->build()->getRESTBindingProperties());
         $field2 = aMockField()->withId(2)->build();
         stub($field2)->userCanRead()->returns(false);
-        stub($field2)->exportCurrentUserPermissionsToREST()->returns(array());
         stub($field2)->getRESTBindingProperties()->returns(aStringField()->build()->getRESTBindingProperties());
         $field3 = aMockField()->withId(3)->build();
         stub($field3)->userCanRead()->returns(true);
-        stub($field3)->exportCurrentUserPermissionsToREST()->returns(array());
         stub($field3)->getRESTBindingProperties()->returns(aStringField()->build()->getRESTBindingProperties());
 
         stub($this->workflow)->getField()->returns($field2);
@@ -62,7 +66,7 @@ class TrackerRestBuilderTest extends TuleapTestCase {
         stub($this->formelement_factory)->getAllUsedFormElementOfAnyTypesForTracker()->returns(array($field1, $field2, $field3));
         stub($this->formelement_factory)->getType()->returns('string');
 
-        $tracker_representation = $this->builder->getTrackerRepresentation($this->user, $this->tracker);
+        $tracker_representation = $this->builder->getTrackerRepresentationWithoutWorkflowComputedPermissions($this->user, $this->tracker);
         $this->assertEqual(array_keys($tracker_representation->fields), array(0, 1));
     }
 }
