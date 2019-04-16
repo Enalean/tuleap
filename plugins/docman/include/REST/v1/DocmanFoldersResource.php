@@ -168,11 +168,23 @@ class DocmanFoldersResource extends AuthenticatedResource
             throw new RestException(400, $e->getMessage());
         } catch (Metadata\ItemStatusUsageMismatchException $e) {
             throw new RestException(403, 'The "Status" property is not activated for this item.');
+        } catch (Metadata\InvalidDateComparisonException $e) {
+            throw new RestException(400, 'The obsolescence date is before the current date');
+        } catch (Metadata\InvalidDateTimeFormatException $e) {
+            throw new RestException(400, 'The date format is incorrect. The format should be YYYY-MM-DD');
+        } catch (Metadata\ObsoloscenceDateUsageMismatchException $e) {
+            throw new RestException(400, 'The "Obsolescence date" property is not activated for this item.');
         }
     }
 
     /**
      * Create new empty document
+     *
+     * <pre>
+     * /!\ This route is under construction and will be subject to changes
+     * </pre>
+     *
+     * The format of the obsolescence date is : "YYYY-MM-DD"
      *
      * @param int                                 $id   Id of the parent folder
      * @param DocmanEmptyPOSTRepresentation $empty_representation {@from body} {@type \Tuleap\Docman\REST\v1\Folders\DocmanEmptyPOSTRepresentation}
@@ -208,13 +220,25 @@ class DocmanFoldersResource extends AuthenticatedResource
 
         $docman_item_creator = DocmanItemCreatorBuilder::build($project);
 
-        return $docman_item_creator->createEmpty(
-            $parent,
-            $current_user,
-            $empty_representation,
-            new \DateTimeImmutable(),
-            $project
-        );
+        try {
+            return $docman_item_creator->createEmpty(
+                $parent,
+                $current_user,
+                $empty_representation,
+                new \DateTimeImmutable(),
+                $project
+            );
+        } catch (Metadata\StatusNotFoundException $e) {
+            throw new RestException(400, $e->getMessage());
+        } catch (Metadata\ItemStatusUsageMismatchException $e) {
+            throw new RestException(403, 'The "Status" property is not activated for this item.');
+        } catch (Metadata\InvalidDateComparisonException $e) {
+            throw new RestException(400, 'The obsolescence date is before the current date');
+        } catch (Metadata\InvalidDateTimeFormatException $e) {
+            throw new RestException(400, 'The date format is incorrect. The format should be YYYY-MM-DD');
+        } catch (Metadata\ObsoloscenceDateUsageMismatchException $e) {
+            throw new RestException(403, $e->getMessage());
+        }
     }
 
     /**

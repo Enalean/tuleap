@@ -43,6 +43,7 @@ class DocmanWithMetadataActivatedDataBuilder extends DocmanDataBuildCommon
         echo 'Setup Docman with activated metadata REST Tests configuration' . PHP_EOL;
 
         $this->setMetadataUsageByLabel('status');
+        $this->setMetadataUsageByLabel('obsolescence_date');
         $this->installPlugin($this->project);
         $this->addContent();
     }

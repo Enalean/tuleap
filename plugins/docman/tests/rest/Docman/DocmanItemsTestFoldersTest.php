@@ -471,6 +471,53 @@ class DocmanItemsTestFoldersTest extends DocmanBase
         $this->assertEquals(403, $response->getStatusCode());
     }
 
+
+    /**
+     * @depends testGetRootId
+     */
+    public function testPostEmptyWithStatusWhenStatusIsNotAllowedForProject(int $root_id): void
+    {
+        $headers = ['Content-Type' => 'application/json'];
+
+        $query = json_encode(
+            [
+                'title'       => 'EMPTY FAIL',
+                'description' => 'A description',
+                'status'      => 'approved'
+            ]
+        );
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post('docman_folders/' . $root_id . "/empties", $headers, $query)
+        );
+
+        $this->assertEquals(403, $response->getStatusCode());
+    }
+
+    /**
+     * @depends testGetRootId
+     */
+    public function testPostEmptyWithObsolescenceDateWhenObsolescenceDateIsNotAllowedForProject(int $root_id): void
+    {
+        $headers = ['Content-Type' => 'application/json'];
+
+        $query = json_encode(
+            [
+                'title'             => 'EMPTY FAIL 2',
+                'description'       => 'A description',
+                'obsolescence_date' => '2019-02-25'
+            ]
+        );
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post('docman_folders/' . $root_id . "/empties", $headers, $query)
+        );
+
+        $this->assertEquals(403, $response->getStatusCode());
+    }
+
     /**
      * Find first item in given array of items which has given title.
      * @return array|null Found item. null otherwise.

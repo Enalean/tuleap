@@ -95,6 +95,20 @@ class HardcodedMetadataUsageCheckerTest extends TestCase
         $checker->checkItemStatusAuthorisedValue('swang');
     }
 
+    public function testCheckItemStatusAuthorisedValueThrowsExceptionIfTheValueIsNull(): void
+    {
+        $checker = new HardcodedMetadataUsageChecker(
+            $this->docman_settings_bo
+        );
+
+        $this->docman_settings_bo->shouldReceive("getMetadataUsage")->with('status')->andReturn('1');
+
+        $this->expectException(StatusNotFoundException::class);
+
+        $checker->checkItemStatusAuthorisedValue(null);
+    }
+
+
     public function testCheckItemStatusUsageReturnExceptionIfTheMetadataReturnFalse(): void
     {
         $checker = new HardcodedMetadataUsageChecker(

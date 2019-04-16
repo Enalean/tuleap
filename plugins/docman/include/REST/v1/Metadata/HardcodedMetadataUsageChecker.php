@@ -38,7 +38,7 @@ class HardcodedMetadataUsageChecker
     /**
      * @throws ItemStatusUsageMismatchException
      */
-    public function checkStatusIsNotSetWhenStatusMetadataIsNotAllowed(string $status): void
+    public function checkStatusIsNotSetWhenStatusMetadataIsNotAllowed(?string $status): void
     {
         $metadata_usage = $this->docman_settings_bo->getMetadataUsage('status');
         if (!($metadata_usage === "1") && ($status !== ItemStatusMapper::ITEM_STATUS_NONE)) {
@@ -49,8 +49,12 @@ class HardcodedMetadataUsageChecker
     /**
      * @throws StatusNotFoundException
      */
-    public function checkItemStatusAuthorisedValue(string $status_string): void
+    public function checkItemStatusAuthorisedValue(?string $status_string): void
     {
+        if ($status_string === null) {
+            throw new StatusNotFoundException('null is not a valid item status');
+        }
+
         if (!isset(ItemStatusMapper::ITEM_STATUS_ARRAY_MAP[$status_string])) {
             throw new StatusNotFoundException(
                 sprintf(

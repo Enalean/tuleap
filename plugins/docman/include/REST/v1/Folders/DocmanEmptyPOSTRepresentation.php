@@ -22,6 +22,9 @@ declare(strict_types = 1);
 
 namespace Tuleap\Docman\REST\v1\Folders;
 
+use Tuleap\Docman\REST\v1\ItemRepresentation;
+use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
+
 class DocmanEmptyPOSTRepresentation
 {
     /**
@@ -32,4 +35,12 @@ class DocmanEmptyPOSTRepresentation
      * @var string Item description {@from body} {@required false}
      */
     public $description = '';
+    /**
+     * @var string | null Item status {@from body} {@required false} {@choice none,draft,approved,rejected}
+     */
+    public $status = ItemStatusMapper::ITEM_STATUS_NONE;
+    /**
+     * @var string Obsolescence date {@from body} {@required false}
+     */
+    public $obsolescence_date = ItemRepresentation::OBSOLESCENCE_DATE_NONE;
 }
