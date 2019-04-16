@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,10 +27,23 @@ class UGroup_AddUserTest extends TuleapTestCase {
         $this->user_id = 400;
         $this->user    = stub('PFUser')->getId()->returns($this->user_id);
     }
-    
-    function itAddUserIntoStaticGroup() {
+
+    public function tearDown() : void
+    {
+        parent::tearDown();
+        ProjectManager::clearInstance();
+    }
+
+    public function itAddUserIntoStaticGroup() : void
+    {
         $ugroup_id = 200;
         $group_id  = 300;
+
+        $project_manager = Mockery::mock(ProjectManager::class);
+        ProjectManager::setInstance($project_manager);
+        $project = Mockery::mock(Project::class);
+        $project_manager->shouldReceive('getProject')->with($group_id)->andReturn($project);
+        $project->shouldReceive('getAccess')->andReturn(Project::ACCESS_PUBLIC);
         
         $ugroup = TestHelper::getPartialMock('ProjectUGroup', array('addUserToStaticGroup', 'exists'));
         stub($ugroup)->exists()->returns(true);
@@ -44,6 +57,12 @@ class UGroup_AddUserTest extends TuleapTestCase {
     function itThrowAnExceptionIfStaticUGroupDoesntExist() {
         $ugroup_id = 200;
         $group_id  = 300;
+
+        $project_manager = Mockery::mock(ProjectManager::class);
+        ProjectManager::setInstance($project_manager);
+        $project = Mockery::mock(Project::class);
+        $project_manager->shouldReceive('getProject')->with($group_id)->andReturn($project);
+        $project->shouldReceive('getAccess')->andReturn(Project::ACCESS_PUBLIC);
         
         $ugroup = TestHelper::getPartialMock('ProjectUGroup', array('exists'));
         stub($ugroup)->exists()->returns(false);
@@ -57,7 +76,13 @@ class UGroup_AddUserTest extends TuleapTestCase {
     function itAddUserIntoDynamicGroup() {
         $ugroup_id = $GLOBALS['UGROUP_WIKI_ADMIN'];
         $group_id  = 300;
-        
+
+        $project_manager = Mockery::mock(ProjectManager::class);
+        ProjectManager::setInstance($project_manager);
+        $project = Mockery::mock(Project::class);
+        $project_manager->shouldReceive('getProject')->with($group_id)->andReturn($project);
+        $project->shouldReceive('getAccess')->andReturn(Project::ACCESS_PUBLIC);
+
         $ugroup = TestHelper::getPartialMock('ProjectUGroup', array('_getUserGroupDao'));
         
         $dao = mock('UserGroupDao');

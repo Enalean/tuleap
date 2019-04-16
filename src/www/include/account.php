@@ -1,6 +1,6 @@
 <?php
 //
-// Copyright (c) Enalean, 2015-2018. All Rights Reserved.
+// Copyright (c) Enalean, 2015-Present. All Rights Reserved.
 // SourceForge: Breaking Down the Barriers to Open Source Development
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
@@ -11,6 +11,8 @@
 //
 
 // Add user to an existing project
+use Tuleap\Project\Admin\ProjectWithoutRestrictedFeatureFlag;
+
 function account_add_user_to_group ($group_id, &$user_unix_name)
 {
     $um = UserManager::instance();
@@ -29,7 +31,7 @@ function account_add_user_to_group ($group_id, &$user_unix_name)
 /**
  * Add a new user into a given project
  *
- * @param Integer $group_id Project id
+ * @param integer $group_id Project id
  * @param PFUser $user User to add
  * @param bool $check_user_status
  * @return bool
@@ -41,6 +43,16 @@ function account_add_user_obj_to_group ($group_id, PFUser $user, $check_user_sta
     //is not allowed
     if ($check_user_status && !$user->isActive() && !$user->isRestricted()) {
         $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('include_account', 'account_notactive', $user->getUserName()));
+        return false;
+    }
+
+    $project = ProjectManager::instance()->getProject($group_id);
+    if ($project !== null && $project->getAccess() === Project::ACCESS_PRIVATE_WO_RESTRICTED &&
+        ForgeConfig::areRestrictedUsersAllowed() && ProjectWithoutRestrictedFeatureFlag::isEnabled() && $user->isRestricted()) {
+        $GLOBALS['Response']->addFeedback(
+            Feedback::ERROR,
+            sprintf(_('Account %s is restricted and the project does not allow restricted users. User not added.'), $user->getUserName())
+        );
         return false;
     }
 
