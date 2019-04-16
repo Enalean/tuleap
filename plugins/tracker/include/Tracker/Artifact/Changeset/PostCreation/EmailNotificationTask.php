@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -306,7 +306,7 @@ final class EmailNotificationTask implements PostCreationTask
                 "name" => "Reply-to",
                 "value" => $artifact->getTokenBasedEmailAddress()
             );
-        } else if ($artifactbymail->canUpdateArtifactInInsecureMode($artifact->getTracker())) {
+        } elseif ($artifactbymail->canUpdateArtifactInInsecureMode($artifact->getTracker())) {
             return array(
                 "name" => "Reply-to",
                 "value" => $artifact->getInsecureEmailAddress()
@@ -539,9 +539,11 @@ final class EmailNotificationTask implements PostCreationTask
     private function getSubjectAssignedTo(\Tracker_Artifact $artifact, \PFUser $recipient)
     {
         if ($this->isNotificationAssignedToEnabled($artifact->getTracker())) {
-            $users = $artifact->getAssignedTo($recipient);
-            if (in_array($recipient, $users, true)) {
-                return '[' . $recipient->getLanguage()->getText('plugin_tracker_include_type', 'assigned_to_me') . '] ';
+            $assigned_to_users = $artifact->getAssignedTo($recipient);
+            foreach ($assigned_to_users as $assigned_to_user) {
+                if ((int) $assigned_to_user->getId() === (int) $recipient->getId()) {
+                    return '[' . $recipient->getLanguage()->getText('plugin_tracker_include_type', 'assigned_to_me') . '] ';
+                }
             }
         }
         return '';
