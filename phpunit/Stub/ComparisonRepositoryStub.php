@@ -24,17 +24,26 @@ declare(strict_types=1);
 namespace Tuleap\Baseline\Stub;
 
 use PFUser;
+use Tuleap\Baseline\Clock;
 use Tuleap\Baseline\Comparison;
 use Tuleap\Baseline\ComparisonRepository;
 use Tuleap\Baseline\TransientComparison;
 
 class ComparisonRepositoryStub implements ComparisonRepository
 {
+    /** @var Clock */
+    private $clock;
+
     /** @var Comparison[] */
     private $comparisons_by_id = [];
 
     /** @var int */
     private $id_sequence = 1;
+
+    public function __construct(Clock $clock)
+    {
+        $this->clock = $clock;
+    }
 
     public function add(TransientComparison $transient_comparison, PFUser $current_user): Comparison
     {
@@ -43,7 +52,9 @@ class ComparisonRepositoryStub implements ComparisonRepository
             $transient_comparison->getName(),
             $transient_comparison->getComment(),
             $transient_comparison->getBaseBaseline(),
-            $transient_comparison->getComparedToBaseline()
+            $transient_comparison->getComparedToBaseline(),
+            $current_user,
+            $this->clock->now()
         );
 
         $this->comparisons_by_id[$comparison->getId()] = $comparison;

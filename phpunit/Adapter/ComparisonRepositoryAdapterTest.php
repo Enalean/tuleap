@@ -25,10 +25,13 @@ namespace Tuleap\Baseline\Adapter;
 
 require_once __DIR__ . '/../bootstrap.php';
 
+use DateTimeImmutable;
+use DateTimeInterface;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
 use ParagonIE\EasyDB\EasyDB;
+use PFUser;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Baseline\BaselineRepository;
 use Tuleap\Baseline\Comparison;
@@ -37,6 +40,8 @@ use Tuleap\Baseline\Factory\ProjectFactory;
 use Tuleap\Baseline\Factory\TransientComparisonFactory;
 use Tuleap\Baseline\NotAuthorizedException;
 use Tuleap\Baseline\Support\CurrentUserContext;
+use Tuleap\Baseline\Support\DateTimeFactory;
+use UserManager;
 
 class ComparisonRepositoryAdapterTest extends TestCase
 {
@@ -55,19 +60,35 @@ class ComparisonRepositoryAdapterTest extends TestCase
     /** @var BaselineRepository|MockInterface */
     private $baseline_repository;
 
+    /** @var UserManager|MockInterface */
+    private $user_manager;
+
+    /** @var ClockAdapter|MockInterface */
+    private $clock;
+
+    /** @var DateTimeInterface */
+    private $now;
+
     /** @before */
     public function createInstance()
     {
+        $this->now = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', '2019-05-17 09:33:22');
+
         $this->db                  = Mockery::mock(EasyDB::class);
         $this->adapter_permissions = Mockery::mock(AdapterPermissions::class);
         $this->adapter_permissions->allows(['canUserAdministrateBaselineOnProject' => true])
             ->byDefault();
         $this->baseline_repository = Mockery::mock(BaselineRepository::class);
+        $this->user_manager        = Mockery::mock(UserManager::class);
+        $this->clock               = Mockery::mock(ClockAdapter::class);
+        $this->clock->allows(['now' => $this->now]);
 
         $this->repository = new ComparisonRepositoryAdapter(
             $this->db,
             $this->adapter_permissions,
-            $this->baseline_repository
+            $this->baseline_repository,
+            $this->user_manager,
+            $this->clock
         );
     }
 
@@ -88,6 +109,8 @@ class ComparisonRepositoryAdapterTest extends TestCase
         $this->assertEquals($transient_comparison->getComment(), $comparison->getComment());
         $this->assertEquals($transient_comparison->getBaseBaseline(), $comparison->getBaseBaseline());
         $this->assertEquals($transient_comparison->getComparedToBaseline(), $comparison->getComparedToBaseline());
+        $this->assertEquals($this->current_user, $comparison->getAuthor());
+        $this->assertEquals($this->now, $comparison->getCreationDate());
     }
 
     public function testAddReturnsComparisonWithDatabaseId()
@@ -145,9 +168,23 @@ class ComparisonRepositoryAdapterTest extends TestCase
                         "comment"                 => null,
                         "base_baseline_id"        => 1,
                         "compared_to_baseline_id" => 2,
+                        "user_id"                 => 9,
+                        "creation_date"           => 1553176023
                     ]
                 ]
             );
+
+        $author = new PFUser();
+        $this->user_manager
+            ->shouldReceive('getUserById')
+            ->with(9)
+            ->andReturn($author);
+
+        $creation_date = DateTimeFactory::one();
+        $this->clock
+            ->shouldReceive('at')
+            ->with(1553176023)
+            ->andReturn($creation_date);
 
         $this->adapter_permissions
             ->shouldReceive('canUserReadBaselineOnProject')
@@ -160,7 +197,9 @@ class ComparisonRepositoryAdapterTest extends TestCase
             "Persisted comparison",
             null,
             $base_baseline,
-            $compared_to_baseline
+            $compared_to_baseline,
+            $author,
+            $creation_date
         );
         $this->assertEquals($expected_comparison, $comparison);
     }
@@ -202,9 +241,21 @@ class ComparisonRepositoryAdapterTest extends TestCase
                         "comment"                 => null,
                         "base_baseline_id"        => 1,
                         "compared_to_baseline_id" => 2,
+                        "user_id"                 => 9,
+                        "creation_date"           => 1553176023
                     ]
                 ]
             );
+
+        $this->user_manager
+            ->shouldReceive('getUserById')
+            ->with(9)
+            ->andReturn(new PFUser());
+
+        $this->clock
+            ->shouldReceive('at')
+            ->with(1553176023)
+            ->andReturn(DateTimeFactory::one());
 
         $this->adapter_permissions
             ->shouldReceive('canUserReadBaselineOnProject')
@@ -234,6 +285,8 @@ class ComparisonRepositoryAdapterTest extends TestCase
                         "comment"                 => null,
                         "base_baseline_id"        => 1,
                         "compared_to_baseline_id" => 2,
+                        "user_id"                 => 9,
+                        "creation_date"           => 1553176023
                     ]
                 ]
             );
@@ -266,6 +319,8 @@ class ComparisonRepositoryAdapterTest extends TestCase
                         "comment"                 => null,
                         "base_baseline_id"        => 1,
                         "compared_to_baseline_id" => 2,
+                        "user_id"                 => 9,
+                        "creation_date"           => 1553176023
                     ]
                 ]
             );

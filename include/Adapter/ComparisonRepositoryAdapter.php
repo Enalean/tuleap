@@ -30,6 +30,7 @@ use Tuleap\Baseline\Comparison;
 use Tuleap\Baseline\ComparisonRepository;
 use Tuleap\Baseline\NotAuthorizedException;
 use Tuleap\Baseline\TransientComparison;
+use UserManager;
 
 class ComparisonRepositoryAdapter implements ComparisonRepository
 {
@@ -42,14 +43,24 @@ class ComparisonRepositoryAdapter implements ComparisonRepository
     /** @var BaselineRepository */
     private $baseline_repository;
 
+    /** @var UserManager */
+    private $user_manager;
+
+    /** @var ClockAdapter */
+    private $clock;
+
     public function __construct(
         EasyDB $db,
         AdapterPermissions $adapter_permissions,
-        BaselineRepository $baseline_repository
+        BaselineRepository $baseline_repository,
+        UserManager $user_manager,
+        ClockAdapter $clock
     ) {
         $this->db                  = $db;
         $this->adapter_permissions = $adapter_permissions;
         $this->baseline_repository = $baseline_repository;
+        $this->user_manager        = $user_manager;
+        $this->clock               = $clock;
     }
 
     /**
@@ -67,13 +78,17 @@ class ComparisonRepositoryAdapter implements ComparisonRepository
             );
         }
 
+        $creation_date = $this->clock->now();
+
         $id = (int) $this->db->insertReturnId(
             'plugin_baseline_comparison',
             [
                 'name'                    => $comparison->getName(),
                 'comment'                 => $comparison->getComment(),
                 'base_baseline_id'        => $comparison->getBaseBaseline()->getId(),
-                'compared_to_baseline_id' => $comparison->getComparedToBaseline()->getId()
+                'compared_to_baseline_id' => $comparison->getComparedToBaseline()->getId(),
+                'user_id'                 => $current_user->getId(),
+                'creation_date'           => $creation_date->getTimestamp()
             ]
         );
 
@@ -82,14 +97,16 @@ class ComparisonRepositoryAdapter implements ComparisonRepository
             $comparison->getName(),
             $comparison->getComment(),
             $comparison->getBaseBaseline(),
-            $comparison->getComparedToBaseline()
+            $comparison->getComparedToBaseline(),
+            $current_user,
+            $creation_date
         );
     }
 
     public function findById(PFUser $current_user, int $id): ?Comparison
     {
         $rows = $this->db->safeQuery(
-            'SELECT id, name, comment, base_baseline_id, compared_to_baseline_id
+            'SELECT id, name, comment, base_baseline_id, compared_to_baseline_id, user_id, creation_date
             FROM plugin_baseline_comparison
             WHERE id = ?',
             [$id]
@@ -122,12 +139,17 @@ class ComparisonRepositoryAdapter implements ComparisonRepository
             return null;
         }
 
+        $author        = $this->user_manager->getUserById($row['user_id']);
+        $creation_date = $this->clock->at($row['creation_date']);
+
         return new Comparison(
             $row['id'],
             $row['name'],
             $row['comment'],
             $base_baseline,
-            $compared_to_baseline
+            $compared_to_baseline,
+            $author,
+            $creation_date
         );
     }
 }

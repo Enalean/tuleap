@@ -43,18 +43,28 @@ class ComparisonRepresentation
     /** @var int */
     public $compared_to_baseline_id;
 
+    /** @var int */
+    public $author_id;
+
+    /** @var string */
+    public $creation_date;
+
     private function __construct(
         int $id,
         string $name,
         ?string $comment,
         int $base_baseline_id,
-        int $compared_to_baseline_id
+        int $compared_to_baseline_id,
+        int $author_id,
+        string $creation_date
     ) {
         $this->id                      = $id;
         $this->name                    = $name;
         $this->comment                 = $comment;
         $this->base_baseline_id        = $base_baseline_id;
         $this->compared_to_baseline_id = $compared_to_baseline_id;
+        $this->author_id               = $author_id;
+        $this->creation_date           = $creation_date;
     }
 
     public static function fromComparison(Comparison $comparison): ComparisonRepresentation
@@ -64,7 +74,9 @@ class ComparisonRepresentation
             $comparison->getName(),
             $comparison->getComment(),
             Jsoncast::toInt($comparison->getBaseBaseline()->getId()),
-            Jsoncast::toInt($comparison->getComparedToBaseline()->getId())
+            Jsoncast::toInt($comparison->getComparedToBaseline()->getId()),
+            Jsoncast::toInt($comparison->getAuthor()->getId()),
+            JsonCast::fromDateTimeToDate($comparison->getCreationDate())
         );
     }
 }

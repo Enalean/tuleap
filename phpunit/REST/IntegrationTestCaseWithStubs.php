@@ -96,7 +96,7 @@ abstract class IntegrationTestCaseWithStubs extends TestCase
     {
         $this->clock                        = new FrozenClock();
         $this->baseline_repository          = new BaselineRepositoryStub();
-        $this->comparison_repository        = new ComparisonRepositoryStub();
+        $this->comparison_repository        = new ComparisonRepositoryStub($this->clock);
         $this->project_repository           = new ProjectRepositoryStub();
         $this->baseline_artifact_repository = new BaselineArtifactRepositoryStub($this->clock);
         $this->current_user_provider        = new CurrentUserProviderStub();

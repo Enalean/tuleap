@@ -71,6 +71,8 @@ class ComparisonsResourceTest extends RestBase
         $this->assertEquals('used fo tests', $json_response['comment']);
         $this->assertEquals($base_baseline['id'], $json_response['base_baseline_id']);
         $this->assertEquals($compared_to_baseline['id'], $json_response['compared_to_baseline_id']);
+        $this->assertNotNull($json_response['author_id']);
+        $this->assertNotNull($json_response['creation_date']);
     }
 
     public function testGetBaselineComparison()
@@ -91,6 +93,8 @@ class ComparisonsResourceTest extends RestBase
         $this->assertEquals($comparison['comment'], $json_response['comment']);
         $this->assertEquals($comparison['base_baseline_id'], $json_response['base_baseline_id']);
         $this->assertEquals($comparison['compared_to_baseline_id'], $json_response['compared_to_baseline_id']);
+        $this->assertNotNull($json_response['author_id']);
+        $this->assertNotNull($json_response['creation_date']);
     }
 
     private function createABaseline(int $artifact_id): array

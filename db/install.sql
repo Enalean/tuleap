@@ -28,7 +28,9 @@ CREATE TABLE IF NOT EXISTS plugin_baseline_comparison
 	name varchar(255) not null,
 	comment varchar(255) null,
 	base_baseline_id int not null,
-	compared_to_baseline_id int not null
+	compared_to_baseline_id int not null,
+	user_id int not null,
+	creation_date int not null
 );
 
 -- Role Assignment entity

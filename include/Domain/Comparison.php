@@ -23,24 +23,47 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline;
 
+use DateTimeInterface;
+use PFUser;
+
 class Comparison extends TransientComparison
 {
     /** @var int */
     private $id;
+
+    /** @var DateTimeInterface */
+    private $creation_date;
+
+    /** @var PFUser */
+    private $author;
 
     public function __construct(
         int $id,
         string $name,
         ?string $comment,
         Baseline $base_baseline,
-        Baseline $compared_to_baseline
+        Baseline $compared_to_baseline,
+        PFUser $author,
+        DateTimeInterface $creation_date
     ) {
         parent::__construct($name, $comment, $base_baseline, $compared_to_baseline);
-        $this->id = $id;
+        $this->id            = $id;
+        $this->creation_date = $creation_date;
+        $this->author        = $author;
     }
 
     public function getId(): int
     {
         return $this->id;
+    }
+
+    public function getCreationDate(): DateTimeInterface
+    {
+        return $this->creation_date;
+    }
+
+    public function getAuthor(): PFUser
+    {
+        return $this->author;
     }
 }
