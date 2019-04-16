@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project unix-name="DocmanProjectMetadata" full-name="DocmanProjectMetadata" description="Docman project with activated metadata" access="public">
+    <long-description></long-description>
+    <services>
+        <service shortname="summary" enabled="1"/>
+        <service shortname="admin" enabled="1"/>
+        <service shortname="docman" enabled="1"/>
+        <service shortname="wiki" enabled="1"/>
+    </services>
+    <ugroups>
+        <ugroup name="project_admins" description="Project administrators">
+            <members>
+                <member format="username">rest_api_tester_1</member>
+            </members>
+        </ugroup>
+        <ugroup name="project_members" description="Project members">
+            <members>
+                <member format="username">rest_api_tester_1</member>
+                <member format="username">docman_regular_user</member>
+            </members>
+        </ugroup>
+    </ugroups>
+</project>

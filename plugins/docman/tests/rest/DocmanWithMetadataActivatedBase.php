@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,28 +15,24 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see http://www.gnu.org/licenses/.
+ *
  */
 
 declare(strict_types = 1);
 
-namespace Tuleap\Docman\REST\v1\Folders;
+namespace Tuleap\Docman\rest;
 
-use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
+use RestBase;
 
-class DocmanFolderPOSTRepresentation
+class DocmanWithMetadataActivatedBase extends RestBase
 {
-    /**
-     * @var string Item title {@from body} {@required true}
-     */
-    public $title;
-    /**
-     * @var string Item description {@from body} {@required false}
-     */
-    public $description = '';
+    const PROJECT_NAME = 'docmanprojectmetadata';
+    protected $project_id;
 
-    /**
-     * @var string Item status {@from body} {@required false} {@choice none,draft,approved,rejected}
-     */
-    public $status = ItemStatusMapper::ITEM_STATUS_NONE;
+    public function setUp() : void
+    {
+        parent::setUp();
+        $this->project_id = $this->getProjectId(self::PROJECT_NAME);
+    }
 }

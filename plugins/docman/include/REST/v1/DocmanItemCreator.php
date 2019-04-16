@@ -31,9 +31,12 @@ use Tuleap\Docman\REST\v1\Files\EmptyFileToUploadFinisher;
 use Tuleap\Docman\REST\v1\Files\FilePropertiesPOSTPATCHRepresentation;
 use Tuleap\Docman\REST\v1\Folders\DocmanEmptyPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Folders\DocmanFolderPOSTRepresentation;
-use Tuleap\Docman\REST\v1\Wiki\DocmanWikiPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Links\DocmanLinkPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Links\DocmanLinksValidityChecker;
+use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataUsageChecker;
+use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
+use Tuleap\Docman\REST\v1\Metadata\StatusNotFoundException;
+use Tuleap\Docman\REST\v1\Wiki\DocmanWikiPOSTRepresentation;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
 use Tuleap\Docman\Upload\Document\DocumentToUploadCreator;
 use Tuleap\Docman\Upload\UploadCreationConflictException;
@@ -71,6 +74,14 @@ class DocmanItemCreator
      * @var DocmanLinksValidityChecker
      */
     private $links_validity_checker;
+    /**
+     * @var ItemStatusMapper
+     */
+    private $status_mapper;
+    /**
+     * @var HardcodedMetadataUsageChecker
+     */
+    private $metadata_usage_checker;
 
     public function __construct(
         \Docman_ItemFactory $item_factory,
@@ -78,7 +89,9 @@ class DocmanItemCreator
         DocumentToUploadCreator $document_to_upload_creator,
         AfterItemCreationVisitor $creator_visitor,
         EmptyFileToUploadFinisher $empty_file_to_upload_finisher,
-        DocmanLinksValidityChecker $links_validity_checker
+        DocmanLinksValidityChecker $links_validity_checker,
+        ItemStatusMapper $status_mapper,
+        HardcodedMetadataUsageChecker $metadata_usage_checker
     ) {
         $this->item_factory                      = $item_factory;
         $this->document_ongoing_upload_retriever = $document_ongoing_upload_retriever;
@@ -86,6 +99,8 @@ class DocmanItemCreator
         $this->creator_visitor                   = $creator_visitor;
         $this->empty_file_to_upload_finisher     = $empty_file_to_upload_finisher;
         $this->links_validity_checker            = $links_validity_checker;
+        $this->status_mapper                     = $status_mapper;
+        $this->metadata_usage_checker            = $metadata_usage_checker;
     }
 
     /**
@@ -113,6 +128,7 @@ class DocmanItemCreator
 
     /**
      * @throws \Tuleap\Docman\CannotInstantiateItemWeHaveJustCreatedInDBException
+     ** @throws StatusNotFoundException
      */
     private function createDocument(
         $item_type_id,
@@ -122,15 +138,20 @@ class DocmanItemCreator
         Project $project,
         $title,
         $description,
+        string $status,
         $wiki_page,
         $link_url,
         $content
     ) {
+
+        $this->metadata_usage_checker->checkStatusIsNotSetWhenStatusMetadataIsNotAllowed($status);
+        $status_id = $this->status_mapper->getItemStatusIdFromItemStatusString($status);
+
         $item = $this->item_factory->createWithoutOrdering(
             $title,
             $description,
             $parent_item->getId(),
-            PLUGIN_DOCMAN_ITEM_STATUS_NONE,
+            $status_id,
             $user->getId(),
             $item_type_id,
             $wiki_page,
@@ -210,6 +231,8 @@ class DocmanItemCreator
     /**
      * @throws \Tuleap\Docman\CannotInstantiateItemWeHaveJustCreatedInDBException
      * @throws RestException
+     * @throws Metadata\ItemStatusUsageMismatchException
+     * @throws StatusNotFoundException
      */
     public function createFolder(
         Docman_Item $parent_item,
@@ -238,6 +261,7 @@ class DocmanItemCreator
             $project,
             $representation->title,
             $representation->description,
+            $representation->status,
             null,
             null,
             null
@@ -245,7 +269,9 @@ class DocmanItemCreator
     }
 
     /**
+     * @return CreatedItemRepresentation
      * @throws RestException
+     * @throws StatusNotFoundException
      * @throws \Tuleap\Docman\CannotInstantiateItemWeHaveJustCreatedInDBException
      */
     public function createEmpty(
@@ -274,6 +300,7 @@ class DocmanItemCreator
             $project,
             $representation->title,
             $representation->description,
+            ItemStatusMapper::ITEM_STATUS_NONE,
             null,
             null,
             null
@@ -282,6 +309,7 @@ class DocmanItemCreator
 
     /**
      * @throws RestException
+     * @throws StatusNotFoundException
      * @throws \Tuleap\Docman\CannotInstantiateItemWeHaveJustCreatedInDBException
      */
     public function createWiki(
@@ -317,6 +345,7 @@ class DocmanItemCreator
             $project,
             $representation->title,
             $representation->description,
+            ItemStatusMapper::ITEM_STATUS_NONE,
             $representation->wiki_properties->page_name,
             null,
             null
@@ -324,7 +353,9 @@ class DocmanItemCreator
     }
 
     /**
+     * @return CreatedItemRepresentation
      * @throws RestException
+     * @throws StatusNotFoundException
      * @throws \Tuleap\Docman\CannotInstantiateItemWeHaveJustCreatedInDBException
      */
     public function createEmbedded(
@@ -353,6 +384,7 @@ class DocmanItemCreator
             $project,
             $representation->title,
             $representation->description,
+            ItemStatusMapper::ITEM_STATUS_NONE,
             null,
             null,
             $representation->embedded_properties->content
@@ -360,7 +392,9 @@ class DocmanItemCreator
     }
 
     /**
+     * @return CreatedItemRepresentation
      * @throws RestException
+     * @throws StatusNotFoundException
      * @throws \Tuleap\Docman\CannotInstantiateItemWeHaveJustCreatedInDBException
      */
     public function createLink(
@@ -392,6 +426,7 @@ class DocmanItemCreator
             $project,
             $representation->title,
             $representation->description,
+            ItemStatusMapper::ITEM_STATUS_NONE,
             null,
             $link_url,
             null

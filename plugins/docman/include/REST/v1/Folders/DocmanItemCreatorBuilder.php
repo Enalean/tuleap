@@ -26,6 +26,7 @@ use Docman_FileStorage;
 use Docman_ItemDao;
 use Docman_ItemFactory;
 use Docman_MIMETypeDetector;
+use Docman_SettingsBo;
 use Docman_VersionFactory;
 use EventManager;
 use PermissionsManager;
@@ -37,6 +38,8 @@ use Tuleap\Docman\REST\v1\AfterItemCreationVisitor;
 use Tuleap\Docman\REST\v1\DocmanItemCreator;
 use Tuleap\Docman\REST\v1\Files\EmptyFileToUploadFinisher;
 use Tuleap\Docman\REST\v1\Links\DocmanLinksValidityChecker;
+use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataUsageChecker;
+use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadDAO;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
 use Tuleap\Docman\Upload\Document\DocumentToUploadCreator;
@@ -61,6 +64,7 @@ class DocmanItemCreatorBuilder
         $version_factory      = new Docman_VersionFactory();
         $event_manager        = EventManager::instance();
         $transaction_executor = new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection());
+        $hardcoded_metadata_checker = new HardcodedMetadataUsageChecker(new Docman_SettingsBo($project->getGroupId()));
 
         return new DocmanItemCreator(
             $item_factory,
@@ -93,7 +97,9 @@ class DocmanItemCreatorBuilder
                 ),
                 $document_upload_path_allocator
             ),
-            new DocmanLinksValidityChecker()
+            new DocmanLinksValidityChecker(),
+            new ItemStatusMapper($hardcoded_metadata_checker),
+            $hardcoded_metadata_checker
         );
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,11 +17,13 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  *
- *
  */
 
-require_once __DIR__.'/DocmanBase.php';
-require_once __DIR__.'/DocmanDataBuilder.php';
-require_once __DIR__.'/helper/DocmanDataBuildCommon.php';
-require_once __DIR__.'/DocmanWithMetadataActivatedBase.php';
-require_once __DIR__.'/DocmanWithMetadataActivatedDataBuilder.php';
+declare(strict_types=1);
+
+namespace Tuleap\Docman\REST\v1\Metadata;
+
+class StatusNotFoundException extends \Exception
+{
+
+}

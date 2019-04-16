@@ -29,12 +29,16 @@ use Tuleap\Docman\rest\DocmanDatabaseInitialization;
 
 class DocmanDataBuildCommon extends REST_TestDataBuilder
 {
+    const DOCMAN_REGULAR_USER_NAME = 'docman_regular_user';
+    const REGULAR_USER_ID          = 102;
+
     private const DOCMAN_REGULAR_USER_PASSWORD = 'welcome0';
+
 
     /**
      * @var \Docman_ItemFactory
      */
-    private $docman_item_factory;
+    protected $docman_item_factory;
 
     /**
      * @var \Project
@@ -57,7 +61,7 @@ class DocmanDataBuildCommon extends REST_TestDataBuilder
     public function __construct(string $project_name)
     {
         parent::__construct();
-        $this->project = $this->project_manager->getProjectByUnixName($project_name);
+        $this->project             = $this->project_manager->getProjectByUnixName($project_name);
         $this->docman_item_factory = Docman_ItemFactory::instance($this->project->getID());
         $this->installPlugin($this->project);
         $this->metadata_factory       = new \Docman_MetadataFactory($this->project->getID());
@@ -177,9 +181,9 @@ class DocmanDataBuildCommon extends REST_TestDataBuilder
         return $link_version->getId();
     }
 
-    protected function generateDocmanRegularUser(string $user_name): void
+    protected function generateDocmanRegularUser(): void
     {
-        $this->docman_user = $this->user_manager->getUserByUserName($user_name);
+        $this->docman_user = $this->user_manager->getUserByUserName(self::DOCMAN_REGULAR_USER_NAME);
         $this->docman_user->setPassword(self::DOCMAN_REGULAR_USER_PASSWORD);
         $this->user_manager->updateDb($this->docman_user);
     }

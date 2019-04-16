@@ -20,8 +20,15 @@
 
 require_once __DIR__ . '/../../../../src/vendor/autoload.php';
 require_once __DIR__ . '/DocmanDataBuilder.php';
+require_once __DIR__.'/DocmanWithMetadataActivatedDataBuilder.php';
 
 use Tuleap\Docman\rest\DocmanDataBuilder;
+use Tuleap\Docman\rest\DocmanWithMetadataActivatedDataBuilder;
 
 $data_builder = new DocmanDataBuilder(DocmanDataBuilder::PROJECT_NAME);
 $data_builder->setUp();
+
+$data_builder_metadata = new DocmanWithMetadataActivatedDataBuilder(
+    DocmanWithMetadataActivatedDataBuilder::PROJECT_NAME
+);
+$data_builder_metadata->setUp();

@@ -31,11 +31,14 @@ use Tuleap\Docman\REST\v1\Files\EmptyFileToUploadFinisher;
 use Tuleap\Docman\REST\v1\Files\FilePropertiesPOSTPATCHRepresentation;
 use Tuleap\Docman\REST\v1\Folders\DocmanEmptyPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Folders\DocmanFolderPOSTRepresentation;
-use Tuleap\Docman\REST\v1\Wiki\DocmanWikiPOSTRepresentation;
-use Tuleap\Docman\REST\v1\Wiki\WikiPropertiesPOSTPATCHRepresentation;
 use Tuleap\Docman\REST\v1\Links\DocmanLinkPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Links\DocmanLinksValidityChecker;
 use Tuleap\Docman\REST\v1\Links\LinkPropertiesRepresentation;
+use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataUsageChecker;
+use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
+use Tuleap\Docman\REST\v1\Metadata\ItemStatusUsageMismatchException;
+use Tuleap\Docman\REST\v1\Wiki\DocmanWikiPOSTRepresentation;
+use Tuleap\Docman\REST\v1\Wiki\WikiPropertiesPOSTPATCHRepresentation;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
 use Tuleap\Docman\Upload\Document\DocumentToUpload;
 use Tuleap\Docman\Upload\Document\DocumentToUploadCreator;
@@ -57,6 +60,15 @@ class DocmanItemCreatorTest extends TestCase
 
     private $empty_file_to_upload_finisher;
 
+    /**
+     * @var \Mockery\MockInterface|ItemStatusMapper
+     */
+    private $item_status_mapper;
+    /**
+     * @var \Mockery\MockInterface|HardcodedMetadataUsageChecker
+     */
+    private $metadata_usage_checker;
+
     public function setUp() : void
     {
         $this->creator_visitor      = \Mockery::mock(AfterItemCreationVisitor::class);
@@ -68,6 +80,10 @@ class DocmanItemCreatorTest extends TestCase
         $this->empty_file_to_upload_finisher     = \Mockery::mock(EmptyFileToUploadFinisher::class);
 
         $this->link_validity_checker = \Mockery::mock(DocmanLinksValidityChecker::class);
+
+        $this->item_status_mapper = \Mockery::mock(ItemStatusMapper::class);
+
+        $this->metadata_usage_checker = \Mockery::mock(HardcodedMetadataUsageChecker::class);
     }
 
     public function testEmptyDocumentCanBeCreated()
@@ -78,7 +94,9 @@ class DocmanItemCreatorTest extends TestCase
             $this->document_to_upload_creator,
             $this->creator_visitor,
             $this->empty_file_to_upload_finisher,
-            $this->link_validity_checker
+            $this->link_validity_checker,
+            $this->item_status_mapper,
+            $this->metadata_usage_checker
         );
 
         $parent_item  = \Mockery::mock(\Docman_Item::class);
@@ -96,6 +114,11 @@ class DocmanItemCreatorTest extends TestCase
         $user->shouldReceive('getId')->andReturns(222);
         $project->shouldReceive('getID')->andReturns(102);
 
+        $this->item_status_mapper->shouldReceive('getItemStatusIdFromItemStatusString')
+                                 ->andReturn(PLUGIN_DOCMAN_ITEM_STATUS_NONE);
+
+        $this->metadata_usage_checker->shouldReceive('checkStatusIsNotSetWhenStatusMetadataIsNotAllowed')->andReturn(false);
+
         $created_item = \Mockery::mock(\Docman_Empty::class);
         $created_item->shouldReceive('getId')->andReturns(12);
         $created_item->shouldReceive('getParentId')->andReturns(11);
@@ -110,6 +133,7 @@ class DocmanItemCreatorTest extends TestCase
         $this->item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
 
         $this->creator_visitor->shouldReceive('visitEmpty')->once();
+
 
         $created_item_representation = $item_creator->createEmpty(
             $parent_item,
@@ -130,7 +154,9 @@ class DocmanItemCreatorTest extends TestCase
             $this->document_to_upload_creator,
             $this->creator_visitor,
             $this->empty_file_to_upload_finisher,
-            $this->link_validity_checker
+            $this->link_validity_checker,
+            $this->item_status_mapper,
+            $this->metadata_usage_checker
         );
 
         $parent_item  = \Mockery::mock(\Docman_Item::class);
@@ -148,6 +174,12 @@ class DocmanItemCreatorTest extends TestCase
         $user->shouldReceive('getId')->andReturns(222);
         $project->shouldReceive('getID')->andReturns(102);
         $project->shouldReceive('usesWiki')->andReturn(true);
+
+        $this->item_status_mapper->shouldReceive('getItemStatusIdFromItemStatusString')->andReturn(
+            PLUGIN_DOCMAN_ITEM_STATUS_NONE
+        );
+
+        $this->metadata_usage_checker->shouldReceive('checkStatusIsNotSetWhenStatusMetadataIsNotAllowed')->andReturn(false);
 
         $created_item = \Mockery::mock(\Docman_Wiki::class);
         $created_item->shouldReceive('getId')->andReturns(12);
@@ -183,7 +215,9 @@ class DocmanItemCreatorTest extends TestCase
             $this->document_to_upload_creator,
             $this->creator_visitor,
             $this->empty_file_to_upload_finisher,
-            $this->link_validity_checker
+            $this->link_validity_checker,
+            $this->item_status_mapper,
+            $this->metadata_usage_checker
         );
 
         $parent_item  = \Mockery::mock(\Docman_Item::class);
@@ -235,7 +269,9 @@ class DocmanItemCreatorTest extends TestCase
             $this->document_to_upload_creator,
             $this->creator_visitor,
             $this->empty_file_to_upload_finisher,
-            $this->link_validity_checker
+            $this->link_validity_checker,
+            $this->item_status_mapper,
+            $this->metadata_usage_checker
         );
 
         $parent_item  = \Mockery::mock(\Docman_Item::class);
@@ -276,7 +312,9 @@ class DocmanItemCreatorTest extends TestCase
             $this->document_to_upload_creator,
             $this->creator_visitor,
             $this->empty_file_to_upload_finisher,
-            $this->link_validity_checker
+            $this->link_validity_checker,
+            $this->item_status_mapper,
+            $this->metadata_usage_checker
         );
 
         $parent_item  = \Mockery::mock(\Docman_Item::class);
@@ -317,7 +355,9 @@ class DocmanItemCreatorTest extends TestCase
             $this->document_to_upload_creator,
             $this->creator_visitor,
             $this->empty_file_to_upload_finisher,
-            $this->link_validity_checker
+            $this->link_validity_checker,
+            $this->item_status_mapper,
+            $this->metadata_usage_checker
         );
 
         $parent_item  = \Mockery::mock(\Docman_Item::class);
@@ -353,7 +393,9 @@ class DocmanItemCreatorTest extends TestCase
             $this->document_to_upload_creator,
             $this->creator_visitor,
             $this->empty_file_to_upload_finisher,
-            $this->link_validity_checker
+            $this->link_validity_checker,
+            $this->item_status_mapper,
+            $this->metadata_usage_checker
         );
 
         $parent_item  = \Mockery::mock(\Docman_Item::class);
@@ -370,6 +412,11 @@ class DocmanItemCreatorTest extends TestCase
         $parent_item->shouldReceive('getId')->andReturns(11);
         $user->shouldReceive('getId')->andReturns(222);
         $project->shouldReceive('getID')->andReturns(102);
+
+        $this->item_status_mapper->shouldReceive('getItemStatusIdFromItemStatusString')
+                                 ->andReturn(PLUGIN_DOCMAN_ITEM_STATUS_NONE);
+
+        $this->metadata_usage_checker->shouldReceive('checkStatusIsNotSetWhenStatusMetadataIsNotAllowed')->andReturn(false);
 
         $created_item = \Mockery::mock(\Docman_Link::class);
         $created_item->shouldReceive('getId')->andReturns(12);
@@ -416,7 +463,9 @@ class DocmanItemCreatorTest extends TestCase
             $this->document_to_upload_creator,
             $this->creator_visitor,
             $this->empty_file_to_upload_finisher,
-            $this->link_validity_checker
+            $this->link_validity_checker,
+            $this->item_status_mapper,
+            $this->metadata_usage_checker
         );
 
         $parent_item  = \Mockery::mock(\Docman_Item::class);
@@ -432,6 +481,11 @@ class DocmanItemCreatorTest extends TestCase
         $parent_item->shouldReceive('getId')->andReturns(11);
         $user->shouldReceive('getId')->andReturns(222);
         $project->shouldReceive('getID')->andReturns(102);
+
+        $this->item_status_mapper->shouldReceive('getItemStatusIdFromItemStatusString')
+                                 ->andReturn(PLUGIN_DOCMAN_ITEM_STATUS_NONE);
+
+        $this->metadata_usage_checker->shouldReceive('checkStatusIsNotSetWhenStatusMetadataIsNotAllowed')->andReturn(false);
 
         $created_item = \Mockery::mock(\Docman_Folder::class);
         $created_item->shouldReceive('getId')->andReturns(12);
@@ -467,7 +521,9 @@ class DocmanItemCreatorTest extends TestCase
             $this->document_to_upload_creator,
             $this->creator_visitor,
             $this->empty_file_to_upload_finisher,
-            $this->link_validity_checker
+            $this->link_validity_checker,
+            $this->item_status_mapper,
+            $this->metadata_usage_checker
         );
 
         $parent_item  = \Mockery::mock(\Docman_Item::class);
@@ -484,6 +540,12 @@ class DocmanItemCreatorTest extends TestCase
         $parent_item->shouldReceive('getId')->andReturns(11);
         $user->shouldReceive('getId')->andReturns(222);
         $project->shouldReceive('getID')->andReturns(102);
+
+        $this->item_status_mapper->shouldReceive('getItemStatusIdFromItemStatusString')->andReturn(
+            PLUGIN_DOCMAN_ITEM_STATUS_NONE
+        );
+
+        $this->metadata_usage_checker->shouldReceive('checkStatusIsNotSetWhenStatusMetadataIsNotAllowed')->andReturn(false);
 
         $created_item = \Mockery::mock(\Docman_EmbeddedFile::class);
         $created_item->shouldReceive('getId')->andReturns(12);
@@ -521,7 +583,9 @@ class DocmanItemCreatorTest extends TestCase
             $this->document_to_upload_creator,
             $this->creator_visitor,
             $this->empty_file_to_upload_finisher,
-            $this->link_validity_checker
+            $this->link_validity_checker,
+            $this->item_status_mapper,
+            $this->metadata_usage_checker
         );
 
         $parent_item  = \Mockery::mock(\Docman_Item::class);
@@ -545,5 +609,127 @@ class DocmanItemCreatorTest extends TestCase
             $current_time,
             $project
         );
+    }
+
+    public function testItThrowsExceptionIfTheStatusMetadataIsNotUsedButSetInTheRepresentation(): void
+    {
+        $item_creator = new DocmanItemCreator(
+            $this->item_factory,
+            $this->document_ongoing_upload_retriever,
+            $this->document_to_upload_creator,
+            $this->creator_visitor,
+            $this->empty_file_to_upload_finisher,
+            $this->link_validity_checker,
+            $this->item_status_mapper,
+            $this->metadata_usage_checker
+        );
+
+        $parent_item = \Mockery::mock(\Docman_Item::class);
+        $parent_item->shouldReceive('getId')->andReturn(1);
+        $user         = \Mockery::mock(\PFUser::class);
+        $project      = \Mockery::mock(\Project::class);
+        $current_time = new \DateTimeImmutable();
+
+        $post_representation              = new DocmanFolderPOSTRepresentation();
+        $post_representation->title       = 'Title';
+        $post_representation->description = '';
+        $post_representation->status      = 'approved';
+
+        $this->document_ongoing_upload_retriever->shouldReceive('isThereAlreadyAnUploadOngoing')->andReturns(false);
+        $parent_item->shouldReceive('getId')->andReturns(11);
+        $user->shouldReceive('getId')->andReturns(222);
+        $project->shouldReceive('getID')->andReturns(102);
+
+        $this->item_status_mapper->shouldReceive('getItemStatusIdFromItemStatusString')->andReturn(
+            PLUGIN_DOCMAN_ITEM_STATUS_APPROVED
+        );
+
+        $this->metadata_usage_checker->shouldReceive('checkStatusIsNotSetWhenStatusMetadataIsNotAllowed')
+                                     ->andThrow(ItemStatusUsageMismatchException::class);
+
+        $created_item = \Mockery::mock(\Docman_Folder::class);
+        $created_item->shouldReceive('getId')->andReturns(12);
+        $created_item->shouldReceive('getParentId')->andReturns(11);
+        $created_item->makePartial();
+
+        $this->item_factory
+            ->shouldReceive('createWithoutOrdering')
+            ->never();
+
+        $this->item_factory->shouldReceive('doesTitleCorrespondToExistingFolder')->andReturn(false);
+
+        $this->creator_visitor->shouldReceive('visitFolder')->never();
+
+        $this->expectException(ItemStatusUsageMismatchException::class);
+
+        $item_creator->createFolder(
+            $parent_item,
+            $user,
+            $post_representation,
+            $current_time,
+            $project
+        );
+    }
+
+    public function testFolderCanBeCreatedWithStatus(): void
+    {
+        $item_creator = new DocmanItemCreator(
+            $this->item_factory,
+            $this->document_ongoing_upload_retriever,
+            $this->document_to_upload_creator,
+            $this->creator_visitor,
+            $this->empty_file_to_upload_finisher,
+            $this->link_validity_checker,
+            $this->item_status_mapper,
+            $this->metadata_usage_checker
+        );
+
+        $parent_item  = \Mockery::mock(\Docman_Item::class);
+        $user         = \Mockery::mock(\PFUser::class);
+        $project      = \Mockery::mock(\Project::class);
+        $current_time = new \DateTimeImmutable();
+
+        $post_representation              = new DocmanFolderPOSTRepresentation();
+        $post_representation->title       = 'Title';
+        $post_representation->description = '';
+        $post_representation->status      = 'approved';
+
+        $this->document_ongoing_upload_retriever->shouldReceive('isThereAlreadyAnUploadOngoing')->andReturns(false);
+        $parent_item->shouldReceive('getId')->andReturns(11);
+        $user->shouldReceive('getId')->andReturns(222);
+        $project->shouldReceive('getID')->andReturns(102);
+
+        $this->item_status_mapper->shouldReceive('getItemStatusIdFromItemStatusString')->with(
+            $post_representation->status
+        )->andReturn(
+            PLUGIN_DOCMAN_ITEM_STATUS_APPROVED
+        );
+
+        $this->metadata_usage_checker->shouldReceive('checkStatusIsNotSetWhenStatusMetadataIsNotAllowed')->once()->andReturn('approved');
+
+        $created_item = \Mockery::mock(\Docman_Folder::class);
+        $created_item->shouldReceive('getId')->andReturns(12);
+        $created_item->shouldReceive('getParentId')->andReturns(11);
+        $created_item->makePartial();
+
+        $this->item_factory
+            ->shouldReceive('createWithoutOrdering')
+            ->with('Title', '', 11, PLUGIN_DOCMAN_ITEM_STATUS_APPROVED, 222, PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, null, null)
+            ->once()
+            ->andReturns($created_item);
+
+        $this->item_factory->shouldReceive('doesTitleCorrespondToExistingFolder')->andReturn(false);
+
+        $this->creator_visitor->shouldReceive('visitFolder')->once();
+
+        $created_item_representation = $item_creator->createFolder(
+            $parent_item,
+            $user,
+            $post_representation,
+            $current_time,
+            $project
+        );
+
+        $this->assertSame(12, $created_item_representation->id);
     }
 }

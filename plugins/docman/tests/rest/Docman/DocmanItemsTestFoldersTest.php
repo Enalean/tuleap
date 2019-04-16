@@ -449,6 +449,29 @@ class DocmanItemsTestFoldersTest extends DocmanBase
     }
 
     /**
+     * @depends testGetRootId
+     */
+    public function testPostFolderWithStatusWhenStatusIsNotAllowedForProject(int $root_id): void
+    {
+        $headers = ['Content-Type' => 'application/json'];
+
+        $query = json_encode(
+            [
+                'title'       => 'To the future',
+                'description' => 'A description',
+                'status'      => 'approved'
+            ]
+        );
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post('docman_folders/' . $root_id . "/folders", $headers, $query)
+        );
+
+        $this->assertEquals(403, $response->getStatusCode());
+    }
+
+    /**
      * Find first item in given array of items which has given title.
      * @return array|null Found item. null otherwise.
      */
