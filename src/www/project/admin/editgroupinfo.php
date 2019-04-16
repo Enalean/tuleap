@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright 1999-2000 (c) The SourceForge Crew
- * Copyright Enalean (c) 2015 - 2018. All rights reserved.
+ * Copyright Enalean (c) 2015 - Present. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registered trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -31,6 +31,7 @@ use Tuleap\Project\Admin\ProjectDetails\ProjectDetailsDAO;
 use Tuleap\Project\Admin\ProjectDetails\ProjectDetailsRouter;
 use Tuleap\Project\Admin\ProjectVisibilityPresenterBuilder;
 use Tuleap\Project\Admin\ProjectVisibilityUserConfigurationPermissions;
+use Tuleap\Project\Admin\RestrictedUsersProjectCounter;
 use Tuleap\Project\Admin\ServicesUsingTruncatedMailRetriever;
 use Tuleap\Project\DescriptionFieldsDao;
 use Tuleap\Project\DescriptionFieldsFactory;
@@ -59,7 +60,8 @@ $ugroup_binding = new UGroupBinding(
 
 $project_visibility_presenter_builder = new ProjectVisibilityPresenterBuilder(
     $project_visibility_configuration,
-    $service_truncated_mails_retriever
+    $service_truncated_mails_retriever,
+    new RestrictedUsersProjectCounter(new UserDao())
 );
 
 $csrf_token = new CSRFSynchronizerToken($request->getFromServer('REQUEST_URI'));
