@@ -78,10 +78,12 @@ class DocmanItemUpdator
         \Docman_Item $item,
         bool $should_lock_item,
         \PFUser $user,
-        string $approval_table_action,
+        ?string $approval_table_action,
         ?Version $version
     ): void {
-        $this->updateApprovalTable($item, $user, $approval_table_action);
+        if ($approval_table_action) {
+            $this->updateApprovalTable($item, $user, $approval_table_action);
+        }
         $this->updateCommonDataWithoutApprovalTable($item, $should_lock_item, $user, $version);
     }
 

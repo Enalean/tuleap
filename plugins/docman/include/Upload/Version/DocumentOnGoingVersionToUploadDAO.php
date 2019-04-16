@@ -36,7 +36,7 @@ class DocumentOnGoingVersionToUploadDAO extends DataAccessObject
         string $filename,
         int $filesize,
         bool $is_file_locked,
-        string $approval_table_action
+        ?string $approval_table_action
     ) : int {
         $version_id = $this->getDB()->insertReturnId(
             'plugin_docman_new_version_upload',

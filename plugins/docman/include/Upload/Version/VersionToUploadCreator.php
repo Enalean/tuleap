@@ -62,7 +62,7 @@ class VersionToUploadCreator
         string $filename,
         int $filesize,
         bool $is_file_locked,
-        string $approval_table_action
+        ?string $approval_table_action
     ) : VersionToUpload {
         $file_size = $filesize;
         if ((int)$file_size > (int)\ForgeConfig::get(PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING)) {
