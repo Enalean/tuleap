@@ -34,6 +34,7 @@ import "./components/Folder/Error/GoBackToRootButton.spec.js";
 import "./components/Folder/Error/ShowErrorDetails.spec.js";
 
 import "./components/Folder/FolderContentRow.spec.js";
+import "./components/Folder/FolderHeaderAction.spec.js";
 
 import "./components/Folder/DragNDrop/CurrentFolderDropZone.spec.js";
 import "./components/Folder/DragNDrop/DragNDropHandler.spec.js";
@@ -43,6 +44,7 @@ import "./components/Folder/ActionsButton/UpdateItemButton.spec.js";
 import "./components/Folder/ActionsDropDown/DropdownButton.spec.js";
 import "./components/Folder/ActionsDropDown/DropdownMenu.spec.js";
 import "./components/Folder/ActionsDropDown/DropdownMenuForItemQuickLook.spec.js";
+import "./components/Folder/ActionsDropDown/DropdownMenuCurrentFolder.spec.js";
 
 import "./components/Folder/ActionsQuickLookButton/QuickLookDeleteButton.spec.js";
 
