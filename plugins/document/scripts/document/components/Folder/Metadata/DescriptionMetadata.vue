@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2019. All Rights Reserved.
+  - Copyright (c) Enalean, 2018. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -14,27 +14,29 @@
   - GNU General Public License for more details.
   -
   - You should have received a copy of the GNU General Public License
-  - along with Tuleap. If not, see http://www.gnu.org/licenses/.
+  - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -
   -->
 
 <template>
     <div class="tlp-form-element">
-        <label
-            class="tlp-label"
-            for="document-update-changelog"
-        >
-            <translate>Changelog</translate>
-        </label>
-        <textarea
-            type="text"
-            class="tlp-textarea"
-            id="document-update-changelog"
-            name="changelog"
-            v-bind:placeholder="placeholder"
-            v-bind:value="value"
-            v-on:input="$emit('input', $event.target.value)"
-        ></textarea>
+        <div class="tlp-form-element">
+            <label
+                class="tlp-label"
+                for="document-new-item-description"
+                v-translate
+            >
+                Description
+            </label>
+            <textarea
+                class="tlp-textarea"
+                id="document-new-item-description"
+                name="description"
+                v-bind:placeholder="placeholder"
+                v-bind:value="value"
+                v-on:input="$emit('input', $event.target.value)"
+            ></textarea>
+        </div>
     </div>
 </template>
 <script>
@@ -44,7 +46,7 @@ export default {
     },
     computed: {
         placeholder() {
-            return this.$gettext("Please describe the changes of the new version here");
+            return this.$gettext("My useful document description");
         }
     }
 };

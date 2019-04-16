@@ -23,7 +23,7 @@
         <modal-header v-bind:modal-title="modal_title" v-bind:aria-labelled-by="aria_labelled_by"/>
         <modal-feedback/>
         <div class="tlp-modal-body document-new-item-modal-body" v-if="is_displayed">
-            <global-properties v-bind:item="item" v-bind:parent="parent"/>
+            <global-metadata v-bind:item="item" v-bind:parent="parent"/>
         </div>
         <modal-footer v-bind:is-loading="is_loading" v-bind:submit-button-label="submit_button_label" v-bind:aria-labelled-by="aria_labelled_by"/>
     </form>
@@ -36,7 +36,7 @@ import { TYPE_FOLDER } from "../../../constants.js";
 import ModalHeader from "../ModalCommon/ModalHeader.vue";
 import ModalFeedback from "../ModalCommon/ModalFeedback.vue";
 import ModalFooter from "../ModalCommon/ModalFooter.vue";
-import GlobalProperties from "../Property/GlobalProperties.vue";
+import GlobalMetadata from "../Metadata/GlobalMetadata.vue";
 
 export default {
     name: "NewFolderModal",
@@ -44,7 +44,7 @@ export default {
         ModalFeedback,
         ModalHeader,
         ModalFooter,
-        GlobalProperties
+        GlobalMetadata
     },
     data() {
         return {
