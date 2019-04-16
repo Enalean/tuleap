@@ -92,7 +92,7 @@ class DocmanEmbeddedFileUpdator
                     'item_id'   => $item->getId(),
                     'number'    => $next_version_id,
                     'user_id'   => $current_user->getId(),
-                    'label'     => '',
+                    'label'     => $representation->version_title,
                     'changelog' => $representation->change_log,
                     'date'      => $date->getTimestamp(),
                     'filename'  => basename($created_file_path),
