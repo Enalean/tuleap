@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <div class="new-baseline-modal-milestone-list">
+    <div>
         <div class="new-baseline-modal-milestone-list-scrollbar">
             <div v-if="milestones.length === 0">
                 <p class="baseline-empty-information-message"

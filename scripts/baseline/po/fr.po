@@ -96,7 +96,7 @@ msgid "Consult"
 msgstr "Consulter"
 
 msgid "Create baseline"
-msgstr "Créer baseline"
+msgstr "Créer la baseline"
 
 msgid "Created by"
 msgstr "Créé par"

@@ -18,7 +18,7 @@
   -->
 
 <template functional>
-    <div class="new-baseline-modal-milestone-list">
+    <div>
         <div><span class="tlp-skeleton-text"></span></div>
         <div><span class="tlp-skeleton-text"></span></div>
         <div><span class="tlp-skeleton-text"></span></div>
