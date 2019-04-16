@@ -24,6 +24,7 @@ namespace Tuleap\Docman\REST\v1;
 
 use Docman_ApprovalTableFactoriesFactory;
 use Docman_LockFactory;
+use Docman_VersionFactory;
 use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\ApprovalTable\ApprovalTableUpdateActionChecker;
 use Tuleap\Docman\ApprovalTable\ApprovalTableUpdater;
@@ -34,7 +35,10 @@ class DocmanItemUpdatorBuilder
 {
     public function build(\EventManager $event_manager): DocmanItemUpdator
     {
-        $docman_approval_table_retriever = new ApprovalTableRetriever(new \Docman_ApprovalTableFactoriesFactory());
+        $docman_approval_table_retriever = new ApprovalTableRetriever(
+            new \Docman_ApprovalTableFactoriesFactory(),
+            new Docman_VersionFactory()
+        );
 
         return new DocmanItemUpdator(
             new ApprovalTableUpdater($docman_approval_table_retriever, new Docman_ApprovalTableFactoriesFactory()),

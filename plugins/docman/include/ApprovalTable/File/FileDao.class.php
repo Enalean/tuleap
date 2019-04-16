@@ -35,7 +35,7 @@ class Docman_ApprovalTableFileDao extends Docman_ApprovalTableItemDao {
     }
 
     function getLatestTableByItemId($itemId, $fields='app.*') {
-        return $this->getApprovalTableItemId($itemId, $fields, ' LIMIT 1');
+        return $this->getApprovalTableItemId($itemId, $fields, ' LIMIT 1', true);
     }
 
     function getApprovalTableItemId($itemId, $fields='app.*', $limit='', $tableStatus=false) {

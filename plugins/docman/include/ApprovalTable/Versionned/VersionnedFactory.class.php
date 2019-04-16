@@ -127,7 +127,7 @@ abstract class Docman_ApprovalTableVersionnedFactory extends Docman_ApprovalTabl
     /**
      * Return the last created approval table for the item
      *
-     * @return ApprovalTable object
+     * @return Docman_ApprovalTable object
      */
     function getLastTableForItem() {
         $table = null;

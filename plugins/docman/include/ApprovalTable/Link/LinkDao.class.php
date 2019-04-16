@@ -35,7 +35,7 @@ class Docman_ApprovalTableLinkDao extends Docman_ApprovalTableItemDao {
     }
 
     public function getLatestTableByItemId($itemId, $fields='app.*') {
-        return $this->getApprovalTableItemId($itemId, $fields, ' LIMIT 1');
+        return $this->getApprovalTableItemId($itemId, $fields, ' LIMIT 1', true);
     }
 
     public function getApprovalTableItemId($itemId, $fields='app.*', $limit='', $tableStatus=false) {
@@ -44,6 +44,7 @@ class Docman_ApprovalTableLinkDao extends Docman_ApprovalTableItemDao {
             ' AND app.wiki_version_id IS NULL';
         $join = ' JOIN plugin_docman_link_version ver ON (ver.id = app.version_id)';
         $orderBy = ' ORDER BY ver.number DESC ';
+
 
         return $this->getTableWithStatus($tableStatus, $fields, $where, $join, $orderBy, $limit);
     }
