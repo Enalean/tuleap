@@ -21,11 +21,6 @@
 
 $artifact-body-padding: $tlp-spacing;
 
-.baseline-pane-header {
-    display: flex;
-    justify-content: space-between;
-}
-
 .baseline-statistic-epics {
     @extend %statistic;
     background-color: $tlp-theme-blue;

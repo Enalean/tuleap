@@ -19,39 +19,36 @@
 
 <template>
     <div>
-        <div class="tlp-card tlp-card-inactive">
-            <p class="tlp-text-muted" v-translate>
-                Baselines features allow you to consult the state of your releases in a
-                chosen date in the past.
-            </p>
-        </div>
         <section class="tlp-pane">
             <div class="tlp-pane-container">
-                <div class="tlp-pane-header baseline-pane-header">
-                    <h2>
-                        <span class="baselines-title" v-translate>
+                <div class="tlp-pane-header">
+                    <h1 class="tlp-pane-title">
+                        <span v-translate>
                             your baselines
                         </span>
-                        <span v-if="baselines !== null"
-                              class="tlp-tooltip tlp-tooltip-right"
-                              v-bind:data-tlp-tooltip="baselines_tooltip"
+                        <span
+                            v-if="baselines !== null"
+                            class="tlp-badge-secondary tlp-badge-outline tlp-tooltip tlp-tooltip-right baselines-count"
+                            v-bind:data-tlp-tooltip="baselines_tooltip"
                         >
-                            ({{ baselines.length }})
+                            {{ baselines.length }}
                         </span>
-                    </h2>
-                    <button
-                        type="button"
-                        data-target="new-baseline-modal"
-                        class="tlp-button-primary"
-                        data-test-action="new-baseline"
-                        v-on:click="showNewBaselineModal()"
-                    >
-                        <i class="fa fa-plus tlp-button-icon"></i>
-                        <translate>New baseline</translate>
-                    </button>
+                    </h1>
                 </div>
 
                 <section class="tlp-pane-section">
+                    <div class="tlp-table-actions">
+                        <button
+                            type="button"
+                            data-target="new-baseline-modal"
+                            class="tlp-button-primary"
+                            data-test-action="new-baseline"
+                            v-on:click="showNewBaselineModal()"
+                        >
+                            <i class="fa fa-plus tlp-button-icon"></i>
+                            <translate>New baseline</translate>
+                        </button>
+                    </div>
                     <baseline-table v-bind:baselines="baselines" v-bind:is_loading="are_baselines_loading"/>
                 </section>
             </div>
@@ -59,24 +56,27 @@
 
         <section class="tlp-pane">
             <div class="tlp-pane-container">
-                <div class="tlp-pane-header baseline-pane-header">
-                    <h2>
-                        <span class="baselines-title" v-translate>
-                            Comparisons
-                        </span>
-                    </h2>
-                    <button
-                        type="button"
-                        data-target="new-comparison-modal"
-                        class="tlp-button-primary"
-                        data-test-action="show-comparison"
-                        v-bind:disabled="are_baselines_loading || !are_baselines_available"
-                        v-on:click="showNewComparisonModal()"
-                        v-translate
-                    >
-                        Compare baselines
-                    </button>
+                <div class="tlp-pane-header">
+                    <h1 class="tlp-pane-title" v-translate>
+                        Comparisons
+                    </h1>
                 </div>
+
+                <section class="tlp-pane-section">
+                    <div class="tlp-table-actions">
+                        <button
+                            type="button"
+                            data-target="new-comparison-modal"
+                            class="tlp-button-primary"
+                            data-test-action="show-comparison"
+                            v-bind:disabled="are_baselines_loading || !are_baselines_available"
+                            v-on:click="showNewComparisonModal()"
+                            v-translate
+                        >
+                            Compare baselines
+                        </button>
+                    </div>
+                </section>
             </div>
         </section>
     </div>

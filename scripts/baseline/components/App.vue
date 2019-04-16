@@ -25,9 +25,11 @@
                 <router-link
                     v-bind:to="{ name: 'BaselinesPage' }"
                     class="breadcrumb-link"
-                    v-translate
                 >
-                    Baselines
+                    <i class="fa fa-tlp-baseline breadcrumb-link-icon"></i>
+                    <translate>
+                        Baselines
+                    </translate>
                 </router-link>
             </div>
             <div

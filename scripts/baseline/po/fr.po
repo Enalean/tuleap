@@ -36,14 +36,6 @@ msgstr "Baselines disponibles"
 msgid "Baselines comparison #%u/#%u"
 msgstr "Comparaison des baselines #%u/#%u"
 
-msgid ""
-"Baselines features allow you to consult the state of your releases in a\n"
-"            chosen date in the past."
-msgstr ""
-"Les fonctionnalités de baselines vous permettent de consulter l'état de vos "
-"versions\n"
-"            à une date choisie dans le passé."
-
 msgid "Bugs"
 msgstr "Bugs"
 
