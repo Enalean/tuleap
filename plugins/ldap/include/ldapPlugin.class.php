@@ -618,7 +618,7 @@ class LdapPlugin extends Plugin {
     function warnNoPwChange($params) {
         global $Language;
         if($this->isLdapAuthType()) {
-            $params['additional_password_messages'][] = '<div class="tlp-alert-warning"><i class="fa fa-warning"></i> ' . $Language->getText('admin_user_changepw','ldap_warning') . '</div>';
+            $params['additional_password_messages'][] = '<div class="tlp-alert-warning">' . $Language->getText('admin_user_changepw','ldap_warning') . '</div>';
         }
     }
 
