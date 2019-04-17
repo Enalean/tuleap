@@ -34,10 +34,17 @@ class BaselineService
     /** @var Clock */
     private $clock;
 
-    public function __construct(BaselineRepository $baseline_repository, Clock $clock)
-    {
+    /** @var BaselineAuthorizations */
+    private $authorizations;
+
+    public function __construct(
+        BaselineRepository $baseline_repository,
+        Clock $clock,
+        BaselineAuthorizations $authorizations
+    ) {
         $this->baseline_repository = $baseline_repository;
         $this->clock               = $clock;
+        $this->authorizations      = $authorizations;
     }
 
     /**
@@ -45,6 +52,11 @@ class BaselineService
      */
     public function create(PFUser $current_user, TransientBaseline $baseline): Baseline
     {
+        if (! $this->authorizations->canCreateBaseline($current_user, $baseline)) {
+            throw new NotAuthorizedException(
+                dgettext('tuleap-baseline', "You are not allowed to create this baseline")
+            );
+        }
         return $this->baseline_repository->add(
             $baseline,
             $current_user,
@@ -52,9 +64,6 @@ class BaselineService
         );
     }
 
-    /**
-     * @throws NotAuthorizedException
-     */
     public function findById(PFUser $current_user, int $id): ?Baseline
     {
         return $this->baseline_repository->findById($current_user, $id);
@@ -65,6 +74,11 @@ class BaselineService
      */
     public function delete(PFUser $current_user, Baseline $baseline)
     {
+        if (! $this->authorizations->canDeleteBaseline($current_user, $baseline)) {
+            throw new NotAuthorizedException(
+                dgettext('tuleap-baseline', "You are not allowed to delete this baseline")
+            );
+        }
         return $this->baseline_repository->delete($baseline, $current_user);
     }
 
@@ -82,6 +96,11 @@ class BaselineService
         int $page_size,
         int $baseline_offset
     ): BaselinesPage {
+        if (! $this->authorizations->canReadBaselinesOnProject($current_user, $project)) {
+            throw new NotAuthorizedException(
+                dgettext('tuleap-baseline', "You are not allowed to read baselines of this project")
+            );
+        }
         $baselines = $this->baseline_repository->findByProject($current_user, $project, $page_size, $baseline_offset);
         $count     = $this->baseline_repository->countByProject($project);
         return new BaselinesPage($baselines, $page_size, $baseline_offset, $count);

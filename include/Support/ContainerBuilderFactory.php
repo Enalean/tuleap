@@ -37,12 +37,16 @@ use Tuleap\Baseline\Adapter\ClockAdapter;
 use Tuleap\Baseline\Adapter\ComparisonRepositoryAdapter;
 use Tuleap\Baseline\Adapter\CurrentUserProviderAdapter;
 use Tuleap\Baseline\Adapter\ProjectRepositoryAdapter;
+use Tuleap\Baseline\Adapter\RoleAssignmentRepositoryAdapter;
 use Tuleap\Baseline\BaselineArtifactRepository;
+use Tuleap\Baseline\BaselineAuthorizations;
+use Tuleap\Baseline\BaselineAuthorizationsImpl;
 use Tuleap\Baseline\BaselineRepository;
 use Tuleap\Baseline\Clock;
 use Tuleap\Baseline\ComparisonRepository;
 use Tuleap\Baseline\CurrentUserProvider;
 use Tuleap\Baseline\ProjectRepository;
+use Tuleap\Baseline\RoleAssignmentRepository;
 use Tuleap\DB\DBFactory;
 use Tuleap\REST\UserManager;
 use function DI\autowire;
@@ -58,6 +62,7 @@ class ContainerBuilderFactory
         $container_builder = new ContainerBuilder();
         return $container_builder->addDefinitions(
             [
+                BaselineAuthorizations::class            => autowire(BaselineAuthorizationsImpl::class),
                 Clock::class                             => autowire(ClockAdapter::class),
                 UserManager::class                       => factory([UserManager::class, 'build']),
                 CurrentUserProvider::class               => autowire(CurrentUserProviderAdapter::class),
@@ -65,6 +70,7 @@ class ContainerBuilderFactory
                 ComparisonRepository::class              => autowire(ComparisonRepositoryAdapter::class),
                 BaselineArtifactRepository::class        => autowire(BaselineArtifactRepositoryAdapter::class),
                 ProjectRepository::class                 => autowire(ProjectRepositoryAdapter::class),
+                RoleAssignmentRepository::class          => autowire(RoleAssignmentRepositoryAdapter::class),
                 ProjectManager::class                    => factory([ProjectManager::class, 'instance']),
                 Tracker_ArtifactFactory::class           => factory([Tracker_ArtifactFactory::class, 'instance']),
                 Tracker_Artifact_ChangesetFactory::class => factory(

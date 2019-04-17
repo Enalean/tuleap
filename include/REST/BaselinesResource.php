@@ -92,6 +92,7 @@ class BaselinesResource extends AuthenticatedResource
      * @param int $id
      * @throws \Rest_Exception_InvalidTokenException
      * @throws NotFoundRestException 404
+     * @throws ForbiddenRestException 403
      * @throws \User_PasswordExpiredException
      * @throws \User_StatusDeletedException
      * @throws \User_StatusInvalidException
@@ -121,7 +122,6 @@ class BaselinesResource extends AuthenticatedResource
      * @return Tuleap\Baseline\REST\BaselineRepresentation
      * @throws \Rest_Exception_InvalidTokenException
      * @throws I18NRestException 401
-     * @throws ForbiddenRestException 403
      * @throws NotFoundRestException 404
      * @throws \User_PasswordExpiredException
      * @throws \User_StatusDeletedException

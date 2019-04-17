@@ -49,9 +49,6 @@ class BaselineArtifactRepositoryAdapterTest extends TestCase
     /** @var Tracker_ArtifactFactory|MockInterface */
     private $artifact_factory;
 
-    /** @var AdapterPermissions|MockInterface */
-    private $adapter_permissions;
-
     /** @var Tracker_Artifact_ChangesetFactory|MockInterface */
     private $changeset_factory;
 
@@ -65,14 +62,12 @@ class BaselineArtifactRepositoryAdapterTest extends TestCase
     public function createInstance()
     {
         $this->artifact_factory       = Mockery::mock(Tracker_ArtifactFactory::class);
-        $this->adapter_permissions    = Mockery::mock(AdapterPermissions::class);
         $this->changeset_factory      = Mockery::mock(Tracker_Artifact_ChangesetFactory::class);
         $this->semantic_value_adapter = Mockery::mock(SemanticValueAdapter::class);
         $this->artifact_link_adapter  = Mockery::mock(ArtifactLinkRepository::class);
 
         $this->adapter = new BaselineArtifactRepositoryAdapter(
             $this->artifact_factory,
-            $this->adapter_permissions,
             $this->changeset_factory,
             $this->semantic_value_adapter,
             $this->artifact_link_adapter
@@ -82,18 +77,12 @@ class BaselineArtifactRepositoryAdapterTest extends TestCase
     public function testFindById()
     {
         $artifact = Mockery::mock(Tracker_Artifact::class);
-        $artifact->shouldReceive('getTracker->getProject')
-            ->andReturn(ProjectFactory::one());
+        $artifact->allows(['userCanView' => true, 'getTracker->getProject' => ProjectFactory::one()]);
 
         $this->artifact_factory
             ->shouldReceive('getArtifactById')
             ->with(1)
             ->andReturn($artifact);
-
-        $this->adapter_permissions
-            ->shouldReceive('canUserReadArtifact')
-            ->with($this->current_user, $artifact)
-            ->andReturn(true);
 
         $changeset = Mockery::mock(Tracker_Artifact_Changeset::class);
         $changeset->shouldReceive('getArtifact->getTracker')
@@ -137,18 +126,12 @@ class BaselineArtifactRepositoryAdapterTest extends TestCase
     {
         $date     = DateTimeFactory::one();
         $artifact = Mockery::mock(Tracker_Artifact::class);
-        $artifact->shouldReceive('getTracker->getProject')
-            ->andReturn(ProjectFactory::one());
+        $artifact->allows(['userCanView' => true, 'getTracker->getProject' => ProjectFactory::one()]);
 
         $this->artifact_factory
             ->shouldReceive('getArtifactById')
             ->with(1)
             ->andReturn($artifact);
-
-        $this->adapter_permissions
-            ->shouldReceive('canUserReadArtifact')
-            ->with($this->current_user, $artifact)
-            ->andReturn(true);
 
         $changeset = Mockery::mock(Tracker_Artifact_Changeset::class);
         $changeset->shouldReceive('getArtifact->getTracker')

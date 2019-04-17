@@ -106,20 +106,15 @@ class BaselineController
 
     /**
      * @throws NotFoundRestException 404
-     * @throws ForbiddenRestException 403
      */
     public function getById(int $id): BaselineRepresentation
     {
-        try {
-            $current_user = $this->current_user_provider->getUser();
-            $baseline     = $this->baseline_service->findById($current_user, $id);
-            if ($baseline === null) {
-                $this->throw404Exception($id);
-            }
-            return BaselineRepresentation::fromBaseline($baseline);
-        } catch (NotAuthorizedException $exception) {
-            $this->throw403Exception($exception);
+        $current_user = $this->current_user_provider->getUser();
+        $baseline     = $this->baseline_service->findById($current_user, $id);
+        if ($baseline === null) {
+            $this->throw404Exception($id);
         }
+        return BaselineRepresentation::fromBaseline($baseline);
     }
 
     /**

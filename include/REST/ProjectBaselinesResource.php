@@ -25,6 +25,7 @@ namespace Tuleap\Baseline\REST;
 
 use DI\Container;
 use Luracast\Restler\RestException;
+use Tuleap\Baseline\REST\Exception\ForbiddenRestException;
 use Tuleap\Baseline\Support\ContainerBuilderFactory;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
@@ -57,6 +58,7 @@ class ProjectBaselinesResource extends AuthenticatedResource
      *
      * @return BaselinesPageRepresentation {@type Tuleap\Baseline\REST\BaselinesPageRepresentation}
      * @throws RestException 404
+     * @throws ForbiddenRestException 403
      */
     public function getBaselines(int $id, int $limit = 10, int $offset = 0): BaselinesPageRepresentation
     {

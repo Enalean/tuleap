@@ -21,14 +21,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Baseline\Adapter;
+namespace Tuleap\Baseline;
 
 use PFUser;
 use Project;
-use Tuleap\Baseline\Role;
-use Tuleap\Baseline\RoleAssignmentRepository;
 
-class AdapterPermissions
+class BaselineAuthorizationsImpl implements BaselineAuthorizations
 {
     /** @var RoleAssignmentRepository */
     private $role_assignment_repository;
@@ -38,7 +36,30 @@ class AdapterPermissions
         $this->role_assignment_repository = $role_assignment_repository;
     }
 
-    public function canUserAdministrateBaselineOnProject(PFUser $user, Project $project): bool
+    public function canCreateBaseline(PFUser $current_user, TransientBaseline $baseline): bool
+    {
+        $project = $baseline->getProject();
+        return $this->canUserAdministrateBaselineOnProject($current_user, $project);
+    }
+
+    public function canDeleteBaseline(PFUser $current_user, Baseline $baseline): bool
+    {
+        $project = $baseline->getProject();
+        return $this->canUserAdministrateBaselineOnProject($current_user, $project);
+    }
+
+    public function canReadBaseline(PFUser $current_user, Baseline $baseline): bool
+    {
+        $project = $baseline->getProject();
+        return $this->canUserReadBaselineOnProject($current_user, $project);
+    }
+
+    public function canReadBaselinesOnProject(PFUser $current_user, Project $project): bool
+    {
+        return $this->canUserReadBaselineOnProject($current_user, $project);
+    }
+
+    private function canUserAdministrateBaselineOnProject(PFUser $user, Project $project): bool
     {
         if ($this->isUserAdminOnProject($user, $project)) {
             return true;
@@ -46,7 +67,7 @@ class AdapterPermissions
         return $this->hasUserRoleOnProject($user, Role::ADMIN, $project);
     }
 
-    public function canUserReadBaselineOnProject(PFUser $user, Project $project): bool
+    private function canUserReadBaselineOnProject(PFUser $user, Project $project): bool
     {
         if ($this->isUserAdminOnProject($user, $project)) {
             return true;

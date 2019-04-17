@@ -37,9 +37,6 @@ class BaselineArtifactRepositoryAdapter implements BaselineArtifactRepository
     /** @var Tracker_ArtifactFactory */
     private $artifact_factory;
 
-    /** @var AdapterPermissions */
-    private $adapter_permissions;
-
     /** @var Tracker_Artifact_ChangesetFactory */
     private $changeset_factory;
 
@@ -51,13 +48,11 @@ class BaselineArtifactRepositoryAdapter implements BaselineArtifactRepository
 
     public function __construct(
         Tracker_ArtifactFactory $artifact_factory,
-        AdapterPermissions $adapter_permissions,
         Tracker_Artifact_ChangesetFactory $changeset_factory,
         SemanticValueAdapter $semantic_value_adapter,
         ArtifactLinkRepository $artifact_link_adapter
     ) {
         $this->artifact_factory       = $artifact_factory;
-        $this->adapter_permissions    = $adapter_permissions;
         $this->changeset_factory      = $changeset_factory;
         $this->semantic_value_adapter = $semantic_value_adapter;
         $this->artifact_link_adapter  = $artifact_link_adapter;
@@ -69,7 +64,7 @@ class BaselineArtifactRepositoryAdapter implements BaselineArtifactRepository
         if ($artifact === null) {
             return null;
         }
-        if (! $this->adapter_permissions->canUserReadArtifact($current_user, $artifact)) {
+        if (! $artifact->userCanView($current_user)) {
             return null;
         }
 
@@ -89,7 +84,7 @@ class BaselineArtifactRepositoryAdapter implements BaselineArtifactRepository
     public function findByIdAt(PFUser $current_user, int $id, DateTimeInterface $date): ?BaselineArtifact
     {
         $tracker_artifact = $this->artifact_factory->getArtifactById($id);
-        if ($tracker_artifact === null) {
+        if ($tracker_artifact === null || ! $tracker_artifact->userCanView($current_user)) {
             return null;
         }
         $changeset = $this->changeset_factory->getChangesetAtTimestamp($tracker_artifact, $date->getTimestamp());

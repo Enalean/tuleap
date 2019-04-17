@@ -30,6 +30,7 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Baseline\BaselineArtifactRepository;
+use Tuleap\Baseline\BaselineAuthorizations;
 use Tuleap\Baseline\BaselineRepository;
 use Tuleap\Baseline\Clock;
 use Tuleap\Baseline\ComparisonRepository;
@@ -40,6 +41,7 @@ use Tuleap\Baseline\Stub\BaselineRepositoryStub;
 use Tuleap\Baseline\Stub\ComparisonRepositoryStub;
 use Tuleap\Baseline\Stub\CurrentUserProviderStub;
 use Tuleap\Baseline\Stub\FrozenClock;
+use Tuleap\Baseline\Stub\FullAccessBaselineAuthorizationsStub;
 use Tuleap\Baseline\Stub\ProjectRepositoryStub;
 use Tuleap\Baseline\Support\ContainerBuilderFactory;
 use Tuleap\Baseline\Support\CurrentUserContext;
@@ -109,6 +111,7 @@ abstract class IntegrationTestCaseWithStubs extends TestCase
                     ProjectRepository::class          => $this->project_repository,
                     BaselineArtifactRepository::class => $this->baseline_artifact_repository,
                     CurrentUserProvider::class        => $this->current_user_provider,
+                    BaselineAuthorizations::class     => new FullAccessBaselineAuthorizationsStub(),
                     Clock::class                      => $this->clock,
                     RESTLogger::class                 => Mockery::mock(RESTLogger::class)->shouldIgnoreMissing()
                 ]

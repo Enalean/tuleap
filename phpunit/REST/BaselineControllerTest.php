@@ -211,17 +211,6 @@ class BaselineControllerTest extends TestCase
         $this->controller->getById(1);
     }
 
-    public function testGetByIdThrows403WhenNotAuthorized()
-    {
-        $this->expectException(ForbiddenRestException::class);
-
-        $this->baseline_service
-            ->shouldReceive('findById')
-            ->andThrow(new NotAuthorizedException('not authorized'));
-
-        $this->controller->getById(1);
-    }
-
     public function testPostDeletesBaseline()
     {
         $baseline = BaselineFactory::one()

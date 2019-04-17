@@ -34,6 +34,8 @@ use PFUser;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Baseline\Baseline;
 use Tuleap\Baseline\BaselineArtifactRepository;
+use Tuleap\Baseline\BaselineAuthorizations;
+use Tuleap\Baseline\BaselineAuthorizationsImpl;
 use Tuleap\Baseline\Factory\BaselineArtifactFactory;
 use Tuleap\Baseline\Factory\ProjectFactory;
 use Tuleap\Baseline\Support\CurrentUserContext;
@@ -57,8 +59,8 @@ class BaselineRepositoryAdapterTest extends TestCase
     /** @var BaselineArtifactRepository|MockInterface */
     private $baseline_artifact_repository;
 
-    /** @var AdapterPermissions|MockInterface */
-    private $adapter_permissions;
+    /** @var BaselineAuthorizations|MockInterface */
+    private $authorizations;
 
     /** @var ClockAdapter|MockInterface */
     private $clock;
@@ -69,7 +71,7 @@ class BaselineRepositoryAdapterTest extends TestCase
         $this->db                           = Mockery::mock(EasyDB::class);
         $this->user_manager                 = Mockery::mock(UserManager::class);
         $this->baseline_artifact_repository = Mockery::mock(BaselineArtifactRepository::class);
-        $this->adapter_permissions          = Mockery::mock(AdapterPermissions::class);
+        $this->authorizations               = Mockery::mock(BaselineAuthorizationsImpl::class);
         $this->clock                        = Mockery::mock(ClockAdapter::class);
         $this->clock->allows(['at' => DateTimeFactory::one()]);
 
@@ -77,7 +79,7 @@ class BaselineRepositoryAdapterTest extends TestCase
             $this->db,
             $this->user_manager,
             $this->baseline_artifact_repository,
-            $this->adapter_permissions,
+            $this->authorizations,
             $this->clock
         );
     }
@@ -111,9 +113,8 @@ class BaselineRepositoryAdapterTest extends TestCase
                 ]
             );
 
-        $this->adapter_permissions
-            ->shouldReceive('canUserReadBaselineOnProject')
-            ->andReturn(true);
+        $this->authorizations
+            ->allows(['canReadBaseline' => true]);
 
         $baseline = $this->repository->findById($this->current_user, 1);
 
@@ -139,7 +140,7 @@ class BaselineRepositoryAdapterTest extends TestCase
         $this->assertNull($baseline);
     }
 
-    public function testFindByIdReturnsNullWhenGivenUserCannotReadBaselineOnProjetOfFoundBaseline()
+    public function testFindByIdReturnsNullWhenGivenUserCannotReadFoundBaseline()
     {
         $artifact = BaselineArtifactFactory::one()->build();
         $this->baseline_artifact_repository
@@ -168,10 +169,8 @@ class BaselineRepositoryAdapterTest extends TestCase
                 ]
             );
 
-        $this->adapter_permissions
-            ->shouldReceive('canUserReadBaselineOnProject')
-            ->with($this->current_user, $artifact->getProject())
-            ->andReturn(false);
+        $this->authorizations
+            ->allows(['canReadBaseline' => false]);
 
         $baseline = $this->repository->findById($this->current_user, 1);
 
@@ -242,10 +241,6 @@ class BaselineRepositoryAdapterTest extends TestCase
 
         $project = ProjectFactory::oneWithId(102);
 
-        $this->adapter_permissions
-            ->shouldReceive('canUserReadBaselineOnProject')
-            ->andReturn(true);
-
         $baselines = $this->repository->findByProject($this->current_user, $project, 10, 3);
 
         $expected_baselines = [new Baseline(
@@ -287,10 +282,6 @@ class BaselineRepositoryAdapterTest extends TestCase
             );
 
         $project = ProjectFactory::oneWithId(102);
-
-        $this->adapter_permissions
-            ->shouldReceive('canUserReadBaselineOnProject')
-            ->andReturn(true);
 
         $baselines = $this->repository->findByProject($this->current_user, $project, 10, 3);
 

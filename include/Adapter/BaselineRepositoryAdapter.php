@@ -29,8 +29,8 @@ use PFUser;
 use Project;
 use Tuleap\Baseline\Baseline;
 use Tuleap\Baseline\BaselineArtifactRepository;
+use Tuleap\Baseline\BaselineAuthorizations;
 use Tuleap\Baseline\BaselineRepository;
-use Tuleap\Baseline\NotAuthorizedException;
 use Tuleap\Baseline\TransientBaseline;
 use UserManager;
 
@@ -45,8 +45,8 @@ class BaselineRepositoryAdapter implements BaselineRepository
     /** @var BaselineArtifactRepository */
     private $baseline_artifact_repository;
 
-    /** @var AdapterPermissions */
-    private $adapter_permissions;
+    /** @var BaselineAuthorizations */
+    private $authorizations;
 
     /** @var ClockAdapter */
     private $clock;
@@ -55,35 +55,24 @@ class BaselineRepositoryAdapter implements BaselineRepository
         EasyDB $db,
         UserManager $user_manager,
         BaselineArtifactRepository $baseline_artifact_repository,
-        AdapterPermissions $adapter_permissions,
+        BaselineAuthorizations $authorizations,
         ClockAdapter $clock
     ) {
         $this->db                           = $db;
         $this->user_manager                 = $user_manager;
         $this->baseline_artifact_repository = $baseline_artifact_repository;
-        $this->adapter_permissions          = $adapter_permissions;
+        $this->authorizations               = $authorizations;
         $this->clock                        = $clock;
     }
 
     /**
-     * @throws NotAuthorizedException
+     * Note: Authorizations may have been check earlier
      */
     public function add(
         TransientBaseline $baseline,
         PFUser $current_user,
         DateTimeInterface $snapshot_date
     ): Baseline {
-
-        $project = $baseline->getProject();
-        if (! $this->adapter_permissions->canUserAdministrateBaselineOnProject($current_user, $project)) {
-            throw new NotAuthorizedException(
-                sprintf(
-                    dgettext('tuleap-baseline', "You're not allowed to add new baseline in project with id %u"),
-                    $project->getID()
-                )
-            );
-        }
-
         $id = (int) $this->db->insertReturnId(
             'plugin_baseline_baseline',
             [
@@ -121,39 +110,26 @@ class BaselineRepositoryAdapter implements BaselineRepository
             return null;
         }
 
-        if (! $this->adapter_permissions->canUserReadBaselineOnProject($current_user, $baseline->getProject())) {
+        if (! $this->authorizations->canReadBaseline($current_user, $baseline)) {
             return null;
         }
         return $baseline;
     }
 
     /**
-     * @throws NotAuthorizedException
+     * Note: Authorizations may have been check earlier
      */
     public function delete(Baseline $baseline, PFUser $current_user): void
     {
-        $project = $baseline->getProject();
-
-        if (! $this->adapter_permissions->canUserAdministrateBaselineOnProject($current_user, $project)) {
-            throw new NotAuthorizedException(
-                sprintf(
-                    dgettext('tuleap-baseline', "You're not allowed to delete baseline in project with id %u"),
-                    $project->getID()
-                )
-            );
-        }
         $this->db->delete('plugin_baseline_baseline', ['id' => $baseline->getId()]);
     }
 
     /**
+     * Note: Authorizations may have been check earlier
      * @return Baseline[]
      */
     public function findByProject(PFUser $current_user, Project $project, int $page_size, int $baseline_offset): array
     {
-        if (! $this->adapter_permissions->canUserReadBaselineOnProject($current_user, $project)) {
-            return [];
-        }
-
         $rows = $this->db->safeQuery(
             'SELECT baseline.id, baseline.name, baseline.artifact_id, baseline.user_id, baseline.snapshot_date
             FROM plugin_baseline_baseline as baseline
@@ -178,6 +154,9 @@ class BaselineRepositoryAdapter implements BaselineRepository
         );
     }
 
+    /**
+     * Note: Authorizations may have been check earlier
+     */
     public function countByProject(Project $project): int
     {
         return $this->db->single(
