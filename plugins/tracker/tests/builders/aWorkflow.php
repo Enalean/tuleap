@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,6 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\Tracker\Workflow\WorkflowBackendLogger;
 
 require_once __DIR__.'/../bootstrap.php';
 
@@ -78,7 +80,7 @@ class Test_Workflow_Builder {
         return new Workflow(
             $this->global_rules_manager,
             $this->trigger_rules_manager,
-            mock('WorkflowBackendLogger'),
+            new WorkflowBackendLogger(Mockery::spy(BackendLogger::class), Logger::DEBUG),
             $this->id,
             $this->tracker_id,
             $this->field_id,

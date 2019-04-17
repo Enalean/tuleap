@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - Present. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,6 +19,7 @@
 
 use Tuleap\Tracker\Webhook\WebhookDao;
 use Tuleap\Tracker\Webhook\WebhookFactory;
+use Tuleap\Tracker\Workflow\WorkflowBackendLogger;
 
 class TrackerFactory {
 
@@ -656,7 +657,7 @@ class TrackerFactory {
      */
     public function getTriggerRulesManager() {
         $trigger_rule_dao        = new Tracker_Workflow_Trigger_RulesDao();
-        $workflow_backend_logger = new WorkflowBackendLogger(new BackendLogger());
+        $workflow_backend_logger = new WorkflowBackendLogger(new BackendLogger(), ForgeConfig::get('sys_logger_level'));
         $rules_processor         = new Tracker_Workflow_Trigger_RulesProcessor(
             new Tracker_Workflow_WorkflowUser(),
             $workflow_backend_logger

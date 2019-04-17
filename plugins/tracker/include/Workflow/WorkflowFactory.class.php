@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Codendi.
@@ -20,6 +20,7 @@
  */
 
 use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyDao;
+use Tuleap\Tracker\Workflow\WorkflowBackendLogger;
 
 class WorkflowFactory //phpcs:ignoreFile
 {
@@ -87,7 +88,7 @@ class WorkflowFactory //phpcs:ignoreFile
     {
         if (!isset(self::$_instance)) {
             $formelement_factory = Tracker_FormElementFactory::instance();
-            $logger = new WorkflowBackendLogger(new BackendLogger());
+            $logger = new WorkflowBackendLogger(new BackendLogger(), ForgeConfig::get('sys_logger_level'));
 
             $trigger_rules_manager = new Tracker_Workflow_Trigger_RulesManager(
                 new Tracker_Workflow_Trigger_RulesDao(),
