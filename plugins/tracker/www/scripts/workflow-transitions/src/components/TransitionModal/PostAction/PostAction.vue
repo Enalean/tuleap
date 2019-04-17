@@ -50,11 +50,6 @@ import { mapState } from "vuex";
 
 export default {
     name: "PostAction",
-    data() {
-        return {
-            POST_ACTION_TYPE
-        };
-    },
     props: {
         postAction: {
             type: Object,
@@ -63,6 +58,11 @@ export default {
         is_invalid: {
             type: Boolean
         }
+    },
+    data() {
+        return {
+            POST_ACTION_TYPE
+        };
     },
     computed: {
         ...mapState("transitionModal", ["is_modal_save_running"]),

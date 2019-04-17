@@ -34,7 +34,7 @@
 </template>
 <script>
 export default {
-    name: "TrackerPermissionsTableEmptyState",
+    name: "TrackerPermissionTableEmptyState",
     props: {
         selectedUgroupName: String
     },

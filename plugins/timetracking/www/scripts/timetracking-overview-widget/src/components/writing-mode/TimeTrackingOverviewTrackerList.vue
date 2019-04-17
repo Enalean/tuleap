@@ -47,7 +47,7 @@
 import { mapState } from "vuex";
 
 export default {
-    name: "TrackerListWritingMode",
+    name: "TimeTrackingOverviewTrackerList",
     computed: {
         ...mapState(["selected_trackers"])
     },

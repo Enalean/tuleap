@@ -52,13 +52,13 @@
 import { modal as createModal } from "tlp";
 
 export default {
+    props: {
+        body_class: String
+    },
     computed: {
         close() {
             return this.$gettext("Close");
         }
-    },
-    props: {
-        body_class: String
     },
     mounted() {
         const modal = createModal(this.$el);

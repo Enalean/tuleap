@@ -37,7 +37,7 @@
 import UgroupBadge from "../../project/admin/permissions-per-group/PermissionsPerGroupBadge.vue";
 
 export default {
-    name: "ReleasePermissions",
+    name: "FRSPackagePermissionsTablePackageRelease",
     components: {
         UgroupBadge
     },

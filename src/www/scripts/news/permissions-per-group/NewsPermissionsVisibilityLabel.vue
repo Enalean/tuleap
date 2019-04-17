@@ -36,7 +36,7 @@
 </template>
 <script>
 export default {
-    name: "VisibilityLabel",
+    name: "NewsPermissionsVisibilityLabel",
     props: {
         isVisibilityPublic: Boolean
     }

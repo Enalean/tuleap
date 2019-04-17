@@ -55,14 +55,10 @@ import DropdownMenuCurrentFolder from "./ActionsDropDown/DropdownMenuCurrentFold
 import FileUploadManager from "./FilesUploads/FilesUploadsManager.vue";
 import NewItemModal from "./ModalNewItem/NewItemModal.vue";
 import NewFolderModal from "./ModalNewItem/NewFolderModal.vue";
-import UpdateFileModal from "./ModalUpdateItem/UpdateFileModal.vue";
-import UpdateEmbeddedFileModal from "./ModalUpdateItem/UpdateEmbeddedFileModal.vue";
 
 export default {
     name: "FolderHeader",
     components: {
-        UpdateEmbeddedFileModal,
-        UpdateFileModal,
         DropdownMenuCurrentFolder,
         NewFolderModal,
         DropdownButton,

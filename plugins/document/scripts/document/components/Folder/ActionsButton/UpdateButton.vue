@@ -35,7 +35,7 @@ import { TYPE_EMPTY, TYPE_WIKI } from "../../../constants.js";
 
 import { redirect_to_url } from "../../../helpers/location-helper.js";
 export default {
-    name: "UpdatButton",
+    name: "UpdateButton",
     props: {
         item: Object,
         buttonClasses: String,

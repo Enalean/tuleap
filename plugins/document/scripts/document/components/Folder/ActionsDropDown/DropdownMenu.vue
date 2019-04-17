@@ -56,7 +56,7 @@
            v-bind:href="getUrlForPane(PERMISSIONS_PANE_NAME)"
            class="tlp-dropdown-menu-item"
            role="menuitem"
-           data-test=docman-dropdown-permissions
+           data-test="docman-dropdown-permissions"
         >
             <i class="fa fa-fw fa-lock tlp-dropdown-menu-item-icon"></i>
             <span v-translate>
@@ -67,7 +67,7 @@
            v-bind:href="getUrlForPane(APPROVAL_TABLES_PANE_NAME)"
            class="tlp-dropdown-menu-item"
            role="menuitem"
-           data-test=docman-dropdown-approval-tables
+           data-test="docman-dropdown-approval-tables"
         >
             <i class="fa fa-fw fa-check-square-o tlp-dropdown-menu-item-icon"></i>
             <span v-translate>
@@ -91,7 +91,7 @@ import { mapState } from "vuex";
 import { TYPE_EMPTY } from "../../../constants.js";
 
 export default {
-    name: "DropDownMenu",
+    name: "DropdownMenu",
     props: {
         isInFolderEmptyState: Boolean,
         isInQuickLookMode: Boolean,

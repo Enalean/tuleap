@@ -36,7 +36,7 @@
 </template>
 <script>
 export default {
-    name: "PackageEmptyState",
+    name: "FRSPackagePermissionsTablePackageEmptyState",
     props: {
         selectedUgroupName: String
     },

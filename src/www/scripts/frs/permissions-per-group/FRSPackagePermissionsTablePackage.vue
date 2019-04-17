@@ -52,7 +52,7 @@ import EmptyState from "./FRSPackagePermissionsTablePackageEmptyState.vue";
 import ReleasePermissions from "./FRSPackagePermissionsTablePackageRelease.vue";
 
 export default {
-    name: "PackagePermissions",
+    name: "FRSPackagePermissionsTablePackage",
     components: {
         EmptyState,
         UgroupBadge,

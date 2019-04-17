@@ -42,12 +42,6 @@ export default {
             hidden_timeout_id: null
         };
     },
-    created() {
-        document.addEventListener("item-has-been-created-under-the-fold", this.show);
-        this.$once("hook:beforeDestroy", () => {
-            document.removeEventListener("item-has-been-created-under-the-fold", this.show);
-        });
-    },
     computed: {
         notification_class() {
             return {
@@ -55,6 +49,12 @@ export default {
                 "document-new-item-under-the-fold-notification-fast-fadeout": this.is_fast_fadeout
             };
         }
+    },
+    created() {
+        document.addEventListener("item-has-been-created-under-the-fold", this.show);
+        this.$once("hook:beforeDestroy", () => {
+            document.removeEventListener("item-has-been-created-under-the-fold", this.show);
+        });
     },
     methods: {
         show(event) {
