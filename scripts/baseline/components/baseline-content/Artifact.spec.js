@@ -142,9 +142,7 @@ describe("Artifact", () => {
         describe("when artifacts doest not have linked artifact", () => {
             beforeEach(async () => {
                 wrapper.setProps({
-                    artifact: create("baseline_artifact", "presented"),
-                    linked_artifact_ids: [],
-                    linked_artifacts: []
+                    artifact: create("baseline_artifact", "presented", "without_linked_artifacts")
                 });
                 await wrapper.vm.$nextTick();
             });

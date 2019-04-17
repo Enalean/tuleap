@@ -18,10 +18,18 @@
  *
  */
 
-import { getArtifact, getTracker, getUser } from "../api/rest-querier";
+import {
+    getArtifact,
+    getBaseline,
+    getBaselineArtifacts,
+    getTracker,
+    getUser
+} from "../api/rest-querier";
 import ArrayUtils from "../support/array-utils";
+import { fetchAllArtifacts } from "../api/request-manufacturer";
+import { presentLinkedArtifactsAsGraph } from "./baseline-artifact";
 
-export { presentBaseline, presentBaselines, presentArtifacts };
+export { presentBaseline, presentBaselines, presentBaselineWithArtifactsAsGraph };
 
 async function presentBaselines(baselines) {
     let users_loading = fetchUsers(baselines);
@@ -41,6 +49,22 @@ async function presentBaselines(baselines) {
 
         return { ...baseline, author, artifact };
     });
+}
+
+async function presentBaselineWithArtifactsAsGraph(baseline_id) {
+    const baseline_loading = getBaseline(baseline_id);
+    const first_level_artifacts_loading = getBaselineArtifacts(baseline_id);
+
+    const baseline = await baseline_loading;
+    const first_level_artifacts = await first_level_artifacts_loading;
+
+    const presented_baseline = await presentBaseline(baseline);
+    const all_artifacts = await fetchAllArtifacts(baseline_id, first_level_artifacts);
+    const first_level_artifacts_as_graph = presentLinkedArtifactsAsGraph(
+        first_level_artifacts,
+        all_artifacts
+    );
+    return { ...presented_baseline, first_level_artifacts: first_level_artifacts_as_graph };
 }
 
 function fetchUsers(baselines) {
@@ -67,8 +91,4 @@ async function presentBaseline(baseline) {
     const user = await getUser(baseline.author_id);
 
     return { ...baseline, author: user };
-}
-
-function presentArtifacts(artifacts, baseline_id) {
-    return artifacts.map(artifact => ({ ...artifact, baseline_id }));
 }

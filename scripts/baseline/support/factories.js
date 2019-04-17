@@ -98,6 +98,10 @@ const factories = {
         presented: {
             linked_artifacts: [],
             is_depth_limit_reached: false
+        },
+        without_linked_artifacts: {
+            linked_artifact_ids: [],
+            linked_artifacts: []
         }
     },
     user: {

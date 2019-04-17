@@ -23,30 +23,24 @@ import localVue from "../../../support/local-vue";
 import ArtifactComparison from "./ArtifactComparison.vue";
 import ArtifactsListComparison from "./ArtifactsListComparison.vue";
 import BaselineDepthLimitReachedMessage from "../../common/BaselineDepthLimitReachedMessage.vue";
-import { restore, rewire$getBaselineArtifactsByIds } from "../../../api/rest-querier";
 
 describe("ArtifactComparison", () => {
     let wrapper;
-    let getBaselineArtifactsByIds;
+    let linked_artifact;
 
-    beforeEach(async () => {
-        getBaselineArtifactsByIds = jasmine.createSpy("getBaselineArtifactsByIds");
-        getBaselineArtifactsByIds.and.returnValue(Promise.resolve([create("artifact")]));
-        rewire$getBaselineArtifactsByIds(getBaselineArtifactsByIds);
-
+    beforeEach(() => {
+        linked_artifact = create("baseline_artifact", "presented", { id: 2 });
         wrapper = shallowMount(ArtifactComparison, {
             localVue,
             propsData: {
-                reference: create("baseline_artifact", { linked_artifact_ids: [1] }),
-                compared_to: create("baseline_artifact"),
-                current_depth: 1
+                reference: create("baseline_artifact", "presented", {
+                    linked_artifact_ids: [2],
+                    linked_artifacts: [linked_artifact]
+                }),
+                compared_to: create("baseline_artifact", "presented")
             }
         });
-
-        await wrapper.vm.$nextTick();
     });
-
-    afterEach(restore);
 
     it("does not show depth limit message", () => {
         expect(wrapper.contains(BaselineDepthLimitReachedMessage)).toBeFalsy();
@@ -56,17 +50,11 @@ describe("ArtifactComparison", () => {
         expect(wrapper.contains(ArtifactsListComparison)).toBeTruthy();
     });
 
-    it("does calls getBaselineArtifactsByIds", () => {
-        expect(getBaselineArtifactsByIds).toHaveBeenCalled();
-    });
-
     describe("when artifacts does not have linked artifact", () => {
         beforeEach(async () => {
-            getBaselineArtifactsByIds.calls.reset();
-
             wrapper.setProps({
-                reference: create("baseline_artifact", { linked_artifact_ids: [] }),
-                compared_to: create("baseline_artifact", { linked_artifact_ids: [] })
+                reference: create("baseline_artifact", "presented", "without_linked_artifacts"),
+                compared_to: create("baseline_artifact", "presented", "without_linked_artifacts")
             });
 
             await wrapper.vm.$nextTick();
@@ -79,47 +67,24 @@ describe("ArtifactComparison", () => {
         it("does not show artifacts list comparison", () => {
             expect(wrapper.contains(ArtifactsListComparison)).toBeFalsy();
         });
-
-        it("does not call getBaselineArtifactsByIds", () => {
-            expect(getBaselineArtifactsByIds).not.toHaveBeenCalled();
-        });
     });
 
     describe("when the current depth has reached the limit", () => {
         beforeEach(async () => {
-            getBaselineArtifactsByIds.calls.reset();
-
             wrapper.setProps({
-                current_depth: 1000
+                reference: create("baseline_artifact", "presented", {
+                    is_depth_limit_reached: true
+                }),
+                compared_to: create("baseline_artifact", "presented", {
+                    is_depth_limit_reached: true
+                })
             });
 
             await wrapper.vm.$nextTick();
         });
 
-        it("shows information message", () => {
+        it("shows depth limit message", () => {
             expect(wrapper.contains(BaselineDepthLimitReachedMessage)).toBeTruthy();
-        });
-
-        it("does not call getBaselineArtifactsByIds", () => {
-            expect(getBaselineArtifactsByIds).not.toHaveBeenCalled();
-        });
-
-        describe("when artifacts does not have linked artifact", () => {
-            beforeEach(async () => {
-                wrapper.setProps({
-                    reference: create("artifact", { linked_artifact_ids: [] }),
-                    compared_to: create("artifact", { linked_artifact_ids: [] })
-                });
-                await wrapper.vm.$nextTick();
-            });
-
-            it("does not show depth limit message", () => {
-                expect(wrapper.contains(BaselineDepthLimitReachedMessage)).toBeFalsy();
-            });
-
-            it("does not shows artifacts list comparison component", () => {
-                expect(wrapper.contains(ArtifactsListComparison)).toBeFalsy();
-            });
         });
     });
 });

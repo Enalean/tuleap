@@ -31,15 +31,20 @@ describe("ArtifactsListComparison", () => {
             localVue,
             propsData: {
                 reference_artifacts: [],
-                compared_artifacts: [],
-                current_depth: 1
+                compared_artifacts: []
             }
         });
     });
 
     describe("#artifact_comparisons", () => {
-        const reference = create("baseline_artifact", { id: 1, description: "old description" });
-        const compared_to = create("baseline_artifact", { id: 1, description: "new description" });
+        const reference = create("baseline_artifact", "presented", {
+            id: 1,
+            description: "old description"
+        });
+        const compared_to = create("baseline_artifact", "presented", {
+            id: 1,
+            description: "new description"
+        });
 
         beforeEach(() => {
             wrapper.setProps({
@@ -55,7 +60,7 @@ describe("ArtifactsListComparison", () => {
         describe("when artifact removed", () => {
             beforeEach(() => {
                 wrapper.setProps({
-                    reference_artifacts: [create("baseline_artifact")],
+                    reference_artifacts: [create("baseline_artifact", "presented")],
                     compared_artifacts: []
                 });
             });
@@ -67,7 +72,7 @@ describe("ArtifactsListComparison", () => {
     });
 
     describe("#added_artifacts", () => {
-        const added_artifact = create("baseline_artifact");
+        const added_artifact = create("baseline_artifact", "presented");
 
         beforeEach(() => {
             wrapper.setProps({ reference_artifacts: [], compared_artifacts: [added_artifact] });
@@ -79,7 +84,7 @@ describe("ArtifactsListComparison", () => {
     });
 
     describe("#removed_artifacts", () => {
-        const removed_artifact = create("baseline_artifact");
+        const removed_artifact = create("baseline_artifact", "presented");
 
         beforeEach(() => {
             wrapper.setProps({ reference_artifacts: [removed_artifact], compared_artifacts: [] });

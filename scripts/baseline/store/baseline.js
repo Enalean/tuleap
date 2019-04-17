@@ -17,10 +17,7 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { getBaseline, getBaselineArtifacts } from "../api/rest-querier";
-import { presentBaseline } from "../presenters/baseline";
-import { presentLinkedArtifactsAsGraph } from "../presenters/baseline-artifact";
-import { fetchAllArtifacts } from "../api/request-manufacturer";
+import { presentBaselineWithArtifactsAsGraph } from "../presenters/baseline";
 
 export default {
     namespaced: true,
@@ -35,24 +32,10 @@ export default {
         async load({ commit }, baseline_id) {
             commit("startBaselineLoading");
             try {
-                const baseline_loading = getBaseline(baseline_id);
-                const first_level_artifacts_loading = getBaselineArtifacts(baseline_id);
-
-                const baseline = await baseline_loading;
-                const first_level_artifacts = await first_level_artifacts_loading;
-
-                const presented_baseline = await presentBaseline(baseline);
-
-                const all_artifacts = await fetchAllArtifacts(baseline_id, first_level_artifacts);
-                const first_level_artifacts_as_graph = presentLinkedArtifactsAsGraph(
-                    first_level_artifacts,
-                    all_artifacts
+                const presented_baseline_as_graph = await presentBaselineWithArtifactsAsGraph(
+                    baseline_id
                 );
-
-                commit("updateBaseline", {
-                    ...presented_baseline,
-                    first_level_artifacts: first_level_artifacts_as_graph
-                });
+                commit("updateBaseline", presented_baseline_as_graph);
             } catch (e) {
                 commit("failBaselineLoading");
             } finally {

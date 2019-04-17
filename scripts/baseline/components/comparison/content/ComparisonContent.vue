@@ -19,37 +19,40 @@
   -->
 
 <template>
-    <div>
-        <artifacts-list-comparison-skeleton v-if="is_loading"/>
+    <div class="tlp-framed-vertically">
+        <section class="tlp-pane">
+            <div class="tlp-pane-container">
+                <section class="tlp-pane-section comparison-content">
+                    <artifacts-list-comparison-skeleton v-if="is_comparison_loading"/>
 
-        <div v-else-if="is_loading_failed">
-            <div class="tlp-alert-danger">
-                <translate>Cannot fetch baseline artifacts</translate>
+                    <div v-else-if="is_comparison_loading_failed">
+                        <div class="tlp-alert-danger">
+                            <translate>Cannot fetch baseline artifacts</translate>
+                        </div>
+                    </div>
+
+                    <artifacts-list-comparison
+                        v-else-if="are_some_first_level_artifacts_available"
+                        v-bind:reference_artifacts="base_baseline.first_level_artifacts"
+                        v-bind:compared_artifacts="compared_to_baseline.first_level_artifacts"
+                    />
+                    <span
+                        v-else
+                        class="baseline-empty-information-message"
+                        v-translate
+                    >
+                        No artifact to compare
+                    </span>
+                </section>
             </div>
-        </div>
-
-        <span
-            v-else-if="!are_some_artifacts_available"
-            class="baseline-empty-information-message"
-            v-translate
-        >
-            No artifact to compare
-        </span>
-
-        <artifacts-list-comparison
-            v-else
-            v-bind:current_depth="1"
-            v-bind:reference_artifacts="reference_artifacts"
-            v-bind:compared_artifacts="compared_artifacts"
-        />
+        </section>
     </div>
 </template>
 
 <script>
-import { getBaselineArtifacts } from "../../../api/rest-querier";
-import { presentArtifacts } from "../../../presenters/baseline";
 import ArtifactsListComparisonSkeleton from "./ArtifactsListComparisonSkeleton.vue";
 import ArtifactsListComparison from "./ArtifactsListComparison.vue";
+import { mapState } from "vuex";
 
 export default {
     name: "ComparisonContent",
@@ -61,49 +64,38 @@ export default {
         to_baseline_id: { require: true, type: Number }
     },
 
-    data() {
-        return {
-            reference_artifacts: null,
-            compared_artifacts: null,
-            is_loading_failed: false,
-            is_loading: true
-        };
-    },
-
     computed: {
-        are_some_artifacts_available() {
+        ...mapState("comparison", [
+            "base_baseline",
+            "compared_to_baseline",
+            "is_comparison_loading_failed",
+            "is_comparison_loading"
+        ]),
+
+        is_base_baseline_available() {
+            return this.base_baseline !== null && this.base_baseline !== undefined;
+        },
+
+        is_compared_to_baseline_available() {
+            return this.base_baseline !== null && this.base_baseline !== undefined;
+        },
+
+        are_some_first_level_artifacts_available() {
             return (
-                this.reference_artifacts !== null &&
-                this.reference_artifacts.length > 0 &&
-                this.compared_artifacts !== null &&
-                this.compared_artifacts.length > 0
+                !this.is_comparison_loading &&
+                this.is_base_baseline_available &&
+                this.is_compared_to_baseline_available &&
+                this.base_baseline.first_level_artifacts.length > 0 &&
+                this.compared_to_baseline.first_level_artifacts.length > 0
             );
         }
     },
 
     mounted() {
-        this.fetchArtifacts();
-    },
-
-    methods: {
-        async fetchArtifacts() {
-            try {
-                const reference_artifacts = this.getPresentedLinkedArtifacts(this.from_baseline_id);
-                const compared_artifacts = this.getPresentedLinkedArtifacts(this.to_baseline_id);
-
-                this.reference_artifacts = await reference_artifacts;
-                this.compared_artifacts = await compared_artifacts;
-            } catch (e) {
-                this.is_loading_failed = true;
-            } finally {
-                this.is_loading = false;
-            }
-        },
-
-        async getPresentedLinkedArtifacts(baseline_id) {
-            const artifacts = await getBaselineArtifacts(baseline_id);
-            return presentArtifacts(artifacts, baseline_id);
-        }
+        this.$store.dispatch("comparison/load", {
+            base_baseline_id: this.from_baseline_id,
+            compared_to_baseline_id: this.to_baseline_id
+        });
     }
 };
 </script>

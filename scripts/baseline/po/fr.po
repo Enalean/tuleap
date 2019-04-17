@@ -57,9 +57,6 @@ msgstr "Impossible de charger les artefacts de la baseline"
 msgid "Cannot fetch baselines"
 msgstr "Impossible de charger les baselines"
 
-msgid "Cannot fetch linked artifacts"
-msgstr "Impossible de charger les artefacts liés"
-
 msgid "Cannot fetch milestones"
 msgstr "Impossible de charger les milestones"
 

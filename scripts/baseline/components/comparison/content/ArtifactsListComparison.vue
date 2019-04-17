@@ -28,7 +28,6 @@
             <artifact-comparison
                 v-bind:reference="comparison.reference"
                 v-bind:compared_to="comparison.compared_to"
-                v-bind:current_depth="current_depth"
             />
         </li>
         <li
@@ -59,8 +58,7 @@ export default {
 
     props: {
         reference_artifacts: { require: true, type: Array },
-        compared_artifacts: { require: true, type: Array },
-        current_depth: { required: true, type: Number }
+        compared_artifacts: { require: true, type: Array }
     },
 
     computed: {
