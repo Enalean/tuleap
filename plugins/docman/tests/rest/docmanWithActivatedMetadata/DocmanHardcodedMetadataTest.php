@@ -246,6 +246,80 @@ class DocmanHardcodedMetadataTest extends DocmanWithMetadataActivatedBase
         $this->assertEquals(400, $response->getStatusCode());
     }
 
+    /**
+     * @depends testGetRootId
+     */
+    public function testPostLinkWithStatusAndObsolescenceDate(int $root_id): void
+    {
+        $headers         = ['Content-Type' => 'application/json'];
+        $link_properties = ['link_url' => 'https://turfu.example.test'];
+        $query           = json_encode(
+            [
+                'title'             => 'To the future 2',
+                'description'       => 'A description',
+                'link_properties'   => $link_properties,
+                'status'            => 'approved',
+                'obsolescence_date' => '3000-08-25'
+            ]
+        );
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post('docman_folders/' . $root_id . "/links", $headers, $query)
+        );
+
+        $this->assertEquals(201, $response->getStatusCode());
+    }
+
+    /**
+     * @depends testGetRootId
+     */
+    public function testPostLinkWithStatusThrows400IfThereIsABadStatus(int $root_id): void
+    {
+        $headers         = ['Content-Type' => 'application/json'];
+        $link_properties = ['link_url' => 'https://turfu.example.test'];
+        $query           = json_encode(
+            [
+                'title'             => 'To the future 2',
+                'description'       => 'A description',
+                'link_properties'   => $link_properties,
+                'status'            => 'approveddg,sigvjzeg',
+                'obsolescence_date' => '3000-08-25'
+            ]
+        );
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post('docman_folders/' . $root_id . "/links", $headers, $query)
+        );
+
+        $this->assertEquals(400, $response->getStatusCode());
+    }
+
+    /**
+     * @depends testGetRootId
+     */
+    public function testPostLinkThrows400IfTheDateIsNotWellFormatted(int $root_id): void
+    {
+        $headers         = ['Content-Type' => 'application/json'];
+        $link_properties = ['link_url' => 'https://turfu.example.test'];
+        $query           = json_encode(
+            [
+                'title'             => 'To the future 3',
+                'description'       => 'A description',
+                'link_properties'   => $link_properties,
+                'status'            => 'approveddg,sigvjzeg',
+                'obsolescence_date' => '3000-08-25884444'
+            ]
+        );
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post('docman_folders/' . $root_id . "/links", $headers, $query)
+        );
+
+        $this->assertEquals(400, $response->getStatusCode());
+    }
 
     /**
      * Find first item in given array of items which has given title.
