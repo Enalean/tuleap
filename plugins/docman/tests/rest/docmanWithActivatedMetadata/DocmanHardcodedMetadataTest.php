@@ -160,6 +160,93 @@ class DocmanHardcodedMetadataTest extends DocmanWithMetadataActivatedBase
         $this->assertEquals(400, $response->getStatusCode());
     }
 
+
+    /**
+     * @depends testGetDocumentItemsForAdmin
+     */
+    public function testPostEmbeddedFileWithStatusAndObsolescenceDate(array $items): void
+    {
+
+        $folder_HM = $this->findItemByTitle($items, 'Folder HM');
+
+        $headers             = ['Content-Type' => 'application/json'];
+        $embedded_properties = ['content' => 'step4 : Play with metadata'];
+        $query               = json_encode(
+            [
+                'title'               => 'How to become a Tuleap 4 (embedded version)',
+                'description'         => 'A description',
+                'embedded_properties' => $embedded_properties,
+                'status'              => 'approved',
+                'obsolescence_date'   => '3000-08-25'
+            ]
+        );
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post('docman_folders/' . $folder_HM['id'] . "/embedded_files", $headers, $query)
+        );
+
+        $this->assertEquals(201, $response->getStatusCode());
+    }
+
+
+    /**
+     * @depends testGetDocumentItemsForAdmin
+     */
+    public function testPostEmbeddedFileThrows400IfThereIsABadStatus(array $items): void
+    {
+        $headers = ['Content-Type' => 'application/json'];
+
+        $folder_HM = $this->findItemByTitle($items, 'Folder HM');
+
+        $embedded_properties = ['content' => 'step5: Play with metadata and fail'];
+        $query               = json_encode(
+            [
+                'title'               => 'How to become a Tuleap 5 (embedded version)',
+                'description'         => 'A description',
+                'embedded_properties' => $embedded_properties,
+                'status'              => 'gj,sogpzjgp',
+                'obsolescence_date'   => '3000-08-25'
+            ]
+        );
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post('docman_folders/' . $folder_HM['id'] . "/embedded_files", $headers, $query)
+        );
+
+        $this->assertEquals(400, $response->getStatusCode());
+    }
+
+    /**
+     * @depends testGetDocumentItemsForAdmin
+     */
+    public function testPostEmbeddedFileThrows400IfTheDateIsNotWellFormatted(array $items): void
+    {
+        $headers = ['Content-Type' => 'application/json'];
+
+        $folder_HM = $this->findItemByTitle($items, 'Folder HM');
+
+        $embedded_properties = ['content' => 'step6 : Play with metadata and fail again'];
+        $query               = json_encode(
+            [
+                'title'               => 'How to become a Tuleap 6 (embedded version)',
+                'description'         => 'A description',
+                'embedded_properties' => $embedded_properties,
+                'status'              => 'approved',
+                'obsolescence_date'   => '3000-08-2585487474'
+            ]
+        );
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post('docman_folders/' . $folder_HM['id'] . "/embedded_files", $headers, $query)
+        );
+
+        $this->assertEquals(400, $response->getStatusCode());
+    }
+
+
     /**
      * Find first item in given array of items which has given title.
      *

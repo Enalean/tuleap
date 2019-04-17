@@ -519,6 +519,53 @@ class DocmanItemsTestFoldersTest extends DocmanBase
     }
 
     /**
+     * @depends testGetRootId
+     */
+    public function testPostEmbeddedWithObsolescenceDateWhenObsolescenceDateIsNotAllowedForProject(int $root_id): void
+    {
+        $headers = ['Content-Type' => 'application/json'];
+
+        $embedded_properties = ['content' => 'step2 : Stop using approval table'];
+        $query               = json_encode(
+            [
+                'title'               => 'How to become a Tuleap 2  (embedded version)',
+                'description'         => 'A description',
+                'embedded_properties' => $embedded_properties,
+                'obsolescence_date'   => '2019-02-25'
+            ]
+        );
+        $response            = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post('docman_folders/' . $root_id . "/embedded_files", $headers, $query)
+        );
+        $this->assertEquals(403, $response->getStatusCode());
+    }
+
+    /**
+     * @depends testGetRootId
+     */
+    public function testPostEmbeddedWithStatusWhenStatusIsNotAllowedForProject(int $root_id): void
+    {
+        $headers             = ['Content-Type' => 'application/json'];
+        $embedded_properties = ['content' => 'step3 : bruh'];
+        $query               = json_encode(
+            [
+                'title'               => 'How to become a Tuleap 3 (embedded version)',
+                'description'         => 'A description',
+                'embedded_properties' => $embedded_properties,
+                'status'              => 'approved'
+            ]
+        );
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post('docman_folders/' . $root_id . "/embedded_files", $headers, $query)
+        );
+
+        $this->assertEquals(403, $response->getStatusCode());
+    }
+
+    /**
      * Find first item in given array of items which has given title.
      * @return array|null Found item. null otherwise.
      */

@@ -473,8 +473,8 @@ class DocmanItemCreator
             $project,
             $representation->title,
             $representation->description,
-            ItemStatusMapper::ITEM_STATUS_NONE,
-            ItemRepresentation::OBSOLESCENCE_DATE_NONE,
+            $representation->status,
+            $representation->obsolescence_date,
             null,
             null,
             $representation->embedded_properties->content
