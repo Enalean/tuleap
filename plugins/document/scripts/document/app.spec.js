@@ -56,6 +56,8 @@ import "./components/Folder/ItemTitle/LinkCellTitle.spec.js";
 
 import "./components/Folder/QuickLook/QuickLookDocumentPreview.spec.js";
 
+import "./components/Folder/ProgressBar/UploadProgressBar.spec.js";
+
 import "./components/Folder/ModalCommon/ModalFooter.spec.js";
 
 import "./components/Folder/Property/ApprovalUpdateProperties.spec.js";

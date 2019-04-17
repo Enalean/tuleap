@@ -32,6 +32,7 @@
            v-bind:data-tlp-tooltip="cancel_title"
            role="button"
            v-on:click.prevent="cancel"
+           data-test="cancel-upload"
         >
             <i class="fa fa-times-circle"></i>
         </a>
