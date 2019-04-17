@@ -23,41 +23,38 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\REST;
 
-use Tuleap\Baseline\BaselineService;
+use Tuleap\Baseline\ComparisonService;
 use Tuleap\Baseline\CurrentUserProvider;
-use Tuleap\Baseline\NotAuthorizedException;
 use Tuleap\Baseline\ProjectRepository;
-use Tuleap\Baseline\REST\Exception\ForbiddenRestException;
 use Tuleap\Baseline\REST\Exception\NotFoundRestException;
 
-class ProjectBaselineController
+class ProjectComparisonController
 {
     /** @var CurrentUserProvider */
     private $current_user_provider;
 
-    /** @var BaselineService */
-    private $baseline_service;
+    /** @var ComparisonService */
+    private $comparison_service;
 
     /** @var ProjectRepository */
     private $project_repository;
 
     public function __construct(
         CurrentUserProvider $current_user_provider,
-        BaselineService $baseline_service,
+        ComparisonService $comparison_service,
         ProjectRepository $project_repository
     ) {
         $this->current_user_provider = $current_user_provider;
-        $this->baseline_service      = $baseline_service;
+        $this->comparison_service    = $comparison_service;
         $this->project_repository    = $project_repository;
     }
 
     /**
-     * @return BaselinesPageRepresentation requested baseline page, excluding not authorized baselines. More over, page
-     * total count is the real total count without any security filtering. Baselines are sorted by snapshot date (most recent first).
+     * @return ComparisonsPageRepresentation requested comparison page, excluding not authorized comparisons. More over, page
+     * total count is the real total count without any security filtering. Comparison are sorted by creation date (most recent first)
      * @throws NotFoundRestException 404
-     * @throws ForbiddenRestException 403
      */
-    public function get(int $project_id, int $limit, int $offset): BaselinesPageRepresentation
+    public function get(int $project_id, int $limit, int $offset): ComparisonsPageRepresentation
     {
         $current_user = $this->current_user_provider->getUser();
 
@@ -67,21 +64,12 @@ class ProjectBaselineController
                 dgettext('tuleap-baseline', 'No project found with this id')
             );
         }
-        try {
-            $page = $this->baseline_service->findByProject(
-                $current_user,
-                $project,
-                $limit,
-                $offset
-            );
-            return BaselinesPageRepresentation::build($page);
-        } catch (NotAuthorizedException $exception) {
-            throw new ForbiddenRestException(
-                sprintf(
-                    dgettext('tuleap-baseline', 'This operation is not allowed. %s'),
-                    $exception->getMessage()
-                )
-            );
-        }
+        $page = $this->comparison_service->findByProject(
+            $current_user,
+            $project,
+            $limit,
+            $offset
+        );
+        return ComparisonsPageRepresentation::build($page);
     }
 }

@@ -69,9 +69,9 @@ class BaselineService
     }
 
     /**
-     * Find baselines on given project, ordered by snapshot date.
+     * Find baselines on given project, ordered by snapshot date (most recent first).
      * @param int $page_size       Number of baselines to return
-     * @param int $baseline_offset Fetch baselines from this index (start with 0), following snapshot date order.
+     * @param int $baseline_offset Fetch baselines from this index (start with 0), following snapshot date order (in reverse order).
      * @return BaselinesPage requested baseline page, excluding not authorized baselines. More over, page
      *                             total count is the real total count without any security filtering.
      * @throws NotAuthorizedException

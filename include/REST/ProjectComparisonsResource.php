@@ -29,7 +29,7 @@ use Tuleap\Baseline\Support\ContainerBuilderFactory;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 
-class ProjectBaselinesResource extends AuthenticatedResource
+class ProjectComparisonsResource extends AuthenticatedResource
 {
     const MAX_PAGINATION_LIMIT = 50;
 
@@ -42,28 +42,28 @@ class ProjectBaselinesResource extends AuthenticatedResource
     }
 
     /**
-     * Get baselines
+     * Get baselines comparisons
      *
-     * Get all the baselines of a given project.
-     * /!\ Some baseline may be filtered with security reason, but total count returned represents all available
-     * baselines INCLUDING the ones you're not authorized to see.
+     * Get all the baselines comparisons of a given project.
+     * /!\ Some comparisons may be filtered with security reason, but total count returned represents all available
+     * comparisons INCLUDING the ones you're not authorized to see.
      *
-     * @url    GET {id}/baselines
+     * @url    GET {id}/baselines_comparisons
      * @access hybrid
      *
      * @param int $id     Id of the project
      * @param int $limit  Number of elements to fetch (not authorized element are hidden, so you may get less element than requested) {@from path}
-     * @param int $offset Position of the first element to display (first position is 0). Baselines are sorted by snapshot date (most recent first) {@from path}
+     * @param int $offset Position of the first element to display (first position is 0). Comparisons are sorted by creation date (most recent first) {@from path}
      *
-     * @return BaselinesPageRepresentation {@type Tuleap\Baseline\REST\BaselinesPageRepresentation}
+     * @return ComparisonsPageRepresentation {@type Tuleap\Baseline\REST\ComparisonsPageRepresentation}
      * @throws RestException 404
      */
-    public function getBaselines(int $id, int $limit = 10, int $offset = 0): BaselinesPageRepresentation
+    public function getComparisons(int $id, int $limit = 10, int $offset = 0): ComparisonsPageRepresentation
     {
         $this->checkAccess();
 
         $page_representation = $this->container
-            ->get(ProjectBaselineController::class)
+            ->get(ProjectComparisonController::class)
             ->get($id, $limit, $offset);
 
         Header::sendPaginationHeaders(
@@ -77,7 +77,7 @@ class ProjectBaselinesResource extends AuthenticatedResource
     }
 
     /**
-     * @url OPTIONS {id}/baselines
+     * @url OPTIONS {id}/baselines_comparisons
      */
     public function options(int $id)
     {

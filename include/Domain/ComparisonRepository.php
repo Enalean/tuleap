@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Baseline;
 
 use PFUser;
+use Project;
 
 interface ComparisonRepository
 {
@@ -33,4 +34,23 @@ interface ComparisonRepository
     public function add(TransientComparison $comparison, PFUser $current_user): Comparison;
 
     public function findById(PFUser $current_user, int $id): ?Comparison;
+
+    /**
+     * Find all comparisons on given project, ordered by creation date (most recent first).
+     * @param int $page_size         Number of comparisons to fetch
+     * @param int $comparison_offset Fetch comparisons from this index (start with 0), then follow creation date order (in reverse order).
+     * @return Comparison[] requested comparison, excluding not authorized ones
+     */
+    public function findByProject(
+        PFUser $current_user,
+        Project $project,
+        int $page_size,
+        int $comparison_offset
+    ): array;
+
+    /**
+     * @return int total count of all available comparisons in given project, excluding any security policy
+     * (for performances reasons)
+     */
+    public function countByProject(Project $project): int;
 }

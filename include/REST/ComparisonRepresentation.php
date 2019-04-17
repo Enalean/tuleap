@@ -49,7 +49,7 @@ class ComparisonRepresentation
     /** @var string */
     public $creation_date;
 
-    private function __construct(
+    public function __construct(
         int $id,
         string $name,
         ?string $comment,

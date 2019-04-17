@@ -25,6 +25,7 @@ namespace Tuleap\Baseline\Adapter;
 
 use ParagonIE\EasyDB\EasyDB;
 use PFUser;
+use Project;
 use Tuleap\Baseline\BaselineRepository;
 use Tuleap\Baseline\Comparison;
 use Tuleap\Baseline\ComparisonRepository;
@@ -125,6 +126,64 @@ class ComparisonRepositoryAdapter implements ComparisonRepository
             return null;
         }
         return $comparison;
+    }
+
+    /**
+     * @return Comparison[]
+     */
+    public function findByProject(PFUser $current_user, Project $project, int $page_size, int $comparison_offset): array
+    {
+        if (! $this->adapter_permissions->canUserReadBaselineOnProject($current_user, $project)) {
+            return [];
+        }
+
+        $rows = $this->db->safeQuery(
+            'SELECT 
+                comparison.id,
+                comparison.name,
+                comparison.comment,
+                comparison.base_baseline_id,
+                comparison.compared_to_baseline_id,
+                comparison.user_id,
+                comparison.creation_date
+            FROM plugin_baseline_comparison as comparison
+                 INNER JOIN plugin_baseline_baseline as baseline
+            ON baseline.id = comparison.base_baseline_id
+                 INNER JOIN tracker_artifact as artifact
+            ON artifact.id = baseline.artifact_id
+                 INNER JOIN tracker
+            ON tracker.id = artifact.tracker_id
+            WHERE tracker.group_id = ?
+            ORDER BY comparison.creation_date DESC
+            LIMIT ?
+            OFFSET ?',
+            [$project->getID(), $page_size, $comparison_offset]
+        );
+
+        return array_filter(
+            array_map(
+                function (array $row) use ($current_user) {
+                    return $this->mapRow($current_user, $row);
+                },
+                $rows
+            )
+        );
+    }
+
+    public function countByProject(Project $project): int
+    {
+        return $this->db->single(
+            'SELECT COUNT(comparison.id) as nb
+            FROM plugin_baseline_comparison as comparison
+                 INNER JOIN plugin_baseline_baseline as baseline
+            ON baseline.id = comparison.base_baseline_id
+                 INNER JOIN tracker_artifact as artifact
+            ON artifact.id = baseline.artifact_id
+                 INNER JOIN tracker
+            ON tracker.id = artifact.tracker_id
+            WHERE tracker.group_id = ?',
+            [$project->getID()]
+        );
     }
 
     private function mapRow(PFUser $current_user, array $row): ?Comparison

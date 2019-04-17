@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Baseline;
 
 use PFUser;
+use Project;
 
 class ComparisonService
 {
@@ -62,5 +63,28 @@ class ComparisonService
     public function findById(PFUser $current_user, int $id): ?Comparison
     {
         return $this->comparison_repository->findById($current_user, $id);
+    }
+
+    /**
+     * Find comparisons on given project, ordered by creation date (most recent first).
+     * @param int $page_size         Number of comparisons to return
+     * @param int $comparison_offset Fetch comparisons from this index (start with 0), following creation date order (in reverse order).
+     * @return ComparisonsPage requested comparison page, excluding not authorized comparisons. More over, page
+     *                               total count is the real total count without any security filtering.
+     */
+    public function findByProject(
+        PFUser $current_user,
+        Project $project,
+        int $page_size,
+        int $comparison_offset
+    ): ComparisonsPage {
+        $comparisons = $this->comparison_repository->findByProject(
+            $current_user,
+            $project,
+            $page_size,
+            $comparison_offset
+        );
+        $count       = $this->comparison_repository->countByProject($project);
+        return new ComparisonsPage($comparisons, $page_size, $comparison_offset, $count);
     }
 }

@@ -329,4 +329,111 @@ class ComparisonRepositoryAdapterTest extends TestCase
 
         $this->assertNull($baseline);
     }
+
+    public function testFindByProject()
+    {
+        $this->db->allows()
+            ->safeQuery(Mockery::type('string'), [102, 10, 3])
+            ->andReturn(
+                [
+                    [
+                        "id"                      => 1,
+                        "name"                    => "Persisted comparison",
+                        "comment"                 => null,
+                        "base_baseline_id"        => 1,
+                        "compared_to_baseline_id" => 2,
+                        "user_id"                 => 22,
+                        "creation_date"           => 1553176023
+                    ]
+                ]
+            );
+
+        $base_baseline = BaselineFactory::one()->build();
+        $this->baseline_repository->allows()
+            ->findById($this->current_user, 1)
+            ->andReturn($base_baseline);
+
+        $compared_to_baseline = BaselineFactory::one()->build();
+        $this->baseline_repository->allows()
+            ->findById($this->current_user, 2)
+            ->andReturn($compared_to_baseline);
+
+        $user = new PFUser();
+        $this->user_manager->allows()
+            ->getUserById(22)
+            ->andReturn($user);
+
+        $creation_date = DateTimeFactory::one();
+        $this->clock->allows()
+            ->at(1553176023)
+            ->andReturn($creation_date);
+
+        $this->adapter_permissions
+            ->allows(['canUserReadBaselineOnProject' => true]);
+
+        $project = ProjectFactory::oneWithId(102);
+
+        $baselines = $this->repository->findByProject($this->current_user, $project, 10, 3);
+
+        $expected_baselines = [new Comparison(
+            1,
+            "Persisted comparison",
+            null,
+            $base_baseline,
+            $compared_to_baseline,
+            $user,
+            $creation_date
+        )];
+        $this->assertEquals($expected_baselines, $baselines);
+    }
+
+    public function testFindByProjectIgnoresBaselinesWhereBaseBaselineIsNotFound()
+    {
+        $this->db->allows()
+            ->safeQuery(Mockery::type('string'), [102, 10, 3])
+            ->andReturn(
+                [
+                    [
+                        "id"                      => 1,
+                        "name"                    => "Persisted comparison",
+                        "comment"                 => null,
+                        "base_baseline_id"        => 1,
+                        "compared_to_baseline_id" => 2,
+                        "user_id"                 => 22,
+                        "creation_date"           => 1553176023
+                    ]
+                ]
+            );
+
+        $this->baseline_repository->allows()
+            ->findById($this->current_user, 1)
+            ->andReturn(null);
+
+        $user = new PFUser();
+        $this->user_manager->allows()
+            ->getUserById(22)
+            ->andReturn($user);
+
+
+        $this->adapter_permissions
+            ->allows(['canUserReadBaselineOnProject' => true]);
+
+        $project = ProjectFactory::oneWithId(102);
+
+        $baselines = $this->repository->findByProject($this->current_user, $project, 10, 3);
+
+        $this->assertEquals([], $baselines);
+    }
+
+    public function testCountByProject()
+    {
+        $project = ProjectFactory::oneWithId(102);
+        $this->db->allows()
+            ->single(Mockery::type('string'), [102])
+            ->andReturn(233);
+
+        $count = $this->repository->countByProject($project);
+
+        $this->assertEquals(233, $count);
+    }
 }

@@ -21,19 +21,27 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Baseline\REST;
+namespace Tuleap\Baseline\Factory;
 
-use Luracast\Restler\Restler;
-use Tuleap\Project\REST\ProjectRepresentation;
+use PFUser;
+use Tuleap\Baseline\Comparison;
+use Tuleap\Baseline\Support\DateTimeFactory;
 
-class BaselineRestResourcesInjector
+class ComparisonFactory
 {
-    public function populate(Restler $restler)
+    public static function one(): Comparison
     {
-        $restler->addAPIClass('\\Tuleap\\Baseline\\REST\\BaselinesResource', 'baselines');
-        $restler->addAPIClass(ProjectBaselinesResource::class, ProjectRepresentation::ROUTE);
-        $restler->addAPIClass(ProjectComparisonsResource::class, ProjectRepresentation::ROUTE);
-        $restler->addAPIClass(BaselineArtifactsResource::class, 'baselines');
-        $restler->addAPIClass(ComparisonsResource::class, 'baselines');
+        $base_baseline = BaselineFactory::one()->build();
+        return new Comparison(
+            1,
+            'Compare two baselines',
+            'Created for test purpose',
+            $base_baseline,
+            BaselineFactory::one()
+                ->artifact($base_baseline->getArtifact())
+                ->build(),
+            new PFUser(),
+            DateTimeFactory::one()
+        );
     }
 }

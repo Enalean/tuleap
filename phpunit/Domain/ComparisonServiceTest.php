@@ -28,9 +28,13 @@ require_once __DIR__ . '/../bootstrap.php';
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
+use PFUser;
 use PHPUnit\Framework\TestCase;
+use Project;
 use Tuleap\Baseline\Factory\BaselineArtifactFactory;
 use Tuleap\Baseline\Factory\BaselineFactory;
+use Tuleap\Baseline\Factory\ComparisonFactory;
+use Tuleap\Baseline\Factory\ProjectFactory;
 use Tuleap\Baseline\Factory\TransientComparisonFactory;
 use Tuleap\Baseline\Support\CurrentUserContext;
 
@@ -52,6 +56,19 @@ class ComparisonServiceTest extends TestCase
         $this->service               = new ComparisonService($this->comparison_repository);
     }
 
+    /** @var PFUser */
+    private $a_user;
+
+    /** @var Project|MockInterface */
+    private $a_project;
+
+    /** @before */
+    public function createEntities()
+    {
+        $this->a_user    = new PFUser();
+        $this->a_project = ProjectFactory::one();
+    }
+
     public function testCreateThrowsWhenGivenBaselinesAreNotOnSameRootArtifacts()
     {
         $this->expectException(InvalidComparisonException::class);
@@ -69,5 +86,25 @@ class ComparisonServiceTest extends TestCase
         $this->comparison_repository
             ->shouldReceive('add')
             ->never();
+    }
+
+    public function testFinByProject()
+    {
+        $comparisons = [ComparisonFactory::one()];
+        $this->comparison_repository
+            ->shouldReceive('findByProject')
+            ->with($this->a_user, $this->a_project, 10, 3)
+            ->andReturn($comparisons);
+        $this->comparison_repository
+            ->shouldReceive('countByProject')
+            ->with($this->a_project)
+            ->andReturn(233);
+
+        $comparisons_page = $this->service->findByProject($this->a_user, $this->a_project, 10, 3);
+
+        $this->assertEquals($comparisons, $comparisons_page->getComparisons());
+        $this->assertEquals(233, $comparisons_page->getTotalComparisonsCount());
+        $this->assertEquals(10, $comparisons_page->getPageSize());
+        $this->assertEquals(3, $comparisons_page->getComparisonOffset());
     }
 }

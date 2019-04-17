@@ -97,6 +97,36 @@ class ComparisonsResourceTest extends RestBase
         $this->assertNotNull($json_response['creation_date']);
     }
 
+    /**
+     * @depends testPostBaselineComparison
+     */
+    public function testGetByProject(): void
+    {
+        $project_id = $this->project_ids[BaselineFixtureData::PROJECT_NAME];
+        $url        = 'projects/' . $project_id . '/baselines_comparisons?limit=2';
+        $response   = $this->getResponseByName(
+            BaselineFixtureData::TEST_USER_NAME,
+            $this->client->get($url)
+        );
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $json_response = $response->json();
+        $this->assertGreaterThanOrEqual(1, $json_response['total_count']);
+
+        $comparisons_response = $json_response['comparisons'];
+        $this->assertGreaterThanOrEqual(1, count($comparisons_response));
+        $this->assertLessThanOrEqual(2, count($comparisons_response));
+
+        $baseline_response = $comparisons_response[0];
+        $this->assertNotNull($baseline_response['id']);
+        $this->assertNotNull($baseline_response['name']);
+        $this->assertNotNull($baseline_response['base_baseline_id']);
+        $this->assertNotNull($baseline_response['compared_to_baseline_id']);
+        $this->assertNotNull($baseline_response['author_id']);
+        $this->assertNotNull($baseline_response['creation_date']);
+    }
+
     private function createABaseline(int $artifact_id): array
     {
         $response = $this->getResponseByName(
