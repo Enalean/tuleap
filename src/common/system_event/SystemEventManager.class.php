@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2011 — 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 — Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Project\UserRemover;
+use Tuleap\Project\UserRemoverDao;
 use Tuleap\SVN\SVNAuthenticationCacheInvalidator;
 use Tuleap\System\ApacheServiceControl;
 use Tuleap\System\ServiceControl;
@@ -451,6 +453,22 @@ class SystemEventManager {
             $klass_params = array(Backend::instance(Backend::SVN));
             break;
         case SystemEvent::TYPE_PROJECT_IS_PRIVATE:
+            $klass          = $this->getClassForType($row['type']);
+            $ugroup_manager = new UGroupManager();
+            $klass_params   = [
+                $this->getSVNAuthenticationCacheInvalidator(),
+                new UserRemover(
+                    ProjectManager::instance(),
+                    EventManager::instance(),
+                    new ArtifactTypeFactory(false),
+                    new UserRemoverDao(),
+                    UserManager::instance(),
+                    new ProjectHistoryDao(),
+                    $ugroup_manager
+                ),
+                $ugroup_manager
+            ];
+            break;
         case SystemEvent::TYPE_PROJECT_ACTIVE:
         case SystemEvent::TYPE_PROJECT_DELETE:
         case SystemEvent::TYPE_PROJECT_SVN_AUTHENTICATION_CACHE_REFRESH:

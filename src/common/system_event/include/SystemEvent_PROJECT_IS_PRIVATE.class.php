@@ -22,6 +22,8 @@
  */
 
 use Tuleap\admin\ProjectCreation\ProjectVisibility\ProjectVisibilityConfigManager;
+use Tuleap\Project\Admin\ProjectWithoutRestrictedFeatureFlag;
+use Tuleap\Project\UserRemover;
 use Tuleap\SVN\SVNAuthenticationCacheInvalidator;
 
 
@@ -35,11 +37,23 @@ class SystemEvent_PROJECT_IS_PRIVATE extends SystemEvent
      * @var SVNAuthenticationCacheInvalidator
      */
     private $svn_authentication_cache_invalidator;
+    /**
+     * @var UserRemover
+     */
+    private $user_remover;
+    /**
+     * @var UGroupManager
+     */
+    private $ugroup_manager;
 
     public function injectDependencies(
-        SVNAuthenticationCacheInvalidator $svn_authentication_cache_invalidator
+        SVNAuthenticationCacheInvalidator $svn_authentication_cache_invalidator,
+        UserRemover $user_remover,
+        UGroupManager $ugroup_manager
     ) {
         $this->svn_authentication_cache_invalidator = $svn_authentication_cache_invalidator;
+        $this->user_remover                         = $user_remover;
+        $this->ugroup_manager                       = $ugroup_manager;
     }
 
     /**
@@ -61,47 +75,74 @@ class SystemEvent_PROJECT_IS_PRIVATE extends SystemEvent
     /**
      * Process stored event
      */
-    function process() {
+    public function process()
+    {
         list($group_id, $project_is_private) = $this->getParametersAsArray();
 
-        if ($project = $this->getProject($group_id)) {
-
-            if ($project->usesCVS()) {
-                if (!Backend::instance('CVS')->setCVSPrivacy($project, $project_is_private)) {
-                    $this->error("Could not set cvs privacy for project $group_id");
-                    return false;
-                }
-            }
-
-            if ($project->usesSVN()) {
-                $backendSVN    = Backend::instance('SVN');
-                if (!$backendSVN->setSVNPrivacy($project, $project_is_private)) {
-                    $this->error("Could not set svn privacy for project $group_id");
-                    return false;
-                }
-                if (!$backendSVN->updateSVNAccess($group_id, $project->getSVNRootPath()) ) {
-                    $this->error("Could not update svn access file for project $group_id");
-                    return false;
-                }
-            }
-
-            $should_notify_project_members = (bool) ForgeConfig::get(
-                ProjectVisibilityConfigManager::SEND_MAIL_ON_PROJECT_VISIBILITY_CHANGE
-            );
-
-            if ($should_notify_project_members) {
-                $this->notifyProjectMembers($project);
-            }
-
-            //allows to link plugins to this system event
-            $this->callSystemEventListeners( __CLASS__ );
-
-            $this->done();
-
-            return true;
+        $project = $this->getProject($group_id);
+        if ($project === null) {
+            return false;
         }
 
-        return false;
+        $this->cleanRestrictedUsersIfNecessary($project);
+
+        if ($project->usesCVS()) {
+            if (!Backend::instance('CVS')->setCVSPrivacy($project, $project_is_private)) {
+                $this->error("Could not set cvs privacy for project $group_id");
+                return false;
+            }
+        }
+
+        if ($project->usesSVN()) {
+            $backendSVN    = Backend::instance('SVN');
+            if (!$backendSVN->setSVNPrivacy($project, $project_is_private)) {
+                $this->error("Could not set svn privacy for project $group_id");
+                return false;
+            }
+            if (!$backendSVN->updateSVNAccess($group_id, $project->getSVNRootPath()) ) {
+                $this->error("Could not update svn access file for project $group_id");
+                return false;
+            }
+        }
+
+        $should_notify_project_members = (bool) ForgeConfig::get(
+            ProjectVisibilityConfigManager::SEND_MAIL_ON_PROJECT_VISIBILITY_CHANGE
+        );
+
+        if ($should_notify_project_members) {
+            $this->notifyProjectMembers($project);
+        }
+
+        //allows to link plugins to this system event
+        $this->callSystemEventListeners( __CLASS__ );
+
+        $this->done();
+
+        return true;
+    }
+
+    private function cleanRestrictedUsersIfNecessary(Project $project) : void
+    {
+        if (! ProjectWithoutRestrictedFeatureFlag::isEnabled() || ! ForgeConfig::areRestrictedUsersAllowed() ||
+            $project->getAccess() !== Project::ACCESS_PRIVATE_WO_RESTRICTED) {
+            return;
+        }
+        $project_members = $project->getMembers();
+        foreach ($project_members as $project_member) {
+            if ($project_member->isRestricted()) {
+                $this->user_remover->removeUserFromProject($project->getID(), $project_member->getId());
+            }
+        }
+
+        $static_ugroups = $this->ugroup_manager->getStaticUGroups($project);
+        foreach ($static_ugroups as $static_ugroup) {
+            $ugroup_members = $static_ugroup->getMembers();
+            foreach ($ugroup_members as $ugroup_member) {
+                if ($ugroup_member->isRestricted()) {
+                    $static_ugroup->removeUser($ugroup_member);
+                }
+            }
+        }
     }
 
     private function notifyProjectMembers(Project $project)
@@ -138,7 +179,7 @@ class SystemEvent_PROJECT_IS_PRIVATE extends SystemEvent
 
     private function getBody(Project $project, BaseLanguage $user_language): string
     {
-        if (\Tuleap\Project\Admin\ProjectWithoutRestrictedFeatureFlag::isEnabled() && ForgeConfig::areRestrictedUsersAllowed()) {
+        if (ProjectWithoutRestrictedFeatureFlag::isEnabled() && ForgeConfig::areRestrictedUsersAllowed()) {
             switch ($project->getAccess()) {
                 case Project::ACCESS_PUBLIC:
                     return $user_language->getText(

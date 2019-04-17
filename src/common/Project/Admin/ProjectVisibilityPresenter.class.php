@@ -58,11 +58,16 @@ class ProjectVisibilityPresenter
     public $can_configure_visibility;
     public $project_visibility_label;
     public $accept_tos_message;
+    /**
+     * @var int
+     */
+    public $number_of_restricted_users_in_project;
 
     public function __construct(
         BaseLanguage $language,
         $platform_allows_restricted,
-        $project_visibility
+        $project_visibility,
+        int $number_of_restricted_users_in_project
     ) {
         $this->language                         = $language;
         $this->platform_allows_restricted       = (bool) $platform_allows_restricted;
@@ -88,6 +93,8 @@ class ProjectVisibilityPresenter
         } else {
             $this->generateLegacyVisibilityOptions();
         }
+
+        $this->number_of_restricted_users_in_project = $number_of_restricted_users_in_project;
     }
 
     private function generateLegacyVisibilityOptions()

@@ -574,6 +574,8 @@ class UserDao extends DataAccessObject {
 
     /**
      * Return the result of  'FOUND_ROWS()' SQL method for the last query.
+     *
+     * @return string|false
      */
     function foundRows() {
         $sql = "SELECT FOUND_ROWS() as nb;";
@@ -649,14 +651,18 @@ class UserDao extends DataAccessObject {
      * the result according to the clicked header and the order of sort
      *
      * @param int $group_id
-     * @param String $pattern
-     * @param Integer $offset
-     * @param Integer $limit
-     * @param String $sort_header
-     * @param String $sort_order
+     * @param string $pattern
+     * @param integer $offset
+     * @param integer $limit
+     * @param string $sort_header
+     * @param string $sort_order
      * @param array $status_values
      *
-     * @return Array
+     * @psalm-return array{
+     *      users: DataAccessResult|false,
+     *      numrows: string|false
+     * }
+     * @return array
      */
     public function listAllUsers ($group_id, $pattern, $offset, $limit, $sort_header, $sort_order, $status_values)
     {

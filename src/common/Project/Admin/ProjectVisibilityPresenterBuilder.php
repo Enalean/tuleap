@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright Enalean (c) 2017. All rights reserved.
+ * Copyright Enalean (c) 2017-Present. All rights reserved.
  *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
+ * Tuleap and Enalean names and logos are registered trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
  * owners.
  *
@@ -40,13 +40,19 @@ class ProjectVisibilityPresenterBuilder
      * @var ServicesUsingTruncatedMailRetriever
      */
     private $service_truncated_mails_retriever;
+    /**
+     * @var RestrictedUsersProjectCounter
+     */
+    private $restricted_users_project_counter;
 
     public function __construct(
         ProjectVisibilityUserConfigurationPermissions $project_visibility_configuration,
-        ServicesUsingTruncatedMailRetriever $service_truncated_mails_retriever
+        ServicesUsingTruncatedMailRetriever $service_truncated_mails_retriever,
+        RestrictedUsersProjectCounter $restricted_users_project_counter
     ) {
         $this->project_visibility_configuration  = $project_visibility_configuration;
         $this->service_truncated_mails_retriever = $service_truncated_mails_retriever;
+        $this->restricted_users_project_counter  = $restricted_users_project_counter;
     }
 
     public function build(HTTPRequest $request)
@@ -56,7 +62,8 @@ class ProjectVisibilityPresenterBuilder
         $visibility_presenter = new ProjectVisibilityPresenter(
             $GLOBALS['Language'],
             ForgeConfig::areRestrictedUsersAllowed(),
-            $project->getAccess()
+            $project->getAccess(),
+            $this->restricted_users_project_counter->getNumberOfRestrictedUsersInProject($project)
         );
 
 

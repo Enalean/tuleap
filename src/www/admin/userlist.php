@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  * Copyright 1999-2000 (c) The SourceForge Crew
  *
  * This file is a part of Tuleap.
@@ -195,7 +195,7 @@ if (isset($user_name_search) && $user_name_search) {
         $GLOBALS['Response']->redirect('/admin/usergroup.php?user_id=' . $row['user_id']);
     }
 } else {
-    $result = $dao->listAllUsers($group_id, 0, $offset, $limit, $current_sort_header, $sort_order, $status_values);
+    $result = $dao->listAllUsers($group_id, '', $offset, $limit, $current_sort_header, $sort_order, $status_values);
 }
 
 $search_fields_presenter = new Tuleap\User\Admin\UserListSearchFieldsPresenter($user_name_search, $status_values);
