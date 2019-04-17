@@ -70,7 +70,7 @@ class UGroupBinding
     /**
      * Retrieve All Ugroups bound to a given ProjectUGroup
      *
-     * @param Integer $ugroupId Id of the source user goup
+     * @param integer $ugroupId Id of the source user goup
      *
      * @return Array
      */
@@ -250,8 +250,8 @@ class UGroupBinding
     /**
      * Bind a given user group to another one
      *
-     * @param Integer $ugroupId Id of the bound user group
-     * @param Integer $sourceId Id of the source user group
+     * @param integer $ugroupId Id of the bound user group
+     * @param integer $sourceId Id of the source user group
      *
      * @return boolean
      */
@@ -276,7 +276,7 @@ class UGroupBinding
     /**
      * Remove binding for a given user group
      *
-     * @param Integer $ugroupId Id of the user group we want to remove its binding
+     * @param integer $ugroupId Id of the user group we want to remove its binding
      *
      * @return boolean
      */

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2008. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2008
@@ -159,9 +159,9 @@ extends DataAccessObject
     /**
      * Check if a given ugroup is synchronized with an ldap group
      *
-     * @param Integer $ugroup_id User group id to check
+     * @param integer $ugroup_id User group id to check
      *
-     * @return Boolean
+     * @return boolean
      */
     function isSynchronizedUgroup($ugroup_id) {
         $ugroup_id = $this->da->escapeInt($ugroup_id);
@@ -177,9 +177,9 @@ extends DataAccessObject
     /**
      * Check if a given ugroup is preserving members
      *
-     * @param Integer $ugroup_id User group id to check
+     * @param integer $ugroup_id User group id to check
      *
-     * @return Boolean
+     * @return boolean
      */
     function isMembersPreserving($ugroup_id) {
         $ugroup_id = $this->da->escapeInt($ugroup_id);

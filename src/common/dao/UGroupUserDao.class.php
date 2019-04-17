@@ -114,10 +114,10 @@ class UGroupUserDao extends DataAccessObject {
     /**
      * Return project admins of given static group
      *
-     * @param Integer $groupId Id of the project
-     * @param Array   $ugroups List of ugroups
+     * @param integer $groupId Id of the project
+     * @param array   $ugroups List of ugroups
      *
-     * @return Data Access Result
+     * @return DataAccessResult|false
      */
     function returnProjectAdminsByStaticUGroupId($groupId, $ugroups) {
         $sql = 'SELECT u.email as email FROM user u
@@ -199,10 +199,10 @@ class UGroupUserDao extends DataAccessObject {
     /**
      * Clone a given user group from another one
      *
-     * @param Integer $source_ugroup_id Id of the user group from which we will copy users
-     * @param Integer $target_ugroup_id Id of the target user group
+     * @param integer $source_ugroup_id Id of the user group from which we will copy users
+     * @param integer $target_ugroup_id Id of the target user group
      *
-     * @return Boolean
+     * @return boolean
      */
     public function cloneUgroup($source_ugroup_id, $target_ugroup_id) {
         $source_ugroup_id = $this->da->escapeInt($source_ugroup_id);

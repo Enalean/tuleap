@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -39,7 +39,7 @@ class GitPanePresenter
      */
     public $project_id;
     /**
-     * @var null|int
+     * @var string|int
      */
     public $ugroup_id;
     /**

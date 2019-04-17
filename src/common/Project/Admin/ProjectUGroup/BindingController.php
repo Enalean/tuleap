@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -77,7 +77,7 @@ class BindingController
     {
         $ugroup_id = $ugroup->getId();
         if ($this->ugroup_binding->removeBinding($ugroup_id)) {
-            $this->history_dao->groupAddHistory("ugroup_remove_binding", $ugroup_id, $ugroup->getProjectId());
+            $this->history_dao->groupAddHistory("ugroup_remove_binding", (string) $ugroup_id, $ugroup->getProjectId());
             $this->edit_event_launcher->launch($ugroup);
         }
     }
