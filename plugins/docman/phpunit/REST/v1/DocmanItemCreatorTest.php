@@ -1001,4 +1001,95 @@ class DocmanItemCreatorTest extends TestCase
 
         $this->assertSame(12, $created_item_representation->id);
     }
+
+    public function testCreateLinkDocumentWithStatusAndObsolescenceDate(): void
+    {
+        $item_creator = new DocmanItemCreator(
+            $this->item_factory,
+            $this->document_ongoing_upload_retriever,
+            $this->document_to_upload_creator,
+            $this->creator_visitor,
+            $this->empty_file_to_upload_finisher,
+            $this->link_validity_checker,
+            $this->item_status_mapper,
+            $this->metadata_item_status_checker,
+            $this->metadata_obsolescence_date_checker,
+            $this->metadata_obsolesence_date_retriever
+        );
+
+        $parent_item  = \Mockery::mock(\Docman_Item::class);
+        $user         = \Mockery::mock(\PFUser::class);
+        $project      = \Mockery::mock(\Project::class);
+        $current_time = new \DateTimeImmutable();
+
+        $post_representation                            = new DocmanLinkPOSTRepresentation();
+        $post_representation->title                     = 'Link with status and Obsolescence date';
+        $post_representation->link_properties           = new LinkPropertiesRepresentation();
+        $post_representation->link_properties->link_url = 'https://my.example.test';
+        $post_representation->status                    = 'approved';
+        $post_representation->obsolescence_date         = '2019-10-11';
+
+
+        $this->document_ongoing_upload_retriever->shouldReceive('isThereAlreadyAnUploadOngoing')->andReturns(false);
+        $parent_item->shouldReceive('getId')->andReturns(11);
+        $user->shouldReceive('getId')->andReturns(222);
+        $project->shouldReceive('getID')->andReturns(102);
+
+        $this->item_status_mapper->shouldReceive('getItemStatusIdFromItemStatusString')
+                                 ->andReturn(PLUGIN_DOCMAN_ITEM_STATUS_REJECTED);
+
+        $this->metadata_obsolescence_date_checker->shouldReceive('checkObsolescenceDateUsage')->once();
+        $obsolescence_date_time_stamp = 123456;
+        $this->metadata_obsolesence_date_retriever->shouldReceive('getTimeStampOfDate')
+                                                  ->withArgs(
+                                                      [
+                                                          $post_representation->obsolescence_date,
+                                                          PLUGIN_DOCMAN_ITEM_TYPE_LINK
+                                                      ]
+                                                  )
+                                                  ->andReturn($obsolescence_date_time_stamp);
+
+        $this->metadata_obsolescence_date_checker->shouldReceive('checkDateValidity')->once();
+
+        $this->metadata_item_status_checker->shouldReceive(
+            'checkStatusIsNotSetWhenStatusMetadataIsNotAllowed'
+        )->andReturn(false);
+
+        $created_item = \Mockery::mock(\Docman_Link::class);
+        $created_item->shouldReceive('getId')->andReturns(12);
+        $created_item->shouldReceive('getParentId')->andReturns(11);
+        $created_item->makePartial();
+
+        $this->item_factory
+            ->shouldReceive('createWithoutOrdering')
+            ->with(
+                'Link with status and Obsolescence date',
+                '',
+                11,
+                PLUGIN_DOCMAN_ITEM_STATUS_REJECTED,
+                $obsolescence_date_time_stamp,
+                222,
+                PLUGIN_DOCMAN_ITEM_TYPE_LINK,
+                null,
+                'https://my.example.test'
+            )
+            ->once()
+            ->andReturns($created_item);
+
+        $this->item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
+
+        $this->creator_visitor->shouldReceive('visitLink')->once();
+
+        $this->link_validity_checker->shouldReceive("checkLinkValidity");
+
+        $created_item_representation = $item_creator->createLink(
+            $parent_item,
+            $user,
+            $post_representation,
+            $current_time,
+            $project
+        );
+
+        $this->assertSame(12, $created_item_representation->id);
+    }
 }

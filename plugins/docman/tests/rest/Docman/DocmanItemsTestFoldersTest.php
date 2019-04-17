@@ -566,6 +566,54 @@ class DocmanItemsTestFoldersTest extends DocmanBase
     }
 
     /**
+     * @depends testGetRootId
+     */
+    public function testPostLinkWithStatusWhenStatusIsNotAllowedForProject(int $root_id): void
+    {
+        $headers         = ['Content-Type' => 'application/json'];
+        $link_properties = ['link_url' => 'https://turfu.example.test'];
+        $query           = json_encode(
+            [
+                'title'           => 'To the future 2',
+                'description'     => 'A description',
+                'link_properties' => $link_properties,
+                'status'          => 'approved'
+            ]
+        );
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post('docman_folders/' . $root_id . "/links", $headers, $query)
+        );
+
+        $this->assertEquals(403, $response->getStatusCode());
+    }
+
+    /**
+     * @depends testGetRootId
+     */
+    public function testPostLinkWithObsolescenceDateWhenObsolescenceDateIsNotAllowedForProject(int $root_id): void
+    {
+        $headers         = ['Content-Type' => 'application/json'];
+        $link_properties = ['link_url' => 'https://turfu.example.test'];
+        $query           = json_encode(
+            [
+                'title'             => 'To the future 3, the return',
+                'description'       => 'A description',
+                'link_properties'   => $link_properties,
+                'obsolescence_date' => '3000-08-08'
+            ]
+        );
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post('docman_folders/' . $root_id . "/links", $headers, $query)
+        );
+
+        $this->assertEquals(403, $response->getStatusCode());
+    }
+
+    /**
      * Find first item in given array of items which has given title.
      * @return array|null Found item. null otherwise.
      */
