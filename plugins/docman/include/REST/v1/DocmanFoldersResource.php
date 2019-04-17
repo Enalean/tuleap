@@ -333,13 +333,25 @@ class DocmanFoldersResource extends AuthenticatedResource
             throw new RestException(403, 'Embedded files are not allowed');
         }
 
-        return $docman_item_creator->createEmbedded(
-            $parent,
-            $current_user,
-            $embeds_representation,
-            new \DateTimeImmutable(),
-            $project
-        );
+        try {
+            return $docman_item_creator->createEmbedded(
+                $parent,
+                $current_user,
+                $embeds_representation,
+                new \DateTimeImmutable(),
+                $project
+            );
+        } catch (Metadata\StatusNotFoundException $e) {
+            throw new RestException(400, $e->getMessage());
+        } catch (Metadata\ItemStatusUsageMismatchException $e) {
+            throw new RestException(403, 'The "Status" property is not activated for this item.');
+        } catch (Metadata\InvalidDateComparisonException $e) {
+            throw new RestException(400, 'The obsolescence date is before the current date');
+        } catch (Metadata\InvalidDateTimeFormatException $e) {
+            throw new RestException(400, 'The date format is incorrect. The format should be YYYY-MM-DD');
+        } catch (Metadata\ObsoloscenceDateUsageMismatchException $e) {
+            throw new RestException(403, $e->getMessage());
+        }
     }
 
     /**
