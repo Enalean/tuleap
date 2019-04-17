@@ -83,6 +83,82 @@ class DocmanHardcodedMetadataTest extends DocmanWithMetadataActivatedBase
         $this->assertEquals(201, $response->getStatusCode());
     }
 
+    /**
+     * @depends testGetDocumentItemsForAdmin
+     */
+    public function testPostEmptyWithStatusAndObsolescenceDate(array $items): void
+    {
+        $headers = ['Content-Type' => 'application/json'];
+
+        $folder_HM = $this->findItemByTitle($items, 'Folder HM');
+
+        $query = json_encode(
+            [
+                'title'             => 'Faboulous Empty With Status',
+                'status'            => 'rejected',
+                'obsolescence_date' => '3000-08-20'
+            ]
+        );
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post('docman_folders/' . $folder_HM['id'] . "/empties", $headers, $query)
+        );
+
+        $this->assertEquals(201, $response->getStatusCode());
+    }
+
+    /**
+     * @depends testGetDocumentItemsForAdmin
+     */
+    public function testPostEmptyThrows400IfTheDateIsNotWellFormatted(array $items): void
+    {
+        $headers = ['Content-Type' => 'application/json'];
+
+        $folder_HM = $this->findItemByTitle($items, 'Folder HM');
+
+        $query = json_encode(
+            [
+                'title'             => 'Faboulous Folder With Status',
+                'description'       => 'A description',
+                'status'            => 'rejected',
+                'obsolescence_date' => '3000-08-25844841854'
+            ]
+        );
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post('docman_folders/' . $folder_HM['id'] . "/empties", $headers, $query)
+        );
+
+        $this->assertEquals(400, $response->getStatusCode());
+    }
+
+    /**
+     * @depends testGetDocumentItemsForAdmin
+     */
+    public function testPostEmptyThrows400IfThereIsABadStatus(array $items): void
+    {
+        $headers = ['Content-Type' => 'application/json'];
+
+        $folder_HM = $this->findItemByTitle($items, 'Folder HM');
+
+        $query = json_encode(
+            [
+                'title'             => 'Faboulous Folder With Status',
+                'description'       => 'A description',
+                'status'            => 'nononono',
+                'obsolescence_date' => '3000-08-25844841854'
+            ]
+        );
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post('docman_folders/' . $folder_HM['id'] . "/empties", $headers, $query)
+        );
+
+        $this->assertEquals(400, $response->getStatusCode());
+    }
 
     /**
      * Find first item in given array of items which has given title.

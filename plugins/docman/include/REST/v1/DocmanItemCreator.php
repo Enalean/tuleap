@@ -33,7 +33,9 @@ use Tuleap\Docman\REST\v1\Folders\DocmanEmptyPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Folders\DocmanFolderPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Links\DocmanLinkPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Links\DocmanLinksValidityChecker;
+use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataObsolescenceDateRetriever;
 use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataUsageChecker;
+use Tuleap\Docman\REST\v1\Metadata\HardcodedMetdataObsolescenceDateChecker;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
 use Tuleap\Docman\REST\v1\Metadata\StatusNotFoundException;
 use Tuleap\Docman\REST\v1\Wiki\DocmanWikiPOSTRepresentation;
@@ -82,6 +84,14 @@ class DocmanItemCreator
      * @var HardcodedMetadataUsageChecker
      */
     private $metadata_usage_checker;
+    /**
+     * @var HardcodedMetdataObsolescenceDateChecker
+     */
+    private $obsolescence_date_checker;
+    /**
+     * @var HardcodedMetadataObsolescenceDateRetriever
+     */
+    private $date_retriever;
 
     public function __construct(
         \Docman_ItemFactory $item_factory,
@@ -91,7 +101,9 @@ class DocmanItemCreator
         EmptyFileToUploadFinisher $empty_file_to_upload_finisher,
         DocmanLinksValidityChecker $links_validity_checker,
         ItemStatusMapper $status_mapper,
-        HardcodedMetadataUsageChecker $metadata_usage_checker
+        HardcodedMetadataUsageChecker $metadata_usage_checker,
+        HardcodedMetdataObsolescenceDateChecker $obsolescence_date_checker,
+        HardcodedMetadataObsolescenceDateRetriever $date_retriever
     ) {
         $this->item_factory                      = $item_factory;
         $this->document_ongoing_upload_retriever = $document_ongoing_upload_retriever;
@@ -101,6 +113,8 @@ class DocmanItemCreator
         $this->links_validity_checker            = $links_validity_checker;
         $this->status_mapper                     = $status_mapper;
         $this->metadata_usage_checker            = $metadata_usage_checker;
+        $this->obsolescence_date_checker         = $obsolescence_date_checker;
+        $this->date_retriever                    = $date_retriever;
     }
 
     /**
@@ -127,8 +141,26 @@ class DocmanItemCreator
     }
 
     /**
+     * @param                    $item_type_id
+     * @param \DateTimeImmutable $current_time
+     * @param Docman_Item        $parent_item
+     * @param PFUser             $user
+     * @param Project            $project
+     * @param                    $title
+     * @param                    $description
+     * @param string             $status
+     * @param string             $obsolescence_date
+     * @param                    $wiki_page
+     * @param                    $link_url
+     * @param                    $content
+     *
+     * @return CreatedItemRepresentation
+     * @throws Metadata\InvalidDateComparisonException
+     * @throws Metadata\InvalidDateTimeFormatException
+     * @throws Metadata\ItemStatusUsageMismatchException
+     * @throws Metadata\ObsoloscenceDateUsageMismatchException
+     * @throws StatusNotFoundException
      * @throws \Tuleap\Docman\CannotInstantiateItemWeHaveJustCreatedInDBException
-     ** @throws StatusNotFoundException
      */
     private function createDocument(
         $item_type_id,
@@ -138,7 +170,8 @@ class DocmanItemCreator
         Project $project,
         $title,
         $description,
-        string $status,
+        ?string $status,
+        ?string $obsolescence_date,
         $wiki_page,
         $link_url,
         $content
@@ -147,11 +180,23 @@ class DocmanItemCreator
         $this->metadata_usage_checker->checkStatusIsNotSetWhenStatusMetadataIsNotAllowed($status);
         $status_id = $this->status_mapper->getItemStatusIdFromItemStatusString($status);
 
+        $this->obsolescence_date_checker->checkObsolescenceDateUsage($obsolescence_date, $item_type_id);
+        $obsolescence_date_time_stamp = $this->date_retriever->getTimeStampOfDate(
+            $obsolescence_date,
+            $item_type_id
+        );
+        $this->obsolescence_date_checker->checkDateValidity(
+            $current_time->getTimestamp(),
+            $obsolescence_date_time_stamp,
+            $item_type_id
+        );
+
         $item = $this->item_factory->createWithoutOrdering(
             $title,
             $description,
             $parent_item->getId(),
             $status_id,
+            $obsolescence_date_time_stamp,
             $user->getId(),
             $item_type_id,
             $wiki_page,
@@ -229,10 +274,20 @@ class DocmanItemCreator
     }
 
     /**
-     * @throws \Tuleap\Docman\CannotInstantiateItemWeHaveJustCreatedInDBException
-     * @throws RestException
+     * @param Docman_Item                    $parent_item
+     * @param PFUser                         $user
+     * @param DocmanFolderPOSTRepresentation $representation
+     * @param \DateTimeImmutable             $current_time
+     * @param Project                        $project
+     *
+     * @return CreatedItemRepresentation
+     * @throws Metadata\InvalidDateComparisonException
+     * @throws Metadata\InvalidDateTimeFormatException
      * @throws Metadata\ItemStatusUsageMismatchException
+     * @throws Metadata\ObsoloscenceDateUsageMismatchException
+     * @throws RestException
      * @throws StatusNotFoundException
+     * @throws \Tuleap\Docman\CannotInstantiateItemWeHaveJustCreatedInDBException
      */
     public function createFolder(
         Docman_Item $parent_item,
@@ -262,6 +317,7 @@ class DocmanItemCreator
             $representation->title,
             $representation->description,
             $representation->status,
+            ItemRepresentation::OBSOLESCENCE_DATE_NONE,
             null,
             null,
             null
@@ -269,7 +325,17 @@ class DocmanItemCreator
     }
 
     /**
+     * @param Docman_Item                   $parent_item
+     * @param PFUser                        $user
+     * @param DocmanEmptyPOSTRepresentation $representation
+     * @param \DateTimeImmutable            $current_time
+     * @param Project                       $project
+     *
      * @return CreatedItemRepresentation
+     * @throws Metadata\InvalidDateComparisonException
+     * @throws Metadata\InvalidDateTimeFormatException
+     * @throws Metadata\ItemStatusUsageMismatchException
+     * @throws Metadata\ObsoloscenceDateUsageMismatchException
      * @throws RestException
      * @throws StatusNotFoundException
      * @throws \Tuleap\Docman\CannotInstantiateItemWeHaveJustCreatedInDBException
@@ -300,7 +366,8 @@ class DocmanItemCreator
             $project,
             $representation->title,
             $representation->description,
-            ItemStatusMapper::ITEM_STATUS_NONE,
+            $representation->status,
+            $representation->obsolescence_date,
             null,
             null,
             null
@@ -308,6 +375,17 @@ class DocmanItemCreator
     }
 
     /**
+     * @param Docman_Item                  $parent_item
+     * @param PFUser                       $user
+     * @param DocmanWikiPOSTRepresentation $representation
+     * @param \DateTimeImmutable           $current_time
+     * @param Project                      $project
+     *
+     * @return CreatedItemRepresentation
+     * @throws Metadata\InvalidDateComparisonException
+     * @throws Metadata\InvalidDateTimeFormatException
+     * @throws Metadata\ItemStatusUsageMismatchException
+     * @throws Metadata\ObsoloscenceDateUsageMismatchException
      * @throws RestException
      * @throws StatusNotFoundException
      * @throws \Tuleap\Docman\CannotInstantiateItemWeHaveJustCreatedInDBException
@@ -346,6 +424,7 @@ class DocmanItemCreator
             $representation->title,
             $representation->description,
             ItemStatusMapper::ITEM_STATUS_NONE,
+            ItemRepresentation::OBSOLESCENCE_DATE_NONE,
             $representation->wiki_properties->page_name,
             null,
             null
@@ -353,7 +432,17 @@ class DocmanItemCreator
     }
 
     /**
+     * @param Docman_Item                      $parent_item
+     * @param PFUser                           $user
+     * @param DocmanEmbeddedPOSTRepresentation $representation
+     * @param \DateTimeImmutable               $current_time
+     * @param Project                          $project
+     *
      * @return CreatedItemRepresentation
+     * @throws Metadata\InvalidDateComparisonException
+     * @throws Metadata\InvalidDateTimeFormatException
+     * @throws Metadata\ItemStatusUsageMismatchException
+     * @throws Metadata\ObsoloscenceDateUsageMismatchException
      * @throws RestException
      * @throws StatusNotFoundException
      * @throws \Tuleap\Docman\CannotInstantiateItemWeHaveJustCreatedInDBException
@@ -385,6 +474,7 @@ class DocmanItemCreator
             $representation->title,
             $representation->description,
             ItemStatusMapper::ITEM_STATUS_NONE,
+            ItemRepresentation::OBSOLESCENCE_DATE_NONE,
             null,
             null,
             $representation->embedded_properties->content
@@ -392,7 +482,17 @@ class DocmanItemCreator
     }
 
     /**
+     * @param Docman_Item                  $parent_item
+     * @param PFUser                       $user
+     * @param DocmanLinkPOSTRepresentation $representation
+     * @param \DateTimeImmutable           $current_time
+     * @param Project                      $project
+     *
      * @return CreatedItemRepresentation
+     * @throws Metadata\InvalidDateComparisonException
+     * @throws Metadata\InvalidDateTimeFormatException
+     * @throws Metadata\ItemStatusUsageMismatchException
+     * @throws Metadata\ObsoloscenceDateUsageMismatchException
      * @throws RestException
      * @throws StatusNotFoundException
      * @throws \Tuleap\Docman\CannotInstantiateItemWeHaveJustCreatedInDBException
@@ -427,6 +527,7 @@ class DocmanItemCreator
             $representation->title,
             $representation->description,
             ItemStatusMapper::ITEM_STATUS_NONE,
+            ItemRepresentation::OBSOLESCENCE_DATE_NONE,
             null,
             $link_url,
             null

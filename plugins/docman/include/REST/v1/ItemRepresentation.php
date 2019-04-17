@@ -37,6 +37,7 @@ class ItemRepresentation
     const TYPE_WIKI   = 'wiki';
     const TYPE_EMPTY  = 'empty';
 
+    const OBSOLESCENCE_DATE_NONE = "0";
     /**
      * @var int {@type int}
      */

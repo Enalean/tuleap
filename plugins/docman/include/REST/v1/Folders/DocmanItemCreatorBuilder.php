@@ -38,7 +38,9 @@ use Tuleap\Docman\REST\v1\AfterItemCreationVisitor;
 use Tuleap\Docman\REST\v1\DocmanItemCreator;
 use Tuleap\Docman\REST\v1\Files\EmptyFileToUploadFinisher;
 use Tuleap\Docman\REST\v1\Links\DocmanLinksValidityChecker;
+use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataObsolescenceDateRetriever;
 use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataUsageChecker;
+use Tuleap\Docman\REST\v1\Metadata\HardcodedMetdataObsolescenceDateChecker;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadDAO;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
@@ -59,12 +61,18 @@ class DocmanItemCreatorBuilder
 
         $docman_file_storage = new Docman_FileStorage($docman_root);
 
-        $item_factory         = new Docman_ItemFactory($project->getID());
-        $permission_manager   = PermissionsManager::instance();
-        $version_factory      = new Docman_VersionFactory();
-        $event_manager        = EventManager::instance();
-        $transaction_executor = new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection());
-        $hardcoded_metadata_checker = new HardcodedMetadataUsageChecker(new Docman_SettingsBo($project->getGroupId()));
+        $item_factory                                 = new Docman_ItemFactory($project->getID());
+        $permission_manager                           = PermissionsManager::instance();
+        $version_factory                              = new Docman_VersionFactory();
+        $event_manager                                = EventManager::instance();
+        $transaction_executor                         = new DBTransactionExecutorWithConnection(
+            DBFactory::getMainTuleapDBConnection()
+        );
+        $docman_setting_bo                            = new Docman_SettingsBo($project->getGroupId());
+        $hardcoded_metadata_status_checker            = new HardcodedMetadataUsageChecker($docman_setting_bo);
+        $hardcoded_metadata_obsolescence_date_checker = new HardcodedMetdataObsolescenceDateChecker(
+            $docman_setting_bo
+        );
 
         return new DocmanItemCreator(
             $item_factory,
@@ -98,8 +106,12 @@ class DocmanItemCreatorBuilder
                 $document_upload_path_allocator
             ),
             new DocmanLinksValidityChecker(),
-            new ItemStatusMapper($hardcoded_metadata_checker),
-            $hardcoded_metadata_checker
+            new ItemStatusMapper($hardcoded_metadata_status_checker),
+            $hardcoded_metadata_status_checker,
+            $hardcoded_metadata_obsolescence_date_checker,
+            new HardcodedMetadataObsolescenceDateRetriever(
+                $hardcoded_metadata_obsolescence_date_checker
+            )
         );
     }
 }

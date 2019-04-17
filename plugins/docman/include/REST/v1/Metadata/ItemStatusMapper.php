@@ -50,7 +50,7 @@ class ItemStatusMapper
     /**
      * @throws StatusNotFoundException
      */
-    public function getItemStatusIdFromItemStatusString(string $status_string): int
+    public function getItemStatusIdFromItemStatusString(?string $status_string): int
     {
         $this->checker->checkItemStatusAuthorisedValue($status_string);
         return self::ITEM_STATUS_ARRAY_MAP[$status_string];
