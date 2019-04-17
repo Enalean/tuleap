@@ -30,8 +30,8 @@ use Tuleap\Tracker\REST\v1\Workflow\PostAction\Update\PostActionCollectionJsonPa
 use Tuleap\Tracker\REST\v1\Workflow\PostActionsPUTRepresentation;
 use Tuleap\Tracker\REST\v1\Workflow\TransitionsPermissionsChecker;
 use Tuleap\Tracker\Workflow\PostAction\Update\PostActionCollectionUpdater;
+use Tuleap\Tracker\Workflow\SimpleMode\TransitionRetriever;
 use Tuleap\Tracker\Workflow\Transition\NoSiblingTransitionException;
-use Tuleap\Tracker\Workflow\Transition\Update\TransitionRetriever;
 
 class PUTHandler
 {

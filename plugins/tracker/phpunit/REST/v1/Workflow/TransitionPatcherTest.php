@@ -26,10 +26,10 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
+use Tuleap\Tracker\Workflow\SimpleMode\TransitionCollection;
+use Tuleap\Tracker\Workflow\SimpleMode\TransitionRetriever;
 use Tuleap\Tracker\Workflow\Transition\Condition\ConditionsUpdater;
 use Tuleap\Tracker\Workflow\Transition\NoSiblingTransitionException;
-use Tuleap\Tracker\Workflow\Transition\Update\TransitionCollection;
-use Tuleap\Tracker\Workflow\Transition\Update\TransitionRetriever;
 
 class TransitionPatcherTest extends TestCase
 {

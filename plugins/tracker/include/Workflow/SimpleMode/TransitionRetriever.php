@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Workflow\Transition\Update;
+namespace Tuleap\Tracker\Workflow\SimpleMode;
 
 use Tuleap\Tracker\Workflow\Transition\NoSiblingTransitionException;
 use Tuleap\Tracker\Workflow\Transition\NoTransitionForStateException;

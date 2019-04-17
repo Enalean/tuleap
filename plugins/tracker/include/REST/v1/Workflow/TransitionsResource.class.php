@@ -62,12 +62,12 @@ use Tuleap\Tracker\Workflow\PostAction\Update\Internal\SetIntValueUpdater;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\SetIntValueValidator;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\UnknownPostActionIdsException;
 use Tuleap\Tracker\Workflow\PostAction\Update\PostActionCollectionUpdater;
+use Tuleap\Tracker\Workflow\SimpleMode\TransitionReplicator;
+use Tuleap\Tracker\Workflow\SimpleMode\TransitionReplicatorBuilder;
+use Tuleap\Tracker\Workflow\SimpleMode\TransitionRetriever;
 use Tuleap\Tracker\Workflow\Transition\Condition\ConditionsUpdateException;
 use Tuleap\Tracker\Workflow\Transition\Condition\ConditionsUpdater;
 use Tuleap\Tracker\Workflow\Transition\OrphanTransitionException;
-use Tuleap\Tracker\Workflow\Transition\Update\TransitionReplicator;
-use Tuleap\Tracker\Workflow\Transition\Update\TransitionReplicatorBuilder;
-use Tuleap\Tracker\Workflow\Transition\Update\TransitionRetriever;
 use WorkflowFactory;
 
 class TransitionsResource extends AuthenticatedResource

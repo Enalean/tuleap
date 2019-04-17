@@ -26,15 +26,14 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use TrackerFactory;
-use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\REST\I18NRestException;
 use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\REST\UserManager;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Tracker\REST\WorkflowTransitionPOSTRepresentation;
+use Tuleap\Tracker\Workflow\SimpleMode\TransitionReplicator;
+use Tuleap\Tracker\Workflow\SimpleMode\TransitionRetriever;
 use Tuleap\Tracker\Workflow\Transition\TransitionCreationParameters;
-use Tuleap\Tracker\Workflow\Transition\Update\TransitionReplicator;
-use Tuleap\Tracker\Workflow\Transition\Update\TransitionRetriever;
 
 class TransitionPOSTHandlerTest extends TestCase
 {

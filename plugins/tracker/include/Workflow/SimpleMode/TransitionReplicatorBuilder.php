@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Workflow\Transition\Update;
+namespace Tuleap\Tracker\Workflow\SimpleMode;
 
 use Tracker_FormElementFactory;
 use Transition_PostAction_CIBuildDao;

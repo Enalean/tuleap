@@ -20,7 +20,7 @@
  */
 
 use Tuleap\Tracker\Workflow\BeforeEvent;
-use Tuleap\Tracker\Workflow\Transition\Update\TransitionRetriever;
+use Tuleap\Tracker\Workflow\SimpleMode\TransitionRetriever;
 
 class Workflow //phpcs:ignoreFile
 {
