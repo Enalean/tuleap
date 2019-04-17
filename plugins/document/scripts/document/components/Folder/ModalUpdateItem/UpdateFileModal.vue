@@ -100,7 +100,7 @@ export default {
             this.modal.show();
         },
         reset() {
-            this.$store.commit("resetModalError");
+            this.$store.commit("error/resetModalError");
             this.is_displayed = false;
             this.is_loading = false;
             this.uploaded_item = {};
@@ -108,7 +108,7 @@ export default {
         async updateFile(event) {
             event.preventDefault();
             this.is_loading = true;
-            this.$store.commit("resetModalError");
+            this.$store.commit("error/resetModalError");
 
             await this.$store.dispatch("updateFileFromModal", [
                 this.item,

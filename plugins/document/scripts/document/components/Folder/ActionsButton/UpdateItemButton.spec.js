@@ -18,7 +18,7 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import UpdateButton from "./UpdateButton.vue";
+import UpdateItemButton from "./UpdateItemButton.vue";
 
 import localVue from "../../../helpers/local-vue.js";
 import { rewire$redirect_to_url, restore } from "../../../helpers/location-helper.js";
@@ -32,7 +32,7 @@ describe("QuickLookDocumentPreview", () => {
         const store = createStoreMock(store_options);
 
         update_button_factory = (props = {}) => {
-            return shallowMount(UpdateButton, {
+            return shallowMount(UpdateItemButton, {
                 localVue,
                 propsData: { ...props },
                 mocks: { $store: store }

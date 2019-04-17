@@ -92,7 +92,6 @@ export default {
         }
     },
     mounted() {
-        document.addEventListener("show-update-item-modal", this.showUpdateFileModal);
         document.addEventListener("show-update-item-modal", this.showUpdateItemModal);
 
         this.$once("hook:beforeDestroy", () => {
