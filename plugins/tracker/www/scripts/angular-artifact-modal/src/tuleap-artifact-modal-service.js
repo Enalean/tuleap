@@ -3,8 +3,13 @@ import TuleapArtifactModalController from "./tuleap-artifact-modal-controller.js
 
 import _ from "lodash";
 import { setCreationMode, isInCreationMode } from "./modal-creation-mode-state.js";
-import { getArtifactFieldValues, getTracker, getUserPreference } from "./rest/rest-service.js";
+import {
+    getTracker,
+    getUserPreference,
+    getArtifactWithCompleteTrackerStructure
+} from "./rest/rest-service.js";
 import { updateFileUploadRulesWhenNeeded } from "./tuleap-artifact-modal-fields/file-field/file-upload-rules-state.js";
+import { getArtifactFieldValues } from "./artifact-edition-initializer.js";
 
 export default ArtifactModalService;
 
@@ -159,13 +164,12 @@ function ArtifactModalService(
 
         var promise = $q
             .all([
-                getTracker(tracker_id),
-                getArtifactValues(artifact_id),
+                getArtifactWithCompleteTrackerStructure(artifact_id),
                 getFollowupsCommentsOrderUserPreference(user_id, tracker_id, modal_model),
                 getTextFieldsFormatUserPreference(user_id, modal_model)
             ])
             .then(function(promises) {
-                const tracker = promises[0];
+                const tracker = promises[0].tracker;
                 transformed_tracker = TuleapArtifactModalTrackerTransformerService.transform(
                     tracker,
                     creation_mode
@@ -174,7 +178,7 @@ function ArtifactModalService(
                 modal_model.ordered_fields = transformed_tracker.ordered_fields;
                 modal_model.color = transformed_tracker.color_name;
 
-                const artifact_values = promises[1];
+                const artifact_values = getArtifactFieldValues(promises[0]);
                 let tracker_with_field_values = TuleapArtifactModalTrackerTransformerService.addFieldValuesToTracker(
                     artifact_values,
                     transformed_tracker
@@ -220,14 +224,6 @@ function ArtifactModalService(
                 modal_model.text_fields_format =
                     data.value !== false ? data.value : TEXT_FORMAT_TEXT_ID;
             });
-    }
-
-    function getArtifactValues(artifact_id) {
-        var promise;
-        if (artifact_id) {
-            promise = getArtifactFieldValues(artifact_id);
-        }
-        return $q.when(promise);
     }
 
     function applyWorkflowTransitions(tracker, field_values) {
