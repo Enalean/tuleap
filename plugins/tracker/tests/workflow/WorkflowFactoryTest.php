@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015-2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -20,6 +20,7 @@
  */
 
 use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyDao;
+use Tuleap\Tracker\Workflow\WorkflowBackendLogger;
 
 require_once __DIR__.'/../bootstrap.php';
 
@@ -89,7 +90,7 @@ class WorkflowFactoryTest extends TuleapTestCase {
             mock('TrackerFactory'),
             mock('Tracker_FormElementFactory'),
             mock('Tracker_Workflow_Trigger_RulesManager'),
-            mock('WorkflowBackendLogger'),
+            new WorkflowBackendLogger(Mockery::spy(BackendLogger::class), Logger::DEBUG),
             \Mockery::mock(ReadOnlyDao::class)
         );
 
@@ -158,7 +159,7 @@ class WorkflowFactory_IsFieldUsedInWorkflowTest extends TuleapTestCase {
                 mock('TrackerFactory'),
                 mock('Tracker_FormElementFactory'),
                 mock('Tracker_Workflow_Trigger_RulesManager'),
-                mock('WorkflowBackendLogger'),
+                new WorkflowBackendLogger(Mockery::spy(BackendLogger::class), Logger::DEBUG),
                 \Mockery::mock(ReadOnlyDao::class)
             )
         );
@@ -203,7 +204,7 @@ class WorkflowFactory_CacheTest extends TuleapTestCase {
                 stub('TrackerFactory')->getTrackerById()->returns(aMockTracker()->build()),
                 mock('Tracker_FormElementFactory'),
                 mock('Tracker_Workflow_Trigger_RulesManager'),
-                mock('WorkflowBackendLogger'),
+                new WorkflowBackendLogger(Mockery::spy(BackendLogger::class), Logger::DEBUG),
                 \Mockery::mock(ReadOnlyDao::class)
             )
         );

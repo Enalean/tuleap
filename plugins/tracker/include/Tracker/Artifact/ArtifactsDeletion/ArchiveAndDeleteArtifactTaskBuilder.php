@@ -22,6 +22,7 @@ namespace Tuleap\Tracker\Artifact\ArtifactsDeletion;
 
 use CrossReferenceManager;
 use EventManager;
+use ForgeConfig;
 use Logger;
 use PermissionsDao;
 use PermissionsManager;
@@ -47,6 +48,7 @@ use Tuleap\Tracker\Artifact\ArtifactWithTrackerStructureExporter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\Tracker\RecentlyVisited\RecentlyVisitedDao;
+use Tuleap\Tracker\Workflow\WorkflowBackendLogger;
 use UserManager;
 use UserXMLExportedCollection;
 use UserXMLExporter;
@@ -67,7 +69,7 @@ class ArchiveAndDeleteArtifactTaskBuilder
             new UserXMLExportedCollection($rng_validator, new XML_SimpleXMLCDATAFactory())
         );
 
-        $workflow_logger = new \WorkflowBackendLogger(new \BackendLogger());
+        $workflow_logger = new WorkflowBackendLogger(new \BackendLogger(), ForgeConfig::get('sys_logger_level'));
 
         return new ArchiveAndDeleteArtifactTask(
             new ArtifactWithTrackerStructureExporter(

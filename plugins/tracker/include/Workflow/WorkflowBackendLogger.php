@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,65 +18,63 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\Tracker\Workflow;
+
+use Exception;
+use TruncateLevelLogger;
+
 /**
  * A BackendLogger dedicated to the workflow. It prefix all message by [WF] tag.
  */
-class WorkflowBackendLogger implements Logger {
+final class WorkflowBackendLogger extends TruncateLevelLogger
+{
 
     /** @var string */
-    const WF_PREFIX = '[WF] ';
+    private const WF_PREFIX = '[WF] ';
 
     /** @var string */
-    const INDENTATION_START     = '┌ ';
+    private const INDENTATION_START     = '┌ ';
 
     /** @var string */
-    const INDENTATION_INCREMENT = '│ ';
+    private const INDENTATION_INCREMENT = '│ ';
 
     /** @var string */
-    const INDENTATION_END       = '└ ';
+    private const INDENTATION_END       = '└ ';
 
     /** @var string */
     private $indentation_prefix    = '';
 
-    /** @var BackendLogger */
-    private $backend_logger;
-
     /** @var string */
     private $fingerprint = '';
 
-    public function __construct(BackendLogger $backend_logger) {
-        $this->backend_logger = $backend_logger;
+    public function debug($message) : void
+    {
+        parent::debug($this->getDecoratedMessage($message));
     }
 
-    /** @see Logger::debug() */
-    public function debug($message) {
-        $this->log($message, Feedback::DEBUG);
+    public function info($message) : void
+    {
+        parent::info($this->getDecoratedMessage($message));
     }
 
-    /** @see Logger::info() */
-    public function info($message) {
-        $this->log($message, Feedback::INFO);
+    public function warn($message, Exception $exception = null) : void
+    {
+        parent::warn($this->getDecoratedMessage($message), $exception);
     }
 
-    /** @see Logger::error() */
-    public function error($message, Exception $e = null) {
-        $this->log($this->backend_logger->generateLogWithException($message, $e), Feedback::ERROR);
+    public function error($message, Exception $exception = null) : void
+    {
+        parent::error($this->getDecoratedMessage($message), $exception);
     }
 
-    /** @see Logger::warn() */
-    public function warn($message, Exception $e = null) {
-        $this->log($this->backend_logger->generateLogWithException($message, $e), Feedback::WARN);
-
-    }
-
-    /** @see Logger::log() */
-    public function log($message, $level = Feedback::INFO) {
+    private function getDecoratedMessage(string $message) : string
+    {
         $prefix  = self::WF_PREFIX;
         if ($this->fingerprint) {
             $prefix .= "[{$this->fingerprint}] ";
         }
         $prefix .= $this->indentation_prefix;
-        $this->backend_logger->log($prefix . $message, $level);
+        return $prefix . $message;
     }
 
     /**
@@ -85,11 +83,12 @@ class WorkflowBackendLogger implements Logger {
      * @param string $calling_method
      * @param mixed  ...              Parameters of the calling method
      */
-    public function start($calling_method) {
+    public function start($calling_method) : void
+    {
         $arguments = func_get_args();
         array_unshift($arguments, __FUNCTION__);
         array_unshift($arguments, self::INDENTATION_START);
-        call_user_func_array(array($this, 'logMethodAndItsArguments'), $arguments);
+        $this->logMethodAndItsArguments(...$arguments);
         $this->indent();
     }
 
@@ -99,12 +98,13 @@ class WorkflowBackendLogger implements Logger {
      * @param string $calling_method
      * @param mixed  ...              Parameters of the calling method
      */
-    public function end($calling_method) {
+    public function end($calling_method) : void
+    {
         $this->unindent();
         $arguments = func_get_args();
         array_unshift($arguments, __FUNCTION__);
         array_unshift($arguments, self::INDENTATION_END);
-        call_user_func_array(array($this, 'logMethodAndItsArguments'), $arguments);
+        $this->logMethodAndItsArguments(...$arguments);
     }
 
     /**
@@ -114,13 +114,15 @@ class WorkflowBackendLogger implements Logger {
      *
      * @param string $the_fingerprint
      */
-    public function defineFingerprint($fingerprint) {
+    public function defineFingerprint($fingerprint) : void
+    {
         if (! $this->fingerprint) {
             $this->fingerprint = $fingerprint;
         }
     }
 
-    private function logMethodAndItsArguments() {
+    private function logMethodAndItsArguments() : void
+    {
         $arguments      = func_get_args();
         $prefix         = array_shift($arguments);
         $method         = ucfirst(array_shift($arguments));
@@ -129,11 +131,13 @@ class WorkflowBackendLogger implements Logger {
         $this->debug("$prefix$method $calling_method($arguments)");
     }
 
-    private function indent() {
+    private function indent() : void
+    {
         $this->indentation_prefix .= self::INDENTATION_INCREMENT;
     }
 
-    private function unindent() {
+    private function unindent() : void
+    {
         $this->indentation_prefix = mb_substr(
             $this->indentation_prefix,
             0,

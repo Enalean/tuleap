@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,6 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\Tracker\Workflow\WorkflowBackendLogger;
 
 require_once __DIR__.'/../../bootstrap.php';
 
@@ -38,7 +40,7 @@ abstract class Tracker_Workflow_Trigger_RulesManagerTest extends TuleapTestCase 
             $this->dao,
             $this->formelement_factory,
             $this->rules_processor,
-            \Mockery::spy(\WorkflowBackendLogger::class),
+            new WorkflowBackendLogger(Mockery::spy(BackendLogger::class), Logger::DEBUG),
             \Mockery::spy(\Tracker_Workflow_Trigger_RulesBuilderFactory::class)
         );
     }
@@ -56,7 +58,7 @@ class Tracker_Workflow_Trigger_RulesManager_duplicateTest extends Tracker_Workfl
                 $this->dao,
                 $this->formelement_factory,
                 $this->rules_processor,
-                mock('WorkflowBackendLogger'),
+                new WorkflowBackendLogger(Mockery::spy(BackendLogger::class), Logger::DEBUG),
                 mock('Tracker_Workflow_Trigger_RulesBuilderFactory')
             )
         )
@@ -406,7 +408,7 @@ class Tracker_Workflow_Trigger_RulesManager_processTriggersTest extends Tracker_
                 $this->dao,
                 $this->formelement_factory,
                 $this->rules_processor,
-                mock('WorkflowBackendLogger'),
+                new WorkflowBackendLogger(Mockery::spy(BackendLogger::class), Logger::DEBUG),
                 mock('Tracker_Workflow_Trigger_RulesBuilderFactory')
             )
         )

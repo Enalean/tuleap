@@ -18,6 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\Tracker\Workflow\WorkflowBackendLogger;
+
 require_once __DIR__.'/../bootstrap.php';
 
 Mock::generate('Transition');
@@ -225,7 +228,7 @@ class WorkflowTest extends TuleapTestCase {
 
         $global_rules_manager  = mock('Tracker_RulesManager');
         $trigger_rules_manager = mock('Tracker_Workflow_Trigger_RulesManager');
-        $logger                = mock('WorkflowBackendLogger');
+        $logger                = new WorkflowBackendLogger(Mockery::spy(BackendLogger::class), Logger::DEBUG);
 
         $workflow = TestHelper::getPartialMock('Workflow', array('getPermissionsManager'));
         $workflow->__construct($global_rules_manager, $trigger_rules_manager, $logger, 1, 2, 103, 1, $transitions);
@@ -302,7 +305,7 @@ class Workflow_BeforeAfterTest extends TuleapTestCase {
             array(
                 mock('Tracker_RulesManager'),
                 $this->trigger_rules_manager,
-                mock('WorkflowBackendLogger'),
+                new WorkflowBackendLogger(Mockery::spy(BackendLogger::class), Logger::DEBUG),
                 $workflow_id,
                 $tracker_id,
                 $field_id,
@@ -319,7 +322,7 @@ class Workflow_BeforeAfterTest extends TuleapTestCase {
             array(
                 mock('Tracker_RulesManager'),
                 $this->trigger_rules_manager,
-                mock('WorkflowBackendLogger'),
+                new WorkflowBackendLogger(Mockery::spy(BackendLogger::class), Logger::DEBUG),
                 $workflow_id,
                 $tracker_id,
                 $field_id,
@@ -336,7 +339,7 @@ class Workflow_BeforeAfterTest extends TuleapTestCase {
             array(
                 mock('Tracker_RulesManager'),
                 $this->trigger_rules_manager,
-                mock('WorkflowBackendLogger'),
+                new WorkflowBackendLogger(Mockery::spy(BackendLogger::class), Logger::DEBUG),
                 $workflow_id,
                 $tracker_id,
                 $field_id,
