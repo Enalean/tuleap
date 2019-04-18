@@ -68,6 +68,12 @@ class DocmanFoldersResource extends AuthenticatedResource
     /**
      * Create new file
      *
+     * <pre>
+     * /!\ This route is under construction and will be subject to changes
+     * </pre>
+     *
+     * The format of the obsolescence date is : "YYYY-MM-DD"
+     *
      * You will get an URL where the file needs to be uploaded using the
      * <a href="https://tus.io/protocols/resumable-upload.html">tus resumable upload protocol</a>
      * to validate the item creation. You will need to use the same authentication mechanism you used
@@ -108,15 +114,28 @@ class DocmanFoldersResource extends AuthenticatedResource
         $event_adder->addNotificationEvents($project);
 
         $docman_item_creator = DocmanItemCreatorBuilder::build($project);
-
-        return $docman_item_creator->createFileDocument(
-            $parent,
-            $current_user,
-            $files_representation->title,
-            $files_representation->description,
-            new \DateTimeImmutable(),
-            $files_representation->file_properties
-        );
+        try {
+            return $docman_item_creator->createFileDocument(
+                $parent,
+                $current_user,
+                $files_representation->title,
+                $files_representation->description,
+                $files_representation->status,
+                $files_representation->obsolescence_date,
+                new \DateTimeImmutable(),
+                $files_representation->file_properties
+            );
+        } catch (Metadata\StatusNotFoundException $e) {
+            throw new RestException(400, $e->getMessage());
+        } catch (Metadata\ItemStatusUsageMismatchException $e) {
+            throw new RestException(403, 'The "Status" property is not activated for this item.');
+        } catch (Metadata\InvalidDateComparisonException $e) {
+            throw new RestException(400, 'The obsolescence date is before the current date');
+        } catch (Metadata\InvalidDateTimeFormatException $e) {
+            throw new RestException(400, 'The date format is incorrect. The format should be YYYY-MM-DD');
+        } catch (Metadata\ObsoloscenceDateUsageMismatchException $e) {
+            throw new RestException(403, $e->getMessage());
+        }
     }
 
     /**

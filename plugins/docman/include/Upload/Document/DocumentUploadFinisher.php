@@ -155,16 +155,17 @@ final class DocumentUploadFinisher implements TusFinisherDataStore
             $current_time    = (new \DateTimeImmutable)->getTimestamp();
             $is_item_created = $this->docman_item_factory->create(
                 [
-                    'item_id'     => $item_id,
-                    'title'       => $document_row['title'],
-                    'description' => $document_row['description'],
-                    'parent_id'   => $document_row['parent_id'],
-                    'group_id'    => $document_row['group_id'],
-                    'create_date' => $current_time,
-                    'update_date' => $current_time,
-                    'user_id'     => $document_row['user_id'],
-                    'status'      => PLUGIN_DOCMAN_ITEM_STATUS_NONE,
-                    'item_type'   => PLUGIN_DOCMAN_ITEM_TYPE_FILE
+                    'item_id'           => $item_id,
+                    'title'             => $document_row['title'],
+                    'description'       => $document_row['description'],
+                    'parent_id'         => $document_row['parent_id'],
+                    'group_id'          => $document_row['group_id'],
+                    'create_date'       => $current_time,
+                    'update_date'       => $current_time,
+                    'user_id'           => $document_row['user_id'],
+                    'status'            => $document_row['status'],
+                    'obsolescence_date' => $document_row['obsolescence_date'],
+                    'item_type'         => PLUGIN_DOCMAN_ITEM_TYPE_FILE
                 ],
                 null
             );

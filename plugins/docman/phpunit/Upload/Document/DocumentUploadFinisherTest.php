@@ -88,15 +88,17 @@ class DocumentUploadFinisherTest extends TestCase
         $this->item_factory->shouldReceive('getItemFromDB')->andReturns(null, \Mockery::spy(\Docman_Item::class));
         $this->on_going_upload_dao->shouldReceive('searchDocumentOngoingUploadByItemID')->andReturns(
             [
-                'item_id'     => $item_id_being_created,
-                'parent_id'   => 3,
-                'group_id'    => 102,
-                'user_id'     => 101,
-                'title'       => 'Title',
-                'description' => 'Description',
-                'filename' => 'Filename',
-                'filesize' => 123,
-                'filetype' => 'Filetype',
+                'item_id'           => $item_id_being_created,
+                'parent_id'         => 3,
+                'group_id'          => 102,
+                'user_id'           => 101,
+                'title'             => 'Title',
+                'description'       => 'Description',
+                'filename'          => 'Filename',
+                'filesize'          => 123,
+                'filetype'          => 'Filetype',
+                'status'            => 'approved',
+                'obsolescence_date' => '2020-03-06'
             ]
         );
         $this->on_going_upload_dao->shouldReceive('deleteByItemID')->once();
