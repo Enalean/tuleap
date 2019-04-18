@@ -19,16 +19,16 @@
  */
 
 import { mount } from "@vue/test-utils";
-import localVue from "../support/local-vue.js";
-import BaselineButton from "./BaselineButton.vue";
+import localVue from "../../support/local-vue.js";
+import ActionButton from "./ActionButton.vue";
 
-describe("BaselineButton", () => {
+describe("ActionButton", () => {
     const spinner_selector = '[data-test-type="spinner"]';
     const button_selector = '[data-test-type="button"]';
     let wrapper;
 
     beforeEach(() => {
-        wrapper = mount(BaselineButton, {
+        wrapper = mount(ActionButton, {
             localVue,
             propsData: {
                 icon: "delete"

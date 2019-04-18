@@ -19,7 +19,7 @@
   -->
 
 <template>
-    <baseline-button
+    <action-button
         icon="trash-o"
         v-on:click="showConfirmation()"
         class="tlp-button-danger"
@@ -27,16 +27,16 @@
         <span v-translate>
             Delete
         </span>
-    </baseline-button>
+    </action-button>
 </template>
 
 <script>
-import BaselineButton from "./BaselineButton.vue";
+import ActionButton from "./common/ActionButton.vue";
 import DeleteBaselineConfirmationModal from "./DeleteBaselineConfirmationModal.vue";
 
 export default {
     name: "DeleteBaselineButton",
-    components: { BaselineButton },
+    components: { ActionButton },
 
     props: {
         baseline: { required: true, type: Object }

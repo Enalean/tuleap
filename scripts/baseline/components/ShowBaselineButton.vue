@@ -18,18 +18,18 @@
   -
   -->
 <template>
-    <baseline-button
+    <action-button
         icon="eye"
         v-on:click="showBaseline()"
     >
         <span v-translate>Consult</span>
-    </baseline-button>
+    </action-button>
 </template>
 <script>
-import BaselineButton from "./BaselineButton.vue";
+import ActionButton from "./common/ActionButton.vue";
 export default {
     name: "ShowBaselineButton",
-    components: { BaselineButton },
+    components: { ActionButton },
     props: {
         baseline: {
             required: true,

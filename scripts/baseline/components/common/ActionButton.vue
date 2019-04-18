@@ -43,7 +43,7 @@
 
 <script>
 export default {
-    name: "BaselineButton",
+    name: "ActionButton",
     props: {
         icon: { required: true, type: String },
         loading: { type: Boolean, default: false },

@@ -35,23 +35,23 @@
             <span class="tlp-skeleton-text"></span>
         </td>
         <td class="tlp-table-cell-actions">
-            <baseline-button icon="eye" v-bind:disabled="true">
+            <action-button icon="eye" v-bind:disabled="true">
                 <span v-translate>
                     Consult
                 </span>
-            </baseline-button>
-            <baseline-button icon="trash-o" v-bind:disabled="true" class="tlp-button-danger">
+            </action-button>
+            <action-button icon="trash-o" v-bind:disabled="true" class="tlp-button-danger">
                 <span v-translate>
                     Delete
                 </span>
-            </baseline-button>
+            </action-button>
         </td>
     </tr>
 </template>
 <script>
-import BaselineButton from "./BaselineButton.vue";
+import ActionButton from "./common/ActionButton.vue";
 export default {
     name: "BaselineTableBodyCellSkeleton",
-    components: { BaselineButton }
+    components: { ActionButton }
 };
 </script>
