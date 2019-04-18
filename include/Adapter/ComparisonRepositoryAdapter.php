@@ -73,7 +73,7 @@ class ComparisonRepositoryAdapter implements ComparisonRepository
         if (! $this->adapter_permissions->canUserAdministrateBaselineOnProject($current_user, $project)) {
             throw new NotAuthorizedException(
                 sprintf(
-                    dgettext('tuleap-baseline', "You're not allowed to add new comparison in project with id %u"),
+                    dgettext('tuleap-baseline', "You are not allowed to add new comparison in project with id %u"),
                     $project->getID()
                 )
             );
