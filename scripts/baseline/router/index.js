@@ -22,7 +22,7 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import NotFoundPage from "./NotFoundPage.vue";
 import BaselineContentPage from "../components/baseline-content/ContentPage.vue";
-import BaselinesPage from "../components/BaselinesPage.vue";
+import HomePage from "../components/HomePage.vue";
 import TransientComparisonPage from "../components/comparison/TransientComparisonPage.vue";
 import ComparisonPageAsync from "../components/comparison/ComparisonPageAsync.vue";
 import store from "../store";
@@ -43,8 +43,8 @@ const router = new VueRouter({
 
         {
             path: "/plugins/baseline/:project_name",
-            name: "BaselinesPage",
-            component: BaselinesPage
+            name: "HomePage",
+            component: HomePage
         },
 
         {

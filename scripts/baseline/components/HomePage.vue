@@ -89,7 +89,7 @@ import NewComparisonModal from "./comparison/NewComparisonModal.vue";
 import { mapState } from "vuex";
 
 export default {
-    name: "BaselinesPage",
+    name: "HomePage",
 
     components: { BaselinesTable },
 
