@@ -36,7 +36,7 @@ describe("DeleteBaselineConfirmationModal", () => {
 
     const baseline = create("baseline", { id: 1 });
 
-    let store;
+    let $store;
     let wrapper;
 
     beforeEach(() => {
@@ -49,7 +49,7 @@ describe("DeleteBaselineConfirmationModal", () => {
         );
         rewire$deleteBaseline(deleteBaseline);
 
-        store = createStoreMock(store_options);
+        $store = createStoreMock(store_options);
 
         wrapper = mount(DeleteBaselineConfirmationModal, {
             propsData: {
@@ -57,7 +57,7 @@ describe("DeleteBaselineConfirmationModal", () => {
             },
             localVue,
             mocks: {
-                $store: store
+                $store
             }
         });
     });
@@ -93,16 +93,16 @@ describe("DeleteBaselineConfirmationModal", () => {
                 await wrapper.vm.$nextTick();
             });
             it("deletes baseline in store", () => {
-                expect(store.commit).toHaveBeenCalledWith("baselines/delete", baseline);
+                expect($store.commit).toHaveBeenCalledWith("baselines/delete", baseline);
             });
             it("notifies user", () => {
-                expect(store.commit).toHaveBeenCalledWith("notify", jasmine.any(Object));
+                expect($store.commit).toHaveBeenCalledWith("notify", jasmine.any(Object));
             });
             it("does not show spinner any more", () => {
                 expect(wrapper.contains(spinner_selector)).toBeFalsy();
             });
             it("hides modal", () => {
-                expect(store.commit).toHaveBeenCalledWith("hideModal");
+                expect($store.commit).toHaveBeenCalledWith("hideModal");
             });
         });
 
@@ -112,13 +112,13 @@ describe("DeleteBaselineConfirmationModal", () => {
                 await wrapper.vm.$nextTick();
             });
             it("does not delete baseline in store", () => {
-                expect(store.commit).not.toHaveBeenCalledWith(
+                expect($store.commit).not.toHaveBeenCalledWith(
                     "baselines/delete",
                     jasmine.any(Object)
                 );
             });
             it("does not notify user", () => {
-                expect(store.commit).not.toHaveBeenCalledWith("notify", jasmine.any(Object));
+                expect($store.commit).not.toHaveBeenCalledWith("notify", jasmine.any(Object));
             });
             it("does not show spinner any more", () => {
                 expect(wrapper.contains(spinner_selector)).toBeFalsy();

@@ -38,7 +38,7 @@ describe("Artifact", () => {
     beforeEach(() => {
         const linked_artifact = create("baseline_artifact", { title: "Story" });
 
-        const store = createStoreMock({
+        const $store = createStoreMock({
             ...store_options,
             getters: {
                 "semantics/field_label": () => "My description",
@@ -56,7 +56,7 @@ describe("Artifact", () => {
             },
             localVue,
             mocks: {
-                $store: store
+                $store
             }
         });
     });

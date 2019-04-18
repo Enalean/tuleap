@@ -27,18 +27,18 @@ import store_options from "../store/options";
 import { createList } from "../support/factories";
 
 describe("HomePage", () => {
-    let store;
+    let $store;
     let wrapper;
 
     beforeEach(() => {
-        store = createStoreMock(store_options);
+        $store = createStoreMock(store_options);
 
         wrapper = shallowMount(HomePage, {
             propsData: { project_id: 1 },
             localVue,
             router,
             mocks: {
-                $store: store
+                $store
             }
         });
     });
@@ -47,21 +47,21 @@ describe("HomePage", () => {
         beforeEach(() => wrapper.find('[data-test-action="new-baseline"]').trigger("click"));
 
         it("shows new modal", () => {
-            expect(store.commit).toHaveBeenCalledWith("showModal", jasmine.any(Object));
+            expect($store.commit).toHaveBeenCalledWith("showModal", jasmine.any(Object));
         });
     });
 
     describe("when some baselines are available", () => {
         beforeEach(() => {
-            store.state.baselines.baselines = createList("baseline", 2);
-            store.state.baselines.are_baselines_loading = false;
+            $store.state.baselines.baselines = createList("baseline", 2);
+            $store.state.baselines.are_baselines_loading = false;
         });
 
         describe("when clicking on show comparison button", () => {
             beforeEach(() => wrapper.find('[data-test-action="show-comparison"]').trigger("click"));
 
             it("shows new modal", () => {
-                expect(store.commit).toHaveBeenCalledWith("showModal", jasmine.any(Object));
+                expect($store.commit).toHaveBeenCalledWith("showModal", jasmine.any(Object));
             });
         });
     });

@@ -28,17 +28,17 @@ import { create } from "../support/factories";
 import Notification from "./Notification.vue";
 
 describe("App", () => {
-    let store;
+    let $store;
     let wrapper;
 
     beforeEach(() => {
-        store = createStoreMock(store_options);
+        $store = createStoreMock(store_options);
 
         wrapper = shallowMount(App, {
             localVue,
             router,
             mocks: {
-                $store: store
+                $store
             }
         });
     });
@@ -52,14 +52,14 @@ describe("App", () => {
     });
 
     describe("With notification", () => {
-        beforeEach(() => (store.state.notification = create("notification")));
+        beforeEach(() => ($store.state.notification = create("notification")));
         it("Show notification", () => {
             expect(wrapper.contains(Notification)).toBeTruthy();
         });
     });
 
     describe("Without notification", () => {
-        beforeEach(() => (store.state.notification = null));
+        beforeEach(() => ($store.state.notification = null));
         it("Show notification", () => {
             expect(wrapper.contains(Notification)).toBeFalsy();
         });

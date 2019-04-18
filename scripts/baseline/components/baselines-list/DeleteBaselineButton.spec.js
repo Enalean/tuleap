@@ -28,16 +28,16 @@ import { create } from "../../support/factories";
 describe("DeleteBaselineButton", () => {
     const baseline = create("baseline", { id: 1 });
 
-    let store;
+    let $store;
     let wrapper;
 
     beforeEach(() => {
-        store = createStoreMock(store_options);
+        $store = createStoreMock(store_options);
 
         wrapper = mount(DeleteBaselineButton, {
             localVue,
             mocks: {
-                $store: store
+                $store
             },
             propsData: {
                 baseline
@@ -49,7 +49,7 @@ describe("DeleteBaselineButton", () => {
         beforeEach(() => wrapper.trigger("click"));
 
         it("shows modal", () => {
-            expect(store.commit).toHaveBeenCalledWith("showModal", jasmine.any(Object));
+            expect($store.commit).toHaveBeenCalledWith("showModal", jasmine.any(Object));
         });
     });
 });

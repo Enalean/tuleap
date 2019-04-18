@@ -38,7 +38,7 @@ describe("NewBaselineModal", () => {
 
     let getOpenMilestones;
     let createBaseline;
-    let store;
+    let $store;
     let wrapper;
 
     const a_milestone = create("milestone");
@@ -61,13 +61,13 @@ describe("NewBaselineModal", () => {
         createBaseline.and.returnValue(Promise.resolve(a_baseline));
         rewire$createBaseline(createBaseline);
 
-        store = createStoreMock(store_options);
+        $store = createStoreMock(store_options);
 
         wrapper = shallowMount(NewBaselineModal, {
             propsData: { project_id: 1 },
             localVue,
             mocks: {
-                $store: store
+                $store
             }
         });
         await wrapper.vm.$nextTick();
@@ -167,13 +167,13 @@ describe("NewBaselineModal", () => {
             });
 
             it("notify user with successful creation", () => {
-                expect(store.commit).toHaveBeenCalledWith("notify", jasmine.any(Object));
+                expect($store.commit).toHaveBeenCalledWith("notify", jasmine.any(Object));
             });
             it("reloads all baselines", () => {
-                expect(store.dispatch).toHaveBeenCalledWith("baselines/load", { project_id: 1 });
+                expect($store.dispatch).toHaveBeenCalledWith("baselines/load", { project_id: 1 });
             });
             it("hides modal", () => {
-                expect(store.commit).toHaveBeenCalledWith("hideModal");
+                expect($store.commit).toHaveBeenCalledWith("hideModal");
             });
         });
     });

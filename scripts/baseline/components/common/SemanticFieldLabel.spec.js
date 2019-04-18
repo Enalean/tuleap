@@ -27,11 +27,11 @@ import store_options from "../../store/options.js";
 describe("SemanticFieldLabel", () => {
     const skeleton_selector = '[data-test-type="skeleton"]';
 
-    let store;
+    let $store;
     let wrapper;
 
     beforeEach(() => {
-        store = createStoreMock({
+        $store = createStoreMock({
             ...store_options,
             getters: {
                 "semantics/field_label": () => "My description",
@@ -45,18 +45,18 @@ describe("SemanticFieldLabel", () => {
             },
             localVue,
             mocks: {
-                $store: store
+                $store
             }
         });
     });
 
     it("loads semantic fields on mount", () => {
-        expect(store.dispatch).toHaveBeenCalledWith("semantics/loadByTrackerId", 1);
+        expect($store.dispatch).toHaveBeenCalledWith("semantics/loadByTrackerId", 1);
     });
 
     describe("when semantic is not available", () => {
         beforeEach(() => {
-            store.getters["semantics/is_field_label_available"] = () => false;
+            $store.getters["semantics/is_field_label_available"] = () => false;
         });
 
         it("shows only skeleton", () => {
@@ -68,8 +68,8 @@ describe("SemanticFieldLabel", () => {
 
     describe("when semantic is available", () => {
         beforeEach(() => {
-            store.getters["semantics/is_field_label_available"] = () => true;
-            store.getters["semantics/field_label"] = () => "Status";
+            $store.getters["semantics/is_field_label_available"] = () => true;
+            $store.getters["semantics/field_label"] = () => "Status";
         });
 
         it("shows only field label", () => {
