@@ -114,7 +114,7 @@
     width: 100%;
     text-align: center;
     line-height: 0;
-    background: url(../images/lytebox/loading.gif) center no-repeat;
+    background: url("#{$tuleap-common-theme-basepath}images/lytebox/loading.gif") center no-repeat;
 }
 
 #lbHoverNav {
@@ -137,59 +137,59 @@
 #lbPrev {
     width: 49%;
     height: 100%;
-    background: transparent url(../images/lytebox/blank.gif) no-repeat;
+    background: transparent url("#{$tuleap-common-theme-basepath}images/lytebox/blank.gif") no-repeat;
     display: block;
     left: 0;
     float: left;
 }
 
 #lbPrev.grey:hover, #lbPrev.grey:visited:hover {
-    background: url(../images/lytebox/prev_grey.gif) left 15% no-repeat;
+    background: url("#{$tuleap-common-theme-basepath}images/lytebox/prev_grey.gif") left 15% no-repeat;
 }
 
 #lbPrev.red:hover, #lbPrev.red:visited:hover {
-    background: url(../images/lytebox/prev_red.gif) left 15% no-repeat;
+    background: url("#{$tuleap-common-theme-basepath}images/lytebox/prev_red.gif") left 15% no-repeat;
 }
 
 #lbPrev.green:hover, #lbPrev.green:visited:hover {
-    background: url(../images/lytebox/prev_green.gif) left 15% no-repeat;
+    background: url("#{$tuleap-common-theme-basepath}images/lytebox/prev_green.gif") left 15% no-repeat;
 }
 
 #lbPrev.blue:hover, #lbPrev.blue:visited:hover {
-    background: url(../images/lytebox/prev_blue.gif) left 15% no-repeat;
+    background: url("#{$tuleap-common-theme-basepath}images/lytebox/prev_blue.gif") left 15% no-repeat;
 }
 
 #lbPrev.gold:hover, #lbPrev.gold:visited:hover {
-    background: url(../images/lytebox/prev_gold.gif) left 15% no-repeat;
+    background: url("#{$tuleap-common-theme-basepath}images/lytebox/prev_gold.gif") left 15% no-repeat;
 }
 
 #lbNext {
     width: 49%;
     height: 100%;
-    background: transparent url(../images/lytebox/blank.gif) no-repeat;
+    background: transparent url("#{$tuleap-common-theme-basepath}images/lytebox/blank.gif") no-repeat;
     display: block;
     right: 0;
     float: right;
 }
 
 #lbNext.grey:hover, #lbNext.grey:visited:hover {
-    background: url(../images/lytebox/next_grey.gif) right 15% no-repeat;
+    background: url("#{$tuleap-common-theme-basepath}images/lytebox/next_grey.gif") right 15% no-repeat;
 }
 
 #lbNext.red:hover, #lbNext.red:visited:hover {
-    background: url(../images/lytebox/next_red.gif) right 15% no-repeat;
+    background: url("#{$tuleap-common-theme-basepath}images/lytebox/next_red.gif") right 15% no-repeat;
 }
 
 #lbNext.green:hover, #lbNext.green:visited:hover {
-    background: url(../images/lytebox/next_green.gif) right 15% no-repeat;
+    background: url("#{$tuleap-common-theme-basepath}images/lytebox/next_green.gif") right 15% no-repeat;
 }
 
 #lbNext.blue:hover, #lbNext.blue:visited:hover {
-    background: url(../images/lytebox/next_blue.gif) right 15% no-repeat;
+    background: url("#{$tuleap-common-theme-basepath}images/lytebox/next_blue.gif") right 15% no-repeat;
 }
 
 #lbNext.gold:hover, #lbNext.gold:visited:hover {
-    background: url(../images/lytebox/next_gold.gif) right 15% no-repeat;
+    background: url("#{$tuleap-common-theme-basepath}images/lytebox/next_gold.gif") right 15% no-repeat;
 }
 
 #lbPrev2, #lbNext2 {
@@ -296,23 +296,23 @@
 }
 
 #lbClose.grey {
-    background: url(../images/lytebox/close_grey.png) no-repeat;
+    background: url("#{$tuleap-common-theme-basepath}images/lytebox/close_grey.png") no-repeat;
 }
 
 #lbClose.red {
-    background: url(../images/lytebox/close_red.png) no-repeat;
+    background: url("#{$tuleap-common-theme-basepath}images/lytebox/close_red.png") no-repeat;
 }
 
 #lbClose.green {
-    background: url(../images/lytebox/close_green.png) no-repeat;
+    background: url("#{$tuleap-common-theme-basepath}images/lytebox/close_green.png") no-repeat;
 }
 
 #lbClose.blue {
-    background: url(../images/lytebox/close_blue.png) no-repeat;
+    background: url("#{$tuleap-common-theme-basepath}images/lytebox/close_blue.png") no-repeat;
 }
 
 #lbClose.gold {
-    background: url(../images/lytebox/close_gold.png) no-repeat;
+    background: url("#{$tuleap-common-theme-basepath}images/lytebox/close_gold.png") no-repeat;
 }
 
 #lbPlay {
@@ -323,23 +323,23 @@
 }
 
 #lbPlay.grey {
-    background: url(../images/lytebox/play_grey.png) no-repeat;
+    background: url("#{$tuleap-common-theme-basepath}images/lytebox/play_grey.png") no-repeat;
 }
 
 #lbPlay.red {
-    background: url(../images/lytebox/play_red.png) no-repeat;
+    background: url("#{$tuleap-common-theme-basepath}images/lytebox/play_red.png") no-repeat;
 }
 
 #lbPlay.green {
-    background: url(../images/lytebox/play_green.png) no-repeat;
+    background: url("#{$tuleap-common-theme-basepath}images/lytebox/play_green.png") no-repeat;
 }
 
 #lbPlay.blue {
-    background: url(../images/lytebox/play_blue.png) no-repeat;
+    background: url("#{$tuleap-common-theme-basepath}images/lytebox/play_blue.png") no-repeat;
 }
 
 #lbPlay.gold {
-    background: url(../images/lytebox/play_gold.png) no-repeat;
+    background: url("#{$tuleap-common-theme-basepath}images/lytebox/play_gold.png") no-repeat;
 }
 
 #lbPause {
@@ -350,21 +350,21 @@
 }
 
 #lbPause.grey {
-    background: url(../images/lytebox/pause_grey.png) no-repeat;
+    background: url("#{$tuleap-common-theme-basepath}images/lytebox/pause_grey.png") no-repeat;
 }
 
 #lbPause.red {
-    background: url(../images/lytebox/pause_red.png) no-repeat;
+    background: url("#{$tuleap-common-theme-basepath}images/lytebox/pause_red.png") no-repeat;
 }
 
 #lbPause.green {
-    background: url(../images/lytebox/pause_green.png) no-repeat;
+    background: url("#{$tuleap-common-theme-basepath}images/lytebox/pause_green.png") no-repeat;
 }
 
 #lbPause.blue {
-    background: url(../images/lytebox/pause_blue.png) no-repeat;
+    background: url("#{$tuleap-common-theme-basepath}images/lytebox/pause_blue.png") no-repeat;
 }
 
 #lbPause.gold {
-    background: url(../images/lytebox/pause_gold.png) no-repeat;
+    background: url("#{$tuleap-common-theme-basepath}images/lytebox/pause_gold.png") no-repeat;
 }

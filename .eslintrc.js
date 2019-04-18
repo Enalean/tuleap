@@ -125,7 +125,10 @@ module.exports = {
                 "karma.conf.js",
                 "plugins/tracker/grammar/",
                 "tools/**/*.js",
-                "webpack.config.js"
+                "webpack.config.js",
+                "webpack.common.js",
+                "webpack.dev.js",
+                "webpack.prod.js"
             ],
             env: {
                 node: true

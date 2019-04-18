@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -178,8 +178,6 @@ gulp.task("watch", function() {
     gulp.watch(
         core_build_manifest.themes.common.files
             .concat(select2_scss.themes.common.files)
-            .concat(core_build_manifest.themes.FlamingParrot.files)
-            .concat(core_build_manifest.themes.FlamingParrot.watched_includes)
             .concat(core_build_manifest.themes.BurningParrot.files)
             .concat(core_build_manifest.themes.BurningParrot.watched_includes),
         ["sass-core"]

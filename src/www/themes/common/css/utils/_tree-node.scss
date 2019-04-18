@@ -2,7 +2,7 @@
     width: 16px;
     height: 100%;
     display: inline-block;
-    background-image: url('../images/TreeNodeSprites.png');
+    background-image: url("#{$tuleap-common-theme-basepath}images/TreeNodeSprites.png");
     background-repeat: repeat-y;
 
     /*Dirty IE Hack*/

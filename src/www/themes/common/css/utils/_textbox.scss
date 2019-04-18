@@ -91,7 +91,7 @@ div.holder a.bit-box a.closebutton {
     width: 7px;
     height: 7px;
     font-size: 1px;
-    background: url('../images/ic/textboxlist-close.gif');
+    background: url("#{$tuleap-common-theme-basepath}images/ic/textboxlist-close.gif");
 }
 
 div.holder a.bit-box a.closebutton:hover {

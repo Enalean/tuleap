@@ -238,7 +238,7 @@ body > .select2-drop {
     min-height: 32px;
 
     &.loading {
-        background: url('../images/tuleap-spinner.gif') no-repeat center center;
+        background: url('#{$tuleap-common-theme-basepath}images/tuleap-spinner.gif') no-repeat center center;
     }
 
     &.no-search-panes {

@@ -17,10 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const BabelPresetEnv = require("@babel/preset-env");
-const BabelPluginSyntaxDynamicImport = require("@babel/plugin-syntax-dynamic-import");
+const BabelPresetEnv = require("@babel/preset-env").default;
+const BabelPluginSyntaxDynamicImport = require("@babel/plugin-syntax-dynamic-import").default;
 const BabelPluginRewireExports = require("babel-plugin-rewire-exports").default;
 const BabelPluginIstanbul = require("babel-plugin-istanbul").default;
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 const babel_preset_env_ie_config = [
     BabelPresetEnv,
@@ -145,6 +146,23 @@ const rule_easygettext_loader = {
     use: [{ loader: "json-loader" }, { loader: "easygettext-loader" }]
 };
 
+const rule_scss_loader = {
+    test: /\.scss$/,
+    use: [MiniCssExtractPlugin.loader, "css-loader", "sass-loader"]
+};
+
+const rule_css_assets = {
+    test: /(\.(png|gif|eot|ttf|woff|woff2))|(font\.svg)$/,
+    use: [
+        {
+            loader: "file-loader",
+            options: {
+                name: "css-assets/[name]-[sha256:hash].[ext]"
+            }
+        }
+    ]
+};
+
 module.exports = {
     configureBabelRule,
     babel_options_ie11,
@@ -155,5 +173,7 @@ module.exports = {
     rule_ng_cache_loader,
     rule_angular_gettext_loader,
     rule_angular_gettext_extract_loader,
-    rule_easygettext_loader
+    rule_easygettext_loader,
+    rule_scss_loader,
+    rule_css_assets
 };

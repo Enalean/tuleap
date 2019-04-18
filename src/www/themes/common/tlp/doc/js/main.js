@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -42,9 +42,11 @@
     updateAllHexaColors();
 
     function loadStylesheet(color) {
+        // Directly put in the global scope...
+        var manifest = manifest_framework_file;
         var new_stylesheet = document.createElement("link");
         new_stylesheet.rel = "stylesheet";
-        new_stylesheet.href = "../dist/tlp-" + color + ".min.css";
+        new_stylesheet.href = "../dist/" + manifest["tlp-" + color + ".css"];
         var interval = setInterval(function() {
             if (new_stylesheet.sheet.cssRules.length) {
                 clearInterval(interval);
