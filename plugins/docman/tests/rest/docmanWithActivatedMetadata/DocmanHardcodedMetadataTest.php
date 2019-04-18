@@ -322,6 +322,81 @@ class DocmanHardcodedMetadataTest extends DocmanWithMetadataActivatedBase
     }
 
     /**
+     * @depends testGetRootId
+     */
+    public function testPostWikiWithStatusAndObsolescenceDate(int $root_id): void
+    {
+        $headers         = ['Content-Type' => 'application/json'];
+        $wiki_properties = ['page_name' => 'Ten steps to become a Tuleap'];
+        $query           = json_encode(
+            [
+                'title'             => 'How to become a Tuleap wiki version 2',
+                'description'       => 'A description',
+                'wiki_properties'   => $wiki_properties,
+                'status'            => 'approved',
+                'obsolescence_date' => '3000-08-08'
+            ]
+        );
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post('docman_folders/' . $root_id . "/wikis", $headers, $query)
+        );
+
+        $this->assertEquals(201, $response->getStatusCode());
+    }
+
+    /**
+     * @depends testGetRootId
+     */
+    public function testPostWikiWithStatusThrows400IfThereIsABadStatus(int $root_id): void
+    {
+        $headers         = ['Content-Type' => 'application/json'];
+        $wiki_properties = ['page_name' => 'Ten steps to become a Tuleap'];
+        $query           = json_encode(
+            [
+                'title'             => 'How to become a Tuleap wiki version 2',
+                'description'       => 'A description',
+                'wiki_properties'   => $wiki_properties,
+                'status'            => 'approvedsdogjziogj',
+                'obsolescence_date' => '3000-08-08'
+            ]
+        );
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post('docman_folders/' . $root_id . "/wikis", $headers, $query)
+        );
+
+        $this->assertEquals(400, $response->getStatusCode());
+    }
+
+    /**
+     * @depends testGetRootId
+     */
+    public function testPostWikiThrows400IfTheDateIsNotWellFormatted(int $root_id): void
+    {
+        $headers         = ['Content-Type' => 'application/json'];
+        $wiki_properties = ['page_name' => 'Ten steps to become a Tuleap'];
+        $query           = json_encode(
+            [
+                'title'             => 'How to become a Tuleap wiki version 2',
+                'description'       => 'A description',
+                'wiki_properties'   => $wiki_properties,
+                'status'            => 'approved',
+                'obsolescence_date' => '3000-08-08231'
+            ]
+        );
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post('docman_folders/' . $root_id . "/wikis", $headers, $query)
+        );
+
+        $this->assertEquals(400, $response->getStatusCode());
+    }
+
+    /**
      * Find first item in given array of items which has given title.
      *
      * @return array|null Found item. null otherwise.
