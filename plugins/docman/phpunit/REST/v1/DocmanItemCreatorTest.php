@@ -1092,4 +1092,95 @@ class DocmanItemCreatorTest extends TestCase
 
         $this->assertSame(12, $created_item_representation->id);
     }
+
+    public function testWikiDocumentCanBeCreatedWithStatusAndObsolescenceDate(): void
+    {
+        $item_creator = new DocmanItemCreator(
+            $this->item_factory,
+            $this->document_ongoing_upload_retriever,
+            $this->document_to_upload_creator,
+            $this->creator_visitor,
+            $this->empty_file_to_upload_finisher,
+            $this->link_validity_checker,
+            $this->item_status_mapper,
+            $this->metadata_item_status_checker,
+            $this->metadata_obsolescence_date_checker,
+            $this->metadata_obsolesence_date_retriever
+        );
+
+        $parent_item  = \Mockery::mock(\Docman_Item::class);
+        $user         = \Mockery::mock(\PFUser::class);
+        $project      = \Mockery::mock(\Project::class);
+        $current_time = new \DateTimeImmutable();
+
+        $post_representation                             = new DocmanWikiPOSTRepresentation();
+        $post_representation->title                      = 'wiki';
+        $post_representation->wiki_properties            = new WikiPropertiesPOSTPATCHRepresentation();
+        $post_representation->wiki_properties->page_name = "Monchocho";
+        $post_representation->status                     = 'rejected';
+        $post_representation->obsolescence_date          = '2019-10-11';
+
+        $this->document_ongoing_upload_retriever->shouldReceive('isThereAlreadyAnUploadOngoing')->andReturns(false);
+        $parent_item->shouldReceive('getId')->andReturns(11);
+        $user->shouldReceive('getId')->andReturns(222);
+        $project->shouldReceive('getID')->andReturns(102);
+        $project->shouldReceive('usesWiki')->andReturn(true);
+
+        $this->item_status_mapper->shouldReceive('getItemStatusIdFromItemStatusString')->andReturn(
+            PLUGIN_DOCMAN_ITEM_STATUS_REJECTED
+        );
+
+        $this->metadata_item_status_checker->shouldReceive(
+            'checkStatusIsNotSetWhenStatusMetadataIsNotAllowed'
+        )->andReturn(false);
+
+        $this->metadata_obsolescence_date_checker->shouldReceive('checkObsolescenceDateUsage')->once();
+        $obsolescence_date_time_stamp = 123456;
+        $this->metadata_obsolesence_date_retriever->shouldReceive('getTimeStampOfDate')
+                                                  ->withArgs(
+                                                      [
+                                                          $post_representation->obsolescence_date,
+                                                          PLUGIN_DOCMAN_ITEM_TYPE_WIKI
+                                                      ]
+                                                  )
+                                                  ->andReturn($obsolescence_date_time_stamp);
+
+        $this->metadata_obsolescence_date_checker->shouldReceive('checkDateValidity')->once();
+
+
+        $created_item = \Mockery::mock(\Docman_Wiki::class);
+        $created_item->shouldReceive('getId')->andReturns(12);
+        $created_item->shouldReceive('getParentId')->andReturns(11);
+        $created_item->makePartial();
+
+        $this->item_factory
+            ->shouldReceive('createWithoutOrdering')
+            ->with(
+                'wiki',
+                '',
+                11,
+                PLUGIN_DOCMAN_ITEM_STATUS_REJECTED,
+                $obsolescence_date_time_stamp,
+                222,
+                PLUGIN_DOCMAN_ITEM_TYPE_WIKI,
+                "Monchocho",
+                null
+            )
+            ->once()
+            ->andReturns($created_item);
+
+        $this->item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
+
+        $this->creator_visitor->shouldReceive('visitWiki')->once();
+
+        $created_item_representation = $item_creator->createWiki(
+            $parent_item,
+            $user,
+            $post_representation,
+            $current_time,
+            $project
+        );
+
+        $this->assertSame(12, $created_item_representation->id);
+    }
 }

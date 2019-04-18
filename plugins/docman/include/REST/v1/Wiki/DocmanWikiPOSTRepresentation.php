@@ -22,6 +22,8 @@ declare(strict_types = 1);
 
 namespace Tuleap\Docman\REST\v1\Wiki;
 
+use Tuleap\Docman\REST\v1\ItemRepresentation;
+use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
 
 class DocmanWikiPOSTRepresentation
 {
@@ -37,4 +39,12 @@ class DocmanWikiPOSTRepresentation
      * @var WikiPropertiesPOSTPATCHRepresentation {@type \Tuleap\Docman\REST\v1\Wiki\WikiPropertiesPOSTPATCHRepresentation} {@from body} {@required true}
      */
     public $wiki_properties;
+    /**
+     * @var string | null Item status {@from body} {@required false} {@choice none,draft,approved,rejected}
+     */
+    public $status = ItemStatusMapper::ITEM_STATUS_NONE;
+    /**
+     * @var string Obsolescence date {@from body} {@required false}
+     */
+    public $obsolescence_date = ItemRepresentation::OBSOLESCENCE_DATE_NONE;
 }

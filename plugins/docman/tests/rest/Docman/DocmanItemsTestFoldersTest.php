@@ -614,6 +614,54 @@ class DocmanItemsTestFoldersTest extends DocmanBase
     }
 
     /**
+     * @depends testGetRootId
+     */
+    public function testPostWikiWithWithStatusWhenStatusIsNotAllowedForProject(int $root_id): void
+    {
+        $headers         = ['Content-Type' => 'application/json'];
+        $wiki_properties = ['page_name' => 'Ten steps to become a Tuleap'];
+        $query           = json_encode(
+            [
+                'title'           => 'How to become a Tuleap wiki version',
+                'description'     => 'A description',
+                'wiki_properties' => $wiki_properties,
+                'status'          => 'approved'
+            ]
+        );
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post('docman_folders/' . $root_id . "/wikis", $headers, $query)
+        );
+
+        $this->assertEquals(403, $response->getStatusCode());
+    }
+
+    /**
+     * @depends testGetRootId
+     */
+    public function testPostWikiWithObsolescenceDateWhenObsolescenceDateIsNotAllowedForProject(int $root_id): void
+    {
+        $headers         = ['Content-Type' => 'application/json'];
+        $wiki_properties = ['page_name' => 'Ten steps to become a Tuleap'];
+        $query           = json_encode(
+            [
+                'title'             => 'How to become a Tuleap wiki version 2',
+                'description'       => 'A description',
+                'wiki_properties'   => $wiki_properties,
+                'obsolescence_date' => '3000-08-08'
+            ]
+        );
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post('docman_folders/' . $root_id . "/wikis", $headers, $query)
+        );
+
+        $this->assertEquals(403, $response->getStatusCode());
+    }
+
+    /**
      * Find first item in given array of items which has given title.
      * @return array|null Found item. null otherwise.
      */
