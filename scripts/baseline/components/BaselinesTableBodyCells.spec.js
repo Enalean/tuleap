@@ -19,15 +19,15 @@
 
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../support/local-vue.js";
-import BaselineTableBodyCells from "./BaselineTableBodyCells.vue";
+import BaselinesTableBodyCells from "./BaselinesTableBodyCells.vue";
 import { createList } from "../support/factories";
 
-describe("BaselineTableBodyCells", () => {
+describe("BaselinesTableBodyCells", () => {
     const baseline_selector = '[data-test-type="baseline"]';
     let wrapper;
 
     beforeEach(() => {
-        wrapper = shallowMount(BaselineTableBodyCells, {
+        wrapper = shallowMount(BaselinesTableBodyCells, {
             localVue,
             propsData: {
                 baselines: createList("baseline", 3, "presented")

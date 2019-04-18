@@ -41,9 +41,9 @@
             </tr>
         </thead>
 
-        <baseline-table-body-skeleton v-if="is_loading"/>
+        <baselines-table-body-skeleton v-if="is_loading"/>
 
-        <baseline-table-body-cells v-else-if="are_baselines_available" v-bind:baselines="baselines"/>
+        <baselines-table-body-cells v-else-if="are_baselines_available" v-bind:baselines="baselines"/>
 
         <tbody v-else>
             <tr>
@@ -56,13 +56,13 @@
 </template>
 
 <script>
-import BaselineTableBodySkeleton from "./BaselineTableBodySkeleton.vue";
-import BaselineTableBodyCells from "./BaselineTableBodyCells.vue";
+import BaselinesTableBodySkeleton from "./BaselinesTableBodySkeleton.vue";
+import BaselinesTableBodyCells from "./BaselinesTableBodyCells.vue";
 
 export default {
-    name: "BaselineTable",
+    name: "BaselinesTable",
 
-    components: { BaselineTableBodySkeleton, BaselineTableBodyCells },
+    components: { BaselinesTableBodySkeleton, BaselinesTableBodyCells },
 
     props: {
         baselines: { required: false, type: Array },

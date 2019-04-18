@@ -49,7 +49,7 @@
                             <translate>New baseline</translate>
                         </button>
                     </div>
-                    <baseline-table v-bind:baselines="baselines" v-bind:is_loading="are_baselines_loading"/>
+                    <baselines-table v-bind:baselines="baselines" v-bind:is_loading="are_baselines_loading"/>
                 </section>
             </div>
         </section>
@@ -83,7 +83,7 @@
 </template>
 
 <script>
-import BaselineTable from "./BaselineTable.vue";
+import BaselinesTable from "./BaselinesTable.vue";
 import NewBaselineModal from "./new-baseline/NewBaselineModal.vue";
 import NewComparisonModal from "./comparison/NewComparisonModal.vue";
 import { mapState } from "vuex";
@@ -91,7 +91,7 @@ import { mapState } from "vuex";
 export default {
     name: "BaselinesPage",
 
-    components: { BaselineTable },
+    components: { BaselinesTable },
 
     props: {
         project_id: { mandatory: true, type: Number }

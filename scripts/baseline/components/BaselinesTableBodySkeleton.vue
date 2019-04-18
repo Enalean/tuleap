@@ -19,17 +19,17 @@
 
 <template>
     <tbody>
-        <baseline-table-body-cell-skeleton/>
-        <baseline-table-body-cell-skeleton/>
-        <baseline-table-body-cell-skeleton/>
+        <baselines-table-body-cell-skeleton/>
+        <baselines-table-body-cell-skeleton/>
+        <baselines-table-body-cell-skeleton/>
     </tbody>
 </template>
 
 <script>
-import BaselineTableBodyCellSkeleton from "./BaselineTableBodyCellSkeleton.vue";
+import BaselinesTableBodyCellSkeleton from "./BaselinesTableBodyCellSkeleton.vue";
 export default {
-    name: "BaselineTableBodySkeleton",
+    name: "BaselinesTableBodySkeleton",
 
-    components: { BaselineTableBodyCellSkeleton }
+    components: { BaselinesTableBodyCellSkeleton }
 };
 </script>

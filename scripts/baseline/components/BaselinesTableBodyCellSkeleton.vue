@@ -51,7 +51,7 @@
 <script>
 import ActionButton from "./common/ActionButton.vue";
 export default {
-    name: "BaselineTableBodyCellSkeleton",
+    name: "BaselinesTableBodyCellSkeleton",
     components: { ActionButton }
 };
 </script>

@@ -54,7 +54,7 @@ import DeleteBaselineButton from "./DeleteBaselineButton.vue";
 import ShowBaselineButton from "./ShowBaselineButton.vue";
 
 export default {
-    name: "BaselineTableBodyCells",
+    name: "BaselinesTableBodyCells",
     components: {
         ShowBaselineButton,
         ArtifactLink,

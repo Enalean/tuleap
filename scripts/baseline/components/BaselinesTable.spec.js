@@ -20,17 +20,17 @@
 import Vue from "vue";
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../support/local-vue.js";
-import BaselineTable from "./BaselineTable.vue";
-import BaselineTableBodySkeleton from "./BaselineTableBodySkeleton.vue";
-import BaselineTableBodyCells from "./BaselineTableBodyCells.vue";
+import BaselinesTable from "./BaselinesTable.vue";
+import BaselinesTableBodySkeleton from "./BaselinesTableBodySkeleton.vue";
+import BaselinesTableBodyCells from "./BaselinesTableBodyCells.vue";
 import { createList } from "../support/factories";
 
-describe("BaselineTable", () => {
+describe("BaselinesTable", () => {
     const empty_baseline_selector = '[data-test-type="empty-baseline"]';
     let wrapper;
 
     beforeEach(() => {
-        wrapper = shallowMount(BaselineTable, {
+        wrapper = shallowMount(BaselinesTable, {
             localVue,
             propsData: {
                 baselines: [],
@@ -46,11 +46,11 @@ describe("BaselineTable", () => {
         });
 
         it("does not show any baseline", () => {
-            expect(wrapper.contains(BaselineTableBodyCells)).toBeFalsy();
+            expect(wrapper.contains(BaselinesTableBodyCells)).toBeFalsy();
         });
 
         it("shows body table skeleton", () => {
-            expect(wrapper.contains(BaselineTableBodySkeleton)).toBeTruthy();
+            expect(wrapper.contains(BaselinesTableBodySkeleton)).toBeTruthy();
         });
 
         it("does not show a message that specifies an empty state", () => {
@@ -67,11 +67,11 @@ describe("BaselineTable", () => {
         });
 
         it("shows baselines", () => {
-            expect(wrapper.contains(BaselineTableBodyCells)).toBeTruthy();
+            expect(wrapper.contains(BaselinesTableBodyCells)).toBeTruthy();
         });
 
         it("does not show body table skeleton", () => {
-            expect(wrapper.contains(BaselineTableBodySkeleton)).toBeFalsy();
+            expect(wrapper.contains(BaselinesTableBodySkeleton)).toBeFalsy();
         });
 
         it("does not show a message that specifies an empty state", () => {
@@ -81,11 +81,11 @@ describe("BaselineTable", () => {
 
     describe("when no baseline", () => {
         it("does not show baselines", () => {
-            expect(wrapper.contains(BaselineTableBodyCells)).toBeFalsy();
+            expect(wrapper.contains(BaselinesTableBodyCells)).toBeFalsy();
         });
 
         it("does not show body table skeleton", () => {
-            expect(wrapper.contains(BaselineTableBodySkeleton)).toBeFalsy();
+            expect(wrapper.contains(BaselinesTableBodySkeleton)).toBeFalsy();
         });
 
         it("shows a message that specifies an empty state", () => {
