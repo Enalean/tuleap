@@ -47,7 +47,7 @@ class ComparisonsResource extends AuthenticatedResource
      *
      * Create a new comparison between two baselines.
      *
-     * @url    POST /comparisons
+     * @url    POST
      * @status 201
      * @access protected
      *
@@ -79,7 +79,7 @@ class ComparisonsResource extends AuthenticatedResource
      *
      * Get a comparison between two baselines
      *
-     * @url    GET /comparisons/{id}
+     * @url    GET /{id}
      * @access hybrid
      *
      * @param int $id The comparison id
@@ -104,7 +104,7 @@ class ComparisonsResource extends AuthenticatedResource
     }
 
     /**
-     * @url OPTIONS /comparisons
+     * @url OPTIONS
      */
     public function optionsArtifacts()
     {

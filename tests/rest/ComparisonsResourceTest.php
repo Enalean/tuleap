@@ -51,7 +51,7 @@ class ComparisonsResourceTest extends RestBase
         $response = $this->getResponseByName(
             BaselineFixtureData::TEST_USER_NAME,
             $this->client->post(
-                'baselines/comparisons',
+                'baselines_comparisons',
                 null,
                 json_encode(
                     [
@@ -81,7 +81,7 @@ class ComparisonsResourceTest extends RestBase
 
         $response = $this->getResponseByName(
             BaselineFixtureData::TEST_USER_NAME,
-            $this->client->get('baselines/comparisons/' . $comparison['id'])
+            $this->client->get('baselines_comparisons/' . $comparison['id'])
         );
 
         $this->assertEquals(200, $response->getStatusCode());
@@ -153,7 +153,7 @@ class ComparisonsResourceTest extends RestBase
         $response = $this->getResponseByName(
             BaselineFixtureData::TEST_USER_NAME,
             $this->client->post(
-                'baselines/comparisons',
+                'baselines_comparisons',
                 null,
                 json_encode(
                     [

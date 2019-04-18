@@ -34,6 +34,6 @@ class BaselineRestResourcesInjector
         $restler->addAPIClass(ProjectBaselinesResource::class, ProjectRepresentation::ROUTE);
         $restler->addAPIClass(ProjectComparisonsResource::class, ProjectRepresentation::ROUTE);
         $restler->addAPIClass(BaselineArtifactsResource::class, 'baselines');
-        $restler->addAPIClass(ComparisonsResource::class, 'baselines');
+        $restler->addAPIClass(ComparisonsResource::class, 'baselines_comparisons');
     }
 }

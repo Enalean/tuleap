@@ -67,7 +67,7 @@ async function getBaseline(id) {
 }
 
 async function getComparison(id) {
-    const response = await get(`/api/baselines/comparisons/${id}`);
+    const response = await get(`/api/baselines_comparisons/${id}`);
     return response.json();
 }
 
@@ -123,7 +123,7 @@ async function createComparison(name, comment, base_baseline_id, compared_to_bas
         compared_to_baseline_id
     });
 
-    const response = await post("/api/baselines/comparisons/", {
+    const response = await post("/api/baselines_comparisons/", {
         headers: JSON_HEADERS,
         body
     });
