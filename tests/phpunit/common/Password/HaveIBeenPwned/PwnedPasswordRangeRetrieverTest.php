@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,44 +18,88 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Password\HaveIBeenPwned;
 
+use Http\Client\Exception;
+use Http\Mock\Client;
+use Logger;
+use Mockery;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\RequestFactoryInterface;
+use Tuleap\Http\HTTPFactoryBuilder;
 
 class PwnedPasswordRangeRetrieverTest extends TestCase
 {
-    public function testAPIResponseIsRetrieved()
-    {
-        $http_client = $this->createMock(\Http_Client::class);
-        $http_client->method('getLastResponse')->willReturn('API_RESPONSE');
-        $logger = $this->createMock(\Logger::class);
+    use MockeryPHPUnitIntegration;
 
-        $retriever     = new PwnedPasswordRangeRetriever($http_client, $logger);
+    public function testAPIResponseIsRetrieved() : void
+    {
+        $http_client   = new Client();
+        $response_body = HTTPFactoryBuilder::streamFactory()->createStream('API_RESPONSE');
+        $response      = HTTPFactoryBuilder::responseFactory()->createResponse(200)->withBody($response_body);
+        $http_client->addResponse($response);
+
+        $retriever     = new PwnedPasswordRangeRetriever(
+            $http_client,
+            HTTPFactoryBuilder::requestFactory(),
+            Mockery::mock(Logger::class)
+        );
         $hash_suffixes = $retriever->getHashSuffixesMatchingPrefix('AAAAA');
 
         $this->assertEquals('API_RESPONSE', $hash_suffixes);
     }
 
-    public function testTooLongPrefixIsRejected()
+    public function testTooLongPrefixIsRejected() : void
     {
-        $http_client = $this->createMock(\Http_Client::class);
-        $logger      = $this->createMock(\Logger::class);
-
-        $retriever = new PwnedPasswordRangeRetriever($http_client, $logger);
+        $retriever = new PwnedPasswordRangeRetriever(
+            Mockery::mock(ClientInterface::class),
+            Mockery::mock(RequestFactoryInterface::class),
+            Mockery::mock(Logger::class)
+        );
 
         $this->expectException(\LengthException::class);
 
         $retriever->getHashSuffixesMatchingPrefix(sha1('password'));
     }
 
-    public function testAPICallErrorGivesEmptyResponse()
+    public function testAPICallWithInvalidResponseGivesEmptyResult() : void
     {
-        $http_client = $this->createMock(\Http_Client::class);
-        $http_client->method('doRequest')->willThrowException(new \Http_ClientException());
-        $logger = $this->createMock(\Logger::class);
-        $logger->expects($this->once())->method('info');
+        $http_client = new Client();
+        $response    = HTTPFactoryBuilder::responseFactory()->createResponse(504);
+        $http_client->addResponse($response);
+        $logger = Mockery::mock(Logger::class);
 
-        $retriever     = new PwnedPasswordRangeRetriever($http_client, $logger);
+        $retriever = new PwnedPasswordRangeRetriever(
+            $http_client,
+            HTTPFactoryBuilder::requestFactory(),
+            $logger
+        );
+
+        $logger->shouldReceive('info')->once();
+
+        $hash_suffixes = $retriever->getHashSuffixesMatchingPrefix('AAAAA');
+
+        $this->assertEquals('', $hash_suffixes);
+    }
+
+    public function testAPICallErrorGivesEmptyResult() : void
+    {
+        $http_client = new Client();
+        $http_client->addException(Mockery::mock(Exception\RequestException::class));
+        $logger = Mockery::mock(Logger::class);
+
+        $retriever = new PwnedPasswordRangeRetriever(
+            $http_client,
+            HTTPFactoryBuilder::requestFactory(),
+            $logger
+        );
+
+        $logger->shouldReceive('info')->once();
+
         $hash_suffixes = $retriever->getHashSuffixesMatchingPrefix('AAAAA');
 
         $this->assertEquals('', $hash_suffixes);

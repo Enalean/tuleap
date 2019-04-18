@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,32 +18,42 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Password\HaveIBeenPwned;
+
+use Logger;
+use Psr\Http\Client\ClientExceptionInterface;
+use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\RequestFactoryInterface;
 
 /**
  * @see https://haveibeenpwned.com/API/v2#SearchingPwnedPasswordsByRange
  */
 class PwnedPasswordRangeRetriever
 {
+    private const ENDPOINT = 'https://api.pwnedpasswords.com/range/';
     /**
-     * Set a low timeout for HTTP requests made to the API.
-     * Even if the API becomes slow or inaccessible the user
-     * experience will not be impacted too much.
+     * @var ClientInterface
      */
-    const AGGRESSIVE_TIMEOUT_FOR_HTTP_REQUEST = 2;
-    const ENDPOINT                            = 'https://api.pwnedpasswords.com/range/';
+    private $http_client;
+    /**
+     * @var RequestFactoryInterface
+     */
+    private $request_factory;
+    /**
+     * @var Logger
+     */
+    private $logger;
 
-    public function __construct(\Http_Client $http_client, \Logger $logger)
+    public function __construct(ClientInterface $http_client, RequestFactoryInterface $request_factory, Logger $logger)
     {
-        $this->http_client = $http_client;
-        $this->http_client->setOption(CURLOPT_TIMEOUT, self::AGGRESSIVE_TIMEOUT_FOR_HTTP_REQUEST);
-        $this->logger = $logger;
+        $this->http_client     = $http_client;
+        $this->request_factory = $request_factory;
+        $this->logger          = $logger;
     }
 
-    /**
-     * @return string
-     */
-    public function getHashSuffixesMatchingPrefix($sha1_password_prefix)
+    public function getHashSuffixesMatchingPrefix(string $sha1_password_prefix) : string
     {
         if (strlen($sha1_password_prefix) !== PwnedPasswordChecker::PREFIX_SIZE) {
             throw new \LengthException(
@@ -53,15 +63,21 @@ class PwnedPasswordRangeRetriever
 
         $url = self::ENDPOINT . urlencode($sha1_password_prefix);
 
-        $this->http_client->setOption(CURLOPT_URL, $url);
+        $request = $this->request_factory->createRequest('GET', $url);
 
         try {
-            $this->http_client->doRequest();
-        } catch (\Http_ClientException $ex) {
+            $response = $this->http_client->sendRequest($request);
+        } catch (ClientExceptionInterface $ex) {
             $this->logger->info('Call to HIBP Password API failed: ' . $ex->getMessage());
             return '';
         }
 
-        return $this->http_client->getLastResponse();
+        if ($response->getStatusCode() !== 200) {
+            $this->logger->info('Response from the HIBP Password API is invalid: ' .
+                $response->getStatusCode() . ' ' . $response->getReasonPhrase());
+            return '';
+        }
+
+        return $response->getBody()->getContents();
     }
 }
