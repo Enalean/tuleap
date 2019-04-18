@@ -83,7 +83,7 @@
 </template>
 
 <script>
-import BaselinesTable from "./BaselinesTable.vue";
+import BaselinesTable from "./baselines-list/BaselinesTable.vue";
 import NewBaselineModal from "./new-baseline/NewBaselineModal.vue";
 import NewComparisonModal from "./comparison/NewComparisonModal.vue";
 import { mapState } from "vuex";

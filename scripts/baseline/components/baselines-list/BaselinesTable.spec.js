@@ -15,15 +15,16 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 import Vue from "vue";
 import { shallowMount } from "@vue/test-utils";
-import localVue from "../support/local-vue.js";
+import localVue from "../../support/local-vue.js";
 import BaselinesTable from "./BaselinesTable.vue";
 import BaselinesTableBodySkeleton from "./BaselinesTableBodySkeleton.vue";
 import BaselinesTableBodyCells from "./BaselinesTableBodyCells.vue";
-import { createList } from "../support/factories";
+import { createList } from "../../support/factories";
 
 describe("BaselinesTable", () => {
     const empty_baseline_selector = '[data-test-type="empty-baseline"]';

@@ -15,6 +15,7 @@
   -
   - You should have received a copy of the GNU General Public License
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+  -
   -->
 
 <template>
@@ -49,7 +50,7 @@
     </tr>
 </template>
 <script>
-import ActionButton from "./common/ActionButton.vue";
+import ActionButton from "../common/ActionButton.vue";
 export default {
     name: "BaselinesTableBodyCellSkeleton",
     components: { ActionButton }

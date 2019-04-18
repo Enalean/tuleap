@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import ActionButton from "./common/ActionButton.vue";
+import ActionButton from "../common/ActionButton.vue";
 import DeleteBaselineConfirmationModal from "./DeleteBaselineConfirmationModal.vue";
 
 export default {

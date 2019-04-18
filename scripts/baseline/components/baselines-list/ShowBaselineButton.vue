@@ -26,7 +26,7 @@
     </action-button>
 </template>
 <script>
-import ActionButton from "./common/ActionButton.vue";
+import ActionButton from "../common/ActionButton.vue";
 export default {
     name: "ShowBaselineButton",
     components: { ActionButton },

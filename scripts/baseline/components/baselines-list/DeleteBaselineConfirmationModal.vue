@@ -63,7 +63,7 @@
 </template>
 
 <script>
-import { deleteBaseline } from "../api/rest-querier";
+import { deleteBaseline } from "../../api/rest-querier";
 
 export default {
     name: "DeleteBaselineConfirmationModal",

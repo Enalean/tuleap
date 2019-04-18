@@ -15,6 +15,7 @@
   -
   - You should have received a copy of the GNU General Public License
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+  -
   -->
 
 <template>
@@ -46,10 +47,10 @@
 </template>
 
 <script>
-import HumanizedDate from "./common/HumanizedDate.vue";
-import UserBadge from "./common/UserBadge.vue";
-import ArtifactLink from "./common/ArtifactLink.vue";
-import ArtifactBadge from "./common/ArtifactBadge.vue";
+import HumanizedDate from "../common/HumanizedDate.vue";
+import UserBadge from "../common/UserBadge.vue";
+import ArtifactLink from "../common/ArtifactLink.vue";
+import ArtifactBadge from "../common/ArtifactBadge.vue";
 import DeleteBaselineButton from "./DeleteBaselineButton.vue";
 import ShowBaselineButton from "./ShowBaselineButton.vue";
 
