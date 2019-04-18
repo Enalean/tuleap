@@ -1,6 +1,6 @@
 #
 # Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
-# Copyright (c) Enalean, 2011 - 2018. All Rights Reserved.
+# Copyright (c) Enalean, 2011 - Present. All Rights Reserved.
 #
 # This file is a part of Tuleap.
 #
@@ -1470,7 +1470,7 @@ CREATE TABLE IF NOT EXISTS cross_references (
 #
 # Table structure for System Events
 #
-# type        : one of "PROJECT_CREATE", "PROJECT_DELETE", "USER_CREATE", etc.
+# type        : one of "PROJECT_CREATE", "PROJECT_DELETE", etc.
 # parameters  : event parameters (group_id, etc.) depending on event type
 # priority    : event priority from 3 (high prio) to 1 (low prio)
 # status      : event status: 'NEW' = nothing done yet, 'RUNNING' = event is being processed,

@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2011 — 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 — Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -45,7 +45,7 @@ abstract class SystemEvent {
     const TYPE_PROJECT_SVN_AUTHENTICATION_CACHE_REFRESH = "PROJECT_SVN_AUTHENTICATION_CACHE_REFRESH";
     const TYPE_PROJECT_RENAME                           = "PROJECT_RENAME";
     const TYPE_UGROUP_MODIFY                            = "UGROUP_MODIFY";
-    const TYPE_USER_CREATE                              = "USER_CREATE";
+    public const TYPE_USER_ACTIVE_STATUS_CHANGE         = "ACTIVE_USER_STATUS_CHANGE";
     const TYPE_USER_DELETE                              = "USER_DELETE";
     const TYPE_USER_MODIFY                              = "USER_MODIFY";
     const TYPE_USER_RENAME                              = "USER_RENAME";
