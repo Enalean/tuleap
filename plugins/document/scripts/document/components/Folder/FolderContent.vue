@@ -95,6 +95,7 @@ export default {
     },
     methods: {
         displayQuickLook(item) {
+            this.$store.commit("updateCurrentlyPreviewedItem", item);
             this.quick_look_item = item;
             this.toggle_quick_look = true;
         },

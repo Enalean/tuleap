@@ -18,7 +18,7 @@
   -
   -->
 <template>
-    <section class="tlp-pane-container">
+    <section class="tlp-pane-container" v-if="currently_previewed_item !== null">
         <div class="tlp-pane-header document-quick-look-header">
             <h2 class="tlp-pane-title document-quick-look-title" v-bind:title="item.title">
                 <i class="tlp-pane-title-icon fa" v-bind:class="icon_class"></i>
@@ -51,6 +51,7 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 import {
     ICON_EMBEDDED,
     ICON_EMPTY,
@@ -80,6 +81,7 @@ export default {
         item: Object
     },
     computed: {
+        ...mapState(["currently_previewed_item"]),
         icon_class() {
             switch (this.item.type) {
                 case TYPE_FOLDER:
@@ -119,10 +121,13 @@ export default {
                     name = "EmptyOrEmbedded";
                     break;
                 default:
-                    return;
+                    return null;
             }
             return () => import(/* webpackChunkName: "quick-look-" */ `./QuickLook${name}.vue`);
         }
+    },
+    mounted() {
+        this.$store.commit("updateCurrentlyPreviewedItem", this.item);
     },
     methods: {
         closeQuickLookEvent() {

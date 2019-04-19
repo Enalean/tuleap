@@ -17,25 +17,33 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vuex from "vuex";
 import { shallowMount } from "@vue/test-utils";
-import Preview from "./QuickLookDocumentPreview.vue";
-import { TYPE_FILE, TYPE_EMBEDDED, TYPE_LINK } from "../../../constants.js";
+import QuickLookDocumentPreview from "./QuickLookDocumentPreview.vue";
+import { TYPE_EMBEDDED, TYPE_FILE, TYPE_LINK } from "../../../constants.js";
 
 import localVue from "../../../helpers/local-vue.js";
 import { createStoreMock } from "../../../helpers/store-wrapper.spec-helper.js";
 
 describe("QuickLookDocumentPreview", () => {
-    let store_options, store;
+    let preview_factory, state, store;
 
     beforeEach(() => {
-        store_options = {};
+        state = {};
+
+        const store_options = { state };
 
         store = createStoreMock(store_options);
+        preview_factory = (props = {}) => {
+            return shallowMount(QuickLookDocumentPreview, {
+                localVue,
+                propsData: { ...props },
+                mocks: { $store: store }
+            });
+        };
     });
 
     it("Renders an image if the item is an image", () => {
-        const item = {
+        store.state.currently_previewed_item = {
             id: 42,
             parent_id: 66,
             type: TYPE_FILE,
@@ -43,14 +51,8 @@ describe("QuickLookDocumentPreview", () => {
                 file_type: "image/png"
             }
         };
-        const component_options = {
-            localVue,
-            propsData: {
-                item
-            }
-        };
 
-        const wrapper = shallowMount(Preview, { store, ...component_options });
+        const wrapper = preview_factory();
 
         expect(wrapper.contains(".document-quick-look-image-container")).toBeTruthy();
         expect(wrapper.contains(".document-quick-look-embedded")).toBeFalsy();
@@ -58,7 +60,7 @@ describe("QuickLookDocumentPreview", () => {
     });
 
     it("Renders some rich text html if the item is an embedded file", () => {
-        const item = {
+        store.state.currently_previewed_item = {
             id: 42,
             parent_id: 66,
             type: TYPE_EMBEDDED,
@@ -66,17 +68,7 @@ describe("QuickLookDocumentPreview", () => {
                 content: "<h1>Hello world!</h1>"
             }
         };
-        const component_options = {
-            localVue,
-            propsData: {
-                item
-            }
-        };
-
-        const store = new Vuex.Store({
-            state: {}
-        });
-        const wrapper = shallowMount(Preview, { store, ...component_options });
+        const wrapper = preview_factory();
 
         expect(wrapper.contains(".document-quick-look-embedded")).toBeTruthy();
         expect(wrapper.contains(".document-quick-look-image-container")).toBeFalsy();
@@ -84,23 +76,13 @@ describe("QuickLookDocumentPreview", () => {
     });
 
     it("Displays the icon passed in props otherwise", () => {
-        const item = {
+        store.state.currently_previewed_item = {
             id: 42,
             parent_id: 66,
             type: TYPE_LINK
         };
-        const component_options = {
-            localVue,
-            propsData: {
-                item,
-                iconClass: "fa-link"
-            }
-        };
 
-        const store = new Vuex.Store({
-            state: {}
-        });
-        const wrapper = shallowMount(Preview, { store, ...component_options });
+        const wrapper = preview_factory({ iconClass: "fa-link" });
 
         expect(wrapper.contains(".fa-link")).toBeTruthy();
         expect(wrapper.contains(".document-quick-look-icon-container")).toBeTruthy();

@@ -18,31 +18,31 @@
   -
   -->
 <template>
-    <div v-dompurify-html="item.embedded_file_properties.content"
+    <div v-dompurify-html="currently_previewed_item.embedded_file_properties.content"
          class="document-quick-look-embedded"
          v-if="is_embedded"
     ></div>
 
-    <div class="document-quick-look-image-container" v-else-if="is_an_image && item.user_can_write">
+    <div class="document-quick-look-image-container" v-else-if="is_an_image && currently_previewed_item.user_can_write">
         <div class="document-quick-look-image-overlay">
             <i class="fa fa-file-image-o document-quick-look-update-image-icon"></i>
             <span class="document-quick-look-dropzone-text" v-translate>
                 Drop to upload a new version
             </span>
         </div>
-        <img class="document-quick-look-image" v-bind:src="item.file_properties.download_href" v-bind:alt="item.title">
+        <img class="document-quick-look-image" v-bind:src="currently_previewed_item.file_properties.download_href" v-bind:alt="currently_previewed_item.title">
     </div>
-    <div class="document-quick-look-image-container" v-else-if="is_an_image && ! item.user_can_write">
+    <div class="document-quick-look-image-container" v-else-if="is_an_image && ! currently_previewed_item.user_can_write">
         <div class="document-quick-look-image-overlay">
             <i class="fa fa-ban"></i>
             <span class="document-quick-look-dropzone-text" v-translate>
                 You are not allowed to update this file
             </span>
         </div>
-        <img class="document-quick-look-image" v-bind:src="item.file_properties.download_href" v-bind:alt="item.title">
+        <img class="document-quick-look-image" v-bind:src="currently_previewed_item.file_properties.download_href" v-bind:alt="currently_previewed_item.title">
     </div>
 
-    <div class="document-quick-look-folder-container" v-else-if="is_a_folder && item.user_can_write">
+    <div class="document-quick-look-folder-container" v-else-if="is_a_folder && currently_previewed_item.user_can_write">
         <icon-quicklook-folder/>
         <icon-quicklook-drop-into-folder/>
         <span key="upload"
@@ -52,7 +52,7 @@
             Drop to upload in folder
         </span>
     </div>
-    <div class="document-quick-look-folder-container" v-else-if="is_a_folder && ! item.user_can_write">
+    <div class="document-quick-look-folder-container" v-else-if="is_a_folder && ! currently_previewed_item.user_can_write">
         <icon-quicklook-folder/>
         <i class="fa fa-ban"></i>
         <span key="folder"
@@ -63,7 +63,7 @@
         </span>
     </div>
 
-    <div class="document-quick-look-icon-container" v-else-if="item.user_can_write">
+    <div class="document-quick-look-icon-container" v-else-if="currently_previewed_item.user_can_write">
         <i class="fa document-quick-look-icon"
            v-bind:class="iconClass"
         ></i>
@@ -88,6 +88,7 @@
     </div>
 </template>
 <script>
+import { mapState } from "vuex";
 import { TYPE_EMBEDDED, TYPE_FOLDER } from "../../../constants.js";
 import IconQuicklookFolder from "../../svg-icons/IconQuicklookFolder.vue";
 import IconQuicklookDropIntoFolder from "../../svg-icons/IconQuicklookDropIntoFolder.vue";
@@ -98,29 +99,27 @@ export default {
         IconQuicklookDropIntoFolder
     },
     props: {
-        item: Object,
         iconClass: String
     },
     computed: {
+        ...mapState(["currently_previewed_item"]),
         is_an_image() {
-            if (!this.item.file_properties) {
+            if (!this.currently_previewed_item.file_properties) {
                 return false;
             }
             return (
-                this.item.file_properties && this.item.file_properties.file_type.includes("image")
+                this.currently_previewed_item.file_properties &&
+                this.currently_previewed_item.file_properties.file_type.includes("image")
             );
         },
         is_embedded() {
-            return this.item.type === TYPE_EMBEDDED;
-        },
-        embedded_content() {
-            if (!this.item.embedded_file_properties) {
-                return "";
-            }
-            return this.item.embedded_file_properties.content;
+            return (
+                this.currently_previewed_item.type === TYPE_EMBEDDED &&
+                this.currently_previewed_item.embedded_file_properties
+            );
         },
         is_a_folder() {
-            return this.item.type === TYPE_FOLDER;
+            return this.currently_previewed_item.type === TYPE_FOLDER;
         }
     }
 };
