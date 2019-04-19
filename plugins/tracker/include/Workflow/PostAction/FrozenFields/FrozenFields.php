@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Workflow\PostAction\ReadOnly;
+namespace Tuleap\Tracker\Workflow\PostAction\FrozenFields;
 
 use Codendi_Request;
 use SimpleXMLElement;
@@ -28,9 +28,9 @@ use Tracker_FormElement_Field;
 use Transition_PostAction;
 use Tuleap\Tracker\Workflow\PostAction\Visitor;
 
-class ReadOnlyFields extends Transition_PostAction
+class FrozenFields extends Transition_PostAction
 {
-    public const SHORT_NAME = 'read_only_fields';
+    public const SHORT_NAME = 'frozen';
 
     /** @var int[] */
     private $field_ids = [];
@@ -113,6 +113,6 @@ class ReadOnlyFields extends Transition_PostAction
 
     public function accept(Visitor $visitor)
     {
-        $visitor->visitReadOnlyFields($this);
+        $visitor->visitFrozenFields($this);
     }
 }

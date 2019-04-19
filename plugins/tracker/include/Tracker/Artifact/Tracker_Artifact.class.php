@@ -56,9 +56,9 @@ use Tuleap\Tracker\FormElement\Field\Burndown\BurndownRemainingEffortAdderForRES
 use Tuleap\Tracker\Notifications\UnsubscribersNotificationDAO;
 use Tuleap\Tracker\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\RecentlyVisited\VisitRecorder;
-use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyDao;
-use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyFieldDetector;
-use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyFieldsRetriever;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
 use Tuleap\Tracker\Workflow\WorkflowUpdateChecker;
 
 class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interface //phpcs:ignoreFile
@@ -2029,9 +2029,9 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      */
     protected function getWorkflowUpdateChecker()
     {
-        $read_only_detector = new ReadOnlyFieldDetector(
-            new ReadOnlyFieldsRetriever(new ReadOnlyDao())
+        $frozen_field_detector = new FrozenFieldDetector(
+            new FrozenFieldsRetriever(new FrozenFieldsDao())
         );
-        return new WorkflowUpdateChecker($read_only_detector);
+        return new WorkflowUpdateChecker($frozen_field_detector);
     }
 }

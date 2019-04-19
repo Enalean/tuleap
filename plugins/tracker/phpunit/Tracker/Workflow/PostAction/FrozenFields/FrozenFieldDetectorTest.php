@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Workflow\PostAction\ReadOnly;
+namespace Tuleap\Tracker\Workflow\PostAction\FrozenFields;
 
 require_once __DIR__ . '/../../../../bootstrap.php';
 
@@ -30,22 +30,22 @@ use PHPUnit\Framework\TestCase;
 use Tuleap\Tracker\Workflow\PostAction\PostActionsRetriever;
 use Tuleap\Tracker\Workflow\Transition\NoTransitionForStateException;
 
-final class ReadOnlyFieldDetectorTest extends TestCase
+final class FrozenFieldDetectorTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    /** @var ReadOnlyFieldDetector */
-    private $read_only_field_detector;
+    /** @var FrozenFieldDetector */
+    private $frozen_field_detector;
     /** @var Mockery\MockInterface */
-    private $read_only_fields_retriever;
+    private $frozen_retriever;
 
     protected function setUp(): void
     {
-        $this->read_only_fields_retriever = Mockery::mock(ReadOnlyFieldsRetriever::class);
-        $this->read_only_field_detector   = new ReadOnlyFieldDetector($this->read_only_fields_retriever);
+        $this->frozen_retriever      = Mockery::mock(FrozenFieldsRetriever::class);
+        $this->frozen_field_detector = new FrozenFieldDetector($this->frozen_retriever);
     }
 
-    public function testIsFieldReadOnlyReturnsFalseWhenNoWorkflow()
+    public function testIsFieldFrozenReturnsFalseWhenNoWorkflow()
     {
         $artifact = Mockery::mock(\Tracker_Artifact::class);
         $field    = Mockery::mock(\Tracker_FormElement_Field::class);
@@ -53,11 +53,11 @@ final class ReadOnlyFieldDetectorTest extends TestCase
         $artifact->shouldReceive('getWorkflow')->andReturnNull();
 
         $this->assertFalse(
-            $this->read_only_field_detector->isFieldReadOnly($artifact, $field)
+            $this->frozen_field_detector->isFieldFrozen($artifact, $field)
         );
     }
 
-    public function testIsFieldReadOnlyReturnsFalseWhenWorkflowIsNotUsed()
+    public function testIsFieldFrozenReturnsFalseWhenWorkflowIsNotUsed()
     {
         $artifact = Mockery::mock(\Tracker_Artifact::class);
         $field    = Mockery::mock(\Tracker_FormElement_Field::class);
@@ -67,11 +67,11 @@ final class ReadOnlyFieldDetectorTest extends TestCase
         $artifact->shouldReceive('getWorkflow')->andReturns($workflow);
 
         $this->assertFalse(
-            $this->read_only_field_detector->isFieldReadOnly($artifact, $field)
+            $this->frozen_field_detector->isFieldFrozen($artifact, $field)
         );
     }
 
-    public function testIsFieldReadOnlyReturnsFalseWhenWorkflowIsAdvanced()
+    public function testIsFieldFrozenReturnsFalseWhenWorkflowIsAdvanced()
     {
         $artifact = Mockery::mock(\Tracker_Artifact::class);
         $field    = Mockery::mock(\Tracker_FormElement_Field::class);
@@ -82,11 +82,11 @@ final class ReadOnlyFieldDetectorTest extends TestCase
         $artifact->shouldReceive('getWorkflow')->andReturns($workflow);
 
         $this->assertFalse(
-            $this->read_only_field_detector->isFieldReadOnly($artifact, $field)
+            $this->frozen_field_detector->isFieldFrozen($artifact, $field)
         );
     }
 
-    public function testIsFieldReadOnlyReturnsFalseWhenNoTransitionIsDefinedForCurrentState()
+    public function testIsFieldFrozenReturnsFalseWhenNoTransitionIsDefinedForCurrentState()
     {
         $artifact = Mockery::mock(\Tracker_Artifact::class);
         $field    = Mockery::mock(\Tracker_FormElement_Field::class);
@@ -98,11 +98,11 @@ final class ReadOnlyFieldDetectorTest extends TestCase
         $artifact->shouldReceive('getWorkflow')->andReturns($workflow);
 
         $this->assertFalse(
-            $this->read_only_field_detector->isFieldReadOnly($artifact, $field)
+            $this->frozen_field_detector->isFieldFrozen($artifact, $field)
         );
     }
 
-    public function testIsFieldReadOnlyReturnsFalseWhenNoReadOnlyFieldsPostAction()
+    public function testIsFieldFrozenReturnsFalseWhenNoFrozenFieldsPostAction()
     {
         $artifact = Mockery::mock(\Tracker_Artifact::class);
         $field    = Mockery::mock(\Tracker_FormElement_Field::class);
@@ -112,39 +112,39 @@ final class ReadOnlyFieldDetectorTest extends TestCase
         $workflow->shouldReceive('getFirstTransitionForCurrentState')
             ->andReturns($transition);
         $artifact->shouldReceive('getWorkflow')->andReturns($workflow);
-        $this->read_only_fields_retriever
-            ->shouldReceive('getReadOnlyFields')
+        $this->frozen_retriever
+            ->shouldReceive('getFrozenFields')
             ->with($transition)
-            ->andThrows(new NoReadOnlyFieldsPostActionException());
+            ->andThrows(new NoFrozenFieldsPostActionException());
 
         $this->assertFalse(
-            $this->read_only_field_detector->isFieldReadOnly($artifact, $field)
+            $this->frozen_field_detector->isFieldFrozen($artifact, $field)
         );
     }
 
-    public function testIsFieldReadOnlyReturnsFalseWhenGivenFieldIsNotAmongReadOnlyFields()
+    public function testIsFieldFrozenReturnsFalseWhenGivenFieldIsNotAmongFrozenFields()
     {
         $field    = Mockery::mock(\Tracker_FormElement_Field::class);
         $artifact = $this->mockArtifactWithWorkflow();
 
-        $this->mockReadOnlyFields(242, 566);
+        $this->mockFrozenFields(242, 566);
         $field->shouldReceive('getId')->andReturns('312');
 
         $this->assertFalse(
-            $this->read_only_field_detector->isFieldReadOnly($artifact, $field)
+            $this->frozen_field_detector->isFieldFrozen($artifact, $field)
         );
     }
 
-    public function testIsFieldReadOnlyReturnsTrueWhenGivenFieldIsReadOnly()
+    public function testIsFieldFrozenReturnsTrueWhenGivenFieldIsReadOnly()
     {
         $field    = Mockery::mock(\Tracker_FormElement_Field::class);
         $artifact = $this->mockArtifactWithWorkflow();
 
-        $this->mockReadOnlyFields(242, 312, 566);
+        $this->mockFrozenFields(242, 312, 566);
         $field->shouldReceive('getId')->andReturns('312');
 
         $this->assertTrue(
-            $this->read_only_field_detector->isFieldReadOnly($artifact, $field)
+            $this->frozen_field_detector->isFieldFrozen($artifact, $field)
         );
     }
 
@@ -169,11 +169,11 @@ final class ReadOnlyFieldDetectorTest extends TestCase
         return $artifact;
     }
 
-    private function mockReadOnlyFields(int ...$field_ids): void
+    private function mockFrozenFields(int ...$field_ids): void
     {
-        $read_only_fields_post_action = Mockery::mock(ReadOnlyFields::class);
-        $this->read_only_fields_retriever
-            ->shouldReceive('getReadOnlyFields')
+        $read_only_fields_post_action = Mockery::mock(FrozenFields::class);
+        $this->frozen_retriever
+            ->shouldReceive('getFrozenFields')
             ->andReturns($read_only_fields_post_action);
         $read_only_fields_post_action
             ->shouldReceive('getFieldIds')

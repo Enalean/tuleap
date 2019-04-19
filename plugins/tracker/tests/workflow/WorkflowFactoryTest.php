@@ -19,7 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyDao;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\WorkflowBackendLogger;
 
 require_once __DIR__.'/../bootstrap.php';
@@ -91,7 +91,7 @@ class WorkflowFactoryTest extends TuleapTestCase {
             mock('Tracker_FormElementFactory'),
             mock('Tracker_Workflow_Trigger_RulesManager'),
             new WorkflowBackendLogger(Mockery::spy(BackendLogger::class), Logger::DEBUG),
-            \Mockery::mock(ReadOnlyDao::class)
+            \Mockery::mock(FrozenFieldsDao::class)
         );
 
         $workflow = $workflow_factory->getInstanceFromXML($xml, $mapping, $tracker, $this->project);
@@ -160,7 +160,7 @@ class WorkflowFactory_IsFieldUsedInWorkflowTest extends TuleapTestCase {
                 mock('Tracker_FormElementFactory'),
                 mock('Tracker_Workflow_Trigger_RulesManager'),
                 new WorkflowBackendLogger(Mockery::spy(BackendLogger::class), Logger::DEBUG),
-                \Mockery::mock(ReadOnlyDao::class)
+                \Mockery::mock(FrozenFieldsDao::class)
             )
         );
         stub($this->workflow_factory)->getWorkflowByTrackerId($tracker->getId())->returns($workflow);
@@ -205,7 +205,7 @@ class WorkflowFactory_CacheTest extends TuleapTestCase {
                 mock('Tracker_FormElementFactory'),
                 mock('Tracker_Workflow_Trigger_RulesManager'),
                 new WorkflowBackendLogger(Mockery::spy(BackendLogger::class), Logger::DEBUG),
-                \Mockery::mock(ReadOnlyDao::class)
+                \Mockery::mock(FrozenFieldsDao::class)
             )
         );
         $this->dao = mock('Workflow_Dao');

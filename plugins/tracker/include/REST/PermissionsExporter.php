@@ -26,7 +26,7 @@ use PFUser;
 use Tracker_Artifact;
 use Tracker_FormElement;
 use Tracker_FormElement_Field;
-use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyFieldDetector;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 
 class PermissionsExporter
 {
@@ -36,11 +36,11 @@ class PermissionsExporter
     ];
 
     /**
-     * @var ReadOnlyFieldDetector
+     * @var FrozenFieldDetector
      */
     private $read_only_field_detector;
 
-    public function __construct(ReadOnlyFieldDetector $read_only_field_detector)
+    public function __construct(FrozenFieldDetector $read_only_field_detector)
     {
         $this->read_only_field_detector = $read_only_field_detector;
     }
@@ -63,7 +63,7 @@ class PermissionsExporter
             return $permissions;
         }
 
-        if ($this->read_only_field_detector->isFieldReadOnly($artifact, $field)) {
+        if ($this->read_only_field_detector->isFieldFrozen($artifact, $field)) {
             $permissions = $this->removeUpdatePermissionFromField($permissions);
         }
 

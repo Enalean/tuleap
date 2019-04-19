@@ -20,21 +20,21 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Workflow\PostAction\ReadOnly;
+namespace Tuleap\Tracker\Workflow\PostAction\FrozenFields;
 
 use Tuleap\Tracker\Workflow\Transition\NoTransitionForStateException;
 
-class ReadOnlyFieldDetector
+class FrozenFieldDetector
 {
-    /** @var ReadOnlyFieldsRetriever */
-    private $read_only_fields_retriever;
+    /** @var FrozenFieldsRetriever */
+    private $frozen_fields_retriever;
 
-    public function __construct(ReadOnlyFieldsRetriever $read_only_fields_retriever)
+    public function __construct(FrozenFieldsRetriever $frozen_fields_retriever)
     {
-        $this->read_only_fields_retriever = $read_only_fields_retriever;
+        $this->frozen_fields_retriever = $frozen_fields_retriever;
     }
 
-    public function isFieldReadOnly(\Tracker_Artifact $artifact, \Tracker_FormElement_Field $field): bool
+    public function isFieldFrozen(\Tracker_Artifact $artifact, \Tracker_FormElement_Field $field): bool
     {
         $workflow = $artifact->getWorkflow();
 
@@ -43,14 +43,14 @@ class ReadOnlyFieldDetector
         }
 
         try {
-            $current_state_transition     = $workflow->getFirstTransitionForCurrentState($artifact);
-            $read_only_fields_post_action = $this->read_only_fields_retriever->getReadOnlyFields($current_state_transition);
-        } catch (NoTransitionForStateException | NoReadOnlyFieldsPostActionException $e) {
+            $current_state_transition = $workflow->getFirstTransitionForCurrentState($artifact);
+            $frozen_post_action       = $this->frozen_fields_retriever->getFrozenFields($current_state_transition);
+        } catch (NoTransitionForStateException | NoFrozenFieldsPostActionException $e) {
             return false;
         }
         $field_id = (int) $field->getId();
 
-        if (in_array($field_id, $read_only_fields_post_action->getFieldIds())) {
+        if (in_array($field_id, $frozen_post_action->getFieldIds())) {
             return true;
         }
 

@@ -18,8 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Tracker\Workflow\PostAction\ReadOnly;
+namespace Tuleap\Tracker\Workflow\PostAction\FrozenFields;
 
-final class NoReadOnlyFieldsPostActionException extends \Exception
+final class NoFrozenFieldsPostActionException extends \Exception
 {
 }

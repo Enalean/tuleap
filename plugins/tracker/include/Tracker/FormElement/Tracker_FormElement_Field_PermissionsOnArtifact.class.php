@@ -25,9 +25,9 @@ use Tuleap\Tracker\FormElement\PermissionsOnArtifactUGroupRetriever;
 use Tuleap\Tracker\FormElement\PermissionsOnArtifactUsageFormatter;
 use Tuleap\Tracker\FormElement\PermissionsOnArtifactValidator;
 use Tuleap\Tracker\REST\v1\TrackerFieldsRepresentations\PermissionsOnArtifacts;
-use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyDao;
-use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyFieldDetector;
-use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyFieldsRetriever;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
 use Tuleap\User\UserGroup\NameTranslator;
 
 class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElement_Field {
@@ -232,10 +232,10 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         Tracker_Artifact_ChangesetValue $value = null,
         $submitted_values = array()
     ) {
-        $is_field_read_only = $this->getReadOnlyFieldDetector()->isFieldReadOnly($artifact, $this);
+        $is_field_frozen = $this->getFrozenFieldDetector()->isFieldFrozen($artifact, $this);
 
         return '<div class="tracker_hidden_edition_field" data-field-id="' . $this->getId() . '">' .
-                $this->fetchArtifactValueCommon($is_field_read_only, $artifact, $value, $submitted_values) .
+                $this->fetchArtifactValueCommon($is_field_frozen, $artifact, $value, $submitted_values) .
             '</div>';
     }
 
@@ -913,12 +913,12 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
     }
 
     /**
-     * @return ReadOnlyFieldDetector
+     * @return FrozenFieldDetector
      */
-    private function getReadOnlyFieldDetector()
+    private function getFrozenFieldDetector()
     {
-        return new ReadOnlyFieldDetector(
-            new ReadOnlyFieldsRetriever(new ReadOnlyDao())
+        return new FrozenFieldDetector(
+            new FrozenFieldsRetriever(new FrozenFieldsDao())
         );
     }
 }

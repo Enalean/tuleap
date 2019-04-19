@@ -58,9 +58,9 @@ use Tuleap\Tracker\Webhook\WebhookDao;
 use Tuleap\Tracker\Webhook\WebhookFactory;
 use Tuleap\Tracker\Webhook\WebhookLogsRetriever;
 use Tuleap\Tracker\Webhook\WebhookXMLExporter;
-use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyDao;
-use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyFieldDetector;
-use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyFieldsRetriever;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
 use Tuleap\Tracker\Workflow\WorkflowUpdateChecker;
 use Tuleap\Tracker\XML\Updater\FieldChange\FieldChangeComputedXMLUpdater;
 
@@ -3780,10 +3780,10 @@ EOS;
      */
     private function getNewChangesetFieldsValidator()
     {
-        $read_only_detector = new ReadOnlyFieldDetector(
-            new ReadOnlyFieldsRetriever(new ReadOnlyDao())
+        $frozen_field_detector = new FrozenFieldDetector(
+            new FrozenFieldsRetriever(new FrozenFieldsDao())
         );
-        $workflow_update_checker = new WorkflowUpdateChecker($read_only_detector);
+        $workflow_update_checker = new WorkflowUpdateChecker($frozen_field_detector);
         return new Tracker_Artifact_Changeset_NewChangesetFieldsValidator(
             $this->getFormElementFactory(),
             $workflow_update_checker

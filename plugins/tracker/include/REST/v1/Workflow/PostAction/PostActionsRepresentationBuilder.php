@@ -25,7 +25,7 @@ use Transition_PostAction_CIBuild;
 use Transition_PostAction_Field_Date;
 use Transition_PostAction_Field_Float;
 use Transition_PostAction_Field_Int;
-use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyFields;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFields;
 use Tuleap\Tracker\Workflow\PostAction\Visitor;
 
 class PostActionsRepresentationBuilder implements Visitor
@@ -100,11 +100,11 @@ class PostActionsRepresentationBuilder implements Visitor
         );
     }
 
-    public function visitReadOnlyFields(ReadOnlyFields $read_only_fields)
+    public function visitFrozenFields(FrozenFields $frozen_fields)
     {
-        $this->post_action_representations[] = ReadOnlyFieldsRepresentation::build(
-            $read_only_fields->getId(),
-            $read_only_fields->getFieldIds()
+        $this->post_action_representations[] = FrozenFieldsRepresentation::build(
+            $frozen_fields->getId(),
+            $frozen_fields->getFieldIds()
         );
     }
 }

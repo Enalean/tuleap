@@ -20,21 +20,21 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Workflow\PostAction\ReadOnly;
+namespace Tuleap\Tracker\Workflow\PostAction\FrozenFields;
 
 use SimpleXMLElement;
 use Tracker_FormElement_Field;
 use Transition;
 use Transition_PostAction;
 
-class ReadOnlyFieldsFactory implements \Transition_PostActionSubFactory
+class FrozenFieldsFactory implements \Transition_PostActionSubFactory
 {
-    /** @var ReadOnlyDao */
-    private $read_only_dao;
+    /** @var FrozenFieldsDao */
+    private $frozen_dao;
 
-    public function __construct(ReadOnlyDao $read_only_dao)
+    public function __construct(FrozenFieldsDao $frozen_dao)
     {
-        $this->read_only_dao = $read_only_dao;
+        $this->frozen_dao = $frozen_dao;
     }
 
     /**
@@ -66,19 +66,19 @@ class ReadOnlyFieldsFactory implements \Transition_PostActionSubFactory
      */
     public function loadPostActions(Transition $transition) : array
     {
-        $rows = $this->read_only_dao->searchByTransitionId((int) $transition->getId());
+        $rows = $this->frozen_dao->searchByTransitionId((int) $transition->getId());
 
         $field_ids = [];
         $post_action_id = null;
         foreach ($rows as $row) {
             $field_ids[] = $row['field_id'];
-            // There is only one ReadOnlyFields post-action per transition, so we just choose the last row's id
+            // There is only one FrozenFields post-action per transition, so we just choose the last row's id
             $post_action_id = $row['postaction_id'];
         }
         if ($post_action_id === null) {
             return [];
         }
-        $post_action = new ReadOnlyFields($transition, $post_action_id, $field_ids);
+        $post_action = new FrozenFields($transition, $post_action_id, $field_ids);
         return [$post_action];
     }
 
@@ -103,7 +103,7 @@ class ReadOnlyFieldsFactory implements \Transition_PostActionSubFactory
      */
     public function isFieldUsedInPostActions(Tracker_FormElement_Field $field)
     {
-        return $this->read_only_dao->isFieldUsedInPostAction($field->getId());
+        return $this->frozen_dao->isFieldUsedInPostAction($field->getId());
     }
 
     /**

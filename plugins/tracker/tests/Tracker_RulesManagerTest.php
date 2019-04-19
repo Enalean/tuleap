@@ -19,7 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyDao;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 
 require_once('bootstrap.php');
 Mock::generatePartial('Tracker_RulesManager', 'Tracker_RulesManagerTestVersion', array('getRuleFactory', 'getSelectedValuesForField'));
@@ -255,17 +255,17 @@ class Tracker_RulesManagerTest extends TuleapTestCase {
         $arf = new MockTracker_RuleFactory($this);
         $arf->setReturnValue('getAllListRulesByTrackerWithOrder', array($r1, $r2, $r3));
 
-        $read_only_dao = Mockery::mock(ReadOnlyDao::class);
-        $read_only_dao->shouldReceive('isFieldUsedInPostAction')->with('A')->andReturn(false);
-        $read_only_dao->shouldReceive('isFieldUsedInPostAction')->with('B')->andReturn(false);
-        $read_only_dao->shouldReceive('isFieldUsedInPostAction')->with('C')->andReturn(false);
-        $read_only_dao->shouldReceive('isFieldUsedInPostAction')->with('D')->andReturn(false);
-        $read_only_dao->shouldReceive('isFieldUsedInPostAction')->with('E')->andReturn(false);
+        $frozen_dao = Mockery::mock(FrozenFieldsDao::class);
+        $frozen_dao->shouldReceive('isFieldUsedInPostAction')->with('A')->andReturn(false);
+        $frozen_dao->shouldReceive('isFieldUsedInPostAction')->with('B')->andReturn(false);
+        $frozen_dao->shouldReceive('isFieldUsedInPostAction')->with('C')->andReturn(false);
+        $frozen_dao->shouldReceive('isFieldUsedInPostAction')->with('D')->andReturn(false);
+        $frozen_dao->shouldReceive('isFieldUsedInPostAction')->with('E')->andReturn(false);
 
         $arm = partial_mock(
             'Tracker_RulesManager',
             array('getRuleFactory', 'getSelectedValuesForField'),
-            [Mockery::mock(Tracker::class), Mockery::mock(Tracker_FormElementFactory::class), $read_only_dao]
+            [Mockery::mock(Tracker::class), Mockery::mock(Tracker_FormElementFactory::class), $frozen_dao]
         );
         $arm->setReturnReference('getRuleFactory', $arf);
 
@@ -453,8 +453,8 @@ XML;
         $xmlMapping           = array();
         $tracker              = mock('Tracker');
         $form_element_factory = mock('Tracker_FormElementFactory');
-        $read_only_dao        = Mockery::mock(ReadOnlyDao::class);
-        $manager              = new Tracker_RulesManager($tracker, $form_element_factory, $read_only_dao);
+        $frozen_dao           = Mockery::mock(FrozenFieldsDao::class);
+        $manager              = new Tracker_RulesManager($tracker, $form_element_factory, $frozen_dao);
 
         stub($tracker)->getId()->returns(45);
 
@@ -488,7 +488,7 @@ class Tracker_RulesManagerValidationTest extends Tracker_RulesManagerTest {
 
         $form_element_factory = mock('Tracker_FormElementFactory');
         $source_field         = mock('Tracker_FormElement_Field_Date');
-        $read_only_dao        = Mockery::mock(ReadOnlyDao::class);
+        $frozen_dao           = Mockery::mock(FrozenFieldsDao::class);
         stub($source_field)->getLabel()->returns('aaaaa');
         stub($form_element_factory)->getFormElementById()->returns($source_field);
 
@@ -509,7 +509,7 @@ class Tracker_RulesManagerValidationTest extends Tracker_RulesManagerTest {
                 'getAllListRulesByTrackerWithOrder',
                 'getAllDateRulesByTrackerId',
             ],
-            [$tracker, $form_element_factory, $read_only_dao]
+            [$tracker, $form_element_factory, $frozen_dao]
         );
 
         $tracker_rules_manager->setReturnValue('getAllListRulesByTrackerWithOrder',array());
@@ -530,7 +530,7 @@ class Tracker_RulesManagerValidationTest extends Tracker_RulesManagerTest {
         stub($tracker)->getId()->returns(10);
 
         $form_element_factory = mock('Tracker_FormElementFactory');
-        $read_only_dao = Mockery::mock(ReadOnlyDao::class);
+        $fozen_dao            = Mockery::mock(FrozenFieldsDao::class);
 
         $tracker_rule_date  = mock('Tracker_Rule_Date');
         $tracker_rule_date2 = mock('Tracker_Rule_Date');
@@ -546,7 +546,7 @@ class Tracker_RulesManagerValidationTest extends Tracker_RulesManagerTest {
         $tracker_rules_manager = partial_mock(
             'Tracker_RulesManager',
             ['getAllListRulesByTrackerWithOrder', 'getAllDateRulesByTrackerId'],
-            [$tracker, $form_element_factory, $read_only_dao]
+            [$tracker, $form_element_factory, $fozen_dao]
         );
         $tracker_rules_manager->setReturnValue('getAllListRulesByTrackerWithOrder',array());
         $tracker_rules_manager->setReturnValue('getAllDateRulesByTrackerId',array($tracker_rule_date, $tracker_rule_date2));
@@ -568,12 +568,12 @@ class Tracker_RulesManagerValidationTest extends Tracker_RulesManagerTest {
         stub($tracker)->getId()->returns(10);
 
         $form_element_factory = mock('Tracker_FormElementFactory');
-        $read_only_dao        = Mockery::mock(ReadOnlyDao::class);
+        $frozen_dao           = Mockery::mock(FrozenFieldsDao::class);
 
         $tracker_rules_manager = partial_mock(
             'Tracker_RulesManager',
             ['getAllListRulesByTrackerWithOrder', 'getAllDateRulesByTrackerId'],
-            [$tracker, $form_element_factory, $read_only_dao]
+            [$tracker, $form_element_factory, $frozen_dao]
         );
         $tracker_rules_manager->setReturnValue('getAllListRulesByTrackerWithOrder',array());
         $tracker_rules_manager->setReturnValue('getAllDateRulesByTrackerId',array());
@@ -602,7 +602,7 @@ class Tracker_RulesManagerValidationTest extends Tracker_RulesManagerTest {
         stub($tracker)->getId()->returns(10);
 
         $form_element_factory = mock('Tracker_FormElementFactory');
-        $read_only_dao        = Mockery::mock(ReadOnlyDao::class);
+        $frozen_dao           = Mockery::mock(FrozenFieldsDao::class);
 
         $tracker_rules_manager = partial_mock(
             'Tracker_RulesManager',
@@ -610,7 +610,7 @@ class Tracker_RulesManagerValidationTest extends Tracker_RulesManagerTest {
                 'getAllListRulesByTrackerWithOrder',
                 'getAllDateRulesByTrackerId',
             ],
-            [$tracker, $form_element_factory, $read_only_dao]
+            [$tracker, $form_element_factory, $frozen_dao]
         );
 
         $tracker_rules_manager->setReturnValue('getAllDateRulesByTrackerId',array());
@@ -637,7 +637,7 @@ class Tracker_RulesManagerValidationTest extends Tracker_RulesManagerTest {
         stub($tracker)->getId()->returns(10);
 
         $form_element_factory = mock('Tracker_FormElementFactory');
-        $read_only_dao        = Mockery::mock(ReadOnlyDao::class);
+        $frozen_dao           = Mockery::mock(FrozenFieldsDao::class);
 
         $source_field = mock('Tracker_FormElement_Field_Selectbox');
         $target_field = mock('Tracker_FormElement_Field_Selectbox');
@@ -657,7 +657,7 @@ class Tracker_RulesManagerValidationTest extends Tracker_RulesManagerTest {
                 'getAllDateRulesByTrackerId',
                 'getSelectedValuesForField',
             ],
-            [$tracker, $form_element_factory, $read_only_dao]
+            [$tracker, $form_element_factory, $frozen_dao]
         );
 
         stub($tracker_rules_manager)->getSelectedValuesForField()->returns(array());
@@ -686,7 +686,7 @@ class Tracker_RulesManagerValidationTest extends Tracker_RulesManagerTest {
         stub($tracker)->getId()->returns(10);
 
         $form_element_factory = mock('Tracker_FormElementFactory');
-        $read_only_dao        = Mockery::mock(ReadOnlyDao::class);
+        $frozen_dao           = Mockery::mock(FrozenFieldsDao::class);
 
         $tracker_rules_manager = partial_mock(
             'Tracker_RulesManager',
@@ -695,7 +695,7 @@ class Tracker_RulesManagerValidationTest extends Tracker_RulesManagerTest {
                 'getAllDateRulesByTrackerId',
                 'getSelectedValuesForField',
             ],
-            [$tracker, $form_element_factory, $read_only_dao]
+            [$tracker, $form_element_factory, $frozen_dao]
         );
 
         stub($tracker_rules_manager)->getSelectedValuesForField()->returns(array());
@@ -723,7 +723,7 @@ class Tracker_RulesManagerValidationTest extends Tracker_RulesManagerTest {
         stub($tracker)->getId()->returns(10);
 
         $form_element_factory = mock('Tracker_FormElementFactory');
-        $read_only_dao        = Mockery::mock(ReadOnlyDao::class);
+        $frozen_field         = Mockery::mock(FrozenFieldsDao::class);
 
         $source_field = mock('Tracker_FormElement_Field_Selectbox');
         $target_field = mock('Tracker_FormElement_Field_Selectbox');
@@ -743,7 +743,7 @@ class Tracker_RulesManagerValidationTest extends Tracker_RulesManagerTest {
                 'getAllDateRulesByTrackerId',
                 'getSelectedValuesForField',
             ],
-            [$tracker, $form_element_factory, $read_only_dao]
+            [$tracker, $form_element_factory, $frozen_field]
         );
 
         stub($tracker_rules_manager)->getSelectedValuesForField()->returns(array());
@@ -781,7 +781,7 @@ class Tracker_RulesManagerValidationTest extends Tracker_RulesManagerTest {
         stub($tracker)->getId()->returns(19);
 
         $form_element_factory = mock('Tracker_FormElementFactory');
-        $read_only_dao        = Mockery::mock(ReadOnlyDao::class);
+        $frozen_dao           = Mockery::mock(FrozenFieldsDao::class);
 
         $tracker_rules_manager = partial_mock(
             'Tracker_RulesManager',
@@ -790,7 +790,7 @@ class Tracker_RulesManagerValidationTest extends Tracker_RulesManagerTest {
                 'getAllDateRulesByTrackerId',
                 'getSelectedValuesForField',
             ],
-            [$tracker, $form_element_factory, $read_only_dao]
+            [$tracker, $form_element_factory, $frozen_dao]
         );
 
         stub($tracker_rules_manager)->getSelectedValuesForField()->returns(array());
@@ -830,7 +830,7 @@ class Tracker_RulesManagerValidationTest extends Tracker_RulesManagerTest {
         stub($tracker)->getId()->returns(19);
 
         $form_element_factory = mock('Tracker_FormElementFactory');
-        $read_only_dao        = Mockery::mock(ReadOnlyDao::class);
+        $frozen_dao           = Mockery::mock(FrozenFieldsDao::class);
         $source_field         = mock('Tracker_FormElement_Field_List_OpenValue');
         stub($source_field)->getLabel()->returns('aaaaa');
         stub($form_element_factory)->getFormElementById()->returns($source_field);
@@ -842,7 +842,7 @@ class Tracker_RulesManagerValidationTest extends Tracker_RulesManagerTest {
                 'getAllDateRulesByTrackerId',
                 'getSelectedValuesForField',
             ],
-            [$tracker, $form_element_factory, $read_only_dao]
+            [$tracker, $form_element_factory, $frozen_dao]
         );
         stub($tracker_rules_manager)->getSelectedValuesForField()->returns(array());
         $tracker_rules_manager->setReturnValue('getAllDateRulesByTrackerId',array());
@@ -915,12 +915,12 @@ class Tracker_RulesManager_isUsedInFieldDependencyTest extends TuleapTestCase {
         $rule_date_factory = mock('Tracker_Rule_Date_Factory');
         stub($rule_date_factory)->searchByTrackerId($this->tracker_id)->returns($rules_date);
 
-        $element_factory   = mock('Tracker_FormElementFactory');
-        $read_only_dao     = Mockery::mock(ReadOnlyDao::class);
+        $element_factory    = mock('Tracker_FormElementFactory');
+        $frozen_dao          = Mockery::mock(FrozenFieldsDao::class);
         $this->rules_manager = partial_mock(
             'Tracker_RulesManager',
             ['getRuleFactory'],
-            [$tracker, $element_factory, $read_only_dao]
+            [$tracker, $element_factory, $frozen_dao     ]
         );
         stub($this->rules_manager)->getRuleFactory()->returns($rule_list_factory);
         $this->rules_manager->setRuleDateFactory($rule_date_factory);

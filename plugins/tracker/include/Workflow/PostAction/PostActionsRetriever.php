@@ -22,10 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Workflow\PostAction;
 
-use Tuleap\Tracker\Workflow\PostAction\ReadOnly\NoReadOnlyFieldsPostActionException;
-use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyFields;
-use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyFieldsFactory;
-use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyFieldsRetriever;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\NoFrozenFieldsPostActionException;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsFactory;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFields;
 
 class PostActionsRetriever
 {
@@ -33,17 +33,18 @@ class PostActionsRetriever
     private $cibuild_factory;
     /** @var \Transition_PostAction_FieldFactory */
     private $field_factory;
-    /** @var ReadOnlyFieldsRetriever */
-    private $read_only_fields_retriever;
+
+    /** @var FrozenFieldsRetriever */
+    private $frozen_fields_retriever;
 
     public function __construct(
         \Transition_PostAction_CIBuildFactory $cibuild_factory,
         \Transition_PostAction_FieldFactory $field_factory,
-        ReadOnlyFieldsRetriever $read_only_fields_retriever
+        FrozenFieldsRetriever $frozen_fields_retriever
     ) {
-        $this->cibuild_factory            = $cibuild_factory;
-        $this->field_factory              = $field_factory;
-        $this->read_only_fields_retriever = $read_only_fields_retriever;
+        $this->cibuild_factory         = $cibuild_factory;
+        $this->field_factory           = $field_factory;
+        $this->frozen_fields_retriever = $frozen_fields_retriever;
     }
 
     /**
@@ -79,10 +80,10 @@ class PostActionsRetriever
     }
 
     /**
-     * @throws NoReadOnlyFieldsPostActionException
+     * @throws NoFrozenFieldsPostActionException
      */
-    public function getReadOnlyFields(\Transition $transition): ReadOnlyFields
+    public function getFrozenFields(\Transition $transition): FrozenFields
     {
-        return $this->read_only_fields_retriever->getReadOnlyFields($transition);
+        return $this->frozen_fields_retriever->getFrozenFields($transition);
     }
 }

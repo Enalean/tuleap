@@ -19,9 +19,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyDao;
-use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyFieldDetector;
-use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyFieldsRetriever;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
 
 /**
  * The base class for fields in trackers. From int and string to selectboxes.
@@ -342,7 +342,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         $submitted_values = array(),
         $additional_classes = array()
     ) {
-        $is_field_read_only = $this->getReadOnlyFieldDetector()->isFieldReadOnly($artifact, $this);
+        $is_field_read_only = $this->getFrozenFieldDetector()->isFieldFrozen($artifact, $this);
         if (! $is_field_read_only && $this->userCanUpdate()) {
             $last_changeset = $artifact->getLastChangeset();
             if ($last_changeset) {
@@ -401,7 +401,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         $purifier = Codendi_HTMLPurifier::instance();
         $html = '';
         if ($this->userCanRead()) {
-            $is_field_read_only = $this->getReadOnlyFieldDetector()->isFieldReadOnly($artifact, $this);
+            $is_field_read_only = $this->getFrozenFieldDetector()->isFieldFrozen($artifact, $this);
             $required = $this->required ? ' <span class="highlight">*</span>' : '';
             $html .= '<div class="'. $this->getClassNames($additional_classes, $is_field_read_only) .'"
                 data-field-id="'. $this->id .'"
@@ -579,7 +579,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      * @return string
      */
     public function fetchArtifactValueForWebDisplay(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
-        $is_field_read_only = $this->getReadOnlyFieldDetector()->isFieldReadOnly($artifact, $this);
+        $is_field_read_only = $this->getFrozenFieldDetector()->isFieldFrozen($artifact, $this);
         if (! $is_field_read_only && $this->userCanUpdate()) {
             return $this->fetchArtifactValueWithEditionFormIfEditable($artifact, $value, $submitted_values);
         }
@@ -663,8 +663,8 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
 
         $purifier        = Codendi_HTMLPurifier::instance();
 
-        $is_field_read_only = $this->getReadOnlyFieldDetector()->isFieldReadOnly($artifact, $this);
-        if ($this->userCanUpdate() && ! $is_field_read_only) {
+        $is_field_frozen = $this->getFrozenFieldDetector()->isFieldFrozen($artifact, $this);
+        if ($this->userCanUpdate() && ! $is_field_frozen) {
             $data_field_id   = 'data-field-id="'. $purifier->purify($this->getId()) .'"';
             $data_field_type = 'data-field-type="'. $purifier->purify($this->getFormElementFactory()->getType($this)) .'"';
         }
@@ -874,7 +874,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      */
     public function isUsedInFieldDependency()
     {
-        $rm = new Tracker_RulesManager($this->getTracker(), Tracker_FormElementFactory::instance(), new ReadOnlyDao());
+        $rm = new Tracker_RulesManager($this->getTracker(), Tracker_FormElementFactory::instance(), new FrozenFieldsDao());
         return $rm->isUsedInFieldDependency($this);
     }
 
@@ -1447,12 +1447,12 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     }
 
     /**
-     * @return ReadOnlyFieldDetector
+     * @return FrozenFieldDetector
      */
-    private function getReadOnlyFieldDetector()
+    private function getFrozenFieldDetector()
     {
-        return new ReadOnlyFieldDetector(
-            new ReadOnlyFieldsRetriever(new ReadOnlyDao())
+        return new FrozenFieldDetector(
+            new FrozenFieldsRetriever(new FrozenFieldsDao())
         );
     }
 }

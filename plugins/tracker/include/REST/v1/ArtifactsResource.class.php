@@ -87,9 +87,9 @@ use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 use Tuleap\Tracker\REST\PermissionsExporter;
 use Tuleap\Tracker\REST\TrackerReference;
 use Tuleap\Tracker\REST\v1\Event\ArtifactPartialUpdate;
-use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyDao;
-use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyFieldDetector;
-use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyFieldsRetriever;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
 use Tuleap\Tracker\XML\Updater\MoveChangesetXMLUpdater;
 use UserManager;
 use UserXMLExportedCollection;
@@ -198,9 +198,9 @@ class ArtifactsResource extends AuthenticatedResource {
         $this->tracker_rest_builder = new \Tracker_REST_TrackerRestBuilder(
             $this->formelement_factory,
             new PermissionsExporter(
-                new ReadOnlyFieldDetector(
-                    new ReadOnlyFieldsRetriever(
-                        new ReadOnlyDao()
+                new FrozenFieldDetector(
+                    new FrozenFieldsRetriever(
+                        new FrozenFieldsDao()
                     )
                 )
             )

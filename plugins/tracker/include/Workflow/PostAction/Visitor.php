@@ -21,7 +21,7 @@
 namespace Tuleap\Tracker\Workflow\PostAction;
 
 use Transition_PostAction_CIBuild;
-use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyFields;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFields;
 
 interface Visitor
 {
@@ -33,5 +33,5 @@ interface Visitor
 
     public function visitFloatField(\Transition_PostAction_Field_Float $param);
 
-    public function visitReadOnlyFields(ReadOnlyFields $read_only_fields);
+    public function visitFrozenFields(FrozenFields $frozen_fields);
 }

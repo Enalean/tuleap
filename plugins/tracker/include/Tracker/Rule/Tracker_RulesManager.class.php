@@ -19,7 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyDao;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 
 /**
 * Manager of rules
@@ -47,10 +47,10 @@ class Tracker_RulesManager
      */
     private $rule_list_factory;
 
-    /** @var ReadOnlyDao */
+    /** @var FrozenFieldsDao */
     private $read_only_dao;
 
-    public function __construct(Tracker $tracker, Tracker_FormElementFactory $form_element_factory, ReadOnlyDao $read_only_dao)
+    public function __construct(Tracker $tracker, Tracker_FormElementFactory $form_element_factory, FrozenFieldsDao $read_only_dao)
     {
         $this->tracker              = $tracker;
         $this->form_element_factory = $form_element_factory;
