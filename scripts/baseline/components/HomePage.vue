@@ -49,7 +49,7 @@
                             <translate>New baseline</translate>
                         </button>
                     </div>
-                    <baselines-table v-bind:baselines="baselines" v-bind:is_loading="are_baselines_loading"/>
+                    <baselines-table v-bind:project_id="project_id"/>
                 </section>
             </div>
         </section>
@@ -120,10 +120,6 @@ export default {
         this.$emit("title", this.$gettext("Baselines"));
     },
 
-    mounted() {
-        this.fetchBaselines();
-    },
-
     methods: {
         showNewBaselineModal() {
             this.$store.commit("showModal", {
@@ -139,10 +135,6 @@ export default {
                 title: this.$gettext("New comparison"),
                 props: { baselines: this.baselines }
             });
-        },
-
-        fetchBaselines() {
-            this.$store.dispatch("baselines/load", { project_id: this.project_id });
         }
     }
 };

@@ -17,7 +17,9 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { presentBaselineWithArtifactsAsGraph } from "../presenters/baseline";
+import { getBaseline, getBaselineArtifacts } from "../api/rest-querier";
+import { presentLinkedArtifactsAsGraph } from "../presenters/baseline-artifact";
+import { fetchAllArtifacts } from "../api/request-manufacturer";
 
 export default {
     namespaced: true,
@@ -29,13 +31,44 @@ export default {
     },
 
     actions: {
-        async load({ commit }, baseline_id) {
+        async load({ commit, dispatch, rootGetters }, baseline_id) {
             commit("startBaselineLoading");
             try {
-                const presented_baseline_as_graph = await presentBaselineWithArtifactsAsGraph(
-                    baseline_id
+                const baseline_loading = getBaseline(baseline_id);
+                const first_level_artifacts_loading = getBaselineArtifacts(baseline_id);
+
+                const baseline = await baseline_loading;
+                const first_level_artifacts = await first_level_artifacts_loading;
+
+                const author_loading = dispatch(
+                    "loadUser",
+                    { user_id: baseline.author_id },
+                    { root: true }
                 );
-                commit("updateBaseline", presented_baseline_as_graph);
+                const artifact_loading = dispatch(
+                    "loadArtifact",
+                    { artifact_id: baseline.artifact_id },
+                    { root: true }
+                );
+
+                await author_loading;
+                const author = rootGetters.findUserById(baseline.author_id);
+
+                await artifact_loading;
+                const artifact = rootGetters.findArtifactById(baseline.artifact_id);
+
+                const all_artifacts = await fetchAllArtifacts(baseline_id, first_level_artifacts);
+                const first_level_artifacts_as_graph = presentLinkedArtifactsAsGraph(
+                    first_level_artifacts,
+                    all_artifacts
+                );
+
+                commit("updateBaseline", {
+                    ...baseline,
+                    author,
+                    artifact,
+                    first_level_artifacts: first_level_artifacts_as_graph
+                });
             } catch (e) {
                 commit("failBaselineLoading");
             } finally {

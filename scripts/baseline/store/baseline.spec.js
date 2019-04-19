@@ -21,23 +21,19 @@ import {
     restore,
     rewire$getBaselineArtifactsByIds,
     rewire$getBaseline,
-    rewire$getBaselineArtifacts,
-    rewire$getUser
+    rewire$getBaselineArtifacts
 } from "../api/rest-querier";
 import { create } from "../support/factories";
 import store from "./baseline";
 
-describe("fetchAllArtifacts()", () => {
+describe("Baseline store:", () => {
     let state;
 
     let getBaselineArtifactsByIds;
     let getBaseline;
     let getBaselineArtifacts;
-    let getUser;
 
     let baseline;
-    let expected_baseline;
-    let user;
     let first_level_artifacts;
     let child_artifacts;
 
@@ -50,34 +46,41 @@ describe("fetchAllArtifacts()", () => {
         getBaselineArtifacts = jasmine.createSpy("getBaselineArtifacts");
         rewire$getBaselineArtifacts(getBaselineArtifacts);
 
-        getUser = jasmine.createSpy("getUser");
-        rewire$getUser(getUser);
-
         getBaselineArtifactsByIds = jasmine.createSpy("getBaselineArtifactsByIds");
         rewire$getBaselineArtifactsByIds(getBaselineArtifactsByIds);
-    });
 
-    afterEach(() => {
-        restore();
-    });
-
-    beforeEach(() => {
         baseline = create("baseline");
-        user = create("user");
 
         first_level_artifacts = [create("baseline_artifact", { id: 1, linked_artifact_ids: [2] })];
         child_artifacts = [create("baseline_artifact", { id: 2, linked_artifact_ids: [] })];
         getBaseline.and.returnValue(Promise.resolve(baseline));
         getBaselineArtifacts.and.returnValue(Promise.resolve(first_level_artifacts));
-        getUser.and.returnValue(Promise.resolve(user));
         getBaselineArtifactsByIds.and.returnValue(Promise.resolve(child_artifacts));
     });
 
+    afterEach(restore);
+
     describe("actions", () => {
         let context;
+        let author;
+        let artifact;
+
         beforeEach(() => {
+            const findUserById = jasmine.createSpy("findUserById");
+            author = create("user");
+            findUserById.and.returnValue(author);
+
+            const findArtifactById = jasmine.createSpy("findUserById");
+            artifact = create("artifact");
+            findArtifactById.and.returnValue(artifact);
+
             const commit = jasmine.createSpy("commit");
-            context = { state, commit };
+            const dispatch = jasmine.createSpy("commit");
+            const rootGetters = {
+                findUserById,
+                findArtifactById
+            };
+            context = { state, commit, dispatch, rootGetters };
         });
 
         describe("#load", () => {
@@ -85,13 +88,8 @@ describe("fetchAllArtifacts()", () => {
                 await store.actions.load(context, baseline.id);
             });
 
-            beforeEach(() => {
-                baseline.first_level_artifacts = first_level_artifacts;
-                baseline.author = user;
-                expected_baseline = baseline;
-            });
-
             it("updates baseline", () => {
+                const expected_baseline = { ...baseline, first_level_artifacts, author, artifact };
                 expect(context.commit).toHaveBeenCalledWith("updateBaseline", expected_baseline);
             });
         });

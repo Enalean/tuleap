@@ -30,9 +30,8 @@ describe("ArtifactBadge", () => {
         wrapper = shallowMount(ArtifactBadge, {
             localVue,
             propsData: {
-                artifact: create("artifact", {
-                    tracker: create("tracker", { color_name: "blue_cyan" })
-                })
+                artifact: create("artifact"),
+                tracker: create("tracker", { color_name: "blue_cyan" })
             }
         });
     });

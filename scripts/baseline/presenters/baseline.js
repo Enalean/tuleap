@@ -18,38 +18,11 @@
  *
  */
 
-import {
-    getArtifact,
-    getBaseline,
-    getBaselineArtifacts,
-    getTracker,
-    getUser
-} from "../api/rest-querier";
-import ArrayUtils from "../support/array-utils";
+import { getBaseline, getBaselineArtifacts, getUser } from "../api/rest-querier";
 import { fetchAllArtifacts } from "../api/request-manufacturer";
 import { presentLinkedArtifactsAsGraph } from "./baseline-artifact";
 
-export { presentBaseline, presentBaselines, presentBaselineWithArtifactsAsGraph };
-
-async function presentBaselines(baselines) {
-    let users_loading = fetchUsers(baselines);
-    let artifacts_loading = fetchArtifacts(baselines);
-
-    const users = await users_loading;
-    const artifacts = await artifacts_loading;
-    const trackers = await fetchTrackers(artifacts);
-
-    return baselines.map(baseline => {
-        const author = ArrayUtils.find(users, user => user.id === baseline.author_id);
-        const artifact = ArrayUtils.find(
-            artifacts,
-            artifact => artifact.id === baseline.artifact_id
-        );
-        artifact.tracker = ArrayUtils.find(trackers, tracker => tracker.id === artifact.tracker.id);
-
-        return { ...baseline, author, artifact };
-    });
-}
+export { presentBaseline, presentBaselineWithArtifactsAsGraph };
 
 async function presentBaselineWithArtifactsAsGraph(baseline_id) {
     const baseline_loading = getBaseline(baseline_id);
@@ -65,26 +38,6 @@ async function presentBaselineWithArtifactsAsGraph(baseline_id) {
         all_artifacts
     );
     return { ...presented_baseline, first_level_artifacts: first_level_artifacts_as_graph };
-}
-
-function fetchUsers(baselines) {
-    const user_ids = baselines.map(baseline => baseline.author_id);
-    return fetchById(user_ids, getUser);
-}
-
-function fetchArtifacts(baselines) {
-    const user_ids = baselines.map(baseline => baseline.artifact_id);
-    return fetchById(user_ids, getArtifact);
-}
-
-function fetchTrackers(artifacts) {
-    const simplified_tracker_ids = artifacts.map(artifact => artifact.tracker.id);
-    return fetchById(simplified_tracker_ids, getTracker);
-}
-
-function fetchById(ids, fetcher) {
-    const uniq_ids = ArrayUtils.unique(ids);
-    return Promise.all(uniq_ids.map(id => fetcher(id)));
 }
 
 async function presentBaseline(baseline) {

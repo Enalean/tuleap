@@ -19,7 +19,6 @@
  */
 
 import { getBaselines } from "../api/rest-querier";
-import { presentBaselines } from "../presenters/baseline";
 
 export default {
     namespaced: true,
@@ -31,12 +30,24 @@ export default {
     },
 
     actions: {
-        async load({ commit }, { project_id }) {
+        async load({ dispatch, commit }, { project_id }) {
             commit("startBaselinesLoading");
             try {
                 const baselines = await getBaselines(project_id);
-                const presented_baselines = await presentBaselines(baselines);
-                commit("updateBaselines", presented_baselines);
+
+                const user_ids = baselines.map(baseline => baseline.author_id);
+                const users_loading = dispatch("loadUsers", { user_ids }, { root: true });
+
+                const artifact_ids = baselines.map(baseline => baseline.artifact_id);
+                const artifacts_loading = dispatch(
+                    "loadArtifacts",
+                    { artifact_ids },
+                    { root: true }
+                );
+
+                await users_loading;
+                await artifacts_loading;
+                commit("updateBaselines", baselines);
             } catch (e) {
                 commit("failBaselinesLoading");
             } finally {
@@ -66,5 +77,9 @@ export default {
                 baseline => baseline.id !== baseline_to_delete.id
             );
         }
+    },
+
+    getters: {
+        are_baselines_available: state => state.baselines !== null && state.baselines.length > 0
     }
 };

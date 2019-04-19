@@ -46,6 +46,7 @@ const factories = {
     tracker: {
         default: {
             id: identity,
+            item_name: "features",
             color_name: "blue_ocean",
             fields: [
                 {
@@ -72,7 +73,9 @@ const factories = {
     artifact: {
         default: {
             id: 1,
-            tracker: association("tracker")
+            tracker: {
+                id: 9
+            }
         }
     },
     baseline_artifact: {

@@ -18,40 +18,50 @@
  *
  */
 
-import Vue from "vue";
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../../support/local-vue.js";
 import BaselinesTable from "./BaselinesTable.vue";
-import BaselinesTableBodySkeleton from "./BaselinesTableBodySkeleton.vue";
-import BaselinesTableBodyCells from "./BaselinesTableBodyCells.vue";
+import BaselineSkeleton from "./BaselineSkeleton.vue";
+import Baseline from "./Baseline.vue";
 import { createList } from "../../support/factories";
+import { createStoreMock } from "../../support/store-wrapper.spec-helper";
+import store_options from "../../store/options";
 
 describe("BaselinesTable", () => {
     const empty_baseline_selector = '[data-test-type="empty-baseline"]';
+    let $store;
     let wrapper;
 
     beforeEach(() => {
-        wrapper = shallowMount(BaselinesTable, {
-            localVue,
-            propsData: {
-                baselines: [],
-                is_loading: false
+        $store = createStoreMock({
+            ...store_options,
+            getters: {
+                "baselines/are_baselines_available": false
             }
         });
+
+        wrapper = shallowMount(BaselinesTable, {
+            propsData: {
+                project_id: 102
+            },
+            localVue,
+            mocks: { $store }
+        });
     });
 
-    describe("when is loading baselines", () => {
-        beforeEach(async () => {
-            wrapper.setProps({ baselines: null, is_loading: true });
-            await Vue.nextTick();
-        });
+    it("loads all baselines from given project id", () => {
+        expect($store.dispatch).toHaveBeenCalledWith("baselines/load", { project_id: 102 });
+    });
+
+    describe("when baselines are loading", () => {
+        beforeEach(() => ($store.state.baselines.are_baselines_loading = true));
 
         it("does not show any baseline", () => {
-            expect(wrapper.contains(BaselinesTableBodyCells)).toBeFalsy();
+            expect(wrapper.contains(Baseline)).toBeFalsy();
         });
 
-        it("shows body table skeleton", () => {
-            expect(wrapper.contains(BaselinesTableBodySkeleton)).toBeTruthy();
+        it("shows baseline skeleton", () => {
+            expect(wrapper.contains(BaselineSkeleton)).toBeTruthy();
         });
 
         it("does not show a message that specifies an empty state", () => {
@@ -59,38 +69,46 @@ describe("BaselinesTable", () => {
         });
     });
 
-    describe("when many baselines", () => {
-        beforeEach(async () => {
-            wrapper.setProps({
-                baselines: createList("baseline", 3)
+    describe("when baselines loaded", () => {
+        beforeEach(() => ($store.state.baselines.are_baselines_loading = false));
+
+        describe("with many baselines", () => {
+            beforeEach(() => {
+                $store.state.baselines.baselines = createList("baseline", 3);
+                $store.getters["baselines/are_baselines_available"] = true;
             });
-            await Vue.nextTick();
+
+            it("shows as many baselines as given", () => {
+                let baselines = wrapper.findAll(Baseline);
+                expect(baselines.length).toBe(3);
+            });
+
+            it("does not show baseline skeleton", () => {
+                expect(wrapper.contains(BaselineSkeleton)).toBeFalsy();
+            });
+
+            it("does not show a message that specifies an empty state", () => {
+                expect(wrapper.contains(empty_baseline_selector)).toBeFalsy();
+            });
         });
 
-        it("shows baselines", () => {
-            expect(wrapper.contains(BaselinesTableBodyCells)).toBeTruthy();
-        });
+        describe("without any baseline", () => {
+            beforeEach(() => {
+                $store.state.baselines.baselines = [];
+                $store.getters["baselines/are_baselines_available"] = false;
+            });
 
-        it("does not show body table skeleton", () => {
-            expect(wrapper.contains(BaselinesTableBodySkeleton)).toBeFalsy();
-        });
+            it("does not show baselines", () => {
+                expect(wrapper.contains(Baseline)).toBeFalsy();
+            });
 
-        it("does not show a message that specifies an empty state", () => {
-            expect(wrapper.contains(empty_baseline_selector)).toBeFalsy();
-        });
-    });
+            it("does not show baseline skeleton", () => {
+                expect(wrapper.contains(BaselineSkeleton)).toBeFalsy();
+            });
 
-    describe("when no baseline", () => {
-        it("does not show baselines", () => {
-            expect(wrapper.contains(BaselinesTableBodyCells)).toBeFalsy();
-        });
-
-        it("does not show body table skeleton", () => {
-            expect(wrapper.contains(BaselinesTableBodySkeleton)).toBeFalsy();
-        });
-
-        it("shows a message that specifies an empty state", () => {
-            expect(wrapper.contains(empty_baseline_selector)).toBeTruthy();
+            it("shows a message that specifies an empty state", () => {
+                expect(wrapper.contains(empty_baseline_selector)).toBeTruthy();
+            });
         });
     });
 });

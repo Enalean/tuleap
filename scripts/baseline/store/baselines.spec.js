@@ -19,16 +19,63 @@
  */
 
 import store from "./baselines";
-import { create } from "../support/factories";
+import { create, createList } from "../support/factories";
+import { restore, rewire$getBaselines } from "../api/rest-querier";
 
 describe("Baselines store:", () => {
-    let state;
+    describe("actions", () => {
+        let context;
 
-    beforeEach(() => {
-        state = { ...store.state };
+        beforeEach(() => {
+            context = {
+                commit: jasmine.createSpy("commit"),
+                dispatch: jasmine.createSpy("dispatch")
+            };
+            context.dispatch.and.returnValue(Promise.resolve());
+        });
+
+        afterEach(restore);
+
+        describe("#load", () => {
+            const baseline1 = create("baseline", { artifact_id: 1, author_id: 4 });
+            const baseline2 = create("baseline", { artifact_id: 2, author_id: 5 });
+
+            let getBaselines;
+
+            beforeEach(() => {
+                getBaselines = jasmine.createSpy("getBaselines");
+                rewire$getBaselines(getBaselines);
+                getBaselines.and.returnValue(Promise.resolve([baseline1, baseline2]));
+
+                return store.actions.load(context, { project_id: 102 });
+            });
+
+            it("dispatches 'loadUsers' for users of baselines returned by getBaselines()", () => {
+                expect(context.dispatch).toHaveBeenCalledWith(
+                    "loadUsers",
+                    { user_ids: [4, 5] },
+                    { root: true }
+                );
+            });
+            it("dispatches 'loadArtifacts' for artifacts of baselines", () => {
+                expect(context.dispatch).toHaveBeenCalledWith(
+                    "loadArtifacts",
+                    { artifact_ids: [1, 2] },
+                    { root: true }
+                );
+            });
+            it("updated baselines", () => {
+                expect(context.commit).toHaveBeenCalledWith("updateBaselines", [
+                    baseline1,
+                    baseline2
+                ]);
+            });
+        });
     });
-
     describe("mutations", () => {
+        let state;
+        beforeEach(() => (state = { ...store.state }));
+
         describe("#delete", () => {
             const baseline_to_delete = create("baseline", { id: 1 });
             const another_baseline = create("baseline", { id: 2 });
@@ -43,6 +90,34 @@ describe("Baselines store:", () => {
             });
             it("does not remove other baselines from state", () => {
                 expect(state.baselines).toContain(another_baseline);
+            });
+        });
+    });
+
+    describe("getters", () => {
+        let state;
+        beforeEach(() => (state = { ...store.state }));
+
+        describe("#are_baselines_available", () => {
+            describe("when baselines not loaded yet", () => {
+                beforeEach(() => (state.baselines = null));
+                it("returns false", () => {
+                    expect(store.getters.are_baselines_available(state)).toBeFalsy();
+                });
+            });
+            describe("when baselines are loaded", () => {
+                describe("when no baselines", () => {
+                    beforeEach(() => (state.baselines = []));
+                    it("returns false", () => {
+                        expect(store.getters.are_baselines_available(state)).toBeFalsy();
+                    });
+                });
+                describe("when some baselines", () => {
+                    beforeEach(() => (state.baselines = createList("baseline", 2)));
+                    it("returns false", () => {
+                        expect(store.getters.are_baselines_available(state)).toBeTruthy();
+                    });
+                });
             });
         });
     });

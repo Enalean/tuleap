@@ -41,13 +41,29 @@
             </tr>
         </thead>
 
-        <baselines-table-body-skeleton v-if="is_loading"/>
+        <tbody v-if="are_baselines_loading">
+            <baseline-skeleton/>
+            <baseline-skeleton/>
+            <baseline-skeleton/>
+        </tbody>
 
-        <baselines-table-body-cells v-else-if="are_baselines_available" v-bind:baselines="baselines"/>
+        <tbody v-else-if="are_baselines_available">
+            <baseline
+                v-for="baseline in baselines"
+                v-bind:key="baseline.id"
+                v-bind:baseline="baseline"
+            />
+        </tbody>
 
         <tbody v-else>
             <tr>
-                <td colspan="6" class="tlp-table-cell-empty" key="no-baseline" data-test-type="empty-baseline" v-translate>
+                <td
+                    colspan="6"
+                    class="tlp-table-cell-empty"
+                    key="no-baseline"
+                    data-test-type="empty-baseline"
+                    v-translate
+                >
                     No baseline available
                 </td>
             </tr>
@@ -56,23 +72,26 @@
 </template>
 
 <script>
-import BaselinesTableBodySkeleton from "./BaselinesTableBodySkeleton.vue";
-import BaselinesTableBodyCells from "./BaselinesTableBodyCells.vue";
+import BaselineSkeleton from "./BaselineSkeleton.vue";
+import Baseline from "./Baseline.vue";
+import { mapState, mapGetters } from "vuex";
 
 export default {
     name: "BaselinesTable",
 
-    components: { BaselinesTableBodySkeleton, BaselinesTableBodyCells },
+    components: { BaselineSkeleton, Baseline },
 
     props: {
-        baselines: { required: false, type: Array },
-        is_loading: { required: true, type: Boolean }
+        project_id: { required: true, type: Number }
     },
 
     computed: {
-        are_baselines_available() {
-            return this.baselines !== null && this.baselines.length > 0;
-        }
+        ...mapState("baselines", ["baselines", "are_baselines_loading"]),
+        ...mapGetters("baselines", ["are_baselines_available"])
+    },
+
+    mounted() {
+        this.$store.dispatch("baselines/load", { project_id: this.project_id });
     }
 };
 </script>
