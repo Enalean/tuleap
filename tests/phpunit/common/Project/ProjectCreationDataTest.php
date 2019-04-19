@@ -138,7 +138,7 @@ class ProjectCreationDataTest extends TestCase
         $this->assertEquals(Project::ACCESS_PUBLIC, $project_data->getAccess());
     }
 
-    public function testItCreatesAPrivateProjectFromWebPayload()
+    public function testItCreatesAPrivateProjectFromWebPayload() : void
     {
         $project_data = ProjectCreationData::buildFromFormArray(
             [
@@ -149,6 +149,35 @@ class ProjectCreationDataTest extends TestCase
         );
 
         $this->assertEquals(Project::ACCESS_PRIVATE, $project_data->getAccess());
+    }
+
+    /**
+     * @testWith [true, true, "unrestricted"]
+     *           [true, false, "public"]
+     *           [false, true, "private"]
+     *           [false, false, "private-wo-restr"]
+     */
+    public function testItCreatesAProjectWithRestrictedVisibilityFromWebPayload(
+        bool $is_public,
+        bool $allow_restricted,
+        string $expected_visibility
+    ) : void {
+        ForgeConfig::set('sys_user_can_choose_project_privacy', 1);
+        ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
+        ForgeConfig::set('feature_flag_project_without_restricted', 1);
+
+        $web_payload = [
+            'project' => [
+                'is_public' => $is_public ? '1' : '0',
+            ],
+        ];
+        if ($allow_restricted) {
+            $web_payload['project']['allow_restricted'] = '1';
+        }
+
+        $project_data = ProjectCreationData::buildFromFormArray($web_payload);
+
+        $this->assertEquals($expected_visibility, $project_data->getAccess());
     }
 
 
