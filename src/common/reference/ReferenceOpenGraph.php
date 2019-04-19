@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -38,14 +38,22 @@ class ReferenceOpenGraph
      * @var Reference
      */
     private $reference;
+    /**
+     * @var ReferenceOpenGraphDispatcher
+     */
+    private $dispatcher;
 
-    public function __construct(Codendi_HTMLPurifier $purifier, Reference $reference)
-    {
-        $this->purifier  = $purifier;
-        $this->reference = $reference;
+    public function __construct(
+        Codendi_HTMLPurifier $purifier,
+        Reference $reference,
+        ReferenceOpenGraphDispatcher $dispatcher
+    ) {
+        $this->purifier   = $purifier;
+        $this->reference  = $reference;
+        $this->dispatcher = $dispatcher;
     }
 
-    public function getContent()
+    public function getContent() : string
     {
         $html = '';
         try {
@@ -56,7 +64,7 @@ class ReferenceOpenGraph
             $embed = Embed::create(
                 $this->reference->getLink(),
                 null,
-                new ReferenceOpenGraphDispatcher()
+                $this->dispatcher
             );
 
             if ($embed->title) {
