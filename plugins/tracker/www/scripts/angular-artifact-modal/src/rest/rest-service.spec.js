@@ -73,21 +73,9 @@ describe("rest-service", () => {
         };
         mockFetchSuccess(tlp.get, { return_json });
 
-        const values = await RestService.getArtifactFieldValues(40);
+        const values = await RestService.getArtifactWithCompleteTrackerStructure(40);
 
-        expect(values).toEqual({
-            866: {
-                field_id: 866,
-                label: "unpredisposed",
-                value: "ectogenous"
-            },
-            468: {
-                field_id: 468,
-                label: "coracler",
-                value: "caesaropapism"
-            },
-            title: "coincoin"
-        });
+        expect(values).toEqual(return_json);
     });
 
     describe("getAllOpenParentArtifacts() -", () => {

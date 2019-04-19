@@ -7,7 +7,6 @@ export {
     editArtifact,
     getAllOpenParentArtifacts,
     getArtifact,
-    getArtifactFieldValues,
     getFileUploadRules,
     getFollowupsComments,
     getTracker,
@@ -15,7 +14,8 @@ export {
     searchUsers,
     uploadAdditionalChunk,
     uploadTemporaryFile,
-    getFirstReverseIsChildLink
+    getFirstReverseIsChildLink,
+    getArtifactWithCompleteTrackerStructure
 };
 
 const headers = {
@@ -30,20 +30,11 @@ function getArtifact(artifact_id) {
     return get(`/api/v1/artifacts/${artifact_id}`).then(responseHandler, errorHandler);
 }
 
-async function getArtifactFieldValues(artifact_id) {
-    const artifact = await getArtifact(artifact_id);
-
-    const { values = [] } = artifact;
-
-    const indexed_values = {};
-
-    for (const value of values) {
-        indexed_values[value.field_id] = value;
-    }
-
-    indexed_values.title = artifact.title;
-
-    return indexed_values;
+function getArtifactWithCompleteTrackerStructure(artifact_id) {
+    return get(`/api/v1/artifacts/${artifact_id}?tracker_structure_format=complete`).then(
+        responseHandler,
+        errorHandler
+    );
 }
 
 async function getAllOpenParentArtifacts(tracker_id, limit, offset) {

@@ -9,7 +9,7 @@ import {
 } from "./modal-creation-mode-state.js";
 
 import {
-    rewire$getArtifactFieldValues,
+    rewire$getArtifactWithCompleteTrackerStructure,
     rewire$getTracker,
     rewire$getUserPreference,
     restore as restoreRest
@@ -31,7 +31,7 @@ describe("NewTuleapArtifactModalService", () => {
         isInCreationMode,
         getTracker,
         getUserPreference,
-        getArtifactFieldValues,
+        getArtifactWithCompleteTrackerStructure,
         updateFileUploadRulesWhenNeeded;
 
     beforeEach(() => {
@@ -99,8 +99,10 @@ describe("NewTuleapArtifactModalService", () => {
         rewire$getTracker(getTracker);
         getUserPreference = jasmine.createSpy("getUserPreference");
         rewire$getUserPreference(getUserPreference);
-        getArtifactFieldValues = jasmine.createSpy("getArtifactFieldValues");
-        rewire$getArtifactFieldValues(getArtifactFieldValues);
+        getArtifactWithCompleteTrackerStructure = jasmine.createSpy(
+            "getArtifactWithCompleteTrackerStructure"
+        );
+        rewire$getArtifactWithCompleteTrackerStructure(getArtifactWithCompleteTrackerStructure);
         updateFileUploadRulesWhenNeeded = jasmine.createSpy("updateFileUploadRulesWhenNeeded");
         rewire$updateFileUploadRulesWhenNeeded(updateFileUploadRulesWhenNeeded);
     });
@@ -311,6 +313,7 @@ describe("NewTuleapArtifactModalService", () => {
             });
 
             describe("", () => {
+                let artifact;
                 beforeEach(() => {
                     tracker = {
                         id: tracker_id,
@@ -318,15 +321,17 @@ describe("NewTuleapArtifactModalService", () => {
                         label: "unstainableness",
                         parent: null
                     };
-                    artifact_values = {
-                        487: {
-                            field_id: 487,
-                            value: "unwadded"
-                        },
-                        title: "onomatomania"
+                    artifact = {
+                        title: "onomatomania",
+                        tracker,
+                        values: [
+                            {
+                                field_id: 487,
+                                value: "unwadded"
+                            }
+                        ]
                     };
-                    getTracker.and.returnValue($q.when(tracker));
-                    getArtifactFieldValues.and.returnValue($q.when(artifact_values));
+                    getArtifactWithCompleteTrackerStructure.and.returnValue($q.when(artifact));
                 });
 
                 it("Given a user id, tracker id and an artifact id, when I create the modal's edition model, then the artifact's field values will be retrieved, the tracker's structure will be retrieved and a promise will be resolved with the modal's model object", () => {
@@ -337,15 +342,16 @@ describe("NewTuleapArtifactModalService", () => {
                     );
 
                     expect(promise).toBeResolved();
-                    expect(getTracker).toHaveBeenCalledWith(tracker_id);
-                    expect(getArtifactFieldValues).toHaveBeenCalledWith(artifact_id);
+                    expect(getArtifactWithCompleteTrackerStructure).toHaveBeenCalledWith(
+                        artifact_id
+                    );
                     expect(getUserPreference).toHaveBeenCalledWith(
                         user_id,
                         "tracker_comment_invertorder_93"
                     );
                     expect(updateFileUploadRulesWhenNeeded).toHaveBeenCalled();
                     expect(TuleapArtifactFieldValuesService.getSelectedValues).toHaveBeenCalledWith(
-                        artifact_values,
+                        jasmine.any(Object),
                         tracker
                     );
                     expect(
@@ -353,7 +359,7 @@ describe("NewTuleapArtifactModalService", () => {
                     ).toHaveBeenCalledWith(tracker, false);
                     expect(
                         TuleapArtifactModalTrackerTransformerService.addFieldValuesToTracker
-                    ).toHaveBeenCalledWith(artifact_values, tracker);
+                    ).toHaveBeenCalledWith(jasmine.any(Object), tracker);
                     expect(
                         TuleapArtifactModalFormTreeBuilderService.buildFormTree
                     ).toHaveBeenCalledWith(tracker);
@@ -405,19 +411,12 @@ describe("NewTuleapArtifactModalService", () => {
             });
 
             describe("apply transitions -", () => {
-                var workflow_field;
+                let workflow_field, artifact;
 
                 beforeEach(() => {
                     workflow_field = {
                         field_id: 189
                     };
-                    artifact_values = {
-                        189: {
-                            field_id: 189,
-                            bind_value_ids: [757]
-                        }
-                    };
-                    getArtifactFieldValues.and.returnValue($q.when(artifact_values));
                 });
 
                 it("Given a tracker that had workflow transitions, when I create the modal's edition model, then the transitions will be enforced", () => {
@@ -436,7 +435,17 @@ describe("NewTuleapArtifactModalService", () => {
                         fields: [workflow_field],
                         workflow: workflow
                     };
-                    getTracker.and.returnValue($q.when(tracker));
+                    artifact = {
+                        title: "onomatomania",
+                        tracker,
+                        values: [
+                            {
+                                field_id: 189,
+                                bind_value_ids: [757]
+                            }
+                        ]
+                    };
+                    getArtifactWithCompleteTrackerStructure.and.returnValue($q.when(artifact));
 
                     var promise = NewTuleapArtifactModalService.initEditionModalModel(
                         user_id,
@@ -466,7 +475,18 @@ describe("NewTuleapArtifactModalService", () => {
                         fields: [workflow_field],
                         workflow: workflow
                     };
-                    getTracker.and.returnValue($q.when(tracker));
+                    artifact = {
+                        title: "onomatomania",
+                        tracker,
+                        values: [
+                            {
+                                field_id: 487,
+                                value: "unwadded"
+                            }
+                        ]
+                    };
+
+                    getArtifactWithCompleteTrackerStructure.and.returnValue($q.when(artifact));
 
                     var promise = NewTuleapArtifactModalService.initEditionModalModel(
                         user_id,
