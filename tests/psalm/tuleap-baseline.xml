@@ -20157,18 +20157,6 @@
       <code>setNeedUpdateMailAliases</code>
     </UndefinedMethod>
   </file>
-  <file src="src/common/system_event/include/SystemEvent_USER_CREATE.class.php">
-    <TooManyArguments occurrences="2">
-      <code>getIdFromParam</code>
-      <code>getIdFromParam</code>
-    </TooManyArguments>
-    <UndefinedClass occurrences="1">
-      <code>Boolean</code>
-    </UndefinedClass>
-    <UndefinedMethod occurrences="1">
-      <code>flushNscdAndFsCache</code>
-    </UndefinedMethod>
-  </file>
   <file src="src/common/system_event/include/SystemEvent_USER_DELETE.class.php">
     <TooManyArguments occurrences="2">
       <code>getIdFromParam</code>

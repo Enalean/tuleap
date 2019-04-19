@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -55,6 +55,7 @@ class UserDetailsPresenter
     public $status_label;
     public $email_label;
     public $status;
+    public $nb_project_user_is_member_of_that_dont_accept_restricted;
     public $name_label;
     public $login_label;
     public $password_label;
@@ -77,6 +78,7 @@ class UserDetailsPresenter
         array $more,
         array $shells,
         array $status,
+        int $nb_project_user_is_member_of_that_dont_accept_restricted,
         array $unix_status
     ) {
         $this->id     = $user->getId();
@@ -87,14 +89,15 @@ class UserDetailsPresenter
 
         $this->has_avatar = $user->hasAvatar();
 
-        $this->access             = $access;
-        $this->change_password    = $change_password;
-        $this->csrf_token         = $csrf_token;
-        $this->additional_details = $additional_details;
-        $this->shells             = $shells;
-        $this->unix_status        = $unix_status;
-        $this->status             = $status;
-        $this->more               = $more;
+        $this->access                                                   = $access;
+        $this->change_password                                          = $change_password;
+        $this->csrf_token                                               = $csrf_token;
+        $this->additional_details                                       = $additional_details;
+        $this->shells                                                   = $shells;
+        $this->unix_status                                              = $unix_status;
+        $this->status                                                   = $status;
+        $this->nb_project_user_is_member_of_that_dont_accept_restricted = $nb_project_user_is_member_of_that_dont_accept_restricted;
+        $this->more                                                     = $more;
 
         $this->projects     = $projects;
         $this->has_projects = count($projects) > 0;

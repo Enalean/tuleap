@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -42,7 +42,7 @@ class SystemEventTest extends RestBase
 
         $system_event_01 = $response_json[0];
         $this->assertEquals($system_event_01['id'], 1);
-        $this->assertEquals($system_event_01['type'], "SystemEvent_USER_CREATE");
+        $this->assertEquals($system_event_01['type'], 'Tuleap\\SystemEvent\\SystemEventUserActiveStatusChange');
         $this->assertEquals($system_event_01['owner'], "root");
     }
 

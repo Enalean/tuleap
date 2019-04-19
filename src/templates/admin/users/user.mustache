@@ -13,7 +13,7 @@
 
 <div id="siteadmin-user">
     <div id="siteadmin-user-details">
-        <form action="" method="POST" class="tlp-pane" >
+        <form action="" method="POST" class="tlp-pane" id="siteadmin-user-details-form">
             {{# csrf_token }}
                 {{> csrf_token_input }}
             {{/ csrf_token }}
@@ -56,6 +56,37 @@
                                         </option>
                                     {{/ status }}
                                 </select>
+                            </div>
+                            <div class="tlp-modal tlp-modal-danger" role="dialog"
+                                 aria-labelledby="modal-warning-removal-project-not-including-restricted-label"
+                                 id="modal-warning-removal-project-not-including-restricted"
+                                 data-nb-project-not-accepting-restricted="{{ nb_project_user_is_member_of_that_dont_accept_restricted }}"
+                            >
+                                <div class="tlp-modal-header">
+                                    <h1 class="tlp-modal-title" id="modal-warning-removal-project-not-including-restricted-label">
+                                        <i class="fa fa-trash-o tlp-modal-title-icon"></i> {{# gettext }}Removal from projects{{/ gettext }}
+                                    </h1>
+                                    <div class="tlp-modal-close" data-dismiss="modal" aria-label="{{# gettext }}Close{{/ gettext }}">
+                                        &times;
+                                    </div>
+                                </div>
+                                <div class="tlp-modal-body">
+                                    <p>
+                                        {{# ngettext }}You are about to mark this user as restricted, he will be removed from %s project not allowing restricted users. Please confirm your action. |
+                                            You are about to mark this user as restricted, he will be removed from %s projects not allowing restricted users. Please confirm your action.
+                                            | {{ nb_project_user_is_member_of_that_dont_accept_restricted }}
+                                        {{/ ngettext }}
+                                    </p>
+                                </div>
+                                <div class="tlp-modal-footer">
+                                    <button type="button" class="tlp-button-primary tlp-button-outline tlp-modal-action tlp-button-danger" data-dismiss="modal">
+                                        {{# gettext }}Cancel{{/ gettext }}
+                                    </button>
+                                    <button type="submit" class="tlp-button-primary tlp-modal-action tlp-button-danger" id="modal-warning-removal-project-not-including-restricted-confirm">
+                                        <i class="fa fa-trash-o tlp-button-icon"></i>
+                                        {{# gettext }}Confirm{{/ gettext }}
+                                    </button>
+                                </div>
                             </div>
                         {{/ is_in_limbo }}
                     </div>

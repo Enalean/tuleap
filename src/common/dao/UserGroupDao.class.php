@@ -46,6 +46,20 @@ class UserGroupDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+    /**
+     * @return DataAccessResult|false
+     */
+    public function searchActiveProjectsByUserIdAndAccessType(int $user_id, string $access_type)
+    {
+        $user_id     = $this->da->escapeInt($user_id);
+        $access_type = $this->da->quoteSmart($access_type);
+        $sql         = "SELECT `groups`.*
+                FROM user_group INNER JOIN `groups` USING(group_id)
+                WHERE user_id = $user_id
+                  AND `groups`.status = 'A' AND `groups`.access = $access_type";
+        return $this->retrieve($sql);
+    }
+
 
     /**
      * return users count, members of given project

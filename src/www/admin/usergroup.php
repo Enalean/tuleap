@@ -4,7 +4,7 @@
  * Copyright 1999-2000 (c) VA Linux Systems
  * http://sourceforge.net
  *
- * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -25,6 +25,7 @@
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Password\Configuration\PasswordConfigurationDAO;
 use Tuleap\Password\Configuration\PasswordConfigurationRetriever;
+use Tuleap\User\Admin\RestrictedProjectsUserCounter;
 use Tuleap\User\Admin\UserChangePasswordPresenter;
 use Tuleap\User\Admin\UserDetailsAccessPresenter;
 use Tuleap\User\Admin\UserDetailsFormatter;
@@ -308,6 +309,8 @@ foreach ($password_strategy->validators as $key => $v) {
     );
 }
 
+$restricted_projects_user_counter = new RestrictedProjectsUserCounter(new UserGroupDao());
+
 $siteadmin->renderAPresenter(
     $Language->getText('admin_usergroup', 'title'),
     ForgeConfig::get('codendi_dir') . '/src/templates/admin/users/',
@@ -327,6 +330,7 @@ $siteadmin->renderAPresenter(
         $details_formatter->getMore($user),
         $details_formatter->getShells($user),
         $details_formatter->getStatus($user),
+        $restricted_projects_user_counter->getNumberOfProjectsNotAllowingRestrictedTheUserIsMemberOf($user),
         $details_formatter->getUnixStatus($user)
     )
 );

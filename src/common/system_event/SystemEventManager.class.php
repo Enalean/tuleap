@@ -26,6 +26,7 @@ use Tuleap\System\ApacheServiceControl;
 use Tuleap\System\ServiceControl;
 use Tuleap\SystemEvent\SystemEventSVNAuthenticationCacheRefresh;
 use \Tuleap\Redis;
+use Tuleap\SystemEvent\SystemEventUserActiveStatusChange;
 
 /**
 * Manager of system events
@@ -204,7 +205,7 @@ class SystemEventManager {
                                SystemEvent::PRIORITY_MEDIUM);
             break;
         case 'project_admin_activate_user':
-            $this->createEvent(SystemEvent::TYPE_USER_CREATE,
+            $this->createEvent(SystemEvent::TYPE_USER_ACTIVE_STATUS_CHANGE,
                                $params['user_id'],
                                SystemEvent::PRIORITY_MEDIUM);
             break;
@@ -376,6 +377,8 @@ class SystemEventManager {
                 return SystemEventSVNAuthenticationCacheRefresh::class;
             case SystemEvent::TYPE_PROJECT_ACTIVE:
                 return \Tuleap\SystemEvent\SystemEventProjectActive::class;
+            case SystemEvent::TYPE_USER_ACTIVE_STATUS_CHANGE:
+                return SystemEventUserActiveStatusChange::class;
             default:
                 return 'SystemEvent_' . $type;
         }
@@ -426,6 +429,23 @@ class SystemEventManager {
         $klass        = null;
         $klass_params = null;
         switch ($row['type']) {
+        case SystemEvent::TYPE_USER_ACTIVE_STATUS_CHANGE:
+            $klass        = SystemEventUserActiveStatusChange::class;
+            $user_manager = UserManager::instance();
+            $klass_params = [
+                $user_manager,
+                new UserGroupDao(),
+                new UserRemover(
+                    ProjectManager::instance(),
+                    EventManager::instance(),
+                    new ArtifactTypeFactory(false),
+                    new UserRemoverDao(),
+                    $user_manager,
+                    new ProjectHistoryDao(),
+                    new UGroupManager()
+                )
+            ];
+            break;
         case SystemEvent::TYPE_SYSTEM_CHECK:
         case SystemEvent::TYPE_EDIT_SSH_KEYS:
         case SystemEvent::TYPE_PROJECT_CREATE:
@@ -433,7 +453,6 @@ class SystemEventManager {
         case SystemEvent::TYPE_MEMBERSHIP_CREATE:
         case SystemEvent::TYPE_MEMBERSHIP_DELETE:
         case SystemEvent::TYPE_UGROUP_MODIFY:
-        case SystemEvent::TYPE_USER_CREATE:
         case SystemEvent::TYPE_USER_DELETE:
         case SystemEvent::TYPE_USER_RENAME:
         case SystemEvent::TYPE_MAILING_LIST_CREATE:
