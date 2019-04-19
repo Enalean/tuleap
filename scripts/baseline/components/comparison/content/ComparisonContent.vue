@@ -19,33 +19,27 @@
   -->
 
 <template>
-    <div class="tlp-framed-vertically">
-        <section class="tlp-pane">
-            <div class="tlp-pane-container">
-                <section class="tlp-pane-section comparison-content">
-                    <artifacts-list-comparison-skeleton v-if="is_comparison_loading"/>
+    <div class="comparison-content">
+        <artifacts-list-comparison-skeleton v-if="is_comparison_loading"/>
 
-                    <div v-else-if="is_comparison_loading_failed">
-                        <div class="tlp-alert-danger">
-                            <translate>Cannot fetch baseline artifacts</translate>
-                        </div>
-                    </div>
-
-                    <artifacts-list-comparison
-                        v-else-if="are_some_first_level_artifacts_available"
-                        v-bind:reference_artifacts="base_baseline.first_level_artifacts"
-                        v-bind:compared_artifacts="compared_to_baseline.first_level_artifacts"
-                    />
-                    <span
-                        v-else
-                        class="baseline-empty-information-message"
-                        v-translate
-                    >
-                        No artifact to compare
-                    </span>
-                </section>
+        <div v-else-if="is_comparison_loading_failed">
+            <div class="tlp-alert-danger">
+                <translate>Cannot fetch baseline artifacts</translate>
             </div>
-        </section>
+        </div>
+
+        <artifacts-list-comparison
+            v-else-if="are_some_first_level_artifacts_available"
+            v-bind:reference_artifacts="base_baseline.first_level_artifacts"
+            v-bind:compared_artifacts="compared_to_baseline.first_level_artifacts"
+        />
+        <span
+            v-else
+            class="baseline-empty-information-message"
+            v-translate
+        >
+            No artifact to compare
+        </span>
     </div>
 </template>
 
