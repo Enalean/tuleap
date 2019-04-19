@@ -6,9 +6,9 @@
   "license": "GPL-2.0+",
   "private": true,
   "dependencies": {
-    "dompurify": "^1.0.10",
     "luxon": "^0.5.3",
     "vue": "^2.5.17",
+    "vue-dompurify-html": "^1.2.0",
     "vue-gettext": "^2.1.0"
   },
   "config": {

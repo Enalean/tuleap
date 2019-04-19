@@ -20,6 +20,7 @@
 
 import { createLocalVue } from "@vue/test-utils";
 import Vuex from "vuex";
+import VueDOMPurifyHTML from "vue-dompurify-html";
 import GettextPlugin from "vue-gettext";
 import VueRouter from "vue-router";
 
@@ -27,6 +28,7 @@ const localVue = createLocalVue();
 localVue.use(Vuex);
 localVue.use(VueRouter);
 
+localVue.use(VueDOMPurifyHTML);
 localVue.use(GettextPlugin, {
     translations: {},
     silent: true

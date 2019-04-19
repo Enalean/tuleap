@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2018. All Rights Reserved.
+  - Copyright (c) Enalean, 2018-Present. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -18,8 +18,7 @@
   -->
 <template>
     <div class="call-me-back dropup" ref="dropdown">
-        <!-- eslint-disable-next-line vue/no-v-html -->
-        <div class="call-me-back-message" v-if="! dropdown_open && message" v-html="sanitized_message"></div>
+        <div class="call-me-back-message" v-if="! dropdown_open && message" v-dompurify-html="message"></div>
         <button class="call-me-back-button dropdown-toggle" data-toggle="dropdown">
             <i class="fa fa-phone"></i>
         </button>
@@ -84,7 +83,6 @@
 <script>
 import { getCallMeBackMessage, askToBeCalledBack } from "../../call-me-back-rest-querier.js";
 import { DateTime } from "luxon";
-import { sanitize } from "dompurify";
 import jQuery from "jquery";
 
 export default {
@@ -106,9 +104,6 @@ export default {
     computed: {
         call_me_back_formatted_date() {
             return DateTime.fromISO(this.call_me_back_date).toLocaleString(DateTime.DATE_FULL);
-        },
-        sanitized_message() {
-            return sanitize(this.message);
         }
     },
     mounted() {

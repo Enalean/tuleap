@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,12 +18,14 @@
  */
 
 import Vue from "vue";
+import VueDOMPurifyHTML from "vue-dompurify-html";
 import GetTextPlugin from "vue-gettext";
 import french_translations from "../../po/fr.po";
 import CallMeBack from "./CallMeBack.vue";
 import { Settings } from "luxon";
 
 document.addEventListener("DOMContentLoaded", () => {
+    Vue.use(VueDOMPurifyHTML);
     Vue.use(GetTextPlugin, {
         translations: {
             fr: french_translations.messages
