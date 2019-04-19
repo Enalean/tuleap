@@ -43,15 +43,6 @@ const factories = {
             first_level_artifacts: []
         }
     },
-    simplified_baseline: {
-        default: {
-            id: identity,
-            name: "Simplified baseline label",
-            milestone_id: 3,
-            author_id: 2,
-            creation_date: 12344567
-        }
-    },
     tracker: {
         default: {
             id: identity,

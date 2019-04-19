@@ -69,7 +69,7 @@ describe("Rest queries:", () => {
     describe("createBaseline()", () => {
         let post;
 
-        const simplified_baseline = create("simplified_baseline");
+        const baseline = create("baseline");
         const headers = {
             "content-type": "application/json"
         };
@@ -80,7 +80,7 @@ describe("Rest queries:", () => {
 
         beforeEach(async () => {
             post = jasmine.createSpy("post");
-            mockFetchSuccess(post, { return_json: simplified_baseline });
+            mockFetchSuccess(post, { return_json: baseline });
             rewire$post(post);
 
             result = await createBaseline("My first baseline", {
@@ -92,7 +92,7 @@ describe("Rest queries:", () => {
         it("calls baselines API to create baseline", () =>
             expect(post).toHaveBeenCalledWith("/api/baselines/", { headers, body }));
 
-        it("returns created baseline", () => expect(result).toEqual(simplified_baseline));
+        it("returns created baseline", () => expect(result).toEqual(baseline));
     });
 
     describe("getBaselineArtifactsByIds()", () => {
