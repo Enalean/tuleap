@@ -28,7 +28,7 @@
     </div>
 </template>
 <script>
-import { mapState, mapGetters } from "vuex";
+import { mapGetters, mapState } from "vuex";
 import DocumentBreadcrumb from "./Breadcrumb/DocumentBreadcrumb.vue";
 import PermissionError from "./Folder/Error/PermissionError.vue";
 import ItemPermissionError from "./Folder/Error/ItemPermissionError.vue";
@@ -53,7 +53,8 @@ export default {
         max_files_dragndrop: Number,
         max_size_upload: Number,
         is_under_construction: Boolean,
-        embedded_are_allowed: Boolean
+        embedded_are_allowed: Boolean,
+        is_item_status_metadata_used: Boolean
     },
     computed: {
         ...mapState("error", [
@@ -87,7 +88,8 @@ export default {
             this.max_files_dragndrop,
             this.max_size_upload,
             this.is_under_construction,
-            this.embedded_are_allowed
+            this.embedded_are_allowed,
+            this.is_item_status_metadata_used
         ]);
 
         window.addEventListener("beforeunload", event => {

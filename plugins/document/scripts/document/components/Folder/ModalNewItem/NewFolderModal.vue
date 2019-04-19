@@ -23,7 +23,9 @@
         <modal-header v-bind:modal-title="modal_title" v-bind:aria-labelled-by="aria_labelled_by"/>
         <modal-feedback/>
         <div class="tlp-modal-body document-new-item-modal-body" v-if="is_displayed">
-            <global-metadata v-bind:item="item" v-bind:parent="parent"/>
+            <global-metadata v-bind:item="item" v-bind:parent="parent">
+                <status-metadata v-if="is_item_status_metadata_used" v-on:itemStatusSelectEvent="setItemStatus"/>
+            </global-metadata>
         </div>
         <modal-footer v-bind:is-loading="is_loading" v-bind:submit-button-label="submit_button_label" v-bind:aria-labelled-by="aria_labelled_by"/>
     </form>
@@ -32,15 +34,17 @@
 <script>
 import { mapState } from "vuex";
 import { modal as createModal } from "tlp";
-import { TYPE_FOLDER } from "../../../constants.js";
+import { TYPE_FOLDER, ITEM_STATUS_NONE } from "../../../constants.js";
 import ModalHeader from "../ModalCommon/ModalHeader.vue";
 import ModalFeedback from "../ModalCommon/ModalFeedback.vue";
 import ModalFooter from "../ModalCommon/ModalFooter.vue";
 import GlobalMetadata from "../Metadata/GlobalMetadata.vue";
+import StatusMetadata from "../Metadata/StatusMetadata.vue";
 
 export default {
     name: "NewFolderModal",
     components: {
+        StatusMetadata,
         ModalFeedback,
         ModalHeader,
         ModalFooter,
@@ -51,7 +55,8 @@ export default {
             item: {
                 title: "",
                 description: "",
-                type: TYPE_FOLDER
+                type: TYPE_FOLDER,
+                status: ITEM_STATUS_NONE
             },
             is_loading: false,
             is_displayed: false,
@@ -60,7 +65,7 @@ export default {
         };
     },
     computed: {
-        ...mapState(["current_folder"]),
+        ...mapState(["current_folder", "is_item_status_metadata_used"]),
         ...mapState("error", ["has_modal_error"]),
         submit_button_label() {
             return this.$gettext("Create folder");
@@ -95,6 +100,7 @@ export default {
             this.$store.commit("error/resetModalError");
             this.is_displayed = false;
             this.is_loading = false;
+            this.setItemStatus(ITEM_STATUS_NONE);
         },
         async addFolder(event) {
             event.preventDefault();
@@ -106,10 +112,14 @@ export default {
                 this.parent,
                 this.current_folder
             ]);
+            this.setItemStatus(ITEM_STATUS_NONE);
             this.is_loading = false;
             if (this.has_modal_error === false) {
                 this.modal.hide();
             }
+        },
+        setItemStatus(status) {
+            this.item.status = status;
         }
     }
 };
