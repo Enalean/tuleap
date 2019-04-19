@@ -59,6 +59,8 @@ class DocumentToUploadCreatorTest extends TestCase
         $this->dao->shouldReceive('searchDocumentOngoingUploadByParentIDTitleAndExpirationDate')->andReturns([]);
         $this->dao->shouldReceive('saveDocumentOngoingUpload')->once()->andReturns(12);
 
+        $obsolescence_date = \DateTimeImmutable::createFromFormat('Y-m-d', '2100-05-19');
+
         $document_to_upload = $creator->create(
             $parent_item,
             $user,
@@ -66,7 +68,9 @@ class DocumentToUploadCreatorTest extends TestCase
             'title',
             'description',
             'filename',
-            123456
+            123456,
+            PLUGIN_DOCMAN_ITEM_STATUS_APPROVED,
+            $obsolescence_date->getTimestamp()
         );
 
         $this->assertSame(12, $document_to_upload->getItemId());
@@ -87,6 +91,8 @@ class DocumentToUploadCreatorTest extends TestCase
             ['item_id' => 12, 'user_id' => 102, 'filename' => 'filename', 'filesize' => 123456]
         ]);
 
+        $obsolescence_date = \DateTimeImmutable::createFromFormat('Y-m-d', '2100-05-19');
+
         $document_to_upload = $creator->create(
             $parent_item,
             $user,
@@ -94,7 +100,9 @@ class DocumentToUploadCreatorTest extends TestCase
             'title',
             'description',
             'filename',
-            123456
+            123456,
+            PLUGIN_DOCMAN_ITEM_STATUS_APPROVED,
+            $obsolescence_date->getTimestamp()
         );
 
         $this->assertSame(12, $document_to_upload->getItemId());
@@ -117,6 +125,8 @@ class DocumentToUploadCreatorTest extends TestCase
 
         $this->expectException(UploadCreationConflictException::class);
 
+        $obsolescence_date = \DateTimeImmutable::createFromFormat('Y-m-d', '2100-05-19');
+
         $creator->create(
             $parent_item,
             $user,
@@ -124,7 +134,9 @@ class DocumentToUploadCreatorTest extends TestCase
             'title',
             'description',
             'filename',
-            123456
+            123456,
+            PLUGIN_DOCMAN_ITEM_STATUS_APPROVED,
+            $obsolescence_date->getTimestamp()
         );
     }
 
@@ -145,6 +157,8 @@ class DocumentToUploadCreatorTest extends TestCase
 
         $this->expectException(UploadCreationFileMismatchException::class);
 
+        $obsolescence_date = \DateTimeImmutable::createFromFormat('Y-m-d', '2100-05-19');
+
         $creator->create(
             $parent_item,
             $user,
@@ -152,7 +166,9 @@ class DocumentToUploadCreatorTest extends TestCase
             'title',
             'description',
             'filename2',
-            789
+            789,
+            PLUGIN_DOCMAN_ITEM_STATUS_APPROVED,
+            $obsolescence_date->getTimestamp()
         );
     }
 
@@ -167,6 +183,8 @@ class DocumentToUploadCreatorTest extends TestCase
 
         $this->expectException(UploadMaxSizeExceededException::class);
 
+        $obsolescence_date = \DateTimeImmutable::createFromFormat('Y-m-d', '2100-05-19');
+
         $creator->create(
             $parent_item,
             $user,
@@ -174,7 +192,9 @@ class DocumentToUploadCreatorTest extends TestCase
             'title',
             'description',
             'filename',
-            2
+            2,
+            PLUGIN_DOCMAN_ITEM_STATUS_APPROVED,
+            $obsolescence_date->getTimestamp()
         );
     }
 }

@@ -51,7 +51,9 @@ class DocumentToUploadCreator
         $title,
         $description,
         $filename,
-        $filesize
+        $filesize,
+        int $status,
+        int $obsolescence_date
     ) {
         if ((int) $filesize > (int) \ForgeConfig::get(PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING)) {
             throw new UploadMaxSizeExceededException(
@@ -68,7 +70,9 @@ class DocumentToUploadCreator
             $description,
             $filename,
             $filesize,
-            &$item_id
+            &$item_id,
+            $status,
+            $obsolescence_date
         ) {
             $rows = $this->dao->searchDocumentOngoingUploadByParentIDTitleAndExpirationDate(
                 $parent_item->getId(),
@@ -99,7 +103,9 @@ class DocumentToUploadCreator
                 $description,
                 $user->getId(),
                 $filename,
-                $filesize
+                $filesize,
+                $status,
+                $obsolescence_date
             );
         });
 

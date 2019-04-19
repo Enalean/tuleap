@@ -417,6 +417,8 @@ CREATE TABLE plugin_docman_new_document_upload (
     user_id INT(11) UNSIGNED NOT NULL,
     filename TEXT NULL,
     filesize INT(11) UNSIGNED NULL,
+    status TINYINT(4) DEFAULT 100 NOT NULL,
+    obsolescence_date int(11) DEFAULT 0 NOT NULL,
     INDEX idx_parentid (parent_id),
     INDEX idx_expiration_date (expiration_date)
 ) ENGINE=InnoDB;

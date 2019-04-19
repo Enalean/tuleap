@@ -662,6 +662,52 @@ class DocmanItemsTestFoldersTest extends DocmanBase
     }
 
     /**
+     * @depends testGetRootId
+     */
+    public function testPostFileWithStatusWhenStatusIsNotAllowedForProject(int $root_id): void
+    {
+        $file_size = 123;
+        $headers   = ['Content-Type' => 'application/json'];
+        $query     = json_encode(
+            [
+                'title'           => 'File5',
+                'file_properties' => ['file_name' => 'file1', 'file_size' => $file_size],
+                'status'          => 'approved'
+            ]
+        );
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post('docman_folders/' . $root_id . "/files", $headers, $query)
+        );
+
+        $this->assertEquals(403, $response->getStatusCode());
+    }
+
+    /**
+     * @depends testGetRootId
+     */
+    public function testPostFileWithObsolescenceDateWhenObsolescenceDateIsNotAllowedForProject(int $root_id): void
+    {
+        $file_size = 123;
+        $headers   = ['Content-Type' => 'application/json'];
+        $query     = json_encode(
+            [
+                'title'             => 'My File',
+                'file_properties'   => ['file_name' => 'file1', 'file_size' => $file_size],
+                'obsolescence_date' => '3019-05-20'
+            ]
+        );
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post('docman_folders/' . $root_id . "/files", $headers, $query)
+        );
+
+        $this->assertEquals(403, $response->getStatusCode());
+    }
+
+    /**
      * Find first item in given array of items which has given title.
      * @return array|null Found item. null otherwise.
      */

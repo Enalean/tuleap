@@ -329,6 +329,20 @@ class DocmanItemCreatorTest extends TestCase
 
         $this->document_to_upload_creator->shouldReceive('create')->once()->andReturns(new DocumentToUpload(12));
 
+        $this->item_status_mapper->shouldReceive('getItemStatusIdFromItemStatusString')->andReturn(
+            PLUGIN_DOCMAN_ITEM_STATUS_NONE
+        );
+
+        $this->metadata_item_status_checker->shouldReceive(
+            'checkStatusIsNotSetWhenStatusMetadataIsNotAllowed'
+        )->andReturn(false);
+
+        $this->metadata_obsolescence_date_checker->shouldReceive('checkObsolescenceDateUsage')->once();
+        $this->metadata_obsolesence_date_retriever->shouldReceive('getTimeStampOfDate')->andReturn(
+            (int)ItemRepresentation::OBSOLESCENCE_DATE_NONE
+        );
+        $this->metadata_obsolescence_date_checker->shouldReceive('checkDateValidity')->once();
+
         $this->item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
 
         $created_item_representation = $item_creator->createFileDocument(
@@ -336,6 +350,8 @@ class DocmanItemCreatorTest extends TestCase
             $user,
             $post_representation->title,
             $post_representation->description,
+            'approved',
+            '2019-06-06',
             $current_time,
             $file_properties_post_representation
         );
@@ -384,6 +400,8 @@ class DocmanItemCreatorTest extends TestCase
             $user,
             $post_representation->title,
             $post_representation->description,
+            'approved',
+            '2019-06-06',
             $current_time,
             $file_properties_post_representation
         );
@@ -1182,5 +1200,75 @@ class DocmanItemCreatorTest extends TestCase
         );
 
         $this->assertSame(12, $created_item_representation->id);
+    }
+
+    public function testFileDocumentCanBeCreatedWithStatusAndObsolescenceDate()
+    {
+        $item_creator = new DocmanItemCreator(
+            $this->item_factory,
+            $this->document_ongoing_upload_retriever,
+            $this->document_to_upload_creator,
+            $this->creator_visitor,
+            $this->empty_file_to_upload_finisher,
+            $this->link_validity_checker,
+            $this->item_status_mapper,
+            $this->metadata_item_status_checker,
+            $this->metadata_obsolescence_date_checker,
+            $this->metadata_obsolesence_date_retriever
+        );
+
+        $parent_item = \Mockery::mock(\Docman_Item::class);
+        $parent_item->shouldReceive('getId')->andReturns(3);
+        $user         = \Mockery::mock(\PFUser::class);
+        $current_time = new \DateTimeImmutable();
+
+        $post_representation                            = new DocmanPOSTFilesRepresentation();
+        $post_representation->title                     = 'Title';
+        $post_representation->description               = '';
+        $post_representation->status                    = 'approved';
+        $post_representation->obsolescence_date         = '2019-03-08';
+        $file_properties_post_representation            = new FilePropertiesPOSTPATCHRepresentation();
+        $file_properties_post_representation->file_size = 123456;
+        $file_properties_post_representation->file_name = 'myfile';
+        $post_representation->file_properties           = $file_properties_post_representation;
+
+        $this->document_to_upload_creator->shouldReceive('create')->once()->andReturns(new DocumentToUpload(12));
+
+        $this->item_status_mapper->shouldReceive('getItemStatusIdFromItemStatusString')->andReturn(
+            PLUGIN_DOCMAN_ITEM_STATUS_NONE
+        );
+
+        $this->metadata_item_status_checker->shouldReceive(
+            'checkStatusIsNotSetWhenStatusMetadataIsNotAllowed'
+        )->andReturn(false);
+
+        $this->metadata_obsolescence_date_checker->shouldReceive('checkObsolescenceDateUsage')->once();
+        $obsolescence_date_time_stamp = 123456;
+        $this->metadata_obsolesence_date_retriever->shouldReceive('getTimeStampOfDate')
+                                                  ->withArgs(
+                                                      [
+                                                          $post_representation->obsolescence_date,
+                                                          PLUGIN_DOCMAN_ITEM_TYPE_FILE
+                                                      ]
+                                                  )
+                                                  ->andReturn($obsolescence_date_time_stamp);
+
+        $this->metadata_obsolescence_date_checker->shouldReceive('checkDateValidity')->once();
+
+        $this->item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
+
+        $created_item_representation = $item_creator->createFileDocument(
+            $parent_item,
+            $user,
+            $post_representation->title,
+            $post_representation->description,
+            $post_representation->status,
+            $post_representation->obsolescence_date,
+            $current_time,
+            $file_properties_post_representation
+        );
+
+        $this->assertSame(12, $created_item_representation->id);
+        $this->assertNotNull($created_item_representation->file_properties);
     }
 }

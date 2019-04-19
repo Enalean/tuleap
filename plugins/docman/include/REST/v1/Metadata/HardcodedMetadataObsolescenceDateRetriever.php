@@ -46,7 +46,7 @@ class HardcodedMetadataObsolescenceDateRetriever
      * @return int
      * @throws InvalidDateTimeFormatException
      */
-    public function getTimeStampOfDate(?string $date, int $item_type)
+    public function getTimeStampOfDate(string $date, int $item_type)
     {
         if (!$this->date_checker->isObsolescenceMetadataUsed() || $item_type === PLUGIN_DOCMAN_ITEM_TYPE_FOLDER) {
             return (int)ItemRepresentation::OBSOLESCENCE_DATE_NONE;

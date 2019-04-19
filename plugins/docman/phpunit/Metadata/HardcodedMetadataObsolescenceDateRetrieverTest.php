@@ -66,16 +66,6 @@ class HardcodedMetadataObsolescenceDateRetrieverTest extends TestCase
         $this->assertEquals($expected_date->getTimestamp(), $time_stamp);
     }
 
-    public function testGetTimeStampOfDateWhenTheObsolescenceDateIsNotUsed(): void
-    {
-        $retriever = new HardcodedMetadataObsolescenceDateRetriever($this->metadata_obsolescence_date_checker);
-
-        $this->metadata_obsolescence_date_checker->shouldReceive('isObsolescenceMetadataUsed')->andReturn('0');
-
-        $time_stamp = $retriever->getTimeStampOfDate(null, PLUGIN_DOCMAN_ITEM_TYPE_EMPTY);
-        $this->assertEquals(0, $time_stamp);
-    }
-
     public function testGetTimeStampOfDateThrowsExceptionWhenTheDateIsNotWellFormattedAndTheMetadataIsUsed(): void
     {
         $retriever = new HardcodedMetadataObsolescenceDateRetriever($this->metadata_obsolescence_date_checker);

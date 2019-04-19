@@ -76,20 +76,24 @@ class DocumentOngoingUploadDAO extends DataAccessObject
         $description,
         $user_id,
         $filename,
-        $filesize
+        $filesize,
+        ?int $status,
+        ?int $obsolescence_date
     ) {
         $item_id = (int) $this->getDB()->insertReturnId('plugin_docman_item_id', []);
         $this->getDB()->insert(
             'plugin_docman_new_document_upload',
             [
-                'item_id'         => $item_id,
-                'expiration_date' => $expiration_date,
-                'parent_id'       => $parent_id,
-                'title'           => $title,
-                'description'     => $description,
-                'user_id'         => $user_id,
-                'filename'        => $filename,
-                'filesize'        => $filesize
+                'item_id'           => $item_id,
+                'expiration_date'   => $expiration_date,
+                'parent_id'         => $parent_id,
+                'title'             => $title,
+                'description'       => $description,
+                'user_id'           => $user_id,
+                'filename'          => $filename,
+                'filesize'          => $filesize,
+                'status'            => $status,
+                'obsolescence_date' => $obsolescence_date
             ]
         );
         return $item_id;

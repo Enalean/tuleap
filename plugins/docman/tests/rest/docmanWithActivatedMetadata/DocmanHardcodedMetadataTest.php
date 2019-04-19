@@ -23,6 +23,8 @@ declare(strict_types = 1);
 
 namespace Tuleap\Docman\rest\v1;
 
+use DateTimeZone;
+use Guzzle\Http\Client;
 use REST_TestDataBuilder;
 use Tuleap\Docman\rest\DocmanDataBuilder;
 use Tuleap\Docman\rest\DocmanWithMetadataActivatedBase;
@@ -50,7 +52,7 @@ class DocmanHardcodedMetadataTest extends DocmanWithMetadataActivatedBase
             REST_TestDataBuilder::ADMIN_USER_NAME,
             $this->client->get('docman_items/' . $root_id . '/docman_items')
         );
-        $folders   = $response->json();
+        $folders  = $response->json();
 
         $this->assertEquals(count($folders), 1);
         $this->assertEquals($folders[0]['user_can_write'], true);
@@ -397,6 +399,156 @@ class DocmanHardcodedMetadataTest extends DocmanWithMetadataActivatedBase
     }
 
     /**
+     * @depends testGetDocumentItemsForAdmin
+     */
+    public function testPostFileDocumentWithStatusAndObsolescenceDate(array $items): void
+    {
+        $folder_HM = $this->findItemByTitle($items, 'Folder HM');
+
+        $file_size = 123;
+
+        $headers = ['Content-Type' => 'application/json'];
+
+        $date = new \DateTimeImmutable();
+        $date->setTimezone(new DateTimeZone('GMT+1'));
+        $query = json_encode(
+            [
+                'title'             => 'File1',
+                'file_properties'   => ['file_name' => 'file1', 'file_size' => $file_size],
+                'status'            => 'approved',
+                'obsolescence_date' => $date->modify('+1 day')->format('Y-m-d')
+            ]
+        );
+
+        $response1      = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post('docman_folders/' . $folder_HM['id'] . '/files', $headers, $query)
+        );
+        $response1_json = $response1->json();
+        $file_id        = $response1_json['id'];
+        $this->assertEquals(201, $response1->getStatusCode());
+        $this->assertNotEmpty($response1_json['file_properties']['upload_href']);
+
+        $response2 = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post('docman_folders/' . $folder_HM['id'] . '/files', null, $query)
+        );
+        $this->assertEquals(201, $response1->getStatusCode());
+        $this->assertSame(
+            $response1->json()['file_properties']['upload_href'],
+            $response2->json()['file_properties']['upload_href']
+        );
+
+        $general_use_http_client = new Client(
+            str_replace('/api/v1', '', $this->client->getBaseUrl()),
+            $this->client->getConfig()
+        );
+        $general_use_http_client->setSslVerification(false, false, false);
+        $file_content        = str_repeat('A', $file_size);
+        $tus_response_upload = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $general_use_http_client->patch(
+                $response1->json()['file_properties']['upload_href'],
+                [
+                    'Tus-Resumable' => '1.0.0',
+                    'Content-Type'  => 'application/offset+octet-stream',
+                    'Upload-Offset' => '0'
+                ],
+                $file_content
+            )
+        );
+        $this->assertEquals(204, $tus_response_upload->getStatusCode());
+        $this->assertEquals([$file_size], $tus_response_upload->getHeader('Upload-Offset')->toArray());
+
+        $file_item_response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->get($response1->json()['uri'])
+        );
+        $this->assertEquals(200, $file_item_response->getStatusCode());
+        $this->assertEquals('file', $file_item_response->json()['type']);
+
+        $file_content_response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $general_use_http_client->get($file_item_response->json()['file_properties']['download_href'])
+        );
+        $this->assertEquals(200, $file_content_response->getStatusCode());
+        $this->assertEquals($file_content, $file_content_response->getBody());
+
+        $response_file = $this->getResponseByName(
+            REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('docman_items/' . $file_id)
+        );
+
+        $this->assertEquals(200, $response_file->getStatusCode());
+
+        $status = $this->getMetadataByName($response_file->json()['metadata'], 'Status');
+        $this->assertEquals(
+            'Approved',
+            $status['list_value'][0]['name']
+        );
+        $obsolescence_date_metadata = $this->getMetadataByName(
+            $response_file->json()['metadata'],
+            'Obsolescence Date'
+        );
+
+        $obsolescence_date_string = $obsolescence_date_metadata['value'];
+        $obsolescence_date = \DateTimeImmutable::createFromFormat(
+            \DateTimeInterface::W3C,
+            $obsolescence_date_string
+        );
+
+        $this->assertTrue($date->modify('+1 day')->getTimestamp() === $obsolescence_date->getTimestamp());
+    }
+
+    /**
+     * @depends testGetRootId
+     */
+    public function testPostFileWithStatusThrows400IfThereIsABadStatus(int $root_id): void
+    {
+        $file_size = 123;
+        $headers   = ['Content-Type' => 'application/json'];
+        $query     = json_encode(
+            [
+                'title'             => 'My File2352',
+                'file_properties'   => ['file_name' => 'file1', 'file_size' => $file_size],
+                'status'            => 'approveddfkndfnig',
+                'obsolescence_date' => '3019-05-20'
+            ]
+        );
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post('docman_folders/' . $root_id . "/files", $headers, $query)
+        );
+
+        $this->assertEquals(400, $response->getStatusCode());
+    }
+
+    /**
+     * @depends testGetRootId
+     */
+    public function testPostFileWithStatusThrows400IfTheDateIsNotWellFormatted(int $root_id): void
+    {
+        $file_size = 123;
+        $headers   = ['Content-Type' => 'application/json'];
+        $query     = json_encode(
+            [
+                'title'             => 'My File2352',
+                'file_properties'   => ['file_name' => 'file1', 'file_size' => $file_size],
+                'status'            => 'approved',
+                'obsolescence_date' => '3019-05-2030096'
+            ]
+        );
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post('docman_folders/' . $root_id . "/files", $headers, $query)
+        );
+
+        $this->assertEquals(400, $response->getStatusCode());
+    }
+
+    /**
      * Find first item in given array of items which has given title.
      *
      * @return array|null Found item. null otherwise.
@@ -408,5 +560,14 @@ class DocmanHardcodedMetadataTest extends DocmanWithMetadataActivatedBase
             return null;
         }
         return $items[$index];
+    }
+
+    private function getMetadataByName(array $metadata, string $name)
+    {
+        $index = array_search($name, array_column($metadata, 'name'));
+        if ($index === false) {
+            return null;
+        }
+        return $metadata[$index];
     }
 }

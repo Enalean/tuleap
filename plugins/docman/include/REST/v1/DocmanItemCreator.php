@@ -223,20 +223,40 @@ class DocmanItemCreator
     }
 
     /**
-     *
      * @throws RestException
+     * @throws Metadata\ItemStatusUsageMismatchException
+     * @throws StatusNotFoundException
+     * @throws Metadata\ObsoloscenceDateUsageMismatchException
+     * @throws Metadata\InvalidDateTimeFormatException
+     * @throws Metadata\InvalidDateComparisonException
      */
     public function createFileDocument(
         Docman_Item $parent_item,
         PFUser $user,
         $title,
         $description,
+        ?string $status,
+        ?string $obsolescence_date,
         \DateTimeImmutable $current_time,
         FilePropertiesPOSTPATCHRepresentation $file_properties
     ) {
         if ($this->item_factory->doesTitleCorrespondToExistingDocument($title, $parent_item->getId())) {
             throw new RestException(400, "A file with same title already exists in the given folder.");
         }
+
+        $this->metadata_usage_checker->checkStatusIsNotSetWhenStatusMetadataIsNotAllowed($status);
+        $status_id = $this->status_mapper->getItemStatusIdFromItemStatusString($status);
+
+        $this->obsolescence_date_checker->checkObsolescenceDateUsage($obsolescence_date, PLUGIN_DOCMAN_ITEM_TYPE_FILE);
+        $obsolescence_date_time_stamp = $this->date_retriever->getTimeStampOfDate(
+            $obsolescence_date,
+            PLUGIN_DOCMAN_ITEM_TYPE_FILE
+        );
+        $this->obsolescence_date_checker->checkDateValidity(
+            $current_time->getTimestamp(),
+            $obsolescence_date_time_stamp,
+            PLUGIN_DOCMAN_ITEM_TYPE_FILE
+        );
 
         try {
             $document_to_upload = $this->document_to_upload_creator->create(
@@ -246,7 +266,9 @@ class DocmanItemCreator
                 $title,
                 $description,
                 $file_properties->file_name,
-                $file_properties->file_size
+                $file_properties->file_size,
+                $status_id,
+                $obsolescence_date_time_stamp
             );
 
             if ($file_properties->file_size === 0) {
