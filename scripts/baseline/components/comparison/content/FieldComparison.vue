@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2019. All Rights Reserved.
+  - Copyright (c) Enalean, 2019-Present. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -23,7 +23,7 @@
         <h3 class="comparison-content-artifact-body-field-label">
             <semantic-field-label v-bind:semantic="semantic" v-bind:tracker_id="tracker_id"/>
         </h3>
-        <p v-html="sanitized_value_diff"></p>
+        <p v-dompurify-html="value_diff"></p>
     </div>
 </template>
 
@@ -59,9 +59,8 @@ export default {
     },
 
     computed: {
-        sanitized_value_diff() {
-            const value_diff = diff(this.reference, this.compare_to);
-            return DOMPurify.sanitize(value_diff);
+        value_diff() {
+            return diff(this.reference, this.compare_to);
         }
     }
 };

@@ -8,11 +8,11 @@
   "dependencies": {
     "moment": "^2.24.0",
     "moment-timezone": "^0.5.23",
-    "dompurify": "^1.0.10",
     "node-htmldiff": "^0.9.3",
     "phptomoment": "0.0.2",
     "sprintf-js": "^1.1.2",
     "vue": "^2.5.17",
+    "vue-dompurify-html": "^1.2.0",
     "vue-gettext": "^2.1.0",
     "vue-router": "^3.0.2",
     "vuex": "^3.1.0"

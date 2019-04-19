@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2019. All Rights Reserved.
+  - Copyright (c) Enalean, 2019-Present. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -23,7 +23,7 @@
         <h3 class="baseline-content-artifact-body-field-label">
             <semantic-field-label v-bind:semantic="semantic" v-bind:tracker_id="tracker_id"/>
         </h3>
-        <p v-if="html_content" v-html="sanitized_value" class="baseline-content-artifact-body-field-value"></p>
+        <p v-if="html_content" v-dompurify-html="value" class="baseline-content-artifact-body-field-value"></p>
         <p v-else class="baseline-content-artifact-body-field-value">{{ value }}</p>
     </div>
 </template>
@@ -52,12 +52,6 @@ export default {
         html_content: {
             default: false,
             type: Boolean
-        }
-    },
-
-    computed: {
-        sanitized_value() {
-            return DOMPurify.sanitize(this.value);
         }
     }
 };

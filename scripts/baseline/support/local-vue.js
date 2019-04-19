@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,11 +20,13 @@
 
 import { createLocalVue } from "@vue/test-utils";
 import Vuex from "vuex";
+import VueDOMPurifyHTML from "vue-dompurify-html";
 import GettextPlugin from "vue-gettext";
 import VueRouter from "vue-router";
 
 const localVue = createLocalVue();
 localVue.use(Vuex);
+localVue.use(VueDOMPurifyHTML);
 localVue.use(GettextPlugin, {
     translations: {},
     silent: true
