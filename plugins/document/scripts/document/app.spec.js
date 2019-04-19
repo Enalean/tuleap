@@ -66,5 +66,7 @@ import "./components/Folder/Property/ItemUpdateProperties.spec.js";
 
 import "./components/Folder/Metadata/TitleMetadata.spec.js";
 
+import "./components/User/UserBadge.spec.js";
+
 import "./helpers/highlight-items-helper.spec.js";
 import "./helpers/uploading-status-helper.spec.js";
