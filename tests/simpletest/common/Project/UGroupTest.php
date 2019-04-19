@@ -83,10 +83,10 @@ class UGroup_AddUserTest extends TuleapTestCase {
         $project_manager->shouldReceive('getProject')->with($group_id)->andReturn($project);
         $project->shouldReceive('getAccess')->andReturn(Project::ACCESS_PUBLIC);
 
-        $ugroup = TestHelper::getPartialMock('ProjectUGroup', array('_getUserGroupDao'));
+        $ugroup = TestHelper::getPartialMock('ProjectUGroup', array('getUserGroupDao'));
         
         $dao = mock('UserGroupDao');
-        stub($ugroup)->_getUserGroupDao()->returns($dao);
+        stub($ugroup)->getUserGroupDao()->returns($dao);
         
         $ugroup->__construct(array('ugroup_id' => $ugroup_id, 'group_id' => $group_id));
         
@@ -168,10 +168,10 @@ class UGroup_RemoveUserTest extends TuleapTestCase {
         $ugroup_id = $GLOBALS['UGROUP_WIKI_ADMIN'];
         $group_id  = 300;
         
-        $ugroup = TestHelper::getPartialMock('ProjectUGroup', array('_getUserGroupDao'));
+        $ugroup = TestHelper::getPartialMock('ProjectUGroup', array('getUserGroupDao'));
         
         $dao = mock('UserGroupDao');
-        stub($ugroup)->_getUserGroupDao()->returns($dao);
+        stub($ugroup)->getUserGroupDao()->returns($dao);
         
         $ugroup->__construct(array('ugroup_id' => $ugroup_id, 'group_id' => $group_id));
         
@@ -184,12 +184,12 @@ class UGroup_RemoveUserTest extends TuleapTestCase {
         $ugroup_id = $GLOBALS['UGROUP_PROJECT_ADMIN'];
         $group_id  = 300;
         
-        $ugroup = TestHelper::getPartialMock('ProjectUGroup', array('_getUserGroupDao'));
+        $ugroup = TestHelper::getPartialMock('ProjectUGroup', array('getUserGroupDao'));
         
         $project_admin_dar = TestHelper::emptyDar();
 
         $dao = stub('UserGroupDao')->searchProjectAdminsByProjectIdExcludingOneUserId()->returns($project_admin_dar);
-        stub($ugroup)->_getUserGroupDao()->returns($dao);
+        stub($ugroup)->getUserGroupDao()->returns($dao);
         
         $ugroup->__construct(array('ugroup_id' => $ugroup_id, 'group_id' => $group_id));
         
@@ -264,7 +264,7 @@ class UGroup_getUsersTest extends UGroup_getUsersBaseTest {
         $row      = array('ugroup_id' => $id, 'group_id' => 105);
         $ugroup   = new ProjectUGroup($row);
         $ugroup->setUGroupUserDao(stub('UGroupUserDao')->searchUserByStaticUGroupId($id)->returnsEmptyDar());
-        $this->assertEqual($ugroup->getUsers()->reify(), array());
+        $this->assertEqual($ugroup->getUsers()->getNames(), array());
     }
 
     public function itReturnsTheMembersOfStaticGroups() {
@@ -273,8 +273,7 @@ class UGroup_getUsersTest extends UGroup_getUsersBaseTest {
         $ugroup   = new ProjectUGroup($row);
         $ugroup->setUGroupUserDao(stub('UGroupUserDao')->searchUserByStaticUGroupId($id)->returnsDar($this->garfield_incomplete_row, $this->goofy_incomplete_row));
         
-        $users = array($this->garfield, $this->goofy);
-        $this->assertEqual($ugroup->getUsers()->reify(), $users);
+        $this->assertEqual($ugroup->getUsers()->getNames(), ['garfield', 'goofy']);
     }
     
     public function itReturnsTheMembersOfDynamicGroups() {
@@ -284,8 +283,7 @@ class UGroup_getUsersTest extends UGroup_getUsersBaseTest {
         $ugroup   = new ProjectUGroup($row);
         $ugroup->setUGroupUserDao(stub('UGroupUserDao')->searchUserByDynamicUGroupId($id, $group_id)->returnsDar($this->garfield_incomplete_row, $this->goofy_incomplete_row));
 
-        $users = array($this->garfield, $this->goofy);
-        $this->assertEqual($ugroup->getUsers()->reify(), $users);
+        $this->assertEqual($ugroup->getUsers()->getNames(),  ['garfield', 'goofy']);
     }
 }
 

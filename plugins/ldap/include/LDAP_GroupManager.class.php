@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) STMicroelectronics, 2008. All Rights Reserved.
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  * Copyright (c) cjt Systemsoftware AG, 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -431,7 +431,7 @@ abstract class LDAP_GroupManager
     /**
      * Get LDAP group entry corresponding to Group id
      * 
-     * @param Integer $id Id of the Group
+     * @param integer $id Id of the Group
      * 
      * @return LDAPResult 
      */

@@ -32,7 +32,7 @@ function autoload9303a908666dc230966c4209553dec89($class) {
             'usernotactiveexception' => '/UserNotActiveException.class.php',
             'usernotauthorizedexception' => '/UserNotAuthorizedException.class.php',
             'usernotexistexception' => '/UserNotExistException.class.php',
-            'users' => '/Users.class.php'
+            'users' => '/Users.php'
         );
     }
     $cn = strtolower($class);

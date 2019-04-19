@@ -26,7 +26,8 @@ use Tuleap\User\UserGroup\NameTranslator;
 /**
  * ProjectUGroup object
  */
-class ProjectUGroup implements User_UGroup {
+class ProjectUGroup implements User_UGroup // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+{
 
     const NONE               = 100;
     const ANONYMOUS          = 1;
@@ -95,23 +96,33 @@ class ProjectUGroup implements User_UGroup {
 
     protected $members      = null;
     protected $members_name = null;
-    /** @var Project */
+    /** @var Project|null */
     protected $project      = null;
-    /** @var ProjectUGroup */
+    /** @var self|null|false */
     protected $source_ugroup  = false;
 
-    protected $_ugroupdao;
-    protected $_ugroupuserdao;
-    protected $_usergroupdao;
+    /**
+     * @var UGroupDao
+     */
+    private $ugroup_dao;
+    /**
+     * @var UGroupUserDao
+     */
+    private $ugroup_user_dao;
+    /**
+     * @var UserGroupDao
+     */
+    private $user_group_dao;
 
     /**
      * Constructor of the class
      *
-     * @param Array $row ugroup row
+     * @param array $row ugroup row
      *
      * @return Void
      */
-    public function __construct($row = null) {
+    public function __construct($row = null)
+    {
         $this->id          = isset($row['ugroup_id'])   ? $row['ugroup_id']   : 0;
         $this->name        = isset($row['name'])        ? $row['name']        : null;
         $this->description = isset($row['description']) ? $row['description'] : null;
@@ -125,11 +136,12 @@ class ProjectUGroup implements User_UGroup {
      *
      * @return UGroupDao
      */
-    protected function getUGroupDao() {
-        if (!$this->_ugroupdao) {
-            $this->_ugroupdao = new UGroupDao();
+    protected function getUGroupDao()
+    {
+        if (!$this->ugroup_dao) {
+            $this->ugroup_dao = new UGroupDao();
         }
-        return $this->_ugroupdao;
+        return $this->ugroup_dao;
     }
 
     /**
@@ -137,22 +149,26 @@ class ProjectUGroup implements User_UGroup {
      *
      * @return UGroupUserDao
      */
-    protected function getUGroupUserDao() {
-        if (!$this->_ugroupuserdao) {
-            $this->_ugroupuserdao = new UGroupUserDao();
+    protected function getUGroupUserDao()
+    {
+        if (!$this->ugroup_user_dao) {
+            $this->ugroup_user_dao = new UGroupUserDao();
         }
-        return $this->_ugroupuserdao;
+        return $this->ugroup_user_dao;
     }
 
-    public function setUGroupUserDao(UGroupUserDao $dao) {
-        $this->_ugroupuserdao = $dao;
+    public function setUGroupUserDao(UGroupUserDao $dao)
+    {
+        $this->ugroup_user_dao = $dao;
     }
 
-    public function setProject(Project $project) {
+    public function setProject(Project $project)
+    {
         $this->project = $project;
     }
 
-    public function setProjectId($project_id) {
+    public function setProjectId($project_id)
+    {
         $this->group_id = $project_id;
     }
 
@@ -161,23 +177,26 @@ class ProjectUGroup implements User_UGroup {
      *
      * @return UserGroupDao
      */
-    protected function _getUserGroupDao() {
-        if (!$this->_usergroupdao) {
-            $this->_usergroupdao = new UserGroupDao();
+    protected function getUserGroupDao()
+    {
+        if (!$this->user_group_dao) {
+            $this->user_group_dao = new UserGroupDao();
         }
-        return $this->_usergroupdao;
+        return $this->user_group_dao;
     }
 
     /**
      * Get the ugroup name
      *
-     * @return String
+     * @return string
      */
-    public function getName() {
+    public function getName()
+    {
         return $this->name;
     }
 
-    public function getTranslatedName() {
+    public function getTranslatedName()
+    {
         return NameTranslator::getUserGroupDisplayName($this->name);
     }
 
@@ -185,9 +204,10 @@ class ProjectUGroup implements User_UGroup {
      * return the string identifier for dynamic user groups
      * or the name of static user groups
      *
-     * @return String
+     * @return string
      */
-    public function getNormalizedName() {
+    public function getNormalizedName()
+    {
         if ($this->is_dynamic) {
             return self::$normalized_names[$this->id];
         }
@@ -198,24 +218,28 @@ class ProjectUGroup implements User_UGroup {
     /**
      * Get the ugroup id
      *
-     * @return Integer
+     * @return integer
      */
-    public function getId() {
+    public function getId()
+    {
         return $this->id;
     }
 
-    public function getProjectId() {
+    public function getProjectId()
+    {
         return $this->group_id;
     }
 
-    public function getProject() {
+    public function getProject()
+    {
         if (!$this->project) {
             $this->project = ProjectManager::instance()->getProject($this->group_id);
         }
         return $this->project;
     }
 
-    public function getDescription() {
+    public function getDescription()
+    {
         return $this->description;
     }
 
@@ -232,14 +256,16 @@ class ProjectUGroup implements User_UGroup {
      *
      * @return PFUser[]
      */
-    public function getMembers() {
+    public function getMembers()
+    {
         if (! $this->members) {
             $this->members = $this->getStaticOrDynamicMembers($this->group_id);
         }
         return $this->members;
     }
 
-    public function getMembersIncludingSuspended() {
+    public function getMembersIncludingSuspended()
+    {
         if (! $this->members) {
             $this->members = $this->getStaticOrDynamicMembersInludingSuspended($this->group_id);
         }
@@ -250,16 +276,18 @@ class ProjectUGroup implements User_UGroup {
      *
      * @return Users
      */
-    public function getUsers() {
-        return new Users($this->getStaticOrDynamicMembers($this->group_id));
+    public function getUsers()
+    {
+        return new Users(...$this->getStaticOrDynamicMembers($this->group_id));
     }
 
     /**
      * Return array containing the user_name of all ugroup members
      *
-     * @return Array
+     * @return array
      */
-    public function getMembersUserName() {
+    public function getMembersUserName()
+    {
         $names = array();
         foreach ($this->getMembers() as $member) {
             $names[] = $member->getUserName();
@@ -267,22 +295,41 @@ class ProjectUGroup implements User_UGroup {
         return $names;
     }
 
-    private function getStaticOrDynamicMembers($group_id) {
+    private function getStaticOrDynamicMembers($group_id)
+    {
         if ($this->is_dynamic) {
-            $dar = $this->getUGroupUserDao()->searchUserByDynamicUGroupId($this->id, $group_id);
-            return $dar->instanciateWith(array($this, 'newUserFromIncompleteRow'));
+            $dar   = $this->getUGroupUserDao()->searchUserByDynamicUGroupId($this->id, $group_id);
+            $users = [];
+            foreach ($dar as $row) {
+                $user = $this->newUserFromIncompleteRow($row);
+                if ($user !== null) {
+                    $users[] = $user;
+                }
+            }
+            return $users;
         }
-        $dar = $this->getUGroupUserDao()->searchUserByStaticUGroupId($this->id);
-        return $dar->instanciateWith(array($this, 'newUser'));
+        $dar   = $this->getUGroupUserDao()->searchUserByStaticUGroupId($this->id);
+        $users = [];
+        foreach ($dar as $row) {
+            $users[] = $this->newUser($row);
+        }
+
+        return $users;
     }
 
-    private function getStaticOrDynamicMembersInludingSuspended($group_id) {
+    private function getStaticOrDynamicMembersInludingSuspended($group_id)
+    {
         if ($this->is_dynamic) {
             $dar = $this->getUGroupUserDao()->searchUserByDynamicUGroupIdIncludingSuspended($this->id, $group_id);
             return $dar->instanciateWith(array($this, 'newUserFromIncompleteRow'));
         }
-        $dar = $this->getUGroupUserDao()->searchUserByStaticUGroupIdIncludingSuspended($this->id);
-        return $dar->instanciateWith(array($this, 'newUser'));
+        $dar   = $this->getUGroupUserDao()->searchUserByStaticUGroupIdIncludingSuspended($this->id);
+        $users = [];
+        foreach ($dar as $row) {
+            $users[] = $this->newUser($row);
+        }
+
+        return $users;
     }
 
     /**
@@ -290,7 +337,8 @@ class ProjectUGroup implements User_UGroup {
      *
      * @return PFUser[]
      */
-    public function getStaticOrDynamicMembersPaginated($project_id, $limit, $offset) {
+    public function getStaticOrDynamicMembersPaginated($project_id, $limit, $offset)
+    {
         if ($this->is_dynamic) {
             return $this->getDynamicMembersPaginated($project_id, $limit, $offset);
         }
@@ -303,14 +351,23 @@ class ProjectUGroup implements User_UGroup {
      *
      * @return PFUser[]
      */
-    private function getDynamicMembersPaginated($group_id, $limit, $offset) {
+    private function getDynamicMembersPaginated($group_id, $limit, $offset)
+    {
         $dar = $this->getUGroupUserDao()->searchUsersByDynamicUGroupIdPaginated($this->id, $group_id, $limit, $offset);
 
         if (! $dar) {
             return array();
         }
 
-        return $dar->instanciateWith(array($this, 'newUserFromIncompleteRow'));
+        $users = [];
+        foreach ($dar as $row) {
+            $user = $this->newUserFromIncompleteRow($row);
+            if ($user !== null) {
+                $users[] = $user;
+            }
+        }
+
+        return $users;
     }
 
     /**
@@ -318,10 +375,13 @@ class ProjectUGroup implements User_UGroup {
      *
      * @return PFUser[]
      */
-    private function getStaticMembersPaginated($limit, $offset) {
-        return $this->getUGroupUserDao()
-                ->searchUsersByStaticUGroupIdPaginated($this->id, $limit, $offset)
-                ->instanciateWith(array($this, 'newUser'));
+    private function getStaticMembersPaginated($limit, $offset)
+    {
+        $users = [];
+        foreach ($this->getUGroupUserDao()->searchUsersByStaticUGroupIdPaginated($this->id, $limit, $offset) as $row) {
+            $users[] = $this->newUser($row);
+        }
+        return $users;
     }
 
     /**
@@ -329,7 +389,8 @@ class ProjectUGroup implements User_UGroup {
      *
      * @return int
      */
-    public function countStaticOrDynamicMembers($group_id) {
+    public function countStaticOrDynamicMembers($group_id)
+    {
         $count = 0;
 
         if ($this->is_dynamic) {
@@ -343,35 +404,39 @@ class ProjectUGroup implements User_UGroup {
         return $count;
     }
 
-    public function newUser($row) {
+    public function newUser($row)
+    {
         return new PFUser($row);
     }
 
-    public function newUserFromIncompleteRow($row) {
+    public function newUserFromIncompleteRow($row)
+    {
         return UserManager::instance()->getUserById($row['user_id']);
     }
 
     /**
     * Check if the ugroup exist for the given project
     *
-    * @param Integer $groupId  The group id
-    * @param Integer $ugroupId The ugroup id
+    * @param integer $groupId  The group id
+    * @param integer $ugroupId The ugroup id
     *
-    * @return Boolean
+    * @return boolean
     */
-    public function exists($groupId, $ugroupId) {
+    public function exists($groupId, $ugroupId)
+    {
         return $this->getUGroupDao()->checkUGroupValidityByGroupId($groupId, $ugroupId);
     }
 
     /**
      * Return project admins of given static group
      *
-     * @param Integer $groupId Id of the project
-     * @param Array   $ugroups list of ugroups
+     * @param integer $groupId Id of the project
+     * @param array   $ugroups list of ugroups
      *
-     * @return DataAccessResult
+     * @return DataAccessResult|false
      */
-    public function returnProjectAdminsByStaticUGroupId($groupId, $ugroups) {
+    public function returnProjectAdminsByStaticUGroupId($groupId, $ugroups)
+    {
         return $this->getUGroupUserDao()->returnProjectAdminsByStaticUGroupId($groupId, $ugroups);
     }
 
@@ -384,9 +449,10 @@ class ProjectUGroup implements User_UGroup {
      * @throws UGroup_Invalid_Exception
      * @throws CannotAddRestrictedUserToProjectNotAllowingRestricted
      *
-     * @return Void
+     * @return void
      */
-    public function addUser(PFUser $user) {
+    public function addUser(PFUser $user)
+    {
         $this->assertProjectUGroupAndUserValidity($user);
         $project = $this->getProject();
         if ($project->getAccess() === Project::ACCESS_PRIVATE_WO_RESTRICTED && ForgeConfig::areRestrictedUsersAllowed() &&
@@ -409,9 +475,10 @@ class ProjectUGroup implements User_UGroup {
      *
      * @param PFUser $user User to test
      *
-     * @return Void
+     * @return void
      */
-    private function assertProjectUGroupAndUserValidity($user) {
+    private function assertProjectUGroupAndUserValidity($user)
+    {
         if (!$this->group_id) {
             throw new Exception('Invalid group_id');
         }
@@ -426,13 +493,14 @@ class ProjectUGroup implements User_UGroup {
     /**
      * Add user to a static ugroup
      *
-     * @param Integer $group_id  Id of the project
-     * @param Integer $ugroup_id Id of the ugroup
-     * @param Integer $user_id   Id of the user
+     * @param integer $group_id  Id of the project
+     * @param integer $ugroup_id Id of the ugroup
+     * @param integer $user_id   Id of the user
      *
-     * @return Void
+     * @return void
      */
-    protected function addUserToStaticGroup($group_id, $ugroup_id, $user_id) {
+    protected function addUserToStaticGroup($group_id, $ugroup_id, $user_id)
+    {
         include_once 'www/project/admin/ugroup_utils.php';
         ugroup_add_user_to_ugroup($group_id, $ugroup_id, $user_id);
     }
@@ -444,8 +512,9 @@ class ProjectUGroup implements User_UGroup {
      *
      * @return Void
      */
-    protected function addUserToDynamicGroup(PFUser $user) {
-        $dao  = $this->_getUserGroupDao();
+    protected function addUserToDynamicGroup(PFUser $user)
+    {
+        $dao  = $this->getUserGroupDao();
         $flag = $this->getAddFlagForUGroupId($this->id);
         $dao->updateUserGroupFlags($user->getId(), $this->group_id, $flag);
     }
@@ -453,13 +522,14 @@ class ProjectUGroup implements User_UGroup {
     /**
      * Convert a dynamic ugroup_id into it's DB table update to add someone to a given group
      *
-     * @param Integer $id Id of the ugroup
+     * @param integer $id Id of the ugroup
      *
      * @throws UGroup_Invalid_Exception
      *
-     * @return String
+     * @return string
      */
-    public function getAddFlagForUGroupId($id) {
+    public function getAddFlagForUGroupId($id)
+    {
         switch ($id) {
             case self::PROJECT_ADMIN:
                 return "admin_flags = 'A'";
@@ -474,7 +544,7 @@ class ProjectUGroup implements User_UGroup {
             case self::NEWS_ADMIN:
                 return 'news_flags = 2';
             case self::NEWS_WRITER:
-                 return 'news_flags = 1';
+                return 'news_flags = 1';
             default:
                 throw new UGroup_Invalid_Exception();
         }
@@ -488,9 +558,10 @@ class ProjectUGroup implements User_UGroup {
      *
      * @throws UGroup_Invalid_Exception
      *
-     * @return Void
+     * @return void
      */
-    public function removeUser(PFUser $user) {
+    public function removeUser(PFUser $user)
+    {
         $this->assertProjectUGroupAndUserValidity($user);
         if ($this->is_dynamic) {
             $this->removeUserFromDynamicGroup($user);
@@ -506,13 +577,14 @@ class ProjectUGroup implements User_UGroup {
     /**
      * Remove user from static ugroup
      *
-     * @param Integer $group_id  Id of the project
-     * @param Integer $ugroup_id Id of the ugroup
-     * @param Integer $user_id   Id of the user
+     * @param integer $group_id  Id of the project
+     * @param integer $ugroup_id Id of the ugroup
+     * @param integer $user_id   Id of the user
      *
-     * @return Void
+     * @return void
      */
-    protected function removeUserFromStaticGroup($group_id, $ugroup_id, $user_id) {
+    protected function removeUserFromStaticGroup($group_id, $ugroup_id, $user_id)
+    {
         include_once 'www/project/admin/ugroup_utils.php';
         ugroup_remove_user_from_ugroup($group_id, $ugroup_id, $user_id);
     }
@@ -522,10 +594,11 @@ class ProjectUGroup implements User_UGroup {
      *
      * @param PFUser $user User to remove
      *
-     * @return Boolean
+     * @return boolean
      */
-    protected function removeUserFromDynamicGroup(PFUser $user) {
-        $dao  = $this->_getUserGroupDao();
+    protected function removeUserFromDynamicGroup(PFUser $user)
+    {
+        $dao  = $this->getUserGroupDao();
         if ($this->id == self::PROJECT_ADMIN &&
             $dao->searchProjectAdminsByProjectIdExcludingOneUserId($this->group_id, $user->getId())->rowCount() === 0) {
             throw new Exception('Impossible to remove last admin of the project');
@@ -537,13 +610,14 @@ class ProjectUGroup implements User_UGroup {
     /**
      * Convert a dynamic ugroup_id into it's DB table update to remove someone from given group
      *
-     * @param Integer $id Id of the ugroup
+     * @param integer $id Id of the ugroup
      *
      * @throws UGroup_Invalid_Exception
      *
-     * @return String
+     * @return string
      */
-    public function getRemoveFlagForUGroupId($id) {
+    public function getRemoveFlagForUGroupId($id)
+    {
         switch ($id) {
             case self::PROJECT_ADMIN:
                 return "admin_flags = ''";
@@ -557,7 +631,7 @@ class ProjectUGroup implements User_UGroup {
                 return 'forum_flags = 0';
             case self::NEWS_ADMIN:
             case self::NEWS_WRITER:
-                 return 'news_flags = 0';
+                return 'news_flags = 0';
             default:
                 throw new UGroup_Invalid_Exception();
         }
@@ -566,35 +640,40 @@ class ProjectUGroup implements User_UGroup {
     /**
      * Check if the user group is bound
      *
-     * @param Integer $ugroupId Id of the user goup
+     * @param integer $ugroupId Id of the user goup
      *
-     * @return Boolean
+     * @return boolean
      */
-    public function isBound() {
+    public function isBound()
+    {
         if ($this->source_id === false) {
             $this->getSourceGroup();
         }
         return ($this->source_id != null);
     }
 
-    public function getSourceGroup() {
+    public function getSourceGroup()
+    {
         if ($this->source_ugroup === false) {
             $this->setSourceGroup($this->getUgroupBindingSource($this->id));
         }
         return $this->source_ugroup;
     }
 
-    protected function getUgroupBindingSource($id) {
+    protected function getUgroupBindingSource($id)
+    {
         $ugroup_manager = new UGroupManager();
         return $ugroup_manager->getUgroupBindingSource($id);
     }
 
-    public function setSourceGroup(ProjectUGroup $ugroup = null) {
+    public function setSourceGroup(ProjectUGroup $ugroup = null)
+    {
         $this->source_ugroup = $ugroup;
         $this->source_id = ($ugroup === null) ? null : $ugroup->getId();
     }
 
-    public function isStatic() {
+    public function isStatic()
+    {
         return $this->getId() > 100;
     }
 }

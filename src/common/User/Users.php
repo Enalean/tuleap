@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,19 +18,32 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Users_Test extends TuleapTestCase {
+/**
+ * First class collection of users
+ */
+class Users
+{
+    /**
+     * @var PFUser[]
+     */
+    private $users;
 
-    public function itProvidesTheBareDAR() {
-        $dar = TestHelper::arrayToDar('hej', 'hopp', 'trallalalala');
-        $users = new Users($dar);
-        $this->assertEqual($users->getDar(), $dar);
-        $this->assertEqual($users->reify(), array('hej', 'hopp', 'trallalalala'));
+    public function __construct(PFUser ...$users)
+    {
+        $this->users = $users;
     }
 
-    public function itProvidesTheUserNames() {
-        $dar = TestHelper::arrayToDar(aUser()->withUserName('Nicolas')->build(), aUser()->withUserName('Johan')->build());
-        $users = new Users($dar);
-        $this->assertEqual($users->getNames(), array('Nicolas', 'Johan'));
+    /**
+     * @return string[]
+     */
+    public function getNames()
+    {
+        $names = [];
+
+        foreach ($this->users as $user) {
+            $names[] = $user->getUserName();
+        }
+
+        return $names;
     }
 }
-?>

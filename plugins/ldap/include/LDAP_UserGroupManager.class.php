@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) STMicroelectronics, 2008. All Rights Reserved.
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -131,9 +131,9 @@ class LDAP_UserGroupManager extends LDAP_GroupManager
     /**
      * Check if a given ugroup is synchronized with an ldap group
      *
-     * @param Integer $ugroup_id User group id to check
+     * @param integer $ugroup_id User group id to check
      *
-     * @return Boolean
+     * @return boolean
      */
     public function isSynchronizedUgroup($ugroup_id) {
         return $this->getDao()->isSynchronizedUgroup($ugroup_id);
@@ -142,9 +142,9 @@ class LDAP_UserGroupManager extends LDAP_GroupManager
     /**
      * Check if a given ugroup is preserving members
      *
-     * @param Integer $ugroup_id User group id to check
+     * @param integer $ugroup_id User group id to check
      *
-     * @return Boolean
+     * @return boolean
      */
     public function isMembersPreserving($ugroup_id) {
         return $this->getDao()->isMembersPreserving($ugroup_id);

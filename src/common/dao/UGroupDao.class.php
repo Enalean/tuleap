@@ -197,10 +197,10 @@ class UGroupDao extends DataAccessObject {
     /**
      * Checks ProjectUGroup  validity by GroupId
      *
-     * @param Integer $groupId  The group id
-     * @param Integer $ugroupId The ugroup id
+     * @param integer $groupId  The group id
+     * @param integer $ugroupId The ugroup id
      *
-     * @return Boolean
+     * @return boolean
      */
     function checkUGroupValidityByGroupId($groupId, $ugroupId) {
         $groupId = $this->da->escapeInt($groupId);
