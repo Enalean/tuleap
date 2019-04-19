@@ -71,3 +71,16 @@
 .document-search-box {
     padding: 0 80px 0 33px;
 }
+
+.document-display-lock {
+    width: 36px;
+    height: 36px;
+    margin: $tlp-half-spacing $tlp-half-spacing $tlp-half-spacing 0;
+    border-radius: 50%;
+    background: #333333;
+    color: $tlp-ui-white;
+}
+
+.document-display-lock-icon {
+    margin: $tlp-half-spacing 13px;
+}

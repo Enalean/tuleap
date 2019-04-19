@@ -30,7 +30,8 @@ export {
     removeVersionUploadProgress,
     replaceFileWithNewVersion,
     replaceLinkWithNewVersion,
-    replaceWikiWithNewVersion
+    replaceWikiWithNewVersion,
+    replaceEmbeddedFilesWithNewVersion
 };
 
 function addFileInUploadsList(state, file) {
@@ -140,4 +141,8 @@ function replaceLinkWithNewVersion(state, [existing_item, new_version]) {
 function replaceWikiWithNewVersion(state, [existing_item, new_version]) {
     existing_item.lock_info = new_version.lock_info;
     existing_item.wiki_properties = new_version.wiki_properties;
+}
+
+function replaceEmbeddedFilesWithNewVersion(state, [existing_item, new_version]) {
+    existing_item.lock_info = new_version.lock_info;
 }

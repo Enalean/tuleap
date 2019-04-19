@@ -20,6 +20,8 @@
 <template>
     <div class="tlp-framed">
         <div class="document-header">
+            <document-title-lock-info v-bind:item="embedded_file"/>
+
             <div class="embedded-document-header-title">
                 <h1>{{ embedded_title }}</h1>
             </div>
@@ -43,9 +45,11 @@ import DropdownMenu from "../ActionsDropDown/DropdownMenu.vue";
 import UpdateItemButton from "../ActionsButton/UpdateItemButton.vue";
 import UpdateEmbeddedFileModal from "../ModalUpdateItem/UpdateEmbeddedFileModal.vue";
 import ActionsHeader from "./ActionsHeader.vue";
+import DocumentTitleLockInfo from "../LockInfo/DocumentTitleLockInfo.vue";
 export default {
     name: "DisplayEmbeddedContent",
     components: {
+        DocumentTitleLockInfo,
         ActionsHeader,
         UpdateEmbeddedFileModal,
         DropdownMenu,

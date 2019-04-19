@@ -119,6 +119,7 @@ export default {
 
             this.is_loading = false;
             if (this.has_modal_error === false) {
+                this.$store.dispatch("refreshEmbeddedFile", this.item);
                 this.item.embedded_file_properties.content = this.embedded_file_model.content;
                 this.embedded_file_model = null;
                 this.modal.hide();

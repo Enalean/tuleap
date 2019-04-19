@@ -54,6 +54,7 @@ import "./components/Folder/ItemTitle/FolderCellTitle.spec.js";
 import "./components/Folder/ItemTitle/EmbeddedCellTitle.spec.js";
 import "./components/Folder/ItemTitle/FileCellTitle.spec.js";
 import "./components/Folder/ItemTitle/LinkCellTitle.spec.js";
+import "./components/Folder/LockInfo/DocumentTitleLockInfo.spec.js";
 
 import "./components/Folder/QuickLook/QuickLookDocumentPreview.spec.js";
 
