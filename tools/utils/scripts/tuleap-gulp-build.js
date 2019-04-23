@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -139,7 +139,11 @@ function declare_plugin_tasks(asset_dir) {
         }
 
         gulp.task("build-plugin-" + name, function(callback) {
-            runSequence(plugin_component_task_name, plugin_tasks, callback);
+            if (plugin_tasks.length > 0) {
+                runSequence(plugin_component_task_name, plugin_tasks, callback);
+            } else {
+                runSequence(plugin_component_task_name, callback);
+            }
         });
         all_plugins_tasks.push("build-plugin-" + name);
     });
