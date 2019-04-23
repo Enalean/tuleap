@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -19,24 +19,30 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-require_once ('common/frs/FRSPackageFactory.class.php');
-require_once ('common/frs/FRSReleaseFactory.class.php');
+namespace Tuleap\FRS;
 
-class frsValidator {
-    var $_errors = [];
+use FRSPackageFactory;
+use FRSReleaseFactory;
 
-    function addError($error) {
+class FRSValidator
+{
+    private $_errors = [];
+
+    public function addError($error)
+    {
         if (!$this->_errors) {
             $this->_errors = array ();
         }
         $this->_errors[] = $error;
     }
 
-    function getErrors() {
+    public function getErrors()
+    {
         return $this->_errors;
     }
 
-    public function isValidForCreation($release, $group_id) {
+    public function isValidForCreation($release, $group_id)
+    {
         $frspf = new FRSPackageFactory();
         $frsrf = new FRSReleaseFactory();
         if (isset($release['package_id']) && $release['package_id'] != 'null') {
@@ -68,7 +74,8 @@ class frsValidator {
         return count($this->_errors) === 0;
     }
 
-    public function isValidForUpdate($release, $group_id) {
+    public function isValidForUpdate($release, $group_id)
+    {
         $frspf = new FRSPackageFactory();
         $frsrf = new FRSReleaseFactory();
         if (isset($release['package_id']) && $release['package_id'] != 'null') {

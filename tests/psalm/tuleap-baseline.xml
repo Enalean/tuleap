@@ -21332,7 +21332,7 @@
       <code>$desc_id</code>
     </UndefinedGlobalVariable>
   </file>
-  <file src="src/www/file/admin/frsValidator.class.php">
+  <file src="src/common/frs/FRSValidator.php">
     <InvalidArgument occurrences="2">
       <code>$release_exists</code>
       <code>$res2</code>

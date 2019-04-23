@@ -20,6 +20,7 @@
  */
 
 use Tuleap\FRS\FRSPackageController;
+use Tuleap\FRS\FRSValidator;
 use Tuleap\FRS\UploadedLinksDao;
 use Tuleap\FRS\UploadedLinksInvalidFormException;
 use Tuleap\FRS\UploadedLinksRequestFormatter;
@@ -1009,7 +1010,7 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
     $error   = array();
     $info    = array();
 
-    $validator = new frsValidator();
+    $validator = new FRSValidator();
 
     if ($is_update) {
         $valid = $validator->isValidForUpdate($release, $group_id);
