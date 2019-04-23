@@ -69,6 +69,7 @@ import "./components/Folder/Property/ItemUpdateProperties.spec.js";
 
 import "./components/Folder/Metadata/TitleMetadata.spec.js";
 import "./components/Folder/Metadata/StatusMetadata.spec";
+import "./components/Folder/Metadata/ObsolescenceDateMetadata.spec.js";
 
 import "./components/User/UserBadge.spec.js";
 

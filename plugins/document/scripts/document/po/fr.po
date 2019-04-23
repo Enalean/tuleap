@@ -250,6 +250,9 @@ msgstr "Notifications"
 msgid "OK, got it"
 msgstr "OK, compris"
 
+msgid "Obsolescence date"
+msgstr "Date d'obsolescence"
+
 msgid ""
 "Only the table structure will be kept. Reviewer comments and commitments "
 "will be discarded."

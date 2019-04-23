@@ -40,6 +40,8 @@ export const FILE_UPLOAD_UNKNOWN_ERROR = "unknown error";
 
 export const ITEM_STATUS_NONE = "none";
 
+export const OBSOLESCENCE_DATE_NONE = "0";
+
 export const APPROVAL_NOT_YET = "Not yet";
 export const APPROVAL_APPROVED = "Approved";
 export const APPROVAL_REJECTED = "Rejected";

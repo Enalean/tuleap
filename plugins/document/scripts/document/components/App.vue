@@ -54,7 +54,8 @@ export default {
         max_size_upload: Number,
         is_under_construction: Boolean,
         embedded_are_allowed: Boolean,
-        is_item_status_metadata_used: Boolean
+        is_item_status_metadata_used: Boolean,
+        is_obsolescence_date_metadata_used: Boolean
     },
     computed: {
         ...mapState("error", [
@@ -89,7 +90,8 @@ export default {
             this.max_size_upload,
             this.is_under_construction,
             this.embedded_are_allowed,
-            this.is_item_status_metadata_used
+            this.is_item_status_metadata_used,
+            this.is_obsolescence_date_metadata_used
         ]);
 
         window.addEventListener("beforeunload", event => {

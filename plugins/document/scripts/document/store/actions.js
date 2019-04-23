@@ -370,7 +370,7 @@ export const setUserPreferenciesForFolder = (context, [folder_id, should_be_clos
 
 async function createNewFile(
     context,
-    { title, description, file_properties },
+    { title, description, file_properties, status, obsolescence_date },
     parent,
     should_display_fake_item
 ) {
@@ -382,7 +382,9 @@ async function createNewFile(
             file_properties: {
                 file_name: dropped_file.name,
                 file_size: dropped_file.size
-            }
+            },
+            status: status,
+            obsolescence_date: obsolescence_date
         },
         parent.id
     );
