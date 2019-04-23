@@ -57,6 +57,8 @@ class DocumentTreeController implements DispatchableWithRequest, DispatchableWit
 
         $project = $this->getProject($variables);
 
+        $is_item_status_used = $this->isHardcodedMetadataUsed($project, 'status');
+
         $user = $request->getCurrentUser();
         $user->setPreference("plugin_docman_display_new_ui_" . $project->getID(), true);
 
@@ -73,7 +75,8 @@ class DocumentTreeController implements DispatchableWithRequest, DispatchableWit
                 $project,
                 $request->getCurrentUser(),
                 $preference === '1',
-                (bool)$this->docman_plugin_info->getPropertyValueForName('embedded_are_allowed')
+                (bool)$this->docman_plugin_info->getPropertyValueForName('embedded_are_allowed'),
+                $is_item_status_used
             )
         );
 
@@ -88,6 +91,12 @@ class DocumentTreeController implements DispatchableWithRequest, DispatchableWit
     public function getProject(array $variables) : Project
     {
         return $this->project_extractor->getProject($variables);
+    }
+
+    private function isHardcodedMetadataUsed(Project $project, string $label): bool
+    {
+        $docman_setting_bo = new \Docman_SettingsBo($project->getID());
+        return $docman_setting_bo->getMetadataUsage($label) === "1";
     }
 
     /**

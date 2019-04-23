@@ -58,6 +58,9 @@ msgstr "Tables d'approbation"
 msgid "Approval tables"
 msgstr "Tables d'approbation"
 
+msgid "Approved"
+msgstr "Approuvé"
+
 msgid "Cancel"
 msgstr "Annuler"
 
@@ -114,6 +117,9 @@ msgstr "Documents"
 
 msgid "Download"
 msgstr "Télécharger"
+
+msgid "Draft"
+msgstr "Brouillon"
 
 msgid ""
 "Drag and drop is not supported under IE11. Please use a more recent browser."
@@ -226,6 +232,9 @@ msgstr "Nouveau document"
 msgid "New folder"
 msgstr "Nouveau dossier"
 
+msgid "None"
+msgstr "Aucun"
+
 msgid "Notifications"
 msgstr "Notifications"
 
@@ -275,6 +284,9 @@ msgstr "Documentation du projet"
 msgid "Quick look"
 msgstr "Aperçu"
 
+msgid "Rejected"
+msgstr "Rejeté"
+
 msgid "Reset the approval cycle."
 msgstr "Recommencer le cycle d'approbation."
 
@@ -308,6 +320,9 @@ msgstr ""
 
 msgid "Start over with a completely new approval table."
 msgstr "Commencer avec une nouvelle table d'approbation."
+
+msgid "Status"
+msgstr "Statut"
 
 msgid "Switch to old user interface"
 msgstr "Basculer sur l'ancienne interface utilisateur"

@@ -35,7 +35,8 @@ const state = {
     max_size_upload: 1,
     is_under_construction: false,
     files_uploads_list: [],
-    embedded_are_allowed: false
+    embedded_are_allowed: false,
+    is_item_status_metadata_used: false
 };
 
 export default state;

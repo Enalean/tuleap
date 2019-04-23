@@ -42,7 +42,8 @@ function initApp(
         max_files_dragndrop,
         max_size_upload,
         is_under_construction,
-        embedded_are_allowed
+        embedded_are_allowed,
+        is_item_status_metadata_used
     ]
 ) {
     state.user_id = user_id;
@@ -55,6 +56,7 @@ function initApp(
     state.max_size_upload = max_size_upload;
     state.is_under_construction = is_under_construction;
     state.embedded_are_allowed = embedded_are_allowed;
+    state.is_item_status_metadata_used = is_item_status_metadata_used;
 }
 
 function saveAscendantHierarchy(state, hierarchy) {
