@@ -25,15 +25,33 @@ import baselines from "./baselines";
 import semantics from "./semantics";
 import dialog_interface from "./dialog_interface";
 import ArrayUtils from "../support/array-utils";
-import { getArtifact, getTracker, getUser } from "../api/rest-querier";
+import { getBaseline, getUser, getTracker, getArtifact } from "../api/rest-querier";
+import comparisons from "./comparisons";
 
 export default {
     state: {
+        baselines_by_id: {},
         users_by_id: {},
         artifacts_by_id: {},
         trackers_by_id: {}
     },
     actions: {
+        async loadBaselines({ dispatch, getters }, { baseline_ids }) {
+            let unique_baseline_ids = ArrayUtils.unique(baseline_ids);
+            let baselines_loading = unique_baseline_ids.map(baseline_id =>
+                dispatch("loadBaseline", { baseline_id })
+            );
+            await Promise.all(baselines_loading);
+
+            const artifact_ids = unique_baseline_ids
+                .map(id => getters.findBaselineById(id))
+                .map(baseline => baseline.artifact_id);
+            await dispatch("loadArtifacts", { artifact_ids });
+        },
+        async loadBaseline({ commit }, { baseline_id }) {
+            const baseline = await getBaseline(baseline_id);
+            commit("addBaseline", baseline);
+        },
         async loadUsers({ dispatch }, { user_ids }) {
             let users_loading = ArrayUtils.unique(user_ids).map(user_id =>
                 dispatch("loadUser", { user_id })
@@ -50,6 +68,7 @@ export default {
                 dispatch("loadArtifact", { artifact_id })
             );
             await Promise.all(artifacts_loading);
+
             const tracker_ids = unique_artifact_ids
                 .map(id => getters.findArtifactById(id))
                 .map(artifact => artifact.tracker.id);
@@ -71,11 +90,13 @@ export default {
         }
     },
     mutations: {
+        addBaseline: (state, baseline) => Vue.set(state.baselines_by_id, baseline.id, baseline),
         addUser: (state, user) => Vue.set(state.users_by_id, user.id, user),
         addArtifact: (state, artifact) => Vue.set(state.artifacts_by_id, artifact.id, artifact),
         addTracker: (state, tracker) => Vue.set(state.trackers_by_id, tracker.id, tracker)
     },
     getters: {
+        findBaselineById: state => id => state.baselines_by_id[id],
         findUserById: state => id => state.users_by_id[id],
         findArtifactById: state => id => state.artifacts_by_id[id],
         findTrackerById: state => id => state.trackers_by_id[id]
@@ -85,7 +106,8 @@ export default {
         comparison,
         baseline,
         baselines,
-        semantics
+        semantics,
+        comparisons
     },
     strict: process.env.NODE_ENV !== "production" // eslint-disable-line no-undef
 };

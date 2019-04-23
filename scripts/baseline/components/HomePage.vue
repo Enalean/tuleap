@@ -57,8 +57,17 @@
         <section class="tlp-pane">
             <div class="tlp-pane-container">
                 <div class="tlp-pane-header">
-                    <h1 class="tlp-pane-title" v-translate>
-                        Comparisons
+                    <h1 class="tlp-pane-title">
+                        <span v-translate>
+                            Comparisons
+                        </span>
+                        <span
+                            v-if="comparisons !== null"
+                            class="tlp-badge-secondary tlp-badge-outline tlp-tooltip tlp-tooltip-right comparisons-count"
+                            v-bind:data-tlp-tooltip="comparisons_tooltip"
+                        >
+                            {{ comparisons.length }}
+                        </span>
                     </h1>
                 </div>
 
@@ -76,6 +85,7 @@
                             Compare baselines
                         </button>
                     </div>
+                    <comparisons-list v-bind:project_id="project_id"/>
                 </section>
             </div>
         </section>
@@ -86,12 +96,13 @@
 import BaselinesTable from "./baselines-list/BaselinesTable.vue";
 import NewBaselineModal from "./new-baseline/NewBaselineModal.vue";
 import NewComparisonModal from "./comparison/NewComparisonModal.vue";
+import ComparisonsList from "./comparisons-list/ComparisonsList.vue";
 import { mapState } from "vuex";
 
 export default {
     name: "HomePage",
 
-    components: { BaselinesTable },
+    components: { BaselinesTable, ComparisonsList },
 
     props: {
         project_id: { mandatory: true, type: Number }
@@ -106,8 +117,12 @@ export default {
 
     computed: {
         ...mapState("baselines", ["baselines", "are_baselines_loading"]),
+        ...mapState("comparisons", ["comparisons"]),
         baselines_tooltip() {
             return this.$gettext("Baselines available");
+        },
+        comparisons_tooltip() {
+            return this.$gettext("Comparisons available");
         },
         are_baselines_available() {
             return (

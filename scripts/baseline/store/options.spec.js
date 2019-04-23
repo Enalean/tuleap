@@ -22,6 +22,7 @@ import store from "./options";
 import { create } from "../support/factories";
 import {
     restore,
+    rewire$getBaseline,
     rewire$getUser,
     rewire$getTracker,
     rewire$getArtifact
@@ -35,7 +36,8 @@ describe("Global store:", () => {
             commit: jasmine.createSpy("commit"),
             dispatch: jasmine.createSpy("dispatch"),
             getters: {
-                findArtifactById: jasmine.createSpy("findArtifactById")
+                findArtifactById: jasmine.createSpy("findArtifactById"),
+                findBaselineById: jasmine.createSpy("findBaselineById")
             }
         };
         context.dispatch.and.returnValue(Promise.resolve());
@@ -44,6 +46,60 @@ describe("Global store:", () => {
     afterEach(restore);
 
     describe("actions", () => {
+        describe("#loadBaselines", () => {
+            beforeEach(() => {
+                context.getters.findBaselineById
+                    .withArgs(1)
+                    .and.returnValue(create("baseline", { artifact_id: 10 }))
+                    .withArgs(2)
+                    .and.returnValue(create("baseline", { artifact_id: 20 }));
+
+                return store.actions.loadBaselines(context, { baseline_ids: [1, 2] });
+            });
+
+            it("dispatches 'loadBaseline' for each baseline id", () => {
+                expect(context.dispatch).toHaveBeenCalledWith("loadBaseline", { baseline_id: 1 });
+                expect(context.dispatch).toHaveBeenCalledWith("loadBaseline", { baseline_id: 2 });
+            });
+
+            it("dispatches 'loadTrackers'", () => {
+                expect(context.dispatch).toHaveBeenCalledWith("loadArtifacts", {
+                    artifact_ids: [10, 20]
+                });
+            });
+
+            describe("when all given ids are identical", () => {
+                beforeEach(() => {
+                    context.dispatch.calls.reset();
+                    return store.actions.loadBaselines(context, { baseline_ids: [1, 1] });
+                });
+
+                it("dispatches 'loadBaseline' once", () => {
+                    const loadBaseline_calls = context.dispatch.calls
+                        .all()
+                        .filter(call => call.args[0] === "loadBaseline");
+                    expect(loadBaseline_calls.length).toEqual(1);
+                });
+            });
+        });
+
+        describe("#loadBaseline", () => {
+            let getBaseline;
+            const user = create("user");
+
+            beforeEach(() => {
+                getBaseline = jasmine.createSpy("getBaseline");
+                rewire$getBaseline(getBaseline);
+                getBaseline.and.returnValue(Promise.resolve(user));
+
+                return store.actions.loadBaseline(context, { baseline_id: 1 });
+            });
+
+            it("commits 'addBaseline' with fetch user", () => {
+                expect(context.commit).toHaveBeenCalledWith("addBaseline", user);
+            });
+        });
+
         describe("#loadUsers", () => {
             beforeEach(() => store.actions.loadUsers(context, { user_ids: [1, 2] }));
 

@@ -35,6 +35,7 @@ export {
     getArtifact,
     getBaselineArtifacts,
     getBaselineArtifactsByIds,
+    getComparisons,
     createComparison
 };
 
@@ -113,6 +114,14 @@ async function getBaselineArtifactsByIds(baseline_id, artifact_ids) {
 
     let json_response = await response.json();
     return json_response.artifacts;
+}
+
+async function getComparisons(project_id) {
+    const response = await get(
+        `/api/projects/${project_id}/baselines_comparisons?limit=1000&offset=0`
+    );
+    const comparisons_with_total_count = await response.json();
+    return comparisons_with_total_count.comparisons;
 }
 
 async function createComparison(name, comment, base_baseline_id, compared_to_baseline_id) {

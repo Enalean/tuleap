@@ -117,7 +117,11 @@ const factories = {
         default: {
             id: identity,
             name: "comparison label",
-            comment: null
+            comment: null,
+            base_baseline_id: 1,
+            compared_to_baseline_id: 2,
+            author_id: 1,
+            creation_date: "2019-03-22T10:01:48+00:00"
         }
     }
 };

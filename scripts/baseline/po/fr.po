@@ -84,6 +84,9 @@ msgstr "Comparer des baselines"
 msgid "Comparisons"
 msgstr "Comparaisons"
 
+msgid "Comparisons available"
+msgstr "Comparaisons disponibles"
+
 msgid "Consult"
 msgstr "Consulter"
 
@@ -92,6 +95,9 @@ msgstr "Créer la baseline"
 
 msgid "Created by"
 msgstr "Créé par"
+
+msgid "Creation Date"
+msgstr "Date de création"
 
 msgid "Delete"
 msgstr "Supprimer"
@@ -133,6 +139,9 @@ msgstr "Aucun artefact disponible"
 
 msgid "No baseline available"
 msgstr "Aucune baseline disponible"
+
+msgid "No comparison available"
+msgstr "Aucune comparaison disponible"
 
 msgid "No milestone available"
 msgstr "Aucune milestone disponible"
