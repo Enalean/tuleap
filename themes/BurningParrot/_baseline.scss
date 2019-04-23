@@ -58,3 +58,12 @@
 .baseline-artifact-badge {
     margin-right: $tlp-half-spacing / 2;
 }
+
+.baseline-badge-avatar {
+    display: flex;
+    align-items: center;
+}
+
+.baseline-badge-avatar-img {
+    margin-right: 5px;
+}

@@ -36,7 +36,7 @@
             </artifact-link>
         </td>
         <td class="baselines-table-column-snapshot-date">
-            <humanized-date v-bind:date="baseline.snapshot_date"/>
+            <humanized-date v-bind:date="baseline.snapshot_date" v-bind:start_with_capital="true"/>
         </td>
         <td class="baselines-table-column-author">
             <user-badge v-bind:user="author"/>

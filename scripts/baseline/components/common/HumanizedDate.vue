@@ -22,7 +22,7 @@
         class="tlp-tooltip tlp-tooltip-right"
         v-bind:data-tlp-tooltip="formatted_date"
     >
-        {{ interval_from_now }}
+        {{ humanized_date }}
     </span>
 </template>
 
@@ -33,7 +33,8 @@ export default {
     name: "HumanizedDate",
 
     props: {
-        date: { required: true, type: String }
+        date: { required: true, type: String },
+        start_with_capital: { type: Boolean, default: false }
     },
 
     computed: {
@@ -42,6 +43,18 @@ export default {
         },
         interval_from_now() {
             return DateUtils.getFromNow(this.date);
+        },
+        humanized_date() {
+            if (this.start_with_capital) {
+                return this.capitalizeFirstLetter(this.interval_from_now);
+            } else {
+                return this.interval_from_now;
+            }
+        }
+    },
+    methods: {
+        capitalizeFirstLetter(string) {
+            return string.charAt(0).toUpperCase() + string.slice(1);
         }
     }
 };

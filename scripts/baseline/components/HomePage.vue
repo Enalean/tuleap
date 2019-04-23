@@ -23,6 +23,7 @@
             <div class="tlp-pane-container">
                 <div class="tlp-pane-header">
                     <h1 class="tlp-pane-title">
+                        <i class="fa fa-tlp-baseline"></i>
                         <span v-translate>
                             your baselines
                         </span>
@@ -58,6 +59,7 @@
             <div class="tlp-pane-container">
                 <div class="tlp-pane-header">
                     <h1 class="tlp-pane-title">
+                        <i class="fa fa-tlp-baseline-comparison"></i>
                         <span v-translate>
                             Comparisons
                         </span>

@@ -32,3 +32,9 @@
     color: inherit;
     white-space: nowrap;
 }
+
+.baselines-table-column-author,
+.comparisons-table-column-creation-date {
+    color: $tlp-ui-dimmed;
+    font-size: 14px;
+}

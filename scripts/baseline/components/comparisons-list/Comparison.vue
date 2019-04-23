@@ -38,7 +38,7 @@
             <user-badge v-bind:user="author"/>
         </td>
         <td class="comparisons-table-column-snapshot-date">
-            <humanized-date v-bind:date="comparison.creation_date"/>
+            <humanized-date v-bind:date="comparison.creation_date" v-bind:start_with_capital="true"/>
         </td>
         <td class="tlp-table-cell-actions">
             <action-button
