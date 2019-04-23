@@ -20,14 +20,15 @@
 <template>
     <form v-on:submit.prevent="openComparison()">
         <div class="tlp-modal-body">
-            <p v-translate class="tlp-modal-subtitle">
+            <p v-translate>
                 Please choose two baselines to compare
             </p>
 
             <div class="new-comparison-modal-body">
                 <div class="tlp-form-element new-comparison-modal-body-form-element">
-                    <label class="tlp-label" for="base_baseline" v-translate>
-                        Reference…
+                    <label class="tlp-label" for="base_baseline">
+                        <translate>Reference…</translate>
+                        <i class="fa fa-asterisk"></i>
                     </label>
                     <select
                         id="base_baseline"
@@ -50,8 +51,9 @@
                 </div>
 
                 <div class="tlp-form-element new-comparison-modal-body-form-element">
-                    <label class="tlp-label" for="baseline_to_compare" v-translate>
-                        … compared to
+                    <label class="tlp-label" for="baseline_to_compare">
+                        <translate>… compared to</translate>
+                        <i class="fa fa-asterisk"></i>
                     </label>
                     <span
                         v-if="baselines_to_compare !== null && baselines_to_compare.length === 0"
