@@ -23,16 +23,16 @@ namespace Tuleap\Tracker\Workflow;
 use Tracker_Artifact;
 use Tracker_Artifact_ChangesetValue;
 use Tracker_FormElement_Field;
-use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyFieldDetector;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 
 class WorkflowUpdateChecker
 {
-    /** @var ReadOnlyFieldDetector */
-    private $read_only_field_detector;
+    /** @var FrozenFieldDetector */
+    private $frozen_field_detector;
 
-    public function __construct(ReadOnlyFieldDetector $read_only_field_detector)
+    public function __construct(FrozenFieldDetector $frozen_field_detector)
     {
-        $this->read_only_field_detector = $read_only_field_detector;
+        $this->frozen_field_detector = $frozen_field_detector;
     }
 
     public function canFieldBeUpdated(
@@ -51,7 +51,7 @@ class WorkflowUpdateChecker
             return true;
         }
 
-        return ! $this->read_only_field_detector->isFieldReadOnly($artifact, $field);
+        return ! $this->frozen_field_detector->isFieldFrozen($artifact, $field);
     }
 
     private function fieldHasChanges(

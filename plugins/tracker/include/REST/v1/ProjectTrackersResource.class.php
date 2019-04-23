@@ -31,9 +31,9 @@ use Tuleap\REST\Header;
 use Tuleap\REST\JsonDecoder;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 use Tuleap\Tracker\REST\PermissionsExporter;
-use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyDao;
-use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyFieldDetector;
-use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyFieldsRetriever;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
 use Tuleap\Widget\Event\GetTrackersWithCriteria;
 
 /**
@@ -159,9 +159,9 @@ class ProjectTrackersResource
         $builder                 = new Tracker_REST_TrackerRestBuilder(
             Tracker_FormElementFactory::instance(),
             new PermissionsExporter(
-                new ReadOnlyFieldDetector(
-                    new ReadOnlyFieldsRetriever(
-                        new ReadOnlyDao()
+                new FrozenFieldDetector(
+                    new FrozenFieldsRetriever(
+                        new FrozenFieldsDao()
                     )
                 )
             )

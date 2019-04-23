@@ -37,9 +37,9 @@ use Tuleap\Timetracking\Permissions\PermissionsRetriever;
 use Tuleap\Timetracking\Time\TimeDao;
 use Tuleap\Timetracking\Time\TimeRetriever;
 use Tuleap\Tracker\REST\PermissionsExporter;
-use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyDao;
-use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyFieldDetector;
-use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyFieldsRetriever;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
 
 class ProjectResource
 {
@@ -79,9 +79,9 @@ class ProjectResource
             new Tracker_REST_TrackerRestBuilder(
                 Tracker_FormElementFactory::instance(),
                 new PermissionsExporter(
-                    new ReadOnlyFieldDetector(
-                        new ReadOnlyFieldsRetriever(
-                            new ReadOnlyDao()
+                    new FrozenFieldDetector(
+                        new FrozenFieldsRetriever(
+                            new FrozenFieldsDao()
                         )
                     )
                 )

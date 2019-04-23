@@ -20,30 +20,30 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Workflow\PostAction\ReadOnly;
+namespace Tuleap\Tracker\Workflow\PostAction\FrozenFields;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 
-final class ReadOnlyFieldsRetrieverTest extends TestCase
+final class FrozenFieldsRetrieverTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
     /** @var Mockery\MockInterface */
-    private $read_only_dao;
-    /** @var ReadOnlyFieldsRetriever */
-    private $read_only_fields_retriever;
+    private $frozen_dao;
+    /** @var FrozenFieldsRetriever */
+    private $frozen_retriever;
 
     protected function setUp(): void
     {
-        $this->read_only_dao              = Mockery::mock(ReadOnlyDao::class);
-        $this->read_only_fields_retriever = new ReadOnlyFieldsRetriever($this->read_only_dao);
+        $this->frozen_dao       = Mockery::mock(FrozenFieldsDao::class);
+        $this->frozen_retriever = new FrozenFieldsRetriever($this->frozen_dao);
     }
 
-    public function testGetReadOnlyFieldsReturnsASinglePostAction()
+    public function testGetFrozenFieldsReturnsASinglePostAction()
     {
-        $this->read_only_dao->shouldReceive('searchByTransitionId')->andReturn(
+        $this->frozen_dao->shouldReceive('searchByTransitionId')->andReturn(
             [
                 ['postaction_id' => 72, 'field_id' => 331],
                 ['postaction_id' => 72, 'field_id' => 651],
@@ -52,19 +52,19 @@ final class ReadOnlyFieldsRetrieverTest extends TestCase
         );
 
         $transition           = Mockery::mock(\Transition::class)->shouldReceive(['getId' => 97])->getMock();
-        $expected_post_action = new ReadOnlyFields($transition, 72, [331, 651, 987]);
+        $expected_post_action = new FrozenFields($transition, 72, [331, 651, 987]);
 
-        $result = $this->read_only_fields_retriever->getReadOnlyFields($transition);
+        $result = $this->frozen_retriever->getFrozenFields($transition);
         $this->assertEquals($expected_post_action, $result);
     }
 
-    public function testGetReadOnlyFieldsThrowsWhenNoPostAction()
+    public function testGetFrozenFieldsThrowsWhenNoPostAction()
     {
-        $this->read_only_dao->shouldReceive('searchByTransitionId')->andReturn([]);
+        $this->frozen_dao->shouldReceive('searchByTransitionId')->andReturn([]);
 
         $transition = Mockery::mock(\Transition::class)->shouldReceive(['getId' => 97])->getMock();
 
-        $this->expectException(NoReadOnlyFieldsPostActionException::class);
-        $this->read_only_fields_retriever->getReadOnlyFields($transition);
+        $this->expectException(NoFrozenFieldsPostActionException::class);
+        $this->frozen_retriever->getFrozenFields($transition);
     }
 }

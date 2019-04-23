@@ -23,9 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\REST\v1\Workflow\PostAction;
 
 use Tuleap\REST\JsonCast;
-use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyFields;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFields;
 
-class ReadOnlyFieldsRepresentation
+class FrozenFieldsRepresentation
 {
     /**
      * @var int Post Action identifier (unique among actions with same type)
@@ -35,7 +35,7 @@ class ReadOnlyFieldsRepresentation
     /**
      * @var string
      */
-    public $type = ReadOnlyFields::SHORT_NAME;
+    public $type = FrozenFields::SHORT_NAME;
 
     /**
      * @var int[]
@@ -55,9 +55,9 @@ class ReadOnlyFieldsRepresentation
     /**
      * @param int   $id
      * @param int[] $field_ids
-     * @return ReadOnlyFieldsRepresentation
+     * @return FrozenFieldsRepresentation
      */
-    public static function build(int $id, array $field_ids): ReadOnlyFieldsRepresentation
+    public static function build(int $id, array $field_ids): FrozenFieldsRepresentation
     {
         return new self(
             JsonCast::toInt($id),

@@ -27,7 +27,7 @@ require_once __DIR__ . '/../../bootstrap.php';
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyFieldDetector;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 
 final class WorkflowUpdateCheckerTest extends TestCase
 {
@@ -36,12 +36,12 @@ final class WorkflowUpdateCheckerTest extends TestCase
     /** @var WorkflowUpdateChecker */
     private $workflow_update_checker;
     /** @var Mockery\MockInterface */
-    private $read_only_field_detector;
+    private $frozen_field_detector;
 
     protected function setUp(): void
     {
-        $this->read_only_field_detector = Mockery::mock(ReadOnlyFieldDetector::class);
-        $this->workflow_update_checker  = new WorkflowUpdateChecker($this->read_only_field_detector);
+        $this->frozen_field_detector = Mockery::mock(FrozenFieldDetector::class);
+        $this->workflow_update_checker  = new WorkflowUpdateChecker($this->frozen_field_detector);
     }
 
     public function testCanFieldBeUpdatedReturnsTrueWhenInitialSubmission()
@@ -143,8 +143,8 @@ final class WorkflowUpdateCheckerTest extends TestCase
         $user                 = Mockery::mock(\PFUser::class);
 
         $field->shouldReceive('hasChanges')->andReturnTrue();
-        $this->read_only_field_detector
-            ->shouldReceive('isFieldReadOnly')
+        $this->frozen_field_detector
+            ->shouldReceive('isFieldFrozen')
             ->with($artifact, $field)
             ->andReturnTrue();
 
@@ -170,8 +170,8 @@ final class WorkflowUpdateCheckerTest extends TestCase
         $user                 = Mockery::mock(\PFUser::class);
 
         $field->shouldReceive('hasChanges')->andReturnTrue();
-        $this->read_only_field_detector
-            ->shouldReceive('isFieldReadOnly')
+        $this->frozen_field_detector
+            ->shouldReceive('isFieldFrozen')
             ->andReturnFalse();
 
         $this->assertTrue(
@@ -195,8 +195,8 @@ final class WorkflowUpdateCheckerTest extends TestCase
         $is_submission        = false;
         $user                 = Mockery::mock(\PFUser::class);
 
-        $this->read_only_field_detector
-            ->shouldReceive('isFieldReadOnly')
+        $this->frozen_field_detector
+            ->shouldReceive('isFieldFrozen')
             ->andReturnFalse();
 
         $this->assertTrue(
@@ -220,8 +220,8 @@ final class WorkflowUpdateCheckerTest extends TestCase
         $is_submission        = false;
         $user                 = Mockery::mock(\PFUser::class);
 
-        $this->read_only_field_detector
-            ->shouldReceive('isFieldReadOnly')
+        $this->frozen_field_detector
+            ->shouldReceive('isFieldFrozen')
             ->andReturnFalse();
 
         $this->assertTrue(

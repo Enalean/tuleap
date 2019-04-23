@@ -23,9 +23,9 @@ use Tuleap\Tracker\DAO\ComputedDao;
 use Tuleap\Tracker\FormElement\ComputedFieldCalculator;
 use Tuleap\Tracker\FormElement\FieldCalculator;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldComputedValueFullRepresentation;
-use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyDao;
-use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyFieldDetector;
-use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyFieldsRetriever;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
 
 class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float //phpcs:ignore
 {
@@ -708,7 +708,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
             return $html;
         }
 
-        $is_field_read_only = $this->getReadOnlyFieldDetector()->isFieldReadOnly($artifact, $this);
+        $is_field_read_only = $this->getFrozenFieldDetector()->isFieldFrozen($artifact, $this);
         if ($is_field_read_only || ! $this->userCanUpdate()) {
             if (isset($changeset) && $changeset->getValue() !== null) {
                 $computed_value     = $changeset->getValue();
@@ -784,8 +784,8 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         $is_autocomputed            = $this->isArtifactValueAutocomputed($artifact);
         $purifier                   = Codendi_HTMLPurifier::instance();
 
-        $is_field_read_only = $this->getReadOnlyFieldDetector()->isFieldReadOnly($artifact, $this);
-        if ($this->userCanUpdate() && ! $is_field_read_only) {
+        $is_field_frozen = $this->getFrozenFieldDetector()->isFieldFrozen($artifact, $this);
+        if ($this->userCanUpdate() && ! $is_field_frozen) {
             $data_field_id              = 'data-field-id="'. $purifier->purify($this->getId()) .'"';
             $data_field_type            = 'data-field-type="'. $purifier->purify($this->getFormElementFactory()->getType($this)) .'"';
             $data_field_is_autocomputed = 'data-field-is-autocomputed="'.$is_autocomputed.'"';
@@ -1010,12 +1010,12 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
     }
 
     /**
-     * @return ReadOnlyFieldDetector
+     * @return FrozenFieldDetector
      */
-    private function getReadOnlyFieldDetector()
+    private function getFrozenFieldDetector()
     {
-        return new ReadOnlyFieldDetector(
-            new ReadOnlyFieldsRetriever(new ReadOnlyDao())
+        return new FrozenFieldDetector(
+            new FrozenFieldsRetriever(new FrozenFieldsDao())
         );
     }
 }

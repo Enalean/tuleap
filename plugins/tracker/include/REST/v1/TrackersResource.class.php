@@ -57,9 +57,9 @@ use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 use Tuleap\Tracker\REST\PermissionsExporter;
 use Tuleap\Tracker\REST\ReportRepresentation;
 use Tuleap\Tracker\REST\v1\Workflow\ModeUpdater;
-use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyDao;
-use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyFieldDetector;
-use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyFieldsRetriever;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
 use Tuleap\Tracker\Workflow\SimpleMode\TransitionReplicator;
 use Tuleap\Tracker\Workflow\SimpleMode\TransitionReplicatorBuilder;
 use Tuleap\Tracker\Workflow\SimpleMode\TransitionRetriever;
@@ -157,9 +157,9 @@ class TrackersResource extends AuthenticatedResource
         $builder = new Tracker_REST_TrackerRestBuilder(
             $this->formelement_factory,
             new PermissionsExporter(
-                new ReadOnlyFieldDetector(
-                    new ReadOnlyFieldsRetriever(
-                        new ReadOnlyDao()
+                new FrozenFieldDetector(
+                    new FrozenFieldsRetriever(
+                        new FrozenFieldsDao()
                     )
                 )
             )
@@ -630,9 +630,9 @@ class TrackersResource extends AuthenticatedResource
             $builder = new Tracker_REST_TrackerRestBuilder(
                 $this->formelement_factory,
                 new PermissionsExporter(
-                    new ReadOnlyFieldDetector(
-                        new ReadOnlyFieldsRetriever(
-                            new ReadOnlyDao()
+                    new FrozenFieldDetector(
+                        new FrozenFieldsRetriever(
+                            new FrozenFieldsDao()
                         )
                     )
                 )

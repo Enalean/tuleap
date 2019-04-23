@@ -20,16 +20,16 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Workflow\PostAction\ReadOnly;
+namespace Tuleap\Tracker\Workflow\PostAction\FrozenFields;
 
 use Tuleap\DB\DataAccessObject;
 
-class ReadOnlyDao extends DataAccessObject
+class FrozenFieldsDao extends DataAccessObject
 {
     public function isFieldUsedInPostAction($field_id): bool
     {
         $sql = 'SELECT NULL
-            FROM plugin_tracker_workflow_transition_postactions_read_only_fields AS paf
+            FROM plugin_tracker_workflow_postactions_frozen_fields_value AS paf
             WHERE paf.field_id = ?';
         $result = $this->getDB()->cell($sql, $field_id);
 
@@ -39,8 +39,8 @@ class ReadOnlyDao extends DataAccessObject
     public function searchByTransitionId(int $transition_id): array
     {
         $sql = 'SELECT paf.*
-            FROM plugin_tracker_workflow_transition_postactions_read_only_fields AS paf
-                 JOIN plugin_tracker_workflow_transition_postactions_read_only AS paro
+            FROM plugin_tracker_workflow_postactions_frozen_fields_value AS paf
+                 JOIN plugin_tracker_workflow_postactions_frozen_fields AS paro
             ON (paro.id = paf.postaction_id)
             WHERE paro.transition_id = ?';
 

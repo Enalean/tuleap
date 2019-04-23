@@ -19,7 +19,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyDao;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\WorkflowBackendLogger;
 
 class WorkflowFactory //phpcs:ignoreFile
@@ -40,7 +40,7 @@ class WorkflowFactory //phpcs:ignoreFile
     /** @var WorkflowBackendLogger */
     private $logger;
 
-    /** @var ReadOnlyDao */
+    /** @var FrozenFieldsDao */
     private $read_only_dao;
 
     /**
@@ -54,7 +54,7 @@ class WorkflowFactory //phpcs:ignoreFile
         Tracker_FormElementFactory $formelement_factory,
         Tracker_Workflow_Trigger_RulesManager $trigger_rules_manager,
         WorkflowBackendLogger $logger,
-        ReadOnlyDao $read_only_dao
+        FrozenFieldsDao $read_only_dao
     ) {
         $this->transition_factory    = $transition_factory;
         $this->tracker_factory       = $tracker_factory;
@@ -108,7 +108,7 @@ class WorkflowFactory //phpcs:ignoreFile
                 $formelement_factory,
                 $trigger_rules_manager,
                 $logger,
-                new ReadOnlyDao()
+                new FrozenFieldsDao()
             );
         }
         return self::$_instance;

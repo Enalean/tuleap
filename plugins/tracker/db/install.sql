@@ -909,15 +909,15 @@ CREATE TABLE IF NOT EXISTS plugin_tracker_source_artifact_id (
     INDEX (source_platform)
 ) ENGINE=InnoDB;
 
-DROP TABLE IF EXISTS plugin_tracker_workflow_transition_postactions_read_only;
-CREATE TABLE IF NOT EXISTS plugin_tracker_workflow_transition_postactions_read_only (
+DROP TABLE IF EXISTS plugin_tracker_workflow_postactions_frozen_fields;
+CREATE TABLE IF NOT EXISTS plugin_tracker_workflow_postactions_frozen_fields (
     id INT(11) UNSIGNED PRIMARY KEY AUTO_INCREMENT,
     transition_id INT(11) NOT NULL,
     INDEX idx_wf_transition_id( transition_id )
 ) ENGINE=InnoDB;
 
-DROP TABLE IF EXISTS plugin_tracker_workflow_transition_postactions_read_only_fields;
-CREATE TABLE IF NOT EXISTS plugin_tracker_workflow_transition_postactions_read_only_fields (
+DROP TABLE IF EXISTS plugin_tracker_workflow_postactions_frozen_fields_value;
+CREATE TABLE IF NOT EXISTS plugin_tracker_workflow_postactions_frozen_fields_value (
     postaction_id INT(11) UNSIGNED NOT NULL,
     field_id INT(11) NOT NULL,
     PRIMARY KEY (postaction_id, field_id)

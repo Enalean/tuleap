@@ -18,8 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyDao;
-use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyFieldsFactory;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsFactory;
 
 /**
  * Collection of subfactories to CRUD postactions. Uniq entry point from the transition point of view.
@@ -40,8 +40,8 @@ class Transition_PostActionFactory //phpcs:ignoreFile
     /** @var Transition_PostAction_CIBuildFactory */
     private $postaction_cibuild_factory;
 
-    /** @var ReadOnlyFieldsFactory */
-    private $read_only_fields_factory;
+    /** @var FrozenFieldsFactory */
+    private $frozen_fields_factory;
 
     /**
      * Get html code to let someone choose a post action for a transition
@@ -194,12 +194,12 @@ class Transition_PostActionFactory //phpcs:ignoreFile
         return $this->postaction_cibuild_factory;
     }
 
-    private function getReadOnlyFieldsFactory(): ReadOnlyFieldsFactory
+    private function getFrozenFieldsFactory(): FrozenFieldsFactory
     {
-        if (!$this->read_only_fields_factory) {
-            $this->read_only_fields_factory = new ReadOnlyFieldsFactory(new ReadOnlyDao());
+        if (!$this->frozen_fields_factory) {
+            $this->frozen_fields_factory = new FrozenFieldsFactory(new FrozenFieldsDao());
         }
-        return $this->read_only_fields_factory;
+        return $this->frozen_fields_factory;
     }
 
     private function areNewActionsEnabled(): bool
@@ -218,7 +218,7 @@ class Transition_PostActionFactory //phpcs:ignoreFile
         $sub_factories = [$this->getFieldFactory(), $this->getCIBuildFactory()];
 
         if ($this->areNewActionsEnabled()) {
-            $sub_factories[] = $this->getReadOnlyFieldsFactory();
+            $sub_factories[] = $this->getFrozenFieldsFactory();
         }
         return new Transition_PostActionSubFactories($sub_factories);
     }

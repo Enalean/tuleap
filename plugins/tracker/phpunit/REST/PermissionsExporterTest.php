@@ -24,7 +24,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
 use PHPUnit\Framework\TestCase;
 use Tracker_FormElement;
-use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyFieldDetector;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 
 class PermissionsExporterTest extends TestCase
 {
@@ -33,7 +33,7 @@ class PermissionsExporterTest extends TestCase
     /**
      * @var MockInterface
      */
-    private $read_only_field_detector;
+    private $frozen_field_detector;
 
     /**
      * @var PermissionsExporter
@@ -42,9 +42,9 @@ class PermissionsExporterTest extends TestCase
 
     protected function setUp() : void
     {
-        $this->read_only_field_detector = \Mockery::mock(ReadOnlyFieldDetector::class);
-        $this->permissions_exporter     = new PermissionsExporter(
-            $this->read_only_field_detector
+        $this->frozen_field_detector = \Mockery::mock(FrozenFieldDetector::class);
+        $this->permissions_exporter  = new PermissionsExporter(
+            $this->frozen_field_detector
         );
     }
 
@@ -59,7 +59,7 @@ class PermissionsExporterTest extends TestCase
         $user         = \Mockery::mock(\PFUser::class);
         $artifact     = \Mockery::mock(\Tracker_Artifact::class);
 
-        $this->read_only_field_detector->shouldNotReceive('isFieldReadOnly');
+        $this->frozen_field_detector->shouldNotReceive('isFieldFrozen');
 
         $this->permissions_exporter->exportUserPermissionsForFieldWithWorkflowComputedPermissions(
             $user,
@@ -68,7 +68,7 @@ class PermissionsExporterTest extends TestCase
         );
     }
 
-    public function testItDoesNotChangePermissionsIfNotReadOnlyField()
+    public function testItDoesNotChangePermissionsIfNotFrozenField()
     {
         $initial_permissions = [Tracker_FormElement::REST_PERMISSION_READ, Tracker_FormElement::REST_PERMISSION_UPDATE];
         $form_element        = \Mockery::mock(\Tracker_FormElement_Field::class);
@@ -79,8 +79,8 @@ class PermissionsExporterTest extends TestCase
         $user         = \Mockery::mock(\PFUser::class);
         $artifact     = \Mockery::mock(\Tracker_Artifact::class);
 
-        $this->read_only_field_detector
-            ->shouldReceive('isFieldReadOnly')
+        $this->frozen_field_detector
+            ->shouldReceive('isFieldFrozen')
             ->andReturnFalse();
 
         $computed_permissions = $this->permissions_exporter->exportUserPermissionsForFieldWithWorkflowComputedPermissions(
@@ -103,8 +103,8 @@ class PermissionsExporterTest extends TestCase
         $user         = \Mockery::mock(\PFUser::class);
         $artifact     = \Mockery::mock(\Tracker_Artifact::class);
 
-        $this->read_only_field_detector
-            ->shouldReceive('isFieldReadOnly')
+        $this->frozen_field_detector
+            ->shouldReceive('isFieldFrozen')
             ->andReturnTrue();
 
         $computed_permissions = $this->permissions_exporter->exportUserPermissionsForFieldWithWorkflowComputedPermissions(
