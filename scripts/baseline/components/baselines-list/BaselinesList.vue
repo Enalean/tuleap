@@ -77,7 +77,7 @@ import Baseline from "./Baseline.vue";
 import { mapState, mapGetters } from "vuex";
 
 export default {
-    name: "BaselinesTable",
+    name: "BaselinesList",
 
     components: { BaselineSkeleton, Baseline },
 

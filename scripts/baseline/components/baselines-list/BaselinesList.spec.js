@@ -20,14 +20,14 @@
 
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../../support/local-vue.js";
-import BaselinesTable from "./BaselinesTable.vue";
+import BaselinesList from "./BaselinesList.vue";
 import BaselineSkeleton from "./BaselineSkeleton.vue";
 import Baseline from "./Baseline.vue";
 import { createList } from "../../support/factories";
 import { createStoreMock } from "../../support/store-wrapper.spec-helper";
 import store_options from "../../store/options";
 
-describe("BaselinesTable", () => {
+describe("BaselinesList", () => {
     const empty_baseline_selector = '[data-test-type="empty-baseline"]';
     let $store;
     let wrapper;
@@ -40,7 +40,7 @@ describe("BaselinesTable", () => {
             }
         });
 
-        wrapper = shallowMount(BaselinesTable, {
+        wrapper = shallowMount(BaselinesList, {
             propsData: {
                 project_id: 102
             },
