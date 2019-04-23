@@ -76,7 +76,7 @@ class BurningParrotTheme extends BaseLayout
             ForgeConfig::get('tuleap_dir') . '/src/www/themes/common/tlp/dist',
             '/themes/common/tlp/dist'
         );
-        $this->includeFooterJavascriptFile($tlp_include_assets->getFileURL('tlp.' . $user->getLocale() . '.min.js'));
+        $this->includeFooterJavascriptFile($tlp_include_assets->getFileURL('tlp-' . $user->getLocale() . '.js'));
         $this->includeFooterJavascriptFile($this->include_asset->getFileURL('burning-parrot.js'));
     }
 
@@ -241,7 +241,7 @@ class BurningParrotTheme extends BaseLayout
         if (isset($params['sidebar'])) {
             $this->show_sidebar = true;
             return $params['sidebar'];
-        } else if (! empty($params['group'])) {
+        } elseif (! empty($params['group'])) {
             $project = $this->project_manager->getProject($params['group']);
             $this->show_sidebar = true;
             return $this->getSidebarPresenterForProject($project, $params);

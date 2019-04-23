@@ -16,12 +16,12 @@ h3.toggler-hide-noajax {
 
 .toggler,
 .toggler-noajax {
-    background-image: url('../images/ic/toggle_minus.png');
+    background-image: url("#{$tuleap-common-theme-basepath}images/ic/toggle_minus.png");
 }
 
 .toggler-hide,
 .toggler-hide-noajax {
-    background-image: url('../images/ic/toggle_plus.png');
+    background-image: url("#{$tuleap-common-theme-basepath}images/ic/toggle_plus.png");
 
     ~ * {
         display: none;

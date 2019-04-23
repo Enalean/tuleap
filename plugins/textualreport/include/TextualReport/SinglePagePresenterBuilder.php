@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,12 +20,12 @@
 
 namespace Tuleap\TextualReport;
 
-use ForgeConfig;
-use PDOStatement;
 use PFUser;
 use ThemeVariant;
 use ThemeVariantColor;
+use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\ThemeVariation;
 
 class SinglePagePresenterBuilder
 {
@@ -80,19 +80,30 @@ class SinglePagePresenterBuilder
      */
     private function getStylesheetsToEmbed(PFUser $current_user)
     {
-        $theme_variant = new ThemeVariant();
-        $color         = ThemeVariantColor::buildFromVariant($theme_variant->getVariantForUser($current_user));
+        $theme_variant   = new ThemeVariant();
+        $color           = ThemeVariantColor::buildFromVariant($theme_variant->getVariantForUser($current_user));
+        $theme_variation = new ThemeVariation($color, $current_user);
+
+        $root_core_themes_directory = __DIR__ . '/../../../../src/www/themes/';
+
+        $tlp_framework_base_css = new CssAssetWithoutVariantDeclinaisons(
+            new IncludeAssets(
+                $root_core_themes_directory . '/common/tlp/dist/',
+                $root_core_themes_directory . '/common/tlp/dist/'
+            ),
+            'tlp' . $theme_variation->getFileColorCondensedSuffix()
+        );
 
         $core_burning_parrot_include_assets = new IncludeAssets(
-            ForgeConfig::get('tuleap_dir') . '/src/www/themes/BurningParrot/assets',
-            '/themes/BurningParrot/assets'
+            $root_core_themes_directory . '/BurningParrot/assets',
+            $root_core_themes_directory . '/BurningParrot/assets'
         );
 
         $stylesheets = file_get_contents(
-            ForgeConfig::get('sys_urlroot') . '/themes/common/tlp/dist/tlp-' . $color->getName() . '.min.css'
+            $tlp_framework_base_css->getFileURL($theme_variation)
         );
         $stylesheets .= file_get_contents(
-            ForgeConfig::get('sys_urlroot') . $core_burning_parrot_include_assets->getFileURL(
+            $core_burning_parrot_include_assets->getFileURL(
                 'burning-parrot-' . $color->getName() . '.css'
             )
         );

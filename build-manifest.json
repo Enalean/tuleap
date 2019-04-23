@@ -8,20 +8,6 @@
             ],
             "target_dir": "src/www/themes/common/css"
         },
-        "FlamingParrot": {
-            "files": [
-                "src/www/themes/FlamingParrot/css/print.scss",
-                "src/www/themes/FlamingParrot/css/FlamingParrot_Orange.scss",
-                "src/www/themes/FlamingParrot/css/FlamingParrot_Red.scss",
-                "src/www/themes/FlamingParrot/css/FlamingParrot_Green.scss",
-                "src/www/themes/FlamingParrot/css/FlamingParrot_Blue.scss",
-                "src/www/themes/FlamingParrot/css/FlamingParrot_Purple.scss",
-                "src/www/themes/FlamingParrot/css/FlamingParrot_BlueGrey.scss"
-            ],
-            "watched_includes": ["src/www/themes/FlamingParrot/css/**/_*.scss"],
-            "target_dir": "src/www/themes/FlamingParrot/assets",
-            "is_revisioned": true
-        },
         "BurningParrot": {
             "files": [
                 "src/www/themes/BurningParrot/css/burning-parrot-blue.scss",
@@ -44,6 +30,7 @@
     },
     "components": [
         "src/www/themes/common/tlp/",
+        "src/www/themes/FlamingParrot/",
         "src/www/scripts/"
     ],
     "gettext-js": {

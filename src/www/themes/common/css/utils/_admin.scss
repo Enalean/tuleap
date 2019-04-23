@@ -65,7 +65,7 @@
 
 .site_admin_project_status_A {
     padding-left: 1em;
-    background-image: url('../images/ic/tick.png');
+    background-image: url("#{$tuleap-common-theme-basepath}images/ic/tick.png");
 }
 
 .site_admin .widget {

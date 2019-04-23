@@ -49,7 +49,7 @@ a.date-picker-control:focus {
     border: 0 none;
     padding: 0;
     margin: 0 0 0 4px;
-    background: transparent url(../images/ic/cal.png) no-repeat 50% 50%;
+    background: transparent url("#{$tuleap-common-theme-basepath}images/ic/cal.png") no-repeat 50% 50%;
     min-width: 16px;
     line-height: 1;
     cursor: pointer;
@@ -173,7 +173,7 @@ div.datePicker table th {
 }
 
 div.datePicker table td.date-picker-unused {
-    background: #fff url(../images/backstripes.gif);
+    background: #fff url("#{$tuleap-common-theme-basepath}images/backstripes.gif");
     border-color: #dcdcdc;
     padding: 0;
     cursor: default !important;

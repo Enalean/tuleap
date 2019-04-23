@@ -5,9 +5,9 @@
 }
 
 .project_privacy_private {
-    background-image: url('../images/ic/lock.png');
+    background-image: url("#{$tuleap-common-theme-basepath}images/ic/lock.png");
 }
 
 .project_privacy_public {
-    background-image: url('../images/ic/lock-unlock.png');
+    background-image: url("#{$tuleap-common-theme-basepath}images/ic/lock-unlock.png");
 }

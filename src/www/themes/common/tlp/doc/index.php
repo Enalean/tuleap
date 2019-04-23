@@ -1,11 +1,11 @@
 <?php
 
-require_once('common/layout/IncludeAssets.php');
-require_once('common/layout/IncludeAssetsException.php');
+require_once __DIR__ . '/../../../../include/pre.php';
 
 use Tuleap\Layout\IncludeAssets;
 
-function discoverSection($basepath) {
+function discoverSection($basepath)
+{
     $discovery = array();
     $manifest_file = "$basepath/manifest.json";
     if (! is_file($manifest_file)) {
@@ -45,8 +45,12 @@ if (isset($_GET['section']) && isset($sections[$_GET['section']])) {
 }
 $sections[$current_section]['selected'] = true;
 
-$include_asset  = new IncludeAssets(__DIR__ . '/../dist', '../dist');
-$tlp_script_tag = $include_asset->getHTMLSnippet('tlp.en_US.min.js');
+$include_asset_framework  = new IncludeAssets(__DIR__ . '/../dist', '../dist');
+$tlp_script_tag = $include_asset_framework->getHTMLSnippet('tlp-en_US.js');
+$tlp_blue_css   = $include_asset_framework->getFileURL('tlp-blue.css');
+
+$include_asset_doc   = new IncludeAssets(__DIR__ . '/dist', 'dist');
+$main_doc_stylesheet = $include_asset_doc->getFileURL('style.css');
 
 ?><!DOCTYPE html>
 <html lang="en">
@@ -54,9 +58,9 @@ $tlp_script_tag = $include_asset->getHTMLSnippet('tlp.en_US.min.js');
     <meta charset="utf-8">
     <title>Tuleap UI Framework</title>
 
-    <link rel="stylesheet" id="tlp-stylesheet" href="../dist/tlp-blue.min.css">
+    <link rel="stylesheet" id="tlp-stylesheet" href="<?php echo $tlp_blue_css ?>">
 
-    <link rel="stylesheet" href="css/main.min.css">
+    <link rel="stylesheet" href="<?php echo $main_doc_stylesheet ?>">
     <link rel="stylesheet" href="codemirror/5.12.2/codemirror.css">
     <link rel="stylesheet" href="codemirror/5.12.2/addon/scroll/simplescrollbars.css">
     <link rel="stylesheet" href="codemirror/5.12.2/theme/mdn-like.css">
@@ -236,6 +240,11 @@ $tlp_script_tag = $include_asset->getHTMLSnippet('tlp.en_US.min.js');
     <a href="#" title="Back to top" id="back-to-top"><i class="fa fa-arrow-up"></i></a>
 </main>
 <?php echo $tlp_script_tag; ?>
+<script type="text/javascript">
+    const manifest_framework_file = <?php
+        echo (string) file_get_contents(__DIR__ . '/../dist/manifest.json');
+    ?>
+</script>
 <script type="text/javascript" src="js/polyfills.js"></script>
 <script type="text/javascript" src="js/main.js"></script>
 <script src="codemirror/5.12.2/codemirror-compressed.js"></script>

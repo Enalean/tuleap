@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,19 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-$tuleap-common-theme-basepath: '../../common/';
+const common = require("./webpack.common.js");
+const webpack_configurator = require("../../../../../tools/utils/scripts/webpack-configurator.js");
 
-@import '../../common/css/bootstrap-tuleap-22d39b3.min.css';
-@import '../../common/css/bootstrap-tuleap-responsive-22d39b3.min.css';
-@import '../../common/css/utils/utils';
-@import 'variables-common';
-
-$fa-font-path: '../../common/tlp/src/fonts/font-awesome-4.7.0/fonts';
-@import '../../common/tlp/src/fonts/font-awesome-4.7.0/scss/font-awesome';
-
-$tlp-font-basepath: '../../common/tlp/src';
-@import '../../common/tlp/src/fonts/tlp-font/tlp-font';
-
-html, body {
-    height: 100%;
-}
+module.exports = webpack_configurator.extendProdConfiguration(common);

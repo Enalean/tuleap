@@ -21,7 +21,7 @@
     height: $loading-size;
     margin-top: -($loading-size / 2);
     margin-left: -($loading-size / 2);
-    background: #303030 url('../images/tuleap-modal-spinner.gif') no-repeat center center;
+    background: #303030 url('#{$tuleap-common-theme-basepath}images/tuleap-modal-spinner.gif') no-repeat center center;
     border-radius: 50%;
 }
 

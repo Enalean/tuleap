@@ -1,7 +1,7 @@
 .rte_toggle {
     padding-left: 20px;
     background-repeat: no-repeat;
-    background-image: url('../images/ic/rte.png');
+    background-image: url("#{$tuleap-common-theme-basepath}images/ic/rte.png");
     float: left;
 }
 

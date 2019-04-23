@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-$tlp-font-basepath: '.' !default;
+$tlp-font-basepath: '../' !default;
 
 @font-face {
     font-family: 'TLPFontAwesome';

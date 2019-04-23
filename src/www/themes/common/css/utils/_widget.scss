@@ -18,7 +18,7 @@
 }
 
 .widget_titlebar {
-    background: #E0DDD2 url(../images/widget-header.png) left top repeat-x;
+    background: #E0DDD2 url('#{$tuleap-common-theme-basepath}images/widget-header.png') left top repeat-x;
     font-weight: bold;
     text-align: left;
 

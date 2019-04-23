@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,9 +18,14 @@
  */
 
 const webpack = require("webpack");
+const merge = require("webpack-merge");
 const WebpackAssetsManifest = require("webpack-assets-manifest");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const AngularGettextPlugin = require("angular-gettext-plugin");
+const CleanWebpackPlugin = require("clean-webpack-plugin");
+const FixStyleOnlyEntriesPlugin = require("webpack-fix-style-only-entries");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const OptimizeCssAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const { VueLoaderPlugin } = require("vue-loader");
 const rule_configurations = require("./webpack-rule-configs.js");
 const aliases = require("./webpack-aliases.js");
@@ -51,6 +56,12 @@ function configureOutput(assets_dir_path, public_path) {
     return output;
 }
 
+function getCleanWebpackPlugin() {
+    return new CleanWebpackPlugin({
+        cleanAfterEveryBuildPatterns: ["!css-assets/", "!css-assets/**"]
+    });
+}
+
 function getVueLoaderPlugin() {
     return new VueLoaderPlugin();
 }
@@ -69,13 +80,60 @@ function getCopyPlugin(patterns = [], options = {}) {
     return new CopyWebpackPlugin(patterns, options);
 }
 
+function getCSSExtractionPlugins() {
+    return [
+        new FixStyleOnlyEntriesPlugin(),
+        new MiniCssExtractPlugin({
+            filename: "[name]-[chunkhash].css"
+        })
+    ];
+}
+
+function getCSSOptimizerPlugin() {
+    return new OptimizeCssAssetsPlugin({
+        cssProcessor: require("cssnano"),
+        cssProcessorPluginOptions: {
+            preset: [
+                "default",
+                {
+                    discardComments: {
+                        removeAll: true
+                    }
+                }
+            ]
+        }
+    });
+}
+
+function extendDevConfiguration(webpack_configs) {
+    return webpack_configs.map(webpack_config =>
+        merge(webpack_config, {
+            mode: "development",
+            devtool: "inline-source-map"
+        })
+    );
+}
+
+function extendProdConfiguration(webpack_configs) {
+    return webpack_configs.map(webpack_config =>
+        merge(webpack_config, {
+            mode: "production",
+            plugins: [getCSSOptimizerPlugin()]
+        })
+    );
+}
+
 const configurator = {
     configureOutput,
     getAngularGettextPlugin,
     getCopyPlugin,
     getManifestPlugin,
     getMomentLocalePlugin,
-    getVueLoaderPlugin
+    getVueLoaderPlugin,
+    getCleanWebpackPlugin,
+    getCSSExtractionPlugins,
+    extendDevConfiguration,
+    extendProdConfiguration
 };
 Object.assign(configurator, rule_configurations, aliases);
 

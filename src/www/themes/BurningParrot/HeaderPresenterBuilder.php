@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -29,6 +29,7 @@ use ThemeVariant;
 use ThemeVariantColor;
 use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\CssAssetCollection;
+use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\SidebarPresenter;
 use Tuleap\Layout\ThemeVariation;
@@ -180,9 +181,17 @@ class HeaderPresenterBuilder
 
     private function getStylesheets(ThemeVariation $theme_variation)
     {
-        $stylesheets = array(
-            '/themes/common/tlp/dist/tlp' . $theme_variation->getFileColorCondensedSuffix() . '.min.css',
+        $tlp_framework_base_css = new CssAssetWithoutVariantDeclinaisons(
+            new IncludeAssets(
+                __DIR__ . '/../../themes/common/tlp/dist/',
+                '/themes/common/tlp/dist/'
+            ),
+            'tlp' . $theme_variation->getFileColorCondensedSuffix()
         );
+
+        $stylesheets = [
+            $tlp_framework_base_css->getFileURL($theme_variation)
+        ];
 
         $core_burning_parrot_css = new CssAsset(
             new IncludeAssets(

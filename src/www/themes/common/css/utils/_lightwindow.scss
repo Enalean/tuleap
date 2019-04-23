@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2013-2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -152,7 +152,7 @@
 #lightwindow_next {
     width: 49%;
     height: 100%;
-    background: transparent url(../images/lightwindow/blank.gif) no-repeat; /* Trick IE into showing hover */
+    background: transparent url("#{$tuleap-common-theme-basepath}images/lightwindow/blank.gif") no-repeat; /* Trick IE into showing hover */
     display: block;
 }
 
@@ -168,12 +168,12 @@
 
 #lightwindow_previous:hover,
 #lightwindow_previous:active {
-    background: url(../images/lightwindow/prevlabel.gif) left 15% no-repeat;
+    background: url("#{$tuleap-common-theme-basepath}images/lightwindow/prevlabel.gif") left 15% no-repeat;
 }
 
 #lightwindow_next:hover,
 #lightwindow_next:active {
-    background: url(../images/lightwindow/nextlabel.gif) right 15% no-repeat;
+    background: url("#{$tuleap-common-theme-basepath}images/lightwindow/nextlabel.gif") right 15% no-repeat;
 }
 
 #lightwindow_previous_title,
@@ -212,7 +212,7 @@ a:visited#lightwindow_galleries_tab {
     cursor: pointer;
     font-size: 11px;
     color: #ffffbe;
-    background: url(../images/lightwindow/black-70.png) repeat 0 0 transparent;
+    background: url("#{$tuleap-common-theme-basepath}images/lightwindow/black-70.png") repeat 0 0 transparent;
 }
 
 * html a#lightwindow_galleries_tab,
@@ -238,15 +238,15 @@ a:active#lightwindow_galleries_tab {
 }
 
 #lightwindow_galleries_tab .up {
-    background: url(../images/lightwindow/arrow-up.gif) no-repeat 60px 5px transparent;
+    background: url("#{$tuleap-common-theme-basepath}images/lightwindow/arrow-up.gif") no-repeat 60px 5px transparent;
 }
 
 #lightwindow_galleries_tab .down {
-    background: url(../images/lightwindow/arrow-down.gif) no-repeat 60px 6px transparent;
+    background: url("#{$tuleap-common-theme-basepath}images/lightwindow/arrow-down.gif") no-repeat 60px 6px transparent;
 }
 
 #lightwindow_galleries_list {
-    background: url(../images/lightwindow/black-70.png) repeat 0 0 transparent;
+    background: url("#{$tuleap-common-theme-basepath}images/lightwindow/black-70.png") repeat 0 0 transparent;
     overflow: hidden;
     height: 0px;
 }
