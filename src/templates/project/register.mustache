@@ -1,6 +1,6 @@
 {{!
  /**
-  * Copyright (c) Enalean, 2013-2016. All rights reserved
+  * Copyright (c) Enalean, 2013-Present. All rights reserved
   *
   * This file is a part of Tuleap.
   *
@@ -104,6 +104,14 @@
                     {{getDescriptionContainerPrivateLabel}}
                 </label>
             </div>
+            {{# has_project_without_restricted }}
+            <div class="controls">
+                <label class="checkbox">
+                    <input type="checkbox" name="allow_restricted" value="1" checked/>
+                    {{# gettext }}Allow restricted users to be added to the project{{/ gettext }}
+                </label>
+            </div>
+            {{/ has_project_without_restricted }}
         </div>
         {{/ userCanSelectProjectPrivacy }}
     </fieldset>

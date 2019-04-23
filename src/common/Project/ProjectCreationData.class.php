@@ -17,6 +17,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Project\Admin\ProjectWithoutRestrictedFeatureFlag;
+
 class ProjectCreationData
 {
 
@@ -130,6 +132,7 @@ class ProjectCreationData
      * $data['project']['built_from_template']
      * $data['project']['is_test']
      * $data['project']['is_public']
+     * $data['project']['allow_restricted']
      * $data['project']["form_".$descfieldsinfos[$i]["group_desc_id"]]
      * foreach($data['project']['trove'] as $root => $values);
      * $data['project']['services'][$arr['service_id']]['is_used'];
@@ -161,10 +164,19 @@ class ProjectCreationData
         if ((int) ForgeConfig::get('sys_user_can_choose_project_privacy') === 0) {
             return $this->getDefaultAccessOfPlatform();
         }
-        if (isset($project['is_public'])) {
-            return (string )$project['is_public'] === '1' ? Project::ACCESS_PUBLIC : Project::ACCESS_PRIVATE;
+
+        if (! isset($project['is_public'])) {
+            return $this->getDefaultAccessOfPlatform();
         }
-        return $this->getDefaultAccessOfPlatform();
+
+        $should_allow_restricted = isset($project['allow_restricted']) && $project['allow_restricted'] &&
+            ForgeConfig::areRestrictedUsersAllowed() && ProjectWithoutRestrictedFeatureFlag::isEnabled();
+
+        if ((string) $project['is_public'] === '1') {
+            return $should_allow_restricted ? Project::ACCESS_PUBLIC_UNRESTRICTED : Project::ACCESS_PUBLIC;
+        }
+
+        return $should_allow_restricted ? Project::ACCESS_PRIVATE : Project::ACCESS_PRIVATE_WO_RESTRICTED;
     }
 
     private function getDefaultAccessOfPlatform()

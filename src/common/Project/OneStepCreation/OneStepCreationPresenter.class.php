@@ -18,6 +18,8 @@
   * along with Tuleap. If not, see <http://www.gnu.org/licenses/
   */
 
+use Tuleap\Project\Admin\ProjectWithoutRestrictedFeatureFlag;
+
 /**
  * Presenter for one step creation project
  */
@@ -39,6 +41,10 @@ class Project_OneStepCreation_OneStepCreationPresenter {
     public $unix_name_label                        = self::UNIX_NAME;
     public $user_can_choose_project_privacy_label  = self::USER_CAN_CHOOSE_PROJECT_PRIVACY;
     public $is_public_label                        = self::IS_PUBLIC;
+    /**
+     * @var bool
+     */
+    public $has_project_without_restricted;
     public $template_id_label                      = self::TEMPLATE_ID;
     public $short_description_label                = self::SHORT_DESCRIPTION;
     public $term_of_service_approval_label         = self::TOS_APPROVAL;
@@ -85,6 +91,8 @@ class Project_OneStepCreation_OneStepCreationPresenter {
         $this->required_custom_description_presenters = $this->getCustomDescriptionPresenters($required_custom_descriptions);
         $this->trove_cats                             = array_values($trove_cats);
         $this->csrf_token                             = $csrf_token_field;
+        $this->has_project_without_restricted         = ForgeConfig::areRestrictedUsersAllowed() &&
+            ProjectWithoutRestrictedFeatureFlag::isEnabled();
     }
 
     public function hasTroveCats() {

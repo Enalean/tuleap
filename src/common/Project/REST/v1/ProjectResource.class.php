@@ -195,11 +195,12 @@ class ProjectResource extends AuthenticatedResource
      * @url    POST
      * @status 201
      *
-     * @param string $shortname   Name of the project
-     * @param string $description Full description of the project
-     * @param string $label       A short description of the project
-     * @param bool   $is_public   Define the visibility of the project
-     * @param int    $template_id Template for this project.
+     * @param string      $shortname        Name of the project
+     * @param string      $description      Full description of the project
+     * @param string      $label            A short description of the project
+     * @param bool        $is_public        Define the visibility of the project
+     * @param bool | null $allow_restricted Define if the project should accept restricted users {@required false}
+     * @param int         $template_id      Template for this project.
      *
      *
      * @return ProjectRepresentation
@@ -207,7 +208,7 @@ class ProjectResource extends AuthenticatedResource
      * @throws 403
      * @throws 429
      */
-    protected function post($shortname, $description, $label, $is_public, $template_id)
+    protected function post($shortname, $description, $label, $is_public, ?bool $allow_restricted, $template_id)
     {
         $this->checkAccess();
 
@@ -230,6 +231,10 @@ class ProjectResource extends AuthenticatedResource
             ]
         ];
 
+        if ($allow_restricted !== null) {
+            $data['project']['allow_restricted'] = $allow_restricted;
+        }
+
         try {
             $project = $this->project_creator->createFromRest($shortname, $label, $data);
         } catch (Project_InvalidShortName_Exception $exception) {
@@ -238,9 +243,7 @@ class ProjectResource extends AuthenticatedResource
             throw new RestException(400, $exception->getMessage());
         }
 
-        $project_representation = $this->getProjectRepresentation($project, $user);
-
-        return $project_representation;
+        return $this->getProjectRepresentation($project, $user);
     }
 
     /**
