@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,22 +18,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Artifact_Redirect {
+class Tracker_Artifact_Redirect
+{
     const STATE_CREATE_PARENT    = 'to_parent';
     const STATE_STAY_OR_CONTINUE = 'stay_continue';
     const STATE_SUBMIT           = 'submit';
     
-    public $mode;
-    public $base_url;
-    public $query_parameters;
+    public $mode = '';
+    public $base_url = '';
+    public $query_parameters = [];
 
-    public function toUrl() {
-        return $this->base_url.'/?'.http_build_query($this->query_parameters);
+    public function toUrl() : string
+    {
+        return rtrim((string) $this->base_url, '/') .'/?'.http_build_query($this->query_parameters);
     }
 
-    public function stayInTracker() {
-        return ($this->mode != self::STATE_SUBMIT);
+    public function stayInTracker() : bool
+    {
+        return $this->mode !== self::STATE_SUBMIT;
     }
 }
-
-?>
