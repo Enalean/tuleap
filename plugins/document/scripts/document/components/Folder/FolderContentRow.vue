@@ -27,6 +27,7 @@
                     v-bind:style="item_indentation"
                     v-bind:title="item.title"
                 />
+                <div class="document-tree-item-toggle-quicklook-spacer"></div>
                 <div class="tlp-dropdown tlp-table-cell-actions-button" v-if="item_is_not_being_uploaded">
                     <div class="tlp-dropdown-split-button">
                         <quick-look-button
@@ -44,6 +45,10 @@
                     v-if="is_item_uploading_in_quicklook_mode"
                     v-bind:item="item"
                     data-test="progress-bar-quick-look-pane-open"
+                />
+                <document-title-lock-info
+                    v-bind:item="item"
+                    v-bind:is-displaying-in-header="false"
                 />
             </div>
         </td>
@@ -81,10 +86,14 @@ import {
     isItemUploadingInTreeView,
     isItemInTreeViewWithoutUpload
 } from "../../helpers/uploading-status-helper.js";
+import LockProperty from "./Property/LockProperty.vue";
+import DocumentTitleLockInfo from "./LockInfo/DocumentTitleLockInfo.vue";
 
 export default {
     name: "FolderContentRow",
     components: {
+        DocumentTitleLockInfo,
+        LockProperty,
         DropdownMenuForItemQuickLook,
         QuickLookButton,
         UserBadge,
