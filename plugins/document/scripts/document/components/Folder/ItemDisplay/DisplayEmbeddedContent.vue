@@ -35,7 +35,11 @@
             </div>
         </section>
 
-        <update-embedded-file-modal v-bind:is="shown_modal" v-bind:item="embedded_file"/>
+        <update-embedded-file-modal
+            v-if="is_modal_shown"
+            v-bind:item="embedded_file"
+            v-on:hidden="hideModal()"
+        />
     </div>
 </template>
 
@@ -43,7 +47,6 @@
 import DropdownButton from "../ActionsDropDown/DropdownButton.vue";
 import DropdownMenu from "../ActionsDropDown/DropdownMenu.vue";
 import UpdateItemButton from "../ActionsButton/UpdateItemButton.vue";
-import UpdateEmbeddedFileModal from "../ModalUpdateItem/UpdateEmbeddedFileModal.vue";
 import ActionsHeader from "./ActionsHeader.vue";
 import DocumentTitleLockInfo from "../LockInfo/DocumentTitleLockInfo.vue";
 import ApprovalTableBadge from "../ApprovalTables/ApprovalTableBadge.vue";
@@ -53,17 +56,18 @@ export default {
         ApprovalTableBadge,
         DocumentTitleLockInfo,
         ActionsHeader,
-        UpdateEmbeddedFileModal,
         DropdownMenu,
         UpdateItemButton,
-        DropdownButton
+        DropdownButton,
+        "update-embedded-file-modal": () =>
+            import(/* webpackChunkName: "document-update-embedded-file-modal" */ "../ModalUpdateItem/UpdateEmbeddedFileModal.vue")
     },
     props: {
         embedded_file: Object
     },
     data() {
         return {
-            shown_modal: ""
+            is_modal_shown: false
         };
     },
     computed: {
@@ -87,8 +91,10 @@ export default {
     },
     methods: {
         showUpdateItemModal() {
-            this.shown_modal = () =>
-                import(/* webpackChunkName: "document-update-embedded-file-modal" */ "../ModalUpdateItem/UpdateEmbeddedFileModal.vue");
+            this.is_modal_shown = true;
+        },
+        hideModal() {
+            this.is_modal_shown = false;
         }
     }
 };
