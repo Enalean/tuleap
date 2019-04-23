@@ -28,12 +28,7 @@
         </h1>
         <div class="document-header-actions">
             <div class="tlp-dropdown" v-if="can_display_new_document_button">
-                <div class="tlp-dropdown-split-button">
-                    <new-item-button class="tlp-button-primary tlp-dropdown-split-button-main" v-bind:item="current_folder"/>
-                    <dropdown-button>
-                        <dropdown-menu-current-folder/>
-                    </dropdown-button>
-                </div>
+                <folder-header-action v-bind:item="current_folder"/>
                 <new-item-modal/>
                 <new-folder-modal/>
                 <update-item-modal v-bind:is="shown_modal" v-bind:item="updated_item"/>
@@ -49,21 +44,19 @@
 import { mapGetters, mapState } from "vuex";
 import { TYPE_FILE, TYPE_EMBEDDED, TYPE_WIKI, TYPE_LINK } from "../../constants.js";
 import SearchBox from "./SearchBox.vue";
-import NewItemButton from "./ActionsButton/NewItemButton.vue";
-import DropdownButton from "./ActionsDropDown/DropdownButton.vue";
 import DropdownMenuCurrentFolder from "./ActionsDropDown/DropdownMenuCurrentFolder.vue";
 import FileUploadManager from "./FilesUploads/FilesUploadsManager.vue";
 import NewItemModal from "./ModalNewItem/NewItemModal.vue";
 import NewFolderModal from "./ModalNewItem/NewFolderModal.vue";
+import FolderHeaderAction from "./FolderHeaderAction.vue";
 
 export default {
     name: "FolderHeader",
     components: {
         DropdownMenuCurrentFolder,
+        FolderHeaderAction,
         NewFolderModal,
-        DropdownButton,
         SearchBox,
-        NewItemButton,
         NewItemModal,
         FileUploadManager
     },
@@ -88,7 +81,7 @@ export default {
             return this.current_folder && !this.is_folder_empty;
         },
         can_display_new_document_button() {
-            return this.current_folder && this.current_folder.user_can_write;
+            return this.current_folder;
         }
     },
     mounted() {
