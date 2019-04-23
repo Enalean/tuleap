@@ -59,6 +59,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const is_under_construction = Boolean(vue_mount_point.dataset.isUnderConstruction);
     const embedded_are_allowed = Boolean(vue_mount_point.dataset.embeddedAreAllowed);
     const is_item_status_metadata_used = Boolean(vue_mount_point.dataset.isItemStatusMetadataUsed);
+    const is_obsolescence_date_metadata_used = Boolean(
+        vue_mount_point.dataset.isObsolescenceDateMetadataUsed
+    );
 
     moment.tz(user_timezone).locale(user_locale);
 
@@ -78,7 +81,8 @@ document.addEventListener("DOMContentLoaded", () => {
             max_size_upload,
             is_under_construction,
             embedded_are_allowed,
-            is_item_status_metadata_used
+            is_item_status_metadata_used,
+            is_obsolescence_date_metadata_used
         }
     }).$mount(vue_mount_point);
 });

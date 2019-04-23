@@ -43,7 +43,8 @@ function initApp(
         max_size_upload,
         is_under_construction,
         embedded_are_allowed,
-        is_item_status_metadata_used
+        is_item_status_metadata_used,
+        is_obsolescence_date_metadata_used
     ]
 ) {
     state.user_id = user_id;
@@ -57,6 +58,7 @@ function initApp(
     state.is_under_construction = is_under_construction;
     state.embedded_are_allowed = embedded_are_allowed;
     state.is_item_status_metadata_used = is_item_status_metadata_used;
+    state.is_obsolescence_date_metadata_used = is_obsolescence_date_metadata_used;
 }
 
 function saveAscendantHierarchy(state, hierarchy) {
