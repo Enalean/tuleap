@@ -30,6 +30,8 @@ import "./store/error/error-mutations.spec.js";
 
 import "./components/Breadcrumb/DocumentBreadCrumb.spec.js";
 
+import "./components/Folder/ApprovalTables/ApprovalTableBadge.spec.js";
+
 import "./components/Folder/Error/GoBackToRootButton.spec.js";
 import "./components/Folder/Error/ShowErrorDetails.spec.js";
 

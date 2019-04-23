@@ -39,3 +39,9 @@ export const RETRY_DELAYS = [0, 1000, 3000, 5000];
 export const FILE_UPLOAD_UNKNOWN_ERROR = "unknown error";
 
 export const ITEM_STATUS_NONE = "none";
+
+export const APPROVAL_NOT_YET = "Not yet";
+export const APPROVAL_APPROVED = "Approved";
+export const APPROVAL_REJECTED = "Rejected";
+export const APPROVAL_DECLINED = "Declined";
+export const APPROVAL_COMMENTED = "Commented";
