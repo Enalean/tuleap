@@ -29,6 +29,8 @@ $(RPM_TMP)/SPECS/%.spec: $(BASE_DIR)/%.spec
 
 $(RPM_TMP)/SOURCES/$(NAME_VERSION).tar.gz: $(RPM_TMP)
 	[ -h $(RPM_TMP)/SOURCES/$(NAME_VERSION) ] || ln -s $(BASE_DIR) $(RPM_TMP)/SOURCES/$(NAME_VERSION)
+	[ ! -d $(RPM_TMP)/SOURCES/$(NAME_VERSION)/assets ] || rm -rf $(RPM_TMP)/SOURCES/$(NAME_VERSION)/assets
+	cp -ar $(BASE_DIR)/../../src/www/assets/botmattermost $(RPM_TMP)/SOURCES/$(NAME_VERSION)/assets
 	cd $(RPM_TMP)/SOURCES && \
 		find $(NAME_VERSION)/ \(\
 		-path $(NAME_VERSION)/tests -o\

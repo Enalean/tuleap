@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,6 +22,8 @@ use Tuleap\BotMattermost\Bot\BotDao;
 use Tuleap\BotMattermost\Bot\BotFactory;
 use Tuleap\BotMattermost\Controller\AdminController;
 use Tuleap\BurningParrotCompatiblePageEvent;
+use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
+use Tuleap\Layout\IncludeAssets;
 
 require_once 'constants.php';
 require_once 'autoload.php';
@@ -61,7 +63,11 @@ class BotMattermostPlugin extends Plugin
     public function burning_parrot_get_javascript_files($params)
     {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
-            $params['javascript_files'][] = $this->getThemePath() .'/js/modals.js';
+            $asset   = new IncludeAssets(
+                __DIR__ . '/../../../src/www/assets/botmattermost/',
+                '/assets/botmattermost'
+            );
+            $params['javascript_files'][] = $asset->getFileURL('modals.js');
         }
     }
 
@@ -69,7 +75,11 @@ class BotMattermostPlugin extends Plugin
     {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
             $variant = $params['variant'];
-            $params['stylesheets'][] = $this->getThemePath() .'/css/style-'.$variant->getName().'.css';
+            $asset   = new IncludeAssets(
+                __DIR__ . '/../../../src/www/assets/botmattermost/',
+                '/assets/botmattermost'
+            );
+            $params['stylesheets'][] = $asset->getFileURL('style-'.$variant->getName().'.css');
         }
     }
 
