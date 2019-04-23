@@ -52,14 +52,14 @@ describe("App", () => {
     });
 
     describe("With notification", () => {
-        beforeEach(() => ($store.state.notification = create("notification")));
+        beforeEach(() => ($store.state.dialog_interface.notification = create("notification")));
         it("Show notification", () => {
             expect(wrapper.contains(Notification)).toBeTruthy();
         });
     });
 
     describe("Without notification", () => {
-        beforeEach(() => ($store.state.notification = null));
+        beforeEach(() => ($store.state.dialog_interface.notification = null));
         it("Show notification", () => {
             expect(wrapper.contains(Notification)).toBeFalsy();
         });

@@ -90,11 +90,11 @@ export default {
             try {
                 await deleteBaseline(this.baseline.id);
                 this.$store.commit("baselines/delete", this.baseline);
-                this.$store.commit("notify", {
+                this.$store.commit("dialog_interface/notify", {
                     text: this.$gettext("The baseline was deleted"),
                     class: "success"
                 });
-                this.$store.commit("hideModal");
+                this.$store.commit("dialog_interface/hideModal");
             } finally {
                 this.is_deleting = false;
             }

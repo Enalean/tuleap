@@ -167,13 +167,16 @@ describe("NewBaselineModal", () => {
             });
 
             it("notify user with successful creation", () => {
-                expect($store.commit).toHaveBeenCalledWith("notify", jasmine.any(Object));
+                expect($store.commit).toHaveBeenCalledWith(
+                    "dialog_interface/notify",
+                    jasmine.any(Object)
+                );
             });
             it("reloads all baselines", () => {
                 expect($store.dispatch).toHaveBeenCalledWith("baselines/load", { project_id: 1 });
             });
             it("hides modal", () => {
-                expect($store.commit).toHaveBeenCalledWith("hideModal");
+                expect($store.commit).toHaveBeenCalledWith("dialog_interface/hideModal");
             });
         });
     });

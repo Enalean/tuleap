@@ -76,7 +76,7 @@ export default {
         };
     },
     computed: {
-        ...mapState(["notification"]),
+        ...mapState("dialog_interface", ["notification"]),
         is_current_page_root() {
             return this.$route.name === "HomePage";
         }

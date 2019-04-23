@@ -44,7 +44,7 @@ export default {
 
     methods: {
         showConfirmation() {
-            this.$store.commit("showModal", {
+            this.$store.commit("dialog_interface/showModal", {
                 class: "tlp-modal-danger",
                 component: DeleteBaselineConfirmationModal,
                 title: this.$gettext("Delete baseline"),

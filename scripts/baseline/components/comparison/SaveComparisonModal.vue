@@ -129,8 +129,8 @@ export default {
                     text: this.$gettext("The comparison was saved"),
                     class: "success"
                 };
-                this.$store.commit("notify", notification);
-                this.$store.commit("hideModal");
+                this.$store.commit("dialog_interface/notify", notification);
+                this.$store.commit("dialog_interface/hideModal");
             } catch (e) {
                 this.is_saving_failed = true;
             } finally {

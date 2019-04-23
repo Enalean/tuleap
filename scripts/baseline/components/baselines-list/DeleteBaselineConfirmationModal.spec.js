@@ -96,13 +96,16 @@ describe("DeleteBaselineConfirmationModal", () => {
                 expect($store.commit).toHaveBeenCalledWith("baselines/delete", baseline);
             });
             it("notifies user", () => {
-                expect($store.commit).toHaveBeenCalledWith("notify", jasmine.any(Object));
+                expect($store.commit).toHaveBeenCalledWith(
+                    "dialog_interface/notify",
+                    jasmine.any(Object)
+                );
             });
             it("does not show spinner any more", () => {
                 expect(wrapper.contains(spinner_selector)).toBeFalsy();
             });
             it("hides modal", () => {
-                expect($store.commit).toHaveBeenCalledWith("hideModal");
+                expect($store.commit).toHaveBeenCalledWith("dialog_interface/hideModal");
             });
         });
 
@@ -118,7 +121,10 @@ describe("DeleteBaselineConfirmationModal", () => {
                 );
             });
             it("does not notify user", () => {
-                expect($store.commit).not.toHaveBeenCalledWith("notify", jasmine.any(Object));
+                expect($store.commit).not.toHaveBeenCalledWith(
+                    "dialog_interface/notify",
+                    jasmine.any(Object)
+                );
             });
             it("does not show spinner any more", () => {
                 expect(wrapper.contains(spinner_selector)).toBeFalsy();

@@ -23,13 +23,12 @@ import comparison from "./comparison";
 import baseline from "./baseline";
 import baselines from "./baselines";
 import semantics from "./semantics";
+import dialog_interface from "./dialog_interface";
 import ArrayUtils from "../support/array-utils";
 import { getArtifact, getTracker, getUser } from "../api/rest-querier";
 
 export default {
     state: {
-        notification: null,
-        modal: null,
         users_by_id: {},
         artifacts_by_id: {},
         trackers_by_id: {}
@@ -72,13 +71,6 @@ export default {
         }
     },
     mutations: {
-        notify: (state, message) => (state.notification = message),
-        clearNotification: state => (state.notification = null),
-        showModal: (state, modal) =>
-            // Vue.extend() is required here to prevent store mutation when given component is mounted
-            // (which is a bad practice, identified when strict mode is enabled)
-            (state.modal = { ...modal, component: Vue.extend(modal.component) }),
-        hideModal: state => (state.modal = null),
         addUser: (state, user) => Vue.set(state.users_by_id, user.id, user),
         addArtifact: (state, artifact) => Vue.set(state.artifacts_by_id, artifact.id, artifact),
         addTracker: (state, tracker) => Vue.set(state.trackers_by_id, tracker.id, tracker)
@@ -89,6 +81,7 @@ export default {
         findTrackerById: state => id => state.trackers_by_id[id]
     },
     modules: {
+        dialog_interface,
         comparison,
         baseline,
         baselines,

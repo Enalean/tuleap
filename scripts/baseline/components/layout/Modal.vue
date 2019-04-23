@@ -63,7 +63,7 @@ export default {
         return { modal: null, modal_content_version: 0 };
     },
     computed: {
-        ...mapState({ modal_content: "modal" }),
+        ...mapState("dialog_interface", { modal_content: "modal" }),
         close_label() {
             return this.$gettext("Close");
         },

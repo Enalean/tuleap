@@ -47,7 +47,7 @@ export default {
 
     methods: {
         openSaveModal() {
-            this.$store.commit("showModal", {
+            this.$store.commit("dialog_interface/showModal", {
                 title: this.$gettext("Save comparison"),
                 component: SaveComparisonModal,
                 props: {

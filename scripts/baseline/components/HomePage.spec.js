@@ -47,7 +47,10 @@ describe("HomePage", () => {
         beforeEach(() => wrapper.find('[data-test-action="new-baseline"]').trigger("click"));
 
         it("shows new modal", () => {
-            expect($store.commit).toHaveBeenCalledWith("showModal", jasmine.any(Object));
+            expect($store.commit).toHaveBeenCalledWith(
+                "dialog_interface/showModal",
+                jasmine.any(Object)
+            );
         });
     });
 
@@ -61,7 +64,10 @@ describe("HomePage", () => {
             beforeEach(() => wrapper.find('[data-test-action="show-comparison"]').trigger("click"));
 
             it("shows new modal", () => {
-                expect($store.commit).toHaveBeenCalledWith("showModal", jasmine.any(Object));
+                expect($store.commit).toHaveBeenCalledWith(
+                    "dialog_interface/showModal",
+                    jasmine.any(Object)
+                );
             });
         });
     });

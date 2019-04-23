@@ -85,7 +85,7 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
-    store.commit("clearNotification");
+    store.commit("dialog_interface/clearNotification");
     next();
 });
 

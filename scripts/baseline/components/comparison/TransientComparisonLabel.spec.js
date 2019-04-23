@@ -48,7 +48,7 @@ describe("TransientComparisonLabel", () => {
 
         it("shows save comparison modal", () => {
             expect($store.commit).toHaveBeenCalledWith(
-                "showModal",
+                "dialog_interface/showModal",
                 jasmine.objectContaining({
                     component: SaveComparisonModal,
                     props: {

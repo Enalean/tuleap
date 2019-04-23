@@ -122,7 +122,7 @@ export default {
 
     methods: {
         showNewBaselineModal() {
-            this.$store.commit("showModal", {
+            this.$store.commit("dialog_interface/showModal", {
                 component: NewBaselineModal,
                 title: this.$gettext("New baseline"),
                 props: { project_id: this.project_id }
@@ -130,7 +130,7 @@ export default {
         },
 
         showNewComparisonModal() {
-            this.$store.commit("showModal", {
+            this.$store.commit("dialog_interface/showModal", {
                 component: NewComparisonModal,
                 title: this.$gettext("New comparison"),
                 props: { baselines: this.baselines }

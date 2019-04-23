@@ -177,9 +177,9 @@ export default {
                     text: this.$gettext("The baseline was created"),
                     class: "success"
                 };
-                this.$store.commit("notify", notification);
+                this.$store.commit("dialog_interface/notify", notification);
                 this.$store.dispatch("baselines/load", { project_id: this.project_id });
-                this.$store.commit("hideModal");
+                this.$store.commit("dialog_interface/hideModal");
             } catch (e) {
                 this.is_creating_failed = true;
             } finally {

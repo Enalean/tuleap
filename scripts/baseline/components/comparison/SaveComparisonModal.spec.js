@@ -107,12 +107,12 @@ describe("SaveComparisonModal", () => {
             });
             it("notify user with successful message", () => {
                 expect($store.commit).toHaveBeenCalledWith(
-                    "notify",
+                    "dialog_interface/notify",
                     jasmine.objectContaining({ class: "success" })
                 );
             });
             it("hides modal", () => {
-                expect($store.commit).toHaveBeenCalledWith("hideModal");
+                expect($store.commit).toHaveBeenCalledWith("dialog_interface/hideModal");
             });
         });
     });

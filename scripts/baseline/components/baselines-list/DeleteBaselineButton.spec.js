@@ -49,7 +49,10 @@ describe("DeleteBaselineButton", () => {
         beforeEach(() => wrapper.trigger("click"));
 
         it("shows modal", () => {
-            expect($store.commit).toHaveBeenCalledWith("showModal", jasmine.any(Object));
+            expect($store.commit).toHaveBeenCalledWith(
+                "dialog_interface/showModal",
+                jasmine.any(Object)
+            );
         });
     });
 });
