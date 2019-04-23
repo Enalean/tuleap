@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -146,13 +146,11 @@ class Tracker_Action_CreateArtifact_RedirectToParentCreationTest extends Tracker
         stub($this->formelement_factory)->getAnArtifactLinkField()->returns($this->parent_art_link_field);
 
         $this->action->redirectToParentCreationIfNeeded($this->new_artifact, $this->current_user, $this->redirect, $this->request);
-        $this->assertNull($this->redirect->query_parameters);
+        $this->assertArrayEmpty($this->redirect->query_parameters);
     }
 
     public function itDoesntRedirectIfThereAreNoHierarchy() {
         $this->action->redirectToParentCreationIfNeeded($this->new_artifact, $this->current_user, $this->redirect, $this->request);
-        $this->assertNull($this->redirect->query_parameters);
+        $this->assertArrayEmpty($this->redirect->query_parameters);
     }
 }
-
-?>
