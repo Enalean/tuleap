@@ -13,7 +13,7 @@
     "pretty-kibibytes": "^4.0.4",
     "tus-js-client": "^1.5.2",
     "vue": "^2.5.17",
-    "vue-dompurify-html": "^1.2.0",
+    "vue-dompurify-html": "^1.2.1",
     "vue-gettext": "^2.1.0",
     "vue-router": "^3.0.1",
     "vuex": "^3.0.1"
