@@ -1,0 +1,40 @@
+@import '../../default/css/style';
+
+@mixin definitions($main) {
+    #agiledashboard-notification-mattermost-section .panel-header {
+        border-bottom-color: $main;
+    }
+}
+
+body {
+
+    &.FlamingParrot_Orange {
+        @import '../../src/www/themes/FlamingParrot/css/utils/variables-orange';
+        @include definitions($main);
+    }
+
+    &.FlamingParrot_Blue {
+        @import '../../src/www/themes/FlamingParrot/css/utils/variables-blue';
+        @include definitions($main);
+    }
+
+    &.FlamingParrot_Green {
+        @import '../../src/www/themes/FlamingParrot/css/utils/variables-green';
+        @include definitions($main);
+    }
+
+    &.FlamingParrot_BlueGrey {
+        @import '../../src/www/themes/FlamingParrot/css/utils/variables-bluegrey';
+        @include definitions($main);
+    }
+
+    &.FlamingParrot_Purple {
+        @import '../../src/www/themes/FlamingParrot/css/utils/variables-purple';
+        @include definitions($main);
+    }
+
+    &.FlamingParrot_Red {
+        @import '../../src/www/themes/FlamingParrot/css/utils/variables-red';
+        @include definitions($main);
+    }
+}

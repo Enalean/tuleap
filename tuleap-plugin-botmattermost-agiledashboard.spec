@@ -21,19 +21,18 @@ Bot Mattermost AgileDashboard - Stand up summary
 
 
 %build
-npm install
-npm run build
-find www/themes -name '*.scss' | xargs rm -f
 
 %install
 %{__rm} -rf $RPM_BUILD_ROOT
 
+%{__install} -m 755 -d $RPM_BUILD_ROOT/%{_datadir}/tuleap/src/www/assets
 %{__install} -m 755 -d $RPM_BUILD_ROOT/%{_datadir}/tuleap/plugins/botmattermost_agiledashboard
 %{__cp} -ar db include site-content template README.mkd VERSION $RPM_BUILD_ROOT/%{_datadir}/tuleap/plugins/botmattermost_agiledashboard
+%{__cp} -ar assets $RPM_BUILD_ROOT/%{_datadir}/tuleap/src/www/assets/botmattermost_agiledashboard
 
 # www
 %{__mkdir} -p $RPM_BUILD_ROOT/%{_datadir}/tuleap/plugins/botmattermost_agiledashboard/www
-%{__cp} -ar www/index.php www/themes www/scripts $RPM_BUILD_ROOT/%{_datadir}/tuleap/plugins/botmattermost_agiledashboard/www
+%{__cp} -ar www/index.php $RPM_BUILD_ROOT/%{_datadir}/tuleap/plugins/botmattermost_agiledashboard/www
 
 
 %pre
@@ -45,6 +44,7 @@ find www/themes -name '*.scss' | xargs rm -f
 %files
 %defattr(-,root,root,-)
 %{_datadir}/tuleap/plugins/botmattermost_agiledashboard
+%{_datadir}/tuleap/src/www/assets/botmattermost_agiledashboard
 
 
 %changelog

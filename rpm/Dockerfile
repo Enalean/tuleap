@@ -1,8 +1,7 @@
 FROM centos:7
 
 RUN yum install -y make rpm-build tar git fontconfig epel-release && \
-    yum install -y nodejs npm rubygem-sass
+    yum install -y nodejs npm
 
-WORKDIR /tuleap/plugins/botmattermost_agiledashboard
-VOLUME ["/tuleap/plugins/botmattermost_agiledashboard"]
+WORKDIR /plugin
 CMD make docker-run

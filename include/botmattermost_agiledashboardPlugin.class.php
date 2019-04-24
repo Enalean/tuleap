@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -37,6 +37,7 @@ use Tuleap\BotMattermostAgileDashboard\SenderServices\StandUpNotificationSender;
 use Tuleap\BotMattermost\SenderServices\EncoderMessage;
 use Tuleap\BotMattermost\SenderServices\Sender;
 use Tuleap\Cron\EventCronJobEveryMinute;
+use Tuleap\Layout\IncludeAssets;
 
 require_once 'autoload.php';
 require_once 'constants.php';
@@ -88,7 +89,11 @@ class botmattermost_agiledashboardPlugin extends Plugin
     {
         $agiledashboard_plugin = PluginManager::instance()->getPluginByName('agiledashboard');
         if (strpos($_SERVER['REQUEST_URI'], $agiledashboard_plugin->getPluginPath()) === 0) {
-            echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />';
+            $asset = new IncludeAssets(
+                __DIR__ . '/../../../src/www/assets/botmattermost_agiledashboard/',
+                '/assets/botmattermost_agiledashboard'
+            );
+            echo '<link rel="stylesheet" type="text/css" href="'.$asset->getFileURL('style.css').'" />';
         }
     }
 
@@ -96,8 +101,13 @@ class botmattermost_agiledashboardPlugin extends Plugin
     {
         $agiledashboard_plugin = PluginManager::instance()->getPluginByName('agiledashboard');
         if (strpos($_SERVER['REQUEST_URI'], $agiledashboard_plugin->getPluginPath()) === 0) {
-            echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/timepicker.js"></script>';
-            echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/autocompleter.js"></script>';
+            $asset = new IncludeAssets(
+                __DIR__ . '/../../../src/www/assets/botmattermost_agiledashboard/',
+                '/assets/botmattermost_agiledashboard'
+            );
+
+            echo $asset->getHTMLSnippet('timepicker.js');
+            echo $asset->getHTMLSnippet('autocompleter.js');
         }
     }
 
