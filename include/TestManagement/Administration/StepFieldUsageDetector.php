@@ -62,7 +62,11 @@ class StepFieldUsageDetector
     private function isFieldUsed($tracker_id, $type)
     {
         $tracker = $this->tracker_factory->getTrackerById($tracker_id);
-        $field   = $this->form_element_factory->getUsedFormElementsByType($tracker, $type);
+        if ($tracker === null) {
+            return false;
+        }
+
+        $field = $this->form_element_factory->getUsedFormElementsByType($tracker, $type);
 
         return ! empty($field);
     }
