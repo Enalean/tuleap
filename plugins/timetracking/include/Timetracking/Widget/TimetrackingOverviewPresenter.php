@@ -29,8 +29,14 @@ class TimetrackingOverviewPresenter
      */
     public $report_id;
 
-    public function __construct(int $report_id)
+    /**
+     * @var  string
+     */
+    public $preference;
+
+    public function __construct(int $report_id, string $display_preference)
     {
-        $this->report_id = $report_id;
+        $this->report_id  = $report_id;
+        $this->preference = $display_preference;
     }
 }

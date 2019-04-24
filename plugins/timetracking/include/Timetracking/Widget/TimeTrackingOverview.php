@@ -65,10 +65,9 @@ class TimeTrackingOverview extends Widget
     public function getContent()
     {
         $renderer = TemplateRendererFactory::build()->getRenderer(TIMETRACKING_TEMPLATE_DIR);
-
         return $renderer->renderToString(
             'timetracking-overview',
-            new TimetrackingOverviewPresenter($this->content_id)
+            new TimetrackingOverviewPresenter($this->content_id, $this->getPreferences($this->content_id))
         );
     }
 
@@ -90,6 +89,11 @@ class TimeTrackingOverview extends Widget
             TIMETRACKING_BASE_URL . '/themes/BurningParrot/assets'
         );
         return new CssAssetCollection([new CssAsset($include_assets, 'style')]);
+    }
+
+    public function getPreferences($widget_id)
+    {
+        return $this->getCurrentUser()->getPreference("timetracking_overview_display_trackers_without_time_" . $widget_id);
     }
 
     public function create(Codendi_Request $request)

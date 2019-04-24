@@ -39,6 +39,9 @@ msgstr "Détails"
 msgid "From"
 msgstr "Du"
 
+msgid "Hide void trackers"
+msgstr "Cacher les trackers vides"
+
 msgid "Load more"
 msgstr "Voir plus"
 
@@ -68,6 +71,9 @@ msgstr "Enregistrer le rapport"
 
 msgid "Search"
 msgstr "Rechercher"
+
+msgid "Show void trackers"
+msgstr "Montrer les trackers vides"
 
 msgid "Steps"
 msgstr "Etapes"

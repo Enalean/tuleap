@@ -38,17 +38,21 @@ document.addEventListener("DOMContentLoaded", () => {
     const Widget = Vue.extend(TimeTrackingOverview);
 
     const locale = document.body.dataset.userLocale;
+    const user_id = parseInt(document.body.dataset.userId, 10);
     Vue.config.language = locale;
 
     for (const widget_element of widgets) {
         const report_id = widget_element.dataset.reportId;
+        const are_void_trackers_hidden = widget_element.dataset.displayPreference === "true";
 
         const store = createStore();
 
         new Widget({
             store,
             propsData: {
-                reportId: report_id
+                reportId: report_id,
+                userId: user_id,
+                areVoidTrackersHidden: are_void_trackers_hidden
             }
         }).$mount(widget_element);
     }

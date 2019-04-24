@@ -21,7 +21,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { get, put } from "tlp";
+import { get, put, patch } from "tlp";
 import { formatDatetimeToISO } from "../../../time-formatters";
 
 export {
@@ -30,7 +30,8 @@ export {
     getTimes,
     getProjectsWithTimetracking,
     getTrackersWithTimetracking,
-    saveNewReport
+    saveNewReport,
+    setDisplayPreference
 };
 
 const headers = {
@@ -107,4 +108,15 @@ async function saveNewReport(report_id, trackers_id) {
     });
 
     return response.json();
+}
+
+async function setDisplayPreference(report_id, user_id, are_void_trackers_hidden) {
+    const body = JSON.stringify({
+        key: "timetracking_overview_display_trackers_without_time_" + report_id,
+        value: are_void_trackers_hidden.toString()
+    });
+    await patch("/api/v1/users/" + encodeURI(user_id) + "/preferences", {
+        headers,
+        body
+    });
 }

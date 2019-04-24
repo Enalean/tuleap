@@ -26,6 +26,18 @@ export default {
         state.trackers_times = times;
     },
 
+    setDisplayVoidTrackers(state, are_void_trackers_hidden) {
+        state.are_void_trackers_hidden = are_void_trackers_hidden;
+    },
+
+    initUserId(state, user_id) {
+        state.user_id = user_id;
+    },
+
+    toggleDisplayVoidTrackers(state) {
+        state.are_void_trackers_hidden = !state.are_void_trackers_hidden;
+    },
+
     setLoadingTrackers(state, is_loading_trackers) {
         state.is_loading_trackers = is_loading_trackers;
     },
