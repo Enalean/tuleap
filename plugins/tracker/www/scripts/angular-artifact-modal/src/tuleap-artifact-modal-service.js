@@ -1,3 +1,22 @@
+/*
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import "./tuleap-artifact-modal.tpl.html";
 import TuleapArtifactModalController from "./tuleap-artifact-modal-controller.js";
 
@@ -10,6 +29,7 @@ import {
 } from "./rest/rest-service.js";
 import { updateFileUploadRulesWhenNeeded } from "./tuleap-artifact-modal-fields/file-field/file-upload-rules-state.js";
 import { getArtifactFieldValues } from "./artifact-edition-initializer.js";
+import { buildFormTree } from "./model/form-tree-builder.js";
 
 export default ArtifactModalService;
 
@@ -18,7 +38,6 @@ ArtifactModalService.$inject = [
     "TlpModalService",
     "TuleapArtifactModalLoading",
     "TuleapArtifactModalTrackerTransformerService",
-    "TuleapArtifactModalFormTreeBuilderService",
     "TuleapArtifactFieldValuesService",
     "TuleapArtifactModalWorkflowService",
     "TuleapArtifactModalFieldDependenciesService"
@@ -29,7 +48,6 @@ function ArtifactModalService(
     TlpModalService,
     TuleapArtifactModalLoading,
     TuleapArtifactModalTrackerTransformerService,
-    TuleapArtifactModalFormTreeBuilderService,
     TuleapArtifactFieldValuesService,
     TuleapArtifactModalWorkflowService,
     TuleapArtifactModalFieldDependenciesService
@@ -135,9 +153,7 @@ function ArtifactModalService(
                     transformed_tracker
                 );
                 applyFieldDependencies(transformed_tracker, modal_model.values);
-                modal_model.ordered_fields = TuleapArtifactModalFormTreeBuilderService.buildFormTree(
-                    transformed_tracker
-                );
+                modal_model.ordered_fields = buildFormTree(transformed_tracker);
 
                 const file_upload_rules_promise = $q.when(
                     updateFileUploadRulesWhenNeeded(transformed_tracker.fields)
@@ -193,9 +209,7 @@ function ArtifactModalService(
                 applyFieldDependencies(tracker_with_field_values, modal_model.values);
 
                 modal_model.tracker = tracker_with_field_values;
-                modal_model.ordered_fields = TuleapArtifactModalFormTreeBuilderService.buildFormTree(
-                    tracker_with_field_values
-                );
+                modal_model.ordered_fields = buildFormTree(tracker_with_field_values);
 
                 const file_upload_rules_promise = $q.when(
                     updateFileUploadRulesWhenNeeded(transformed_tracker.fields)

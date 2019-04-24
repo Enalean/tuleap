@@ -1,3 +1,22 @@
+/*
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import artifact_modal_module from "./tuleap-artifact-modal.js";
 import angular from "angular";
 import "angular-mocks";
@@ -15,6 +34,8 @@ import {
     restore as restoreRest
 } from "./rest/rest-service.js";
 
+import { rewire$buildFormTree, restore as restoreFormTree } from "./model/form-tree-builder.js";
+
 import {
     rewire$updateFileUploadRulesWhenNeeded,
     restore as restoreFile
@@ -25,8 +46,8 @@ describe("NewTuleapArtifactModalService", () => {
         $q,
         TuleapArtifactFieldValuesService,
         TuleapArtifactModalTrackerTransformerService,
-        TuleapArtifactModalFormTreeBuilderService,
         TuleapArtifactModalWorkflowService,
+        buildFormTree,
         setCreationMode,
         isInCreationMode,
         getTracker,
@@ -58,14 +79,6 @@ describe("NewTuleapArtifactModalService", () => {
                 return $delegate;
             });
 
-            $provide.decorator("TuleapArtifactModalFormTreeBuilderService", function($delegate) {
-                spyOn($delegate, "buildFormTree").and.callFake(function() {
-                    return {};
-                });
-
-                return $delegate;
-            });
-
             $provide.decorator("TuleapArtifactModalWorkflowService", function($delegate) {
                 spyOn($delegate, "enforceWorkflowTransitions");
 
@@ -77,14 +90,12 @@ describe("NewTuleapArtifactModalService", () => {
             _$q_,
             _TuleapArtifactModalTrackerTransformerService_,
             _TuleapArtifactFieldValuesService_,
-            _TuleapArtifactModalFormTreeBuilderService_,
             _TuleapArtifactModalWorkflowService_,
             _NewTuleapArtifactModalService_
         ) {
             $q = _$q_;
             TuleapArtifactModalTrackerTransformerService = _TuleapArtifactModalTrackerTransformerService_;
             TuleapArtifactFieldValuesService = _TuleapArtifactFieldValuesService_;
-            TuleapArtifactModalFormTreeBuilderService = _TuleapArtifactModalFormTreeBuilderService_;
             TuleapArtifactModalWorkflowService = _TuleapArtifactModalWorkflowService_;
             NewTuleapArtifactModalService = _NewTuleapArtifactModalService_;
         });
@@ -105,12 +116,16 @@ describe("NewTuleapArtifactModalService", () => {
         rewire$getArtifactWithCompleteTrackerStructure(getArtifactWithCompleteTrackerStructure);
         updateFileUploadRulesWhenNeeded = jasmine.createSpy("updateFileUploadRulesWhenNeeded");
         rewire$updateFileUploadRulesWhenNeeded(updateFileUploadRulesWhenNeeded);
+        buildFormTree = jasmine.createSpy("buildFormTree");
+        buildFormTree.and.returnValue({});
+        rewire$buildFormTree(buildFormTree);
     });
 
     afterEach(() => {
         restoreCreationMode();
         restoreRest();
         restoreFile();
+        restoreFormTree();
     });
 
     describe("", () => {
@@ -150,9 +165,7 @@ describe("NewTuleapArtifactModalService", () => {
                     tracker,
                     true
                 );
-                expect(
-                    TuleapArtifactModalFormTreeBuilderService.buildFormTree
-                ).toHaveBeenCalledWith(tracker);
+                expect(buildFormTree).toHaveBeenCalledWith(tracker);
                 const model = promise.$$state.value;
                 expect(setCreationMode).toHaveBeenCalledWith(true);
                 expect(model.tracker_id).toEqual(tracker_id);
@@ -360,9 +373,7 @@ describe("NewTuleapArtifactModalService", () => {
                     expect(
                         TuleapArtifactModalTrackerTransformerService.addFieldValuesToTracker
                     ).toHaveBeenCalledWith(jasmine.any(Object), tracker);
-                    expect(
-                        TuleapArtifactModalFormTreeBuilderService.buildFormTree
-                    ).toHaveBeenCalledWith(tracker);
+                    expect(buildFormTree).toHaveBeenCalledWith(tracker);
                     var model = promise.$$state.value;
                     expect(model.invert_followups_comments_order).toBeTruthy();
                     expect(model.text_fields_format).toEqual("html");
