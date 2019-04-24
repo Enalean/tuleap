@@ -350,7 +350,7 @@ class LDAP_UserManager {
             $this->mergeDefaultAttributesAndSiteAttributes()
         );
 
-        if (count($ldap_results_iterator) !== 1) {
+        if ($ldap_results_iterator === false || count($ldap_results_iterator) !== 1) {
             throw new LDAP_UserNotFoundException();
         }
 
@@ -603,6 +603,10 @@ class LDAP_UserManager {
             default:
                 throw new IdentifierTypeNotRecognizedException();
                 break;
+        }
+
+        if ($lri === false) {
+            return null;
         }
 
         return $this->getUserFromLdapIterator($lri);
