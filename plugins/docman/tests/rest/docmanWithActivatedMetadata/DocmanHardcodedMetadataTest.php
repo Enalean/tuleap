@@ -410,15 +410,17 @@ class DocmanHardcodedMetadataTest extends DocmanWithMetadataActivatedBase
         $headers = ['Content-Type' => 'application/json'];
 
         $date = new \DateTimeImmutable();
-        $date->setTimezone(new DateTimeZone('GMT+1'));
-        $date->setTime(0, 0, 0);
+        $date = $date->setTimezone(new DateTimeZone('GMT+1'));
+        $date = $date->setTime(0, 0, 0);
+
+        $formatted_date = $date->modify('+1 day')->format('Y-m-d');
 
         $query = json_encode(
             [
                 'title'             => 'File1',
                 'file_properties'   => ['file_name' => 'file1', 'file_size' => $file_size],
                 'status'            => 'approved',
-                'obsolescence_date' => $date->modify('+1 day')->format('Y-m-d')
+                'obsolescence_date' => $formatted_date
             ]
         );
 
@@ -494,12 +496,12 @@ class DocmanHardcodedMetadataTest extends DocmanWithMetadataActivatedBase
         );
 
         $obsolescence_date_string = $obsolescence_date_metadata['value'];
-        $obsolescence_date = \DateTimeImmutable::createFromFormat(
+        $obsolescence_date        = \DateTimeImmutable::createFromFormat(
             \DateTimeInterface::W3C,
             $obsolescence_date_string
         );
-        $obsolescence_date->setTimezone(new DateTimeZone('GMT+1'));
-        $obsolescence_date->setTime(0, 0, 0);
+        $obsolescence_date        = $obsolescence_date->setTimezone(new DateTimeZone('GMT+1'));
+        $obsolescence_date        = $obsolescence_date->setTime(0, 0, 0);
 
         $this->assertTrue($date->modify('+1 day')->getTimestamp() === $obsolescence_date->getTimestamp());
     }
