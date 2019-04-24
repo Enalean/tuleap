@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -34,6 +34,7 @@ use Tuleap\BotMattermostGit\SenderServices\GitNotificationBuilder;
 use Tuleap\BotMattermostGit\SenderServices\GitNotificationSender;
 use Tuleap\BotMattermostGit\SenderServices\PullRequestNotificationBuilder;
 use Tuleap\BotMattermostGit\SenderServices\PullRequestNotificationSender;
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\PullRequest\GetCreatePullRequest;
 
 require_once 'autoload.php';
@@ -148,7 +149,12 @@ class botmattermost_gitPlugin extends Plugin
     {
         $git_plugin = PluginManager::instance()->getPluginByName('git');
         if (strpos($_SERVER['REQUEST_URI'], $git_plugin->getPluginPath()) === 0) {
-            echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />';
+            $asset = new IncludeAssets(
+                __DIR__ . '/../../../src/www/assets/botmattermost_git/',
+                '/assets/botmattermost_git'
+
+            );
+            echo '<link rel="stylesheet" type="text/css" href="'.$asset->getFileURL('style.css').'" />';
         }
     }
 
@@ -156,7 +162,12 @@ class botmattermost_gitPlugin extends Plugin
     {
         $git_plugin = PluginManager::instance()->getPluginByName('git');
         if (strpos($_SERVER['REQUEST_URI'], $git_plugin->getPluginPath()) === 0) {
-            echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/autocompleter.js"></script>';
+            $asset = new IncludeAssets(
+                __DIR__ . '/../../../src/www/assets/botmattermost_git/',
+                '/assets/botmattermost_git'
+
+            );
+            echo $asset->getHTMLSnippet('autocompleter.js');
         }
     }
 

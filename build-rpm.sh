@@ -31,4 +31,4 @@ if [[ "$OS" = 'centos:7' ]]; then
 fi
 
 docker build -t $DOCKERIMAGE rpm
-docker run --rm -v $TULEAP_PATH:/tuleap -v $PWD:/tuleap/plugins/botmattermost_git -v $WORKSPACE:/output -e UID=`id -u` -e GID=`id -g` -e RELEASE=$RELEASE -e DIST=$DIST $DOCKERIMAGE
+docker run --rm -v "$TULEAP_PATH":/tuleap:ro -v $PWD:/plugin:ro -v "$WORKSPACE":/output -e UID=`id -u` -e GID=`id -g` -e RELEASE=$RELEASE -e DIST=$DIST $DOCKERIMAGE
