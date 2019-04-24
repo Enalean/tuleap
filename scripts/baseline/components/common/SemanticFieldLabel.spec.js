@@ -22,7 +22,7 @@ import { shallowMount } from "@vue/test-utils";
 import localVue from "../../support/local-vue.js";
 import { createStoreMock } from "../../support/store-wrapper.spec-helper.js";
 import SemanticFieldLabel from "./SemanticFieldLabel.vue";
-import store_options from "../../store/options.js";
+import store_options from "../../store/store_options";
 
 describe("SemanticFieldLabel", () => {
     const skeleton_selector = '[data-test-type="skeleton"]';

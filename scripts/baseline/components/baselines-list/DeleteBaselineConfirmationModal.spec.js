@@ -21,7 +21,7 @@
 import { mount } from "@vue/test-utils";
 import localVue from "../../support/local-vue.js";
 import { createStoreMock } from "../../support/store-wrapper.spec-helper.js";
-import store_options from "../../store/options";
+import store_options from "../../store/store_options";
 import DeleteBaselineConfirmationModal from "./DeleteBaselineConfirmationModal.vue";
 import { create } from "../../support/factories";
 import { restore, rewire$deleteBaseline } from "../../api/rest-querier";

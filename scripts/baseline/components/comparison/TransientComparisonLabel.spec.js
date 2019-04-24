@@ -22,7 +22,7 @@ import { shallowMount } from "@vue/test-utils";
 import localVue from "../../support/local-vue.js";
 import TransientComparisonLabel from "./TransientComparisonLabel.vue";
 import { createStoreMock } from "../../support/store-wrapper.spec-helper";
-import store_options from "../../store/options";
+import store_options from "../../store/store_options";
 import SaveComparisonModal from "./SaveComparisonModal.vue";
 
 describe("TransientComparisonLabel", () => {

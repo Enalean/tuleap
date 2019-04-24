@@ -18,7 +18,7 @@
  *
  */
 
-import store from "./options";
+import store from "./global";
 import { create } from "../support/factories";
 import {
     restore,

@@ -17,10 +17,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  *
  */
-import Vue from "vue";
-import Vuex from "vuex";
-import store_options from "./store_options";
 
-Vue.use(Vuex);
+import global from "./global";
+import dialog_interface from "./dialog_interface";
+import comparison from "./comparison";
+import baseline from "./baseline";
+import baselines from "./baselines";
+import semantics from "./semantics";
+import comparisons from "./comparisons";
 
-export default new Vuex.Store(store_options);
+export default {
+    ...global,
+    modules: {
+        dialog_interface,
+        comparison,
+        baseline,
+        baselines,
+        semantics,
+        comparisons
+    },
+    strict: process.env.NODE_ENV !== "production" // eslint-disable-line no-undef
+};

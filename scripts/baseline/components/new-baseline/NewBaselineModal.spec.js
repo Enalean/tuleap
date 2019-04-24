@@ -26,7 +26,7 @@ import NewBaselineModal from "./NewBaselineModal.vue";
 import MilestonesSelect from "./MilestonesSelect.vue";
 import MilestonesSelectSkeleton from "./MilestonesSelectSkeleton.vue";
 import { create } from "../../support/factories";
-import store_options from "../../store/options.js";
+import store_options from "../../store/store_options";
 import { createStoreMock } from "../../support/store-wrapper.spec-helper";
 
 describe("NewBaselineModal", () => {

@@ -22,7 +22,7 @@ import Vue from "vue";
 import { createLocalVue, shallowMount } from "@vue/test-utils";
 import { restore, rewire$createComparison } from "../../api/rest-querier";
 import SaveComparisonModal from "./SaveComparisonModal.vue";
-import store_options from "../../store/options.js";
+import store_options from "../../store/store_options";
 import { createStoreMock } from "../../support/store-wrapper.spec-helper";
 import GettextPlugin from "vue-gettext";
 import { create } from "../../support/factories";

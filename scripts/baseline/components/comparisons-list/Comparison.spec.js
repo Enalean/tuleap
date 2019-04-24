@@ -22,7 +22,7 @@ import { createLocalVue, shallowMount } from "@vue/test-utils";
 import Comparison from "./Comparison.vue";
 import { create } from "../../support/factories";
 import { createStoreMock } from "../../support/store-wrapper.spec-helper";
-import store_options from "../../store/options";
+import store_options from "../../store/store_options";
 import ArtifactLink from "../common/ArtifactLink.vue";
 import UserBadge from "../common/UserBadge.vue";
 import GettextPlugin from "vue-gettext";

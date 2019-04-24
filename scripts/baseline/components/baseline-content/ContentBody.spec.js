@@ -20,7 +20,7 @@
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../../support/local-vue.js";
 import { createStoreMock } from "../../support/store-wrapper.spec-helper.js";
-import store_options from "../../store/options.js";
+import store_options from "../../store/store_options";
 import { restore } from "../../api/rest-querier";
 import ContentBody from "./ContentBody.vue";
 

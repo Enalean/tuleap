@@ -23,7 +23,7 @@ import localVue from "../support/local-vue.js";
 import App from "./App.vue";
 import router from "../router";
 import { createStoreMock } from "../support/store-wrapper.spec-helper";
-import store_options from "../store/options";
+import store_options from "../store/store_options";
 import { create } from "../support/factories";
 import Notification from "./Notification.vue";
 

@@ -23,7 +23,7 @@ import localVue from "../support/local-vue.js";
 import HomePage from "./HomePage.vue";
 import router from "../router";
 import { createStoreMock } from "../support/store-wrapper.spec-helper";
-import store_options from "../store/options";
+import store_options from "../store/store_options";
 import { createList } from "../support/factories";
 
 describe("HomePage", () => {

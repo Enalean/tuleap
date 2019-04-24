@@ -25,7 +25,7 @@ import BaselineSkeleton from "./BaselineSkeleton.vue";
 import Baseline from "./Baseline.vue";
 import { createList } from "../../support/factories";
 import { createStoreMock } from "../../support/store-wrapper.spec-helper";
-import store_options from "../../store/options";
+import store_options from "../../store/store_options";
 
 describe("BaselinesList", () => {
     const empty_baseline_selector = '[data-test-type="empty-baseline"]';

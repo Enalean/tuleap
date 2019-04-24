@@ -25,7 +25,7 @@ import ComparisonSkeleton from "./ComparisonSkeleton.vue";
 import Comparison from "./Comparison.vue";
 import { createList } from "../../support/factories";
 import { createStoreMock } from "../../support/store-wrapper.spec-helper";
-import store_options from "../../store/options";
+import store_options from "../../store/store_options";
 
 describe("ComparisonsList", () => {
     const empty_comparison_selector = '[data-test-type="empty-comparison"]';

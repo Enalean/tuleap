@@ -19,14 +19,8 @@
  */
 
 import Vue from "vue";
-import comparison from "./comparison";
-import baseline from "./baseline";
-import baselines from "./baselines";
-import semantics from "./semantics";
-import dialog_interface from "./dialog_interface";
 import ArrayUtils from "../support/array-utils";
 import { getBaseline, getUser, getTracker, getArtifact } from "../api/rest-querier";
-import comparisons from "./comparisons";
 
 export default {
     state: {
@@ -100,14 +94,5 @@ export default {
         findUserById: state => id => state.users_by_id[id],
         findArtifactById: state => id => state.artifacts_by_id[id],
         findTrackerById: state => id => state.trackers_by_id[id]
-    },
-    modules: {
-        dialog_interface,
-        comparison,
-        baseline,
-        baselines,
-        semantics,
-        comparisons
-    },
-    strict: process.env.NODE_ENV !== "production" // eslint-disable-line no-undef
+    }
 };
