@@ -786,15 +786,29 @@ class Docman_ItemFactory
                 'title'     => $link->getTitle(),
                 'user_id'   => $link->getOwnerId(),
                 'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_LINK,
+                'link_url'  => $link->getUrl(),
+            ]
+        );
+
+        return $update && $this->createNewLinkVersion($link, $version_data);
+    }
+
+    public function updateLinkFromVersionData(Docman_Link $link, array $version_data)
+    {
+        $update = $this->update(
+            [
+                'id'        => $link->getId(),
+                'group_id'  => $link->getGroupId(),
+                'title'     => $link->getTitle(),
+                'user_id'   => $link->getOwnerId(),
+                'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_LINK,
                 'link_url'  => $version_data['link_url'],
             ]
         );
 
-        $link_version_factory = new Docman_LinkVersionFactory();
+        $link->setUrl($version_data['link_url']);
 
-        $create = $link_version_factory->create($link, $version_data['label'], $version_data['changelog'], $_SERVER['REQUEST_TIME']);
-
-        return ($update && $create);
+        return $update && $this->createNewLinkVersion($link, $version_data);
     }
 
     function massUpdate($srcItemId, $mdLabel, $itemIdArray) {
@@ -1461,5 +1475,12 @@ class Docman_ItemFactory
             return $dao->restore($item->getId());
         }
         return false;
+    }
+
+    private function createNewLinkVersion(Docman_Link $link, array $version_data): bool
+    {
+        $link_version_factory = new Docman_LinkVersionFactory();
+
+        return $link_version_factory->create($link, $version_data['label'], $version_data['changelog'], $_SERVER['REQUEST_TIME']);
     }
 }

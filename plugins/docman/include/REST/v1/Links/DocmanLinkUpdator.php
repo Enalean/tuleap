@@ -114,7 +114,7 @@ class DocmanLinkUpdator
                     'link_url'  => $representation->link_properties->link_url
                 ];
 
-                $this->item_factory->updateLink($item, $new_link_version_row);
+                $this->item_factory->updateLinkFromVersionData($item, $new_link_version_row);
             }
         );
 
