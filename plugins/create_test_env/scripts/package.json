@@ -8,7 +8,7 @@
   "dependencies": {
     "luxon": "^0.5.3",
     "vue": "^2.5.17",
-    "vue-dompurify-html": "^1.2.0",
+    "vue-dompurify-html": "^1.2.1",
     "vue-gettext": "^2.1.0"
   },
   "config": {
