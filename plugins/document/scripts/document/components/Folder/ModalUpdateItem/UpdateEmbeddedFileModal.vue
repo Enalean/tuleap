@@ -56,7 +56,6 @@ export default {
             embedded_file_model: null,
             version: {},
             is_loading: false,
-            is_displayed: false,
             modal: null
         };
     },
@@ -94,14 +93,13 @@ export default {
 
             this.embedded_file_model = this.item.embedded_file_properties;
 
-            this.is_displayed = true;
             this.modal.show();
         },
         reset() {
             this.$store.commit("error/resetModalError");
-            this.is_displayed = false;
             this.is_loading = false;
             this.embedded_file_model = null;
+            this.hide();
         },
         async updateEmbeddedFile(event) {
             event.preventDefault();
@@ -122,8 +120,12 @@ export default {
                 this.$store.dispatch("refreshEmbeddedFile", this.item);
                 this.item.embedded_file_properties.content = this.embedded_file_model.content;
                 this.embedded_file_model = null;
+                this.hide();
                 this.modal.hide();
             }
+        },
+        hide() {
+            this.$emit("hidden");
         }
     }
 };
