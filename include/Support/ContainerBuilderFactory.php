@@ -38,9 +38,9 @@ use Tuleap\Baseline\Adapter\ComparisonRepositoryAdapter;
 use Tuleap\Baseline\Adapter\CurrentUserProviderAdapter;
 use Tuleap\Baseline\Adapter\ProjectRepositoryAdapter;
 use Tuleap\Baseline\Adapter\RoleAssignmentRepositoryAdapter;
+use Tuleap\Baseline\Authorizations;
+use Tuleap\Baseline\AuthorizationsImpl;
 use Tuleap\Baseline\BaselineArtifactRepository;
-use Tuleap\Baseline\BaselineAuthorizations;
-use Tuleap\Baseline\BaselineAuthorizationsImpl;
 use Tuleap\Baseline\BaselineRepository;
 use Tuleap\Baseline\Clock;
 use Tuleap\Baseline\ComparisonRepository;
@@ -62,12 +62,12 @@ class ContainerBuilderFactory
         $container_builder = new ContainerBuilder();
         return $container_builder->addDefinitions(
             [
-                BaselineAuthorizations::class            => autowire(BaselineAuthorizationsImpl::class),
-                Clock::class                             => autowire(ClockAdapter::class),
-                UserManager::class                       => factory([UserManager::class, 'build']),
-                CurrentUserProvider::class               => autowire(CurrentUserProviderAdapter::class),
-                BaselineRepository::class                => autowire(BaselineRepositoryAdapter::class),
-                ComparisonRepository::class              => autowire(ComparisonRepositoryAdapter::class),
+                Authorizations::class       => autowire(AuthorizationsImpl::class),
+                Clock::class                => autowire(ClockAdapter::class),
+                UserManager::class          => factory([UserManager::class, 'build']),
+                CurrentUserProvider::class  => autowire(CurrentUserProviderAdapter::class),
+                BaselineRepository::class   => autowire(BaselineRepositoryAdapter::class),
+                ComparisonRepository::class => autowire(ComparisonRepositoryAdapter::class),
                 BaselineArtifactRepository::class        => autowire(BaselineArtifactRepositoryAdapter::class),
                 ProjectRepository::class                 => autowire(ProjectRepositoryAdapter::class),
                 RoleAssignmentRepository::class          => autowire(RoleAssignmentRepositoryAdapter::class),

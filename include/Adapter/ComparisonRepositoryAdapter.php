@@ -26,10 +26,10 @@ namespace Tuleap\Baseline\Adapter;
 use ParagonIE\EasyDB\EasyDB;
 use PFUser;
 use Project;
+use Tuleap\Baseline\Authorizations;
 use Tuleap\Baseline\BaselineRepository;
 use Tuleap\Baseline\Comparison;
 use Tuleap\Baseline\ComparisonRepository;
-use Tuleap\Baseline\NotAuthorizedException;
 use Tuleap\Baseline\TransientComparison;
 use UserManager;
 
@@ -38,47 +38,37 @@ class ComparisonRepositoryAdapter implements ComparisonRepository
     /** @var EasyDB */
     private $db;
 
-    /** @var AdapterPermissions */
-    private $adapter_permissions;
-
     /** @var BaselineRepository */
     private $baseline_repository;
 
     /** @var UserManager */
     private $user_manager;
 
+    /** @var Authorizations */
+    private $authorizations;
+
     /** @var ClockAdapter */
     private $clock;
 
     public function __construct(
         EasyDB $db,
-        AdapterPermissions $adapter_permissions,
         BaselineRepository $baseline_repository,
         UserManager $user_manager,
+        Authorizations $authorizations,
         ClockAdapter $clock
     ) {
         $this->db                  = $db;
-        $this->adapter_permissions = $adapter_permissions;
         $this->baseline_repository = $baseline_repository;
         $this->user_manager        = $user_manager;
+        $this->authorizations      = $authorizations;
         $this->clock               = $clock;
     }
 
     /**
-     * @throws NotAuthorizedException
+     * Note: Authorizations may have been checked earlier
      */
     public function add(TransientComparison $comparison, PFUser $current_user): Comparison
     {
-        $project = $comparison->getProject();
-        if (! $this->adapter_permissions->canUserAdministrateBaselineOnProject($current_user, $project)) {
-            throw new NotAuthorizedException(
-                sprintf(
-                    dgettext('tuleap-baseline', "You are not allowed to add new comparison in project with id %u"),
-                    $project->getID()
-                )
-            );
-        }
-
         $creation_date = $this->clock->now();
 
         $id = (int) $this->db->insertReturnId(
@@ -122,21 +112,18 @@ class ComparisonRepositoryAdapter implements ComparisonRepository
             return null;
         }
 
-        if (! $this->adapter_permissions->canUserReadBaselineOnProject($current_user, $comparison->getProject())) {
+        if (! $this->authorizations->canReadComparison($current_user, $comparison)) {
             return null;
         }
         return $comparison;
     }
 
     /**
+     * Note: Authorizations may have been checked earlier
      * @return Comparison[]
      */
     public function findByProject(PFUser $current_user, Project $project, int $page_size, int $comparison_offset): array
     {
-        if (! $this->adapter_permissions->canUserReadBaselineOnProject($current_user, $project)) {
-            return [];
-        }
-
         $rows = $this->db->safeQuery(
             'SELECT 
                 comparison.id,
@@ -170,6 +157,9 @@ class ComparisonRepositoryAdapter implements ComparisonRepository
         );
     }
 
+    /**
+     * Note: Authorizations may have been check earlier
+     */
     public function countByProject(Project $project): int
     {
         return $this->db->single(

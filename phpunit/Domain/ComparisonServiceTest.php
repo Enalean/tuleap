@@ -49,11 +49,19 @@ class ComparisonServiceTest extends TestCase
     /** @var ComparisonRepository|MockInterface */
     private $comparison_repository;
 
+    /** @var Authorizations|MockInterface */
+    private $authorizations;
+
     /** @before */
     protected function createInstance(): void
     {
         $this->comparison_repository = Mockery::mock(ComparisonRepository::class);
-        $this->service               = new ComparisonService($this->comparison_repository);
+        $this->authorizations        = Mockery::mock(AuthorizationsImpl::class);
+
+        $this->service = new ComparisonService(
+            $this->comparison_repository,
+            $this->authorizations
+        );
     }
 
     /** @var PFUser */
@@ -81,6 +89,9 @@ class ComparisonServiceTest extends TestCase
             ->comparedTo(BaselineFactory::one()->artifact($artifact2)->build())
             ->build();
 
+        $this->authorizations
+            ->shouldReceive(['canCreateComparison' => true]);
+
         $this->service->create($comparison, $this->current_user);
 
         $this->comparison_repository
@@ -99,6 +110,9 @@ class ComparisonServiceTest extends TestCase
             ->shouldReceive('countByProject')
             ->with($this->a_project)
             ->andReturn(233);
+
+        $this->authorizations
+            ->shouldReceive(['canReadComparisonsOnProject' => true]);
 
         $comparisons_page = $this->service->findByProject($this->a_user, $this->a_project, 10, 3);
 

@@ -34,13 +34,13 @@ class BaselineService
     /** @var Clock */
     private $clock;
 
-    /** @var BaselineAuthorizations */
+    /** @var Authorizations */
     private $authorizations;
 
     public function __construct(
         BaselineRepository $baseline_repository,
         Clock $clock,
-        BaselineAuthorizations $authorizations
+        Authorizations $authorizations
     ) {
         $this->baseline_repository = $baseline_repository;
         $this->clock               = $clock;

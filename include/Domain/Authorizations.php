@@ -26,7 +26,7 @@ namespace Tuleap\Baseline;
 use PFUser;
 use Project;
 
-interface BaselineAuthorizations
+interface Authorizations
 {
     public function canCreateBaseline(PFUser $current_user, TransientBaseline $baseline): bool;
 
@@ -35,4 +35,10 @@ interface BaselineAuthorizations
     public function canReadBaseline(PFUser $current_user, Baseline $baseline): bool;
 
     public function canReadBaselinesOnProject(PFUser $current_user, Project $project): bool;
+
+    public function canCreateComparison(PFUser $current_user, TransientComparison $comparison): bool;
+
+    public function canReadComparison(PFUser $current_user, Comparison $comparison): bool;
+
+    public function canReadComparisonsOnProject(PFUser $current_user, Project $project): bool;
 }

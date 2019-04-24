@@ -25,11 +25,13 @@ namespace Tuleap\Baseline\Stub;
 
 use PFUser;
 use Project;
+use Tuleap\Baseline\Authorizations;
 use Tuleap\Baseline\Baseline;
-use Tuleap\Baseline\BaselineAuthorizations;
+use Tuleap\Baseline\Comparison;
 use Tuleap\Baseline\TransientBaseline;
+use Tuleap\Baseline\TransientComparison;
 
-class FullAccessBaselineAuthorizationsStub implements BaselineAuthorizations
+class FullAccessAuthorizationsStub implements Authorizations
 {
 
     public function canCreateBaseline(PFUser $current_user, TransientBaseline $baseline): bool
@@ -48,6 +50,21 @@ class FullAccessBaselineAuthorizationsStub implements BaselineAuthorizations
     }
 
     public function canReadBaselinesOnProject(PFUser $current_user, Project $project): bool
+    {
+        return true;
+    }
+
+    public function canCreateComparison(PFUser $current_user, TransientComparison $comparison): bool
+    {
+        return true;
+    }
+
+    public function canReadComparison(PFUser $current_user, Comparison $comparison): bool
+    {
+        return true;
+    }
+
+    public function canReadComparisonsOnProject(PFUser $current_user, Project $project): bool
     {
         return true;
     }

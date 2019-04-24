@@ -25,6 +25,7 @@ namespace Tuleap\Baseline\REST;
 
 use DI\Container;
 use Luracast\Restler\RestException;
+use Tuleap\Baseline\REST\Exception\ForbiddenRestException;
 use Tuleap\Baseline\Support\ContainerBuilderFactory;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
@@ -56,7 +57,8 @@ class ProjectComparisonsResource extends AuthenticatedResource
      * @param int $offset Position of the first element to display (first position is 0). Comparisons are sorted by creation date (most recent first) {@from path}
      *
      * @return ComparisonsPageRepresentation {@type Tuleap\Baseline\REST\ComparisonsPageRepresentation}
-     * @throws RestException 404
+     * @throws RestException
+     * @throws ForbiddenRestException
      */
     public function getComparisons(int $id, int $limit = 10, int $offset = 0): ComparisonsPageRepresentation
     {

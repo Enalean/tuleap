@@ -31,9 +31,13 @@ class ComparisonService
     /** @var ComparisonRepository */
     private $comparison_repository;
 
-    public function __construct(ComparisonRepository $comparison_repository)
+    /** @var Authorizations */
+    private $authorizations;
+
+    public function __construct(ComparisonRepository $comparison_repository, Authorizations $authorizations)
     {
         $this->comparison_repository = $comparison_repository;
+        $this->authorizations        = $authorizations;
     }
 
     /**
@@ -42,6 +46,12 @@ class ComparisonService
      */
     public function create(TransientComparison $transient_comparison, PFUser $current_user): Comparison
     {
+        if (! $this->authorizations->canCreateComparison($current_user, $transient_comparison)) {
+            throw new NotAuthorizedException(
+                dgettext('tuleap-baseline', "You are not allowed to create this comparison")
+            );
+        }
+
         $base_baseline        = $transient_comparison->getBaseBaseline();
         $compared_to_baseline = $transient_comparison->getComparedToBaseline();
         if (! $base_baseline->getArtifact()->equals($compared_to_baseline->getArtifact())) {
@@ -71,6 +81,7 @@ class ComparisonService
      * @param int $comparison_offset Fetch comparisons from this index (start with 0), following creation date order (in reverse order).
      * @return ComparisonsPage requested comparison page, excluding not authorized comparisons. More over, page
      *                               total count is the real total count without any security filtering.
+     * @throws NotAuthorizedException
      */
     public function findByProject(
         PFUser $current_user,
@@ -78,6 +89,11 @@ class ComparisonService
         int $page_size,
         int $comparison_offset
     ): ComparisonsPage {
+        if (! $this->authorizations->canReadComparisonsOnProject($current_user, $project)) {
+            throw new NotAuthorizedException(
+                dgettext('tuleap-baseline', "You are not allowed to read comparisons of this project")
+            );
+        }
         $comparisons = $this->comparison_repository->findByProject(
             $current_user,
             $project,

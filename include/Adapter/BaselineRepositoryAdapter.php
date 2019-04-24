@@ -27,9 +27,9 @@ use DateTimeInterface;
 use ParagonIE\EasyDB\EasyDB;
 use PFUser;
 use Project;
+use Tuleap\Baseline\Authorizations;
 use Tuleap\Baseline\Baseline;
 use Tuleap\Baseline\BaselineArtifactRepository;
-use Tuleap\Baseline\BaselineAuthorizations;
 use Tuleap\Baseline\BaselineRepository;
 use Tuleap\Baseline\TransientBaseline;
 use UserManager;
@@ -45,7 +45,7 @@ class BaselineRepositoryAdapter implements BaselineRepository
     /** @var BaselineArtifactRepository */
     private $baseline_artifact_repository;
 
-    /** @var BaselineAuthorizations */
+    /** @var Authorizations */
     private $authorizations;
 
     /** @var ClockAdapter */
@@ -55,7 +55,7 @@ class BaselineRepositoryAdapter implements BaselineRepository
         EasyDB $db,
         UserManager $user_manager,
         BaselineArtifactRepository $baseline_artifact_repository,
-        BaselineAuthorizations $authorizations,
+        Authorizations $authorizations,
         ClockAdapter $clock
     ) {
         $this->db                           = $db;
@@ -66,7 +66,7 @@ class BaselineRepositoryAdapter implements BaselineRepository
     }
 
     /**
-     * Note: Authorizations may have been check earlier
+     * Note: Authorizations may have been checked earlier
      */
     public function add(
         TransientBaseline $baseline,
@@ -117,7 +117,7 @@ class BaselineRepositoryAdapter implements BaselineRepository
     }
 
     /**
-     * Note: Authorizations may have been check earlier
+     * Note: Authorizations may have been checked earlier
      */
     public function delete(Baseline $baseline, PFUser $current_user): void
     {
@@ -125,7 +125,7 @@ class BaselineRepositoryAdapter implements BaselineRepository
     }
 
     /**
-     * Note: Authorizations may have been check earlier
+     * Note: Authorizations may have been checked earlier
      * @return Baseline[]
      */
     public function findByProject(PFUser $current_user, Project $project, int $page_size, int $baseline_offset): array

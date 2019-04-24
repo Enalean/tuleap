@@ -32,10 +32,10 @@ use Mockery\MockInterface;
 use ParagonIE\EasyDB\EasyDB;
 use PFUser;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Baseline\Authorizations;
+use Tuleap\Baseline\AuthorizationsImpl;
 use Tuleap\Baseline\Baseline;
 use Tuleap\Baseline\BaselineArtifactRepository;
-use Tuleap\Baseline\BaselineAuthorizations;
-use Tuleap\Baseline\BaselineAuthorizationsImpl;
 use Tuleap\Baseline\Factory\BaselineArtifactFactory;
 use Tuleap\Baseline\Factory\ProjectFactory;
 use Tuleap\Baseline\Support\CurrentUserContext;
@@ -59,7 +59,7 @@ class BaselineRepositoryAdapterTest extends TestCase
     /** @var BaselineArtifactRepository|MockInterface */
     private $baseline_artifact_repository;
 
-    /** @var BaselineAuthorizations|MockInterface */
+    /** @var Authorizations|MockInterface */
     private $authorizations;
 
     /** @var ClockAdapter|MockInterface */
@@ -71,7 +71,7 @@ class BaselineRepositoryAdapterTest extends TestCase
         $this->db                           = Mockery::mock(EasyDB::class);
         $this->user_manager                 = Mockery::mock(UserManager::class);
         $this->baseline_artifact_repository = Mockery::mock(BaselineArtifactRepository::class);
-        $this->authorizations               = Mockery::mock(BaselineAuthorizationsImpl::class);
+        $this->authorizations               = Mockery::mock(AuthorizationsImpl::class);
         $this->clock                        = Mockery::mock(ClockAdapter::class);
         $this->clock->allows(['at' => DateTimeFactory::one()]);
 

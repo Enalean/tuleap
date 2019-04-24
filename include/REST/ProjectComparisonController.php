@@ -25,7 +25,9 @@ namespace Tuleap\Baseline\REST;
 
 use Tuleap\Baseline\ComparisonService;
 use Tuleap\Baseline\CurrentUserProvider;
+use Tuleap\Baseline\NotAuthorizedException;
 use Tuleap\Baseline\ProjectRepository;
+use Tuleap\Baseline\REST\Exception\ForbiddenRestException;
 use Tuleap\Baseline\REST\Exception\NotFoundRestException;
 
 class ProjectComparisonController
@@ -52,7 +54,8 @@ class ProjectComparisonController
     /**
      * @return ComparisonsPageRepresentation requested comparison page, excluding not authorized comparisons. More over, page
      * total count is the real total count without any security filtering. Comparison are sorted by creation date (most recent first)
-     * @throws NotFoundRestException 404
+     * @throws NotFoundRestException
+     * @throws ForbiddenRestException
      */
     public function get(int $project_id, int $limit, int $offset): ComparisonsPageRepresentation
     {
@@ -64,12 +67,21 @@ class ProjectComparisonController
                 dgettext('tuleap-baseline', 'No project found with this id')
             );
         }
-        $page = $this->comparison_service->findByProject(
-            $current_user,
-            $project,
-            $limit,
-            $offset
-        );
-        return ComparisonsPageRepresentation::build($page);
+        try {
+            $page = $this->comparison_service->findByProject(
+                $current_user,
+                $project,
+                $limit,
+                $offset
+            );
+            return ComparisonsPageRepresentation::build($page);
+        } catch (NotAuthorizedException $exception) {
+            throw new ForbiddenRestException(
+                sprintf(
+                    dgettext('tuleap-baseline', 'This operation is not allowed. %s'),
+                    $exception->getMessage()
+                )
+            );
+        }
     }
 }

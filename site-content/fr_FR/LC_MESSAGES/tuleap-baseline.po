@@ -58,17 +58,17 @@ msgstr "Poser des baselines et les comparer"
 msgid "This operation is not allowed. %s"
 msgstr "Cette opération n'est pas autorisée. %s"
 
-#, php-format
-msgid "You are not allowed to add new comparison in project with id %u"
-msgstr ""
-"Vous n'êtes pas autorisé à ajouter une nouvelle comparison dans le projet "
-"ayant pour id %u"
-
 msgid "You are not allowed to create this baseline"
 msgstr "Vous n'êtes pas autorisé à créer cette baseline"
+
+msgid "You are not allowed to create this comparison"
+msgstr "Vous n'êtes pas autorisé à créer cette comparaison"
 
 msgid "You are not allowed to delete this baseline"
 msgstr "Vous n'êtes pas autorisé à supprimer cette baseline"
 
 msgid "You are not allowed to read baselines of this project"
 msgstr "Vous n'êtes pas autorisé à lire les baselines de ce projet"
+
+msgid "You are not allowed to read comparisons of this project"
+msgstr "Vous n'êtes pas autorisé à lire les comparaisons de ce projet"

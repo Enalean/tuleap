@@ -33,12 +33,13 @@ use Mockery\MockInterface;
 use ParagonIE\EasyDB\EasyDB;
 use PFUser;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Baseline\Authorizations;
+use Tuleap\Baseline\AuthorizationsImpl;
 use Tuleap\Baseline\BaselineRepository;
 use Tuleap\Baseline\Comparison;
 use Tuleap\Baseline\Factory\BaselineFactory;
 use Tuleap\Baseline\Factory\ProjectFactory;
 use Tuleap\Baseline\Factory\TransientComparisonFactory;
-use Tuleap\Baseline\NotAuthorizedException;
 use Tuleap\Baseline\Support\CurrentUserContext;
 use Tuleap\Baseline\Support\DateTimeFactory;
 use UserManager;
@@ -54,14 +55,14 @@ class ComparisonRepositoryAdapterTest extends TestCase
     /** @var EasyDB|MockInterface */
     private $db;
 
-    /** @var AdapterPermissions|MockInterface */
-    private $adapter_permissions;
-
     /** @var BaselineRepository|MockInterface */
     private $baseline_repository;
 
     /** @var UserManager|MockInterface */
     private $user_manager;
+
+    /** @var Authorizations|MockInterface */
+    private $authorizations;
 
     /** @var ClockAdapter|MockInterface */
     private $clock;
@@ -75,19 +76,17 @@ class ComparisonRepositoryAdapterTest extends TestCase
         $this->now = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', '2019-05-17 09:33:22');
 
         $this->db                  = Mockery::mock(EasyDB::class);
-        $this->adapter_permissions = Mockery::mock(AdapterPermissions::class);
-        $this->adapter_permissions->allows(['canUserAdministrateBaselineOnProject' => true])
-            ->byDefault();
         $this->baseline_repository = Mockery::mock(BaselineRepository::class);
         $this->user_manager        = Mockery::mock(UserManager::class);
+        $this->authorizations      = Mockery::mock(AuthorizationsImpl::class);
         $this->clock               = Mockery::mock(ClockAdapter::class);
         $this->clock->allows(['now' => $this->now]);
 
         $this->repository = new ComparisonRepositoryAdapter(
             $this->db,
-            $this->adapter_permissions,
             $this->baseline_repository,
             $this->user_manager,
+            $this->authorizations,
             $this->clock
         );
     }
@@ -125,22 +124,6 @@ class ComparisonRepositoryAdapterTest extends TestCase
         );
 
         $this->assertEquals(10, $comparison->getId());
-    }
-
-    public function testAddThrowsIfGivenUserIsNotAuthorized()
-    {
-        $this->expectException(NotAuthorizedException::class);
-        $project = ProjectFactory::one();
-
-        $this->adapter_permissions
-            ->allows('canUserAdministrateBaselineOnProject')
-            ->with($this->current_user, $project)
-            ->andReturn(false);
-
-        $this->repository->add(
-            TransientComparisonFactory::fromProject($project)->build(),
-            $this->current_user
-        );
     }
 
     public function testFindById()
@@ -186,8 +169,8 @@ class ComparisonRepositoryAdapterTest extends TestCase
             ->with(1553176023)
             ->andReturn($creation_date);
 
-        $this->adapter_permissions
-            ->shouldReceive('canUserReadBaselineOnProject')
+        $this->authorizations
+            ->shouldReceive('canReadComparison')
             ->andReturn(true);
 
         $comparison = $this->repository->findById($this->current_user, 1);
@@ -216,7 +199,7 @@ class ComparisonRepositoryAdapterTest extends TestCase
         $this->assertNull($comparison);
     }
 
-    public function testFindByIdReturnsNullWhenGivenUserCannotReadBaselineOnProjetOfFoundBaseline()
+    public function testFindByIdReturnsNullWhenGivenUserCannotReadFoundBaseline()
     {
         $base_baseline = BaselineFactory::one()->build();
         $this->baseline_repository
@@ -257,14 +240,13 @@ class ComparisonRepositoryAdapterTest extends TestCase
             ->with(1553176023)
             ->andReturn(DateTimeFactory::one());
 
-        $this->adapter_permissions
-            ->shouldReceive('canUserReadBaselineOnProject')
-            ->with($this->current_user, $base_baseline->getProject())
+        $this->authorizations
+            ->shouldReceive('canReadComparison')
             ->andReturn(false);
 
-        $baseline = $this->repository->findById($this->current_user, 1);
+        $comparison = $this->repository->findById($this->current_user, 1);
 
-        $this->assertNull($baseline);
+        $this->assertNull($comparison);
     }
 
     public function testFindByIdReturnsNullWhenBaseBaselineIsNotFound()
@@ -368,9 +350,6 @@ class ComparisonRepositoryAdapterTest extends TestCase
             ->at(1553176023)
             ->andReturn($creation_date);
 
-        $this->adapter_permissions
-            ->allows(['canUserReadBaselineOnProject' => true]);
-
         $project = ProjectFactory::oneWithId(102);
 
         $baselines = $this->repository->findByProject($this->current_user, $project, 10, 3);
@@ -414,9 +393,6 @@ class ComparisonRepositoryAdapterTest extends TestCase
             ->getUserById(22)
             ->andReturn($user);
 
-
-        $this->adapter_permissions
-            ->allows(['canUserReadBaselineOnProject' => true]);
 
         $project = ProjectFactory::oneWithId(102);
 

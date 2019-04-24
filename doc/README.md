@@ -29,8 +29,14 @@ This step is handled by **resources** (in REST namespace)
 
 ### Authorization
 
-Each **repository** is responsible for this step. This way, an unauthorized resource is seen as unexisting.
+This step is handled by **Authorizations** class where a method is dedicated to each operation on each secured entity. Thus, all authorization rules are gathered to ease maintainability.
+
+This class is used either on entering **domain** layer, or on **repository**.
+This is determined with following a simple rule: as soon as possible.
+For example, when we have to return a baseline from its id, authorization can only be performed after database retrieval, i.e. in **repository**.
 This implies to transit current user from REST namespace to these repositories as function argument.
+
+But when authorization can be performed earlier (like when we try to create a new baseline), it is done at the begining of **domain service**.
 
 # Appendices
 Diagrams are created with [yEd live](https://www.yworks.com/yed-live/).

@@ -52,7 +52,7 @@ class BaselineServiceTest extends TestCase
     /** @var FrozenClock */
     private $clock;
 
-    /** @var BaselineAuthorizations */
+    /** @var Authorizations */
     private $authorizations;
 
     /** @before */
@@ -60,7 +60,7 @@ class BaselineServiceTest extends TestCase
     {
         $this->baseline_repository = Mockery::mock(BaselineRepository::class);
         $this->clock               = new FrozenClock();
-        $this->authorizations      = Mockery::mock(BaselineAuthorizationsImpl::class);
+        $this->authorizations      = Mockery::mock(AuthorizationsImpl::class);
 
         $this->service = new BaselineService(
             $this->baseline_repository,
