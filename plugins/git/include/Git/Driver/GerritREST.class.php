@@ -480,7 +480,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
             );
             $plugins = $this->decodeGerritResponse($response->getBody(true));
 
-            $activated = isset($plugins['deleteproject']);
+            $activated = isset($plugins['deleteproject']) || isset($plugins['delete-project']);
 
             $this->logger->info("Gerrit REST driver: delete plugin is activated : $activated");
 
