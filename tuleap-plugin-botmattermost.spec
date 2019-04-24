@@ -21,9 +21,6 @@ Bot Mattermost management for Tuleap
 
 
 %build
-npm install
-npm run build
-find www/themes -name '*.scss' | xargs rm -f
 
 %install
 %{__rm} -rf $RPM_BUILD_ROOT
@@ -36,7 +33,7 @@ find www/themes -name '*.scss' | xargs rm -f
 # www
 %{__mkdir} -p $RPM_BUILD_ROOT/%{_datadir}/tuleap/plugins/botmattermost/www
 %{__mkdir} -p $RPM_BUILD_ROOT/%{_sysconfdir}/logrotate.d
-%{__cp} -ar www/index.php www/themes www/admin $RPM_BUILD_ROOT/%{_datadir}/tuleap/plugins/botmattermost/www
+%{__cp} -ar www/index.php www/admin $RPM_BUILD_ROOT/%{_datadir}/tuleap/plugins/botmattermost/www
 %{__cp} -ar %{name}.conf $RPM_BUILD_ROOT/%{_sysconfdir}/logrotate.d
 
 %pre
@@ -48,6 +45,7 @@ find www/themes -name '*.scss' | xargs rm -f
 %files
 %defattr(-,root,root,-)
 %{_datadir}/tuleap/plugins/botmattermost
+%{_datadir}/tuleap/src/www/assets/botmattermost
 %config(noreplace) %{_sysconfdir}/logrotate.d/%{name}.conf
 
 
