@@ -28,7 +28,7 @@
 
             <actions-header v-bind:item="embedded_file"/>
 
-            <approval-table-badge v-bind:item="embedded_file"/>
+            <approval-table-badge v-bind:item="embedded_file" v-bind:is-in-folder-content-row="false"/>
         </div>
 
         <section class="tlp-pane">

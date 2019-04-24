@@ -28,7 +28,8 @@ import { extractApprovalTableData } from "../../../helpers/approval-table-helper
 
 export default {
     props: {
-        item: Object
+        item: Object,
+        isInFolderContentRow: Boolean
     },
     data() {
         return {
@@ -52,7 +53,8 @@ export default {
 
             this.approval_data = extractApprovalTableData(
                 translated_approval_states,
-                this.item.approval_table.approval_state
+                this.item.approval_table.approval_state,
+                this.isInFolderContentRow
             );
         }
     }

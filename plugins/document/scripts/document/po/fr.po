@@ -52,6 +52,9 @@ msgstr "Avancé"
 msgid "An error has occurred, please contact your administrator"
 msgstr "Une erreur est servenue, merci de contacter votre administrateur"
 
+msgid "Approval status"
+msgstr "Status de la table d'approbation"
+
 msgid "Approval table"
 msgstr "Tables d'approbation"
 

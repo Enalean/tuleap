@@ -73,6 +73,6 @@ describe("ApprovalTableBadge", () => {
         expect(wrapper.contains(".document-approval-badge")).toBeTruthy();
         expect(wrapper.vm.approval_data.icon_badge).toBe("fa-tlp-gavel-approved");
         expect(wrapper.vm.approval_data.badge_label).toBe("Approved");
-        expect(wrapper.vm.approval_data.badge_class).toBe("tlp-badge-success");
+        expect(wrapper.vm.approval_data.badge_class).toBe("tlp-badge-success ");
     });
 });

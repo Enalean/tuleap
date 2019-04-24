@@ -77,3 +77,4 @@ import "./components/User/UserBadge.spec.js";
 
 import "./helpers/highlight-items-helper.spec.js";
 import "./helpers/uploading-status-helper.spec.js";
+import "./helpers/approval-table-helper.spec.js";

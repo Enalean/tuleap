@@ -25,44 +25,52 @@ import {
     APPROVAL_REJECTED
 } from "../constants.js";
 
-export function extractApprovalTableData(translated_states, approval_table) {
+export function extractApprovalTableData(
+    translated_states,
+    approval_table,
+    is_in_folder_content_row
+) {
+    let additional_class = "";
+    if (is_in_folder_content_row) {
+        additional_class = "document-tree-item-toggle-quicklook-approval-badge";
+    }
     switch (approval_table) {
         case APPROVAL_NOT_YET:
             return {
                 icon_badge: "fa-tlp-gavel-pending",
                 badge_label: translated_states[APPROVAL_NOT_YET],
-                badge_class: "tlp-badge-chrome-silver"
+                badge_class: `tlp-badge-chrome-silver ${additional_class}`
             };
         case APPROVAL_APPROVED:
             return {
                 icon_badge: "fa-tlp-gavel-approved",
                 badge_label: translated_states[APPROVAL_APPROVED],
-                badge_class: "tlp-badge-success"
+                badge_class: `tlp-badge-success ${additional_class}`
             };
         case APPROVAL_REJECTED:
             return {
                 icon_badge: "fa-tlp-gavel-rejected",
                 badge_label: translated_states[APPROVAL_REJECTED],
-                badge_class: "tlp-badge-danger"
+                badge_class: `tlp-badge-danger ${additional_class}`
             };
         case APPROVAL_DECLINED:
             return {
                 icon_badge: "fa-tlp-gavel-rejected",
                 badge_label: translated_states[APPROVAL_DECLINED],
-                badge_class: "tlp-badge-danger"
+                badge_class: `tlp-badge-danger ${additional_class}`
             };
         case APPROVAL_COMMENTED:
             return {
                 icon_badge: "fa-tlp-gavel-comment",
                 badge_label: translated_states[APPROVAL_COMMENTED],
-                badge_class: "tlp-badge-info"
+                badge_class: `tlp-badge-info ${additional_class}`
             };
 
         default:
             return {
                 icon_badge: "fa-tlp-gavel-pending",
                 badge_label: translated_states[APPROVAL_NOT_YET],
-                badge_class: "tlp-badge-secondary"
+                badge_class: `tlp-badge-secondary ${additional_class}`
             };
     }
 }
