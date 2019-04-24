@@ -50,6 +50,7 @@
                     v-bind:item="item"
                     v-bind:is-displaying-in-header="false"
                 />
+                <approval-table-badge v-bind:item="item" v-bind:is-in-folder-content-row="true"/>
             </div>
         </td>
         <template v-if="is_item_uploading_without_quick_look_mode">
@@ -88,10 +89,12 @@ import {
 } from "../../helpers/uploading-status-helper.js";
 import LockProperty from "./Property/LockProperty.vue";
 import DocumentTitleLockInfo from "./LockInfo/DocumentTitleLockInfo.vue";
+import ApprovalTableBadge from "./ApprovalTables/ApprovalTableBadge.vue";
 
 export default {
     name: "FolderContentRow",
     components: {
+        ApprovalTableBadge,
         DocumentTitleLockInfo,
         LockProperty,
         DropdownMenuForItemQuickLook,

@@ -55,6 +55,17 @@
                     {{ getFormattedDateForDisplay(item.last_update_date) }}
                 </p>
             </div>
+            <div class="tlp-property">
+                <label for="document-approval-status" class="tlp-label" v-translate>
+                    Approval status
+                </label>
+                <p id="document-approval-status">
+                    <approval-table-badge v-bind:item="item" v-bind:is-in-folder-content-row="false" v-if="has_an_approval_table"/>
+                    <span class="document-quick-look-property-empty" v-else v-translate>
+                        Empty
+                    </span>
+                </p>
+            </div>
             <div v-if="is_file" class="tlp-property">
                 <label for="document-file-size" class="tlp-label" v-translate>
                     File size
@@ -77,9 +88,10 @@ import {
 import UserBadge from "../../User/UserBadge.vue";
 import { TYPE_FILE } from "../../../constants.js";
 import QuickLookDocumentAdditionalMetadataList from "./QuickLookDocumentAdditionalMetadataList.vue";
+import ApprovalTableBadge from "../ApprovalTables/ApprovalTableBadge.vue";
 
 export default {
-    components: { QuickLookDocumentAdditionalMetadataList, UserBadge },
+    components: { ApprovalTableBadge, QuickLookDocumentAdditionalMetadataList, UserBadge },
     props: {
         item: Object
     },
@@ -103,6 +115,9 @@ export default {
                 return prettyBytes(0);
             }
             return prettyBytes(parseInt(this.item.file_properties.file_size, 10));
+        },
+        has_an_approval_table() {
+            return this.item.approval_table;
         }
     },
     methods: {
