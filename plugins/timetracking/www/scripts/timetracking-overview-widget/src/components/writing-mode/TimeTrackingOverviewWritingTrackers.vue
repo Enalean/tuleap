@@ -33,16 +33,17 @@
                 <i class="fa fa-asterisk"></i>
             </label>
             <div class="tlp-form-element tlp-form-element-append">
-                <time-tracking-overview-trackers-options ref="select_trackers"/>
+                <time-tracking-overview-trackers-options v-on:input="trackerSelected($event)"/>
                 <button
                     type="button"
                     class="tlp-append tlp-button-primary tlp-button-outline"
                     v-bind:disabled="!is_tracker_available"
                     v-on:click="addTracker()"
+                    data-test="add-tracker-button"
                 >
-                    <i v-if="is_tracker_or_project_select_disabled" class="tlp-button-icon fa fa-spinner fa-spin"></i>
-                    <i v-else-if="is_tracker_available" class="tlp-button-icon fa fa-plus"></i>
-                    <i v-else class="tlp-button-icon fa fa-ban"></i>
+                    <i v-if="is_tracker_or_project_select_disabled" class="tlp-button-icon fa fa-spinner fa-spin" data-test="icon-spinner"></i>
+                    <i v-else-if="is_tracker_available" class="tlp-button-icon fa fa-plus" data-test="icon-plus"></i>
+                    <i v-else class="tlp-button-icon fa fa-ban" data-test="icon-ban"></i>
                     <translate>Add</translate>
                 </button>
             </div>
@@ -57,6 +58,11 @@ import { mapState } from "vuex";
 export default {
     name: "TimeTrackingOverviewWritingTrackers",
     components: { TimeTrackingOverviewProjectOption, TimeTrackingOverviewTrackersOptions },
+    data() {
+        return {
+            selected_tracker: null
+        };
+    },
     computed: {
         ...mapState(["projects", "trackers", "is_loading_tracker"]),
         is_project_select_disabled() {
@@ -73,10 +79,11 @@ export default {
         }
     },
     methods: {
+        trackerSelected(value) {
+            this.selected_tracker = value;
+        },
         addTracker() {
-            let opt = this.$refs.select_trackers.$el.options;
-            this.$store.commit("addSelectedTrackers", opt[opt.selectedIndex].value);
-            opt.selectedIndex = 0;
+            this.$store.commit("addSelectedTrackers", this.selected_tracker);
         }
     }
 };

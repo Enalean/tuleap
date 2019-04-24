@@ -19,11 +19,11 @@
 
 <template>
     <div class="timetracking-overview-widget-table">
-        <div v-if="has_error" class="tlp-alert-danger">
+        <div v-if="has_error" class="tlp-alert-danger" data-test="alert-danger">
             {{ error_message }}
         </div>
-        <div v-if="is_loading" class="timetracking-loader"></div>
-        <table v-if="can_results_be_displayed" class="tlp-table">
+        <div v-if="is_loading" class="timetracking-loader" data-test="timetracking-loader"></div>
+        <table v-if="can_results_be_displayed" class="tlp-table" data-test="overview-table">
             <thead>
                 <tr>
                     <th v-translate>
@@ -45,7 +45,7 @@
             </thead>
             <tbody>
                 <tr v-if="! has_data_to_display">
-                    <td colspan="4" class="tlp-table-cell-empty" v-translate>
+                    <td colspan="4" class="tlp-table-cell-empty" v-translate data-test="empty-cell">
                         No time have been found for this period and these trackers
                     </td>
                 </tr>
@@ -53,9 +53,10 @@
                                                   v-for="tracker_time in trackers_times"
                                                   v-bind:key="tracker_time.id"
                                                   v-bind:time="tracker_time"
+                                                  data-test="table-row"
                 />
             </tbody>
-            <tfoot v-if="has_data_to_display">
+            <tfoot v-if="has_data_to_display" data-test="tfoot">
                 <tr>
                     <th></th>
                     <th></th>
