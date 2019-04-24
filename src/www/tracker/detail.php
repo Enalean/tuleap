@@ -10,8 +10,6 @@
   *
   */
 
-require_once('include/ArtifactRulesManagerHtml.class.php');
-
 // Check if this tracker is valid (not deleted)
 if ( !$ath->isValid() ) {
 	exit_error($Language->getText('global','error'),$Language->getText('tracker_add', 'invalid'));

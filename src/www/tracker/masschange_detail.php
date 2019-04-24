@@ -10,8 +10,6 @@
   *
   */
 
-require_once('include/ArtifactRulesManagerHtml.class.php');
-
 // Printer version ?
 if ( !$request->exist('pv') ) {
 	$pv = false;

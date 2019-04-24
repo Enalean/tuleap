@@ -9,7 +9,6 @@
   *
   *
   */
-require_once('include/ArtifactRulesManagerHtml.class.php');
 
 // Check if this tracker is valid (not deleted)
 if ( !$ath->isValid() ) {

@@ -23350,12 +23350,12 @@
       <code>$request</code>
     </UndefinedGlobalVariable>
   </file>
-  <file src="src/www/tracker/include/ArtifactCannedHtml.class.php">
+  <file src="src/common/tracker/HTML/ArtifactCannedHtml.class.php">
     <InvalidStaticInvocation occurrences="1">
       <code>SimpleSanitizer::unsanitize($this-&gt;ArtifactType-&gt;getName())</code>
     </InvalidStaticInvocation>
   </file>
-  <file src="src/www/tracker/include/ArtifactFieldHtml.class.php">
+  <file src="src/common/tracker/HTML/ArtifactFieldHtml.class.php">
     <InvalidPropertyAssignmentValue occurrences="1">
       <code>true</code>
     </InvalidPropertyAssignmentValue>
@@ -23376,7 +23376,7 @@
       <code>Boolean</code>
     </UndefinedClass>
   </file>
-  <file src="src/www/tracker/include/ArtifactHtml.class.php">
+  <file src="src/common/tracker/HTML/ArtifactHtml.class.php">
     <InvalidOperand occurrences="4">
       <code>$this-&gt;showCCList($group_id,$group_artifact_id, false, $pv)</code>
       <code>$this-&gt;showAttachedFiles($group_id,$group_artifact_id, false, $pv)</code>
@@ -23412,7 +23412,7 @@
       <code>Integer</code>
     </UndefinedClass>
   </file>
-  <file src="src/www/tracker/include/ArtifactImportHtml.class.php">
+  <file src="src/common/tracker/HTML/ArtifactImportHtml.class.php">
     <PossiblyUndefinedVariable occurrences="3">
       <code>$aid</code>
       <code>$aid</code>
@@ -23422,7 +23422,7 @@
       <code>$submitted_on_column</code>
     </UndefinedVariable>
   </file>
-  <file src="src/www/tracker/include/ArtifactReportHtml.class.php">
+  <file src="src/common/tracker/HTML/ArtifactReportHtml.class.php">
     <InvalidStaticInvocation occurrences="5">
       <code>SimpleSanitizer::unsanitize($field-&gt;getLabel())</code>
       <code>SimpleSanitizer::unsanitize($field-&gt;getLabel())</code>
@@ -23448,12 +23448,12 @@
       <code>$field</code>
     </UndefinedClass>
   </file>
-  <file src="src/www/tracker/include/ArtifactRuleValueJavascript.class.php">
+  <file src="src/common/tracker/HTML/ArtifactRuleValueJavascript.class.php">
     <InvalidReturnType occurrences="1">
       <code>fetch</code>
     </InvalidReturnType>
   </file>
-  <file src="src/www/tracker/include/ArtifactRulesManagerHtml.class.php">
+  <file src="src/common/tracker/HTML/ArtifactRulesManagerHtml.class.php">
     <InvalidStaticInvocation occurrences="6">
       <code>SimpleSanitizer::unsanitize($field-&gt;getLabel())</code>
       <code>SimpleSanitizer::unsanitize($row[1])</code>
@@ -23466,7 +23466,7 @@
       <code>parent::saveRule($this-&gt;artifact_type-&gt;getId(), $source, $source_value, $target, $target_values)</code>
     </UndefinedMethod>
   </file>
-  <file src="src/www/tracker/include/ArtifactTypeHtml.class.php">
+  <file src="src/common/tracker/HTML/ArtifactTypeHtml.class.php">
     <InvalidStaticInvocation occurrences="42">
       <code>SimpleSanitizer::unsanitize($this-&gt;getName())</code>
       <code>SimpleSanitizer::unsanitize($at_arr[$i]-&gt;getName())</code>

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -24,13 +24,6 @@ use Tuleap\Project\Admin\Navigation\NavigationPresenterBuilder;
 require_once('pre.php');
 require_once('../admin/project_admin_utils.php');
 require_once('./project_export_utils.php');
-require_once('common/tracker/Artifact.class.php');
-require_once('www/tracker/include/ArtifactHtml.class.php');
-require_once('common/tracker/ArtifactType.class.php');
-require_once('www/tracker/include/ArtifactTypeHtml.class.php');
-require_once('common/tracker/ArtifactTypeFactory.class.php');
-require_once('common/tracker/ArtifactField.class.php');
-require_once('common/tracker/ArtifactFieldFactory.class.php');
 
 // Inherited from old .htaccess
 ini_set('max_execution_time', 3600);
