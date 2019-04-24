@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -30,6 +30,7 @@ use ProjectManager;
 use TrackerFactory;
 use TrackerXmlImport;
 use Tuleap\TestManagement\Administration\StepFieldUsageDetector;
+use Tuleap\TestManagement\Administration\TrackerChecker;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
 use UserManager;
 use XMLImportHelper;
@@ -78,6 +79,10 @@ class Router {
      * @var StepFieldUsageDetector
      */
     private $step_field_usage_detector;
+    /**
+     * @var TrackerChecker
+     */
+    private $tracker_checker;
 
     public function __construct(
         Plugin $plugin,
@@ -87,7 +92,8 @@ class Router {
         UserManager $user_manager,
         EventManager $event_manager,
         ArtifactLinksUsageUpdater $artifact_links_usage_updater,
-        StepFieldUsageDetector $step_field_usage_detector
+        StepFieldUsageDetector $step_field_usage_detector,
+        TrackerChecker $tracker_checker
     ) {
         $this->config                       = $config;
         $this->plugin                       = $plugin;
@@ -97,6 +103,7 @@ class Router {
         $this->event_manager                = $event_manager;
         $this->artifact_links_usage_updater = $artifact_links_usage_updater;
         $this->step_field_usage_detector    = $step_field_usage_detector;
+        $this->tracker_checker              = $tracker_checker;
     }
 
     public function route(Codendi_Request $request)
@@ -113,7 +120,8 @@ class Router {
                     $this->tracker_factory,
                     $this->event_manager,
                     $csrf_token,
-                    $this->step_field_usage_detector
+                    $this->step_field_usage_detector,
+                    $this->tracker_checker
                 );
                 $this->renderAction($controller, 'admin', $request);
                 break;
@@ -125,7 +133,8 @@ class Router {
                     $this->tracker_factory,
                     $this->event_manager,
                     $csrf_token,
-                    $this->step_field_usage_detector
+                    $this->step_field_usage_detector,
+                    $this->tracker_checker
                 );
                 $this->executeAction($controller, 'update');
                 $this->renderIndex($request);

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -27,6 +27,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tracker;
 use Tuleap\TestManagement\Administration\StepFieldUsageDetector;
+use Tuleap\TestManagement\Administration\TrackerChecker;
 use Tuleap\TestManagement\Event\GetMilestone;
 
 class AdminControllerTest extends TestCase
@@ -58,6 +59,8 @@ class AdminControllerTest extends TestCase
     private $execution_tracker;
     /** @var Tracker */
     private $issue_tracker;
+    /** @var TrackerChecker */
+    private $tracker_checker;
 
     const PROJECT_ID = 104;
     const CAMPAIGN_TRACKER_ID = 531;
@@ -85,13 +88,16 @@ class AdminControllerTest extends TestCase
 
         $this->csrf_token = Mockery::mock(\CSRFSynchronizerToken::class);
 
+        $this->tracker_checker = Mockery::mock(TrackerChecker::class);
+
         $this->admin_controller = new AdminController(
             $this->request,
             $this->config,
             $this->tracker_factory,
             $this->event_manager,
             $this->csrf_token,
-            $this->step_field_usage_detector
+            $this->step_field_usage_detector,
+            $this->tracker_checker
         );
     }
 
@@ -171,6 +177,8 @@ class AdminControllerTest extends TestCase
             ]
         );
 
+        $this->tracker_checker->shouldReceive('checkTrackerIsInProject');
+
         $this->admin_controller->update();
     }
 
@@ -212,6 +220,8 @@ class AdminControllerTest extends TestCase
                 self::ISSUE_TRACKER_ID
             ]
         );
+
+        $this->tracker_checker->shouldReceive('checkTrackerIsInProject');
 
         $this->admin_controller->update();
     }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -28,6 +28,7 @@ use Tuleap\Plugin\PluginWithLegacyInternalRouting;
 use Tuleap\Project\Event\ProjectServiceBeforeActivation;
 use Tuleap\Project\XML\Export\ArchiveInterface;
 use Tuleap\TestManagement\Administration\StepFieldUsageDetector;
+use Tuleap\TestManagement\Administration\TrackerChecker;
 use Tuleap\TestManagement\Config;
 use Tuleap\TestManagement\Dao;
 use Tuleap\TestManagement\FirstConfigCreator;
@@ -404,6 +405,8 @@ class testmanagementPlugin extends PluginWithLegacyInternalRouting
             $form_element_factory
         );
 
+        $tracker_checker = new TrackerChecker();
+
         $router = new Tuleap\TestManagement\Router(
             $this,
             $config,
@@ -412,7 +415,8 @@ class testmanagementPlugin extends PluginWithLegacyInternalRouting
             $user_manager,
             $event_manager,
             $this->getArtifactLinksUsageUpdater(),
-            $step_field_usage_detector
+            $step_field_usage_detector,
+            $tracker_checker
         );
 
         try {

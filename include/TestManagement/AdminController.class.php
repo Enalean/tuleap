@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -26,6 +26,8 @@ use EventManager;
 use Feedback;
 use TrackerFactory;
 use Tuleap\TestManagement\Administration\StepFieldUsageDetector;
+use Tuleap\TestManagement\Administration\TrackerChecker;
+use Tuleap\TestManagement\Administration\TrackerNotInProjectException;
 use Tuleap\TestManagement\Breadcrumbs\AdmininistrationBreadcrumbs;
 
 class AdminController extends TestManagementController
@@ -40,17 +42,24 @@ class AdminController extends TestManagementController
      */
     private $step_field_usage_detector;
 
+    /**
+     * @var TrackerChecker
+     */
+    private $tracker_checker;
+
     public function __construct(
         Codendi_Request $request,
         Config $config,
         TrackerFactory $tracker_factory,
         EventManager $event_manager,
         CSRFSynchronizerToken $csrf_token,
-        StepFieldUsageDetector $step_field_usage_detector
+        StepFieldUsageDetector $step_field_usage_detector,
+        TrackerChecker $tracker_checker
     ) {
         parent::__construct($request, $config, $tracker_factory, $event_manager);
         $this->csrf_token                = $csrf_token;
         $this->step_field_usage_detector = $step_field_usage_detector;
+        $this->tracker_checker           = $tracker_checker;
     }
 
     public function admin()
@@ -132,17 +141,23 @@ class AdminController extends TestManagementController
         );
     }
 
-    private function checkTrackerIdForProject($submitted_id, $original_id, $project_tracker_ids)
+    private function checkTrackerIdForProject($submitted_id, $original_id, array $project_tracker_ids)
     {
-        $is_valid_project_tracker_id = in_array($submitted_id, $project_tracker_ids);
-        if (! $is_valid_project_tracker_id) {
+        if (! $submitted_id) {
+            return $original_id;
+        }
+
+        try {
+            $this->tracker_checker->checkTrackerIsInProject($submitted_id, $project_tracker_ids);
+            return $submitted_id;
+        } catch (TrackerNotInProjectException $exception) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::WARN,
                 sprintf(dgettext('tuleap-testmanagement', 'Invalid tracker id %1$s for this project'), $submitted_id)
             );
-        }
 
-        return $is_valid_project_tracker_id ? $submitted_id : $original_id;
+            return $original_id;
+        }
     }
 
     public function getBreadcrumbs()
