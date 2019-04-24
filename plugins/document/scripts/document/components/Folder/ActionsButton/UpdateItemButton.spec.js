@@ -21,13 +21,19 @@ import { shallowMount } from "@vue/test-utils";
 import UpdateItemButton from "./UpdateItemButton.vue";
 
 import localVue from "../../../helpers/local-vue.js";
-import { rewire$redirect_to_url, restore } from "../../../helpers/location-helper.js";
+import { rewire$redirectToUrl, restore } from "../../../helpers/location-helper.js";
 import { createStoreMock } from "../../../helpers/store-wrapper.spec-helper.js";
 
-describe("QuickLookDocumentPreview", () => {
+describe("UpdateItemButton", () => {
     let update_button_factory;
     beforeEach(() => {
-        const store_options = {};
+        const state = {
+            project_id: 101
+        };
+
+        const store_options = {
+            state
+        };
 
         const store = createStoreMock(store_options);
 
@@ -133,8 +139,8 @@ describe("QuickLookDocumentPreview", () => {
     it(`Given item is an empty document
         When we click on update button
         Then user should be redirected on legacy UI`, () => {
-        const redirect_to_url = jasmine.createSpy("redirect_to_url");
-        rewire$redirect_to_url(redirect_to_url);
+        const redirect_to_url = jasmine.createSpy("redirectToUrl");
+        rewire$redirectToUrl(redirect_to_url);
 
         const wrapper = update_button_factory({
             item: {
@@ -147,7 +153,9 @@ describe("QuickLookDocumentPreview", () => {
 
         wrapper.find("[data-test=docman-item-update-button]").trigger("click");
 
-        expect(redirect_to_url).toHaveBeenCalled();
+        expect(redirect_to_url).toHaveBeenCalledWith(
+            "/plugins/docman/index.php?group_id=101&id=1&action=action_update"
+        );
     });
 
     it(`Given item is a link document

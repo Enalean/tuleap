@@ -17,6 +17,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export function redirectToUrl(url) {
-    window.location.assign(url);
-}
+import { shallowMount } from "@vue/test-utils";
+import localVue from "../../../helpers/local-vue.js";
+
+import QuickLookButton from "./QuickLookButton.vue";
+
+describe("QuickLookButton", () => {
+    it(`Emit displayQuickLook event with correct parameters when user click on button`, () => {
+        const item = {
+            id: 42,
+            title: "my item title"
+        };
+        const wrapper = shallowMount(QuickLookButton, {
+            localVue,
+            propsData: { item }
+        });
+
+        wrapper.find("[data-test=quick-look-button]").trigger("click");
+
+        expect(wrapper.emitted().displayQuickLook[0]).toEqual([item]);
+    });
+});
