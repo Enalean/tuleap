@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,13 +20,11 @@
 
 use Tuleap\FRS\FRSPackageController;
 use Tuleap\FRS\FRSReleaseController;
+use Tuleap\FRS\FRSValidator;
 
-require_once ('pre.php');
-require_once ('www/project/admin/permissions.php');
-require_once ('frsValidator.class.php');
-require_once ('common/include/Feedback.class.php');
-require_once ('common/frs/FRSFileFactory.class.php');
-require_once ('json.php');
+require_once __DIR__ . '/../../include/pre.php';
+require_once __DIR__ . '/../../project/admin/permissions.php';
+require_once __DIR__ . '/../../include/json.php';
 
 $vAction = new Valid_WhiteList('action',array('permissions_frs_package','permissions_frs_release','validator_frs_create','validator_frs_update','refresh_file_list'));
 if ($request->valid($vAction)) {
@@ -91,7 +89,7 @@ if ($action == 'permissions_frs_package') {
                 $package_id = $request->get('package_id');
                 $date       = $request->get('date');
                 $group_id   = $request->get('group_id');
-                $validator = new frsValidator();
+                $validator = new FRSValidator();
                 $release = array (
                     'name' => $name,
                     'package_id' => $package_id,
@@ -130,7 +128,7 @@ if ($action == 'permissions_frs_package') {
                     $date       = $request->get('date');
                     $group_id   = $request->get('group_id');
                     $release_id = $request->get('release_id');
-                    $validator = new frsValidator();
+                    $validator = new FRSValidator();
                     $release = array (
                         'name' => $name,
                         'release_id' => $release_id,

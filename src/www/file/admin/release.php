@@ -1,7 +1,7 @@
 <?php
 /**
 * Copyright 1999-2000 (c) The SourceForge Crew
-* Copyright (c) Enalean, 2016. All Rights Reserved.
+* Copyright (c) Enalean, 2016-Present. All Rights Reserved.
 *
 * This file is a part of Tuleap.
 *
@@ -22,8 +22,7 @@
 use Tuleap\FRS\FRSReleaseController;
 use Tuleap\FRS\FRSReleaseRouter;
 
-require_once ('pre.php');
-require_once ('www/file/admin/frsValidator.class.php');
+require_once __DIR__ . '/../../include/pre.php';
 
 $GLOBALS['HTML']->includeCalendarScripts();
 $GLOBALS['HTML']->includeJavascriptFile("../scripts/frs.js");
