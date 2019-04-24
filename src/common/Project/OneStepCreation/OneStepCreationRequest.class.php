@@ -19,6 +19,7 @@
   */
 
 use Tuleap\Project\Admin\ProjectWithoutRestrictedFeatureFlag;
+use Tuleap\Project\DefaultProjectVisibilityRetriever;
 
 /**
  * Wraps user request for one step creation form
@@ -100,10 +101,17 @@ class Project_OneStepCreation_OneStepCreationRequest {
      */
     private $trove_cats = [];
 
-    public function __construct(Codendi_Request $request, ProjectManager $project_manager) {
+    public function __construct(
+        Codendi_Request $request,
+        ProjectManager $project_manager,
+        DefaultProjectVisibilityRetriever $default_project_visibility_retriever
+    ) {
+        $default_project_visibility = $default_project_visibility_retriever->getDefaultProjectVisibility();
+
         $this->request                         = $request;
         $this->project_manager                 = $project_manager;
-        $this->is_public                       = $GLOBALS['sys_is_project_public'];
+        $this->is_public                       = $default_project_visibility === Project::ACCESS_PUBLIC ||
+            $default_project_visibility === Project::ACCESS_PUBLIC_UNRESTRICTED;
         $this->user_can_choose_project_privacy = ForgeConfig::get('sys_user_can_choose_project_privacy');
         $request_data                          = $request->params;
         $this->setFullName($request_data)

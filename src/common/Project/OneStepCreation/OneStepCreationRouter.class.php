@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Project\DefaultProjectVisibilityRetriever;
+
 /**
  * Routes the one step creation requests
  */
@@ -30,18 +32,23 @@ class Project_OneStepCreation_OneStepCreationRouter {
 
     /** @var ProjectManager */
     private $project_manager;
-
+    /**
+     * @var DefaultProjectVisibilityRetriever
+     */
+    private $default_project_visibility_retriever;
     /** @var Project_CustomDescription_CustomDescriptionFactory */
     private $custom_description_factory;
 
     public function __construct(
         ProjectManager $project_manager,
+        DefaultProjectVisibilityRetriever $default_project_visibility_retriever,
         Project_CustomDescription_CustomDescriptionFactory $custom_description_factory,
         TroveCatFactory $trove_cat_factory
     ) {
-        $this->project_manager            = $project_manager;
-        $this->custom_description_factory = $custom_description_factory;
-        $this->trove_cat_factory          = $trove_cat_factory;
+        $this->project_manager                      = $project_manager;
+        $this->default_project_visibility_retriever = $default_project_visibility_retriever;
+        $this->custom_description_factory           = $custom_description_factory;
+        $this->trove_cat_factory                    = $trove_cat_factory;
     }
 
     public function route(Codendi_Request $request) {
@@ -49,6 +56,7 @@ class Project_OneStepCreation_OneStepCreationRouter {
         $controller = new Project_OneStepCreation_OneStepCreationController(
             $request,
             $this->project_manager,
+            $this->default_project_visibility_retriever,
             $this->custom_description_factory,
             $this->trove_cat_factory,
             $csrf_token

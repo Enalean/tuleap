@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -39,6 +39,7 @@ require_once 'common/wiki/lib/WikiCloner.class.php';
 define('PROJECT_APPROVAL_BY_ADMIN', 'P');
 define('PROJECT_APPROVAL_AUTO',     'A');
 
+use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\Event\ProjectRegistrationActivateService;
 use Tuleap\Project\DescriptionFieldsFactory;
 use Tuleap\Project\DescriptionFieldsDao;
@@ -126,6 +127,10 @@ class ProjectCreator {
      * @var LabelDao
      */
     private $label_dao;
+    /**
+     * @var DefaultProjectVisibilityRetriever
+     */
+    private $default_project_visibility_retriever;
 
     public function __construct(
         ProjectManager $projectManager,
@@ -137,20 +142,22 @@ class ProjectCreator {
         ProjectDashboardDuplicator $dashboard_duplicator,
         ServiceCreator $service_creator,
         LabelDao $label_dao,
+        DefaultProjectVisibilityRetriever $default_project_visibility_retriever,
         $force_activation = false
     ) {
-        $this->send_notifications      = $send_notifications;
-        $this->force_activation        = $force_activation;
-        $this->reference_manager       = $reference_manager;
-        $this->user_manager            = $user_manager;
-        $this->rule_short_name         = new Rule_ProjectName();
-        $this->rule_full_name          = new Rule_ProjectFullName();
-        $this->project_manager         = $projectManager;
-        $this->frs_permissions_creator = $frs_permissions_creator;
-        $this->ugroup_duplicator       = $ugroup_duplicator;
-        $this->dashboard_duplicator    = $dashboard_duplicator;
-        $this->service_creator         = $service_creator;
-        $this->label_dao               = $label_dao;
+        $this->send_notifications                   = $send_notifications;
+        $this->force_activation                     = $force_activation;
+        $this->reference_manager                    = $reference_manager;
+        $this->user_manager                         = $user_manager;
+        $this->rule_short_name                      = new Rule_ProjectName();
+        $this->rule_full_name                       = new Rule_ProjectFullName();
+        $this->project_manager                      = $projectManager;
+        $this->frs_permissions_creator              = $frs_permissions_creator;
+        $this->ugroup_duplicator                    = $ugroup_duplicator;
+        $this->dashboard_duplicator                 = $dashboard_duplicator;
+        $this->service_creator                      = $service_creator;
+        $this->label_dao                            = $label_dao;
+        $this->default_project_visibility_retriever = $default_project_visibility_retriever;
     }
 
     /**
@@ -347,11 +354,6 @@ class ProjectCreator {
         srand((double)microtime()*1000000);
         $random_num=rand(0,1000000);
 
-        // Make sure default project privacy status is defined. If not
-        // then default to "public"
-        if (!isset($GLOBALS['sys_is_project_public'])) {
-            $GLOBALS['sys_is_project_public'] = 1;
-        }
         if (isset($GLOBALS['sys_disable_subdomains']) && $GLOBALS['sys_disable_subdomains']) {
           $http_domain=$GLOBALS['sys_default_domain'];
         } else {
@@ -748,7 +750,7 @@ class ProjectCreator {
 
     private function getProjectCreationData($short_name, $public_name, array $data)
     {
-        $creation_data = ProjectCreationData::buildFromFormArray($data);
+        $creation_data = ProjectCreationData::buildFromFormArray($this->default_project_visibility_retriever, $data);
 
         $creation_data->setUnixName($short_name);
         $creation_data->setFullName($public_name);

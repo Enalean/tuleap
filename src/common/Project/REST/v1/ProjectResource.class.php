@@ -42,6 +42,7 @@ use Tuleap\FRS\FRSPermissionDao;
 use Tuleap\Label\Label;
 use Tuleap\Label\PaginatedCollectionsOfLabelsBuilder;
 use Tuleap\Label\REST\LabelRepresentation;
+use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\Event\GetProjectWithTrackerAdministrationPermission;
 use Tuleap\Project\HeartbeatsEntryCollection;
 use Tuleap\Project\Label\LabelDao;
@@ -178,6 +179,7 @@ class ProjectResource extends AuthenticatedResource
             $duplicator,
             new ServiceCreator(),
             $label_dao,
+            new DefaultProjectVisibilityRetriever(),
             $force_activation
         );
 

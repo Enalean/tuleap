@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Project\DefaultProjectVisibilityRetriever;
+
 ini_set('max_execution_time', 0);
 ini_set('memory_limit', -1);
 
@@ -28,6 +30,7 @@ $request = HTTPRequest::instance();
 
 $router = new Project_OneStepCreation_OneStepCreationRouter(
     ProjectManager::instance(),
+    new DefaultProjectVisibilityRetriever(),
     new Project_CustomDescription_CustomDescriptionFactory(new Project_CustomDescription_CustomDescriptionDao()),
     new TroveCatFactory(new TroveCatDao())
 );

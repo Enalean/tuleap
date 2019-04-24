@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2018. All rights reserved
+ * Copyright (c) Enalean, 2013 - Present. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -17,6 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
+
+use Tuleap\Project\DefaultProjectVisibilityRetriever;
 
 class OneStepCreationValidatorTest extends TuleapTestCase {
 
@@ -62,7 +64,11 @@ class OneStepCreationValidatorTest extends TuleapTestCase {
 
     protected function aCreationValidator($request_data, $required_custom_descriptions, $trove_cats) {
         $request          = aRequest()->withParams($request_data)->build();
-        $creation_request = new Project_OneStepCreation_OneStepCreationRequest($request, ProjectManager::instance());
+        $creation_request = new Project_OneStepCreation_OneStepCreationRequest(
+            $request,
+            ProjectManager::instance(),
+            new DefaultProjectVisibilityRetriever()
+        );
         $validator        = new Project_OneStepCreation_OneStepCreationValidator(
             $creation_request, 
             $required_custom_descriptions,
