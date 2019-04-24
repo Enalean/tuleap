@@ -29,7 +29,7 @@
             </div>
         </div>
         <section class="tlp-pane-section">
-            <quick-look-item-is-locked-message v-if="item.is_lock !== null"/>
+            <quick-look-item-is-locked-message v-if="item.lock_info !== null"/>
             <quick-look-document-preview v-bind:icon-class="icon_class" v-bind:item="item"/>
             <component
                 v-bind:is="quick_look_component_action"
