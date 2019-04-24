@@ -19,7 +19,7 @@
   -->
 
 <template>
-    <div class="baseline-badge-avatar">
+    <div>
         <div class="tlp-avatar-small baseline-badge-avatar-img">
             <img v-bind:src="user.avatar_url" v-if="user.has_avatar">
         </div>

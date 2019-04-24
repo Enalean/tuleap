@@ -19,7 +19,7 @@
   -->
 
 <template>
-    <table class="tlp-table">
+    <table class="tlp-table comparisons-table">
         <thead>
             <tr>
                 <th class="tlp-table-cell-numeric" v-translate>
@@ -31,11 +31,11 @@
                 <th class="comparisons-table-column-milestone" v-translate>
                     Milestone
                 </th>
+                <th class="comparisons-table-column-creation-date" v-translate>
+                    Date
+                </th>
                 <th class="comparisons-table-column-author" v-translate>
                     Author
-                </th>
-                <th class="comparisons-table-column-creation-date" v-translate>
-                    Creation Date
                 </th>
                 <th>
                 </th>

@@ -24,15 +24,20 @@
             <span class="tlp-skeleton-text"></span>
         </td>
         <td class="comparisons-table-column-name">
-            <span class="tlp-skeleton-text"></span>
+            <p class="comparisons-table-column-name-content">
+                <span class="tlp-skeleton-text"></span>
+            </p>
+            <p class="comparisons-table-column-name-baselines">
+                <span class="tlp-skeleton-text"></span>
+            </p>
         </td>
         <td class="comparisons-table-column-milestone">
             <span class="tlp-skeleton-text"></span>
         </td>
-        <td class="comparisons-table-column-author">
+        <td class="comparisons-table-column-creation-date">
             <span class="tlp-skeleton-text"></span>
         </td>
-        <td class="comparisons-table-column-creation-date">
+        <td class="comparisons-table-column-author">
             <span class="tlp-skeleton-text"></span>
         </td>
         <td class="tlp-table-cell-actions">

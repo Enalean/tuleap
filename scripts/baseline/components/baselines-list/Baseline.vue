@@ -31,15 +31,14 @@
                 <artifact-badge
                     v-bind:artifact="milestone"
                     v-bind:tracker="milestone_tracker"
-                />
-                {{ milestone.title }}
+                />{{ milestone.title }}
             </artifact-link>
         </td>
         <td class="baselines-table-column-snapshot-date">
             <humanized-date v-bind:date="baseline.snapshot_date" v-bind:start_with_capital="true"/>
         </td>
         <td class="baselines-table-column-author">
-            <user-badge v-bind:user="author"/>
+            <user-badge v-bind:user="author" class="baseline-badge-avatar"/>
         </td>
         <td class="tlp-table-cell-actions">
             <show-baseline-button class="tlp-table-cell-actions-button" v-bind:baseline="baseline"/>

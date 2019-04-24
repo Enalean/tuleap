@@ -24,7 +24,16 @@
                 {{ comparison.id }}
             </a>
         </td>
-        <td class="comparisons-table-column-name">{{ comparison.name }}</td>
+        <td class="comparisons-table-column-name">
+            <p class="comparisons-table-column-name-content">
+                {{ comparison.name }}
+            </p>
+            <p class="comparisons-table-column-name-baselines">
+                {{ base_baseline.name }}
+                <i class="fa fa-tlp-baseline-comparison"></i>
+                {{ compared_to_baseline.name }}
+            </p>
+        </td>
         <td class="comparisons-table-column-milestone">
             <artifact-link class="baselines-table-column-milestone" v-bind:artifact="milestone">
                 <artifact-badge
@@ -34,11 +43,11 @@
                 {{ milestone.title }}
             </artifact-link>
         </td>
+        <td class="comparisons-table-column-creation-date">
+            <humanized-date v-bind:date="comparison.creation_date" v-bind:start_with_capital="true"/>
+        </td>
         <td class="comparisons-table-column-author">
             <user-badge v-bind:user="author"/>
-        </td>
-        <td class="comparisons-table-column-snapshot-date">
-            <humanized-date v-bind:date="comparison.creation_date" v-bind:start_with_capital="true"/>
         </td>
         <td class="tlp-table-cell-actions">
             <action-button
@@ -47,7 +56,9 @@
                 v-on:click="showComparison()"
                 data-test-action="consult"
             >
-                <span v-translate>Consult</span>
+                <span v-translate>
+                    Consult
+                </span>
             </action-button>
         </td>
     </tr>
@@ -79,6 +90,9 @@ export default {
         ...mapGetters(["findBaselineById", "findArtifactById", "findTrackerById", "findUserById"]),
         base_baseline() {
             return this.findBaselineById(this.comparison.base_baseline_id);
+        },
+        compared_to_baseline() {
+            return this.findBaselineById(this.comparison.compared_to_baseline_id);
         },
         milestone() {
             return this.findArtifactById(this.base_baseline.artifact_id);

@@ -56,13 +56,19 @@ describe("Comparison", () => {
         $store.getters.findBaselineById
             .withArgs(11)
             .and.returnValue(create("baseline", { artifact_id: 22 }));
+        $store.getters.findBaselineById.withArgs(12).and.returnValue(create("baseline"));
         $store.getters.findArtifactById.withArgs(22).and.returnValue(base_baseline_artifact);
         $store.getters.findTrackerById.and.returnValue(create("tracker"));
         $store.getters.findUserById.withArgs(9).and.returnValue(author);
 
         wrapper = shallowMount(Comparison, {
             propsData: {
-                comparison: create("comparison", { id: 1, base_baseline_id: 11, author_id: 9 })
+                comparison: create("comparison", {
+                    id: 1,
+                    base_baseline_id: 11,
+                    compared_to_baseline_id: 12,
+                    author_id: 9
+                })
             },
             localVue,
             mocks: { $store, $router }

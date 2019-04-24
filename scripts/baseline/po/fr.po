@@ -96,8 +96,8 @@ msgstr "Créer la baseline"
 msgid "Created by"
 msgstr "Créé par"
 
-msgid "Creation Date"
-msgstr "Date de création"
+msgid "Date"
+msgstr "Date"
 
 msgid "Delete"
 msgstr "Supprimer"

@@ -22,8 +22,19 @@
     margin-left: $tlp-half-spacing;
 }
 
-.comparisons-table-column-name {
-    width: 100%;
+// We have to be very specific here to override .tlp-table
+// (.tlp-table > tbody > tr > td)
+.comparisons-table > tbody > tr > td {
+    vertical-align: baseline;
+}
+
+.comparisons-table-column-name-content {
+    margin: 0;
+}
+
+.comparisons-table-column-name-baselines {
+    color: $tlp-ui-dimmed;
+    font-size: 14px;
 }
 
 .comparisons-table-column-milestone,
