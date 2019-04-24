@@ -365,6 +365,9 @@ msgstr[1] ""
 msgid "There is no upload in progress"
 msgstr "Il n'y a aucun téléversement en cours"
 
+msgid "This document is currently locked."
+msgstr "Ce document est actuellement verrouillé"
+
 msgid "This folder is empty"
 msgstr "Ce dossier est vide"
 

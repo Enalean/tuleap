@@ -20,7 +20,9 @@
 <template>
     <div class="tlp-framed">
         <div class="document-header">
-            <document-title-lock-info v-bind:item="embedded_file"/>
+            <document-title-lock-info v-bind:item="embedded_file"
+                                      v-bind:is-displaying-in-header="true"
+            />
 
             <h1 class="embedded-document-header-title">{{ embedded_title }}</h1>
 

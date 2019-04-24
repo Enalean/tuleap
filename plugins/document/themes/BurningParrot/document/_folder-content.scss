@@ -47,6 +47,20 @@
     }
 }
 
+.document-tree-item-toggle-quicklook-spacer {
+    flex: 1 1 auto;
+}
+
+.document-tree-item-toggle-quicklook-lock-icon {
+    margin: 0 0 0 $tlp-spacing;
+}
+
+.document-preview-item-is-locked-icon {
+    &::before {
+        content: '\f023'; // fa-lock
+    }
+}
+
 .document-tree-item-toggle-quicklook:hover {
     .quick-look-button,
     .document-dropdown-menu,

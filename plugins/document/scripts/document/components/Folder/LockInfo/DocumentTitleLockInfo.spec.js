@@ -48,10 +48,11 @@ describe("DocumentTitleLockInfo", () => {
         };
 
         const wrapper = document_locked_factory({
-            item
+            item,
+            isDisplayingItem: true
         });
 
-        expect(wrapper.contains(".document-display-lock")).toBeFalsy();
+        expect(wrapper.contains("[data-test=document-lock-information]")).toBeFalsy();
     });
 
     it(`Given document is locked
@@ -69,9 +70,58 @@ describe("DocumentTitleLockInfo", () => {
         };
 
         const wrapper = document_locked_factory({
-            item
+            item,
+            isDisplayingItem: true
+        });
+
+        expect(wrapper.contains("[data-test=document-lock-information]")).toBeTruthy();
+    });
+
+    it(`Given document is displayed in item view
+        When we display lock info
+        Then we should have dedicated badges classes`, () => {
+        const item = {
+            id: 42,
+            title: "my locked document",
+            type: TYPE_EMBEDDED,
+            lock_info: {
+                locked_by: {
+                    display_name: "lock owner name"
+                }
+            }
+        };
+
+        const wrapper = document_locked_factory({
+            item,
+            isDisplayingInHeader: true
         });
 
         expect(wrapper.contains(".document-display-lock")).toBeTruthy();
+        expect(wrapper.contains(".document-display-lock-icon")).toBeTruthy();
+        expect(wrapper.contains(".document-tree-item-toggle-quicklook-lock-icon")).toBeFalsy();
+    });
+
+    it(`Given document is displayed in tree view
+        When we display lock info
+        Then we should not have item header title style`, () => {
+        const item = {
+            id: 42,
+            title: "my locked document",
+            type: TYPE_EMBEDDED,
+            lock_info: {
+                locked_by: {
+                    display_name: "lock owner name"
+                }
+            }
+        };
+
+        const wrapper = document_locked_factory({
+            item,
+            isDisplayingInHeader: false
+        });
+
+        expect(wrapper.contains(".document-display-lock")).toBeFalsy();
+        expect(wrapper.contains(".document-display-lock-icon")).toBeFalsy();
+        expect(wrapper.contains(".document-tree-item-toggle-quicklook-lock-icon")).toBeTruthy();
     });
 });

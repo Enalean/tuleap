@@ -18,17 +18,23 @@
   -->
 
 <template>
-    <span class="document-display-lock" v-if="is_locked" v-bind:title="document_lock_info_title">
-        <i class="fa fa-lock document-display-lock-icon"></i>
+    <span v-bind:class="get_additional_classes"
+          v-if="is_locked"
+          v-bind:title="document_lock_info_title"
+          data-test="document-lock-information"
+    >
+        <i class="fa fa-lock" v-bind:class="get_icon_additional_classes"></i>
     </span>
 </template>
 
 <script>
 import { sprintf } from "sprintf-js";
+
 export default {
     name: "DocumentTitleLockInfo",
     props: {
-        item: Object
+        item: Object,
+        isDisplayingInHeader: Boolean
     },
     computed: {
         is_locked() {
@@ -43,6 +49,14 @@ export default {
                 this.$gettext("Document locked by %s."),
                 this.item.lock_info.locked_by.display_name
             );
+        },
+        get_icon_additional_classes() {
+            return this.isDisplayingInHeader
+                ? "document-display-lock-icon"
+                : "document-tree-item-toggle-quicklook-lock-icon";
+        },
+        get_additional_classes() {
+            return this.isDisplayingInHeader ? "document-display-lock" : "";
         }
     }
 };
