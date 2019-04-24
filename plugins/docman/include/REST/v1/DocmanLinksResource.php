@@ -24,6 +24,8 @@ namespace Tuleap\Docman\REST\v1;
 
 use Docman_LinkVersionFactory;
 use Docman_LockFactory;
+use Docman_SettingsBo;
+use Luracast\Restler\RestException;
 use Docman_VersionFactory;
 use Project;
 use ProjectManager;
@@ -38,6 +40,10 @@ use Tuleap\Docman\REST\v1\Links\DocmanLinkPATCHRepresentation;
 use Tuleap\Docman\REST\v1\Links\DocmanLinksValidityChecker;
 use Tuleap\Docman\REST\v1\Links\DocmanLinkUpdator;
 use Tuleap\Docman\REST\v1\Links\LinkVersionCreationBeforeUpdateValidator;
+use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataObsolescenceDateRetriever;
+use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataUsageChecker;
+use Tuleap\Docman\REST\v1\Metadata\HardcodedMetdataObsolescenceDateChecker;
+use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
@@ -128,11 +134,8 @@ class DocmanLinksResource extends AuthenticatedResource
         $event_adder->addLogEvents();
         $event_adder->addNotificationEvents($project);
 
-        $docman_approval_table_retriever = new ApprovalTableRetriever(
-            new \Docman_ApprovalTableFactoriesFactory(),
-            new Docman_VersionFactory()
-        );
-        $docman_item_updator             = $this->getLinkUpdator();
+        $docman_approval_table_retriever = new ApprovalTableRetriever(new \Docman_ApprovalTableFactoriesFactory(), new Docman_VersionFactory());
+        $docman_item_updator             = $this->getLinkUpdator($project);
 
         try {
             $approval_check = new ApprovalTableUpdateActionChecker($docman_approval_table_retriever);
@@ -140,7 +143,8 @@ class DocmanLinksResource extends AuthenticatedResource
             $docman_item_updator->updateLink(
                 $item,
                 $current_user,
-                $representation
+                $representation,
+                new \DateTimeImmutable()
             );
         } catch (ExceptionItemIsLockedByAnotherUser $exception) {
             throw new I18NRestException(
@@ -157,6 +161,16 @@ class DocmanLinksResource extends AuthenticatedResource
                 400,
                 $exception->getMessage()
             );
+        } catch (Metadata\StatusNotFoundException $e) {
+            throw new RestException(400, $e->getMessage());
+        } catch (Metadata\ItemStatusUsageMismatchException $e) {
+            throw new RestException(403, 'The "Status" property is not activated for this item.');
+        } catch (Metadata\InvalidDateComparisonException $e) {
+            throw new RestException(400, 'The obsolescence date is before the current date');
+        } catch (Metadata\InvalidDateTimeFormatException $e) {
+            throw new RestException(400, 'The date format is incorrect. The format should be YYYY-MM-DD');
+        } catch (Metadata\ObsoloscenceDateUsageMismatchException $e) {
+            throw new RestException(403, $e->getMessage());
         }
     }
 
@@ -175,14 +189,19 @@ class DocmanLinksResource extends AuthenticatedResource
         Header::allowOptionsPatch();
     }
 
-    private function getLinkUpdator(): DocmanLinkUpdator
+    private function getLinkUpdator(Project $project): DocmanLinkUpdator
     {
-        $builder             = new DocmanItemUpdatorBuilder();
-        $updator             = $builder->build($this->event_manager);
-        $version_factory     = new \Docman_VersionFactory();
-        $lock_factory        = new Docman_LockFactory();
-        $lock_checker        = new LockChecker($lock_factory);
-        $docman_item_factory = new \Docman_ItemFactory();
+        $builder                                      = new DocmanItemUpdatorBuilder();
+        $updator                                      = $builder->build($this->event_manager);
+        $version_factory                              = new \Docman_VersionFactory();
+        $lock_factory                                 = new Docman_LockFactory();
+        $lock_checker                                 = new LockChecker($lock_factory);
+        $docman_item_factory                          = new \Docman_ItemFactory();
+        $docman_setting_bo                            = new Docman_SettingsBo($project->getGroupId());
+        $hardcoded_metadata_status_checker            = new HardcodedMetadataUsageChecker($docman_setting_bo);
+        $hardcoded_metadata_obsolescence_date_checker = new HardcodedMetdataObsolescenceDateChecker(
+            $docman_setting_bo
+        );
         return new DocmanLinkUpdator(
             $version_factory,
             $updator,
@@ -191,7 +210,13 @@ class DocmanLinksResource extends AuthenticatedResource
             \EventManager::instance(),
             new DocmanLinksValidityChecker(),
             new Docman_LinkVersionFactory(),
-            new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
+            new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
+            new ItemStatusMapper($hardcoded_metadata_status_checker),
+            $hardcoded_metadata_status_checker,
+            $hardcoded_metadata_obsolescence_date_checker,
+            new HardcodedMetadataObsolescenceDateRetriever(
+                $hardcoded_metadata_obsolescence_date_checker
+            )
         );
     }
 }

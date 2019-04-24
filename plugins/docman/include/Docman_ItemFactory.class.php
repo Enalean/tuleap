@@ -800,6 +800,27 @@ class Docman_ItemFactory
         return $update && $this->createNewLinkVersion($link, $version_data);
     }
 
+    public function updateLinkWithMetadata(Docman_Link $link, array $version_data)
+    {
+        $update = $this->update(
+            [
+                'id'                => $link->getId(),
+                'group_id'          => $link->getGroupId(),
+                'title'             => $version_data['title'],
+                'description'       => $version_data['description'],
+                'user_id'           => $link->getOwnerId(),
+                'item_type'         => PLUGIN_DOCMAN_ITEM_TYPE_LINK,
+                'link_url'          => $version_data['link_url'],
+                'status'            => $version_data['status'],
+                'obsolescence_date' => $version_data['obsolescence_date']
+            ]
+        );
+
+        $link->setUrl($version_data['link_url']);
+
+        return $update && $this->createNewLinkVersion($link, $version_data);
+    }
+
     function massUpdate($srcItemId, $mdLabel, $itemIdArray) {
         $dao = $this->_getItemDao();
         $dao->massUpdate($srcItemId, $mdLabel, $itemIdArray);

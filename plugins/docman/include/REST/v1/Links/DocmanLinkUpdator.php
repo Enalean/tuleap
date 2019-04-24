@@ -29,6 +29,10 @@ use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Docman\Lock\LockChecker;
 use Tuleap\Docman\REST\v1\DocmanItemUpdator;
 use Tuleap\Docman\REST\v1\ExceptionItemIsLockedByAnotherUser;
+use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataObsolescenceDateRetriever;
+use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataUsageChecker;
+use Tuleap\Docman\REST\v1\Metadata\HardcodedMetdataObsolescenceDateChecker;
+use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
 
 class DocmanLinkUpdator
 {
@@ -64,6 +68,22 @@ class DocmanLinkUpdator
      * @var DBTransactionExecutor
      */
     private $transaction_executor;
+    /**
+     * @var ItemStatusMapper
+     */
+    private $status_mapper;
+    /**
+     * @var HardcodedMetadataUsageChecker
+     */
+    private $metadata_usage_checker;
+    /**
+     * @var HardcodedMetdataObsolescenceDateChecker
+     */
+    private $obsolescence_date_checker;
+    /**
+     * @var HardcodedMetadataObsolescenceDateRetriever
+     */
+    private $date_retriever;
 
     public function __construct(
         Docman_VersionFactory $version_factory,
@@ -73,7 +93,11 @@ class DocmanLinkUpdator
         EventManager $event_manager,
         DocmanLinksValidityChecker $links_validity_checker,
         \Docman_LinkVersionFactory $docman_link_version_factory,
-        DBTransactionExecutor $transaction_executor
+        DBTransactionExecutor $transaction_executor,
+        ItemStatusMapper $status_mapper,
+        HardcodedMetadataUsageChecker $metadata_usage_checker,
+        HardcodedMetdataObsolescenceDateChecker $obsolescence_date_checker,
+        HardcodedMetadataObsolescenceDateRetriever $date_retriever
     ) {
         $this->version_factory             = $version_factory;
         $this->updator                     = $updator;
@@ -83,38 +107,74 @@ class DocmanLinkUpdator
         $this->links_validity_checker      = $links_validity_checker;
         $this->docman_link_version_factory = $docman_link_version_factory;
         $this->transaction_executor        = $transaction_executor;
+        $this->status_mapper               = $status_mapper;
+        $this->metadata_usage_checker      = $metadata_usage_checker;
+        $this->obsolescence_date_checker   = $obsolescence_date_checker;
+        $this->date_retriever              = $date_retriever;
     }
 
     /**
      * @throws ExceptionItemIsLockedByAnotherUser
      * @throws \Luracast\Restler\RestException
+     * @throws \Throwable
+     * @throws \Tuleap\Docman\REST\v1\Metadata\InvalidDateComparisonException
+     * @throws \Tuleap\Docman\REST\v1\Metadata\InvalidDateTimeFormatException
+     * @throws \Tuleap\Docman\REST\v1\Metadata\ItemStatusUsageMismatchException
+     * @throws \Tuleap\Docman\REST\v1\Metadata\ObsoloscenceDateUsageMismatchException
+     * @throws \Tuleap\Docman\REST\v1\Metadata\StatusNotFoundException
      */
     public function updateLink(
         \Docman_Link $item,
         \PFUser $current_user,
-        DocmanLinkPATCHRepresentation $representation
+        DocmanLinkPATCHRepresentation $representation,
+        \DateTimeImmutable $current_time
     ): void {
         $this->lock_checker->checkItemIsLocked($item, $current_user);
 
         $this->links_validity_checker->checkLinkValidity($representation->link_properties->link_url);
 
+        $this->metadata_usage_checker->checkStatusIsNotSetWhenStatusMetadataIsNotAllowed(
+            $representation->status
+        );
+        $status_id = $this->status_mapper->getItemStatusIdFromItemStatusString(
+            $representation->status
+        );
+
+        $this->obsolescence_date_checker->checkObsolescenceDateUsage(
+            $representation->obsolescence_date,
+            PLUGIN_DOCMAN_ITEM_TYPE_LINK
+        );
+        $obsolescence_date_time_stamp = $this->date_retriever->getTimeStampOfDate(
+            $representation->obsolescence_date,
+            PLUGIN_DOCMAN_ITEM_TYPE_LINK
+        );
+        $this->obsolescence_date_checker->checkDateValidity(
+            $current_time->getTimestamp(),
+            $obsolescence_date_time_stamp,
+            PLUGIN_DOCMAN_ITEM_TYPE_LINK
+        );
+
         $this->transaction_executor->execute(
-            function () use ($item, $current_user, $representation) {
+            function () use ($item, $current_user, $representation, $status_id, $obsolescence_date_time_stamp) {
                 $next_version_id = (int)$this->version_factory->getNextVersionNumber($item);
 
                 $date = new \DateTimeImmutable();
 
                 $new_link_version_row = [
-                    'item_id'   => $item->getId(),
-                    'number'    => $next_version_id,
-                    'user_id'   => $current_user->getId(),
-                    'label'     => $representation->version_title,
-                    'changelog' => $representation->change_log,
-                    'date'      => $date->getTimestamp(),
-                    'link_url'  => $representation->link_properties->link_url
+                    'item_id'           => $item->getId(),
+                    'number'            => $next_version_id,
+                    'user_id'           => $current_user->getId(),
+                    'label'             => $representation->version_title,
+                    'changelog'         => $representation->change_log,
+                    'date'              => $date->getTimestamp(),
+                    'link_url'          => $representation->link_properties->link_url,
+                    'title'             => $representation->title,
+                    'description'       => $representation->description,
+                    'status'            => $status_id,
+                    'obsolescence_date' => $obsolescence_date_time_stamp
                 ];
 
-                $this->item_factory->updateLinkFromVersionData($item, $new_link_version_row);
+                $this->item_factory->updateLinkWithMetadata($item, $new_link_version_row);
             }
         );
 
