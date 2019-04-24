@@ -1,24 +1,24 @@
 <?php
-/* 
+/**
+ * Copyright (c) Enalean, 2011 - Present.
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
- * Originally written by Mahmoud MAALEJ, 2006. STMicroelectronics.
+ * This file is a part of Tuleap.
  *
- * This file is a part of Codendi.
- *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
 require_once('DataBuilderV5.class.php');
 require_once('ChartDataBuilderV5.class.php');
 require_once(TRACKER_BASE_DIR .'/Tracker/Artifact/Tracker_ArtifactFactory.class.php');
@@ -48,10 +48,10 @@ class GraphOnTrackersV5_Chart_GanttDataBuilder extends ChartDataBuilderV5 {
      *
      * @param Gantt_Engine object
      * @return array data array
-     */ 
+     */
     function buildData($engine) {
         $engine->data = array();
-        
+
         $ff = Tracker_FormElementFactory::instance();
         $field_start      = $this->chart->getField_start()      ? $ff->getFormElementById($this->chart->getField_start())      : null;
         $field_due        = $this->chart->getField_due()        ? $ff->getFormElementById($this->chart->getField_due())        : null;
@@ -75,31 +75,31 @@ class GraphOnTrackersV5_Chart_GanttDataBuilder extends ChartDataBuilderV5 {
                         'hint'     => '#'. $aid,
                         'links'    => TRACKER_BASE_URL.'/?aid='. $aid,
                     );
-                    
+
                     if ($field_start) {
                         $data['start'] = $field_start->fetchRawValueFromChangeset($changeset);
                     }
-                    
+
                     if ($field_due) {
                         $data['due'] = $field_due->fetchRawValueFromChangeset($changeset);
                     }
-                    
+
                     if ($field_finish) {
                         $data['finish'] = $field_finish->fetchRawValueFromChangeset($changeset);
                     }
-                    
+
                     if ($field_percentage) {
-                        $data['progress'] = $field_percentage->fetchRawValueFromChangeset($changeset);
+                        $data['progress'] = (int) $field_percentage->fetchRawValueFromChangeset($changeset);
                     }
-                    
+
                     if ($field_righttext) {
                         $data['right'] = $field_righttext->fetchRawValueFromChangeset($changeset);
                     }
-                    
+
                     if ($field_summary) {
                         $data['hint'] = $data['summary'] = $field_summary->fetchRawValueFromChangeset($changeset);
                     }
-                    
+
                     if ($data['progress'] < 0) {
                         $data['progress'] = 0;
                     } else if ($data['progress'] > 100) {
