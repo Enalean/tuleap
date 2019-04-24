@@ -453,11 +453,15 @@ class URLVerification_RedirectionTests extends URLVerificationBaseTest {
         $url = Mockery::mock(URL::class);
         $url->shouldReceive('getGroupIdFromUrl')->andReturn(101);
 
-        $event_manager = Mockery::mock(EventManager::class);
-        $event_manager->shouldReceive('processEvent')->with(Mockery::on(function (RestrictedUsersAreHandledByPluginEvent $event) {
-            $event->setPluginHandleRestricted();
-            return true;
-        }));
+        $fake_plugin = new class {
+            public function restrictedUsersAreHandledByPluginEvent(RestrictedUsersAreHandledByPluginEvent $event)
+            {
+                $event->setPluginHandleRestricted();
+            }
+        };
+
+        $event_manager = new EventManager();
+        $event_manager->addListener(RestrictedUsersAreHandledByPluginEvent::NAME, $fake_plugin, 'restrictedUsersAreHandledByPluginEvent', false);
 
         $url_verification->shouldReceive('getEventManager')->andReturn($event_manager);
 

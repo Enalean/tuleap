@@ -16,10 +16,11 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
-
  */
 
 use PHPUnit\Framework\TestCase;
+use Psr\EventDispatcher\StoppableEventInterface;
+use Tuleap\Event\EventManagerCannotDispatchException;
 
 class EventManagerTest extends TestCase // phpcs:ignore
 {
@@ -112,7 +113,8 @@ class EventManagerTest extends TestCase // phpcs:ignore
 
     public function testItCanSendAnEventObjectInsteadOfStringPlusParams()
     {
-        $event = new class {
+        $event = new class
+        {
             public const NAME = 'doSomething';
         };
 
@@ -123,5 +125,81 @@ class EventManagerTest extends TestCase // phpcs:ignore
         $event_manager->addListener($event::NAME, $listener, 'doSomething', false);
 
         $event_manager->processEvent($event);
+    }
+
+    public function testItStopsEventPropagation() : void
+    {
+        $stoppable_event = new class implements StoppableEventInterface {
+            public const NAME = 'foo';
+
+            public $stop = false;
+
+            public function isPropagationStopped(): bool
+            {
+                return $this->stop;
+            }
+        };
+
+        $listener_1 = new class {
+            public $was_called = false;
+
+            public function handleFoo(object $event)
+            {
+                $this->was_called = true;
+            }
+        };
+
+        $listener_2 = new class {
+            public $was_called = false;
+
+            public function handleFoo(object $event)
+            {
+                $this->was_called = true;
+                $event->stop = true;
+            }
+        };
+
+        $listener_3 = new class {
+            public $was_called = false;
+
+            public function handleFoo(object $event)
+            {
+                $this->was_called = true;
+            }
+        };
+
+        $event_manager = new EventManager();
+        $event_manager->addListener('foo', $listener_1, 'handleFoo', false);
+        $event_manager->addListener('foo', $listener_2, 'handleFoo', false);
+        $event_manager->addListener('foo', $listener_3, 'handleFoo', false);
+
+        $event_manager->dispatch($stoppable_event);
+
+        $this->assertEquals(true, $listener_1->was_called);
+        $this->assertEquals(true, $listener_2->was_called);
+        $this->assertEquals(false, $listener_3->was_called);
+    }
+
+    public function testItDispatchWithoutName()
+    {
+        $event_manager = new EventManager();
+
+        $unnamed_event = new class {
+            public $id = 0;
+        };
+
+        $listener = new class {
+            public function handleEvent(object $event)
+            {
+                $event->id = 12;
+            }
+        };
+
+        $event_manager->addListener(get_class($unnamed_event), $listener, 'handleEvent', false);
+
+
+        $unnamed_event = $event_manager->dispatch($unnamed_event);
+
+        $this->assertEquals(12, $unnamed_event->id);
     }
 }
