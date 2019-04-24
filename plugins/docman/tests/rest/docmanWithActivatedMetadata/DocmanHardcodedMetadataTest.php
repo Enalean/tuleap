@@ -411,6 +411,8 @@ class DocmanHardcodedMetadataTest extends DocmanWithMetadataActivatedBase
 
         $date = new \DateTimeImmutable();
         $date->setTimezone(new DateTimeZone('GMT+1'));
+        $date->setTime(0, 0, 0);
+
         $query = json_encode(
             [
                 'title'             => 'File1',
@@ -496,6 +498,8 @@ class DocmanHardcodedMetadataTest extends DocmanWithMetadataActivatedBase
             \DateTimeInterface::W3C,
             $obsolescence_date_string
         );
+        $obsolescence_date->setTimezone(new DateTimeZone('GMT+1'));
+        $obsolescence_date->setTime(0, 0, 0);
 
         $this->assertTrue($date->modify('+1 day')->getTimestamp() === $obsolescence_date->getTimestamp());
     }
