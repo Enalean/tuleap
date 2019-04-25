@@ -29,7 +29,6 @@
 
 <script>
 import SemanticFieldLabel from "../../common/SemanticFieldLabel.vue";
-import DOMPurify from "dompurify";
 import diff from "node-htmldiff";
 
 export default {
@@ -60,7 +59,7 @@ export default {
 
     computed: {
         value_diff() {
-            return diff(this.reference, this.compare_to);
+            return diff(this.reference || "", this.compare_to || "");
         }
     }
 };
