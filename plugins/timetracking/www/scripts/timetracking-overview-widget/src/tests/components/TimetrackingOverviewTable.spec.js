@@ -38,17 +38,19 @@ describe("Given a timetracking overview widget", () => {
             state: {
                 is_loading: false,
                 error_message: null,
+                are_void_trackers_hidden: false,
                 trackers_times: [{ tracker_id: 1 }]
             },
             getters: {
                 can_results_be_displayed: true,
                 has_error: false,
-                get_formatted_total_sum: "10:20"
+                get_formatted_total_sum: "10:20",
+                is_sum_of_times_equals_zero: true
             }
         };
     });
 
-    it("When trackers times are avalaible, then table is displayed", () => {
+    it("When trackers times are available, then table is displayed", () => {
         const wrapper = getTimeTrackingOverviewTableInstance(store_options);
         expect(wrapper.contains("[data-test=alert-danger]")).toBeFalsy();
         expect(wrapper.contains("[data-test=timetracking-loader]")).toBeFalsy();
@@ -59,7 +61,34 @@ describe("Given a timetracking overview widget", () => {
         expect(wrapper.contains("[data-test=tfoot]")).toBeTruthy();
     });
 
-    it("When trackers times are not avalaible, then table is displayed and an error feedback is not displayed", () => {
+    it("When trackers times sum not equal zero, then table with rows is displayed and an error feedback is not displayed", () => {
+        store_options.getters.is_sum_of_times_equals_zero = false;
+        const wrapper = getTimeTrackingOverviewTableInstance(store_options);
+
+        expect(wrapper.contains("[data-test=alert-danger]")).toBeFalsy();
+        expect(wrapper.contains("[data-test=timetracking-loader]")).toBeFalsy();
+        expect(wrapper.contains("[data-test=overview-table]")).toBeTruthy();
+        expect(wrapper.contains("[data-test=empty-cell]")).toBeFalsy();
+        expect(wrapper.contains("[data-test=table-row]")).toBeTruthy();
+        expect(wrapper.contains("[data-test=table-action]")).toBeTruthy();
+        expect(wrapper.contains("[data-test=tfoot]")).toBeTruthy();
+    });
+
+    it("When trackers times sum equal zero and void trackers are hidden, then table with empty cell is displayed and an error feedback is not displayed", () => {
+        store_options.getters.is_sum_of_times_equals_zero = true;
+        store_options.state.are_void_trackers_hidden = true;
+        const wrapper = getTimeTrackingOverviewTableInstance(store_options);
+
+        expect(wrapper.contains("[data-test=alert-danger]")).toBeFalsy();
+        expect(wrapper.contains("[data-test=timetracking-loader]")).toBeFalsy();
+        expect(wrapper.contains("[data-test=overview-table]")).toBeTruthy();
+        expect(wrapper.contains("[data-test=empty-cell]")).toBeTruthy();
+        expect(wrapper.contains("[data-test=table-row]")).toBeFalsy();
+        expect(wrapper.contains("[data-test=table-action]")).toBeTruthy();
+        expect(wrapper.contains("[data-test=tfoot]")).toBeFalsy();
+    });
+
+    it("When trackers times are not available, then table is displayed and an error feedback is not displayed", () => {
         store_options.state.trackers_times = [];
         const wrapper = getTimeTrackingOverviewTableInstance(store_options);
 
