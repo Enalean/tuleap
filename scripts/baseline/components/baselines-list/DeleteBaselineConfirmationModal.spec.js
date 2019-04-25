@@ -18,7 +18,7 @@
  *
  */
 
-import { mount } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
 import localVue from "../../support/local-vue.js";
 import { createStoreMock } from "../../support/store-wrapper.spec-helper.js";
 import store_options from "../../store/store_options";
@@ -27,9 +27,6 @@ import { create } from "../../support/factories";
 import { restore, rewire$deleteBaseline } from "../../api/rest-querier";
 
 describe("DeleteBaselineConfirmationModal", () => {
-    const confirm_selector = '[data-test-action="confirm"]';
-    const spinner_selector = '[data-test-type="spinner"]';
-
     let deleteBaseline;
     let deleteBaselineResolve;
     let deleteBaselineReject;
@@ -51,7 +48,7 @@ describe("DeleteBaselineConfirmationModal", () => {
 
         $store = createStoreMock(store_options);
 
-        wrapper = mount(DeleteBaselineConfirmationModal, {
+        wrapper = shallowMount(DeleteBaselineConfirmationModal, {
             propsData: {
                 baseline
             },
@@ -64,25 +61,11 @@ describe("DeleteBaselineConfirmationModal", () => {
 
     afterEach(restore);
 
-    it("does not show spinner", () => {
-        expect(wrapper.contains(spinner_selector)).toBeFalsy();
-    });
-    it("enables confirm button", () => {
-        expect(wrapper.find(confirm_selector).attributes().disabled).toBeUndefined();
-    });
-
     describe("when confirming", () => {
-        beforeEach(async () => {
-            wrapper.find(confirm_selector).trigger("click");
-            await wrapper.vm.$nextTick();
+        beforeEach(() => {
+            wrapper.vm.confirm();
         });
 
-        it("shows spinner", () => {
-            expect(wrapper.contains(spinner_selector)).toBeTruthy();
-        });
-        it("disables confirm button", () => {
-            expect(wrapper.find(confirm_selector).attributes().disabled).toEqual("disabled");
-        });
         it("deletes baseline", () => {
             expect(deleteBaseline).toHaveBeenCalledWith(1);
         });
@@ -100,9 +83,6 @@ describe("DeleteBaselineConfirmationModal", () => {
                     "dialog_interface/notify",
                     jasmine.any(Object)
                 );
-            });
-            it("does not show spinner any more", () => {
-                expect(wrapper.contains(spinner_selector)).toBeFalsy();
             });
             it("hides modal", () => {
                 expect($store.commit).toHaveBeenCalledWith("dialog_interface/hideModal");
@@ -125,12 +105,6 @@ describe("DeleteBaselineConfirmationModal", () => {
                     "dialog_interface/notify",
                     jasmine.any(Object)
                 );
-            });
-            it("does not show spinner any more", () => {
-                expect(wrapper.contains(spinner_selector)).toBeFalsy();
-            });
-            it("enables confirm button", () => {
-                expect(wrapper.find(confirm_selector).attributes().disabled).toBeUndefined();
             });
         });
     });

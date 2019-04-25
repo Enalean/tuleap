@@ -28,7 +28,7 @@
 <script>
 import ActionButton from "../common/ActionButton.vue";
 export default {
-    name: "ShowBaselineButton",
+    name: "ConsultBaselineButton",
     components: { ActionButton },
     props: {
         baseline: {

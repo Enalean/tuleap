@@ -49,17 +49,10 @@
             <user-badge v-bind:user="author"/>
         </td>
         <td class="tlp-table-cell-actions">
-            <action-button
-                icon="eye"
-                class="tlp-table-cell-actions-button"
-                v-on:click="showComparison()"
-                data-test-action="consult"
-            >
-                <span v-translate>
-                    Consult
-                </span>
-            </action-button>
+            <consult-comparison-button class="tlp-table-cell-actions-button" v-bind:comparison="comparison"/>
+            <delete-comparison-button class="tlp-table-cell-actions-button" v-bind:comparison="comparison"/>
         </td>
+
     </tr>
 </template>
 
@@ -68,17 +61,19 @@ import HumanizedDate from "../common/HumanizedDate.vue";
 import UserBadge from "../common/UserBadge.vue";
 import ArtifactLink from "../common/ArtifactLink.vue";
 import ArtifactBadge from "../common/ArtifactBadge.vue";
-import ActionButton from "../common/ActionButton.vue";
 import { mapGetters } from "vuex";
+import DeleteComparisonButton from "./DeleteComparisonButton.vue";
+import ConsultComparisonButton from "./ConsultComparisonButton.vue";
 
 export default {
     name: "Comparison",
     components: {
+        ConsultComparisonButton,
+        DeleteComparisonButton,
         ArtifactLink,
         ArtifactBadge,
         HumanizedDate,
-        UserBadge,
-        ActionButton
+        UserBadge
     },
 
     props: {
@@ -101,15 +96,6 @@ export default {
         },
         author() {
             return this.findUserById(this.comparison.author_id);
-        }
-    },
-
-    methods: {
-        showComparison() {
-            this.$router.push({
-                name: "ComparisonPage",
-                params: { comparison_id: this.comparison.id }
-            });
         }
     }
 };

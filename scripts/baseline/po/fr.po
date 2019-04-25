@@ -105,6 +105,9 @@ msgstr "Supprimer"
 msgid "Delete baseline"
 msgstr "Supprimer la baseline"
 
+msgid "Delete comparison"
+msgstr "Supprimer la comparaison"
+
 msgid "Epics"
 msgstr "Epics"
 
@@ -193,6 +196,12 @@ msgid ""
 msgstr ""
 "Vous êtes sur le point de supprimer la baseline <strong>%{ baseline.name }</"
 "strong>."
+
+msgid ""
+"You are about to delete the comparison <strong>%{ comparison.name }</strong>."
+msgstr ""
+"Vous êtes sur le point de supprimer la comparaison <strong>%{ comparison."
+"name }</strong>."
 
 msgid "your baselines"
 msgstr "vos baselines"

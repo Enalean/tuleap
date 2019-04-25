@@ -15,7 +15,6 @@
   -
   - You should have received a copy of the GNU General Public License
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
-  -
   -->
 <template>
     <delete-confirmation-modal
@@ -23,34 +22,27 @@
         v-bind:on_submit="confirm"
     >
         <span v-translate>
-            You are about to delete the baseline <strong>%{ baseline.name }</strong>.
+            You are about to delete the comparison <strong>%{ comparison.name }</strong>.
         </span>
     </delete-confirmation-modal>
 </template>
 
 <script>
-import { deleteBaseline } from "../../api/rest-querier";
 import DeleteConfirmationModal from "../common/DeleteConfirmationModal.vue";
 
 export default {
-    name: "DeleteBaselineConfirmationModal",
+    name: "DeleteComparisonConfirmationModal",
     components: { DeleteConfirmationModal },
     props: {
-        baseline: { required: true, type: Object }
+        comparison: { required: true, type: Object }
     },
     computed: {
         label() {
-            return this.$gettext("Delete baseline");
+            return this.$gettext("Delete comparison");
         }
     },
     methods: {
-        async confirm() {
-            await deleteBaseline(this.baseline.id);
-            this.$store.commit("baselines/delete", this.baseline);
-            this.$store.commit("dialog_interface/notify", {
-                text: this.$gettext("The baseline was deleted"),
-                class: "success"
-            });
+        confirm() {
             this.$store.commit("dialog_interface/hideModal");
         }
     }

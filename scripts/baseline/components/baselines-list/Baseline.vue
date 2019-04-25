@@ -41,7 +41,7 @@
             <user-badge v-bind:user="author" class="baseline-badge-avatar"/>
         </td>
         <td class="tlp-table-cell-actions">
-            <show-baseline-button class="tlp-table-cell-actions-button" v-bind:baseline="baseline"/>
+            <consult-baseline-button class="tlp-table-cell-actions-button" v-bind:baseline="baseline"/>
             <delete-baseline-button class="tlp-table-cell-actions-button" v-bind:baseline="baseline"/>
         </td>
     </tr>
@@ -53,13 +53,13 @@ import UserBadge from "../common/UserBadge.vue";
 import ArtifactLink from "../common/ArtifactLink.vue";
 import ArtifactBadge from "../common/ArtifactBadge.vue";
 import DeleteBaselineButton from "./DeleteBaselineButton.vue";
-import ShowBaselineButton from "./ShowBaselineButton.vue";
+import ConsultBaselineButton from "./ConsultBaselineButton.vue";
 import { mapGetters } from "vuex";
 
 export default {
     name: "Baseline",
     components: {
-        ShowBaselineButton,
+        ConsultBaselineButton,
         ArtifactLink,
         ArtifactBadge,
         HumanizedDate,
