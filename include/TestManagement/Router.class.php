@@ -21,6 +21,7 @@
 namespace Tuleap\TestManagement;
 
 use BackendLogger;
+use CSRFSynchronizerToken;
 use EventManager;
 use PFUser;
 use Plugin;
@@ -135,7 +136,11 @@ class Router {
                     $this->tracker_checker
                 );
                 $this->executeAction($controller, 'update');
-                $this->renderIndex($request);
+                if ($this->config->isConfigNeeded($request->getProject())) {
+                    $this->renderStartTestManagement($request, $csrf_token);
+                } else {
+                    $this->renderIndex($request);
+                }
                 break;
             case 'create-config':
                 $this->checkUserCanAdministrate($request->getProject(), $this->user_manager->getCurrentUser());
@@ -153,27 +158,32 @@ class Router {
                 break;
             default:
                 if ($this->config->isConfigNeeded($request->getProject())) {
-                    $controller = new StartTestManagementController(
-                        $this->tracker_factory,
-                        new BackendLogger(),
-                        TrackerXmlImport::build(
-                            new XMLImportHelper(UserManager::instance())
-                        ),
-                        $this->artifact_links_usage_updater,
-                        $csrf_token
-                    );
-
-                    $this->renderAction(
-                        $controller,
-                        'misconfiguration',
-                        $request,
-                        array($request)
-                    );
+                    $this->renderStartTestManagement($request, $csrf_token);
                     return;
                 }
 
                 $this->renderIndex($request);
         }
+    }
+
+    private function renderStartTestManagement(Codendi_Request $request, CSRFSynchronizerToken $csrf_token)
+    {
+        $controller = new StartTestManagementController(
+            $this->tracker_factory,
+            new BackendLogger(),
+            TrackerXmlImport::build(
+                new XMLImportHelper(UserManager::instance())
+            ),
+            $this->artifact_links_usage_updater,
+            $csrf_token
+        );
+
+        $this->renderAction(
+            $controller,
+            'misconfiguration',
+            $request,
+            array($request)
+        );
     }
 
     public function renderIndex(Codendi_Request $request) {

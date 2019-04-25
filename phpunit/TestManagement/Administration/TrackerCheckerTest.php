@@ -27,6 +27,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Project;
 use Tracker;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 
 class TrackerCheckerTest extends TestCase
 {
@@ -75,23 +76,52 @@ class TrackerCheckerTest extends TestCase
             $this->issue_tracker
         ]);
 
-        $this->tracker_checker = new TrackerChecker($tracker_factory);
+        $this->frozen_field_dao = Mockery::mock(FrozenFieldsDao::class);
+
+        $this->tracker_checker = new TrackerChecker($tracker_factory, $this->frozen_field_dao);
     }
 
     public function testItDoesNotThrowExceptionIfProvidedTrackerIdIsInProject()
     {
         $submitted_id = 1;
+
         $this->tracker_checker->checkTrackerIsInProject($this->project, $submitted_id);
 
         $this->addToAssertionCount(1);
     }
 
-    public function testItThrowsAnExceptionIfProvidedTrackerIdIsInProject()
+    public function testItDoesNotThrowExceptionIfProvidedTrackerIdCanBeUsed()
+    {
+        $submitted_id = 1;
+
+        $this->frozen_field_dao->shouldReceive('isAFrozenFieldPostActionUsedInTracker')->with(1)->andReturn(false);
+
+        $this->tracker_checker->checkSubmittedTrackerCanBeUsed($this->project, $submitted_id);
+
+        $this->addToAssertionCount(1);
+    }
+
+    public function testItThrowsAnExceptionIfProvidedTrackerIdIsNotInProject()
     {
         $submitted_id = 5;
 
-        $this->expectException(TrackerNotInProjectException::class);
+        $this->frozen_field_dao->shouldReceive('isAFrozenFieldPostActionUsedInTracker')->never();
 
+        $this->expectException(TrackerNotInProjectException::class);
         $this->tracker_checker->checkTrackerIsInProject($this->project, $submitted_id);
+
+        $this->expectException(TrackerNotInProjectException::class);
+        $this->tracker_checker->checkSubmittedTrackerCanBeUsed($this->project, $submitted_id);
+    }
+
+    public function testItThrowsAnExceptionIfProvidedTrackerHasAFrozenFieldsPostAction()
+    {
+        $submitted_id = 1;
+
+        $this->frozen_field_dao->shouldReceive('isAFrozenFieldPostActionUsedInTracker')->with(1)->andReturn(true);
+
+        $this->expectException(TrackerHasAtLeastOneFrozenFieldsPostActionException::class);
+
+        $this->tracker_checker->checkSubmittedTrackerCanBeUsed($this->project, $submitted_id);
     }
 }

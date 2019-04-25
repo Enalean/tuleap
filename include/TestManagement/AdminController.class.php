@@ -26,6 +26,7 @@ use EventManager;
 use Feedback;
 use Tuleap\TestManagement\Administration\StepFieldUsageDetector;
 use Tuleap\TestManagement\Administration\TrackerChecker;
+use Tuleap\TestManagement\Administration\TrackerHasAtLeastOneFrozenFieldsPostActionException;
 use Tuleap\TestManagement\Administration\TrackerNotInProjectException;
 use Tuleap\TestManagement\Breadcrumbs\AdmininistrationBreadcrumbs;
 
@@ -90,21 +91,45 @@ class AdminController extends TestManagementController
     {
         $this->csrf_token->check();
 
+        $campaign_tracker_id = $this->checkTrackerIdForProject(
+            $this->request->get('campaign_tracker_id'),
+            $this->config->getCampaignTrackerId($this->project),
+            false
+        );
+
+        $definition_tracker_id = $this->getValidDefinitionTrackerId();
+
+        $execution_tracker_id = $this->checkTrackerIdForProject(
+            $this->request->get('test_execution_tracker_id'),
+            $this->config->getTestExecutionTrackerId($this->project),
+            true
+        );
+
+        $issue_tracker_id = $this->checkTrackerIdForProject(
+            $this->request->get('issue_tracker_id'),
+            $this->config->getIssueTrackerId($this->project),
+            false
+        );
+
+        if ($campaign_tracker_id === false ||
+            $definition_tracker_id === false ||
+            $execution_tracker_id === false ||
+            $issue_tracker_id === false
+        ) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                sprintf(dgettext('tuleap-testmanagement', 'The submitted administration configuration is not valid.'))
+            );
+
+            return;
+        }
+
         $this->config->setProjectConfiguration(
             $this->project,
-            $this->checkTrackerIdForProject(
-                $this->request->get('campaign_tracker_id'),
-                $this->config->getCampaignTrackerId($this->project)
-            ),
-            $this->getValidDefinitionTrackerId(),
-            $this->checkTrackerIdForProject(
-                $this->request->get('test_execution_tracker_id'),
-                $this->config->getTestExecutionTrackerId($this->project)
-            ),
-            $this->checkTrackerIdForProject(
-                $this->request->get('issue_tracker_id'),
-                $this->config->getIssueTrackerId($this->project)
-            )
+            $campaign_tracker_id,
+            $definition_tracker_id,
+            $execution_tracker_id,
+            $issue_tracker_id
         );
     }
 
@@ -124,20 +149,25 @@ class AdminController extends TestManagementController
 
         return $this->checkTrackerIdForProject(
             $this->request->get('test_definition_tracker_id'),
-            $current_tracker_id
+            $current_tracker_id,
+            true
         );
     }
 
-    private function checkTrackerIdForProject($submitted_id, $original_id)
+    private function checkTrackerIdForProject($submitted_id, $original_id, $must_check_frozen_fields)
     {
         if (! $submitted_id) {
             return $original_id;
         }
 
         try {
-            $this->tracker_checker->checkTrackerIsInProject($this->project, $submitted_id);
+            if ($must_check_frozen_fields) {
+                $this->tracker_checker->checkSubmittedTrackerCanBeUsed($this->project, $submitted_id);
+            } else {
+                $this->tracker_checker->checkTrackerIsInProject($this->project, $submitted_id);
+            }
             return $submitted_id;
-        } catch (TrackerNotInProjectException $exception) {
+        } catch (TrackerNotInProjectException | TrackerHasAtLeastOneFrozenFieldsPostActionException $exception) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::WARN,
                 sprintf(dgettext('tuleap-testmanagement', 'Invalid tracker id %1$s for this project'), $submitted_id)

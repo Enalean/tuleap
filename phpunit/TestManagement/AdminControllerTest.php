@@ -25,9 +25,10 @@ require_once __DIR__ . '/../bootstrap.php';
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Tracker;
+use Tuleap\Layout\BaseLayout;
 use Tuleap\TestManagement\Administration\StepFieldUsageDetector;
 use Tuleap\TestManagement\Administration\TrackerChecker;
+use Tuleap\TestManagement\Administration\TrackerHasAtLeastOneFrozenFieldsPostActionException;
 use Tuleap\TestManagement\Event\GetMilestone;
 
 class AdminControllerTest extends TestCase
@@ -63,6 +64,7 @@ class AdminControllerTest extends TestCase
         parent::setUp();
         $this->globals = $GLOBALS;
         $GLOBALS       = [];
+        $GLOBALS['Response'] = Mockery::spy(BaseLayout::class);
 
         $this->config                    = Mockery::mock(Config::class);
         $this->step_field_usage_detector = Mockery::mock(StepFieldUsageDetector::class);
@@ -143,7 +145,8 @@ class AdminControllerTest extends TestCase
             ]
         );
 
-        $this->tracker_checker->shouldReceive('checkTrackerIsInProject');
+        $this->tracker_checker->shouldReceive('checkTrackerIsInProject')->times(2);
+        $this->tracker_checker->shouldReceive('checkSubmittedTrackerCanBeUsed')->times(2);
 
         $this->admin_controller->update();
     }
@@ -179,7 +182,44 @@ class AdminControllerTest extends TestCase
             ]
         );
 
-        $this->tracker_checker->shouldReceive('checkTrackerIsInProject');
+        $this->tracker_checker->shouldReceive('checkTrackerIsInProject')->times(2);
+        $this->tracker_checker->shouldReceive('checkSubmittedTrackerCanBeUsed');
+
+        $this->admin_controller->update();
+    }
+
+    public function testUpdateNotDoneWhenATrackerIdIsNotSetAtInitialConfiguration()
+    {
+        $this->request->shouldReceive('get')->with('campaign_tracker_id')->andReturn(self::CAMPAIGN_TRACKER_ID);
+        $this->request->shouldReceive('get')->with('test_definition_tracker_id')->andReturn(999);
+        $this->request->shouldReceive('get')->with('test_execution_tracker_id')->andReturn(
+            self::EXECUTION_TRACKER_ID
+        );
+        $this->request->shouldReceive('get')->with('issue_tracker_id')->andReturn(self::ISSUE_TRACKER_ID);
+
+        $this->config->shouldReceive(
+            [
+                'getCampaignTrackerId'       => false,
+                'getTestDefinitionTrackerId' => false,
+                'getTestExecutionTrackerId'  => false,
+                'getIssueTrackerId'          => false,
+            ]
+        );
+
+        $this->step_field_usage_detector->shouldReceive('isStepDefinitionFieldUsed')->andReturn(false);
+
+        $this->csrf_token->shouldReceive('check');
+        $this->config->shouldReceive('setProjectConfiguration')->never();
+
+        $this->tracker_checker->shouldReceive('checkTrackerIsInProject')->times(2);
+
+        $this->tracker_checker->shouldReceive('checkSubmittedTrackerCanBeUsed')
+            ->with($this->project,999)
+            ->andThrow(TrackerHasAtLeastOneFrozenFieldsPostActionException::class);
+
+        $this->tracker_checker->shouldReceive('checkSubmittedTrackerCanBeUsed')
+            ->with($this->project,self::EXECUTION_TRACKER_ID)
+            ->once();
 
         $this->admin_controller->update();
     }

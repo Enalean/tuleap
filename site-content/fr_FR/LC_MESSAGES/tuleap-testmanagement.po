@@ -124,6 +124,10 @@ msgstr "La configuration de TestManagement est incomplète,"
 msgid "Tests executions"
 msgstr "Exécution de tests"
 
+#, php-format
+msgid "The submitted administration configuration is not valid."
+msgstr "La configuration envoyée n'est pas valide."
+
 msgid ""
 "The tracker is using a field \"Step definition\" that is only available in "
 "the context of Test Management. However this service is not enabled in the "

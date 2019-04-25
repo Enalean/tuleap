@@ -51,6 +51,7 @@ use Tuleap\Tracker\Events\XMLImportArtifactLinkTypeCanBeDisabled;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\Tracker\FormElement\View\Admin\DisplayAdminFormElementsWarningsEvent;
 use Tuleap\Tracker\FormElement\View\Admin\FilterFormElementsThatCanBeCreatedForTracker;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__.'/../../tracker/include/trackerPlugin.class.php';
@@ -405,7 +406,7 @@ class testmanagementPlugin extends PluginWithLegacyInternalRouting
             $form_element_factory
         );
 
-        $tracker_checker = new TrackerChecker($tracker_factory);
+        $tracker_checker = new TrackerChecker($tracker_factory, new FrozenFieldsDao());
 
         $router = new Tuleap\TestManagement\Router(
             $this,

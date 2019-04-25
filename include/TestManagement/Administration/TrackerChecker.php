@@ -24,6 +24,7 @@ namespace Tuleap\TestManagement\Administration;
 
 use Project;
 use TrackerFactory;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 
 class TrackerChecker
 {
@@ -33,16 +34,19 @@ class TrackerChecker
     private $project_trackers = [];
 
     /**
-     * @var array
+     * @var TrackerFactory
      */
-    private $project_tracker_ids = [];
-
-    /** @var TrackerFactory */
     private $tracker_factory;
 
-    public function __construct(TrackerFactory $tracker_factory)
+    /**
+     * @var FrozenFieldsDao
+     */
+    private $frozen_fields_dao;
+
+    public function __construct(TrackerFactory $tracker_factory, FrozenFieldsDao $frozen_fields_dao)
     {
-        $this->tracker_factory = $tracker_factory;
+        $this->tracker_factory   = $tracker_factory;
+        $this->frozen_fields_dao = $frozen_fields_dao;
     }
 
     /**
@@ -52,8 +56,21 @@ class TrackerChecker
     {
         $this->initTrackerIds($project);
 
-        if (! in_array($submitted_id, $this->project_tracker_ids[$project->getID()])) {
+        if (! array_key_exists($submitted_id, $this->project_trackers[$project->getID()])) {
             throw new TrackerNotInProjectException();
+        }
+    }
+
+    /**
+     * @throws TrackerNotInProjectException
+     * @throws TrackerHasAtLeastOneFrozenFieldsPostActionException
+     */
+    public function checkSubmittedTrackerCanBeUsed(Project $project, int $submitted_id) : void
+    {
+        $this->checkTrackerIsInProject($project, $submitted_id);
+
+        if ($this->frozen_fields_dao->isAFrozenFieldPostActionUsedInTracker($submitted_id)) {
+            throw new TrackerHasAtLeastOneFrozenFieldsPostActionException();
         }
     }
 
@@ -63,15 +80,6 @@ class TrackerChecker
 
         if (! array_key_exists($project_id, $this->project_trackers)) {
             $this->project_trackers[$project_id] = $this->tracker_factory->getTrackersByGroupId($project_id);
-        }
-
-        if (! array_key_exists($project_id, $this->project_tracker_ids)) {
-            $this->project_tracker_ids[$project_id] = array_map(
-                function ($tracker) {
-                    return $tracker->getId();
-                },
-                $this->project_trackers[$project_id]
-            );
         }
     }
 }
