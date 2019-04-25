@@ -28,10 +28,6 @@
     margin: 0 $tlp-spacing $tlp-spacing 0;
 }
 
-.embedded-document-header-title {
-    margin: 0 $tlp-spacing 0 0;
-}
-
 .document-header-actions {
     display: flex;
     flex: 1 1 auto;
@@ -73,25 +69,26 @@
 }
 
 .document-display-lock {
+    display: flex;
+    position: relative;
+    top: 5px;
+    align-items: center;
+    justify-content: center;
     width: 36px;
     height: 36px;
-    margin: $tlp-half-spacing $tlp-half-spacing $tlp-half-spacing 0;
+    margin: 0 $tlp-half-spacing 0 0;
     border-radius: 50%;
-    background: #333333;
+    background: $tlp-theme-sidebar-background-color;
     color: $tlp-ui-white;
+    font-size: 20px;
 }
 
 .document-header-embedded-actions {
     display: flex;
     flex: 1 1 auto;
-
-}
-
-.document-display-lock-icon {
-    margin: $tlp-half-spacing 13px;
 }
 
 .document-approval-badge {
-    height: 25px;
     align-self: center;
+    height: 25px;
 }

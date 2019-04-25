@@ -24,7 +24,7 @@
                                       v-bind:is-displaying-in-header="true"
             />
 
-            <h1 class="embedded-document-header-title">{{ embedded_title }}</h1>
+            <h1 class="document-header-title">{{ embedded_title }}</h1>
 
             <actions-header v-bind:item="embedded_file"/>
 
