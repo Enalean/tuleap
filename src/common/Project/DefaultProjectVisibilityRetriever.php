@@ -28,11 +28,13 @@ use Tuleap\Project\Admin\ProjectWithoutRestrictedFeatureFlag;
 
 final class DefaultProjectVisibilityRetriever
 {
+    public const CONFIG_SETTING_NAME = 'default_project_visibility';
+
     public function getDefaultProjectVisibility() : string
     {
         $are_restricted_users_allowed          = ForgeConfig::areRestrictedUsersAllowed();
         $is_without_restricted_feature_enabled = ProjectWithoutRestrictedFeatureFlag::isEnabled();
-        $default_project_visibility_setting    = ForgeConfig::get('default_project_visibility');
+        $default_project_visibility_setting    = ForgeConfig::get(self::CONFIG_SETTING_NAME);
 
         if ($are_restricted_users_allowed && $default_project_visibility_setting === Project::ACCESS_PUBLIC_UNRESTRICTED) {
             return $default_project_visibility_setting;

@@ -301,9 +301,6 @@ $sys_lang = 'en_US';
 // admin. If 0 user can register by themselves
 $sys_user_approval = 0;
 
-// Project default privacy status (1 is public, 0 is private)
-$sys_is_project_public = 1;
-
 // if set to 0 (zero) then the project privacy radio buttons are hidden during the project registration
 $sys_user_can_choose_project_privacy = 1;
 

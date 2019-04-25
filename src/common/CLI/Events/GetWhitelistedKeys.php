@@ -26,6 +26,7 @@ use Tuleap\Event\Dispatchable;
 use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\layout\HomePage\NewsCollectionBuilder;
 use Tuleap\layout\HomePage\StatisticsCollectionBuilder;
+use Tuleap\Project\DefaultProjectVisibilityRetriever;
 
 class GetWhitelistedKeys implements Dispatchable
 {
@@ -45,6 +46,7 @@ class GetWhitelistedKeys implements Dispatchable
         Prometheus::CONFIG_PROMETHEUS_NODE_EXPORTER => true,
         NewsCollectionBuilder::CONFIG_DISPLAY_NEWS => true,
         StatisticsCollectionBuilder::CONFIG_DISPLAY_STATISTICS => true,
+        DefaultProjectVisibilityRetriever::CONFIG_SETTING_NAME => true,
     ];
 
     public function addPluginsKeys($key_name)

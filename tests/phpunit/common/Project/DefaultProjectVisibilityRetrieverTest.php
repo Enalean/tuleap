@@ -67,7 +67,7 @@ final class DefaultProjectVisibilityRetrieverTest extends TestCase
         if ($is_without_restricted_feature_enabled) {
             ForgeConfig::set('feature_flag_project_without_restricted', 1);
         }
-        ForgeConfig::set('default_project_visibility', $setting_value);
+        ForgeConfig::set(DefaultProjectVisibilityRetriever::CONFIG_SETTING_NAME, $setting_value);
 
         $default_visibility_retriever = new DefaultProjectVisibilityRetriever();
 
@@ -97,7 +97,7 @@ final class DefaultProjectVisibilityRetrieverTest extends TestCase
 
     public function testNewSettingHasPrecedenceOverTheLegacySetting() : void
     {
-        ForgeConfig::set('default_project_visibility', Project::ACCESS_PRIVATE);
+        ForgeConfig::set(DefaultProjectVisibilityRetriever::CONFIG_SETTING_NAME, Project::ACCESS_PRIVATE);
         ForgeConfig::set('sys_is_project_public', 1);
 
         $default_visibility_retriever = new DefaultProjectVisibilityRetriever();
