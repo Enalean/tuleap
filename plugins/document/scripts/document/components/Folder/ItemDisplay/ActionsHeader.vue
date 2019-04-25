@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <div class="document-header-embedded-actions">
+    <div class="document-header-actions">
         <div class="tlp-dropdown document-dropdown-menu-button">
             <div class="tlp-dropdown-split-button">
                 <update-item-button class="tlp-button-primary tlp-dropdown-split-button-main"

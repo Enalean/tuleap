@@ -76,6 +76,10 @@
     }
 }
 
+.document-preview-item-is-locked-icon + .document-quick-look-icon-container {
+    margin: $tlp-double-spacing 0;
+}
+
 .document-quick-look-icon {
     position: relative;
     top: -10px;
