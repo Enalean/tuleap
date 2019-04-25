@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use FastRoute\RouteCollector;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Bugzilla\Administration\Controller;
 use Tuleap\Bugzilla\Administration\Router;
@@ -32,6 +33,8 @@ use Tuleap\Bugzilla\Reference\RESTReferenceCreator;
 use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\reference\ReferenceValidator;
 use Tuleap\reference\ReservedKeywordsRetriever;
+use Tuleap\Request\CollectRoutesEvent;
+use Tuleap\Request\DispatchableWithRequest;
 
 require_once __DIR__ . '/constants.php';
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -54,6 +57,7 @@ class bugzilla_referencePlugin extends Plugin
         $this->addHook(Event::REMOVE_CROSS_REFERENCE);
         $this->addHook(Event::GET_REFERENCE_ADMIN_CAPABILITIES);
         $this->addHook(Event::CAN_USER_CREATE_REFERENCE_WITH_THIS_NATURE);
+        $this->addHook(CollectRoutesEvent::NAME);
     }
 
     /**
@@ -83,7 +87,7 @@ class bugzilla_referencePlugin extends Plugin
         }
     }
 
-    public function processAdmin(HTTPRequest $request)
+    public function routeAdmin() : DispatchableWithRequest
     {
         $encryption_key = $this->getEncryptionKey();
 
@@ -103,8 +107,14 @@ class bugzilla_referencePlugin extends Plugin
             new ReferenceDestructor(new Dao())
         );
 
-        $router = new Router($controller);
-        $router->route($request);
+        return new Router($controller);
+    }
+
+    public function collectRoutesEvent(CollectRoutesEvent $event)
+    {
+        $event->getRouteCollector()->addGroup($this->getPluginPath(), function (RouteCollector $r) {
+            $r->addRoute(['GET', 'POST'], '/admin/[index.php]', $this->getRouteHandler('routeAdmin'));
+        });
     }
 
     public function burning_parrot_get_javascript_files(array $params)

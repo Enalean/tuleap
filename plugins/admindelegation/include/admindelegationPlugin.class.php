@@ -19,12 +19,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- */
-
-use Tuleap\BurningParrotCompatiblePageEvent;
-use Tuleap\Layout\IncludeAssets;
-
-/**
+ *
  * AdminDelegationPlugin
  *
  * This plugin is made of two parts:
@@ -43,6 +38,12 @@ use Tuleap\Layout\IncludeAssets;
  *
  */
 
+use FastRoute\RouteCollector;
+use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\BurningParrotCompatiblePageEvent;
+use Tuleap\Layout\IncludeAssets;
+use Tuleap\Request\CollectRoutesEvent;
+
 require_once __DIR__ . '/../vendor/autoload.php';
 
 class AdminDelegationPlugin extends Plugin  // @codingStandardsIgnoreLine
@@ -58,6 +59,7 @@ class AdminDelegationPlugin extends Plugin  // @codingStandardsIgnoreLine
         $this->addHook(BurningParrotCompatiblePageEvent::NAME);
         $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
         $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
+        $this->addHook(CollectRoutesEvent::NAME);
         bindtextdomain('tuleap-admindelegation', __DIR__ . '/../site-content');
     }
 
@@ -98,7 +100,7 @@ class AdminDelegationPlugin extends Plugin  // @codingStandardsIgnoreLine
      *
      * @return Boolean
      */
-    protected function _userCanViewWidget($widget)
+    protected function userCanViewWidget($widget)
     {
         $um      = UserManager::instance();
         $user    = $um->getCurrentUser();
@@ -154,11 +156,11 @@ class AdminDelegationPlugin extends Plugin  // @codingStandardsIgnoreLine
      */
     public function widgetInstance(\Tuleap\Widget\Event\GetWidget $get_widget_event)
     {
-        if ($get_widget_event->getName() === 'admindelegation' && $this->_userCanViewWidget('admindelegation')) {
+        if ($get_widget_event->getName() === 'admindelegation' && $this->userCanViewWidget('admindelegation')) {
             include_once 'AdminDelegation_UserWidget.class.php';
             $get_widget_event->setWidget(new AdminDelegation_UserWidget($this));
         }
-        if ($get_widget_event->getName() ==='admindelegation_projects' && $this->_userCanViewWidget('admindelegation_projects')) {
+        if ($get_widget_event->getName() ==='admindelegation_projects' && $this->userCanViewWidget('admindelegation_projects')) {
             include_once 'AdminDelegation_ShowProjectWidget.class.php';
             $get_widget_event->setWidget(new AdminDelegation_ShowProjectWidget($this));
         }
@@ -171,11 +173,11 @@ class AdminDelegationPlugin extends Plugin  // @codingStandardsIgnoreLine
      */
     public function getUserWidgetList(\Tuleap\Widget\Event\GetUserWidgetList $get_user_widget_list_event)
     {
-        if ($this->_userCanViewWidget('admindelegation')) {
+        if ($this->userCanViewWidget('admindelegation')) {
             include_once 'AdminDelegation_UserWidget.class.php';
             $get_user_widget_list_event->addWidget('admindelegation');
         }
-        if ($this->_userCanViewWidget('admindelegation_projects')) {
+        if ($this->userCanViewWidget('admindelegation_projects')) {
             include_once 'AdminDelegation_ShowProjectWidget.class.php';
             $get_user_widget_list_event->addWidget('admindelegation_projects');
         }
@@ -184,5 +186,25 @@ class AdminDelegationPlugin extends Plugin  // @codingStandardsIgnoreLine
     public function uninstall()
     {
         $this->removeOrphanWidgets(array('admindelegation', 'admindelegation_projects'));
+    }
+
+    public function routeAdmin() : \Tuleap\Request\DispatchableWithRequest
+    {
+        return new \Tuleap\AdminDelegation\SiteAdminController(
+            new AdminDelegation_UserServiceManager(
+                new AdminDelegation_UserServiceDao(),
+                new AdminDelegation_UserServiceLogDao()
+            ),
+            UserManager::instance(),
+            new AdminPageRenderer()
+        );
+    }
+
+    public function collectRoutesEvent(CollectRoutesEvent $event)
+    {
+        $event->getRouteCollector()->addGroup($this->getPluginPath(), function (RouteCollector $r) {
+            $r->addRoute(['GET', 'POST'], '/', $this->getRouteHandler('routeAdmin'));
+            $r->addRoute(['GET', 'POST'], '/permissions.php', $this->getRouteHandler('routeAdmin'));
+        });
     }
 }

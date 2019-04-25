@@ -24,8 +24,12 @@ use CSRFSynchronizerToken;
 use Feedback;
 use HTTPRequest;
 use PFUser;
+use Tuleap\Layout\BaseLayout;
+use Tuleap\Request\DispatchableWithRequest;
+use Tuleap\Request\ForbiddenException;
+use Tuleap\Request\NotFoundException;
 
-class Router
+class Router implements DispatchableWithRequest
 {
     /**
      * @var Controller
@@ -37,7 +41,7 @@ class Router
         $this->controller = $controller;
     }
 
-    public function route(HTTPRequest $request)
+    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $current_user = $request->getCurrentUser();
         $this->checkUserIsSiteAdmin($current_user);
