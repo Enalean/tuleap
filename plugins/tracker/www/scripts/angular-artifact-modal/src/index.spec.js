@@ -22,7 +22,7 @@ import "./field-dependencies-service.spec.js";
 import "./model/field-values-service.spec.js";
 import "./model/form-tree-builder.spec.js";
 import "./model/tracker-transformer-service.spec.js";
-import "./model/workflow-service.spec.js";
+import "./model/workflow-field-values-filter.spec.js";
 import "./rest/rest-service.spec.js";
 import "./tuleap-artifact-modal-controller.spec.js";
 import "./tuleap-artifact-modal-fields/computed-field/computed-field-controller.spec.js";
