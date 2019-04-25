@@ -22,6 +22,7 @@ require_once 'exit.php';
 require_once 'html.php';
 require_once 'user.php';
 
+use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\Label\LabelDao;
 use Tuleap\Project\UgroupDuplicator;
 use Tuleap\FRS\FRSPermissionCreator;
@@ -129,6 +130,7 @@ class ProjectCreationTest extends TuleapDbTestCase {
             $duplicator,
             new ServiceCreator(),
             new LabelDao(),
+            new DefaultProjectVisibilityRetriever(),
             $force_activation
         );
 

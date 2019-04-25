@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 use Mockery as M;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\XML\MappingsRegistry;
 use Tuleap\Project\XML\Import;
@@ -89,7 +90,8 @@ class ProjectXMLImporterTest extends TestCase
             $frs_permissions_creator,
             M::spy(\Tuleap\Dashboard\Project\ProjectDashboardDuplicator::class),
             M::spy(\Tuleap\Service\ServiceCreator::class),
-            M::spy(\Tuleap\Project\Label\LabelDao::class)
+            M::spy(\Tuleap\Project\Label\LabelDao::class),
+            new DefaultProjectVisibilityRetriever()
         );
 
         $this->xml_importer = new ProjectXMLImporter(

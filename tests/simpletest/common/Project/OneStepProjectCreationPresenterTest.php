@@ -18,11 +18,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+use Tuleap\Project\DefaultProjectVisibilityRetriever;
+
 class OneStepProjectCreationPresenter_FieldsTest extends TuleapTestCase {
     protected function aOneStepProjectCreationForm($request_data) {
         $project_manager  = mock('ProjectManager');
         $request          = aRequest()->withParams($request_data)->build();
-        $creation_request = new Project_OneStepCreation_OneStepCreationRequest($request, $project_manager);
+        $creation_request = new Project_OneStepCreation_OneStepCreationRequest(
+            $request,
+            $project_manager,
+            new DefaultProjectVisibilityRetriever()
+        );
 
         return new Project_OneStepCreation_OneStepCreationPresenter(
             $creation_request,

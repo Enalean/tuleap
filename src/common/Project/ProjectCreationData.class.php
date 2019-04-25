@@ -18,11 +18,16 @@
  */
 
 use Tuleap\Project\Admin\ProjectWithoutRestrictedFeatureFlag;
+use Tuleap\Project\DefaultProjectVisibilityRetriever;
 
 class ProjectCreationData
 {
 
     private $logger;
+    /**
+     * @var DefaultProjectVisibilityRetriever
+     */
+    private $default_project_visibility_retriever;
     private $data_services;
     private $data_fields;
     private $full_name;
@@ -35,13 +40,14 @@ class ProjectCreationData
     private $inherit_from_template = true;
     private $access;
 
-    public function __construct(?Logger $logger = null)
+    public function __construct(DefaultProjectVisibilityRetriever $default_project_visibility_retriever, ?Logger $logger = null)
     {
         if ($logger === null) {
             $this->logger = new Log_NoopLogger();
         } else {
             $this->logger = new WrapperLogger($logger, self::class);
         }
+        $this->default_project_visibility_retriever = $default_project_visibility_retriever;
     }
 
     /**
@@ -138,8 +144,11 @@ class ProjectCreationData
      * $data['project']['services'][$arr['service_id']]['is_used'];
      * $data['project']['services'][$arr['service_id']]['server_id'];
      */
-    public static function buildFromFormArray(array $data) {
-        $instance = new ProjectCreationData();
+    public static function buildFromFormArray(
+        DefaultProjectVisibilityRetriever $default_project_visibility_retriever,
+        array $data
+    ) {
+        $instance = new ProjectCreationData($default_project_visibility_retriever);
         $instance->fromForm($data);
         return $instance;
     }
@@ -162,26 +171,29 @@ class ProjectCreationData
     private function getAccessFromProjectArrayData(array $project)
     {
         if ((int) ForgeConfig::get('sys_user_can_choose_project_privacy') === 0) {
-            return $this->getDefaultAccessOfPlatform();
+            return $this->default_project_visibility_retriever->getDefaultProjectVisibility();
         }
 
         if (! isset($project['is_public'])) {
-            return $this->getDefaultAccessOfPlatform();
+            return $this->default_project_visibility_retriever->getDefaultProjectVisibility();
         }
 
-        $should_allow_restricted = isset($project['allow_restricted']) && $project['allow_restricted'] &&
-            ForgeConfig::areRestrictedUsersAllowed() && ProjectWithoutRestrictedFeatureFlag::isEnabled();
+        $is_public                       = (string) $project['is_public'] === '1';
+        $are_restricted_enabled          = ForgeConfig::areRestrictedUsersAllowed();
+        $should_project_allow_restricted = isset($project['allow_restricted']) && $project['allow_restricted'];
 
-        if ((string) $project['is_public'] === '1') {
-            return $should_allow_restricted ? Project::ACCESS_PUBLIC_UNRESTRICTED : Project::ACCESS_PUBLIC;
+        if ($is_public) {
+            if ($are_restricted_enabled && $should_project_allow_restricted) {
+                return Project::ACCESS_PUBLIC_UNRESTRICTED;
+            }
+            return PROJECT::ACCESS_PUBLIC;
         }
 
-        return $should_allow_restricted ? Project::ACCESS_PRIVATE : Project::ACCESS_PRIVATE_WO_RESTRICTED;
-    }
+        if ($are_restricted_enabled && !$should_project_allow_restricted && ProjectWithoutRestrictedFeatureFlag::isEnabled()) {
+            return Project::ACCESS_PRIVATE_WO_RESTRICTED;
+        }
 
-    private function getDefaultAccessOfPlatform()
-    {
-        return ForgeConfig::get('sys_is_project_public') ? Project::ACCESS_PUBLIC : Project::ACCESS_PRIVATE;
+        return Project::ACCESS_PRIVATE;
     }
 
     public static function buildFromXML(
@@ -190,9 +202,12 @@ class ProjectCreationData
         XML_RNGValidator $xml_validator = null,
         ServiceManager $service_manager = null,
         ProjectManager $project_manager = null,
-        ?Logger $logger = null)
-        {
-        $instance = new ProjectCreationData($logger);
+        ?Logger $logger = null,
+        ?DefaultProjectVisibilityRetriever $default_project_visibility_retriever = null
+    ) {
+        $default_project_visibility_retriever = $default_project_visibility_retriever ?? new DefaultProjectVisibilityRetriever();
+
+        $instance = new ProjectCreationData($default_project_visibility_retriever, $logger);
         $instance->fromXML($xml, $template_id, $xml_validator, $service_manager, $project_manager);
         return $instance;
     }
@@ -254,7 +269,7 @@ class ProjectCreationData
                 break;
 
             default:
-                $this->access = $this->getDefaultAccessOfPlatform();
+                $this->access = $this->default_project_visibility_retriever->getDefaultProjectVisibility();
         }
 
         $this->markUsedServicesFromXML($xml, $template_id, $service_manager, $project_manager);

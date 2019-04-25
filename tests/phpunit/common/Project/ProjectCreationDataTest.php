@@ -25,6 +25,7 @@ declare(strict_types=1);
 use Mockery as M;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Configuration\Logger\LoggerInterface;
+use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\XML\Import\ImportNotValidException;
 
 class ProjectCreationDataTest extends TestCase
@@ -47,9 +48,15 @@ class ProjectCreationDataTest extends TestCase
      * @var M\MockInterface|ServiceManager
      */
     private $service_manager;
+    /**
+     * @var DefaultProjectVisibilityRetriever
+     */
+    private $default_project_visibility_retriever;
 
     protected function setUp(): void
     {
+        $this->default_project_visibility_retriever = new DefaultProjectVisibilityRetriever();
+
         $this->xml_rngvalidator = M::mock(XML_RNGValidator::class);
         $this->xml_rngvalidator->shouldReceive('validate');
         $this->service_manager  = M::mock(ServiceManager::class);
@@ -140,7 +147,10 @@ class ProjectCreationDataTest extends TestCase
 
     public function testItCreatesAPrivateProjectFromWebPayload() : void
     {
+        ForgeConfig::set('sys_user_can_choose_project_privacy', 1);
+
         $project_data = ProjectCreationData::buildFromFormArray(
+            $this->default_project_visibility_retriever,
             [
                 'project' => [
                     'is_public' => '0',
@@ -175,7 +185,7 @@ class ProjectCreationDataTest extends TestCase
             $web_payload['project']['allow_restricted'] = '1';
         }
 
-        $project_data = ProjectCreationData::buildFromFormArray($web_payload);
+        $project_data = ProjectCreationData::buildFromFormArray($this->default_project_visibility_retriever, $web_payload);
 
         $this->assertEquals($expected_visibility, $project_data->getAccess());
     }
@@ -186,6 +196,7 @@ class ProjectCreationDataTest extends TestCase
         ForgeConfig::set('sys_user_can_choose_project_privacy', 1);
 
         $project_data = ProjectCreationData::buildFromFormArray(
+            $this->default_project_visibility_retriever,
             [
                 'project' => [
                     'is_public' => '1',
@@ -202,6 +213,7 @@ class ProjectCreationDataTest extends TestCase
         ForgeConfig::set('sys_is_project_public', 1);
 
         $project_data = ProjectCreationData::buildFromFormArray(
+            $this->default_project_visibility_retriever,
             [
                 'project' => [
                     'is_public' => '0',
@@ -218,6 +230,7 @@ class ProjectCreationDataTest extends TestCase
         ForgeConfig::set('sys_is_project_public', 0);
 
         $project_data = ProjectCreationData::buildFromFormArray(
+            $this->default_project_visibility_retriever,
             [
                 'project' => [
                     'is_public' => '1',
@@ -233,7 +246,7 @@ class ProjectCreationDataTest extends TestCase
         ForgeConfig::set('sys_user_can_choose_project_privacy', 1);
         ForgeConfig::set('sys_is_project_public', 0);
 
-        $project_data = ProjectCreationData::buildFromFormArray([]);
+        $project_data = ProjectCreationData::buildFromFormArray($this->default_project_visibility_retriever, []);
 
         $this->assertEquals(Project::ACCESS_PRIVATE, $project_data->getAccess());
     }

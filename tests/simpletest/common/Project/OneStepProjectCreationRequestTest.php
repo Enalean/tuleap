@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+use Tuleap\Project\DefaultProjectVisibilityRetriever;
+
 class OneStepProjectCreationRequestTest extends TuleapTestCase {
 
     private $template_id        = 100;
@@ -43,7 +45,11 @@ class OneStepProjectCreationRequestTest extends TuleapTestCase {
 
     protected function aCreationRequest($request_data) {
         $request = aRequest()->withParams($request_data)->build();
-        return new Project_OneStepCreation_OneStepCreationRequest($request, $this->project_manager);
+        return new Project_OneStepCreation_OneStepCreationRequest(
+            $request,
+            $this->project_manager,
+            new DefaultProjectVisibilityRetriever()
+        );
     }
 
     public function testNewObjectSetsACustomTextDescriptionField() {

@@ -21,6 +21,7 @@
 use Tuleap\Dashboard\Project\ProjectDashboardRetriever;
 use Tuleap\Dashboard\Widget\DashboardWidgetRetriever;
 use Tuleap\Plugin\PluginLoader;
+use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\Label\LabelDao;
 use Tuleap\Project\UgroupDuplicator;
 use Tuleap\FRS\FRSPermissionCreator;
@@ -158,6 +159,7 @@ class ProjectImportTest extends TuleapDbTestCase
             $duplicator,
             new ServiceCreator(),
             new LabelDao(),
+            new DefaultProjectVisibilityRetriever(),
             $force_activation
         );
 

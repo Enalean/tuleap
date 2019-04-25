@@ -17,6 +17,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Project\DefaultProjectVisibilityRetriever;
+
 class ProjectCreatorTest extends TuleapTestCase
 {
 
@@ -59,8 +61,10 @@ class ProjectCreatorTest extends TuleapTestCase
                 mock('Tuleap\FRS\FRSPermissionCreator'),
                 mock('Tuleap\Dashboard\Project\ProjectDashboardDuplicator'),
                 mock('Tuleap\Service\ServiceCreator'),
-                mock(\Tuleap\Project\Label\LabelDao::class)
-            ));
+                mock(\Tuleap\Project\Label\LabelDao::class),
+                new DefaultProjectVisibilityRetriever()
+            )
+        );
     }
 
     public function tearDown()
@@ -126,7 +130,8 @@ class ProjectCreatorTest extends TuleapTestCase
                 mock('Tuleap\FRS\FRSPermissionCreator'),
                 mock('Tuleap\Dashboard\Project\ProjectDashboardDuplicator'),
                 mock('Tuleap\Service\ServiceCreator'),
-                Mock(\Tuleap\Project\Label\LabelDao::class)
+                Mock(\Tuleap\Project\Label\LabelDao::class),
+                new DefaultProjectVisibilityRetriever()
             )
         );
         $project_id      = 100;

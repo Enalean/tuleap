@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\Label\LabelDao;
 use Tuleap\Project\UgroupDuplicator;
 use Tuleap\FRS\FRSPermissionCreator;
@@ -40,6 +41,11 @@ class Project_OneStepCreation_OneStepCreationController extends MVC2_Controller 
      */
     private $project_manager;
 
+    /**
+     * @var DefaultProjectVisibilityRetriever
+     */
+    private $default_project_visibility_retriever;
+
     /** @var Project_OneStepCreation_OneStepCreationRequest */
     private $creation_request;
 
@@ -48,7 +54,6 @@ class Project_OneStepCreation_OneStepCreationController extends MVC2_Controller 
 
     /** @var Project_CustomDescription_CustomDescription[] */
     private $required_custom_descriptions;
-
     /** @var TroveCat[] */
     private $trove_cats;
     /**
@@ -59,6 +64,7 @@ class Project_OneStepCreation_OneStepCreationController extends MVC2_Controller 
     public function __construct(
         Codendi_Request $request,
         ProjectManager $project_manager,
+        DefaultProjectVisibilityRetriever $default_project_visibility_retriever,
         Project_CustomDescription_CustomDescriptionFactory $custom_description_factory,
         TroveCatFactory $trove_cat_factory,
         CSRFSynchronizerToken $csrf_token
@@ -68,7 +74,11 @@ class Project_OneStepCreation_OneStepCreationController extends MVC2_Controller 
         $this->required_custom_descriptions = $custom_description_factory->getRequiredCustomDescriptions();
         $this->trove_cats                   = $trove_cat_factory->getMandatoryParentCategoriesUnderRootOnlyWhenCategoryHasChildren();
 
-        $this->creation_request = new Project_OneStepCreation_OneStepCreationRequest($request, $project_manager);
+        $this->creation_request = new Project_OneStepCreation_OneStepCreationRequest(
+            $request,
+            $project_manager,
+            $default_project_visibility_retriever
+        );
         $this->csrf_token       = $csrf_token;
 
         $this->presenter = new Project_OneStepCreation_OneStepCreationPresenter(
@@ -79,6 +89,7 @@ class Project_OneStepCreation_OneStepCreationController extends MVC2_Controller 
             $csrf_token->fetchHTMLInput()
         );
 
+        $this->default_project_visibility_retriever = $default_project_visibility_retriever;
     }
 
     /**
@@ -170,11 +181,12 @@ class Project_OneStepCreation_OneStepCreationController extends MVC2_Controller 
             $duplicator,
             new ServiceCreator(),
             new LabelDao(),
+            $this->default_project_visibility_retriever,
             $force_activation
         );
 
         $data         = $this->creation_request->getProjectValues();
-        $creationData = ProjectCreationData::buildFromFormArray($data);
+        $creationData = ProjectCreationData::buildFromFormArray($this->default_project_visibility_retriever, $data);
 
         try {
             return $projectCreator->build($creationData);

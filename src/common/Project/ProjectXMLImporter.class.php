@@ -157,7 +157,8 @@ class ProjectXMLImporter {
         $event_runner->checkPermissions();
 
         $this->logger->info("Create project {$xml['unix-name']}");
-        $data = ProjectCreationData::buildFromXML($xml,
+        $data = ProjectCreationData::buildFromXML(
+            $xml,
             100,
             $this->xml_validator,
             ServiceManager::instance(),
