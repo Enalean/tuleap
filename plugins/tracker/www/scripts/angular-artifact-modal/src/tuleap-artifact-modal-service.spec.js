@@ -35,6 +35,10 @@ import {
 } from "./rest/rest-service.js";
 
 import { rewire$buildFormTree, restore as restoreFormTree } from "./model/form-tree-builder.js";
+import {
+    rewire$enforceWorkflowTransitions,
+    restore as restoreWorkflow
+} from "./model/workflow-field-values-filter.js";
 
 import {
     rewire$updateFileUploadRulesWhenNeeded,
@@ -46,8 +50,8 @@ describe("NewTuleapArtifactModalService", () => {
         $q,
         TuleapArtifactFieldValuesService,
         TuleapArtifactModalTrackerTransformerService,
-        TuleapArtifactModalWorkflowService,
         buildFormTree,
+        enforceWorkflowTransitions,
         setCreationMode,
         isInCreationMode,
         getTracker,
@@ -78,47 +82,48 @@ describe("NewTuleapArtifactModalService", () => {
 
                 return $delegate;
             });
-
-            $provide.decorator("TuleapArtifactModalWorkflowService", function($delegate) {
-                spyOn($delegate, "enforceWorkflowTransitions");
-
-                return $delegate;
-            });
         });
 
         angular.mock.inject(function(
             _$q_,
             _TuleapArtifactModalTrackerTransformerService_,
             _TuleapArtifactFieldValuesService_,
-            _TuleapArtifactModalWorkflowService_,
             _NewTuleapArtifactModalService_
         ) {
             $q = _$q_;
             TuleapArtifactModalTrackerTransformerService = _TuleapArtifactModalTrackerTransformerService_;
             TuleapArtifactFieldValuesService = _TuleapArtifactFieldValuesService_;
-            TuleapArtifactModalWorkflowService = _TuleapArtifactModalWorkflowService_;
             NewTuleapArtifactModalService = _NewTuleapArtifactModalService_;
         });
 
         installPromiseMatchers();
+
         setCreationMode = jasmine.createSpy("setCreationMode");
         rewire$setCreationMode(setCreationMode);
+
         isInCreationMode = jasmine.createSpy("isInCreationMode");
         rewire$isInCreationMode(isInCreationMode);
 
         getTracker = jasmine.createSpy("getTracker");
         rewire$getTracker(getTracker);
+
         getUserPreference = jasmine.createSpy("getUserPreference");
         rewire$getUserPreference(getUserPreference);
+
         getArtifactWithCompleteTrackerStructure = jasmine.createSpy(
             "getArtifactWithCompleteTrackerStructure"
         );
         rewire$getArtifactWithCompleteTrackerStructure(getArtifactWithCompleteTrackerStructure);
+
         updateFileUploadRulesWhenNeeded = jasmine.createSpy("updateFileUploadRulesWhenNeeded");
         rewire$updateFileUploadRulesWhenNeeded(updateFileUploadRulesWhenNeeded);
+
         buildFormTree = jasmine.createSpy("buildFormTree");
         buildFormTree.and.returnValue({});
         rewire$buildFormTree(buildFormTree);
+
+        enforceWorkflowTransitions = jasmine.createSpy("enforceWorkflowTransitions");
+        rewire$enforceWorkflowTransitions(enforceWorkflowTransitions);
     });
 
     afterEach(() => {
@@ -126,6 +131,7 @@ describe("NewTuleapArtifactModalService", () => {
         restoreRest();
         restoreFile();
         restoreFormTree();
+        restoreWorkflow();
     });
 
     describe("", () => {
@@ -226,9 +232,11 @@ describe("NewTuleapArtifactModalService", () => {
                     );
 
                     expect(promise).toBeResolved();
-                    expect(
-                        TuleapArtifactModalWorkflowService.enforceWorkflowTransitions
-                    ).toHaveBeenCalledWith(null, workflow_field, workflow);
+                    expect(enforceWorkflowTransitions).toHaveBeenCalledWith(
+                        null,
+                        workflow_field,
+                        workflow
+                    );
                 });
 
                 it("Given a tracker that had workflow transitions but were not used, then the transitions won't be enforced", () => {
@@ -258,9 +266,7 @@ describe("NewTuleapArtifactModalService", () => {
                     );
 
                     expect(promise).toBeResolved();
-                    expect(
-                        TuleapArtifactModalWorkflowService.enforceWorkflowTransitions
-                    ).not.toHaveBeenCalled();
+                    expect(enforceWorkflowTransitions).not.toHaveBeenCalled();
                 });
 
                 it("Given a tracker that didn't have workflow transitions, when I create the modal's creation model, then the transitions won't be enforced", () => {
@@ -283,15 +289,13 @@ describe("NewTuleapArtifactModalService", () => {
                     var promise = NewTuleapArtifactModalService.initCreationModalModel(tracker_id);
 
                     expect(promise).toBeResolved();
-                    expect(
-                        TuleapArtifactModalWorkflowService.enforceWorkflowTransitions
-                    ).not.toHaveBeenCalled();
+                    expect(enforceWorkflowTransitions).not.toHaveBeenCalled();
                 });
             });
         });
 
         describe("initEditionModalModel() -", () => {
-            var user_id, tracker_id, artifact_id, artifact_values;
+            var user_id, tracker_id, artifact_id;
 
             beforeEach(() => {
                 TuleapArtifactFieldValuesService.getSelectedValues.and.callFake(() => {
@@ -465,9 +469,11 @@ describe("NewTuleapArtifactModalService", () => {
                     );
 
                     expect(promise).toBeResolved();
-                    expect(
-                        TuleapArtifactModalWorkflowService.enforceWorkflowTransitions
-                    ).toHaveBeenCalledWith(757, workflow_field, workflow);
+                    expect(enforceWorkflowTransitions).toHaveBeenCalledWith(
+                        757,
+                        workflow_field,
+                        workflow
+                    );
                 });
 
                 it("Given a tracker that had workflow transitions but were not used, when I create the modal's edition model, then the transitions won't be enforced", () => {
@@ -506,9 +512,7 @@ describe("NewTuleapArtifactModalService", () => {
                     );
 
                     expect(promise).toBeResolved();
-                    expect(
-                        TuleapArtifactModalWorkflowService.enforceWorkflowTransitions
-                    ).not.toHaveBeenCalled();
+                    expect(enforceWorkflowTransitions).not.toHaveBeenCalled();
                 });
             });
         });

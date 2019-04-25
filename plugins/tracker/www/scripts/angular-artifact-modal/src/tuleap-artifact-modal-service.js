@@ -30,6 +30,7 @@ import {
 import { updateFileUploadRulesWhenNeeded } from "./tuleap-artifact-modal-fields/file-field/file-upload-rules-state.js";
 import { getArtifactFieldValues } from "./artifact-edition-initializer.js";
 import { buildFormTree } from "./model/form-tree-builder.js";
+import { enforceWorkflowTransitions } from "./model/workflow-field-values-filter.js";
 
 export default ArtifactModalService;
 
@@ -39,7 +40,6 @@ ArtifactModalService.$inject = [
     "TuleapArtifactModalLoading",
     "TuleapArtifactModalTrackerTransformerService",
     "TuleapArtifactFieldValuesService",
-    "TuleapArtifactModalWorkflowService",
     "TuleapArtifactModalFieldDependenciesService"
 ];
 
@@ -49,7 +49,6 @@ function ArtifactModalService(
     TuleapArtifactModalLoading,
     TuleapArtifactModalTrackerTransformerService,
     TuleapArtifactFieldValuesService,
-    TuleapArtifactModalWorkflowService,
     TuleapArtifactModalFieldDependenciesService
 ) {
     const self = this;
@@ -257,11 +256,7 @@ function ArtifactModalService(
         } else {
             source_value_id = field_values[workflow.field_id].bind_value_ids[0];
         }
-        TuleapArtifactModalWorkflowService.enforceWorkflowTransitions(
-            source_value_id,
-            workflow_field,
-            workflow
-        );
+        enforceWorkflowTransitions(source_value_id, workflow_field, workflow);
     }
 
     function hasWorkflowTransitions(tracker) {
