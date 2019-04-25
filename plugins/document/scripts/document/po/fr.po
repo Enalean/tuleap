@@ -214,6 +214,9 @@ msgstr "Date de dernière mise à jour"
 msgid "Link"
 msgstr "Lien"
 
+msgid "Lock new version"
+msgstr "Verrouiller la nouvelle version"
+
 msgid "My content..."
 msgstr "Mon contenu..."
 
