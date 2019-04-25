@@ -27,7 +27,8 @@ export {
     stopLoadingAscendantHierarchy,
     appendFolderToAscendantHierarchy,
     setCurrentFolder,
-    removeIsUnderConstruction
+    removeIsUnderConstruction,
+    updateCurrentlyPreviewedItem
 };
 
 function initApp(
@@ -119,4 +120,8 @@ function setCurrentFolder(state, folder) {
 
 function removeIsUnderConstruction(state) {
     state.is_under_construction = false;
+}
+
+function updateCurrentlyPreviewedItem(state, item) {
+    state.currently_previewed_item = item;
 }
