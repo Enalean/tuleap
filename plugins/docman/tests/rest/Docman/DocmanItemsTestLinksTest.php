@@ -107,28 +107,6 @@ class DocmanItemsTestLinksTest extends DocmanBase
             $this->client->patch('docman_links/' . $links['id'], null, $put_resource)
         );
         $this->assertEquals(200, $response->getStatusCode());
-
-        $response                        = $this->getResponseByName(
-            DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->get('docman_items/' . $links['id'])
-        );
-        $item_after_patch                = $response->json();
-        $item_approval_table_after_patch = $item_after_patch['approval_table'];
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertNotNull($item_approval_table_after_patch);
-
-        $this->assertEquals(
-            $item_approval_table_before_patch['approval_state'],
-            $item_approval_table_after_patch['approval_state']
-        );
-        $this->assertEquals(
-            $item_approval_table_before_patch['approval_request_date'],
-            $item_approval_table_after_patch['approval_request_date']
-        );
-        $this->assertEquals(
-            $item_approval_table_before_patch['has_been_approved'],
-            $item_approval_table_after_patch['has_been_approved']
-        );
     }
 
     /**
@@ -147,6 +125,7 @@ class DocmanItemsTestLinksTest extends DocmanBase
         $item_approval_table_before_patch = $item_before_patch['approval_table'];
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertNotNull($item_approval_table_before_patch);
+        $this->assertEquals($item_approval_table_before_patch['approval_state'], 'Approved');
 
         $put_resource = json_encode(
             [
@@ -163,17 +142,6 @@ class DocmanItemsTestLinksTest extends DocmanBase
             $this->client->patch('docman_links/' . $links['id'], null, $put_resource)
         );
         $this->assertEquals(200, $response->getStatusCode());
-
-        $response                        = $this->getResponseByName(
-            DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->get('docman_items/' . $links['id'])
-        );
-        $item_after_patch                = $response->json();
-        $item_approval_table_after_patch = $item_after_patch['approval_table'];
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertNotNull($item_approval_table_after_patch);
-        $this->assertEquals($item_after_patch['id'], $item_before_patch['id']);
-        $this->assertNotEquals($item_approval_table_before_patch, $item_approval_table_after_patch);
     }
 
     /**
@@ -208,16 +176,6 @@ class DocmanItemsTestLinksTest extends DocmanBase
             $this->client->patch('docman_links/' . $links['id'], null, $put_resource)
         );
         $this->assertEquals(200, $response->getStatusCode());
-
-        $response                        = $this->getResponseByName(
-            DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->get('docman_items/' . $links['id'])
-        );
-        $item_after_patch                = $response->json();
-        $item_approval_table_after_patch = $item_after_patch['approval_table'];
-        $this->assertEquals(200, $response->getStatusCode());
-
-        $this->assertNull($item_approval_table_after_patch);
     }
 
     /**
@@ -430,6 +388,37 @@ class DocmanItemsTestLinksTest extends DocmanBase
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals('link', $response->json()['type']);
         $this->assertEquals(110, $response->json()['lock_info']["locked_by"]["id"]);
+    }
+
+    /**
+     * @depends testGetRootId
+     */
+    public function testApprovalTablesStatus(int $root_id): void
+    {
+
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('docman_items/' . $root_id . '/docman_items')
+        );
+        $folder   = $response->json();
+
+
+        $folder_embedded = $this->findItemByTitle($folder, 'Folder D Link');
+        $folder_embedded_id = $folder_embedded['id'];
+        $response           = $this->getResponseByName(
+            REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('docman_items/' . $folder_embedded_id . '/docman_items')
+        );
+        $items     = $response->json();
+
+        $reset_after_patch = $this->findItemByTitle($items, 'link AT R');
+        $this->assertEquals($reset_after_patch['approval_table']["approval_state"], 'Not yet');
+
+        $empty_after_patch = $this->findItemByTitle($items, 'link AT E');
+        $this->assertNull($empty_after_patch['approval_table']["approval_state"]);
+
+        $copy_after_patch = $this->findItemByTitle($items, 'link AT C');
+        $this->assertEquals($copy_after_patch['approval_table']["approval_state"], "Approved");
     }
 
     /**

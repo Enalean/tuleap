@@ -24,6 +24,7 @@ namespace Tuleap\Docman\ApprovalTable;
 
 use Docman_ApprovalTable;
 use Docman_ApprovalTableFactoriesFactory;
+use Docman_ApprovalTableVersionnedFactory;
 use Docman_Item;
 
 class ApprovalTableRetriever
@@ -32,22 +33,23 @@ class ApprovalTableRetriever
      * @var Docman_ApprovalTableFactoriesFactory
      */
     private $approval_table_factory;
+    /**
+     * @var \Docman_VersionFactory
+     */
+    private $version_factory;
 
-    public function __construct(\Docman_ApprovalTableFactoriesFactory $approval_table_factory)
-    {
+    public function __construct(
+        \Docman_ApprovalTableFactoriesFactory $approval_table_factory,
+        \Docman_VersionFactory $version_factory
+    ) {
         $this->approval_table_factory = $approval_table_factory;
+        $this->version_factory        = $version_factory;
     }
 
     public function retrieveByItem(Docman_Item $item): ?Docman_ApprovalTable
     {
-        $table_factory = $this->approval_table_factory->getSpecificFactoryFromItem($item);
-        if (! $table_factory) {
-            return null;
-        }
-
-        /* @var $approval_table \Docman_ApprovalTable */
-        $approval_table = $table_factory->getTable();
-        if (! $approval_table || ! $approval_table->isEnabled()) {
+        $approval_table = $this->getLastApprovalTable($item);
+        if (! $approval_table || $approval_table->isDisabled()) {
             return null;
         }
 
@@ -56,15 +58,29 @@ class ApprovalTableRetriever
 
     public function hasApprovalTable(Docman_Item $item): bool
     {
-        $table_factory      = $this->approval_table_factory->getSpecificFactoryFromItem($item);
-        if ($table_factory === null) {
-            return false;
+        $approval_table = $this->getLastApprovalTable($item);
+        return $approval_table !== null;
+    }
+
+    private function getLastApprovalTable(Docman_Item $item): ?Docman_ApprovalTable
+    {
+        $version    = $this->version_factory->getCurrentVersionForItem($item);
+        $version_id = null;
+        if ($version) {
+            $version_id = $version->getNumber();
         }
 
-        $approval_table = $table_factory->getTable();
-        if ($approval_table === null) {
-            return false;
+        $item_factory = $this->approval_table_factory->getFromItem($item, $version_id);
+
+        if ($item_factory instanceof Docman_ApprovalTableVersionnedFactory) {
+            return $item_factory->getLastTableForItem();
         }
-        return true;
+
+        $table_factory = $this->approval_table_factory->getSpecificFactoryFromItem($item);
+        if (! $table_factory) {
+            return null;
+        }
+
+        return $table_factory->getTable();
     }
 }

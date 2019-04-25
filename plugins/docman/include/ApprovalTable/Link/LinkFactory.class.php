@@ -40,7 +40,7 @@ class Docman_ApprovalTableLinkFactory extends Docman_ApprovalTableVersionnedFact
         $this->dao = new Docman_ApprovalTableLinkDao();
         $vFactory = new Docman_LinkVersionFactory();
 
-        $dar = $this->dao->getLatestTableByItemId($item->getId(), 'ver.number');
+        $dar = $this->dao->getLatestTableByItemId($item->getId(), 'ver.number', true);
         if($dar && !$dar->isError() && $dar->rowCount() == 1) {
             $row = $dar->getRow();
             $lastVersionNumber = $row['number'];

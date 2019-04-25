@@ -127,27 +127,6 @@ class DocmanItemsTestFilesTest extends DocmanBase
             )
         );
         $this->assertEquals(204, $tus_response_upload->getStatusCode());
-        $response                        = $this->getResponseByName(
-            DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->get('docman_items/' . $file['id'])
-        );
-        $item_after_patch                = $response->json();
-        $item_approval_table_after_patch = $item_after_patch['approval_table'];
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertNotNull($item_approval_table_after_patch);
-
-        $this->assertEquals(
-            $item_approval_table_before_patch['approval_state'],
-            $item_approval_table_after_patch['approval_state']
-        );
-        $this->assertEquals(
-            $item_approval_table_before_patch['approval_request_date'],
-            $item_approval_table_after_patch['approval_request_date']
-        );
-        $this->assertEquals(
-            $item_approval_table_before_patch['has_been_approved'],
-            $item_approval_table_after_patch['has_been_approved']
-        );
     }
 
     /**
@@ -165,7 +144,7 @@ class DocmanItemsTestFilesTest extends DocmanBase
         $item_before_patch                = $response->json();
         $item_approval_table_before_patch = $item_before_patch['approval_table'];
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertNotNull($item_approval_table_before_patch);
+        $this->assertEquals($item_approval_table_before_patch['approval_state'], 'Approved');
 
         $file_size    = 305;
         $put_resource = json_encode(
@@ -202,16 +181,6 @@ class DocmanItemsTestFilesTest extends DocmanBase
             )
         );
         $this->assertEquals(204, $tus_response_upload->getStatusCode());
-        $response                        = $this->getResponseByName(
-            DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->get('docman_items/' . $file['id'])
-        );
-        $item_after_patch                = $response->json();
-        $item_approval_table_after_patch = $item_after_patch['approval_table'];
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertNotNull($item_approval_table_after_patch);
-        $this->assertEquals($item_after_patch['id'], $item_before_patch['id']);
-        $this->assertNotEquals($item_approval_table_before_patch, $item_approval_table_after_patch);
     }
 
     /**
@@ -230,6 +199,7 @@ class DocmanItemsTestFilesTest extends DocmanBase
         $item_approval_table_before_patch            = $item_before_patch['approval_table'];
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertNotNull($item_approval_table_before_patch);
+        $this->assertEquals($item_approval_table_before_patch['approval_state'], 'Approved');
 
         $file_size    = 305;
         $put_resource = json_encode(
@@ -266,20 +236,6 @@ class DocmanItemsTestFilesTest extends DocmanBase
             )
         );
         $this->assertEquals(204, $tus_response_upload->getStatusCode());
-        $response                        = $this->getResponseByName(
-            DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->get('docman_items/' . $file['id'])
-        );
-        $item_after_patch                = $response->json();
-        $item_approval_table_after_patch = $item_after_patch['approval_table'];
-        $this->assertEquals(200, $response->getStatusCode());
-
-        $this->assertNotEquals(
-            $item_approval_table_before_patch,
-            $item_approval_table_after_patch
-        );
-
-        $this->assertNull($item_approval_table_after_patch);
     }
 
     /**
@@ -728,6 +684,37 @@ class DocmanItemsTestFilesTest extends DocmanBase
             $this->client->patch('docman_files/' . $file_id, null, $put_resource)
         );
         $this->assertEquals(200, $response->getStatusCode());
+    }
+
+    /**
+     * @depends testGetRootId
+     */
+    public function testApprovalTablesStatus(int $root_id): void
+    {
+
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('docman_items/' . $root_id . '/docman_items')
+        );
+        $folder   = $response->json();
+
+
+        $folder_embedded = $this->findItemByTitle($folder, 'Folder A File');
+        $folder_embedded_id = $folder_embedded['id'];
+        $response           = $this->getResponseByName(
+            REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('docman_items/' . $folder_embedded_id . '/docman_items')
+        );
+        $items     = $response->json();
+
+        $reset_after_patch = $this->findItemByTitle($items, 'file AT R');
+        $this->assertEquals($reset_after_patch['approval_table']["approval_state"], 'Not yet');
+
+        $empty_after_patch = $this->findItemByTitle($items, 'file AT E');
+        $this->assertNull($empty_after_patch['approval_table']["approval_state"]);
+
+        $copy_after_patch = $this->findItemByTitle($items, 'file AT C');
+        $this->assertEquals($copy_after_patch['approval_table']["approval_state"], "Approved");
     }
 
     /**

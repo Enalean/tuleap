@@ -1260,7 +1260,10 @@ class DocmanPlugin extends Plugin
             new MetadataRepresentationBuilder(
                 new Docman_MetadataFactory($project->getID())
             ),
-            new ApprovalTableRetriever(new Docman_ApprovalTableFactoriesFactory())
+            new ApprovalTableRetriever(
+                new Docman_ApprovalTableFactoriesFactory(),
+                new Docman_VersionFactory()
+            )
         );
 
         $item_representation = $item_representation_builder->buildRootId($project, $current_user);
@@ -1326,7 +1329,10 @@ class DocmanPlugin extends Plugin
         $path_allocator           = new VersionUploadPathAllocator();
         $version_to_upload_dao    = new DocumentOnGoingVersionToUploadDAO();
         $event_manager            = EventManager::instance();
-        $approval_table_retriever = new ApprovalTableRetriever(new Docman_ApprovalTableFactoriesFactory());
+        $approval_table_retriever = new ApprovalTableRetriever(
+            new Docman_ApprovalTableFactoriesFactory(),
+            new Docman_VersionFactory()
+        );
         return FileUploadController::build(
             new VersionDataStore(
                 new VersionBeingUploadedInformationProvider(

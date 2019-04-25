@@ -34,7 +34,7 @@ class Docman_ApprovalTableWikiDao extends Docman_ApprovalTableItemDao {
      * Last approval table created for the given itemId
      */
     function getLatestTableByItemId($itemId, $fields='app.*') {
-        return $this->getApprovalTableItemId($itemId, $fields, ' LIMIT 1');
+        return $this->getApprovalTableItemId($itemId, $fields, ' LIMIT 1', true);
     }
 
     function getApprovalTableItemId($itemId, $fields='app.*', $limit='', $tableStatus=false) {

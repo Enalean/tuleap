@@ -129,7 +129,10 @@ class DocmanEmbeddedFilesResource extends AuthenticatedResource
         $event_adder->addLogEvents();
         $event_adder->addNotificationEvents($project);
 
-        $docman_approval_table_retriever = new ApprovalTableRetriever(new \Docman_ApprovalTableFactoriesFactory());
+        $docman_approval_table_retriever = new ApprovalTableRetriever(
+            new \Docman_ApprovalTableFactoriesFactory(),
+            new Docman_VersionFactory()
+        );
 
         $builder             = new DocmanItemUpdatorBuilder();
         $docman_item_updator = $builder->build($this->event_manager);

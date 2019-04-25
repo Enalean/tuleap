@@ -24,10 +24,10 @@ namespace Tuleap\Docman\REST\v1;
 
 use Docman_LinkVersionFactory;
 use Docman_LockFactory;
+use Docman_VersionFactory;
 use Project;
 use ProjectManager;
 use Tuleap\DB\DBFactory;
-use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\ApprovalTable\ApprovalTableUpdateActionChecker;
@@ -128,7 +128,10 @@ class DocmanLinksResource extends AuthenticatedResource
         $event_adder->addLogEvents();
         $event_adder->addNotificationEvents($project);
 
-        $docman_approval_table_retriever = new ApprovalTableRetriever(new \Docman_ApprovalTableFactoriesFactory());
+        $docman_approval_table_retriever = new ApprovalTableRetriever(
+            new \Docman_ApprovalTableFactoriesFactory(),
+            new Docman_VersionFactory()
+        );
         $docman_item_updator             = $this->getLinkUpdator();
 
         try {

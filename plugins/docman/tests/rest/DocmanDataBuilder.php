@@ -27,6 +27,7 @@ namespace Tuleap\Docman\rest;
 use Docman_ApprovalTableItemDao;
 use Docman_ApprovalTableWikiDao;
 use ProjectUGroup;
+use Tuleap\DB\DBFactory;
 use Tuleap\Docman\rest\v1\DocmanDataBuildCommon;
 
 require_once __DIR__ .'/DocmanDatabaseInitialization.php';
@@ -79,7 +80,7 @@ class DocmanDataBuilder extends DocmanDataBuildCommon
     private function addApprovalTable(string $title, int $version_id, int $status): void
     {
         $dao = new Docman_ApprovalTableItemDao();
-        $dao->createTable(
+        $table_id = $dao->createTable(
             'version_id',
             $version_id,
             self::REGULAR_USER_ID,
@@ -88,6 +89,10 @@ class DocmanDataBuilder extends DocmanDataBuildCommon
             $status,
             false
         );
+
+        $reviewer_dao = new \Docman_ApprovalTableReviewerDao(\CodendiDataAccess::instance());
+        $reviewer_dao-> addUser($table_id, self::REGULAR_USER_ID);
+        $reviewer_dao->updateReview($table_id, self::REGULAR_USER_ID, time(), 1, "", 1);
     }
 
     private function lockItem(int $item_id)
@@ -460,7 +465,7 @@ class DocmanDataBuilder extends DocmanDataBuildCommon
     private function addApprovalTableForWiki(int $item_id, int $status): void
     {
         $dao = new Docman_ApprovalTableWikiDao();
-        $dao->createTable(
+        $table_id = $dao->createTable(
             $item_id,
             0,
             self::REGULAR_USER_ID,
@@ -469,6 +474,10 @@ class DocmanDataBuilder extends DocmanDataBuildCommon
             $status,
             false
         );
+
+        $reviewer_dao = new \Docman_ApprovalTableReviewerDao(\CodendiDataAccess::instance());
+        $reviewer_dao-> addUser($table_id, self::REGULAR_USER_ID);
+        $reviewer_dao->updateReview($table_id, self::REGULAR_USER_ID, time(), 1, "", 1);
     }
 
     /**

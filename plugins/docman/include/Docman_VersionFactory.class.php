@@ -71,6 +71,9 @@ class Docman_VersionFactory {
         return $versions;
     }
 
+    /**
+     * @return Docman_Version|null
+     */
     public function getCurrentVersionForItem($item) {
         $all_versions = $this->getAllVersionForItem($item);
 

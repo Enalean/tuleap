@@ -27,6 +27,7 @@ namespace Tuleap\Docman\REST\v1;
 use Docman_Item;
 use Docman_ItemDao;
 use Docman_ItemFactory;
+use Docman_VersionFactory;
 use EventManager;
 use Luracast\Restler\RestException;
 use Project;
@@ -297,7 +298,10 @@ class DocmanItemsResource extends AuthenticatedResource
             new MetadataRepresentationBuilder(
                 new \Docman_MetadataFactory($project->getID())
             ),
-            new ApprovalTableRetriever(new \Docman_ApprovalTableFactoriesFactory())
+            new ApprovalTableRetriever(
+                new \Docman_ApprovalTableFactoriesFactory(),
+                new Docman_VersionFactory()
+            )
         );
         return $item_representation_builder;
     }

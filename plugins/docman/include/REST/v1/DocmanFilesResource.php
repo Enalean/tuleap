@@ -23,6 +23,7 @@ declare(strict_types = 1);
 namespace Tuleap\Docman\REST\v1;
 
 use Docman_LockFactory;
+use Docman_VersionFactory;
 use Luracast\Restler\RestException;
 use Project;
 use ProjectManager;
@@ -127,7 +128,10 @@ class DocmanFilesResource extends AuthenticatedResource
         $event_adder->addNotificationEvents($project);
 
 
-        $docman_approval_table_retriever = new ApprovalTableRetriever(new \Docman_ApprovalTableFactoriesFactory());
+        $docman_approval_table_retriever = new ApprovalTableRetriever(
+            new \Docman_ApprovalTableFactoriesFactory(),
+            new Docman_VersionFactory()
+        );
         $docman_item_updator             = new DocmanItemFileUpdator(
             $docman_approval_table_retriever,
             new Docman_LockFactory(),
