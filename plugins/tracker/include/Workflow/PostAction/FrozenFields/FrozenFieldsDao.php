@@ -46,4 +46,18 @@ class FrozenFieldsDao extends DataAccessObject
 
         return $this->getDB()->q($sql, $transition_id);
     }
+
+    public function isAFrozenFieldPostActionUsedInTracker(int $tracker_id) : bool
+    {
+        $sql = 'SELECT NULL
+FROM tracker_workflow
+LEFT JOIN tracker_workflow_transition ON (tracker_workflow.workflow_id = tracker_workflow_transition.workflow_id)
+LEFT JOIN plugin_tracker_workflow_postactions_frozen_fields ON (tracker_workflow_transition.transition_id = plugin_tracker_workflow_postactions_frozen_fields.transition_id)
+WHERE tracker_workflow.tracker_id = ?
+    AND plugin_tracker_workflow_postactions_frozen_fields.id IS NOT NULL;';
+
+        $result = $this->getDB()->cell($sql, $tracker_id);
+
+        return $result !== false;
+    }
 }
