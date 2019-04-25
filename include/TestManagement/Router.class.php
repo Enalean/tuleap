@@ -117,7 +117,6 @@ class Router {
                 $controller = new AdminController(
                     $request,
                     $this->config,
-                    $this->tracker_factory,
                     $this->event_manager,
                     $csrf_token,
                     $this->step_field_usage_detector,
@@ -130,7 +129,6 @@ class Router {
                 $controller = new AdminController(
                     $request,
                     $this->config,
-                    $this->tracker_factory,
                     $this->event_manager,
                     $csrf_token,
                     $this->step_field_usage_detector,
@@ -179,7 +177,7 @@ class Router {
     }
 
     public function renderIndex(Codendi_Request $request) {
-        $controller = new IndexController($request, $this->config, $this->tracker_factory, $this->event_manager);
+        $controller = new IndexController($request, $this->config, $this->event_manager, $this->tracker_factory);
         $this->renderAction($controller, 'index', $request);
     }
 

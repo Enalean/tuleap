@@ -43,22 +43,12 @@ class AdminControllerTest extends TestCase
     private $request;
     /** @var Config */
     private $config;
-    /** @var \TrackerFactory */
-    private $tracker_factory;
     /** @var \EventManager */
     private $event_manager;
     /** @var \CSRFSynchronizerToken */
     private $csrf_token;
     /** @var StepFieldUsageDetector */
     private $step_field_usage_detector;
-    /** @var Tracker */
-    private $campaign_tracker;
-    /** @var Tracker */
-    private $definition_tracker;
-    /** @var Tracker */
-    private $execution_tracker;
-    /** @var Tracker */
-    private $issue_tracker;
     /** @var TrackerChecker */
     private $tracker_checker;
 
@@ -74,9 +64,6 @@ class AdminControllerTest extends TestCase
         $this->globals = $GLOBALS;
         $GLOBALS       = [];
 
-        $this->setUpTrackers();
-
-        $this->tracker_factory           = Mockery::mock(\TrackerFactory::class);
         $this->config                    = Mockery::mock(Config::class);
         $this->step_field_usage_detector = Mockery::mock(StepFieldUsageDetector::class);
 
@@ -93,7 +80,6 @@ class AdminControllerTest extends TestCase
         $this->admin_controller = new AdminController(
             $this->request,
             $this->config,
-            $this->tracker_factory,
             $this->event_manager,
             $this->csrf_token,
             $this->step_field_usage_detector,
@@ -105,18 +91,6 @@ class AdminControllerTest extends TestCase
     {
         $GLOBALS = $this->globals;
         parent::tearDown();
-    }
-
-    private function setUpTrackers()
-    {
-        $this->campaign_tracker = Mockery::mock(Tracker::class);
-        $this->campaign_tracker->shouldReceive('getId')->andReturn(self::CAMPAIGN_TRACKER_ID);
-        $this->definition_tracker = Mockery::mock(Tracker::class);
-        $this->definition_tracker->shouldReceive('getId')->andReturn(self::DEFINITION_TRACKER_ID);
-        $this->execution_tracker = Mockery::mock(Tracker::class);
-        $this->execution_tracker->shouldReceive('getId')->andReturn(self::EXECUTION_TRACKER_ID);
-        $this->issue_tracker = Mockery::mock(Tracker::class);
-        $this->issue_tracker->shouldReceive('getId')->andReturn(self::ISSUE_TRACKER_ID);
     }
 
     private function setUpRequest()
@@ -138,14 +112,6 @@ class AdminControllerTest extends TestCase
 
     public function testUpdateWithoutChange()
     {
-        $project_trackers = [
-            $this->campaign_tracker,
-            $this->definition_tracker,
-            $this->execution_tracker,
-            $this->issue_tracker
-        ];
-        $this->setUpProjectTrackers($project_trackers);
-
         $this->request->shouldReceive('get')->with('campaign_tracker_id')->andReturn(self::CAMPAIGN_TRACKER_ID);
         $this->request->shouldReceive('get')->with('test_definition_tracker_id')->andReturn(
             self::DEFINITION_TRACKER_ID
@@ -184,14 +150,6 @@ class AdminControllerTest extends TestCase
 
     public function testUpdateWhenDefinitionTrackerCantBeEdited()
     {
-        $project_trackers = [
-            $this->campaign_tracker,
-            $this->definition_tracker,
-            $this->execution_tracker,
-            $this->issue_tracker
-        ];
-        $this->setUpProjectTrackers($project_trackers);
-
         $this->request->shouldReceive('get')->with('campaign_tracker_id')->andReturn(self::CAMPAIGN_TRACKER_ID);
         // No test_definition_tracker_id is provided
         $this->request->shouldReceive('get')->with('test_execution_tracker_id')->andReturn(
@@ -224,15 +182,5 @@ class AdminControllerTest extends TestCase
         $this->tracker_checker->shouldReceive('checkTrackerIsInProject');
 
         $this->admin_controller->update();
-    }
-
-    /**
-     * @param $project_trackers
-     */
-    private function setUpProjectTrackers($project_trackers)
-    {
-        $this->tracker_factory->shouldReceive('getTrackersByGroupId')->with(self::PROJECT_ID)->andReturn(
-            $project_trackers
-        );
     }
 }

@@ -22,34 +22,76 @@ declare(strict_types=1);
 
 namespace Tuleap\TestManagement\Administration;
 
+use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Project;
+use Tracker;
 
 class TrackerCheckerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
+    /** @var Tracker */
+    private $campaign_tracker;
+    /** @var Tracker */
+    private $definition_tracker;
+    /** @var Tracker */
+    private $execution_tracker;
+    /** @var Tracker */
+    private $issue_tracker;
+
+    /**
+     * @var Project
+     */
+    private $project;
+
+    /**
+     * @var TrackerChecker
+     */
+    private $tracker_checker;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->campaign_tracker = Mockery::mock(Tracker::class);
+        $this->campaign_tracker->shouldReceive('getId')->andReturn(1);
+        $this->definition_tracker = Mockery::mock(Tracker::class);
+        $this->definition_tracker->shouldReceive('getId')->andReturn(2);
+        $this->execution_tracker = Mockery::mock(Tracker::class);
+        $this->execution_tracker->shouldReceive('getId')->andReturn(3);
+        $this->issue_tracker = Mockery::mock(Tracker::class);
+        $this->issue_tracker->shouldReceive('getId')->andReturn(4);
+
+        $this->project = Mockery::mock(Project::class);
+        $this->project->shouldReceive('getID')->andReturn(101);
+
+        $tracker_factory = Mockery::mock(\TrackerFactory::class);
+        $tracker_factory->shouldReceive('getTrackersByGroupId')->with(101)->andReturn([
+            $this->campaign_tracker,
+            $this->definition_tracker,
+            $this->execution_tracker,
+            $this->issue_tracker
+        ]);
+
+        $this->tracker_checker = new TrackerChecker($tracker_factory);
+    }
+
     public function testItDoesNotThrowExceptionIfProvidedTrackerIdIsInProject()
     {
-        $tracker_checker = new TrackerChecker();
-
-        $submitted_id        = 1;
-        $project_tracker_ids = [1, 2, 3];
-
-        $tracker_checker->checkTrackerIsInProject($submitted_id, $project_tracker_ids);
+        $submitted_id = 1;
+        $this->tracker_checker->checkTrackerIsInProject($this->project, $submitted_id);
 
         $this->addToAssertionCount(1);
     }
 
-    public function testItReturnsFalseIfProvidedTrackerIdIsInProject()
+    public function testItThrowsAnExceptionIfProvidedTrackerIdIsInProject()
     {
-        $tracker_checker = new TrackerChecker();
-
-        $submitted_id        = 5;
-        $project_tracker_ids = [1, 2, 3];
+        $submitted_id = 5;
 
         $this->expectException(TrackerNotInProjectException::class);
 
-        $tracker_checker->checkTrackerIsInProject($submitted_id, $project_tracker_ids);
+        $this->tracker_checker->checkTrackerIsInProject($this->project, $submitted_id);
     }
 }

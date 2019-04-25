@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,11 +20,29 @@
 
 namespace Tuleap\TestManagement;
 
+use Codendi_Request;
+use EventManager;
 use PFUser;
 use Tracker_FormElementFactory;
+use TrackerFactory;
 
 class IndexController extends TestManagementController
 {
+    /**
+     * @var TrackerFactory
+     */
+    private $tracker_factory;
+
+    public function __construct(
+        Codendi_Request $request,
+        Config $config,
+        EventManager $event_manager,
+        TrackerFactory $tracker_factory
+    ) {
+        parent::__construct($request, $config, $event_manager);
+
+        $this->tracker_factory = $tracker_factory;
+    }
 
     public function index()
     {

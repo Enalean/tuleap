@@ -36,9 +36,6 @@ abstract class TestManagementController extends MVC2_PluginController {
      */
     protected $config;
 
-    /** @var TrackerFactory */
-    protected $tracker_factory;
-
     /**
      * @var Project
      */
@@ -57,14 +54,12 @@ abstract class TestManagementController extends MVC2_PluginController {
     public function __construct(
         Codendi_Request $request,
         Config $config,
-        TrackerFactory $tracker_factory,
         EventManager $event_manager
     ) {
         parent::__construct(self::NAME, $request);
 
         $this->project         = $request->getProject();
         $this->config          = $config;
-        $this->tracker_factory = $tracker_factory;
         $this->event_manager   = $event_manager;
 
         $event = new \Tuleap\TestManagement\Event\GetMilestone(

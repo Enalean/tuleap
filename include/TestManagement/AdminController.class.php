@@ -24,7 +24,6 @@ use Codendi_Request;
 use CSRFSynchronizerToken;
 use EventManager;
 use Feedback;
-use TrackerFactory;
 use Tuleap\TestManagement\Administration\StepFieldUsageDetector;
 use Tuleap\TestManagement\Administration\TrackerChecker;
 use Tuleap\TestManagement\Administration\TrackerNotInProjectException;
@@ -50,13 +49,12 @@ class AdminController extends TestManagementController
     public function __construct(
         Codendi_Request $request,
         Config $config,
-        TrackerFactory $tracker_factory,
         EventManager $event_manager,
         CSRFSynchronizerToken $csrf_token,
         StepFieldUsageDetector $step_field_usage_detector,
         TrackerChecker $tracker_checker
     ) {
-        parent::__construct($request, $config, $tracker_factory, $event_manager);
+        parent::__construct($request, $config, $event_manager);
         $this->csrf_token                = $csrf_token;
         $this->step_field_usage_detector = $step_field_usage_detector;
         $this->tracker_checker           = $tracker_checker;
@@ -91,31 +89,21 @@ class AdminController extends TestManagementController
     public function update()
     {
         $this->csrf_token->check();
-        $project_trackers    = $this->tracker_factory->getTrackersByGroupId($this->project->getId());
-        $project_tracker_ids = array_map(
-            function ($tracker) {
-                return $tracker->getId();
-            },
-            $project_trackers
-        );
 
         $this->config->setProjectConfiguration(
             $this->project,
             $this->checkTrackerIdForProject(
                 $this->request->get('campaign_tracker_id'),
-                $this->config->getCampaignTrackerId($this->project),
-                $project_tracker_ids
+                $this->config->getCampaignTrackerId($this->project)
             ),
-            $this->getValidDefinitionTrackerId($project_tracker_ids),
+            $this->getValidDefinitionTrackerId(),
             $this->checkTrackerIdForProject(
                 $this->request->get('test_execution_tracker_id'),
-                $this->config->getTestExecutionTrackerId($this->project),
-                $project_tracker_ids
+                $this->config->getTestExecutionTrackerId($this->project)
             ),
             $this->checkTrackerIdForProject(
                 $this->request->get('issue_tracker_id'),
-                $this->config->getIssueTrackerId($this->project),
-                $project_tracker_ids
+                $this->config->getIssueTrackerId($this->project)
             )
         );
     }
@@ -124,7 +112,7 @@ class AdminController extends TestManagementController
      * @param int[] $project_tracker_ids
      * @return array
      */
-    private function getValidDefinitionTrackerId(array $project_tracker_ids)
+    private function getValidDefinitionTrackerId()
     {
         $current_tracker_id = $this->config->getTestDefinitionTrackerId($this->project);
 
@@ -136,19 +124,18 @@ class AdminController extends TestManagementController
 
         return $this->checkTrackerIdForProject(
             $this->request->get('test_definition_tracker_id'),
-            $current_tracker_id,
-            $project_tracker_ids
+            $current_tracker_id
         );
     }
 
-    private function checkTrackerIdForProject($submitted_id, $original_id, array $project_tracker_ids)
+    private function checkTrackerIdForProject($submitted_id, $original_id)
     {
         if (! $submitted_id) {
             return $original_id;
         }
 
         try {
-            $this->tracker_checker->checkTrackerIsInProject($submitted_id, $project_tracker_ids);
+            $this->tracker_checker->checkTrackerIsInProject($this->project, $submitted_id);
             return $submitted_id;
         } catch (TrackerNotInProjectException $exception) {
             $GLOBALS['Response']->addFeedback(

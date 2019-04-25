@@ -22,17 +22,56 @@ declare(strict_types=1);
 
 namespace Tuleap\TestManagement\Administration;
 
+use Project;
+use TrackerFactory;
+
 class TrackerChecker
 {
+    /**
+     * @var array
+     */
+    private $project_trackers = [];
+
+    /**
+     * @var array
+     */
+    private $project_tracker_ids = [];
+
+    /** @var TrackerFactory */
+    private $tracker_factory;
+
+    public function __construct(TrackerFactory $tracker_factory)
+    {
+        $this->tracker_factory = $tracker_factory;
+    }
 
     /**
      * @throws TrackerNotInProjectException
      */
-    public function checkTrackerIsInProject(int $submitted_id, array $project_tracker_ids) : void
+    public function checkTrackerIsInProject(Project $project, int $submitted_id) : void
     {
-        $is_valid_project_tracker_id = in_array($submitted_id, $project_tracker_ids);
-        if (! $is_valid_project_tracker_id) {
+        $this->initTrackerIds($project);
+
+        if (! in_array($submitted_id, $this->project_tracker_ids[$project->getID()])) {
             throw new TrackerNotInProjectException();
+        }
+    }
+
+    private function initTrackerIds(Project $project) : void
+    {
+        $project_id = $project->getID();
+
+        if (! array_key_exists($project_id, $this->project_trackers)) {
+            $this->project_trackers[$project_id] = $this->tracker_factory->getTrackersByGroupId($project_id);
+        }
+
+        if (! array_key_exists($project_id, $this->project_tracker_ids)) {
+            $this->project_tracker_ids[$project_id] = array_map(
+                function ($tracker) {
+                    return $tracker->getId();
+                },
+                $this->project_trackers[$project_id]
+            );
         }
     }
 }

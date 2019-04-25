@@ -405,7 +405,7 @@ class testmanagementPlugin extends PluginWithLegacyInternalRouting
             $form_element_factory
         );
 
-        $tracker_checker = new TrackerChecker();
+        $tracker_checker = new TrackerChecker($tracker_factory);
 
         $router = new Tuleap\TestManagement\Router(
             $this,
