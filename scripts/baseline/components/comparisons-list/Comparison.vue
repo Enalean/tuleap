@@ -39,8 +39,7 @@
                 <artifact-badge
                     v-bind:artifact="milestone"
                     v-bind:tracker="milestone_tracker"
-                />
-                {{ milestone.title }}
+                />{{ milestone.title }}
             </artifact-link>
         </td>
         <td class="comparisons-table-column-creation-date">
