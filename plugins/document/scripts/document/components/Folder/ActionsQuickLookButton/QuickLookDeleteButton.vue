@@ -28,6 +28,7 @@
 
 <script>
 import { mapState } from "vuex";
+import { redirectToUrl } from "../../../helpers/location-helper.js";
 
 export default {
     name: "QuickLookDeleteButton",
@@ -39,10 +40,10 @@ export default {
     },
     methods: {
         redirectDeleteUrl() {
-            window.location.assign(
-                `/plugins/docman/?group_id=${this.project_id}&action=confirmDelete&id=${
-                    this.item.id
-                }`
+            redirectToUrl(
+                `/plugins/docman/?group_id=${encodeURIComponent(
+                    this.project_id
+                )}&action=confirmDelete&id=${encodeURIComponent(this.item.id)}`
             );
         }
     }

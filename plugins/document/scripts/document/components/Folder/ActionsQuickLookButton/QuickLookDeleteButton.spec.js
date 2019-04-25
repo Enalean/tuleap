@@ -19,29 +19,60 @@
 
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../../../helpers/local-vue.js";
+import { rewire$redirectToUrl, restore } from "../../../helpers/location-helper.js";
 
 import QuickLookDeleteButton from "./QuickLookDeleteButton.vue";
+import { createStoreMock } from "../../../helpers/store-wrapper.spec-helper.js";
 
 describe("QuickLookDeleteButton", () => {
     let delete_button_factory;
     beforeEach(() => {
+        const state = {
+            project_id: 101
+        };
+
+        const store_options = {
+            state
+        };
+
+        const store = createStoreMock(store_options);
+
         delete_button_factory = user_can_write => {
             return shallowMount(QuickLookDeleteButton, {
                 localVue,
                 propsData: {
                     item: {
+                        id: 1,
                         user_can_write: user_can_write
                     }
-                }
+                },
+                mocks: { $store: store }
             });
         };
     });
+
+    afterEach(() => {
+        restore();
+    });
+
     it(`Displays the delete button because the user can write`, () => {
         const wrapper = delete_button_factory(true);
         expect(wrapper.find("[data-test=quick-look-delete-button]").exists()).toBeTruthy();
     });
-    it(`Does not display the delete button if the can't write`, () => {
+    it(`Does not display the delete button if the user can't write`, () => {
         const wrapper = delete_button_factory(false);
         expect(wrapper.find("[data-test=quick-look-delete-button]").exists()).toBeFalsy();
+    });
+
+    it(`When the user clicks the button, Should redirect user on legacy url`, () => {
+        const redirect_to_url = jasmine.createSpy("redirectToUrl");
+        rewire$redirectToUrl(redirect_to_url);
+
+        const wrapper = delete_button_factory(true);
+        wrapper.find("[data-test=quick-look-delete-button]").trigger("click");
+
+        expect(redirect_to_url).toHaveBeenCalledWith(
+            "/plugins/docman/?group_id=101&action=confirmDelete&id=1"
+        );
     });
 });

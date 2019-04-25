@@ -19,8 +19,11 @@
   -->
 
 <template>
-    <button type="button" class="tlp-button-primary tlp-button-outline tlp-button-small tlp-dropdown-split-button-main"
-            v-on:click="displayQuickLook()">
+    <button type="button"
+            class="tlp-button-primary tlp-button-outline tlp-button-small tlp-dropdown-split-button-main"
+            v-on:click="displayQuickLook()"
+            data-test="quick-look-button"
+    >
         <i class="fa fa-eye tlp-button-icon"></i>
         <translate>Quick look</translate>
     </button>

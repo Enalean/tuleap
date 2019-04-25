@@ -33,7 +33,7 @@
 import { mapState } from "vuex";
 import { TYPE_EMPTY, TYPE_WIKI } from "../../../constants.js";
 
-import { redirect_to_url } from "../../../helpers/location-helper.js";
+import { redirectToUrl } from "../../../helpers/location-helper.js";
 export default {
     name: "UpdateButton",
     props: {
@@ -66,7 +66,7 @@ export default {
             }
 
             if (this.item.type === TYPE_EMPTY) {
-                return redirect_to_url(
+                return redirectToUrl(
                     `/plugins/docman/index.php?group_id=${this.project_id}&id=${
                         this.item.id
                     }&action=action_update`

@@ -21,9 +21,10 @@
     <div class="document-quick-look-folder-action">
         <div class="tlp-dropdown-split-button">
             <update-item-button v-bind:item="item"
-                                v-bind:button-classes="button_classes"
-                                v-bind:icon-classes="icon_classes"
+                                v-bind:button-classes="'tlp-button-primary tlp-button-outline tlp-button-small tlp-dropdown-split-button-main'"
+                                v-bind:icon-classes="'fa fa-mail-forward tlp-button-icon'"
                                 v-if="! is_item_a_wiki_with_approval_table"
+                                data-test="docman-quicklook-action-button-update"
             />
             <dropdown-button
                 v-bind:is-in-quick-look-mode="true"
@@ -53,12 +54,6 @@ export default {
         isDetailsButtonShown: Boolean
     },
     computed: {
-        button_classes() {
-            return "tlp-button-primary tlp-button-outline tlp-button-small tlp-dropdown-split-button-main";
-        },
-        icon_classes() {
-            return "fa fa-mail-forward tlp-button-icon";
-        },
         is_item_a_wiki_with_approval_table() {
             return this.item.type === TYPE_WIKI && this.item.approval_table !== null;
         }

@@ -49,6 +49,8 @@ import "./components/Folder/ActionsDropDown/DropdownMenuForItemQuickLook.spec.js
 import "./components/Folder/ActionsDropDown/DropdownMenuCurrentFolder.spec.js";
 
 import "./components/Folder/ActionsQuickLookButton/QuickLookDeleteButton.spec.js";
+import "./components/Folder/ActionsQuickLookButton/QuickLookButton.spec.js";
+import "./components/Folder/ActionsQuickLookButton/QuickLookDocumentActionButton.spec.js";
 
 import "./components/Folder/ItemDisplay/ActionsHeader.spec.js";
 import "./components/Folder/ItemDisplay/DisplayEmbedded.spec.js";
