@@ -33,7 +33,6 @@
                         <quick-look-button
                             class="quick-look-button"
                             v-on:displayQuickLook="$emit('displayQuickLook', item)"
-                            v-bind:item="item"
                             data-test="quick-look-button"
                         />
                         <dropdown-button v-bind:is-in-quick-look-mode="true" data-test="dropdown-button">

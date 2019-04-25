@@ -30,14 +30,15 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
     name: "QuickLookButton",
-    props: {
-        item: Object
+    computed: {
+        ...mapState(["currently_previewed_item"])
     },
     methods: {
         displayQuickLook() {
-            this.$emit("displayQuickLook", this.item);
+            this.$emit("displayQuickLook", this.currently_previewed_item);
         }
     }
 };
