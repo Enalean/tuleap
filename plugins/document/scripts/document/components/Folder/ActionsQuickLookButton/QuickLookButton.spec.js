@@ -21,20 +21,34 @@ import { shallowMount } from "@vue/test-utils";
 import localVue from "../../../helpers/local-vue.js";
 
 import QuickLookButton from "./QuickLookButton.vue";
+import { createStoreMock } from "../../../helpers/store-wrapper.spec-helper.js";
 
 describe("QuickLookButton", () => {
     it(`Emit displayQuickLook event with correct parameters when user click on button`, () => {
-        const item = {
+        const state = {
+            project_id: 101
+        };
+
+        const store_options = {
+            state
+        };
+
+        const store = createStoreMock(store_options);
+
+        store.state.currently_previewed_item = {
             id: 42,
             title: "my item title"
         };
+
         const wrapper = shallowMount(QuickLookButton, {
             localVue,
-            propsData: { item }
+            mocks: { $store: store }
         });
 
         wrapper.find("[data-test=quick-look-button]").trigger("click");
 
-        expect(wrapper.emitted().displayQuickLook[0]).toEqual([item]);
+        expect(wrapper.emitted().displayQuickLook[0]).toEqual([
+            store.state.currently_previewed_item
+        ]);
     });
 });
