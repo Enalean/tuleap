@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,11 +21,13 @@
 namespace Tuleap\admin\ProjectCreation\ProjectVisibility;
 
 use CSRFSynchronizerToken;
-use ForgeConfig;
 use HTTPRequest;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Admin\ProjectCreationNavBarPresenter;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Layout\IncludeAssets;
+use Tuleap\Project\Admin\ProjectVisibilityOptionsForPresenterGenerator;
+use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 
@@ -43,18 +45,26 @@ class ProjectVisibilityConfigDisplayController implements DispatchableWithReques
             throw new ForbiddenException();
         }
 
+        $js_asset = new IncludeAssets(
+            __DIR__ . '/../../../../www/assets/',
+            '/assets'
+        );
+        $layout->includeFooterJavascriptFile($js_asset->getFileURL('site-admin-project-visibility.js'));
+
         $csrf_token = new CSRFSynchronizerToken('/admin/project-creation/visibility');
 
         $presenter = new ProjectVisibilityConfigPresenter(
             new ProjectCreationNavBarPresenter(self::TAB_NAME),
+            new ProjectVisibilityOptionsForPresenterGenerator(),
+            (new DefaultProjectVisibilityRetriever())->getDefaultProjectVisibility(),
             $csrf_token
         );
 
         $admin_renderer = new AdminPageRenderer();
         $admin_renderer->renderANoFramedPresenter(
             _('Projects visibility'),
-            ForgeConfig::get('codendi_dir') . '/src/templates/admin/projects',
-            'project-visibility-switch-configuration-pane',
+            __DIR__ . '/../../../../templates/admin/projects',
+            'project-visibility-configuration-pane',
             $presenter
         );
     }
