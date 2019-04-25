@@ -65,7 +65,6 @@ final class ProjectGroupManagerRestrictedUserFilterTest extends TestCase
         $filter       = new ProjectGroupManagerRestrictedUserFilter($user_manager);
 
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
-        ForgeConfig::set('feature_flag_project_without_restricted', 1);
         $project = Mockery::mock(Project::class);
         $project->shouldReceive('getAccess')->andReturn(Project::ACCESS_PRIVATE_WO_RESTRICTED);
         $project->shouldReceive('isSuperPublic')->andReturn(false);

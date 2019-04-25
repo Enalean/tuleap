@@ -26,7 +26,6 @@ use PFUser;
 use Project;
 use ProjectUGroup;
 use Tuleap\DB\DBTransactionExecutor;
-use Tuleap\Project\Admin\ProjectWithoutRestrictedFeatureFlag;
 use Tuleap\Project\UserPermissionsDao;
 use UGroupBinding;
 
@@ -67,7 +66,7 @@ class DynamicUGroupMembersUpdater
     public function addUser(Project $project, ProjectUGroup $ugroup, PFUser $user) : void
     {
         if ($project->getAccess() === Project::ACCESS_PRIVATE_WO_RESTRICTED && ForgeConfig::areRestrictedUsersAllowed() &&
-            ProjectWithoutRestrictedFeatureFlag::isEnabled() && $user->isRestricted()) {
+            $user->isRestricted()) {
             throw new CannotAddRestrictedUserToProjectNotAllowingRestricted($user, $project);
         }
 

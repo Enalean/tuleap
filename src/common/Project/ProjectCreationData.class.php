@@ -17,7 +17,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-use Tuleap\Project\Admin\ProjectWithoutRestrictedFeatureFlag;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 
 class ProjectCreationData
@@ -189,7 +188,7 @@ class ProjectCreationData
             return PROJECT::ACCESS_PUBLIC;
         }
 
-        if ($are_restricted_enabled && !$should_project_allow_restricted && ProjectWithoutRestrictedFeatureFlag::isEnabled()) {
+        if ($are_restricted_enabled && !$should_project_allow_restricted) {
             return Project::ACCESS_PRIVATE_WO_RESTRICTED;
         }
 

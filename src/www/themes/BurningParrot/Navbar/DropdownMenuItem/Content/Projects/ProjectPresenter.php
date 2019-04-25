@@ -20,9 +20,8 @@
 
 namespace Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Content\Projects;
 
-use PFUser;
+use ForgeConfig;
 use Project;
-use Tuleap\Project\Admin\ProjectWithoutRestrictedFeatureFlag;
 
 class ProjectPresenter
 {
@@ -71,8 +70,7 @@ class ProjectPresenter
         $this->user_administers   = $user_administers;
         $this->user_belongs       = $user_belongs;
 
-        $are_restricted_users_allowed = \ForgeConfig::areRestrictedUsersAllowed()
-            && ProjectWithoutRestrictedFeatureFlag::isEnabled();
+        $are_restricted_users_allowed = ForgeConfig::areRestrictedUsersAllowed();
         if ($are_restricted_users_allowed) {
             $this->is_public                  = $project->getAccess() === Project::ACCESS_PUBLIC;
             $this->is_public_incl_restricted  = $project->getAccess() === Project::ACCESS_PUBLIC_UNRESTRICTED;

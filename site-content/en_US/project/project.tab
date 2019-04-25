@@ -14,14 +14,11 @@ project_admin_editgroupinfo	soft_required	Other Software Required
 project_admin_editgroupinfo	comments	Other Comments:
 project_admin_editgroupinfo	autocompleter_placeholder	Project name (search as you type)
 project_admin_editgroupinfo	visibility_section	Access
-project_admin_editgroupinfo	private_label	private
-project_admin_editgroupinfo	public_label	public
 project_admin_editgroupinfo	use_truncated_emails	Use truncated emails
 project_admin_editgroupinfo	truncated_emails_title	Truncated Emails
 project_admin_editgroupinfo	truncated_emails_impacted_services_introduction	Truncated emails are emails that have their content cleared (confidentiality) and replaced by a link of the modified item.
 project_admin_editgroupinfo	truncated_emails_impacted_services_no_available	No service using truncated emails is activated.
 project_admin_editgroupinfo	truncated_emails_impacted_services_impacted_services	Impacted services:
-project_admin_editgroupinfo	unrestricted_label	public incl. restricted users
 project_admin_editgroupinfo	restricted_warning	Only project members can access a <b>private</b> project. <br>A <b>public</b> project is accessible to all <b>except restricted users</b>.<br>It is not advisable to allow <b>restricted users</b> to access you project without good reason.<br />Please not that <b>Public incl. Restricted</b> only applies to <em>project dashboard page</em>, <em>Mediawiki</em> and <em>git repositories</em>.
 project_admin_editgroupinfo	general_warning	Only project members can access a <b>private</b> project <br>A <b>public</b> project is accessible to everyone.
 project_admin_editgroupinfo	under_construction	Page under construction.
@@ -806,9 +803,6 @@ project_desc_desc	int_prop	If your project is covered by Patents or IPs list the
 #
 project_privacy	private	Private
 project_privacy	public	Public
-project_privacy	tooltip_private	<p class='project-privacy'>Project privacy set to <big><strong>private</strong></big>. <br />Only project members can access its content.</p>
-project_privacy	tooltip_public_w_anon	<p class='project-privacy'>Project privacy set to <big><strong>public</strong></big>. <br />By default, its content is available to everyone (authenticated or not).<br />Please note that more restrictive permissions might exist on some items.</p>
-project_privacy	tooltip_public_wo_anon	<p class='project-privacy'>Project privacy set to <big><strong>public</strong></big>. <br />By default, its content is available to all authenticated, but not restricted, users.<br />Please note that more restrictive permissions might exist on some items.</p>
 
 project_privacy	email_visibility_change_title	The privacy policy of the project $1 has changed
 project_privacy	email_visibility_change_body_private	The project $1 is now private.

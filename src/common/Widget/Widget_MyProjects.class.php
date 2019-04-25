@@ -90,7 +90,6 @@ class Widget_MyProjects extends Widget {
             while ($row = db_fetch_array($result)) {
                 if (
                     $row['access'] === Project::ACCESS_PRIVATE_WO_RESTRICTED &&
-                    \Tuleap\Project\Admin\ProjectWithoutRestrictedFeatureFlag::isEnabled() &&
                     ForgeConfig::areRestrictedUsersAllowed() &&
                     $user->isRestricted()
                 ) {
@@ -108,10 +107,7 @@ class Widget_MyProjects extends Widget {
 
                 // Privacy
                 if ($display_privacy) {
-                    if (
-                        \Tuleap\Project\Admin\ProjectWithoutRestrictedFeatureFlag::isEnabled() &&
-                        ForgeConfig::areRestrictedUsersAllowed()
-                    ) {
+                    if (ForgeConfig::areRestrictedUsersAllowed()) {
                         if ($row['access'] === Project::ACCESS_PUBLIC_UNRESTRICTED) {
                             $privacy = 'fa fa-tlp-unlock-plus-r';
                         } else if ($row['access'] === Project::ACCESS_PRIVATE) {
@@ -171,10 +167,7 @@ class Widget_MyProjects extends Widget {
                     ['classname' => 'fa-lock', 'label' => $GLOBALS['Language']->getText('project_privacy', 'private')],
                     ['classname' => 'fa-unlock', 'label' => $GLOBALS['Language']->getText('project_privacy', 'public')]
                 ];
-                if (
-                    \Tuleap\Project\Admin\ProjectWithoutRestrictedFeatureFlag::isEnabled() &&
-                    ForgeConfig::areRestrictedUsersAllowed()
-                ) {
+                if (ForgeConfig::areRestrictedUsersAllowed()) {
                     $icons = [
                         ['classname' => 'fa-lock', 'label' => _('Private')],
                         ['classname' => 'fa-tlp-lock-plus-r', 'label' => _('Private incl. restricted')],

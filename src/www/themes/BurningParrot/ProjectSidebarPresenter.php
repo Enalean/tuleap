@@ -20,10 +20,10 @@
 
 namespace Tuleap\Theme\BurningParrot;
 
+use ForgeConfig;
 use PFUser;
 use Project;
 use Codendi_HTMLPurifier;
-use Tuleap\Project\Admin\ProjectWithoutRestrictedFeatureFlag;
 
 class ProjectSidebarPresenter
 {
@@ -68,8 +68,7 @@ class ProjectSidebarPresenter
         $this->powered_by = $GLOBALS['Language']->getText('global', 'powered_by') . ' ' . $this->getVersion();
         $this->copyright  = $GLOBALS['Language']->getText('global', 'copyright');
 
-        $this->are_restricted_users_allowed = \ForgeConfig::areRestrictedUsersAllowed()
-            && ProjectWithoutRestrictedFeatureFlag::isEnabled();
+        $this->are_restricted_users_allowed = ForgeConfig::areRestrictedUsersAllowed();
         if ($this->are_restricted_users_allowed) {
             $this->project_is_public                  = $project->getAccess() === Project::ACCESS_PUBLIC;
             $this->project_is_public_incl_restricted  = $project->getAccess() === Project::ACCESS_PUBLIC_UNRESTRICTED;

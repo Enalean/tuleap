@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2017. All rights reserved
+ * Copyright (c) Enalean, 2016 - Present. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -22,7 +22,6 @@ namespace Tuleap\Project;
 
 use ForgeConfig;
 use Project;
-use Tuleap\Project\Admin\ProjectWithoutRestrictedFeatureFlag;
 
 class ProjectAccessPresenter
 {
@@ -38,16 +37,11 @@ class ProjectAccessPresenter
     public function __construct($project_access)
     {
         if (ForgeConfig::areRestrictedUsersAllowed()) {
-            $this->is_incl_restricted = $project_access === Project::ACCESS_PUBLIC_UNRESTRICTED ||
-                (ProjectWithoutRestrictedFeatureFlag::isEnabled() && $project_access === Project::ACCESS_PRIVATE);
+            $this->is_incl_restricted = $project_access === Project::ACCESS_PUBLIC_UNRESTRICTED || $project_access === Project::ACCESS_PRIVATE;
             $this->is_wide_open              = $project_access === Project::ACCESS_PUBLIC_UNRESTRICTED;
             $this->is_open                   = $project_access === Project::ACCESS_PUBLIC;
-            $this->is_closed                 = $project_access === Project::ACCESS_PRIVATE || $project_access === Project::ACCESS_PRIVATE_WO_RESTRICTED;
-            $this->is_closed_incl_restricted = false;
-            if (ProjectWithoutRestrictedFeatureFlag::isEnabled()) {
-                $this->is_closed                 = $project_access === Project::ACCESS_PRIVATE_WO_RESTRICTED;
-                $this->is_closed_incl_restricted = $project_access === Project::ACCESS_PRIVATE;
-            }
+            $this->is_closed                 = $project_access === Project::ACCESS_PRIVATE_WO_RESTRICTED;
+            $this->is_closed_incl_restricted = $project_access === Project::ACCESS_PRIVATE;
         } else {
             $this->is_incl_restricted        = false;
             $this->is_wide_open              = false;

@@ -18,8 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Project\Admin\ProjectWithoutRestrictedFeatureFlag;
-
 class FlamingParrot_ContainerPresenter
 {
     /** @var array */
@@ -95,8 +93,7 @@ class FlamingParrot_ContainerPresenter
         $this->forge_version       = $forge_version;
         $this->sidebar_collapsable = $sidebar_collapsable;
 
-        $this->are_restricted_users_allowed = \ForgeConfig::areRestrictedUsersAllowed()
-            && ProjectWithoutRestrictedFeatureFlag::isEnabled();
+        $this->are_restricted_users_allowed = ForgeConfig::areRestrictedUsersAllowed();
         if ($this->are_restricted_users_allowed && $project !== null) {
             $this->project_is_public                  = $project->getAccess() === Project::ACCESS_PUBLIC;
             $this->project_is_public_incl_restricted  = $project->getAccess() === Project::ACCESS_PUBLIC_UNRESTRICTED;
@@ -160,5 +157,3 @@ class FlamingParrot_ContainerPresenter
         return $html;
     }
 }
-
-?>

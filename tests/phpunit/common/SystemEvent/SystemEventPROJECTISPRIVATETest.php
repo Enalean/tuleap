@@ -84,7 +84,6 @@ final class SystemEventPROJECTISPRIVATETest extends TestCase
         EventManager::setInstance(Mockery::spy(EventManager::class));
 
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
-        ForgeConfig::set('feature_flag_project_without_restricted', 1);
         $project->shouldReceive('getAccess')->andReturn(Project::ACCESS_PRIVATE_WO_RESTRICTED);
 
         $restricted_member = Mockery::mock(PFUser::class);

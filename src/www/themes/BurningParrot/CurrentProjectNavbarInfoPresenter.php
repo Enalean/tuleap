@@ -21,8 +21,8 @@
 namespace Tuleap\Theme\BurningParrot;
 
 use Codendi_HTMLPurifier;
+use ForgeConfig;
 use Project;
-use Tuleap\Project\Admin\ProjectWithoutRestrictedFeatureFlag;
 
 class CurrentProjectNavbarInfoPresenter
 {
@@ -73,8 +73,7 @@ class CurrentProjectNavbarInfoPresenter
 
         $this->project_flags_title = ngettext("Project flag", "Project flags", $nb_project_flags);
 
-        $this->are_restricted_users_allowed = \ForgeConfig::areRestrictedUsersAllowed()
-            && ProjectWithoutRestrictedFeatureFlag::isEnabled();
+        $this->are_restricted_users_allowed = ForgeConfig::areRestrictedUsersAllowed();
         if ($this->are_restricted_users_allowed) {
             $this->project_is_public                  = $project->getAccess() === Project::ACCESS_PUBLIC;
             $this->project_is_public_incl_restricted  = $project->getAccess() === Project::ACCESS_PUBLIC_UNRESTRICTED;

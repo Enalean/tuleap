@@ -60,7 +60,6 @@ final class ProjectUGroupTest extends TestCase
         $project_manager->shouldReceive('getProject')->with(300)->andReturn($project_not_allowing_restricted);
         ProjectManager::setInstance($project_manager);
 
-        ForgeConfig::set('feature_flag_project_without_restricted', 1);
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
 
         $this->expectException(CannotAddRestrictedUserToProjectNotAllowingRestricted::class);

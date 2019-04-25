@@ -25,7 +25,6 @@ namespace Tuleap\User\Admin;
 use ForgeConfig;
 use PFUser;
 use Project;
-use Tuleap\Project\Admin\ProjectWithoutRestrictedFeatureFlag;
 use UserGroupDao;
 
 final class RestrictedProjectsUserCounter
@@ -43,10 +42,6 @@ final class RestrictedProjectsUserCounter
     public function getNumberOfProjectsNotAllowingRestrictedTheUserIsMemberOf(PFUser $user) : int
     {
         if (! ForgeConfig::areRestrictedUsersAllowed()) {
-            return 0;
-        }
-
-        if (! ProjectWithoutRestrictedFeatureFlag::isEnabled()) {
             return 0;
         }
 

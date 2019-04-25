@@ -25,7 +25,6 @@ use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\FRS\FRSPermissionDao;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
-use Tuleap\Project\Admin\ProjectWithoutRestrictedFeatureFlag;
 use Tuleap\Project\Webhook\Log\StatusLogger as WebhookStatusLogger;
 use Tuleap\Project\Webhook\Log\WebhookLoggerDao;
 use Tuleap\Project\Webhook\ProjectCreatedPayload;
@@ -689,7 +688,7 @@ class ProjectManager
             return true;
         }
 
-        if (ProjectWithoutRestrictedFeatureFlag::isEnabled() && $group->getAccess() === Project::ACCESS_PRIVATE_WO_RESTRICTED) {
+        if ($group->getAccess() === Project::ACCESS_PRIVATE_WO_RESTRICTED) {
             return false;
         }
 
@@ -792,7 +791,6 @@ class ProjectManager
         foreach ($projects_results as $row) {
             if (
                 $row['access'] === Project::ACCESS_PRIVATE_WO_RESTRICTED &&
-                ProjectWithoutRestrictedFeatureFlag::isEnabled() &&
                 ForgeConfig::areRestrictedUsersAllowed() &&
                 $user->isRestricted()
             ) {
@@ -855,7 +853,6 @@ class ProjectManager
         foreach ($result as $row) {
             if (
                 $row['access'] === Project::ACCESS_PRIVATE_WO_RESTRICTED &&
-                ProjectWithoutRestrictedFeatureFlag::isEnabled() &&
                 ForgeConfig::areRestrictedUsersAllowed() &&
                 $user->isRestricted()
             ) {

@@ -22,7 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-use Tuleap\Project\Admin\ProjectWithoutRestrictedFeatureFlag;
 use Tuleap\User\RequestFromAutocompleter;
 use Tuleap\User\UserAutocompletePostSearchEvent;
 
@@ -60,9 +59,7 @@ if ($requested_project_id !== '' && $requested_project_id !== false) {
             return true;
         }
 
-        return ! ($project->getAccess() === Project::ACCESS_PRIVATE_WO_RESTRICTED && ForgeConfig::areRestrictedUsersAllowed() &&
-            ProjectWithoutRestrictedFeatureFlag::isEnabled()
-        );
+        return ! ($project->getAccess() === Project::ACCESS_PRIVATE_WO_RESTRICTED && ForgeConfig::areRestrictedUsersAllowed());
     }) ($requested_project_id);
 }
 

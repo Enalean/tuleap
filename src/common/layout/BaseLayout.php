@@ -37,7 +37,6 @@ use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLinkCollection;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbSubItems;
 use Tuleap\Layout\BreadCrumbDropdown\SubItemsUnlabelledSection;
 use Tuleap\Project\Admin\MembershipDelegationDao;
-use Tuleap\Project\Admin\ProjectWithoutRestrictedFeatureFlag;
 use Tuleap\Sanitizer\URISanitizer;
 use UserManager;
 use Valid_FTPURI;
@@ -566,13 +565,6 @@ abstract class BaseLayout extends Response
 
     protected function getProjectPrivacy(Project $project)
     {
-        if (! ProjectWithoutRestrictedFeatureFlag::isEnabled()) {
-            return $GLOBALS['Language']->getText(
-                'project_privacy',
-                'tooltip_' . $this->getLegacyProjectPrivacy($project)
-            );
-        }
-
         if (ForgeConfig::areRestrictedUsersAllowed()) {
             switch ($project->getAccess()) {
                 case Project::ACCESS_PUBLIC:
@@ -614,23 +606,6 @@ abstract class BaseLayout extends Response
             return _('Project privacy set to private.') .' '.
                 _('Only project members can access its content.');
         }
-    }
-
-    private function getLegacyProjectPrivacy(Project $project): string
-    {
-        if ($project->isPublic()) {
-            $privacy = 'public';
-
-            if (ForgeConfig::areAnonymousAllowed()) {
-                $privacy .= '_w_anon';
-            } else {
-                $privacy .= '_wo_anon';
-            }
-        } else {
-            $privacy = 'private';
-        }
-
-        return $privacy;
     }
 
     protected function getFooterSiteJs()

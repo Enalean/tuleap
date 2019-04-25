@@ -30,7 +30,6 @@ use Project_AccessDeletedException;
 use Project_AccessPrivateException;
 use Project_AccessProjectNotFoundException;
 use Project_AccessRestrictedException;
-use Tuleap\Project\Admin\ProjectWithoutRestrictedFeatureFlag;
 
 class ProjectAccessChecker
 {
@@ -77,9 +76,7 @@ class ProjectAccessChecker
         }
 
         if ($user->isMember($project->getID())) {
-            if (
-                $project->getAccess() === Project::ACCESS_PRIVATE_WO_RESTRICTED &&
-                ProjectWithoutRestrictedFeatureFlag::isEnabled() &&
+            if ($project->getAccess() === Project::ACCESS_PRIVATE_WO_RESTRICTED &&
                 ForgeConfig::areRestrictedUsersAllowed() &&
                 $user->isRestricted()
             ) {
@@ -93,7 +90,7 @@ class ProjectAccessChecker
         }
 
         if ($user->isRestricted()) {
-            if ( ! $project->allowsRestricted() ||
+            if (! $project->allowsRestricted() ||
                 ! $this->verifier->isRestrictedUserAllowedToAccess($user, $project)) {
                 throw new Project_AccessRestrictedException();
             }

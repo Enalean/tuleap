@@ -150,7 +150,6 @@ class ProjectAccessCheckerTest extends TestCase
 
     public function testRestrictedUserCanNotAccessAProjectMarkedAsPrivateWithoutRestrictedEvenSheIsMemberOf()
     {
-        ForgeConfig::set('feature_flag_project_without_restricted', 1);
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
 
         $project = Mockery::mock(Project::class);
@@ -179,7 +178,6 @@ class ProjectAccessCheckerTest extends TestCase
 
     public function testRestrictedUserCanAccessAProjectMarkedAsPrivateEvenSheIsMemberOf()
     {
-        ForgeConfig::set('feature_flag_project_without_restricted', 1);
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
 
         $project = Mockery::mock(Project::class);
