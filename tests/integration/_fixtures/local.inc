@@ -217,9 +217,6 @@ $sys_lang = 'en_US';
 // admin. If 0 user can register by themselves
 $sys_user_approval = 0;
 
-// Project default privacy status (1 is public, 0 is private)
-$sys_is_project_public = 1;
-
 // Is license approval mandatory when downloading a file from the FRS?
 // (1 is mandatory, 0 is optional)
 $sys_frs_license_mandatory = 1;
