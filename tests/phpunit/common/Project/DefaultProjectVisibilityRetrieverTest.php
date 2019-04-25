@@ -58,14 +58,10 @@ final class DefaultProjectVisibilityRetrieverTest extends TestCase
     public function testAllPossibleProjectVisibilityCanBeSetAsTheDefaultValue(
         string $setting_value,
         bool $are_restricted_allowed,
-        bool $is_without_restricted_feature_enabled,
         string $expected_access
     ) : void {
         if ($are_restricted_allowed) {
             ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
-        }
-        if ($is_without_restricted_feature_enabled) {
-            ForgeConfig::set('feature_flag_project_without_restricted', 1);
         }
         ForgeConfig::set(DefaultProjectVisibilityRetriever::CONFIG_SETTING_NAME, $setting_value);
 
@@ -77,14 +73,14 @@ final class DefaultProjectVisibilityRetrieverTest extends TestCase
     public function providerSettingDefaultVisibility() : array
     {
         return [
-            [Project::ACCESS_PUBLIC, true, true, Project::ACCESS_PUBLIC],
-            [Project::ACCESS_PUBLIC_UNRESTRICTED, true, true, Project::ACCESS_PUBLIC_UNRESTRICTED],
-            [Project::ACCESS_PUBLIC_UNRESTRICTED, false, true, Project::ACCESS_PUBLIC],
-            [Project::ACCESS_PRIVATE, true, true, Project::ACCESS_PRIVATE],
-            [Project::ACCESS_PRIVATE_WO_RESTRICTED, true, true, Project::ACCESS_PRIVATE_WO_RESTRICTED],
-            [Project::ACCESS_PRIVATE_WO_RESTRICTED, false, true, Project::ACCESS_PRIVATE],
-            [Project::ACCESS_PRIVATE_WO_RESTRICTED, true, false, Project::ACCESS_PRIVATE],
-            [Project::ACCESS_PRIVATE_WO_RESTRICTED, false, false, Project::ACCESS_PRIVATE],
+            [Project::ACCESS_PUBLIC, true, Project::ACCESS_PUBLIC],
+            [Project::ACCESS_PUBLIC, false, Project::ACCESS_PUBLIC],
+            [Project::ACCESS_PUBLIC_UNRESTRICTED, true, Project::ACCESS_PUBLIC_UNRESTRICTED],
+            [Project::ACCESS_PUBLIC_UNRESTRICTED, false, Project::ACCESS_PUBLIC],
+            [Project::ACCESS_PRIVATE, true, Project::ACCESS_PRIVATE],
+            [Project::ACCESS_PRIVATE, false, Project::ACCESS_PRIVATE],
+            [Project::ACCESS_PRIVATE_WO_RESTRICTED, true, Project::ACCESS_PRIVATE_WO_RESTRICTED],
+            [Project::ACCESS_PRIVATE_WO_RESTRICTED, false, Project::ACCESS_PRIVATE],
         ];
     }
 

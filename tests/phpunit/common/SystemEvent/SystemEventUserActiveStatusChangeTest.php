@@ -73,7 +73,6 @@ final class SystemEventUserActiveStatusChangeTest extends TestCase
         Backend::setInstance('System', $backend_system);
 
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
-        ForgeConfig::set('feature_flag_project_without_restricted', 1);
 
         $user = Mockery::mock(PFUser::class);
         $user_manager->shouldReceive('getUserById')->andReturn($user);

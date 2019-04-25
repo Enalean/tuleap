@@ -22,7 +22,6 @@
  */
 
 use Tuleap\admin\ProjectCreation\ProjectVisibility\ProjectVisibilityConfigManager;
-use Tuleap\Project\Admin\ProjectWithoutRestrictedFeatureFlag;
 use Tuleap\Project\UserRemover;
 use Tuleap\SVN\SVNAuthenticationCacheInvalidator;
 
@@ -123,8 +122,7 @@ class SystemEvent_PROJECT_IS_PRIVATE extends SystemEvent
 
     private function cleanRestrictedUsersIfNecessary(Project $project) : void
     {
-        if (! ProjectWithoutRestrictedFeatureFlag::isEnabled() || ! ForgeConfig::areRestrictedUsersAllowed() ||
-            $project->getAccess() !== Project::ACCESS_PRIVATE_WO_RESTRICTED) {
+        if (! ForgeConfig::areRestrictedUsersAllowed() || $project->getAccess() !== Project::ACCESS_PRIVATE_WO_RESTRICTED) {
             return;
         }
         $project_members = $project->getMembers();
@@ -179,7 +177,7 @@ class SystemEvent_PROJECT_IS_PRIVATE extends SystemEvent
 
     private function getBody(Project $project, BaseLanguage $user_language): string
     {
-        if (ProjectWithoutRestrictedFeatureFlag::isEnabled() && ForgeConfig::areRestrictedUsersAllowed()) {
+        if (ForgeConfig::areRestrictedUsersAllowed()) {
             switch ($project->getAccess()) {
                 case Project::ACCESS_PUBLIC:
                     return $user_language->getText(

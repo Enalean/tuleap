@@ -217,6 +217,7 @@ class ProjectManagerTest extends TuleapTestCase {
         $user = \Mockery::mock(\PFUser::class);
         $user->shouldReceive('isRestricted')->andReturn(true);
         $project = \Mockery::mock(\Project::class);
+        $project->shouldReceive('getAccess')->andReturn(Project::ACCESS_PUBLIC);
         $project->shouldReceive('userIsMember')->andReturn(false);
 
         $this->assertFalse($this->project_manager_test_version->checkRestrictedAccess($project, $user));
@@ -227,6 +228,7 @@ class ProjectManagerTest extends TuleapTestCase {
         $user = \Mockery::mock(\PFUser::class);
         $user->shouldReceive('isRestricted')->andReturn(true);
         $project = \Mockery::mock(\Project::class);
+        $project->shouldReceive('getAccess')->andReturn(Project::ACCESS_PUBLIC);
         $project->shouldReceive('userIsMember')->andReturn(true);
 
         $this->assertTrue($this->project_manager_test_version->checkRestrictedAccess($project, $user));
@@ -235,7 +237,6 @@ class ProjectManagerTest extends TuleapTestCase {
     public function testGetActiveProjectsForUserExcludesProjectsARestrictedUserDontHaveAccessTo()
     {
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
-        ForgeConfig::set('feature_flag_project_without_restricted', 1);
 
         $user = \Mockery::mock(\PFUser::class);
         $user->shouldReceive([

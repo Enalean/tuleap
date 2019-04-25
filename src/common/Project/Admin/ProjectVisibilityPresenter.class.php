@@ -88,39 +88,8 @@ class ProjectVisibilityPresenter
         $this->project_visibility_label = _('Project visibility');
         $this->accept_tos_message       = _("Please accept term of service");
 
-        if (ProjectWithoutRestrictedFeatureFlag::isEnabled()) {
-            $this->generateVisibilityOptions();
-        } else {
-            $this->generateLegacyVisibilityOptions();
-        }
-
+        $this->generateVisibilityOptions();
         $this->number_of_restricted_users_in_project = $number_of_restricted_users_in_project;
-    }
-
-    private function generateLegacyVisibilityOptions()
-    {
-        $options = array(
-            array(
-                'value'      => Project::ACCESS_PRIVATE,
-                'label'      => $this->language->getText('project_admin_editgroupinfo', 'private_label'),
-                'selected'   => ($this->project_visibility === Project::ACCESS_PRIVATE) ? 'selected = "selected"' : '',
-            ),
-            array(
-                'value'      => Project::ACCESS_PUBLIC,
-                'label'      => $this->language->getText('project_admin_editgroupinfo', 'public_label'),
-                'selected'   => ($this->project_visibility === Project::ACCESS_PUBLIC) ? 'selected = "selected"' : '',
-            )
-        );
-
-        if ($this->platform_allows_restricted) {
-            $options[] = array(
-                'value'      => Project::ACCESS_PUBLIC_UNRESTRICTED,
-                'label'      => $this->language->getText('project_admin_editgroupinfo', 'unrestricted_label'),
-                'selected'   => ($this->project_visibility === Project::ACCESS_PUBLIC_UNRESTRICTED) ? 'selected = "selected"' : '',
-            );
-        }
-
-        $this->options = $options;
     }
 
     private function generateVisibilityOptions()

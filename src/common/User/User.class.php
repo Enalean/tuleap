@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -904,7 +904,6 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
         foreach($this->getUserGroupDao()->searchActiveGroupsByUserId($this->user_id) as $data) {
             if (
                 $data['access'] === Project::ACCESS_PRIVATE_WO_RESTRICTED &&
-                \Tuleap\Project\Admin\ProjectWithoutRestrictedFeatureFlag::isEnabled() &&
                 ForgeConfig::areRestrictedUsersAllowed() &&
                 $this->isRestricted()
             ) {

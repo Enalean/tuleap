@@ -26,7 +26,6 @@ use Mockery as M;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Configuration\Logger\LoggerInterface;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
-use Tuleap\Project\XML\Import\ImportNotValidException;
 
 class ProjectCreationDataTest extends TestCase
 {
@@ -174,7 +173,6 @@ class ProjectCreationDataTest extends TestCase
     ) : void {
         ForgeConfig::set('sys_user_can_choose_project_privacy', 1);
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
-        ForgeConfig::set('feature_flag_project_without_restricted', 1);
 
         $web_payload = [
             'project' => [

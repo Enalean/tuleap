@@ -18,7 +18,6 @@
   * along with Tuleap. If not, see <http://www.gnu.org/licenses/
   */
 
-use Tuleap\Project\Admin\ProjectWithoutRestrictedFeatureFlag;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 
 /**
@@ -305,7 +304,7 @@ class Project_OneStepCreation_OneStepCreationRequest {
     {
         $this->allow_restricted = true;
 
-        if (! ForgeConfig::areRestrictedUsersAllowed() || ! ProjectWithoutRestrictedFeatureFlag::isEnabled()) {
+        if (! ForgeConfig::areRestrictedUsersAllowed()) {
             return $this;
         }
 

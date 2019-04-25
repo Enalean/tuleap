@@ -27,7 +27,6 @@ use ForgeConfig;
 use PFUser;
 use Project;
 use SystemEvent;
-use Tuleap\Project\Admin\ProjectWithoutRestrictedFeatureFlag;
 use Tuleap\Project\UserRemover;
 use UserGroupDao;
 use UserManager;
@@ -108,7 +107,7 @@ final class SystemEventUserActiveStatusChange extends SystemEvent
 
     private function cleanRestrictedUserFromProjectMembershipIfNecessary(PFUser $user) : void
     {
-        if (! ProjectWithoutRestrictedFeatureFlag::isEnabled() || ! ForgeConfig::areRestrictedUsersAllowed()) {
+        if (! ForgeConfig::areRestrictedUsersAllowed()) {
             return;
         }
 

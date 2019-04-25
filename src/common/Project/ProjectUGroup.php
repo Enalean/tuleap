@@ -20,7 +20,6 @@
  */
 
 use Tuleap\Project\Admin\ProjectUGroup\CannotAddRestrictedUserToProjectNotAllowingRestricted;
-use Tuleap\Project\Admin\ProjectWithoutRestrictedFeatureFlag;
 use Tuleap\User\UserGroup\NameTranslator;
 
 /**
@@ -456,7 +455,7 @@ class ProjectUGroup implements User_UGroup // phpcs:ignore PSR1.Classes.ClassDec
         $this->assertProjectUGroupAndUserValidity($user);
         $project = $this->getProject();
         if ($project->getAccess() === Project::ACCESS_PRIVATE_WO_RESTRICTED && ForgeConfig::areRestrictedUsersAllowed() &&
-            ProjectWithoutRestrictedFeatureFlag::isEnabled() && $user->isRestricted()) {
+            $user->isRestricted()) {
             throw new CannotAddRestrictedUserToProjectNotAllowingRestricted($user, $project);
         }
         if ($this->is_dynamic) {

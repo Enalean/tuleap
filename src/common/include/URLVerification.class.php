@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013-2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2010. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -28,13 +28,10 @@ use Tuleap\Error\PermissionDeniedRestrictedAccountProjectController;
 use Tuleap\Error\PlaceHolderBuilder;
 use Tuleap\Layout\ErrorRendering;
 use Tuleap\Project\Admin\MembershipDelegationDao;
-use Tuleap\Project\Admin\ProjectWithoutRestrictedFeatureFlag;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\ProjectAccessSuspendedException;
 use Tuleap\Project\RestrictedUserCanAccessUrlOrProjectVerifier;
-use Tuleap\Request\NotFoundException;
 use Tuleap\Request\RequestInstrumentation;
-use Tuleap\Request\RestrictedUsersAreHandledByPluginEvent;
 
 /**
  * Check the URL validity (protocol, host name, query) regarding server constraints

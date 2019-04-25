@@ -18,8 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Project\Admin\ProjectWithoutRestrictedFeatureFlag;
-
 class FlamingParrot_CurrentProjectNavbarInfoPresenter  // phpcs:ignore
 {
     public $project_privacy;
@@ -75,8 +73,7 @@ class FlamingParrot_CurrentProjectNavbarInfoPresenter  // phpcs:ignore
 
         $this->project_flags_title = ngettext("Project flag", "Project flags", $nb_project_flags);
 
-        $this->are_restricted_users_allowed = \ForgeConfig::areRestrictedUsersAllowed()
-            && ProjectWithoutRestrictedFeatureFlag::isEnabled();
+        $this->are_restricted_users_allowed = ForgeConfig::areRestrictedUsersAllowed();
         if ($this->are_restricted_users_allowed) {
             $this->project_is_public                  = $project->getAccess() === Project::ACCESS_PUBLIC;
             $this->project_is_public_incl_restricted  = $project->getAccess() === Project::ACCESS_PUBLIC_UNRESTRICTED;

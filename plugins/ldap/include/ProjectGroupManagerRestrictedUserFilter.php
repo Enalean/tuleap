@@ -24,7 +24,6 @@ namespace Tuleap\LDAP;
 
 use ForgeConfig;
 use Project;
-use Tuleap\Project\Admin\ProjectWithoutRestrictedFeatureFlag;
 use UserManager;
 
 final class ProjectGroupManagerRestrictedUserFilter
@@ -56,14 +55,8 @@ final class ProjectGroupManagerRestrictedUserFilter
     private function areRestrictedUsersAllowed(Project $project) : bool
     {
         $project_access = $project->getAccess();
-        if ($project_access === Project::ACCESS_PUBLIC_UNRESTRICTED || $project_access === Project::ACCESS_PRIVATE ||
-            $project->isSuperPublic()) {
-            return true;
-        }
-        if ($project_access === Project::ACCESS_PRIVATE_WO_RESTRICTED && ! ProjectWithoutRestrictedFeatureFlag::isEnabled()) {
-            return true;
-        }
-        return false;
+        return $project_access === Project::ACCESS_PUBLIC_UNRESTRICTED || $project_access === Project::ACCESS_PRIVATE ||
+            $project->isSuperPublic();
     }
 
     private function clearRestrictedUsersToAddInAProjectNotIncludingRestrictedContext(LDAPSetOfUserIDsForDiff $set_of_user_ids) : LDAPSetOfUserIDsForDiff

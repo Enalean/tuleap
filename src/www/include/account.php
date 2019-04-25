@@ -11,8 +11,6 @@
 //
 
 // Add user to an existing project
-use Tuleap\Project\Admin\ProjectWithoutRestrictedFeatureFlag;
-
 function account_add_user_to_group ($group_id, &$user_unix_name)
 {
     $um = UserManager::instance();
@@ -48,7 +46,7 @@ function account_add_user_obj_to_group ($group_id, PFUser $user, $check_user_sta
 
     $project = ProjectManager::instance()->getProject($group_id);
     if ($project !== null && $project->getAccess() === Project::ACCESS_PRIVATE_WO_RESTRICTED &&
-        ForgeConfig::areRestrictedUsersAllowed() && ProjectWithoutRestrictedFeatureFlag::isEnabled() && $user->isRestricted()) {
+        ForgeConfig::areRestrictedUsersAllowed() && $user->isRestricted()) {
         $GLOBALS['Response']->addFeedback(
             Feedback::ERROR,
             sprintf(_('Account %s is restricted and the project does not allow restricted users. User not added.'), $user->getUserName())
