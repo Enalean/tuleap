@@ -1,7 +1,7 @@
 <template>
     <action-button
         icon="eye"
-        v-on:click="showComparison"
+        v-on:click="showComparison()"
     >
         <span v-translate>
             Consult

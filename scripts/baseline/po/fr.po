@@ -15,6 +15,15 @@ msgstr ""
 msgid "Artifact added"
 msgstr "Artefact ajouté"
 
+msgid "Artifact deleted"
+msgstr "Artefact supprimé"
+
+msgid "Artifact modified"
+msgstr "Artefact modifié"
+
+msgid "Artifacts added"
+msgstr "Artefacts ajoutés"
+
 msgid "Artifacts deleted"
 msgstr "Artefacts supprimés"
 
@@ -53,9 +62,6 @@ msgstr "Impossible de charger la baseline"
 
 msgid "Cannot fetch baseline artifacts"
 msgstr "Impossible de charger les artefacts de la baseline"
-
-msgid "Cannot fetch baselines"
-msgstr "Impossible de charger les baselines"
 
 msgid "Cannot fetch milestones"
 msgstr "Impossible de charger les milestones"
@@ -208,3 +214,6 @@ msgstr "vos baselines"
 
 msgid "… compared to"
 msgstr "… comparée à"
+
+#~ msgid "Cannot fetch baselines"
+#~ msgstr "Impossible de charger les baselines"

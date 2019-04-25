@@ -20,21 +20,24 @@
 
 <template>
     <div>
-        <h1 class="statistic-label">
-            <slot></slot>
-            <span class="statistic-label-title">
-                {{ label }}
-            </span>
+        <h1>
+            {{ comparison.name }}
         </h1>
+        <div
+            v-if="comparison.comment !== null"
+            class="comparison-comment tlp-text-muted"
+        >{{ comparison.comment }}</div>
     </div>
 </template>
-
 <script>
 export default {
-    name: "Statistic",
+    name: "SavedComparisonLabel",
 
     props: {
-        label: { required: true, type: String }
+        comparison: {
+            required: true,
+            type: Object
+        }
     }
 };
 </script>

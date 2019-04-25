@@ -23,27 +23,27 @@
         <artifact-label v-bind:artifact="compared_to" class="comparison-content-artifact-header"/>
         <div class="comparison-content-artifact-body">
             <field-comparison
-                v-if="reference.description !== compared_to.description"
+                v-if="base.description !== compared_to.description"
                 semantic="description"
                 v-bind:tracker_id="compared_to.tracker_id"
-                v-bind:reference="reference.description"
+                v-bind:reference="base.description"
                 v-bind:compare_to="compared_to.description"
             />
             <field-comparison
-                v-if="reference.status !== compared_to.status"
+                v-if="base.status !== compared_to.status"
                 semantic="status"
                 v-bind:tracker_id="compared_to.tracker_id"
-                v-bind:reference="reference.status"
+                v-bind:reference="base.status"
                 v-bind:compare_to="compared_to.status"
             />
         </div>
 
-        <baseline-maximum-depth-reached-message v-if="reference.is_depth_limit_reached"/>
+        <baseline-maximum-depth-reached-message v-if="is_depth_limit_reached"/>
 
         <artifacts-list-comparison
             v-else-if="are_linked_artifacts_available"
-            v-bind:reference_artifacts="reference.linked_artifacts"
-            v-bind:compared_artifacts="compared_to.linked_artifacts"
+            v-bind:base_artifacts="base_linked_artifacts"
+            v-bind:compared_to_artifacts="compared_to_linked_artifacts"
         />
     </div>
 </template>
@@ -53,6 +53,7 @@ import ArtifactsListComparison from "./ArtifactsListComparison.vue";
 import FieldComparison from "./FieldComparison.vue";
 import ArtifactLabel from "../../common/ArtifactLabel.vue";
 import BaselineMaximumDepthReachedMessage from "../../common/BaselineDepthLimitReachedMessage.vue";
+import { mapGetters } from "vuex";
 
 export default {
     name: "ArtifactComparison",
@@ -65,17 +66,26 @@ export default {
     },
 
     props: {
-        reference: { require: true, type: Object },
+        base: { require: true, type: Object },
         compared_to: { required: true, type: Object }
     },
 
     computed: {
+        ...mapGetters("comparison", [
+            "findBaseArtifactsByIds",
+            "findComparedToArtifactsByIds",
+            "is_depth_limit_reached"
+        ]),
+        base_linked_artifacts() {
+            return this.findBaseArtifactsByIds(this.base.linked_artifact_ids);
+        },
+        compared_to_linked_artifacts() {
+            return this.findComparedToArtifactsByIds(this.compared_to.linked_artifact_ids);
+        },
         are_linked_artifacts_available() {
             return (
-                (this.reference.linked_artifacts !== null &&
-                    this.reference.linked_artifacts.length > 0) ||
-                (this.compared_to.linked_artifacts !== null &&
-                    this.compared_to.linked_artifacts.length > 0)
+                this.base.linked_artifact_ids.length > 0 ||
+                this.compared_to.linked_artifact_ids.length > 0
             );
         }
     },

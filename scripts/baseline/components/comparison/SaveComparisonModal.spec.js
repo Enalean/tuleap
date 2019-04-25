@@ -93,7 +93,7 @@ describe("SaveComparisonModal", () => {
 
         describe("when createComparison() is successful", () => {
             beforeEach(async () => {
-                createComparisonResolve(create("comparison", { id: 10 }));
+                createComparisonResolve(create("comparison", "saved", { id: 10 }));
                 await Vue.nextTick();
             });
 

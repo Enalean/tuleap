@@ -18,20 +18,18 @@
   -
   -->
 
-<template>
-    <ol class="comparison-content-artifact-ol">
-        <li class="comparison-content-artifact-li"><artifact-comparison-skeleton/></li>
-        <li class="comparison-content-artifact-li"><artifact-comparison-skeleton/></li>
-        <li class="comparison-content-artifact-li"><artifact-comparison-skeleton/></li>
-    </ol>
+<template functionnal>
+    <div>
+        <h1 class="statistic-label">
+            <span class="tlp-skeleton-text statistics-skeleton"></span>
+            <span class="statistic-label-title">
+                <span class="tlp-skeleton-text"></span>
+            </span>
+        </h1>
+    </div>
 </template>
-
 <script>
-import ArtifactComparisonSkeleton from "./ArtifactComparisonSkeleton.vue";
-
 export default {
-    name: "ArtifactsListComparisonSkeleton",
-
-    components: { ArtifactComparisonSkeleton }
+    name: "ComparisonStatisticSkeleton"
 };
 </script>

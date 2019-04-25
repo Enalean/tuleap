@@ -19,11 +19,15 @@
  */
 
 const find = (values, predicate) => values.filter(predicate)[0];
+
 const mapAttribute = (values, attribute) =>
     values.map(value => value[attribute] || null).filter(Boolean);
+
 const unique = values => [...new Set(values)];
+
 const clone = values =>
     values.map(value => {
         return { ...value };
     });
+
 export default { find, unique, clone, mapAttribute };

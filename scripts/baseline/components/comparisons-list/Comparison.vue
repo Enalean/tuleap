@@ -20,7 +20,7 @@
 <template>
     <tr>
         <td class="tlp-table-cell-numeric">
-            <a href="#" v-on:click.prevent="showComparison(comparison)">
+            <a href="#" v-on:click.prevent="showComparison()">
                 {{ comparison.id }}
             </a>
         </td>
@@ -96,6 +96,15 @@ export default {
         },
         author() {
             return this.findUserById(this.comparison.author_id);
+        }
+    },
+
+    methods: {
+        showComparison() {
+            this.$router.push({
+                name: "ComparisonPage",
+                params: { comparison_id: this.comparison.id }
+            });
         }
     }
 };

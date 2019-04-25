@@ -21,7 +21,7 @@
 <template>
     <h2 class="comparison-label">
         Unsaved comparison
-        <div class="transient-comparison-actions">
+        <div class="comparison-actions">
             <button
                 v-on:click="openSaveModal"
                 type="button"
@@ -41,8 +41,8 @@ export default {
     name: "TransientComparisonLabel",
 
     props: {
-        from_baseline_id: { required: true, type: Number },
-        to_baseline_id: { required: true, type: Number }
+        base_baseline_id: { required: true, type: Number },
+        compared_to_baseline_id: { required: true, type: Number }
     },
 
     methods: {
@@ -51,8 +51,8 @@ export default {
                 title: this.$gettext("Save comparison"),
                 component: SaveComparisonModal,
                 props: {
-                    base_baseline_id: this.from_baseline_id,
-                    compared_to_baseline_id: this.to_baseline_id
+                    base_baseline_id: this.base_baseline_id,
+                    compared_to_baseline_id: this.compared_to_baseline_id
                 }
             });
         }

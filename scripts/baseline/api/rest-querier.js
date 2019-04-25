@@ -107,7 +107,6 @@ async function getBaselineArtifactsByIds(baseline_id, artifact_ids) {
     const query = JSON.stringify({
         ids: artifact_ids
     });
-
     const response = await get(
         `/api/baselines/${baseline_id}/artifacts?query=${encodeURIComponent(query)}`
     );

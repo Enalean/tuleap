@@ -20,22 +20,15 @@
 
 <template>
     <div class="comparison-content">
-        <artifacts-list-comparison-skeleton v-if="is_comparison_loading"/>
-
-        <div v-else-if="is_comparison_loading_failed">
-            <div class="tlp-alert-danger">
-                <translate>Cannot fetch baseline artifacts</translate>
-            </div>
-        </div>
-
         <artifacts-list-comparison
-            v-else-if="are_some_first_level_artifacts_available"
-            v-bind:reference_artifacts="base_baseline.first_level_artifacts"
-            v-bind:compared_artifacts="compared_to_baseline.first_level_artifacts"
+            v-if="are_some_artifacts_available"
+            v-bind:base_artifacts="first_level_base_artifacts"
+            v-bind:compared_to_artifacts="first_level_compared_to_artifacts"
         />
         <span
             v-else
             class="baseline-empty-information-message"
+            data-test-type="no-comparison-available-message"
             v-translate
         >
             No artifact to compare
@@ -44,52 +37,25 @@
 </template>
 
 <script>
-import ArtifactsListComparisonSkeleton from "./ArtifactsListComparisonSkeleton.vue";
 import ArtifactsListComparison from "./ArtifactsListComparison.vue";
 import { mapState } from "vuex";
 
 export default {
     name: "ComparisonContent",
 
-    components: { ArtifactsListComparisonSkeleton, ArtifactsListComparison },
-
-    props: {
-        from_baseline_id: { require: true, type: Number },
-        to_baseline_id: { require: true, type: Number }
-    },
+    components: { ArtifactsListComparison },
 
     computed: {
         ...mapState("comparison", [
-            "base_baseline",
-            "compared_to_baseline",
-            "is_comparison_loading_failed",
-            "is_comparison_loading"
+            "first_level_base_artifacts",
+            "first_level_compared_to_artifacts"
         ]),
-
-        is_base_baseline_available() {
-            return this.base_baseline !== null && this.base_baseline !== undefined;
-        },
-
-        is_compared_to_baseline_available() {
-            return this.base_baseline !== null && this.base_baseline !== undefined;
-        },
-
-        are_some_first_level_artifacts_available() {
+        are_some_artifacts_available() {
             return (
-                !this.is_comparison_loading &&
-                this.is_base_baseline_available &&
-                this.is_compared_to_baseline_available &&
-                this.base_baseline.first_level_artifacts.length > 0 &&
-                this.compared_to_baseline.first_level_artifacts.length > 0
+                this.first_level_base_artifacts.length > 0 ||
+                this.first_level_compared_to_artifacts.length > 0
             );
         }
-    },
-
-    mounted() {
-        this.$store.dispatch("comparison/load", {
-            base_baseline_id: this.from_baseline_id,
-            compared_to_baseline_id: this.to_baseline_id
-        });
     }
 };
 </script>

@@ -58,14 +58,56 @@ describe("ArrayUtils:", () => {
     });
 
     describe("unique", () => {
+        describe("when they are objects", () => {
+            const obj = { id: 1, title: "Scra" };
+
+            it("returns unique values", () => {
+                expect(ArrayUtils.unique([obj, obj])).toEqual([obj]);
+            });
+        });
+
+        describe("when they are numbers", () => {
+            it("returns unique values", () => {
+                expect(ArrayUtils.unique([1, 1, 2])).toEqual([1, 2]);
+            });
+        });
+
+        describe("when they are booleans", () => {
+            it("returns unique values", () => {
+                expect(ArrayUtils.unique([true, true, false])).toEqual([true, false]);
+            });
+        });
+
+        describe("when they are string", () => {
+            it("returns unique values", () => {
+                expect(
+                    ArrayUtils.unique(["unique string", "unique string", "other string"])
+                ).toEqual(["unique string", "other string"]);
+            });
+        });
+
+        describe("when array is empty", () => {
+            it("returns empty array", () => {
+                expect(ArrayUtils.unique([])).toEqual([]);
+            });
+        });
+
+        describe("when they are null values", () => {
+            it("returns unique null values", () => {
+                expect(ArrayUtils.unique([null, null])).toEqual([null]);
+            });
+        });
+    });
+
+    describe("clone", () => {
         const obj = { id: 1, title: "Scra" };
 
         it("returns clones", () => {
-            expect(ArrayUtils.clone([obj])).not.toBe([obj]);
+            expect(ArrayUtils.clone([obj])[0]).not.toBe(obj);
         });
 
         it("returns empty array when array is empty", () => {
-            expect(ArrayUtils.clone([])).not.toBe([]);
+            expect(ArrayUtils.clone([obj])[0]).not.toBe(obj);
         });
     });
 });

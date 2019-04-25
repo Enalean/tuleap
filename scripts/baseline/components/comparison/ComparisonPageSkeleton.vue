@@ -21,14 +21,12 @@
 <template>
     <div>
         <comparison-header-skeleton/>
-
-        <statistics/>
-
+        <comparison-statistics-skeleton/>
         <div class="tlp-framed-vertically">
             <section class="tlp-pane">
                 <div class="tlp-pane-container">
-                    <section class="tlp-pane-section comparison-content">
-                        <artifacts-list-comparison-skeleton/>
+                    <section class="tlp-pane-section">
+                        <comparison-content-skeleton/>
                     </section>
                 </div>
             </section>
@@ -38,12 +36,16 @@
 
 <script>
 import ComparisonHeaderSkeleton from "./ComparisonHeaderSkeleton.vue";
-import Statistics from "./Statistics.vue";
-import ArtifactsListComparisonSkeleton from "./content/ArtifactsListComparisonSkeleton.vue";
+import ComparisonStatisticsSkeleton from "./ComparisonStatisticsSkeleton.vue";
+import ComparisonContentSkeleton from "./content/ComparisonContentSkeleton.vue";
 
 export default {
     name: "ComparisonPageSkeleton",
 
-    components: { ComparisonHeaderSkeleton, Statistics, ArtifactsListComparisonSkeleton }
+    components: {
+        ComparisonHeaderSkeleton,
+        ComparisonStatisticsSkeleton,
+        ComparisonContentSkeleton
+    }
 };
 </script>

@@ -21,24 +21,24 @@
 <template>
     <ol class="comparison-content-artifact-ol">
         <li
-            v-for="comparison in artifact_comparisons"
-            v-bind:key="comparison.reference.id"
+            v-for="{base, compared_to} in comparison.identical_or_modified"
+            v-bind:key="base.id"
             class="comparison-content-artifact-li"
         >
             <artifact-comparison
-                v-bind:reference="comparison.reference"
-                v-bind:compared_to="comparison.compared_to"
+                v-bind:base="base"
+                v-bind:compared_to="compared_to"
             />
         </li>
         <li
-            v-for="artifact in added_artifacts"
+            v-for="artifact in comparison.added"
             v-bind:key="artifact.id"
             class="comparison-content-artifact-li comparison-content-artifact-added"
         >
             <artifact-label v-bind:artifact="artifact" class="comparison-content-artifact-header"/>
         </li>
         <li
-            v-for="artifact in removed_artifacts"
+            v-for="artifact in comparison.removed"
             v-bind:key="artifact.id"
             class="comparison-content-artifact-li comparison-content-artifact-removed"
         >
@@ -50,44 +50,21 @@
 <script>
 import ArtifactComparison from "./ArtifactComparison.vue";
 import ArtifactLabel from "../../common/ArtifactLabel.vue";
+import { compareArtifacts } from "../../../support/comparison";
 
 export default {
-    name: "ArtifactsComparison",
+    name: "ArtifactsListComparison",
 
     components: { ArtifactComparison, ArtifactLabel },
 
     props: {
-        reference_artifacts: { require: true, type: Array },
-        compared_artifacts: { require: true, type: Array }
+        base_artifacts: { require: true, type: Array },
+        compared_to_artifacts: { require: true, type: Array }
     },
 
     computed: {
-        artifact_comparisons() {
-            return this.reference_artifacts
-                .map(reference => {
-                    const matching_comparisons = this.compared_artifacts.filter(
-                        compared => reference.id === compared.id
-                    );
-                    if (matching_comparisons.length === 0) {
-                        // Artifact was removed
-                        return null;
-                    }
-                    return {
-                        reference,
-                        compared_to: matching_comparisons[0]
-                    };
-                })
-                .filter(modification => modification !== null);
-        },
-        added_artifacts() {
-            return this.compared_artifacts.filter(compared =>
-                this.reference_artifacts.every(reference => compared.id !== reference.id)
-            );
-        },
-        removed_artifacts() {
-            return this.reference_artifacts.filter(reference =>
-                this.compared_artifacts.every(compared => reference.id !== compared.id)
-            );
+        comparison() {
+            return compareArtifacts(this.base_artifacts, this.compared_to_artifacts);
         }
     }
 };

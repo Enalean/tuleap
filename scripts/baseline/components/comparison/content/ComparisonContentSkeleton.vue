@@ -19,25 +19,21 @@
   -->
 
 <template>
-    <div>
-        <h1>
-            {{ comparison.name }}
-        </h1>
-        <div
-            v-if="comparison.comment !== null"
-            class="comparison-comment tlp-text-muted"
-        >{{ comparison.comment }}</div>
+    <div class="comparison-content">
+        <ol class="comparison-content-artifact-ol">
+            <li class="comparison-content-artifact-li"><artifact-comparison-skeleton/></li>
+            <li class="comparison-content-artifact-li"><artifact-comparison-skeleton/></li>
+            <li class="comparison-content-artifact-li"><artifact-comparison-skeleton/></li>
+        </ol>
     </div>
 </template>
-<script>
-export default {
-    name: "ComparisonLabel",
 
-    props: {
-        comparison: {
-            required: true,
-            type: Object
-        }
-    }
+<script>
+import ArtifactComparisonSkeleton from "./ArtifactComparisonSkeleton.vue";
+
+export default {
+    name: "ComparisonContentSkeleton",
+
+    components: { ArtifactComparisonSkeleton }
 };
 </script>

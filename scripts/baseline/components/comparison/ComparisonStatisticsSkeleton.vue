@@ -19,22 +19,18 @@
   -->
 
 <template>
-    <div>
-        <h1 class="statistic-label">
-            <slot></slot>
-            <span class="statistic-label-title">
-                {{ label }}
-            </span>
-        </h1>
+    <div class="statistics">
+        <comparison-statistic-skeleton class="comparison-statistic-added-artifacts"/>
+        <comparison-statistic-skeleton class="comparison-statistic-deleted-artifacts"/>
+        <comparison-statistic-skeleton class="comparison-statistic-modified-artifacts"/>
+        <comparison-statistic-skeleton class="comparison-statistic-initial-effort"/>
     </div>
 </template>
-
 <script>
-export default {
-    name: "Statistic",
+import ComparisonStatisticSkeleton from "./ComparisonStatisticSkeleton.vue";
 
-    props: {
-        label: { required: true, type: String }
-    }
+export default {
+    name: "ComparisonStatisticsSkeleton",
+    components: { ComparisonStatisticSkeleton }
 };
 </script>

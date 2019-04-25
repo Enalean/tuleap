@@ -20,41 +20,45 @@
 
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../../support/local-vue.js";
-import TransientComparisonLabel from "./TransientComparisonLabel.vue";
+import ComparisonStatistics from "./ComparisonStatistics.vue";
 import { createStoreMock } from "../../support/store-wrapper.spec-helper";
 import store_options from "../../store/store_options";
-import SaveComparisonModal from "./SaveComparisonModal.vue";
 
-describe("TransientComparisonLabel", () => {
-    const save_comparison_selector = '[data-test-action="save-comparison"]';
-    let $store;
+describe("ComparisonStatistics", () => {
+    const initial_effort_statistic_selector = '[data-test-type="initial-effort-statistic"]';
+
     let wrapper;
+    let $store;
 
     beforeEach(() => {
         $store = createStoreMock(store_options);
+        $store.state.comparison.initial_effort_difference = -1;
 
-        wrapper = shallowMount(TransientComparisonLabel, {
-            propsData: {
-                base_baseline_id: 1,
-                compared_to_baseline_id: 2
-            },
+        wrapper = shallowMount(ComparisonStatistics, {
             localVue,
             mocks: { $store }
         });
     });
 
-    describe("when saving comparison", () => {
-        beforeEach(() => wrapper.find(save_comparison_selector).trigger("click"));
+    describe("when compared initial effort is negative", () => {
+        it("returns negative sign in front of initial effort", () => {
+            expect(wrapper.find(initial_effort_statistic_selector).text()).toContain("- 1");
+        });
+    });
 
-        it("shows save comparison modal", () => {
-            expect($store.commit).toHaveBeenCalledWith("dialog_interface/showModal", {
-                title: "Save comparison",
-                component: SaveComparisonModal,
-                props: {
-                    base_baseline_id: 1,
-                    compared_to_baseline_id: 2
-                }
+    describe("when compared initial effort is positive", () => {
+        beforeEach(() => {
+            $store = createStoreMock(store_options);
+            $store.state.comparison.initial_effort_difference = 1;
+
+            wrapper = shallowMount(ComparisonStatistics, {
+                localVue,
+                mocks: { $store }
             });
+        });
+
+        it("returns positive sign in front of initial effort", () => {
+            expect(wrapper.find(initial_effort_statistic_selector).text()).toContain("1");
         });
     });
 });

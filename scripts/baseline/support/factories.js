@@ -84,6 +84,7 @@ const factories = {
             title: "Sprint-1",
             status: "Planned",
             tracker_id: 1,
+            initial_effort: null,
             tracker_name: "Sprint",
             description:
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit labore et dolore magna aliqua",
@@ -115,13 +116,39 @@ const factories = {
     },
     comparison: {
         default: {
+            base_baseline_id: 1,
+            compared_to_baseline_id: 2
+        },
+        saved: {
             id: identity,
             name: "comparison label",
             comment: null,
-            base_baseline_id: 1,
-            compared_to_baseline_id: 2,
             author_id: 1,
             creation_date: "2019-03-22T10:01:48+00:00"
+        }
+    },
+    artifacts_comparison: {
+        default: {
+            added: associationList("baseline_artifact"),
+            removed: associationList("baseline_artifact"),
+            modified: () => [
+                {
+                    base: create("baseline_artifact"),
+                    compared_to: create("baseline_artifact")
+                }
+            ],
+            identical_or_modified: () => [
+                {
+                    base: create("baseline_artifact"),
+                    compared_to: create("baseline_artifact")
+                }
+            ]
+        },
+        empty: {
+            added: [],
+            removed: [],
+            modified: [],
+            identical_or_modified: []
         }
     }
 };
@@ -130,6 +157,10 @@ let instance_index = 1;
 
 function association(factory_name, ...trait_or_attributes) {
     return () => create(factory_name, ...trait_or_attributes);
+}
+
+function associationList(factory_name, ...trait_or_attributes) {
+    return () => createList(factory_name, 2, ...trait_or_attributes);
 }
 
 const evaluateAttributesAsFunction = instance =>

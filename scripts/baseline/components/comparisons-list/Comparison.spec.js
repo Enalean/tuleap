@@ -63,7 +63,7 @@ describe("Comparison", () => {
 
         wrapper = shallowMount(Comparison, {
             propsData: {
-                comparison: create("comparison", {
+                comparison: create("comparison", "saved", {
                     id: 1,
                     base_baseline_id: 11,
                     compared_to_baseline_id: 12,

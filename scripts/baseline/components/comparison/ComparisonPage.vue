@@ -20,39 +20,102 @@
 
 <template>
     <div>
-        <comparison-header-async
-            v-bind:comparison="comparison"
-            v-bind:from_baseline_id="comparison.base_baseline_id"
-            v-bind:to_baseline_id="comparison.compared_to_baseline_id"
-        />
-
-        <statistics/>
-
-        <div class="tlp-framed-vertically">
-            <section class="tlp-pane">
-                <div class="tlp-pane-container">
-                    <section class="tlp-pane-section comparison-content">
-                        <comparison-content
-                            v-bind:from_baseline_id="comparison.base_baseline_id"
-                            v-bind:to_baseline_id="comparison.compared_to_baseline_id"
-                        />
-                    </section>
-                </div>
-            </section>
+        <div
+            v-if="is_loading_failed"
+            class="tlp-alert-danger"
+        >
+            <translate>Cannot fetch baseline artifacts</translate>
         </div>
+
+        <comparison-page-skeleton v-else-if="is_loading"/>
+
+        <template v-else>
+            <comparison-header v-bind:comparison="comparison"/>
+
+            <comparison-statistics/>
+
+            <div class="tlp-framed-vertically">
+                <section class="tlp-pane">
+                    <div class="tlp-pane-container">
+                        <section class="tlp-pane-section">
+                            <comparison-content/>
+                        </section>
+                    </div>
+                </section>
+            </div>
+        </template>
     </div>
 </template>
 
 <script>
-import ComparisonHeaderAsync from "./ComparisonHeaderAsync.vue";
-import Statistics from "./Statistics.vue";
+import ComparisonStatistics from "./ComparisonStatistics.vue";
+import ComparisonPageSkeleton from "./ComparisonPageSkeleton.vue";
+import ComparisonHeaderSkeleton from "./ComparisonHeaderSkeleton.vue";
+import ComparisonHeader from "./ComparisonHeader.vue";
+import ComparisonContentSkeleton from "./content/ComparisonContentSkeleton.vue";
+import ComparisonStatisticsSkeleton from "./ComparisonStatisticsSkeleton.vue";
 import ComparisonContent from "./content/ComparisonContent.vue";
+import { sprintf } from "sprintf-js";
+import { mapGetters } from "vuex";
 
 export default {
     name: "ComparisonPage",
-    components: { ComparisonHeaderAsync, ComparisonContent, Statistics },
+    components: {
+        ComparisonPageSkeleton,
+        ComparisonContent,
+        ComparisonStatisticsSkeleton,
+        ComparisonContentSkeleton,
+        ComparisonHeader,
+        ComparisonHeaderSkeleton,
+        ComparisonStatistics
+    },
     props: {
         comparison: { required: true, type: Object }
+    },
+
+    data() {
+        return {
+            is_loading: true,
+            is_loading_failed: false
+        };
+    },
+
+    computed: {
+        ...mapGetters(["findBaselineById"]),
+        base_baseline() {
+            return this.findBaselineById(this.comparison.base_baseline_id);
+        },
+        compared_to_baseline() {
+            return this.findBaselineById(this.comparison.compared_to_baseline_id);
+        }
+    },
+
+    mounted() {
+        this.loadComparison();
+    },
+
+    created() {
+        const title = sprintf(
+            this.$gettext("Baselines comparison #%u/#%u"),
+            this.comparison.base_baseline_id,
+            this.comparison.compared_to_baseline_id
+        );
+        this.$emit("title", title);
+    },
+
+    methods: {
+        async loadComparison() {
+            this.is_loading = true;
+            this.is_loading_failed = false;
+
+            try {
+                await this.$store.dispatch("comparison/load", this.comparison);
+            } catch (e) {
+                this.is_loading_failed = true;
+            } finally {
+                this.is_loading = false;
+            }
+        }
     }
 };
 </script>

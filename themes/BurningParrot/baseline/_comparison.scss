@@ -23,11 +23,15 @@
     white-space: pre-wrap;
 }
 
-.transient-comparison-actions {
+.comparison-actions {
     display: inline-block;
 }
 
 .baseline-comparison-separator {
     margin: 0 $tlp-spacing;
     font-size: 22px;
+}
+
+h1 > .statistics-skeleton {
+    width: 2em;
 }
