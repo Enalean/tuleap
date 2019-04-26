@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -25,7 +25,6 @@ use Tuleap\Layout\IncludeAssets;
 use Tuleap\MyTuleapContactSupport\Plugin\Info;
 use Tuleap\MyTuleapContactSupport\Router;
 use Tuleap\MyTuleapContactSupport\ContactSupportController;
-use Tuleap\MyTuleapContactSupport\Presenter\HomepagePresenter;
 
 class mytuleap_contact_supportPlugin extends Plugin
 {
@@ -85,13 +84,14 @@ class mytuleap_contact_supportPlugin extends Plugin
 
     public function cssfile()
     {
-        echo '<link rel="stylesheet" type="text/css" href="'. $this->getThemePath() .'/css/style.css" />';
+        $asset = $this->getIncludeAssets();
+        echo '<link rel="stylesheet" type="text/css" href="'. $asset->getFileURL('style-flamingparrot.css') .'" />';
     }
 
     public function javascript_file($params)
     {
-        echo '<script type="text/javascript" src="'.$this->getPluginPath().'/js/modal.js"></script>';
-        echo '<script type="text/javascript" src="'.$this->getPluginPath().'/js/modal-flaming-parrot.js"></script>';
+        $asset = $this->getIncludeAssets();
+        echo $asset->getHTMLSnippet('modal-flaming-parrot.js');
     }
 
     public function site_help($params)
@@ -101,17 +101,26 @@ class mytuleap_contact_supportPlugin extends Plugin
 
     public function burning_parrot_get_javascript_files(array $params)
     {
-        $params['javascript_files'][] = $this->getPluginPath().'/js/modal.js';
-        $params['javascript_files'][] = $this->getPluginPath().'/js/modal-burning-parrot.js';
+        $asset = $this->getIncludeAssets();
+        $params['javascript_files'][] = $asset->getFileURL('modal-burning-parrot.js');
 
         if (strpos($_SERVER['REQUEST_URI'], '/help/') === 0) {
-            $params['javascript_files'][] = $this->getPluginPath().'/js/help-page.js';
+            $params['javascript_files'][] = $asset->getFileURL('help-page.js');
         }
     }
 
     public function burning_parrot_get_stylesheets(array $params)
     {
+        $asset                   = $this->getIncludeAssets();
         $variant                 = $params['variant'];
-        $params['stylesheets'][] = $this->getThemePath() .'/css/style-'. $variant->getName() .'.css';
+        $params['stylesheets'][] = $asset->getFileURL('style-burningparrot-' . $variant->getName() . '.css');
+    }
+
+    private function getIncludeAssets() : IncludeAssets
+    {
+        return new IncludeAssets(
+            __DIR__ . '/../../../src/www/assets/mytuleap_contact_support/',
+            '/assets/mytuleap_contact_support'
+        );
     }
 }

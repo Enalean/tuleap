@@ -1,3 +1,4 @@
+SHELL := /bin/bash
 RPM_TMP=$(HOME)/rpmbuild
 PKG_NAME=tuleap-plugin-mytuleap-contact-support
 VERSION=$(shell LANG=C cat VERSION)
@@ -42,13 +43,17 @@ $(RPM_TMP)/SPECS/%.spec: $(BASE_DIR)/%.spec
 # This is crappy but it avoids the duplication of the files that need to be built
 .PHONY: build
 build:
-	cd /build/src && npm install && npm run build
+	cd /build/src && npm install && \
+	cd /build/src/plugins/mytuleap_contact_support && npm install && npm run build
 
 $(RPM_TMP)/SOURCES/$(NAME_VERSION).tar.gz: build $(RPM_TMP)
 	[ -h $(RPM_TMP)/SOURCES/$(NAME_VERSION) ] || ln -s $(BASE_DIR) $(RPM_TMP)/SOURCES/$(NAME_VERSION)
+	[ ! -d $(RPM_TMP)/SOURCES/$(NAME_VERSION)/assets ] || rm -rf $(RPM_TMP)/SOURCES/$(NAME_VERSION)/assets
+	cp -ar $(BASE_DIR)/../../src/www/assets/mytuleap_contact_support $(RPM_TMP)/SOURCES/$(NAME_VERSION)/assets
 	cd $(RPM_TMP)/SOURCES && \
 		find $(NAME_VERSION)/ \(\
 		-path $(NAME_VERSION)/tests -o\
+		-name 'node_modules' -o\
 		-name '*.spec' -o\
 		-name 'Makefile' -o\
 		-name 'build-rpm.sh' -o\
@@ -69,6 +74,7 @@ $(RPM_TMP):
 docker-run:
 	@[ -n "$(GID)" -a -n "$(UID)" ] || (echo "*** ERROR: UID or GID are missing" && false)
 	useradd -d /build -m build
-	cp -Rf /tuleap/ /build/src && cp -Rf /plugin/ /build/src/plugins/mytuleap_contact_support && chown -R build /build/src
+	pushd /tuleap && git checkout-index -a --prefix=/build/src/ && popd
+	cp -Rf /plugin/ /build/src/plugins/mytuleap_contact_support && chown -R build /build/src
 	su --login --command "make -C /build/src/plugins/mytuleap_contact_support all RELEASE=$(RELEASE) OS=$(OS)" build
 	install -o $(UID) -g $(GID) -m 0644 /build/rpmbuild/RPMS/noarch/*.rpm /output

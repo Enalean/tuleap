@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2017. All rights reserved
+ * Copyright (c) Enalean, 2017-Present. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -16,6 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
+
+import jQuery from "jquery";
+import { contactSupportModalShown } from "./modal.js";
 
 (function($) {
     var help_modal_trigger = document.querySelector(
@@ -39,7 +42,7 @@
                 );
                 contact_support_modal.addEventListener(
                     "tlp-modal-shown",
-                    tuleap.contact_support_modal_shown
+                    contactSupportModalShown
                 );
                 contact_support_modal.show();
             });

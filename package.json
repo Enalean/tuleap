@@ -1,0 +1,13 @@
+{
+  "name": "@tuleap/plugin-mytuleap_contact_support",
+  "private": true,
+  "dependencies": {},
+  "devDependencies": {},
+  "config": {
+    "bin": "../../node_modules/.bin"
+  },
+  "scripts": {
+    "build": "$npm_package_config_bin/webpack --config webpack.prod.js",
+    "watch": "$npm_package_config_bin/webpack --config webpack.dev.js --watch"
+  }
+}

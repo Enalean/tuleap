@@ -1,6 +1,4 @@
 *.mo
 *.po~
 .DS_Store
-*.css
-www/assets/*
-.sass-cache/
+node_modules/

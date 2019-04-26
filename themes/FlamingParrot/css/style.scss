@@ -28,37 +28,37 @@
 
 body {
     &.FlamingParrot_Orange {
-        @import "variables-orange";
+        @import "../../src/www/themes/FlamingParrot/css/utils/variables-orange";
 
         @include definitions($main, $main-background, $ui-color-success, $ui-color-danger);
     }
 
     &.FlamingParrot_Blue {
-        @import "variables-blue";
+        @import "../../src/www/themes/FlamingParrot/css/utils/variables-blue";
 
         @include definitions($main, $main-background, $ui-color-success, $ui-color-danger);
     }
 
     &.FlamingParrot_Green {
-        @import "variables-green";
+        @import "../../src/www/themes/FlamingParrot/css/utils/variables-green";
 
         @include definitions($main, $main-background, $ui-color-success, $ui-color-danger);
     }
 
     &.FlamingParrot_BlueGrey {
-        @import "variables-bluegrey";
+        @import "../../src/www/themes/FlamingParrot/css/utils/variables-bluegrey";
 
         @include definitions($main, $main-background, $ui-color-success, $ui-color-danger);
     }
 
     &.FlamingParrot_Purple {
-        @import "variables-purple";
+        @import "../../src/www/themes/FlamingParrot/css/utils/variables-purple";
 
         @include definitions($main, $main-background, $ui-color-success, $ui-color-danger);
     }
 
     &.FlamingParrot_Red {
-        @import "variables-red";
+        @import "../../src/www/themes/FlamingParrot/css/utils/variables-red";
 
         @include definitions($main, $main-background, $ui-color-success, $ui-color-danger);
     }

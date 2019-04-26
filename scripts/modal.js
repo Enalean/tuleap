@@ -17,9 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-var tuleap = tuleap || {};
+import jQuery from "jquery";
 
-tuleap.contact_support_modal_shown = function contactSupportModalShown() {
+export function contactSupportModalShown() {
     var contact_support_modal_forms = document.querySelectorAll(".contact-support-modal-form");
 
     [].forEach.call(contact_support_modal_forms, function(contact_support_modal_form) {
