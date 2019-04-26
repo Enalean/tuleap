@@ -76,4 +76,24 @@ describe("DocumentBreadcrumb", () => {
 
         expect(wrapper.contains("[data-test=breadcrumb-ellipsis]")).toBeTruthy();
     });
+
+    it(`Given a list of folders which are in different hierarchy level
+        When we display the breadcrumb
+        Then folders which are in the root folder (parent_id === 0) are removed`, () => {
+        store.state.is_user_administrator = false;
+        store.state.is_loading_ascendant_hierarchy = false;
+        store.state.current_folder_ascendant_hierarchy = [
+            { id: 1, title: "My first folder", parent_id: 0 },
+            { id: 2, title: "My second folder", parent_id: 0 },
+            { id: 3, title: "My third folder", parent_id: 1 },
+            { id: 4, title: "My fourth folder", parent_id: 2 },
+            { id: 5, title: "My fifth folder", parent_id: 2 }
+        ];
+
+        const wrapper = shallowMount(DocumentBreadcrumb, component_options);
+
+        expect(wrapper.vm.current_folder_ascendant_hierarchy_to_display).not.toContain(
+            jasmine.objectContaining({ parent_id: 0 })
+        );
+    });
 });

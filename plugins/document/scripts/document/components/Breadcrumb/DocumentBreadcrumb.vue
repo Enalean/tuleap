@@ -42,12 +42,10 @@
                 ...
             </span>
         </span>
-
-        <document-breadcrumb-element v-for="parent in current_folder_ascendant_hierarchy.slice(-max_nb_to_display)"
+        <document-breadcrumb-element v-for="parent in current_folder_ascendant_hierarchy_to_display"
                                      v-bind:key="parent.id"
                                      v-bind:item="parent"
         />
-
         <span class="breadcrumb-item" v-if="is_loading_ascendant_hierarchy">
             <a class="breadcrumb-link" href="#">
                 <span class="tlp-skeleton-text"></span>
@@ -59,6 +57,7 @@
 <script>
 import { mapState } from "vuex";
 import DocumentBreadcrumbElement from "./DocumentBreadcrumbElement.vue";
+
 export default {
     name: "DocumentBreadcrumb",
     components: { DocumentBreadcrumbElement },
@@ -102,6 +101,11 @@ export default {
         },
         ellipsis_title() {
             return this.$gettext("Parent folders are not displayed to not clutter the interface");
+        },
+        current_folder_ascendant_hierarchy_to_display() {
+            return this.current_folder_ascendant_hierarchy
+                .filter(parent => parent.parent_id !== 0)
+                .slice(-this.max_nb_to_display);
         }
     }
 };

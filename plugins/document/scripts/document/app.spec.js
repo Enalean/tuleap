@@ -28,7 +28,7 @@ import "./store/mutations.spec.js";
 
 import "./store/error/error-mutations.spec.js";
 
-import "./components/Breadcrumb/DocumentBreadCrumb.spec.js";
+import "./components/Breadcrumb/DocumentBreadcrumb.spec.js";
 
 import "./components/Folder/ApprovalTables/ApprovalTableBadge.spec.js";
 
