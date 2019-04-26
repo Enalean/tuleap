@@ -81,6 +81,28 @@ describe("Comparisons store:", () => {
         });
     });
 
+    describe("mutations", () => {
+        let state;
+        beforeEach(() => (state = { ...store.state }));
+
+        describe("#delete", () => {
+            const comparison_to_delete = create("comparison", { id: 1 });
+            const another_comparison = create("comparison", { id: 2 });
+
+            beforeEach(() => {
+                state.comparisons = [comparison_to_delete, another_comparison];
+                store.mutations.delete(state, comparison_to_delete);
+            });
+
+            it("removes given comparison from state", () => {
+                expect(state.comparisons).not.toContain(comparison_to_delete);
+            });
+            it("does not remove other comparisons from state", () => {
+                expect(state.comparisons).toContain(another_comparison);
+            });
+        });
+    });
+
     describe("getters", () => {
         let state;
         beforeEach(() => (state = { ...store.state }));

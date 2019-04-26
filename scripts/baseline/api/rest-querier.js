@@ -29,6 +29,7 @@ export {
     getBaseline,
     getComparison,
     deleteBaseline,
+    deleteComparison,
     getTracker,
     getBaselines,
     getUser,
@@ -74,6 +75,10 @@ async function getComparison(id) {
 
 async function deleteBaseline(id) {
     await del(`/api/baselines/${id}`);
+}
+
+async function deleteComparison(id) {
+    await del(`/api/baselines_comparisons/${id}`);
 }
 
 async function getTracker(id) {

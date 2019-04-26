@@ -20,6 +20,13 @@
 <template>
     <div>
         <div class="tlp-modal-body">
+            <div
+                class="tlp-alert-danger"
+                data-test-type="error-message"
+                v-if="is_deleting_failed"
+            >
+                {{ failed_message }}
+            </div>
             <p>
                 <slot></slot>
                 <br>
@@ -66,20 +73,25 @@ export default {
 
     props: {
         submit_label: { required: true, type: String },
+        failed_message: { required: true, type: String },
         on_submit: { required: true, type: Function }
     },
 
     data() {
         return {
-            is_deleting: false
+            is_deleting: false,
+            is_deleting_failed: false
         };
     },
 
     methods: {
         async confirm() {
             this.is_deleting = true;
+            this.is_deleting_failed = false;
             try {
                 await this.on_submit();
+            } catch (e) {
+                this.is_deleting_failed = true;
             } finally {
                 this.is_deleting = false;
             }

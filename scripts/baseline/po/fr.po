@@ -57,6 +57,12 @@ msgstr "Annuler"
 msgid "Cannot create baseline"
 msgstr "Impossible de créer une baseline"
 
+msgid "Cannot delete baseline"
+msgstr "Impossible de supprimer la baseline"
+
+msgid "Cannot delete comparison"
+msgstr "Impossible de supprimer la comparaison"
+
 msgid "Cannot fetch baseline"
 msgstr "Impossible de charger la baseline"
 
@@ -191,6 +197,9 @@ msgstr "La baseline a été créée"
 msgid "The baseline was deleted"
 msgstr "La baseline a été supprimée"
 
+msgid "The comparison was deleted"
+msgstr "La comparaison a été supprimée"
+
 msgid "The comparison was saved"
 msgstr "La comparaison a été sauvegardée"
 
@@ -214,6 +223,3 @@ msgstr "vos baselines"
 
 msgid "… compared to"
 msgstr "… comparée à"
-
-#~ msgid "Cannot fetch baselines"
-#~ msgstr "Impossible de charger les baselines"

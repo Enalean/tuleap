@@ -19,6 +19,7 @@
 <template>
     <delete-confirmation-modal
         v-bind:submit_label="label"
+        v-bind:failed_message="failed_message"
         v-bind:on_submit="confirm"
     >
         <span v-translate>
@@ -29,6 +30,7 @@
 
 <script>
 import DeleteConfirmationModal from "../common/DeleteConfirmationModal.vue";
+import { deleteComparison } from "../../api/rest-querier";
 
 export default {
     name: "DeleteComparisonConfirmationModal",
@@ -39,10 +41,19 @@ export default {
     computed: {
         label() {
             return this.$gettext("Delete comparison");
+        },
+        failed_message() {
+            return this.$gettext("Cannot delete comparison");
         }
     },
     methods: {
-        confirm() {
+        async confirm() {
+            await deleteComparison(this.comparison.id);
+            this.$store.commit("comparisons/delete", this.comparison);
+            this.$store.commit("dialog_interface/notify", {
+                text: this.$gettext("The comparison was deleted"),
+                class: "success"
+            });
             this.$store.commit("dialog_interface/hideModal");
         }
     }

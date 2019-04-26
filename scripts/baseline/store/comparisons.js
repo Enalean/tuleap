@@ -80,6 +80,11 @@ export default {
         },
         updateComparisons: (state, comparisons) => {
             state.comparisons = comparisons;
+        },
+        delete: (state, comparison_to_delete) => {
+            state.comparisons = state.comparisons.filter(
+                comparison => comparison.id !== comparison_to_delete.id
+            );
         }
     },
     getters: {
