@@ -21,6 +21,7 @@
 namespace Tuleap\TestManagement;
 
 use BackendLogger;
+use Feedback;
 use HTTPRequest;
 use Project;
 use TrackerFactory;
@@ -96,12 +97,41 @@ class StartTestManagementController
             $this->backend_logger
         );
 
-        $config_creator->createConfigForProjectFromXML($project);
+        try {
+            $config_creator->createConfigForProjectFromXML($project);
 
-        $this->allowProjectToUseNature(
-            $project,
-            $project
-        );
+            $this->allowProjectToUseNature(
+                $project,
+                $project
+            );
+
+            $GLOBALS['Response']->addFeedback(
+                Feedback::INFO,
+                dgettext('tuleap-testmanagement', 'We configured Test Management for you. Enjoy!')
+            );
+        } catch (TrackerComesFromLegacyEngineException $exception) {
+            $GLOBALS['Response']->addFeedback(
+                    Feedback::WARN,
+                    sprintf(
+                        dgettext('tuleap-testmanagement', 'We tried to configure Test Management for you but an existing tracker (%1$s) is using Tracker Engine v3 and prevented it.'),
+                        $exception->getTrackerShortname()
+                    )
+                );
+
+            $this->redirectToTestManagementHomepage($project);
+        } catch (TrackerNotCreatedException $exception) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::WARN,
+                dgettext('tuleap-testmanagement', 'We tried to configure Test Management for you but an internal error prevented it.')
+            );
+
+            $this->redirectToTestManagementHomepage($project);
+        }
+    }
+
+    private function redirectToTestManagementHomepage(Project $project)
+    {
+        $GLOBALS['Response']->redirect(TESTMANAGEMENT_BASE_URL . '/?group_id=' . urlencode($project->getID()));
     }
 
     public function getBreadcrumbs() {

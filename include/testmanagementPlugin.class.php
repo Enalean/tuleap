@@ -38,6 +38,8 @@ use Tuleap\TestManagement\REST\ResourcesInjector;
 use Tuleap\TestManagement\Step\Definition\Field\StepDefinition;
 use Tuleap\TestManagement\Step\Execution\Field\StepExecution;
 use Tuleap\TestManagement\TestManagementPluginInfo;
+use Tuleap\TestManagement\TrackerComesFromLegacyEngineException;
+use Tuleap\TestManagement\TrackerNotCreatedException;
 use Tuleap\TestManagement\UserIsNotAdministratorException;
 use Tuleap\TestManagement\XML\Exporter;
 use Tuleap\TestManagement\XML\XMLImport;
@@ -294,20 +296,27 @@ class testmanagementPlugin extends PluginWithLegacyInternalRouting
     {
         $config       = $this->getConfig();
         $from_project = ProjectManager::instance()->getProject($params['source_project_id']);
-        $to_project = ProjectManager::instance()->getProject($params['group_id']);
+        $to_project   = ProjectManager::instance()->getProject($params['group_id']);
 
         $plugin_testmanagement_is_used = $to_project->usesService($this->getServiceShortname());
         if (! $plugin_testmanagement_is_used) {
             return;
         }
 
+        $logger = new BackendLogger();
+
         $config_creator = new FirstConfigCreator(
             $config,
             TrackerFactory::instance(),
             TrackerXmlImport::build(new XMLImportHelper(UserManager::instance())),
-            new BackendLogger()
+            $logger
         );
-        $config_creator->createConfigForProjectFromTemplate($to_project, $from_project, $params['tracker_mapping']);
+
+        try {
+            $config_creator->createConfigForProjectFromTemplate($to_project, $from_project, $params['tracker_mapping']);
+        } catch (TrackerComesFromLegacyEngineException | TrackerNotCreatedException $exception) {
+            $logger->error('TTM configuration for project #' . $to_project->getID() . ' not duplicated.');
+        }
     }
 
     /**

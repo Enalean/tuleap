@@ -52,6 +52,10 @@ class FirstConfigCreator
         $this->logger           = $logger;
     }
 
+    /**
+     * @throws TrackerComesFromLegacyEngineException
+     * @throws TrackerNotCreatedException
+     */
     public function createConfigForProjectFromTemplate(
         Project $project,
         Project $template,
@@ -72,11 +76,6 @@ class FirstConfigCreator
         foreach($template_tracker_ids as $tracker_itemname => $tracker_id) {
             if (! isset($tracker_mapping[$tracker_id])) {
                 $tracker = $this->getTracker($project, $tracker_itemname);
-
-                if (! $tracker) {
-                    return;
-                }
-
                 $project_tracker_ids[$tracker_itemname] = $tracker->getId();
             } else {
                 $project_tracker_ids[$tracker_itemname] = $tracker_mapping[$tracker_id];
@@ -92,6 +91,10 @@ class FirstConfigCreator
         );
     }
 
+    /**
+     * @throws TrackerComesFromLegacyEngineException
+     * @throws TrackerNotCreatedException
+     */
     public function createConfigForProjectFromXML(Project $project)
     {
         $tracker_ids       = array();
@@ -108,11 +111,6 @@ class FirstConfigCreator
 
         foreach($tracker_itemnames as $tracker_itemname) {
             $tracker = $this->getTracker($project, $tracker_itemname);
-
-            if (! $tracker) {
-                $GLOBALS['Response']->redirect(TESTMANAGEMENT_BASE_URL . '/?group_id=' . urlencode($project->getID()));
-            }
-
             $tracker_ids[$tracker_itemname] = $tracker->getId();
         }
 
@@ -123,12 +121,12 @@ class FirstConfigCreator
             $tracker_ids[EXECUTION_TRACKER_SHORTNAME],
             $tracker_ids[ISSUE_TRACKER_SHORTNAME]
         );
-
-        $this->success();
     }
 
     /**
-     * @return null|\Tracker
+     * @return \Tracker|null
+     * @throws TrackerComesFromLegacyEngineException
+     * @throws TrackerNotCreatedException
      */
     private function getTracker(Project $project, $tracker_itemname)
     {
@@ -141,10 +139,7 @@ class FirstConfigCreator
 
             if (! $tracker) {
                 # Tracker using this shortname is from TrackerEngine v3
-                $GLOBALS['Response']->addFeedback(
-                    Feedback::WARN,
-                    sprintf(dgettext('tuleap-testmanagement', 'We tried to configure Test Management for you but an existing tracker (%1$s) is using Tracker Engine v3 and prevented it.'), $tracker_itemname)
-                );
+                throw new TrackerComesFromLegacyEngineException($tracker_itemname);
             }
         } else {
             $tracker = $this->createTrackerFromXML($project, $tracker_itemname);
@@ -153,38 +148,34 @@ class FirstConfigCreator
         return $tracker;
     }
 
-    private function success()
-    {
-        $GLOBALS['Response']->addFeedback(
-            Feedback::INFO,
-            dgettext('tuleap-testmanagement', 'We configured Test Management for you. Enjoy!')
-        );
-    }
-
-    /** @return \Tracker|null */
+    /**
+     * @return \Tracker|null
+     * @throws TrackerNotCreatedException
+     */
     private function createTrackerFromXML(Project $project, $tracker_itemname)
     {
         $template_path = TESTMANAGEMENT_RESOURCE_DIR .'/Tracker_'.$tracker_itemname.'.xml';
 
         $tracker = $this->importTrackerStructure($project, $template_path);
         if (! $tracker) {
-            $GLOBALS['Response']->addFeedback(
-                Feedback::WARN,
-                dgettext('tuleap-testmanagement', 'We tried to configure Test Management for you but an internal error prevented it.')
-            );
+            throw new TrackerNotCreatedException();
         }
 
         return $tracker;
     }
 
-    /** @return \Tracker */
+    /**
+     * @return \Tracker|null
+     */
     private function importTrackerStructure(Project $project, $template_path)
     {
+        $created_tracker = null;
         try {
-            return $this->xml_import->createFromXMLFile($project, $template_path);
+            $created_tracker = $this->xml_import->createFromXMLFile($project, $template_path);
         } catch (\Exception $exception) {
             $this->logger->error('Unable to create testmanagement config for '. $project->getId() .': '. $exception->getMessage());
-            return;
+        } finally {
+            return $created_tracker;
         }
     }
 

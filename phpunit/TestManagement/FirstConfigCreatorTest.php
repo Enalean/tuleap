@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,6 +24,7 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tracker;
+use TrackerFromXmlException;
 use TrackerXmlImport;
 use Tuleap\Layout\BaseLayout;
 use XMLImportHelper;
@@ -67,13 +68,9 @@ class FirstConfigCreatorTest extends TestCase
     private $execution_tracker_xml_path;
     private $issue_tracker_xml_path;
 
-    public function setUp() : void
+    protected function setUp() : void
     {
         parent::setUp();
-
-        $this->globals = array_merge([], $GLOBALS);
-        $GLOBALS['Response'] = Mockery::spy(BaseLayout::class);
-        $GLOBALS['Language'] = Mockery::spy(\BaseLanguage::class);
 
         $this->campaign_tracker_xml_path   = TESTMANAGEMENT_RESOURCE_DIR .'/Tracker_campaign.xml';
         $this->definition_tracker_xml_path = TESTMANAGEMENT_RESOURCE_DIR .'/Tracker_test_def.xml';
@@ -145,14 +142,7 @@ class FirstConfigCreatorTest extends TestCase
         );
     }
 
-    public function tearDown() : void
-    {
-        $GLOBALS = $this->globals;
-
-        parent::tearDown();
-    }
-
-    public function testItSetsTheProjectTTLTrackerIdsInConfig()
+    public function testItSetsTheProjectTTMTrackerIdsInConfig()
     {
         $this->config->shouldReceive('getCampaignTrackerId')
             ->with($this->template)
@@ -337,6 +327,41 @@ class FirstConfigCreatorTest extends TestCase
 
         $this->config_creator->createConfigForProjectFromXML($this->project);
     }
+
+    public function testItThrowsAnExceptionIfTrackerExistsInLegacyEngine()
+    {
+        $this->tracker_factory->shouldReceive('isShortNameExists')
+            ->with('campaign', $this->project->getID())
+            ->andReturn(true);
+
+        $this->tracker_factory->shouldReceive('getTrackerByShortnameAndProjectId')
+            ->with('campaign', $this->project->getID())
+            ->andReturn(null);
+
+        $this->config->shouldReceive('isConfigNeeded')
+            ->with($this->project)
+            ->andReturn(true);
+
+        $this->xml_import->shouldReceive('createFromXMLFile')->never();
+
+        $this->expectException(TrackerComesFromLegacyEngineException::class);
+
+        $this->config_creator->createConfigForProjectFromXML($this->project);
+    }
+
+    public function testItThrowsAnExceptionIfTrackerIsNotCreated()
+    {
+        $this->config->shouldReceive('isConfigNeeded')
+            ->with($this->project)
+            ->andReturn(true);
+
+        $this->xml_import->shouldReceive('createFromXMLFile')
+            ->with($this->project, $this->campaign_tracker_xml_path)
+            ->once()
+            ->andThrow(TrackerFromXmlException::class);
+
+        $this->expectException(TrackerNotCreatedException::class);
+
+        $this->config_creator->createConfigForProjectFromXML($this->project);
+    }
 }
-
-
