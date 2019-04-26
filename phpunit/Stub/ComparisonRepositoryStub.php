@@ -101,4 +101,18 @@ class ComparisonRepositoryStub implements ComparisonRepository
     {
         return count($this->comparisons_by_id);
     }
+
+    /**
+     * It returns a array of comparisons with id as key
+     * @return Comparison[]
+     */
+    public function findAllById(): array
+    {
+        return $this->comparisons_by_id;
+    }
+
+    public function delete(Comparison $comparison, PFUser $current_user): void
+    {
+        unset($this->comparisons_by_id[$comparison->getId()]);
+    }
 }

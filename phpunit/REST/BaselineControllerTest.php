@@ -211,7 +211,7 @@ class BaselineControllerTest extends TestCase
         $this->controller->getById(1);
     }
 
-    public function testPostDeletesBaseline()
+    public function testDelete()
     {
         $baseline = BaselineFactory::one()
             ->id(2)

@@ -59,8 +59,8 @@ class ComparisonsResource extends AuthenticatedResource
      * @return Tuleap\Baseline\REST\ComparisonRepresentation
      * @throws I18NRestException 400
      * @throws RestException 401
-     * @throws ForbiddenRestException 403
-     * @throws NotFoundRestException 404
+     * @throws ForbiddenRestException
+     * @throws NotFoundRestException
      */
     protected function post(
         string $name,
@@ -104,10 +104,39 @@ class ComparisonsResource extends AuthenticatedResource
     }
 
     /**
+     * Delete a Comparison
+     *
+     * Delete a Comparison by id.
+     *
+     * @url    DELETE{id}
+     * @status 200
+     * @access protected
+     *
+     * @param int $id
+     * @throws \Rest_Exception_InvalidTokenException
+     * @throws NotFoundRestException 404
+     * @throws ForbiddenRestException 403
+     * @throws \User_PasswordExpiredException
+     * @throws \User_StatusDeletedException
+     * @throws \User_StatusInvalidException
+     * @throws \User_StatusPendingException
+     * @throws \User_StatusSuspendedException
+     * @throws \Luracast\Restler\RestException
+     *
+     */
+    protected function delete(int $id)
+    {
+        $this->checkAccess();
+        return $this->container
+            ->get(ComparisonController::class)
+            ->delete($id);
+    }
+
+    /**
      * @url OPTIONS
      */
     public function optionsArtifacts()
     {
-        Header::allowOptionsGetPost();
+        Header::allowOptionsGetPostDelete();
     }
 }

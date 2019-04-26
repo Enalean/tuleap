@@ -68,4 +68,9 @@ class FullAccessAuthorizationsStub implements Authorizations
     {
         return true;
     }
+
+    public function canDeleteComparison(PFUser $current_user, Comparison $comparison)
+    {
+        return true;
+    }
 }

@@ -67,6 +67,9 @@ msgstr "Vous n'êtes pas autorisé à créer cette comparaison"
 msgid "You are not allowed to delete this baseline"
 msgstr "Vous n'êtes pas autorisé à supprimer cette baseline"
 
+msgid "You are not allowed to delete this comparison"
+msgstr "Vous n'êtes pas autorisé à supprimer cette comparaison"
+
 msgid "You are not allowed to read baselines of this project"
 msgstr "Vous n'êtes pas autorisé à lire les baselines de ce projet"
 

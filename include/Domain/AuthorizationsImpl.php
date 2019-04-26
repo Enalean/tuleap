@@ -91,6 +91,12 @@ class AuthorizationsImpl implements Authorizations
         return $this->canUserAdministrateBaselineOnProject($current_user, $comparison->getProject());
     }
 
+    public function canDeleteComparison(PFUser $current_user, Comparison $comparison): bool
+    {
+        $project = $comparison->getProject();
+        return $this->canUserAdministrateBaselineOnProject($current_user, $project);
+    }
+
     public function canReadComparison(PFUser $current_user, Comparison $comparison): bool
     {
         return $this->canReadComparisonsOnProject($current_user, $comparison->getProject());

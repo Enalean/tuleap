@@ -120,6 +120,14 @@ class ComparisonRepositoryAdapter implements ComparisonRepository
 
     /**
      * Note: Authorizations may have been checked earlier
+     */
+    public function delete(Comparison $comparison, PFUser $current_user): void
+    {
+        $this->db->delete('plugin_baseline_comparison', ['id' => $comparison->getId()]);
+    }
+
+    /**
+     * Note: Authorizations may have been checked earlier
      * @return Comparison[]
      */
     public function findByProject(PFUser $current_user, Project $project, int $page_size, int $comparison_offset): array

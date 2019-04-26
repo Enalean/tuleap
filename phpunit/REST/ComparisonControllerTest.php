@@ -30,8 +30,12 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Baseline\BaselineRepository;
+use Tuleap\Baseline\ComparisonRepository;
 use Tuleap\Baseline\ComparisonService;
 use Tuleap\Baseline\CurrentUserProvider;
+use Tuleap\Baseline\Factory\ComparisonFactory;
+use Tuleap\Baseline\NotAuthorizedException;
+use Tuleap\Baseline\REST\Exception\ForbiddenRestException;
 use Tuleap\Baseline\REST\Exception\NotFoundRestException;
 use Tuleap\Baseline\Support\CurrentUserContext;
 
@@ -52,18 +56,23 @@ class ComparisonControllerTest extends TestCase
     /** @var BaselineRepository|MockInterface */
     private $baseline_repository;
 
+    /** @var ComparisonRepository|MockInterface */
+    private $comparison_repository;
+
     /** @before */
     protected function createInstance()
     {
         $this->comparison_service    = Mockery::mock(ComparisonService::class);
         $this->current_user_provider = Mockery::mock(CurrentUserProvider::class);
         $this->current_user_provider->allows(['getUser' => $this->current_user]);
-        $this->baseline_repository = Mockery::mock(BaselineRepository::class);
+        $this->baseline_repository   = Mockery::mock(BaselineRepository::class);
+        $this->comparison_repository = Mockery::mock(ComparisonRepository::class);
 
         $this->controller = new ComparisonController(
             $this->comparison_service,
             $this->current_user_provider,
-            $this->baseline_repository
+            $this->baseline_repository,
+            $this->comparison_repository
         );
     }
 
@@ -72,5 +81,46 @@ class ComparisonControllerTest extends TestCase
         $this->expectException(NotFoundRestException::class);
         $this->comparison_service->allows(['findById' => null]);
         $this->controller->getById(1);
+    }
+
+    public function testDelete()
+    {
+        $comparison = ComparisonFactory::withId(2);
+
+        $this->comparison_repository
+            ->shouldReceive('findById')
+            ->andReturn($comparison);
+
+        $this->comparison_service
+            ->shouldReceive('delete')
+            ->with($this->current_user, $comparison);
+
+        $this->controller->delete(2);
+    }
+
+    public function testDeleteThrows404WhenComparisonNotFound()
+    {
+        $this->expectException(NotFoundRestException::class);
+
+        $this->comparison_repository
+            ->shouldReceive('findById')
+            ->andReturn(null);
+
+        $this->controller->delete(2);
+    }
+
+    public function testDeleteThrows403WhenNotAllowed()
+    {
+        $this->expectException(ForbiddenRestException::class);
+
+        $this->comparison_repository
+            ->shouldReceive('findById')
+            ->andReturn(ComparisonFactory::one());
+
+        $this->comparison_service
+            ->shouldReceive('delete')
+            ->andThrow(new NotAuthorizedException('not allowed'));
+
+        $this->controller->delete(2);
     }
 }

@@ -103,4 +103,17 @@ class ComparisonService
         $count       = $this->comparison_repository->countByProject($project);
         return new ComparisonsPage($comparisons, $page_size, $comparison_offset, $count);
     }
+
+    /**
+     * @throws NotAuthorizedException
+     */
+    public function delete(PFUser $current_user, Comparison $comparison): void
+    {
+        if (! $this->authorizations->canDeleteComparison($current_user, $comparison)) {
+            throw new NotAuthorizedException(
+                dgettext('tuleap-baseline', "You are not allowed to delete this comparison")
+            );
+        }
+        $this->comparison_repository->delete($comparison, $current_user);
+    }
 }

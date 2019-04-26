@@ -38,6 +38,8 @@ interface Authorizations
 
     public function canCreateComparison(PFUser $current_user, TransientComparison $comparison): bool;
 
+    public function canDeleteComparison(PFUser $current_user, Comparison $comparison);
+
     public function canReadComparison(PFUser $current_user, Comparison $comparison): bool;
 
     public function canReadComparisonsOnProject(PFUser $current_user, Project $project): bool;

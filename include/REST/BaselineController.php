@@ -86,8 +86,8 @@ class BaselineController
     }
 
     /**
-     * @throws NotFoundRestException 404
-     * @throws ForbiddenRestException 403
+     * @throws NotFoundRestException
+     * @throws ForbiddenRestException
      */
     public function delete(int $id): void
     {

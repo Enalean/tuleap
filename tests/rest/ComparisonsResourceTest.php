@@ -97,6 +97,24 @@ class ComparisonsResourceTest extends RestBase
         $this->assertNotNull($json_response['creation_date']);
     }
 
+    public function testDelete()
+    {
+        $comparison = $this->createAComparison($this->an_artifact_id);
+
+        $delete_response = $this->getResponseByName(
+            BaselineFixtureData::TEST_USER_NAME,
+            $this->client->delete('baselines_comparisons/' . $comparison['id'])
+        );
+
+        $this->assertEquals(200, $delete_response->getStatusCode());
+
+        $get_response = $this->getResponseByName(
+            BaselineFixtureData::TEST_USER_NAME,
+            $this->client->get('baselines_comparisons/' . $comparison['id'])
+        );
+        $this->assertEquals(404, $get_response->getStatusCode());
+    }
+
     /**
      * @depends testPostBaselineComparison
      */

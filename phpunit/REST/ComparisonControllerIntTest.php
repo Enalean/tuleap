@@ -134,4 +134,17 @@ class ComparisonControllerIntTest extends IntegrationTestCaseWithStubs
         $this->assertEquals(1, $representation->base_baseline_id);
         $this->assertEquals(2, $representation->compared_to_baseline_id);
     }
+
+    public function testDelete()
+    {
+        $comparison = $this->comparison_repository->add(
+            TransientComparisonFactory::one()->build(),
+            $this->current_user
+        );
+
+        $comparison_id = $comparison->getId();
+        $this->controller->delete($comparison_id);
+
+        $this->assertNotContains($comparison_id, array_keys($this->comparison_repository->findAllById()));
+    }
 }

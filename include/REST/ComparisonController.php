@@ -26,6 +26,7 @@ namespace Tuleap\Baseline\REST;
 use PFUser;
 use Tuleap\Baseline\Baseline;
 use Tuleap\Baseline\BaselineRepository;
+use Tuleap\Baseline\ComparisonRepository;
 use Tuleap\Baseline\ComparisonService;
 use Tuleap\Baseline\CurrentUserProvider;
 use Tuleap\Baseline\InvalidComparisonException;
@@ -46,14 +47,19 @@ class ComparisonController
     /** @var BaselineRepository */
     private $baseline_repository;
 
+    /** @var ComparisonRepository */
+    private $comparison_repository;
+
     public function __construct(
         ComparisonService $comparison_service,
         CurrentUserProvider $current_user_provider,
-        BaselineRepository $baseline_repository
+        BaselineRepository $baseline_repository,
+        ComparisonRepository $comparison_repository
     ) {
         $this->comparison_service    = $comparison_service;
         $this->current_user_provider = $current_user_provider;
         $this->baseline_repository   = $baseline_repository;
+        $this->comparison_repository = $comparison_repository;
     }
 
     /**
@@ -91,14 +97,28 @@ class ComparisonController
         $current_user = $this->current_user_provider->getUser();
         $comparison   = $this->comparison_service->findById($current_user, $id);
         if ($comparison === null) {
-            throw new NotFoundRestException(
-                sprintf(
-                    dgettext('tuleap-baseline', 'No comparison found with id %u'),
-                    $id
-                )
-            );
+            $this->throwNotFoundException($id);
         }
         return ComparisonRepresentation::fromComparison($comparison);
+    }
+
+    /**
+     * @throws NotFoundRestException
+     * @throws ForbiddenRestException
+     */
+    public function delete(int $id): void
+    {
+        $current_user = $this->current_user_provider->getUser();
+        $comparison   = $this->comparison_repository->findById($current_user, $id);
+        if ($comparison === null) {
+            $this->throwNotFoundException($id);
+        }
+
+        try {
+            $this->comparison_service->delete($current_user, $comparison);
+        } catch (NotAuthorizedException $exception) {
+            throw new ForbiddenRestException($exception->getMessage());
+        }
     }
 
     /**
@@ -116,5 +136,18 @@ class ComparisonController
             );
         }
         return $base_baseline;
+    }
+
+    /**
+     * @throws NotFoundRestException
+     */
+    private function throwNotFoundException(int $id): void
+    {
+        throw new NotFoundRestException(
+            sprintf(
+                dgettext('tuleap-baseline', 'No comparison found with id %u'),
+                $id
+            )
+        );
     }
 }

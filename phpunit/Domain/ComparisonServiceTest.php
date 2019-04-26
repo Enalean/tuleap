@@ -99,6 +99,30 @@ class ComparisonServiceTest extends TestCase
             ->never();
     }
 
+    public function testDeleteDeletesGivenBaseline()
+    {
+        $this->authorizations->allows(['canDeleteComparison' => true]);
+
+        $comparison = ComparisonFactory::one();
+        $this->comparison_repository
+            ->shouldReceive('delete')
+            ->with($comparison, $this->current_user);
+
+        $this->service->delete($this->current_user, $comparison);
+    }
+
+    public function testDeleteThrowsNotAuthorizedExceptionWhenNotAuthorized()
+    {
+        $this->expectException(NotAuthorizedException::class);
+
+        $comparison = ComparisonFactory::one();
+        $this->authorizations->allows()
+            ->canDeleteComparison($this->current_user, $comparison)
+            ->andReturn(false);
+
+        $this->service->delete($this->current_user, $comparison);
+    }
+
     public function testFinByProject()
     {
         $comparisons = [ComparisonFactory::one()];

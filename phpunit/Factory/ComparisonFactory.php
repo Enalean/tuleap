@@ -31,9 +31,14 @@ class ComparisonFactory
 {
     public static function one(): Comparison
     {
+        return self::withId(1);
+    }
+
+    public static function withId(int $id): Comparison
+    {
         $base_baseline = BaselineFactory::one()->build();
         return new Comparison(
-            1,
+            $id,
             'Compare two baselines',
             'Created for test purpose',
             $base_baseline,
