@@ -70,6 +70,7 @@ import "./components/Folder/ModalCommon/ModalFooter.spec.js";
 
 import "./components/Folder/Property/ApprovalUpdateProperties.spec.js";
 import "./components/Folder/Property/ItemUpdateProperties.spec.js";
+import "./components/Folder/Property/LockProperty.spec.js";
 
 import "./components/Folder/Metadata/TitleMetadata.spec.js";
 import "./components/Folder/Metadata/StatusMetadata.spec";
