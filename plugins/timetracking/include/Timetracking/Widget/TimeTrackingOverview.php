@@ -67,7 +67,7 @@ class TimeTrackingOverview extends Widget
         $renderer = TemplateRendererFactory::build()->getRenderer(TIMETRACKING_TEMPLATE_DIR);
         return $renderer->renderToString(
             'timetracking-overview',
-            new TimetrackingOverviewPresenter($this->content_id, $this->getPreferences($this->content_id))
+            new TimetrackingOverviewPresenter($this->content_id, $this->getUserPreferences($this->content_id))
         );
     }
 
@@ -91,7 +91,7 @@ class TimeTrackingOverview extends Widget
         return new CssAssetCollection([new CssAsset($include_assets, 'style')]);
     }
 
-    public function getPreferences($widget_id)
+    public function getUserPreferences(int $widget_id)
     {
         return $this->getCurrentUser()->getPreference("timetracking_overview_display_trackers_without_time_" . $widget_id);
     }
