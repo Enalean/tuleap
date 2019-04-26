@@ -56,11 +56,21 @@ class PostActionCollection implements PostActionVisitor
      */
     private $set_float_value_actions = [];
 
+    /**
+     * @var FrozenFields[]
+     */
+    private $frozen_fields_actions = [];
+
     public function __construct(PostAction... $actions)
     {
         foreach ($actions as $action) {
             $action->accept($this);
         }
+    }
+
+    public function visitFrozenFields(FrozenFields $frozen_fields_action)
+    {
+        $this->frozen_fields_actions[] = $frozen_fields_action;
     }
 
     public function visitCIBuild(CIBuild $ci_build_action)
@@ -190,5 +200,10 @@ class PostActionCollection implements PostActionVisitor
             array_values($added),
             array_values($updated)
         );
+    }
+
+    public function getFrozenFieldsPostActions() : array
+    {
+        return $this->frozen_fields_actions;
     }
 }

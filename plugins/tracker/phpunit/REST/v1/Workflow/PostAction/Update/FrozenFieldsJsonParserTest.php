@@ -1,0 +1,65 @@
+<?php
+/**
+ * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
+ *
+ *  This file is a part of Tuleap.
+ *
+ *  Tuleap is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Tuleap is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+namespace Tuleap\Tracker\REST\v1\Workflow\PostAction\Update;
+
+require_once __DIR__ . '/../../../../../bootstrap.php';
+
+use Mockery;
+use PHPUnit\Framework\TestCase;
+use Tuleap\Tracker\Workflow\PostAction\Update\Internal\IncompatibleWorkflowModeException;
+use Workflow;
+
+class FrozenFieldsJsonParserTest extends TestCase
+{
+    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
+    /**
+     * @var FrozenFieldsJsonParser
+     */
+    private $parser;
+
+    /**
+     * @before
+     */
+    public function createParser()
+    {
+        $this->parser = new FrozenFieldsJsonParser();
+    }
+
+    public function testAcceptReturnsTrueWhenTypeMatches()
+    {
+        $this->assertTrue($this->parser->accept(["type" => "frozen_fields"]));
+    }
+
+    public function testAcceptReturnsFalseWhenTypeDoesNotMatch()
+    {
+        $this->assertFalse($this->parser->accept(["type" => "set_date_value"]));
+    }
+
+    public function testItThrowsAnExceptionIfWorkflowIsInAdvancedMode()
+    {
+        $workflow = \Mockery::mock(Workflow::class);
+        $workflow->shouldReceive('isAdvanced')->andReturnTrue();
+
+        $this->expectException(IncompatibleWorkflowModeException::class);
+        $this->parser->parse($workflow, ["type" => "frozen_fields"]);
+    }
+}

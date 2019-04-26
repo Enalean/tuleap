@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Workflow\PostAction\FrozenFields;
 
+use ParagonIE\EasyDB\EasyDB;
+use ParagonIE\EasyDB\EasyStatement;
 use Tuleap\DB\DataAccessObject;
 
 class FrozenFieldsDao extends DataAccessObject
@@ -50,14 +52,37 @@ class FrozenFieldsDao extends DataAccessObject
     public function isAFrozenFieldPostActionUsedInTracker(int $tracker_id) : bool
     {
         $sql = 'SELECT NULL
-FROM tracker_workflow
-LEFT JOIN tracker_workflow_transition ON (tracker_workflow.workflow_id = tracker_workflow_transition.workflow_id)
-LEFT JOIN plugin_tracker_workflow_postactions_frozen_fields ON (tracker_workflow_transition.transition_id = plugin_tracker_workflow_postactions_frozen_fields.transition_id)
-WHERE tracker_workflow.tracker_id = ?
-    AND plugin_tracker_workflow_postactions_frozen_fields.id IS NOT NULL;';
+            FROM tracker_workflow
+            LEFT JOIN tracker_workflow_transition ON (tracker_workflow.workflow_id = tracker_workflow_transition.workflow_id)
+            LEFT JOIN plugin_tracker_workflow_postactions_frozen_fields ON (tracker_workflow_transition.transition_id = plugin_tracker_workflow_postactions_frozen_fields.transition_id)
+            WHERE tracker_workflow.tracker_id = ?
+                AND plugin_tracker_workflow_postactions_frozen_fields.id IS NOT NULL;';
 
         $result = $this->getDB()->cell($sql, $tracker_id);
 
         return $result !== false;
+    }
+
+    public function createPostActionForTransitionId(int $transition_id) : void
+    {
+        $this->getDB()->insert(
+            "plugin_tracker_workflow_postactions_frozen_fields",
+            ["transition_id" => $transition_id]
+        );
+    }
+
+    public function deletePostActionsByTransitionId(int $transition_id) : void
+    {
+        $sql = "
+            DELETE plugin_tracker_workflow_postactions_frozen_fields, plugin_tracker_workflow_postactions_frozen_fields_value
+            FROM plugin_tracker_workflow_postactions_frozen_fields
+            LEFT JOIN plugin_tracker_workflow_postactions_frozen_fields_value
+                ON plugin_tracker_workflow_postactions_frozen_fields_value.postaction_id = plugin_tracker_workflow_postactions_frozen_fields.id
+            WHERE plugin_tracker_workflow_postactions_frozen_fields.transition_id = ?";
+
+        $this->getDB()->run(
+            $sql,
+            $transition_id
+        );
     }
 }
