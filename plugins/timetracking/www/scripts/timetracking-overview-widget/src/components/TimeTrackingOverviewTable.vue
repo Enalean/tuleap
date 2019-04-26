@@ -22,7 +22,7 @@
         <div v-if="has_error" class="tlp-alert-danger" data-test="alert-danger">
             {{ error_message }}
         </div>
-        <div v-if="has_data_to_display && !has_error" class="tlp-table-actions" data-test="table-action">
+        <div v-if="has_trackers_times && !has_error" class="tlp-table-actions" data-test="table-action">
             <button class="tlp-button-small tlp-button-primary tlp-button-outline tlp-table-actions-element"
                     v-on:click="setAreVoidTrackersHidden"
             >
@@ -41,7 +41,7 @@
                         Project
                     </th>
                     <th class="tlp-table-cell-numeric">
-                        <translate> Time</translate>
+                        <translate> Time </translate>
                         <span class="tlp-tooltip tlp-tooltip-left timetracking-time-tooltip"
                               v-bind:data-tlp-tooltip="time_format_tooltip"
                               v-bind:aria-label="time_format_tooltip"
@@ -84,12 +84,23 @@ export default {
     name: "TimeTrackingOverviewTable",
     components: { TimeTrackingOverviewTableRow },
     computed: {
-        ...mapGetters(["get_formatted_total_sum", "has_error", "can_results_be_displayed"]),
+        ...mapGetters([
+            "get_formatted_total_sum",
+            "has_error",
+            "can_results_be_displayed",
+            "is_sum_of_times_equals_zero"
+        ]),
         ...mapState(["trackers_times", "error_message", "is_loading", "are_void_trackers_hidden"]),
         time_format_tooltip() {
             return this.$gettext("The time is displayed in hours:minutes");
         },
         has_data_to_display() {
+            return (
+                this.has_trackers_times &&
+                !(this.are_void_trackers_hidden && this.is_sum_of_times_equals_zero)
+            );
+        },
+        has_trackers_times() {
             return this.trackers_times.length > 0;
         },
         display_button_text() {

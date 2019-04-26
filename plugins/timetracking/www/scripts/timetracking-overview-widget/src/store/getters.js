@@ -24,12 +24,12 @@ export const has_success_message = state => state.success_message !== null;
 import { formatMinutes } from "../../../time-formatters.js";
 
 export function get_formatted_total_sum(state) {
-    let sum = 0;
-    state.trackers_times.forEach(function(tracker) {
-        sum = sum + tracker.minutes;
-    });
-
+    let sum = getTotalSum(state);
     return formatMinutes(sum);
+}
+
+export function is_sum_of_times_equals_zero(state) {
+    return getTotalSum(state) === 0;
 }
 
 export const get_formatted_time = () => time => {
@@ -37,3 +37,7 @@ export const get_formatted_time = () => time => {
 };
 
 export const can_results_be_displayed = state => !state.is_loading && state.error_message === null;
+
+function getTotalSum(state) {
+    return state.trackers_times.reduce((sum, { minutes }) => minutes + sum, 0);
+}

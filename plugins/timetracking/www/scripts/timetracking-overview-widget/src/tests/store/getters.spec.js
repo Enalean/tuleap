@@ -77,5 +77,47 @@ describe("Getters Timetracking Overview", () => {
             };
             expect(getters.get_formatted_time()(trackers)).toBe("02:00");
         });
+
+        it("Given a widget with state initialisation, Then is_sum_of_times_equals_zero should return false", () => {
+            let trackers = [
+                {
+                    id: "16",
+                    label: "tracker",
+                    project: {},
+                    uri: "",
+                    minutes: 60
+                },
+                {
+                    id: "18",
+                    label: "tracker 2",
+                    project: {},
+                    uri: "",
+                    minutes: 20
+                }
+            ];
+            mutations.setTrackersTimes(state, trackers);
+            expect(getters.is_sum_of_times_equals_zero(state)).toBe(false);
+        });
+
+        it("Given trackers without times, Then is_sum_of_times_equals_zero should return true", () => {
+            let trackers = [
+                {
+                    id: "16",
+                    label: "tracker",
+                    project: {},
+                    uri: "",
+                    minutes: 0
+                },
+                {
+                    id: "18",
+                    label: "tracker 2",
+                    project: {},
+                    uri: "",
+                    minutes: 0
+                }
+            ];
+            mutations.setTrackersTimes(state, trackers);
+            expect(getters.is_sum_of_times_equals_zero(state)).toBe(true);
+        });
     });
 });
