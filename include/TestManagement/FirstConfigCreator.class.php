@@ -31,10 +31,10 @@ class FirstConfigCreator
     /** @var Config */
     private $config;
 
-    /** @var Tracker_TrackerFactory */
+    /** @var TrackerFactory */
     private $tracker_factory;
 
-    /** @var Tracker_TrackerXmlImport */
+    /** @var TrackerXmlImport */
     private $xml_import;
 
     /** @var Logger */

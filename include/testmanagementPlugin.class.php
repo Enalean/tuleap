@@ -40,7 +40,7 @@ use Tuleap\TestManagement\Step\Execution\Field\StepExecution;
 use Tuleap\TestManagement\TestManagementPluginInfo;
 use Tuleap\TestManagement\UserIsNotAdministratorException;
 use Tuleap\TestManagement\XML\Exporter;
-use Tuleap\TestManagement\XMLImport;
+use Tuleap\TestManagement\XML\XMLImport;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalArtifactActionButtonsFetcher;
@@ -406,8 +406,6 @@ class testmanagementPlugin extends PluginWithLegacyInternalRouting
             $form_element_factory
         );
 
-        $tracker_checker = new TrackerChecker($tracker_factory, new FrozenFieldsDao());
-
         $router = new Tuleap\TestManagement\Router(
             $this,
             $config,
@@ -417,7 +415,7 @@ class testmanagementPlugin extends PluginWithLegacyInternalRouting
             $event_manager,
             $this->getArtifactLinksUsageUpdater(),
             $step_field_usage_detector,
-            $tracker_checker
+            $this->getTrackerChecker()
         );
 
         try {
@@ -429,6 +427,11 @@ class testmanagementPlugin extends PluginWithLegacyInternalRouting
             );
             $router->renderIndex($request);
         }
+    }
+
+    private function getTrackerChecker() : TrackerChecker
+    {
+        return new TrackerChecker(TrackerFactory::instance(), new FrozenFieldsDao());
     }
 
     /**
@@ -454,7 +457,7 @@ class testmanagementPlugin extends PluginWithLegacyInternalRouting
 
     public function import_xml_project_tracker_done(array $params)
     {
-        $importer = new XMLImport(new Config(new Dao()));
+        $importer = new XMLImport(new Config(new Dao()), $this->getTrackerChecker());
         $importer->import($params['project'], $params['extraction_path'], $params['mapping']);
     }
 

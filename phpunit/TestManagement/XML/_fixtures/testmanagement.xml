@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testmanagement>
+    <configuration>
+        <issues>T1</issues>
+        <campaigns>T2</campaigns>
+        <definitions>T3</definitions>
+        <executions>T4</executions>
+    </configuration>
+</testmanagement>
