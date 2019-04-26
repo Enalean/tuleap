@@ -20,7 +20,7 @@
 
 import global from "./global";
 import dialog_interface from "./dialog_interface";
-import comparison from "./comparison";
+import comparison from "./current_comparison";
 import baseline from "./baseline";
 import baselines from "./baselines";
 import semantics from "./semantics";

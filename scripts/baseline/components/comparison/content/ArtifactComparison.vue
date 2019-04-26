@@ -71,11 +71,11 @@ export default {
     },
 
     computed: {
-        ...mapGetters("comparison", [
-            "findBaseArtifactsByIds",
-            "findComparedToArtifactsByIds",
-            "is_depth_limit_reached"
-        ]),
+        ...mapGetters("comparison", ["is_depth_limit_reached"]),
+        ...mapGetters({
+            findBaseArtifactsByIds: "comparison/base/findArtifactsByIds",
+            findComparedToArtifactsByIds: "comparison/compared_to/findArtifactsByIds"
+        }),
         base_linked_artifacts() {
             return this.findBaseArtifactsByIds(this.base.linked_artifact_ids);
         },

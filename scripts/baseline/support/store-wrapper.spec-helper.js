@@ -30,13 +30,9 @@ import { Store } from "vuex-mock-store";
  */
 export function createStoreMock(store_options, custom_state = {}) {
     // vuex-mock-store requires empty state for all modules
-    const state_with_modules = Object.keys(store_options.modules).reduce((state, module) => {
-        state[module] = store_options.modules[module].state;
-        return state;
-    }, {});
-
+    const state_with_modules = {};
+    appendModuleStates(store_options.modules, state_with_modules);
     const state = Object.assign(state_with_modules, store_options.state, custom_state);
-
     const options = Object.assign({}, store_options, {
         state,
         spy: {
@@ -46,4 +42,14 @@ export function createStoreMock(store_options, custom_state = {}) {
     });
 
     return new Store(options);
+}
+
+function appendModuleStates(modules, state) {
+    Object.keys(modules).forEach(module_name => {
+        let module = modules[module_name];
+        state[module_name] = module.state;
+        if (module.modules) {
+            appendModuleStates(module.modules, state[module_name]);
+        }
+    });
 }

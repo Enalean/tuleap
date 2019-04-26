@@ -46,10 +46,11 @@ export default {
     components: { ArtifactsListComparison },
 
     computed: {
-        ...mapState("comparison", [
-            "first_level_base_artifacts",
-            "first_level_compared_to_artifacts"
-        ]),
+        ...mapState({
+            first_level_base_artifacts: state => state.comparison.base.first_level_artifacts,
+            first_level_compared_to_artifacts: state =>
+                state.comparison.compared_to.first_level_artifacts
+        }),
         are_some_artifacts_available() {
             return (
                 this.first_level_base_artifacts.length > 0 ||
