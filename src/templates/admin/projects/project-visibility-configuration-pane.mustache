@@ -1,7 +1,7 @@
 <div class="tlp-framed-vertically">
     {{> creation-settings-tabs }}
 
-    <form action="" method="POST">
+    <form action="" method="POST" id="site-admin-project-visibility-form">
         <input type="hidden" name="update" value="1">
         {{# csrf_token }}
             {{> csrf_token_input }}
@@ -21,7 +21,6 @@
                             <div class="tlp-switch">
                                 <input
                                     type="checkbox"
-                                    onchange="this.form.submit()"
                                     name="project_admin_can_choose_visibility"
                                     id="toggle-project-admin-can-choose-visibility"
                                     class="tlp-switch-checkbox"
@@ -39,7 +38,6 @@
                             <div class="tlp-switch">
                                 <input
                                     type="checkbox"
-                                    onchange="this.form.submit()"
                                     name="send_mail_on_visibility_change"
                                     id="toggle-send-mail-on-visibility-change"
                                     class="tlp-switch-checkbox"
@@ -49,6 +47,16 @@
                                 <label for="toggle-send-mail-on-visibility-change" class="tlp-switch-button" aria-hidden></label>
                             </div>
                             <p class="tlp-text-info">{{# gettext }}If enabled, an email will be sent to all the project members if the visibility of the project is changed.{{/ gettext }}</p>
+                        </div>
+                        <div class="tlp-form-element">
+                            <label class="tlp-label" for="default_project_visibility">
+                                {{# gettext }}Default project visibility{{/ gettext }}
+                            </label>
+                            <select class="tlp-select tlp-select-adjusted" name="default_project_visibility" id="default_project_visibility">
+                                {{# default_project_visibility_options }}
+                                    <option value="{{ value }}" {{ selected }}>{{ label }}</option>
+                                {{/ default_project_visibility_options }}
+                            </select>
                         </div>
                     </section>
                 </div>

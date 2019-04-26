@@ -21,7 +21,6 @@ namespace Tuleap\Project\Admin;
 
 use BaseLanguage;
 use Codendi_HTMLPurifier;
-use Project;
 
 class ProjectVisibilityPresenter
 {
@@ -47,11 +46,6 @@ class ProjectVisibilityPresenter
     public $purified_term_of_service_message;
 
     /**
-     * @var string
-     */
-    private $project_visibility;
-
-    /**
      * @var BaseLanguage
      */
     private $language;
@@ -67,11 +61,11 @@ class ProjectVisibilityPresenter
         BaseLanguage $language,
         $platform_allows_restricted,
         $project_visibility,
-        int $number_of_restricted_users_in_project
+        int $number_of_restricted_users_in_project,
+        ProjectVisibilityOptionsForPresenterGenerator $project_visibility_options_generator
     ) {
         $this->language                         = $language;
         $this->platform_allows_restricted       = (bool) $platform_allows_restricted;
-        $this->project_visibility               = $project_visibility;
         $this->restricted_warning_message       = $this->language->getText(
             'project_admin_editgroupinfo',
             'restricted_warning'
@@ -88,48 +82,10 @@ class ProjectVisibilityPresenter
         $this->project_visibility_label = _('Project visibility');
         $this->accept_tos_message       = _("Please accept term of service");
 
-        $this->generateVisibilityOptions();
+        $this->options = $project_visibility_options_generator->generateVisibilityOptions(
+            $this->platform_allows_restricted,
+            $project_visibility
+        );
         $this->number_of_restricted_users_in_project = $number_of_restricted_users_in_project;
-    }
-
-    private function generateVisibilityOptions()
-    {
-        if ($this->platform_allows_restricted) {
-            $this->options = [
-                [
-                    'value'    => Project::ACCESS_PRIVATE_WO_RESTRICTED,
-                    'label'    => _('Private'),
-                    'selected' => ($this->project_visibility === Project::ACCESS_PRIVATE_WO_RESTRICTED) ? 'selected = "selected"' : '',
-                ],
-                [
-                    'value'    => Project::ACCESS_PRIVATE,
-                    'label'    => _('Private incl. restricted'),
-                    'selected' => ($this->project_visibility === Project::ACCESS_PRIVATE) ? 'selected = "selected"' : '',
-                ],
-                [
-                    'value'    => Project::ACCESS_PUBLIC,
-                    'label'    => _('Public'),
-                    'selected' => ($this->project_visibility === Project::ACCESS_PUBLIC) ? 'selected = "selected"' : '',
-                ],
-                [
-                    'value'    => Project::ACCESS_PUBLIC_UNRESTRICTED,
-                    'label'    => _('Public incl. restricted'),
-                    'selected' => ($this->project_visibility === Project::ACCESS_PUBLIC_UNRESTRICTED) ? 'selected = "selected"' : '',
-                ]
-            ];
-        } else {
-            $this->options = [
-                [
-                    'value'    => Project::ACCESS_PRIVATE,
-                    'label'    => _('Private'),
-                    'selected' => ($this->project_visibility === Project::ACCESS_PRIVATE) ? 'selected = "selected"' : '',
-                ],
-                [
-                    'value'    => Project::ACCESS_PUBLIC,
-                    'label'    => _('Public'),
-                    'selected' => ($this->project_visibility === Project::ACCESS_PUBLIC) ? 'selected = "selected"' : '',
-                ]
-            ];
-        }
     }
 }

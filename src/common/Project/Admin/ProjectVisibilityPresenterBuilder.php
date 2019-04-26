@@ -44,15 +44,21 @@ class ProjectVisibilityPresenterBuilder
      * @var RestrictedUsersProjectCounter
      */
     private $restricted_users_project_counter;
+    /**
+     * @var ProjectVisibilityOptionsForPresenterGenerator
+     */
+    private $project_visibility_options_generator;
 
     public function __construct(
         ProjectVisibilityUserConfigurationPermissions $project_visibility_configuration,
         ServicesUsingTruncatedMailRetriever $service_truncated_mails_retriever,
-        RestrictedUsersProjectCounter $restricted_users_project_counter
+        RestrictedUsersProjectCounter $restricted_users_project_counter,
+        ProjectVisibilityOptionsForPresenterGenerator $project_visibility_options_generator
     ) {
-        $this->project_visibility_configuration  = $project_visibility_configuration;
-        $this->service_truncated_mails_retriever = $service_truncated_mails_retriever;
-        $this->restricted_users_project_counter  = $restricted_users_project_counter;
+        $this->project_visibility_configuration     = $project_visibility_configuration;
+        $this->service_truncated_mails_retriever    = $service_truncated_mails_retriever;
+        $this->restricted_users_project_counter     = $restricted_users_project_counter;
+        $this->project_visibility_options_generator = $project_visibility_options_generator;
     }
 
     public function build(HTTPRequest $request)
@@ -63,7 +69,8 @@ class ProjectVisibilityPresenterBuilder
             $GLOBALS['Language'],
             ForgeConfig::areRestrictedUsersAllowed(),
             $project->getAccess(),
-            $this->restricted_users_project_counter->getNumberOfRestrictedUsersInProject($project)
+            $this->restricted_users_project_counter->getNumberOfRestrictedUsersInProject($project),
+            $this->project_visibility_options_generator
         );
 
 

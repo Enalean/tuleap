@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,13 +21,12 @@
 namespace Tuleap\admin\ProjectCreation\ProjectVisibility;
 
 use CSRFSynchronizerToken;
+use Feedback;
 use ForgeAccess_ForgePropertiesManager;
-use ForgeConfig;
 use HTTPRequest;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
-use Tuleap\Request\NotFoundException;
 
 class ProjectVisibilityConfigUpdateController implements DispatchableWithRequest
 {
@@ -60,7 +59,11 @@ class ProjectVisibilityConfigUpdateController implements DispatchableWithRequest
             $request->get('send_mail_on_visibility_change')
         );
 
-        $GLOBALS['Response']->addFeedback(\Feedback::INFO, _('Successfully updated.'));
+        if ($this->visibility_config_manager->updateDefaultProjectVisibility($request->get('default_project_visibility'))) {
+            $layout->addFeedback(Feedback::INFO, _('Successfully updated.'));
+        } else {
+            $layout->addFeedback(Feedback::ERROR, _('Ooops an error occured'));
+        }
 
         $layout->redirect('/admin/project-creation/visibility');
     }

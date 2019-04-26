@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -128,6 +128,7 @@ const webpack_config_for_burning_parrot_code = {
         "site-admin-trackers-pending-removal": "./admin/trackers-pending-removal.js",
         "site-admin-user-details": "./admin/userdetails.js",
         "site-admin-generate-pie-charts": "./admin/generate-pie-charts.js",
+        "site-admin-project-visibility": "./admin/project-visibility.js",
         "access-denied-error": "./BurningParrot/access-denied-error.js",
         "trovecat-admin": "./tuleap/trovecat.js"
     },

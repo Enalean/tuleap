@@ -61,7 +61,8 @@ $ugroup_binding = new UGroupBinding(
 $project_visibility_presenter_builder = new ProjectVisibilityPresenterBuilder(
     $project_visibility_configuration,
     $service_truncated_mails_retriever,
-    new RestrictedUsersProjectCounter(new UserDao())
+    new RestrictedUsersProjectCounter(new UserDao()),
+    new \Tuleap\Project\Admin\ProjectVisibilityOptionsForPresenterGenerator()
 );
 
 $csrf_token = new CSRFSynchronizerToken($request->getFromServer('REQUEST_URI'));

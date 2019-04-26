@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,6 +21,8 @@
 namespace Tuleap\admin\ProjectCreation\ProjectVisibility;
 
 use ForgeConfig;
+use Project;
+use Tuleap\Project\DefaultProjectVisibilityRetriever;
 
 class ProjectVisibilityConfigManager
 {
@@ -46,5 +48,21 @@ class ProjectVisibilityConfigManager
         }
 
         $this->config_dao->save($forge_config_option, $new_value);
+    }
+
+    public function updateDefaultProjectVisibility(string $new_value) : bool
+    {
+        $acceptable_values = [Project::ACCESS_PUBLIC, Project::ACCESS_PRIVATE];
+        if (ForgeConfig::areRestrictedUsersAllowed()) {
+            $acceptable_values[] = Project::ACCESS_PUBLIC_UNRESTRICTED;
+            $acceptable_values[] = Project::ACCESS_PRIVATE_WO_RESTRICTED;
+        }
+
+        if (! in_array($new_value, $acceptable_values, true)) {
+            return false;
+        }
+
+        $this->updateVisibilityOption(DefaultProjectVisibilityRetriever::CONFIG_SETTING_NAME, $new_value);
+        return true;
     }
 }

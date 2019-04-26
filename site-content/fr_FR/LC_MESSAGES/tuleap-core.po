@@ -425,6 +425,9 @@ msgstr "Données"
 msgid "Date"
 msgstr "Date"
 
+msgid "Default project visibility"
+msgstr "Visibilité du projet par défaut"
+
 msgid "Delete"
 msgstr "Supprimer"
 

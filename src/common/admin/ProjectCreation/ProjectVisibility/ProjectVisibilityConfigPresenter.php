@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,9 +20,9 @@
 
 namespace Tuleap\admin\ProjectCreation\ProjectVisibility;
 
-use ForgeAccess;
 use ForgeConfig;
 use Tuleap\Admin\ProjectCreationNavBarPresenter;
+use Tuleap\Project\Admin\ProjectVisibilityOptionsForPresenterGenerator;
 
 class ProjectVisibilityConfigPresenter
 {
@@ -46,13 +46,24 @@ class ProjectVisibilityConfigPresenter
      */
     public $send_mail_on_project_visibility_change;
 
+    /**
+     * @var array
+     */
+    public $default_project_visibility_options;
+
     public function __construct(
         ProjectCreationNavBarPresenter $menu_tabs,
+        ProjectVisibilityOptionsForPresenterGenerator $project_visibility_options_generator,
+        string $current_default_project_visibility_retriever,
         \CSRFSynchronizerToken $csrf_token
     ) {
         $this->navbar                                 = $menu_tabs;
         $this->csrf_token                             = $csrf_token;
         $this->project_admin_can_choose               = (bool) ForgeConfig::get(ProjectVisibilityConfigManager::PROJECT_ADMIN_CAN_CHOOSE_VISIBILITY);
         $this->send_mail_on_project_visibility_change = (bool) ForgeConfig::get(ProjectVisibilityConfigManager::SEND_MAIL_ON_PROJECT_VISIBILITY_CHANGE);
+        $this->default_project_visibility_options     = $project_visibility_options_generator->generateVisibilityOptions(
+            ForgeConfig::areRestrictedUsersAllowed(),
+            $current_default_project_visibility_retriever
+        );
     }
 }
