@@ -21,10 +21,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { get, post, put } from "tlp";
+import { get, post, put, del } from "tlp";
 import { formatDatetimeToISO } from "../../../time-formatters.js";
 
-export { getTrackedTimes, addTime, updateTime };
+export { getTrackedTimes, addTime, updateTime, deleteTime };
 
 const headers = {
     "content-type": "application/json"
@@ -80,4 +80,10 @@ async function updateTime(date_time, time_id, time_value, step) {
     });
     const time = await response.json();
     return time;
+}
+
+async function deleteTime(time_id) {
+    await del("/api/v1/timetracking/" + time_id, {
+        headers
+    });
 }

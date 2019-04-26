@@ -24,7 +24,7 @@
 import { Settings } from "luxon";
 import { tlp, mockFetchSuccess } from "tlp-mocks";
 
-import { getTrackedTimes, addTime } from "./rest-querier.js";
+import { getTrackedTimes, addTime, deleteTime } from "./rest-querier.js";
 
 describe("getTrackedTimes() -", () => {
     it("the REST API will be queried with ISO-8601 dates and the times returned", async () => {
@@ -98,5 +98,21 @@ describe("getTrackedTimes() -", () => {
             body
         });
         expect(result).toEqual(time);
+    });
+
+    it("the REST API should delete the given time", async () => {
+        Settings.defaultZoneName = "Europe/Paris";
+
+        mockFetchSuccess(tlp.del, {
+            return_json: []
+        });
+        const time_id = 2;
+        await deleteTime(time_id);
+        const headers = {
+            "content-type": "application/json"
+        };
+        expect(tlp.del).toHaveBeenCalledWith("/api/v1/timetracking/" + time_id, {
+            headers
+        });
     });
 });

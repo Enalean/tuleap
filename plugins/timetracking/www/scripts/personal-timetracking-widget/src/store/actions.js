@@ -18,11 +18,17 @@
  */
 
 import {
-    getTrackedTimes,
     addTime as addTimeQuerrier,
+    deleteTime as deleteTimeQuerrier,
+    getTrackedTimes,
     updateTime as updateTimeQuerrier
 } from "../api/rest-querier.js";
-import { REST_FEEDBACK_ADD, REST_FEEDBACK_EDIT, ERROR_OCCURRED } from "../../../constants.js";
+import {
+    ERROR_OCCURRED,
+    REST_FEEDBACK_ADD,
+    REST_FEEDBACK_EDIT,
+    REST_FEEDBACK_DELETE
+} from "../../../constants.js";
 
 export function setDatesAndReload(context, [start_date, end_date]) {
     context.commit("setParametersForNewQuery", [start_date, end_date]);
@@ -59,6 +65,16 @@ export async function updateTime(context, [date, time_id, time_value, step]) {
     try {
         const response = await updateTimeQuerrier(date, time_id, time_value, step);
         context.commit("replaceInCurrentTimes", [response, REST_FEEDBACK_EDIT]);
+        return loadFirstBatchOfTimes(context);
+    } catch (rest_error) {
+        return showRestError(context, rest_error);
+    }
+}
+
+export async function deleteTime(context, time_id) {
+    try {
+        await deleteTimeQuerrier(time_id);
+        context.commit("deleteInCurrentTimes", [time_id, REST_FEEDBACK_DELETE]);
         return loadFirstBatchOfTimes(context);
     } catch (rest_error) {
         return showRestError(context, rest_error);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 import { sortTimesChronologically } from "../../../time-formatters";
+import { SUCCESS_TYPE } from "../../../constants.js";
 
 export default {
     toggleReadingMode(state) {
@@ -57,7 +58,7 @@ export default {
         state.is_add_mode = is_add_mode;
         if (
             state.is_add_mode === false ||
-            (state.is_add_mode === true && state.rest_feedback.type === "success")
+            (state.is_add_mode === true && state.rest_feedback.type === SUCCESS_TYPE)
         ) {
             state.rest_feedback.message = "";
             state.rest_feedback.type = "";
@@ -71,7 +72,23 @@ export default {
         state.current_times[time_to_update_index] = time;
         state.current_times = sortTimesChronologically(state.current_times);
         state.rest_feedback.message = feedback_message;
-        state.rest_feedback.type = "success";
+        state.rest_feedback.type = SUCCESS_TYPE;
+    },
+
+    deleteInCurrentTimes(state, [time_id, feedback_message]) {
+        const void_times = [
+            { artifact: state.current_times[0].artifact, project: state.current_times[0].project }
+        ];
+        const time_to_delete_index = state.current_times.findIndex(
+            current_time => current_time.id === time_id
+        );
+
+        state.current_times.splice(time_to_delete_index, 1);
+        if (state.current_times.length === 0) {
+            state.current_times = void_times;
+        }
+        state.rest_feedback.message = feedback_message;
+        state.rest_feedback.type = SUCCESS_TYPE;
     },
 
     resetErrorMessage(state) {
@@ -83,11 +100,14 @@ export default {
     },
 
     pushCurrentTimes(state, [times, feedback_message]) {
+        if (state.current_times.length === 1 && !state.current_times[0].minutes) {
+            state.current_times = [];
+        }
         state.current_times = state.current_times.concat(Object.values(times));
         state.current_times = sortTimesChronologically(state.current_times);
         state.is_add_mode = false;
         state.rest_feedback.message = feedback_message;
-        state.rest_feedback.type = "success";
+        state.rest_feedback.type = SUCCESS_TYPE;
     },
 
     setIsLoading(state, isLoading) {

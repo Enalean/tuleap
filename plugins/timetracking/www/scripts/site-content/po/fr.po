@@ -27,6 +27,9 @@ msgstr "Annuler"
 msgid "Close"
 msgstr "Fermer"
 
+msgid "Confirm deletion"
+msgstr "Confirmer la suppression"
+
 msgid "Date"
 msgstr "Date"
 
@@ -50,6 +53,9 @@ msgstr "Aucun temps n'a été trouvé pour cette période et ces outils de suivi
 
 msgid "No tracked time have been found for this period"
 msgstr "Aucun temps suivi n'a été trouvé pour cette période"
+
+msgid "No tracked times have been found for this period and artifact"
+msgstr "Aucun temps suivi n'a été trouvé sur cette période et cet artefact"
 
 msgid "No trackers selected"
 msgstr "Aucun élément séléctionné"
@@ -93,6 +99,9 @@ msgstr "Le temps est requis"
 msgid "Time successfully added"
 msgstr "Temps ajouté avec succès"
 
+msgid "Time successfully deleted"
+msgstr "Temps supprimé avec succès"
+
 msgid "Time successfully updated"
 msgstr "Temps mis à jour avec succès"
 
@@ -104,3 +113,9 @@ msgstr "Au"
 
 msgid "Tracker"
 msgstr "Outil de suivi"
+
+msgid "Wait a minute..."
+msgstr "Attendez une minute..."
+
+msgid "You're about to remove the time. Please confirm your action."
+msgstr "Vous êtes sur le point de supprimer le temps. Confirmez votre action."

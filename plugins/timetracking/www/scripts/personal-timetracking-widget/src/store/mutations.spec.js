@@ -23,7 +23,13 @@
 
 import mutations from "./mutations.js";
 import initial_state from "./state.js";
-import { REST_FEEDBACK_ADD, ERROR_OCCURRED, REST_FEEDBACK_EDIT } from "../../../constants.js";
+import {
+    ERROR_OCCURRED,
+    REST_FEEDBACK_ADD,
+    REST_FEEDBACK_DELETE,
+    REST_FEEDBACK_EDIT,
+    SUCCESS_TYPE
+} from "../../../constants.js";
 
 describe("Store mutations", () => {
     let state;
@@ -102,6 +108,27 @@ describe("Store mutations", () => {
             expect(state.current_times).toEqual([updated_time]);
             expect(state.rest_feedback.message).toEqual(REST_FEEDBACK_EDIT);
             expect(state.rest_feedback.type).toEqual("success");
+        });
+
+        it("Given a widget with states, When we call deleteCurrentTime, Then the deleted time should be removed from state.current_times anymore", () => {
+            state.current_times = [
+                {
+                    artifact: {},
+                    project: {},
+                    id: 1,
+                    minutes: 20
+                }
+            ];
+            const deleted_time_id = 1;
+            mutations.deleteInCurrentTimes(state, [deleted_time_id, REST_FEEDBACK_DELETE]);
+            expect(state.current_times).toEqual([
+                {
+                    artifact: {},
+                    project: {}
+                }
+            ]);
+            expect(state.rest_feedback.message).toEqual(REST_FEEDBACK_DELETE);
+            expect(state.rest_feedback.type).toEqual(SUCCESS_TYPE);
         });
     });
 });

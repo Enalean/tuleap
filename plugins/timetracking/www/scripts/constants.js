@@ -20,4 +20,6 @@
 export const TIME_REGEX = new RegExp("^[0-9]{2}[:][0-9]{2}$");
 export const REST_FEEDBACK_EDIT = "updated";
 export const REST_FEEDBACK_ADD = "added";
+export const REST_FEEDBACK_DELETE = "deleted";
 export const ERROR_OCCURRED = "error";
+export const SUCCESS_TYPE = "success";

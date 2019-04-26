@@ -35,6 +35,18 @@
                 >
                     <i class="fa fa-pencil"></i>
                 </button>
+                <button class="tlp-button-outline tlp-button-small tlp-button-danger"
+                        ref="popover_button"
+                        data-placement="left"
+                        data-trigger="click"
+                >
+                    <i class="fa fa-trash"></i>
+                </button>
+                <widget-modal-delete-popover
+                    v-on:createDeletePopover="createPopover()"
+                    v-bind:time-id="timeData.id"
+                    ref="delete_popover"
+                />
             </span>
         </td>
     </tr>
@@ -42,10 +54,12 @@
 <script>
 import { formatMinutes } from "../../../../time-formatters.js";
 import WidgetModalEditTime from "./WidgetModalEditTime.vue";
+import { createPopover } from "tlp";
+import WidgetModalDeletePopover from "./WidgetModalDeletePopover.vue";
 
 export default {
     name: "WidgetModalRow",
-    components: { WidgetModalEditTime },
+    components: { WidgetModalEditTime, WidgetModalDeletePopover },
     props: {
         timeData: Object
     },
@@ -60,6 +74,9 @@ export default {
         }
     },
     methods: {
+        createPopover() {
+            createPopover(this.$refs.popover_button, this.$refs.delete_popover.$el);
+        },
         swapEditMode() {
             this.edit_mode = !this.edit_mode;
         },
