@@ -26,7 +26,7 @@ import "./model/workflow-field-values-filter.spec.js";
 import "./rest/rest-service.spec.js";
 import "./tuleap-artifact-modal-controller.spec.js";
 import "./tuleap-artifact-modal-fields/computed-field/computed-field-controller.spec.js";
-import "./tuleap-artifact-modal-fields/computed-field/computed-field-validate-service.spec.js";
+import "./tuleap-artifact-modal-fields/computed-field/computed-field-value-formatter.spec.js";
 import "./tuleap-artifact-modal-fields/file-field/file-field-controller.spec.js";
 import "./tuleap-artifact-modal-fields/file-field/file-field-detector.spec.js";
 import "./tuleap-artifact-modal-fields/file-field/file-upload-rules-state.spec.js";
