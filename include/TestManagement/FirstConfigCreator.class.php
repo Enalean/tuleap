@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,7 +24,9 @@ use Project;
 use TrackerFactory;
 use TrackerXmlImport;
 use Logger;
-use Feedback;
+use Tuleap\TestManagement\Administration\TrackerChecker;
+use Tuleap\TestManagement\Administration\TrackerHasAtLeastOneFrozenFieldsPostActionException;
+use Tuleap\TestManagement\Administration\TrackerNotInProjectException;
 
 class FirstConfigCreator
 {
@@ -40,21 +42,30 @@ class FirstConfigCreator
     /** @var Logger */
     private $logger;
 
+    /**
+     * @var TrackerChecker
+     */
+    private $tracker_checker;
+
     public function __construct(
         Config $config,
         TrackerFactory $tracker_factory,
         TrackerXmlImport $xml_import,
+        TrackerChecker $tracker_checker,
         Logger $logger
     ) {
         $this->config           = $config;
         $this->tracker_factory  = $tracker_factory;
         $this->xml_import       = $xml_import;
         $this->logger           = $logger;
+        $this->tracker_checker  = $tracker_checker;
     }
 
     /**
      * @throws TrackerComesFromLegacyEngineException
      * @throws TrackerNotCreatedException
+     * @throws TrackerHasAtLeastOneFrozenFieldsPostActionException
+     * @throws TrackerNotInProjectException
      */
     public function createConfigForProjectFromTemplate(
         Project $project,
@@ -82,18 +93,14 @@ class FirstConfigCreator
             }
         }
 
-        $this->config->setProjectConfiguration(
-            $project,
-            $project_tracker_ids[CAMPAIGN_TRACKER_SHORTNAME],
-            $project_tracker_ids[DEFINITION_TRACKER_SHORTNAME],
-            $project_tracker_ids[EXECUTION_TRACKER_SHORTNAME],
-            $project_tracker_ids[ISSUE_TRACKER_SHORTNAME]
-        );
+        $this->saveConfiguration($project, $project_tracker_ids);
     }
 
     /**
      * @throws TrackerComesFromLegacyEngineException
      * @throws TrackerNotCreatedException
+     * @throws TrackerHasAtLeastOneFrozenFieldsPostActionException
+     * @throws TrackerNotInProjectException
      */
     public function createConfigForProjectFromXML(Project $project)
     {
@@ -114,12 +121,31 @@ class FirstConfigCreator
             $tracker_ids[$tracker_itemname] = $tracker->getId();
         }
 
+        $this->saveConfiguration($project, $tracker_ids);
+    }
+
+    /**
+     * @throws TrackerHasAtLeastOneFrozenFieldsPostActionException
+     * @throws TrackerNotInProjectException
+     */
+    private function saveConfiguration(Project $project, array $tracker_ids)
+    {
+        $campaign_tracker_id   = $tracker_ids[CAMPAIGN_TRACKER_SHORTNAME];
+        $definition_tracker_id = $tracker_ids[DEFINITION_TRACKER_SHORTNAME];
+        $execution_tracker_id  = $tracker_ids[EXECUTION_TRACKER_SHORTNAME];
+        $issue_tracker_id      = $tracker_ids[ISSUE_TRACKER_SHORTNAME];
+
+        $this->tracker_checker->checkTrackerIsInProject($project, $campaign_tracker_id);
+        $this->tracker_checker->checkTrackerIsInProject($project, $issue_tracker_id);
+        $this->tracker_checker->checkSubmittedTrackerCanBeUsed($project, $definition_tracker_id);
+        $this->tracker_checker->checkSubmittedTrackerCanBeUsed($project, $execution_tracker_id);
+
         $this->config->setProjectConfiguration(
             $project,
-            $tracker_ids[CAMPAIGN_TRACKER_SHORTNAME],
-            $tracker_ids[DEFINITION_TRACKER_SHORTNAME],
-            $tracker_ids[EXECUTION_TRACKER_SHORTNAME],
-            $tracker_ids[ISSUE_TRACKER_SHORTNAME]
+            $campaign_tracker_id,
+            $definition_tracker_id,
+            $execution_tracker_id,
+            $issue_tracker_id
         );
     }
 

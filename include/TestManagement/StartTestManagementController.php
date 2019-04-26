@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -26,6 +26,7 @@ use HTTPRequest;
 use Project;
 use TrackerFactory;
 use TrackerXmlImport;
+use Tuleap\TestManagement\Administration\TrackerChecker;
 use Tuleap\TestManagement\Breadcrumbs\NoCrumb;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
 
@@ -55,18 +56,25 @@ class StartTestManagementController
      */
     private $csrf_token;
 
+    /**
+     * @var TrackerChecker
+     */
+    private $tracker_checker;
+
     public function __construct(
         TrackerFactory        $tracker_factory,
         BackendLogger         $backend_logger,
         TrackerXmlImport      $tracker_xml_import,
         ArtifactLinksUsageUpdater $artifact_link_usage_updater,
-        \CSRFSynchronizerToken $csrf_token
+        \CSRFSynchronizerToken $csrf_token,
+        TrackerChecker $tracker_checker
     ) {
         $this->tracker_factory             = $tracker_factory;
         $this->tracker_xml_import          = $tracker_xml_import;
         $this->backend_logger              = $backend_logger;
         $this->artifact_link_usage_updater = $artifact_link_usage_updater;
         $this->csrf_token                  = $csrf_token;
+        $this->tracker_checker             = $tracker_checker;
     }
 
     public function misconfiguration(HTTPRequest $request)
@@ -94,6 +102,7 @@ class StartTestManagementController
             $config,
             $this->tracker_factory,
             $this->tracker_xml_import,
+            $this->tracker_checker,
             $this->backend_logger
         );
 

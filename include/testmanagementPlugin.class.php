@@ -309,6 +309,7 @@ class testmanagementPlugin extends PluginWithLegacyInternalRouting
             $config,
             TrackerFactory::instance(),
             TrackerXmlImport::build(new XMLImportHelper(UserManager::instance())),
+            $this->getTrackerChecker(),
             $logger
         );
 

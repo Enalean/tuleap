@@ -151,7 +151,8 @@ class Router {
                         new XMLImportHelper(UserManager::instance())
                     ),
                     $this->artifact_links_usage_updater,
-                    $csrf_token
+                    $csrf_token,
+                    $this->tracker_checker
                 );
                 $this->executeAction($controller, 'createConfig', array($request));
                 $this->renderIndex($request);
@@ -175,7 +176,8 @@ class Router {
                 new XMLImportHelper(UserManager::instance())
             ),
             $this->artifact_links_usage_updater,
-            $csrf_token
+            $csrf_token,
+            $this->tracker_checker
         );
 
         $this->renderAction(
