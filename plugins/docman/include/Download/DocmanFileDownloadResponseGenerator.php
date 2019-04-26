@@ -27,6 +27,7 @@ use Docman_PermissionsManager;
 use Docman_VersionFactory;
 use PFUser;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Tuleap\Http\Response\BinaryFileResponseBuilder;
 
 class DocmanFileDownloadResponseGenerator
@@ -53,8 +54,12 @@ class DocmanFileDownloadResponseGenerator
      * @throws VersionNotFoundException
      * @throws FileDoesNotExistException
      */
-    public function generateResponse(PFUser $current_user, Docman_File $docman_file, ?int $version_id) : ResponseInterface
-    {
+    public function generateResponse(
+        ServerRequestInterface $request,
+        PFUser $current_user,
+        Docman_File $docman_file,
+        ?int $version_id
+    ) : ResponseInterface {
         $permission_manager = Docman_PermissionsManager::instance($docman_file->getGroupId());
         if (! $permission_manager->userCanAccess($current_user, $docman_file->getId())) {
             throw new UserCannotAccessFileException($current_user, $docman_file);
@@ -78,6 +83,7 @@ class DocmanFileDownloadResponseGenerator
         $version->preDownload($docman_file, $current_user);
 
         return $this->binary_file_response_builder->fromFilePath(
+            $request,
             $file_path,
             $version->getFilename(),
             $version->getFiletype()

@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use GuzzleHttp\Psr7\ServerRequest;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\BinaryFileResponseBuilder;
 use Zend\HttpHandlerRunner\Emitter\SapiStreamEmitter;
@@ -486,7 +487,7 @@ class FRSFile {
     public function download()
     {
         $response_builder = new BinaryFileResponseBuilder(HTTPFactoryBuilder::responseFactory(), HTTPFactoryBuilder::streamFactory());
-        $response         = $response_builder->fromFilePath($this->getFileLocation(), basename($this->getFileName()));
+        $response         = $response_builder->fromFilePath(ServerRequest::fromGlobals(), $this->getFileLocation(), basename($this->getFileName()));
         (new SapiStreamEmitter())->emit($response);
         exit();
     }

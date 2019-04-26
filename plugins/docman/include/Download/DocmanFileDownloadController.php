@@ -95,6 +95,7 @@ final class DocmanFileDownloadController extends DispatchablePSR15Compatible imp
             /** @var PFUser $current_user */
             $current_user = $request->getAttribute(RESTCurrentUserMiddleware::class);
             return $this->file_download_response_generator->generateResponse(
+                $request,
                 $current_user,
                 $this->item,
                 $attribute_version_id !== null ? (int) $attribute_version_id : null
