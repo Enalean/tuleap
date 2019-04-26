@@ -27,7 +27,7 @@ use Project;
 
 class TransientComparison
 {
-    /** @var string */
+    /** @var string|null */
     private $name;
 
     /** @var string|null */
@@ -39,7 +39,12 @@ class TransientComparison
     /** @var Baseline */
     private $compared_to_baseline;
 
-    public function __construct(string $name, ?string $comment, Baseline $base_baseline, Baseline $compared_to_baseline)
+    public function __construct(
+        ?string $name,
+        ?string $comment,
+        Baseline $base_baseline,
+        Baseline $compared_to_baseline
+    )
     {
         $this->name                 = $name;
         $this->comment              = $comment;
@@ -47,7 +52,7 @@ class TransientComparison
         $this->compared_to_baseline = $compared_to_baseline;
     }
 
-    public function getName(): string
+    public function getName(): ?string
     {
         return $this->name;
     }

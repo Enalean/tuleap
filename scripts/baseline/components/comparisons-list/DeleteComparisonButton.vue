@@ -38,7 +38,9 @@ export default {
     components: { ActionButton },
 
     props: {
-        comparison: { required: true, type: Object }
+        comparison: { required: true, type: Object },
+        base_baseline: { required: true, type: Object },
+        compared_to_baseline: { required: true, type: Object }
     },
 
     methods: {
@@ -47,7 +49,11 @@ export default {
                 class: "tlp-modal-danger",
                 component: DeleteComparisonConfirmationModal,
                 title: this.$gettext("Delete comparison"),
-                props: { comparison: this.comparison }
+                props: {
+                    comparison: this.comparison,
+                    base_baseline: this.base_baseline,
+                    compared_to_baseline: this.compared_to_baseline
+                }
             });
         }
     }

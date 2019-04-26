@@ -31,7 +31,6 @@
             <div class="tlp-form-element">
                 <label class="tlp-label" for="name">
                     <translate>Name</translate>
-                    <i class="fa fa-asterisk"></i>
                 </label>
                 <input
                     id="name"
@@ -39,7 +38,6 @@
                     class="tlp-input"
                     type="text"
                     name="name"
-                    required
                     v-bind:disabled="is_saving"
                 >
             </div>

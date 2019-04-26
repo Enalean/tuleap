@@ -121,7 +121,7 @@ const factories = {
         },
         saved: {
             id: identity,
-            name: "comparison label",
+            name: null,
             comment: null,
             author_id: 1,
             creation_date: "2019-03-22T10:01:48+00:00"

@@ -39,7 +39,7 @@ class Comparison extends TransientComparison
 
     public function __construct(
         int $id,
-        string $name,
+        ?string $name,
         ?string $comment,
         Baseline $base_baseline,
         Baseline $compared_to_baseline,

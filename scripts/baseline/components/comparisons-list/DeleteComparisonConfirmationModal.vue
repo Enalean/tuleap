@@ -23,7 +23,7 @@
         v-bind:on_submit="confirm"
     >
         <span v-translate>
-            You are about to delete the comparison <strong>%{ comparison.name }</strong>.
+            You are about to delete the comparison between the baselines <strong>%{ base_baseline.name }</strong> and <strong>%{ compared_to_baseline.name }</strong>.
         </span>
     </delete-confirmation-modal>
 </template>
@@ -36,7 +36,9 @@ export default {
     name: "DeleteComparisonConfirmationModal",
     components: { DeleteConfirmationModal },
     props: {
-        comparison: { required: true, type: Object }
+        comparison: { required: true, type: Object },
+        base_baseline: { required: true, type: Object },
+        compared_to_baseline: { required: true, type: Object }
     },
     computed: {
         label() {

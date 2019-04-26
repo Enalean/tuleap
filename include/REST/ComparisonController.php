@@ -68,7 +68,7 @@ class ComparisonController
      * @throws NotFoundRestException
      */
     public function post(
-        string $name,
+        ?string $name,
         ?string $comment,
         int $base_baseline_id,
         int $compared_to_baseline_id

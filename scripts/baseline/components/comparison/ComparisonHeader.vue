@@ -25,7 +25,7 @@
             v-bind:base_baseline_id="comparison.base_baseline_id"
             v-bind:compared_to_baseline_id="comparison.compared_to_baseline_id"
         />
-        <saved-comparison-label v-else v-bind:comparison="comparison"/>
+        <saved-comparison-label v-else-if="has_comparison_label" v-bind:comparison="comparison"/>
         <h2>
             {{ base_baseline.name }}
             <i class="fa fa-tlp-baseline-comparison baseline-comparison-separator"></i>
@@ -58,6 +58,9 @@ export default {
         },
         compared_to_baseline() {
             return this.findBaselineById(this.comparison.compared_to_baseline_id);
+        },
+        has_comparison_label() {
+            return Boolean(this.comparison.name) || Boolean(this.comparison.comment);
         }
     }
 };

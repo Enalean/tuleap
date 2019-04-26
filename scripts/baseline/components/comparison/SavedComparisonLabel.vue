@@ -20,13 +20,15 @@
 
 <template>
     <div>
-        <h1>
+        <h1 v-if="comparison.name">
             {{ comparison.name }}
         </h1>
         <div
-            v-if="comparison.comment !== null"
+            v-if="comparison.comment"
             class="comparison-comment tlp-text-muted"
-        >{{ comparison.comment }}</div>
+            data-test-type="comment"
+        >{{ comparison.comment }}
+        </div>
     </div>
 </template>
 <script>

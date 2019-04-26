@@ -40,7 +40,12 @@
         </td>
         <td class="tlp-table-cell-actions">
             <consult-comparison-button class="tlp-table-cell-actions-button" v-bind:comparison="comparison"/>
-            <delete-comparison-button class="tlp-table-cell-actions-button" v-bind:comparison="comparison"/>
+            <delete-comparison-button
+                class="tlp-table-cell-actions-button"
+                v-bind:comparison="comparison"
+                v-bind:base_baseline="base_baseline"
+                v-bind:compared_to_baseline="compared_to_baseline"
+            />
         </td>
     </tr>
 </template>

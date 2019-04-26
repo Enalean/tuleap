@@ -51,9 +51,9 @@ class ComparisonsResource extends AuthenticatedResource
      * @status 201
      * @access protected
      *
-     * @param string $name                    Name of the comparison {@from body}
      * @param int    $base_baseline_id        Id of the baseline used as base comparison {@from body}
      * @param int    $compared_to_baseline_id Id of the baseline to be compared {@from body}
+     * @param string $name                    Name of the comparison {@from body}
      * @param string $comment                 Comment {@from body}
      *
      * @return Tuleap\Baseline\REST\ComparisonRepresentation
@@ -63,9 +63,9 @@ class ComparisonsResource extends AuthenticatedResource
      * @throws NotFoundRestException
      */
     protected function post(
-        string $name,
         int $base_baseline_id,
         int $compared_to_baseline_id,
+        string $name = null,
         string $comment = null
     ): ComparisonRepresentation {
         $this->checkAccess();

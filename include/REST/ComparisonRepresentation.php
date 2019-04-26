@@ -31,7 +31,7 @@ class ComparisonRepresentation
     /** @var int */
     public $id;
 
-    /** @var string */
+    /** @var string|null */
     public $name;
 
     /** @var string|null */
@@ -51,7 +51,7 @@ class ComparisonRepresentation
 
     public function __construct(
         int $id,
-        string $name,
+        ?string $name,
         ?string $comment,
         int $base_baseline_id,
         int $compared_to_baseline_id,

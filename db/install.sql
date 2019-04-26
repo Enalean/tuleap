@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS plugin_baseline_baseline
 CREATE TABLE IF NOT EXISTS plugin_baseline_comparison
 (
 	id int auto_increment primary key,
-	name varchar(255) not null,
+	name varchar(255) null,
 	comment varchar(255) null,
 	base_baseline_id int not null,
 	compared_to_baseline_id int not null,

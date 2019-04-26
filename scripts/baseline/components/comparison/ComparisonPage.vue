@@ -50,10 +50,7 @@
 <script>
 import ComparisonStatistics from "./ComparisonStatistics.vue";
 import ComparisonPageSkeleton from "./ComparisonPageSkeleton.vue";
-import ComparisonHeaderSkeleton from "./ComparisonHeaderSkeleton.vue";
 import ComparisonHeader from "./ComparisonHeader.vue";
-import ComparisonContentSkeleton from "./content/ComparisonContentSkeleton.vue";
-import ComparisonStatisticsSkeleton from "./ComparisonStatisticsSkeleton.vue";
 import ComparisonContent from "./content/ComparisonContent.vue";
 import { sprintf } from "sprintf-js";
 import { mapGetters } from "vuex";
@@ -63,10 +60,7 @@ export default {
     components: {
         ComparisonPageSkeleton,
         ComparisonContent,
-        ComparisonStatisticsSkeleton,
-        ComparisonContentSkeleton,
         ComparisonHeader,
-        ComparisonHeaderSkeleton,
         ComparisonStatistics
     },
     props: {
