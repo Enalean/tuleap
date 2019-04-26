@@ -47,11 +47,11 @@ export default {
             required: true,
             type: Number
         },
-        reference: {
+        base: {
             required: false,
             type: String
         },
-        compare_to: {
+        compared_to: {
             required: false,
             type: String
         }
@@ -59,7 +59,7 @@ export default {
 
     computed: {
         value_diff() {
-            return diff(this.reference || "", this.compare_to || "");
+            return diff(this.base || "", this.compared_to || "");
         }
     }
 };

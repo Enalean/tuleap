@@ -31,8 +31,8 @@ describe("FieldComparison", () => {
             propsData: {
                 semantic: "description",
                 tracker_id: 1,
-                reference: "My description",
-                compare_to: "New description"
+                base: "My description",
+                compared_to: "New description"
             }
         });
     });
@@ -50,8 +50,8 @@ describe("FieldComparison", () => {
     describe("when compared values contain html", () => {
         beforeEach(() => {
             wrapper.setProps({
-                reference: "My description<div onload=alert('xss')>",
-                compare_to: "<div onload=alert('xss')>My description"
+                base: "My description<div onload=alert('xss')>",
+                compared_to: "<div onload=alert('xss')>My description"
             });
         });
 

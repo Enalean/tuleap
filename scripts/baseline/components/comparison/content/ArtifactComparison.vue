@@ -26,15 +26,15 @@
                 v-if="base.description !== compared_to.description"
                 semantic="description"
                 v-bind:tracker_id="compared_to.tracker_id"
-                v-bind:reference="base.description"
-                v-bind:compare_to="compared_to.description"
+                v-bind:base="base.description"
+                v-bind:compared_to="compared_to.description"
             />
             <field-comparison
                 v-if="base.status !== compared_to.status"
                 semantic="status"
                 v-bind:tracker_id="compared_to.tracker_id"
-                v-bind:reference="base.status"
-                v-bind:compare_to="compared_to.status"
+                v-bind:base="base.status"
+                v-bind:compared_to="compared_to.status"
             />
         </div>
 
