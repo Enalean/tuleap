@@ -25,7 +25,6 @@ use HTTPRequest;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Admin\ProjectCreationNavBarPresenter;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\ProjectVisibilityOptionsForPresenterGenerator;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Request\DispatchableWithRequest;
@@ -44,12 +43,6 @@ class ProjectVisibilityConfigDisplayController implements DispatchableWithReques
         if (! $request->getCurrentUser()->isSuperUser()) {
             throw new ForbiddenException();
         }
-
-        $js_asset = new IncludeAssets(
-            __DIR__ . '/../../../../www/assets/',
-            '/assets'
-        );
-        $layout->includeFooterJavascriptFile($js_asset->getFileURL('site-admin-project-visibility.js'));
 
         $csrf_token = new CSRFSynchronizerToken('/admin/project-creation/visibility');
 
