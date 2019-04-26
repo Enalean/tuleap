@@ -24,17 +24,7 @@
                 {{ comparison.id }}
             </a>
         </td>
-        <td class="comparisons-table-column-name">
-            <p class="comparisons-table-column-name-content">
-                {{ comparison.name }}
-            </p>
-            <p class="comparisons-table-column-name-baselines">
-                {{ base_baseline.name }}
-                <i class="fa fa-tlp-baseline-comparison"></i>
-                {{ compared_to_baseline.name }}
-            </p>
-        </td>
-        <td class="comparisons-table-column-milestone">
+        <td class="comparisons-table-column">
             <artifact-link class="baselines-table-column-milestone" v-bind:artifact="milestone">
                 <artifact-badge
                     v-bind:artifact="milestone"
@@ -42,23 +32,20 @@
                 />{{ milestone.title }}
             </artifact-link>
         </td>
-        <td class="comparisons-table-column-creation-date">
-            <humanized-date v-bind:date="comparison.creation_date" v-bind:start_with_capital="true"/>
+        <td class="comparisons-table-column">
+            {{ base_baseline.name }}
         </td>
-        <td class="comparisons-table-column-author">
-            <user-badge v-bind:user="author"/>
+        <td class="comparisons-table-column">
+            {{ compared_to_baseline.name }}
         </td>
         <td class="tlp-table-cell-actions">
             <consult-comparison-button class="tlp-table-cell-actions-button" v-bind:comparison="comparison"/>
             <delete-comparison-button class="tlp-table-cell-actions-button" v-bind:comparison="comparison"/>
         </td>
-
     </tr>
 </template>
 
 <script>
-import HumanizedDate from "../common/HumanizedDate.vue";
-import UserBadge from "../common/UserBadge.vue";
 import ArtifactLink from "../common/ArtifactLink.vue";
 import ArtifactBadge from "../common/ArtifactBadge.vue";
 import { mapGetters } from "vuex";
@@ -71,9 +58,7 @@ export default {
         ConsultComparisonButton,
         DeleteComparisonButton,
         ArtifactLink,
-        ArtifactBadge,
-        HumanizedDate,
-        UserBadge
+        ArtifactBadge
     },
 
     props: {
@@ -93,9 +78,6 @@ export default {
         },
         milestone_tracker() {
             return this.findTrackerById(this.milestone.tracker.id);
-        },
-        author() {
-            return this.findUserById(this.comparison.author_id);
         }
     },
 

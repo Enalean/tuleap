@@ -93,6 +93,9 @@ msgstr "Commentaire"
 msgid "Compare baselines"
 msgstr "Comparer des baselines"
 
+msgid "Compared to"
+msgstr "Comparée à"
+
 msgid "Comparisons"
 msgstr "Comparaisons"
 
@@ -107,9 +110,6 @@ msgstr "Créer la baseline"
 
 msgid "Created by"
 msgstr "Créé par"
-
-msgid "Date"
-msgstr "Date"
 
 msgid "Delete"
 msgstr "Supprimer"
@@ -172,6 +172,9 @@ msgstr "Veuillez choisir deux baselines à comparer"
 
 msgid "Please confirm your action."
 msgstr "Veuillez confirmer votre action."
+
+msgid "Reference"
+msgstr "Référence"
 
 msgid "Reference…"
 msgstr "Référence…"

@@ -23,27 +23,24 @@
         <td class="tlp-table-cell-numeric">
             <span class="tlp-skeleton-text"></span>
         </td>
-        <td class="comparisons-table-column-name">
-            <p class="comparisons-table-column-name-content">
-                <span class="tlp-skeleton-text"></span>
-            </p>
-            <p class="comparisons-table-column-name-baselines">
-                <span class="tlp-skeleton-text"></span>
-            </p>
-        </td>
-        <td class="comparisons-table-column-milestone">
+        <td class="comparisons-table-column">
             <span class="tlp-skeleton-text"></span>
         </td>
-        <td class="comparisons-table-column-creation-date">
+        <td class="comparisons-table-column">
             <span class="tlp-skeleton-text"></span>
         </td>
-        <td class="comparisons-table-column-author">
+        <td class="comparisons-table-column">
             <span class="tlp-skeleton-text"></span>
         </td>
         <td class="tlp-table-cell-actions">
             <action-button icon="eye" v-bind:disabled="true">
                 <span v-translate>
                     Consult
+                </span>
+            </action-button>
+            <action-button icon="trash-o" v-bind:disabled="true" class="tlp-button-danger">
+                <span v-translate>
+                    Delete
                 </span>
             </action-button>
         </td>

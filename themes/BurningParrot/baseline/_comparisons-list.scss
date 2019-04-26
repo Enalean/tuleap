@@ -28,24 +28,8 @@
     vertical-align: baseline;
 }
 
-.comparisons-table-column-name-content {
-    margin: 0;
-}
-
-.comparisons-table-column-name-baselines {
-    color: $tlp-ui-dimmed;
-    font-size: 14px;
-}
-
-.comparisons-table-column-milestone,
-.comparisons-table-column-author,
-.comparisons-table-column-creation-date {
+.comparisons-table-column {
+    width: 33%;
     color: inherit;
     white-space: nowrap;
-}
-
-.baselines-table-column-author,
-.comparisons-table-column-creation-date {
-    color: $tlp-ui-dimmed;
-    font-size: 14px;
 }

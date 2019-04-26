@@ -24,7 +24,6 @@ import { create } from "../../support/factories";
 import { createStoreMock } from "../../support/store-wrapper.spec-helper";
 import store_options from "../../store/store_options";
 import ArtifactLink from "../common/ArtifactLink.vue";
-import UserBadge from "../common/UserBadge.vue";
 import GettextPlugin from "vue-gettext";
 
 describe("Comparison", () => {
@@ -35,7 +34,6 @@ describe("Comparison", () => {
     let wrapper;
 
     const base_baseline_artifact = create("artifact");
-    const author = create("user");
 
     beforeEach(() => {
         $store = createStoreMock(store_options);
@@ -59,15 +57,13 @@ describe("Comparison", () => {
         $store.getters.findBaselineById.withArgs(12).and.returnValue(create("baseline"));
         $store.getters.findArtifactById.withArgs(22).and.returnValue(base_baseline_artifact);
         $store.getters.findTrackerById.and.returnValue(create("tracker"));
-        $store.getters.findUserById.withArgs(9).and.returnValue(author);
 
         wrapper = shallowMount(Comparison, {
             propsData: {
                 comparison: create("comparison", "saved", {
                     id: 1,
                     base_baseline_id: 11,
-                    compared_to_baseline_id: 12,
-                    author_id: 9
+                    compared_to_baseline_id: 12
                 })
             },
             localVue,
@@ -77,9 +73,5 @@ describe("Comparison", () => {
 
     it("shows base baseline as milestone", () => {
         expect(wrapper.find(ArtifactLink).vm.artifact).toEqual(base_baseline_artifact);
-    });
-
-    it("shows author", () => {
-        expect(wrapper.find(UserBadge).vm.user).toEqual(author);
     });
 });

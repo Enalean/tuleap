@@ -25,17 +25,14 @@
                 <th class="tlp-table-cell-numeric" v-translate>
                     Id
                 </th>
-                <th class="comparisons-table-column-name" v-translate>
-                    Name
-                </th>
-                <th class="comparisons-table-column-milestone" v-translate>
+                <th class="comparisons-table-column" v-translate>
                     Milestone
                 </th>
-                <th class="comparisons-table-column-creation-date" v-translate>
-                    Date
+                <th class="comparisons-table-column" v-translate>
+                    Reference
                 </th>
-                <th class="comparisons-table-column-author" v-translate>
-                    Author
+                <th class="comparisons-table-column" v-translate>
+                    Compared to
                 </th>
                 <th>
                 </th>

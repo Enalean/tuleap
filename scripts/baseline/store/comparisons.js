@@ -35,13 +35,6 @@ export default {
             try {
                 const comparisons = await getComparisons(project_id);
 
-                const author_ids = comparisons.map(comparison => comparison.author_id);
-                const authors_loading = dispatch(
-                    "loadUsers",
-                    { user_ids: author_ids },
-                    { root: true }
-                );
-
                 const baseline_ids = comparisons
                     .map(comparison => [
                         comparison.base_baseline_id,
@@ -54,7 +47,6 @@ export default {
                     { root: true }
                 );
 
-                await authors_loading;
                 await baselines_loading;
 
                 commit("updateComparisons", comparisons);

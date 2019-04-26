@@ -58,13 +58,6 @@ describe("Comparisons store:", () => {
                 return store.actions.load(context, { project_id: 102 });
             });
 
-            it("dispatches 'loadUsers' for authors of comparisons returned by getComparisons()", () => {
-                expect(context.dispatch).toHaveBeenCalledWith(
-                    "loadUsers",
-                    { user_ids: [4, 5] },
-                    { root: true }
-                );
-            });
             it("dispatches 'loadBaselines' for all base and compared to baselines", () => {
                 expect(context.dispatch).toHaveBeenCalledWith(
                     "loadBaselines",
