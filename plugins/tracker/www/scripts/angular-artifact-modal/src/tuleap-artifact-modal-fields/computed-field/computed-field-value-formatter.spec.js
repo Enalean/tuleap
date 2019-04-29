@@ -19,7 +19,7 @@
 
 import { formatComputedFieldValue } from "./computed-field-value-formatter.js";
 
-describe("computed-field-validate-service", () => {
+describe("computed-field-value-formatter", () => {
     describe("formatComputedFieldValue() -", () => {
         it(`Given a field value that was undefined, then it will return null`, () => {
             const result = formatComputedFieldValue(undefined);

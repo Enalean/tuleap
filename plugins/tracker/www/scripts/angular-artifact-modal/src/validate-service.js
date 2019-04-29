@@ -20,12 +20,13 @@
 import _ from "lodash";
 import { validateOpenListFieldValue } from "./tuleap-artifact-modal-fields/open-list-field/open-list-field-validate-service.js";
 import { formatComputedFieldValue } from "./tuleap-artifact-modal-fields/computed-field/computed-field-value-formatter.js";
+import { formatPermissionFieldValue } from "./tuleap-artifact-modal-fields/permission-field/permission-field-value-formatter.js";
 
 export default ValidateService;
 
-ValidateService.$inject = ["TuleapArtifactModalPermissionFieldValidateService"];
+ValidateService.$inject = [];
 
-function ValidateService(TuleapArtifactModalPermissionFieldValidateService) {
+function ValidateService() {
     return {
         validateArtifactFieldsValues: validateArtifactFieldsValues
     };
@@ -40,9 +41,7 @@ function ValidateService(TuleapArtifactModalPermissionFieldValidateService) {
                     case "computed":
                         return formatComputedFieldValue(field);
                     case "perm":
-                        return TuleapArtifactModalPermissionFieldValidateService.validateFieldValue(
-                            field
-                        );
+                        return formatPermissionFieldValue(field);
                     case "tbl":
                         return validateOpenListFieldValue(field);
                     default:
