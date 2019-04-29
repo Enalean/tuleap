@@ -53,6 +53,7 @@ use Tuleap\Tracker\Events\XMLImportArtifactLinkTypeCanBeDisabled;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\Tracker\FormElement\View\Admin\DisplayAdminFormElementsWarningsEvent;
 use Tuleap\Tracker\FormElement\View\Admin\FilterFormElementsThatCanBeCreatedForTracker;
+use Tuleap\Tracker\REST\v1\Workflow\PostAction\CheckPostActionsForTracker;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -110,6 +111,7 @@ class testmanagementPlugin extends PluginWithLegacyInternalRouting
             $this->addHook(TRACKER_EVENT_EXPORT_FULL_XML);
             $this->addHook(TRACKER_USAGE);
             $this->addHook(StatisticsCollectionCollector::NAME);
+            $this->addHook(CheckPostActionsForTracker::NAME);
         }
 
         return parent::getHooksAndCallbacks();
@@ -727,5 +729,25 @@ class testmanagementPlugin extends PluginWithLegacyInternalRouting
             $dao->countTestsExecutionsArtifacts(),
             $dao->countTestExecutionsArtifactsRegisteredBefore($collector->getTimestamp())
         );
+    }
+
+    public function checkPostActionsForTracker(CheckPostActionsForTracker $event)
+    {
+        $frozen_fields_post_actions = $event->getPostActions()->getFrozenFieldsPostActions();
+        if (count($frozen_fields_post_actions) > 0) {
+            $tracker = $event->getTracker();
+            $config  = $this->getConfig();
+
+            if ($tracker->getId() == $config->getTestExecutionTrackerId($tracker->getProject()) ||
+                $tracker->getId() == $config->getTestDefinitionTrackerId($tracker->getProject())
+            ) {
+                $message = dgettext(
+                    'tuleap-testmanagement',
+                    'The post actions cannot be saved because this tracker is used in TestManagement and frozen fields actions are defined.'
+                );
+                $event->setPostActionsNonEligible();
+                $event->setErrorMessage($message);
+            }
+        }
     }
 }
