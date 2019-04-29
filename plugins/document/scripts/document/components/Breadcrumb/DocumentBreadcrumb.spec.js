@@ -96,4 +96,47 @@ describe("DocumentBreadcrumb", () => {
             jasmine.objectContaining({ parent_id: 0 })
         );
     });
+    it(`Given a list of folders and not the current document
+    When we display the breadcrumb
+    Then the breadcrumb display the current folder`, () => {
+        store.state.current_folder = { id: 1, title: "My first folder", parent_id: 0 };
+        store.state.currently_displayed_item = null;
+        store.state.is_user_administrator = false;
+        store.state.is_loading_ascendant_hierarchy = false;
+        store.state.current_folder_ascendant_hierarchy = [
+            { id: 1, title: "My first folder", parent_id: 0 },
+            { id: 2, title: "My second folder", parent_id: 0 },
+            { id: 3, title: "My third folder", parent_id: 1 },
+            { id: 4, title: "My fourth folder", parent_id: 2 },
+            { id: 5, title: "My fifth folder", parent_id: 2 }
+        ];
+
+        const wrapper = shallowMount(DocumentBreadcrumb, component_options);
+
+        expect(wrapper.contains("[data-test=breadcrumb-current-document]")).toBeFalsy();
+    });
+
+    it(`Given a list of folders and the current document which is displayed
+    When we display the breadcrumb
+    Then the breadcrumb display the current folder`, () => {
+        store.state.current_folder = { id: 1, title: "My first folder", parent_id: 0 };
+        store.state.currently_displayed_item = {
+            id: 6,
+            title: "My embedded content",
+            parent_id: 0
+        };
+        store.state.is_user_administrator = false;
+        store.state.is_loading_ascendant_hierarchy = false;
+        store.state.current_folder_ascendant_hierarchy = [
+            { id: 1, title: "My first folder", parent_id: 0 },
+            { id: 2, title: "My second folder", parent_id: 0 },
+            { id: 3, title: "My third folder", parent_id: 1 },
+            { id: 4, title: "My fourth folder", parent_id: 2 },
+            { id: 5, title: "My fifth folder", parent_id: 2 }
+        ];
+
+        const wrapper = shallowMount(DocumentBreadcrumb, component_options);
+
+        expect(wrapper.contains("[data-test=breadcrumb-current-document]")).toBeTruthy();
+    });
 });
