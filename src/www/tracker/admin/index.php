@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean SAS, 2017 - 2018. All rights reserved
+ * Copyright (c) Enalean SAS, 2017 - Present. All rights reserved
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * Written for Codendi by Stephane Bouhet
@@ -22,25 +22,6 @@
  */
 
 require_once('pre.php');
-require_once('common/include/HTTPRequest.class.php');
-require_once('common/include/GroupFactory.class.php');
-require_once('common/tracker/ArtifactTypeFactory.class.php');
-require_once('common/tracker/ArtifactType.class.php');
-require_once('common/tracker/ArtifactFieldSetFactory.class.php');
-require_once('common/tracker/ArtifactFieldSet.class.php');
-require_once('common/tracker/ArtifactCanned.class.php');
-require_once('common/tracker/ArtifactFieldFactory.class.php');
-require_once('common/tracker/ArtifactField.class.php');
-require_once('common/tracker/ArtifactReport.class.php');
-require_once('common/tracker/ArtifactReportFactory.class.php');
-require_once('common/tracker/ArtifactReportField.class.php');
-require_once('common/tracker/Artifact.class.php');
-require_once('common/reference/ReferenceManager.class.php');
-require_once('../include/ArtifactTypeHtml.class.php');
-require_once('../include/ArtifactCannedHtml.class.php');
-require_once('../include/ArtifactReportHtml.class.php');
-require_once('../include/ArtifactHtml.class.php');
-require_once('common/include/SimpleSanitizer.class.php');
 
 // Inherited from old .htaccess (needed for reports, linked artifact view, etc)
 ini_set('max_execution_time', 1800);
@@ -946,7 +927,6 @@ if ($group_id && !$atid) {
 			return;
 		}
 	
-	    require_once('../include/ArtifactRulesManagerHtml.class.php');
         $armh = new ArtifactRulesManagerHtml($ath, '?group_id='. (int)($ath->getGroupID()) .'&atid='. (int)($ath->getID()) .'&func=field_dependencies');
         if ($request->getValidated('save') === 'save') {
             if ($request->valid(new Valid_UInt('source_field')) && $request->valid(new Valid_UInt('target_field'))) {

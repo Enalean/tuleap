@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011 - 2018. All rights reserved
+ * Copyright (c) Enalean, 2011 - Present. All rights reserved
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * Originally written by Nicolas Terray, 2006
@@ -20,10 +20,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
-
-require_once('common/tracker/ArtifactRulesManager.class.php');
-require_once('ArtifactTypeHtml.class.php');
-require_once('ArtifactRuleValueJavascript.class.php');
 
 /**
 * Html view of the manager.

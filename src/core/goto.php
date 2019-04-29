@@ -114,11 +114,7 @@ if ($request->isAjax()) {
             if (db_numrows($result)>0) {
                 $row = db_fetch_array($result);
                 $atid = $row['group_artifact_id'];
-                
-                require_once('common/tracker/ArtifactType.class.php');
-                require_once('common/tracker/ArtifactFieldFactory.class.php');
-                require_once('tracker/include/ArtifactHtml.class.php');
-                require_once('tracker/include/ArtifactFieldHtml.class.php');
+
                 $at = new ArtifactType($project, $atid);
                 $values = null;
                 if (!$at->isError() && $at->isValid()) {

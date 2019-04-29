@@ -8,9 +8,6 @@
 //  Written for Codendi by Stephane Bouhet
 //
 
-//require_once('common/tracker/ArtifactFactory.class.php');
-
-require_once('include/ArtifactRulesManagerHtml.class.php');
 // Check if a user can submit a new without loggin
 if ( !user_isloggedin() && !$ath->allowsAnon() ) {
 	exit_not_logged_in();

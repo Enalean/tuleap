@@ -22,26 +22,6 @@
 
 require_once('pre.php');
 require_once('www/project/admin/project_admin_utils.php');
-require_once('common/tracker/Artifact.class.php');
-require_once('common/tracker/ArtifactFile.class.php');
-require_once('./include/ArtifactFileHtml.class.php');
-require_once('common/tracker/ArtifactType.class.php');
-require_once('./include/ArtifactTypeHtml.class.php');
-require_once('./include/ArtifactHtml.class.php');
-require_once('common/tracker/ArtifactCanned.class.php');
-require_once('common/tracker/ArtifactTypeFactory.class.php');
-require_once('common/tracker/ArtifactFieldSet.class.php');
-require_once('common/tracker/ArtifactFieldSetFactory.class.php');
-require_once('common/tracker/ArtifactField.class.php');
-require_once('common/tracker/ArtifactFieldFactory.class.php');
-require_once('common/tracker/ArtifactReportFactory.class.php');
-require_once('common/tracker/ArtifactReport.class.php');
-require_once('common/tracker/ArtifactReportField.class.php');
-require_once('./include/ArtifactFieldHtml.class.php');
-require_once('./include/ArtifactReportHtml.class.php');
-require_once('./include/ArtifactImportHtml.class.php');
-require_once('www/project/admin/permissions.php');
-require_once('common/include/SimpleSanitizer.class.php');
 
 // Inherited from old .htaccess (needed for reports, linked artifact view, etc)
 ini_set('max_execution_time', 1800);

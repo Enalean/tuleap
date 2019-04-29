@@ -25,19 +25,6 @@ define('delete_artifact_followup_fault','3023');
 
 require_once ('pre.php');
 require_once ('session.php');
-require_once ('common/tracker/ArtifactType.class.php');
-require_once ('common/tracker/ArtifactTypeFactory.class.php');
-require_once ('common/tracker/Artifact.class.php');
-require_once ('common/tracker/ArtifactFactory.class.php');
-require_once ('common/tracker/ArtifactField.class.php');
-require_once ('common/tracker/ArtifactFieldFactory.class.php');
-require_once ('common/tracker/ArtifactFieldSet.class.php');
-require_once ('common/tracker/ArtifactFieldSetFactory.class.php');
-require_once ('common/tracker/ArtifactReportFactory.class.php');
-require_once ('common/tracker/ArtifactGlobalNotificationFactory.class.php');
-require_once ('common/tracker/ArtifactRulesManager.class.php');
-require_once ('www/tracker/include/ArtifactFieldHtml.class.php');
-require_once ('common/include/SimpleSanitizer.class.php');
 
 if (defined('NUSOAP')) {
 	

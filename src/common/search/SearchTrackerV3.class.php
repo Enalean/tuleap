@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -32,9 +32,6 @@ class Search_SearchTrackerV3 {
     }
 
     public function search(Search_SearchQuery $query, Search_SearchResults $search_results) {
-        include_once('www/tracker/include/ArtifactTypeHtml.class.php');
-        include_once('www/tracker/include/ArtifactHtml.class.php');
-
         $project = $query->getProject();
         if ($project->isError()) {
             return;
