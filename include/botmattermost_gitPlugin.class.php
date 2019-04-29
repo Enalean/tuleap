@@ -35,6 +35,7 @@ use Tuleap\BotMattermostGit\SenderServices\GitNotificationSender;
 use Tuleap\BotMattermostGit\SenderServices\PullRequestNotificationBuilder;
 use Tuleap\BotMattermostGit\SenderServices\PullRequestNotificationSender;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Plugin\PluginWithLegacyInternalRouting;
 use Tuleap\PullRequest\GetCreatePullRequest;
 
 require_once 'autoload.php';
@@ -42,7 +43,7 @@ require_once 'constants.php';
 require_once __DIR__ . '/../../botmattermost/include/botmattermostPlugin.class.php';
 require_once __DIR__ . '/../../git/include/gitPlugin.class.php';
 
-class botmattermost_gitPlugin extends Plugin
+class botmattermost_gitPlugin extends PluginWithLegacyInternalRouting
 {
 
     public function __construct($id)
@@ -67,6 +68,7 @@ class botmattermost_gitPlugin extends Plugin
         if (defined('GIT_BASE_URL')) {
             $this->addHook(GIT_ADDITIONAL_NOTIFICATIONS);
             $this->addHook(GIT_HOOK_POSTRECEIVE_REF_UPDATE);
+            $this->listenToCollectRouteEventWithDefaultController();
         }
         if (defined('PULLREQUEST_BASE_DIR')) {
             $this->addHook(GetCreatePullRequest::NAME);
@@ -176,7 +178,7 @@ class botmattermost_gitPlugin extends Plugin
         $this->getController(HTTPRequest::instance())->deleteBotNotificationByBot($event->getBot());
     }
 
-    public function process()
+    public function process() : void
     {
         $request = HTTPRequest::instance();
         if ($this->isAllowed($request->getProject()->getID())) {
