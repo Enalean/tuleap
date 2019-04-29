@@ -497,6 +497,10 @@ done
 %{__install} src/utils/systemd/tuleap-process-system-events-git.service $RPM_BUILD_ROOT/%{_unitdir}
 %{__install} src/utils/systemd/tuleap-launch-system-check.timer $RPM_BUILD_ROOT/%{_unitdir}
 %{__install} src/utils/systemd/tuleap-launch-system-check.service $RPM_BUILD_ROOT/%{_unitdir}
+%{__install} src/utils/systemd/tuleap-launch-daily-event.timer $RPM_BUILD_ROOT/%{_unitdir}
+%{__install} src/utils/systemd/tuleap-launch-daily-event.service $RPM_BUILD_ROOT/%{_unitdir}
+%{__install} src/utils/systemd/tuleap-launch-plugin-job.timer $RPM_BUILD_ROOT/%{_unitdir}
+%{__install} src/utils/systemd/tuleap-launch-plugin-job.service $RPM_BUILD_ROOT/%{_unitdir}
 
 # Install Tuleap executables
 %{__install} -d $RPM_BUILD_ROOT/%{_bindir}
@@ -913,6 +917,10 @@ fi
 %attr(00644,root,root) %{_unitdir}/tuleap-process-system-events-default.service
 %attr(00644,root,root) %{_unitdir}/tuleap-launch-system-check.timer
 %attr(00644,root,root) %{_unitdir}/tuleap-launch-system-check.service
+%attr(00644,root,root) %{_unitdir}/tuleap-launch-daily-event.timer
+%attr(00644,root,root) %{_unitdir}/tuleap-launch-daily-event.service
+%attr(00644,root,root) %{_unitdir}/tuleap-launch-plugin-job.timer
+%attr(00644,root,root) %{_unitdir}/tuleap-launch-plugin-job.service
 
 #
 # Core

@@ -76,7 +76,9 @@ declare -r tuleap_unix_user="codendiadm"
 declare -i mysql_port=3306
 
 declare -a timers=("tuleap-process-system-events-default.timer"
-                   "tuleap-launch-system-check.timer")
+                   "tuleap-launch-system-check.timer"
+                   "tuleap-launch-daily-event.timer"
+                   "tuleap-launch-plugin-job.timer")
 
 assumeyes="false"
 db_exist="false"
