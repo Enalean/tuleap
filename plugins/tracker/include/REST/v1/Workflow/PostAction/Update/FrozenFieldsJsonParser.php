@@ -34,6 +34,9 @@ class FrozenFieldsJsonParser implements PostActionUpdateJsonParser
         return isset($json['type']) && $json['type'] === self::POSTACTION_TYPE;
     }
 
+    /**
+     * @throws IncompatibleWorkflowModeException
+     */
     public function parse(Workflow $workflow, array $json): PostAction
     {
         if ($workflow->isAdvanced()) {

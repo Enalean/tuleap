@@ -22,6 +22,7 @@
 namespace Tuleap\Tracker\REST\v1\Workflow\PostAction\Update;
 
 use Tuleap\REST\I18NRestException;
+use Tuleap\Tracker\Workflow\PostAction\Update\Internal\IncompatibleWorkflowModeException;
 use Tuleap\Tracker\Workflow\PostAction\Update\PostActionCollection;
 use Tuleap\Tracker\Workflow\Update\PostAction;
 use Workflow;
@@ -43,6 +44,7 @@ class PostActionCollectionJsonParser
 
     /**
      * @throws I18NRestException 400
+     * @throws IncompatibleWorkflowModeException
      */
     public function parse(Workflow $workflow, array $json): PostActionCollection
     {
@@ -64,6 +66,7 @@ class PostActionCollectionJsonParser
 
     /**
      * @throws I18NRestException 400
+     * @throws IncompatibleWorkflowModeException
      */
     private function parsePostAction(Workflow $workflow, array $json): PostAction
     {
