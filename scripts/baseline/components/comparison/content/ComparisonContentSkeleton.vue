@@ -21,19 +21,25 @@
 <template>
     <div class="comparison-content">
         <ol class="comparison-content-artifact-ol">
-            <li class="comparison-content-artifact-li"><artifact-comparison-skeleton/></li>
-            <li class="comparison-content-artifact-li"><artifact-comparison-skeleton/></li>
-            <li class="comparison-content-artifact-li"><artifact-comparison-skeleton/></li>
+            <li class="comparison-content-artifact-li">
+                <artifact-skeleton class="comparison-content-artifact-header"/>
+            </li>
+            <li class="comparison-content-artifact-li">
+                <artifact-skeleton class="comparison-content-artifact-header"/>
+            </li>
+            <li class="comparison-content-artifact-li">
+                <artifact-skeleton class="comparison-content-artifact-header"/>
+            </li>
         </ol>
     </div>
 </template>
 
 <script>
-import ArtifactComparisonSkeleton from "./ArtifactComparisonSkeleton.vue";
+import ArtifactSkeleton from "../../common/ArtifactSkeleton.vue";
 
 export default {
     name: "ComparisonContentSkeleton",
 
-    components: { ArtifactComparisonSkeleton }
+    components: { ArtifactSkeleton }
 };
 </script>

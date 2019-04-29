@@ -20,8 +20,6 @@
 
 <template functional>
     <span>
-        <span class="comparison-content-artifact-header">
-            <span class="tlp-skeleton-text"></span>
-        </span>
+        <span class="tlp-skeleton-text"></span>
     </span>
 </template>

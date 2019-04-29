@@ -20,14 +20,20 @@
 
 <template>
     <ol class="baseline-content-artifact-ol">
-        <li class="baseline-content-artifact-li"><artifact-skeleton/></li>
-        <li class="baseline-content-artifact-li"><artifact-skeleton/></li>
-        <li class="baseline-content-artifact-li"><artifact-skeleton/></li>
+        <li class="baseline-content-artifact-li">
+            <artifact-skeleton class="baseline-content-artifact"/>
+        </li>
+        <li class="baseline-content-artifact-li">
+            <artifact-skeleton class="baseline-content-artifact"/>
+        </li>
+        <li class="baseline-content-artifact-li">
+            <artifact-skeleton class="baseline-content-artifact"/>
+        </li>
     </ol>
 </template>
 
 <script>
-import ArtifactSkeleton from "./ArtifactSkeleton.vue";
+import ArtifactSkeleton from "../common/ArtifactSkeleton.vue";
 
 export default {
     name: "ContentBodySkeleton",
