@@ -117,9 +117,9 @@ class testmanagementPlugin extends PluginWithLegacyInternalRouting
 
     public function javascript_file() {
         if ($this->canIncludeStepDefinitionAssets()) {
-            $include_assets = new \Tuleap\Layout\IncludeAssets(
-                __DIR__ . '/../www/assets',
-                TESTMANAGEMENT_BASE_URL . '/assets'
+            $include_assets = new IncludeAssets(
+                __DIR__ . '/../../../src/www/assets/testmanagement/js/',
+                '/assets/testmanagement/js'
             );
             echo $include_assets->getHTMLSnippet('step-definition-field.js');
         }
@@ -129,11 +129,11 @@ class testmanagementPlugin extends PluginWithLegacyInternalRouting
     {
         if ($this->isTrackerURL()) {
             $include_assets = new IncludeAssets(
-                TESTMANAGEMENT_BASE_DIR . '/www/themes/FlamingParrot/assets',
-                TESTMANAGEMENT_BASE_URL . '/themes/FlamingParrot/assets'
+                __DIR__ . '/../../../src/www/assets/testmanagement/css/',
+                '/assets/testmanagement/css'
             );
 
-            $style_css_url = $include_assets->getFileURL('style.css');
+            $style_css_url = $include_assets->getFileURL('flamingparrot.css');
 
             echo '<link rel="stylesheet" type="text/css" href="'.$style_css_url.'" />';
         }
@@ -381,7 +381,11 @@ class testmanagementPlugin extends PluginWithLegacyInternalRouting
     {
         if ($this->currentRequestIsForPlugin()) {
             $variant = $params['variant'];
-            $params['stylesheets'][] = $this->getThemePath() .'/css/style-'. $variant->getName() .'.css';
+            $css_assets = new IncludeAssets(
+                __DIR__ . '/../../../src/www/assets/testmanagement/css/',
+                '/assets/testmanagement/css'
+            );
+            $params['stylesheets'][] = $css_assets->getFileURL('burningparrot-' . $variant->getName() . '.css');
         }
     }
 
@@ -393,8 +397,8 @@ class testmanagementPlugin extends PluginWithLegacyInternalRouting
             $params['javascript_files'][] = $include_assets->getFileURL('ckeditor.js');
 
             $test_management_include_assets = new IncludeAssets(
-                TESTMANAGEMENT_BASE_DIR . '/www/assets',
-                TESTMANAGEMENT_BASE_URL . '/assets'
+                __DIR__ . '/../../../src/www/assets/testmanagement/js/',
+                '/assets/testmanagement/js'
             );
 
             $params['javascript_files'][] = $test_management_include_assets->getFileURL('testmanagement.js');

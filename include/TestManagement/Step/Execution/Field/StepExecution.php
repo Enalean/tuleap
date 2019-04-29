@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -67,7 +67,7 @@ class StepExecution extends Tracker_FormElement_Field implements TrackerFormElem
      */
     public static function getFactoryIconUseIt()
     {
-        return TESTMANAGEMENT_BASE_URL . '/themes/default/images/ic/tick-circle.png';
+        return TESTMANAGEMENT_BASE_URL . '/images/ic/tick-circle.png';
     }
 
     /**
@@ -75,7 +75,7 @@ class StepExecution extends Tracker_FormElement_Field implements TrackerFormElem
      */
     public static function getFactoryIconCreate()
     {
-        return TESTMANAGEMENT_BASE_URL . '/themes/default/images/ic/tick-circle--plus.png';
+        return TESTMANAGEMENT_BASE_URL . '/images/ic/tick-circle--plus.png';
     }
 
     public static function getFactoryUniqueField()
