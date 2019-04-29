@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,10 +21,12 @@
 namespace Tuleap\OpenIDConnectClient;
 
 use Feedback;
-use ForgeConfig;
 use HTTPRequest;
+use Tuleap\Layout\BaseLayout;
+use Tuleap\Request\DispatchableWithRequest;
 
-class Router {
+class Router implements DispatchableWithRequest
+{
 
     /**
      * @var Login\Controller
@@ -51,7 +53,8 @@ class Router {
         $this->user_mapping_controller   = $user_mapping_controller;
     }
 
-    public function route(HTTPRequest $request) {
+    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    {
         $action = $request->get('action');
 
         if ($action === 'remove-user-mapping') {
@@ -59,7 +62,7 @@ class Router {
             return;
         }
 
-        $this->checkTLSPresence($request);
+        $this->checkTLSPresence($request, $layout);
         switch ($action) {
             case 'link':
                 $this->account_linker_controller->showIndex($request);
@@ -72,14 +75,14 @@ class Router {
         }
     }
 
-    private function checkTLSPresence(HTTPRequest $request) {
+    private function checkTLSPresence(HTTPRequest $request, BaseLayout $layout)
+    {
         if(! $request->isSecure()) {
-            $GLOBALS['Response']->addFeedback(
+            $layout->addFeedback(
                 Feedback::ERROR,
                 dgettext('tuleap-openidconnectclient', 'The OpenID Connect plugin can only be used if the platform is accessible with HTTPS')
             );
-            $GLOBALS['Response']->redirect('/account/login.php');
+            $layout->redirect('/account/login.php');
         }
     }
-
 }

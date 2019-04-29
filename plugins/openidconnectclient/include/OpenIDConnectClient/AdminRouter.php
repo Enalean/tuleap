@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,14 +20,16 @@
 
 namespace Tuleap\OpenIDConnectClient;
 
-
 use CSRFSynchronizerToken;
 use Feedback;
 use HTTPRequest;
 use PFUser;
+use Tuleap\Layout\BaseLayout;
 use Tuleap\OpenIDConnectClient\Administration\Controller;
+use Tuleap\Request\DispatchableWithRequest;
 
-class AdminRouter {
+class AdminRouter implements DispatchableWithRequest
+{
     /**
      * @var Controller
      */
@@ -42,9 +44,10 @@ class AdminRouter {
         $this->csrf_token = $csrf_token;
     }
 
-    public function route(HTTPRequest $request) {
+    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    {
         $current_user = $request->getCurrentUser();
-        $this->checkUserIsSiteAdmin($current_user);
+        $this->checkUserIsSiteAdmin($current_user, $layout);
 
         $action = $request->get('action');
         switch ($action) {
@@ -62,13 +65,14 @@ class AdminRouter {
         }
     }
 
-    private function checkUserIsSiteAdmin(PFUser $user) {
+    private function checkUserIsSiteAdmin(PFUser $user, BaseLayout $layout)
+    {
         if(! $user->isSuperUser()) {
-            $GLOBALS['Response']->addFeedback(
+            $layout->addFeedback(
                 Feedback::ERROR,
                 $GLOBALS['Language']->getText('global', 'perm_denied')
             );
-            $GLOBALS['Response']->redirect('/');
+            $layout->redirect('/');
         }
     }
 }
