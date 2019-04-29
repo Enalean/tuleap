@@ -21,7 +21,7 @@
 import global from "./global";
 import dialog_interface from "./dialog_interface";
 import comparison from "./current_comparison";
-import baseline from "./baseline";
+import current_baseline from "./current_baseline";
 import baselines from "./baselines";
 import semantics from "./semantics";
 import comparisons from "./comparisons";
@@ -31,7 +31,7 @@ export default {
     modules: {
         dialog_interface,
         comparison,
-        baseline,
+        current_baseline,
         baselines,
         semantics,
         comparisons

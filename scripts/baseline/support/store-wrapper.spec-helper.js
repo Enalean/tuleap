@@ -46,7 +46,7 @@ export function createStoreMock(store_options, custom_state = {}) {
 
 function appendModuleStates(modules, state) {
     Object.keys(modules).forEach(module_name => {
-        let module = modules[module_name];
+        const module = modules[module_name];
         state[module_name] = module.state;
         if (module.modules) {
             appendModuleStates(module.modules, state[module_name]);

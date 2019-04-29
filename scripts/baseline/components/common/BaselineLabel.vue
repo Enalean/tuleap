@@ -24,7 +24,7 @@
         <span class="baseline-label-author tlp-text-muted">
             <span v-translate>Created by</span>
             <user-badge
-                v-bind:user="baseline.author"
+                v-bind:user="author"
                 class="baseline-label-author-badge"
             />
             <humanized-date v-bind:date="baseline.snapshot_date"/>
@@ -35,11 +35,19 @@
 <script>
 import HumanizedDate from "./HumanizedDate.vue";
 import UserBadge from "./UserBadge.vue";
+import { mapGetters } from "vuex";
+
 export default {
     name: "BaselineLabel",
     components: { HumanizedDate, UserBadge },
     props: {
         baseline: { required: true, type: Object }
+    },
+    computed: {
+        ...mapGetters(["findUserById"]),
+        author() {
+            return this.findUserById(this.baseline.author_id);
+        }
     }
 };
 </script>

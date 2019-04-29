@@ -34,13 +34,6 @@ const factories = {
             artifact_id: 9,
             snapshot_date: "2019-03-22T10:01:48+00:00",
             author_id: 3
-        },
-        presented: {
-            author: association("user", { id: 3 }),
-            artifact: association("artifact", {
-                id: 9
-            }),
-            first_depth_artifacts: []
         }
     },
     tracker: {
@@ -89,10 +82,6 @@ const factories = {
             description:
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit labore et dolore magna aliqua",
             linked_artifact_ids: []
-        },
-        presented: {
-            linked_artifacts: [],
-            is_depth_limit_reached: false
         },
         without_linked_artifacts: {
             linked_artifact_ids: [],
@@ -154,10 +143,6 @@ const factories = {
 };
 
 let instance_index = 1;
-
-function association(factory_name, ...trait_or_attributes) {
-    return () => create(factory_name, ...trait_or_attributes);
-}
 
 function associationList(factory_name, ...trait_or_attributes) {
     return () => createList(factory_name, 2, ...trait_or_attributes);

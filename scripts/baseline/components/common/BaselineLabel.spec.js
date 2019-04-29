@@ -23,11 +23,17 @@ import localVue from "../../support/local-vue.js";
 import BaselineLabel from "./BaselineLabel.vue";
 import { create } from "../../support/factories";
 import DateFormatter from "../../support/date-utils";
+import { createStoreMock } from "../../support/store-wrapper.spec-helper";
+import store_options from "../../store/store_options";
 
 describe("BaselineLabel", () => {
+    let $store;
     let wrapper;
 
     beforeEach(() => {
+        $store = createStoreMock(store_options);
+        $store.getters.findUserById = () => create("user", { display_name: "Alita" });
+
         DateFormatter.setOptions({
             user_locale: "fr_FR",
             user_timezone: "Europe/Paris",
@@ -38,15 +44,16 @@ describe("BaselineLabel", () => {
         past_snapshot_date.setDate(past_snapshot_date.getDate() - 4);
 
         wrapper = mount(BaselineLabel, {
-            localVue,
             propsData: {
                 baseline: create("baseline", {
                     id: 1,
                     name: "Baseline V1",
                     snapshot_date: past_snapshot_date.toISOString(),
-                    author: create("user", { display_name: "Alita" })
+                    author_id: 9
                 })
-            }
+            },
+            localVue,
+            mocks: { $store }
         });
     });
 

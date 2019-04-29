@@ -42,6 +42,12 @@ export default {
                 .map(baseline => baseline.artifact_id);
             await dispatch("loadArtifacts", { artifact_ids });
         },
+        async loadBaselineWithAuthor({ commit }, { baseline_id }) {
+            const baseline = await getBaseline(baseline_id);
+            commit("addBaseline", baseline);
+            const author = await getUser(baseline.author_id);
+            commit("addUser", author);
+        },
         async loadBaseline({ commit }, { baseline_id }) {
             const baseline = await getBaseline(baseline_id);
             commit("addBaseline", baseline);

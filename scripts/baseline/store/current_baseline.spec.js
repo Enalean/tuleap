@@ -1,0 +1,57 @@
+/*
+ * Copyright (c) Enalean, 2019. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+import store from "./current_baseline";
+
+describe("Current baseline store:", () => {
+    describe("actions", () => {
+        let context;
+
+        beforeEach(() => {
+            context = {
+                commit: jasmine.createSpy("commit"),
+                dispatch: jasmine.createSpy("dispatch")
+            };
+            context.dispatch.and.returnValue(Promise.resolve());
+        });
+
+        describe("#load", () => {
+            beforeEach(() => store.actions.load(context, 1));
+
+            it("reset baseline content with given baseline id", () => {
+                expect(context.commit).toHaveBeenCalledWith("reset", { baseline_id: 1 });
+            });
+            it("reset semantics", () => {
+                expect(context.commit).toHaveBeenCalledWith("semantics/reset", null, {
+                    root: true
+                });
+            });
+            it("loads baseline with author", () => {
+                expect(context.dispatch).toHaveBeenCalledWith(
+                    "loadBaselineWithAuthor",
+                    { baseline_id: 1 },
+                    { root: true }
+                );
+            });
+            it("loads baseline content", () => {
+                expect(context.dispatch).toHaveBeenCalledWith("loadAllArtifacts");
+            });
+        });
+    });
+});

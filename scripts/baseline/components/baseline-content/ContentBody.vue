@@ -35,24 +35,13 @@
 
 <script>
 import ArtifactsList from "./ArtifactsList.vue";
+import { mapState } from "vuex";
 
 export default {
     name: "ContentBody",
 
     components: { ArtifactsList },
 
-    props: {
-        first_depth_artifacts: { required: true, type: Array }
-    },
-
-    mounted() {
-        this.reset();
-    },
-
-    methods: {
-        reset() {
-            this.$store.commit("semantics/reset");
-        }
-    }
+    computed: mapState("current_baseline", ["first_depth_artifacts"])
 };
 </script>

@@ -25,18 +25,22 @@ import { restore } from "../../api/rest-querier";
 import ContentBody from "./ContentBody.vue";
 
 describe("ContentBody", () => {
+    let $store;
     let wrapper;
 
     const information_message_selector = '[data-test-type="information-message"]';
 
     beforeEach(() => {
+        $store = createStoreMock(store_options);
+        $store.state.current_baseline.first_depth_artifacts = [];
+
         wrapper = shallowMount(ContentBody, {
             propsData: {
                 first_depth_artifacts: []
             },
             localVue,
             mocks: {
-                $store: createStoreMock(store_options)
+                $store
             }
         });
     });

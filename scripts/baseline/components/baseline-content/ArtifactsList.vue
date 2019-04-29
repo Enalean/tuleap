@@ -23,9 +23,7 @@
             v-for="artifact in artifacts" v-bind:key="artifact.id"
             class="baseline-content-artifact-li"
         >
-            <artifact
-                v-bind:artifact="artifact"
-            />
+            <artifact v-bind:artifact="artifact"/>
         </li>
     </ol>
 </template>

@@ -21,17 +21,17 @@
 <template>
     <div>
         <div
-            v-if="is_baseline_loading_failed"
+            v-if="is_loading_failed"
             class="tlp-alert-danger tlp-framed-vertically"
             data-test-type="error-message"
         >
             <translate>Cannot fetch baseline</translate>
         </div>
 
-        <template v-else>
-            <baseline-label-skeleton v-if="!is_baseline_available" data-test-type="baseline-header-skeleton"/>
+        <content-page-skeleton v-else-if="is_loading"/>
 
-            <baseline-label v-else v-bind:baseline="baseline"/>
+        <template v-else>
+            <baseline-label v-bind:baseline="baseline"/>
 
             <statistics/>
 
@@ -39,8 +39,7 @@
                 <section class="tlp-pane">
                     <div class="tlp-pane-container">
                         <section class="tlp-pane-section baseline-content">
-                            <content-body-skeleton v-if="!is_baseline_available"/>
-                            <content-body v-else v-bind:first_depth_artifacts="baseline.first_depth_artifacts"/>
+                            <content-body/>
                         </section>
                     </div>
                 </section>
@@ -51,31 +50,36 @@
 
 <script>
 import { sprintf } from "sprintf-js";
-import { mapState } from "vuex";
 import Statistics from "./Statistics.vue";
 import ContentBody from "./ContentBody.vue";
 import BaselineLabel from "../common/BaselineLabel.vue";
-import BaselineLabelSkeleton from "../common/BaselineLabelSkeleton.vue";
-import ContentBodySkeleton from "./ContentBodySkeleton.vue";
+import ContentPageSkeleton from "./ContentPageSkeleton.vue";
+import { mapGetters } from "vuex";
 
 export default {
     name: "ContentPage",
     components: {
-        BaselineLabelSkeleton,
         BaselineLabel,
         ContentBody,
         Statistics,
-        ContentBodySkeleton
+        ContentPageSkeleton
     },
+
     props: {
         baseline_id: { required: true, type: Number }
     },
 
-    computed: {
-        ...mapState("baseline", ["baseline", "is_baseline_loading_failed", "is_baseline_loading"]),
+    data() {
+        return {
+            is_loading: true,
+            is_loading_failed: false
+        };
+    },
 
-        is_baseline_available() {
-            return !this.is_baseline_loading && this.baseline;
+    computed: {
+        ...mapGetters(["findBaselineById"]),
+        baseline() {
+            return this.findBaselineById(this.baseline_id);
         }
     },
 
@@ -85,7 +89,21 @@ export default {
     },
 
     mounted() {
-        this.$store.dispatch("baseline/load", this.baseline_id);
+        this.loadBaseline();
+    },
+
+    methods: {
+        async loadBaseline() {
+            this.is_loading = true;
+            this.is_loading_failed = false;
+            try {
+                await this.$store.dispatch("current_baseline/load", this.baseline_id);
+            } catch (e) {
+                this.is_loading_failed = true;
+            } finally {
+                this.is_loading = false;
+            }
+        }
     }
 };
 </script>

@@ -40,11 +40,11 @@
             />
         </div>
 
-        <depth-limit-reached-message v-if="artifact.is_depth_limit_reached"/>
+        <depth-limit-reached-message v-if="is_limit_reached"/>
 
         <artifacts-list
-            v-else-if="artifact.linked_artifacts.length > 0"
-            v-bind:artifacts="artifact.linked_artifacts"
+            v-else-if="linked_artifacts.length > 0"
+            v-bind:artifacts="linked_artifacts"
         />
     </div>
 </template>
@@ -54,6 +54,7 @@ import ArtifactsList from "./ArtifactsList.vue";
 import ArtifactLabel from "../common/ArtifactLabel.vue";
 import Field from "./Field.vue";
 import DepthLimitReachedMessage from "../common/DepthLimitReachedMessage.vue";
+import { mapGetters } from "vuex";
 
 export default {
     name: "Artifact",
@@ -80,12 +81,21 @@ export default {
     },
 
     computed: {
+        ...mapGetters("current_baseline", ["findArtifactsByIds", "isLimitReachedOnArtifact"]),
         is_description_available() {
             return this.artifact.description !== null && this.artifact.description.length > 0;
         },
 
         is_status_available() {
             return this.artifact.status !== null && this.artifact.status.length > 0;
+        },
+
+        linked_artifacts() {
+            return this.findArtifactsByIds(this.artifact.linked_artifact_ids);
+        },
+
+        is_limit_reached() {
+            return this.isLimitReachedOnArtifact(this.artifact);
         }
     },
 

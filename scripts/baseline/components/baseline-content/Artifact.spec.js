@@ -18,7 +18,7 @@
  *
  */
 
-import { mount } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
 import localVue from "../../support/local-vue.js";
 import { createStoreMock } from "../../support/store-wrapper.spec-helper.js";
 import store_options from "../../store/store_options";
@@ -33,25 +33,36 @@ describe("Artifact", () => {
     const artifact_description_selector = '[data-test-type="artifact-description"]';
     const artifact_status_selector = '[data-test-type="artifact-status"]';
 
+    let isLimitReachedOnArtifact;
+
+    const artifact_where_limit_reached = create("baseline_artifact");
+
     let wrapper;
 
     beforeEach(() => {
         const linked_artifact = create("baseline_artifact", { title: "Story" });
 
+        isLimitReachedOnArtifact = jasmine
+            .createSpy("isLimitReachedOnArtifact")
+            .and.returnValue(false)
+            .withArgs(artifact_where_limit_reached)
+            .and.returnValue(true);
+
         const $store = createStoreMock({
             ...store_options,
             getters: {
                 "semantics/field_label": () => "My description",
-                "semantics/is_field_label_available": () => true
+                "semantics/is_field_label_available": () => true,
+                "current_baseline/findArtifactsByIds": () => [linked_artifact],
+                "current_baseline/isLimitReachedOnArtifact": isLimitReachedOnArtifact
             }
         });
 
-        wrapper = mount(Artifact, {
+        wrapper = shallowMount(Artifact, {
             propsData: {
-                artifact: create("baseline_artifact", "presented", {
+                artifact: create("baseline_artifact", {
                     title: "Epic",
-                    linked_artifact_ids: [linked_artifact.id],
-                    linked_artifact: { linked_artifact }
+                    linked_artifact_ids: [linked_artifact.id]
                 })
             },
             localVue,
@@ -64,7 +75,7 @@ describe("Artifact", () => {
     describe("when artifact has description", () => {
         beforeEach(() => {
             wrapper.setProps({
-                artifact: create("baseline_artifact", "presented", {
+                artifact: create("baseline_artifact", {
                     description: "my description"
                 })
             });
@@ -78,7 +89,7 @@ describe("Artifact", () => {
     describe("when artifact has no description", () => {
         beforeEach(async () => {
             wrapper.setProps({
-                artifact: create("baseline_artifact", "presented", { description: null })
+                artifact: create("baseline_artifact", { description: null })
             });
             await wrapper.vm.$nextTick();
         });
@@ -93,7 +104,7 @@ describe("Artifact", () => {
     describe("when artifact has status", () => {
         beforeEach(() => {
             wrapper.setProps({
-                artifact: create("baseline_artifact", "presented", { status: "my status" })
+                artifact: create("baseline_artifact", { status: "my status" })
             });
         });
 
@@ -105,7 +116,7 @@ describe("Artifact", () => {
     describe("when artifact has no status", () => {
         beforeEach(async () => {
             wrapper.setProps({
-                artifact: create("baseline_artifact", "presented", { status: null })
+                artifact: create("baseline_artifact", { status: null })
             });
             await wrapper.vm.$nextTick();
         });
@@ -123,11 +134,7 @@ describe("Artifact", () => {
 
     describe("when artifacts tree has reached depth limit", () => {
         beforeEach(async () => {
-            wrapper.setProps({
-                artifact: create("baseline_artifact", "presented", {
-                    is_depth_limit_reached: true
-                })
-            });
+            wrapper.setProps({ artifact: artifact_where_limit_reached });
             await wrapper.vm.$nextTick();
         });
 
@@ -137,19 +144,6 @@ describe("Artifact", () => {
 
         it("does not show linked artifact", () => {
             expect(wrapper.contains(ArtifactsList)).toBeFalsy();
-        });
-
-        describe("when artifacts doest not have linked artifact", () => {
-            beforeEach(async () => {
-                wrapper.setProps({
-                    artifact: create("baseline_artifact", "presented", "without_linked_artifacts")
-                });
-                await wrapper.vm.$nextTick();
-            });
-
-            it("does not show artifacts list component", () => {
-                expect(wrapper.contains(ArtifactsList)).toBeFalsy();
-            });
         });
     });
 });
