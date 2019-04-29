@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\FormElement\Field\Integer\ChangesChecker;
+
 class Tracker_FormElement_Field_Integer extends Tracker_FormElement_Field_Numeric {
 
     public function getCriteriaFrom($criteria)
@@ -172,6 +174,7 @@ class Tracker_FormElement_Field_Integer extends Tracker_FormElement_Field_Numeri
      */
     public function hasChanges(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $old_value, $new_value)
     {
-        return (new \Tuleap\Tracker\FormElement\Field\Integer\ChangesChecker())->hasChanges($old_value, $new_value);
+        /** @var Tracker_Artifact_ChangesetValue_Integer $old_value */
+        return (new ChangesChecker())->hasChanges($old_value, $new_value);
     }
 }

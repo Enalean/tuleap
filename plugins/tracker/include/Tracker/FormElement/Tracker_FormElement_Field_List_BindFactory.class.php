@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -19,8 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/html/HTML_Element_Input_Radio.class.php');
-
 class Tracker_FormElement_Field_List_BindFactory
 {
     public const STATIK  = 'static';
@@ -37,7 +35,8 @@ class Tracker_FormElement_Field_List_BindFactory
      */
     private $ugroups_value_dao;
 
-    public function __construct(?UgroupManager $ugroup_manager = null) {
+    public function __construct(?UGroupManager $ugroup_manager = null)
+    {
         $this->ugroup_manager    = $ugroup_manager ? $ugroup_manager : new UGroupManager();
     }
 

@@ -157,7 +157,7 @@ abstract class Tracker_Artifact_ChangesetValue
     /**
      * Returns the value of this changeset value
      *
-     * @return string|array The value of this artifact changeset value
+     * @return mixed The value of this artifact changeset value
      */
     public abstract function getValue();
 

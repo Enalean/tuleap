@@ -278,24 +278,17 @@ class ArtifactRepresentationBuilder
             );
         }
 
-        $total_size               = (int) $this->nature_dao->foundRows();
-        $artifact_representations = [];
-        foreach ($linked_artifacts_ids as $artifact_id) {
-            $artifact = $this->artifact_factory->getArtifactByIdUserCanView($user, $artifact_id);
-            if ($artifact) {
-                $tracker_representation = new MinimalTrackerRepresentation();
-                $tracker_representation->build($artifact->getTracker());
-
-                $artifact_representations[] = $this->getArtifactRepresentationWithFieldValuesInBothFormat(
-                    $user,
-                    $artifact,
-                    $tracker_representation
-                );
+        $total_size = (int) $this->nature_dao->foundRows();
+        $artifacts  = [];
+        foreach ($linked_artifacts_ids as $linked_artifact_id) {
+            $artifact = $this->artifact_factory->getArtifactByIdUserCanView($user, $linked_artifact_id);
+            if ($artifact !== null) {
+                $artifacts[] = $artifact;
             }
         }
 
         return new Tracker_Artifact_PaginatedArtifacts(
-            $artifact_representations,
+            $artifacts,
             $total_size
         );
     }

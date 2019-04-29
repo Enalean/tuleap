@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011. All Rights Reserved.
+ * Copyright (c) Enalean, 2011-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -35,7 +35,7 @@ abstract class Transition_PostAction
     protected $transition;
 
     /**
-     * @var Integer Id of the post action
+     * @var integer Id of the post action
      */
     protected $id;
 
@@ -48,7 +48,7 @@ abstract class Transition_PostAction
      * Constructor
      *
      * @param Transition $transition The transition the post action belongs to
-     * @param Integer    $id         Id of the post action
+     * @param integer    $id         Id of the post action
      */
     public function __construct(Transition $transition, $id) {
         $this->transition = $transition;
@@ -58,7 +58,7 @@ abstract class Transition_PostAction
     /**
      * Return ID of the post-action
      *
-     * @return Integer
+     * @return integer
      */
     public function getId() {
         return $this->id;

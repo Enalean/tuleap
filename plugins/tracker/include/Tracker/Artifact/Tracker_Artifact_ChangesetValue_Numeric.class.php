@@ -46,7 +46,7 @@ abstract class Tracker_Artifact_ChangesetValue_Numeric extends Tracker_Artifact_
     /**
      * Get the string value
      *
-     * @return string
+     * @return string|null
      */
     public function getValue() {
         return $this->numeric;
