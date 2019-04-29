@@ -106,7 +106,8 @@ describe("Rest queries:", () => {
 
             result = await createBaseline("My first baseline", {
                 id: 3,
-                label: "milestone Label"
+                label: "milestone Label",
+                snapshot_date: "2019-04-29"
             });
         });
 

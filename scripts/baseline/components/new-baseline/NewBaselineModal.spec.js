@@ -144,6 +144,17 @@ describe("NewBaselineModal", () => {
             expect(wrapper.find(submit_selector).attributes("disabled")).toEqual("disabled");
         });
 
+        describe("when snapshot date has a value", () => {
+            beforeEach(async () => {
+                wrapper.vm.snapshot_date = "2019-02-11";
+                await Vue.nextTick();
+            });
+
+            it("takes the defined value", () => {
+                expect(wrapper.vm.snapshot_date).toEqual("2019-02-11");
+            });
+        });
+
         describe("when createBaseline() fail", () => {
             beforeEach(async () => {
                 createBaselineReject("rejection");

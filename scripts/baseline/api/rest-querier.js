@@ -49,10 +49,11 @@ async function getOpenMilestones(project_id) {
     return response.json();
 }
 
-async function createBaseline(name, milestone) {
+async function createBaseline(name, milestone, snapshot_date) {
     const body = JSON.stringify({
         name,
-        artifact_id: milestone.id
+        artifact_id: milestone.id,
+        snapshot_date
     });
 
     const response = await post("/api/baselines/", {

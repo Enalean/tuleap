@@ -78,6 +78,32 @@
                     v-on:change="selectMilestoneSelected"
                 />
             </div>
+
+            <div class="tlp-form-element">
+                <label for="snapshot_date" class="tlp-label">
+                    <translate>Snapshot date</translate>
+                    <span
+                        class="tlp-tooltip tlp-tooltip-right"
+                        v-bind:data-tlp-tooltip="snapshot_date_tooltip"
+                    >
+                        <i
+                            class="fa fa-question-circle baseline-tooltip-icon-optional"
+                        ></i>
+                    </span>
+                </label>
+                <div class="tlp-form-element tlp-form-element-prepend">
+                    <span class="tlp-prepend">
+                        <i class="fa fa-calendar"></i>
+                    </span>
+                    <input
+                        type="text"
+                        id="snapshot_date"
+                        ref="snapshot_date"
+                        class="tlp-input tlp-input-date"
+                        size="11"
+                    >
+                </div>
+            </div>
         </div>
 
         <div class="tlp-modal-footer">
@@ -114,6 +140,8 @@
 import { getOpenMilestones, createBaseline } from "../../api/rest-querier";
 import MilestonesSelect from "./MilestonesSelect.vue";
 import MilestonesSelectSkeleton from "./MilestonesSelectSkeleton.vue";
+import { datePicker as createDatePicker } from "tlp";
+
 export default {
     name: "NewBaselineModal",
 
@@ -127,6 +155,7 @@ export default {
         return {
             name: null,
             milestone: null,
+            snapshot_date: null,
             available_milestones: null,
             is_loading_failed: false,
             is_loading: false,
@@ -141,11 +170,17 @@ export default {
         },
         milestone_tooltip() {
             return this.$gettext("Only open milestone are visible here");
+        },
+        snapshot_date_tooltip() {
+            return this.$gettext(
+                "Without date, the baseline will be created with the current date"
+            );
         }
     },
 
     mounted() {
         this.fetchMilestones();
+        this.createDatePicker();
     },
 
     methods: {
@@ -172,7 +207,7 @@ export default {
             this.is_creating_failed = false;
 
             try {
-                await createBaseline(this.name, this.milestone);
+                await createBaseline(this.name, this.milestone, this.snapshot_date);
                 const notification = {
                     text: this.$gettext("The baseline was created"),
                     class: "success"
@@ -185,6 +220,15 @@ export default {
             } finally {
                 this.is_creating = false;
             }
+        },
+
+        createDatePicker() {
+            createDatePicker(this.$refs.snapshot_date, {
+                maxDate: "today",
+                onValueUpdate: (_, date) => {
+                    this.snapshot_date = date;
+                }
+            });
         }
     }
 };
