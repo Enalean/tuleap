@@ -20,6 +20,7 @@
 
 namespace Tuleap\ProFTPd\Explorer;
 
+use GuzzleHttp\Psr7\ServerRequest;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\BinaryFileResponseBuilder;
 use Tuleap\ProFTPd\Directory\DirectoryParser;
@@ -99,7 +100,7 @@ class ExplorerController {
         );
 
         $response_builder = new BinaryFileResponseBuilder(HTTPFactoryBuilder::responseFactory(), HTTPFactoryBuilder::streamFactory());
-        $response         = $response_builder->fromFilePath($full_path, basename($full_path));
+        $response         = $response_builder->fromFilePath(ServerRequest::fromGlobals(), $full_path, basename($full_path));
         (new SapiStreamEmitter())->emit($response);
         exit();
     }

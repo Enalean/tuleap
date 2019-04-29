@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use GuzzleHttp\Psr7\ServerRequest;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\BinaryFileResponseBuilder;
 use Zend\HttpHandlerRunner\Emitter\SapiStreamEmitter;
@@ -73,7 +74,12 @@ class WebDAVFRSFile extends Sabre_DAV_File {
 
         // Start download
         $response_builder = new BinaryFileResponseBuilder(HTTPFactoryBuilder::responseFactory(), HTTPFactoryBuilder::streamFactory());
-        $response         = $response_builder->fromFilePath($this->getFileLocation(), $this->getName(), $this->getContentType())
+        $response         = $response_builder->fromFilePath(
+            ServerRequest::fromGlobals(),
+            $this->getFileLocation(),
+            $this->getName(),
+            $this->getContentType()
+        )
             ->withHeader('ETag', $this->getETag())
             ->withHeader('Last-Modified', $this->getLastModified());
         (new SapiStreamEmitter())->emit($response);

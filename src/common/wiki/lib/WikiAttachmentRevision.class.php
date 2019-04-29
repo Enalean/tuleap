@@ -21,6 +21,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use GuzzleHttp\Psr7\ServerRequest;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\BinaryFileResponseBuilder;
 use Zend\HttpHandlerRunner\Emitter\SapiStreamEmitter;
@@ -158,7 +159,12 @@ class WikiAttachmentRevision {
     {
         if ($this->exist()) {
             $response_builder = new BinaryFileResponseBuilder(HTTPFactoryBuilder::responseFactory(), HTTPFactoryBuilder::streamFactory());
-            $response         = $response_builder->fromFilePath($this->getFilePath(), $this->getDisplayFilename(), $this->getMimeType());
+            $response         = $response_builder->fromFilePath(
+                ServerRequest::fromGlobals(),
+                $this->getFilePath(),
+                $this->getDisplayFilename(),
+                $this->getMimeType()
+            );
             (new SapiStreamEmitter())->emit($response);
             exit();
         }

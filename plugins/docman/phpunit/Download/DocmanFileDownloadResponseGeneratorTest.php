@@ -31,6 +31,7 @@ use Mockery\MockInterface;
 use org\bovigo\vfs\vfsStream;
 use PFUser;
 use PHPUnit\Framework\TestCase;
+use Psr\Http\Message\ServerRequestInterface;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\BinaryFileResponseBuilder;
 
@@ -89,7 +90,12 @@ final class DocmanFileDownloadResponseGeneratorTest extends TestCase
         $this->permissions_manager->shouldReceive('userCanAccess')->andReturn(false);
 
         $this->expectException(UserCannotAccessFileException::class);
-        $response_generator->generateResponse($this->current_user, $this->docman_file, null);
+        $response_generator->generateResponse(
+            Mockery::mock(ServerRequestInterface::class),
+            $this->current_user,
+            $this->docman_file,
+            null
+        );
     }
 
     /**
@@ -108,7 +114,12 @@ final class DocmanFileDownloadResponseGeneratorTest extends TestCase
         $this->version_factory->shouldReceive('getSpecificVersion')->andReturn(null);
 
         $this->expectException(VersionNotFoundException::class);
-        $response_generator->generateResponse($this->current_user, $this->docman_file, $version_id);
+        $response_generator->generateResponse(
+            Mockery::mock(ServerRequestInterface::class),
+            $this->current_user,
+            $this->docman_file,
+            $version_id
+        );
     }
 
     public function testFileCanNotBeDownloadedIfItIsNotPresentOnTheFilesystem() : void
@@ -128,7 +139,12 @@ final class DocmanFileDownloadResponseGeneratorTest extends TestCase
         $version->shouldReceive('getPath')->andReturn($directory . '/mydoc');
 
         $this->expectException(FileDoesNotExistException::class);
-        $response_generator->generateResponse($this->current_user, $this->docman_file, null);
+        $response_generator->generateResponse(
+            Mockery::mock(ServerRequestInterface::class),
+            $this->current_user,
+            $this->docman_file,
+            null
+        );
     }
 
     public function testFileResponseCanBeGenerated() : void
@@ -153,6 +169,14 @@ final class DocmanFileDownloadResponseGeneratorTest extends TestCase
 
         $version->shouldReceive('preDownload')->once();
 
-        $response_generator->generateResponse($this->current_user, $this->docman_file, null);
+        $request = Mockery::mock(ServerRequestInterface::class);
+        $request->shouldReceive('getHeaderLine')->andReturn('');
+
+        $response_generator->generateResponse(
+            $request,
+            $this->current_user,
+            $this->docman_file,
+            null
+        );
     }
 }

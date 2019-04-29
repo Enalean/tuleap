@@ -24,6 +24,7 @@
  * $Id$
  */
 
+use GuzzleHttp\Psr7\ServerRequest;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\BinaryFileResponseBuilder;
 use Zend\HttpHandlerRunner\Emitter\SapiStreamEmitter;
@@ -70,7 +71,12 @@ if ($p && $plugin_manager->isPluginAvailable($p) && $p->isAllowed(null)) {
         $attch = $fmlAttch->getById($attchmentId);
         if ($attch && file_exists($attch['file_path'])) {
             $response_builder = new BinaryFileResponseBuilder(HTTPFactoryBuilder::responseFactory(), HTTPFactoryBuilder::streamFactory());
-            $response         = $response_builder->fromFilePath($attch['file_path'], $attch['file_name'], $attch['type']);
+            $response         = $response_builder->fromFilePath(
+                ServerRequest::fromGlobals(),
+                $attch['file_path'],
+                $attch['file_name'],
+                $attch['type']
+            );
             (new SapiStreamEmitter())->emit($response);
             exit();
         }
