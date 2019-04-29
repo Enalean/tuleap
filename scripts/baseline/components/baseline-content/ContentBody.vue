@@ -18,7 +18,7 @@
   -
   -->
 <template>
-    <div class="baseline-content">
+    <div>
         <div
             v-if="first_depth_artifacts.length === 0"
             class="baseline-empty-information-message"

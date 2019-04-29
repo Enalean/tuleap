@@ -66,7 +66,7 @@ $artifact-body-padding: $tlp-spacing;
     }
 }
 
-.baseline-content > .baseline-content-artifact-ol > .baseline-content-artifact-li:first-child {
+.baseline-content .baseline-content-artifact-ol > .baseline-content-artifact-li:first-child {
     margin-top: 0;
 }
 
@@ -74,11 +74,6 @@ $artifact-body-padding: $tlp-spacing;
     display: initial;
     color: $tlp-theme-color;
     font-size: 1.3rem;
-}
-
-.baseline-content-artifact-label {
-    margin-right: .2rem;
-    margin-left: .2rem;
 }
 
 .baseline-content-artifact-error-message {
