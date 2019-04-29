@@ -27,10 +27,10 @@ export default {
 
     state: {
         baseline_id: null,
-        first_level_artifacts: null,
+        first_depth_artifacts: null,
         artifacts_by_id: null,
 
-        artifact_exploration_depth: null
+        loaded_depths_count: null
     },
 
     actions: {
@@ -43,8 +43,8 @@ export default {
         async addArtifacts({ commit, dispatch, state }, artifacts) {
             commit("addArtifacts", artifacts);
 
-            commit("incrementArtifactExplorationDepth");
-            if (state.artifact_exploration_depth > ARTIFACTS_EXPLORATION_DEPTH_LIMIT) {
+            commit("incrementLoadedDepthsCount");
+            if (state.loaded_depths_count > ARTIFACTS_EXPLORATION_DEPTH_LIMIT) {
                 return;
             }
 
@@ -65,16 +65,16 @@ export default {
     mutations: {
         reset: (state, { baseline_id }) => {
             state.baseline_id = baseline_id;
-            state.first_level_artifacts = null;
+            state.first_depth_artifacts = null;
             state.artifacts_by_id = {};
         },
         updateFirstLevelArtifacts: (state, artifacts) => {
-            state.first_level_artifacts = artifacts;
+            state.first_depth_artifacts = artifacts;
         },
         addArtifacts: (state, artifacts) => {
             artifacts.forEach(artifact => (state.artifacts_by_id[artifact.id] = artifact));
         },
-        incrementArtifactExplorationDepth: state => state.artifact_exploration_depth++
+        incrementLoadedDepthsCount: state => state.loaded_depths_count++
     },
 
     getters: {

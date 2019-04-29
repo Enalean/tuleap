@@ -34,7 +34,7 @@ describe("Baseline store:", () => {
     let getBaselineArtifacts;
 
     let baseline;
-    let first_level_artifacts;
+    let first_depth_artifacts;
     let child_artifacts;
 
     beforeEach(() => {
@@ -51,10 +51,10 @@ describe("Baseline store:", () => {
 
         baseline = create("baseline");
 
-        first_level_artifacts = [create("baseline_artifact", { id: 1, linked_artifact_ids: [2] })];
+        first_depth_artifacts = [create("baseline_artifact", { id: 1, linked_artifact_ids: [2] })];
         child_artifacts = [create("baseline_artifact", { id: 2, linked_artifact_ids: [] })];
         getBaseline.and.returnValue(Promise.resolve(baseline));
-        getBaselineArtifacts.and.returnValue(Promise.resolve(first_level_artifacts));
+        getBaselineArtifacts.and.returnValue(Promise.resolve(first_depth_artifacts));
         getBaselineArtifactsByIds.and.returnValue(Promise.resolve(child_artifacts));
     });
 
@@ -89,7 +89,7 @@ describe("Baseline store:", () => {
             });
 
             it("updates baseline", () => {
-                const expected_baseline = { ...baseline, first_level_artifacts, author, artifact };
+                const expected_baseline = { ...baseline, first_depth_artifacts, author, artifact };
                 expect(context.commit).toHaveBeenCalledWith("updateBaseline", expected_baseline);
             });
         });

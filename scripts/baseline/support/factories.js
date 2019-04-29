@@ -40,7 +40,7 @@ const factories = {
             artifact: association("artifact", {
                 id: 9
             }),
-            first_level_artifacts: []
+            first_depth_artifacts: []
         }
     },
     tracker: {

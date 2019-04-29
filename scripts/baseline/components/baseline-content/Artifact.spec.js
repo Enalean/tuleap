@@ -23,7 +23,7 @@ import localVue from "../../support/local-vue.js";
 import { createStoreMock } from "../../support/store-wrapper.spec-helper.js";
 import store_options from "../../store/store_options";
 import { create } from "../../support/factories";
-import BaselineDepthLimitReachedMessage from "../common/BaselineDepthLimitReachedMessage.vue";
+import DepthLimitReachedMessage from "../common/DepthLimitReachedMessage.vue";
 import Artifact from "./Artifact.vue";
 import ArtifactsList from "./ArtifactsList.vue";
 
@@ -132,7 +132,7 @@ describe("Artifact", () => {
         });
 
         it("shows depth limit reached message", () => {
-            expect(wrapper.contains(BaselineDepthLimitReachedMessage)).toBeTruthy();
+            expect(wrapper.contains(DepthLimitReachedMessage)).toBeTruthy();
         });
 
         it("does not show linked artifact", () => {

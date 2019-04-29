@@ -41,7 +41,7 @@
                         <div class="tlp-pane-container">
                             <section class="tlp-pane-section">
                                 <content-body-skeleton v-if="!is_baseline_available"/>
-                                <content-body v-else v-bind:first_level_artifacts="baseline.first_level_artifacts"/>
+                                <content-body v-else v-bind:first_depth_artifacts="baseline.first_depth_artifacts"/>
                             </section>
                         </div>
                     </section>

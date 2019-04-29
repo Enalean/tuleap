@@ -54,8 +54,8 @@ export default {
 
         async computeStatistics({ dispatch, state }) {
             await dispatch("compareArtifacts", {
-                base_artifacts: state.base.first_level_artifacts,
-                compared_to_artifacts: state.compared_to.first_level_artifacts
+                base_artifacts: state.base.first_depth_artifacts,
+                compared_to_artifacts: state.compared_to.first_depth_artifacts
             });
         },
 
@@ -91,8 +91,6 @@ export default {
             state.removed_artifacts_count = 0;
             state.modified_artifacts_count = 0;
             state.initial_effort_difference = 0;
-
-            state.artifact_exploration_depth = 0;
         },
         incrementStatistics: (state, artifacts_comparison) => {
             state.added_artifacts_count += artifacts_comparison.added.length;
@@ -109,8 +107,8 @@ export default {
     getters: {
         is_depth_limit_reached(state) {
             return (
-                state.base.artifact_exploration_depth > ARTIFACTS_EXPLORATION_DEPTH_LIMIT ||
-                state.compared_to.artifact_exploration_depth > ARTIFACTS_EXPLORATION_DEPTH_LIMIT
+                state.base.loaded_depths_count > ARTIFACTS_EXPLORATION_DEPTH_LIMIT ||
+                state.compared_to.loaded_depths_count > ARTIFACTS_EXPLORATION_DEPTH_LIMIT
             );
         }
     },

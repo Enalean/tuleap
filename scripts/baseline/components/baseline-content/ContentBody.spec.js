@@ -32,7 +32,7 @@ describe("ContentBody", () => {
     beforeEach(() => {
         wrapper = shallowMount(ContentBody, {
             propsData: {
-                first_level_artifacts: []
+                first_depth_artifacts: []
             },
             localVue,
             mocks: {

@@ -20,7 +20,7 @@
 <template>
     <div class="baseline-content">
         <div
-            v-if="first_level_artifacts.length === 0"
+            v-if="first_depth_artifacts.length === 0"
             class="baseline-empty-information-message"
             data-test-type="information-message"
         >
@@ -28,7 +28,7 @@
         </div>
 
         <artifacts-list
-            v-bind:artifacts="first_level_artifacts"
+            v-bind:artifacts="first_depth_artifacts"
         />
     </div>
 </template>
@@ -42,7 +42,7 @@ export default {
     components: { ArtifactsList },
 
     props: {
-        first_level_artifacts: { required: true, type: Array }
+        first_depth_artifacts: { required: true, type: Array }
     },
 
     mounted() {

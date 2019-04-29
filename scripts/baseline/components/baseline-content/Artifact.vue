@@ -40,7 +40,7 @@
             />
         </div>
 
-        <baseline-depth-limit-reached-message v-if="artifact.is_depth_limit_reached"/>
+        <depth-limit-reached-message v-if="artifact.is_depth_limit_reached"/>
 
         <artifacts-list
             v-else-if="artifact.linked_artifacts.length > 0"
@@ -53,7 +53,7 @@
 import ArtifactsList from "./ArtifactsList.vue";
 import ArtifactLabel from "../common/ArtifactLabel.vue";
 import Field from "./Field.vue";
-import BaselineDepthLimitReachedMessage from "../common/BaselineDepthLimitReachedMessage.vue";
+import DepthLimitReachedMessage from "../common/DepthLimitReachedMessage.vue";
 
 export default {
     name: "Artifact",
@@ -62,7 +62,7 @@ export default {
         ArtifactLabel,
         ArtifactsList,
         Field,
-        BaselineDepthLimitReachedMessage
+        DepthLimitReachedMessage
     },
 
     props: {

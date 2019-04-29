@@ -35,10 +35,10 @@ export default {
             commit("startBaselineLoading");
             try {
                 const baseline_loading = getBaseline(baseline_id);
-                const first_level_artifacts_loading = getBaselineArtifacts(baseline_id);
+                const first_depth_artifacts_loading = getBaselineArtifacts(baseline_id);
 
                 const baseline = await baseline_loading;
-                const first_level_artifacts = await first_level_artifacts_loading;
+                const first_depth_artifacts = await first_depth_artifacts_loading;
 
                 const author_loading = dispatch(
                     "loadUser",
@@ -57,9 +57,9 @@ export default {
                 await artifact_loading;
                 const artifact = rootGetters.findArtifactById(baseline.artifact_id);
 
-                const all_artifacts = await fetchAllArtifacts(baseline_id, first_level_artifacts);
-                const first_level_artifacts_as_graph = presentLinkedArtifactsAsGraph(
-                    first_level_artifacts,
+                const all_artifacts = await fetchAllArtifacts(baseline_id, first_depth_artifacts);
+                const first_depth_artifacts_as_graph = presentLinkedArtifactsAsGraph(
+                    first_depth_artifacts,
                     all_artifacts
                 );
 
@@ -67,7 +67,7 @@ export default {
                     ...baseline,
                     author,
                     artifact,
-                    first_level_artifacts: first_level_artifacts_as_graph
+                    first_depth_artifacts: first_depth_artifacts_as_graph
                 });
             } catch (e) {
                 commit("failBaselineLoading");

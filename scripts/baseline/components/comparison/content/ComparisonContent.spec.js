@@ -32,8 +32,8 @@ describe("ComparisonContent", () => {
 
     beforeEach(() => {
         $store = createStoreMock(store_options);
-        $store.state.comparison.base.first_level_artifacts = [];
-        $store.state.comparison.compared_to.first_level_artifacts = [];
+        $store.state.comparison.base.first_depth_artifacts = [];
+        $store.state.comparison.compared_to.first_depth_artifacts = [];
 
         wrapper = shallowMount(ComparisonContent, {
             localVue,
@@ -43,8 +43,8 @@ describe("ComparisonContent", () => {
 
     describe("when some artifacts available", () => {
         beforeEach(() => {
-            $store.state.comparison.base.first_level_artifacts = createList("baseline_artifact", 2);
-            $store.state.comparison.compared_to.first_level_artifacts = [];
+            $store.state.comparison.base.first_depth_artifacts = createList("baseline_artifact", 2);
+            $store.state.comparison.compared_to.first_depth_artifacts = [];
         });
         it("shows artifacts list comparison", () => {
             expect(wrapper.contains(ArtifactsListComparison)).toBeTruthy();
@@ -53,8 +53,8 @@ describe("ComparisonContent", () => {
 
     describe("when no artifact available", () => {
         beforeEach(() => {
-            $store.state.comparison.base.first_level_artifacts = [];
-            $store.state.comparison.compared_to.first_level_artifacts = [];
+            $store.state.comparison.base.first_depth_artifacts = [];
+            $store.state.comparison.compared_to.first_depth_artifacts = [];
         });
         it("shows artifacts list comparison", () => {
             expect(

@@ -22,8 +22,8 @@
     <div class="comparison-content">
         <artifacts-list-comparison
             v-if="are_some_artifacts_available"
-            v-bind:base_artifacts="first_level_base_artifacts"
-            v-bind:compared_to_artifacts="first_level_compared_to_artifacts"
+            v-bind:base_artifacts="first_depth_base_artifacts"
+            v-bind:compared_to_artifacts="first_depth_compared_to_artifacts"
         />
         <span
             v-else
@@ -47,14 +47,14 @@ export default {
 
     computed: {
         ...mapState({
-            first_level_base_artifacts: state => state.comparison.base.first_level_artifacts,
-            first_level_compared_to_artifacts: state =>
-                state.comparison.compared_to.first_level_artifacts
+            first_depth_base_artifacts: state => state.comparison.base.first_depth_artifacts,
+            first_depth_compared_to_artifacts: state =>
+                state.comparison.compared_to.first_depth_artifacts
         }),
         are_some_artifacts_available() {
             return (
-                this.first_level_base_artifacts.length > 0 ||
-                this.first_level_compared_to_artifacts.length > 0
+                this.first_depth_base_artifacts.length > 0 ||
+                this.first_depth_compared_to_artifacts.length > 0
             );
         }
     }

@@ -38,7 +38,7 @@
             />
         </div>
 
-        <baseline-maximum-depth-reached-message v-if="is_depth_limit_reached"/>
+        <depth-limit-reached-message v-if="is_depth_limit_reached"/>
 
         <artifacts-list-comparison
             v-else-if="are_linked_artifacts_available"
@@ -52,14 +52,14 @@
 import ArtifactsListComparison from "./ArtifactsListComparison.vue";
 import FieldComparison from "./FieldComparison.vue";
 import ArtifactLabel from "../../common/ArtifactLabel.vue";
-import BaselineMaximumDepthReachedMessage from "../../common/BaselineDepthLimitReachedMessage.vue";
+import DepthLimitReachedMessage from "../../common/DepthLimitReachedMessage.vue";
 import { mapGetters } from "vuex";
 
 export default {
     name: "ArtifactComparison",
 
     components: {
-        BaselineMaximumDepthReachedMessage,
+        DepthLimitReachedMessage,
         ArtifactLabel,
         FieldComparison,
         ArtifactsListComparison

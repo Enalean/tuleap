@@ -85,10 +85,8 @@ describe("Compared baseline store:", () => {
                     return store.actions.addArtifacts(context, artifacts);
                 });
 
-                it("commit 'incrementArtifactExplorationDepth'", () => {
-                    expect(context.commit).toHaveBeenCalledWith(
-                        "incrementArtifactExplorationDepth"
-                    );
+                it("commit 'incrementLoadedDepthsCount'", () => {
+                    expect(context.commit).toHaveBeenCalledWith("incrementLoadedDepthsCount");
                 });
 
                 it("commit 'addArtifacts' with artifacts", () => {

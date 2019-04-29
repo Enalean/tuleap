@@ -25,7 +25,7 @@ describe("fetchAllArtifacts()", () => {
     let getBaselineArtifactsByIds;
 
     let baseline;
-    let first_level_artifacts;
+    let first_depth_artifacts;
     let child_artifacts;
     let grandchild_artifacts;
 
@@ -44,7 +44,7 @@ describe("fetchAllArtifacts()", () => {
     beforeEach(async () => {
         baseline = create("baseline");
 
-        first_level_artifacts = [
+        first_depth_artifacts = [
             create("baseline_artifact", { id: 1, linked_artifact_ids: [4] }),
             create("baseline_artifact", { id: 2, linked_artifact_ids: [5] })
         ];
@@ -63,7 +63,7 @@ describe("fetchAllArtifacts()", () => {
             .withArgs(baseline.id, [6])
             .and.returnValue(Promise.resolve(grandchild_artifacts));
 
-        all_artifacts = await fetchAllArtifacts(baseline.id, first_level_artifacts);
+        all_artifacts = await fetchAllArtifacts(baseline.id, first_depth_artifacts);
         baseline_data_ids = all_artifacts.map(artifact => artifact.id);
     });
 
@@ -87,16 +87,16 @@ describe("fetchAllArtifacts()", () => {
 
     describe("when there is a cyclic dependency between two artifacts", () => {
         beforeEach(async () => {
-            first_level_artifacts = [
+            first_depth_artifacts = [
                 create("baseline_artifact", { id: 1, linked_artifact_ids: [1] })
             ];
 
             getBaselineArtifactsByIds.calls.reset();
             getBaselineArtifactsByIds
                 .withArgs(baseline.id, [1])
-                .and.returnValue(Promise.resolve(first_level_artifacts));
+                .and.returnValue(Promise.resolve(first_depth_artifacts));
 
-            all_artifacts = await fetchAllArtifacts(baseline.id, first_level_artifacts);
+            all_artifacts = await fetchAllArtifacts(baseline.id, first_depth_artifacts);
             baseline_data_ids = all_artifacts.map(artifact => artifact.id);
         });
 
@@ -107,7 +107,7 @@ describe("fetchAllArtifacts()", () => {
 
     describe("when an artifact is linked to different parents", () => {
         beforeEach(async () => {
-            first_level_artifacts = [
+            first_depth_artifacts = [
                 create("baseline_artifact", { id: 1, linked_artifact_ids: [3] }),
                 create("baseline_artifact", { id: 2, linked_artifact_ids: [3] })
             ];
@@ -115,9 +115,9 @@ describe("fetchAllArtifacts()", () => {
             getBaselineArtifactsByIds.calls.reset();
             getBaselineArtifactsByIds
                 .withArgs(baseline.id, [3])
-                .and.returnValue(Promise.resolve(first_level_artifacts));
+                .and.returnValue(Promise.resolve(first_depth_artifacts));
 
-            all_artifacts = await fetchAllArtifacts(baseline.id, first_level_artifacts);
+            all_artifacts = await fetchAllArtifacts(baseline.id, first_depth_artifacts);
             baseline_data_ids = all_artifacts.map(artifact => artifact.id);
         });
 

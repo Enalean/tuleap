@@ -24,7 +24,7 @@ import ArrayUtils from "../support/array-utils";
 import GraphUtils from "../support/graph-utils";
 
 describe("presentLinkedArtifactsAsGraph()", () => {
-    let first_level_artifacts;
+    let first_depth_artifacts;
     let all_artifacts;
     let presented_linked_artifacts;
 
@@ -36,12 +36,12 @@ describe("presentLinkedArtifactsAsGraph()", () => {
 
     beforeEach(() => {
         const artifact = create("baseline_artifact", { id: 1, linked_artifact_ids: [2] });
-        first_level_artifacts = [artifact];
+        first_depth_artifacts = [artifact];
 
         all_artifacts = [artifact, create("baseline_artifact", { id: 2, linked_artifact_ids: [] })];
 
         presented_linked_artifacts = presentLinkedArtifactsAsGraph(
-            first_level_artifacts,
+            first_depth_artifacts,
             all_artifacts
         );
     });
@@ -52,7 +52,7 @@ describe("presentLinkedArtifactsAsGraph()", () => {
 
     it("makes copy of artifacts", () => {
         expect(presented_linked_artifacts[0].linked_artifacts[0]).not.toBe(
-            first_level_artifacts[0]
+            first_depth_artifacts[0]
         );
     });
 
@@ -75,7 +75,7 @@ describe("presentLinkedArtifactsAsGraph()", () => {
 
     describe("when artifacts have grandchild", () => {
         beforeEach(() => {
-            first_level_artifacts = [
+            first_depth_artifacts = [
                 create("baseline_artifact", { id: 1, linked_artifact_ids: [2] })
             ];
 
@@ -86,7 +86,7 @@ describe("presentLinkedArtifactsAsGraph()", () => {
             ];
 
             presented_linked_artifacts = presentLinkedArtifactsAsGraph(
-                first_level_artifacts,
+                first_depth_artifacts,
                 all_artifacts
             );
         });
@@ -118,13 +118,13 @@ describe("presentLinkedArtifactsAsGraph()", () => {
 
     describe("when there is a cyclic dependency between two artifacts", () => {
         beforeEach(() => {
-            first_level_artifacts = [
+            first_depth_artifacts = [
                 create("baseline_artifact", { id: 1, linked_artifact_ids: [1] })
             ];
 
             all_artifacts = [create("baseline_artifact", { id: 1, linked_artifact_ids: [1] })];
             presented_linked_artifacts = presentLinkedArtifactsAsGraph(
-                first_level_artifacts,
+                first_depth_artifacts,
                 all_artifacts
             );
         });

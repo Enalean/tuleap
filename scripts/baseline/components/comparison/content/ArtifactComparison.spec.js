@@ -23,7 +23,7 @@ import { createStoreMock } from "../../../support/store-wrapper.spec-helper";
 import localVue from "../../../support/local-vue";
 import ArtifactComparison from "./ArtifactComparison.vue";
 import ArtifactsListComparison from "./ArtifactsListComparison.vue";
-import BaselineDepthLimitReachedMessage from "../../common/BaselineDepthLimitReachedMessage.vue";
+import DepthLimitReachedMessage from "../../common/DepthLimitReachedMessage.vue";
 import store_options from "../../../store/store_options";
 
 describe("ArtifactComparison", () => {
@@ -55,7 +55,7 @@ describe("ArtifactComparison", () => {
     });
 
     it("does not show depth limit message", () => {
-        expect(wrapper.contains(BaselineDepthLimitReachedMessage)).toBeFalsy();
+        expect(wrapper.contains(DepthLimitReachedMessage)).toBeFalsy();
     });
 
     it("shows artifacts list comparison", () => {
@@ -73,7 +73,7 @@ describe("ArtifactComparison", () => {
         });
 
         it("does not show depth limit message", () => {
-            expect(wrapper.contains(BaselineDepthLimitReachedMessage)).toBeFalsy();
+            expect(wrapper.contains(DepthLimitReachedMessage)).toBeFalsy();
         });
 
         it("does not show artifacts list comparison", () => {
@@ -93,7 +93,7 @@ describe("ArtifactComparison", () => {
         });
 
         it("shows depth limit message", () => {
-            expect(wrapper.contains(BaselineDepthLimitReachedMessage)).toBeTruthy();
+            expect(wrapper.contains(DepthLimitReachedMessage)).toBeTruthy();
         });
     });
 });

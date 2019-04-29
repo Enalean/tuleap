@@ -21,10 +21,10 @@ import { ARTIFACTS_EXPLORATION_DEPTH_LIMIT } from "../constants";
 import { getBaselineArtifactsByIds } from "./rest-querier";
 import ArrayUtils from "../support/array-utils";
 
-async function fetchAllArtifacts(baseline_id, first_level_artifacts) {
-    const all_artifacts = [...first_level_artifacts];
+async function fetchAllArtifacts(baseline_id, first_depth_artifacts) {
+    const all_artifacts = [...first_depth_artifacts];
     let current_depth = 1;
-    let current_depth_artifacts = first_level_artifacts;
+    let current_depth_artifacts = first_depth_artifacts;
     while (
         current_depth_artifacts.length > 0 &&
         current_depth <= ARTIFACTS_EXPLORATION_DEPTH_LIMIT
