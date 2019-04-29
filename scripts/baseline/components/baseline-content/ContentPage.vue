@@ -19,36 +19,34 @@
   -->
 
 <template>
-    <main class="tlp-framed-vertically">
-        <div class="tlp-framed-horizontally">
-            <div
-                v-if="is_baseline_loading_failed"
-                class="tlp-alert-danger tlp-framed-vertically"
-                data-test-type="error-message"
-            >
-                <translate>Cannot fetch baseline</translate>
-            </div>
-
-            <template v-else>
-                <baseline-label-skeleton v-if="!is_baseline_available" data-test-type="baseline-header-skeleton"/>
-
-                <baseline-label v-else v-bind:baseline="baseline"/>
-
-                <statistics/>
-
-                <div class="tlp-framed-vertically">
-                    <section class="tlp-pane">
-                        <div class="tlp-pane-container">
-                            <section class="tlp-pane-section">
-                                <content-body-skeleton v-if="!is_baseline_available"/>
-                                <content-body v-else v-bind:first_depth_artifacts="baseline.first_depth_artifacts"/>
-                            </section>
-                        </div>
-                    </section>
-                </div>
-            </template>
+    <div>
+        <div
+            v-if="is_baseline_loading_failed"
+            class="tlp-alert-danger tlp-framed-vertically"
+            data-test-type="error-message"
+        >
+            <translate>Cannot fetch baseline</translate>
         </div>
-    </main>
+
+        <template v-else>
+            <baseline-label-skeleton v-if="!is_baseline_available" data-test-type="baseline-header-skeleton"/>
+
+            <baseline-label v-else v-bind:baseline="baseline"/>
+
+            <statistics/>
+
+            <div class="tlp-framed-vertically">
+                <section class="tlp-pane">
+                    <div class="tlp-pane-container">
+                        <section class="tlp-pane-section">
+                            <content-body-skeleton v-if="!is_baseline_available"/>
+                            <content-body v-else v-bind:first_depth_artifacts="baseline.first_depth_artifacts"/>
+                        </section>
+                    </div>
+                </section>
+            </div>
+        </template>
+    </div>
 </template>
 
 <script>
