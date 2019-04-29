@@ -71,10 +71,11 @@ export default {
     },
 
     computed: {
-        ...mapGetters("comparison", ["is_depth_limit_reached"]),
         ...mapGetters({
             findBaseArtifactsByIds: "comparison/base/findArtifactsByIds",
-            findComparedToArtifactsByIds: "comparison/compared_to/findArtifactsByIds"
+            isLimitReachedOnBaseArtifact: "comparison/base/isLimitReachedOnArtifact",
+            findComparedToArtifactsByIds: "comparison/compared_to/findArtifactsByIds",
+            isLimitReachedOnComparedToArtifact: "comparison/compared_to/isLimitReachedOnArtifact"
         }),
         base_linked_artifacts() {
             return this.findBaseArtifactsByIds(this.base.linked_artifact_ids);
@@ -86,6 +87,12 @@ export default {
             return (
                 this.base.linked_artifact_ids.length > 0 ||
                 this.compared_to.linked_artifact_ids.length > 0
+            );
+        },
+        is_depth_limit_reached() {
+            return (
+                this.isLimitReachedOnBaseArtifact(this.base) ||
+                this.isLimitReachedOnComparedToArtifact(this.compared_to)
             );
         }
     },

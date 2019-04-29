@@ -147,5 +147,61 @@ describe("Compared baseline store:", () => {
                 ]);
             });
         });
+        describe("#is_depth_limit_reached", () => {
+            describe("when no artifacts on depth limit", () => {
+                beforeEach(() => (state.artifacts_where_depth_limit_reached = null));
+                it("returns false", () => {
+                    expect(store.getters.is_depth_limit_reached(state)).toBeFalsy();
+                });
+            });
+            describe("when some artifacts on depth limit", () => {
+                beforeEach(() =>
+                    (state.artifacts_where_depth_limit_reached = createList(
+                        "baseline_artifact",
+                        2
+                    )));
+                it("returns true", () => {
+                    expect(store.getters.is_depth_limit_reached(state)).toBeTruthy();
+                });
+            });
+        });
+        describe("#isLimitReachedOnArtifact", () => {
+            const artifact = create("baseline_artifact");
+            const getters = {};
+
+            describe("when depth limit not reached", () => {
+                beforeEach(() => (getters.is_depth_limit_reached = false));
+                it("returns false", () => {
+                    expect(
+                        store.getters.isLimitReachedOnArtifact(state, getters)(artifact)
+                    ).toBeFalsy();
+                });
+            });
+
+            describe("when depth limit reached", () => {
+                beforeEach(() => (getters.is_depth_limit_reached = true));
+
+                describe("on given artifact", () => {
+                    beforeEach(() => (state.artifacts_where_depth_limit_reached = [artifact]));
+                    it("returns true", () => {
+                        expect(
+                            store.getters.isLimitReachedOnArtifact(state, getters)(artifact)
+                        ).toBeTruthy();
+                    });
+                });
+                describe("not reached on given artifact", () => {
+                    beforeEach(() =>
+                        (state.artifacts_where_depth_limit_reached = createList(
+                            "baseline_artifact",
+                            2
+                        )));
+                    it("returns false", () => {
+                        expect(
+                            store.getters.isLimitReachedOnArtifact(state, getters)(artifact)
+                        ).toBeFalsy();
+                    });
+                });
+            });
+        });
     });
 });

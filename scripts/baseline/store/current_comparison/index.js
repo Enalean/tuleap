@@ -19,7 +19,6 @@
  */
 
 import { compareArtifacts } from "../../support/comparison";
-import { ARTIFACTS_EXPLORATION_DEPTH_LIMIT } from "../../constants";
 import abstract_baseline_content from "./abstract_baseline_content";
 
 export default {
@@ -101,15 +100,6 @@ export default {
                 state.initial_effort_difference +=
                     (compared_to.initial_effort || 0) - (base.initial_effort || 0);
             });
-        }
-    },
-
-    getters: {
-        is_depth_limit_reached(state) {
-            return (
-                state.base.loaded_depths_count > ARTIFACTS_EXPLORATION_DEPTH_LIMIT ||
-                state.compared_to.loaded_depths_count > ARTIFACTS_EXPLORATION_DEPTH_LIMIT
-            );
         }
     },
 

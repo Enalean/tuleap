@@ -36,8 +36,9 @@ describe("ArtifactComparison", () => {
             ...store_options,
             getters: {
                 "comparison/base/findArtifactsByIds": () => [linked_artifact],
+                "comparison/base/isLimitReachedOnArtifact": () => false,
                 "comparison/compared_to/findArtifactsByIds": () => [],
-                "comparison/is_depth_limit_reached": false
+                "comparison/compared_to/isLimitReachedOnArtifact": () => false
             }
         });
         linked_artifact = create("baseline_artifact", { id: 2 });
@@ -83,7 +84,7 @@ describe("ArtifactComparison", () => {
 
     describe("when the current depth has reached the limit", () => {
         beforeEach(async () => {
-            $store.getters["comparison/is_depth_limit_reached"] = true;
+            $store.getters["comparison/base/isLimitReachedOnArtifact"] = () => true;
             wrapper.setProps({
                 reference: create("baseline_artifact"),
                 compared_to: create("baseline_artifact")

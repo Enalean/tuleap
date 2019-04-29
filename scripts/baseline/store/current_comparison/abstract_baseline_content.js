@@ -28,6 +28,7 @@ export default {
     state: {
         baseline_id: null,
         first_depth_artifacts: null,
+        artifacts_where_depth_limit_reached: null,
         artifacts_by_id: null,
 
         loaded_depths_count: null
@@ -45,6 +46,7 @@ export default {
 
             commit("incrementLoadedDepthsCount");
             if (state.loaded_depths_count > ARTIFACTS_EXPLORATION_DEPTH_LIMIT) {
+                commit("updateArtifactsWhereDepthLimitReached", artifacts);
                 return;
             }
 
@@ -66,10 +68,14 @@ export default {
         reset: (state, { baseline_id }) => {
             state.baseline_id = baseline_id;
             state.first_depth_artifacts = null;
+            state.artifacts_where_depth_limit_reached = null;
             state.artifacts_by_id = {};
         },
         updateFirstLevelArtifacts: (state, artifacts) => {
             state.first_depth_artifacts = artifacts;
+        },
+        updateArtifactsWhereDepthLimitReached: (state, artifacts) => {
+            state.artifacts_where_depth_limit_reached = artifacts;
         },
         addArtifacts: (state, artifacts) => {
             artifacts.forEach(artifact => (state.artifacts_by_id[artifact.id] = artifact));
@@ -79,6 +85,12 @@ export default {
 
     getters: {
         findArtifactsByIds: state => ids =>
-            ids.map(id => state.artifacts_by_id[id]).filter(artifact => artifact !== undefined)
+            ids.map(id => state.artifacts_by_id[id]).filter(artifact => artifact !== undefined),
+        is_depth_limit_reached: state =>
+            state.artifacts_where_depth_limit_reached !== null &&
+            state.artifacts_where_depth_limit_reached.length > 0,
+        isLimitReachedOnArtifact: (state, getters) => artifact =>
+            getters.is_depth_limit_reached &&
+            state.artifacts_where_depth_limit_reached.indexOf(artifact) !== -1
     }
 };
