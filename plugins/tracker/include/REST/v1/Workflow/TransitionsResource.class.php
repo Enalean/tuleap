@@ -40,14 +40,19 @@ use Tuleap\Tracker\REST\v1\TrackerPermissionsChecker;
 use Tuleap\Tracker\REST\v1\Workflow\PostAction\PostActionsRepresentationBuilder;
 use Tuleap\Tracker\REST\v1\Workflow\PostAction\PUTHandler;
 use Tuleap\Tracker\REST\v1\Workflow\PostAction\Update\CIBuildJsonParser;
+use Tuleap\Tracker\REST\v1\Workflow\PostAction\Update\FrozenFieldsJsonParser;
 use Tuleap\Tracker\REST\v1\Workflow\PostAction\Update\PostActionCollectionJsonParser;
 use Tuleap\Tracker\REST\v1\Workflow\PostAction\Update\SetDateValueJsonParser;
 use Tuleap\Tracker\REST\v1\Workflow\PostAction\Update\SetFloatValueJsonParser;
 use Tuleap\Tracker\REST\v1\Workflow\PostAction\Update\SetIntValueJsonParser;
 use Tuleap\Tracker\REST\WorkflowTransitionPOSTRepresentation;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\CIBuildRepository;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\CIBuildUpdater;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\CIBuildValidator;
+use Tuleap\Tracker\Workflow\PostAction\Update\Internal\FrozenFieldsRepository;
+use Tuleap\Tracker\Workflow\PostAction\Update\Internal\FrozenFieldsUpdater;
+use Tuleap\Tracker\Workflow\PostAction\Update\Internal\IncompatibleWorkflowModeException;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\InvalidPostActionException;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\PostActionFieldIdValidator;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\PostActionIdValidator;
@@ -100,8 +105,8 @@ class TransitionsResource extends AuthenticatedResource
      * @access protected
      *
      * @param int $tracker_id Id of the tracker
-     * @param int $from_id    Transition source as a field value id
-     * @param int $to_id      Transition destination as a field value id
+     * @param int $from_id Transition source as a field value id
+     * @param int $to_id Transition destination as a field value id
      *
      * @return WorkflowTransitionPOSTRepresentation {@type WorkflowTransitionPOSTRepresentation}
      *
@@ -185,7 +190,7 @@ class TransitionsResource extends AuthenticatedResource
      *
      * @access protected
      *
-     * @param int                                   $id                    Transition id
+     * @param int $id Transition id
      * @param WorkflowTransitionPATCHRepresentation $transition_conditions The new transition representation
      *
      * @throws I18NRestException 400
@@ -400,7 +405,7 @@ class TransitionsResource extends AuthenticatedResource
         } catch (OrphanTransitionException $exception) {
             $this->getRESTLogger()->error('Cannot update transition post actions', $exception);
             throw new RestException(520);
-        } catch (InvalidPostActionException | UnknownPostActionIdsException $e) {
+        } catch (InvalidPostActionException | UnknownPostActionIdsException | IncompatibleWorkflowModeException $e) {
             throw new I18NRestException(400, $e->getMessage());
         }
     }
@@ -449,6 +454,16 @@ class TransitionsResource extends AuthenticatedResource
 
     private function getPostActionCollectionJsonParser(): PostActionCollectionJsonParser
     {
+        if (\ForgeConfig::get("sys_should_use_read_only_post_actions")) {
+            return new PostActionCollectionJsonParser(
+                new CIBuildJsonParser(),
+                new SetDateValueJsonParser(),
+                new SetIntValueJsonParser(),
+                new SetFloatValueJsonParser(),
+                new FrozenFieldsJsonParser()
+            );
+        }
+
         return new PostActionCollectionJsonParser(
             new CIBuildJsonParser(),
             new SetDateValueJsonParser(),
@@ -468,6 +483,43 @@ class TransitionsResource extends AuthenticatedResource
         $field_ids_validator  = new PostActionFieldIdValidator();
         $form_element_factory = \Tracker_FormElementFactory::instance();
         $transaction_executor = $this->getTransactionExecutor();
+
+        if (\ForgeConfig::get('sys_should_use_read_only_post_actions')) {
+            return new PostActionCollectionUpdater(
+                new CIBuildUpdater(
+                    new CIBuildRepository(
+                        $this->getCIBuildDao()
+                    ),
+                    new CIBuildValidator($ids_validator)
+                ),
+                new SetDateValueUpdater(
+                    new SetDateValueRepository(
+                        $this->getFieldDateDao(),
+                        $transaction_executor
+                    ),
+                    new SetDateValueValidator($ids_validator, $field_ids_validator, $form_element_factory)
+                ),
+                new SetIntValueUpdater(
+                    new SetintValueRepository(
+                        $this->getFieldIntDao(),
+                        $transaction_executor
+                    ),
+                    new SetIntValueValidator($ids_validator, $field_ids_validator, $form_element_factory)
+                ),
+                new SetFloatValueUpdater(
+                    new SetFloatValueRepository(
+                        $this->getFieldFloatDao(),
+                        $transaction_executor
+                    ),
+                    new SetFloatValueValidator($ids_validator, $field_ids_validator, $form_element_factory)
+                ),
+                new FrozenFieldsUpdater(
+                    new FrozenFieldsRepository(
+                        $this->getFrozenFieldsDao()
+                    )
+                )
+            );
+        }
 
         return new PostActionCollectionUpdater(
             new CIBuildUpdater(
@@ -518,6 +570,11 @@ class TransitionsResource extends AuthenticatedResource
     private function getFieldFloatDao(): Transition_PostAction_Field_FloatDao
     {
         return new Transition_PostAction_Field_FloatDao();
+    }
+
+    private function getFrozenFieldsDao() : FrozenFieldsDao
+    {
+        return new FrozenFieldsDao();
     }
 
     private function getConditionsUpdater(): ConditionsUpdater

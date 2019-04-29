@@ -1057,6 +1057,10 @@ msgstr "Webhooks"
 msgid "Workflow"
 msgstr "Workflow"
 
+#, php-format
+msgid "Workflow mode is incompatible with PostAction of type %s"
+msgstr "Le mode du Workflow est incompatible avec la PostAction de type %s"
+
 msgid "You are about to remove the notification. Please confirm your action."
 msgstr ""
 "Vous êtes sur le point de supprimer la notification. Merci de confirmer "
