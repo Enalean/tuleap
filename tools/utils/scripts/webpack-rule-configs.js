@@ -157,7 +157,7 @@ const rule_css_assets = {
         {
             loader: "file-loader",
             options: {
-                name: "css-assets/[name]-[sha256:hash].[ext]"
+                name: "css-assets/[name]-[sha256:hash:hex:16].[ext]"
             }
         }
     ]

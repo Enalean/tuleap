@@ -1,6 +1,6 @@
 RPM_TMP=$(HOME)/rpmbuild
 BASE_DIR=$(shell cd ../..; pwd)
-SHELL=/bin/bash
+SHELL=/bin/bash -euo pipefail
 
 version=$(shell LANG=C cat $(BASE_DIR)/VERSION)
 
@@ -136,7 +136,6 @@ $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz: rpmprep node composer mo
 			&& \
 			find $(PKG_NAME)-$(version)/src/www/themes/common/tlp/dist; \
 			find $(PKG_NAME)-$(version)/plugins/agiledashboard/www/js/planning-v2/dist; \
-			find $(PKG_NAME)-$(version)/plugins/agiledashboard/www/js/kanban/dist; \
 		} | \
 		cpio -o -H ustar --quiet |\
 		gzip > $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz
