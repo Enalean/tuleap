@@ -1,0 +1,10 @@
+[Unit]
+Description=Tuleap launch daily event
+
+[Timer]
+OnCalendar=*:00:00
+RandomizedDelaySec=60min
+Unit=tuleap-launch-daily-event.service
+
+[Install]
+WantedBy=timers.target

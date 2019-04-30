@@ -1,0 +1,10 @@
+[Unit]
+Description=Tuleap launch daily event
+
+[Service]
+Type=simple
+User=codendiadm
+ExecStart=/usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/src/utils/codendi_daily.php
+
+[Install]
+WantedBy=multi-user.target

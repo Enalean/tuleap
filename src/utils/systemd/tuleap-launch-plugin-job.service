@@ -1,0 +1,10 @@
+[Unit]
+Description=Tuleap plugins job
+
+[Service]
+Type=simple
+User=codendiadm
+ExecStart=/usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/src/utils/process_cron_job_for_plugins.php
+
+[Install]
+WantedBy=multi-user.target

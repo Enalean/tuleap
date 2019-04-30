@@ -1,0 +1,10 @@
+[Unit]
+Description=Tuleap plugins job
+
+[Timer]
+OnCalendar=*:*:00
+RandomizedDelaySec=1min
+Unit=tuleap-launch-plugin-job.service
+
+[Install]
+WantedBy=timers.target
