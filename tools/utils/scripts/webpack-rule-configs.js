@@ -148,7 +148,22 @@ const rule_easygettext_loader = {
 
 const rule_scss_loader = {
     test: /\.scss$/,
-    use: [MiniCssExtractPlugin.loader, "css-loader", "sass-loader"]
+    use: [
+        MiniCssExtractPlugin.loader,
+        {
+            loader: "css-loader",
+            options: {
+                url: (url, resourcePath) => {
+                    // Organization logos might be customized by administrators, let's exclude them for now
+                    return (
+                        url.endsWith("organization_logo.png") ||
+                        url.endsWith("organization_logo_small.png")
+                    );
+                }
+            }
+        },
+        "sass-loader"
+    ]
 };
 
 const rule_css_assets = {
