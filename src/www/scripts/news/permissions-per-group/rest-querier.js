@@ -26,7 +26,7 @@ import { get } from "tlp";
 export { getNewsPermissions };
 
 async function getNewsPermissions(project_id, selected_ugroup_id) {
-    const response = await get("/new/news_permissions_per_group.php/", {
+    const response = await get("/news/permissions-per-group", {
         params: {
             group_id: project_id,
             selected_ugroup_id: selected_ugroup_id

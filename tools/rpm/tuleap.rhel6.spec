@@ -1024,7 +1024,6 @@ fi
 %{APP_DIR}/src/www/include
 %{APP_DIR}/src/www/mail
 %{APP_DIR}/src/www/my
-%{APP_DIR}/src/www/new
 %{APP_DIR}/src/www/news
 %{APP_DIR}/src/www/project
 %{APP_DIR}/src/www/reference
