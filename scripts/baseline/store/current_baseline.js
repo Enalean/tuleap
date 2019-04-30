@@ -18,6 +18,7 @@
 */
 
 import abstract_baseline_content from "./current_comparison/abstract_baseline_content";
+import ArrayUtils from "../support/array-utils";
 
 export default {
     namespaced: true,
@@ -43,8 +44,8 @@ export default {
 
     mutations: {
         ...abstract_baseline_content.mutations,
-        filterTrackersById: (state, hidden_tracker_ids) =>
-            (state.hidden_tracker_ids = hidden_tracker_ids)
+        filterTrackers: (state, hidden_trackers) =>
+            (state.hidden_tracker_ids = ArrayUtils.mapAttribute(hidden_trackers, "id"))
     },
 
     getters: {

@@ -21,64 +21,26 @@
 <template>
     <div class="tlp-form-element">
         <label class="tlp-label" for="hidden-trackers" v-translate>Hidden trackers</label>
-        <select
+        <trackers-multi-select
             id="hidden-trackers"
-            class="tlp-select"
-            tabindex="-1"
-            aria-hidden="true"
-            ref="input"
-            width="100%"
-            multiple
-        >
-            <option
-                v-for="tracker in all_trackers"
-                v-bind:key="tracker.id"
-                v-bind:value="tracker.id"
-            >
-                {{ tracker.name }}
-            </option>
-        </select>
+            v-bind:trackers="all_trackers"
+            v-on:change="onChange"
+        />
     </div>
 </template>
 <script>
-import { select2 } from "tlp";
+import TrackersMultiSelect from "../common/TrackersMultiSelect.vue";
 import { mapGetters } from "vuex";
 
 export default {
     name: "BaselineContentFilters",
-    data() {
-        return {
-            select2_control: null
-        };
-    },
+    components: { TrackersMultiSelect },
 
     computed: mapGetters("current_baseline", ["all_trackers"]),
 
-    mounted() {
-        this.select2_control = select2(this.$refs.input, {
-            placeholder: this.$gettext("Choose a tracker…"),
-            multiple: true
-        }).on("change", this.onChange);
-    },
-
-    destroyed() {
-        this.select2_control.off().select2("destroy");
-    },
-
     methods: {
-        // Used to convert values returned by select2 before emitting
-        // these values to parent in expected type.
-        // This is required as select works only with strings.
-        // See https://select2.org/data-sources/formats#automatic-string-casting
-        convertToInts(values) {
-            if (!values) {
-                return values;
-            }
-            return values.map(value => Number(value));
-        },
-        onChange() {
-            const tracker_ids = this.convertToInts(this.select2_control.val()) || [];
-            this.$store.commit("current_baseline/filterTrackersById", tracker_ids);
+        onChange(trackers) {
+            this.$store.commit("current_baseline/filterTrackers", trackers);
         }
     }
 };
