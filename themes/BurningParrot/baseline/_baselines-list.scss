@@ -22,6 +22,10 @@
     margin-left: $tlp-half-spacing;
 }
 
+.baselines-table-column-header {
+    white-space: nowrap;
+}
+
 .baselines-table-column-name {
     width: 100%;
 }

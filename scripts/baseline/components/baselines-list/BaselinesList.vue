@@ -18,22 +18,22 @@
   -->
 
 <template>
-    <table class="tlp-table">
+    <table class="tlp-table baselines-table">
         <thead>
             <tr>
-                <th class="tlp-table-cell-numeric" v-translate>
+                <th class="tlp-table-cell-numeric baselines-table-column-header" v-translate>
                     Id
                 </th>
-                <th v-translate class="baselines-table-column-name">
+                <th class="baselines-table-column-header" v-translate>
                     Name
                 </th>
-                <th v-translate class="baselines-table-column-milestone">
+                <th class="baselines-table-column-header" v-translate>
                     Milestone
                 </th>
-                <th v-translate class="baselines-table-column-snapshot-date">
+                <th class="baselines-table-column-header" v-translate>
                     Snapshot Date
                 </th>
-                <th v-translate class="baselines-table-column-author">
+                <th class="baselines-table-column-header" v-translate>
                     Author
                 </th>
                 <th>
