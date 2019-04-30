@@ -27,19 +27,19 @@
                 v-bind:user="author"
                 class="baseline-label-author-badge"
             />
-            <humanized-date v-bind:date="baseline.snapshot_date"/>
+            <span v-translate>on</span> {{ humanized_snapshot_date }}
         </span>
     </h2>
 </template>
 
 <script>
-import HumanizedDate from "./HumanizedDate.vue";
 import UserBadge from "./UserBadge.vue";
 import { mapGetters } from "vuex";
+import DateUtils from "../../support/date-utils";
 
 export default {
     name: "BaselineLabel",
-    components: { HumanizedDate, UserBadge },
+    components: { UserBadge },
     props: {
         baseline: { required: true, type: Object }
     },
@@ -47,6 +47,9 @@ export default {
         ...mapGetters(["findUserById"]),
         author() {
             return this.findUserById(this.baseline.author_id);
+        },
+        humanized_snapshot_date() {
+            return DateUtils.humanFormat(this.baseline.snapshot_date);
         }
     }
 };

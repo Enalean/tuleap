@@ -42,6 +42,14 @@ describe("DateUtils:", () => {
         });
     });
 
+    describe("#humanFormat", () => {
+        it("formats date to make it readable", () => {
+            expect(DateFormatter.humanFormat("2019-03-22T10:01:48+00:00")).toEqual(
+                "22. März 2019 05:01"
+            );
+        });
+    });
+
     describe("#getFromNow", () => {
         it("formats date and returns interval from now", () => {
             expect(DateFormatter.getFromNow("2016-01-01T23:35:01")).toEqual("vor 3 Jahren");

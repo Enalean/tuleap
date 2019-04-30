@@ -40,6 +40,12 @@ export default {
             .format(format);
     },
 
+    humanFormat(date) {
+        return moment(date)
+            .tz(time_zone)
+            .format("LLL");
+    },
+
     getFromNow(date) {
         return moment(date)
             .tz(time_zone)

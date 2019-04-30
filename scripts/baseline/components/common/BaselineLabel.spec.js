@@ -35,13 +35,12 @@ describe("BaselineLabel", () => {
         $store.getters.findUserById = () => create("user", { display_name: "Alita" });
 
         DateFormatter.setOptions({
-            user_locale: "fr_FR",
-            user_timezone: "Europe/Paris",
+            user_locale: "en_EN",
+            user_timezone: "Europe/London",
             format: "d/m/Y H:i"
         });
 
-        const past_snapshot_date = new Date();
-        past_snapshot_date.setDate(past_snapshot_date.getDate() - 4);
+        const past_snapshot_date = new Date("2019-05-02T06:48:22+00:00");
 
         wrapper = mount(BaselineLabel, {
             propsData: {
@@ -59,7 +58,7 @@ describe("BaselineLabel", () => {
 
     it("shows baseline information", () => {
         expect(wrapper.text()).toMatch(
-            /Baseline #1 - Baseline V1\s*Created by\s*Alita\s*il y a 4 jours/
+            /Baseline #1 - Baseline V1\s*Created by\s*Alita\s*on May 2, 2019 7:48 AM/
         );
     });
 });

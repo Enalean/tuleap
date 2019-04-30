@@ -245,6 +245,9 @@ msgstr ""
 "<strong>%{ base_baseline.name }</strong> et <strong>%{ compared_to_baseline."
 "name }</strong>."
 
+msgid "on"
+msgstr "au"
+
 msgid "your baselines"
 msgstr "vos baselines"
 
