@@ -48,6 +48,7 @@ use Tuleap\Error\PlaceHolderBuilder;
 use Tuleap\FRS\FileDownloadController;
 use Tuleap\Layout\SiteHomepageController;
 use Tuleap\News\NewsDao;
+use Tuleap\News\PermissionsPerGroup;
 use Tuleap\Password\Administration\PasswordPolicyDisplayController;
 use Tuleap\Password\Administration\PasswordPolicyUpdateController;
 use Tuleap\Password\Configuration\PasswordConfigurationDAO;
@@ -264,6 +265,11 @@ class RouteCollector
         return new LatestNewsController(new NewsDao(), Codendi_HTMLPurifier::instance());
     }
 
+    public static function getNewsPermissionsPerGroup() : DispatchableWithRequest
+    {
+        return new PermissionsPerGroup();
+    }
+
     public function getLegacyController(string $path)
     {
         return new LegacyRoutesController($path);
@@ -342,6 +348,8 @@ class RouteCollector
 
         $r->get('/export/rss_sfprojects.php', [__CLASS__, 'getRssLatestProjects']);
         $r->get('/export/rss_sfnews.php', [__CLASS__, 'getRssLatestNews']);
+
+        $r->get('/news/permissions-per-group', [__CLASS__, 'getNewsPermissionsPerGroup']);
 
         $collect_routes = new CollectRoutesEvent($r);
         $this->event_manager->processEvent($collect_routes);
