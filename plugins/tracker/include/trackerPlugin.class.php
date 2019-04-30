@@ -110,6 +110,7 @@ use Tuleap\Tracker\Webhook\WebhookFactory;
 use Tuleap\Tracker\Workflow\WorkflowLegacyController;
 use Tuleap\Tracker\Workflow\WorkflowMenuTabPresenterBuilder;
 use Tuleap\Tracker\Workflow\WorkflowTransitionController;
+use Tuleap\Tracker\XMLTemplatesController;
 use Tuleap\User\History\HistoryRetriever;
 use Tuleap\User\User_ForgeUserGroupPermissionsFactory;
 use Tuleap\Widget\Event\GetPublicAreas;
@@ -1765,10 +1766,17 @@ class trackerPlugin extends Plugin {
         );
     }
 
+    public function routeGetTemplates() : \Tuleap\Request\DispatchableWithRequest
+    {
+        return new XMLTemplatesController();
+    }
+
     public function collectRoutesEvent(\Tuleap\Request\CollectRoutesEvent $event)
     {
         $event->getRouteCollector()->addGroup(TRACKER_BASE_URL, function(FastRoute\RouteCollector $r) {
             $r->addRoute(['GET', 'POST'],'[/[index.php]]', $this->getRouteHandler('routeLegacyController'));
+
+            $r->get('/resources/templates/[index.php]', $this->getRouteHandler('routeGetTemplates'));
 
             $r->post('/invert_comments_order.php', $this->getRouteHandler('routePostInvertCommentsOrder'));
             $r->post('/invert_display_changes.php', $this->getRouteHandler('routePostInvertDisplayChanges'));
