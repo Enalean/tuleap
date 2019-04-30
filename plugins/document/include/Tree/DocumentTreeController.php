@@ -61,7 +61,7 @@ class DocumentTreeController implements DispatchableWithRequest, DispatchableWit
         $is_obsolescence_date_used = $this->isHardcodedMetadataUsed($project, 'obsolescence_date');
 
         $user = $request->getCurrentUser();
-        $user->setPreference("plugin_docman_display_new_ui_" . $project->getID(), true);
+        $user->setPreference("plugin_docman_display_new_ui_" . $project->getID(), '1');
 
         $this->includeCssFiles($layout);
         $this->includeHeaderAndNavigationBar($layout, $project);

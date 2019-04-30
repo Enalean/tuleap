@@ -61,9 +61,7 @@ class DocumentUsageRetrieverTest extends TestCase
         $user    = \Mockery::mock(\PFUser::class);
         $project = \Mockery::mock(\Project::class);
         $project->shouldReceive('getId')->andReturn(102);
-        $user->shouldReceive('getPreference')->with('plugin_docman_display_legacy_ui_102')->andReturn(true);
-
-        ForgeConfig::set('disable_new_document_ui_by_default', true);
+        $user->shouldReceive('getPreference')->with('plugin_docman_display_new_ui_102')->andReturn("0");
 
         $this->assertFalse($this->retriever->shouldUseDocument($user, $project));
     }
@@ -73,8 +71,7 @@ class DocumentUsageRetrieverTest extends TestCase
         $user    = \Mockery::mock(\PFUser::class);
         $project = \Mockery::mock(\Project::class);
         $project->shouldReceive('getId')->andReturn(102);
-        $user->shouldReceive('getPreference')->with('plugin_docman_display_legacy_ui_102')->andReturn(false);
-        $user->shouldReceive('getPreference')->with('plugin_docman_display_new_ui_102')->andReturn(true);
+        $user->shouldReceive('getPreference')->with('plugin_docman_display_new_ui_102')->andReturn('1');
 
         ForgeConfig::set('disable_new_document_ui_by_default', true);
 
@@ -100,8 +97,7 @@ class DocumentUsageRetrieverTest extends TestCase
         $project = \Mockery::mock(\Project::class);
         $project->shouldReceive('getId')->andReturn(102);
 
-        $user->shouldReceive('getPreference')->with('plugin_docman_display_legacy_ui_102')->andReturn(null);
-        $user->shouldReceive('getPreference')->with('plugin_docman_display_new_ui_102')->andReturn(null);
+        $user->shouldReceive('getPreference')->with('plugin_docman_display_new_ui_102')->andReturn(false);
 
         ForgeConfig::set('disable_new_document_ui_by_default', true);
 
@@ -116,7 +112,6 @@ class DocumentUsageRetrieverTest extends TestCase
         $user    = \Mockery::mock(\PFUser::class);
         $project = \Mockery::mock(\Project::class);
         $project->shouldReceive('getId')->andReturn(102);
-        $user->shouldReceive('getPreference')->with('plugin_docman_display_legacy_ui_102')->andReturn(false);
         $user->shouldReceive('getPreference')->with('plugin_docman_display_new_ui_102')->andReturn(false);
 
         $metadata = \Mockery::mock(\Docman_Metadata::class);
@@ -131,7 +126,6 @@ class DocumentUsageRetrieverTest extends TestCase
         $user    = \Mockery::mock(\PFUser::class);
         $project = \Mockery::mock(\Project::class);
         $project->shouldReceive('getId')->andReturn(102);
-        $user->shouldReceive('getPreference')->with('plugin_docman_display_legacy_ui_102')->andReturn(false);
         $user->shouldReceive('getPreference')->with('plugin_docman_display_new_ui_102')->andReturn(false);
 
         $metadata = \Mockery::mock(\Docman_Metadata::class);
@@ -148,7 +142,6 @@ class DocumentUsageRetrieverTest extends TestCase
         $user    = \Mockery::mock(\PFUser::class);
         $project = \Mockery::mock(\Project::class);
         $project->shouldReceive('getId')->andReturn(102);
-        $user->shouldReceive('getPreference')->with('plugin_docman_display_legacy_ui_102')->andReturn(false);
         $user->shouldReceive('getPreference')->with('plugin_docman_display_new_ui_102')->andReturn(false);
 
         $metadata = \Mockery::mock(\Docman_Metadata::class);
@@ -165,7 +158,6 @@ class DocumentUsageRetrieverTest extends TestCase
         $user    = \Mockery::mock(\PFUser::class);
         $project = \Mockery::mock(\Project::class);
         $project->shouldReceive('getId')->andReturn(102);
-        $user->shouldReceive('getPreference')->with('plugin_docman_display_legacy_ui_102')->andReturn(false);
         $user->shouldReceive('getPreference')->with('plugin_docman_display_new_ui_102')->andReturn(false);
 
         $metadata = \Mockery::mock(\Docman_Metadata::class);
@@ -182,7 +174,6 @@ class DocumentUsageRetrieverTest extends TestCase
         $user    = \Mockery::mock(\PFUser::class);
         $project = \Mockery::mock(\Project::class);
         $project->shouldReceive('getId')->andReturn(102);
-        $user->shouldReceive('getPreference')->with('plugin_docman_display_legacy_ui_102')->andReturn(false);
         $user->shouldReceive('getPreference')->with('plugin_docman_display_new_ui_102')->andReturn(false);
 
         $metadata = \Mockery::mock(\Docman_Metadata::class);

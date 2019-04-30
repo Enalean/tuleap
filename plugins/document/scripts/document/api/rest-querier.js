@@ -31,7 +31,6 @@ export {
     patchLink,
     deleteUserPreferenciesForFolderInProject,
     deleteUserPreferenciesForUnderConstructionModal,
-    deleteUserPreferenciesForUIInProject,
     addUserLegacyUIPreferency,
     cancelUpload,
     createNewVersion,
@@ -229,14 +228,8 @@ async function deleteUserPreferenciesForUnderConstructionModal(user_id, project_
     await deleteUserPreference(user_id, key);
 }
 
-async function deleteUserPreferenciesForUIInProject(user_id, project_id) {
-    const key = `plugin_docman_display_new_ui_${project_id}`;
-
-    await deleteUserPreference(user_id, key);
-}
-
 async function addUserLegacyUIPreferency(user_id, project_id) {
-    const key = `plugin_docman_display_legacy_ui_${project_id}`;
+    const key = `plugin_docman_display_new_ui_${project_id}`;
 
     await patch(`/api/users/${user_id}/preferences`, {
         headers: {
@@ -244,7 +237,7 @@ async function addUserLegacyUIPreferency(user_id, project_id) {
         },
         body: JSON.stringify({
             key,
-            value: true
+            value: "0"
         })
     });
 }

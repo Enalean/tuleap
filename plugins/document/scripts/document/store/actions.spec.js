@@ -49,7 +49,6 @@ import {
     rewire$cancelUpload,
     rewire$createNewVersion,
     rewire$deleteUserPreferenciesForFolderInProject,
-    rewire$deleteUserPreferenciesForUIInProject,
     rewire$addUserLegacyUIPreferency,
     rewire$deleteUserPreferenciesForUnderConstructionModal,
     rewire$getItem,
@@ -86,7 +85,6 @@ describe("Store actions", () => {
         deleteUserPreferenciesForFolderInProject,
         deleteUserPreferenciesForUnderConstructionModal,
         patchUserPreferenciesForFolderInProject,
-        deleteUserPreferenciesForUIInProject,
         addUserLegacyUIPreferency,
         addNewEmpty,
         addNewFile,
@@ -154,11 +152,6 @@ describe("Store actions", () => {
             "patchUserPreferenciesForFolderInProject"
         );
         rewire$patchUserPreferenciesForFolderInProject(patchUserPreferenciesForFolderInProject);
-
-        deleteUserPreferenciesForUIInProject = jasmine.createSpy(
-            "deleteUserPreferenciesForUIInProject"
-        );
-        rewire$deleteUserPreferenciesForUIInProject(deleteUserPreferenciesForUIInProject);
 
         patchEmbeddedFile = jasmine.createSpy("patchEmbeddedFile");
         rewire$patchEmbeddedFile(patchEmbeddedFile);
