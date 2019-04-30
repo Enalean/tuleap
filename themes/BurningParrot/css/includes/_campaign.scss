@@ -53,6 +53,7 @@
     }
 
     > .test-campaign-progression {
+        min-width: 10px;
         margin: -$tlp-half-spacing 1px 0;
 
         .test-campaign-progression-value {
