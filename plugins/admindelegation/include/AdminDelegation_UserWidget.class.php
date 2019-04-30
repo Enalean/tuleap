@@ -133,7 +133,7 @@ class AdminDelegation_UserWidget extends Widget //phpcs:ignore
                 $html .= '<tbody>';
                 $i = 1;
                 foreach ($users as $u) {
-                    $mailto = $u->getRealname().' &lt;'.$u->getEmail().'&gt;';
+                    $mailto = $u->getEmail();
                     $allAdmins[] = $mailto;
                     $html .= '<tr class="'. util_get_alt_row_color($i++) .'">';
                     $html .= '<td>'.$hp->purify($uh->getDisplayNameFromUser($u)).'</td>';
