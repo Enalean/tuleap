@@ -28,53 +28,47 @@
             <translate>Cannot fetch baseline</translate>
         </div>
 
-        <baseline-content-layout v-else-if="is_loading">
+        <content-layout v-else-if="is_loading">
             <baseline-label-skeleton slot="header"/>
+            <statistics slot="statistics"/>
             <baseline-content-filters-skeleton slot="filters"/>
 
-            <ol class="baseline-content-artifact-ol">
-                <li class="baseline-content-artifact-li">
-                    <artifact-skeleton class="baseline-content-artifact"/>
-                </li>
-                <li class="baseline-content-artifact-li">
-                    <artifact-skeleton class="baseline-content-artifact"/>
-                </li>
-                <li class="baseline-content-artifact-li">
-                    <artifact-skeleton class="baseline-content-artifact"/>
-                </li>
-            </ol>
-        </baseline-content-layout>
+            <content-body-skeleton/>
+        </content-layout>
 
-        <baseline-content-layout v-else>
+        <content-layout v-else>
             <baseline-label slot="header" v-bind:baseline="baseline"/>
+            <statistics slot="statistics"/>
             <baseline-content-filters slot="filters"/>
 
             <content-body/>
-        </baseline-content-layout>
+        </content-layout>
     </div>
 </template>
 
 <script>
 import { sprintf } from "sprintf-js";
 import BaselineLabelSkeleton from "../common/BaselineLabelSkeleton.vue";
+import ContentBodySkeleton from "./ContentBodySkeleton.vue";
 import ContentBody from "./ContentBody.vue";
 import BaselineLabel from "../common/BaselineLabel.vue";
 import { mapGetters } from "vuex";
+import Statistics from "./Statistics.vue";
 import BaselineContentFilters from "./BaselineContentFilters.vue";
 import BaselineContentFiltersSkeleton from "./BaselineContentFiltersSkeleton.vue";
-import BaselineContentLayout from "./BaselineContentLayout.vue";
-import ArtifactSkeleton from "../common/ArtifactSkeleton.vue";
+import ContentLayout from "../common/ContentLayout.vue";
 
 export default {
     name: "ContentPage",
     components: {
+        ContentBodySkeleton,
         BaselineLabelSkeleton,
-        BaselineContentLayout,
+        Statistics,
+        ContentLayout,
         BaselineContentFilters,
         BaselineContentFiltersSkeleton,
         BaselineLabel,
-        ContentBody,
-        ArtifactSkeleton
+        ContentBody
     },
 
     props: {

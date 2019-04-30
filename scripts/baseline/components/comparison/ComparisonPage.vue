@@ -29,28 +29,22 @@
 
         <comparison-page-skeleton v-else-if="is_loading"/>
 
-        <template v-else>
-            <comparison-header v-bind:comparison="comparison"/>
+        <content-layout v-else>
+            <comparison-header v-bind:comparison="comparison" slot="header"/>
+            <comparison-statistics slot="statistics"/>
+            <comparison-content-filters slot="filters"/>
 
-            <comparison-statistics/>
-
-            <div class="tlp-framed-vertically">
-                <section class="tlp-pane">
-                    <div class="tlp-pane-container">
-                        <section class="tlp-pane-section">
-                            <comparison-content/>
-                        </section>
-                    </div>
-                </section>
-            </div>
-        </template>
+            <comparison-content/>
+        </content-layout>
     </div>
 </template>
 
 <script>
-import ComparisonStatistics from "./ComparisonStatistics.vue";
 import ComparisonPageSkeleton from "./ComparisonPageSkeleton.vue";
+import ContentLayout from "../common/ContentLayout.vue";
 import ComparisonHeader from "./ComparisonHeader.vue";
+import ComparisonStatistics from "./ComparisonStatistics.vue";
+import ComparisonContentFilters from "./ComparisonContentFilters.vue";
 import ComparisonContent from "./content/ComparisonContent.vue";
 import { sprintf } from "sprintf-js";
 import { mapGetters } from "vuex";
@@ -59,9 +53,11 @@ export default {
     name: "ComparisonPage",
     components: {
         ComparisonPageSkeleton,
-        ComparisonContent,
+        ContentLayout,
         ComparisonHeader,
-        ComparisonStatistics
+        ComparisonStatistics,
+        ComparisonContentFilters,
+        ComparisonContent
     },
     props: {
         comparison: { required: true, type: Object }

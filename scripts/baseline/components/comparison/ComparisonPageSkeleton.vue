@@ -19,33 +19,29 @@
   -->
 
 <template>
-    <div>
-        <comparison-header-skeleton/>
-        <comparison-statistics-skeleton/>
-        <div class="tlp-framed-vertically">
-            <section class="tlp-pane">
-                <div class="tlp-pane-container">
-                    <section class="tlp-pane-section">
-                        <comparison-content-skeleton/>
-                    </section>
-                </div>
-            </section>
-        </div>
-    </div>
-</template>
+    <content-layout>
+        <comparison-header-skeleton slot="header"/>
+        <comparison-statistics-skeleton slot="statistics"/>
+        <comparison-content-filters-skeleton slot="filters"/>
 
+        <comparison-content-skeleton/>
+    </content-layout>
+</template>
 <script>
-import ComparisonHeaderSkeleton from "./ComparisonHeaderSkeleton.vue";
-import ComparisonStatisticsSkeleton from "./ComparisonStatisticsSkeleton.vue";
+import ContentLayout from "../common/ContentLayout.vue";
 import ComparisonContentSkeleton from "./content/ComparisonContentSkeleton.vue";
+import ComparisonHeaderSkeleton from "./ComparisonHeaderSkeleton.vue";
+import ComparisonContentFiltersSkeleton from "./ComparisonContentFiltersSkeleton.vue";
+import ComparisonStatisticsSkeleton from "./ComparisonStatisticsSkeleton.vue";
 
 export default {
     name: "ComparisonPageSkeleton",
-
     components: {
+        ContentLayout,
+        ComparisonContentSkeleton,
         ComparisonHeaderSkeleton,
-        ComparisonStatisticsSkeleton,
-        ComparisonContentSkeleton
+        ComparisonContentFiltersSkeleton,
+        ComparisonStatisticsSkeleton
     }
 };
 </script>

@@ -42,8 +42,8 @@
 
         <artifacts-list-comparison
             v-else-if="are_linked_artifacts_available"
-            v-bind:base_artifacts="base_linked_artifacts"
-            v-bind:compared_to_artifacts="compared_to_linked_artifacts"
+            v-bind:base_artifacts="filtered_base_linked_artifacts"
+            v-bind:compared_to_artifacts="filtered_compared_to_linked_artifacts"
         />
     </div>
 </template>
@@ -72,6 +72,7 @@ export default {
 
     computed: {
         ...mapGetters({
+            filterArtifacts: "comparison/filterArtifacts",
             findBaseArtifactsByIds: "comparison/base/findArtifactsByIds",
             isLimitReachedOnBaseArtifact: "comparison/base/isLimitReachedOnArtifact",
             findComparedToArtifactsByIds: "comparison/compared_to/findArtifactsByIds",
@@ -82,6 +83,12 @@ export default {
         },
         compared_to_linked_artifacts() {
             return this.findComparedToArtifactsByIds(this.compared_to.linked_artifact_ids);
+        },
+        filtered_base_linked_artifacts() {
+            return this.filterArtifacts(this.base_linked_artifacts);
+        },
+        filtered_compared_to_linked_artifacts() {
+            return this.filterArtifacts(this.compared_to_linked_artifacts);
         },
         are_linked_artifacts_available() {
             return (

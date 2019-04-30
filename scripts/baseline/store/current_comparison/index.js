@@ -20,6 +20,7 @@
 
 import { compareArtifacts } from "../../support/comparison";
 import abstract_baseline_content from "./abstract_baseline_content";
+import ArrayUtils from "../../support/array-utils";
 
 export default {
     namespaced: true,
@@ -28,7 +29,8 @@ export default {
         added_artifacts_count: null,
         removed_artifacts_count: null,
         modified_artifacts_count: null,
-        initial_effort_difference: null
+        initial_effort_difference: null,
+        hidden_tracker_ids: []
     },
 
     actions: {
@@ -100,7 +102,21 @@ export default {
                 state.initial_effort_difference +=
                     (compared_to.initial_effort || 0) - (base.initial_effort || 0);
             });
-        }
+        },
+        filterTrackers: (state, hidden_trackers) =>
+            (state.hidden_tracker_ids = ArrayUtils.mapAttribute(hidden_trackers, "id"))
+    },
+
+    getters: {
+        all_trackers: (state, getters) =>
+            ArrayUtils.uniqueByAttribute(
+                [...getters["base/all_trackers"], ...getters["compared_to/all_trackers"]],
+                "id"
+            ),
+        filterArtifacts: state => artifacts =>
+            artifacts.filter(
+                artifact => state.hidden_tracker_ids.indexOf(artifact.tracker_id) === -1
+            )
     },
 
     modules: {

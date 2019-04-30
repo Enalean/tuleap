@@ -31,9 +31,24 @@ describe("ComparisonContent", () => {
     let wrapper;
 
     beforeEach(() => {
-        $store = createStoreMock(store_options);
-        $store.state.comparison.base.first_depth_artifacts = [];
-        $store.state.comparison.compared_to.first_depth_artifacts = [];
+        $store = createStoreMock(
+            {
+                ...store_options,
+                getters: {
+                    "comparison/filterArtifacts": () => []
+                }
+            },
+            {
+                comparison: {
+                    base: {
+                        first_depth_artifacts: []
+                    },
+                    compared_to: {
+                        first_depth_artifacts: []
+                    }
+                }
+            }
+        );
 
         wrapper = shallowMount(ComparisonContent, {
             localVue,
@@ -43,6 +58,7 @@ describe("ComparisonContent", () => {
 
     describe("when some artifacts available", () => {
         beforeEach(() => {
+            $store.getters["comparison/filterArtifacts"] = () => createList("baseline_artifact", 2);
             $store.state.comparison.base.first_depth_artifacts = createList("baseline_artifact", 2);
             $store.state.comparison.compared_to.first_depth_artifacts = [];
         });

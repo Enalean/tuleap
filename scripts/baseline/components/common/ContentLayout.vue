@@ -18,11 +18,11 @@
   -
   -->
 
-<template>
+<template functional>
     <div>
         <slot name="header"/>
 
-        <statistics/>
+        <slot name="statistics"/>
 
         <div class="baseline-panes">
             <section class="tlp-pane baseline-content-filter-pane">
@@ -55,13 +55,3 @@
         </div>
     </div>
 </template>
-
-<script>
-import Statistics from "./Statistics.vue";
-
-export default {
-    name: "BaselineContentLayout",
-
-    components: { Statistics }
-};
-</script>

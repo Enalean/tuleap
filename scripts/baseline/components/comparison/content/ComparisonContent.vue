@@ -21,10 +21,17 @@
 <template>
     <div class="comparison-content">
         <artifacts-list-comparison
-            v-if="are_some_artifacts_available"
-            v-bind:base_artifacts="first_depth_base_artifacts"
-            v-bind:compared_to_artifacts="first_depth_compared_to_artifacts"
+            v-if="are_some_artifacts_visible"
+            v-bind:base_artifacts="filtered_first_depth_base_artifacts"
+            v-bind:compared_to_artifacts="filtered_first_depth_compared_to_artifacts"
         />
+        <div
+            v-else-if="are_some_artifacts_available"
+            class="baseline-empty-information-message"
+            data-test-type="all-artifacts-filtered-message"
+        >
+            <translate>All artifacts are hidden</translate>
+        </div>
         <span
             v-else
             class="baseline-empty-information-message"
@@ -38,7 +45,7 @@
 
 <script>
 import ArtifactsListComparison from "./ArtifactsListComparison.vue";
-import { mapState } from "vuex";
+import { mapState, mapGetters } from "vuex";
 
 export default {
     name: "ComparisonContent",
@@ -51,6 +58,19 @@ export default {
             first_depth_compared_to_artifacts: state =>
                 state.comparison.compared_to.first_depth_artifacts
         }),
+        ...mapGetters("comparison", ["filterArtifacts"]),
+        filtered_first_depth_base_artifacts() {
+            return this.filterArtifacts(this.first_depth_base_artifacts);
+        },
+        filtered_first_depth_compared_to_artifacts() {
+            return this.filterArtifacts(this.first_depth_compared_to_artifacts);
+        },
+        are_some_artifacts_visible() {
+            return (
+                this.filtered_first_depth_base_artifacts.length > 0 ||
+                this.filtered_first_depth_compared_to_artifacts.length > 0
+            );
+        },
         are_some_artifacts_available() {
             return (
                 this.first_depth_base_artifacts.length > 0 ||

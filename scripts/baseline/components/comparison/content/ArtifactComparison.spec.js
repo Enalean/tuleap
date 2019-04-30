@@ -35,6 +35,7 @@ describe("ArtifactComparison", () => {
         $store = createStoreMock({
             ...store_options,
             getters: {
+                "comparison/filterArtifacts": () => [linked_artifact],
                 "comparison/base/findArtifactsByIds": () => [linked_artifact],
                 "comparison/base/isLimitReachedOnArtifact": () => false,
                 "comparison/compared_to/findArtifactsByIds": () => [],
