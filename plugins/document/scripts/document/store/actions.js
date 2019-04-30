@@ -27,7 +27,6 @@ import {
     cancelUpload,
     createNewVersion,
     deleteUserPreferenciesForFolderInProject,
-    deleteUserPreferenciesForUIInProject,
     addUserLegacyUIPreferency,
     deleteUserPreferenciesForUnderConstructionModal,
     getFolderContent,
@@ -492,7 +491,6 @@ export const cancelAllFileUploads = context => {
 
 export const setUserPreferenciesForUI = async context => {
     try {
-        await deleteUserPreferenciesForUIInProject(context.state.user_id, context.state.project_id);
         return await addUserLegacyUIPreferency(context.state.user_id, context.state.project_id);
     } catch (exception) {
         return handleErrors(context, exception);

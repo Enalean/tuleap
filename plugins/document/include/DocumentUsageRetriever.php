@@ -45,12 +45,13 @@ class DocumentUsageRetriever
             return false;
         }
 
-        if ((bool)$user->getPreference("plugin_docman_display_legacy_ui_" . $project->getID())) {
-            return false;
+        $user_new_ui_preference = $user->getPreference("plugin_docman_display_new_ui_" . $project->getID());
+        if ($user_new_ui_preference === '1') {
+            return true;
         }
 
-        if ((bool)$user->getPreference("plugin_docman_display_new_ui_" . $project->getID())) {
-            return true;
+        if ($user_new_ui_preference === '0') {
+            return false;
         }
 
         if (ForgeConfig::get('disable_new_document_ui_by_default')) {
