@@ -48,7 +48,7 @@ class DocumentTreeUnderConstructionController implements DispatchableWithRequest
         $user = $request->getCurrentUser();
         $user->setPreference("plugin_document_set_display_under_construction_modal_" . $project->getID(), true);
 
-        $GLOBALS['HTML']->redirect("/plugins/document/" . $variables['project_name'] . "/" . $variables['vue-routing']);
+        $layout->redirect('/plugins/document/' . $variables['project_name'] . '/' . ($variables['vue-routing'] ?? ''));
     }
 
     /**
