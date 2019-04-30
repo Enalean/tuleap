@@ -57,10 +57,15 @@ class BaselineService
                 dgettext('tuleap-baseline', "You are not allowed to create this baseline")
             );
         }
+
+        $snapshot_date = $baseline->getSnapshotDate();
+        if ($snapshot_date === null) {
+            $snapshot_date = $this->clock->now();
+        }
         return $this->baseline_repository->add(
             $baseline,
             $current_user,
-            $this->clock->now()
+            $snapshot_date
         );
     }
 

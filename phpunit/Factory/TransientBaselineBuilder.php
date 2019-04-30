@@ -21,12 +21,13 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Baseline;
+namespace Tuleap\Baseline\Factory;
 
 use DateTimeInterface;
-use Project;
+use Tuleap\Baseline\BaselineArtifact;
+use Tuleap\Baseline\TransientBaseline;
 
-class TransientBaseline
+class TransientBaselineBuilder
 {
     /** @var string */
     private $name;
@@ -37,30 +38,26 @@ class TransientBaseline
     /** @var DateTimeInterface|null */
     private $snapshot_date;
 
-    public function __construct(string $name, BaselineArtifact $artifact, ?DateTimeInterface $snapshot_date)
+    public function name(string $name): self
     {
-        $this->name          = $name;
-        $this->artifact      = $artifact;
+        $this->name = $name;
+        return $this;
+    }
+
+    public function artifact(BaselineArtifact $artifact): self
+    {
+        $this->artifact = $artifact;
+        return $this;
+    }
+
+    public function snapshotDate(?DateTimeInterface $snapshot_date): self
+    {
         $this->snapshot_date = $snapshot_date;
+        return $this;
     }
 
-    public function getName(): string
+    public function build(): TransientBaseline
     {
-        return $this->name;
-    }
-
-    public function getArtifact(): BaselineArtifact
-    {
-        return $this->artifact;
-    }
-
-    public function getSnapshotDate(): ?DateTimeInterface
-    {
-        return $this->snapshot_date;
-    }
-
-    public function getProject(): Project
-    {
-        return $this->artifact->getProject();
+        return new TransientBaseline($this->name, $this->artifact, $this->snapshot_date);
     }
 }

@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\REST;
 
+use DateTimeImmutable;
 use Tuleap\Baseline\BaselineArtifactRepository;
 use Tuleap\Baseline\BaselineService;
 use Tuleap\Baseline\CurrentUserProvider;
@@ -30,9 +31,12 @@ use Tuleap\Baseline\NotAuthorizedException;
 use Tuleap\Baseline\REST\Exception\ForbiddenRestException;
 use Tuleap\Baseline\REST\Exception\NotFoundRestException;
 use Tuleap\Baseline\TransientBaseline;
+use Tuleap\REST\I18NRestException;
 
 class BaselineController
 {
+    public const DATE_TIME_FORMAT = 'Y-m-d\TH:i:sP';
+
     /** @var CurrentUserProvider */
     private $current_user_provider;
 
@@ -63,7 +67,7 @@ class BaselineController
      * @throws \User_StatusPendingException
      * @throws \User_StatusSuspendedException
      */
-    public function post(string $name, int $artifact_id): BaselineRepresentation
+    public function post(string $name, int $artifact_id, ?string $snapshot_date_as_string): BaselineRepresentation
     {
         $current_user = $this->current_user_provider->getUser();
         $artifact     = $this->baseline_artifact_repository->findById($current_user, $artifact_id);
@@ -76,7 +80,21 @@ class BaselineController
             );
         }
 
-        $baseline = new TransientBaseline($name, $artifact);
+        $snapshot_date = null;
+        if ($snapshot_date_as_string !== null) {
+            $snapshot_date = DateTimeImmutable::createFromFormat(self::DATE_TIME_FORMAT, $snapshot_date_as_string);
+            if (! $snapshot_date) {
+                throw new I18NRestException(
+                    400,
+                    sprintf(
+                        dgettext('tuleap-baseline', 'Bad snapshot date format: %s. Expected: %s'),
+                        $snapshot_date_as_string,
+                        self::DATE_TIME_FORMAT
+                    )
+                );
+            }
+        }
+        $baseline = new TransientBaseline($name, $artifact, $snapshot_date);
         try {
             $created_baseline = $this->baseline_service->create($current_user, $baseline);
             return BaselineRepresentation::fromBaseline($created_baseline);

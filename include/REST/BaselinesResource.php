@@ -44,13 +44,24 @@ class BaselinesResource extends AuthenticatedResource
      * Create a new Baseline
      *
      * Create a new Baseline on current date time.
+     * Example:
+     * <pre>
+     * {
+     *   "name": "",
+     *   "artifact_id": 14,
+     *   "snapshot_date": "2019-03-21T14:47:03+01:00"
+     * }
+     * </pre>
+     * snapshot_date format is ISO 8601.
+     * Current date is used if no snapshot date provided.
      *
      * @url    POST
      * @status 201
      * @access protected
      *
-     * @param string $name        Name of the baseline {@from body}
-     * @param int    $artifact_id Id of an artifact {@from body}
+     * @param string $name          Name of the baseline {@from body}
+     * @param int    $artifact_id   Id of an artifact {@from body}
+     * @param string $snapshot_date Snapshot date of the baseline {@from body}
      *
      * @return Tuleap\Baseline\REST\BaselineRepresentation
      * @throws \Rest_Exception_InvalidTokenException
@@ -64,12 +75,12 @@ class BaselinesResource extends AuthenticatedResource
      * @throws \User_StatusSuspendedException
      * @throws \Luracast\Restler\RestException
      */
-    protected function post(string $name, int $artifact_id): BaselineRepresentation
+    protected function post(string $name, int $artifact_id, string $snapshot_date = null): BaselineRepresentation
     {
         $this->checkAccess();
         return $this->container
             ->get(BaselineController::class)
-            ->post($name, $artifact_id);
+            ->post($name, $artifact_id, $snapshot_date);
     }
 
     /**

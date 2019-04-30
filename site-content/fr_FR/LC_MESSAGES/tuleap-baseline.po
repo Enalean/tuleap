@@ -12,6 +12,10 @@ msgstr ""
 "X-Generator: Poedit 2.2.1\n"
 
 #, php-format
+msgid "Bad snapshot date format: %s. Expected: %s"
+msgstr "Mauvais format de date de capture: %s: Attendu: %s"
+
+#, php-format
 msgid ""
 "Base baseline is not on same artifact (id %u) than compared to baseline (id "
 "%u)"

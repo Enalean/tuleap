@@ -51,8 +51,9 @@ class BaselinesResourceTest extends RestBase
                 null,
                 json_encode(
                     [
-                        'name'        => 'new baseline',
-                        'artifact_id' => $this->an_artifact_id
+                        'name'          => 'new baseline',
+                        'artifact_id'   => $this->an_artifact_id,
+                        'snapshot_date' => '2019-03-21T11:47:04+02:00'
                     ]
                 )
             )
@@ -63,7 +64,7 @@ class BaselinesResourceTest extends RestBase
         $this->assertNotNull($json_response['id']);
         $this->assertEquals('new baseline', $json_response['name']);
         $this->assertEquals($this->user_ids[BaselineFixtureData::TEST_USER_NAME], $json_response['author_id']);
-        $this->assertNotNull($json_response['snapshot_date']);
+        $this->assertEquals('2019-03-21T11:47:04+02:00', $json_response['snapshot_date']);
     }
 
     public function testGetById()

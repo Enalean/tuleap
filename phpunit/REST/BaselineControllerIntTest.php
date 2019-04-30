@@ -25,6 +25,7 @@ namespace Tuleap\Baseline\REST;
 
 require_once __DIR__ . '/IntegrationTestCaseWithStubs.php';
 
+use DateTimeImmutable;
 use Tuleap\Baseline\Factory\BaselineArtifactFactory;
 use Tuleap\Baseline\Factory\BaselineFactory;
 use Tuleap\GlobalLanguageMock;
@@ -47,7 +48,7 @@ class BaselineControllerIntTest extends IntegrationTestCaseWithStubs
         $artifact = BaselineArtifactFactory::one()->id(2)->build();
         $this->baseline_artifact_repository->addAt($artifact, $this->clock->now());
 
-        $this->controller->post('My first baseline', 2);
+        $this->controller->post('My first baseline', 2, null);
 
         $this->assertEquals(1, $this->baseline_repository->count());
         $baseline = $this->baseline_repository->findAny();
@@ -55,6 +56,32 @@ class BaselineControllerIntTest extends IntegrationTestCaseWithStubs
         $this->assertEquals($artifact, $baseline->getArtifact());
         $this->assertEquals($this->current_user_provider->getUser(), $baseline->getAuthor());
         $this->assertEquals($this->clock->now(), $baseline->getSnapshotDate());
+    }
+
+    public function testPostWithoutSnapshotDate()
+    {
+        $artifact = BaselineArtifactFactory::one()->id(2)->build();
+        $this->baseline_artifact_repository->addAt($artifact, $this->clock->now());
+
+        $this->controller->post('My first baseline', 2, null);
+
+        $baseline = $this->baseline_repository->findAny();
+        $this->assertEquals($this->clock->now(), $baseline->getSnapshotDate());
+    }
+
+    public function testPostWithSnapshotDate()
+    {
+        $artifact = BaselineArtifactFactory::one()->id(2)->build();
+        $this->baseline_artifact_repository->addAt($artifact, $this->clock->now());
+
+        $this->controller->post('My first baseline', 2, '2019-03-21T11:47:04+02:00');
+
+        $baseline               = $this->baseline_repository->findAny();
+        $expected_snapshot_date = DateTimeImmutable::createFromFormat(
+            'Y-m-d\TH:i:sP',
+            '2019-03-21T11:47:04+02:00'
+        );
+        $this->assertEquals($expected_snapshot_date, $baseline->getSnapshotDate());
     }
 
     public function testDelete()

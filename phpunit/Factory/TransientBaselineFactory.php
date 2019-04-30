@@ -21,38 +21,17 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Baseline;
+namespace Tuleap\Baseline\Factory;
 
-use DateTimeInterface;
-use PFUser;
+use Tuleap\Baseline\Support\DateTimeFactory;
 
-class Baseline extends TransientBaseline
+class TransientBaselineFactory
 {
-    /** @var int */
-    private $id;
-
-    /** @var PFUser */
-    private $author;
-
-    public function __construct(
-        int $id,
-        string $name,
-        BaselineArtifact $artifact,
-        DateTimeInterface $snapshot_date,
-        PFUser $author
-    ) {
-        parent::__construct($name, $artifact, $snapshot_date);
-        $this->id            = $id;
-        $this->author        = $author;
-    }
-
-    public function getId(): int
+    public static function one(): TransientBaselineBuilder
     {
-        return $this->id;
-    }
-
-    public function getAuthor(): PFUser
-    {
-        return $this->author;
+        return (new TransientBaselineBuilder())
+            ->name('baseline name')
+            ->artifact(BaselineArtifactFactory::one()->build())
+            ->snapshotDate(DateTimeFactory::one());
     }
 }

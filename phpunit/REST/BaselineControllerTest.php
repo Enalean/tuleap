@@ -41,6 +41,7 @@ use Tuleap\Baseline\NotAuthorizedException;
 use Tuleap\Baseline\REST\Exception\ForbiddenRestException;
 use Tuleap\Baseline\REST\Exception\NotFoundRestException;
 use Tuleap\Baseline\Support\CurrentUserContext;
+use Tuleap\REST\I18NRestException;
 
 class BaselineControllerTest extends TestCase
 {
@@ -106,7 +107,7 @@ class BaselineControllerTest extends TestCase
             ->shouldReceive('create')
             ->andReturn(BaselineFactory::one()->build());
 
-        $this->controller->post('new baseline', 3);
+        $this->controller->post('new baseline', 3, null);
     }
 
     public function testPostReturnsRepresentationOfCreatedBaseline()
@@ -131,7 +132,7 @@ class BaselineControllerTest extends TestCase
                     ->build()
             );
 
-        $representation = $this->controller->post('first baseline', 3);
+        $representation = $this->controller->post('first baseline', 3, null);
 
         $this->assertEquals(11, $representation->id);
         $this->assertEquals('first baseline', $representation->name);
@@ -159,7 +160,7 @@ class BaselineControllerTest extends TestCase
                     ->build()
             );
 
-        $representation = $this->controller->post('first baseline', 3);
+        $representation = $this->controller->post('first baseline', 3, null);
 
         $this->assertEquals('2019-03-21T14:47:03+01:00', $representation->snapshot_date);
     }
@@ -176,7 +177,19 @@ class BaselineControllerTest extends TestCase
             ->shouldReceive('create')
             ->andThrow(new NotAuthorizedException('not authorized'));
 
-        $this->controller->post('new baseline', 3);
+        $this->controller->post('new baseline', 3, null);
+    }
+
+    public function testPostThrows400WhenGivenDateIsMalFormed()
+    {
+        $this->expectException(I18NRestException::class);
+        $this->expectExceptionCode(400);
+
+        $this->baseline_artifact_repository
+            ->shouldReceive('findById')
+            ->andReturn($this->an_artifact);
+
+        $this->controller->post('new baseline', 3, 'not a date');
     }
 
     public function testGetById()

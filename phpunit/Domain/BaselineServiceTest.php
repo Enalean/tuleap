@@ -31,9 +31,9 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
 use PHPUnit\Framework\TestCase;
 use Project;
-use Tuleap\Baseline\Factory\BaselineArtifactFactory;
 use Tuleap\Baseline\Factory\BaselineFactory;
 use Tuleap\Baseline\Factory\ProjectFactory;
+use Tuleap\Baseline\Factory\TransientBaselineFactory;
 use Tuleap\Baseline\Stub\FrozenClock;
 use Tuleap\Baseline\Support\CurrentUserContext;
 use Tuleap\Baseline\Support\DateTimeFactory;
@@ -82,14 +82,31 @@ class BaselineServiceTest extends TestCase
         $this->a_date    = DateTimeFactory::one();
     }
 
-    public function testCreateAddsGivenBaseline()
+    public function testCreatWithoutSnapshotDateAddsGivenBaselineWithNowAsSnapshoDate()
     {
         $this->authorizations->allows(['canCreateBaseline' => true]);
 
-        $baseline = $this->buildATransientBaseline();
+        $baseline = TransientBaselineFactory::one()
+            ->snapshotDate(null)
+            ->build();
         $this->baseline_repository
             ->shouldReceive('add')
             ->with($baseline, $this->current_user, $this->clock->now());
+
+        $this->service->create($this->current_user, $baseline);
+    }
+
+    public function testCreatWithSnapshotDateAddsBaselineWithGivenSnapshoDate()
+    {
+        $this->authorizations->allows(['canCreateBaseline' => true]);
+
+        $snapshot_date = DateTimeFactory::one();
+        $baseline      = TransientBaselineFactory::one()
+            ->snapshotDate($snapshot_date)
+            ->build();
+        $this->baseline_repository
+            ->shouldReceive('add')
+            ->with($baseline, $this->current_user, $snapshot_date);
 
         $this->service->create($this->current_user, $baseline);
     }
@@ -98,7 +115,7 @@ class BaselineServiceTest extends TestCase
     {
         $this->expectException(NotAuthorizedException::class);
 
-        $baseline = $this->buildATransientBaseline();
+        $baseline = TransientBaselineFactory::one()->build();
         $this->authorizations->allows()
             ->canCreateBaseline($this->current_user, $baseline)
             ->andReturn(false);
@@ -162,10 +179,5 @@ class BaselineServiceTest extends TestCase
             ->andReturn(false);
 
         $this->service->findByProject($this->current_user, $project, 10, 0);
-    }
-
-    private function buildATransientBaseline(): TransientBaseline
-    {
-        return new TransientBaseline('baseline name', BaselineArtifactFactory::one()->build());
     }
 }
