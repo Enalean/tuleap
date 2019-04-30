@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,14 +15,18 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see http://www.gnu.org/licenses/.
+ *
  */
 
-class b201901231543_remove_no_more_used_user_preference extends ForgeUpgrade_Bucket // phpcs:ignore
+declare(strict_types=1);
+
+class b201904301737_remove_user_preference_expand_collapse_folder extends ForgeUpgrade_Bucket // @codingStandardsIgnoreLine
 {
+
     public function description()
     {
-        return 'Remove no more used use preference';
+        return 'Remove the user preference for expanded/collapsed folder.';
     }
 
     public function preUp()
@@ -32,12 +36,12 @@ class b201901231543_remove_no_more_used_user_preference extends ForgeUpgrade_Buc
 
     public function up()
     {
-        $sql = "DELETE FROM user_preferences WHERE preference_name LIKE 'plugin_docman_display_legacy_ui_%'";
+        $sql = "DELETE FROM user_preferences WHERE preference_name LIKE 'plugin_docman_hide_%'";
 
         $result = $this->db->dbh->exec($sql);
 
         if ($result === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Can not delete the legacy ui preference');
+            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Can not delete the expand/collapse user preference');
         }
     }
 }
