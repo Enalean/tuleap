@@ -515,20 +515,27 @@ class testmanagementPlugin extends PluginWithLegacyInternalRouting
             NatureCoveredByPresenter::NATURE_COVERED_BY
         );
 
-        if (! $project->usesService($this->getServiceShortname()) && $covered_by_type_is_activated) {
+        if ($project->usesService($service_short_name)) {
+            // Service is being deactivated
             $event->serviceCanBeActivated();
-        } else {
-            $message = sprintf(
-                dgettext(
-                    'tuleap-testmanagement',
-                    'Service %s cannot be activated because the artifact link type "%s" is not activated'
-                ),
-                $service_short_name,
-                NatureCoveredByPresenter::NATURE_COVERED_BY
-            );
-
-            $event->setWarningMessage($message);
+            return;
         }
+
+        if ($covered_by_type_is_activated) {
+            $event->serviceCanBeActivated();
+            return;
+        }
+
+        $message = sprintf(
+            dgettext(
+                'tuleap-testmanagement',
+                'Service %s cannot be activated because the artifact link type "%s" is not activated'
+            ),
+            $service_short_name,
+            NatureCoveredByPresenter::NATURE_COVERED_BY
+        );
+
+        $event->setWarningMessage($message);
     }
 
     public function tracker_xml_import_artifact_link_can_be_disabled(XMLImportArtifactLinkTypeCanBeDisabled $event)
