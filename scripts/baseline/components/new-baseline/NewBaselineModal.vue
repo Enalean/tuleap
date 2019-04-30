@@ -100,7 +100,8 @@
                         id="snapshot_date"
                         ref="snapshot_date"
                         class="tlp-input tlp-input-date"
-                        size="11"
+                        data-enabletime="true"
+                        size="19"
                     >
                 </div>
             </div>
