@@ -22,26 +22,38 @@
         <div
             v-if="first_depth_artifacts.length === 0"
             class="baseline-empty-information-message"
-            data-test-type="information-message"
+            data-test-type="empty-artifact-message"
         >
             <translate>No artifacts</translate>
         </div>
 
-        <artifacts-list
-            v-bind:artifacts="first_depth_artifacts"
-        />
+        <div
+            v-if="filtered_artifacts.length === 0"
+            class="baseline-empty-information-message"
+            data-test-type="all-artifacts-filtered-message"
+        >
+            <translate>All artifacts are hidden</translate>
+        </div>
+
+        <artifacts-list v-bind:artifacts="filtered_artifacts"/>
     </div>
 </template>
 
 <script>
 import ArtifactsList from "./ArtifactsList.vue";
-import { mapState } from "vuex";
+import { mapState, mapGetters } from "vuex";
 
 export default {
     name: "ContentBody",
 
     components: { ArtifactsList },
 
-    computed: mapState("current_baseline", ["first_depth_artifacts"])
+    computed: {
+        ...mapState("current_baseline", ["first_depth_artifacts"]),
+        ...mapGetters("current_baseline", ["filterArtifacts"]),
+        filtered_artifacts() {
+            return this.filterArtifacts(this.first_depth_artifacts);
+        }
+    }
 };
 </script>

@@ -28,41 +28,53 @@
             <translate>Cannot fetch baseline</translate>
         </div>
 
-        <content-page-skeleton v-else-if="is_loading"/>
+        <baseline-content-layout v-else-if="is_loading">
+            <baseline-label-skeleton slot="header"/>
+            <baseline-content-filters-skeleton slot="filters"/>
 
-        <template v-else>
-            <baseline-label v-bind:baseline="baseline"/>
+            <ol class="baseline-content-artifact-ol">
+                <li class="baseline-content-artifact-li">
+                    <artifact-skeleton class="baseline-content-artifact"/>
+                </li>
+                <li class="baseline-content-artifact-li">
+                    <artifact-skeleton class="baseline-content-artifact"/>
+                </li>
+                <li class="baseline-content-artifact-li">
+                    <artifact-skeleton class="baseline-content-artifact"/>
+                </li>
+            </ol>
+        </baseline-content-layout>
 
-            <statistics/>
+        <baseline-content-layout v-else>
+            <baseline-label slot="header" v-bind:baseline="baseline"/>
+            <baseline-content-filters slot="filters"/>
 
-            <div class="tlp-framed-vertically">
-                <section class="tlp-pane">
-                    <div class="tlp-pane-container">
-                        <section class="tlp-pane-section baseline-content">
-                            <content-body/>
-                        </section>
-                    </div>
-                </section>
-            </div>
-        </template>
+            <content-body/>
+        </baseline-content-layout>
     </div>
 </template>
 
 <script>
 import { sprintf } from "sprintf-js";
-import Statistics from "./Statistics.vue";
+import BaselineLabelSkeleton from "../common/BaselineLabelSkeleton.vue";
 import ContentBody from "./ContentBody.vue";
 import BaselineLabel from "../common/BaselineLabel.vue";
-import ContentPageSkeleton from "./ContentPageSkeleton.vue";
 import { mapGetters } from "vuex";
+import BaselineContentFilters from "./BaselineContentFilters.vue";
+import BaselineContentFiltersSkeleton from "./BaselineContentFiltersSkeleton.vue";
+import BaselineContentLayout from "./BaselineContentLayout.vue";
+import ArtifactSkeleton from "../common/ArtifactSkeleton.vue";
 
 export default {
     name: "ContentPage",
     components: {
+        BaselineLabelSkeleton,
+        BaselineContentLayout,
+        BaselineContentFilters,
+        BaselineContentFiltersSkeleton,
         BaselineLabel,
         ContentBody,
-        Statistics,
-        ContentPageSkeleton
+        ArtifactSkeleton
     },
 
     props: {

@@ -18,6 +18,7 @@
  *
  */
 
+import Vue from "vue";
 import { getBaselineArtifacts, getBaselineArtifactsByIds } from "../../api/rest-querier";
 import { ARTIFACTS_EXPLORATION_DEPTH_LIMIT } from "../../constants";
 import ArrayUtils from "../../support/array-utils";
@@ -29,7 +30,7 @@ export default {
         baseline_id: null,
         first_depth_artifacts: null,
         artifacts_where_depth_limit_reached: null,
-        artifacts_by_id: null,
+        artifacts_by_id: {},
 
         loaded_depths_count: null
     },
@@ -78,7 +79,7 @@ export default {
             state.artifacts_where_depth_limit_reached = artifacts;
         },
         addArtifacts: (state, artifacts) => {
-            artifacts.forEach(artifact => (state.artifacts_by_id[artifact.id] = artifact));
+            artifacts.forEach(artifact => Vue.set(state.artifacts_by_id, artifact.id, artifact));
         },
         incrementLoadedDepthsCount: state => state.loaded_depths_count++
     },
@@ -91,6 +92,14 @@ export default {
             state.artifacts_where_depth_limit_reached.length > 0,
         isLimitReachedOnArtifact: (state, getters) => artifact =>
             getters.is_depth_limit_reached &&
-            state.artifacts_where_depth_limit_reached.indexOf(artifact) !== -1
+            state.artifacts_where_depth_limit_reached.indexOf(artifact) !== -1,
+        all_trackers: state =>
+            ArrayUtils.uniqueByAttribute(
+                Object.values(state.artifacts_by_id).map(artifact => ({
+                    id: artifact.tracker_id,
+                    name: artifact.tracker_name
+                })),
+                "id"
+            )
     }
 };

@@ -203,5 +203,20 @@ describe("Compared baseline store:", () => {
                 });
             });
         });
+        describe("#all_trackers", () => {
+            beforeEach(() =>
+                (state.artifacts_by_id = {
+                    1: create("baseline_artifact", { tracker_id: 1, tracker_name: "Epic" }),
+                    2: create("baseline_artifact", { tracker_id: 2, tracker_name: "Story" }),
+                    3: create("baseline_artifact", { tracker_id: 1, tracker_name: "Epic" })
+                }));
+
+            it("returns all distinct trackers", () => {
+                expect(store.getters.all_trackers(state)).toEqual([
+                    { id: 1, name: "Epic" },
+                    { id: 2, name: "Story" }
+                ]);
+            });
+        });
     });
 });

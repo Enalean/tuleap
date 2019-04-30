@@ -12,6 +12,9 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 2.2.1\n"
 
+msgid "All artifacts are hidden"
+msgstr "Tous les artefacts sont masqués"
+
 msgid "Artifact added"
 msgstr "Artefact ajouté"
 
@@ -84,6 +87,9 @@ msgstr "Choisissez une baseline…"
 msgid "Choose a reference baseline…"
 msgstr "Choisissez une baseline de référence…"
 
+msgid "Choose a tracker…"
+msgstr "Choisissez un tracker…"
+
 msgid "Close"
 msgstr "Fermer"
 
@@ -105,6 +111,9 @@ msgstr "Comparaisons disponibles"
 msgid "Consult"
 msgstr "Consulter"
 
+msgid "Content"
+msgstr "Contenu"
+
 msgid "Create baseline"
 msgstr "Créer la baseline"
 
@@ -122,6 +131,12 @@ msgstr "Supprimer la comparaison"
 
 msgid "Epics"
 msgstr "Epics"
+
+msgid "Filters"
+msgstr "Filtres"
+
+msgid "Hidden trackers"
+msgstr "Trackers masqués"
 
 msgid "Id"
 msgstr "Id"

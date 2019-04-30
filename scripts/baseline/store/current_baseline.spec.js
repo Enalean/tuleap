@@ -18,6 +18,7 @@
  */
 
 import store from "./current_baseline";
+import { create, createList } from "../support/factories";
 
 describe("Current baseline store:", () => {
     describe("actions", () => {
@@ -51,6 +52,40 @@ describe("Current baseline store:", () => {
             });
             it("loads baseline content", () => {
                 expect(context.dispatch).toHaveBeenCalledWith("loadAllArtifacts");
+            });
+        });
+    });
+
+    describe("getters", () => {
+        let state;
+        beforeEach(() => (state = { ...store.state }));
+
+        describe("#filterArtifacts", () => {
+            describe("when no hidden trackers", () => {
+                beforeEach(() => (state.hidden_tracker_ids = []));
+
+                it("returns all given artifacts", () => {
+                    const artifacts = createList("baseline_artifact");
+                    expect(store.getters.filterArtifacts(state)(artifacts)).toEqual(artifacts);
+                });
+            });
+
+            describe("when some trackers hidden", () => {
+                let artifact_on_hidden_tracker = create("baseline_artifact", { tracker_id: 1 });
+                let artifact_on_other_tracker = create("baseline_artifact", { tracker_id: 3 });
+
+                beforeEach(() => (state.hidden_tracker_ids = [1, 2]));
+
+                it("filters artifacts on hidden trackers", () => {
+                    expect(
+                        store.getters.filterArtifacts(state)([artifact_on_hidden_tracker])
+                    ).toEqual([]);
+                });
+                it("does not filter artifacts on not hidden trackers", () => {
+                    expect(
+                        store.getters.filterArtifacts(state)([artifact_on_other_tracker])
+                    ).toEqual([artifact_on_other_tracker]);
+                });
             });
         });
     });

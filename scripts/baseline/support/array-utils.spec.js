@@ -58,11 +58,20 @@ describe("ArrayUtils:", () => {
     });
 
     describe("unique", () => {
-        describe("when they are objects", () => {
-            const obj = { id: 1, title: "Scra" };
+        describe("with two objects with same references", () => {
+            const object = { id: 1, title: "Scra" };
 
-            it("returns unique values", () => {
-                expect(ArrayUtils.unique([obj, obj])).toEqual([obj]);
+            it("identifies double", () => {
+                expect(ArrayUtils.unique([object, object])).toEqual([object]);
+            });
+        });
+
+        describe("with two objects with same content, but different references", () => {
+            const object1 = { id: 1, title: "title" };
+            const object2 = { id: 1, title: "title" };
+
+            it("does not identify double", () => {
+                expect(ArrayUtils.unique([object1, object2])).toEqual([object1, object2]);
             });
         });
 
@@ -95,6 +104,37 @@ describe("ArrayUtils:", () => {
         describe("when they are null values", () => {
             it("returns unique null values", () => {
                 expect(ArrayUtils.unique([null, null])).toEqual([null]);
+            });
+        });
+    });
+
+    describe("uniqueByAttribute", () => {
+        describe("with two objects with same references", () => {
+            const object = { id: 1, title: "Scra" };
+
+            it("identifies double", () => {
+                expect(ArrayUtils.uniqueByAttribute([object, object], "id")).toEqual([object]);
+            });
+        });
+
+        describe("with two objects with same content, but different references", () => {
+            const object1 = { id: 1, title: "title" };
+            const object2 = { id: 1, title: "title" };
+
+            it("identifies double", () => {
+                expect(ArrayUtils.uniqueByAttribute([object1, object2], "id")).toEqual([object1]);
+            });
+        });
+
+        describe("with two objects with different attributes", () => {
+            const object1 = { id: 1, title: "title" };
+            const object2 = { id: 2, title: "title" };
+
+            it("returns identical array", () => {
+                expect(ArrayUtils.uniqueByAttribute([object1, object2], "id")).toEqual([
+                    object1,
+                    object2
+                ]);
             });
         });
     });

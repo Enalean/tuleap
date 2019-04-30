@@ -23,21 +23,31 @@ import { createStoreMock } from "../../support/store-wrapper.spec-helper.js";
 import store_options from "../../store/store_options";
 import { restore } from "../../api/rest-querier";
 import ContentBody from "./ContentBody.vue";
+import { createList } from "../../support/factories";
+import ArtifactsList from "./ArtifactsList.vue";
 
 describe("ContentBody", () => {
     let $store;
     let wrapper;
 
-    const information_message_selector = '[data-test-type="information-message"]';
+    const empty_artifact_message_selector = '[data-test-type="empty-artifact-message"]';
+    const all_artifacts_filtered_message_selector =
+        '[data-test-type="all-artifacts-filtered-message"]';
 
     beforeEach(() => {
-        $store = createStoreMock(store_options);
-        $store.state.current_baseline.first_depth_artifacts = [];
+        $store = createStoreMock(
+            {
+                ...store_options,
+                getters: {
+                    "current_baseline/filterArtifacts": () => []
+                }
+            },
+            {
+                current_baseline: { first_depth_artifacts: [] }
+            }
+        );
 
         wrapper = shallowMount(ContentBody, {
-            propsData: {
-                first_depth_artifacts: []
-            },
             localVue,
             mocks: {
                 $store
@@ -47,7 +57,37 @@ describe("ContentBody", () => {
 
     afterEach(restore);
 
-    it("shows information message", () => {
-        expect(wrapper.contains(information_message_selector)).toBeTruthy();
+    describe("when no first depth artifacts", () => {
+        beforeEach(() => ($store.state.current_baseline.first_depth_artifacts = []));
+        it("shows empty artifact message", () => {
+            expect(wrapper.contains(empty_artifact_message_selector)).toBeTruthy();
+        });
+    });
+
+    describe("when some first depth artifacts", () => {
+        beforeEach(() =>
+            ($store.state.current_baseline.first_depth_artifacts = createList(
+                "baseline_artifact",
+                2
+            )));
+
+        describe("when all artifacts hidden", () => {
+            beforeEach(() => ($store.getters["current_baseline/filterArtifacts"] = () => []));
+            it("shows all artifacts filtered message", () => {
+                expect(wrapper.contains(all_artifacts_filtered_message_selector)).toBeTruthy();
+            });
+        });
+
+        describe("when some artifacts are visible", () => {
+            const filtered_artifacts = createList("baseline_artifact", 2);
+
+            beforeEach(() =>
+                ($store.getters["current_baseline/filterArtifacts"] = () => filtered_artifacts));
+
+            it("shows all visible artifacts", () => {
+                expect(wrapper.contains(ArtifactsList)).toBeTruthy();
+                expect(wrapper.find(ArtifactsList).props().artifacts).toEqual(filtered_artifacts);
+            });
+        });
     });
 });

@@ -43,8 +43,8 @@
         <depth-limit-reached-message v-if="is_limit_reached"/>
 
         <artifacts-list
-            v-else-if="linked_artifacts.length > 0"
-            v-bind:artifacts="linked_artifacts"
+            v-else-if="filtered_linked_artifacts.length > 0"
+            v-bind:artifacts="filtered_linked_artifacts"
         />
     </div>
 </template>
@@ -81,7 +81,11 @@ export default {
     },
 
     computed: {
-        ...mapGetters("current_baseline", ["findArtifactsByIds", "isLimitReachedOnArtifact"]),
+        ...mapGetters("current_baseline", [
+            "findArtifactsByIds",
+            "isLimitReachedOnArtifact",
+            "filterArtifacts"
+        ]),
         is_description_available() {
             return this.artifact.description !== null && this.artifact.description.length > 0;
         },
@@ -92,6 +96,10 @@ export default {
 
         linked_artifacts() {
             return this.findArtifactsByIds(this.artifact.linked_artifact_ids);
+        },
+
+        filtered_linked_artifacts() {
+            return this.filterArtifacts(this.linked_artifacts);
         },
 
         is_limit_reached() {

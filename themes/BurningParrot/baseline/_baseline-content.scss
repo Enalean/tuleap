@@ -46,6 +46,23 @@ $artifact-body-padding: $tlp-spacing;
     background-color: $tlp-theme-purple;
 }
 
+.baseline-panes {
+    display: flex;
+    position: relative;
+    align-items: flex-start;
+}
+
+.baseline-content-filter-pane {
+    position: sticky;
+    top: 65px;
+    min-width: 300px;
+    margin: 0 20px 0 0;
+}
+
+.baseline-content-body-pane {
+    flex-grow: 2;
+}
+
 .baseline-content-artifact-ol {
     padding-left: $artifact-body-padding;
     list-style: none;
@@ -64,10 +81,6 @@ $artifact-body-padding: $tlp-spacing;
         color: $tlp-theme-color;
         font-size: 1.3rem;
     }
-}
-
-.baseline-content .baseline-content-artifact-ol > .baseline-content-artifact-li:first-child {
-    margin-top: 0;
 }
 
 .baseline-content-artifact {

@@ -25,7 +25,8 @@ export default {
     ...abstract_baseline_content,
 
     state: {
-        ...abstract_baseline_content.state
+        ...abstract_baseline_content.state,
+        hidden_tracker_ids: []
     },
 
     actions: {
@@ -38,5 +39,19 @@ export default {
                 dispatch("loadAllArtifacts")
             ]);
         }
+    },
+
+    mutations: {
+        ...abstract_baseline_content.mutations,
+        filterTrackersById: (state, hidden_tracker_ids) =>
+            (state.hidden_tracker_ids = hidden_tracker_ids)
+    },
+
+    getters: {
+        ...abstract_baseline_content.getters,
+        filterArtifacts: state => artifacts =>
+            artifacts.filter(
+                artifact => state.hidden_tracker_ids.indexOf(artifact.tracker_id) === -1
+            )
     }
 };

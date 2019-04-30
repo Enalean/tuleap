@@ -22,21 +22,22 @@ import { shallowMount } from "@vue/test-utils";
 import localVue from "../../support/local-vue.js";
 import { createStoreMock } from "../../support/store-wrapper.spec-helper.js";
 import store_options from "../../store/store_options";
-import { create } from "../../support/factories";
+import { create, createList } from "../../support/factories";
 import DepthLimitReachedMessage from "../common/DepthLimitReachedMessage.vue";
 import Artifact from "./Artifact.vue";
 import ArtifactsList from "./ArtifactsList.vue";
 
 describe("Artifact", () => {
-    const artifact_selector = '[data-test-type="artifact"]';
     const artifact_fields_selector = '[data-test-type="artifact-fields"]';
     const artifact_description_selector = '[data-test-type="artifact-description"]';
     const artifact_status_selector = '[data-test-type="artifact-status"]';
 
     let isLimitReachedOnArtifact;
 
+    const artifact_where_not_limit_reached = create("baseline_artifact");
     const artifact_where_limit_reached = create("baseline_artifact");
 
+    let $store;
     let wrapper;
 
     beforeEach(() => {
@@ -48,13 +49,14 @@ describe("Artifact", () => {
             .withArgs(artifact_where_limit_reached)
             .and.returnValue(true);
 
-        const $store = createStoreMock({
+        $store = createStoreMock({
             ...store_options,
             getters: {
                 "semantics/field_label": () => "My description",
                 "semantics/is_field_label_available": () => true,
                 "current_baseline/findArtifactsByIds": () => [linked_artifact],
-                "current_baseline/isLimitReachedOnArtifact": isLimitReachedOnArtifact
+                "current_baseline/isLimitReachedOnArtifact": isLimitReachedOnArtifact,
+                "current_baseline/filterArtifacts": () => []
             }
         });
 
@@ -128,15 +130,8 @@ describe("Artifact", () => {
         });
     });
 
-    it("shows linked artifacts", () => {
-        expect(wrapper.find(artifact_selector).contains(artifact_selector)).toBeTruthy();
-    });
-
     describe("when artifacts tree has reached depth limit", () => {
-        beforeEach(async () => {
-            wrapper.setProps({ artifact: artifact_where_limit_reached });
-            await wrapper.vm.$nextTick();
-        });
+        beforeEach(() => wrapper.setProps({ artifact: artifact_where_limit_reached }));
 
         it("shows depth limit reached message", () => {
             expect(wrapper.contains(DepthLimitReachedMessage)).toBeTruthy();
@@ -144,6 +139,25 @@ describe("Artifact", () => {
 
         it("does not show linked artifact", () => {
             expect(wrapper.contains(ArtifactsList)).toBeFalsy();
+        });
+    });
+
+    describe("when artifacts tree has not reached depth limit", () => {
+        beforeEach(() => wrapper.setProps({ artifact: artifact_where_not_limit_reached }));
+
+        describe("when some linked artifacts are filtered", () => {
+            const filtered_linked_artifacts = createList("baseline_artifact", 3);
+
+            beforeEach(() =>
+                ($store.getters["current_baseline/filterArtifacts"] = () =>
+                    filtered_linked_artifacts));
+
+            it("shows only visible linked artifacts", () => {
+                expect(wrapper.contains(ArtifactsList)).toBeTruthy();
+                expect(wrapper.find(ArtifactsList).props().artifacts).toEqual(
+                    filtered_linked_artifacts
+                );
+            });
         });
     });
 });

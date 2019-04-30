@@ -18,21 +18,25 @@
  *
  */
 
-const find = (values, predicate) => values.filter(predicate)[0];
+import { shallowMount } from "@vue/test-utils";
+import localVue from "../../support/local-vue.js";
+import { createList } from "../../support/factories";
+import Artifact from "./Artifact.vue";
+import ArtifactsList from "./ArtifactsList.vue";
 
-const mapAttribute = (values, attribute) =>
-    values.map(value => value[attribute] || null).filter(Boolean);
+describe("ArtifactsList", () => {
+    let wrapper;
 
-const unique = values => [...new Set(values)];
-
-const uniqueByAttribute = (values, attribute) =>
-    unique(mapAttribute(values, attribute)).map(attribute_value =>
-        find(values, value => value[attribute] === attribute_value)
-    );
-
-const clone = values =>
-    values.map(value => {
-        return { ...value };
+    beforeEach(() => {
+        wrapper = shallowMount(ArtifactsList, {
+            propsData: {
+                artifacts: createList("baseline_artifact", 3)
+            },
+            localVue
+        });
     });
 
-export default { find, unique, uniqueByAttribute, clone, mapAttribute };
+    it("shows as many artifacts as given", () => {
+        expect(wrapper.findAll(Artifact).length).toEqual(3);
+    });
+});
