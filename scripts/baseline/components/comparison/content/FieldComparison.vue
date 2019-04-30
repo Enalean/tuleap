@@ -49,17 +49,31 @@ export default {
         },
         base: {
             required: false,
-            type: String
+            type: [String, Number]
         },
         compared_to: {
             required: false,
-            type: String
+            type: [String, Number]
         }
     },
 
     computed: {
+        base_as_string() {
+            if (!this.base) {
+                return "";
+            }
+            return this.base.toString();
+        },
+
+        compared_to_as_string() {
+            if (!this.compared_to) {
+                return "";
+            }
+            return this.compared_to.toString();
+        },
+
         value_diff() {
-            return diff(this.base || "", this.compared_to || "");
+            return diff(this.base_as_string, this.compared_to_as_string);
         }
     }
 };

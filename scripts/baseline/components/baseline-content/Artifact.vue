@@ -49,6 +49,13 @@
                     v-bind:value="artifact.status"
                     data-test-type="artifact-status"
                 />
+                <field
+                    v-if="is_initial_effort_available"
+                    semantic="initial_effort"
+                    v-bind:tracker_id="artifact.tracker_id"
+                    v-bind:value="artifact.initial_effort.toString()"
+                    data-test-type="artifact-initial_effort"
+                />
             </div>
 
             <depth-limit-reached-message v-if="is_limit_reached"/>
@@ -103,6 +110,12 @@ export default {
 
         is_status_available() {
             return this.artifact.status !== null && this.artifact.status.length > 0;
+        },
+
+        is_initial_effort_available() {
+            return (
+                this.artifact.initial_effort !== null && this.artifact.initial_effort !== undefined
+            );
         },
 
         linked_artifacts() {

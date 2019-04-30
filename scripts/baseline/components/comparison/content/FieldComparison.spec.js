@@ -59,4 +59,31 @@ describe("FieldComparison", () => {
             expect(wrapper.html()).not.toContain("<div onload=alert('xss')>");
         });
     });
+
+    describe("when compared values are numeric", () => {
+        beforeEach(() => {
+            wrapper.setProps({
+                base: 3,
+                compared_to: 5
+            });
+        });
+
+        it("converts values to string", () => {
+            expect(wrapper.find("del").text()).toEqual("3");
+            expect(wrapper.find("ins").text()).toEqual("5");
+        });
+    });
+
+    describe("when base value is null", () => {
+        beforeEach(() => {
+            wrapper.setProps({
+                base: null,
+                compared_to: 5
+            });
+        });
+
+        it("does not show base value", () => {
+            expect(wrapper.contains("del")).toBeFalsy();
+        });
+    });
 });

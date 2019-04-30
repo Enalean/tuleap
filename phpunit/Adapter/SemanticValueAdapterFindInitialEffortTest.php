@@ -27,7 +27,12 @@ require_once __DIR__ . '/../bootstrap.php';
 require_once __DIR__ . '/SemanticValueAdapterTest.php';
 
 use Mockery;
+use Mockery\MockInterface;
+use Tracker_Artifact_ChangesetValue;
+use Tracker_Artifact_ChangesetValue_List;
+use Tracker_Artifact_ChangesetValue_Numeric;
 use Tracker_FormElement_Field;
+use Tracker_FormElement_Field_List_Bind_StaticValue;
 
 class SemanticValueAdapterFindInitialEffortTest extends SemanticValueAdapterTest
 {
@@ -47,7 +52,30 @@ class SemanticValueAdapterFindInitialEffortTest extends SemanticValueAdapterTest
 
         $this->changeset->shouldReceive('getValue')
             ->with($field)
-            ->andReturn($this->mockChangesetValue(5));
+            ->andReturn($this->mockChangesetValueNumeric(5));
+
+        $title = $this->adapter->findInitialEffort($this->changeset, $this->current_user);
+
+        $this->assertEquals(5, $title);
+    }
+
+    public function testFindInitialEffortWithValueList(): void
+    {
+        $this->changeset->shouldReceive('getTracker')->andReturn($this->tracker);
+
+        $field = Mockery::mock(Tracker_FormElement_Field::class)
+            ->shouldReceive('userCanRead')
+            ->andReturn(true)
+            ->getMock();
+
+        $this->semantic_field_repository
+            ->shouldReceive('findInitialEffortByTracker')
+            ->with($this->tracker)
+            ->andReturn($field);
+
+        $this->changeset->shouldReceive('getValue')
+            ->with($field)
+            ->andReturn($this->mockChangesetValueListWithLabel("5"));
 
         $title = $this->adapter->findInitialEffort($this->changeset, $this->current_user);
 
@@ -107,5 +135,28 @@ class SemanticValueAdapterFindInitialEffortTest extends SemanticValueAdapterTest
         $title = $this->adapter->findInitialEffort($this->changeset, $this->current_user);
 
         $this->assertNull($title);
+    }
+
+    /**
+     * @return Tracker_Artifact_ChangesetValue_Numeric|MockInterface
+     */
+    private function mockChangesetValueNumeric(float $value): Tracker_Artifact_ChangesetValue
+    {
+        return Mockery::mock(Tracker_Artifact_ChangesetValue_Numeric::class)
+            ->shouldReceive(['getNumeric' => $value])
+            ->getMock();
+    }
+
+    /**
+     * @return Tracker_Artifact_ChangesetValue_List|MockInterface
+     */
+    private function mockChangesetValueListWithLabel(string $value): Tracker_Artifact_ChangesetValue
+    {
+        $value = Mockery::mock(Tracker_FormElement_Field_List_Bind_StaticValue::class)
+            ->shouldReceive(['getLabel' => $value])
+            ->getMock();
+        return Mockery::mock(Tracker_Artifact_ChangesetValue_List::class)
+            ->shouldReceive(['getListValues' => [$value]])
+            ->getMock();
     }
 }

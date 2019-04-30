@@ -36,7 +36,7 @@ class BaselineArtifact
     /** @var string|null */
     private $description;
 
-    /** @var int|null */
+    /** @var float|null */
     private $initial_effort;
 
     /** @var string|null */
@@ -61,7 +61,7 @@ class BaselineArtifact
         int $id,
         ?string $title,
         ?string $description,
-        ?int $initial_effort,
+        ?float $initial_effort,
         ?string $status,
         Project $project,
         int $tracker_id,
@@ -94,7 +94,7 @@ class BaselineArtifact
         return $this->description;
     }
 
-    public function getInitialEffort(): ?int
+    public function getInitialEffort(): ?float
     {
         return $this->initial_effort;
     }
