@@ -1,8 +1,5 @@
 <?php
 
-/**
- *
- */
 class b201102090815_add_column_repository_events_mailing_prefix extends ForgeUpgrade_Bucket {
 
     public function description() {

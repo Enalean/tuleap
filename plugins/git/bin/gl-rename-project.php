@@ -30,7 +30,7 @@ if ($argc !== 3) {
     exit(1);
 }
 
-/* @var $git_plugin GitPlugin */
+/** @var GitPlugin $git_plugin */
 $git_plugin  = PluginManager::instance()->getPluginByName('git');
 $url_manager = new Git_GitRepositoryUrlManager($git_plugin);
 $driver      = new Git_GitoliteDriver(

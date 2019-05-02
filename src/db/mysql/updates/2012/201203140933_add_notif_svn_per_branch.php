@@ -17,9 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- *
- */
 class b201203140933_add_notif_svn_per_branch extends ForgeUpgrade_Bucket {
     public function description() {
         return <<<EOT

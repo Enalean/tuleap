@@ -87,9 +87,7 @@ class ArtifactCanned {
 	function create($title, $body) {
 	  global $Language;
 
-		//
 		//	data validation
-		//
 		if (!$title || !$body) {
 			$this->setError('ArtifactCanned: '.$Language->getText('tracker_common_canned','name_requ'));
 			return false;

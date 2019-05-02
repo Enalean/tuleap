@@ -1,5 +1,4 @@
 <?php
-//
 // Copyright (c) Enalean, 2014. All Rights Reserved.
 // This file is part of Tuleap
 //
@@ -10,8 +9,6 @@
 // 
 //
 //	Originally written by Laurent Julliard 2004, Codendi Team, Xerox
-//
-
 $project_manager = ProjectManager::instance();
 $project         = $project_manager->getProject($group_id);
 $project_svnroot = $project->getSVNRootPath();

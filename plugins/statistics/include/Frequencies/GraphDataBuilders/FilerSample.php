@@ -23,10 +23,6 @@ namespace Tuleap\Statistics\Frequencies\GraphDataBuilder;
 /**
  * Files released processing
  *
- * @package   Sample
- * @author    Arnaud Salvucci <arnuad.salvucci@st.com>
- * @copyright 2007 STMicroelectronics
- * @license   http://opensource.org/licenses/gpl-license.php GPL
  */
 class FilerSample extends Sample
 {

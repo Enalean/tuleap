@@ -190,9 +190,9 @@ class ReferenceDao extends DataAccessObject {
     * @return DataAccessResult with one field ('reference_id')
     */
     function searchByKeywordAndGroupId($keyword,$group_id) {
-        # Order by scope to return 'P'roject references before 'S'ystem references
-        # This may happen for old tracker created before Reference management.
-        # Otherwise, there should not be both S and P reference with the same keyword...
+        // Order by scope to return 'P'roject references before 'S'ystem references
+        // This may happen for old tracker created before Reference management.
+        // Otherwise, there should not be both S and P reference with the same keyword...
         $sql = sprintf("SELECT * FROM reference,reference_group WHERE reference.keyword = %s and reference.id=reference_group.reference_id and reference_group.group_id=%s ORDER BY reference.scope",
                        $this->da->quoteSmart($keyword),
                        $this->da->quoteSmart($group_id));
@@ -205,9 +205,9 @@ class ReferenceDao extends DataAccessObject {
     * @return DataAccessResult with one field ('reference_id')
     */
     function searchByKeywordAndGroupIdAndDescriptionAndLinkAndScope($keyword,$group_id,$description,$link,$scope) {
-        # Order by scope to return 'P'roject references before 'S'ystem references
-        # This may happen for old tracker created before Reference management.
-        # Otherwise, there should not be both S and P reference with the same keyword...
+        // Order by scope to return 'P'roject references before 'S'ystem references
+        // This may happen for old tracker created before Reference management.
+        // Otherwise, there should not be both S and P reference with the same keyword...
         $sql = sprintf("SELECT * FROM reference r,reference_group rg WHERE ".
                "service_short_name != 'plugin_tracker' AND ".
 		       "r.keyword = %s AND ".

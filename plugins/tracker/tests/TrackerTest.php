@@ -250,9 +250,7 @@ class TrackerTest extends TuleapTestCase {
         parent::tearDown();
     }
 
-    //
     // New artifact permissions
-    //
     public function testPermsNewArtifactSiteAdmin() {
         $request_new_artifact = \Mockery::spy(\Codendi_Request::class);
         $request_new_artifact->shouldReceive('get')->with('func')->andReturns('new-artifact');
@@ -373,9 +371,7 @@ class TrackerTest extends TuleapTestCase {
         $this->tracker->process($this->tracker_manager, $request_new_artifact, $this->registered_user);
     }
 
-    //
     // Delete tracker permissions
-    //
     public function testPermsDeleteTrackerSiteAdmin() {
         $request_delete_tracker = \Mockery::spy(\Codendi_Request::class);
         $request_delete_tracker->shouldReceive('get')->with('func')->andReturns('delete');
@@ -417,9 +413,7 @@ class TrackerTest extends TuleapTestCase {
         $this->tracker->process($this->tracker_manager, $request_delete_tracker, $this->registered_user);
     }
 
-    //
     // Tracker admin permissions
-    //
     public function testPermsAdminTrackerSiteAdmin() {
         $request_admin_tracker = \Mockery::spy(\Codendi_Request::class);
         $request_admin_tracker->shouldReceive('get')->with('func')->andReturns('admin');
@@ -493,9 +487,7 @@ class TrackerTest extends TuleapTestCase {
         $this->tracker->userIsAdmin($user);
     }
 
-    //
     // Tracker admin edit option permissions
-    //
     public function testPermsAdminEditOptionsTrackerSiteAdmin() {
         $request_admin_editoptions_tracker = \Mockery::spy(\Codendi_Request::class);
         $request_admin_editoptions_tracker->shouldReceive('get')->with('func')->andReturns('admin-editoptions');
@@ -559,9 +551,7 @@ class TrackerTest extends TuleapTestCase {
         $this->tracker->process($this->tracker_manager, $request_admin_editoptions_tracker, $this->registered_user);
     }
 
-    //
     // Tracker "admin perms" permissions
-    //
     public function testPermsAdminPermsTrackerSiteAdmin() {
         $request_admin_perms_tracker = \Mockery::spy(\Codendi_Request::class);
         $request_admin_perms_tracker->shouldReceive('get')->with('func')->andReturns('admin-perms');
@@ -625,9 +615,7 @@ class TrackerTest extends TuleapTestCase {
         $this->tracker->process($this->tracker_manager, $request_admin_perms_tracker, $this->registered_user);
     }
 
-    //
     // Tracker "admin perms tracker" permissions
-    //
     public function testPermsAdminPermsTrackerTrackerSiteAdmin() {
         $request_admin_perms_tracker_tracker = \Mockery::spy(\Codendi_Request::class);
         $request_admin_perms_tracker_tracker->shouldReceive('get')->with('func')->andReturns('admin-perms-tracker');
@@ -691,9 +679,7 @@ class TrackerTest extends TuleapTestCase {
         $this->tracker->process($this->tracker_manager, $request_admin_perms_tracker_tracker, $this->registered_user);
     }
 
-    //
     // Tracker "admin perms fields" permissions
-    //
     public function testPermsAdminPermsFieldsTrackerSiteAdmin() {
         $request_admin_perms_fields_tracker = \Mockery::spy(\Codendi_Request::class);
         $request_admin_perms_fields_tracker->shouldReceive('get')->with('func')->andReturns('admin-perms-fields');
@@ -757,9 +743,7 @@ class TrackerTest extends TuleapTestCase {
         $this->tracker->process($this->tracker_manager, $request_admin_perms_fields_tracker, $this->registered_user);
     }
 
-    //
     // Tracker "admin form elements" permissions
-    //
     public function testPermsAdminFormElementTrackerSiteAdmin() {
         $request_admin_formelement_tracker = \Mockery::spy(\Codendi_Request::class);
         $request_admin_formelement_tracker->shouldReceive('get')->with('func')->andReturns('admin-formElements');
@@ -823,9 +807,7 @@ class TrackerTest extends TuleapTestCase {
         $this->tracker->process($this->tracker_manager, $request_admin_formelement_tracker, $this->registered_user);
     }
 
-    //
     // Tracker "admin semantic" permissions
-    //
     public function testPermsAdminSemanticTrackerSiteAdmin() {
         $request_admin_semantic_tracker = \Mockery::spy(\Codendi_Request::class);
         $request_admin_semantic_tracker->shouldReceive('get')->with('func')->andReturns('admin-semantic');
@@ -886,9 +868,7 @@ class TrackerTest extends TuleapTestCase {
         $this->tracker->process($this->tracker_manager, $request_admin_semantic_tracker, $this->registered_user);
     }
 
-    //
     // Tracker "admin canned" permissions
-    //
     public function testPermsAdminCannedTrackerSiteAdmin() {
         $request_admin_canned_tracker = \Mockery::spy(\Codendi_Request::class);
         $request_admin_canned_tracker->shouldReceive('get')->with('func')->andReturns('admin-canned');
@@ -949,9 +929,7 @@ class TrackerTest extends TuleapTestCase {
         $this->tracker->process($this->tracker_manager, $request_admin_canned_tracker, $this->registered_user);
     }
 
-    //
     // Tracker "admin workflow" permissions
-    //
     public function testPermsAdminWorkflowTrackerSiteAdmin() {
         $request_admin_workflow_tracker = \Mockery::spy(\HTTPRequest::class);
         $request_admin_workflow_tracker->shouldReceive('get')->with('func')->andReturns(Workflow::FUNC_ADMIN_TRANSITIONS);

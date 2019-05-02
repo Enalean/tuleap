@@ -91,8 +91,6 @@ extends WikiPlugin
 // Revision 1.2  2003/01/04 23:27:39  carstenklapp
 // New: Gracefully handle non-existant pages. Added copyleft;
 // getVersion() for PluginManager.
-//
-
 // (c-file-style: "gnu")
 // Local Variables:
 // mode: php

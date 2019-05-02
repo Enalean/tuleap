@@ -149,9 +149,6 @@ extends WikiPlugin__WikiTranslation
 //
 // Revision 1.2  2004/03/17 12:04:36  rurban
 // more docs
-//
-//
-
 // For emacs users
 // Local Variables:
 // mode: php

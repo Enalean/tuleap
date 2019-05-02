@@ -46,7 +46,6 @@ use Tuleap\User\RequestFromAutocompleter;
 
 /**
  * Git
- * @author Guillaume Storchi
  */
 class Git extends PluginController
 {
@@ -558,12 +557,12 @@ class Git extends PluginController
     public function _dispatchActionAndView($action, /* GitRepository */ $repository, $repo_id, $repositoryName, $user) {
         $pane = $this->request->get('pane');
         switch ($action) {
-             #DELETE a repository
+             // DELETE a repository
             case 'del':
                 $this->addAction( 'deleteRepository', array($this->groupId, $repository->getId()));
                 $this->addView('index');
                 break;
-            #EDIT
+            // EDIT
             case 'edit-description':
                 $description = null;
                 if ($this->request->exist('repo_desc')) {
@@ -656,7 +655,7 @@ class Git extends PluginController
                     $this->redirect('/plugins/git/' . urlencode($this->project->getUnixNameLowerCase()) . '/');
                 }
                 break;
-            #repo_management
+            // repo_management
             case 'repo_management':
                 if (empty($repository)) {
                     $this->redirectNoRepositoryError();
@@ -669,12 +668,12 @@ class Git extends PluginController
             case 'mail':
                 $this->processRepoManagementNotifications($pane, $repository->getId(), $repositoryName, $user);
                 break;
-            #fork
+            // fork
             case 'fork':
                 $this->addAction('repoManagement', array($this->groupId, $repository->getId()));
                 $this->addView('forkRepositories');
                 break;
-            #confirm_private
+            // confirm_private
             case 'confirm_private':
                 if ( $this->isAPermittedAction('confirm_deletion') && $this->request->get('confirm_deletion') ) {
                     $this->addAction('confirmDeletion', array($this->groupId, $repository));
@@ -695,7 +694,7 @@ class Git extends PluginController
                     $this->addView('confirmPrivate');
                 }
                 break;
-             #SET TO PRIVATE
+             // SET TO PRIVATE
             case 'set_private':
                 $this->addAction('setPrivate', array($this->groupId, $repository->getId()));
                 $this->addView('view');
@@ -1027,7 +1026,7 @@ class Git extends PluginController
 
                 $this->addRedirectToDefaultSettingsAction();
                 break;
-            #LIST
+            // LIST
             default:
                 $GLOBALS['Response']->permanentRedirect('/plugins/git/' . urlencode($this->project->getUnixNameLowerCase()) ."/");
 

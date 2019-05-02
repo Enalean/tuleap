@@ -7,10 +7,6 @@ namespace Tuleap\Git\GitPHP;
  *
  * Base class for ref objects
  *
- * @author Christopher Han <xiphux@gmail.com>
- * @copyright Copyright (c) 2010 Christopher Han
- * @package GitPHP
- * @subpackage Git
  */
 
 use Tuleap\Git\Exceptions\GitRepoRefNotFoundException;
@@ -18,8 +14,6 @@ use Tuleap\Git\Exceptions\GitRepoRefNotFoundException;
 /**
  * Git Ref class
  *
- * @package GitPHP
- * @subpackage Git
  */
 abstract class Ref extends GitObject
 {

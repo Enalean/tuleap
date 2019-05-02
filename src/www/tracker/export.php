@@ -21,9 +21,7 @@
 
 require_once __DIR__ . '/../project/export/project_export_utils.php';
 
-//
 //  make sure this person has permission to view artifacts
-//
 if (!$ath->userCanView()) {
 	exit_permission_denied();
 }

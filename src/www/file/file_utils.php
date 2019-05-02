@@ -217,7 +217,7 @@ function file_utils_show_processors ($result) {
     echo '<td>'.$proc_rank."</td>\n";
 
 	if ($gr_id == "100") {
-	    #pre-defined processors are not manageable
+	    // pre-defined processors are not manageable
 	    echo '<TD align=center>-</TD>';
 	} else {
 	    echo '<TD align=center>'.

@@ -19,7 +19,7 @@
  */
 
 /**
- * Class CSRFSynchronizerToken
+ *
  *
  * This class deals with a CSRF countermeasure. Usage:
  *

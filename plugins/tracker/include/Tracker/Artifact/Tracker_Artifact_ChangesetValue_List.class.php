@@ -242,7 +242,7 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
         $added_elements = array_diff($next, $previous);
         $added_arr = array();
         foreach ($added_elements as $added_element) {
-            /* @var $added_element Tracker_FormElement_Field_List_Value */
+            /** @var Tracker_FormElement_Field_List_Value $added_element */
             $added_arr[] = $added_element->getLabel();
         }
 
@@ -253,7 +253,7 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
         $removed_elements = array_diff($previous, $next);
         $removed_arr = array();
         foreach ($removed_elements as $removed_element) {
-            /* @var $removed_element Tracker_FormElement_Field_List_Value */
+            /** @var Tracker_FormElement_Field_List_Value $removed_element */
             $removed_arr[] = $removed_element->getLabel();
         }
 

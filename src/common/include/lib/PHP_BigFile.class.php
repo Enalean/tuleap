@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright Nicolas Terray
+ * Nicolas Terray
  *
  * PHP_BigFile is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,9 +19,6 @@
  * https://bitbucket.org/vaceletm/php_bigfile
  */
 
-/**
- * Allow php to handle big files
- */
 class PHP_BigFile {
     
     /**

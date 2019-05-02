@@ -685,7 +685,6 @@ function util_user_finder($ident, $strict=true) {
 // this function get the css file for the theme
 // Requirement: $sys_user_theme is already
 // set (done by theme.php in pre.php)
-//
 function util_get_css_theme()
 {
     return '/themes/'.$GLOBALS['sys_user_theme'].'/css/style.css';
@@ -723,8 +722,6 @@ function formatByteToMb($size_byte) {
 /**
  * Return human readable sizes
  *
- * @author      Aidan Lister <aidan@php.net>
- * @version     1.3.0
  * @link        http://aidanlister.com/repos/v/function.size_readable.php
  * @param       int     $size        size in bytes
  * @param       string  $max         maximum unit

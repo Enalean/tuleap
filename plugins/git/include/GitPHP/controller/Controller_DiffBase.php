@@ -7,16 +7,10 @@ namespace Tuleap\Git\GitPHP;
  *
  * Base controller for diff-type views
  *
- * @author Christopher Han <xiphux@gmail.com>
- * @copyright Copyright (c) 2011 Christopher Han
- * @package GitPHP
- * @subpackage Controller
  */
 /**
  * DiffBase controller class
  *
- * @package GitPHP
- * @subpackage Controller
  */
 abstract class Controller_DiffBase extends ControllerBase // @codingStandardsIgnoreLine
 {

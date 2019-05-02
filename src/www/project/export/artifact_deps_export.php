@@ -20,9 +20,7 @@
  */
 
 
-//
 //	get the Group object
-//
 $pm = ProjectManager::instance();
 $group = $pm->getProject($group_id);
 if (!$group || !is_object($group) || $group->isError()) {
@@ -31,7 +29,6 @@ if (!$group || !is_object($group) || $group->isError()) {
 
 if ( $atid ) {
 	//	Create the ArtifactType object
-	//
 	$at = new ArtifactType($group,$atid);
 	if (!$at || !is_object($at)) {
 		exit_error($Language->getText('global','error'),$Language->getText('project_export_artifact_deps_export','at_not_created'));

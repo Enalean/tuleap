@@ -291,9 +291,6 @@ class Docman_Item {
         return $value;
     }
 
-    /**
-     * 
-     */
     public function &getMetadataFromLabel($label) {
         $metadata_value = $this->getHardCodedMetadataValue($label);
         $metadata       = null; // can't refactor with early return as it returns value by ref :(

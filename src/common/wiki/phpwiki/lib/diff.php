@@ -6,8 +6,6 @@ rcs_id('$Id: diff.php,v 1.52 2005/04/01 14:45:14 rurban Exp $');
 //
 // Copyright (C) 2000, 2001 Geoffrey T. Dairiki <dairiki@dairiki.org>
 // You may copy this code freely under the conditions of the GPL.
-//
-
 require_once('lib/difflib.php');
 require_once('lib/HtmlElement.php');
 
@@ -436,8 +434,6 @@ function showDiff (&$request) {
 // Revision 1.41  2003/01/08 02:23:02  carstenklapp
 // Don't perform a diff when the page doesn't exist (such as a
 // nonexistant calendar day/sub-page)
-//
-
 // Local Variables:
 // mode: php
 // tab-width: 8

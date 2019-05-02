@@ -177,14 +177,12 @@ class Docman_ItemDao extends DataAccessObject {
         $_id = (int) $id;
         $sql_where = ' i.group_id = '.$_id;
                 
-        //
         // Order clause        
         $sql_order = '';
 
 
         $fromStmts = array();
 
-        //
         // Report 
         if($report !== null) {
             // Filters

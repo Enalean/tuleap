@@ -23,10 +23,6 @@ rcs_id('$Id: InlineParser.php,v 1.70 2005/10/31 16:45:23 rurban Exp $');
  * This is the code which deals with the inline part of the (new-style)
  * wiki-markup.
  *
- * @package Markup
- * @author Geoffrey T. Dairiki
- */
-/**
  */
 
 /**
@@ -896,8 +892,6 @@ function TransformLinks($text, $markup = 2.0, $basepage = false) {
 //
 // Revision 1.65  2005/03/27 18:24:17  rurban
 // add Log
-//
-
 // (c-file-style: "gnu")
 // Local Variables:
 // mode: php

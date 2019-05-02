@@ -392,7 +392,6 @@ function fixup_static_configs($file) {
 
     //////////////////////////////////////////////////////////////////
     // Select database
-    //
     if (empty($DBParams['dbtype']))
         $DBParams['dbtype'] = 'dba';
 
@@ -538,7 +537,6 @@ function fixup_dynamic_configs($file) {
 
     //////////////////////////////////////////////////////////////////
     // Autodetect URL settings:
-    //
     foreach (array('SERVER_NAME','SERVER_PORT') as $var) {
         //FIXME: for CGI without _SERVER
         if (!defined($var) and !empty($_SERVER[$var]))
@@ -608,8 +606,6 @@ function fixup_dynamic_configs($file) {
         // passed to '/wikidir/index.php'.  In this case, the
         // proper VIRTUAL_PATH is '/wikidir/index.php', since the
         // pages will appear at e.g. '/wikidir/index.php/HomePage'.
-        //
-
         $REDIRECT_URL = &$_SERVER['REDIRECT_URL'];
         if (USE_PATH_INFO and isset($REDIRECT_URL)
             and ! IsProbablyRedirectToIndex()) {
@@ -1037,8 +1033,6 @@ function fixup_dynamic_configs($file) {
 // WikiUserNew changes for the new "'$variable'" syntax
 //   in the statements
 // TODO: optimization to put config vars into the session.
-//
-
 // (c-file-style: "gnu")
 // Local Variables:
 // mode: php

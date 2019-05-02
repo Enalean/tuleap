@@ -16,9 +16,7 @@ define('invalid_operator', '3021');
 
 if (defined('NUSOAP')) {
 
-//
 // Type definition
-//
 $GLOBALS['server']->wsdl->addComplexType(
     'Docman_Item',
     'complexType',
@@ -435,10 +433,7 @@ function _updateDocmanDocument($sessionKey, $group_id, $item_id, $title, $descri
     }
     return _updateDocmanItem($sessionKey, $group_id, $item_id, $title, $description, $status, $type, $permissions, $metadata, $owner, $create_date, $update_date, $extraParams);
 }
-//
 // SOAP function implementations
-//
-
 /**
 * Returns the document object that is at the top of the docman given a group object.
 */
@@ -820,10 +815,7 @@ function updateDocmanEmptyDocument($sessionKey, $group_id, $item_id, $title, $de
 $soapFunctions[] = array('updateDocmanEmptyDocument', 'Updates a docman empty document');
 
 
-//
 // Functions registering
-//
-
 if (defined('NUSOAP')) {
     // Soap parameters definition
     $GLOBALS['soapParameters'] = array(

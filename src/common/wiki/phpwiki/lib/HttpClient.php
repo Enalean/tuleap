@@ -357,8 +357,6 @@ class HttpClient {
 //
 // Revision 1.4  2004/04/12 18:15:28  rurban
 // standard footer
-//
-
 // For emacs users
 // Local Variables:
 // mode: php

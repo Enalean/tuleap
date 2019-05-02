@@ -27,8 +27,6 @@ rcs_id('$Id: OrphanedPages.php,v 1.10 2004/07/09 13:05:34 rurban Exp $');
  **/
 require_once('lib/PageList.php');
 
-/**
- */
 class WikiPlugin_OrphanedPages
 extends WikiPlugin
 {
@@ -122,8 +120,6 @@ extends WikiPlugin
 // Code cleanup:
 // Reformatting & tabs to spaces;
 // Added copyleft, getVersion, getDescription, rcs_id.
-//
-
 // Local Variables:
 // mode: php
 // tab-width: 8

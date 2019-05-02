@@ -25,7 +25,6 @@
 
 //require_once('common/tracker/ArtifactFactory.class.php');
 
-//
 // HTTP GET arguments
 // 
 // $group_id = The group ID 
@@ -41,10 +40,7 @@
 // $offset = the first element of the query result to display (used for the sql limit)
 // $pv = printable version (=1)
 //
-
-//
 //  make sure this person has permission to view artifacts
-//
 if (!$ath->userCanView()) {
 	exit_permission_denied();
 }
@@ -54,11 +50,9 @@ if ( !$ath->isValid() ) {
 	exit_error($Language->getText('global', 'error'),$Language->getText('tracker_add', 'invalid'));
 }
 
-//
 //  If the report type is not defined then get it from the user preferences.
 //  If it is set then update the user preference.  Also initialize the
 //  artifact report structures.
-//
 if (user_isloggedin()) {
     if (!$request->exist('report_id')) {
 		$report_id = user_get_preference('artifact_browse_report'.$atid);

@@ -128,9 +128,6 @@ class Codendi_HTMLPurifier {
         return $allowed;
     }
 
-    /**
-     *
-     */
     function getStripConfig() {
         $config = $this->getCodendiConfig();
         $this->setConfigAttribute($config, 'HTML', 'Allowed', '');

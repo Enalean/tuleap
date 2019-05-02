@@ -18,9 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- *
- */
 class b201206291629_add_missing_renderer_table_rows extends ForgeUpgrade_Bucket {
     
     public function description() {

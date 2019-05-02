@@ -1,8 +1,5 @@
 <?php
 
-/**
- *
- */
 class b201010181624_add_table_plugin_docman_version_deleted extends ForgeUpgrade_Bucket {
 
     public function description() {

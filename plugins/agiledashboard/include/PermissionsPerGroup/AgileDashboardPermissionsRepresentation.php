@@ -28,7 +28,7 @@ class AgileDashboardPermissionsRepresentation
     public $plannings_permissions;
 
     /**
-     * AgileDashboardPermissionRepresentation constructor.
+     *
      *
      * @param PlanningPermissionRepresentation[] $permissions
      */

@@ -8,8 +8,6 @@ require 'Docman_XMLExport.class.php';
 
 /**
  * Description of XMLExportclass
- *
- * @author vm16
  */
 class XMLExport {
     protected $archiveName;

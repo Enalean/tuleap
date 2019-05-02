@@ -170,8 +170,6 @@ extends WikiPlugin
 //
 // Revision 1.1.1.1  2004/01/29 14:30:28  dfrankow
 // Right out of the 1.3.7 package
-//
-
 // Local Variables:
 // mode: php
 // tab-width: 8

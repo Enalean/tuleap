@@ -7,10 +7,6 @@ namespace Tuleap\Git\GitPHP;
  *
  * Diff executable class
  *
- * @author Christopher Han <xiphux@gmail.com>
- * @copyright Copyright (c) 2010 Christopher Han
- * @package GitPHP
- * @subpackage Git
  */
 
 /**

@@ -59,9 +59,6 @@ class Docman_SqlFilterFactory {
     }
 }
 
-/**
- *
- */
 class Docman_SqlFilter
 extends Docman_MetadataSqlQueryChunk {
 
@@ -149,9 +146,6 @@ extends Docman_MetadataSqlQueryChunk {
     }
 }
 
-/**
- *
- */
 class Docman_SqlFilterDate
 extends Docman_SqlFilter {
 
@@ -224,9 +218,6 @@ extends Docman_SqlFilter {
     }
 }
 
-/**
- *
- */
 class Docman_SqlFilterDateAdvanced
 extends Docman_SqlFilterDate {
 
@@ -268,9 +259,6 @@ extends Docman_SqlFilterDate {
     }
 }
 
-/**
- *
- */
 class Docman_SqlFilterOwner
 extends Docman_SqlFilter {
 
@@ -289,9 +277,6 @@ extends Docman_SqlFilter {
     }
 }
 
-/**
- *
- */
 class Docman_SqlFilterText
 extends Docman_SqlFilter {
 

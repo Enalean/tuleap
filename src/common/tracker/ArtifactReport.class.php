@@ -19,10 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-//
 // Sort functions - Must be outside the classes
-//
-
 // Sort by place query
 function cmp_place_query($field1, $field2) {
     if ($field1->getPlaceQuery() <> NULL || $field2->getPlaceQuery() <> NULL) {
@@ -59,9 +56,7 @@ function cmp_place_result($field1, $field2) {
     }
 }
 
-//
 // Classe to manage the artifact report
-//
 class ArtifactReport {
 
 	// The report id
@@ -94,7 +89,7 @@ class ArtifactReport {
 	private $error_state = false;
 
 	/**
-	 *  Constructor.
+	 *
 	 *
 	 *	@param	report_id	
 	 *  @param  atid: the artifact type id
@@ -808,7 +803,6 @@ class ArtifactReport {
 	 */
 	function getQueryElements($prefs,$advsrch,&$from,&$where) {
 	  global $art_field_fact;
-	  //
 	  // NOTICE
 	  //
 	  // We can't use left join because the performs are very bad.
@@ -816,7 +810,6 @@ class ArtifactReport {
 	  // So the restriction to this: all fields used in the query must have a value.
 	  // That involves artifact creation or artifact admin (add a field) must create
 	  // empty records with default values for fields which haven't a value (from the user).
-	  //
 	  /* The query must be something like this :
 			FROM artifact a 
                              JOIN artifact_field_value v1 ON (v1.artifact_id=a.artifact_id)
@@ -923,7 +916,6 @@ class ArtifactReport {
 	 */
 	function getResultQueryElements($prefs,$morder,$advsrch,$aids=false,&$select,&$from,&$where,&$order_by) {
 		
-	  //
 	  // NOTICE
 	  //
 	  // We can't use left join because the performs are very bad.
@@ -931,7 +923,6 @@ class ArtifactReport {
 	  // So the restriction to this: all fields used in the query must have a value.
 	  // That involves artifact creation or artifact admin (add a field) must create
 	  // empty records with default values for fields which haven't a value (from the user).
-	  //
 	  /* The query must be something like this :
 		        SELECT a.artifact_id,u.user_name,v1.valueInt,v2.valueText,u3.user_name
 			FROM artifact a 

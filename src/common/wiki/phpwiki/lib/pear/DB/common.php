@@ -26,11 +26,6 @@ require_once 'PEAR.php';
  * DB_common is a base class for DB implementations, and must be
  * inherited by all such
  *
- * @package  DB
- * @version  $Id: common.php,v 1.5 2004/06/21 08:39:38 rurban Exp $
- * @category Database
- * @author   Stig Bakken <ssb@php.net>
- * @author   Tomas V.V.Cox <cox@idecnet.com>
  */
 class DB_common extends PEAR
 {
@@ -230,7 +225,6 @@ class DB_common extends PEAR
      *
      * @return string  quoted identifier string
      *
-     * @since 1.6.0
      * @access public
      */
     function quoteIdentifier($str)
@@ -340,7 +334,6 @@ class DB_common extends PEAR
      *  </li>
      * </ul>
      *
-     * @since 1.6.0
      * @see DB_common::escapeSimple()
      * @access public
      */
@@ -372,7 +365,6 @@ class DB_common extends PEAR
      *
      * @return string  the escaped string
      *
-     * @since 1.6.0
      * @see DB_common::quoteSmart()
      * @access public
      */

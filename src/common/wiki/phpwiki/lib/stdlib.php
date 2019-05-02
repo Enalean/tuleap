@@ -2429,8 +2429,6 @@ function getMemoryUsage() {
 //   removed REPLACE sql (dangerous)
 // moved gettext init after the locale was guessed
 // + some minor changes
-//
-
 // (c-file-style: "gnu")
 // Local Variables:
 // mode: php

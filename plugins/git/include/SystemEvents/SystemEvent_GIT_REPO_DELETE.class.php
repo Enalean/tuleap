@@ -25,8 +25,6 @@ use Tuleap\Git\Notifications\UsersToNotifyDao;
 require_once('common/system_event/SystemEvent.class.php');
 /**
  * Description of SystemEvent_GIT_REPO_DELETE
- *
- * @author gstorchi
  */
 class SystemEvent_GIT_REPO_DELETE extends SystemEvent {
     const NAME = 'GIT_REPO_DELETE';

@@ -27,13 +27,6 @@ require_once(dirname(__FILE__).'/WikiViews.class.php');
 require_once(dirname(__FILE__).'/../lib/WikiPage.class.php');
 require_once(dirname(__FILE__).'/../lib/WikiEntry.class.php');
 
-/**
- * 
- * @package   WikiService
- * @copyright STMicroelectronics, 2005
- * @author    Manuel Vacelet <manuel.vacelet-abecedaire@st.com>
- * @license   http://opensource.org/licenses/gpl-license.php GPL
- */
 class WikiServiceViews extends WikiViews {
 
     protected $purifier;
@@ -120,9 +113,6 @@ class WikiServiceViews extends WikiViews {
 
   }
 
- /**
-   *
-   */
   function _browseWikiDocuments() {
 
     $wei = WikiEntry::getEntryIterator($this->gid);

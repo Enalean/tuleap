@@ -151,7 +151,6 @@ class RectPatternVert extends RectPattern {
 
     //--------------------
     // Private methods
-    //
     function DoPattern($aImg) {
         $x = $this->rect->x;
         $y0 = $this->rect->y;

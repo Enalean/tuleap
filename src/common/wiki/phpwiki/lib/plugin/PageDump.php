@@ -369,8 +369,6 @@ _("PhpWiki developers should manually inspect the downloaded file for nested mar
 //
 // Revision 1.1  2003/02/20 18:03:04  carstenklapp
 // New experimental WikiPlugin for internal use only by PhpWiki developers.
-//
-
 // For emacs users
 // Local Variables:
 // mode: php

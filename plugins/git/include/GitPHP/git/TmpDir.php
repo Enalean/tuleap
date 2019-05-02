@@ -7,10 +7,6 @@ namespace Tuleap\Git\GitPHP;
  *
  * Temporary directory class
  *
- * @author Christopher Han <xiphux@gmail.com>
- * @copyright Copyright (c) 2010 Christopher Han
- * @package GitPHP
- * @subpackage Git
  */
 
 /**
@@ -18,10 +14,6 @@ namespace Tuleap\Git\GitPHP;
  *
  * Class to handle managing files in a temporary directory
  *
- * @author Christopher Han <xiphux@gmail.com>
- * @copyright Copyright (c) 2010 Christopher Han
- * @package GitPHP
- * @subpackage Git
  */
 class TmpDir
 {

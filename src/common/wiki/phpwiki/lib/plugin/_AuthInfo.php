@@ -302,8 +302,6 @@ extends WikiPlugin
 // Revision 1.20  2003/01/18 21:19:24  carstenklapp
 // Code cleanup:
 // Reformatting; added copyleft, getVersion, getDescription
-//
-
 // (c-file-style: "gnu")
 // Local Variables:
 // mode: php

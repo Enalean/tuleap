@@ -23,9 +23,6 @@
  *
  * This is a part of lite Model/View/Controler design pattern.
  *
- * @package Codendi-mvc
- * @author    guillaume storchi
- * @license   http://opensource.org/licenses/gpl-license.php GPL
  */
 
 class PluginController {

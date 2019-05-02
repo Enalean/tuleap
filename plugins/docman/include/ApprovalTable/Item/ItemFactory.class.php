@@ -71,10 +71,7 @@ class Docman_ApprovalTableItemFactory extends Docman_ApprovalTableFactory {
         return true;
     }
 
-    //
     // Class accessor
-    //
-
     function _getDao() {
         return new Docman_ApprovalTableItemDao(CodendiDataAccess::instance());
     }

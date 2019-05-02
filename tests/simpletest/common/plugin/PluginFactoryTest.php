@@ -121,7 +121,6 @@ class PluginFactoryTest extends TuleapTestCase {
         $col = $pf->getAllPlugins();
         $this->assertEqual(count($col), 2);
     }
-    /**/
     function testIsPluginAvailable() {
         $plugin_dao    = new MockPluginDao($this);
         $access_result = new MockDataAccessResult($this);

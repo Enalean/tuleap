@@ -466,8 +466,6 @@ extends WikiPlugin
 // New: use blog.tmpl template to format output. Some cosmetic
 // issues, it mostly works but code still needs cleanup. Added
 // getVersion() for PluginManager.
-//
-
 // For emacs users
 // Local Variables:
 // mode: php

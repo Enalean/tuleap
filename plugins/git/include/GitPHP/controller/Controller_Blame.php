@@ -28,8 +28,6 @@ use Tuleap\Layout\IncludeAssets;
 /**
  * Blame controller class
  *
- * @package GitPHP
- * @subpackage Controller
  */
 class Controller_Blame extends ControllerBase // @codingStandardsIgnoreLine
 {

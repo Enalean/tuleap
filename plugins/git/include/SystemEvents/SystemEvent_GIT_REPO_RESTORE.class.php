@@ -20,8 +20,6 @@
 
 /**
  * Description of SystemEvent_GIT_REPO_DELETE
- *
- * @author gstorchi
  */
 class SystemEvent_GIT_REPO_RESTORE extends SystemEvent {
     const NAME = 'GIT_REPO_RESTORE';

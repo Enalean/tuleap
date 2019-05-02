@@ -140,10 +140,7 @@ class BackendSystemTest extends TuleapTestCase {
         $backend->createUserHome($user);
         $this->assertTrue(is_dir(ForgeConfig::get('homedir_prefix')."/codendiadm"),"Home dir should be created");
 
-        //
         // Run test
-        //
-
         $um = new MockUserManager();
         $um->setReturnReference('getUserById', $user, array(104));
 

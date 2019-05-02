@@ -38,10 +38,6 @@ require_once('common/dao/CodendiDataAccess.class.php');
  *
  *
  * @see       WikiAttachmentRevision
- * @package   WikiService
- * @copyright STMicroelectronics, 2005
- * @author    Manuel Vacelet <manuel.vacelet-abecedaire@st.com>
- * @license   http://opensource.org/licenses/gpl-license.php GPL
  */
 class WikiAttachment /* implements UGroupPermission */ {
     /**

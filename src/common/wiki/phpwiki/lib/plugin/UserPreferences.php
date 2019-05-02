@@ -306,8 +306,6 @@ extends WikiPlugin
 //
 // Revision 1.9  2003/09/13 21:53:41  carstenklapp
 // Added lang and theme arguments, getVersion(), copyright and cvs log.
-//
-
 // For emacs users
 // Local Variables:
 // mode: php

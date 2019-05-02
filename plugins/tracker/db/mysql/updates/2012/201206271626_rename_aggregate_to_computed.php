@@ -18,9 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- *
- */
 class b201206271626_rename_aggregate_to_computed extends ForgeUpgrade_Bucket {
 
     public function description() {

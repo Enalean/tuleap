@@ -23,16 +23,11 @@
  
 require_once('ArtifactDateReminderFactory.class.php');
 
-//
 // The artifact date reminder object
-//
 class ArtifactDateReminder {
 
     private $logger;
     
-    /**
-     *  Constructor.
-     */
     function __construct(TrackerDateReminder_Logger $logger) {
         $this->logger = new TrackerDateReminder_Logger_Prefix($logger, '');
     }

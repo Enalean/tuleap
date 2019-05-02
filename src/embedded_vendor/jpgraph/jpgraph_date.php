@@ -233,7 +233,6 @@ class DateScale extends LinearScale {
         // array ( Decision point,  array( array( Major-scale-step-array ),
         //       array( Minor-scale-step-array ),
         //       array( 0=date-adjust, 1=time-adjust, adjustment-alignment) )
-        //
         $scalePoints =
         array(
         /* Intervall larger than 10 years */

@@ -24,8 +24,6 @@ namespace Tuleap\Git\GitPHP;
 /**
  * Message controller class
  *
- * @package GitPHP
- * @subpackage Controller
  */
 class Controller_Message extends ControllerBase // @codingStandardsIgnoreLine
 {

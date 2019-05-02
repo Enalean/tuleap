@@ -152,9 +152,6 @@ extends WikiPlugin_WikiBlog
 //
 // Revision 1.1  2004/04/18 05:43:12  rurban
 // .
-//
-//
-
 // For emacs users
 // Local Variables:
 // mode: php

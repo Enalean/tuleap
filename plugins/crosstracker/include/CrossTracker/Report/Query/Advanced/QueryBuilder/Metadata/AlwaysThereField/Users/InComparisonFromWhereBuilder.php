@@ -41,7 +41,7 @@ class InComparisonFromWhereBuilder implements FromWhereBuilder
     private $alias_field;
 
     /**
-     * EqualComparisonFromWhereBuilder constructor.
+     *
      * @param ListValueExtractor $extractor
      * @param UserManager $user_manager
      * @param string $alias_field

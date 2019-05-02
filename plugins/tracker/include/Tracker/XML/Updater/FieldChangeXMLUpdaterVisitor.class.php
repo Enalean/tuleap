@@ -102,7 +102,7 @@ class Tracker_XML_Updater_FieldChangeXMLUpdaterVisitor implements Tracker_FormEl
         Tracker_FormElement_Field $field,
         $submitted_value
     ) {
-        /* @var $updater Tracker_XML_Updater_FieldChange_FieldChangeXMLUpdater */
+        /** @var Tracker_XML_Updater_FieldChange_FieldChangeXMLUpdater $updater */
         $updater = $field->accept($this);
         $updater->update($field_change_xml, $submitted_value);
     }

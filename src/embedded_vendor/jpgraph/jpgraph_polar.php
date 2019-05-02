@@ -16,7 +16,6 @@ require_once "jpgraph_log.php";
 define('POLAR_360',1);
 define('POLAR_180',2);
 
-//
 // Note. Don't attempt to make sense of this code.
 // In order not to have to be able to inherit the scaling code
 // from the main graph package we have had to make some "tricks" since
@@ -26,8 +25,6 @@ define('POLAR_180',2);
 // and 2: do some "small" trickery and be able to inherit most of
 // the functionlity from the main graph package.
 // We choose 2: here in order to save some time.
-//
-
 //--------------------------------------------------------------------------
 // class PolarPlot
 //--------------------------------------------------------------------------
@@ -527,9 +524,7 @@ class PolarAxis extends Axis {
         $this->img->SetColor($this->radius_tick_color);
         $this->scale->ticks->Stroke($this->img,$this->scale,$pos);
 
-        //
         // Mirror the positions for the left side of the scale
-        //
         $mid = 2*($this->img->left_margin+$this->img->plotwidth/2);
         $n = count($this->scale->ticks->ticks_pos);
         $i=0;

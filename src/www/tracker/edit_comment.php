@@ -42,7 +42,6 @@ $params=array('title'=>$group->getPublicName().' '.$ath->getName().' #'.$ah->get
 $ath->header($params);
 echo '<div id="tracker_toolbar_clear"></div>';
 
-// 
 $ah->displayEditFollowupComment($request->get('artifact_history_id'));
 
 $ath->footer($params);

@@ -548,10 +548,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
         return $this->language;
     }
 
-    //
     // Getter
-    //
-
     public function getPublicProfileUrl()
     {
         return '/users/'.urlencode($this->getUnixName());
@@ -958,10 +955,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
         return new UGroupDao();
     }
 
-    //
     // Setters
-    //
-
     /**
      * @param int the ID of the user
      */
@@ -1165,8 +1159,6 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
         $this->expiry_date = $expiryDate;
     }
     // Preferences
-    //
-
     protected function getPreferencesDao() {
         if (!$this->_preferencesdao) {
             $this->_preferencesdao = new UserPreferencesDao();

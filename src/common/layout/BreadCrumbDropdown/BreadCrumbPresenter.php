@@ -32,7 +32,7 @@ class BreadCrumbPresenter
     public $link;
 
     /**
-     * BreadCrumbPresenter constructor.
+     *
      *
      * @param BreadCrumbLinkPresenter    $link
      * @param SubItemsSectionPresenter[] $sections

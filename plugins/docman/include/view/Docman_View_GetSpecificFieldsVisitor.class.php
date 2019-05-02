@@ -123,8 +123,6 @@ class Docman_MetadataHtmlEmbeddedFile extends Docman_MetadataHtml {
 
 }
 
-/**
- */
 class Docman_MetadataHtmlEmpty extends Docman_MetadataHtml {
 
     function __construct() {

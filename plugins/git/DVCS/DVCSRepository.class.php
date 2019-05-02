@@ -23,8 +23,6 @@
 
 /**
  * Description of DVCSRepository
- *
- * @author gstorchi
  */
 interface DVCSRepository {
    

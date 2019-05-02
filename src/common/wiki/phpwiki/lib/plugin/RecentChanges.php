@@ -20,8 +20,6 @@ rcs_id('$Id: RecentChanges.php,v 1.108 2005/04/01 16:09:35 rurban Exp $');
  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-/**
- */
 class _RecentChanges_Formatter
 {
     var $_absurls = false;
@@ -1114,8 +1112,6 @@ class DayButtonBar extends HtmlElement {
 // Code cleanup:
 // Reformatting & tabs to spaces;
 // Added copyleft, getVersion, getDescription, rcs_id.
-//
-
 // (c-file-style: "gnu")
 // Local Variables:
 // mode: php

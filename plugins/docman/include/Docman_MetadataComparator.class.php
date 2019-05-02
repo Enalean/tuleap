@@ -48,9 +48,6 @@ class Docman_MetadataComparator {
         return $a;
     }
 
-    /**
-     *
-     */
     function checkMdDifferences($srcMd, $dstMd, $loveMap) {
         $diffArray = array();
         if(!$dstMd->sameDescription($srcMd)) {
@@ -210,9 +207,7 @@ class Docman_MetadataComparator {
             $srcMd = $srcMdIter->current();
             $dstMd = null;
 
-            //
             // Compute the differences between the 2 projects
-            //
             $dstMdStatus = 'missing';
             $dstMdLabel = '';
             if($srcMdFactory->isRealMetadata($srcMd->getLabel())) {
@@ -249,9 +244,7 @@ class Docman_MetadataComparator {
 
             $purified_property_name = $purifier->purify($srcMd->getName());
 
-            //
             // Display result
-            //
             $html .= "<tr>\n";
 
             // Property
@@ -313,9 +306,7 @@ class Docman_MetadataComparator {
 
             $html .= "</tr>\n";
 
-            //
             // List of values
-            //
             if($srcMd->getType() == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
                 if($dstMd !== null) {
                     $html .= $this->getLoveCompareTable($srcMd, $dstMd, $mdMap, $sthToImport);

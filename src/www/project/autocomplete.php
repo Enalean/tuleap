@@ -21,9 +21,7 @@
 
 require_once('pre.php');
 
-//
 // Input treatment
-//
 $vName = new Valid_String('name');
 $vName->required();
 if ($request->valid($vName)) {

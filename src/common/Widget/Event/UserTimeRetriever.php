@@ -55,7 +55,7 @@ class UserTimeRetriever implements Dispatchable
     private $times;
 
     /**
-     * UserTimeRetriever constructor.
+     *
      * @param int $user_id
      * @param String $query
      * @param int $limit

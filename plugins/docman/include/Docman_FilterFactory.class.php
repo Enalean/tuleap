@@ -315,9 +315,6 @@ class Docman_FilterFactory {
         return new Docman_FilterFactory($groupId);
     }
 
-    /**
-     *
-     */
     function cloneFilter($srcFilter, $dstReport, $metadataMapping) {
         $dstMdFactory = new Docman_MetadataFactory($dstReport->getGroupId());
 
@@ -363,9 +360,6 @@ class Docman_FilterFactory {
         }
     }
     
-    /**
-     *
-     */
     function cloneFilterValues($srcFilter, &$dstFilter, $metadataMapping) {
         $dstVal = null;
 
@@ -411,9 +405,6 @@ class Docman_FilterFactory {
         return $dstVal;
     }
 
-    //
-    //
-    //
     function &getDao() {
         $dao = new Docman_FilterDao(CodendiDataAccess::instance());
         return $dao;

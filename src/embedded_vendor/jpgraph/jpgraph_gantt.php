@@ -367,8 +367,6 @@ class GanttGraph extends Graph {
     //---------------
     // PUBLIC METHODS
 
-    //
-
     function SetSimpleFont($aFont,$aSize) {
         $this->iSimpleFont = $aFont;
         $this->iSimpleFontSize = $aSize;
@@ -2293,7 +2291,6 @@ class GanttScale {
 
     // Translate a date to screen coordinates (horizontal scale)
     function TranslateDate($aDate) {
-        //
         // In order to handle the problem with Daylight savings time
         // the scale written with equal number of seconds per day beginning
         // with the start date. This means that we "cement" the state of

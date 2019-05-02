@@ -44,7 +44,6 @@ extends Docman_View_ItemDetailsSection {
     function initDisplay() {
         $request = HTTPRequest::instance();
 
-        //
         // User may request a specific table id
         $vVersion = new Valid_UInt('version');
         $vVersion->required();

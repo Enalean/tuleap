@@ -28,7 +28,7 @@ require_once('common/tracker/ArtifactImport.class.php');
 class ArtifactImportHtml extends ArtifactImport {
 
   /**
-   *  Constructor.
+   *
    *
    *    
    *  

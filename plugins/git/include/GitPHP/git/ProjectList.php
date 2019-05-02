@@ -26,17 +26,11 @@ namespace Tuleap\Git\GitPHP;
  *
  * Project list singleton instance and factory
  *
- * @author Christopher Han <xiphux@gmail.com>
- * @copyright Copyright (c) 2010 Christopher Han
- * @package GitPHP
- * @subpackage Git
  */
 
 /**
  * ProjectList class
  *
- * @package GitPHP
- * @subpackage Git
  */
 class ProjectList
 {

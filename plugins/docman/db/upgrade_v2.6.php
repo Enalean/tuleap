@@ -4,7 +4,6 @@ require_once('pre.php');
 
 // Step 1: fix bug with not deleted items
 // First delete all documents with deleted parents.
-//
 echo "Delete items which parents are already deleted.\n";
 $sql = 'UPDATE plugin_docman_item i, plugin_docman_item p'.
 ' SET i.delete_date = p.delete_date'.
@@ -21,8 +20,6 @@ do {
 
 // Step 2:
 // Default value upgrade
-//
-
 // Do it only if there is a default_value column
 $sql = 'SHOW COLUMNS FROM plugin_docman_metadata LIKE "default_value"';
 $res = db_query($sql);
@@ -104,8 +101,6 @@ if(db_numrows($res) > 0) {
 }
 
 // Step 3: optim
-//
-//
 echo "More optimal indexes\n";
 $sql = 'ALTER TABLE plugin_docman_metadata DROP INDEX idx_group_id';
 $res = db_query($sql);

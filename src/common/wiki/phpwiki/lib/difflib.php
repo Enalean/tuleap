@@ -7,8 +7,6 @@ rcs_id('$Id: difflib.php,v 1.12 2005/02/04 13:44:45 rurban Exp $');
 //
 // Copyright (C) 2000, 2001 Geoffrey T. Dairiki <dairiki@dairiki.org>
 // You may copy this code freely under the conditions of the GPL.
-//
-
 // FIXME: possibly remove assert()'s for production version?
 
 // PHP3 does not have assert()
@@ -104,7 +102,6 @@ class _DiffOp_Change extends _DiffOp {
  * Finally, some ideas (subdivision by NCHUNKS > 2, and some optimizations)
  * are my own.
  *
- * @author Geoffrey T. Dairiki
  * @access private
  */
 class _DiffEngine
@@ -496,7 +493,7 @@ class Diff
     var $edits;
 
     /**
-     * Constructor.
+     *
      * Computes diff between sequences of strings.
      *
      * @param $from_lines array An array of strings.
@@ -559,10 +556,6 @@ class Diff
 
     /**
      * Get the original set of lines.
-     *
-     * This reconstructs the $from_lines parameter passed to the
-     * constructor.
-     *
      * @return array The original sequence of strings.
      */
     function orig() {
@@ -577,10 +570,6 @@ class Diff
 
     /**
      * Get the final set of lines.
-     *
-     * This reconstructs the $to_lines parameter passed to the
-     * constructor.
-     *
      * @return array The sequence of strings.
      */
     function _final() {
@@ -633,7 +622,7 @@ class MappedDiff
 extends Diff
 {
     /**
-     * Constructor.
+     *
      *
      * Computes diff between sequences of strings.
      *

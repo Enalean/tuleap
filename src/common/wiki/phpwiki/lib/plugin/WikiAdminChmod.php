@@ -274,9 +274,6 @@ class _PageList_Column_chmod_perm extends _PageList_Column {
 // more PagePerm stuff: (working against 1.4.0)
 //   ACL editing and simplification of ACL's to simple rwx------ string
 //   not yet working.
-//
-//
-
 // Local Variables:
 // mode: php
 // tab-width: 8

@@ -195,10 +195,7 @@ abstract class Docman_ApprovalTableFactory {
         return $GLOBALS['Language']->getText('plugin_docman', 'details_approval_notif_'.$type);
     }
 
-    //
     // Class accessor
-    //
-
     protected function _getDao() {
         return new Docman_ApprovalTableItemDao(CodendiDataAccess::instance());
     }

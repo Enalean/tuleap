@@ -4,10 +4,6 @@
  *
  * Smarty function to get the full url of the current script
  *
- * @author Christopher Han <xiphux@gmail.com>
- * @copyright Copyright (c) 2010 Christopher Han
- * @package GitPHP
- * @subpackage Smarty
  */
 
 /**

@@ -27,9 +27,7 @@ use Tuleap\User\UserAutocompletePostSearchEvent;
 
 require_once('pre.php');
 
-//
 // Input treatment
-//
 $request = HTTPRequest::instance();
 
 $vUserName = new Valid_String('name');
@@ -119,9 +117,7 @@ $post_search_event = new UserAutocompletePostSearchEvent($userList, $request->ge
 $em->processEvent($post_search_event);
 $userList = $post_search_event->getUserList();
 
-//
 // Display
-//
 if ($json_format) {
     $json_entries = array();
     $with_groups_of_user_in_project_id = $request->get('with-groups-of-user-in-project-id');

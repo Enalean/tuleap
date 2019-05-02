@@ -20,9 +20,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * @package Codendi
- */
 class Valid {
     /**
      * @access private

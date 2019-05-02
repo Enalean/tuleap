@@ -66,10 +66,7 @@ class Docman_View_Admin_MetadataDetails extends Docman_View_Extra {
             echo $mdContent;
         }
 
-        //
         // Display list of values
-        //
-
         if($md->getType() == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
             echo '<h3>'.$GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_val_title').'</h3>';
 

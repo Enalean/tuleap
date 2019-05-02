@@ -23,8 +23,6 @@
 
 /**
  * Description of DVCSDriverFactoryclass
- *
- * @author gstorchi
  */
 class DVCSDriverFactory {
     //put your code here

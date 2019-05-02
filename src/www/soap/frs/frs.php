@@ -21,9 +21,7 @@ define('invalid_file_fault', '3019');
 
 if (defined('NUSOAP')) {
 
-//
 // Type definition
-//
 $server->wsdl->addComplexType(
     'FRSPackage',
     'complexType',
@@ -113,9 +111,7 @@ $server->wsdl->addComplexType(
     'tns:FRSFile'
 );
 
-//
 // Function definition
-//
 $server->register(
     'getPackages',
     array(

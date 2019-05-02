@@ -105,8 +105,6 @@ extends WikiPlugin_WikiBlog
 // UnfoldSubpages for blogs.
 // Rui called this plugin "JournalLast", but this was written completely
 // independently, without having seen the src (yet).
-//
-
 // Local Variables:
 // mode: php
 // tab-width: 8

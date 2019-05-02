@@ -34,7 +34,7 @@ class graphicEngineUserPrefs {
 	var $report_id;
 
     /**
-	 * Class constructor
+	 *
 	 *
 	 * 	@param atid:artifact type id
 	 */

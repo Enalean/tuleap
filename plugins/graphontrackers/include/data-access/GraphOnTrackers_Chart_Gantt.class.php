@@ -41,11 +41,7 @@ class GraphOnTrackers_Chart_Gantt extends GraphOnTrackers_Chart {
     protected $scale;
     protected $as_of_date;
     protected $summary;
-    
-    /**
-     * class constructor
-     *
-     */    
+
     function __construct($graphic_report, $id, $rank, $title, $description, $width, $height) {
         parent::__construct($graphic_report, $id, $rank, $title, $description, $width, $height);
         $sql = "SELECT * FROM plugin_graphontrackers_gantt_chart WHERE id = ". db_ei($id);

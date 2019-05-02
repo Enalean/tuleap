@@ -67,5 +67,4 @@ if(isset($arg['ldapid'])
 echo "Error\n";
 return 1;
 //phpinfo();
-//
 ?>

@@ -8,10 +8,8 @@ require_once('user.php');
 require_once('common/include/GroupFactory.class.php');
 
 if (defined('NUSOAP')) {
-	
-//
+
 // Type definition
-//
 $server->wsdl->addComplexType(
     'Group',
     'complexType',
@@ -88,10 +86,7 @@ $GLOBALS['server']->wsdl->addComplexType(
     'tns:Ugroup'
 );
 
-//
 // Function definition
-//
-
 $server->register('getMyProjects',		       // method name
     array('sessionKey' => 'xsd:string'		       // input parameters	      
     ),                                   

@@ -164,9 +164,7 @@ class ArtifactHtml extends Artifact {
             if (!$ro) {
                 echo '<div style="text-align:center"><INPUT CLASS="btn btn-primary" TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('tracker_include_artifact','submit').'"></div>';
             }
-            //
             // Followups comments
-            //
             $html = '';
             $html .= '<script type="text/javascript">';
             $html .= "var tracker_comment_togglers = {};
@@ -234,9 +232,7 @@ class ArtifactHtml extends Artifact {
                 echo '<script type="text/javascript">tracker_reorder_followups();</script>';
             }
             
-            //
             // CC List
-            //
             $html = '';
             if ($pv == 0) {
                 $html .= $Language->getText('tracker_include_artifact','fill_cc_list_msg');
@@ -255,9 +251,7 @@ class ArtifactHtml extends Artifact {
                 db_numrows($this->getCCList()) ? '' : '<div>'. $GLOBALS['Language']->getText('tracker_include_artifact','cc_empty') .'</div>'
             );
                     
-            //
             // File attachments
-            //
             $html = '';
             if ($pv == 0) {
                 $html .= '<input type="file" name="input_file" size="40">';
@@ -276,9 +270,7 @@ class ArtifactHtml extends Artifact {
                 db_numrows($this->getAttachedFiles()) ? '' : '<div>'. $GLOBALS['Language']->getText('tracker_include_artifact','no_file_attached') .'</div>'
             );
 			
-            //
             // Artifact dependencies
-            //
             $html = '<B>'.$Language->getText('tracker_include_artifact','depend_on').'</B><BR><P>';
             if ( !$ro ) {
                     $html .= '
@@ -299,9 +291,7 @@ class ArtifactHtml extends Artifact {
                (db_numrows($this->getDependencies()) || db_numrows($this->getInverseDependencies())),
                (db_numrows($this->getDependencies()) || db_numrows($this->getInverseDependencies())) ? '' : '<div>'. $Language->getText('tracker_include_artifact','dep_list_empty') .'</div>'
             );
-            //
             // Artifact Cross References
-            //
             $html='';
             $crossref_fact= new CrossReferenceFactory($this->getID(), ReferenceManager::REFERENCE_NATURE_ARTIFACT, $group_id);
 			$crossref_fact->fetchDatas();
@@ -314,9 +304,7 @@ class ArtifactHtml extends Artifact {
                 $crossref_fact->getNbReferences() ? '' : '<div>'. $Language->getText('tracker_include_artifact','ref_list_empty') .'</div>'
             );
             
-            //
             // Artifact permissions
-            //
             if ($this->ArtifactType->userIsAdmin()) {
                 $checked = '';
                 if ($this->useArtifactPermissions()) {
@@ -353,9 +341,7 @@ class ArtifactHtml extends Artifact {
                 );
             }
             
-            //
             // History
-            //
             $is_there_history = db_numrows($this->getHistory());
             echo $this->_getSection(
                 'artifact_section_history',
@@ -364,9 +350,7 @@ class ArtifactHtml extends Artifact {
                 !$is_there_history
             );
             
-            // 
             // Final submit button
-            //
             if ( $pv == 0) {
                 echo '<div style="text-align:center"><INPUT CLASS="btn btn-primary" TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('tracker_include_artifact','submit').'"></div>';
             }
@@ -608,9 +592,7 @@ class ArtifactHtml extends Artifact {
             true
         );
         
-        //
         // Followups comments
-        //
         $html = '';
         $html .= '<div>';
         if ( !$ro ) {
@@ -653,9 +635,7 @@ class ArtifactHtml extends Artifact {
         );
 
         
-        //
         // CC List
-        //
         $html = '';
         $html .= $Language->getText('tracker_include_artifact','fill_cc_list_msg');
         $html .= $Language->getText('tracker_include_artifact','fill_cc_list_lbl');
@@ -670,9 +650,7 @@ class ArtifactHtml extends Artifact {
             true
         );
                 
-        //
         // File attachments
-        //
         $html = '';
         $html .= '<input type="file" name="input_file" size="40">';
         $html .= $Language->getText('tracker_include_artifact','upload_file_msg',formatByteToMb($sys_max_size_attachment));
@@ -687,9 +665,7 @@ class ArtifactHtml extends Artifact {
             true
         );
         
-        //
         // Artifact dependencies
-        //
         $html = '
         <P><B>'.$Language->getText('tracker_include_artifact','dependent_on').'</B><BR>
         <P>';
@@ -707,9 +683,7 @@ class ArtifactHtml extends Artifact {
             true
         );
 
-        //
         // Final submit button
-        //
         echo '<p><B><span class="highlight">'.$Language->getText('tracker_include_artifact','check_already_submitted').'</b></p>';
         echo '<div style="text-align:center"><INPUT CLASS="btn btn-primary" TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('tracker_include_artifact','submit').'"></div>';
         echo '</td></tr>';
@@ -727,9 +701,7 @@ class ArtifactHtml extends Artifact {
          * @return void
          */
         function showHistory ($group_id,$group_artifact_id) {
-            //
                 //      show the artifact_history rows that are relevant to this artifact_id, excluding comment (follow-up comments)
-                //
             global $art_field_fact,$sys_lf,$Language;
             $result=$this->getHistory();
             $rows=db_numrows($result);
@@ -820,10 +792,7 @@ class ArtifactHtml extends Artifact {
             $hp = Codendi_HTMLPurifier::instance();
             global $sys_lf,$Language;
         
-            //
             //      format the dependencies list for this artifact
-            //
-        
             $result=$this->getInverseDependencies();
             $rows=db_numrows($result);
             $out = '';
@@ -1000,9 +969,7 @@ class ArtifactHtml extends Artifact {
             true
         );
         
-        //
         // CC List
-        //
         $html = '';
         $html .= $Language->getText('tracker_include_artifact','fill_cc_list_msg');
         $html .= $Language->getText('tracker_include_artifact','fill_cc_list_lbl');
@@ -1017,9 +984,7 @@ class ArtifactHtml extends Artifact {
             true
         );
                 
-        //
         // File attachments
-        //
         $html = '';
         $html .= '<input type="file" name="input_file" size="40">';
         $html .= $Language->getText('tracker_include_artifact','upload_file_msg',formatByteToMb($sys_max_size_attachment));
@@ -1034,9 +999,7 @@ class ArtifactHtml extends Artifact {
             true
         );
         
-        //
         // Artifact permissions
-        //
         if ($this->ArtifactType->userIsAdmin()) {
             $checked = '';
             if ($this->useArtifactPermissions()) {
@@ -1073,9 +1036,7 @@ class ArtifactHtml extends Artifact {
             );
         }
         
-        //
         // Final submit button
-        //
         echo '<p><B><span class="highlight">'.$Language->getText('tracker_include_artifact','check_already_submitted').'</b></p>';
         echo '<div style="text-align:center"><INPUT CLASS="btn btn-primary" TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('tracker_include_artifact','submit').'"></div>';
         echo '</td></tr>';

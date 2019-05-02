@@ -1719,8 +1719,6 @@ extends PageList {
 // more numeric pagename fixes.
 // fixed action=upload with merge conflict warnings.
 // charset changed from constant to global (dynamic utf-8 switching)
-//
-
 // (c-file-style: "gnu")
 // Local Variables:
 // mode: php

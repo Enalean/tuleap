@@ -57,7 +57,7 @@ abstract class GitViewsRepositoriesTraversalStrategyTest extends TuleapTestCase 
         //go find the variable $repositories
         include dirname(__FILE__) .'/_fixtures/flat_tree_of_repositories.php'; 
         foreach ($repositories as $row) {
-            /* @var $repository GitRepository */
+            /** @var GitRepository $repository */
             $repository = partial_mock('GitRepository', array('userCanRead'));
             $repository->setId($row['repository_id']);
             $repository->setName($row['repository_name']);

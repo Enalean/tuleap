@@ -162,10 +162,8 @@ define("_FORCE_IMGTOFILE",false);
 define("_FORCE_IMGDIR",'/tmp/jpgimg/');
 
 
-//
 // Automatic settings of path for cache and font directory
 // if they have not been previously specified
-//
 if(USE_CACHE) {
     if (!defined('CACHE_DIR')) {
         if ( strstr( PHP_OS, 'WIN') ) {
@@ -186,9 +184,7 @@ elseif( !defined('CACHE_DIR') ) {
     define('CACHE_DIR', '');
 }
 
-//
 // Setup path for western/latin TTF fonts
-//
 if (!defined('TTF_DIR')) {
     if (strstr( PHP_OS, 'WIN') ) {
         $sroot = getenv('SystemRoot');
@@ -205,9 +201,7 @@ if (!defined('TTF_DIR')) {
     }
 }
 
-//
 // Setup path for MultiByte TTF fonts (japanese, chinese etc.)
-//
 if (!defined('MBTTF_DIR')) {
     if (strstr( PHP_OS, 'WIN') ) {
         $sroot = getenv('SystemRoot');
@@ -224,9 +218,7 @@ if (!defined('MBTTF_DIR')) {
     }
 }
 
-//
 // Check minimum PHP version
-//
 function CheckPHPVersion($aMinVersion) {
     list($majorC, $minorC, $editC) = preg_split('/[\/.-]/', PHP_VERSION);
     list($majorR, $minorR, $editR) = preg_split('/[\/.-]/', $aMinVersion);
@@ -244,25 +236,19 @@ function CheckPHPVersion($aMinVersion) {
     return true;
 }
 
-//
 // Make sure PHP version is high enough
-//
 if( !CheckPHPVersion(MIN_PHPVERSION) ) {
     JpGraphError::RaiseL(13,PHP_VERSION,MIN_PHPVERSION);
     die();
 }
 
-//
 // Make GD sanity check
-//
 if( !function_exists("imagetypes") || !function_exists('imagecreatefromstring') ) {
     JpGraphError::RaiseL(25001);
     //("This PHP installation is not configured with the GD library. Please recompile PHP with GD support to run JpGraph. (Neither function imagetypes() nor imagecreatefromstring() does exist)");
 }
 
-//
 // Setup PHP error handler
-//
 function _phpErrorHandler($errno,$errmsg,$filename, $linenum, $vars) {
     // Respect current error level
     if( $errno & error_reporting() ) {
@@ -274,11 +260,9 @@ if( INSTALL_PHP_ERR_HANDLER ) {
     set_error_handler("_phpErrorHandler");
 }
 
-//
 // Check if there were any warnings, perhaps some wrong includes by the user. In this
 // case we raise it immediately since otherwise the image will not show and makes
 // debugging difficult. This is controlled by the user setting CATCH_PHPERRMSG
-//
 if( isset($GLOBALS['php_errormsg']) && CATCH_PHPERRMSG && !preg_match('/|Deprecated|/i', $GLOBALS['php_errormsg']) ) {
     JpGraphError::RaiseL(25004,$GLOBALS['php_errormsg']);
 }
@@ -286,12 +270,10 @@ if( isset($GLOBALS['php_errormsg']) && CATCH_PHPERRMSG && !preg_match('/|Depreca
 // Useful mathematical function
 function sign($a) {return $a >= 0 ? 1 : -1;}
 
-//
 // Utility function to generate an image name based on the filename we
 // are running from and assuming we use auto detection of graphic format
 // (top level), i.e it is safe to call this function
 // from a script that uses JpGraph
-//
 function GenImgName() {
     // Determine what format we should use when we save the images
     $supported = imagetypes();
@@ -1851,9 +1833,7 @@ class Graph {
         }
 
 
-        //
         // Autoscale the extra Y-axises
-        //
         $n = count($this->ynaxis);
         for( $i=0; $i < $n; ++$i ) {
             if( $this->ynscale[$i] != null) {

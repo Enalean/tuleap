@@ -43,7 +43,7 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent {
      * Process stored event
      */
     function process() {
-        /* @var $backendSystem BackendSystem */
+        /** @var BackendSystem $backendSystem */
         $backendSystem      = Backend::instance('System');
         $backendAliases     = Backend::instance('Aliases');
         $backendSVN         = Backend::instance('SVN');

@@ -22,7 +22,6 @@
 // HTML form library translated and simplified from PRATS
 //
 // for a usage guide, look at the examples in the following form library check
-//
 /********************************************************
 The form is bounded by form_Start() and form_End. An HTML table is built to contain the elements within the form. refer to the example below.
 
@@ -395,7 +394,6 @@ function form_End($SubmitLegend = DEFAULT_SUBMIT_BUTTON,
 //
 //-----------------------------------------------------------------------------------
 // Validation
-//
 Class tValidation {
     var $ParamName;
     var $Test;
@@ -714,9 +712,7 @@ define("NO_BLANK_ROW_PREFIX", false);
 define("BLANK_ROW_PREFIX", true);
 
 function form_genSelectBoxFromSQL($ParamName, $Caption, $SQLstr, $DefaultValue = "", $PrefixWithBlankItem = NO_BLANK_ROW_PREFIX, $SubmitOnChange = NO_SUBMIT_ON_CHANGE)
-//
 // the SQL first field should be in the index (value for the select box) - other fields are concatenated to form the text
-//
 {
     $db_res = db_query($SQLstr);
     $optionsList = array();
@@ -737,11 +733,9 @@ function form_genSelectBoxFromSQL($ParamName, $Caption, $SQLstr, $DefaultValue =
 //=============================================================================
 function form_genTextBox($ParamName, $Caption, $DefaultValue = "", $Width = FORM_TEXT_AREA_WIDTH, $MaxInputLength = 0)
 {
-//
 // if the default value is prefixed with "COF:" (clear on focus) {
 // the box is displayed with the DefaultValue as help text, and the text
 // vanishes when the box is clicked
-//
     global $gInForm, $gFormCaptions, $gFirstFormTextBox;
 
     if (! $gInForm) {
@@ -777,9 +771,7 @@ function form_genTextBox($ParamName, $Caption, $DefaultValue = "", $Width = FORM
 //=============================================================================
 function form_genShowBox($Caption, $Value, $UpdateURL = NULL)
 {
-//
 // just display the information
-//
     global $gInForm;
 
     if (! $gInForm) {
@@ -876,11 +868,9 @@ $gPageDateCodeWritten = False; // ... but only once per page, no matter how many
 
 function form_genDateBox($ParamName, $Caption, $DefaultValue = "")
 {
-//
 // if the default value is prefixed with "COF:" (clear on focus) {
 // the box is displayed with the DefaultValue (as help text), and the text
 // vanishes when the box is clicked
-//
     global $gInForm, $gFormCaptions;
     if (! $gInForm) {
         trigger_error("Form item outside form: form_genDateBox()");
@@ -990,11 +980,9 @@ function form_TableEnd()
 //=============================================================================
 function form_JS_ElementRef($Elementname)
 {
-    //
     // Used to reference a (current) form item in javascript, e.g.:
     //
     //     print "<script type='text/javascript'>".form_JS_ElementRef("item_name").".value=3;</script>";
-    //
     global $gFormName, $gInForm;
 
     if (! $gInForm) {
@@ -1067,9 +1055,7 @@ function repeat_uri($new_params)
 //=============================================================================
 function update_database($tableName, $items, $selectCriteria = "")
 {
-    //
     // database utitlity to insert./update DB record
-    //
     if (stristr($selectCriteria, ";")) {
         exit_error("update_database: Select criteria contains illegal character",
             "$tableName: ".htmlentities(selectCriteria));

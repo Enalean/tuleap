@@ -380,8 +380,6 @@ function GeneratePageasXML($content, $title, $page_revision = false, $args = fal
 // Revision 1.52  2003/12/20 23:59:19  carstenklapp
 // Internal change: Added rcs Log tag & emacs php mode tag (sorry, forgot
 // this in the last commit).
-//
-
 // Local Variables:
 // mode: php
 // tab-width: 8

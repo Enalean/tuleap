@@ -21,9 +21,6 @@
  *
  * This is a part of lite Model/View/Controler design pattern.
  *
- * @package Codendi-mvc
- * @author    Guillaume Storchi
- * @license   http://opensource.org/licenses/gpl-license.php GPL
  */
 
 require_once('common/include/Codendi_HTMLPurifier.class.php');

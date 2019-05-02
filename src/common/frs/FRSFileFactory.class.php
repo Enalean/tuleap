@@ -30,9 +30,6 @@ use Tuleap\FRS\FRSPermissionManager;
 use Tuleap\FRS\FRSPermissionDao;
 use Tuleap\FRS\FRSPermissionFactory;
 
-/**
- *
- */
 class FRSFileFactory {
     const COMPUTE_MD5 = 0x0001;
 

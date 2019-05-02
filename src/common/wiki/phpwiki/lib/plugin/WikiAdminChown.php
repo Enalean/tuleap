@@ -231,9 +231,6 @@ extends WikiPlugin_WikiAdminSelect
 //
 // Revision 1.1  2004/06/07 17:58:58  rurban
 // new chown plugin
-//
-//
-
 // Local Variables:
 // mode: php
 // tab-width: 8

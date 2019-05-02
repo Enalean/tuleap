@@ -25,8 +25,6 @@
 // Make the changes before calling svn_header_admin because
 // svn_header_admin caches the project object in memory and
 // the form values are therefore not updated.
-//
-
 $request->valid(new Valid_String('post_changes'));
 $request->valid(new Valid_String('SUBMIT'));
 if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {

@@ -30,9 +30,6 @@ use Tuleap\FRS\FRSPermissionManager;
 use Tuleap\FRS\FRSPermissionFactory;
 use Tuleap\FRS\FRSPermissionDao;
 
-/**
- * 
- */
 class FRSPackageFactory {
     // Kept for legacy
     var $STATUS_ACTIVE  = FRSPackage::STATUS_ACTIVE;

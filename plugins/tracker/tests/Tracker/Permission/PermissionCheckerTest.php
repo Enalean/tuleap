@@ -688,7 +688,6 @@ class Tracker_Permission_PermissionCheckerTest extends TuleapTestCase {
         // $submitter is in (UgroupSub - ugroup_id=102)
         // $u is in (UgroupFul - ugroup_id=103);
         // $other do not belong to any ugroup
-        //
         $u = \Mockery::spy(\PFUser::class);
         $u->shouldReceive('getId')->andReturns(120);
         $u->shouldReceive('isMemberOfUGroup')->with(103, 222)->andReturns(true);
@@ -696,21 +695,18 @@ class Tracker_Permission_PermissionCheckerTest extends TuleapTestCase {
         $u->shouldReceive('isMemberOfUGroup')->with(102, 222)->andReturns(false);
         $u->shouldReceive('isSuperUser')->andReturns(false);
 
-        //
         $assignee = \Mockery::spy(\PFUser::class);
         $assignee->shouldReceive('getId')->andReturns(121);
         $assignee->shouldReceive('isMemberOfUGroup')->with(101, 222)->andReturns(true);
         $assignee->shouldReceive('isMemberOfUGroup')->with(102, 222)->andReturns(false);
         $assignee->shouldReceive('isMemberOfUGroup')->with(103, 222)->andReturns(false);
         $assignee->shouldReceive('isSuperUser')->andReturns(false);
-        //
         $submitter = \Mockery::spy(\PFUser::class);
         $submitter->shouldReceive('getId')->andReturns(122);
         $submitter->shouldReceive('isMemberOfUGroup')->with(101, 222)->andReturns(false);
         $submitter->shouldReceive('isMemberOfUGroup')->with(102, 222)->andReturns(true);
         $submitter->shouldReceive('isMemberOfUGroup')->with(103, 222)->andReturns(false);
         $submitter->shouldReceive('isSuperUser')->andReturns(false);
-        //
         $other = \Mockery::spy(\PFUser::class);
         $other->shouldReceive('getId')->andReturns(123);
         $other->shouldReceive('isMemberOfUGroup')->andReturns(false);

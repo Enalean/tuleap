@@ -87,8 +87,6 @@ extends WikiPlugin_IncludePage
 //
 // Revision 1.1  2004/09/06 08:37:31  rurban
 // plugin-list support for pages and exclude args
-//
-
 // For emacs users
 // Local Variables:
 // mode: php

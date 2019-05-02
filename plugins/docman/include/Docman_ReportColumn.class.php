@@ -69,9 +69,7 @@ class Docman_ReportColumn {
             $toogleIcon = '<img src="'.util_get_image_theme("dn_arrow.png").'" border="0" >';
         }
         
-        //
         // URL
-        //
         $toggleParam = array();
         $sortParam = $this->getSortParameter();
         if($sortParam !== null) {

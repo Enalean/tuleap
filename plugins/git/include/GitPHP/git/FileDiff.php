@@ -26,8 +26,6 @@ use Tuleap\Git\BinaryDetector;
 /**
  * Commit class
  *
- * @package GitPHP
- * @subpackage Git
  */
 class FileDiff
 {
@@ -703,8 +701,6 @@ class FileDiff
      * First the mode ("" or "-added" or "-deleted" or "-modified"),
      * then the first column, then the second.
      *
-     * @author Mattias Ulbrich
-     *
      * @access public
      * @return an array of line elements (see above)
      */
@@ -734,7 +730,6 @@ class FileDiff
 
         unset($exe);
 
-        //
         // parse diffs
         $diffs = array();
         $currentDiff = false;
@@ -781,7 +776,6 @@ class FileDiff
             $diffs[] = $currentDiff;
         }
 
-        //
         // iterate over diffs
         $output = array();
         $idx = 0;

@@ -23,8 +23,6 @@ require_once 'www/svn/svn_utils.php';
 
 /**
 * Widget_MyLatestSvnCommits
-*
-* @author  marc.nazarian@xrce.xerox.com
 */
 class Widget_MyLatestSvnCommits extends Widget {
 

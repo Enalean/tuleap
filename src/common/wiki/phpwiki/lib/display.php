@@ -327,8 +327,6 @@ function displayPage(&$request, $template=false) {
 // more numeric pagename fixes.
 // fixed action=upload with merge conflict warnings.
 // charset changed from constant to global (dynamic utf-8 switching)
-//
-
 // For emacs users
 // Local Variables:
 // mode: php

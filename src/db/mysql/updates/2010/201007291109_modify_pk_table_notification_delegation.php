@@ -1,8 +1,5 @@
 <?php
 
-/**
- *
- */
 class b201007291109_modify_pk_table_notification_delegation extends ForgeUpgrade_Bucket {
 
     public function description() {

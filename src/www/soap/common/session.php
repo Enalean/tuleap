@@ -5,10 +5,8 @@ define('invalid_session_fault', '3001');
 define('login_fault', '3002');
 
 if (defined('NUSOAP')) {
-	
-//
+
 // Type definition
-//
 $server->wsdl->addComplexType(
     'Session',
     'complexType',
@@ -21,9 +19,7 @@ $server->wsdl->addComplexType(
     )
 );
 
-//
 // Functions definition
-//
 $server->register('login', // method name
     array('loginname' => 'xsd:string', // input parameters
         'passwd'    => 'xsd:string'

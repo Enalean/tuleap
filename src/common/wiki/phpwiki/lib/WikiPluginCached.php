@@ -51,8 +51,6 @@ define('PLUGIN_CACHED_STATIC', 128); 	 // make it available via /uploads/, not v
  *     <li>plugin/RecentChangesCached.php</li>
  *     <li>plugin/Ploticus.php</li>
  * </ul>
- *
- * @author  Johannes Gro�e, Reini Urban
  */                                                                
 class WikiPluginCached extends WikiPlugin
 {   
@@ -456,8 +454,6 @@ class WikiPluginCached extends WikiPlugin
 //
 // Revision 1.11  2004/09/06 09:12:46  rurban
 // improve pear handling with silent fallback to ours
-//
-
 // For emacs users
 // Local Variables:
 // mode: php

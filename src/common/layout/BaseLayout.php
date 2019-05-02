@@ -154,7 +154,7 @@ abstract class BaseLayout extends Response
         $motd      = '';
         $motd_file = $GLOBALS['Language']->getContent('others/motd');
         if (! strpos($motd_file, "empty.txt")) {
-            # empty.txt returned when no motd file found
+            // empty.txt returned when no motd file found
             ob_start();
             include($motd_file);
             $motd = ob_get_clean();

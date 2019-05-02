@@ -32,7 +32,6 @@ class LdapQueryEscaper {
      * @see RFC2254 define how string search filters must be represented
      * @see For PHP >= 5.6.0, ldap_escape() is a core function
      *
-     * @author Chris Wright
      * @see https://github.com/DaveRandom/LDAPi/blob/master/src/global_functions.php
      *
      * @return String

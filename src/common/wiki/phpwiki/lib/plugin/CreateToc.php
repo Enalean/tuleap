@@ -536,9 +536,6 @@ function toggletoc(a) {
 //
 // Revision 1.1  2004/03/01 18:10:28  rurban
 // first version, without links, anchors and jscript folding
-//
-//
-
 // For emacs users
 // Local Variables:
 // mode: php

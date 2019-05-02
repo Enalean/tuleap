@@ -32,8 +32,6 @@ if (!defined('SECONDS_PER_DAY'))
 // pages back to the calendar page. (Subpage support might make this
 // easier.)
 
-/**
- */
 class WikiPlugin_Calendar
 extends WikiPlugin
 {
@@ -255,8 +253,6 @@ extends WikiPlugin
 // Revision 1.26  2003/01/18 21:19:25  carstenklapp
 // Code cleanup:
 // Reformatting; added copyleft, getVersion, getDescription
-//
-
 // For emacs users
 // Local Variables:
 // mode: php

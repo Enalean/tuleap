@@ -51,7 +51,7 @@ if (!user_isloggedin()  || ! $permission_manager->isAdmin($project, $user)) {
 
 $vMode = new Valid_WhiteList('mode',array('delete'));
 if ($request->valid($vMode) && $request->existAndNonEmpty('mode')) {
-    # delete a processor from db
+    // delete a processor from db
     if ($request->valid(new Valid_UInt('proc_id'))) {
         $proc_id = $request->get('proc_id');
     file_utils_delete_proc($proc_id);
@@ -74,7 +74,7 @@ $vProcRank = new Valid_UInt('procrank');
 $vProcRank->required();
 
 if ($request->isPost() && $request->existAndNonEmpty('add')) {
-    # add a new processor to the database
+    // add a new processor to the database
     if ($request->valid($vProcName) &&
         $request->valid($vProcRank) &&
         $request->valid($vAdd)) {
@@ -101,7 +101,7 @@ $vProcessRank = new Valid_UInt('processrank');
 $vProcessRank->required();
 
 if ($request->isPost() && $request->existAndNonEmpty('update')) {
-    # update a processor
+    // update a processor
     if ($request->valid($vProcessName) &&
         $request->valid($vProcessRank) &&
         $request->valid($vProcId)      &&

@@ -37,7 +37,7 @@ class ArtifactFactory {
     private $error_state = false;
 
     /**
-	 *  Constructor.
+	 *
 	 *
 	 *	@param	object	The ArtifactType object to which this ArtifactFactory is associated.
 	 *	@return	boolean	success.

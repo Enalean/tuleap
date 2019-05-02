@@ -32,9 +32,6 @@
 class Docman_ApprovalTableFileFactory extends Docman_ApprovalTableVersionnedFactory {
     var $itemVersion;
 
-    /**
-     *
-     */
     function __construct($item, $versionNumber=null) {
         parent::__construct($item);
 
@@ -117,10 +114,7 @@ class Docman_ApprovalTableFileFactory extends Docman_ApprovalTableVersionnedFact
         return $log->userAccessedSince($user->getId(), $this->item->getId(), $this->itemVersion->getDate());
     }
 
-    //
     // Class accessor
-    //
-
     function _getDao() {
         return new Docman_ApprovalTableFileDao(CodendiDataAccess::instance());
     }

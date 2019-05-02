@@ -17,9 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- *
- */
 class b201207051342_add_has_avatar_column extends ForgeUpgrade_Bucket {
     public function description() {
         return <<<EOT

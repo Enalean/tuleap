@@ -151,8 +151,6 @@ extends WikiPlugin_WikiBlog
 // Revision 1.1  2004/12/13 13:22:57  rurban
 // new BlogArchives plugin for the new blog theme. enable default box method
 // for all plugins. Minor search improvement.
-//
-
 // Local Variables:
 // mode: php
 // tab-width: 8

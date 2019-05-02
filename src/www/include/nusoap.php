@@ -59,8 +59,6 @@ $GLOBALS['_transient']['static']['nusoap_base']->globalDebugLevel = 9;
 *
 * nusoap_base
 *
-* @author   Dietrich Ayala <dietrich@ganx4.com>
-* @version  $Id: nusoap.php,v 1.94 2005/08/04 01:27:42 snichol Exp $
 * @access   public
 */
 class nusoap_base {
@@ -920,8 +918,6 @@ function usleepWindows($usec)
 * Contains information for a SOAP fault.
 * Mainly used for returning faults from deployed functions
 * in a server instance.
-* @author   Dietrich Ayala <dietrich@ganx4.com>
-* @version  $Id: nusoap.php,v 1.94 2005/08/04 01:27:42 snichol Exp $
 * @access public
 */
 class soap_fault extends nusoap_base {
@@ -1006,8 +1002,6 @@ class soap_fault extends nusoap_base {
 * that just doesn't have time to read the spec(s) thoroughly, and just have a couple of trusty
 * tutorials I refer to :)
 *
-* @author   Dietrich Ayala <dietrich@ganx4.com>
-* @version  $Id: nusoap.php,v 1.94 2005/08/04 01:27:42 snichol Exp $
 * @access   public
 */
 class XMLSchema extends nusoap_base  {
@@ -1909,8 +1903,6 @@ class XMLSchema extends nusoap_base  {
 * used, but is also useful when WSDL is used with polymorphic types, including
 * xsd:anyType and user-defined types.
 *
-* @author   Dietrich Ayala <dietrich@ganx4.com>
-* @version  $Id: nusoap.php,v 1.94 2005/08/04 01:27:42 snichol Exp $
 * @access   public
 */
 class soapval extends nusoap_base {
@@ -2010,8 +2002,6 @@ class soapval extends nusoap_base {
 * transport class for sending/receiving data via HTTP and HTTPS
 * NOTE: PHP must be compiled with the CURL extension for HTTPS support
 *
-* @author   Dietrich Ayala <dietrich@ganx4.com>
-* @version  $Id: nusoap.php,v 1.94 2005/08/04 01:27:42 snichol Exp $
 * @access public
 */
 class soap_transport_http extends nusoap_base {
@@ -2593,7 +2583,7 @@ class soap_transport_http extends nusoap_base {
 			if(isset($lb) && preg_match('#^HTTP/1.1 100#D',$data)){
 				unset($lb);
 				$data = '';
-			}//
+			}
 		}
 		// store header data
 		$this->incoming_payload .= $data;
@@ -3047,8 +3037,6 @@ class soap_transport_http extends nusoap_base {
 *
 * NOTE: WSDL functionality is experimental
 *
-* @author   Dietrich Ayala <dietrich@ganx4.com>
-* @version  $Id: nusoap.php,v 1.94 2005/08/04 01:27:42 snichol Exp $
 * @access   public
 */
 class soap_server extends nusoap_base {
@@ -4018,8 +4006,6 @@ class soap_server extends nusoap_base {
 /**
 * parses a WSDL file, allows access to it's data, other utility methods
 * 
-* @author   Dietrich Ayala <dietrich@ganx4.com>
-* @version  $Id: nusoap.php,v 1.94 2005/08/04 01:27:42 snichol Exp $
 * @access public 
 */
 class wsdl extends nusoap_base {
@@ -5734,8 +5720,6 @@ class wsdl extends nusoap_base {
 *
 * soap_parser class parses SOAP XML messages into native PHP values
 *
-* @author   Dietrich Ayala <dietrich@ganx4.com>
-* @version  $Id: nusoap.php,v 1.94 2005/08/04 01:27:42 snichol Exp $
 * @access   public
 */
 class soap_parser extends nusoap_base {
@@ -6116,7 +6100,6 @@ class soap_parser extends nusoap_base {
 		 } elseif($name == 'Header'){
 			$this->status = 'envelope';
 		} elseif($name == 'Envelope'){
-			//
 		}
 		// set parent back to my parent
 		$this->parent = $this->message[$pos]['parent'];
@@ -6267,7 +6250,6 @@ class soap_parser extends nusoap_base {
 				} else {
 					$notstruct = 0;
 	            }
-            	//
             	foreach($children as $child_pos){
             		if($notstruct){
             			$params[] = &$this->message[$child_pos]['result'];
@@ -6341,8 +6323,6 @@ class soap_parser extends nusoap_base {
 * // bye bye client
 * unset($soap_client);
 *
-* @author   Dietrich Ayala <dietrich@ganx4.com>
-* @version  $Id: nusoap.php,v 1.94 2005/08/04 01:27:42 snichol Exp $
 * @access   public
 */
 class soap_client extends nusoap_base  {

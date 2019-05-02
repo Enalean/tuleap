@@ -265,8 +265,6 @@ extends WikiPlugin
 // New plugin to be used in conjunction with the Calendar plugin.
 // Upgraded to use SUBPAGE_SEPARATOR for subpages. SF patch tracker
 // submission 565369.
-//
-
 
 // For emacs users
 // Local Variables:

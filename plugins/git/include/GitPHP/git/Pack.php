@@ -26,8 +26,6 @@ namespace Tuleap\Git\GitPHP;
 /**
  * Pack class
  *
- * @package GitPHP
- * @subpackage Git
  */
 class Pack
 {

@@ -1,13 +1,7 @@
 <?php
-//
 // Codendi
 // Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 // http://www.codendi.com
-//
-//
-//
-
-
 /**
  * Prepare SQL query for given date and given person
  */

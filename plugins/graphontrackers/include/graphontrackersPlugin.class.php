@@ -40,7 +40,7 @@ class GraphOnTrackersPlugin extends Plugin
     var $allowedForProject;
 
     /**
-     * Class constructor
+     *
      *
      * @param integer $id plugin id
      */

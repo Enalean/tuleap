@@ -1,5 +1,4 @@
 <?php
-//
 // Copyright (c) Enalean, 2015-Present. All Rights Reserved.
 // SourceForge: Breaking Down the Barriers to Open Source Development
 // Copyright 1999-2000 (c) The SourceForge Crew
@@ -8,8 +7,6 @@
 //
 //
 // adduser.php - All the forms and functions to manage unix users
-//
-
 // Add user to an existing project
 function account_add_user_to_group ($group_id, &$user_unix_name)
 {

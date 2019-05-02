@@ -153,8 +153,8 @@ function permission_get_object_name($permission_type,$object_id) {
     } else if ($permission_type=='WIKI_READ') {
         return $Language->getText('project_admin_permissions','wiki');    
     } else if ($permission_type=='WIKIPAGE_READ') {
-        #$wikipage= new WikiPage($object_id);
-        #return $wikipage->getPagename();
+        // $wikipage= new WikiPage($object_id);
+        // return $wikipage->getPagename();
         return "$object_id";
     } else if ($permission_type=='WIKIATTACHMENT_READ') {
         return $Language->getText('project_admin_permissions','wikiattachment');
@@ -1024,7 +1024,7 @@ function permission_process_selection_form($group_id, $permission_type, $object_
                 } else $msg .= $Language->getText('project_admin_permissions','nobody_has_no_access')." ";
             }
             if (permission_add_ugroup($group_id, $permission_type, $object_id, $selected_ugroup)) {
-                # $msg .= "+g$selected_ugroup ";
+                // $msg .= "+g$selected_ugroup ";
             } else {
                 return array(false, $Language->getText('project_admin_permissions','cant_add_ug',array($msg,$selected_ugroup)));
             }

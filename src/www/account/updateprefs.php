@@ -27,10 +27,7 @@ require_once('utils.php');
 $cookie_manager = new CookieManager();
 $user = UserManager::instance()->getCurrentUser();
 
-//
 // Validate params
-//
-
 session_require(array('isloggedin'=>1));
 
 $request = HTTPRequest::instance();
@@ -144,10 +141,7 @@ if ($request->existAndNonEmpty('form_accessibility_mode')) {
         );
     }
 }
-//
 // Perform the update
-//
-
 // User
 db_query("UPDATE user SET "
          . "mail_siteupdates=" . $form_mail_site . ","
@@ -190,8 +184,5 @@ if ($display_density === PFUser::DISPLAY_DENSITY_CONDENSED) {
 $em = EventManager::instance();
 $em->processEvent('update_user_preferences_appearance', array('request' => $request));
 
-//
 // Output
-//
-
 session_redirect("/account/index.php");

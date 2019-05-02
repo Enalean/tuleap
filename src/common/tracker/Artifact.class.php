@@ -84,31 +84,23 @@ class Artifact {
             return false;
         }
                 
-        //
         //      make sure this person has permission to view artifacts belonging to this tracker
-        //
         if ($checkPerms && !$this->ArtifactType->userCanView()) {
             $this->setError('Artifact: '.$Language->getText('tracker_common_artifact','view_private'));
             return false;
         }
 
-        //
         //      set up data structures
-        //
         if ($data) {
             if (is_array($data)) {
                 $this->data_array = $data;
-                //
                 //      Should verify ArtifactType ID
-                //
             } else {
                 if (!$this->fetchData($data)) {
                     return false;
                 }
             }
-            //
             //      make sure this person has permission to view this artifact
-            //
             if ($checkPerms) {
                 if (!$this->userCanView()) {
                     $this->setError('Artifact: '.$Language->getText('tracker_common_artifact','view_private_artifact'));
@@ -474,7 +466,6 @@ class Artifact {
         }
         
         
-        //
         //  Create the insert statement for standard field
         //
         //Reference manager for cross reference
@@ -523,9 +514,7 @@ class Artifact {
         }  
         
         
-        //
         //  Finally, build the full SQL query and insert the artifact itself 
-        //
         $id_sharing = new TrackerIdSharingDao();
         if ($artifact_id = $id_sharing->generateArtifactId()) {
             $sql="INSERT INTO artifact (artifact_id, $fixed_cols $vfl_cols) VALUES ($artifact_id, $fixed_values $vfl_values)";
@@ -538,9 +527,7 @@ class Artifact {
                 $was_error = true;
             } else {
                 
-                //
                 //  Insert the field values for no standard field
-                //
                 $fields = $art_field_fact->getAllUsedFields();
                 foreach ($fields as $field_name => $field) {
                     
@@ -830,11 +817,9 @@ class Artifact {
     
             
                 
-        //
         //  See which fields changed during the modification
         //  and if we must keep history then do it. Also add them to the update
         //  statement
-        //
         $reference_manager = ReferenceManager::instance();
         $text_value_list=array();
         $changes = array();
@@ -1044,9 +1029,7 @@ class Artifact {
 
 	    $this->addFollowUpComment($comment,$comment_type_id,$canned_response,$changes,$comment_format);
             
-        //
         //  Enter the timestamp if we are changing to closed or declined
-        //
         if (isset($changes['status_id']) && $this->isStatusClosed($vfl['status_id'])) {
             $now=time();
             $upd_list .= "close_date='$now',";
@@ -1056,9 +1039,7 @@ class Artifact {
             }
         }
         
-        //
         //  Reset the timestamp if we are changing from closed or declined
-        //
         if (isset($changes['status_id']) && !$this->isStatusClosed($vfl['status_id'])) {
             $upd_list .= "close_date='',";
             $field = $art_field_fact->getFieldFromName('close_date');
@@ -1067,10 +1048,7 @@ class Artifact {
             }
         }
 
-        //
         //  Insert the list of dependencies 
-        //
-        
 	    if ($import && $artifact_id_dependent) {
 			if (!$this->deleteAllDependencies()) {
                 return false;
@@ -1085,10 +1063,7 @@ class Artifact {
             }
         }
                 
-        //
         //  Finally, build the full SQL query and update the artifact itself (if need be)
-        //
-    
         $res_upd = true;
         if ($upd_list) {
             // strip the excess comma at the end of the update field list
@@ -3157,9 +3132,7 @@ class Artifact {
             $hp = $this->getHTMLPurifier();
             $uh = UserHelper::instance();
 
-            //
             //  Format the comment rows from artifact_history
-            //  
             global $Language;
             
                 //$group = $this->ArtifactType->getGroup();
@@ -3379,10 +3352,7 @@ class Artifact {
             $hp = Codendi_HTMLPurifier::instance();
             global $Language;
         
-            //
             //      format the CC list for this artifact
-            //
-        
             $result = $this->getCCList();
             $rows   = db_numrows($result);
             $out    = '';
@@ -3486,10 +3456,7 @@ class Artifact {
             $hp = Codendi_HTMLPurifier::instance();
             global $Language;
         
-            //
             //      format the dependencies list for this artifact
-            //
-        
             $result=$this->getDependencies();
             $rows=db_numrows($result);
             $out = '';
@@ -3586,10 +3553,7 @@ class Artifact {
         
             global $Language;
             $hp = $this->getHtmlPurifier();
-            //
             //  show the files attached to this artifact
-            //   
-        
             $result=$this->getAttachedFiles();
             $rows=db_numrows($result);
         

@@ -27,10 +27,10 @@ class SystemEvent_GIT_USER_RENAME extends SystemEvent {
 
     const NAME = "GIT_USER_RENAME";
 
-    /* @var Git_Gitolite_SSHKeyDumper*/
+    /** @var Git_Gitolite_SSHKeyDumper*/
     private $ssh_key_dumper;
 
-    /* @var UserManager */
+    /** @var UserManager */
     private $user_manager;
 
     public function process() {

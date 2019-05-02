@@ -912,8 +912,6 @@ function ParseMimeifiedPages ($data)
 // fixed IMAP auth
 // removed rating recommendations
 // ziplib reformatting
-//
-
 // Local Variables:
 // mode: php
 // tab-width: 8

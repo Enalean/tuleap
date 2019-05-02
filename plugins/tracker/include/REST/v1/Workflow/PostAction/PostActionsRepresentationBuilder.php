@@ -42,7 +42,7 @@ class PostActionsRepresentationBuilder implements Visitor
     private $post_action_representations;
 
     /**
-     * PostActionsRepresentationBuilder constructor.
+     *
      * @param Transition_PostAction[] $post_actions
      */
     public function __construct(array $post_actions)

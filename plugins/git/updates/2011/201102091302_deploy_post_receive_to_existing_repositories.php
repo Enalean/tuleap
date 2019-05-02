@@ -1,8 +1,5 @@
 <?php
 
-/**
- *
- */
 class b201102091302_deploy_post_receive_to_existing_repositories extends ForgeUpgrade_Bucket {
 
     public function description() {

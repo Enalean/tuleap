@@ -4,9 +4,6 @@ require_once('lib/WikiDB.php');
 //require_once('lib/WikiDB/backend/PearDB.php');
 //require_once('DB.php'); // Always favor use our local pear copy
 
-/**
- *
- */
 class WikiDB_SQL extends WikiDB
 {
     public function __construct ()

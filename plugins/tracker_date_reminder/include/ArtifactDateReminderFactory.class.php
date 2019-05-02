@@ -21,9 +21,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-//
 // The artifact date reminder object
-//
 class ArtifactDateReminderFactory {
 
     // The notification id
@@ -46,10 +44,6 @@ class ArtifactDateReminderFactory {
      */
     private $logger;
     
-    /**
-     *  Constructor.
-     *
-     */
     function __construct($notification_id, TrackerDateReminder_Logger $logger) {
 
         // Set object attributes

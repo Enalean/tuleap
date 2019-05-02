@@ -285,10 +285,7 @@ class Docman_BuildItemMappingVisitor {
         return $this->itemMapping;
     }
 
-    //
     // Object accessors
-    //
-
     protected function getItemDao() {
         if($this->dao === null) {
             $this->dao = new Docman_ItemDao(CodendiDataAccess::instance());

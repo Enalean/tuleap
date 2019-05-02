@@ -18,9 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- *
- */
 class b201207271519_add_ldap_ugroup_synchro_policy_and_bind_option_columns extends ForgeUpgrade_Bucket {
 
     /**

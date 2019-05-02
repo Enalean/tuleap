@@ -202,7 +202,6 @@ class BuildItemMappingVisitorTest extends TuleapTestCase {
         $mockDar37->shouldReceive('getRow')->once()->andReturns(false);
         $mockDao->shouldReceive('searchByTitle')->with(array('Folder 1.1.1'), 569, 37)->andReturns($mockDar37);
 
-        //
         // Permissions mock
         $mockDPM  = \Mockery::spy(Docman_PermissionsManager::class);
         $mockDPM->shouldReceive('userCanRead')->andReturns(true);
@@ -279,7 +278,6 @@ class BuildItemMappingVisitorTest extends TuleapTestCase {
         $mockDar37->shouldReceive('getRow')->once()->andReturns(false);
         $mockDao->shouldReceive('searchByTitle')->with(array('Folder 1.1.1'), 569, 37)->andReturns($mockDar37);
 
-        //
         // Permissions mock
         $mockUser = \Mockery::spy(PFUser::class);
         $mockDPM  = \Mockery::spy(Docman_PermissionsManager::class);
@@ -363,7 +361,6 @@ class BuildItemMappingVisitorTest extends TuleapTestCase {
         $mockDar37->shouldReceive('getRow')->once()->andReturns(false);
         $mockDao->shouldReceive('searchByTitle')->with(array('Folder test'), 569, 40)->andReturns($mockDar37);
 
-        //
         // Permissions mock
         $mockDPM  = \Mockery::spy(Docman_PermissionsManager::class);
         $mockDPM->shouldReceive('userCanRead')->andReturns(true);

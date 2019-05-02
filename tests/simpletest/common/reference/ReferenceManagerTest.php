@@ -117,7 +117,7 @@ class ReferenceManagerTest extends TuleapTestCase {
         $this->assertTrue(count($this->rm->_extractAllMatches("art #123-rev #123", 0)) == 2, "Multiple extracts with '-'");
         $this->assertTrue(count($this->rm->_extractAllMatches("art #123:wikipage/2", 0)) == 1, "Wikipage revision number");
 
-        # Projectname with - and _ See SR #1178
+        // Projectname with - and _ See SR #1178
         $matches = $this->rm->_extractAllMatches("art #abc-def:ghi");
         $this->assertEqual($matches[0]['project_name'], 'abc-def:');
         $this->assertEqual($matches[0]['value'], 'ghi');
@@ -125,7 +125,7 @@ class ReferenceManagerTest extends TuleapTestCase {
         $this->assertEqual($matches[0]['project_name'], 'abc-de_f:');
         $this->assertEqual($matches[0]['value'], 'ghi');
 
-        # SR #2353 - Reference to wiki page name with "&" does not work
+        // SR #2353 - Reference to wiki page name with "&" does not work
         $matches = $this->rm->_extractAllMatches('wiki #project:page/subpage&amp;toto&tutu & co');
         $this->assertEqual($matches[0]['key'], 'wiki');
         $this->assertEqual($matches[0]['project_name'], 'project:');

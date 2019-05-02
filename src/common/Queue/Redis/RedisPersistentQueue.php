@@ -28,7 +28,7 @@ use Tuleap\Queue\PersistentQueue;
 use Tuleap\Queue\QueueServerConnectionException;
 
 /**
- * Class RedisQueue
+ *
  *
  * @see https://stackoverflow.com/questions/27986649/redis-better-way-of-cleaning-the-processing-queuereliable-while-using-brpopl
  */

@@ -36,7 +36,7 @@ class SubItemsSectionPresenter
     public $has_label;
 
     /**
-     * SubItemsSectionPresenter constructor.
+     *
      *
      * @param string                    $label
      * @param BreadCrumbLinkPresenter[] $links

@@ -330,7 +330,6 @@ function UserExists ($UserName) {
     return false;
 }
 
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 /** 
  * Base WikiUser class.
@@ -1238,7 +1237,6 @@ extends _PassUser
     }
 }
 
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /**
  * Various data classes for the preference types, 
  * to support get, set, sanify (range checking, ...)
@@ -1615,7 +1613,6 @@ function ValidateMail($email, $noconnect=false) {
     return $result;
 } // end of function 
 
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 /**
  * UserPreferences
@@ -2320,8 +2317,6 @@ extends UserPreferences
 // Revision 1.46  2004/04/01 06:29:51  rurban
 // better wording
 // RateIt also for ADODB
-//
-
 // Local Variables:
 // mode: php
 // tab-width: 8

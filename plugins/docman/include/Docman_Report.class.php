@@ -146,8 +146,6 @@ class Docman_Report {
         if(isset($row['image'])) $this->image = $row['image'];
     }
 
-    //
-
     function addColumn(&$c) {
         $this->columns[] = $c;
     }

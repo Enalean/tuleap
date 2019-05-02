@@ -28,11 +28,7 @@ require_once('common/html/HTML_Element_Selectbox_TrackerFields_Selectboxes.class
 class GraphOnTrackers_Chart_Pie extends GraphOnTrackers_Chart {
     
     protected $field_base;
-    
-    /**
-     * class constructor
-     *
-     */    
+
     function __construct($graphic_report, $id, $rank, $title, $description, $width, $height) {
         parent::__construct($graphic_report, $id, $rank, $title, $description, $width, $height);
         $sql = "SELECT * FROM plugin_graphontrackers_pie_chart WHERE id = ". db_ei($id);

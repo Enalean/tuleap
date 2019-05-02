@@ -192,7 +192,6 @@ echo $footerEnd;
 		wfRestoreWarnings();
 	} // end of execute() method
 
-	/*************************************************************************************************/
 
 	protected function renderPortals( $sidebar ) {
 		if ( !isset( $sidebar['SEARCH'] ) ) $sidebar['SEARCH'] = true;
@@ -235,7 +234,6 @@ echo $footerEnd;
 	</div>
 <?php
 	}
-	/*************************************************************************************************/
 	function toolbox() {
 ?>
 	<div class="portlet" id="p-tb">
@@ -257,7 +255,6 @@ echo $footerEnd;
 <?php
 	}
 
-	/*************************************************************************************************/
 	function languageBox() {
 		if( $this->data['language_urls'] ) {
 ?>
@@ -276,7 +273,6 @@ echo $footerEnd;
 		}
 	}
 
-	/*************************************************************************************************/
 	function customBox( $bar, $cont ) {
 		$portletAttribs = array( 'class' => 'generated-sidebar portlet', 'id' => Sanitizer::escapeId( "p-$bar" ) );
 		$tooltip = Linker::titleAttrib( "p-$bar" );
@@ -296,7 +292,7 @@ echo $footerEnd;
 <?php			} ?>
 			</ul>
 <?php   } else {
-			# allow raw HTML block to be defined by extensions
+			// allow raw HTML block to be defined by extensions
 			print $cont;
 		}
 ?>

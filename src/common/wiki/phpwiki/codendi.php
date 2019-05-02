@@ -85,7 +85,6 @@ function codendi_main () {
     //
     // (If DEBUG if off, this may be a strong validator, but I'm going
     // to go the paranoid route here pending further study and testing.)
-    //
     $validators['%weak'] = true;
     $request->setValidators($validators);
 

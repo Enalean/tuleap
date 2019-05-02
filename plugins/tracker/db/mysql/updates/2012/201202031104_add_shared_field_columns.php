@@ -19,9 +19,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-/**
- *
- */
 class b201202031104_add_shared_field_columns extends ForgeUpgrade_Bucket {
 
     public function description() {

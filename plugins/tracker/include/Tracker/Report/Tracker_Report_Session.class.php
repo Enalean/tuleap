@@ -95,12 +95,7 @@ class Tracker_Report_Session extends Codendi_Session {
 
 
     
-    ##############################################################
-    //
     //                  CRITERIA SESSION METHODS
-    //
-    ##############################################################    
-
     /**
      * remove a criterion (field) from session
      * @param <type> $field_id

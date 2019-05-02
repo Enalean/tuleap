@@ -21,8 +21,6 @@
 
 /**
  * Description of GitDriverDestinationNotEmpty
- *
- * @author gstorchi
  */
 class GitDriverDestinationNotEmptyException extends  GitDriverException {
     //put your code here

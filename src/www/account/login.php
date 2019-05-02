@@ -33,10 +33,7 @@ if ($request->get('confirm_hash')) {
 
 $em = EventManager::instance();
 
-//
 // Validate input
-//
-
 // Clean variables
 $_cVar = array();
 // Raw variables
@@ -63,10 +60,7 @@ if($request->valid(new Valid_String('return_to'))) {
     $_rVar['return_to'] = $request->get('return_to');
 }
 
-//
 // Application
-//
-
 $um         = UserManager::instance();
 $login_csrf = new CSRFSynchronizerToken('/account/login.php');
 
@@ -98,10 +92,7 @@ if ($user->isLoggedIn()) {
     account_redirect_after_login($_rVar['return_to']);
 }
 
-//
 // Display login page
-//
-
 // Display mode
 $pvMode = false;
 if($_cVar['pv'] == 2) {

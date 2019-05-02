@@ -31,7 +31,7 @@ class DataBuilder {
     var $y_values;
 
     /**
-	* class constructor
+	*
 	*  @param field_X: base_field (field_name)on which will data will be based
 	*  @param field_Y: group_field (field_name)on which will data will be grouped
 	*  @param atid: the artifact type id

@@ -18,9 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- *
- */
 class b201209121717_turn_tables_innodb extends ForgeUpgrade_Bucket {
     
     public function description() {

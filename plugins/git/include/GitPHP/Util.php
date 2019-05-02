@@ -8,14 +8,9 @@ namespace Tuleap\Git\GitPHP;
  *
  * Utility functions
  *
- * @author Christopher Han <xiphux@gmail.com>
- * @copyright Copyright (c) 2010 Christopher Han
- * @package GitPHP
  */
 /**
  * Util class
- *
- * @package GitPHP
  */
 class Util
 {

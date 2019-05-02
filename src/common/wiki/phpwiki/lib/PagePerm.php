@@ -908,9 +908,6 @@ class PagePermission {
 //
 // Revision 1.1  2004/02/08 12:29:30  rurban
 // initial version, not yet hooked into lib/main.php
-//
-//
-
 // Local Variables:
 // mode: php
 // tab-width: 8

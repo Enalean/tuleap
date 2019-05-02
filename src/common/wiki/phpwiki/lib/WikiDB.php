@@ -9,9 +9,6 @@ require_once('lib/WikiNotification.php');
  * The classes in the file define the interface to the
  * page database.
  *
- * @package WikiDB
- * @author Geoffrey T. Dairiki <dairiki@dairiki.org>
- *         Reini Urban
  */
 
 /**
@@ -60,7 +57,7 @@ class WikiDB {
 
 
     /**
-     * Constructor.
+     *
      *
      * @access private
      * @see open()
@@ -2563,8 +2560,6 @@ function _sql_debuglog_shutdown_function() {
 // more numeric pagename fixes.
 // fixed action=upload with merge conflict warnings.
 // charset changed from constant to global (dynamic utf-8 switching)
-//
-
 // Local Variables:
 // mode: php
 // tab-width: 8

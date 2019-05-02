@@ -28,10 +28,6 @@
  * interface between data corresponding to a Wiki Service (instance of
  * PhpWiki for Codendi) and Codendi application
  *
- * @package   WikiService
- * @copyright STMicroelectronics, 2007
- * @author    Sabri LABBENE <sabri.labbene@st.com>
- * @license   http://opensource.org/licenses/gpl-license.php GPL
  */
 class WikiCloner {
     /*private int */   var $tmpl_wiki_exist;

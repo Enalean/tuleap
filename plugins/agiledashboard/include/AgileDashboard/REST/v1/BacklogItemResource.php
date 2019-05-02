@@ -61,7 +61,7 @@ class BacklogItemResource extends AuthenticatedResource
     /** @var UserManager */
     private $user_manager;
 
-    /* @var TrackerFactory */
+    /** @var TrackerFactory */
     private $tracker_factory;
 
     /** @var BacklogItemsUpdater */

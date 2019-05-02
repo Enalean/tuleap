@@ -378,8 +378,6 @@ class _PageList_Column_renamed_pagename extends _PageList_Column {
 //
 // Revision 1.1  2004/02/11 20:00:16  rurban
 // WikiAdmin... series overhaul. Rename misses the db backend methods yet. Chmod + Chwon still missing.
-//
-
 // Local Variables:
 // mode: php
 // tab-width: 8

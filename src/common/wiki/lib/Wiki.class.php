@@ -32,10 +32,6 @@ require_once('WikiPage.class.php');
  * interface between data corresponding to a Wiki Service (instance of
  * PhpWiki for Codendi) and Codendi application
  *
- * @package   WikiService
- * @copyright STMicroelectronics, 2005
- * @author    Manuel Vacelet <manuel.vacelet-abecedaire@st.com>
- * @license   http://opensource.org/licenses/gpl-license.php GPL
  */
 class Wiki {
   /* private int */ var $gid;
@@ -225,9 +221,7 @@ class Wiki {
     //TODO: Drop entries
 
 
-    //
     // PhpWiki
-    //
     $res = db_query('  SELECT id FROM wiki_page'
 		    .' WHERE group_id='.db_ei($this->gid));
     

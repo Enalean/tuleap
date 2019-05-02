@@ -27,10 +27,8 @@ require_once ('pre.php');
 require_once ('session.php');
 
 if (defined('NUSOAP')) {
-	
-//
+
 // Type definition
-//
 $server->wsdl->addComplexType(
     'TrackerDesc',
     'complexType',
@@ -687,9 +685,7 @@ $server->wsdl->addComplexType(
     )
 );
 
-//
 // Function definition
-//
 $server->register(
     'getTrackerList', // method name
     array('sessionKey'=>'xsd:string', // input parameters

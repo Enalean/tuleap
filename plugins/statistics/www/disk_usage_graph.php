@@ -143,10 +143,7 @@ if (strtotime($startDate) > strtotime($endDate)) {
     $error = true;
 }
 
-//
 // Display graph
-//
-
 $graph = new Statistics_DiskUsageGraph($duMgr);
 if (!$error) {
 

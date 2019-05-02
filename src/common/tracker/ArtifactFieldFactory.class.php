@@ -50,7 +50,7 @@ class ArtifactFieldFactory {
 	private $error_state = false;
 
 	/**
-	 *  Constructor.
+	 *
 	 *
 	 *  @param ArtifactType: the artifact type object
 	 *	@return	boolean	success.
@@ -459,9 +459,7 @@ class ArtifactFieldFactory {
 	      }
 
 
-	      //
 	      // Copy artifact_field_usage records
-	      //
 	      $place = ($field->getPlace() == ""?"null":$field->getPlace());
 	      $sql_insert = 'INSERT INTO artifact_field_usage VALUES ('.$field->getID().','.$atid_dest.','.$field->getUseIt().
 		','.$place.')';
@@ -477,9 +475,7 @@ class ArtifactFieldFactory {
 	
 		
 		
-		//
 		// Copy artifact_field_value_list records
-		//
 	    $sql='SELECT field_id,value_id,value,description,order_id,status '.
 		'FROM artifact_field_value_list '.
 		'WHERE group_artifact_id='. db_ei($this->ArtifactType->getID()) ;
@@ -516,16 +512,12 @@ class ArtifactFieldFactory {
 	 */
 	function deleteFields($atid) {
         
-        //
         // Remove fields permissions
-        //
 		foreach($this->USAGE_BY_ID as $field_id => $field) {
             permission_clear_all_fields_tracker($this->ArtifactType->getGroupID(), $atid, $field_id);
         }
         
-		//
 		// Delete artifact_field records
-		//
 	    $sql='DELETE '.
 		'FROM artifact_field '.
 		'WHERE group_artifact_id='. db_ei($atid) ;
@@ -534,9 +526,7 @@ class ArtifactFieldFactory {
 		
 	    $res = db_query($sql);
 	
-		//
 		// Delete artifact_field_usage records
-		//
 	    $sql='DELETE '.
 		'FROM artifact_field_usage '.
 		'WHERE group_artifact_id='. db_ei($atid) ;
@@ -545,9 +535,7 @@ class ArtifactFieldFactory {
 		
 	    $res = db_query($sql);
 			
-		//
 		// Delete artifact_field_value_list records
-		//
 	    $sql='DELETE '.
 		'FROM artifact_field_value_list '.
 		'WHERE group_artifact_id='. db_ei($atid) ;

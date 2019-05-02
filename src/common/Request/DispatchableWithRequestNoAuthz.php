@@ -33,8 +33,6 @@ namespace Tuleap\Request;
  *
  * This interface is supposed to be implemented by Routes that need to manage permissions entirely on their own.
  * As a developer or review be very careful, you are alone here, no Black^WBrown magic is there to protect yourself.
- *
- * @package Tuleap\Request
  */
 interface DispatchableWithRequestNoAuthz extends DispatchableWithRequest
 {

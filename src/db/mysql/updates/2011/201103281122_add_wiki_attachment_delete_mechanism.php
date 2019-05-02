@@ -1,8 +1,5 @@
 <?php
 
-/**
- *
- */
 class b201103281122_add_wiki_attachment_delete_mechanism extends ForgeUpgrade_Bucket {
 
     public function description() {

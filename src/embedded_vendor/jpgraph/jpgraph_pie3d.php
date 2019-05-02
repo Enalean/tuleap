@@ -162,7 +162,6 @@ class PiePlot3D extends PiePlot {
     // Normalize Angle between 0-360
     function NormAngle($a) {
         // Normalize anle to 0 to 2M_PI
-        //
         if( $a > 0 ) {
             while($a > 360) $a -= 360;
         }
@@ -456,9 +455,7 @@ class PiePlot3D extends PiePlot {
         $a = $startangle;
         $a = $this->NormAngle($a);
 
-        //
         // Step 1 . Split all slices that crosses 90 or 270
-        //
         $idx=0;
         $adjexplode=array();
         $numcolors = count($colors);
@@ -562,9 +559,7 @@ class PiePlot3D extends PiePlot {
             list($dbgs,$dbge) = $angles[$i];
         }
 
-        //
         // Step 2. Find start index (first pie that starts in upper left quadrant)
-        //
         $minval = $angles[0][0];
         $min = 0;
         for( $i=0; $i<$n; ++$i ) {
@@ -588,9 +583,7 @@ class PiePlot3D extends PiePlot {
         }
         $start = $j;
 
-        //
         // Step 3. Print slices in z-order
-        //
         $cnt = 0;
 
         // First stroke all the slices between 90 and 270 (left half circle)
@@ -678,10 +671,7 @@ class PiePlot3D extends PiePlot {
             }
         }
 
-        //
         // Finally add potential lines in pie
-        //
-
         if( $edgecolor=="" || $aaoption !== 0 ) return;
 
         $accsum = 0;

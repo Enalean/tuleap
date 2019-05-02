@@ -160,12 +160,12 @@ class FusionForgeTemplate extends QuickTemplate {
 						echo ' class="'.htmlspecialchars($tab['class']).'"';
 					}
 					echo'><a href="'.htmlspecialchars($tab['href']).'"';
-					# We don't want to give the watch tab an accesskey if the
-					# page is being edited, because that conflicts with the
-					# accesskey on the watch checkbox.  We also don't want to
-					# give the edit tab an accesskey, because that's fairly su-
-					# perfluous and conflicts with an accesskey (Ctrl-E) often
-					# used for editing in Safari.
+					// We don't want to give the watch tab an accesskey if the
+					// page is being edited, because that conflicts with the
+					// accesskey on the watch checkbox.  We also don't want to
+					// give the edit tab an accesskey, because that's fairly su-
+					// perfluous and conflicts with an accesskey (Ctrl-E) often
+					// used for editing in Safari.
 				 	if( in_array( $action, array( 'edit', 'submit' ) )
 				 	&& in_array( $key, array( 'edit', 'watch', 'unwatch' ))) {
 				 		echo $skin->tooltip( "ca-$key" );
@@ -269,7 +269,6 @@ class FusionForgeTemplate extends QuickTemplate {
 	wfRestoreWarnings();
 	} // end of execute() method
 
-	/*************************************************************************************************/
 	function searchBox() {
 		global $wgUseTwoButtonsSearchForm;
 ?>
@@ -292,7 +291,6 @@ class FusionForgeTemplate extends QuickTemplate {
 <?php
 	}
 
-	/*************************************************************************************************/
 	function toolbox() {
 ?>
 	<div class="portlet" id="p-tb">
@@ -352,7 +350,6 @@ class FusionForgeTemplate extends QuickTemplate {
 <?php
 	}
 
-	/*************************************************************************************************/
 	function languageBox() {
 		if( $this->data['language_urls'] ) {
 ?>
@@ -371,7 +368,6 @@ class FusionForgeTemplate extends QuickTemplate {
 		}
 	}
 
-	/*************************************************************************************************/
 	function customBox( $bar, $cont ) {
 ?>
 	<div class='generated-sidebar portlet' id='<?php echo Sanitizer::escapeId( "p-$bar" ) ?>'<?php echo $this->skin->tooltip('p-'.$bar) ?>>
@@ -386,7 +382,7 @@ class FusionForgeTemplate extends QuickTemplate {
 <?php			} ?>
 			</ul>
 <?php   } else {
-			# allow raw HTML block to be defined by extensions
+			// allow raw HTML block to be defined by extensions
 			print $cont;
 		}
 ?>

@@ -35,9 +35,6 @@ require_once ('common/frs/FRSPackageFactory.class.php');
 require_once ('common/frs/FileModuleMonitorFactory.class.php');
 require_once ('common/frs/FRSLog.class.php');
 
-/**
- * 
- */
 class FRSReleaseFactory {
     // Kept for legacy
     var $STATUS_ACTIVE  = FRSRelease::STATUS_ACTIVE;

@@ -38,9 +38,6 @@ class ProfileController implements DispatchableWithRequest, DispatchableWithBurn
      */
     private $presenter_builder;
 
-    /**
-     * ProfileController constructor.
-     */
     public function __construct(ProfilePresenterBuilder $presenter_builder)
     {
         $this->presenter_builder = $presenter_builder;

@@ -72,8 +72,6 @@ extends WikiPlugin
 // display dynamic content.
 //
 // ----------------------------------------------------------------------
-//
-
 // For emacs users
 // Local Variables:
 // mode: php

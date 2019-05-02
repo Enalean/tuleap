@@ -64,7 +64,7 @@ main() {
     then
         exit 0
     fi
-    ./src/vendor/bin/phpcs --standard=./tests/phpcs/tuleap-ruleset-minimal.xml --encoding=utf-8 -p ${files_list}
+    ./src/vendor/bin/phpcs --standard=./tests/phpcs/tuleap-ruleset-minimal.xml --encoding=utf-8 -s ${files_list}
     local status_strict=$?
     if [[ ${status_strict} -ne 0 ]]
     then

@@ -693,8 +693,6 @@ class Statistics_DiskUsageManager {
         }
     }
 
-    /**
-     */
     public function _getDao() {
         return $this->dao;
     }

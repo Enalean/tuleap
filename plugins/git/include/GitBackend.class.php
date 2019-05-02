@@ -22,8 +22,6 @@ require_once('common/backend/Backend.class.php');
 
 /**
  * Description of GitBackend
- *
- * @author Guillaume Storchi
  */
 class GitBackend extends Backend implements Git_Backend_Interface, GitRepositoryCreator {
     

@@ -24,8 +24,6 @@ namespace Tuleap\Git\GitPHP;
 /**
  * Project class
  *
- * @package GitPHP
- * @subpackage Git
  */
 class Project
 {
@@ -272,7 +270,7 @@ class Project
     /**
      * __construct
      *
-     * Class constructor
+     *
      *
      * @access public
      * @param string $projectRoot project root

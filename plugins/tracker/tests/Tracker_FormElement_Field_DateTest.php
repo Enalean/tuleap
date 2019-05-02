@@ -672,7 +672,7 @@ class DayFieldTestVersion extends Tracker_FormElement_Field_Date {
 
 class Tracker_FormElement_Field_DateTest_getSQLCompareDate_DAY extends TuleapTestCase {
 
-    /* @var DayFieldTestVersion */
+    /** @var DayFieldTestVersion */
     private $day_field;
 
     public function setUp() {

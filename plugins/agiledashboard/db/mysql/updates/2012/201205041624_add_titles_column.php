@@ -19,9 +19,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-/**
- *
- */
 class b201205041624_add_titles_column extends ForgeUpgrade_Bucket {
 
     public function description() {

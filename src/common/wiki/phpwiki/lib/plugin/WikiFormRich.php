@@ -380,8 +380,6 @@ extends WikiPlugin
 //
 // Revision 1.1  2004/07/01 13:11:53  rurban
 // more generic forms
-//
-
 // For emacs users
 // Local Variables:
 // mode: php

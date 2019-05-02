@@ -110,7 +110,6 @@ class ArtifactRulesManagerTest extends TuleapTestCase {
         $arm->setReturnValue('_getSelectedValuesForField', array('b_1', 'b_2'), array(null, 'F3', array('B1', 'B2')));
         $arm->setReturnValue('_getSelectedValuesForField', array('b_2', 'b_3'), array(null, 'F3', array('B2', 'B3')));
         
-        /**/
         //S1
         $GLOBALS['Response'] = new MockResponse();
         $GLOBALS['Response']->expectNever('addFeedback');
@@ -127,7 +126,6 @@ class ArtifactRulesManagerTest extends TuleapTestCase {
             )
         );
         //$this->assertEqual($GLOBALS['feedback'], '');
-        /**/
         //S2
         $GLOBALS['Response'] = new MockResponse();
         $GLOBALS['Response']->expectOnce('addFeedback', array('error', 'f_3(c_2) -> f_2(b_3)'));
@@ -144,7 +142,6 @@ class ArtifactRulesManagerTest extends TuleapTestCase {
             )
         );
         //$this->assertEqual($GLOBALS['feedback'],  'f_3(c_2) -> f_2(b_3) : ');
-        /**/
         //S3
         $GLOBALS['Response'] = new MockResponse();
         $GLOBALS['Response']->expectNever('addFeedback');
@@ -161,7 +158,6 @@ class ArtifactRulesManagerTest extends TuleapTestCase {
             )
         );
         //$this->assertEqual($GLOBALS['feedback'],  '');
-        /**/
         //S4
         $GLOBALS['Response'] = new MockResponse();
         $GLOBALS['Response']->expectNever('addFeedback');
@@ -178,7 +174,6 @@ class ArtifactRulesManagerTest extends TuleapTestCase {
             )
         );
         //$this->assertEqual($GLOBALS['feedback'],  '');
-        /**/
         //S5
         $GLOBALS['Response'] = new MockResponse();
         $GLOBALS['Response']->expectNever('addFeedback');
@@ -195,7 +190,6 @@ class ArtifactRulesManagerTest extends TuleapTestCase {
             )
         );
         //$this->assertEqual($GLOBALS['feedback'],  '');
-        /**/
         //S6
         $GLOBALS['Response'] = new MockResponse();
         $GLOBALS['Response']->expectOnce('addFeedback', array('error', 'f_1(a_1) -> f_2(b_2)'));
@@ -212,7 +206,6 @@ class ArtifactRulesManagerTest extends TuleapTestCase {
             )
         );
         //$this->assertEqual($GLOBALS['feedback'],  'f_1(a_1) -> f_2(b_2)');
-        /**/
     }
     
     function testForbidden() {

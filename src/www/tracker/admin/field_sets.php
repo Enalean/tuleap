@@ -1,13 +1,10 @@
 <?php
-//
 // Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 //
 // $$
 //
 //
 //  Written for Codendi by Marc Nazarian
-//
-
 
 if ( !user_isloggedin() ) {
 	exit_not_logged_in();

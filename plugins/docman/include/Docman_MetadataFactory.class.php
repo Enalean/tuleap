@@ -747,8 +747,6 @@ class Docman_MetadataFactory {
     }
 
 
-    /**
-     */
     function _findRealMetadataByName($name, &$mda) {
         $dao = $this->getDao();
 
@@ -835,10 +833,7 @@ class Docman_MetadataFactory {
         }
     }
     
-    //
     // Accessors for mock
-    //
-    
     function &_getMetadataFactory($groupId) {
         $mdf = new Docman_MetadataFactory($groupId);
         return $mdf;

@@ -1,5 +1,4 @@
 <?php
-//
 // Tuleap
 // Copyright (c) Enalean, 2016-Present. All Rights Reserved.
 // Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
@@ -7,8 +6,6 @@
 // 
 //
 //	Originally written by Laurent Julliard 2001- 2003 Codendi Team, Xerox
-//
-
 require_once __DIR__ . '/commit_utils.php';
 
 $request  = HTTPRequest::instance();

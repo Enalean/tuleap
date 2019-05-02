@@ -23,8 +23,6 @@ rcs_id('$Id: LikePages.php,v 1.22 2004/11/23 15:17:19 rurban Exp $');
 require_once('lib/TextSearchQuery.php');
 require_once('lib/PageList.php');
 
-/**
- */
 class WikiPlugin_LikePages
 extends WikiPlugin
 {
@@ -140,8 +138,6 @@ extends WikiPlugin
 // Code cleanup:
 // Reformatting & tabs to spaces;
 // Added copyleft, getVersion, getDescription, rcs_id.
-//
-
 // Local Variables:
 // mode: php
 // tab-width: 8
