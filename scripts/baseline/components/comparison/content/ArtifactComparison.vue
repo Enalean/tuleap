@@ -19,8 +19,12 @@
   -->
 
 <template>
-    <div class="comparison-content-artifact">
-        <artifact-label v-bind:artifact="compared_to" class="comparison-content-artifact-header"/>
+    <collapsable-content class="comparison-content-artifact">
+        <artifact-label
+            slot="header"
+            v-bind:artifact="compared_to"
+            class="comparison-content-artifact-header"
+        />
         <div class="comparison-content-artifact-body">
             <field-comparison
                 v-if="base.description !== compared_to.description"
@@ -52,10 +56,11 @@
             v-bind:base_artifacts="filtered_base_linked_artifacts"
             v-bind:compared_to_artifacts="filtered_compared_to_linked_artifacts"
         />
-    </div>
+    </collapsable-content>
 </template>
 
 <script>
+import CollapsableContent from "../../common/CollapsableContent.vue";
 import ArtifactsListComparison from "./ArtifactsListComparison.vue";
 import FieldComparison from "./FieldComparison.vue";
 import ArtifactLabel from "../../common/ArtifactLabel.vue";
@@ -66,6 +71,7 @@ export default {
     name: "ArtifactComparison",
 
     components: {
+        CollapsableContent,
         DepthLimitReachedMessage,
         ArtifactLabel,
         FieldComparison,
