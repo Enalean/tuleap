@@ -19,56 +19,47 @@
   -->
 
 <template>
-    <div class="baseline-content-artifact" data-test-type="artifact">
-        <a
-            v-on:click="toggleCollapse()"
-            class="baseline-content-artifact-collapse-link"
-            data-test-action="toggle-expand-collapse"
-        >
-            <i
-                class="fa fa-fw"
-                v-bind:class="{ 'fa-caret-right': is_collapsed, 'fa-caret-down': !is_collapsed }"
-            ></i>
-        </a>
-        <artifact-label v-bind:artifact="artifact" class="baseline-content-artifact-label"/>
-
-        <div v-show="!is_collapsed">
-            <div class="baseline-content-artifact-body" data-test-type="artifact-fields">
-                <field
-                    v-if="is_description_available"
-                    semantic="description"
-                    v-bind:tracker_id="artifact.tracker_id"
-                    v-bind:value="artifact.description"
-                    data-test-type="artifact-description"
-                    v-bind:html_content="true"
-                />
-                <field
-                    v-if="is_status_available"
-                    semantic="status"
-                    v-bind:tracker_id="artifact.tracker_id"
-                    v-bind:value="artifact.status"
-                    data-test-type="artifact-status"
-                />
-                <field
-                    v-if="is_initial_effort_available"
-                    semantic="initial_effort"
-                    v-bind:tracker_id="artifact.tracker_id"
-                    v-bind:value="artifact.initial_effort.toString()"
-                    data-test-type="artifact-initial_effort"
-                />
-            </div>
-
-            <depth-limit-reached-message v-if="is_limit_reached"/>
-
-            <artifacts-list
-                v-else-if="filtered_linked_artifacts.length > 0"
-                v-bind:artifacts="filtered_linked_artifacts"
+    <collapsable-content class="baseline-content-artifact" data-test-type="artifact">
+        <artifact-label
+            slot="header"
+            v-bind:artifact="artifact" class="baseline-content-artifact-label"
+        />
+        <div class="baseline-content-artifact-body" data-test-type="artifact-fields">
+            <field
+                v-if="is_description_available"
+                semantic="description"
+                v-bind:tracker_id="artifact.tracker_id"
+                v-bind:value="artifact.description"
+                data-test-type="artifact-description"
+                v-bind:html_content="true"
+            />
+            <field
+                v-if="is_status_available"
+                semantic="status"
+                v-bind:tracker_id="artifact.tracker_id"
+                v-bind:value="artifact.status"
+                data-test-type="artifact-status"
+            />
+            <field
+                v-if="is_initial_effort_available"
+                semantic="initial_effort"
+                v-bind:tracker_id="artifact.tracker_id"
+                v-bind:value="artifact.initial_effort.toString()"
+                data-test-type="artifact-initial_effort"
             />
         </div>
-    </div>
+
+        <depth-limit-reached-message v-if="is_limit_reached"/>
+
+        <artifacts-list
+            v-else-if="filtered_linked_artifacts.length > 0"
+            v-bind:artifacts="filtered_linked_artifacts"
+        />
+    </collapsable-content>
 </template>
 
 <script>
+import CollapsableContent from "../common/CollapsableContent.vue";
 import ArtifactsList from "./ArtifactsList.vue";
 import ArtifactLabel from "../common/ArtifactLabel.vue";
 import Field from "./Field.vue";
@@ -79,6 +70,7 @@ export default {
     name: "Artifact",
 
     components: {
+        CollapsableContent,
         ArtifactLabel,
         ArtifactsList,
         Field,

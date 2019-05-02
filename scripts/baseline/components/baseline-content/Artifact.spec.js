@@ -28,7 +28,6 @@ import Artifact from "./Artifact.vue";
 import ArtifactsList from "./ArtifactsList.vue";
 
 describe("Artifact", () => {
-    const toggle_selector = '[data-test-action="toggle-expand-collapse"]';
     const artifact_fields_selector = '[data-test-type="artifact-fields"]';
     const artifact_description_selector = '[data-test-type="artifact-description"]';
     const artifact_status_selector = '[data-test-type="artifact-status"]';
@@ -158,28 +157,6 @@ describe("Artifact", () => {
                 expect(wrapper.find(ArtifactsList).props().artifacts).toEqual(
                     filtered_linked_artifacts
                 );
-            });
-        });
-    });
-
-    describe("when toggle expand/collapse", () => {
-        beforeEach(async () => {
-            wrapper.find(toggle_selector).trigger("click");
-            await wrapper.vm.$nextTick();
-        });
-
-        it("hides fields", () => {
-            expect(wrapper.find(artifact_fields_selector).isVisible()).toBeFalsy();
-        });
-
-        describe("when toggle expand/collapse again", () => {
-            beforeEach(async () => {
-                wrapper.find(toggle_selector).trigger("click");
-                await wrapper.vm.$nextTick();
-            });
-
-            it("shows fields", () => {
-                expect(wrapper.find(artifact_fields_selector).isVisible()).toBeTruthy();
             });
         });
     });
