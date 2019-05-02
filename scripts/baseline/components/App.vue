@@ -23,7 +23,7 @@
         <nav class="breadcrumb">
             <div class="breadcrumb-item">
                 <router-link
-                    v-bind:to="{ name: 'HomePage' }"
+                    v-bind:to="{ name: 'IndexPage' }"
                     class="breadcrumb-link"
                 >
                     <i class="fa fa-tlp-baseline breadcrumb-link-icon"></i>
@@ -78,7 +78,7 @@ export default {
     computed: {
         ...mapState("dialog_interface", ["notification"]),
         is_current_page_root() {
-            return this.$route.name === "HomePage";
+            return this.$route.name === "IndexPage";
         }
     },
     methods: {

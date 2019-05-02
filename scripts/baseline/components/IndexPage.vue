@@ -102,7 +102,7 @@ import ComparisonsList from "./comparisons-list/ComparisonsList.vue";
 import { mapState } from "vuex";
 
 export default {
-    name: "HomePage",
+    name: "IndexPage",
 
     components: { BaselinesList, ComparisonsList },
 

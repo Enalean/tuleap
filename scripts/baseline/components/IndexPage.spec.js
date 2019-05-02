@@ -20,20 +20,20 @@
 
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../support/local-vue.js";
-import HomePage from "./HomePage.vue";
+import IndexPage from "./IndexPage.vue";
 import router from "../router";
 import { createStoreMock } from "../support/store-wrapper.spec-helper";
 import store_options from "../store/store_options";
 import { createList } from "../support/factories";
 
-describe("HomePage", () => {
+describe("IndexPage", () => {
     let $store;
     let wrapper;
 
     beforeEach(() => {
         $store = createStoreMock(store_options);
 
-        wrapper = shallowMount(HomePage, {
+        wrapper = shallowMount(IndexPage, {
             propsData: { project_id: 1 },
             localVue,
             router,
