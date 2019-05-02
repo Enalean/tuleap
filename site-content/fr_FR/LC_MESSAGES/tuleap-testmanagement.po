@@ -124,6 +124,13 @@ msgstr "La configuration de TestManagement est incomplète,"
 msgid "Tests executions"
 msgstr "Exécution de tests"
 
+msgid ""
+"The post actions cannot be saved because this tracker is used in "
+"TestManagement and frozen fields actions are defined."
+msgstr ""
+"Les post actions ne peuvent être enregistrées car ce tracker est utilisé dans la configuration de TestManagement "
+"et des champs figés sont définis."
+
 #, php-format
 msgid "The submitted administration configuration is not valid."
 msgstr "La configuration envoyée n'est pas valide."
