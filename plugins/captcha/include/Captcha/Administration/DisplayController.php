@@ -23,18 +23,14 @@ namespace Tuleap\Captcha\Administration;
 use CSRFSynchronizerToken;
 use Feedback;
 use HTTPRequest;
+use PFUser;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Captcha\Configuration;
-use Tuleap\Captcha\ConfigurationDataAccessException;
-use Tuleap\Captcha\ConfigurationMalformedDataException;
-use Tuleap\Captcha\ConfigurationSaver;
+use Tuleap\Layout\BaseLayout;
+use Tuleap\Request\DispatchableWithRequest;
 
-class Controller
+class DisplayController implements DispatchableWithRequest
 {
-    /**
-     * @var ConfigurationSaver
-     */
-    private $saver;
     /**
      * @var CSRFSynchronizerToken
      */
@@ -48,16 +44,18 @@ class Controller
      */
     private $configuration;
 
-    public function __construct(Configuration $configuration, ConfigurationSaver $saver, AdminPageRenderer $renderer)
+    public function __construct(Configuration $configuration, AdminPageRenderer $renderer)
     {
-        $this->saver         = $saver;
         $this->csrf_token    = new CSRFSynchronizerToken(CAPTCHA_BASE_URL . '/admin/');
         $this->renderer      = $renderer;
         $this->configuration = $configuration;
     }
 
-    public function display()
+    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
+        $current_user = $request->getCurrentUser();
+        $this->checkUserIsSiteAdmin($current_user, $layout);
+
         $presenter = new Presenter($this->csrf_token, $this->configuration);
         $this->renderer->renderAPresenter(
             dgettext('tuleap-captcha', 'Captcha configuration'),
@@ -67,28 +65,14 @@ class Controller
         );
     }
 
-    public function processFormSubmission(HTTPRequest $request)
+    private function checkUserIsSiteAdmin(PFUser $user, BaseLayout $layout)
     {
-        $this->csrf_token->check();
-
-        try {
-            $this->saver->save($request->get('site_key'), $request->get('secret_key'));
-            $GLOBALS['Response']->addFeedback(
-                Feedback::INFO,
-                dgettext('tuleap-captcha', 'Your keys has been successfully saved')
-            );
-        } catch (ConfigurationMalformedDataException $ex) {
-            $GLOBALS['Response']->addFeedback(
+        if (! $user->isSuperUser()) {
+            $layout->addFeedback(
                 Feedback::ERROR,
-                dgettext('tuleap-captcha', 'The provided keys are not valid')
+                $GLOBALS['Language']->getText('global', 'perm_denied')
             );
-        } catch (ConfigurationDataAccessException $ex) {
-            $GLOBALS['Response']->addFeedback(
-                Feedback::ERROR,
-                dgettext('tuleap-captcha', 'An error occurred while saving your keys, please retry')
-            );
+            $layout->redirect('/');
         }
-
-        $GLOBALS['Response']->redirect(CAPTCHA_BASE_URL . '/admin/');
     }
 }

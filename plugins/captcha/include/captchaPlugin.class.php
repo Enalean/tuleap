@@ -18,16 +18,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use FastRoute\RouteCollector;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\Captcha\Administration\Controller;
+use Tuleap\Captcha\Administration\DisplayController;
 use Tuleap\Captcha\Administration\Router;
+use Tuleap\Captcha\Administration\UpdateController;
+use Tuleap\Captcha\Configuration;
 use Tuleap\Captcha\ConfigurationNotFoundException;
 use Tuleap\Captcha\ConfigurationRetriever;
 use Tuleap\Captcha\ConfigurationSaver;
 use Tuleap\Captcha\DataAccessObject;
 use Tuleap\Captcha\Plugin\Info as PluginInfo;
 use Tuleap\Captcha\Registration\Presenter;
+use Tuleap\Request\CollectRoutesEvent;
+use Tuleap\Request\DispatchableWithRequest;
 
 require_once __DIR__ . '/constants.php';
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -49,6 +55,7 @@ class captchaPlugin extends Plugin // @codingStandardsIgnoreLine
         $this->addHook(Event::BEFORE_USER_REGISTRATION, 'checkCaptchaBeforeSubmission');
         $this->addHook('site_admin_option_hook', 'addSiteAdministrationOptionHook');
         $this->addHook(BurningParrotCompatiblePageEvent::NAME);
+        $this->addHook(CollectRoutesEvent::NAME);
     }
 
     /**
@@ -131,7 +138,7 @@ class captchaPlugin extends Plugin // @codingStandardsIgnoreLine
     }
 
     /**
-     * @return \Tuleap\Captcha\Configuration
+     * @return Configuration
      * @throws \Tuleap\Captcha\ConfigurationNotFoundException
      */
     private function getConfiguration()
@@ -169,18 +176,31 @@ class captchaPlugin extends Plugin // @codingStandardsIgnoreLine
         }
     }
 
-    public function processAdmin(HTTPRequest $request)
+    public function routeGetAdmin() : DispatchableWithRequest
     {
-        $dao        = new DataAccessObject();
-        $saver      = new ConfigurationSaver($dao);
-        $renderer   = new AdminPageRenderer();
         try {
             $configuration = $this->getConfiguration();
         } catch (ConfigurationNotFoundException $ex) {
-            $configuration = new \Tuleap\Captcha\Configuration('', '');
+            $configuration = new Configuration('', '');
         }
-        $controller = new Controller($configuration, $saver, $renderer);
-        $router     = new Router($controller);
-        $router->route($request);
+        return new DisplayController(
+            $configuration,
+            new AdminPageRenderer()
+        );
+    }
+
+    public function routePostAdmin() : DispatchableWithRequest
+    {
+        return new UpdateController(
+            new ConfigurationSaver(new DataAccessObject())
+        );
+    }
+
+    public function collectRoutesEvent(CollectRoutesEvent $event)
+    {
+        $event->getRouteCollector()->addGroup($this->getPluginPath(), function (RouteCollector $r) {
+            $r->get('/admin/[index.php]', $this->getRouteHandler('routeGetAdmin'));
+            $r->post('/admin/[index.php]', $this->getRouteHandler('routePostAdmin'));
+        });
     }
 }
