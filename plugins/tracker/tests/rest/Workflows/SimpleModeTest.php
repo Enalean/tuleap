@@ -251,5 +251,33 @@ class SimpleModeTest extends TrackerBase
         $this->assertSame($date_field_id, $date_post_action['field_id']);
         $this->assertSame(9001, $int_post_action['value']);
         $this->assertSame($int_field_id, $int_post_action['field_id']);
+
+        return $transition_id;
+    }
+
+    /**
+     * @depends testPUTTrackerWorkflowTransitionsActions
+     */
+    public function testPUTTrackerWorkflowTransitionFrozenFieldsActions(int $transition_id)
+    {
+        $body = json_encode([
+            "post_actions" => [
+                [
+                    "id" => null,
+                    "type" => "frozen_fields"
+                ]
+            ]
+        ]);
+
+        $response = $this->getResponseByName(
+            \REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->client->put(
+                "tracker_workflow_transitions/$transition_id/actions",
+                null,
+                $body
+            )
+        );
+
+        $this->assertEquals($response->getStatusCode(), 200);
     }
 }
