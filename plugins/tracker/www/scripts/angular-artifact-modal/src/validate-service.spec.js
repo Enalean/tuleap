@@ -222,48 +222,5 @@ describe("TuleapArtifactModalValidateService validateArtifactFieldsValues() -", 
             var output = ValidateService.validateArtifactFieldsValues(input, creation_mode);
             expect(output).toEqual([{ field_id: 166, value: 1 }]);
         });
-
-        describe("and given an array containing an artifact link field and", function() {
-            it("given that its links array contains empty string, null and undefined values, when I validate the fields, then an object containing this field with a links containing only non-null ids will be returned", function() {
-                var input = [
-                    {
-                        field_id: 986,
-                        links: [
-                            { id: "" },
-                            { id: 202 },
-                            { id: undefined },
-                            { id: 584 },
-                            { id: null }
-                        ],
-                        permissions: ["create"]
-                    }
-                ];
-                var output = ValidateService.validateArtifactFieldsValues(input, creation_mode);
-                expect(output).toEqual([
-                    {
-                        field_id: 986,
-                        links: [{ id: 202 }, { id: 584 }]
-                    }
-                ]);
-            });
-
-            it("given that its links array contains an object with an id and its unformatted_links contains a comma-separated list of ids, when I validate the fields, then an object containing the field with a links containing only non-null ids will be returned", function() {
-                var input = [
-                    {
-                        field_id: 162,
-                        links: [{ id: 18 }],
-                        permissions: ["create"],
-                        unformatted_links: "text,650, 673"
-                    }
-                ];
-                var output = ValidateService.validateArtifactFieldsValues(input, creation_mode);
-                expect(output).toEqual([
-                    {
-                        field_id: 162,
-                        links: [{ id: 18 }, { id: 650 }, { id: 673 }]
-                    }
-                ]);
-            });
-        });
     });
 });

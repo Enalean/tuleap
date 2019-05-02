@@ -32,6 +32,7 @@ import "./tuleap-artifact-modal-fields/file-field/file-field-detector.spec.js";
 import "./tuleap-artifact-modal-fields/file-field/file-upload-rules-state.spec.js";
 import "./tuleap-artifact-modal-fields/link-field/link-field-controller.spec.js";
 import "./tuleap-artifact-modal-fields/link-field/link-field-service.spec.js";
+import "./tuleap-artifact-modal-fields/link-field/link-field-value-formatter.spec.js";
 import "./tuleap-artifact-modal-fields/open-list-field/open-list-field-validate-service.spec.js";
 import "./tuleap-artifact-modal-fields/open-list-field/static-open-list-field-controller.spec.js";
 import "./tuleap-artifact-modal-fields/open-list-field/ugroups-open-list-field-controller.spec.js";
