@@ -37,8 +37,10 @@ use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\REST\RESTLogger;
 use Tuleap\REST\UserManager;
 use Tuleap\Tracker\REST\v1\TrackerPermissionsChecker;
+use Tuleap\Tracker\REST\v1\Workflow\PostAction\PostActionNonEligibleForTrackerException;
 use Tuleap\Tracker\REST\v1\Workflow\PostAction\PostActionsRepresentationBuilder;
 use Tuleap\Tracker\REST\v1\Workflow\PostAction\PUTHandler;
+use Tuleap\Tracker\REST\v1\Workflow\PostAction\TrackerChecker;
 use Tuleap\Tracker\REST\v1\Workflow\PostAction\Update\CIBuildJsonParser;
 use Tuleap\Tracker\REST\v1\Workflow\PostAction\Update\FrozenFieldsJsonParser;
 use Tuleap\Tracker\REST\v1\Workflow\PostAction\Update\PostActionCollectionJsonParser;
@@ -398,6 +400,7 @@ class TransitionsResource extends AuthenticatedResource
                 $this->getPostActionCollectionJsonParser(),
                 $this->getPostActionCollectionUpdater(),
                 $this->getTransitionRetriever(),
+                new TrackerChecker(\EventManager::instance()),
                 $this->getTransactionExecutor()
             );
 
@@ -405,8 +408,12 @@ class TransitionsResource extends AuthenticatedResource
         } catch (OrphanTransitionException $exception) {
             $this->getRESTLogger()->error('Cannot update transition post actions', $exception);
             throw new RestException(520);
-        } catch (InvalidPostActionException | UnknownPostActionIdsException | IncompatibleWorkflowModeException $e) {
-            throw new I18NRestException(400, $e->getMessage());
+        } catch (InvalidPostActionException |
+                 UnknownPostActionIdsException |
+                 IncompatibleWorkflowModeException |
+                 PostActionNonEligibleForTrackerException $exception
+        ) {
+            throw new I18NRestException(400, $exception->getMessage());
         }
     }
 

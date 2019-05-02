@@ -29,6 +29,7 @@ use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\Tracker\REST\v1\Workflow\PostAction\Update\PostActionCollectionJsonParser;
 use Tuleap\Tracker\REST\v1\Workflow\PostActionsPUTRepresentation;
 use Tuleap\Tracker\REST\v1\Workflow\TransitionsPermissionsChecker;
+use Tuleap\Tracker\Workflow\PostAction\Update\Internal\IncompatibleWorkflowModeException;
 use Tuleap\Tracker\Workflow\PostAction\Update\PostActionCollectionUpdater;
 use Tuleap\Tracker\Workflow\SimpleMode\TransitionRetriever;
 use Tuleap\Tracker\Workflow\Transition\NoSiblingTransitionException;
@@ -64,12 +65,18 @@ class PUTHandler
      */
     private $transaction_executor;
 
+    /**
+     * @var TrackerChecker
+     */
+    private $tracker_checker;
+
     public function __construct(
         TransitionsPermissionsChecker $transitions_permissions_checker,
         ProjectStatusVerificator $project_status_verificator,
         PostActionCollectionJsonParser $post_action_collection_json_parser,
         PostActionCollectionUpdater $action_collection_updater,
         TransitionRetriever $transition_retriever,
+        TrackerChecker $tracker_checker,
         DBTransactionExecutor $transaction_executor
     ) {
         $this->transitions_permissions_checker    = $transitions_permissions_checker;
@@ -78,6 +85,7 @@ class PUTHandler
         $this->action_collection_updater          = $action_collection_updater;
         $this->transition_retriever               = $transition_retriever;
         $this->transaction_executor               = $transaction_executor;
+        $this->tracker_checker                    = $tracker_checker;
     }
 
     /**
@@ -87,6 +95,8 @@ class PUTHandler
      * @throws \Tuleap\Tracker\Workflow\PostAction\Update\Internal\InvalidPostActionException
      * @throws \Tuleap\Tracker\Workflow\PostAction\Update\Internal\UnknownPostActionIdsException
      * @throws \Tuleap\Tracker\Workflow\Transition\OrphanTransitionException
+     * @throws IncompatibleWorkflowModeException
+     * @throws \Tuleap\Tracker\REST\v1\Workflow\PostAction\PostActionNonEligibleForTrackerException
      */
     public function handle(
         PFUser $current_user,
@@ -99,6 +109,8 @@ class PUTHandler
         $this->project_status_verificator->checkProjectStatusAllowsAllUsersToAccessIt($project);
 
         $post_actions = $this->post_action_collection_json_parser->parse($workflow, $post_actions_representation->post_actions);
+
+        $this->tracker_checker->checkPostActionsAreEligibleForTracker($workflow->getTracker(), $post_actions);
 
         if ($workflow->isAdvanced()) {
             $this->transaction_executor->execute(
