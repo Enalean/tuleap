@@ -18,7 +18,7 @@
   -
   -->
 
-<template functional>
+<template>
     <div>
         <slot name="header"/>
 
@@ -47,7 +47,10 @@
                             <translate>Content</translate>
                         </h1>
                     </div>
-                    <section class="tlp-pane-section baseline-content">
+                    <section v-if="has_comment_slot" class="tlp-pane-section comparison-comment">
+                        <slot name="comment"/>
+                    </section>
+                    <section class="tlp-pane-section">
                         <slot/>
                     </section>
                 </div>
@@ -55,3 +58,13 @@
         </div>
     </div>
 </template>
+<script>
+export default {
+    name: "ContentLayout",
+    computed: {
+        has_comment_slot() {
+            return Boolean(this.$slots.comment);
+        }
+    }
+};
+</script>

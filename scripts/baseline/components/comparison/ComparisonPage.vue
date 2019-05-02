@@ -34,6 +34,7 @@
             <comparison-statistics slot="statistics"/>
             <comparison-content-filters slot="filters"/>
 
+            <p slot="comment" v-if="has_comparison_comment">{{ comparison.comment }}</p>
             <comparison-content/>
         </content-layout>
     </div>
@@ -77,6 +78,9 @@ export default {
         },
         compared_to_baseline() {
             return this.findBaselineById(this.comparison.compared_to_baseline_id);
+        },
+        has_comparison_comment() {
+            return Boolean(this.comparison.comment);
         }
     },
 
