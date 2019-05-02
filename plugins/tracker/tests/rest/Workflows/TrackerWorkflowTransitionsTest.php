@@ -434,5 +434,33 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
         );
 
         $this->assertEquals($response->getStatusCode(), 200);
+
+        return $transition_id;
+    }
+
+    /**
+     * @depends testPUTTrackerWorkflowTransitionActions
+     */
+    public function testPUTTrackerWorkflowTransitionFrozenFieldsActionsNotPossible(int $transition_id)
+    {
+        $body = json_encode([
+            "post_actions" => [
+                [
+                    "id" => null,
+                    "type" => "frozen_fields"
+                ]
+            ]
+        ]);
+
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::TEST_USER_1_NAME,
+            $this->client->put(
+                "tracker_workflow_transitions/$transition_id/actions",
+                null,
+                $body
+            )
+        );
+
+        $this->assertEquals($response->getStatusCode(), 400);
     }
 }
