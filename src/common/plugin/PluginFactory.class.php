@@ -1,7 +1,7 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2011 - Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +21,8 @@
 /**
  * PluginFactory
  */
-class PluginFactory {
+class PluginFactory // phpcs:ignore
+{
 
     /** @var PluginDao */
     private $plugin_dao;
@@ -166,6 +167,14 @@ class PluginFactory {
             $custom = $this->classIsCustom($file_name);
         }
         if (!class_exists($class_name)) {
+            $file_name = '/'.$name.'/include/'.$class_name.'.php';
+            $this->loadClass($this->_getCustomPluginsRoot().$file_name);
+            if (empty($this->plugin_class_path[$name])) {
+                $class_path = $this->getPluginClassPath($file_name);
+                $custom = $this->classIsCustom($file_name);
+            }
+        }
+        if (!class_exists($class_name)) {
             $class_name = false;
         } else {
             if ($class_path) {
@@ -229,15 +238,11 @@ class PluginFactory {
     }
 
     function _getOfficialPluginsRoot() {
-        if (isset($GLOBALS['sys_pluginsroot']))
-            return $GLOBALS['sys_pluginsroot'];
-        else return null;
+        return ForgeConfig::get('sys_pluginsroot', null);
     }
 
     function _getCustomPluginsRoot() {
-        if (isset($GLOBALS['sys_custompluginsroot']))
-            return $GLOBALS['sys_custompluginsroot'];
-        else return null;
+        return ForgeConfig::get('sys_custompluginsroot', null);
     }
 
     /**
