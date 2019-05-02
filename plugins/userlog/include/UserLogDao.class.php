@@ -26,9 +26,6 @@
 require_once('common/dao/include/DataAccessObject.class.php');
 
 class UserLogDao extends DataAccessObject {
-    /**
-     *
-     */
     function getFoundRows() {
         $sql = 'SELECT FOUND_ROWS() as nb';
         $dar = $this->retrieve($sql);

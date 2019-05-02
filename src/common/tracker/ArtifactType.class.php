@@ -1544,14 +1544,12 @@ class ArtifactType {
 	 */
 	function getExportQueryElements($fields,&$select,&$from,&$where,&$count_user_fields) {
 		
-		//
 		// NOTICE
 		//
 		// Use left join because of the performance
 		// So the restriction to this: all fields used in the query must have a value.
 		// That involves artifact creation or artifact admin (add a field) must create
 		// empty records with default values for fields which haven't a value (from the user).
-		//
 		/* The query must be something like this :
 			SELECT a.artifact_id,u.user_name,v1.valueInt,v2.valueText,u3.user_name
 			FROM artifact a 

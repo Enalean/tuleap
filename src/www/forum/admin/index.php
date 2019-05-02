@@ -37,10 +37,7 @@ if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'
          Update the DB to reflect the changes
         */
 
-        //
         // Prepare validators
-        //
-
         // Forum Name
         $vForumName = new Valid_String('forum_name');
         $vForumName->setErrorMessage($Language->getText('forum_admin_index','params_missing'));

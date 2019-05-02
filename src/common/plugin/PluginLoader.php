@@ -55,7 +55,7 @@ class PluginLoader
         }
         foreach ($proxy->getEvents() as $event_name => $listeners) {
             foreach ($listeners as $listener) {
-                /* @var EventPluginCacheInfo $listener */
+                /** @var EventPluginCacheInfo $listener */
                 $this->event_manager->addClosureOnEvent(
                     $event_name,
                     function ($event, $params) use ($proxy, $listener) {

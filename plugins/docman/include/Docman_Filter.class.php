@@ -37,7 +37,6 @@ class Docman_Filter {
     }
 
     function initFromRow($row) {
-        //
     }
 
     function getUrlParameters() {

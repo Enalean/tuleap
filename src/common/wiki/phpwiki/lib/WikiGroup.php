@@ -51,8 +51,6 @@ define('GROUP_CREATOR',	   	_("Creator"));
  * Do not ever instantiate this class. Use: $group = &WikiGroup::getGroup();
  * This will instantiate the proper subclass.
  *
- * @author Joby Walker <zorloc@imperium.org>
- * @author Reini Urban
  */ 
 class WikiGroup{
     /** User name */
@@ -369,7 +367,6 @@ class WikiGroup{
  * 
  * All of the GroupNone functions return false or empty values to indicate failure or 
  * no results.  Use GroupNone if group controls are not desired.
- * @author Joby Walker <zorloc@imperium.org>
  */ 
 class GroupNone extends WikiGroup{
 
@@ -644,8 +641,6 @@ class GroupNone extends WikiGroup{
 //
 // Revision 1.4  2003/01/21 04:02:39  zorloc
 // Added Log entry and page footer.
-//
-
 // Local Variables:
 // mode: php
 // tab-width: 8

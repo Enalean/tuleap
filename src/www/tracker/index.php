@@ -66,17 +66,13 @@ if ( $func == 'gotoid' ) {
         require('./gotoid.php');
     }
 } else if ($group_id && $atid) {
-        //
         //      get the Group object
-        //
         $pm = ProjectManager::instance();
         $group = $pm->getProject($group_id);
         if (!$group || !is_object($group) || $group->isError()) {
                 exit_no_group();
         }
-        //
         //      Create the ArtifactType object
-        //
         $ath = new ArtifactTypeHtml($group,$atid);
         if (!$ath || !is_object($ath)) {
                 exit_error($Language->getText('global','error'),$Language->getText('tracker_index','not_create_at'));
@@ -122,10 +118,7 @@ if ( $func == 'gotoid' ) {
         
         case 'postadd' : {
             
-                //
                 //              Create a new Artifact
-                //      
-
                 $ah=new ArtifactHtml($ath);
                 if (!$ah || !is_object($ah)) {
                         exit_error($Language->getText('global','error'),$Language->getText('tracker_index','not_create_art'));
@@ -136,9 +129,7 @@ if ( $func == 'gotoid' ) {
                                 return;
                         }
                         
-                        //
                         //  make sure this person has permission to add artifacts
-                        //
                         if (!$ath->userCanSubmit()) {
                                 exit_permission_denied();
                         }
@@ -167,9 +158,7 @@ if ( $func == 'gotoid' ) {
                         if (!$ah->create()) {
                                 exit_error($Language->getText('global','error'),$ah->getErrorMessage());
                         } else {
-                                //
                                 //      Attach file to this Artifact.
-                                //
                                 if (isset($_FILES['input_file']['error']) && $_FILES['input_file']['error'] != UPLOAD_ERR_NO_FILE) {
                                         $afh=new ArtifactFileHtml($ah);
                                         if (!$afh || !is_object($afh)) {
@@ -208,10 +197,7 @@ if ( $func == 'gotoid' ) {
                 break;
         }
         case 'postcopy' : {
-                //
                 //              Create a new Artifact
-                //      
-
                 $ah=new ArtifactHtml($ath);
                 if (!$ah || !is_object($ah)) {
                         exit_error($Language->getText('global','error'),$Language->getText('tracker_index','not_create_art'));
@@ -222,7 +208,6 @@ if ( $func == 'gotoid' ) {
                                 return;
                         }
                         
-                        //
                         //  make sure this person has permission to copy artifacts
                         //  !!!! verify with new permission scheme !!!!
                         if (!$ath->userCanSubmit()) {
@@ -239,7 +224,6 @@ if ( $func == 'gotoid' ) {
 			}
 
 			// Files
-			// 
                         if (isset($_FILES['input_file']['error']) && $_FILES['input_file']['error'] != UPLOAD_ERR_NO_FILE && !util_check_fileupload($_FILES['input_file']['tmp_name'])) {
                                 exit_error($Language->getText('global','error'),$Language->getText('tracker_index','invalid_filename'));
                         }
@@ -248,9 +232,7 @@ if ( $func == 'gotoid' ) {
                         if (!$ah->create()) {
                                 exit_error($Language->getText('global','error'),$ah->getErrorMessage());
                         } else {
-                                //
                                 //      Attach file to this Artifact.
-                                //
                                 if (isset($_FILES['input_file']['error']) && $_FILES['input_file']['error'] != UPLOAD_ERR_NO_FILE) {
                                         $afh=new ArtifactFileHtml($ah);
                                         if (!$afh || !is_object($afh)) {
@@ -407,10 +389,7 @@ if ( $func == 'gotoid' ) {
         }
 
         case 'delete_file' : {
-                //
                 //      Delete a file from this artifact
-                //
-                
                 $ah=new ArtifactHtml($ath,$aid);
 
                 // Check permissions
@@ -444,9 +423,7 @@ if ( $func == 'gotoid' ) {
 
 
         case 'postmod' : {
-                //
                 //      Modify an Artifact
-                //
                 $ah=new ArtifactHtml($ath,$aid);
                 if (!$ah || !is_object($ah)) {
                         exit_error($Language->getText('global','error'),$Language->getText('tracker_index', 'not_create_art'));
@@ -495,9 +472,7 @@ if ( $func == 'gotoid' ) {
                                 exit();
                         }
                 
-                        //
                         //  Attach file to this Artifact.
-                        //
                         if (isset($_FILES['input_file']['error']) && $_FILES['input_file']['error'] != UPLOAD_ERR_NO_FILE) {
                                 $afh=new ArtifactFileHtml($ah);
                                 if (!$afh || !is_object($afh)) {
@@ -534,9 +509,7 @@ if ( $func == 'gotoid' ) {
     
                         $em->processEvent('tracker_postmod', array('ah' => $ah, 'ath' => $ath));
                         
-                        //
                         //      Show just one feedback entry if no errors
-                        //
                         if (!isset($was_error) || !$was_error) {
                             $itemname = $ath->getItemName();
                             $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_index','update_success',
@@ -559,7 +532,6 @@ if ( $func == 'gotoid' ) {
 
 	case 'postmasschange' : {
             $was_error = false;
-                //
                 //      Modify several Artifacts
                 //
 	        // Check if users can update anonymously
@@ -629,9 +601,7 @@ if ( $func == 'gotoid' ) {
 		      $feedback .= " ". (int)$aid;
 				    
 		    }
-		    //
 		    //  Attach file to this Artifact.
-		    //
 		    if (isset($_FILES['input_file']['error']) && $_FILES['input_file']['error'] != UPLOAD_ERR_NO_FILE) {
 		      $afh=new ArtifactFileHtml($ah);
 		      if (!$afh || !is_object($afh)) {
@@ -687,9 +657,7 @@ if ( $func == 'gotoid' ) {
 		$old_value = $ath->getName();
 		group_add_history('mass_change',$old_value,$group_id);
 
-		//
 		//      Show just one feedback entry if no errors
-		//
 		if (!$was_error) {
 		    $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_index','mass_update_success'));
 			if ($ath->getStopNotification()) {
@@ -701,10 +669,8 @@ if ( $func == 'gotoid' ) {
         }
         
         case 'postaddcomment' : {
-            //
             //  Attach a comment to an artifact
             //  Used by non-admins
-            //
             $ah=new ArtifactHtml($ath,$aid);
             if (!$ah || !is_object($ah)) {
                 exit_error($Language->getText('global','error'),$Language->getText('tracker_index', 'not_create_art'));
@@ -722,17 +688,13 @@ if ( $func == 'gotoid' ) {
                 }
             }
             
-            //
             // Add CC
-            //
             if ($add_cc = trim($request->get('add_cc'))) {
                 $ah->addCC($add_cc,$sanitizer->sanitize($request->get('cc_comment')),$changes);
             }
             
             
-            //
             //  Attach file to this Artifact.
-            //
             if (isset($_FILES['input_file']['error']) && $_FILES['input_file']['error'] != UPLOAD_ERR_NO_FILE) {
                 
                 if (!util_check_fileupload($_FILES['input_file']['tmp_name'])) {
@@ -799,9 +761,7 @@ if ( $func == 'gotoid' ) {
 	     return;
 	   }
                         
-	   //
 	   //  make sure this person has permission to import artifacts
-	   //
 	   if (!$ath->userIsAdmin()) {
 	     exit_permission_denied();
 	   }
@@ -946,10 +906,8 @@ if ( $func == 'gotoid' ) {
         
         
         case 'detail' : {
-                //
                 //      users can modify their own tickets if they submitted them
                 //      even if they are not artifact admins
-                //
                 $ah=new ArtifactHtml($ath,$aid);
                 if (!$ah || !is_object($ah)) {
                         exit_error($Language->getText('global','error'),$Language->getText('tracker_index', 'not_create_art'));
@@ -1019,9 +977,7 @@ if ( $func == 'gotoid' ) {
         
         } // switch
 } else if ($group_id) {
-        //        
         //  get the Group object
-        //        
         $pm = ProjectManager::instance();
         $group = $pm->getProject($group_id);
         if (!$group || !is_object($group) || $group->isError()) {
@@ -1068,9 +1024,7 @@ if ( $func == 'gotoid' ) {
             }
             echo "<p>";
 
-            //
             // Put the result set (list of trackers for this group) into a column with folders
-            //
             for ($j = 0; $j < count($at_arr); $j++) {
                 if ($at_arr[$j]->userCanView()) {
                     echo '

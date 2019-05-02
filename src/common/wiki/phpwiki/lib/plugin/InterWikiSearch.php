@@ -145,8 +145,6 @@ extends PageType_interwikimap
 //
 // Revision 1.1  2003/01/31 22:56:21  carstenklapp
 // New plugin which provides entry forms to search any site listed in the InterWikiMap.
-//
-
 // (c-file-style: "gnu")
 // Local Variables:
 // mode: php

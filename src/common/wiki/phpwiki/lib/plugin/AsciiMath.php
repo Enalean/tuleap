@@ -75,8 +75,6 @@ extends WikiPlugin
 // $Log: AsciiMath.php,v $
 // Revision 1.1  2005/01/29 21:50:38  rurban
 // new MathML plugin and lib
-//
-
 // Local Variables:
 // mode: php
 // tab-width: 8

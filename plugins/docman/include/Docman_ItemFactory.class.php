@@ -451,9 +451,7 @@ class Docman_ItemFactory
 
         $searchItemsParams = array('ignore_obsolete' => $ignoreObsolete);
 
-        //
         // Treatment
-        //
         $dao = $this->_getItemDao();
         $dPm = Docman_PermissionsManager::instance($rootItem->getGroupId());
 
@@ -535,9 +533,7 @@ class Docman_ItemFactory
 
         $dao = $this->_getItemDao();
 
-        //
         // Build Folder List
-        //
         $parentItem = $this->getItemFromDb($parentId);
         $dPm = Docman_PermissionsManager::instance($parentItem->getGroupId());
         $folderList = array($parentId => &$parentItem);
@@ -579,18 +575,14 @@ class Docman_ItemFactory
             }
         } while(count($parentIds) > 0);
 
-        //
         // Keep only documents in allowed subfolders
-        //
         $mdFactory  = new Docman_MetadataFactory($this->groupId);
         $ci = null;
         if($filter !== null) {
             $ci = $filter->getColumnIterator();
         }
 
-        //
         // Build Document list
-        //
         $itemArray = array();
         if(isset($params['obsolete_only']) && $params['obsolete_only']) {
             $dar = $dao->searchObsoleteByGroupId($this->groupId);
@@ -687,9 +679,6 @@ class Docman_ItemFactory
         return $this->_getItemDao()->doesTitleCorrespondToExistingFolder($title, $parent_id);
     }
 
-    /**
-     *
-     */
     function findByTitle($user, $title, $groupId) {
         $ia = array();
 

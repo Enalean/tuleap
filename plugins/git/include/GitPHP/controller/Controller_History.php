@@ -30,8 +30,6 @@ use UserManager;
 /**
  * History controller class
  *
- * @package GitPHP
- * @subpackage Controller
  */
 class Controller_History extends ControllerBase // @codingStandardsIgnoreLine
 {

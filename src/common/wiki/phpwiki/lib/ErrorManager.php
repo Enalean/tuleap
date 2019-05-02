@@ -46,7 +46,7 @@ function wiki_assert_handler ($file, $line, $code) {
 class ErrorManager 
 {
     /**
-     * Constructor.
+     *
      *
      * As this is a singleton class, you should never call this.
      * @access private
@@ -688,9 +688,6 @@ if (!isset($GLOBALS['ErrorManager'])) {
 // fixed adodb session AffectedRows
 // added FileFinder helpers to unify local filenames and DATA_PATH names
 // editpage.php: new edit toolbar javascript on ENABLE_EDIT_TOOLBAR
-//
-//
-
 // (c-file-style: "gnu")
 // Local Variables:
 // mode: php

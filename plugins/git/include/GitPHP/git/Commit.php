@@ -24,8 +24,6 @@ namespace Tuleap\Git\GitPHP;
 /**
  * Commit class
  *
- * @package GitPHP
- * @subpackage Git
  */
 class Commit extends GitObject
 {

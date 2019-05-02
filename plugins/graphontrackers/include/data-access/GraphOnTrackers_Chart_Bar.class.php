@@ -29,11 +29,7 @@ class GraphOnTrackers_Chart_Bar extends GraphOnTrackers_Chart {
     
     protected $field_base;
     protected $field_group;
-    
-    /**
-     * class constructor
-     *
-     */    
+
     function __construct($graphic_report, $id, $rank, $title, $description, $width, $height) {
         parent::__construct($graphic_report, $id, $rank, $title, $description, $width, $height);
         $sql = "SELECT * FROM plugin_graphontrackers_bar_chart WHERE id = ". db_ei($id);

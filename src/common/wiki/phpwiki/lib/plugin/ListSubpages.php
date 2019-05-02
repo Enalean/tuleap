@@ -148,8 +148,6 @@ class _PageList_Column_ListSubpages_count extends _PageList_Column {
 // page. (Unfortunately this plugin reveals a bug in
 // stdlib/explodePageList(), the function doesn't seem to work as
 // expected when there are no subpages (see also UnfoldSubPages plugin).
-//
-
 // For emacs users
 // Local Variables:
 // mode: php

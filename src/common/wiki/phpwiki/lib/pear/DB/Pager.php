@@ -1,5 +1,4 @@
 <?php
-//
 //  Pear DB Pager - Retrieve and return information of databases
 //                  result sets
 //
@@ -24,7 +23,6 @@
 ///
 // Based on DB_Pager 0.7 from the pear.php.net repository. 
 // The only modifications made have been modification of the include paths.
-//
 rcs_id('$Id: Pager.php,v 1.2 2004/04/26 20:44:37 rurban Exp $');
 rcs_id('From Pear CVS: Id: Pager.php,v 1.3 2002/05/12 13:59:40 cox Exp');
 
@@ -61,8 +59,6 @@ require_once 'DB.php';
 * // XXX code for building the pager here
 * ? >
 *
-* @version 0.7
-* @author Tomas V.V.Cox <cox@idecnet.com>
 * @see http://vulcanonet.com/soft/pager/
 */
 

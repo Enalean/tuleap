@@ -55,7 +55,7 @@ class ArtifactFieldSetFactory {
     private $error_state = false;
 
     /**
-     *  Constructor.
+     *
      *
      *	@param	object $ArtifactType The ArtifactType object to which this ArtifactFieldSetFactory is associated
      *	@return	boolean	success.
@@ -320,9 +320,7 @@ class ArtifactFieldSetFactory {
 	 *	@return	boolean true if the deletion happen without problems, false otherwise
 	 */
 	function deleteFieldSets() {
-        //
 		// Delete artifact_field_set records
-		//
         $artifact_type = $this->getArtifactType();
 	    $sql = 'DELETE FROM artifact_field_set WHERE group_artifact_id='. db_ei($artifact_type->getID()) ;
 		
@@ -347,9 +345,7 @@ class ArtifactFieldSetFactory {
      */
     function copyFieldSets($atid_source,$atid_dest) {
         global $Language;
-        //
         // Copy the field_sets
-        //
         $fieldset_id_source_dest_array = array();
         $sql_source_fieldset = "SELECT field_set_id, name, description, rank FROM artifact_field_set WHERE group_artifact_id=". db_ei($atid_source) ;
         $res_source_fieldset = db_query($sql_source_fieldset);

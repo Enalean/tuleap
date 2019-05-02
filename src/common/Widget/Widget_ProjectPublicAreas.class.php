@@ -160,9 +160,7 @@ class Widget_ProjectPublicAreas extends Widget {
             $html .= '<p><a href="'.$project->getTrackerPage().'">';
             $html .= '<i class="tuleap-services-tracker tuleap-services-widget"></i>';
             $html .= $GLOBALS['Language']->getText('include_project_home','trackers').'</a>';
-            //
             //  get the Group object
-            //
             $pm = ProjectManager::instance();
             $group = $pm->getProject($group_id);
             if (!$group || !is_object($group) || $group->isError()) {

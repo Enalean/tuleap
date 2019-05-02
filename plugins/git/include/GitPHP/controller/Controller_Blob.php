@@ -31,8 +31,6 @@ use Tuleap\Layout\IncludeAssets;
 /**
  * Blob controller class
  *
- * @package GitPHP
- * @subpackage Controller
  */
 class Controller_Blob extends ControllerBase // @codingStandardsIgnoreLine
 {

@@ -59,8 +59,6 @@ extends WikiPlugin
 // Revision 1.2  2003/01/18 21:19:25  carstenklapp
 // Code cleanup:
 // Reformatting; added copyleft, getVersion, getDescription
-//
-
 // For emacs users
 // Local Variables:
 // mode: php

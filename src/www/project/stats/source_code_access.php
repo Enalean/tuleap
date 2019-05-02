@@ -91,10 +91,7 @@ project_admin_header(
     \Tuleap\Project\Admin\Navigation\NavigationPresenterBuilder::DATA_ENTRY_SHORTNAME
 );
 
-//
 // BEGIN PAGE CONTENT CODE
-//
-
 echo "\n\n";
 
 echo '<h2>'.$Language->getText('project_admin_utils','access_logs').'</h2>';
@@ -174,8 +171,5 @@ echo '<BR><FORM METHOD="POST" NAME="access_logs_export_form">
 
 print '<BR><P>';
 
-//
 // END PAGE CONTENT CODE
-//
-
 site_project_footer( array() );

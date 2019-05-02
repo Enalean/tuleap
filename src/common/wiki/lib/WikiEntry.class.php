@@ -25,13 +25,6 @@ use Tuleap\PHPWiki\WikiPage;
 
 require_once('WikiPage.class.php');
 
-/**
- *
- * @package   WikiService
- * @copyright STMicroelectronics, 2005
- * @author    Manuel Vacelet <manuel.vacelet-abecedaire@st.com>
- * @license   http://opensource.org/licenses/gpl-license.php GPL
- */
 class WikiEntry {
   /* private int(11) */     var $id;
   /* private int(11) */     var $gid;

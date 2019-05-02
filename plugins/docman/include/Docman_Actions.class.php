@@ -868,7 +868,6 @@ class Docman_Actions extends Actions {
             $ugroupsMapping = true;
         }
 
-        //
         // Action
         $itemFactory  = $this->_getItemFactory();
         $item_mapping = $itemFactory->cloneItems($itemToPaste->getGroupId(),
@@ -926,13 +925,11 @@ class Docman_Actions extends Actions {
     }
 
     function action_cut($params) {
-        //
         // Param
         $user = $this->_controler->getUser();
         $item = $this->_controler->_actionParams['item'];
         $hp   = Codendi_HTMLPurifier::instance();
 
-        //
         // Action
         $itemFactory = $this->_getItemFactory();
 
@@ -940,19 +937,16 @@ class Docman_Actions extends Actions {
         $itemFactory->delCutPreference();
         $itemFactory->setCutPreference($item);
 
-        //
         // Message
         $this->_controler->feedback->log('info', $hp->purify($item->getTitle()).' '.$GLOBALS['Language']->getText('plugin_docman', 'info_cut_notify_cut'));
     }
 
     function action_copy($params) {
-        //
         // Param
         $user = $this->_controler->getUser();
         $item = $this->_controler->_actionParams['item'];
         $hp   = Codendi_HTMLPurifier::instance();
 
-        //
         // Action
         $itemFactory = $this->_getItemFactory();
 
@@ -960,7 +954,6 @@ class Docman_Actions extends Actions {
         $itemFactory->delCutPreference();
         $itemFactory->setCopyPreference($item);
 
-        //
         // Message
         $msg = $hp->purify($item->getTitle()).' '.$GLOBALS['Language']->getText('plugin_docman', 'info_copy_notify_cp');
         $this->_controler->feedback->log('info', $msg, CODENDI_PURIFIER_DISABLED);

@@ -267,8 +267,6 @@ extends WikiPlugin_IncludePage
 //
 // Revision 1.3  2003/01/04 22:46:07  carstenklapp
 // Workaround: when page has no subpages avoid include of nonexistant pages.
-//
-
 // KNOWN ISSUES:
 // - line & word limit doesn't work if the included page itself
 //   includes a plugin

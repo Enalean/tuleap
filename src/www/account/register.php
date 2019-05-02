@@ -375,9 +375,7 @@ if($page == 'admin_creation'){
     $body_class[] = 'admin_register';
 }
 
-//
 // not valid registration, or first time to page
-//
 $HTML->includeJavascriptFile('/scripts/check_pw.js');
 $HTML->includeFooterJavascriptFile('/scripts/jstimezonedetect/jstz.min.js');
 $HTML->includeFooterJavascriptFile('/scripts/tuleap/timezone.js');

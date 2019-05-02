@@ -21,8 +21,6 @@ rcs_id('$Id: _BackendInfo.php,v 1.24 2005/01/29 19:47:43 rurban Exp $');
  */
 
 require_once('lib/Template.php');
-/**
- */
 class WikiPlugin__BackendInfo
 extends WikiPlugin
 {
@@ -174,8 +172,6 @@ extends WikiPlugin
 // Revision 1.20  2003/01/18 21:19:24  carstenklapp
 // Code cleanup:
 // Reformatting; added copyleft, getVersion, getDescription
-//
-
 // (c-file-style: "gnu")
 // Local Variables:
 // mode: php

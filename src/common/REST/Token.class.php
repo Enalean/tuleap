@@ -18,7 +18,7 @@
  */
 
 /**
- * Class Rest_Token
+ *
  * I'm a token for Rest authentication
  */
 

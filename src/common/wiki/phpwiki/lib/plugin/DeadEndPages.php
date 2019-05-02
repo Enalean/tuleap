@@ -15,8 +15,6 @@ rcs_id('$Id: DeadEndPages.php,v 1.1 2004/05/27 12:10:31 rurban Exp $');
 require_once('lib/PageList.php');
 require_once('lib/plugin/OrphanedPages.php');
 
-/**
- */
 class WikiPlugin_DeadEndPages
 extends WikiPlugin_OrphanedPages
 {
@@ -28,9 +26,6 @@ extends WikiPlugin_OrphanedPages
 // $Log: DeadEndPages.php,v $
 // Revision 1.1  2004/05/27 12:10:31  rurban
 // The mediawiki name for OrphanedPages. Just an alias.
-//
-//
-
 // Local Variables:
 // mode: php
 // tab-width: 8

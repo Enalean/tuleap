@@ -51,8 +51,6 @@ extends WikiPlugin
 //
 // Revision 1.1  2003/01/28 17:57:15  carstenklapp
 // Martin Geisler's clever Comment plugin.
-//
-
 // For emacs users
 // Local Variables:
 // mode: php

@@ -27,8 +27,6 @@
 //
 // Copyright (C) 2000, 2001 Geoffrey T. Dairiki <dairiki@dairiki.org>
 // You may copy this code freely under the conditions of the GPL.
-//
-
 class Codendi_DiffOp {
     var $type;
     var $orig;
@@ -118,7 +116,6 @@ class Codendi_DiffOp_Change extends Codendi_DiffOp {
  * Finally, some ideas (subdivision by NCHUNKS > 2, and some optimizations)
  * are my own.
  *
- * @author Geoffrey T. Dairiki
  * @access private
  */
 class Codendi_DiffEngine
@@ -497,7 +494,7 @@ class Codendi_Diff
     var $edits;
 
     /**
-     * Constructor.
+     *
      * Computes diff between sequences of strings.
      *
      * @param $from_lines array An array of strings.
@@ -562,7 +559,7 @@ class Codendi_Diff
      * Get the original set of lines.
      *
      * This reconstructs the $from_lines parameter passed to the
-     * constructor.
+     *
      *
      * @return array The original sequence of strings.
      */
@@ -580,7 +577,7 @@ class Codendi_Diff
      * Get the fin set of lines.
      *
      * This reconstructs the $to_lines parameter passed to the
-     * constructor.
+     *
      *
      * @return array The sequence of strings.
      */
@@ -634,7 +631,7 @@ class Codendi_MappedDiff
 extends Codendi_Diff
 {
     /**
-     * Constructor.
+     *
      *
      * Computes diff between sequences of strings.
      *
@@ -926,8 +923,6 @@ class Codendi_BlockDiffFormatter extends Codendi_DiffFormatter
 //
 // Copyright (C) 2000, 2001 Geoffrey T. Dairiki <dairiki@dairiki.org>
 // You may copy this code freely under the conditions of the GPL.
-//
-
 /**
  * HTML unified diff formatter.
  *

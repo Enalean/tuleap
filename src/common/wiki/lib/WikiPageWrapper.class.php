@@ -31,10 +31,6 @@ require_once('common/wiki/lib/WikiEntry.class.php');
  *
  * This class wrap WikiDB object located in phpwiki/lib/WikiDB.php 
  *
- * @package WikiService
- * @author Manuel VACELET <manuel.vacelet-abecedaire@st.com>
- * @copyright STMicroelectronics, 2005
- * @license http://opensource.org/licenses/gpl-license.php GPL
  */
 class WikiPageWrapper {
   /* private string */ var $wikiname;

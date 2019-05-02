@@ -57,8 +57,6 @@ rcs_id('$Id: AuthorHistory.php,v 1.6 2004/06/14 11:31:38 rurban Exp $');
 */
 
 
-/**
- */
 require_once('lib/PageList.php');
 
 //include_once('lib/debug.php');
@@ -293,8 +291,6 @@ extends WikiPlugin
 // New experimental plugin to provide a different kind of
 // PageHistory. Functional as-is, but is in need of much cleanup and
 // refactoring. Probably very, very slow on wikis with many pages!
-//
-
 // For emacs users
 // Local Variables:
 // mode: php

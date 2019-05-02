@@ -6,8 +6,6 @@ rcs_id('$Id: diff3.php,v 1.5 2002/08/20 16:51:46 rurban Exp $');
 //
 // Copyright (C) 2001 Geoffrey T. Dairiki <dairiki@dairiki.org>
 // You may copy this code freely under the conditions of the GPL.
-//
-
 require_once('lib/difflib.php');
 
 class _Diff3_Block {

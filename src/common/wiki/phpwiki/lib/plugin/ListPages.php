@@ -172,8 +172,6 @@ class _PageList_Column_ListPages_count extends _PageList_Column {
 //
 // Revision 1.1  2004/06/08 13:49:43  rurban
 // List pages that are explicitly given as the pages argument, by DanFr
-// 
-
 // Local Variables:
 // mode: php
 // tab-width: 8

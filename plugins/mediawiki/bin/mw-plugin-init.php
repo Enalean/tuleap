@@ -33,7 +33,7 @@ $master_path = forge_get_config('master_path', 'mediawiki');
 $projects_path = forge_get_config('projects_path', 'mediawiki');
 $src_path = forge_get_config('src_path', 'mediawiki');
 
-# create directories
+// create directories
 if (!is_dir($projects_path)) {
 	echo "Creating $projects_path...\n";
 	mkdir($projects_path, 0755, true);
@@ -55,7 +55,7 @@ function mysymlink($from, $to) {
 }
 
 
-# install links in master
+// install links in master
 echo "Creating symlinks from $master_path to $src_path...\n";
 if (!($dh = opendir($src_path))) {
 	echo "Could not open mediawiki source directory $src_path!\n";

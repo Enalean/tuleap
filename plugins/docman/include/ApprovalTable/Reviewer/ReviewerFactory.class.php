@@ -318,17 +318,11 @@ class Docman_ApprovalTableReviewerFactory {
         return false;
     }
 
-    /**
-     *
-     */
     function newTableCopy($newTableId) {
         $dao = $this->_getDao();
         return $dao->copyReviews($this->table->getId(), $newTableId);
     }
 
-    /**
-     *
-     */
     function newTableReset($newTableId) {
         $dao = $this->_getDao();
         return $dao->copyReviewers($this->table->getId(), $newTableId);
@@ -395,10 +389,7 @@ class Docman_ApprovalTableReviewerFactory {
         return $reviewsArray;
     }
 
-    //
     // Class accessor
-    //
-
     function _getDao() {
         $dao = new Docman_ApprovalTableReviewerDao(CodendiDataAccess::instance());
         return $dao;

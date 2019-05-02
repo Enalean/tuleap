@@ -4,15 +4,12 @@
 // SourceForge: Breaking Down the Barriers to Open Source Development
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
-//
-// 
-
 function send_new_project_email(Project $project) {
     $ugroup_manager = new UGroupManager();
     $admin_ugroup   = $ugroup_manager->getUGroup($project, ProjectUGroup::PROJECT_ADMIN);
 
     foreach ($admin_ugroup->getMembers() as $user) {
-        /* @var $user PFUser */
+        /** @var PFUser $user */
         $language = $user->getLanguage();
         $subject = $GLOBALS['sys_name'] . ' ' . $language->getText('include_proj_email', 'proj_approve', $project->getUnixName());
         $presenter = new MailPresenterFactory();

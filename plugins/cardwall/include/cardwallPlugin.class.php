@@ -284,7 +284,7 @@ class cardwallPlugin extends Plugin
      */
     public function tracker_event_manage_semantics($parameters) {
         $tracker   = $parameters['tracker'];
-        /* @var $semantics Tracker_SemanticCollection */
+        /** @var Tracker_SemanticCollection $semantics */
         $semantics = $parameters['semantics'];
 
 

@@ -65,7 +65,7 @@ class Git_LastPushesGraph {
     protected $year    = array();
 
     /**
-     * Constructor.
+     *
      *
      * @param Integer $groupId     Project Id
      * @param Integer $weeksNumber Statistics duration in weeks

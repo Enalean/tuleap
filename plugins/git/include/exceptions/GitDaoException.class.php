@@ -20,8 +20,6 @@
 
 /**
  * Description of GitDaoException
- *
- * @author gstorchi
  */
 class GitDaoException extends Exception {
     //put your code here

@@ -30,8 +30,6 @@ use UserManager;
 /**
  * Log controller class
  *
- * @package GitPHP
- * @subpackage Controller
  */
 class Controller_Log extends ControllerBase // @codingStandardsIgnoreLine
 {

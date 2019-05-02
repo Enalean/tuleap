@@ -30,7 +30,7 @@ class GraphicReportFactory {
     var $reports;
 
     /**
-	* class constructor
+	*
 	*
 	* 	@return null
     */ 

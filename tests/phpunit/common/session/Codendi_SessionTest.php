@@ -256,7 +256,6 @@ class Codendi_SessionTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
         // {{{ PHP prevents us to do thing like that. Which is too bad
         $session->changeSessionNamespace('.riri');
 
-        //
         // Check behaviour __get and references.
         // The expected error (notice) is:
         // Unexpected PHP error [Indirect modification of overloaded property Codendi_Session::$fifi has no effect

@@ -86,9 +86,6 @@ class Tracker_Report_CriteriaFactory {
         $this->getDao()->duplicate($from_report->id, $to_report->id, $fields_mapping);
     }
     
-    /**
-     * 
-     */
     public function saveObject($criteria) {
         
     }

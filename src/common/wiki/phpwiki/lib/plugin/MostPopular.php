@@ -20,8 +20,6 @@ rcs_id('$Id: MostPopular.php,v 1.32 2004/12/26 17:14:03 rurban Exp $');
  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-/**
- */
 
 require_once('lib/PageList.php');
 
@@ -154,8 +152,6 @@ extends WikiPlugin
 // Code cleanup:
 // Reformatting & tabs to spaces;
 // Added copyleft, getVersion, getDescription, rcs_id.
-//
-
 // Local Variables:
 // mode: php
 // tab-width: 8

@@ -1,5 +1,4 @@
 <?php
-//
 // Codendi
 // Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 // http://www.codendi.com
@@ -10,8 +9,6 @@
 //
 // Purpose: Display contextual help for artifact search criteria. 
 //              Help depends upon the field type.
-//
-
 require_once('pre.php');
 require_once('common/tracker/ArtifactType.class.php');
 require_once('common/tracker/ArtifactFieldFactory.class.php');
@@ -25,18 +22,14 @@ $field_info = $request->get('field_info');
 // help_id argument
 list($group_id, $artifact_type_id, $field_name) = explode('|',urldecode($helpid));
 
-//
 //	get the Group object
-//
 $pm = ProjectManager::instance();
 $group = $pm->getProject($group_id);
 if (!$group || !is_object($group) || $group->isError()) {
     exit_no_group();
 }
 
-//
 //	Create the ArtifactType object
-//
 $at = new ArtifactType($group,$artifact_type_id);
 if (!$at || !is_object($at)) {
     exit_error($Language->getText('global','error'),$Language->getText('help_browse_tracker_query_field','at_not_created'));

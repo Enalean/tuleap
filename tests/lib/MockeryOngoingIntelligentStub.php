@@ -33,8 +33,6 @@ use Mockery\MockInterface;
  *
  * This class was introduced to ease the conversion from SimpleTest mocks to Mockery by not having to rewrite all tests
  * that depends on Tuleap test abstractions.
- *
- * @package Tuleap\Test
  */
 class MockeryOngoingIntelligentStub
 {

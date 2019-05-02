@@ -20,8 +20,6 @@ rcs_id('$Id: PageHistory.php,v 1.30 2004/06/14 11:31:39 rurban Exp $');
  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-/**
- */
 require_once('lib/plugin/RecentChanges.php');
 
 class _PageHistory_PageRevisionIter
@@ -367,8 +365,6 @@ extends WikiPlugin_RecentChanges
 // Revision 1.23  2003/01/04 23:27:39  carstenklapp
 // New: Gracefully handle non-existant pages. Added copyleft;
 // getVersion() for PluginManager.
-//
-
 // (c-file-style: "gnu")
 // Local Variables:
 // mode: php

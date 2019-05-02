@@ -20,7 +20,7 @@ rcs_id('$Id: CategoryPage.php,v 1.2 2004/07/08 20:30:07 rurban Exp $');
  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#require_once('lib/InlineParser.php');
+// require_once('lib/InlineParser.php');
 require_once('lib/BlockParser.php');
 
 /**

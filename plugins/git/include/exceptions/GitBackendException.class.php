@@ -20,8 +20,6 @@
 
 /**
  * Description of GitBackendException
- *
- * @author gstorchi
  */
 class GitBackendException extends Exception {    
 

@@ -25,14 +25,6 @@ require_once('common/mvc/Controler.class.php');
 require_once(dirname(__FILE__).'/actions/WikiServiceAdminActions.class.php');
 require_once(dirname(__FILE__).'/views/WikiServiceAdminViews.class.php');
 
-/**
- *
- * @package    WikiService
- * @subpackage WikiServiceAdmin
- * @copyright  STMicroelectronics, 2005
- * @author     Manuel Vacelet <manuel.vacelet-abecedaire@st.com>
- * @license    http://opensource.org/licenses/gpl-license.php GPL
- */
 class WikiServiceAdmin extends Controler {
   /* private Wiki*/ var $wiki;
   

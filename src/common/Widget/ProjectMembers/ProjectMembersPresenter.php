@@ -33,7 +33,7 @@ class ProjectMembersPresenter
     public $administrators;
 
     /**
-     * ProjectMembersPresenter constructor.
+     *
      * @param Project                  $project
      * @param AdministratorPresenter[] $administrators
      */

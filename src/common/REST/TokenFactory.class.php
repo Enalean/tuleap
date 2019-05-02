@@ -18,7 +18,7 @@
  */
 
 /**
- * Class Rest_TokenFactory
+ *
  * I instantiate Rest_Token
  */
 class Rest_TokenFactory {

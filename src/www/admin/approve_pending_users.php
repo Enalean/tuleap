@@ -4,9 +4,6 @@
 // SourceForge: Breaking Down the Barriers to Open Source Development
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
-//
-//
-
 use Tuleap\Layout\IncludeAssets;
 
 require_once('pre.php');
@@ -192,10 +189,8 @@ $expiry_date = 0;
             }
         }
     }
-//
 // No action - First time in this script
 // Show the list of pending user waiting for approval
-//
 if ($page == ADMIN_APPROVE_PENDING_PAGE_PENDING){
     $res = db_query("SELECT * FROM user WHERE status='P'");
     $msg = $Language->getText('admin_approve_pending_users','no_pending_validated');

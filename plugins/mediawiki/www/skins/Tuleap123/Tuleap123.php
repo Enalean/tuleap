@@ -368,7 +368,6 @@ echo $footerEnd;
 	</div>
 <?php
 	}
-	/*************************************************************************************************/
 	function toolbox() {
 ?>
 	<div class="portlet" id="p-tb" role="navigation">
@@ -391,7 +390,6 @@ echo $footerEnd;
 <?php
 	}
 
-	/*************************************************************************************************/
 	function languageBox() {
 		if( $this->data['language_urls'] !== false ) {
 ?>
@@ -411,7 +409,6 @@ echo $footerEnd;
 		}
 	}
 
-	/*************************************************************************************************/
         /**
 	 * @param $bar string
 	 * @param $cont array|string
@@ -435,7 +432,7 @@ echo $footerEnd;
 <?php			} ?>
 			</ul>
 <?php   } else {
-			# allow raw HTML block to be defined by extensions
+			// allow raw HTML block to be defined by extensions
 			print $cont;
 		}
 

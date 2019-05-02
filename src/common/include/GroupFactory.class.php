@@ -26,7 +26,7 @@ class GroupFactory {
 	private $error_state = false;
 
 	/**
-	 *  Constructor.
+	 *
 	 *
 	 *	@return	boolean	success.
 	 */

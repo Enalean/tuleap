@@ -111,8 +111,6 @@ class Spline {
 //------------------------------------------------------------------------
 class Bezier {
     /**
-     * @author Thomas Despoix, openXtrem company
-     * @license released under QPL
      * @abstract Bezier interoplated point generation,
      * computed from control points data sets, based on Paul Bourke algorithm :
      * http://local.wasp.uwa.edu.au/~pbourke/geometry/bezier/index2.html

@@ -47,9 +47,7 @@ function doSelection(form) {
 <tr valign="center"><td>
 <div align="center">
 <?php
-	//
 	//	get the Group object
-	//
     $group_id = $request->getValidated('group_id', 'GroupId');
 	$pm = ProjectManager::instance();
     $group = $pm->getProject($group_id);

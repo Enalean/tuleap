@@ -8,16 +8,10 @@ namespace Tuleap\Git\GitPHP;
  *
  * Controller for getting a snapshot
  *
- * @author Christopher Han <xiphux@gmail.com>
- * @copyright Copyright (c) 2010 Christopher Han
- * @package GitPHP
- * @subpackage Controller
  */
 /**
  * Snapshot controller class
  *
- * @package GitPHP
- * @subpackage Controller
  */
 class Controller_Snapshot extends ControllerBase // @codingStandardsIgnoreLine
 {

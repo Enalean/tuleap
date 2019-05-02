@@ -153,7 +153,6 @@ class ProjectSerializerTest extends TestCase
         );
     }
 
-    //
     // The project has 2 repositories nb 4 & 5.
     // 4 has defaults
     // 5 has pimped perms

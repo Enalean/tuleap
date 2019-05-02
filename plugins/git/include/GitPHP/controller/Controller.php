@@ -26,16 +26,10 @@ namespace Tuleap\Git\GitPHP;
  *
  * Controller factory
  *
- * @author Christopher Han <xiphux@gmail.com>
- * @copyright Copyright (c) 2010 Christopher Han
- * @package GitPHP
- * @subpackage Controller
  */
 /**
  * Controller
  *
- * @package GitPHP
- * @subpackage Controller
  */
 class Controller
 {

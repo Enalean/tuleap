@@ -72,7 +72,7 @@ $name = db_result($result,0,'name');
 $rank = db_result($result,0,'rank');
 
 if (db_numrows($result) < 1) {
-    #invalid  processor  id
+    // invalid  processor  id
     $feedback .= " ".$Language->getText('file_admin_manageprocessors','invalid_procid');
     file_utils_footer(array());
     exit;

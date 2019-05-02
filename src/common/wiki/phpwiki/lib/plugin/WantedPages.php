@@ -198,8 +198,6 @@ class _PageList_Column_WantedPages_wanted extends _PageList_Column {
 // Code cleanup:
 // Reformatting & tabs to spaces;
 // Added copyleft, getVersion, getDescription, rcs_id.
-//
-
 // Local Variables:
 // mode: php
 // tab-width: 8

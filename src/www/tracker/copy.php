@@ -1,14 +1,11 @@
 <?php
 
-//
 // Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 //
 // 
 //
 //
 //  Written for Codendi by Marie-Luise Schneider
-//
-
 // Check if this tracker is valid (not deleted)
 if ( !$ath->isValid() ) {
 	exit_error($Language->getText('global','error'),$Language->getText('tracker_add','invalid'));

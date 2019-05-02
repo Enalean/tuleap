@@ -18,10 +18,6 @@
   * along with Codendi. If not, see <http://www.gnu.org/licenses/
   */
 
-/**
- * @author    guillaume Storchi
- * @license   http://opensource.org/licenses/gpl-license.php GPL
- */
 class PluginActions {
 
     protected $controller;

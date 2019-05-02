@@ -36,7 +36,7 @@ class GraphOnTrackers_Report {
     protected $plugin_charts;
 
     /**
-    * class constructor
+    *
     *
     *     @return null
     */   

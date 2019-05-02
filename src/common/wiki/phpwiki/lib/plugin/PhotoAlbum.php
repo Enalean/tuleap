@@ -722,8 +722,6 @@ display_slides();"));
 //
 // Revision 1.1  2003/01/05 04:21:06  carstenklapp
 // New plugin by Ted Vinke (sf tracker patch #661189)
-//
-
 // For emacs users
 // Local Variables:
 // mode: php

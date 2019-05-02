@@ -37,7 +37,7 @@ class WebhookGenerator
     private $number_generator;
 
     /**
-     * GenerateWebhook constructor.
+     *
      * @param TuleapSynchroDao $tuleap_synchro_dao
      * @param int $size
      */

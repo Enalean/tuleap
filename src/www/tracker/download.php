@@ -1,5 +1,4 @@
 <?php
-//
 // Copyright (c) Enalean SAS, 2017. All rights reserved
 // Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 // http://www.codendi.com
@@ -7,8 +6,6 @@
 // 
 //
 //	Originally written by Laurent Julliard 2001, 2002, Codendi Team, Xerox
-//
-
 require_once('pre.php');
 require_once('common/tracker/ArtifactType.class.php');
 require_once('common/tracker/Artifact.class.php');

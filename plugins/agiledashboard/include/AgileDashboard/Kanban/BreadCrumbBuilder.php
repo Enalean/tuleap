@@ -33,7 +33,7 @@ class BreadCrumbBuilder
     private $plugin_path;
 
     /**
-     * BreadCrumb constructor.
+     *
      *
      * @param string $plugin_path
      */

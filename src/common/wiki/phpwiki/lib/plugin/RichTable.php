@@ -165,8 +165,6 @@ extends WikiPlugin
 // Revision 1.4  2004/03/09 13:08:40  rurban
 // fix undefined TransformText error: load BlockParser,
 // get rid of warnings
-//
-
 // For emacs users
 // Local Variables:
 // mode: php

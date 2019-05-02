@@ -7,18 +7,11 @@ namespace Tuleap\Git\GitPHP;
  *
  * Controller for displaying a project's feed
  *
- * @author Christopher Han <xiphux@gmail.com>
- * @author Christian Weiske <cweiske@cweiske.de>
- * @copyright Copyright (c) 2010 Christopher Han
- * @package GitPHP
- * @subpackage Controller
  */
 
 /**
  * Feed controller class
  *
- * @package GitPHP
- * @subpackage Controller
  */
 class Controller_Feed extends ControllerBase // @codingStandardsIgnoreLine
 {

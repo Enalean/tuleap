@@ -16,7 +16,7 @@ class FileFinder
     //var $_pathsep, $_path;
 
     /**
-     * Constructor.
+     *
      *
      * @param $path array A list of directories in which to search for files.
      */
@@ -359,7 +359,7 @@ class PearFileFinder
     extends FileFinder
 {
     /**
-     * Constructor.
+     *
      *
      * @param $path array Where to look for PEAR library code.
      * A good set of defaults is provided, so you can probably leave
@@ -396,9 +396,6 @@ class PearFileFinder
 class LocalizedFileFinder
 extends FileFinder
 {
-    /**
-     * Constructor.
-     */
     function __construct () {
         $this->_pathsep = $this->_get_syspath_separator();
         $include_path = $this->_get_include_path();
@@ -433,9 +430,6 @@ extends FileFinder
 class LocalizedButtonFinder
 extends FileFinder
 {
-    /**
-     * Constructor.
-     */
     function __construct () {
         global $WikiTheme;
         $this->_pathsep = $this->_get_syspath_separator();
@@ -651,9 +645,6 @@ function isCygwin() {
 // fixed adodb session AffectedRows
 // added FileFinder helpers to unify local filenames and DATA_PATH names
 // editpage.php: new edit toolbar javascript on ENABLE_EDIT_TOOLBAR
-//
-//
-
 // Local Variables:
 // mode: php
 // tab-width: 8

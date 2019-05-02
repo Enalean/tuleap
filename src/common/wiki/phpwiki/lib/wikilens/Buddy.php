@@ -16,9 +16,6 @@ rcs_id('$Id: Buddy.php,v 1.3 2004/11/21 11:59:26 rurban Exp $');
 //       If no homepage, fallback to prefs in cookie as in 1.3.3.
 
 
-/**
-* 
-*/
 require_once (dirname(__FILE__)."/Utils.php");
 
 /*
@@ -150,8 +147,6 @@ function AverageRating($dbi, $page, $users, $active_userid){
 //
 // Revision 1.1  2004/06/18 14:42:17  rurban
 // added wikilens libs (not yet merged good enough, some work for DanFr)
-// 
-
 // Local Variables:
 // mode: php
 // tab-width: 8

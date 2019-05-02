@@ -25,8 +25,6 @@ namespace Tuleap\Git\GitPHP;
  * Git Filesystem object class
  *
  * @abstract
- * @package GitPHP
- * @subpackage Git
  */
 abstract class FilesystemObject extends GitObject implements GitObjectType
 {

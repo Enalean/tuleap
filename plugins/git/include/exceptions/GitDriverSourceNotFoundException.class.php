@@ -21,8 +21,6 @@
 
 /**
  * Description of GitDriverSourceNotFoundException
- *
- * @author gstorchi
  */
 class GitDriverSourceNotFoundException extends GitDriverException {
     //put your code here

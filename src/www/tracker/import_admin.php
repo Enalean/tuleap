@@ -1,6 +1,5 @@
 <?php
 
-//
 // Copyright (c) Enalean SAS, 2017. All rights reserved
 // Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 //
@@ -8,8 +7,6 @@
 //
 //
 //  Written for Codendi by Marie-Luise Schneider
-//
-
 require_once('pre.php');
 require_once('www/project/admin/project_admin_utils.php');
 require_once('common/tracker/ArtifactType.class.php');
@@ -27,9 +24,7 @@ if ($group_id && $mode == "admin") {
   
   session_require(array('group'=>$group_id,'admin_flags'=>'A'));
 
-  //	  
   //  get the Group object
-  //	  
   $pm = ProjectManager::instance();
   $group = $pm->getProject($group_id);
   if (!$group || !is_object($group) || $group->isError()) {

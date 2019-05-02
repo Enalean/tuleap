@@ -11,7 +11,7 @@ class WikiDB_backend_dumb_AllRevisionsIter
 extends WikiDB_backend_iterator
 {
     /**
-     * Constructor.
+     *
      *
      * @access protected
      * @param $backend object A WikiDB_backend.

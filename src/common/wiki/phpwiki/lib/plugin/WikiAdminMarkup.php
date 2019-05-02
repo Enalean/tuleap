@@ -188,9 +188,6 @@ extends WikiPlugin_WikiAdminSelect
 // $Log: WikiAdminMarkup.php,v $
 // Revision 1.1  2005/09/18 13:06:24  rurban
 // already added to 1.3.11
-//
-//
-
 // Local Variables:
 // mode: php
 // tab-width: 8

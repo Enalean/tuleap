@@ -64,7 +64,7 @@ class Tracker_Workflow_Trigger_RulesManager {
         $trigger_rule_collection = $this->getForTargetTracker($tracker);
 
         foreach ($trigger_rule_collection as $trigger_rule) {
-            /* @var $trigger_rule Tracker_Workflow_Trigger_TriggerRule */
+            /** @var Tracker_Workflow_Trigger_TriggerRule $trigger_rule */
 
             $trigger_rule_xml = $root->addChild('trigger_rule');
 

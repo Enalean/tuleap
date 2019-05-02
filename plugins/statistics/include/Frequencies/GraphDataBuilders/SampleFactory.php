@@ -26,10 +26,6 @@ use Statistics_Event;
 /**
  * Design pattern factory
  *
- * @package   Sample
- * @author    Arnaud Salvucci <arnaud.salvucci@st.com>
- * @copyright 2007 STMicroelectronics
- * @license   http://opensource.org/licenses/gpl-license.php GPL
  */
 class SampleFactory
 {

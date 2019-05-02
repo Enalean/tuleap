@@ -118,7 +118,7 @@ class Tracker_RuleFactory {
         
         if(isset($rules['list_rules'])) {
             foreach ($rules['list_rules'] as $list_rule) {
-                /* @var $list_rule Tracker_Rule_List */
+                /** @var Tracker_Rule_List $list_rule */
                 $list_rule->setTrackerId($trackerDB->getId());
                 $this->getListFactory()->insert($list_rule);
             }
@@ -126,7 +126,7 @@ class Tracker_RuleFactory {
         
         if(isset($rules['date_rules'])) {
             foreach ($rules['date_rules'] as $date_rule) {
-                /* @var $list_rule Tracker_Rule_Date */
+                /** @var Tracker_Rule_Date $list_rule */
                 $date_rule->setTrackerId($trackerDB->getId());
                 $this->getDateFactory()->insert($date_rule);
             }

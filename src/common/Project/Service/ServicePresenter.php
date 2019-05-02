@@ -45,7 +45,7 @@ class ServicePresenter
     public $is_link_customizable;
 
     /**
-     * ServicePresenter constructor.
+     *
      *
      * @param Service $service
      * @param         $is_read_only

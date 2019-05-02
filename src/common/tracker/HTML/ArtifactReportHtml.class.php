@@ -27,7 +27,7 @@ class ArtifactReportHtml extends ArtifactReport {
     var $fields_per_line;
         
         /**
-         *  Constructor.
+         *
          *
          *      @param  report_id       
          *  @param  atid: the artifact type id
@@ -181,10 +181,8 @@ class ArtifactReportHtml extends ArtifactReport {
             global $ath,$Language;
             $hp = Codendi_HTMLPurifier::instance();
             $html_select = '';
-            //
             // Loop through the list of used fields to define label and fields/boxes
             // used as search criteria
-            //
             $query_fields = $this->getQueryFields();
             
             //the width has been removed to correct the display of the Query Form (related to the fix of STTab theme)
@@ -385,7 +383,7 @@ class ArtifactReportHtml extends ArtifactReport {
             
             $offset_last = min($offset+$chunksz-1, $total_rows-1);
         
-            #display 'Items x - y'  only in normal and printer-version modes
+            // display 'Items x - y'  only in normal and printer-version modes
 	    if ($pv != 2) {
 	    $nav_bar .= '<td width= "20% " align = "center" class="small">'.$Language->getText('tracker_include_report','items').' '.($offset+1).' - '.
                 ($offset_last+1)."</td>\n";
@@ -543,8 +541,8 @@ class ArtifactReportHtml extends ArtifactReport {
 				$html_result .= '<INPUT TYPE="HIDDEN" NAME="'. $hp->purify($field, CODENDI_PURIFIER_CONVERT_HTML) .'" VALUE="'. $hp->purify($value, CODENDI_PURIFIER_CONVERT_HTML) .'">';
 			}
 		}
-		#stuff related to mass-change (buttons, check_all_items link, clear_all_items link) should be hidden in printer version
-		#as well as table-only view. keep only 'select' column checkboxes
+		// stuff related to mass-change (buttons, check_all_items link, clear_all_items link) should be hidden in printer version
+		// as well as table-only view. keep only 'select' column checkboxes
 		if ($pv == 0) {		
 		    if ($total_rows > $chunksz) {
                		$html_result .=
@@ -691,9 +689,7 @@ class ArtifactReportHtml extends ArtifactReport {
                     $html_result .= '</div></fieldset><br>';
                 }
                 
-                //
                 // Finally display the result table
-                // 
                 $user_dont_want_to_see_results = $current_user->getPreference('tracker_'. (int)$this->group_artifact_id .'_hide_section_results');
                 $totalrows = $this->selectReportItems($prefs,$morder,$advsrch,$aids); // Filter according to permissions
 
@@ -769,7 +765,7 @@ class ArtifactReportHtml extends ArtifactReport {
                     }
                     $html_result .= '</form>';
                     if ($pv != 2 && !$user_dont_want_to_see_results) {  
-                        #priority colors are not displayed in table-only view 
+                        // priority colors are not displayed in table-only view
                         $html_result .= $this->showPriorityColorsKey($Language->getText('tracker_include_report','sev_colors'),$aids,$masschange,$pv);
                     }
                 } else {

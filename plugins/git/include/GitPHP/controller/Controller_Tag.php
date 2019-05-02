@@ -7,16 +7,10 @@ namespace Tuleap\Git\GitPHP;
  *
  * Controller for displaying a tag
  *
- * @author Christopher Han <xiphux@gmail.com>
- * @copyright Copyright (c) 2010 Christopher Han
- * @package GitPHP
- * @subpackage Controller
  */
 /**
  * Tag controller class
  *
- * @package GitPHP
- * @subpackage Controller
  */
 class Controller_Tag extends ControllerBase // @codingStandardsIgnoreLine
 {

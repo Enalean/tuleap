@@ -128,10 +128,7 @@ class Docman_ApprovalTableWikiFactory extends Docman_ApprovalTableVersionnedFact
         return $this->_getDao()->userAccessedSince($user->getId(), $this->item->getPagename(), $this->item->getGroupId(), $this->wikiVersionId);
     }
 
-    //
     // Class accessor
-    //
-
     function _getDao() {
         return new Docman_ApprovalTableWikiDao(CodendiDataAccess::instance());
     }

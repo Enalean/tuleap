@@ -37,9 +37,6 @@ class InjectSpanPaddingInTreeNodeVisitorTest extends InjectSpanPadding {
         return $this->buildBaseTree();
     }
     
-    /**
-     * 
-     */
     public function itShouldSetDataToFirstChildThatMatches_IndentLast_leftTreeIndentMinus_treeAndChild() {
         $given = $this->given_AParentWithOneChildTreeNode();
         $this->when_VisitTreeNodeWith_InjectSpanPadding($given);
@@ -51,9 +48,6 @@ class InjectSpanPaddingInTreeNodeVisitorTest extends InjectSpanPadding {
         $this->then_GivenTreeNodeData_ContentTemplate_AssertPattern($givenChild, $this->getPatternSuite(" content child"));
     }
     
-    /**
-     * 
-     */
     public function itShouldSetDataToSecondChildThatMatches_BlankBlankLast_LeftLast_Right() {
         $given      = $this->given_AParentWithOneChildTreeNode();
         $this->when_VisitTreeNodeWith_InjectSpanPadding($given);

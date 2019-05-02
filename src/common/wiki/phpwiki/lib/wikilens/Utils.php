@@ -20,8 +20,6 @@ rcs_id('$Id: Utils.php,v 1.2 2004/11/15 16:00:02 rurban Exp $');
  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-/**
- */
 
 function addPageTextData($user, $dbi, $new_data, $START_DELIM, $DELIM) {
     // This is largely lifted from the TranslateText plugin, which performs a
@@ -105,8 +103,6 @@ function notEmptyName($var) {
 //
 // Revision 1.1  2004/06/18 14:42:17  rurban
 // added wikilens libs (not yet merged good enough, some work for DanFr)
-// 
-
 // Local Variables:
 // mode: php
 // tab-width: 8

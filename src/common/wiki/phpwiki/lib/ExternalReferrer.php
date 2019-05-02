@@ -121,8 +121,6 @@ class SearchEngines {
 //
 // Revision 1.1  2004/09/26 12:20:28  rurban
 // Detect external referrers, handle search engines
-//
-
 // For emacs users
 // Local Variables:
 // mode: php

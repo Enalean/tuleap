@@ -124,7 +124,7 @@ class ReferenceAdministrationActions extends Actions
                                      $request->get('keyword'),
                                      $request->get('description'),
                                      $request->get('link'),
-                                     $ref->getScope(), # Can't edit a ref scope
+                                     $ref->getScope(), // Can't edit a ref scope
                                      $service_short_name,
                                      $request->get('nature'),
                                      $request->get('is_used'),

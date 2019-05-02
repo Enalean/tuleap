@@ -20,8 +20,6 @@ rcs_id('$Id: BackLinks.php,v 1.32 2004/12/06 19:50:05 rurban Exp $');
  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-/**
- */
 require_once('lib/PageList.php');
 
 class WikiPlugin_BackLinks
@@ -207,8 +205,6 @@ class _PageList_Column_BackLinks_count extends _PageList_Column {
 // Revision 1.19  2003/01/18 21:19:25  carstenklapp
 // Code cleanup:
 // Reformatting; added copyleft, getVersion, getDescription
-//
-
 // For emacs users
 // Local Variables:
 // mode: php

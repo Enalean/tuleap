@@ -24,7 +24,6 @@
  * @TODO Create Class exception to thro GIT messages
  * @TODO Make this driver compliant with Apache ??
  * @TODO Make sure directories tree to manage forks and repo is a good choice
- * @author gstorchi
  */
 
 require_once(__DIR__.'/../DVCS/DVCSDriver.class.php');

@@ -1,8 +1,5 @@
 <?php
 
-/**
- *
- */
 class b201103031250_add_group_id_index_on_diskusage_group_table extends ForgeUpgrade_Bucket {
 
     public function description() {

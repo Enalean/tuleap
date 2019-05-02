@@ -82,8 +82,6 @@ extends WikiPlugin_SiteMap
 //
 // Revision 1.1  2004/02/17 12:11:36  rurban
 // added missing 4th basepage arg at plugin->run() to almost all plugins. This caused no harm so far, because it was silently dropped on normal usage. However on plugin internal ->run invocations it failed. (InterWikiSearch, IncludeSiteMap, ...)
-//
-
 // For emacs users
 // Local Variables:
 // mode: php

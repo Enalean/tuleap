@@ -1431,8 +1431,6 @@ class WikiDB_backend_PearDB_search extends WikiDB_backend_search_sql
 //
 // Revision 1.45  2004/04/16 14:19:39  rurban
 // updated ADODB notes
-//
-
 // (c-file-style: "gnu")
 // Local Variables:
 // mode: php

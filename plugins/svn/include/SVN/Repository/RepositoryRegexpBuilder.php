@@ -26,9 +26,9 @@ class RepositoryRegexpBuilder
 {
     public function generateRegexpFromPath($path, LegacyDataAccessInterface $data_access)
     {
-        # Split a given path into subpathes according to depth, then build a regular expression like below:
-        # Path: '/trunk/src/common/' =>
-        # Regex: '^(/(trunk|\\*))$|^(/(trunk|\\*)/)$|^(/(trunk|\\*)/(src|\\*))$|^(/(trunk|\\*)/(src|\\*)/)$|^(/(trunk|\\*)/(src|\\*)/(common|\\*))$|^(/(trunk|\\*)/(src|\\*)/(common|\\*)/)$'
+        // Split a given path into subpathes according to depth, then build a regular expression like below:
+        // Path: '/trunk/src/common/' =>
+        // Regex: '^(/(trunk|\\*))$|^(/(trunk|\\*)/)$|^(/(trunk|\\*)/(src|\\*))$|^(/(trunk|\\*)/(src|\\*)/)$|^(/(trunk|\\*)/(src|\\*)/(common|\\*))$|^(/(trunk|\\*)/(src|\\*)/(common|\\*)/)$'
         $list_repositories = explode('/', $path);
         $star_operator     = "\\*";
 

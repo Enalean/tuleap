@@ -38,8 +38,6 @@ rcs_id('$Id: OldStyleTable.php,v 1.11 2005/09/14 05:56:21 rurban Exp $');
  * generates a right justified column, <code>&lt;</code> a left
  * justified column and <code>^</code> a centered column
  * (which is the default.)
- *
- * @author Geoffrey T. Dairiki
  */
 
 class WikiPlugin_OldStyleTable
@@ -184,8 +182,6 @@ extends WikiPlugin
 // Code cleanup:
 // Reformatting & tabs to spaces;
 // Added copyleft, getVersion, getDescription, rcs_id.
-//
-
 // (c-file-style: "gnu")
 // Local Variables:
 // mode: php

@@ -117,7 +117,7 @@ class Tracker_XML_Exporter_ChangesetValueXMLExporterVisitor implements Tracker_A
         Tracker_Artifact $artifact,
         Tracker_Artifact_ChangesetValue $changeset_value
     ) {
-        /* @var $exporter Tracker_XML_Exporter_ChangesetValue_ChangesetValueXMLExporter */
+        /** @var Tracker_XML_Exporter_ChangesetValue_ChangesetValueXMLExporter $exporter */
         $exporter = $changeset_value->accept($this);
         $exporter->export($artifact_xml, $changeset_xml, $artifact, $changeset_value);
     }

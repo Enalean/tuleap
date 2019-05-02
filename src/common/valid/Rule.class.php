@@ -21,9 +21,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * @package Codendi
- */
 abstract class Rule {
     /**
      * @access private
@@ -106,10 +103,6 @@ extends Rule {
     }
 }
 
-/**
- * Check that given value is strictly greater than the one defined in
- * constructor.
- */
 class Rule_GreaterThan
 extends Rule_Comparator {
     function isValid($val) {
@@ -120,9 +113,6 @@ extends Rule_Comparator {
     }
 }
 
-/**
- * Check that given value is strictly less than the one defined in constructor.
- */
 class Rule_LessThan
 extends Rule_Comparator {
     function isValid($val) {
@@ -133,10 +123,6 @@ extends Rule_Comparator {
     }
 }
 
-/**
- * Check that given value is greater or equal to the one defined in
- * constructor.
- */
 class Rule_GreaterOrEqual
 extends Rule_Comparator {
     function isValid($val) {
@@ -147,10 +133,6 @@ extends Rule_Comparator {
     }
 }
 
-/**
- * Check that given value is strictly less or equal to the one defined in
- * constructor.
- */
 class Rule_lessOrEqual
 extends Rule_Comparator {
     function isValid($val) {

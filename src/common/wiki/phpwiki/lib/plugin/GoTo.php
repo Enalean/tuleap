@@ -77,8 +77,6 @@ extends WikiPlugin
 //
 // Revision 1.2  2004/04/12 16:21:01  rurban
 // fix lib/plugin/RssFeed.php:81: Notice[8]: Undefined variable: th
-//
-        
 // Local Variables:
 // mode: php
 // tab-width: 8

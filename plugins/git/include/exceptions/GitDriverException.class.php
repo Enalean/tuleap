@@ -20,8 +20,6 @@
 
 /**
  * Description of GitDriverException
- *
- * @author gstorchi
  */
 class GitDriverException extends Exception {
     //put your code here

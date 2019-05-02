@@ -85,7 +85,7 @@ class URL {
             }
             $dao = $this->getProjectDao();
             $dao_results=$dao->searchByUnixGroupName($this_proj_name);
-            if ($dao_results->rowCount() < 1) {# project does not exist
+            if ($dao_results->rowCount() < 1) {// project does not exist
                 return false;
             }
             $group_id=$dao_results->getRow();

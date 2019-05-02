@@ -41,9 +41,6 @@ class Docman_SqlReportColumn
 extends Docman_MetadataSqlQueryChunk {
     var $column;
 
-    /**
-     *
-     */
     function __construct($column) {
         $this->column = $column;
         parent::__construct($column->md);

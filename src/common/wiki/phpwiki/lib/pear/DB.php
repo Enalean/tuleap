@@ -250,12 +250,6 @@ define('DB_PORTABILITY_ALL', 63);
  *              connections, the object returned is an instance of this
  *              class.
  *
- * @package  DB
- * @author   Stig Bakken <ssb@php.net>
- * @author   Tomas V.V.Cox <cox@idecnet.com>
- * @since    PHP 4.0
- * @version  $Id: DB.php,v 1.6 2004/06/21 08:39:37 rurban Exp $
- * @category Database
  */
 class DB
 {
@@ -430,15 +424,13 @@ class DB
  * DB_Error implements a class for reporting portable database error
  * messages.
  *
- * @package  DB
- * @author Stig Bakken <ssb@php.net>
  */
 class DB_Error extends PEAR_Error
 {
     // {{{ constructor
 
     /**
-     * DB_Error constructor.
+     *
      *
      * @param mixed   $code   DB error code, or string with error message.
      * @param integer $mode   what "error mode" to operate in
@@ -469,8 +461,6 @@ class DB_Error extends PEAR_Error
  * A new instance of this class will be returned by the DB implementation
  * after processing a query that returns data.
  *
- * @package  DB
- * @author Stig Bakken <ssb@php.net>
  */
 class DB_result
 {
@@ -496,7 +486,7 @@ class DB_result
     // {{{ constructor
 
     /**
-     * DB_result constructor.
+     *
      * @param resource &$dbh   DB object reference
      * @param resource $result  result resource id
      * @param array    $options assoc array with optional result options

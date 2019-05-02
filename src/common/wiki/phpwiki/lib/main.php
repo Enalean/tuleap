@@ -1134,7 +1134,6 @@ function main () {
     //
     // (If DEBUG if off, this may be a strong validator, but I'm going
     // to go the paranoid route here pending further study and testing.)
-    //
     $validators['%weak'] = true;
     $request->setValidators($validators);
    
@@ -1706,8 +1705,6 @@ if (!defined('PHPWIKI_NOMAIN') or !PHPWIKI_NOMAIN)
 //
 // Revision 1.100  2003/11/18 16:54:18  carstenklapp
 // Reformatting only: Tabs to spaces, added rcs log.
-//
-
 
 // Local Variables:
 // mode: php

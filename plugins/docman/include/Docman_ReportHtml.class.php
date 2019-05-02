@@ -39,9 +39,6 @@ class Docman_ReportHtml
         $this->hp         = Codendi_HTMLPurifier::instance();
     }
 
-    /**
-     *
-     */
     function getSelectOption($value, $text, $selected=null) {
         $html = '';
         $html .= '<option value="'.$value.'"';
@@ -63,9 +60,6 @@ class Docman_ReportHtml
         return $html;
     }
 
-    /**
-     *
-     */
     function getReportSelector($item) {
         $html = '';
 
@@ -115,9 +109,6 @@ class Docman_ReportHtml
         return $html;
     }
 
-    /**
-     *
-     */
     function getSelectedFilters($params, &$displayedFilters) {
         $html = '';
 
@@ -153,17 +144,12 @@ class Docman_ReportHtml
         return $html;
     }
 
-    /**
-     *
-     */   
     function getFiltersOptions($params, $displayedFilters) {
         $html = '';
 
         $html .= '<div id="docman_report_options">';
         $html .= '<strong>'.$GLOBALS['Language']->getText('plugin_docman', 'report_filters_options').'</strong>&nbsp;';
-        //
         // Add a new filter
-        //
         $html .= $GLOBALS['Language']->getText('plugin_docman', 'report_add_filter');
         $html .= '&nbsp;';
         $html .= '<select name="add_filter" id="plugin_docman_report_add_filter">';
@@ -202,9 +188,7 @@ class Docman_ReportHtml
         $html .= '</select>';
 
         
-        //
         // Advanced search
-        //
         if($this->report->advancedSearch) {
             $html .= '<input type="hidden" name="advsearch" value="1" />';
             $advSearchToggle = 0;
@@ -221,9 +205,6 @@ class Docman_ReportHtml
         return $html;
     }
 
-    /**
-     * 
-     */
     function getReportOptions() {
         $html = '';
 
@@ -233,9 +214,7 @@ class Docman_ReportHtml
         $html .= '<div id="docman_report_save">';
         $html .= '<strong>'.$GLOBALS['Language']->getText('plugin_docman', 'report_reports_options').'</strong>&nbsp;';
 
-        //
         // Save filter
-        //
         $html .= $GLOBALS['Language']->getText('plugin_docman', 'report_save_report');
         $html .= '&nbsp;';
         $html .= '<select name="save_report" id="plugin_docman_report_save">';

@@ -36,9 +36,6 @@ class GetAdditionalCriteria implements Dispatchable
      */
     private $criteria;
 
-    /**
-     * GetAdditionalCriteria constructor.
-     */
     public function __construct()
     {
         $this->criteria = [];

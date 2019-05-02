@@ -37,16 +37,12 @@ require_once('www/project/admin/permissions.php');
  *
  * This class is Tuleap representation of wiki_page table in database.
  *
- * @package WikiService
- * @copyright STMicroelectronics, 2005
- * @author Manuel Vacelet <manuel.vacelet-abecedaire@st.com>
- * @license http://opensource.org/licenses/gpl-license.php GPL
  */
 class WikiPage {
  /* private int */   var $id;       /* wiki_page.id */
  /* private string*/ var $pagename; /* wiki_page.pagename */
  /* private int */   static $gid;      /* wiki_page.group_id */
- /* private bool */  var $empty;    /* */
+ /* private bool */  var $empty;
 
     /** @var WikiPageWrapper */
     private $wrapper;

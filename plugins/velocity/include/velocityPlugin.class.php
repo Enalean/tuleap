@@ -90,7 +90,7 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
     public function tracker_event_manage_semantics($parameters) // @codingStandardsIgnoreLine
     {
         $tracker = $parameters['tracker'];
-        /* @var $semantics Tracker_SemanticCollection */
+        /** @var Tracker_SemanticCollection $semantics */
         $semantics = $parameters['semantics'];
 
         if (! $this->isAPlanningTrackers($tracker)) {

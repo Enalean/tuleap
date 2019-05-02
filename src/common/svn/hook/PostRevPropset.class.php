@@ -76,7 +76,7 @@ class SVN_Hook_PostRevPropset {
         $GLOBALS['group_id'] = $project->getID();
         $references = $this->reference_manager->extractReferences($old_commit_message, $project->getID());
         foreach ($references as $reference_instance) {
-            /* @var $reference Reference */
+            /** @var Reference $reference */
             $reference = $reference_instance->getReference();
             if ($reference) {
                 $cross_reference = new CrossReference(

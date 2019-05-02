@@ -1,8 +1,5 @@
 <?php
 
-/**
- *
- */
 class b201010201546_fill_frs_file_deleted extends ForgeUpgrade_Bucket {
 
     public function description() {

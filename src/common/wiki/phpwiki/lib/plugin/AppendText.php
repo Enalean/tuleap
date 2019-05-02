@@ -120,7 +120,6 @@ extends WikiPlugin
         if ( $request->getArg($pagename) == $pagename ) {
             // TODO: Just invalidate the cache, if AppendText didn't 
             // change anything before.
-            // 
             return $request->redirect(WikiURL($pagename, false, 'absurl'), false);
 
         // The user asked to be redirected to the modified page
@@ -173,8 +172,6 @@ extends WikiPlugin
 //
 // Revision 1.0  2004/11/23 09:43:35  epasgia
 // * Initial version.
-//
-
 // Local Variables:
 // mode: php
 // tab-width: 8

@@ -79,7 +79,6 @@ extends WikiPlugin
 
         // Look at arguments to see if submit was entered. If so,
         // process this request before displaying.
-        //
         if ($request->isPost() and $request->_user->isAdmin() and $request->getArg('metaedit')) {
             $metafield = trim($request->getArg('metafield'));
             $metavalue = trim($request->getArg('metavalue'));
@@ -195,8 +194,6 @@ extends WikiPlugin
 // Code cleanup:
 // Reformatting & tabs to spaces;
 // Added copyleft, getVersion, getDescription, rcs_id.
-//
-
 // For emacs users
 // Local Variables:
 // mode: php

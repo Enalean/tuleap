@@ -168,9 +168,6 @@ function togglecomments(a) {
 // new base class PageType_attach as base class for WikiBlog, Comment, and WikiForum.
 // new plugin AddComment, which is a WikiBlog with different pagetype and template,
 //   based on WikiBlog. WikiForum comes later.
-//
-//
-
 // For emacs users
 // Local Variables:
 // mode: php

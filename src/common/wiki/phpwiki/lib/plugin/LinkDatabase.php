@@ -210,8 +210,6 @@ class _PageList_Column_LinkDatabase_links extends _PageList_Column {
 // A simple plugin for WikiBrowser at http://touchgraph.sourceforge.net/
 // List all pages with all links as text file (with some caching tricks).
 //   format=html currently unstable.
-//
-
 // Local Variables:
 // mode: php
 // tab-width: 8

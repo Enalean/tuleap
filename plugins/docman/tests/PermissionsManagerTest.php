@@ -87,10 +87,7 @@ class Docman_PermissionsManagerTest extends TuleapTestCase {
 
         $itemId = 1515;
 
-        //
         // Start Test
-        //
-
         $pm = new MockPermissionsManager($this);
         $pm->setReturnValue('userHasPermission', true, array($itemId, 'PLUGIN_DOCMAN_MANAGE', ['test']));
         $this->docmanPm->setReturnReference('_getPermissionManagerInstance', $pm);
@@ -118,10 +115,7 @@ class Docman_PermissionsManagerTest extends TuleapTestCase {
 
         $itemId = 1515;
 
-        //
         // Start Test
-        //
-
         $pm = new MockPermissionsManager($this);
         $pm->setReturnValue('userHasPermission', true, array($itemId, 'PLUGIN_DOCMAN_WRITE', ['test']));
         $this->docmanPm->setReturnReference('_getPermissionManagerInstance', $pm);
@@ -148,10 +142,7 @@ class Docman_PermissionsManagerTest extends TuleapTestCase {
 
         $itemId = 1515;
 
-        //
         // Start Test
-        //
-
         $pm = new MockPermissionsManager($this);
         $pm->setReturnValue('userHasPermission', true, array($itemId, 'PLUGIN_DOCMAN_READ', ['test']));
         $this->docmanPm->setReturnReference('_getPermissionManagerInstance', $pm);
@@ -173,10 +164,7 @@ class Docman_PermissionsManagerTest extends TuleapTestCase {
 
         $itemId = 1515;
 
-        //
         // Start Test
-        //
-
         $pm = new MockPermissionsManager($this);
         $pm->setReturnValue('userHasPermission', false);
         $this->docmanPm->setReturnReference('_getPermissionManagerInstance', $pm);
@@ -220,10 +208,7 @@ class Docman_PermissionsManagerTest extends TuleapTestCase {
 
         $itemId = 1515;
 
-        //
         // Start Test
-        //
-
         $pm = new MockPermissionsManager($this);
         $pm->setReturnValue('userHasPermission', false);
         $pm->expectCallCount('userHasPermission', 3);
@@ -247,10 +232,7 @@ class Docman_PermissionsManagerTest extends TuleapTestCase {
 
         $itemId = 1515;
 
-        //
         // Start Test
-        //
-
         $pm = new MockPermissionsManager($this);
         $pm->setReturnValue('userHasPermission', false);
         $pm->expectCallCount('userHasPermission', 2);
@@ -273,10 +255,7 @@ class Docman_PermissionsManagerTest extends TuleapTestCase {
 
         $itemId = 1515;
 
-        //
         // Start Test
-        //
-
         $pm = new MockPermissionsManager($this);
         $pm->setReturnValue('userHasPermission', false);
         $pm->expectCallCount('userHasPermission', 1);
@@ -298,10 +277,7 @@ class Docman_PermissionsManagerTest extends TuleapTestCase {
 
         $this->docmanPm->setReturnReference('_getPermissionManagerInstance', $this->refOnNull);
 
-        //
         // Start Test
-        //
-
         // Read one object
         $pm1 = new MockPermissionsManager($this);
         $pm1->expectCallCount('userHasPermission', 3);
@@ -349,10 +325,7 @@ class Docman_PermissionsManagerTest extends TuleapTestCase {
 
         $this->docmanPm->setReturnReference('_getPermissionManagerInstance', $this->refOnNull);
 
-        //
         // Start Test
-        //
-
         // Read one object
         $pm1 = new MockPermissionsManager($this);
         $pm1->expectCallCount('userHasPermission', 2);
@@ -399,10 +372,7 @@ class Docman_PermissionsManagerTest extends TuleapTestCase {
 
         $this->docmanPm->setReturnReference('_getPermissionManagerInstance', $this->refOnNull);
 
-        //
         // Start Test
-        //
-
         // Read one object
         $pm1 = new MockPermissionsManager($this);
         $pm1->expectCallCount('userHasPermission', 1);
@@ -449,10 +419,7 @@ class Docman_PermissionsManagerTest extends TuleapTestCase {
 
         $this->docmanPm->setReturnReference('getDao', $dao);
 
-        //
         // Start Test
-        //
-
         $this->docmanPm->retreiveReadPermissionsForItems(array(1515), $this->user);
         $this->assertTrue($this->docmanPm->userCanRead($this->user, '1515'));
     }
@@ -468,10 +435,7 @@ class Docman_PermissionsManagerTest extends TuleapTestCase {
 
         $this->docmanPm->setReturnReference('getDao', $dao);
 
-        //
         // Start Test
-        //
-
         $this->docmanPm->retreiveReadPermissionsForItems(array(1515), $this->user);
         $this->assertTrue($this->docmanPm->userCanRead($this->user, '1515'));
     }

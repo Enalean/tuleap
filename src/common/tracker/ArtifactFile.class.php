@@ -94,9 +94,7 @@ class ArtifactFile {
 			$filetype = 'application/octet-stream';
 		}
 
-		//
 		//	data validation
-		//
 		if (!$filename || !$filetype || !$filesize || !$bin_data) {
 			$GLOBALS['Response']->addFeedback('error', '<P>|'.$filename.'|'.$filetype.'|'.$filesize.'|'.$bin_data.'|');
             $this->setError('ArtifactFile: '.$Language->getText('tracker_common_file','name_requ'));

@@ -97,10 +97,6 @@ function wiki_display_footer() {
 /**
  * Common functions for WikiServiceViews and WikiServiceAdminViews
  *
- * @package WikiService
- * @copyright STMicroelectronics, 2005
- * @author Manuel Vacelet <manuel.vacelet-abecedaire@st.com>
- * @license http://opensource.org/licenses/gpl-license.php GPL
  */
 class WikiViews extends Views {
   /* protected int    */ var $gid;

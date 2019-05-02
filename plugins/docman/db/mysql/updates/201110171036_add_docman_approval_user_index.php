@@ -1,8 +1,5 @@
 <?php
 
-/**
- *
- */
 class b201110171036_add_docman_approval_user_index extends ForgeUpgrade_Bucket {
 
     public function description() {

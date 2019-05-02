@@ -132,7 +132,6 @@ class Docman_Error_PermissionDenied extends Error_PermissionDenied {
             $id = $query['id'];
         } else {
             if (isset($query['item'])) {
-                //
             } else {
                 //if no item id is filled, we retieve the root id: the id of "Project documentation"
                 if (isset($query['group_id'])) {

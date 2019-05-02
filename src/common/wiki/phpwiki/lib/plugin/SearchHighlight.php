@@ -94,9 +94,6 @@ extends WikiPlugin
 // $Log: SearchHighlight.php,v $
 // Revision 1.1  2004/09/26 14:58:36  rurban
 // naive SearchHighLight implementation
-//
-//
-
 // Local Variables:
 // mode: php
 // tab-width: 8

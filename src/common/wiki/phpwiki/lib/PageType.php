@@ -25,7 +25,7 @@ require_once('lib/CachedMarkup.php');
 /** A cacheable formatted wiki page.
  */
 class TransformedText extends CacheableMarkup {
-    /** Constructor.
+    /**
      *
      * @param WikiDB_Page $page
      * @param string $text  The packed page revision content.
@@ -312,7 +312,7 @@ class PageType_interwikimap extends PageType
 /** How to transform text.
  */
 class PageFormatter {
-    /** Constructor.
+    /**
      *
      * @param WikiDB_Page $page
      * @param hash $meta Version meta-data.
@@ -498,8 +498,6 @@ class PageFormatter_html extends PageFormatter
 // added BABYCART_PATH config
 // fixed magiqc in adodb.inc.php
 // and some more docs
-//
-
 // Local Variables:
 // mode: php
 // tab-width: 8

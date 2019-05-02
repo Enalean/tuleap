@@ -440,9 +440,6 @@ class TableUnifiedDiffFormatter extends HtmlUnifiedDiffFormatter
 // code by dairiki
 //
 // Would make sense to see arbitrary diff's between any files or revisions.
-//
-//
-
 // For emacs users
 // Local Variables:
 // mode: php

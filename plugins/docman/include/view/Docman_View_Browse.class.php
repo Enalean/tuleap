@@ -100,9 +100,6 @@ use Tuleap\Docman\View\DocmanViewURLBuilder;
         echo $html;
     }
 
-    /**
-     * 
-     */
     var $dfltParams = null;
     function _getDefaultUrlParams($params) {
         if($this->dfltParams === null) {
@@ -114,9 +111,6 @@ use Tuleap\Docman\View\DocmanViewURLBuilder;
         return array_merge($this->dfltParams, $this->dfltSearchParams, $this->dfltSortParams);
     }
 
-    /**
-     * 
-     */
     function _buildSearchUrl($params, $extraParams = array()) {
         $parameters = array_merge($this->_getDefaultUrlParams($params), $extraParams);
         return DocmanViewURLBuilder::buildActionUrl($params['item'], $params, $parameters);

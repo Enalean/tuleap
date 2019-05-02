@@ -1802,12 +1802,12 @@ EOS;
 				$html .= '<TD align="center">'. $hp->purify($row['value_id'], CODENDI_PURIFIER_CONVERT_HTML) .'</TD>';
 			}
                         $html .= '<TD>';
-                        if ( $row['value_id'] != 100 ) { # Can't edit 'None'
+                        if ( $row['value_id'] != 100 ) { // Can't edit 'None'
                             $html.='<A HREF="?group_id='.(int)$this->Group->getID()."&atid=".(int)$this->getID().
                             '&func=display_field_value&field_id='.(int)$field->getID().'&value_id='.(int)$row['value_id'].'">';
                         }
 			$html .= $hp->purify(SimpleSanitizer::unsanitize($row['value']), CODENDI_PURIFIER_CONVERT_HTML);
-                        if ( $row['value_id'] != 100 ) { # Can't edit 'None'
+                        if ( $row['value_id'] != 100 ) { // Can't edit 'None'
                             $html .= '</A>';
                         }
 			$html .= "</td>\n<td>". $hp->purify(SimpleSanitizer::unsanitize($row['description']), CODENDI_PURIFIER_BASIC, $this->getGroupId()) .'</td>'.
@@ -2343,9 +2343,7 @@ EOS;
 	    </TABLE>
 	    <table cellspacing="0">';
 
-		//
                 // Followups comments
-                //
                 echo '
 	    <TR><TD colspan="2" align="top"><HR></td></TR>
 	    <TR><TD>
@@ -2380,9 +2378,7 @@ EOS;
         
                 echo '</td></tr>';
                 
-                //
                 // CC List
-                //
                 echo '          
                 <TR><TD colspan="2"><hr></td></tr>
                 
@@ -2405,9 +2401,7 @@ EOS;
 
                 echo '</TD></TR>';
                         
-                //
                 // File attachments
-                //
                 echo '
                 <TR><TD colspan="2"><hr></td></tr>
                 <TR><TD colspan="2">
@@ -2426,9 +2420,7 @@ EOS;
                 echo $this->showAttachedFiles($mass_change_ids);
                 echo '</TD></TR>';
 
-                //
                 // Artifact dependencies
-                //
                 echo '
                 <TR><TD colspan="2"><hr></td></tr>
                 <TR ><TD colspan="2">';
@@ -2446,9 +2438,7 @@ EOS;
 
                 echo '</TD></TR>';
                 
-                //
                 // Artifact permissions
-                //
                 if ($this->userIsAdmin()) {
                     echo '
                     <TR><TD colspan="2"><hr></td></tr>

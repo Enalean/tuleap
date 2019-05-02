@@ -17,9 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- *
- */
 class b201209131359_add_ugroup_binding_column extends ForgeUpgrade_Bucket {
     public function description() {
         return <<<EOT

@@ -1,12 +1,8 @@
 <?php
-//
 // Copyright 2015-2018 (c) Enalean
 // SourceForge: Breaking Down the Barriers to Open Source Development
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
-//
-//
-
 use Tuleap\User\Password\Reset\TokenNotCreatedException;
 
 require_once('pre.php');

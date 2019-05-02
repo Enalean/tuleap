@@ -1,11 +1,7 @@
 <?php
-//
 // SourceForge: Breaking Down the Barriers to Open Source Development
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
-//
-// 
-
 /*
 
 	Forum written 11/99 by Tim Perdue
@@ -137,7 +133,6 @@ if ($request->valid(new Valid_UInt('forum_id'))) {
     $vPostMsg = new Valid_WhiteList('post_message', array('y'));
     $vPostMsg->required();
 	if ($request->isPost() && $request->valid($vPostMsg)) {
-        //
         // MV: add management on "on post monitoring"
         $vMonitor = new Valid_WhiteList('enable_monitoring', array('1'));
         $vMonitor->required();

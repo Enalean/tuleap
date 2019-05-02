@@ -98,7 +98,7 @@ class ArtifactImport {
     private $error_state = false;
 
     /**
-   *  Constructor.
+   *
    *
    *      @return boolean success.
    */
@@ -1104,9 +1104,7 @@ function getUsedFields() {
       return;
     }
     
-    //
     //  make sure this person has permission to add artifacts
-    //
     if (!$this->ath->userIsAdmin()) {
       exit_permission_denied();
     }

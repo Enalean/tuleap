@@ -23,8 +23,6 @@
 
 /**
  * Description of DVCSDriverclass
- *
- * @author gstorchi
  */
 interface DVCSDriver {
     

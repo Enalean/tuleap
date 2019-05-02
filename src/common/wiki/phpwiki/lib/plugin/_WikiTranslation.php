@@ -533,9 +533,6 @@ class _PageList_Column_customlang extends _PageList_Column {
 // Revision 1.1  2004/03/14 16:45:10  rurban
 // Just the page matrix for now.
 // doesn't work yet, if the default langauge != en
-//
-//
-
 // For emacs users
 // Local Variables:
 // mode: php

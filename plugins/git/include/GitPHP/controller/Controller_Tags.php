@@ -8,16 +8,10 @@ namespace Tuleap\Git\GitPHP;
  *
  * Controller for displaying tags
  *
- * @author Christopher Han <xiphux@gmail.com>
- * @copyright Copyright (c) 2010 Christopher Han
- * @package GitPHP
- * @subpackage Controller
  */
 /**
  * Tags controller class
  *
- * @package GitPHP
- * @subpackage Controller
  */
 class Controller_Tags extends ControllerBase // @codingStandardsIgnoreLine
 {

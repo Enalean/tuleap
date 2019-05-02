@@ -8,14 +8,9 @@ namespace Tuleap\Git\GitPHP;
  *
  * Configfile reader class
  *
- * @author Christopher Han <xiphux@gmail.com>
- * @copyright Copyright (c) 2010 Christopher Han
- * @package GitPHP
  */
 /**
  * Config class
- *
- * @package GitPHP
  */
 class Config
 {

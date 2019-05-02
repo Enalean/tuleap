@@ -344,7 +344,7 @@ class Project_OneStepCreation_OneStepCreationPresenter {
     private function generateTemplatesFromParsedDbData(array $projects) {
         $templates = array();
         foreach ($projects as $project) {
-            /* @var $project Project */
+            /** @var Project $project */
             $templates[] = new ProjectCreationTemplatePresenter($project, $this->getTemplateId());
         }
         return $templates;

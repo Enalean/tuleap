@@ -34,9 +34,7 @@ $group_id = $request->get('group_id');
 
 session_require(array('group'=>$group_id, 'admin_flags'=>'A'));
 
-//
 //  get the Project
-//
 $pm    = ProjectManager::instance();
 $project = $pm->getProject($group_id);
 if (!$project || !is_object($project) || $project->isError()) {

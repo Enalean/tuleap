@@ -23,8 +23,6 @@ namespace Tuleap\Test;
 
 /**
  * We need to override reporter to avoid output that conflict with headers (CookieTests)
- *
- * @package Tuleap\Test
  */
 class TuleapColorTextReporter extends \ColorTextReporter
 {

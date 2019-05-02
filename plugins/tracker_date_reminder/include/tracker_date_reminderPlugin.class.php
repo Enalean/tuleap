@@ -31,7 +31,6 @@ class tracker_date_reminderPlugin extends Plugin {
         parent::__construct($id);
         $this->setScope(self::SCOPE_PROJECT);
 
-        //
         $this->addHook('artifact_type_html_display_notification_form', 'artifact_type_html_display_notification_form', false);
         // Tracker admin "controller"
         $this->addHook('tracker_graphic_report_admin', 'tracker_graphic_report_admin', false);

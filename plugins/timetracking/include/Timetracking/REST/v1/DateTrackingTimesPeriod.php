@@ -40,7 +40,7 @@ class DateTrackingTimesPeriod
     private $end_date;
 
     /**
-     * DateTrackingTimesPeriod constructor.
+     *
      * @param string $start_date
      * @param string $end_date
      */

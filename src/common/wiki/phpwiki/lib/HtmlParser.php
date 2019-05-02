@@ -133,7 +133,6 @@ extends XmlParser
         return $output;
     }
 
-    //
     // Private function: _elem_attr_str( $elem, @attrs )
     //
     // Returns a string containing a list of attribute names and
@@ -143,7 +142,6 @@ extends XmlParser
     // is suitable for inserting into an HTML document, as
     // attribute name/value pairs are specified in attr="value"
     // format.
-    //
     function _elem_attr_str($node, $attrs) {
         $s = '';
         foreach ($node->_attr as $attr => $val) {
@@ -154,13 +152,11 @@ extends XmlParser
         return $s;
     }
 
-    //
     // Private function: _elem_has_ancestor( $elem, $tagname )
     //
     // Returns true if the specified HtmlElement has an ancestor element
     // whose element tag equals $tag. This is useful for determining if
     // an element belongs to the specified tag.
-    //
     function _elem_has_ancestor($node, $tag) {
         if (isset($node->parent)) {
             if ($node->parent->_tag == $tag) return true;
@@ -169,7 +165,6 @@ extends XmlParser
         return false;
     }
 
-    //
     // Private function: _elem_is_image_div( $elem )
     //
     // Returns true $elem is a container element (P or DIV) meant only to
@@ -179,7 +174,6 @@ extends XmlParser
     // element and the only child it contains is an IMG tag or an IMG tag
     // contained within a sole A tag (not counting child elements with
     // whitespace text only).
-    //
     function _elem_is_image_div( $node ) {
         // Return false if node is undefined or isn't a DIV at all
         if (!$node or !in_array($node->_tag,array("div","p")))
@@ -333,9 +327,7 @@ extends HtmlParser
         $file = basename( $image_url );
         $alignment = $node->getAttr('align');
         $this->log( "Processing IMG tag for SRC: ".$image_url."..." );
-        //
         // Grab attributes to be added to the [ Image ] markup (since 1.3.10)
-        //
         if (!$alignment) {
             if ($this->_elem_is_image_div( $node->parent ))
                 $image_div = $node->parent;
@@ -364,11 +356,9 @@ extends HtmlParser
         }
         if ($alignment) 
             $attrs[] = "align=$alignment";
-        //
         // Check if we need to request a thumbnail of this
         // image; it's needed if the specified width attribute
         // differs from the default size of the image
-        //
         if( $width = $node->getAttr('width') ) {
             $this->log( "  Image has WIDTH attribute of $width" );
             $this->log( "  Checking whether resulting [Image] markup should specify a thumbnail..." );
@@ -418,9 +408,6 @@ extends HtmlParser
 //
 // Revision 1.1  2004/05/24 17:31:31  rurban
 // new XmlParser and HtmlParser, RssParser based on that.
-//
-//
-
 // For emacs users
 // Local Variables:
 // mode: php

@@ -57,9 +57,7 @@ if (!$request->valid($vGroupId)) {
 
     $vOrder = new Valid_WhiteList('order', array('revision', 'description', 'date', 'who'));
 
-    //
     // Morder
-    //
     if(user_isloggedin() && !$request->existAndNonEmpty('morder')) {
         $morder = user_get_preference('svn_commit_browse_order'.$group_id);
     }

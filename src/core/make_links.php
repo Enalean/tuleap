@@ -48,7 +48,7 @@ if (!$request->getValidated('group_id', 'GroupId')) {
  } else $group_id=$request->get('group_id');
 
 if (!$request->getValidated('text', 'text')) {
-    # Empty string? return empty string...
+    // Empty string? return empty string...
     exit;
  }
 if ($request->get('help')) {

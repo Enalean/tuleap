@@ -183,8 +183,6 @@ extends WikiPlugin
 // Revision 1.4  2003/01/18 21:19:25  carstenklapp
 // Code cleanup:
 // Reformatting; added copyleft, getVersion, getDescription
-//
-
 // Local Variables:
 // mode: php
 // tab-width: 8

@@ -43,8 +43,6 @@ extends WikiPlugin_RecentChanges
 // Two convenient RecentChanges extensions
 //   RelatedChanges (only links from current page)
 //   RecentEdits (just change the default args)
-//
-
 // (c-file-style: "gnu")
 // Local Variables:
 // mode: php

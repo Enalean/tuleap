@@ -43,9 +43,7 @@ class Search_SearchTrackerV3 {
         $atid     = $query->getTrackerV3Id();
 
         ob_start();
-        //
         //      Create the ArtifactType object
-        //
         $ath = new ArtifactTypeHtml($project, $atid);
         if (!$ath || !is_object($ath)) {
             exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('global', 'error'));

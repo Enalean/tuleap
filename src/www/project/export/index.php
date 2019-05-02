@@ -41,9 +41,7 @@ if ( !$group_id ) {
 
 session_require(array('group'=>$group_id,'admin_flags'=>'A'));
 
-//
 //  get the Group object
-//
 $pm = ProjectManager::instance();
 $group = $pm->getProject($group_id);
 if (!$group || !is_object($group) || $group->isError()) {

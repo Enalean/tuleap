@@ -444,10 +444,7 @@ function ugroup_create($group_id, $ugroup_name, $ugroup_description, $group_temp
         throw new CannotCreateUGroupException(_('User group created but cannot get Id.'));
     }
 
-    //
     // Now populate new group if a 'template' was selected
-    //
-
     if ($group_templates == "cx_empty") {
         // Do nothing, the group should be empty
         $query='';

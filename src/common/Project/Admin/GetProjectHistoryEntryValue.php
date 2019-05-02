@@ -35,7 +35,7 @@ class GetProjectHistoryEntryValue implements Dispatchable
     private $value;
 
     /**
-     * GetProjectHistoryEntryValue constructor.
+     *
      *
      * @param array  $row
      * @param string $value

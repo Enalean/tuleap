@@ -190,9 +190,6 @@ extends WikiPlugin
 // Revision 1.1  2004/05/14 14:55:52  rurban
 // Alec Thomas original plugin, which comes with highlight http://www.andre-simon.de/,
 // plus some extensions by Reini Urban
-//
-//
-
 // For emacs users
 // Local Variables:
 // mode: php

@@ -9,15 +9,10 @@ use Exception;
  *
  * Custom exception for signalling display of a message to user
  *
- * @author Christopher Han <xiphux@gmail.com>
- * @copyright Copyright (c) 2010 Christopher Han
- * @package GitPHP
  */
 
 /**
  * Message Exception
- *
- * @package GitPHP
  */
 class MessageException extends Exception
 {

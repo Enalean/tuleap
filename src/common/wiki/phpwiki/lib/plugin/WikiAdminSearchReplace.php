@@ -352,9 +352,6 @@ function stri_replace($find,$replace,$string) {
 // Revision 1.1  2004/02/12 11:25:53  rurban
 // new WikiAdminSearchReplace plugin (requires currently Admin)
 // removed dead comments from WikiDB
-//
-//
-
 // Local Variables:
 // mode: php
 // tab-width: 8

@@ -29,7 +29,6 @@ require_once('pre.php');
 
 // Include for services
 
-//
 $em = EventManager::instance();
 $em->processEvent("codendi_daily_start", null);
 

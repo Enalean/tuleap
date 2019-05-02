@@ -1,7 +1,6 @@
 <?php rcs_id('$Id: XmlElement.php,v 1.38 2005/10/10 19:36:09 rurban Exp $');
 /**
  * Code for writing XML.
- * @package Markup
  * @author: Jeff Dairiki,
  *          Reini Urban (php5 tricks)
  *
@@ -616,8 +615,6 @@ function fmt ($fs /* , ... */) {
 //
 // Revision 1.31  2004/06/20 14:42:54  rurban
 // various php5 fixes (still broken at blockparser)
-//
-
 // (c-file-style: "gnu")
 // Local Variables:
 // mode: php

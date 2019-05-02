@@ -119,7 +119,6 @@ class HTML extends HtmlElement {
         }
     }
 
-    //
     // Shell script to generate the following static methods:
     //
     // #!/bin/sh
@@ -175,7 +174,6 @@ class HTML extends HtmlElement {
         return $el->_init2(func_get_args());
     }
 
-    /****************************************/
     function a (/*...*/) {
         $el = new HtmlElement('a');
         return $el->_init2(func_get_args());
@@ -193,7 +191,6 @@ class HTML extends HtmlElement {
         return $el->_init2(func_get_args());
     }
 
-    /****************************************/
     function h1 (/*...*/) {
         $el = new HtmlElement('h1');
         return $el->_init2(func_get_args());
@@ -219,7 +216,6 @@ class HTML extends HtmlElement {
         return $el->_init2(func_get_args());
     }
 
-    /****************************************/
     function hr (/*...*/) {
         $el = new HtmlElement('hr');
         return $el->_init2(func_get_args());
@@ -241,7 +237,6 @@ class HTML extends HtmlElement {
         return $el->_init2(func_get_args());
     }
 
-    /****************************************/
     function em (/*...*/) {
         $el = new HtmlElement('em');
         return $el->_init2(func_get_args());
@@ -255,7 +250,6 @@ class HTML extends HtmlElement {
         return $el->_init2(func_get_args());
     }
 
-    /****************************************/
     function tt (/*...*/) {
         $el = new HtmlElement('tt');
         return $el->_init2(func_get_args());
@@ -273,7 +267,6 @@ class HTML extends HtmlElement {
         return $el->_init2(func_get_args());
     }
 
-    /****************************************/
     function ul (/*...*/) {
         $el = new HtmlElement('ul');
         return $el->_init2(func_get_args());
@@ -299,7 +292,6 @@ class HTML extends HtmlElement {
         return $el->_init2(func_get_args());
     }
 
-    /****************************************/
     function table (/*...*/) {
         $el = new HtmlElement('table');
         return $el->_init2(func_get_args());
@@ -341,7 +333,6 @@ class HTML extends HtmlElement {
         return $el->_init2(func_get_args());
     }
 
-    /****************************************/
     function form (/*...*/) {
         $el = new HtmlElement('form');
         return $el->_init2(func_get_args());
@@ -371,7 +362,6 @@ class HTML extends HtmlElement {
         return $el->_init2(func_get_args());
     }
 
-    /****************************************/
     function area (/*...*/) {
         $el = new HtmlElement('area');
         return $el->_init2(func_get_args());

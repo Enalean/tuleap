@@ -20,9 +20,7 @@
 
 require_once('common/dao/ArtifactReportFieldDao.class.php');
 
-//
 // This class inherits from ArtifactField
-//
 class ArtifactReportField extends ArtifactField {
 
 	// Show this field for the query
@@ -41,7 +39,7 @@ class ArtifactReportField extends ArtifactField {
 	var $col_width;
 
 	/**
-	 *  Constructor.
+	 *
 	 *
 	 *	@param		
 	 *	@return	boolean	success.

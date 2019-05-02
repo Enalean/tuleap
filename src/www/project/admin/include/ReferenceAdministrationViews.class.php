@@ -258,7 +258,7 @@ class ReferenceAdministrationViews extends Views
             echo '
 <tr><td><a href="#" title="'.$GLOBALS['Language']->getText('project_reference','r_service_desc').'">'.$GLOBALS['Language']->getText('project_reference','r_service').'</a>:</td>
 <td>';
-# Get list of services
+// Get list of services
             $result = db_query("SELECT * FROM service WHERE group_id=100 ORDER BY rank");
             $serv_label=array();
             $serv_short_name=array();

@@ -199,7 +199,6 @@ class GitRepositoryTest extends TuleapTestCase {
 
         $this->assertFalse($repository->isMigratedToGerrit());
     }
-    /**/
 }
 
 class GitRepository_CanDeletedTest extends TuleapTestCase {

@@ -26,10 +26,6 @@
  *
  * This is a part of lite Model/View/Controler design pattern.
  *
- * @package Codendi-mvc
- * @copyright STMicroelectronics, 2005
- * @author    Manuel Vacelet <manuel.vacelet-abecedaire@st.com>
- * @license   http://opensource.org/licenses/gpl-license.php GPL
  */
 class Controler {
   /* protected */ var $gid;

@@ -195,8 +195,6 @@ extends WikiPlugin
 //
 // Revision 1.1  2005/09/10 19:59:38  rurban
 // Parametrized page inclusion ala mediawiki
-//
-
 // For emacs users
 // Local Variables:
 // mode: php

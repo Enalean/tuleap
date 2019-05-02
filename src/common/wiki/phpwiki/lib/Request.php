@@ -1149,8 +1149,6 @@ class HTTP_ValidatorSet {
 // so they don't prevent IE from partially (or not at all) rendering the
 // page. This should help a little for the IE user who encounters trouble
 // when setting up a new PhpWiki for the first time.
-//
-
 // Local Variables:
 // mode: php
 // tab-width: 8

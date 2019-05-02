@@ -30,8 +30,6 @@ use UserManager;
 /**
  * Search controller class
  *
- * @package GitPHP
- * @subpackage Controller
  */
 class Controller_Search extends ControllerBase // @codingStandardsIgnoreLine
 {

@@ -51,7 +51,7 @@ class ArtifactTypeFactory {
     private $error_state = false;
 
     /**
-	 *  Constructor.
+	 *
 	 *
 	 *	@param	object	The Group object to which this ArtifactTypeFactory is associated
 	 *	@return	boolean	success.

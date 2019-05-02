@@ -56,7 +56,7 @@ class AgileDashboard_XMLExporter {
         $plannings_node      = $agiledashboard_node->addChild(self::NODE_PLANNINGS);
 
         foreach ($plannings as $planning) {
-            /* @var $planning Planning */
+            /** @var Planning $planning */
             $planning_name                  = $planning->getName();
             $planning_title                 = $planning->getPlanTitle();
             $planning_tracker_id            = $this->getFormattedTrackerId($planning->getPlanningTrackerId());

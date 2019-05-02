@@ -45,11 +45,6 @@ require_once('www/project/admin/permissions.php');
  * `-- Set Wiki Permissions (wikiPerms)
  * </pre>
  *
- * @package    WikiService
- * @subpackage WikiServiceAdmin
- * @copyright  STMicroelectronics, 2005
- * @author     Manuel Vacelet <manuel.vacelet-abecedaire@st.com>
- * @license    http://opensource.org/licenses/gpl-license.php GPL
  */
 class WikiServiceAdminViews extends WikiViews {
 
@@ -508,9 +503,6 @@ class WikiServiceAdminViews extends WikiViews {
         print '<hr/><p><a href="'.$this->wikiAdminLink.'&view=wikiAttachments">'.$GLOBALS['Language']->getText('wiki_views_wkserviews', 'back_admin').'</a></p>'."\n";
     }
 
-    /**
-     *
-     */
     function install() {
         $wpw = new WikiPageWrapper($this->gid);
         $wpw->install();

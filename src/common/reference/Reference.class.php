@@ -78,7 +78,7 @@ class Reference {
     var $num_param=null;
     
     /**
-     * Class constructor
+     *
      * The constructor only builds full objects; Only the 'myid' and 'mygroup_id' params may be set to 0 if unknown.
      */
     public function __construct($myid,$mykeyword,$mydescription,$mylink,$myscope,$myservice_short_name,$nature,$myis_active,$mygroup_id) {

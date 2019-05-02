@@ -24,8 +24,6 @@ rcs_id('$Id: WantedPagesOld.php,v 1.1 2004/11/20 11:28:49 rurban Exp $');
  **/
 //include_once('lib/PageList.php');
 
-/**
- */
 class WikiPlugin_WantedPagesOld
 extends WikiPlugin
 {
@@ -256,8 +254,6 @@ extends WikiPlugin
 // Code cleanup:
 // Reformatting & tabs to spaces;
 // Added copyleft, getVersion, getDescription, rcs_id.
-//
-
 // Local Variables:
 // mode: php
 // tab-width: 8

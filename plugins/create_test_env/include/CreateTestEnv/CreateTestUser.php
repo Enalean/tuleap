@@ -29,7 +29,7 @@ class CreateTestUser
     private $login;
 
     /**
-     * CreateTestUser constructor.
+     *
      * @param $firstname
      * @param $lastname
      * @param $email

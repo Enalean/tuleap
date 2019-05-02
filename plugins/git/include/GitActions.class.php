@@ -40,7 +40,6 @@ use Tuleap\Git\RemoteServer\Gerrit\MigrationHandler;
 /**
  * GitActions
  * @todo call Event class instead of SystemEvent
- * @author Guillaume Storchi
  */
 class GitActions extends PluginActions
 {

@@ -115,8 +115,6 @@ extends WikiPlugin
 //
 // Revision 1.2  2003/01/18 22:22:36  carstenklapp
 // defined constant for arrow, eliminate use of fmt()
-//
-
 // For emacs users
 // Local Variables:
 // mode: php

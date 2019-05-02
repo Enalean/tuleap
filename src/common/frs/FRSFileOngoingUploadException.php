@@ -25,7 +25,7 @@ class FRSFileOngoingUploadException extends \RuntimeException //phpcs:ignore
 {
 
     /**
-     * FRSFileOngoingUploadException constructor.
+     *
      *
      * @param FRSFile $file
      */

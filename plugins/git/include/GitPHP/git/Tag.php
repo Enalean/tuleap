@@ -24,8 +24,6 @@ namespace Tuleap\Git\GitPHP;
 /**
  * Tag class
  *
- * @package GitPHP
- * @subpackage Git
  */
 class Tag extends Ref
 {

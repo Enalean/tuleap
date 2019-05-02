@@ -212,7 +212,6 @@ class Docman_Controller extends Controler {
         $user = $this->getUser();
         return $dPm->userCanAdmin($user);
     }
-    /******************************************************/
 
     function setRequest($request) {
         $this->request = $request;
@@ -1105,7 +1104,6 @@ class Docman_Controller extends Controler {
                 $vOwner->required();
                 $this->_actionParams['table_owner'] = $this->request->getValidated('table_owner', $vOwner, false);
 
-                //
                 // Special handeling of table deletion
                 if($this->_actionParams['status'] == PLUGIN_DOCMAN_APPROVAL_TABLE_DELETED) {
                     $this->_viewParams['default_url_params'] = array('action' => 'approval_create',

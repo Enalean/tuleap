@@ -92,12 +92,10 @@ class ErrMsgText {
         return $msg;
     }
 }
-     
-//
+
 // A wrapper class that is used to access the specified error object
 // (to hide the global error parameter and avoid having a GLOBAL directive
 // in all methods.
-//
 class JpGraphError {
     private static $__iImgFlg = true;
     private static $__iLogFile = '';
@@ -184,10 +182,7 @@ class JpGraphExceptionL extends JpGraphException {
 global $__jpg_OldHandler;
 $__jpg_OldHandler = set_exception_handler(array('JpGraphException','defaultHandler'));
 
-//
 // First of all set up a default error handler
-//
-
 //=============================================================
 // The default trivial text error handler.
 //=============================================================

@@ -299,7 +299,6 @@ function project_export_makesalt($type=CRYPT_SALT_LENGTH) {
    default: 
      // by default, fall back on Standard DES (should work everywhere)
      $saltlen=2; $saltprefix=''; $saltsuffix=''; break;
-   #
   }
   $salt='';
   while(strlen($salt)<$saltlen) $salt.= chr(rand(64,126));

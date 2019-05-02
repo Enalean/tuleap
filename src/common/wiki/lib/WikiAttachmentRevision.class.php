@@ -41,10 +41,6 @@ use Zend\HttpHandlerRunner\Emitter\SapiStreamEmitter;
  *
  *
  * @see       WikiAttachment
- * @package   WikiService
- * @copyright STMicroelectronics, 2005
- * @author    Manuel Vacelet <manuel.vacelet-abecedaire@st.com>
- * @license   http://opensource.org/licenses/gpl-license.php GPL
  */
 class WikiAttachmentRevision {
     var $id;
@@ -66,9 +62,6 @@ class WikiAttachmentRevision {
     private $displayFilename;
 
 
-    /**
-     *
-     */
     function __construct($gid=null) {
         if(is_numeric($gid)) {
             $this->gid = (int) $gid;
@@ -152,9 +145,6 @@ class WikiAttachmentRevision {
     }
 
 
-    /**
-     *
-     */
     public function htmlDump()
     {
         if ($this->exist()) {
@@ -208,9 +198,6 @@ class WikiAttachmentRevision {
         $this->size         = $row['size'];
     }
 
-    /**
-     *
-     */
     function setFilename($name="") {   
         $this->filename = $name;
         return true;
@@ -223,9 +210,6 @@ class WikiAttachmentRevision {
         }
 	}
 
-    /**
-     *
-     */
     function setSize($s) {
         global $sys_max_size_upload;
 
@@ -241,9 +225,6 @@ class WikiAttachmentRevision {
     }
 
 
-    /**
-     *
-     */
     function setMimeType($m) {
         $this->mimeType =  $m;
         return true;
@@ -269,16 +250,10 @@ class WikiAttachmentRevision {
         return true;
     }
 
-    /**
-     *
-     */
     function getRevision() {    
         return $this->revision;
     }
 
-    /**
-     * 
-     */
     function getFilename() {
         if(empty($this->filename)) {
             $wa = new WikiAttachment();
@@ -303,25 +278,16 @@ class WikiAttachmentRevision {
     }
 
 
-    /**
-     *
-     */
     function getSize() {    
         return $this->size;
     }
 
 
-    /**
-     *
-     */
     function getMimeType() {
         return trim($this->mimeType, "'");
     }
 
 
-    /**
-     *
-     */
     function getDate() {
         return $this->date;
     }

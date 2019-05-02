@@ -34,10 +34,6 @@ require_once('common/wiki/lib/Wiki.class.php');
  *
  * This class receive HTTP requests for Wiki Service.
  *
- * @package   WikiService
- * @copyright STMicroelectronics, 2005
- * @author    Manuel Vacelet <manuel.vacelet-abecedaire@st.com>
- * @license   http://opensource.org/licenses/gpl-license.php GPL
  */
 class WikiService extends Controler {
   /* private Wiki*/ var $wiki;

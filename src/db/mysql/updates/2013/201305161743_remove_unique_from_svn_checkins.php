@@ -16,9 +16,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- *
- */
 class b201305161743_remove_unique_from_svn_checkins extends ForgeUpgrade_Bucket {
     public function description() {
         return <<<EOT

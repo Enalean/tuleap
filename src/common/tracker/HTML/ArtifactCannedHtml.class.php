@@ -1,5 +1,4 @@
 <?php
-//
 // Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 //
 // 
@@ -8,8 +7,6 @@
 //	Originally by to the SourceForge Team,1999-2000
 //
 //  Written for Codendi by Thierry Jacquin
-//
-
 //require_once('common/tracker/ArtifactCanned.class.php');
 
 

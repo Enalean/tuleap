@@ -73,7 +73,6 @@ class ProjectManagerTest extends TuleapTestCase {
         $this->assertReference($o1, $o2);
         $this->assertNotEqual($o1, $o3);
     }
-    /**/
     function testClear() {
         $p1 = new MockProject($this);
         $p1->setReturnValue('getId', '1');
@@ -97,7 +96,6 @@ class ProjectManagerTest extends TuleapTestCase {
         $p->clear(1);
         $p->getProject(1);
     }
-    /**/
 
     function testRename() {
         $p1 = new MockProject($this);

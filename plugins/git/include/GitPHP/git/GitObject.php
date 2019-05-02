@@ -7,18 +7,12 @@ namespace Tuleap\Git\GitPHP;
  *
  * Base class for all hash objects in a git repository
  *
- * @author Christopher Han <xiphux@gmail.com>
- * @copyright Copyright (c) 2010 Christopher Han
- * @package GitPHP
- * @subpackage Git
  */
 
 /**
  * Git Object class
  *
  * @abstract
- * @package GitPHP
- * @subpackage Git
  */
 abstract class GitObject
 {

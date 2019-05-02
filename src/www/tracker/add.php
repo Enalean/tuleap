@@ -1,13 +1,10 @@
 <?php
-//
 // Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 //
 // 
 //
 //
 //  Written for Codendi by Stephane Bouhet
-//
-
 // Check if a user can submit a new without loggin
 if ( !user_isloggedin() && !$ath->allowsAnon() ) {
 	exit_not_logged_in();
@@ -19,9 +16,7 @@ if ( !$ath->isValid() ) {
 	exit_error($Language->getText('global', 'error'),$Language->getText('tracker_add', 'invalid'));
 }
 
-//
 //  make sure this person has permission to add artifacts
-//
 if (!$ath->userCanSubmit()) {
     exit_permission_denied();
 }

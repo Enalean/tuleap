@@ -84,10 +84,8 @@ $pm = ProjectManager::instance();
 $project = $pm->getProject($group_id);
 $projectname = $project->getUnixName(false);
 
-//
 // Memorize order by field as a user preference if explicitly specified.
 // Automatically discard invalid field names.
-//
 if ($order !== false) {
 	if ($order=='id' || $order=='description' || $order=='date' || $order=='submitted_by') {
 		if(user_isloggedin() &&

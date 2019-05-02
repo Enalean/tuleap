@@ -19,9 +19,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-/**
- *
- */
 class b201203291146_delete_deprecated_doc extends ForgeUpgrade_Bucket {
     public function description() {
         return <<<EOT

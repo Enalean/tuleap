@@ -18,7 +18,7 @@
  */
 
 /**
- * Class Rest_TokenManager
+ *
  * I Deal with Rest_Token
  */
 class Rest_TokenManager {

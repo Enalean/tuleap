@@ -25,9 +25,6 @@ use Tuleap\Mail\MailLogger;
 require_once('FRSFile.class.php');
 require_once('common/dao/FileModuleMonitorDao.class.php');
 
-/**
- * 
- */
 class FileModuleMonitorFactory {
 
     var $dao;

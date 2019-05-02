@@ -111,7 +111,6 @@ $WikiTheme->setAutosplitWikiWords(false);
  * which displays the rating column whenever the wikilens theme is active.
  * See themes/wikilens/themeinfo.php
  */
-// 
 //$WikiTheme->addPageListColumn(); 
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

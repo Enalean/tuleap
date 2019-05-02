@@ -23,9 +23,6 @@ require_once('lib/CachedMarkup.php');
 require_once('lib/InlineParser.php');
 
 ////////////////////////////////////////////////////////////////
-//
-//
-
 /**
  * Deal with paragraphs and proper, recursive block indents 
  * for the new style markup (version 2)
@@ -43,7 +40,6 @@ require_once('lib/InlineParser.php');
  *        but is again broken with the 1.3.11 
  *        allow_call_time_pass_reference clean fixes
  *
- * @package Markup
  * @author: Geoffrey T. Dairiki 
  */
 
@@ -158,7 +154,6 @@ class BlockParser_Input {
         // FIXME: do this better.
         //
         // We want to ensure the only characters matching \s are ' ' and "\n".
-        //
         $text = preg_replace('/(?![ \n])\s/', ' ', $text);
         assert(!preg_match('/(?![ \n])\s/', $text));
 
@@ -527,7 +522,6 @@ class Block_list extends BlockMarkup
         //   *  * Item
         // Should markup as <ul><li>* Item</li></ul>,
         // not <ul><li><ul><li>Item</li></ul>/li></ul>.
-        //
         if (preg_match('/[*#+-o]/', $input->getPrefix())) {
             return false;
         }
@@ -1046,8 +1040,6 @@ class Block_p extends BlockMarkup
 }
 
 ////////////////////////////////////////////////////////////////
-//
-
 /**
  * Transform the text of a page, and return a parse tree.
  */
@@ -1117,8 +1109,6 @@ function TransformText ($text, $markup = 2.0, $basepage=false) {
 //
 // Revision 1.46  2004/06/20 14:42:53  rurban
 // various php5 fixes (still broken at blockparser)
-//
-
 // (c-file-style: "gnu")
 // Local Variables:
 // mode: php

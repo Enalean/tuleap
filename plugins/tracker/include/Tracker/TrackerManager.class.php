@@ -509,10 +509,6 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
         $this->displayFooter($project);
     }
 
-    /**
-     *
-     *
-     */
     function displayCreateTrackerFromTemplate($requested_create_mode, Project $project, Tracker $tracker_template = null) {
         $hp = Codendi_HTMLPurifier::instance();
 
@@ -531,7 +527,6 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
         $radio = $this->getCreateTrackerRadio('gallery', $requested_create_mode);
         echo '<h3><label>'. $radio . $GLOBALS['Language']->getText('plugin_tracker_include_type','from_tmpl').'</label></h3>';
 
-        //
         echo '<div class="tracker_create_mode">';
         echo '<noscript>Project Id: <input type="text" name="group_id_template" value=""><br/>Tracker Id: <input type="text" name="atid_template" value=""></noscript>';
 
@@ -607,9 +602,6 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
         echo '</div>';
     }
 
-    /**
-     *
-     */
     function displayCreateTrackerFromXML($requested_create_mode, Project $project) {
         $radio = $this->getCreateTrackerRadio('xml', $requested_create_mode);
         echo '<h3><label>'. $radio . $GLOBALS['Language']->getText('plugin_tracker_include_type','from_xml').'</label></h3>
@@ -641,7 +633,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
 
         $errors = array();
         foreach ($parse_errors as $error) {
-            /* @var $error XML_ParseError */
+            /** @var XML_ParseError $error */
             $errors[$error->getLine()][$error->getColumn()][] = $error;
         }
 

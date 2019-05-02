@@ -20,7 +20,6 @@
  *
  */
 
-//
 // This script simply launches a SYSTEM_CHECK event.
 //
 // This event will trigger some checkings on the backend: it will

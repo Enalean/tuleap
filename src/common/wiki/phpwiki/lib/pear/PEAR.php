@@ -1,5 +1,4 @@
 <?php
-//
 // +----------------------------------------------------------------------+
 // | PEAR, the PHP Extension and Application Repository                   |
 // +----------------------------------------------------------------------+
@@ -17,11 +16,8 @@
 // |          Stig Bakken <ssb@php.net>                                   |
 // |          Tomas V.V.Cox <cox@idecnet.com>                             |
 // +----------------------------------------------------------------------+
-//
 rcs_id('$Id: PEAR.php,v 1.5 2005/02/28 21:24:33 rurban Exp $');
 rcs_id('From Pear CVS: Id: PEAR.php,v 1.59 2003/04/03 23:10:10 ssb Exp');
-//
-
 define('PEAR_ERROR_RETURN',   1);
 define('PEAR_ERROR_PRINT',    2);
 define('PEAR_ERROR_TRIGGER',  4);
@@ -64,8 +60,6 @@ $GLOBALS['_PEAR_error_handler_stack']    = array();
  * IMPORTANT! To use the emulated destructors you need to create the
  * objects by reference, ej: $obj = new PEAR_child;
  *
- * @since PHP 4.0.2
- * @author Stig Bakken <ssb@php.net>
  * @see http://pear.php.net/manual/
  */
 class PEAR
@@ -280,8 +274,6 @@ class PEAR
      * @see PEAR_ERROR_DIE
      * @see PEAR_ERROR_CALLBACK
      * @see PEAR_ERROR_EXCEPTION
-     *
-     * @since PHP 4.0.5
      */
 
     function setErrorHandling($mode = null, $options = null)
@@ -373,7 +365,6 @@ class PEAR
      * @param mixed error code
      * @return bool true if the error code was unset, false otherwise
      * @access private
-     * @since PHP 4.3.0
      */
     function _checkDelExpect($error_code)
     {
@@ -403,7 +394,6 @@ class PEAR
      * @param  mixed $error_code error code that should be deleted
      * @return mixed list of error codes that were deleted or error
      * @access public
-     * @since PHP 4.3.0
      */
     function delExpect($error_code)
     {
@@ -472,7 +462,6 @@ class PEAR
      * @access public
      * @return object   a PEAR error object
      * @see PEAR::setErrorHandling
-     * @since PHP 4.0.5
      */
     function &raiseError($message = null,
                          $code = null,

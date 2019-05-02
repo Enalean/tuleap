@@ -42,7 +42,7 @@ class MediaWikiInstantiater {
     /** @var project */
     private $project;
 
-    /* @var MediawikiDao */
+    /** @var MediawikiDao */
     private $dao;
 
     /** @var MediawikiSiteAdminResourceRestrictor */
@@ -265,7 +265,7 @@ class MediaWikiInstantiater {
             if ( $sl < 0 ) { continue; }
             if ( '-' == $line{0} && '-' == $line{1} ) { continue; }
 
-            ## Allow dollar quoting for function declarations
+            // Allow dollar quoting for function declarations
             if (substr($line,0,4) == '$mw$') {
                 if ($dollarquote) {
                     $dollarquote = false;

@@ -1,5 +1,4 @@
 <?php
-//
 // Codendi
 // Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 // http://www.codendi.com
@@ -7,8 +6,6 @@
 // 
 //
 //	Originally written by Laurent Julliard 2004, Codendi Team, Xerox
-//
-
 require_once('common/svn/SvnNotification.class.php');
 $svnNotification = new SvnNotification();
 $pm              = ProjectManager::instance();
@@ -18,7 +15,6 @@ $disabled        = "";
 // Make the changes before calling svn_header_admin because 
 // svn_header_admin caches the project object in memory and
 // the form values are therefore not updated.
-//
 $request->valid(new Valid_String('post_changes'));
 $request->valid(new Valid_String('SUBMIT'));
 

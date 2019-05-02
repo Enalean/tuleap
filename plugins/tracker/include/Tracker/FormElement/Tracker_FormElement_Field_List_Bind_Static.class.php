@@ -200,9 +200,6 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
         return $this->values[$value_id];
     }
 
-    /*
-     *
-     */
     public function getIsRankAlpha() {
         return $this->is_rank_alpha;
     }

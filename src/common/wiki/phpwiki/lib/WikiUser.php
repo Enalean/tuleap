@@ -60,9 +60,6 @@ function UpgradeUser ($olduser, $user) {
     }
 }
 
-/**
-* 
-*/
 class WikiUser {
     var $_userid = false;
     var $_level  = false;
@@ -70,7 +67,7 @@ class WikiUser {
     var $_authmethod = '', $_authhow = '';
 
     /**
-     * Constructor.
+     *
      * 
      * Populates the instance variables and calls $this->_ok() 
      * to ensure that the parameters are valid.
@@ -858,8 +855,6 @@ class UserPreferences {
 // Revision 1.30  2003/01/15 04:59:27  carstenklapp
 // Bugfix: Previously stored preferences were not loading when user
 // signed in. (Fixed... I hope.)
-//
-
 // Local Variables:
 // mode: php
 // tab-width: 8

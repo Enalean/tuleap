@@ -1803,8 +1803,6 @@ function listAvailableLanguages() {
 //
 // Revision 1.59  2003/01/04 22:30:16  carstenklapp
 // New: display a "Never edited." message instead of an invalid epoch date.
-//
-
 // (c-file-style: "gnu")
 // Local Variables:
 // mode: php

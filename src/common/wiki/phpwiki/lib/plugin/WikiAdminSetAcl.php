@@ -235,7 +235,6 @@ extends WikiPlugin_WikiAdminSelect
                                      _("To add check 'Add' near the dropdown list.")
                                      ));
         $header->pushContent(HTML::blockquote($table));
-        //
         // display array of checkboxes for existing perms
         // and a dropdown for user/group to add perms.
         // disabled if inherited, 
@@ -384,9 +383,6 @@ class _PageList_Column_perm extends _PageList_Column {
 // more PagePerm stuff: (working against 1.4.0)
 //   ACL editing and simplification of ACL's to simple rwx------ string
 //   not yet working.
-//
-//
-
 // Local Variables:
 // mode: php
 // tab-width: 8

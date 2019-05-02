@@ -1,8 +1,5 @@
 <?php
 
-/**
- *
- */
 class b201102081526_add_table_plugin_git_post_receive_mail extends ForgeUpgrade_Bucket {
 
     public function description() {

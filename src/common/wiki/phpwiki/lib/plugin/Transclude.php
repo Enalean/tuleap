@@ -28,8 +28,6 @@ rcs_id('$Id: Transclude.php,v 1.9 2004/06/14 11:31:39 rurban Exp $');
  *           src=http://www.internet-technology.de/fourwins_de.htm
  *  ?>
  *
- * @author Geoffrey T. Dairiki
- *
  * @see http://www.cs.tut.fi/~jkorpela/html/iframe.html
  *
  * KNOWN ISSUES
@@ -189,8 +187,6 @@ extends WikiPlugin
 // Code cleanup:
 // Reformatting & tabs to spaces;
 // Added copyleft, getVersion, getDescription, rcs_id.
-//
-
 // (c-file-style: "gnu")
 // Local Variables:
 // mode: php

@@ -18,9 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- *
- */
 class b201206251148_add_table_for_aggregate_field extends ForgeUpgrade_Bucket {
 
     public function description() {

@@ -50,7 +50,7 @@ require_once 'pre.php';
 require_once MEDIAWIKI_BASE_DIR . '/../fusionforge/compat/load_compatibilities_method.php';
 
 $plugin_manager = PluginManager::instance();
-/** @var $mw_plugin mediawikiPlugin */
+/** @var mediawikiPlugin $mw_plugin */
 $mw_plugin = $plugin_manager->getPluginByName('mediawiki');
 if (! $mw_plugin || ! $plugin_manager->isPluginAvailable($mw_plugin)) {
     die('Mediawiki plugin not available');
@@ -531,14 +531,14 @@ if ($manager->isCompatibilityViewEnabled($group)) {
     // WikiEditor Extension inclusion
     require_once("$IP/extensions/WikiEditor/WikiEditor.php");
 
-    # Enables use of WikiEditor by default but still allow users to disable it in preferences
+    // Enables use of WikiEditor by default but still allow users to disable it in preferences
     $wgDefaultUserOptions['usebetatoolbar'] = 1;
     $wgDefaultUserOptions['usebetatoolbar-cgd'] = 1;
 
-    # Displays the Preview and Changes tabs
+    // Displays the Preview and Changes tabs
     $wgDefaultUserOptions['wikieditor-preview'] = 1;
 
-    # Displays the Publish and Cancel buttons on the top right side
+    // Displays the Publish and Cancel buttons on the top right side
     $wgDefaultUserOptions['wikieditor-publish'] = 1;
 }
 
@@ -553,23 +553,23 @@ if ($mleb_manager->isMLEBExtensionInstalled()){
 
         $mleb_path = forge_get_config('extension_mleb_path', 'mediawiki');
 
-        # Babelww
+        // Babelww
         require_once $mleb_path."/extensions/Babel/Babel.php";
 
-        # CLDR
+        // CLDR
         require_once $mleb_path."/extensions/cldr/cldr.php";
 
-        # CleanChanges
+        // CleanChanges
         require_once $mleb_path."/extensions/CleanChanges/CleanChanges.php";
         $wgCCTrailerFilter                = true;
         $wgCCUserFilter                   = false;
         $wgDefaultUserOptions['usenewrc'] = 1;
 
-        # LocalisationUpdate
+        // LocalisationUpdate
         require_once $mleb_path."/extensions/LocalisationUpdate/LocalisationUpdate.php";
         $wgLocalisationUpdateDirectory = $mleb_path."/cache";
 
-        # Translate
+        // Translate
         require_once $mleb_path."/extensions/Translate/Translate.php";
         $wgGroupPermissions['user']['translate']               = true;
         $wgGroupPermissions['user']['translate-messagereview'] = true;
@@ -577,7 +577,7 @@ if ($mleb_manager->isMLEBExtensionInstalled()){
         $wgGroupPermissions['user']['translate-import']        = true;
         $wgGroupPermissions['sysop']['pagetranslation']        = true;
         $wgGroupPermissions['sysop']['translate-manage']       = true;
-        $wgExtraLanguageNames['qqq']                           = 'Message documentation'; # No linguistic content. Used for documenting messages
+        $wgExtraLanguageNames['qqq']                           = 'Message documentation'; // No linguistic content. Used for documenting messages
 
         require_once $mleb_path."/extensions/UniversalLanguageSelector/UniversalLanguageSelector.php";
         $GLOBALS['wgTranslatePageTranslationULS'] = true;

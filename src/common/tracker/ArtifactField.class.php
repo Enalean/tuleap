@@ -19,9 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-//
 // The artifact field object
-//
 class ArtifactField {
 
 	// The field id
@@ -96,10 +94,6 @@ class ArtifactField {
 	 */
 	private $error_state = false;
 
-	/**
-	 *  Constructor.
-	 *
-	 */
 	function __construct() {
 	}
 	

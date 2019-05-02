@@ -86,8 +86,6 @@ class _BogoLoginPassUser extends _PassUser {
 // fix WikiUser (old) overlarge data session
 // remove wikidb arg from various page class methods, use global ->_dbi instead
 // ...
-//
-
 // Local Variables:
 // mode: php
 // tab-width: 8

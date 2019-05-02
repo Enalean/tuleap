@@ -74,10 +74,7 @@ class Docman_ApprovalTableNotificationCycle {
         }
     }
 
-    //
     // Actions
-    //
-
     /**
      * Action
      */
@@ -203,10 +200,6 @@ class Docman_ApprovalTableNotificationCycle {
             $this->notificationManager->add($reviewerId, $this->item->getId());
         }
     }
-
-    //
-    //
-    //
 
     /**
      * Update item status according to parameters.
@@ -474,10 +467,6 @@ class Docman_ApprovalTableNotificationCycle {
         );
     }
 
-    //
-    //
-    //
-
     /**
      * Return current item approval table state
      */
@@ -510,10 +499,7 @@ class Docman_ApprovalTableNotificationCycle {
         return PLUGIN_DOCMAN_APPROVAL_STATE_NOTYET;
     }
 
-    //
     // Getters & setters
-    //
-
     function setTable(&$table) {
         $this->table = $table;
     }
@@ -530,10 +516,7 @@ class Docman_ApprovalTableNotificationCycle {
         $this->item = $item;
     }
 
-    //
     // Class accessor
-    //
-
     function _getReviewerDao() {
         return new Docman_ApprovalTableReviewerDao(CodendiDataAccess::instance());
     }

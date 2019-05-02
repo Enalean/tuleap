@@ -24,8 +24,6 @@ require_once 'PathJoinUtil.php';
 
 /**
  * Description of GitRepositoryclass
- *
- * @author Guillaume Storchi
  */
 
 class GitRepository implements DVCSRepository
@@ -215,7 +213,7 @@ class GitRepository implements DVCSRepository
      */
     public function getBackend() {
         if ( empty($this->backend) ) {
-            /* @var $git_plugin GitPlugin */
+            /** @var GitPlugin $git_plugin */
             $git_plugin  = PluginManager::instance()->getPluginByName('git');
             $url_manager = new Git_GitRepositoryUrlManager($git_plugin);
             switch ($this->getBackendType()) {

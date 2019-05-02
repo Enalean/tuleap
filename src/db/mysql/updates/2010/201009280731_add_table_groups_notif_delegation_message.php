@@ -1,8 +1,5 @@
 <?php
 
-/**
- *
- */
 class b201009280731_add_table_groups_notif_delegation_message extends ForgeUpgrade_Bucket {
 
     public function description() {

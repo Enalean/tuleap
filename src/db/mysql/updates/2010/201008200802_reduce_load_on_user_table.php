@@ -1,8 +1,5 @@
 <?php
 
-/**
- *
- */
 class b201008200802_reduce_load_on_user_table extends ForgeUpgrade_Bucket {
     public function description() {
         return <<<EOT

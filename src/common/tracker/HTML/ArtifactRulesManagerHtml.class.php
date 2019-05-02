@@ -121,7 +121,6 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
         $hp = Codendi_HTMLPurifier::instance();
         echo '<noscript class="error">'. $GLOBALS['Language']->getText('tracker_field_dependencies','noscript') .'</noscript>';
         echo '<form action="'. $this->href .'" method="post" id="edit_rule_form"><div id="edit_rule">';
-        /**/
         echo '<table border=0><thead><tr><td>';
         echo $GLOBALS['Language']->getText('tracker_field_dependencies','source');
         
@@ -227,7 +226,6 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
         echo '</tbody>';
         echo '</table>';
         echo '</div>';
-        /**/
         
         echo '<input type="hidden" id="save"  name="save" value="no" />';
         echo '<input type="hidden" id="source_field_hidden" name="source_field" value="" />';

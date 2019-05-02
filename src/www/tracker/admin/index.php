@@ -37,20 +37,15 @@ $atid     = $request->getValidated('atid', 'uint');
 $hp = Codendi_HTMLPurifier::instance();
 
 if ($group_id && !$atid) {
-	//
 	// Manage trackers: create and delete
 	
-	//
 	//	get the Group object
-	//
 	$pm = ProjectManager::instance();
     $group = $pm->getProject($group_id);
 	if (!$group || !is_object($group) || $group->isError()) {
 		exit_no_group();
 	}
-	//
 	//	Create the ArtifactType object
-	//
 	$ath = new ArtifactTypeHtml($group);
 	if (!$ath || !is_object($ath)) {
 		exit_error($Language->getText('global','error'),$Language->getText('tracker_index','not_create_at'));
@@ -142,20 +137,15 @@ if ($group_id && !$atid) {
 				
 } else if ($group_id && $atid) {
 
-	//
 	// Manage trackers: create and delete
 	
-	//
 	//	get the Group object
-	//
 	$pm = ProjectManager::instance();
     $group = $pm->getProject($group_id);
 	if (!$group || !is_object($group) || $group->isError()) {
 		exit_no_group();
 	}
-	//
 	//	Create the ArtifactType object
-	//
 	$ath = new ArtifactTypeHtml($group,$atid);
 	if (!$ath || !is_object($ath)) {
 		exit_error($Language->getText('global','error'),$Language->getText('tracker_index','not_create_at'));

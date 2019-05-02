@@ -4,10 +4,6 @@
  *
  * Base class that all controllers extend
  *
- * @author Christopher Han <xiphux@gmail.com
- * @copyright Copyright (c) 2010 Christopher Han
- * @package GitPHP
- * @subpackage Controller
  */
 
 namespace Tuleap\Git\GitPHP;
@@ -15,8 +11,6 @@ namespace Tuleap\Git\GitPHP;
 /**
  * ControllerBase class
  *
- * @package GitPHP
- * @subpackage Controller
  * @abstract
  */
 abstract class ControllerBase

@@ -39,7 +39,7 @@ class FileUploadCanceler implements TusTerminaterDataStore
     private $dao;
 
     /**
-     * FileUploadCanceler constructor.
+     *
      *
      * @param UploadPathAllocator  $path_allocator
      * @param FileOngoingUploadDao $dao

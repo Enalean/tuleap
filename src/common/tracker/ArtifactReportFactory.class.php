@@ -33,7 +33,7 @@ class ArtifactReportFactory {
 	private $error_state = false;
 
 	/**
-	 *  Constructor.
+	 *
 	 *
 	 *	@return	boolean	success.
 	 */
@@ -73,7 +73,6 @@ class ArtifactReportFactory {
         $report_mapping = array(100 => 100); //The system report 'Default' (sic)
 		//
 		// Copy artifact_report records which are not individual/personal
-		//
 	    $sql="SELECT report_id,user_id,name,description,scope,is_default ".
 		"FROM artifact_report ".
 		"WHERE group_artifact_id='". db_ei($atid_source) ."'" .
@@ -95,9 +94,7 @@ class ArtifactReportFactory {
 			
 			$report_id = db_insertid($res_insert,'artifact_report','report_id');
             $report_mapping[$report_array["report_id"]] = $report_id;
-			//
 			// Copy artifact_report_field records
-			//
 		    $sql_fields='SELECT field_name,show_on_query,show_on_result,place_query,place_result,col_width '.
 			'FROM artifact_report_field '.
 			'WHERE report_id='. db_ei($report_array["report_id"]) ;
@@ -141,9 +138,7 @@ class ArtifactReportFactory {
 	 */
 	function deleteReports($atid) {
 		
-		//
 		// Delete artifact_report_field records
-		//
 	    $sql='SELECT report_id '.
 		'FROM artifact_report '.
 		'WHERE group_artifact_id='. db_ei($atid) ;
@@ -164,9 +159,7 @@ class ArtifactReportFactory {
 		
 		} // while
 					
-		//
 		// Delete artifact_report records
-		//
 	    $sql='DELETE '.
 		'FROM artifact_report '.
 		'WHERE group_artifact_id='. db_ei($atid) ;

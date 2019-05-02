@@ -1045,8 +1045,6 @@ class ReferenceManager {
         return null;
     }
 
-    /**
-     */
     function _initProjectReferences($group_id) {
         if (!isset($this->activeReferencesByProject[$group_id])) {
             $p = array();

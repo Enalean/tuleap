@@ -68,9 +68,6 @@ class WikiServiceAdminActions extends WikiActions
   }
 
 
-  /**
-   *
-   */
   function create() {    
     $page=$_POST['page'];
     if(!empty($_POST['upage'])) {
@@ -91,9 +88,6 @@ class WikiServiceAdminActions extends WikiActions
     }
   }
 
-  /**
-   *
-   */
   function delete() {
     $we = new WikiEntry();
     $we->setGid($this->gid);
@@ -137,9 +131,6 @@ class WikiServiceAdminActions extends WikiActions
       }
   }
 
-  /**
-   *
-   */
   function update() {
     $page=$_POST['page'];
     if(!empty($_POST['upage'])) {
@@ -160,9 +151,6 @@ class WikiServiceAdminActions extends WikiActions
     }
   }
 
-  /**
-   *
-   */
   function setWikiPerms() {
       global $feedback;
 
@@ -187,9 +175,6 @@ class WikiServiceAdminActions extends WikiActions
     );
   }
 
-  /**
-   *
-   */
   function setWikiPagePerms() {
     global $feedback;
 

@@ -1,5 +1,4 @@
 <?php
-//
 // Codendi
 // Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 // http://www.codendi.com
@@ -7,8 +6,6 @@
 //
 //
 //	Originally written by Laurent Julliard 2004, Codendi Team, Xerox
-//
-
 require_once('pre.php');
 require_once('../svn_data.php');
 

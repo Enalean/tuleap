@@ -167,8 +167,6 @@ $WikiTheme->addPageListColumn
 //
 // Revision 1.1  2004/06/18 14:42:17  rurban
 // added wikilens libs (not yet merged good enough, some work for DanFr)
-// 
-
 // Local Variables:
 // mode: php
 // tab-width: 8

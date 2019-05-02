@@ -24,8 +24,6 @@ namespace Tuleap\Git\GitPHP;
 /**
  * Git Executable class
  *
- * @package GitPHP
- * @subpackage Git
  */
 class GitExe
 {
