@@ -29,11 +29,11 @@ use Tuleap\REST\JsonCast;
 
 class MinimalDefinitionRepresentation
 {
-    const ROUTE = 'testmanagement_definitions';
+    public const ROUTE = 'testmanagement_definitions';
 
-    const FIELD_SUMMARY         = 'summary';
-    const FIELD_CATEGORY        = 'category';
-    const FIELD_AUTOMATED_TESTS = 'automated_tests';
+    public const FIELD_SUMMARY         = 'summary';
+    public const FIELD_CATEGORY        = 'category';
+    public const FIELD_AUTOMATED_TESTS = 'automated_tests';
 
     /**
      * @var int ID of the artifact

@@ -53,11 +53,11 @@ class AdminControllerTest extends TestCase
     /** @var TrackerChecker */
     private $tracker_checker;
 
-    const PROJECT_ID = 104;
-    const CAMPAIGN_TRACKER_ID = 531;
-    const DEFINITION_TRACKER_ID = 532;
-    const EXECUTION_TRACKER_ID = 533;
-    const ISSUE_TRACKER_ID = 534;
+    public const PROJECT_ID = 104;
+    public const CAMPAIGN_TRACKER_ID = 531;
+    public const DEFINITION_TRACKER_ID = 532;
+    public const EXECUTION_TRACKER_ID = 533;
+    public const ISSUE_TRACKER_ID = 534;
 
     public function setUp() : void
     {

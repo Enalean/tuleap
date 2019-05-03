@@ -30,8 +30,8 @@ use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 
 class DefinitionRepresentation extends MinimalDefinitionRepresentation
 {
-    const FIELD_DESCRIPTION = 'details';
-    const FIELD_STEPS       = 'steps';
+    public const FIELD_DESCRIPTION = 'details';
+    public const FIELD_STEPS       = 'steps';
 
     /**
      * @var String

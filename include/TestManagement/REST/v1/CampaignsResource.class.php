@@ -82,7 +82,7 @@ use UserManager;
 
 class CampaignsResource
 {
-    const MAX_LIMIT = 50;
+    public const MAX_LIMIT = 50;
 
     /** @var Config */
     private $config;

@@ -33,13 +33,13 @@ use Tuleap\TestManagement\MilestoneItemsArtifactFactory;
 
 class DefinitionSelector
 {
-    const ALL = 'all';
+    public const ALL = 'all';
 
-    const MILESTONE = 'milestone';
+    public const MILESTONE = 'milestone';
 
-    const NONE = 'none';
+    public const NONE = 'none';
 
-    const REPORT = 'report';
+    public const REPORT = 'report';
 
     /** @var Config */
     private $config;

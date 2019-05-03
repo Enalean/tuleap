@@ -60,9 +60,9 @@ use UserManager;
 
 class ExecutionsResource
 {
-    const FIELD_RESULTS = 'results';
-    const FIELD_STATUS  = 'status';
-    const FIELD_TIME    = 'time';
+    public const FIELD_RESULTS = 'results';
+    public const FIELD_STATUS  = 'status';
+    public const FIELD_TIME    = 'time';
 
     /** @var Config */
     private $config;

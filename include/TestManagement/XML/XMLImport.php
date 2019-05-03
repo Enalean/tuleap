@@ -34,10 +34,10 @@ class XMLImport
 {
 
     // Those constants maps testmanagement.rnc
-    const ISSUES      = 'issues';
-    const CAMPAIGNS   = 'campaigns';
-    const DEFINITIONS = 'definitions';
-    const EXECUTIONS  = 'executions';
+    public const ISSUES      = 'issues';
+    public const CAMPAIGNS   = 'campaigns';
+    public const DEFINITIONS = 'definitions';
+    public const EXECUTIONS  = 'executions';
 
     /**
      * @var Config

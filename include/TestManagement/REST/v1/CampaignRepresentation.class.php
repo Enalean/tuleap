@@ -28,16 +28,16 @@ use Tuleap\TestManagement\Campaign\Campaign;
 
 class CampaignRepresentation
 {
-    const ROUTE = 'testmanagement_campaigns';
+    public const ROUTE = 'testmanagement_campaigns';
 
-    const FIELD_NAME           = "label";
-    const FIELD_ARTIFACT_LINKS = "artifact_links";
-    const FIELD_STATUS         = "status";
+    public const FIELD_NAME           = "label";
+    public const FIELD_ARTIFACT_LINKS = "artifact_links";
+    public const FIELD_STATUS         = "status";
 
-    const STATUS_NOT_RUN = "notrun";
-    const STATUS_PASSED  = "passed";
-    const STATUS_FAILED  = "failed";
-    const STATUS_BLOCKED = "blocked";
+    public const STATUS_NOT_RUN = "notrun";
+    public const STATUS_PASSED  = "passed";
+    public const STATUS_FAILED  = "failed";
+    public const STATUS_BLOCKED = "blocked";
 
     /** @var Tracker_FormElementFactory */
     private $form_element_factory;

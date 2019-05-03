@@ -25,7 +25,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenter;
 
 class NatureCoveredByPresenter extends NaturePresenter
 {
-    const NATURE_COVERED_BY = '_covered_by';
+    public const NATURE_COVERED_BY = '_covered_by';
 
     public function __construct()
     {

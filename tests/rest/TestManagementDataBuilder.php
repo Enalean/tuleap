@@ -23,12 +23,12 @@ use Tuleap\TestManagement\Dao;
 
 class TestManagementDataBuilder extends REST_TestDataBuilder
 {
-    const PROJECT_TEST_MGMT_SHORTNAME = 'test-mgmt';
-    const ISSUE_TRACKER_SHORTNAME     = 'bugs';
+    public const PROJECT_TEST_MGMT_SHORTNAME = 'test-mgmt';
+    public const ISSUE_TRACKER_SHORTNAME     = 'bugs';
 
-    const USER_TESTER_NAME   = 'rest_api_ttm_1';
-    const USER_TESTER_PASS   = 'welcome0';
-    const USER_TESTER_STATUS = 'A';
+    public const USER_TESTER_NAME   = 'rest_api_ttm_1';
+    public const USER_TESTER_PASS   = 'welcome0';
+    public const USER_TESTER_STATUS = 'A';
 
     public function __construct() {
         parent::__construct();

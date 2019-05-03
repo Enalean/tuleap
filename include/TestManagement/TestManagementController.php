@@ -29,7 +29,7 @@ use Tuleap\TestManagement\Breadcrumbs\NoCrumb;
 
 abstract class TestManagementController extends MVC2_PluginController {
 
-    const NAME = 'testmanagement';
+    public const NAME = 'testmanagement';
 
     /**
      * @var Config

@@ -38,8 +38,8 @@ use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
 
 class StepDefinition extends Tracker_FormElement_Field implements TrackerFormElementExternalField
 {
-    const START_RANK = 1;
-    const TYPE       = 'ttmstepdef';
+    public const START_RANK = 1;
+    public const TYPE       = 'ttmstepdef';
 
     public function accept(Tracker_FormElement_FieldVisitor $visitor)
     {
