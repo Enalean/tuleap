@@ -25,7 +25,7 @@ use Tuleap\Event\Dispatchable;
 
 class BotMattermostDeleted implements Dispatchable
 {
-    const NAME = 'botmattermost_bot_deleted';
+    public const NAME = 'botmattermost_bot_deleted';
 
     private $bot;
 

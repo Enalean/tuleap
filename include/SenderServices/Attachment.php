@@ -23,7 +23,7 @@ namespace Tuleap\BotMattermostGit\SenderServices;
 
 class Attachment
 {
-    const COLOR_BLUE = '#36a64f';
+    public const COLOR_BLUE = '#36a64f';
 
     private $pre_text;
     private $title;

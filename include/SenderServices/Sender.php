@@ -29,7 +29,7 @@ use Tuleap\BotMattermostGit\SenderServices\Attachment;
 class Sender
 {
 
-    const DEFAULT_CHANNEL = '';
+    public const DEFAULT_CHANNEL = '';
 
     private $encoder_message;
     private $client;
