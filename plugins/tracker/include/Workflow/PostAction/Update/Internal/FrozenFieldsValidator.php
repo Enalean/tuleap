@@ -54,7 +54,7 @@ class FrozenFieldsValidator
                 );
             }
 
-            $this->validateSelectedField($frozen_field, $used_field_ids);
+            $this->validateSelectedField($tracker, $frozen_field, $used_field_ids);
         }
     }
 
@@ -73,15 +73,29 @@ class FrozenFieldsValidator
     /**
      * @throws InvalidPostActionException
      */
-    private function validateSelectedField(FrozenFields $frozen_fields, array $int_field_ids) : void
+    private function validateSelectedField(Tracker $tracker, FrozenFields $frozen_fields, array $used_field_ids) : void
     {
+        $workflow_field_id = (int) $tracker->getWorkflow()->getFieldId();
+
         foreach ($frozen_fields->getFieldIds() as $field_id) {
-            if (! in_array($field_id, $int_field_ids, true)) {
+            if (! in_array($field_id, $used_field_ids, true)) {
                 throw new InvalidPostActionException(
                     sprintf(
                         dgettext(
                             'tuleap-tracker',
                             "The field_id value '%u' does not match a field in use in the tracker."
+                        ),
+                        $field_id
+                    )
+                );
+            }
+
+            if ($field_id === $workflow_field_id) {
+                throw new InvalidPostActionException(
+                    sprintf(
+                        dgettext(
+                            'tuleap-tracker',
+                            "The field '%u' is used for the workflow cannot be defined in frozen fields actions."
                         ),
                         $field_id
                     )
