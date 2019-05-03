@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2017-2018. All rights reserved.
+ * Copyright Enalean (c) 2017 - Present. All rights reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -479,27 +479,15 @@ class SemanticDone extends Tracker_Semantic
         return self::$_instances[$tracker->getId()];
     }
 
-    private static function forceLoad(Tracker $tracker)
+    private static function forceLoad(Tracker $tracker): SemanticDone
     {
         $semantic_status = Tracker_Semantic_Status::load($tracker);
         $dao             = new SemanticDoneDao();
+        $value_checker   = new SemanticDoneValueChecker();
 
-        $semantic_status_field = $semantic_status->getField();
-        $done_values           = array();
-        $value_checker         = new SemanticDoneValueChecker();
+        $semantic_done = (new SemanticDoneLoader($dao, $value_checker))->load($tracker, $semantic_status);
 
-        if ($semantic_status_field) {
-            foreach ($dao->getSelectedValues($tracker->getId()) as $selected_value_row) {
-                $value_id = $selected_value_row['value_id'];
-                $value    = $semantic_status_field->getBind()->getValue($value_id);
-
-                if ($value && $value_checker->isValueAPossibleDoneValue($value, $semantic_status)) {
-                    $done_values[$value_id] = $value;
-                }
-            }
-        }
-
-        self::$_instances[$tracker->getId()] = new SemanticDone($tracker, $semantic_status, $dao, $value_checker, $done_values);
+        self::$_instances[$tracker->getId()] = $semantic_done;
 
         return self::$_instances[$tracker->getId()];
     }
