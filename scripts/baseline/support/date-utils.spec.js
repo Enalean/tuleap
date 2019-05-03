@@ -55,4 +55,12 @@ describe("DateUtils:", () => {
             expect(DateFormatter.getFromNow("2016-01-01T23:35:01")).toEqual("vor 3 Jahren");
         });
     });
+
+    describe("#formatToISO", () => {
+        it("formats date to ISO", () => {
+            expect(DateFormatter.formatToISO("2019-03-22 10:01")).toEqual(
+                "2019-03-22T10:01:00-05:00"
+            );
+        });
+    });
 });

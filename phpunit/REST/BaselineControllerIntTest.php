@@ -78,7 +78,7 @@ class BaselineControllerIntTest extends IntegrationTestCaseWithStubs
 
         $baseline               = $this->baseline_repository->findAny();
         $expected_snapshot_date = DateTimeImmutable::createFromFormat(
-            'Y-m-d\TH:i:sP',
+            BaselineController::DATE_TIME_FORMAT,
             '2019-03-21T11:47:04+02:00'
         );
         $this->assertEquals($expected_snapshot_date, $baseline->getSnapshotDate());

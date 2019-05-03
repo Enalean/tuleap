@@ -50,5 +50,9 @@ export default {
         return moment(date)
             .tz(time_zone)
             .fromNow();
+    },
+
+    formatToISO(date) {
+        return moment.tz(date, time_zone).format();
     }
 };

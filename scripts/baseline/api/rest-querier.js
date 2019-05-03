@@ -22,6 +22,7 @@
  */
 
 import { get, post, del } from "tlp-fetch";
+import DateUtils from "../support/date-utils";
 
 export {
     getOpenMilestones,
@@ -50,10 +51,14 @@ async function getOpenMilestones(project_id) {
 }
 
 async function createBaseline(name, milestone, snapshot_date) {
+    let formatted_date = null;
+    if (snapshot_date) {
+        formatted_date = DateUtils.formatToISO(snapshot_date);
+    }
     const body = JSON.stringify({
         name,
         artifact_id: milestone.id,
-        snapshot_date
+        snapshot_date: formatted_date
     });
 
     const response = await post("/api/baselines/", {

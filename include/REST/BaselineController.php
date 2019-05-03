@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\REST;
 
+use DateTime;
 use DateTimeImmutable;
 use Tuleap\Baseline\BaselineArtifactRepository;
 use Tuleap\Baseline\BaselineService;
@@ -35,7 +36,7 @@ use Tuleap\REST\I18NRestException;
 
 class BaselineController
 {
-    public const DATE_TIME_FORMAT = 'Y-m-d\TH:i:sP';
+    public const DATE_TIME_FORMAT = DateTime::ATOM;
 
     /** @var CurrentUserProvider */
     private $current_user_provider;
