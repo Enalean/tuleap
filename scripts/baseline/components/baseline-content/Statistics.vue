@@ -31,9 +31,6 @@
         <statistic v-bind:label="tasks_label" class="baseline-statistic-tasks">
             33
         </statistic>
-        <statistic v-bind:label="initial_effort_label" class="baseline-statistic-initial-effort">
-            400
-        </statistic>
     </div>
 </template>
 
@@ -55,9 +52,6 @@ export default {
         },
         tasks_label() {
             return this.$gettext("Tasks");
-        },
-        initial_effort_label() {
-            return this.$gettext("Initial effort");
         }
     }
 };

@@ -40,14 +40,6 @@
         >
             {{ modified_artifacts_count }}
         </statistic>
-
-        <statistic
-            v-bind:label="initial_effort_label"
-            class="comparison-statistic-initial-effort"
-            data-test-type="initial-effort-statistic"
-        >
-            {{ initial_effort_difference | with_sign }}
-        </statistic>
     </div>
 </template>
 
@@ -74,8 +66,7 @@ export default {
         ...mapState("comparison", [
             "added_artifacts_count",
             "removed_artifacts_count",
-            "modified_artifacts_count",
-            "initial_effort_difference"
+            "modified_artifacts_count"
         ]),
         added_artifact_label() {
             if (this.added_artifacts_count > 1) {
@@ -94,9 +85,6 @@ export default {
                 return this.$gettext("Artifacts modified");
             }
             return this.$gettext("Artifact modified");
-        },
-        initial_effort_label() {
-            return this.$gettext("Initial effort");
         }
     }
 };

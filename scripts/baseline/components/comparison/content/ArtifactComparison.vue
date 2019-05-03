@@ -40,13 +40,6 @@
                 v-bind:base="base.status"
                 v-bind:compared_to="compared_to.status"
             />
-            <field-comparison
-                v-if="base.initial_effort !== compared_to.initial_effort"
-                semantic="initial_effort"
-                v-bind:tracker_id="compared_to.tracker_id"
-                v-bind:base="base.initial_effort"
-                v-bind:compared_to="compared_to.initial_effort"
-            />
         </div>
 
         <depth-limit-reached-message v-if="is_depth_limit_reached"/>

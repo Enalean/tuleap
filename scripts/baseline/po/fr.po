@@ -141,9 +141,6 @@ msgstr "Trackers masqués"
 msgid "Id"
 msgstr "Id"
 
-msgid "Initial effort"
-msgstr "Effort initial"
-
 msgid "Linked artifacts are skipped because depth limit has been reached."
 msgstr ""
 "Les artefacts liés sont ignorés parce que la limite de profondeur a été "

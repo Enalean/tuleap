@@ -25,9 +25,6 @@ namespace Tuleap\Baseline\Adapter;
 
 use PFUser;
 use Tracker_Artifact_Changeset;
-use Tracker_Artifact_ChangesetValue_List;
-use Tracker_Artifact_ChangesetValue_Numeric;
-use Tracker_FormElement_Field_List_Bind_StaticValue;
 
 class SemanticValueAdapter
 {
@@ -78,7 +75,7 @@ class SemanticValueAdapter
     /**
      * Find value of initial effort field for a given artifact at a given date time (i.e. given change set).
      */
-    public function findInitialEffort(Tracker_Artifact_Changeset $changeset, PFUser $current_user): ?float
+    public function findInitialEffort(Tracker_Artifact_Changeset $changeset, PFUser $current_user): ?int
     {
         $tracker              = $changeset->getTracker();
         $initial_effort_field = $this->semantic_field_repository->findInitialEffortByTracker($tracker);
@@ -86,27 +83,11 @@ class SemanticValueAdapter
             return null;
         }
 
-
         $changed_value = $changeset->getValue($initial_effort_field);
         if ($changed_value === null) {
             return null;
         }
-
-        if ($changed_value instanceof Tracker_Artifact_ChangesetValue_List) {
-            $values = $changed_value->getListValues();
-            if (count($values) === 0) {
-                return null;
-            }
-            /** @var Tracker_FormElement_Field_List_Bind_StaticValue $value */
-            $value = array_values($values)[0];
-            return (float) $value->getLabel();
-        }
-
-        if ($changed_value instanceof Tracker_Artifact_ChangesetValue_Numeric) {
-            return (float) $changed_value->getNumeric();
-        }
-
-        return null;
+        return (int) $changed_value->getValue();
     }
 
     /**
