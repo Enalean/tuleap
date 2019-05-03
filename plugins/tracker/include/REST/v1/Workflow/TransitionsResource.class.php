@@ -54,6 +54,7 @@ use Tuleap\Tracker\Workflow\PostAction\Update\Internal\CIBuildUpdater;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\CIBuildValidator;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\FrozenFieldsRepository;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\FrozenFieldsUpdater;
+use Tuleap\Tracker\Workflow\PostAction\Update\Internal\FrozenFieldsValidator;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\IncompatibleWorkflowModeException;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\InvalidPostActionException;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\PostActionFieldIdValidator;
@@ -523,7 +524,8 @@ class TransitionsResource extends AuthenticatedResource
                 new FrozenFieldsUpdater(
                     new FrozenFieldsRepository(
                         $this->getFrozenFieldsDao()
-                    )
+                    ),
+                    new FrozenFieldsValidator($form_element_factory)
                 )
             );
         }

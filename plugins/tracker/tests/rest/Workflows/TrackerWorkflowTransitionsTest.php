@@ -443,11 +443,17 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
      */
     public function testPUTTrackerWorkflowTransitionFrozenFieldsActionsNotPossible(int $transition_id)
     {
+        $used_field_id = $this->getAUsedField(
+            $this->tracker_workflow_transitions_tracker_id,
+            'status_id'
+        );
+
         $body = json_encode([
             "post_actions" => [
                 [
                     "id" => null,
-                    "type" => "frozen_fields"
+                    "type" => "frozen_fields",
+                    "field_ids" => [$used_field_id]
                 ]
             ]
         ]);

@@ -24,7 +24,10 @@ require_once __DIR__ . '/../../../../../bootstrap.php';
 
 use Mockery;
 use PHPUnit\Framework\TestCase;
+use Tuleap\REST\I18NRestException;
+use Tuleap\Tracker\Workflow\PostAction\Update\FrozenFields;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\IncompatibleWorkflowModeException;
+use Tuleap\Tracker\Workflow\PostAction\Update\SetIntValue;
 use Workflow;
 
 class FrozenFieldsJsonParserTest extends TestCase
@@ -52,6 +55,128 @@ class FrozenFieldsJsonParserTest extends TestCase
     public function testAcceptReturnsFalseWhenTypeDoesNotMatch()
     {
         $this->assertFalse($this->parser->accept(["type" => "set_date_value"]));
+    }
+
+    public function testParseReturnsNewFrozenFieldsValueBasedOnGivenJson()
+    {
+        $workflow = Mockery::mock(Workflow::class);
+        $workflow->shouldReceive('isAdvanced')->andReturn(false);
+
+        $frozen_fields_value = $this->parser->parse(
+            $workflow,
+            [
+                "id" => 2,
+                "type" => "frozen_fields",
+                "field_ids" => [43],
+            ]
+        );
+        $expected_action = new FrozenFields(null, [43]);
+        $this->assertEquals($expected_action, $frozen_fields_value);
+    }
+
+    public function testParseWhenIdNotProvided()
+    {
+        $workflow = Mockery::mock(Workflow::class);
+        $workflow->shouldReceive('isAdvanced')->andReturn(false);
+
+        $frozen_fields_value = $this->parser->parse(
+            $workflow,
+            [
+                "type" => "frozen_fields",
+                "field_ids" => [43],
+            ]
+        );
+        $expected_action = new FrozenFields(null, [43]);
+        $this->assertEquals($expected_action, $frozen_fields_value);
+    }
+
+    public function testParseThrowsAnExceptionWhenIdIsNotInt()
+    {
+        $workflow = Mockery::mock(Workflow::class);
+        $workflow->shouldReceive('isAdvanced')->andReturn(false);
+
+        $this->expectException(I18NRestException::class);
+        $this->expectExceptionCode(400);
+
+        $this->parser->parse(
+            $workflow,
+            [
+                "id" => 'not_an_int',
+                "type" => "frozen_fields",
+                "field_ids" => [43],
+            ]
+        );
+    }
+
+    public function testParseThrowsAnExceptionWhenNoFieldIdsProvided()
+    {
+        $workflow = Mockery::mock(Workflow::class);
+        $workflow->shouldReceive('isAdvanced')->andReturn(false);
+
+        $this->expectException(I18NRestException::class);
+        $this->expectExceptionCode(400);
+
+        $this->parser->parse(
+            $workflow,
+            [
+                "id" => 1,
+                "type" => "frozen_fields",
+            ]
+        );
+    }
+
+    public function testParseThrowsAnExceptionWhenFieldIdsIsNull()
+    {
+        $workflow = Mockery::mock(Workflow::class);
+        $workflow->shouldReceive('isAdvanced')->andReturn(false);
+
+        $this->expectException(I18NRestException::class);
+        $this->expectExceptionCode(400);
+
+        $this->parser->parse(
+            $workflow,
+            [
+                "id" => 1,
+                "type" => "frozen_fields",
+                "field_ids" => null,
+            ]
+        );
+    }
+
+    public function testParseThrowsAnExceptionWhenFieldIdIsAnEmptyArray()
+    {
+        $workflow = Mockery::mock(Workflow::class);
+        $workflow->shouldReceive('isAdvanced')->andReturn(false);
+
+        $this->expectException(I18NRestException::class);
+        $this->expectExceptionCode(400);
+
+        $this->parser->parse(
+            $workflow,
+            [
+                "id" => 1,
+                "type" => "frozen_fields",
+                "field_ids" => [],
+            ]
+        );
+    }
+
+    public function testParseThrowsAnExceptionWhenFieldIdIsNotAnArrayOfInt()
+    {
+        $workflow = Mockery::mock(Workflow::class);
+        $workflow->shouldReceive('isAdvanced')->andReturn(false);
+
+        $this->expectException(I18NRestException::class);
+        $this->expectExceptionCode(400);
+
+        $this->parser->parse(
+            $workflow,
+            [
+                "id" => 1,
+                "type" => "frozen_fields",
+                "field_ids" => [1, 'aaa'],
+            ]
+        );
     }
 
     public function testItThrowsAnExceptionIfWorkflowIsInAdvancedMode()

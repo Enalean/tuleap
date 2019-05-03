@@ -26,6 +26,7 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
 use PHPUnit\Framework\TestCase;
+use Tracker;
 use Tuleap\Tracker\Workflow\PostAction\Update\FrozenFields;
 use Tuleap\Tracker\Workflow\PostAction\Update\PostActionCollection;
 use Tuleap\Tracker\Workflow\PostAction\Update\TransitionFactory;
@@ -43,6 +44,11 @@ class FrozenFieldsUpdaterTest extends TestCase
      * @var MockInterface
      */
     private $frozen_fields_repository;
+    /**
+     *
+     * @var MockInterface
+     */
+    private $frozen_fields_validator;
 
     /**
      * @before
@@ -57,14 +63,18 @@ class FrozenFieldsUpdaterTest extends TestCase
             ->shouldReceive('create')
             ->byDefault();
 
-        $this->updater   = new FrozenFieldsUpdater($this->frozen_fields_repository);
+        $this->frozen_fields_validator = Mockery::mock(FrozenFieldsValidator::class);
+
+        $this->updater = new FrozenFieldsUpdater($this->frozen_fields_repository, $this->frozen_fields_validator);
     }
 
     public function testUpdateAddsNewFrozenFieldsActions()
     {
-        $transition   = TransitionFactory::buildATransition();
-        $added_action = new FrozenFields();
+        $transition   = TransitionFactory::buildATransitionWithTracker(Mockery::mock(Tracker::class));
+        $added_action = new FrozenFields(null, []);
         $actions      = new PostActionCollection($added_action);
+
+        $this->frozen_fields_validator->shouldReceive('validate')->once();
 
         $this->frozen_fields_repository
             ->shouldReceive('create')
@@ -76,14 +86,32 @@ class FrozenFieldsUpdaterTest extends TestCase
 
     public function testUpdateDeletesAllPreExistingFrozenFieldsActions()
     {
-        $transition     = TransitionFactory::buildATransition();
-        $updated_action = new FrozenFields();
+        $transition     = TransitionFactory::buildATransitionWithTracker(Mockery::mock(Tracker::class));
+        $updated_action = new FrozenFields(null, []);
         $actions        = new PostActionCollection($updated_action);
+
+        $this->frozen_fields_validator->shouldReceive('validate')->once();
 
         $this->frozen_fields_repository
             ->shouldReceive('deleteAllByTransition')
             ->with($updated_action)
             ->andReturns();
+
+        $this->updater->updateByTransition($actions, $transition);
+    }
+
+    public function testItDoesNothingIfFrozenFieldsActionsAreNotValid()
+    {
+        $transition     = TransitionFactory::buildATransitionWithTracker(Mockery::mock(Tracker::class));
+        $updated_action = new FrozenFields(null, []);
+        $actions        = new PostActionCollection($updated_action);
+
+        $this->frozen_fields_validator->shouldReceive('validate')->andThrow(InvalidPostActionException::class);
+
+        $this->frozen_fields_repository->shouldReceive('deleteAllByTransition')->never();
+        $this->frozen_fields_repository->shouldReceive('create')->never();
+
+        $this->expectException(InvalidPostActionException::class);
 
         $this->updater->updateByTransition($actions, $transition);
     }
