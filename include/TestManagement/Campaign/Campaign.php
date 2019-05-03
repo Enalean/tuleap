@@ -36,7 +36,7 @@ class Campaign
     private $job_configuration;
 
     /**
-     * Campaign constructor.
+     *
      *
      * @param \Tracker_Artifact $artifact
      * @param string            $label

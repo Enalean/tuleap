@@ -164,7 +164,7 @@ class FirstConfigCreator
             );
 
             if (! $tracker) {
-                # Tracker using this shortname is from TrackerEngine v3
+                // Tracker using this shortname is from TrackerEngine v3
                 throw new TrackerComesFromLegacyEngineException($tracker_itemname);
             }
         } else {

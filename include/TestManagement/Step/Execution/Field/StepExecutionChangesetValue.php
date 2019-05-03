@@ -35,7 +35,7 @@ class StepExecutionChangesetValue extends \Tracker_Artifact_ChangesetValue
     private $steps;
 
     /**
-     * StepDefinitionChangesetValue constructor.
+     *
      *
      * @param int                        $id
      * @param Tracker_Artifact_Changeset $changeset
