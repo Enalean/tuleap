@@ -20,8 +20,13 @@
  *
  */
 
+use Tuleap\Http\HttpClientFactory;
+use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\Reference\ReferenceOpenGraph;
+use Tuleap\Reference\ReferenceOpenGraphDispatcher;
+
 $reference_manager = ReferenceManager::instance();
-$request = HTTPRequest::instance();
+$request           = HTTPRequest::instance();
 
 $vGroupId = new Valid_GroupId();
 if (! $request->valid($vGroupId)) {
@@ -53,7 +58,7 @@ if ($keyword == 'wiki') {
     //wiki page name to handle 'toto/titi/1' (1 is the version number)
     if ($wiki->retrieveWikiPageId($value, $group_id) != null) {
         $args = array($value);
-    } else if (preg_match('%^(.*)/(\d+)$%', $val, $matches)) {
+    } elseif (preg_match('%^(.*)/(\d+)$%', $val, $matches)) {
         $args = array($matches[1], $matches[2]);
     }
 }
@@ -237,7 +242,11 @@ if ($request->isAjax()) {
             if ($output) {
                 echo $output;
             } elseif ($ref->getNature() === ReferenceManager::REFERENCE_NATURE_OTHER) {
-                echo (new \Tuleap\Reference\ReferenceOpenGraph($html_purifier, $ref))->getContent();
+                $open_graph_dispatcher = new ReferenceOpenGraphDispatcher(
+                    HttpClientFactory::createClient(),
+                    HTTPFactoryBuilder::requestFactory()
+                );
+                echo (new ReferenceOpenGraph($html_purifier, $ref, $open_graph_dispatcher))->getContent();
             }
             break;
     }

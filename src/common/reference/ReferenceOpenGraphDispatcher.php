@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -25,44 +25,45 @@ use Embed\Http\DispatcherInterface;
 use Embed\Http\ImageResponse;
 use Embed\Http\Response;
 use Embed\Http\Url;
+use Psr\Http\Client\ClientExceptionInterface;
+use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\RequestFactoryInterface;
 
 class ReferenceOpenGraphDispatcher implements DispatcherInterface
 {
-
     /**
-     * Dispatch an url.
-     *
-     * @param Url $url
-     *
-     * @return Response
+     * @var ClientInterface
      */
-    public function dispatch(Url $url)
+    private $http_client;
+    /**
+     * @var RequestFactoryInterface
+     */
+    private $request_factory;
+
+    public function __construct(ClientInterface $http_client, RequestFactoryInterface $request_factory)
     {
+        $this->http_client     = $http_client;
+        $this->request_factory = $request_factory;
+    }
+
+    public function dispatch(Url $url) : Response
+    {
+        $request = $this->request_factory->createRequest('GET', $url->__toString());
+
         try {
-            $http_client = new \Http_Client();
-            $http_client->addOptions([
-                CURLOPT_URL             => $url->__toString(),
-                CURLOPT_SSL_VERIFYPEER  => true,
-            ]);
-
-            $http_client->doRequest();
-
-            $response = new Response(
-                $url,
-                Url::create($http_client->getInfo(CURLINFO_EFFECTIVE_URL)),
-                $http_client->getInfo(CURLINFO_HTTP_CODE),
-                $http_client->getInfo(CURLINFO_CONTENT_TYPE),
-                $http_client->getLastResponse(),
-                [],
-                []
-            );
-
-            $http_client->close();
-
-            return $response;
-        } catch (\Http_ClientException $exception) {
-            return new Response($url, $url, 400, null, null, [], []);
+            $response = $this->http_client->sendRequest($request);
+        } catch (ClientExceptionInterface $e) {
+            return new Response($url, $url, 500, null, null, []);
         }
+
+        return new Response(
+            $url,
+            $url,
+            $response->getStatusCode(),
+            $response->getHeaderLine('Content-Type'),
+            $response->getBody()->getContents(),
+            []
+        );
     }
 
     /**
