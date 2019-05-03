@@ -21,6 +21,7 @@
 require_once 'constants.php';
 require_once __DIR__. '/../vendor/autoload.php';
 
+use FastRoute\RouteCollector;
 use Tuleap\BurningParrotCompatiblePageDetector;
 use Tuleap\CVS\DiskUsage\Collector as CVSCollector;
 use Tuleap\CVS\DiskUsage\FullHistoryDao;
@@ -37,6 +38,8 @@ use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupFormatter;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupRetriever;
 use Tuleap\Project\Event\ProjectRegistrationActivateService;
+use Tuleap\Request\CollectRoutesEvent;
+use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\REST\Event\ProjectGetSvn;
 use Tuleap\REST\Event\ProjectOptionsSvn;
 use Tuleap\Service\ServiceCreator;
@@ -84,6 +87,7 @@ use Tuleap\SVN\PermissionsPerGroup\PaneCollector;
 use Tuleap\SVN\PermissionsPerGroup\PermissionPerGroupRepositoryRepresentationBuilder;
 use Tuleap\SVN\PermissionsPerGroup\PermissionPerGroupSVNServicePaneBuilder;
 use Tuleap\SVN\PermissionsPerGroup\SVNJSONPermissionsRetriever;
+use Tuleap\SVN\RedirectOldViewVCUrls;
 use Tuleap\SVN\Reference\Extractor;
 use Tuleap\SVN\Repository\Destructor;
 use Tuleap\SVN\Repository\HookConfigChecker;
@@ -187,6 +191,8 @@ class SvnPlugin extends Plugin
         $this->addHook(PermissionPerGroupDisplayEvent::NAME);
 
         $this->addHook(PostRotateEvent::NAME);
+
+        $this->addHook(CollectRoutesEvent::NAME);
     }
 
     public function getHooksAndCallbacks()
@@ -467,64 +473,6 @@ class SvnPlugin extends Plugin
     private function getProjectManager()
     {
         return ProjectManager::instance();
-
-    }
-
-    public function process(HTTPRequest $request)
-    {
-        $project = $request->getProject();
-        if (! $project->getID()) {
-            $project = $this->getProjectFromViewVcURL($request);
-        }
-
-        if (! $project) {
-            $GLOBALS['Response']->addFeedback(
-                Feedback::ERROR,
-                $GLOBALS['Language']->getText(
-                    'include_group', 'g_not_found'
-                )
-            );
-
-            $this->redirectToHomepage();
-        } elseif ($project->isDeleted()) {
-            $GLOBALS['Response']->addFeedback(
-                Feedback::ERROR,
-                $GLOBALS['Language']->getText(
-                    'include_exit', 'project_status_' . $project->getStatus()
-                )
-            );
-
-            $this->redirectToHomepage();
-        }
-
-        $project_id = $project->getId();
-        $request->set('group_id', $project_id);
-
-        if (! PluginManager::instance()->isPluginAllowedForProject($this, $project_id)) {
-            $GLOBALS['Response']->addFeedback(
-                'error',
-                $GLOBALS['Language']->getText(
-                    'plugin_svn_manage_repository', 'plugin_not_activated'
-                 )
-            );
-            $GLOBALS['Response']->redirect('/projects/' . $project->getUnixNameMixedCase() . '/');
-        } else {
-            $this->getRouter()->route($request);
-        }
-    }
-
-    private function redirectToHomepage()
-    {
-        $GLOBALS['Response']->redirect('/');
-    }
-
-    private function getProjectFromViewVcURL(HTTPRequest $request)
-    {
-        $svn_root          = $request->get('root');
-        $project_shortname = substr($svn_root, 0, strpos($svn_root, '/'));
-        $project = ProjectManager::instance()->getProjectByCaseInsensitiveUnixName($project_shortname);
-
-        return $project;
     }
 
     public function cssFile($params) {
@@ -588,7 +536,7 @@ class SvnPlugin extends Plugin
         );
     }
 
-    private function getRouter()
+    public function routeSvnPlugin() : DispatchableWithRequest
     {
         $repository_manager  = $this->getRepositoryManager();
         $ugroup_manager      = $this->getUGroupManager();
@@ -672,8 +620,23 @@ class SvnPlugin extends Plugin
                     $this->getRepositoryManager(),
                     $this->getUGroupManager()
                 )
-            )
+            ),
+            $this,
+            ProjectManager::instance()
         );
+    }
+
+    public function redirectOldViewVcRoutes() : DispatchableWithRequest
+    {
+        return new RedirectOldViewVCUrls($this->getPluginPath());
+    }
+
+    public function collectRoutesEvent(CollectRoutesEvent $event)
+    {
+        $event->getRouteCollector()->addGroup($this->getPluginPath(), function (RouteCollector $r) {
+            $r->get('/index.php/{path:.*}', $this->getRouteHandler('redirectOldViewVcRoutes'));
+            $r->addRoute(['GET', 'POST'], '/[{path:.*}]', $this->getRouteHandler('routeSvnPlugin'));
+        });
     }
 
     /** @return BackendSVN */

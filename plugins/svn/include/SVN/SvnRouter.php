@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,6 +22,11 @@ namespace Tuleap\SVN;
 
 use Feedback;
 use HTTPRequest;
+use PluginManager;
+use ProjectManager;
+use SvnPlugin;
+use Tuleap\Layout\BaseLayout;
+use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\SVN\AccessControl\AccessControlController;
 use Tuleap\SVN\Admin\AdminController;
 use Tuleap\SVN\Admin\GlobalAdminController;
@@ -34,7 +39,7 @@ use Tuleap\SVN\Repository\Exception\CannotFindRepositoryException;
 use Tuleap\SVN\Repository\RepositoryManager;
 use UGroupManager;
 
-class SvnRouter
+class SvnRouter implements DispatchableWithRequest
 {
 
     /** @var RepositoryDisplayController */
@@ -70,6 +75,14 @@ class SvnRouter
      * @var SVNJSONPermissionsRetriever
      */
     private $json_retriever;
+    /**
+     * @var SvnPlugin
+     */
+    private $plugin;
+    /**
+     * @var ProjectManager
+     */
+    private $project_manager;
 
     public function __construct(
         RepositoryManager $repository_manager,
@@ -82,7 +95,9 @@ class SvnRouter
         ImmutableTagController $immutable_tag_controller,
         GlobalAdminController $global_admin_controller,
         RestoreController $restore_controller,
-        SVNJSONPermissionsRetriever $json_retriever
+        SVNJSONPermissionsRetriever $json_retriever,
+        SvnPlugin $plugin,
+        ProjectManager $project_manager
     ) {
         $this->repository_manager        = $repository_manager;
         $this->permissions_manager       = $permissions_manager;
@@ -95,6 +110,8 @@ class SvnRouter
         $this->global_admin_controller   = $global_admin_controller;
         $this->restore_controller        = $restore_controller;
         $this->json_retriever            = $json_retriever;
+        $this->plugin                    = $plugin;
+        $this->project_manager           = $project_manager;
     }
 
     /**
@@ -102,10 +119,12 @@ class SvnRouter
      * @param HTTPRequest $request
      * @return void
      */
-    public function route(HTTPRequest $request)
+    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         try {
-            $this->useAViewVcRoadIfRootValid($request);
+            $this->checkAccessToProject($request, $layout);
+
+            $this->useAViewVcRoadIfRootValid($request, $variables);
 
             if (!$request->get('action')) {
                 $this->useDefaultRoute($request);
@@ -133,7 +152,7 @@ class SvnRouter
                     if ($request->get('save-mailing-lists')) {
                         $this->checkUserCanAdministrateARepository($request);
                         $this->admin_controller->saveMailingList($request);
-                    } else if ($request->get('delete-mailing-lists')) {
+                    } elseif ($request->get('delete-mailing-lists')) {
                         $this->checkUserCanAdministrateARepository($request);
                         $this->admin_controller->deleteMailingList($request);
                     }
@@ -230,14 +249,14 @@ class SvnRouter
         }
     }
 
-    private function useAViewVcRoadIfRootValid(HTTPRequest $request)
+    private function useAViewVcRoadIfRootValid(HTTPRequest $request, array $url_variables)
     {
         if ($request->get('root')) {
             $repository = $this->repository_manager->getRepositoryFromPublicPath($request);
 
             $request->set("repo_id", $repository->getId());
 
-            $this->display_controller->displayRepository($this->getService($request), $request);
+            $this->display_controller->displayRepository($this->getService($request), $request, $url_variables);
 
             return;
         }
@@ -271,5 +290,54 @@ class SvnRouter
         }
 
         return $request->getProject()->getService('plugin_svn');
+    }
+
+    private function getProjectFromViewVcURL(HTTPRequest $request)
+    {
+        $svn_root          = $request->get('root');
+        $project_shortname = substr($svn_root, 0, strpos($svn_root, '/'));
+        $project           = $this->project_manager->getProjectByCaseInsensitiveUnixName($project_shortname);
+
+        return $project;
+    }
+
+    /**
+     * @param HTTPRequest $request
+     * @param BaseLayout  $layout
+     * @throws CannotFindRepositoryException
+     */
+    private function checkAccessToProject(HTTPRequest $request, BaseLayout $layout): void
+    {
+        $project = $request->getProject();
+        if (! $project->getID()) {
+            $project = $this->getProjectFromViewVcURL($request);
+        }
+
+        if (! $project) {
+            $layout->addFeedback(
+                Feedback::ERROR,
+                $GLOBALS['Language']->getText('include_group', 'g_not_found')
+            );
+
+            $layout->redirect('/');
+        } elseif ($project->isDeleted()) {
+            $layout->addFeedback(
+                Feedback::ERROR,
+                $GLOBALS['Language']->getText('include_exit', 'project_status_' . $project->getStatus())
+            );
+
+            $layout->redirect('/');
+        }
+
+        $project_id = $project->getId();
+        $request->set('group_id', $project_id);
+
+        if (! $this->plugin->isAllowed($project_id)) {
+            $layout->addFeedback(
+                Feedback::ERROR,
+                $GLOBALS['Language']->getText('plugin_svn_manage_repository', 'plugin_not_activated')
+            );
+            $layout->redirect('/projects/' . $project->getUnixNameMixedCase() . '/');
+        }
     }
 }

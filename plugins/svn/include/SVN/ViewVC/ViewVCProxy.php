@@ -190,7 +190,7 @@ class ViewVCProxy
         return '/usr/bin/python';
     }
 
-    public function getContent(HTTPRequest $request)
+    public function getContent(HTTPRequest $request, string $path)
     {
         $user = $request->getCurrentUser();
         if ($user->isAnonymous()) {
@@ -206,20 +206,19 @@ class ViewVCProxy
 
         $this->access_history_saver->saveAccess($user, $repository);
 
-        //this is very important. default path must be /
-        $path = $request->getPathInfoFromFCGI();
-
         $command = 'REMOTE_USER_ID=' . escapeshellarg($user->getId()) . ' '.
             'REMOTE_USER=' . escapeshellarg($this->getUsername($user, $project)) . ' '.
             'PATH_INFO='.$this->setLocaleOnFileName($path).' '.
             'QUERY_STRING='.escapeshellarg($this->buildQueryString($request)).' '.
-            'SCRIPT_NAME='.$this->escapeStringFromServer($request, 'SCRIPT_NAME').' '.
+            'SCRIPT_NAME=/plugins/svn '.
             'HTTP_ACCEPT_ENCODING='.$this->escapeStringFromServer($request, 'HTTP_ACCEPT_ENCODING').' '.
             'HTTP_ACCEPT_LANGUAGE='.$this->escapeStringFromServer($request, 'HTTP_ACCEPT_LANGUAGE').' '.
             'TULEAP_PROJECT_NAME='.escapeshellarg($repository->getProject()->getUnixNameMixedCase()).' '.
             'TULEAP_REPO_NAME='.escapeshellarg($repository->getName()).' '.
             'TULEAP_REPO_PATH='.escapeshellarg($repository->getSystemPath()).' '.
-            $this->getPythonLauncher() . ' ' . ForgeConfig::get('tuleap_dir').'/'.SVN_BASE_URL.'/bin/viewvc-epel.cgi 2>&1';
+            $this->getPythonLauncher() . ' ' . __DIR__.'/../../../bin/viewvc-epel.cgi 2>&1';
+
+
 
         $content = $this->setLocaleOnCommand($command, $return_var);
 
