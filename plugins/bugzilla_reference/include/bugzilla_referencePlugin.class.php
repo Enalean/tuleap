@@ -31,6 +31,8 @@ use Tuleap\Bugzilla\Reference\ReferenceRetriever;
 use Tuleap\Bugzilla\Reference\ReferenceSaver;
 use Tuleap\Bugzilla\Reference\RESTReferenceCreator;
 use Tuleap\BurningParrotCompatiblePageEvent;
+use Tuleap\Http\HttpClientFactory;
+use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\reference\ReferenceValidator;
 use Tuleap\reference\ReservedKeywordsRetriever;
 use Tuleap\Request\CollectRoutesEvent;
@@ -184,9 +186,14 @@ class bugzilla_referencePlugin extends Plugin
         return new CrossReferenceCreator(new CrossReferenceDao(), $this->getRESTReferenceCreator());
     }
 
-    private function getRESTReferenceCreator()
+    private function getRESTReferenceCreator() : RESTReferenceCreator
     {
-        return new RESTReferenceCreator(new Http_Client(), new BugzillaLogger());
+        return new RESTReferenceCreator(
+            HttpClientFactory::createClient(),
+            HTTPFactoryBuilder::requestFactory(),
+            HTTPFactoryBuilder::streamFactory(),
+            new BugzillaLogger()
+        );
     }
 
     /** @see \Event::REMOVE_CROSS_REFERENCE */
