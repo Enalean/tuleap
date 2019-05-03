@@ -1,7 +1,6 @@
 <?php
-
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,36 +18,25 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('bootstrap.php');
+require_once __DIR__.'/bootstrap.php';
 
 use Tuleap\OpenIDConnectClient\Router;
 
 class RouterTest extends TuleapTestCase {
 
-    private $existing_response;
-
-    public function setUp() {
-        parent::setUp();
-        $this->existing_response = $GLOBALS['Response'];
-        $GLOBALS['Response']     = mock('Layout');
-    }
-
-    public function tearDown() {
-        $GLOBALS['Response'] = $this->existing_response;
-        parent::tearDown();
-    }
-
-    public function itOnlyAcceptsHTTPS() {
+    public function itOnlyAcceptsHTTPS()
+    {
         $login_controller          = mock('Tuleap\OpenIDConnectClient\Login\Controller');
         $account_linker_controller = mock('Tuleap\OpenIDConnectClient\AccountLinker\Controller');
         $user_mapping_controller   = mock('Tuleap\OpenIDConnectClient\UserMapping\Controller');
         $request                   = mock('HTTPRequest');
         $request->setReturnValue('isSecure', false);
 
-        $GLOBALS['Response']->expectOnce('redirect');
+        $response = Mockery::mock(\Tuleap\Layout\BaseLayout::class);
+        $response->shouldReceive('addFeedback')->once();
+        $response->shouldReceive('redirect')->once();
 
         $router = new Router($login_controller, $account_linker_controller, $user_mapping_controller);
-        $router->route($request);
+        $router->process($request, $response, []);
     }
-
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use FastRoute\RouteCollector;
 use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
@@ -41,6 +42,7 @@ use Tuleap\OpenIDConnectClient\Authentication\UserInfo\UserInfoRequestSender;
 use Tuleap\OpenIDConnectClient\Login\ConnectorPresenterBuilder;
 use Tuleap\OpenIDConnectClient\Login;
 use Tuleap\OpenIDConnectClient\Login\IncoherentDataUniqueProviderException;
+use Tuleap\OpenIDConnectClient\LoginController;
 use Tuleap\OpenIDConnectClient\OpenIDConnectClientLogger;
 use Tuleap\OpenIDConnectClient\OpenIDConnectClientPluginInfo;
 use Tuleap\OpenIDConnectClient\Provider\EnableUniqueAuthenticationEndpointVerifier;
@@ -53,11 +55,15 @@ use Tuleap\OpenIDConnectClient\UserMapping\UserPreferencesPresenter;
 use Tuleap\OpenIDConnectClient\UserMapping;
 use Tuleap\OpenIDConnectClient\Administration;
 use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\Request\CollectRoutesEvent;
+use Tuleap\Request\DispatchableWithRequest;
+use Tuleap\Request\DispatchTemporaryRedirect;
 
 require_once __DIR__ . '/constants.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
-class openidconnectclientPlugin extends Plugin {
+class openidconnectclientPlugin extends Plugin
+{
     public function __construct($id) {
         parent::__construct($id);
         bindtextdomain('tuleap-openidconnectclient', __DIR__ . '/../site-content');
@@ -79,6 +85,7 @@ class openidconnectclientPlugin extends Plugin {
         $this->addHook(Event::IS_OLD_PASSWORD_REQUIRED_FOR_PASSWORD_CHANGE);
         $this->addHook(Event::GET_LOGIN_URL);
         $this->addHook('display_newaccount');
+        $this->addHook(CollectRoutesEvent::NAME);
     }
 
     /**
@@ -354,9 +361,10 @@ class openidconnectclientPlugin extends Plugin {
         }
     }
 
-    public function process(HTTPRequest $request) {
+    public function routeIndex() : DispatchableWithRequest
+    {
         if(! $this->canPluginAuthenticateUser()) {
-            return;
+            return new DispatchTemporaryRedirect('/');
         }
 
         $user_manager                = UserManager::instance();
@@ -392,14 +400,14 @@ class openidconnectclientPlugin extends Plugin {
             $provider_manager,
             $user_mapping_manager
         );
-        $router                    = new Router(
+        return new Router(
             $login_controller,
             $account_linker_controller,
-            $user_mapping_controller);
-        $router->route($request);
+            $user_mapping_controller
+        );
     }
 
-    public function processAdmin(HTTPRequest $request)
+    public function routeAdminIndex() : DispatchableWithRequest
     {
         $provider_manager                               = $this->getProviderManager();
         $user_mapping_manager                           = new UserMappingManager(new UserMappingDao());
@@ -420,32 +428,29 @@ class openidconnectclientPlugin extends Plugin {
             OPENIDCONNECTCLIENT_BASE_URL . '/admin'
         );
 
-        $router = new AdminRouter($controller, $csrf_token);
-        $router->route($request);
+        return new AdminRouter($controller, $csrf_token);
     }
 
-    public function processSpecificLoginPage(HTTPRequest $request)
+    public function routeLogin() : DispatchableWithRequest
     {
-        if (!$this->canPluginAuthenticateUser()) {
-            $GLOBALS['Response']->redirect('/');
+        if (! $this->canPluginAuthenticateUser()) {
+            return new DispatchTemporaryRedirect('/');
         }
 
-        $provider_manager        = $this->getProviderManager();
-        $login_presenter_builder = new ConnectorPresenterBuilder(
-            $provider_manager,
-            $this->getAuthorizationRequestCreator()
+        return new LoginController(
+            new ConnectorPresenterBuilder(
+                $this->getProviderManager(),
+                $this->getAuthorizationRequestCreator()
+            )
         );
+    }
 
-        $return_to = $request->get('return_to');
-        $presenter = $login_presenter_builder->getLoginSpecificPageConnectorPresenter($return_to);
-
-        $GLOBALS['HTML']->header(array(
-            'title' => $GLOBALS['Language']->getText('account_login', 'page_title',
-                array(ForgeConfig::get('sys_name'))),
-            'body_class' => array('login-page')
-        ));
-        $renderer = TemplateRendererFactory::build()->getRenderer(OPENIDCONNECTCLIENT_TEMPLATE_DIR);
-        $renderer->renderToPage('login-page', $presenter);
-        $GLOBALS['HTML']->footer(array('without_content' => true));
+    public function collectRoutesEvent(CollectRoutesEvent $event) : void
+    {
+        $event->getRouteCollector()->addGroup($this->getPluginPath(), function (RouteCollector $r) {
+            $r->addRoute(['GET', 'POST'], '[/[index.php]]', $this->getRouteHandler('routeIndex'));
+            $r->addRoute(['GET', 'POST'], '/admin[/[index.php]]', $this->getRouteHandler('routeAdminIndex'));
+            $r->addRoute(['GET', 'POST'], '/login.php', $this->getRouteHandler('routeLogin'));
+        });
     }
 }
