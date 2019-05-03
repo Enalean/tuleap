@@ -45,7 +45,7 @@ class AttachmentPreTextPresenter
     public $pre_text_message;
 
     /**
-     * AttachmentPreTextPresenter constructor.
+     *
      * @param PullRequest $pull_request
      * @param PFUser $user
      * @param HTTPRequest $request
