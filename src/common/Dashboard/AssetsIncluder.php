@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,18 +21,24 @@
 namespace Tuleap\Dashboard;
 
 use Tuleap\Dashboard\Widget\DashboardWidgetPresenter;
+use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Layout\IncludeAssets;
 
 class AssetsIncluder
 {
     /**
+     * @var BaseLayout
+     */
+    private $layout;
+    /**
      * @var IncludeAssets
      */
     private $include_assets;
 
-    public function __construct(IncludeAssets $include_assets)
+    public function __construct(BaseLayout $layout, IncludeAssets $include_assets)
     {
+        $this->layout         = $layout;
         $this->include_assets = $include_assets;
     }
 
@@ -41,7 +47,7 @@ class AssetsIncluder
      */
     public function includeAssets(array $dashboards_presenter)
     {
-        $GLOBALS['Response']->includeFooterJavascriptFile($this->include_assets->getFileURL('dashboard.js'));
+        $this->layout->includeFooterJavascriptFile($this->include_assets->getFileURL('dashboard.js'));
         $this->includeAssetsNeededByWidgets($dashboards_presenter);
     }
 
@@ -71,19 +77,16 @@ class AssetsIncluder
                             $is_unique_dependency_included[$javascript['unique-name']] = true;
                         }
                         if (isset($javascript['snippet'])) {
-                            /** @var \Tuleap\Layout\BaseLayout */
-                            $GLOBALS['Response']->includeFooterJavascriptSnippet($javascript['snippet']);
+                            $this->layout->includeFooterJavascriptSnippet($javascript['snippet']);
                         } else {
-                            /** @var \Tuleap\Layout\BaseLayout */
-                            $GLOBALS['Response']->includeFooterJavascriptFile($javascript['file']);
+                            $this->layout->includeFooterJavascriptFile($javascript['file']);
                         }
                     }
                 }
             }
         }
 
-        /** @var \Tuleap\Layout\BaseLayout */
-        $GLOBALS['Response']->addCssAssetCollection($deduplicated_css_assets);
+        $this->layout->addCssAssetCollection($deduplicated_css_assets);
     }
 
     /**

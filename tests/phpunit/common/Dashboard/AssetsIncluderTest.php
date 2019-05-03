@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -29,9 +29,9 @@ use Tuleap\Dashboard\Project\ProjectDashboardPresenter;
 use Tuleap\Dashboard\Widget\DashboardWidgetColumnPresenter;
 use Tuleap\Dashboard\Widget\DashboardWidgetLinePresenter;
 use Tuleap\Dashboard\Widget\DashboardWidgetPresenter;
+use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Layout\IncludeAssets;
-use Tuleap\Theme\BurningParrot\BurningParrotTheme;
 
 class AssetsIncluderTest extends TestCase
 {
@@ -40,96 +40,92 @@ class AssetsIncluderTest extends TestCase
     /** @var AssetsIncluder */
     private $includer;
 
+    /**
+     * @var BaseLayout|Mockery\MockInterface
+     */
+    private $layout;
+
     private $backup_globals;
 
-    public function setUp() : void
+    protected function setUp() : void
     {
         parent::setUp();
 
-        $this->backup_globals = array_merge([], $GLOBALS);
-        $GLOBALS['Response']  = Mockery::mock(BurningParrotTheme::class);
+        $this->layout = Mockery::mock(BaseLayout::class);
 
         $include_assets = Mockery::mock(IncludeAssets::class);
         $include_assets->allows('getFileUrl')->andReturnUsing(function ($file_name) {
             return $file_name;
         });
 
-        $this->includer = new AssetsIncluder($include_assets);
+        $this->includer = new AssetsIncluder($this->layout, $include_assets);
     }
 
-    public function tearDown() : void
+    public function testItAlwaysIncludesDashboardJs() : void
     {
-        $GLOBALS = $this->backup_globals;
-
-        parent::tearDown();
-    }
-
-    public function testItAlwaysIncludesDashboardJs()
-    {
-        $GLOBALS['Response']->shouldReceive('includeFooterJavascriptFile')->once()->with('dashboard.js');
+        $this->layout->shouldReceive('includeFooterJavascriptFile')->once()->with('dashboard.js');
 
         $this->includer->includeAssets([]);
     }
 
-    public function testItDoesNotIncludeDependenciesIfThereIsNoDashboard()
+    public function testItDoesNotIncludeDependenciesIfThereIsNoDashboard() : void
     {
         $this->expectDependenciesScriptsWillNOTBeIncluded();
-        $GLOBALS['Response']->shouldNotReceive('addCssAssetCollection');
+        $this->layout->shouldNotReceive('addCssAssetCollection');
 
         $this->includer->includeAssets([]);
     }
 
-    public function testItDoesNotIncludeDependenciesIfCurrentDashboardDoesNotHaveAnyWidgets()
+    public function testItDoesNotIncludeDependenciesIfCurrentDashboardDoesNotHaveAnyWidgets() : void
     {
         $empty_dashboard               = Mockery::mock(ProjectDashboardPresenter::class);
         $empty_dashboard->is_active    = true;
         $empty_dashboard->widget_lines = [];
 
         $this->expectDependenciesScriptsWillNOTBeIncluded();
-        $GLOBALS['Response']->shouldReceive('addCssAssetCollection')->once();
+        $this->layout->shouldReceive('addCssAssetCollection')->once();
 
         $this->includer->includeAssets([$empty_dashboard]);
     }
 
-    public function testItDoesNotIncludeDependenciesIfItIsNotNeeded()
+    public function testItDoesNotIncludeDependenciesIfItIsNotNeeded() : void
     {
         $dashboard = $this->getDashboardWithWidgets(['widget_without_dependencies']);
 
         $this->expectDependenciesScriptsWillNOTBeIncluded();
-        $GLOBALS['Response']->shouldReceive('addCssAssetCollection')->once();
+        $this->layout->shouldReceive('addCssAssetCollection')->once();
 
         $this->includer->includeAssets([$dashboard]);
     }
 
-    public function testItIncludesDependenciesWidgetsWithoutDuplicationWhenRequested()
+    public function testItIncludesDependenciesWidgetsWithoutDuplicationWhenRequested() : void
     {
         $dashboard = $this->getDashboardWithWidgets(['first_widget', 'second_widget']);
 
         //first widget
-        $GLOBALS['Response']->shouldReceive('includeFooterJavascriptFile')->with('dashboard.js')->ordered()->once();
-        $GLOBALS['Response']->shouldReceive('includeFooterJavascriptFile')->with('dependency_one')->ordered()->once();
-        $GLOBALS['Response']->shouldReceive('includeFooterJavascriptSnippet')->with('dependency_two')->once();
-        $GLOBALS['Response']->shouldReceive('includeFooterJavascriptFile')->with('dependency_three')->ordered()->once();
+        $this->layout->shouldReceive('includeFooterJavascriptFile')->with('dashboard.js')->ordered()->once();
+        $this->layout->shouldReceive('includeFooterJavascriptFile')->with('dependency_one')->ordered()->once();
+        $this->layout->shouldReceive('includeFooterJavascriptSnippet')->with('dependency_two')->once();
+        $this->layout->shouldReceive('includeFooterJavascriptFile')->with('dependency_three')->ordered()->once();
         // second widget
-        $GLOBALS['Response']->shouldReceive('includeFooterJavascriptFile')->with('dependency_one')->ordered()->once();
-        $GLOBALS['Response']->shouldReceive('includeFooterJavascriptFile')->with('dependency_four')->ordered()->once();
+        $this->layout->shouldReceive('includeFooterJavascriptFile')->with('dependency_one')->ordered()->once();
+        $this->layout->shouldReceive('includeFooterJavascriptFile')->with('dependency_four')->ordered()->once();
 
-        $GLOBALS['Response']->shouldReceive('addCssAssetCollection')->once();
+        $this->layout->shouldReceive('addCssAssetCollection')->once();
 
         $this->includer->includeAssets([$dashboard]);
     }
 
-    private function expectDependenciesScriptsWillNOTBeIncluded()
+    private function expectDependenciesScriptsWillNOTBeIncluded() : void
     {
-        $GLOBALS['Response']->shouldReceive('includeFooterJavascriptFile')->once()->with('dashboard.js');
-        $GLOBALS['Response']->shouldNotReceive('includeFooterJavascriptSnippet');
+        $this->layout->shouldReceive('includeFooterJavascriptFile')->once()->with('dashboard.js');
+        $this->layout->shouldNotReceive('includeFooterJavascriptSnippet');
     }
 
     /**
      * @param string[] $widget_names
-     * @return ProjectDashboardPresenter
      */
-    private function getDashboardWithWidgets(array $widget_names)
+    private function getDashboardWithWidgets(array $widget_names) : ProjectDashboardPresenter
     {
         $javascript_dependencies = [
             'first_widget'                => [
