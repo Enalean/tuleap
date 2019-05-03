@@ -25,7 +25,7 @@ use Tuleap\Event\Dispatchable;
 
 class DefaultSettingsPanesCollection implements Dispatchable
 {
-    const NAME = 'collectDefaultSettingsPanes';
+    public const NAME = 'collectDefaultSettingsPanes';
 
     /**
      * @var Pane[]

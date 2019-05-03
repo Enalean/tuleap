@@ -44,12 +44,12 @@ abstract class Tracker_Report_Renderer implements WidgetWithAssetDependencies
     /**
      * A table renderer. This is the legacy display of the results
      */
-    const TABLE = 'table';
+    public const TABLE = 'table';
 
     /**
      * A "Board" renderer. Display artifacts grouped by columns.
      */
-    const BOARD = 'board';
+    public const BOARD = 'board';
 
     /**
      * Constructor

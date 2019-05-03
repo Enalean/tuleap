@@ -47,8 +47,8 @@ use Tuleap\Tracker\Report\TrackerReportExtractor;
 
 class TimetrackingReportResource extends AuthenticatedResource
 {
-    const DEFAULT_OFFSET  = 0;
-    const MAX_LIMIT       = 50;
+    public const DEFAULT_OFFSET  = 0;
+    public const MAX_LIMIT       = 50;
 
     /**
      * @var UserManager

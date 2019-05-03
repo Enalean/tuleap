@@ -22,10 +22,10 @@ namespace Tuleap\CrossTracker\Report\CSV;
 
 class CSVRepresentation
 {
-    const COMMA_SEPARATOR_NAME = 'comma';
-    const SEMICOLON_SEPARATOR_NAME = 'semicolon';
-    const TAB_SEPARATOR_NAME = 'tab';
-    const CSV_EMPTY_VALUE = '';
+    public const COMMA_SEPARATOR_NAME = 'comma';
+    public const SEMICOLON_SEPARATOR_NAME = 'semicolon';
+    public const TAB_SEPARATOR_NAME = 'tab';
+    public const CSV_EMPTY_VALUE = '';
 
     /**
      * @var string[][]

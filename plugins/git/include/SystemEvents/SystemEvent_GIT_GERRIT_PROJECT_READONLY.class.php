@@ -25,7 +25,7 @@ require_once('common/system_event/SystemEvent.class.php');
 
 class SystemEvent_GIT_GERRIT_PROJECT_READONLY extends SystemEvent {
 
-    const NAME = 'GIT_GERRIT_PROJECT_READONLY';
+    public const NAME = 'GIT_GERRIT_PROJECT_READONLY';
 
     /**
      * @var GitRepositoryFactory

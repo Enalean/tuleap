@@ -29,7 +29,7 @@ require_once 'ClientUnableToLaunchBuildException.class.php';
  */
 class Jenkins_Client {
 
-    const BUILD_WITH_PARAMETERS_REGEXP = '%(?P<job_url>.*)/buildWithParameters(/|\?).*%';
+    public const BUILD_WITH_PARAMETERS_REGEXP = '%(?P<job_url>.*)/buildWithParameters(/|\?).*%';
 
     /**
      * @var Http_Client

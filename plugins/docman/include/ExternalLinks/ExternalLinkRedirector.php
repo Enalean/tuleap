@@ -26,7 +26,7 @@ use Tuleap\Event\Dispatchable;
 
 class ExternalLinkRedirector implements Dispatchable
 {
-    const NAME = 'externalLinkRedirector';
+    public const NAME = 'externalLinkRedirector';
 
     /**
      * @var \PFUser

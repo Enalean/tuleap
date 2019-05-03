@@ -24,7 +24,7 @@ use Tuleap\Event\Dispatchable;
 
 class ProjectSuspendedAndNotBlockedWarningCollector implements Dispatchable
 {
-    const NAME = 'projectSuspendedAndNotBlockedWarningCollector';
+    public const NAME = 'projectSuspendedAndNotBlockedWarningCollector';
 
     /** @var \Project */
     private $project;

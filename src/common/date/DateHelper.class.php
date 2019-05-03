@@ -21,10 +21,10 @@
 
 class DateHelper {
     
-    const INCLUDE_SECONDS = 1;
-    const WITH_TITLE      = 1;
+    public const INCLUDE_SECONDS = 1;
+    public const WITH_TITLE      = 1;
     
-    const SECONDS_IN_A_DAY = 86400;
+    public const SECONDS_IN_A_DAY = 86400;
 
     /**
      * Give the apporximate distance between a time and now

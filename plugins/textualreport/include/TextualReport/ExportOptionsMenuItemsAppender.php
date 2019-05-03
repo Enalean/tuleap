@@ -25,7 +25,7 @@ use Tuleap\Tracker\Report\Renderer\Table\GetExportOptionsMenuItemsEvent;
 
 class ExportOptionsMenuItemsAppender
 {
-    const EXPORT_SINGLE_PAGE = 'export_single_page';
+    public const EXPORT_SINGLE_PAGE = 'export_single_page';
     /**
      * @var TemplateRenderer
      */

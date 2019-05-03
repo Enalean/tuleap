@@ -65,7 +65,7 @@ extends Docman_MetadataSqlQueryChunk {
     /**
      * The search type is the full text one
      */
-    const BOOLEAN_SEARCH_TYPE = 'IN BOOLEAN MODE';
+    public const BOOLEAN_SEARCH_TYPE = 'IN BOOLEAN MODE';
 
     var $filter;
     var $isRealMetadata;

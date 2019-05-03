@@ -26,7 +26,7 @@ use Tuleap\AgileDashboard\Milestone\Pane\PaneInfo;
 
 class PlanningV2PaneInfo extends PaneInfo
 {
-    const IDENTIFIER = 'planning-v2';
+    public const IDENTIFIER = 'planning-v2';
 
     /** @var Tracker */
     private $submilestone_tracker;

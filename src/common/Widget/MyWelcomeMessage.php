@@ -28,7 +28,7 @@ use ForgeConfig;
 
 class MyWelcomeMessage extends Widget
 {
-    const NAME = 'mywelcomemessage';
+    public const NAME = 'mywelcomemessage';
 
     /**
      * @var PFUser

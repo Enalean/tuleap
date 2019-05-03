@@ -24,7 +24,7 @@ use Project;
 
 class ProjectStatusMapper
 {
-    const STATUS_FLAGS = [
+    public const STATUS_FLAGS = [
         Project::STATUS_DELETED_LABEL,
         Project::STATUS_PENDING_LABEL,
         Project::STATUS_ACTIVE_LABEL,
@@ -32,7 +32,7 @@ class ProjectStatusMapper
         Project::STATUS_SYSTEM_LABEL
     ];
 
-    const LABEL_TO_FLAG_MAP = [
+    public const LABEL_TO_FLAG_MAP = [
         Project::STATUS_DELETED_LABEL    => Project::STATUS_DELETED,
         Project::STATUS_PENDING_LABEL    => Project::STATUS_PENDING,
         Project::STATUS_ACTIVE_LABEL     => Project::STATUS_ACTIVE,

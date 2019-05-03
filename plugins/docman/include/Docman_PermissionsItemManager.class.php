@@ -25,7 +25,7 @@ require_once 'Docman_ItemFactory.class.php';
  *
  */
 class Docman_PermissionsItemManager {
-    const PERMISSIONS_TYPE = 'PLUGIN_DOCMAN_%';
+    public const PERMISSIONS_TYPE = 'PLUGIN_DOCMAN_%';
 
     private function mergeUgroupIds(array $parent_ugroups_ids, array $child_ugroups_ids) {
         $item_ugroups_ids   = array_intersect($parent_ugroups_ids, $child_ugroups_ids);

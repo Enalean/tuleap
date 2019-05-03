@@ -23,9 +23,9 @@ use Tuleap\Tracker\Semantic\SemanticStatusCanBeDeleted;
 use Tuleap\Tracker\Semantic\SemanticStatusGetDisabledValues;
 
 class Tracker_Semantic_Status extends Tracker_Semantic {
-    const NAME   = 'status';
-    const OPEN   = 'Open';
-    const CLOSED = 'Closed';
+    public const NAME   = 'status';
+    public const OPEN   = 'Open';
+    public const CLOSED = 'Closed';
 
     /**
      * @var Tracker_FormElement_Field_List

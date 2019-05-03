@@ -23,7 +23,7 @@ require_once 'Statistics_Formatter.class.php';
 class Statistics_Services_UsageFormatter {
 
     /** @const number of bytes in a MegaByte */
-    const BYTES_NUMBER_IN_MB = 1000;
+    public const BYTES_NUMBER_IN_MB = 1000;
 
     /** @var array */
     private $datas;
@@ -34,8 +34,8 @@ class Statistics_Services_UsageFormatter {
     /** @var Statistics_Formatter */
     private $stats_formatter;
 
-    const GROUP_ID = 'group_id';
-    const VALUES   = 'result';
+    public const GROUP_ID = 'group_id';
+    public const VALUES   = 'result';
 
     public function __construct(Statistics_Formatter $stats_formatter) {
         $this->stats_formatter = $stats_formatter;

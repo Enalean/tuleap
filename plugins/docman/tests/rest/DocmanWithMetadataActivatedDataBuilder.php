@@ -31,7 +31,7 @@ require_once __DIR__ . '/helper/DocmanDataBuildCommon.php';
 
 class DocmanWithMetadataActivatedDataBuilder extends DocmanDataBuildCommon
 {
-    const PROJECT_NAME = 'DocmanProjectMetadata';
+    public const PROJECT_NAME = 'DocmanProjectMetadata';
 
     /**
      * @var \Docman_SettingsDao

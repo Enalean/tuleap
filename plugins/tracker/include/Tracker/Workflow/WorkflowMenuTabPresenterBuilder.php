@@ -25,10 +25,10 @@ use Workflow;
 
 class WorkflowMenuTabPresenterBuilder
 {
-    const TAB_RULES                  = 'rules';
-    const TAB_TRANSITIONS            = 'transitions';
-    const TAB_CROSS_TRACKER_TRIGGERS = 'triggers';
-    const TAB_WEBHOOKS               = 'webhooks';
+    public const TAB_RULES                  = 'rules';
+    public const TAB_TRANSITIONS            = 'transitions';
+    public const TAB_CROSS_TRACKER_TRIGGERS = 'triggers';
+    public const TAB_WEBHOOKS               = 'webhooks';
 
     public function build(Tracker $tracker, $active_tab_name)
     {

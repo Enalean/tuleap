@@ -19,7 +19,7 @@
  */
 
 class SystemEvent_GIT_GROKMIRROR_MANIFEST_CHECK extends SystemEvent {
-    const NAME = 'GIT_GROKMIRROR_MANIFEST_CHECK';
+    public const NAME = 'GIT_GROKMIRROR_MANIFEST_CHECK';
 
     /** @var Git_Mirror_ManifestManager */
     private $manifest_manager;

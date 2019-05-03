@@ -37,7 +37,7 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidMetadata\Comment\CommentToStatus
 
 class NotEqualComparisonChecker implements ICheckMetadataForAComparison, ValueWrapperVisitor
 {
-    const OPERATOR = '!=';
+    public const OPERATOR = '!=';
 
     public function checkMetaDataIsValid(Metadata $metadata, Comparison $comparison)
     {

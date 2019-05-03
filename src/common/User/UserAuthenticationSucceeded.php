@@ -26,7 +26,7 @@ use Tuleap\Event\Dispatchable;
 
 class UserAuthenticationSucceeded implements Dispatchable
 {
-    const NAME = 'userAuthenticationSucceeded';
+    public const NAME = 'userAuthenticationSucceeded';
 
     /**
      * @var PFUser

@@ -28,8 +28,8 @@ namespace Tuleap\System;
  */
 class ServiceControl
 {
-    const SYSTEMD = 'systemd';
-    const INITV   = 'initv';
+    public const SYSTEMD = 'systemd';
+    public const INITV   = 'initv';
 
     public function getInitMode()
     {

@@ -24,7 +24,7 @@ class SVN_ImmutableTagsPresenter
     // Should be a const, waiting for PHP 5.6+
     public static $SO_MUCH_FOLDERS = array();
 
-    const MAX_NUMBER_OF_FOLDERS = 10000;
+    public const MAX_NUMBER_OF_FOLDERS = 10000;
 
     /** @var Project */
     private $project;

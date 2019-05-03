@@ -46,11 +46,11 @@ use ForgeConfig;
 
 class ArtifactTemporaryFilesResource {
 
-    const PAGINATION_MAX_LIMIT      = 50;
-    const PAGINATION_DEFAULT_LIMIT  = 10;
-    const PAGINATION_DEFAULT_OFFSET = 0;
+    public const PAGINATION_MAX_LIMIT      = 50;
+    public const PAGINATION_DEFAULT_LIMIT  = 10;
+    public const PAGINATION_DEFAULT_OFFSET = 0;
 
-    const DEFAULT_LIMIT = 1048576; // 1Mo
+    public const DEFAULT_LIMIT = 1048576; // 1Mo
 
     /** @var PFUser */
     private $user;

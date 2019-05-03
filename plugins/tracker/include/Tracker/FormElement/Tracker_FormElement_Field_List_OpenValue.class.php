@@ -22,7 +22,7 @@
 
 class Tracker_FormElement_Field_List_OpenValue extends Tracker_FormElement_Field_List_Value {
 
-    const OPEN_PREFIX = 'o';
+    public const OPEN_PREFIX = 'o';
 
     protected $label;
     

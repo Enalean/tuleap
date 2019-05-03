@@ -24,9 +24,9 @@ require_once('Docman_Path.class.php');
 
 class Docman_NotificationsManager_Move extends Docman_NotificationsManager {
 
-    const MESSAGE_MOVED      = 'moved';      // X has been moved from to
-    const MESSAGE_MOVED_FROM = 'moved_from'; // X has been moved from
-    const MESSAGE_MOVED_TO   = 'moved_to';   // X has been moved to
+    public const MESSAGE_MOVED      = 'moved';      // X has been moved from to
+    public const MESSAGE_MOVED_FROM = 'moved_from'; // X has been moved from
+    public const MESSAGE_MOVED_TO   = 'moved_to';   // X has been moved to
 
     function somethingHappen($event, $params) {
         if ($event == 'plugin_docman_event_move') {

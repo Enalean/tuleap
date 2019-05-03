@@ -26,7 +26,7 @@ use Tuleap\Event\Dispatchable;
 
 class WorkerEvent implements Dispatchable
 {
-    const NAME = 'workerEvent';
+    public const NAME = 'workerEvent';
 
     /**
      * @var Logger

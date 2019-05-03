@@ -26,17 +26,17 @@ use Tuleap\Backend\FileExtensionFilterIterator;
  */
 class Backend {
 
-    const LOG_INFO    = "info";
-    const LOG_WARNING = "warn";
-    const LOG_ERROR   = "error";
-    const LOG_DEBUG   = "debug";
+    public const LOG_INFO    = "info";
+    public const LOG_WARNING = "warn";
+    public const LOG_ERROR   = "error";
+    public const LOG_DEBUG   = "debug";
 
-    const SVN         = 'SVN';
-    const CVS         = 'CVS';
-    const MAILINGLIST = 'MailingList';
-    const BACKEND     = 'Backend';
-    const SYSTEM      = 'System';
-    const ALIASES     = 'Aliases';
+    public const SVN         = 'SVN';
+    public const CVS         = 'CVS';
+    public const MAILINGLIST = 'MailingList';
+    public const BACKEND     = 'Backend';
+    public const SYSTEM      = 'System';
+    public const ALIASES     = 'Aliases';
 
     public $block_marker_start = "# !!! Codendi Specific !!! DO NOT REMOVE (NEEDED CODENDI MARKER)\n";
     public $block_marker_end   = "# END OF NEEDED CODENDI BLOCK\n";

@@ -22,15 +22,15 @@ use Tuleap\REST\JsonCast;
 
 class Tracker_REST_FieldRepresentation {
 
-    const BIND_TYPE  = 'type';
-    const BIND_LIST  = 'list';
+    public const BIND_TYPE  = 'type';
+    public const BIND_LIST  = 'list';
 
-    const BIND_ID    = 'id';
-    const BIND_LABEL = 'label';
+    public const BIND_ID    = 'id';
+    public const BIND_LABEL = 'label';
 
-    const PERM_READ   = 'read';
-    const PERM_UPDATE = 'update';
-    const PERM_CREATE = 'create';
+    public const PERM_READ   = 'read';
+    public const PERM_UPDATE = 'update';
+    public const PERM_CREATE = 'create';
 
     /**
      * @var int

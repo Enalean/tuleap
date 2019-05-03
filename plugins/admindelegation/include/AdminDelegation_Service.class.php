@@ -21,8 +21,8 @@
 
 class AdminDelegation_Service //phpcs:ignore
 {
-    const SHOW_PROJECT_ADMINS = 101;
-    const SHOW_PROJECTS       = 102;
+    public const SHOW_PROJECT_ADMINS = 101;
+    public const SHOW_PROJECTS       = 102;
 
     public static function getAllServices()
     {

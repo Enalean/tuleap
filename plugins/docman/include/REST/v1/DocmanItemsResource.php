@@ -44,7 +44,7 @@ use Tuleap\REST\UserManager as RestUserManager;
 
 class DocmanItemsResource extends AuthenticatedResource
 {
-    const MAX_LIMIT = 50;
+    public const MAX_LIMIT = 50;
 
     /**
      * @var Docman_ItemDao

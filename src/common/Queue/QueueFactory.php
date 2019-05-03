@@ -27,7 +27,7 @@ use Tuleap\Redis\ClientFactory as RedisClientFactory;
 
 class QueueFactory
 {
-    const REDIS = 'redis';
+    public const REDIS = 'redis';
 
     /**
      * @return PersistentQueue

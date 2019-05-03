@@ -29,7 +29,7 @@ use Tuleap\PullRequest\Reference\HTMLURLBuilder;
 
 class NavigationTabPresenterBuilder
 {
-    const TAB_PULLREQUEST = 'tabs-pullrequest';
+    public const TAB_PULLREQUEST = 'tabs-pullrequest';
     /**
      * @var HTMLURLBuilder
      */

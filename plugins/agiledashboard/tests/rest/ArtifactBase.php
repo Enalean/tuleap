@@ -26,7 +26,7 @@ use Tuleap\REST\ArtifactBase as Base;
 
 class ArtifactBase extends Base
 {
-    const BURNUP_FIELD_SHORTNAME = 'burnup_field';
+    public const BURNUP_FIELD_SHORTNAME = 'burnup_field';
 
     protected $burnup_artifact_ids = array();
     private $burnup_tracker_id;

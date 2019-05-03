@@ -91,9 +91,9 @@ class Git_GitoliteDriver {
         Git::PERM_WPLUS => ' RW+'
     );
 
-    CONST OLD_AUTHORIZED_KEYS_PATH = "/usr/com/gitolite/.ssh/authorized_keys";
-    CONST NEW_AUTHORIZED_KEYS_PATH = "/var/lib/gitolite/.ssh/authorized_keys";
-    CONST EXTRA_REPO_RESTORE_DEPTH = 2;
+    public CONST OLD_AUTHORIZED_KEYS_PATH = "/usr/com/gitolite/.ssh/authorized_keys";
+    public CONST NEW_AUTHORIZED_KEYS_PATH = "/var/lib/gitolite/.ssh/authorized_keys";
+    public CONST EXTRA_REPO_RESTORE_DEPTH = 2;
 
     /**
      * Constructor

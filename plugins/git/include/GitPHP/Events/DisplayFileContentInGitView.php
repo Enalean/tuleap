@@ -26,7 +26,7 @@ use Tuleap\Git\GitPHP\Blob;
 
 class DisplayFileContentInGitView implements Dispatchable
 {
-    const NAME = 'displayFileContentInGitView';
+    public const NAME = 'displayFileContentInGitView';
 
     /**
      * @var Blob

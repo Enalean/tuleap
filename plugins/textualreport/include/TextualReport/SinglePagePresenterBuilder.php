@@ -29,7 +29,7 @@ use Tuleap\Layout\ThemeVariation;
 
 class SinglePagePresenterBuilder
 {
-    const HARD_LIMIT = 1000;
+    public const HARD_LIMIT = 1000;
 
     /**
      * @var ArtifactsPresentersBuilder

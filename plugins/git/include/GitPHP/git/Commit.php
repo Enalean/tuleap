@@ -27,7 +27,7 @@ namespace Tuleap\Git\GitPHP;
  */
 class Commit extends GitObject
 {
-    const HEADER_PGP = 'gpgsig';
+    public const HEADER_PGP = 'gpgsig';
 
     /**
      * dataRead

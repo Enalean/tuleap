@@ -25,7 +25,7 @@ use Tuleap\Event\Dispatchable;
 
 class AdditionalArtifactActionButtonsFetcher implements Dispatchable
 {
-    const NAME = "additionalArtifactActionButtonsFetcher";
+    public const NAME = "additionalArtifactActionButtonsFetcher";
 
     /**
      * @var Tracker_Artifact

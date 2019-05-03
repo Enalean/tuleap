@@ -28,7 +28,7 @@ use Tuleap\GitLFS\Batch\Response\Action\BatchResponseActionContent;
 
 class SSHAuthenticateResponseBuilder
 {
-    const EXPIRES_IN_SECONDS = 600;
+    public const EXPIRES_IN_SECONDS = 600;
 
     /**
      * @var UserTokenCreator

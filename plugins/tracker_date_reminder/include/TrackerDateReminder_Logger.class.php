@@ -19,9 +19,9 @@
  */
 
 class TrackerDateReminder_Logger {
-    const LOG_INFO    = "info";
-    const LOG_WARNING = "warn";
-    const LOG_ERROR   = "error";
+    public const LOG_INFO    = "info";
+    public const LOG_WARNING = "warn";
+    public const LOG_ERROR   = "error";
     
     private $file;
     

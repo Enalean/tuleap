@@ -26,7 +26,7 @@ use Widget;
 
 class ProjectMembers extends Widget
 {
-    const NAME = 'projectmembers';
+    public const NAME = 'projectmembers';
 
     public function __construct()
     {

@@ -28,11 +28,11 @@ use Tuleap\Tracker\Notifications\ConfigNotificationEmailCustomSenderFormatter;
 
 class ConfigNotificationEmailCustomSenderFormatterTest extends TestCase
 {
-    const FIELD1_DATA = "123456";
-    const FIELD2_DATA = "abcdef";
-    const FORMAT_DATA = '%field1';
-    const NO_SLUGIFY  = '@ slugify.';
-    const SLUGIFY     = 'at slugify';
+    public const FIELD1_DATA = "123456";
+    public const FIELD2_DATA = "abcdef";
+    public const FORMAT_DATA = '%field1';
+    public const NO_SLUGIFY  = '@ slugify.';
+    public const SLUGIFY     = 'at slugify';
 
     /**
      * @var ConfigNotificationEmailCustomSenderFormatter

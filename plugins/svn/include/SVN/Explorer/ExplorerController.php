@@ -36,7 +36,7 @@ use Tuleap\SVN\SvnPermissionManager;
 
 class ExplorerController
 {
-    const NAME = 'explorer';
+    public const NAME = 'explorer';
 
     /** @var SvnPermissionManager */
     private $permissions_manager;

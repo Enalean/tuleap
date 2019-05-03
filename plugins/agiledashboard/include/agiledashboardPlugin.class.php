@@ -84,9 +84,9 @@ require_once 'constants.php';
  */
 class AgileDashboardPlugin extends Plugin
 {
-    const PLUGIN_NAME = 'agiledashboard';
-    const PLUGIN_SHORTNAME = 'plugin_agiledashboard';
-    const HTTP_CLIENT_UUID = 'HTTP_X_CLIENT_UUID';
+    public const PLUGIN_NAME = 'agiledashboard';
+    public const PLUGIN_SHORTNAME = 'plugin_agiledashboard';
+    public const HTTP_CLIENT_UUID = 'HTTP_X_CLIENT_UUID';
 
     /** @var AgileDashboard_SequenceIdManager */
     private $sequence_id_manager;

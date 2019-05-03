@@ -61,7 +61,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
         'Trackers' => 'ic/tracker20w.png'
         );
 
-    const INCLUDE_FAT_COMBINED = 'include_fat_combined';
+    public const INCLUDE_FAT_COMBINED = 'include_fat_combined';
 
     /**
      * Background for priorities

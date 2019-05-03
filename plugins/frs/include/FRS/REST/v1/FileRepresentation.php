@@ -30,7 +30,7 @@ use Tuleap\User\REST\UserRepresentation;
 
 class FileRepresentation
 {
-    const ROUTE = 'frs_files';
+    public const ROUTE = 'frs_files';
 
     /**
      * @var id {@type int}

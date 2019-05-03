@@ -23,9 +23,9 @@
  */
 class AgileDashboard_Milestone_SelectedMilestoneProvider {
 
-    const FIELD_NAME             = AgileDashboard_Milestone_MilestoneReportCriterionProvider::FIELD_NAME;
-    const ANY                    = AgileDashboard_Milestone_MilestoneReportCriterionProvider::ANY;
-    const TOP_BACKLOG_IDENTIFIER = AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider::TOP_BACKLOG_IDENTIFIER;
+    public const FIELD_NAME             = AgileDashboard_Milestone_MilestoneReportCriterionProvider::FIELD_NAME;
+    public const ANY                    = AgileDashboard_Milestone_MilestoneReportCriterionProvider::ANY;
+    public const TOP_BACKLOG_IDENTIFIER = AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider::TOP_BACKLOG_IDENTIFIER;
 
     /** @var Planning_MilestoneFactory */
     private $milestone_factory;

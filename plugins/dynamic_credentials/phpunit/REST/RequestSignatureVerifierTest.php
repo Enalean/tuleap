@@ -30,9 +30,9 @@ class RequestSignatureVerifierTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    const PUBLIC_KEY  = 'ka7Gcvo3RO0FeksfVkBCgTndCz/IMLfwCQA3DoN8k68=';
-    const SECRET_KEY  = 'KOJqKTCvuBvSdKN/MgGLlTI7T3hrZKERlq2JDLB7Wc+RrsZy+jdE7QV6Sx9WQEKBOd0LP8gwt/AJADcOg3yTrw==';
-    const USED_DOMAIN = 'example.com';
+    public const PUBLIC_KEY  = 'ka7Gcvo3RO0FeksfVkBCgTndCz/IMLfwCQA3DoN8k68=';
+    public const SECRET_KEY  = 'KOJqKTCvuBvSdKN/MgGLlTI7T3hrZKERlq2JDLB7Wc+RrsZy+jdE7QV6Sx9WQEKBOd0LP8gwt/AJADcOg3yTrw==';
+    public const USED_DOMAIN = 'example.com';
 
     public function setUp() : void
     {

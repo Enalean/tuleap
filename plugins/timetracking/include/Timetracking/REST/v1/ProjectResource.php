@@ -43,7 +43,7 @@ use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
 
 class ProjectResource
 {
-    const TIMETRACKING_CRITERION = 'with_time_tracking';
+    public const TIMETRACKING_CRITERION = 'with_time_tracking';
 
     /** @var \Tuleap\REST\UserManager */
     private $rest_user_manager;

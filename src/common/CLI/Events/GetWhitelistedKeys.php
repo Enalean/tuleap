@@ -30,7 +30,7 @@ use Tuleap\Project\DefaultProjectVisibilityRetriever;
 
 class GetWhitelistedKeys implements Dispatchable
 {
-    const NAME = 'getWhitelistedKeys';
+    public const NAME = 'getWhitelistedKeys';
 
     /**
      * @var array

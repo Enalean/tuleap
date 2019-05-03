@@ -112,8 +112,8 @@ use Tuleap\SVN\XMLSvnExporter;
  */
 class SvnPlugin extends Plugin
 {
-    const SERVICE_SHORTNAME  = 'plugin_svn';
-    const SYSTEM_NATURE_NAME = 'svn_revision';
+    public const SERVICE_SHORTNAME  = 'plugin_svn';
+    public const SYSTEM_NATURE_NAME = 'svn_revision';
 
     /** @var Tuleap\SVN\Repository\RepositoryManager */
     private $repository_manager;

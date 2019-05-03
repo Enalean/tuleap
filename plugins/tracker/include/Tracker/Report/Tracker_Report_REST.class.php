@@ -19,14 +19,14 @@
 
 class Tracker_Report_REST extends Tracker_Report {
 
-    const OPERATOR_PROPERTY_NAME = 'operator';
-    const VALUE_PROPERTY_NAME    = 'value';
-    const DEFAULT_OPERATOR       = 'contains';
-    const OPERATOR_CONTAINS      = 'contains';
-    const OPERATOR_EQUALS        = '=';
-    const OPERATOR_BETWEEN       = 'between';
-    const OPERATOR_GREATER_THAN  = '>';
-    const OPERATOR_LESS_THAN     = '<';
+    public const OPERATOR_PROPERTY_NAME = 'operator';
+    public const VALUE_PROPERTY_NAME    = 'value';
+    public const DEFAULT_OPERATOR       = 'contains';
+    public const OPERATOR_CONTAINS      = 'contains';
+    public const OPERATOR_EQUALS        = '=';
+    public const OPERATOR_BETWEEN       = 'between';
+    public const OPERATOR_GREATER_THAN  = '>';
+    public const OPERATOR_LESS_THAN     = '<';
 
     /**
      * @var Tracker_FormElementFactory

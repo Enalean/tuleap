@@ -26,7 +26,7 @@ use Tuleap\Event\Dispatchable;
 
 class ExternalLinksManager implements Dispatchable
 {
-    const NAME = 'externalLinksManager';
+    public const NAME = 'externalLinksManager';
 
     /**
      * @var array

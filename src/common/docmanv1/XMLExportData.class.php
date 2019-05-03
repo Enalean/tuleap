@@ -21,17 +21,17 @@ use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 
 class DocmanV1_XMLExportData {
 
-    const ROOT_FOLDER_NAME = 'Legacy documentation';
+    public const ROOT_FOLDER_NAME = 'Legacy documentation';
 
-    const FOLDER_TYPE = 'folder';
-    const FILE_TYPE   = 'file';
+    public const FOLDER_TYPE = 'folder';
+    public const FILE_TYPE   = 'file';
 
-    const FOLDER_PERMISSION_TYPE   = 'DOCGROUP_READ';
-    const DOCUMENT_PERMISSION_TYPE = 'DOCUMENT_READ';
+    public const FOLDER_PERMISSION_TYPE   = 'DOCGROUP_READ';
+    public const DOCUMENT_PERMISSION_TYPE = 'DOCUMENT_READ';
 
-    const V2_SOAP_PERM_MANAGE = 'manage';
-    const V2_SOAP_PERM_READ   = 'read';
-    const V2_SOAP_PERM_NONE   = '';
+    public const V2_SOAP_PERM_MANAGE = 'manage';
+    public const V2_SOAP_PERM_READ   = 'read';
+    public const V2_SOAP_PERM_NONE   = '';
 
 
     /**

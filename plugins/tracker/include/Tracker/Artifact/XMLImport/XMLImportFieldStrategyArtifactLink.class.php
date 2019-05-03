@@ -30,7 +30,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink implements T
      *  - tracker_id: input int
      *  - error : output string
      */
-    const TRACKER_ADD_SYSTEM_NATURES = 'tracker_add_system_natures';
+    public const TRACKER_ADD_SYSTEM_NATURES = 'tracker_add_system_natures';
 
     /**
      * Check that nature is respects rules
@@ -42,7 +42,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink implements T
      *  - children_id: input int
      *  - shortname: input string
      */
-    const TRACKER_IS_NATURE_VALID = 'tracker_is_nature_valid';
+    public const TRACKER_IS_NATURE_VALID = 'tracker_is_nature_valid';
 
     /** @var Tracker_XML_Importer_ArtifactImportedMapping */
     private $artifact_id_mapping;

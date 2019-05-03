@@ -22,7 +22,7 @@
  * A swimline for the tracker's cardwall renderer
  */
 class Cardwall_SwimlineTrackerRenderer extends Cardwall_Swimline{
-    const FAKE_SWIMLINE_ID_FOR_TRACKER_RENDERER = 'FAKE_SWIMLINE_ID_FOR_TRACKER_RENDERER';
+    public const FAKE_SWIMLINE_ID_FOR_TRACKER_RENDERER = 'FAKE_SWIMLINE_ID_FOR_TRACKER_RENDERER';
 
     /**
      * @var int

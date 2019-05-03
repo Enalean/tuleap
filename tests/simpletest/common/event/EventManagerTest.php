@@ -34,7 +34,7 @@ class EventManagerTest extends TuleapTestCase {
 
 class EventManager_ProcessEvent_EventForTestingPurpose
 {
-    const NAME = 'whatever';
+    public const NAME = 'whatever';
 }
 
 class EventManager_ProcessEventTest extends TuleapTestCase {

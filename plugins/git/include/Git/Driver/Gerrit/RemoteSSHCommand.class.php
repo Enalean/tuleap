@@ -20,8 +20,8 @@
 
 class Git_Driver_Gerrit_RemoteSSHCommand {
 
-    const SUCCESS = 0;
-    const STD_OUT_GLUE = PHP_EOL;
+    public const SUCCESS = 0;
+    public const STD_OUT_GLUE = PHP_EOL;
     
     /** Logger */
     private $logger;

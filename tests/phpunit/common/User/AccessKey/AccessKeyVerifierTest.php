@@ -30,8 +30,8 @@ class AccessKeyVerifierTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    const LAST_ACCESS_RESOLUTION             = 3600;
-    const IP_ADDRESS_REQUESTING_VERIFICATION = '2001:db8::1777';
+    public const LAST_ACCESS_RESOLUTION             = 3600;
+    public const IP_ADDRESS_REQUESTING_VERIFICATION = '2001:db8::1777';
 
 
     /**

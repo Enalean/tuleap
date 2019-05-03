@@ -25,7 +25,7 @@ use Tracker_FormElementFactory;
 
 class MoveDescriptionSemanticChecker extends MoveSemanticChecker
 {
-    const DESCRIPTION_SEMANTIC_LABEL = 'description';
+    public const DESCRIPTION_SEMANTIC_LABEL = 'description';
 
     public function __construct(Tracker_FormElementFactory $form_element_factory)
     {

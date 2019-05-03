@@ -3,9 +3,9 @@
 require_once 'FakePluginDescriptor.php';
 
 class ReleaseVersionComparator {
-    const COLOR_RED     = "\033[31m";
-    const COLOR_GREEN   = "\033[32m";
-    const COLOR_NOCOLOR = "\033[0m";
+    public const COLOR_RED     = "\033[31m";
+    public const COLOR_GREEN   = "\033[32m";
+    public const COLOR_NOCOLOR = "\033[0m";
 
     protected $tmpNames = array();
 

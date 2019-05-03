@@ -26,7 +26,7 @@ use Tuleap\REST\v1\FRSPackageRepresentationBase;
 
 class PackageMinimalRepresentation extends FRSPackageRepresentationBase
 {
-    const ROUTE = 'frs_packages';
+    public const ROUTE = 'frs_packages';
 
     public function build(FRSPackage $package)
     {

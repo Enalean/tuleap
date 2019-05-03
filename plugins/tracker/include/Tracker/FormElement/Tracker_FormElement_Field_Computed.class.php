@@ -29,8 +29,8 @@ use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
 
 class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float //phpcs:ignore
 {
-    const FIELD_VALUE_IS_AUTOCOMPUTED = 'is_autocomputed';
-    const FIELD_VALUE_MANUAL          = 'manual_value';
+    public const FIELD_VALUE_IS_AUTOCOMPUTED = 'is_autocomputed';
+    public const FIELD_VALUE_MANUAL          = 'manual_value';
 
     public $default_properties = array(
         'target_field_name' => array(

@@ -19,7 +19,7 @@
 
 class ServiceTracker extends Service {
 
-    const NAME = 'tracker';
+    public const NAME = 'tracker';
 
     /**
      * Display header for service tracker

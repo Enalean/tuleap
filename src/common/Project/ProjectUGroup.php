@@ -28,26 +28,26 @@ use Tuleap\User\UserGroup\NameTranslator;
 class ProjectUGroup implements User_UGroup // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
 
-    const NONE               = 100;
-    const ANONYMOUS          = 1;
-    const REGISTERED         = 2;
-    const AUTHENTICATED      = 5;
-    const PROJECT_MEMBERS    = 3;
-    const PROJECT_ADMIN      = 4;
-    const FILE_MANAGER_ADMIN = 11;
-    const DOCUMENT_TECH      = 12;
-    const DOCUMENT_ADMIN     = 13;
-    const WIKI_ADMIN         = 14;
-    const TRACKER_ADMIN      = 15;
-    const FORUM_ADMIN        = 16;
-    const NEWS_ADMIN         = 17;
-    const NEWS_WRITER        = 18;
-    const SVN_ADMIN          = 19;
+    public const NONE               = 100;
+    public const ANONYMOUS          = 1;
+    public const REGISTERED         = 2;
+    public const AUTHENTICATED      = 5;
+    public const PROJECT_MEMBERS    = 3;
+    public const PROJECT_ADMIN      = 4;
+    public const FILE_MANAGER_ADMIN = 11;
+    public const DOCUMENT_TECH      = 12;
+    public const DOCUMENT_ADMIN     = 13;
+    public const WIKI_ADMIN         = 14;
+    public const TRACKER_ADMIN      = 15;
+    public const FORUM_ADMIN        = 16;
+    public const NEWS_ADMIN         = 17;
+    public const NEWS_WRITER        = 18;
+    public const SVN_ADMIN          = 19;
 
-    const WIKI_ADMIN_PERMISSIONS    = 'W2';
-    const PROJECT_ADMIN_PERMISSIONS = 'A';
+    public const WIKI_ADMIN_PERMISSIONS    = 'W2';
+    public const PROJECT_ADMIN_PERMISSIONS = 'A';
 
-    const DYNAMIC_UPPER_BOUNDARY = 100;
+    public const DYNAMIC_UPPER_BOUNDARY = 100;
 
     public static $legacy_ugroups = array(
         self::FILE_MANAGER_ADMIN,

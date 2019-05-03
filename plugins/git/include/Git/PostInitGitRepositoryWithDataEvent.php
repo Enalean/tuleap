@@ -24,7 +24,7 @@ use Tuleap\Event\Dispatchable;
 
 class PostInitGitRepositoryWithDataEvent implements Dispatchable
 {
-    const NAME = 'postInitGitRepositoryWithDataEvent';
+    public const NAME = 'postInitGitRepositoryWithDataEvent';
 
     /**
      * @var \GitRepository

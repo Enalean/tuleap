@@ -29,7 +29,7 @@ use \Tuleap\REST\Header;
  * Wrapper for milestone related REST methods
  */
 class ProjectPlanningsResource {
-    const MAX_LIMIT = 50;
+    public const MAX_LIMIT = 50;
 
     public function get(PFUser $user, Project $project, $limit, $offset) {
 

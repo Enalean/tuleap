@@ -27,7 +27,7 @@ use Tuleap\Tracker\Action\Move\FeedbackFieldCollectorInterface;
 
 class MoveArtifactParseFieldChangeNodes implements Dispatchable
 {
-    const NAME = "moveArtifactParseFieldChangeNodes";
+    public const NAME = "moveArtifactParseFieldChangeNodes";
 
     /**
      * @var Tracker

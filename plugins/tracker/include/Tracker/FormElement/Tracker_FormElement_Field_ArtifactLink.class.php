@@ -39,11 +39,11 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\SubmittedValueConvertor;
 
 class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
 {
-    const TYPE                    = 'art_link';
-    const CREATE_NEW_PARENT_VALUE = -1;
-    const NEW_VALUES_KEY          = 'new_values';
-    const NATURE_IS_CHILD         = '_is_child';
-    const NO_NATURE               = '';
+    public const TYPE                    = 'art_link';
+    public const CREATE_NEW_PARENT_VALUE = -1;
+    public const NEW_VALUES_KEY          = 'new_values';
+    public const NATURE_IS_CHILD         = '_is_child';
+    public const NO_NATURE               = '';
 
     /**
      * Display some information at the top of the artifact link field value
@@ -56,7 +56,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
      *   'reverse_artifact_links' => input boolean
      *   'additional_classes'     => input String[]
      */
-    const PREPEND_ARTIFACTLINK_INFORMATION = 'prepend_artifactlink_information';
+    public const PREPEND_ARTIFACTLINK_INFORMATION = 'prepend_artifactlink_information';
 
     /**
      * Allow to add command to the queue that is processed after a changeset is created.
@@ -66,7 +66,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
      *    'queue' => input/output Tracker_FormElement_Field_ArtifactLink_PostSaveNewChangesetQueue
      *    'field' => input Tracker_FormElement_Field
      */
-    const GET_POST_SAVE_NEW_CHANGESET_QUEUE = 'get_post_save_new_changeset_queue';
+    public const GET_POST_SAVE_NEW_CHANGESET_QUEUE = 'get_post_save_new_changeset_queue';
 
     /**
      * Called just after augmentDataFromRequest has been called.
@@ -75,7 +75,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
      *    'fields_data' => input/output array
      *    'field'       => input Tracker_FormElement_Field
      */
-    const AFTER_AUGMENT_DATA_FROM_REQUEST = 'after_augment_data_from_request';
+    public const AFTER_AUGMENT_DATA_FROM_REQUEST = 'after_augment_data_from_request';
 
     /**
      * @var Tracker_ArtifactFactory

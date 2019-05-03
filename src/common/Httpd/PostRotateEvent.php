@@ -29,7 +29,7 @@ use Logger;
  */
 class PostRotateEvent implements Dispatchable
 {
-    const NAME = 'httpdPostRotate';
+    public const NAME = 'httpdPostRotate';
 
     /**
      * @var Logger

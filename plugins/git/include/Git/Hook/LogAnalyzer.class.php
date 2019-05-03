@@ -27,7 +27,7 @@
  * is a branch creation or a tag deletion, etc.
  */
 class Git_Hook_LogAnalyzer {
-    const FAKE_EMPTY_COMMIT = '0000000000000000000000000000000000000000';
+    public const FAKE_EMPTY_COMMIT = '0000000000000000000000000000000000000000';
 
     /** @var Git_Exec */
     private $exec_repo;

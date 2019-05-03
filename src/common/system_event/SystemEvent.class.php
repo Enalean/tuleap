@@ -37,58 +37,58 @@ abstract class SystemEvent {
     protected $log;
 
     // Define event types
-    const TYPE_SYSTEM_CHECK                             = "SYSTEM_CHECK";
-    const TYPE_EDIT_SSH_KEYS                            = "EDIT_SSH_KEYS";
-    const TYPE_PROJECT_CREATE                           = "PROJECT_CREATE";
-    const TYPE_PROJECT_ACTIVE                           = "PROJECT_ACTIVE";
-    const TYPE_PROJECT_DELETE                           = "PROJECT_DELETE";
-    const TYPE_PROJECT_SVN_AUTHENTICATION_CACHE_REFRESH = "PROJECT_SVN_AUTHENTICATION_CACHE_REFRESH";
-    const TYPE_PROJECT_RENAME                           = "PROJECT_RENAME";
-    const TYPE_UGROUP_MODIFY                            = "UGROUP_MODIFY";
+    public const TYPE_SYSTEM_CHECK                             = "SYSTEM_CHECK";
+    public const TYPE_EDIT_SSH_KEYS                            = "EDIT_SSH_KEYS";
+    public const TYPE_PROJECT_CREATE                           = "PROJECT_CREATE";
+    public const TYPE_PROJECT_ACTIVE                           = "PROJECT_ACTIVE";
+    public const TYPE_PROJECT_DELETE                           = "PROJECT_DELETE";
+    public const TYPE_PROJECT_SVN_AUTHENTICATION_CACHE_REFRESH = "PROJECT_SVN_AUTHENTICATION_CACHE_REFRESH";
+    public const TYPE_PROJECT_RENAME                           = "PROJECT_RENAME";
+    public const TYPE_UGROUP_MODIFY                            = "UGROUP_MODIFY";
     public const TYPE_USER_ACTIVE_STATUS_CHANGE         = "ACTIVE_USER_STATUS_CHANGE";
-    const TYPE_USER_DELETE                              = "USER_DELETE";
-    const TYPE_USER_MODIFY                              = "USER_MODIFY";
-    const TYPE_USER_RENAME                              = "USER_RENAME";
-    const TYPE_MEMBERSHIP_CREATE                        = "MEMBERSHIP_CREATE";
-    const TYPE_MEMBERSHIP_DELETE                        = "MEMBERSHIP_DELETE";
-    const TYPE_MEMBERSHIP_MODIFY                        = "MEMBERSHIP_MODIFY";
-    const TYPE_CVS_IS_PRIVATE                           = "CVS_IS_PRIVATE";
-    const TYPE_PROJECT_IS_PRIVATE                       = "PROJECT_IS_PRIVATE";
-    const TYPE_MAILING_LIST_CREATE                      = "MAILING_LIST_CREATE";
-    const TYPE_MAILING_LIST_DELETE                      = "MAILING_LIST_DELETE";
-    const TYPE_SERVICE_USAGE_SWITCH                     = "SERVICE_USAGE_SWITCH";
-    const TYPE_ROOT_DAILY                               = "ROOT_DAILY";
-    const TYPE_COMPUTE_MD5SUM                           = "COMPUTE_MD5SUM";
-    const TYPE_MASSMAIL                                 = "MASSMAIL";
-    const TYPE_SVN_UPDATE_HOOKS                         = "SVN_UPDATE_HOOKS";
-    const TYPE_SVN_AUTHORIZE_TOKENS                     = "SVN_AUTHORIZE_TOKENS";
-    const TYPE_SVN_REVOKE_TOKENS                        = "SVN_REVOKE_TOKENS";
-    const TYPE_SVN_AUTH_CACHE_CHANGE                    = "SVN_AUTH_CACHE_CHANGE";
-    const TYPE_MOVE_FRS_FILE                            = "MOVE_FRS_FILE";
-    const TYPE_UPDATE_ALIASES                           = "UPDATE_ALIASES";
+    public const TYPE_USER_DELETE                              = "USER_DELETE";
+    public const TYPE_USER_MODIFY                              = "USER_MODIFY";
+    public const TYPE_USER_RENAME                              = "USER_RENAME";
+    public const TYPE_MEMBERSHIP_CREATE                        = "MEMBERSHIP_CREATE";
+    public const TYPE_MEMBERSHIP_DELETE                        = "MEMBERSHIP_DELETE";
+    public const TYPE_MEMBERSHIP_MODIFY                        = "MEMBERSHIP_MODIFY";
+    public const TYPE_CVS_IS_PRIVATE                           = "CVS_IS_PRIVATE";
+    public const TYPE_PROJECT_IS_PRIVATE                       = "PROJECT_IS_PRIVATE";
+    public const TYPE_MAILING_LIST_CREATE                      = "MAILING_LIST_CREATE";
+    public const TYPE_MAILING_LIST_DELETE                      = "MAILING_LIST_DELETE";
+    public const TYPE_SERVICE_USAGE_SWITCH                     = "SERVICE_USAGE_SWITCH";
+    public const TYPE_ROOT_DAILY                               = "ROOT_DAILY";
+    public const TYPE_COMPUTE_MD5SUM                           = "COMPUTE_MD5SUM";
+    public const TYPE_MASSMAIL                                 = "MASSMAIL";
+    public const TYPE_SVN_UPDATE_HOOKS                         = "SVN_UPDATE_HOOKS";
+    public const TYPE_SVN_AUTHORIZE_TOKENS                     = "SVN_AUTHORIZE_TOKENS";
+    public const TYPE_SVN_REVOKE_TOKENS                        = "SVN_REVOKE_TOKENS";
+    public const TYPE_SVN_AUTH_CACHE_CHANGE                    = "SVN_AUTH_CACHE_CHANGE";
+    public const TYPE_MOVE_FRS_FILE                            = "MOVE_FRS_FILE";
+    public const TYPE_UPDATE_ALIASES                           = "UPDATE_ALIASES";
 
     // Define status value (in sync with DB enum)
-    const STATUS_NONE       = "NONE";
-    const STATUS_NEW        = "NEW";
-    const STATUS_RUNNING    = "RUNNING";
-    const STATUS_DONE       = "DONE";
-    const STATUS_WARNING    = "WARNING";
-    const STATUS_ERROR      = "ERROR";
+    public const STATUS_NONE       = "NONE";
+    public const STATUS_NEW        = "NEW";
+    public const STATUS_RUNNING    = "RUNNING";
+    public const STATUS_DONE       = "DONE";
+    public const STATUS_WARNING    = "WARNING";
+    public const STATUS_ERROR      = "ERROR";
 
     //Priority of the event
-    const PRIORITY_HIGH   = 1;
-    const PRIORITY_MEDIUM = 2;
-    const PRIORITY_LOW    = 3;
+    public const PRIORITY_HIGH   = 1;
+    public const PRIORITY_MEDIUM = 2;
+    public const PRIORITY_LOW    = 3;
     
-    const PARAMETER_SEPARATOR        = '::';
-    const PARAMETER_SEPARATOR_ESCAPE = '\:\:';
+    public const PARAMETER_SEPARATOR        = '::';
+    public const PARAMETER_SEPARATOR_ESCAPE = '\:\:';
 
     // Who should execute the event
-    const OWNER_ROOT = 'root';
-    const OWNER_APP  = 'app';
+    public const OWNER_ROOT = 'root';
+    public const OWNER_APP  = 'app';
 
-    const APP_OWNER_QUEUE = 'owner';
-    const DEFAULT_QUEUE   = 'default';
+    public const APP_OWNER_QUEUE = 'owner';
+    public const DEFAULT_QUEUE   = 'default';
 
     /**
      * Constructor

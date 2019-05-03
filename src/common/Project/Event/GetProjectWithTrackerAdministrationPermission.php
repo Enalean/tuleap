@@ -26,7 +26,7 @@ use Tuleap\Project\PaginatedProjects;
 
 class GetProjectWithTrackerAdministrationPermission implements Dispatchable
 {
-    const NAME = 'getProjectWithTrackerAdministrationPermission';
+    public const NAME = 'getProjectWithTrackerAdministrationPermission';
     /**
      * @var PFUser
      */

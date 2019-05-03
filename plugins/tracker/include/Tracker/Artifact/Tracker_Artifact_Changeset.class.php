@@ -24,8 +24,8 @@ use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsRunner;
 require_once('utils.php');
 
 class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
-    const FIELDS_ALL      = 'all';
-    const FIELDS_COMMENTS = 'comments';
+    public const FIELDS_ALL      = 'all';
+    public const FIELDS_COMMENTS = 'comments';
 
     public $id;
     public $artifact;

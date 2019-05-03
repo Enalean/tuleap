@@ -19,10 +19,10 @@
  */
 
 class Search_SearchWiki {
-    const NAME = 'wiki';
+    public const NAME = 'wiki';
 
-    const SEARCH_PAGENAME_EN = 'FullTextSearch';
-    const SEARCH_PAGENAME_FR = 'RechercheEnTexteIntégral';
+    public const SEARCH_PAGENAME_EN = 'FullTextSearch';
+    public const SEARCH_PAGENAME_FR = 'RechercheEnTexteIntégral';
 
     /**
      * @var WikiDao

@@ -26,7 +26,7 @@ class Statistics_Event {
      * Output:
      *  'entries' => array of label indexed by character ex: ('docdl' => 'Legacy document viewed')
      */
-    const FREQUENCE_STAT_ENTRIES = 'plugin_statistics_frequence_stat_entries';
+    public const FREQUENCE_STAT_ENTRIES = 'plugin_statistics_frequence_stat_entries';
 
     /**
      * Get the statistics/frequence sample for the given character
@@ -37,5 +37,5 @@ class Statistics_Event {
      * Output:
      *  'sample' => instance of Sample
      */
-    const FREQUENCE_STAT_SAMPLE = 'plugin_statistics_frequence_stat_sample';
+    public const FREQUENCE_STAT_SAMPLE = 'plugin_statistics_frequence_stat_sample';
 }

@@ -24,7 +24,7 @@ use Tuleap\Event\Dispatchable;
 
 class GlyphLocationsCollector implements Dispatchable
 {
-    const NAME = 'collect_glyph_locations';
+    public const NAME = 'collect_glyph_locations';
 
     private $glyph_locations = array();
 

@@ -32,7 +32,7 @@ use Widget;
 
 class ProjectCrossTrackerSearch extends Widget
 {
-    const NAME = 'crosstrackersearch';
+    public const NAME = 'crosstrackersearch';
 
     public function __construct()
     {

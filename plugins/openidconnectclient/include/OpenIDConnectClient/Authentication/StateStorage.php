@@ -22,7 +22,7 @@ namespace Tuleap\OpenIDConnectClient\Authentication;
 
 class StateStorage
 {
-    const AUTHORIZATION_STATE = 'tuleap_oidc_authorization_state';
+    public const AUTHORIZATION_STATE = 'tuleap_oidc_authorization_state';
 
     /**
      * @var array

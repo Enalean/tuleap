@@ -19,8 +19,8 @@
  */
 
 class Mediawiki_Migration_MediawikiMigrator {
-    const PATH_TO_EXECUTION_SCRIPT = "/plugins/mediawiki/bin/migrate_to_123.php";
-    const PATH_TO_LOCALSETTINGS    = "/plugins/mediawiki/www/LocalSettings.php";
+    public const PATH_TO_EXECUTION_SCRIPT = "/plugins/mediawiki/bin/migrate_to_123.php";
+    public const PATH_TO_LOCALSETTINGS    = "/plugins/mediawiki/www/LocalSettings.php";
 
     /**
      * @param Project $project

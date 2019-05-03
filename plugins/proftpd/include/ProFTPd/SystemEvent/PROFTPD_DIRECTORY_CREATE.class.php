@@ -26,7 +26,7 @@ use RuntimeException;
 use Backend;
 
 class PROFTPD_DIRECTORY_CREATE extends \SystemEvent {
-    const NAME = 'Tuleap\ProFTPd\SystemEvent\PROFTPD_DIRECTORY_CREATE';
+    public const NAME = 'Tuleap\ProFTPd\SystemEvent\PROFTPD_DIRECTORY_CREATE';
 
     /** @var Backend */
     private $backend;

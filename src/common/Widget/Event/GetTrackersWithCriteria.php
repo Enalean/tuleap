@@ -32,7 +32,7 @@ use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 
 class GetTrackersWithCriteria implements Dispatchable
 {
-    const NAME = "getTrackersWithCriteria";
+    public const NAME = "getTrackersWithCriteria";
 
     /**
      * @var Project

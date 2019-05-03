@@ -29,7 +29,7 @@ use Tuleap\SVN\Dao;
  */
 class RuleName extends Rule
 {
-    const PATTERN_REPOSITORY_NAME = '[a-zA-Z][A-Za-z0-9-_.]{2,254}';
+    public const PATTERN_REPOSITORY_NAME = '[a-zA-Z][A-Za-z0-9-_.]{2,254}';
 
     private $project;
     private $dao;

@@ -24,7 +24,7 @@ use User_ForgeUserGroupPermission;
 
 class MediawikiAdminAllProjects extends User_ForgeUserGroupPermission
 {
-    const ID = 3;
+    public const ID = 3;
 
     public function getId()
     {

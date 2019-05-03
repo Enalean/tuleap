@@ -41,8 +41,8 @@ use Tuleap\Widget\Event\GetTrackersWithCriteria;
  */
 class ProjectTrackersResource
 {
-    const MAX_LIMIT              = 50;
-    const MINIMAL_REPRESENTATION = 'minimal';
+    public const MAX_LIMIT              = 50;
+    public const MINIMAL_REPRESENTATION = 'minimal';
 
     /**
      * Get all the tracker representation of a given project

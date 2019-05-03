@@ -19,7 +19,7 @@
  */
 
 class Search_SearchPeople {
-    const NAME = 'people';
+    public const NAME = 'people';
 
     /**
      * @var UserManager

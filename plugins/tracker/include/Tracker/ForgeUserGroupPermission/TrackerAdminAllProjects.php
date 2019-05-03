@@ -24,7 +24,7 @@ use User_ForgeUserGroupPermission;
 
 class TrackerAdminAllProjects extends User_ForgeUserGroupPermission
 {
-    const ID = 2;
+    public const ID = 2;
 
     public function getId()
     {

@@ -28,22 +28,22 @@ use RestBase;
 
 class TrackerBase extends RestBase
 {
-    const MOVE_PROJECT_NAME                  = 'move-artifact';
-    const DELETE_PROJECT_NAME                = 'test-delete-artifacts';
-    const TRACKER_FIELDS_PROJECT_NAME        = 'test-tracker-fields';
-    const TRACKER_ADMINISTRATOR_PROJECT_NAME = 'test-tracker-project-filter';
-    const TRACKER_WORKFLOWS_PROJECT_NAME     = 'test-tracker-workflows';
+    public const MOVE_PROJECT_NAME                  = 'move-artifact';
+    public const DELETE_PROJECT_NAME                = 'test-delete-artifacts';
+    public const TRACKER_FIELDS_PROJECT_NAME        = 'test-tracker-fields';
+    public const TRACKER_ADMINISTRATOR_PROJECT_NAME = 'test-tracker-project-filter';
+    public const TRACKER_WORKFLOWS_PROJECT_NAME     = 'test-tracker-workflows';
 
-    const MOVE_TRACKER_SHORTNAME                           = 'ToMoveArtifacts';
-    const BASE_TRACKER_SHORTNAME                           = 'base';
-    const DELETE_TRACKER_SHORTNAME                         = 'diasabled_delete_artifacts_testing_2';
-    const TRACKER_FIELDS_TRACKER_SHORTNAME                 = 'tracker_fields_tracker';
-    const SIMPLE_01_TRACKER_SHORTNAME                      = 'simple_tracker_01';
-    const SIMPLE_02_TRACKER_SHORTNAME                      = 'simple_tracker_02';
-    const TRACKER_WITH_WORKFLOWS_SHORTNAME                 = 'workflows_tracker';
-    const TRACKER_WORKFLOW_WITH_TRANSITIONS_SHORTNAME      = 'workflows_tracker_transitions';
-    const TRACKER_WORKFLOW_SIMPLE_MODE_SHORTNAME           = 'workflow_simple_mode';
-    const TRACKER_WORKFLOW_SIMPLE_MODE_TO_SWITCH_SHORTNAME = 'simple_workflow_to_switch';
+    public const MOVE_TRACKER_SHORTNAME                           = 'ToMoveArtifacts';
+    public const BASE_TRACKER_SHORTNAME                           = 'base';
+    public const DELETE_TRACKER_SHORTNAME                         = 'diasabled_delete_artifacts_testing_2';
+    public const TRACKER_FIELDS_TRACKER_SHORTNAME                 = 'tracker_fields_tracker';
+    public const SIMPLE_01_TRACKER_SHORTNAME                      = 'simple_tracker_01';
+    public const SIMPLE_02_TRACKER_SHORTNAME                      = 'simple_tracker_02';
+    public const TRACKER_WITH_WORKFLOWS_SHORTNAME                 = 'workflows_tracker';
+    public const TRACKER_WORKFLOW_WITH_TRANSITIONS_SHORTNAME      = 'workflows_tracker_transitions';
+    public const TRACKER_WORKFLOW_SIMPLE_MODE_SHORTNAME           = 'workflow_simple_mode';
+    public const TRACKER_WORKFLOW_SIMPLE_MODE_TO_SWITCH_SHORTNAME = 'simple_workflow_to_switch';
 
     protected $tracker_administrator_project_id;
     protected $tracker_workflows_project_id;

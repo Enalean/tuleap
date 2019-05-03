@@ -28,23 +28,23 @@ use Codendi_HTMLPurifier;
 
 class PullRequestRepresentation extends PullRequestMinimalRepresentation
 {
-    const ROUTE = parent::ROUTE;
+    public const ROUTE = parent::ROUTE;
 
-    const COMMENTS_ROUTE = 'comments';
-    const INLINE_ROUTE   = 'inline-comments';
-    const LABELS_ROUTE   = 'labels';
-    const FILES_ROUTE    = 'files';
-    const DIFF_ROUTE     = 'file_diff';
-    const TIMELINE_ROUTE = 'timeline';
+    public const COMMENTS_ROUTE = 'comments';
+    public const INLINE_ROUTE   = 'inline-comments';
+    public const LABELS_ROUTE   = 'labels';
+    public const FILES_ROUTE    = 'files';
+    public const DIFF_ROUTE     = 'file_diff';
+    public const TIMELINE_ROUTE = 'timeline';
 
-    const STATUS_ABANDON = 'abandon';
-    const STATUS_MERGE   = 'merge';
-    const STATUS_REVIEW  = 'review';
+    public const STATUS_ABANDON = 'abandon';
+    public const STATUS_MERGE   = 'merge';
+    public const STATUS_REVIEW  = 'review';
 
-    const NO_FASTFORWARD_MERGE = 'no_fastforward';
-    const FASTFORWARD_MERGE    = 'fastforward';
-    const CONFLICT_MERGE       = 'conflict';
-    const UNKNOWN_MERGE        = 'unknown-merge-status';
+    public const NO_FASTFORWARD_MERGE = 'no_fastforward';
+    public const FASTFORWARD_MERGE    = 'fastforward';
+    public const CONFLICT_MERGE       = 'conflict';
+    public const UNKNOWN_MERGE        = 'unknown-merge-status';
 
     /**
      * @var string {@type string}

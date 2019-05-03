@@ -24,7 +24,7 @@ use \Tuleap\REST\JsonCast;
 class ResourceReference {
 
     /** Use this variable as a placeholder for future route implementation */
-    const NO_ROUTE = 'route-not-yet-implemented';
+    public const NO_ROUTE = 'route-not-yet-implemented';
 
     /**
      * @var int ID of the resource

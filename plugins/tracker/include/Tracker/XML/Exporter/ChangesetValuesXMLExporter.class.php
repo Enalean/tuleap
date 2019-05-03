@@ -20,12 +20,12 @@
 
 class Tracker_XML_Exporter_ChangesetValuesXMLExporter {
 
-    const ARTIFACT_XML_KEY  = 'artifact_xml';
-    const CHANGESET_XML_KEY = 'changeset_xml';
-    const ARTIFACT_KEY      = 'artifact';
-    const EXPORT_MODE_KEY   = 'export_mode';
-    const EXPORT_SNAPSHOT   = true;
-    const EXPORT_CHANGES    = false;
+    public const ARTIFACT_XML_KEY  = 'artifact_xml';
+    public const CHANGESET_XML_KEY = 'changeset_xml';
+    public const ARTIFACT_KEY      = 'artifact';
+    public const EXPORT_MODE_KEY   = 'export_mode';
+    public const EXPORT_SNAPSHOT   = true;
+    public const EXPORT_CHANGES    = false;
 
     /**
      * @var Tracker_XML_Exporter_ChangesetValueXMLExporterVisitor

@@ -20,7 +20,7 @@
 
 class Git_AdminMAllowedProjectsPresenter {
 
-    const TEMPLATE = 'manage-allowed-projects';
+    public const TEMPLATE = 'manage-allowed-projects';
 
     /**
      * @var Git_Mirror_Mirror

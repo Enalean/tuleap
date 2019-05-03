@@ -25,11 +25,11 @@
  * then target field will react, depending of the implementation of the rule.
  */
 abstract class Tracker_Rule {
-    const RULETYPE_HIDDEN       = 1;
-    const RULETYPE_DISABLED     = 2;
-    const RULETYPE_MANDATORY    = 3;
-    const RULETYPE_VALUE        = 4;
-    const RULETYPE_DATE         = 5;
+    public const RULETYPE_HIDDEN       = 1;
+    public const RULETYPE_DISABLED     = 2;
+    public const RULETYPE_MANDATORY    = 3;
+    public const RULETYPE_VALUE        = 4;
+    public const RULETYPE_DATE         = 5;
 
     /**
      *

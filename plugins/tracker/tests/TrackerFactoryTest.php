@@ -300,7 +300,7 @@ class TrackerFactoryDuplicationTest extends TuleapTestCase {
 
 class TrackerFactoryCollectErrorWithoutImportingTest extends TuleapTestCase
 {
-    const PROJECT_ID = 123;
+    public const PROJECT_ID = 123;
 
     public function itDoesNotFindErrorsWhenTrackerInformationsAreValid()
     {

@@ -32,7 +32,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 class textualreportPlugin extends Plugin // @codingStandardsIgnoreLine
 {
-    const NAME = 'textualreport';
+    public const NAME = 'textualreport';
 
     public function __construct($id)
     {

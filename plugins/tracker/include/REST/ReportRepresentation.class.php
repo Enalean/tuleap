@@ -26,7 +26,7 @@ use Tuleap\Tracker\REST\Artifact\ArtifactRepresentation;
 
 class ReportRepresentation {
 
-    const ROUTE = 'tracker_reports';
+    public const ROUTE = 'tracker_reports';
 
     /**
      * @var int

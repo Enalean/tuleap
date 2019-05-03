@@ -42,7 +42,7 @@ use Tuleap\SVN\SvnAdmin;
 
 class RepositoryManager
 {
-    const PREFIX = 'svn';
+    public const PREFIX = 'svn';
 
     /** @var Dao */
     private $dao;

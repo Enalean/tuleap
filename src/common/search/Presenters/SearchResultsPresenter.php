@@ -19,7 +19,7 @@
  */
 
 class Search_SearchResultsPresenter {
-    const TEMPLATE_PREFIX = 'results-';
+    public const TEMPLATE_PREFIX = 'results-';
 
     private $template;
 

@@ -35,7 +35,7 @@ class Tracker_Artifact_ChangesetValue_ArtifactLinkDiff
      *  - artifact      => Tracker_Artifact
      *
      */
-    const HIDE_ARTIFACT = 'hide_artifact';
+    public const HIDE_ARTIFACT = 'hide_artifact';
 
     /** @var Tracker_ArtifactLinkInfo[] */
     private $previous;

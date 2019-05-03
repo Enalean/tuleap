@@ -34,7 +34,7 @@ class GitBackend extends Backend implements Git_Backend_Interface, GitRepository
     /** @var Git_GitRepositoryUrlManager */
     private $url_manager;
 
-    const DEFAULT_DIR_MODE = '770';
+    public const DEFAULT_DIR_MODE = '770';
 
     protected function __construct() {
         $this->gitRootPath  = '';

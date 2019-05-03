@@ -42,10 +42,10 @@ use Tuleap\LDAP\GroupSyncNotificationsManager;
 abstract class LDAP_GroupManager
 {
 
-    const NO_SYNCHRONIZATION      = 'never';
-    const AUTO_SYNCHRONIZATION    = 'auto';
-    const BIND_OPTION             = 'bind';
-    const PRESERVE_MEMBERS_OPTION = 'preserve_members';
+    public const NO_SYNCHRONIZATION      = 'never';
+    public const AUTO_SYNCHRONIZATION    = 'auto';
+    public const BIND_OPTION             = 'bind';
+    public const PRESERVE_MEMBERS_OPTION = 'preserve_members';
 
     /**
      * @type LDAP

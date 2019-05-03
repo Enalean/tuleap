@@ -82,20 +82,20 @@ class ReferenceManager {
      */
     protected static $instance;
 
-    const KEYWORD_ARTIFACT_SHORT = 'art';
-    const KEYWORD_ARTIFACT_LONG  = 'artifact';
+    public const KEYWORD_ARTIFACT_SHORT = 'art';
+    public const KEYWORD_ARTIFACT_LONG  = 'artifact';
 
-    const REFERENCE_NATURE_ARTIFACT = 'artifact';
-    const REFERENCE_NATURE_DOCUMENT = 'document';
-    const REFERENCE_NATURE_CVSCOMMIT = 'cvs_commit';
-    const REFERENCE_NATURE_SVNREVISION = 'svn_revision';
-    const REFERENCE_NATURE_FILE = 'file';
-    const REFERENCE_NATURE_RELEASE = 'release';
-    const REFERENCE_NATURE_FORUM = 'forum';
-    const REFERENCE_NATURE_FORUMMESSAGE = 'forum_message';
-    const REFERENCE_NATURE_NEWS = 'news';
-    const REFERENCE_NATURE_WIKIPAGE = 'wiki_page';
-    const REFERENCE_NATURE_OTHER = 'other';
+    public const REFERENCE_NATURE_ARTIFACT = 'artifact';
+    public const REFERENCE_NATURE_DOCUMENT = 'document';
+    public const REFERENCE_NATURE_CVSCOMMIT = 'cvs_commit';
+    public const REFERENCE_NATURE_SVNREVISION = 'svn_revision';
+    public const REFERENCE_NATURE_FILE = 'file';
+    public const REFERENCE_NATURE_RELEASE = 'release';
+    public const REFERENCE_NATURE_FORUM = 'forum';
+    public const REFERENCE_NATURE_FORUMMESSAGE = 'forum_message';
+    public const REFERENCE_NATURE_NEWS = 'news';
+    public const REFERENCE_NATURE_WIKIPAGE = 'wiki_page';
+    public const REFERENCE_NATURE_OTHER = 'other';
 
     /**
      * Not possible to give extra params to the call back function (_insertRefCallback in this case)

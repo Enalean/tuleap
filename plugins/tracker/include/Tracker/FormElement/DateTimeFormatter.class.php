@@ -20,7 +20,7 @@
  */
 
 class Tracker_FormElement_DateTimeFormatter extends Tracker_FormElement_DateFormatter {
-    const DATE_TIME_FORMAT = 'Y-m-d H:i';
+    public const DATE_TIME_FORMAT = 'Y-m-d H:i';
 
     public function __construct(Tracker_FormElement_Field_Date $field) {
         parent::__construct($field);

@@ -29,7 +29,7 @@ use Logger;
 
 class Launcher {
 
-    const ROOT_DIRECTORY = '/';
+    public const ROOT_DIRECTORY = '/';
 
     /**
      * @var Logger

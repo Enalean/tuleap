@@ -26,7 +26,7 @@
  */
 class Tracker_Widget_ProjectRenderer extends Tracker_Widget_Renderer
 {
-    const ID = 'plugin_tracker_projectrenderer';
+    public const ID = 'plugin_tracker_projectrenderer';
 
     public function __construct()
     {

@@ -25,7 +25,7 @@ class Git_SystemEventQueue extends SystemEventQueue {
      */
     private $logger;
 
-    const NAME = 'git';
+    public const NAME = 'git';
 
     public function __construct(Logger $logger) {
         $this->logger = $logger;

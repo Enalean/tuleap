@@ -27,12 +27,12 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
     /**
      * @const Changeset comment format is text.
      */
-    const TEXT_CONTENT = 'text';
+    public const TEXT_CONTENT = 'text';
 
     /**
      * @const Changeset comment format is HTML
      */
-    const HTML_CONTENT = 'html';
+    public const HTML_CONTENT = 'html';
 
     private static $MAX_LENGTH_FOR_DIFF = 20000;
 

@@ -23,8 +23,8 @@ use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
 
 class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View {
 
-    const USER_PREFERENCE_DISPLAY_CHANGES = 'tracker_artifact_comment_display_changes';
-    const USER_PREFERENCE_INVERT_ORDER    = 'tracker_comment_invertorder';
+    public const USER_PREFERENCE_DISPLAY_CHANGES = 'tracker_artifact_comment_display_changes';
+    public const USER_PREFERENCE_INVERT_ORDER    = 'tracker_comment_invertorder';
 
     /**
      * @var Tracker_Artifact_ArtifactRenderer

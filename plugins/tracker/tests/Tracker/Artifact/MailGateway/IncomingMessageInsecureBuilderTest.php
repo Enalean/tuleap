@@ -23,11 +23,11 @@ use Tuleap\Tracker\Artifact\MailGateway\IncomingMail;
 require_once __DIR__.'/../../../bootstrap.php';
 
 class Tracker_Artifact_IncomingMessageInsecureBuilderTest extends TuleapTestCase {
-    const USER_MAIL     = 'user@example.com';
-    const TRACKER_ID    = 1;
-    const TRACKER_MAIL  = 'forge__tracker+1@example.com';
-    const ARTIFACT_ID   = 1;
-    const ARTIFACT_MAIL = 'forge__artifact+1@example.com';
+    public const USER_MAIL     = 'user@example.com';
+    public const TRACKER_ID    = 1;
+    public const TRACKER_MAIL  = 'forge__tracker+1@example.com';
+    public const ARTIFACT_ID   = 1;
+    public const ARTIFACT_MAIL = 'forge__artifact+1@example.com';
 
     private $user_manager;
     private $tracker_factory;

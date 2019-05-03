@@ -19,7 +19,7 @@
  */
 
 class SystemEvent_GIT_UPDATE_MIRROR extends SystemEvent {
-    const NAME = 'GIT_UPDATE_MIRROR';
+    public const NAME = 'GIT_UPDATE_MIRROR';
 
     /** @var Git_GitoliteDriver */
     private $gitolite_driver;

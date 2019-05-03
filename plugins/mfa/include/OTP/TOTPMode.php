@@ -22,7 +22,7 @@ namespace Tuleap\MFA\OTP;
 
 class TOTPMode
 {
-    const SUPPORTED_ALGORITHMS = ['sha1', 'sha256', 'sha512'];
+    public const SUPPORTED_ALGORITHMS = ['sha1', 'sha256', 'sha512'];
 
     /**
      * @var int

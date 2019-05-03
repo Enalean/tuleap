@@ -37,7 +37,7 @@ use UserManager;
 
 class GitXmlExporter
 {
-    const EXPORT_FOLDER = "export";
+    public const EXPORT_FOLDER = "export";
 
     /**
      * @var Project

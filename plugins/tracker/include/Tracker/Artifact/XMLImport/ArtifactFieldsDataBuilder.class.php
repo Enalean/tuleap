@@ -28,17 +28,17 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureValidator;
  */
 class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder {
 
-    const FIELDTYPE_STRING            = 'string';
-    const FIELDTYPE_TEXT              = 'text';
-    const FIELDTYPE_INT               = 'int';
-    const FIELDTYPE_FLOAT             = 'float';
-    const FIELDTYPE_DATE              = 'date';
-    const FIELDTYPE_PERMS_ON_ARTIFACT = 'permissions_on_artifact';
-    const FIELDTYPE_ATTACHEMENT       = 'file';
-    const FIELDTYPE_OPENLIST          = 'open_list';
-    const FIELDTYPE_LIST              = 'list';
-    const FIELDTYPE_ARTIFACT_LINK     = 'art_link';
-    const FIELDTYPE_COMPUTED          = 'computed';
+    public const FIELDTYPE_STRING            = 'string';
+    public const FIELDTYPE_TEXT              = 'text';
+    public const FIELDTYPE_INT               = 'int';
+    public const FIELDTYPE_FLOAT             = 'float';
+    public const FIELDTYPE_DATE              = 'date';
+    public const FIELDTYPE_PERMS_ON_ARTIFACT = 'permissions_on_artifact';
+    public const FIELDTYPE_ATTACHEMENT       = 'file';
+    public const FIELDTYPE_OPENLIST          = 'open_list';
+    public const FIELDTYPE_LIST              = 'list';
+    public const FIELDTYPE_ARTIFACT_LINK     = 'art_link';
+    public const FIELDTYPE_COMPUTED          = 'computed';
 
     /** @var Tracker_FormElementFactory */
     private $formelement_factory;

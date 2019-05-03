@@ -20,7 +20,7 @@
 
 class ArtifactXMLExporter {
 
-    const ARCHIVE_DATA_DIR = 'data';
+    public const ARCHIVE_DATA_DIR = 'data';
 
     /** @var ArtifactXMLExporterDao */
     private $dao;

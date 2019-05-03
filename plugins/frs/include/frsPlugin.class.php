@@ -62,7 +62,7 @@ class frsPlugin extends \Plugin //phpcs:ignore
      *   'user'       => (Input)  PFUser        Current user
      *   'view'       => (Output) String        Rendered template of the view
      */
-    const FRS_RELEASE_VIEW = 'frs_release_view';
+    public const FRS_RELEASE_VIEW = 'frs_release_view';
 
     public function __construct($id)
     {

@@ -88,7 +88,7 @@ use WikiDao;
 class ProjectResource extends AuthenticatedResource
 {
 
-    const MAX_LIMIT = 50;
+    public const MAX_LIMIT = 50;
 
     /** @var LabelsCurlyCoatedRetriever */
     private $labels_retriever;

@@ -21,8 +21,8 @@ require_once dirname(__FILE__).'/../../../bootstrap.php';
 
 class AgileDashboard_Milestone_SelectedMilestoneProviderTest extends TuleapTestCase {
 
-    const FIELD_NAME = AgileDashboard_Milestone_MilestoneReportCriterionProvider::FIELD_NAME;
-    const ANY        = AgileDashboard_Milestone_MilestoneReportCriterionProvider::ANY;
+    public const FIELD_NAME = AgileDashboard_Milestone_MilestoneReportCriterionProvider::FIELD_NAME;
+    public const ANY        = AgileDashboard_Milestone_MilestoneReportCriterionProvider::ANY;
 
     public function setUp() {
         parent::setUp();

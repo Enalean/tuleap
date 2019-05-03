@@ -51,7 +51,7 @@ class AllowedColorsCollection
         'flamingo-pink'
     );
 
-    const DEFAULT_COLOR = 'chrome-silver';
+    public const DEFAULT_COLOR = 'chrome-silver';
 
     /**
      * @return string[]

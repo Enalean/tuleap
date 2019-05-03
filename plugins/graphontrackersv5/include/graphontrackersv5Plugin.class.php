@@ -31,7 +31,7 @@ require_once __DIR__ .  '/../vendor/autoload.php';
 
 class GraphOnTrackersV5Plugin extends Plugin
 {
-    const RENDERER_TYPE = 'plugin_graphontrackersv5';
+    public const RENDERER_TYPE = 'plugin_graphontrackersv5';
 
     var $report_id;
     var $chunksz;

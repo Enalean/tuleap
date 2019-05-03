@@ -69,7 +69,7 @@ class Tracker_FormElement_Field_List_Bind_JsonFormatTest extends TuleapTestCase 
 
 class Tracker_FormElement_Field_List_Bind_ValuesTest extends TuleapTestCase
 {
-    const NON_EXISTANT_VALUE_ID = 100;
+    public const NON_EXISTANT_VALUE_ID = 100;
     private $bind;
     private $value_id1 = 101;
     private $value1;

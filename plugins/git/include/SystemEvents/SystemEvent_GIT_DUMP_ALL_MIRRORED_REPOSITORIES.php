@@ -19,7 +19,7 @@
  */
 
 class SystemEvent_GIT_DUMP_ALL_MIRRORED_REPOSITORIES extends SystemEvent {
-    const NAME = 'GIT_DUMP_ALL_MIRRORED_REPOSITORIES';
+    public const NAME = 'GIT_DUMP_ALL_MIRRORED_REPOSITORIES';
 
     /** @var Git_GitoliteDriver */
     private $gitolite_driver;

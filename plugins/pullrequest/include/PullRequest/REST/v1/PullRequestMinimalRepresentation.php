@@ -28,7 +28,7 @@ use Tuleap\REST\JsonCast;
 
 class PullRequestMinimalRepresentation
 {
-    const ROUTE = 'pull_requests';
+    public const ROUTE = 'pull_requests';
 
     /**
      * @var GitoliteAccessURLGenerator

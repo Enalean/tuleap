@@ -54,25 +54,25 @@ class Git extends PluginController
      */
     private $description_updater;
 
-    const PERM_READ  = 'PLUGIN_GIT_READ';
-    const PERM_WRITE = 'PLUGIN_GIT_WRITE';
-    const PERM_WPLUS = 'PLUGIN_GIT_WPLUS';
+    public const PERM_READ  = 'PLUGIN_GIT_READ';
+    public const PERM_WRITE = 'PLUGIN_GIT_WRITE';
+    public const PERM_WPLUS = 'PLUGIN_GIT_WPLUS';
 
-    const READ_PERM  = 'R';
+    public const READ_PERM  = 'R';
 
-    const DEFAULT_PERM_READ  = 'PLUGIN_GIT_DEFAULT_READ';
-    const DEFAULT_PERM_WRITE = 'PLUGIN_GIT_DEFAULT_WRITE';
-    const DEFAULT_PERM_WPLUS = 'PLUGIN_GIT_DEFAULT_WPLUS';
+    public const DEFAULT_PERM_READ  = 'PLUGIN_GIT_DEFAULT_READ';
+    public const DEFAULT_PERM_WRITE = 'PLUGIN_GIT_DEFAULT_WRITE';
+    public const DEFAULT_PERM_WPLUS = 'PLUGIN_GIT_DEFAULT_WPLUS';
 
-    const PERM_ADMIN         = 'PLUGIN_GIT_ADMIN';
-    const SPECIAL_PERM_ADMIN = 'PROJECT_ADMIN';
+    public const PERM_ADMIN         = 'PLUGIN_GIT_ADMIN';
+    public const SPECIAL_PERM_ADMIN = 'PROJECT_ADMIN';
 
-    const SCOPE_PERSONAL = 'personal';
+    public const SCOPE_PERSONAL = 'personal';
 
-    const REFERENCE_KEYWORD = 'git';
-    const REFERENCE_NATURE  = 'git_commit';
+    public const REFERENCE_KEYWORD = 'git';
+    public const REFERENCE_NATURE  = 'git_commit';
 
-    const DEFAULT_GIT_PERMS_GRANTED_FOR_PROJECT = 'default_git_perms_granted_for_project';
+    public const DEFAULT_GIT_PERMS_GRANTED_FOR_PROJECT = 'default_git_perms_granted_for_project';
 
     /**
      * @var VersionDetector

@@ -19,16 +19,16 @@
  */
 
 class ArtifactStaticMultiListFieldXMLExporter extends ArtifactFieldXMLExporter {
-    const LABEL_VALUES_INDEX  = 'valueLabelList';
-    const TV3_VALUE_INDEX     = 'valueInt';
-    const TV3_TYPE            = 'MB_2';
-    const TV5_TYPE            = 'list';
-    const TV5_BIND            = 'static';
+    public const LABEL_VALUES_INDEX  = 'valueLabelList';
+    public const TV3_VALUE_INDEX     = 'valueInt';
+    public const TV3_TYPE            = 'MB_2';
+    public const TV5_TYPE            = 'list';
+    public const TV5_BIND            = 'static';
 
-    const SYS_VALUE_NONE_FR = 'Aucun';
-    const SYS_VALUE_NONE_EN = 'None';
-    const SYS_VALUE_ANY_EN  = 'Any';
-    const SYS_VALUE_ANY_FR  = 'Tous';
+    public const SYS_VALUE_NONE_FR = 'Aucun';
+    public const SYS_VALUE_NONE_EN = 'None';
+    public const SYS_VALUE_ANY_EN  = 'Any';
+    public const SYS_VALUE_ANY_FR  = 'Tous';
 
     /** @var ArtifactXMLExporterDao */
     private $dao;

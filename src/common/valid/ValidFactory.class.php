@@ -132,7 +132,7 @@ class Valid_HTTPSURI extends Valid_String {
  */
 class Valid_LocalURI extends Valid_String
 {
-    const URI_REGEXP = '/^(http:\/\/|https:\/\/|#|\/|\?)/i';
+    public const URI_REGEXP = '/^(http:\/\/|https:\/\/|#|\/|\?)/i';
 
     public function validate($value)
     {
@@ -147,7 +147,7 @@ class Valid_LocalURI extends Valid_String
  */
 class Valid_FTPURI extends Valid_String
 {
-    const URI_REGEXP = '/^ftps?:\/\/.+/i';
+    public const URI_REGEXP = '/^ftps?:\/\/.+/i';
 
     public function validate($value)
     {
@@ -215,7 +215,7 @@ class Valid_GenericUserNameSuffix extends Valid_UserNameFormat {
      * by '-'
      * But aaa-team is a valid name at whole.
      */
-    const FAKE_PREFIX = 'aaa';
+    public const FAKE_PREFIX = 'aaa';
 
     function validate($value) {
         return parent::validate(self::FAKE_PREFIX.$value);

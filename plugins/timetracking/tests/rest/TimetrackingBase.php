@@ -26,8 +26,8 @@ use RestBase;
 class TimetrackingBase extends RestBase
 {
 
-    const PROJECT_NAME = 'test-timetracking';
-    const TRACKER_NAME = 'timetracking_testing';
+    public const PROJECT_NAME = 'test-timetracking';
+    public const TRACKER_NAME = 'timetracking_testing';
 
     protected $tracker_timetracking;
     protected $timetracking_project_id;

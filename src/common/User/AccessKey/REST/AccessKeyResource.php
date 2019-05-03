@@ -33,7 +33,7 @@ use Tuleap\User\AccessKey\LastAccessKeyIdentifierStore;
 
 class AccessKeyResource extends AuthenticatedResource
 {
-    const ROUTE = 'access_keys';
+    public const ROUTE = 'access_keys';
 
     /**
      * @url OPTIONS

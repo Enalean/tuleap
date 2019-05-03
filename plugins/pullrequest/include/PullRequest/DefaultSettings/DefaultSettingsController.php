@@ -29,7 +29,7 @@ use Tuleap\Request\ForbiddenException;
 
 class DefaultSettingsController implements DispatchableWithRequest
 {
-    const HISTORY_FIELD_NAME = 'pullrequest-default-settings';
+    public const HISTORY_FIELD_NAME = 'pullrequest-default-settings';
     /**
      * @var MergeSettingDAO
      */

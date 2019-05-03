@@ -20,7 +20,7 @@
 
 class Tracker_Artifact_BatchIterator {
 
-    const ITEMS_PER_BATCH = 100;
+    public const ITEMS_PER_BATCH = 100;
 
     private $batches_processed;
 

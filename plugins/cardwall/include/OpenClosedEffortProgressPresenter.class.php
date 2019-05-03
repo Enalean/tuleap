@@ -19,7 +19,7 @@
  */
 
 class Cardwall_OpenClosedEffortProgressPresenter implements Cardwall_EffortProgressPresenter {
-    const COUNT_STYLE = 'cards';
+    public const COUNT_STYLE = 'cards';
 
     private $nb_total;
     private $nb_open;

@@ -18,7 +18,7 @@
 
 class Tracker_DateReminder_Role_Submitter implements Tracker_DateReminder_Role {
 
-    const IDENTIFIER = "1";
+    public const IDENTIFIER = "1";
     /**
      * Get the Role
      *

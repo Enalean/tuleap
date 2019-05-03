@@ -25,7 +25,7 @@ use Tuleap\Event\Dispatchable;
 
 class ArtifactPartialUpdate implements Dispatchable
 {
-    const NAME = 'artifactPartialUpdate';
+    public const NAME = 'artifactPartialUpdate';
 
     /**
      * @var Tracker_Artifact

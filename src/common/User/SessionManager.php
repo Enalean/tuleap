@@ -28,8 +28,8 @@ use UserManager;
 
 class SessionManager
 {
-    const HASH_ALGORITHM               = 'sha256';
-    const SESSION_IDENTIFIER_SEPARATOR = '.';
+    public const HASH_ALGORITHM               = 'sha256';
+    public const SESSION_IDENTIFIER_SEPARATOR = '.';
 
     /**
      * @var SessionDao

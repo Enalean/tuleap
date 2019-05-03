@@ -30,7 +30,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class ConfigGetCommand extends Command
 {
-    const NAME = 'config-get';
+    public const NAME = 'config-get';
 
     public function __construct()
     {

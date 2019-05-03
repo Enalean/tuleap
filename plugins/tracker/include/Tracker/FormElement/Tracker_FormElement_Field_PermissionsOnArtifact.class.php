@@ -32,10 +32,10 @@ use Tuleap\User\UserGroup\NameTranslator;
 
 class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElement_Field {
 
-    const GRANTED_GROUPS     = 'granted_groups';
-    const USE_IT             = 'use_artifact_permissions';
-    const IS_USED_BY_DEFAULT = false;
-    const PERMISSION_TYPE    = 'PLUGIN_TRACKER_ARTIFACT_ACCESS';
+    public const GRANTED_GROUPS     = 'granted_groups';
+    public const USE_IT             = 'use_artifact_permissions';
+    public const IS_USED_BY_DEFAULT = false;
+    public const PERMISSION_TYPE    = 'PLUGIN_TRACKER_ARTIFACT_ACCESS';
 
     public $default_properties = array();
 

@@ -36,11 +36,11 @@ use GitRepository;
 
 class Gitolite3LogParser
 {
-    const REPOSITORY_PATH                       = 'gitolite/repositories/';
-    const GIT_COMMAND                           = 'pre_git';
-    const FILE_NAME                             = 'gitolite-';
-    const FILE_EXTENSION                        = '.log';
-    const EXPECTED_NUMBER_OF_FIELDS_IN_LOG_LINE = 8;
+    public const REPOSITORY_PATH                       = 'gitolite/repositories/';
+    public const GIT_COMMAND                           = 'pre_git';
+    public const FILE_NAME                             = 'gitolite-';
+    public const FILE_EXTENSION                        = '.log';
+    public const EXPECTED_NUMBER_OF_FIELDS_IN_LOG_LINE = 8;
 
 
     /** @var Logger */

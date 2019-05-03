@@ -19,7 +19,7 @@
  */
 
 class Tracker_Workflow_WorkflowUser extends PFUser {
-    const ID = 90;
+    public const ID = 90;
 
 }
 

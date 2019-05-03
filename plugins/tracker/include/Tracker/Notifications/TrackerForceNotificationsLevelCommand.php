@@ -44,7 +44,7 @@ class TrackerForceNotificationsLevelCommand extends Command
      */
     private $project_manager;
 
-    const AUTHORIZED_CONFIGURATION_LEVEL
+    public const AUTHORIZED_CONFIGURATION_LEVEL
         = [
             Tracker::NOTIFICATIONS_LEVEL_DEFAULT_LABEL,
             Tracker::NOTIFICATIONS_LEVEL_DISABLED_LABEL,

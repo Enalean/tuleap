@@ -20,9 +20,9 @@
 
 class Tracker_Artifact_MailGateway_CitationStripper {
 
-    const TEXT_CITATION_PATTERN = '/(\n>\s+.*)+/';
-    const HTML_CITATION_PATTERN = '%<blockquote[^>]*>.*</blockquote>%';
-    const DEFAULT_REPLACEMENT   = "\n[citation removed]";
+    public const TEXT_CITATION_PATTERN = '/(\n>\s+.*)+/';
+    public const HTML_CITATION_PATTERN = '%<blockquote[^>]*>.*</blockquote>%';
+    public const DEFAULT_REPLACEMENT   = "\n[citation removed]";
 
     private $outlook_header = array(
         'en' => array(

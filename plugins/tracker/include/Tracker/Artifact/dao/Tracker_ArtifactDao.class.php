@@ -21,9 +21,9 @@
 
 
 class Tracker_ArtifactDao extends DataAccessObject {
-    const MAX_RETRY_CREATION = 10;
-    const STATUS_OPEN        = 'open';
-    const STATUS_CLOSED      = 'closed';
+    public const MAX_RETRY_CREATION = 10;
+    public const STATUS_OPEN        = 'open';
+    public const STATUS_CLOSED      = 'closed';
 
     public function __construct() {
         parent::__construct();

@@ -26,7 +26,7 @@ use Tuleap\PullRequest\GitExec;
 
 class GitPullRequestReferenceBulkConverter
 {
-    const STOP_CONVERSION_FILE = 'tuleap_plugin_pullrequest_stop_bulk_convert';
+    public const STOP_CONVERSION_FILE = 'tuleap_plugin_pullrequest_stop_bulk_convert';
 
     /**
      * @var GitPullRequestReferenceDAO

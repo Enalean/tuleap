@@ -31,7 +31,7 @@ use Tuleap\News\Admin\AdminNewsDao;
 
 class NewsPermissionsManager
 {
-    const NEWS_READ = 'NEWS_READ';
+    public const NEWS_READ = 'NEWS_READ';
 
     /**
      * @var PermissionsManager

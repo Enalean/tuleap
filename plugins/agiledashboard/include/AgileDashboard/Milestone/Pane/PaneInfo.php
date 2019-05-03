@@ -31,7 +31,7 @@ use Planning_Milestone;
  */
 abstract class PaneInfo
 {
-    const ACTION = 'show';
+    public const ACTION = 'show';
 
     /**
      * @var bool

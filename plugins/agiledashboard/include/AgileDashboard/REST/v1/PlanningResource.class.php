@@ -38,7 +38,7 @@ use AgileDashboard_Milestone_MilestoneDao;
 
 class PlanningResource extends AuthenticatedResource {
 
-    const MAX_LIMIT = 100;
+    public const MAX_LIMIT = 100;
 
     private $milestone_factory;
 

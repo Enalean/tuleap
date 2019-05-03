@@ -27,11 +27,11 @@ use Tuleap\Git\GitPHP\TreeDiff;
 
 class CommitPresenter
 {
-    const ADDED_STATUS        = "A";
-    const DELETED_STATUS      = "D";
-    const MODIFIED_STATUS     = "M";
-    const TYPE_CHANGED_STATUS = "T";
-    const RENAMED_STATUS      = "R";
+    public const ADDED_STATUS        = "A";
+    public const DELETED_STATUS      = "D";
+    public const MODIFIED_STATUS     = "M";
+    public const TYPE_CHANGED_STATUS = "T";
+    public const RENAMED_STATUS      = "R";
 
     public $description;
     public $has_description;

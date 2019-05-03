@@ -25,7 +25,7 @@ use Tuleap\REST\JsonCast;
 
 class LabelRepresentation
 {
-    const ROUTE = 'labels';
+    public const ROUTE = 'labels';
 
     /**
      * @var int {@required false}

@@ -34,7 +34,7 @@ class ReferencesImporter
     /** @var Logger */
     private $logger;
 
-    const XREF_CMMT  = 'cmmt';
+    public const XREF_CMMT  = 'cmmt';
 
     public function __construct(Dao $dao, Logger $logger)
     {

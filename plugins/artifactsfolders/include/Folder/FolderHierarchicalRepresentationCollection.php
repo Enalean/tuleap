@@ -25,7 +25,7 @@ use Tracker_Artifact;
 
 class FolderHierarchicalRepresentationCollection
 {
-    const DEFAULT_PREFIX = ' ';
+    public const DEFAULT_PREFIX = ' ';
 
     /** @var FolderHierarchicalRepresentation[] */
     private $collection = array();

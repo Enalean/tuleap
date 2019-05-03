@@ -31,7 +31,7 @@ use PermissionsManager;
 class SvnPermissionManager
 {
 
-    const PERMISSION_ADMIN = 'PLUGIN_SVN_ADMIN';
+    public const PERMISSION_ADMIN = 'PLUGIN_SVN_ADMIN';
 
     /**
      * @var User_ForgeUserGroupFactory

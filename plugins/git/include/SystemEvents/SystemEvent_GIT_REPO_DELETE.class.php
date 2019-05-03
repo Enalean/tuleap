@@ -27,7 +27,7 @@ require_once('common/system_event/SystemEvent.class.php');
  * Description of SystemEvent_GIT_REPO_DELETE
  */
 class SystemEvent_GIT_REPO_DELETE extends SystemEvent {
-    const NAME = 'GIT_REPO_DELETE';
+    public const NAME = 'GIT_REPO_DELETE';
 
     /** @var EventManager */
     private $event_manager;

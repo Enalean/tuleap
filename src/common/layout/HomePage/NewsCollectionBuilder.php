@@ -26,7 +26,7 @@ use Tuleap\News\NewsDao;
 
 class NewsCollectionBuilder
 {
-    const CONFIG_DISPLAY_NEWS = 'display_homepage_news';
+    public const CONFIG_DISPLAY_NEWS = 'display_homepage_news';
     /**
      * @var NewsDao
      */

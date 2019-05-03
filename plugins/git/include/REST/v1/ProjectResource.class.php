@@ -35,9 +35,9 @@ include_once('www/project/admin/permissions.php');
 
 class ProjectResource
 {
-    const PROJECT                = 'project';
-    const INDIVIDUAL             = 'individual';
-    const SCOPES_REPRESENTATIONS = [
+    public const PROJECT                = 'project';
+    public const INDIVIDUAL             = 'individual';
+    public const SCOPES_REPRESENTATIONS = [
         self::PROJECT    => GitRepository::REPO_SCOPE_PROJECT,
         self::INDIVIDUAL => GitRepository::REPO_SCOPE_INDIVIDUAL
     ];

@@ -25,7 +25,7 @@ use Tuleap\Event\Dispatchable;
 
 class ProjectRegistrationActivateService implements Dispatchable
 {
-    const NAME = 'project_registration_activate_service';
+    public const NAME = 'project_registration_activate_service';
 
     /**
      * @var Project

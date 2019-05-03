@@ -24,8 +24,8 @@ use Tuleap\Git\Gitolite\SSHKey\InvalidKeysCollector;
 
 class Git_Gitolite_SSHKeyDumper implements Dumper
 {
-    const KEYDIR       = 'keydir';
-    const FIRST_KEY_ID = 0;
+    public const KEYDIR       = 'keydir';
+    public const FIRST_KEY_ID = 0;
 
     private $admin_path;
     private $git_exec;

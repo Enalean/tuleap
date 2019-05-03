@@ -29,13 +29,13 @@
  */
 class Artifact {
 
-    const FORMAT_TEXT  = 0;
-    const FORMAT_HTML  = 1;
+    public const FORMAT_TEXT  = 0;
+    public const FORMAT_HTML  = 1;
     
     //The diffetents mode of display
-    const OUTPUT_BROWSER      = 0;
-    const OUTPUT_EXPORT       = 1;
-    const OUTPUT_MAIL_TEXT    = 2;
+    public const OUTPUT_BROWSER      = 0;
+    public const OUTPUT_EXPORT       = 1;
+    public const OUTPUT_MAIL_TEXT    = 2;
 
     /**
      * Artifact Type object.

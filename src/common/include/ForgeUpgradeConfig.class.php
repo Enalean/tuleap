@@ -23,9 +23,9 @@
  * Manage interactions with ForgeUpgrade configuration
  */
 class ForgeUpgradeConfig {
-    const FORGEUPGRADE_PATH = '/usr/lib/forgeupgrade/bin/forgeupgrade';
+    public const FORGEUPGRADE_PATH = '/usr/lib/forgeupgrade/bin/forgeupgrade';
 
-    const COMMAND_CHECK_UPDATE = 'check-update';
+    public const COMMAND_CHECK_UPDATE = 'check-update';
 
     /**
      * @var System_Command

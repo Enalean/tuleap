@@ -20,10 +20,10 @@
 
 class Tuleap_CustomToursFactory {
 
-    const CUSTOM_TOURS_LIST_FILE      = 'tour.json';
-    const PLACEHOLDER_PROJECT_ID      = '{project_id}';
-    const PLACEHOLDER_PROJECT_NAME    = '{project_name}';
-    const PLACEHOLDER_ATTRIBUTE_VALUE = '{attribute_value}';
+    public const CUSTOM_TOURS_LIST_FILE      = 'tour.json';
+    public const PLACEHOLDER_PROJECT_ID      = '{project_id}';
+    public const PLACEHOLDER_PROJECT_NAME    = '{project_name}';
+    public const PLACEHOLDER_ATTRIBUTE_VALUE = '{attribute_value}';
 
     /** @var ProjectManager */
     private $project_manager;

@@ -23,10 +23,10 @@ namespace Tuleap\REST\v1;
 
 class GitRepositoryRepresentationBase
 {
-    const ROUTE = 'git';
+    public const ROUTE = 'git';
 
-    const FIELDS_BASIC = 'basic';
-    const FIELDS_ALL   = 'all';
+    public const FIELDS_BASIC = 'basic';
+    public const FIELDS_ALL   = 'all';
 
     /**
      * @var int

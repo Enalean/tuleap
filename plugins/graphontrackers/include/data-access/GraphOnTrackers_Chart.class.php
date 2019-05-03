@@ -33,7 +33,7 @@ require_once('common/html/HTML_Element_Selectbox_Rank.class.php');
  */
 abstract class GraphOnTrackers_Chart {
 
-    const MARKER_BEGINNING_OUTPUT_DISPLAY = '💩';
+    public const MARKER_BEGINNING_OUTPUT_DISPLAY = '💩';
 
     protected $id;
     protected $rank;

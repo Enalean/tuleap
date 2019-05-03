@@ -20,8 +20,8 @@
 
 class Git_Mirror_MirrorDataMapper {
 
-    const MIRROR_OWNER_PREFIX = 'forge__gitmirror_';
-    const PROJECTS_HOSTNAME   = 'projects';
+    public const MIRROR_OWNER_PREFIX = 'forge__gitmirror_';
+    public const PROJECTS_HOSTNAME   = 'projects';
 
     /** @var Git_Mirror_MirrorDao */
     private $dao;

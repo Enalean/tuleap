@@ -23,11 +23,11 @@
  */
 class Project_CustomDescription_CustomDescription {
 
-    const REQUIRED     = true;
-    const NOT_REQUIRED = false;
+    public const REQUIRED     = true;
+    public const NOT_REQUIRED = false;
 
-    const TYPE_TEXT = 'text';
-    const TYPE_LINE = 'line';
+    public const TYPE_TEXT = 'text';
+    public const TYPE_LINE = 'line';
 
     private $id;
     private $name;

@@ -24,8 +24,8 @@
  */
 class PermissionsOverrider_PermissionsOverriderManager {
 
-    const PERMISSIONS_OVERRIDER_DIRECTORY = "local_glue";
-    const PERMISSIONS_OVERRIDER_FILE      = "PermissionsOverrider.php";
+    public const PERMISSIONS_OVERRIDER_DIRECTORY = "local_glue";
+    public const PERMISSIONS_OVERRIDER_FILE      = "PermissionsOverrider.php";
 
     /**
      * Holds an instance of the class

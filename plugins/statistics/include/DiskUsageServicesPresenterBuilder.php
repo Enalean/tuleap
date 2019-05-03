@@ -29,10 +29,10 @@ use Statistics_DiskUsageOutput;
 
 class DiskUsageServicesPresenterBuilder
 {
-    const GROUP_BY_DAY_KEY   = 'day';
-    const GROUP_BY_WEEK_KEY  = 'week';
-    const GROUP_BY_MONTH_KEY = 'month';
-    const GROUP_BY_YEAR_KEY  = 'year';
+    public const GROUP_BY_DAY_KEY   = 'day';
+    public const GROUP_BY_WEEK_KEY  = 'week';
+    public const GROUP_BY_MONTH_KEY = 'month';
+    public const GROUP_BY_YEAR_KEY  = 'year';
 
     /**
      * @var Statistics_DiskUsageGraph

@@ -31,7 +31,7 @@ use Tuleap\DynamicCredentials\User\DynamicUserCreator;
 
 class dynamic_credentialsPlugin extends Plugin // @codingStandardsIgnoreLine
 {
-    const NAME = 'dynamic_credentials';
+    public const NAME = 'dynamic_credentials';
 
     public function __construct($id)
     {

@@ -26,11 +26,11 @@ use Tuleap\Mediawiki\ForgeUserGroupPermission\MediawikiAdminAllProjects;
  */
 class MediawikiUserGroupsMapper {
 
-    const MEDIAWIKI_GROUPS_ANONYMOUS  = 'anonymous';
-    const MEDIAWIKI_GROUPS_USER       = 'user';
-    const MEDIAWIKI_GROUPS_BOT        = 'bot';
-    const MEDIAWIKI_GROUPS_SYSOP      = 'sysop';
-    const MEDIAWIKI_GROUPS_BUREAUCRAT = 'bureaucrat';
+    public const MEDIAWIKI_GROUPS_ANONYMOUS  = 'anonymous';
+    public const MEDIAWIKI_GROUPS_USER       = 'user';
+    public const MEDIAWIKI_GROUPS_BOT        = 'bot';
+    public const MEDIAWIKI_GROUPS_SYSOP      = 'sysop';
+    public const MEDIAWIKI_GROUPS_BUREAUCRAT = 'bureaucrat';
 
     public static $MEDIAWIKI_GROUPS_NAME = array (
         self::MEDIAWIKI_GROUPS_ANONYMOUS,

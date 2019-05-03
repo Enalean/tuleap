@@ -24,7 +24,7 @@ require_once('Docman_Path.class.php');
 
 class Docman_NotificationsManager_Add extends Docman_NotificationsManager { 
 
-    const MESSAGE_ADDED = 'added'; // X has been added
+    public const MESSAGE_ADDED = 'added'; // X has been added
     
     function _getListeningUsersItemId($params) {
         return $params['parent']->getId();

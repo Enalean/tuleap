@@ -26,8 +26,8 @@ use ProjectUGroup;
 use PFUser;
 
 class PermissionsManager {
-    const PERM_READ  = 'PLUGIN_PROFTPD_READ';
-    const PERM_WRITE = 'PLUGIN_PROFTPD_WRITE';
+    public const PERM_READ  = 'PLUGIN_PROFTPD_READ';
+    public const PERM_WRITE = 'PLUGIN_PROFTPD_WRITE';
 
     /** @var \PermissionsManager */
     private $permissions_manager;

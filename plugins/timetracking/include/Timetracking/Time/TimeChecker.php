@@ -28,7 +28,7 @@ use Tuleap\Timetracking\Exceptions\TimeTrackingBadDateFormatException;
 
 class TimeChecker
 {
-    const TIME_PATTERN = '^[0-9]{2}[:][0-9]{2}$';
+    public const TIME_PATTERN = '^[0-9]{2}[:][0-9]{2}$';
 
     public function doesTimeBelongsToUser(Time $time, PFUser $user)
     {

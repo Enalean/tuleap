@@ -23,8 +23,8 @@ use Luracast\Restler\RestException;
 
 class OrderRepresentationBase {
 
-    const AFTER  = 'after';
-    const BEFORE = 'before';
+    public const AFTER  = 'after';
+    public const BEFORE = 'before';
 
     /**
      * @var {@type array}

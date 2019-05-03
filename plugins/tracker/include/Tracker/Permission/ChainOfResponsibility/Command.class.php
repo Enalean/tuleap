@@ -26,15 +26,15 @@
  */
 abstract class Tracker_Permission_Command {
 
-    const PERMISSION_PREFIX = 'permissions_';
+    public const PERMISSION_PREFIX = 'permissions_';
 
-    const PERMISSION_ADMIN                  = 'ADMIN';
-    const PERMISSION_FULL                   = 'FULL';
-    const PERMISSION_ASSIGNEE               = 'ASSIGNEE';
-    const PERMISSION_SUBMITTER              = 'SUBMITTER';
-    const PERMISSION_ASSIGNEE_AND_SUBMITTER = 'SUBMITTER_N_ASSIGNEE';
-    const PERMISSION_NONE                   = 'NONE';
-    const PERMISSION_SUBMITTER_ONLY         = 'SUBMITTER_ONLY';
+    public const PERMISSION_ADMIN                  = 'ADMIN';
+    public const PERMISSION_FULL                   = 'FULL';
+    public const PERMISSION_ASSIGNEE               = 'ASSIGNEE';
+    public const PERMISSION_SUBMITTER              = 'SUBMITTER';
+    public const PERMISSION_ASSIGNEE_AND_SUBMITTER = 'SUBMITTER_N_ASSIGNEE';
+    public const PERMISSION_NONE                   = 'NONE';
+    public const PERMISSION_SUBMITTER_ONLY         = 'SUBMITTER_ONLY';
 
     protected static $non_admin_permissions = array(
         Tracker_Permission_Command::PERMISSION_FULL,

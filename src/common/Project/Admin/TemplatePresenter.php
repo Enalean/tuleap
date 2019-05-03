@@ -32,7 +32,7 @@ class TemplatePresenter
      *  - template => (in) Project
      *  - buttons  => (out) Array of button presenters
      */
-    const EVENT_ADDITIONAL_ADMIN_BUTTONS = 'event_additional_admin_buttons';
+    public const EVENT_ADDITIONAL_ADMIN_BUTTONS = 'event_additional_admin_buttons';
 
     public $id;
     public $name;

@@ -23,10 +23,10 @@ namespace Tuleap\Configuration\Logger;
 
 class Console implements LoggerInterface
 {
-    const RED     = "\033[31m";
-    const GREEN   = "\033[32m";
-    const YELLOW  = "\033[33m";
-    const NOCOLOR = "\033[0m";
+    public const RED     = "\033[31m";
+    public const GREEN   = "\033[32m";
+    public const YELLOW  = "\033[33m";
+    public const NOCOLOR = "\033[0m";
 
     public function debug($message, array $context = array())
     {

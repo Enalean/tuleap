@@ -24,7 +24,7 @@ use PHPUnit\Framework\TestCase;
 
 class IncomingMailParsingTest extends TestCase
 {
-    const HTML_ONLY_BODY = '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+    public const HTML_ONLY_BODY = '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
 </head>
@@ -35,7 +35,7 @@ My <b>fault<br>
 </body>
 </html>
 ';
-    const HTML_BODY_WITH_INLINE_ATTACHMENT = '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+    public const HTML_BODY_WITH_INLINE_ATTACHMENT = '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
 </head>

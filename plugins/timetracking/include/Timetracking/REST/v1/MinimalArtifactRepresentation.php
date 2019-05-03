@@ -29,7 +29,7 @@ use Tuleap\REST\JsonCast;
 
 class MinimalArtifactRepresentation
 {
-    const ROUTE = 'artifacts';
+    public const ROUTE = 'artifacts';
 
     /**
      * @var int

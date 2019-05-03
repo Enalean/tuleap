@@ -28,7 +28,7 @@ use \PFUser;
 use \UserManager;
 
 class ChangesetRepresentation {
-    const ROUTE = 'changesets';
+    public const ROUTE = 'changesets';
 
     /**
      * @var int ID of the changeset

@@ -24,10 +24,10 @@ use Tuleap\Chart\ColorsForCharts;
 require_once 'common/chart/Chart.class.php';
 
 class Git_LastPushesGraph {
-    const MAX_WEEKSNUMBER  = 25;
-    const WEEKS_IN_SECONDS = 604800;
+    public const MAX_WEEKSNUMBER  = 25;
+    public const WEEKS_IN_SECONDS = 604800;
 
-    const NUMBER_OF_REPOSITORIES_BEFORE_GRAPH_LABEL_BREAK_DISPLAY = 15;
+    public const NUMBER_OF_REPOSITORIES_BEFORE_GRAPH_LABEL_BREAK_DISPLAY = 15;
 
     /**
      * @var Boolean

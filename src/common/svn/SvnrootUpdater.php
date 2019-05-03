@@ -32,8 +32,8 @@ use Exception;
 
 class SvnrootUpdater
 {
-    const QUEUE_PREFIX = 'tuleap_svnroot_update';
-    const TOPIC        = 'tuleap.svn.svnroot.update';
+    public const QUEUE_PREFIX = 'tuleap_svnroot_update';
+    public const TOPIC        = 'tuleap.svn.svnroot.update';
 
     /**
      * @var Logger

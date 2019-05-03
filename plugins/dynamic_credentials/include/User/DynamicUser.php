@@ -22,7 +22,7 @@ namespace Tuleap\DynamicCredentials\User;
 
 class DynamicUser extends \PFUser
 {
-    const ID = 80;
+    public const ID = 80;
 
     /**
      * @var bool

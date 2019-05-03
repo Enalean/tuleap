@@ -21,7 +21,7 @@
 require_once 'common/system_event/SystemEvent.class.php';
 
 class SystemEvent_GIT_REPO_UPDATE extends SystemEvent {
-    const NAME = 'GIT_REPO_UPDATE';
+    public const NAME = 'GIT_REPO_UPDATE';
 
     /** @var GitRepositoryFactory */
     private $repository_factory;

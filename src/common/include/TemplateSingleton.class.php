@@ -27,9 +27,9 @@ class TemplateSingleton
   // simply containing the
   var $data_array = array();
 
-  const PROJECT      = 1;
-  const TEMPLATE     = 2;
-  const TEST_PROJECT = 3;
+  public const PROJECT      = 1;
+  public const TEMPLATE     = 2;
+  public const TEST_PROJECT = 3;
 
   function __construct() {
     $this->update();

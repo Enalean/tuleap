@@ -31,7 +31,7 @@ use Tuleap\FRS\FRSPermissionDao;
 use Tuleap\FRS\FRSPermissionFactory;
 
 class FRSFileFactory {
-    const COMPUTE_MD5 = 0x0001;
+    public const COMPUTE_MD5 = 0x0001;
 
     /**
      * @var Logger

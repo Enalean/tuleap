@@ -42,9 +42,9 @@
  */
 class CSRFSynchronizerToken
 {
-    const DEFAULT_TOKEN_NAME    = 'challenge';
-    const STORAGE_PREFIX        = 'synchronizer_token';
-    const MAX_TOKEN_PER_STORAGE = 4096;
+    public const DEFAULT_TOKEN_NAME    = 'challenge';
+    public const STORAGE_PREFIX        = 'synchronizer_token';
+    public const MAX_TOKEN_PER_STORAGE = 4096;
 
     /**
      * @var string a pseudorandom generated token

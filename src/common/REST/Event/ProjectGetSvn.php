@@ -26,7 +26,7 @@ use Tuleap\REST\v1\SvnRepositoryRepresentationBase;
 
 class ProjectGetSvn implements Dispatchable
 {
-    const NAME = 'rest_project_get_svn';
+    public const NAME = 'rest_project_get_svn';
 
     /**
      * @var SvnRepositoryRepresentationBase[]

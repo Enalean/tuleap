@@ -91,7 +91,7 @@ class Tracker_FormElementFactory {
      *  - group   => (in/out) array of {'type' => 'classname'} Containers of fields (column, fieldset, …)
      *  - static  => (in/out) array of {'type' => 'classname'} Static fields (static text, separators, …)
      */
-    const GET_CLASSNAMES     = 'tracker_formelement_get_classnames';
+    public const GET_CLASSNAMES     = 'tracker_formelement_get_classnames';
 
     /**
      * Get the visitor responsible of the display of create interface for the element
@@ -100,7 +100,7 @@ class Tracker_FormElementFactory {
      *  - all_used_elements => Tracker_FormElement[]
      *  - visitor           => (output) Tracker_FormElement_View_Admin_CreateVisitor
      */
-    const VIEW_ADMIN_CREATE_VISITOR = 'tracker_formelement_factory_view_admin_create_visitor';
+    public const VIEW_ADMIN_CREATE_VISITOR = 'tracker_formelement_factory_view_admin_create_visitor';
 
     /**
      * A protected constructor; prevents direct creation of object

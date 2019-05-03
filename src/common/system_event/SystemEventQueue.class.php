@@ -20,7 +20,7 @@
 
 class SystemEventQueue {
 
-    const NAME = 'default';
+    public const NAME = 'default';
 
     public function getName() {
         return self::NAME;

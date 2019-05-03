@@ -29,8 +29,8 @@ use Tuleap\PullRequest\MergeSetting\MergeSettingRetriever;
 
 class PullRequestMerger
 {
-    const GIT_MERGE_CONFLICT_MARKER = '+<<<<<<<';
-    const MERGE_TEMPORARY_SUBFOLDER = 'tuleap-pr';
+    public const GIT_MERGE_CONFLICT_MARKER = '+<<<<<<<';
+    public const MERGE_TEMPORARY_SUBFOLDER = 'tuleap-pr';
     /**
      * @var MergeSettingRetriever
      */

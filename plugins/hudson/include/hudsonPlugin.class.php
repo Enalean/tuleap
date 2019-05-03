@@ -31,7 +31,7 @@ require_once __DIR__ . '/constants.php';
 
 class hudsonPlugin extends PluginWithLegacyInternalRouting
 {
-    const ICONS_PATH = '/plugins/hudson/themes/default/images/ic/';
+    public const ICONS_PATH = '/plugins/hudson/themes/default/images/ic/';
 
     public function __construct($id)
     {

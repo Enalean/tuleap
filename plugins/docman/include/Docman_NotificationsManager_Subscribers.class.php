@@ -23,8 +23,8 @@ require_once('Docman_NotificationsManager.class.php');
 
 class Docman_NotificationsManager_Subscribers extends Docman_NotificationsManager {
 
-    const MESSAGE_ADDED = 'added'; // X has been added to monitoring list
-    const MESSAGE_REMOVED = 'removed'; // X has been removed from monitoring list
+    public const MESSAGE_ADDED = 'added'; // X has been added to monitoring list
+    public const MESSAGE_REMOVED = 'removed'; // X has been removed from monitoring list
 
     /**
      * Trigger notification message build for a list of users monitoring a given docman item.

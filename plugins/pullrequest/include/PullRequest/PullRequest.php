@@ -25,18 +25,18 @@ use Tuleap\Label\Labelable;
 class PullRequest implements Labelable
 {
 
-    const STATUS_ABANDONED = 'A';
-    const STATUS_MERGED    = 'M';
-    const STATUS_REVIEW    = 'R';
+    public const STATUS_ABANDONED = 'A';
+    public const STATUS_MERGED    = 'M';
+    public const STATUS_REVIEW    = 'R';
 
-    const UNKNOWN_MERGE        = 0;
-    const NO_FASTFORWARD_MERGE = 1;
-    const FASTFORWARD_MERGE    = 2;
-    const CONFLICT_MERGE       = 3;
+    public const UNKNOWN_MERGE        = 0;
+    public const NO_FASTFORWARD_MERGE = 1;
+    public const FASTFORWARD_MERGE    = 2;
+    public const CONFLICT_MERGE       = 3;
 
-    const BUILD_STATUS_UNKNOWN = 'U';
-    const BUILD_STATUS_SUCCESS = 'S';
-    const BUILD_STATUS_FAIL    = 'F';
+    public const BUILD_STATUS_UNKNOWN = 'U';
+    public const BUILD_STATUS_SUCCESS = 'S';
+    public const BUILD_STATUS_FAIL    = 'F';
 
     private $id;
     private $title;

@@ -28,7 +28,7 @@ use Tuleap\Tracker\Workflow\PostAction\Update\PostActionCollection;
 
 class CheckPostActionsForTracker implements Dispatchable
 {
-    const NAME = 'checkPostActionsForTracker';
+    public const NAME = 'checkPostActionsForTracker';
 
     /**
      * @var PostActionCollection

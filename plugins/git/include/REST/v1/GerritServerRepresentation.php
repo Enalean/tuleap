@@ -26,7 +26,7 @@ use Tuleap\REST\JsonCast;
 
 class GerritServerRepresentation {
 
-    const ROUTE = 'gerrit';
+    public const ROUTE = 'gerrit';
 
     /**
      * @var int {@type int}

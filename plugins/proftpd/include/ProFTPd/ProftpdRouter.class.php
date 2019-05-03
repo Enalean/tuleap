@@ -24,8 +24,8 @@ use HTTPRequest;
 
 class ProftpdRouter {
 
-    const DEFAULT_CONTROLLER = 'explorer';
-    const DEFAULT_ACTION     = 'index';
+    public const DEFAULT_CONTROLLER = 'explorer';
+    public const DEFAULT_ACTION     = 'index';
 
     private $controllers = array();
 

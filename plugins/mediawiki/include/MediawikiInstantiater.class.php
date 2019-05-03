@@ -25,7 +25,7 @@ require_once 'common/backend/BackendLogger.class.php';
 
 class MediaWikiInstantiater {
 
-    const MW_123_PATH = '/usr/share/mediawiki-tuleap-123';
+    public const MW_123_PATH = '/usr/share/mediawiki-tuleap-123';
 
     /** @var BackendLogger */
     private $logger;

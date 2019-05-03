@@ -29,8 +29,8 @@ use Tuleap\Cryptography\ConcealedString;
 
 final class AccessKeySerializer implements SplitTokenFormatter, SplitTokenIdentifierTranslator
 {
-    const PREFIX  = 'tlp-k1-';
-    const PATTERN = '/' . self::PREFIX . '(?<key_id>\d+)\.(?<verifier>[[:xdigit:]]+)/';
+    public const PREFIX  = 'tlp-k1-';
+    public const PATTERN = '/' . self::PREFIX . '(?<key_id>\d+)\.(?<verifier>[[:xdigit:]]+)/';
 
     public function getIdentifier(SplitToken $token)
     {

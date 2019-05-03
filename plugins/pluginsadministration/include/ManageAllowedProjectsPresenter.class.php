@@ -20,7 +20,7 @@
 
 class PluginsAdministration_ManageAllowedProjectsPresenter {
 
-    const TEMPLATE = 'manage-allowed-projects';
+    public const TEMPLATE = 'manage-allowed-projects';
 
     /**
      * @var Plugin

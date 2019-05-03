@@ -22,7 +22,7 @@ namespace Tuleap\Templating;
 
 class TemplateCache
 {
-    const CACHE_FOLDER_NAME = 'template_engine';
+    public const CACHE_FOLDER_NAME = 'template_engine';
 
     /**
      * @return string

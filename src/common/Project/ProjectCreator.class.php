@@ -65,7 +65,7 @@ class ProjectCreator {
      *  - project_creation_data => (output) array
      *  - use_legacy_services   => (output) array
      */
-    const PROJECT_CREATION_REMOVE_LEGACY_SERVICES = 'project_creation_remove_legacy_services';
+    public const PROJECT_CREATION_REMOVE_LEGACY_SERVICES = 'project_creation_remove_legacy_services';
 
     /**
      * Waiting for "private const" in PHP 7.1 https://wiki.php.net/rfc/class_const_visibility

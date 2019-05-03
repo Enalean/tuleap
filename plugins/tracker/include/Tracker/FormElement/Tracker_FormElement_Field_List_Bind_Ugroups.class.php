@@ -22,7 +22,7 @@ use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindVisitor;
 
 class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Field_List_Bind
 {
-    const TYPE = 'ugroups';
+    public const TYPE = 'ugroups';
 
     /**
      * @var UGroupManager

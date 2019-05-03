@@ -31,7 +31,7 @@ use Cocur\Slugify\Slugify;
  * */
 class ConfigNotificationEmailCustomSenderFormatter
 {
-    const SLUGIFY_ARGS = [
+    public const SLUGIFY_ARGS = [
         'separator' => ' ',
         'lowercase' => false
     ];

@@ -23,7 +23,7 @@
 class Tracker_Semantic_Contributor extends Tracker_Semantic
 {
 
-    const CONTRIBUTOR_SEMANTIC_SHORTNAME = 'contributor';
+    public const CONTRIBUTOR_SEMANTIC_SHORTNAME = 'contributor';
 
     /**
      * @var Tracker_FormElement_Field_List

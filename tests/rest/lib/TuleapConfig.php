@@ -25,10 +25,10 @@ use PDO;
 
 class TuleapConfig
 {
-    const FORGE_ACCESS = 'access_mode';
-    const ANONYMOUS    = 'anonymous';
-    const REGULAR      = 'regular';
-    const RESTRICTED   = 'restricted';
+    public const FORGE_ACCESS = 'access_mode';
+    public const ANONYMOUS    = 'anonymous';
+    public const REGULAR      = 'regular';
+    public const RESTRICTED   = 'restricted';
 
     /**
      * @var PDO

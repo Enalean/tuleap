@@ -27,7 +27,7 @@ use Tuleap\Event\Dispatchable;
 
 class UGroupEditProcessAction implements Dispatchable
 {
-    const NAME = 'ugroupEditProcessAction';
+    public const NAME = 'ugroupEditProcessAction';
 
     /**
      * @var bool

@@ -50,7 +50,7 @@ use UserManager;
  */
 class UserGroupResource extends AuthenticatedResource {
 
-    const MAX_LIMIT = 50;
+    public const MAX_LIMIT = 50;
     /**
      * @var UserIsUGroupMemberChecker
      */

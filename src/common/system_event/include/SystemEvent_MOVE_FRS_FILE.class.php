@@ -20,7 +20,7 @@
 
 class SystemEvent_MOVE_FRS_FILE extends SystemEvent {
 
-    const NAME = 'MOVE_FRS_FILE';
+    public const NAME = 'MOVE_FRS_FILE';
 
     /**
      * Set multiple logs

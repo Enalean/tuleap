@@ -19,7 +19,7 @@
  */
 
 class SystemEvent_GIT_PROJECTS_UPDATE extends SystemEvent {
-    const NAME = 'GIT_PROJECTS_UPDATE';
+    public const NAME = 'GIT_PROJECTS_UPDATE';
 
     /** @var Logger */
     private $logger;

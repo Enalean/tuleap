@@ -26,7 +26,7 @@ use RestBase;
 
 class DocmanBase extends RestBase
 {
-    const PROJECT_NAME = 'docmanproject';
+    public const PROJECT_NAME = 'docmanproject';
     protected $project_id;
 
     public function setUp() : void

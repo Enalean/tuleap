@@ -21,8 +21,8 @@
 
 
 class Tracker_FileInfo {
-    const THUMBNAILS_MAX_WIDTH  = 150;
-    const THUMBNAILS_MAX_HEIGHT = 112;
+    public const THUMBNAILS_MAX_WIDTH  = 150;
+    public const THUMBNAILS_MAX_HEIGHT = 112;
 
     protected $id;
     protected $field;

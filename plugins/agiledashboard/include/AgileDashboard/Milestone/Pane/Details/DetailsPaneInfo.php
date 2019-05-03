@@ -25,7 +25,7 @@ use Planning_Milestone;
 
 class DetailsPaneInfo extends PaneInfo
 {
-    const IDENTIFIER = 'details';
+    public const IDENTIFIER = 'details';
 
     /** @var string */
     private $theme_path;

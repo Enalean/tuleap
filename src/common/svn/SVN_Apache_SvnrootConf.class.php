@@ -23,7 +23,7 @@
  */
 class SVN_Apache_SvnrootConf
 {
-    const CONFIG_SVN_LOG_PATH = 'svn_log_path';
+    public const CONFIG_SVN_LOG_PATH = 'svn_log_path';
 
     /**
      * @var Array

@@ -25,7 +25,7 @@ use Symfony\Component\Console\Command\Command;
 
 class CLICommandsCollector implements Dispatchable
 {
-    const NAME = 'collectCLICommands';
+    public const NAME = 'collectCLICommands';
     /**
      * @var Application
      */

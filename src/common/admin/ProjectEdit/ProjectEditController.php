@@ -34,7 +34,7 @@ use Tuleap\Project\Admin\ProjectDetailsPresenter;
 
 class ProjectEditController
 {
-    const TEMPLATE = 'project-info';
+    public const TEMPLATE = 'project-info';
     /**
      * @var ProjectDetailsPresenter
      */

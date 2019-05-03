@@ -25,7 +25,7 @@ use Tuleap\Event\Dispatchable;
 
 class UserConnectionUpdateEvent implements Dispatchable
 {
-    const NAME = 'userConnectionUpdateEvent';
+    public const NAME = 'userConnectionUpdateEvent';
 
     /**
      * @var \PFUser

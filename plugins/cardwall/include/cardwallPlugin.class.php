@@ -61,7 +61,7 @@ class cardwallPlugin extends Plugin
         return $this->config_factory;
     }
 
-    const RENDERER_TYPE = 'plugin_cardwall';
+    public const RENDERER_TYPE = 'plugin_cardwall';
 
 
     public function getHooksAndCallbacks() {

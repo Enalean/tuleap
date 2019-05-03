@@ -22,8 +22,8 @@
  * Build all the data needed to create Trigger rules in workflow administration
  */
 class Tracker_Workflow_Trigger_RulesBuilderData implements Tracker_IProvideJsonFormatOfMyself {
-    const CONDITION_AT_LEAST_ONE = 'at_least_one';
-    const CONDITION_ALL_OFF      = 'all_of';
+    public const CONDITION_AT_LEAST_ONE = 'at_least_one';
+    public const CONDITION_ALL_OFF      = 'all_of';
 
     /**
      * @var Tracker_FormElement_Field_List[]

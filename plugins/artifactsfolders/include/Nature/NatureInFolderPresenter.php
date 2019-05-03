@@ -25,7 +25,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenter;
 
 class NatureInFolderPresenter extends NaturePresenter
 {
-    const NATURE_IN_FOLDER = '_in_folder';
+    public const NATURE_IN_FOLDER = '_in_folder';
 
     public function __construct()
     {

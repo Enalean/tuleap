@@ -41,11 +41,11 @@ class TrackerXmlImport
      *  - project:     input Project
      *  - logger:      output Logger
      */
-    const ADD_PROPERTY_TO_TRACKER = 'add_property_to_tracker';
+    public const ADD_PROPERTY_TO_TRACKER = 'add_property_to_tracker';
 
-    const XML_PARENT_ID_EMPTY = "0";
+    public const XML_PARENT_ID_EMPTY = "0";
 
-    const DEFAULT_NOTIFICATIONS_LEVEL = 0;
+    public const DEFAULT_NOTIFICATIONS_LEVEL = 0;
 
     /** @var TrackerFactory */
     private $tracker_factory;

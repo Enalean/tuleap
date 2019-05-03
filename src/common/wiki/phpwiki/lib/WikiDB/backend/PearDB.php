@@ -8,7 +8,7 @@ require_once('lib/WikiDB/backend.php');
 class WikiDB_backend_PearDB
 extends WikiDB_backend
 {
-    const DATABASE_TABLE_PREFIX = 'wiki_';
+    public const DATABASE_TABLE_PREFIX = 'wiki_';
 
     var $_dbh;
 

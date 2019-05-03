@@ -25,10 +25,10 @@ use \RecursiveIteratorIterator;
 use \RecursiveDirectoryIterator;
 
 class ACLUpdater {
-    const PARENT_DIR  = '..';
-    const CURRENT_DIR = '.';
-    const FILE        = 'file';
-    const DIRECTORY   = 'dir';
+    public const PARENT_DIR  = '..';
+    public const CURRENT_DIR = '.';
+    public const FILE        = 'file';
+    public const DIRECTORY   = 'dir';
 
     /** @var Backend */
     private $backend;

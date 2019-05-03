@@ -22,8 +22,8 @@ namespace Tuleap\FRS;
 
 class FRSPermission
 {
-    const FRS_ADMIN  = 'FRS_ADMIN';
-    const FRS_READER = 'FRS_READ';
+    public const FRS_ADMIN  = 'FRS_ADMIN';
+    public const FRS_READER = 'FRS_READ';
 
     private $project_id;
     private $permission_type;

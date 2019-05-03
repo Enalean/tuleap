@@ -34,7 +34,7 @@ use Tuleap\Tracker\Webhook\WebhookLogsRetriever;
 
 class AdminWebhooks extends Tracker_Workflow_Action
 {
-    const FUNC_ADMIN_WEBHOOKS = 'admin-webhooks';
+    public const FUNC_ADMIN_WEBHOOKS = 'admin-webhooks';
 
     /**
      * @var WebhookFactory

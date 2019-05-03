@@ -26,7 +26,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperParameters;
 
 class InComparisonChecker extends ComparisonChecker
 {
-    const OPERATOR = 'IN()';
+    public const OPERATOR = 'IN()';
 
     public function visitInValueWrapper(
         InValueWrapper $value_wrapper,

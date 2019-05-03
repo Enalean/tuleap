@@ -37,7 +37,7 @@ use REST_TestDataBuilder;
  */
 class PermissionOnArtifactRequiredTest extends RestBase
 {
-    const PROJECT_NAME = 'hierarchy-tests';
+    public const PROJECT_NAME = 'hierarchy-tests';
 
     public function testItsLinkedToParentAsChild()
     {

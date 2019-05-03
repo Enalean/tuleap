@@ -28,7 +28,7 @@ use TemplateRenderer;
 
 class ProjectNote extends \Widget
 {
-    const NAME = 'projectnote';
+    public const NAME = 'projectnote';
 
     private $content;
     /**

@@ -21,10 +21,10 @@
 
 
 class StandardPasswordHandlerTest extends TuleapTestCase {
-    const HASHED_WORD = 'Tuleap';
-    const MD5_HASH    = '$1$aa$yURlyd26QSZm44JDJtAuT/';
-    const SHA512_HASH = '$6$rounds=50000$aaaaaaaaaaaaaaaa$sI3KG111U.auUFeiO.PlagitndbvX7gVnzecFnuCBs/TV.qUCla1mz3Zmaq1JTJWT2eErh4ea9Iw995D//pfo/';
-    const BCRYPT_HASH = '$2y$10$aaaaaaaaaaaaaaaaaaaaaOBkuuklGwTPKAtCkHvUX3Lk5UDwjLI5O';
+    public const HASHED_WORD = 'Tuleap';
+    public const MD5_HASH    = '$1$aa$yURlyd26QSZm44JDJtAuT/';
+    public const SHA512_HASH = '$6$rounds=50000$aaaaaaaaaaaaaaaa$sI3KG111U.auUFeiO.PlagitndbvX7gVnzecFnuCBs/TV.qUCla1mz3Zmaq1JTJWT2eErh4ea9Iw995D//pfo/';
+    public const BCRYPT_HASH = '$2y$10$aaaaaaaaaaaaaaaaaaaaaOBkuuklGwTPKAtCkHvUX3Lk5UDwjLI5O';
 
     /**
      * @var StandardPasswordHandler

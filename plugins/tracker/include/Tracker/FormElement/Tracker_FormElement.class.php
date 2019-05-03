@@ -25,17 +25,17 @@ require_once('json.php');
  * Base class for all fields in trackers, from fieldsets to selectboxes
  */
 abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tracker_FormElement_IProvideFactoryButtonInformation, Tracker_IProvideJsonFormatOfMyself {
-    const PERMISSION_READ   = 'PLUGIN_TRACKER_FIELD_READ';
-    const PERMISSION_UPDATE = 'PLUGIN_TRACKER_FIELD_UPDATE';
-    const PERMISSION_SUBMIT = 'PLUGIN_TRACKER_FIELD_SUBMIT';
+    public const PERMISSION_READ   = 'PLUGIN_TRACKER_FIELD_READ';
+    public const PERMISSION_UPDATE = 'PLUGIN_TRACKER_FIELD_UPDATE';
+    public const PERMISSION_SUBMIT = 'PLUGIN_TRACKER_FIELD_SUBMIT';
 
-    const REST_PERMISSION_READ   = 'read';
-    const REST_PERMISSION_UPDATE = 'update';
-    const REST_PERMISSION_SUBMIT = 'submit';
+    public const REST_PERMISSION_READ   = 'read';
+    public const REST_PERMISSION_UPDATE = 'update';
+    public const REST_PERMISSION_SUBMIT = 'submit';
 
-    const PROJECT_HISTORY_UPDATE = 'tracker_formelement_update';
+    public const PROJECT_HISTORY_UPDATE = 'tracker_formelement_update';
 
-    const XML_ID_PREFIX = 'F';
+    public const XML_ID_PREFIX = 'F';
 
     /**
      * Get the visitor responsible of the display of update interface for the element
@@ -44,7 +44,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      *  - all_used_elements => Tracker_FormElement[]
      *  - visitor           => (output) Tracker_FormElement_View_Admin_UpdateVisitor
      */
-    const VIEW_ADMIN_UPDATE_VISITOR = 'tracker_formelement_view_admin_update_visitor';
+    public const VIEW_ADMIN_UPDATE_VISITOR = 'tracker_formelement_view_admin_update_visitor';
 
     /**
      * The field id

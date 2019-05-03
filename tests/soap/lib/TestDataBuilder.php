@@ -21,7 +21,7 @@
 
 class SOAP_TestDataBuilder extends TestDataBuilder
 {
-    const PROJECT_PRIVATE_MEMBER_ID = 101;
+    public const PROJECT_PRIVATE_MEMBER_ID = 101;
 
     public function generateUsers()
     {

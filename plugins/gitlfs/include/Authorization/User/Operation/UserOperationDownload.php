@@ -22,7 +22,7 @@ namespace Tuleap\GitLFS\Authorization\User\Operation;
 
 final class UserOperationDownload implements UserOperation
 {
-    const NAME = 'download';
+    public const NAME = 'download';
 
     public function getName()
     {

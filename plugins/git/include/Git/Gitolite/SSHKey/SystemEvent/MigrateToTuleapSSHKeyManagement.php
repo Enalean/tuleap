@@ -26,8 +26,8 @@ use Tuleap\Git\GlobalParameterDao;
 
 class MigrateToTuleapSSHKeyManagement extends \SystemEvent
 {
-    const NAME              = 'MIGRATE_TO_TULEAP_SSH_KEY_MANAGEMENT';
-    const GITOLITE3_RC_PATH = '/var/lib/gitolite/.gitolite.rc';
+    public const NAME              = 'MIGRATE_TO_TULEAP_SSH_KEY_MANAGEMENT';
+    public const GITOLITE3_RC_PATH = '/var/lib/gitolite/.gitolite.rc';
 
     /**
      * @var GlobalParameterDao

@@ -47,7 +47,7 @@ use Tuleap\Admin\AdminPageRenderer;
 // @codingStandardsIgnoreLine
 class create_test_envPlugin extends Plugin
 {
-    const NAME = 'create_test_env';
+    public const NAME = 'create_test_env';
 
     public function __construct($id)
     {

@@ -23,8 +23,8 @@ use Tuleap\Tracker\FormElement\TransitionListValidator;
 
 abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field implements Tracker_FormElement_Field_Shareable {
 
-    const NONE_VALUE          = 100;
-    const NOT_INDICATED_VALUE = 0;
+    public const NONE_VALUE          = 100;
+    public const NOT_INDICATED_VALUE = 0;
 
     protected $bind;
 

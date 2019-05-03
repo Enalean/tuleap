@@ -28,8 +28,8 @@ require_once __DIR__ . '/TrackerBase.php';
 
 class DataBuilder extends REST_TestDataBuilder
 {
-    const USER_TESTER_NAME   = 'rest_api_tracker_admin_1';
-    const USER_TESTER_PASS   = 'welcome0';
+    public const USER_TESTER_NAME   = 'rest_api_tracker_admin_1';
+    public const USER_TESTER_PASS   = 'welcome0';
 
     /**
      * @var ArtifactsDeletionConfigDAO

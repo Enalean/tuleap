@@ -26,7 +26,7 @@ use Tuleap\Tracker\Action\MoveSemanticChecker;
 
 class MoveArtifactGetExternalSemanticCheckers implements Dispatchable
 {
-    const NAME = "moveArtifactGetExternalSemanticCheckers";
+    public const NAME = "moveArtifactGetExternalSemanticCheckers";
 
     /**
      * @var MoveSemanticChecker[]

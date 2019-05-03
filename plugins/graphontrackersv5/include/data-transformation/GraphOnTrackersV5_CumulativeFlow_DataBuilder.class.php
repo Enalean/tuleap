@@ -23,7 +23,7 @@
 
 class GraphOnTrackersV5_CumulativeFlow_DataBuilder extends ChartDataBuilderV5 {
 
-    const MAX_STEPS = 75;
+    public const MAX_STEPS = 75;
     protected $timeFiller;
     protected $startDate;
     protected $stopDate;

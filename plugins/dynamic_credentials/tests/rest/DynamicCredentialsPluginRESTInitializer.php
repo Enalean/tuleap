@@ -24,8 +24,8 @@ use PluginManager;
 
 class DynamicCredentialsPluginRESTInitializer
 {
-    const PUBLIC_KEY  = 'IpuL6ZHoKzsbGFiFLPuUvD/8dTlZ14t47O5WAyzRpgk=';
-    const PRIVATE_KEY = 'jEaIxuBi/dU3YT/YomtD0Qc/afTSXV4mHVFpuc68EGUim4vpkegrOxsYWIUs+5S8P/x1OVnXi3js7lYDLNGmCQ==';
+    public const PUBLIC_KEY  = 'IpuL6ZHoKzsbGFiFLPuUvD/8dTlZ14t47O5WAyzRpgk=';
+    public const PRIVATE_KEY = 'jEaIxuBi/dU3YT/YomtD0Qc/afTSXV4mHVFpuc68EGUim4vpkegrOxsYWIUs+5S8P/x1OVnXi3js7lYDLNGmCQ==';
 
     public function initialize()
     {

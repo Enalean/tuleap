@@ -20,7 +20,7 @@
  */
 
 class SystemEvent_GIT_LEGACY_REPO_ACCESS  extends SystemEvent {
-    const NAME = 'GIT_LEGACY_REPO_ACCESS';
+    public const NAME = 'GIT_LEGACY_REPO_ACCESS';
 
     public function process() {
         $parameters  = $this->getParametersAsArray();

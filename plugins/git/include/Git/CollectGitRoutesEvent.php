@@ -25,7 +25,7 @@ use Tuleap\Event\Dispatchable;
 
 class CollectGitRoutesEvent implements Dispatchable
 {
-    const NAME = 'collectGitRoutesEvent';
+    public const NAME = 'collectGitRoutesEvent';
 
     /**
      * @var RouteCollector

@@ -35,7 +35,7 @@ use User_ForgeUserGroupPermissionsDao;
 
 class User_ForgeUserGroupPermissionsFactory // @codingStandardsIgnoreLine
 {
-    const GET_PERMISSION_DELEGATION = 'get_permission_delegation';
+    public const GET_PERMISSION_DELEGATION = 'get_permission_delegation';
 
     /**
      * @var User_ForgeUserGroupPermissionsDao

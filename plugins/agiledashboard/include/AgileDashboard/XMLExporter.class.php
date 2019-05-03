@@ -26,18 +26,18 @@ class AgileDashboard_XMLExporter {
     /**  @var PlanningPermissionsManager */
     private $planning_permissions_manager;
 
-    const NODE_AGILEDASHBOARD = 'agiledashboard';
-    const NODE_PLANNINGS      = 'plannings';
-    const NODE_PLANNING       = 'planning';
-    const NODE_BACKLOGS       = 'backlogs';
-    const NODE_BACKLOG        = 'backlog';
-    const NODE_PERMISSIONS    = 'permissions';
-    const NODE_PERMISSION     = 'permission';
+    public const NODE_AGILEDASHBOARD = 'agiledashboard';
+    public const NODE_PLANNINGS      = 'plannings';
+    public const NODE_PLANNING       = 'planning';
+    public const NODE_BACKLOGS       = 'backlogs';
+    public const NODE_BACKLOG        = 'backlog';
+    public const NODE_PERMISSIONS    = 'permissions';
+    public const NODE_PERMISSION     = 'permission';
 
     /**
      * @todo move me to tracker class
      */
-    const TRACKER_ID_PREFIX = 'T';
+    public const TRACKER_ID_PREFIX = 'T';
 
     public function __construct(XML_RNGValidator $xml_validator, PlanningPermissionsManager $planning_permissions_manager) {
         $this->xml_validator                = $xml_validator;

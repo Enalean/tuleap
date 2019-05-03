@@ -28,7 +28,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperParameters;
 
 class NotEqualComparisonChecker extends ComparisonChecker
 {
-    const OPERATOR = '!=';
+    public const OPERATOR = '!=';
 
     public function visitCurrentDateTimeValueWrapper(
         CurrentDateTimeValueWrapper $value_wrapper,

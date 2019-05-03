@@ -27,9 +27,9 @@ use Tuleap\AgileDashboard\Kanban\RealTime\KanbanArtifactMessageSender;
 
 class RealTimeArtifactMessageController
 {
-    const EVENT_NAME_ARTIFACT_CREATED   = 'created';
-    const EVENT_NAME_ARTIFACT_UPDATED   = 'updated';
-    const EVENT_NAME_ARTIFACT_REORDERED = 'reordered';
+    public const EVENT_NAME_ARTIFACT_CREATED   = 'created';
+    public const EVENT_NAME_ARTIFACT_UPDATED   = 'updated';
+    public const EVENT_NAME_ARTIFACT_REORDERED = 'reordered';
     /**
      * @var AgileDashboard_KanbanFactory
      */

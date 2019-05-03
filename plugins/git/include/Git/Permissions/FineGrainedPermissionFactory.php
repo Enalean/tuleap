@@ -46,10 +46,10 @@ class FineGrainedPermissionFactory
      */
     private $validator;
 
-    const ADD_BRANCH_PREFIX  = 'add-branch';
-    const ADD_TAG_PREFIX     = 'add-tag';
-    const EDIT_BRANCH_PREFIX = 'edit-branch';
-    const EDIT_TAG_PREFIX    = 'edit-tag';
+    public const ADD_BRANCH_PREFIX  = 'add-branch';
+    public const ADD_TAG_PREFIX     = 'add-tag';
+    public const EDIT_BRANCH_PREFIX = 'edit-branch';
+    public const EDIT_TAG_PREFIX    = 'edit-tag';
 
     /**
      * @var PermissionsManager

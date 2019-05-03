@@ -27,10 +27,10 @@ use Zend\HttpHandlerRunner\Emitter\SapiStreamEmitter;
 
 class FRSFile {
 
-    const EVT_CREATE  = 301;
-    const EVT_UPDATE  = 302;
-    const EVT_DELETE  = 303;
-    const EVT_RESTORE = 304;
+    public const EVT_CREATE  = 301;
+    public const EVT_UPDATE  = 302;
+    public const EVT_DELETE  = 303;
+    public const EVT_RESTORE = 304;
 
 	/**
      * @var int $file_id the ID of this FRSFile

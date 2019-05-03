@@ -59,16 +59,16 @@ use Tuleap\Tracker\Report\TrackerReportConfigDao;
  */
 class Tracker_Report implements Tracker_Dispatchable_Interface {
 
-    const ACTION_SAVE            = 'report-save';
-    const ACTION_SAVEAS          = 'report-saveas';
-    const ACTION_REPLACE         = 'report-replace';
-    const ACTION_DELETE          = 'report-delete';
-    const ACTION_SCOPE           = 'report-scope';
-    const ACTION_DEFAULT         = 'report-default';
-    const ACTION_CLEANSESSION    = 'clean-session';
-    const TYPE_CRITERIA          = 'criteria';
-    const TYPE_TABLE             = 'table';
-    const COMMENT_CRITERION_NAME = 'comment';
+    public const ACTION_SAVE            = 'report-save';
+    public const ACTION_SAVEAS          = 'report-saveas';
+    public const ACTION_REPLACE         = 'report-replace';
+    public const ACTION_DELETE          = 'report-delete';
+    public const ACTION_SCOPE           = 'report-scope';
+    public const ACTION_DEFAULT         = 'report-default';
+    public const ACTION_CLEANSESSION    = 'clean-session';
+    public const TYPE_CRITERIA          = 'criteria';
+    public const TYPE_TABLE             = 'table';
+    public const COMMENT_CRITERION_NAME = 'comment';
 
     public $id;
     public $name;

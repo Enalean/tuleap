@@ -28,7 +28,7 @@ class Controller_Tree extends ControllerBase // @codingStandardsIgnoreLine
 {
     use \Tuleap\Git\Repository\View\FeatureFlag;
 
-    const README_FILE_PATTERN = '/^readme\.(markdown|mdown|mkdn|md|mkd|mdwn|mdtxt|mdtext|text)$/i';
+    public const README_FILE_PATTERN = '/^readme\.(markdown|mdown|mkdn|md|mkd|mdwn|mdtxt|mdtext|text)$/i';
 
     /**
      * __construct

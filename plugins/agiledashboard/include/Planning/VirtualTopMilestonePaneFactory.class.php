@@ -28,16 +28,16 @@ use Tuleap\AgileDashboard\Milestone\Pane\TopPlanning\TopPlanningV2PaneInfo;
  */
 class Planning_VirtualTopMilestonePaneFactory
 {
-    const TOP_MILESTONE_DUMMY_ARTIFACT_ID = "ABC";
+    public const TOP_MILESTONE_DUMMY_ARTIFACT_ID = "ABC";
 
     /**
      * If PRELOAD_ENABLED is set to true, planning v2 data will be injected to the view.
      * If it's set to false, data will be asynchronously fetched via REST calls.
      */
-    const PRELOAD_ENABLED                 = false;
-    const PRELOAD_PAGINATION_LIMIT        = 50;
-    const PRELOAD_PAGINATION_OFFSET       = 0;
-    const PRELOAD_PAGINATION_ORDER        = 'desc';
+    public const PRELOAD_ENABLED                 = false;
+    public const PRELOAD_PAGINATION_LIMIT        = 50;
+    public const PRELOAD_PAGINATION_OFFSET       = 0;
+    public const PRELOAD_PAGINATION_ORDER        = 'desc';
 
     /** @var PaneInfo[] */
     private $list_of_pane_info = array();

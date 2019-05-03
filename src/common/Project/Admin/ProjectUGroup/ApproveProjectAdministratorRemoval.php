@@ -22,7 +22,7 @@ namespace Tuleap\Project\Admin\ProjectUGroup;
 
 class ApproveProjectAdministratorRemoval
 {
-    const NAME = 'approveProjectAdministratorRemoval';
+    public const NAME = 'approveProjectAdministratorRemoval';
 
     /**
      * @var \Project

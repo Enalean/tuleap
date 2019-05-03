@@ -23,7 +23,7 @@ use Tuleap\Git\Gitolite\VersionDetector;
 
 class Git_Gitolite_ProjectSerializer {
 
-    const OBJECT_SIZE_LIMIT = 52428800;
+    public const OBJECT_SIZE_LIMIT = 52428800;
 
     /**
      * @var Git_GitRepositoryUrlManager

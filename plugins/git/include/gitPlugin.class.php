@@ -172,9 +172,9 @@ class GitPlugin extends Plugin
      *
      * Should be transfered in 'ServiceGit' class when we introduce it
      */
-    const SERVICE_SHORTNAME = 'plugin_git';
+    public const SERVICE_SHORTNAME = 'plugin_git';
 
-    const SYSTEM_NATURE_NAME = 'git_revision';
+    public const SYSTEM_NATURE_NAME = 'git_revision';
 
     private static $FREQUENCIES_GIT_READ = 'git';
 

@@ -46,9 +46,9 @@ use Tuleap\Timetracking\Time\TimeUpdater;
 
 class TimetrackingResource extends AuthenticatedResource
 {
-    const DEFAULT_OFFSET  = 0;
-    const MAX_LIMIT       = 50;
-    const MAX_TIMES_BATCH = 100;
+    public const DEFAULT_OFFSET  = 0;
+    public const MAX_LIMIT       = 50;
+    public const MAX_TIMES_BATCH = 100;
 
     /**
      * @var UserManager

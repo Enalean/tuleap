@@ -19,7 +19,7 @@
  */
 
 class SystemEvent_GIT_GROKMIRROR_MANIFEST_REPODELETE extends SystemEvent {
-    const NAME = 'GIT_GROKMIRROR_MANIFEST_REPODELETE';
+    public const NAME = 'GIT_GROKMIRROR_MANIFEST_REPODELETE';
 
     /** @var Git_Mirror_ManifestManager */
     private $manifest_manager;

@@ -19,7 +19,7 @@
  */
 
 abstract class Tracker_FormElement_Field_List_Value implements Tracker_IProvideJsonFormatOfMyself {
-    const XML_ID_PREFIX = 'V';
+    public const XML_ID_PREFIX = 'V';
 
     /**
      *

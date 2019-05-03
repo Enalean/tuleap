@@ -33,7 +33,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 class mfaPlugin  extends Plugin // @codingStandardsIgnoreLine
 {
-    const NAME = 'mfa';
+    public const NAME = 'mfa';
 
     public function __construct($id)
     {

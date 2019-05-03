@@ -25,8 +25,8 @@
  * Artifact assigned to or submitted by this person
  */
 class Tracker_Widget_MyArtifacts extends Widget {
-    const ID        = 'plugin_tracker_myartifacts';
-    const PREF_SHOW = 'plugin_tracker_myartifacts_show';
+    public const ID        = 'plugin_tracker_myartifacts';
+    public const PREF_SHOW = 'plugin_tracker_myartifacts_show';
 
     protected $artifact_show;
 

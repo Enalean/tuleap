@@ -22,10 +22,10 @@ require_once 'TreeNode.class.php';
 
 class TreeNode_GetStateVisitor {
     
-    const STATE_NODE  = 0;
-    const STATE_LAST  = 1;
-    const STATE_BLANK = 2;
-    const STATE_PIPE  = 3;
+    public const STATE_NODE  = 0;
+    public const STATE_LAST  = 1;
+    public const STATE_BLANK = 2;
+    public const STATE_PIPE  = 3;
     
     private $states = array();
     

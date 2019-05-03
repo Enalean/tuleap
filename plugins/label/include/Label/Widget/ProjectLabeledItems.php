@@ -34,7 +34,7 @@ use Widget;
 
 class ProjectLabeledItems extends Widget
 {
-    const NAME = 'projectlabeleditems';
+    public const NAME = 'projectlabeleditems';
 
     /**
      * @var ProjectLabelBuilder

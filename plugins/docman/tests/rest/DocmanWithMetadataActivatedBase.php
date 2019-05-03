@@ -27,7 +27,7 @@ use RestBase;
 
 class DocmanWithMetadataActivatedBase extends RestBase
 {
-    const PROJECT_NAME = 'docmanprojectmetadata';
+    public const PROJECT_NAME = 'docmanprojectmetadata';
     protected $project_id;
 
     public function setUp() : void

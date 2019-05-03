@@ -28,7 +28,7 @@ use UserManager;
 
 class StatisticsCollectionBuilder
 {
-    const CONFIG_DISPLAY_STATISTICS = 'display_homepage_statistics';
+    public const CONFIG_DISPLAY_STATISTICS = 'display_homepage_statistics';
 
     /**
      * @var \ProjectManager

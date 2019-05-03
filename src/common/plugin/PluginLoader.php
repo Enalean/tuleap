@@ -29,7 +29,7 @@ use Symfony\Component\VarExporter\VarExporter;
 
 class PluginLoader
 {
-    const HOOK_CACHE_KEY = 'tuleap_hooks_cache';
+    public const HOOK_CACHE_KEY = 'tuleap_hooks_cache';
 
     /**
      * @var EventManager

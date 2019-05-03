@@ -38,7 +38,7 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
      *  - request   Codendi_Request
      *  - user  PFUser
      */
-    const EVENT_ADD_VIEW_IN_COLLECTION = 'tracker_artifact_editrenderer_add_view_in_collection';
+    public const EVENT_ADD_VIEW_IN_COLLECTION = 'tracker_artifact_editrenderer_add_view_in_collection';
 
     /**
      * @var Tracker_FormElementFactory

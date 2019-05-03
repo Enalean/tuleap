@@ -58,8 +58,8 @@ use Tuleap\PHPWiki\WikiPage;
 
 class Wiki_PermissionsManager {
 
-    const WIKI_PERMISSION_READ         = 'WIKIPAGE_READ';
-    const SERVICE_WIKI_PERMISSION_READ = 'WIKI_READ';
+    public const WIKI_PERMISSION_READ         = 'WIKIPAGE_READ';
+    public const SERVICE_WIKI_PERMISSION_READ = 'WIKI_READ';
 
     /** @var PermissionsManager */
     private $permission_manager;

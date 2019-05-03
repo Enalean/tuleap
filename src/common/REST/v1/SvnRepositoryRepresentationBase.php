@@ -24,7 +24,7 @@ use Tuleap\Project\REST\MinimalProjectRepresentation;
 
 class SvnRepositoryRepresentationBase
 {
-    const ROUTE = 'svn';
+    public const ROUTE = 'svn';
 
     /**
      * @var int {@type int}

@@ -20,10 +20,10 @@
 
 class Tracker_Artifact_XMLImport_XMLImportFieldStrategyOpenList implements Tracker_Artifact_XMLImport_XMLImportFieldStrategy {
 
-    const FORMAT_ID       = 'id';
-    const FORMAT_LDAP     = 'ldap';
-    const FORMAT_USERNAME = 'username';
-    const BIND_USERS      = 'users';
+    public const FORMAT_ID       = 'id';
+    public const FORMAT_LDAP     = 'ldap';
+    public const FORMAT_USERNAME = 'username';
+    public const BIND_USERS      = 'users';
 
     /** @var TrackerXmlFieldsMapping */
     private $xml_fields_mapping;

@@ -29,7 +29,7 @@ use Tuleap\Event\Dispatchable;
 
 class CanValueBeHiddenStatementsCollection implements Dispatchable
 {
-    const NAME = 'canValueBeHiddenStatementsCollection';
+    public const NAME = 'canValueBeHiddenStatementsCollection';
 
     /**
      * @var array

@@ -14,8 +14,8 @@ namespace Tuleap\Git\GitPHP;
  */
 abstract class Controller_DiffBase extends ControllerBase // @codingStandardsIgnoreLine
 {
-    const DIFF_UNIFIED    = 1;
-    const DIFF_SIDEBYSIDE = 2;
+    public const DIFF_UNIFIED    = 1;
+    public const DIFF_SIDEBYSIDE = 2;
 
     /**
      * ReadQuery

@@ -39,8 +39,8 @@ use UGroupDao;
 
 class PlatformAccessControlCommand extends Command
 {
-    const NAME = '--platform-access-control';
-    const ACCESS_CONTROL_ARGUMENT = 'access_control_level';
+    public const NAME = '--platform-access-control';
+    public const ACCESS_CONTROL_ARGUMENT = 'access_control_level';
 
     protected function configure()
     {

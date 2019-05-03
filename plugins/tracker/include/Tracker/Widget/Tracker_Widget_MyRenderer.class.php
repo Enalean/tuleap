@@ -28,7 +28,7 @@ use Tuleap\Dashboard\User\UserDashboardController;
  */
 class Tracker_Widget_MyRenderer extends Tracker_Widget_Renderer
 {
-    const ID = 'plugin_tracker_myrenderer';
+    public const ID = 'plugin_tracker_myrenderer';
 
     function __construct()
     {

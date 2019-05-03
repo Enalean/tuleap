@@ -41,11 +41,11 @@ use Tuleap\Project\SystemEventRunner;
 
 class DataBuilder extends REST_TestDataBuilder
 {
-    const PROJECT_KANBAN_CUMULATIVE_FLOW_SHORTNAME = 'kanban-cumulative-flow';
-    const KANBAN_CUMULATIVE_FLOW_NAME              = 'kanban_cumulative_flow_test';
-    const RELEASE_TRACKER_SHORTNAME                = 'rel';
-    const PROJECT_BURNUP_SHORTNAME                 = 'burnup';
-    const KANBAN_CUMULATIVE_FLOW_ID                = 2;
+    public const PROJECT_KANBAN_CUMULATIVE_FLOW_SHORTNAME = 'kanban-cumulative-flow';
+    public const KANBAN_CUMULATIVE_FLOW_NAME              = 'kanban_cumulative_flow_test';
+    public const RELEASE_TRACKER_SHORTNAME                = 'rel';
+    public const PROJECT_BURNUP_SHORTNAME                 = 'burnup';
+    public const KANBAN_CUMULATIVE_FLOW_ID                = 2;
     /**
      * @var SystemEventManager
      */

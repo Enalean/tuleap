@@ -23,10 +23,10 @@
  */
 interface Planning_Milestone // @codingStandardsIgnoreLine
 {
-    const REMAINING_EFFORT_FIELD_NAME = 'remaining_effort';
-    const CAPACITY_FIELD_NAME         = 'capacity';
-    const START_DATE_FIELD_NAME       = 'start_date';
-    const DURATION_FIELD_NAME         = 'duration';
+    public const REMAINING_EFFORT_FIELD_NAME = 'remaining_effort';
+    public const CAPACITY_FIELD_NAME         = 'capacity';
+    public const START_DATE_FIELD_NAME       = 'start_date';
+    public const DURATION_FIELD_NAME         = 'duration';
 
     /**
      * @return int The project identifier.

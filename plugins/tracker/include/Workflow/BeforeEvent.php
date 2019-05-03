@@ -27,7 +27,7 @@ use Tuleap\Event\Dispatchable;
 
 class BeforeEvent implements Dispatchable
 {
-    const NAME = 'beforeEvent';
+    public const NAME = 'beforeEvent';
 
     /**
      * @var bool[]

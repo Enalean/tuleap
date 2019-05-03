@@ -57,12 +57,12 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 class gitlfsPlugin extends \Plugin // phpcs:ignore
 {
-    const SERVICE_SHORTNAME = "tuleap-gitlfs";
+    public const SERVICE_SHORTNAME = "tuleap-gitlfs";
 
-    const SERVICE_LABEL = "Git LFS";
+    public const SERVICE_LABEL = "Git LFS";
 
-    const DISPLAY_CONFIG_KEY = 'git_lfs_display_config';
-    const MAX_FILE_SIZE_KEY  = 'git_lfs_max_file_size';
+    public const DISPLAY_CONFIG_KEY = 'git_lfs_display_config';
+    public const MAX_FILE_SIZE_KEY  = 'git_lfs_max_file_size';
 
     public function __construct($id)
     {

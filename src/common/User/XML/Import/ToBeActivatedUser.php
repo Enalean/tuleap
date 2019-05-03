@@ -25,7 +25,7 @@ class ToBeActivatedUser extends ActionToBeTakenForUser {
 
     private static $ALLOWED_ACTIONS = array(self::ACTION, ToBeMappedUser::ACTION);
 
-    const ACTION = 'noop';
+    public const ACTION = 'noop';
 
     private $status;
 

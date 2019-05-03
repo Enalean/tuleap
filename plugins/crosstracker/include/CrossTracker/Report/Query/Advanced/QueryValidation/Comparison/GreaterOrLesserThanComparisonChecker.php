@@ -33,7 +33,7 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateToStringExceptio
 
 abstract class GreaterOrLesserThanComparisonChecker extends ComparisonChecker
 {
-    const OPERATOR = '';
+    public const OPERATOR = '';
 
     /**
      * @param Metadata $metadata

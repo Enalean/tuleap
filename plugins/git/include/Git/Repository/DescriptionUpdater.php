@@ -29,7 +29,7 @@ use Git_SystemEventManager;
 
 class DescriptionUpdater
 {
-    const MAX_LENGTH = 1024;
+    public const MAX_LENGTH = 1024;
 
     /**
      * @var Git_SystemEventManager

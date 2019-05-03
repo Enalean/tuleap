@@ -29,7 +29,7 @@ use RestBase;
  */
 class PackagesTest extends RestBase
 {
-    const PROJECT_NAME = 'frs-test';
+    public const PROJECT_NAME = 'frs-test';
 
     private $project_id;
 

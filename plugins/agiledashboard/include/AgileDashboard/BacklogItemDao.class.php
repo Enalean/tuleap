@@ -23,8 +23,8 @@
  */
 
 class AgileDashboard_BacklogItemDao extends DataAccessObject {
-    const STATUS_OPEN   = 1;
-    const STATUS_CLOSED = 0;
+    public const STATUS_OPEN   = 1;
+    public const STATUS_CLOSED = 0;
 
     public function getBacklogArtifacts($milestone_artifact_id) {
         $milestone_artifact_id = $this->da->escapeInt($milestone_artifact_id);

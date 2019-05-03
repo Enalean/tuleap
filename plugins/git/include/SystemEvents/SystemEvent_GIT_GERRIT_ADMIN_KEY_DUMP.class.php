@@ -26,7 +26,7 @@ use Tuleap\Git\Gitolite\SSHKey\Dumper;
 use Tuleap\Git\Gitolite\SSHKey\InvalidKeysCollector;
 
 class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMP extends SystemEvent {
-    const NAME = 'GIT_GERRIT_ADMIN_KEY_DUMP';
+    public const NAME = 'GIT_GERRIT_ADMIN_KEY_DUMP';
 
     /** @var Git_RemoteServer_GerritServerFactory */
     private $gerrit_server_factory;

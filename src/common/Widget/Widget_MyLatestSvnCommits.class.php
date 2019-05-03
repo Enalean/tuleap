@@ -29,7 +29,7 @@ class Widget_MyLatestSvnCommits extends Widget {
     /**
      * Default number of SVN commits to display (if user did not change/set preferences)
      */
-    const NB_COMMITS_TO_DISPLAY = 5;
+    public const NB_COMMITS_TO_DISPLAY = 5;
 
     /**
      * Number of SVN commits to display (user preferences)

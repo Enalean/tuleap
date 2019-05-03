@@ -27,7 +27,7 @@ use Tuleap\Event\Dispatchable;
 
 class XMLImportArtifactLinkTypeCanBeDisabled implements Dispatchable
 {
-    const NAME = 'tracker_xml_import_artifact_link_can_be_disabled';
+    public const NAME = 'tracker_xml_import_artifact_link_can_be_disabled';
 
     /**
      * @var Project

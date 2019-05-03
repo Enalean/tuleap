@@ -21,8 +21,8 @@
 class Tracker_Artifact_XMLExport
 {
 
-    const ARTIFACTS_RNG_PATH = '/www/resources/artifacts.rng';
-    const THRESHOLD          = 9000;
+    public const ARTIFACTS_RNG_PATH = '/www/resources/artifacts.rng';
+    public const THRESHOLD          = 9000;
 
     /**
      * @var Tracker_ArtifactFactory

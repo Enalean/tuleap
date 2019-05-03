@@ -25,7 +25,7 @@ use Tuleap\DynamicCredentials\Credential\CredentialRetriever;
 
 class DynamicCredentialSession
 {
-    const STORAGE_IDENTIFIER = 'dynamic_credential_storage';
+    public const STORAGE_IDENTIFIER = 'dynamic_credential_storage';
 
     /**
      * @var array

@@ -26,8 +26,8 @@ use Tuleap\Tracker\Workflow\PostAction\Visitor;
 class Transition_PostAction_Field_Int extends Transition_PostAction_Field_Numeric
 {//phpcs:ignore
 
-    const XML_TAG_NAME = 'postaction_field_int';
-    const SHORT_NAME   = 'field_int';
+    public const XML_TAG_NAME = 'postaction_field_int';
+    public const SHORT_NAME   = 'field_int';
 
     /**
      * Get the shortname of the post action

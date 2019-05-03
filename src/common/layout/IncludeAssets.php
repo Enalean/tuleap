@@ -24,7 +24,7 @@ class IncludeAssets
 {
 
 
-    const MANIFEST_FILE_NAME = 'manifest.json';
+    public const MANIFEST_FILE_NAME = 'manifest.json';
 
     private $base_url;
     private $assets;

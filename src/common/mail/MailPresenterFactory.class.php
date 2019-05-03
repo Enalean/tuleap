@@ -20,7 +20,7 @@
 
 class MailPresenterFactory {
 
-    const FLAMING_PARROT_THEME = 'FlamingParrot';
+    public const FLAMING_PARROT_THEME = 'FlamingParrot';
 
     /**
      * Create a presenter for email account.

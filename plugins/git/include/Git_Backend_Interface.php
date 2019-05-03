@@ -20,7 +20,7 @@
  */
 
 interface Git_Backend_Interface {
-    const GIT_ROOT_PATH = '/var/lib/codendi/gitroot/';
+    public const GIT_ROOT_PATH = '/var/lib/codendi/gitroot/';
 
     /**
      * Verify if the repository as already some content within

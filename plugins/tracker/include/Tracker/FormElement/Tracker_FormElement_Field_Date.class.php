@@ -21,8 +21,8 @@
 
 class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
 
-    const DEFAULT_VALUE_TYPE_TODAY    = 0;
-    const DEFAULT_VALUE_TYPE_REALDATE = 1;
+    public const DEFAULT_VALUE_TYPE_TODAY    = 0;
+    public const DEFAULT_VALUE_TYPE_REALDATE = 1;
 
     public $default_properties = array(
         'default_value_type' => array(

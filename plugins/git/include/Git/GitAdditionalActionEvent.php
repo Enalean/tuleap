@@ -25,7 +25,7 @@ use HTTPRequest;
 
 class GitAdditionalActionEvent implements \Tuleap\Event\Dispatchable
 {
-    const NAME = 'gitAdditionalAction';
+    public const NAME = 'gitAdditionalAction';
     /**
      * @var HTTPRequest
      */

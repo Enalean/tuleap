@@ -22,8 +22,8 @@ namespace Tuleap\Password\HaveIBeenPwned;
 
 class PwnedPasswordChecker
 {
-    const PREFIX_SIZE                                  = 5;
-    const NUMBER_OF_OCCURRENCE_TO_CONSIDER_COMPROMISED = 10;
+    public const PREFIX_SIZE                                  = 5;
+    public const NUMBER_OF_OCCURRENCE_TO_CONSIDER_COMPROMISED = 10;
 
     /**
      * @var PwnedPasswordRangeRetriever

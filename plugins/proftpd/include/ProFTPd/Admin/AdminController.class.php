@@ -28,7 +28,7 @@ use Project;
 use Feedback;
 
 class AdminController {
-    const NAME = 'admin';
+    public const NAME = 'admin';
 
     /** @var PermissionsManager */
     private $permissions_manager;

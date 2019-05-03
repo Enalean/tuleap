@@ -20,7 +20,7 @@
 
 class TrackerV3
 {
-    const REFERENCE_NATURE = 'artifact';
+    public const REFERENCE_NATURE = 'artifact';
 
     /**
      * @var ArtifactDao

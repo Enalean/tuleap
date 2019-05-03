@@ -22,9 +22,9 @@ namespace Tuleap\PullRequest;
 
 class UniDiffLine
 {
-    const REMOVED = -1;
-    const KEPT    =  0;
-    const ADDED   =  1;
+    public const REMOVED = -1;
+    public const KEPT    =  0;
+    public const ADDED   =  1;
 
     private $type;
     private $unidiff_offset;

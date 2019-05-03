@@ -28,9 +28,9 @@ use Exception;
 // @codingStandardsIgnoreLine
 class SystemEvent_MEDIAWIKI_TO_CENTRAL_DB extends SystemEvent
 {
-    const NAME = 'MEDIAWIKI_TO_CENTRAL_DB';
+    public const NAME = 'MEDIAWIKI_TO_CENTRAL_DB';
 
-    const ALL = 'all';
+    public const ALL = 'all';
 
     /** @var MoveToCentralDbDao */
     private $move_to_central_db;

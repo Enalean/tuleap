@@ -24,7 +24,7 @@ use Firebase\JWT\JWT;
 
 class State
 {
-    const SIGNATURE_ALGORITHM = 'HS256';
+    public const SIGNATURE_ALGORITHM = 'HS256';
 
     /**
      * @var int

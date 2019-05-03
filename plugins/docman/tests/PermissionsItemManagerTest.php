@@ -28,7 +28,7 @@ class Docman_PermissionsItemManager_Test extends TuleapTestCase {
     protected $item_id = 100;
     protected $uniq_id = 200;
     protected $literalizer;
-    const PERMISSIONS_TYPE = Docman_PermissionsItemManager::PERMISSIONS_TYPE;
+    public const PERMISSIONS_TYPE = Docman_PermissionsItemManager::PERMISSIONS_TYPE;
 
     public function setUp() {
         parent::setUp();

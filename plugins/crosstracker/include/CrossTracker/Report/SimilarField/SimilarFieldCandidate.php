@@ -35,7 +35,7 @@ class SimilarFieldCandidate
      */
     private $type;
 
-    const SEPARATOR_CHAR = '/';
+    public const SEPARATOR_CHAR = '/';
 
     public function __construct(
         SimilarFieldIdentifier $identifier,

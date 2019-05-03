@@ -21,12 +21,12 @@
 
 class AgileDashboard_KanbanUserPreferences {
 
-    const COLLAPSE_COLUMN_PREFERENCE_PREFIX  = 'kanban_collapse_column_';
-    const COLLAPSE_BACKLOG_PREFERENCE_PREFIX = 'kanban_collapse_backlog_';
-    const COLLAPSE_ARCHIVE_PREFERENCE_PREFIX = 'kanban_collapse_archive_';
+    public const COLLAPSE_COLUMN_PREFERENCE_PREFIX  = 'kanban_collapse_column_';
+    public const COLLAPSE_BACKLOG_PREFERENCE_PREFIX = 'kanban_collapse_backlog_';
+    public const COLLAPSE_ARCHIVE_PREFERENCE_PREFIX = 'kanban_collapse_archive_';
 
-    const EXPAND   = "0";
-    const COLLAPSE = "1";
+    public const EXPAND   = "0";
+    public const COLLAPSE = "1";
 
     public function isColumnOpen(AgileDashboard_Kanban $kanban, $column_id, PFUser $user) {
         return ! $user->getPreference($this->getCollapseColumnPreferenceName($kanban, $column_id));

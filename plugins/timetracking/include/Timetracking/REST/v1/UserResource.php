@@ -42,7 +42,7 @@ use Tuleap\Timetracking\Time\TimeRetriever;
 
 class UserResource extends AuthenticatedResource
 {
-    const MAX_TIMES_BATCH = 100;
+    public const MAX_TIMES_BATCH = 100;
 
     /** @var \Tuleap\REST\UserManager */
     private $rest_user_manager;

@@ -35,9 +35,9 @@ use Tuleap\Git\GerritCanMigrateChecker;
 class Gerrit extends Pane
 {
 
-    const OPTION_DISCONNECT_GERRIT_PROJECT = 'gerrit_project_delete';
-    const OPTION_DELETE_GERRIT_PROJECT     = 'delete';
-    const OPTION_READONLY_GERRIT_PROJECT   = 'read-only';
+    public const OPTION_DISCONNECT_GERRIT_PROJECT = 'gerrit_project_delete';
+    public const OPTION_DELETE_GERRIT_PROJECT     = 'delete';
+    public const OPTION_READONLY_GERRIT_PROJECT   = 'read-only';
 
     /**
      * @var Git_RemoteServer_GerritServer[]

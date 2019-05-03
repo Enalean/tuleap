@@ -20,11 +20,11 @@
 
 class b201706091011_migrate_old_dashboard extends ForgeUpgrade_Bucket
 {
-    const DASHBOARD_NAME         = 'Dashboard';
-    const OLD_USER_OWNER_TYPE    = 'u';
-    const OLD_PROJECT_OWNER_TYPE = 'g';
-    const NEW_USER_OWNER_TYPE    = 'user';
-    const NEW_PROJECT_OWNER_TYPE = 'project';
+    public const DASHBOARD_NAME         = 'Dashboard';
+    public const OLD_USER_OWNER_TYPE    = 'u';
+    public const OLD_PROJECT_OWNER_TYPE = 'g';
+    public const NEW_USER_OWNER_TYPE    = 'user';
+    public const NEW_PROJECT_OWNER_TYPE = 'project';
 
     public function description()
     {

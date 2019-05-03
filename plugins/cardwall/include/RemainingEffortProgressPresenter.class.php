@@ -19,7 +19,7 @@
  */
 
 class Cardwall_RemainingEffortProgressPresenter implements Cardwall_EffortProgressPresenter {
-    const COUNT_STYLE = 'effort';
+    public const COUNT_STYLE = 'effort';
 
     private $initial_effort;
     private $capacity;

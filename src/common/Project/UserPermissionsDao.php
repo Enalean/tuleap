@@ -24,11 +24,11 @@ use Tuleap\DB\DataAccessObject;
 
 class UserPermissionsDao extends DataAccessObject
 {
-    const PROJECT_ADMIN_FLAG = 'A';
-    const WIKI_ADMIN_FLAG    = '2';
-    const FORUM_ADMIN_FLAG   = '2';
-    const NEWS_WRITER_FLAG   = '1';
-    const NEWS_ADMIN_FLAG    = '2';
+    public const PROJECT_ADMIN_FLAG = 'A';
+    public const WIKI_ADMIN_FLAG    = '2';
+    public const FORUM_ADMIN_FLAG   = '2';
+    public const NEWS_WRITER_FLAG   = '1';
+    public const NEWS_ADMIN_FLAG    = '2';
 
     public function isUserPartOfProjectMembers($project_id, $user_id)
     {

@@ -30,7 +30,7 @@ use Tuleap\SVN\SvnAdmin;
 
 class SystemEvent_SVN_DELETE_REPOSITORY extends SystemEvent //phpcs:ignore
 {
-    const NAME = 'SystemEvent_SVN_DELETE_REPOSITORY';
+    public const NAME = 'SystemEvent_SVN_DELETE_REPOSITORY';
     /**
      * @var SvnAdmin
      */

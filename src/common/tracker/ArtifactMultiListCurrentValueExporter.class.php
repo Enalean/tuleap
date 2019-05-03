@@ -24,11 +24,11 @@
  * Tracker v3 migration purpose
  */
 class ArtifactMultiListCurrentValueExporter {
-    const LABEL_VALUES_INDEX         = 'valueLabelList';
-    const TV3_VALUE_INDEX            = 'valueInt';
-    const TV3_BIND_TO_USER_DATA_TYPE = '5';
+    public const LABEL_VALUES_INDEX         = 'valueLabelList';
+    public const TV3_VALUE_INDEX            = 'valueInt';
+    public const TV3_BIND_TO_USER_DATA_TYPE = '5';
     /** This happens when a MSB is changed into a SB and back to a MSB */
-    const TV3_ALTERNATE_BIND_TO_USER_DATA_TYPE = '2';
+    public const TV3_ALTERNATE_BIND_TO_USER_DATA_TYPE = '2';
 
     /** @var array */
     private $current_field_values = array();

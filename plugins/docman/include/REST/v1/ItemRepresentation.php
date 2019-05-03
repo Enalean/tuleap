@@ -30,14 +30,14 @@ use Tuleap\User\REST\MinimalUserRepresentation;
 
 class ItemRepresentation
 {
-    const TYPE_FOLDER   = 'folder';
-    const TYPE_FILE   = 'file';
-    const TYPE_LINK   = 'link';
-    const TYPE_EMBEDDED = 'embedded';
-    const TYPE_WIKI   = 'wiki';
-    const TYPE_EMPTY  = 'empty';
+    public const TYPE_FOLDER   = 'folder';
+    public const TYPE_FILE   = 'file';
+    public const TYPE_LINK   = 'link';
+    public const TYPE_EMBEDDED = 'embedded';
+    public const TYPE_WIKI   = 'wiki';
+    public const TYPE_EMPTY  = 'empty';
 
-    const OBSOLESCENCE_DATE_NONE = "0";
+    public const OBSOLESCENCE_DATE_NONE = "0";
     /**
      * @var int {@type int}
      */

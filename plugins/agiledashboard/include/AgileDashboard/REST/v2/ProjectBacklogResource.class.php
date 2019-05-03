@@ -50,7 +50,7 @@ use AgileDashboard_Milestone_MilestoneDao;
  * Wrapper for backlog related REST methods
  */
 class ProjectBacklogResource {
-    const MAX_LIMIT = 50;
+    public const MAX_LIMIT = 50;
 
     /** @var Planning_MilestoneFactory */
     private $milestone_factory;

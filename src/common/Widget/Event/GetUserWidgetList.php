@@ -25,9 +25,9 @@ use Tuleap\Widget\MyWelcomeMessage;
 
 class GetUserWidgetList extends GetWidgetList
 {
-    const NAME = 'getUserWidgetList';
+    public const NAME = 'getUserWidgetList';
 
-    const CORE_WIDGETS = [
+    public const CORE_WIDGETS = [
         'myadmin',
         'myprojects',
         'mybookmarks',

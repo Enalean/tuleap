@@ -22,10 +22,10 @@ namespace Tuleap\Git\CommitStatus;
 
 final class CommitStatusWithKnownStatus implements CommitStatus
 {
-    const STATUS_SUCCESS      = 0;
-    const STATUS_SUCCESS_NAME = 'success';
-    const STATUS_FAILURE      = 1;
-    const STATUS_FAILURE_NAME = 'failure';
+    public const STATUS_SUCCESS      = 0;
+    public const STATUS_SUCCESS_NAME = 'success';
+    public const STATUS_FAILURE      = 1;
+    public const STATUS_FAILURE_NAME = 'failure';
 
     /**
      * @var int

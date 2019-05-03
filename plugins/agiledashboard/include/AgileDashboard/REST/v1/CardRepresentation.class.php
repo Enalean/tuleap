@@ -23,7 +23,7 @@ use \Tuleap\REST\JsonCast;
 
 class AgileDashboard_CardRepresentation {
 
-    const ROUTE = 'cards';
+    public const ROUTE = 'cards';
 
     /** @var int */
     public $id;

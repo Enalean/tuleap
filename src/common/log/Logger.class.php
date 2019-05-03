@@ -19,10 +19,10 @@
  */
 
 interface Logger {
-    const DEBUG = 'debug';
-    const INFO  = 'info';
-    const WARN  = 'warn';
-    const ERROR = 'error';
+    public const DEBUG = 'debug';
+    public const INFO  = 'info';
+    public const WARN  = 'warn';
+    public const ERROR = 'error';
 
     function debug($message);
 

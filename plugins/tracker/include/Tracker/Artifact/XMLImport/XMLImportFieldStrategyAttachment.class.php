@@ -21,7 +21,7 @@
 class Tracker_Artifact_XMLImport_XMLImportFieldStrategyAttachment implements Tracker_Artifact_XMLImport_XMLImportFieldStrategy {
 
 
-    const FILE_INFO_COPY_OPTION = 'is_migrated';
+    public const FILE_INFO_COPY_OPTION = 'is_migrated';
 
     /** @var string */
     private $extraction_path;

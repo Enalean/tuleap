@@ -43,11 +43,11 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
  */
 class ReportsResource extends AuthenticatedResource
 {
-    const MAX_LIMIT      = 50;
-    const DEFAULT_LIMIT  = 10;
-    const DEFAULT_OFFSET = 0;
-    const DEFAULT_VALUES = null;
-    const ALL_VALUES     = 'all';
+    public const MAX_LIMIT      = 50;
+    public const DEFAULT_LIMIT  = 10;
+    public const DEFAULT_OFFSET = 0;
+    public const DEFAULT_VALUES = null;
+    public const ALL_VALUES     = 'all';
 
     /** @var ArtifactRepresentationBuilder */
     private $builder;
