@@ -28,7 +28,7 @@
         </div>
 
         <div
-            v-if="filtered_artifacts.length === 0"
+            v-else-if="filtered_artifacts.length === 0"
             class="baseline-empty-information-message"
             data-test-type="all-artifacts-filtered-message"
         >
