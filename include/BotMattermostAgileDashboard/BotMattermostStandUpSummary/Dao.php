@@ -26,7 +26,7 @@ use Tuleap\BotMattermost\Bot\Bot;
 class Dao extends DataAccessObject
 {
 
-    const SEND_TIME_INTERVAL = '00:00:59';
+    public const SEND_TIME_INTERVAL = '00:00:59';
 
     public function searchBotNotification($project_id)
     {
