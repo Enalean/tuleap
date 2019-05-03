@@ -1,24 +1,25 @@
 <?php
-// Copyright (c) Enalean, 2012-2018. All Rights Reserved.
-// Copyright (c) STMicroelectronics, 2005. All Rights Reserved.
+/**
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
+ * Copyright (c) STMicroelectronics, 2005-2009. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
 
- // Originally written by Jean-Philippe Giola, 2005
- //
- // This file is a part of Tuleap.
- //
- // Tuleap is free software; you can redistribute it and/or modify
- // it under the terms of the GNU General Public License as published by
- // the Free Software Foundation; either version 2 of the License, or
- // (at your option) any later version.
- //
- // Tuleap is distributed in the hope that it will be useful,
- // but WITHOUT ANY WARRANTY; without even the implied warranty of
- // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- // GNU General Public License for more details.
- //
- // You should have received a copy of the GNU General Public License
- // along with Tuleap; if not, write to the Free Software
- // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 define('FORUMML_MESSAGE_ID', 1);
 define('FORUMML_DATE', 2);
 define('FORUMML_FROM', 3);
@@ -26,10 +27,7 @@ define('FORUMML_SUBJECT', 4);
 define('FORUMML_CONTENT_TYPE', 12);
 define('FORUMML_CC', 34);
 
-require_once(dirname(__FILE__).'/../include/ForumML_Attachment.class.php');
-require_once('common/include/Toggler.class.php');
-
-// Get message headers 
+// Get message headers
 function plugin_forumml_get_message_headers($id_message) {
 	
 	$sql = sprintf('SELECT value'.
@@ -669,9 +667,9 @@ function plugin_forumml_reply($hp,$subject,$in_reply_to,$id_parent,$body,$author
     $tab_tmp = explode("\n",$body);
     $tab_tmp = array_pad($tab_tmp,-count($tab_tmp)-1,"$author wrote :");
 
-    echo '<script type="text/javascript" src="scripts/cc_attach_js.php"></script>';
+    echo '<script type="text/javascript" src="scripts/cc_attach.js"></script>';
     echo ' <div id="reply-'. $in_reply_to .'" class="plugin_forumml_message_reply">'."
-            <form id='".$in_reply_to."' action='?group_id=".$request->get('group_id')."&list=".$request->get('list')."&topic=".$id_parent."' name='replyform' method='post' enctype='multipart/form-data'>
+            <form id='".$in_reply_to."' action='index.php?group_id=".$request->get('group_id')."&list=".$request->get('list')."&topic=".$id_parent."' name='replyform' method='post' enctype='multipart/form-data'>
             <input type='hidden' name='reply_to' value='".$in_reply_to."'/>
             <input type='hidden' name='subject' value='".$subject."'/>
             <input type='hidden' name='list' value='".$request->get('list')."'/>
@@ -725,7 +723,7 @@ function plugin_forumml_replace_attachment($id_message, $group_id, $list, $id_pa
 }
 
 // Build Mail headers, and send the mail
-function plugin_forumml_process_mail($plug,$reply=false) {
+function plugin_forumml_process_mail($reply=false) {
 
 	$request = HTTPRequest::instance();
 	$hp = ForumML_HTMLPurifier::instance();
@@ -799,4 +797,4 @@ function plugin_forumml_process_mail($plug,$reply=false) {
 	return $continue;
 	
 }
-?>
+

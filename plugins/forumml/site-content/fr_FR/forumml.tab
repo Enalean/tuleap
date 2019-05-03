@@ -55,7 +55,7 @@ plugin_forumml	wrong_list	Cette mailing-liste n'existe pas ou bien elle est inac
 plugin_forumml	specify_list	Vous devez spécifier l'identificateur (id) de la mailing-liste.
 plugin_forumml	type_subject	L'envoi a échoué. Vous devez spécifier le sujet du mail.
 plugin_forumml	warn_post_without_confirm	Veuillez bien vérifier votre message avant de l'envoyer. Le message va être envoyé sans confirmation.
-plugin_forumml	delay_redirection	Il peut y avoir un délai avant de voir le message dans les archives.<br>Vous allez être redirigé vers la page des archives, veuillez patienter... <img src="$1" border="0" width="16" height="16"> <br> Si la page de destination n'est pas entrain de se charger, essayez ce <i><a href="/plugins/forumml/message.php?group_id=$2&list=$3&topic=$4">lien</a></i>
+plugin_forumml	delay_redirection	Il peut y avoir un délai avant de voir le message dans les archives. Si vous ne voyez pas votre message, merci de rafraichir la page dans quelques instants.
 plugin_forumml	back_to_list	Retour à la liste
 #
 #-----------------------------------------------
