@@ -102,7 +102,7 @@ use UserManager;
 
 class CrossTrackerReportsResource extends AuthenticatedResource
 {
-    const MAX_LIMIT = 50;
+    public const MAX_LIMIT = 50;
     /**
      * @var QueryParameterParser
      */

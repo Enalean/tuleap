@@ -31,7 +31,7 @@ use Tuleap\Event\Dispatchable;
 
 class ProjectMembersAdditionalModalCollectionPresenter implements Dispatchable
 {
-    const NAME = "project_admin_members_additional_modal";
+    public const NAME = "project_admin_members_additional_modal";
 
     /**
      * @var Project

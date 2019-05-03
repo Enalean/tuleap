@@ -38,7 +38,7 @@ use Tuleap\SVN\SvnLogger;
 
 class SystemEvent_SVN_RESTORE_REPOSITORY extends SystemEvent //phpcs:ignore
 {
-    const NAME = 'SystemEvent_SVN_RESTORE_REPOSITORY';
+    public const NAME = 'SystemEvent_SVN_RESTORE_REPOSITORY';
 
     public function process()
     {

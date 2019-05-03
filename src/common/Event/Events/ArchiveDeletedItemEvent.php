@@ -27,7 +27,7 @@ use Tuleap\Event\Dispatchable;
 
 final class ArchiveDeletedItemEvent implements Dispatchable
 {
-    const NAME = 'archiveDeletedItem';
+    public const NAME = 'archiveDeletedItem';
 
     private $status = true;
     private $skip_duplicated;

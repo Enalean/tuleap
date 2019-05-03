@@ -24,7 +24,7 @@ require_once 'common/dao/GenericUserDao.class.php';
 
 
 class GenericUserFactory {
-    const CONFIG_KEY_SUFFIX = 'sys_generic_user_suffix';
+    public const CONFIG_KEY_SUFFIX = 'sys_generic_user_suffix';
 
     /**
      * @var UserManager

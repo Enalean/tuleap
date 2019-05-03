@@ -22,7 +22,7 @@ namespace Tuleap\Statistics;
 
 class AdminHeaderPresenter
 {
-    const TEMPLATE = 'admin-header';
+    public const TEMPLATE = 'admin-header';
 
     public $title;
 

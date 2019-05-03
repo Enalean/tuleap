@@ -31,13 +31,13 @@ class PackTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    const SHA1_PACK = 'e9760fd950093eb1efd59a6200469e8c2d8c9632';
+    public const SHA1_PACK = 'e9760fd950093eb1efd59a6200469e8c2d8c9632';
 
-    const V1_PACK_INDEX_PATH                     = __DIR__ . '/fixtures/pack/v1.idx';
-    const V2_PACK_INDEX_PATH                     = __DIR__ . '/fixtures/pack/v2.idx';
-    const V2_PACK_INDEX_64BIT_INDEX_ENTRIES_PATH = __DIR__ . '/fixtures/pack/v2-64bit-index-entries.idx';
+    public const V1_PACK_INDEX_PATH                     = __DIR__ . '/fixtures/pack/v1.idx';
+    public const V2_PACK_INDEX_PATH                     = __DIR__ . '/fixtures/pack/v2.idx';
+    public const V2_PACK_INDEX_64BIT_INDEX_ENTRIES_PATH = __DIR__ . '/fixtures/pack/v2-64bit-index-entries.idx';
 
-    const ALL_PACK_INDEX_PATHS = [self::V1_PACK_INDEX_PATH, self::V2_PACK_INDEX_PATH, self::V2_PACK_INDEX_64BIT_INDEX_ENTRIES_PATH];
+    public const ALL_PACK_INDEX_PATHS = [self::V1_PACK_INDEX_PATH, self::V2_PACK_INDEX_PATH, self::V2_PACK_INDEX_64BIT_INDEX_ENTRIES_PATH];
 
     /**
      * @var \Mockery\MockInterface

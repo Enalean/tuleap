@@ -21,9 +21,9 @@ namespace Tuleap\REST\v2;
 
 class BacklogRepresentationBase {
 
-    const BACKLOG_ROUTE = 'backlog';
+    public const BACKLOG_ROUTE = 'backlog';
 
-    const ROUTE         = 'backlog_items';
+    public const ROUTE         = 'backlog_items';
 
     /**
      * @var BacklogItemRepresentation[]

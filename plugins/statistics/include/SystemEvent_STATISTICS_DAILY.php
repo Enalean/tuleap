@@ -40,7 +40,7 @@ class SystemEvent_STATISTICS_DAILY extends SystemEvent {
      */
     private $disk_usage_manager;
 
-    const NAME = 'STATISTICS_DAILY';
+    public const NAME = 'STATISTICS_DAILY';
 
     public function injectDependencies(
         Logger $logger,

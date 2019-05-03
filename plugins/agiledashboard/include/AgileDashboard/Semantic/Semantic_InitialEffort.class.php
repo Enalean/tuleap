@@ -22,7 +22,7 @@
 */
 
 class AgileDashBoard_Semantic_InitialEffort extends Tracker_Semantic {
-    const NAME = 'initial_effort';
+    public const NAME = 'initial_effort';
 
     /**
      * @var Tracker_FormElement_Field

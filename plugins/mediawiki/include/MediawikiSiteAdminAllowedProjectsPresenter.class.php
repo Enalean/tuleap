@@ -20,7 +20,7 @@
 
 class MediawikiSiteAdminAllowedProjectsPresenter {
 
-    const TEMPLATE = 'grant-only-allowed-projects';
+    public const TEMPLATE = 'grant-only-allowed-projects';
 
     /**
      * @var Project[]

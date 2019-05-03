@@ -24,18 +24,18 @@ use ForgeConfig;
 
 class NameTranslator
 {
-    const NOBODY                     = 'ugroup_nobody_name_key';
-    const ANON                       = 'ugroup_anonymous_users_name_key';
-    const AUTHENTICATED              = 'ugroup_authenticated_users_name_key';
-    const PROJECT_ADMINS             = 'ugroup_project_admins_name_key';
-    const REGISTERED                 = 'ugroup_registered_users_name_key';
-    const PROJECT_MEMBERS            = 'ugroup_project_members_name_key';
-    const WIKI_ADMINS                = 'ugroup_wiki_admin_name_key';
-    const FORUM_ADMINS               = 'ugroup_forum_admin_name_key';
-    const NEWS_WRITER                = 'ugroup_news_writer_name_key';
-    const NEWS_ADMIN                 = 'ugroup_news_admin_name_key';
-    const CONFIG_REGISTERED_LABEL    = 'ugroup_registered_label';
-    const CONFIG_AUTHENTICATED_LABEL = 'ugroup_authenticated_label';
+    public const NOBODY                     = 'ugroup_nobody_name_key';
+    public const ANON                       = 'ugroup_anonymous_users_name_key';
+    public const AUTHENTICATED              = 'ugroup_authenticated_users_name_key';
+    public const PROJECT_ADMINS             = 'ugroup_project_admins_name_key';
+    public const REGISTERED                 = 'ugroup_registered_users_name_key';
+    public const PROJECT_MEMBERS            = 'ugroup_project_members_name_key';
+    public const WIKI_ADMINS                = 'ugroup_wiki_admin_name_key';
+    public const FORUM_ADMINS               = 'ugroup_forum_admin_name_key';
+    public const NEWS_WRITER                = 'ugroup_news_writer_name_key';
+    public const NEWS_ADMIN                 = 'ugroup_news_admin_name_key';
+    public const CONFIG_REGISTERED_LABEL    = 'ugroup_registered_label';
+    public const CONFIG_AUTHENTICATED_LABEL = 'ugroup_authenticated_label';
 
     public static $names = array(
         NameTranslator::NOBODY,

@@ -27,7 +27,7 @@ class CommitTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    const COMMIT_CONTENT = <<<EOF
+    public const COMMIT_CONTENT = <<<EOF
 tree ee6b900783b06b774d401de9c4ef3ddf0d124574
 parent 4e6c9adec89c15af454484dda60109ed604efca8
 author Author 1 <author@example.com> 1534259619 +0300
@@ -36,7 +36,7 @@ committer Committer 1 <committer@example.com> 1534259719 +0200
 This is Tuleap 10.4
 EOF;
 
-    const COMMIT_CONTENT_WITH_PGP_SIGNATURE = <<<EOF
+    public const COMMIT_CONTENT_WITH_PGP_SIGNATURE = <<<EOF
 tree ee6b900783b06b774d401de9c4ef3ddf0d124574
 parent 4e6c9adec89c15af454484dda60109ed604efca8
 author Author 1 <author@example.com> 1534259619 +0300
@@ -55,7 +55,7 @@ gpgsig -----BEGIN PGP SIGNATURE-----
 
 This is Tuleap 10.4
 EOF;
-    const EXPECTED_PGP_SIGNATURE = <<<EOF
+    public const EXPECTED_PGP_SIGNATURE = <<<EOF
 -----BEGIN PGP SIGNATURE-----
 
 iQEzBAABCgAdFiEEZYSpTRl85FSuRKh0m6S5XYk2HS0FAlty8aMACgkQm6S5XYk2

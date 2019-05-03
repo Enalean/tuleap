@@ -28,7 +28,7 @@ use Widget;
 
 class UserWidget extends Widget
 {
-    const NAME = 'timetracking';
+    public const NAME = 'timetracking';
 
     public function __construct()
     {

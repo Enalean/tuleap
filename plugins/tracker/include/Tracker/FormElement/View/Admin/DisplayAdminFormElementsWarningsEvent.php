@@ -26,7 +26,7 @@ use Tuleap\Event\Dispatchable;
 
 class DisplayAdminFormElementsWarningsEvent implements Dispatchable
 {
-    const NAME = 'displayAdminFormElementsWarningsEvent';
+    public const NAME = 'displayAdminFormElementsWarningsEvent';
 
     /**
      * @var Tracker

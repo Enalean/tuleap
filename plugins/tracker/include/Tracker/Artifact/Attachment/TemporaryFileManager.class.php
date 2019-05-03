@@ -26,7 +26,7 @@ use Tuleap\Tracker\Artifact\Attachment\PaginatedTemporaryFiles;
  */
 class Tracker_Artifact_Attachment_TemporaryFileManager {
 
-    const TEMP_FILE_PREFIX = 'rest_attachement_temp_';
+    public const TEMP_FILE_PREFIX = 'rest_attachement_temp_';
 
     /**
      * @var Tracker_Artifact_Attachment_TemporaryFileManagerDao

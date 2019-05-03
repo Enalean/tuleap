@@ -32,35 +32,35 @@ class Project extends Group implements PFO_Project  // phpcs:ignore PSR1.Classes
     /**
      * The project is active
      */
-    const STATUS_ACTIVE = 'A';
-    const STATUS_ACTIVE_LABEL = 'active';
+    public const STATUS_ACTIVE = 'A';
+    public const STATUS_ACTIVE_LABEL = 'active';
 
     /**
      * The project is pending
      */
-    const STATUS_PENDING = 'P';
-    const STATUS_PENDING_LABEL = 'pending';
+    public const STATUS_PENDING = 'P';
+    public const STATUS_PENDING_LABEL = 'pending';
 
     /**
      * The project is suspended
      */
-    const STATUS_SUSPENDED = 'H';
-    const STATUS_SUSPENDED_LABEL = 'suspended';
+    public const STATUS_SUSPENDED = 'H';
+    public const STATUS_SUSPENDED_LABEL = 'suspended';
 
     /**
      * The project is deleted
      */
-    const STATUS_DELETED = 'D';
-    const STATUS_DELETED_LABEL = 'deleted';
+    public const STATUS_DELETED = 'D';
+    public const STATUS_DELETED_LABEL = 'deleted';
 
     /**
      * The project is system
      */
-    const STATUS_SYSTEM = 's';
-    const STATUS_SYSTEM_LABEL = 'system';
+    public const STATUS_SYSTEM = 's';
+    public const STATUS_SYSTEM_LABEL = 'system';
 
-    const SITE_NEWS_PROJECT_ID = 46;
-    const ADMIN_PROJECT_ID     = 100;
+    public const SITE_NEWS_PROJECT_ID = 46;
+    public const ADMIN_PROJECT_ID     = 100;
 
     public const ACCESS_PRIVATE               = 'private';
     public const ACCESS_PRIVATE_WO_RESTRICTED = 'private-wo-restr';

@@ -22,7 +22,7 @@ namespace Tuleap\News;
 
 class NewsItem
 {
-    const NEWS_DELETED = 4;
+    public const NEWS_DELETED = 4;
 
     /**
      * @var array

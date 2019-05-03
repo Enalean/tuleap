@@ -25,7 +25,7 @@ class Git_HTTP_Wrapper {
      */
     private $logger;
 
-    const CHUNK_LENGTH = 8192;
+    public const CHUNK_LENGTH = 8192;
 
     public function __construct(Logger $logger) {
         $this->logger = $logger;

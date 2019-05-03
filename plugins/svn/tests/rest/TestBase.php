@@ -28,9 +28,9 @@ use RestBase;
  */
 class TestBase extends RestBase
 {
-    const PROJECT_NAME  = 'svn-plugin-test';
-    const UGROUP_NAME_1 = 'svn_ugroup_1';
-    const UGROUP_NAME_2 = 'svn_ugroup_2';
+    public const PROJECT_NAME  = 'svn-plugin-test';
+    public const UGROUP_NAME_1 = 'svn_ugroup_1';
+    public const UGROUP_NAME_2 = 'svn_ugroup_2';
 
     /**
      * @var array

@@ -19,11 +19,11 @@
  */
 
 class AgileDashboardStatisticsAggregator {
-    const CARD_DRAG_AND_DROP     = 'ad_kanban_card_drag_drop';
-    const EXPAND_COLLAPSE_COLUMN = 'ad_kanban_expand_collapse_column';
-    const WIP_MODIFICATION       = 'ad_kanban_wip_modification';
-    const KANBAN_RENAMING        = 'ad_kanban_renaming';
-    const KANBAN_ADD_IN_PLACE    = 'ad_kanban_add_in_place';
+    public const CARD_DRAG_AND_DROP     = 'ad_kanban_card_drag_drop';
+    public const EXPAND_COLLAPSE_COLUMN = 'ad_kanban_expand_collapse_column';
+    public const WIP_MODIFICATION       = 'ad_kanban_wip_modification';
+    public const KANBAN_RENAMING        = 'ad_kanban_renaming';
+    public const KANBAN_ADD_IN_PLACE    = 'ad_kanban_add_in_place';
 
 
     /**

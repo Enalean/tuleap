@@ -22,7 +22,7 @@ use Tuleap\Git\Gitolite\SSHKey\InvalidKeysCollector;
 use Tuleap\Git\Gitolite\SSHKey\MassDumper;
 
 class SystemEvent_GIT_DUMP_ALL_SSH_KEYS extends SystemEvent {
-    const NAME = 'GIT_DUMP_ALL_SSH_KEYS';
+    public const NAME = 'GIT_DUMP_ALL_SSH_KEYS';
 
     /** @var Logger */
     private $logger;

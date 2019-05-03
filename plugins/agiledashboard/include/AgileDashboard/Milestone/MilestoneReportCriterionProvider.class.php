@@ -23,8 +23,8 @@
  */
 class AgileDashboard_Milestone_MilestoneReportCriterionProvider {
 
-    const FIELD_NAME = 'agiledashboard_milestone';
-    const ANY        = '';
+    public const FIELD_NAME = 'agiledashboard_milestone';
+    public const ANY        = '';
 
     /** @var AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider */
     private $options_provider;

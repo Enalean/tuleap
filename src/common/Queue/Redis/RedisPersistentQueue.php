@@ -34,7 +34,7 @@ use Tuleap\Queue\QueueServerConnectionException;
  */
 class RedisPersistentQueue implements PersistentQueue
 {
-    const MAX_MESSAGES = 1000;
+    public const MAX_MESSAGES = 1000;
 
     /**
      * @var Logger

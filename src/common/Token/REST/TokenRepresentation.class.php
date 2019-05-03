@@ -23,7 +23,7 @@ use Rest_Token;
 use Tuleap\REST\JsonCast;
 
 class TokenRepresentation {
-    const ROUTE = 'tokens';
+    public const ROUTE = 'tokens';
 
     /**
      * @var int

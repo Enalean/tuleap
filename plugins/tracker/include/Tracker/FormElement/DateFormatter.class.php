@@ -20,7 +20,7 @@
  */
 
 class Tracker_FormElement_DateFormatter {
-    const DATE_FORMAT           = "Y-m-d";
+    public const DATE_FORMAT           = "Y-m-d";
 
     /** @var Tracker_FormElement_Field_Date */
     protected $field;

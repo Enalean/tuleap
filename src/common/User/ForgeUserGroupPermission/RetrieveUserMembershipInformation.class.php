@@ -21,7 +21,7 @@
 class User_ForgeUserGroupPermission_RetrieveUserMembershipInformation extends User_ForgeUserGroupPermission
 {
 
-    const ID = 4;
+    public const ID = 4;
 
     public function getId()
     {

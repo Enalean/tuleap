@@ -25,8 +25,8 @@ use HTTPRequest;
 
 class WidgetDashboardController
 {
-    const USER_DASHBOARD_TYPE    = 'user';
-    const PROJECT_DASHBOARD_TYPE = 'project';
+    public const USER_DASHBOARD_TYPE    = 'user';
+    public const PROJECT_DASHBOARD_TYPE = 'project';
     /**
      * @var CSRFSynchronizerToken
      */

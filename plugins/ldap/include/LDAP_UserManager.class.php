@@ -30,7 +30,7 @@ use Tuleap\LDAP\Exception\IdentifierTypeNotRecognizedException;
 class LDAP_UserManager {
 
 
-    const EVENT_UPDATE_LOGIN = 'PLUGIN_LDAP_UPDATE_LOGIN';
+    public const EVENT_UPDATE_LOGIN = 'PLUGIN_LDAP_UPDATE_LOGIN';
     
     /**
      * @type LDAP

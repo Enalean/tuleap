@@ -30,9 +30,9 @@ use Tuleap\PullRequest\PullRequestWithGitReference;
 
 class PullRequestRepresentationFactory
 {
-    const BUILD_STATUS_UNKNOWN = 'unknown';
-    const BUILD_STATUS_SUCESS  = 'success';
-    const BUILD_STATUS_FAIL    = 'fail';
+    public const BUILD_STATUS_UNKNOWN = 'unknown';
+    public const BUILD_STATUS_SUCESS  = 'success';
+    public const BUILD_STATUS_FAIL    = 'fail';
 
     /**
      * @var AccessControlVerifier

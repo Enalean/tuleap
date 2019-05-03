@@ -30,8 +30,8 @@ class AuthorizationRequestCreatorTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    const SIGNED_STATE   = 'Tuleap_signed_state';
-    const NONCE_FOR_TEST = '000000';
+    public const SIGNED_STATE   = 'Tuleap_signed_state';
+    public const NONCE_FOR_TEST = '000000';
 
     private $state_manager;
 

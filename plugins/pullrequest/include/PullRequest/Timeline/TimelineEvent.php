@@ -22,10 +22,10 @@ namespace Tuleap\PullRequest\Timeline;
 
 class TimelineEvent
 {
-    const UPDATE  = 1;
-    const REBASE  = 2;
-    const MERGE   = 3;
-    const ABANDON = 4;
+    public const UPDATE  = 1;
+    public const REBASE  = 2;
+    public const MERGE   = 3;
+    public const ABANDON = 4;
 
     /** @var int */
     private $id;

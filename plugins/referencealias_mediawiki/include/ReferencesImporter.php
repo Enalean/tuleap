@@ -33,7 +33,7 @@ class ReferencesImporter
     /** @var Logger */
     private $logger;
 
-    const XREF_WIKI  = 'wiki';
+    public const XREF_WIKI  = 'wiki';
 
     public function __construct(CompatibilityDao $dao, Logger $logger)
     {

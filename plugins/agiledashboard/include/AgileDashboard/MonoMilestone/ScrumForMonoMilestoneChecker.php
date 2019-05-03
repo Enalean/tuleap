@@ -25,7 +25,7 @@ use PlanningFactory;
 
 class ScrumForMonoMilestoneChecker
 {
-    const NUMBER_MAXIMUM_OF_PLANNING = 1;
+    public const NUMBER_MAXIMUM_OF_PLANNING = 1;
     /**
      * @var ScrumForMonoMilestoneDao
      */

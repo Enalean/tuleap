@@ -22,7 +22,7 @@ use Tuleap\AgileDashboard\Kanban\TrackerReport\TrackerReportUpdater;
 
 class AgileDashboard_FirstKanbanCreator
 {
-    const ASSIGNED_TO_ME_REPORT = "Assigned to me";
+    public const ASSIGNED_TO_ME_REPORT = "Assigned to me";
 
     /** @var Project */
     private $project;

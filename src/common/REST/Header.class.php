@@ -24,32 +24,32 @@ use DateTimeZone;
 use ForgeConfig;
 
 class Header {
-    const GET     = 'GET';
-    const OPTIONS = 'OPTIONS';
-    const PUT     = 'PUT';
-    const POST    = 'POST';
-    const DELETE  = 'DELETE';
-    const PATCH   = 'PATCH';
+    public const GET     = 'GET';
+    public const OPTIONS = 'OPTIONS';
+    public const PUT     = 'PUT';
+    public const POST    = 'POST';
+    public const DELETE  = 'DELETE';
+    public const PATCH   = 'PATCH';
 
-    const CORS_ALLOW_METHODS = 'Access-Control-Allow-Methods';
-    const ALLOW              = 'Allow';
-    const LAST_MODIFIED      = 'Last-Modified';
-    const ETAG               = 'Etag';
-    const LOCATION           = 'Location';
+    public const CORS_ALLOW_METHODS = 'Access-Control-Allow-Methods';
+    public const ALLOW              = 'Allow';
+    public const LAST_MODIFIED      = 'Last-Modified';
+    public const ETAG               = 'Etag';
+    public const LOCATION           = 'Location';
 
-    const X_PAGINATION_LIMIT     = 'X-PAGINATION-LIMIT';
-    const X_PAGINATION_OFFSET    = 'X-PAGINATION-OFFSET';
-    const X_PAGINATION_SIZE      = 'X-PAGINATION-SIZE';
-    const X_PAGINATION_LIMIT_MAX = 'X-PAGINATION-LIMIT-MAX';
+    public const X_PAGINATION_LIMIT     = 'X-PAGINATION-LIMIT';
+    public const X_PAGINATION_OFFSET    = 'X-PAGINATION-OFFSET';
+    public const X_PAGINATION_SIZE      = 'X-PAGINATION-SIZE';
+    public const X_PAGINATION_LIMIT_MAX = 'X-PAGINATION-LIMIT-MAX';
 
-    const X_QUOTA                     = 'X-QUOTA';
-    const X_DISK_USAGE                = 'X-DISK-USAGE';
-    const X_UPLOAD_MAX_FILE_CHUNKSIZE = 'X-UPLOAD-MAX-FILE-CHUNKSIZE';
+    public const X_QUOTA                     = 'X-QUOTA';
+    public const X_DISK_USAGE                = 'X-DISK-USAGE';
+    public const X_UPLOAD_MAX_FILE_CHUNKSIZE = 'X-UPLOAD-MAX-FILE-CHUNKSIZE';
 
-    const X_RATELIMIT_REMAINING = "X-RateLimit-Remaining";
-    const X_RATELIMIT_LIMIT     = "X-RateLimit-Limit";
+    public const X_RATELIMIT_REMAINING = "X-RateLimit-Remaining";
+    public const X_RATELIMIT_LIMIT     = "X-RateLimit-Limit";
 
-    const RFC1123 = 'D, d M Y H:i:s \G\M\T';
+    public const RFC1123 = 'D, d M Y H:i:s \G\M\T';
 
     /**
      * Sends headers in RFC1123 compliant format

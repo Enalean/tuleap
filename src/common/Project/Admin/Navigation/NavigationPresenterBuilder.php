@@ -28,7 +28,7 @@ use Tuleap\Label\CanProjectUseLabels;
 
 class NavigationPresenterBuilder
 {
-    const DATA_ENTRY_SHORTNAME = 'data';
+    public const DATA_ENTRY_SHORTNAME = 'data';
 
     /**
      * @var NavigationPresenter

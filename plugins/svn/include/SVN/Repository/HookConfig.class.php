@@ -23,8 +23,8 @@ use Exception;
 class HookConfig
 {
 
-    const MANDATORY_REFERENCE       = 'mandatory_reference';
-    const COMMIT_MESSAGE_CAN_CHANGE = 'commit_message_can_change';
+    public const MANDATORY_REFERENCE       = 'mandatory_reference';
+    public const COMMIT_MESSAGE_CAN_CHANGE = 'commit_message_can_change';
 
     /**
      * @var Repository

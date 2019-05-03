@@ -23,8 +23,8 @@
  */
 
 abstract class Cardwall_UserPreferences_UserPreferencesAutostack {
-    const DONT_STACK = 'no_stack';
-    const STACK      = 'auto_stack';
+    public const DONT_STACK = 'no_stack';
+    public const STACK      = 'auto_stack';
 
     /**
      * @var PFUser

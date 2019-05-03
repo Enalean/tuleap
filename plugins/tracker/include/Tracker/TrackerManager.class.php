@@ -32,7 +32,7 @@ use Tuleap\Tracker\PermissionsPerGroup\TrackerPermissionPerGroupPermissionRepres
 use Tuleap\Tracker\PermissionsPerGroup\TrackerPermissionPerGroupRepresentationBuilder;
 
 class TrackerManager implements Tracker_IFetchTrackerSwitcher {
-    const DELETED_TRACKERS_TEMPLATE_NAME = 'deleted_trackers';
+    public const DELETED_TRACKERS_TEMPLATE_NAME = 'deleted_trackers';
 
     /**
      * Check that the service is used and the plugin is allowed for project $project

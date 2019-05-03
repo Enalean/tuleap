@@ -26,7 +26,7 @@ use Tuleap\Theme\BurningParrot\BurningParrotTheme;
 
 class PermissionPerGroupDisplayEvent implements Dispatchable
 {
-    const NAME = 'permissionPerGroupDisplayEvent';
+    public const NAME = 'permissionPerGroupDisplayEvent';
 
     /**
      * @var BurningParrotTheme

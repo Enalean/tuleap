@@ -23,10 +23,10 @@
  */
 
 class AgileDashboard_PaneRedirectionExtractor {
-    const ARTIFACT_ID = 'aid';
-    const PANE        = 'pane';
-    const PLANNING_ID = 'planning_id';
-    const ACTION      = 'action';
+    public const ARTIFACT_ID = 'aid';
+    public const PANE        = 'pane';
+    public const PLANNING_ID = 'planning_id';
+    public const ACTION      = 'action';
 
     /**
      * Get the parameters to redirect to proper pane on the AgileDashboard

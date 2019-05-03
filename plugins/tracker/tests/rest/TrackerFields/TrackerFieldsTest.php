@@ -24,10 +24,10 @@ use Tuleap\Tracker\Tests\REST\TrackerBase;
 
 class TrackerFieldsTest extends TrackerBase
 {
-    const FIELD_STATIC_SELECTBOX_SHOTNAME       = 'staticsb';
-    const FIELD_STATIC_RADIOBUTTON_SHOTNAME     = 'staticrb';
-    const FIELD_STATIC_MULTI_SELECTBOX_SHOTNAME = 'staticmsb';
-    const FIELD_USER_SELECTBOX_SHOTNAME         = 'userssb';
+    public const FIELD_STATIC_SELECTBOX_SHOTNAME       = 'staticsb';
+    public const FIELD_STATIC_RADIOBUTTON_SHOTNAME     = 'staticrb';
+    public const FIELD_STATIC_MULTI_SELECTBOX_SHOTNAME = 'staticmsb';
+    public const FIELD_USER_SELECTBOX_SHOTNAME         = 'userssb';
 
     public function testOPTIONSId()
     {

@@ -19,8 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 class GenericUser extends PFUser {
-    const NAME_PREFIX = 'forge__prjgen_';
-    const REAL_NAME = 'Generic User For Project';
+    public const NAME_PREFIX = 'forge__prjgen_';
+    public const REAL_NAME = 'Generic User For Project';
 
     /**
      * @var Project

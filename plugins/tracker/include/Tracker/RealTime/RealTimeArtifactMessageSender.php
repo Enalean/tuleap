@@ -28,7 +28,7 @@ use Tuleap\RealTime\NodeJSClient;
 
 class RealTimeArtifactMessageSender
 {
-    const HTTP_CLIENT_UUID = 'HTTP_X_CLIENT_UUID';
+    public const HTTP_CLIENT_UUID = 'HTTP_X_CLIENT_UUID';
 
     /** @var  NodeJSClient */
     private $node_js_client;

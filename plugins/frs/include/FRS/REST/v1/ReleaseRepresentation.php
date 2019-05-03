@@ -34,11 +34,11 @@ use Tuleap\Tracker\REST\Artifact\ArtifactRepresentationBuilder;
 
 class ReleaseRepresentation
 {
-    const ROUTE = 'frs_release';
+    public const ROUTE = 'frs_release';
 
-    const STATUS_ACTIVE  = 'active';
-    const STATUS_DELETED = 'deleted';
-    const STATUS_HIDDEN  = 'hidden';
+    public const STATUS_ACTIVE  = 'active';
+    public const STATUS_DELETED = 'deleted';
+    public const STATUS_HIDDEN  = 'hidden';
 
     public static $STATUS = array(
         FRSRelease::STATUS_ACTIVE  => self::STATUS_ACTIVE,

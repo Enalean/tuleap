@@ -50,7 +50,7 @@ use Tuleap\AgileDashboard\REST\MalformedQueryParameterException;
  * Wrapper for milestone related REST methods
  */
 class ProjectMilestonesResource {
-    const MAX_LIMIT = 50;
+    public const MAX_LIMIT = 50;
 
     /** @var Tracker_FormElementFactory */
     private $tracker_form_element_factory;

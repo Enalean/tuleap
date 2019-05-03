@@ -35,7 +35,7 @@ require_once __DIR__ . '/helper/DocmanDataBuildCommon.php';
 
 class DocmanDataBuilder extends DocmanDataBuildCommon
 {
-    const PROJECT_NAME = 'DocmanProject';
+    public const PROJECT_NAME = 'DocmanProject';
 
     private const ANON_ID = 0;
 

@@ -31,8 +31,8 @@ class LDAP {
     /**
      * This is equivalent to searching the entire directory. 
      */
-    const SCOPE_SUBTREE      = 1;
-    const SCOPE_SUBTREE_TEXT = 'subtree';
+    public const SCOPE_SUBTREE      = 1;
+    public const SCOPE_SUBTREE_TEXT = 'subtree';
     
     /**
      * LDAP_SCOPE_ONELEVEL means that the search should only return information 
@@ -40,23 +40,23 @@ class LDAP {
      * (Equivalent to typing "ls" and getting a list of files and folders in 
      * the current working directory.)
      */
-    const SCOPE_ONELEVEL      = 2;
-    const SCOPE_ONELEVEL_TEXT = 'onelevel';
+    public const SCOPE_ONELEVEL      = 2;
+    public const SCOPE_ONELEVEL_TEXT = 'onelevel';
     
     /**
      * It is equivalent to reading an entry from the directory. 
      */
-    const SCOPE_BASE     = 3;
+    public const SCOPE_BASE     = 3;
 
     /**
      * Error value when search exceed either server or client size limit. 
      */
-    const ERR_SIZELIMIT = 0x04 ;
+    public const ERR_SIZELIMIT = 0x04 ;
     
-    const ERR_SUCCESS   = 0x00;
+    public const ERR_SUCCESS   = 0x00;
 
-    const SERVER_TYPE_ACTIVE_DIRECTORY = "ActiveDirectory";
-    const SERVER_TYPE_OPEN_LDAP        = "OpenLDAP";
+    public const SERVER_TYPE_ACTIVE_DIRECTORY = "ActiveDirectory";
+    public const SERVER_TYPE_OPEN_LDAP        = "OpenLDAP";
 
     private $ds;
     private $bound;

@@ -21,7 +21,7 @@ namespace Tuleap\AgileDashboard\REST\v1\Kanban;
 
 class KanbanItemPOSTRepresentation {
 
-    const ROUTE = 'kanban_items';
+    public const ROUTE = 'kanban_items';
 
     /**
      * @var int {@type int}

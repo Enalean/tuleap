@@ -30,7 +30,7 @@ class GitViews_GitPhpViewer
 {
     use \Tuleap\Git\Repository\View\FeatureFlag;
 
-    const GLOSSIFIED_GITPHP_ACTIONS = [
+    public const GLOSSIFIED_GITPHP_ACTIONS = [
         'blob',
         'blobdiff',
         'blame',

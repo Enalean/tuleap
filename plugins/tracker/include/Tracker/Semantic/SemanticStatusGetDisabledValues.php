@@ -29,7 +29,7 @@ use Tuleap\Event\Dispatchable;
 
 class SemanticStatusGetDisabledValues implements Dispatchable
 {
-    const NAME = 'semanticStatusGetDisabledValues';
+    public const NAME = 'semanticStatusGetDisabledValues';
 
     /**
      * @var Tracker_FormElement_Field_List

@@ -24,9 +24,9 @@ use Tuleap\User\UserGroup\NameTranslator;
 
 class ForgeAccess_AdminController
 {
-    const TEMPLATE                  = 'access_choice';
-    const ACCESS_KEY                = ForgeAccess::CONFIG;
-    const SUPER_PUBLIC_PROJECTS_KEY = ForgeAccess::SUPER_PUBLIC_PROJECTS;
+    public const TEMPLATE                  = 'access_choice';
+    public const ACCESS_KEY                = ForgeAccess::CONFIG;
+    public const SUPER_PUBLIC_PROJECTS_KEY = ForgeAccess::SUPER_PUBLIC_PROJECTS;
 
     /**
      * @var UserDao

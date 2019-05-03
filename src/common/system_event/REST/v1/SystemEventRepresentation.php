@@ -26,7 +26,7 @@ use Tuleap\REST\JsonCast;
 
 class SystemEventRepresentation
 {
-    const ROUTE = 'system_event';
+    public const ROUTE = 'system_event';
 
     /**
      *

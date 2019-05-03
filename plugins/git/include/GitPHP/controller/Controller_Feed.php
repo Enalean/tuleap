@@ -15,9 +15,9 @@ namespace Tuleap\Git\GitPHP;
  */
 class Controller_Feed extends ControllerBase // @codingStandardsIgnoreLine
 {
-    const FEED_ITEMS       = 150;
-    const FEED_FORMAT_RSS  = 'rss';
-    const FEED_FORMAT_ATOM = 'atom';
+    public const FEED_ITEMS       = 150;
+    public const FEED_FORMAT_RSS  = 'rss';
+    public const FEED_FORMAT_ATOM = 'atom';
 
     /**
      * __construct

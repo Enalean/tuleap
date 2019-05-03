@@ -34,12 +34,12 @@ use Tuleap\Docman\REST\v1\DocmanWikiResource;
 
 class ResourcesInjector
 {
-    const NAME          = 'docman_items';
-    const FILES_NAME    = 'docman_files';
-    const FOLDER_NAME   = 'docman_folders';
-    const EMBEDDED_NAME = 'docman_embedded_files';
-    const WIKI_NAME     = 'docman_wikis';
-    const LINK_NAME     = 'docman_links';
+    public const NAME          = 'docman_items';
+    public const FILES_NAME    = 'docman_files';
+    public const FOLDER_NAME   = 'docman_folders';
+    public const EMBEDDED_NAME = 'docman_embedded_files';
+    public const WIKI_NAME     = 'docman_wikis';
+    public const LINK_NAME     = 'docman_links';
 
     public function populate(Restler $restler)
     {

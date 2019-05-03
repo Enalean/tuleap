@@ -23,7 +23,7 @@
 
 class BaseLanguage {
 
-    const DEFAULT_LANG = 'en_US';
+    public const DEFAULT_LANG = 'en_US';
 
     //array to hold the string values
     var $text_array ;

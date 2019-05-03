@@ -26,7 +26,7 @@ use Tuleap\Event\Dispatchable;
 
 class LastMonthStatisticsCollectorSVN implements Dispatchable
 {
-    const NAME = 'lastMonthStatisticsCollectorSVN';
+    public const NAME = 'lastMonthStatisticsCollectorSVN';
     /**
      * @var int
      */

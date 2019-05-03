@@ -25,7 +25,7 @@ use Http_ClientException;
 
 class Client
 {
-    const SITE_VERIFY_URL = 'https://www.google.com/recaptcha/api/siteverify';
+    public const SITE_VERIFY_URL = 'https://www.google.com/recaptcha/api/siteverify';
 
     /**
      * @var string

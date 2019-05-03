@@ -29,7 +29,7 @@ use Project;
 
 class NavigationPermissionsDropdownPresenterBuilder
 {
-    const PERMISSIONS_ENTRY_SHORTNAME = 'permissions';
+    public const PERMISSIONS_ENTRY_SHORTNAME = 'permissions';
 
     public function build(Project $project, $current_pane_shortname)
     {

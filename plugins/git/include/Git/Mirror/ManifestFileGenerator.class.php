@@ -29,7 +29,7 @@ class Git_Mirror_ManifestFileGenerator {
     /** @var string */
     private $gladm_path = '/gitolite-admin.git';
 
-    const FILE_PREFIX = 'manifest_mirror_';
+    public const FILE_PREFIX = 'manifest_mirror_';
 
     public function __construct(Logger $logger, $manifest_directory) {
         $this->manifest_directory = $manifest_directory;

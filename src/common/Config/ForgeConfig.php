@@ -26,7 +26,7 @@
  */
 class ForgeConfig {
 
-    const AUTH_TYPE_LDAP = 'ldap';
+    public const AUTH_TYPE_LDAP = 'ldap';
 
     /**
      * Hold the configuration variables

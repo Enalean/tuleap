@@ -24,9 +24,9 @@ use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindVisitor;
 
 class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List implements BindVisitor
 {
-    const BIND_PREFIX = 'b';
-    const OPEN_PREFIX = 'o';
-    const NEW_VALUE_PREFIX = '!';
+    public const BIND_PREFIX = 'b';
+    public const OPEN_PREFIX = 'o';
+    public const NEW_VALUE_PREFIX = '!';
 
     public $default_properties = array(
         'hint' => array(

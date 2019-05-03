@@ -30,10 +30,10 @@ use Tracker_FormElementFactory;
 
 class ChartConfigurationFieldRetriever
 {
-    const REMAINING_EFFORT_FIELD_NAME = 'remaining_effort';
-    const DURATION_FIELD_NAME         = 'duration';
-    const START_DATE_FIELD_NAME       = 'start_date';
-    const CAPACITY_FIELD_NAME         = 'capacity';
+    public const REMAINING_EFFORT_FIELD_NAME = 'remaining_effort';
+    public const DURATION_FIELD_NAME         = 'duration';
+    public const START_DATE_FIELD_NAME       = 'start_date';
+    public const CAPACITY_FIELD_NAME         = 'capacity';
 
     /**
      * @var Tracker_FormElementFactory

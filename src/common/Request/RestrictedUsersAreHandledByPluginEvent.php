@@ -23,7 +23,7 @@ namespace Tuleap\Request;
 
 class RestrictedUsersAreHandledByPluginEvent implements \Tuleap\Event\Dispatchable
 {
-    const NAME = 'restrictedUsersAreHandledByPluginEvent';
+    public const NAME = 'restrictedUsersAreHandledByPluginEvent';
 
     private $uri;
     private $plugin_handle_restricted = false;

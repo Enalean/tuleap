@@ -25,7 +25,7 @@ class ToBeCreatedUser extends ActionToBeTakenForUser {
 
     private static $ALLOWED_ACTIONS = array('create', 'map');
 
-    const ACTION = 'create';
+    public const ACTION = 'create';
 
     /** @return array */
     public function getCSVData() {

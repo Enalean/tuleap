@@ -21,7 +21,7 @@
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 
 class Search_SearchForum {
-    const NAME = 'forums';
+    public const NAME = 'forums';
 
     /**
      * @var ForumDao

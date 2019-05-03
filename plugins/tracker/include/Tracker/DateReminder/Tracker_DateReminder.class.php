@@ -19,11 +19,11 @@
 
 class Tracker_DateReminder {
 
-    const BEFORE = 0;
-    const AFTER  = 1;
+    public const BEFORE = 0;
+    public const AFTER  = 1;
 
-    const DISABLED = 0;
-    const ENABLED  = 1;
+    public const DISABLED = 0;
+    public const ENABLED  = 1;
 
     protected $reminderId;
     protected $trackerId;

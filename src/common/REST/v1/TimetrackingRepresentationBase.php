@@ -29,7 +29,7 @@ use Tuleap\Timetracking\REST\v1\MinimalArtifactRepresentation;
 
 class TimetrackingRepresentationBase
 {
-    const NAME = "timetracking";
+    public const NAME = "timetracking";
 
     /**
      * @var MinimalArtifactRepresentation

@@ -42,7 +42,7 @@ use Tuleap\AgileDashboard\Semantic\SemanticDoneValueChecker;
 
 class SemanticVelocity extends Tracker_Semantic
 {
-    const NAME = 'velocity';
+    public const NAME = 'velocity';
 
     /**
      * @var SemanticDone

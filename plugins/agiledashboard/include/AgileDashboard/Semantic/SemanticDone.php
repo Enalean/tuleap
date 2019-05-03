@@ -38,7 +38,7 @@ use Tuleap\AgileDashboard\Semantic\Dao\SemanticDoneDao;
 
 class SemanticDone extends Tracker_Semantic
 {
-    const NAME = 'done';
+    public const NAME = 'done';
 
     /**
      * @var Tracker_Semantic_Status

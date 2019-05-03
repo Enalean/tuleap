@@ -35,7 +35,7 @@ use UserManager;
 
 class ProjectResource
 {
-    const MAX_LIMIT = 50;
+    public const MAX_LIMIT = 50;
 
     /** @var UserManager */
     private $user_manager;

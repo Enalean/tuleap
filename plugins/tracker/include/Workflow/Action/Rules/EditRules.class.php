@@ -21,13 +21,13 @@
 require_once 'html.php';
 class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Rules {
 
-    const PARAMETER_ADD_RULE     = 'add_rule';
-    const PARAMETER_UPDATE_RULES = 'update_rules';
-    const PARAMETER_REMOVE_RULES = 'remove_rules';
+    public const PARAMETER_ADD_RULE     = 'add_rule';
+    public const PARAMETER_UPDATE_RULES = 'update_rules';
+    public const PARAMETER_REMOVE_RULES = 'remove_rules';
 
-    const PARAMETER_SOURCE_FIELD = 'source_date_field';
-    const PARAMETER_TARGET_FIELD = 'target_date_field';
-    const PARAMETER_COMPARATOR   = 'comparator';
+    public const PARAMETER_SOURCE_FIELD = 'source_date_field';
+    public const PARAMETER_TARGET_FIELD = 'target_date_field';
+    public const PARAMETER_COMPARATOR   = 'comparator';
 
     private $default_value = 'default_value';
 

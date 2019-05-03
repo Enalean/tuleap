@@ -27,7 +27,7 @@ use Tuleap\Project\REST\ProjectReference;
 class CompleteTrackerRepresentation implements TrackerRepresentation
 {
 
-    const ROUTE = 'trackers';
+    public const ROUTE = 'trackers';
 
     /**
      * @var int

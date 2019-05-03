@@ -22,5 +22,5 @@ namespace Tuleap\Project\Admin\ProjectUGroup;
 
 class UserBecomesNewsWriter extends UserAndProjectUGroupRelationshipEvent
 {
-    const NAME = 'userBecomesNewsWriter';
+    public const NAME = 'userBecomesNewsWriter';
 }

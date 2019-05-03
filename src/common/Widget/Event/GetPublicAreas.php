@@ -25,7 +25,7 @@ use Tuleap\Event\Dispatchable;
 
 class GetPublicAreas implements Dispatchable
 {
-    const NAME = 'service_public_areas';
+    public const NAME = 'service_public_areas';
 
     /**
      * @var string[]

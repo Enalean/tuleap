@@ -31,7 +31,7 @@ class ImmutableTagPresenter extends BaseAdminPresenter
     // Should be a const, waiting for PHP 5.6+
     public static $SO_MUCH_FOLDERS = array();
 
-    const MAX_NUMBER_OF_FOLDERS = 10000;
+    public const MAX_NUMBER_OF_FOLDERS = 10000;
 
     public $svn_allow_tag_immutable_title;
     public $svn_allow_tag_immutable_comment;

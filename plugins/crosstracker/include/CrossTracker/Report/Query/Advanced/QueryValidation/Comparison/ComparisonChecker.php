@@ -39,7 +39,7 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateToStringExceptio
 
 class ComparisonChecker implements ValueWrapperVisitor
 {
-    const OPERATOR = '';
+    public const OPERATOR = '';
 
     /**
      * @var DateFormatValidator

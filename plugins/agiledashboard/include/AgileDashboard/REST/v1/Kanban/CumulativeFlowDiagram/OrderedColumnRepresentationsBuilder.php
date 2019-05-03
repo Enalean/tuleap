@@ -30,8 +30,8 @@ use Tuleap\AgileDashboard\Kanban\ColumnIdentifier;
 
 class OrderedColumnRepresentationsBuilder
 {
-    const BACKLOG_BINDVALUE_ID = 100;
-    const MAX_POSSIBLE_POINTS  = 90;
+    public const BACKLOG_BINDVALUE_ID = 100;
+    public const MAX_POSSIBLE_POINTS  = 90;
 
     /** @var AgileDashboard_KanbanColumnFactory */
     private $kanban_column_factory;

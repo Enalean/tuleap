@@ -23,9 +23,9 @@
  */
 class GitRepositoryGitoliteAdmin extends GitRepository
 {
-    const ID       = '-2';
-    const NAME     = 'gitolite-admin.git';
-    const USERNAME = 'id_rsa_gl-adm';
+    public const ID       = '-2';
+    public const NAME     = 'gitolite-admin.git';
+    public const USERNAME = 'id_rsa_gl-adm';
 
     public function __construct()
     {

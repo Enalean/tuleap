@@ -22,7 +22,7 @@ namespace Tuleap\Jenkins;
 
 class JenkinsCSRFCrumbRetriever
 {
-    const CRUMB_ISSUER_PATH = '/crumbIssuer/api/xml';
+    public const CRUMB_ISSUER_PATH = '/crumbIssuer/api/xml';
 
     /**
      * @var \Http_Client

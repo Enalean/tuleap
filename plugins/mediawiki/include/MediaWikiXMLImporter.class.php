@@ -22,7 +22,7 @@ use Tuleap\Project\XML\Import\ImportConfig;
 
 class MediaWikiXMLImporter
 {
-    const SERVICE_NAME = 'mediawiki';
+    public const SERVICE_NAME = 'mediawiki';
 
     /**
      * @var Logger

@@ -35,11 +35,11 @@ use System_Command;
 
 class Worker
 {
-    const EVENT_QUEUE_NAME = 'app_user_events';
+    public const EVENT_QUEUE_NAME = 'app_user_events';
 
-    const DEFAULT_PID_FILE_PATH = '/var/run/tuleap/worker.pid';
+    public const DEFAULT_PID_FILE_PATH = '/var/run/tuleap/worker.pid';
 
-    const DEFAULT_LOG_FILE_PATH = '/var/log/tuleap/worker_log';
+    public const DEFAULT_LOG_FILE_PATH = '/var/log/tuleap/worker_log';
 
     private $id = 0;
     private $log_file;

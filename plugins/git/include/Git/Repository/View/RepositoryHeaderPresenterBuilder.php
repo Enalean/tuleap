@@ -35,8 +35,8 @@ class RepositoryHeaderPresenterBuilder
 {
     use \Tuleap\Git\Repository\View\FeatureFlag;
 
-    const TAB_FILES   = 'tab-files';
-    const TAB_COMMITS = 'tab-commits';
+    public const TAB_FILES   = 'tab-files';
+    public const TAB_COMMITS = 'tab-commits';
 
     /**
      * @var Git_GitRepositoryUrlManager

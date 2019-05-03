@@ -24,7 +24,7 @@ use Guzzle\Http\Client;
 
 class RequestWrapper {
 
-    const MAX_RETRY = 3;
+    public const MAX_RETRY = 3;
     /**
      * @var Client
      */

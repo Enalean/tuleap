@@ -23,7 +23,7 @@ namespace Tuleap\User;
 
 class LoginInstrumentation
 {
-    const METRIC_NAME = 'authentication_total';
+    public const METRIC_NAME = 'authentication_total';
 
     public static function increment($type)
     {

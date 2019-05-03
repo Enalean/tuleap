@@ -25,7 +25,7 @@ use Tuleap\Event\Dispatchable;
 
 class ReferenceGetTooltipContentEvent implements Dispatchable
 {
-    const NAME = 'referenceGetTooltipContentEvent';
+    public const NAME = 'referenceGetTooltipContentEvent';
 
     /**
      * @var \Reference

@@ -20,7 +20,7 @@
 
 class SystemEventQueueStatistics extends SystemEventQueue {
 
-    const NAME = 'statistics';
+    public const NAME = 'statistics';
 
     public function getName() {
         return self::NAME;

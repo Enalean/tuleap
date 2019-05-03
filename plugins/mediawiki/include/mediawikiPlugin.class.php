@@ -53,7 +53,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 class MediaWikiPlugin extends Plugin {
 
-    const SERVICE_SHORTNAME = 'plugin_mediawiki';
+    public const SERVICE_SHORTNAME = 'plugin_mediawiki';
 
     public function __construct ($id=0) {
         parent::__construct($id);

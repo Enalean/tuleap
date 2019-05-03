@@ -20,7 +20,7 @@
 
 class SystemEvent_GIT_GROKMIRROR_MANIFEST_UPDATE_FOLLOWING_A_GIT_PUSH extends SystemEvent_GIT_GROKMIRROR_MANIFEST_UPDATE {
 
-    const NAME = 'GIT_GROKMIRROR_MANIFEST_UPDATE_FOLLOWING_A_GIT_PUSH';
+    public const NAME = 'GIT_GROKMIRROR_MANIFEST_UPDATE_FOLLOWING_A_GIT_PUSH';
 
     public function process() {
         $repository = $this->getRepositoryFromParameters();

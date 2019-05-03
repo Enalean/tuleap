@@ -19,13 +19,13 @@
  */
 
 class Log_ConsoleLogger implements Logger {
-    const BLACK   = "\033[30m";
-    const RED     = "\033[31m";
-    const GREEN   = "\033[32m";
-    const BLUE    = "\033[34m";
-    const YELLOW  = "\033[33m";
-    const BG_RED  = "\033[41m";
-    const NOCOLOR = "\033[0m";
+    public const BLACK   = "\033[30m";
+    public const RED     = "\033[31m";
+    public const GREEN   = "\033[32m";
+    public const BLUE    = "\033[34m";
+    public const YELLOW  = "\033[33m";
+    public const BG_RED  = "\033[41m";
+    public const NOCOLOR = "\033[0m";
 
     private $log = array();
 

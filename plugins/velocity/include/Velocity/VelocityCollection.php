@@ -24,7 +24,7 @@ use Tracker_Artifact;
 
 class VelocityCollection
 {
-    const NB_MAX_VELOCITIES = 7;
+    public const NB_MAX_VELOCITIES = 7;
     /**
      * @var Tracker_Artifact[]
      */

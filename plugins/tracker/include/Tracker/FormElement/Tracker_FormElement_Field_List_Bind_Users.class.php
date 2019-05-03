@@ -25,12 +25,12 @@ use Tuleap\Tracker\Import\Spotter;
 
 class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Field_List_Bind {
 
-    const TYPE = 'users';
+    public const TYPE = 'users';
 
-    const REGISTERED_USERS_UGROUP_NAME = 'ugroup_2';
+    public const REGISTERED_USERS_UGROUP_NAME = 'ugroup_2';
 
-    const REST_BINDING_LIST_ID    = 'ugroup_id';
-    const REST_BINDING_LIST_LABEL = 'name';
+    public const REST_BINDING_LIST_ID    = 'ugroup_id';
+    public const REST_BINDING_LIST_LABEL = 'name';
 
     /** @var UserManager */
     protected $userManager;

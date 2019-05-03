@@ -24,7 +24,7 @@ use Tuleap\Statistics\AdminHeaderPresenter;
 
 class FrequenciesPresenter
 {
-    const TEMPLATE = 'frequencies';
+    public const TEMPLATE = 'frequencies';
 
     public $header;
     public $search_fields;

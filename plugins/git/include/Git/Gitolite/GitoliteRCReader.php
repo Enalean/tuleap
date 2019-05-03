@@ -22,8 +22,8 @@ use Tuleap\Git\Gitolite\VersionDetector;
 
 class Git_Gitolite_GitoliteRCReader {
 
-    const OLD_GITOLITE_RC_PATH = "/usr/com/gitolite/.gitolite.rc";
-    const NEW_GITOLITE_RC_PATH = "/var/lib/gitolite/.gitolite.rc";
+    public const OLD_GITOLITE_RC_PATH = "/usr/com/gitolite/.gitolite.rc";
+    public const NEW_GITOLITE_RC_PATH = "/var/lib/gitolite/.gitolite.rc";
 
     public function __construct(VersionDetector $version_detector)
     {

@@ -26,19 +26,19 @@
  * Store informations about a push
  */
 class Git_Hook_PushDetails {
-    const ACTION_ERROR  = 'error';
-    const ACTION_CREATE = 'create';
-    const ACTION_DELETE = 'delete';
-    const ACTION_UPDATE = 'update';
+    public const ACTION_ERROR  = 'error';
+    public const ACTION_CREATE = 'create';
+    public const ACTION_DELETE = 'delete';
+    public const ACTION_UPDATE = 'update';
 
-    const OBJECT_TYPE_COMMIT = 'commit';
-    const OBJECT_TYPE_TAG    = 'tag';
+    public const OBJECT_TYPE_COMMIT = 'commit';
+    public const OBJECT_TYPE_TAG    = 'tag';
 
-    const TYPE_BRANCH          = 'branch';
-    const TYPE_UNANNOTATED_TAG = 'tag';
-    const TYPE_ANNOTATED_TAG   = 'annotated_tag';
-    const TYPE_TRACKING_BRANCH = 'tracking_branch';
-    const TYPE_UNKNOWN         = '';
+    public const TYPE_BRANCH          = 'branch';
+    public const TYPE_UNANNOTATED_TAG = 'tag';
+    public const TYPE_ANNOTATED_TAG   = 'annotated_tag';
+    public const TYPE_TRACKING_BRANCH = 'tracking_branch';
+    public const TYPE_UNKNOWN         = '';
 
     private $type;
     private $rev_type;

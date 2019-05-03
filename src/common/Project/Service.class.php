@@ -23,20 +23,20 @@
 */
 class Service {
 
-    const SUMMARY   = 'summary';
-    const ADMIN     = 'admin';
-    const FORUM     = 'forum';
-    const HOMEPAGE  = 'homepage';
-    const ML        = 'mail';
-    const NEWS      = 'news';
-    const CVS       = 'cvs';
-    const FILE      = 'file';
-    const SVN       = 'svn';
-    const WIKI      = 'wiki';
-    const TRACKERV3 = 'tracker';
+    public const SUMMARY   = 'summary';
+    public const ADMIN     = 'admin';
+    public const FORUM     = 'forum';
+    public const HOMEPAGE  = 'homepage';
+    public const ML        = 'mail';
+    public const NEWS      = 'news';
+    public const CVS       = 'cvs';
+    public const FILE      = 'file';
+    public const SVN       = 'svn';
+    public const WIKI      = 'wiki';
+    public const TRACKERV3 = 'tracker';
 
-    const SCOPE_SYSTEM  = 'system';
-    const SCOPE_PROJECT = 'project';
+    public const SCOPE_SYSTEM  = 'system';
+    public const SCOPE_PROJECT = 'project';
 
     public $data;
     

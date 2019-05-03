@@ -36,9 +36,9 @@ use Tuleap\REST\AuthenticatedResource;
  * Get Memberships For a list of Users
  */
 class UserMembershipResource extends AuthenticatedResource {
-    const MAX_LIMIT = 1000;
+    public const MAX_LIMIT = 1000;
 
-    const CRITERION_WITH_SSH_KEY = 'with_ssh_key';
+    public const CRITERION_WITH_SSH_KEY = 'with_ssh_key';
 
     /** @var UserManager */
     private $user_manager;

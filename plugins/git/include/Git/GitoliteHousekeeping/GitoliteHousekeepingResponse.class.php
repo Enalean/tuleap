@@ -20,12 +20,12 @@
 
 class Git_GitoliteHousekeeping_GitoliteHousekeepingResponse {
 
-    const ANSI_NOCOLOR = "\033[0m";
-    const ANSI_GREEN   = "\033[32m";
-    const ANSI_YELLOW  = "\033[35m";
-    const ANSI_RED     = "\033[31m";
+    public const ANSI_NOCOLOR = "\033[0m";
+    public const ANSI_GREEN   = "\033[32m";
+    public const ANSI_YELLOW  = "\033[35m";
+    public const ANSI_RED     = "\033[31m";
 
-    const LOG_PREFIX = '[GITOLITE_HOUSEKEEPING] ';
+    public const LOG_PREFIX = '[GITOLITE_HOUSEKEEPING] ';
 
     /** @var Logger */
     private $logger;

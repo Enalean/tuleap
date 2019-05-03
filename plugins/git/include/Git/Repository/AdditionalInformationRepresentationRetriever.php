@@ -24,7 +24,7 @@ use Tuleap\Event\Dispatchable;
 
 class AdditionalInformationRepresentationRetriever implements Dispatchable
 {
-    const NAME = 'additionalInformationRepresentationRetriever';
+    public const NAME = 'additionalInformationRepresentationRetriever';
     /**
      * @var \GitRepository
      */

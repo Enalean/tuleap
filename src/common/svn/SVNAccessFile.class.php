@@ -30,17 +30,17 @@ class SVNAccessFile {
     /**
      * Value in $groups when the group is (re)defined by user
      */
-    const UGROUP_REDEFINED = 0;
+    public const UGROUP_REDEFINED = 0;
 
     /**
      * Value in $groups when the group is defined only in default [groups] section
      */
-    const UGROUP_DEFAULT   = 1;
+    public const UGROUP_DEFAULT   = 1;
 
     /**
      * Pattern used to find a line defining permission on group
      */
-    const GROUPNAME_PATTERN = "([a-zA-Z0-9_-]+)";
+    public const GROUPNAME_PATTERN = "([a-zA-Z0-9_-]+)";
 
     /**
      * New name of the renamed group

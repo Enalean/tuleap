@@ -39,8 +39,8 @@ use TemplateRendererFactory;
 
 class Hooks extends Pane
 {
-    const ID = 'hooks';
-    const CSRF_TOKEN_ID = 'GIT-WEBHOOK-SETTINGS';
+    public const ID = 'hooks';
+    public const CSRF_TOKEN_ID = 'GIT-WEBHOOK-SETTINGS';
 
     /**
      * Allow plugins to add additional hooks setup for git
@@ -52,7 +52,7 @@ class Hooks extends Pane
      *   'create_buttons'       => (Output) Array of CreateWebhookButtonPresenter
      *   'additional_html_bits' => (Output) Array of html string
      */
-    const ADDITIONAL_WEBHOOKS = 'plugin_git_settings_additional_webhooks';
+    public const ADDITIONAL_WEBHOOKS = 'plugin_git_settings_additional_webhooks';
 
     /**
      * @var WebhookFactory

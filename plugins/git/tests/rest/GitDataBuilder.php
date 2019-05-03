@@ -24,8 +24,8 @@ use Tuleap\Git\RestrictedGerritServerDao;
 
 class GitDataBuilder extends REST_TestDataBuilder {
 
-    const PROJECT_TEST_GIT_SHORTNAME = 'test-git';
-    const REPOSITORY_GIT_ID          = 1;
+    public const PROJECT_TEST_GIT_SHORTNAME = 'test-git';
+    public const REPOSITORY_GIT_ID          = 1;
 
     public function setUp() {
         $project = $this->project_manager->getProjectByUnixName(self::PROJECT_TEST_GIT_SHORTNAME);

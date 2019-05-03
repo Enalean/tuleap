@@ -31,11 +31,11 @@ use UserManager;
 
 class AvatarController implements DispatchableWithRequest, DispatchableWithRequestNoAuthz
 {
-    const DEFAULT_AVATAR = __DIR__ . '/../../../www/themes/common/images/avatar_default.png';
+    public const DEFAULT_AVATAR = __DIR__ . '/../../../www/themes/common/images/avatar_default.png';
 
     private $never_expires = false;
 
-    const ONE_YEAR_IN_SECONDS = 3600 * 24 * 365;
+    public const ONE_YEAR_IN_SECONDS = 3600 * 24 * 365;
 
     public function __construct(array $options = [])
     {

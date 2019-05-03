@@ -59,7 +59,7 @@ abstract class Rule {
  * this case, 2007-01-01 format (with zero in month or day) is not allowed.
  */
 class Rule_Date extends Rule {
-    const DAY_REGEX     = '/^(\d{1,4})-(\d{1,2})-(\d{1,2}?)$/';
+    public const DAY_REGEX     = '/^(\d{1,4})-(\d{1,2})-(\d{1,2}?)$/';
 
     function isValid($val) {
         if (preg_match(self::DAY_REGEX, $val, $m)) {
@@ -71,7 +71,7 @@ class Rule_Date extends Rule {
 }
 
 class Rule_Date_Time extends Rule {
-    const DAYTIME_REGEX = '/^(\d{1,4})-(\d{1,2})-(\d{1,2}?) (\d{2}):(\d{2})(?::\d{2})?$/';
+    public const DAYTIME_REGEX = '/^(\d{1,4})-(\d{1,2})-(\d{1,2}?) (\d{2}):(\d{2})(?::\d{2})?$/';
 
     function isValid($val) {
         if (! preg_match(self::DAYTIME_REGEX, $val, $m)) {
@@ -82,7 +82,7 @@ class Rule_Date_Time extends Rule {
 }
 
 class Rule_Timestamp extends Rule {
-    const TIMESTAMP_REGEX = '/^[0-9]+$/';
+    public const TIMESTAMP_REGEX = '/^[0-9]+$/';
 
     function isValid($val) {
         return preg_match(self::TIMESTAMP_REGEX, $val);
@@ -307,7 +307,7 @@ extends Rule {
 class Rule_UserName
 extends Rule {
 
-    const RESERVED_PREFIX = 'forge__';
+    public const RESERVED_PREFIX = 'forge__';
 
     /**
      * Test if value is a name on underlying OS.
@@ -610,7 +610,7 @@ extends Rule {
 class Rule_ProjectName
 extends Rule_UserName {
 
-    const PATTERN_PROJECT_NAME    = '[a-zA-Z][A-Za-z0-9-_.]{2,254}';
+    public const PATTERN_PROJECT_NAME    = '[a-zA-Z][A-Za-z0-9-_.]{2,254}';
 
     /**
      * Group name cannot contain underscore or dots for DNS reasons.

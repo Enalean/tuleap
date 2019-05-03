@@ -23,11 +23,11 @@ namespace Tuleap\ProFTPd\Xferlog;
 use DataAccessObject;
 
 class Dao extends DataAccessObject {
-    const DIRECTION_UPLOAD  = 'i';
-    const DIRECTION_DOWNLOAD = 'o';
-    const DIRECTION_DELETE = 'd';
+    public const DIRECTION_UPLOAD  = 'i';
+    public const DIRECTION_DOWNLOAD = 'o';
+    public const DIRECTION_DELETE = 'd';
 
-    const SERVICE_HTTP = 'http';
+    public const SERVICE_HTTP = 'http';
 
     public function searchLatestEntryTimestamp() {
         $sql = 'SELECT * FROM plugin_proftpd_xferlog WHERE service_name != "'.self::SERVICE_HTTP.'" ORDER BY id DESC LIMIT 1';

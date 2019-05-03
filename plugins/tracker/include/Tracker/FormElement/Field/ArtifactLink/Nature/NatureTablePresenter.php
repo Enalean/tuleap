@@ -40,7 +40,7 @@ class NatureTablePresenter {
     public $artifact_links;
     public $mass_unlink_title;
 
-    const TABLE_ID_PREFIX = "tracker_report_table_nature_";
+    public const TABLE_ID_PREFIX = "tracker_report_table_nature_";
 
     public function __construct(
         NaturePresenter $nature,

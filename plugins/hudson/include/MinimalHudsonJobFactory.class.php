@@ -27,7 +27,7 @@ use Tuleap\Hudson\MinimalHudsonJob;
  */
 class MinimalHudsonJobFactory // @codingStandardsIgnoreLine
 {
-    const API_XML = '/api/xml';
+    public const API_XML = '/api/xml';
 
     private $jobs = array();
 

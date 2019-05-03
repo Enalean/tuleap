@@ -28,7 +28,7 @@ use TemplateRendererFactory;
 
 class GitViewsRepoManagementPaneCIToken extends Pane
 {
-    const ID = 'citoken';
+    public const ID = 'citoken';
 
     /**
      * @see GitViews_RepoManagement_Pane::getIdentifier()

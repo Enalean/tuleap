@@ -28,42 +28,42 @@ require_once __DIR__.'/../../lib/TestDataBuilder.php';
 
 class REST_TestDataBuilder extends TestDataBuilder  // @codingStandardsIgnoreLine
 {
-    const TEST_USER_4_NAME        = 'rest_api_tester_4';
-    const TEST_USER_4_PASS        = 'welcome0';
-    const TEST_USER_4_STATUS      = 'A';
+    public const TEST_USER_4_NAME        = 'rest_api_tester_4';
+    public const TEST_USER_4_PASS        = 'welcome0';
+    public const TEST_USER_4_STATUS      = 'A';
 
-    const EPICS_TRACKER_SHORTNAME        = 'epic';
-    const RELEASES_TRACKER_SHORTNAME     = 'rel';
-    const SPRINTS_TRACKER_SHORTNAME      = 'sprint';
-    const TASKS_TRACKER_SHORTNAME        = 'task';
-    const USER_STORIES_TRACKER_SHORTNAME = 'story';
-    const DELETED_TRACKER_SHORTNAME      = 'delete';
-    const KANBAN_TRACKER_SHORTNAME       = 'kanbantask';
+    public const EPICS_TRACKER_SHORTNAME        = 'epic';
+    public const RELEASES_TRACKER_SHORTNAME     = 'rel';
+    public const SPRINTS_TRACKER_SHORTNAME      = 'sprint';
+    public const TASKS_TRACKER_SHORTNAME        = 'task';
+    public const USER_STORIES_TRACKER_SHORTNAME = 'story';
+    public const DELETED_TRACKER_SHORTNAME      = 'delete';
+    public const KANBAN_TRACKER_SHORTNAME       = 'kanbantask';
 
-    const LEVEL_ONE_TRACKER_SHORTNAME    = 'LevelOne';
-    const LEVEL_TWO_TRACKER_SHORTNAME    = 'LevelTwo';
-    const LEVEL_THREE_TRACKER_SHORTNAME  = 'LevelThree';
-    const LEVEL_FOUR_TRACKER_SHORTNAME   = 'LevelFour';
+    public const LEVEL_ONE_TRACKER_SHORTNAME    = 'LevelOne';
+    public const LEVEL_TWO_TRACKER_SHORTNAME    = 'LevelTwo';
+    public const LEVEL_THREE_TRACKER_SHORTNAME  = 'LevelThree';
+    public const LEVEL_FOUR_TRACKER_SHORTNAME   = 'LevelFour';
 
-    const EPICS_TRACKER_LABEL         = 'Epics';
-    const KANBAN_TRACKER_LABEL        = 'Kanban Tasks';
-    const SUSPENDED_TRACKER_SHORTNAME = 'suspended_tracker';
+    public const EPICS_TRACKER_LABEL         = 'Epics';
+    public const KANBAN_TRACKER_LABEL        = 'Kanban Tasks';
+    public const SUSPENDED_TRACKER_SHORTNAME = 'suspended_tracker';
 
-    const NIVEAU_1_TRACKER_SHORTNAME = 'niveau1';
-    const NIVEAU_2_TRACKER_SHORTNAME = 'niveau2';
-    const POKEMON_TRACKER_SHORTNAME  = 'pokemon';
+    public const NIVEAU_1_TRACKER_SHORTNAME = 'niveau1';
+    public const NIVEAU_2_TRACKER_SHORTNAME = 'niveau2';
+    public const POKEMON_TRACKER_SHORTNAME  = 'pokemon';
 
-    const KANBAN_ID = 1;
+    public const KANBAN_ID = 1;
 
-    const KANBAN_TO_BE_DONE_COLUMN_ID = 230;
-    const KANBAN_ONGOING_COLUMN_ID    = 231;
-    const KANBAN_REVIEW_COLUMN_ID     = 232;
-    const KANBAN_DONE_VALUE_ID        = 233;
+    public const KANBAN_TO_BE_DONE_COLUMN_ID = 230;
+    public const KANBAN_ONGOING_COLUMN_ID    = 231;
+    public const KANBAN_REVIEW_COLUMN_ID     = 232;
+    public const KANBAN_DONE_VALUE_ID        = 233;
 
-    const PLANNING_ID = 2;
+    public const PLANNING_ID = 2;
 
-    const PHPWIKI_PAGE_ID          = 6097;
-    const PHPWIKI_SPACE_PAGE_ID    = 6100;
+    public const PHPWIKI_PAGE_ID          = 6097;
+    public const PHPWIKI_SPACE_PAGE_ID    = 6100;
 
     /** @var Tracker_ArtifactFactory */
     private $tracker_artifact_factory;

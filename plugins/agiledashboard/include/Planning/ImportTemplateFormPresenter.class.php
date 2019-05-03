@@ -20,7 +20,7 @@
 
 class Planning_ImportTemplateFormPresenter {
 
-    const TULEAP_TEMPLATE_URL = 'https://tuleap.net/plugins/docman/?group_id=101&action=show&id=438';
+    public const TULEAP_TEMPLATE_URL = 'https://tuleap.net/plugins/docman/?group_id=101&action=show&id=438';
 
     public $group_id;
 

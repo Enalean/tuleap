@@ -31,9 +31,9 @@ use AgileDashboard_KanbanActionsChecker;
 
 class KanbanRepresentation {
 
-    const ROUTE         = 'kanban';
-    const BACKLOG_ROUTE = 'backlog';
-    const ITEMS_ROUTE   = 'items';
+    public const ROUTE         = 'kanban';
+    public const BACKLOG_ROUTE = 'backlog';
+    public const ITEMS_ROUTE   = 'items';
 
     /**
      * @var int

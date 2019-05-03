@@ -21,11 +21,11 @@
 
 class Git_Driver_Gerrit_ProjectCreator {
 
-    const GROUP_REPLICATION = 'replication';
-    const GROUP_REGISTERED_USERS = 'Registered Users';
+    public const GROUP_REPLICATION = 'replication';
+    public const GROUP_REGISTERED_USERS = 'Registered Users';
 
-    const NO_PERMISSIONS_MIGRATION      = 'none';
-    const DEFAULT_PERMISSIONS_MIGRATION = 'default';
+    public const NO_PERMISSIONS_MIGRATION      = 'none';
+    public const DEFAULT_PERMISSIONS_MIGRATION = 'default';
 
     /** @var array */
     static $MIGRATION_MINIMAL_PERMISSIONS = array(

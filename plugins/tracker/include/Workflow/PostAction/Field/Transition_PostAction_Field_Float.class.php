@@ -27,8 +27,8 @@ include_once 'common/valid/ValidFactory.class.php';
 class Transition_PostAction_Field_Float extends Transition_PostAction_Field_Numeric
 {//phpcs:ignore
 
-    const XML_TAG_NAME = 'postaction_field_float';
-    const SHORT_NAME   = 'field_float';
+    public const XML_TAG_NAME = 'postaction_field_float';
+    public const SHORT_NAME   = 'field_float';
     
     /**
      * Get the shortname of the post action

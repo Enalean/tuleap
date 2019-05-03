@@ -18,9 +18,9 @@
  */
 
 class GraphOnTrackersV5_InSessionChartSorter {
-    const FREEZE__DONT_MOVE = '--';
-    const BEGINNING         = 'beginning';
-    const END               = 'end';
+    public const FREEZE__DONT_MOVE = '--';
+    public const BEGINNING         = 'beginning';
+    public const END               = 'end';
 
     /**
      * @var Tracker_Report_Session

@@ -29,11 +29,11 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
      * When one create a group when no owners, set Administrators as default
      * @see: https://groups.google.com/d/msg/repo-discuss/kVDkj7Ds970/xzLP1WQI2BAJ
      */
-    const DEFAULT_GROUP_OWNER = 'Administrators';
+    public const DEFAULT_GROUP_OWNER = 'Administrators';
 
-    const HEADER_CONTENT_TYPE = 'Content-type';
-    const MIME_JSON           = 'application/json;charset=UTF-8';
-    const MIME_TEXT           = 'plain/text';
+    public const HEADER_CONTENT_TYPE = 'Content-type';
+    public const MIME_JSON           = 'application/json;charset=UTF-8';
+    public const MIME_TEXT           = 'plain/text';
 
     /** @var Logger */
     private $logger;

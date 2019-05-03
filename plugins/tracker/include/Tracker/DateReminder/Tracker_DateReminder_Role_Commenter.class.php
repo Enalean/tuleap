@@ -18,7 +18,7 @@
 
 class Tracker_DateReminder_Role_Commenter implements Tracker_DateReminder_Role {
 
-    const IDENTIFIER = "3";
+    public const IDENTIFIER = "3";
     /**
      * Get the Role
      *

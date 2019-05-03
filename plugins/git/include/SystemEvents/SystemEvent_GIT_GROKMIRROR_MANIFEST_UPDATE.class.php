@@ -19,7 +19,7 @@
  */
 
 class SystemEvent_GIT_GROKMIRROR_MANIFEST_UPDATE extends SystemEvent {
-    const NAME = 'GIT_GROKMIRROR_MANIFEST_UPDATE';
+    public const NAME = 'GIT_GROKMIRROR_MANIFEST_UPDATE';
 
     /** @var GitRepositoryFactory */
     protected $repository_factory;

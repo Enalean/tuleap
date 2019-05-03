@@ -25,7 +25,7 @@ use Tuleap\CreateTestEnv\XMLDateUpdater\DateUpdater;
 
 class CreateTestProject
 {
-    const DEFAULT_ARCHIVE = 'sample-project';
+    public const DEFAULT_ARCHIVE = 'sample-project';
 
     private $user_name;
     private $user_realname;

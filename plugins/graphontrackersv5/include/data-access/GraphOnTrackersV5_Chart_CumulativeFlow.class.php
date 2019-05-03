@@ -33,9 +33,9 @@ require_once(dirname(__FILE__).'/../common/HTML_Element_Selectbox_TrackerFields_
  */
 class GraphOnTrackersV5_Chart_CumulativeFlow extends GraphOnTrackersV5_Chart
 {
-    const SCALE_DAY = 0;
-    const SCALE_WEEK = 1;
-    const SCALE_MONTH = 2;
+    public const SCALE_DAY = 0;
+    public const SCALE_WEEK = 1;
+    public const SCALE_MONTH = 2;
     /**
      * The date (timestamp) the sprint start
      */

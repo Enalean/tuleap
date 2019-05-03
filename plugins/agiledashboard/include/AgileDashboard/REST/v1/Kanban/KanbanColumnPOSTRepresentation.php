@@ -20,7 +20,7 @@ namespace Tuleap\AgileDashboard\REST\v1\Kanban;
 
 class KanbanColumnPOSTRepresentation {
 
-    const ROUTE = "kanban";
+    public const ROUTE = "kanban";
 
     /**
      * @var string {@type string}

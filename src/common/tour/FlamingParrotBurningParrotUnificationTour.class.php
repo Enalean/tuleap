@@ -21,7 +21,7 @@
 
 class Tuleap_Tour_FlamingParrotBurningParrotUnificationTour extends Tuleap_Tour
 {
-    const TOUR_NAME = 'flaming-parrot-burning-parrot-unification-tour';
+    public const TOUR_NAME = 'flaming-parrot-burning-parrot-unification-tour';
 
     public function __construct()
     {

@@ -27,7 +27,7 @@ use Tuleap\Tracker\Action\MoveSemanticChecker;
 
 class MoveSemanticInitialEffortChecker extends MoveSemanticChecker
 {
-    const INITIAL_EFFORT_SEMANTIC_LABEL = 'initial effort';
+    public const INITIAL_EFFORT_SEMANTIC_LABEL = 'initial effort';
 
     /**
      * @var AgileDashboard_Semantic_InitialEffortFactory

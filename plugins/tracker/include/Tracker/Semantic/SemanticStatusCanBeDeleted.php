@@ -29,7 +29,7 @@ use Tuleap\Event\Dispatchable;
 
 class SemanticStatusCanBeDeleted implements Dispatchable
 {
-    const NAME = 'semanticStatusCanBeDeleted';
+    public const NAME = 'semanticStatusCanBeDeleted';
 
     /**
      * @var Tracker

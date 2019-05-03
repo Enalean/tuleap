@@ -25,7 +25,7 @@ class Rest_TokenManager {
     /**
      * Expiration time for tokens in seconds (24 hours)
      */
-    const TOKENS_EXPIRATION_TIME = 86400;
+    public const TOKENS_EXPIRATION_TIME = 86400;
 
     /** @var Rest_TokenDao */
     private $token_dao;

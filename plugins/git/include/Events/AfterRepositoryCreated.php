@@ -25,7 +25,7 @@ use Tuleap\Event\Dispatchable;
 
 class AfterRepositoryCreated implements Dispatchable
 {
-    const NAME = 'afterRepositoryCreated';
+    public const NAME = 'afterRepositoryCreated';
 
     /**
      * @var GitRepository

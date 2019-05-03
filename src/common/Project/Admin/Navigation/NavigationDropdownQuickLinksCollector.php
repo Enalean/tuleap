@@ -29,7 +29,7 @@ use Tuleap\Event\Dispatchable;
 
 class NavigationDropdownQuickLinksCollector implements Dispatchable
 {
-    const NAME = 'collect_project_admin_navigation_permission_dropdown_quick_links';
+    public const NAME = 'collect_project_admin_navigation_permission_dropdown_quick_links';
 
     private $quick_links_collection;
     private $project;

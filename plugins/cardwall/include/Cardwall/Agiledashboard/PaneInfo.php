@@ -25,7 +25,7 @@ use Tuleap\AgileDashboard\Milestone\Pane\PaneInfo;
 
 class CardwallPaneInfo extends PaneInfo
 {
-    const IDENTIFIER = 'cardwall';
+    public const IDENTIFIER = 'cardwall';
 
     /**
      * @var string

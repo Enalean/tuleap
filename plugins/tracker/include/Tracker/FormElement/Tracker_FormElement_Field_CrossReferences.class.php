@@ -24,12 +24,12 @@ require_once('common/reference/CrossReferenceFactory.class.php');
 
 class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Field implements Tracker_FormElement_Field_ReadOnly {
 
-    const REST_REF_INDEX          = 'ref';
-    const REST_REF_URL            = 'url';
-    const REST_REF_DIRECTION      = 'direction';
-    const REST_REF_DIRECTION_IN   = 'in';
-    const REST_REF_DIRECTION_OUT  = 'out';
-    const REST_REF_DIRECTION_BOTH = 'both';
+    public const REST_REF_INDEX          = 'ref';
+    public const REST_REF_URL            = 'url';
+    public const REST_REF_DIRECTION      = 'direction';
+    public const REST_REF_DIRECTION_IN   = 'in';
+    public const REST_REF_DIRECTION_OUT  = 'out';
+    public const REST_REF_DIRECTION_BOTH = 'both';
 
     public $default_properties = array();
 

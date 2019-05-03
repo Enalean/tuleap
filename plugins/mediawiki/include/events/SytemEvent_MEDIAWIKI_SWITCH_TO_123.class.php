@@ -19,9 +19,9 @@
  */
 
 class SystemEvent_MEDIAWIKI_SWITCH_TO_123 extends SystemEvent {
-    const NAME = 'MEDIAWIKI_SWITCH_TO_123';
+    public const NAME = 'MEDIAWIKI_SWITCH_TO_123';
 
-    const ALL = 'all';
+    public const ALL = 'all';
 
     /** @var Mediawiki_Migration_MediawikiMigrator **/
     private $mediawiki_migrator;

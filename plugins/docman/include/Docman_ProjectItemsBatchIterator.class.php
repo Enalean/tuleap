@@ -20,7 +20,7 @@
 
 class Docman_ProjectItemsBatchIterator {
 
-    const ITEMS_PER_BATCH = 1000;
+    public const ITEMS_PER_BATCH = 1000;
 
     private $batches_processed;
 

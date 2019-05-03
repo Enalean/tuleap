@@ -41,8 +41,8 @@ use Tuleap\TroveCat\TroveCatLinkDao;
 
 class ProjectDashboardController
 {
-    const DASHBOARD_TYPE = 'project';
-    const LEGACY_DASHBOARD_TYPE = 'g';
+    public const DASHBOARD_TYPE = 'project';
+    public const LEGACY_DASHBOARD_TYPE = 'g';
 
     /**
      * @var CSRFSynchronizerToken

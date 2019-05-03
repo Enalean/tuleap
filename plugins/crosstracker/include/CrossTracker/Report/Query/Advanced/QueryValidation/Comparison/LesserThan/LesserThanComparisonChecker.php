@@ -24,5 +24,5 @@ use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\Greater
 
 class LesserThanComparisonChecker extends GreaterOrLesserThanComparisonChecker
 {
-    const OPERATOR = '<';
+    public const OPERATOR = '<';
 }

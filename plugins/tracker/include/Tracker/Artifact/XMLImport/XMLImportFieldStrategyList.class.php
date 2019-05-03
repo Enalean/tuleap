@@ -20,9 +20,9 @@
 
 class Tracker_Artifact_XMLImport_XMLImportFieldStrategyList extends Tracker_Artifact_XMLImport_XMLImportFieldStrategyAlphanumeric {
 
-    const BIND_STATIC  = 'static';
-    const BIND_UGROUPS = 'ugroups';
-    const FORMAT_ID    = 'id';
+    public const BIND_STATIC  = 'static';
+    public const BIND_UGROUPS = 'ugroups';
+    public const FORMAT_ID    = 'id';
 
     /** @var Tracker_FormElement_Field_List_Bind_Static_ValueDao */
     private $static_value_dao;

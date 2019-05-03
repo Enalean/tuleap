@@ -28,7 +28,7 @@ use Tuleap\CLI\ConsoleLogger;
 
 class ClearCachesCommand extends Command
 {
-    const NAME = '-c, --clear-caches';
+    public const NAME = '-c, --clear-caches';
 
     protected function configure()
     {

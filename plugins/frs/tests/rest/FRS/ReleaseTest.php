@@ -25,7 +25,7 @@ use RestBase;
 
 class ReleaseTest extends RestBase
 {
-    const PROJECT_NAME = 'frs-test';
+    public const PROJECT_NAME = 'frs-test';
 
     private $project_id;
 

@@ -25,7 +25,7 @@ use Tuleap\Event\Dispatchable;
 
 class AdditionalPlanningConfigurationWarningsRetriever implements Dispatchable
 {
-    const NAME = 'additionalPlanningConfigurationWarningsRetriever';
+    public const NAME = 'additionalPlanningConfigurationWarningsRetriever';
 
     /**
      * @var string[]

@@ -46,7 +46,7 @@ use URLVerification;
 
 class CSVExportController implements DispatchableWithRequest
 {
-    const MAX_LIMIT = 50;
+    public const MAX_LIMIT = 50;
     /**
      * @var CrossTrackerReportFactory
      */

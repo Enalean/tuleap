@@ -22,10 +22,10 @@ namespace Tuleap\SvnCore\Cache;
 
 class ParameterRetriever
 {
-    const MAXIMUM_CREDENTIALS         = 'maximum_credentials';
-    const LIFETIME                    = 'lifetime';
-    const MAXIMUM_CREDENTIALS_DEFAULT = 10;
-    const LIFETIME_DEFAULT            = 5;
+    public const MAXIMUM_CREDENTIALS         = 'maximum_credentials';
+    public const LIFETIME                    = 'lifetime';
+    public const MAXIMUM_CREDENTIALS_DEFAULT = 10;
+    public const LIFETIME_DEFAULT            = 5;
 
     /**
      * @var ParameterDao

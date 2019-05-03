@@ -25,8 +25,8 @@ require_once __DIR__ . '/../bootstrap.php';
 class RepositoryTestNonRegressionTest extends TestBase
 {
 
-    const TULEAP_MAGIC_GROUP_ID_ANONYMOUS = 1;
-    const TULEAP_MAGIC_GROUP_ID_MEMBERS   = 3;
+    public const TULEAP_MAGIC_GROUP_ID_ANONYMOUS = 1;
+    public const TULEAP_MAGIC_GROUP_ID_MEMBERS   = 3;
 
     public function testPOSTRepositoryWithMissingKey()
     {

@@ -26,11 +26,11 @@ use Tuleap\Configuration\Apache\LogrotateDeployer;
 
 class DistributedSVN
 {
-    const OPT_REVERSE_PROXY = 'reverse-proxy';
-    const OPT_BACKEND_SVN   = 'backend-svn';
+    public const OPT_REVERSE_PROXY = 'reverse-proxy';
+    public const OPT_BACKEND_SVN   = 'backend-svn';
 
-    const PID_ONE_SYSTEMD     = 'systemd';
-    const PID_ONE_SUPERVISORD = 'supervisord';
+    public const PID_ONE_SYSTEMD     = 'systemd';
+    public const PID_ONE_SUPERVISORD = 'supervisord';
 
     /**
      * @var Configuration\Logger\Console

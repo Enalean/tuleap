@@ -25,8 +25,8 @@ use Tuleap\Configuration\Logger\Wrapper;
 
 class TuleapWeb
 {
-    const SSL_CERT_KEY_PATH  = '/etc/pki/tls/private/localhost.key.pem';
-    const SSL_CERT_CERT_PATH = '/etc/pki/tls/certs/localhost.cert.pem';
+    public const SSL_CERT_KEY_PATH  = '/etc/pki/tls/private/localhost.key.pem';
+    public const SSL_CERT_CERT_PATH = '/etc/pki/tls/certs/localhost.cert.pem';
 
     /**
      * @var LoggerInterface

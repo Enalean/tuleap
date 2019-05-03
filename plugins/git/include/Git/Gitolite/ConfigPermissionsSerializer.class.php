@@ -36,8 +36,8 @@ class Git_Gitolite_ConfigPermissionsSerializer {
      */
     private $fine_grained_retriever;
 
-    const TEMPLATES_PATH    = 'gitolite';
-    const REMOVE_PERMISSION = ' - ';
+    public const TEMPLATES_PATH    = 'gitolite';
+    public const REMOVE_PERMISSION = ' - ';
 
     /**
      * @var TemplateRenderer

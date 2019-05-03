@@ -25,7 +25,7 @@ use RestBase;
 
 class AccessKeyTest extends RestBase
 {
-    const DESCRIPTION_ACCESS_KEY = 'test_key';
+    public const DESCRIPTION_ACCESS_KEY = 'test_key';
 
     public function testOptions(): void
     {

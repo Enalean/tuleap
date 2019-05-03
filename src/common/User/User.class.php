@@ -32,67 +32,67 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
     /**
      * The user is active
      */
-    const STATUS_ACTIVE     = 'A';
+    public const STATUS_ACTIVE     = 'A';
 
     /**
      * The user is restricted
      */
-    const STATUS_RESTRICTED = 'R';
+    public const STATUS_RESTRICTED = 'R';
 
     /**
      * The user is pending
      */
-    const STATUS_PENDING    = 'P';
+    public const STATUS_PENDING    = 'P';
 
     /**
      * The user is suspended
      */
-    const STATUS_SUSPENDED  = 'S';
+    public const STATUS_SUSPENDED  = 'S';
 
     /**
      * The user is deleted
      */
-    const STATUS_DELETED    = 'D';
+    public const STATUS_DELETED    = 'D';
 
     /**
      * Site admin validated the account as active
      */
-    const STATUS_VALIDATED = 'V';
+    public const STATUS_VALIDATED = 'V';
 
     /**
      * Site admin validated the account as restricted
      */
-    const STATUS_VALIDATED_RESTRICTED = 'W';
+    public const STATUS_VALIDATED_RESTRICTED = 'W';
 
     /**
      * Name of the preference for lab features
      */
-    const PREF_NAME_LAB_FEATURE = 'use_lab_features';
+    public const PREF_NAME_LAB_FEATURE = 'use_lab_features';
 
     /**
      * Should we disable the ie7 warning?
      */
-    const PREFERENCE_DISABLE_IE7_WARNING = 'disable_ie7_warning';
-    const PREFERENCE_DISPLAY_DENSITY     = 'display_density';
-    const DISPLAY_DENSITY_CONDENSED      = 'condensed';
+    public const PREFERENCE_DISABLE_IE7_WARNING = 'disable_ie7_warning';
+    public const PREFERENCE_DISPLAY_DENSITY     = 'display_density';
+    public const DISPLAY_DENSITY_CONDENSED      = 'condensed';
 
     /**
      * Seperator for ssh key concatenation
      */
-    const SSH_KEY_SEPARATOR = '###';
+    public const SSH_KEY_SEPARATOR = '###';
 
     /**
      * Default avatar url
      */
-    const DEFAULT_AVATAR_URL = '/themes/common/images/avatar_default.png';
+    public const DEFAULT_AVATAR_URL = '/themes/common/images/avatar_default.png';
 
-    const DEFAULT_CSV_SEPARATOR = ',';
+    public const DEFAULT_CSV_SEPARATOR = ',';
 
-    const DEFAULT_CSV_DATEFORMAT = 'month_day_year';
+    public const DEFAULT_CSV_DATEFORMAT = 'month_day_year';
 
-    const EDITION_DEFAULT_FORMAT = 'user_edition_default_format';
+    public const EDITION_DEFAULT_FORMAT = 'user_edition_default_format';
 
-    const ACCESSIBILITY_MODE = 'accessibility_mode';
+    public const ACCESSIBILITY_MODE = 'accessibility_mode';
 
     /**
      * @var array of allowed separators for CSV export

@@ -44,7 +44,7 @@ require_once('common/html/HTML_Element_Selectbox_Rank.class.php');
  */
 abstract class GraphOnTrackersV5_Chart implements Visitable
 {
-    const MARKER_BEGINNING_OUTPUT_FETCH = '💩';
+    public const MARKER_BEGINNING_OUTPUT_FETCH = '💩';
 
     public $id;
     protected $rank;

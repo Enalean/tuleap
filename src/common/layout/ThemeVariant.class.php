@@ -20,7 +20,7 @@
 
 class ThemeVariant {
 
-    const PREFERENCE_NAME = 'theme_variant';
+    public const PREFERENCE_NAME = 'theme_variant';
 
     /** @var string */
     private $default;

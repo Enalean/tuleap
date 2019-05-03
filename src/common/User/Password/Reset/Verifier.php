@@ -28,7 +28,7 @@ use UserManager;
 
 class Verifier
 {
-    const TOKEN_VALIDITY_PERIOD = 'PT1H';
+    public const TOKEN_VALIDITY_PERIOD = 'PT1H';
 
     /**
      * @var DataAccessObject

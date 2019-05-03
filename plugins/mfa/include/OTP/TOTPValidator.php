@@ -22,7 +22,7 @@ namespace Tuleap\MFA\OTP;
 
 class TOTPValidator
 {
-    const OUT_OF_SYNC_ACCEPTED_STEPS = 1;
+    public const OUT_OF_SYNC_ACCEPTED_STEPS = 1;
 
     /**
      * @return bool

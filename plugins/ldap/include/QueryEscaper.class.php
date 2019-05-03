@@ -23,8 +23,8 @@
  *
  */
 class LdapQueryEscaper {
-    const LDAP_ESCAPE_FILTER = 1;
-    const LDAP_ESCAPE_DN     = 2;
+    public const LDAP_ESCAPE_FILTER = 1;
+    public const LDAP_ESCAPE_DN     = 2;
 
     /**
      * Escape strings for safe use in an LDAP filter or DN

@@ -26,7 +26,7 @@ use WikiPageVersion;
 
 class PhpWikiPageVersionRepresentation {
 
-    const ROUTE = 'versions';
+    public const ROUTE = 'versions';
 
     /**
      * @var int {@type int}

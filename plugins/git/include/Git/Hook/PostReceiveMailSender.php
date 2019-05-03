@@ -34,11 +34,11 @@ use Notification;
 
 class PostReceiveMailSender
 {
-    const DEFAULT_MAIL_SUBJECT = 'Git notification';
-    const DEFAULT_FROM         = 'git';
+    public const DEFAULT_MAIL_SUBJECT = 'Git notification';
+    public const DEFAULT_FROM         = 'git';
 
-    const TIMEOUT_EXIT_CODE    = 124;
-    const INITIAL_COMMIT       = '0000000000000000000000000000000000000000';
+    public const TIMEOUT_EXIT_CODE    = 124;
+    public const INITIAL_COMMIT       = '0000000000000000000000000000000000000000';
 
     /**
      * @var Git_GitRepositoryUrlManager

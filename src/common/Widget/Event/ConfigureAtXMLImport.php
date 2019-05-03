@@ -26,7 +26,7 @@ use Tuleap\XML\MappingsRegistry;
 
 class ConfigureAtXMLImport implements Dispatchable
 {
-    const NAME = 'configureAtXMLImport';
+    public const NAME = 'configureAtXMLImport';
     /**
      * @var \Widget
      */

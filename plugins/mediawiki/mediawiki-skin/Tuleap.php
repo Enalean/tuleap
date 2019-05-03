@@ -20,7 +20,7 @@ if( !defined( 'MEDIAWIKI' ) )
  */
 class SkinTuleap extends SkinTemplate {
 
-    CONST MEDIAWIKI_URL = '/\/plugins\/mediawiki\/wiki\/(.*)\/index.php\//';
+    public CONST MEDIAWIKI_URL = '/\/plugins\/mediawiki\/wiki\/(.*)\/index.php\//';
 
     /** Using fusionforge. */
     var $skinname = 'tuleap', $stylename = 'tuleap',

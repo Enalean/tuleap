@@ -25,7 +25,7 @@ use Tuleap\Layout\BaseLayout;
 
 class ChangePasswordController
 {
-    const URL = '/account/change_email.php';
+    public const URL = '/account/change_email.php';
 
     /**
      * @var \UserManager

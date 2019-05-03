@@ -31,15 +31,15 @@ use User\XML\Import\IFindUserFromXMLReference;
 class GitXmlImporter
 {
 
-    const READ_TAG         = 'read';
-    const WRITE_TAG        = 'write';
-    const WPLUS_TAG        = 'wplus';
-    const UGROUP_TAG       = 'ugroup';
-    const FINE_GRAINED_TAG = 'fine_grained';
-    const TAG_PATTERN      = 'tag';
-    const BRANCH_PATTERN   = 'branch';
+    public const READ_TAG         = 'read';
+    public const WRITE_TAG        = 'write';
+    public const WPLUS_TAG        = 'wplus';
+    public const UGROUP_TAG       = 'ugroup';
+    public const FINE_GRAINED_TAG = 'fine_grained';
+    public const TAG_PATTERN      = 'tag';
+    public const BRANCH_PATTERN   = 'branch';
 
-    const SERVICE_NAME = 'git';
+    public const SERVICE_NAME = 'git';
 
     /**
      * @var Logger

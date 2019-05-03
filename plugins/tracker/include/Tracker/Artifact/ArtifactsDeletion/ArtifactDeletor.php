@@ -27,7 +27,7 @@ use Tracker_ArtifactDao;
 
 class ArtifactDeletor
 {
-    const PROJECT_HISTORY_ARTIFACT_DELETED = 'tracker_artifact_delete';
+    public const PROJECT_HISTORY_ARTIFACT_DELETED = 'tracker_artifact_delete';
 
     /**
      * @var Tracker_ArtifactDao

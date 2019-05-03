@@ -25,7 +25,7 @@ class Git_Mirror_MirrorSystemEventQueue extends SystemEventQueue {
      */
     private $logger;
 
-    const NAME = 'grokmirror';
+    public const NAME = 'grokmirror';
 
     public function __construct(Logger $logger) {
         $this->logger = $logger;

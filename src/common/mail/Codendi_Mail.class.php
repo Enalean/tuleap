@@ -37,12 +37,12 @@ class Codendi_Mail implements Codendi_Mail_Interface {
      *
      * The common look and feel is the pretty one you can see in trackers v3
      */
-    const USE_COMMON_LOOK_AND_FEEL = true;
+    public const USE_COMMON_LOOK_AND_FEEL = true;
 
     /**
      * @const DO NOT use the common look and feel
      */
-    const DISCARD_COMMON_LOOK_AND_FEEL = false;
+    public const DISCARD_COMMON_LOOK_AND_FEEL = false;
     /**
      * @var BackendLogger
      */

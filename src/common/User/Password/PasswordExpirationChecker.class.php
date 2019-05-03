@@ -18,7 +18,7 @@
  */
 
 class User_PasswordExpirationChecker {
-    const DAYS_FOR_EXPIRATION_WARN = 10;
+    public const DAYS_FOR_EXPIRATION_WARN = 10;
 
     /**
      *

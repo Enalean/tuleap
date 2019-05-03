@@ -25,7 +25,7 @@ require_once('common/system_event/SystemEvent.class.php');
 
 class SystemEvent_GIT_GERRIT_PROJECT_DELETE extends SystemEvent
 {
-    const NAME = 'GIT_GERRIT_PROJECT_DELETE';
+    public const NAME = 'GIT_GERRIT_PROJECT_DELETE';
 
     /**
      * @var GitRepositoryFactory

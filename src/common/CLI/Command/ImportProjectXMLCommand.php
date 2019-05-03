@@ -69,7 +69,7 @@ use Symfony\Component\Console\Exception\InvalidArgumentException;
 class ImportProjectXMLCommand extends Command
 {
 
-    const AUTHORIZED_CONFIGURATION_AUTOMAP =
+    public const AUTHORIZED_CONFIGURATION_AUTOMAP =
         [
             "no-email"
         ];

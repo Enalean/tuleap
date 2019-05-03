@@ -34,7 +34,7 @@ class NaturePresenterFactory
      * Parameters:
      *  - natures: List of existing natures
      */
-    const EVENT_GET_ARTIFACTLINK_NATURES = 'event_get_artifactlink_natures';
+    public const EVENT_GET_ARTIFACTLINK_NATURES = 'event_get_artifactlink_natures';
 
     /**
      * Return presneter from nature shortname
@@ -42,7 +42,7 @@ class NaturePresenterFactory
      * Parameters:
      *  - nature: input nature shortname
      */
-    const EVENT_GET_NATURE_PRESENTER = 'event_get_nature_presenter';
+    public const EVENT_GET_NATURE_PRESENTER = 'event_get_nature_presenter';
 
     /**
      * @var NatureDao

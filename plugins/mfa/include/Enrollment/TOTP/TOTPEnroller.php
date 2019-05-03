@@ -30,8 +30,8 @@ use Tuleap\MFA\OTP\TOTPValidator;
 
 class TOTPEnroller
 {
-    const SESSION_KEY = 'plugin_mfa_enrollment_totp_secret';
-    const SECRET_SIZE = 32;
+    public const SESSION_KEY = 'plugin_mfa_enrollment_totp_secret';
+    public const SECRET_SIZE = 32;
 
     /**
      * @var TOTPEnrollmentDAO

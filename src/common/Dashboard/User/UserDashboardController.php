@@ -37,8 +37,8 @@ use Tuleap\Dashboard\Widget\OwnerInfo;
 
 class UserDashboardController
 {
-    const DASHBOARD_TYPE        = 'user';
-    const LEGACY_DASHBOARD_TYPE = 'u';
+    public const DASHBOARD_TYPE        = 'user';
+    public const LEGACY_DASHBOARD_TYPE = 'u';
 
     /**
      * @var CSRFSynchronizerToken

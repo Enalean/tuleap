@@ -24,10 +24,10 @@
  */
 class UserHelper {
 
-    const PREFERENCES_NAME_AND_LOGIN = 0;
-    const PREFERENCES_LOGIN_AND_NAME = 1;
-    const PREFERENCES_LOGIN = 2;
-    const PREFERENCES_REAL_NAME = 3;
+    public const PREFERENCES_NAME_AND_LOGIN = 0;
+    public const PREFERENCES_LOGIN_AND_NAME = 1;
+    public const PREFERENCES_LOGIN = 2;
+    public const PREFERENCES_REAL_NAME = 3;
 
     var $_username_display;
     var $_cache_by_id;

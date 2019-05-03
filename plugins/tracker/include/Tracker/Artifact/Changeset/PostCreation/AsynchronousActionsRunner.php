@@ -26,7 +26,7 @@ use Tuleap\Queue\WorkerEvent;
 
 class AsynchronousActionsRunner
 {
-    const TOPIC = 'tuleap.tracker.artifact';
+    public const TOPIC = 'tuleap.tracker.artifact';
 
     /**
      * @var ActionsRunner

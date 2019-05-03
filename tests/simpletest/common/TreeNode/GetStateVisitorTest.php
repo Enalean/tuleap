@@ -21,10 +21,10 @@ require_once 'common/TreeNode/GetStateVisitor.class.php';
 
 class TreeNode_GetStateVisitorVisitorTest extends TuleapTestCase {
     
-    const STATE_NODE  = TreeNode_GetStateVisitor::STATE_NODE;
-    const STATE_LAST  = TreeNode_GetStateVisitor::STATE_LAST;
-    const STATE_BLANK = TreeNode_GetStateVisitor::STATE_BLANK;
-    const STATE_PIPE  = TreeNode_GetStateVisitor::STATE_PIPE;
+    public const STATE_NODE  = TreeNode_GetStateVisitor::STATE_NODE;
+    public const STATE_LAST  = TreeNode_GetStateVisitor::STATE_LAST;
+    public const STATE_BLANK = TreeNode_GetStateVisitor::STATE_BLANK;
+    public const STATE_PIPE  = TreeNode_GetStateVisitor::STATE_PIPE;
     
     public function testOneNodeShouldHaveStateLast() {
         $root    = new TreeNode();

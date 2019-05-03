@@ -19,7 +19,7 @@
  */
 
 class SystemEvent_GIT_DELETE_MIRROR extends SystemEvent {
-    const NAME = 'GIT_DELETE_MIRROR';
+    public const NAME = 'GIT_DELETE_MIRROR';
 
     /** @var Git_GitoliteDriver */
     private $gitolite_driver;

@@ -32,7 +32,7 @@ use Tuleap\Svn\SVNRepositoryLayoutInitializationException;
 
 class SystemEvent_SVN_CREATE_REPOSITORY extends SystemEvent //phpcs:ignore
 {
-    const NAME = 'SystemEvent_SVN_CREATE_REPOSITORY';
+    public const NAME = 'SystemEvent_SVN_CREATE_REPOSITORY';
 
     /**
      * @var RepositoryCopier

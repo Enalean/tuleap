@@ -26,7 +26,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperParameters;
 
 class NotInComparisonChecker extends ComparisonChecker
 {
-    const OPERATOR = 'NOT IN()';
+    public const OPERATOR = 'NOT IN()';
 
     public function visitInValueWrapper(
         InValueWrapper $value_wrapper,

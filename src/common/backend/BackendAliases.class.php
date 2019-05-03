@@ -21,7 +21,7 @@
 
 class BackendAliases extends Backend {
 
-    const ALIAS_ENTRY_FORMAT = "%-50s%-10s";
+    public const ALIAS_ENTRY_FORMAT = "%-50s%-10s";
 
     protected $need_update=false;   
     protected $mailinglistdao = null;

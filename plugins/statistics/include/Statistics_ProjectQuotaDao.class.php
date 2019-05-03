@@ -23,11 +23,11 @@
 class Statistics_ProjectQuotaDao extends DataAccessObject {
 
     protected $tableName       = 'plugin_statistics_disk_quota_exception';
-    const GROUP_ID             = 'group_id'; //PK
-    const REQUESTER_ID         = 'requester_id';
-    const REQUEST_SIZE         = 'requested_size';
-    const EXCEPTION_MOTIVATION = 'exception_motivation';
-    const REQUEST_DATE         = 'request_date';
+    public const GROUP_ID             = 'group_id'; //PK
+    public const REQUESTER_ID         = 'requester_id';
+    public const REQUEST_SIZE         = 'requested_size';
+    public const EXCEPTION_MOTIVATION = 'exception_motivation';
+    public const REQUEST_DATE         = 'request_date';
 
     /**
      * Get the dao table name

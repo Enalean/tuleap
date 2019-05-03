@@ -21,10 +21,10 @@
 
 class ProjectDao extends DataAccessObject {
 
-    const TABLE_NAME       = 'groups';
-    const GROUP_ID         = 'group_id';
-    const STATUS           = 'status';
-    const UNIX_GROUP_NAME  = 'unix_group_name';
+    public const TABLE_NAME       = 'groups';
+    public const GROUP_ID         = 'group_id';
+    public const STATUS           = 'status';
+    public const UNIX_GROUP_NAME  = 'unix_group_name';
 
     public function __construct($da = null) {
         parent::__construct($da);

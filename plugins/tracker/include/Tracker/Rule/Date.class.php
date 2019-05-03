@@ -27,12 +27,12 @@
  */
 class Tracker_Rule_Date extends Tracker_Rule {
 
-    const COMPARATOR_EQUALS                 = '=';
-    const COMPARATOR_NOT_EQUALS             = '≠';
-    const COMPARATOR_LESS_THAN              = '<';
-    const COMPARATOR_LESS_THAN_OR_EQUALS    = '≤';
-    const COMPARATOR_GREATER_THAN           = '>';
-    const COMPARATOR_GREATER_THAN_OR_EQUALS = '≥';
+    public const COMPARATOR_EQUALS                 = '=';
+    public const COMPARATOR_NOT_EQUALS             = '≠';
+    public const COMPARATOR_LESS_THAN              = '<';
+    public const COMPARATOR_LESS_THAN_OR_EQUALS    = '≤';
+    public const COMPARATOR_GREATER_THAN           = '>';
+    public const COMPARATOR_GREATER_THAN_OR_EQUALS = '≥';
 
     public static $allowed_comparators = array(
         self::COMPARATOR_LESS_THAN,

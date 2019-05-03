@@ -22,7 +22,7 @@
  * Description of SystemEvent_GIT_REPO_DELETE
  */
 class SystemEvent_GIT_REPO_RESTORE extends SystemEvent {
-    const NAME = 'GIT_REPO_RESTORE';
+    public const NAME = 'GIT_REPO_RESTORE';
 
     /** @var GitRepositoryFactory */
     private $repository_factory;

@@ -34,7 +34,7 @@ use Tuleap\Request\NotFoundException;
 
 class IndexController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
-    const PANE_SHORTNAME = 'project_ownership';
+    public const PANE_SHORTNAME = 'project_ownership';
     /** @var \TemplateRenderer */
     private $template_renderer;
     /** @var \ProjectManager */

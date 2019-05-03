@@ -23,7 +23,7 @@ use Tuleap\Tracker\Workflow\WorkflowBackendLogger;
 
 class TrackerFactory {
 
-    const LEGACY_SUFFIX = '_from_tv3';
+    public const LEGACY_SUFFIX = '_from_tv3';
 
     /** @var array of Tracker */
     protected $trackers;

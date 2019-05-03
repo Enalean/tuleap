@@ -99,23 +99,23 @@ use XML_SimpleXMLCDATAFactory;
 use XMLImportHelper;
 
 class ArtifactsResource extends AuthenticatedResource {
-    const MAX_LIMIT          = 50;
-    const DEFAULT_LIMIT      = 10;
-    const DEFAULT_OFFSET     = 0;
-    const MAX_ARTIFACT_BATCH = 100;
-    const ORDER_ASC          = 'asc';
-    const ORDER_DESC         = 'desc';
+    public const MAX_LIMIT          = 50;
+    public const DEFAULT_LIMIT      = 10;
+    public const DEFAULT_OFFSET     = 0;
+    public const MAX_ARTIFACT_BATCH = 100;
+    public const ORDER_ASC          = 'asc';
+    public const ORDER_DESC         = 'desc';
 
-    const VALUES_FORMAT_COLLECTION  = 'collection';
-    const VALUES_FORMAT_BY_FIELD    = 'by_field';
-    const VALUES_FORMAT_ALL         = 'all';
-    const VALUES_DEFAULT            = null;
+    public const VALUES_FORMAT_COLLECTION  = 'collection';
+    public const VALUES_FORMAT_BY_FIELD    = 'by_field';
+    public const VALUES_FORMAT_ALL         = 'all';
+    public const VALUES_DEFAULT            = null;
 
-    const DEFAULT_TRACKER_STRUCTURE  = self::MINIMAL_TRACKER_STRUCTURE;
-    const MINIMAL_TRACKER_STRUCTURE  = 'minimal';
-    const COMPLETE_TRACKER_STRUCTURE = 'complete';
+    public const DEFAULT_TRACKER_STRUCTURE  = self::MINIMAL_TRACKER_STRUCTURE;
+    public const MINIMAL_TRACKER_STRUCTURE  = 'minimal';
+    public const COMPLETE_TRACKER_STRUCTURE = 'complete';
 
-    const EMPTY_TYPE = '';
+    public const EMPTY_TYPE = '';
     /**
      * @var PostMoveArticfactRESTAction
      */

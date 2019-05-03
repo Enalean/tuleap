@@ -42,7 +42,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     /**
      * Request parameter to display burndown image
      */
-    const FUNC_SHOW_BURNDOWN          = 'show_burndown';
+    public const FUNC_SHOW_BURNDOWN          = 'show_burndown';
 
     /**
      * @var Tracker_HierarchyFactory

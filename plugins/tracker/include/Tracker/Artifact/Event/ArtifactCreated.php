@@ -25,7 +25,7 @@ use Tuleap\Event\Dispatchable;
 
 class ArtifactCreated implements Dispatchable
 {
-    const NAME = 'trackerArtifactCreated';
+    public const NAME = 'trackerArtifactCreated';
     /**
      * @var Tracker_Artifact
      */

@@ -24,8 +24,8 @@ use TuleapTestCase;
 
 class SessionManagerTest extends TuleapTestCase
 {
-    const SESSION_LIFETIME_2_WEEKS = 1209600;
-    const CURRENT_TIME             = 1481202269;
+    public const SESSION_LIFETIME_2_WEEKS = 1209600;
+    public const CURRENT_TIME             = 1481202269;
 
     /**
      * @var \UserManager

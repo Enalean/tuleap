@@ -25,7 +25,7 @@ use Gumlet\ImageResizeException;
 
 class UserAvatarSaver
 {
-    const AVATAR_MAX_SIZE = 100;
+    public const AVATAR_MAX_SIZE = 100;
 
     /**
      * @var \UserManager

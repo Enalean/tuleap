@@ -23,7 +23,7 @@ namespace Tuleap\Project;
 
 class ServiceInstrumentation
 {
-    const METRIC_NAME = 'project_service_access_total';
+    public const METRIC_NAME = 'project_service_access_total';
 
     public static function increment($service)
     {

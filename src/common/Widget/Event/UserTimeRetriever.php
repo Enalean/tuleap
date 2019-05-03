@@ -25,9 +25,9 @@ use Tuleap\Timetracking\REST\v1\TimetrackingRepresentation;
 
 class UserTimeRetriever implements Dispatchable
 {
-    const NAME            = 'userTimeRetriever';
-    const MAX_TIMES_BATCH = 100;
-    const DEFAULT_OFFSET  = 0;
+    public const NAME            = 'userTimeRetriever';
+    public const MAX_TIMES_BATCH = 100;
+    public const DEFAULT_OFFSET  = 0;
 
     /**
      * @var int

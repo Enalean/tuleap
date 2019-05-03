@@ -22,17 +22,17 @@ interface Codendi_Mail_Interface {
     /**
      * User preference that stores the mail format
      */
-    const PREF_FORMAT = 'user_tracker_mailformat';
+    public const PREF_FORMAT = 'user_tracker_mailformat';
     
     /**
      * Send message in HTML
      */
-    const FORMAT_HTML = 'html';
+    public const FORMAT_HTML = 'html';
     
     /**
      * Send message in Text
      */
-    const FORMAT_TEXT = 'text';
+    public const FORMAT_TEXT = 'text';
     
     public function send();
 

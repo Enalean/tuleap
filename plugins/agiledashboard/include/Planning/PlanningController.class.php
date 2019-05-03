@@ -53,10 +53,10 @@ use Tuleap\Widget\WidgetFactory;
  */
 class Planning_Controller extends BaseController
 {
-    const AGILE_DASHBOARD_TEMPLATE_NAME = 'agile_dashboard_template.xml';
-    const PAST_PERIOD   = 'past';
-    const FUTURE_PERIOD = 'future';
-    const NUMBER_PAST_MILESTONES_SHOWN = 10;
+    public const AGILE_DASHBOARD_TEMPLATE_NAME = 'agile_dashboard_template.xml';
+    public const PAST_PERIOD   = 'past';
+    public const FUTURE_PERIOD = 'future';
+    public const NUMBER_PAST_MILESTONES_SHOWN = 10;
 
     /** @var PlanningFactory */
     private $planning_factory;

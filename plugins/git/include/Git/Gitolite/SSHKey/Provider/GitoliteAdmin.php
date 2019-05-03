@@ -25,10 +25,10 @@ use Tuleap\Git\Gitolite\SSHKey\Key;
 
 class GitoliteAdmin extends ArrayIterator implements IProvideKey
 {
-    const GITOLITE_ADMIN_KEY_NAME = 'id_rsa_gl-adm';
-    const GITOLITE_ADMIN_KEY_FILE = 'id_rsa_gl-adm.pub';
-    const EL6_HOME                = '/home/codendiadm';
-    const EL7_HOME                = '/var/lib/tuleap';
+    public const GITOLITE_ADMIN_KEY_NAME = 'id_rsa_gl-adm';
+    public const GITOLITE_ADMIN_KEY_FILE = 'id_rsa_gl-adm.pub';
+    public const EL6_HOME                = '/home/codendiadm';
+    public const EL7_HOME                = '/var/lib/tuleap';
 
     public function __construct()
     {

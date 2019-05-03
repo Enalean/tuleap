@@ -23,17 +23,17 @@
  */
 class Project_OneStepCreation_OneStepCreationPresenter {
 
-    const DEFAULT_TEMPLATE_ID = 100;
+    public const DEFAULT_TEMPLATE_ID = 100;
 
-    const FULL_NAME                       = 'form_full_name';
-    const UNIX_NAME                       = 'form_unix_name';
-    const IS_PUBLIC                       = 'is_public';
-    const USER_CAN_CHOOSE_PROJECT_PRIVACY = 'user_can_choose_project_privacy';
-    const TEMPLATE_ID                     = 'built_from_template';
-    const SHORT_DESCRIPTION               = 'form_short_description';
-    const TOS_APPROVAL                    = 'form_terms_of_services_approval';
-    const PROJECT_DESCRIPTION_PREFIX      = 'form_';
-    const TROVE_CAT_PREFIX                = 'trove';
+    public const FULL_NAME                       = 'form_full_name';
+    public const UNIX_NAME                       = 'form_unix_name';
+    public const IS_PUBLIC                       = 'is_public';
+    public const USER_CAN_CHOOSE_PROJECT_PRIVACY = 'user_can_choose_project_privacy';
+    public const TEMPLATE_ID                     = 'built_from_template';
+    public const SHORT_DESCRIPTION               = 'form_short_description';
+    public const TOS_APPROVAL                    = 'form_terms_of_services_approval';
+    public const PROJECT_DESCRIPTION_PREFIX      = 'form_';
+    public const TROVE_CAT_PREFIX                = 'trove';
 
     public $full_name_label                        = self::FULL_NAME;
     public $unix_name_label                        = self::UNIX_NAME;

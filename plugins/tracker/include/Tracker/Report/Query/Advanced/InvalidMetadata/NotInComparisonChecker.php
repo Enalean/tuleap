@@ -25,7 +25,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 
 class NotInComparisonChecker implements ICheckMetadataForAComparison
 {
-    const OPERATOR = 'not in()';
+    public const OPERATOR = 'not in()';
 
     public function checkMetaDataIsValid(Metadata $metadata, Comparison $comparison)
     {

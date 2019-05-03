@@ -31,7 +31,7 @@ use Project;
 class TemplatePermissionsUpdater
 {
 
-    const REQUEST_KEY = 'default_access_rights';
+    public const REQUEST_KEY = 'default_access_rights';
 
     /**
      * @var PermissionChangesDetector

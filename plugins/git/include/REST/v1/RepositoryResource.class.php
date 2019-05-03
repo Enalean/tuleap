@@ -100,10 +100,10 @@ include_once('www/project/admin/permissions.php');
 
 class RepositoryResource extends AuthenticatedResource
 {
-    const MAX_LIMIT = 50;
+    public const MAX_LIMIT = 50;
 
-    const MIGRATE_PERMISSION_DEFAULT = 'default';
-    const MIGRATE_NO_PERMISSION      = 'none';
+    public const MIGRATE_PERMISSION_DEFAULT = 'default';
+    public const MIGRATE_NO_PERMISSION      = 'none';
     /**
      * @var RepositoryCreator
      */

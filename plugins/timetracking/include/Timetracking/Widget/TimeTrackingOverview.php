@@ -30,7 +30,7 @@ use Widget;
 
 class TimeTrackingOverview extends Widget
 {
-    const NAME = 'timetracking-overview';
+    public const NAME = 'timetracking-overview';
 
     public function __construct()
     {

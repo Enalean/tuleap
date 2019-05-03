@@ -30,7 +30,7 @@ use Valid_UInt;
 
 class TrackerReportConfigController
 {
-    const EXPERT_QUERY_LIMIT_MAX = 80;
+    public const EXPERT_QUERY_LIMIT_MAX = 80;
 
     /**
      * @var TrackerReportConfig

@@ -35,8 +35,8 @@ use Project;
 use Zend\HttpHandlerRunner\Emitter\SapiStreamEmitter;
 
 class ExplorerController {
-    const NAME = 'explorer';
-    const TRANSFERT_BUFFER_SIZE = 8192;
+    public const NAME = 'explorer';
+    public const TRANSFERT_BUFFER_SIZE = 8192;
 
     /** @var DirectoryParser */
     private $parser;

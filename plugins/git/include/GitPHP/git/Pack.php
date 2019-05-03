@@ -30,12 +30,12 @@ namespace Tuleap\Git\GitPHP;
 class Pack
 {
 
-    const OBJ_COMMIT = 1;
-    const OBJ_TREE = 2;
-    const OBJ_BLOB = 3;
-    const OBJ_TAG = 4;
-    const OBJ_OFS_DELTA = 6;
-    const OBJ_REF_DELTA = 7;
+    public const OBJ_COMMIT = 1;
+    public const OBJ_TREE = 2;
+    public const OBJ_BLOB = 3;
+    public const OBJ_TAG = 4;
+    public const OBJ_OFS_DELTA = 6;
+    public const OBJ_REF_DELTA = 7;
 
     /**
      * @var Project

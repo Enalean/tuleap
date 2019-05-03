@@ -24,7 +24,7 @@ use Mediawiki_Migration_MediawikiMigrator;
 
 class MediawikiMathExtensionEnabler
 {
-    const PLUGIN_MAIN_HOOK_FILE = '/extensions/Math/Math.php';
+    public const PLUGIN_MAIN_HOOK_FILE = '/extensions/Math/Math.php';
 
     /**
      * @var MediawikiExtensionDAO

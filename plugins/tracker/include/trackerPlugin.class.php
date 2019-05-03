@@ -123,11 +123,11 @@ require_once __DIR__ . '/../include/manual_autoload.php';
  */
 class trackerPlugin extends Plugin {
 
-    const EMAILGATEWAY_TOKEN_ARTIFACT_UPDATE      = 'forge__artifacts';
-    const EMAILGATEWAY_INSECURE_ARTIFACT_CREATION = 'forge__tracker';
-    const EMAILGATEWAY_INSECURE_ARTIFACT_UPDATE   = 'forge__artifact';
-    const SERVICE_SHORTNAME                       = 'plugin_tracker';
-    const TRUNCATED_SERVICE_NAME                  = 'Trackers';
+    public const EMAILGATEWAY_TOKEN_ARTIFACT_UPDATE      = 'forge__artifacts';
+    public const EMAILGATEWAY_INSECURE_ARTIFACT_CREATION = 'forge__tracker';
+    public const EMAILGATEWAY_INSECURE_ARTIFACT_UPDATE   = 'forge__artifact';
+    public const SERVICE_SHORTNAME                       = 'plugin_tracker';
+    public const TRUNCATED_SERVICE_NAME                  = 'Trackers';
 
     public function __construct($id) {
         parent::__construct($id);

@@ -35,9 +35,9 @@ use UserManager;
 
 class PackageResource extends AuthenticatedResource
 {
-    const MAX_LIMIT      = 50;
-    const DEFAULT_LIMIT  = 10;
-    const DEFAULT_OFFSET = 0;
+    public const MAX_LIMIT      = 50;
+    public const DEFAULT_LIMIT  = 10;
+    public const DEFAULT_OFFSET = 0;
 
     private $uploaded_link_retriever;
     private $package_factory;

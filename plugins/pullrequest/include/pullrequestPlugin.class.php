@@ -91,9 +91,9 @@ use Tuleap\Request\CollectRoutesEvent;
 class pullrequestPlugin extends Plugin // phpcs:ignore
 {
 
-    const PR_REFERENCE_KEYWORD          = 'pr';
-    const PULLREQUEST_REFERENCE_KEYWORD = 'pullrequest';
-    const REFERENCE_NATURE              = 'pullrequest';
+    public const PR_REFERENCE_KEYWORD          = 'pr';
+    public const PULLREQUEST_REFERENCE_KEYWORD = 'pullrequest';
+    public const REFERENCE_NATURE              = 'pullrequest';
     private $git_rest_route_additional_informations;
 
     public function __construct($id)

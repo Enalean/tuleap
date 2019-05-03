@@ -22,7 +22,7 @@ namespace Tuleap\Admin\SystemEvents;
 
 class HomepagePanePresenter
 {
-    const TEMPLATE = 'homepage_pane';
+    public const TEMPLATE = 'homepage_pane';
 
     public $sections;
     public $pane_title;

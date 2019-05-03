@@ -23,7 +23,7 @@ use Tuleap\Tracker\FormElement\Field\FloatingPointNumber\ChangesChecker;
 
 class Tracker_FormElement_Field_Float extends Tracker_FormElement_Field_Numeric {
 
-    const FLOAT_DECIMALS = 4;
+    public const FLOAT_DECIMALS = 4;
 
     public function getCriteriaFrom($criteria)
     {

@@ -20,7 +20,7 @@
 
 class Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporter extends Tracker_XML_Exporter_ChangesetValue_ChangesetValueXMLExporter {
 
-    const ID_PREFIX = 'fileinfo_';
+    public const ID_PREFIX = 'fileinfo_';
 
     /**
      * @var Tracker_XML_Exporter_FilePathXMLExporter

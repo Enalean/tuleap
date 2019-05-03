@@ -23,13 +23,13 @@
  */
 interface Git_Driver_Gerrit {
 
-    const CACHE_ACCOUNTS        = 'accounts';
-    const CACHE_GROUPS_INCLUDES = 'groups_byinclude';
+    public const CACHE_ACCOUNTS        = 'accounts';
+    public const CACHE_GROUPS_INCLUDES = 'groups_byinclude';
 
-    const DEFAULT_PARENT_PROJECT = 'All-Projects';
+    public const DEFAULT_PARENT_PROJECT = 'All-Projects';
 
-    const DELETEPROJECT_PLUGIN_NAME   = 'deleteproject';
-    const GERRIT_PLUGIN_ENABLED_VALUE = 'ENABLED';
+    public const DELETEPROJECT_PLUGIN_NAME   = 'deleteproject';
+    public const GERRIT_PLUGIN_ENABLED_VALUE = 'ENABLED';
 
     /**
      *

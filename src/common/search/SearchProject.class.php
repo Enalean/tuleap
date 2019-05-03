@@ -21,7 +21,7 @@
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 
 class Search_SearchProject {
-    const NAME = 'soft';
+    public const NAME = 'soft';
 
     /**
      * @var ProjectDao

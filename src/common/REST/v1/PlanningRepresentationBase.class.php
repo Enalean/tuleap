@@ -23,7 +23,7 @@ namespace Tuleap\REST\v1;
  */
 class PlanningRepresentationBase {
 
-    const ROUTE = 'plannings';
+    public const ROUTE = 'plannings';
 
     /**
      * @var int

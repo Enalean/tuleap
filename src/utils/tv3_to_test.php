@@ -26,7 +26,7 @@ if ($argc != 2) {
 
 class ArtifactDebug {
     // Hardcoded value for tests
-    const TRACKER_ID = 1;
+    public const TRACKER_ID = 1;
 
     private $artifact_id;
 

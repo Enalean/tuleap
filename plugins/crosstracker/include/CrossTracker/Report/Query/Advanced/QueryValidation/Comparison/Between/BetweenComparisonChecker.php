@@ -30,7 +30,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperParameters;
 
 class BetweenComparisonChecker extends ComparisonChecker
 {
-    const OPERATOR = 'BETWEEN()';
+    public const OPERATOR = 'BETWEEN()';
 
     public function visitSimpleValueWrapper(SimpleValueWrapper $value_wrapper, ValueWrapperParameters $parameters)
     {

@@ -25,9 +25,9 @@ namespace Tuleap\Git\REST\v1;
  */
 class BuildStatusPOSTRepresentation
 {
-    const BUILD_STATUS_UNKNOWN = 'U';
-    const BUILD_STATUS_SUCCESS = 'S';
-    const BUILD_STATUS_FAIL    = 'F';
+    public const BUILD_STATUS_UNKNOWN = 'U';
+    public const BUILD_STATUS_SUCCESS = 'S';
+    public const BUILD_STATUS_FAIL    = 'F';
 
     /**
      * @var string {@type string}

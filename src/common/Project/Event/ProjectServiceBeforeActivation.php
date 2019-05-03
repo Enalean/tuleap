@@ -25,7 +25,7 @@ use Tuleap\Event\Dispatchable;
 
 class ProjectServiceBeforeActivation implements Dispatchable
 {
-    const NAME = 'project_service_before_activation';
+    public const NAME = 'project_service_before_activation';
 
     /**
      * @var Project

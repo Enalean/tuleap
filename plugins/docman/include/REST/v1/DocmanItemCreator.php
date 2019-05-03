@@ -47,7 +47,7 @@ use Tuleap\Docman\Upload\UploadMaxSizeExceededException;
 
 class DocmanItemCreator
 {
-    const ITEM_TYPE_ID = [
+    public const ITEM_TYPE_ID = [
         ItemRepresentation::TYPE_EMPTY => PLUGIN_DOCMAN_ITEM_TYPE_EMPTY,
         ItemRepresentation::TYPE_WIKI  => PLUGIN_DOCMAN_ITEM_TYPE_WIKI,
     ];

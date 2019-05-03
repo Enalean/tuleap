@@ -25,7 +25,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 class prometheus_metricsPlugin extends Plugin  // @codingStandardsIgnoreLine
 {
-    const NAME = 'prometheus_metrics';
+    public const NAME = 'prometheus_metrics';
 
     public function __construct($id)
     {

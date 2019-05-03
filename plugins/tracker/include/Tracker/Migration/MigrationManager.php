@@ -34,9 +34,9 @@ use Tuleap\Tracker\RecentlyVisited\VisitRecorder;
 
 class Tracker_Migration_MigrationManager {
 
-    const INDENT_XSL_RESOURCE = '/xml/indent.xsl';
+    public const INDENT_XSL_RESOURCE = '/xml/indent.xsl';
 
-    const LOG_FILE = 'tv3_tv5_migration_syslog';
+    public const LOG_FILE = 'tv3_tv5_migration_syslog';
 
     /** @var  Tracker_SystemEventManager */
     private $system_event_manager;

@@ -22,7 +22,7 @@ class UGroupLiteralizerTest extends TuleapTestCase {
 
     protected $membership;
     protected $user;
-    const PERMISSIONS_TYPE = 'PLUGIN_DOCMAN_%';
+    public const PERMISSIONS_TYPE = 'PLUGIN_DOCMAN_%';
 
     public function setUp() {
         parent::setUp();

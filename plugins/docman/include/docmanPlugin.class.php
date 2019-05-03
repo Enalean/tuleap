@@ -91,11 +91,11 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 class DocmanPlugin extends Plugin
 {
-    const TRUNCATED_SERVICE_NAME = 'Documents';
-    const SYSTEM_NATURE_NAME     = 'document';
-    const SERVICE_SHORTNAME      = 'docman';
+    public const TRUNCATED_SERVICE_NAME = 'Documents';
+    public const SYSTEM_NATURE_NAME     = 'document';
+    public const SERVICE_SHORTNAME      = 'docman';
 
-    const ADMIN_BASE_URL = '/admin/document';
+    public const ADMIN_BASE_URL = '/admin/document';
 
     /**
      * Store docman root items indexed by groupId

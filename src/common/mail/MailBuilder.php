@@ -22,8 +22,8 @@ use Tuleap\Mail\MailFilter;
 
 class MailBuilder {
 
-    const TRUNCATED_SUBJECT_TEMPLATE = 'subject';
-    const TRUNCATED_BODY_TEMPLATE    = 'body';
+    public const TRUNCATED_SUBJECT_TEMPLATE = 'subject';
+    public const TRUNCATED_BODY_TEMPLATE    = 'body';
 
     /** @var TemplateRenderer */
     private $renderer;

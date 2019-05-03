@@ -27,9 +27,9 @@ use ForgeConfig;
 
 class AsynchronousSupervisor
 {
-    const ACCEPTABLE_PROCESS_DELAY = 120;
+    public const ACCEPTABLE_PROCESS_DELAY = 120;
 
-    const ONE_WEEK_IN_SECONDS = 604800;
+    public const ONE_WEEK_IN_SECONDS = 604800;
 
     /**
      * @var ActionsRunnerDao

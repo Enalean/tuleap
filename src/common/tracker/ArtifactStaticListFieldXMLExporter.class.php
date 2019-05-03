@@ -19,15 +19,15 @@
  */
 
 class ArtifactStaticListFieldXMLExporter extends ArtifactAlphaNumFieldXMLExporter {
-    const TV3_DISPLAY_TYPE = 'SB';
-    const TV3_DATA_TYPE    = '2';
-    const TV3_VALUE_INDEX  = 'valueInt';
-    const TV3_TYPE         = 'SB_2';
-    const TV5_TYPE         = 'list';
-    const TV5_BIND         = 'static';
+    public const TV3_DISPLAY_TYPE = 'SB';
+    public const TV3_DATA_TYPE    = '2';
+    public const TV3_VALUE_INDEX  = 'valueInt';
+    public const TV3_TYPE         = 'SB_2';
+    public const TV5_TYPE         = 'list';
+    public const TV5_BIND         = 'static';
 
-    const SPECIAL_SEVERITY = 'severity';
-    const SPECIAL_STATUS   = 'status_id';
+    public const SPECIAL_SEVERITY = 'severity';
+    public const SPECIAL_STATUS   = 'status_id';
 
     /** @var ArtifactXMLExporterDao */
     protected $dao;

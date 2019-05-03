@@ -25,7 +25,7 @@ use PFUser;
 
 class UserDetailsPresenter
 {
-    const ADDITIONAL_DETAILS = 'additional_details';
+    public const ADDITIONAL_DETAILS = 'additional_details';
 
     public $name;
     public $login;

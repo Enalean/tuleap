@@ -24,7 +24,7 @@ use ParagonIE\ConstantTime\Hex;
 
 class TOTP
 {
-    const TIME_ZERO = 0;
+    public const TIME_ZERO = 0;
 
     /**
      * @var TOTPMode

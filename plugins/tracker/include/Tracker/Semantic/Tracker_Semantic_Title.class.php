@@ -21,7 +21,7 @@
 
 
 class Tracker_Semantic_Title extends Tracker_Semantic {
-    const NAME = 'title';
+    public const NAME = 'title';
 
     /**
      * @var Tracker_FormElement_Field_Text

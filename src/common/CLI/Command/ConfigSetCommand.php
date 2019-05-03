@@ -32,7 +32,7 @@ use Tuleap\CLI\Events\GetWhitelistedKeys;
 
 class ConfigSetCommand extends Command
 {
-    const NAME = 'config-set';
+    public const NAME = 'config-set';
 
     /**
      * @var ConfigDao

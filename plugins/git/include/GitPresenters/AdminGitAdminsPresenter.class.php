@@ -20,7 +20,7 @@
 
 class GitPresenters_AdminGitAdminsPresenter extends GitPresenters_AdminPresenter {
 
-    const GIT_ADMIN_SELECTBOX_NAME = 'git_admins';
+    public const GIT_ADMIN_SELECTBOX_NAME = 'git_admins';
 
     /** @var ProjectUGroup[] */
     private $static_ugroups;

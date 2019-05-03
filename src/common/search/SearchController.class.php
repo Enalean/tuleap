@@ -20,7 +20,7 @@
 
 class Search_SearchController {
 
-    const DEFAULT_SEARCH = Search_SearchProject::NAME;
+    public const DEFAULT_SEARCH = Search_SearchProject::NAME;
 
     /**
      * @var EventManager

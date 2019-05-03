@@ -28,9 +28,9 @@ use Tuleap\Docman\Notifications\UsersRetriever;
 
 class Docman_NotificationsManager
 {
-    const MESSAGE_MODIFIED        = 'modified';
-    const MESSAGE_NEWVERSION      = 'new_version';
-    const MESSAGE_WIKI_NEWVERSION = 'new_wiki_version';
+    public const MESSAGE_MODIFIED        = 'modified';
+    public const MESSAGE_NEWVERSION      = 'new_version';
+    public const MESSAGE_WIKI_NEWVERSION = 'new_wiki_version';
 
     var $_listeners;
     var $_feedback;

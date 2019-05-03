@@ -25,7 +25,7 @@ require_once 'common/backend/BackendLogger.class.php';
 
 class SystemEvent_GIT_USER_RENAME extends SystemEvent {
 
-    const NAME = "GIT_USER_RENAME";
+    public const NAME = "GIT_USER_RENAME";
 
     /** @var Git_Gitolite_SSHKeyDumper*/
     private $ssh_key_dumper;

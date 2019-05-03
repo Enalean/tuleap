@@ -23,12 +23,12 @@ namespace Tuleap\Request;
 
 class RequestInstrumentation
 {
-    const COUNT_NAME = 'http_responses_total';
-    const COUNT_HELP = 'Total number of HTTP request';
+    public const COUNT_NAME = 'http_responses_total';
+    public const COUNT_HELP = 'Total number of HTTP request';
 
-    const DURATION_NAME    = 'http_responses_duration';
-    const DURATION_HELP    = 'Duration of http responses in microseconds';
-    const DURATION_BUCKETS = [0.05, 0.1, 0.2, 0.5, 1, 2, 5, 10, 30];
+    public const DURATION_NAME    = 'http_responses_duration';
+    public const DURATION_HELP    = 'Duration of http responses in microseconds';
+    public const DURATION_BUCKETS = [0.05, 0.1, 0.2, 0.5, 1, 2, 5, 10, 30];
 
     public static function increment($code)
     {

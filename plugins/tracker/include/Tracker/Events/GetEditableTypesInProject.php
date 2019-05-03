@@ -27,7 +27,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenter;
 
 class GetEditableTypesInProject implements Dispatchable
 {
-    const NAME = 'tracker_get_editable_type_in_project';
+    public const NAME = 'tracker_get_editable_type_in_project';
 
     /**
      * @var array

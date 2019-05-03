@@ -27,7 +27,7 @@ use Tuleap\PullRequest\MergeSetting\MergeSettingRetriever;
 
 final class PullRequestPane extends Pane
 {
-    const NAME = 'pullrequest';
+    public const NAME = 'pullrequest';
 
     /**
      * @var MergeSettingRetriever

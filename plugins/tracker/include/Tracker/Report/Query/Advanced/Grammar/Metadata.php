@@ -22,7 +22,7 @@ namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
 class Metadata implements Searchable
 {
-    const PREFIX = '@';
+    public const PREFIX = '@';
 
     /**
      * @var string

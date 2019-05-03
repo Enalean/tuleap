@@ -20,7 +20,7 @@
 
 class TroveCat {
 
-    const ROOT_ID = 0;
+    public const ROOT_ID = 0;
 
     /**
      * @var int

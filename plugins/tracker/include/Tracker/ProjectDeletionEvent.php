@@ -25,7 +25,7 @@ use Tuleap\Event\Dispatchable;
 
 class ProjectDeletionEvent implements Dispatchable
 {
-    const NAME = 'trackerProjectDeletion';
+    public const NAME = 'trackerProjectDeletion';
 
     /**
      * @var int

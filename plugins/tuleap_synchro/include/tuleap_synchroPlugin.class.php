@@ -37,7 +37,7 @@ require_once 'constants.php';
 
 class tuleap_synchroPlugin extends Plugin  // @codingStandardsIgnoreLine
 {
-    const NAME = 'tuleap_synchro';
+    public const NAME = 'tuleap_synchro';
 
     public function __construct($id)
     {

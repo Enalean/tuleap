@@ -23,7 +23,7 @@ use \Tracker_FormElement_Field_List_Bind_UsersValue;
 
 class UserRepresentation {
 
-    const ROUTE = 'users';
+    public const ROUTE = 'users';
 
     /**
      * @var int

@@ -24,7 +24,7 @@ use Tracker;
 
 class MoveTitleSemanticChecker extends MoveSemanticChecker
 {
-    const TITLE_SEMANTIC_LABEL = 'title';
+    public const TITLE_SEMANTIC_LABEL = 'title';
 
     /**
      * @return bool

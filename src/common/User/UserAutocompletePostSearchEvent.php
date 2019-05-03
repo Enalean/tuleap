@@ -24,7 +24,7 @@ use Tuleap\Event\Dispatchable;
 
 class UserAutocompletePostSearchEvent implements Dispatchable
 {
-    const NAME = 'user_autocomplete_post_search';
+    public const NAME = 'user_autocomplete_post_search';
 
     /**
      * @var array

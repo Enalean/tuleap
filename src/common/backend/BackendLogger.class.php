@@ -19,7 +19,7 @@
  */
 
 class BackendLogger implements Logger {
-    const FILENAME = 'codendi_syslog';
+    public const FILENAME = 'codendi_syslog';
 
     private $filepath;
 

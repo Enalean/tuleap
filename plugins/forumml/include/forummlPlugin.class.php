@@ -22,7 +22,7 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 class ForumMLPlugin extends Plugin {
-    const SEARCH_TYPE = 'mail';
+    public const SEARCH_TYPE = 'mail';
 
     public function __construct($id) {
         parent::__construct($id);

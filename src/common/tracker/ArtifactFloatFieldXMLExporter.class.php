@@ -19,10 +19,10 @@
  */
 
 class ArtifactFloatFieldXMLExporter extends ArtifactAlphaNumFieldXMLExporter {
-    const TV3_VALUE_INDEX  = 'valueFloat';
-    const TV3_TYPE         = 'TF_3';
-    const TV5_TYPE         = 'float';
-    const DEFAULT_VALUE    = 0.0;
+    public const TV3_VALUE_INDEX  = 'valueFloat';
+    public const TV3_TYPE         = 'TF_3';
+    public const TV5_TYPE         = 'float';
+    public const DEFAULT_VALUE    = 0.0;
 
     public function appendNode(DOMElement $changeset_node, $tracker_id, $artifact_id, array $row) {
         $this->setNewValue($row);

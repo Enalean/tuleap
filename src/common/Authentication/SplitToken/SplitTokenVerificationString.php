@@ -24,7 +24,7 @@ use Tuleap\Cryptography\ConcealedString;
 
 class SplitTokenVerificationString
 {
-    const VERIFICATION_STRING_LENGTH = 32;
+    public const VERIFICATION_STRING_LENGTH = 32;
 
     /**
      * @var ConcealedString

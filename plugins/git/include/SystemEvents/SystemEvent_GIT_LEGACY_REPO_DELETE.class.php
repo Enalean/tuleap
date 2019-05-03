@@ -20,5 +20,5 @@
  */
 
 class SystemEvent_GIT_LEGACY_REPO_DELETE extends SystemEvent_GIT_REPO_DELETE {
-    const NAME = 'GIT_LEGACY_REPO_DELETE';
+    public const NAME = 'GIT_LEGACY_REPO_DELETE';
 }

@@ -26,7 +26,7 @@ require_once('common/system_event/SystemEvent.class.php');
 
 class SystemEvent_TRACKER_V3_MIGRATION extends SystemEvent {
 
-    const NAME = 'TRACKER_V3_MIGRATION';
+    public const NAME = 'TRACKER_V3_MIGRATION';
 
     /** @var  Tracker_Migration_MigrationManager */
     private $migration_manager;

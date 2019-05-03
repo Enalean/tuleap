@@ -21,8 +21,8 @@
 
 class AgileDashboard_ConfigurationManager {
 
-    const DEFAULT_SCRUM_TITLE  = 'Scrum';
-    const DEFAULT_KANBAN_TITLE = 'Kanban';
+    public const DEFAULT_SCRUM_TITLE  = 'Scrum';
+    public const DEFAULT_KANBAN_TITLE = 'Kanban';
 
     /**
      * @var AgileDashboard_ConfigurationDao

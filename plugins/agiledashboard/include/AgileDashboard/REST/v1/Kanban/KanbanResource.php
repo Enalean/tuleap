@@ -92,8 +92,8 @@ use UserManager;
 
 class KanbanResource extends AuthenticatedResource
 {
-    const MAX_LIMIT = 100;
-    const HTTP_CLIENT_UUID = 'HTTP_X_CLIENT_UUID';
+    public const MAX_LIMIT = 100;
+    public const HTTP_CLIENT_UUID = 'HTTP_X_CLIENT_UUID';
 
     /** @var AgileDashboard_KanbanFactory */
     private $kanban_factory;

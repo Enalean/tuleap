@@ -23,10 +23,10 @@ require_once 'www/news/news_utils.php';
 
 class NewsRetriever
 {
-    const NEWS_STATUS_WAITING_PUBLICATION   = '0';
-    const NEWS_STATUS_PUBLISHED             = '1';
-    const NEWS_STATUS_REJECTED              = '2';
-    const NEWS_STATUS_REQUESTED_PUBLICATION = '3';
+    public const NEWS_STATUS_WAITING_PUBLICATION   = '0';
+    public const NEWS_STATUS_PUBLISHED             = '1';
+    public const NEWS_STATUS_REJECTED              = '2';
+    public const NEWS_STATUS_REQUESTED_PUBLICATION = '3';
 
     /**
      * @var AdminNewsDao

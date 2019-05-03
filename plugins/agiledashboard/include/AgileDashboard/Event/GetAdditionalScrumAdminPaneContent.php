@@ -24,7 +24,7 @@ use Tuleap\Event\Dispatchable;
 
 class GetAdditionalScrumAdminPaneContent implements Dispatchable
 {
-    const NAME = 'additional_scrum_admin_pane_content';
+    public const NAME = 'additional_scrum_admin_pane_content';
 
     private $additional_content = '';
 

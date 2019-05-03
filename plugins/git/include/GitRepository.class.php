@@ -28,15 +28,15 @@ require_once 'PathJoinUtil.php';
 
 class GitRepository implements DVCSRepository
 {
-    const REPO_EXT       = '.git';
+    public const REPO_EXT       = '.git';
    
-    const PRIVATE_ACCESS       = 'private';
-    const PUBLIC_ACCESS        = 'public';
+    public const PRIVATE_ACCESS       = 'private';
+    public const PUBLIC_ACCESS        = 'public';
     
-    const DEFAULT_MAIL_PREFIX = '[SCM]';
-    const REPO_SCOPE_PROJECT  = 'P';
-    const REPO_SCOPE_INDIVIDUAL = 'I';
-    const DEFAULT_DESCRIPTION = "-- Default description --";
+    public const DEFAULT_MAIL_PREFIX = '[SCM]';
+    public const REPO_SCOPE_PROJECT  = 'P';
+    public const REPO_SCOPE_INDIVIDUAL = 'I';
+    public const DEFAULT_DESCRIPTION = "-- Default description --";
     
     private $id;
     private $parentId;

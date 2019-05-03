@@ -30,7 +30,7 @@ use Tuleap\Queue\WorkerEvent;
 
 class AsynchronousArtifactsDeletionActionsRunner
 {
-    const TOPIC = 'tuleap.tracker.artifact.deletion';
+    public const TOPIC = 'tuleap.tracker.artifact.deletion';
     /**
      * @var PendingArtifactRemovalDao
      */

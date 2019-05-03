@@ -19,8 +19,8 @@
  */
 
 class b201403130910_update_apache_config extends ForgeUpgrade_Bucket {
-    const BACKUP_FILE = '/etc/httpd/conf.d/codendi_aliases.conf_b201403130910_update_apache_config';
-    const CONFIG_FILE = '/etc/httpd/conf.d/codendi_aliases.conf';
+    public const BACKUP_FILE = '/etc/httpd/conf.d/codendi_aliases.conf_b201403130910_update_apache_config';
+    public const CONFIG_FILE = '/etc/httpd/conf.d/codendi_aliases.conf';
 
     /**
      * Description of the bucket

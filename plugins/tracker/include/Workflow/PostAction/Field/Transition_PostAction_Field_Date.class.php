@@ -29,15 +29,15 @@ class Transition_PostAction_Field_Date extends Transition_PostAction_Field
     /**
      * @const Clear the date.
      */
-    const CLEAR_DATE = 1;
+    public const CLEAR_DATE = 1;
     
     /**
      * @const Fill the date to the current time
      */
-    const FILL_CURRENT_TIME = 2;
+    public const FILL_CURRENT_TIME = 2;
     
-    const SHORT_NAME   = 'field_date';
-    const XML_TAG_NAME = 'postaction_field_date';
+    public const SHORT_NAME   = 'field_date';
+    public const XML_TAG_NAME = 'postaction_field_date';
 
     /**
      * @var Integer the type of the value. CLEAR_DATE | FILL_CURRENT_TIME

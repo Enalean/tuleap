@@ -35,8 +35,8 @@ use Tuleap\Tracker\Report\WidgetAdditionalButtonPresenter;
 
 class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements Tracker_Report_Renderer_ArtifactLinkable {
 
-    const EXPORT_LIGHT = 1;
-    const EXPORT_FULL  = 0;
+    public const EXPORT_LIGHT = 1;
+    public const EXPORT_FULL  = 0;
 
     public $chunksz;
     public $multisort;
@@ -796,10 +796,10 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         return $columns_sort;
     }
 
-    const NO_EXTRACOLUMN         = 0;
-    const EXTRACOLUMN_MASSCHANGE = 1;
-    const EXTRACOLUMN_LINK       = 2;
-    const EXTRACOLUMN_UNLINK     = 3;
+    public const NO_EXTRACOLUMN         = 0;
+    public const EXTRACOLUMN_MASSCHANGE = 1;
+    public const EXTRACOLUMN_LINK       = 2;
+    public const EXTRACOLUMN_UNLINK     = 3;
 
     private function fetchTHead($extracolumn = 1, $only_one_column = null, $with_sort_links = true, $use_data_from_db = false, $id_suffix = '', $store_in_session = true, $is_nature_col = false) {
         $current_user = UserManager::instance()->getCurrentUser();

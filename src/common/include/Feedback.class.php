@@ -31,10 +31,10 @@ class Feedback {
      */
     private $formatter;
 
-    const INFO =  'info';
-    const WARN  = 'warning';
-    const ERROR = 'error';
-    const DEBUG = 'debug';
+    public const INFO =  'info';
+    public const WARN  = 'warning';
+    public const ERROR = 'error';
+    public const DEBUG = 'debug';
 
     function __construct() {
         $this->logs = array();

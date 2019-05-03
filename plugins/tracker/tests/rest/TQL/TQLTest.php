@@ -31,7 +31,7 @@ require_once dirname(__FILE__).'/../bootstrap.php';
  */
 class TQLTest extends RestBase
 {
-    const PROJECT_NAME = 'tql';
+    public const PROJECT_NAME = 'tql';
 
     private $tracker_id;
 

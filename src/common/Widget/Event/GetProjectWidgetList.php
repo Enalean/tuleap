@@ -26,9 +26,9 @@ use Tuleap\Widget\ProjectHeartbeat;
 
 class GetProjectWidgetList extends GetWidgetList
 {
-    const NAME = 'getProjectWidgetList';
+    public const NAME = 'getProjectWidgetList';
 
-    const CORE_WIDGETS = [
+    public const CORE_WIDGETS = [
         'projectdescription',
         'projectmembers',
         ProjectHeartbeat::NAME,

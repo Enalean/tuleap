@@ -44,7 +44,7 @@ use UserManager;
 
 class PostCommit
 {
-    const PROCESS_POST_COMMIT = 'process_post_commit';
+    public const PROCESS_POST_COMMIT = 'process_post_commit';
 
     /**
      * @var EmailsToBeNotifiedRetriever

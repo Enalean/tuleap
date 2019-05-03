@@ -24,7 +24,7 @@ use Tuleap\Label\LabeledItemCollection;
 
 class CollectionOfLabeledItemsRepresentation
 {
-    const ROUTE = 'labeled_items';
+    public const ROUTE = 'labeled_items';
 
     /**
      * @var LabeledItemRepresentation[]

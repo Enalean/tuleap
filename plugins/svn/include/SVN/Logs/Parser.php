@@ -25,8 +25,8 @@ use \DateTime;
 
 class Parser
 {
-    const BASE_URL = '/svnplugin/';
-    const CORE_URL = '/svnroot/';
+    public const BASE_URL = '/svnplugin/';
+    public const CORE_URL = '/svnroot/';
 
     public function parse($file)
     {

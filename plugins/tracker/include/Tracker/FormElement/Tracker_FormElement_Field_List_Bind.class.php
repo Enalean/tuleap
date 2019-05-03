@@ -28,12 +28,12 @@ abstract class Tracker_FormElement_Field_List_Bind implements
     Tracker_IProvideJsonFormatOfMyself,
     BindVisitable
 {
-    const REST_ID_KEY    = 'bind_value_id';
-    const REST_LABEL_KEY = 'bind_value_label';
-    const REST_TYPE_KEY  = 'bind_type';
-    const REST_LIST_KEY  = 'bind_list';
+    public const REST_ID_KEY    = 'bind_value_id';
+    public const REST_LABEL_KEY = 'bind_value_label';
+    public const REST_TYPE_KEY  = 'bind_type';
+    public const REST_LIST_KEY  = 'bind_list';
 
-    const NONE_VALUE = 100;
+    public const NONE_VALUE = 100;
 
     /**
      * @var Tracker_FormElement_Field_List_Bind_DefaultvalueDao

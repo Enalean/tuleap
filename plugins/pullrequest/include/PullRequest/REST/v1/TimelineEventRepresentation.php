@@ -27,10 +27,10 @@ use Tuleap\PullRequest\Timeline\TimelineEvent;
 class TimelineEventRepresentation
 {
 
-    const UPDATE  = 'update';
-    const REBASE  = 'rebase';
-    const MERGE   = 'merge';
-    const ABANDON = 'abandon';
+    public const UPDATE  = 'update';
+    public const REBASE  = 'rebase';
+    public const MERGE   = 'merge';
+    public const ABANDON = 'abandon';
 
     /**
      * @var MinimalUserRepresentation {@type MinimalUserRepresentation}

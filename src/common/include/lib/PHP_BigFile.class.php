@@ -44,7 +44,7 @@ class PHP_BigFile {
     /**
      * @var string the name of the protocol
      */
-    const PROTOCOL = 'php-bigfile';
+    public const PROTOCOL = 'php-bigfile';
 
     /**
      * @return string the stream url to use with fopen & co

@@ -22,8 +22,8 @@ namespace Tuleap\GitLFS\Batch\Request;
 
 class BatchRequestOperation
 {
-    const UPLOAD_OPERATION   = 'upload';
-    const DOWNLOAD_OPERATION = 'download';
+    public const UPLOAD_OPERATION   = 'upload';
+    public const DOWNLOAD_OPERATION = 'download';
 
     /**
      * @var string

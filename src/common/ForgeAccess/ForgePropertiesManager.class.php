@@ -24,7 +24,7 @@ use Tuleap\User\UserGroup\NameTranslator;
 
 class ForgeAccess_ForgePropertiesManager
 {
-    const POSSIBLE_ACCESS_VALUES = [ForgeAccess::ANONYMOUS, ForgeAccess::REGULAR, ForgeAccess::RESTRICTED];
+    public const POSSIBLE_ACCESS_VALUES = [ForgeAccess::ANONYMOUS, ForgeAccess::REGULAR, ForgeAccess::RESTRICTED];
 
     /**
      * @var EventManager

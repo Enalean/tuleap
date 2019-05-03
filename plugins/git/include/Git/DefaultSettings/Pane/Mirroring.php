@@ -27,7 +27,7 @@ use TemplateRendererFactory;
 
 class Mirroring extends Pane
 {
-    const NAME = 'mirroring';
+    public const NAME = 'mirroring';
     /**
      * @var Project
      */

@@ -29,7 +29,7 @@ require_once 'constants.php';
 require_once __DIR__.'/../vendor/autoload.php';
 
 class proftpdPlugin extends Plugin {
-    const SERVICE_SHORTNAME = 'plugin_proftpd';
+    public const SERVICE_SHORTNAME = 'plugin_proftpd';
 
     public function __construct($id) {
         parent::__construct($id);

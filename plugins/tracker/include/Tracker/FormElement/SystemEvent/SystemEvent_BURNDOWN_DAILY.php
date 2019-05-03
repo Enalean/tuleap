@@ -30,7 +30,7 @@ use Tuleap\Tracker\FormElement\FieldCalculator;
 
 class SystemEvent_BURNDOWN_DAILY extends SystemEvent
 {
-    const NAME = 'SystemEvent_BURNDOWN_DAILY';
+    public const NAME = 'SystemEvent_BURNDOWN_DAILY';
 
     /**
      * @var Tracker_FormElement_Field_BurndownDao

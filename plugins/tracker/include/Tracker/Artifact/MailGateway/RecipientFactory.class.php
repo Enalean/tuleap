@@ -23,10 +23,10 @@
  */
 class Tracker_Artifact_MailGateway_RecipientFactory {
 
-    const ARTIFACT_ID_INDEX = 'artifact_id';
-    const USER_ID_INDEX     = 'user_id';
-    const HASH_INDEX        = 'hash';
-    const EMAIL_PATTERN     = '/
+    public const ARTIFACT_ID_INDEX = 'artifact_id';
+    public const USER_ID_INDEX     = 'user_id';
+    public const HASH_INDEX        = 'hash';
+    public const EMAIL_PATTERN     = '/
         <
         (?P<artifact_id>\d+)
         -

@@ -24,7 +24,7 @@
  */
 interface AgileDashboard_Milestone_Backlog_IBacklogItem
 {
-    const REMAINING_EFFORT_FIELD_NAME = 'remaining_effort';
+    public const REMAINING_EFFORT_FIELD_NAME = 'remaining_effort';
 
     public function setInitialEffort($value);
 

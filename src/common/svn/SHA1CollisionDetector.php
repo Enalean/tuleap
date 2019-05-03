@@ -22,8 +22,8 @@ namespace Tuleap\Svn;
 
 class SHA1CollisionDetector
 {
-    const SHA1COLLISIONDETECTOR_PATH = '/usr/bin/sha1collisiondetector';
-    const SUCCESS_EXIT_CODE          = 0;
+    public const SHA1COLLISIONDETECTOR_PATH = '/usr/bin/sha1collisiondetector';
+    public const SUCCESS_EXIT_CODE          = 0;
 
     /**
      * @return bool

@@ -20,7 +20,7 @@
 namespace Tuleap\JWT\REST;
 
 class JWTRepresentation {
-    const ROUTE = 'jwt';
+    public const ROUTE = 'jwt';
 
     /**
      * @var string

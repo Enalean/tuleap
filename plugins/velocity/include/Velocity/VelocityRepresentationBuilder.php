@@ -30,8 +30,8 @@ use Tuleap\Velocity\Semantic\SemanticVelocity;
 
 class VelocityRepresentationBuilder
 {
-    const START_DATE_FIELD_NAME = 'start_date';
-    const DURATION_FIELD_NAME   = 'duration';
+    public const START_DATE_FIELD_NAME = 'start_date';
+    public const DURATION_FIELD_NAME   = 'duration';
 
     /**
      * @var VelocityDao

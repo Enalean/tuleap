@@ -24,7 +24,7 @@ use Tuleap\Cryptography\ConcealedString;
 
 class RedisInitializer
 {
-    const CONNECT_TIMEOUT = 0.1;
+    public const CONNECT_TIMEOUT = 0.1;
 
     /**
      * @var string|false

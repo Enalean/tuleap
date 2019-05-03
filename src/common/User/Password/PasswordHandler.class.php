@@ -21,7 +21,7 @@
 
 abstract class PasswordHandler {
     // We need 16 hex chars (8 bytes) to use as a salt to generate the UNIX password
-    const SALT_SIZE = 8;
+    public const SALT_SIZE = 8;
 
     public abstract function verifyHashPassword($plain_password, $hash_password);
 

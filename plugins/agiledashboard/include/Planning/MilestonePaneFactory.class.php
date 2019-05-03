@@ -33,12 +33,12 @@ class Planning_MilestonePaneFactory
      * If PRELOAD_ENABLED is set to true, planning v2 data will be injected to the view.
      * If it's set to false, data will be asynchronously fetched via REST calls.
      */
-    const PRELOAD_ENABLED              = false;
-    const PRELOAD_PAGINATION_LIMIT     = 50;
-    const PRELOAD_PAGINATION_OFFSET    = 0;
-    const PRELOAD_PAGINATION_ORDER     = 'desc';
-    const PRELOAD_SUBMILESTONES_FIELDS = Tuleap\AgileDashboard\REST\v1\MilestoneRepresentation::SLIM;
-    const PRELOAD_MILESTONE_FIELDS     = Tuleap\AgileDashboard\REST\v1\MilestoneRepresentation::ALL_FIELDS;
+    public const PRELOAD_ENABLED              = false;
+    public const PRELOAD_PAGINATION_LIMIT     = 50;
+    public const PRELOAD_PAGINATION_OFFSET    = 0;
+    public const PRELOAD_PAGINATION_ORDER     = 'desc';
+    public const PRELOAD_SUBMILESTONES_FIELDS = Tuleap\AgileDashboard\REST\v1\MilestoneRepresentation::SLIM;
+    public const PRELOAD_MILESTONE_FIELDS     = Tuleap\AgileDashboard\REST\v1\MilestoneRepresentation::ALL_FIELDS;
 
     /** @var PaneInfo[] */
     private $list_of_pane_info = array();

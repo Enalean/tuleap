@@ -24,35 +24,35 @@ use ParagonIE\EasyDB\EasyStatement;
 class GitDao extends \Tuleap\DB\DataAccessObject
 {
 
-    const REPOSITORY_ID               = 'repository_id'; //PK
-    const REPOSITORY_NAME             = 'repository_name';
-    const REPOSITORY_PATH             = 'repository_path';
-    const REPOSITORY_DESCRIPTION      = 'repository_description';
-    const REPOSITORY_PARENT           = 'repository_parent_id';
-    const FK_PROJECT_ID               = 'project_id';//FK
-    const REPOSITORY_CREATION_DATE    = 'repository_creation_date';
-    const REPOSITORY_CREATION_USER_ID = 'repository_creation_user_id';
-    const REPOSITORY_DELETION_DATE    = 'repository_deletion_date';
-    const REPOSITORY_IS_INITIALIZED   = 'repository_is_initialized';
-    const REPOSITORY_ACCESS           = 'repository_access';
-    const REPOSITORY_MAIL_PREFIX      = 'repository_events_mailing_prefix';
-    const REPOSITORY_BACKEND_TYPE     = 'repository_backend_type';
-    const REPOSITORY_SCOPE            = 'repository_scope';
-    const REPOSITORY_NAMESPACE        = 'repository_namespace';
-    const REPOSITORY_BACKUP_PATH      = 'repository_backup_path';
+    public const REPOSITORY_ID               = 'repository_id'; //PK
+    public const REPOSITORY_NAME             = 'repository_name';
+    public const REPOSITORY_PATH             = 'repository_path';
+    public const REPOSITORY_DESCRIPTION      = 'repository_description';
+    public const REPOSITORY_PARENT           = 'repository_parent_id';
+    public const FK_PROJECT_ID               = 'project_id';//FK
+    public const REPOSITORY_CREATION_DATE    = 'repository_creation_date';
+    public const REPOSITORY_CREATION_USER_ID = 'repository_creation_user_id';
+    public const REPOSITORY_DELETION_DATE    = 'repository_deletion_date';
+    public const REPOSITORY_IS_INITIALIZED   = 'repository_is_initialized';
+    public const REPOSITORY_ACCESS           = 'repository_access';
+    public const REPOSITORY_MAIL_PREFIX      = 'repository_events_mailing_prefix';
+    public const REPOSITORY_BACKEND_TYPE     = 'repository_backend_type';
+    public const REPOSITORY_SCOPE            = 'repository_scope';
+    public const REPOSITORY_NAMESPACE        = 'repository_namespace';
+    public const REPOSITORY_BACKUP_PATH      = 'repository_backup_path';
 
-    const REPO_NAME_MAX_LENGTH = 255;
+    public const REPO_NAME_MAX_LENGTH = 255;
 
-    const BACKEND_GITSHELL = 'gitshell';
-    const BACKEND_GITOLITE = 'gitolite';
+    public const BACKEND_GITSHELL = 'gitshell';
+    public const BACKEND_GITOLITE = 'gitolite';
 
-    const REMOTE_SERVER_ID               = 'remote_server_id';
-    const REMOTE_SERVER_DISCONNECT_DATE  = 'remote_server_disconnect_date';
-    const REMOTE_SERVER_DELETE_DATE      = 'remote_project_deleted_date';
-    const REMOTE_SERVER_MIGRATION_STATUS = 'remote_server_migration_status';
+    public const REMOTE_SERVER_ID               = 'remote_server_id';
+    public const REMOTE_SERVER_DISCONNECT_DATE  = 'remote_server_disconnect_date';
+    public const REMOTE_SERVER_DELETE_DATE      = 'remote_project_deleted_date';
+    public const REMOTE_SERVER_MIGRATION_STATUS = 'remote_server_migration_status';
 
-    const NOT_DELETED_DATE = '0000-00-00 00:00:00';
-    const ORDER_BY_PATH    = 'path';
+    public const NOT_DELETED_DATE = '0000-00-00 00:00:00';
+    public const ORDER_BY_PATH    = 'path';
 
     public function exists($id) {
         if ( empty($id) ) {

@@ -24,10 +24,10 @@
  */
 class Git_Exec
 {
-    const GIT212_PATH = '/opt/rh/sclo-git212/root';
+    public const GIT212_PATH = '/opt/rh/sclo-git212/root';
 
-    const TRANSPORT_EXT  = 'ext';
-    const TRANSPORT_FILE = 'file';
+    public const TRANSPORT_EXT  = 'ext';
+    public const TRANSPORT_FILE = 'file';
 
     private $work_tree;
     private $git_dir;

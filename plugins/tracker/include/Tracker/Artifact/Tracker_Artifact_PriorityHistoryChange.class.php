@@ -18,7 +18,7 @@
 
 class Tracker_Artifact_PriorityHistoryChange extends Tracker_Artifact_Followup_Item {
 
-    const NO_CONTEXT = '-1';
+    public const NO_CONTEXT = '-1';
 
     /**
      * @var Tracker_ArtifactFactory

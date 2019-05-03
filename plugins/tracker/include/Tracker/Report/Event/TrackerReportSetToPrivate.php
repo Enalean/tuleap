@@ -29,7 +29,7 @@ use Tuleap\Event\Dispatchable;
 
 class TrackerReportSetToPrivate implements Dispatchable
 {
-    const NAME = 'trackerReportSetToPrivate';
+    public const NAME = 'trackerReportSetToPrivate';
 
     /**
      * @var Tracker_Report

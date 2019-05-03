@@ -22,8 +22,8 @@ use Tuleap\Mediawiki\ForgeUserGroupPermission\MediawikiAdminAllProjects;
 
 class MediawikiManager {
 
-    const READ_ACCESS  = 'PLUGIN_MEDIAWIKI_READ';
-    const WRITE_ACCESS = 'PLUGIN_MEDIAWIKI_WRITE';
+    public const READ_ACCESS  = 'PLUGIN_MEDIAWIKI_READ';
+    public const WRITE_ACCESS = 'PLUGIN_MEDIAWIKI_WRITE';
 
     /** @var MediawikiDao */
     private $dao;

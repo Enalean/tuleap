@@ -36,7 +36,7 @@ use Tuleap\Plugin\PluginWithLegacyInternalRouting;
 
 class hudson_gitPlugin extends PluginWithLegacyInternalRouting
 {
-    const DISPLAY_HUDSON_ADDITION_INFO = 'display_hudson_addition_info';
+    public const DISPLAY_HUDSON_ADDITION_INFO = 'display_hudson_addition_info';
 
     public function __construct($id)
     {

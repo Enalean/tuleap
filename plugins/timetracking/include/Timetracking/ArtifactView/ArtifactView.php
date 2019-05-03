@@ -28,7 +28,7 @@ use TemplateRendererFactory;
 
 class ArtifactView extends Tracker_Artifact_View_View
 {
-    const IDENTIFIER = 'timetracking';
+    public const IDENTIFIER = 'timetracking';
 
     /**
      * @var ArtifactViewPresenter

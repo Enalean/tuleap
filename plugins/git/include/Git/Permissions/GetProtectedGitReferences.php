@@ -24,7 +24,7 @@ use Tuleap\Event\Dispatchable;
 
 class GetProtectedGitReferences implements Dispatchable
 {
-    const NAME = 'getProtectedGitReferences';
+    public const NAME = 'getProtectedGitReferences';
 
     /**
      * @var ProtectedReferencePermission[]

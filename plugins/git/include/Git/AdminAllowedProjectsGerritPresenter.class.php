@@ -26,7 +26,7 @@ use CSRFSynchronizerToken;
 class AdminAllowedProjectsGerritPresenter
 {
 
-    const TEMPLATE = 'manage-allowed-projects';
+    public const TEMPLATE = 'manage-allowed-projects';
 
     /**
      * @var Git_RemoteServer_GerritServer

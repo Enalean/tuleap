@@ -24,7 +24,7 @@ use Tuleap\Event\Dispatchable;
 
 class CollectionOfLabelableDao implements Dispatchable
 {
-    const NAME = 'collectionOfLabelableDao';
+    public const NAME = 'collectionOfLabelableDao';
 
     /** @var LabelableDao[] */
     private $daos = array();

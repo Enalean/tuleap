@@ -19,13 +19,13 @@
  */
 
 class ArtifactUserMultiListFieldXMLExporter extends ArtifactAlphaNumFieldXMLExporter {
-    const LABEL_VALUES_INDEX  = 'valueLabelList';
-    const TV3_TYPE            = 'MB_5';
-    const TV5_TYPE            = 'list';
-    const TV5_BIND            = 'users';
+    public const LABEL_VALUES_INDEX  = 'valueLabelList';
+    public const TV3_TYPE            = 'MB_5';
+    public const TV5_TYPE            = 'list';
+    public const TV5_BIND            = 'users';
 
-    const SYS_VALUE_NONE_FR = 'Aucun';
-    const SYS_VALUE_NONE_EN = 'None';
+    public const SYS_VALUE_NONE_FR = 'Aucun';
+    public const SYS_VALUE_NONE_EN = 'None';
 
     /** @var ArtifactMultiListCurrentValueExporter */
     private $current_value_exporter;

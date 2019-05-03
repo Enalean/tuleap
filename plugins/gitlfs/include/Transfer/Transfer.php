@@ -22,7 +22,7 @@ namespace Tuleap\GitLFS\Transfer;
 
 class Transfer
 {
-    const BASIC_TRANSFER_IDENTIFIER = 'basic';
+    public const BASIC_TRANSFER_IDENTIFIER = 'basic';
 
     /**
      * @var string

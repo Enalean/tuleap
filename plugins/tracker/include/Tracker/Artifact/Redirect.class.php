@@ -20,9 +20,9 @@
 
 class Tracker_Artifact_Redirect
 {
-    const STATE_CREATE_PARENT    = 'to_parent';
-    const STATE_STAY_OR_CONTINUE = 'stay_continue';
-    const STATE_SUBMIT           = 'submit';
+    public const STATE_CREATE_PARENT    = 'to_parent';
+    public const STATE_STAY_OR_CONTINUE = 'stay_continue';
+    public const STATE_SUBMIT           = 'submit';
     
     public $mode = '';
     public $base_url = '';

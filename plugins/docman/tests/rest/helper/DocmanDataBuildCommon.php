@@ -29,8 +29,8 @@ use Tuleap\Docman\rest\DocmanDatabaseInitialization;
 
 class DocmanDataBuildCommon extends REST_TestDataBuilder
 {
-    const DOCMAN_REGULAR_USER_NAME = 'docman_regular_user';
-    const REGULAR_USER_ID          = 102;
+    public const DOCMAN_REGULAR_USER_NAME = 'docman_regular_user';
+    public const REGULAR_USER_ID          = 102;
 
     private const DOCMAN_REGULAR_USER_PASSWORD = 'welcome0';
 

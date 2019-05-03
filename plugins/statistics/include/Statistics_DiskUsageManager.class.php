@@ -28,20 +28,20 @@ class Statistics_DiskUsageManager {
 
     private $_services = array();
 
-    const SVN = 'svn';
-    const CVS = 'cvs';
-    const FRS = 'frs';
-    const FTP = 'ftp';
-    const GRP_HOME = 'grp_home';
-    const USR_HOME = 'usr_home';
-    const WIKI = 'wiki';
-    const PLUGIN_WEBDAV = 'plugin_webdav';
-    const MAILMAN = 'mailman';
-    const MYSQL = 'mysql';
-    const CODENDI_LOGS = 'codendi_log';
-    const BACKUP = 'backup';
-    const BACKUP_OLD = 'backup_old';
-    const PATH = 'path_';
+    public const SVN = 'svn';
+    public const CVS = 'cvs';
+    public const FRS = 'frs';
+    public const FTP = 'ftp';
+    public const GRP_HOME = 'grp_home';
+    public const USR_HOME = 'usr_home';
+    public const WIKI = 'wiki';
+    public const PLUGIN_WEBDAV = 'plugin_webdav';
+    public const MAILMAN = 'mailman';
+    public const MYSQL = 'mysql';
+    public const CODENDI_LOGS = 'codendi_log';
+    public const BACKUP = 'backup';
+    public const BACKUP_OLD = 'backup_old';
+    public const PATH = 'path_';
 
     /**
      * @var Statistics_DiskUsageDao

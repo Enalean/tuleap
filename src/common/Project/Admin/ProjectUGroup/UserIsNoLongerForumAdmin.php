@@ -22,5 +22,5 @@ namespace Tuleap\Project\Admin\ProjectUGroup;
 
 class UserIsNoLongerForumAdmin extends UserAndProjectUGroupRelationshipEvent
 {
-    const NAME = 'userIsNoLongerForumAdmin';
+    public const NAME = 'userIsNoLongerForumAdmin';
 }

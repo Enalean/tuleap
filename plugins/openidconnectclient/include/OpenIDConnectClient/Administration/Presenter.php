@@ -47,7 +47,7 @@ class Presenter {
      * @var string
      */
     public $csrf_token;
-    const TEMPLATE = 'administration-providers';
+    public const TEMPLATE = 'administration-providers';
 
     public function __construct(
         array $providers_presenters,

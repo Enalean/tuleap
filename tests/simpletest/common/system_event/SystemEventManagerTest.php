@@ -148,7 +148,7 @@ class SystemEventManagerGetTypesForQueueTest extends TuleapTestCase {
 
     private $event_manager;
 
-    const CUSTOM_QUEUE = 'custom_queue';
+    public const CUSTOM_QUEUE = 'custom_queue';
 
     public function setUp() {
         parent::setUp();

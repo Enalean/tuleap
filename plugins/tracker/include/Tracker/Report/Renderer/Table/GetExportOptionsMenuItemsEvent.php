@@ -24,7 +24,7 @@ use Tuleap\Event\Dispatchable;
 
 class GetExportOptionsMenuItemsEvent implements Dispatchable
 {
-    const NAME = 'getExportOptionsMenuItems';
+    public const NAME = 'getExportOptionsMenuItems';
     /**
      * @var \Tracker_Report_Renderer_Table
      */

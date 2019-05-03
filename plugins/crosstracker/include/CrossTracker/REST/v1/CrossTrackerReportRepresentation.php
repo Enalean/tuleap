@@ -26,7 +26,7 @@ use Tuleap\Tracker\REST\TrackerReference;
 
 class CrossTrackerReportRepresentation
 {
-    const ROUTE = 'cross_tracker_reports';
+    public const ROUTE = 'cross_tracker_reports';
 
     /**
      * @var int

@@ -22,7 +22,7 @@ require_once dirname(__FILE__). '/../../constants.php';
 
 class Cardwall_OnTop_Config_ColumnFactory {
 
-    const DEFAULT_HEADER_COLOR = 'rgb(248,248,248)';
+    public const DEFAULT_HEADER_COLOR = 'rgb(248,248,248)';
 
     /**
      * @var Cardwall_OnTop_ColumnDao

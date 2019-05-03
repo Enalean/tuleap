@@ -25,7 +25,7 @@ use Tuleap\Event\Dispatchable;
 
 class MoveArtifactActionAllowedByPluginRetriever implements Dispatchable
 {
-    const NAME = 'moveArtifactActionAllowedByPluginRetriever';
+    public const NAME = 'moveArtifactActionAllowedByPluginRetriever';
     /**
      * @var \Tracker_Artifact
      */

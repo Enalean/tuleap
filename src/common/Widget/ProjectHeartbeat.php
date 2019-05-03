@@ -28,7 +28,7 @@ use Widget;
 
 class ProjectHeartbeat extends Widget
 {
-    const NAME = 'projectheartbeat';
+    public const NAME = 'projectheartbeat';
 
     public function __construct()
     {

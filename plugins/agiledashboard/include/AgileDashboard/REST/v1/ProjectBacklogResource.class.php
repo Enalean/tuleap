@@ -58,8 +58,8 @@ use UserManager;
  */
 class ProjectBacklogResource
 {
-    const MAX_LIMIT = 100;
-    const TOP_BACKLOG_IDENTIFIER = AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider::TOP_BACKLOG_IDENTIFIER;
+    public const MAX_LIMIT = 100;
+    public const TOP_BACKLOG_IDENTIFIER = AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider::TOP_BACKLOG_IDENTIFIER;
 
     /** @var Planning_MilestoneFactory */
     private $milestone_factory;

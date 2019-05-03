@@ -27,7 +27,7 @@ use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
 
 class LastAccessKeyIdentifierStore
 {
-    const STORAGE_NAME = 'last_access_key_identifier';
+    public const STORAGE_NAME = 'last_access_key_identifier';
     /**
      * @var SplitTokenFormatter
      */

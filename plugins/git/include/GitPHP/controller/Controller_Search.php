@@ -35,9 +35,9 @@ class Controller_Search extends ControllerBase // @codingStandardsIgnoreLine
 {
     use \Tuleap\Git\Repository\View\FeatureFlag;
 
-    const SEARCH_COMMIT    = 'commit';
-    const SEARCH_AUTHOR    = 'author';
-    const SEARCH_COMMITTER = 'committer';
+    public const SEARCH_COMMIT    = 'commit';
+    public const SEARCH_AUTHOR    = 'author';
+    public const SEARCH_COMMITTER = 'committer';
 
     /**
      * __construct

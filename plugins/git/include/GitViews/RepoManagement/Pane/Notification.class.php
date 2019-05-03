@@ -31,7 +31,7 @@ use Tuleap\Git\Notifications\CollectionOfUgroupToBeNotifiedPresenterBuilder;
 class Notification extends Pane
 {
 
-    const ID = 'mail';
+    public const ID = 'mail';
 
     /**
      * @var CollectionOfUserToBeNotifiedPresenterBuilder

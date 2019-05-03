@@ -24,12 +24,12 @@ require_once 'common/backend/BackendLogger.class.php';
  * I know how to speak to a Gerrit 2.5 remote server
  */
 class Git_Driver_GerritLegacy implements Git_Driver_Gerrit {
-    const INDEX_GROUPS_VERBOSE_NAME = 0;
-    const INDEX_GROUPS_VERBOSE_UUID = 1;
+    public const INDEX_GROUPS_VERBOSE_NAME = 0;
+    public const INDEX_GROUPS_VERBOSE_UUID = 1;
 
-    const COMMAND      = 'gerrit';
-    const GSQL_COMMAND = 'gerrit gsql --format json -c';
-    const EXIT_CODE    = 1;
+    public const COMMAND      = 'gerrit';
+    public const GSQL_COMMAND = 'gerrit gsql --format json -c';
+    public const EXIT_CODE    = 1;
 
     /** @var Git_Driver_Gerrit_RemoteSSHCommand */
     private $ssh;

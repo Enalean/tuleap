@@ -22,7 +22,7 @@
 
 abstract class Tracker_FormElement_Field_List_BindValue extends Tracker_FormElement_Field_List_Value {
 
-    const BIND_PREFIX = 'b';
+    public const BIND_PREFIX = 'b';
 
     public function getJsonId() {
         return self::BIND_PREFIX. $this->getId();

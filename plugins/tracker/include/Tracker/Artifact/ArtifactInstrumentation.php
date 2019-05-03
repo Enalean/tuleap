@@ -23,10 +23,10 @@ namespace Tuleap\Tracker\Artifact;
 
 class ArtifactInstrumentation
 {
-    const METRIC_NAME  = 'tracker_artifacts_total';
-    const TYPE_CREATED = 'created';
-    const TYPE_UPDATED = 'updated';
-    const TYPE_VIEWED  = 'viewed';
+    public const METRIC_NAME  = 'tracker_artifacts_total';
+    public const TYPE_CREATED = 'created';
+    public const TYPE_UPDATED = 'updated';
+    public const TYPE_VIEWED  = 'viewed';
 
     public static function increment($type)
     {

@@ -27,9 +27,9 @@ use Tuleap\Layout\IncludeAssets;
 
 class Git_AdminGitoliteConfig {
 
-    const ACTION_UPDATE_CONFIG                      = 'update_config';
-    const ACTION_MIGRATE_SSH_KEY_MANAGEMENT         = 'migrate_to_tuleap_ssh_keys_management';
-    const ACTION_UPDATE_BIG_OBJECT_ALLOWED_PROJECTS = "update-big-objects-allowed-projects";
+    public const ACTION_UPDATE_CONFIG                      = 'update_config';
+    public const ACTION_MIGRATE_SSH_KEY_MANAGEMENT         = 'migrate_to_tuleap_ssh_keys_management';
+    public const ACTION_UPDATE_BIG_OBJECT_ALLOWED_PROJECTS = "update-big-objects-allowed-projects";
 
     /**
      * @var Git_SystemEventManager

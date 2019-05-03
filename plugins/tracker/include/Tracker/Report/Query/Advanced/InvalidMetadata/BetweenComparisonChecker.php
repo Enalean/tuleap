@@ -25,7 +25,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 
 class BetweenComparisonChecker implements ICheckMetadataForAComparison
 {
-    const OPERATOR = 'between()';
+    public const OPERATOR = 'between()';
 
     public function checkMetaDataIsValid(Metadata $metadata, Comparison $comparison)
     {

@@ -54,14 +54,14 @@ class UserManager {
      */
     private $access_key_verifier;
 
-    const HTTP_TOKEN_HEADER     = 'X-Auth-Token';
-    const PHP_HTTP_TOKEN_HEADER = 'HTTP_X_AUTH_TOKEN';
+    public const HTTP_TOKEN_HEADER     = 'X-Auth-Token';
+    public const PHP_HTTP_TOKEN_HEADER = 'HTTP_X_AUTH_TOKEN';
 
-    const HTTP_USER_HEADER      = 'X-Auth-UserId';
-    const PHP_HTTP_USER_HEADER  = 'HTTP_X_AUTH_USERID';
+    public const HTTP_USER_HEADER      = 'X-Auth-UserId';
+    public const PHP_HTTP_USER_HEADER  = 'HTTP_X_AUTH_USERID';
 
-    const HTTP_ACCESS_KEY_HEADER     = 'X-Auth-AccessKey';
-    const PHP_HTTP_ACCESS_KEY_HEADER = 'HTTP_X_AUTH_ACCESSKEY';
+    public const HTTP_ACCESS_KEY_HEADER     = 'X-Auth-AccessKey';
+    public const PHP_HTTP_ACCESS_KEY_HEADER = 'HTTP_X_AUTH_ACCESSKEY';
 
     public function __construct(
         \UserManager $user_manager,

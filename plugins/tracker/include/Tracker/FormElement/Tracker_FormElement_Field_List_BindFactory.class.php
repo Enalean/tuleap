@@ -23,9 +23,9 @@ require_once('common/html/HTML_Element_Input_Radio.class.php');
 
 class Tracker_FormElement_Field_List_BindFactory
 {
-    const STATIK  = 'static';
-    const USERS   = 'users';
-    const UGROUPS = 'ugroups';
+    public const STATIK  = 'static';
+    public const USERS   = 'users';
+    public const UGROUPS = 'ugroups';
 
     /**
      * @var UGroupManager

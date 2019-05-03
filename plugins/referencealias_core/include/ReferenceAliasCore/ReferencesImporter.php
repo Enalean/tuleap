@@ -33,8 +33,8 @@ class ReferencesImporter
     /** @var Logger */
     private $logger;
 
-    const XREF_PKG = 'pkg';
-    const XREF_REL = 'rel';
+    public const XREF_PKG = 'pkg';
+    public const XREF_REL = 'rel';
 
     private $xref_kind = array(
         self::XREF_PKG => 'package',

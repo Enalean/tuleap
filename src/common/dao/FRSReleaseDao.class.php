@@ -20,7 +20,7 @@
  */
 
 class FRSReleaseDao extends DataAccessObject {
-    const INCLUDE_DELETED = 0x0001;
+    public const INCLUDE_DELETED = 0x0001;
 
     var $STATUS_DELETED;
 

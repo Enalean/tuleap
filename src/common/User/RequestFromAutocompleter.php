@@ -33,7 +33,7 @@ use UserManager;
  */
 class RequestFromAutocompleter
 {
-    const UGROUP_PREFIX = '_ugroup:';
+    public const UGROUP_PREFIX = '_ugroup:';
 
     /**
      * @var string[]

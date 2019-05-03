@@ -21,8 +21,8 @@
 
 class MediawikiDao extends DataAccessObject {
 
-    const DEDICATED_DATABASE_PREFIX = 'plugin_mediawiki_';
-    const DEDICATED_DATABASE_TABLE_PREFIX = 'mw';
+    public const DEDICATED_DATABASE_PREFIX = 'plugin_mediawiki_';
+    public const DEDICATED_DATABASE_TABLE_PREFIX = 'mw';
 
     private $database_name = array();
     private $table_prefix = array();

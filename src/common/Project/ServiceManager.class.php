@@ -23,7 +23,7 @@ use Tuleap\Project\Service\ServiceNotFoundException;
 
 class ServiceManager {
 
-    const CUSTOM_SERVICE_SHORTNAME = '';
+    public const CUSTOM_SERVICE_SHORTNAME = '';
 
     /** @var ServiceDao */
     private $dao;

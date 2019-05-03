@@ -24,7 +24,7 @@ use Event;
 
 class HistoryRetriever
 {
-    const MAX_LENGTH_HISTORY = 30;
+    public const MAX_LENGTH_HISTORY = 30;
 
     /**
      * @var \EventManager
