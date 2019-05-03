@@ -28,7 +28,9 @@ require_once __DIR__ . '/IntegrationTestCaseWithStubs.php';
 use DateTimeImmutable;
 use Tuleap\Baseline\Factory\BaselineArtifactFactory;
 use Tuleap\Baseline\Factory\BaselineFactory;
+use Tuleap\Baseline\Factory\TransientComparisonFactory;
 use Tuleap\GlobalLanguageMock;
+use Tuleap\REST\I18NRestException;
 
 class BaselineControllerIntTest extends IntegrationTestCaseWithStubs
 {
@@ -90,5 +92,19 @@ class BaselineControllerIntTest extends IntegrationTestCaseWithStubs
         $this->baseline_repository->addBaseline($baseline);
         $this->controller->delete(2);
         $this->assertNotContains(2, array_keys($this->baseline_repository->findAllById()));
+    }
+
+    public function testDeleteThrowsWhenAssociatedToAComparison()
+    {
+        $this->expectException(I18NRestException::class);
+        $this->expectExceptionCode(409);
+
+        $baseline = BaselineFactory::one()->id(2)->build();
+        $this->baseline_repository->addBaseline($baseline);
+
+        $comparison = TransientComparisonFactory::one()->base($baseline)->build();
+        $this->comparison_repository->add($comparison, $this->current_user);
+
+        $this->controller->delete(2);
     }
 }

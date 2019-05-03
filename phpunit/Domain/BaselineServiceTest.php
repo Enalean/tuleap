@@ -49,6 +49,9 @@ class BaselineServiceTest extends TestCase
     /** @var BaselineRepository|MockInterface */
     private $baseline_repository;
 
+    /** @var ComparisonRepository|MockInterface */
+    private $comparison_repository;
+
     /** @var FrozenClock */
     private $clock;
 
@@ -58,12 +61,14 @@ class BaselineServiceTest extends TestCase
     /** @before */
     public function createInstance()
     {
-        $this->baseline_repository = Mockery::mock(BaselineRepository::class);
-        $this->clock               = new FrozenClock();
-        $this->authorizations      = Mockery::mock(AuthorizationsImpl::class);
+        $this->baseline_repository   = Mockery::mock(BaselineRepository::class);
+        $this->comparison_repository = Mockery::mock(ComparisonRepository::class);
+        $this->clock                 = new FrozenClock();
+        $this->authorizations        = Mockery::mock(AuthorizationsImpl::class);
 
         $this->service = new BaselineService(
             $this->baseline_repository,
+            $this->comparison_repository,
             $this->clock,
             $this->authorizations
         );
@@ -126,6 +131,8 @@ class BaselineServiceTest extends TestCase
     public function testDeleteDeletesGivenBaseline()
     {
         $this->authorizations->allows(['canDeleteBaseline' => true]);
+
+        $this->comparison_repository->shouldReceive(['countByBaseline' => 0]);
 
         $baseline = BaselineFactory::one()->build();
         $this->baseline_repository

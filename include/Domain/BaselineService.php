@@ -31,6 +31,9 @@ class BaselineService
     /** @var BaselineRepository */
     private $baseline_repository;
 
+    /** @var ComparisonRepository */
+    private $comparison_repository;
+
     /** @var Clock */
     private $clock;
 
@@ -39,12 +42,14 @@ class BaselineService
 
     public function __construct(
         BaselineRepository $baseline_repository,
+        ComparisonRepository $comparison_repository,
         Clock $clock,
         Authorizations $authorizations
     ) {
-        $this->baseline_repository = $baseline_repository;
-        $this->clock               = $clock;
-        $this->authorizations      = $authorizations;
+        $this->baseline_repository   = $baseline_repository;
+        $this->comparison_repository = $comparison_repository;
+        $this->clock                 = $clock;
+        $this->authorizations        = $authorizations;
     }
 
     /**
@@ -76,6 +81,7 @@ class BaselineService
 
     /**
      * @throws NotAuthorizedException
+     * @throws BaselineDeletionException
      */
     public function delete(PFUser $current_user, Baseline $baseline)
     {
@@ -83,6 +89,11 @@ class BaselineService
             throw new NotAuthorizedException(
                 dgettext('tuleap-baseline', "You are not allowed to delete this baseline")
             );
+        }
+
+        $comparisons_count = $this->comparison_repository->countByBaseline($baseline);
+        if ($comparisons_count > 0) {
+            throw new BaselineDeletionException($comparisons_count);
         }
         return $this->baseline_repository->delete($baseline, $current_user);
     }

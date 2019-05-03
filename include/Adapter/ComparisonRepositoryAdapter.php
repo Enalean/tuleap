@@ -27,6 +27,7 @@ use ParagonIE\EasyDB\EasyDB;
 use PFUser;
 use Project;
 use Tuleap\Baseline\Authorizations;
+use Tuleap\Baseline\Baseline;
 use Tuleap\Baseline\BaselineRepository;
 use Tuleap\Baseline\Comparison;
 use Tuleap\Baseline\ComparisonRepository;
@@ -207,6 +208,17 @@ class ComparisonRepositoryAdapter implements ComparisonRepository
             $compared_to_baseline,
             $author,
             $creation_date
+        );
+    }
+
+    public function countByBaseline(Baseline $baseline): int
+    {
+        return $this->db->single(
+            'SELECT COUNT(comparison.id) as nb
+            FROM plugin_baseline_comparison as comparison
+            WHERE comparison.base_baseline_id = ?
+            OR comparison.compared_to_baseline_id = ?',
+            [$baseline->getId(), $baseline->getId()]
         );
     }
 }

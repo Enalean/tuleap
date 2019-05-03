@@ -25,6 +25,7 @@ namespace Tuleap\Baseline\Stub;
 
 use PFUser;
 use Project;
+use Tuleap\Baseline\Baseline;
 use Tuleap\Baseline\Clock;
 use Tuleap\Baseline\Comparison;
 use Tuleap\Baseline\ComparisonRepository;
@@ -114,5 +115,18 @@ class ComparisonRepositoryStub implements ComparisonRepository
     public function delete(Comparison $comparison, PFUser $current_user): void
     {
         unset($this->comparisons_by_id[$comparison->getId()]);
+    }
+
+    public function countByBaseline(Baseline $baseline): int
+    {
+        return count(
+            array_filter(
+                $this->comparisons_by_id,
+                function (Comparison $comparison) use ($baseline) {
+                    return $comparison->getBaseBaseline() === $baseline
+                        || $comparison->getComparedToBaseline() === $baseline;
+                }
+            )
+        );
     }
 }

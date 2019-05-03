@@ -104,6 +104,7 @@ class BaselinesResource extends AuthenticatedResource
      * @throws \Rest_Exception_InvalidTokenException
      * @throws NotFoundRestException 404
      * @throws ForbiddenRestException 403
+     * @throws I18NRestException 409
      * @throws \User_PasswordExpiredException
      * @throws \User_StatusDeletedException
      * @throws \User_StatusInvalidException

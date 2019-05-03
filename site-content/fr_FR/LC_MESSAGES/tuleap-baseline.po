@@ -59,8 +59,20 @@ msgid "Set and compare baseline of items"
 msgstr "Poser des baselines et les comparer"
 
 #, php-format
+msgid ""
+"The baseline is associated to %u saved comparison(s). You should delete "
+"this(these) comparison(s) before deleting the baseline"
+msgstr ""
+"La baseline est associée à %u comparaison(s) sauvegardée(s). Vous devez "
+"supprimer cette(ces) comparaison(s) avant de supprimer la baseline"
+
+#, php-format
 msgid "This operation is not allowed. %s"
 msgstr "Cette opération n'est pas autorisée. %s"
+
+#, php-format
+msgid "This operation is possible for now. %s"
+msgstr "Cette opération n'est pas possible actuellement. %s"
 
 msgid "You are not allowed to create this baseline"
 msgstr "Vous n'êtes pas autorisé à créer cette baseline"

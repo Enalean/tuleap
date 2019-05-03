@@ -55,4 +55,6 @@ interface ComparisonRepository
     public function countByProject(Project $project): int;
 
     public function delete(Comparison $comparison, PFUser $current_user): void;
+
+    public function countByBaseline(Baseline $baseline): int;
 }

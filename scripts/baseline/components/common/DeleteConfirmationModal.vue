@@ -25,7 +25,12 @@
                 data-test-type="error-message"
                 v-if="is_deleting_failed"
             >
-                {{ failed_message }}
+                <template v-if="Boolean(failed_message)">
+                    {{ failed_message }}
+                </template>
+                <template v-else>
+                    {{ default_failed_message }}
+                </template>
             </div>
             <p>
                 <slot></slot>
@@ -68,19 +73,21 @@
 </template>
 
 <script>
+import { getMessageFromException } from "../../support/rest-utils";
 export default {
     name: "DeleteConfirmationModal",
 
     props: {
         submit_label: { required: true, type: String },
-        failed_message: { required: true, type: String },
+        default_failed_message: { required: true, type: String },
         on_submit: { required: true, type: Function }
     },
 
     data() {
         return {
             is_deleting: false,
-            is_deleting_failed: false
+            is_deleting_failed: false,
+            failed_message: null
         };
     },
 
@@ -90,8 +97,9 @@ export default {
             this.is_deleting_failed = false;
             try {
                 await this.on_submit();
-            } catch (e) {
+            } catch (exception) {
                 this.is_deleting_failed = true;
+                this.failed_message = await getMessageFromException(exception);
             } finally {
                 this.is_deleting = false;
             }

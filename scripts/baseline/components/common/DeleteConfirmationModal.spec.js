@@ -41,7 +41,7 @@ describe("DeleteConfirmationModal", () => {
         wrapper = shallowMount(DeleteConfirmationModal, {
             propsData: {
                 submit_label: "Confirmation message",
-                failed_message: "Failed message",
+                default_failed_message: "Failed message",
                 on_submit: confirm
             },
             localVue

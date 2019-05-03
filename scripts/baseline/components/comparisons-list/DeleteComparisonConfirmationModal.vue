@@ -19,7 +19,7 @@
 <template>
     <delete-confirmation-modal
         v-bind:submit_label="label"
-        v-bind:failed_message="failed_message"
+        v-bind:default_failed_message="default_failed_message"
         v-bind:on_submit="confirm"
     >
         <span v-translate>
@@ -44,7 +44,7 @@ export default {
         label() {
             return this.$gettext("Delete comparison");
         },
-        failed_message() {
+        default_failed_message() {
             return this.$gettext("Cannot delete comparison");
         }
     },

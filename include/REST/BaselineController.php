@@ -25,7 +25,9 @@ namespace Tuleap\Baseline\REST;
 
 use DateTime;
 use DateTimeImmutable;
+use Exception;
 use Tuleap\Baseline\BaselineArtifactRepository;
+use Tuleap\Baseline\BaselineDeletionException;
 use Tuleap\Baseline\BaselineService;
 use Tuleap\Baseline\CurrentUserProvider;
 use Tuleap\Baseline\NotAuthorizedException;
@@ -107,6 +109,7 @@ class BaselineController
     /**
      * @throws NotFoundRestException
      * @throws ForbiddenRestException
+     * @throws I18NRestException 409
      */
     public function delete(int $id): void
     {
@@ -120,6 +123,8 @@ class BaselineController
             $this->baseline_service->delete($current_user, $baseline);
         } catch (NotAuthorizedException $exception) {
             $this->throw403Exception($exception);
+        } catch (BaselineDeletionException $exception) {
+            $this->throw409Exception($exception);
         }
     }
 
@@ -157,6 +162,20 @@ class BaselineController
         throw new ForbiddenRestException(
             sprintf(
                 dgettext('tuleap-baseline', 'This operation is not allowed. %s'),
+                $exception->getMessage()
+            )
+        );
+    }
+
+    /**
+     * @throws I18NRestException 409
+     */
+    private function throw409Exception(Exception $exception): void
+    {
+        throw new I18NRestException(
+            409,
+            sprintf(
+                dgettext('tuleap-baseline', 'This operation is possible for now. %s'),
                 $exception->getMessage()
             )
         );
