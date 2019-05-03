@@ -30,13 +30,30 @@ class FrozenFieldsUpdater implements PostActionUpdater
      */
     private $frozen_fields_repository;
 
-    public function __construct(FrozenFieldsRepository $frozen_fields_repository)
-    {
+    /**
+     * @var FrozenFieldsValidator
+     */
+    private $frozen_fields_validator;
+
+    public function __construct(
+        FrozenFieldsRepository $frozen_fields_repository,
+        FrozenFieldsValidator $frozen_fields_validator
+    ) {
         $this->frozen_fields_repository = $frozen_fields_repository;
+        $this->frozen_fields_validator = $frozen_fields_validator;
     }
 
+    /**
+     * @throws InvalidPostActionException
+     * @throws \Tuleap\Tracker\Workflow\Transition\OrphanTransitionException
+     */
     public function updateByTransition(PostActionCollection $actions, Transition $transition): void
     {
+        $actions->validateFrozenFieldsActions(
+            $this->frozen_fields_validator,
+            $transition->getWorkflow()->getTracker()
+        );
+
         $this->frozen_fields_repository->deleteAllByTransition($transition);
 
         foreach ($actions->getFrozenFieldsPostActions() as $action) {

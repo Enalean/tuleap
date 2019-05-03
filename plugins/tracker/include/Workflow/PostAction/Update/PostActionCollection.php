@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,6 +22,8 @@
 namespace Tuleap\Tracker\Workflow\PostAction\Update;
 
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\CIBuildValidator;
+use Tuleap\Tracker\Workflow\PostAction\Update\Internal\FrozenFieldsValidator;
+use Tuleap\Tracker\Workflow\PostAction\Update\Internal\InvalidPostActionException;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\PostActionIdCollection;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\PostActionsDiff;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\PostActionVisitor;
@@ -91,6 +93,14 @@ class PostActionCollection implements PostActionVisitor
     public function visitSetFloatValue(SetFloatValue $set_float_value_action)
     {
         $this->set_float_value_actions[] = $set_float_value_action;
+    }
+
+    /**
+     * @throws Internal\InvalidPostActionException
+     */
+    public function validateFrozenFieldsActions(FrozenFieldsValidator $validator, \Tracker $tracker): void
+    {
+        $validator->validate($tracker, ...$this->frozen_fields_actions);
     }
 
     /**

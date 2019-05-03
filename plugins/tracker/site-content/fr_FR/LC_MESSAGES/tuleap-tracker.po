@@ -164,6 +164,9 @@ msgstr ""
 msgid "Bad field_id attribute format: int expected."
 msgstr "L'attribut field_id a un mauvais format : numérique attendu."
 
+msgid "Bad field_ids attribute format: array of integer expected."
+msgstr "L'attribut field_ids a un mauvais format : tableau de numérique attendu."
+
 #, php-format
 msgid "Bad format: '%s'. Array expected"
 msgstr "Mauvais format: '%s'. Tableau attendu"
@@ -352,6 +355,13 @@ msgid ""
 msgstr ""
 "Attribut obligatoire field_id non trouvé dans une action de type "
 "\"set_field_value\"."
+
+msgid ""
+"Mandatory attribute field_ids not found in action with type \"frozen_fields"
+"\"."
+msgstr ""
+"Attribut obligatoire field_ids non trouvé dans une action de type "
+"\"frozen_fields\"."
 
 msgid "Mandatory attribute job_url not found in CI build action."
 msgstr "L'attribut obligatoire job_url non trouvé dans une action de build CI."
@@ -619,6 +629,11 @@ msgstr ""
 "Le field_id '%u' ne correspond pas à un champ date utilisé dans le tracker."
 
 #, php-format
+msgid "The field_id value '%u' does not match a field in use in the tracker."
+msgstr ""
+"Le field_id '%u' ne correspond pas à un champ utilisé dans le tracker."
+
+#, php-format
 msgid ""
 "The field_id value '%u' does not match a float field in use in the tracker."
 msgstr ""
@@ -870,6 +885,11 @@ msgstr ""
 
 msgid "There should not be duplicate 'run_job' ids."
 msgstr "Les ids de type 'run_job' ne doivent pas être en doublons."
+
+msgid "There should not be duplicate field_ids for 'frozen_fields' actions."
+msgstr ""
+"Les field_ids d'actions 'frozen_fields' avec type 'int' ne doivent pas "
+"être en doublons."
 
 msgid ""
 "There should not be duplicate field_ids for 'set_field_value' actions with "
@@ -1136,6 +1156,9 @@ msgstr ""
 
 msgid "cleared"
 msgstr "vidé"
+
+msgid "field_ids attribute must not be empty."
+msgstr "L'attribut field_ids ne doit pas être vide."
 
 msgid "no type"
 msgstr "sans nature"

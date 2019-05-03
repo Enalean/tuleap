@@ -260,11 +260,17 @@ class SimpleModeTest extends TrackerBase
      */
     public function testPUTTrackerWorkflowTransitionFrozenFieldsActions(int $transition_id)
     {
+        $used_field_id = $this->getAUsedField(
+            $this->simple_mode_workflow_tracker_id,
+            'status'
+        );
+
         $body = json_encode([
             "post_actions" => [
                 [
                     "id" => null,
-                    "type" => "frozen_fields"
+                    "type" => "frozen_fields",
+                    "field_ids" => [$used_field_id]
                 ]
             ]
         ]);

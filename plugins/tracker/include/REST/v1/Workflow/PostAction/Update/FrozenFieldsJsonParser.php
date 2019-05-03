@@ -20,6 +20,7 @@
 
 namespace Tuleap\Tracker\REST\v1\Workflow\PostAction\Update;
 
+use Tuleap\REST\I18NRestException;
 use Tuleap\Tracker\Workflow\PostAction\Update\FrozenFields;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\IncompatibleWorkflowModeException;
 use Tuleap\Tracker\Workflow\Update\PostAction;
@@ -36,6 +37,7 @@ class FrozenFieldsJsonParser implements PostActionUpdateJsonParser
 
     /**
      * @throws IncompatibleWorkflowModeException
+     * @throws I18NRestException
      */
     public function parse(Workflow $workflow, array $json): PostAction
     {
@@ -43,6 +45,43 @@ class FrozenFieldsJsonParser implements PostActionUpdateJsonParser
             throw new IncompatibleWorkflowModeException(self::POSTACTION_TYPE);
         }
 
-        return new FrozenFields();
+        if (isset($json['id']) && !is_int($json['id'])) {
+            throw new I18NRestException(
+                400,
+                dgettext('tuleap-tracker', "Bad id attribute format: int expected.")
+            );
+        }
+
+        if (! isset($json['field_ids'])) {
+            throw new I18NRestException(
+                400,
+                dgettext('tuleap-tracker', 'Mandatory attribute field_ids not found in action with type "frozen_fields".')
+            );
+        }
+
+        if (! is_array($json['field_ids'])) {
+            throw new I18NRestException(
+                400,
+                dgettext('tuleap-tracker', "Bad field_ids attribute format: array of integer expected.")
+            );
+        }
+
+        if (count($json['field_ids']) === 0) {
+            throw new I18NRestException(
+                400,
+                dgettext('tuleap-tracker', "field_ids attribute must not be empty.")
+            );
+        }
+
+        foreach ($json['field_ids'] as $field_id) {
+            if (! is_int($field_id)) {
+                throw new I18NRestException(
+                    400,
+                    dgettext('tuleap-tracker', "Bad field_ids attribute format: array of integer expected.")
+                );
+            }
+        }
+
+        return new FrozenFields(null, $json['field_ids']);
     }
 }

@@ -152,4 +152,24 @@ class TrackerBase extends RestBase
 
         return $found_transition;
     }
+
+    protected function getAUsedField(int $tracker_id, string $workflow_field_shortname) : int
+    {
+        $response = $this->getResponseByName(
+            \REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->setup_client->get("trackers/$tracker_id")
+        );
+
+        $this->assertEquals($response->getStatusCode(), 200);
+
+        $tracker = $response->json();
+
+        foreach ($tracker['fields'] as $tracker_field) {
+            if ($tracker_field['name'] !== $workflow_field_shortname) {
+                return $tracker_field['field_id'];
+            }
+        }
+
+        $this->fail();
+    }
 }

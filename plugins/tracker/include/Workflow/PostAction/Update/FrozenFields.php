@@ -23,12 +23,35 @@ namespace Tuleap\Tracker\Workflow\PostAction\Update;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\PostActionVisitor;
 use Tuleap\Tracker\Workflow\Update\PostAction;
 
-class FrozenFields implements PostAction
+final class FrozenFields implements PostAction
 {
+    /**
+     * @var int|null
+     */
+    private $id;
+
+    /**
+     * @var array
+     */
+    private $field_ids;
+
+    public function __construct(?int $id, array $field_ids)
+    {
+        $this->id        = $id;
+        $this->field_ids = $field_ids;
+    }
 
     public function getId(): ?int
     {
-        return null;
+        return $this->id;
+    }
+
+    /**
+     * @return array
+     */
+    public function getFieldIds(): array
+    {
+        return $this->field_ids;
     }
 
     public function accept(PostActionVisitor $visitor)
