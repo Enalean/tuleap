@@ -36,7 +36,7 @@ class Tracker_Semantic_Contributor extends Tracker_Semantic
      * @param Tracker                        $tracker    The tracker
      * @param Tracker_FormElement_Field_List $list_field The field
      */
-    public function __construct(Tracker $tracker, Tracker_FormElement_Field_List $list_field = null) {
+    public function __construct(Tracker $tracker, ?Tracker_FormElement_Field_List $list_field = null) {
         parent::__construct($tracker);
         $this->list_field = $list_field;
     }

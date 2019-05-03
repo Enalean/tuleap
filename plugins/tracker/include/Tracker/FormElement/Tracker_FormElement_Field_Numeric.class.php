@@ -222,7 +222,7 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
      *
      * @return string
      */
-    protected function fetchArtifactValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
+    protected function fetchArtifactValue(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
         $html = '';
         if (! empty($submitted_values) && is_array($submitted_values[0]) && isset($submitted_values[0][$this->getId()])) {
             $value = $submitted_values[0][$this->getId()];
@@ -256,7 +256,7 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
         Tracker_Artifact $artifact,
         PFUser $user,
         $ignore_perms,
-        Tracker_Artifact_ChangesetValue $value = null,
+        ?Tracker_Artifact_ChangesetValue $value = null,
         $format = 'text'
     ) {
         if ( empty($value) || !$value->getNumeric()) {
@@ -284,7 +284,7 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
      *
      * @return string
      */
-    public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
+    public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null) {
         if ( empty($value) || ! $value->getValue()) {
             return $this->getNoValueLabel();
         }
@@ -292,7 +292,7 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
         return $hp->purify( "{$value->getValue()}", CODENDI_PURIFIER_CONVERT_HTML);
     }
 
-    public function fetchArtifactValueWithEditionFormIfEditable(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
+    public function fetchArtifactValueWithEditionFormIfEditable(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
         return $this->fetchArtifactValueReadOnly($artifact, $value) . $this->getHiddenArtifactValueForEdition($artifact, $value, $submitted_values);
     }
 

@@ -113,7 +113,7 @@ function partial_stub($classname_or_simpletest_mock, array $mocked_methods) {
     return new OngoingIntelligentStub($mock);
 }
 
-function partial_mock($classname, array $mocked_methods, array $construct_params = null) {
+function partial_mock($classname, array $mocked_methods, ?array $construct_params = null) {
     $object = TestHelper::getPartialMock($classname, $mocked_methods);
     if ($construct_params) {
         call_user_func_array(array($object, '__construct'), $construct_params);

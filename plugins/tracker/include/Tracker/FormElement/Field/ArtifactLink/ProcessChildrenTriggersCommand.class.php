@@ -47,7 +47,7 @@ class Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersCommand impl
         Tracker_Artifact $artifact,
         PFUser $submitter,
         Tracker_Artifact_Changeset $new_changeset,
-        Tracker_Artifact_Changeset $previous_changeset = null
+        ?Tracker_Artifact_Changeset $previous_changeset = null
     ) {
         if ($this->hasChanges($new_changeset, $previous_changeset)) {
             $this->trigger_rules_manager->processChildrenTriggers($artifact);
@@ -56,7 +56,7 @@ class Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersCommand impl
 
     private function hasChanges(
         Tracker_Artifact_Changeset $new_changeset,
-        Tracker_Artifact_Changeset $previous_changeset = null
+        ?Tracker_Artifact_Changeset $previous_changeset = null
     ) {
         if (! $previous_changeset) {
             return true;

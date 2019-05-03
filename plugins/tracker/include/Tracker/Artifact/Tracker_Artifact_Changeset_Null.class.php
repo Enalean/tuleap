@@ -73,7 +73,7 @@ class Tracker_Artifact_Changeset_Null extends Tracker_Artifact_Changeset {
      *
      * @return boolean true if the user can edit
      */
-    public function userCanEdit(PFUser $user = null) {
+    public function userCanEdit(?PFUser $user = null) {
         return false;
     }
 

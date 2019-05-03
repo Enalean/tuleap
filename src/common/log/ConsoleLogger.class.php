@@ -33,7 +33,7 @@ class Log_ConsoleLogger implements Logger {
         $this->log($message, Logger::DEBUG);
     }
 
-    public function error($message, Exception $e = null) {
+    public function error($message, ?Exception $e = null) {
         $this->log($this->generateLogWithException($message, $e), Logger::ERROR);
     }
 
@@ -46,11 +46,11 @@ class Log_ConsoleLogger implements Logger {
         fflush(STDERR);
     }
 
-    public function warn($message, Exception $e = null) {
+    public function warn($message, ?Exception $e = null) {
         $this->log($this->generateLogWithException($message, $e), Logger::WARN);
     }
 
-    private function generateLogWithException($message, Exception $e = null) {
+    private function generateLogWithException($message, ?Exception $e = null) {
         $log_string = $message;
         if (!empty($e)) {
             $error_message  = $e->getMessage();

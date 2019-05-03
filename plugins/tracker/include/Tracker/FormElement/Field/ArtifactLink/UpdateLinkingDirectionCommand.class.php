@@ -42,7 +42,7 @@ class Tracker_FormElement_Field_ArtifactLink_UpdateLinkingDirectionCommand imple
         Tracker_Artifact $artifact,
         PFUser $submitter,
         Tracker_Artifact_Changeset $new_changeset,
-        Tracker_Artifact_Changeset $previous_changeset = null
+        ?Tracker_Artifact_Changeset $previous_changeset = null
     ) {
         $this->source_of_association->linkToArtifact($artifact, $submitter);
     }

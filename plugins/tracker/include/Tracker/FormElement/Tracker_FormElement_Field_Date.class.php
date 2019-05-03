@@ -627,7 +627,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
      */
     protected function fetchArtifactValue(
         Tracker_Artifact $artifact,
-        Tracker_Artifact_ChangesetValue $value = null,
+        ?Tracker_Artifact_ChangesetValue $value = null,
         $submitted_values = array()
     ) {
         $errors = $this->has_errors ? array('has_error') : array();
@@ -650,7 +650,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
         Tracker_Artifact $artifact,
         PFUser $user,
         $ignore_perms,
-        Tracker_Artifact_ChangesetValue $value = null,
+        ?Tracker_Artifact_ChangesetValue $value = null,
         $format = 'text'
     ) {
         if ( empty($value) || !$value->getTimestamp()) {
@@ -675,11 +675,11 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
      *
      * @return string
      */
-    public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
+    public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null) {
         return $this->getFormatter()->fetchArtifactValueReadOnly($artifact, $value);
     }
 
-    public function fetchArtifactValueWithEditionFormIfEditable(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
+    public function fetchArtifactValueWithEditionFormIfEditable(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
         return $this->fetchArtifactValueReadOnly($artifact, $value) . $this->getHiddenArtifactValueForEdition($artifact, $value, $submitted_values);
     }
 
@@ -751,7 +751,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
      * @param Tracker_Artifact_ChangesetValue_Date $value The changeset value for this field
      * @return string
      */
-    protected function fetchTooltipValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
+    protected function fetchTooltipValue(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null) {
         $html = '';
         if ($value) {
             $html .= DateHelper::timeAgoInWords($value->getTimestamp());
@@ -781,7 +781,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
      *
      * @return boolean
      */
-    protected function saveValue($artifact, $changeset_value_id, $value, Tracker_Artifact_ChangesetValue $previous_changesetvalue = null) {
+    protected function saveValue($artifact, $changeset_value_id, $value, ?Tracker_Artifact_ChangesetValue $previous_changesetvalue = null) {
         return $this->getValueDao()->create($changeset_value_id, strtotime($value));
     }
 
@@ -962,7 +962,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
      * @param Tracker_Artifact $artifact
      * @return type
      */
-    public function getFieldDataFromRESTValue(array $value, Tracker_Artifact $artifact = null) {
+    public function getFieldDataFromRESTValue(array $value, ?Tracker_Artifact $artifact = null) {
         if (! $value['value']) {
             return '';
         }
@@ -974,7 +974,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
         return date(Tracker_FormElement_DateFormatter::DATE_FORMAT, strtotime($value['value']));
     }
 
-    public function getFieldDataFromRESTValueByField(array $value, Tracker_Artifact $artifact = null) {
+    public function getFieldDataFromRESTValueByField(array $value, ?Tracker_Artifact $artifact = null) {
         throw new Tracker_FormElement_RESTValueByField_NotImplementedException();
     }
 

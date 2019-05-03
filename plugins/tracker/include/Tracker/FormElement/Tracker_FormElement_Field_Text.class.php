@@ -250,7 +250,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
      *
      * @return string
      */
-    protected function fetchArtifactValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
+    protected function fetchArtifactValue(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
         $html    = '';
         $content = '';
 
@@ -301,7 +301,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
         Tracker_Artifact $artifact,
         PFUser $user,
         $ignore_perms,
-        Tracker_Artifact_ChangesetValue $value = null,
+        ?Tracker_Artifact_ChangesetValue $value = null,
         $format = 'text'
     ) {
         if (empty($value) || $value->getText() == '') {
@@ -327,7 +327,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
      *
      * @return string
      */
-    public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
+    public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null) {
         $text = $value ? $value->getValue() : '';
 
         if ($text === '') {
@@ -337,7 +337,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
         return '<div class="textarea-value">' . $text . '</div>';
     }
 
-    public function fetchArtifactValueWithEditionFormIfEditable(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
+    public function fetchArtifactValueWithEditionFormIfEditable(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
         return $this->fetchArtifactValueReadOnly($artifact, $value) . $this->getHiddenArtifactValueForEdition($artifact, $value, $submitted_values);
     }
 
@@ -431,7 +431,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
      * @param Tracker_Artifact_ChangesetValue_Text $value The changeset value of this field
      * @return string The html code to display the field value in tooltip
      */
-    protected function fetchTooltipValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
+    protected function fetchTooltipValue(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null) {
         $html = '';
 
         if ($value) {
@@ -522,7 +522,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
      *
      * @return mixed
      */
-    public function getFieldDataFromRESTValueByField(array $value, Tracker_Artifact $artifact = null) {
+    public function getFieldDataFromRESTValueByField(array $value, ?Tracker_Artifact $artifact = null) {
         if ($this->doesValueUseTheByFieldOutput($value)) {
            $text_value = $this->formatValueWithTheByFieldOutput($value);
 
@@ -570,7 +570,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
      *
      * @return boolean
      */
-    protected function saveValue($artifact, $changeset_value_id, $value, Tracker_Artifact_ChangesetValue $previous_changesetvalue = null) {
+    protected function saveValue($artifact, $changeset_value_id, $value, ?Tracker_Artifact_ChangesetValue $previous_changesetvalue = null) {
         $content     = $this->getRightContent($value);
         $body_format = $this->getRightBodyFormat($artifact, $value);
 

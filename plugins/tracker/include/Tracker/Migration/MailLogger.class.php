@@ -48,11 +48,11 @@ class Tracker_Migration_MailLogger implements Logger {
         $this->log($message, Logger::INFO);
     }
 
-    public function error($message, Exception $e = null) {
+    public function error($message, ?Exception $e = null) {
         $this->log($this->generateLogWithException('<strong>'.$message.'</strong>', $e), Logger::ERROR);
     }
 
-    public function warn($message, Exception $e = null) {
+    public function warn($message, ?Exception $e = null) {
         $this->log($this->generateLogWithException($message, $e), Logger::WARN);
 
     }
@@ -93,7 +93,7 @@ class Tracker_Migration_MailLogger implements Logger {
         return $html;
     }
 
-    private function generateLogWithException($message, Exception $exception = null) {
+    private function generateLogWithException($message, ?Exception $exception = null) {
         return $this->backend_logger->generateLogWithException($message, $exception);
     }
 }

@@ -119,7 +119,7 @@ class Tracker_DateReminderManager {
     /**
      * @throws Tracker_DateReminderException
      */
-    private function checkReminderMatchTracker(Tracker_DateReminder $reminder = null)
+    private function checkReminderMatchTracker(?Tracker_DateReminder $reminder = null)
     {
         if ($reminder === null || $reminder->getTrackerId() !== $this->getTracker()->getId()) {
             $reminder_id  = $reminder === null ? '' : $reminder->getId();

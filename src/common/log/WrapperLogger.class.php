@@ -36,7 +36,7 @@ class WrapperLogger implements Logger {
         $this->logger->debug($this->formatMessage($message));
     }
 
-    public function error($message, Exception $exception = null) {
+    public function error($message, ?Exception $exception = null) {
         $this->logger->error($this->formatMessage($message), $exception);
     }
 
@@ -48,7 +48,7 @@ class WrapperLogger implements Logger {
         $this->logger->log($this->formatMessage($message), $level);
     }
 
-    public function warn($message, Exception $exception = null) {
+    public function warn($message, ?Exception $exception = null) {
         $this->logger->warn($this->formatMessage($message), $exception);
     }
 

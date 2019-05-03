@@ -564,7 +564,7 @@ class ArtifactsResource extends AuthenticatedResource {
      *
      * @throws RestException 403
      */
-    protected function putId($id, array $values, ChangesetCommentRepresentation $comment = null) {
+    protected function putId($id, array $values, ?ChangesetCommentRepresentation $comment = null) {
         $user     = $this->user_manager->getCurrentUser();
         $artifact = $this->getArtifactById($user, $id);
 
@@ -693,7 +693,7 @@ class ArtifactsResource extends AuthenticatedResource {
         TrackerReference $tracker,
         array $values = array(),
         array $values_by_field = array(),
-        ArtifactReference $from_artifact = null
+        ?ArtifactReference $from_artifact = null
     ) {
         $this->options();
 

@@ -47,9 +47,9 @@ class DetailsChartPresenter
         $burndown_label,
         $has_burnup,
         $burnup_label,
-        BurndownFieldPresenter $burndown_presenter = null,
-        BurnupFieldPresenter $burnup_presenter = null,
-        array $escaped_charts = null
+        ?BurndownFieldPresenter $burndown_presenter = null,
+        ?BurnupFieldPresenter $burnup_presenter = null,
+        ?array $escaped_charts = null
     ) {
         $this->has_burndown       = $has_burndown;
         $this->burndown_label     = $burndown_label;

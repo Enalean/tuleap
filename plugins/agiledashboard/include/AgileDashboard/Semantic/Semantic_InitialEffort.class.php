@@ -38,7 +38,7 @@ class AgileDashBoard_Semantic_InitialEffort extends Tracker_Semantic {
      * @param Tracker                           $tracker    The tracker
      * @param Tracker_FormElement_Field $initial_effort_field The field
      */
-    public function __construct(Tracker $tracker, Tracker_FormElement_Field $initial_effort_field = null) {
+    public function __construct(Tracker $tracker, ?Tracker_FormElement_Field $initial_effort_field = null) {
         parent::__construct($tracker);
         $this->initial_effort_field = $initial_effort_field;
     }

@@ -95,7 +95,7 @@ class Cardwall_OnTop_Config_Command_UpdateMappingFields extends Cardwall_OnTop_C
     /**
      * @return void
      */
-    private function save(array $mapping_tracker_info, array $mapping_fields, Tracker $mapping_tracker = null, Tracker_FormElement $field = null) {
+    private function save(array $mapping_tracker_info, array $mapping_fields, ?Tracker $mapping_tracker = null, ?Tracker_FormElement $field = null) {
         if ($this->canSaveNewField($mapping_fields, $mapping_tracker, $field)) {
             if ($this->fieldHasChanged($mapping_fields, $mapping_tracker, $field)) {
                 $this->saveFieldMapping($mapping_tracker, $field);
@@ -170,14 +170,14 @@ class Cardwall_OnTop_Config_Command_UpdateMappingFields extends Cardwall_OnTop_C
     /**
      * @return bool
      */
-    private function canSaveNewField(array $mapping_fields, Tracker $mapping_tracker = null, Tracker_FormElement $field = null) {
+    private function canSaveNewField(array $mapping_fields, ?Tracker $mapping_tracker = null, ?Tracker_FormElement $field = null) {
         return $mapping_tracker && $field && $field->getTracker() == $mapping_tracker;
     }
 
     /**
      * @return bool
      */
-    private function fieldHasChanged(array $mapping_fields, Tracker $mapping_tracker = null, Tracker_FormElement $field = null) {
+    private function fieldHasChanged(array $mapping_fields, ?Tracker $mapping_tracker = null, ?Tracker_FormElement $field = null) {
         return !isset($mapping_fields[$mapping_tracker->getId()]) || $mapping_fields[$mapping_tracker->getId()] != $field->getId();
     }
 }

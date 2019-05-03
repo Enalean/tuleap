@@ -182,7 +182,7 @@ class Tracker_Artifact_ChangesetFactory {
         PFUser $user,
         array $cache,
         Tracker_Artifact_Changeset $changeset,
-        Tracker_Artifact_Changeset $previous_changeset = null
+        ?Tracker_Artifact_Changeset $previous_changeset = null
     ) {
         foreach ($cache[$changeset->getId()] as $changeset_value_row) {
             $field = $this->tracker_form_element_factory->getFieldById($changeset_value_row['field_id']);

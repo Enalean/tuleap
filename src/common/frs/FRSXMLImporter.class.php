@@ -75,9 +75,9 @@ class FRSXMLImporter {
         XMLImportHelper $xml_import_helper,
         FRSPermissionCreator $permission_creator,
         UploadedLinksUpdater $links_updater,
-        FRSProcessorDao $processor_dao = null,
-        FRSFileTypeDao $filetype_dao = null,
-        PermissionsManager $permission_manager = null
+        ?FRSProcessorDao $processor_dao = null,
+        ?FRSFileTypeDao $filetype_dao = null,
+        ?PermissionsManager $permission_manager = null
     ) {
         $this->logger             = new WrapperLogger($logger, "FRSXMLImporter");
         $this->xml_validator      = $xml_validator;

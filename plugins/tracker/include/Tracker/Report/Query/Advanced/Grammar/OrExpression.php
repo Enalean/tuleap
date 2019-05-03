@@ -30,7 +30,7 @@ class OrExpression implements Term, Visitable
      */
     private $tail;
 
-    public function __construct(AndExpression $expression, OrOperand $tail = null)
+    public function __construct(AndExpression $expression, ?OrOperand $tail = null)
     {
         $this->expression = $expression;
         $this->tail       = $tail;

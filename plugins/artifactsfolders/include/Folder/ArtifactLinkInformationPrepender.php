@@ -98,7 +98,7 @@ class ArtifactLinkInformationPrepender
         Tracker_Artifact $artifact,
         PFUser $current_user,
         array $additional_classes,
-        Tracker_Artifact $current_folder = null
+        ?Tracker_Artifact $current_folder = null
     ) {
         $class = "";
         if (count($additional_classes) === 0) {

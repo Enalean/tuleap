@@ -529,7 +529,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      *
      * @return string
      */
-    protected function fetchArtifactValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
+    protected function fetchArtifactValue(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
         $values = array();
         if (! empty($submitted_values) && isset($submitted_values[0][$this->id])) {
             $values = $submitted_values[0][$this->id];
@@ -556,7 +556,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         Tracker_Artifact $artifact,
         PFUser $user,
         $ignore_perms,
-        Tracker_Artifact_ChangesetValue $value = null,
+        ?Tracker_Artifact_ChangesetValue $value = null,
         $format = 'text'
     ) {
         $output = '';
@@ -587,7 +587,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      *
      * @return string
      */
-    public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
+    public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null) {
         $html = '';
         $selected_values = $value ? $value->getListValues() : array();
         $tablo = array();
@@ -607,7 +607,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         return $html;
     }
 
-    public function fetchArtifactValueWithEditionFormIfEditable(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
+    public function fetchArtifactValueWithEditionFormIfEditable(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
         return $this->fetchArtifactValueReadOnly($artifact, $value) . $this->getHiddenArtifactValueForEdition($artifact, $value, $submitted_values);
     }
 
@@ -981,7 +981,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      * @param Tracker_Artifact_ChangesetValue_List $value The changeset value of this field
      * @return string The html code to display the field value in tooltip
      */
-    protected function fetchTooltipValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
+    protected function fetchTooltipValue(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null) {
         $html = '';
         if ($value) {
             $html .= $this->fetchChangesetValue($artifact->id, $artifact->getLastChangeset()->id, $value);
@@ -994,7 +994,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      */
     public function fetchCardValue(
         Tracker_Artifact $artifact,
-        Tracker_CardDisplayPreferences $display_preferences = null
+        ?Tracker_CardDisplayPreferences $display_preferences = null
     ) {
         $html = '';
         //We have to fetch all values of the changeset as we are a list of value
@@ -1133,7 +1133,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      *
      * @return boolean
      */
-    protected function saveValue($artifact, $changeset_value_id, $value, Tracker_Artifact_ChangesetValue $previous_changesetvalue = null) {
+    protected function saveValue($artifact, $changeset_value_id, $value, ?Tracker_Artifact_ChangesetValue $previous_changesetvalue = null) {
         return $this->getValueDao()->create($changeset_value_id, $value);
     }
 
@@ -1166,7 +1166,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
          return $bind->getRESTBindingProperties();
      }
 
-     public function getFieldDataFromRESTValue(array $value, Tracker_Artifact $artifact = null) {
+     public function getFieldDataFromRESTValue(array $value, ?Tracker_Artifact $artifact = null) {
          if (array_key_exists('bind_value_ids', $value) && is_array($value['bind_value_ids'])) {
              return array_map('intval', $value['bind_value_ids']);
          }
@@ -1174,7 +1174,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
             . ' Example: {"field_id": 1548, "bind_value_ids": [457]}');
      }
 
-    public function getFieldDataFromRESTValueByField(array $value, Tracker_Artifact $artifact = null) {
+    public function getFieldDataFromRESTValueByField(array $value, ?Tracker_Artifact $artifact = null) {
         throw new Tracker_FormElement_RESTValueByField_NotImplementedException();
     }
 
@@ -1250,7 +1250,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      *
      *@return boolean true if user has permission on this field
      */
-    public function userCanMakeTransition($transition_id, PFUser $user = null) {
+    public function userCanMakeTransition($transition_id, ?PFUser $user = null) {
         if ($transition_id) {
             $group_id = $this->getTracker()->getGroupId();
 

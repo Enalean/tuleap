@@ -103,7 +103,7 @@ abstract class Tracker_FormElement_Field_Alphanum extends Tracker_FormElement_Fi
      *
      * @return int or array of int
      */
-    protected function saveValue($artifact, $changeset_value_id, $value, Tracker_Artifact_ChangesetValue $previous_changesetvalue = null) {
+    protected function saveValue($artifact, $changeset_value_id, $value, ?Tracker_Artifact_ChangesetValue $previous_changesetvalue = null) {
         return $this->getValueDao()->create($changeset_value_id, $value);
     }
 

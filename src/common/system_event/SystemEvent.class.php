@@ -400,7 +400,7 @@ abstract class SystemEvent {
     /**
      * Notify people that listen to the status of the event
      */
-    public function notify(SystemEventsFollowersDao $dao = null) {
+    public function notify(?SystemEventsFollowersDao $dao = null) {
         if(is_null($dao)) {
             $dao = new SystemEventsFollowersDao(CodendiDataAccess::instance());
         }

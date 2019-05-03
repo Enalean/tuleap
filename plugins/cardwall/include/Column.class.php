@@ -98,7 +98,7 @@ class Cardwall_Column {
      *
      * @return Boolean
      */
-    public function canContainStatus($artifact_status, Cardwall_OnTop_Config_TrackerMapping $tracker_mapping = null) {
+    public function canContainStatus($artifact_status, ?Cardwall_OnTop_Config_TrackerMapping $tracker_mapping = null) {
         $is_mapped = false;
         if ($tracker_mapping) {
             $is_mapped = $tracker_mapping->isMappedTo($this, $artifact_status);

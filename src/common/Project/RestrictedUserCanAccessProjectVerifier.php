@@ -27,7 +27,7 @@ use Project;
 
 class RestrictedUserCanAccessProjectVerifier implements RestrictedUserCanAccessVerifier
 {
-    public function isRestrictedUserAllowedToAccess(PFUser $user, Project $project = null): bool
+    public function isRestrictedUserAllowedToAccess(PFUser $user, ?Project $project = null): bool
     {
         return $project && $project->isSuperPublic();
     }

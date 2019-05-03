@@ -163,7 +163,7 @@ class TrackerXmlImport
      */
     public static function build(
         User\XML\Import\IFindUserFromXMLReference $user_finder,
-        Logger $logger = null
+        ?Logger $logger = null
     ) {
         $builder         = new Tracker_Artifact_XMLImportBuilder();
         $tracker_factory = TrackerFactory::instance();

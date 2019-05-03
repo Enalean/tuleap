@@ -42,7 +42,7 @@ class ConsoleLogger implements Logger
         $this->log($message, Logger::DEBUG);
     }
 
-    public function error($message, Exception $e = null)
+    public function error($message, ?Exception $e = null)
     {
         $this->log($this->generateLogWithException($message, $e), Logger::ERROR);
     }
@@ -57,12 +57,12 @@ class ConsoleLogger implements Logger
         $this->output->writeln($this->colorize($level, $message));
     }
 
-    public function warn($message, Exception $e = null)
+    public function warn($message, ?Exception $e = null)
     {
         $this->log($this->generateLogWithException($message, $e), Logger::WARN);
     }
 
-    private function generateLogWithException($message, Exception $e = null)
+    private function generateLogWithException($message, ?Exception $e = null)
     {
         $log_string = $message;
         if ($e !== null) {

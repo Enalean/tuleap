@@ -52,10 +52,10 @@ class UGroupManager {
     private $dynamic_ugroup_members_updater;
 
     public function __construct(
-        UGroupDao $dao = null,
-        EventManager $event_manager = null,
-        UGroupUserDao $ugroup_user_dao = null,
-        DynamicUGroupMembersUpdater $dynamic_ugroup_members_updater = null
+        ?UGroupDao $dao = null,
+        ?EventManager $event_manager = null,
+        ?UGroupUserDao $ugroup_user_dao = null,
+        ?DynamicUGroupMembersUpdater $dynamic_ugroup_members_updater = null
     ) {
         $this->dao                            = $dao;
         $this->event_manager                  = $event_manager;

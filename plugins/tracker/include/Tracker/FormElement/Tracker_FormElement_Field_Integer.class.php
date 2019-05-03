@@ -127,7 +127,7 @@ class Tracker_FormElement_Field_Integer extends Tracker_FormElement_Field_Numeri
      * @param Tracker_Artifact_ChangesetValue_Integer $value The changeset value of this field
      * @return string The html code to display the field value in tooltip
      */
-    protected function fetchTooltipValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
+    protected function fetchTooltipValue(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null) {
         $html = '';
         if ($value) {
             $html .= $value->getInteger();

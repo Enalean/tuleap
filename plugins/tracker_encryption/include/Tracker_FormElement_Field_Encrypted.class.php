@@ -125,7 +125,7 @@ class Tracker_FormElement_Field_Encrypted extends Tracker_FormElement_Field impl
         return $tracker_key->getFieldSize($key);
     }
 
-    protected function saveValue($artifact, $changeset_value_id, $value, Tracker_Artifact_ChangesetValue $previous_changesetvalue = null)
+    protected function saveValue($artifact, $changeset_value_id, $value, ?Tracker_Artifact_ChangesetValue $previous_changesetvalue = null)
     {
         if ($value != "") {
             $dao_pub_key        = new TrackerPublicKeyDao();
@@ -219,7 +219,7 @@ class Tracker_FormElement_Field_Encrypted extends Tracker_FormElement_Field impl
      */
     protected function fetchArtifactValue(
         Tracker_Artifact $artifact,
-        Tracker_Artifact_ChangesetValue $value = null,
+        ?Tracker_Artifact_ChangesetValue $value = null,
         $submitted_values = array()
     ) {
         $html = '';
@@ -244,7 +244,7 @@ class Tracker_FormElement_Field_Encrypted extends Tracker_FormElement_Field impl
      */
     public function fetchArtifactValueReadOnly(
         Tracker_Artifact $artifact,
-        Tracker_Artifact_ChangesetValue $value = null
+        ?Tracker_Artifact_ChangesetValue $value = null
     ) {
         if (isset($value) === false || $value->getValue() === '') {
             return $this->getNoValueLabel();
@@ -257,7 +257,7 @@ class Tracker_FormElement_Field_Encrypted extends Tracker_FormElement_Field impl
 
     protected function getHiddenArtifactValueForEdition(
         Tracker_Artifact $artifact,
-        Tracker_Artifact_ChangesetValue $value = null,
+        ?Tracker_Artifact_ChangesetValue $value = null,
         $submitted_values = array()
     ) {
         return '<div class="tracker_hidden_edition_field" data-field-id="' . $this->getId() . '">' .
@@ -285,7 +285,7 @@ class Tracker_FormElement_Field_Encrypted extends Tracker_FormElement_Field impl
 
     protected function fetchArtifactValueWithEditionFormIfEditable(
         Tracker_Artifact $artifact,
-        Tracker_Artifact_ChangesetValue $value = null,
+        ?Tracker_Artifact_ChangesetValue $value = null,
         $submitted_values = array()
     ) {
         return "<div class='tracker-form-element-encrypted'>" . $this->fetchArtifactValueReadOnly($artifact, $value) . "</div>" .
@@ -303,7 +303,7 @@ class Tracker_FormElement_Field_Encrypted extends Tracker_FormElement_Field impl
     /**
      * @return string
      */
-    protected function fetchTooltipValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null)
+    protected function fetchTooltipValue(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
     {
         return '';
     }

@@ -79,7 +79,7 @@ class FlamingParrot_ContainerPresenter
         $feedback_content,
         $forge_version,
         $sidebar_collapsable,
-        Project $project = null
+        ?Project $project = null
     ) {
         $this->breadcrumbs         = $breadcrumbs;
         $this->toolbar             = $toolbar;

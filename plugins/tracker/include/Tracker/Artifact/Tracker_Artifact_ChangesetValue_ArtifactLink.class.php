@@ -92,7 +92,7 @@ class Tracker_Artifact_ChangesetValue_ArtifactLink extends Tracker_Artifact_Chan
      *
      * @return string The difference between another $changeset_value, false if no differences
      */
-    public function diff($changeset_value, $format = 'html', PFUser $user = null, $ignore_perms = false)
+    public function diff($changeset_value, $format = 'html', ?PFUser $user = null, $ignore_perms = false)
     {
         $this->setCurrentUserIfUserIsNotDefined($user);
         $diff = $this->getArtifactLinkInfoDiff($this->getField()->getTracker(), $changeset_value);
@@ -107,7 +107,7 @@ class Tracker_Artifact_ChangesetValue_ArtifactLink extends Tracker_Artifact_Chan
      *
      * @return Tracker_Artifact_ChangesetValue_ArtifactLinkDiff
      */
-    public function getArtifactLinkInfoDiff(Tracker $tracker, Tracker_Artifact_ChangesetValue_ArtifactLink $old_changeset_value = null) {
+    public function getArtifactLinkInfoDiff(Tracker $tracker, ?Tracker_Artifact_ChangesetValue_ArtifactLink $old_changeset_value = null) {
         $previous = array();
         if ($old_changeset_value !== null) {
             $previous = $old_changeset_value->getValue();

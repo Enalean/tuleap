@@ -36,7 +36,7 @@ abstract class Error_PermissionDenied {
      *
      * @return void
      */
-    function __construct(Url $url = null) {
+    function __construct(?Url $url = null) {
         if ($url === null) {
             $url = new URL();
         }
@@ -81,7 +81,7 @@ abstract class Error_PermissionDenied {
      * Build the user interface to ask for membership
      * 
      */
-    function buildInterface(PFUser $user, Project $project = null) {
+    function buildInterface(PFUser $user, ?Project $project = null) {
         if ($user->isAnonymous()) {
             $event_manager = EventManager::instance();
             $redirect = new URLRedirect($event_manager);
@@ -250,7 +250,7 @@ abstract class Error_PermissionDenied {
     /**
      * Build the Permission Denied error interface
      */
-    private function buildPermissionDeniedInterface(Project $project = null) {
+    private function buildPermissionDeniedInterface(?Project $project = null) {
         $purifier = Codendi_HTMLPurifier::instance();
         $param    = $this->returnBuildInterfaceParam();
 

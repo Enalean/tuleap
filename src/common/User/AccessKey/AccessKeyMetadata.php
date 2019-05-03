@@ -47,7 +47,7 @@ class AccessKeyMetadata
         $id,
         \DateTimeImmutable $creation_date,
         $description,
-        \DateTimeImmutable $last_used_date = null,
+        ?\DateTimeImmutable $last_used_date = null,
         $last_used_ip = null
     ) {
 

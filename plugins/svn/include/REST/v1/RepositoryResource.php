@@ -646,7 +646,7 @@ class RepositoryResource extends AuthenticatedResource
      * @throws 500 Error Unable to create the repository
      * @throws 409 Repository name is invalid
      */
-    protected function post($project_id, $name, SettingsPOSTRepresentation $settings = null)
+    protected function post($project_id, $name, ?SettingsPOSTRepresentation $settings = null)
     {
         $this->checkAccess();
         $this->options();
@@ -724,7 +724,7 @@ class RepositoryResource extends AuthenticatedResource
     /**
      * @return Settings
      */
-    private function getSettings(Repository $repository, SettingsRepresentation $settings = null)
+    private function getSettings(Repository $repository, ?SettingsRepresentation $settings = null)
     {
         return $this->extractSettingsFromRepresentation($repository, $settings);
     }
@@ -732,7 +732,7 @@ class RepositoryResource extends AuthenticatedResource
     /**
      * @return Settings
      */
-    private function getPOSTSettings(Repository $repository, SettingsPOSTRepresentation $settings = null)
+    private function getPOSTSettings(Repository $repository, ?SettingsPOSTRepresentation $settings = null)
     {
         return $this->extractSettingsFromRepresentation($repository, $settings);
     }
@@ -741,7 +741,7 @@ class RepositoryResource extends AuthenticatedResource
      * @throws RestException
      * @return Settings
      */
-    private function extractSettingsFromRepresentation(Repository $repository, SettingsRepresentationInterface $settings = null)
+    private function extractSettingsFromRepresentation(Repository $repository, ?SettingsRepresentationInterface $settings = null)
     {
         $commit_rules = array();
         if ($settings && $settings->commit_rules) {

@@ -44,7 +44,7 @@ class SemanticDoneIntroPresenter
      */
     public $semantic_status_field_label = '';
 
-    public function __construct(array $selected_values, Tracker_FormElement_Field $semantic_status_field = null)
+    public function __construct(array $selected_values, ?Tracker_FormElement_Field $semantic_status_field = null)
     {
         $this->semantic_status_is_defined  = (boolean)($semantic_status_field !== null);
         $this->selected_values             = $selected_values;

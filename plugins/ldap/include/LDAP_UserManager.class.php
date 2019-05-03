@@ -619,7 +619,7 @@ class LDAP_UserManager {
      *
      * @return PFUser|null
      */
-    public function getUserFromLdapIterator(LDAPResultIterator $lri = null)
+    public function getUserFromLdapIterator(?LDAPResultIterator $lri = null)
     {
         if ($lri && count($lri) === 1) {
             return $this->getUserFromLdap($lri->current());

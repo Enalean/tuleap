@@ -46,7 +46,7 @@ class DataAccessObject {
      * @param $da LegacyDataAccessInterface
      * @deprecated
      */
-    public function __construct(LegacyDataAccessInterface $da = null) {
+    public function __construct(?LegacyDataAccessInterface $da = null) {
         $this->table_name = 'CLASSNAME_MUST_BE_DEFINE_FOR_EACH_CLASS';
         $this->da = $da ? $da : CodendiDataAccess::instance();
     }

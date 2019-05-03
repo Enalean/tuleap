@@ -198,9 +198,9 @@ class ProjectCreationData
     public static function buildFromXML(
         SimpleXMLElement $xml,
         $template_id = 100,
-        XML_RNGValidator $xml_validator = null,
-        ServiceManager $service_manager = null,
-        ProjectManager $project_manager = null,
+        ?XML_RNGValidator $xml_validator = null,
+        ?ServiceManager $service_manager = null,
+        ?ProjectManager $project_manager = null,
         ?Logger $logger = null,
         ?DefaultProjectVisibilityRetriever $default_project_visibility_retriever = null
     ) {
@@ -214,9 +214,9 @@ class ProjectCreationData
     private function fromXML(
         SimpleXMLElement $xml,
         $template_id,
-        XML_RNGValidator $xml_validator = null,
-        ServiceManager $service_manager = null,
-        ProjectManager $project_manager = null)
+        ?XML_RNGValidator $xml_validator = null,
+        ?ServiceManager $service_manager = null,
+        ?ProjectManager $project_manager = null)
     {
         if(empty($xml_validator)) {
             $xml_validator = new XML_RNGValidator();
@@ -284,8 +284,8 @@ class ProjectCreationData
     private function markUsedServicesFromXML(
         SimpleXMLElement $xml,
         $template_id,
-        ServiceManager $service_manager = null,
-        ProjectManager $project_manager = null)
+        ?ServiceManager $service_manager = null,
+        ?ProjectManager $project_manager = null)
     {
         $template = $project_manager->getProject($template_id);
         $services_by_name = array();

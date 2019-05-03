@@ -44,7 +44,7 @@ final class CreatedItemRepresentation
     /**
      * @param int $item_id The id of the item.
      */
-    public function build($item_id, CreatedItemFilePropertiesRepresentation $file_properties = null)
+    public function build($item_id, ?CreatedItemFilePropertiesRepresentation $file_properties = null)
     {
         $this->id              = JsonCast::toInt($item_id);
         $this->uri             = ResourcesInjector::NAME . '/' . $item_id;

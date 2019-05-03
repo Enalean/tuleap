@@ -380,7 +380,7 @@ class Cardwall_Semantic_CardFields extends Tracker_Semantic
         return $this->background_color_field;
     }
 
-    public function setBackgroundColorField(Tracker_FormElement_Field $background_color_field = null)
+    public function setBackgroundColorField(?Tracker_FormElement_Field $background_color_field = null)
     {
         $this->background_color_field = $background_color_field;
     }

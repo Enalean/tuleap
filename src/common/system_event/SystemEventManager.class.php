@@ -39,7 +39,7 @@ class SystemEventManager {
     var $followers_dao;
 
     // Constructor
-    private function __construct(SystemEventDao $dao = null, SystemEventsFollowersDao $followers_dao = null) {
+    private function __construct(?SystemEventDao $dao = null, ?SystemEventsFollowersDao $followers_dao = null) {
         $this->dao = $dao;
         $this->followers_dao = $followers_dao;
         $this->_getDao();

@@ -105,7 +105,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         $this->hierarchy_factory = $hierarchy_factory;
     }
 
-    public function fetchArtifactValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
+    public function fetchArtifactValue(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
         return $this->fetchArtifactValueWithEditionFormIfEditable($artifact, $value);
     }
 
@@ -119,7 +119,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      */
     public function fetchArtifactValueReadOnly(
         Tracker_Artifact $artifact,
-        Tracker_Artifact_ChangesetValue $value = null
+        ?Tracker_Artifact_ChangesetValue $value = null
     ) {
         $html = $this->fetchBurndownReadOnly($artifact);
         $html .= $this->fetchBurndownCacheGenerationButton($artifact);
@@ -430,7 +430,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         Tracker_Artifact $artifact,
         PFUser $user,
         $ignore_perms,
-        Tracker_Artifact_ChangesetValue $value = null,
+        ?Tracker_Artifact_ChangesetValue $value = null,
         $format = 'text'
     ) {
         $purifier = Codendi_HTMLPurifier::instance();
@@ -506,7 +506,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     public function getRESTAvailableValues() {
     }
 
-    protected function saveValue($artifact, $changeset_value_id, $value, Tracker_Artifact_ChangesetValue $previous_changesetvalue = null) {
+    protected function saveValue($artifact, $changeset_value_id, $value, ?Tracker_Artifact_ChangesetValue $previous_changesetvalue = null) {
     }
 
     protected function keepValue($artifact, $changeset_value_id, Tracker_Artifact_ChangesetValue $previous_changesetvalue) {
@@ -552,7 +552,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      * @param Tracker_Artifact_ChangesetValue_Integer $value The changeset value of this field
      * @return string The html code to display the field value in tooltip
      */
-    protected function fetchTooltipValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
+    protected function fetchTooltipValue(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null) {
         return $this->fetchArtifactValueReadOnly($artifact, $value);
     }
 
@@ -619,7 +619,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         Tracker_Artifact $artifact,
         PFUser $submitter,
         Tracker_Artifact_Changeset $new_changeset,
-        Tracker_Artifact_Changeset $previous_changeset = null
+        ?Tracker_Artifact_Changeset $previous_changeset = null
     ) {
 
         try {

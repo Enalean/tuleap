@@ -51,7 +51,7 @@ class RestrictedUserCanAccessUrlOrProjectVerifier implements RestrictedUserCanAc
         $this->request_uri   = $request_uri;
     }
 
-    public function isRestrictedUserAllowedToAccess(PFUser $user, Project $project = null): bool
+    public function isRestrictedUserAllowedToAccess(PFUser $user, ?Project $project = null): bool
     {
         // This assume that we already checked that project is accessible to restricted prior to function call.
         // Hence, summary page is ALWAYS accessible

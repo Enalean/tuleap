@@ -156,9 +156,9 @@ class MilestoneResourceValidator {
     private function getArtifactsFromBodyContent(
         array $ids,
         array $backlog_tracker_ids,
-        AgileDashboard_Milestone_Backlog_IBacklogItemCollection $todo = null,
-        AgileDashboard_Milestone_Backlog_IBacklogItemCollection $done = null,
-        AgileDashboard_Milestone_Backlog_IBacklogItemCollection $open_unplanned = null
+        ?AgileDashboard_Milestone_Backlog_IBacklogItemCollection $todo = null,
+        ?AgileDashboard_Milestone_Backlog_IBacklogItemCollection $done = null,
+        ?AgileDashboard_Milestone_Backlog_IBacklogItemCollection $open_unplanned = null
     ) {
         $artifacts = array();
 

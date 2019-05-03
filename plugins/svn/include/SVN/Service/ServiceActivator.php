@@ -99,16 +99,16 @@ class ServiceActivator
     }
 
     private function mustServiceBeActive(
-        Service $svn_core_service = null,
-        Service $svn_plugin_service = null
+        ?Service $svn_core_service = null,
+        ?Service $svn_plugin_service = null
     ) {
         return (bool) (($svn_core_service && $svn_core_service->isActive()) ||
             ($svn_plugin_service && $svn_plugin_service->isActive()));
     }
 
     private function mustServiceBeUsed(
-        Service $svn_core_service = null,
-        Service $svn_plugin_service = null
+        ?Service $svn_core_service = null,
+        ?Service $svn_plugin_service = null
     ) {
         return (bool) (($svn_core_service && $svn_core_service->isUsed()) ||
             ($svn_plugin_service && $svn_plugin_service->isUsed()));

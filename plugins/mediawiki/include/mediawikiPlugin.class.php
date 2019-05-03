@@ -258,7 +258,7 @@ class MediaWikiPlugin extends Plugin {
             return $this->getPluginPath().'/wiki/'. $project->getUnixName() .'/index.php?title=Special%3ASearch&search=' . urlencode($words) . '&go=Go';
         }
 
-        private function isSearchEntryAvailable(Project $project = null) {
+        private function isSearchEntryAvailable(?Project $project = null) {
             if ($project && ! $project->isError()) {
                 return $project->usesService(self::SERVICE_SHORTNAME);
             }

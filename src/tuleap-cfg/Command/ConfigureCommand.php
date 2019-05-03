@@ -35,7 +35,7 @@ class ConfigureCommand extends Command
      */
     private $base_directory;
 
-    public function __construct(string $base_directory = null)
+    public function __construct(?string $base_directory = null)
     {
         $this->base_directory = $base_directory ?: '/';
 

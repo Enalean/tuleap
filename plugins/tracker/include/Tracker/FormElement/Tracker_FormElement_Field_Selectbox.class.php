@@ -276,7 +276,7 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
         return null;
     }
 
-    public function getFieldDataFromRESTValue(array $value, Tracker_Artifact $artifact = null) {
+    public function getFieldDataFromRESTValue(array $value, ?Tracker_Artifact $artifact = null) {
         if (array_key_exists('bind_value_ids', $value) && is_array($value['bind_value_ids'])) {
             if (count($value['bind_value_ids']) > 1) {
                 throw new Tracker_FormElement_InvalidFieldValueException('Selectbox fields can only have one value');

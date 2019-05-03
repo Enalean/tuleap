@@ -505,7 +505,7 @@ class AgileDashboardPlugin extends Plugin
         }
     }
 
-    private function redirectOrAppend(Codendi_Request $request, Tracker_Artifact $artifact, Tracker_Artifact_Redirect $redirect, $requested_planning, Tracker_Artifact $last_milestone_artifact = null) {
+    private function redirectOrAppend(Codendi_Request $request, Tracker_Artifact $artifact, Tracker_Artifact_Redirect $redirect, $requested_planning, ?Tracker_Artifact $last_milestone_artifact = null) {
         $planning = PlanningFactory::build()->getPlanning($requested_planning['planning_id']);
 
         if ($planning && ! $redirect->stayInTracker()) {

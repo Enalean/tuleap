@@ -82,7 +82,7 @@ class AdditionalModalPresenterBuilder
         $bind_option,
         $synchro,
         CSRFSynchronizerToken $csrf,
-        LDAPResult $ldap_group = null
+        ?LDAPResult $ldap_group = null
     ) {
         return $this->renderer->renderToString(
             'modal-content',
@@ -102,7 +102,7 @@ class AdditionalModalPresenterBuilder
         );
     }
 
-    private function getTitle(LDAPResult $ldap_group = null)
+    private function getTitle(?LDAPResult $ldap_group = null)
     {
         $title = dgettext('tuleap-ldap', "Set directory group binding");
 

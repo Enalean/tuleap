@@ -77,7 +77,7 @@ class Planning_ArtifactLinker {
         return $this->artifact_factory->getArtifactById($artifact_id);
     }
 
-    private function linkWithMilestoneArtifact(PFUser $user, Tracker_Artifact $artifact, Tracker_Artifact $source_artifact = null) {
+    private function linkWithMilestoneArtifact(PFUser $user, Tracker_Artifact $artifact, ?Tracker_Artifact $source_artifact = null) {
         $last_ancestor = $source_artifact;
         if ($source_artifact) {
             foreach ($source_artifact->getAllAncestors($user) as $ancestor) {

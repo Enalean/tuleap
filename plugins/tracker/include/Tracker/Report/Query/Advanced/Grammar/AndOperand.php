@@ -30,7 +30,7 @@ class AndOperand implements Visitable
      */
     private $tail;
 
-    public function __construct(Term $operand, AndOperand $tail = null)
+    public function __construct(Term $operand, ?AndOperand $tail = null)
     {
         $this->operand = $operand;
         $this->tail    = $tail;

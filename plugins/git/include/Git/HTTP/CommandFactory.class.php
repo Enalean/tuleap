@@ -33,7 +33,7 @@ class Git_HTTP_CommandFactory
         $this->detector = $detector;
     }
 
-    public function getCommandForUser(Git_URL $url, PFO_User $user = null)
+    public function getCommandForUser(Git_URL $url, ?PFO_User $user = null)
     {
         $command = $this->getGitHttpBackendCommand();
         if ($user !== null) {

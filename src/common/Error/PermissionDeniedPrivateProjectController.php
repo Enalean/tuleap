@@ -52,7 +52,7 @@ class PermissionDeniedPrivateProjectController
         $this->place_holder_builder  = $place_holder_builder;
     }
 
-    public function displayError(PFUser $user, Project $project = null)
+    public function displayError(PFUser $user, ?Project $project = null)
     {
         $layout = $this->theme_manager->getBurningParrot($user);
 

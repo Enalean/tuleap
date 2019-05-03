@@ -100,7 +100,7 @@ class CompleteTrackerRepresentation implements TrackerRepresentation
      */
     public $color_name;
 
-    public function build(Tracker $tracker, array $tracker_fields, array $structure, array $semantics, WorkflowRepresentation $workflow = null) {
+    public function build(Tracker $tracker, array $tracker_fields, array $structure, array $semantics, ?WorkflowRepresentation $workflow = null) {
         $this->id          = JsonCast::toInt($tracker->getId());
         $this->uri         = self::ROUTE . '/' . $this->id;
         $this->html_url    = $tracker->getUri();

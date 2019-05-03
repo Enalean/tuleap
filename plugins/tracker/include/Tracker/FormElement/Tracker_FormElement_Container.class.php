@@ -409,7 +409,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement {
      *
      * @return bool
      */
-    public function userCanRead(PFUser $user = null) {
+    public function userCanRead(?PFUser $user = null) {
         return true;
     }
 

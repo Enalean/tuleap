@@ -62,7 +62,7 @@ class SemanticVelocity extends Tracker_Semantic
         Tracker $tracker,
         SemanticDone $semantic_done,
         BacklogRequiredTrackerCollectionFormatter $semantic_formatter,
-        Tracker_FormElement_Field $velocity_field = null
+        ?Tracker_FormElement_Field $velocity_field = null
     ) {
         parent::__construct($tracker);
 
@@ -254,7 +254,7 @@ class SemanticVelocity extends Tracker_Semantic
         return self::$_instances[$tracker->getId()];
     }
 
-    private static function forceLoad(Tracker $tracker, Tracker_FormElement_Field $field = null)
+    private static function forceLoad(Tracker $tracker, ?Tracker_FormElement_Field $field = null)
     {
         $semantic_done                       = SemanticDone::load($tracker);
         $semantic_formatter                  = new BacklogRequiredTrackerCollectionFormatter();

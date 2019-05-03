@@ -34,7 +34,7 @@ interface Logger {
      * @param String    $message the message to log.
      * @param Exception $e       the exception to log.
      */
-    function warn($message, Exception $e = null);
+    function warn($message, ?Exception $e = null);
 
     /**
      * Logs a warning into the log file.
@@ -42,7 +42,7 @@ interface Logger {
      * @param String    $message the message to log.
      * @param Exception $e       the exception to log.
      */
-    function error($message, Exception $e = null);
+    function error($message, ?Exception $e = null);
 
     /**
      * @deprecated use explicit methods

@@ -50,7 +50,7 @@ class GitPanePresenter
     public function __construct(
         PermissionPerGroupPanePresenter $service_presenter,
         Project $project,
-        ProjectUGroup $ugroup = null
+        ?ProjectUGroup $ugroup = null
     ) {
         $this->service_presenter    = $service_presenter;
         $this->url                  = $this->getGlobalAdminLink($project);

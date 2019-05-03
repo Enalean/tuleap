@@ -55,7 +55,7 @@ Mock::generatePartial(
     )
 );
 class Tracker_FormElement_Field_OpenListTestVersion_for_saveValue extends Tracker_FormElement_Field_OpenListTestVersion {
-    public function saveValue($artifact, $changeset_value_id, $value, Tracker_Artifact_ChangesetValue $previous_changesetvalue = null) {
+    public function saveValue($artifact, $changeset_value_id, $value, ?Tracker_Artifact_ChangesetValue $previous_changesetvalue = null) {
         parent::saveValue($artifact, $changeset_value_id, $value, $previous_changesetvalue);
     }
 }

@@ -71,7 +71,7 @@ class AgileDashboardPermissionsRepresentationBuilder
     private function getPlanningPermissionsRepresentation(
         Project $project,
         PFUser $user,
-        ProjectUGroup $user_group = null
+        ?ProjectUGroup $user_group = null
     ) {
         $plannings      = $this->planning_factory->getPlannings($user, $project->getID());
         $planning_names = array();

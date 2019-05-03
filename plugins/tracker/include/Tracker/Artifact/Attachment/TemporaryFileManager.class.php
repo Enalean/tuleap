@@ -354,7 +354,7 @@ class Tracker_Artifact_Attachment_TemporaryFileManager {
      * @throws Tracker_Artifact_Attachment_FileNotFoundException
      * @throws Tracker_Artifact_Attachment_AlreadyLinkedToAnotherArtifactException
      */
-    public function buildFieldDataForREST($rest_value, Tracker_Artifact $artifact = null) {
+    public function buildFieldDataForREST($rest_value, ?Tracker_Artifact $artifact = null) {
         $field_data                = array();
         $already_attached_file_ids = array();
 

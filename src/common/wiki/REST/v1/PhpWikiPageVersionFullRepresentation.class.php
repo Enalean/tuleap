@@ -36,7 +36,7 @@ class PhpWikiPageVersionFullRepresentation extends PhpWikiPageVersionRepresentat
      */
     public $formatted_content;
 
-    public function build(WikiPageVersion $version, WikiPage $wiki_page = null)
+    public function build(WikiPageVersion $version, ?WikiPage $wiki_page = null)
     {
         parent::build($version);
 

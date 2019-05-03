@@ -71,7 +71,7 @@ class Tracker_FormElement_Field_PerTrackerArtifactId extends Tracker_FormElement
      *
      * @return string
      */
-    public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
+    public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null) {
         return '<a href="'.TRACKER_BASE_URL.'/?'. http_build_query(array('aid' => (int)$artifact->id )).'">'. (int)$artifact->getPerTrackerArtifactId().'</a>';
     }
 
@@ -89,7 +89,7 @@ class Tracker_FormElement_Field_PerTrackerArtifactId extends Tracker_FormElement
         Tracker_Artifact $artifact,
         PFUser $user,
         $ignore_perms,
-        Tracker_Artifact_ChangesetValue $value = null,
+        ?Tracker_Artifact_ChangesetValue $value = null,
         $format = 'text'
     ) {
         $output = '';
@@ -151,7 +151,7 @@ class Tracker_FormElement_Field_PerTrackerArtifactId extends Tracker_FormElement
      * @param Tracker_Artifact_ChangesetValue_Integer $value The changeset value of this field
      * @return string The html code to display the field value in tooltip
      */
-    protected function fetchTooltipValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
+    protected function fetchTooltipValue(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null) {
         $html = '';
         $html .= $artifact->getPerTrackerArtifactId();
         return $html;

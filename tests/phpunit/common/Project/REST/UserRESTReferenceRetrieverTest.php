@@ -45,7 +45,7 @@ class UserRESTReferenceRetrieverTest extends TestCase
         $reference_used,
         $expected_user_manager_call,
         $user_manager_return_value,
-        \PFUser $expected_user = null
+        ?\PFUser $expected_user = null
     ) {
         $representation                  = new UserRESTReferenceRepresentation();
         $representation->$reference_used = 'value';

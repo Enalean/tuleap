@@ -47,11 +47,11 @@ class Tracker_XML_Importer_CopyArtifactInformationsAggregator implements Logger 
         $this->backend_logger->log($message, Feedback::INFO);
     }
 
-    public function error($message, Exception $e = null) {
+    public function error($message, ?Exception $e = null) {
         $this->log($this->generateLogWithException($message, $e), Feedback::ERROR);
     }
 
-    public function warn($message, Exception $e = null) {
+    public function warn($message, ?Exception $e = null) {
         $this->log($this->generateLogWithException($message, $e), Feedback::WARN);
     }
 

@@ -37,7 +37,7 @@ class CommitMetadata
      */
     private $committer;
 
-    public function __construct(CommitStatus $last_commit_status, \PFUser $author = null, \PFUser $committer = null)
+    public function __construct(CommitStatus $last_commit_status, ?\PFUser $author = null, ?\PFUser $committer = null)
     {
         $this->last_commit_status = $last_commit_status;
         $this->author             = $author;

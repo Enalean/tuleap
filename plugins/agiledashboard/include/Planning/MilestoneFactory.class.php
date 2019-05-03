@@ -701,7 +701,7 @@ class Planning_MilestoneFactory
      *
      * @return Planning_ArtifactMilestone
      */
-    public function getMilestoneFromArtifact(Tracker_Artifact $artifact, TreeNode $planned_artifacts = null)
+    public function getMilestoneFromArtifact(Tracker_Artifact $artifact, ?TreeNode $planned_artifacts = null)
     {
         $tracker = $artifact->getTracker();
         $planning = $this->planning_factory->getPlanningByPlanningTracker($tracker);

@@ -56,13 +56,13 @@ class TruncateLevelLogger implements Logger {
         }
     }
 
-    public function warn($message, Exception $exception = null) {
+    public function warn($message, ?Exception $exception = null) {
         if ($this->should_log[Logger::WARN]) {
             $this->logger->warn($message, $exception);
         }
     }
 
-    public function error($message, Exception $exception = null) {
+    public function error($message, ?Exception $exception = null) {
         $this->logger->error($message, $exception);
     }
 

@@ -41,6 +41,6 @@ interface Tracker_IFetchTrackerSwitcher extends Tracker_IDisplayTrackerLayout {
      *
      * @return string html
      */
-    public function fetchTrackerSwitcher(PFUser $user, $separator, Project $include_project = null, Tracker $current_tracker = null);
+    public function fetchTrackerSwitcher(PFUser $user, $separator, ?Project $include_project = null, ?Tracker $current_tracker = null);
 }
 ?>
