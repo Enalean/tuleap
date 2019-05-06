@@ -8,6 +8,8 @@
 
 ![Components architecture](backend_architecture.png)
 
+Note: this diagram illustrates components architecture, so all classes are not represented here.
+
 **Hexagonal architecture** is followed here in order to limit technical debt on legacy code to corrupt baseline code base. This allows to keep baseline codebase testable as much as it can be (except for adapters, see below).
 
 More over, this architecture allows to follow some **Domain Driven Design** principles which make code easier to understand, therefore to maintain.
