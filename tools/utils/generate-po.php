@@ -152,6 +152,7 @@ function gettextPHP($path, string $translated_plugin, DomainExtractor $gettext_i
             --from-code=UTF-8 \
             --omit-header \
             -o - \
+        | msguniq --sort-output --use-first -o - \
         | msggrep \
             --msgctxt \
             --regexp='$translated_plugin\b' \
@@ -169,6 +170,7 @@ function gettextPHP($path, string $translated_plugin, DomainExtractor $gettext_i
             --from-code=UTF-8 \
             --omit-header \
             -o - \
+        | msguniq --sort-output --use-first -o - \
         | msggrep \
             --msgctxt \
             --regexp='$translated_plugin\b' \
