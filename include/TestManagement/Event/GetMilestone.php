@@ -66,7 +66,7 @@ class GetMilestone implements Dispatchable
         return $this->milestone;
     }
 
-    public function setMilestone(Planning_Milestone $milestone = null)
+    public function setMilestone(?Planning_Milestone $milestone = null)
     {
         $this->milestone = $milestone;
     }

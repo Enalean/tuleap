@@ -52,8 +52,8 @@ class DefinitionRepresentation extends MinimalDefinitionRepresentation
         Tracker_Artifact $artifact,
         Tracker_FormElementFactory $form_element_factory,
         PFUser $user,
-        Tracker_Artifact_Changeset $changeset = null,
-        Tracker_Artifact $requirement = null
+        ?Tracker_Artifact_Changeset $changeset = null,
+        ?Tracker_Artifact $requirement = null
     ) {
         parent::build($artifact, $form_element_factory, $user, $changeset);
 

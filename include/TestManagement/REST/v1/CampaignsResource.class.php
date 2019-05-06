@@ -512,7 +512,7 @@ class CampaignsResource
      * @throws 403
      * @throws 500
      */
-    protected function patch($id, $label = null, JobConfigurationRepresentation $job_configuration = null)
+    protected function patch($id, $label = null, ?JobConfigurationRepresentation $job_configuration = null)
     {
         $user     = UserManager::instance()->getCurrentUser();
         $campaign = $this->getUpdatedCampaign($user, $id, $label, $job_configuration);
@@ -619,7 +619,7 @@ class CampaignsResource
         PFUser $user,
         $id,
         $label = null,
-        JobConfigurationRepresentation $job_representation = null
+        ?JobConfigurationRepresentation $job_representation = null
     ) {
         $campaign = $this->getCampaignUserCanRead($user, $id);
 
@@ -680,7 +680,7 @@ class CampaignsResource
     private function overrideWithSubmittedData(
         Campaign $campaign,
         $label = null,
-        JobConfigurationRepresentation $job_representation = null
+        ?JobConfigurationRepresentation $job_representation = null
     ) {
         if ($label) {
             $campaign->setLabel($label);

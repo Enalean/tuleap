@@ -432,7 +432,7 @@ class ExecutionsResource
      * @throws 404
      * @throws 500
      */
-    protected function patchIssueLink($id, $issue_id, ChangesetCommentRepresentation $comment = null)
+    protected function patchIssueLink($id, $issue_id, ?ChangesetCommentRepresentation $comment = null)
     {
         $user               = $this->user_manager->getCurrentUser();
         $execution_artifact = $this->getArtifactById($user, $id);

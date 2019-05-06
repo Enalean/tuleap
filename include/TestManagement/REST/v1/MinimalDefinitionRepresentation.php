@@ -89,7 +89,7 @@ class MinimalDefinitionRepresentation
         Tracker_Artifact $artifact,
         Tracker_FormElementFactory $form_element_factory,
         PFUser $user,
-        Tracker_Artifact_Changeset $changeset = null
+        ?Tracker_Artifact_Changeset $changeset = null
     ) {
         $this->form_element_factory = $form_element_factory;
         $this->artifact             = $artifact;

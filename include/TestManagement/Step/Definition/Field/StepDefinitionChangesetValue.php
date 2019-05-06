@@ -64,7 +64,7 @@ class StepDefinitionChangesetValue extends Tracker_Artifact_ChangesetValue
      *
      * @return string The difference between another $changeset_value, false if no differences
      */
-    public function diff($changeset_value, $format = 'html', PFUser $user = null, $ignore_perms = false)
+    public function diff($changeset_value, $format = 'html', ?PFUser $user = null, $ignore_perms = false)
     {
         /** @var Step[] $previous_steps */
         $previous_steps = array_values($changeset_value->getValue());

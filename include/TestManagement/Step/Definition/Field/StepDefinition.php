@@ -190,7 +190,7 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
      */
     protected function fetchArtifactValue(
         Tracker_Artifact $artifact,
-        Tracker_Artifact_ChangesetValue $value = null,
+        ?Tracker_Artifact_ChangesetValue $value = null,
         $submitted_values = []
     ) {
         $submitted_values = $submitted_values[0] ?: [];
@@ -215,7 +215,7 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
 
     public function fetchArtifactValueWithEditionFormIfEditable(
         Tracker_Artifact $artifact,
-        Tracker_Artifact_ChangesetValue $value = null,
+        ?Tracker_Artifact_ChangesetValue $value = null,
         $submitted_values = []
     ) {
         return $this->fetchArtifactValueReadOnly($artifact, $value) .
@@ -232,7 +232,7 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
      */
     public function fetchArtifactValueReadOnly(
         Tracker_Artifact $artifact,
-        Tracker_Artifact_ChangesetValue $value = null
+        ?Tracker_Artifact_ChangesetValue $value = null
     ) {
         $renderer = TemplateRendererFactory::build()->getRenderer(TESTMANAGEMENT_BASE_DIR . '/templates');
 
@@ -279,7 +279,7 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
      *
      * @return string
      */
-    protected function fetchTooltipValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null)
+    protected function fetchTooltipValue(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
     {
         return '';
     }
@@ -436,7 +436,7 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
         $artifact,
         $changeset_value_id,
         $value,
-        Tracker_Artifact_ChangesetValue $previous_changesetvalue = null
+        ?Tracker_Artifact_ChangesetValue $previous_changesetvalue = null
     ) {
         $steps = $this->transformSubmittedValuesIntoArrayOfStructuredSteps($value);
 
@@ -559,7 +559,7 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
      *
      * @return StepPresenter[]
      */
-    private function getStepsPresentersFromChangesetValue(Tracker_Artifact_ChangesetValue $value = null)
+    private function getStepsPresentersFromChangesetValue(?Tracker_Artifact_ChangesetValue $value = null)
     {
         $steps = [];
         if ($value) {
