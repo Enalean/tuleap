@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Workflow\PostAction\Update\Internal;
 
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFields;
+use Tuleap\Tracker\Workflow\PostAction\Update\FrozenFields as FrozenFieldsValue;
 use Tuleap\Tracker\Workflow\PostAction\Update\CIBuild;
 use Tuleap\Tracker\Workflow\PostAction\Update\SetDateValue;
 use Tuleap\Tracker\Workflow\PostAction\Update\SetFloatValue;
@@ -99,5 +101,22 @@ class PostActionsMapper
             );
         }
         return $update_int_values;
+    }
+
+    /**
+     * Converts from FrozenFields to FrozenFieldsValue object.
+     * Sets the id to null to force the new post-action to be recreated.
+     * @return FrozenFieldsValue[]
+     */
+    public function convertToFrozenFieldValueWithNullId(FrozenFields $frozen_fields): array
+    {
+        $update_frozen_fields_value = [];
+        // We set $id to null so that all post actions are re-created from scratch in the $to transition
+        $update_frozen_fields_value[] = new FrozenFieldsValue(
+            null,
+            $frozen_fields->getFieldIds()
+        );
+
+        return $update_frozen_fields_value;
     }
 }

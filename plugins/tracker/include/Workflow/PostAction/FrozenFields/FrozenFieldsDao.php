@@ -63,12 +63,22 @@ class FrozenFieldsDao extends DataAccessObject
         return $result !== false;
     }
 
-    public function createPostActionForTransitionId(int $transition_id) : void
+    public function createPostActionForTransitionId(int $transition_id, array $field_ids) : void
     {
-        $this->getDB()->insert(
+        $frozen_fields_action_id = (int) $this->getDB()->insertReturnId(
             "plugin_tracker_workflow_postactions_frozen_fields",
             ["transition_id" => $transition_id]
         );
+
+        foreach ($field_ids as $field_id) {
+            $this->getDB()->insert(
+                "plugin_tracker_workflow_postactions_frozen_fields_value",
+                [
+                    "postaction_id" => $frozen_fields_action_id,
+                    "field_id"      => $field_id,
+                ]
+            );
+        }
     }
 
     public function deletePostActionsByTransitionId(int $transition_id) : void

@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Workflow\SimpleMode;
 
 use Transition;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\NoFrozenFieldsPostActionException;
 use Tuleap\Tracker\Workflow\PostAction\PostActionsRetriever;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\PostActionsMapper;
 use Tuleap\Tracker\Workflow\PostAction\Update\PostActionCollection;
@@ -121,12 +122,20 @@ class TransitionReplicator
         $set_int_values    = $this->post_actions_retriever->getSetIntFieldValues($transition);
         $update_int_values = $this->post_action_mapper->convertToSetIntValueWithNullId(...$set_int_values);
 
+        try {
+            $frozen_fields_action = $this->post_actions_retriever->getFrozenFieldsValue($transition);
+            $frozen_fields_value  = $this->post_action_mapper->convertToFrozenFieldValueWithNullId($frozen_fields_action);
+        } catch (NoFrozenFieldsPostActionException $exception) {
+            $frozen_fields_value = [];
+        }
+
         return new PostActionCollection(
             ...array_merge(
                 $update_ci_builds,
                 $update_date_values,
                 $update_float_values,
-                $update_int_values
+                $update_int_values,
+                $frozen_fields_value
             )
         );
     }

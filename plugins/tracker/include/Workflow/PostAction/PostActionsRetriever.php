@@ -82,7 +82,7 @@ class PostActionsRetriever
     /**
      * @throws NoFrozenFieldsPostActionException
      */
-    public function getFrozenFields(\Transition $transition): FrozenFields
+    public function getFrozenFieldsValue(\Transition $transition): FrozenFields
     {
         return $this->frozen_fields_retriever->getFrozenFields($transition);
     }
