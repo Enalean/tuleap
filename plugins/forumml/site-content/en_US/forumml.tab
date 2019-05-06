@@ -55,7 +55,7 @@ plugin_forumml	wrong_list	The mailing-list does not exist or is inactive.
 plugin_forumml	specify_list	You must specify the mailing-list id.
 plugin_forumml	type_subject	Submit failed. You must specify the mail subject.
 plugin_forumml	warn_post_without_confirm	Check carefully your post before submitting. The message is sent without confirmation.
-plugin_forumml	delay_redirection	There can be some delay before to see the message in the archives. Redirecting to archive page, please wait ... <img src="$1" border="0" width="16" height="16"> <br> If target page is not loading, try this <i><a href="/plugins/forumml/message.php?group_id=$2&list=$3&topic=$4">link</a></i>
+plugin_forumml	delay_redirection	There can be some delay before to see the message in the archives. If you don't see your mail, please refresh the page in a few moment.
 plugin_forumml	back_to_list	Back to the list
 #
 #-----------------------------------------------

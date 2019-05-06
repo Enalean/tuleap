@@ -1,7 +1,7 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2013 - Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2004-2009. All rights reserved
- * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,6 +19,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use FastRoute\RouteCollector;
+use Tuleap\Request\CollectRoutesEvent;
+use Tuleap\Request\DispatchableWithRequest;
+use Tuleap\ForumML;
+
 require_once __DIR__ . '/../vendor/autoload.php';
 
 class ForumMLPlugin extends Plugin {
@@ -27,9 +32,9 @@ class ForumMLPlugin extends Plugin {
     public function __construct($id) {
         parent::__construct($id);
 
-        $this->addHook('browse_archives','forumml_browse_archives',false);
-        $this->addHook('cssfile','cssFile',false);
-        $this->addHook('javascript_file',                   'jsFile',                            false);
+        $this->addHook('browse_archives','forumml_browse_archives');
+        $this->addHook('cssfile','cssFile');
+        $this->addHook('javascript_file', 'jsFile');
 
         // Search
         $this->addHook(Event::SEARCH_TYPE);
@@ -37,9 +42,11 @@ class ForumMLPlugin extends Plugin {
         $this->addHook(Event::LAYOUT_SEARCH_ENTRY);
 
         // Stat plugin
-        $this->addHook('plugin_statistics_disk_usage_collect_project', 'plugin_statistics_disk_usage_collect_project', false);
-        $this->addHook('plugin_statistics_disk_usage_service_label',   'plugin_statistics_disk_usage_service_label',   false);
-        $this->addHook('plugin_statistics_color',                      'plugin_statistics_color',                      false);
+        $this->addHook('plugin_statistics_disk_usage_collect_project');
+        $this->addHook('plugin_statistics_disk_usage_service_label');
+        $this->addHook('plugin_statistics_color');
+
+        $this->addHook(CollectRoutesEvent::NAME);
 
         // Set ForumML plugin scope to 'Projects' wide 
         $this->setScope(Plugin::SCOPE_PROJECT);
@@ -199,4 +206,33 @@ class ForumMLPlugin extends Plugin {
         }
     }
 
+    public function routeGetMessages() : DispatchableWithRequest
+    {
+        return new ForumML\ListMailsController($this);
+    }
+
+    public function routeSendMail() : DispatchableWithRequest
+    {
+        return new ForumML\SendMailController($this);
+    }
+
+    public function routeWriteMail() : DispatchableWithRequest
+    {
+        return new ForumML\WriteMailController($this);
+    }
+
+    public function routeOutputAttachment() : DispatchableWithRequest
+    {
+        return new ForumML\OutputAttachmentController($this);
+    }
+
+    public function collectRoutesEvent(CollectRoutesEvent $event)
+    {
+        $event->getRouteCollector()->addGroup($this->getPluginPath(), function (RouteCollector $r) {
+            $r->get('/message.php', $this->getRouteHandler('routeGetMessages'));
+            $r->get('/upload.php', $this->getRouteHandler('routeOutputAttachment'));
+            $r->get('/index.php', $this->getRouteHandler('routeWriteMail'));
+            $r->post('/index.php', $this->getRouteHandler('routeSendMail'));
+        });
+    }
 }
