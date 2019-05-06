@@ -59,14 +59,25 @@ class FrozenFieldsValidatorTest extends TestCase
             ->andReturn(2)
             ->getMock();
 
+        $selectbox_field = Mockery::mock(\Tracker_FormElement_Field_Selectbox::class)
+            ->shouldReceive('getId')
+            ->andReturn(3)
+            ->getMock();
+
         $this->form_element_factory
             ->shouldReceive('getUsedFields')
-            ->andReturn([$integer_field, $string_field]);
+            ->andReturn([$integer_field, $string_field, $selectbox_field]);
 
         $frozen_fields_value = new FrozenFields(null, [1,2]);
 
+        $tracker  = Mockery::mock(\Tracker::class);
+        $workflow = Mockery::mock(\Workflow::class);
+
+        $workflow->shouldReceive('getFieldId')->once()->andReturn(3);
+        $tracker->shouldReceive('getWorkflow')->once()->andReturn($workflow);
+
         $this->frozen_fields_validator->validate(
-            Mockery::mock(\Tracker::class),
+            $tracker,
             $frozen_fields_value
         );
 
@@ -96,6 +107,38 @@ class FrozenFieldsValidatorTest extends TestCase
             ->andReturn(1)
             ->getMock();
 
+        $selectbox_field = Mockery::mock(\Tracker_FormElement_Field_Selectbox::class)
+            ->shouldReceive('getId')
+            ->andReturn(2)
+            ->getMock();
+
+        $this->form_element_factory
+            ->shouldReceive('getUsedFields')
+            ->andReturn([$integer_field, $selectbox_field]);
+
+        $frozen_fields_value = new FrozenFields(null, [1,3]);
+
+        $tracker  = Mockery::mock(\Tracker::class);
+        $workflow = Mockery::mock(\Workflow::class);
+
+        $workflow->shouldReceive('getFieldId')->once()->andReturn(2);
+        $tracker->shouldReceive('getWorkflow')->once()->andReturn($workflow);
+
+        $this->expectException(InvalidPostActionException::class);
+
+        $this->frozen_fields_validator->validate(
+            $tracker,
+            $frozen_fields_value
+        );
+    }
+
+    public function testValidateThrowsWhenFieldIdIsTheFieldUsedToDefineToWorkflow()
+    {
+        $selectbox_field = Mockery::mock(\Tracker_FormElement_Field_Selectbox::class)
+            ->shouldReceive('getId')
+            ->andReturn(1)
+            ->getMock();
+
         $string_field = Mockery::mock(\Tracker_FormElement_Field_String::class)
             ->shouldReceive('getId')
             ->andReturn(2)
@@ -103,14 +146,20 @@ class FrozenFieldsValidatorTest extends TestCase
 
         $this->form_element_factory
             ->shouldReceive('getUsedFields')
-            ->andReturn([$integer_field, $string_field]);
+            ->andReturn([$selectbox_field, $string_field]);
 
-        $frozen_fields_value = new FrozenFields(null, [1,3]);
+        $frozen_fields_value = new FrozenFields(null, [1,2]);
 
         $this->expectException(InvalidPostActionException::class);
 
+        $tracker  = Mockery::mock(\Tracker::class);
+        $workflow = Mockery::mock(\Workflow::class);
+
+        $workflow->shouldReceive('getFieldId')->once()->andReturn(1);
+        $tracker->shouldReceive('getWorkflow')->once()->andReturn($workflow);
+
         $this->frozen_fields_validator->validate(
-            Mockery::mock(\Tracker::class),
+            $tracker,
             $frozen_fields_value
         );
     }

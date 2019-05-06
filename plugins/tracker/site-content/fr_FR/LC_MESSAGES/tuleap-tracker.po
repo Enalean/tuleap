@@ -165,7 +165,8 @@ msgid "Bad field_id attribute format: int expected."
 msgstr "L'attribut field_id a un mauvais format : numérique attendu."
 
 msgid "Bad field_ids attribute format: array of integer expected."
-msgstr "L'attribut field_ids a un mauvais format : tableau de numérique attendu."
+msgstr ""
+"L'attribut field_ids a un mauvais format : tableau de numérique attendu."
 
 #, php-format
 msgid "Bad format: '%s'. Array expected"
@@ -624,14 +625,21 @@ msgstr ""
 
 #, php-format
 msgid ""
+"The field '%u' is used for the workflow cannot be defined in frozen fields "
+"actions."
+msgstr ""
+"Le champ '%u' est utilisé pour définir le workflow et ne peut pas être "
+"choisi en tant que champ figé."
+
+#, php-format
+msgid ""
 "The field_id value '%u' does not match a date field in use in the tracker."
 msgstr ""
 "Le field_id '%u' ne correspond pas à un champ date utilisé dans le tracker."
 
 #, php-format
 msgid "The field_id value '%u' does not match a field in use in the tracker."
-msgstr ""
-"Le field_id '%u' ne correspond pas à un champ utilisé dans le tracker."
+msgstr "Le field_id '%u' ne correspond pas à un champ utilisé dans le tracker."
 
 #, php-format
 msgid ""
@@ -888,8 +896,8 @@ msgstr "Les ids de type 'run_job' ne doivent pas être en doublons."
 
 msgid "There should not be duplicate field_ids for 'frozen_fields' actions."
 msgstr ""
-"Les field_ids d'actions 'frozen_fields' avec type 'int' ne doivent pas "
-"être en doublons."
+"Les field_ids d'actions 'frozen_fields' avec type 'int' ne doivent pas être "
+"en doublons."
 
 msgid ""
 "There should not be duplicate field_ids for 'set_field_value' actions with "
