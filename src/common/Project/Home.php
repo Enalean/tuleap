@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,6 +24,7 @@ namespace Tuleap\Project;
 use CSRFSynchronizerToken;
 use ProjectManager;
 use HTTPRequest;
+use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\NotFoundException;
 use UserManager;
@@ -31,7 +32,6 @@ use EventManager;
 use ForgeConfig;
 use User_ForgeUserGroupPermissionsManager;
 use User_ForgeUserGroupPermissionsDao;
-use Tuleap\Instrument\Collect;
 use Tuleap\Dashboard\AssetsIncluder;
 use Tuleap\Dashboard\Project\ProjectDashboardController;
 use Tuleap\Dashboard\Project\ProjectDashboardDao;
@@ -59,7 +59,7 @@ class Home implements DispatchableWithRequest
      * @param array $args
      * @throws NotFoundException
      */
-    public function process(HTTPRequest $request, \Tuleap\Layout\BaseLayout $layout, array $args)
+    public function process(HTTPRequest $request, BaseLayout $layout, array $args)
     {
         $project = ProjectManager::instance()->getProjectFromAutocompleter($args['name']);
         if ($project && !$project->isError()) {
@@ -107,6 +107,7 @@ class Home implements DispatchableWithRequest
                         new WidgetDeletor($dashboard_widget_dao),
                         new WidgetMinimizor($dashboard_widget_dao),
                         new AssetsIncluder(
+                            $layout,
                             new IncludeAssets(ForgeConfig::get('tuleap_dir').'/src/www/assets', '/assets')
                         )
                     ),
