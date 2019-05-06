@@ -216,7 +216,8 @@ class Git_Exec
         return $branches;
     }
 
-    public function getAllBranches() {
+    private function getAllBranches() : array
+    {
         $output = array();
         $this->gitCmdWithOutput("for-each-ref --format='%(refname)' refs/heads", $output);
         return $output;

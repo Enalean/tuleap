@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,7 +24,6 @@ use \GitRepository;
 use \PFUser;
 use Tuleap\PullRequest\Exception\PullRequestNotFoundException;
 use Tuleap\PullRequest\Exception\PullRequestNotCreatedException;
-use Tuleap\PullRequest\Exception\InvalidBuildStatusException;
 use pullrequestPlugin;
 use ReferenceManager;
 
@@ -32,11 +31,11 @@ class Factory
 {
 
     /**
-     * @var PullRequest\Dao
+     * @var Dao
      */
     private $dao;
 
-    /*
+    /**
      * @var ReferenceManager
      */
     private $reference_manager;
@@ -110,8 +109,6 @@ class Factory
             $row['repo_dest_id'],
             $row['branch_dest'],
             $row['sha1_dest'],
-            $row['last_build_date'],
-            $row['last_build_status'],
             $row['status'],
             $row['merge_status']
         );
@@ -226,19 +223,5 @@ class Factory
             $user->getId(),
             pullrequestPlugin::PULLREQUEST_REFERENCE_KEYWORD
         );
-    }
-
-    /**
-     * @deprecated
-     */
-    public function updateLastBuildStatus(PullRequest $pull_request, $status, $date)
-    {
-        if ($status != PullRequest::BUILD_STATUS_FAIL
-            && $status != PullRequest::BUILD_STATUS_SUCCESS
-            && $status != PullRequest::BUILD_STATUS_UNKNOWN) {
-            throw new InvalidBuildStatusException();
-        }
-
-        $this->dao->updateLastBuildStatus($pull_request->getId(), $status, $date);
     }
 }

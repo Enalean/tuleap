@@ -126,7 +126,6 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
             $this->addHook(GIT_ADDITIONAL_BODY_CLASSES);
             $this->addHook(GIT_ADDITIONAL_PERMITTED_ACTIONS);
             $this->addHook(GIT_HOOK_POSTRECEIVE_REF_UPDATE, 'gitHookPostReceive');
-            $this->addHook(REST_GIT_BUILD_STATUS, 'gitRestBuildStatus');
             $this->addHook(GitRepositoryDeletionEvent::NAME);
             $this->addHook(GitAdditionalActionEvent::NAME);
             $this->addHook(AdditionalInformationRepresentationRetriever::NAME);
@@ -329,18 +328,6 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
         foreach ($prs as $pr) {
             $closer->abandon($pr);
             $timeline_event_creator->storeAbandonEvent($pr, $user);
-        }
-    }
-
-    /**
-     * @deprecated
-     */
-    public function gitRestBuildStatus($params)
-    {
-        $factory = $this->getPullRequestFactory();
-        $pull_requests = $factory->getOpenedBySourceBranch($params['repository'], $params['branch']);
-        foreach ($pull_requests as $pull_request) {
-            $factory->updateLastBuildStatus($pull_request, $params['status'], time());
         }
     }
 

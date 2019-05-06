@@ -75,16 +75,3 @@ define('GIT_ADDITIONAL_NOTIFICATIONS', 'git_additional_notifications');
  *   'user'       => (Input) The user performing the action
  */
 define('GIT_HOOK_POSTRECEIVE_REF_UPDATE', 'git_hook_post_receive_ref_update');
-
-/**
- * Allow plugins to do something when Tuleap is notified
- * that a build has been triggered or finished.
- * Parameters:
- *     'repository'       => (Input) GitRepository Git repository currently modified
- *     'branch'           => (Input) The branch being built
- *     'commit_reference' => (Input) The sha1 of the commit being built
- *     'status'           => (Input) The status of the build
- *
- * @deprecated
- */
-define('REST_GIT_BUILD_STATUS', 'rest_git_build_status');
