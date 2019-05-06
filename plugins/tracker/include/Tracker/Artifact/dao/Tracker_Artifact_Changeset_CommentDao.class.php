@@ -25,25 +25,44 @@ class Tracker_Artifact_Changeset_CommentDao extends DataAccessObject {
         $this->table_name = 'tracker_changeset_comment';
     }
 
-    public function searchLastVersion($changeset_id) {
+    public function searchLastVersion($changeset_id, array $ugroups, $user_is_admin) {
         $changeset_id = $this->da->escapeInt($changeset_id);
-        $sql = "SELECT * FROM $this->table_name
-                WHERE changeset_id = $changeset_id
-                ORDER BY id DESC
+        $sql = "SELECT *";
+        $from = " FROM $this->table_name";
+        $where = " WHERE changeset_id = $changeset_id";
+        $order = " ORDER BY id DESC
                 LIMIT 1";
+
+        if (!$user_is_admin) {
+                $ugroups = $this->da->escapeIntImplode($ugroups);
+                $from   .= " LEFT JOIN permissions ON (permissions.object_id = CAST(tracker_changeset_comment.id AS CHAR CHARACTER SET utf8) AND permissions.permission_type = 'PLUGIN_TRACKER_ARTIFACT_COMMENT_ACCESS')";
+                $where  .= " AND (tracker_changeset_comment.use_comment_permissions = 0 OR  (permissions.ugroup_id IN (". $ugroups.")))";
+        }
+        $sql .= $from.$where.$order;
+
         return $this->retrieve($sql);
     }
 
-    public function searchLastVersionForArtifact($artifact_id)
+    public function searchLastVersionForArtifact($artifact_id, array $ugroups, $user_is_admin)
     {
         $artifact_id = $this->da->escapeInt($artifact_id);
-        $sql = "SELECT comment_v1.*
-                FROM tracker_changeset AS changeset
+        $sql = "SELECT comment_v1.*";
+        $from = " FROM tracker_changeset AS changeset
                   LEFT JOIN tracker_changeset_comment AS comment_v1 ON (comment_v1.changeset_id = changeset.id)
-                  LEFT JOIN tracker_changeset_comment AS comment_v2 ON (comment_v2.changeset_id = changeset.id AND comment_v1.id < comment_v2.id)
-                WHERE changeset.artifact_id = $artifact_id
+                  LEFT JOIN tracker_changeset_comment AS comment_v2 ON (comment_v2.changeset_id = changeset.id AND comment_v1.id < comment_v2.id)";
+
+        $where = " WHERE changeset.artifact_id = $artifact_id
                 AND comment_v2.id IS NULL
                 AND comment_v1.id IS NOT NULL";
+
+        if (!$user_is_admin) {
+                $ugroups = $this->da->escapeIntImplode($ugroups);
+                $from   .= "LEFT JOIN permissions ON (permissions.object_id = CAST(comment_v1.id AS CHAR CHARACTER SET utf8) AND permissions.permission_type = 'PLUGIN_TRACKER_ARTIFACT_COMMENT_ACCESS')";
+                $where  .= " AND (comment_v1.use_comment_permissions = 0 OR (permissions.ugroup_id IN (". $ugroups.")))";
+        }
+
+        $sql .= $from.$where;
+
         $result = array();
         foreach ($this->retrieve($sql) as $row) {
             $result[$row['changeset_id']] = $row;

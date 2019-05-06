@@ -505,8 +505,12 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
         if (isset($this->latest_comment)) {
             return $this->latest_comment;
         }
+        $user = $this->getUserManager()->getCurrentUser();
+        $is_admin = $this->artifact->getTracker()->userIsAdmin($user);
+        $this_project_id = $this->artifact->getTracker()->getProject()->getGroupId();
+        $ugroups = $user->getUgroups($this_project_id, array());
 
-        if ($row = $this->getCommentDao()->searchLastVersion($this->id)->getRow()) {
+        if ($row = $this->getCommentDao()->searchLastVersion($this->id, $ugroups, $is_admin)->getRow()) {
             $this->latest_comment = new Tracker_Artifact_Changeset_Comment($row['id'],
                                                     $this,
                                                     $row['comment_type_id'],
