@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Baseline\Stub;
 
 use DateTimeInterface;
-use Tuleap\Baseline\BaselineArtifact;
+use Tuleap\Baseline\Domain\BaselineArtifact;
 
 /**
  * Snapshot of an artifact at a precise date.

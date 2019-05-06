@@ -30,12 +30,12 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
 use PHPUnit\Framework\TestCase;
 use Project;
-use Tuleap\Baseline\ComparisonService;
-use Tuleap\Baseline\ComparisonsPage;
-use Tuleap\Baseline\CurrentUserProvider;
+use Tuleap\Baseline\Domain\ComparisonService;
+use Tuleap\Baseline\Domain\ComparisonsPage;
+use Tuleap\Baseline\Domain\CurrentUserProvider;
 use Tuleap\Baseline\Factory\ComparisonFactory;
 use Tuleap\Baseline\Factory\ProjectFactory;
-use Tuleap\Baseline\ProjectRepository;
+use Tuleap\Baseline\Domain\ProjectRepository;
 use Tuleap\Baseline\REST\Exception\NotFoundRestException;
 use Tuleap\Baseline\Support\CurrentUserContext;
 

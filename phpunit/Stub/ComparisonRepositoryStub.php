@@ -25,11 +25,11 @@ namespace Tuleap\Baseline\Stub;
 
 use PFUser;
 use Project;
-use Tuleap\Baseline\Baseline;
-use Tuleap\Baseline\Clock;
-use Tuleap\Baseline\Comparison;
-use Tuleap\Baseline\ComparisonRepository;
-use Tuleap\Baseline\TransientComparison;
+use Tuleap\Baseline\Domain\Baseline;
+use Tuleap\Baseline\Domain\Clock;
+use Tuleap\Baseline\Domain\Comparison;
+use Tuleap\Baseline\Domain\ComparisonRepository;
+use Tuleap\Baseline\Domain\TransientComparison;
 
 class ComparisonRepositoryStub implements ComparisonRepository
 {

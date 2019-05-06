@@ -28,7 +28,7 @@ require_once __DIR__ . '/../bootstrap.php';
 use DateTimeImmutable;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Tuleap\Baseline\Clock;
+use Tuleap\Baseline\Domain\Clock;
 
 class ClockAdapterTest extends TestCase
 {

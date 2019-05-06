@@ -23,10 +23,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\REST;
 
-use Tuleap\Baseline\BaselineService;
-use Tuleap\Baseline\CurrentUserProvider;
-use Tuleap\Baseline\NotAuthorizedException;
-use Tuleap\Baseline\ProjectRepository;
+use Tuleap\Baseline\Domain\BaselineService;
+use Tuleap\Baseline\Domain\CurrentUserProvider;
+use Tuleap\Baseline\Domain\NotAuthorizedException;
+use Tuleap\Baseline\Domain\ProjectRepository;
 use Tuleap\Baseline\REST\Exception\ForbiddenRestException;
 use Tuleap\Baseline\REST\Exception\NotFoundRestException;
 

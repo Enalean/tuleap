@@ -26,9 +26,9 @@ namespace Tuleap\Baseline\Stub;
 use DateTimeInterface;
 use PFUser;
 use Project;
-use Tuleap\Baseline\Baseline;
-use Tuleap\Baseline\BaselineRepository;
-use Tuleap\Baseline\TransientBaseline;
+use Tuleap\Baseline\Domain\Baseline;
+use Tuleap\Baseline\Domain\BaselineRepository;
+use Tuleap\Baseline\Domain\TransientBaseline;
 
 /**
  * In memory implementation of BaselineRepository used for tests.

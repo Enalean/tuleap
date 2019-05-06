@@ -27,7 +27,7 @@ use PFUser;
 use Project;
 use Project_AccessException;
 use ProjectManager;
-use Tuleap\Baseline\ProjectRepository;
+use Tuleap\Baseline\Domain\ProjectRepository;
 use URLVerification;
 
 class ProjectRepositoryAdapter implements ProjectRepository

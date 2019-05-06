@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Baseline;
+namespace Tuleap\Baseline\Domain;
 
 /**
  * Lump of all available comparisons, fetch with pagination.

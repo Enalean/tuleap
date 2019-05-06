@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Baseline\Stub;
 
 use PFUser;
-use Tuleap\Baseline\CurrentUserProvider;
+use Tuleap\Baseline\Domain\CurrentUserProvider;
 
 /**
  * Implementation of CurrentUserProvider used for tests.

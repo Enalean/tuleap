@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Baseline;
+namespace Tuleap\Baseline\Domain;
 
 use Project;
 use Tuleap\Baseline\Adapter\RoleAssignment;

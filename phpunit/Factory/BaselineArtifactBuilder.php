@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Baseline\Factory;
 
 use Project;
-use Tuleap\Baseline\BaselineArtifact;
+use Tuleap\Baseline\Domain\BaselineArtifact;
 
 class BaselineArtifactBuilder
 {

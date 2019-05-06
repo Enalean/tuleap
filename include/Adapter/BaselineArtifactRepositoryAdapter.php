@@ -29,8 +29,8 @@ use Project;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetFactory;
 use Tracker_ArtifactFactory;
-use Tuleap\Baseline\BaselineArtifact;
-use Tuleap\Baseline\BaselineArtifactRepository;
+use Tuleap\Baseline\Domain\BaselineArtifactRepository;
+use Tuleap\Baseline\Domain\BaselineArtifact;
 
 class BaselineArtifactRepositoryAdapter implements BaselineArtifactRepository
 {

@@ -24,16 +24,16 @@ declare(strict_types=1);
 namespace Tuleap\Baseline\REST;
 
 use PFUser;
-use Tuleap\Baseline\Baseline;
-use Tuleap\Baseline\BaselineRepository;
-use Tuleap\Baseline\ComparisonRepository;
-use Tuleap\Baseline\ComparisonService;
-use Tuleap\Baseline\CurrentUserProvider;
-use Tuleap\Baseline\InvalidComparisonException;
-use Tuleap\Baseline\NotAuthorizedException;
+use Tuleap\Baseline\Domain\Baseline;
+use Tuleap\Baseline\Domain\BaselineRepository;
+use Tuleap\Baseline\Domain\ComparisonRepository;
+use Tuleap\Baseline\Domain\ComparisonService;
+use Tuleap\Baseline\Domain\CurrentUserProvider;
+use Tuleap\Baseline\Domain\InvalidComparisonException;
+use Tuleap\Baseline\Domain\NotAuthorizedException;
 use Tuleap\Baseline\REST\Exception\ForbiddenRestException;
 use Tuleap\Baseline\REST\Exception\NotFoundRestException;
-use Tuleap\Baseline\TransientComparison;
+use Tuleap\Baseline\Domain\TransientComparison;
 use Tuleap\REST\I18NRestException;
 
 class ComparisonController

@@ -27,11 +27,11 @@ use DateTimeInterface;
 use ParagonIE\EasyDB\EasyDB;
 use PFUser;
 use Project;
-use Tuleap\Baseline\Authorizations;
-use Tuleap\Baseline\Baseline;
-use Tuleap\Baseline\BaselineArtifactRepository;
-use Tuleap\Baseline\BaselineRepository;
-use Tuleap\Baseline\TransientBaseline;
+use Tuleap\Baseline\Domain\Authorizations;
+use Tuleap\Baseline\Domain\Baseline;
+use Tuleap\Baseline\Domain\BaselineArtifactRepository;
+use Tuleap\Baseline\Domain\BaselineRepository;
+use Tuleap\Baseline\Domain\TransientBaseline;
 use UserManager;
 
 class BaselineRepositoryAdapter implements BaselineRepository

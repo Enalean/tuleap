@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Baseline\Adapter;
 
 use PFUser;
-use Tuleap\Baseline\CurrentUserProvider;
+use Tuleap\Baseline\Domain\CurrentUserProvider;
 use Tuleap\REST\UserManager;
 
 class CurrentUserProviderAdapter implements CurrentUserProvider

@@ -23,8 +23,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\REST;
 
-use Tuleap\Baseline\Comparison;
-use Tuleap\Baseline\ComparisonsPage;
+use Tuleap\Baseline\Domain\Comparison;
+use Tuleap\Baseline\Domain\ComparisonsPage;
 use Tuleap\REST\JsonCast;
 
 class ComparisonsPageRepresentation

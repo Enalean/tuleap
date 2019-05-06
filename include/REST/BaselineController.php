@@ -26,14 +26,14 @@ namespace Tuleap\Baseline\REST;
 use DateTime;
 use DateTimeImmutable;
 use Exception;
-use Tuleap\Baseline\BaselineArtifactRepository;
-use Tuleap\Baseline\BaselineDeletionException;
-use Tuleap\Baseline\BaselineService;
-use Tuleap\Baseline\CurrentUserProvider;
-use Tuleap\Baseline\NotAuthorizedException;
+use Tuleap\Baseline\Domain\BaselineArtifactRepository;
+use Tuleap\Baseline\Domain\BaselineDeletionException;
+use Tuleap\Baseline\Domain\BaselineService;
+use Tuleap\Baseline\Domain\CurrentUserProvider;
+use Tuleap\Baseline\Domain\NotAuthorizedException;
 use Tuleap\Baseline\REST\Exception\ForbiddenRestException;
 use Tuleap\Baseline\REST\Exception\NotFoundRestException;
-use Tuleap\Baseline\TransientBaseline;
+use Tuleap\Baseline\Domain\TransientBaseline;
 use Tuleap\REST\I18NRestException;
 
 class BaselineController

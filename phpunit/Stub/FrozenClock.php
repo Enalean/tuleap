@@ -25,7 +25,7 @@ namespace Tuleap\Baseline\Stub;
 
 use DateTimeImmutable;
 use DateTimeInterface;
-use Tuleap\Baseline\Clock;
+use Tuleap\Baseline\Domain\Clock;
 use Tuleap\Baseline\Support\DateTimeFactory;
 
 /**

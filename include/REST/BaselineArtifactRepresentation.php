@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\REST;
 
-use Tuleap\Baseline\BaselineArtifact;
+use Tuleap\Baseline\Domain\BaselineArtifact;
 use Tuleap\REST\JsonCast;
 
 class BaselineArtifactRepresentation

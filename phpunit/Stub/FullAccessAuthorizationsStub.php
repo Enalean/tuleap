@@ -25,11 +25,11 @@ namespace Tuleap\Baseline\Stub;
 
 use PFUser;
 use Project;
-use Tuleap\Baseline\Authorizations;
-use Tuleap\Baseline\Baseline;
-use Tuleap\Baseline\Comparison;
-use Tuleap\Baseline\TransientBaseline;
-use Tuleap\Baseline\TransientComparison;
+use Tuleap\Baseline\Domain\Authorizations;
+use Tuleap\Baseline\Domain\Baseline;
+use Tuleap\Baseline\Domain\Comparison;
+use Tuleap\Baseline\Domain\TransientBaseline;
+use Tuleap\Baseline\Domain\TransientComparison;
 
 class FullAccessAuthorizationsStub implements Authorizations
 {

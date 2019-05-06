@@ -24,8 +24,8 @@ declare(strict_types=1);
 namespace Tuleap\Baseline\Factory;
 
 use DateTimeInterface;
-use Tuleap\Baseline\BaselineArtifact;
-use Tuleap\Baseline\TransientBaseline;
+use Tuleap\Baseline\Domain\BaselineArtifact;
+use Tuleap\Baseline\Domain\TransientBaseline;
 
 class TransientBaselineBuilder
 {

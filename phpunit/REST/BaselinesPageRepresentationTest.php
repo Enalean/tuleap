@@ -27,7 +27,7 @@ use DateTimeImmutable;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use PHPUnit\Framework\TestCase;
-use Tuleap\Baseline\BaselinesPage;
+use Tuleap\Baseline\Domain\BaselinesPage;
 use Tuleap\Baseline\Factory\BaselineArtifactFactory;
 use Tuleap\Baseline\Factory\BaselineFactory;
 use Tuleap\GlobalLanguageMock;

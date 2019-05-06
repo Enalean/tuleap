@@ -25,9 +25,9 @@ namespace Tuleap\Baseline\Stub;
 
 use DateTimeInterface;
 use PFUser;
-use Tuleap\Baseline\BaselineArtifact;
-use Tuleap\Baseline\BaselineArtifactRepository;
-use Tuleap\Baseline\Clock;
+use Tuleap\Baseline\Domain\BaselineArtifact;
+use Tuleap\Baseline\Domain\BaselineArtifactRepository;
+use Tuleap\Baseline\Domain\Clock;
 
 /**
  * In memory implementation of BaselineArtifactRepository used for tests

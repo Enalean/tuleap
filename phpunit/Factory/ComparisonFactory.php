@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Baseline\Factory;
 
 use PFUser;
-use Tuleap\Baseline\Comparison;
+use Tuleap\Baseline\Domain\Comparison;
 use Tuleap\Baseline\Support\DateTimeFactory;
 
 class ComparisonFactory

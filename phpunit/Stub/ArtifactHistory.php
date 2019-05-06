@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Baseline\Stub;
 
 use DateTimeInterface;
-use Tuleap\Baseline\BaselineArtifact;
+use Tuleap\Baseline\Domain\BaselineArtifact;
 
 /**
  * History of an artifact, represented as a list of change sets (i.e. snapshot version).

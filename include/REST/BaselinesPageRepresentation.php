@@ -23,8 +23,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\REST;
 
-use Tuleap\Baseline\Baseline;
-use Tuleap\Baseline\BaselinesPage;
+use Tuleap\Baseline\Domain\Baseline;
+use Tuleap\Baseline\Domain\BaselinesPage;
 use Tuleap\REST\JsonCast;
 
 class BaselinesPageRepresentation

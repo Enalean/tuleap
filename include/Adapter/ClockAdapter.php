@@ -25,7 +25,7 @@ namespace Tuleap\Baseline\Adapter;
 
 use DateTimeImmutable;
 use DateTimeInterface;
-use Tuleap\Baseline\Clock;
+use Tuleap\Baseline\Domain\Clock;
 
 class ClockAdapter implements Clock
 {

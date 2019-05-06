@@ -26,12 +26,12 @@ namespace Tuleap\Baseline\Adapter;
 use ParagonIE\EasyDB\EasyDB;
 use PFUser;
 use Project;
-use Tuleap\Baseline\Authorizations;
-use Tuleap\Baseline\Baseline;
-use Tuleap\Baseline\BaselineRepository;
-use Tuleap\Baseline\Comparison;
-use Tuleap\Baseline\ComparisonRepository;
-use Tuleap\Baseline\TransientComparison;
+use Tuleap\Baseline\Domain\Authorizations;
+use Tuleap\Baseline\Domain\Baseline;
+use Tuleap\Baseline\Domain\BaselineRepository;
+use Tuleap\Baseline\Domain\Comparison;
+use Tuleap\Baseline\Domain\ComparisonRepository;
+use Tuleap\Baseline\Domain\TransientComparison;
 use UserManager;
 
 class ComparisonRepositoryAdapter implements ComparisonRepository

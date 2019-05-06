@@ -25,7 +25,7 @@ namespace Tuleap\Baseline\Stub;
 
 use PFUser;
 use Project;
-use Tuleap\Baseline\ProjectRepository;
+use Tuleap\Baseline\Domain\ProjectRepository;
 
 class ProjectRepositoryStub implements ProjectRepository
 {

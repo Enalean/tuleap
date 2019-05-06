@@ -24,12 +24,12 @@ declare(strict_types=1);
 namespace Tuleap\Baseline\REST;
 
 use Luracast\Restler\RestException;
-use Tuleap\Baseline\BaselineArtifactNotFoundException;
-use Tuleap\Baseline\BaselineArtifactService;
-use Tuleap\Baseline\BaselineRepository;
-use Tuleap\Baseline\BaselineRootArtifactNotFoundException;
-use Tuleap\Baseline\CurrentUserProvider;
-use Tuleap\Baseline\NotAuthorizedException;
+use Tuleap\Baseline\Domain\BaselineArtifactNotFoundException;
+use Tuleap\Baseline\Domain\BaselineArtifactService;
+use Tuleap\Baseline\Domain\BaselineRepository;
+use Tuleap\Baseline\Domain\BaselineRootArtifactNotFoundException;
+use Tuleap\Baseline\Domain\CurrentUserProvider;
+use Tuleap\Baseline\Domain\NotAuthorizedException;
 use Tuleap\Baseline\REST\Exception\ForbiddenRestException;
 use Tuleap\Baseline\REST\Exception\NotFoundRestException;
 use Tuleap\REST\QueryParameterException;

@@ -23,8 +23,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\Factory;
 
-use Tuleap\Baseline\Baseline;
-use Tuleap\Baseline\TransientComparison;
+use Tuleap\Baseline\Domain\Baseline;
+use Tuleap\Baseline\Domain\TransientComparison;
 
 class TransientComparisonBuilder
 {

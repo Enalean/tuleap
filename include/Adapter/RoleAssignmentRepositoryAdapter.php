@@ -25,7 +25,7 @@ namespace Tuleap\Baseline\Adapter;
 
 use ParagonIE\EasyDB\EasyDB;
 use Project;
-use Tuleap\Baseline\RoleAssignmentRepository;
+use Tuleap\Baseline\Domain\RoleAssignmentRepository;
 
 class RoleAssignmentRepositoryAdapter implements RoleAssignmentRepository
 {

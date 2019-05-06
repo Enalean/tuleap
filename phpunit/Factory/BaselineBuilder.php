@@ -25,8 +25,8 @@ namespace Tuleap\Baseline\Factory;
 
 use DateTimeInterface;
 use PFUser;
-use Tuleap\Baseline\Baseline;
-use Tuleap\Baseline\BaselineArtifact;
+use Tuleap\Baseline\Domain\Baseline;
+use Tuleap\Baseline\Domain\BaselineArtifact;
 
 class BaselineBuilder
 {

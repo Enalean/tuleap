@@ -2,12 +2,7 @@
     "name": "tuleap/plugin-baseline",
     "autoload": {
         "psr-4": {
-            "Tuleap\\Baseline\\": [
-                "include/",
-                "include/Domain/",
-                "include/Adapter/",
-                "include/Support/"
-            ]
+            "Tuleap\\Baseline\\": "include/"
         }
     },
     "require": {
