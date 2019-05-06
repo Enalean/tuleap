@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,6 +20,7 @@
 
 namespace Tuleap\TestManagement\REST\v1;
 
+use BackendLogger;
 use Luracast\Restler\RestException;
 use PFUser;
 use Tracker_Artifact;
@@ -37,6 +38,8 @@ use Tracker_REST_Artifact_ArtifactUpdater;
 use Tracker_REST_Artifact_ArtifactValidator;
 use Tracker_URLVerification;
 use TrackerFactory;
+use Tuleap\Http\HttpClientFactory;
+use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\RealTime\NodeJSClient;
 use Tuleap\REST\Header;
 use Tuleap\REST\ProjectAuthorization;
@@ -155,7 +158,12 @@ class ExecutionsResource
             $steps_results_representation_builder
         );
 
-        $this->node_js_client         = new NodeJSClient();
+        $this->node_js_client         = new NodeJSClient(
+            HttpClientFactory::createClient(),
+            HTTPFactoryBuilder::requestFactory(),
+            HTTPFactoryBuilder::streamFactory(),
+            new BackendLogger()
+        );
         $this->permissions_serializer = new Tracker_Permission_PermissionsSerializer(
             new Tracker_Permission_PermissionRetrieveAssignee(UserManager::instance())
         );
