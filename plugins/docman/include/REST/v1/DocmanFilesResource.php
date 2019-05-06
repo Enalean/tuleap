@@ -73,7 +73,7 @@ class DocmanFilesResource extends AuthenticatedResource
      */
     public function optionsDocumentItems($id)
     {
-        $this->getAllowOptionsPatch();
+        $this->getHeaders();
     }
 
     /**
@@ -109,7 +109,7 @@ class DocmanFilesResource extends AuthenticatedResource
     public function patch(int $id, DocmanFilesPATCHRepresentation $representation)
     {
         $this->checkAccess();
-        $this->getAllowOptionsPatch();
+        $this->getHeaders();
 
         $item_request = $this->request_builder->buildFromItemId($id);
         $item         = $item_request->getItem();
@@ -189,13 +189,58 @@ class DocmanFilesResource extends AuthenticatedResource
         }
     }
 
+    /**
+     * Delete a file document in the document manager
+     *
+     * Delete an existing file document
+     *
+     * @url    DELETE {id}
+     * @access hybrid
+     *
+     * @param int $id Id of the item
+     *
+     * @status 200
+     * @throws RestException 401
+     * @throws RestException 403
+     * @throws RestException 404
+     */
+    public function delete(int $id) : void
+    {
+        $this->checkAccess();
+        $this->getHeaders();
+
+        $item_request      = $this->request_builder->buildFromItemId($id);
+        $item_to_delete    = $item_request->getItem();
+        $current_user      = $this->rest_user_manager->getCurrentUser();
+        $project           = $item_request->getProject();
+        $validator_visitor = new DocumentBeforeDeletionValidatorVisitor(\Docman_File::class);
+
+        $docman_permission_manager = Docman_PermissionsManager::instance($project->getGroupId());
+        if (! $docman_permission_manager->userCanDelete($current_user, $item_to_delete)) {
+            throw new I18NRestException(
+                403,
+                dgettext('tuleap-docman', 'You are not allowed to delete this item.')
+            );
+        }
+
+        $item_to_delete->accept($validator_visitor);
+
+        $event_adder = $this->getDocmanItemsEventAdder();
+        $event_adder->addLogEvents();
+        $event_adder->addNotificationEvents($project);
+
+        (new \Docman_ItemFactory())->delete($item_to_delete);
+
+        $this->event_manager->processEvent('send_notifications', []);
+    }
+
     private function getDocmanItemsEventAdder(): DocmanItemsEventAdder
     {
         return new DocmanItemsEventAdder($this->event_manager);
     }
 
-    private function getAllowOptionsPatch(): void
+    private function getHeaders(): void
     {
-        Header::allowOptionsPatch();
+        Header::allowOptionsPatchDelete();
     }
 }
