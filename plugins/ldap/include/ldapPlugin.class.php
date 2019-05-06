@@ -25,6 +25,7 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/constants.php';
 
+use FastRoute\RouteCollector;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\LDAP\Exception\IdentifierTypeNotFoundException;
 use Tuleap\LDAP\Exception\IdentifierTypeNotRecognizedException;
@@ -38,6 +39,8 @@ use Tuleap\Project\Admin\ProjectMembers\ProjectMembersAdditionalModalCollectionP
 use Tuleap\LDAP\Project\UGroup\Binding\AdditionalModalPresenterBuilder;
 use Tuleap\Project\Admin\ProjectUGroup\BindingAdditionalModalPresenterCollection;
 use Tuleap\Project\Admin\ProjectUGroup\UGroupEditProcessAction;
+use Tuleap\Request\CollectRoutesEvent;
+use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\svn\Event\GetSVNLoginNameEvent;
 use Tuleap\User\Admin\UserDetailsPresenter;
 use Tuleap\Project\UserRemover;
@@ -161,6 +164,8 @@ class LdapPlugin extends Plugin {
 
         $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
         $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
+
+        $this->addHook(CollectRoutesEvent::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -390,7 +395,7 @@ class LdapPlugin extends Plugin {
                 } else {
                     if (isset($pv) && $pv == 2) $return_to_arg .= '?pv='.$pv;
                 }
-                $params['return_to'] = '/plugins/ldap/welcome.php'.$return_to_arg;
+                $params['return_to'] = '/plugins/ldap/welcome'.$return_to_arg;
             }
         }
     }
@@ -1362,5 +1367,42 @@ class LdapPlugin extends Plugin {
                 $ldap_group_manager->unbindFromBindLdap();
                 break;
         }
+    }
+
+    public function routeGetWelcome() : DispatchableWithRequest
+    {
+        return new \Tuleap\LDAP\WelcomeDisplayController($this->getLdapUserManager(), Codendi_HTMLPurifier::instance(), $this->getPluginPath());
+    }
+
+    public function routePostWelcome() : DispatchableWithRequest
+    {
+        return new \Tuleap\LDAP\WelcomeUpdateController(UserManager::instance(), new LDAP_UserDao(), new Account_TimezonesCollection());
+    }
+
+    public function routeGetAutocomplete() : DispatchableWithRequest
+    {
+        return new \Tuleap\LDAP\GroupAutocompleteController($this->getLdap());
+    }
+
+    public function routeGetBindUgroupConfirm() : DispatchableWithRequest
+    {
+        return new \Tuleap\LDAP\BindUgroupConfirmController(new UGroupManager(), $this->getLdapUserGroupManager(), UserManager::instance(), UserHelper::instance());
+    }
+
+    public function routeGetBindMembersConfirm() : DispatchableWithRequest
+    {
+        return new \Tuleap\LDAP\BindMembersConfirmController($this->getLdapProjectGroupManager(), UserManager::instance(), UserHelper::instance(), new \Tuleap\Project\Admin\MembershipDelegationDao());
+    }
+
+    public function collectRoutesEvent(CollectRoutesEvent $event)
+    {
+        $event->getRouteCollector()->addGroup($this->getPluginPath(), function (RouteCollector $r) {
+            $r->get('/welcome', $this->getRouteHandler('routeGetWelcome'));
+            $r->post('/welcome', $this->getRouteHandler('routePostWelcome'));
+
+            $r->get('/autocomplete', $this->getRouteHandler('routeGetAutocomplete'));
+            $r->get('/bind-ugroup-confirm', $this->getRouteHandler('routeGetBindUgroupConfirm'));
+            $r->get('/bind-members-confirm', $this->getRouteHandler('routeGetBindMembersConfirm'));
+        });
     }
 }
