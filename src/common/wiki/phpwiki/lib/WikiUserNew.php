@@ -72,14 +72,6 @@ rcs_id('$Id: WikiUserNew.php,v 1.132 2006/03/04 13:19:12 rurban Exp $');
  *    objects are tried, but not used.
  * 4) Already gotten prefs are passed to the next object to avoid 
  *    duplicate getPreferences() calls.
- * 2004-03-18 rurban
- * 5) Major php-5 problem: $this re-assignment is disallowed by the parser
- *    So we cannot just discrimate with 
- *      if (!check_php_version(5))
- *          $this = $user;
- *    A /php5-patch.php is provided, which patches the src automatically 
- *    for php4 and php5. Default is php4.
- *    Update: not needed anymore. we use eval to fool the load-time syntax checker.
  * 2004-03-24 rurban
  * 6) enforced new cookie policy: prefs don't get stored in cookies
  *    anymore, only in homepage and/or database, but always in the 
@@ -570,9 +562,6 @@ class _WikiUser
                 $class = "_" . $this->_current_method . "PassUser";
                 include_once("lib/WikiUser/".$this->_current_method.".php");
                 $user = new $class($userid,$this->_prefs);
-                if (!check_php_version(5))
-                    eval("\$this = \$user;");
-                // /*PHP5 patch*/$this = $user;
                 $this->_level = $authlevel;
                 return $user;
             }
@@ -590,9 +579,6 @@ class _WikiUser
             $class = "_" . $this->_current_method . "PassUser";
             include_once("lib/WikiUser/".$this->_current_method.".php");
             $user = new $class($userid, $this->_prefs);
-            if (!check_php_version(5))
-                eval("\$this = \$user;");
-            // /*PHP5 patch*/$this = $user;
             $user->_level = $authlevel;
             return $user;
         }
@@ -809,69 +795,27 @@ extends _AnonUser
                     // before we have to upgrade it manually.
                     if (!empty($GLOBALS['PHP_AUTH_USER']) or !empty($_SERVER['REMOTE_USER'])) {
                         include_once("lib/WikiUser/HttpAuth.php");
-                        if (check_php_version(5))
-                            return new _HttpAuthPassUser($UserName,$this->_prefs);
-                        else {
-                            $user = new _HttpAuthPassUser($UserName,$this->_prefs);
-                            eval("\$this = \$user;");
-                            // /*PHP5 patch*/$this = $user;
-                            return $user;
-                        }
+                        return new _HttpAuthPassUser($UserName,$this->_prefs);
                     } elseif (in_array('Db', $dbh->getAuthParam('USER_AUTH_ORDER')) and
                               $dbh->getAuthParam('auth_check') and
                               ($dbh->getAuthParam('auth_dsn') or $dbh->getParam('dsn'))) {
-                        if (check_php_version(5))
-                            return new _DbPassUser($UserName,$this->_prefs);
-                        else {
-                            $user = new _DbPassUser($UserName,$this->_prefs);
-                            eval("\$this = \$user;");
-                            // /*PHP5 patch*/$this = $user;
-                            return $user;
-                        }
+                        return new _DbPassUser($UserName,$this->_prefs);
                     } elseif (in_array('LDAP', $dbh->getAuthParam('USER_AUTH_ORDER')) and
                               defined('LDAP_AUTH_HOST') and defined('LDAP_BASE_DN') and 
                               function_exists('ldap_connect')) {
                         include_once("lib/WikiUser/LDAP.php");
-                        if (check_php_version(5))
-                            return new _LDAPPassUser($UserName,$this->_prefs);
-                        else {
-                            $user = new _LDAPPassUser($UserName,$this->_prefs);
-                            eval("\$this = \$user;");
-                            // /*PHP5 patch*/$this = $user;
-                            return $user;
-                        }
+                        return new _LDAPPassUser($UserName,$this->_prefs);
                     } elseif (in_array('IMAP', $dbh->getAuthParam('USER_AUTH_ORDER')) and
                               defined('IMAP_AUTH_HOST') and function_exists('imap_open')) {
                         include_once("lib/WikiUser/IMAP.php");
-                        if (check_php_version(5))
-                            return new _IMAPPassUser($UserName,$this->_prefs);
-                        else {
-                            $user = new _IMAPPassUser($UserName,$this->_prefs);
-                            eval("\$this = \$user;");
-                            // /*PHP5 patch*/$this = $user;
-                            return $user;
-                        }
+                        return new _IMAPPassUser($UserName,$this->_prefs);
                     } elseif (in_array('File', $dbh->getAuthParam('USER_AUTH_ORDER')) and
                               defined('AUTH_USER_FILE') and file_exists(AUTH_USER_FILE)) {
                         include_once("lib/WikiUser/File.php");
-                        if (check_php_version(5))
-                            return new _FilePassUser($UserName, $this->_prefs);
-                        else {
-                            $user = new _FilePassUser($UserName, $this->_prefs);
-                            eval("\$this = \$user;");
-                            // /*PHP5 patch*/$this = $user;
-                            return $user;
-                        }
+                        return new _FilePassUser($UserName, $this->_prefs);
                     } else {
                         include_once("lib/WikiUser/PersonalPage.php");
-                        if (check_php_version(5))
-                            return new _PersonalPagePassUser($UserName,$this->_prefs);
-                        else {
-                            $user = new _PersonalPagePassUser($UserName,$this->_prefs);
-                            eval("\$this = \$user;");
-                            // /*PHP5 patch*/$this = $user;
-                            return $user;
-                        }
+                        return new _PersonalPagePassUser($UserName,$this->_prefs);
                     }
                 }
                 else 
@@ -1071,9 +1015,6 @@ extends _AnonUser
         //if ($this->_HomePagehandle) return true;
         $class = $this->nextClass();
         while ($user = new $class($this->_userid, $this->_prefs)) {
-            if (!check_php_version(5))
-                eval("\$this = \$user;");
-            // /*PHP5 patch*/$this = $user;
             UpgradeUser($this,$user);
             if ($user->userExists()) {
                 return true;
@@ -1166,9 +1107,6 @@ extends _AnonUser
         if (USER_AUTH_POLICY === 'strict') {
             $class = $this->nextClass();
             while ($user = new $class($this->_userid,$this->_prefs)) {
-                if (!check_php_version(5))
-                    eval("\$this = \$user;");
-                // /*PHP5 patch*/$this = $user;
                 //$user = UpgradeUser($this, $user);
                 if ($user->userExists()) {
                     return true;

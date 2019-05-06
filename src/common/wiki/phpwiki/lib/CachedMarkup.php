@@ -185,10 +185,7 @@ class CacheableMarkup extends XmlContent {
             if (is_string($item)) {
                 $xml .= $item;
             }
-            elseif (is_subclass_of($item, 
-                                   check_php_version(5) 
-                                     ? 'Cached_DynamicContent' 
-                                     : 'cached_dynamiccontent'))
+            elseif ($item instanceof \Cached_DynamicContent)
             {
                 $val = $item->expand($basepage, $this);
                 $xml .= $val->asXML();
@@ -208,10 +205,7 @@ class CacheableMarkup extends XmlContent {
             if (is_string($item)) {
                 print $item;
             }
-            elseif (is_subclass_of($item, 
-                                   check_php_version(5) 
-                                     ? 'Cached_DynamicContent' 
-                                     : 'cached_dynamiccontent')) 
+            elseif ($item instanceof \Cached_DynamicContent)
             {  	// give the content the chance to know about itself or even 
             	// to change itself
                 $val = $item->expand($basepage, $this);

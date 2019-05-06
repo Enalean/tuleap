@@ -29,9 +29,6 @@ class _BogoLoginPassUser extends _PassUser {
             if (isset($this->_prefs->_method) and $this->_prefs->_method == 'HomePage') {
                 $user = new _PersonalPagePassUser($this->_userid, $this->_prefs);
                 if ($user->checkPass($submitted_password)) {
-                    if (!check_php_version(5))
-                        eval("\$this = \$user;");
-                    // /*PHP5 patch*/$this = $user;
                     $user = UpgradeUser($this, $user);
                     $this->_level = WIKIAUTH_USER;
                     return $this->_level;

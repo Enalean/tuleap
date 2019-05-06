@@ -7,14 +7,8 @@ rcs_id('$Id: config.php,v 1.137 2005/08/06 14:31:10 rurban Exp $');
  */
  
 if (!defined("LC_ALL")) {
-    // Backward compatibility (for PHP < 4.0.5)
-    if (!check_php_version(4,0,5)) {
-        define("LC_ALL",   "LC_ALL");
-        define("LC_CTYPE", "LC_CTYPE");
-    } else {
-        define("LC_ALL",   0);
-        define("LC_CTYPE", 2);
-    }
+    define("LC_ALL",   0);
+    define("LC_CTYPE", 2);
 }
 // debug flags: 
 define ('_DEBUG_VERBOSE',   1); // verbose msgs and add validator links on footer
@@ -366,21 +360,6 @@ if (!function_exists('str_ireplace')) {
   }
 }
 
-/**
- * safe php4 definition for clone.
- * php5 copies objects by reference, but we need to clone "deep copy" in some places.
- * (BlockParser)
- * We need to eval it as workaround for the php5 parser.
- * See http://www.acko.net/node/54
- */
-if (!check_php_version(5)) {
-    eval('
-    function clone($object) {
-      return $object;
-    }
-    ');
-}
-
 /** 
  * wordwrap() might crash between 4.1.2 and php-4.3.0RC2, fixed in 4.3.0
  * See http://bugs.php.net/bug.php?id=20927 and 
@@ -388,62 +367,7 @@ if (!check_php_version(5)) {
  * Improved version of wordwrap2() in the comments at http://www.php.net/wordwrap
  */
 function safe_wordwrap($str, $width=80, $break="\n", $cut=false) {
-    if (check_php_version(4,3))
-        return wordwrap($str, $width, $break, $cut);
-    elseif (!check_php_version(4,1,2))
-        return wordwrap($str, $width, $break, $cut);
-    else {
-        $len = strlen($str);
-        $tag = 0; $result = ''; $wordlen = 0;
-        for ($i = 0; $i < $len; $i++) {
-            $chr = $str[$i];
-            // don't break inside xml tags
-            if ($chr == '<') {
-                $tag++;
-            } elseif ($chr == '>') {
-                $tag--;
-            } elseif (!$tag) {
-                if (!function_exists('ctype_space')) {
-                    if (preg_match('/^\s$/', $chr))
-                        $wordlen = 0;
-                    else
-                        $wordlen++;
-                }
-                elseif (ctype_space($chr)) {
-                    $wordlen = 0;
-                } else {
-                    $wordlen++;
-                }
-            }
-            if ((!$tag) && ($wordlen) && (!($wordlen % $width))) {
-                $chr .= $break;
-            }
-            $result .= $chr;
-        }
-        return $result;
-        /*
-        if (isset($str) && isset($width)) {
-            $ex = explode(" ", $str); // wrong: must use preg_split \s+
-            $rp = array();
-            for ($i=0; $i<count($ex); $i++) {
-                // $word_array = preg_split('//', $ex[$i], -1, PREG_SPLIT_NO_EMPTY);
-                // delete #&& !is_numeric($ex[$i])# if you want force it anyway
-                if (strlen($ex[$i]) > $width && !is_numeric($ex[$i])) {
-                    $where = 0;
-                    $rp[$i] = "";
-                    for($b=0; $b < (ceil(strlen($ex[$i]) / $width)); $b++) {
-                        $rp[$i] .= substr($ex[$i], $where, $width).$break;
-                        $where += $width;
-                    }
-                } else {
-                    $rp[$i] = $ex[$i];
-                }
-            }
-            return implode(" ",$rp);
-        }
-        return $text;
-        */
-    }
+    return wordwrap($str, $width, $break, $cut);
 }
 
 function getUploadFilePath() {

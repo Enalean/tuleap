@@ -5,7 +5,7 @@ rcs_id('$Id: HttpClient.php,v 1.6 2004/11/01 10:43:55 rurban Exp $');
    Version 0.9, 6th April 2003 - Simon Willison ( http://simon.incutio.com/ )
    Manual: http://scripts.incutio.com/httpclient/
 
-   Copyright © 2003 Incutio Limited
+   Copyright (c) 2003 Incutio Limited
    License: http://www.opensource.org/licenses/artistic-license.php
 */
 
@@ -102,8 +102,7 @@ class HttpClient {
             }
             return false;
         }
-        if (check_php_version(4,3,0))
-            socket_set_timeout($fp, $this->timeout);
+        socket_set_timeout($fp, $this->timeout);
         $request = $this->buildRequest();
         $this->debug('Request', $request);
         fwrite($fp, $request);

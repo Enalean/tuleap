@@ -16,8 +16,7 @@ extends WikiDB_backend
         // Find and include PEAR's DB.php. maybe we should force our private version again...
         // if DB would have exported its version number, it would be easier.
         @require_once('DB/common.php'); // Either our local pear copy or the system one
-        // check the version!
-        $name = check_php_version(5) ? "escapeSimple" : strtolower("escapeSimple");
+        $name = 'escapeSimple';
         // TODO: apparently some Pear::Db version adds LIMIT 1,0 to getOne(), 
         // which is invalid for "select version()"
         if (!in_array($name, get_class_methods("DB_common"))) {

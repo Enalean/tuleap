@@ -34,12 +34,7 @@ if (DEBUG & _DEBUG_LOGIN) {
 if (ALLOW_BOGO_LOGIN && $require_level <= WIKIAUTH_BOGO) {
   require_once("lib/BlockParser.php");
   // This iso-8859-1 sample covers French, Spanish, Italian, German, and probably others
-  if (check_php_version(4,3))
-    $examplechars = htmlentities("ÀñíçéàÖãæôßøü", ENT_QUOTES, $charset);
-  elseif (check_php_version(4,0,3))
-    $examplechars = htmlentities("ÀñíçéàÖãæôßøü", ENT_QUOTES);
-  else
-    $examplechars = htmlentities("ÀñíçéàÖãæôßøü");
+  $examplechars = htmlentities("Ã€Ã±Ã­Ã§Ã©Ã Ã–Ã£Ã¦Ã´ÃŸÃ¸Ã¼", ENT_QUOTES, $charset);
   // Japanese login requires utf-8 and ALLOW_NONWIKIWORD_LOGINS
   if (($charset == 'utf-8') && defined('ALLOW_NONWIKIWORD_LOGINS') && ALLOW_NONWIKIWORD_LOGINS) {
     //sample Japanese login name in unicode

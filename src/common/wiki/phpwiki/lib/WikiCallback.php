@@ -119,37 +119,8 @@ class WikiMethodCb
 
     function call_array ($args) {
         $method = &$this->methodName;
-        //$obj = &$this->object;
 
-        // This should work, except PHP's before 4.0.5 (which includes mine)
-        // don't have 'call_user_method_array'.
-        if (check_php_version(4,0,5)) {
-            return call_user_func_array(array(&$this->object, $method), $args);
-        }
-
-        // This should work, but doesn't.  At least in my PHP, the object seems
-        // to get passed by value, rather than reference, so any changes to the
-        // object made by the called method get lost.
-        /*
-        switch (count($args)) {
-        case 0: return call_user_method($method, $obj);
-        case 1: return call_user_method($method, $obj, $args[0]);
-        case 2: return call_user_method($method, $obj, $args[0], $args[1]);
-        case 3: return call_user_method($method, $obj, $args[0], $args[1], $args[2]);
-        case 4: return call_user_method($method, $obj, $args[0], $args[1], $args[2], $args[3]);
-        default: trigger_error("Too many arguments to method callback", E_USER_ERROR);
-        }
-        */
-
-        // This seems to work, at least for me (so far):
-        switch (count($args)) {
-        case 0: return $this->object->$method();
-        case 1: return $this->object->$method($args[0]);
-        case 2: return $this->object->$method($args[0], $args[1]);
-        case 3: return $this->object->$method($args[0], $args[1], $args[2]);
-        case 4: return $this->object->$method($args[0], $args[1], $args[2], $args[3]);
-        default: trigger_error("Too many arguments to method callback", E_USER_ERROR);
-        }
+        return call_user_func_array(array(&$this->object, $method), $args);
     }
 
     function toPearCb() {

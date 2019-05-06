@@ -33,11 +33,7 @@ extends WikiPlugin_RecentChanges
     }
 
     function getDefaultArguments() {
-    	//php-4.0.4pl1 breaks at the parent:: line even if the 
-    	// code doesn't reach this line
-        //if (!check_php_version(4,0,6))
         $args = WikiPlugin_RecentChanges::getDefaultArguments();
-        //else $args = parent::getDefaultArguments();
         $args['page'] = '[pagename]';
         $args['show_minor'] = true;
         $args['show_all'] = true;

@@ -236,15 +236,6 @@ class WikiDB {
     function getAllPages($include_empty=false, $sortby=false, $limit=false, 
                          $exclude=false) 
     {
-        // HACK: memory_limit=8M will fail on too large pagesets. old php on unix only!
-        if (USECACHE) {
-            $mem = ini_get("memory_limit");
-            if ($mem and !$limit and !isWindows() and !check_php_version(4,3)) {
-                $limit = 450;
-                $GLOBALS['request']->setArg('limit', $limit);
-                $GLOBALS['request']->setArg('paging', 'auto');
-            }
-        }
         $result = $this->_backend->get_all_pages($include_empty, $sortby, $limit, 
                                                  $exclude);
         return new WikiDB_PageIterator($this, $result, 

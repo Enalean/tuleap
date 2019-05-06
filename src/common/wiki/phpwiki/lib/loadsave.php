@@ -206,10 +206,8 @@ function MakeWikiZip (&$request)
     $zip = new ZipWriter("Created by PhpWiki " . PHPWIKI_VERSION, $zipname);
 
     /* ignore fatals in plugins */
-    if (check_php_version(4,1)) {
-        global $ErrorManager;
-        $ErrorManager->pushErrorHandler(new WikiFunctionCb('_dump_error_handler'));
-    }
+    global $ErrorManager;
+    $ErrorManager->pushErrorHandler(new WikiFunctionCb('_dump_error_handler'));
 
     $dbi = $request->_dbi;
     $thispage = $request->getArg('pagename'); // for "Return to ..."
@@ -258,10 +256,8 @@ function MakeWikiZip (&$request)
                               $content, $attrib);
     }
     $zip->finish();
-    if (check_php_version(4,1)) {
-        global $ErrorManager;
-        $ErrorManager->popErrorHandler();
-    }
+    global $ErrorManager;
+    $ErrorManager->popErrorHandler();
 }
 
 function _copyMsg($page, $smallmsg) {
@@ -311,10 +307,8 @@ function MakeWikiZipHtml (&$request)
     unset($WikiTheme->_MoreAttr['body']);
 
     /* ignore fatals in plugins */
-    if (check_php_version(4,1)) {
-        global $ErrorManager;
-        $ErrorManager->pushErrorHandler(new WikiFunctionCb('_dump_error_handler'));
-    }
+    global $ErrorManager;
+    $ErrorManager->pushErrorHandler(new WikiFunctionCb('_dump_error_handler'));
 
     $request_args = $request->args;
     $timeout = (! $request->getArg('start_debug')) ? 20 : 240;
@@ -374,10 +368,7 @@ function MakeWikiZipHtml (&$request)
         foreach ($WikiTheme->dumped_images as $img_file) {
             if (($from = $WikiTheme->_findFile($img_file, true)) and basename($from)) {
                 $target = "images/".basename($img_file);
-                if (check_php_version(4,3))
-                    $zip->addRegularFile($target, file_get_contents($WikiTheme->_path . $from), $attrib);
-                else
-                    $zip->addRegularFile($target, join('', file($WikiTheme->_path . $from)), $attrib);
+                $zip->addRegularFile($target, file_get_contents($WikiTheme->_path . $from), $attrib);
             }
         }
     }
@@ -386,10 +377,7 @@ function MakeWikiZipHtml (&$request)
         foreach ($WikiTheme->dumped_buttons as $text => $img_file) {
             if (($from = $WikiTheme->_findFile($img_file, true)) and basename($from)) {
                 $target = "images/buttons/".basename($img_file);
-                if (check_php_version(4,3))
-                    $zip->addRegularFile($target, file_get_contents($WikiTheme->_path . $from), $attrib);
-                else
-                    $zip->addRegularFile($target, join('', file($WikiTheme->_path . $from)), $attrib);
+                $zip->addRegularFile($target, file_get_contents($WikiTheme->_path . $from), $attrib);
             }
         }
     }
@@ -397,19 +385,14 @@ function MakeWikiZipHtml (&$request)
         foreach ($WikiTheme->dumped_css as $css_file) {
             if (($from = $WikiTheme->_findFile(basename($css_file), true)) and basename($from)) {
                 $target = basename($css_file);
-                if (check_php_version(4,3))
-                    $zip->addRegularFile($target, file_get_contents($WikiTheme->_path . $from), $attrib);
-                else
-                    $zip->addRegularFile($target, join('', file($WikiTheme->_path . $from)), $attrib);
+                $zip->addRegularFile($target, file_get_contents($WikiTheme->_path . $from), $attrib);
             }
         }
     }
 
     $zip->finish();
-    if (check_php_version(4,1)) {
-        global $ErrorManager;
-        $ErrorManager->popErrorHandler();
-    }
+    global $ErrorManager;
+    $ErrorManager->popErrorHandler();
     $WikiTheme->HTML_DUMP_SUFFIX = '';
     $WikiTheme->DUMP_MODE = false;
     $WikiTheme->_MoreAttr['body'] = $_bodyAttr;

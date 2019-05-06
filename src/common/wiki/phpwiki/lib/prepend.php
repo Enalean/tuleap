@@ -14,17 +14,6 @@ rcs_id('$Id: prepend.php,v 1.43 2005/09/14 06:06:43 rurban Exp $');
 // see lib/stdlib.php: phpwiki_version()
 define('PHPWIKI_VERSION', '1.3.12p2');
 
-/** 
- * Returns true if current php version is at mimimum a.b.c 
- * Called: check_php_version(4,1)
- */
-function check_php_version ($a = '0', $b = '0', $c = '0') {
-    static $PHP_VERSION;
-    if (!isset($PHP_VERSION))
-        $PHP_VERSION = substr( str_pad( preg_replace('/\D/','', PHP_VERSION), 3, '0'), 0, 3);
-    return ($PHP_VERSION >= ($a.$b.$c));
-}
-
 /** PHP5 deprecated old-style globals if !(bool)ini_get('register_long_arrays'). 
   *  See Bug #1180115
   * We want to work with those old ones instead of the new superglobals, 

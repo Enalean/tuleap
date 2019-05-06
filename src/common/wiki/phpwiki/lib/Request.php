@@ -324,8 +324,6 @@ class Request {
             if (!COMPRESS_OUTPUT)
                 $compress = false;
         }
-        elseif (!check_php_version(4,2,3))
-            $compress = false;
         elseif (isCGI()) // necessary?
             $compress = false;
             
@@ -422,17 +420,6 @@ class Request {
     	$this->_finishing = true;
         
         if (!empty($this->_is_buffering_output)) {
-            /* This cannot work because it might destroy xml markup */
-            /*
-            if (0 and $GLOBALS['SearchHighLightQuery'] and check_php_version(4,2)) {
-                $html = str_replace($GLOBALS['SearchHighLightQuery'],
-                                    '<span class="search-term">'.$GLOBALS['SearchHighLightQuery'].'</span>',
-                                    ob_get_contents());
-                ob_clean();
-                header(sprintf("Content-Length: %d", strlen($html)));
-                echo $html;
-            } else {
-            */
             // if _is_compressing_output then ob_get_length() returns 
             // the uncompressed length, not the gzip'ed as required.
 	    if (!headers_sent() and !$this->_is_compressing_output) {
