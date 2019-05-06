@@ -61,10 +61,10 @@ class Admin_PermissionDelegationIndexPresenter
         array $groups,
         $permission_delegation_javascript_url,
         Admin_PermissionDelegationGroupModalPresenter $add_group,
-        Admin_PermissionDelegationDeleteGroupModalPresenter $delete_group = null,
-        Admin_PermissionDelegationGroupModalPresenter $edit_group = null,
-        Admin_PermissionDelegationPermissionsModalPresenter $add_perm_presenter = null,
-        Admin_PermissionDelegationGroupPresenter $current_group_presenter = null
+        ?Admin_PermissionDelegationDeleteGroupModalPresenter $delete_group = null,
+        ?Admin_PermissionDelegationGroupModalPresenter $edit_group = null,
+        ?Admin_PermissionDelegationPermissionsModalPresenter $add_perm_presenter = null,
+        ?Admin_PermissionDelegationGroupPresenter $current_group_presenter = null
     ) {
         $this->csrf_token         = $csrf_token;
         $this->groups             = $groups;

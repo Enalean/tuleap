@@ -665,7 +665,7 @@ class ProjectUGroup implements User_UGroup // phpcs:ignore PSR1.Classes.ClassDec
         return $ugroup_manager->getUgroupBindingSource($id);
     }
 
-    public function setSourceGroup(ProjectUGroup $ugroup = null)
+    public function setSourceGroup(?ProjectUGroup $ugroup = null)
     {
         $this->source_ugroup = $ugroup;
         $this->source_id = ($ugroup === null) ? null : $ugroup->getId();

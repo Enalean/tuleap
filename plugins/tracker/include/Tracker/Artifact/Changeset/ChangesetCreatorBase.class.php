@@ -69,7 +69,7 @@ abstract class Tracker_Artifact_Changeset_ChangesetCreatorBase {
         array $fields_data,
         PFUser $submitter,
         Tracker_Artifact_Changeset $new_changeset,
-        Tracker_Artifact_Changeset $previous_changeset = null
+        ?Tracker_Artifact_Changeset $previous_changeset = null
     ) {
         if ($this->artifact_factory->save($artifact)) {
             $used_fields = $this->formelement_factory->getUsedFields($artifact->getTracker());

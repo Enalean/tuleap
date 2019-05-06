@@ -34,7 +34,7 @@ class Tracker_Semantic_Title extends Tracker_Semantic {
      * @param Tracker                        $tracker    The tracker
      * @param Tracker_FormElement_Field_Text $text_field The field
      */
-    public function __construct(Tracker $tracker, Tracker_FormElement_Field_Text $text_field = null) {
+    public function __construct(Tracker $tracker, ?Tracker_FormElement_Field_Text $text_field = null) {
         parent::__construct($tracker);
         $this->text_field = $text_field;
     }

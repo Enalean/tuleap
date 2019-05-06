@@ -56,7 +56,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         $required,
         $notifications,
         $rank,
-        Tracker_FormElement $original_field = null
+        ?Tracker_FormElement $original_field = null
     ) {
         parent::__construct(
             $id,
@@ -312,7 +312,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
 
     public function fetchArtifactValueWithEditionFormIfEditable(
         Tracker_Artifact $artifact,
-        Tracker_Artifact_ChangesetValue $value = null,
+        ?Tracker_Artifact_ChangesetValue $value = null,
         $submitted_values = array()
     ) {
         return $this->fetchArtifactValueReadOnly($artifact, $value).
@@ -321,7 +321,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
 
     protected function getHiddenArtifactValueForEdition(
         Tracker_Artifact $artifact,
-        Tracker_Artifact_ChangesetValue $value = null,
+        ?Tracker_Artifact_ChangesetValue $value = null,
         $submitted_values = array()
     ) {
 
@@ -365,7 +365,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
 
     protected function fetchArtifactValue(
         Tracker_Artifact $artifact,
-        Tracker_Artifact_ChangesetValue $value = null,
+        ?Tracker_Artifact_ChangesetValue $value = null,
         $submitted_values = array()
     ) {
         $displayed_value = null;
@@ -405,7 +405,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
      */
     public function fetchArtifactValueReadOnly(
         Tracker_Artifact $artifact,
-        Tracker_Artifact_ChangesetValue $changeset_value = null
+        ?Tracker_Artifact_ChangesetValue $changeset_value = null
     ) {
         $value    = null;
         $purifier = Codendi_HTMLPurifier::instance();
@@ -446,7 +446,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         Tracker_Artifact $artifact,
         PFUser $user,
         $ignore_perms,
-        Tracker_Artifact_ChangesetValue $value = null,
+        ?Tracker_Artifact_ChangesetValue $value = null,
         $format = 'text'
     ) {
         $changeset = $artifact->getLastChangesetWithFieldValue($this);
@@ -462,7 +462,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
      * @param Tracker_Artifact_ChangesetValue_Integer $value The changeset value of this field
      * @return string The html code to display the field value in tooltip
      */
-    protected function fetchTooltipValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
+    protected function fetchTooltipValue(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null) {
         $current_user = UserManager::instance()->getCurrentUser();
         $changeset    = $artifact->getLastChangesetWithFieldValue($this);
         $value        = $this->getComputedValue($current_user, $changeset->getArtifact(), $changeset->getSubmittedOn());
@@ -515,7 +515,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         return null;
     }
 
-    public function getFieldDataFromRESTValue(array $value, Tracker_Artifact $artifact = null)
+    public function getFieldDataFromRESTValue(array $value, ?Tracker_Artifact $artifact = null)
     {
         if ($this->isAutocomputedDisabledAndNoManualValueProvided($value) || isset($value['value'])) {
             throw new Tracker_FormElement_InvalidFieldValueException(
@@ -854,7 +854,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         return UserManager::instance()->getCurrentUser();
     }
 
-    protected function saveValue($artifact, $changeset_value_id, $value, Tracker_Artifact_ChangesetValue $previous_changesetvalue = null) {
+    protected function saveValue($artifact, $changeset_value_id, $value, ?Tracker_Artifact_ChangesetValue $previous_changesetvalue = null) {
         $user = $this->getCurrentUser();
         if (! $this->userCanUpdate($user)) {
             return true;
@@ -957,7 +957,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
     public function validateFieldWithPermissionsAndRequiredStatus(
         Tracker_Artifact $artifact,
         $submitted_value,
-        Tracker_Artifact_ChangesetValue $last_changeset_value = null,
+        ?Tracker_Artifact_ChangesetValue $last_changeset_value = null,
         $is_submission = null
     ) {
         $hasPermission = $this->userCanUpdate();

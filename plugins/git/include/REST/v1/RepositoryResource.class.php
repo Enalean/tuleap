@@ -673,7 +673,7 @@ class RepositoryResource extends AuthenticatedResource
      */
     protected function patchId(
         $id,
-        GitRepositoryGerritMigratePATCHRepresentation $migrate_to_gerrit = null ,
+        ?GitRepositoryGerritMigratePATCHRepresentation $migrate_to_gerrit = null ,
         $disconnect_from_gerrit = null
     ) {
         $this->checkAccess();

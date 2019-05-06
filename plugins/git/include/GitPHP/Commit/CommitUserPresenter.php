@@ -40,7 +40,7 @@ class CommitUserPresenter
     /**
      * @return CommitUserPresenter
      */
-    public static function buildFromTuleapUser(\PFUser $user = null)
+    public static function buildFromTuleapUser(?\PFUser $user = null)
     {
         $user_presenter                   = new self();
         $user_presenter->is_a_tuleap_user = $user !== null;

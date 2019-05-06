@@ -50,7 +50,7 @@ class BurnupRepresentation
      */
     public $points_with_date = array();
 
-    public function __construct($capacity, BurnupData $burnup_data = null)
+    public function __construct($capacity, ?BurnupData $burnup_data = null)
     {
         $this->capacity = JsonCast::toFloat($capacity);
         if ($burnup_data === null) {

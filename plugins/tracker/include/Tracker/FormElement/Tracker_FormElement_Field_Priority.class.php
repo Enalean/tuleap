@@ -127,7 +127,7 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
      *
      * @return string
      */
-    protected function fetchArtifactValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
+    protected function fetchArtifactValue(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
         return $this->fetchArtifactValueReadOnly($artifact, $value);
     }
 
@@ -139,7 +139,7 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
      *
      * @return string
      */
-    public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
+    public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null) {
         return '<span>' . $this->getArtifactRank($artifact->getID()) . '</span>';
     }
 
@@ -161,7 +161,7 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
         Tracker_Artifact $artifact,
         PFUser $user,
         $ignore_perms,
-        Tracker_Artifact_ChangesetValue $value = null,
+        ?Tracker_Artifact_ChangesetValue $value = null,
         $format = 'text'
     ) {
         $output = '';
@@ -178,7 +178,7 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
 
     public function fetchArtifactValueWithEditionFormIfEditable(
         Tracker_Artifact $artifact,
-        Tracker_Artifact_ChangesetValue $value = null,
+        ?Tracker_Artifact_ChangesetValue $value = null,
         $submitted_values = []
     ) {
         return $this->fetchArtifactValueReadOnly($artifact, $value);
@@ -227,7 +227,7 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
      * @param Tracker_Artifact_ChangesetValue_Integer $value The changeset value of this field
      * @return string The html code to display the field value in tooltip
      */
-    protected function fetchTooltipValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
+    protected function fetchTooltipValue(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null) {
         return $this->getArtifactRank($artifact->getID());
     }
 
@@ -311,7 +311,7 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
     public function validateFieldWithPermissionsAndRequiredStatus(
         Tracker_Artifact $artifact,
         $submitted_value,
-        Tracker_Artifact_ChangesetValue $last_changeset_value = null,
+        ?Tracker_Artifact_ChangesetValue $last_changeset_value = null,
         $is_submission = null
     ) {
         $is_valid = true;
@@ -331,7 +331,7 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
      *
      * @return string
      */
-    public function fetchCardValue(Tracker_Artifact $artifact, Tracker_CardDisplayPreferences $display_preferences = null) {
+    public function fetchCardValue(Tracker_Artifact $artifact, ?Tracker_CardDisplayPreferences $display_preferences = null) {
         //return $this->fetchTooltipValue($artifact, $artifact->getLastChangeset()->getValue($this));
 
         $artifact_id  = $artifact->getId();

@@ -40,7 +40,7 @@ class DashboardWidgetDao extends DataAccessObject
 
     public function __construct(
         WidgetFactory $widget_factory,
-        LegacyDataAccessInterface $da = null
+        ?LegacyDataAccessInterface $da = null
     ) {
         parent::__construct($da);
         $this->enableExceptionsOnError();

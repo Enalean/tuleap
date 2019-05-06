@@ -43,7 +43,7 @@ class FRSFileFactory {
      */
     protected $fileforge;
 
-    function __construct(Logger $logger = null) {
+    function __construct(?Logger $logger = null) {
         $this->fileforge = ForgeConfig::get('codendi_bin_prefix') . "/fileforge";
         if ($logger === null) {
             $this->logger = new Log_NoopLogger();

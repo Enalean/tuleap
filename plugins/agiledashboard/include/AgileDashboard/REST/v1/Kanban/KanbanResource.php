@@ -377,7 +377,7 @@ class KanbanResource extends AuthenticatedResource
     public function patchId(
         $id,
         $label = null,
-        KanbanCollapseColumnRepresentation $collapse_column = null,
+        ?KanbanCollapseColumnRepresentation $collapse_column = null,
         $collapse_archive = null,
         $collapse_backlog = null
     ) {
@@ -588,8 +588,8 @@ class KanbanResource extends AuthenticatedResource
      */
     protected function patchBacklog(
         $id,
-        OrderRepresentation $order = null,
-        KanbanAddRepresentation $add = null,
+        ?OrderRepresentation $order = null,
+        ?KanbanAddRepresentation $add = null,
         $from_column = null
     ) {
         try {
@@ -829,8 +829,8 @@ class KanbanResource extends AuthenticatedResource
      */
     protected function patchArchive(
         $id,
-        OrderRepresentation $order = null,
-        KanbanAddRepresentation $add = null,
+        ?OrderRepresentation $order = null,
+        ?KanbanAddRepresentation $add = null,
         $from_column = null
     ) {
         try {
@@ -1020,8 +1020,8 @@ class KanbanResource extends AuthenticatedResource
     protected function patchItems(
         $id,
         $column_id,
-        OrderRepresentation $order = null,
-        KanbanAddRepresentation $add = null,
+        ?OrderRepresentation $order = null,
+        ?KanbanAddRepresentation $add = null,
         $from_column = null
     ) {
         try {

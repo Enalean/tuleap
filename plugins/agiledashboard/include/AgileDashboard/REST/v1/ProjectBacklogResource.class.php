@@ -224,7 +224,7 @@ class ProjectBacklogResource
         $this->sendAllowHeaders();
     }
 
-    public function patch(PFUser $user, Project $project, OrderRepresentationBase $order = null, array $add = null) {
+    public function patch(PFUser $user, Project $project, ?OrderRepresentationBase $order = null, ?array $add = null) {
         $this->checkIfUserCanChangePrioritiesInMilestone($user, $project);
 
         if ($add) {

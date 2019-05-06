@@ -116,7 +116,7 @@ class Planning_ArtifactMilestone implements Planning_Milestone {
         Planning $planning,
         Tracker_Artifact $artifact,
         ScrumForMonoMilestoneChecker $scrum_mono_milestone_checker,
-        ArtifactNode $planned_artifacts = null
+        ?ArtifactNode $planned_artifacts = null
     ) {
 
         $this->project                      = $project;

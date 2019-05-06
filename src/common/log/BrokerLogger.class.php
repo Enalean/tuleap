@@ -38,13 +38,13 @@ class BrokerLogger implements Logger {
         }
     }
 
-    public function warn($message, Exception $exception = null) {
+    public function warn($message, ?Exception $exception = null) {
         foreach ($this->loggers as $logger) {
             $logger->warn($message, $exception);
         }
     }
 
-    public function error($message, Exception $exception = null) {
+    public function error($message, ?Exception $exception = null) {
         foreach ($this->loggers as $logger) {
             $logger->error($message, $exception);
         }

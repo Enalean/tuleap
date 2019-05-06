@@ -30,6 +30,6 @@ interface Tracker_FormElement_Field_ArtifactLink_PostSaveNewChangesetCommand {
         Tracker_Artifact $artifact,
         PFUser $submitter,
         Tracker_Artifact_Changeset $new_changeset,
-        Tracker_Artifact_Changeset $previous_changeset = null
+        ?Tracker_Artifact_Changeset $previous_changeset = null
     );
 }

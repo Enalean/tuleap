@@ -85,7 +85,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
         return null;
     }
 
-    public function setFieldValue(Tracker_FormElement_Field $field, Tracker_Artifact_ChangesetValue $value = null) {
+    public function setFieldValue(Tracker_FormElement_Field $field, ?Tracker_Artifact_ChangesetValue $value = null) {
         $this->values[$field->getId()] = $value;
     }
 
@@ -413,7 +413,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
      *
      * @return boolean true if the user can delete
      */
-    protected function userCanDelete(PFUser $user = null) {
+    protected function userCanDelete(?PFUser $user = null) {
         if (!$user) {
             $user = $this->getUserManager()->getCurrentUser();
         }
@@ -428,7 +428,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
      *
      * @return boolean true if the user can edit
      */
-    public function userCanEdit(PFUser $user = null) {
+    public function userCanEdit(?PFUser $user = null) {
         if (!$user) {
             $user = $this->getUserManager()->getCurrentUser();
         }

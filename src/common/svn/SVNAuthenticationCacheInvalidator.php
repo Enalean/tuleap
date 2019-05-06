@@ -33,7 +33,7 @@ class SVNAuthenticationCacheInvalidator
      */
     private $redis_client;
 
-    public function __construct(ApacheServiceControl $apache_service_control, \Redis $redis_client = null)
+    public function __construct(ApacheServiceControl $apache_service_control, ?\Redis $redis_client = null)
     {
         $this->apache_service_control = $apache_service_control;
         $this->redis_client           = $redis_client;

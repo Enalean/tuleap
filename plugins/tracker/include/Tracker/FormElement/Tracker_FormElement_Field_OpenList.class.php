@@ -154,7 +154,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
      *
      * @return string
      */
-    protected function fetchArtifactValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
+    protected function fetchArtifactValue(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
         $selected_values = $value ? $value->getListValues() : array();
         if (! empty($submitted_values) && is_array($submitted_values[0]) && isset($submitted_values[0][$this->id])) {
             return $this->fetchOpenList($this->toObj($submitted_values[0][$this->id]));
@@ -170,7 +170,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
      *
      * @return string
      */
-    public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
+    public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null) {
         $labels = array();
         $selected_values = $value ? $value->getListValues() : array();
 
@@ -187,7 +187,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
         return implode(', ', $labels);
     }
 
-    public function fetchArtifactValueWithEditionFormIfEditable(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
+    public function fetchArtifactValueWithEditionFormIfEditable(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
         return $this->fetchArtifactValueReadOnly($artifact, $value) . $this->getHiddenArtifactValueForEdition($artifact, $value, $submitted_values);
     }
 
@@ -206,7 +206,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
         Tracker_Artifact $artifact,
         PFUser $user,
         $ignore_perms,
-        Tracker_Artifact_ChangesetValue $value = null,
+        ?Tracker_Artifact_ChangesetValue $value = null,
         $format = 'text'
     ) {
         if ( empty($value) || ! $value->getListValues()) {
@@ -369,7 +369,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
      *
      * @return boolean
      */
-    protected function saveValue($artifact, $changeset_value_id, $value, Tracker_Artifact_ChangesetValue $previous_changesetvalue = null) {
+    protected function saveValue($artifact, $changeset_value_id, $value, ?Tracker_Artifact_ChangesetValue $previous_changesetvalue = null) {
         $openvalue_dao = $this->getOpenValueDao();
         // the separator is a comma
         $values = $this->sanitize($value);
@@ -520,7 +520,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
     /**
      * @see Tracker_FormElement_Field::fetchCardValue()
      */
-    public function fetchCardValue(Tracker_Artifact $artifact, Tracker_CardDisplayPreferences $display_preferences = null)
+    public function fetchCardValue(Tracker_Artifact $artifact, ?Tracker_CardDisplayPreferences $display_preferences = null)
     {
         $value = $artifact->getLastChangeset()->getValue($this);
         return $this->fetchTooltipValue($artifact, $value);
@@ -763,7 +763,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
         return false;
     }
 
-    public function getFieldDataFromRESTValue(array $value, Tracker_Artifact $artifact = null) {
+    public function getFieldDataFromRESTValue(array $value, ?Tracker_Artifact $artifact = null) {
         if (array_key_exists('bind_value_objects', $value['value']) && is_array($value['value']['bind_value_objects'])) {
             return $this->getFieldDataFromRESTObjects($value['value']['bind_value_objects']);
         } elseif (array_key_exists('bind_value_ids', $value) && is_array($value['bind_value_ids'])) {

@@ -86,7 +86,7 @@ class VelocityComputation
     private function displayUpdateMessageForUserWhoCanReadField(
         PFUser $user,
         $computed_velocity,
-        Tracker_FormElement_Field $field = null
+        ?Tracker_FormElement_Field $field = null
     ) {
         if ($field && $field->userCanRead($user)) {
             $GLOBALS['Response']->addFeedback(

@@ -38,7 +38,7 @@ class AdditionalButtonLinkPresenter
      */
     public $glyph;
 
-    public function __construct($link_label, $url, Glyph $glyph = null)
+    public function __construct($link_label, $url, ?Glyph $glyph = null)
     {
         $this->link_label = $link_label;
         $this->url        = $url;

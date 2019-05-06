@@ -30,7 +30,7 @@ class UserValue implements ValueVisitable
     /**
      * @param null|PFUser $value
      */
-    public function __construct(PFUser $value = null)
+    public function __construct(?PFUser $value = null)
     {
         $this->value = $value;
     }

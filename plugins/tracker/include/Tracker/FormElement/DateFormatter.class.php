@@ -38,7 +38,7 @@ class Tracker_FormElement_DateFormatter {
      */
     public function fetchArtifactValue(
         Tracker_Artifact $artifact,
-        Tracker_Artifact_ChangesetValue $value = null,
+        ?Tracker_Artifact_ChangesetValue $value = null,
         array $submitted_values,
         array $errors
     ) {
@@ -58,7 +58,7 @@ class Tracker_FormElement_DateFormatter {
 
     public function fetchArtifactValueReadOnly(
         Tracker_Artifact $artifact,
-        Tracker_Artifact_ChangesetValue $value = null
+        ?Tracker_Artifact_ChangesetValue $value = null
     ) {
         if ( empty($value) || ! $value->getTimestamp() ) {
             return $this->field->getNoValueLabel();

@@ -27,5 +27,5 @@ use Project;
 
 interface RestrictedUserCanAccessVerifier
 {
-    public function isRestrictedUserAllowedToAccess(PFUser $user, Project $project = null): bool;
+    public function isRestrictedUserAllowedToAccess(PFUser $user, ?Project $project = null): bool;
 }

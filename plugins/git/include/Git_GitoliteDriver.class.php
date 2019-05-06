@@ -108,12 +108,12 @@ class Git_GitoliteDriver {
         GitDao $git_dao,
         Git_Mirror_MirrorDao $git_mirror_dao,
         GitPlugin $git_plugin,
-        Git_Exec $gitExec                        = null,
-        GitRepositoryFactory $repository_factory = null,
-        Git_Gitolite_ConfigPermissionsSerializer $permissions_serializer = null,
-        Git_Gitolite_GitoliteConfWriter $gitolite_conf_writer = null,
-        ProjectManager $project_manager = null,
-        Git_Mirror_MirrorDataMapper $mirror_data_mapper = null,
+        ?Git_Exec $gitExec                        = null,
+        ?GitRepositoryFactory $repository_factory = null,
+        ?Git_Gitolite_ConfigPermissionsSerializer $permissions_serializer = null,
+        ?Git_Gitolite_GitoliteConfWriter $gitolite_conf_writer = null,
+        ?ProjectManager $project_manager = null,
+        ?Git_Mirror_MirrorDataMapper $mirror_data_mapper = null,
         BigObjectAuthorizationManager $big_object_authorization_manager,
         VersionDetector $version_detector
     ) {

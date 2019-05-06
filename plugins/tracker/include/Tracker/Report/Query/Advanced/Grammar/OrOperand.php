@@ -30,7 +30,7 @@ class OrOperand implements Visitable
      */
     private $tail;
 
-    public function __construct(AndExpression $operand, OrOperand $tail = null)
+    public function __construct(AndExpression $operand, ?OrOperand $tail = null)
     {
         $this->operand = $operand;
         $this->tail    = $tail;

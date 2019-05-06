@@ -44,7 +44,7 @@ class Admin_PermissionDelegationGroupModalPresenter
     private $is_new;
 
 
-    public function __construct(UserForgeUGroupPresenter $group = null) {
+    public function __construct(?UserForgeUGroupPresenter $group = null) {
         $this->is_new = true;
 
         if ($group) {

@@ -56,7 +56,7 @@ class PostSaveNewChangesetCommand implements Tracker_FormElement_Field_ArtifactL
         Tracker_Artifact $artifact,
         PFUser $submitter,
         Tracker_Artifact_Changeset $new_changeset,
-        Tracker_Artifact_Changeset $previous_changeset = null
+        ?Tracker_Artifact_Changeset $previous_changeset = null
     ) {
         if (! $this->request->exist('new-artifact-folder')) {
             return;

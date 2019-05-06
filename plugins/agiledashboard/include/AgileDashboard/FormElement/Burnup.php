@@ -111,14 +111,14 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
 
     public function fetchArtifactValue(
         Tracker_Artifact $artifact,
-        Tracker_Artifact_ChangesetValue $value = null,
+        ?Tracker_Artifact_ChangesetValue $value = null,
         $submitted_values = array()
     ) {
     }
 
     public function fetchArtifactValueReadOnly(
         Tracker_Artifact $artifact,
-        Tracker_Artifact_ChangesetValue $value = null
+        ?Tracker_Artifact_ChangesetValue $value = null
     ) {
         $user                      = UserManager::instance()->getCurrentUser();
         $can_burnup_be_regenerated = $artifact->getTracker()->userIsAdmin($user);
@@ -191,7 +191,7 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
         Tracker_Artifact $artifact,
         PFUser $user,
         $ignore_perms,
-        Tracker_Artifact_ChangesetValue $value = null,
+        ?Tracker_Artifact_ChangesetValue $value = null,
         $format = 'text'
     ) {
     }
@@ -221,7 +221,7 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
     {
     }
 
-    protected function fetchTooltipValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null)
+    protected function fetchTooltipValue(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
     {
     }
 
@@ -321,7 +321,7 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
         Tracker_Artifact $artifact,
         PFUser $submitter,
         Tracker_Artifact_Changeset $new_changeset,
-        Tracker_Artifact_Changeset $previous_changeset = null
+        ?Tracker_Artifact_Changeset $previous_changeset = null
     ) {
     }
 
@@ -329,7 +329,7 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
         $artifact,
         $changeset_value_id,
         $value,
-        Tracker_Artifact_ChangesetValue $previous_changesetvalue = null
+        ?Tracker_Artifact_ChangesetValue $previous_changesetvalue = null
     ) {
     }
 

@@ -39,7 +39,7 @@ class AdministratorPresenter
         $this->user_helper = $user_helper;
     }
 
-    public function build(\PFUser $user, UserWithStarBadge $badged_user = null)
+    public function build(\PFUser $user, ?UserWithStarBadge $badged_user = null)
     {
         $this->has_avatar       = $user->hasAvatar();
         $this->user_name        = $user->getUserName();
@@ -52,7 +52,7 @@ class AdministratorPresenter
         }
     }
 
-    private function userHasStarBadge(\PFUser $user, UserWithStarBadge $badged_user = null)
+    private function userHasStarBadge(\PFUser $user, ?UserWithStarBadge $badged_user = null)
     {
         return $badged_user !== null && $badged_user->isUserBadged($user);
     }

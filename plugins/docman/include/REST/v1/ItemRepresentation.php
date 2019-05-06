@@ -146,12 +146,12 @@ class ItemRepresentation
         array $metadata_representations,
         bool $has_approval_table,
         bool $is_approval_table_enabled,
-        ItemApprovalTableRepresentation $approval_table = null,
-        ItemLockInfoRepresentation $lock_info = null,
-        FilePropertiesRepresentation $file_properties = null,
-        EmbeddedFilePropertiesRepresentation $embedded_file_properties = null,
-        LinkPropertiesRepresentation $link_properties = null,
-        WikiPropertiesRepresentation $wiki_properties = null
+        ?ItemApprovalTableRepresentation $approval_table = null,
+        ?ItemLockInfoRepresentation $lock_info = null,
+        ?FilePropertiesRepresentation $file_properties = null,
+        ?EmbeddedFilePropertiesRepresentation $embedded_file_properties = null,
+        ?LinkPropertiesRepresentation $link_properties = null,
+        ?WikiPropertiesRepresentation $wiki_properties = null
     ) {
         $this->id                        = JsonCast::toInt($item->getId());
         $this->title                     = $item->getTitle();

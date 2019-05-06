@@ -57,12 +57,12 @@ final class WorkflowBackendLogger extends TruncateLevelLogger
         parent::info($this->getDecoratedMessage($message));
     }
 
-    public function warn($message, Exception $exception = null) : void
+    public function warn($message, ?Exception $exception = null) : void
     {
         parent::warn($this->getDecoratedMessage($message), $exception);
     }
 
-    public function error($message, Exception $exception = null) : void
+    public function error($message, ?Exception $exception = null) : void
     {
         parent::error($this->getDecoratedMessage($message), $exception);
     }

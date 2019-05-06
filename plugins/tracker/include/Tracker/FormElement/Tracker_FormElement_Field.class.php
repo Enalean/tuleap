@@ -558,7 +558,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      *
      * @return string
      */
-    protected abstract function fetchArtifactValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array());
+    protected abstract function fetchArtifactValue(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array());
 
     /**
      * Fetch the html code to display the field value in artifact in read only
@@ -568,7 +568,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      *
      * @return string
      */
-    public abstract function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null);
+    public abstract function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null);
 
     /**
      * Fetch the HMTL code to display the field in the web browser
@@ -578,7 +578,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      *
      * @return string
      */
-    public function fetchArtifactValueForWebDisplay(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
+    public function fetchArtifactValueForWebDisplay(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
         $is_field_read_only = $this->getFrozenFieldDetector()->isFieldFrozen($artifact, $this);
         if (! $is_field_read_only && $this->userCanUpdate()) {
             return $this->fetchArtifactValueWithEditionFormIfEditable($artifact, $value, $submitted_values);
@@ -586,7 +586,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         return $this->fetchArtifactValueReadOnly($artifact, $value);
     }
 
-    protected function fetchArtifactValueWithEditionFormIfEditable(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
+    protected function fetchArtifactValueWithEditionFormIfEditable(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
         return $this->fetchArtifactValueReadOnly($artifact, $value);
     }
 
@@ -594,7 +594,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         return "<span class='empty_value'>".$GLOBALS['Language']->getText('plugin_tracker_formelement_exception', 'no_value_for_field')."</span>";
     }
 
-    protected function getHiddenArtifactValueForEdition(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
+    protected function getHiddenArtifactValueForEdition(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
         return '<div class="tracker_hidden_edition_field" data-field-id="'. $this->getId() .'">' . $this->fetchArtifactValue($artifact, $value, $submitted_values) . '</div>';
     }
 
@@ -635,7 +635,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      * @param Tracker_Artifact_ChangesetValue $value The changeset value of the field
      * @return string
      */
-    protected abstract function fetchTooltipValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null);
+    protected abstract function fetchTooltipValue(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null);
 
     /**
      * Fetch the html code to display the field value in card
@@ -644,7 +644,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      *
      * @return string
      */
-    public function fetchCardValue(Tracker_Artifact $artifact, Tracker_CardDisplayPreferences $display_preferences = null) {
+    public function fetchCardValue(Tracker_Artifact $artifact, ?Tracker_CardDisplayPreferences $display_preferences = null) {
         return $this->fetchTooltipValue($artifact, $artifact->getLastChangeset()->getValue($this));
     }
 
@@ -952,7 +952,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      *
      * @return boolean true on success or false on failure
      */
-    public function validateFieldWithPermissionsAndRequiredStatus(Tracker_Artifact $artifact, $submitted_value, Tracker_Artifact_ChangesetValue $last_changeset_value = null, $is_submission = null) {
+    public function validateFieldWithPermissionsAndRequiredStatus(Tracker_Artifact $artifact, $submitted_value, ?Tracker_Artifact_ChangesetValue $last_changeset_value = null, $is_submission = null) {
         $is_valid = true;
         $hasPermission = $this->userCanUpdate();
         if ($is_submission) {
@@ -1158,7 +1158,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      *
      * @return int or array of int
      */
-    protected abstract function saveValue($artifact, $changeset_value_id, $value, Tracker_Artifact_ChangesetValue $previous_changesetvalue = null);
+    protected abstract function saveValue($artifact, $changeset_value_id, $value, ?Tracker_Artifact_ChangesetValue $previous_changesetvalue = null);
 
     /**
      * Keep the value
@@ -1257,7 +1257,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      *
      * @return mixed
      */
-    public function getFieldDataFromRESTValue(array $value, Tracker_Artifact $artifact = null) {
+    public function getFieldDataFromRESTValue(array $value, ?Tracker_Artifact $artifact = null) {
         if (! isset($value['value'])) {
             throw new Tracker_FormElement_InvalidFieldValueException (
                 'Expected format for field '.$this->id .
@@ -1273,7 +1273,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      *
      * @return mixed
      */
-    public function getFieldDataFromRESTValueByField(array $value, Tracker_Artifact $artifact = null) {
+    public function getFieldDataFromRESTValueByField(array $value, ?Tracker_Artifact $artifact = null) {
         if (! array_key_exists('value', $value)) {
             throw new Tracker_FormElement_InvalidFieldValueException (
                 'value attribute is missing for field '.$this->id
@@ -1290,7 +1290,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      *
      * @return mixed
      */
-    public function getFieldDataFromCSVValue($csv_value, Tracker_Artifact $artifact = null)
+    public function getFieldDataFromCSVValue($csv_value, ?Tracker_Artifact $artifact = null)
     {
         return $this->getFieldData($csv_value);
     }
@@ -1400,7 +1400,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         Tracker_Artifact $artifact,
         PFUser $submitter,
         Tracker_Artifact_Changeset $new_changeset,
-        Tracker_Artifact_Changeset $previous_changeset = null
+        ?Tracker_Artifact_Changeset $previous_changeset = null
     ) {
     }
 

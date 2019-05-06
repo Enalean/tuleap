@@ -67,7 +67,7 @@ class Test_Tracker_Builder {
         return $this;
     }
 
-    public function withParent(Tracker $parent = null) {
+    public function withParent(?Tracker $parent = null) {
         $this->parent = $parent;
         return $this;
     }

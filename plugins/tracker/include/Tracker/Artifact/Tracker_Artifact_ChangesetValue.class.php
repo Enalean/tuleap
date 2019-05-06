@@ -89,7 +89,7 @@ abstract class Tracker_Artifact_ChangesetValue
      *
      * @return string The difference between another $changeset_value, false if no differences
      */
-    public abstract function diff($changeset_value, $format = 'html', PFUser $user = null, $ignore_perms = false);
+    public abstract function diff($changeset_value, $format = 'html', ?PFUser $user = null, $ignore_perms = false);
 
     public abstract function nodiff($format = 'html');
 
@@ -104,7 +104,7 @@ abstract class Tracker_Artifact_ChangesetValue
         $changeset_id,
         $ignore_perms,
         $format = 'html',
-        PFUser $user = null
+        ?PFUser $user = null
     ) {
         return $this->diff($changeset_value, $format, $user, $ignore_perms);
     }
@@ -118,7 +118,7 @@ abstract class Tracker_Artifact_ChangesetValue
      *
      * @return string The difference between another $changeset_value, false if no differences
      */
-    public function modalDiff($changeset_value, $format = 'html', PFUser $user = null) {
+    public function modalDiff($changeset_value, $format = 'html', ?PFUser $user = null) {
         return $this->diff($changeset_value, $format, $user);
     }
 

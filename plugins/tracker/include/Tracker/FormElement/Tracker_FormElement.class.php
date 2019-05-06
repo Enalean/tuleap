@@ -139,7 +139,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      *
      * @return void
      */
-    public function __construct($id, $tracker_id, $parent_id, $name, $label, $description, $use_it, $scope, $required, $notifications, $rank, Tracker_FormElement $original_field = null) {
+    public function __construct($id, $tracker_id, $parent_id, $name, $label, $description, $use_it, $scope, $required, $notifications, $rank, ?Tracker_FormElement $original_field = null) {
         $this->id             = $id;
         $this->tracker_id     = $tracker_id;
         $this->parent_id      = $parent_id;
@@ -699,7 +699,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
         Tracker_Artifact $artifact,
         PFUser $user,
         $ignore_perms,
-        Tracker_Artifact_ChangesetValue $value = null,
+        ?Tracker_Artifact_ChangesetValue $value = null,
         $format = 'text'
     ) {
         return '';
@@ -1053,7 +1053,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      *
      * @return bool
      */
-    protected function userHasPermission($permission_type, PFUser $user = null) {
+    protected function userHasPermission($permission_type, ?PFUser $user = null) {
         if ($user instanceof Tracker_Workflow_WorkflowUser) {
             return true;
         }
@@ -1086,7 +1086,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      *
      * @return bool
      */
-    public function userCanRead(PFUser $user = null) {
+    public function userCanRead(?PFUser $user = null) {
         if (! $user) {
             $user = $this->getCurrentUser();
         }
@@ -1105,7 +1105,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      *
      * @return bool
      */
-    public function userCanUpdate(PFUser $user = null) {
+    public function userCanUpdate(?PFUser $user = null) {
         return $this->isUpdateable() && $this->userHasPermission(self::PERMISSION_UPDATE, $user);
     }
 
@@ -1116,7 +1116,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      *
      * @return bool
      */
-    public function userCanSubmit(PFUser $user = null) {
+    public function userCanSubmit(?PFUser $user = null) {
         return $this->isSubmitable() && $this->userHasPermission(self::PERMISSION_SUBMIT, $user);
     }
 

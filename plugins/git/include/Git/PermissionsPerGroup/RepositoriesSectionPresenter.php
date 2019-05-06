@@ -31,7 +31,7 @@ class RepositoriesSectionPresenter
     /** @var bool */
     public $has_repositories;
 
-    public function __construct(array $repository_presenters, $has_repositories, \ProjectUGroup $selected_ugroup = null)
+    public function __construct(array $repository_presenters, $has_repositories, ?\ProjectUGroup $selected_ugroup = null)
     {
         $this->repository_presenters = $repository_presenters;
         $this->has_repositories      = $has_repositories;

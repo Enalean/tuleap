@@ -63,7 +63,7 @@ class FolderHierarchicalRepresentationCollection
         return $this->collection;
     }
 
-    public function collectOptions(array &$options, Tracker_Artifact $current_folder = null, $prefix = self::DEFAULT_PREFIX)
+    public function collectOptions(array &$options, ?Tracker_Artifact $current_folder = null, $prefix = self::DEFAULT_PREFIX)
     {
         if ($prefix === self::DEFAULT_PREFIX) {
             $prefix_for_children = "└─$prefix";

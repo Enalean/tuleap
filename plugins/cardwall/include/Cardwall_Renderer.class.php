@@ -62,7 +62,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
         $name,
         $description,
         $rank,
-        Tracker_FormElement_Field_Selectbox $field = null,
+        ?Tracker_FormElement_Field_Selectbox $field = null,
         $enable_qr_code = false
     ) {
         parent::__construct($id, $report, $name, $description, $rank);

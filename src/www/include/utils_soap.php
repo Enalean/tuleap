@@ -90,7 +90,7 @@ function ugroups_to_soap($ugroups) {
  * @param PFUser $current_user
  * @return array
  */
-function user_to_soap($identifier, PFUser $user = null, PFUser $current_user) {
+function user_to_soap($identifier, ?PFUser $user = null, PFUser $current_user) {
     if ($user !== null && ($user->isActive() || $user->isRestricted() || $user->isSuspended())) {
         if ($current_user->canSee($user)) {
             return array(

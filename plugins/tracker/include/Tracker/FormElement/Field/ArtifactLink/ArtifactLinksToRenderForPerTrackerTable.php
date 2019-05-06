@@ -35,7 +35,7 @@ class ArtifactLinksToRenderForPerTrackerTable
      */
     private $renderer;
 
-    public function __construct(\Tracker $tracker, array $matching_ids, \Tracker_Report_Renderer_Table $renderer = null)
+    public function __construct(\Tracker $tracker, array $matching_ids, ?\Tracker_Report_Renderer_Table $renderer = null)
     {
         $this->tracker      = $tracker;
         $this->matching_ids = $matching_ids;

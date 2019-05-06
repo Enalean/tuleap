@@ -27,7 +27,7 @@ class SettingsRepresentationValidator
      *
      * @return array
      */
-    private function getNonUniquePath(SettingsRepresentation $settings = null)
+    private function getNonUniquePath(?SettingsRepresentation $settings = null)
     {
         $already_seen_path = array();
         $non_unique_path   = array();
@@ -63,12 +63,12 @@ class SettingsRepresentationValidator
         return $non_unique_mail;
     }
 
-    private function isAccessFileKeySent(SettingsRepresentation $settings = null)
+    private function isAccessFileKeySent(?SettingsRepresentation $settings = null)
     {
         return isset($settings->access_file);
     }
 
-    public function validateForPUTRepresentation(SettingsPUTRepresentation $settings = null)
+    public function validateForPUTRepresentation(?SettingsPUTRepresentation $settings = null)
     {
         if (isset($settings)) {
             if (! $this->isAccessFileKeySent($settings)) {
@@ -81,7 +81,7 @@ class SettingsRepresentationValidator
         }
     }
 
-    public function validateForPOSTRepresentation(SettingsPOSTRepresentation $settings = null)
+    public function validateForPOSTRepresentation(?SettingsPOSTRepresentation $settings = null)
     {
         if (isset($settings)) {
             $this->validatePathAreUnique($settings);
@@ -98,7 +98,7 @@ class SettingsRepresentationValidator
         }
     }
 
-    private function validateAtLeastOneNotificationSent(SettingsRepresentation $settings = null)
+    private function validateAtLeastOneNotificationSent(?SettingsRepresentation $settings = null)
     {
         $empty_notification = array();
         if ($settings && $settings->email_notifications) {

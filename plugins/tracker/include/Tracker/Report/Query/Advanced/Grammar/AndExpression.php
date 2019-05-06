@@ -30,7 +30,7 @@ class AndExpression implements Visitable
      */
     private $tail;
 
-    public function __construct(Term $expression, AndOperand $tail = null)
+    public function __construct(Term $expression, ?AndOperand $tail = null)
     {
         $this->expression = $expression;
         $this->tail       = $tail;

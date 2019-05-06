@@ -110,7 +110,7 @@ class JsonCast
     /**
      * @return array|null Given array where all values are casted to int.
      */
-    public static function toArrayOfInts(array $values = null)
+    public static function toArrayOfInts(?array $values = null)
     {
         if ($values === null) {
             return null;

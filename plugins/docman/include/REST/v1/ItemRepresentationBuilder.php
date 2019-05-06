@@ -120,10 +120,10 @@ class ItemRepresentationBuilder
         \Docman_Item $item,
         \PFUser $current_user,
         $type,
-        FilePropertiesRepresentation $file_properties = null,
-        EmbeddedFilePropertiesRepresentation $embedded_file_properties = null,
-        LinkPropertiesRepresentation $link_properties = null,
-        WikiPropertiesRepresentation $wiki_properties = null
+        ?FilePropertiesRepresentation $file_properties = null,
+        ?EmbeddedFilePropertiesRepresentation $embedded_file_properties = null,
+        ?LinkPropertiesRepresentation $link_properties = null,
+        ?WikiPropertiesRepresentation $wiki_properties = null
     ) {
         $owner                = $this->user_manager->getUserById($item->getOwnerId());
         $owner_representation = new MinimalUserRepresentation();

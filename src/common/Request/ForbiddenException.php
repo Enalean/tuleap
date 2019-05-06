@@ -26,7 +26,7 @@ use Throwable;
 class ForbiddenException extends \Exception
 {
 
-    public function __construct($message = null, $code = 0, Throwable $previous = null)
+    public function __construct($message = null, $code = 0, ?Throwable $previous = null)
     {
         if ($message === null) {
             $message = _('You are not allowed to access this resource');

@@ -26,7 +26,7 @@ require_once 'common/TreeNode/TreeNode.class.php';
  */
 class ArtifactNode extends TreeNode {
 
-    public function __construct(Tracker_Artifact $artifact, array $data = null) {
+    public function __construct(Tracker_Artifact $artifact, ?array $data = null) {
         parent::__construct($data, $artifact->getId());
         $this->setObject($artifact);
     }

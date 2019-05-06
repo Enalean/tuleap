@@ -22,7 +22,7 @@ use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface;
 
 class ConfigNotificationAssignedToDao extends DataAccessObject
 {
-    public function __construct(LegacyDataAccessInterface $da = null)
+    public function __construct(?LegacyDataAccessInterface $da = null)
     {
         parent::__construct($da);
         $this->enableExceptionsOnError();

@@ -39,7 +39,7 @@ abstract class PermissionDeniedMailSender extends Error_PermissionDenied impleme
      */
     private $token;
 
-    public function __construct(PlaceHolderBuilder $place_holder_builder, \CSRFSynchronizerToken $token, Url $url = null)
+    public function __construct(PlaceHolderBuilder $place_holder_builder, \CSRFSynchronizerToken $token, ?Url $url = null)
     {
         parent::__construct($url);
         $this->place_holder_builder = $place_holder_builder;

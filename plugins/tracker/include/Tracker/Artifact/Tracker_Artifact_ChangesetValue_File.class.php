@@ -197,7 +197,7 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
         $changeset_id,
         $ignore_perms,
         $format = 'html',
-        PFUser $user = null
+        ?PFUser $user = null
     ) {
         return $this->formatDiff($changeset_value, $format, true);
     }
@@ -207,7 +207,7 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
      *
      * @return string The difference between another $changeset_value, false if no differneces
      */
-    public function diff($changeset_value, $format = 'html', PFUser $user = null, $ignore_perms = false)
+    public function diff($changeset_value, $format = 'html', ?PFUser $user = null, $ignore_perms = false)
     {
         return $this->formatDiff($changeset_value, $format, false);
     }

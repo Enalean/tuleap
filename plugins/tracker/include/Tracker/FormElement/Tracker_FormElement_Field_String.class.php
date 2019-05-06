@@ -129,7 +129,7 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text {
      *
      * @return string
      */
-    public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
+    public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null) {
         $value = $value ? $value->getValue() : '';
 
         if ($value === '') {
@@ -149,7 +149,7 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text {
      *
      * @return string
      */
-    protected function fetchArtifactValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
+    protected function fetchArtifactValue(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
         $html = '';
         if (! empty($submitted_values) && is_array($submitted_values[0]) && isset($submitted_values[0][$this->getId()])) {
             $value = $submitted_values[0][$this->getId()];
@@ -221,7 +221,7 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text {
      * @param Tracker_Artifact_ChangesetValue_String $value The ChangesetValue_String
      * @return string The html code to display the field value in tooltip
      */
-    protected function fetchTooltipValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
+    protected function fetchTooltipValue(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null) {
         $hp = Codendi_HTMLPurifier::instance();
         $html = '';
         if ($value) {
@@ -302,7 +302,7 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text {
         return $previous_changesetvalue->getText() !== (string) $new_value;
     }
 
-    protected function saveValue($artifact, $changeset_value_id, $value, Tracker_Artifact_ChangesetValue $previous_changesetvalue = null) {
+    protected function saveValue($artifact, $changeset_value_id, $value, ?Tracker_Artifact_ChangesetValue $previous_changesetvalue = null) {
         return $this->getValueDao()->create($changeset_value_id, $value) &&
                $this->extractCrossRefs($artifact, $value);
     }

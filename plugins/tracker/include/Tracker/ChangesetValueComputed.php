@@ -77,7 +77,7 @@ class ChangesetValueComputed extends Tracker_Artifact_ChangesetValue_Float
      *
      * @return bool|string
      */
-    public function diff($changeset_value, $format = 'html', PFUser $user = null, $ignore_perms = false)
+    public function diff($changeset_value, $format = 'html', ?PFUser $user = null, $ignore_perms = false)
     {
         $previous_numeric = $changeset_value->getValue();
         $next_numeric     = $this->getValue();

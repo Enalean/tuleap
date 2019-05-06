@@ -24,7 +24,7 @@ use Exception;
 
 class UnknownBranchNameException extends Exception
 {
-    public function __construct($branch_name, $code = 0, Exception $previous = null)
+    public function __construct($branch_name, $code = 0, ?Exception $previous = null)
     {
         $message = "Branch $branch_name not found";
         parent::__construct($message, $code, $previous);

@@ -338,7 +338,7 @@ class BacklogItemResource extends AuthenticatedResource
      * @throws 404
      * @throws 409
      */
-    protected function patch($id, OrderRepresentation $order = null, array $add = null) {
+    protected function patch($id, ?OrderRepresentation $order = null, ?array $add = null) {
 
         $artifact = $this->getArtifact($id);
         $user     = $this->getCurrentUser();

@@ -29,7 +29,7 @@ class ProjectOwnershipRepresentation
      */
     public $project_owner;
 
-    public function build(\PFUser $project_owner = null)
+    public function build(?\PFUser $project_owner = null)
     {
         if ($project_owner !== null) {
             $user_representation = new MinimalUserRepresentation();

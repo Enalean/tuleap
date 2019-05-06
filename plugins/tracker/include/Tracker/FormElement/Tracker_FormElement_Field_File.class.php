@@ -146,7 +146,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
      *
      * @return string
      */
-    protected function fetchArtifactValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
+    protected function fetchArtifactValue(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
         $html             = '';
         $submitter_needed = true;
         $read_only        = false;
@@ -189,7 +189,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
         Tracker_Artifact $artifact,
         PFUser $user,
         $ignore_perms,
-        Tracker_Artifact_ChangesetValue $value = null,
+        ?Tracker_Artifact_ChangesetValue $value = null,
         $format = 'text'
     ) {
         if ( empty($value) || ! $value->getFiles()) {
@@ -207,14 +207,14 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
      *
      * @return string
      */
-    public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
+    public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null) {
         $html = '';
         $submitter_needed = true;
         $html .= $this->fetchAllAttachment($artifact->id, $value, $submitter_needed, array());
         return $html;
     }
 
-    public function fetchArtifactValueWithEditionFormIfEditable(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
+    public function fetchArtifactValueWithEditionFormIfEditable(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
         return $this->fetchArtifactValueReadOnly($artifact, $value) . $this->getHiddenArtifactValueForEdition($artifact, $value, $submitted_values);
     }
     /**
@@ -620,7 +620,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
      *
      * @return string The html code to display the field value in tooltip
      */
-    protected function fetchTooltipValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
+    protected function fetchTooltipValue(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null) {
         $html = '';
         if ($value) {
             $files_info = $value->getFiles();
@@ -814,7 +814,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
      *
      * @return boolean
      */
-    protected function saveValue($artifact, $changeset_value_id, $value, Tracker_Artifact_ChangesetValue $previous_changesetvalue = null) {
+    protected function saveValue($artifact, $changeset_value_id, $value, ?Tracker_Artifact_ChangesetValue $previous_changesetvalue = null) {
         $save_ok = true;
 
         $success = array();
@@ -1044,12 +1044,12 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
      *
      * @return array
      */
-    public function getFieldDataFromCSVValue($csv_value, Tracker_Artifact $artifact = null)
+    public function getFieldDataFromCSVValue($csv_value, ?Tracker_Artifact $artifact = null)
     {
         return array();
     }
 
-    public function getFieldDataFromRESTValue(array $rest_value, Tracker_Artifact $artifact = null) {
+    public function getFieldDataFromRESTValue(array $rest_value, ?Tracker_Artifact $artifact = null) {
         //Transform array to object
         $value = json_decode(json_encode($rest_value), FALSE);
 
@@ -1059,7 +1059,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
         return $file_manager->buildFieldDataForREST($value, $artifact);
     }
 
-    public function getFieldDataFromRESTValueByField($value, Tracker_Artifact $artifact = null) {
+    public function getFieldDataFromRESTValueByField($value, ?Tracker_Artifact $artifact = null) {
         throw new Tracker_FormElement_RESTValueByField_NotImplementedException();
     }
 

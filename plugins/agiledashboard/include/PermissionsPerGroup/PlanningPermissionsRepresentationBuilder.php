@@ -76,7 +76,7 @@ class PlanningPermissionsRepresentationBuilder
     private function getPlanningPrioritizers(
         Planning $planning,
         Project $project,
-        ProjectUGroup $user_group = null
+        ?ProjectUGroup $user_group = null
     ) {
         $planning_prioritizers = array();
         $prioritizers          = $this->planning_permissions_manager->getGroupIdsWhoHasPermissionOnPlanning(

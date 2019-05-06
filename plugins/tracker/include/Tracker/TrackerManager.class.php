@@ -453,7 +453,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
                                          $name = '',
                                          $description = '',
                                          $itemname = '',
-                                         Tracker $tracker_template = null) {
+                                         ?Tracker $tracker_template = null) {
         global $Language;
         $breadcrumbs = array(
             array(
@@ -509,7 +509,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
         $this->displayFooter($project);
     }
 
-    function displayCreateTrackerFromTemplate($requested_create_mode, Project $project, Tracker $tracker_template = null) {
+    function displayCreateTrackerFromTemplate($requested_create_mode, Project $project, ?Tracker $tracker_template = null) {
         $hp = Codendi_HTMLPurifier::instance();
 
         $GLOBALS['Response']->includeFooterJavascriptFile(TRACKER_BASE_URL.'/scripts/TrackerTemplateSelector.js');
@@ -958,7 +958,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
         $this->displayFooter($project);
     }
 
-    public function fetchTrackerSwitcher(PFUser $user, $separator, Project $include_project = null, Tracker $current_tracker = null) {
+    public function fetchTrackerSwitcher(PFUser $user, $separator, ?Project $include_project = null, ?Tracker $current_tracker = null) {
         $hp = Codendi_HTMLPurifier::instance();
         $html = '';
 

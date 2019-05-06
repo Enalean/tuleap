@@ -175,7 +175,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
      *
      * @return string
      */
-    protected function fetchArtifactValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
+    protected function fetchArtifactValue(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
         $is_read_only = false;
         return $this->fetchArtifactValueCommon($is_read_only, $artifact, $value, $submitted_values);
     }
@@ -195,7 +195,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         Tracker_Artifact $artifact,
         PFUser $user,
         $ignore_perms,
-        Tracker_Artifact_ChangesetValue $value = null,
+        ?Tracker_Artifact_ChangesetValue $value = null,
         $format = 'text'
     ) {
         $output = '';
@@ -218,18 +218,18 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
      *
      * @return string
      */
-    public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
+    public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null) {
         $is_read_only = true;
         return $this->fetchArtifactValueCommon($is_read_only, $artifact, $value);
     }
 
-    public function fetchArtifactValueWithEditionFormIfEditable(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
+    public function fetchArtifactValueWithEditionFormIfEditable(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
         return $this->fetchArtifactValueReadOnly($artifact, $value) . $this->getHiddenArtifactValueForEdition($artifact, $value, $submitted_values);
     }
 
     protected function getHiddenArtifactValueForEdition(
         Tracker_Artifact $artifact,
-        Tracker_Artifact_ChangesetValue $value = null,
+        ?Tracker_Artifact_ChangesetValue $value = null,
         $submitted_values = array()
     ) {
         $is_field_frozen = $this->getFrozenFieldDetector()->isFieldFrozen($artifact, $this);
@@ -303,7 +303,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
     protected function fetchArtifactValueCommon(
         $is_read_only,
         Tracker_Artifact $artifact,
-        Tracker_Artifact_ChangesetValue $value = null,
+        ?Tracker_Artifact_ChangesetValue $value = null,
         $submitted_values = array()
     ) {
         if ($this->isValidSubmittedValues($submitted_values)) {
@@ -390,7 +390,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
      * @param Tracker_Artifact_ChangesetValue_PermissionsOnArtifact $value The changeset value for this field
      * @return string
      */
-    protected function fetchTooltipValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
+    protected function fetchTooltipValue(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null) {
         $html = '';
         if ($value && $artifact->useArtifactPermissions()) {
             $ugroup_dao = $this->getUGroupDao();
@@ -626,7 +626,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
     public function validateFieldWithPermissionsAndRequiredStatus(
         Tracker_Artifact $artifact,
         $submitted_value,
-        Tracker_Artifact_ChangesetValue $last_changeset_value = null,
+        ?Tracker_Artifact_ChangesetValue $last_changeset_value = null,
         $is_submission = null
     ) {
         if ($last_changeset_value === null && $this->isRequired() == true && $this->isAtLeastOneUGroupSelected($submitted_value) === false) {
@@ -680,7 +680,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         $artifact,
         $changeset_value_id,
         $value,
-        Tracker_Artifact_ChangesetValue $previous_changesetvalue = null
+        ?Tracker_Artifact_ChangesetValue $previous_changesetvalue = null
     ) {
         $value = $this->getPermissionsOnArtifactUsageRetriever()->setRestrictAccessForArtifact($value, $this);
         $value = $this->getPermissionsOnArtifactUGroupRetriever()->initializeUGroupsIfNoUGroupsAreChoosenWithRequiredCondition($value, $this);
@@ -728,7 +728,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         return $changeset_value;
     }
 
-    public function getFieldDataFromRESTValue(array $value, Tracker_Artifact $artifact = null)
+    public function getFieldDataFromRESTValue(array $value, ?Tracker_Artifact $artifact = null)
     {
         if (isset($value['value'][self::GRANTED_GROUPS])) {
             if (isset($value['value']['is_used_by_default']) === true
@@ -782,7 +782,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         return $project_groups;
     }
 
-    public function getFieldDataFromRESTValueByField(array $value, Tracker_Artifact $artifact = null) {
+    public function getFieldDataFromRESTValueByField(array $value, ?Tracker_Artifact $artifact = null) {
         throw new Tracker_FormElement_RESTValueByField_NotImplementedException();
     }
 

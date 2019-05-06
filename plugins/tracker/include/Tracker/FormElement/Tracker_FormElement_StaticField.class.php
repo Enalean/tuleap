@@ -189,7 +189,7 @@ abstract class Tracker_FormElement_StaticField extends Tracker_FormElement {
      *
      * @return bool
      */
-    public function userCanRead(PFUser $user = null) {
+    public function userCanRead(?PFUser $user = null) {
         return true;
     }
 

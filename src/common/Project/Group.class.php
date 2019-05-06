@@ -243,7 +243,7 @@ class Group {
     /**
      * getMembersUserNames - Return an array of user names of group members
      */
-    function getMembersUserNames(ProjectManager $pm = null) {
+    function getMembersUserNames(?ProjectManager $pm = null) {
         if (!$this->members_usernames_data_array) {
             if(is_null($pm)) {
                 $pm = ProjectManager::instance();

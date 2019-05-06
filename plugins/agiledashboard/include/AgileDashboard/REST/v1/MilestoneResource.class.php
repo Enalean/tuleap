@@ -298,7 +298,7 @@ class MilestoneResource extends AuthenticatedResource {
      * @throws 403
      * @throws 404
      */
-    protected function patchSubmilestones($id, array $add = null) {
+    protected function patchSubmilestones($id, ?array $add = null) {
         $user      = $this->getCurrentUser();
         $milestone = $this->getMilestoneById($user, $id);
 
@@ -701,7 +701,7 @@ class MilestoneResource extends AuthenticatedResource {
      * @throws 404
      * @throws 409
      */
-    protected function patchContent($id, OrderRepresentation $order = null, array $add = null) {
+    protected function patchContent($id, ?OrderRepresentation $order = null, ?array $add = null) {
         $user      = $this->getCurrentUser();
         $milestone = $this->getMilestoneById($user, $id);
 
@@ -931,7 +931,7 @@ class MilestoneResource extends AuthenticatedResource {
      * @throws 404
      * @throws 409
      */
-    protected function patchBacklog($id, OrderRepresentation $order = null, array $add = null) {
+    protected function patchBacklog($id, ?OrderRepresentation $order = null, ?array $add = null) {
         $user      = $this->getCurrentUser();
         $milestone = $this->getMilestoneById($user, $id);
 
@@ -993,7 +993,7 @@ class MilestoneResource extends AuthenticatedResource {
         }
     }
 
-    private function filterOutAddedElements(OrderRepresentation $order, array $to_add = null) {
+    private function filterOutAddedElements(OrderRepresentation $order, ?array $to_add = null) {
         $ids_to_validate = array_merge($order->ids, array($order->compared_to));
         if (is_array($to_add)) {
             return array_diff($ids_to_validate, $to_add);

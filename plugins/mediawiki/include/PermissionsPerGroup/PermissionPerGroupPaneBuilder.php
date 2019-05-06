@@ -87,7 +87,7 @@ class PermissionPerGroupPaneBuilder
     private function addReadersToCollection(
         Project $project,
         PermissionPerGroupCollection $collection,
-        ProjectUGroup $ugroup = null
+        ?ProjectUGroup $ugroup = null
     ) {
         if ($ugroup) {
             $readers = $this->mediawiki_manager->getReadAccessControlForProjectContainingGroup($project, $ugroup);
@@ -106,7 +106,7 @@ class PermissionPerGroupPaneBuilder
     private function addWritersToCollection(
         Project $project,
         PermissionPerGroupCollection $collection,
-        ProjectUGroup $ugroup = null
+        ?ProjectUGroup $ugroup = null
     ) {
         if ($ugroup) {
             $writers = $this->mediawiki_manager->getWriteAccessControlForProjectContainingUGroup($project, $ugroup);
@@ -122,7 +122,7 @@ class PermissionPerGroupPaneBuilder
     private function addMediawikiSpecificPermissionsToCollection(
         Project $project,
         PermissionPerGroupCollection $collection,
-        ProjectUGroup $selected_ugroup = null
+        ?ProjectUGroup $selected_ugroup = null
     ) {
         $current_mapping = $this->mapper->getCurrentUserGroupMapping($project);
 
@@ -169,7 +169,7 @@ class PermissionPerGroupPaneBuilder
         PermissionPerGroupCollection $collection,
         $current_mapping,
         $mw_group_name,
-        ProjectUGroup $selected_ugroup = null
+        ?ProjectUGroup $selected_ugroup = null
     ) {
         if (! $selected_ugroup) {
             return;
@@ -197,7 +197,7 @@ class PermissionPerGroupPaneBuilder
         PermissionPerGroupCollection $collection,
         $current_mapping,
         $mw_group_name,
-        ProjectUGroup $selected_ugroup = null
+        ?ProjectUGroup $selected_ugroup = null
     ) {
         if ($selected_ugroup) {
             return;

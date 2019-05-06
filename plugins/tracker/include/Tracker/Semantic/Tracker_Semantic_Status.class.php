@@ -44,7 +44,7 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
      * @param Tracker_FormElement_Field_List $list_field  The field
      * @param array                          $open_values The values with the meaning "Open"
      */
-    public function __construct(Tracker $tracker, Tracker_FormElement_Field_List $list_field = null, $open_values = array()) {
+    public function __construct(Tracker $tracker, ?Tracker_FormElement_Field_List $list_field = null, $open_values = array()) {
         parent::__construct($tracker);
         $this->list_field  = $list_field;
         $this->open_values = $open_values;

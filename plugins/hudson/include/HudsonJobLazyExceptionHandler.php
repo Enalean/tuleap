@@ -31,7 +31,7 @@ class HudsonJobLazyExceptionHandler
      */
     private $exception;
 
-    public function __construct(\HudsonJob $hudson_job = null, \Exception $exception = null)
+    public function __construct(?\HudsonJob $hudson_job = null, ?\Exception $exception = null)
     {
         $this->hudson_job = $hudson_job;
         $this->exception  = $exception;

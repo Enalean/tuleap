@@ -113,7 +113,7 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
      *
      * @return string The difference between another $changeset_value, false if no differences
      */
-    public function diff($changeset_value, $format = 'html', PFUser $user = null, $ignore_perms = false)
+    public function diff($changeset_value, $format = 'html', ?PFUser $user = null, $ignore_perms = false)
     {
         $previous_text = $changeset_value->getText();
         $next_text     = $this->getText();
@@ -126,7 +126,7 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
         return $this->fetchDiff($previous, $next, $format);
     }
 
-    public function modalDiff($changeset_value, $format = 'modal', PFUser $user = null) {
+    public function modalDiff($changeset_value, $format = 'modal', ?PFUser $user = null) {
         return $this->diff($changeset_value, 'modal', $user);
     }
 
@@ -136,7 +136,7 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
         $changeset_id,
         $ignore_perms,
         $format = 'html',
-        PFUser $user = null
+        ?PFUser $user = null
     ) {
         $previous = explode(PHP_EOL, $changeset_value->getText());
         $next     = explode(PHP_EOL, $this->getText());

@@ -41,7 +41,7 @@ class Codendi_Request {
     /**
      * Constructor
      */
-    public function __construct($params, ProjectManager $project_manager = null) {
+    public function __construct($params, ?ProjectManager $project_manager = null) {
         $this->params                = $params;
         $this->project_manager       = $project_manager ? $project_manager : ProjectManager::instance();
     }

@@ -51,7 +51,7 @@ class Workflow_Transition_ConditionsCollection implements ArrayAccess {
     /**
      * Add a condition to the collection
      */
-    public function add(Workflow_Transition_Condition $condition = null) {
+    public function add(?Workflow_Transition_Condition $condition = null) {
         if ($condition) { //pattern null object?
             $this->conditions[] = $condition;
         }

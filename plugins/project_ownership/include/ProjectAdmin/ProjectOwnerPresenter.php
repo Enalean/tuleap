@@ -40,7 +40,7 @@ class ProjectOwnerPresenter
         $this->project_owner_description = $language->getText('plugin_project_ownership', 'project_owner_description');
     }
 
-    public function build(\PFUser $project_owner = null)
+    public function build(?\PFUser $project_owner = null)
     {
         $this->has_project_owner = $project_owner !== null;
         if ($this->has_project_owner) {

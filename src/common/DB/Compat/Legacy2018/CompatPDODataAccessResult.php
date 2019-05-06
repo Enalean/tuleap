@@ -36,7 +36,7 @@ final class CompatPDODataAccessResult implements LegacyDataAccessResultInterface
     private $instance_callback;
 
 
-    public function __construct(\PDOStatement $pdo_statement = null)
+    public function __construct(?\PDOStatement $pdo_statement = null)
     {
         $this->pdo_statement = $pdo_statement;
         if ($this->pdo_statement !== null) {

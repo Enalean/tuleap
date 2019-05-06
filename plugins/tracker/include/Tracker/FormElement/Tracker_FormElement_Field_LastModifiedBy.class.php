@@ -97,7 +97,7 @@ class Tracker_FormElement_Field_LastModifiedBy extends Tracker_FormElement_Field
         return $GLOBALS['HTML']->getImagePath('ic/user-female--plus.png');
     }
 
-    protected function saveValue($artifact, $changeset_value_id, $value, Tracker_Artifact_ChangesetValue $previous_changesetvalue = null) {
+    protected function saveValue($artifact, $changeset_value_id, $value, ?Tracker_Artifact_ChangesetValue $previous_changesetvalue = null) {
         return null;
     }
 
@@ -144,7 +144,7 @@ class Tracker_FormElement_Field_LastModifiedBy extends Tracker_FormElement_Field
      *
      * @return string
      */
-    protected function fetchArtifactValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
+    protected function fetchArtifactValue(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
         return $this->fetchArtifactValueWithEditionFormIfEditable($artifact, $value);
     }
 
@@ -156,7 +156,7 @@ class Tracker_FormElement_Field_LastModifiedBy extends Tracker_FormElement_Field
      *
      * @return string
      */
-    public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
+    public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null) {
         $purifier = Codendi_HTMLPurifier::instance();
 
         if ($artifact->wasLastModifiedByAnonymous()) {
@@ -175,7 +175,7 @@ class Tracker_FormElement_Field_LastModifiedBy extends Tracker_FormElement_Field
 
     public function fetchArtifactValueWithEditionFormIfEditable(
         Tracker_Artifact $artifact,
-        Tracker_Artifact_ChangesetValue $value = null,
+        ?Tracker_Artifact_ChangesetValue $value = null,
         $submitted_values = []
     ) {
         return $this->fetchArtifactValueReadOnly($artifact, $value);
@@ -196,7 +196,7 @@ class Tracker_FormElement_Field_LastModifiedBy extends Tracker_FormElement_Field
         Tracker_Artifact $artifact,
         PFUser $user,
         $ignore_perms,
-        Tracker_Artifact_ChangesetValue $value = null,
+        ?Tracker_Artifact_ChangesetValue $value = null,
         $format = 'text'
     ) {
         $value = new Tracker_FormElement_Field_List_Bind_UsersValue($artifact->getLastModifiedBy());
@@ -219,7 +219,7 @@ class Tracker_FormElement_Field_LastModifiedBy extends Tracker_FormElement_Field
     public function validateFieldWithPermissionsAndRequiredStatus(
         Tracker_Artifact $artifact,
         $submitted_value,
-        Tracker_Artifact_ChangesetValue $last_changeset_value = null,
+        ?Tracker_Artifact_ChangesetValue $last_changeset_value = null,
         $is_submission = null
     ) {
         if ($submitted_value !== null) {
@@ -270,14 +270,14 @@ class Tracker_FormElement_Field_LastModifiedBy extends Tracker_FormElement_Field
     /**
      * @see Tracker_FormElement_Field::fetchTooltipValue()
      */
-    protected function fetchTooltipValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
+    protected function fetchTooltipValue(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null) {
         return $this->fetchArtifactValueReadOnly($artifact, $value);
     }
 
     /**
      * @see Tracker_FormElement_Field::fetchCardValue()
      */
-    public function fetchCardValue(Tracker_Artifact $artifact, Tracker_CardDisplayPreferences $display_preferences = null)
+    public function fetchCardValue(Tracker_Artifact $artifact, ?Tracker_CardDisplayPreferences $display_preferences = null)
     {
         $value = new Tracker_FormElement_Field_List_Bind_UsersValue($artifact->getLastModifiedBy());
         return $value->fetchCard($display_preferences);
@@ -349,7 +349,7 @@ class Tracker_FormElement_Field_LastModifiedBy extends Tracker_FormElement_Field
         return Tracker_FormElement_Field_List_Bind::NONE_VALUE;
     }
 
-    public function getFieldDataFromRESTValue(array $value, Tracker_Artifact $artifact = null) {
+    public function getFieldDataFromRESTValue(array $value, ?Tracker_Artifact $artifact = null) {
          return null;
     }
 }

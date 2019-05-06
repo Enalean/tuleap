@@ -85,7 +85,7 @@ class SubmittedValueConvertor {
         array $submitted_value,
         SourceOfAssociationCollection $source_of_association_collection,
         Tracker_Artifact $artifact,
-        Tracker_Artifact_ChangesetValue_ArtifactLink $previous_changesetvalue = null
+        ?Tracker_Artifact_ChangesetValue_ArtifactLink $previous_changesetvalue = null
     ) {
         $submitted_value['list_of_artifactlinkinfo'] = $this->getListOfArtifactLinkInfo(
             $source_of_association_collection,
@@ -102,7 +102,7 @@ class SubmittedValueConvertor {
         SourceOfAssociationCollection $source_of_association_collection,
         Tracker_Artifact $from_artifact,
         array $submitted_value,
-        Tracker_Artifact_ChangesetValue_ArtifactLink $previous_changesetvalue = null
+        ?Tracker_Artifact_ChangesetValue_ArtifactLink $previous_changesetvalue = null
     ) {
         $list_of_artifactlinkinfo = array();
         if ($previous_changesetvalue != null) {

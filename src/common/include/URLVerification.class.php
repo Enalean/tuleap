@@ -273,7 +273,7 @@ class URLVerification {
      * @param String $request_uri
      * @return Boolean False if user not allowed to see the content
      */
-    protected function restrictedUserCanAccessUrl(PFUser $user, URL $url, string $request_uri, Project $project = null)
+    protected function restrictedUserCanAccessUrl(PFUser $user, URL $url, string $request_uri, ?Project $project = null)
     {
         $verifier = new RestrictedUserCanAccessUrlOrProjectVerifier($this->getEventManager(), $url, $request_uri);
 
@@ -322,7 +322,7 @@ class URLVerification {
         exit;
     }
 
-    public function displayPrivateProjectError(PFUser $user, Project $project = null)
+    public function displayPrivateProjectError(PFUser $user, ?Project $project = null)
     {
         $GLOBALS['Response']->send401UnauthorizedHeader();
 
@@ -364,7 +364,7 @@ class URLVerification {
      *
      * @return void
      */
-    public function assertValidUrl($server, HTTPRequest $request, Project $project = null) {
+    public function assertValidUrl($server, HTTPRequest $request, ?Project $project = null) {
         if (!$this->isException($server)) {
             $this->verifyProtocol($request);
             $this->verifyRequest($server);
