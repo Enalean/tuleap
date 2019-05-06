@@ -72,6 +72,7 @@ use Tuleap\Tracker\Report\Event\TrackerReportDeleted;
 use Tuleap\Tracker\Report\Event\TrackerReportSetToPrivate;
 use Tuleap\Tracker\Artifact\ActionButtons\MoveArtifactActionAllowedByPluginRetriever;
 use Tuleap\Tracker\Semantic\SemanticStatusCanBeDeleted;
+use Tuleap\Tracker\Semantic\SemanticStatusFieldCanBeUpdated;
 use Tuleap\Tracker\Semantic\SemanticStatusGetDisabledValues;
 
 require_once __DIR__ . '/../../tracker/include/trackerPlugin.class.php';
@@ -157,6 +158,7 @@ class AgileDashboardPlugin extends Plugin
             $this->addHook(CanValueBeHiddenStatementsCollection::NAME);
             $this->addHook(SemanticStatusGetDisabledValues::NAME);
             $this->addHook(SemanticStatusCanBeDeleted::NAME);
+            $this->addHook(SemanticStatusFieldCanBeUpdated::NAME);
             $this->addHook(ArtifactCreated::NAME);
             $this->addHook(ArtifactsReordered::NAME);
             $this->addHook(TRACKER_EVENT_ARTIFACT_POST_UPDATE);
@@ -1305,9 +1307,19 @@ class AgileDashboardPlugin extends Plugin
     {
         $tracker = $event->getTracker();
 
-        if (! $this->doesTrackerNotificationUseStatusSemantic($tracker) &&
-            ! $this->doesSemanticDoneUsesSemanticStatus($tracker)) {
-            $event->semanticIsDeletable();
+        if ($this->doesSemanticDoneUsesSemanticStatus($tracker)) {
+            $event->semanticIsNotDeletable(
+                dgettext('tuleap-agiledashboard', 'The semantic status cannot de deleted because the semantic done is defined for this tracker.')
+            );
+        }
+    }
+
+    public function semanticStatusFieldCanBeUpdated(SemanticStatusFieldCanBeUpdated $event): void
+    {
+        if ($this->doesSemanticDoneUsesSemanticStatus($event->getTracker())) {
+            $event->fieldIsNotUpdatable(
+                dgettext('tuleap-agiledashboard', 'The field for semantic status cannot be updated because semantic done is defined for this tracker.')
+            );
         }
     }
 
@@ -1609,32 +1621,12 @@ class AgileDashboardPlugin extends Plugin
         $burnup_cache_dao->deleteArtifactCacheValue($artifact->getId());
     }
 
-    private function doesTrackerNotificationUseStatusSemantic(Tracker $tracker)
-    {
-        if ($tracker->getNotificationsLevel() !== \Tracker::NOTIFICATIONS_LEVEL_STATUS_CHANGE) {
-            return false;
-        }
-        $GLOBALS['Response']->addFeedback(
-            Feedback::WARN,
-            dgettext('tuleap-agiledashboard', 'The semantic status cannot de deleted because tracker notifications is set to "Status change notifications".')
-        );
-        return true;
-    }
-
     private function doesSemanticDoneUsesSemanticStatus(Tracker $tracker)
     {
         $dao             = new SemanticDoneDao();
         $selected_values = $dao->getSelectedValues($tracker->getId());
 
-        if ($selected_values->rowCount() === 0) {
-            return false;
-        }
-
-        $GLOBALS['Response']->addFeedback(
-            Feedback::WARN,
-            dgettext('tuleap-agiledashboard', 'The semantic status cannot de deleted because the semantic done is defined for this tracker.')
-        );
-        return true;
+        return $selected_values->rowCount() !== 0;
     }
 
     public function moveArtifactGetExternalSemanticCheckers(MoveArtifactGetExternalSemanticCheckers $event)

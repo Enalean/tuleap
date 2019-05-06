@@ -3,14 +3,14 @@ msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
 "PO-Revision-Date: \n"
-"Last-Translator: Joris MASSON <joris.masson@enalean.com>\n"
+"Last-Translator: Nicolas Terray <nicolas.terray@enalean.com>\n"
 "Language-Team: \n"
 "Language: fr_FR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.2.1\n"
+"X-Generator: Poedit 2.0.6\n"
 
 #, php-format
 msgid "%s has been created"
@@ -165,7 +165,8 @@ msgid "Bad field_id attribute format: int expected."
 msgstr "L'attribut field_id a un mauvais format : numérique attendu."
 
 msgid "Bad field_ids attribute format: array of integer expected."
-msgstr "L'attribut field_ids a un mauvais format : tableau de numérique attendu."
+msgstr ""
+"L'attribut field_ids a un mauvais format : tableau de numérique attendu."
 
 #, php-format
 msgid "Bad format: '%s'. Array expected"
@@ -630,8 +631,7 @@ msgstr ""
 
 #, php-format
 msgid "The field_id value '%u' does not match a field in use in the tracker."
-msgstr ""
-"Le field_id '%u' ne correspond pas à un champ utilisé dans le tracker."
+msgstr "Le field_id '%u' ne correspond pas à un champ utilisé dans le tracker."
 
 #, php-format
 msgid ""
@@ -842,6 +842,13 @@ msgstr ""
 "La même valeur ne peut pas être à la fois source et destination en même "
 "temps."
 
+msgid ""
+"The semantic status cannot de deleted because tracker notifications is set "
+"to \"Status change notifications\"."
+msgstr ""
+"La sémantique statut ne peut être supprimée car la configuration des "
+"notifications est définie à \"Notifications lors du changement de status\"."
+
 msgid "The submitted URL is not valid."
 msgstr "L'URL soumise n'est pas valide."
 
@@ -888,8 +895,8 @@ msgstr "Les ids de type 'run_job' ne doivent pas être en doublons."
 
 msgid "There should not be duplicate field_ids for 'frozen_fields' actions."
 msgstr ""
-"Les field_ids d'actions 'frozen_fields' avec type 'int' ne doivent pas "
-"être en doublons."
+"Les field_ids d'actions 'frozen_fields' avec type 'int' ne doivent pas être "
+"en doublons."
 
 msgid ""
 "There should not be duplicate field_ids for 'set_field_value' actions with "
