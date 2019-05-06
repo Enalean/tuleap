@@ -807,6 +807,246 @@ class DocmanHardcodedMetadataTest extends DocmanWithMetadataActivatedBase
     }
 
     /**
+     * @depends testGetDocumentItemsForAdmin
+     */
+    public function testPatchWikiDocument(array $items): void
+    {
+        $folder_HM = $this->findItemByTitle($items, 'Folder HM');
+
+
+        $headers = ['Content-Type' => 'application/json'];
+
+        $date           = new \DateTimeImmutable();
+        $date           = $date->setTimezone(new DateTimeZone('GMT+1'));
+        $date           = $date->setTime(0, 0, 0);
+        $formatted_date = $date->modify('+1 day')->format('Y-m-d');
+
+        $query = json_encode(
+            [
+                'title'             => 'How to patch a wiki',
+                'wiki_properties'  => ['page_name' => 'Step 1: Do not use wiki service'],
+                'status'            => 'approved',
+                'obsolescence_date' => $formatted_date
+            ]
+        );
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post('docman_folders/' . $folder_HM['id'] . '/wikis', $headers, $query)
+        );
+
+        $this->assertEquals(201, $response->getStatusCode());
+
+        $wiki_id = $response->json()['id'];
+
+        $put_resource = json_encode(
+            [
+                'version_title'     => 'My version title',
+                'changelog'         => 'I have changed',
+                'title'             => 'How to patch',
+                'should_lock_file'  => false,
+                'status'            => 'approved',
+                'obsolescence_date' => $date->modify('+2 day')->format('Y-m-d'),
+                'wiki_properties'  => ['page_name' => 'Step 2: Do not use wiki service ( updated )'],
+            ]
+        );
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->patch('docman_wikis/' . $wiki_id, $headers, $put_resource)
+        );
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $response = $this->getResponse(
+            $this->client->get('docman_items/' . $wiki_id),
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
+        );
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals('wiki', $response->json()['type']);
+        $status = $this->getMetadataByName($response->json()['metadata'], 'Status');
+        $this->assertEquals(
+            'Approved',
+            $status['list_value'][0]['name']
+        );
+
+        $obsolescence_date_metadata = $this->getMetadataByName(
+            $response->json()['metadata'],
+            'Obsolescence Date'
+        );
+
+        $obsolescence_date_string = $obsolescence_date_metadata['value'];
+        $obsolescence_date        = \DateTimeImmutable::createFromFormat(
+            \DateTimeInterface::ISO8601,
+            $obsolescence_date_string
+        );
+        $obsolescence_date        = $obsolescence_date->setTimezone(new DateTimeZone('GMT+1'));
+        $obsolescence_date        = $obsolescence_date->setTime(0, 0, 0, 0);
+
+        $this->assertTrue($date->modify('+2 day')->getTimestamp() === $obsolescence_date->getTimestamp());
+        $this->assertEquals('Step 2: Do not use wiki service ( updated )', $response->json()['wiki_properties']['page_name']);
+    }
+
+    /**
+     * @depends testGetDocumentItemsForAdmin
+     */
+    public function testPatchWikiWithStatusThrows400IfThereIsABadStatus(array $items): void
+    {
+        $folder_HM = $this->findItemByTitle($items, 'Folder HM');
+
+
+        $headers = ['Content-Type' => 'application/json'];
+
+        $date           = new \DateTimeImmutable();
+        $date           = $date->setTimezone(new DateTimeZone('GMT+1'));
+        $date           = $date->setTime(0, 0, 0);
+        $formatted_date = $date->modify('+1 day')->format('Y-m-d');
+
+        $query = json_encode(
+            [
+                'title'             => 'My Super wiki to patch v2',
+                'wiki_properties'  => ['page_name' => 'Step 2: Do not use wiki service ( updated )'],
+                'status'            => 'approved',
+                'obsolescence_date' => $formatted_date
+            ]
+        );
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post('docman_folders/' . $folder_HM['id'] . '/wikis', $headers, $query)
+        );
+
+        $this->assertEquals(201, $response->getStatusCode());
+
+        $wiki_id = $response->json()['id'];
+
+        $put_resource = json_encode(
+            [
+                'version_title'    => 'My version title',
+                'changelog'        => 'I have changed',
+                'title'             => 'My Super wiki to patch fail',
+                'should_lock_file' => false,
+                'status'           => 'yolo',
+                'wiki_properties'  => ['page_name' => 'Step 2: Do not use wiki service ( updated )']
+            ]
+        );
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->patch('docman_wikis/' . $wiki_id, $headers, $put_resource)
+        );
+
+        $this->assertEquals(400, $response->getStatusCode());
+
+        $response = $this->getResponse(
+            $this->client->get('docman_items/' . $wiki_id),
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
+        );
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals('wiki', $response->json()['type']);
+        $status = $this->getMetadataByName($response->json()['metadata'], 'Status');
+        $this->assertEquals(
+            'Approved',
+            $status['list_value'][0]['name']
+        );
+        $obsolescence_date_metadata = $this->getMetadataByName(
+            $response->json()['metadata'],
+            'Obsolescence Date'
+        );
+
+        $obsolescence_date_string = $obsolescence_date_metadata['value'];
+        $obsolescence_date        = \DateTimeImmutable::createFromFormat(
+            \DateTimeInterface::ISO8601,
+            $obsolescence_date_string
+        );
+        $obsolescence_date        = $obsolescence_date->setTimezone(new DateTimeZone('GMT+1'));
+        $obsolescence_date        = $obsolescence_date->setTime(0, 0, 0);
+
+        $this->assertTrue($date->modify('+1 day')->getTimestamp() === $obsolescence_date->getTimestamp());
+    }
+
+    /**
+     * @depends testGetDocumentItemsForAdmin
+     */
+    public function testPatchWikiWithObsolescenceDateThrows400IfTheDateIsNotWellFormatted(array $items): void
+    {
+        $folder_HM = $this->findItemByTitle($items, 'Folder HM');
+
+        $headers = ['Content-Type' => 'application/json'];
+
+        $date           = new \DateTimeImmutable();
+        $date           = $date->setTimezone(new DateTimeZone('GMT+1'));
+        $date           = $date->setTime(0, 0, 0);
+        $formatted_date = $date->modify('+1 day')->format('Y-m-d');
+
+        $query = json_encode(
+            [
+                'title'             => 'My Super wiki to patch v3',
+                'wiki_properties'  => ['page_name' => 'Step 2: Do not use wiki service ( updated )'],
+                'status'            => 'approved',
+                'obsolescence_date' => $formatted_date
+            ]
+        );
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post('docman_folders/' . $folder_HM['id'] . '/wikis', $headers, $query)
+        );
+
+        $this->assertEquals(201, $response->getStatusCode());
+
+        $wiki_id = $response->json()['id'];
+
+        $put_resource = json_encode(
+            [
+                'version_title'     => 'My version title',
+                'changelog'         => 'I have changed',
+                'should_lock_file'  => false,
+                'title'             => 'My Super wiki to patch v3',
+                'status'            => 'rejected',
+                'obsolescence_date' => '2020-13-2011',
+                'wiki_properties'  => ['page_name' => 'Step 2: Do not use wiki service ( updated )']
+            ]
+        );
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->patch('docman_wikis/' . $wiki_id, $headers, $put_resource)
+        );
+
+        $this->assertEquals(400, $response->getStatusCode());
+
+        $response = $this->getResponse(
+            $this->client->get('docman_items/' . $wiki_id),
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
+        );
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals('wiki', $response->json()['type']);
+        $status = $this->getMetadataByName($response->json()['metadata'], 'Status');
+        $this->assertEquals(
+            'Approved',
+            $status['list_value'][0]['name']
+        );
+        $obsolescence_date_metadata = $this->getMetadataByName(
+            $response->json()['metadata'],
+            'Obsolescence Date'
+        );
+
+        $obsolescence_date_string = $obsolescence_date_metadata['value'];
+        $obsolescence_date        = \DateTimeImmutable::createFromFormat(
+            \DateTimeInterface::ISO8601,
+            $obsolescence_date_string
+        );
+        $obsolescence_date        = $obsolescence_date->setTimezone(new DateTimeZone('GMT+1'));
+        $obsolescence_date        = $obsolescence_date->setTime(0, 0, 0);
+
+        $this->assertTrue($date->modify('+1 day')->getTimestamp() === $obsolescence_date->getTimestamp());
+    }
+
+    /**
      * Find first item in given array of items which has given title.
      *
      * @return array|null Found item. null otherwise.

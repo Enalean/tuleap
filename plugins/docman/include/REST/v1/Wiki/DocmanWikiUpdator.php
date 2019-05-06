@@ -27,6 +27,10 @@ use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Docman\Lock\LockChecker;
 use Tuleap\Docman\REST\v1\DocmanItemUpdator;
 use Tuleap\Docman\REST\v1\ExceptionItemIsLockedByAnotherUser;
+use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataObsolescenceDateRetriever;
+use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataUsageChecker;
+use Tuleap\Docman\REST\v1\Metadata\HardcodedMetdataObsolescenceDateChecker;
+use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
 
 class DocmanWikiUpdator
 {
@@ -54,6 +58,22 @@ class DocmanWikiUpdator
      * @var DBTransactionExecutor
      */
     private $transaction_executor;
+    /**
+     * @var HardcodedMetadataUsageChecker
+     */
+    private $metadata_usage_checker;
+    /**
+     * @var HardcodedMetdataObsolescenceDateChecker
+     */
+    private $obsolescence_date_checker;
+    /**
+     * @var ItemStatusMapper
+     */
+    private $status_mapper;
+    /**
+     * @var HardcodedMetadataObsolescenceDateRetriever
+     */
+    private $date_retriever;
 
     public function __construct(
         \Docman_VersionFactory $version_factory,
@@ -61,39 +81,60 @@ class DocmanWikiUpdator
         Docman_ItemFactory $docman_item_factory,
         \EventManager $event_manager,
         DocmanItemUpdator $updator,
-        DBTransactionExecutor $transaction_executor
+        DBTransactionExecutor $transaction_executor,
+        ItemStatusMapper $status_mapper,
+        HardcodedMetadataUsageChecker $metadata_usage_checker,
+        HardcodedMetdataObsolescenceDateChecker $obsolescence_date_checker,
+        HardcodedMetadataObsolescenceDateRetriever $date_retriever
     ) {
-        $this->version_factory         = $version_factory;
-        $this->lock_checker            = $lock_checker;
-        $this->docman_item_factory     = $docman_item_factory;
-        $this->event_manager           = $event_manager;
-        $this->updator                 = $updator;
-        $this->transaction_executor = $transaction_executor;
+        $this->version_factory           = $version_factory;
+        $this->lock_checker              = $lock_checker;
+        $this->docman_item_factory       = $docman_item_factory;
+        $this->event_manager             = $event_manager;
+        $this->updator                   = $updator;
+        $this->transaction_executor      = $transaction_executor;
+        $this->metadata_usage_checker    = $metadata_usage_checker;
+        $this->obsolescence_date_checker = $obsolescence_date_checker;
+        $this->status_mapper             = $status_mapper;
+        $this->date_retriever            = $date_retriever;
     }
 
     /**
      * @throws ExceptionItemIsLockedByAnotherUser
+     * @throws \Tuleap\Docman\REST\v1\Metadata\ItemStatusUsageMismatchException
+     * @throws \Tuleap\Docman\REST\v1\Metadata\StatusNotFoundException
+     * @throws \Tuleap\Docman\REST\v1\Metadata\ObsoloscenceDateUsageMismatchException
+     * @throws \Tuleap\Docman\REST\v1\Metadata\InvalidDateTimeFormatException
+     * @throws \Tuleap\Docman\REST\v1\Metadata\InvalidDateComparisonException
      */
     public function updateWiki(
         \Docman_Wiki $item,
         \PFUser $current_user,
-        DocmanWikiPATCHRepresentation $representation
+        DocmanWikiPATCHRepresentation $representation,
+        \DateTimeImmutable $current_time
     ): void {
         $this->lock_checker->checkItemIsLocked($item, $current_user);
 
+        $status_id = $this->getStatusId($representation);
+
+        $obsolescence_date_time_stamp = $this->getObsolescenceDateTimestamp($representation, $current_time);
+
         $this->transaction_executor->execute(
-            function () use ($item, $current_user, $representation) {
+            function () use ($item, $current_user, $representation, $status_id, $obsolescence_date_time_stamp) {
                 $next_version_id = (int)$this->version_factory->getNextVersionNumber($item);
 
-                $new_link_version_row = [
-                    'item_id'   => $item->getId(),
-                    'user_id'   => $current_user->getId(),
-                    'wiki_page' => $representation->wiki_properties->page_name
-
+                $new_wiki_version_row = [
+                    'id'                => $item->getId(),
+                    'user_id'           => $current_user->getId(),
+                    'wiki_page'         => $representation->wiki_properties->page_name,
+                    'title'             => $representation->title,
+                    'description'       => $representation->description,
+                    'status'            => $status_id,
+                    'obsolescence_date' => $obsolescence_date_time_stamp
                 ];
 
 
-                $this->docman_item_factory->update($new_link_version_row);
+                $this->docman_item_factory->update($new_wiki_version_row);
 
                 $documents = $this->docman_item_factory->getWikiPageReferencers($item->getPagename(), $item->getGroupId());
                 foreach ($documents as $document) {
@@ -128,5 +169,45 @@ class DocmanWikiUpdator
                 );
             }
         );
+    }
+
+    /**
+     * @throws \Tuleap\Docman\REST\v1\Metadata\ItemStatusUsageMismatchException
+     * @throws \Tuleap\Docman\REST\v1\Metadata\StatusNotFoundException
+     */
+    private function getStatusId(DocmanWikiPATCHRepresentation $representation): int
+    {
+        $this->metadata_usage_checker->checkStatusIsNotSetWhenStatusMetadataIsNotAllowed(
+            $representation->status
+        );
+        $status_id = $this->status_mapper->getItemStatusIdFromItemStatusString(
+            $representation->status
+        );
+        return $status_id;
+    }
+
+    /**
+     * @throws \Tuleap\Docman\REST\v1\Metadata\InvalidDateComparisonException
+     * @throws \Tuleap\Docman\REST\v1\Metadata\InvalidDateTimeFormatException
+     * @throws \Tuleap\Docman\REST\v1\Metadata\ObsoloscenceDateUsageMismatchException
+     */
+    private function getObsolescenceDateTimestamp(
+        DocmanWikiPATCHRepresentation $representation,
+        \DateTimeImmutable $current_time
+    ): int {
+        $this->obsolescence_date_checker->checkObsolescenceDateUsage(
+            $representation->obsolescence_date,
+            PLUGIN_DOCMAN_ITEM_TYPE_WIKI
+        );
+        $obsolescence_date_time_stamp = $this->date_retriever->getTimeStampOfDate(
+            $representation->obsolescence_date,
+            PLUGIN_DOCMAN_ITEM_TYPE_WIKI
+        );
+        $this->obsolescence_date_checker->checkDateValidity(
+            $current_time->getTimestamp(),
+            $obsolescence_date_time_stamp,
+            PLUGIN_DOCMAN_ITEM_TYPE_WIKI
+        );
+        return $obsolescence_date_time_stamp;
     }
 }
