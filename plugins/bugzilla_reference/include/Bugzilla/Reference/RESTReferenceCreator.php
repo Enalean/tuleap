@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,28 +21,45 @@
 namespace Tuleap\Bugzilla\Reference;
 
 use CrossReference;
-use Http_Client;
+use Psr\Http\Client\ClientExceptionInterface;
+use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\RequestFactoryInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 use ReferenceInstance;
 use Tuleap\Bugzilla\BugzillaLogger;
 
 class RESTReferenceCreator
 {
     /**
-     * @var Http_Client
+     * @var ClientInterface
      */
-    private $http_curl_client;
+    private $http_client;
+    /**
+     * @var RequestFactoryInterface
+     */
+    private $request_factory;
+    /**
+     * @var StreamFactoryInterface
+     */
+    private $stream_factory;
     /**
      * @var BugzillaLogger
      */
     private $logger;
 
-    public function __construct(Http_Client $http_curl_client, BugzillaLogger $logger)
-    {
-        $this->http_curl_client = $http_curl_client;
-        $this->logger           = $logger;
+    public function __construct(
+        ClientInterface $http_client,
+        RequestFactoryInterface $request_factory,
+        StreamFactoryInterface $stream_factory,
+        BugzillaLogger $logger
+    ) {
+        $this->http_client     = $http_client;
+        $this->request_factory = $request_factory;
+        $this->stream_factory  = $stream_factory;
+        $this->logger          = $logger;
     }
 
-    public function create(CrossReference $cross_reference, Reference $bugzilla)
+    public function create(CrossReference $cross_reference, Reference $bugzilla) : void
     {
         $source_keyword = $cross_reference->getRefSourceKey();
         $source_id      = $cross_reference->getRefSourceId();
@@ -61,46 +78,57 @@ class RESTReferenceCreator
         $api_key               = $bugzilla->getAPIKey();
         $are_follow_up_private = $bugzilla->getAreFollowupPrivate();
 
-        $options = array(
-            CURLOPT_URL         => $url,
-            CURLOPT_POST        => true,
-            CURLOPT_HEADER      => true,
-            CURLOPT_FAILONERROR => true,
-            CURLOPT_HTTPHEADER  => array('Content-Type: application/json'),
-            CURLOPT_POSTFIELDS  => json_encode(
-                array(
-                    "Bugzilla_login"    => $login,
-                    "Bugzilla_api_key"  => $api_key->getString(),
-                    "id"                => $target_id,
-                    "comment"           => $message,
-                    "is_private"        => $are_follow_up_private,
-                    "is_markdown"       => true
+        $request = $this->request_factory->createRequest('POST', $url)
+            ->withHeader('Content-Type', 'application/json')
+            ->withBody(
+                $this->stream_factory->createStream(
+                    json_encode(
+                        [
+                            'Bugzilla_login'   => $login,
+                            'Bugzilla_api_key' => $api_key->getString(),
+                            'id'               => $target_id,
+                            'comment'          => $message,
+                            'is_private'       => $are_follow_up_private,
+                            'is_markdown'      => true
+                        ]
+                    )
                 )
-            )
-        );
-        $this->http_curl_client->addOptions($options);
-        try {
-            $this->http_curl_client->doRequest();
-            $this->http_curl_client->close();
-            $this->logger->info("Bugzilla reference added", $this->http_curl_client->getStatusCodeAndReasonPhrase());
-        } catch (\Http_ClientException $ex) {
-            $this->logger->error($ex->getMessage());
-            $request = $this->http_curl_client->getLastRequest();
-            if (isset($request['http_code']) && 401 === (int) $request['http_code']) {
-                $message = dgettext(
-                    'tuleap-bugzilla_reference',
-                    'Cannot create Bugzilla link. Please check your credentials.'
-                );
-                if ($are_follow_up_private) {
-                    $message .= ' ' . dgettext(
-                        'tuleap-bugzilla_reference',
-                        'Please check that you can add private comments in Bugzilla.'
-                    );
-                }
+            );
 
-                $this->logger->error($message);
-            }
+        try {
+            $response = $this->http_client->sendRequest($request);
+        } catch (ClientExceptionInterface $e) {
+            $this->logger->error('Could not send HTTP request to Bugzilla server ' . $url, $e);
+            return;
         }
+
+        if ($response->getStatusCode() === 401) {
+            $message = dgettext(
+                'tuleap-bugzilla_reference',
+                'Cannot create Bugzilla link. Please check your credentials.'
+            );
+            if ($are_follow_up_private) {
+                $message .= ' ' . dgettext(
+                    'tuleap-bugzilla_reference',
+                    'Please check that you can add private comments in Bugzilla.'
+                );
+            }
+
+            $this->logger->error($message);
+            return;
+        }
+
+        $response_status_code   = $response->getStatusCode();
+        $response_reason_phrase = $response->getReasonPhrase();
+        if ($response_status_code >= 400) {
+            $this->logger->error(
+                'Request has not been processed correctly by the Bugzilla server: #'
+                . $response_status_code . ':' . $response_reason_phrase
+            );
+            return;
+        }
+
+        $this->logger->info('Bugzilla reference added: #' . $response_status_code . ':' . $response_reason_phrase);
     }
 
     private function getLinkToSource(CrossReference $cross_reference)
