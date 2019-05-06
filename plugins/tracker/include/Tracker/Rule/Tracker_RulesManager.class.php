@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -48,13 +48,16 @@ class Tracker_RulesManager
     private $rule_list_factory;
 
     /** @var FrozenFieldsDao */
-    private $read_only_dao;
+    private $frozen_fields_dao;
 
-    public function __construct(Tracker $tracker, Tracker_FormElementFactory $form_element_factory, FrozenFieldsDao $read_only_dao)
-    {
+    public function __construct(
+        Tracker $tracker,
+        Tracker_FormElementFactory $form_element_factory,
+        FrozenFieldsDao $frozen_fields_dao
+    ) {
         $this->tracker              = $tracker;
         $this->form_element_factory = $form_element_factory;
-        $this->read_only_dao        = $read_only_dao;
+        $this->frozen_fields_dao    = $frozen_fields_dao;
     }
 
     /**
@@ -191,7 +194,7 @@ class Tracker_RulesManager
                 $field_id == $target_id ||
                 $this->isCyclic($tracker_id, $field_id, $target_id) ||
                 $this->fieldHasSource($tracker_id, $target_id) ||
-                $this->isFieldUsedInReadOnlyTransitionPostAction($field_id)
+                $this->isFieldUsedInFrozenFieldsTransitionPostAction($field_id)
             );
     }
 
@@ -220,7 +223,7 @@ class Tracker_RulesManager
                 $field_id == $source_id ||
                 $this->isCyclic($tracker_id, $source_id, $field_id) ||
                 $this->fieldHasSource($tracker_id, $field_id) ||
-                $this->isFieldUsedInReadOnlyTransitionPostAction($field_id)
+                $this->isFieldUsedInFrozenFieldsTransitionPostAction($field_id)
             );
     }
 
@@ -794,8 +797,8 @@ class Tracker_RulesManager
         return $field;
     }
 
-    private function isFieldUsedInReadOnlyTransitionPostAction($field_id)
+    private function isFieldUsedInFrozenFieldsTransitionPostAction($field_id)
     {
-        return $this->read_only_dao->isFieldUsedInPostAction($field_id);
+        return $this->frozen_fields_dao->isFieldUsedInPostAction($field_id);
     }
 }

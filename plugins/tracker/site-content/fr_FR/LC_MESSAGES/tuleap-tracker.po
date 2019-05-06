@@ -625,8 +625,8 @@ msgstr ""
 
 #, php-format
 msgid ""
-"The field '%u' is used for the workflow cannot be defined in frozen fields "
-"actions."
+"The field '%u' is used for the workflow and cannot be defined in frozen "
+"fields actions."
 msgstr ""
 "Le champ '%u' est utilisé pour définir le workflow et ne peut pas être "
 "choisi en tant que champ figé."
@@ -654,6 +654,10 @@ msgid ""
 msgstr ""
 "La valeur de field_id '%u' ne correspond pas à un champ de type entier "
 "utilisé dans le tracker."
+
+#, php-format
+msgid "The field_id value '%u' is used in a field dependency in the tracker."
+msgstr "Le field_id '%u' est utilisé dans une dépendance entre champs dans le tracker."
 
 #, php-format
 msgid "The file field '%s' cannot be compared to MYSELF()."

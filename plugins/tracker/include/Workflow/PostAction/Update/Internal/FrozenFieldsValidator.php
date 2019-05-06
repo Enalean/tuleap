@@ -24,6 +24,7 @@ namespace Tuleap\Tracker\Workflow\PostAction\Update\Internal;
 
 use Tracker;
 use Tracker_FormElementFactory;
+use Tracker_RuleFactory;
 use Tuleap\Tracker\Workflow\PostAction\Update\FrozenFields;
 
 class FrozenFieldsValidator
@@ -33,9 +34,17 @@ class FrozenFieldsValidator
      */
     private $form_element_factory;
 
-    public function __construct(Tracker_FormElementFactory $form_element_factory)
-    {
+    /**
+     * @var Tracker_RuleFactory
+     */
+    private $tracker_rule_factory;
+
+    public function __construct(
+        Tracker_FormElementFactory $form_element_factory,
+        Tracker_RuleFactory $tracker_rule_factory
+    ) {
         $this->form_element_factory = $form_element_factory;
+        $this->tracker_rule_factory = $tracker_rule_factory;
     }
 
     /**
@@ -43,7 +52,6 @@ class FrozenFieldsValidator
      */
     public function validate(Tracker $tracker, FrozenFields ...$frozen_fields): void
     {
-        $used_field_ids = $this->extractUsedFieldIds($tracker);
         foreach ($frozen_fields as $frozen_field) {
             if (count($frozen_field->getFieldIds()) !== count(array_unique($frozen_field->getFieldIds()))) {
                 throw new InvalidPostActionException(
@@ -54,7 +62,7 @@ class FrozenFieldsValidator
                 );
             }
 
-            $this->validateSelectedField($tracker, $frozen_field, $used_field_ids);
+            $this->validateSelectedField($tracker, $frozen_field);
         }
     }
 
@@ -70,37 +78,87 @@ class FrozenFieldsValidator
         return $used_field_ids;
     }
 
+    private function extractFieldDependenciesFieldIds(Tracker $tracker) : array
+    {
+        $involved_fields    = $this->tracker_rule_factory->getInvolvedFieldsByTrackerId($tracker->getId());
+        $involved_field_ids = [];
+        foreach ($involved_fields as $involved_fields_row) {
+            $involved_field_ids[] = (int) $involved_fields_row['source_field_id'];
+            $involved_field_ids[] = (int) $involved_fields_row['target_field_id'];
+        }
+
+        return array_unique($involved_field_ids);
+    }
+
     /**
      * @throws InvalidPostActionException
      */
-    private function validateSelectedField(Tracker $tracker, FrozenFields $frozen_fields, array $used_field_ids) : void
+    private function validateSelectedField(Tracker $tracker, FrozenFields $frozen_fields) : void
     {
-        $workflow_field_id = (int) $tracker->getWorkflow()->getFieldId();
+        $used_field_ids     = $this->extractUsedFieldIds($tracker);
+        $involved_field_ids = $this->extractFieldDependenciesFieldIds($tracker);
+        $workflow_field_id  = (int) $tracker->getWorkflow()->getFieldId();
 
         foreach ($frozen_fields->getFieldIds() as $field_id) {
-            if (! in_array($field_id, $used_field_ids, true)) {
-                throw new InvalidPostActionException(
-                    sprintf(
-                        dgettext(
-                            'tuleap-tracker',
-                            "The field_id value '%u' does not match a field in use in the tracker."
-                        ),
-                        $field_id
-                    )
-                );
-            }
+            $this->validateFieldIsUsedInTracker($field_id, $used_field_ids);
+            $this->validateFieldIsNotUsedInDependencies($field_id, $involved_field_ids);
+            $this->validateFieldIsNotUsedToDefineTheWorkflow($field_id, $workflow_field_id);
+        }
+    }
 
-            if ($field_id === $workflow_field_id) {
+    /**
+     * @throws InvalidPostActionException
+     */
+    private function validateFieldIsUsedInTracker(int $field_id, array $used_field_ids)
+    {
+        if (! in_array($field_id, $used_field_ids, true)) {
+            throw new InvalidPostActionException(
+                sprintf(
+                    dgettext(
+                        'tuleap-tracker',
+                        "The field_id value '%u' does not match a field in use in the tracker."
+                    ),
+                    $field_id
+                )
+            );
+        }
+    }
+
+    /**
+     * @throws InvalidPostActionException
+     */
+    private function validateFieldIsNotUsedInDependencies(int $field_id, array $involved_field_ids)
+    {
+        foreach ($involved_field_ids as $field_used_in_dependency_id) {
+            if ($field_used_in_dependency_id === $field_id) {
                 throw new InvalidPostActionException(
                     sprintf(
                         dgettext(
                             'tuleap-tracker',
-                            "The field '%u' is used for the workflow cannot be defined in frozen fields actions."
+                            "The field_id value '%u' is used in a field dependency in the tracker."
                         ),
                         $field_id
                     )
                 );
             }
+        }
+    }
+
+    /**
+     * @throws InvalidPostActionException
+     */
+    private function validateFieldIsNotUsedToDefineTheWorkflow(int $field_id, int $workflow_field_id)
+    {
+        if ($field_id === $workflow_field_id) {
+            throw new InvalidPostActionException(
+                sprintf(
+                    dgettext(
+                        'tuleap-tracker',
+                        "The field '%u' is used for the workflow and cannot be defined in frozen fields actions."
+                    ),
+                    $field_id
+                )
+            );
         }
     }
 }

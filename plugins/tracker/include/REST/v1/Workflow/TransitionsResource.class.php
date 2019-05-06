@@ -21,6 +21,7 @@
 namespace Tuleap\Tracker\REST\v1\Workflow;
 
 use Luracast\Restler\RestException;
+use Tracker_RuleFactory;
 use TrackerFactory;
 use Transition_PostAction_CIBuildDao;
 use Transition_PostAction_Field_DateDao;
@@ -525,7 +526,7 @@ class TransitionsResource extends AuthenticatedResource
                     new FrozenFieldsRepository(
                         $this->getFrozenFieldsDao()
                     ),
-                    new FrozenFieldsValidator($form_element_factory)
+                    new FrozenFieldsValidator($form_element_factory, Tracker_RuleFactory::instance())
                 )
             );
         }
