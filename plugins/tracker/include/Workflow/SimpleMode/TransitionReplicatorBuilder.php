@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Workflow\SimpleMode;
 
 use Tracker_FormElementFactory;
+use Tracker_RuleFactory;
 use Transition_PostAction_CIBuildDao;
 use Transition_PostAction_CIBuildFactory;
 use Transition_PostAction_Field_DateDao;
@@ -38,6 +39,9 @@ use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\CIBuildRepository;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\CIBuildUpdater;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\CIBuildValidator;
+use Tuleap\Tracker\Workflow\PostAction\Update\Internal\FrozenFieldsRepository;
+use Tuleap\Tracker\Workflow\PostAction\Update\Internal\FrozenFieldsUpdater;
+use Tuleap\Tracker\Workflow\PostAction\Update\Internal\FrozenFieldsValidator;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\PostActionFieldIdValidator;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\PostActionIdValidator;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\PostActionsMapper;
@@ -63,23 +67,44 @@ class TransitionReplicatorBuilder
         $form_element_factory = Tracker_FormElementFactory::instance();
         $transaction_executor = new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection());
 
-        return new TransitionReplicator(
-            Workflow_Transition_ConditionFactory::build(),
-            new ConditionsUpdater(
-                TransitionFactory::instance(),
-                Workflow_Transition_ConditionFactory::build()
-            ),
-            new PostActionsRetriever(
-                new Transition_PostAction_CIBuildFactory(new Transition_PostAction_CIBuildDao()),
-                new Transition_PostAction_FieldFactory(
-                    $form_element_factory,
-                    new Transition_PostAction_Field_DateDao(),
-                    new Transition_PostAction_Field_IntDao(),
-                    new Transition_PostAction_Field_FloatDao()
+        if (\ForgeConfig::get('sys_should_use_read_only_post_actions')) {
+            $post_action_collection_updater = new PostActionCollectionUpdater(
+                new CIBuildUpdater(
+                    new CIBuildRepository(
+                        new Transition_PostAction_CIBuildDao()
+                    ),
+                    new CIBuildValidator($ids_validator)
                 ),
-                new FrozenFieldsRetriever(new FrozenFieldsDao())
-            ),
-            new PostActionCollectionUpdater(
+                new SetDateValueUpdater(
+                    new SetDateValueRepository(
+                        new Transition_PostAction_Field_DateDao(),
+                        $transaction_executor
+                    ),
+                    new SetDateValueValidator($ids_validator, $field_ids_validator, $form_element_factory)
+                ),
+                new SetIntValueUpdater(
+                    new SetintValueRepository(
+                        new Transition_PostAction_Field_IntDao(),
+                        $transaction_executor
+                    ),
+                    new SetIntValueValidator($ids_validator, $field_ids_validator, $form_element_factory)
+                ),
+                new SetFloatValueUpdater(
+                    new SetFloatValueRepository(
+                        new Transition_PostAction_Field_FloatDao(),
+                        $transaction_executor
+                    ),
+                    new SetFloatValueValidator($ids_validator, $field_ids_validator, $form_element_factory)
+                ),
+                new FrozenFieldsUpdater(
+                    new FrozenFieldsRepository(
+                        new FrozenFieldsDao()
+                    ),
+                    new FrozenFieldsValidator($form_element_factory, Tracker_RuleFactory::instance())
+                )
+            );
+        } else {
+            $post_action_collection_updater = new PostActionCollectionUpdater(
                 new CIBuildUpdater(
                     new CIBuildRepository(
                         new Transition_PostAction_CIBuildDao()
@@ -107,7 +132,26 @@ class TransitionReplicatorBuilder
                     ),
                     new SetFloatValueValidator($ids_validator, $field_ids_validator, $form_element_factory)
                 )
+            );
+        }
+
+        return new TransitionReplicator(
+            Workflow_Transition_ConditionFactory::build(),
+            new ConditionsUpdater(
+                TransitionFactory::instance(),
+                Workflow_Transition_ConditionFactory::build()
             ),
+            new PostActionsRetriever(
+                new Transition_PostAction_CIBuildFactory(new Transition_PostAction_CIBuildDao()),
+                new Transition_PostAction_FieldFactory(
+                    $form_element_factory,
+                    new Transition_PostAction_Field_DateDao(),
+                    new Transition_PostAction_Field_IntDao(),
+                    new Transition_PostAction_Field_FloatDao()
+                ),
+                new FrozenFieldsRetriever(new FrozenFieldsDao())
+            ),
+            $post_action_collection_updater,
             new PostActionsMapper()
         );
     }

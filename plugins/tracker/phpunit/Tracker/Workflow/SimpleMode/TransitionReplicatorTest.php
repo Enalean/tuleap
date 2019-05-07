@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\Workflow\SimpleMode;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFields;
 use Tuleap\Tracker\Workflow\PostAction\PostActionsRetriever;
 use Tuleap\Tracker\Workflow\PostAction\Update\CIBuild;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\PostActionsMapper;
@@ -34,6 +35,7 @@ use Tuleap\Tracker\Workflow\PostAction\Update\SetDateValue;
 use Tuleap\Tracker\Workflow\PostAction\Update\SetFloatValue;
 use Tuleap\Tracker\Workflow\PostAction\Update\SetIntValue;
 use Tuleap\Tracker\Workflow\Transition\Condition\ConditionsUpdater;
+use Tuleap\Tracker\Workflow\PostAction\Update\FrozenFields as FrozenFieldsValue;
 
 class TransitionReplicatorTest extends TestCase
 {
@@ -124,6 +126,12 @@ class TransitionReplicatorTest extends TestCase
             ->shouldReceive('getSetIntFieldValues')
             ->andReturn([$int_field]);
 
+        $frozen_fields = Mockery::mock(FrozenFields::class);
+        $frozen_fields->shouldReceive('getFieldIds')->andReturn([999]);
+        $this->post_actions_retriever
+            ->shouldReceive('getFrozenFieldsValue')
+            ->andReturn($frozen_fields);
+
         $this->conditions_updater
             ->shouldReceive('update')
             ->with($to_transition, ['191', '154_3'], $not_empty_ids, $is_comment_required);
@@ -132,7 +140,8 @@ class TransitionReplicatorTest extends TestCase
                 new CIBuild(null, 'https://example.com'),
                 new SetDateValue(null, 197, \Transition_PostAction_Field_Date::FILL_CURRENT_TIME),
                 new SetFloatValue(null, 201, 48.97),
-                new SetIntValue(null, 247, -128)
+                new SetIntValue(null, 247, -128),
+                new FrozenFieldsValue(null, [999])
             ));
 
         $this->transition_replicator->replicate($from_transition, $to_transition);

@@ -27,10 +27,12 @@ require_once __DIR__ . '/../../../../../bootstrap.php';
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFields;
 use Tuleap\Tracker\Workflow\PostAction\Update\CIBuild;
 use Tuleap\Tracker\Workflow\PostAction\Update\SetDateValue;
 use Tuleap\Tracker\Workflow\PostAction\Update\SetFloatValue;
 use Tuleap\Tracker\Workflow\PostAction\Update\SetIntValue;
+use Tuleap\Tracker\Workflow\PostAction\Update\FrozenFields as FrozenFieldsValue;
 
 class PostActionsMapperTest extends TestCase
 {
@@ -120,6 +122,20 @@ class PostActionsMapperTest extends TestCase
             [
                 new SetIntValue(null, 104, 42),
                 new SetIntValue(null, 108, -18)
+            ],
+            $result
+        );
+    }
+
+    public function testConvertToFrozenFieldsValueValueWithNullId()
+    {
+        $frozen_fields = Mockery::mock(FrozenFields::class);
+        $frozen_fields->shouldReceive('getFieldIds')->andReturn([999]);
+
+        $result = $this->mapper->convertToFrozenFieldValueWithNullId($frozen_fields);
+        $this->assertEquals(
+            [
+                new FrozenFieldsValue(null, [999]),
             ],
             $result
         );

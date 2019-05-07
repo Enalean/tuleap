@@ -38,7 +38,7 @@ class FrozenFieldsRepository
 
     public function create(Transition $transition, FrozenFields $frozen_fields) :  void
     {
-        $this->frozen_fields_dao->createPostActionForTransitionId($transition->getId());
+        $this->frozen_fields_dao->createPostActionForTransitionId($transition->getId(), $frozen_fields->getFieldIds());
     }
 
     public function deleteAllByTransition(Transition $transition) : void
