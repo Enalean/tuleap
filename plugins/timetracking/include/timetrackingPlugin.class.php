@@ -18,9 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Layout\IncludeAssets;
 use Tuleap\Plugin\PluginWithLegacyInternalRouting;
-use Tuleap\Request\CurrentPage;
 use Tuleap\Timetracking\Admin\AdminController;
 use Tuleap\Timetracking\Admin\AdminDao;
 use Tuleap\Timetracking\Admin\TimetrackingEnabler;
@@ -40,6 +38,7 @@ use Tuleap\Timetracking\Time\TimeController;
 use Tuleap\Timetracking\Time\TimeDao;
 use Tuleap\Timetracking\Time\TimePresenterBuilder;
 use Tuleap\Timetracking\Time\TimeRetriever;
+use Tuleap\Timetracking\Time\TimetrackingReportDao;
 use Tuleap\Timetracking\Time\TimeUpdater;
 use Tuleap\Timetracking\Widget\TimeTrackingOverview;
 use Tuleap\Timetracking\Widget\UserWidget;
@@ -313,7 +312,12 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting // @codingStand
             $get_widget_event->setWidget(new UserWidget());
         }
         if ($get_widget_event->getName() === TimeTrackingOverview::NAME) {
-            $get_widget_event->setWidget(new TimeTrackingOverview());
+            $get_widget_event->setWidget(
+                new TimeTrackingOverview(
+                    new TimetrackingReportDao(),
+                    TemplateRendererFactory::build()->getRenderer(TIMETRACKING_TEMPLATE_DIR)
+                )
+            );
         }
     }
 

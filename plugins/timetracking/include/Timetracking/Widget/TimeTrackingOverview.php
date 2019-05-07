@@ -21,6 +21,7 @@
 namespace Tuleap\Timetracking\Widget;
 
 use Codendi_Request;
+use TemplateRenderer;
 use TemplateRendererFactory;
 use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\CssAssetCollection;
@@ -32,19 +33,40 @@ class TimeTrackingOverview extends Widget
 {
     public const NAME = 'timetracking-overview';
 
-    public function __construct()
+    /**
+     * @var string
+     */
+    private $widget_title;
+
+    /**
+     * @var TemplateRenderer
+     */
+    private $renderer;
+
+    /**
+     * @var TimetrackingReportDao
+     */
+    private $report_dao;
+
+    public function __construct(TimetrackingReportDao $report_dao, TemplateRenderer $renderer)
     {
         parent::__construct(self::NAME);
-    }
-
-    public function loadContent($id)
-    {
-        $this->content_id = $id;
+        $this->report_dao = $report_dao;
+        $this->renderer   = $renderer;
     }
 
     public function getTitle()
     {
-        return dgettext('tuleap-timetracking', 'Timetracking overview');
+        if ($this->widget_title !== null) {
+            return $this->widget_title;
+        }
+        return $this->widget_title ?: dgettext('tuleap-timetracking', 'Timetracking overview');
+    }
+
+    public function loadContent($id)
+    {
+        $this->content_id   = $this->report_dao->searchReportById($id);
+        $this->widget_title = $this->report_dao->getReportTitleById($id);
     }
 
     public function getDescription()
@@ -69,6 +91,31 @@ class TimeTrackingOverview extends Widget
             'timetracking-overview',
             new TimetrackingOverviewPresenter($this->content_id, $this->getUserPreferences($this->content_id))
         );
+    }
+
+    public function getPreferences($widget_id)
+    {
+        return $this->renderer->renderToString(
+            'timetracking-overview-preferences',
+            new TimetrackingOverviewPreferencesPresenter($widget_id, $this->widget_title)
+        );
+    }
+
+    public function getInstallPreferences()
+    {
+        return $this->renderer->renderToString(
+            'timetracking-overview-preferences',
+            new TimetrackingOverviewPreferencesPresenter(0, $this->getTitle())
+        );
+    }
+
+    public function updatePreferences(Codendi_Request $request)
+    {
+        $content_id = $request->getValidated('content_id', 'uint', 0);
+
+        $title = $request->get('timetracking-overview-title');
+
+        return $this->report_dao->setReportTitleById($title, $content_id);
     }
 
     public function getJavascriptDependencies()
@@ -96,20 +143,24 @@ class TimeTrackingOverview extends Widget
         return $this->getCurrentUser()->getPreference("timetracking_overview_display_trackers_without_time_" . $widget_id);
     }
 
+    public function hasPreferences($widget_id)
+    {
+        return true;
+    }
+
     public function create(Codendi_Request $request)
     {
-        $content_id = $this->getDao()->create();
+        $content_id = $this->report_dao->create();
+        if ($request->params[ "timetracking-overview-title" ]) {
+            $title = $request->params[ "timetracking-overview-title" ];
+            $this->report_dao->setReportTitleById($title, $content_id);
+        }
 
         return $content_id;
     }
 
     public function destroy($content_id)
     {
-        $this->getDao()->delete($content_id);
-    }
-
-    private function getDao()
-    {
-        return new TimetrackingReportDao();
+        $this->report_dao->delete($content_id);
     }
 }

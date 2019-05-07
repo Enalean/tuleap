@@ -33,14 +33,14 @@ class TimetrackingReportDao extends DataAccessObject
 {
     public function create()
     {
-        $this->getDB()->run('INSERT INTO plugin_timetracking_overview_report(id) VALUES (null)');
+        $this->getDB()->run('INSERT INTO plugin_timetracking_overview_widget(id) VALUES (null)');
         return $this->getDB()->lastInsertId();
     }
 
     public function delete($report_id)
     {
         $sql = 'DELETE
-                FROM plugin_timetracking_overview_report
+                FROM plugin_timetracking_overview_widget
                 WHERE id = ?';
 
         return $this->getDB()->run($sql, $report_id);
@@ -49,18 +49,36 @@ class TimetrackingReportDao extends DataAccessObject
     public function searchReportById(int $report_id)
     {
           $sql = 'SELECT id
-                FROM plugin_timetracking_overview_report
+                FROM plugin_timetracking_overview_widget
                 WHERE id = ?';
 
         return $this->getDB()->single($sql, [$report_id]);
     }
 
+    public function getReportTitleById(int $report_id)
+    {
+        $sql = 'SELECT widget_title
+                FROM plugin_timetracking_overview_widget
+                WHERE id = ?';
+
+        return $this->getDB()->single($sql, [$report_id]);
+    }
+
+    public function setReportTitleById(string $widget_title, int $report_id)
+    {
+        $sql = 'UPDATE plugin_timetracking_overview_widget
+                SET widget_title = ?
+                WHERE id = ?';
+
+        $this->getDB()->run($sql, $widget_title, $report_id);
+    }
+
     public function searchTimetrackingWidgetByTimetrackingReportId(int $content_id)
     {
         $sql = "SELECT dashboard_id, user_id, project_dashboards.project_id
-                  FROM plugin_timetracking_overview_report
+                  FROM plugin_timetracking_overview_widget
                 INNER JOIN dashboards_lines_columns_widgets AS widget
-                    ON plugin_timetracking_overview_report.id = widget.content_id
+                    ON plugin_timetracking_overview_widget.id = widget.content_id
                 INNER JOIN dashboards_lines_columns
                     ON widget.column_id = dashboards_lines_columns.id
                 INNER JOIN dashboards_lines
@@ -69,7 +87,7 @@ class TimetrackingReportDao extends DataAccessObject
                     ON user_dashboards.id = dashboards_lines.dashboard_id
                 LEFT JOIN project_dashboards
                     ON project_dashboards.id = dashboards_lines.dashboard_id
-                 WHERE plugin_timetracking_overview_report.id = ?
+                 WHERE plugin_timetracking_overview_widget.id = ?
                   AND widget.name = 'timetracking-overview'
                   AND dashboard_type = 'user'";
 
@@ -80,7 +98,7 @@ class TimetrackingReportDao extends DataAccessObject
     public function searchReportTrackersById(int $report_id)
     {
         $sql = 'SELECT report_tracker.*
-                  FROM plugin_timetracking_overview_report AS report
+                  FROM plugin_timetracking_overview_widget AS report
                   INNER JOIN plugin_timetracking_overview_report_tracker AS report_tracker
                           ON report.id = report_tracker.report_id
                  WHERE report_id = ?';
