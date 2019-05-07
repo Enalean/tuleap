@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <button v-if="item.user_can_write" type="button" class="tlp-button-small tlp-button-outline tlp-button-danger"
+    <button v-if="item.user_can_write" type="button" class="tlp-button-small tlp-button-outline tlp-button-danger document-quick-look-delete-button-margin"
             v-on:click="redirectDeleteUrl"
             data-test="quick-look-delete-button">
         <i class="fa fa-trash-o tlp-button-icon"></i>
