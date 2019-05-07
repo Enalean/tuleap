@@ -26,11 +26,12 @@
                 <th v-translate> Times </th>
             </tr>
         </thead>
-        <tbody v-if="has_times_on_artifact">
+        <tbody v-if="has_times_on_artifact" data-test="table-body-with-row">
             <widget-modal-edit-time
                 v-if="is_add_mode"
                 v-on:swapMode="setAddMode"
                 v-on:validateTime="addNewTime"
+                data-test="edit-time-with-row"
             />
             <widget-modal-row
                 v-for="time in current_times"
@@ -38,11 +39,12 @@
                 v-bind:time-data="time"
             />
         </tbody>
-        <tbody v-else>
+        <tbody v-else data-test="table-body-without-row">
             <widget-modal-edit-time
                 v-if="is_add_mode"
                 v-on:swapMode="setAddMode"
                 v-on:validateTime="addNewTime"
+                data-test="edit-time-without-row"
             />
             <tr>
                 <td colspan="4" class="tlp-table-cell-empty" v-translate>
@@ -50,7 +52,7 @@
                 </td>
             </tr>
         </tbody>
-        <tfoot v-if="has_times_on_artifact">
+        <tfoot v-if="has_times_on_artifact" data-test="table-foot">
             <tr>
                 <th></th>
                 <th></th>
@@ -72,7 +74,7 @@ export default {
         ...mapState(["is_add_mode", "current_times"]),
         ...mapGetters(["get_formatted_aggregated_time"]),
         has_times_on_artifact() {
-            return this.current_times[0].minutes;
+            return this.current_times[0].minutes !== null;
         }
     },
     methods: {

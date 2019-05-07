@@ -28,6 +28,7 @@
             <widget-modal-artifact-info/>
             <div class="timetracking-details-modal-artefact-link-top-bottom-spacer">
                 <button class="tlp-button-primary"
+                        data-test="button-set-add-mode"
                         v-on:click="setAddMode(!is_add_mode)"
                 >
                     <i class="fa fa-plus tlp-button-icon"></i>
@@ -36,6 +37,7 @@
             </div>
             <div v-if="rest_feedback.type"
                  v-bind:class="feedback_class"
+                 data-test="feedback"
             >
                 {{ feedback_message }}
             </div>
@@ -62,9 +64,6 @@ export default {
         ...mapGetters(["current_artifact"]),
         feedback_class() {
             return "tlp-alert-" + this.rest_feedback.type;
-        },
-        timetracking_url() {
-            return this.current_artifact.html_url + "&view=timetracking";
         },
         feedback_message() {
             switch (this.rest_feedback.message) {

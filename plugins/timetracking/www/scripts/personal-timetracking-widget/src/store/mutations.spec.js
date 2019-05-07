@@ -1,5 +1,5 @@
 /*
- * Copyright Enalean (c) 2018. All rights reserved.
+ * Copyright Enalean (c) 2018 - present. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -36,99 +36,101 @@ describe("Store mutations", () => {
     beforeEach(() => {
         state = { ...initial_state };
     });
+    describe("Mutations", () => {
+        describe("Given a widget with state initialisation", () => {
+            it("Then we change reading mode, state must change too", () => {
+                mutations.toggleReadingMode(state);
+                expect(state.reading_mode).toBe(false);
+            });
 
-    describe("setters", () => {
-        it("Given a widget with state initialisation, Then we change reading mode, state must change too", () => {
-            mutations.toggleReadingMode(state);
-            expect(state.reading_mode).toBe(false);
-        });
+            it("Then we put new dates, state must change too", () => {
+                mutations.toggleReadingMode(state);
+                mutations.setParametersForNewQuery(state, ["2018-01-01", "2018-02-02"]);
+                expect(state.start_date).toEqual("2018-01-01");
+                expect(state.end_date).toEqual("2018-02-02");
+                expect(state.reading_mode).toBe(true);
+            });
 
-        it("Given a widget with state initialisation, Then we put new dates, state must change too", () => {
-            mutations.toggleReadingMode(state);
-            mutations.setParametersForNewQuery(state, ["2018-01-01", "2018-02-02"]);
-            expect(state.start_date).toEqual("2018-01-01");
-            expect(state.end_date).toEqual("2018-02-02");
-            expect(state.reading_mode).toBe(true);
-        });
+            it("Then we change rest_error, state must change too", () => {
+                mutations.setErrorMessage(state, "oui");
+                expect(state.error_message).toEqual("oui");
+            });
 
-        it("Given a widget with state initialisation, Then we change rest_error, state must change too", () => {
-            mutations.setErrorMessage(state, "oui");
-            expect(state.error_message).toEqual("oui");
-        });
+            it("Then we change isLoading, state must change too", () => {
+                mutations.setIsLoading(state, true);
+                expect(state.is_loading).toBe(true);
+            });
 
-        it("Given a widget with state initialisation, Then we change isLoading, state must change too", () => {
-            mutations.setIsLoading(state, true);
-            expect(state.is_loading).toBe(true);
-        });
+            it("Then we call setAddMode, states must change", () => {
+                mutations.setAddMode(state, true);
+                expect(state.is_add_mode).toBe(true);
+                expect(state.rest_feedback.message).toEqual(null);
+                expect(state.rest_feedback.type).toEqual(null);
+            });
 
-        it("Given a widget with state initialisation, Then we call setAddMode, states must change", () => {
-            mutations.setAddMode(state, true);
-            expect(state.is_add_mode).toBe(true);
-            expect(state.rest_feedback.message).toEqual(null);
-            expect(state.rest_feedback.type).toEqual(null);
-        });
+            it("When states updated with error message, Then we call setAddMode, states must change", () => {
+                state.rest_feedback.message = REST_FEEDBACK_ADD;
+                state.rest_feedback.type = "success";
+                mutations.setAddMode(state, true);
 
-        it("Given a widget with states updated with error message, Then we call setAddMode, states must change", () => {
-            state.rest_feedback.message = REST_FEEDBACK_ADD;
-            state.rest_feedback.type = "success";
-            mutations.setAddMode(state, true);
+                expect(state.is_add_mode).toBe(true);
+                expect(state.rest_feedback.message).toEqual("");
+                expect(state.rest_feedback.type).toEqual("");
+            });
 
-            expect(state.is_add_mode).toBe(true);
-            expect(state.rest_feedback.message).toEqual("");
-            expect(state.rest_feedback.type).toEqual("");
-        });
+            it("When states updated with error message, Then we call setAddMode, states must change", () => {
+                state.is_add_mode = true;
+                state.rest_feedback.message = ERROR_OCCURRED;
+                state.rest_feedback.type = "danger";
+                mutations.setAddMode(state, false);
 
-        it("Given a widget with states updated with error message, Then we call setAddMode, states must change", () => {
-            state.is_add_mode = true;
-            state.rest_feedback.message = ERROR_OCCURRED;
-            state.rest_feedback.type = "danger";
-            mutations.setAddMode(state, false);
+                expect(state.is_add_mode).toBe(false);
+                expect(state.rest_feedback.message).toEqual("");
+                expect(state.rest_feedback.type).toEqual("");
+            });
 
-            expect(state.is_add_mode).toBe(false);
-            expect(state.rest_feedback.message).toEqual("");
-            expect(state.rest_feedback.type).toEqual("");
-        });
-
-        it("Given a widget with states updated with error message, Then we call replaceCurrentTime, states must change", () => {
-            state.current_times = [
-                {
+            it("When states updated with error message, Then we call replaceCurrentTime, states must change", () => {
+                state.current_times = [
+                    {
+                        artifact: {},
+                        project: {},
+                        id: 1,
+                        minutes: 20
+                    }
+                ];
+                const updated_time = {
                     artifact: {},
                     project: {},
                     id: 1,
-                    minutes: 20
-                }
-            ];
-            const updated_time = {
-                artifact: {},
-                project: {},
-                id: 1,
-                minutes: 40
-            };
-            mutations.replaceInCurrentTimes(state, [updated_time, REST_FEEDBACK_EDIT]);
-            expect(state.current_times).toEqual([updated_time]);
-            expect(state.rest_feedback.message).toEqual(REST_FEEDBACK_EDIT);
-            expect(state.rest_feedback.type).toEqual("success");
-        });
+                    minutes: 40
+                };
+                mutations.replaceInCurrentTimes(state, [updated_time, REST_FEEDBACK_EDIT]);
+                expect(state.current_times).toEqual([updated_time]);
+                expect(state.rest_feedback.message).toEqual(REST_FEEDBACK_EDIT);
+                expect(state.rest_feedback.type).toEqual("success");
+            });
 
-        it("Given a widget with states, When we call deleteCurrentTime, Then the deleted time should be removed from state.current_times anymore", () => {
-            state.current_times = [
-                {
-                    artifact: {},
-                    project: {},
-                    id: 1,
-                    minutes: 20
-                }
-            ];
-            const deleted_time_id = 1;
-            mutations.deleteInCurrentTimes(state, [deleted_time_id, REST_FEEDBACK_DELETE]);
-            expect(state.current_times).toEqual([
-                {
-                    artifact: {},
-                    project: {}
-                }
-            ]);
-            expect(state.rest_feedback.message).toEqual(REST_FEEDBACK_DELETE);
-            expect(state.rest_feedback.type).toEqual(SUCCESS_TYPE);
+            it("When we call deleteCurrentTime, Then the deleted time should be removed from state.current_times anymore", () => {
+                state.current_times = [
+                    {
+                        artifact: {},
+                        project: {},
+                        id: 1,
+                        minutes: 20
+                    }
+                ];
+                const deleted_time_id = 1;
+                mutations.deleteInCurrentTimes(state, [deleted_time_id, REST_FEEDBACK_DELETE]);
+                expect(state.current_times).toEqual([
+                    {
+                        artifact: {},
+                        project: {},
+                        minutes: null
+                    }
+                ]);
+                expect(state.rest_feedback.message).toEqual(REST_FEEDBACK_DELETE);
+                expect(state.rest_feedback.type).toEqual(SUCCESS_TYPE);
+            });
         });
     });
 });

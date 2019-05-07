@@ -77,7 +77,11 @@ export default {
 
     deleteInCurrentTimes(state, [time_id, feedback_message]) {
         const void_times = [
-            { artifact: state.current_times[0].artifact, project: state.current_times[0].project }
+            {
+                artifact: state.current_times[0].artifact,
+                project: state.current_times[0].project,
+                minutes: null
+            }
         ];
         const time_to_delete_index = state.current_times.findIndex(
             current_time => current_time.id === time_id

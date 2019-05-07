@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,19 +15,19 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-import "tlp-mocks";
+import { createLocalVue } from "@vue/test-utils";
+import Vuex from "vuex";
+import GettextPlugin from "vue-gettext";
 
-import "../../time-formatters.spec.js";
-import "./api/rest-querier.spec.js";
+const localVue = createLocalVue();
+localVue.use(Vuex);
 
-import "./store/mutations.spec.js";
-import "./store/actions.spec.js";
-import "./store/getters.spec.js";
+localVue.use(GettextPlugin, {
+    translations: {},
+    silent: true
+});
 
-import "./components/Widget.spec.js";
-import "./components/WidgetArtifactTable.spec.js";
-import "./components/modal/WidgetModalContent.spec.js";
-import "./components/modal/WidgetModalTable.spec.js";
-import "./components/modal/WidgetModalTimes.spec.js";
+export default localVue;
