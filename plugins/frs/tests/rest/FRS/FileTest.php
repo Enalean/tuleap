@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -57,8 +57,15 @@ class FileTest extends RestBase
         $this->assertEquals(72, $file['file_size']);
         $this->assertEquals('2015-12-03T16:46:00+01:00', $file['date']);
         $this->assertEquals('7865eaef28db1b906eaf1e4fa353796d', $file['computed_md5']);
-        $this->assertEquals("/file/download.php/{$this->project_id}/1/BooksAuthors.txt", $file['download_url']);
+        $this->assertEquals('/file/download/1', $file['download_url']);
         $this->assertEquals('rest_api_tester_1', $file['owner']['username']);
+
+        $file_data_response = $this->getResponse($this->setup_client->get($file['download_url']));
+        $this->assertEquals(200, $file_data_response->getStatusCode());
+        $this->assertStringEqualsFile(
+            __DIR__ . '/../_fixtures/frs/data/authors.txt',
+            (string) $file_data_response->getBody()
+        );
     }
 
     public function testDELETEFile(): void

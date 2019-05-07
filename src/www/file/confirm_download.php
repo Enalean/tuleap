@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -48,8 +48,9 @@ if($request->valid($vGroupId) && $request->valid($vFileId)) {
         if ($res !== null) {
             if ($res->getApproveLicense()==0) {
                 // Directly display file
-                $location = "Location: /file/download.php/$group_id/$file_id";
+                $location = 'Location: /file/download/' . urlencode($file_id);
                 header($location);
+                exit();
             }
         }
     }
@@ -72,8 +73,8 @@ if($request->valid($vGroupId) && $request->valid($vFileId)) {
 <SCRIPT language="JavaScript">
 <!--
 
-function download_local(group_id,file_id) {
-    url = "/file/download.php/" + group_id + "/" + file_id;
+function download_local(file_id) {
+    url = "/file/download/" + file_id;
     self.location = url;
 }
 -->
@@ -96,7 +97,7 @@ echo $Language->getText('file_confirm_download', 'download_explain', array($GLOB
 <table width="100%" border="0" cellspacing="0" cellpadding="0" class="normal">
   <tr> 
     <td> 
-      <div align="center"><a href="javascript:<?php echo "$dlscript($group_id,$file_id);"; ?>"><b><?php echo $Language->getText('file_confirm_download','agree'); ?></b></a></div>
+      <div align="center"><a href="javascript:<?php echo "$dlscript($file_id);"; ?>"><b><?php echo $Language->getText('file_confirm_download','agree'); ?></b></a></div>
     </td>
     <td> 
       <div align="center"><a href="javascript:<?php echo "$cancelscript"?>;"><b><?php echo $Language->getText('file_confirm_download','decline'); ?></b></a></div>
