@@ -20,6 +20,7 @@
  */
 
 use Tuleap\Tracker\Semantic\SemanticStatusCanBeDeleted;
+use Tuleap\Tracker\Semantic\SemanticStatusFieldCanBeUpdated;
 use Tuleap\Tracker\Semantic\SemanticStatusGetDisabledValues;
 
 class Tracker_Semantic_Status extends Tracker_Semantic {
@@ -235,13 +236,13 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
         PFUser $current_user
     ) {
         $hp = Codendi_HTMLPurifier::instance();
-        $sm->displaySemanticHeader($this, $tracker_manager);
         $html = '';
 
         if ($list_fields = Tracker_FormElementFactory::instance()->getUsedListFields($this->tracker)) {
 
             $html .= '<form method="POST" action="'. $this->getUrl() .'">';
             $html .= $this->getCSRFToken()->fetchHTMLInput();
+            $html .= '<input type="hidden" name="field_id" value="'. (int) $this->getFieldId() .'">';
 
             // field selectbox
             $field = null;
@@ -295,6 +296,15 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
                 $html .= $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','status_no_field');
                 $html .= '<p>' . $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','choose_one_advice') . $select .' '. $submit .'</p>';
             } else {
+                $event = new SemanticStatusFieldCanBeUpdated($this->tracker);
+
+                EventManager::instance()->processEvent($event);
+
+                if (! ($event->fieldCanBeUpdated())) {
+                    $GLOBALS['Response']->addFeedback(Feedback::INFO, $event->getReason());
+                    $select = $this->getField()->getLabel();
+                }
+
                 $html .= $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','status_long_desc', array($select)) . $values .' '. $submit;
             }
             $html .= '</form>';
@@ -302,6 +312,8 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
             $html .= $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','status_impossible');
         }
         $html .= '<p><a href="'.TRACKER_BASE_URL.'/?tracker='. $this->tracker->getId() .'&amp;func=admin-semantic">&laquo; ' . $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','go_back_overview') . '</a></p>';
+
+        $sm->displaySemanticHeader($this, $tracker_manager);
         echo $html;
         $sm->displaySemanticFooter($this, $tracker_manager);
     }
@@ -329,28 +341,9 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
         if ($request->exist('update')) {
             $this->getCSRFToken()->check();
             if ($request->get('field_id') == '-1') {
-                if ($this->getField()) {
-                    $this->delete();
-                }
-            } else if ($field = Tracker_FormElementFactory::instance()->getUsedListFieldById($this->tracker, $request->get('field_id'))) {
-                if ($this->getFieldId() != $request->get('field_id') || $request->get('open_values')) {
-                    $this->list_field = $field;
-                    $open_values = $this->getFilteredOpenValues($request);
-                    if (count($open_values) > 0) {
-                        $this->open_values = $open_values;
-                        if ($this->save()) {
-                            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','status_now', array($field->getLabel())));
-                            $GLOBALS['Response']->redirect($this->getUrl());
-                        } else {
-                            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','unable_save_status'));
-                        }
-                    } else {
-                        //Display the form to choose the values
-                        //nop - see below
-                    }
-                }
+                $this->processDelete();
             } else {
-                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','bad_field_status'));
+                $this->processUpdate($request);
             }
         }
         $this->displayAdmin($sm, $tracker_manager, $request, $current_user);
@@ -359,7 +352,7 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
     /**
      * @return array
      */
-    private function getFilteredOpenValues(HTTPRequest $request)
+    private function getFilteredOpenValues(Codendi_Request $request)
     {
         $filtered_values = array();
         $open_values     = $request->get('open_values');
@@ -388,13 +381,25 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
     /**
      * Delete this semantic
      */
-    private function delete()
+    private function processDelete()
     {
-        $event = new SemanticStatusCanBeDeleted($this->tracker);
+        if (! $this->getField()) {
+            return;
+        }
 
+        if ($this->doesTrackerNotificationUseStatusSemantic()) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                dgettext('tuleap-tracker', 'The semantic status cannot de deleted because tracker notifications is set to "Status change notifications".')
+            );
+            return;
+        }
+
+        $event = new SemanticStatusCanBeDeleted($this->tracker);
         EventManager::instance()->processEvent($event);
 
         if (! $event->semanticCanBeDeleted()) {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $event->getReason());
             return;
         }
 
@@ -402,6 +407,11 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
         $this->open_values = array();
         $dao = new Tracker_Semantic_StatusDao();
         $dao->delete($this->tracker->getId());
+    }
+
+    private function doesTrackerNotificationUseStatusSemantic()
+    {
+        return $this->tracker->getNotificationsLevel() === \Tracker::NOTIFICATIONS_LEVEL_STATUS_CHANGE;
     }
 
     /**
@@ -557,5 +567,58 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
     public static function clearInstances()
     {
         self::$_instances = null;
+    }
+
+    /**
+     * @param Codendi_Request $request
+     */
+    private function processUpdate(Codendi_Request $request): void
+    {
+        $field = Tracker_FormElementFactory::instance()->getUsedListFieldById(
+            $this->tracker,
+            $request->get('field_id')
+        );
+        if (! $field) {
+            $GLOBALS['Response']->addFeedback(
+                'error',
+                $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'bad_field_status')
+            );
+            return;
+        }
+
+        if ($this->getFieldId() == $request->get('field_id') && ! $request->get('open_values')) {
+            return;
+        }
+
+        if ($this->getFieldId() !== $field->getId()) {
+            $event = new SemanticStatusFieldCanBeUpdated($this->tracker);
+
+            EventManager::instance()->processEvent($event);
+
+            if (! ($event->fieldCanBeUpdated())) {
+                $GLOBALS['Response']->addFeedback(Feedback::ERROR, $event->getReason());
+                return;
+            }
+        }
+
+        $this->list_field = $field;
+        $open_values      = $this->getFilteredOpenValues($request);
+        if (count($open_values) <= 0) {
+            return;
+        }
+
+        $this->open_values = $open_values;
+        if ($this->save()) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::INFO,
+                $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'status_now', [$field->getLabel()])
+            );
+            $GLOBALS['Response']->redirect($this->getUrl());
+        } else {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'unable_save_status')
+            );
+        }
     }
 }
