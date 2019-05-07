@@ -555,6 +555,258 @@ class DocmanHardcodedMetadataTest extends DocmanWithMetadataActivatedBase
     }
 
     /**
+     * @depends testGetDocumentItemsForAdmin
+     */
+    public function testPatchLinksDocumentWithHardcodedMetadata(array $items): void
+    {
+        $folder_HM = $this->findItemByTitle($items, 'Folder HM');
+
+
+        $headers = ['Content-Type' => 'application/json'];
+
+        $date           = new \DateTimeImmutable();
+        $date           = $date->setTimezone(new DateTimeZone('GMT+1'));
+        $date           = $date->setTime(0, 0, 0);
+        $formatted_date = $date->modify('+1 day')->format('Y-m-d');
+
+        $query = json_encode(
+            [
+                'title'             => 'My Super link to patch',
+                'link_properties'   => ['link_url' => 'https://example.com'],
+                'status'            => 'approved',
+                'obsolescence_date' => $formatted_date
+            ]
+        );
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post('docman_folders/' . $folder_HM['id'] . '/links', $headers, $query)
+        );
+
+        $this->assertEquals(201, $response->getStatusCode());
+
+        $links_id = $response->json()['id'];
+
+        $link_properties = [
+            'link_url'          => 'https://example.test.com',
+        ];
+
+        $put_resource = json_encode(
+            [
+                'version_title'     => 'My version title',
+                'changelog'         => 'I have changed',
+                'title'             => 'My Super link to patch',
+                'should_lock_file'  => false,
+                'status'            => 'rejected',
+                'obsolescence_date' => $date->modify('+2 day')->format('Y-m-d'),
+                'link_properties'   => $link_properties
+            ]
+        );
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->patch('docman_links/' . $links_id, $headers, $put_resource)
+        );
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $response = $this->getResponse(
+            $this->client->get('docman_items/' . $links_id),
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
+        );
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals('link', $response->json()['type']);
+        $status = $this->getMetadataByName($response->json()['metadata'], 'Status');
+        $this->assertEquals(
+            'Rejected',
+            $status['list_value'][0]['name']
+        );
+
+        $obsolescence_date_metadata = $this->getMetadataByName(
+            $response->json()['metadata'],
+            'Obsolescence Date'
+        );
+
+        $obsolescence_date_string = $obsolescence_date_metadata['value'];
+        $obsolescence_date        = \DateTimeImmutable::createFromFormat(
+            \DateTimeInterface::ISO8601,
+            $obsolescence_date_string
+        );
+        $obsolescence_date        = $obsolescence_date->setTimezone(new DateTimeZone('GMT+1'));
+        $obsolescence_date        = $obsolescence_date->setTime(0, 0, 0, 0);
+
+        $this->assertTrue($date->modify('+2 day')->getTimestamp() === $obsolescence_date->getTimestamp());
+        $this->assertEquals('https://example.test.com', $response->json()['link_properties']['link_url']);
+    }
+
+    /**
+     * @depends testGetDocumentItemsForAdmin
+     */
+    public function testPatchLinksWithStatusThrows400IfThereIsABadStatus(array $items): void
+    {
+        $folder_HM = $this->findItemByTitle($items, 'Folder HM');
+
+
+        $headers = ['Content-Type' => 'application/json'];
+
+        $date           = new \DateTimeImmutable();
+        $date           = $date->setTimezone(new DateTimeZone('GMT+1'));
+        $date           = $date->setTime(0, 0, 0);
+        $formatted_date = $date->modify('+1 day')->format('Y-m-d');
+
+        $query = json_encode(
+            [
+                'title'             => 'My Super link to patch v2',
+                'link_properties'   => ['link_url' => 'https://example.com'],
+                'status'            => 'approved',
+                'obsolescence_date' => $formatted_date
+            ]
+        );
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post('docman_folders/' . $folder_HM['id'] . '/links', $headers, $query)
+        );
+
+        $this->assertEquals(201, $response->getStatusCode());
+
+        $links_id = $response->json()['id'];
+
+        $link_properties = [
+            'link_url' => 'https://example.test.com'
+        ];
+
+        $put_resource = json_encode(
+            [
+                'version_title'    => 'My version title',
+                'changelog'        => 'I have changed',
+                'title'             => 'My Super link to patch v2',
+                'should_lock_file' => false,
+                'status'           => 'yolo',
+                'link_properties'  => $link_properties
+            ]
+        );
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->patch('docman_links/' . $links_id, $headers, $put_resource)
+        );
+
+        $this->assertEquals(400, $response->getStatusCode());
+
+        $response = $this->getResponse(
+            $this->client->get('docman_items/' . $links_id),
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
+        );
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals('link', $response->json()['type']);
+        $status = $this->getMetadataByName($response->json()['metadata'], 'Status');
+        $this->assertEquals(
+            'Approved',
+            $status['list_value'][0]['name']
+        );
+        $obsolescence_date_metadata = $this->getMetadataByName(
+            $response->json()['metadata'],
+            'Obsolescence Date'
+        );
+
+        $obsolescence_date_string = $obsolescence_date_metadata['value'];
+        $obsolescence_date        = \DateTimeImmutable::createFromFormat(
+            \DateTimeInterface::ISO8601,
+            $obsolescence_date_string
+        );
+        $obsolescence_date        = $obsolescence_date->setTimezone(new DateTimeZone('GMT+1'));
+        $obsolescence_date        = $obsolescence_date->setTime(0, 0, 0);
+
+        $this->assertTrue($date->modify('+1 day')->getTimestamp() === $obsolescence_date->getTimestamp());
+    }
+
+    /**
+     * @depends testGetDocumentItemsForAdmin
+     */
+    public function testPatchLinksWithObsolescenceDateThrows400IfTheDateIsNotWellFormatted(array $items): void
+    {
+        $folder_HM = $this->findItemByTitle($items, 'Folder HM');
+
+        $headers = ['Content-Type' => 'application/json'];
+
+        $date           = new \DateTimeImmutable();
+        $date           = $date->setTimezone(new DateTimeZone('GMT+1'));
+        $date           = $date->setTime(0, 0, 0);
+        $formatted_date = $date->modify('+1 day')->format('Y-m-d');
+
+        $query = json_encode(
+            [
+                'title'             => 'My Super link to patch v3',
+                'link_properties'   => ['link_url' => 'https://example.com'],
+                'status'            => 'approved',
+                'obsolescence_date' => $formatted_date
+            ]
+        );
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post('docman_folders/' . $folder_HM['id'] . '/links', $headers, $query)
+        );
+
+        $this->assertEquals(201, $response->getStatusCode());
+
+        $links_id = $response->json()['id'];
+
+        $link_properties = [
+            'link_url' => 'https://example.test.com'
+        ];
+
+        $put_resource = json_encode(
+            [
+                'version_title'     => 'My version title',
+                'changelog'         => 'I have changed',
+                'should_lock_file'  => false,
+                'title'             => 'My Super link to patch v3',
+                'status'            => 'rejected',
+                'obsolescence_date' => '2020-13-2011',
+                'link_properties'   => $link_properties
+            ]
+        );
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->patch('docman_links/' . $links_id, $headers, $put_resource)
+        );
+
+        $this->assertEquals(400, $response->getStatusCode());
+
+        $response = $this->getResponse(
+            $this->client->get('docman_items/' . $links_id),
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
+        );
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals('link', $response->json()['type']);
+        $status = $this->getMetadataByName($response->json()['metadata'], 'Status');
+        $this->assertEquals(
+            'Approved',
+            $status['list_value'][0]['name']
+        );
+        $obsolescence_date_metadata = $this->getMetadataByName(
+            $response->json()['metadata'],
+            'Obsolescence Date'
+        );
+
+        $obsolescence_date_string = $obsolescence_date_metadata['value'];
+        $obsolescence_date        = \DateTimeImmutable::createFromFormat(
+            \DateTimeInterface::ISO8601,
+            $obsolescence_date_string
+        );
+        $obsolescence_date        = $obsolescence_date->setTimezone(new DateTimeZone('GMT+1'));
+        $obsolescence_date        = $obsolescence_date->setTime(0, 0, 0);
+
+        $this->assertTrue($date->modify('+1 day')->getTimestamp() === $obsolescence_date->getTimestamp());
+    }
+
+    /**
      * Find first item in given array of items which has given title.
      *
      * @return array|null Found item. null otherwise.

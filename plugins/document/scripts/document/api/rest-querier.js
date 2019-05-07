@@ -203,6 +203,8 @@ function patchLink(
         body: JSON.stringify({
             version_title,
             change_log,
+            title: item.title,
+            description: item.description,
             link_properties: {
                 link_url
             },

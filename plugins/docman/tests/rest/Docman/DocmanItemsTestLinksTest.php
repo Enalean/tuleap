@@ -96,8 +96,9 @@ class DocmanItemsTestLinksTest extends DocmanBase
             [
                 'version_title'         => 'My version title',
                 'changelog'             => 'I have changed',
+                'title'                 => 'link AT C',
                 'should_lock_file'      => false,
-                'link_properties'      => ['link_url' => 'https://example.com'],
+                'link_properties'       => ['link_url' => 'https://example.com'],
                 'approval_table_action' => 'copy'
             ]
         );
@@ -131,8 +132,9 @@ class DocmanItemsTestLinksTest extends DocmanBase
             [
                 'version_title'         => 'My version title',
                 'changelog'             => 'I have changed',
+                'title'                 => 'link AT R',
                 'should_lock_file'      => false,
-                'link_properties'      => ['link_url' => 'https://example.com'],
+                'link_properties'       => ['link_url' => 'https://example.com'],
                 'approval_table_action' => 'reset'
             ]
         );
@@ -165,8 +167,9 @@ class DocmanItemsTestLinksTest extends DocmanBase
             [
                 'version_title'         => 'My version title',
                 'changelog'             => 'I have changed',
+                'title'                 => 'link AT E',
                 'should_lock_file'      => false,
-                'link_properties'      => ['link_url' => 'https://example.com'],
+                'link_properties'       => ['link_url' => 'https://example.com'],
                 'approval_table_action' => 'empty'
             ]
         );
@@ -189,8 +192,9 @@ class DocmanItemsTestLinksTest extends DocmanBase
             [
                 'version_title'    => 'My version title',
                 'changelog'        => 'I have changed',
+                'title'            => 'link AT C',
                 'should_lock_file' => false,
-                'link_properties' => ['link_url' => 'https://example.com']
+                'link_properties'  => ['link_url' => 'https://example.com']
             ]
         );
 
@@ -213,7 +217,8 @@ class DocmanItemsTestLinksTest extends DocmanBase
                 'version_title'         => 'My version title',
                 'changelog'             => 'I have changed',
                 'should_lock_file'      => false,
-                'link_properties'      => ['link_url' => 'https://example.com'],
+                'title'                 => 'link NO AT',
+                'link_properties'       => ['link_url' => 'https://example.com'],
                 'approval_table_action' => 'copy'
             ]
         );
@@ -236,8 +241,9 @@ class DocmanItemsTestLinksTest extends DocmanBase
             [
                 'version_title'    => 'My version title',
                 'changelog'        => 'I have changed',
+                'title'            => 'empty',
                 'should_lock_file' => false,
-                'link_properties' => ['link_url' => 'https://example.com']
+                'link_properties'  => ['link_url' => 'https://example.com']
             ]
         );
 
@@ -264,7 +270,8 @@ class DocmanItemsTestLinksTest extends DocmanBase
                 'version_title'    => 'My version title',
                 'changelog'        => 'I have changed',
                 'should_lock_file' => false,
-                'link_properties' => ['link_url' => 'https://example.com']
+                'title'            => 'link AT L',
+                'link_properties'  => ['link_url' => 'https://example.com']
             ]
         );
 
@@ -286,9 +293,8 @@ class DocmanItemsTestLinksTest extends DocmanBase
     {
         $query = json_encode(
             [
-                'title'            => 'My new link',
-                'parent_id'        => $root_id,
-                'type'             => 'links',
+                'title'           => 'My new link',
+                'parent_id'       => $root_id,
                 'link_properties' => ['link_url' => 'https://example.com']
             ]
         );
@@ -313,8 +319,9 @@ class DocmanItemsTestLinksTest extends DocmanBase
             [
                 'version_title'    => 'My version title',
                 'changelog'        => 'I have changed',
+                'title'            => 'My new link',
                 'should_lock_file' => false,
-                'link_properties' => ['link_url' => 'https://example.com']
+                'link_properties'  => ['link_url' => 'https://example.com']
             ]
         );
 
@@ -331,6 +338,182 @@ class DocmanItemsTestLinksTest extends DocmanBase
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals('link', $response->json()['type']);
         $this->assertEquals(null, $response->json()['lock_info']);
+    }
+
+    /**
+     * @depends testGetRootId
+     */
+    public function testPatchLinksWithStatusThrows403WhenStatusIsNotAllowedForProject(int $root_id): void
+    {
+        $query = json_encode(
+            [
+                'title'           => 'My new link 403',
+                'parent_id'       => $root_id,
+                'link_properties' => ['link_url' => 'https://example.com']
+            ]
+        );
+
+        $response1 = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post('docman_folders/' . $root_id . '/links', null, $query)
+        );
+
+        $this->assertEquals(201, $response1->getStatusCode());
+
+        $links_item_response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->get($response1->json()['uri'])
+        );
+        $this->assertEquals(200, $links_item_response->getStatusCode());
+        $this->assertEquals('link', $links_item_response->json()['type']);
+
+        $links_id = $response1->json()['id'];
+
+        $link_properties = [
+            'link_url' => 'https://example.com'
+        ];
+        $put_resource    = json_encode(
+            [
+                'version_title'    => 'My version title',
+                'changelog'        => 'I have changed',
+                'title'            => 'My new link 403',
+                'status'           => 'approved',
+                'should_lock_file' => false,
+                'link_properties'  => $link_properties
+            ]
+        );
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->patch('docman_links/' . $links_id, null, $put_resource)
+        );
+        $this->assertEquals(403, $response->getStatusCode());
+
+        $response = $this->getResponse(
+            $this->client->get('docman_items/' . $links_id),
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
+        );
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals('link', $response->json()['type']);
+        $this->assertEquals(null, $response->json()['lock_info']);
+    }
+
+    /**
+     * @depends testGetRootId
+     */
+    public function testPatchLinksWithStatusThrows403WhenObsolescenceDateIsNotAllowedForProject(int $root_id): void
+    {
+        $query = json_encode(
+            [
+                'title'           => 'My new link with fail obsolescence date',
+                'parent_id'       => $root_id,
+                'link_properties' => ['link_url' => 'https://example.com']
+            ]
+        );
+
+        $response1 = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post('docman_folders/' . $root_id . '/links', null, $query)
+        );
+
+        $this->assertEquals(201, $response1->getStatusCode());
+
+        $links_item_response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->get($response1->json()['uri'])
+        );
+        $this->assertEquals(200, $links_item_response->getStatusCode());
+        $this->assertEquals('link', $links_item_response->json()['type']);
+
+        $links_id = $response1->json()['id'];
+
+        $link_properties = [
+            'link_url'          => 'https://example.com',
+        ];
+        $put_resource    = json_encode(
+            [
+                'version_title'     => 'My version title',
+                'changelog'         => 'I have changed',
+                'title'             => 'My new link with fail obsolescence date',
+                'obsolescence_date' => '2038-12-31',
+                'should_lock_file'  => false,
+                'link_properties'   => $link_properties
+            ]
+        );
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->patch('docman_links/' . $links_id, null, $put_resource)
+        );
+        $this->assertEquals(403, $response->getStatusCode());
+
+        $response = $this->getResponse(
+            $this->client->get('docman_items/' . $links_id),
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
+        );
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals('link', $response->json()['type']);
+        $this->assertEquals(null, $response->json()['lock_info']);
+    }
+
+    /**
+     * @depends testGetRootId
+     */
+    public function testPatchLinksDocumentTitleAndDescription(int $root_id): void
+    {
+        $query = json_encode(
+            [
+                'title'           => 'My new link 3',
+                'parent_id'       => $root_id,
+                'link_properties' => ['link_url' => 'https://example.com']
+            ]
+        );
+
+        $response1 = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post('docman_folders/' . $root_id . '/links', null, $query)
+        );
+
+        $this->assertEquals(201, $response1->getStatusCode());
+
+        $links_item_response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->get($response1->json()['uri'])
+        );
+        $this->assertEquals(200, $links_item_response->getStatusCode());
+        $this->assertEquals('link', $links_item_response->json()['type']);
+
+        $links_id = $response1->json()['id'];
+
+        $link_properties = [
+            'link_url' => 'https://example.com'
+        ];
+
+        $put_resource = json_encode(
+            [
+                'version_title'    => 'My version title',
+                'changelog'        => 'I have changed',
+                'title'            => 'New title !!!',
+                'description'      => 'I have a description now',
+                'should_lock_file' => false,
+                'link_properties'  => $link_properties
+            ]
+        );
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->patch('docman_links/' . $links_id, null, $put_resource)
+        );
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $response = $this->getResponse(
+            $this->client->get('docman_items/' . $links_id),
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
+        );
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals('link', $response->json()['type']);
+        $this->assertEquals('New title !!!', $response->json()['title']);
+        $this->assertEquals('I have a description now', $response->json()['description']);
     }
 
     /**
@@ -368,8 +551,9 @@ class DocmanItemsTestLinksTest extends DocmanBase
             [
                 'version_title'    => 'My version title',
                 'changelog'        => 'I have changed',
+                'title'            => 'My second link',
                 'should_lock_file' => true,
-                'link_properties' => ['link_url' => 'https://example.com']
+                'link_properties'  => ['link_url' => 'https://example.com']
             ]
         );
 
