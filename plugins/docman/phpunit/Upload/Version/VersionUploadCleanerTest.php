@@ -23,22 +23,20 @@ namespace Tuleap\Docman\Upload\Version;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
-use Tuleap\Docman\Upload\Document\DocumentOngoingUploadDAO;
-use Tuleap\Docman\Upload\Document\DocumentUploadPathAllocator;
-use Tuleap\ForgeConfigSandbox;
 use Tuleap\Upload\FileBeingUploadedInformation;
+use Tuleap\Upload\UploadPathAllocator;
 
 class VersionUploadCleanerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, ForgeConfigSandbox;
+    use MockeryPHPUnitIntegration;
 
     public function testDanglingDocumentBeingUploadedAreCleaned()
     {
-        $dao            = \Mockery::mock(DocumentOnGoingVersionToUploadDAO::class);
-        $path_allocator = new DocumentUploadPathAllocator();
-
         $tmp_dir = vfsStream::setup();
-        \ForgeConfig::set('tmp_dir', $tmp_dir->url());
+
+        $dao            = \Mockery::mock(DocumentOnGoingVersionToUploadDAO::class);
+        $path_allocator = new UploadPathAllocator($tmp_dir->url() . '/document');
+
 
         $existing_version_id = 10;
         $existing_file_information = new FileBeingUploadedInformation($existing_version_id, 'Filename', 10, 0);

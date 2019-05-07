@@ -27,6 +27,7 @@ use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\REST\RESTCurrentUserMiddleware;
+use Tuleap\Upload\UploadPathAllocator;
 
 class VersionBeingUploadedInformationProviderTest extends TestCase
 {
@@ -34,7 +35,7 @@ class VersionBeingUploadedInformationProviderTest extends TestCase
 
     public function testFileInformationCanBeProvided() : void
     {
-        $path_allocator = new VersionUploadPathAllocator();
+        $path_allocator = new UploadPathAllocator('/var/tmp');
         $dao            = \Mockery::mock(DocumentOnGoingVersionToUploadDAO::class);
         $item_factory   = \Mockery::mock(\Docman_ItemFactory::class);
         $data_store     = new VersionBeingUploadedInformationProvider($dao, $item_factory, $path_allocator);
@@ -63,7 +64,7 @@ class VersionBeingUploadedInformationProviderTest extends TestCase
 
     public function testFileInformationCannotBeFoundIfItemIsNoMoreFoundInBD(): void
     {
-        $path_allocator = new VersionUploadPathAllocator();
+        $path_allocator = new UploadPathAllocator('/var/tmp');
         $dao            = \Mockery::mock(DocumentOnGoingVersionToUploadDAO::class);
         $item_factory   = \Mockery::mock(\Docman_ItemFactory::class);
         $data_store     = new VersionBeingUploadedInformationProvider($dao, $item_factory, $path_allocator);
@@ -83,7 +84,7 @@ class VersionBeingUploadedInformationProviderTest extends TestCase
 
     public function testFileInformationCannotBeFoundIfRequestAttributesAreMissing() : void
     {
-        $path_allocator = new VersionUploadPathAllocator();
+        $path_allocator = new UploadPathAllocator('/var/tmp');
         $dao            = \Mockery::mock(DocumentOnGoingVersionToUploadDAO::class);
         $item_factory   = \Mockery::mock(\Docman_ItemFactory::class);
         $data_store     = new VersionBeingUploadedInformationProvider($dao, $item_factory, $path_allocator);
@@ -96,7 +97,7 @@ class VersionBeingUploadedInformationProviderTest extends TestCase
 
     public function testFileInformationCannotBeFoundIfThereIsNotAValidEntryInTheDatabase() : void
     {
-        $path_allocator = new VersionUploadPathAllocator();
+        $path_allocator = new UploadPathAllocator('/var/tmp');
         $dao            = \Mockery::mock(DocumentOnGoingVersionToUploadDAO::class);
         $item_factory   = \Mockery::mock(\Docman_ItemFactory::class);
         $data_store     = new VersionBeingUploadedInformationProvider($dao, $item_factory, $path_allocator);

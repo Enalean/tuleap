@@ -18,16 +18,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Docman\Upload\Version;
+namespace Tuleap\Upload;
 
 use PHPUnit\Framework\TestCase;
 use Tuleap\Upload\FileBeingUploadedInformation;
 
-class VersionUploadPathAllocatorTest extends TestCase
+class UploadPathAllocatorTest extends TestCase
 {
     public function testTheSamePathIsAlwaysAllocatedForAGivenItemID()
     {
-        $allocator = new VersionUploadPathAllocator();
+        $allocator = new UploadPathAllocator('/var/tmp');
 
         $this->assertSame(
             $allocator->getPathForItemBeingUploaded(new FileBeingUploadedInformation(1, 'Filename', 123, 0)),

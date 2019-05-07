@@ -20,7 +20,7 @@
 
 namespace Tuleap\Docman\Upload\Version;
 
-use Tuleap\Docman\Upload\UploadPathAllocator;
+use Tuleap\Upload\UploadPathAllocator;
 
 final class VersionUploadCleaner
 {

@@ -58,13 +58,13 @@ use Tuleap\Docman\REST\ResourcesInjector;
 use Tuleap\Docman\REST\v1\DocmanItemsEventAdder;
 use Tuleap\Docman\REST\v1\ItemRepresentationBuilder;
 use Tuleap\Docman\REST\v1\Metadata\MetadataRepresentationBuilder;
+use Tuleap\Docman\Upload\UploadPathAllocatorBuilder;
 use Tuleap\Docman\Upload\Version\DocumentOnGoingVersionToUploadDAO;
 use Tuleap\Docman\Upload\Version\VersionBeingUploadedInformationProvider;
 use Tuleap\Docman\Upload\Version\VersionDataStore;
 use Tuleap\Docman\Upload\Version\VersionUploadCanceler;
 use Tuleap\Docman\Upload\Version\VersionUploadCleaner;
 use Tuleap\Docman\Upload\Version\VersionUploadFinisher;
-use Tuleap\Docman\Upload\Version\VersionUploadPathAllocator;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\BinaryFileResponseBuilder;
 use Tuleap\Http\Server\SessionWriteCloseMiddleware;
@@ -84,6 +84,7 @@ use Tuleap\REST\TuleapRESTCORSMiddleware;
 use Tuleap\Upload\FileBeingUploadedLocker;
 use Tuleap\Upload\FileBeingUploadedWriter;
 use Tuleap\Upload\FileUploadController;
+use Tuleap\Upload\UploadPathAllocator;
 use Tuleap\Widget\Event\GetPublicAreas;
 use Zend\HttpHandlerRunner\Emitter\SapiStreamEmitter;
 
@@ -1285,7 +1286,7 @@ class DocmanPlugin extends Plugin
     {
         $document_ongoing_upload_dao = new \Tuleap\Docman\Upload\Document\DocumentOngoingUploadDAO();
         $root_path                   = $this->getPluginInfo()->getPropertyValueForName('docman_root');
-        $path_allocator              = new \Tuleap\Docman\Upload\Document\DocumentUploadPathAllocator();
+        $path_allocator              = (new UploadPathAllocatorBuilder())->getDocumentUploadPathAllocator();
         $user_manager                = UserManager::instance();
         return FileUploadController::build(
             new \Tuleap\Docman\Upload\Document\DocumentDataStore(
@@ -1326,7 +1327,7 @@ class DocmanPlugin extends Plugin
     public function routeUploadsVersionFile(): FileUploadController
     {
         $root_path                = $this->getPluginInfo()->getPropertyValueForName('docman_root');
-        $path_allocator           = new VersionUploadPathAllocator();
+        $path_allocator           = (new UploadPathAllocatorBuilder())->getVersionUploadPathAllocator();
         $version_to_upload_dao    = new DocumentOnGoingVersionToUploadDAO();
         $event_manager            = EventManager::instance();
         $approval_table_retriever = new ApprovalTableRetriever(
@@ -1447,7 +1448,7 @@ class DocmanPlugin extends Plugin
     private function cleanUnusedDocumentResources(): void
     {
         $cleaner = new \Tuleap\Docman\Upload\Document\DocumentUploadCleaner(
-            new \Tuleap\Docman\Upload\Document\DocumentUploadPathAllocator(),
+            (new UploadPathAllocatorBuilder())->getDocumentUploadPathAllocator(),
             new \Tuleap\Docman\Upload\Document\DocumentOngoingUploadDAO()
         );
         $cleaner->deleteDanglingDocumentToUpload(new \DateTimeImmutable());
@@ -1465,7 +1466,7 @@ class DocmanPlugin extends Plugin
     private function cleanUnusedVersionResources(): void
     {
         $cleaner = new VersionUploadCleaner(
-            new VersionUploadPathAllocator(),
+            (new UploadPathAllocatorBuilder())->getVersionUploadPathAllocator(),
             new DocumentOnGoingVersionToUploadDAO()
         );
         $cleaner->deleteDanglingVersionToUpload(new \DateTimeImmutable());

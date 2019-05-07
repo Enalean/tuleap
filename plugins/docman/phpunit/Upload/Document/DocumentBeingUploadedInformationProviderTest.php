@@ -27,6 +27,7 @@ use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\REST\RESTCurrentUserMiddleware;
+use Tuleap\Upload\UploadPathAllocator;
 use UserManager;
 
 class DocumentBeingUploadedInformationProviderTest extends TestCase
@@ -35,7 +36,7 @@ class DocumentBeingUploadedInformationProviderTest extends TestCase
 
     public function testFileInformationCanBeProvided() : void
     {
-        $path_allocator = new DocumentUploadPathAllocator();
+        $path_allocator = new UploadPathAllocator('/var/tmp');
         $dao            = \Mockery::mock(DocumentOngoingUploadDAO::class);
         $item_factory   = \Mockery::mock(\Docman_ItemFactory::class);
         $user_manager   = \Mockery::mock(UserManager::class);
@@ -64,7 +65,7 @@ class DocumentBeingUploadedInformationProviderTest extends TestCase
 
     public function testFileInformationCanBeProvidedWhenTheFileHasAlreadyBeenUploaded() : void
     {
-        $path_allocator = new DocumentUploadPathAllocator();
+        $path_allocator = new UploadPathAllocator('/var/tmp');
         $dao            = \Mockery::mock(DocumentOngoingUploadDAO::class);
         $item_factory   = \Mockery::mock(\Docman_ItemFactory::class);
         $data_store     = new DocumentBeingUploadedInformationProvider($path_allocator, $dao, $item_factory);
@@ -91,7 +92,7 @@ class DocumentBeingUploadedInformationProviderTest extends TestCase
     public function testFileInformationCannotBeFoundIfRequestAttributesAreMissing() : void
     {
         $data_store = new DocumentBeingUploadedInformationProvider(
-            new DocumentUploadPathAllocator(),
+            new UploadPathAllocator('/var/tmp'),
             \Mockery::mock(DocumentOngoingUploadDAO::class),
             \Mockery::mock(\Docman_ItemFactory::class)
         );
@@ -107,7 +108,7 @@ class DocumentBeingUploadedInformationProviderTest extends TestCase
         $dao           = \Mockery::mock(DocumentOngoingUploadDAO::class);
         $item_factory  = \Mockery::mock(\Docman_ItemFactory::class);
         $data_store    = new DocumentBeingUploadedInformationProvider(
-            new DocumentUploadPathAllocator(),
+            new UploadPathAllocator('/var/tmp'),
             $dao,
             $item_factory
         );

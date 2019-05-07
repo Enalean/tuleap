@@ -24,11 +24,12 @@ namespace Tuleap\Docman\Upload\Version;
 
 use Tuleap\Tus\TusFileInformation;
 use Tuleap\Tus\TusTerminaterDataStore;
+use Tuleap\Upload\UploadPathAllocator;
 
 final class VersionUploadCanceler implements TusTerminaterDataStore
 {
     /**
-     * @var VersionUploadPathAllocator
+     * @var UploadPathAllocator
      */
     private $path_allocator;
     /**
@@ -36,7 +37,7 @@ final class VersionUploadCanceler implements TusTerminaterDataStore
      */
     private $dao;
 
-    public function __construct(VersionUploadPathAllocator $path_allocator, DocumentOnGoingVersionToUploadDAO $dao)
+    public function __construct(UploadPathAllocator $path_allocator, DocumentOnGoingVersionToUploadDAO $dao)
     {
         $this->path_allocator = $path_allocator;
         $this->dao            = $dao;

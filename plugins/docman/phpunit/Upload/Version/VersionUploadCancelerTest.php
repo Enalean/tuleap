@@ -25,17 +25,16 @@ namespace Tuleap\Docman\Upload\Version;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
-use Tuleap\ForgeConfigSandbox;
 use Tuleap\Tus\TusFileInformation;
+use Tuleap\Upload\UploadPathAllocator;
 
 class VersionUploadCancelerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, ForgeConfigSandbox;
+    use MockeryPHPUnitIntegration;
 
     public function testVersionBeingUploadedIsCleanedWhenTheUploadIsCancelled() : void
     {
-        \ForgeConfig::set('tmp_dir', vfsStream::setup()->url());
-        $path_allocator = new VersionUploadPathAllocator();
+        $path_allocator = new UploadPathAllocator(vfsStream::setup()->url() . '/version');
         $dao            = \Mockery::mock(DocumentOnGoingVersionToUploadDAO::class);
 
         $canceler = new VersionUploadCanceler($path_allocator, $dao);
@@ -55,8 +54,7 @@ class VersionUploadCancelerTest extends TestCase
 
     public function testCancellingAnUploadThatHasNotYetStartedDoesNotGiveAWarning() : void
     {
-        \ForgeConfig::set('tmp_dir', vfsStream::setup()->url());
-        $path_allocator = new VersionUploadPathAllocator();
+        $path_allocator = new UploadPathAllocator(vfsStream::setup()->url() . '/version');
         $dao            = \Mockery::mock(DocumentOnGoingVersionToUploadDAO::class);
 
         $canceler = new VersionUploadCanceler($path_allocator, $dao);

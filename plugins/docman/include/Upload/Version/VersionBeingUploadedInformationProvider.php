@@ -27,6 +27,7 @@ use Tuleap\REST\RESTCurrentUserMiddleware;
 use Tuleap\Tus\TusFileInformation;
 use Tuleap\Tus\TusFileInformationProvider;
 use Tuleap\Upload\FileBeingUploadedInformation;
+use Tuleap\Upload\UploadPathAllocator;
 
 class VersionBeingUploadedInformationProvider implements TusFileInformationProvider
 {
@@ -39,14 +40,14 @@ class VersionBeingUploadedInformationProvider implements TusFileInformationProvi
      */
     private $item_factory;
     /**
-     * @var VersionUploadPathAllocator
+     * @var UploadPathAllocator
      */
     private $path_allocator;
 
     public function __construct(
         DocumentOnGoingVersionToUploadDAO $dao,
         \Docman_ItemFactory $item_factory,
-        VersionUploadPathAllocator $path_allocator
+        UploadPathAllocator $path_allocator
     ) {
         $this->dao            = $dao;
         $this->item_factory   = $item_factory;
