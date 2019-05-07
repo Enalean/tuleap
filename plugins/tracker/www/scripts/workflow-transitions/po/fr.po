@@ -251,7 +251,7 @@ msgid ""
 "                Each transition will be configurable independently.\n"
 "                They will copy their state configuration during the switch."
 msgstr ""
-"Vous êtes sur le point de passer à la configuration simple.\n"
+"Vous êtes sur le point de passer à la configuration avancée.\n"
 "Chaque transition sera configurable indépendamment. Lors du changement de "
 "mode, elles copieront la configuration de leur état. "
 
