@@ -28,11 +28,12 @@ use Tuleap\Tus\TusFileInformation;
 use Tuleap\Tus\TusFileInformationProvider;
 use Tuleap\Upload\FileAlreadyUploadedInformation;
 use Tuleap\Upload\FileBeingUploadedInformation;
+use Tuleap\Upload\UploadPathAllocator;
 
 final class DocumentBeingUploadedInformationProvider implements TusFileInformationProvider
 {
     /**
-     * @var DocumentUploadPathAllocator
+     * @var UploadPathAllocator
      */
     private $path_allocator;
     /**
@@ -45,7 +46,7 @@ final class DocumentBeingUploadedInformationProvider implements TusFileInformati
     private $item_factory;
 
     public function __construct(
-        DocumentUploadPathAllocator $path_allocator,
+        UploadPathAllocator $path_allocator,
         DocumentOngoingUploadDAO $dao,
         \Docman_ItemFactory $item_factory
     ) {

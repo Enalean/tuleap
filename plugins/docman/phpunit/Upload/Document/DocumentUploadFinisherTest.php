@@ -25,14 +25,14 @@ use Docman_VersionFactory;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
-use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Upload\FileAlreadyUploadedInformation;
 use Tuleap\Upload\FileBeingUploadedInformation;
+use Tuleap\Upload\UploadPathAllocator;
 
 class DocumentUploadFinisherTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, ForgeConfigSandbox;
+    use MockeryPHPUnitIntegration;
 
     private $logger;
     private $item_factory;
@@ -60,9 +60,8 @@ class DocumentUploadFinisherTest extends TestCase
     public function testDocumentIsAddedToTheDocumentManagerWhenTheUploadIsComplete() : void
     {
         $root = vfsStream::setup();
-        \ForgeConfig::set('tmp_dir', $root->url());
 
-        $path_allocator = new DocumentUploadPathAllocator();
+        $path_allocator = new UploadPathAllocator($root->url() . '/document');
 
         $upload_finisher = new DocumentUploadFinisher(
             $this->logger,

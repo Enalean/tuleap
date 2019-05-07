@@ -18,24 +18,27 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Docman\Upload\Document;
+declare(strict_types=1);
 
-use Tuleap\Docman\Upload\UploadPathAllocator;
+namespace Tuleap\Upload;
+
 use Tuleap\Tus\TusFileInformation;
 
-final class DocumentUploadPathAllocator implements UploadPathAllocator
+final class UploadPathAllocator implements PathAllocator
 {
     /**
-     * @return string
+     * @var string
      */
-    private function getBasePath()
+    private $base_path;
+
+    public function __construct(string $base_path)
     {
-        return \ForgeConfig::get('tmp_dir') . '/docman/ongoing-upload/';
+        $this->base_path = $base_path;
     }
 
     public function getPathForItemBeingUploaded(TusFileInformation $file_information): string
     {
-        return $this->getBasePath() . $file_information->getID();
+        return $this->base_path .'/'. $file_information->getID();
     }
 
     /**
@@ -43,14 +46,13 @@ final class DocumentUploadPathAllocator implements UploadPathAllocator
      */
     public function getCurrentlyUsedAllocatedPathsPerExpectedItemIDs(): array
     {
-        $base_path = $this->getBasePath();
-        if (! is_dir($base_path)) {
+        if (! is_dir($this->base_path)) {
             return [];
         }
 
         $paths = [];
 
-        $directory_iterator = new \DirectoryIterator($base_path);
+        $directory_iterator = new \DirectoryIterator($this->base_path);
         foreach ($directory_iterator as $file_info) {
             if ($file_info->isFile()) {
                 $paths[$file_info->getFilename()] = $file_info->getPathname();

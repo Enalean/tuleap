@@ -33,6 +33,7 @@ use Tuleap\Docman\Lock\LockUpdater;
 use Tuleap\Docman\REST\v1\DocmanItemsEventAdder;
 use Tuleap\Tus\TusFileInformation;
 use Tuleap\Tus\TusFinisherDataStore;
+use Tuleap\Upload\UploadPathAllocator;
 
 final class VersionUploadFinisher implements TusFinisherDataStore
 {
@@ -45,7 +46,7 @@ final class VersionUploadFinisher implements TusFinisherDataStore
      */
     private $logger;
     /**
-     * @var VersionUploadPathAllocator
+     * @var UploadPathAllocator
      */
     private $document_upload_path_allocator;
     /**
@@ -104,7 +105,7 @@ final class VersionUploadFinisher implements TusFinisherDataStore
 
     public function __construct(
         \Logger $logger,
-        VersionUploadPathAllocator $document_upload_path_allocator,
+        UploadPathAllocator $document_upload_path_allocator,
         \Docman_ItemFactory $docman_item_factory,
         \Docman_VersionFactory $version_factory,
         \EventManager $event_manager,

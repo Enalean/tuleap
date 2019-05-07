@@ -46,7 +46,8 @@ use Tuleap\Docman\Upload\Document\DocumentOngoingUploadDAO;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
 use Tuleap\Docman\Upload\Document\DocumentToUploadCreator;
 use Tuleap\Docman\Upload\Document\DocumentUploadFinisher;
-use Tuleap\Docman\Upload\Document\DocumentUploadPathAllocator;
+use Tuleap\Docman\Upload\UploadPathAllocatorBuilder;
+use Tuleap\Upload\UploadPathAllocator;
 use UserManager;
 
 class DocmanItemCreatorBuilder
@@ -54,7 +55,7 @@ class DocmanItemCreatorBuilder
     public static function build(Project $project): DocmanItemCreator
     {
         $document_on_going_upload_dao   = new DocumentOngoingUploadDAO();
-        $document_upload_path_allocator = new DocumentUploadPathAllocator();
+        $document_upload_path_allocator = (new UploadPathAllocatorBuilder())->getDocumentUploadPathAllocator();
 
         $docman_plugin = PluginManager::instance()->getPluginByName('docman');
         $docman_root   = $docman_plugin->getPluginInfo()->getPropertyValueForName('docman_root');

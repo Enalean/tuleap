@@ -32,14 +32,14 @@ use Tuleap\Docman\ApprovalTable\ApprovalTableUpdateActionChecker;
 use Tuleap\Docman\ApprovalTable\ApprovalTableUpdater;
 use Tuleap\Docman\Lock\LockUpdater;
 use Tuleap\Docman\REST\v1\DocmanItemsEventAdder;
-use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Upload\FileAlreadyUploadedInformation;
 use Tuleap\Upload\FileBeingUploadedInformation;
+use Tuleap\Upload\UploadPathAllocator;
 
 class VersionUploadFinisherTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, ForgeConfigSandbox;
+    use MockeryPHPUnitIntegration;
 
     private $lock_updater;
     private $project_manager;
@@ -75,9 +75,8 @@ class VersionUploadFinisherTest extends TestCase
     public function testDocumentIsAddedToTheDocumentManagerWhenTheUploadIsComplete() : void
     {
         $root = vfsStream::setup();
-        \ForgeConfig::set('tmp_dir', $root->url());
 
-        $path_allocator = new VersionUploadPathAllocator();
+        $path_allocator = new UploadPathAllocator($root->url() . '/version');
 
         $upload_finisher = new VersionUploadFinisher(
             $this->logger,
@@ -178,9 +177,8 @@ class VersionUploadFinisherTest extends TestCase
     public function testDocumentWithoutApprovalTableIsAddedToTheDocumentManagerWhenTheUploadIsComplete() : void
     {
         $root = vfsStream::setup();
-        \ForgeConfig::set('tmp_dir', $root->url());
 
-        $path_allocator = new VersionUploadPathAllocator();
+        $path_allocator = new UploadPathAllocator($root->url() . '/version');
 
         $upload_finisher = new VersionUploadFinisher(
             $this->logger,
@@ -281,9 +279,8 @@ class VersionUploadFinisherTest extends TestCase
     public function testDocumentWithApprovalTableAndBadActionApprovalIsAddedToTheDocumentManagerWhenTheUploadIsComplete() : void
     {
         $root = vfsStream::setup();
-        \ForgeConfig::set('tmp_dir', $root->url());
 
-        $path_allocator = new VersionUploadPathAllocator();
+        $path_allocator = new UploadPathAllocator($root->url() . '/version');
 
         $upload_finisher = new VersionUploadFinisher(
             $this->logger,

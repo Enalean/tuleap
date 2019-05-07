@@ -18,20 +18,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Docman\Upload\Document;
+declare(strict_types = 1);
 
-use PHPUnit\Framework\TestCase;
-use Tuleap\Upload\FileBeingUploadedInformation;
+namespace Tuleap\Docman\Upload;
 
-class DocumentUploadPathAllocatorTest extends TestCase
+use Tuleap\Upload\UploadPathAllocator;
+
+class UploadPathAllocatorBuilder
 {
-    public function testTheSamePathIsAlwaysAllocatedForAGivenItemID()
+    public function getVersionUploadPathAllocator(): UploadPathAllocator
     {
-        $allocator = new DocumentUploadPathAllocator();
+        return new UploadPathAllocator(\ForgeConfig::get('tmp_dir') . '/docman/ongoing-version-upload/');
+    }
 
-        $this->assertSame(
-            $allocator->getPathForItemBeingUploaded(new FileBeingUploadedInformation(1, 'Filename', 123, 0)),
-            $allocator->getPathForItemBeingUploaded(new FileBeingUploadedInformation(1, 'Filename', 123, 0))
-        );
+    public function getDocumentUploadPathAllocator(): UploadPathAllocator
+    {
+        return new UploadPathAllocator(\ForgeConfig::get('tmp_dir') . '/docman/ongoing-upload/');
     }
 }

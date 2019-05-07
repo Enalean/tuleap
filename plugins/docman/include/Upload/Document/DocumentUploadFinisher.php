@@ -25,6 +25,7 @@ namespace Tuleap\Docman\Upload\Document;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Tus\TusFileInformation;
 use Tuleap\Tus\TusFinisherDataStore;
+use Tuleap\Upload\UploadPathAllocator;
 
 final class DocumentUploadFinisher implements TusFinisherDataStore
 {
@@ -33,7 +34,7 @@ final class DocumentUploadFinisher implements TusFinisherDataStore
      */
     private $logger;
     /**
-     * @var DocumentUploadPathAllocator
+     * @var UploadPathAllocator
      */
     private $document_upload_path_allocator;
     /**
@@ -79,7 +80,7 @@ final class DocumentUploadFinisher implements TusFinisherDataStore
 
     public function __construct(
         \Logger $logger,
-        DocumentUploadPathAllocator $document_upload_path_allocator,
+        UploadPathAllocator $document_upload_path_allocator,
         \Docman_ItemFactory $docman_item_factory,
         \Docman_VersionFactory $version_factory,
         \PermissionsManager $permission_manager,

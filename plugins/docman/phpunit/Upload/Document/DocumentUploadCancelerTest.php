@@ -25,17 +25,16 @@ namespace Tuleap\Docman\Upload\Document;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
-use Tuleap\ForgeConfigSandbox;
 use Tuleap\Tus\TusFileInformation;
+use Tuleap\Upload\UploadPathAllocator;
 
 class DocumentUploadCancelerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, ForgeConfigSandbox;
+    use MockeryPHPUnitIntegration;
 
     public function testDocumentBeingUploadedIsCleanedWhenTheUploadIsCancelled() : void
     {
-        \ForgeConfig::set('tmp_dir', vfsStream::setup()->url());
-        $path_allocator = new DocumentUploadPathAllocator();
+        $path_allocator = new UploadPathAllocator(vfsStream::setup()->url() . '/document');
         $dao            = \Mockery::mock(DocumentOngoingUploadDAO::class);
 
         $canceler = new DocumentUploadCanceler($path_allocator, $dao);
@@ -55,8 +54,7 @@ class DocumentUploadCancelerTest extends TestCase
 
     public function testCancellingAnUploadThatHasNotYetStartedDoesNotGiveAWarning() : void
     {
-        \ForgeConfig::set('tmp_dir', vfsStream::setup()->url());
-        $path_allocator = new DocumentUploadPathAllocator();
+        $path_allocator = new UploadPathAllocator(vfsStream::setup()->url() . '/document');
         $dao            = \Mockery::mock(DocumentOngoingUploadDAO::class);
 
         $canceler = new DocumentUploadCanceler($path_allocator, $dao);

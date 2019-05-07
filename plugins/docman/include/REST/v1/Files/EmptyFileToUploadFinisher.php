@@ -22,9 +22,9 @@ namespace Tuleap\Docman\REST\v1\Files;
 
 use Tuleap\Docman\Upload\Document\DocumentToUpload;
 use Tuleap\Docman\Upload\Document\DocumentUploadFinisher;
-use Tuleap\Docman\Upload\Document\DocumentUploadPathAllocator;
 use Tuleap\Tus\CannotWriteFileException;
 use Tuleap\Upload\FileAlreadyUploadedInformation;
+use Tuleap\Upload\UploadPathAllocator;
 
 class EmptyFileToUploadFinisher
 {
@@ -33,13 +33,13 @@ class EmptyFileToUploadFinisher
      */
     private $finisher;
     /**
-     * @var DocumentUploadPathAllocator
+     * @var UploadPathAllocator
      */
     private $document_upload_path_allocator;
 
     public function __construct(
         DocumentUploadFinisher $finisher,
-        DocumentUploadPathAllocator $document_upload_path_allocator
+        UploadPathAllocator $document_upload_path_allocator
     ) {
         $this->finisher                       = $finisher;
         $this->document_upload_path_allocator = $document_upload_path_allocator;
