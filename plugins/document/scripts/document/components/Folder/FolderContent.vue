@@ -50,9 +50,9 @@
                 </table>
             </div>
         </section>
-        <div v-if="toggle_quick_look" class="document-folder-right-container">
+        <div v-if="toggle_quick_look && currently_previewed_item" class="document-folder-right-container">
             <section class="tlp-pane document-quick-look-pane" v-bind:class="quick_look_dropzone_class" v-bind:data-item-id="item_id">
-                <quicklook-global v-on:closeQuickLookEvent="closeQuickLook" v-bind:item="quick_look_item"/>
+                <quicklook-global v-on:closeQuickLookEvent="closeQuickLook" v-bind:item="currently_previewed_item"/>
             </section>
         </div>
     </div>
@@ -69,34 +69,34 @@ export default {
     components: { QuicklookGlobal, FolderContentRow },
     data() {
         return {
-            quick_look_item: null,
             toggle_quick_look: false
         };
     },
     computed: {
-        ...mapState(["folder_content"]),
+        ...mapState(["folder_content", "currently_previewed_item"]),
         item_id() {
-            if (!this.quick_look_item) {
+            if (this.currently_previewed_item === null) {
                 return null;
             }
 
-            return this.quick_look_item.id;
+            return this.currently_previewed_item.id;
         },
         quick_look_dropzone_class() {
-            if (!this.quick_look_item) {
+            if (this.currently_previewed_item === null) {
                 return;
             }
 
             return {
-                "document-quick-look-folder-dropzone": this.quick_look_item.type === TYPE_FOLDER,
-                "document-quick-look-file-dropzone": this.quick_look_item.type === TYPE_FILE
+                "document-quick-look-folder-dropzone":
+                    this.currently_previewed_item.type === TYPE_FOLDER,
+                "document-quick-look-file-dropzone":
+                    this.currently_previewed_item.type === TYPE_FILE
             };
         }
     },
     methods: {
         displayQuickLook(item) {
             this.$store.commit("updateCurrentlyPreviewedItem", item);
-            this.quick_look_item = item;
             this.toggle_quick_look = true;
         },
         closeQuickLook() {

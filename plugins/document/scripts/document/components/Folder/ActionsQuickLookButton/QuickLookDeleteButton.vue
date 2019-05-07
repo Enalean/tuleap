@@ -18,10 +18,23 @@
   -->
 
 <template>
-    <button v-if="item.user_can_write" type="button" class="tlp-button-small tlp-button-outline tlp-button-danger document-quick-look-delete-button-margin"
-            v-on:click="redirectDeleteUrl"
-            data-test="quick-look-delete-button">
-        <i class="fa fa-trash-o tlp-button-icon"></i>
+    <button
+        v-if="item.user_can_write"
+        type="button"
+        v-bind:class="{
+            'tlp-button-small tlp-button-outline tlp-button-danger': ! isInDropdown,
+            'tlp-dropdown-menu-item tlp-dropdown-menu-item-danger': isInDropdown
+        }"
+        v-on:click="processDeletion"
+        data-test="quick-look-delete-button"
+    >
+        <i
+            class="fa fa-trash-o"
+            v-bind:class="{
+                'tlp-button-icon': ! isInDropdown,
+                'fa-fw tlp-dropdown-menu-item-icon': isInDropdown
+            }"
+        ></i>
         <translate>Delete</translate>
     </button>
 </template>
@@ -29,16 +42,32 @@
 <script>
 import { mapState } from "vuex";
 import { redirectToUrl } from "../../../helpers/location-helper.js";
+import { TYPE_FILE } from "../../../constants.js";
 
 export default {
     name: "QuickLookDeleteButton",
     props: {
-        item: Object
+        item: Object,
+        isInDropdown: {
+            type: Boolean,
+            default: false
+        }
     },
     computed: {
         ...mapState(["project_id"])
     },
     methods: {
+        processDeletion() {
+            if (this.item.type === TYPE_FILE) {
+                document.dispatchEvent(
+                    new CustomEvent("show-confirm-item-deletion-modal", {
+                        detail: { current_item: this.item }
+                    })
+                );
+            } else {
+                this.redirectDeleteUrl();
+            }
+        },
         redirectDeleteUrl() {
             redirectToUrl(
                 `/plugins/docman/?group_id=${encodeURIComponent(

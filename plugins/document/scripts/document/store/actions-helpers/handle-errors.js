@@ -73,6 +73,25 @@ export async function handleErrorsForModal(context, exception) {
     }
 }
 
+export async function handleErrorsForDeletionModal(context, exception, item) {
+    const message = "Internal server error";
+    if (exception.response === undefined) {
+        context.commit("error/setModalError", message);
+        return;
+    }
+    try {
+        const json = await exception.response.json();
+        context.commit("error/setModalError", getErrorMessage(json));
+
+        if (json.error.code === 404) {
+            context.commit("removeItemFromFolderContent", item);
+            context.commit("updateCurrentlyPreviewedItem", null);
+        }
+    } catch (error) {
+        context.commit("error/setModalError", message);
+    }
+}
+
 export function getErrorMessage(error_json) {
     if (error_json.hasOwnProperty("error")) {
         if (error_json.error.hasOwnProperty("i18n_error_message")) {

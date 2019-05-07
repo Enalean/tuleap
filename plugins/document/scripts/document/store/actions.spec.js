@@ -34,7 +34,8 @@ import {
     updateFileFromModal,
     updateEmbeddedFileFromModal,
     updateWikiFromModal,
-    updateLinkFromModal
+    updateLinkFromModal,
+    deleteItem
 } from "./actions.js";
 import {
     restore as restoreUploadFile,
@@ -56,7 +57,8 @@ import {
     rewire$patchUserPreferenciesForFolderInProject,
     rewire$patchEmbeddedFile,
     rewire$patchWiki,
-    rewire$patchLink
+    rewire$patchLink,
+    rewire$deleteFile
 } from "../api/rest-querier.js";
 import {
     restore as restoreLoadFolderContent,
@@ -1160,6 +1162,52 @@ describe("Store actions", () => {
                 "error/setItemLoadingError",
                 "Internal server error"
             );
+        });
+    });
+
+    describe("deleteItem()", () => {
+        let item_to_delete, context, deleteFile;
+
+        beforeEach(() => {
+            item_to_delete = {
+                id: 123,
+                title: "My file",
+                type: TYPE_FILE
+            };
+
+            context = {
+                state: {
+                    folder_content: [item_to_delete],
+                    currently_previewed_item: null
+                },
+                commit: jasmine.createSpy("commit")
+            };
+
+            deleteFile = jasmine.createSpy("deleteItem");
+            rewire$deleteFile(deleteFile);
+        });
+
+        it("deletes the given item and removes it from the tree view", async () => {
+            await deleteItem(context, item_to_delete);
+
+            expect(context.commit).toHaveBeenCalledWith(
+                "removeItemFromFolderContent",
+                item_to_delete
+            );
+            expect(deleteFile).toHaveBeenCalledWith(item_to_delete);
+        });
+
+        it("resets currentlyPreviewedItem when it references the deleted item", async () => {
+            context.state.currently_previewed_item = item_to_delete;
+
+            await deleteItem(context, item_to_delete);
+
+            expect(deleteFile).toHaveBeenCalledWith(item_to_delete);
+            expect(context.commit).toHaveBeenCalledWith(
+                "removeItemFromFolderContent",
+                item_to_delete
+            );
+            expect(context.commit).toHaveBeenCalledWith("updateCurrentlyPreviewedItem", null);
         });
     });
 });

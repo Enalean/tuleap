@@ -35,13 +35,15 @@ import {
     patchUserPreferenciesForFolderInProject,
     patchEmbeddedFile,
     patchWiki,
-    patchLink
+    patchLink,
+    deleteFile
 } from "../api/rest-querier.js";
 
 import {
     getErrorMessage,
     handleErrors,
     handleErrorsForModal,
+    handleErrorsForDeletionModal,
     handleErrorsForDocument
 } from "./actions-helpers/handle-errors.js";
 import { loadFolderContent } from "./actions-helpers/load-folder-content.js";
@@ -507,5 +509,23 @@ export const unsetUnderConstructionUserPreference = async context => {
         return handleErrors(context, exception);
     } finally {
         context.commit("removeIsUnderConstruction");
+    }
+};
+
+export const deleteItem = async (context, item) => {
+    try {
+        if (item.type === TYPE_FILE) {
+            await deleteFile(item);
+            context.commit("removeItemFromFolderContent", item);
+        }
+
+        if (
+            context.state.currently_previewed_item &&
+            item.id === context.state.currently_previewed_item.id
+        ) {
+            context.commit("updateCurrentlyPreviewedItem", null);
+        }
+    } catch (exception) {
+        return handleErrorsForDeletionModal(context, exception, item);
     }
 };

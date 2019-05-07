@@ -190,6 +190,9 @@ msgstr ""
 msgid "History"
 msgstr "Historique"
 
+msgid "Hold on a second!"
+msgstr "Attendez une seconde !"
+
 msgid "Id"
 msgstr "Id"
 
@@ -421,6 +424,11 @@ msgstr "Bienvenue dans le nouveau gestionnaire de documents"
 
 msgid "Wiki page"
 msgstr "Page wiki"
+
+msgid "You are about to delete \"%s\" permanently. Please confirm your action."
+msgstr ""
+"Vous êtes sur le point de supprimer \"%s\" de manière définitive. Veuillez "
+"confirmer cette action."
 
 msgid "You are not allowed to drag 'n drop more than %{ nb } file at once."
 msgid_plural ""
