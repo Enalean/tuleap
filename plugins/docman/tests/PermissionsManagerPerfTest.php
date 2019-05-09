@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
  * Originally written by Manuel VACELET, 2006.
@@ -24,10 +24,15 @@
 
 require_once 'bootstrap.php';
 
-class PermissionsManagerPerfTest extends TuleapTestCase {
+class PermissionsManagerPerfTest extends TuleapTestCase
+{
     var $user;
     var $docmanPm;
     var $refOnNull;
+    /**
+     * @var \Mockery\MockInterface|URLVerification
+     */
+    private $url_verification;
 
     public function setUp()
     {
@@ -35,11 +40,18 @@ class PermissionsManagerPerfTest extends TuleapTestCase {
 
         $this->user     = \Mockery::spy(PFUser::class);
         $this->docmanPm = \Mockery::mock(Docman_PermissionsManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $project        = Mockery::mock(Project::class);
+        $project->shouldReceive('getID')->andReturn('102');
+        $this->url_verification = Mockery::mock(URLVerification::class);
         $this->docmanPm->allows(['_itemIsLockedForUser' => false]);
+        $this->docmanPm->shouldReceive('getProject')->andReturn($project);
+        $this->docmanPm->shouldReceive('getURLVerification')->andReturn($this->url_verification);
         $this->refOnNull = null;
     }
 
-    function testSuperAdminHasAllAccess() {
+    public function testSuperAdminHasAllAccess()
+    {
+        $this->url_verification->shouldReceive('userCanAccessProject')->andReturn(true);
         $this->user->allows(['isSuperUser' => true]);
 
         // no _isUserDocmanAdmin call
@@ -58,6 +70,7 @@ class PermissionsManagerPerfTest extends TuleapTestCase {
 
     public function testProjectAdminHasAllAccess()
     {
+        $this->url_verification->shouldReceive('userCanAccessProject')->andReturn(true);
         $this->user->allows(['isSuperUser' => false]);
         $this->user->allows(['isAdmin' => true]);
 
@@ -75,7 +88,9 @@ class PermissionsManagerPerfTest extends TuleapTestCase {
         $this->docmanPm->userCanAdmin($this->user, 324324423413);
     }
 
-    function testDocmanAdminHasAllAccess() {
+    public function testDocmanAdminHasAllAccess()
+    {
+        $this->url_verification->shouldReceive('userCanAccessProject')->andReturn(true);
         $this->user->allows(['isSuperUser' => false]);
 
         // one _isUserDocmanAdmin call
@@ -92,7 +107,9 @@ class PermissionsManagerPerfTest extends TuleapTestCase {
         $this->docmanPm->userCanAdmin($this->user, 324324423413);
     }
 
-    function testManageRightGivesReadAndWriteRights() {
+    public function testManageRightGivesReadAndWriteRights()
+    {
+        $this->url_verification->shouldReceive('userCanAccessProject')->andReturn(true);
         // user is not super admin
         $this->user->allows(['isSuperUser' => false]);
         $this->user->allows(['getUgroups' => ['test']]);
@@ -117,7 +134,9 @@ class PermissionsManagerPerfTest extends TuleapTestCase {
         $this->docmanPm->userCanRead($this->user, $itemId);
     }
 
-    function testWriteRightGivesReadRights() {
+    public function testWriteRightGivesReadRights()
+    {
+        $this->url_verification->shouldReceive('userCanAccessProject')->andReturn(true);
         // user is not super admin
         $this->user->allows(['isSuperUser' => false]);
         $this->user->allows(['getUgroups' => ['test']]);
@@ -138,7 +157,9 @@ class PermissionsManagerPerfTest extends TuleapTestCase {
         $this->docmanPm->userCanRead($this->user, $itemId);
     }
 
-    function testOnReadTestManageRightGivesReadAndWriteRights() {
+    public function testOnReadTestManageRightGivesReadAndWriteRights()
+    {
+        $this->url_verification->shouldReceive('userCanAccessProject')->andReturn(true);
         $this->docmanPm->shouldReceive('_isUserDocmanAdmin')->once()->andReturns(false);
 
         // user is not super admin
@@ -162,7 +183,9 @@ class PermissionsManagerPerfTest extends TuleapTestCase {
         $this->docmanPm->userCanManage($this->user, $itemId);
     }
 
-    function testOnReadTestWriteRightGivesReadAndWriteRights() {
+    public function testOnReadTestWriteRightGivesReadAndWriteRights()
+    {
+        $this->url_verification->shouldReceive('userCanAccessProject')->andReturn(true);
         // user is not docman admin
         $this->docmanPm->shouldReceive('_isUserDocmanAdmin')->once()->andReturns(false);
         // user is not super admin
@@ -190,7 +213,9 @@ class PermissionsManagerPerfTest extends TuleapTestCase {
         $this->docmanPm->userCanWrite($this->user, $itemId);
     }
 
-    function testOnWriteTestManageRightGivesReadAndWriteRights() {
+    public function testOnWriteTestManageRightGivesReadAndWriteRights()
+    {
+        $this->url_verification->shouldReceive('userCanAccessProject')->andReturn(true);
         // user is not docman admin
         $this->docmanPm->shouldReceive('_isUserDocmanAdmin')->once()->andReturns(false);
         // user is not super admin

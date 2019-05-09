@@ -28,11 +28,19 @@ class Docman_PermissionsManager {
     const PLUGIN_OPTION_DELETE = 'only_siteadmin_can_delete';
     const PLUGIN_DOCMAN_ADMIN  = 'PLUGIN_DOCMAN_ADMIN';
 
-    protected $groupId;
+    /**
+     * @var Project
+     */
+    private $project;
+    /**
+     * @var URLVerification
+     */
+    private $url_verification;
     protected $cache_access = array();
     protected $cache_read   = array();
     protected $cache_write  = array();
     protected $cache_manage = array();
+
     protected $cache_admin  = array();
     protected $dao          = null;
 
@@ -40,21 +48,14 @@ class Docman_PermissionsManager {
     protected $subItemsWritableVisitor = null;
 
     private $lockFactory = null;
-
     private static $instance = array();
-
     private $plugin;
 
-    /**
-     * Constructor, private to enforce singleton (use instance() instead)
-     *
-     * @param Integer $groupId
-     *
-     * @return void
-     */
-    private function __construct($groupId) {
-        $this->groupId = $groupId;
-        $this->plugin  = PluginManager::instance()->getPluginByName(docmanPlugin::SERVICE_SHORTNAME);
+    private function __construct(Project $project, URLVerification $url_verification)
+    {
+        $this->project          = $project;
+        $this->url_verification = $url_verification;
+        $this->plugin           = PluginManager::instance()->getPluginByName(docmanPlugin::SERVICE_SHORTNAME);
     }
 
     /**
@@ -64,9 +65,11 @@ class Docman_PermissionsManager {
      *
      * @return Docman_PermissionsManager
      */
-    public static function instance($groupId) {
+    public static function instance($groupId)
+    {
         if(!isset(self::$instance[$groupId])) {
-            self::$instance[$groupId] = new Docman_PermissionsManager($groupId);
+            $project = ProjectManager::instance()->getProject($groupId);
+            self::$instance[$groupId] = new Docman_PermissionsManager($project, new URLVerification());
         }
         return self::$instance[$groupId];
     }
@@ -105,7 +108,7 @@ class Docman_PermissionsManager {
      */
     function getDao() {
         if($this->dao === null) {
-            $this->dao = new Docman_PermissionsManagerDao(CodendiDataAccess::instance(), $this->groupId);
+            $this->dao = new Docman_PermissionsManagerDao(CodendiDataAccess::instance(), $this->getProject()->getID());
         }
         return $this->dao;
     }
@@ -174,10 +177,19 @@ class Docman_PermissionsManager {
     */
     function userCanRead($user, $item_id) {
         if(!isset($this->cache_read[$user->getId()][$item_id])) {
+            try {
+                $can_access_project = $this->getURLVerification()->userCanAccessProject($user, $this->getProject());
+            } catch (Project_AccessException $e) {
+                $can_access_project = false;
+            }
+            if (! $can_access_project) {
+                $this->_setCanRead($user->getId(), $item_id, $can_access_project);
+                return $can_access_project;
+            }
             $pm = $this->_getPermissionManagerInstance();
             $canRead = $user->isSuperUser()
                 || $this->userCanAdmin($user) //There are default perms for admin
-                || $pm->userHasPermission($item_id, 'PLUGIN_DOCMAN_READ', $user->getUgroups($this->groupId, array()))
+                || $pm->userHasPermission($item_id, 'PLUGIN_DOCMAN_READ', $user->getUgroups($this->getProject()->getID(), array()))
                 || $this->_userHasWritePermission($user, $item_id);
 
             $this->_setCanRead($user->getId(), $item_id, $canRead);
@@ -201,6 +213,15 @@ class Docman_PermissionsManager {
     */
     function userCanWrite($user, $item_id) {
         if(!isset($this->cache_write[$user->getId()][$item_id])) {
+            try {
+                $can_access_project = $this->getURLVerification()->userCanAccessProject($user, $this->getProject());
+            } catch (Project_AccessException $e) {
+                $can_access_project = false;
+            }
+            if (! $can_access_project) {
+                $this->_setCanWrite($user->getId(), $item_id, $can_access_project);
+                return $can_access_project;
+            }
             // Check permissions
             $hasWritePerm = $this->_userHasWritePermission($user, $item_id);
             // Check lock status
@@ -248,7 +269,7 @@ class Docman_PermissionsManager {
         $pm = $this->_getPermissionManagerInstance();
         $canWrite = $user->isSuperUser()
                 || $this->userCanAdmin($user) //There are default perms for admin
-                || $pm->userHasPermission($item_id, 'PLUGIN_DOCMAN_WRITE', $user->getUgroups($this->groupId, array()))
+                || $pm->userHasPermission($item_id, 'PLUGIN_DOCMAN_WRITE', $user->getUgroups($this->getProject()->getID(), array()))
                 || $this->userCanManage($user, $item_id);
         if($canWrite) {
             $this->_setCanRead($user->getId(), $item_id, true);
@@ -293,12 +314,22 @@ class Docman_PermissionsManager {
     * - or one of his ugroups has MANAGE permission on the item
     * @return boolean
     */
-    function userCanManage($user, $item_id) {
+    public function userCanManage($user, $item_id)
+    {
         if(!isset($this->cache_manage[$user->getId()][$item_id])) {
+            try {
+                $can_access_project = $this->getURLVerification()->userCanAccessProject($user, $this->getProject());
+            } catch (Project_AccessException $e) {
+                $can_access_project = false;
+            }
+            if (! $can_access_project) {
+                $this->cache_manage[$user->getId()][$item_id] = $can_access_project;
+                return $can_access_project;
+            }
             $pm = $this->_getPermissionManagerInstance();
             $canManage = $user->isSuperUser()
                 || $this->userCanAdmin($user) //There are default perms for admin
-                || $pm->userHasPermission($item_id, 'PLUGIN_DOCMAN_MANAGE', $user->getUgroups($this->groupId, array())) ;
+                || $pm->userHasPermission($item_id, 'PLUGIN_DOCMAN_MANAGE', $user->getUgroups($this->getProject()->getID(), array())) ;
             $this->_setCanManage($user->getId(), $item_id, $canManage);
         }
         return $this->cache_manage[$user->getId()][$item_id];
@@ -314,7 +345,7 @@ class Docman_PermissionsManager {
         $has_permission = false;
 
         $permission_type = self::PLUGIN_DOCMAN_ADMIN;
-        $object_id       = $this->groupId;
+        $object_id       = $this->getProject()->getID();
 
         // permissions set for this object.
         $res = permission_db_authorized_ugroups($permission_type, (int)$object_id);
@@ -324,7 +355,7 @@ class Docman_PermissionsManager {
         }
         while (!$has_permission && ($row = db_fetch_array($res))) {
             // should work even for anonymous users
-            $has_permission = ugroup_user_is_member($user->getId(), $row['ugroup_id'], $this->groupId);
+            $has_permission = ugroup_user_is_member($user->getId(), $row['ugroup_id'], $this->getProject()->getID());
         }
 
         return $has_permission;
@@ -336,15 +367,24 @@ class Docman_PermissionsManager {
     */
     public function userCanAdmin(PFUser $user)
     {
-        if (! isset($this->cache_admin[$user->getId()][$this->groupId])) {
-            $has_permission = $user->isSuperUser() || $user->isAdmin($this->groupId);
+        if (! isset($this->cache_admin[$user->getId()][$this->getProject()->getID()])) {
+            try {
+                $can_access_project = $this->getURLVerification()->userCanAccessProject($user, $this->getProject());
+            } catch (Project_AccessException $e) {
+                $can_access_project = false;
+            }
+            if (! $can_access_project) {
+                $this->cache_admin[$user->getId()][$this->getProject()->getID()] = false;
+                return false;
+            }
+            $has_permission = $user->isSuperUser() || $user->isAdmin($this->getProject()->getID());
             if (! $has_permission) {
                 $has_permission = $this->_isUserDocmanAdmin($user);
             }
-            $this->cache_admin[$user->getId()][$this->groupId] = $has_permission;
+            $this->cache_admin[$user->getId()][$this->getProject()->getID()] = $has_permission;
         }
 
-        return $this->cache_admin[$user->getId()][$this->groupId];
+        return $this->cache_admin[$user->getId()][$this->getProject()->getID()];
     }
 
     /**
@@ -370,7 +410,7 @@ class Docman_PermissionsManager {
      */
     function userCanWriteSubItems($user, $itemId) {
         $item = $this->_getItemTreeForPermChecking($itemId, $user);
-        $this->subItemsWritableVisitor = new Docman_SubItemsWritableVisitor($this->groupId, $user);
+        $this->subItemsWritableVisitor = new Docman_SubItemsWritableVisitor($this->getProject()->getID(), $user);
         return $item->accept($this->subItemsWritableVisitor);
     }
 
@@ -383,7 +423,7 @@ class Docman_PermissionsManager {
      * by mistake.
      */
     function _getItemTreeForPermChecking($itemId, $user) {
-        $itemFactory = $this->_getItemFactory($this->groupId);
+        $itemFactory = $this->_getItemFactory($this->getProject()->getID());
         $srcItem = $itemFactory->getItemFromDb($itemId);
         $item = $itemFactory->getItemSubTree($srcItem, $user, true, true);
         return $item;
@@ -458,7 +498,7 @@ class Docman_PermissionsManager {
 
         if(count($objIds) > 0) {
             $perms = array("'PLUGIN_DOCMAN_READ'", "'PLUGIN_DOCMAN_WRITE'", "'PLUGIN_DOCMAN_MANAGE'");
-            $dar = $dao->retreivePermissionsForItems($objIds, $perms, $user->getUgroups($this->groupId, array()));
+            $dar = $dao->retreivePermissionsForItems($objIds, $perms, $user->getUgroups($this->getProject()->getID(), array()));
             foreach($dar as $row) {
                 switch($row['permission_type']) {
                 case 'PLUGIN_DOCMAN_MANAGE':
@@ -561,7 +601,7 @@ class Docman_PermissionsManager {
             $oneWritable = true;
         }
         else {
-            $oneWritable = $dao->oneFolderIsWritable($this->groupId, $user->getUgroups($this->groupId, array()));
+            $oneWritable = $dao->oneFolderIsWritable($this->getProject()->getID(), $user->getUgroups($this->getProject()->getID(), array()));
         }
 
         return $oneWritable;
@@ -657,5 +697,15 @@ class Docman_PermissionsManager {
             }
         }
         return $userArray;
+    }
+
+    protected function getProject() : Project
+    {
+        return $this->project;
+    }
+
+    protected function getURLVerification() : URLVerification
+    {
+        return $this->url_verification;
     }
 }
