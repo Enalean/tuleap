@@ -34,9 +34,20 @@ TEST_RESULT_OUTPUT="$test_results_folder" $DOCKERCOMPOSE up -d --build
 
 wait_until_tests_are_executed
 
-$DOCKERCOMPOSE logs backend-web > "$test_results_folder/backend-web.log"
-$DOCKERCOMPOSE logs backend-svn > "$test_results_folder/backend-svn.log"
-$DOCKERCOMPOSE logs test-cli > "$test_results_folder/test-cli.log"
-$DOCKERCOMPOSE logs test-cypress > "$test_results_folder/test-cypress.log"
+backend_svn_container_id="$($DOCKERCOMPOSE ps -q backend-svn)"
+mkdir -p "$test_results_folder/logs/backend-svn"
+docker cp ${backend_svn_container_id}:/var/log/nginx/ "$test_results_folder/logs/backend-svn"
+docker cp ${backend_svn_container_id}:/var/log/httpd/ "$test_results_folder/logs/backend-svn"
+docker cp ${backend_svn_container_id}:/var/opt/remi/php72/log/php-fpm/ "$test_results_folder/logs/backend-svn/"
+$DOCKERCOMPOSE logs backend-svn > "$test_results_folder/logs/backend-svn/backend-svn.log"
+
+backend_web_container_id="$($DOCKERCOMPOSE ps -q backend-web)"
+mkdir -p "$test_results_folder/logs/backend-web"
+docker cp ${backend_web_container_id}:/var/log/nginx/ "$test_results_folder/logs/backend-web"
+docker cp ${backend_web_container_id}:/var/opt/remi/php72/log/php-fpm/ "$test_results_folder/logs/backend-web"
+$DOCKERCOMPOSE logs backend-web > "$test_results_folder/logs/backend-web/backend-web.log"
+
+$DOCKERCOMPOSE logs test-cli > "$test_results_folder/logs/test-cli.log"
+$DOCKERCOMPOSE logs test-cypress > "$test_results_folder/logs/test-cypress.log"
 
 clean_env
