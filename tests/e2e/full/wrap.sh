@@ -31,7 +31,12 @@ TEST_RESULT_OUTPUT="$test_results_folder" $DOCKERCOMPOSE up -d --build
 
 wait_until_tests_are_executed
 
-$DOCKERCOMPOSE logs tuleap > "$test_results_folder/tuleap.log"
-$DOCKERCOMPOSE logs test > "$test_results_folder/test.log"
+tuleap_container_id="$($DOCKERCOMPOSE ps -q tuleap)"
+mkdir -p "$test_results_folder/logs"
+docker cp ${tuleap_container_id}:/var/log/nginx/ "$test_results_folder/logs"
+docker cp ${tuleap_container_id}:/var/opt/remi/php72/log/php-fpm/ "$test_results_folder/logs"
+$DOCKERCOMPOSE logs tuleap > "$test_results_folder/logs/tuleap.log"
+
+$DOCKERCOMPOSE logs test > "$test_results_folder/logs/test.log"
 
 clean_env
