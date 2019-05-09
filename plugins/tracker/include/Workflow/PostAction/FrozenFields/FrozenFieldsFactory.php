@@ -62,7 +62,7 @@ class FrozenFieldsFactory implements \Transition_PostActionSubFactory
      *
      * @param Transition $transition The transition
      *
-     * @return Transition_PostAction[]
+     * @return FrozenFields[]
      */
     public function loadPostActions(Transition $transition) : array
     {
@@ -127,7 +127,21 @@ class FrozenFieldsFactory implements \Transition_PostActionSubFactory
      */
     public function duplicate(Transition $from_transition, $to_transition_id, array $field_mapping)
     {
-        // Not implemented.
+        $postactions = $this->loadPostActions($from_transition);
+        foreach ($postactions as $postaction) {
+            $from_field_ids = $postaction->getFieldIds();
+            $to_field_ids   = [];
+
+            foreach ($field_mapping as $mapping) {
+                foreach ($from_field_ids as $from_field_id) {
+                    if ($mapping['from'] == $from_field_id) {
+                        $to_field_ids[] = $mapping['to'];
+                    }
+                }
+            }
+
+            $this->frozen_dao->createPostActionForTransitionId($to_transition_id, $to_field_ids);
+        }
     }
 
     /**
