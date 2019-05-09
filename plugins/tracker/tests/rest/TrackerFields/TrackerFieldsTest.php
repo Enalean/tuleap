@@ -20,14 +20,18 @@
 
 namespace Tuleap\Tracker\Tests\REST\TrackerFields;
 
+require_once __DIR__ .'/../TrackerBase.php';
+
+use Guzzle\Http\Client;
 use Tuleap\Tracker\Tests\REST\TrackerBase;
 
 class TrackerFieldsTest extends TrackerBase
 {
-    public const FIELD_STATIC_SELECTBOX_SHOTNAME       = 'staticsb';
-    public const FIELD_STATIC_RADIOBUTTON_SHOTNAME     = 'staticrb';
-    public const FIELD_STATIC_MULTI_SELECTBOX_SHOTNAME = 'staticmsb';
-    public const FIELD_USER_SELECTBOX_SHOTNAME         = 'userssb';
+    private const FIELD_STATIC_SELECTBOX_SHOTNAME       = 'staticsb';
+    private const FIELD_STATIC_RADIOBUTTON_SHOTNAME     = 'staticrb';
+    private const FIELD_STATIC_MULTI_SELECTBOX_SHOTNAME = 'staticmsb';
+    private const FIELD_USER_SELECTBOX_SHOTNAME         = 'userssb';
+    private const FIELD_FILE                            = 'attachment';
 
     public function testOPTIONSId()
     {
@@ -95,6 +99,107 @@ class TrackerFieldsTest extends TrackerBase
         $response = $this->getResponse($this->client->patch("tracker_fields/$field_id", null, $body));
 
         $this->assertEquals($response->getStatusCode(), 400);
+    }
+
+    /**
+     * @test
+     */
+    public function getFileFieldId(): int
+    {
+        return $this->getAUsedField($this->tracker_fields_tracker_id, self::FIELD_FILE);
+    }
+
+    /**
+     * @depends getFileFieldId
+     */
+    public function testPOSTFile(int $field_id): void
+    {
+        $file_size = 123;
+
+        $query = [
+            'name'       => 'file_creation_' . bin2hex(random_bytes(8)),
+            'file_size'  => $file_size,
+            'file_type'  => 'text/plain'
+        ];
+
+        $response1 = $this->getResponse($this->client->post("tracker_fields/$field_id/files", null, json_encode($query)));
+        $this->assertEquals(201, $response1->getStatusCode());
+        $this->assertNotEmpty($response1->json()['upload_href']);
+
+        $response2 = $this->getResponse($this->client->post("tracker_fields/$field_id/files", null, json_encode($query)));
+        $this->assertEquals(201, $response1->getStatusCode());
+        $this->assertSame($response1->json()['upload_href'], $response2->json()['upload_href']);
+
+        $query['file_size'] = 456;
+        $response3          = $this->getResponse($this->client->post("tracker_fields/$field_id/files", null, json_encode($query)));
+        $this->assertEquals(409, $response3->getStatusCode());
+
+        $tus_client = new Client(
+            str_replace('/api/v1', '', $this->client->getBaseUrl()),
+            $this->client->getConfig()
+        );
+        $tus_client->setSslVerification(false, false, false);
+        $tus_response_upload = $this->getResponse(
+            $tus_client->patch(
+                $response1->json()['upload_href'],
+                [
+                    'Tus-Resumable' => '1.0.0',
+                    'Content-Type'  => 'application/offset+octet-stream',
+                    'Upload-Offset' => '0'
+                ],
+                str_repeat('A', $file_size)
+            )
+        );
+        $this->assertEquals(204, $tus_response_upload->getStatusCode());
+        $this->assertEquals([$file_size], $tus_response_upload->getHeader('Upload-Offset')->toArray());
+    }
+
+    /**
+     * @depends getFileFieldId
+     */
+    public function testFileCreationWithASameNameIsNotRejectedWhenTheUploadHasBeenCanceled($field_id): void
+    {
+        $query = [
+            'name'       => 'file_not_conflict_after_cancel_' . bin2hex(random_bytes(8)),
+            'file_size'  => 123,
+            'file_type'  => 'text/plain'
+        ];
+
+        $response_creation_file = $this->getResponse($this->client->post("tracker_fields/$field_id/files", null, json_encode($query)));
+        $this->assertEquals(201, $response_creation_file->getStatusCode());
+
+        $tus_client = new Client(
+            str_replace('/api/v1', '', $this->client->getBaseUrl()),
+            $this->client->getConfig()
+        );
+        $tus_client->setSslVerification(false, false, false);
+        $tus_response_upload = $this->getResponse(
+            $tus_client->delete(
+                $response_creation_file->json()['upload_href'],
+                ['Tus-Resumable' => '1.0.0',]
+            )
+        );
+        $this->assertEquals(204, $tus_response_upload->getStatusCode());
+
+        $response_creation_file = $this->getResponse($this->client->post("tracker_fields/$field_id/files", null, json_encode($query)));
+        $this->assertEquals(201, $response_creation_file->getStatusCode());
+    }
+
+    /**
+     * @depends getFileFieldId
+     */
+    public function testEmptyFileCreation($field_id): void
+    {
+        $name  = 'empty_file_' . bin2hex(random_bytes(8));
+        $query = [
+            'name'       => $name,
+            'file_size'  => 0,
+            'file_type'  => 'text/plain'
+        ];
+
+        $response_creation_file = $this->getResponse($this->client->post("tracker_fields/$field_id/files", null, json_encode($query)));
+        $this->assertEquals(201, $response_creation_file->getStatusCode());
+        $this->assertEmpty($response_creation_file->json()['upload_href']);
     }
 
     private function getStaticMultiSelectboxFieldId()

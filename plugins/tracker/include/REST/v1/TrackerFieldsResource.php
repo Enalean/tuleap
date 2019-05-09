@@ -20,15 +20,26 @@
 
 namespace Tuleap\Tracker\REST\v1;
 
+use ForgeConfig;
 use Luracast\Restler\RestException;
+use PFUser;
+use Tracker_FormElement_Field;
+use Tracker_FormElement_Field_File;
 use Tracker_FormElement_Field_List_Bind_Static;
 use Tracker_FormElementFactory;
 use Tracker_REST_FieldRepresentation;
+use Tuleap\DB\DBFactory;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\REST\UserManager;
 use Tuleap\REST\v1\TrackerFieldRepresentations\TrackerFieldPatchRepresentation;
+use Tuleap\Tracker\FormElement\Field\File\Upload\EmptyFileToUploadFinisher;
+use Tuleap\Tracker\FormElement\Field\File\Upload\FileOngoingUploadDao;
+use Tuleap\Tracker\FormElement\Field\File\Upload\FileToUploadCreator;
+use Tuleap\Tracker\FormElement\Field\File\Upload\UploadPathAllocator;
+use Tuleap\Tracker\FormElement\Field\File\Upload\UploadPathAllocatorBuilder;
 
 class TrackerFieldsResource extends AuthenticatedResource
 {
@@ -88,34 +99,13 @@ class TrackerFieldsResource extends AuthenticatedResource
         $rest_user_manager = UserManager::build();
         $user              = $rest_user_manager->getCurrentUser();
 
-        $form_element_factory = Tracker_FormElementFactory::instance();
-        $field                = $form_element_factory->getFieldById($id);
+        $field = $this->getField($id, $user);
 
-
-        if (! $field) {
-            throw new RestException(404, "Field not found.");
-        }
-
-        $tracker = $field->getTracker();
-        if (! $tracker) {
-            throw new RestException(404);
-        }
-        if (! $tracker->userCanView($user)) {
-            throw new RestException(404);
-        }
-
-        ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
-            $tracker->getProject()
-        );
-
-        if (! $tracker->userIsAdmin($user)) {
+        if (! $field->getTracker()->userIsAdmin($user)) {
             throw new RestException(403, "User is not tracker administrator.");
         }
 
-        if (! $field->isUsed()) {
-            throw new RestException(400, "Field is not used in tracker.");
-        }
-
+        $form_element_factory = Tracker_FormElementFactory::instance();
         if (! $form_element_factory->isFieldASimpleListField($field)) {
             throw new RestException(400, "Field is not a simple list.");
         }
@@ -135,5 +125,106 @@ class TrackerFieldsResource extends AuthenticatedResource
         );
 
         return $field_representation;
+    }
+
+    /**
+     * @url OPTIONS {id}/files
+     *
+     * @param int $id Id of the tracker field
+     */
+    public function optionsFiles(int $id): void
+    {
+        Header::allowOptionsPost();
+    }
+
+    /**
+     * Create file
+     *
+     * Create a file in a File field so that it can be attached to an artifact later.
+     *
+     * Only File field allows this route.
+     *
+     * /!\ This route is under construction and subject to changes /!\
+     *
+     * @url POST {id}/files
+     *
+     * @access protected
+     *
+     * @param int                    $id                        The id of the field
+     * @param FilePOSTRepresentation $file_post_representation
+     *
+     * @return CreatedFileRepresentation
+     *
+     * @status 201
+     * @throws 403
+     * @throws 404
+     */
+    protected function postFiles(int $id, FilePOSTRepresentation $file_post_representation): CreatedFileRepresentation
+    {
+        $this->checkAccess();
+        $this->optionsFiles($id);
+
+        $rest_user_manager = UserManager::build();
+        $user              = $rest_user_manager->getCurrentUser();
+        $field             = $this->getFileFieldUserCanUpdate($id, $user);
+
+        $file_ongoing_upload_dao = new FileOngoingUploadDao();
+
+        $upload_path_allocator = new UploadPathAllocator($file_ongoing_upload_dao, Tracker_FormElementFactory::instance());
+        $file_creator     = new FileCreator(
+            new FileToUploadCreator(
+                $file_ongoing_upload_dao,
+                new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
+                (int) ForgeConfig::get('sys_max_size_upload')
+            ),
+            new EmptyFileToUploadFinisher($upload_path_allocator)
+        );
+
+        return $file_creator->create($field, $user, $file_post_representation, new \DateTimeImmutable());
+    }
+
+    private function getField(int $id, PFUser $user): Tracker_FormElement_Field
+    {
+        $form_element_factory = Tracker_FormElementFactory::instance();
+        $field                = $form_element_factory->getFieldById($id);
+
+        if (! $field) {
+            throw new RestException(404, "Field not found.");
+        }
+
+        $tracker = $field->getTracker();
+        if (! $tracker) {
+            throw new RestException(404);
+        }
+        if (! $tracker->userCanView($user)) {
+            throw new RestException(404);
+        }
+
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
+            $tracker->getProject()
+        );
+
+        if (! $field->isUsed()) {
+            throw new RestException(400, "Field is not used in tracker.");
+        }
+
+        return $field;
+    }
+
+    private function getFileFieldUserCanUpdate(int $id, PFUser $user): Tracker_FormElement_Field_File
+    {
+        /** @var Tracker_FormElement_Field_File $field */
+        $field = $this->getField($id, $user);
+
+        $form_element_factory = Tracker_FormElementFactory::instance();
+        if (! $form_element_factory->isFieldAFileField($field)) {
+            throw new RestException(400, "Field must be of type File.");
+        }
+
+        if (! $field->userCanSubmit($user) || ! $field->userCanUpdate($user)) {
+            throw new RestException(403);
+        }
+
+        return $field;
     }
 }

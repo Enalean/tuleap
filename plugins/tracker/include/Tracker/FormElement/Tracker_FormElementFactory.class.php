@@ -1682,4 +1682,12 @@ class Tracker_FormElementFactory {
     {
         return in_array($this->getType($field), ["sb", "rb"]);
     }
+
+    /**
+     * @return bool
+     */
+    public function isFieldAFileField(Tracker_FormElement_Field $field)
+    {
+        return $this->getType($field) === 'file';
+    }
 }
