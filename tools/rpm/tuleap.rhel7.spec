@@ -124,6 +124,7 @@ Group: Development/Tools
 Version: @@PLUGIN_GIT_VERSION@@
 Release: @@VERSION@@_@@RELEASE@@%{?dist}
 AutoReqProv: no
+Requires(pre): shadow-utils
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, sclo-git212-git, gitolite3
 Requires: php-guzzle-Guzzle, sudo, openssh-server
 %description plugin-git
@@ -715,14 +716,12 @@ fi
 %pre plugin-git
 if [ "$1" -eq "1" ]; then
     # Install
-    if ! grep -q "^gitolite:" /etc/group 2> /dev/null ; then
-        /usr/sbin/groupadd -r gitolite 2> /dev/null || :
-    fi
+    getent group gitolite >/dev/null || groupadd -r gitolite
 
-    if id gitolite >/dev/null 2>&1; then
+    if getent passwd gitolite >/dev/null; then
         /usr/sbin/usermod -c 'Git'    -d '/var/lib/gitolite' -g gitolite gitolite
     else
-        /usr/sbin/useradd -c 'Git' -m -d '/var/lib/gitolite' -g gitolite gitolite
+        /usr/sbin/useradd -r -c 'Git' -m -d '/var/lib/gitolite' -g gitolite gitolite
     fi
 else
     true
