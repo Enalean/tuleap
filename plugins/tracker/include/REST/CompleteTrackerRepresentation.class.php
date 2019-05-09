@@ -45,7 +45,7 @@ class CompleteTrackerRepresentation implements TrackerRepresentation
     public $html_url;
 
     /**
-     * @var Tuleap\REST\ResourceReference
+     * @var ProjectReference
      */
     public $project;
 
@@ -80,12 +80,12 @@ class CompleteTrackerRepresentation implements TrackerRepresentation
     public $semantics = array();
 
     /**
-     * @var Tuleap\Tracker\REST\WorkflowRepresentation
+     * @var WorkflowRepresentation | null
      */
     public $workflow;
 
     /**
-     * @var Tuleap\Tracker\REST\TrackerReference
+     * @var TrackerReference
      */
 
     public $parent;

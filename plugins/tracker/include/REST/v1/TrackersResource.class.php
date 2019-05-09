@@ -51,8 +51,10 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\SyntaxError;
 use Tuleap\Tracker\Report\Query\Advanced\LimitSizeIsExceededException;
 use Tuleap\Tracker\Report\Query\Advanced\SearchablesAreInvalidException;
 use Tuleap\Tracker\Report\Query\Advanced\SearchablesDoNotExistException;
+use Tuleap\Tracker\REST\Artifact\ArtifactRepresentation;
 use Tuleap\Tracker\REST\Artifact\ArtifactRepresentationBuilder;
 use Tuleap\Tracker\REST\Artifact\ParentArtifactReference;
+use Tuleap\Tracker\REST\CompleteTrackerRepresentation;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 use Tuleap\Tracker\REST\PermissionsExporter;
 use Tuleap\Tracker\REST\ReportRepresentation;
@@ -146,7 +148,7 @@ class TrackersResource extends AuthenticatedResource
      *
      * @param int $id Id of the tracker
      *
-     * @return Tuleap\Tracker\REST\CompleteTrackerRepresentation
+     * @return CompleteTrackerRepresentation
      * @throws RestException 403
      * @throws RestException 404
      */
@@ -412,7 +414,7 @@ class TrackersResource extends AuthenticatedResource
     }
 
     /**
-     * @return Tuleap\Tracker\REST\Artifact\ArtifactRepresentation[]
+     * @return ArtifactRepresentation[]
      */
     private function getListOfArtifactRepresentation(PFUser $user, $artifacts, $with_all_field_values)
     {
@@ -596,7 +598,7 @@ class TrackersResource extends AuthenticatedResource
      * @param int    $id    Id of the tracker.
      * @param string $query JSON object of search criteria properties {@from query}
      *
-     * @return Tuleap\Tracker\REST\CompleteTrackerRepresentation
+     * @return CompleteTrackerRepresentation
      *
      * @throws I18NRestException 500
      * @throws I18NRestException 400

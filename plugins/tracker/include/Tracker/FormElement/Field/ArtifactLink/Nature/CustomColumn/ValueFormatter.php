@@ -81,7 +81,11 @@ class ValueFormatter
             return '';
         }
 
-        $changeset = $artifact_link_info->getArtifact()->getLastChangeset();
+        $artifact  = $artifact_link_info->getArtifact();
+        if ($artifact === null) {
+            return '';
+        }
+        $changeset = $artifact->getLastChangeset();
         if (! $changeset) {
             return '';
         }

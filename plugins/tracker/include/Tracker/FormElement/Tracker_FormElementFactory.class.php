@@ -926,7 +926,7 @@ class Tracker_FormElementFactory {
     }
 
     /**
-     * @return Tracker_FormElement
+     * @return Tracker_FormElement[]
      */
     public function getUsedFormElementForTracker($tracker) {
         $tracker_id = $tracker->getId();

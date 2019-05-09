@@ -465,8 +465,20 @@ class ArtifactsResource extends AuthenticatedResource {
         $this->sendAllowHeadersForLinkedArtifacts();
         Header::sendPaginationHeaders($limit, $offset, $linked_artifacts->getTotalSize(), self::MAX_LIMIT);
 
+        $artifact_representations = [];
+        foreach ($linked_artifacts->getArtifacts() as $linked_artifact) {
+            $tracker_representation = new MinimalTrackerRepresentation();
+            $tracker_representation->build($linked_artifact->getTracker());
+
+            $artifact_representations[] = $this->builder->getArtifactRepresentationWithFieldValuesInBothFormat(
+                $user,
+                $artifact,
+                $tracker_representation
+            );
+        }
+
         return array(
-            self::VALUES_FORMAT_COLLECTION => $linked_artifacts->getArtifacts()
+            self::VALUES_FORMAT_COLLECTION => $artifact_representations
         );
     }
 

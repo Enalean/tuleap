@@ -205,7 +205,7 @@ class Transition_PostActionFactory //phpcs:ignoreFile
     private function areNewActionsEnabled(): bool
     {
         $enabled = trim(ForgeConfig::get('sys_should_use_read_only_post_actions'));
-        if ($enabled === false || empty($enabled)) {
+        if (empty($enabled)) {
             return false;
         }
 

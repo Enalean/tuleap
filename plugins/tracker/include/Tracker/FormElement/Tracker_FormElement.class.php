@@ -467,6 +467,8 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
         return $html;
     }
 
+    abstract public function fetchAdmin(Tracker $tracker);
+
     public $default_properties = array();
     protected $cache_specific_properties;
 
@@ -621,7 +623,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      *
      * @return string html
      */
-    public abstract function fetchSubmit(/*$submitted_values = array()*/);
+    public abstract function fetchSubmit($submitted_values = array());
 
     public abstract function fetchSubmitForOverlay($submitted_values);
 
@@ -641,7 +643,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      */
     public abstract function fetchArtifact(Tracker_Artifact $artifact);
 
-    public abstract function fetchArtifactForOverlay(Tracker_Artifact $artifact);
+    public abstract function fetchArtifactForOverlay(Tracker_Artifact $artifact, $submitted_values = []);
 
     /**
      * Fetch the element for the artifact in read only
@@ -650,7 +652,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      *
      * @return string html
      */
-    public abstract function fetchArtifactReadOnly(Tracker_Artifact $artifact);
+    public abstract function fetchArtifactReadOnly(Tracker_Artifact $artifact, $submitted_values = []);
 
     /**
      * @param Tracker_Artifact $artifact

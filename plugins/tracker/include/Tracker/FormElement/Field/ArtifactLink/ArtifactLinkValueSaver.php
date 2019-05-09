@@ -128,10 +128,14 @@ class ArtifactLinkValueSaver {
             return $nature_by_hierarchy;
         }
 
+        $linked_artifact  = $artifactlinkinfo->getArtifact();
+        if ($linked_artifact === null) {
+            return null;
+        }
         $nature_by_plugin = $this->getNatureDefinedByPlugin(
             $artifactlinkinfo,
             $from_artifact,
-            $artifactlinkinfo->getArtifact(),
+            $linked_artifact,
             $existing_nature,
             $submitted_value
         );

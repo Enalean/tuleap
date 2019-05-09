@@ -137,10 +137,11 @@ class FrozenFieldsFactory implements \Transition_PostActionSubFactory
      * @param array            &$xmlMapping containig the newly created formElements idexed by their XML IDs
      * @param Transition        $transition to which the postaction is attached
      *
-     * @return Transition_PostAction The  Transition_PostAction object, or null if error
+     * @return Transition_PostAction|null The  Transition_PostAction object, or null if error
      */
     public function getInstanceFromXML($xml, &$xmlMapping, Transition $transition)
     {
         // Not implemented.
+        return null;
     }
 }

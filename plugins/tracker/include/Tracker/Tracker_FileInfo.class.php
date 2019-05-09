@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -97,7 +97,7 @@ class Tracker_FileInfo {
      * @param int $offset Where to start reading
      * @param int $size   How much to read
      *
-     * @return String Base64 encoded content
+     * @return string|null Base64 encoded content
      */
     public function getContent($offset, $size) {
         if (file_exists($this->getPath())) {

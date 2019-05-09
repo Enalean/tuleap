@@ -21,6 +21,7 @@
 
 require_once('common/dao/UGroupDao.class.php');
 
+use Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact\ChangesChecker;
 use Tuleap\Tracker\FormElement\PermissionsOnArtifactUGroupRetriever;
 use Tuleap\Tracker\FormElement\PermissionsOnArtifactUsageFormatter;
 use Tuleap\Tracker\FormElement\PermissionsOnArtifactValidator;
@@ -701,8 +702,10 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
     /**
      * @see Tracker_FormElement_Field::hasChanges()
      */
-    public function hasChanges(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $old_value, $new_value) {
-        return (new \Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact\ChangesChecker())->hasChanges($old_value, $new_value);
+    public function hasChanges(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $old_value, $new_value)
+    {
+        /** @var Tracker_Artifact_ChangesetValue_PermissionsOnArtifact $old_value */
+        return (new ChangesChecker())->hasChanges($old_value, $new_value);
     }
 
     /**

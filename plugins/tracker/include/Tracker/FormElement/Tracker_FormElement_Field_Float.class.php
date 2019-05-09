@@ -194,6 +194,7 @@ class Tracker_FormElement_Field_Float extends Tracker_FormElement_Field_Numeric 
      */
     public function hasChanges(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $old_value, $new_value)
     {
+        /** @var Tracker_Artifact_ChangesetValue_Float $old_value */
         return (new ChangesChecker())->hasChanges($old_value, $new_value);
     }
 }

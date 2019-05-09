@@ -31,6 +31,7 @@ class JsonCast
 
     /**
      * Cast a value to int if it's not null
+     * @psalm-ignore-nullable-return
      * @return int|null
      */
     public static function toInt($value) {

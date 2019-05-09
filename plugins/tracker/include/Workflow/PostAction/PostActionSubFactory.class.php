@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -88,8 +88,7 @@ interface Transition_PostActionSubFactory {
      * @param array            &$xmlMapping containig the newly created formElements idexed by their XML IDs
      * @param Transition       $transition     to which the postaction is attached
      *
-     * @return Transition_PostAction The  Transition_PostAction object, or null if error
+     * @return Transition_PostAction|null The  Transition_PostAction object, or null if error
      */
     public function getInstanceFromXML($xml, &$xmlMapping, Transition $transition);
 }
-?>

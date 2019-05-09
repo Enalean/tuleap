@@ -1124,21 +1124,19 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignoreFile
      */
     public function displaySubmit(Tracker_IFetchTrackerSwitcher $layout, $request, $current_user, $link = null)
     {
-        $visit_recorder = $this->getVisitRecorder();
         if ($link) {
             $source_artifact = $this->getTrackerArtifactFactory()->getArtifactByid($link);
             $submit_renderer = new Tracker_Artifact_SubmitOverlayRenderer(
                 $this,
                 $source_artifact,
                 EventManager::instance(),
-                $layout, $visit_recorder
+                $layout
             );
         } else {
             $submit_renderer = new Tracker_Artifact_SubmitRenderer(
                 $this,
                 EventManager::instance(),
-                $layout,
-                $visit_recorder
+                $layout
             );
         }
         $submit_renderer->display($request, $current_user);
