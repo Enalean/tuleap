@@ -277,6 +277,27 @@ class GitAdminProcessTest extends TestCase
     /**
      * @test
      */
+    public function itUpdatesExistingGerritServerIfNoAuthentificationType()
+    {
+        $this->request->set('action', 'edit-gerrit-server');
+        $this->request->set('gerrit_server_id', 1);
+        $this->request->set('host', 'g.example.com');
+        $this->request->set('ssh_port', '1234');
+        $this->request->set('http_port', '80');
+        $this->request->set('login', 'new_login');
+        $this->request->set('identity_file', '/path/to/file');
+        $this->request->set('replication_key', 'replication_key');
+        $this->request->set('use_ssl', 1);
+        $this->request->set('gerrit_version', '2.5');
+        $this->request->set('http_password', 'azerty');
+        $this->request->set('replication_password', 'azerty');
+        $this->factory->shouldReceive('save')->with($this->an_existing_server)->once();
+        $this->admin->process($this->request);
+    }
+
+    /**
+     * @test
+     */
     public function itDeletesGerritServer()
     {
         $this->request->set('action', 'delete-gerrit-server');
