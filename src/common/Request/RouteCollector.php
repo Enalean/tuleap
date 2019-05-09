@@ -25,6 +25,7 @@ use Codendi_HTMLPurifier;
 use ConfigDao;
 use EventManager;
 use FastRoute;
+use FRSFileFactory;
 use ProjectHistoryDao;
 use TroveCatDao;
 use Tuleap\Admin\AdminPageRenderer;
@@ -45,7 +46,12 @@ use Tuleap\Core\RSS\Project\LatestProjectDao;
 use Tuleap\Error\PermissionDeniedPrivateProjectMailSender;
 use Tuleap\Error\PermissionDeniedRestrictedMemberMailSender;
 use Tuleap\Error\PlaceHolderBuilder;
-use Tuleap\FRS\FileDownloadController;
+use Tuleap\FRS\FRSFileDownloadController;
+use Tuleap\FRS\FRSFileDownloadOldURLRedirectionController;
+use Tuleap\Http\HttpClientFactory;
+use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\Http\Response\BinaryFileResponseBuilder;
+use Tuleap\Http\Server\SessionWriteCloseMiddleware;
 use Tuleap\Layout\SiteHomepageController;
 use Tuleap\News\NewsDao;
 use Tuleap\News\PermissionsPerGroup;
@@ -57,6 +63,10 @@ use Tuleap\Password\Configuration\PasswordConfigurationSaver;
 use Tuleap\Project\Admin\Categories;
 use Tuleap\Project\Admin\Categories\ProjectCategoriesUpdater;
 use Tuleap\Project\Home;
+use Tuleap\REST\BasicAuthentication;
+use Tuleap\REST\RESTCurrentUserMiddleware;
+use Tuleap\REST\TuleapRESTCORSMiddleware;
+use Tuleap\REST\UserManager;
 use Tuleap\Trove\TroveCatListController;
 use Tuleap\User\AccessKey\AccessKeyCreationController;
 use Tuleap\User\AccessKey\AccessKeyRevocationController;
@@ -66,6 +76,9 @@ use Tuleap\User\Account\UserAvatarSaver;
 use Tuleap\User\Profile\AvatarController;
 use Tuleap\User\Profile\ProfileController;
 use Tuleap\User\Profile\ProfilePresenterBuilder;
+use URLVerification;
+use Zend\HttpHandlerRunner\Emitter\SapiEmitter;
+use Zend\HttpHandlerRunner\Emitter\SapiStreamEmitter;
 
 class RouteCollector
 {
@@ -250,9 +263,25 @@ class RouteCollector
         return new \Tuleap\CVS\ViewVC\ViewVCController();
     }
 
-    public static function getFileDownload()
+    public static function getOldFileDownloadURLRedirection() : FRSFileDownloadOldURLRedirectionController
     {
-        return new FileDownloadController();
+        return new FRSFileDownloadOldURLRedirectionController(HTTPFactoryBuilder::responseFactory(), new SapiEmitter());
+    }
+
+    public static function getFileDownload() : FRSFileDownloadController
+    {
+        return new FRSFileDownloadController(
+            new URLVerification(),
+            new FRSFileFactory(),
+            new BinaryFileResponseBuilder(
+                HTTPFactoryBuilder::responseFactory(),
+                HTTPFactoryBuilder::streamFactory()
+            ),
+            new SapiStreamEmitter(),
+            new SessionWriteCloseMiddleware(),
+            new RESTCurrentUserMiddleware(UserManager::build(), new BasicAuthentication()),
+            new TuleapRESTCORSMiddleware()
+        );
     }
 
     public static function getRssLatestProjects()
@@ -344,7 +373,8 @@ class RouteCollector
 
         $r->get('/svn/viewvc.php[/{path:.*}]', [__CLASS__, 'getSvnViewVC']);
         $r->get('/cvs/viewvc.php[/{path:.*}]', [__CLASS__, 'getCVSViewVC']);
-        $r->get('/file/download.php/{group_id:\d+}/{file_id:\d+}[/{filename:.*}]', [__CLASS__, 'getFileDownload']);
+        $r->get('/file/download.php/{group_id:\d+}/{file_id:\d+}[/{filename:.*}]', [self::class, 'getOldFileDownloadURLRedirection']);
+        $r->get('/file/download/{file_id:\d+}', [self::class, 'getFileDownload']);
 
         $r->get('/export/rss_sfprojects.php', [__CLASS__, 'getRssLatestProjects']);
         $r->get('/export/rss_sfnews.php', [__CLASS__, 'getRssLatestNews']);

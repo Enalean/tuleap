@@ -479,20 +479,6 @@ class FRSFile {
     }
 
     /**
-     * download : download the file, i.e. print it to stdout
-     *
-     * WARNING : this function does not check permissions, nor does it log the download
-     *
-     */
-    public function download()
-    {
-        $response_builder = new BinaryFileResponseBuilder(HTTPFactoryBuilder::responseFactory(), HTTPFactoryBuilder::streamFactory());
-        $response         = $response_builder->fromFilePath(ServerRequest::fromGlobals(), $this->getFileLocation(), basename($this->getFileName()));
-        (new SapiStreamEmitter())->emit($response);
-        exit();
-    }
-
-    /**
      * Returns the HTML content for tooltip when hover a reference with the nature file
      * @returns string HTML content for file tooltip
      */

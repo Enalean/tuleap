@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -97,7 +97,7 @@ class FileRepresentation
         $this->id            = JsonCast::toInt($file->getFileID());
         $this->uri           = self::ROUTE . '/' . $this->id;
         $this->name          = $this->retrieveOnlyFileName($file);
-        $this->download_url  = '/file/download.php/' . urlencode($file->getGroup()->getID()) . "/" .urlencode($this->id) . "/" . urlencode($this->name);
+        $this->download_url  = '/file/download/' . urlencode($this->id);
         $this->file_size     = JsonCast::toInt($file->getFileSize());
         $this->nb_download   = $this->getDownloads($file);
         $this->arch          = $this->retrieveProcessorLabel($file);

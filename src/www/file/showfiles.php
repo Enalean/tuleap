@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
  * Copyright 1999-2000 (c) The SourceForge Crew
  *
  * This file is a part of Tuleap.
@@ -373,9 +373,8 @@ foreach ($packages as $package_id => $package_for_display) {
                                 if (($package->getApproveLicense(
                                         ) == 0) && (isset ($GLOBALS['sys_frs_license_mandatory']) && ! $GLOBALS['sys_frs_license_mandatory'])) {
                                     // Allow direct download
-                                    $html .= '<A HREF="/file/download.php/' . $group_id . "/" . $file_release['file_id'] . "/" . $hp->purify(
-                                            $file_release['filename']
-                                        ) . '" title="' . $file_release['file_id'] . " - " . $hp->purify(
+                                    $html .= '<A HREF="/file/download/' . urlencode($file_release['file_id']) .
+                                        '" title="' . $hp->purify($file_release['file_id']) . " - " . $hp->purify(
                                             $fname
                                         ) . '">' . $hp->purify($fname) . '</A>';
                                 } else {
@@ -460,8 +459,8 @@ function showConfirmDownload(group_id,file_id) {
     wConfirm.focus();
 }
 
-function download(group_id,file_id,filename) {
-    url = "/file/download.php/" + group_id + "/" + file_id +"/"+filename;
+function download(file_id) {
+    url = "/file/download/" + file_id;
     wConfirm.close();
     self.location = url;
 

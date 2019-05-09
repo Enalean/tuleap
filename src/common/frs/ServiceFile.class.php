@@ -167,13 +167,6 @@ class ServiceFile extends Service
         }
         return $packages;
     }
-    function isRequestedPageDistributed(&$request) {
-        return in_array($_SERVER['SCRIPT_NAME'], array(
-            '/file/admin/release.php', 
-            '/file/admin/frsajax.php', 
-            '/file/download.php',
-        ));
-    }
 
     public function displayFRSHeader(Project $project, $title)
     {

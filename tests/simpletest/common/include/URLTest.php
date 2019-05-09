@@ -1,7 +1,7 @@
 <?php
-/* 
+/**
  * Copyright (c) The Codendi Team, Xerox, 2008. All Rights Reserved.
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -248,11 +248,5 @@ class URLTest extends TuleapTestCase {
         $url->setReturnReference('getArtifactDao', $dao);
         $this->assertEqual($url->getGroupIdFromURL('/tracker/download.php?artifact_id=exist'), 1);
         $this->assertNotEqual($url->getGroupIdFromURL('/toto/tracker/download.php?artifact_id=exist'), 1);
-    }
-    
-    function testFileDownload() {
-        $url = partial_mock('URL', array('getProjectDao'));
-        $this->assertEqual($url->getGroupIdFromURL('/file/download.php/101/1/p9_r4/toto.csv'), 101);
-        $this->assertNotEqual($url->getGroupIdFromURL('/toto/file/download.php/101/1/p9_r4/toto.csv'), 101);
     }
 }
