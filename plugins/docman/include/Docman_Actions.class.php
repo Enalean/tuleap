@@ -844,7 +844,7 @@ class Docman_Actions extends Actions {
      * @param Docman_Folder $newParentItem New parent item
      * @param PFUser          $user          User who perform the paste
      * @param String        $ordering      Where the item should be paste within the new folder
-     * @param Boolean       $importMd      Do we need to import metadata from another project
+     * @param bool $importMd Do we need to import metadata from another project
      * @param String        $dataRoot      Where the docman data stand on hard drive
      *
      * @return void
@@ -965,7 +965,7 @@ class Docman_Actions extends Actions {
      * @param Docman_Item $itemToPaste
      * @param Docman_Item $newParentItem
      * @param String      $rank
-     * @param Boolean     $importMd
+     * @param bool $importMd
      * @param String      $srcMode
      *
      * @return void
@@ -1251,7 +1251,7 @@ class Docman_Actions extends Actions {
 
     /**
     * Return the parent (or grand parent) of ugroup $parent which has a bigger permission
-    * @return integer the ugroup id which has been found or false
+    * @return int the ugroup id which has been found or false
     */
     function _getBiggerOrEqualParent($permission_definition, $done_permissions, $parent, $wanted_permission) {
         //No need to search for parent if the wanted permission is the default one

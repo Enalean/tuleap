@@ -33,10 +33,10 @@ class Tracker_ArtifactLinkInfo
     private   $artifact;
 
     /**
-     * @param integer $artifact_id
+     * @param int $artifact_id
      * @param string  $keyword
-     * @param integer $group_id
-     * @param integer $last_changeset_id
+     * @param int $group_id
+     * @param int $last_changeset_id
      * @param string $nature
      */
     public function __construct($artifact_id, $keyword, $group_id, $tracker_id, $last_changeset_id, $nature) {
@@ -154,7 +154,7 @@ class Tracker_ArtifactLinkInfo
     /**
      * Returns true is the current user can see the artifact
      *
-     * @return boolean
+     * @return bool
      */
     public function userCanView(PFUser $user) {
         $artifact = $this->getArtifact();

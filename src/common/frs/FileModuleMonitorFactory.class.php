@@ -54,7 +54,7 @@ class FileModuleMonitorFactory {
     /**
      * Get the list of users publicly monitoring a package
      *
-     * @param Integer $packageId Id of the package
+     * @param int $packageId Id of the package
      *
      * @return DataAccessResult
      */
@@ -87,11 +87,11 @@ class FileModuleMonitorFactory {
     /**
      * Is the user in the list of people monitoring this package.
      *
-     * @param Integer $filemodule_id Id of the package
+     * @param int $filemodule_id Id of the package
      * @param PFUser    $user          The user
-     * @param Boolean $publicly      If true check if the user is monitoring publicly
+     * @param bool $publicly If true check if the user is monitoring publicly
      *
-     * @return Boolean is_monitoring
+     * @return bool is_monitoring
      */
     function isMonitoring($filemodule_id, PFUser $user, $publicly) {
         $_filemodule_id = (int) $filemodule_id;
@@ -120,9 +120,9 @@ class FileModuleMonitorFactory {
     /**
      * Set package monitoring
      *
-     * @param Integer $filemodule_id Id of the package
+     * @param int $filemodule_id Id of the package
      * @param PFUser    $user          The user
-     * @param Boolean $anonymous     True if the user want to monitor the package anonymously
+     * @param bool $anonymous True if the user want to monitor the package anonymously
      *
      * @return DataAccessResult
      */
@@ -136,8 +136,8 @@ class FileModuleMonitorFactory {
      * Add package monitoring for a user
      *
      * @param PFUser              $user         The user
-     * @param Integer           $groupId      Id of the project
-     * @param Integer           $fileModuleId Id of the package
+     * @param int $groupId Id of the project
+     * @param int $fileModuleId Id of the package
      * @param FRSPackage        $package      Package
      * @param FRSPackageFactory $frspf        Package factory
      * @param UserHelper        $userHelper   User helper
@@ -173,11 +173,11 @@ class FileModuleMonitorFactory {
     /**
      * Stop the package monitoring
      *
-     * @param Integer $filemodule_id Id of th package
+     * @param int $filemodule_id Id of th package
      * @param PFUser    $user          The user
-     * @param Boolean $onlyPublic    If true delete only user publicly monitoring the package
+     * @param bool $onlyPublic If true delete only user publicly monitoring the package
      *
-     * @return Boolean
+     * @return bool
      */
     function stopMonitor($filemodule_id, PFUser $user, $onlyPublic = false) {
         $_id = (int) $filemodule_id;
@@ -189,8 +189,8 @@ class FileModuleMonitorFactory {
      * Stop the package monitoring for some users
      *
      * @param Array             $users        Array of users
-     * @param Integer           $groupId      Id of the project
-     * @param Integer           $fileModuleId Id of the package
+     * @param int $groupId Id of the project
+     * @param int $fileModuleId Id of the package
      * @param FRSPackage        $package      Package
      * @param UserManager       $um           User manager
      * @param UserHelper        $userHelper   User helper
@@ -218,9 +218,9 @@ class FileModuleMonitorFactory {
     /**
      * Stop only the public package monitoring for a given user
      *
-     * @param Integer    $fileModuleId Id of the package
+     * @param int $fileModuleId Id of the package
      * @param PFUser       $user         User we want to stop its monitoring
-     * @param Integer    $groupId      Id of the project
+     * @param int $groupId Id of the project
      * @param FRSPackage $package      Package
      * @param UserHelper $userHelper   User helper
      *
@@ -262,7 +262,7 @@ class FileModuleMonitorFactory {
      * @param FRSPackage $package Id of th package
      * @param PFUser       $user    The added user
      *
-     * @return Boolean
+     * @return bool
      */
     function notifyAfterAdd(FRSPackage $package, PFUser $user) {
         $mail_builder = new MailBuilder(
@@ -294,7 +294,7 @@ class FileModuleMonitorFactory {
      * @param FRSPackage $package Id of th package
      * @param PFUser       $user    The deleted user
      *
-     * @return Boolean
+     * @return bool
      */
     function notifyAfterDelete(FRSPackage $package, PFUser $user) {
         $mail_builder = new MailBuilder(
@@ -325,7 +325,7 @@ class FileModuleMonitorFactory {
     /**
      * Display the list of people monitoring the package with the delete form
      *
-     * @param Integer     $fileModuleId Id of the package
+     * @param int $fileModuleId Id of the package
      * @param UserManager $um           UserManager instance
      * @param UserHelper  $userHelper   UserHelper instance
      *
@@ -360,7 +360,7 @@ class FileModuleMonitorFactory {
     /**
      * Display the form to add a user to the monitoring people by the admin
      *
-     * @param Integer $fileModuleId Id of the package
+     * @param int $fileModuleId Id of the package
      *
      * @return String
      */
@@ -382,7 +382,7 @@ class FileModuleMonitorFactory {
      * Display the form to manage user's self monitoring of the package
      *
      * @param PFUser    $currentUser  Current user
-     * @param Integer $fileModuleId Id of the package
+     * @param int $fileModuleId Id of the package
      *
      * @return String
      */
@@ -423,8 +423,8 @@ class FileModuleMonitorFactory {
      * Display the HTML of the monitoring UI
      *
      * @param PFUser        $currentUser  Current user
-     * @param Integer     $groupId      Id of the project
-     * @param Integer     $fileModuleId Id of the package
+     * @param int $groupId Id of the project
+     * @param int $fileModuleId Id of the package
      * @param UserManager $um           UserManager instance
      * @param UserHelper  $userHelper   UserHelper instance
      *
@@ -449,8 +449,8 @@ class FileModuleMonitorFactory {
      *
      * @param HTTPRequest $request      HTTP request
      * @param PFUser        $currentUser  Current user
-     * @param Integer     $groupId      Id of the project
-     * @param Integer     $fileModuleId Id of the package
+     * @param int $groupId Id of the project
+     * @param int $fileModuleId Id of the package
      *
      * @return String
      */
@@ -483,9 +483,9 @@ class FileModuleMonitorFactory {
      * Listening to stop self monitoring action
      *
      * @param PFUser    $currentUser  Current user
-     * @param Integer $fileModuleId Id of the package
+     * @param int $fileModuleId Id of the package
      *
-     * @return Boolean
+     * @return bool
      */
     private function stopMonitorActionListener($currentUser, $fileModuleId) {
         if ($this->isMonitoring($fileModuleId, $currentUser, false)) {
@@ -502,11 +502,11 @@ class FileModuleMonitorFactory {
      * Listening to anonymous monitoring action
      *
      * @param PFUser    $currentUser  Current user
-     * @param Integer $fileModuleId Id of the package
-     * @param Boolean $anonymous    Anonymous monitoring flag
-     * @param Integer $groupId      Id of the project
+     * @param int $fileModuleId Id of the package
+     * @param bool $anonymous Anonymous monitoring flag
+     * @param int $groupId Id of the project
      *
-     * @return Boolean
+     * @return bool
      */
     private function anonymousMonitoringActionListener($currentUser, $fileModuleId, $anonymous, $groupId) {
         $performAction = false;
@@ -536,8 +536,8 @@ class FileModuleMonitorFactory {
      *
      * @param HTTPRequest $request      HTTP request
      * @param PFUser        $currentUser  Current user
-     * @param Integer     $groupId      Id of the project
-     * @param Integer     $fileModuleId Id of the package
+     * @param int $groupId Id of the project
+     * @param int $fileModuleId Id of the package
      * @param UserManager $um           UserManager instance
      * @param UserHelper  $userHelper   UserHelper instance
      *
@@ -576,8 +576,8 @@ class FileModuleMonitorFactory {
      *
      * @param HTTPRequest $request      HTTP request
      * @param PFUser        $currentUser  Current user
-     * @param Integer     $groupId      Id of the project
-     * @param Integer     $fileModuleId Id of the package
+     * @param int $groupId Id of the project
+     * @param int $fileModuleId Id of the package
      * @param UserManager $um           UserManager instance
      * @param UserHelper  $userHelper   UserHelper instance
      *

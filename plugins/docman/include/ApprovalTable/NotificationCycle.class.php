@@ -122,9 +122,9 @@ class Docman_ApprovalTableNotificationCycle {
     /**
      * Notify everybody in the same time
      *
-     * @return boolean Will return false only if there is no table or no
-     * reviewers to notify. If one notification fail, I don't have the tools to
-     * report it to the user.
+     * @return bool Will return false only if there is no table or no
+ * reviewers to notify. If one notification fail, I don't have the tools to
+ * report it to the user.
      */
     function notifyAllAtOnce() {
         $nbNotif = 0;

@@ -88,7 +88,7 @@ class Docman_Widget_Embedded extends Widget /* implements Visitor */ {
     /**
      * Says if the content of the widget can be displayed through an ajax call
      * If true, then the dashboard will be rendered faster but the page will be a little bit crappy until full load.
-     * @return boolean
+     * @return bool
      */
     public function isAjax() {
         return true;
@@ -213,7 +213,7 @@ class Docman_Widget_Embedded extends Widget /* implements Visitor */ {
     /**
      * Update the preferences
      * @param Codendi_Request $request
-     * @return boolean true if something has been updated
+     * @return bool true if something has been updated
      */
     function updatePreferences(Codendi_Request $request) {
         $done = false;
@@ -258,7 +258,7 @@ class Docman_Widget_Embedded extends Widget /* implements Visitor */ {
     /**
      * Says if the widget allows (or not) more than one instance on the same dashboard
      * It's up to the widget to decide if it is relevant.
-     * @return boolean
+     * @return bool
      */
     function isUnique() {
         return false;

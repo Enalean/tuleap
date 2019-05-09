@@ -40,7 +40,7 @@ class ArtifactFieldComputedValueFullRepresentation
     public $label;
 
     /**
-     * @var boolean
+     * @var bool
      */
     public $is_autocomputed;
 

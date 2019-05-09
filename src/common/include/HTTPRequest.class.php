@@ -55,7 +55,7 @@ class HTTPRequest extends Codendi_Request {
      *
      * This method is useful to test if the current request comes from a form.
      *
-     * @return boolean
+     * @return bool
      */
     public function isPost() {
         if($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -116,7 +116,7 @@ class HTTPRequest extends Codendi_Request {
      * Validate file upload.
      *
      * @param  Valid_File Validator for files.
-     * @return Boolean
+     * @return bool
      */
     public function validFile(&$validator) {
         if(is_a($validator, 'Valid_File')) {
@@ -181,7 +181,7 @@ class HTTPRequest extends Codendi_Request {
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isSecure() {
         if ($this->reverseProxyForwardsOriginalProtocol()) {

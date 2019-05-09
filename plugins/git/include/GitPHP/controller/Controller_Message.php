@@ -67,7 +67,7 @@ class Controller_Message extends ControllerBase // @codingStandardsIgnoreLine
      * Gets the name of this controller's action
      *
      * @access public
-     * @param boolean $local true if caller wants the localized action name
+     * @param bool $local true if caller wants the localized action name
      * @return string action name
      */
     public function GetName($local = false) // @codingStandardsIgnoreLine
@@ -132,7 +132,7 @@ class Controller_Message extends ControllerBase // @codingStandardsIgnoreLine
      * Gets the header for an HTTP status code
      *
      * @access private
-     * @param integer $code status code
+     * @param int $code status code
      * @return string header
      */
     private function StatusCodeHeader($code) // @codingStandardsIgnoreLine

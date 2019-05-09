@@ -86,7 +86,7 @@ class BacklogItemRepresentationBase
     public $project;
 
     /**
-     * @var Boolean
+     * @var bool
      */
     public $has_children;
 

@@ -35,7 +35,7 @@
     /**
     * validate
     * 
-    * @return boolean true if the password is valid
+    * @return bool true if the password is valid
     *
     */
     /* abstract */ function validate($pwd) {

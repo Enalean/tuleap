@@ -66,7 +66,7 @@ class Artifact {
      *  @param  object  The ArtifactType object.
      *  @param  integer (primary key from database OR complete assoc array) 
      *          ONLY OPTIONAL WHEN YOU PLAN TO IMMEDIATELY CALL ->create()
-     *  @return boolean success.
+     *  @return bool success.
      */
     function __construct(&$ArtifactType, $data=false, $checkPerms = true) {
       global $Language;
@@ -116,7 +116,7 @@ class Artifact {
      *  fetchData - re-fetch the data for this Artifact from the database.
      *
      *  @param  int             The artifact ID.
-     *  @return boolean success.
+     *  @return bool success.
      */
     function fetchData($artifact_id) {
 
@@ -371,7 +371,7 @@ class Artifact {
      * @param array $vfl the value-field-list. Array association pair of field_name => field_value. 
      *              If the function is called by the web-site submission form, the $vfl is set to false, and will be filled by the function extractFieldList function retrieving the HTTP parameters.
      *              If $vfl is not false, the fields expected in this array are *all* the fields of this tracker that are allowed to be submited by the user.
-     *  @return boolean
+     *  @return bool
      */
     function create($vfl=false,$import=false,$row=0) {
         global $ath,$art_field_fact,$Language;
@@ -610,7 +610,7 @@ class Artifact {
      * @param email: user email if the user is not logged in
      * @param changes (OUT): array of changes (for notifications)
      *
-     *  @return boolean
+     *  @return bool
      */
     function addComment($comment,$email=false,&$changes,$comment_format=self::FORMAT_TEXT) {
                         
@@ -700,7 +700,7 @@ class Artifact {
      *
      * @param parsed_comments (IN): an array (#detail => array2), where array2 is of the form
      *                              ("date" => date, "by" => user, "type" => comment-type, "comment" => comment-string)
-     *  @return boolean
+     *  @return bool
      */
     function addFollowUpComments($parsed_comments) {
     	global $Language;
@@ -745,7 +745,7 @@ class Artifact {
     * @param comment_id: follow-up comment id
     * @param comment_txt: text of the follow-up comment
     * 
-    * @return boolean
+    * @return bool
     */
     function updateFollowupComment($comment_id,$comment_txt,&$changes, $comment_format=self::FORMAT_TEXT) {
         if ($this->userCanEditFollowupComment($comment_id)) {
@@ -796,7 +796,7 @@ class Artifact {
      * @param canned_response: canned responses
      * @param changes (OUT): array of changes (for notifications)
      *
-     *  @return boolean
+     *  @return bool
      */
     function handleUpdate ($artifact_id_dependent,$canned_response,&$changes,$masschange=false,$vfl=false,$import=false){
         global $art_field_fact,$Language;
@@ -1116,7 +1116,7 @@ class Artifact {
      *
      * @param cc: the email address
      *
-     * @return boolean
+     * @return bool
      */
     function existCC($cc) {
         $sql = "SELECT artifact_cc_id FROM artifact_cc WHERE artifact_id=". db_ei($this->getID()) ." AND email='". db_es($cc) ."'";
@@ -1132,7 +1132,7 @@ class Artifact {
      * @param comment: comment for this cc list
      * @param date: date of creation
      *
-     * @return boolean
+     * @return bool
      */
     function insertCC($cc,$added_by,$comment,$date) {
         $sql = "INSERT INTO artifact_cc (artifact_id,email,added_by,comment,date) ".
@@ -1150,7 +1150,7 @@ class Artifact {
      * @param changes (OUT): list of changes
      * @param masschange: if in a masschange, we do not wan't to get feedback when everything ok
      *
-     * @return boolean
+     * @return bool
      */
     function addCC($email,$comment,&$changes,$masschange=false) {
         global $Language;
@@ -1198,7 +1198,7 @@ class Artifact {
      * @param email: list of email addresses
      * @param comment: comment for these addresses
      *
-     * @return boolean
+     * @return bool
      */
     function updateCC($email,$comment) {
         global $Language;
@@ -1249,7 +1249,7 @@ class Artifact {
      * @param artifact_cc_id: cc list id
      * @param changes (OUT): list of changes
      *
-     * @return boolean
+     * @return bool
      */
     function deleteCC($artifact_cc_id=false,&$changes,$masschange=false) {
         global $Language;
@@ -1285,7 +1285,7 @@ class Artifact {
      *
      * @param id: the artifact id
      *
-     * @return boolean
+     * @return bool
      */
     function existDependency($id) {
         $sql = "SELECT is_dependent_on_artifact_id FROM artifact_dependencies WHERE artifact_id=". db_ei($this->getID()) ." AND is_dependent_on_artifact_id=". db_ei($id);
@@ -1299,7 +1299,7 @@ class Artifact {
      *
      * @param id: the artifact id
      *
-     * @return boolean
+     * @return bool
      */
     function validArtifact($id) {
         $sql = "SELECT * FROM artifact a, artifact_group_list agl WHERE ".
@@ -1318,7 +1318,7 @@ class Artifact {
      *
      * @param id: the artifact id
      *
-     * @return boolean
+     * @return bool
      */
     function insertDependency($id) {
         $sql = "INSERT INTO artifact_dependencies (artifact_id,is_dependent_on_artifact_id) ".
@@ -1373,7 +1373,7 @@ class Artifact {
      * @param artifact_id_dependent: list of artifact which are depend on (comma sperator)
      * @param changes (OUT): list of changes
      *
-     * @return boolean
+     * @return bool
      */
     function addDependencies($artifact_id_dependent,&$changes,$masschange, $import = false) {
         if ( !$artifact_id_dependent ) 
@@ -1417,7 +1417,7 @@ class Artifact {
      * @param dependent_on_artifact_id: artifact id which is depend on
      * @param changes (OUT): list of changes
      *
-     * @return boolean
+     * @return bool
      */
     function deleteDependency($dependent_on_artifact_id,&$changes) {
         global $Language;
@@ -1441,7 +1441,7 @@ class Artifact {
      * @param aid: the artifact id
      * @param comment_id: the followup comment id
      *
-     * @return boolean
+     * @return bool
      */    
     function deleteFollowupComment($aid,$comment_id) {
         if ($this->userCanEditFollowupComment($comment_id)) {
@@ -1480,7 +1480,7 @@ class Artifact {
      *
      * @param status: the status
      *
-     * @return boolean
+     * @return bool
      */
     function isStatusClosed($status) {
         return (($status == '3') || ($status == '10') );
@@ -1544,7 +1544,7 @@ class Artifact {
     /**
      * Get follow-up comment text
      * 
-     * @param Integer $comment_id
+     * @param int $comment_id
      * 
      * @return String
      */
@@ -1556,7 +1556,7 @@ class Artifact {
     /**
      * Get all details of a follow-up comment
      * 
-     * @param Integer $comment_id
+     * @param int $comment_id
      * 
      * @return Array
      */
@@ -1945,7 +1945,7 @@ class Artifact {
      *	  userCanView - determine if the user can view this artifact.
      *
      *	  @param $my_user_id	if not specified, use the current user id..
-     *	  @return boolean	user_can_view.
+     *	  @return bool user_can_view.
      */
     function userCanView($my_user_id=0) {
 
@@ -2239,7 +2239,7 @@ class Artifact {
       * @param user_id 
       * @param comment_id
       *
-      * @return boolean
+      * @return bool
       */    
     function userCanEditFollowupComment($comment_id) {
 
@@ -2267,7 +2267,7 @@ class Artifact {
      * 
      * @params int comment_id
      * 
-     * @return boolean
+     * @return bool
      */
     function isFollowupCommentDeleted($comment_id) {
     	
@@ -2865,7 +2865,7 @@ class Artifact {
      *
      * @param Array $field_perm ...
      *
-     * @return Boolean
+     * @return bool
      */
     public function hasFieldPermission($field_perm, $field_name) {
         $hasPerm = false;
@@ -3664,10 +3664,10 @@ class Artifact {
     /**
      * Format the comment text to a given format according to parameters
      *
-     * @param Integer $groupId       Project id
-     * @param Boolean $commentFormat $value's format
+     * @param int $groupId Project id
+     * @param bool $commentFormat $value's format
      * @param String  $value         Comment content
-     * @param Boolean $output        Output format
+     * @param bool $output Output format
      *
      * @return String
      */

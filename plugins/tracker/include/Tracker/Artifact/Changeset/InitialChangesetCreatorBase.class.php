@@ -50,7 +50,7 @@ abstract class Tracker_Artifact_Changeset_InitialChangesetCreatorBase extends Tr
      *
      * @param array   $fields_data The artifact fields values
      * @param PFUser  $submitter   The user who did the artifact submission
-     * @param integer $submitted_on When the changeset is created
+     * @param int $submitted_on When the changeset is created
      *
      * @return int The Id of the initial changeset, or null if fields were not valid
      */

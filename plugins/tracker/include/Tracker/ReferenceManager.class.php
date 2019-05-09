@@ -73,7 +73,7 @@ class Tracker_ReferenceManager {
      * @param Tracker_Artifact $target_artifact
      * @param PFUser $user
      *
-     * @return boolean
+     * @return bool
      */
     public function insertBetweenTwoArtifacts(Tracker_Artifact $source_artifact, Tracker_Artifact $target_artifact, PFUser $user) {
         return $this->reference_manager->insertCrossReference(
@@ -88,7 +88,7 @@ class Tracker_ReferenceManager {
      * @param Tracker_Artifact $target_artifact
      * @param PFUser $user
      *
-     * @return boolean
+     * @return bool
      */
     public function removeBetweenTwoArtifacts(Tracker_Artifact $source_artifact, Tracker_Artifact $target_artifact, PFUser $user) {
         return $this->reference_manager->removeCrossReference(

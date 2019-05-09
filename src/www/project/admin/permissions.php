@@ -224,11 +224,11 @@ function permission_get_object_fullname($permission_type,$object_id) {
 /**
  * Check if the current user is allowed to change permissions, depending on the permission_type
  *
- * @param Integer $project_id        Id of the project
+ * @param int $project_id Id of the project
  * @param String  $permission_type Type of the permission
- * @param Boolean $object_id       Object on which permission is applied
+ * @param bool $object_id Object on which permission is applied
  *
- * @return Boolean
+ * @return bool
  */
 function permission_user_allowed_to_change($project_id, $permission_type, $object_id=0) {
 

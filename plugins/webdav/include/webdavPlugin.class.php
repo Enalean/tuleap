@@ -27,7 +27,7 @@ class WebDAVPlugin extends Plugin {
     /**
      * Constructor of the class
      *
-     * @param Integer $id
+     * @param int $id
      *
      * @return void
      */

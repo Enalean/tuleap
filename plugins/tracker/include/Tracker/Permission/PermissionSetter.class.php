@@ -52,7 +52,7 @@ class Tracker_Permission_PermissionSetter {
      * Clean set of one permission (will revoke all other perms before granting)
      *
      * @param String  $permission_type
-     * @param Integer $ugroup_id
+     * @param int $ugroup_id
      */
     public function grant($permission_type, $ugroup_id) {
         if (! $this->groupHasPermission($permission_type, $ugroup_id)) {

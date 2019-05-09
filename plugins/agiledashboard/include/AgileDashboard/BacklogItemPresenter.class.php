@@ -66,7 +66,7 @@ class AgileDashboard_BacklogItemPresenter implements
     /** @var Tracker_Artifact */
     private $parent;
 
-    /** @var boolean */
+    /** @var bool */
     private $has_children = null;
     /**
      * @var

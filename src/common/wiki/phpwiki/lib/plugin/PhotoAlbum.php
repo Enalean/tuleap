@@ -508,9 +508,9 @@ display_slides();"));
      * Calculate the new size in pixels when the original size
      * with a value is given.
      *
-     * @param integer $oldSize Absolute no. of pixels
+     * @param int $oldSize Absolute no. of pixels
      * @param mixed $value Either absolute no. or HTML percentage e.g. '50%'
-     * @return integer New size in pixels
+     * @return int New size in pixels
      */
     function newSize($oldSize, $value) {
         if (trim(substr($value,strlen($value)-1)) != "%") {

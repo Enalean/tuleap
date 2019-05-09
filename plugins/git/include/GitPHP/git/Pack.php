@@ -111,7 +111,7 @@ class Pack
      *
      * @access public
      * @param string $hash object hash
-     * @return boolean true if object is in pack
+     * @return bool true if object is in pack
      */
     public function ContainsObject($hash) // @codingStandardsIgnoreLine
     {

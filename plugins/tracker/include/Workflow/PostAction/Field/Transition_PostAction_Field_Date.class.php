@@ -40,7 +40,7 @@ class Transition_PostAction_Field_Date extends Transition_PostAction_Field
     public const XML_TAG_NAME = 'postaction_field_date';
 
     /**
-     * @var Integer the type of the value. CLEAR_DATE | FILL_CURRENT_TIME
+     * @var int the type of the value. CLEAR_DATE | FILL_CURRENT_TIME
      */
     protected $value_type;
     
@@ -48,9 +48,9 @@ class Transition_PostAction_Field_Date extends Transition_PostAction_Field
      * Constructor
      *
      * @param Transition                   $transition The transition the post action belongs to
-     * @param Integer                      $id         Id of the post action
+     * @param int $id Id of the post action
      * @param Tracker_FormElement_Field    $field      The field the post action should modify
-     * @param Integer                      $value_type The type of the value to set
+     * @param int $value_type The type of the value to set
      */
     public function __construct(Transition $transition, $id, $field, $value_type) {
         parent::__construct($transition, $id, $field);
@@ -69,7 +69,7 @@ class Transition_PostAction_Field_Date extends Transition_PostAction_Field
     /**
      * Get the value type of the post action
      *
-     * @return integer
+     * @return int
      */
     public function getValueType() {
         return $this->value_type;

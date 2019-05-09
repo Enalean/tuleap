@@ -28,7 +28,7 @@ class RepositoryPaginatedCollection
     private $repositories;
 
     /**
-     * @var integer
+     * @var int
      */
     private $total_size;
 

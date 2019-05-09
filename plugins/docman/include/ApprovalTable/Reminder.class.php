@@ -79,7 +79,7 @@ class Docman_ApprovalTableReminder {
      *
      * @param Docman_ApprovalTable $table Approval table
      *
-     * @return Boolean
+     * @return bool
      */
     private function notifyAllAtOnce(Docman_ApprovalTable $table) {
         $nbNotif = 0;
@@ -102,7 +102,7 @@ class Docman_ApprovalTableReminder {
      *
      * @param Docman_ApprovalTable $table Approval table
      *
-     * @return Boolean
+     * @return bool
      */
     private function notifyNextReviewer(Docman_ApprovalTable $table) {
         $dao = new Docman_ApprovalTableReviewerDao(CodendiDataAccess::instance());
@@ -123,9 +123,9 @@ class Docman_ApprovalTableReminder {
      * Remind a user about the document he is supposed to review
      *
      * @param Docman_ApprovalTable $table      Approval table
-     * @param Integer              $reviewerId Id of the reviewer
+     * @param int $reviewerId Id of the reviewer
      *
-     * @return Boolean
+     * @return bool
      */
     private function notifyIndividual(Docman_ApprovalTable $table, $reviewerId) {
         $hp       = Codendi_HTMLPurifier::instance();

@@ -59,7 +59,7 @@ class BackendSystem extends Backend {
     /**
      * Return if we need to refresh the user cache
      * 
-     * @return boolean
+     * @return bool
      */
     public function getNeedRefreshUserCache() {
         return $this->needRefreshUserCache;
@@ -95,7 +95,7 @@ class BackendSystem extends Backend {
     /**
      * Return if we need to refresh the groupo cache
      * 
-     * @return boolean
+     * @return bool
      */
     public function getNeedRefreshGroupCache() {
         return $this->needRefreshGroupCache;
@@ -176,7 +176,7 @@ class BackendSystem extends Backend {
      * 
      * @param String $username the user name to test if home exists
      * 
-     * @return boolean
+     * @return bool
      */
     public function userHomeExists($username) {
         return (is_dir(ForgeConfig::get('homedir_prefix')."/".$username));
@@ -187,7 +187,7 @@ class BackendSystem extends Backend {
      * 
      * @param PFUser $user the user needed to verify his home directory
      * 
-     * @return boolean
+     * @return bool
      */
     private function isUserHomeOwnedByUser(PFUser $user) {
         $stat = stat($user->getUnixHomeDir());
@@ -467,9 +467,9 @@ class BackendSystem extends Backend {
      * It would delete FTP directory content of the project
      * and create a Tarball in temp dir.
      *
-     * @param Integer $group_id the group id
+     * @param int $group_id the group id
      *
-     * @return boolean
+     * @return bool
      */
     function archiveProjectFtp($group_id) {
         if (! is_dir(ForgeConfig::get('ftp_anon_dir_prefix'))) {
@@ -522,7 +522,7 @@ class BackendSystem extends Backend {
     /**
      * dumps SSH authorized_keys into all users homedirs
      * 
-     * @return boolean always true
+     * @return bool always true
      */
     public function dumpSSHKeys() {
         if (ForgeConfig::areUnixUsersAvailableOnSystem()) {
@@ -542,7 +542,7 @@ class BackendSystem extends Backend {
      * @param PFUser $user the user we want to dump his key
      * @param string $original_keys the original keys of the user
      * 
-     * @return boolean if the ssh key was written
+     * @return bool if the ssh key was written
      */
     public function dumpSSHKeysForUser(PFUser $user, $original_keys) {
         $sshkey_dumper = new User_SSHKeyDumper($this);
@@ -576,7 +576,7 @@ class BackendSystem extends Backend {
      * 
      * @param String $name the project name to test
      * 
-     * @return boolean 
+     * @return bool
      */
     public function isProjectNameAvailable($name) {
         if (! ForgeConfig::areUnixGroupsAvailableOnSystem()) {
@@ -607,7 +607,7 @@ class BackendSystem extends Backend {
      * 
      * @param String $name a user name to test availability
      * 
-     * @return boolean false if repository or file  or link already exists, true otherwise
+     * @return bool false if repository or file  or link already exists, true otherwise
      */
     function isUserNameAvailable($name) {
         if (! ForgeConfig::areUnixUsersAvailableOnSystem()) {
@@ -624,7 +624,7 @@ class BackendSystem extends Backend {
      * @param Project $project a project to rename
      * @param String  $newName the new name of the project
      * 
-     * @return boolean
+     * @return bool
      */
     public function renameProjectHomeDirectory($project, $newName) {
         if (! ForgeConfig::areUnixGroupsAvailableOnSystem()) {
@@ -657,7 +657,7 @@ class BackendSystem extends Backend {
      * @param Project $project a project
      * @param String  $newName a new name
      * 
-     * @return boolean
+     * @return bool
      */
     public function renameFileReleasedDirectory($project, $newName) {
         if (is_dir($GLOBALS['ftp_frs_dir_prefix'].'/'.$project->getUnixName(false))) {
@@ -673,7 +673,7 @@ class BackendSystem extends Backend {
      * @param Project $project a project
      * @param String  $newName a new name
      * 
-     * @return boolean
+     * @return bool
      */
     public function renameAnonFtpDirectory($project, $newName) {
         if (! is_dir(ForgeConfig::get('ftp_anon_dir_prefix'))) {
@@ -694,7 +694,7 @@ class BackendSystem extends Backend {
      * @param PFUser    $user    a user
      * @param String  $newName the new name of user home directory
      * 
-     * @return boolean
+     * @return bool
      */
     public function renameUserHomeDirectory($user, $newName) {
         if (! ForgeConfig::areUnixUsersAvailableOnSystem()) {

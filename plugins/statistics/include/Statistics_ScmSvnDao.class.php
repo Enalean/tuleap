@@ -28,7 +28,7 @@ class Statistics_ScmSvnDao extends DataAccessObject {
      * Constructor of the class
      *
      * @param \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface $da Data access details
-     * @param Integer $groupId Project Id
+     * @param int $groupId Project Id
      *
      * @return void
      */

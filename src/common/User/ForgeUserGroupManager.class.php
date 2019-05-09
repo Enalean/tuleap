@@ -50,7 +50,7 @@ class User_ForgeUserGroupManager
     }
 
     /**
-     * @return boolean
+     * @return bool
      * @throws User_UserGroupNotFoundException
      * @throws User_UserGroupNameInvalidException
      */

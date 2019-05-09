@@ -43,7 +43,7 @@ class WebDAVRoot extends Sabre_DAV_Directory {
      *
      * @param Plugin $plugin
      * @param PFUser $user
-     * @param Integer $maxFileSize
+     * @param int $maxFileSize
      *
      * @return void
      */
@@ -166,7 +166,7 @@ class WebDAVRoot extends Sabre_DAV_Directory {
     /**
      * Returns the max file size
      *
-     * @return Integer
+     * @return int
      */
     function getMaxFileSize() {
         return $this->maxFileSize;
@@ -177,7 +177,7 @@ class WebDAVRoot extends Sabre_DAV_Directory {
      *
      * @param String $projectName
      *
-     * @return Integer
+     * @return int
      */
     function getProjectIdByName($projectName) {
 
@@ -191,7 +191,7 @@ class WebDAVRoot extends Sabre_DAV_Directory {
     /**
      * Returns a new WebDAVProject from the given group Id
      *
-     * @param Integer $groupId
+     * @param int $groupId
      *
      * @return WebDAVProject
      */
@@ -256,9 +256,9 @@ class WebDAVRoot extends Sabre_DAV_Directory {
     /**
      * Checks whether the WebDAV plugin is available for the project or not
      *
-     * @param Integer $groupId
+     * @param int $groupId
      *
-     * @return Boolean
+     * @return bool
      */
     function isWebDAVAllowedForProject($groupId) {
 

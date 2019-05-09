@@ -32,7 +32,7 @@ class TimetrackingPOSTRepresentation
     public $date_time;
 
     /**
-     * @var integer {@type integer}
+     * @var int {@type integer}
      */
     public $artifact_id;
 

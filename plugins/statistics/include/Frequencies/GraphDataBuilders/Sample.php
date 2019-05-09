@@ -123,7 +123,7 @@ class Sample
      * @param string $startdate the date the graph start
      * @param string $enddate   the date teh graph end
      *
-     * @return boolean true if advanced search, else return false
+     * @return bool true if advanced search, else return false
      */
     public function isAdvanced($startdate, $enddate)
     {

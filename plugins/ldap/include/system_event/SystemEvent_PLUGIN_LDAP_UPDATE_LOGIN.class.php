@@ -93,7 +93,7 @@ class SystemEvent_PLUGIN_LDAP_UPDATE_LOGIN  extends SystemEvent {
      * 
      * @see src/common/system_event/SystemEvent::verbalizeParameters()
      * 
-     * @param Boolean $with_link With link 
+     * @param bool $with_link With link
      */
     public function verbalizeParameters($with_link) {
         return  $this->parameters;

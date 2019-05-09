@@ -98,7 +98,7 @@ class AdminDelegationPlugin extends Plugin  // @codingStandardsIgnoreLine
      *
      * @param String  $widget
      *
-     * @return Boolean
+     * @return bool
      */
     protected function userCanViewWidget($widget)
     {

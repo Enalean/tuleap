@@ -35,7 +35,7 @@ class FolderHierarchicalRepresentation
     private $children;
 
     /**
-     * @var integer
+     * @var int
      */
     private $parent_id;
 

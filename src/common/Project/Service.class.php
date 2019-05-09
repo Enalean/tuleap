@@ -193,7 +193,7 @@ class Service {
     /**
      * Return true if service configuration is inherited on clone
      * 
-     * @return Boolean
+     * @return bool
      */
     public function isInheritedOnDuplicate() {
         return false;

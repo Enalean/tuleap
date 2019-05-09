@@ -164,7 +164,7 @@ class UGroupLiteralizer {
      * for the given object of a given project
      *
      * @param Project $project         The project
-     * @param integer $object_id       The identifier of the object
+     * @param int $object_id The identifier of the object
      * @param string  $permission_type PLUGIN_GIT_READ | PLUGIN_DOCMAN_%
      *
      * @return array of groups converted to string

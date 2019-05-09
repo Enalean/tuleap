@@ -141,7 +141,7 @@ class Tracker_Report_REST extends Tracker_Report {
      *     "operator" => "contains",
      *     "value"    => [string, array]
      *  )
-     * @return boolean
+     * @return bool
      */
     private function isCriterionBasic($criterion) {
         if (is_array($criterion)) {

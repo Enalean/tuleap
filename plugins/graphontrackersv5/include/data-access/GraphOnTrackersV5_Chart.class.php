@@ -440,7 +440,7 @@ abstract class GraphOnTrackersV5_Chart implements Visitable
     /**
      * Update the properties of the chart
      *
-     * @return boolean true if the update is successful
+     * @return bool true if the update is successful
      */
     public function update($row) {
         $session = self::getSession($this->renderer->report->id, $this->renderer->id);
@@ -522,7 +522,7 @@ abstract class GraphOnTrackersV5_Chart implements Visitable
 
     /**
      * Allow update of the specific properties of the concrete chart
-     * @return boolean true if the update is successful
+     * @return bool true if the update is successful
      */
     abstract protected function updateSpecificProperties($row);
 

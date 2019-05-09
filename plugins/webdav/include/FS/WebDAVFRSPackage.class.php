@@ -41,7 +41,7 @@ class WebDAVFRSPackage extends Sabre_DAV_Directory {
      * @param PFUser $user
      * @param Project $project
      * @param FRSPackage $package
-     * @param Integer $maxFileSize
+     * @param int $maxFileSize
      *
      * @return void
      */
@@ -154,7 +154,7 @@ class WebDAVFRSPackage extends Sabre_DAV_Directory {
     /**
      * Returns the package Id
      *
-     * @return Integer
+     * @return int
      */
     function getPackageId() {
 
@@ -198,7 +198,7 @@ class WebDAVFRSPackage extends Sabre_DAV_Directory {
     /**
      * Returns the max file size
      *
-     * @return Integer
+     * @return int
      */
     function getMaxFileSize() {
         return $this->maxFileSize;
@@ -248,7 +248,7 @@ class WebDAVFRSPackage extends Sabre_DAV_Directory {
     /**
      * Returns whether the package exists or not
      *
-     * @return Boolean
+     * @return bool
      */
     function exist() {
 
@@ -261,7 +261,7 @@ class WebDAVFRSPackage extends Sabre_DAV_Directory {
      *
      * @param PFUser $user
      *
-     * @return Boolean
+     * @return bool
      */
     function userCanRead($user) {
         return (($this->getPackage()->isActive() && $this->getPackage()->userCanRead($user->getId()))
@@ -272,7 +272,7 @@ class WebDAVFRSPackage extends Sabre_DAV_Directory {
     /**
      * Returns if the user is superuser, project admin or File release admin
      *
-     * @return Boolean
+     * @return bool
      */
     function userIsAdmin() {
 
@@ -284,7 +284,7 @@ class WebDAVFRSPackage extends Sabre_DAV_Directory {
     /**
      * Returns if the user is Superuser or File release admin
      *
-     * @return Boolean
+     * @return bool
      */
     function userCanWrite() {
         $utils = $this->getUtils();

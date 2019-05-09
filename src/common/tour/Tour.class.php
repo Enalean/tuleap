@@ -26,12 +26,12 @@ class Tuleap_Tour {
     public $name;
 
     /**
-     * @var boolean
+     * @var bool
      */
     public $storage = false;
 
     /**
-     * @var boolean
+     * @var bool
      */
     public $orphan = true;
 

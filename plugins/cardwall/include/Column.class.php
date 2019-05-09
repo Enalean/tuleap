@@ -39,7 +39,7 @@ class Cardwall_Column {
     public $header_color;
 
     /**
-     * @var Boolean
+     * @var bool
      */
     private $autostack = true;
 
@@ -96,7 +96,7 @@ class Cardwall_Column {
      * @param String                               $artifact_status
      * @param Cardwall_OnTop_Config_TrackerMapping $tracker_mapping
      *
-     * @return Boolean
+     * @return bool
      */
     public function canContainStatus($artifact_status, ?Cardwall_OnTop_Config_TrackerMapping $tracker_mapping = null) {
         $is_mapped = false;

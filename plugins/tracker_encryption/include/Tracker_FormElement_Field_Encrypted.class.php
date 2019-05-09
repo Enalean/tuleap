@@ -338,7 +338,7 @@ class Tracker_FormElement_Field_Encrypted extends Tracker_FormElement_Field impl
     /**
      * @param Tracker_Artifact_Changeset $changeset
      * @param int $value_id
-     * @param boolean $has_changed
+     * @param bool $has_changed
      *
      * @return Tracker_Artifact_ChangesetValue | null
      */

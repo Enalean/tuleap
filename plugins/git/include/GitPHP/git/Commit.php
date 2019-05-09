@@ -489,7 +489,7 @@ class Commit extends GitObject
      * Gets the commit title
      *
      * @access public
-     * @param integer $trim length to trim to (0 for no trim)
+     * @param int $trim length to trim to (0 for no trim)
      * @return string title
      */
     public function GetTitle($trim = 0) // @codingStandardsIgnoreLine
@@ -614,7 +614,7 @@ class Commit extends GitObject
      * Returns whether this is a merge commit
      *
      * @access pubilc
-     * @return boolean true if merge commit
+     * @return bool true if merge commit
      */
     public function IsMergeCommit() // @codingStandardsIgnoreLine
     {
@@ -982,8 +982,8 @@ class Commit extends GitObject
      *
      * @access public
      * @param string $pattern pattern to search
-     * @param integer $count number of results to get
-     * @param integer $skip number of results to skip
+     * @param int $count number of results to get
+     * @param int $skip number of results to skip
      * @return array array of results
      */
     public function SearchFiles($pattern, $count = 100, $skip = 0) // @codingStandardsIgnoreLine
@@ -1113,7 +1113,7 @@ class Commit extends GitObject
      * @static
      * @param mixed $a first commit
      * @param mixed $b second commit
-     * @return integer comparison result
+     * @return int comparison result
      */
     public static function CompareAge($a, $b) // @codingStandardsIgnoreLine
     {

@@ -77,7 +77,7 @@ class Tracker_Rule_Date extends Tracker_Rule {
      *
      * @param string $source_value
      * @param string $target_value
-     * @return boolean
+     * @return bool
      */
     public function validate($source_value, $target_value) {
         //if one of the value is empty then return true

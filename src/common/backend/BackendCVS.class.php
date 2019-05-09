@@ -36,7 +36,7 @@ class BackendCVS extends Backend {
     /**
      * Return true if server uses CVS NT, or false if it uses GNU CVS
      *
-     * @return Boolean
+     * @return bool
      */
     function useCVSNT() {
         if (isset($this->UseCVSNT)) {
@@ -71,7 +71,7 @@ class BackendCVS extends Backend {
      * Create project CVS repository
      * If the directory already exists, nothing is done.
      *
-     * @param Integer $group_id project id for wic CVS repository will be created
+     * @param int $group_id project id for wic CVS repository will be created
      *
      * @return true if repo is successfully created, false otherwise
      */
@@ -204,7 +204,7 @@ class BackendCVS extends Backend {
      *
      * @param Project $project project for wich the lock dir will be created
      *
-     * @return Boolean
+     * @return bool
      */
     public function createLockDirIfMissing($project) {
         // Lockdir does not exist? (Re)create it.
@@ -226,7 +226,7 @@ class BackendCVS extends Backend {
      *
      * @param Project $project project for wich post-commit hooks will be updated
      *
-     * @return Boolean
+     * @return bool
      */
     public function updatePostCommit($project) {
         $unix_group_name=$project->getUnixName(false); // May contain upper-case letters
@@ -293,9 +293,9 @@ class BackendCVS extends Backend {
      * in the CVS passwd file. The pserver protocol will fallback
      * on /etc/passwd (or NSS) for user authentication
      *
-     * @param Integer $group_id Project id for which committers will be updated
+     * @param int $group_id Project id for which committers will be updated
      *
-     * @return Boolean
+     * @return bool
      */
     public function updateCVSwriters($group_id) {
         $project = $this->getProjectManager()->getProject($group_id);
@@ -321,7 +321,7 @@ class BackendCVS extends Backend {
      *
      * @param PFUser $user member to add as committer
      *
-     * @return Boolean
+     * @return bool
      */
     public function updateCVSWritersForGivenMember($user) {
         $projects = $user->getProjects();
@@ -343,9 +343,9 @@ class BackendCVS extends Backend {
     /**
      * Update CVS Watch Mode
      *
-     * @param Integer $group_id Project id for wich watch mode will be updated
+     * @param int $group_id Project id for wich watch mode will be updated
      *
-     * @return Boolean
+     * @return bool
      */
     public function updateCVSWatchMode($group_id) {
         $project=$this->getProjectManager()->getProject($group_id);
@@ -402,9 +402,9 @@ class BackendCVS extends Backend {
      *
      * @param String  $cvs_dir         CVS root directory
      * @param String  $unix_group_name name of the project
-     * @param Integer $watch_mode      defines the watch mode
+     * @param int $watch_mode defines the watch mode
      *
-     * @return Boolean
+     * @return bool
      */
     function CVSWatch($cvs_dir, $unix_group_name, $watch_mode) {
         $sandbox_dir =  $GLOBALS['tmp_dir']."/".$unix_group_name.".cvs_watch_sandbox";
@@ -452,9 +452,9 @@ class BackendCVS extends Backend {
     /**
      * Archive CVS repository: stores a tgz in temp dir, and remove the directory
      *
-     * @param Integer $group_id id of the project for which CVS repository will be archived
+     * @param int $group_id id of the project for which CVS repository will be archived
      *
-     * @return Boolean
+     * @return bool
      */
     public function archiveProjectCVS($group_id) {
         $project=$this->getProjectManager()->getProject($group_id);
@@ -476,7 +476,7 @@ class BackendCVS extends Backend {
     /**
      * Update the "cvs_root_allow" file that contains the list of authorised CVS repositories
      *
-     * @return Boolean
+     * @return bool
      */
     public function CVSRootListUpdate() {
         $cvs_root_allow_array = array();
@@ -551,7 +551,7 @@ class BackendCVS extends Backend {
     /**
      * Check if CVS root need update
      *
-     * @return Boolean
+     * @return bool
      */
     public function getCVSRootListNeedUpdate() {
         return $this->CVSRootListNeedUpdate;
@@ -561,9 +561,9 @@ class BackendCVS extends Backend {
      * Make the cvs repository of the project private or public
      *
      * @param Project $project    project for which project privacy is set
-     * @param boolean $is_private true if the repository is private
+     * @param bool $is_private true if the repository is private
      *
-     * @return boolean true if success
+     * @return bool true if success
      */
     public function setCVSPrivacy($project, $is_private) {
         $perms = $is_private ? 02770 : 02775;
@@ -577,7 +577,7 @@ class BackendCVS extends Backend {
      *
      * @param Project $project The project to work on
      *
-     * @return boolean true if success
+     * @return bool true if success
      */
     public function checkCVSMode($project) {
         $unix_group_name =  $project->getUnixName(false);
@@ -657,7 +657,7 @@ class BackendCVS extends Backend {
      * @param Project $project Project to rename
      * @param String  $newName New name
      *
-     * @return Boolean
+     * @return bool
      */
     public function renameCVSRepository($project, $newName) {
         if (rename($GLOBALS['cvs_prefix'].'/'.$project->getUnixName(false), $GLOBALS['cvs_prefix'].'/'.$newName)) {
@@ -675,7 +675,7 @@ class BackendCVS extends Backend {
      * @param Project $project Project to rename
      * @param String  $newName New name
      *
-     * @return Boolean
+     * @return bool
      */
     public function renameLockDir($project, $newName) {
         $oldLockDir = $GLOBALS['cvslock_prefix'].'/'.$project->getUnixName(false);
@@ -700,7 +700,7 @@ class BackendCVS extends Backend {
      * @param Project $project Project to rename
      * @param String  $newName New name
      *
-     * @return Boolean
+     * @return bool
      */
     public function renameLogInfoFile($project, $newName) {
         $filename = $GLOBALS['cvs_prefix'].'/'.$newName.'/CVSROOT/loginfo';
@@ -719,7 +719,7 @@ class BackendCVS extends Backend {
      * @param Project $project Project to rename
      * @param String  $newName New name
      *
-     * @return Boolean
+     * @return bool
      */
     public function renameCommitInfoFile($project, $newName) {
         $filename = $GLOBALS['cvs_prefix'].'/'.$newName.'/CVSROOT/commitinfo';

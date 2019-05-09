@@ -158,7 +158,7 @@ class GraphOnTrackersV5_Chart_CumulativeFlow extends GraphOnTrackersV5_Chart
 
     /**
      * Allow update of the specific properties of the concrete chart
-     * @return boolean true if the update is successful
+     * @return bool true if the update is successful
      */
     protected function updateSpecificProperties($row) {
         $session = self::getSession($this->renderer->report->id, $this->renderer->id);

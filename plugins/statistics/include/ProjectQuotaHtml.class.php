@@ -62,7 +62,7 @@ class ProjectQuotaHtml {
      *
      * @param HTTPRequest $request HTTP request
      *
-     * @return Integer
+     * @return int
      */
     private function validateOffset(HTTPRequest $request) {
         $valid = new Valid('offset');

@@ -155,7 +155,7 @@ class DataAccessResult implements LegacyDataAccessResultInterface
      *
      * @deprecated
      *
-     * @return boolean 
+     * @return bool
      */
     public function valid() {
         return $this->_row !== false;

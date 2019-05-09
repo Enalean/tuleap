@@ -53,7 +53,7 @@ class Docman_MIMETypeDetector {
     /**
      * @param string $filename
      *
-     * @return boolean True if the file is an office one
+     * @return bool True if the file is an office one
      */
     public function isAnOfficeFile($filename) {
         return $this->getRightOfficeType($filename) != null;

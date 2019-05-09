@@ -265,7 +265,7 @@ class UserHelper {
     /**
      * Get a link on user profile with name according to user prefs.
      * 
-     * @param Integer $user_id User id
+     * @param int $user_id User id
      * 
      * @return String
      */

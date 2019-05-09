@@ -173,7 +173,7 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
      * Get the field data for artifact submission
      *
      * @param string  $submitted_value the field value (username(s))
-     * @param boolean $is_multiple     if the value is multiple or not
+     * @param bool $is_multiple if the value is multiple or not
      *
      * @return mixed the field data corresponding to the value for artifact submision (user_id)
      */

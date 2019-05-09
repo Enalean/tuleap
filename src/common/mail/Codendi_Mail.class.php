@@ -197,7 +197,7 @@ class Codendi_Mail implements Codendi_Mail_Interface {
     /**
      *
      * @param String  $to
-     * @param Boolean $raw
+     * @param bool $raw
      */
     public function setTo($to, $raw=false)
     {
@@ -236,7 +236,7 @@ class Codendi_Mail implements Codendi_Mail_Interface {
     /**
      *
      * @param String  $bcc
-     * @param Boolean $raw
+     * @param bool $raw
      */
     public function setBcc($bcc, $raw=false)
     {
@@ -274,7 +274,7 @@ class Codendi_Mail implements Codendi_Mail_Interface {
     /**
      *
      * @param String  $cc
-     * @param Boolean $raw
+     * @param bool $raw
      */
     public function setCc($cc, $raw=false)
     {
@@ -497,7 +497,7 @@ class Codendi_Mail implements Codendi_Mail_Interface {
     /**
      * Send the mail
      * 
-     * @return Boolean
+     * @return bool
      */
     public function send()
     {

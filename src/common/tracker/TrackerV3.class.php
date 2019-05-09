@@ -33,7 +33,7 @@ class TrackerV3
     private static $instance;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $available = null;
 
@@ -56,7 +56,7 @@ class TrackerV3
     /**
      * Return True if Trackerv3 are available on the platform
      *
-     * @return boolean
+     * @return bool
      */
     public function available()
     {

@@ -43,7 +43,7 @@ class AgileDashboard_Semantic_Dao_InitialEffort extends DataAccessObject {
     }
 
     /**
-     * @return boolean true if success
+     * @return bool true if success
      */
     public function save($tracker_id, $field_id) {
         $tracker_id = $this->da->escapeInt($tracker_id);

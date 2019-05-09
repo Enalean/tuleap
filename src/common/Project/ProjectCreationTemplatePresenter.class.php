@@ -32,7 +32,7 @@ class ProjectCreationTemplatePresenter {
     private $text_purifier;
 
     /**
-     * @var integer
+     * @var int
      */
     private $selected_template_id;
 

@@ -38,7 +38,7 @@ class Admin_Homepage_Dao extends DataAccessObject {
         return $row['headline'];
     }
 
-    /** @return boolean */
+    /** @return bool */
     public function save(array $headlines) {
         $values = array();
 

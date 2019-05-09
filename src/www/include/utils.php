@@ -85,7 +85,7 @@ function util_get_user_preferences_export_datefmt() {
  * @global $sys_datefmt the user preference date format defined in the language file
  *
  * @param string $date the date in the unix timestamp format
- * @param boolean $day_only false: return the day AND the time, true only the date.
+ * @param bool $day_only false: return the day AND the time, true only the date.
  *
  * @deprecated Use DateHelper::formatForLanguage() instead
  *
@@ -613,7 +613,7 @@ function validate_emails ($addresses) {
      * @param message (OUT): error message if an error is found
      * @param strict (IN): Parametrer for user_finder function
      *
-     * @return boolean
+     * @return bool
      */
     function util_validateCCList(&$arr_email, &$message, $strict=false) {
       global $Language;
@@ -659,8 +659,8 @@ function validate_emails ($addresses) {
  * - Else, return an empty string (ie. not a valid identifier)
  *
  * @param String  $ident (IN)      A user identifier
- * @param Boolean $strict (IN)     If strict mode is enabled only Codendi user and ldap valid
- *                                 entries are allowed. Otherwise, return an empty string
+ * @param bool $strict (IN)     If strict mode is enabled only Codendi user and ldap valid
+ * entries are allowed. Otherwise, return an empty string
  *
  * @return String
  */
@@ -850,7 +850,7 @@ function util_get_group_name_from_id($group_id) {
  * @param group_artifact_id: the tracker id (OUT)
  * @param art_name: the item name corresponding to this tracker (OUT) e.g. 'bug', 'defect', etc.
  *
- * @return boolean
+ * @return bool
  */
 function util_get_ids_from_aid($aid,&$art_group_id,&$atid,&$art_name) {
     $sql = "SELECT group_artifact_id FROM artifact WHERE artifact_id = ".db_ei($aid);

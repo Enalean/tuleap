@@ -128,7 +128,7 @@ class DateHelper {
      *
      * @param String $date Date modifier as for 'strtotime'
      *
-     * @return Integer
+     * @return int
      */
     public static function getTimestampAtMidnight($date) {
         $time = strtotime($date);
@@ -138,10 +138,10 @@ class DateHelper {
     /**
      * Calculate difference between two dates in days
      *
-     * @param Integer $start Timestamp of the start date
-     * @param Integer $end   Timestamp of the end date
+     * @param int $start Timestamp of the start date
+     * @param int $end Timestamp of the end date
      *
-     * @return Integer
+     * @return int
      */
     public static function dateDiffInDays($start, $end) {
         return floor(($end - $start) / self::SECONDS_IN_A_DAY);
@@ -152,10 +152,10 @@ class DateHelper {
      * Example: if the period is 3 the method should return true only for distances
      * that are multiples of 3 like: 3, 6, 9, 27, 501
      *
-     * @param Integer $distance Distance in days
-     * @param Integer $period   Period to respect
+     * @param int $distance Distance in days
+     * @param int $period Period to respect
      *
-     * @return Boolean
+     * @return bool
      */
     public static function isPeriodicallyDistant($distance, $period) {
         return ($distance % $period == 0);

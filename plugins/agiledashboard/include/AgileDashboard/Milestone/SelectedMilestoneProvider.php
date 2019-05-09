@@ -42,7 +42,7 @@ class AgileDashboard_Milestone_SelectedMilestoneProvider {
     /** @var Array */
     private $additional_criteria;
 
-    /** @var Boolean */
+    /** @var bool */
     private $milestone_has_been_loaded = false;
 
     public function __construct(array $additional_criteria, Planning_MilestoneFactory $milestone_factory, PFUser $user, Project $project) {

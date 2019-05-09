@@ -336,7 +336,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
      * Get the field data for artifact submission
      *
      * @param string  $submitted_value
-     * @param boolean $is_multiple     if the value is multiple or not
+     * @param bool $is_multiple if the value is multiple or not
      *
      * @return mixed the field data corresponding to the value for artifact submision (user_id)
      */

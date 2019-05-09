@@ -128,7 +128,7 @@ class WebDAVFRSFile extends Sabre_DAV_File {
     /**
      * Returns the file size
      *
-     * @return Integer
+     * @return int
      */
     function getSize() {
 
@@ -184,7 +184,7 @@ class WebDAVFRSFile extends Sabre_DAV_File {
     /**
      * Returns the file Id
      *
-     * @return Integer
+     * @return int
      */
     function getFileId() {
 
@@ -195,7 +195,7 @@ class WebDAVFRSFile extends Sabre_DAV_File {
     /**
      * Returns the Id of the release that file belongs to
      *
-     * @return Integer
+     * @return int
      */
     function getReleaseId() {
 
@@ -206,7 +206,7 @@ class WebDAVFRSFile extends Sabre_DAV_File {
     /**
      * Returns the Id of the package that file belongs to
      *
-     * @return Integer
+     * @return int
      */
     function getPackageId() {
 
@@ -250,7 +250,7 @@ class WebDAVFRSFile extends Sabre_DAV_File {
     /**
      * Tests whether the file is active or not
      *
-     * @return Boolean
+     * @return bool
      */
     function isActive() {
 
@@ -261,9 +261,9 @@ class WebDAVFRSFile extends Sabre_DAV_File {
     /**
      * Checks whether the user can download the file or not
      *
-     * @param Integer $user
+     * @param int $user
      *
-     * @return Boolean
+     * @return bool
      */
     function userCanDownload($user) {
 
@@ -274,7 +274,7 @@ class WebDAVFRSFile extends Sabre_DAV_File {
     /**
      * Tests whether the file exists in the file system or not
      *
-     * @return Boolean
+     * @return bool
      */
 
     function fileExists() {
@@ -286,9 +286,9 @@ class WebDAVFRSFile extends Sabre_DAV_File {
     /**
      * Logs the download in the Log system
      *
-     * @param Integer $userId
+     * @param int $userId
      *
-     * @return Boolean
+     * @return bool
      */
     function logDownload($user) {
 
@@ -299,7 +299,7 @@ class WebDAVFRSFile extends Sabre_DAV_File {
     /**
      * Returns if the user is superuser or File release admin
      *
-     * @return Boolean
+     * @return bool
      */
     function userCanWrite() {
         $utils = $this->getUtils();
@@ -333,7 +333,7 @@ class WebDAVFRSFile extends Sabre_DAV_File {
      * @param String $source
      * @param String $destination
      *
-     * @return Boolean
+     * @return bool
      */
     function copyFile($source, $destination) {
 

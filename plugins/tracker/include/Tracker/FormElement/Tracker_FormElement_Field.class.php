@@ -773,7 +773,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     /**
      * Tells if the field takes two columns
      * Ugly legacy hack to display fields in columns
-     * @return boolean
+     * @return bool
      */
     public function takesTwoColumns() {
         return false;
@@ -846,7 +846,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     /**
      * Is the field used in semantics?
      *
-     * @return boolean returns true if the field is used in semantics, false otherwise
+     * @return bool returns true if the field is used in semantics, false otherwise
      */
     public function isUsedInSemantics() {
         $sm = new Tracker_SemanticManager($this->getTracker());
@@ -856,7 +856,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     /**
      * Is the field used in workflow?
      *
-     * @return boolean returns true if the field is used in workflow, false otherwise
+     * @return bool returns true if the field is used in workflow, false otherwise
      */
     public function isUsedInWorkflow() {
         return $this->getWorkflowFactory()->isFieldUsedInWorkflow($this);
@@ -870,7 +870,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      /**
      * Is the field used in a field dependency?
      *
-     * @return boolean returns true if the field is used in field dependency, false otherwise
+     * @return bool returns true if the field is used in field dependency, false otherwise
      */
     public function isUsedInFieldDependency()
     {
@@ -920,7 +920,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
 
     /**
      *
-     * @return boolean
+     * @return bool
      */
     public function canBeRemovedFromUsage() {
         $is_used = $this->isUsedInSemantics() ||
@@ -948,9 +948,9 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      * @param Tracker_Artifact                $artifact             The artifact to check
      * @param mixed                           $submitted_value      The submitted value
      * @param Tracker_Artifact_ChangesetValue $last_changeset_value The last changeset value of the field (give null if no old value)
-     * @param boolean $is_submission true if artifact submission, false if artifact update
+     * @param bool $is_submission true if artifact submission, false if artifact update
      *
-     * @return boolean true on success or false on failure
+     * @return bool true on success or false on failure
      */
     public function validateFieldWithPermissionsAndRequiredStatus(Tracker_Artifact $artifact, $submitted_value, ?Tracker_Artifact_ChangesetValue $last_changeset_value = null, $is_submission = null) {
         $is_valid = true;
@@ -979,7 +979,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      * @param Tracker_Artifact                $artifact             The artifact to check
      * @param mixed                           $submitted_value      The submitted value
      *
-     * @return boolean true on success or false on failure
+     * @return bool true on success or false on failure
      */
     public function isValidRegardingRequiredProperty(Tracker_Artifact $artifact, $submitted_value) {
         if (($submitted_value === null || $submitted_value === '') && $this->isRequired()) {
@@ -1008,7 +1008,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      * @param Tracker_Artifact                $artifact             The artifact to check
      * @param mixed                           $submitted_value      The submitted value
      *
-     * @return boolean true on success or false on failure
+     * @return bool true on success or false on failure
      */
     public function validateField(Tracker_Artifact $artifact, $submitted_value) {
         $is_valid = true;
@@ -1038,7 +1038,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     }
 
     /**
-     * @return boolean true if the field has errors. Default is false
+     * @return bool true if the field has errors. Default is false
      * @see isValid
      */
     public function hasErrors() {
@@ -1074,8 +1074,8 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      * @param int                        $new_changeset_id   The id of the new changeset
      * @param mixed                      $submitted_value    The value submitted by the user
      * @param PFUser                       $submitter          The user who made the modification
-     * @param boolean                    $is_submission      True if artifact submission, false if artifact update
-     * @param boolean                    $bypass_permissions If true, permissions to update/submit the value on field is not checked
+     * @param bool $is_submission True if artifact submission, false if artifact update
+     * @param bool $bypass_permissions If true, permissions to update/submit the value on field is not checked
      *
      * @return bool true if success
      */
@@ -1191,7 +1191,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      *
      * @param Tracker_Artifact_Changeset $changeset   The changeset (needed in only few cases like 'lud' field)
      * @param int                        $value_id    The id of the value
-     * @param boolean                    $has_changed If the changeset value has changed from the rpevious one
+     * @param bool $has_changed If the changeset value has changed from the rpevious one
      *
      * @return Tracker_Artifact_ChangesetValue or null if not found
      */
@@ -1311,7 +1311,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     /**
      * Returns true if field has a default value defined, false otherwise
      *
-     * @return boolean true if field has a default value defined, false otherwise
+     * @return bool true if field has a default value defined, false otherwise
      */
     function hasDefaultValue() {
         return ($this->getProperty('default_value') !== null);

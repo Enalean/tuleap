@@ -58,13 +58,13 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
     /** @var PlanningFactory */
     private $planning_factory;
 
-    /** @var Boolean[] */
+    /** @var bool[] */
     private $cache_read_title;
 
-    /** @var Boolean[] */
+    /** @var bool[] */
     private $cache_read_status;
 
-    /** @var Boolean[] */
+    /** @var bool[] */
     private $cache_initial_effort;
 
     /** @var AgileDashboard_Milestone_Backlog_IBuildBacklogItemAndBacklogItemCollection */

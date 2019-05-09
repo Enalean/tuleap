@@ -139,7 +139,7 @@ class Planning_RequestValidator {
      * @param int                $planning_id         The planning with the current planning tracker id
      * @param PlanningParameters $planning_parameters The parameters being validated
      * 
-     * @return boolean 
+     * @return bool
      */
     private function planningTrackerIsTheCurrentOne($planning_id, PlanningParameters $planning_parameters) {
         $planning = $this->factory->getPlanning($planning_id);
@@ -161,7 +161,7 @@ class Planning_RequestValidator {
      * @param int                $group_id            The project where to search for existing planning trackers
      * @param PlanningParameters $planning_parameters The parameters being validated
      * 
-     * @return boolean
+     * @return bool
      */
     private function trackerIsNotAlreadyUsedAsAPlanningTrackerInProject($group_id, PlanningParameters $planning_parameters) {
         $planning_tracker_id          = $planning_parameters->planning_tracker_id;

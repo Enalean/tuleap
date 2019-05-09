@@ -28,7 +28,7 @@ abstract class GraphOnTrackers_Engine {
     public $data;
     
     /**
-     * @return boolean true if the data are valid to buid the chart
+     * @return bool true if the data are valid to buid the chart
      */
     public function validData() {
         if (count($this->data) > 0) {

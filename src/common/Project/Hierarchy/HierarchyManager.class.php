@@ -42,7 +42,7 @@ class Project_HierarchyManager
     /**
      * @param int $project_id
      * @param int $parent_project_id
-     * @return Boolean
+     * @return bool
      * @throws Project_HierarchyManagerAlreadyAncestorException
      * @throws Project_HierarchyManagerAncestorIsSelfException
      */
@@ -67,7 +67,7 @@ class Project_HierarchyManager
      * @param int $project_id
      * @param int $parent_project_id
      * @param Project|null $current_parent
-     * @return boolean
+     * @return bool
      */
     private function validateParent($project_id, $parent_project_id)
     {
@@ -84,7 +84,7 @@ class Project_HierarchyManager
     /**
      * @param int $project_id
      * @param int $parent_project_id
-     * @return Boolean
+     * @return bool
      */
     private function addParentProject($project_id, $parent_project_id) {
         return $this->getDao()->addParentProject($project_id, $parent_project_id);
@@ -93,7 +93,7 @@ class Project_HierarchyManager
     /**
      * @param int $project_id
      * @param int $parent_project_id
-     * @return Boolean
+     * @return bool
      */
     private function updateParentProject($project_id, $parent_project_id) {
         return $this->getDao()->updateParentProject($project_id, $parent_project_id);
@@ -101,7 +101,7 @@ class Project_HierarchyManager
 
     /**
      * @param int $project_id
-     * @return Boolean
+     * @return bool
      */
     public function removeParentProject($project_id) {
         return $this->getDao()->removeParentProject($project_id);

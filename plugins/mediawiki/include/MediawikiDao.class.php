@@ -260,7 +260,7 @@ class MediawikiDao extends DataAccessObject {
      * Reset all user permissions for a given database according to mapping
      *
      * @param Project $project
-     * @return boolean
+     * @return bool
      */
     public function resetUserGroups(Project $project) {
         $group_id      = $this->da->escapeInt($project->getID());
@@ -531,7 +531,7 @@ class MediawikiDao extends DataAccessObject {
      *
      * @param int $project_id
      * @param bool $enable_compatibility_view
-     * @return boolean true if success
+     * @return bool true if success
      */
     public function updateCompatibilityViewOption($project_id, $enable_compatibility_view) {
         $project_id = $this->da->escapeInt($project_id);

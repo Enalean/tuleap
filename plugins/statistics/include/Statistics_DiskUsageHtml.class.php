@@ -61,8 +61,8 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput {
      *
      * @param Date $startDate
      * @param Date $endDate
-     * @param Integer $groupId
-     * @param Boolean $colored
+     * @param int $groupId
+     * @param bool $colored
      *
      */
     public function getServiceEvolutionForPeriod($startDate , $endDate, $groupId = NULL, $colored = false) {
@@ -114,7 +114,7 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput {
      *
      * Displays the disk usage for a given project
      *
-     * @param Integer $groupId Id of the project we want retrieve its disk usage
+     * @param int $groupId Id of the project we want retrieve its disk usage
      *
      */
     public function getTotalProjectSize($groupId) {

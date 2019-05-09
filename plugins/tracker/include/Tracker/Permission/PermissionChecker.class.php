@@ -45,7 +45,7 @@ class Tracker_Permission_PermissionChecker
      *
      * @param PFUser $user
      * @param Tracker_Artifact $artifact
-     * @return boolean
+     * @return bool
      */
     public function userCanView(PFUser $user, Tracker_Artifact $artifact)
     {

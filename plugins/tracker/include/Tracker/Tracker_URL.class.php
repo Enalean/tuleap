@@ -85,7 +85,7 @@ class Tracker_URL extends URL {
      * 
      * @param Array $requestUri $SERVER['REQUEST_URI']
      * 
-     * @return Integer
+     * @return int
      */
     function getGroupIdFromUrl($requestUri) {
         $request = HTTPRequest::instance();

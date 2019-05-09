@@ -293,7 +293,7 @@ abstract class FilesystemObject extends GitObject implements GitObjectType
      * @static
      * @param mixed $a first object
      * @param mixed $b second object
-     * @return integer comparison result
+     * @return int comparison result
      */
     public static function ComparePath($a, $b) // @codingStandardsIgnoreLine
     {

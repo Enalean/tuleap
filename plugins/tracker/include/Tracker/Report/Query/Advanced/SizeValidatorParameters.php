@@ -24,7 +24,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\VisitorParameters;
 class SizeValidatorParameters implements VisitorParameters
 {
     /**
-     * @var integer
+     * @var int
      */
     private $size;
 
@@ -34,7 +34,7 @@ class SizeValidatorParameters implements VisitorParameters
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getSize()
     {

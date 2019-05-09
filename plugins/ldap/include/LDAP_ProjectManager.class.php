@@ -29,9 +29,9 @@ class LDAP_ProjectManager {
     /**
      * Return true if project uses LDAP for SVN authentication
      *
-     * @param Integer $groupId
+     * @param int $groupId
      *
-     * @return Boolean
+     * @return bool
      */
     function hasSVNLDAPAuth($groupId) {
         if (!isset($this->cacheSVNLDAP[$groupId])) {
@@ -45,7 +45,7 @@ class LDAP_ProjectManager {
      *
      * @param String $groupName
      *
-     * @return Boolean
+     * @return bool
      */
     function hasSVNLDAPAuthByName($groupName) {
         return $this->getDao()->hasLdapAuthByName($groupName);
@@ -54,7 +54,7 @@ class LDAP_ProjectManager {
     /**
      * Enable LDAP based authentication for project SVN repository
      *
-     * @param Integer $groupId
+     * @param int $groupId
      *
      * @return Void
      */

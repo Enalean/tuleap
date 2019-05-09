@@ -125,7 +125,7 @@ abstract class ControllerBase
      *
      * @abstract
      * @access public
-     * @param boolean $local true if caller wants the localized action name
+     * @param bool $local true if caller wants the localized action name
      * @return string action name
      */
     abstract public function GetName($local = false); // @codingStandardsIgnoreLine

@@ -420,7 +420,7 @@ class UserGroupResource extends AuthenticatedResource {
      * @throws 403
      * @throws 404
      *
-     * @return boolean
+     * @return bool
      */
     private function userCanSeeUserGroups($project_id) {
         $project      = $this->project_manager->getProject($project_id);
@@ -434,7 +434,7 @@ class UserGroupResource extends AuthenticatedResource {
      * @throws 403
      * @throws 404
      *
-     * @return boolean
+     * @return bool
      */
     private function userCanSeeUserGroupMembers(ProjectUGroup $ugroup)
     {
@@ -453,7 +453,7 @@ class UserGroupResource extends AuthenticatedResource {
      *
      * @throws 404
      *
-     * @return boolean
+     * @return bool
      */
     private function checkGroupIsViewable($ugroup_id) {
         if (in_array($ugroup_id, ProjectUGroup::$forge_user_groups)) {
@@ -480,7 +480,7 @@ class UserGroupResource extends AuthenticatedResource {
      *
      * @param int $limit Number of elements displayed per page
      *
-     * @return boolean
+     * @return bool
      *
      * @throws 406
      */

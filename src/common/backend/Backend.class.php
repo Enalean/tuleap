@@ -175,7 +175,7 @@ class Backend {
      * @param string $path Path to the file. 
      * @param mixed  $uid  A user name or number.
      * 
-     * @return boolean true on success or false on failure
+     * @return bool true on success or false on failure
      */
     public function chown($path, $uid) {
         if (is_link($path)) {
@@ -191,7 +191,7 @@ class Backend {
      * @param String  $file
      * @param String  $user
      * @param String  $group
-     * @param Integer $mode
+     * @param int $mode
      *
      * @return void
      */
@@ -212,7 +212,7 @@ class Backend {
      * @param string $path Path to the file. 
      * @param mixed  $uid  A group name or number.
      * 
-     * @return boolean true on success or false on failure
+     * @return bool true on success or false on failure
      */
     public function chgrp($path, $uid) {
         if (is_link($path)) {
@@ -232,7 +232,7 @@ class Backend {
      *                     owner, the user group in which the owner is in, and 
      *                     to everybody else in this order.
      * 
-     * @return boolean true on success or false on failure
+     * @return bool true on success or false on failure
      */
     public function chmod($file, $mode) {
         return chmod($file, $mode);
@@ -254,7 +254,7 @@ class Backend {
      * 
      * @param String $database Database
      * @param String $entry    Entry to search
-     * @return String|Array|Boolean Result
+     * @return String|Array|bool Result
      */
     protected function getent($database, $entry=false) {
         $cmd = 'getent '.escapeshellarg($database);
@@ -278,7 +278,7 @@ class Backend {
      * Return true if given name exists in passwd unix database
      * 
      * @param String $name Identifier to search
-     * @return Boolean True if user exists
+     * @return bool True if user exists
      */
     public function unixUserExists($name) {
         if ($name != '') {
@@ -291,7 +291,7 @@ class Backend {
      * Return true if given name exists in group unix database
      * 
      * @param String $name Identifier to search
-     * @return Boolean True if group exists
+     * @return bool True if group exists
      */
     public function unixGroupExists($name) {
         if ($name != '') {
@@ -304,7 +304,7 @@ class Backend {
      * Create system function to allow mocking in unit tests 
      *
      * @param string $cmd The command that will be executed
-     * @param Integer $rval command return value
+     * @param int $rval command return value
      * @return mixed Returns the last line of the command output on success, and false 
      * on failure.
      */
@@ -318,7 +318,7 @@ class Backend {
      * @param string $message The error message that should be logged.
      * @param string $level   The level of the message "info", "warn", ...
      * 
-     * @return boolean true on success or false on failure
+     * @return bool true on success or false on failure
      */
     public function log($message, $level = 'info') {
         $logger = new BackendLogger();
@@ -449,7 +449,7 @@ class Backend {
      * @param string $filename Path to the file
      * @param string $command  content of the block
      *
-     * @return boolean true on success or false on failure.
+     * @return bool true on success or false on failure.
      */
     public function addBlock($filename, $command) {
         
@@ -468,7 +468,7 @@ class Backend {
      * 
      * @param string $filename Path to the file
      *
-     * @return boolean true on success or false on failure.
+     * @return bool true on success or false on failure.
      */
     public function removeBlock($filename) {
         $file_array     = file($filename);
@@ -496,7 +496,7 @@ class Backend {
      * @param array  $file_array Content to write to file
      * @param string $filename   Path to the file
      *
-     * @return boolean true on success or false on failure.
+     * @return bool true on success or false on failure.
      */
     public function writeArrayToFile($file_array, $filename) {
 
@@ -527,7 +527,7 @@ class Backend {
      * @param string $file_old Path to the old file.
      * @param string $force    Force install even if the files are the same or file is empty. Default is false.
      *
-     * @return boolean true on success or false on failure.
+     * @return bool true on success or false on failure.
      */
     public function installNewFileVersion($file_new, $file, $file_old, $force=false) {
         // Backup existing file and install new one if they are different

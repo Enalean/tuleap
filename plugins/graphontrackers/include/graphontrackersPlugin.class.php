@@ -42,7 +42,7 @@ class GraphOnTrackersPlugin extends Plugin
     /**
      *
      *
-     * @param integer $id plugin id
+     * @param int $id plugin id
      */
     public function __construct($id) {
         parent::__construct($id);

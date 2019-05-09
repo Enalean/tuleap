@@ -67,7 +67,7 @@ class TrackerDao extends DataAccessObject {
     * Check if the shortname of the tracker is already used in the project
     * @param string $item_name the shortname of the tracker we are looking for
     * @param int $group_id the ID of the group
-    * @return boolean
+    * @return bool
     */
     public function isShortNameExists($item_name, $group_id) {
         $item_name = $this->da->quoteSmart($item_name);
@@ -325,7 +325,7 @@ class TrackerDao extends DataAccessObject {
     *
     * @param int $tracker_id the ID of the tracker
     *
-    * @return Boolean
+    * @return bool
     */
     public function restoreTrackerMarkAsDeleted($tracker_id) {
         $tracker_id = $this->da->escapeInt($tracker_id);

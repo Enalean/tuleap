@@ -63,7 +63,7 @@ class ChartConfigurationValueRetriever
     }
 
     /**
-     * @return Integer
+     * @return int
      *
      * @throws Tracker_FormElement_Chart_Field_Exception
      */
@@ -97,7 +97,7 @@ class ChartConfigurationValueRetriever
     /**
      * @param Tracker_Artifact $artifact
      *
-     * @return Integer
+     * @return int
      *
      * @throws Tracker_FormElement_Chart_Field_Exception
      */

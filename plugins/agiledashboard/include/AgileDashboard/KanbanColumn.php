@@ -37,7 +37,7 @@ class AgileDashboard_KanbanColumn {
     private $label;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $is_open;
 
@@ -52,7 +52,7 @@ class AgileDashboard_KanbanColumn {
     private $limit;
 
      /**
-      * @var boolean
+      * @var bool
       */
     private $is_removable;
 

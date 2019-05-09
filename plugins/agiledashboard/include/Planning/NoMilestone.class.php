@@ -68,7 +68,7 @@ class Planning_NoMilestone implements Planning_Milestone {
 
     /**
      * @param PFUser $user
-     * @return boolean
+     * @return bool
      */
     public function userCanView(PFUser $user) {
         return true; // User can view milestone content, since it's empty.

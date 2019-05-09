@@ -100,7 +100,7 @@ class Chart_GanttMileStone {
      *
      * @param string $name The name of the property
      *
-     * @return boolean
+     * @return bool
      */
     public function __isset($name) {
         return isset($this->jpgraph_instance->$name);
@@ -112,7 +112,7 @@ class Chart_GanttMileStone {
      *
      * @param string $name The name of the property
      *
-     * @return boolean
+     * @return bool
      */
     public function __unset($name) {
         unset($this->jpgraph_instance->$name);

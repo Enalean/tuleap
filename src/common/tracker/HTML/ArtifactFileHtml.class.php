@@ -32,7 +32,7 @@ class ArtifactFileHtml extends ArtifactFile {
 	/**
 	 * Upload a file to store in artifact_file
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	function upload($input_file,$input_file_name,$input_file_type,$description,&$changes) {
             global $sys_max_size_attachment,$Language;

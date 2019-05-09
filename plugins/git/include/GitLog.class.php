@@ -60,7 +60,7 @@ class GitLog
     /**
      * Return the SQL Statement for logs daily pushs
      *
-     * @param Integer $project_id  Id of the project
+     * @param int $project_id Id of the project
      * @param String  $condition Condition
      *
      * @return String

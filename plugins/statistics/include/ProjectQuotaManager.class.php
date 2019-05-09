@@ -73,7 +73,7 @@ class ProjectQuotaManager {
     /**
      * Retrieve the authorized disk quota for a project
      *
-     * @param Integer $group_id The ID of the project we are looking for its quota
+     * @param int $group_id The ID of the project we are looking for its quota
      *
      * @return int
      */
@@ -88,7 +88,7 @@ class ProjectQuotaManager {
     /**
      * Convert a given quota size in bi to Gib
      *
-     * @param Integer $size The quota size in bi
+     * @param int $size The quota size in bi
      *
      * @return Float
      */
@@ -99,10 +99,10 @@ class ProjectQuotaManager {
     /**
      * Check if a given project is overquota given it
      *
-     * @param Integer $current_size The current disk size of the project in bi
-     * @param Integer $allowed_size The allowed disk size of the project in bi
+     * @param int $current_size The current disk size of the project in bi
+     * @param int $allowed_size The allowed disk size of the project in bi
      *
-     * @return Boolean
+     * @return bool
      */
     private function isProjectOverQuota($current_size, $allowed_size) {
         if (!empty($current_size) && ($current_size > $allowed_size)) {
@@ -159,7 +159,7 @@ class ProjectQuotaManager {
      *
      * @param int $groupId ID of the project we want to retrieve its custom quota
      *
-     * @return Integer
+     * @return int
      */
     public function getProjectCustomQuota($groupId) {
         $allowedQuota = null;
@@ -176,7 +176,7 @@ class ProjectQuotaManager {
      *
      * @param String  $project    Project for which quota will be customized
      * @param String  $requester  User that asked for the custom quota
-     * @param Integer $quota      Quota to be set for the project
+     * @param int $quota Quota to be set for the project
      * @param String  $motivation Why the custom quota was requested
      *
      * @return Void

@@ -40,7 +40,7 @@ class ProviderPresenter {
     public  $colors_presenters;
 
     /**
-     * @var boolean
+     * @var bool
      */
     public $can_user_enable_unique_authentication_endpoint;
 

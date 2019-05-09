@@ -28,7 +28,7 @@ class Git_Ci_Dao extends DataAccessObject {
     /**
      * Retrieve git trigger of a ci job
      *
-     * @param Integer $jobId Id of the CI job
+     * @param int $jobId Id of the CI job
      *
      * @return DataAccessResult
      */
@@ -42,7 +42,7 @@ class Git_Ci_Dao extends DataAccessObject {
     /**
      * Retrieve git triggers of a project
      *
-     * @param Integer $projectId Id of the project
+     * @param int $projectId Id of the project
      *
      * @return DataAccessResult
      */
@@ -57,7 +57,7 @@ class Git_Ci_Dao extends DataAccessObject {
     /**
      * Retrieve Jobs path corresponding to the repository
      *
-     * @param Integer $repositoryId Id of the repository
+     * @param int $repositoryId Id of the repository
      *
      * @return DataAccessResult
      */
@@ -72,8 +72,8 @@ class Git_Ci_Dao extends DataAccessObject {
     /**
      * Check that the repository exist and belong to the same project as the ci job
      *
-     * @param Integer $jobId        Id of the CI job
-     * @param Integer $repositoryId Id of the repository
+     * @param int $jobId Id of the CI job
+     * @param int $repositoryId Id of the repository
      *
      * @return DataAccessResult
      */
@@ -89,10 +89,10 @@ class Git_Ci_Dao extends DataAccessObject {
     /**
      * Save a new trigger
      *
-     * @param Integer $jobId        Id of the CI job
-     * @param Integer $repositoryId Id of the repository
+     * @param int $jobId Id of the CI job
+     * @param int $repositoryId Id of the repository
      *
-     * @return Boolean
+     * @return bool
      */
     function saveTrigger($jobId, $repositoryId) {
         $sql = 'REPLACE INTO plugin_git_ci
@@ -111,9 +111,9 @@ class Git_Ci_Dao extends DataAccessObject {
     /**
      * Delete trigger
      *
-     * @param Integer $jobId Id of the CI job
+     * @param int $jobId Id of the CI job
      *
-     * @return Boolean
+     * @return bool
      */
     function deleteTrigger($jobId) {
         $sql = 'DELETE FROM plugin_git_ci

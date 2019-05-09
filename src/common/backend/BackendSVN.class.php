@@ -91,7 +91,7 @@ class BackendSVN extends Backend {
      *
      * @param int $group_id The id of the project to work on
      *
-     * @return boolean true if repo is successfully created, false otherwise
+     * @return bool true if repo is successfully created, false otherwise
      */
     public function createProjectSVN($group_id) {
         $project=$this->getProjectManager()->getProject($group_id);
@@ -280,7 +280,7 @@ class BackendSVN extends Backend {
      *
      * @param Project $project The project to work on
      *
-     * @return boolean true on success or false on failure
+     * @return bool true on success or false on failure
      */
     public function updateHooks(Project $project, $system_path, $can_change_svn_log, $hook_commit_path, $post_commit_file, $post_commit_launcher, $pre_commit_file) {
         $unix_group_name=$project->getUnixNameMixedCase(); // May contain upper-case letters
@@ -394,7 +394,7 @@ class BackendSVN extends Backend {
      * @param String $ugroup_name     New name of the renamed ugroup (if any)
      * @param String $ugroup_old_name Old name of the renamed ugroup (if any)
      *
-     * @return boolean true on success or false on failure
+     * @return bool true on success or false on failure
      */
     public function updateSVNAccess($group_id, $system_path, $ugroup_name = null, $ugroup_old_name = null) {
         $project = $this->getProjectManager()->getProject($group_id);
@@ -647,7 +647,7 @@ class BackendSVN extends Backend {
      *
      * @param PFUser $user
      *
-     * @return Boolean
+     * @return bool
      */
     public function updateSVNAccessForGivenMember($user) {
         $projects = $user->getAllProjects();
@@ -665,7 +665,7 @@ class BackendSVN extends Backend {
      *
      * @param Project $project The project to update
      *
-     * @return Boolean
+     * @return bool
      */
     public function updateProjectSVNAccessFile(Project $project) {
         if ($this->repositoryExists($project)) {
@@ -686,7 +686,7 @@ class BackendSVN extends Backend {
     /**
      * Say if apache conf need update
      *
-     * @return boolean
+     * @return bool
      */
     public function getSVNApacheConfNeedUpdate() {
         return $this->SVNApacheConfNeedUpdate;
@@ -696,7 +696,7 @@ class BackendSVN extends Backend {
      * Add Subversion DAV definition for all projects in a dedicated Apache
      * configuration file
      *
-     * @return boolean true on success or false on failure
+     * @return bool true on success or false on failure
      */
     public function generateSVNApacheConf() {
         $svn_root_file = ForgeConfig::get('svn_root_file');
@@ -746,7 +746,7 @@ class BackendSVN extends Backend {
      *
      * @param int $group_id The id of the project to work on
      *
-     * @return boolean true on success or false on failure
+     * @return bool true on success or false on failure
      */
     public function archiveProjectSVN($group_id) {
         $project=$this->getProjectManager()->getProject($group_id);
@@ -771,9 +771,9 @@ class BackendSVN extends Backend {
      * Make the cvs repository of the project private or public
      *
      * @param Project $project    The project to work on
-     * @param boolean $is_private true if the repository is private
+     * @param bool $is_private true if the repository is private
      *
-     * @return boolean true if success
+     * @return bool true if success
      */
     public function setSVNPrivacy(Project $project, $is_private) {
         $perms   = $is_private ? 0770 : 0775;
@@ -787,7 +787,7 @@ class BackendSVN extends Backend {
      *
      * @param Project $project The project to work on
      *
-     * @return boolean true if success
+     * @return bool true if success
      */
     public function checkSVNMode(Project $project) {
         $svnroot = $project->getSVNRootPath();
@@ -862,7 +862,7 @@ class BackendSVN extends Backend {
      * @param Project $project
      * @param String  $newName
      *
-     * @return Boolean
+     * @return bool
      */
     public function renameSVNRepository(Project $project, $newName) {
         return rename($project->getSVNRootPath(), $GLOBALS['svn_prefix'].'/'.$newName);

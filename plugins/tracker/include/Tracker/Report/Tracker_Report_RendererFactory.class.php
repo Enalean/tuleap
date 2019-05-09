@@ -168,7 +168,7 @@ class Tracker_Report_RendererFactory {
      * @param Report $report the report
      * @param mixed $new_rank a position: an int or 'beginning' or 'end'
      *
-     * @return boolean true on success or false on failure
+     * @return bool true on success or false on failure
      */
     public function move($id, $report, $new_rank) {
         return $this->getDao()->move($id, $report->id, $new_rank);
@@ -296,7 +296,7 @@ class Tracker_Report_RendererFactory {
      *
      * @param Tracker_Report_Renderer $renderer the renderer to save
      *
-     * @return boolean true on success or false on failure
+     * @return bool true on success or false on failure
      */
     public function save(Tracker_Report_Renderer $renderer) {
         return $this->getDao()->save(

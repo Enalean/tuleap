@@ -51,7 +51,7 @@ class Docman_ItemFactory
      *
      * This is useful when you need to cache information across method calls
      *
-     * @param Integer $group_id Project id
+     * @param int $group_id Project id
      *
      * @return Docman_ItemFactory
      */
@@ -67,7 +67,7 @@ class Docman_ItemFactory
      *
      * This is useful when you need to cache information across method calls
      *
-     * @param Integer $group_id Project id
+     * @param int $group_id Project id
      *
      * @return Docman_ItemFactory
      */
@@ -80,7 +80,7 @@ class Docman_ItemFactory
      *
      * This is useful when you need to cache information across method calls
      *
-     * @param Integer $group_id Project id
+     * @param int $group_id Project id
      *
      * @return Docman_ItemFactory
      */
@@ -391,10 +391,10 @@ class Docman_ItemFactory
     /**
      * Check if a given item is into the subtree of another given item or not.
      *
-     * @param Integer $childId  Id of the potential child.
-     * @param Integer $parentId Id of the potential parent.
+     * @param int $childId Id of the potential child.
+     * @param int $parentId Id of the potential parent.
      *
-     * @return Boolean
+     * @return bool
      */
     function isInSubTree($childId, $parentId) {
         $child = $this->getItemFromDb($childId);
@@ -412,7 +412,7 @@ class Docman_ItemFactory
     /**
      * Give the list of parents of an item
      *
-     * @param Integer $childId  Id of the child.
+     * @param int $childId Id of the child.
      *
      * @return Array
      */
@@ -434,9 +434,9 @@ class Docman_ItemFactory
      *
      * @param Docman_Item $rootItem
      * @param PFUser $user
-     * @param boolean $ignorePerms
-     * @param boolean $expandAll
-     * @param boolean $ignoreObsolete
+     * @param bool $ignorePerms
+     * @param bool $expandAll
+     * @param bool $ignoreObsolete
      * @return Docman_Item
      */
     function &getItemSubTree(&$rootItem, &$user, $ignorePerms=false, $expandAll=false, $ignoreObsolete=true) {
@@ -1045,7 +1045,7 @@ class Docman_ItemFactory
      * @param $orphan      Hashmap of item ids. Items (in ItemList) without
      *                     parent node
      * @param $wantedItems Items needed to continue to build the tree.
-     * @return Integer Id of root item if found, false otherwise.
+     * @return int Id of root item if found, false otherwise.
      */
     function connectOrphansToParents(&$itemList, &$orphans, &$wantedItems) {
         $rootId = false;
@@ -1169,9 +1169,9 @@ class Docman_ItemFactory
      * If no item match, returns false.
      *
      * @param PFUser    $user
-     * @param Integer $groupId
+     * @param int $groupId
      *
-     * @return Integer or false.
+     * @return int or false.
      */
     function getCutPreference($user, $groupId=null) {
         if(!isset($this->cutItem[$user->getId()])) {
@@ -1348,9 +1348,9 @@ class Docman_ItemFactory
     /**
      * Delete Docman hierarchy for a given project
      *
-     * @param Integer $groupId The project id
+     * @param int $groupId The project id
      *
-     * @return Boolean success
+     * @return bool success
      */
     public function deleteProjectTree($groupId) {
         $deleteStatus = true;
@@ -1380,9 +1380,9 @@ class Docman_ItemFactory
      *
      * @param Docman_Item $item        Item to delete
      * @param PFUser        $user        User who performs the delete
-     * @param Boolean     $cascadeWiki If there are wiki documents, do we delete corresponding in wiki page too ?
+     * @param bool $cascadeWiki If there are wiki documents, do we delete corresponding in wiki page too ?
      *
-     * @return Boolean success
+     * @return bool success
      */
     public function deleteSubTree(Docman_Item $item, PFUser $user, $cascadeWiki) {
         if($item && !$this->isRoot($item)) {
@@ -1408,9 +1408,9 @@ class Docman_ItemFactory
     /**
      * List pending items
      *
-     * @param Integer $groupId
-     * @param Integer $offset
-     * @param Integer $limit
+     * @param int $groupId
+     * @param int $offset
+     * @param int $limit
      *
      * @return Array
      */
@@ -1422,9 +1422,9 @@ class Docman_ItemFactory
     /**
      * Purge deleted items with delete date lower than the given time
      *
-     * @param Integer $time
+     * @param int $time
      *
-     * @return Boolean
+     * @return bool
      */
     function purgeDeletedItems($time) {
         $dao = $this->_getItemDao();
@@ -1444,7 +1444,7 @@ class Docman_ItemFactory
      *
      * @param Docman_Item $item
      *
-     * @return Boolean
+     * @return bool
      */
     public function purgeDeletedItem($item) {
         $dao = $this->_getItemDao();
@@ -1456,7 +1456,7 @@ class Docman_ItemFactory
      *
      * @param Docman_Item $item
      *
-     * @return Boolean
+     * @return bool
      */
     public function restore($item) {
         $dao         = $this->_getItemDao();

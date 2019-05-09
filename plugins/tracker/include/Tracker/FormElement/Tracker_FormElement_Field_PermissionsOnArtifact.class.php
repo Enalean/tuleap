@@ -56,7 +56,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
      * or specific values of the field.
      * (The field itself will be deleted later)
      *
-     * @return boolean true if success
+     * @return bool true if success
      */
     public function delete() {
         return true;
@@ -186,7 +186,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
      *
      * @param Tracker_Artifact                $artifact         The artifact
      * @param PFUser                          $user             The user who will receive the email
-     * @param boolean                         $ignore_perms
+     * @param bool $ignore_perms
      * @param Tracker_Artifact_ChangesetValue $value            The actual value of the field
      * @param string                          $format           mail format
      *
@@ -620,9 +620,9 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
      * @param Tracker_Artifact $artifact
      * @param mixed $submitted_value
      * @param Tracker_Artifact_ChangesetValue $last_changeset_value
-     * @param boolean $is_submission
+     * @param bool $is_submission
      *
-     * @return boolean
+     * @return bool
      */
     public function validateFieldWithPermissionsAndRequiredStatus(
         Tracker_Artifact $artifact,
@@ -675,7 +675,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
      * @param mixed $value
      * @param Tracker_Artifact_ChangesetValue $previous_changesetvalue
      *
-     * @return boolean
+     * @return bool
      */
     protected function saveValue(
         $artifact,
@@ -713,7 +713,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
      *
      * @param Tracker_Artifact_Changeset $changeset   The changeset (needed in only few cases like 'lud' field)
      * @param int                        $value_id    The id of the value
-     * @param boolean                    $has_changed If the changeset value has changed from the previous one
+     * @param bool $has_changed If the changeset value has changed from the previous one
      *
      * @return Tracker_Artifact_ChangesetValue or null if not found
      */
@@ -829,7 +829,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
      * @param Array $ugroups the list of ugroups
      * @param int          $artifact  The id of the artifact
      *
-     * @return boolean
+     * @return bool
      */
     public function addPermissions ($ugroups, $artifact_id) {
         $pm = PermissionsManager::instance();

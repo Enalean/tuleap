@@ -23,12 +23,12 @@ namespace Tuleap\Git\GitPHP;
 interface GitObjectType
 {
     /**
-     * @return boolean
+     * @return bool
      */
     public function isTree();
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isBlob();
 

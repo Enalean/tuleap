@@ -339,7 +339,7 @@ class GitRepositoryManager {
      * @param String        $scope           Either GitRepository::REPO_SCOPE_INDIVIDUAL or GitRepository::REPO_SCOPE_PROJECT
      * @param array         $forkPermissions Permissions to be applied for the new repository
      *
-     * @return Boolean
+     * @return bool
      *
      * @throws Exception
      */
@@ -393,7 +393,7 @@ class GitRepositoryManager {
      * @param Project $project
      * @param String  $name
      *
-     * @return Boolean
+     * @return bool
      */
     public function isRepositoryNameAlreadyUsed(GitRepository $new_repository) {
         $repositories = $this->repository_factory->getAllRepositories($new_repository->getProject());

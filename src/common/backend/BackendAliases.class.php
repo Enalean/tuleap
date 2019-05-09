@@ -50,7 +50,7 @@ class BackendAliases extends Backend {
     /**
      * Do we need to update mail aliases?
      * 
-     * @return boolean
+     * @return bool
      */
     function aliasesNeedUpdate() {
         return $this->need_update;

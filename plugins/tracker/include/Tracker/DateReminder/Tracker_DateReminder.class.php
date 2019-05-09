@@ -42,14 +42,14 @@ class Tracker_DateReminder {
    /**
     * Constructor of the class
     *
-    * @param Integer                      $reminderId       Id of the reminder
-    * @param Integer                      $trackerId        Id of the tracker
-    * @param Integer                      $fieldId          Id of the field
+    * @param int $reminderId Id of the reminder
+    * @param int $trackerId Id of the tracker
+    * @param int $fieldId Id of the field
     * @param String                       $ugroups          List of ugroups to be notified
     * @param Tracker_DateReminder_Role[]  $roles            Array of tracker predifined roles to be notified
-    * @param Integer                      $notificationType Before or after the date value
-    * @param Integer                      $distance         Distance from the date value
-    * @param Integer                      $status           Status of the reminder
+    * @param int $notificationType Before or after the date value
+    * @param int $distance Distance from the date value
+    * @param int $status Status of the reminder
     *
     * @return Void
     */
@@ -88,7 +88,7 @@ class Tracker_DateReminder {
     /**
      * Get tracker id of the reminder
      *
-     * @return Integer
+     * @return int
      */
     public function getTrackerId() {
         return $this->trackerId;
@@ -97,7 +97,7 @@ class Tracker_DateReminder {
     /**
      * Get field id of the reminder
      *
-     * @return Integer
+     * @return int
      */
     public function getFieldId() {
         return $this->fieldId;
@@ -127,7 +127,7 @@ class Tracker_DateReminder {
     /**
      * Get the Notification Type of this reminder
      *
-     * @return Integer
+     * @return int
      */
     public function getNotificationType() {
         return $this->notificationType;
@@ -136,7 +136,7 @@ class Tracker_DateReminder {
     /**
      * Get the distance of this reminder
      *
-     * @return Integer
+     * @return int
      */
     public function getDistance() {
         return $this->distance;
@@ -145,7 +145,7 @@ class Tracker_DateReminder {
     /**
      * Get the notified ugroups ids of this reminder
      *
-     * @param Boolean $asArray Return an array if true and a string otherwise
+     * @param bool $asArray Return an array if true and a string otherwise
      *
      * @return Mixed
      */
@@ -170,7 +170,7 @@ class Tracker_DateReminder {
     /**
      * Get the status of this reminder
      *
-     * @return Integer
+     * @return int
      */
     public function getStatus() {
         return $this->status;
@@ -179,7 +179,7 @@ class Tracker_DateReminder {
     /**
      * Set the tracker of this reminder
      *
-     * @param Integer $trackerId Id of the tracker
+     * @param int $trackerId Id of the tracker
      *
      * @return Void
      */
@@ -190,7 +190,7 @@ class Tracker_DateReminder {
     /**
      * Set the Notification Type of this reminder
      *
-     * @param Integer $notificationType The Notification Type
+     * @param int $notificationType The Notification Type
      *
      * @return Void
      */

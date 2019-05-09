@@ -175,7 +175,7 @@ class CardsResource
      *
      * @param string $id Id of the card (format: planningId_artifactId)
      *
-     * @return boolean
+     * @return bool
      *
      * @throws 400
      */

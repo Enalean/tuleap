@@ -146,7 +146,7 @@ class GitForkPermissionsManager {
      * Fetch the html code to display permissions form when forking repositories
      *
      * @param Array   $params   Request params
-     * @param Integer $groupId  Project Id
+     * @param int $groupId Project Id
      * @param String  $userName User name
      *
      * @return String
@@ -248,7 +248,7 @@ class GitForkPermissionsManager {
     /**
      * Display access control management for gitolite backend
      *
-     * @param Integer $project_id Project Id, to manage permissions when performing a cross project fork
+     * @param int $project_id Project Id, to manage permissions when performing a cross project fork
      *
      * @return String
      */

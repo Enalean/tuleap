@@ -66,7 +66,7 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
      * @param array   $fields_data       Artifact fields values
      * @param string  $comment           The comment (follow-up) associated with the artifact update
      * @param PFUser  $submitter         The user who is doing the update
-     * @param boolean $send_notification true if a notification must be sent, false otherwise
+     * @param bool $send_notification true if a notification must be sent, false otherwise
      * @param string  $comment_format    The comment (follow-up) type ("text" | "html")
      *
      * @throws Tracker_Exception In the validation

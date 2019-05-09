@@ -54,7 +54,7 @@ class WikiCloner {
    *
    *  Check if new project's wiki service is used.
    *
-   *  @return boolean.
+   *  @return bool .
    *
    *
    */
@@ -70,7 +70,7 @@ class WikiCloner {
  /**
    *
    *  Check if template project has wiki service enabled
-   *  @return boolean
+   *  @return bool
    *
    */
   function templateWikiExists(){
@@ -95,8 +95,8 @@ class WikiCloner {
    *  Create a clone of the template wiki. It includes:
    *  - the clone wiki pages (wiki_page table).
    *
-   *  @return boolean.
-   *push
+   *  @return bool .
+ * push
    */
   function CloneWiki(){
       $this->addWikiEntries();
@@ -256,7 +256,7 @@ class WikiCloner {
    *
    *  @param int : template attachment id.
    *
-   *  @return boolean.
+   *  @return bool .
    *
    */
   function attachmentHasAPermission($attachment_id){
@@ -560,8 +560,8 @@ class WikiCloner {
    *  Check if a template page is non empty
    * 
    *  @param int : id of template wiki page
-   *  @return boolean : true if the template page is considered as non empty in
-   *  the template project.
+   *  @return bool : true if the template page is considered as non empty in
+ * the template project.
    *   
    */
   function isTemplatePageNonEmpty($id){

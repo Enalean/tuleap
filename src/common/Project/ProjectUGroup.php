@@ -217,7 +217,7 @@ class ProjectUGroup implements User_UGroup // phpcs:ignore PSR1.Classes.ClassDec
     /**
      * Get the ugroup id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -416,10 +416,10 @@ class ProjectUGroup implements User_UGroup // phpcs:ignore PSR1.Classes.ClassDec
     /**
     * Check if the ugroup exist for the given project
     *
-    * @param integer $groupId  The group id
-    * @param integer $ugroupId The ugroup id
+    * @param int $groupId The group id
+    * @param int $ugroupId The ugroup id
     *
-    * @return boolean
+    * @return bool
     */
     public function exists($groupId, $ugroupId)
     {
@@ -429,7 +429,7 @@ class ProjectUGroup implements User_UGroup // phpcs:ignore PSR1.Classes.ClassDec
     /**
      * Return project admins of given static group
      *
-     * @param integer $groupId Id of the project
+     * @param int $groupId Id of the project
      * @param array   $ugroups list of ugroups
      *
      * @return DataAccessResult|false
@@ -492,9 +492,9 @@ class ProjectUGroup implements User_UGroup // phpcs:ignore PSR1.Classes.ClassDec
     /**
      * Add user to a static ugroup
      *
-     * @param integer $group_id  Id of the project
-     * @param integer $ugroup_id Id of the ugroup
-     * @param integer $user_id   Id of the user
+     * @param int $group_id Id of the project
+     * @param int $ugroup_id Id of the ugroup
+     * @param int $user_id Id of the user
      *
      * @return void
      */
@@ -521,7 +521,7 @@ class ProjectUGroup implements User_UGroup // phpcs:ignore PSR1.Classes.ClassDec
     /**
      * Convert a dynamic ugroup_id into it's DB table update to add someone to a given group
      *
-     * @param integer $id Id of the ugroup
+     * @param int $id Id of the ugroup
      *
      * @throws UGroup_Invalid_Exception
      *
@@ -576,9 +576,9 @@ class ProjectUGroup implements User_UGroup // phpcs:ignore PSR1.Classes.ClassDec
     /**
      * Remove user from static ugroup
      *
-     * @param integer $group_id  Id of the project
-     * @param integer $ugroup_id Id of the ugroup
-     * @param integer $user_id   Id of the user
+     * @param int $group_id Id of the project
+     * @param int $ugroup_id Id of the ugroup
+     * @param int $user_id Id of the user
      *
      * @return void
      */
@@ -593,7 +593,7 @@ class ProjectUGroup implements User_UGroup // phpcs:ignore PSR1.Classes.ClassDec
      *
      * @param PFUser $user User to remove
      *
-     * @return boolean
+     * @return bool
      */
     protected function removeUserFromDynamicGroup(PFUser $user)
     {
@@ -609,7 +609,7 @@ class ProjectUGroup implements User_UGroup // phpcs:ignore PSR1.Classes.ClassDec
     /**
      * Convert a dynamic ugroup_id into it's DB table update to remove someone from given group
      *
-     * @param integer $id Id of the ugroup
+     * @param int $id Id of the ugroup
      *
      * @throws UGroup_Invalid_Exception
      *
@@ -639,9 +639,9 @@ class ProjectUGroup implements User_UGroup // phpcs:ignore PSR1.Classes.ClassDec
     /**
      * Check if the user group is bound
      *
-     * @param integer $ugroupId Id of the user goup
+     * @param int $ugroupId Id of the user goup
      *
-     * @return boolean
+     * @return bool
      */
     public function isBound()
     {

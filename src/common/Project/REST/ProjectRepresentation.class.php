@@ -38,7 +38,7 @@ class ProjectRepresentation extends MinimalProjectRepresentation
      */
     public $additional_informations = array();
     /**
-     * @var boolean
+     * @var bool
      */
     public $is_member_of;
 

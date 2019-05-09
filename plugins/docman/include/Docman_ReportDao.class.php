@@ -100,7 +100,7 @@ extends DataAccessObject {
      * @param $userId user id
      * @param $itemId item id 
      * @param $scope (I/P) (personnel/project)
-     * @return Boolean
+     * @return bool
      */
     function verifyQueryUnicity($name, $groupId, $userId, $scope){
         

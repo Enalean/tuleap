@@ -56,7 +56,7 @@ class FRSPackage {
      */
     var $rank;
     /**
-     * @var boolean $approve_license true if the license has been approved, false otherwise
+     * @var bool $approve_license true if the license has been approved, false otherwise
      */
     var $approve_license;
 
@@ -112,7 +112,7 @@ class FRSPackage {
     
     /**
      * Determines if the package is active or not
-     * @return boolean true if the package is active, false otherwise
+     * @return bool true if the package is active, false otherwise
      */
     function isActive() {
         $frsrf = new FRSPackageFactory();
@@ -121,7 +121,7 @@ class FRSPackage {
     
     /**
      * Determines if the package is hidden or not
-     * @return boolean true if the package is hidden, false otherwise
+     * @return bool true if the package is hidden, false otherwise
      */
     function isHidden() {
         $frsrf = new FRSPackageFactory();
@@ -130,7 +130,7 @@ class FRSPackage {
     
     /**
      * Determines if the package is deleted or not
-     * @return boolean true if the package is deleted, false otherwise
+     * @return bool true if the package is deleted, false otherwise
      */
     function isDeleted() {
         $frsrf = new FRSPackageFactory();

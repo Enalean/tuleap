@@ -26,7 +26,7 @@ use Project;
 class Dao extends DataAccessObject {
 
     /**
-     * @return Boolean
+     * @return bool
      */
     public function saveTrigger($job_id, $repository_id, $path) {
         $job_id        = $this->da->escapeInt($job_id);

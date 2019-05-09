@@ -42,7 +42,7 @@ class ArtifactFile {
 	 *
 	 *	@param	object	The Artifact object.
 	 *  @param	array	(all fields from artifact_file_user_vw) OR id from database.
-	 *  @return	boolean	success.
+	 *  @return bool success.
 	 */
 	function __construct(&$Artifact, $data=false) {
 	  global $Language;
@@ -171,7 +171,7 @@ class ArtifactFile {
         /**
 	 *	delete - delete this artifact file from the db.
 	 *
-	 *	@return	boolean	success.
+	 *	@return bool success.
 	 */
 	function delete() {
 	  global $Language;
@@ -218,7 +218,7 @@ class ArtifactFile {
 	 *	fetchData - re-fetch the data for this ArtifactFile from the database.
 	 *
 	 *	@param	int	The file_id.
-	 *	@return	boolean	success.
+	 *	@return bool success.
 	 */
 	function fetchData($id) {
 	  global $Language;

@@ -131,7 +131,7 @@ class ChartConfigurationFieldRetriever
 
     /**
      * @param Tracker $tracker
-     * @return Boolean
+     * @return bool
      */
     public function doesRemainingEffortFieldExists(Tracker $tracker)
     {

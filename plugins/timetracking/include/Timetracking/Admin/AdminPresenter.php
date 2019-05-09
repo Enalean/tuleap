@@ -31,7 +31,7 @@ class AdminPresenter
     public $form_url;
 
     /**
-     * @var boolean
+     * @var bool
      */
     public $is_timetracking_enabled;
 

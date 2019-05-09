@@ -132,7 +132,7 @@ class TimePeriodWithoutWeekEnd  extends TimePeriod {
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isTodayWithinTimePeriod() {
         if ($this->getStartDate() <= $this->getTodayTimestamp() &&

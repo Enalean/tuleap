@@ -134,7 +134,7 @@ class Group {
     /**
      * Simple boolean test to see if it's a project or not
      *
-     * @return Boolean
+     * @return bool
      */
     function isProject() {
         $template = $this->_getTemplateSingleton();
@@ -284,7 +284,7 @@ class Group {
          * This method relies on global state so kittens die everytime you use it
          *
          * @deprecated use PFuser::isAdmin() instead
-         * @return boolean
+         * @return bool
          */
     public function userIsAdmin()
     {
@@ -348,7 +348,7 @@ class Group {
     /**
      * Return true, if this group is a template to create other groups
      *
-     * @return Boolean
+     * @return bool
      */
     function isTemplate() {
         return $this->_getTemplateSingleton()->isTemplate($this->data_array['type']);

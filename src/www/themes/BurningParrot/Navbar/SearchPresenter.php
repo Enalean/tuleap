@@ -28,7 +28,7 @@ class SearchPresenter
     public $placeholder;
     public $search_label;
 
-    /** @var boolean */
+    /** @var bool */
     public $is_user_allowed_to_search;
 
     public function __construct(PFUser $current_user)

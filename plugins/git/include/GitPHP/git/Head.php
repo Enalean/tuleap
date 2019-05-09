@@ -68,7 +68,7 @@ class Head extends Ref
      * @static
      * @param mixed $a first head
      * @param mixed $b second head
-     * @return integer comparison result
+     * @return int comparison result
      */
     public static function CompareAge($a, $b) // @codingStandardsIgnoreLine
     {

@@ -419,7 +419,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      *
      * @param Tracker_Artifact                $artifact         The artifact
      * @param PFUser                          $user             The user who will receive the email
-     * @param boolean                         $ignore_perms
+     * @param bool $ignore_perms
      * @param Tracker_Artifact_ChangesetValue $value            The actual value of the field
      * @param string                          $format           output format
      *

@@ -120,7 +120,7 @@ class Docman_MetadataFactory {
     /**
      * Create the list of Real metadata associated with a project.
      *
-     * @param boolean $onlyUsed Return only metadata enabled by the project.
+     * @param bool $onlyUsed Return only metadata enabled by the project.
      */
     public function getRealMetadataList($onlyUsed = false, $type = array()) {
         $mda = array();
@@ -157,7 +157,7 @@ class Docman_MetadataFactory {
     /**
      * Build a list of HardCoded metadata.
      *
-     * @param boolean $onlyUsed Return only metadata enabled by the project.
+     * @param bool $onlyUsed Return only metadata enabled by the project.
      */
     public function getHardCodedMetadataList($onlyUsed = false) {
         $mda = array();
@@ -225,7 +225,7 @@ class Docman_MetadataFactory {
     /**
      * Return all metadata for current project.
      *
-     * @param boolean $onlyUsed Return only metadata enabled by the project.
+     * @param bool $onlyUsed Return only metadata enabled by the project.
      */
     function &getMetadataForGroup($onlyUsed = false) {
         $mda = array_merge($this->getHardCodedMetadataList($onlyUsed),
@@ -649,7 +649,7 @@ class Docman_MetadataFactory {
      *
      * @see cloneMetadata
      * 
-     * @param Integer         $dstGroupId      Project where the md is created
+     * @param int $dstGroupId Project where the md is created
      * @param Docman_Metadata $md              Metadata to clone
      * @param Array           $metadataMapping Map between src and dst metadata id
      */
@@ -678,7 +678,7 @@ class Docman_MetadataFactory {
     /**
      * Copy all real metadata defined in this project in the destination project
      *
-     * @param Integer $dstGroupId      Project where the metadata will be created
+     * @param int $dstGroupId Project where the metadata will be created
      * @param Array   $metadataMapping Map between src and dst metadata id
      */
     function _cloneRealMetadata($dstGroupId, &$metadataMapping) {
@@ -694,7 +694,7 @@ class Docman_MetadataFactory {
      * needed) in the target project. A maps keeps the link between the id in
      * the source and the destination project.
      * 
-     * @param Integer $dstGroupId       Project where to copy the metadata
+     * @param int $dstGroupId Project where to copy the metadata
      * @param Array   $metadataMapping  Map between source and target metadata definitions
      */
     function cloneMetadata($dstGroupId, &$metadataMapping) {

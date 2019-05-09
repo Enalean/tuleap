@@ -44,7 +44,7 @@ interface Planning_Milestone // @codingStandardsIgnoreLine
     public function getArtifact();
 
     /**
-     * @return Boolean
+     * @return bool
      */
     public function userCanView(PFUser $user);
 
@@ -97,7 +97,7 @@ interface Planning_Milestone // @codingStandardsIgnoreLine
      * Example: a root node (a product) is not IN hierarchy
      *          a lonely milestone is not either.
      *
-     * @return boolean
+     * @return bool
      */
     public function hasAncestors();
 
@@ -172,7 +172,7 @@ interface Planning_Milestone // @codingStandardsIgnoreLine
      * Return If type of element is compatible.
      *
      * @param Planning_Milestone $potential_submilestone
-     * @return boolean
+     * @return bool
      */
     public function milestoneCanBeSubmilestone(Planning_Milestone $potential_submilestone);
 

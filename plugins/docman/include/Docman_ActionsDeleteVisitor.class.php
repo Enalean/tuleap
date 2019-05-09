@@ -86,7 +86,7 @@ class Docman_ActionsDeleteVisitor /* implements Visitor */ {
     * @param Docman_Item $item
     * @param array $params params.
     *
-    * @return boolean $deleted. True if there is no error.  False otherwise.
+    * @return bool $deleted. True if there is no error.  False otherwise.
     */
     public function visitWiki(&$item, $params = array()) {
         // delete the document.
@@ -181,7 +181,7 @@ class Docman_ActionsDeleteVisitor /* implements Visitor */ {
      * @param Docman_File $item
      * @param Array       $params
      * 
-     * @return Boolean
+     * @return bool
      */
     function _deleteFile(Docman_File $item, $params) {
         // Delete all versions before
@@ -205,7 +205,7 @@ class Docman_ActionsDeleteVisitor /* implements Visitor */ {
      * @param Docman_Version $version
      * @param PFUser           $user
      * 
-     * @return Boolean
+     * @return bool
      */
     function _deleteVersion(Docman_File $item, Docman_Version $version, PFUser $user) {
         // Proceed to deletion

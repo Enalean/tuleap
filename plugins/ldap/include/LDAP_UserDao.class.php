@@ -50,9 +50,9 @@ class LDAP_UserDao extends DataAccessObject {
     /**
      * Check if user has already logged in on Web platform
      *
-     * @param Integer $userId Id of the user
+     * @param int $userId Id of the user
      *
-     * @return Boolean
+     * @return bool
      */
     function alreadyLoggedInOnce($userId)
     {
@@ -75,10 +75,10 @@ class LDAP_UserDao extends DataAccessObject {
     /**
      * Create new entry for LDAP user.
      *
-     * @param Integer $userId Id of the user
-     * @param Integer $date   Date of creation (timestamp)
+     * @param int $userId Id of the user
+     * @param int $date Date of creation (timestamp)
      *
-     * @return Boolean
+     * @return bool
      */
     function createLdapUser($userId, $date=0, $ldap_uid="")
     {
@@ -92,10 +92,10 @@ class LDAP_UserDao extends DataAccessObject {
     /**
      * Record when user log on Codendi
      *
-     * @param Integer $userId Id of the user
-     * @param Integer $date   Date of login (timestamp)
+     * @param int $userId Id of the user
+     * @param int $date Date of login (timestamp)
      *
-     * @return Boolean
+     * @return bool
      */
     function setLoginDate($userId, $date)
     {
@@ -117,7 +117,7 @@ class LDAP_UserDao extends DataAccessObject {
      *
      * @param String $name Name to test
      *
-     * @return Boolean
+     * @return bool
      */
     function userNameIsAvailable($name)
     {
@@ -138,10 +138,10 @@ class LDAP_UserDao extends DataAccessObject {
     /**
      * Update LDAP login of given user
      *
-     * @param Integer $userId  User ID to update
-     * @param Integer $ldapUid LDAP login of the user
+     * @param int $userId User ID to update
+     * @param int $ldapUid LDAP login of the user
      *
-     * @return Boolean
+     * @return bool
      */
     function updateLdapUid($userId, $ldapUid)
     {

@@ -91,7 +91,7 @@ class ArtifactRulesManager {
      * @param int $artifact_type_id the artifact id to test
      * @param array $value_field_list the selected values to test for the artifact
      * @param {ArtifactFieldFactory Object} $art_field_fact reference to the artifact field factory of this artifact
-     * @return boolean true if the submitted values are coherent regarding the dependencies, false otherwise
+     * @return bool true if the submitted values are coherent regarding the dependencies, false otherwise
      */
     function validate($artifact_type_id, $value_field_list, $art_field_fact) {
         

@@ -38,7 +38,7 @@ class Git_RemoteServer_GerritServer implements Git_Driver_Gerrit_RemoteSSHConfig
     private $login;
     private $identity_file;
     private $replication_key;
-    /** @var Boolean */
+    /** @var bool */
     private $use_ssl;
     /** @var String */
     private $http_password;

@@ -415,7 +415,7 @@ class Git_Driver_GerritLegacy implements Git_Driver_Gerrit {
 
     /**
      * @param Git_RemoteServer_GerritServer $server
-     * @return boolean
+     * @return bool
      */
     public function isDeletePluginEnabled(Git_RemoteServer_GerritServer $server) {
         $query = self::COMMAND . ' plugin ls';

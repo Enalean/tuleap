@@ -163,8 +163,8 @@ class FRSReleaseFactory {
     /**
      * Returns the list of releases for a given proejct
      * 
-     * @param Integer $group_id
-     * @param Integer $package_id
+     * @param int $group_id
+     * @param int $package_id
      * 
      * @return Array
      */
@@ -225,7 +225,7 @@ class FRSReleaseFactory {
     /**
      * Determine if a release has already the name $release_name in the package $package_id
      *
-     * @return boolean true if there is already a release named $release_name in the package package_id, false otherwise
+     * @return bool true if there is already a release named $release_name in the package package_id, false otherwise
      */
      function isReleaseNameExist($release_name, $package_id) {
          $release_exists = $this->getReleaseIdByName($release_name, $package_id);
@@ -287,10 +287,10 @@ class FRSReleaseFactory {
      * Fourth, put it into the delete_files to be removed from the download server
      * return false if release not deleted, true otherwise
      * 
-     * @param Integer $group_id
-     * @param Integer $release_id
+     * @param int $group_id
+     * @param int $release_id
      * 
-     * @return Boolean
+     * @return bool
      */
     function delete_release($group_id, $release_id) {
         GLOBAL $ftp_incoming_dir;
@@ -320,9 +320,9 @@ class FRSReleaseFactory {
     /**
      * Delete all FRS releases and files of given project
      *
-     * @param Integer $groupId Project ID
+     * @param int $groupId Project ID
      *
-     * @return Boolean
+     * @return bool
      */
     function deleteProjectReleases($groupId) {
         $deleteState = true;
@@ -341,9 +341,9 @@ class FRSReleaseFactory {
      * Test is user can administrate FRS service of given project
      *
      * @param PFUser    $user    User to test
-     * @param Integer $project_id Project
+     * @param int $project_id Project
      *
-     * @return Boolean
+     * @return bool
      */
     public function userCanAdmin($user, $project_id)
     {
@@ -402,11 +402,11 @@ class FRSReleaseFactory {
     /** 
      * Return true if user has Update permission on this release 
      *
-     * @param Integer $group_id   The project this release is in
-     * @param Integer $release_id The ID of the release to update
-     * @param Integer $user_id    If not given or false, take the current user
+     * @param int $group_id The project this release is in
+     * @param int $release_id The ID of the release to update
+     * @param int $user_id If not given or false, take the current user
      *
-     * @return Boolean true if user can update the release $release_id, false otherwise
+     * @return bool true if user can update the release $release_id, false otherwise
      */ 
 	function userCanUpdate($group_id, $release_id, $user_id=false) {
         return $this->userCanCreate($group_id, $user_id);
@@ -418,10 +418,10 @@ class FRSReleaseFactory {
      * NOTE : At this time, there is no difference between creation and update, but in the future, permissions could be added
      * For the moment, only super admin, project admin (A) and file admin (R2) can create releases
      * 
-     * @param Integer $group_id The project ID this release is in
-     * @param Integer $user_id  The ID of the user. If not given or false, take the current user
+     * @param int $group_id The project ID this release is in
+     * @param int $user_id The ID of the user. If not given or false, take the current user
      *
-     * @return Boolean true if the user has permission to create releases, false otherwise
+     * @return bool true if the user has permission to create releases, false otherwise
      */ 
 	function userCanCreate($group_id, $user_id=false) {
         $um = $this->getUserManager();
@@ -441,7 +441,7 @@ class FRSReleaseFactory {
      *
      * @param FRSRelease $release Release on which to apply permissions
      * 
-     * @return Boolean
+     * @return bool
      */
     function setDefaultPermissions(FRSRelease $release) {
         $pm = $this->getPermissionsManager();
@@ -465,7 +465,7 @@ class FRSReleaseFactory {
      *
      * @param FRSRelease $release Release in which the file is published
      *
-     * @return Integer The number of people notified. False in case of error.
+     * @return int The number of people notified. False in case of error.
      */
     function emailNotification(FRSRelease $release) {
         $fmmf   = new FileModuleMonitorFactory();

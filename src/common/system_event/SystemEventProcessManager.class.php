@@ -31,7 +31,7 @@ class SystemEventProcessManager {
 
     /**
      * @see http://www.php.net/manual/en/function.posix-kill.php#49596
-     * @return boolean
+     * @return bool
      */
     public function isAlreadyRunning(SystemEventProcess $process) {
         $pid_file = $process->getPidFile();

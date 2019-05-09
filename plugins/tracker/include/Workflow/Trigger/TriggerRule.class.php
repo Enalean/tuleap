@@ -23,7 +23,7 @@
  */
 class Tracker_Workflow_Trigger_TriggerRule implements Tracker_IProvideJsonFormatOfMyself {
 
-    /** @var Integer */
+    /** @var int */
     private $id;
 
     /** @var Tracker_Workflow_Trigger_FieldValue */
@@ -54,7 +54,7 @@ class Tracker_Workflow_Trigger_TriggerRule implements Tracker_IProvideJsonFormat
     }
 
     /**
-     * @return Integer
+     * @return int
      */
     public function getId() {
         return $this->id;
@@ -82,7 +82,7 @@ class Tracker_Workflow_Trigger_TriggerRule implements Tracker_IProvideJsonFormat
     }
 
     /**
-     * @param Integer $id
+     * @param int $id
      */
     public function setId($id) {
         $this->id = $id;

@@ -439,7 +439,7 @@ class WikiDB_backend
      *   trigger_error("Message goes here.", E_USER_WARNING);
      * </pre>
      *
-     * @return boolean True iff database is in a consistent state.
+     * @return bool True iff database is in a consistent state.
      */
     function check() {
     }
@@ -450,7 +450,7 @@ class WikiDB_backend
      * This should put the database into a consistent state.
      * (I.e. rebuild indexes, etc...)
      *
-     * @return boolean True iff successful.
+     * @return bool True iff successful.
      */
     function rebuild() {
     }

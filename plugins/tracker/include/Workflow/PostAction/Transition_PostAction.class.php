@@ -35,7 +35,7 @@ abstract class Transition_PostAction
     protected $transition;
 
     /**
-     * @var integer Id of the post action
+     * @var int Id of the post action
      */
     protected $id;
 
@@ -48,7 +48,7 @@ abstract class Transition_PostAction
      * Constructor
      *
      * @param Transition $transition The transition the post action belongs to
-     * @param integer    $id         Id of the post action
+     * @param int $id Id of the post action
      */
     public function __construct(Transition $transition, $id) {
         $this->transition = $transition;
@@ -58,7 +58,7 @@ abstract class Transition_PostAction
     /**
      * Return ID of the post-action
      *
-     * @return integer
+     * @return int
      */
     public function getId() {
         return $this->id;
@@ -180,7 +180,7 @@ abstract class Transition_PostAction
      *
      * @param Tracker_FormElement_Field $field
      *
-     * @return boolean
+     * @return bool
      */
     public abstract function bypassPermissions(Tracker_FormElement_Field $field);
 

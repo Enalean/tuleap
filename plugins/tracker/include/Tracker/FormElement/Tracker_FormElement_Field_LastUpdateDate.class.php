@@ -34,7 +34,7 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
      * This hooks is here to delete specific properties,
      * or specific values of the field.
      * (The field itself will be deleted later)
-     * @return boolean true if success
+     * @return bool true if success
      */
     public function delete() {
         return true;
@@ -151,7 +151,7 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
      *
      * @param Tracker_Artifact_Changeset $changeset   The changeset (needed in only few cases like 'lud' field)
      * @param int                        $value_id    The id of the value
-     * @param boolean                    $has_changed If the changeset value has changed from the rpevious one
+     * @param bool $has_changed If the changeset value has changed from the rpevious one
      *
      * @return Tracker_Artifact_ChangesetValue or null if not found
      */
@@ -218,7 +218,7 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
      *
      * @param Tracker_Artifact                $artifact         The artifact
      * @param PFUser                          $user             The user who will receive the email
-     * @param boolean                         $ignore_perms
+     * @param bool $ignore_perms
      * @param Tracker_Artifact_ChangesetValue $value            The actual value of the field
      * @param string                          $format           output format
      *
@@ -276,7 +276,7 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
      * @param mixed                           $submitted_value      The submitted value
      * @param Tracker_Artifact_ChangesetValue $last_changeset_value The last changeset value of the field (give null if no old value)
      *
-     * @return boolean true on success or false on failure
+     * @return bool true on success or false on failure
      */
     public function validateFieldWithPermissionsAndRequiredStatus(
         Tracker_Artifact $artifact,
@@ -351,7 +351,7 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
      * Get artifacts that responds to some criteria
      *
      * @param date    $date      The date criteria
-     * @param Integer $trackerId The Tracker Id
+     * @param int $trackerId The Tracker Id
      *
      * @return Array
      */

@@ -171,7 +171,7 @@ class Statistics_DiskUsageDao extends DataAccessObject {
      * @param String  $dateMethod
      * @param Date    $startDate
      * @param Date    $endDate
-     * @param Integer $groupId
+     * @param int $groupId
      * @return DataAccessResult
      */
     public function searchSizePerServiceForPeriod($service, $dateMethod='DAY', $startDate, $endDate, $groupId = NULL) {
@@ -197,7 +197,7 @@ class Statistics_DiskUsageDao extends DataAccessObject {
      * Search for services size values at a given date
      *
      * @param String  $dateStmt Date Statement
-     * @param Integer $groupId  To restrict to a groupId if needed
+     * @param int $groupId To restrict to a groupId if needed
      *
      * @return DataAccessResult
      */
@@ -216,7 +216,7 @@ class Statistics_DiskUsageDao extends DataAccessObject {
      * Search for services size at the first date greater than the given one
      *
      * @param String  $date    Date (YYYY-MM-DD)
-     * @param Integer $groupId To restrict to a groupId if needed
+     * @param int $groupId To restrict to a groupId if needed
      *
      * @return DataAccessResult
      */
@@ -229,7 +229,7 @@ class Statistics_DiskUsageDao extends DataAccessObject {
      * Search for services size at the first date lower than the given one
      *
      * @param String  $date    Date (YYYY-MM-DD)
-     * @param Integer $groupId To restrict to a groupId if needed
+     * @param int $groupId To restrict to a groupId if needed
      *
      * @return DataAccessResult
      */
@@ -425,7 +425,7 @@ class Statistics_DiskUsageDao extends DataAccessObject {
      * @param Date    $endDate
      * @param String  $service
      * @param String  $order
-     * @param Integer $limit 
+     * @param int $limit
      */
     public function getProjectContributionForService($startDate, $endDate, $service, $order, $offset=0, $limit=10) {
         $sql = 'SELECT SQL_CALC_FOUND_ROWS group_id, group_name, end_size, start_size, (end_size - start_size) as evolution, (end_size-start_size)/start_size as evolution_rate'.

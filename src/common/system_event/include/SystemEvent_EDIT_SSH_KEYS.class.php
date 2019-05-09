@@ -39,7 +39,7 @@ class SystemEvent_EDIT_SSH_KEYS extends SystemEvent {
      * @see UserManager::updateUserSSHKeys()
      * @see SystemEventManager::addSystemEvent()
      * 
-     * @return boolean
+     * @return bool
      */
     public function process() {
         $user_id = $this->getParameter(0);

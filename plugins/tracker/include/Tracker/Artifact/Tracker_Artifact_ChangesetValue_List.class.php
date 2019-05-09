@@ -78,7 +78,7 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
      *
      * @param int $offset to check
      *
-     * @return boolean wether the offset exists
+     * @return bool wether the offset exists
      */
     public function offsetExists($offset) {
         return isset($this->list_values[$offset]);
@@ -99,7 +99,7 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
      * spl\Iterator
      *
      * The internal pointer to traverse the collection
-     * @var integer
+     * @var int
      */
     protected $index;
 
@@ -146,7 +146,7 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
     /**
      * spl\Iterator
      *
-     * @return boolean true if the current pointer is valid
+     * @return bool true if the current pointer is valid
      */
     public function valid() {
         return isset($this->list_values[$this->index]);

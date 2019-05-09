@@ -84,10 +84,10 @@ class LDAP_UserGroupManager extends LDAP_GroupManager
     /**
      * Add user to a user group
      *
-     * @param Integer $ugroupId Codendi Group ID
-     * @param Integer $userId   User ID
+     * @param int $ugroupId Codendi Group ID
+     * @param int $userId User ID
      *
-     * @return Boolean
+     * @return bool
      */
     protected function addUserToGroup($ugroupId, $userId)
     {
@@ -97,10 +97,10 @@ class LDAP_UserGroupManager extends LDAP_GroupManager
     /**
      * Remove user from a user group
      *
-     * @param Integer $ugroupId Codendi Group ID
-     * @param Integer $userId   User ID
+     * @param int $ugroupId Codendi Group ID
+     * @param int $userId User ID
      *
-     * @return Boolean
+     * @return bool
      */
     protected function removeUserFromGroup($ugroupId, $userId)
     {
@@ -110,7 +110,7 @@ class LDAP_UserGroupManager extends LDAP_GroupManager
     /**
      * Get the codendi user_group members ids
      *
-     * @param Integer $ugroupId ID of user group
+     * @param int $ugroupId ID of user group
      *
      * @return Array
      */
@@ -131,9 +131,9 @@ class LDAP_UserGroupManager extends LDAP_GroupManager
     /**
      * Check if a given ugroup is synchronized with an ldap group
      *
-     * @param integer $ugroup_id User group id to check
+     * @param int $ugroup_id User group id to check
      *
-     * @return boolean
+     * @return bool
      */
     public function isSynchronizedUgroup($ugroup_id) {
         return $this->getDao()->isSynchronizedUgroup($ugroup_id);
@@ -142,9 +142,9 @@ class LDAP_UserGroupManager extends LDAP_GroupManager
     /**
      * Check if a given ugroup is preserving members
      *
-     * @param integer $ugroup_id User group id to check
+     * @param int $ugroup_id User group id to check
      *
-     * @return boolean
+     * @return bool
      */
     public function isMembersPreserving($ugroup_id) {
         return $this->getDao()->isMembersPreserving($ugroup_id);
@@ -153,9 +153,9 @@ class LDAP_UserGroupManager extends LDAP_GroupManager
     /**
      * Check if the update of members of an ugroup is allowed
      *
-     * @param Integer $ugroup_id User group id
+     * @param int $ugroup_id User group id
      *
-     * @return Boolean
+     * @return bool
      */
     public function isMembersUpdateAllowed($ugroup_id) {
         return $this->getDao()->isMembersUpdateAllowed($ugroup_id);

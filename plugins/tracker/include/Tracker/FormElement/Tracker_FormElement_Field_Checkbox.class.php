@@ -93,7 +93,7 @@ class Tracker_FormElement_Field_Checkbox extends Tracker_FormElement_Field_Multi
      * Change the type of the checkbox
      * @param string $type the new type
      *
-     * @return boolean true if the change is allowed and successful
+     * @return bool true if the change is allowed and successful
      */
     public function changeType($type) {
         if (in_array($type, array('sb', 'msb', 'rb'))) {

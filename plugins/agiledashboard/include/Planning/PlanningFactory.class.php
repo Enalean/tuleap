@@ -166,7 +166,7 @@ class PlanningFactory {
      * Return a planning for a VirtualTopMilestone
      *
      * @param PFUser  $user
-     * @param Integer $group_id
+     * @param int $group_id
      * @return \Planning
      * @throws Planning_NoPlanningsException
      */
@@ -210,7 +210,7 @@ class PlanningFactory {
      * Note: if there are several parallel, we only return the fist one
      *
      * @param PFUser  $user
-     * @param Integer $group_id
+     * @param int $group_id
      *
      * @return Planning | false
      */
@@ -301,7 +301,7 @@ class PlanningFactory {
      * when the planning's milestone begin and end.
      *
      * @param Tracker $planning_tracker
-     * @return boolean
+     * @return bool
      */
     public function canPlanningBeSetInTime(Tracker $planning_tracker) {
         $start_date_field = $this->getPlanningTrackerStartDateField($planning_tracker);
@@ -660,7 +660,7 @@ class PlanningFactory {
      * and parents)
      *
      * @param PFUser $user
-     * @param Integer $group_id
+     * @param int $group_id
      *
      * @return Tracker[]
      */
@@ -680,9 +680,9 @@ class PlanningFactory {
      * and parents)
      *
      * @param PFUser $user
-     * @param Integer $group_id
+     * @param int $group_id
      *
-     * @return Integer[]
+     * @return int[]
      */
     protected function getPotentialPlanningTrackerIds(PFUser $user, $group_id) {
         $root_planning = $this->getRootPlanning($user, $group_id);
@@ -722,7 +722,7 @@ class PlanningFactory {
     /**
      * Return the 'Planning' tracker (tracker we should be able to use artifacts to perform search.
      *
-     * @param Integer $group_id
+     * @param int $group_id
      *
      * @return Array of Integer
      */

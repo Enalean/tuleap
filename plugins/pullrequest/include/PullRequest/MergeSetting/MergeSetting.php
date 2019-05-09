@@ -23,7 +23,7 @@ namespace Tuleap\PullRequest\MergeSetting;
 interface MergeSetting
 {
     /**
-     * @return boolean
+     * @return bool
      */
     public function isMergeCommitAllowed();
 }

@@ -143,7 +143,7 @@ class WikiGroup{
      * This method is an abstraction.  The group is ignored, an error is sent, and
      * false (not a member of the group) is returned.
      * @param string $group Name of the group to check for membership (ignored).
-     * @return boolean True if user is a member, else false (always false).
+     * @return bool True if user is a member, else false (always false).
      */ 
     function isMember($group){
         if (isset($this->membership[$group]))
@@ -386,7 +386,7 @@ class GroupNone extends WikiGroup{
      * 
      * The group is ignored and false (not a member of the group) is returned.
      * @param string $group Name of the group to check for membership (ignored).
-     * @return boolean True if user is a member, else false (always false).
+     * @return bool True if user is a member, else false (always false).
      */ 
     function isMember($group){
     	if ($this->specialGroup($group)) {

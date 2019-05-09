@@ -394,7 +394,7 @@ class PhpError {
 
     /**
      * Determine whether this is a fatal error.
-     * @return boolean True if this is a fatal error.
+     * @return bool True if this is a fatal error.
      */
     function isFatal() {
         return ($this->errno & (2048|EM_WARNING_ERRORS|EM_NOTICE_ERRORS)) == 0;
@@ -402,7 +402,7 @@ class PhpError {
 
     /**
      * Determine whether this is a warning level error.
-     * @return boolean
+     * @return bool
      */
     function isWarning() {
         return ($this->errno & EM_WARNING_ERRORS) != 0;
@@ -410,7 +410,7 @@ class PhpError {
 
     /**
      * Determine whether this is a notice level error.
-     * @return boolean
+     * @return bool
      */
     function isNotice() {
         return ($this->errno & EM_NOTICE_ERRORS) != 0;

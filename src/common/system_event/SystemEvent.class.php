@@ -147,9 +147,8 @@ abstract class SystemEvent {
     /**
      * verbalize a user id.
      * 
-     * @param integer $user_id   The user id
-     * @param boolean $with_link true if you want links to entities. The returned 
-     * string will be html instead of plain/text
+     * @param int $user_id The user id
+     * @param bool $with_link true if you want links to entities. The returned string will be html instead of plain/text
      *
      * @return string
      */
@@ -164,9 +163,8 @@ abstract class SystemEvent {
     /**
      * verbalize a project id.
      * 
-     * @param integer $group_id   The project id
-     * @param boolean $with_link true if you want links to entities. The returned 
-     * string will be html instead of plain/text
+     * @param int $group_id The project id
+     * @param bool $with_link true if you want links to entities. The returned string will be html instead of plain/text
      *
      * @return string
      */

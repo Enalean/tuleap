@@ -272,7 +272,7 @@ class UGroupManager {
     /**
      * Returns a ProjectUGroup from its Id
      *
-     * @param Integer $ugroupId The UserGroupId
+     * @param int $ugroupId The UserGroupId
      *
      * @return ProjectUGroup
      */
@@ -312,8 +312,8 @@ class UGroupManager {
     /**
      * Get Dynamic ugroups members
      *
-     * @param Integer $ugroupId Id of the ugroup
-     * @param Integer $groupId  Id of the project
+     * @param int $ugroupId Id of the ugroup
+     * @param int $groupId Id of the project
      *
      * @return array of User
      */
@@ -337,7 +337,7 @@ class UGroupManager {
      * @param PFUSer $user
      * @param int $ugroup_id
      * @param int $group_id
-     * @return boolean
+     * @return bool
      */
     public function isDynamicUGroupMember(PFUSer $user, $ugroup_id, $group_id) {
         $dao = $this->getUGroupUserDao();
@@ -348,9 +348,9 @@ class UGroupManager {
     /**
      * Check if update users is allowed for a given user group
      *
-     * @param Integer $ugroupId Id of the user group
+     * @param int $ugroupId Id of the user group
      *
-     * @return boolean
+     * @return bool
      */
     public function isUpdateUsersAllowed($ugroupId) {
         $ugroupUpdateUsersAllowed = true;
@@ -361,10 +361,10 @@ class UGroupManager {
     /**
      * Wrapper for dao method that checks if the user group is valid
      *
-     * @param Integer $groupId  Id of the project
-     * @param Integer $ugroupId Id of the user goup
+     * @param int $groupId Id of the project
+     * @param int $ugroupId Id of the user goup
      *
-     * @return boolean
+     * @return bool
      */
     public function checkUGroupValidityByGroupId($groupId, $ugroupId) {
         return $this->getDao()->checkUGroupValidityByGroupId($groupId, $ugroupId);
@@ -373,7 +373,7 @@ class UGroupManager {
     /**
      * Wrapper for dao method that retrieves all Ugroups bound to a given ProjectUGroup
      *
-     * @param Integer $ugroupId Id of the user goup
+     * @param int $ugroupId Id of the user goup
      *
      * @return DataAccessResult
      */
@@ -392,10 +392,10 @@ class UGroupManager {
     /**
      * Wrapper for dao method that updates binding option for a given ProjectUGroup
      *
-     * @param Integer $ugroup_id Id of the user group
-     * @param Integer $source_ugroup_id Id of the user group we should bind to
+     * @param int $ugroup_id Id of the user group
+     * @param int $source_ugroup_id Id of the user group we should bind to
      *
-     * @return Boolean
+     * @return bool
      */
     public function updateUgroupBinding($ugroup_id, $source_ugroup_id = null) {
         $ugroup = $this->getById($ugroup_id);
@@ -422,7 +422,7 @@ class UGroupManager {
     /**
      * Wrapper to retrieve the source user group from a given bound ugroup id
      *
-     * @param Integer $ugroupId The source ugroup id
+     * @param int $ugroupId The source ugroup id
      *
      * @return DataAccessResult
      */
@@ -447,7 +447,7 @@ class UGroupManager {
     /**
      * Return name and id of all ugroups belonging to a specific project
      *
-     * @param Integer $groupId    Id of the project
+     * @param int $groupId Id of the project
      * @param Array   $predefined List of predefined ugroup id
      *
      * @return DataAccessResult

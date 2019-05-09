@@ -21,7 +21,7 @@
 class SVN_IntroPresenter {
 
     /**
-     * @var boolean
+     * @var bool
      */
     public $uses_ldap_info;
 

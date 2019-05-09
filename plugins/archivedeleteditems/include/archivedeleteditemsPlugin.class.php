@@ -30,7 +30,7 @@ class ArchivedeleteditemsPlugin extends Plugin
     /**
      * Constructor of the class
      *
-     * @param Integer $id Id of the plugin
+     * @param int $id Id of the plugin
      *
      * @return Void
      */

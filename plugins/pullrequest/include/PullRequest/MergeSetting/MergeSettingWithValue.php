@@ -30,7 +30,7 @@ final class MergeSettingWithValue implements MergeSetting
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isMergeCommitAllowed()
     {

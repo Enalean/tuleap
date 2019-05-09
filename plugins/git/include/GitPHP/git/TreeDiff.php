@@ -88,7 +88,7 @@ class TreeDiff implements \Iterator, \Countable
      * @param mixed $project project
      * @param string $toHash to commit hash
      * @param string $fromHash from commit hash
-     * @param boolean $renames whether to detect file renames
+     * @param bool $renames whether to detect file renames
      * @return mixed TreeDiff object
      * @throws Exception exception on invalid parameters
      */
@@ -192,7 +192,7 @@ class TreeDiff implements \Iterator, \Countable
      * Get whether this treediff is set to detect renames
      *
      * @access public
-     * @return boolean true if renames will be detected
+     * @return bool true if renames will be detected
      */
     public function GetRenames() // @codingStandardsIgnoreLine
     {
@@ -205,7 +205,7 @@ class TreeDiff implements \Iterator, \Countable
      * Set whether this treediff is set to detect renames
      *
      * @access public
-     * @param boolean $renames whether to detect renames
+     * @param bool $renames whether to detect renames
      */
     public function SetRenames($renames) // @codingStandardsIgnoreLine
     {
@@ -293,7 +293,7 @@ class TreeDiff implements \Iterator, \Countable
      * Gets the number of file changes in this treediff
      *
      * @access public
-     * @return integer count of file changes
+     * @return int count of file changes
      */
     public function Count() // @codingStandardsIgnoreLine
     {

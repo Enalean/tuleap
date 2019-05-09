@@ -142,7 +142,7 @@ class MediaWikiInstantiater {
     }
 
     /**
-     * @return boolean
+     * @return bool
      * @throws MediawikiInstantiaterException
      */
     private function checkForExistingProject() {
@@ -173,7 +173,7 @@ class MediaWikiInstantiater {
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     private function doesDirectoryExist() {
         $data_dir = new \Tuleap\Mediawiki\MediawikiDataDir();

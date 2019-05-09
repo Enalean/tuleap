@@ -56,7 +56,7 @@ class Git_Gitolite_SSHKeyDumper implements Dumper
     /**
      * Dump ssh keys into gitolite conf
      *
-     * @return Boolean
+     * @return bool
      */
     public function dumpSSHKeys(IHaveAnSSHKey $user, InvalidKeysCollector $invalid_keys_collector)
     {
@@ -72,7 +72,7 @@ class Git_Gitolite_SSHKeyDumper implements Dumper
      *
      * @param String $message
      *
-     * @return Boolean
+     * @return bool
      */
     public function commitKeyDir($message) {
         clearstatcache();
@@ -87,7 +87,7 @@ class Git_Gitolite_SSHKeyDumper implements Dumper
      *
      * @param IHaveAnSSHKey $user
      *
-     * @return boolean
+     * @return bool
      */
     public function dumpSSHKeysWithoutCommit(IHaveAnSSHKey $user) {
         if (is_dir($this->admin_path)) {

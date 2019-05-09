@@ -68,7 +68,7 @@ class DB_common extends PEAR
     var $prepared_queries;
 
     /**
-     * @var integer
+     * @var int
      */
     var $prepare_maxstmt = 0;
 
@@ -78,7 +78,7 @@ class DB_common extends PEAR
     var $last_query = '';
 
     /**
-     * @var integer
+     * @var int
      */
     var $fetchmode = DB_FETCHMODE_ORDERED;
 
@@ -421,7 +421,7 @@ class DB_common extends PEAR
      * Map a DB error code to a textual message.  This is actually
      * just a wrapper for DB::errorMessage()
      *
-     * @param integer $dbcode the DB error code
+     * @param int $dbcode the DB error code
      *
      * @return string the corresponding error message, of false
      * if the error code was unknown
@@ -500,9 +500,9 @@ class DB_common extends PEAR
      * Sets which fetch mode should be used by default on queries
      * on this connection
      *
-     * @param integer $fetchmode DB_FETCHMODE_ORDERED or
-     *        DB_FETCHMODE_ASSOC, possibly bit-wise OR'ed with
-     *        DB_FETCHMODE_FLIPPED.
+     * @param int $fetchmode DB_FETCHMODE_ORDERED or
+ * DB_FETCHMODE_ASSOC, possibly bit-wise OR'ed with
+ * DB_FETCHMODE_FLIPPED.
      *
      * @param string $object_class The class of the object
      *                      to be returned by the fetch methods when
@@ -1087,8 +1087,8 @@ class DB_common extends PEAR
      * This method is used by backends to alter limited queries
      *
      * @param string  $query query to modify
-     * @param integer $from  the row to start to fetching
-     * @param integer $count the numbers of rows to fetch
+     * @param int $from the row to start to fetching
+     * @param int $count the numbers of rows to fetch
      *
      * @return the new (modified) query
      *
@@ -1151,8 +1151,8 @@ class DB_common extends PEAR
      * Generates a limited query
      *
      * @param string  $query query
-     * @param integer $from  the row to start to fetching
-     * @param integer $count the numbers of rows to fetch
+     * @param int $from the row to start to fetching
+     * @param int $count the numbers of rows to fetch
      * @param array   $params required for a statement
      *
      * @return mixed a DB_Result object, DB_OK or a DB_Error
@@ -1412,21 +1412,21 @@ class DB_common extends PEAR
      * values for results regardless of the database's internal type.
      *
      * @param string  $query  the SQL query
-     * @param boolean $force_array  used only when the query returns
-     *                              exactly two columns.  If true, the values
-     *                              of the returned array will be one-element
-     *                              arrays instead of scalars.
+     * @param bool $force_array used only when the query returns
+ * exactly two columns.  If true, the values
+ * of the returned array will be one-element
+ * arrays instead of scalars.
      * @param mixed   $params array, string or numeric data to be used in
      *                        execution of the statement.  Quantity of items
      *                        passed must match quantity of placeholders in
      *                        query:  meaning 1 placeholder for non-array
      *                        parameters or 1 placeholder per array element.
-     * @param boolean $group  if true, the values of the returned array
-     *                        is wrapped in another array.  If the same
-     *                        key value (in the first column) repeats
-     *                        itself, the values will be appended to
-     *                        this array instead of overwriting the
-     *                        existing values.
+     * @param bool $group if true, the values of the returned array
+ * is wrapped in another array.  If the same
+ * key value (in the first column) repeats
+ * itself, the values will be appended to
+ * this array instead of overwriting the
+ * existing values.
      *
      * @return array  associative array with results from the query.
      *                DB Error on failure.
@@ -1705,8 +1705,8 @@ class DB_common extends PEAR
      * Returns the next free id in a sequence
      *
      * @param string  $seq_name  name of the sequence
-     * @param boolean $ondemand  when true, the seqence is automatically
-     *                           created if it does not exist
+     * @param bool $ondemand when true, the seqence is automatically
+ * created if it does not exist
      *
      * @return int  the next id number in the sequence.  DB_Error if problem.
      *

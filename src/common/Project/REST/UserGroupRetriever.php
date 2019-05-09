@@ -66,7 +66,7 @@ class UserGroupRetriever
     }
 
     /**
-     * @return boolean
+     * @return bool
      *
      * @throws 400
      */

@@ -78,7 +78,7 @@ class FRSRelease {
      */
     protected $project;
     /**
-     * @var Integer $group_id Project ID the release belongs to
+     * @var int $group_id Project ID the release belongs to
      */
     protected $group_id;
 
@@ -187,7 +187,7 @@ class FRSRelease {
 
     /**
      * Determines if the release is active or not
-     * @return boolean true if the release is active, false otherwise
+     * @return bool true if the release is active, false otherwise
      */
     function isActive() {
         $release_factory = new FRSReleaseFactory();
@@ -196,7 +196,7 @@ class FRSRelease {
 
     /**
      * Determines if the release is hidden or not
-     * @return boolean true if the release is hidden, false otherwise
+     * @return bool true if the release is hidden, false otherwise
      */
     function isHidden() {
         $release_factory = new FRSReleaseFactory();
@@ -205,7 +205,7 @@ class FRSRelease {
 
     /**
      * Determines if the release is deleted or not
-     * @return boolean true if the release is boolean, false otherwise
+     * @return bool true if the release is boolean, false otherwise
      */
     function isDeleted() {
         $release_factory = new FRSReleaseFactory();
@@ -214,7 +214,7 @@ class FRSRelease {
 
     /**
      * Determines if the release notes and changes are preformatted or not
-     * @return boolean true if the release notes and changes are preformatted, false otherwise
+     * @return bool true if the release notes and changes are preformatted, false otherwise
      */
     function isPreformatted() {
         return $this->getPreformatted() == 1;

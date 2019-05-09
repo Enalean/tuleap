@@ -1220,7 +1220,7 @@ class ProjectResource extends AuthenticatedResource
      * @throws 403
      * @throws 404
      *
-     * @return boolean
+     * @return bool
      */
     private function userCanSeeUserGroups($project_id)
     {

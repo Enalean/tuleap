@@ -31,7 +31,7 @@ class LockDeleteRequest implements GitLfsHTTPOperation
     private $reference;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $force;
 

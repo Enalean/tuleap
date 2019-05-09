@@ -594,7 +594,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
      * @param string  $name the name of the input element
      * @param array   $critria_selector list of extra criterias to be listed in a prepended select
      * @param array   $classes extra css classes if needed
-     * @param boolean $is_time_displayed to know if the time need to be displayed
+     * @param bool $is_time_displayed to know if the time need to be displayed
      *
      * @return string The calendar picker
      */

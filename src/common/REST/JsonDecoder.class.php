@@ -30,7 +30,7 @@ class JsonDecoder {
      * Useful when your route accept either string content or json
      *
      * @param string $value
-     * @return boolean
+     * @return bool
      */
     public function looksLikeJson($value) {
         return substr($value, 0, 1) === '{' && substr($value, -1) === '}';

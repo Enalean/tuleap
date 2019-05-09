@@ -299,7 +299,7 @@ class Plugin implements PFO_Plugin {
      * Allow you to check required things (DB connection, etc...)
      * and to forbid plugin to be made available if requirements are not met.
      *
-     * @return boolean true if the plugin can be made available, false if not
+     * @return bool true if the plugin can be made available, false if not
      */
     public function canBeMadeAvailable() {
     	return true;
@@ -308,7 +308,7 @@ class Plugin implements PFO_Plugin {
 	/**
      * Function called when a plugin is set as available or unavailable
      *
-     * @param boolean $available true if the plugin is available, false if unavailable
+     * @param bool $available true if the plugin is available, false if unavailable
      */
     public function setAvailable($available) {
     }

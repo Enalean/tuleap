@@ -89,7 +89,7 @@ class DiffExe
      * Gets whether this diff is showing the function
      *
      * @access public
-     * @return boolean true if showing function
+     * @return bool true if showing function
      */
     public function GetShowFunction() // @codingStandardsIgnoreLine
     {
@@ -102,7 +102,7 @@ class DiffExe
      * Sets whether this diff is showing the function
      *
      * @access public
-     * @param boolean $show true to show
+     * @param bool $show true to show
      */
     public function SetShowFunction($show) // @codingStandardsIgnoreLine
     {

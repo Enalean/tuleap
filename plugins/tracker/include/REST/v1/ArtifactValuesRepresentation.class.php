@@ -44,7 +44,7 @@ class ArtifactValuesRepresentation {
     public $links;
 
     /**
-     * @var boolean {@type boolean} {@required false}
+     * @var bool {@type boolean} {@required false}
      */
     public $is_autocomputed;
 

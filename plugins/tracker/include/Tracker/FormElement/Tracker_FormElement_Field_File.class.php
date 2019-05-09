@@ -179,7 +179,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
      *
      * @param Tracker_Artifact                $artifact         The artifact
      * @param PFUser                          $user             The user who will receive the email
-     * @param boolean                         $ignore_perms
+     * @param bool $ignore_perms
      * @param Tracker_Artifact_ChangesetValue $value            The actual value of the field
      * @param array                           $submitted_values The value already submitted by the user
      *
@@ -444,7 +444,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
     /**
      * Fetch all attachements for Mail output
      *
-     * @param Integer $artifact_id The artifact Id
+     * @param int $artifact_id The artifact Id
      * @param Array            $values     The actual value of the field
      * @param String            $format       The mail format
      *
@@ -716,7 +716,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
      * @param Tracker_Artifact                $artifact             The artifact to check
      * @param mixed                           $value      The submitted value
      *
-     * @return boolean true on success or false on failure
+     * @return bool true on success or false on failure
      */
     public function isValidRegardingRequiredProperty(Tracker_Artifact $artifact, $value) {
         $this->has_errors = false;
@@ -812,7 +812,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
      * @param mixed                           $value                   The value submitted by the user
      * @param Tracker_Artifact_ChangesetValue $previous_changesetvalue The data previously stored in the db
      *
-     * @return boolean
+     * @return bool
      */
     protected function saveValue($artifact, $changeset_value_id, $value, ?Tracker_Artifact_ChangesetValue $previous_changesetvalue = null) {
         $save_ok = true;
@@ -975,7 +975,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
      * Tells if the field takes two columns
      * Ugly legacy hack to display fields in columns
      *
-     * @return boolean
+     * @return bool
      */
     public function takesTwoColumns() {
         return true;
@@ -986,7 +986,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
      *
      * @param Tracker_Artifact_Changeset $changeset   The changeset (needed in only few cases like 'lud' field)
      * @param int                        $value_id    The id of the value
-     * @param boolean                    $has_changed If the changeset value has changed from the rpevious one
+     * @param bool $has_changed If the changeset value has changed from the rpevious one
      *
      * @return Tracker_Artifact_ChangesetValue or null if not found
      */

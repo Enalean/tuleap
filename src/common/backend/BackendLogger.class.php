@@ -50,7 +50,7 @@ class BackendLogger implements Logger {
      * @param string $message The error message that should be logged.
      * @param string $level   The level of the message "info", "warning", ...
      *
-     * @return boolean true on success or false on failure
+     * @return bool true on success or false on failure
      */
     public function log($message, $level = Feedback::INFO)
     {

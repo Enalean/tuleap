@@ -33,7 +33,7 @@ class Statistics_Formatter_Scm extends Statistics_Formatter {
      * @param String  $scm       'svn' or 'cvs'
      * @param String  $startDate Period start date
      * @param String  $endDate   Period end date
-     * @param Integer $groupId   Project Id
+     * @param int $groupId Project Id
      *
      * @return void
      */

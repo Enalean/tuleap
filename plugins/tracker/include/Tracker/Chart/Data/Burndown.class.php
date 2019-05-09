@@ -52,7 +52,7 @@ class Tracker_Chart_Data_Burndown
     /**
      * Add a remaining effort at a given day offset
      *
-     * @param Integer $day_offset
+     * @param int $day_offset
      * @param Float   $remaining_effort
      */
     public function addEffortAt($day_offset, $remaining_effort) {

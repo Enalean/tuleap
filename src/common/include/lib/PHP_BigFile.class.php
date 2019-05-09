@@ -128,7 +128,7 @@ class PHP_BigFile {
      *                             in options, opened_path should be set to the full path of the 
      *                             file/resource that was actually opened. 
      * 
-     * @return boolean true on success or false on failure
+     * @return bool true on success or false on failure
      */
     public function stream_open($path, $mode, $options, &$opened_path) {
         $this->path   = preg_replace('`^'. preg_quote(self::PROTOCOL .'://') .'`', '', $path);
@@ -298,7 +298,7 @@ class PHP_BigFile {
      *                     * SEEK_CUR - Set position to current location plus offset .
      *                     * SEEK_END - Set position to end-of-file plus offset .
      *
-     * @return boolean Return TRUE if the position was updated, FALSE otherwise
+     * @return bool Return TRUE if the position was updated, FALSE otherwise
      */
     public function stream_seek($offset, $whence = SEEK_SET) {
         switch ($whence) {

@@ -39,8 +39,8 @@ abstract class Tracker_FormElement_Field_ValueDao extends DataAccessObject {
 
     /**
      * Function that creates a value record for all artifact last changeset 
-     * @param integer $tracker_id
-     * @param integer $field_id
+     * @param int $tracker_id
+     * @param int $field_id
      * @return mixed array of changeset_value_id or false if nothing inserted
      */
     public function createNoneChangesetValue($tracker_id, $field_id) {

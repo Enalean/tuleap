@@ -44,9 +44,9 @@ class Git_LogDao extends \Tuleap\DB\DataAccessObject
     /**
      * Return the last pushes of a given repository grouped by week
      *
-     * @param Integer $repositoryId Id of the repository
-     * @param Integer $week         Number of the week
-     * @param Integer $year         Year corresponding to the week
+     * @param int $repositoryId Id of the repository
+     * @param int $week Number of the week
+     * @param int $year Year corresponding to the week
      *
      */
     public function getRepositoryPushesByWeek($repositoryId, $week, $year)
@@ -68,10 +68,10 @@ class Git_LogDao extends \Tuleap\DB\DataAccessObject
     /**
      * Obtain last git pushes performed by the given user
      *
-     * @param Integer $userId Id of the user
-     * @param Integer $repoId Id of the git repository
-     * @param Integer $offset Offset of the search
-     * @param Integer $date   Date from which we start collecting logs
+     * @param int $userId Id of the user
+     * @param int $repoId Id of the git repository
+     * @param int $offset Offset of the search
+     * @param int $date Date from which we start collecting logs
      *
      * @return array
      */
@@ -110,8 +110,8 @@ class Git_LogDao extends \Tuleap\DB\DataAccessObject
     /**
      * Obtain repositories containing git pushes by a user in the last given period
      *
-     * @param Integer $userId Id of the user
-     * @param Integer $date   Date from which we start collecting repostories with pushes
+     * @param int $userId Id of the user
+     * @param int $date Date from which we start collecting repostories with pushes
      *
      * @return DataAccessResult
      */
@@ -147,7 +147,7 @@ class Git_LogDao extends \Tuleap\DB\DataAccessObject
      *
      * @param String  $startDate Period start date
      * @param String  $endDate   Period end date
-     * @param Integer $projectId Id of the project we want to retrieve its git stats
+     * @param int $projectId Id of the project we want to retrieve its git stats
      *
      * @return array
      */

@@ -47,7 +47,7 @@ class Tracker_Rule_List extends Tracker_Rule {
     * Else if params are same target value then returns true,
     * Else returns false.
     *
-    * @return boolean
+    * @return bool
     */
     public function applyTo($tracker_id, $source_field, $source_value, $target_field, $target_value) {
         $can_apply_to = $this->canApplyTo($tracker_id, $source_field, $source_value, $target_field, $target_value);

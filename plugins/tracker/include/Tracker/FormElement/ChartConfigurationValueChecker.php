@@ -90,7 +90,7 @@ class ChartConfigurationValueChecker
     }
 
     /**
-     * @return Boolean
+     * @return bool
      */
     public function doesUserCanReadRemainingEffort(Tracker_Artifact $artifact, PFUser $user)
     {

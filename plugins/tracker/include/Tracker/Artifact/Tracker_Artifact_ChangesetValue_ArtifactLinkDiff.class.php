@@ -145,7 +145,7 @@ class Tracker_Artifact_ChangesetValue_ArtifactLinkDiff
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function hasChanges()
     {

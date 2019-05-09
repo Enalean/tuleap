@@ -77,7 +77,7 @@ class BacklogItemRepresentation {
     public $project;
 
     /**
-     * @var Boolean
+     * @var bool
      */
     public $has_children;
 

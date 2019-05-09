@@ -138,7 +138,7 @@ function MangleXmlIdentifier($str) {
  * 			  If a WikiDB_Page object function will extract the name to link to.
  * 			  If a WikiDB_PageRevision object function will extract the name to link to.
  * @param array $args 
- * @param boolean $get_abs_url Default value is false.
+ * @param bool $get_abs_url Default value is false.
  * @return string The absolute URL to the page passed as $pagename.
  */
 function WikiURL($pagename, $args = '', $get_abs_url = false) {
@@ -334,7 +334,7 @@ function PossiblyGlueIconToText($proto_or_url, $text) {
  * Check against their urlencoded values also.
  *
  * @param string $url URL to check for unsafe characters.
- * @return boolean True if same, false else.
+ * @return bool True if same, false else.
  */
 function IsSafeURL($url) {
     $valid_local_uri  = new Valid_LocalURI();
@@ -1027,7 +1027,7 @@ function ConvertOldMarkup ($text, $markup_type = "block") {
  * Converts all tabs to (the appropriate number of) spaces.
  *
  * @param string $str
- * @param integer $tab_width
+ * @param int $tab_width
  * @return string
  */
 function expand_tabs($str, $tab_width = 8) {

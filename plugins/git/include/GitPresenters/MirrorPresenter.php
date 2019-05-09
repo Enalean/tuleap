@@ -31,7 +31,7 @@ class GitPresenters_MirrorPresenter {
     public $name;
 
     /**
-     * @var boolean
+     * @var bool
      */
     public $is_used;
 

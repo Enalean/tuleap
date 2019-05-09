@@ -23,7 +23,7 @@ namespace Tuleap\PullRequest\MergeSetting;
 final class MergeSettingDefault implements MergeSetting
 {
     /**
-     * @return boolean
+     * @return bool
      */
     public function isMergeCommitAllowed()
     {

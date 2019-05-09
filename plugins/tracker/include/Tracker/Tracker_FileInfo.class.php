@@ -35,12 +35,12 @@ class Tracker_FileInfo {
     protected $supported_image_types = array('gif', 'png', 'jpeg', 'jpg');
 
     /**
-     * @param integer                   $id
+     * @param int $id
      * @param Tracker_FormElement_Field $field
-     * @param integer                   $submitted_by
+     * @param int $submitted_by
      * @param string                    $description
      * @param string                    $filename
-     * @param integer                   $filesize
+     * @param int $filesize
      * @param string                    $filetype
      */
     public function __construct($id, $field, $submitted_by, $description, $filename, $filesize, $filetype) {
@@ -284,7 +284,7 @@ class Tracker_FileInfo {
     /**
      * Persist current object to the database
      *
-     * @return Boolean
+     * @return bool
      */
     public function save() {
         $dao = new Tracker_FileInfoDao();
@@ -298,7 +298,7 @@ class Tracker_FileInfo {
     /**
      * delete a file info
      *
-     * @return boolean true on success
+     * @return bool true on success
      */
     public function delete() {
         if (file_exists($this->getPath())) {

@@ -216,7 +216,7 @@ class WikiAttachment /* implements UGroupPermission */ {
     /**
      * Set the name of the attachment that will be used in the filesystem
      *
-     * @return Boolean
+     * @return bool
      */
     public function initFilesystemName() {
         $this->filesystemName = $this->filename.'_'.time();
@@ -345,7 +345,7 @@ class WikiAttachment /* implements UGroupPermission */ {
      * Check if the status of the attachment is active
      * Active means that the delete_date is null
      *
-     * @return Boolean
+     * @return bool
      */
     public function isActive() {
         $dao = WikiAttachment::getDao();
@@ -552,7 +552,7 @@ class WikiAttachment /* implements UGroupPermission */ {
     /**
      * Mark the attachment as deleted, no physical remove from the FS until the purge
      *
-     * @return Boolean
+     * @return bool
      */
     public function deleteAttachment() {
         if ($this->isActive()) {
@@ -565,9 +565,9 @@ class WikiAttachment /* implements UGroupPermission */ {
     /**
      * Mark all project attachments as deleted, no physical remove from the FS until the purge
      *
-     * @param Integer $groupId Id of the conserned project
+     * @param int $groupId Id of the conserned project
      *
-     * @return Boolean
+     * @return bool
      */
     public function deleteProjectAttachments($groupId = null) {
         $deleteStatus = true;
@@ -592,11 +592,11 @@ class WikiAttachment /* implements UGroupPermission */ {
     /**
      * List all attachments deleted but not already purged
      *
-     * @param Integer $groupId
-     * @param Integer $offset
-     * @param Integer $limit
+     * @param int $groupId
+     * @param int $offset
+     * @param int $limit
      *
-     * @return Boolean
+     * @return bool
      */
     public function listPendingAttachments($groupId, $offset, $limit) {
         $dao = $this->getDao();
@@ -606,9 +606,9 @@ class WikiAttachment /* implements UGroupPermission */ {
     /**
      * Purge the attachments from FS and DB
      *
-     * @param Integer $time
+     * @param int $time
      *
-     * @return Boolean
+     * @return bool
      */
     public function purgeAttachments($time) {
         $dao = $this->getDao();
@@ -631,7 +631,7 @@ class WikiAttachment /* implements UGroupPermission */ {
     /**
      * Erase from the file system one attachment with its all version
      *
-     * @return Boolean
+     * @return bool
      */
     public function purgeAttachment() {
         if($this->exist()){
@@ -658,9 +658,9 @@ class WikiAttachment /* implements UGroupPermission */ {
     /**
      * Restore wiki attachment
      *
-     * @param Integer $id
+     * @param int $id
      *
-     * @return Boolean
+     * @return bool
      */
     public function restoreDeletedAttachment($id) {
         $dao = $this->getDao();

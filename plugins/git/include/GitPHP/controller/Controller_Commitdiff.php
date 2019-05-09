@@ -76,7 +76,7 @@ class Controller_Commitdiff extends Controller_DiffBase // @codingStandardsIgnor
      * Gets the name of this controller's action
      *
      * @access public
-     * @param boolean $local true if caller wants the localized action name
+     * @param bool $local true if caller wants the localized action name
      * @return string action name
      */
     public function GetName($local = false) // @codingStandardsIgnoreLine

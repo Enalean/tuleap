@@ -112,8 +112,8 @@ class Tracker_Artifact_ChangesetDao extends DataAccessObject {
     /**
      * Retrieve the list of artifact id corresponding to a last update date having a specific value
      *
-     * @param Integer $trackerId Tracker id
-     * @param Integer $date      Last update date
+     * @param int $trackerId Tracker id
+     * @param int $date Last update date
      *
      * @return DataAccessResult
      */
@@ -135,8 +135,8 @@ class Tracker_Artifact_ChangesetDao extends DataAccessObject {
     /**
      * We need both artifact_id and changset_id so we ensure we fetch the changeset of an artifact we are allowed to see
      *
-     * @param Integer $artifact_id
-     * @param Integer $changeset_id
+     * @param int $artifact_id
+     * @param int $changeset_id
      *
      * @return DataAccessResult
      */

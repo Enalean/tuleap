@@ -25,7 +25,7 @@ use Tuleap\SVN\Admin\MailNotification;
 class NotificationPresenter
 {
     /**
-     * @var integer
+     * @var int
      */
     public $notification_id;
     /**

@@ -30,7 +30,7 @@ class User_ForgeUserGroupPermissionsManager {
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function addPermission(User_ForgeUGroup $user_group, User_ForgeUserGroupPermission $permission) {
         $user_group_id = $user_group->getId();

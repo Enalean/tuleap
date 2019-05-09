@@ -81,7 +81,7 @@ class FRSFile {
      */
     var $reference_md5;
     /**
-     * @var integer $user_id id of user that created the file
+     * @var int $user_id id of user that created the file
      */
     var $user_id;
     /**
@@ -361,7 +361,7 @@ class FRSFile {
     /**
      * Determine if the file exists really on the server or not
      *
-     * @return boolean true if the file exists on the server, false otherwise
+     * @return bool true if the file exists on the server, false otherwise
      */
     function fileExists() {
         return file_exists($this->getFileLocation());
@@ -429,7 +429,7 @@ class FRSFile {
      * in order to reduce the amount of download attempt logged.
      *
      * @param int $user_id the user that download the file (if 0, the current user will be taken)
-     * @return boolean true if there is no error, false otherwise
+     * @return bool true if there is no error, false otherwise
      */
     function LogDownload($user_id = 0) {
         if ($user_id == 0) {
@@ -449,7 +449,7 @@ class FRSFile {
      * WARNING : for the moment, user can download the file if the user can view the package and can view the release the file belongs to.
      *
      * @param int $user_id the ID of the user. If $user_id is 0, then we take the current user.
-     * @return boolean true if the user has permissions to download the file, false otherwise
+     * @return bool true if the user has permissions to download the file, false otherwise
      */
     function userCanDownload($user_id = 0) {
         if ($user_id == 0) {

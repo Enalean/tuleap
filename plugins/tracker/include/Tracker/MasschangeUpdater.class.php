@@ -107,7 +107,7 @@ class Tracker_MasschangeUpdater {
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     private function getSendNotificationsFromRequest(Codendi_Request $request) {
         $send_notifications = false;

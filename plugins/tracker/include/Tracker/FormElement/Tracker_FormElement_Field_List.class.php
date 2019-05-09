@@ -98,7 +98,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isMultiple() {
         return false;
@@ -545,7 +545,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      *
      * @param Tracker_Artifact                $artifact         The artifact
      * @param PFUser                          $user             The user who will receive the email
-     * @param boolean                         $ignore_perms
+     * @param bool $ignore_perms
      * @param Tracker_Artifact_ChangesetValue $value            The actual value of the field
      * @param string                          $format           mail format
      *
@@ -614,7 +614,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     /**
      * Indicate if a workflow is defined and enabled on a field_id.
      * @param $id the field_id
-     * @return boolean, true if a workflow is defined and enabled on the field_id
+     * @return bool , true if a workflow is defined and enabled on the field_id
      */
     public function fieldHasEnableWorkflow(){
         $workflow = $this->getWorkflow();
@@ -627,7 +627,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      /**
      * Indicate if a workflow is defined on a field_id.
      * @param $id the field_id
-     * @return boolean, true if a workflow is defined on the field_id
+     * @return bool , true if a workflow is defined on the field_id
      */
     public function fieldHasDefineWorkflow(){
         $workflow = $this->getWorkflow();
@@ -1131,7 +1131,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      * @param mixed                           $value                   The value submitted by the user
      * @param Tracker_Artifact_ChangesetValue $previous_changesetvalue The data previously stored in the db
      *
-     * @return boolean
+     * @return bool
      */
     protected function saveValue($artifact, $changeset_value_id, $value, ?Tracker_Artifact_ChangesetValue $previous_changesetvalue = null) {
         return $this->getValueDao()->create($changeset_value_id, $value);
@@ -1142,7 +1142,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      *
      * @param Tracker_Artifact_Changeset $changeset   The changeset (needed in only few cases like 'lud' field)
      * @param int                        $value_id    The id of the value
-     * @param boolean                    $has_changed If the changeset value has changed from the rpevious one
+     * @param bool $has_changed If the changeset value has changed from the rpevious one
      *
      * @return Tracker_Artifact_ChangesetValue or null if not found
      */
@@ -1248,7 +1248,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      * @param int  $transition_id The id of the transition
      * @param PFUser $user          The user. If null, take the current user
      *
-     *@return boolean true if user has permission on this field
+     *@return bool true if user has permission on this field
      */
     public function userCanMakeTransition($transition_id, ?PFUser $user = null) {
         if ($transition_id) {
@@ -1337,7 +1337,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      * @param Tracker_Artifact                $artifact             The artifact to check
      * @param mixed                           $value      The submitted value
      *
-     * @return boolean true on success or false on failure
+     * @return bool true on success or false on failure
      */
     public function isValidRegardingRequiredProperty(Tracker_Artifact $artifact, $value) {
         $this->has_errors = false;

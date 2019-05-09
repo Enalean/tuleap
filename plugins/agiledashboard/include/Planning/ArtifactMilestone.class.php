@@ -148,7 +148,7 @@ class Planning_ArtifactMilestone implements Planning_Milestone {
     }
 
     /**
-     * @return Boolean
+     * @return bool
      */
     public function userCanView(PFUser $user) {
         return $this->artifact->getTracker()->userCanView($user);
@@ -312,7 +312,7 @@ class Planning_ArtifactMilestone implements Planning_Milestone {
     /**
      * @param array $artifacts_ids
      * @param PFUser $user
-     * @return Boolean True if nothing went wrong
+     * @return bool True if nothing went wrong
      */
     public function solveInconsistencies(PFUser $user, array $artifacts_ids) {
         $artifact = $this->getArtifact();
@@ -323,7 +323,7 @@ class Planning_ArtifactMilestone implements Planning_Milestone {
     /**
      * Get the timestamp of the last modification of the milestone
      *
-     * @return Integer
+     * @return int
      */
     public function getLastModifiedDate() {
         return $this->getArtifact()->getLastUpdateDate();
@@ -365,7 +365,7 @@ class Planning_ArtifactMilestone implements Planning_Milestone {
     }
 
     /**
-     * @param boolean $bool
+     * @param bool $bool
      */
     public function setHasUsableBurndownField($bool) {
         $this->has_useable_burndown_field = $bool;

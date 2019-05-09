@@ -41,7 +41,7 @@ class FileModuleMonitorDao extends DataAccessObject {
     /**
      * Get the list of users publicly monitoring a package
      *
-     * @param Integer $packageId Id of the package
+     * @param int $packageId Id of the package
      *
      * @return DataAccessResult
      */
@@ -66,9 +66,9 @@ class FileModuleMonitorDao extends DataAccessObject {
     /**
      * Check user's monitoring of the given package.
      *
-     * @param Integer $package_id Id of the package
+     * @param int $package_id Id of the package
      * @param PFUser    $user       The user
-     * @param Boolean $publicly   If true check if the user is monitoring publicly
+     * @param bool $publicly If true check if the user is monitoring publicly
      *
      * @return DataAccessResult
      */
@@ -96,9 +96,9 @@ class FileModuleMonitorDao extends DataAccessObject {
     /**
      * Create a row in the table filemodule_monitor
      *
-     * @param Integer $filemodule_id Id of the package
+     * @param int $filemodule_id Id of the package
      * @param PFUser    $user          The user
-     * @param Boolean $anonymous     True if the user i monitoring anonymously
+     * @param bool $anonymous True if the user i monitoring anonymously
      *
      * @return true or id(auto_increment) if there is no error
      */
@@ -126,9 +126,9 @@ class FileModuleMonitorDao extends DataAccessObject {
      /**
      * Delete entry that match $package_id and $user_id (current user) in filemodule_monitor
      *
-     * @param Integer $filemodule_id Id of the package
+     * @param int $filemodule_id Id of the package
      * @param PFUser    $user       The user
-     * @param Boolean $onlyPublic If true delete only user publicly monitoring the package
+     * @param bool $onlyPublic If true delete only user publicly monitoring the package
      *
      * @return true if there is no error
      */

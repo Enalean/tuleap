@@ -35,7 +35,7 @@ class MinimalHudsonJobFactory // @codingStandardsIgnoreLine
      * Returns all HudsonJobs for one owner
      *
      * @param String $owner_type
-     * @param Integer $owner_id
+     * @param int $owner_id
      *
      * @return MinimalHudsonJob[]
      */

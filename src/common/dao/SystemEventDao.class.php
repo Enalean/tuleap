@@ -208,7 +208,7 @@ class SystemEventDao extends DataAccessObject {
 
     /**
      * @param array $event_ids
-     * @return boolean
+     * @return bool
      */
     public function markAsDone($event_ids) {
         $event_ids = $this->da->escapeIntImplode($event_ids);
@@ -224,7 +224,7 @@ class SystemEventDao extends DataAccessObject {
 
     /**
      * @param array $event_ids
-     * @return boolean
+     * @return bool
      */
     public function markAsRunning($event_ids) {
         $event_ids = $this->da->escapeIntImplode($event_ids);

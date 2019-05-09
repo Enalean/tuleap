@@ -22,7 +22,7 @@
 class Cardwall_OnTop_Dao extends DataAccessObject {
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isEnabled($tracker_id) {
         $tracker_id = $this->da->escapeInt($tracker_id);
@@ -49,7 +49,7 @@ class Cardwall_OnTop_Dao extends DataAccessObject {
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isFreestyleEnabled($tracker_id) {
         $tracker_id = $this->da->escapeInt($tracker_id);

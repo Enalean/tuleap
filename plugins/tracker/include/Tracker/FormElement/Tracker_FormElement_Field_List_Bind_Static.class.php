@@ -581,7 +581,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
      *
      * @param Tracker_FormElement_Field_List_Bind_StaticValue $value the value
      *
-     * @return boolean true if the value can be hidden
+     * @return bool true if the value can be hidden
      */
     public function canValueBeHidden(Tracker_FormElement_Field_List_Bind_StaticValue $value) {
         return $this->getValueDao()->canValueBeHidden($this->field, $value->getId());
@@ -592,7 +592,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
      *
      * @param Tracker_FormElement_Field_List_Bind_StaticValue $value the value
      *
-     * @return boolean true if the value can be hidden
+     * @return bool true if the value can be hidden
      */
     public function canValueBeHiddenWithoutCheckingSemanticStatus(Tracker_FormElement_Field_List_Bind_StaticValue $value) {
         return $this->getValueDao()->canValueBeHiddenWithoutCheckingSemanticStatus($this->field, $value->getId());
@@ -603,7 +603,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
      *
      * @param Tracker_FormElement_Field_List_Bind_StaticValue $value the value
      *
-     * @return boolean true if the value can be deleted
+     * @return bool true if the value can be deleted
      */
     public function canValueBeDeleted(Tracker_FormElement_Field_List_Bind_StaticValue $value) {
         return $this->getValueDao()->canValueBeDeleted($this->field, $value->getId());

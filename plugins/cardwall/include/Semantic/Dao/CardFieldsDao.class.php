@@ -45,7 +45,7 @@ class Cardwall_Semantic_Dao_CardFieldsDao extends DataAccessObject implements Tr
     }
 
     /**
-     * @return boolean true if success
+     * @return bool true if success
      */
     public function add($tracker_id, $field_id, $rank) {
         $tracker_id = $this->da->escapeInt($tracker_id);
@@ -59,7 +59,7 @@ class Cardwall_Semantic_Dao_CardFieldsDao extends DataAccessObject implements Tr
 
 
     /**
-     * @return boolean true if success
+     * @return bool true if success
      */
     public function remove($tracker_id, $field_id) {
         $tracker_id = $this->da->escapeInt($tracker_id);

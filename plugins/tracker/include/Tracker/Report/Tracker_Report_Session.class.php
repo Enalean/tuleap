@@ -52,8 +52,8 @@ class Tracker_Report_Session extends Codendi_Session {
 
     /**
      * Make a copy of the entire report subtree
-     * @param Integer $id report id to copy
-     * @param Integer $new_id destination report id
+     * @param int $id report id to copy
+     * @param int $new_id destination report id
      */
     public function copy($id, $new_id) {
         $previous_session_namespace_path = $this->getSessionNamespacePath();
@@ -108,7 +108,7 @@ class Tracker_Report_Session extends Codendi_Session {
      * Store value and options (is_advanced) for a given criterion (field)
      * NOTICE : value is overwritten
      * NOTICE : opts are not overwritten if empty because they may have been set earlier through Ajax request
-     * @param integer $field_id
+     * @param int $field_id
      * @param mixed $value
      * @param array $opts
      * @todo empty value may allow to set options only?
@@ -156,7 +156,7 @@ class Tracker_Report_Session extends Codendi_Session {
 
     /**
      * Returns a given criterion if it is already in session
-     * @param integer $field_id
+     * @param int $field_id
      * @return mixed array or false if the criterion does not exist
      */
     public function &getCriterion($field_id) {

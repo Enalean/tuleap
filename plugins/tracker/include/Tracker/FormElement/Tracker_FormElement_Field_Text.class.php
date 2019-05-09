@@ -44,7 +44,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
      * This hooks is here to delete specific properties,
      * or specific values of the field.
      * (The field itself will be deleted later)
-     * @return boolean true if success
+     * @return bool true if success
      */
     public function delete() {
         return $this->getDao()->delete($this->id);
@@ -158,7 +158,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
      * Return true if this field is the semantic title field of the tracker,
      * false otherwise if not or if there is no title field defined.
      *
-     * @return boolean true if the field is the 'title' of the tracker
+     * @return bool true if the field is the 'title' of the tracker
      */
     protected function isSemanticTitle() {
         $semantic_manager = new Tracker_SemanticManager($this->getTracker());
@@ -291,7 +291,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
      *
      * @param Tracker_Artifact                $artifact         The artifact
      * @param PFUser                          $user             The user who will receive the email
-     * @param boolean                         $ignore_perms
+     * @param bool $ignore_perms
      * @param Tracker_Artifact_ChangesetValue $value            The actual value of the field
      * @param string                          $format           output format
      *
@@ -444,7 +444,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
     /**
      * Tells if the field takes two columns
      * Ugly legacy hack to display fields in columns
-     * @return boolean
+     * @return bool
      */
     public function takesTwoColumns() {
         return $this->getProperty('cols') > 40;
@@ -498,7 +498,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
      *
      * @param Tracker_Artifact_Changeset $changeset   The changeset (needed in only few cases like 'lud' field)
      * @param int                        $value_id    The id of the value
-     * @param boolean                    $has_changed If the changeset value has changed from the rpevious one
+     * @param bool $has_changed If the changeset value has changed from the rpevious one
      *
      * @return Tracker_Artifact_ChangesetValue or null if not found
      */
@@ -568,7 +568,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
      * @param mixed                           $value                   The value submitted by the user
      * @param Tracker_Artifact_ChangesetValue $previous_changesetvalue The data previously stored in the db
      *
-     * @return boolean
+     * @return bool
      */
     protected function saveValue($artifact, $changeset_value_id, $value, ?Tracker_Artifact_ChangesetValue $previous_changesetvalue = null) {
         $content     = $this->getRightContent($value);

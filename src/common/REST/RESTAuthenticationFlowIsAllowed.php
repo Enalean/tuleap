@@ -37,7 +37,7 @@ class RESTAuthenticationFlowIsAllowed
     }
 
     /**
-     * @return boolean
+     * @return bool
      * @throws RestException
      */
     public function isAllowed()

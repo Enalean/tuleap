@@ -325,9 +325,9 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
     /**
      * Restore a deleted tracker.
      *
-     * @param Integer $tracker_id ID of the tracker marked as deleted
+     * @param int $tracker_id ID of the tracker marked as deleted
      *
-     * @return Boolean
+     * @return bool
      */
     private function restoreDeletedTracker($tracker_id) {
         return $this->getTrackerFactory()->restoreDeletedTracker($tracker_id);
@@ -1034,8 +1034,8 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
     /**
      * On project creation, copy template trackers to destination project
      *
-     * @param Integer $from_project_id
-     * @param Integer $to_project_id
+     * @param int $from_project_id
+     * @param int $to_project_id
      * @param Array   $ugroup_mapping
      */
     public function duplicate($from_project_id, $to_project_id, $ugroup_mapping) {
@@ -1046,7 +1046,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
     /**
      * On project creation, copy all 'plugin_tracker_artifact' references not attached to a tracker
      *
-     * @param Integer $from_project_id
+     * @param int $from_project_id
      */
     protected function duplicateReferences($from_project_id) {
         // Index by shortname
@@ -1103,7 +1103,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
      * @param int  $group_id The Id of the project where the user wants to create a tracker
      * @param PFUser $user     The user to test (current user if not defined)
      *
-     * @return boolean true if user has persission to create trackers, false otherwise
+     * @return bool true if user has persission to create trackers, false otherwise
      */
     public function userCanCreateTracker($group_id, $user = false) {
         if (!($user instanceof PFUser)) {
@@ -1145,9 +1145,9 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
     /**
      * Mark as deleted all trackers of a given project
      *
-     * @param Integer $group_id The project id
+     * @param int $group_id The project id
      *
-     * @return Boolean
+     * @return bool
      */
     public function deleteProjectTrackers($group_id) {
         $delete_status = true;

@@ -68,7 +68,7 @@ class MilestoneParentLinker {
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     private function parentMilestoneHasItemTrackerInItsBacklogTracker(
         Planning_Milestone $parent_milestone,

@@ -25,7 +25,7 @@ use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupRepresentat
 class RepositoryFineGrainedRepresentation
 {
     /**
-     * @var boolean
+     * @var bool
      */
     public $has_fined_grained_permissions;
     /**

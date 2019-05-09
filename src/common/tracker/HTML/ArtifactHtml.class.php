@@ -1085,7 +1085,7 @@ class ArtifactHtml extends Artifact {
     /**
      * Output the raw follow-up comment
      *
-     * @param Integer $comment_id Id of the follow-up comment
+     * @param int $comment_id Id of the follow-up comment
      *
      * @return void
      */

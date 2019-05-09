@@ -25,7 +25,7 @@ interface PFO_Plugin {
      *
      * @param String  $hook       Event name
      * @param String  $callback   Callback method name (method of the current object)
-     * @param Boolean $recallHook If set to true, event name is passed as parameter
+     * @param bool $recallHook If set to true, event name is passed as parameter
      *
      * @return void
      */

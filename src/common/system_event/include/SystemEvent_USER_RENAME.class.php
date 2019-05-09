@@ -61,7 +61,7 @@ class SystemEvent_USER_RENAME extends SystemEvent {
     /**
      * Process stored event
      *
-     * @return Boolean
+     * @return bool
      */
     public function process() {
         list($user_id, $new_name) = $this->getParametersAsArray();
@@ -128,7 +128,7 @@ class SystemEvent_USER_RENAME extends SystemEvent {
      * @param PFUser    $user     User to update
      * @param String  $new_name New name
      *
-     * @return Boolean
+     * @return bool
      */
     protected function updateDB($user, $new_name) {
         $um = UserManager::instance();

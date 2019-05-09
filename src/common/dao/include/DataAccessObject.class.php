@@ -35,7 +35,7 @@ class DataAccessObject {
     var $da;
 
     /**
-     * @var Boolean
+     * @var bool
      */
     private $throw_exception_on_errors = false;
 
@@ -174,7 +174,7 @@ class DataAccessObject {
      *
      * @deprecated
      *
-     * @return boolean true if success
+     * @return bool true if success
      */
     public function update($sql, $params = array()) {
         $result = $this->da->query($sql, $params);

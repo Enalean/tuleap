@@ -108,7 +108,7 @@ class Tracker_FormElement_Field_Radiobutton extends Tracker_FormElement_Field_Se
      * Change the type of the button
      * @param string $type the new type
      *
-     * @return boolean true if the change is allowed and successful
+     * @return bool true if the change is allowed and successful
      */
     public function changeType($type) {
         if (in_array($type, array('msb', 'cb'))) {

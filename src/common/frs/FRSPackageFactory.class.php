@@ -123,7 +123,7 @@ class FRSPackageFactory {
     /**
      * Return the list of all Packages for given project
      *
-     * @param Integer $group_id
+     * @param int $group_id
      *
      * @return FRSPackage[]
      */
@@ -146,7 +146,7 @@ class FRSPackageFactory {
     /**
      * Return the list of active Packages for given project
      *
-     * @param Integer $group_id
+     * @param int $group_id
      *
      * @return FRSPackage[]
      */
@@ -274,10 +274,10 @@ class FRSPackageFactory {
      * and delete the package from the database
      * return false if release not deleted, true otherwise
      * 
-     * @param Integer $group_id
-     * @param Integer $package_id
+     * @param int $group_id
+     * @param int $package_id
      * 
-     * @return Boolean
+     * @return bool
      */
     function delete_package($group_id, $package_id) {
         $package = $this->getFRSPackageFromDb($package_id, $group_id);
@@ -295,9 +295,9 @@ class FRSPackageFactory {
     /**
      * Delete all FRS packages of given project
      *
-     * @param Integer $groupId Project ID
+     * @param int $groupId Project ID
      *
-     * @return Boolean
+     * @return bool
      */
     function deleteProjectPackages($groupId) {
         $deleteState = true;
@@ -313,7 +313,7 @@ class FRSPackageFactory {
     }
 
     /**
-     * @return Boolean
+     * @return bool
      */
     public function userCanAdmin(PFUser $user, $project_id)
     {
@@ -376,11 +376,11 @@ class FRSPackageFactory {
     /**
      * Return true if user has Update permission on this package
      *
-     * @param Integer $group_id   The project this package is in
-     * @param Integer $package_id The ID of the package to update
-     * @param Integer $user_id if Not given or false, take the current user
+     * @param int $group_id The project this package is in
+     * @param int $package_id The ID of the package to update
+     * @param int $user_id if Not given or false, take the current user
      *
-     * @return Boolean true of user can update the package $package_id, false otherwise
+     * @return bool true of user can update the package $package_id, false otherwise
      */ 
 	function userCanUpdate($group_id, $package_id, $user_id=false) {
         return $this->userCanCreate($group_id, $user_id);
@@ -389,7 +389,7 @@ class FRSPackageFactory {
     /**
      * Returns true if user has permissions to Create packages
      *
-     * @return Boolean true if the user has permission to create packages, false otherwise
+     * @return bool true if the user has permission to create packages, false otherwise
      */ 
     public function userCanCreate($project_id, $user_id = false)
     {

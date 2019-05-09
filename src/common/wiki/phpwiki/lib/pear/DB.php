@@ -329,7 +329,7 @@ class DB
      *
      * @param string $query the query
      *
-     * @return boolean whether $query is a data manipulation query
+     * @return bool whether $query is a data manipulation query
      */
     public static function isManip($query)
     {
@@ -347,7 +347,7 @@ class DB
     /**
      * Return a textual error message for a DB error code
      *
-     * @param integer $value error code
+     * @param int $value error code
      *
      * @return string error message, or false if the error code was
      * not recognized
@@ -407,8 +407,8 @@ class DB
      * @param string $name the base name of the extension (without the .so or
      *                     .dll suffix)
      *
-     * @return boolean true if the extension was already or successfully
-     *                 loaded, false if it could not be loaded
+     * @return bool true if the extension was already or successfully
+ * loaded, false if it could not be loaded
      */
     function assertExtension($name)
     {
@@ -433,8 +433,8 @@ class DB_Error extends PEAR_Error
      *
      *
      * @param mixed   $code   DB error code, or string with error message.
-     * @param integer $mode   what "error mode" to operate in
-     * @param integer $level  what error level to use for $mode & PEAR_ERROR_TRIGGER
+     * @param int $mode what "error mode" to operate in
+     * @param int $level what error level to use for $mode & PEAR_ERROR_TRIGGER
      * @param mixed   $debuginfo  additional debug info, such as the last query
      *
      * @access public
@@ -472,13 +472,13 @@ class DB_result
 
     /**
      * for limit queries, the row to start fetching
-     * @var integer
+     * @var int
      */
     var $limit_from  = null;
 
     /**
      * for limit queries, the number of rows to fetch
-     * @var integer
+     * @var int
      */
     var $limit_count = null;
 
@@ -749,7 +749,7 @@ class DB_result
 
     /**
      * returns the actual row number
-     * @return integer
+     * @return int
      */
     function getRowCounter()
     {

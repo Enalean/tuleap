@@ -53,7 +53,7 @@ class WebDAVAuthentication {
     /**
      * Returns whether the username field is empty or not
      *
-     * @return Boolean
+     * @return bool
      */
     function issetUsername() {
 

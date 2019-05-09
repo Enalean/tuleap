@@ -23,7 +23,7 @@ use \Tuleap\REST\JsonCast;
 
 class AgileDashboard_ColumnRepresentation {
 
-    /** @var integer */
+    /** @var int */
     public $id;
 
     /** @var String */

@@ -26,7 +26,7 @@ class ArtifactAttachmentXMLZipper implements ArtifactAttachmentXMLExporter {
     /** @var ZipArchive */
     private $archive;
 
-    /** @var Boolean */
+    /** @var bool */
     private $skip_files = false;
 
     /** @var ArtifactXMLExporterDao */

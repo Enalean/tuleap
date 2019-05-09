@@ -23,7 +23,7 @@ interface PFO_Project {
     /**
      * Returns project numeric id (aka group_id)
      *
-     * @return Integer
+     * @return int
      */
     public function getID();
 

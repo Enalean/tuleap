@@ -39,8 +39,8 @@ class Tracker_FormElement_Field_Value_DateDao extends Tracker_FormElement_Field_
 
     /**
      * create none value
-     * @param integer $tracker_id
-     * @param integer $field_id
+     * @param int $tracker_id
+     * @param int $field_id
      * @return 
      */
     public function  createNoneValue($tracker_id, $field_id) {
@@ -67,8 +67,8 @@ class Tracker_FormElement_Field_Value_DateDao extends Tracker_FormElement_Field_
     /**
      * Retrieve the list of artifact id corresponding to a date field having a specific value
      *
-     * @param Integer $fieldId Date field
-     * @param Integer $date    Value of the date field
+     * @param int $fieldId Date field
+     * @param int $date Value of the date field
      *
      * @return
      */

@@ -37,7 +37,7 @@ class ArtifactViewPresenter
     public $csrf_token;
 
     /**
-     * @var boolean
+     * @var bool
      */
     public $user_can_add_time;
 
@@ -47,7 +47,7 @@ class ArtifactViewPresenter
     public $times;
 
     /**
-     * @var boolean
+     * @var bool
      */
     public $has_times;
 

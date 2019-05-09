@@ -52,7 +52,7 @@ class Widget_MySystemEvent extends Widget {
     /**
      * Says if the content of the widget can be displayed through an ajax call
      * If true, then the dashboard will be rendered faster but the page will be a little bit crappy until full load.
-     * @return boolean
+     * @return bool
      */
     public function isAjax() {
         return true;

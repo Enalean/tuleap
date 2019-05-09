@@ -25,9 +25,9 @@ class WikiAttachmentDao extends DataAccessObject {
     /**
      * Create a new attachement.
      *
-     * @param integer $gid Group id
+     * @param int $gid Group id
      * @param string $filename Attachement name
-     * @return boolean
+     * @return bool
      */
     function create($gid, $filename, $filesystemName) {
         $qry = sprintf(' INSERT INTO wiki_attachment (group_id, name, filesystem_name)'
@@ -43,7 +43,7 @@ class WikiAttachmentDao extends DataAccessObject {
     /**
      * Retrun one DB entry corresponding to the given id.
      *
-     * @param integer $id Attachement id
+     * @param int $id Attachement id
      * @return DataAccessResult
      */
     function read($id) {
@@ -57,9 +57,9 @@ class WikiAttachmentDao extends DataAccessObject {
     /**
      * Set the status of the attachment to deleted and add the entry to the wiki_attchment_deleted table.
      *
-     * @param integer $id Attachement id
+     * @param int $id Attachement id
      * 
-     * @return boolean
+     * @return bool
      */
     function delete($id) {
         $sql = 'UPDATE wiki_attachment SET delete_date='.$this->da->escapeInt($_SERVER['REQUEST_TIME']).
@@ -78,7 +78,7 @@ class WikiAttachmentDao extends DataAccessObject {
     /**
      * Get the list of attachment for a project
      *
-     * @param integer $gid Group id
+     * @param int $gid Group id
      * @return DataAccessResult
      */
     function getList($gid) {
@@ -96,7 +96,7 @@ class WikiAttachmentDao extends DataAccessObject {
      * by date of creation of their revisions (FILO). The result also contains
      * the number of revisions for each attachement.
      *
-     * @param integer $gid Group id
+     * @param int $gid Group id
      * @return DataAccessResult
      */
     function getListWithCounterOrderedByRevDate($gid) {
@@ -116,7 +116,7 @@ class WikiAttachmentDao extends DataAccessObject {
      * Return attachment id for a file in a project.
      * The utf8_bin collation enforce case sensitivity within where clause
      *
-     * @param integer $gid group id
+     * @param int $gid group id
      * @param string  $filename attachement name
      * @return DataAccessResult
      */
@@ -134,10 +134,10 @@ class WikiAttachmentDao extends DataAccessObject {
     /**
      * Retrieve all deleted Attachment not purged yet after a given period of time
      * 
-     * @param Integer $time    Timestamp of the date to start the search
-     * @param Integer $groupId
-     * @param Integer $offset
-     * @param Integer $limit
+     * @param int $time Timestamp of the date to start the search
+     * @param int $groupId
+     * @param int $offset
+     * @param int $limit
      * 
      * @return DataAccessResult
      */
@@ -158,9 +158,9 @@ class WikiAttachmentDao extends DataAccessObject {
     /**
      * Restore deleted wiki attachments
      * 
-     * @param Integer $id
+     * @param int $id
      * 
-     * @return Boolean
+     * @return bool
      */
     function restoreAttachment($id) {
         $sql = 'UPDATE wiki_attachment SET delete_date = NULL '.
@@ -175,10 +175,10 @@ class WikiAttachmentDao extends DataAccessObject {
     /**
      * Save the purge date of a deleted attachment
      *
-     * @param Integer $attachmentId
-     * @param Integer $time
+     * @param int $attachmentId
+     * @param int $time
      *
-     * @return Boolean
+     * @return bool
      */
     function setPurgeDate($id, $time) {
         $sql = 'UPDATE wiki_attachment_deleted SET purge_date ='.$this->da->escapeInt($time).

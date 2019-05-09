@@ -346,10 +346,10 @@ final class EmailNotificationTask implements PostCreationTask
     /**
      * Get the text body for notification
      *
-     * @param Boolean $is_update    It is an update, not a new artifact
+     * @param bool $is_update It is an update, not a new artifact
      * @param String  $recipient    The recipient who will receive the notification
      * @param \BaseLanguage $language The language of the message
-     * @param Boolean $ignore_perms indicates if permissions have to be ignored
+     * @param bool $ignore_perms indicates if permissions have to be ignored
      *
      * @return String
      */
@@ -386,10 +386,10 @@ final class EmailNotificationTask implements PostCreationTask
     /**
      * Get the html body for notification
      *
-     * @param Boolean $is_update    It is an update, not a new artifact
+     * @param bool $is_update It is an update, not a new artifact
      * @param String  $recipient    The recipient who will receive the notification
      * @param \BaseLanguage $language The language of the message
-     * @param Boolean $ignore_perms ???
+     * @param bool $ignore_perms ???
      *
      * @return String
      */

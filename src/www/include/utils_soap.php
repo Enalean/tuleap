@@ -20,7 +20,7 @@ function groups_to_soap($groups) {
  * regarding the restricted access
  *
  * @param Object{Group} $group the Group object
- * @return boolean true if the current session user has access to this project, false otherwise
+ * @return bool true if the current session user has access to this project, false otherwise
  */
 function checkRestrictedAccess($group) {
     if (ForgeConfig::areRestrictedUsersAllowed()) {

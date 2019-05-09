@@ -151,7 +151,7 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
      * Fetch artifact value for email
      * @param Tracker_Artifact $artifact
      * @param PFUser $user
-     * @param boolean $ignore_perms
+     * @param bool $ignore_perms
      * @param Tracker_Artifact_ChangesetValue $value
      * @param string $format
      *
@@ -306,7 +306,7 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
      * @param mixed                           $submitted_value      The submitted value
      * @param Tracker_Artifact_ChangesetValue $last_changeset_value The last changeset value of the field (give null if no old value)
      *
-     * @return boolean true on success or false on failure
+     * @return bool true on success or false on failure
      */
     public function validateFieldWithPermissionsAndRequiredStatus(
         Tracker_Artifact $artifact,

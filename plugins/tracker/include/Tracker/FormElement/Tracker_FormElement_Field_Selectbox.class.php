@@ -139,7 +139,7 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
      *
      * @param string $type the new type
      *
-     * @return boolean true if the change is allowed and successful
+     * @return bool true if the change is allowed and successful
      */
     public function changeType($type) {
         if (in_array($type, array('msb', 'cb'))) {
@@ -235,7 +235,7 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
     }
 
     /**
-     * @return boolean true if the value corresponds to none
+     * @return bool true if the value corresponds to none
      */
     public function isNone($value) {
         return $value === null ||

@@ -51,7 +51,7 @@ class PluginController {
     /**
      * Boolean to choose to add default page header and footer in the response.
      *
-     * @var boolean
+     * @var bool
      */
     protected $default_page_rendering = true;
     
@@ -132,7 +132,7 @@ class PluginController {
      * This function is useful to control action execution in the controller, this kind of action is a logical view not a method of PluginAction class
      * One should use this to filter the 'action' parameter in the HTTP request (add, clone, del, help etc...)
      * @param String $actionName
-     * @return boolean
+     * @return bool
      */
     public function isAPermittedAction($actionName) {
         return in_array($actionName, $this->permittedActions);
@@ -236,7 +236,7 @@ class PluginController {
     /**
      * Sets whether the default page header and footer are added to the response
      * 
-     * @param boolean $bool
+     * @param bool $bool
      */
     protected function setDefaultPageRendering($bool) {
         $this->default_page_rendering = $bool;

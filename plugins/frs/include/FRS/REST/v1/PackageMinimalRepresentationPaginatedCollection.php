@@ -28,7 +28,7 @@ class PackageMinimalRepresentationPaginatedCollection
     private $package_representations;
 
     /**
-     * @var integer
+     * @var int
      */
     private $total_size;
 

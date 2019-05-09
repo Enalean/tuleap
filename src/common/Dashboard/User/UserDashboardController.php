@@ -151,7 +151,7 @@ class UserDashboardController
 
     /**
      * @param HTTPRequest $request
-     * @return integer|null
+     * @return int|null
      */
     public function createDashboard(HTTPRequest $request)
     {

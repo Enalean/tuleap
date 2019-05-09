@@ -139,8 +139,8 @@ class WikiDB {
      *
      * @param string $pagename string Which page to check.
      *
-     * @return boolean True if the page actually exists with
-     * non-default contents in the WikiDataBase.
+     * @return bool True if the page actually exists with
+ * non-default contents in the WikiDataBase.
      */
     function isWikiPage ($pagename) {
         $page = $this->getPage($pagename);
@@ -225,10 +225,10 @@ class WikiDB {
      *
      * @access public
      *
-     * @param boolean $include_defaulted Normally pages whose most
-     * recent revision has empty content are considered to be
-     * non-existant. Unless $include_defaulted is set to true, those
-     * pages will not be returned.
+     * @param bool $include_defaulted Normally pages whose most
+ * recent revision has empty content are considered to be
+ * non-existant. Unless $include_defaulted is set to true, those
+ * pages will not be returned.
      *
      * @return WikiDB_PageIterator A WikiDB_PageIterator which contains all pages
      *     in the WikiDB which have non-default contents.
@@ -325,9 +325,9 @@ class WikiDB {
      *
      * @access public
      *
-     * @param integer $limit The maximum number of pages to return.
-     * Set $limit to zero to return all pages.  If $limit < 0, pages will
-     * be sorted in decreasing order of popularity.
+     * @param int $limit The maximum number of pages to return.
+ * Set $limit to zero to return all pages.  If $limit < 0, pages will
+ * be sorted in decreasing order of popularity.
      *
      * @return WikiDB_PageIterator A WikiDB_PageIterator containing the matching
      * pages.
@@ -387,8 +387,8 @@ class WikiDB {
      * @access public
      * @param string $from Page to rename
      * @param string $to   New name
-     * @param boolean $updateWikiLinks If the text in all pages should be replaced.
-     * @return boolean     true or false
+     * @param bool $updateWikiLinks If the text in all pages should be replaced.
+     * @return bool true or false
      */
     function renamePage($from, $to, $updateWikiLinks = false) {
         assert(is_string($from) && $from != '');
@@ -636,8 +636,8 @@ class WikiDB_Page
      *
      * @access public
      *
-     * @param integer $version Which revision to delete.  (You can also
-     *  use a WikiDB_PageRevision object here.)
+     * @param int $version Which revision to delete.  (You can also
+ * use a WikiDB_PageRevision object here.)
      */
     function deleteRevision($version) {
         $backend = &$this->_wikidb->_backend;
@@ -1069,7 +1069,7 @@ class WikiDB_Page
      *
      * @access public
      *
-     * @param integer $version  Which revision to get.
+     * @param int $version Which revision to get.
      *
      * @return WikiDB_PageRevision The requested WikiDB_PageRevision object, or
      * false if the requested revision does not exist in the {@link WikiDB}.
@@ -1099,8 +1099,8 @@ class WikiDB_Page
      *
      * @access public
      *
-     * @param integer $version  Find most recent revision before this version.
-     *  You can also use a WikiDB_PageRevision object to specify the $version.
+     * @param int $version Find most recent revision before this version.
+ * You can also use a WikiDB_PageRevision object to specify the $version.
      *
      * @return WikiDB_PageRevision The requested WikiDB_PageRevision object, or false if the
      * requested revision does not exist in the {@link WikiDB}.  Note that
@@ -1146,7 +1146,7 @@ class WikiDB_Page
      *
      * @access public
      *
-     * @param boolean $reversed Which links to find: true for backlinks (default).
+     * @param bool $reversed Which links to find: true for backlinks (default).
      *
      * @return WikiDB_PageIterator A WikiDB_PageIterator containing
      * all matching pages.
@@ -1340,7 +1340,7 @@ class WikiDB_Page
      * @param integer_or_object $version_or_pagerevision
      * Takes either the version number (and int) or a WikiDB_PageRevision
      * object.
-     * @return integer The version number.
+     * @return int The version number.
      */
     function _coerce_to_version($version_or_pagerevision) {
         if (method_exists($version_or_pagerevision, "getContent"))
@@ -1424,7 +1424,7 @@ class WikiDB_PageRevision
      *
      * @access public
      *
-     * @return integer The version number of this revision.
+     * @return int The version number of this revision.
      */
     function getVersion() {
         return $this->_version;
@@ -1442,7 +1442,7 @@ class WikiDB_PageRevision
      *
      * @access public
      *
-     * @return boolean Returns true if the page has default content.
+     * @return bool Returns true if the page has default content.
      */
     function hasDefaultContents() {
         $data = &$this->_data;
@@ -1480,7 +1480,7 @@ class WikiDB_PageRevision
      *
      * @access public
      *
-     * @return boolean True iff the revision is the latest (most recent) one.
+     * @return bool True iff the revision is the latest (most recent) one.
      */
     function isCurrent() {
         if (!isset($this->_iscurrent)) {

@@ -125,7 +125,7 @@ class Valid {
      *
      * @access private
      * @param mixed Value to test
-     * @return boolean
+     * @return bool
      */
     function isValueEmpty($value) {
         return ($value === '' || $value === false || $value === null);

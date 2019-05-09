@@ -61,7 +61,7 @@ class Massmail extends SystemEvent
     /**
      * Process stored event
      *
-     * @return Boolean
+     * @return bool
      */
     public function process()
     {

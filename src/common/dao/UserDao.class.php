@@ -321,9 +321,9 @@ class UserDao extends DataAccessObject {
     /**
      * Assign to given user the next available unix_uid
      *
-     * @param Integer $userId User ID
+     * @param int $userId User ID
      *
-     * @return Boolean
+     * @return bool
      */
     function assignNextUnixUid($userId) {
         $sql = 'UPDATE user, (SELECT MAX(unix_uid)+1 AS max_uid FROM user) AS R'.
@@ -378,7 +378,7 @@ class UserDao extends DataAccessObject {
      * Don't log access if already accessed in the past 6 hours (scalability+privacy)
      * @param  $user_id Integer
      * @param  $time    Integer
-     * @return Boolean
+     * @return bool
      */
     public function storeLastAccessDate($user_id, $time)
     {
@@ -436,7 +436,7 @@ class UserDao extends DataAccessObject {
      *
      * @param String $condition SQL condition
      *
-     * @return Boolean
+     * @return bool
      */
     function suspendAccount($condition) {
         $sql = 'UPDATE user SET status = "S", unix_status = "S"' .
@@ -447,9 +447,9 @@ class UserDao extends DataAccessObject {
     /**
      * Suspend user account according to given date
      *
-     * @param Integer $time
+     * @param int $time
      *
-     * @return Boolean
+     * @return bool
      */
     function suspendExpiredAccounts($time) {
         $condition = 'expiry_date != 0'.
@@ -460,9 +460,9 @@ class UserDao extends DataAccessObject {
     /**
      * Suspend account of users who didn't access the platform after given date
      *
-     * @param Integer $time Unix timestamp of a date
+     * @param int $time Unix timestamp of a date
      *
-     * @return Boolean
+     * @return bool
      */
     public function suspendInactiveAccounts($time)
     {
@@ -652,8 +652,8 @@ class UserDao extends DataAccessObject {
      *
      * @param int $group_id
      * @param string $pattern
-     * @param integer $offset
-     * @param integer $limit
+     * @param int $offset
+     * @param int $limit
      * @param string $sort_header
      * @param string $sort_order
      * @param array $status_values
@@ -726,7 +726,7 @@ class UserDao extends DataAccessObject {
     /**
      * Return the access information for a given user
      *
-     * @param Integer $userId
+     * @param int $userId
      *
      * @return Array
      */

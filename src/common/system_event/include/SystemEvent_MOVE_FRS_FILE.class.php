@@ -56,7 +56,7 @@ class SystemEvent_MOVE_FRS_FILE extends SystemEvent {
     /**
      * Process stored event
      *
-     * @return Boolean
+     * @return bool
      */
     public function process() {
         list($project_path, $file_id, $old_path) = $this->getParametersAsArray();

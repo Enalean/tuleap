@@ -72,7 +72,7 @@ class ArtifactFieldSet {
     /**
      *  fetchData - re-fetch the data for this ArtifactFieldSet from the database.
      *
-     *  @return boolean	success.
+     *  @return bool success.
      */
     function fetchData() {
         $sql = "SELECT *

@@ -61,7 +61,7 @@ class SystemEvent_PROJECT_RENAME extends SystemEvent {
     /** 
      * Process stored event
      * 
-     * @return Boolean
+     * @return bool
      */
     public function process() {
         list($group_id, $new_name) = $this->getParametersAsArray();
@@ -164,7 +164,7 @@ class SystemEvent_PROJECT_RENAME extends SystemEvent {
      * @param Project $project  Project to update
      * @param String  $new_name New name
      * 
-     * @return Boolean
+     * @return bool
      */
     protected function updateDB($project, $new_name) {
         $pm = ProjectManager::instance();
@@ -176,9 +176,9 @@ class SystemEvent_PROJECT_RENAME extends SystemEvent {
      * 
      * @param String  $field_name Event name
      * @param String  $old_value  Event value
-     * @param Integer $group_id   Project id of the vent
+     * @param int $group_id Project id of the vent
      * 
-     * @return Boolean
+     * @return bool
      */
     protected function addProjectHistory($field_name, $old_value, $group_id) {
         return group_add_history($field_name, $old_value, $group_id);

@@ -63,7 +63,7 @@ class ArtifactGlobalNotificationFactory {
         return false;
     }
     /**
-     * @param boolean $update true if the action is an update one (update artifact, add comment, ...) false if it is a create action.
+     * @param bool $update true if the action is an update one (update artifact, add comment, ...) false if it is a create action.
      */
     function getAllAddresses($tracker_id, $update = false) {
         $addresses = array();

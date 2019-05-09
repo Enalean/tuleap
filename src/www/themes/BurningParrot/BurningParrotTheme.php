@@ -201,7 +201,7 @@ class BurningParrotTheme extends BaseLayout
      * Although this is the case, it's worth bearing in mind when refactoring.
      *
      * @param array $params
-     * @return boolean
+     * @return bool
      */
     private function canShowFooter($params)
     {

@@ -33,10 +33,10 @@ class AgileDashboard_BacklogItem_SubBacklogItemProvider {
     /** @var Tracker_ArtifactDao */
     private $dao;
 
-    /** @var Integer[] */
+    /** @var int[] */
     private $backlog_ids = array();
 
-    /** @var Integer[] */
+    /** @var int[] */
     private $inspected_ids = array();
 
     /** @var AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory */

@@ -32,7 +32,7 @@ class FlamingParrot_ContainerPresenter
     /** @var string */
     private $project_link;
 
-    /** @var boolean */
+    /** @var bool */
     public $project_is_public;
 
     /** @var string */
@@ -49,7 +49,7 @@ class FlamingParrot_ContainerPresenter
 
     private $forge_version;
 
-    /** @var boolean */
+    /** @var bool */
     private $sidebar_collapsable;
     /**
      * @var bool

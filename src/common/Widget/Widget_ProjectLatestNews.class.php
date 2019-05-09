@@ -66,7 +66,7 @@ class Widget_ProjectLatestNews extends Widget {
     /**
      * Content is available
      *
-     * @return Boolean
+     * @return bool
      */
     function isAvailable() {
         return $this->content ? true : false;
@@ -77,7 +77,7 @@ class Widget_ProjectLatestNews extends Widget {
      *
      * @param Project $project The project
      *
-     * @return Boolean
+     * @return bool
      */
     private function canBeUsedByProject(Project $project) {
         return $project->usesNews();

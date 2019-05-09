@@ -302,7 +302,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
     }
     /**
      * Sets or adds a criterion to the global report search criteria list
-     * @param integer $field_id criterion id to be added or set
+     * @param int $field_id criterion id to be added or set
      * @return Tracker_Report_Criteria
      * @TODO refactor : must be renamed after addCriterion, and return the current criterion
      */
@@ -433,7 +433,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
     }
 
     /**
-     * @return boolean true if the report has been modified since the last checkout
+     * @return bool true if the report has been modified since the last checkout
      */
     public function isObsolete() {
         return isset($this->report_session) && $this->updated_at && ($this->report_session->get('checkout_date') < $this->updated_at);
@@ -1003,7 +1003,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
      * owner = report->user_id
      * or if null, owner = tracker admin or site admins
      * @param PFUser $user the user who wants to update the report
-     * @return boolean
+     * @return bool
      */
     public function userCanUpdate($user) {
         if (! $this->isBelongingToATracker()) {

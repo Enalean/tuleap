@@ -57,7 +57,7 @@ class GateKeeper {
 
     /**
      * @todo We should really check based on a csrf token but no way to get it done yet
-     * @return boolean
+     * @return bool
      */
     private function isCSRFSafe(HTTPRequest $request) {
         if ($this->isRequestFromSelf($request)) {

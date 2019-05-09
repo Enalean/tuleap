@@ -43,7 +43,7 @@ class Project_Service_ServiceUsageDao extends DataAccessObject {
      * @param int $group_id
      * @param int $service_id
      *
-     * @return Boolean
+     * @return bool
      */
     public function activateService($group_id, $service_id) {
         $group_id   = $this->da->escapeInt($group_id);
@@ -61,7 +61,7 @@ class Project_Service_ServiceUsageDao extends DataAccessObject {
      * @param int $group_id
      * @param int $service_id
      *
-     * @return Boolean
+     * @return bool
      */
     public function deactivateService($group_id, $service_id) {
         $group_id   = $this->da->escapeInt($group_id);

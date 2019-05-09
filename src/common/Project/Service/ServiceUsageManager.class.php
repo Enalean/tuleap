@@ -37,7 +37,7 @@ class Project_Service_ServiceUsageManager {
      * @param Project                      $project
      * @param Project_Service_ServiceUsage $service
      *
-     * @return Boolean
+     * @return bool
      */
     public function activateService(Project $project, Project_Service_ServiceUsage $service) {
         return $this->dao->activateService($project->getID(), $service->getId());
@@ -47,7 +47,7 @@ class Project_Service_ServiceUsageManager {
      * @param Project                      $project
      * @param Project_Service_ServiceUsage $service
      *
-     * @return Boolean
+     * @return bool
      */
     public function deactivateService(Project $project, Project_Service_ServiceUsage $service) {
         return $this->dao->deactivateService($project->getID(), $service->getId());

@@ -101,14 +101,14 @@ class nusoap_base {
 	 * toggles automatic encoding of special characters as entities
 	 * (should always be true, I think)
 	 *
-	 * @var boolean
+	 * @var bool
 	 * @access private
 	 */
 	var $charencoding = true;
 	/**
 	 * the debug level for this instance
 	 *
-	 * @var	integer
+	 * @var int
 	 * @access private
 	 */
 	var $debugLevel;
@@ -207,7 +207,7 @@ class nusoap_base {
 	/**
 	* gets the global debug level, which applies to future instances
 	*
-	* @return	integer	Debug level 0-9, where 0 turns off
+	* @return int Debug level 0-9, where 0 turns off
 	* @access	public
 	*/
 	function getGlobalDebugLevel() {
@@ -342,7 +342,7 @@ class nusoap_base {
 	/**
 	* sets error string
 	*
-	* @return   boolean $string error string
+	* @return bool $string error string
 	* @access   private
 	*/
 	function setError($str){
@@ -1073,7 +1073,7 @@ class XMLSchema extends nusoap_base  {
     *
     * @param string $xml, path/URL to XML file
     * @param string $type, (schema | xml)
-	* @return boolean
+	* @return bool
     * @access public
     */
 	function parseFile($xml,$type){
@@ -2235,8 +2235,8 @@ class soap_transport_http extends nusoap_base {
 	* send the SOAP message via HTTP
 	*
 	* @param    string $data message data
-	* @param    integer $timeout set connection timeout in seconds
-	* @param	integer $response_timeout set response timeout in seconds
+	* @param int $timeout set connection timeout in seconds
+	* @param int $response_timeout set response timeout in seconds
 	* @param	array $cookies cookies to send
 	* @return	string data
 	* @access   public
@@ -2275,8 +2275,8 @@ class soap_transport_http extends nusoap_base {
 	* send the SOAP message via HTTPS 1.0 using CURL
 	*
 	* @param    string $msg message data
-	* @param    integer $timeout set connection timeout in seconds
-	* @param	integer $response_timeout set response timeout in seconds
+	* @param int $timeout set connection timeout in seconds
+	* @param int $response_timeout set response timeout in seconds
 	* @param	array $cookies cookies to send
 	* @return	string data
 	* @access   public
@@ -2982,7 +2982,7 @@ class soap_transport_http extends nusoap_base {
 	 * sort out cookies for the current request
 	 *
 	 * @param	array $cookies array with all cookies
-	 * @param	boolean $secure is the send-content secure or not?
+	 * @param bool $secure is the send-content secure or not?
 	 * @return	string for Cookie-HTTP-Header
 	 * @access	private
 	 */
@@ -3102,7 +3102,7 @@ class soap_server extends nusoap_base {
 	var $xml_encoding = '';
 	/**
 	 * toggles whether the parser decodes element content w/ utf8_decode()
-	 * @var boolean
+	 * @var bool
 	 * @access public
 	 */
     var $decode_utf8 = true;
@@ -3139,7 +3139,7 @@ class soap_server extends nusoap_base {
 	var $methodreturn = false;
 	/**
 	 * whether $methodreturn is a string of literal XML
-	 * @var boolean
+	 * @var bool
 	 * @access public
 	 */
 	var $methodreturnisliteralxml = false;
@@ -3177,7 +3177,7 @@ class soap_server extends nusoap_base {
 	var $externalWSDLURL = false;
 	/**
 	 * whether to append debug to response as XML comment
-	 * @var boolean
+	 * @var bool
 	 * @access public
 	 */
 	var $debug_flag = false;
@@ -3735,7 +3735,7 @@ class soap_server extends nusoap_base {
 	*
 	* @param	string	$operation	The operation to be invoked
 	* @param	array	$request	The array of parameter values
-	* @return	boolean	Whether the operation was found
+	* @return bool Whether the operation was found
 	* @access   private
 	*/
 	function verify_method($operation,$request){
@@ -4052,8 +4052,8 @@ class wsdl extends nusoap_base {
 	 * @param string $proxyport
 	 * @param string $proxyusername
 	 * @param string $proxypassword
-	 * @param integer $timeout set the connection timeout
-	 * @param integer $response_timeout set the response timeout
+	 * @param int $timeout set the connection timeout
+	 * @param int $response_timeout set the response timeout
      * @access public 
      */
     function __construct($wsdl = '',$proxyhost=false,$proxyport=false,$proxyusername=false,$proxypassword=false,$timeout=0,$response_timeout=30){
@@ -5094,7 +5094,7 @@ class wsdl extends nusoap_base {
 	 * @param mixed $value a native PHP value (parameter value)
 	 * @param string $use use for part (encoded|literal)
 	 * @param string $encodingStyle SOAP encoding style for the value (if different than the enclosing style)
-	 * @param boolean $unqualified a kludge for what should be XML namespace form handling
+	 * @param bool $unqualified a kludge for what should be XML namespace form handling
 	 * @return string value serialized as an XML string
 	 * @access private
 	 */
@@ -6200,7 +6200,7 @@ class soap_parser extends nusoap_base {
 	* builds response structures for compound values (arrays/structs)
 	* and scalars
 	*
-	* @param    integer $pos position in node tree
+	* @param int $pos position in node tree
 	* @return	mixed	PHP value
 	* @access   private
 	*/
@@ -6388,8 +6388,8 @@ class soap_client extends nusoap_base  {
 	* @param    string $proxyport
 	* @param	string $proxyusername
 	* @param	string $proxypassword
-	* @param	integer $timeout set the connection timeout
-	* @param	integer $response_timeout set the response timeout
+	* @param int $timeout set the connection timeout
+	* @param int $response_timeout set the response timeout
 	* @access   public
 	*/
 	function __construct($endpoint,$wsdl = false,$proxyhost = false,$proxyport = false,$proxyusername = false, $proxypassword = false, $timeout = 0, $response_timeout = 30){
@@ -6454,7 +6454,7 @@ class soap_client extends nusoap_base  {
 	* @param	string $namespace optional method namespace (WSDL can override)
 	* @param	string $soapAction optional SOAPAction value (WSDL can override)
 	* @param	mixed $headers optional string of XML with SOAP header content, or array of soapval objects for SOAP headers
-	* @param	boolean $rpcParams optional (no longer used)
+	* @param bool $rpcParams optional (no longer used)
 	* @param	string	$style optional (rpc|document) the style to use when serializing parameters (WSDL can override)
 	* @param	string	$use optional (encoded|literal) the use when serializing parameters (WSDL can override)
 	* @return	mixed	response from SOAP call
@@ -6652,8 +6652,8 @@ class soap_client extends nusoap_base  {
     *
 	* @param    string $msg a SOAPx4 soapmsg object
 	* @param    string $soapaction SOAPAction value
-	* @param    integer $timeout set connection timeout in seconds
-	* @param	integer $response_timeout set response timeout in seconds
+	* @param int $timeout set connection timeout in seconds
+	* @param int $response_timeout set response timeout in seconds
 	* @return	mixed native PHP types.
 	* @access   private
 	*/
@@ -6866,7 +6866,7 @@ class soap_client extends nusoap_base  {
 	*
 	* This is no longer used.
 	*
-	* @return boolean
+	* @return bool
 	* @access public
 	* @deprecated
 	*/
@@ -6881,7 +6881,7 @@ class soap_client extends nusoap_base  {
 	*
 	* This is no longer used.
 	*
-	* @param    boolean $rpcParams
+	* @param bool $rpcParams
 	* @access public
 	* @deprecated
 	*/
