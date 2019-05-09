@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,6 +24,7 @@ namespace Tuleap\Tracker\REST\v1\Workflow;
 use Tracker;
 use Transition;
 use TransitionFactory;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\SimpleMode\TransitionReplicator;
 use Tuleap\Tracker\Workflow\SimpleMode\TransitionRetriever;
 use Tuleap\Tracker\Workflow\Transition\NoSiblingTransitionException;
@@ -50,16 +51,23 @@ class ModeUpdater
      */
     private $transition_retriever;
 
+    /**
+     * @var FrozenFieldsDao
+     */
+    private $frozen_fields_dao;
+
     public function __construct(
         Workflow_Dao $workflow_dao,
         TransitionFactory $transition_factory,
         TransitionRetriever $transition_retriever,
-        TransitionReplicator $transition_replicator
+        TransitionReplicator $transition_replicator,
+        FrozenFieldsDao $frozen_fields_dao
     ) {
         $this->workflow_dao          = $workflow_dao;
         $this->transition_replicator = $transition_replicator;
         $this->transition_factory    = $transition_factory;
         $this->transition_retriever  = $transition_retriever;
+        $this->frozen_fields_dao     = $frozen_fields_dao;
     }
 
     public function switchWorkflowToAdvancedMode(Tracker $tracker) : void
@@ -71,6 +79,7 @@ class ModeUpdater
             return;
         }
 
+        $this->frozen_fields_dao->deleteAllPostActionsForWorkflow($workflow_id);
         $this->workflow_dao->switchWorkflowToAdvancedMode($workflow_id);
     }
 

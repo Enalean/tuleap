@@ -678,19 +678,19 @@ class TrackersResource extends AuthenticatedResource
 
         if (isset($workflow_query['is_advanced'])) {
             $workflow_mode_updater = $this->getModeUpdater();
+            $transaction_executor  = new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection());
 
-            if ($workflow_query['is_advanced'] === true) {
-                return $workflow_mode_updater->switchWorkflowToAdvancedMode($tracker);
-            } else {
-                $transaction_executor = new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection());
-                $transaction_executor->execute(
-                    function () use ($workflow_mode_updater, $tracker) {
+            $transaction_executor->execute(
+                function () use ($workflow_mode_updater, $tracker, $workflow_query) {
+                    if ($workflow_query['is_advanced'] === true) {
+                        $workflow_mode_updater->switchWorkflowToAdvancedMode($tracker);
+                    } else {
                         $workflow_mode_updater->switchWorkflowToSimpleMode($tracker);
-                    }
-                );
-                return;
-            }
 
+                    }
+                }
+            );
+            return;
         }
 
         throw new I18NRestException(400, dgettext('tuleap-tracker', 'Please provide a valid query.'));
@@ -710,7 +710,8 @@ class TrackersResource extends AuthenticatedResource
                 new Workflow_TransitionDao(),
                 $transition_factory
             ),
-            $this->getTransitionReplicator()
+            $this->getTransitionReplicator(),
+            new FrozenFieldsDao()
         );
     }
 

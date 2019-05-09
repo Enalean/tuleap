@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -28,6 +28,7 @@ use Tracker;
 use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Transition;
 use TransitionFactory;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\SimpleMode\TransitionReplicator;
 use Tuleap\Tracker\Workflow\SimpleMode\TransitionRetriever;
 use Workflow;
@@ -45,6 +46,7 @@ class ModeUpdaterTest extends TestCase
     private $transition_replicator;
     private $transition_factory;
     private $transition_retriever;
+    private $frozen_fields_dao;
     private $tracker;
     private $workflow;
 
@@ -54,12 +56,14 @@ class ModeUpdaterTest extends TestCase
         $this->transition_factory    = Mockery::mock(TransitionFactory::class);
         $this->transition_retriever  = Mockery::mock(TransitionRetriever::class);
         $this->transition_replicator = Mockery::mock(TransitionReplicator::class);
+        $this->frozen_fields_dao     = Mockery::mock(FrozenFieldsDao::class);
 
         $this->workflow_mode_updater = new ModeUpdater(
             $this->workflow_dao,
             $this->transition_factory,
             $this->transition_retriever,
-            $this->transition_replicator
+            $this->transition_replicator,
+            $this->frozen_fields_dao
         );
 
         $this->tracker  = Mockery::mock(Tracker::class);
@@ -73,6 +77,7 @@ class ModeUpdaterTest extends TestCase
         $this->workflow->shouldReceive('isAdvanced')->andReturn(false);
 
         $this->workflow_dao->shouldReceive('switchWorkflowToAdvancedMode')->with(25)->once();
+        $this->frozen_fields_dao->shouldReceive('deleteAllPostActionsForWorkflow')->with(25)->once();
 
         $this->workflow_mode_updater->switchWorkflowToAdvancedMode($this->tracker);
     }
@@ -84,6 +89,7 @@ class ModeUpdaterTest extends TestCase
         $this->workflow->shouldReceive('isAdvanced')->andReturn(true);
 
         $this->workflow_dao->shouldReceive('switchWorkflowToAdvancedMode')->with(25)->never();
+        $this->frozen_fields_dao->shouldReceive('deleteAllPostActionsForWorkflow')->with(25)->never();
 
         $this->workflow_mode_updater->switchWorkflowToAdvancedMode($this->tracker);
     }
