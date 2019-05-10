@@ -68,9 +68,19 @@ class DocmanItemsTestFilesTest extends DocmanBase
         );
         $items_file = $response->json();
 
-        $items = array_merge($items_folder_1, $items_file);
+        $trash_folder    = $this->findItemByTitle($folder, "Trash");
+        $trash_folder_id = $trash_folder['id'];
 
-        $this->assertEquals(count($items), 12);
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('docman_items/' . $trash_folder_id . '/docman_items')
+        );
+
+        $items_to_delete = $response->json();
+
+        $items = array_merge($items_folder_1, $items_file, $items_to_delete);
+
+        $this->assertEquals(count($items), 14);
 
         return $items;
     }
@@ -727,5 +737,97 @@ class DocmanItemsTestFilesTest extends DocmanBase
             return null;
         }
         return $items[$index];
+    }
+
+    /**
+     * @depends testGetDocumentItemsForAdminUser
+     */
+    public function testItThrowsAnErrorWhenUserHasNotPermissionToDeleteTheFile(array $items): void
+    {
+        $file_to_delete    = $this->findItemByTitle($items, 'old file L');
+        $file_to_delete_id = $file_to_delete['id'];
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->delete('docman_files/' . $file_to_delete_id)
+        );
+
+        $this->assertEquals(403, $response->getStatusCode());
+
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('docman_items/' . $file_to_delete_id)
+        );
+
+        $this->assertEquals(200, $response->getStatusCode());
+    }
+
+    /**
+     * @depends testGetDocumentItemsForAdminUser
+     */
+    public function testItShouldThrowAnErrorWhenTheFileIsLockedByAnotherUser(array $items): void
+    {
+        $file_to_delete    = $this->findItemByTitle($items, 'old file L');
+        $file_to_delete_id = $file_to_delete['id'];
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->delete('docman_files/' . $file_to_delete_id)
+        );
+
+        $this->assertEquals(403, $response->getStatusCode());
+
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('docman_items/' . $file_to_delete_id)
+        );
+
+        $this->assertEquals(200, $response->getStatusCode());
+    }
+
+    /**
+     * @depends testGetDocumentItemsForAdminUser
+     */
+    public function testItShouldDeleteWhenFileIsLockedAndUserIsAdmin(array $items): void
+    {
+        $file_to_delete    = $this->findItemByTitle($items, 'old file L');
+        $file_to_delete_id = $file_to_delete['id'];
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->delete('docman_files/' . $file_to_delete_id)
+        );
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('docman_items/' . $file_to_delete_id)
+        );
+
+        $this->assertEquals(404, $response->getStatusCode());
+    }
+
+    /**
+     * @depends testGetDocumentItemsForAdminUser
+     */
+    public function testItDeletesAFile(array $items): void
+    {
+        $file_to_delete    = $this->findItemByTitle($items, 'another old file');
+        $file_to_delete_id = $file_to_delete['id'];
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->delete('docman_files/' . $file_to_delete_id)
+        );
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('docman_items/' . $file_to_delete_id)
+        );
+
+        $this->assertEquals(404, $response->getStatusCode());
     }
 }

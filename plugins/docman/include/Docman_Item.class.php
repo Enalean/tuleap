@@ -20,6 +20,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\Docman\Item\ItemVisitor;
+
 require_once('Docman_ItemAction.class.php');
 
 /**
@@ -223,8 +226,9 @@ class Docman_Item {
     /**
      * @return mixed|void
      */
-    public function accept($visitor, $params = array())
+    public function accept(ItemVisitor $visitor, $params = array())
     {
+        $visitor->visitItem($this, $params);
     }
 
     public function addMetadata(&$metadata) {

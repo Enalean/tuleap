@@ -56,10 +56,10 @@ class DocmanDataBuilder extends DocmanDataBuildCommon
      *         Root
      *          +
      *          |
-     *    +-----+-----+---------------+---------------------+--------------+
-     *    |           |               |                     |              |
-     *    +           +               +                     +              +
-     * folder 1   Folder A File   Folder B Embedded   Folder C wiki   Folder D Link
+     *    +-----+-----+---------------+---------------------+--------------+---------------+
+     *    |           |               |                     |              |               |
+     *    +           +               +                     +              +               +
+     * folder 1   Folder A File   Folder B Embedded   Folder C wiki   Folder D Link   Trash (Folder)
      *    +           +               +                     +
      *    |           |               |                     |
      *   ...         ...             ...                   ...
@@ -75,6 +75,7 @@ class DocmanDataBuilder extends DocmanDataBuildCommon
         $this->createFolderFileWithContent($docman_root);
         $this->createFolderEmbeddedWithContent($docman_root);
         $this->createFolderWikiWithContent($docman_root);
+        $this->createFolderContentToDelete($docman_root);
     }
 
     private function addApprovalTable(string $title, int $version_id, int $status): void
@@ -576,5 +577,53 @@ class DocmanDataBuilder extends DocmanDataBuildCommon
         $this->appendCustomMetadataValueToItem($link_ATC_id, "custom value for link ATC");
         $this->appendCustomMetadataValueToItem($link_ATR_id, "custom value for link ATR");
         $this->appendCustomMetadataValueToItem($link_ATE_id, "custom value for link ATE");
+    }
+
+    /**
+     * To help understand tests structure, below a representation of folder hierarchy
+     *
+     *                        Trash
+     *                          +
+     *                          |
+     *                          +
+     *             +------------|-------------+
+     *             |                          |
+     *             +                          +
+     *         old file L              another old file
+     *
+     * (L)    => Lock on this item
+     *
+     */
+    private function createFolderContentToDelete(\Docman_Item $docman_root): void
+    {
+        $folder_delete_id = $this->createItemWithVersion(
+            self::REGULAR_USER_ID,
+            $docman_root->getId(),
+            'Trash',
+            PLUGIN_DOCMAN_ITEM_TYPE_FOLDER
+        );
+
+        $file_L_id = $this->createItem(
+            \REST_TestDataBuilder::ADMIN_PROJECT_ID,
+            $folder_delete_id,
+            "old file L",
+            PLUGIN_DOCMAN_ITEM_TYPE_FILE
+        );
+
+        $this->addReadPermissionOnItem($file_L_id, ProjectUGroup::DOCUMENT_ADMIN);
+
+        $dao = new \Docman_LockDao();
+        $dao->addLock(
+            $file_L_id,
+            \REST_TestDataBuilder::ADMIN_PROJECT_ID,
+            time()
+        );
+
+        $this->createItem(
+            \REST_TestDataBuilder::ADMIN_PROJECT_ID,
+            $folder_delete_id,
+            "another old file",
+            PLUGIN_DOCMAN_ITEM_TYPE_FILE
+        );
     }
 }
