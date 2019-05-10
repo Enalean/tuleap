@@ -373,4 +373,19 @@ class SimpleModeTest extends TrackerBase
 
         $this->assertEquals($response->getStatusCode(), 400);
     }
+
+    public function testGETWorkflowImportedFromXML()
+    {
+        $response = $this->getResponseByName(
+            \REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->setup_client->get("trackers/$this->simple_mode_from_xml_tracker_id")
+        );
+
+        $this->assertEquals($response->getStatusCode(), 200);
+        $tracker = $response->json();
+
+        $this->assertEquals($tracker['workflow']['is_advanced'], false);
+        $this->assertEquals($tracker['workflow']['is_used'], "1");
+        $this->assertCount(0, $tracker['workflow']['transitions']);
+    }
 }

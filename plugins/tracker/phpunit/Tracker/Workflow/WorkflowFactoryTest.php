@@ -145,7 +145,7 @@ class WorkflowFactoryTest extends TestCase
 
         $workflow = $workflow_factory->getInstanceFromXML($xml, $mapping, $tracker, $this->project);
 
-        $this->assertEquals($workflow->getIsUsed(), 1);
+        $this->assertEquals($workflow->isUsed(), 1);
         $this->assertEquals($workflow->getFieldId(), 111);
         $this->assertEquals(count($workflow->getTransitions()), 3);
 
@@ -161,5 +161,35 @@ class WorkflowFactoryTest extends TestCase
         $this->assertEquals($postactions[0]->getValueType(), 1);
 
         $this->assertEquals($third_transition, $transitions[2]);
+    }
+
+    public function testImportSimpleWorkflow()
+    {
+        $xml = simplexml_load_file(__DIR__ . '/_fixtures/importWorkflow.xml');
+
+        $tracker = Mockery::mock(Tracker::class);
+        $tracker->shouldReceive('getId')->andReturn(101);
+
+        $mapping = array(
+            'F1'     => aSelectBoxField()->withId(110)->build(),
+            'F32'    => aSelectBoxField()->withId(111)->build(),
+            'F32-V0' => 801,
+            'F32-V1' => 802
+        );
+
+        $workflow_factory   = new WorkflowFactory(
+            Mockery::mock(TransitionFactory::class),
+            Mockery::mock(TrackerFactory::class),
+            Mockery::mock(Tracker_FormElementFactory::class),
+            Mockery::mock(Tracker_Workflow_Trigger_RulesManager::class),
+            new WorkflowBackendLogger(Mockery::spy(BackendLogger::class), Logger::DEBUG),
+            Mockery::mock(FrozenFieldsDao::class)
+        );
+
+        $workflow = $workflow_factory->getSimpleInstanceFromXML($xml, $mapping, $tracker, $this->project);
+
+        $this->assertEquals($workflow->isUsed(), 1);
+        $this->assertEquals($workflow->getFieldId(), 111);
+        $this->assertEquals(count($workflow->getTransitions()), 0);
     }
 }
