@@ -393,7 +393,7 @@ class DocmanItemsTestFilesTest extends DocmanBase
     /**
      * @depends testGetDocumentItemsForAdminUser
      */
-    public function testPACTHIsRejectedIfAFileIsBeingUploadedForTheSameNameByADifferentUser(array $items): void
+    public function testPATCHIsRejectedIfAFileIsBeingUploadedForTheSameNameByADifferentUser(array $items): void
     {
         $file         = $this->findItemByTitle($items, 'file');
         $put_resource = json_encode(
@@ -422,8 +422,7 @@ class DocmanItemsTestFilesTest extends DocmanBase
             ]
         );
 
-        $response = $this->getResponseByName(
-            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+        $response = $this->getResponse(
             $this->client->patch('docman_files/' . $file['id'], null, $put_resource)
         );
         $this->assertEquals(409, $response->getStatusCode());

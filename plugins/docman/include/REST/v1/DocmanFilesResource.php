@@ -23,9 +23,9 @@ declare(strict_types = 1);
 namespace Tuleap\Docman\REST\v1;
 
 use Docman_LockFactory;
+use Docman_PermissionsManager;
 use Docman_VersionFactory;
 use Luracast\Restler\RestException;
-use Project;
 use ProjectManager;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
@@ -120,8 +120,14 @@ class DocmanFilesResource extends AuthenticatedResource
         $current_user = $this->rest_user_manager->getCurrentUser();
 
         $project = $item_request->getProject();
-        $this->getDocmanFolderPermissionChecker($project)
-             ->checkUserCanWriteFolder($current_user, (int)$item->getParentId());
+
+        $docman_permission_manager = Docman_PermissionsManager::instance($project->getGroupId());
+        if (! $docman_permission_manager->userCanWrite($current_user, $item->getId())) {
+            throw new I18NRestException(
+                403,
+                dgettext('tuleap-docman', 'You are not allowed to write this item.')
+            );
+        }
 
         $event_adder = $this->getDocmanItemsEventAdder();
         $event_adder->addLogEvents();
@@ -181,11 +187,6 @@ class DocmanFilesResource extends AuthenticatedResource
                 )
             );
         }
-    }
-
-    private function getDocmanFolderPermissionChecker(Project $project): DocmanFolderPermissionChecker
-    {
-        return new DocmanFolderPermissionChecker(\Docman_PermissionsManager::instance($project->getGroupId()));
     }
 
     private function getDocmanItemsEventAdder(): DocmanItemsEventAdder

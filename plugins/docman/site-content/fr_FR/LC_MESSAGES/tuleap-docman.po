@@ -174,6 +174,9 @@ msgstr "Valider"
 msgid "You are not allowed to write on folder with id '%d'"
 msgstr "Vous n'êtes pas autorisés à écrire dans le dossier ayant pour id '%d'"
 
+msgid "You are not allowed to write this item."
+msgstr "Vous n'êtes pas autorisé à modifier cet élément."
+
 msgid "You should be site administrator to access this page"
 msgstr "Vous devez être administrateur site pour accéder à cette page"
 
