@@ -2284,7 +2284,7 @@ EOS;
      * Determine if the user can view this tracker.
      * Note that if there is no group explicitely auhtorized, access is denied (don't check default values)
      *
-     * @param int $user if not specified, use the current user id. The params accept also User object
+     * @param PFUser|int $user if not specified, use the current user id. The params accept also User object
      *
      * @return boolean true if the user can view the tracker.
      */

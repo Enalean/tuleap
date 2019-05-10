@@ -21,6 +21,7 @@ use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\CLI\CLICommandsCollector;
 use Tuleap\Dashboard\User\AtUserCreationDefaultWidgetsCreator;
+use Tuleap\DB\DBFactory;
 use Tuleap\Glyph\GlyphLocation;
 use Tuleap\Glyph\GlyphLocationsCollector;
 use Tuleap\layout\HomePage\StatisticsCollectionCollector;
@@ -67,6 +68,12 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureEditor;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureUsagePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureValidator;
+use Tuleap\Tracker\FormElement\Field\File\Upload\FileOngoingUploadDao;
+use Tuleap\Tracker\FormElement\Field\File\Upload\Tus\FileBeingUploadedInformationProvider;
+use Tuleap\Tracker\FormElement\Field\File\Upload\Tus\FileDataStore;
+use Tuleap\Tracker\FormElement\Field\File\Upload\Tus\FileUploadCanceler;
+use Tuleap\Tracker\FormElement\Field\File\Upload\Tus\FileUploadFinisher;
+use Tuleap\Tracker\FormElement\Field\File\Upload\UploadPathAllocator;
 use Tuleap\Tracker\FormElement\FieldCalculator;
 use Tuleap\Tracker\FormElement\SystemEvent\SystemEvent_BURNDOWN_DAILY;
 use Tuleap\Tracker\FormElement\SystemEvent\SystemEvent_BURNDOWN_GENERATE;
@@ -111,6 +118,9 @@ use Tuleap\Tracker\Workflow\WorkflowLegacyController;
 use Tuleap\Tracker\Workflow\WorkflowMenuTabPresenterBuilder;
 use Tuleap\Tracker\Workflow\WorkflowTransitionController;
 use Tuleap\Tracker\XMLTemplatesController;
+use Tuleap\Upload\FileBeingUploadedLocker;
+use Tuleap\Upload\FileBeingUploadedWriter;
+use Tuleap\Upload\FileUploadController;
 use Tuleap\User\History\HistoryRetriever;
 use Tuleap\User\User_ForgeUserGroupPermissionsFactory;
 use Tuleap\Widget\Event\GetPublicAreas;
@@ -1796,6 +1806,31 @@ class trackerPlugin extends Plugin {
 
             $r->post('/workflow/{tracker_id:\d+}/legacy_transitions', $this->getRouteHandler('routePostWorkflowLegacyTransitions'));
         });
+
+        $event->getRouteCollector()->addRoute(
+            ['OPTIONS', 'HEAD', 'PATCH', 'DELETE'],
+            '/uploads/tracker/file/{id:\d+}',
+            $this->getRouteHandler('routeUploads')
+        );
+    }
+
+    public function routeUploads(): FileUploadController
+    {
+        $file_ongoing_upload_dao = new FileOngoingUploadDao();
+        $db_connection           = DBFactory::getMainTuleapDBConnection();
+        $path_allocator          = new UploadPathAllocator(
+            $file_ongoing_upload_dao,
+            Tracker_FormElementFactory::instance()
+        );
+
+        return FileUploadController::build(
+            new FileDataStore(
+                new FileBeingUploadedInformationProvider($path_allocator, $file_ongoing_upload_dao),
+                new FileBeingUploadedWriter($path_allocator, $db_connection),
+                new FileBeingUploadedLocker($path_allocator),
+                new FileUploadCanceler($path_allocator, $file_ongoing_upload_dao)
+            )
+        );
     }
 
     public function collectCLICommands(CLICommandsCollector $commands_collector)
