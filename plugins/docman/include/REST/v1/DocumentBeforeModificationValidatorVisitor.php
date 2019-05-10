@@ -32,7 +32,7 @@ use Docman_Wiki;
 use Tuleap\Docman\Item\ItemVisitor;
 use Tuleap\REST\I18NRestException;
 
-class DocumentBeforeDeletionValidatorVisitor implements ItemVisitor
+class DocumentBeforeModificationValidatorVisitor implements ItemVisitor
 {
     /**
      * @var String

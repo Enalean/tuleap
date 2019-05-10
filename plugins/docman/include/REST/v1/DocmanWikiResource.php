@@ -31,7 +31,6 @@ use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\Lock\LockChecker;
 use Tuleap\Docman\REST\v1\Wiki\DocmanWikiPATCHRepresentation;
 use Tuleap\Docman\REST\v1\Wiki\DocmanWikiUpdator;
-use Tuleap\Docman\REST\v1\Wiki\WikiVersionCreationBeforeUpdateValidator;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
@@ -98,11 +97,12 @@ class DocmanWikiResource extends AuthenticatedResource
         $this->getAllowOptionsPatch();
 
         $item_request = $this->request_builder->buildFromItemId($id);
-        $item         = $item_request->getItem();
 
-        $validator = new WikiVersionCreationBeforeUpdateValidator();
-        $item->accept($validator, []);
         /** @var \Docman_Wiki $item */
+        $item = $item_request->getItem();
+
+        $validator = new DocumentBeforeModificationValidatorVisitor(\Docman_Wiki::class);
+        $item->accept($validator, []);
 
         $current_user = $this->rest_user_manager->getCurrentUser();
 

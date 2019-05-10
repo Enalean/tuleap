@@ -31,10 +31,10 @@ use Docman_Link;
 use Docman_Wiki;
 use PHPUnit\Framework\TestCase;
 
-class DocumentBeforeDeletionValidatorVisitorTest extends TestCase
+class DocumentBeforeModificationValidatorVisitorTest extends TestCase
 {
     /**
-     * @var DocumentBeforeDeletionValidatorVisitor
+     * @var DocumentBeforeModificationValidatorVisitor
      */
     private $validator_visitor;
 
@@ -42,7 +42,7 @@ class DocumentBeforeDeletionValidatorVisitorTest extends TestCase
     {
         parent::setUp();
 
-        $this->validator_visitor = new DocumentBeforeDeletionValidatorVisitor(
+        $this->validator_visitor = new DocumentBeforeModificationValidatorVisitor(
             Docman_File::class
         );
     }
