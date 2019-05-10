@@ -98,7 +98,7 @@ class FileOngoingUploadDao extends DataAccessObject
         int $id,
         int $user_id,
         int $current_time
-    ): array {
+    ): ?array {
         return $this->getDB()->row(
             'SELECT *
                 FROM plugin_tracker_file_upload AS upload
@@ -113,7 +113,7 @@ class FileOngoingUploadDao extends DataAccessObject
         );
     }
 
-    public function searchFileOngoingUploadById(int $id): array
+    public function searchFileOngoingUploadById(int $id): ?array
     {
         return $this->getDB()->row(
             'SELECT *
@@ -135,10 +135,5 @@ class FileOngoingUploadDao extends DataAccessObject
                 WHERE ? >= upload.expiration_date',
             $current_time
         );
-    }
-
-    public function searchFileOngoingUploadIds(): array
-    {
-        return $this->getDB()->column('SELECT fileinfo_id FROM plugin_tracker_file_upload');
     }
 }

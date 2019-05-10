@@ -22,27 +22,17 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\Field\File\Upload;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
-use Tuleap\Upload\PathAllocator;
 
-class EmptyFileToUploadFinisherTest extends TestCase
+class FileToUploadTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
 
-    public function testCreateEmptyFile(): void
+    public function testGetDownloadHref()
     {
-        $file_to_upload = new FileToUpload(42, 'readme.md');
-
-        $path           = vfsStream::setup()->url() . '/file/42';
-        $path_allocator = \Mockery::mock(PathAllocator::class);
-        $path_allocator->shouldReceive('getPathForItemBeingUploaded')->andReturn($path);
-
-        (new EmptyFileToUploadFinisher($path_allocator))->createEmptyFile(
-            $file_to_upload,
-            'readme.md'
+        $file = new FileToUpload(123, 'Image Pasted at 2018-9-14 15-15.png');
+        $this->assertEquals(
+            '/plugins/tracker/attachments/123-Image%20Pasted%20at%202018-9-14%2015-15.png',
+            $file->getDownloadHref()
         );
-        $this->assertEquals('', file_get_contents($path));
     }
 }

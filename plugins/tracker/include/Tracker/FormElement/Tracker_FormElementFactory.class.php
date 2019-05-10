@@ -221,9 +221,9 @@ class Tracker_FormElementFactory {
     }
 
     /**
-     * @return Tracker_FormElement_Field
+     * @return Tracker_FormElement_Field|null
      */
-    public function getUsedFormElementFieldById($id) {
+    public function getUsedFormElementFieldById(int $id) {
         $field = $this->getUsedFormElementById($id);
         if ($field instanceof Tracker_FormElement_Field) {
             return $field;

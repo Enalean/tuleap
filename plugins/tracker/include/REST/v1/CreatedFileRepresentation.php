@@ -23,12 +23,22 @@ namespace Tuleap\Tracker\REST\v1;
 final class CreatedFileRepresentation
 {
     /**
+     * @var string
+     */
+    public $download_href;
+    /**
      * @var ?string
      */
     public $upload_href;
 
-    public function build(string $upload_href)
+    public function build(string $download_href, string $upload_href): void
     {
-        $this->upload_href = $upload_href;
+        $this->download_href = $download_href;
+        $this->upload_href   = $upload_href;
+    }
+
+    public function buildEmptyFile(string $download_href): void
+    {
+        $this->download_href = $download_href;
     }
 }

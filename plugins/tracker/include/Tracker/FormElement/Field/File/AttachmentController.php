@@ -1,0 +1,144 @@
+<?php
+/**
+ * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+declare(strict_types=1);
+
+namespace Tuleap\Tracker\FormElement\Field\File;
+
+use PFUser;
+use Project_AccessException;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\MiddlewareInterface;
+use Tracker_FormElementFactory;
+use Tuleap\Http\Response\BinaryFileResponseBuilder;
+use Tuleap\Request\DispatchablePSR15Compatible;
+use Tuleap\Request\DispatchableWithRequestNoAuthz;
+use Tuleap\Request\NotFoundException;
+use Tuleap\REST\RESTCurrentUserMiddleware;
+use Tuleap\Tracker\FormElement\Field\File\Upload\FileOngoingUploadDao;
+use Tuleap\Tracker\FormElement\Field\File\Upload\Tus\FileBeingUploadedInformationProvider;
+use Tuleap\Upload\PathAllocator;
+use URLVerification;
+use Zend\HttpHandlerRunner\Emitter\EmitterInterface;
+
+class AttachmentController extends DispatchablePSR15Compatible implements DispatchableWithRequestNoAuthz
+{
+    /**
+     * @var URLVerification
+     */
+    private $url_verification;
+    /**
+     * @var FileOngoingUploadDao
+     */
+    private $ongoing_upload_dao;
+    /**
+     * @var Tracker_FormElementFactory
+     */
+    private $form_element_factory;
+    /**
+     * @var PathAllocator
+     */
+    private $path_allocator;
+    /**
+     * @var FileBeingUploadedInformationProvider
+     */
+    private $file_information_provider;
+    /**
+     * @var BinaryFileResponseBuilder
+     */
+    private $response_builder;
+
+    public function __construct(
+        URLVerification $url_verification,
+        FileOngoingUploadDao $ongoing_upload_dao,
+        Tracker_FormElementFactory $form_element_factory,
+        FileBeingUploadedInformationProvider $file_information_provider,
+        PathAllocator $path_allocator,
+        BinaryFileResponseBuilder $response_builder,
+        EmitterInterface $emitter,
+        MiddlewareInterface ...$middleware_stack
+    ) {
+        parent::__construct($emitter, ...$middleware_stack);
+        $this->url_verification          = $url_verification;
+        $this->ongoing_upload_dao        = $ongoing_upload_dao;
+        $this->form_element_factory      = $form_element_factory;
+        $this->path_allocator            = $path_allocator;
+        $this->file_information_provider = $file_information_provider;
+        $this->response_builder          = $response_builder;
+    }
+
+    /**
+     * Handles a request and produces a response.
+     *
+     * May call other collaborating code to generate the response.
+     */
+    public function handle(ServerRequestInterface $request): ResponseInterface
+    {
+        /** @var PFUser $current_user */
+        $current_user = $request->getAttribute(RESTCurrentUserMiddleware::class);
+
+        $file_information = $this->file_information_provider->getFileInformation($request);
+        if (! $file_information) {
+            throw new NotFoundException(_('The file cannot be found'));
+        }
+
+        if ($file_information->getLength() !== $file_information->getOffset()) {
+            throw new NotFoundException(_('The file cannot be found'));
+        }
+
+        if ($file_information->getName() !== $request->getAttribute('filename')) {
+            throw new NotFoundException(_('The file cannot be found'));
+        }
+
+        $row = $this->ongoing_upload_dao->searchFileOngoingUploadById($file_information->getID());
+        if (! $row) {
+            throw new NotFoundException(_('The file cannot be found'));
+        }
+
+        $field_id = (int) $row['field_id'];
+        $field    = $this->form_element_factory->getUsedFormElementFieldById($field_id);
+        if (! $field || ! $this->form_element_factory->isFieldAFileField($field)) {
+            throw new NotFoundException(_('The file cannot be found'));
+        }
+
+        $tracker = $field->getTracker();
+        if (! $tracker) {
+            throw new NotFoundException(_('The file cannot be found'));
+        }
+
+        $project = $tracker->getProject();
+        try {
+            $this->url_verification->userCanAccessProject($current_user, $project);
+        } catch (Project_AccessException $e) {
+            throw new NotFoundException(_('The file cannot be found'));
+        }
+
+        if (! $field->userCanRead($current_user)) {
+            throw new NotFoundException(_('The file cannot be found'));
+        }
+
+        return $this->response_builder->fromFilePath(
+            $request,
+            $this->path_allocator->getPathForItemBeingUploaded($file_information),
+            $file_information->getName()
+        );
+    }
+}
