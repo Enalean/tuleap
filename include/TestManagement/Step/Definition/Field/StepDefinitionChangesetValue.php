@@ -60,7 +60,7 @@ class StepDefinitionChangesetValue extends Tracker_Artifact_ChangesetValue
      * @param Tracker_Artifact_ChangesetValue $changeset_value The changeset value to compare to this changeset value
      * @param string                          $format          The format of the diff (html, text, ...)
      * @param PFUser                          $user            The user or null
-     * @param boolean                         $ignore_perms
+     * @param bool $ignore_perms
      *
      * @return string The difference between another $changeset_value, false if no differences
      */

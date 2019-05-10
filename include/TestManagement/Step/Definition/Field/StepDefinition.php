@@ -510,7 +510,7 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
      *
      * @param Tracker_Artifact_Changeset $changeset   The changeset (needed in only few cases like 'lud' field)
      * @param int                        $value_id    The id of the value
-     * @param boolean                    $has_changed If the changeset value has changed from the rpevious one
+     * @param bool $has_changed If the changeset value has changed from the rpevious one
      *
      * @return Tracker_Artifact_ChangesetValue or null if not found
      */

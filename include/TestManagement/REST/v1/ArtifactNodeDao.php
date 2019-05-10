@@ -59,7 +59,7 @@ class ArtifactNodeDao extends DataAccessObject {
     /**
      * Retrieve all artifacts that point to the given one
      *
-     * @param Integer $artifact_id
+     * @param int $artifact_id
      * @return DataAccessResult
      */
     public function getReverseLinkedArtifacts($artifact_id) {

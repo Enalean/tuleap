@@ -205,7 +205,7 @@ class FirstConfigCreator
         }
     }
 
-    /** @return Boolean */
+    /** @return bool */
     private function isTrackerAlreadyCreated($project, $tracker_itemname)
     {
         $is_tracker_already_created = $this->tracker_factory->isShortNameExists(

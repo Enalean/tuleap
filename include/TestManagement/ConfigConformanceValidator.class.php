@@ -35,7 +35,7 @@ class ConfigConformanceValidator {
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isArtifactACampaign(Tracker_Artifact $artifact) {
         $tracker = $artifact->getTracker();
@@ -47,7 +47,7 @@ class ConfigConformanceValidator {
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isArtifactAnExecution(Tracker_Artifact $artifact) {
         $tracker = $artifact->getTracker();
@@ -59,7 +59,7 @@ class ConfigConformanceValidator {
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isArtifactADefinition(Tracker_Artifact $artifact) {
         $tracker = $artifact->getTracker();
@@ -71,7 +71,7 @@ class ConfigConformanceValidator {
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isArtifactAnExecutionOfDefinition(Tracker_Artifact $execution, Tracker_Artifact $definition) {
         if (! $this->isArtifactADefinition($definition)) {
@@ -89,7 +89,7 @@ class ConfigConformanceValidator {
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isArtifactABug(Tracker_Artifact $artifact)
     {

@@ -49,7 +49,7 @@ class IndexPresenter {
     /** @var string */
     public $misconfigured_message;
 
-    /** @var Boolean */
+    /** @var bool */
     public $is_properly_configured;
 
     /** @var string */
