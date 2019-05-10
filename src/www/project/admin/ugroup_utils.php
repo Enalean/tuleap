@@ -121,7 +121,7 @@ function ugroup_db_get_members(
 /**
  * Return name and id (as DB result) of all ugroups belonging to a specific project.
  *
- * @param Integer $groupId    Id of the project
+ * @param int $groupId Id of the project
  * @param Array   $predefined List of predefined ugroup id
  *
  * @deprecated Use UGroupManager::getExistingUgroups() instead
@@ -370,8 +370,8 @@ function ugroup_db_get_dynamic_members(
 
 /**
  * Retrieve all dynamic groups' members except ANONYMOUS, NONE, REGISTERED
- * @param Integer $group_id
- * @param Integer $atid
+ * @param int $group_id
+ * @param int $atid
  * @return Array
  */
 function ugroup_get_all_dynamic_members($group_id, $atid=0) {
@@ -696,7 +696,7 @@ function ugroup_get_ugroup() {
 /**
  * Calculate the number of project admins and non project admins of the ugroup
  *
- * @param Integer $groupId
+ * @param int $groupId
  * @param String  $usersSql
  *
  * @return Array
@@ -724,11 +724,11 @@ function ugroup_count_project_admins($groupId, $usersSql) {
  * Retun value is the number of non project admins
  * in the filtered ugroups.
  *
- * @param Integer $groupId
+ * @param int $groupId
  * @param Array   $ugroups
  * @param Array   $validUgroups
  *
- * @return Integer
+ * @return int
  */
 function ugroup_count_non_admin_for_static_ugroups($groupId, $ugroups, &$validUGroups) {
     $containNonAdmin = 0;
@@ -753,11 +753,11 @@ function ugroup_count_non_admin_for_static_ugroups($groupId, $ugroups, &$validUG
  * Retun is the number of non project admins
  * in the filtered ugroups.
  *
- * @param Integer $groupId
+ * @param int $groupId
  * @param Array   $ugroups
  * @param Array   $validUgroups
  *
- * @return Integer
+ * @return int
  */
 function ugroup_count_non_admin_for_dynamic_ugroups($groupId, $ugroups, &$validUGroups) {
     $containNonAdmin = 0;
@@ -778,7 +778,7 @@ function ugroup_count_non_admin_for_dynamic_ugroups($groupId, $ugroups, &$validU
  * Don't remove ugroups containing both project admins and non project admins
  * just indicate the total number of non project admins.
  *
- * @param Integer $groupId
+ * @param int $groupId
  * @param Array   $ugroups
  *
  * @return Array

@@ -29,13 +29,13 @@ class ForgeAccess_AdminPresenter
     /** @var string */
     public $localinc_path;
 
-    /** @var boolean */
+    /** @var bool */
     public $access_restricted;
 
-    /** @var boolean */
+    /** @var bool */
     public $access_regular;
 
-    /** @var boolean */
+    /** @var bool */
     public $access_anonymous;
 
     /** @var string */

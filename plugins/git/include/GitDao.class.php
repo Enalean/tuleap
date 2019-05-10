@@ -205,9 +205,9 @@ class GitDao extends \Tuleap\DB\DataAccessObject
      * Obtain project's list of git repositories. May be filtered out by user to get only her own repositories
      *
      * @param Integre $projectId    Project id
-     * @param Boolean $onlyGitShell If true list will contain only git repositories no gitolite
-     * @param Boolean $scope        Allows to get all projects ignoring if the scope is project or personal
-     * @param Integer $userId       User id
+     * @param bool $onlyGitShell If true list will contain only git repositories no gitolite
+     * @param bool $scope Allows to get all projects ignoring if the scope is project or personal
+     * @param int $userId User id
      *
      * @TODO: Add a way to obtain all project repositories including both project scope & user scope
      *
@@ -352,12 +352,12 @@ class GitDao extends \Tuleap\DB\DataAccessObject
     /**
      * This function log a Git Push in the database
      *
-     * @param Integer $repoId        Id of the git repository
-     * @param Integer $UserId        Id of the user that performed the push
-     * @param Integer $pushTimestamp Date of the push
-     * @param Integer $commitsNumber Number of commits
+     * @param int $repoId Id of the git repository
+     * @param int $UserId Id of the user that performed the push
+     * @param int $pushTimestamp Date of the push
+     * @param int $commitsNumber Number of commits
      *
-     * @return Boolean
+     * @return bool
      */
     public function logGitPush($repoId, $userId, $pushTimestamp, $commitsNumber, $refname, $operation_type, $refname_type)
     {
@@ -468,8 +468,8 @@ class GitDao extends \Tuleap\DB\DataAccessObject
      *
      * @param String  $startDate   Start date
      * @param String  $endDate     End date
-     * @param Integer $projectId   Project Id
-     * @param Boolean $stillActive Select only reposirtories that still active
+     * @param int $projectId Project Id
+     * @param bool $stillActive Select only reposirtories that still active
      */
     public function getBackendStatistics($backend, $startDate, $endDate, $projectId = null, $stillActive = false)
     {
@@ -511,7 +511,7 @@ class GitDao extends \Tuleap\DB\DataAccessObject
      * @param int $repository_id
      * @param int $remote_server_id
      *
-     * @return Boolean
+     * @return bool
      */
     public function switchToGerrit($repository_id, $remote_server_id)
     {

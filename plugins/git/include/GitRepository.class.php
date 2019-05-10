@@ -127,7 +127,7 @@ class GitRepository implements DVCSRepository
      * 
      * @deprecated
      * 
-     * @return Boolean
+     * @return bool
      */
     public function exists() {
         try {
@@ -246,7 +246,7 @@ class GitRepository implements DVCSRepository
 
     /**
      * Shortcut of setParent
-     * @param Integer $id
+     * @param int $id
      */
     public function setParentId($id) {
         $this->parentId = $id;
@@ -254,7 +254,7 @@ class GitRepository implements DVCSRepository
 
     /**
      * Shortcut
-     * @return Integer
+     * @return int
      */
     public function getParentId() {
         return $this->parentId;
@@ -312,7 +312,7 @@ class GitRepository implements DVCSRepository
      * @param String $repositoryName Name of the repository
      * @param String $projectName    Name of the project
      *
-     * @return Integer
+     * @return int
      */
     public function getRepositoryIDByName($repositoryName, $projectName) {
         $pm = $this->_getProjectManager();
@@ -711,7 +711,7 @@ class GitRepository implements DVCSRepository
      * Verify if the notfication is alreadyu enabled for the given mail
      * 
      * @param String $mail
-     * @return Boolean
+     * @return bool
      */
     public function isAlreadyNotified ($mail) {
         return (in_array($mail, $this->getNotifiedMails())) ;
@@ -722,7 +722,7 @@ class GitRepository implements DVCSRepository
      * 
      * @param String $mail
      * 
-     * @return Boolean
+     * @return bool
      */
     public function notificationAddMail($mail) {
         $this->notifiedMails[] = $mail;
@@ -737,7 +737,7 @@ class GitRepository implements DVCSRepository
      * Remove the @mail from the config git section and from DB
      * @param String $mail
      * 
-     * @return Boolean
+     * @return bool
      */
     public function notificationRemoveMail($mail) {
         if (in_array($mail, $this->getNotifiedMails())) {
@@ -773,7 +773,7 @@ class GitRepository implements DVCSRepository
      *
      * @param PFUser $user The user to test
      *
-     * @return Boolean
+     * @return bool
      */
     public function userCanRead($user) {
         return $this->getBackend()->userCanRead($user, $this);
@@ -784,7 +784,7 @@ class GitRepository implements DVCSRepository
      *
      * @param PFUser $user The user to test
      *
-     * @return Boolean
+     * @return bool
      */
     public function userCanAdmin($user) {
         return $user->isMember($this->getProjectId(), 'A');
@@ -796,7 +796,7 @@ class GitRepository implements DVCSRepository
      * @param String $referencePath The path the repository is supposed to belong to
      * @param String $repositoryPath The path of the repository
      *
-     * @return Boolean
+     * @return bool
      */
     public function isSubPath($referencePath, $repositoryPath) {
         if (strpos(realpath($repositoryPath), realpath($referencePath)) === 0) {
@@ -810,7 +810,7 @@ class GitRepository implements DVCSRepository
      *
      * @param String $path
      *
-     * @return Boolean
+     * @return bool
      */
     public function isDotGit($path) {
         return (substr($path, -4) == '.git');
@@ -819,7 +819,7 @@ class GitRepository implements DVCSRepository
     /**
      * Check if repository can be deleted
      *
-     * @return Boolean
+     * @return bool
      */
     public function canBeDeleted() {
         if ($this->getPath() && $this->getBackend()->canBeDeleted($this)) {

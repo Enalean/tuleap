@@ -24,15 +24,15 @@ class SOAP_WSDLGeneratorFixtures {
      * @param String  $shortName      Unix name of the project
      * @param String  $realName       Full name of the project
      * @param String  $privacy        Either 'public' or 'private'
-     * @param Integer $templateId     Id of template project
+     * @param int $templateId Id of template project
      *
-     * @return Integer The ID of newly created project
+     * @return int The ID of newly created project
      */
     public function addProject($requesterLogin, $shortName, $realName, $privacy, $templateId) {
     }
     
     /**
-     * @return Boolean
+     * @return bool
      */
     public function returnBoolean() {
     }

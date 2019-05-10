@@ -35,7 +35,7 @@ class ArtifactReportFactory {
 	/**
 	 *
 	 *
-	 *	@return	boolean	success.
+	 *	@return bool success.
 	 */
 	function __construct() {
 		return true;
@@ -66,7 +66,7 @@ class ArtifactReportFactory {
 	 *  @param atid_source: source tracker
 	 *  @param atid_dest: destination tracker
 	 *
-	 *	@return	boolean
+	 *	@return bool
 	 */
 	function copyReports($atid_source,$atid_dest) {
 	  global $Language;
@@ -134,7 +134,7 @@ class ArtifactReportFactory {
 	 *
 	 *  @param atid: the tracker id
 	 *
-	 *	@return	boolean
+	 *	@return bool
 	 */
 	function deleteReports($atid) {
 		

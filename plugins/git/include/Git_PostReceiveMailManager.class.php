@@ -36,10 +36,10 @@ class Git_PostReceiveMailManager {
     /**
      * Add a mail address to a repository to be notified
      *
-     * @param Integer $repositoryId
+     * @param int $repositoryId
      * @param String  $mail
      *
-     * @return Boolean
+     * @return bool
      */
     function addMail($repositoryId, $mail) {
         try {
@@ -58,7 +58,7 @@ class Git_PostReceiveMailManager {
      * @param GitRepository  $repository
      * @param String  $mail
      *
-     *  @return Boolean
+     *  @return bool
      */
     public function removeMailByRepository($repository, $mail) {
         if ($this->dao->removeNotification($repository->getId(), $mail)) {
@@ -78,7 +78,7 @@ class Git_PostReceiveMailManager {
      *
      * @param GitRepository $repository
      *
-     * @return Boolean
+     * @return bool
      */
     public function markRepositoryAsDeleted(GitRepository $repository) {
         return $this->dao->removeNotification($repository->getId(), null);
@@ -87,7 +87,7 @@ class Git_PostReceiveMailManager {
     /**
      * Returns the list of notified mails for post commit
      *
-     * @param Integer $repositoryId Id of the repository to retrieve itsnotification mails
+     * @param int $repositoryId Id of the repository to retrieve itsnotification mails
      *
      * @return array
      */

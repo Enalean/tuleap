@@ -39,7 +39,7 @@ class Docman_LockFactory {
    /**
     * Retrieve lock infos on all locked documents in a project
     *
-    * @param Integer $groupId project id.
+    * @param int $groupId project id.
     *
     * @return DataAccessResult of lockinfos or false if there isn't any document locked inside the project.
     */
@@ -76,7 +76,7 @@ class Docman_LockFactory {
      * @param Docman_Item $item Item to test
      * @param PFUser        $user User to test
      * 
-     * @return Boolean
+     * @return bool
      */
     function userIsLocker($item, $user) {
         return $this->userIsLockerByItemId($item->getId(), $user);
@@ -88,7 +88,7 @@ class Docman_LockFactory {
      * @param Intger $itemId Item to test
      * @param PFUser   $user   User to test
      *
-     * @return Boolean
+     * @return bool
      */
     function userIsLockerByItemId($itemId, $user) {
         if ($this->itemIsLockedByItemId($itemId) &&
@@ -103,7 +103,7 @@ class Docman_LockFactory {
      * 
      * @param Docman_Item $item Item to test
      * 
-     * @return Boolean
+     * @return bool
      */
     function itemIsLocked($item) {
         return $this->itemIsLockedByItemId($item->getId());
@@ -114,7 +114,7 @@ class Docman_LockFactory {
      * 
      * @param Docman_Item $item Item to test
      * 
-     * @return Boolean
+     * @return bool
      */
     function itemIsLockedByItemId($itemId) {
         $this->_cacheLocksForProject($itemId);
@@ -132,7 +132,7 @@ class Docman_LockFactory {
      * to look for all items that belongs to the same project than given item and
      * to retrieve only those that are locked.
      * 
-     * @param Integer $itemId An item_id in the project
+     * @param int $itemId An item_id in the project
      * 
      * @return void
      */
@@ -169,7 +169,7 @@ class Docman_LockFactory {
      * @param Docman_Item $item Item to lock
      * @param PFUser        $user User who lock
      *
-     * @return Boolean
+     * @return bool
      */
     function lock($item, $user) {
         $dao = $this->getDao();
@@ -181,7 +181,7 @@ class Docman_LockFactory {
      *
      * @param Docman_Item $item Item to lock
      *
-     * @return Boolean
+     * @return bool
      */
     function unlock($item) {
         $dao = $this->getDao();

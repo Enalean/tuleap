@@ -637,8 +637,8 @@ class SystemEventManager {
      * is a match, it returns true.
      *
      * @param string $event_type
-     * @param string | number | boolean $parameter
-     * @return boolean
+     * @param string|number|bool $parameter
+     * @return bool
      */
     public function isThereAnEventAlreadyOnGoingMatchingFirstParameter($event_type, $parameter) {
         $dar = $this->_getDao()->searchWithParam(
@@ -672,7 +672,7 @@ class SystemEventManager {
      *
      * @param type $event_type
      * @param type $parameter
-     * @return boolean
+     * @return bool
      */
     public function isThereAnEventAlreadyOnGoingMatchingParameter($event_type, $parameter) {
         $dar = $this->_getDao()->searchWithParam(
@@ -704,7 +704,7 @@ class SystemEventManager {
      * Return true if there is no pending rename event of this user, otherwise false
      *
      * @param PFUser $user
-     * @return Boolean
+     * @return bool
      */
     public function canRenameUser($user) {
         return ! $this->isThereAnEventAlreadyOnGoingMatchingFirstParameter(SystemEvent::TYPE_USER_RENAME, $user->getId());
@@ -714,7 +714,7 @@ class SystemEventManager {
      * Return true if there is no pending rename event of this project, otherwise false
      *
      * @param PFUser $user
-     * @return Boolean
+     * @return bool
      */
     public function canRenameProject($project) {
         return ! $this->isThereAnEventAlreadyOnGoingMatchingFirstParameter(SystemEvent::TYPE_PROJECT_RENAME, $project->getId());
@@ -724,7 +724,7 @@ class SystemEventManager {
     /**
      * Return true if there is no pending rename user event on this new name
      * @param String $new_name
-     * @return Boolean
+     * @return bool
      */
     public function isUserNameAvailable($newName) {
         $dar = $this->_getDao()->searchWithParam('tail', $newName, array(SystemEvent::TYPE_USER_RENAME), array(SystemEvent::STATUS_NEW, SystemEvent::STATUS_RUNNING));
@@ -738,7 +738,7 @@ class SystemEventManager {
     /**
      * Return true if there is no pending rename project event on this new name
      * @param String $new_name
-     * @return Boolean
+     * @return bool
      */
     public function isProjectNameAvailable($newName) {
         $dar = $this->_getDao()->searchWithParam('tail', $newName, array(SystemEvent::TYPE_PROJECT_RENAME), array(SystemEvent::STATUS_NEW, SystemEvent::STATUS_RUNNING));

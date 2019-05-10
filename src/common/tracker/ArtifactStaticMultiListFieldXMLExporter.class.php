@@ -120,7 +120,7 @@ class ArtifactStaticMultiListFieldXMLExporter extends ArtifactFieldXMLExporter {
      * @param string $field_name
      * @param array  $all_labels
      *
-     * @return boolean
+     * @return bool
      */
     private function valueCannotBeParsed($value, $number_of_values, $field_name, array $all_labels) {
         return $this->valueIsNotAnExistingLabel($value, $field_name, $all_labels) ||

@@ -983,7 +983,7 @@ class LdapPlugin extends Plugin {
      *
      * This is for backward compatibility (when daily_sync was not yet defined).
      *
-     * @return Boolean
+     * @return bool
      */
     protected function isDailySyncEnabled() {
         return $this->isParamEnabled('daily_sync');
@@ -1002,7 +1002,7 @@ class LdapPlugin extends Plugin {
      *
      * @param String $key
      *
-     * @return Boolean
+     * @return bool
      */
     protected function isParamEnabled($key) {
         $value = $this->getLDAP()->getLDAPParam($key);
@@ -1144,7 +1144,7 @@ class LdapPlugin extends Plugin {
     }
 
     /**
-     * @return Boolean
+     * @return bool
      * */
     private function isGroupSyncAdminNotificationsEnabled() {
         return $this->getLdap()->getLDAPParam('grp_sync_admin_notifications_enabled');

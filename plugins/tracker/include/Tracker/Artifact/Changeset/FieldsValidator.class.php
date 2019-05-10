@@ -38,7 +38,7 @@ abstract class Tracker_Artifact_Changeset_FieldsValidator //phpcs:ignore
      *
      * @param array $fields_data The field data
      *
-     * @return boolean true if all fields are valid, false otherwise. This function update $field_data (set values to null if not valid)
+     * @return bool true if all fields are valid, false otherwise. This function update $field_data (set values to null if not valid)
      */
     public function validate(Tracker_Artifact $artifact, \PFUser $user, $fields_data)
     {

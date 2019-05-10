@@ -33,7 +33,7 @@ class ArtifactImportHtml extends ArtifactImport {
    *    
    *  
    *
-   *      @return boolean success.
+   *      @return bool success.
    */
   function __construct($ath,$art_field_fact,$group) {
     return parent::__construct($ath,$art_field_fact,$group);

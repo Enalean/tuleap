@@ -30,7 +30,7 @@ class LDAP_DirectoryCleanUpDao extends DataAccessObject
      *
      * @param Integer deletionDate date on which suspended user will be deleted
      *
-     * @return Boolean
+     * @return bool
      */
     public function createForecastDeletionDate ($userId, $deletionDate) {
         $sql = 'INSERT INTO plugin_ldap_suspended_user (user_id, deletion_date)'.
@@ -45,7 +45,7 @@ class LDAP_DirectoryCleanUpDao extends DataAccessObject
      *
      * @param Integer deletionDate
      *
-     * @return Boolean
+     * @return bool
      */
     public function resetForecastDeletionDate ($userId) {
         $sql = 'UPDATE plugin_ldap_suspended_user'.

@@ -34,7 +34,7 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput {
      * @param unknown_type $groupBy
      * @param unknown_type $startDate
      * @param unknown_type $endDate
-     * @param Boolean $absolute Is y-axis relative to data set or absolute (starting from 0)
+     * @param bool $absolute Is y-axis relative to data set or absolute (starting from 0)
      */
     function displayServiceGraph($services, $groupBy, $startDate, $endDate, $accumulative, $absolute=true){
         $graph = new Chart(750,450,"auto");
@@ -101,7 +101,7 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput {
      * @param unknown_type $groupBy
      * @param unknown_type $startDate
      * @param unknown_type $endDate
-     * @param Boolean $absolute Is y-axis relative to data set or absolute (starting from 0)
+     * @param bool $absolute Is y-axis relative to data set or absolute (starting from 0)
      */
     function displayUserGraph($userId, $groupBy, $startDate, $endDate, $absolute=true){
         $graph = new Chart(750,450,"auto");
@@ -144,12 +144,12 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput {
 
     /**
      *
-     * @param Integer $groupId
+     * @param int $groupId
      * @param Array   $services
      * @param String  $groupBy
      * @param Date    $startDate
      * @param Date    $endDate
-     * @param Boolean $absolute Is y-axis relative to data set or absolute (starting from 0)
+     * @param bool $absolute Is y-axis relative to data set or absolute (starting from 0)
      */
     function displayProjectGraph($groupId, $services, $groupBy, $startDate, $endDate, $absolute=true, $accumulative = true, $siteAdminView = true){
         $graph = new Chart(750,450,"auto");
@@ -224,11 +224,11 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput {
 
     /**
      *
-     * @param Integer $groupId
+     * @param int $groupId
      * @param String  $groupBy
      * @param Date    $startDate
      * @param Date    $endDate
-     * @param Boolean $absolute Is y-axis relative to data set or absolute (starting from 0)
+     * @param bool $absolute Is y-axis relative to data set or absolute (starting from 0)
      */
     function displayProjectTotalSizeGraph($groupId, $groupBy, $startDate, $endDate, $absolute=true){
         $graph = new Chart(420 ,340 , "auto");

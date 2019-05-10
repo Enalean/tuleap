@@ -124,7 +124,7 @@ class Git_Exec
      * @param string $from
      * @param string $to
      *
-     * @return boolean
+     * @return bool
      * @throw Git_Command_Exception
      */
     public function mv($from, $to) {
@@ -139,7 +139,7 @@ class Git_Exec
      *
      * @param string $file
      *
-     * @return boolean
+     * @return bool
      * @throw Git_Command_Exception
      */
     public function add($file) {
@@ -152,7 +152,7 @@ class Git_Exec
      *
      * @param string $file
      *
-     * @return boolean
+     * @return bool
      * @throw Git_Command_Exception
      */
     public function rm($file) {
@@ -286,7 +286,7 @@ class Git_Exec
      *
      * @param string $message
      *
-     * @return boolean
+     * @return bool
      * @throw Git_Command_Exception
      */
     public function commit($message) {
@@ -300,7 +300,7 @@ class Git_Exec
     /**
      * git help push
      *
-     * @return boolean
+     * @return bool
      * @throw Git_Command_Exception
      */
     public function push($origin='origin master') {
@@ -324,7 +324,7 @@ class Git_Exec
     /**
      * Return true if working directory is clean (nothing to commit)
      *
-     * @return boolean
+     * @return bool
      * @throw Git_Command_Exception
      */
     public function isThereAnythingToCommit() {

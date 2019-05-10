@@ -299,7 +299,7 @@ class Git_Driver_Gerrit_MembershipManager {
      *
      * @param Git_RemoteServer_GerritServer $server
      * @param ProjectUGroup $ugroup
-     * @return Boolean
+     * @return bool
      */
     public function doesGroupExistOnServer(Git_RemoteServer_GerritServer $server, ProjectUGroup $ugroup) {
         $this->cacheGroupDefinitionForServer($server);

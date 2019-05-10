@@ -30,7 +30,7 @@ class FRSFileMD5SumException extends FRSFileException {
      * Constructor
      *
      * @param FRSFile $file The file that triggered the exception
-     * @param Integer $code Numeric code
+     * @param int $code Numeric code
      */
     public function __construct($file, $code = 0) {
         parent::__construct($GLOBALS['Language']->getText('file_admin_editreleases', 'md5_fail', array(basename($file->getFileName()), $file->getComputedMd5())), $code);
@@ -42,7 +42,7 @@ class FRSFileInvalidNameException extends FRSFileException {
      * Constructor
      *
      * @param FRSFile $file The file that triggered the exception
-     * @param Integer $code Numeric code
+     * @param int $code Numeric code
      */
     public function __construct($file, $code = 0) {
         parent::__construct($GLOBALS['Language']->getText('file_admin_editreleases', 'filename_invalid').': '.$file->getFileName(), $code);
@@ -54,7 +54,7 @@ class FRSFileExistsException extends FRSFileException {
      * Constructor
      *
      * @param FRSFile $file The file that triggered the exception
-     * @param Integer $code Numeric code
+     * @param int $code Numeric code
      */
     public function __construct($file, $code = 0) {
         parent::__construct($GLOBALS['Language']->getText('file_admin_editreleases', 'filename_exists').': '.$file->getFileName(), $code);
@@ -66,7 +66,7 @@ class FRSFileToBeRestoredException extends FRSFileException {
      * Constructor
      *
      * @param FRSFile $file The file that triggered the exception
-     * @param Integer $code Numeric code
+     * @param int $code Numeric code
      */
     public function __construct($file, $code = 0) {
         parent::__construct($GLOBALS['Language']->getText('file_admin_editreleases', 'filename_to_be_restored').': '.$file->getFileName(), $code);
@@ -78,7 +78,7 @@ class FRSFileForgeException extends FRSFileException {
      * Constructor
      *
      * @param FRSFile $file The file that triggered the exception
-     * @param Integer $code Numeric code
+     * @param int $code Numeric code
      */
     public function __construct($file, $code = 0) {
         parent::__construct($GLOBALS['Language']->getText('file_admin_editreleases', 'fileforge_error', array($file->getFileName())), $code);
@@ -90,7 +90,7 @@ class FRSFileDbException extends FRSFileException {
      * Constructor
      *
      * @param FRSFile $file The file that triggered the exception
-     * @param Integer $code Numeric code
+     * @param int $code Numeric code
      */
     public function __construct($file, $code = 0) {
         parent::__construct($GLOBALS['Language']->getText('file_admin_editreleases', 'db_error', array($file->getFileName())), $code);
@@ -102,7 +102,7 @@ class FRSFileIllegalNameException extends FRSFileException {
      * Constructor
      *
      * @param FRSFile $file The file that triggered the exception
-     * @param Integer $code Numeric code
+     * @param int $code Numeric code
      */
     public function __construct($file, $code = 0) {
         parent::__construct($GLOBALS['Language']->getText('file_admin_editreleases', 'illegal_file_name').': '.$file->getFileName(), $code);

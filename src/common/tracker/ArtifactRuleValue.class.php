@@ -44,7 +44,7 @@ class ArtifactRuleValue extends ArtifactRule {
     * Else if params are same target value then returns true,
     * Else returns false.
     *
-    * @return boolean
+    * @return bool
     */
     function applyTo($group_artifact_id, $source_field, $source_value, $target_field, $target_value) {
         $can_apply_to = $this->canApplyTo($group_artifact_id, $source_field, $source_value, $target_field, $target_value);

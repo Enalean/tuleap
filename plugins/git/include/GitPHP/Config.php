@@ -143,7 +143,7 @@ class Config
      *
      * @access public
      * @param string $key config key to find
-     * @return boolean true if key exists
+     * @return bool true if key exists
      */
     public function HasKey($key) // @codingStandardsIgnoreLine
     {

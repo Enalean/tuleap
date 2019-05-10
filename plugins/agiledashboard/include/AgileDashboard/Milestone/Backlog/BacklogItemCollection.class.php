@@ -30,7 +30,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollection implements
     /** @var AgileDashboard_Milestone_Backlog_IBacklogItem[] */
     private $rows = array();
 
-    /** @var Integer[] */
+    /** @var int[] */
     private $index = array();
 
     /** @var string */

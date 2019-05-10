@@ -35,7 +35,7 @@ class SemanticDoneIntroPresenter
     public $selected_values;
 
     /**
-     * @var boolean
+     * @var bool
      */
     public $has_selected_values;
 

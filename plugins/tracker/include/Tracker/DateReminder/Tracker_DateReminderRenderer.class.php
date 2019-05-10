@@ -84,7 +84,7 @@ class Tracker_DateReminderRenderer {
     /**
      * Edit a given date reminder
      *
-     * @param Integer $reminderId Id of the edited date reminder
+     * @param int $reminderId Id of the edited date reminder
      *
      * @return String
      */
@@ -214,7 +214,7 @@ class Tracker_DateReminderRenderer {
      *
      * @param HTTPRequest $request HTTP request
      *
-     * @return Integer
+     * @return int
      */
     public function validateFieldId(HTTPRequest $request) {
         $validFieldId = new Valid_UInt('reminder_field_date');
@@ -232,7 +232,7 @@ class Tracker_DateReminderRenderer {
      *
      * @param HTTPRequest $request HTTP request
      *
-     * @return Integer
+     * @return int
      */
     public function validateDistance(HTTPRequest $request) {
         $validDistance = new Valid_UInt('distance');
@@ -250,7 +250,7 @@ class Tracker_DateReminderRenderer {
      *
      * @param HTTPRequest $request HTTP request
      *
-     * @return Integer
+     * @return int
      */
     public function validateNotificationType(HTTPRequest $request) {
         $validNotificationType = new Valid_UInt('notif_type');
@@ -268,7 +268,7 @@ class Tracker_DateReminderRenderer {
      *
      * @param HTTPRequest $request HTTP request
      *
-     * @return Integer
+     * @return int
      */
     public function validateStatus(HTTPRequest $request) {
         $validStatus = new Valid_UInt('notif_status');
@@ -410,7 +410,7 @@ class Tracker_DateReminderRenderer {
     /**
      * Ask for confirmation before deleting a given date reminder
      *
-     * @param Integer $reminderId Id of the date reminder to be deleted
+     * @param int $reminderId Id of the date reminder to be deleted
      *
      * @return String
      */

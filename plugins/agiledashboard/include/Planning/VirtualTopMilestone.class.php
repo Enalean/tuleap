@@ -93,7 +93,7 @@ class Planning_VirtualTopMilestone  implements Planning_Milestone {
 
     /**
      * @param PFUser $user
-     * @return boolean
+     * @return bool
      */
     public function userCanView(PFUser $user) {
         return null;

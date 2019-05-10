@@ -83,7 +83,7 @@ class SVN_Hook_PreCommit extends SVN_Hook {
     /**
      * Check if the commit is done on an allowed path
      * @param String  $repository
-     * @param Integer $transaction
+     * @param int $transaction
      * @throws Exception
      */
     public function assertCommitToTagIsAllowed($repository, $transaction) {
@@ -134,9 +134,9 @@ class SVN_Hook_PreCommit extends SVN_Hook {
    /**
      * Check if the commit target is tags
      * @param Project $project
-     * @param Integer $transaction
+     * @param int $transaction
      *
-     * @return Boolean
+     * @return bool
      */
     private function isCommitAllowed($project, $transaction) {
         $paths = $this->svn_look->getTransactionPath($project, $transaction);
@@ -159,7 +159,7 @@ class SVN_Hook_PreCommit extends SVN_Hook {
      * Check if it is an update or delete to tags
      * @param String $path
      *
-     * @return Boolean
+     * @return bool
      */
     private function isCommitDoneInImmutableTag(Project $project, $path) {
         $immutable_paths = explode(PHP_EOL, $this->handler->getImmutableTagsPathForProject($project->getID()));

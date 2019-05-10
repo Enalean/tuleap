@@ -48,7 +48,7 @@ class BurndownRepresentation
     public $points = array();
 
     /**
-     * @var boolean Is cache calcul asked
+     * @var bool Is cache calcul asked
      */
     public $is_under_calculation;
 

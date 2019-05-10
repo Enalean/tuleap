@@ -64,7 +64,7 @@ abstract class BaseLayout extends Response
     /**
      * Set to true if HTML object is displayed through a Service
      *
-     * @var Boolean
+     * @var bool
      */
     protected $is_rendered_through_service = false;
 
@@ -542,7 +542,7 @@ abstract class BaseLayout extends Response
      *
      * @see Service
      *
-     * @param Boolean $value
+     * @param bool $value
      */
     public function setRenderedThroughservice($value)
     {

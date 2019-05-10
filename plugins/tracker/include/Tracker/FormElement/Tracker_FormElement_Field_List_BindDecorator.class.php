@@ -73,7 +73,7 @@ class Tracker_FormElement_Field_List_BindDecorator
      * considered and should probably be avoided
      *
      * @param string $value The value to decorate Don't forget to html-purify.
-     * @param boolean $full false if you want only the decoration
+     * @param bool $full false if you want only the decoration
      * @return string html
      */
     public function decorate($value, $full = true) {
@@ -124,7 +124,7 @@ class Tracker_FormElement_Field_List_BindDecorator
     /**
      * Display the color and allow the user to edit it
      * @param string $value The value to decorate Don't forget to html-purify.
-     * @param boolean $full false if you want only the decoration
+     * @param bool $full false if you want only the decoration
      * @return string html
      */
     public function decorateEdit($is_used_in_semantics) {
@@ -159,8 +159,8 @@ class Tracker_FormElement_Field_List_BindDecorator
     /**
      * Display the transparent color and allow the user to edit it
      * @param string $value The value to decorate Don't forget to html-purify.
-     * @param boolean $full false if you want only the decoration
-     * @param boolean $is_used_in_semantic True if the field is used in a semantic
+     * @param bool $full false if you want only the decoration
+     * @param bool $is_used_in_semantic True if the field is used in a semantic
      * @return string html
      */
     public static function noDecoratorEdit($field_id, $value_id, $is_used_in_semantics) {

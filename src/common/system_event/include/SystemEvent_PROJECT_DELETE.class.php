@@ -58,7 +58,7 @@ class SystemEvent_PROJECT_DELETE extends SystemEvent
     /**
      * Process stored event
      *
-     * @return Boolean
+     * @return bool
      */
     public function process() {
         // Check parameters
@@ -165,7 +165,7 @@ class SystemEvent_PROJECT_DELETE extends SystemEvent
      *
      * @param Project $project Project to be deleted
      *
-     * @return Boolean
+     * @return bool
      */
     protected function removeProjectMembers($project) {
         $pm = $this->getProjectManager();
@@ -176,9 +176,9 @@ class SystemEvent_PROJECT_DELETE extends SystemEvent
      * Deletes ugroups assigned to recieve membership request notification 
      * And the message set from a given project.
      *
-     * @param Integer $groupId Id of the project to be deleted
+     * @param int $groupId Id of the project to be deleted
      *
-     * @return Boolean
+     * @return bool
      */
     protected function deleteMembershipRequestNotificationEntries($groupId) {
         $pm = $this->getProjectManager();
@@ -189,9 +189,9 @@ class SystemEvent_PROJECT_DELETE extends SystemEvent
     /**
      * Remove Files, releases and packages for a given project.
      *
-     * @param Integer $groupId Id of the project to be deleted
+     * @param int $groupId Id of the project to be deleted
      *
-     * @return Boolean
+     * @return bool
      */
     protected function cleanupProjectFRS($groupId) {
         $frsff = $this->getFRSFileFactory();
@@ -221,7 +221,7 @@ class SystemEvent_PROJECT_DELETE extends SystemEvent
     /**
      * Wrapper for tests
      *
-     * @param Integer $groupId Id of the deleted project
+     * @param int $groupId Id of the deleted project
      *
      * @return WikiAttachment
      */
@@ -241,9 +241,9 @@ class SystemEvent_PROJECT_DELETE extends SystemEvent
     /**
      * Remove all binding to user groups from a the given user group.
      *
-     * @param Integer $groupId Id of the deleted project
+     * @param int $groupId Id of the deleted project
      *
-     * @return Boolean
+     * @return bool
      */
     protected function cleanupProjectUgroupsBinding($groupId) {
         $ugroupUserDao = new UGroupUserDao();

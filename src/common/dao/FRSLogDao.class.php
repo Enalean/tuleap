@@ -26,12 +26,12 @@ class FRSLogDao extends DataAccessObject
     /**
      * Add the action to FRS log
      *
-     * @param Integer $userID
-     * @param Integer $projectID
-     * @param Integer $itemID
-     * @param Integer $actionID
+     * @param int $userID
+     * @param int $projectID
+     * @param int $itemID
+     * @param int $actionID
      *
-     * @return Boolean
+     * @return bool
      */
     function addLog($userID, $projectID, $itemID, $actionID) {
         $sql = ' INSERT INTO frs_log '.

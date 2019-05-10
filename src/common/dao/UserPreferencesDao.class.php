@@ -47,7 +47,7 @@ class UserPreferencesDao extends DataAccessObject {
      * @param int $user_id
      * @param string $preference_name
      * @param string $preference_value
-     * @return boolean
+     * @return bool
      */
     function set($user_id, $preference_name, $preference_value) {
         $sql = sprintf("INSERT INTO user_preferences (user_id, preference_name, preference_value) VALUES (%d, %s, %s)

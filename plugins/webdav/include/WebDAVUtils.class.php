@@ -123,9 +123,9 @@ class WebDAVUtils {
      * Tests if the user is Superuser, project admin or File release admin
      *
      * @param PFUser $user
-     * @param Integer $groupId
+     * @param int $groupId
      *
-     * @return Boolean
+     * @return bool
      */
     function userIsAdmin($user, $project_id)
     {
@@ -139,9 +139,9 @@ class WebDAVUtils {
      * Tests if the user is Superuser, or File release admin
      *
      * @param PFUser $user
-     * @param Integer $groupId
+     * @param int $groupId
      *
-     * @return Boolean
+     * @return bool
      */
     function userCanWrite($user, $project_id)
     {
@@ -278,7 +278,7 @@ class WebDAVUtils {
     /**
      * Tells if write acces is enabled or not for the WebDAV plugin
      *
-     * @return Boolean
+     * @return bool
      */
     function isWriteEnabled() {
         $pluginManager = PluginManager::instance();

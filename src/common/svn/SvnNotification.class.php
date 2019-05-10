@@ -37,11 +37,11 @@ class SvnNotification {
     /**
      * Set mailing list notification per path
      *
-     * @param Integer $projectId   Project id
+     * @param int $projectId Project id
      * @param String  $mailingList List of mail addresses
      * @param String  $path        svn path
      *
-     * @return Boolean
+     * @return bool
      */
     function setSvnMailingList($projectId, $mailingList, $path) {
         $dao = $this->_getDao();
@@ -51,7 +51,7 @@ class SvnNotification {
     /**
      * Get mailing list notification per path
      *
-     * @param Integer $projectId Project id
+     * @param int $projectId Project id
      * @param String  $path      svn path
      *
      * @return String
@@ -70,7 +70,7 @@ class SvnNotification {
     /**
      * Get mailing list notification and path for the whole project
      *
-     * @param Integer $projectId Project id
+     * @param int $projectId Project id
      *
      * @return DataAccessResult
      */
@@ -87,7 +87,7 @@ class SvnNotification {
     /**
      * Remove svn notification details
      *
-     * @param Integer $projectId     Project id
+     * @param int $projectId Project id
      * @param Array   $selectedPaths Contains list of paths to remove.
      *
      * @return void

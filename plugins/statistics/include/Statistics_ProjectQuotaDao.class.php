@@ -41,12 +41,12 @@ class Statistics_ProjectQuotaDao extends DataAccessObject {
     /**
      * This function add a disk quota exception in the database
      *
-     * @param Integer $groupId             Id of the project we want to add excpetion for its disk quota
-     * @param Integer $requesterId         Id of the user that performed the request
-     * @param Integer $requestedSize       New disk size we want to apply as quota
+     * @param int $groupId Id of the project we want to add excpetion for its disk quota
+     * @param int $requesterId Id of the user that performed the request
+     * @param int $requestedSize New disk size we want to apply as quota
      * @param String  $exceptionMotivation A text that should justify a given exception request
      *
-     * @return Boolean
+     * @return bool
      */
     public function addException($groupId, $requesterId, $requestedSize, $exceptionMotivation) {
         $groupId             = $this->da->escapeInt($groupId);
@@ -112,7 +112,7 @@ class Statistics_ProjectQuotaDao extends DataAccessObject {
     /**
      * Get custom quota for a given project
      *
-     * @param Integer $groupId Id of the project
+     * @param int $groupId Id of the project
      *
      * @return DataAccessResult
      */

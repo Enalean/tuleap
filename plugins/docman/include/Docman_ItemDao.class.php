@@ -790,7 +790,7 @@ class Docman_ItemDao extends DataAccessObject {
      * @param string $wikipage wiki page name.
      * @param int $group_id project id.
      *
-     * @return boolean.
+     * @return bool .
      */
     function isWikiPageReferenced($wikipage, $group_id) {
         $obsoleteToday = $this->getObsoleteToday();
@@ -886,9 +886,9 @@ class Docman_ItemDao extends DataAccessObject {
     /**
      * Copy the entry of the item from table of items into table of deleted items
      *
-     * @param Integer $itemId
+     * @param int $itemId
      *
-     * @return Boolean
+     * @return bool
      */
     function storeDeletedItem($itemId) {
         $sql = 'INSERT INTO plugin_docman_item_deleted (item_id, parent_id, group_id, title, '.
@@ -908,9 +908,9 @@ class Docman_ItemDao extends DataAccessObject {
     /**
      * List pending documents
      *
-     * @param Integer $groupId
-     * @param Integer $offset
-     * @param Integer $limit
+     * @param int $groupId
+     * @param int $offset
+     * @param int $limit
      * @return Array
      */
     function listPendingItems($groupId, $offset, $limit) {
@@ -944,9 +944,9 @@ class Docman_ItemDao extends DataAccessObject {
     /**
      * List deleted items with delete date lower than the given time
      *
-     * @param Integer $time
+     * @param int $time
      *
-     * @return Boolean
+     * @return bool
      */
     function listItemsToPurge($time) {
         $sql = 'SELECT item_id, parent_id, group_id, title, '.
@@ -962,10 +962,10 @@ class Docman_ItemDao extends DataAccessObject {
     /**
      * Save the purge date of a deleted item
      *
-     * @param Integer $itemId
-     * @param Integer $time
+     * @param int $itemId
+     * @param int $time
      *
-     * @return Boolean
+     * @return bool
      */
     function setPurgeDate($itemId, $time) {
         $sql = 'UPDATE plugin_docman_item_deleted'.
@@ -977,9 +977,9 @@ class Docman_ItemDao extends DataAccessObject {
     /**
      * Restore one item
      * 
-     * @param Integer $itemId
+     * @param int $itemId
      * 
-     * @return Boolean
+     * @return bool
      */
     public function restore($itemId) {
         $sql = 'UPDATE plugin_docman_item'.

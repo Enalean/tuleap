@@ -364,9 +364,9 @@ class Tracker_NotificationsManager {
     /**
      *
      * @param String $addresses
-     * @param Integer $all_updates
-     * @param Integer $check_permissions
-     * @return Integer last inserted id in database
+     * @param int $all_updates
+     * @param int $check_permissions
+     * @return int last inserted id in database
      */
     protected function addGlobalNotification($addresses, $all_updates, $check_permissions)
     {
@@ -451,7 +451,7 @@ class Tracker_NotificationsManager {
     }
 
     /**
-     * @param boolean $update true if the action is an update one (update artifact, add comment, ...) false if it is a create action.
+     * @param bool $update true if the action is an update one (update artifact, add comment, ...) false if it is a create action.
      */
     public function getAllAddresses($update = false) {
         $addresses = array();
@@ -532,7 +532,7 @@ class Tracker_NotificationsManager {
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     private function isNotificationEmpty(RequestFromAutocompleter $autocompleter)
     {

@@ -87,7 +87,7 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
      *
      * @see    plugins/git/include/Git_Backend_Interface::isInitialized()
      * @param  GitRepository $repository
-     * @return Boolean
+     * @return bool
      */
     public function isInitialized(GitRepository $repository) {
         $init = $this->driver->isInitialized($this->getGitRootPath().'/'.$repository->getPath());
@@ -228,7 +228,7 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
      * @param PFUser          $user       The user to test
      * @param GitRepository $repository The repository to test
      *
-     * @return Boolean
+     * @return bool
      */
     public function userCanRead($user, $repository) {
 
@@ -273,7 +273,7 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
      *
      * @param GitRepository $repository
      *
-     * @return Boolean
+     * @return bool
      */
     public function changeRepositoryMailPrefix($repository) {
         return $this->changeRepositoryMailingList($repository);
@@ -323,7 +323,7 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
      * @param String $newName The new name of the project
      * @throws Exception
      * 
-     * @return Boolean
+     * @return bool
      */
     protected function glRenameProject($oldName, $newName) {
         $retVal = 0;
@@ -370,7 +370,7 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
      *
      * @param GitRepository $repository
      *
-     * @return Boolean
+     * @return bool
      */
     public function archiveBeforePurge(GitRepository $repository) {
         $backup= $this->getGitPlugin()->getConfigurationParameter('git_backup_dir');

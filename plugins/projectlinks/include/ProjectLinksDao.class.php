@@ -31,7 +31,7 @@ class ProjectLinksDao extends DataAccessObject
     /**
      * Search all links of a given type
      * 
-     * @param Integer $linkTypeId
+     * @param int $linkTypeId
      * @return DataAccessResult
      */
     function searchLinksByType($linkTypeId) {
@@ -46,7 +46,7 @@ class ProjectLinksDao extends DataAccessObject
     /**
      * Search all the links from $groupId project to other prjs.
      
-     * @param  Integer $groupId Group id
+     * @param int $groupId Group id
      * @return DataAccessResult
      */
     function searchForwardLinks($groupId) {
@@ -67,7 +67,7 @@ class ProjectLinksDao extends DataAccessObject
     /**
      * Search all the links that point to $groupId project
      * 
-     * @param  Integer $groupId Group id
+     * @param int $groupId Group id
      * @return DataAccessResult
      */
     function searchBackLinks($groupId) {
@@ -89,9 +89,9 @@ class ProjectLinksDao extends DataAccessObject
      * Return true if there are links from or toward this project or if there is
      * at least one link type defined in the project.
      * 
-     * @param Integer $groupId
+     * @param int $groupId
      * 
-     * @return Boolean
+     * @return bool
      */
     function projectUsesProjectLinks($groupId) {
         $sql = 'SELECT NULL'.

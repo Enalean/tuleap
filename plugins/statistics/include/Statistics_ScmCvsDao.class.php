@@ -30,7 +30,7 @@ class Statistics_ScmCvsDao extends DataAccessObject {
      * Constructor of the class
      *
      * @param LegacyDataAccessInterface $da Data access details
-     * @param Integer $groupId Project Id
+     * @param int $groupId Project Id
      *
      * @return void
      */

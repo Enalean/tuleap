@@ -34,7 +34,7 @@ class Tracker_Artifact_ChangesetValue_Integer extends Tracker_Artifact_Changeset
     /**
      * Returns the integer value
      *
-     * @return integer the integer value
+     * @return int the integer value
      */
     public function getInteger() {
         if ($this->numeric !== null) {
@@ -46,7 +46,7 @@ class Tracker_Artifact_ChangesetValue_Integer extends Tracker_Artifact_Changeset
     /**
      * Returns the integer value
      *
-     * @return integer the integer value
+     * @return int the integer value
      */
     public function getNumeric() {
         return $this->getInteger();

@@ -163,7 +163,7 @@ class Git_Widget_UserPushes extends Widget {
      *
      * @param Array $request HTTP request
      *
-     * @return Boolean
+     * @return bool
      */
     function updatePreferences(Codendi_Request $request) {
         $request->valid(new Valid_String('cancel'));

@@ -28,7 +28,7 @@ use Tracker_UserWithReadAllPermission;
 class PermissionsCache
 {
     /**
-     * @var boolean[][]
+     * @var bool[][]
      */
     private static $can_view_cache = array();
 

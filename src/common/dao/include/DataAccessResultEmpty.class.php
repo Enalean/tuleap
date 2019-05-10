@@ -32,7 +32,7 @@ class DataAccessResultEmpty implements IProvideDataAccessResult {
     /**
      * @see IProvideDataAccessResult
      * @deprecated
-     * @return Boolean
+     * @return bool
      */
     public function getRow() {
         return false;
@@ -41,7 +41,7 @@ class DataAccessResultEmpty implements IProvideDataAccessResult {
     /**
      * @see IProvideDataAccessResult
      * @deprecated
-     * @return Integer
+     * @return int
      */
     public function rowCount() {
         return 0;
@@ -50,7 +50,7 @@ class DataAccessResultEmpty implements IProvideDataAccessResult {
     /**
      * @see IProvideDataAccessResult
      * @deprecated
-     * @return Boolean
+     * @return bool
      */
     public function isError() {
         return false;
@@ -59,7 +59,7 @@ class DataAccessResultEmpty implements IProvideDataAccessResult {
     /**
      * @see IProvideDataAccessResult
      * @deprecated
-     * @return Boolean
+     * @return bool
      */
     public function current() {
         return false;
@@ -76,7 +76,7 @@ class DataAccessResultEmpty implements IProvideDataAccessResult {
     /**
      * @see IProvideDataAccessResult
      * @deprecated
-     * @return Boolean
+     * @return bool
      */
     public function valid() {
         return false;
@@ -93,7 +93,7 @@ class DataAccessResultEmpty implements IProvideDataAccessResult {
     /**
      * @see IProvideDataAccessResult
      * @deprecated
-     * @return Boolean
+     * @return bool
      */
     public function key() {
         return false;
@@ -102,7 +102,7 @@ class DataAccessResultEmpty implements IProvideDataAccessResult {
     /**
      * @see IProvideDataAccessResult
      * @deprecated
-     * @return Integer
+     * @return int
      */
     public function count() {
         return 0;

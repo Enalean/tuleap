@@ -57,10 +57,10 @@ class UGroupBinding
     /**
      * Check if the user group is valid
      *
-     * @param Integer $groupId Id of the project
-     * @param Integer $ugroupId Id of the user goup
+     * @param int $groupId Id of the project
+     * @param int $ugroupId Id of the user goup
      *
-     * @return Boolean
+     * @return bool
      */
     public function checkUGroupValidity($groupId, $ugroupId)
     {
@@ -70,7 +70,7 @@ class UGroupBinding
     /**
      * Retrieve All Ugroups bound to a given ProjectUGroup
      *
-     * @param integer $ugroupId Id of the source user goup
+     * @param int $ugroupId Id of the source user goup
      *
      * @return Array
      */
@@ -91,9 +91,9 @@ class UGroupBinding
     /**
      * Remove all Ugroups binding to a given ProjectUGroup
      *
-     * @param Integer $ugroupId Id of the source user group
+     * @param int $ugroupId Id of the source user group
      *
-     * @return boolean
+     * @return bool
      */
     public function removeAllUGroupsBinding($ugroupId)
     {
@@ -112,9 +112,9 @@ class UGroupBinding
     /**
      * Remove binding to all ugroups of a given project
      *
-     * @param Integer $groupId Id of the project
+     * @param int $groupId Id of the project
      *
-     * @return boolean
+     * @return bool
      */
     public function removeProjectUGroupsBinding($groupId)
     {
@@ -131,9 +131,9 @@ class UGroupBinding
     /**
      * Update the user list of all ugroups  bound to a given user group
      *
-     * @param Integer $ugroupId Id of the source user group
+     * @param int $ugroupId Id of the source user group
      *
-     * @return boolean
+     * @return bool
      */
     public function updateBindedUGroups($ugroupId)
     {
@@ -153,7 +153,7 @@ class UGroupBinding
     /**
      * Get title of the link to binding interface
      *
-     * @param Integer $ugroupId Id of the user group
+     * @param int $ugroupId Id of the user group
      *
      * @return String
      */
@@ -171,7 +171,7 @@ class UGroupBinding
     /**
      * Remove all users from a given user group
      *
-     * @param Integer $ugroupId Id of the user group
+     * @param int $ugroupId Id of the user group
      *
      * @return void
      */
@@ -189,8 +189,8 @@ class UGroupBinding
     /**
      * Clone a given user group
      *
-     * @param Integer $sourceId Id of the source user group
-     * @param Integer $ugroupId Id of the bound user group
+     * @param int $sourceId Id of the source user group
+     * @param int $ugroupId Id of the bound user group
      *
      * @return void
      */
@@ -208,8 +208,8 @@ class UGroupBinding
     /**
      * Mark a given user group as bound to another one
      *
-     * @param Integer $ugroupId Id of the bound user group
-     * @param Integer $sourceId Id of the source user group
+     * @param int $ugroupId Id of the bound user group
+     * @param int $sourceId Id of the source user group
      *
      * @return void
      */
@@ -223,8 +223,8 @@ class UGroupBinding
     /**
      * Remove all users from a given user group then make a copy from another one
      *
-     * @param Integer $ugroupId Id of the bound user group
-     * @param Integer $sourceId Id of the source user group
+     * @param int $ugroupId Id of the bound user group
+     * @param int $sourceId Id of the source user group
      *
      * @return void
      */
@@ -250,10 +250,10 @@ class UGroupBinding
     /**
      * Bind a given user group to another one
      *
-     * @param integer $ugroupId Id of the bound user group
-     * @param integer $sourceId Id of the source user group
+     * @param int $ugroupId Id of the bound user group
+     * @param int $sourceId Id of the source user group
      *
-     * @return boolean
+     * @return bool
      */
     public function addBinding($ugroupId, $sourceId)
     {
@@ -276,9 +276,9 @@ class UGroupBinding
     /**
      * Remove binding for a given user group
      *
-     * @param integer $ugroupId Id of the user group we want to remove its binding
+     * @param int $ugroupId Id of the user group we want to remove its binding
      *
-     * @return boolean
+     * @return bool
      */
     public function removeBinding($ugroupId)
     {

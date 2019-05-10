@@ -122,8 +122,8 @@ class GitDriver implements DVCSDriver {
 
     /**
      * Initialize a repository
-     * @param Boolean $bare is a bare a repository
-     * @return Boolean
+     * @param bool $bare is a bare a repository
+     * @return bool
      */
     public function init($bare=false) {
         if ( $bare === false ) {
@@ -153,7 +153,7 @@ class GitDriver implements DVCSDriver {
      *
      * @param String $path Path to the repository
      *
-     * @return Boolean
+     * @return bool
      */
     protected function setUpFreshRepository($path) {
         $cwd = getcwd();
@@ -267,9 +267,9 @@ class GitDriver implements DVCSDriver {
      * Control who can access to a repository
      *
      * @param String  $repoPath Path to the repository
-     * @param Integer $access   Access level
+     * @param int $access Access level
      *
-     * @return Boolean
+     * @return bool
      */
     public function setRepositoryAccess($repoPath, $access) {
         if ($access == GitRepository::PUBLIC_ACCESS) {
@@ -287,7 +287,7 @@ class GitDriver implements DVCSDriver {
      *
      * @param String $path Path to the repository
      *
-     * @return Boolean
+     * @return bool
      */
     protected function setPermissions($path) {
         $rcode  = 0;

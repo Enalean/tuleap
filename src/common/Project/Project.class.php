@@ -422,7 +422,7 @@ class Project extends Group implements PFO_Project  // phpcs:ignore PSR1.Classes
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function allowsRestricted()
     {

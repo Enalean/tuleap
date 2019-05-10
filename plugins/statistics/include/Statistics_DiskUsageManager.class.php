@@ -79,7 +79,7 @@ class Statistics_DiskUsageManager {
      * The SVN/Webdav statistics is dedicated just to the site admin
      * We do not display it in case of project admin
      *
-     * @param Boolean $siteAdminView
+     * @param bool $siteAdminView
      *
      * @return Array
      */
@@ -235,7 +235,7 @@ class Statistics_DiskUsageManager {
      *
      * @param String  $startDate
      * @param String  $endDate
-     * @param Integer $groupId
+     * @param int $groupId
      *
      * @return Array
      */

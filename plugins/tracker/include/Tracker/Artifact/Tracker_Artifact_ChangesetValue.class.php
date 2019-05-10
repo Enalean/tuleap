@@ -41,7 +41,7 @@ abstract class Tracker_Artifact_ChangesetValue
     protected $field;
 
     /**
-     * @var boolean
+     * @var bool
      */
     protected $has_changed;
 
@@ -73,7 +73,7 @@ abstract class Tracker_Artifact_ChangesetValue
     /**
      * Returns true if the changeset value has changed, false otherwise
      *
-     * @return boolean true if the changeset value has changed, false otherwise
+     * @return bool true if the changeset value has changed, false otherwise
      */
     public function hasChanged() {
         return $this->has_changed;
@@ -85,7 +85,7 @@ abstract class Tracker_Artifact_ChangesetValue
      * @param Tracker_Artifact_ChangesetValue $changeset_value The changeset value to compare to this changeset value
      * @param string                          $format          The format of the diff (html, text, ...)
      * @param PFUser                          $user            The user or null
-     * @param boolean                         $ignore_perms
+     * @param bool $ignore_perms
      *
      * @return string The difference between another $changeset_value, false if no differences
      */

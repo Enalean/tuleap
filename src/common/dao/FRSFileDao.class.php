@@ -326,11 +326,11 @@ class FRSFileDao extends DataAccessObject {
     /**
      * Return true if a download is already logged for the user since the given time
      *
-     * @param Integer $fileId
-     * @param Integer $userId
-     * @param Integer $time
+     * @param int $fileId
+     * @param int $userId
+     * @param int $time
      *
-     * @return Boolean
+     * @return bool
      */
     function existsDownloadLogSince($fileId, $userId, $time) {
         $sql = 'SELECT NULL'.
@@ -375,10 +375,10 @@ class FRSFileDao extends DataAccessObject {
     /**
      * Retrieve all deleted files not purged yet after a given period of time
      *
-     * @param Integer $time    Timestamp of the date to start the search
-     * @param Integer $groupId
-     * @param Integer $offset
-     * @param Integer $limit
+     * @param int $time Timestamp of the date to start the search
+     * @param int $groupId
+     * @param int $offset
+     * @param int $limit
      *
      * @return DataAccessResult
      */
@@ -408,9 +408,9 @@ class FRSFileDao extends DataAccessObject {
     /**
      * Copy deleted entry in the dedicated table
      *
-     * @param Integer $id FileId
+     * @param int $id FileId
      *
-     * @return Boolean
+     * @return bool
      */
     function setFileInDeletedList($id) {
         // Store file in deleted table
@@ -424,10 +424,10 @@ class FRSFileDao extends DataAccessObject {
     /**
      * Set the date of the purge of a file
      *
-     * @param Integer $id   File id
-     * @param Integer $time Timestamp of the deletion
+     * @param int $id File id
+     * @param int $time Timestamp of the deletion
      *
-     * @return Boolean
+     * @return bool
      */
     function setPurgeDate($id, $time) {
         $sql = 'UPDATE frs_file_deleted'.
@@ -439,9 +439,9 @@ class FRSFileDao extends DataAccessObject {
     /**
      * Restore file by updating its status and removing it from  frs_file_deleted
      *
-     * @param Integer $id   File id
+     * @param int $id File id
      *
-     * @return Boolean
+     * @return bool
      */
     function restoreFile($id) {
         $sql = 'UPDATE frs_file SET status = "A" WHERE file_id = '.$this->da->escapeInt($id);
@@ -483,7 +483,7 @@ class FRSFileDao extends DataAccessObject {
      *
      * @param String $filename
      *
-     * @return boolean
+     * @return bool
      */
     function isMarkedToBeRestored($filename) {
         $sql = 'SELECT NULL'.
@@ -498,9 +498,9 @@ class FRSFileDao extends DataAccessObject {
     /**
      * Mark file to be restored
      *
-     * @param Integer $id
+     * @param int $id
      *
-     * @return Boolean
+     * @return bool
      */
     function markFileToBeRestored($id) {
                 $sql = 'UPDATE frs_file_deleted AS f,'.
@@ -515,9 +515,9 @@ class FRSFileDao extends DataAccessObject {
     /**
      * Cancel restoration of a file
      *
-     * @param Integer $fileId File id
+     * @param int $fileId File id
      *
-     * @return Boolean
+     * @return bool
      */
     function cancelRestore($fileId) {
         $sql = 'UPDATE frs_file_deleted SET delete_date = '.$this->da->escapeInt($_SERVER['REQUEST_TIME']).' WHERE file_id = '.$this->da->escapeInt($fileId);
@@ -527,10 +527,10 @@ class FRSFileDao extends DataAccessObject {
     /**
      * Insert the computed md5sum value in case of offline checksum comput
      * e
-     * @param Integer $fileId
+     * @param int $fileId
      * @param String $md5Computed
      *
-     * @return Boolean
+     * @return bool
      */
     function updateComputedMd5sum($fileId, $md5Computed) {
         $sql = ' UPDATE frs_file '.

@@ -38,7 +38,7 @@ class UserNavPresenter
     /** @var PFUser */
     private $current_user;
 
-    /** @var boolean */
+    /** @var bool */
     public $display_new_user_menu_item;
     /**
      * @var URLRedirect

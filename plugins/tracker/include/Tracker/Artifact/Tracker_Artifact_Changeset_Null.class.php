@@ -71,7 +71,7 @@ class Tracker_Artifact_Changeset_Null extends Tracker_Artifact_Changeset {
      *
      * @param PFUser $user The user. If null, the current logged in user will be used.
      *
-     * @return boolean true if the user can edit
+     * @return bool true if the user can edit
      */
     public function userCanEdit(?PFUser $user = null) {
         return false;
@@ -113,7 +113,7 @@ class Tracker_Artifact_Changeset_Null extends Tracker_Artifact_Changeset {
      *
      * @param array $fields_data The data submitted (array of 'field_id' => 'value')
      *
-     * @return boolean true if there are changes in fields_data regarding this changeset, false if nothing has changed
+     * @return bool true if there are changes in fields_data regarding this changeset, false if nothing has changed
      */
     public function hasChanges($fields_data) {
         return true;

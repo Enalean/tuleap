@@ -182,7 +182,7 @@ abstract class Docman_ApprovalTableFactory {
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     abstract function userAccessedSinceLastUpdate($user);
 

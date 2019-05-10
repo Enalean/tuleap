@@ -28,7 +28,7 @@ class ArtifactFieldHtml extends ArtifactField {
     /**
      * If set to false, no JS will be generated in Read Only mode.
      * 
-     * @var Boolean
+     * @var bool
      */
     protected $isJavascriptEnabled = true;
 

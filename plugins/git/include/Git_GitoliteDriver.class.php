@@ -215,7 +215,7 @@ class Git_GitoliteDriver {
      * A driver is initialized if the repository has branches.
      *
      * @param string $repoPath
-     * @return boolean
+     * @return bool
      */
     public function isInitialized($repoPath) {
         try {
@@ -237,7 +237,7 @@ class Git_GitoliteDriver {
     /**
      *
      * @param string $repoPath
-     * @return boolean
+     * @return bool
      */
     public function isRepositoryCreated($repoPath) {
         $headsPath = $repoPath.'/refs/heads';
@@ -444,7 +444,7 @@ class Git_GitoliteDriver {
      * @param String git_root_path
      * @param String $backup_directory
      *
-     * @return boolean
+     * @return bool
      *
      */
     public function restoreRepository(GitRepository $repository, $git_root_path, $backup_directory) {

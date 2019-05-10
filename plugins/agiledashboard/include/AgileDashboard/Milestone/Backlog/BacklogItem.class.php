@@ -62,7 +62,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItem implements AgileDashboard_Mil
     /** @var Tracker_Artifact */
     private $parent;
 
-    /** @var boolean */
+    /** @var bool */
     private $has_children = null;
     /**
      * @var

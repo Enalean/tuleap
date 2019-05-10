@@ -39,7 +39,7 @@ class InvalidSearchablesCollection
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function hasInvalidSearchable()
     {

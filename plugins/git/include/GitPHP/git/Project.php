@@ -394,7 +394,7 @@ class Project
      * Returns whether gitdaemon is allowed for this project
      *
      * @access public
-     * @return boolean git-daemon-export-ok?
+     * @return bool git-daemon-export-ok?
      */
     public function GetDaemonEnabled() // @codingStandardsIgnoreLine
     {
@@ -642,7 +642,7 @@ class Project
      * (time of last change)
      *
      * @access public
-     * @return integer timestamp
+     * @return int timestamp
      */
     public function GetEpoch() // @codingStandardsIgnoreLine
     {
@@ -660,7 +660,7 @@ class Project
      * (time since most recent change)
      *
      * @access public
-     * @return integer age
+     * @return int age
      */
     public function GetAge() // @codingStandardsIgnoreLine
     {
@@ -939,7 +939,7 @@ class Project
      * Gets list of tags for this project by age descending
      *
      * @access public
-     * @param integer $count number of tags to load
+     * @param int $count number of tags to load
      * @return array array of tags
      */
     public function GetTags($count = 0) // @codingStandardsIgnoreLine
@@ -956,7 +956,7 @@ class Project
      * Gets list of tags for this project by age descending using raw git objects
      *
      * @access private
-     * @param integer $count number of tags to load
+     * @param int $count number of tags to load
      * @return array array of tags
      */
     private function GetTagsRaw($count = 0) // @codingStandardsIgnoreLine
@@ -1027,7 +1027,7 @@ class Project
      * Gets list of heads for this project by age descending
      *
      * @access public
-     * @param integer $count number of tags to load
+     * @param int $count number of tags to load
      * @return array array of heads
      */
     public function GetHeads($count = 0) // @codingStandardsIgnoreLine
@@ -1044,7 +1044,7 @@ class Project
      * Gets the list of sorted heads using raw git objects
      *
      * @access private
-     * @param integer $count number of tags to load
+     * @param int $count number of tags to load
      * @return array array of heads
      */
     private function GetHeadsRaw($count = 0) // @codingStandardsIgnoreLine
@@ -1097,8 +1097,8 @@ class Project
      *
      * @access private
      * @param string $hash hash to start the log at
-     * @param integer $count number of entries to get
-     * @param integer $skip number of entries to skip
+     * @param int $count number of entries to get
+     * @param int $skip number of entries to skip
      * @return array array of hashes
      */
     private function GetLogHash($hash, $count = 50, $skip = 0) // @codingStandardsIgnoreLine
@@ -1113,8 +1113,8 @@ class Project
      *
      * @access public
      * @param string $hash hash to start the log at
-     * @param integer $count number of entries to get
-     * @param integer $skip number of entries to skip
+     * @param int $count number of entries to get
+     * @param int $skip number of entries to skip
      * @return array array of commit objects
      */
     public function GetLog($hash, $count = 50, $skip = 0) // @codingStandardsIgnoreLine
@@ -1133,8 +1133,8 @@ class Project
      *
      * @access private
      * @param string $hash hash to start the log at
-     * @param integer $count number of entries to get
-     * @param integer $skip number of entries to skip
+     * @param int $count number of entries to get
+     * @param int $skip number of entries to skip
      * @return array array of commit objects
      */
     private function GetLogGit($hash, $count = 50, $skip = 0) // @codingStandardsIgnoreLine
@@ -1336,8 +1336,8 @@ class Project
      * @access public
      * @param string $pattern search pattern
      * @param string $hash hash to start searching from
-     * @param integer $count number of results to get
-     * @param integer $skip number of results to skip
+     * @param int $count number of results to get
+     * @param int $skip number of results to skip
      * @return array array of matching commits
      */
     public function SearchCommit($pattern, $hash = 'HEAD', $count = 50, $skip = 0) // @codingStandardsIgnoreLine
@@ -1368,8 +1368,8 @@ class Project
      * @access public
      * @param string $pattern search pattern
      * @param string $hash hash to start searching from
-     * @param integer $count number of results to get
-     * @param integer $skip number of results to skip
+     * @param int $count number of results to get
+     * @param int $skip number of results to skip
      * @return array array of matching commits
      */
     public function SearchAuthor($pattern, $hash = 'HEAD', $count = 50, $skip = 0) // @codingStandardsIgnoreLine
@@ -1400,8 +1400,8 @@ class Project
      * @access public
      * @param string $pattern search pattern
      * @param string $hash hash to start searching from
-     * @param integer $count number of results to get
-     * @param integer $skip number of results to skip
+     * @param int $count number of results to get
+     * @param int $skip number of results to skip
      * @return array array of matching commits
      */
     public function SearchCommitter($pattern, $hash = 'HEAD', $count = 50, $skip = 0) // @codingStandardsIgnoreLine
@@ -1435,8 +1435,8 @@ class Project
      *
      * @access private
      * @param string $hash hash to list from
-     * @param integer $count number of results to get
-     * @param integer $skip number of results to skip
+     * @param int $count number of results to get
+     * @param int $skip number of results to skip
      * @param array $args args to give to rev-list
      * @return array array of hashes
      */

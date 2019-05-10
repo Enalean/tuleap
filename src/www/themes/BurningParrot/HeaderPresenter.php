@@ -51,7 +51,7 @@ class HeaderPresenter
     /** @var array */
     public $feedbacks;
 
-    /** @var boolean */
+    /** @var bool */
     public $has_feedbacks;
 
     /** @var string */

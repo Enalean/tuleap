@@ -37,7 +37,7 @@ abstract class Rule {
      * Check if $val is a valid not.
      *
      * @param String $val Value to check.
-     * @return Boolean
+     * @return bool
      */
     abstract function isValid($val);
 
@@ -45,7 +45,7 @@ abstract class Rule {
      * Default error message if rule is not apply on value.
      *
      * @param String $val Value to check.
-     * @return Boolean
+     * @return bool
      */
     function getErrorMessage($key='') {
         return $this->error;
@@ -314,7 +314,7 @@ extends Rule {
      *
      * @param String $val Value to test
      *
-     * @return Boolean
+     * @return bool
      */
     public function isSystemName($val) {
         $backend = $this->_getBackend();
@@ -330,7 +330,7 @@ extends Rule {
      *
      * @param String $val Value to test
      *
-     * @return Boolean
+     * @return bool
      */
     public function isAlreadyUserName($val) {
         $um = $this->_getUserManager();
@@ -346,7 +346,7 @@ extends Rule {
      *
      * @param String $val Value to test
      *
-     * @return Boolean
+     * @return bool
      */
     public function isAlreadyProjectName($val) {
         $pm = $this->_getProjectManager();
@@ -362,7 +362,7 @@ extends Rule {
      *
      * @param String $val Value to test
      *
-     * @return Boolean
+     * @return bool
      */
     public function noSpaces($val) {
         if (strrpos($val,' ') !== false) {
@@ -377,7 +377,7 @@ extends Rule {
      *
      * @param String $val
      *
-     * @return Boolean
+     * @return bool
      */
     public function atLeastOneChar($val) {
         if (strspn($val,"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ") == 0) {
@@ -392,7 +392,7 @@ extends Rule {
      *
      * @param String $val Value to test
      *
-     * @return Boolean
+     * @return bool
      */
     public function containsIllegalChars($val) {
         if (strspn($val,"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_.") != strlen($val)) {
@@ -407,7 +407,7 @@ extends Rule {
      *
      * @param String $val Value to test
      *
-     * @return Boolean
+     * @return bool
      */
     public function isReservedName($val) {
         $is_reserved_name = preg_match('/^('.
@@ -447,7 +447,7 @@ extends Rule {
      *
      * @param String $val Value to test
      *
-     * @return Boolean
+     * @return bool
      */
     public function isCvsAccount($val) {
         if (preg_match('/^anoncvs_/i', $val)) {
@@ -462,7 +462,7 @@ extends Rule {
      *
      * @param String $val Value to test
      *
-     * @return Boolean
+     * @return bool
      */
     public function lessThanMin($val) {
         if (strlen($val) < 3) {
@@ -476,9 +476,9 @@ extends Rule {
      * Test maximal length of name
      *
      * @param String  $val Value to test
-     * @param Integer $max maximal length (default = 30)
+     * @param int $max maximal length (default = 30)
      *
-     * @return Boolean
+     * @return bool
      */
     public function greaterThanMax($val, $max = 30) {
         if (strlen($val) > $max) {
@@ -506,7 +506,7 @@ extends Rule {
      *
      * @param String $val Value to test
      *
-     * @return Boolean
+     * @return bool
      */
     public function isValid($val) {
         return $this->isUnixValid($val)
@@ -546,7 +546,7 @@ extends Rule {
      *
      * @param String $val Value to test
      *
-     * @return Boolean
+     * @return bool
      */
     protected function _getErrorExists() {
         return $GLOBALS['Language']->getText('rule_user_name', 'error_exists');
@@ -559,7 +559,7 @@ extends Rule {
      *
      * @param String $val Value to test
      *
-     * @return Boolean
+     * @return bool
      */
     protected function _getErrorNoSpaces() {
         return $GLOBALS['Language']->getText('include_account', 'login_err');
@@ -617,7 +617,7 @@ extends Rule_UserName {
      *
      * @param String $val
      *
-     * @return Boolean
+     * @return bool
      */
     public function isDNSCompliant($val) {
         if (strpos($val, '_') === false && strpos($val, '.') === false) {
@@ -632,7 +632,7 @@ extends Rule_UserName {
      *
      * @param String $val
      *
-     * @return Boolean
+     * @return bool
      */
     public function isNameAvailable($val) {
 
@@ -698,7 +698,7 @@ extends Rule_UserName {
      *
      * @param String $val
      *
-     * @return Boolean
+     * @return bool
      */
     public function isValid($val) {
         return $this->isDNSCompliant($val) && parent::isValid($val)  && $this->isNameAvailable($val)
@@ -726,7 +726,7 @@ class Rule_ProjectFullName extends Rule_UserName {
      *
      * @param String $val
      *
-     * @return Boolean
+     * @return bool
      */
     public function isValid($val) {
         $val = trim($val);
@@ -777,7 +777,7 @@ extends Rule {
      * Check file upload validity
      *
      * @param  Array   One entry in $_FILES superarray (e.g. $_FILES['test'])
-     * @return Boolean Is file upload valid or not.
+     * @return bool Is file upload valid or not.
      */
     function isValid($file) {
         $ok = false;

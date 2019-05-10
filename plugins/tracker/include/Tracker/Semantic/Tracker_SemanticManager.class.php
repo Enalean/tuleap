@@ -91,7 +91,7 @@ class Tracker_SemanticManager
      *
      * @param Tracker_FormElement_Field the field to test if it is used in semantics or not
      *
-     * @return boolean returns true if the field is used in semantics, false otherwise
+     * @return bool returns true if the field is used in semantics, false otherwise
      */
     public function isUsedInSemantics($field) {
         $semantics = $this->getSemantics();

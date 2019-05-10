@@ -80,7 +80,7 @@ class ProjectLinks_Widget_HomePageLinks extends Widget {
     /**
      * Get HTML display of all links from and to given project.
      * 
-     * @param  Integer $groupId Group id 
+     * @param int $groupId Group id
      * @return String
      */
     function getAllLinks($groupId)

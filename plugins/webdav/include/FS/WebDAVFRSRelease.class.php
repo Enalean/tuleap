@@ -44,7 +44,7 @@ class WebDAVFRSRelease extends Sabre_DAV_Directory {
      * @param Project $project
      * @param FRSPackage $package
      * @param FRSRelease $release
-     * @param Integer $maxFileSize
+     * @param int $maxFileSize
      *
      * @return void
      */
@@ -173,7 +173,7 @@ class WebDAVFRSRelease extends Sabre_DAV_Directory {
     /**
      * Returns the release Id
      *
-     * @return Integer
+     * @return int
      */
     function getReleaseId() {
 
@@ -228,7 +228,7 @@ class WebDAVFRSRelease extends Sabre_DAV_Directory {
     /**
      * Returns the max file size
      *
-     * @return Integer
+     * @return int
      */
     function getMaxFileSize() {
         return $this->maxFileSize;
@@ -237,7 +237,7 @@ class WebDAVFRSRelease extends Sabre_DAV_Directory {
     /**
      * Returns new FRSFile from its Id
      *
-     * @param Integer $fileId
+     * @param int $fileId
      *
      * @return FRSFile
      */
@@ -253,7 +253,7 @@ class WebDAVFRSRelease extends Sabre_DAV_Directory {
      *
      * @param String $fileName
      *
-     * @return Integer
+     * @return int
      */
     function getFileIdFromName($fileName) {
 
@@ -295,7 +295,7 @@ class WebDAVFRSRelease extends Sabre_DAV_Directory {
     /**
      * returns whether the release exists or not
      *
-     * @return Boolean
+     * @return bool
      */
     function exist() {
 
@@ -308,7 +308,7 @@ class WebDAVFRSRelease extends Sabre_DAV_Directory {
      *
      * @param PFUser $user
      *
-     * @return Boolean
+     * @return bool
      */
     function userCanRead($user) {
 
@@ -320,7 +320,7 @@ class WebDAVFRSRelease extends Sabre_DAV_Directory {
     /**
      * Returns if the user is superuser, project admin or File release admin
      *
-     * @return Boolean
+     * @return bool
      */
     function userIsAdmin() {
 
@@ -332,7 +332,7 @@ class WebDAVFRSRelease extends Sabre_DAV_Directory {
     /**
      * Returns if the user is superuser or File release admin
      *
-     * @return Boolean
+     * @return bool
      */
     function userCanWrite() {
         $utils = $this->getUtils();
@@ -461,7 +461,7 @@ class WebDAVFRSRelease extends Sabre_DAV_Directory {
      *
      * @param String $path
      *
-     * @return Boolean
+     * @return bool
      */
     function unlinkFile($path) {
 
@@ -474,7 +474,7 @@ class WebDAVFRSRelease extends Sabre_DAV_Directory {
      *
      * @param String $path
      *
-     * @return Boolean
+     * @return bool
      */
     function openFile($path) {
 
@@ -488,7 +488,7 @@ class WebDAVFRSRelease extends Sabre_DAV_Directory {
      * @param Binary $data
      * @param File $file
      *
-     * @return Boolean
+     * @return bool
      */
     function streamCopyToStream($data, $file) {
 
@@ -501,7 +501,7 @@ class WebDAVFRSRelease extends Sabre_DAV_Directory {
      *
      * @param File $file
      *
-     * @return Boolean
+     * @return bool
      */
     function closeFile($file) {
 

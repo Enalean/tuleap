@@ -36,7 +36,7 @@ class UGroupUserDao extends DataAccessObject {
     * Return all Active or Restricted ugroup members
     * Only return active & restricted to keep it coherent with Group::getMembersUserNames
     *
-    * @param Integer $ugroup_id Id of the ugroup
+    * @param int $ugroup_id Id of the ugroup
     *
     * @return DataAccessResult
     */
@@ -71,9 +71,9 @@ class UGroupUserDao extends DataAccessObject {
      * Return all Active or Restricted ugroup members
      * Only return active & restricted to keep it coherent with Group::getMembersUserNames
      *
-     * @param Integer $ugroup_id Id of the ugroup
-     * @param Integer $limit
-     * @param Integer $offset
+     * @param int $ugroup_id Id of the ugroup
+     * @param int $limit
+     * @param int $offset
      *
      * @return DataAccessResult
      */
@@ -95,7 +95,7 @@ class UGroupUserDao extends DataAccessObject {
     /**
      * Count ProjectUGroup members by UGroupId
      *
-     * @param Integer $ugroup_id Id of the ugroup
+     * @param int $ugroup_id Id of the ugroup
      *
      * @return DataAccessResult
      */
@@ -114,7 +114,7 @@ class UGroupUserDao extends DataAccessObject {
     /**
      * Return project admins of given static group
      *
-     * @param integer $groupId Id of the project
+     * @param int $groupId Id of the project
      * @param array   $ugroups List of ugroups
      *
      * @return DataAccessResult|false
@@ -136,8 +136,8 @@ class UGroupUserDao extends DataAccessObject {
     /**
      * Get uGroup members for both dynamic & sttic uGroups
      *
-     * @param Integer $ugroupId Id of the uGroup
-     * @param Integer $groupId  Id of the project
+     * @param int $ugroupId Id of the uGroup
+     * @param int $groupId Id of the project
      *
      * @return DataAccessResult
      */
@@ -162,10 +162,10 @@ class UGroupUserDao extends DataAccessObject {
     /**
      * Get uGroup members for both dynamic & static uGroups
      *
-     * @param Integer $ugroupId Id of the uGroup
-     * @param Integer $groupId  Id of the project
-     * @param Integer $limit
-     * @param Integer $offset
+     * @param int $ugroupId Id of the uGroup
+     * @param int $groupId Id of the project
+     * @param int $limit
+     * @param int $offset
      *
      * @return DataAccessResult | false
      */
@@ -199,10 +199,10 @@ class UGroupUserDao extends DataAccessObject {
     /**
      * Clone a given user group from another one
      *
-     * @param integer $source_ugroup_id Id of the user group from which we will copy users
-     * @param integer $target_ugroup_id Id of the target user group
+     * @param int $source_ugroup_id Id of the user group from which we will copy users
+     * @param int $target_ugroup_id Id of the target user group
      *
-     * @return boolean
+     * @return bool
      */
     public function cloneUgroup($source_ugroup_id, $target_ugroup_id) {
         $source_ugroup_id = $this->da->escapeInt($source_ugroup_id);
@@ -246,9 +246,9 @@ class UGroupUserDao extends DataAccessObject {
     /**
      * Remove all users of an ugroup
      *
-     * @param Integer $ugroupId Id of the user group
+     * @param int $ugroupId Id of the user group
      *
-     * @return Boolean
+     * @return bool
      */
     public function resetUgroupUserList($ugroupId) {
         $ugroupId = $this->da->escapeInt($ugroupId);

@@ -59,13 +59,13 @@ class Tracker_REST_FieldRepresentation {
 
     /**
      *
-     * @var boolean
+     * @var bool
      */
     public $required;
 
     /**
      *
-     * @var boolean
+     * @var bool
      */
     public $collapsed;
 

@@ -29,7 +29,7 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
      * This hooks is here to delete specific properties,
      * or specific values of the field.
      * (The field itself will be deleted later)
-     * @return boolean true if success
+     * @return bool true if success
      */
     public function delete() {
         return true;
@@ -231,7 +231,7 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
      *
      * @param Tracker_Artifact                $artifact         The artifact
      * @param PFUser                          $user             The user who will receive the email
-     * @param boolean                         $ignore_perms
+     * @param bool $ignore_perms
      * @param Tracker_Artifact_ChangesetValue $value            The actual value of the field
      * @param string                          $format           mail format
      *
@@ -279,7 +279,7 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
      * @param mixed                           $submitted_value      The submitted value
      * @param Tracker_Artifact_ChangesetValue $last_changeset_value The last changeset value of the field (give null if no old value)
      *
-     * @return boolean true on success or false on failure
+     * @return bool true on success or false on failure
      */
     public function validateFieldWithPermissionsAndRequiredStatus(
         Tracker_Artifact $artifact,

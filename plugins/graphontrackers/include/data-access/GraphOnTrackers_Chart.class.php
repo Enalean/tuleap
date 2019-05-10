@@ -206,7 +206,7 @@ abstract class GraphOnTrackers_Chart {
     /**
      * Update the properties of the chart
      *
-     * @return boolean true if the update is successful
+     * @return bool true if the update is successful
      */
     public function update($row) {
         $db_update_needed = false;
@@ -262,7 +262,7 @@ abstract class GraphOnTrackers_Chart {
     
     /**
      * Allow update of the specific properties of the concrete chart
-     * @return boolean true if the update is successful
+     * @return bool true if the update is successful
      */
     abstract protected function updateSpecificProperties($row);
     

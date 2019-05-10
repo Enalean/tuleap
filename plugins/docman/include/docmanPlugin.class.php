@@ -546,7 +546,7 @@ class DocmanPlugin extends Plugin
     /**
      * Hook called when a project is being renamed
      * @param Array $params
-     * @return Boolean
+     * @return bool
      */
     function renameProject($params) {
         $docmanPath = $this->getPluginInfo()->getPropertyValueForName('docman_root').'/';

@@ -282,7 +282,7 @@ extends Valid {
      *
      * @param  Array  $_FILES superarray.
      * @param  String Index of file to check in $_FILES array.
-     * @return Boolean
+     * @return bool
      */
     function validate($files, $index = '') {
         if(is_array($files) && isset($files[$index])) {

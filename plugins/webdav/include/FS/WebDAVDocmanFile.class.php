@@ -92,7 +92,7 @@ class WebDAVDocmanFile extends WebDAVDocmanDocument {
     /**
      * Returns the file size
      *
-     * @return Integer
+     * @return int
      *
      * @see plugins/webdav/include/FS/WebDAVDocmanDocument::getSize()
      */
@@ -116,7 +116,7 @@ class WebDAVDocmanFile extends WebDAVDocmanDocument {
     /**
      * Returns the max file size
      *
-     * @return Integer
+     * @return int
      */
     function getMaxFileSize() {
         return $this->maxFileSize;
@@ -125,7 +125,7 @@ class WebDAVDocmanFile extends WebDAVDocmanDocument {
     /**
      * Sets the max file size
      *
-     * @param Integer $maxFileSize
+     * @param int $maxFileSize
      *
      * @return void
      */

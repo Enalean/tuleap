@@ -169,10 +169,10 @@ class FRSLog {
     /**
      * Store the event in DB
      *
-     * @param Integer $userID
-     * @param Integer $projectID
-     * @param Integer $itemID
-     * @param Integer $actionID
+     * @param int $userID
+     * @param int $projectID
+     * @param int $itemID
+     * @param int $actionID
      *
      * @return void
      */

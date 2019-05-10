@@ -49,7 +49,7 @@ class User_SSHKeyDumper {
      *
      * @param PFUser $user
      *
-     * @return Boolean
+     * @return bool
      */
     public function writeSSHKeys(PFUser $user) {
         try {

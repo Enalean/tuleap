@@ -393,7 +393,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement {
 
     /**
      *
-     * @return boolean
+     * @return bool
      */
     public function canBeRemovedFromUsage()
     {

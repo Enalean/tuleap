@@ -499,8 +499,8 @@ class Tracker_ArtifactDao extends DataAccessObject {
     /**
      * Retrieve the list of artifact id corresponding to a submitted on date having a specific value
      *
-     * @param Integer $trackerId Tracker id
-     * @param Integer $date      Submitted on date
+     * @param int $trackerId Tracker id
+     * @param int $date Submitted on date
      *
      * @return DataAccessResult
      */
@@ -520,9 +520,9 @@ class Tracker_ArtifactDao extends DataAccessObject {
     /**
      * Retrieve the hidden field per_tracker_artifact_id
      *
-     * @param Integer $aid Artifact ID
+     * @param int $aid Artifact ID
      *
-     * @return Integer per_tracker_artifact_id if Artifact exist, else 0
+     * @return int per_tracker_artifact_id if Artifact exist, else 0
      */
     public function getPerTrackerArtifactId($aid) {
         $per_tracker_id = 0;
@@ -713,7 +713,7 @@ class Tracker_ArtifactDao extends DataAccessObject {
     /**
      * Retrieve all artifacts linked by the given one
      *
-     * @param Integer $artifact_id
+     * @param int $artifact_id
      * @return DataAccessResult
      */
     public function getLinkedArtifacts($artifact_id) {
@@ -914,7 +914,7 @@ class Tracker_ArtifactDao extends DataAccessObject {
     /**
      * Retrieve all artifacts linked by the given one
      *
-     * @param Integer $artifact_id
+     * @param int $artifact_id
      * @return DataAccessResult
      */
     public function getLinkedArtifactsOfTrackers($artifact_id, array $tracker_ids) {
@@ -938,7 +938,7 @@ class Tracker_ArtifactDao extends DataAccessObject {
     /**
      * Retrieve all artifacts linked by the given one that are of a specific tracker type
      *
-     * @param Integer $artifact_id
+     * @param int $artifact_id
      * @return DataAccessResult
      */
     public function getLinkedArtifactsOfTrackerTypeAsString($artifact_id, $tracker_id) {

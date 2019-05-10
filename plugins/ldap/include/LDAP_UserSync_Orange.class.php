@@ -42,7 +42,7 @@ class LDAP_UserSync_Orange extends LDAP_UserSync {
      * @param PFUser       $user User
      * @param LDAPResult $lr   Ldap result
      *
-     * @return Boolean True if the method modified the user object
+     * @return bool True if the method modified the user object
      */
     public function sync(PFUser $user, LDAPResult $lr) {
         $modified  = false;

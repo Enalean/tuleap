@@ -25,11 +25,11 @@ class SvnNotificationDao extends DataAccessObject {
     /**
      * Set mailing list to be notified on a given path
      *
-     * @param Integer $groupId     Project id
+     * @param int $groupId Project id
      * @param String  $mailingList List of mail addresses
      * @param String  $path        svn path
      *
-     * @return Boolean
+     * @return bool
      */
     function setSvnMailingList($groupId, $mailingList, $path) {
         $sql = ' REPLACE INTO svn_notification
@@ -46,7 +46,7 @@ class SvnNotificationDao extends DataAccessObject {
      * Set mailing list to be notified for a given path
      * or for the whole project if path is null
      *
-     * @param Integer $groupId Project id
+     * @param int $groupId Project id
      * @param String  $path    svn path
      *
      * @return DataAccessResult
@@ -66,10 +66,10 @@ class SvnNotificationDao extends DataAccessObject {
     /**
      * Removes mailing list set on a given path identified by $path.
      *
-     * @param Integer $groupId Project id
+     * @param int $groupId Project id
      * @param String  $path    svn path
      *
-     * @return Boolean
+     * @return bool
      */
     function deleteSvnMailingList($groupId, $path) {
         $sql = 'DELETE FROM svn_notification

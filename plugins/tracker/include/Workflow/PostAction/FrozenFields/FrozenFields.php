@@ -104,7 +104,7 @@ class FrozenFields extends Transition_PostAction
      *
      * @param Tracker_FormElement_Field $field
      *
-     * @return boolean
+     * @return bool
      */
     public function bypassPermissions(Tracker_FormElement_Field $field)
     {

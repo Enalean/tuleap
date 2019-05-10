@@ -97,7 +97,7 @@ class ReleaseRepresentation
     public $artifact;
 
     /**
-     * @var boolean
+     * @var bool
      */
     public $license_approval;
 

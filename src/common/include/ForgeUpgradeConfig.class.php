@@ -73,7 +73,7 @@ class ForgeUpgradeConfig {
      *
      * @param String $path A path to test
      *
-     * @return Boolean
+     * @return bool
      */
     public function existsInPath($path) {
         if (isset($this->config['core']['path'])) {

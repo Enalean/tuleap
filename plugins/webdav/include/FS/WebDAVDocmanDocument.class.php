@@ -96,7 +96,7 @@ class WebDAVDocmanDocument extends Sabre_DAV_File {
     /**
      * Returns the file size
      *
-     * @return Integer
+     * @return int
      *
      * @see plugins/webdav/include/lib/Sabre/DAV/Sabre_DAV_File::getSize()
      */
@@ -155,7 +155,7 @@ class WebDAVDocmanDocument extends Sabre_DAV_File {
      * Downloads the document
      *
      * @param String  $fileType
-     * @param Integer $fileSize
+     * @param int $fileSize
      * @param String  $path
      *
      * @return void

@@ -114,7 +114,7 @@ abstract class LDAP_GroupManager
     /**
      * Set Codendi Group ID  to be used for further processing
      *
-     * @param Integer $id Codendi Group ID
+     * @param int $id Codendi Group ID
      */
     public function setId($id)
     {
@@ -154,7 +154,7 @@ abstract class LDAP_GroupManager
      *
      * @param String  $option 'bind' or 'preserve_members'. The latter keeps ugroup membres that are not members of directory group.
      * @param String  $synchroPolicy   The option to synchrorize the ugroup nightly
-     * @param Boolean $displayFeedback While set to true, it allows the feedback display
+     * @param bool $displayFeedback While set to true, it allows the feedback display
      *
      * @return void
      */
@@ -179,7 +179,7 @@ abstract class LDAP_GroupManager
      * Remove all users members of Tuleap group, not members of LDAP group if $option param is equal to 'bind'.
      *
      * @param string $option tells whether it is a complete bind with the ldap group or user wants to preserve
-     * @return Boolean
+     * @return bool
      */
     protected function syncMembersWithLdap($option) {
         $toAdd = $this->getUsersToBeAdded($option);
@@ -431,7 +431,7 @@ abstract class LDAP_GroupManager
     /**
      * Get LDAP group entry corresponding to Group id
      * 
-     * @param integer $id Id of the Group
+     * @param int $id Id of the Group
      * 
      * @return LDAPResult 
      */
@@ -459,7 +459,7 @@ abstract class LDAP_GroupManager
      * @param  String  $bindOption
      * @param  String  $synchroPolicy
      *
-     * @return Boolean
+     * @return bool
      */
     protected function bindWithLdapGroup($bindOption = self::BIND_OPTION, $synchroPolicy = self::NO_SYNCHRONIZATION)
     {
@@ -474,7 +474,7 @@ abstract class LDAP_GroupManager
     /**
      * Remove link between a Codendi Group and its LDAP group
      * 
-     * @return Boolean
+     * @return bool
      */
     public function unbindFromBindLdap()
     {
@@ -494,27 +494,27 @@ abstract class LDAP_GroupManager
     /**
      * Add user to a Codendi Group
      *
-     * @param Integer $id      Codendi Group ID
-     * @param Integer $userId  User ID
+     * @param int $id Codendi Group ID
+     * @param int $userId User ID
      *
-     * @return Boolean
+     * @return bool
      */
     protected abstract function addUserToGroup($id, $userId);
 
     /**
      * Remove user from a Codendi Group
      *
-     * @param Integer $id      Codendi Group ID
-     * @param Integer $userId  User ID
+     * @param int $id Codendi Group ID
+     * @param int $userId User ID
      *
-     * @return Boolean
+     * @return bool
      */
     protected abstract function removeUserFromGroup($id, $userId);
 
     /**
      * Get the Codendi Group members ids
      *
-     * @param Integer $id  Id of the group
+     * @param int $id Id of the group
      *
      * @return Array
      */

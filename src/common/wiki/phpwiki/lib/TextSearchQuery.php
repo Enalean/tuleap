@@ -107,7 +107,7 @@ class TextSearchQuery {
      * Match query against string.
      *
      * @param $string string The string to match. 
-     * @return boolean True if the string matches the query.
+     * @return bool True if the string matches the query.
      */
     function match($string) {
         return preg_match($this->asRegexp(), $string);

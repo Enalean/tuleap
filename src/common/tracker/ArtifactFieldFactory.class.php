@@ -53,7 +53,7 @@ class ArtifactFieldFactory {
 	 *
 	 *
 	 *  @param ArtifactType: the artifact type object
-	 *	@return	boolean	success.
+	 *	@return bool success.
 	 */
 	function __construct(&$ArtifactType) {
 	  global $Language;
@@ -81,7 +81,7 @@ class ArtifactFieldFactory {
 	 *  Retrieve the fields associated with an artifact type
 	 *
 	 *  @param group_artifact_id: the artifact type id
-	 *	@return	boolean	success.
+	 *	@return bool success.
 	 */
 	function fetchData($group_artifact_id) {
 	    
@@ -278,9 +278,9 @@ class ArtifactFieldFactory {
 	 *  Check whether empty values are allowed for the bug fields
 	 *
 	 *  @param Array   $field_array   associative array of field_name -> value
-	 *  @param Boolean $showFeedback default value set to true, manage the display or not of the error message with reference to the field label 
+	 *  @param bool $showFeedback default value set to true, manage the display or not of the error message with reference to the field label
 	 *
-	 *	@return	boolean
+	 *	@return bool
 	 */
 	function checkEmptyFields($field_array, $showFeedback = true) {
 	    global $Language;
@@ -388,7 +388,7 @@ class ArtifactFieldFactory {
 	 *  @param atid_dest: destination tracker
      *  @param mapping_fieldset_array: mapping array between source fieldsets and dest ones $mapping_fieldset_array[$source_fieldset_id] = $dest_fieldset_id
 	 *
-	 *	@return	boolean
+	 *	@return bool
 	 */
     function copyFields($atid_dest, $mapping_fieldset_array,$ugroup_mapping=false) {
 	  global $Language;
@@ -508,7 +508,7 @@ class ArtifactFieldFactory {
 	 *
 	 *  @param atid: the tracker id
 	 *
-	 *	@return	boolean
+	 *	@return bool
 	 */
 	function deleteFields($atid) {
         
@@ -553,7 +553,7 @@ class ArtifactFieldFactory {
 	 *
 	 *  @param field_id: the field id
 	 *
-	 *  @return boolean - exist or not
+	 *  @return bool - exist or not
 	 */
 	function existFieldId($field_id) {
 		$sql = "SELECT * FROM artifact_field WHERE group_artifact_id=". db_ei($this->ArtifactType->getID()) .
@@ -627,7 +627,7 @@ class ArtifactFieldFactory {
 	 *  @param use_it: this field is used or not
      *  @param field_set_id: the field set id that this field belong to
 	 *
-	 *  @return boolean - succeed or failed
+	 *  @return bool - succeed or failed
 	 */
 	function createField($description,$label,$data_type,$display_type,
 						 $display_size,$rank_on_screen,

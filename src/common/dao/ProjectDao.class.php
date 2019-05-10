@@ -101,11 +101,11 @@ class ProjectDao extends DataAccessObject {
      * the projects the user is member of or is admin of.
      *
      * @param String  $name
-     * @param Integer $limit
-     * @param Integer $userId
-     * @param Boolean $isMember
-     * @param Boolean $isAdmin
-     * @param Boolean $isPrivate Display private projects if true
+     * @param int $limit
+     * @param int $userId
+     * @param bool $isMember
+     * @param bool $isAdmin
+     * @param bool $isPrivate Display private projects if true
      *
      * @return DataAccessResult
      */
@@ -229,7 +229,7 @@ class ProjectDao extends DataAccessObject {
      * Update the http_domain and service when renaming the group
      * @param Project $project
      * @param String  $new_name
-     * @return Boolean
+     * @return bool
      */
     public function renameProject($project,$new_name){
         //Update 'groups' table
@@ -456,10 +456,10 @@ class ProjectDao extends DataAccessObject {
     /**
      * Filled the ugroups to be notified when admin action is needed
      *
-     * @param Integer $groupId
+     * @param int $groupId
      * @param Array   $ugroups
      *
-     * @return Boolean
+     * @return bool
      */
     public function setMembershipRequestNotificationUGroup($groupId, $ugroups){
         $sql = ' DELETE FROM groups_notif_delegation WHERE group_id ='.$this->da->quoteSmart($groupId);
@@ -480,7 +480,7 @@ class ProjectDao extends DataAccessObject {
      /**
      * Returns the ugroup to be notified when admin action is needed for given project
      *
-     * @param Integer $groupId
+     * @param int $groupId
      *
      * @return DataAccessResult
      */
@@ -492,9 +492,9 @@ class ProjectDao extends DataAccessObject {
     /**
      * Deletes the ugroup to be notified for given project
      *
-     * @param Integer $groupId
+     * @param int $groupId
      *
-     * @return Boolean
+     * @return bool
      */
     public function deleteMembershipRequestNotificationUGroup($groupId){
         $groupId = $this->da->escapeInt($groupId);
@@ -505,9 +505,9 @@ class ProjectDao extends DataAccessObject {
     /**
      * Deletes the message set for a given project
      *
-     * @param Integer $groupId
+     * @param int $groupId
      *
-     * @return Boolean
+     * @return bool
      */
     public function deleteMembershipRequestNotificationMessage($groupId){
         $groupId = $this->da->escapeInt($groupId);
@@ -519,7 +519,7 @@ class ProjectDao extends DataAccessObject {
     /**
      * Returns the message to be displayed to requester asking access for a given project
      *
-     * @param Integer $groupId
+     * @param int $groupId
      *
      * @return DataAccessResult
      */
@@ -531,7 +531,7 @@ class ProjectDao extends DataAccessObject {
     /**
      * Updates the message to be displayed to requester asking access for a given project
      *
-     * @param Integer $groupId
+     * @param int $groupId
      * @param String  $message
      */
     public function setMessageToRequesterForAccessProject($groupId, $message) {
@@ -543,10 +543,10 @@ class ProjectDao extends DataAccessObject {
     /**
      * Set SVN header
      *
-     * @param Integer $groupId
+     * @param int $groupId
      * @param String  $mailingHeader
      *
-     * @return Boolean
+     * @return bool
      */
     function setSvnHeader($groupId, $mailingHeader) {
         $sql = ' UPDATE groups

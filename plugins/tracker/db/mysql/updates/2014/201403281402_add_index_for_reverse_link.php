@@ -51,7 +51,7 @@ class b201403281402_add_index_for_reverse_link extends ForgeUpgrade_Bucket {
      * @param String $tableName Table name
      * @param String $index     Index
      *
-     * @return Boolean
+     * @return bool
      */
     private function indexNameExists($tableName, $index) {
         $sql = 'SHOW INDEX FROM '.$tableName.' WHERE Key_name LIKE '.$this->db->dbh->quote($index);

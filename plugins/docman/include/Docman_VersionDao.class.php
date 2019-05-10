@@ -150,9 +150,9 @@ class Docman_VersionDao extends DataAccessObject {
      *
      * Return false if no previous version found
      *
-     * @param Integer $itemId
+     * @param int $itemId
      *
-     * @return Integer
+     * @return int
      */
     function searchNextVersionNumber($itemId) {
         $sql = 'SELECT * FROM'.
@@ -230,7 +230,7 @@ class Docman_VersionDao extends DataAccessObject {
      * @param  String  $docman_path
      * @param  Project $project
      * @param  String  $new_name
-     * @return Boolean
+     * @return bool
      */
     function renameProject($docman_path, $project, $new_name){
     
@@ -244,10 +244,10 @@ class Docman_VersionDao extends DataAccessObject {
      * Delete given version of document and save the entry on plugin_docman_version_deleted
      * in order to ease the restore later
      * 
-     * @param Integer $itemId
-     * @param Integer $number
+     * @param int $itemId
+     * @param int $number
      * 
-     * @return Boolean
+     * @return bool
      */
     function deleteSpecificVersion($itemId, $number) {
         $sql = 'INSERT INTO plugin_docman_version_deleted (id, item_id, number, user_id, label, '.
@@ -267,10 +267,10 @@ class Docman_VersionDao extends DataAccessObject {
     /**
      * Restore one version of an item
      * 
-     * @param Integer $itemId
-     * @param Integer $number
+     * @param int $itemId
+     * @param int $number
      * 
-     * @return Boolean
+     * @return bool
      */
     function restore($itemId, $number) {
         $sql = 'INSERT INTO plugin_docman_version (id, item_id, number, user_id, label, '.
@@ -291,9 +291,9 @@ class Docman_VersionDao extends DataAccessObject {
      * List pending versions ( marked as deleted but not physically removed yet)
      * in order to ease the restore
      *
-     * @param Integer $groupId
-     * @param Integer $offset
-     * @param Integer $limit
+     * @param int $groupId
+     * @param int $offset
+     * @param int $limit
      *
      * @return Array
      */
@@ -328,9 +328,9 @@ class Docman_VersionDao extends DataAccessObject {
     /**
      * List versions of the item that are deleted but not already purged
      *
-     * @param Integer $itemId
+     * @param int $itemId
      *
-     * @return Boolean
+     * @return bool
      */
     function listVersionsToPurgeByItemId($itemId) {
         $sql = 'SELECT v.id, v.number, v.item_id, v.user_id, v.label, v.changelog,'.
@@ -344,9 +344,9 @@ class Docman_VersionDao extends DataAccessObject {
     /**
      * List all pending versions in order to delete them physically
      *
-     * @param Integer $time
+     * @param int $time
      *
-     * @return Boolean
+     * @return bool
      */
     function listVersionsToPurge($time) {
         $sql=' SELECT id, item_id, number, user_id, label, changelog,'.
@@ -377,10 +377,10 @@ class Docman_VersionDao extends DataAccessObject {
     /**
      * Save the purge date of a deleted version
      *
-     * @param Integer $id
-     * @param Integer $time
+     * @param int $id
+     * @param int $time
      *
-     * @return Boolean
+     * @return bool
      */
     function setPurgeDate($id, $time) {
         $sql = 'UPDATE plugin_docman_version_deleted'.

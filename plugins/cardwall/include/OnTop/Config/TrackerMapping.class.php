@@ -53,7 +53,7 @@ abstract class Cardwall_OnTop_Config_TrackerMapping {
      * @param Cardwall_Column $column
      * @param String          $artifact_status
      *
-     * @return Boolean
+     * @return bool
      */
     public function isMappedTo(Cardwall_Column $column, $artifact_status) {
         foreach ($this->getValueMappings() as $value_mapping) {

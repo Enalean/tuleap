@@ -55,7 +55,7 @@ class ProjectCreationData
      * This is mostly useful for XML import where "the true" come from XML
      * and not from the predefined template.
      *
-     * @return boolean
+     * @return bool
      */
     public function projectShouldInheritFromTemplate() {
         return $this->inherit_from_template;

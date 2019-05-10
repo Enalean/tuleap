@@ -42,7 +42,7 @@ class WebDAVFRS extends Sabre_DAV_Directory {
      *
      * @param PFUser $user
      * @param Project $project
-     * @param Integer $maxFileSize
+     * @param int $maxFileSize
      *
      * @return void
      */
@@ -146,7 +146,7 @@ class WebDAVFRS extends Sabre_DAV_Directory {
     /**
      * Returns the project Id
      *
-     * @return Integer
+     * @return int
      */
     function getGroupId() {
 
@@ -179,7 +179,7 @@ class WebDAVFRS extends Sabre_DAV_Directory {
     /**
      * Returns the max file size
      *
-     * @return Integer
+     * @return int
      */
     function getMaxFileSize() {
         return $this->maxFileSize;
@@ -215,7 +215,7 @@ class WebDAVFRS extends Sabre_DAV_Directory {
     /**
      * Generates package list of the given GroupId
      *
-     * @param Integer $groupId
+     * @param int $groupId
      *
      * @return Array
      */
@@ -235,7 +235,7 @@ class WebDAVFRS extends Sabre_DAV_Directory {
     /**
      * Checks whether the user can read the project or not
      *
-     * @return Boolean
+     * @return bool
      */
     public function userCanRead()
     {
@@ -245,7 +245,7 @@ class WebDAVFRS extends Sabre_DAV_Directory {
     /**
      * Tests if the user is Superuser or File release admin
      *
-     * @return Boolean
+     * @return bool
      */
     public function userCanWrite()
     {

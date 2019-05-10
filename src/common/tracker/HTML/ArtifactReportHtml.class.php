@@ -32,7 +32,7 @@ class ArtifactReportHtml extends ArtifactReport {
          *      @param  report_id       
          *  @param  atid: the artifact type id
          *
-         *      @return boolean success.
+         *      @return bool success.
          */
         function __construct($report_id,$atid) {
         // echo 'ArtifactReportHtml('.$report_id.','.$atid.')';

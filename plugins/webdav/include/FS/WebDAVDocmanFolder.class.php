@@ -57,7 +57,7 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
     /**
      * Returns the max file size
      *
-     * @return Integer
+     * @return int
      */
     public function getMaxFileSize() {
         return $this->maxFileSize;
@@ -66,7 +66,7 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
     /**
      * Sets the max file size
      *
-     * @param Integer $maxFileSize
+     * @param int $maxFileSize
      *
      * @return void
      */
@@ -234,7 +234,7 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
     /**
      * Tell if the folder is docman root
      *
-     * @return Boolean
+     * @return bool
      */
     function isDocmanRoot() {
         return !$this->getItem()->getParentId();

@@ -100,7 +100,7 @@ class ArtifactImport {
     /**
    *
    *
-   *      @return boolean success.
+   *      @return bool success.
    */
   function __construct($ath,$art_field_fact,$group) {
     $this->ath = $ath;
@@ -657,7 +657,7 @@ function getUsedFields() {
    *
    * @param String $str String to test
    * 
-   * @return Boolean
+   * @return bool
    */
   function canApplyHtmlSpecialChars($str) {
       if (strpos($str, '"') !== false) {
@@ -712,7 +712,7 @@ function getUsedFields() {
      * @param $arr
      * @param $art_id
      *
-     * @return Boolean
+     * @return bool
      */
     function checkCommentExistInLegacyFormat($arr,$artifact_id) {
         if (!$artifact_id || $artifact_id == 0 || $artifact_id == '0') return false;

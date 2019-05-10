@@ -30,7 +30,7 @@ class TreeNode_InjectPaddingInTreeNodeVisitor extends TreeNode_GetStateVisitor {
     );
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $collapsable;
 

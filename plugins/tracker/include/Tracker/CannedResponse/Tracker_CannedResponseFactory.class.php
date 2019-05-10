@@ -124,7 +124,7 @@ class Tracker_CannedResponseFactory {
      * @param string  $title   The new title
      * @param string  $body    The new body
      *
-     * @return boolean true if success, false otherwise
+     * @return bool true if success, false otherwise
      */
     public function update($id, $tracker, $title, $body) {
         $ok = false;
@@ -143,7 +143,7 @@ class Tracker_CannedResponseFactory {
      *
      * @param int $id the id of the canned response to delete
      *
-     * @return boolean true if success
+     * @return bool true if success
      */
     public function delete($id) {
         return $this->getDao()->delete($id);

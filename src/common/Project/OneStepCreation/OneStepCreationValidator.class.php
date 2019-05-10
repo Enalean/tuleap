@@ -43,7 +43,7 @@ class Project_OneStepCreation_OneStepCreationValidator {
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function validateAndGenerateErrors() {
         $this->is_valid = true;

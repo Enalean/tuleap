@@ -151,9 +151,9 @@ class BackendMailingList extends Backend {
     /**
      * Archive all project mailing lists
      *
-     * @param Integer $projectId id of the project
+     * @param int $projectId id of the project
      *
-     * @return Boolean
+     * @return bool
      */
     public function deleteProjectMailingLists($projectId) {
         $deleteStatus = true;

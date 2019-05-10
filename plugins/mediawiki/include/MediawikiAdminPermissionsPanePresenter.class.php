@@ -24,7 +24,7 @@ class MediawikiAdminPermissionsPanePresenter extends MediawikiAdminPanePresenter
     public  $read_ugroups;
     public  $write_ugroups;
 
-    /** @var Boolean */
+    /** @var bool */
     private $is_default_mapping;
 
     private $is_compatibility_view_enabled = true;

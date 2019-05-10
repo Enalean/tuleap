@@ -82,7 +82,7 @@ class MediaWikiXMLImporter
      * @var Project
      * @var SimpleXMLElement
      * @var String
-     * @return boolean
+     * @return bool
      */
     public function import(ImportConfig $configuration, Project $project, PFUser $creator, SimpleXMLElement $xml_input, $extraction_path)
     {

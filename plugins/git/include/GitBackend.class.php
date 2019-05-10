@@ -271,7 +271,7 @@ class GitBackend extends Backend implements Git_Backend_Interface, GitRepository
      * @param PFUser          $user       The user to test
      * @param GitRepository $repository The repository to test
      *
-     * @return Boolean
+     * @return bool
      */
     public function userCanRead($user, $repository) {
         if ($repository->isPrivate() && $user->isMember($repository->getProjectId())) {
@@ -325,7 +325,7 @@ class GitBackend extends Backend implements Git_Backend_Interface, GitRepository
      * @param String               $type        backend type
      * @param Array                $typeIndex   backend type index
      * @param Array                $typeArray   backend type array
-     * @param Boolean              $keepedAlive keep only reposirtories that still active
+     * @param bool $keepedAlive keep only reposirtories that still active
      *
      * @return Void
      */

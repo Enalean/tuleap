@@ -64,9 +64,9 @@ class UserGroupDao extends DataAccessObject {
     /**
      * return users count, members of given project
      *
-     * @param Integer $groupId
+     * @param int $groupId
      *
-     * @return Integer
+     * @return int
      *
      */
     function returnUsersNumberByGroupId($groupId) {
@@ -81,7 +81,7 @@ class UserGroupDao extends DataAccessObject {
     /**
      * Return project admins of given project
      *
-     * @param Integer $groupId
+     * @param int $groupId
      *
      * @return Data Access Result
      */
@@ -111,9 +111,9 @@ class UserGroupDao extends DataAccessObject {
     /**
      * Remove users from a given project
      *
-     * @param Integer $groupId
+     * @param int $groupId
      *
-     * @return Boolean
+     * @return bool
      */
     function removeProjectMembers($groupId) {
         $groupId = $this->da->escapeInt($groupId);
@@ -142,7 +142,7 @@ class UserGroupDao extends DataAccessObject {
     /**
      * Return name and id of all ugroups belonging to a specific project
      *
-     * @param Integer $groupId    Id of the project
+     * @param int $groupId Id of the project
      * @param Array   $predefined List of predefined ugroup id
      *
      * @return DataAccessResult
@@ -242,7 +242,7 @@ class UserGroupDao extends DataAccessObject {
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function deleteForgeUGroup($user_group_id) {
         $user_group_id = $this->da->escapeInt($user_group_id);

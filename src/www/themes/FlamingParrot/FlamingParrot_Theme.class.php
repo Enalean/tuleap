@@ -399,7 +399,7 @@ class FlamingParrot_Theme extends Layout {
      * Although this is the case, it's worth bearing in mind when refactoring.
      *
      * @param array $params
-     * @return boolean
+     * @return bool
      */
     private function canShowFooter($params) {
         if (! empty($params['without_content'])) {

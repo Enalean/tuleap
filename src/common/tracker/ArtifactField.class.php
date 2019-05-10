@@ -279,7 +279,7 @@ class ArtifactField {
      * @deprecated Caution: don't use this function. Returned value always equal to 0. Use getEmptyOk (required <=> ! empty_ok)
      * Get the required attribute value
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	function getRequired() {
 		return $this->required;
@@ -288,7 +288,7 @@ class ArtifactField {
 	/**
 	 *  Get the empty_ok attribute value
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	function getEmptyOk() {
 		return $this->empty_ok;
@@ -298,7 +298,7 @@ class ArtifactField {
 	 *  Get the keep_history attribute value
 	 *  add CC and file_attachment into history for task #240
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	function getKeepHistory() {
 		if ($this->field_name == 'cc' || $this->field_name == 'attachment' || $this->field_name == 'submitted_by') return true;
@@ -308,7 +308,7 @@ class ArtifactField {
 	/**
 	 *  Get the special attribute value
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	function getSpecial() {
 		return $this->special;
@@ -327,7 +327,7 @@ class ArtifactField {
 	/**
 	 *  Get the use_it attribute value
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	function getUseIt() {
 		return $this->use_it;
@@ -393,7 +393,7 @@ class ArtifactField {
 	/**
 	 *  Return true if the field is a selectbox (display_type attribute value = SB)
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	function isSelectBox() {
 		return ( $this->getDisplayType() == "SB" );
@@ -402,7 +402,7 @@ class ArtifactField {
 	/**
 	 *  Return true if the field is a multi selectbox (display_type attribute value = MB)
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	function isMultiSelectBox() {
 		return ( $this->getDisplayType() == "MB" );
@@ -411,7 +411,7 @@ class ArtifactField {
 	/**
 	 *  Return true if the field is a date field (display_type attribute value = DF)
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	function isDateField() {
 		return ( $this->getDisplayType() == "DF" );
@@ -420,7 +420,7 @@ class ArtifactField {
 	/**
 	 *  Return true if the field is a text field (display_type attribute value = TF)
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	function isTextField() {
 		return ( $this->getDisplayType() == "TF" );
@@ -429,7 +429,7 @@ class ArtifactField {
 	/**
 	 *  Return true if the field is a text area (display_type attribute value = TA)
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	function isTextArea() {
 		return ( $this->getDisplayType() == "TA" );
@@ -438,7 +438,7 @@ class ArtifactField {
 	/**
 	 *  Return true if the field is a float 
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	function isFloat() {
 		return ( $this->getDataType() == $this->DATATYPE_FLOAT );
@@ -447,7 +447,7 @@ class ArtifactField {
 	/**
 	 *  Return true if the field is a int 
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	function isInt() {
 		return ( $this->getDataType() == $this->DATATYPE_INT );
@@ -456,7 +456,7 @@ class ArtifactField {
 	/**
 	 *  Return true if the field is allowed to be empty
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	function isEmptyOk() {
 		$val = $this->getEmptyOk();
@@ -466,7 +466,7 @@ class ArtifactField {
 	/**
 	 *  Return true if the field is special
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	function isSpecial() {
 	    return( $this->special == 1 );
@@ -475,7 +475,7 @@ class ArtifactField {
 	/**
 	 *  Return true if the field is used
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	function isUsed() {
 	    return( $this->use_it );
@@ -484,7 +484,7 @@ class ArtifactField {
 	/**
 	 *  Return true if the field is standard (using if name - if this field value is stored into artifact table) 
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	function isStandardField() {
 		 switch ( $this->field_name ) {
@@ -505,7 +505,7 @@ class ArtifactField {
 
      /**
      * Returns true if the field is bound (to a function like group_members, etc ...)
-     * @return boolean true if the field values are bound to a function, false otherwise
+     * @return bool true if the field values are bound to a function, false otherwise
      */
     function isBound() {
         return count($this->getValueFunction()) > 0;
@@ -573,7 +573,7 @@ class ArtifactField {
 	 * 
 	 * WARNING: the value is not escaped for any output. Please purify it before usage
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	function getValue($group_artifact_id,$value_id,$by_field_id=false) {
 	  global $Language;
@@ -787,7 +787,7 @@ class ArtifactField {
 	/**
 	 *  Return true if the field is a user name
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	function isUsername() {
 		
@@ -798,7 +798,7 @@ class ArtifactField {
 	/**
 	 *  Return the field name according to the data_type attribute
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	function getValueFieldName() {
 	
@@ -829,7 +829,7 @@ class ArtifactField {
 	 * @param artifact_id: the artifact
 	 * @param value: the new value
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	function updateValue($artifact_id,$value) {
 	
@@ -871,7 +871,7 @@ class ArtifactField {
 	 * @param artifact_id: the artifact
 	 * @param values: a single value or an array of values
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	function updateValues($artifact_id,$values) {
 	
@@ -894,7 +894,7 @@ class ArtifactField {
 	 * @param artifact_id: the artifact
 	 * @param value: the value (array or single value)
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	function insertValue($artifact_id,$value) {
 	
@@ -921,7 +921,7 @@ class ArtifactField {
      * @param Integer    artifact_id the artifact
      * @param FieldValue value       the value 
      *
-     * @return Boolean
+     * @return bool
      */
     private function insertFieldValue($artifact_id, $value) {
         $sql = "INSERT INTO artifact_field_value (field_id,artifact_id,";
@@ -966,7 +966,7 @@ class ArtifactField {
      * @param artifact_id: the artifact
      * @param value: the value (single value)
      *
-     * @return boolean
+     * @return bool
      */
     function insertSingleValue($artifact_id, $value) {
         if (!$this->insertFieldValue($artifact_id, $value)) {
@@ -984,7 +984,7 @@ class ArtifactField {
      * 
      * @param artifact_id: the artifact
      *
-     * @return boolean
+     * @return bool
      */
     function insertDefaultValue($artifact_id) {
         // We could simply call insertSingleValue($artifact_id,$this->getDefaultValue()) but
@@ -1213,7 +1213,7 @@ class ArtifactField {
 	 *  @param special: is the field has special process
 	 *  @param use_it: this field is used or not
 	 *
-	 *  @return boolean - succeed or failed
+	 *  @return bool - succeed or failed
 	 */
 	function update($group_artifact_id,$field_name,$description,$label,$data_type,$display_type,
 						 $display_size,$rank_on_screen,
@@ -1329,7 +1329,7 @@ class ArtifactField {
 	 *  @param group_artifact_id: the group artifact id
 	 *  @param value_function: the value function
 	 *
-	 *  @return boolean - succeed or failed
+	 *  @return bool - succeed or failed
 	 */
 	function updateValueFunction($group_artifact_id,$value_function) {
 	  global $Language;
@@ -1368,7 +1368,7 @@ class ArtifactField {
 	 *  @param default_value: the default value
      *  @param mixed computed_value: indication for computed field values (used for instance for current date field value)
 	 *
-	 *  @return boolean - succeed or failed
+	 *  @return bool - succeed or failed
 	 */
 	function updateDefaultValue($group_artifact_id,$default_value, $computed_value=false) {
 	  global $Language;
@@ -1413,7 +1413,7 @@ class ArtifactField {
 	 *
 	 *  @param group_artifact_id: the group artifact id
 	 *
-	 *  @return boolean - succeed or failed
+	 *  @return bool - succeed or failed
 	 */
 	function delete($group_artifact_id) {
 	  global $Language;
@@ -1477,7 +1477,7 @@ class ArtifactField {
 	 *  @param value_id: the value id
 	 *  @param value: the value
 	 *
-	 *  @return boolean - exist or not
+	 *  @return bool - exist or not
 	 */
 	function existValue($group_artifact_id,$value_id,$value) {
 		// Check id first
@@ -1510,7 +1510,7 @@ class ArtifactField {
 	 *  @param description: the value description
 	 *  @param order_id: the rank
 	 *
-	 *  @return boolean - exist or not
+	 *  @return bool - exist or not
 	 */
 	function createValueList($group_artifact_id,$value,$description,$order_id) {
 	  global $Language;
@@ -1556,7 +1556,7 @@ class ArtifactField {
 	 *  @param order_id: the rank
 	 *  @param status: the value status (V,H)
 	 *
-	 *  @return boolean - exist or not
+	 *  @return bool - exist or not
 	 */
 	function updateValueList($group_artifact_id,$value_id,$value,$description,$order_id,$status) {
 	  global $Language;
@@ -1595,7 +1595,7 @@ class ArtifactField {
 	 *  @param group_artifact_id: the group artifact id
 	 *  @param value_id: the value id
 	 *
-	 *  @return boolean - exist or not
+	 *  @return bool - exist or not
 	 */
 	function deleteValueList($group_artifact_id,$value_id) {
 	  global $Language;

@@ -374,7 +374,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
     /**
      * Check if user is admin of a Project
      * @param int $group_id
-     * @return boolean
+     * @return bool
      */
     public function isAdmin($group_id) {
         return $this->isMember($group_id, 'A');
@@ -389,7 +389,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
      * @param int $group_id   the id of the project (is necessary for automatic project groups like project member, release admin, etc.)
      * @param int $tracker_id the id of the tracker (is necessary for trackers since the tracker admin role is different for each tracker.)
      *
-     * @return boolean true if user is member of the ugroup, false otherwise.
+     * @return bool true if user is member of the ugroup, false otherwise.
      */
     public function isMemberOfUGroup($ugroup_id, $group_id, $tracker_id = 0) {
         if (! isset($this->cache_ugroup_membership[$ugroup_id][$group_id][$tracker_id])) {
@@ -415,7 +415,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
 
     /**
      * is this user admin of the tracker group_artifact_id
-     * @return boolean
+     * @return bool
      */
     public function isTrackerAdmin($group_id,$group_artifact_id) {
       return ($this->getTrackerPerm($group_artifact_id) >= 2 || $this->isMember($group_id,'A'));
@@ -523,7 +523,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
      *
      * @param PFUser $user A user to test
      *
-     * @return Boolean
+     * @return bool
      */
     public function canSee($user) {
         if ($this->isRestricted()) {
@@ -810,7 +810,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
     /**
      * Return true if user is active or restricted.
      *
-     * @return Boolean
+     * @return bool
      */
     public function isAlive() {
         return ! $this->isAnonymous() && ($this->isActive() || $this->isRestricted());
@@ -820,7 +820,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
      * isActive - test if the user is active or not, you'd better have good argument to use this instead of isAlive
      *
      * @see PFUser::isAlive()
-     * @return boolean true if the user is active, false otherwise
+     * @return bool true if the user is active, false otherwise
      */
     function isActive() {
         return ($this->getStatus() == 'A');
@@ -829,7 +829,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
     /**
      * isRestricted - test if the user is restricted or not
      *
-     * @return boolean true if the user is restricted, false otherwise
+     * @return bool true if the user is restricted, false otherwise
      */
     function isRestricted() {
         return (!$this->isAnonymous() && $this->getStatus() == 'R');
@@ -838,7 +838,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
     /**
      * isDeleted - test if the user is deleted or not
      *
-     * @return boolean true if the user is deleted, false otherwise
+     * @return bool true if the user is deleted, false otherwise
      */
     function isDeleted() {
         return ($this->getStatus() == 'D');
@@ -847,7 +847,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
     /**
      * isSuspended - test if the user is suspended or not
      *
-     * @return boolean true if the user is suspended, false otherwise
+     * @return bool true if the user is suspended, false otherwise
      */
     function isSuspended() {
         return ($this->getStatus() == 'S');
@@ -856,7 +856,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
     /**
      * hasActiveUnixAccount - test if the unix account of the user is active or not
      *
-     * @return boolean true if the unix account of the user is active, false otherwise
+     * @return bool true if the unix account of the user is active, false otherwise
      */
     function hasActiveUnixAccount() {
         return ($this->getUnixStatus() == 'A');
@@ -865,7 +865,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
     /**
      * hasSuspendedUnixAccount - test if the unix account of the user is suspended or not
      *
-     * @return boolean true if the unix account of the user is suspended, false otherwise
+     * @return bool true if the unix account of the user is suspended, false otherwise
      */
     function hasSuspendedUnixAccount() {
         return ($this->getUnixStatus() == 'S');
@@ -874,7 +874,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
     /**
      * hasDeletedUnixAccount - test if the unix account of the user is deleted or not
      *
-     * @return boolean true if the unix account of the user is deleted, false otherwise
+     * @return bool true if the unix account of the user is deleted, false otherwise
      */
     function hasDeletedUnixAccount() {
         return ($this->getUnixStatus() == 'D');
@@ -883,7 +883,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
     /**
      * hasNoUnixAccount - test if the user doesn't have a unix account
      *
-     * @return boolean true if the user doesn't have a unix account, false otherwise
+     * @return bool true if the user doesn't have a unix account, false otherwise
      */
     function hasNoUnixAccount() {
         return ($this->getUnixStatus() == 'N');
@@ -1062,7 +1062,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
     }
 
     /**
-     * @param Integer $unixUid Unix uid
+     * @param int $unixUid Unix uid
      */
     function setUnixUid($unixUid) {
         $this->unix_uid = $unixUid;
@@ -1198,7 +1198,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
      *
      * @param  string $preference_name
      * @param  string $preference_value
-     * @return boolean
+     * @return bool
      */
     function setPreference($preference_name, $preference_value) {
         $this->_preferences[$preference_name] = false;
@@ -1251,7 +1251,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
      * delPreference
      *
      * @param  string $preference_name
-     * @return boolean
+     * @return bool
      */
     function delPreference($preference_name) {
         $this->_preferences[$preference_name] = false;
@@ -1404,7 +1404,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
      /**
       * Lab features mode
       *
-      * @return Boolean true if the user want lab features
+      * @return bool true if the user want lab features
       */
      public function useLabFeatures() {
          return $this->getPreference(self::PREF_NAME_LAB_FEATURE);
@@ -1413,7 +1413,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
      /**
       * (de)Activate lab features mode
       *
-      * @param Boolean $toggle true if user wants to enable lab features
+      * @param bool $toggle true if user wants to enable lab features
       *
       * @return void
       */
@@ -1428,9 +1428,9 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
       *
       * @param String  $permissionType Permission nature
       * @param String  $objectId       Object to test
-      * @param Integer $groupId        Project the object belongs to
+      * @param int $groupId Project the object belongs to
       *
-      * @return Boolean
+      * @return bool
       */
      public function hasPermission($permissionType, $objectId, $groupId) {
          return permission_is_authorized($permissionType, $objectId, $this->getId(), $groupId);

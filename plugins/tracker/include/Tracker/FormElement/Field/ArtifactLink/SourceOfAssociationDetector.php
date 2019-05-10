@@ -49,7 +49,7 @@ class SourceOfAssociationDetector {
      * @param Tracker_Artifact $artifact_to_check
      * @param Tracker_Artifact $artifact_reference
      *
-     * @return Boolean
+     * @return bool
      */
     public function isChild(Tracker_Artifact $artifact_to_check, Tracker_Artifact $artifact_reference) {
         $children = $this->hierarchy_factory->getChildren($artifact_to_check->getTrackerId());

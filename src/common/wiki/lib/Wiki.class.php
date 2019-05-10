@@ -52,7 +52,7 @@ class Wiki {
 
   /**
    *
-   * @return boolean Return if a permission is set on this Wiki
+   * @return bool Return if a permission is set on this Wiki
    */
   function permissionExist() {
     return permission_exist('WIKI_READ', $this->gid);
@@ -61,7 +61,7 @@ class Wiki {
     /**
      * @param  int     User identifier
      *
-     * @return boolean
+     * @return bool
      */
     public function isAutorized($uid)
     {
@@ -78,7 +78,7 @@ class Wiki {
    * Set access permissions.
    *
    * @param  string[] $groups List of groups allowed to access to the Wiki
-   * @return boolean  Modification status
+   * @return bool Modification status
    */
   function setPermissions($groups) {
     global $feedback;
@@ -94,7 +94,7 @@ class Wiki {
   /**
    * Reset access permissions.
    *
-   * @return boolean  Modification status
+   * @return bool Modification status
    */
   function resetPermissions() {
     return permission_clear_all($this->gid, 
@@ -105,7 +105,7 @@ class Wiki {
  
   /**
    * Check WikiEntry existance for given project.
-   * @return boolean
+   * @return bool
    */
   function exist() {
       if($this->exist === null) {

@@ -110,7 +110,7 @@ class Codendi_Request {
      * Check if $variable exists in user submitted parameters.
      *
      * @param string $variable Name of the parameter.
-     * @return boolean
+     * @return bool
      */
     public function exist($variable) {
         return $this->_exist($variable, $this->params);
@@ -121,7 +121,7 @@ class Codendi_Request {
      *
      * @access protected
      * @param string $variable Name of the parameter.
-     * @return boolean
+     * @return bool
      */
     protected function _exist($variable, $array) {
         return isset($array[$variable]);
@@ -131,7 +131,7 @@ class Codendi_Request {
      * Check if $variable exists and is not empty in user submitted parameters.
      *
      * @param string $variable Name of the parameter.
-     * @return boolean
+     * @return bool
      */
     public function existAndNonEmpty($variable) {
         return ($this->exist($variable) && trim($this->params[$variable]) != '');
@@ -141,7 +141,7 @@ class Codendi_Request {
      * Apply validator on submitted user value.
      *
      * @param Valid  Validator to apply
-     * @return boolean
+     * @return bool
      */
     public function valid($validator) {
         return $validator->validate($this->get($validator->getKey()));
@@ -151,7 +151,7 @@ class Codendi_Request {
      * Apply validator on all values of a submitted user array.
      *
      * @param Valid  Validator to apply
-     * @return boolean
+     * @return bool
      */
     public function validArray($validator) {
         $isValid = true;
@@ -177,7 +177,7 @@ class Codendi_Request {
      *
      * @param string Index in the user submitted values where the array stands.
      * @param Valid  Validator to apply
-     * @return boolean
+     * @return bool
      */
     public function validInArray($index, $validator)
     {
@@ -189,7 +189,7 @@ class Codendi_Request {
      *
      * @param string Variable name
      * @param Rule  Validator to apply
-     * @return boolean
+     * @return bool
      */
     public function validKey($key, $rule) {
         return $rule->isValid($this->get($key));
@@ -277,7 +277,7 @@ class Codendi_Request {
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getTime() {
         return $_SERVER['REQUEST_TIME'];

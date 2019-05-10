@@ -34,7 +34,7 @@ $request->checkUserIsSuperUser();
 * @param String $previous_sort_header
 * @param String $current_sort_header
 * @param String $sort_order
-* @param Integer $offset
+* @param int $offset
 *
 * @return Array
 */

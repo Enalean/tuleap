@@ -26,7 +26,7 @@
 class Reference {
     
     /**
-     * @var integer the ID as stored in the 'Reference' DB table.
+     * @var int the ID as stored in the 'Reference' DB table.
      */
     var $id;
     /**
@@ -67,13 +67,13 @@ class Reference {
      */
     var $is_active;
     /**
-     * @var integer
+     * @var int
      */
     var $group_id;
 
     /**
      * This parameter is computed from the 'link' param.
-     * @var integer when set
+     * @var int when set
      */
     var $num_param=null;
     
@@ -200,7 +200,7 @@ class Reference {
      * Max number is 9 parameters.
      *
      * @param string $link original link containing '$1', '$2',... parameters
-     * @return integer number of parameters needed to compute the link
+     * @return int number of parameters needed to compute the link
      * @static
      */
     function computeNumParam($link) {

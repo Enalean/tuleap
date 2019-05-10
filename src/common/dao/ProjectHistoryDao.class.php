@@ -37,9 +37,9 @@ class ProjectHistoryDao extends DataAccessObject {
     /**
      * Returns an array containing project history elements and their count
      *
-     * @param Integer $offset        OFFSET keyword for the LIMIT clause
-     * @param Integer $limit         Number of results to be returned
-     * @param Integer $groupId       Project ID
+     * @param int $offset OFFSET keyword for the LIMIT clause
+     * @param int $limit Number of results to be returned
+     * @param int $groupId Project ID
      * @param String  $historyFilter Filtering statement
      *
      * @return Array
@@ -71,7 +71,7 @@ class ProjectHistoryDao extends DataAccessObject {
      *
      * @param String  $fieldName Event category
      * @param String  $oldValue  Event value
-     * @param Integer $groupId   Project ID
+     * @param int $groupId Project ID
      * @param Array   $args      list of parameters used for message display
      *
      * @return DataAccessResult

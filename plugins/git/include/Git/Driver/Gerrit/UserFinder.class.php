@@ -55,7 +55,7 @@ class Git_Driver_Gerrit_UserFinder {
     /**
      * Return the list of UGroupIds according to Git permissions that can be managed by Gerrit
      *
-     * @param Integer $repository_id
+     * @param int $repository_id
      * @param String  $permission_type
      *
      * @return array

@@ -246,7 +246,7 @@ class Git_RemoteServer_GerritServerFactory {
 
     /**
      * Check if gerrit is enabled and has remotes set up.
-     * @return boolean
+     * @return bool
      */
     public function hasRemotesSetUp() {
         return count($this->dao->searchAll()) > 0;

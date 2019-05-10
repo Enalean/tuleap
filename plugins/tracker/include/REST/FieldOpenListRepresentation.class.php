@@ -59,13 +59,13 @@ class Tracker_REST_FieldOpenListRepresentation {
 
     /**
      *
-     * @var boolean
+     * @var bool
      */
     public $required;
 
     /**
      *
-     * @var boolean
+     * @var bool
      */
     public $collapsed;
 

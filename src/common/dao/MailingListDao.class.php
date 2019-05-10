@@ -51,7 +51,7 @@ class MailingListDao extends DataAccessObject {
     /**
     * Searches by project id
     *
-    * @param Integer $projectId id of the project
+    * @param int $projectId id of the project
     *
     * @return DataAccessResult
     */
@@ -65,9 +65,9 @@ class MailingListDao extends DataAccessObject {
     /**
      * Mark the list as deleted
      *
-     * @param Integer $listId Id of the mailing list
+     * @param int $listId Id of the mailing list
      *
-     * @return Boolean
+     * @return bool
      */
     function deleteList($listId) {
         $listId = $this->da->escapeInt($listId);
@@ -79,9 +79,9 @@ class MailingListDao extends DataAccessObject {
 	/**
      * Delete the list
      *
-     * @param Integer $listId Id of the mailing list
+     * @param int $listId Id of the mailing list
      *
-     * @return Boolean
+     * @return bool
      */
     function deleteListDefinitively($listId) {
         $listId = $this->da->escapeInt($listId);

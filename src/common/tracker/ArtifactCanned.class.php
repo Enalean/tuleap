@@ -41,7 +41,7 @@ class ArtifactCanned {
 	 *
 	 *	@param	object	The Artifact Type object.
 	 *  @param	array	(all fields from artifact_file_user_vw) OR id from database.
-	 *  @return	boolean	success.
+	 *  @return bool success.
 	 */
 	function __construct(&$ArtifactType, $data=false) {
 	  global $Language;
@@ -125,7 +125,7 @@ class ArtifactCanned {
 	 *	fetchData - re-fetch the data for this ArtifactCanned from the database.
 	 *
 	 *	@param int	The ID number.
-	 *	@return	boolean	success.
+	 *	@return bool success.
 	 */
 	function fetchData($id) {
 	  global $Language;
@@ -181,7 +181,7 @@ class ArtifactCanned {
 	 *
 	 *  @param	string	Title of the message.
 	 *  @param	string	Body of the message.
-	 *  @return	boolean	success.
+	 *  @return bool success.
 	 */
 	function delete($artifact_canned_id) {
 	  global $Language;
@@ -211,7 +211,7 @@ class ArtifactCanned {
 	 *
 	 *  @param	string	Title of the message.
 	 *  @param	string	Body of the message.
-	 *  @return	boolean	success.
+	 *  @return bool success.
 	 */
 	function update($title,$body) {
 	  global $Language;

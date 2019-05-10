@@ -396,7 +396,7 @@ class ReferenceManager {
 
     /**
      * This method updates (rename) reference short name and related cross references
-     * @param Integer $group_id
+     * @param int $group_id
      * @param String $old_short_name
      * @param Stirng $new_short_name
      */
@@ -423,7 +423,7 @@ class ReferenceManager {
      *
      * @param String $keyword
      *
-     * @return Boolean
+     * @return bool
      */
     private function isAnArtifactKeyword($keyword) {
         return $keyword == self::KEYWORD_ARTIFACT_LONG
@@ -619,7 +619,7 @@ class ReferenceManager {
      * @param String  $string
      * @param Project $project
      *
-     * @return Boolean
+     * @return bool
      */
     public function stringContainsReferences($string, Project $project) {
         return count($this->extractReferences($string, $project->getId())) > 0;
@@ -703,10 +703,10 @@ class ReferenceManager {
      * Extract References from a given text and insert extracted refs into the database
      *
      * @param String  $html        Text to parse
-     * @param Integer $source_id   Id of the item where the text was added
+     * @param int $source_id Id of the item where the text was added
      * @param String  $source_type Nature of the source
-     * @param Integer $source_gid  Project Id of the project the source item belongs to
-     * @param Integer $user_id     User who owns the text to parse
+     * @param int $source_gid Project Id of the project the source item belongs to
+     * @param int $user_id User who owns the text to parse
      * @param String  $source_key  Keyword to use for the reference (if different from the one associated to the nature)
      *
      * @retrun Boolean True if no error
@@ -820,7 +820,7 @@ class ReferenceManager {
     /**
      * Returns the group id of an artifact id
      *
-     * @param Integer $artifact_id
+     * @param int $artifact_id
      *
      * @return mixed False if no match, the group id otherwise
      */
@@ -840,9 +840,9 @@ class ReferenceManager {
     /**
      * Return the group_id of an artifact_id
      *
-     * @param Integer $artifact_id
+     * @param int $artifact_id
      *
-     * @return Integer
+     * @return int
      */
     protected function getGroupIdFromArtifactIdForCallbackFunction($artifact_id) {
         $group_id = $this->getGroupIdFromArtifactId($artifact_id);

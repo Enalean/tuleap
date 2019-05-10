@@ -40,7 +40,7 @@ class KanbanPresenter
     /** @var string json of Tuleap\AgileDashboard\Widget\WidgetAddToDashboardDropdownRepresentationBuilder */
     public $dashboard_dropdown_representation;
 
-    /** @var boolean */
+    /** @var bool */
     public $user_is_kanban_admin;
 
     /** @var int */

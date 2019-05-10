@@ -113,7 +113,7 @@ class Tracker_ReportFactory {
      *
      * @param Report $report the report to save
      *
-     * @return boolean true if the save succeed
+     * @return bool true if the save succeed
      */
     public function save(Tracker_Report $report) {
         $user = UserManager::instance()->getCurrentUser();

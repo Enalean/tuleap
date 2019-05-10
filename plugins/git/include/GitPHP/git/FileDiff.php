@@ -252,7 +252,7 @@ class FileDiff
      *
      * @access private
      * @param string $diffTreeLine line from difftree
-     * @return boolean true if data was read from line
+     * @return bool true if data was read from line
      */
     private function ParseDiffTreeLine($diffTreeLine) // @codingStandardsIgnoreLine
     {
@@ -498,7 +498,7 @@ class FileDiff
      * Gets the from file type
      *
      * @access public
-     * @param boolean $local true if caller wants localized type
+     * @param bool $local true if caller wants localized type
      * @return string from file type
      */
     public function GetFromFileType($local = false) // @codingStandardsIgnoreLine
@@ -516,7 +516,7 @@ class FileDiff
      * Gets the to file type
      *
      * @access public
-     * @param boolean $local true if caller wants localized type
+     * @param bool $local true if caller wants localized type
      * @return string to file type
      */
     public function GetToFileType($local = false) // @codingStandardsIgnoreLine
@@ -534,7 +534,7 @@ class FileDiff
      * Tests if filetype changed
      *
      * @access public
-     * @return boolean true if file type changed
+     * @return bool true if file type changed
      */
     public function FileTypeChanged() // @codingStandardsIgnoreLine
     {
@@ -551,7 +551,7 @@ class FileDiff
      * Tests if file mode changed
      *
      * @access public
-     * @return boolean true if file mode changed
+     * @return bool true if file mode changed
      */
     public function FileModeChanged() // @codingStandardsIgnoreLine
     {
@@ -568,7 +568,7 @@ class FileDiff
      * Tests if the from file is a regular file
      *
      * @access public
-     * @return boolean true if from file is regular
+     * @return bool true if from file is regular
      */
     public function FromFileIsRegular() // @codingStandardsIgnoreLine
     {
@@ -585,7 +585,7 @@ class FileDiff
      * Tests if the to file is a regular file
      *
      * @access public
-     * @return boolean true if to file is regular
+     * @return bool true if to file is regular
      */
     public function ToFileIsRegular() // @codingStandardsIgnoreLine
     {
@@ -820,7 +820,7 @@ class FileDiff
      *
      * @access private
      * @param int $context number of context lines
-     * @param boolean $header true to include standard diff header
+     * @param bool $header true to include standard diff header
      * @param string $file override the file name
      * @return string diff content
      */

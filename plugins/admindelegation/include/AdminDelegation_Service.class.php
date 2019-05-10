@@ -55,7 +55,7 @@ class AdminDelegation_Service //phpcs:ignore
      *
      * @param String $widget
      *
-     * @return Integer
+     * @return int
      */
     public static function getServiceFromWidget($widget)
     {

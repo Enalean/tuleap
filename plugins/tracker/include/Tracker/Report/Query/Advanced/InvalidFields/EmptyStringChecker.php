@@ -23,7 +23,7 @@ interface EmptyStringChecker
 {
     /**
      * @param string $value
-     * @return boolean
+     * @return bool
      */
     public function isEmptyStringAProblem($value);
 }

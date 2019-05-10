@@ -79,7 +79,7 @@ class Tracker_FormElement_Field_PerTrackerArtifactId extends Tracker_FormElement
      * Fetch artifact value for email
      * @param Tracker_Artifact $artifact
      * @param PFUser $user
-     * @param boolean $ignore_perms
+     * @param bool $ignore_perms
      * @param Tracker_Artifact_ChangesetValue $value
      * @param string $format
      *

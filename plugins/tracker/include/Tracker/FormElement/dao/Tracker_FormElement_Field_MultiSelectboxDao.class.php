@@ -49,7 +49,7 @@ class Tracker_FormElement_Field_MultiSelectboxDao extends Tracker_FormElement_Sp
      * @param int $from_field_id the field id source
      * @param int $to_field_id   the field id target
      *
-     * @return boolean true if ok, false otherwise
+     * @return bool true if ok, false otherwise
      */
     public function duplicate($from_field_id, $to_field_id) {
         $from_field_id = $this->da->escapeInt($from_field_id);

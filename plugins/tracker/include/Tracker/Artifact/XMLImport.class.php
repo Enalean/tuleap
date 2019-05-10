@@ -26,7 +26,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 
 class Tracker_Artifact_XMLImport {
 
-    /** @var boolean */
+    /** @var bool */
     private $send_notifications;
 
     /** @var XML_RNGValidator */

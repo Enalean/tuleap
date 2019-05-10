@@ -28,7 +28,7 @@ class FRSReleasePaginatedCollection
     private $releases;
 
     /**
-     * @var integer
+     * @var int
      */
     private $total_size;
 

@@ -28,7 +28,7 @@ class FRSPackagePaginatedCollection
     private $packages;
 
     /**
-     * @var integer
+     * @var int
      */
     private $total_size;
 

@@ -73,7 +73,7 @@ class LDAP_SyncMail {
      * @param String  $subject          The subject of the notification mail
      * @param String  $body             The content of the notification mail
      *
-     * @return boolean
+     * @return bool
      */
     public function notifyProjectsAdmins($recipients, $unixProjectName, $user, $subject, $body) {
         $notificationStatus = true;
@@ -94,7 +94,7 @@ class LDAP_SyncMail {
      * Prepare the mail to be sent after daily user sync
      *
      * @param String  $recipients       List of project administrators emails we want to notify
-     * @param Integer $unixProjectName  Unix name of the project we want to notify its administrators
+     * @param int $unixProjectName Unix name of the project we want to notify its administrators
      * @param String  $subject          The subject of the notification mail
      * @param String  $body             The content of the notification mail
      *

@@ -48,7 +48,7 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text {
      *
      * @param Tracker_Artifact_Changeset $changeset   The changeset (needed in only few cases like 'lud' field)
      * @param int                        $value_id    The id of the value
-     * @param boolean                    $has_changed If the changeset value has changed from the rpevious one
+     * @param bool $has_changed If the changeset value has changed from the rpevious one
      *
      * @return Tracker_Artifact_ChangesetValue or null if not found
      */
@@ -73,7 +73,7 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text {
      * This hooks is here to delete specific properties,
      * or specific values of the field.
      * (The field itself will be deleted later)
-     * @return boolean true if success
+     * @return bool true if success
      */
     public function delete() {
         return $this->getDao()->delete($this->id);
@@ -233,7 +233,7 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text {
     /**
      * Tells if the field takes two columns
      * Ugly legacy hack to display fields in columns
-     * @return boolean
+     * @return bool
      */
     public function takesTwoColumns() {
         return $this->getProperty('size') > 40;

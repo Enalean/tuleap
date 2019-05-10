@@ -28,7 +28,7 @@ class GroupFactory {
 	/**
 	 *
 	 *
-	 *	@return	boolean	success.
+	 *	@return bool success.
 	 */
 	function __construct() {
             return true;

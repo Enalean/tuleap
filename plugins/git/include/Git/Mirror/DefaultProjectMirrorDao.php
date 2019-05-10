@@ -102,7 +102,7 @@ class DefaultProjectMirrorDao extends DataAccessObject
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function duplicate($template_project_id, $new_project_id)
     {

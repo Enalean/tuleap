@@ -24,9 +24,9 @@ abstract class Tracker_FormElement_Field_Value_NumericDao extends Tracker_FormEl
     /**
      * Retrieves the value of the given field at the most recent time BEFORE the given timestamp
      *
-     * @param Integer $artifact_id
-     * @param Integer $field_id
-     * @param Integer $timestamp
+     * @param int $artifact_id
+     * @param int $field_id
+     * @param int $timestamp
      *
      * @return Array
      */
@@ -49,8 +49,8 @@ abstract class Tracker_FormElement_Field_Value_NumericDao extends Tracker_FormEl
     /**
      * Return the last value for given artifact/field
      *
-     * @param Integer $artifact_id
-     * @param Integer $field_id
+     * @param int $artifact_id
+     * @param int $field_id
      * @return Array
      */
     public function getLastValue($artifact_id, $field_id) {

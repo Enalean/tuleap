@@ -23,7 +23,7 @@ interface Tracker_Workflow_Trigger_RulesProcessor_Strategy {
     /**
      * Return true when all the trigger conditions are satisfied
      *
-     * @return Boolean
+     * @return bool
      */
     public function allPrecondtionsAreMet();
 }

@@ -41,7 +41,7 @@ class Tuleap_Tour_Step {
     public $placement;
 
     /**
-     * @var boolean
+     * @var bool
      */
     public $backdrop;
 

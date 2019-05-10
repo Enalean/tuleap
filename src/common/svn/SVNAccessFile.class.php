@@ -64,9 +64,9 @@ class SVNAccessFile {
      *
      * @param Array   $groups  List of already defined groups
      * @param String  $line    Line to validate
-     * @param Boolean $verbose Show feedback or not
+     * @param bool $verbose Show feedback or not
      *
-     * @return Boolean
+     * @return bool
      */
     public function isGroupDefined($groups, $line, $verbose = false) {
         preg_match($this->getGroupMatcher(self::GROUPNAME_PATTERN), $line, $matches);
@@ -111,7 +111,7 @@ class SVNAccessFile {
      *
      * @param Array   $groups  List of already defined groups
      * @param String  $line    Line to validate
-     * @param Boolean $verbose Show feedback or not
+     * @param bool $verbose Show feedback or not
      *
      * @return String
      */
@@ -154,7 +154,7 @@ class SVNAccessFile {
      * 
      * @param Array   $groups  List of already defined groups
      * @param String  $line    Line to validate
-     * @param Boolean $verbose Show feedback or not
+     * @param bool $verbose Show feedback or not
      * 
      * @return String
      */
@@ -172,7 +172,7 @@ class SVNAccessFile {
      *
      * @param Project $project  Project of the svn repository
      * @param String  $contents Text to validate
-     * @param Boolean $verbose  Show feedback or not
+     * @param bool $verbose Show feedback or not
      *
      * @return String
      */
@@ -219,8 +219,8 @@ class SVNAccessFile {
      *
      * @param Array   $groups         Groups accumulated until the current line
      * @param String  $line           Current line
-     * @param Boolean $defaultSection Distinguish list of groups retrieved from default [groups] section
-     *                                and those retrieved from extra [groups] section.
+     * @param bool $defaultSection Distinguish list of groups retrieved from default [groups] section
+ * and those retrieved from extra [groups] section.
      *
      * @return Array
      */

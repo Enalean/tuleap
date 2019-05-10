@@ -162,7 +162,7 @@ class GitXmlImporter
      * @var Project
      * @var SimpleXMLElement
      * @var String
-     * @return boolean
+     * @return bool
      */
     public function import(
         ImportConfig $configuration,

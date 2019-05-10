@@ -145,7 +145,7 @@ class SOAP_WSDLMethodGenerator {
      * 
      * @param String $line
      * 
-     * @return Boolean
+     * @return bool
      */
     private function lineDoesntContainPhpDoc($line) {
         return ($this->isNotPresentInLine($line, '@return') &&
@@ -159,7 +159,7 @@ class SOAP_WSDLMethodGenerator {
      * @param String $line
      * @param String $token
      * 
-     * @return Boolean
+     * @return bool
      */
     private function isNotPresentInLine($line, $token) {
         return strpos($line, $token) === false;

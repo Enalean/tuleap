@@ -157,7 +157,7 @@ class PluginHudsonJobDao extends DataAccessObject {
     /**
     * Get jobs number
     *
-    * @param Integer $groupId Id of the project
+    * @param int $groupId Id of the project
     *
     * @return DataAccessResult
     */

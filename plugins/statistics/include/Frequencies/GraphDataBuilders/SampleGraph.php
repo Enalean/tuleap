@@ -133,7 +133,7 @@ class SampleGraph
      * @param string  $selectedData parameter choosen by user
      * @param string  $filter       the filter
      * @param string  $titlePeriod  the title period
-     * @param boolean $advsrch      true if advanced search
+     * @param bool $advsrch true if advanced search
      * @param int     $year         the selected year
      * @param int     $month        the selected month
      * @param string  $start        the start date

@@ -32,7 +32,7 @@ abstract class Transition_PostAction_Field extends Transition_PostAction {
      * Constructor
      *
      * @param Transition                   $transition The transition the post action belongs to
-     * @param Integer                      $id         Id of the post action
+     * @param int $id Id of the post action
      * @param Tracker_FormElement_Field    $field      The field the post action should modify
      */
     public function __construct(Transition $transition, $id, $field) {
@@ -59,7 +59,7 @@ abstract class Transition_PostAction_Field extends Transition_PostAction {
     /**
      * Return ID of the field updated by the post-action
      *
-     * @return Integer
+     * @return int
      */
     public function getFieldId() {
         if ($this->field) {
@@ -74,7 +74,7 @@ abstract class Transition_PostAction_Field extends Transition_PostAction {
      *
      * @param Tracker_FormElement_Field $field
      *
-     * @return boolean
+     * @return bool
      */
     public function bypassPermissions(Tracker_FormElement_Field $field) {
         return $this->getFieldId() == $field->getId() && $this->bypass_permissions;

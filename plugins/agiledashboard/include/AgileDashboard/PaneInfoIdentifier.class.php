@@ -26,7 +26,7 @@ class AgileDashboard_PaneInfoIdentifier
     /**
      * @param string $pane_info_identifier
      *
-     * @return boolean
+     * @return bool
      */
     public function isPaneAPlanningV2($pane_info_identifier)
     {

@@ -27,11 +27,11 @@ use GitRepository;
 
 class GerritStatusPresenter
 {
-    /** @var boolean */
+    /** @var bool */
     public $is_migration_queued;
-    /** @var boolean */
+    /** @var bool */
     public $is_migrated_to_gerrit;
-    /** @var boolean */
+    /** @var bool */
     public $has_migration_error;
     /** @var string */
     public $gerrit_url;

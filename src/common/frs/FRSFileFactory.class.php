@@ -177,7 +177,7 @@ class FRSFileFactory {
      * @param string $file_basename the file name (base, without directory) we want to check
      * @param int $release_id the ID of the release the file belongs to
      * @param int $group_id the ID of the project the file belongs to
-     * @return boolean true if a file named $file_basename already exists in the release $release_id, false otherwise
+     * @return bool true if a file named $file_basename already exists in the release $release_id, false otherwise
      */
     public function isFileBaseNameExists($file_basename, $release_id, $group_id)
     {
@@ -192,9 +192,9 @@ class FRSFileFactory {
      * but not yet moved to its original path
      *
      * @param String $basename
-     * @param Integer $release_id
+     * @param int $release_id
      *
-     * @return Boolean
+     * @return bool
      */
     public function isSameFileMarkedToBeRestored($basename, $release_id)
     {
@@ -388,7 +388,7 @@ class FRSFileFactory {
      *
      * @global $GLOBALS['codendi_bin_prefix']
      *
-     * @return Boolean True if file is moved to it's final location (false otherwise)
+     * @return bool True if file is moved to it's final location (false otherwise)
      */
     public function moveFileForge(FRSFile $file) {
         $release  = $file->getRelease();
@@ -502,10 +502,10 @@ class FRSFileFactory {
      *     because the new file will override the deleted one and when the job
      *     comes to purge the file it will remove the new one (valid).
      *
-     * @param Integer $group_id
-     * @param Integer $file_id
+     * @param int $group_id
+     * @param int $file_id
      *
-     * @return Boolean
+     * @return bool
      */
     function delete_file ($group_id, $file_id) {
         $file = $this->getFRSFileFromDb($file_id, $group_id);
@@ -518,10 +518,10 @@ class FRSFileFactory {
     /**
      * Centralize treatement of files physical deletion in FRS
      *
-     * @param Integer $time Date from when the files must be erased
+     * @param int $time Date from when the files must be erased
      * @param Backend $backend
      *
-     * @return Boolean
+     * @return bool
      */
     public function moveFiles($time, $backend) {
         try {
@@ -541,7 +541,7 @@ class FRSFileFactory {
      *
      * @param BackendSystem $backend
      *
-     * @return Boolean
+     * @return bool
      */
     public function moveDeletedFilesToStagingArea($backend) {
         $dao = $this->_getFRSFileDao();
@@ -570,7 +570,7 @@ class FRSFileFactory {
      * @param FRSFile       $file
      * @param BackendSystem $backend
      *
-     * @return Boolean
+     * @return bool
      */
     public function moveDeletedFileToStagingArea($file, $backend) {
         $stagingPath = $this->getStagingPath($file);
@@ -600,10 +600,10 @@ class FRSFileFactory {
     /**
      * Remove Files, releases and packages for a given project.
      *
-     * @param Integer $groupId
+     * @param int $groupId
      * @param BackendSystem $backend
      *
-     * @return Boolean
+     * @return bool
      */
     public function deleteProjectFRS($groupId, $backend) {
         $deleteState = true;
@@ -626,7 +626,7 @@ class FRSFileFactory {
      *
      * @param FRSFile $file
      *
-     * @return Boolean
+     * @return bool
      */
     public function deleteEmptyReleaseDirectory($file, $backend) {
         $nbFiles = 0;
@@ -670,10 +670,10 @@ class FRSFileFactory {
     /**
      * Permanently erase from the file system all deleted files older than given date
      *
-     * @param Integer $time Timestamp
+     * @param int $time Timestamp
      * @param Backend $backend
      *
-     * @return Boolean
+     * @return bool
      */
     public function purgeFiles($time, $backend) {
         $dao = $this->_getFRSFileDao();
@@ -698,7 +698,7 @@ class FRSFileFactory {
      * @param FRSFile $file File to archive
      * @param Backend $backend Backend
      *
-     * @return Boolean
+     * @return bool
      */
     public function archiveBeforePurge($file, $backend) {
         $release = $this->_getFRSReleaseFactory()->getFRSReleaseFromDb($file->getReleaseId(), null, null, true);
@@ -718,7 +718,7 @@ class FRSFileFactory {
      * @param FRSFile $file    File to delete
      * @param Backend $backend Backend
      *
-     * @return Boolean
+     * @return bool
      */
     public function purgeFile($file, $backend)
     {
@@ -750,7 +750,7 @@ class FRSFileFactory {
      *
      * @param Backend $backend
      *
-     * @return Boolean
+     * @return bool
      */
     public function cleanStaging($backend) {
         // All projects
@@ -795,11 +795,11 @@ class FRSFileFactory {
     /**
      * List all files deleted but not already purged
      *
-     * @param Integer $groupId
-     * @param Integer $offset
-     * @param Integer $limit
+     * @param int $groupId
+     * @param int $offset
+     * @param int $limit
      *
-     * @return Boolean
+     * @return bool
      */
     public function listPendingFiles($groupId, $offset, $limit) {
         $dao = $this->_getFRSFileDao();
@@ -809,9 +809,9 @@ class FRSFileFactory {
     /**
      * List all deleted files marked to be restored
      *
-     * @param Integer $groupId
+     * @param int $groupId
      *
-     * @return Boolean
+     * @return bool
      */
     public function listToBeRestoredFiles($groupId) {
         $dao = $this->_getFRSFileDao();
@@ -821,7 +821,7 @@ class FRSFileFactory {
     /**
      * List all files deleted but not yet moved to staging area
      *
-     * @param Integer $groupId
+     * @param int $groupId
      *
      * @return DataAccessObject
      */
@@ -839,7 +839,7 @@ class FRSFileFactory {
     }
 
     /**
-     * @return boolean true if the user has permission to add files, false otherwise
+     * @return bool true if the user has permission to add files, false otherwise
      */
     public function userCanAdd($project_id, $user_id = false)
     {
@@ -900,7 +900,7 @@ class FRSFileFactory {
      *
      * @param FRSFile $file
      *
-     * @return Boolean
+     * @return bool
      */
     function restoreFile($file, $backend) {
         $release = $this->_getFRSReleaseFactory()->getFRSReleaseFromDb($file->getReleaseId(), null, null, true);
@@ -934,7 +934,7 @@ class FRSFileFactory {
     /**
      * Restore files marked to be restored
      *
-     * @return Boolean
+     * @return bool
      */
     public function restoreDeletedFiles($backend) {
         $dao = $this->_getFRSFileDao();
@@ -960,7 +960,7 @@ class FRSFileFactory {
      *
      * @param FRSFile $file
      *
-     * @return Boolean
+     * @return bool
      */
     public function markFileToBeRestored($file) {
         $release = $this->_getFRSReleaseFactory()->getFRSReleaseFromDb($file->getReleaseID(), null, null, true);
@@ -974,10 +974,10 @@ class FRSFileFactory {
     /**
      * Insert the computed md5sum value in case of offline checksum compute
      *
-     * @param Integer $fileId
+     * @param int $fileId
      * @param String $md5Computed
      *
-     * @return Boolean
+     * @return bool
      */
 
     public function updateComputedMd5sum($fileId, $md5Computed) {
@@ -992,7 +992,7 @@ class FRSFileFactory {
      * @param String $computedMd5
      * @param String $referenceMd5
      *
-     * @return Boolean
+     * @return bool
      */
     function compareMd5Checksums($computedMd5, $referenceMd5) {
         return($computedMd5 == '' || $referenceMd5 == '' || strcasecmp($computedMd5, $referenceMd5) == 0);

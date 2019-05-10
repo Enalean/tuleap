@@ -31,7 +31,7 @@ class ProjectVisibilityPresenter
     public $options;
 
     /**
-     * @var boolean
+     * @var bool
      */
     public $platform_allows_restricted;
 

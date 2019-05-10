@@ -130,7 +130,7 @@ class TrackerFactory {
      *
      * @param  int $tracker_id
      *
-     * @return Boolean
+     * @return bool
      */
     public function restoreDeletedTracker($tracker_id) {
         return $this->getDao()->restoreTrackerMarkAsDeleted($tracker_id);
@@ -318,7 +318,7 @@ class TrackerFactory {
      * Check if the name of the tracker is already used in the project
      * @param string $name the name of the tracker we are looking for
      * @param int $group_id th ID of the group
-     * @return boolean
+     * @return bool
      */
     public function isNameExists($name, $group_id) {
         $tracker_dao = $this->getDao();
@@ -335,7 +335,7 @@ class TrackerFactory {
     * Check if the shortname of the tracker is already used in the project
     * @param string $shortname the shortname of the tracker we are looking for
     * @param int $group_id the ID of the group
-    * @return boolean
+    * @return bool
     */
     public function isShortNameExists($shortname, $group_id) {
         $tracker_dao = $this->getDao();

@@ -52,7 +52,7 @@ class Tracker_DateReminderFactory {
     /**
      * Retrieve date reminders for a given tracker
      *
-     * @param boolean $allReminders Retrieve enabled and disabled reminders (optional)
+     * @param bool $allReminders Retrieve enabled and disabled reminders (optional)
      *
      * @return Tracker_DateReminder[]
      */
@@ -77,7 +77,7 @@ class Tracker_DateReminderFactory {
      *
      * @param HTTPRequest $request Request object
      *
-     * @return Boolean
+     * @return bool
      */
     public function addNewReminder(HTTPRequest $request)
     {
@@ -117,10 +117,10 @@ class Tracker_DateReminderFactory {
     /**
      * Throws an excpetion when an enabled date reminder having same params (field, notification Type and the distance) already exist
      *
-     * @param Integer $fieldId          Id of the date field
-     * @param Integer $notificationType 0 if before, 1 if after the value of the date field
-     * @param Integer $distance         Distance from the value of the date fiels
-     * @param Integer $reminderId       Id of the reminder if it is an updated one Else 0
+     * @param int $fieldId Id of the date field
+     * @param int $notificationType 0 if before, 1 if after the value of the date field
+     * @param int $distance Distance from the value of the date fiels
+     * @param int $reminderId Id of the reminder if it is an updated one Else 0
      *
      * @return Void
      */
@@ -135,8 +135,8 @@ class Tracker_DateReminderFactory {
     /**
      * Throws an excpetion when an notification type is before 'submitted on' date field
      *
-     * @param Integer $fieldId          Id of the date field
-     * @param Integer $notificationType 0 if before, 1 if after the value of the date field
+     * @param int $fieldId Id of the date field
+     * @param int $notificationType 0 if before, 1 if after the value of the date field
      *
      * @return Void
      */
@@ -155,7 +155,7 @@ class Tracker_DateReminderFactory {
      *
      * @param HTTPRequest $request Reminder edit request
      *
-     * @return Boolean
+     * @return bool
      */
     public function editTrackerReminder(Tracker_DateReminder $reminder, HTTPRequest $request)
     {
@@ -244,7 +244,7 @@ class Tracker_DateReminderFactory {
     /**
      * Get the reminder
      *
-     * @param Integer $reminderId The reminder id
+     * @param int $reminderId The reminder id
      *
      * @return Tracker_DateReminder
      */

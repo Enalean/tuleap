@@ -225,7 +225,7 @@ class TreeNode /*implements Visitable*/ {
     /**
      * Return true if Node has children. 
      *
-     * @return boolean.
+     * @return bool .
      */
     function hasChildren() {
         return (count($this->children) > 0);

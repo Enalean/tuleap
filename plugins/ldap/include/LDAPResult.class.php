@@ -108,7 +108,7 @@ class LDAPResultIterator implements SeekableIterator, Countable {
     /**
      * Return true if result set is not empty.
      *
-     * @return boolean
+     * @return bool
      */
     function exist() {
         return !$this->isEmpty();
@@ -165,7 +165,7 @@ class LDAPResultIterator implements SeekableIterator, Countable {
      *
      * Standard function implemented from Iterator interface
      * 
-     * @return boolean
+     * @return bool
      */
     function valid() {
         return $this->valid;

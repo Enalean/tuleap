@@ -95,7 +95,7 @@ class URLVerification {
      *
      * @param Array $server
      *
-     * @return Boolean
+     * @return bool
      */
     function isScriptAllowedForAnonymous($server) {
         // Defaults
@@ -131,7 +131,7 @@ class URLVerification {
      *
      * @param array $server
      *
-     * @return Boolean
+     * @return bool
      */
     function isException($server) {
         return preg_match('`^(?:/plugins/[^/]+)?/(?:soap|api)/`', $server['SCRIPT_NAME']);
@@ -143,7 +143,7 @@ class URLVerification {
      * @param Array $server
      * @param String $host
      *
-     * @return Boolean
+     * @return bool
      */
     function isValidServerName($server, $host) {
 
@@ -154,7 +154,7 @@ class URLVerification {
      * Check if an URI is internal to the application or not. We reject all URLs
      * except /path/to/feature
      *
-     * @return boolean
+     * @return bool
      */
     public function isInternal($uri)
     {
@@ -271,7 +271,7 @@ class URLVerification {
      * @param PFUser $user
      * @param Url $url
      * @param String $request_uri
-     * @return Boolean False if user not allowed to see the content
+     * @return bool False if user not allowed to see the content
      */
     protected function restrictedUserCanAccessUrl(PFUser $user, URL $url, string $request_uri, ?Project $project = null)
     {
@@ -437,7 +437,7 @@ class URLVerification {
      *
      * @param PFUser $user
      * @param Project $project
-     * @return boolean
+     * @return bool
      * @throws Project_AccessProjectNotFoundException
      * @throws Project_AccessDeletedException
      * @throws Project_AccessRestrictedException
@@ -481,7 +481,7 @@ class URLVerification {
      *
      * @param PFUser $user
      * @param Project $project
-     * @return boolean
+     * @return bool
      *
      * @throws Project_AccessProjectNotFoundException
      * @throws Project_AccessDeletedException
@@ -502,7 +502,7 @@ class URLVerification {
     /**
      * @param PFUser $user
      * @param Project $project
-     * @return boolean
+     * @return bool
      *
      * @throws Project_AccessProjectNotFoundException
      * @throws Project_AccessDeletedException

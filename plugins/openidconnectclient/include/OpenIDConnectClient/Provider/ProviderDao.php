@@ -109,7 +109,7 @@ class ProviderDao  extends DataAccessObject {
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     private function disableUniqueAuthenticationProvider()
     {

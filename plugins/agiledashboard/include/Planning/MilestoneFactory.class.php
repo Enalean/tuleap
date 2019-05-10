@@ -100,7 +100,7 @@ class Planning_MilestoneFactory
      * Return an empty milestone for given planning/project.
      *
      * @param Project $project
-     * @param Integer $planning_id
+     * @param int $planning_id
      *
      * @return Planning_NoMilestone
      */
@@ -113,7 +113,7 @@ class Planning_MilestoneFactory
      * Create a milestone corresponding to an artifact
      *
      * @param  PFUser $user
-     * @param  Integer $artifact_id
+     * @param int $artifact_id
      *
      * @return Planning_Milestone|null
      */
@@ -129,7 +129,7 @@ class Planning_MilestoneFactory
      * Create a milestone corresponding to an artifact
      *
      * @param  PFUser $user
-     * @param  Integer $artifact_id
+     * @param int $artifact_id
      *
      * @return Planning_Milestone|null
      */
@@ -186,8 +186,8 @@ class Planning_MilestoneFactory
      *
      * @param PFUser $user
      * @param Project $project
-     * @param Integer $planning_id
-     * @param Integer $artifact_id
+     * @param int $planning_id
+     * @param int $artifact_id
      *
      * @return Planning_Milestone
      * @throws Planning_NoPlanningsException
@@ -308,7 +308,7 @@ class Planning_MilestoneFactory
      * @param type $parent_node
      * @param type $parents     The list of parents to prevent infinite recursion
      *
-     * @return boolean
+     * @return bool
      */
     private function addChildrenPlannedArtifacts(PFUser             $user,
                                                  Tracker_Artifact $artifact,
@@ -774,7 +774,7 @@ class Planning_MilestoneFactory
      * Get the top most recent milestone (last created artifact in planning tracker)
      *
      * @param PFUser    $user
-     * @param Integer $planning_id
+     * @param int $planning_id
      *
      * @return Planning_Milestone
      */
@@ -874,7 +874,7 @@ class Planning_MilestoneFactory
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     private function hasUsableBurndownField(PFUser $user, Planning_ArtifactMilestone $milestone) {
         $tracker = $milestone->getArtifact()->getTracker();

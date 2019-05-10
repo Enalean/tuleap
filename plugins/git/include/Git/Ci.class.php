@@ -144,10 +144,10 @@ class Git_Ci {
     /**
      * Save a new trigger
      *
-     * @param Integer $jobId        Id of the CI job
-     * @param Integer $repositoryId Id of the repository
+     * @param int $jobId Id of the CI job
+     * @param int $repositoryId Id of the repository
      *
-     * @return Boolean
+     * @return bool
      */
     function saveTrigger($jobId, $repositoryId) {
         $dar = $this->getDao()->checkRepository($jobId, $repositoryId);
@@ -162,9 +162,9 @@ class Git_Ci {
     /**
      * Delete trigger
      *
-     * @param Integer $jobId Id of the CI job
+     * @param int $jobId Id of the CI job
      *
-     * @return Boolean
+     * @return bool
      */
     function deleteTrigger($jobId) {
         return $this->getDao()->deleteTrigger($jobId);

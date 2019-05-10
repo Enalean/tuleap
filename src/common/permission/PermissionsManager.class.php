@@ -65,7 +65,7 @@ class PermissionsManager implements IPermissionsManagerNG {
     * @param  int     $object_id       The id of the object
     * @param  string  $permission_type The type of permission asked
     * @param  array   $ugroups         The user's ugroups
-    * @return boolean 
+    * @return bool
     */
     public function userHasPermission($object_id, $permission_type, array $ugroups) {
         if (!isset($this->_permissions[$object_id])) {
@@ -175,7 +175,7 @@ class PermissionsManager implements IPermissionsManagerNG {
       *
       * If no specific permissions set, returns the defaults.
       *
-      * @param Integer $objectId
+      * @param int $objectId
       * @param String  $permissionType
       *
       * @return DataAccessResult
@@ -194,7 +194,7 @@ class PermissionsManager implements IPermissionsManagerNG {
       *
       * If no specific permissions set, returns the defaults.
       *
-      * @param Integer $objectId
+      * @param int $objectId
       * @param String  $permissionType
       *
       * @return DataAccessResult
@@ -317,7 +317,7 @@ class PermissionsManager implements IPermissionsManagerNG {
     * 
     * @deprecated Use one of duplicateWithStatic, duplicateWithStaticMapping, duplicateWithoutStatic below
     * 
-    * @return Boolean
+    * @return bool
     */
     public function duplicatePermissions($source, $target, array $permission_types, $ugroup_mapping, $duplicate_type) {
         return $this->_permission_dao->duplicatePermissions($source, $target, $permission_types, $duplicate_type, $ugroup_mapping);
@@ -330,7 +330,7 @@ class PermissionsManager implements IPermissionsManagerNG {
      * @param int    $target
      * @param array  $permission_types
      * 
-     * @return boolean
+     * @return bool
      */
     public function duplicateWithStatic($source, $target, array $permission_types) {
         return $this->_permission_dao->duplicatePermissions($source, $target, $permission_types, PermissionsDao::DUPLICATE_SAME_PROJECT, false);
@@ -344,7 +344,7 @@ class PermissionsManager implements IPermissionsManagerNG {
      * @param array  $permission_types
      * @param array  $ugroup_mapping 
      * 
-     * @return boolean
+     * @return bool
      */
     public function duplicateWithStaticMapping($source, $target, array $permission_types, $ugroup_mapping) {
         return $this->_permission_dao->duplicatePermissions($source, $target, $permission_types, PermissionsDao::DUPLICATE_NEW_PROJECT, $ugroup_mapping);
@@ -357,7 +357,7 @@ class PermissionsManager implements IPermissionsManagerNG {
      * @param int    $target
      * @param array $permission_types
      * 
-     * @return boolean
+     * @return bool
      */
     public function duplicateWithoutStatic($source, $target, array $permission_types) {
         return $this->_permission_dao->duplicatePermissions($source, $target, $permission_types, PermissionsDao::DUPLICATE_OTHER_PROJECT, false);
@@ -386,7 +386,7 @@ class PermissionsManager implements IPermissionsManagerNG {
      * @param String $permissionType Permission
      * @param String $objectId       Affected object's id
      * 
-     * @return Boolean
+     * @return bool
      */
     public function clearPermission($permissionType, $objectId) {
         return $this->_permission_dao->clearPermission($permissionType, $objectId);

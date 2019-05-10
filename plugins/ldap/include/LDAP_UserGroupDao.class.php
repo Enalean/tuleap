@@ -33,7 +33,7 @@ extends DataAccessObject
     /**
      * Search one user group by id
      *
-     * @param Integer $ugroupId User group id
+     * @param int $ugroupId User group id
      * 
      * @return DataAccessResult
      */
@@ -52,12 +52,12 @@ extends DataAccessObject
     /**
      * Associate one Codendi user group to an LDAP group
      *
-     * @param Integer $ugroupId           Codendi user group id 
+     * @param int $ugroupId Codendi user group id
      * @param String  $ldapGroupDn        LDAP group distinguish name
      * @param String  $bindOption         The bind option can take one of 2 possible values 'bind' or 'preserve_members'
      * @param String  $synchroPolicy      Synchronization option
      *
-     * @return Boolean
+     * @return bool
      */
     function linkGroupLdap($ugroupId, $ldapGroupDn, $bindOption, $synchroPolicy) {
         $synchroPolicy = $this->da->quoteSmart($synchroPolicy);
@@ -69,9 +69,9 @@ extends DataAccessObject
     /**
      * Unlink one Codendi user group with it's LDAP group
      *
-     * @param Integer $ugroupId Codendi user group id
+     * @param int $ugroupId Codendi user group id
      * 
-     * @return Boolean
+     * @return bool
      */
     function unlinkGroupLdap($ugroupId) 
     {
@@ -83,8 +83,8 @@ extends DataAccessObject
     /**
      * Object oriented wrapper for ugroup_add_user_to_ugroup
      *
-     * @param Integer $ugroupId Codendi user group id
-     * @param Integer $userId   Codendi user id
+     * @param int $ugroupId Codendi user group id
+     * @param int $userId Codendi user id
      * 
      * @return void
      */
@@ -97,8 +97,8 @@ extends DataAccessObject
     /**
      * Object oriented wrapper for ugroup_remove_user_from_ugroup
      *
-     * @param Integer $ugroupId Codendi user group id
-     * @param Integer $userId   Codendi user id
+     * @param int $ugroupId Codendi user group id
+     * @param int $userId Codendi user id
      *
      * @return void
      */
@@ -111,7 +111,7 @@ extends DataAccessObject
     /**
      * Object oriented wrapper for ugroup_db_get_ugroup
      *
-     * @param Integer $ugroupId Codendi user group id
+     * @param int $ugroupId Codendi user group id
      * 
      * @return array
      */
@@ -159,9 +159,9 @@ extends DataAccessObject
     /**
      * Check if a given ugroup is synchronized with an ldap group
      *
-     * @param integer $ugroup_id User group id to check
+     * @param int $ugroup_id User group id to check
      *
-     * @return boolean
+     * @return bool
      */
     function isSynchronizedUgroup($ugroup_id) {
         $ugroup_id = $this->da->escapeInt($ugroup_id);
@@ -177,9 +177,9 @@ extends DataAccessObject
     /**
      * Check if a given ugroup is preserving members
      *
-     * @param integer $ugroup_id User group id to check
+     * @param int $ugroup_id User group id to check
      *
-     * @return boolean
+     * @return bool
      */
     function isMembersPreserving($ugroup_id) {
         $ugroup_id = $this->da->escapeInt($ugroup_id);
@@ -195,9 +195,9 @@ extends DataAccessObject
     /**
      * Check if the update of members of an ugroup is allowed
      *
-     * @param Integer $ugroup_id User group id
+     * @param int $ugroup_id User group id
      *
-     * @return Boolean
+     * @return bool
      */
     public function isMembersUpdateAllowed($ugroup_id) {
         $ugroup_id = $this->da->escapeInt($ugroup_id);

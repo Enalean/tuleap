@@ -94,7 +94,7 @@ class ArtifactReport {
 	 *	@param	report_id	
 	 *  @param  atid: the artifact type id
 	 *
-	 *	@return	boolean	success.
+	 *	@return bool success.
 	 */
 	function __construct($report_id,$atid) {
 		$this->group_artifact_id = $atid;
@@ -277,7 +277,7 @@ class ArtifactReport {
 	 *	fetchData - re-fetch the data for this ArtifactReport from the database.
 	 *
 	 *	@param	int		The report ID.
-	 *	@return	boolean	success.
+	 *	@return bool success.
 	 */
 	function fetchData($report_id) {
 	  global $Language;
@@ -657,7 +657,7 @@ class ArtifactReport {
 	 * ANY (0) is one of the value means it is Any even if there are
 	 * other non zero values in the  array
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	function isvarany($var) {
 		

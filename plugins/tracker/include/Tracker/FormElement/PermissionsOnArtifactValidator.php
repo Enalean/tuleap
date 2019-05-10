@@ -28,7 +28,7 @@ class PermissionsOnArtifactValidator
     /**
      * @param  array $value
      *
-     * @return boolean
+     * @return bool
      */
     public function hasAGroupSelected(array $value)
     {
@@ -38,7 +38,7 @@ class PermissionsOnArtifactValidator
     /**
      * @param  array $value
      *
-     * @return boolean
+     * @return bool
      */
     public function isNoneGroupSelected(array $value)
     {

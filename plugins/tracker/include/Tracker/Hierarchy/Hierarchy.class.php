@@ -53,7 +53,7 @@ class Tracker_Hierarchy {
      * 
      * @param int $tracker_id
      * 
-     * @return boolean 
+     * @return bool
      */
     public function exists($tracker_id) {
         try {
@@ -81,9 +81,9 @@ class Tracker_Hierarchy {
     /**
      * Return the parent of given tracker_id or null if tracker has no parent
      *
-     * @param Integer $tracker_id
+     * @param int $tracker_id
      *
-     * @return Integer
+     * @return int
      */
     public function getParent($tracker_id) {
         return isset($this->parents[$tracker_id]) ? $this->parents[$tracker_id] : null;

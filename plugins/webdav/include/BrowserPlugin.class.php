@@ -149,7 +149,7 @@ class BrowserPlugin extends Sabre_DAV_Browser_Plugin {
      *
      * @param String $method
      *
-     * @return Boolean
+     * @return bool
      */
     public function httpPOSTHandler($method, $uri)
     {

@@ -48,8 +48,8 @@ class Tracker_FormElement_Field_Value_TextDao extends Tracker_FormElement_Field_
 
     /**
      * create none value
-     * @param integer $tracker_id
-     * @param integer $field_id
+     * @param int $tracker_id
+     * @param int $field_id
      * @return
      */
     public function  createNoneValue($tracker_id, $field_id) {

@@ -47,7 +47,7 @@ class AdminDelegation_UserServiceDao extends DataAccessObject
     /**
      * Return all user granted for this service
      *
-     * @param  Integer  $serviceId 
+     * @param int $serviceId
      * @return DataAccessResult
      */
     public function searchAllUserService($serviceId) {

@@ -496,7 +496,7 @@ class UserResource extends AuthenticatedResource {
      * @param PFUser $watcher
      * @param PFUSER $watchee
      *
-     * @return Boolean
+     * @return bool
      *
      */
      private function checkUserCanUpdateOtherUser(PFUser $watcher, PFuser $watchee) {

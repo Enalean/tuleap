@@ -685,7 +685,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
 
     /**
      *
-     * @param boolean $reverse_artifact_links
+     * @param bool $reverse_artifact_links
      */
     private function getWidgetTitle($reverse_artifact_links) {
         if ($reverse_artifact_links) {
@@ -1202,7 +1202,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
      *
      * @param Tracker_Artifact                $artifact         The artifact
      * @param PFUser                          $user             The user who will receive the email
-     * @param boolean                         $ignore_perms
+     * @param bool $ignore_perms
      * @param Tracker_Artifact_ChangesetValue $value            The actual value of the field
      * @param array                           $submitted_values The value already submitted by the user
      *
@@ -1272,7 +1272,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
      *
      * @param Tracker_Artifact_Changeset $changeset   The changeset (needed in only few cases like 'lud' field)
      * @param int                        $value_id    The id of the value
-     * @param boolean                    $has_changed If the changeset value has changed from the rpevious one
+     * @param bool $has_changed If the changeset value has changed from the rpevious one
      *
      * @return Tracker_Artifact_ChangesetValue or null if not found
      */
@@ -1343,7 +1343,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
 
     /**
      *
-     * @param Integer $changeset_id
+     * @param int $changeset_id
      *
      * @return Tracker_ArtifactLinkInfo[]
      */
@@ -1456,7 +1456,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
      * @param Tracker_Artifact                $artifact             The artifact to check
      * @param mixed                           $value      The submitted value
      *
-     * @return boolean true on success or false on failure
+     * @return bool true on success or false on failure
      */
     public function isValidRegardingRequiredProperty(Tracker_Artifact $artifact, $value) {
         if ( (! is_array($value) || empty($value['new_values'])) && $this->isRequired()) {
@@ -1607,7 +1607,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
      * @param Tracker_Artifact_Changeset $old_changeset    The old changeset. null if it is the first one
      * @param int                        $new_changeset_id The id of the new changeset
      * @param mixed                      $value  The value submitted by the user
-     * @param boolean $is_submission true if artifact submission, false if artifact update
+     * @param bool $is_submission true if artifact submission, false if artifact update
      *
      * @return bool true if success
      */

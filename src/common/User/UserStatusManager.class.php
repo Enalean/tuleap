@@ -74,8 +74,8 @@ class User_UserStatusManager {
      * Check user status validity
      *
      * @param PFUser $user
-     * @param Boolean $allowpending
-     * @return Boolean
+     * @param bool $allowpending
+     * @return bool
      * @throws User_StatusDeletedException
      * @throws User_StatusSuspendedException
      */

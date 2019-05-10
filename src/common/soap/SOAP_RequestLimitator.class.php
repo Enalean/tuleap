@@ -40,8 +40,8 @@ class SOAP_RequestLimitator {
     /**
      * Constructor
      * 
-     * @param Integer                  $nbCall    Maximum number of call allowed
-     * @param Integer                  $timeframe Time during which $nbCall applies
+     * @param int $nbCall Maximum number of call allowed
+     * @param int $timeframe Time during which $nbCall applies
      * @param SOAP_RequestLimitatorDao $dao       Data access object
      */
     public function __construct($nbCall, $timeframe, SOAP_RequestLimitatorDao $dao) {

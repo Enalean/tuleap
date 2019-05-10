@@ -100,7 +100,7 @@ class ServiceTracker extends Service {
      * 
      * @see Service::isInheritedOnDuplicate()
      * 
-     * @return Boolean
+     * @return bool
      */
     public function isInheritedOnDuplicate() {
         return true;

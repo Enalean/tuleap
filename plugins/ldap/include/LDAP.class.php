@@ -103,7 +103,7 @@ class LDAP {
      * This funtion should not be called directly: it is always called
      * by a public function: authenticate() or search().
      * 
-     * @return Boolean true if connect was successful, false otherwise.
+     * @return bool true if connect was successful, false otherwise.
      */ 
     function connect() {
         if (!$this->ds) {
@@ -225,7 +225,7 @@ class LDAP {
     /**
      * Connect and bind to the LDAP Directory
      *
-     * @return Boolean
+     * @return bool
      */
     function _connectAndBind() {
         if (!$this->connect()) {
@@ -292,12 +292,12 @@ class LDAP {
      *
      * @param string  $baseDn     Base DN where to search
      * @param string  $filter     Specific LDAP query
-     * @param integer $scope      How to search (SCOPE_ SUBTREE, ONELEVEL or BASE)
+     * @param int $scope How to search (SCOPE_ SUBTREE, ONELEVEL or BASE)
      * @param array   $attributes LDAP fields to retreive
-     * @param integer $attrsOnly  Retreive both field value and name (keep it to 0)
-     * @param integer $sizeLimit  Limit the size of the result set
-     * @param integer $timeLimit  Limit the time spend to search for results
-     * @param integer $deref      Dereference result
+     * @param int $attrsOnly Retreive both field value and name (keep it to 0)
+     * @param int $sizeLimit Limit the size of the result set
+     * @param int $timeLimit Limit the time spend to search for results
+     * @param int $deref Dereference result
      * 
      * @return LDAPResultIterator|false
      */
@@ -453,7 +453,7 @@ class LDAP {
      * This method is designed for speed and to limit the number of returned values.
      * 
      * @param string   $name      Name of the group to look for
-     * @param Integer  $sizeLimit Limit the amount of result sent
+     * @param int $sizeLimit Limit the amount of result sent
      * 
      * @return AppendIterator
      */
@@ -524,7 +524,7 @@ class LDAP {
      * This method is designed for speed and to limit the number of returned values.
      * 
      * @param string   $name      Name of the group to look for
-     * @param Integer $sizeLimit Limit the amount of result sent
+     * @param int $sizeLimit Limit the amount of result sent
      * 
      * @return LDAPResultIterator
      */

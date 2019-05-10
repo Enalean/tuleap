@@ -39,7 +39,7 @@ class AdminAllowedProjectsGerritPresenter
     public $allowed_projects;
 
     /**
-     * @var Boolean
+     * @var bool
      */
     public $is_resource_restricted;
 

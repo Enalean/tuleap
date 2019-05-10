@@ -39,7 +39,7 @@ class Admin_PermissionDelegationGroupModalPresenter
     private $description;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $is_new;
 

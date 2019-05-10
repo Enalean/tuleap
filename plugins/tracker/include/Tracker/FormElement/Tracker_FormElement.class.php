@@ -161,7 +161,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     /**
      *  Return true if the field is used
      *
-     * @return boolean
+     * @return bool
      */
     function isUsed() {
         return( $this->use_it );
@@ -606,7 +606,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      *
      * @param array $properties The properties
      *
-     * @return boolean true if success
+     * @return bool true if success
      */
     public function storeProperties($properties) {
         $success = true;
@@ -691,7 +691,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      * Returns the value that will be displayed in a mail
      * @param Tracker_Artifact $artifact
      * @param PFUser $user
-     * @param boolean $ignore_perms
+     * @param bool $ignore_perms
      * @param Tracker_Artifact_ChangesetValue $value
      * @param String $format
      *
@@ -723,7 +723,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      *
      * @param array $properties all the properties of the element
      *
-     * @return boolean true if the update is successful
+     * @return bool true if the update is successful
      */
     public function updateProperties($properties) {
         if (isset($properties['label']) && !trim($properties['label'])) {
@@ -746,7 +746,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      *
      * @param array $properties the specific properties
      *
-     * @return boolean true if the update is successful
+     * @return bool true if the update is successful
      */
     public function updateSpecificProperties($properties) {
         //TODO make it abstract
@@ -758,7 +758,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      *
      * @param string $type the new type
      *
-     * @return boolean true if the change is allowed and successful
+     * @return bool true if the change is allowed and successful
      */
     public function changeType($type) {
         // Default: type change is not allowed, so return false
@@ -947,7 +947,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      *  specific values of the element... all its dependencies.
      * (The element itself will be deleted later)
      *
-     * @return boolean true if success
+     * @return bool true if success
      */
     public function delete() {
         return true;
@@ -1011,7 +1011,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     /**
      * Returns true if the field is a copy of another one
      *
-     * @return Boolean
+     * @return bool
      */
     public function isTargetSharedField() {
         return $this->original_field !== null;
@@ -1222,7 +1222,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      * Is the form element can be removed from usage?
      * This method is to prevent tracker inconsistency
      *
-     * @return boolean
+     * @return bool
      */
     public abstract function canBeRemovedFromUsage();
 

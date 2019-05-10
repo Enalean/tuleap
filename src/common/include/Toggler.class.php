@@ -72,8 +72,8 @@ class Toggler {
     /**
      * 
      * @param string $id the id of the toggler
-     * @param boolean $force optionnal paremeter. Set it to true or false if you want to force show or hide
-     * @param boolean $noajax optinnal parameter. Set it to true if you don't want ajax for registered users
+     * @param bool $force optionnal paremeter. Set it to true or false if you want to force show or hide
+     * @param bool $noajax optinnal parameter. Set it to true if you don't want ajax for registered users
      * 
      * @return string the classname of the toggler depending on the current state
      */

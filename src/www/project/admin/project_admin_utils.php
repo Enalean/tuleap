@@ -75,7 +75,7 @@ function project_admin_footer($params) {
  *
  * @param String  $fieldName Event category
  * @param String  $oldValue  Event value
- * @param Integer $groupId   Project ID
+ * @param int $groupId Project ID
  * @param Array   $args      list of parameters used for message display
  *
  * @return DataAccessResult
@@ -91,8 +91,8 @@ function group_add_history ($field_name,$old_value,$group_id, $args=false) {
  * @param String  $event        Events category used to filter results
  * @param String  $subEventsBox Event used to filter results
  * @param String  $value        Value used to filter results
- * @param Integer $startDate    Start date used to filter results
- * @param Integer $endDate      End date used to filter results
+ * @param int $startDate Start date used to filter results
+ * @param int $endDate End date used to filter results
  * @param String  $by           User name used to filter results
  *
  * @return String
@@ -207,9 +207,9 @@ function get_history_entries() {
 /**
  * Display the retrieved reult set
  *
- * @param Integer $group_id Id of the project
+ * @param int $group_id Id of the project
  * @param Array   $res      Contains the retrieved results
- * @param Boolean $export   Switch CSV export mode or HTML display
+ * @param bool $export Switch CSV export mode or HTML display
  * @param unknown_type $i   Line number indicator
  *
  * @return string html
@@ -284,14 +284,14 @@ function displayProjectHistoryResults($group_id, $res, $export = false, &$i = 1)
 /**
  * Nicely html-formatted output of this group's audit trail
  *
- * @param Integer $group_id     Id of the project
- * @param Integer $offset       Offset used for pagination
- * @param Integer $limit        Number of events by page
+ * @param int $group_id Id of the project
+ * @param int $offset Offset used for pagination
+ * @param int $limit Number of events by page
  * @param String  $event        Events category used to filter results
  * @param array|null  $subEventsBox Event used to filter results
  * @param String  $value        Value used to filter results
- * @param Integer $startDate    Start date used to filter results
- * @param Integer $endDate      End date used to filter results
+ * @param int $startDate Start date used to filter results
+ * @param int $endDate End date used to filter results
  * @param String  $by           User name used to filter results
  *
  * @return void
@@ -390,12 +390,12 @@ function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEvent
 /**
  * Export project history to a csv file
  *
- * @param Integer $group_id     Id of the project
+ * @param int $group_id Id of the project
  * @param String  $event        Events category used to filter results
  * @param String  $subEventsBox Event used to filter results
  * @param String  $value        Value used to filter results
- * @param Integer $startDate    Start date used to filter results
- * @param Integer $endDate      End date used to filter results
+ * @param int $startDate Start date used to filter results
+ * @param int $endDate End date used to filter results
  * @param String  $by           User name used to filter results
  *
  * @return void

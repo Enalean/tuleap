@@ -66,10 +66,10 @@ class LDAP_ProjectGroupManager extends LDAP_GroupManager
     /**
      * Add user to a project
      *
-     * @param Integer $groupId Id of the project
-     * @param Integer $userId  User Id
+     * @param int $groupId Id of the project
+     * @param int $userId User Id
      *
-     * @return Boolean
+     * @return bool
      */
     protected function addUserToGroup($groupId, $userId)
     {
@@ -89,10 +89,10 @@ class LDAP_ProjectGroupManager extends LDAP_GroupManager
     /**
      * Remove user from a project
      *
-     * @param Integer $groupId Id of the project
-     * @param Integer $userId  User ID
+     * @param int $groupId Id of the project
+     * @param int $userId User ID
      *
-     * @return Boolean
+     * @return bool
      */
     protected function removeUserFromGroup($groupId, $userId)
     {
@@ -104,7 +104,7 @@ class LDAP_ProjectGroupManager extends LDAP_GroupManager
     /**
      * Get project members user id
      *
-     * @param Integer $groupId Id of project
+     * @param int $groupId Id of project
      *
      * @return Array
      */

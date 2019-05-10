@@ -58,7 +58,7 @@ class Tracker_FormElement_Field_ComputedDao extends Tracker_FormElement_Specific
      * @param int $from_field_id the field id source
      * @param int $to_field_id the field id target
      *
-     * @return boolean true if ok, false otherwise
+     * @return bool true if ok, false otherwise
      */
     public function duplicate($from_field_id, $to_field_id)
     {
@@ -76,7 +76,7 @@ class Tracker_FormElement_Field_ComputedDao extends Tracker_FormElement_Specific
      * $target_name field values (values can be either float, int or computed)
      * If it's computed, the caller must continue its journey and call getComputedValue
      *
-     * @param Integer[] $source_ids
+     * @param int[] $source_ids
      * @param String $target_name
      * @return DataAccessResult
      */
@@ -121,7 +121,7 @@ class Tracker_FormElement_Field_ComputedDao extends Tracker_FormElement_Specific
      * This method will fetch in 1 pass, for a given artifact all linked artifact
      * $target_name field values (values can be either float, int or computed or manual)
      *
-     * @param Integer[] $source_ids
+     * @param int[] $source_ids
      * @param String $target_name
      * @return DataAccessResult
      */

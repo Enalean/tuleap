@@ -37,7 +37,7 @@ class Admin_Homepage_LogoFinder {
         return ForgeConfig::get('sys_data_dir') . self::PATH;
     }
 
-    /** @return boolean */
+    /** @return bool */
     public static function isCustomLogoUsed() {
         return is_file(self::getCustomPath());
     }

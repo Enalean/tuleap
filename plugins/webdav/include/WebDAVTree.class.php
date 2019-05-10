@@ -30,7 +30,7 @@ class WebDAVTree extends Sabre_DAV_ObjectTree {
      * @param WebDAVFRSRelease $release
      * @param mixed $destination
      *
-     * @return boolean
+     * @return bool
      */
     function releaseCanBeMoved($release, $destination) {
         return (($destination instanceof WebDAVFRSPackage)
@@ -44,7 +44,7 @@ class WebDAVTree extends Sabre_DAV_ObjectTree {
      * @param WebDAVFRSFile $file
      * @param mixed $destination
      *
-     * @return boolean
+     * @return bool
      */
     function fileCanBeMoved($file, $destination) {
         return (($destination instanceof WebDAVFRSRelease)
@@ -57,7 +57,7 @@ class WebDAVTree extends Sabre_DAV_ObjectTree {
      * @param mixed $source
      * @param mixed $destination
      *
-     * @return boolean
+     * @return bool
      */
     function canBeMoved($source, $destination) {
         return(($source instanceof WebDAVFRSRelease && $this->releaseCanBeMoved($source, $destination))

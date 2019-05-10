@@ -73,7 +73,7 @@ class Tracker_Key
      * Verify the validity of a given RSA public key
      * @param $key
      *
-     * @return boolean
+     * @return bool
      */
     public function isValidPublicKey($key)
     {

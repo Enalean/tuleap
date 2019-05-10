@@ -51,7 +51,7 @@ class b20140514_add_index_for_last_changeset_id_tracker_id extends ForgeUpgrade_
      * @param String $tableName Table name
      * @param String $index     Index
      *
-     * @return Boolean
+     * @return bool
      */
     private function indexNameExists($tableName, $index) {
         $sql = 'SHOW INDEX FROM '.$tableName.' WHERE Key_name LIKE '.$this->db->dbh->quote($index);

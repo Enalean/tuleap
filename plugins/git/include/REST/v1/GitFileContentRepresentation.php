@@ -28,7 +28,7 @@ class GitFileContentRepresentation
 
     /**
      * In Bytes
-     * @var integer
+     * @var int
      */
     public $size;
 

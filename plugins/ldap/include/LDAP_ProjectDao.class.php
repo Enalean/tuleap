@@ -32,9 +32,9 @@ extends DataAccessObject
     /**
      * Check if given project has its svn repository with LDAP authentication
      *
-     * @param Integer $groupId Project id
+     * @param int $groupId Project id
      * 
-     * @return Boolean
+     * @return bool
      */
     function hasLdapSvn($groupId) 
     {
@@ -52,7 +52,7 @@ extends DataAccessObject
     /**
      * Enable LDAP based authentication for given project
      *
-     * @param Integer $groupId Project id
+     * @param int $groupId Project id
      */
     function activateLdapAuthForProject($groupId)
     {

@@ -1127,11 +1127,11 @@ function addFile($sessionKey, $group_id, $package_id, $release_id, $filename, $b
  * @param int       $release_id the ID of the release we want to add the file
  * @param int       $file_id the ID of the file we want to retrieve the content
  * @param string    $comment A comment/description of the uploaded file
- * @return boolean true if the file was updated, or a soap fault if:
- *      - group_id does not match with a valid project,
- *      - the package_id, release_id, file_id does not match
- *      - the user does not have permissions to delete this file
- *      - the system was not able to update the file.
+ * @return bool true if the file was updated, or a soap fault if:
+ * - group_id does not match with a valid project,
+ * - the package_id, release_id, file_id does not match
+ * - the user does not have permissions to delete this file
+ * - the system was not able to update the file.
  */
     function updateFileComment($sessionKey, $group_id, $package_id, $release_id, $file_id, $comment) {
         if (session_continue($sessionKey)) {
@@ -1190,7 +1190,7 @@ function addFile($sessionKey, $group_id, $package_id, $release_id, $filename, $b
  * @param int $group_id the ID of the group we want to add the file
  * @param string $filename the name of the file we want to add
  * @param string $contents the content of the chunk, encoded in base64
- * @param boolean $first_chunk indicates if the chunk to add is the first
+ * @param bool $first_chunk indicates if the chunk to add is the first
  * @return int|SoapFault size of the chunk if added, or a soap fault if:
  *              - the sessionKey is not valid, 
  *              - the file creation failed.
@@ -1349,11 +1349,11 @@ function getUploadedFiles($sessionKey, $group_id) {
  * @param int $package_id the ID of the package we want to delete the file
  * @param int $release_id the ID of the release we want to delete the file
  * @param int $file_id the ID of the file we want to delete
- * @return boolean true if the file was deleted, or a soap fault if:
- *                 - group_id does not match with a valid project,
- *                 - the package_id, release_id, file_id does not match
- *                 - the user does not have permissions to delete this file
- *                 - the system was not able to delete the file.
+ * @return bool true if the file was deleted, or a soap fault if:
+ * - group_id does not match with a valid project,
+ * - the package_id, release_id, file_id does not match
+ * - the user does not have permissions to delete this file
+ * - the system was not able to delete the file.
  */
 function deleteFile($sessionKey, $group_id, $package_id, $release_id, $file_id) {
     if (session_continue($sessionKey)) {
@@ -1406,9 +1406,9 @@ function deleteFile($sessionKey, $group_id, $package_id, $release_id, $file_id) 
  * deleteEmptyPackage - Delete an empty package or all empty packages in project group_id.
  *
  * @param String  $sessionKey  The session hash associated with the session opened by the person who calls the service
- * @param Integer $group_id    Id of the project in which we want to delete the package(s)
- * @param Integer $package_id  Id of the package to delete
- * @param Boolean $cleanup_all Set to true to delete all empty packages
+ * @param int $group_id Id of the project in which we want to delete the package(s)
+ * @param int $package_id Id of the package to delete
+ * @param bool $cleanup_all Set to true to delete all empty packages
  *
  * @return Array list of deleted packages, or a soap fault if:
  *                 - group_id does not match with a valid project
@@ -1460,10 +1460,10 @@ function deleteEmptyPackage($sessionKey, $group_id, $package_id, $cleanup_all) {
  * deleteEmptyRelease - Delete an empty release or all empty releases in package package_id in project group_id.
  *
  * @param String  $sessionKey  The session hash associated with the session opened by the person who calls the service
- * @param Integer $group_id    Id of the project in which we want to delete empty releases
- * @param Integer $package_id  Id of the package in which we want to delete empty releases
- * @param Integer $release_id  Id of the release to delete
- * @param Boolean $cleanup_all Set to true to delete all empty releases
+ * @param int $group_id Id of the project in which we want to delete empty releases
+ * @param int $package_id Id of the package in which we want to delete empty releases
+ * @param int $release_id Id of the release to delete
+ * @param bool $cleanup_all Set to true to delete all empty releases
  *
  * @return Array list of deleted releases, or a soap fault if:
  *                 - group_id does not match with a valid project

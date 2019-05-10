@@ -1068,7 +1068,7 @@ class GitActions extends PluginActions
      * @param Project $project Project to modify
      * @param String  $newName New unix group name
      *
-     * @return Boolean
+     * @return bool
      */
     public static function renameProject(Project $project, $newName) {
         $r = new GitRepository();

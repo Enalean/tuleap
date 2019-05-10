@@ -54,7 +54,7 @@ class ArtifactTypeFactory {
 	 *
 	 *
 	 *	@param	object	The Group object to which this ArtifactTypeFactory is associated
-	 *	@return	boolean	success.
+	 *	@return bool success.
 	 */
 	public function __construct($Group)
     {
@@ -111,7 +111,7 @@ class ArtifactTypeFactory {
 	/**
 	 *	getArtifactTypes - return an array of ArtifactType objects of the current group
 	 *
-     * @param Boolean $includeDeleted Define whether list of returned trackers should contain deleted trackers or not
+     * @param bool $includeDeleted Define whether list of returned trackers should contain deleted trackers or not
      *
 	 *	@return	array	The array of ArtifactType objects.
 	 */
@@ -219,7 +219,7 @@ class ArtifactTypeFactory {
     /**
      * Mark all project trackers as deleted
      *
-     * @return Boolean
+     * @return bool
      */
     function preDeleteAllProjectArtifactTypes() {
         $deleteStatus = true;
@@ -240,7 +240,7 @@ class ArtifactTypeFactory {
      *
      * @param $artifactType Tracker to be deleted
      *
-     * @return Boolean
+     * @return bool
      */
     function preDeleteArtifactType(ArtifactType $artifactType) {
         if ($artifactType->preDelete(true)) {
@@ -261,7 +261,7 @@ class ArtifactTypeFactory {
 	 *
 	 *  @aparam atid: the artifact type id
 	 *
-	 *	@return	boolean
+	 *	@return bool
 	 */
 	function deleteArtifactType($atid) {
 		
@@ -515,7 +515,7 @@ class ArtifactTypeFactory {
      * Check if the name of the tracker is already used
      *@param string $name the name of the tracker we are lokking for
      * @param int $group_id th ID of the group     
-     * @return boolean
+     * @return bool
      */
     function isNameExists($name, $group_id) {
         $reference_dao = $this->getArtifactGroupListDao();

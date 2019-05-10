@@ -187,7 +187,7 @@ interface LegacyDataAccessInterface
      *
      * @deprecated
      *
-     * @return boolean Returns TRUE on success or FALSE on failure.
+     * @return bool Returns TRUE on success or FALSE on failure.
      */
     public function dataSeek($result, $row_number);
 

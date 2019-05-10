@@ -45,7 +45,7 @@ class JsonCast
     /**
      * Cast a value to boolean if it's not null
      * @psalm-ignore-nullable-return
-     * @return boolean|null
+     * @return bool|null
      */
     public static function toBoolean($value) {
         if (! is_null($value) && $value !== '') {

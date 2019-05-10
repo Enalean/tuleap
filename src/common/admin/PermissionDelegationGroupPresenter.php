@@ -29,7 +29,7 @@ class Admin_PermissionDelegationGroupPresenter
     public $id;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $is_current;
 

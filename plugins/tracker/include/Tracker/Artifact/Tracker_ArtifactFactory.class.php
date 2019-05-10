@@ -100,7 +100,7 @@ class Tracker_ArtifactFactory {
      * Return the artifact corresponding to $id the user can access
      * 
      * @param PFUser    $user
-     * @param Integer $id
+     * @param int $id
      * 
      * @return Tracker_Artifact|null
      */
@@ -386,7 +386,7 @@ class Tracker_ArtifactFactory {
      * @param array   $fields_data       The data of the artifact to create
      * @param PFUser    $user              The user that want to create the artifact
      * @param string  $email             The email if the user is anonymous (null if anonymous)
-     * @param boolean $send_notification true if a notification must be sent, false otherwise
+     * @param bool $send_notification true if a notification must be sent, false otherwise
      * 
      * @return Tracker_Artifact or false if an error occured
      */
@@ -450,7 +450,7 @@ class Tracker_ArtifactFactory {
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function hasChildren(Tracker_Artifact $artifact) {
         $children_count = $this->getDao()->getChildrenCount(array($artifact->getId()));

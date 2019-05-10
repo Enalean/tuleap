@@ -56,7 +56,7 @@ class SVN_SOAPServer {
      * * 3002, User do not have access to the project
      *
      * @param String  $sessionKey Session key of the desired project admin
-     * @param Integer $group_id    ID of the project the subversion repository belongs to
+     * @param int $group_id ID of the project the subversion repository belongs to
      * @param String  $path        Path to the directory to list (eg. '/tags')
      * 
      * @return ArrayOfString The list of directories
@@ -98,7 +98,7 @@ class SVN_SOAPServer {
      * * 3002, User do not have access to the project
      *
      * @param String  $sessionKey Session key of the desired project admin
-     * @param Integer $group_id    ID of the project the subversion repository belongs to
+     * @param int $group_id ID of the project the subversion repository belongs to
      * @param String  $path        Path to the directory to list (eg. '/tags')
      * @param String  $sort        The type of sort wanted: ASC or DESC
      *
@@ -163,9 +163,9 @@ class SVN_SOAPServer {
      * * 3005, Invalid user id
      *
      * @param String  $sessionKey  Session key of the requesting user
-     * @param Integer $group_id    ID of the project the subversion repository belongs to
-     * @param Integer $limit       Maximum revisions returned
-     * @param Integer $author_id   Id of commit author
+     * @param int $group_id ID of the project the subversion repository belongs to
+     * @param int $limit Maximum revisions returned
+     * @param int $author_id Id of commit author
      *
      * @return ArrayOfRevision The list of revisions
      */
@@ -190,9 +190,9 @@ class SVN_SOAPServer {
      * Returns the list of active users (commiters) between start_date and end_date
      * 
      * @param String  $sessionKey Session key of the requesting user
-     * @param Integer $group_id    ID of the project the subversion repository belongs to
-     * @param Integer $start_date  Start of period (unix timestamp)
-     * @param Integer $end_date    End of period   (unix timestamp)
+     * @param int $group_id ID of the project the subversion repository belongs to
+     * @param int $start_date Start of period (unix timestamp)
+     * @param int $end_date End of period   (unix timestamp)
      * 
      * @return ArrayOfCommiter
      */
@@ -215,10 +215,10 @@ class SVN_SOAPServer {
      * Return top most modified files during the given period
      * 
      * @param String  $sessionKey Session key of the requesting user
-     * @param Integer $group_id    ID of the project the subversion repository belongs to
-     * @param Integer $start_date  Start of period (unix timestamp)
-     * @param Integer $end_date    End of period   (unix timestamp)
-     * @param Integer $limit       Max number of files to return
+     * @param int $group_id ID of the project the subversion repository belongs to
+     * @param int $start_date Start of period (unix timestamp)
+     * @param int $end_date End of period   (unix timestamp)
+     * @param int $limit Max number of files to return
      * 
      * @return ArrayOfSvnPathInfo
      */

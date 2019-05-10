@@ -338,7 +338,7 @@ class Tag extends Ref
      * Tests if this is a light tag (tag without tag object)
      *
      * @access public
-     * @return boolean true if tag is light (has no object)
+     * @return bool true if tag is light (has no object)
      */
     public function LightTag() // @codingStandardsIgnoreLine
     {
@@ -601,7 +601,7 @@ class Tag extends Ref
      * @static
      * @param mixed $a first tag
      * @param mixed $b second tag
-     * @return integer comparison result
+     * @return int comparison result
      */
     public static function CompareAge($a, $b) // @codingStandardsIgnoreLine
     {
@@ -631,7 +631,7 @@ class Tag extends Ref
      * @static
      * @param mixed $a first tag
      * @param mixed $b second tag
-     * @return integer comparison result
+     * @return int comparison result
      */
     public static function CompareCreationEpoch($a, $b) // @codingStandardsIgnoreLine
     {

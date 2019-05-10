@@ -133,9 +133,9 @@ class Project_SOAPServer {
      * @param String  $shortName       Unix name of the project
      * @param String  $publicName      Full name of the project
      * @param String  $privacy         Either 'public' or 'private'
-     * @param Integer $templateId      Id of template project
+     * @param int $templateId Id of template project
      *
-     * @return Integer The ID of newly created project
+     * @return int The ID of newly created project
      */
     public function addProject($sessionKey, $adminSessionKey, $shortName, $publicName, $privacy, $templateId) {
         $requester          = $this->continueSession($sessionKey);
@@ -169,7 +169,7 @@ class Project_SOAPServer {
     /**
      * Return a project the user is authorized to use as template
      *
-     * @param Integer $id
+     * @param int $id
      * @param PFUser    $requester
      *
      * @return Project
@@ -209,7 +209,7 @@ class Project_SOAPServer {
      * @param String $privacy
      * @param Project $template
      *
-     * @return Integer
+     * @return int
      */
     private function formatDataAndCreateProject($shortName, $publicName, $privacy, Project $template)
     {
@@ -245,10 +245,10 @@ class Project_SOAPServer {
      * * 3201, Permission denied: need to be project admin
      *
      * @param String  $sessionKey The project admin session hash
-     * @param Integer $groupId Project ID
+     * @param int $groupId Project ID
      * @param String  $userLogin User login name
      *
-     * @return Boolean
+     * @return bool
      */
     public function addProjectMember($sessionKey, $groupId, $userLogin) {
         $project = $this->getProjectIfUserIsAdmin($groupId, $sessionKey);
@@ -266,10 +266,10 @@ class Project_SOAPServer {
      * * 3203, User not member of project
      *
      * @param String  $sessionKey The project admin session hash
-     * @param Integer $groupId Project ID
+     * @param int $groupId Project ID
      * @param String  $userLogin User login name
      *
-     * @return Boolean
+     * @return bool
      */
     public function removeProjectMember($sessionKey, $groupId, $userLogin)
     {
@@ -300,11 +300,11 @@ class Project_SOAPServer {
      *   * 3301, User Group doesn't exist
      *
      * @param String  $sessionKey The project admin session hash
-     * @param Integer $groupId    The Project id where the User Group is defined
-     * @param Integer $ugroupId   The User Group where the user should be added
-     * @param Integer $userId     The user id to add
+     * @param int $groupId The Project id where the User Group is defined
+     * @param int $ugroupId The User Group where the user should be added
+     * @param int $userId The user id to add
      * 
-     * @return Boolean 
+     * @return bool
      */
     public function addUserToUGroup($sessionKey, $groupId, $ugroupId, $userId) {
         $this->getProjectIfUserIsAdmin($groupId, $sessionKey);
@@ -332,11 +332,11 @@ class Project_SOAPServer {
      *   * 3301, User Group doesn't exist
      *
      * @param String  $sessionKey The project admin session hash
-     * @param Integer $groupId    The Project id where the User Group is defined
-     * @param Integer $ugroupId   The User Group where the user should be removed
-     * @param Integer $userId     The user id to remove
+     * @param int $groupId The Project id where the User Group is defined
+     * @param int $ugroupId The User Group where the user should be removed
+     * @param int $userId The user id to remove
      *
-     * @return Boolean
+     * @return bool
      */
     public function removeUserFromUGroup($sessionKey, $groupId, $ugroupId, $userId) {
         $this->getProjectIfUserIsAdmin($groupId, $sessionKey);
@@ -358,7 +358,7 @@ class Project_SOAPServer {
      * Create a generic user
      *
      * @param String  $session_key The project admin session hash
-     * @param Integer $group_id    The Project id where the User Group is defined
+     * @param int $group_id The Project id where the User Group is defined
      * @param String  $password    The password of the generic user about to be created
      *
      * @return UserInfo
@@ -392,7 +392,7 @@ class Project_SOAPServer {
     /**
      *
      * @param String  $session_key  The project admin session hash
-     * @param Integer $groupId      The Project id where the Generic user is
+     * @param int $groupId The Project id where the Generic user is
      */
     public function unsetGenericUser($session_key, $group_id) {
         if (! $this->isRequesterAdmin($session_key, $group_id)) {
@@ -410,7 +410,7 @@ class Project_SOAPServer {
      * Get a generic user
      *
      * @param String  $sessionKey The project admin session hash
-     * @param Integer $groupId    The Project id where the User Group is defined
+     * @param int $groupId The Project id where the User Group is defined
      *
      * @return UserInfo
      */
@@ -566,7 +566,7 @@ class Project_SOAPServer {
      * @param int     $group_id           The Id of the project
      * @param int     $service_id         The Id of the service
      *
-     * @return Boolean
+     * @return bool
      */
     public function activateService($session_key, $group_id, $service_id) {
         $project = $this->getProjectIfUserIsAdmin($group_id, $session_key);
@@ -591,7 +591,7 @@ class Project_SOAPServer {
      * @param int     $group_id           The Id of the project
      * @param int     $service_id         The Id of the service
      *
-     * @return Boolean
+     * @return bool
      */
     public function deactivateService($session_key, $group_id, $service_id) {
         $project = $this->getProjectIfUserIsAdmin($group_id, $session_key);
@@ -626,7 +626,7 @@ class Project_SOAPServer {
     /**
      * Return a Project is the given user is authorized to administrate it
      *
-     * @param Integer $groupId
+     * @param int $groupId
      * @param String  $sessionKey
      *
      * @return Project
@@ -652,9 +652,9 @@ class Project_SOAPServer {
      * Transform errors from feedback errors into SoapFault and return a boolean value accordingly
      *
      * @throws SoapFault
-     * @param Boolean $result Result of initial command
+     * @param bool $result Result of initial command
      *
-     * @return Boolean
+     * @return bool
      */
     private function returnFeedbackToSoapFault($result) {
         if (!$result) {

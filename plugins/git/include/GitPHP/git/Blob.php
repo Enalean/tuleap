@@ -105,7 +105,7 @@ class Blob extends FilesystemObject
      * Gets the blob data
      *
      * @access public
-     * @param boolean $explode true to explode data into an array of lines
+     * @param bool $explode true to explode data into an array of lines
      * @return string blob data
      */
     public function GetData($explode = false) // @codingStandardsIgnoreLine
@@ -142,7 +142,7 @@ class Blob extends FilesystemObject
      * @access public
      * @static
      * @param string $octMode octal mode
-     * @param boolean $local true if caller wants localized type
+     * @param bool $local true if caller wants localized type
      * @return string file type
      */
     public static function FileType($octMode, $local = false) // @codingStandardsIgnoreLine
@@ -187,7 +187,7 @@ class Blob extends FilesystemObject
      * Gets the blob size
      *
      * @access public
-     * @return integer size
+     * @return int size
      */
     public function GetSize() // @codingStandardsIgnoreLine
     {
@@ -208,7 +208,7 @@ class Blob extends FilesystemObject
      * Sets the blob size
      *
      * @access public
-     * @param integer $size size
+     * @param int $size size
      */
     public function SetSize($size) // @codingStandardsIgnoreLine
     {
@@ -221,7 +221,7 @@ class Blob extends FilesystemObject
      * Get the file mimetype
      *
      * @access public
-     * @param boolean $short true to only the type group
+     * @param bool $short true to only the type group
      * @return string mime
      */
     public function FileMime($short = false) // @codingStandardsIgnoreLine
@@ -493,7 +493,7 @@ class Blob extends FilesystemObject
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isBlob()
     {

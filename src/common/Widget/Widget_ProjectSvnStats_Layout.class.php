@@ -36,7 +36,7 @@ class Widget_ProjectSvnStats_Layout {
     /**
      * Constructor of the class
      *
-     * @param Integer $nb_committer The number of lgend plots
+     * @param int $nb_committer The number of lgend plots
      *
      * @return Void
      */
@@ -48,7 +48,7 @@ class Widget_ProjectSvnStats_Layout {
     /**
      * Adjust the chart width to fit legend ratio
      *
-     * @return Boolean
+     * @return bool
      */
     public function getChartWidth() {
         return $this->hasOnlyOneColumn() ? 400 : 550;
@@ -57,7 +57,7 @@ class Widget_ProjectSvnStats_Layout {
     /**
      * Adjust the chart heigh to fit legend ratio
      *
-     * @return Boolean
+     * @return bool
      */
     public function getChartHeigh() {
         return $this->hasOnlyOneColumn() ? 300+16*$this->nb_committer*(1/$this->legend_ratio) : 300+(16+$this->legend_ratio)*$this->nb_committer;
@@ -67,7 +67,7 @@ class Widget_ProjectSvnStats_Layout {
      * Specify marging between the image bottom and the legend top
      * according to computed legend ratio(less than 10, between 10 and 20 or more than 20 legend items, etc...).
      *
-     * @return Integer
+     * @return int
      */
     private function getCustomImageMargin() {
         return $this->hasMoreThanTwoColumns() ? 80+(16-$this->legend_ratio)*$this->nb_committer : 125+15*(1/$this->legend_ratio)*$this->nb_committer;
@@ -76,7 +76,7 @@ class Widget_ProjectSvnStats_Layout {
     /**
      * Check if committers number take one legend column
      *
-     * @return Boolean
+     * @return bool
      */
     private function hasOnlyOneColumn() {
         return $this->legend_ratio < 1;
@@ -129,7 +129,7 @@ class Widget_ProjectSvnStats_Layout {
     /**
      * Check if committers number take more than two legend columns
      *
-     * @return Boolean
+     * @return bool
      */
     private function hasMoreThanTwoColumns() {
         return $this->legend_ratio > 2;

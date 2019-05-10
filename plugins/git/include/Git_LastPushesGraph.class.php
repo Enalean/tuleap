@@ -30,7 +30,7 @@ class Git_LastPushesGraph {
     public const NUMBER_OF_REPOSITORIES_BEFORE_GRAPH_LABEL_BREAK_DISPLAY = 15;
 
     /**
-     * @var Boolean
+     * @var bool
      */
     public $displayChart;
 
@@ -40,7 +40,7 @@ class Git_LastPushesGraph {
     public $repoList   = array();
 
     /**
-     * @var Integer
+     * @var int
      */
     public $weeksNumber;
 
@@ -67,8 +67,8 @@ class Git_LastPushesGraph {
     /**
      *
      *
-     * @param Integer $groupId     Project Id
-     * @param Integer $weeksNumber Statistics duration in weeks
+     * @param int $groupId Project Id
+     * @param int $weeksNumber Statistics duration in weeks
      *
      * @return Void
      */

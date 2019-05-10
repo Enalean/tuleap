@@ -25,7 +25,7 @@ class WikiAttachmentRevisionDao extends DataAccessObject {
     /**
      * Create a new attachment revision
      *
-     * @return boolean success or failure
+     * @return bool success or failure
      */
     function create($attachmentId, $ownerId, $date, $revision, $type, $size) {
         $sql = sprintf('INSERT INTO wiki_attachment_revision SET'

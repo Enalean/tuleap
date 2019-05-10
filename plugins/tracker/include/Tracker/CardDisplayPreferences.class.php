@@ -25,8 +25,8 @@
 interface Tracker_CardDisplayPreferences {
 
     /**
-     * @return Boolean True if users' avatars should be
-     * displayed instead of usernames.
+     * @return bool True if users' avatars should be
+ * displayed instead of usernames.
      */
     public function shouldDisplayAvatars();
 }

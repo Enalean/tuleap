@@ -42,7 +42,7 @@ class ArtifactReportField extends ArtifactField {
 	 *
 	 *
 	 *	@param		
-	 *	@return	boolean	success.
+	 *	@return bool success.
 	 */
 	function __construct() {
 		parent::__construct();
@@ -88,7 +88,7 @@ class ArtifactReportField extends ArtifactField {
 	/**
 	 *  Return if the show_on_query attribute is equal to 1
 	 *
-	 *	@return boolean
+	 *	@return bool
 	 *
 	 */
 	function isShowOnQuery() {

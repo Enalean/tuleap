@@ -59,7 +59,7 @@ class SystemEvent_COMPUTE_MD5SUM extends SystemEvent {
     /** 
      * Process stored event
      * 
-     * @return Boolean
+     * @return bool
      */
     public function process() {
         $fileId = $this->getIdFromParam($this->parameters);
@@ -109,10 +109,10 @@ class SystemEvent_COMPUTE_MD5SUM extends SystemEvent {
     /**
      * Inserts the computed md5sum for the uploaded files using ftp
      * 
-     * @param Integer $fileId
+     * @param int $fileId
      * @param String  $md5Computed
      *
-     * @return Boolean
+     * @return bool
      */
     public function updateDB($fileId, $md5Computed) {
         $fileFactory = $this->getFileFactory();
@@ -135,7 +135,7 @@ class SystemEvent_COMPUTE_MD5SUM extends SystemEvent {
      * @param String  $bodyContent
      * @param Array   $option
      * 
-     * @return Boolean
+     * @return bool
      */
     function sendNotificationMail($user, $file, $bodyContent, $option)
     {
@@ -157,7 +157,7 @@ class SystemEvent_COMPUTE_MD5SUM extends SystemEvent {
      * 
      * @param FRSFile $file
      * 
-     * @return Boolean 
+     * @return bool
      */
     function compareMd5Checksums($file) {
         $fileFactory = $this->getFileFactory();

@@ -75,7 +75,7 @@ class CrossReference {
      * Return true if current CrossReference is really "cross referenced" with $crossref
      *
      * @param CrossReference $crossref
-     * @return boolean true if current CrossReference is really "cross referenced" with $crossref
+     * @return bool true if current CrossReference is really "cross referenced" with $crossref
      */
     function isCrossReferenceWith($crossref) {
         return $this->getRefSourceId() == $crossref->getRefTargetId() &&

@@ -105,7 +105,7 @@ class PlanningResource extends AuthenticatedResource {
     }
 
     /**
-     * @param integer $id
+     * @param int $id
      *
      * @return Planning
      * @throws RestException 403

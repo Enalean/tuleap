@@ -26,7 +26,7 @@ class Git_PostReceiveMailDao extends \Tuleap\DB\DataAccessObject
 {
     /**
      * Searches Git_PostReceiveMailDao by repository_id
-     * @param Integer $repositoryId
+     * @param int $repositoryId
      *
      * @return DataAccessResult
      */
@@ -50,10 +50,10 @@ class Git_PostReceiveMailDao extends \Tuleap\DB\DataAccessObject
     /**
      * Remove Git repository email notification
      *
-     * @param Integer $repositoryId Id of the watched Git repository
+     * @param int $repositoryId Id of the watched Git repository
      * @param String  $recipient email adress to remove from notification
      *
-     * @return Boolean
+     * @return bool
      */
     public function removeNotification($repositoryId, $recipient)
     {

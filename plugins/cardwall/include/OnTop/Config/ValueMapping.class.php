@@ -63,7 +63,7 @@ class Cardwall_OnTop_Config_ValueMapping {
      *
      * @param String $artifact_status_label
      *
-     * @return Boolean
+     * @return bool
      */
     public function matchStatusLabel($artifact_status_label) {
         return $this->matchLabel($artifact_status_label) || $this->matchNone($artifact_status_label);

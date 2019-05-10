@@ -30,7 +30,7 @@ class Tracker_FormElement_Field_MultiSelectbox extends Tracker_FormElement_Field
     );
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isMultiple() {
         return true;
@@ -45,7 +45,7 @@ class Tracker_FormElement_Field_MultiSelectbox extends Tracker_FormElement_Field
      * This hooks is here to delete specific properties,
      * or specific values of the field.
      * (The field itself will be deleted later)
-     * @return boolean true if success
+     * @return bool true if success
      */
     public function delete() {
         return $this->getDao()->delete($this->id);
@@ -87,7 +87,7 @@ class Tracker_FormElement_Field_MultiSelectbox extends Tracker_FormElement_Field
      * Change the type of the multi select box
      * @param string $type the new type
      *
-     * @return boolean true if the change is allowed and successful
+     * @return bool true if the change is allowed and successful
      */
     public function changeType($type) {
         if (in_array($type, array('sb', 'rb', 'cb'))) {
@@ -162,7 +162,7 @@ class Tracker_FormElement_Field_MultiSelectbox extends Tracker_FormElement_Field
     }
 
     /**
-     * @return boolean true if the value corresponds to what we defined as "none"
+     * @return bool true if the value corresponds to what we defined as "none"
      */
     public function isNone($value) {
         return $this->isScalarNone($value) || (is_array($value) && $this->isArrayNone($value));

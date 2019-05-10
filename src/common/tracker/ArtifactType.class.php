@@ -105,7 +105,7 @@ class ArtifactType {
 	 *	@param	object	The Group object.
 	 *	@param	int		The id # assigned to this artifact type in the db.
 	 *  @param	array	The associative array of data.
-	 *	@return boolean	success.
+	 *	@return bool success.
 	 */
 	function __construct($Group,$artifact_type_id=false, $arr=false) {
 	  global $Language;
@@ -159,7 +159,7 @@ class ArtifactType {
 	 *
 	 *	@param	atid: the artfact type id 
 	 *
-	 *	@return boolean
+	 *	@return bool
 	 */
 	function createUserPerms($atid) {
 	  global $Language;
@@ -224,7 +224,7 @@ class ArtifactType {
 	 *  fetchData - re-fetch the data for this ArtifactType from the database.
 	 *
 	 *  @param	int		The artifact type ID.
-	 *  @return boolean	success.
+	 *  @return bool success.
 	 */
 	function fetchData($artifact_type_id) {
 	  global $Language;
@@ -292,7 +292,7 @@ class ArtifactType {
 	/**
 	 *	  isInstantiatedForNewProjects
 	 *
-	 *	  @return	boolean - true if the tracker is instantiated for new projects (tracker templates).
+	 *	  @return bool - true if the tracker is instantiated for new projects (tracker templates).
 	 */
 	function isInstantiatedForNewProjects() {
 		return $this->data_array['instantiate_for_new_projects'];
@@ -301,7 +301,7 @@ class ArtifactType {
 	/**
 	 *	  allowsAnon - determine if non-logged-in users can post.
 	 *
-	 *	  @return	boolean allow_anonymous_submissions.
+	 *	  @return bool allow_anonymous_submissions.
 	 */
 	function allowsAnon() {
             if (! isset($this->data_array['allow_anon'])) {
@@ -318,7 +318,7 @@ class ArtifactType {
 	/**
 	 *	  allowsCopy - determine if artifacts can be copied using a copy button
 	 *
-	 *	  @return	boolean	allow_copy.
+	 *	  @return bool allow_copy.
 	 */
 	function allowsCopy() {
 		return $this->data_array['allow_copy'];
@@ -381,7 +381,7 @@ class ArtifactType {
 	/**
 	 *	  this tracker is not deleted
 	 *
-	 *	  @return boolean.
+	 *	  @return bool .
 	 */
 	function isValid() {
 		return ($this->data_array['status'] == 'A');
@@ -408,7 +408,7 @@ class ArtifactType {
 	/**
 	 * getStopNotification - get notification status in this tracker (1 for stopped or 0 for active)
 	 * 
-	 * @return boolean: true if notification stopped, false if notification is active
+	 * @return bool : true if notification stopped, false if notification is active
 	 */
 	function getStopNotification() {
 		return $this->data_array['stop_notification'];
@@ -433,7 +433,7 @@ class ArtifactType {
 	 *	@param	int		user_id of the new user.
 	 *  @param  value: the value permission
 	 *
-	 *	@return boolean	success.
+	 *	@return bool success.
 	 */
 	function addUser($id,$value) {
 	  global $Language;
@@ -461,7 +461,7 @@ class ArtifactType {
 	 *	existUser - check if a user is already in the project permissions
 	 *
 	 *	@param	int		user_id of the new user.
-	 *	@return boolean	success.
+	 *	@return bool success.
 	 */
 	function existUser($id) {
 	 global $Language;
@@ -484,7 +484,7 @@ class ArtifactType {
 	 *
 	 *	@param	int		user_id of the user to update.
 	 *	@param	int		(1) tech only, (2) admin & tech (3) admin only.
-	 *	@return boolean	success.
+	 *	@return bool success.
 	 */
 	function updateUser($id,$perm_level) {
 	  global $Language;
@@ -512,7 +512,7 @@ class ArtifactType {
 	 *	deleteUser - delete a user's permissions.
 	 *
 	 *	@param	int		user_id of the user who's permissions to delete.
-	 *	@return boolean	success.
+	 *	@return bool success.
 	 */
 	function deleteUser($id) {
 	  global $Language;
@@ -539,9 +539,9 @@ class ArtifactType {
 	/**
 	 *	preDelete - Mark this for deletion.
 	 *
-	 * @param Boolean $bypassPerms Set to true to bypass testing if user is tracker admin
+	 * @param bool $bypassPerms Set to true to bypass testing if user is tracker admin
 	 *
-	 *	@return boolean	success.
+	 *	@return bool success.
 	 */
 	function preDelete($bypassPerms = false) {
 	  global $Language;
@@ -565,7 +565,7 @@ class ArtifactType {
 	/**
 	 *	delay - change date for deletion.
 	 *
-	 *	@return boolean	success.
+	 *	@return bool success.
 	 */
 	function delay($date) {
 		global $Language;
@@ -593,7 +593,7 @@ class ArtifactType {
 	/**
 	 *	restore - Unmark this for deletion.
 	 *
-	 *	@return boolean	success.
+	 *	@return bool success.
 	 */
 	function restore() {
 	  global $Language;
@@ -618,7 +618,7 @@ class ArtifactType {
 	 *
 	 *  @param atid: the group artifact id
 	 *	@param array: the array which contains the user permissions.
-	 *	@return boolean	success.
+	 *	@return bool success.
 	 */
 	function updateUsers($atid,$user_name) {
 	  global $Language;
@@ -664,7 +664,7 @@ class ArtifactType {
          *        Note that if there is no group explicitely auhtorized, access is denied (don't check default values)
 	 *
 	 *	  @param $my_user_id	if not specified, use the current user id..
-	 *	  @return boolean	user_can_view.
+	 *	  @return bool user_can_view.
 	 */
 	function userCanView($my_user_id=0) {
             if (!$my_user_id) {
@@ -705,7 +705,7 @@ class ArtifactType {
          *        the 'TRACKER_ACCESS_FULL' permission on the tracker.
 	 *
 	 *	  @param $my_user_id	if not specified, use the current user id..
-	 *	  @return boolean
+	 *	  @return bool
 	 */
 	function userHasFullAccess($my_user_id=0) {
             if (!$my_user_id) {
@@ -740,7 +740,7 @@ class ArtifactType {
 	 *	userIsAdmin - see if the user's perms are >= 2 or project admin.
 	 *
 	 *  @param int $user_id the user ID to test, or current user if false
-	 *	@return boolean
+	 *	@return bool
 	 */
 	function userIsAdmin($user_id = false) { 
 	    $um = UserManager::instance();
@@ -763,7 +763,7 @@ class ArtifactType {
          *        Note that if there is no group explicitely auhtorized, access is denied (don't check default values)
 	 *
 	 *	  @param $my_user_id	if not specified, use the current user id..
-	 *	  @return boolean	user_can_submit.
+	 *	  @return bool user_can_submit.
 	 */
         function userCanSubmit($my_user_id=0) {
 
@@ -1061,7 +1061,7 @@ class ArtifactType {
 	 *
 	 * @param group_artifact_id: the destination artifact type id
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	function copyNotificationEvent($group_artifact_id) {
 	    global $Language;
@@ -1084,7 +1084,7 @@ class ArtifactType {
 	 *
 	 * @param group_artifact_id: the destination artifact type id
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	function copyNotificationRole($group_artifact_id) {
 	    global $Language;
@@ -1106,7 +1106,7 @@ class ArtifactType {
 	 *
 	 * Get artifacts by age
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	function getOpenArtifactsByAge() {
 		$time_now=time();
@@ -1144,7 +1144,7 @@ class ArtifactType {
 	 *
 	 * Get artifacts by age
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	function getArtifactsByAge() {
 		$time_now=time();
@@ -1180,7 +1180,7 @@ class ArtifactType {
 	 *
 	 * Get artifacts grouped by standard field
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	function getArtifactsBy($field) {
 	
@@ -1211,7 +1211,7 @@ class ArtifactType {
 	 *
 	 * Get open artifacts grouped by standard field
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	function getOpenArtifactsBy($field) {
 	
@@ -1243,7 +1243,7 @@ class ArtifactType {
 	 *
 	 * Get artifacts grouped by field
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	function getArtifactsByField($field) {
 	
@@ -1276,7 +1276,7 @@ class ArtifactType {
 	 *
 	 * Get open artifacts grouped by field
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	function getOpenArtifactsByField($field) {
 	
@@ -1315,7 +1315,7 @@ class ArtifactType {
 	 * @param role: the role
 	 * @param changes: array of changes
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	function checkNotification($user_id, $role, $changes=false) {
 	
@@ -1746,7 +1746,7 @@ class ArtifactType {
      	* @param artifact_cc_id: cc list id
      	* @param changes (OUT): list of changes
      	*
-     	* @return boolean
+	    * @return bool
      	*/
     	function deleteCC($delete_cc) {
         	

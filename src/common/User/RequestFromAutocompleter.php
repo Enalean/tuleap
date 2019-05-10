@@ -132,7 +132,7 @@ class RequestFromAutocompleter
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isNotificationEmpty()
     {

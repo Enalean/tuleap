@@ -42,7 +42,7 @@ class WebDAVProject extends Sabre_DAV_Directory
      *
      * @param PFUser $user
      * @param Project $project
-     * @param Integer $maxFileSize
+     * @param int $maxFileSize
      *
      * @return void
      */
@@ -139,7 +139,7 @@ class WebDAVProject extends Sabre_DAV_Directory
     /**
      * Returns the project Id
      *
-     * @return Integer
+     * @return int
      */
     function getGroupId() {
 
@@ -172,7 +172,7 @@ class WebDAVProject extends Sabre_DAV_Directory
     /**
      * Returns the max file size
      *
-     * @return Integer
+     * @return int
      */
     function getMaxFileSize() {
         return $this->maxFileSize;
@@ -181,7 +181,7 @@ class WebDAVProject extends Sabre_DAV_Directory
     /**
      * Returns whether the project exist or not
      *
-     * @return Boolean
+     * @return bool
      */
     function exist() {
 
@@ -193,7 +193,7 @@ class WebDAVProject extends Sabre_DAV_Directory
     /**
      * Returns whether the project is active or not
      *
-     * @return Boolean
+     * @return bool
      */
     function isActive() {
 
@@ -213,7 +213,7 @@ class WebDAVProject extends Sabre_DAV_Directory
     /**
      * Returns whether the project uses files or not
      *
-     * @return Boolean
+     * @return bool
      */
     function usesFile() {
 
@@ -224,7 +224,7 @@ class WebDAVProject extends Sabre_DAV_Directory
     /**
      * Checks whether the user can read the project or not
      *
-     * @return Boolean
+     * @return bool
      */
     public function userCanRead()
     {

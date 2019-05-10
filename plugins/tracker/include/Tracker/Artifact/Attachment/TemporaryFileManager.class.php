@@ -82,7 +82,7 @@ class Tracker_Artifact_Attachment_TemporaryFileManager {
     /**
      * Does the temporary file exists on filesystem
      *
-     * @return Boolean
+     * @return bool
      */
     public function exists(PFUser $user, $attachment_name) {
         return file_exists($this->getPath($user, $attachment_name));
@@ -173,7 +173,7 @@ class Tracker_Artifact_Attachment_TemporaryFileManager {
      * @param Tracker_Artifact_Attachment_TemporaryFile $file
      * @param int $offset
      *
-     * @return boolean
+     * @return bool
      * @throws Tracker_Artifact_Attachment_InvalidPathException
      * @throws Tracker_Artifact_Attachment_InvalidOffsetException
      */

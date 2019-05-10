@@ -30,7 +30,7 @@ class UGroupDao extends DataAccessObject {
      * Searches static ProjectUGroup by GroupId
      * return all static ugroups
      *
-     * @param Integer $group_id Id of the project
+     * @param int $group_id Id of the project
      *
      * @return DataAccessResult
      */
@@ -45,7 +45,7 @@ class UGroupDao extends DataAccessObject {
     /**
      * Searches by ugroup id
      *
-     * @param Integer $ugroup_id Id of the ugroup
+     * @param int $ugroup_id Id of the ugroup
      *
      * @return DataAccessResult
      */
@@ -118,7 +118,7 @@ class UGroupDao extends DataAccessObject {
      * Searches group that user belongs to one of its static ugroup
      * return all groups
      *
-     * @param Integer $userId Id of the user
+     * @param int $userId Id of the user
      *
      * @return DataAccessResult
      */
@@ -197,10 +197,10 @@ class UGroupDao extends DataAccessObject {
     /**
      * Checks ProjectUGroup  validity by GroupId
      *
-     * @param integer $groupId  The group id
-     * @param integer $ugroupId The ugroup id
+     * @param int $groupId The group id
+     * @param int $ugroupId The ugroup id
      *
-     * @return boolean
+     * @return bool
      */
     function checkUGroupValidityByGroupId($groupId, $ugroupId) {
         $groupId = $this->da->escapeInt($groupId);
@@ -220,10 +220,10 @@ class UGroupDao extends DataAccessObject {
     /**
      * Update binding option for a given ProjectUGroup
      *
-     * @param Integer $ugroupId The bound ugroup id
-     * @param Integer $sourceId The ugroup id we want to clone
+     * @param int $ugroupId The bound ugroup id
+     * @param int $sourceId The ugroup id we want to clone
      *
-     * @return Boolean
+     * @return bool
      */
     function updateUgroupBinding($ugroupId, $sourceId = null) {
         $ugroupId = $this->da->escapeInt($ugroupId);
@@ -240,7 +240,7 @@ class UGroupDao extends DataAccessObject {
     /**
      * Retrieve all bound UGroups of a given ProjectUGroup
      *
-     * @param Integer $sourceId The source ugroup id
+     * @param int $sourceId The source ugroup id
      *
      * @return DataAccessResult
      */
@@ -268,7 +268,7 @@ class UGroupDao extends DataAccessObject {
     /**
      * Retrieve the source user group from a given bound ugroup id
      *
-     * @param Integer $ugroupId The source ugroup id
+     * @param int $ugroupId The source ugroup id
      *
      * @return DataAccessResult
      */

@@ -264,7 +264,7 @@ class ArtifactDateReminderFactory {
      * Get the number of mails that should have been sent, but
      * weren't sent due to different possible issues
      *
-     * @param Integer $current_time Time when the computation should occur (appart for test, should be time())
+     * @param int $current_time Time when the computation should occur (appart for test, should be time())
      *
      * @return int
      */
@@ -428,7 +428,7 @@ class ArtifactDateReminderFactory {
     /**
      * Check if user (user_id) is allowed to receive reminder mail
      *
-     * @return boolean
+     * @return bool
      */
     function isUserAllowedToBeNotified($user_id) {
         global $art_field_fact;
@@ -445,7 +445,7 @@ class ArtifactDateReminderFactory {
     /**
      * Send the notification mail, about an event
      *
-     * @return boolean
+     * @return bool
      */
     function handleNotification() {
         global $art_field_fact;
@@ -503,7 +503,7 @@ class ArtifactDateReminderFactory {
      *    (c)  increment notifications sent
      * }
      *
-     * @param Integer $current_time Time when the reminder status should be checked (appart for test should be time())
+     * @param int $current_time Time when the reminder status should be checked (appart for test should be time())
      */
     function checkReminderStatus($current_time) {
         $this->logger->info("Start");

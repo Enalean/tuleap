@@ -72,7 +72,7 @@ class WikiUser {
      * Populates the instance variables and calls $this->_ok() 
      * to ensure that the parameters are valid.
      * @param mixed $userid String of username or WikiUser object.
-     * @param integer $authlevel Authorization level.
+     * @param int $authlevel Authorization level.
      */
     function __construct (&$request, $userid = false, $authlevel = false) {
         $this->_request = &$request;
@@ -114,7 +114,7 @@ class WikiUser {
      * 
      * If the WikiUser object has a valid authorization level and the 
      * userid is a string returns true, else false.
-     * @return boolean If valid level and username string true, else false
+     * @return bool If valid level and username string true, else false
      */
     function _ok () {
         if ((in_array($this->_level, array(WIKIAUTH_BOGO,

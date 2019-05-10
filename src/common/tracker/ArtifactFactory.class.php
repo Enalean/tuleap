@@ -40,7 +40,7 @@ class ArtifactFactory {
 	 *
 	 *
 	 *	@param	object	The ArtifactType object to which this ArtifactFactory is associated.
-	 *	@return	boolean	success.
+	 *	@return bool success.
 	 */
 	function __construct(&$ArtifactType) {
 	  global $Language;

@@ -31,7 +31,7 @@ abstract class GraphOnTrackersV5_Engine {
     public $colors;
 
     /**
-     * @return boolean true if the data are valid to buid the chart
+     * @return bool true if the data are valid to buid the chart
      */
     public function validData() {
         if (count($this->data) > 0) {

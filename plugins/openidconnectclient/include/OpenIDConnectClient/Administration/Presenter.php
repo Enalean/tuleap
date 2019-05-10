@@ -29,7 +29,7 @@ class Presenter {
     public $providers_presenters;
 
     /**
-     * @var boolean
+     * @var bool
      */
     public $is_a_provider_configured_as_unique_authentication_endpoint;
 

@@ -55,7 +55,7 @@ class SystemEvent_UGROUP_MODIFY extends SystemEvent {
     /** 
      * Process stored event
      *
-     * @return Boolean
+     * @return bool
      */
     function process() {
         $ugroup_name = null;
@@ -110,10 +110,10 @@ class SystemEvent_UGROUP_MODIFY extends SystemEvent {
      *
      * @protected for testing purpose
      *
-     * @param Integer $ugroup_id Id of the deleted user group
-     * @param Integer $group_id  Id of the project
+     * @param int $ugroup_id Id of the deleted user group
+     * @param int $group_id Id of the project
      *
-     * @return Boolean
+     * @return bool
      */
     protected function processUgroupBinding($ugroup_id, $group_id) {
         $ugroup_binding               = $this->getUgroupBinding();

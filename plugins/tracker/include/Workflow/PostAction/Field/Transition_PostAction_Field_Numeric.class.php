@@ -34,7 +34,7 @@ abstract class Transition_PostAction_Field_Numeric extends Transition_PostAction
      * Constructor
      *
      * @param Transition                   $transition The transition the post action belongs to
-     * @param Integer                      $id         Id of the post action
+     * @param int $id Id of the post action
      * @param Tracker_FormElement_Field    $field      The field the post action should modify
      * @param int|float $value The value to set
      */

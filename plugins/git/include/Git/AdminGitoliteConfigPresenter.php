@@ -32,7 +32,7 @@ class Git_AdminGitoliteConfigPresenter  extends Git_AdminPresenter
     private $authorized_projects;
 
     /**
-     * @var Boolean
+     * @var bool
      */
     private $show_big_objects_config;
 

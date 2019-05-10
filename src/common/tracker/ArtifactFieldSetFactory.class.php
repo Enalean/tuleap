@@ -58,7 +58,7 @@ class ArtifactFieldSetFactory {
      *
      *
      *	@param	object $ArtifactType The ArtifactType object to which this ArtifactFieldSetFactory is associated
-     *	@return	boolean	success.
+     *	@return bool success.
      */
     function __construct($ArtifactType) {
         if ( $ArtifactType ) {
@@ -87,7 +87,7 @@ class ArtifactFieldSetFactory {
      *  Retrieve the fieldsets associated with an artifact type
      *
      *  @param int $group_artifact_id the artifact type id
-     *	@return	boolean	success
+     *	@return bool success
      */
     function fetchData($group_artifact_id) {
         
@@ -247,7 +247,7 @@ class ArtifactFieldSetFactory {
      *  @param string $description the field set description
      *  @param int $rank the rank on screen
      *
-     *  @return boolean - succeed or failed
+     *  @return bool - succeed or failed
      */
     function createFieldSet($fieldset_name, $description, $rank) {
     
@@ -284,7 +284,7 @@ class ArtifactFieldSetFactory {
 	 *	Delete a FieldSet
 	 *
 	 *  @param int $field_set_id the field set id to delete
-	 *	@return	boolean true if the deletion happen without problems, false otherwise
+	 *	@return bool true if the deletion happen without problems, false otherwise
 	 */
 	function deleteFieldSet($field_set_id) {
 
@@ -317,7 +317,7 @@ class ArtifactFieldSetFactory {
     /**
 	 *	Delete all the FieldSets of this ArtifactType, without checking if they are empty or not.
 	 *
-	 *	@return	boolean true if the deletion happen without problems, false otherwise
+	 *	@return bool true if the deletion happen without problems, false otherwise
 	 */
 	function deleteFieldSets() {
 		// Delete artifact_field_set records

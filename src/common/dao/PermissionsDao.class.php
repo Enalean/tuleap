@@ -42,7 +42,7 @@ class PermissionsDao extends DataAccessObject implements IPermissionsNGDao {
      *
      * @param String  $objectId       Id of object
      * @param String  $permissionType Permission type
-     * @param Boolean $withName       Whether to include the group name or not
+     * @param bool $withName Whether to include the group name or not
      * 
      * @return DataAccessResult
      */
@@ -79,7 +79,7 @@ class PermissionsDao extends DataAccessObject implements IPermissionsNGDao {
      * Return the list of the default ugroup_ids authorized to access the given permission_type
      *
      * @param String  $permissionType Permission type
-     * @param Boolean $withName       Whether to include the group name or not
+     * @param bool $withName Whether to include the group name or not
      *
      * @return DataAccessResult
      */
@@ -141,7 +141,7 @@ class PermissionsDao extends DataAccessObject implements IPermissionsNGDao {
     * @param $perms
     * @param $toGroupId
     * 
-    * @return Boolean
+    * @return bool
     */
     function clonePermissions($source, $target, $perms, $toGroupId=0) {
         $sql = sprintf("DELETE FROM permissions ".
@@ -178,7 +178,7 @@ class PermissionsDao extends DataAccessObject implements IPermissionsNGDao {
     * @param int    $duplicate_type
     * @param Array  $ugroup_mapping, an array of static ugroups
     *
-    * @return Boolean
+    * @return bool
     */
     public function duplicatePermissions($from, $to, array $permission_type, $duplicate_type, $ugroup_mapping = false)
     {
@@ -244,7 +244,7 @@ class PermissionsDao extends DataAccessObject implements IPermissionsNGDao {
      * @param String $permissionType Permission
      * @param String $objectId       Affected object's id
      * 
-     * @return Boolean
+     * @return bool
      */
     function clearPermission($permissionType, $objectId) {
         $sql = ' DELETE FROM permissions '.

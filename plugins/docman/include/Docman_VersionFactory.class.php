@@ -96,7 +96,7 @@ class Docman_VersionFactory {
     /**
      * Returns the version of a given id
      *
-     * @param Integer $id    Id of the version
+     * @param int $id Id of the version
      * @param String  $table Table name
      *
      * @return Docman_Version | null
@@ -117,7 +117,7 @@ class Docman_VersionFactory {
      *
      * @param Docman_Item $item
      *
-     * @return Integer
+     * @return int
      */
     function getNextVersionNumber($item) {
         $dao = $this->_getVersionDao();
@@ -128,9 +128,9 @@ class Docman_VersionFactory {
      * Delete given version of document
      * 
      * @param Docman_Item $item
-     * @param Integer        $number
+     * @param int $number
      * 
-     * @return Boolean
+     * @return bool
      */
     function deleteSpecificVersion($item, $number) {
         // The event must be processed before the version is deleted
@@ -144,9 +144,9 @@ class Docman_VersionFactory {
     /**
      * Physically remove files related to deleted versions
      *
-     * @param Integer $time
+     * @param int $time
      *
-     * @return Boolean
+     * @return bool
      */
     public function purgeDeletedVersions($time) {
         $dao = $this->_getVersionDao();
@@ -186,7 +186,7 @@ class Docman_VersionFactory {
      *
      * @param Docman_Version $version
      *
-     * @return Boolean
+     * @return bool
      */
     public function purgeDeletedVersion($version)
     {
@@ -206,7 +206,7 @@ class Docman_VersionFactory {
      * 
      * @param Docman_Version $version
      * 
-     * @return Boolean
+     * @return bool
      */
     public function restore($version) {
         $dao = $this->_getVersionDao();
@@ -242,7 +242,7 @@ class Docman_VersionFactory {
      * @param  String  $docman_path
      * @param  Project $project
      * @param  String  $new_name
-     * @return Boolean
+     * @return bool
      */
     function renameProject($docman_path, $project, $new_name){
         $updateSystem = rename($docman_path.$project->getUnixName(true), $docman_path.strtolower($new_name));
@@ -257,9 +257,9 @@ class Docman_VersionFactory {
      * List pending versions ( marked as deleted but not physically removed yet)
      * in order to ease the restore
      *
-     * @param Integer $groupId
-     * @param Integer $offset
-     * @param Integer $limit
+     * @param int $groupId
+     * @param int $offset
+     * @param int $limit
      *
      * @return Array
      */
@@ -294,7 +294,7 @@ class Docman_VersionFactory {
      *
      * @param String $path
      *
-     * @return Boolean
+     * @return bool
      */
     function physicalDeleteVersion($path) {
         if (unlink($path)) {

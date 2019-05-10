@@ -869,7 +869,7 @@ class Tracker_FormElementFactory {
     /**
      * @param Tracker $tracker
      * @param mixed   $type    The type (string) or types (array of) you are looking for
-     * @param Boolean $used    Check if the type is used or not
+     * @param bool $used Check if the type is used or not
      *
      * @return Array of Tracker_FormElement All formElements used by the tracker
      */

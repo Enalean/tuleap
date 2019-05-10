@@ -41,7 +41,7 @@ class FileImporter
     /** @var ProjectManager */
     private $project_manager;
 
-    /** @var integer */
+    /** @var int */
     private $nb_lines_imported;
 
     /** @var string[] */

@@ -88,7 +88,7 @@ interface LegacyDataAccessResultInterface extends \IProvideDataAccessResult
      *
      * @deprecated
      *
-     * @return boolean
+     * @return bool
      */
     public function valid();
 

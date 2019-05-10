@@ -35,7 +35,7 @@ class FormPresenter {
     public $repositories;
 
     /**
-     * @var boolean
+     * @var bool
      */
     public $is_checked;
 

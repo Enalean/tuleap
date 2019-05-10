@@ -26,7 +26,7 @@ function account_add_user_to_group ($group_id, &$user_unix_name)
 /**
  * Add a new user into a given project
  *
- * @param integer $group_id Project id
+ * @param int $group_id Project id
  * @param PFUser $user User to add
  * @param bool $check_user_status
  * @return bool
@@ -90,10 +90,10 @@ function account_add_user_obj_to_group ($group_id, PFUser $user, $check_user_sta
 /**
  * Warn user she has been added to a project
  *
- * @param Integer $group_id id of the project
- * @param Integer $user_id  id of the user
+ * @param int $group_id id of the project
+ * @param int $user_id id of the user
  *
- * @return Boolean true if the mail was sent false otherwise
+ * @return bool true if the mail was sent false otherwise
  */
 function account_send_add_user_to_group_email($group_id,$user_id) {
   global $Language;
@@ -146,7 +146,7 @@ function account_make_login_from_email($email) {
  * @deprecated
  * @see Valid_UserNameFormat
  * @param String $name
- * @return Integer
+ * @return int
  */
 function account_namevalid($name, $key = '') {
     $rule = new Rule_UserName();
@@ -163,7 +163,7 @@ function account_namevalid($name, $key = '') {
  * @deprecated
  * @see Rule_ProjectName
  * @param String $name
- * @return Integer
+ * @return int
  */
 function account_groupnamevalid($name) {
     $rule = new Rule_ProjectName();

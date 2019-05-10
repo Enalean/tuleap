@@ -227,7 +227,7 @@ class LDAP_UserManager {
      * This should be in UserManager
      *
      * @param String $name Name to test
-     * @return Boolean
+     * @return bool
      */
     function userNameIsAvailable($name) {
         $dao = $this->getDao();
@@ -363,7 +363,7 @@ class LDAP_UserManager {
      * @param  PFUser       $user
      * @param  LDAPResult $lr
      * @param  String     $password
-     * @return Boolean
+     * @return bool
      */
     function synchronizeUser(PFUser $user, LDAPResult $lr, $password) {
         $user->setPassword($password);
@@ -393,7 +393,7 @@ class LDAP_UserManager {
      * @param PFUser    $user    The user to update 
      * @param String  $ldapUid New LDAP login
      * 
-     * @return Boolean
+     * @return bool
      */
     function updateLdapUid(PFUser $user, $ldapUid) {
         if ($this->getDao()->updateLdapUid($user->getId(), $ldapUid)) {
@@ -469,7 +469,7 @@ class LDAP_UserManager {
      *
      * @param int $nbr_all_users
      *
-     * @return Boolean
+     * @return bool
      *
      */
     public function areUsersSupendable($nbr_all_users) {
@@ -486,7 +486,7 @@ class LDAP_UserManager {
      * @param int $nbr_users_to_suspend
      * @param int $nbr_all_users
      *
-     * @return Boolean
+     * @return bool
      *
      */
     public function checkThreshold($nbr_users_to_suspend, $nbr_all_users) {
@@ -513,7 +513,7 @@ class LDAP_UserManager {
      *
      * @param array $row
      *
-     * @return Boolean
+     * @return bool
      *
      */
     public function isUserDeletedFromLdap ($row) {

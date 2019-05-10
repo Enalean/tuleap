@@ -153,8 +153,8 @@ class Tracker_RulesManager
      *
      * @param int $tracker_id the artifact id to test
      * @param array $value_field_list the selected values to test for the artifact     *
-     * @return boolean True if the submitted values are coherent regarding the rules,
-     * false otherwise
+     * @return bool True if the submitted values are coherent regarding the rules,
+ * false otherwise
      */
     function validate($tracker_id, $value_field_list) {
         $valid_list_rules = $this->validateListRules($tracker_id, $value_field_list);
@@ -602,7 +602,7 @@ class Tracker_RulesManager
      *
      * @param int $tracker_id
      * @param array $value_field_list
-     * @return boolean
+     * @return bool
      */
     protected function validateDateRules($tracker_id, $value_field_list) {
         $rules = $this->getAllDateRulesByTrackerId($tracker_id);
@@ -677,7 +677,7 @@ class Tracker_RulesManager
      *
      * @param int $tracker_id
      * @param array $value_field_list
-     * @return boolean
+     * @return bool
      */
     protected function validateListRules($tracker_id, $value_field_list) {
          // construction of $values array : selected values in the form

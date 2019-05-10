@@ -66,7 +66,7 @@ class b201405060841_add_index_for_semantic_and_artifact extends ForgeUpgrade_Buc
      * @param String $tableName Table name
      * @param String $index     Index
      *
-     * @return Boolean
+     * @return bool
      */
     private function indexNameExists($tableName, $index) {
         $sql = 'SHOW INDEX FROM '.$tableName.' WHERE Key_name LIKE '.$this->db->dbh->quote($index);

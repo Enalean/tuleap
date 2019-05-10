@@ -399,7 +399,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
      *
      * @param PFUser $user The user who does the delete
      *
-     * @return boolean true if the user can delete
+     * @return bool true if the user can delete
      */
     protected function userCanDeletePermanently(PFUser $user) {
         // Only tracker admin can edit a comment
@@ -411,7 +411,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
      *
      * @param PFUser $user The user. If null, the current logged in user will be used.
      *
-     * @return boolean true if the user can delete
+     * @return bool true if the user can delete
      */
     protected function userCanDelete(?PFUser $user = null) {
         if (!$user) {
@@ -426,7 +426,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
      *
      * @param PFUser $user The user. If null, the current logged in user will be used.
      *
-     * @return boolean true if the user can edit
+     * @return bool true if the user can edit
      */
     public function userCanEdit(?PFUser $user = null) {
         if (!$user) {
@@ -549,7 +549,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
     /**
      * @param array $fields_data The data submitted (array of 'field_id' => 'value')
      *
-     * @return boolean true if there are changes in fields_data regarding this changeset, false if nothing has changed
+     * @return bool true if there are changes in fields_data regarding this changeset, false if nothing has changed
      */
     public function hasChanges(array $fields_data)
     {

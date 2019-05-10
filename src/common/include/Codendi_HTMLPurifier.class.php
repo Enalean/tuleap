@@ -279,7 +279,7 @@ class Codendi_HTMLPurifier {
      * Purify HTML and insert references
      *
      * @param String  $html Content to filter
-     * @param Integer $group_id
+     * @param int $group_id
      *
      * @return String
      */

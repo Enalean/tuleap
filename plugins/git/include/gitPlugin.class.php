@@ -2020,7 +2020,7 @@ class GitPlugin extends Plugin
     }
 
     /**
-     * @return boolean true if friendly URLs have been activated
+     * @return bool true if friendly URLs have been activated
      */
     public function areFriendlyUrlsActivated() {
         return (bool) $this->getConfigurationParameter('git_use_friendly_urls');

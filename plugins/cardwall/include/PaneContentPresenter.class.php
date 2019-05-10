@@ -30,7 +30,7 @@ class Cardwall_PaneContentPresenter extends Cardwall_BoardPresenter {
     public $switch_display_username_url;
 
     /**
-    * @var boolean
+    * @var bool
     */
     public $is_display_avatar_selected;
 
@@ -58,7 +58,7 @@ class Cardwall_PaneContentPresenter extends Cardwall_BoardPresenter {
      * @param Cardwall_Board                   $board The board
      * @param string                           $redirect_parameter the redirect paramter to add to various url
      * @param string                           $switch_display_username_url
-     * @param boolean                          $is_display_avatar_selected
+     * @param bool $is_display_avatar_selected
      * @param Planning                         $planning The concerned planning
      * @param Planning_Milestone               $milestone The milestone
      * @param Cardwall_EffortProgressPresenter $progress_presenter

@@ -80,7 +80,7 @@ class Cardwall_SingleCard {
     /**
      * Return a field on the card based on the card
      *
-     * @param Integer $id
+     * @param int $id
      *
      * @return Tracker_FormElement_Field
      */

@@ -51,7 +51,7 @@ class LDAP_SyncNotificationManager {
     /**
      * Prepare the body of the notification mail
      *
-     * @param Integer $unixProjectName  Unix name of the project we want to notify its administrators
+     * @param int $unixProjectName Unix name of the project we want to notify its administrators
      * @param PFUser  $user             Suspended user after LDAP daily synchro
      *
      * @return String
@@ -68,7 +68,7 @@ class LDAP_SyncNotificationManager {
     /**
      * Prepare the subject of the notification mail
      *
-     * @param Integer $projectName Public name of the project we want to notify its administrators
+     * @param int $projectName Public name of the project we want to notify its administrators
      * @param PFUser  $user        Suspended user after LDAP daily synchro
      *
      * @return String
