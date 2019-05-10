@@ -1,5 +1,6 @@
 include "artifact-definition.rnc"
 include "triggers.rnc"
+include "workflow.rnc"
 
 trackers =
     attribute use-natures { xsd:boolean }?,
@@ -94,41 +95,6 @@ tracker =
 
         element artifacts {
             artifacts
-        }?
-
-    workflowContent = (advancedWorkflow | simpleWorkflow)
-
-    advancedWorkflow =
-        element workflow {
-            element field_id {
-                attribute REF { xsd:IDREF }
-            }?,
-            element is_used {xsd:long}?,
-            element transitions {
-                element transition { transitionContent }*
-            }?
-        }?
-
-    simpleWorkflow =
-        element simple_workflow {
-            element field_id {
-                attribute REF { xsd:IDREF }
-            }?,
-            element is_used {xsd:long}?,
-            element states {
-                element state {
-                    element to_id {
-                        attribute REF { xsd:string }
-                    },
-                    element transitions {
-                        element transition {
-                            element from_id {
-                                attribute REF { xsd:string }
-                            }
-                        }+
-                    }
-                }+
-            }?
         }?
 
     formElementsContent =
@@ -232,71 +198,6 @@ tracker =
         attribute r { xsd:long },
         attribute g { xsd:long },
         attribute b { xsd:long }
-
-    transitionContent =
-        element from_id {
-            attribute REF { xsd:string }
-        },
-        element to_id {
-            attribute REF { xsd:string }
-        },
-        element postactions {
-            element postaction_field_date {
-                attribute valuetype { xsd:long },
-                element field_id {
-                    attribute REF { xsd:IDREF }
-                }
-            }*,
-            element postaction_field_int {
-                attribute value { xsd:long },
-                element field_id {
-                    attribute REF { xsd:IDREF }
-                }
-            }*,
-            element postaction_field_float {
-                attribute value { xsd:float },
-                element field_id {
-                    attribute REF { xsd:IDREF }
-                }
-            }*,
-            element postaction_ci_build {
-                attribute job_url { xsd:string }
-            }*
-        }?,
-        (
-            (
-                conditionPermissionsContent
-            )
-        |
-            (
-                element conditions {
-                    element condition {
-                        attribute type { "perms" },
-                        conditionPermissionsContent
-                    }?,
-                    element condition {
-                        attribute type { "notempty" },
-                        conditionFieldNotEmptyContent
-                    }?,
-                    element condition {
-                        attribute type { "commentnotempty" },
-                        attribute is_comment_required { "0" | "1" }
-                    }?
-                }?
-            )
-        )
-
-    conditionPermissionsContent =
-        element permissions {
-            element permission {
-                attribute ugroup { xsd:string }
-            }*
-        }
-
-    conditionFieldNotEmptyContent =
-        element field {
-            attribute REF { xsd:IDREF }
-        }+
 
     listRuleContent =
         (

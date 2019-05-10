@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+  <define name="workflowContent">
+    <choice>
+      <ref name="advancedWorkflow"/>
+      <ref name="simpleWorkflow"/>
+    </choice>
+  </define>
+  <define name="advancedWorkflow">
+    <optional>
+      <element name="workflow">
+        <optional>
+          <element name="field_id">
+            <attribute name="REF">
+              <data type="IDREF"/>
+            </attribute>
+          </element>
+        </optional>
+        <optional>
+          <element name="is_used">
+            <data type="long"/>
+          </element>
+        </optional>
+        <optional>
+          <element name="transitions">
+            <zeroOrMore>
+              <element name="transition">
+                <ref name="transitionContent"/>
+              </element>
+            </zeroOrMore>
+          </element>
+        </optional>
+      </element>
+    </optional>
+  </define>
+  <define name="simpleWorkflow">
+    <optional>
+      <element name="simple_workflow">
+        <optional>
+          <element name="field_id">
+            <attribute name="REF">
+              <data type="IDREF"/>
+            </attribute>
+          </element>
+        </optional>
+        <optional>
+          <element name="is_used">
+            <data type="long"/>
+          </element>
+        </optional>
+        <optional>
+          <element name="states">
+            <oneOrMore>
+              <element name="state">
+                <element name="to_id">
+                  <attribute name="REF">
+                    <data type="string"/>
+                  </attribute>
+                </element>
+                <element name="transitions">
+                  <oneOrMore>
+                    <element name="transition">
+                      <element name="from_id">
+                        <attribute name="REF">
+                          <data type="string"/>
+                        </attribute>
+                      </element>
+                    </element>
+                  </oneOrMore>
+                </element>
+              </element>
+            </oneOrMore>
+          </element>
+        </optional>
+      </element>
+    </optional>
+  </define>
+  <define name="transitionContent">
+    <element name="from_id">
+      <attribute name="REF">
+        <data type="string"/>
+      </attribute>
+    </element>
+    <element name="to_id">
+      <attribute name="REF">
+        <data type="string"/>
+      </attribute>
+    </element>
+    <optional>
+      <element name="postactions">
+        <zeroOrMore>
+          <element name="postaction_field_date">
+            <attribute name="valuetype">
+              <data type="long"/>
+            </attribute>
+            <element name="field_id">
+              <attribute name="REF">
+                <data type="IDREF"/>
+              </attribute>
+            </element>
+          </element>
+        </zeroOrMore>
+        <zeroOrMore>
+          <element name="postaction_field_int">
+            <attribute name="value">
+              <data type="long"/>
+            </attribute>
+            <element name="field_id">
+              <attribute name="REF">
+                <data type="IDREF"/>
+              </attribute>
+            </element>
+          </element>
+        </zeroOrMore>
+        <zeroOrMore>
+          <element name="postaction_field_float">
+            <attribute name="value">
+              <data type="float"/>
+            </attribute>
+            <element name="field_id">
+              <attribute name="REF">
+                <data type="IDREF"/>
+              </attribute>
+            </element>
+          </element>
+        </zeroOrMore>
+        <zeroOrMore>
+          <element name="postaction_ci_build">
+            <attribute name="job_url">
+              <data type="string"/>
+            </attribute>
+          </element>
+        </zeroOrMore>
+      </element>
+    </optional>
+    <choice>
+      <ref name="conditionPermissionsContent"/>
+      <optional>
+        <element name="conditions">
+          <optional>
+            <element name="condition">
+              <attribute name="type">
+                <value>perms</value>
+              </attribute>
+              <ref name="conditionPermissionsContent"/>
+            </element>
+          </optional>
+          <optional>
+            <element name="condition">
+              <attribute name="type">
+                <value>notempty</value>
+              </attribute>
+              <ref name="conditionFieldNotEmptyContent"/>
+            </element>
+          </optional>
+          <optional>
+            <element name="condition">
+              <attribute name="type">
+                <value>commentnotempty</value>
+              </attribute>
+              <attribute name="is_comment_required">
+                <choice>
+                  <value>0</value>
+                  <value>1</value>
+                </choice>
+              </attribute>
+            </element>
+          </optional>
+        </element>
+      </optional>
+    </choice>
+  </define>
+  <define name="conditionPermissionsContent">
+    <element name="permissions">
+      <zeroOrMore>
+        <element name="permission">
+          <attribute name="ugroup">
+            <data type="string"/>
+          </attribute>
+        </element>
+      </zeroOrMore>
+    </element>
+  </define>
+  <define name="conditionFieldNotEmptyContent">
+    <oneOrMore>
+      <element name="field">
+        <attribute name="REF">
+          <data type="IDREF"/>
+        </attribute>
+      </element>
+    </oneOrMore>
+  </define>
+</grammar>
