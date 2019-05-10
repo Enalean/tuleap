@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright Enalean (c) 2019-Present. All rights reserved.
+  ~
+  ~ Tuleap and Enalean names and logos are registered trademarks owned by
+  ~ Enalean SAS. All other trademarks or names are properties of their respective
+  ~ owners.
+  ~
+  ~ This file is a part of Tuleap.
+  ~
+  ~ Tuleap is free software; you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation; either version 2 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Tuleap is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<project
+    unix-name="linked-artifacts" full-name="linked-artifacts" description="linked-artifacts" access="public">
+    <long-description>Project for tracker fields actions</long-description>
+    <services>
+        <service shortname="plugin_tracker" enabled="true" />
+    </services>
+    <ugroups>
+        <ugroup name="project_members" description="">
+            <members>
+                <member format="username">rest_api_tester_1</member>
+            </members>
+        </ugroup>
+        <ugroup name="project_admins" description="">
+            <members>
+                <member format="username">rest_api_tester_1</member>
+            </members>
+        </ugroup>
+    </ugroups>
+    <trackers>
+        <tracker id="T1424" parent_id="0" instantiate_for_new_projects="1">
+            <name>
+                <![CDATA[ linked_artifacts ]]>
+            </name>
+            <item_name>linked_artifacts</item_name>
+            <description>
+                <![CDATA[ linked_artifacts ]]>
+            </description>
+            <color>inca-silver</color>
+            <cannedResponses/>
+            <formElements>
+                <formElement type="art_link" ID="F34791" rank="0">
+                    <name>link</name>
+                    <label>
+                        <![CDATA[ link ]]>
+                    </label>
+                </formElement>
+            </formElements>
+            <permissions>
+                <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+                <permission scope="field" REF="F34791" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+                <permission scope="field" REF="F34791" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+                <permission scope="field" REF="F34791" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+            </permissions>
+        </tracker>
+    </trackers>
+</project>

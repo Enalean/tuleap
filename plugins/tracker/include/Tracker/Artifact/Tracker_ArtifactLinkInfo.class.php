@@ -165,11 +165,7 @@ class Tracker_ArtifactLinkInfo
     public function getArtifact() : ?Tracker_Artifact
     {
         if (! $this->artifact) {
-            $artifact = Tracker_ArtifactFactory::instance()->getArtifactById($this->artifact_id);
-            if ($artifact === null) {
-                return null;
-            }
-            $this->artifact = $artifact;
+            $this->artifact = Tracker_ArtifactFactory::instance()->getArtifactById($this->artifact_id);
         }
         return $this->artifact;
     }

@@ -1124,6 +1124,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         $read_only              = false;
         $name                   = 'artifact['. $this->id .']';
         $prefill_removed_values = array();
+        $artifact_links         = array();
 
         // Well, shouldn't be here but API doesn't provide a Null Artifact on creation yet
         // Here to avoid having to pass null arg for fetchHtmlWidget
@@ -1134,7 +1135,8 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
             $this,
             $this->getTrackerFactory(),
             Tracker_ReportFactory::instance(),
-            $this->getNaturePresenterFactory()
+            $this->getNaturePresenterFactory(),
+            ...$artifact_links
         );
 
         return $this->fetchHtmlWidget(
