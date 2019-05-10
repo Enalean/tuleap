@@ -1134,5 +1134,52 @@
                 <permission scope="field" REF="F41702" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
             </permissions>
         </tracker>
+        <tracker id="T404" parent_id="0" instantiate_for_new_projects="1">
+            <name><![CDATA[Workflow Simple Mode From XML]]></name>
+            <item_name>workflow_simple_mode_from_xml</item_name>
+            <description><![CDATA[Workflow Simple Mode From XML]]></description>
+            <color>fiesta_red</color>
+            <cannedResponses/>
+            <formElements>
+                <formElement type="sb" ID="F10000" rank="1">
+                    <name>status</name>
+                    <label><![CDATA[Status]]></label>
+                    <bind type="static" is_rank_alpha="0">
+                        <items>
+                            <item ID="V1" label="Open" is_hidden="0"/>
+                            <item ID="V2" label="Done" is_hidden="0"/>
+                            <item ID="V3" label="Closed" is_hidden="0"/>
+                        </items>
+                    </bind>
+                </formElement>
+            </formElements>
+            <semantics>
+                <semantic type="tooltip"/>
+                <semantic type="plugin_cardwall_card_fields"/>
+            </semantics>
+            <reports>
+                <report is_default="0">
+                    <name>Default</name>
+                    <description>The system default artifact report</description>
+                    <criterias/>
+                    <renderers>
+                        <renderer type="table" rank="0" chunksz="15">
+                            <name>Results</name>
+                            <columns/>
+                        </renderer>
+                    </renderers>
+                </report>
+            </reports>
+            <simple_workflow>
+                <field_id REF="F10000"/>
+                <is_used>1</is_used>
+            </simple_workflow>
+            <permissions>
+                <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+                <permission scope="field" REF="F10000" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+                <permission scope="field" REF="F10000" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+                <permission scope="field" REF="F10000" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+            </permissions>
+        </tracker>
     </trackers>
 </project>

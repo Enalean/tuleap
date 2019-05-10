@@ -722,7 +722,8 @@ class TrackerXmlImport
      * @return Tracker Object
      * @throws Tracker_Exception
      */
-    protected function getInstanceFromXML(SimpleXMLElement $xml, Project $project, $name, $description, $itemname) {
+    protected function getInstanceFromXML(SimpleXMLElement $xml, Project $project, $name, $description, $itemname)
+    {
         // set general settings
         // real id will be set during Database update
         $att = $xml->attributes();
@@ -833,6 +834,13 @@ class TrackerXmlImport
         if (isset($xml->workflow->field_id)) {
             $tracker->workflow= $this->workflow_factory->getInstanceFromXML(
                 $xml->workflow,
+                $this->xml_fields_mapping,
+                $tracker,
+                $project
+            );
+        } elseif (isset($xml->simple_workflow->field_id)) {
+            $tracker->workflow = $this->workflow_factory->getSimpleInstanceFromXML(
+                $xml->simple_workflow,
                 $this->xml_fields_mapping,
                 $tracker,
                 $project

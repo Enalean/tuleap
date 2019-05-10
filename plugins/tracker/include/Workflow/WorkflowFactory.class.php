@@ -382,21 +382,19 @@ class WorkflowFactory //phpcs:ignoreFile
      * Creates a workflow Object
      *
      * @param SimpleXMLElement $xml containing the structure of the imported workflow
-     * @param array            &$xmlMapping containig the newly created formElements idexed by their XML IDs
+     * @param array            &$xml_mapping containig the newly created formElements idexed by their XML IDs
      * @param Tracker $tracker to which the workflow is attached
      *
      * @return Workflow The workflow object, or null if error
      */
-    public function getInstanceFromXML($xml, &$xmlMapping, Tracker $tracker, Project $project)
+    public function getInstanceFromXML(SimpleXMLElement $xml, array &$xml_mapping, Tracker $tracker, Project $project)
     {
-        $xml_field_id = $xml->field_id;
-        $xml_field_attributes = $xml_field_id->attributes();
-        $field = $xmlMapping[(string)$xml_field_attributes['REF']];
+        $workflow_field = $this->getWorkflowField($xml, $xml_mapping);
 
         $transitions = array();
         foreach ($xml->transitions->transition as $t) {
             $tf = $this->transition_factory;
-            $transitions[] = $tf->getInstanceFromXML($t, $xmlMapping, $project);
+            $transitions[] = $tf->getInstanceFromXML($t, $xml_mapping, $project);
         }
 
         $workflow = new Workflow(
@@ -412,8 +410,43 @@ class WorkflowFactory //phpcs:ignoreFile
             $transitions
         );
 
-        $workflow->setField($field);
+        $workflow->setField($workflow_field);
         return $workflow;
+    }
+
+    public function getSimpleInstanceFromXML(
+        SimpleXMLElement $xml,
+        array &$xmlMapping,
+        Tracker $tracker,
+        Project $project
+    ) {
+        $workflow_field = $this->getWorkflowField($xml, $xmlMapping);
+        $transitions    = [];
+
+        $workflow = new Workflow(
+            $this->getGlobalRulesManager($tracker),
+            $this->trigger_rules_manager,
+            $this->logger,
+            0, // not available yet
+            $tracker->getId(),
+            0, // not available yet
+            (string)$xml->is_used,
+            false,
+            false,
+            $transitions
+        );
+
+        $workflow->setField($workflow_field);
+        return $workflow;
+    }
+
+    private function getWorkflowField(SimpleXMLElement $xml, array $xml_mapping)
+    {
+        $xml_field_id = $xml->field_id;
+        $xml_field_attributes = $xml_field_id->attributes();
+        $field = $xml_mapping[(string)$xml_field_attributes['REF']];
+
+        return $field;
     }
 
     /**

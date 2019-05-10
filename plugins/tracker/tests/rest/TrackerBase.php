@@ -44,6 +44,7 @@ class TrackerBase extends RestBase
     public const TRACKER_WORKFLOW_WITH_TRANSITIONS_SHORTNAME      = 'workflows_tracker_transitions';
     public const TRACKER_WORKFLOW_SIMPLE_MODE_SHORTNAME           = 'workflow_simple_mode';
     public const TRACKER_WORKFLOW_SIMPLE_MODE_TO_SWITCH_SHORTNAME = 'simple_workflow_to_switch';
+    public const TRACKER_WORKFLOW_SIMPLE_MODE_FROM_XML_SHORTNAME  = 'workflow_simple_mode_from_xml';
 
     protected $tracker_administrator_project_id;
     protected $tracker_workflows_project_id;
@@ -55,6 +56,7 @@ class TrackerBase extends RestBase
     protected $tracker_workflows_tracker_id;
     protected $simple_mode_workflow_tracker_id;
     protected $simple_mode_workflow_to_switch_tracker_id;
+    protected $simple_mode_from_xml_tracker_id;
 
     protected $base_artifact_ids   = [];
     protected $delete_artifact_ids = [];
@@ -77,6 +79,7 @@ class TrackerBase extends RestBase
         $this->tracker_workflow_transitions_tracker_id   = $this->tracker_ids[$this->tracker_workflows_project_id][self::TRACKER_WORKFLOW_WITH_TRANSITIONS_SHORTNAME];
         $this->simple_mode_workflow_tracker_id           = $this->tracker_ids[$this->tracker_workflows_project_id][self::TRACKER_WORKFLOW_SIMPLE_MODE_SHORTNAME];
         $this->simple_mode_workflow_to_switch_tracker_id = $this->tracker_ids[$this->tracker_workflows_project_id][self::TRACKER_WORKFLOW_SIMPLE_MODE_TO_SWITCH_SHORTNAME];
+        $this->simple_mode_from_xml_tracker_id           = $this->tracker_ids[$this->tracker_workflows_project_id][self::TRACKER_WORKFLOW_SIMPLE_MODE_FROM_XML_SHORTNAME];
 
         $this->getBaseArtifactIds();
         $this->getDeleteArtifactIds();

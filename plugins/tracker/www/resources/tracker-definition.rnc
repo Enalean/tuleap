@@ -75,15 +75,7 @@ tracker =
             element report { reportContent }*
         }?,
 
-        element workflow {
-            element field_id {
-                attribute REF { xsd:IDREF }
-            }?,
-            element is_used {xsd:long}?,
-            element transitions {
-                element transition { transitionContent }*
-            }?
-        }*,
+        workflowContent,
 
         element webhooks {
             element webhook {
@@ -104,11 +96,31 @@ tracker =
             artifacts
         }?
 
+    workflowContent = (advancedWorkflow | simpleWorkflow)
+
+    advancedWorkflow =
+        element workflow {
+            element field_id {
+                attribute REF { xsd:IDREF }
+            }?,
+            element is_used {xsd:long}?,
+            element transitions {
+                element transition { transitionContent }*
+            }?
+        }?
+
+    simpleWorkflow =
+        element simple_workflow {
+            element field_id {
+                attribute REF { xsd:IDREF }
+            }?,
+            element is_used {xsd:long}?
+        }?
+
     formElementsContent =
         element formElements {
             element formElement { formElementContent }*
         }?
-
 
     formElementContent =
         # ID is internal to the XML file
