@@ -1224,11 +1224,7 @@ class Button extends HtmlElement {
     function __construct ($text, $url, $class = false) {
         global $request;
         //php5 workaround
-        if (check_php_version(5)) {
-            $this->_init('a', array('href' => $url));
-        } else {
-            parent::__construct('a', array('href' => $url));
-        }
+        $this->_init('a', array('href' => $url));
         if ($class)
             $this->setAttr('class', $class);
         if ($request->getArg('frame'))

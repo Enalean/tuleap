@@ -21,9 +21,6 @@ require_once('gd_image.inc.php');
 // Version info
 define('JPG_VERSION','4.2.4');
 
-// Minimum required PHP version
-define('MIN_PHPVERSION','5.1.0');
-
 // Special file name to indicate that we only want to calc
 // the image map in the call to Graph::Stroke() used
 // internally from the GetHTMLCSIM() method.
@@ -216,30 +213,6 @@ if (!defined('MBTTF_DIR')) {
     } else {
         define('MBTTF_DIR','/usr/share/fonts/truetype/');
     }
-}
-
-// Check minimum PHP version
-function CheckPHPVersion($aMinVersion) {
-    list($majorC, $minorC, $editC) = preg_split('/[\/.-]/', PHP_VERSION);
-    list($majorR, $minorR, $editR) = preg_split('/[\/.-]/', $aMinVersion);
-
-    if ($majorC < $majorR) return false;
-
-    if ($majorC == $majorR) {
-        if($minorC < $minorR) return false;
-
-        if($minorC == $minorR){
-            if($editC < $editR) return false;
-        }
-    }
-
-    return true;
-}
-
-// Make sure PHP version is high enough
-if( !CheckPHPVersion(MIN_PHPVERSION) ) {
-    JpGraphError::RaiseL(13,PHP_VERSION,MIN_PHPVERSION);
-    die();
 }
 
 // Make GD sanity check

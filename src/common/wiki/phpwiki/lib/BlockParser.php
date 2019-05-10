@@ -847,7 +847,7 @@ class Block_oldlists extends Block_list
         else {
             // This is where php5 usually brakes.
             // wrong duplicated <li> contents
-            if (DEBUG and DEBUG & _DEBUG_PARSER and check_php_version(5)) {
+            if (DEBUG and DEBUG & _DEBUG_PARSER) {
                 if (count($this->_content) != 2) {
                     echo "<pre>";
                     /*
@@ -886,8 +886,6 @@ class Block_oldlists extends Block_list
                     echo "</pre>";
                 }
             }
-            if (!check_php_version(5))
-                assert(count($this->_content) == 2);
             $dt = &$this->_content[0];
             $dd = &$this->_content[1];
             $dt->setTightness($top, false);

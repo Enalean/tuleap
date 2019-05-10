@@ -430,13 +430,7 @@ function LinkImage($url, $alt = false) {
                 return '';
             }
         } else {
-            // Older php versions crash here with certain png's: 
-            // confirmed for 4.1.2, 4.1.3, 4.2.3; 4.3.2 and 4.3.7 are ok
-            //   http://phpwiki.sourceforge.net/demo/themes/default/images/http.png
-            // See http://bugs.php.net/search.php?cmd=display&search_for=getimagesize
-            if (!check_php_version(4,3) and preg_match("/^http.+\.png$/i",$url))
-                ; // it's safe to assume that this will fail.
-            elseif (!DISABLE_GETIMAGESIZE and ($size = @getimagesize($url))) {
+            if (!DISABLE_GETIMAGESIZE and ($size = @getimagesize($url))) {
                 $width  = $size[0];
                 $height = $size[1];
                 if (($width < 3 and $height < 10) 
@@ -867,11 +861,9 @@ function ConvertOldMarkup ($text, $markup_type = "block") {
         global $WikiNameRegexp, $request;
         $bang_esc[] = "(?:" . ALLOWED_PROTOCOLS . "):[^\s<>\[\]\"'()]*[^\s<>\[\]\"'(),.?]";
         // before 4.3.9 pcre had a memory release bug, which might hit us here. so be safe.
-        if (check_php_version(4,3,9)) {
-          $map = getInterwikiMap();
-          if ($map_regex = $map->getRegexp())
-            $bang_esc[] = $map_regex . ":[^\\s.,;?()]+"; // FIXME: is this really needed?
-        }
+        $map = getInterwikiMap();
+        if ($map_regex = $map->getRegexp())
+          $bang_esc[] = $map_regex . ":[^\\s.,;?()]+"; // FIXME: is this really needed?
         $bang_esc[] = $WikiNameRegexp;
         $orig[] = '/!((?:' . join(')|(', $bang_esc) . '))/';
         $repl[] = '~\\1';
@@ -1557,15 +1549,9 @@ function explodePageList($input, $include_empty=false, $sortby='pagename',
  * or a sub-type of $class. 
  */
 function isa ($object, $class) {
-    //if (check_php_version(5)) 
-    //    return $object instanceof $class;
-    if (check_php_version(4,2) and !check_php_version(5)) 
-        return is_a($object, $class);
-
-    $lclass = check_php_version(5) ? $class : strtolower($class);
     return is_object($object)
         && ( strtolower(get_class($object)) == strtolower($class)
-             || is_subclass_of($object, $lclass) );
+             || is_subclass_of($object, $class) );
 }
 
 /** Determine whether (possible) object has method.

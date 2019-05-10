@@ -101,14 +101,7 @@ extends WikiPlugin
                                   array('<?php', '?>'), $source);
         }
 
-        if (!check_php_version(4,2,0)) {
-            ob_start();
-            highlight_string($source);
-            $str = ob_get_contents();
-            ob_end_clean();
-        } else {
-            $str = highlight_string($source, true);
-        }
+        $str = highlight_string($source, true);
 
         if ($wrap)
             /* Remove "<?php\n" and "\n?>" again: */

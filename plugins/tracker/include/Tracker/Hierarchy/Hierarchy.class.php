@@ -135,25 +135,13 @@ class Tracker_Hierarchy {
      * if there are trackers outside hierarchy in the given list, happend to
      * the end
      *
-     * @return Array
+     * @return array
      */
     public function sortTrackerIds(array $tracker_ids)
     {
-        // Due to a PHP bug for PHP version < 7, usage of exceptions
-        // in the callback of usort generate warnings (see https://bugs.php.net/bug.php?id=50688)
-        // Legend has it that many innocent kittens have been injured because of this bug.
-        // For PHP < 7, we ignore all E_WARNING errors during the usort.
-        $old_level = error_reporting();
-        try {
-            if (\PHP_VERSION_ID < 70000) {
-                error_reporting($old_level ^ E_WARNING);
-            }
-            usort($tracker_ids, function ($tracker1_id, $tracker2_id) {
-                return $this->sortByLevel($tracker1_id, $tracker2_id);
-            });
-        } finally {
-            error_reporting($old_level);
-        }
+        usort($tracker_ids, function ($tracker1_id, $tracker2_id) {
+            return $this->sortByLevel($tracker1_id, $tracker2_id);
+        });
         return $tracker_ids;
     }
 
