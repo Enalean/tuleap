@@ -292,6 +292,26 @@ class SimpleModeTest extends TrackerBase
     /**
      * @depends testPUTTrackerWorkflowTransitionFrozenFieldsActions
      */
+    public function testGETTrackerWorkflowTransitionReturnsTheFrozenFieldPostAction(int $transition_id)
+    {
+        $response = $this->getResponseByName(
+            \REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->client->get(
+                "tracker_workflow_transitions/$transition_id/actions"
+            )
+        );
+
+        $this->assertEquals($response->getStatusCode(), 200);
+
+        $json_response = $response->json();
+        $this->assertEquals('frozen_fields', $json_response[0]['type']);
+
+        return $transition_id;
+    }
+
+    /**
+     * @depends testGETTrackerWorkflowTransitionReturnsTheFrozenFieldPostAction
+     */
     public function testPUTTrackerWorkflowTransitionFrozenFieldsActionsCannotUsedTheWorkflowField(int $transition_id)
     {
         $workflow_field_id = $this->getAUsedField(
@@ -322,7 +342,7 @@ class SimpleModeTest extends TrackerBase
     }
 
     /**
-     * @depends testPUTTrackerWorkflowTransitionFrozenFieldsActions
+     * @depends testGETTrackerWorkflowTransitionReturnsTheFrozenFieldPostAction
      */
     public function testPUTTrackerWorkflowTransitionFrozenFieldsActionsCannotUsedAFieldUsedInFieldDependencies(
         int $transition_id
