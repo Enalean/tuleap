@@ -94,7 +94,7 @@ abstract class Tracker_Workflow_Action
         return $this->buildLinkWithFuncQuery(
             self::PANE_TRANSITIONS,
             Workflow::FUNC_ADMIN_TRANSITIONS,
-            $GLOBALS['Language']->getText('workflow_admin', 'tab_transitions')
+            dgettext('tuleap-tracker', 'Transitions Rules')
         );
     }
 
@@ -104,7 +104,7 @@ abstract class Tracker_Workflow_Action
         return $this->buildHTMLLink(
             self::PANE_TRANSITIONS,
             $link,
-            $GLOBALS['Language']->getText('workflow_admin', 'tab_transitions')
+            dgettext('tuleap-tracker', 'Transitions Rules')
         );
     }
 

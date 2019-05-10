@@ -1443,7 +1443,6 @@ workflow_admin	add_new_rule	Ajouter une nouvelle règle
 workflow_admin	add_new_trigger	Ajouter un nouveau déclencheur
 workflow_admin	title_define_transitions	Definir les transitions
 workflow_admin	tab_global_rules	Règles Globales
-workflow_admin	tab_transitions	Transitions
 workflow_admin	tab_triggers	Déclenchements
 workflow_admin	tab_triggers_cancel	annuler
 workflow_admin	tab_triggers_set_to	valué à

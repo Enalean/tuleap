@@ -1450,7 +1450,6 @@ workflow_admin	add_new_rule	Add a new rule
 workflow_admin	add_new_trigger	Add a new trigger
 workflow_admin	title_define_transitions	Define the transitions
 workflow_admin	tab_global_rules	Global Rules
-workflow_admin	tab_transitions	Transitions
 workflow_admin	tab_triggers	Triggers
 workflow_admin	tab_triggers_cancel	cancel
 workflow_admin	tab_triggers_set_to	set to
