@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -125,57 +125,5 @@ class TransitionFactory_duplicateTest extends TransitionFactory_BaseTest {
         $tf->shouldReceive('getPostActionFactory')->andReturns($tpaf);
 
         $tf->duplicate($values, 1, $transitions, array(), false, false);
-    }
-}
-
-class TransitionFactory_GetInstanceFromXmlTest extends TransitionFactory_BaseTest {
-
-    public function setUp() {
-        parent::setUp();
-        $this->setUpGlobalsMockery();
-        $this->field = aMockField()->build();
-        $this->from_value  = \Mockery::spy(\Tracker_FormElement_Field_List_Value::class);
-        $this->to_value    = \Mockery::spy(\Tracker_FormElement_Field_List_Value::class);
-        $this->xml_mapping = array('F1'     => $this->field,
-                                   'F32-V1' => $this->from_value,
-                                   'F32-V0' => $this->to_value);
-
-        $this->condition_factory->shouldReceive('getAllInstancesFromXML')->once()->andReturn(new Workflow_Transition_ConditionsCollection());
-    }
-
-    public function itReconstitutesPostActions() {
-
-        $xml = new SimpleXMLElement('
-            <transition>
-                <from_id REF="F32-V1"/>
-                <to_id REF="F32-V0"/>
-                <postactions>
-                    <postaction_field_date valuetype="1">
-                        <field_id REF="F1"/>
-                    </postaction_field_date>
-                </postactions>
-            </transition>
-        ');
-
-        expect($this->postaction_factory)->getInstanceFromXML(Mockery::any(), $this->xml_mapping, Mockery::any())->once();
-
-        $this->factory->getInstanceFromXML($xml, $this->xml_mapping, $this->project);
-    }
-
-    public function itReconsititutesPermissions() {
-        $xml = new SimpleXMLElement('
-            <transition>
-                <from_id REF="F32-V1"/>
-                <to_id REF="F32-V0"/>
-                <permissions>
-                    <permission ugroup="UGROUP_PROJECT_MEMBERS"/>
-                    <permission ugroup="UGROUP_PROJECT_ADMIN"/>
-                </permissions>
-            </transition>
-        ');
-
-        $transition = $this->factory->getInstanceFromXML($xml, $this->xml_mapping, $this->project);
-
-        $this->assertIsA($transition->getConditions(), 'Workflow_Transition_ConditionsCollection');
     }
 }

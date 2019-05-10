@@ -213,6 +213,26 @@ class TransitionFactory //phpcs:ignoreFile
     }
 
     /**
+     * @return Transition[]
+     */
+    public function getInstancesFromStateXML(SimpleXMLElement $state_xml, array &$xml_mapping)
+    {
+        $transitions = [];
+        $to_id       = $xml_mapping[(string)$state_xml->to_id['REF']];
+
+        foreach ($state_xml->transitions->transition as $transition_xml) {
+            $from_id = null;
+            if ((string)$transition_xml->from_id['REF'] !== 'null') {
+                $from_id = $xml_mapping[(string)$transition_xml->from_id['REF']];
+            }
+
+            $transitions[] = new Transition(0, 0, $from_id, $to_id);
+        }
+
+        return $transitions;
+    }
+
+    /**
      * Delete a workflow
      *
      * @param Workflow $workflow

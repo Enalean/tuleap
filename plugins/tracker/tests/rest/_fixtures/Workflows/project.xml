@@ -1173,6 +1173,27 @@
             <simple_workflow>
                 <field_id REF="F10000"/>
                 <is_used>1</is_used>
+                <states>
+                    <state>
+                        <to_id REF="V1"/>
+                        <transitions>
+                            <transition>
+                                <from_id REF="null"/>
+                            </transition>
+                            <transition>
+                                <from_id REF="V2"/>
+                            </transition>
+                        </transitions>
+                    </state>
+                    <state>
+                        <to_id REF="V3"/>
+                        <transitions>
+                            <transition>
+                                <from_id REF="V2"/>
+                            </transition>
+                        </transitions>
+                    </state>
+                </states>
             </simple_workflow>
             <permissions>
                 <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>

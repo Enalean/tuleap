@@ -114,7 +114,21 @@ tracker =
             element field_id {
                 attribute REF { xsd:IDREF }
             }?,
-            element is_used {xsd:long}?
+            element is_used {xsd:long}?,
+            element states {
+                element state {
+                    element to_id {
+                        attribute REF { xsd:string }
+                    },
+                    element transitions {
+                        element transition {
+                            element from_id {
+                                attribute REF { xsd:string }
+                            }
+                        }+
+                    }
+                }+
+            }?
         }?
 
     formElementsContent =

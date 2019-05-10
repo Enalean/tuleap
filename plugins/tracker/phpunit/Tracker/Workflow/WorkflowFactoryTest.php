@@ -165,7 +165,7 @@ class WorkflowFactoryTest extends TestCase
 
     public function testImportSimpleWorkflow()
     {
-        $xml = simplexml_load_file(__DIR__ . '/_fixtures/importWorkflow.xml');
+        $xml = simplexml_load_file(__DIR__ . '/_fixtures/importSimpleWorkflow.xml');
 
         $tracker = Mockery::mock(Tracker::class);
         $tracker->shouldReceive('getId')->andReturn(101);
@@ -177,8 +177,24 @@ class WorkflowFactoryTest extends TestCase
             'F32-V1' => 802
         );
 
-        $workflow_factory   = new WorkflowFactory(
-            Mockery::mock(TransitionFactory::class),
+        $first_transition = Mockery::mock(Transition::class);
+        $first_transition->shouldReceive('getPostActions')->andReturns([]);
+
+        $second_transition = Mockery::mock(Transition::class);
+        $second_transition->shouldReceive('getPostActions')->andReturns([]);
+
+        $transition_factory = Mockery::mock(TransitionFactory::class);
+        $transition_factory->shouldReceive('getInstancesFromStateXML')
+            ->with(
+                Mockery::on(function (SimpleXMLElement $state) {
+                    return (string)$state->to_id['REF'] === "F32-V0";
+                }),
+                $mapping
+            )
+            ->andReturn([$first_transition, $second_transition]);
+
+        $workflow_factory = new WorkflowFactory(
+            $transition_factory,
             Mockery::mock(TrackerFactory::class),
             Mockery::mock(Tracker_FormElementFactory::class),
             Mockery::mock(Tracker_Workflow_Trigger_RulesManager::class),
@@ -190,6 +206,11 @@ class WorkflowFactoryTest extends TestCase
 
         $this->assertEquals($workflow->isUsed(), 1);
         $this->assertEquals($workflow->getFieldId(), 111);
-        $this->assertEquals(count($workflow->getTransitions()), 0);
+        $this->assertEquals(count($workflow->getTransitions()), 2);
+
+        // Test post actions
+        $transitions = $workflow->getTransitions();
+        $this->assertEquals(count($transitions[0]->getPostActions()), 0);
+        $this->assertEquals(count($transitions[1]->getPostActions()), 0);
     }
 }
