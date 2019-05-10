@@ -472,7 +472,7 @@ class ArtifactsResource extends AuthenticatedResource {
 
             $artifact_representations[] = $this->builder->getArtifactRepresentationWithFieldValuesInBothFormat(
                 $user,
-                $artifact,
+                $linked_artifact,
                 $tracker_representation
             );
         }
