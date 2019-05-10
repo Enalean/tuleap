@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -81,8 +81,12 @@ class Docman_MetadataHtmlFile extends Docman_MetadataHtml {
     }
     
     function getField() {
-        $html = '<input type="hidden" name="max_file_size" value="'. $GLOBALS['sys_max_size_upload'] .'" /><input type="file" name="file" />';
-        $html .= '<br /><em>'. $GLOBALS['Language']->getText('plugin_docman','max_size_msg',array(formatByteToMb($GLOBALS['sys_max_size_upload']))) .'</em>';
+        $html = '<input type="file" name="file" />';
+        $html .= '<br /><em>'. $GLOBALS['Language']->getText(
+            'plugin_docman',
+            'max_size_msg',
+            [formatByteToMb((int) ForgeConfig::get(PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING))]
+            ) .'</em>';
 
         return $html;
     }

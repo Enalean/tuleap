@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2010. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -24,11 +24,8 @@
  */
 class WebDAVDocmanFile extends WebDAVDocmanDocument {
 
-    private $maxFileSize;
-
-    public function __construct($user, $project, $item, $maxFileSize) {
+    public function __construct($user, $project, $item) {
         parent::__construct($user, $project, $item);
-        $this->maxFileSize = $maxFileSize;
     }
     
     /**
@@ -119,18 +116,7 @@ class WebDAVDocmanFile extends WebDAVDocmanDocument {
      * @return int
      */
     function getMaxFileSize() {
-        return $this->maxFileSize;
-    }
-
-    /**
-     * Sets the max file size
-     *
-     * @param int $maxFileSize
-     *
-     * @return void
-     */
-    function setMaxFileSize($maxFileSize) {
-        $this->maxFileSize = $maxFileSize;
+        return (int) ForgeConfig::get(PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING);
     }
 
     /**
