@@ -20,8 +20,6 @@
 
 namespace Tuleap\User\History;
 
-require_once __DIR__ . '/MockedEventManager.php';
-
 class HistoryRetrieverTest extends \TuleapTestCase
 {
     public function itRetrievesHistorySortedByVisitTime()
@@ -31,9 +29,21 @@ class HistoryRetrieverTest extends \TuleapTestCase
             $this->getHistoryEntryAt(100),
             $this->getHistoryEntryAt(200),
         );
-        $event_manager = new MockedEventManager(function ($name, $params) use ($history) {
-            $params['history'] = $history;
-        });
+
+        $event_manager = new class ($history) extends \EventManager {
+            private $history;
+
+            public function __construct(array $history)
+            {
+                $this->history = $history;
+            }
+
+            public function processEvent($event, $params = [])
+            {
+                $params['history'] = $this->history;
+            }
+        };
+
         $history_retriever = new HistoryRetriever($event_manager);
 
         $history = $history_retriever->getHistory(mock('PFUser'));
@@ -51,9 +61,19 @@ class HistoryRetrieverTest extends \TuleapTestCase
             $history[] = $this->getHistoryEntryAt($n);
         }
 
-        $event_manager = new MockedEventManager(function ($name, $params) use ($history) {
-            $params['history'] = $history;
-        });
+        $event_manager = new class ($history) extends \EventManager {
+            private $history;
+
+            public function __construct(array $history)
+            {
+                $this->history = $history;
+            }
+
+            public function processEvent($event, $params = [])
+            {
+                $params['history'] = $this->history;
+            }
+        };
 
         $history_retriever = new HistoryRetriever($event_manager);
 

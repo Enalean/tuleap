@@ -51,7 +51,6 @@ Mock::generatePartial(
     'WebDAVDocmanFolderTestVersion3',
 array('getItem', 'getDocmanItemFactory', 'getDocmanPermissionsManager', 'getWebDAVDocmanFolder', 'getUtils')
 );
-Mock::generate('EventManager');
 
 /**
  * This is the unit test of WebDAVDocmanFolder

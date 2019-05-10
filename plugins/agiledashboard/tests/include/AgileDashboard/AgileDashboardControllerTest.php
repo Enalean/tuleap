@@ -74,7 +74,7 @@ class AgileDashboardControllerTest extends TuleapTestCase
         $this->config_manager               = mock('AgileDashboard_ConfigurationManager');
         $this->tracker_factory              = mock('TrackerFactory');
         $this->kanban_factory               = mock('AgileDashboard_KanbanFactory');
-        $this->event_manager                = mock('EventManager');
+        $this->event_manager                = \Mockery::spy(\EventManager::class);
         $this->service_crumb_builder        = mock(AgileDashboardCrumbBuilder::class);
         $this->admin_crumb_builder          = mock(AdministrationCrumbBuilder::class);
         $this->scrum_mono_milestone_checker = mock(ScrumForMonoMilestoneChecker::class);

@@ -27,7 +27,6 @@ Mock::generate('UserDao');
 Mock::generate('DataAccessResult');
 Mock::generate('Response');
 Mock::generate('BaseLanguage');
-Mock::generate('EventManager');
 
 Mock::generatePartial('UserManager',
                       'UserManagerTestVersion',
@@ -43,16 +42,6 @@ Mock::generatePartial('UserManager',
 );
 // Special mock for getUserByIdentifier test
 Mock::generatePartial('UserManager', 'UserManager4GetByIdent', array('_getEventManager', 'getUserByUserName', 'getUserById', 'getUserByEmail'));
-
-Mock::generate('EventManager', 'BaseMockEventManager');
-
-class MockEM4UserManager extends BaseMockEventManager {
-   function processEvent($event, $params = []) {
-       foreach(parent::processEvent($event, $params) as $key => $value) {
-           $params[$key] = $value;
-       }
-   }
-}
 
 class UserManagerTest extends TuleapTestCase
 {
@@ -163,10 +152,9 @@ class UserManagerTest extends TuleapTestCase
         $dar              = new MockDataAccessResult($this);
         $user123          = mock('PFUser');
         $user_manager     = new UserManagerTestVersion($this);
-        $em               = new MockEventManager($this);
         $password_handler = PasswordHandlerFactory::getPasswordHandler();
 
-        $user_manager->setReturnReference('_getEventManager', $em);
+        $user_manager->setReturnValue('_getEventManager', \Mockery::spy(EventManager::class));
         $hash = 'valid_hash';
 
         $token_value   = 'token';
@@ -204,9 +192,8 @@ class UserManagerTest extends TuleapTestCase
         $user123          = mock('PFUser');
         $userAnonymous    = mock('PFUser');
         $um               = new UserManagerTestVersion($this);
-        $em               = new MockEventManager($this);
 
-        $um->setReturnReference('_getEventManager', $em);
+        $um->setReturnValue('_getEventManager', \Mockery::spy(EventManager::class));
 
         $user123->setReturnValue('getId', 123);
         $user123->setReturnValue('getUserName', 'user_123');
@@ -300,8 +287,8 @@ class UserManagerTest extends TuleapTestCase
     }
 
     function testGetUserByIdentifierPluginNoAnswerWithSimpleId() {
-        $em = new MockEventManager($this);
-        $em->expectOnce('processEvent');
+        $em = \Mockery::mock(EventManager::class);
+        $em->shouldReceive('processEvent');
 
         $um = new UserManager4GetByIdent($this);
         $um->setReturnReference('_getEventManager', $em);
@@ -314,8 +301,8 @@ class UserManagerTest extends TuleapTestCase
     }
 
     function testGetUserByIdentifierPluginAnswerWithSimpleId() {
-        $em = new MockEventManager($this);
-        $em->expectOnce('processEvent');
+        $em = \Mockery::mock(EventManager::class);
+        $em->shouldReceive('processEvent');
 
         $um = new UserManager4GetByIdent($this);
         $um->setReturnReference('_getEventManager', $em);
@@ -329,8 +316,8 @@ class UserManagerTest extends TuleapTestCase
     }
 
     function testGetUserByIdentifierPluginNoAnswerWithComplexId() {
-        $em = new MockEventManager($this);
-        $em->expectOnce('processEvent');
+        $em = \Mockery::mock(EventManager::class);
+        $em->shouldReceive('processEvent');
 
         $um = new UserManager4GetByIdent($this);
         $um->setReturnReference('_getEventManager', $em);
@@ -343,8 +330,21 @@ class UserManagerTest extends TuleapTestCase
 
     function testGetUserByIdentifierPluginAnswer() {
         $u1 = mock('PFUser');
-        $em = new MockEM4UserManager($this);
-        $em->setReturnValue('processEvent', array('tokenFound' => true, 'user' => &$u1));
+
+        $em = new class($u1) extends EventManager {
+
+            private $user;
+
+            public function __construct(PFUser $user)
+            {
+                $this->user = $user;
+            }
+
+            public function processEvent($event, $params = array()) {
+                $params['tokenFound'] = true;
+                $params['user'] = $this->user;
+            }
+        };
 
         $um = new UserManager4GetByIdent($this);
         $um->setReturnReference('_getEventManager', $em);
@@ -357,8 +357,12 @@ class UserManagerTest extends TuleapTestCase
 
     function testGetUserByIdentifierPluginAnswerNotFound() {
         $u1 = mock('PFUser');
-        $em = new MockEM4UserManager($this);
-        $em->setReturnValue('processEvent', array('tokenFound' => false));
+
+        $em = new class extends EventManager {
+            public function processEvent($event, $params = array()) {
+                $params['tokenFound'] = false;
+            }
+        };
 
         $um = new UserManager4GetByIdent($this);
         $um->setReturnReference('_getEventManager', $em);
@@ -395,7 +399,7 @@ class UserManagerTest extends TuleapTestCase
         $session_manager_true = mock('Tuleap\User\SessionManager');
         $session_manager_true->expectNever('destroyAllSessions');
     	$umtrue = new UserManagerTestVersion($this);
-        stub($umtrue)->_getEventManager()->returns(mock('EventManager'));
+        stub($umtrue)->_getEventManager()->returns(\Mockery::spy(\EventManager::class));
         stub($umtrue)->getSessionManager()->returns($session_manager_true);
         $umtrue->setReturnReference('getDao', $daotrue);
         $this->assertTrue($umtrue->updateDb($user));
@@ -407,7 +411,7 @@ class UserManagerTest extends TuleapTestCase
         $session_manager_false = mock('Tuleap\User\SessionManager');
         $session_manager_false->expectNever('destroyAllSessions');
         $umfalse = new UserManagerTestVersion($this);
-        stub($umfalse)->_getEventManager()->returns(mock('EventManager'));
+        stub($umfalse)->_getEventManager()->returns(\Mockery::mock(\EventManager::class));
         stub($umfalse)->getSessionManager()->returns($session_manager_false);
         $umfalse->setReturnReference('getDao', $daofalse);
         $this->assertFalse($umfalse->updateDb($user));
@@ -461,7 +465,7 @@ class UserManagerTest extends TuleapTestCase
         $session_manager->expectOnce('destroyAllSessions', array($user));
 
         $um = new UserManagerTestVersion($this);
-        stub($um)->_getEventManager()->returns(mock('EventManager'));
+        stub($um)->_getEventManager()->returns(\Mockery::spy(\EventManager::class));
         stub($um)->getSessionManager()->returns($session_manager);
         $um->setReturnReference('getDao', $dao);
 
@@ -483,7 +487,7 @@ class UserManagerTest extends TuleapTestCase
         $session_manager->expectOnce('destroyAllSessions', array($user));
 
         $um = new UserManagerTestVersion($this);
-        stub($um)->_getEventManager()->returns(mock('EventManager'));
+        stub($um)->_getEventManager()->returns(\Mockery::spy(\EventManager::class));
         stub($um)->getSessionManager()->returns($session_manager);
         $um->setReturnReference('getDao', $dao);
 
@@ -576,10 +580,10 @@ class UserManagerTest extends TuleapTestCase
     public function itInsuresThatPluginsDoNotReceiveInvalidUsernameWhenFindingUser()
     {
         $user_manager  = TestHelper::getPartialMock('UserManager', array('_getEventManager'));
-        $event_manager = mock('EventManager');
+        $event_manager = \Mockery::mock(\EventManager::class);
         stub($user_manager)->_getEventManager()->returns($event_manager);
 
-        $event_manager->expectNever('processEvent');
+        $event_manager->shouldNotReceive('processEvent');
         $this->assertEqual($user_manager->findUser(null), null);
         $this->assertEqual($user_manager->findUser(false), null);
     }
@@ -618,7 +622,7 @@ class UserManager_GetInstanceFromRowEventsTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
-        $this->event_manager = mock('EventManager');
+        $this->event_manager = \Mockery::mock(\EventManager::class);
         $this->user_manager = partial_mock('UserManager',array());
         EventManager::setInstance($this->event_manager);
     }
@@ -661,6 +665,7 @@ class UserManager_GetInstanceFromRowEventsTest extends TuleapTestCase {
     }
 
     public function itReturnsAPFUserWhenNothingMatches() {
+        $this->event_manager->shouldReceive('processEvent');
         $user_row = array('user_id' => 90);
 
         $this->assertEqual(

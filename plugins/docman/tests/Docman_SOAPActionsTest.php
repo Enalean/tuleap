@@ -31,7 +31,6 @@ Mock::generate('Docman_FolderFactory');
 Mock::generate('Docman_FileStorage');
 Mock::generate('UserManager');
 Mock::generate('PFUser');
-Mock::generate('EventManager');
 Mock::generate('PermissionsManager');
 Mock::generate('Docman_PermissionsManager');
 Mock::generate('SOAPRequest');
@@ -112,7 +111,7 @@ class Docman_SOAPActionsTest extends TuleapTestCase {
         $this->action->setReturnValue('_getVersionFactory', $versionFactory);
         $this->action->setReturnValue('_getPermissionsManagerInstance', $this->permissionManager);
         $this->action->setReturnValue('_getDocmanPermissionsManagerInstance', $this->docmanPermissionsManager);
-        $this->action->setReturnValue('_getEventManager', new MockEventManager());
+        $this->action->setReturnValue('_getEventManager', \Mockery::spy(EventManager::class));
         $this->action->setReturnValue('_getFileStorage', $this->fileStorage);
         $this->action->__construct($controller);
     }

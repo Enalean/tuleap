@@ -91,7 +91,7 @@ class ProjectDashboardXMLImporter_Base extends \TuleapTestCase
         $this->widget_creator = mock('Tuleap\Dashboard\Widget\WidgetCreator');
         $this->widget_factory = mock('Tuleap\Widget\WidgetFactory');
         $this->widget_dao     = mock('Tuleap\Dashboard\Widget\DashboardWidgetDao');
-        $this->event_manager  = mock('EventManager');
+        $this->event_manager  = \Mockery::spy(\EventManager::class);
 
         $this->logger                     = mock('Logger');
         $this->project_dashboard_importer = new ProjectDashboardXMLImporter(
@@ -774,7 +774,6 @@ class ProjectDashboardXMLImporter_PluginTest extends ProjectDashboardXMLImporter
     public function setUp()
     {
         parent::setUp();
-        $this->event_manager = \Mockery::mock(\EventManager::class);
 
         $this->project_dashboard_importer = new ProjectDashboardXMLImporter(
             $this->project_dashboard_saver,

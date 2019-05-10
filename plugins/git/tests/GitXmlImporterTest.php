@@ -119,12 +119,12 @@ class GitXmlImporterTest extends TuleapTestCase {
         $this->git_factory = new GitRepositoryFactory($this->git_dao, $this->project_manager);
 
         $this->ugroup_dao     = mock('UGroupDao');
-        $this->ugroup_manager = new UGroupManager($this->ugroup_dao, mock('EventManager'));
+        $this->ugroup_manager = new UGroupManager($this->ugroup_dao, \Mockery::spy(\EventManager::class));
 
         $this->git_systemeventmanager        = mock('Git_SystemEventManager');
         $this->mirror_updater                = mock('GitRepositoryMirrorUpdater');
         $this->mirror_data_mapper            = mock('Git_Mirror_MirrorDataMapper');
-        $this->event_manager                 = mock('EventManager');
+        $this->event_manager                 = \Mockery::spy(\EventManager::class);
         $this->fine_grained_updater          = mock('Tuleap\Git\Permissions\FineGrainedUpdater');
         $this->regexp_fine_grained_retriever = mock('Tuleap\Git\Permissions\RegexpFineGrainedRetriever');
         $this->regexp_fine_grained_enabler   = mock('Tuleap\Git\Permissions\RegexpFineGrainedEnabler');

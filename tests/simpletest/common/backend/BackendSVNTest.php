@@ -27,7 +27,6 @@ Mock::generate('UGroupDao');
 Mock::generate('ProjectUGroup');
 Mock::generate('ServiceDao');
 Mock::generate('SVNAccessFile');
-Mock::generate('EventManager');
 
 Mock::generatePartial('BackendSVN', 'BackendSVNAccessTestVersion', array('updateSVNAccess',
                                                                          'repositoryExists',

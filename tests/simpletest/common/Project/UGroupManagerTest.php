@@ -151,10 +151,23 @@ class UGroupManager_UpdateUgroupBindingDaoTest extends TuleapTestCase {
 
 class UGroupManager_UpdateUgroupBindingEventTest extends TuleapTestCase {
 
+    /**
+     * @var a|\Mockery\MockInterface|EventManager
+     */
+    private $event_manager;
+    /**
+     * @var ProjectUGroup
+     */
+    private $ugroup_12;
+    /**
+     * @var ProjectUGroup
+     */
+    private $ugroup_24;
+
     public function setUp() {
         parent::setUp();
         $this->dao            = mock('UGroupDao');
-        $this->event_manager  = mock('EventManager');
+        $this->event_manager  = \Mockery::spy(\EventManager::class);
         $this->ugroup_manager = partial_mock('UGroupManager', array('getById'), array($this->dao, $this->event_manager));
 
 

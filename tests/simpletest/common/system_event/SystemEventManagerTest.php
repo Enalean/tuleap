@@ -125,25 +125,6 @@ class SystemEventManagerTest extends TuleapTestCase {
    }
 }
 
-Mock::generate('EventManager');
-class MockEventManager_GetTypesForQueue extends MockEventManager {
-   function processEvent($event, $params = []) {
-       switch ($event) {
-           case Event::SYSTEM_EVENT_GET_TYPES_FOR_CUSTOM_QUEUE:
-                if ($params['queue'] === SystemEventManagerGetTypesForQueueTest::CUSTOM_QUEUE) {
-                    $params['types'][] = 'track_me';
-                    $params['types'][] = 'track_you';
-                }
-                break;
-           case Event::SYSTEM_EVENT_GET_TYPES_FOR_DEFAULT_QUEUE:
-               $params['types'][] = 'feed_mini';
-               $params['types'][] = 'search_wiki';
-           default:
-               break;
-       }
-   }
-}
-
 class SystemEventManagerGetTypesForQueueTest extends TuleapTestCase {
 
     private $event_manager;
@@ -153,7 +134,24 @@ class SystemEventManagerGetTypesForQueueTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
 
-        $this->event_manager = new MockEventManager_GetTypesForQueue();
+        $this->event_manager = new class extends EventManager {
+            function processEvent($event, $params = []) {
+                switch ($event) {
+                    case Event::SYSTEM_EVENT_GET_TYPES_FOR_CUSTOM_QUEUE:
+                        if ($params['queue'] === SystemEventManagerGetTypesForQueueTest::CUSTOM_QUEUE) {
+                            $params['types'][] = 'track_me';
+                            $params['types'][] = 'track_you';
+                        }
+                        break;
+                    case Event::SYSTEM_EVENT_GET_TYPES_FOR_DEFAULT_QUEUE:
+                        $params['types'][] = 'feed_mini';
+                        $params['types'][] = 'search_wiki';
+                    default:
+                        break;
+                }
+            }
+        };
+
         EventManager::setInstance($this->event_manager);
     }
 

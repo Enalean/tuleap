@@ -24,6 +24,10 @@ class CardwallConfigXmlImportTest extends TuleapTestCase {
 
     private $default_xml_input;
     private $enhanced_xml_input;
+    /**
+     * @var a|\Mockery\MockInterface|EventManager
+     */
+    private $event_manager;
 
     public function setUp() {
         parent::setUp();
@@ -151,7 +155,7 @@ class CardwallConfigXmlImportTest extends TuleapTestCase {
         $this->mapping_field_dao          = mock('Cardwall_OnTop_ColumnMappingFieldDao');
         $this->mapping_field_value_dao    = mock('Cardwall_OnTop_ColumnMappingFieldValueDao');
         $this->group_id                   = 145;
-        $this->event_manager              = mock('EventManager');
+        $this->event_manager              = \Mockery::mock(\EventManager::class);
         $this->xml_validator              = mock('XML_RNGValidator');
         $this->cardwall_config_xml_import = new CardwallConfigXmlImport(
             $this->group_id,
@@ -167,6 +171,8 @@ class CardwallConfigXmlImportTest extends TuleapTestCase {
     }
 
     public function itStoresAllTheCardwallOnTop() {
+        $this->event_manager->shouldReceive('processEvent');
+
         expect($this->cardwall_ontop_dao)->enable()->count(2);
         expect($this->cardwall_ontop_dao)->enableFreestyleColumns()->count(2);
 
@@ -174,6 +180,8 @@ class CardwallConfigXmlImportTest extends TuleapTestCase {
     }
 
     public function itCreatesTheFreestyleColumns() {
+        $this->event_manager->shouldReceive('processEvent');
+
         expect($this->column_dao)->createWithcolor()->count(4);
         expect($this->column_dao)->createWithcolor(555, 'Todo', '', '', '')->at(0);
         expect($this->column_dao)->createWithcolor(555, 'On going', '', '', '')->at(1);
@@ -184,6 +192,8 @@ class CardwallConfigXmlImportTest extends TuleapTestCase {
     }
 
     public function itCreatesTheFreestyleColumnsWithColor() {
+        $this->event_manager->shouldReceive('processEvent');
+
         stub($this->column_dao)->createWithcolor()->returnsAt(0, 20);
         stub($this->column_dao)->createWithcolor()->returnsAt(1, 21);
         stub($this->column_dao)->createWithcolor()->returnsAt(2, 22);
@@ -202,6 +212,8 @@ class CardwallConfigXmlImportTest extends TuleapTestCase {
     }
 
     public function itDoesNotCreateMappingAndMappingValueinDefaultXML() {
+        $this->event_manager->shouldReceive('processEvent');
+
         expect($this->mapping_field_dao)->create()->never();
         expect($this->mapping_field_value_dao)->save()->never();
 
@@ -209,6 +221,8 @@ class CardwallConfigXmlImportTest extends TuleapTestCase {
     }
 
     public function itCreatesMappingAndMappingValue() {
+        $this->event_manager->shouldReceive('processEvent');
+
         stub($this->column_dao)->createWithcolor()->returnsAt(0, 20);
         stub($this->column_dao)->createWithcolor()->returnsAt(1, 21);
         stub($this->column_dao)->createWithcolor()->returnsAt(2, 22);
@@ -226,14 +240,14 @@ class CardwallConfigXmlImportTest extends TuleapTestCase {
     }
 
     public function itProcessesANewEventIfAllCardwallAreEnabled() {
-        expect($this->event_manager)->processEvent(
+        $this->event_manager->shouldReceive('processEvent')->with(
             Event::IMPORT_XML_PROJECT_CARDWALL_DONE,
             array(
                 'project_id'  => $this->group_id,
                 'xml_content' => $this->default_xml_input,
                 'mapping'     => $this->mapping
             )
-        )->once();
+        );
 
         $this->cardwall_ontop_dao->expectCallCount('enable', 2);
 
@@ -254,7 +268,7 @@ class CardwallConfigXmlImportTest extends TuleapTestCase {
             $this->xml_validator
         );
 
-        expect($this->event_manager)->processEvent(Event::IMPORT_XML_PROJECT_CARDWALL_DONE, '*')->never();
+        $this->event_manager->shouldNotReceive('processEvent')->with(Event::IMPORT_XML_PROJECT_CARDWALL_DONE, \Mockery::any());
 
         $this->expectException();
         $cardwall_ontop_dao->expectCallCount('enable', 1);

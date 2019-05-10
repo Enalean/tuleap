@@ -144,7 +144,7 @@ class User_LoginManager_validateAndSetCurrentUserTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
-        $this->event_manager = mock('EventManager');
+        $this->event_manager = \Mockery::mock(\EventManager::class);
         $this->user_manager  = mock('UserManager');
         $this->password_verifier = mock(\Tuleap\User\PasswordVerifier::class);
         $this->password_expiration_checker = mock('User_PasswordExpirationChecker');

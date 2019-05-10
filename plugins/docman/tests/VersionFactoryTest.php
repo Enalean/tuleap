@@ -23,8 +23,6 @@ use Mockery as M;
 
 require_once 'bootstrap.php';
 
-Mock::generate('EventManager');
-
 Mock::generate('UserManager');
 Mock::generate('PFUser');
 
@@ -163,8 +161,8 @@ class Docman_VersionFactoryTest extends TuleapTestCase {
         $um->setReturnValue('getCurrentUser', $user);
         $versionFactory->shouldReceive('_getUserManager')->andReturn($um);
 
-        $em = new MockEventManager($this);
-        $em->expectOnce('processEvent', array('plugin_docman_event_restore_version', array('group_id' => 114, 'item' => $file, 'old_value' => '2 (Ho hisse la saucisse)', 'user' => $user)));
+        $em = \Mockery::mock(EventManager::class);
+        $em->shouldReceive('processEvent')->with('plugin_docman_event_restore_version', array('group_id' => 114, 'item' => $file, 'old_value' => '2 (Ho hisse la saucisse)', 'user' => $user));
         $versionFactory->shouldReceive('_getEventManager')->andReturn($em);
 
         $dao->expectOnce('restore', array(1664, 2));
@@ -185,8 +183,8 @@ class Docman_VersionFactoryTest extends TuleapTestCase {
 
         stub($dao)->searchDeletedVersion(1664, 2)->returnsDar(array('purge_date' => null, 'path' => $filePath));
 
-        $em = new MockEventManager($this);
-        $em->expectNever('processEvent', array('plugin_docman_event_restore_version'));
+        $em = \Mockery::mock(EventManager::class);
+        $em->shouldNotReceive('processEvent')->with('plugin_docman_event_restore_version', \Mockery::any());
         $versionFactory->shouldReceive('_getEventManager')->andReturn($em);
 
         $dao->expectNever('restore', array(1664, 2));
@@ -206,8 +204,8 @@ class Docman_VersionFactoryTest extends TuleapTestCase {
 
         stub($dao)->searchDeletedVersion(1664, 2)->returnsDar(array('purge_date' => 1234567890, 'path' => $filePath));
 
-        $em = new MockEventManager($this);
-        $em->expectNever('processEvent', array('plugin_docman_event_restore_version'));
+        $em = \Mockery::mock(EventManager::class);
+        $em->shouldNotReceive('processEvent')->with('plugin_docman_event_restore_version', \Mockery::any());
         $versionFactory->shouldReceive('_getEventManager')->andReturn($em);
 
         $dao->expectNever('restore');

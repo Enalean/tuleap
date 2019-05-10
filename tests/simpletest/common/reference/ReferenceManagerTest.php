@@ -24,7 +24,7 @@ class ReferenceManagerTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
-        EventManager::setInstance(mock('EventManager'));
+        EventManager::setInstance(\Mockery::spy(\EventManager::class));
         ProjectManager::setInstance(mock('ProjectManager'));
         $this->user_manager = mock('UserManager');
         UserManager::setInstance($this->user_manager);

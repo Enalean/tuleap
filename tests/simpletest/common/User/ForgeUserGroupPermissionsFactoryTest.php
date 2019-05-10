@@ -47,7 +47,7 @@ class User_ForgeUserGroupFactory_GetPermissionsForForgeUserGroupTest extends Tul
     public function setUp()
     {
         $this->dao     = mock('User_ForgeUserGroupPermissionsDao');
-        $this->factory = new User_ForgeUserGroupPermissionsFactory($this->dao, mock('EventManager'));
+        $this->factory = new User_ForgeUserGroupPermissionsFactory($this->dao, \Mockery::spy(\EventManager::class));
     }
 
     public function itReturnsEmptyArrayIfNoResultsInDb()

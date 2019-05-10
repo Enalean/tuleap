@@ -98,8 +98,8 @@ class SystemEvent_PROJECT_RENAME_Test extends TuleapTestCase {
         $evt->setReturnValue('updateDB',true);
 
         // Event
-        $em = new MockEventManager($this);
-        $em->expectOnce('processEvent', array('SystemEvent_PROJECT_RENAME', array('project' => $project, 'new_name' => 'FooBar')));
+        $em = \Mockery::mock(EventManager::class);
+        $em->shouldReceive('processEvent')->with('SystemEvent_PROJECT_RENAME', array('project' => $project, 'new_name' => 'FooBar'));
         $evt->setReturnValue('getEventManager', $em);
         $evt->expectOnce('addProjectHistory', array('rename_done', 'TestProj :: FooBar', $project->getId()));
         // Expect everything went OK
@@ -154,8 +154,8 @@ class SystemEvent_PROJECT_RENAME_Test extends TuleapTestCase {
         $evt->setReturnValue('updateDB', true);
 
         // Event
-        $em = new MockEventManager($this);
-        $em->expectOnce('processEvent', array('SystemEvent_PROJECT_RENAME', array('project' => $project, 'new_name' => 'FooBar')));
+        $em = \Mockery::mock(EventManager::class);
+        $em->shouldReceive('processEvent')->with('SystemEvent_PROJECT_RENAME', array('project' => $project, 'new_name' => 'FooBar'));
         $evt->setReturnValue('getEventManager', $em);
 
         $evt->expectOnce('addProjectHistory', array('rename_with_error', 'TestProj :: FooBar (event n°1)', $project->getId()));
@@ -210,8 +210,8 @@ class SystemEvent_PROJECT_RENAME_Test extends TuleapTestCase {
         $evt->setReturnValue('updateDB', true);
 
         // Event
-        $em = new MockEventManager($this);
-        $em->expectOnce('processEvent', array('SystemEvent_PROJECT_RENAME', array('project' => $project, 'new_name' => 'FooBar')));
+        $em = \Mockery::mock(EventManager::class);
+        $em->shouldReceive('processEvent')->with('SystemEvent_PROJECT_RENAME', array('project' => $project, 'new_name' => 'FooBar'));
         $evt->setReturnValue('getEventManager', $em);
 
         $evt->expectOnce('addProjectHistory', array('rename_with_error', 'TestProj :: FooBar (event n°1)', $project->getId()));
@@ -266,8 +266,8 @@ class SystemEvent_PROJECT_RENAME_Test extends TuleapTestCase {
         $evt->setReturnValue('updateDB', true);
 
         // Event
-        $em = new MockEventManager($this);
-        $em->expectOnce('processEvent', array('SystemEvent_PROJECT_RENAME', array('project' => $project, 'new_name' => 'FooBar')));
+        $em = \Mockery::mock(EventManager::class);
+        $em->shouldReceive('processEvent')->with('SystemEvent_PROJECT_RENAME', array('project' => $project, 'new_name' => 'FooBar'));
         $evt->setReturnValue('getEventManager', $em);
 
         $evt->expectOnce('addProjectHistory', array('rename_with_error', 'TestProj :: FooBar (event n°1)', $project->getId()));
@@ -324,8 +324,8 @@ class SystemEvent_PROJECT_RENAME_Test extends TuleapTestCase {
         $evt->setReturnValue('updateDB', true);
 
         // Event
-        $em = new MockEventManager($this);
-        $em->expectOnce('processEvent', array('SystemEvent_PROJECT_RENAME', array('project' => $project, 'new_name' => 'FooBar')));
+        $em = \Mockery::mock(EventManager::class);
+        $em->shouldReceive('processEvent')->with('SystemEvent_PROJECT_RENAME', array('project' => $project, 'new_name' => 'FooBar'));
         $evt->setReturnValue('getEventManager', $em);
 
         $evt->expectOnce('addProjectHistory', array('rename_with_error', 'TestProj :: FooBar (event n°1)', $project->getId()));
@@ -379,8 +379,8 @@ class SystemEvent_PROJECT_RENAME_Test extends TuleapTestCase {
         $evt->setReturnValue('updateDB', true);
 
         // Event
-        $em = new MockEventManager($this);
-        $em->expectOnce('processEvent', array('SystemEvent_PROJECT_RENAME', array('project' => $project, 'new_name' => 'FooBar')));
+        $em = \Mockery::mock(EventManager::class);
+        $em->shouldReceive('processEvent')->with('SystemEvent_PROJECT_RENAME', array('project' => $project, 'new_name' => 'FooBar'));
         $evt->setReturnValue('getEventManager', $em);
 
         $evt->expectOnce('addProjectHistory', array('rename_with_error', 'TestProj :: FooBar (event n°1)', $project->getId()));
@@ -432,8 +432,8 @@ class SystemEvent_PROJECT_RENAME_Test extends TuleapTestCase {
         $evt->setReturnValue('updateDB', true);
 
         // Event
-        $em = new MockEventManager($this);
-        $em->expectOnce('processEvent', array('SystemEvent_PROJECT_RENAME', array('project' => $project, 'new_name' => 'FooBar')));
+        $em = \Mockery::mock(EventManager::class);
+        $em->shouldReceive('processEvent')->with('SystemEvent_PROJECT_RENAME', array('project' => $project, 'new_name' => 'FooBar'));
         $evt->setReturnValue('getEventManager', $em);
 
         $evt->expectOnce('addProjectHistory', array('rename_with_error', 'TestProj :: FooBar (event n°1)', $project->getId()));
@@ -485,8 +485,8 @@ class SystemEvent_PROJECT_RENAME_Test extends TuleapTestCase {
         $evt->setReturnValue('updateDB', false);
 
         // Event
-        $em = new MockEventManager($this);
-        $em->expectOnce('processEvent', array('SystemEvent_PROJECT_RENAME', array('project' => $project, 'new_name' => 'FooBar')));
+        $em = \Mockery::mock(EventManager::class);
+        $em->shouldReceive('processEvent')->with('SystemEvent_PROJECT_RENAME', array('project' => $project, 'new_name' => 'FooBar'));
         $evt->setReturnValue('getEventManager', $em);
 
         $evt->expectOnce('addProjectHistory', array('rename_with_error', 'TestProj :: FooBar (event n°1)', $project->getId()));
@@ -535,8 +535,7 @@ class SystemEvent_PROJECT_RENAME_Test extends TuleapTestCase {
         $evt->setReturnValue('updateDB', true);
 
         // Event
-        $em = new MockEventManager($this);
-        $evt->setReturnValue('getEventManager', $em);
+        $evt->setReturnValue('getEventManager', \Mockery::spy(EventManager::class));
 
         $evt->process();
 

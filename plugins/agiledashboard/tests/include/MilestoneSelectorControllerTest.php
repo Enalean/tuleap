@@ -50,15 +50,11 @@ class Planning_MilestoneSelectorControllerTest extends TuleapTestCase {
     }
 
     function itRedirectToTheCurrentMilestoneCardwallIfAny() {
-        $event_manager = mock('EventManager');
+        $event_manager = \Mockery::mock(\EventManager::class);
         EventManager::setInstance($event_manager);
 
-        $event_manager->expectOnce(
-            'processEvent',
-            array(
-                AGILEDASHBOARD_EVENT_MILESTONE_SELECTOR_REDIRECT,
-                '*'
-        ));
+        $event_manager->shouldReceive('processEvent')->with(AGILEDASHBOARD_EVENT_MILESTONE_SELECTOR_REDIRECT, \Mockery::any());
+
         $controller = new Planning_MilestoneSelectorController($this->request, $this->milestone_factory);
         $controller->show();
     }
@@ -73,5 +69,3 @@ class Planning_MilestoneSelectorControllerTest extends TuleapTestCase {
     }
 
 }
-
-?>

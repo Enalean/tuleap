@@ -25,8 +25,6 @@ use Mockery as M;
 
 require_once 'bootstrap.php';
 
-Mock::generate('EventManager');
-
 Mock::generate('Docman_ItemDao');
 Mock::generate('Docman_Folder');
 Mock::generate('Docman_File');
@@ -479,8 +477,8 @@ class Docman_ItemFactoryTest extends TuleapTestCase
         $um   = new MockUserManager($this);
         $um->setReturnValue('getCurrentUser', $user);
         $itemFactory->setReturnValue('_getUserManager', $um);
-        $em = new MockEventManager($this);
-        $em->expectOnce('processEvent', array('plugin_docman_event_restore', array('group_id' => 114, 'item' => $item, 'user' => $user)));
+        $em = \Mockery::mock(EventManager::class);
+        $em->shouldReceive('processEvent')->with('plugin_docman_event_restore', array('group_id' => 114, 'item' => $item, 'user' => $user));
         $itemFactory->setReturnValue('_getEventManager', $em);
 
         $this->assertTrue($itemFactory->restore($item));
@@ -513,8 +511,8 @@ class Docman_ItemFactoryTest extends TuleapTestCase
         $um   = new MockUserManager($this);
         $um->setReturnValue('getCurrentUser', $user);
         $itemFactory->setReturnValue('_getUserManager', $um);
-        $em = new MockEventManager($this);
-        $em->expectOnce('processEvent', array('plugin_docman_event_restore', array('group_id' => 114, 'item' => $item, 'user' => $user)));
+        $em = \Mockery::mock(EventManager::class);
+        $em->shouldReceive('processEvent')->with('plugin_docman_event_restore', array('group_id' => 114, 'item' => $item, 'user' => $user));
         $itemFactory->setReturnValue('_getEventManager', $em);
 
         $this->assertTrue($itemFactory->restore($item));
@@ -570,8 +568,8 @@ class Docman_ItemFactoryTest extends TuleapTestCase
         $um   = new MockUserManager($this);
         $um->setReturnValue('getCurrentUser', $user);
         $itemFactory->setReturnValue('_getUserManager', $um);
-        $em = new MockEventManager($this);
-        $em->expectOnce('processEvent', array('plugin_docman_event_restore', array('group_id' => 114, 'item' => $item, 'user' => $user)));
+        $em = \Mockery::mock(EventManager::class);
+        $em->shouldReceive('processEvent')->with('plugin_docman_event_restore', array('group_id' => 114, 'item' => $item, 'user' => $user));
         $itemFactory->setReturnValue('_getEventManager', $em);
 
         $this->assertTrue($itemFactory->restore($item));

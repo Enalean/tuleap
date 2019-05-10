@@ -211,7 +211,7 @@ class URLVerification_WithAnonymousTest extends URLVerificationBaseTest {
     public function setUp() {
         parent::setUp();
 
-        $this->em = mock('EventManager');
+        $this->em = \Mockery::spy(\EventManager::class);
 
         $GLOBALS['Language']->setReturnValue('getContent', $this->fixtures.'/empty.txt');
 
@@ -557,7 +557,7 @@ class URLVerification_PermissionsOverriderTest extends URLVerificationBaseTest {
 
         ForgeConfig::store();
 
-        $this->event_manager     = mock('EventManager');
+        $this->event_manager     = \Mockery::spy(\EventManager::class);
         $this->overrider_manager = mock('PermissionsOverrider_PermissionsOverriderManager');
 
         $this->urlVerification = partial_mock('URLVerification', array('getCurrentUser', 'getEventManager'));

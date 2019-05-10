@@ -176,7 +176,7 @@ class ProjectImportTest extends TuleapDbTestCase
             $frs_permissions_creator,
             new UserRemover(
                 mock('ProjectManager'),
-                mock('EventManager'),
+                \Mockery::spy(\EventManager::class),
                 mock('ArtifactTypeFactory'),
                 mock('Tuleap\Project\UserRemoverDao'),
                 mock('UserManager'),

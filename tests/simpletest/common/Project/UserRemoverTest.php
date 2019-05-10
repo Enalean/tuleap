@@ -30,13 +30,17 @@ class UserRemoverTest extends TuleapTestCase
      * @var UserRemover
      */
     private $remover;
+    /**
+     * @var \EventManager|\Mockery\MockInterface
+     */
+    private $event_manager;
 
     public function setUp()
     {
         parent::setUp();
 
         $this->project_manager     = mock('ProjectManager');
-        $this->event_manager       = mock('EventManager');
+        $this->event_manager       = \Mockery::spy(\EventManager::class);
         $this->tv3_tracker_factory = mock('ArtifactTypeFactory');
         $this->dao                 = mock('Tuleap\Project\UserRemoverDao');
         $this->user_manager        = mock('UserManager');
@@ -80,7 +84,7 @@ class UserRemoverTest extends TuleapTestCase
         expect($this->dao)->removeUserFromProjectUgroups()->once();
         expect($this->project_history_dao)->groupAddHistory()->once();
         expect($this->tracker_v3)->deleteUser()->once();
-        $this->event_manager->expectCallCount('processEvent', 2);
+        $this->event_manager->shouldReceive('processEvent')->twice();
 
         $this->remover->removeUserFromProject($project_id, $user_id);
     }

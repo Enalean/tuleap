@@ -43,7 +43,6 @@ Mock::generate('BackendCVS');
 Mock::generate('BackendMailingList');
 Mock::generate('BackendAliases');
 Mock::generate('ArtifactTypeFactory');
-Mock::generate('EventManager');
 Mock::generate('WikiAttachment');
 
 /**
@@ -138,8 +137,7 @@ class SystemEvent_PROJECT_DELETE_Test extends TuleapTestCase {
         $evt->expectNever('done');
         $evt->expectOnce('error', array("Could not remove project users"));
 
-        $em = new MockEventManager();
-        $evt->setReturnValue('getEventManager', $em);
+        $evt->setReturnValue('getEventManager', \Mockery::spy(EventManager::class));
 
         // Launch the event
         $this->assertFalse($evt->process());
@@ -219,8 +217,7 @@ class SystemEvent_PROJECT_DELETE_Test extends TuleapTestCase {
         $evt->expectNever('done');
         $evt->expectOnce('error', array("Could not remove membership request notification ugroups or message"));
 
-        $em = new MockEventManager();
-        $evt->setReturnValue('getEventManager', $em);
+        $evt->setReturnValue('getEventManager', \Mockery::spy(EventManager::class));
 
         // Launch the event
         $this->assertFalse($evt->process());
@@ -299,8 +296,7 @@ class SystemEvent_PROJECT_DELETE_Test extends TuleapTestCase {
         $evt->expectNever('done');
         $evt->expectOnce('error', array("Could not remove FRS items"));
 
-        $em = new MockEventManager();
-        $evt->setReturnValue('getEventManager', $em);
+        $evt->setReturnValue('getEventManager', \Mockery::spy(EventManager::class));
 
         // Launch the event
         $this->assertFalse($evt->process());
@@ -380,8 +376,7 @@ class SystemEvent_PROJECT_DELETE_Test extends TuleapTestCase {
         $evt->expectNever('done');
         $evt->expectOnce('error', array("Could not mark all trackers as deleted"));
 
-        $em = new MockEventManager();
-        $evt->setReturnValue('getEventManager', $em);
+        $evt->setReturnValue('getEventManager', \Mockery::spy(EventManager::class));
 
         // Launch the event
         $this->assertFalse($evt->process());
@@ -461,8 +456,7 @@ class SystemEvent_PROJECT_DELETE_Test extends TuleapTestCase {
         $evt->expectNever('done');
         $evt->expectOnce('error', array("Could not archive project home"));
 
-        $em = new MockEventManager();
-        $evt->setReturnValue('getEventManager', $em);
+        $evt->setReturnValue('getEventManager', \Mockery::spy(EventManager::class));
 
         // Launch the event
         $this->assertFalse($evt->process());
@@ -542,8 +536,7 @@ class SystemEvent_PROJECT_DELETE_Test extends TuleapTestCase {
         $evt->expectNever('done');
         $evt->expectOnce('error', array("Could not archive project public ftp"));
 
-        $em = new MockEventManager();
-        $evt->setReturnValue('getEventManager', $em);
+        $evt->setReturnValue('getEventManager', \Mockery::spy(EventManager::class));
 
         // Launch the event
         $this->assertFalse($evt->process());
@@ -623,8 +616,7 @@ class SystemEvent_PROJECT_DELETE_Test extends TuleapTestCase {
         $evt->expectNever('done');
         $evt->expectOnce('error', array("Could not mark all wiki attachments as deleted"));
 
-        $em = new MockEventManager();
-        $evt->setReturnValue('getEventManager', $em);
+        $evt->setReturnValue('getEventManager', \Mockery::spy(EventManager::class));
 
         // Launch the event
         $this->assertFalse($evt->process());
@@ -704,8 +696,7 @@ class SystemEvent_PROJECT_DELETE_Test extends TuleapTestCase {
         $evt->expectNever('done');
         $evt->expectOnce('error', array("Could not archive project CVS repository"));
 
-        $em = new MockEventManager();
-        $evt->setReturnValue('getEventManager', $em);
+        $evt->setReturnValue('getEventManager', \Mockery::spy(EventManager::class));
 
         // Launch the event
         $this->assertFalse($evt->process());
@@ -785,8 +776,7 @@ class SystemEvent_PROJECT_DELETE_Test extends TuleapTestCase {
         $evt->expectNever('done');
         $evt->expectOnce('error', array("Could not archive project SVN repository"));
 
-        $em = new MockEventManager();
-        $evt->setReturnValue('getEventManager', $em);
+        $evt->setReturnValue('getEventManager', \Mockery::spy(EventManager::class));
 
         // Launch the event
         $this->assertFalse($evt->process());
@@ -866,8 +856,7 @@ class SystemEvent_PROJECT_DELETE_Test extends TuleapTestCase {
         $evt->expectNever('done');
         $evt->expectOnce('error', array("Could not archive project mailing lists"));
 
-        $em = new MockEventManager();
-        $evt->setReturnValue('getEventManager', $em);
+        $evt->setReturnValue('getEventManager', \Mockery::spy(EventManager::class));
 
         // Launch the event
         $this->assertFalse($evt->process());
@@ -947,8 +936,7 @@ class SystemEvent_PROJECT_DELETE_Test extends TuleapTestCase {
         $evt->expectNever('done');
         $evt->expectOnce('error', array("Could not remove ugroups binding"));
 
-        $em = new MockEventManager();
-        $evt->setReturnValue('getEventManager', $em);
+        $evt->setReturnValue('getEventManager', \Mockery::spy(EventManager::class));
 
         // Launch the event
         $this->assertFalse($evt->process());
@@ -1029,8 +1017,7 @@ class SystemEvent_PROJECT_DELETE_Test extends TuleapTestCase {
         $evt->expectOnce('done');
         $evt->expectNever('error');
 
-        $em = new MockEventManager();
-        $evt->setReturnValue('getEventManager', $em);
+        $evt->setReturnValue('getEventManager', \Mockery::spy(EventManager::class));
 
         // Launch the event
         $this->assertTrue($evt->process());

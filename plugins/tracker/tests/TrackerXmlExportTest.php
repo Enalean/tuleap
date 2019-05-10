@@ -53,7 +53,7 @@ class TrackerXmlExportTest extends TuleapTestCase {
             mock('XML_RNGValidator'),
             $this->tracker_artifact_XMLexport,
             mock('UserXMLExporter'),
-            mock('EventManager'),
+            \Mockery::spy(\EventManager::class),
             $this->nature_presenter_factory,
             $this->artifact_link_dao
         );
