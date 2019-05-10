@@ -20,9 +20,9 @@
 
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Git\AdminAllowedProjectsGerritPresenter;
+use Tuleap\Git\AdminGerritBuilder;
 use Tuleap\Git\GerritServerResourceRestrictor;
 use Tuleap\Git\RemoteServer\Gerrit\Restrictor;
-use Tuleap\Git\AdminGerritBuilder;
 
 class Git_AdminGerritController {
 
@@ -229,6 +229,10 @@ class Git_AdminGerritController {
         $server_id = $request_gerrit_server['gerrit_server_id'];
         if (isset($server_id)) {
             $server = $this->gerrit_server_factory->getServerById($server_id);
+
+            if (! isset($request_gerrit_server['auth_type'])) {
+                $request_gerrit_server['auth_type'] = "Basic";
+            }
 
             if ($this->allGerritServerParamsRequiredExist($request_gerrit_server)) {
                 $gerrit_server = $this->admin_gerrit_builder->buildFromRequestForEdition($request_gerrit_server);
