@@ -2,4 +2,17 @@
 <simple_workflow>
     <field_id REF="F32"/>
     <is_used>1</is_used>
+    <states>
+        <state>
+            <to_id REF="F32-V0"/>
+            <transitions>
+                <transition>
+                    <from_id REF="null"/>
+                </transition>
+                <transition>
+                    <from_id REF="F32-V1"/>
+                </transition>
+            </transitions>
+        </state>
+    </states>
 </simple_workflow>

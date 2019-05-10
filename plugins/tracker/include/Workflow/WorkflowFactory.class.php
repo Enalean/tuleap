@@ -416,12 +416,18 @@ class WorkflowFactory //phpcs:ignoreFile
 
     public function getSimpleInstanceFromXML(
         SimpleXMLElement $xml,
-        array &$xmlMapping,
-        Tracker $tracker,
-        Project $project
+        array &$xml_mapping,
+        Tracker $tracker
     ) {
-        $workflow_field = $this->getWorkflowField($xml, $xmlMapping);
+        $workflow_field = $this->getWorkflowField($xml, $xml_mapping);
         $transitions    = [];
+
+        foreach ($xml->states->state as $state_xml) {
+            $transitions = array_merge(
+                $transitions,
+                $this->transition_factory->getInstancesFromStateXML($state_xml, $xml_mapping)
+            );
+        }
 
         $workflow = new Workflow(
             $this->getGlobalRulesManager($tracker),

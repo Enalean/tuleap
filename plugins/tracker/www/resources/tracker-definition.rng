@@ -309,6 +309,30 @@
             <data type="long"/>
           </element>
         </optional>
+        <optional>
+          <element name="states">
+            <oneOrMore>
+              <element name="state">
+                <element name="to_id">
+                  <attribute name="REF">
+                    <data type="string"/>
+                  </attribute>
+                </element>
+                <element name="transitions">
+                  <oneOrMore>
+                    <element name="transition">
+                      <element name="from_id">
+                        <attribute name="REF">
+                          <data type="string"/>
+                        </attribute>
+                      </element>
+                    </element>
+                  </oneOrMore>
+                </element>
+              </element>
+            </oneOrMore>
+          </element>
+        </optional>
       </element>
     </optional>
   </define>

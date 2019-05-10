@@ -386,6 +386,6 @@ class SimpleModeTest extends TrackerBase
 
         $this->assertEquals($tracker['workflow']['is_advanced'], false);
         $this->assertEquals($tracker['workflow']['is_used'], "1");
-        $this->assertCount(0, $tracker['workflow']['transitions']);
+        $this->assertCount(3, $tracker['workflow']['transitions']);
     }
 }
