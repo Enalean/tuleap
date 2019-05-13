@@ -280,12 +280,15 @@ class CampaignsResource
             $artifact_message_sender
         );
 
-        $http_client = new \Http_Client();
+        $http_client          = HttpClientFactory::createClient();
+        $http_request_factory = HTTPFactoryBuilder::requestFactory();
 
         $this->automated_triggerer = new AutomatedTestsTriggerer(
             new Jenkins_Client(
                 $http_client,
-                new JenkinsCSRFCrumbRetriever($http_client)
+                $http_request_factory,
+                HTTPFactoryBuilder::streamFactory(),
+                new JenkinsCSRFCrumbRetriever($http_client, $http_request_factory)
             )
         );
     }
