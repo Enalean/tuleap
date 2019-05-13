@@ -1152,6 +1152,11 @@
                         </items>
                     </bind>
                 </formElement>
+                <formElement type="date" ID="F10001" rank="2">
+                    <name>closed_date</name>
+                    <label><![CDATA[Closed Date]]></label>
+                    <properties display_time="0"/>
+                </formElement>
             </formElements>
             <semantics>
                 <semantic type="tooltip"/>
@@ -1175,15 +1180,20 @@
                 <is_used>1</is_used>
                 <states>
                     <state>
-                        <to_id REF="V1"/>
+                        <to_id REF="V2"/>
                         <transitions>
                             <transition>
                                 <from_id REF="null"/>
                             </transition>
                             <transition>
-                                <from_id REF="V2"/>
+                                <from_id REF="V1"/>
                             </transition>
                         </transitions>
+                        <postactions>
+                            <postaction_field_date valuetype="2">
+                                <field_id REF="F10001"/>
+                            </postaction_field_date>
+                        </postactions>
                     </state>
                     <state>
                         <to_id REF="V3"/>
@@ -1200,6 +1210,9 @@
                 <permission scope="field" REF="F10000" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
                 <permission scope="field" REF="F10000" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
                 <permission scope="field" REF="F10000" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+                <permission scope="field" REF="F10001" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+                <permission scope="field" REF="F10001" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+                <permission scope="field" REF="F10001" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
             </permissions>
         </tracker>
     </trackers>

@@ -28,18 +28,13 @@ simpleWorkflow =
                             attribute REF { xsd:string }
                         }
                     }+
-                }
+                }?,
+                postactionsContent
             }+
         }?
     }?
 
-transitionContent =
-    element from_id {
-        attribute REF { xsd:string }
-    },
-    element to_id {
-        attribute REF { xsd:string }
-    },
+postactionsContent =
     element postactions {
         element postaction_field_date {
             attribute valuetype { xsd:long },
@@ -62,7 +57,16 @@ transitionContent =
         element postaction_ci_build {
             attribute job_url { xsd:string }
         }*
-    }?,
+    }?
+
+transitionContent =
+    element from_id {
+        attribute REF { xsd:string }
+    },
+    element to_id {
+        attribute REF { xsd:string }
+    },
+    postactionsContent,
     (
         (
             conditionPermissionsContent

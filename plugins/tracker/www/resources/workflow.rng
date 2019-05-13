@@ -57,17 +57,20 @@
                     <data type="string"/>
                   </attribute>
                 </element>
-                <element name="transitions">
-                  <oneOrMore>
-                    <element name="transition">
-                      <element name="from_id">
-                        <attribute name="REF">
-                          <data type="string"/>
-                        </attribute>
+                <optional>
+                  <element name="transitions">
+                    <oneOrMore>
+                      <element name="transition">
+                        <element name="from_id">
+                          <attribute name="REF">
+                            <data type="string"/>
+                          </attribute>
+                        </element>
                       </element>
-                    </element>
-                  </oneOrMore>
-                </element>
+                    </oneOrMore>
+                  </element>
+                </optional>
+                <ref name="postactionsContent"/>
               </element>
             </oneOrMore>
           </element>
@@ -75,17 +78,7 @@
       </element>
     </optional>
   </define>
-  <define name="transitionContent">
-    <element name="from_id">
-      <attribute name="REF">
-        <data type="string"/>
-      </attribute>
-    </element>
-    <element name="to_id">
-      <attribute name="REF">
-        <data type="string"/>
-      </attribute>
-    </element>
+  <define name="postactionsContent">
     <optional>
       <element name="postactions">
         <zeroOrMore>
@@ -133,6 +126,19 @@
         </zeroOrMore>
       </element>
     </optional>
+  </define>
+  <define name="transitionContent">
+    <element name="from_id">
+      <attribute name="REF">
+        <data type="string"/>
+      </attribute>
+    </element>
+    <element name="to_id">
+      <attribute name="REF">
+        <data type="string"/>
+      </attribute>
+    </element>
+    <ref name="postactionsContent"/>
     <choice>
       <ref name="conditionPermissionsContent"/>
       <optional>

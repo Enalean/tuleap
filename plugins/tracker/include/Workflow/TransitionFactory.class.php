@@ -226,7 +226,20 @@ class TransitionFactory //phpcs:ignoreFile
                 $from_id = $xml_mapping[(string)$transition_xml->from_id['REF']];
             }
 
-            $transitions[] = new Transition(0, 0, $from_id, $to_id);
+            $transition = new Transition(0, 0, $from_id, $to_id);
+
+            $postactions = [];
+            if ($state_xml->postactions) {
+                $postactions = $this->getPostActionFactory()->getInstanceFromXML(
+                    $state_xml->postactions,
+                    $xml_mapping,
+                    $transition
+                );
+            }
+
+            $transition->setPostActions($postactions);
+
+            $transitions[] = $transition;
         }
 
         return $transitions;

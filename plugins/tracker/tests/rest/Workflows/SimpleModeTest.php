@@ -387,5 +387,23 @@ class SimpleModeTest extends TrackerBase
         $this->assertEquals($tracker['workflow']['is_advanced'], false);
         $this->assertEquals($tracker['workflow']['is_used'], "1");
         $this->assertCount(3, $tracker['workflow']['transitions']);
+
+        $transition = $this->getSpecificTransition(
+            $this->simple_mode_from_xml_tracker_id,
+            'status',
+            'Open',
+            'Done'
+        );
+        $transition_id = $transition['id'];
+
+        $response_actions = $this->getResponseByName(
+            \REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->client->get("tracker_workflow_transitions/$transition_id/actions")
+        );
+        $this->assertEquals(200, $response_actions->getStatusCode());
+
+        $transition_post_actions = $response_actions->json();
+
+        $this->assertCount(1, $transition_post_actions);
     }
 }
