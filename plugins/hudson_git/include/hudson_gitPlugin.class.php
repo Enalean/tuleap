@@ -23,6 +23,8 @@ require_once __DIR__ . '/../../git/include/gitPlugin.class.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/constants.php';
 
+use Tuleap\Http\HttpClientFactory;
+use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\HudsonGit\Plugin\PluginInfo;
 use Tuleap\HudsonGit\Hook;
 use Tuleap\HudsonGit\Logger;
@@ -116,7 +118,7 @@ class hudson_gitPlugin extends PluginWithLegacyInternalRouting
                 new Hook\JenkinsClient(
                     new Http_Client(),
                     new PollingResponseFactory(),
-                    new JenkinsCSRFCrumbRetriever(new Http_Client())
+                    new JenkinsCSRFCrumbRetriever(HttpClientFactory::createClient(), HTTPFactoryBuilder::requestFactory())
                 ),
                 $this->getLogger(),
                 new JobManager(new JobDao())

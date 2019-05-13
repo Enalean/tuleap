@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Http\HttpClientFactory;
+use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Jenkins\JenkinsCSRFCrumbRetriever;
 
 require_once TRACKER_BASE_DIR .'/Workflow/PostAction/PostActionSubFactory.class.php';
@@ -129,8 +131,15 @@ class Transition_PostAction_CIBuildFactory implements Transition_PostActionSubFa
     private function buildPostAction(Transition $transition, $row) {
         $id                           = (int)$row['id'];
         $job_url                      = (string)$row['job_url'];
-        $jenkins_csrf_crumb_retriever = new JenkinsCSRFCrumbRetriever(new Http_Client());
-        $ci_client                    = new Jenkins_Client(new Http_Client(), $jenkins_csrf_crumb_retriever);
+        $http_client                  = HttpClientFactory::createClient();
+        $http_request_factory         = HTTPFactoryBuilder::requestFactory();
+        $jenkins_csrf_crumb_retriever = new JenkinsCSRFCrumbRetriever($http_client, $http_request_factory);
+        $ci_client                    = new Jenkins_Client(
+            $http_client,
+            $http_request_factory,
+            HTTPFactoryBuilder::streamFactory(),
+            $jenkins_csrf_crumb_retriever
+        );
 
         return new Transition_PostAction_CIBuild($transition, $id, $job_url, $ci_client);
     }
