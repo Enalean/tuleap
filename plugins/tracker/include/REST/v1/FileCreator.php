@@ -55,6 +55,7 @@ final class FileCreator
         FilePOSTRepresentation $file_post_representation,
         DateTimeImmutable $current_time
     ): CreatedFileRepresentation {
+        $representation = new CreatedFileRepresentation();
         try {
             $file_to_upload = $this->file_to_upload_creator->create(
                 $field,
@@ -67,7 +68,9 @@ final class FileCreator
 
             if ($file_post_representation->file_size === 0) {
                 $this->empty_file_to_upload_finisher->createEmptyFile($file_to_upload, $file_post_representation->name);
-                return new CreatedFileRepresentation();
+                $representation->buildEmptyFile($file_to_upload->getDownloadHref());
+            } else {
+                $representation->build($file_to_upload->getDownloadHref(), $file_to_upload->getUploadHref());
             }
         } catch (UploadCreationConflictException $exception) {
             throw new RestException(409, $exception->getMessage());
@@ -76,9 +79,6 @@ final class FileCreator
         } catch (UploadMaxSizeExceededException $exception) {
             throw new RestException(400, $exception->getMessage());
         }
-
-        $representation = new CreatedFileRepresentation();
-        $representation->build($file_to_upload->getUploadHref());
 
         return $representation;
     }

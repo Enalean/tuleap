@@ -66,9 +66,12 @@ final class UploadPathAllocator implements PathAllocator
 
     private function getFieldFromFileInformation(TusFileInformation $file_information): Tracker_FormElement_Field_File
     {
-        $field_id = $this->dao->searchFileOngoingUploadById($file_information->getID())['field_id'];
+        $row = $this->dao->searchFileOngoingUploadById($file_information->getID());
+        if (! $row) {
+            throw new \RuntimeException('Cannot retrieve field from file information');
+        }
 
-        return $this->getFileField((int) $field_id);
+        return $this->getFileField((int) ($row['field_id']));
     }
 
     private function getFileField(int $field_id): Tracker_FormElement_Field_File

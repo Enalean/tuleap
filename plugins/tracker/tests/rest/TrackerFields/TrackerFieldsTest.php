@@ -115,6 +115,7 @@ class TrackerFieldsTest extends TrackerBase
     public function testPOSTFile(int $field_id): void
     {
         $file_size = 123;
+        $data      = str_repeat('A', $file_size);
 
         $query = [
             'name'       => 'file_creation_' . bin2hex(random_bytes(8)),
@@ -125,10 +126,12 @@ class TrackerFieldsTest extends TrackerBase
         $response1 = $this->getResponse($this->client->post("tracker_fields/$field_id/files", null, json_encode($query)));
         $this->assertEquals(201, $response1->getStatusCode());
         $this->assertNotEmpty($response1->json()['upload_href']);
+        $this->assertNotEmpty($response1->json()['download_href']);
 
         $response2 = $this->getResponse($this->client->post("tracker_fields/$field_id/files", null, json_encode($query)));
         $this->assertEquals(201, $response1->getStatusCode());
         $this->assertSame($response1->json()['upload_href'], $response2->json()['upload_href']);
+        $this->assertSame($response1->json()['download_href'], $response2->json()['download_href']);
 
         $query['file_size'] = 456;
         $response3          = $this->getResponse($this->client->post("tracker_fields/$field_id/files", null, json_encode($query)));
@@ -147,11 +150,18 @@ class TrackerFieldsTest extends TrackerBase
                     'Content-Type'  => 'application/offset+octet-stream',
                     'Upload-Offset' => '0'
                 ],
-                str_repeat('A', $file_size)
+                $data
             )
         );
         $this->assertEquals(204, $tus_response_upload->getStatusCode());
         $this->assertEquals([$file_size], $tus_response_upload->getHeader('Upload-Offset')->toArray());
+
+        $data_response = $this->getResponse($this->setup_client->get($response1->json()['download_href']));
+        $this->assertEquals(200, $data_response->getStatusCode());
+        $this->assertEquals(
+            $data,
+            (string) $data_response->getBody()
+        );
     }
 
     /**

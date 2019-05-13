@@ -27,15 +27,25 @@ final class FileToUpload
      * @var int
      */
     private $id;
+    /**
+     * @var string
+     */
+    private $filename;
 
-    public function __construct(int $id)
+    public function __construct(int $id, string $filename)
     {
         $this->id = $id;
+        $this->filename = $filename;
     }
 
     public function getUploadHref(): string
     {
         return '/uploads/tracker/file/' . urlencode((string) $this->id);
+    }
+
+    public function getDownloadHref(): string
+    {
+        return TRACKER_BASE_URL . '/attachments/' . urlencode((string) $this->id) .'-'. rawurlencode($this->filename);
     }
 
     public function getId(): int

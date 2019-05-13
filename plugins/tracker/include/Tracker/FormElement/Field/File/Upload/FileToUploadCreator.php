@@ -93,7 +93,7 @@ final class FileToUploadCreator
             }
         );
 
-        return new FileToUpload($id);
+        return new FileToUpload($id, $filename);
     }
 
     private function searchFileOngoingUpload(

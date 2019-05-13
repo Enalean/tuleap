@@ -24,6 +24,9 @@ use Tuleap\Dashboard\User\AtUserCreationDefaultWidgetsCreator;
 use Tuleap\DB\DBFactory;
 use Tuleap\Glyph\GlyphLocation;
 use Tuleap\Glyph\GlyphLocationsCollector;
+use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\Http\Response\BinaryFileResponseBuilder;
+use Tuleap\Http\Server\SessionWriteCloseMiddleware;
 use Tuleap\layout\HomePage\StatisticsCollectionCollector;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupDisplayEvent;
@@ -36,6 +39,10 @@ use Tuleap\Project\PaginatedProjects;
 use Tuleap\Project\XML\Export\NoArchive;
 use Tuleap\Queue\WorkerEvent;
 use Tuleap\Request\CurrentPage;
+use Tuleap\REST\BasicAuthentication;
+use Tuleap\REST\RESTCurrentUserMiddleware;
+use Tuleap\REST\TuleapRESTCORSMiddleware;
+use Tuleap\REST\UserManager as RESTUserManager;
 use Tuleap\Service\ServiceCreator;
 use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfig;
 use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfigController;
@@ -68,6 +75,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureEditor;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureUsagePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureValidator;
+use Tuleap\Tracker\FormElement\Field\File\AttachmentController;
 use Tuleap\Tracker\FormElement\Field\File\Upload\FileOngoingUploadDao;
 use Tuleap\Tracker\FormElement\Field\File\Upload\Tus\FileBeingUploadedInformationProvider;
 use Tuleap\Tracker\FormElement\Field\File\Upload\Tus\FileDataStore;
@@ -124,6 +132,7 @@ use Tuleap\Upload\FileUploadController;
 use Tuleap\User\History\HistoryRetriever;
 use Tuleap\User\User_ForgeUserGroupPermissionsFactory;
 use Tuleap\Widget\Event\GetPublicAreas;
+use Zend\HttpHandlerRunner\Emitter\SapiStreamEmitter;
 
 require_once __DIR__ . '/constants.php';
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -1805,6 +1814,8 @@ class trackerPlugin extends Plugin {
             $r->get('/workflow/{tracker_id:\d+}/transitions', $this->getRouteHandler('routeGetWorkflowTransitions'));
 
             $r->post('/workflow/{tracker_id:\d+}/legacy_transitions', $this->getRouteHandler('routePostWorkflowLegacyTransitions'));
+
+            $r->get('/attachments/{id:\d+}-{filename}', $this->getRouteHandler('routeAttachments'));
         });
 
         $event->getRouteCollector()->addRoute(
@@ -1830,6 +1841,26 @@ class trackerPlugin extends Plugin {
                 new FileBeingUploadedLocker($path_allocator),
                 new FileUploadCanceler($path_allocator, $file_ongoing_upload_dao)
             )
+        );
+    }
+
+    public function routeAttachments(): AttachmentController
+    {
+        $file_ongoing_upload_dao = new FileOngoingUploadDao();
+        $form_element_factory    = Tracker_FormElementFactory::instance();
+        $path_allocator          = new UploadPathAllocator($file_ongoing_upload_dao, $form_element_factory);
+
+        return new AttachmentController(
+            new URLVerification(),
+            $file_ongoing_upload_dao,
+            $form_element_factory,
+            new FileBeingUploadedInformationProvider($path_allocator, $file_ongoing_upload_dao),
+            $path_allocator,
+            new BinaryFileResponseBuilder(HTTPFactoryBuilder::responseFactory(), HTTPFactoryBuilder::streamFactory()),
+            new SapiStreamEmitter(),
+            new SessionWriteCloseMiddleware(),
+            new RESTCurrentUserMiddleware(RESTUserManager::build(), new BasicAuthentication()),
+            new TuleapRESTCORSMiddleware()
         );
     }
 
