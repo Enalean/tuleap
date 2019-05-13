@@ -259,12 +259,7 @@ class ErrorManager
         }
         else if (($error->errno & error_reporting()) != 0) {
             if  (($error->errno & $this->_postpone_mask) == 0) {
-                if ((function_exists('isa') and isa($error, 'PhpErrorOnce'))
-                    or (!function_exists('isa') and
-                        (
-                            // stdlib independent isa()
-                            (strtolower(get_class($error)) == 'phperroronce')
-                            or (is_subclass_of($error, 'PhpErrorOnce'))))) {
+                if ($error instanceof PhpErrorOnce) {
                     $error->removeDoublettes($this->_postponed_errors);
                     if ($error->_count < 2) {
                         $this->_postponed_errors[] = $error;

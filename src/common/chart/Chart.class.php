@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -64,7 +64,6 @@ class Chart
         $this->jpgraph_instance->SetFrame(true, $this->getMainColor(), 0);
 
         if ($aWidth && $aHeight) {
-            require_once __DIR__ . '/EmptyImageAntiAliasPolyfill.php';
             $this->jpgraph_instance->img->SetAntiAliasing();
         }
 

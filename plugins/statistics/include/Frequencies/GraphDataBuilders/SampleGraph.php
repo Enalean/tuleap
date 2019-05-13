@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -248,7 +248,6 @@ class SampleGraph
             $this->graph->img->SetMargin(60, 120, 20, 40);
         }
 
-        require_once __DIR__ . '/../../../../../src/common/chart/EmptyImageAntiAliasPolyfill.php';
         //management of the axes scales
         if ($this->filter == 'hour') {
             $this->graph->SetScale("linlin");

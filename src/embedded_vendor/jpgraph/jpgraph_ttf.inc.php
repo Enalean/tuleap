@@ -188,17 +188,10 @@ class LanguageConv {
             return $this->g2312->gb2utf8($aTxt);
         }
         elseif( $aFF === FF_BIG5 ) {
-            if( !function_exists('iconv') ) {
-                JpGraphError::RaiseL(25006);
-                //('Usage of FF_CHINESE (FF_BIG5) font family requires that your PHP setup has the iconv() function. By default this is not compiled into PHP (needs the "--width-iconv" when configured).');
-            }
             return iconv('BIG5','UTF-8',$aTxt);
         }
         elseif( ASSUME_EUCJP_ENCODING &&
         ($aFF == FF_MINCHO || $aFF == FF_GOTHIC || $aFF == FF_PMINCHO || $aFF == FF_PGOTHIC) ) {
-            if( !function_exists('mb_convert_encoding') ) {
-                JpGraphError::RaiseL(25127);
-            }
             return mb_convert_encoding($aTxt, 'UTF-8','EUC-JP');
         }
         elseif( $aFF == FF_DAVID || $aFF == FF_MIRIAM || $aFF == FF_AHRON ) {

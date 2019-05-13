@@ -7580,9 +7580,6 @@
     </PossiblyUndefinedVariable>
   </file>
   <file src="plugins/statistics/include/Frequencies/GraphDataBuilders/SampleGraph.php">
-    <MissingFile occurrences="1">
-      <code>require_once __DIR__ . '/../../../../../src/common/chart/EmptyImageAntiAliasPolyfill.php'</code>
-    </MissingFile>
     <PossiblyUndefinedVariable occurrences="4">
       <code>$databarx</code>
       <code>$databarx</code>
@@ -17474,11 +17471,6 @@
       <code>FS_NORMAL</code>
       <code>FF_USERFONT</code>
     </UndefinedConstant>
-  </file>
-  <file src="src/common/chart/EmptyImageAntiAliasPolyfill.php">
-    <DuplicateFunction occurrences="1">
-      <code>function imageantialias($image, $enabled) {</code>
-    </DuplicateFunction>
   </file>
   <file src="src/common/chart/ErrorChart.class.php">
     <UndefinedConstant occurrences="2">

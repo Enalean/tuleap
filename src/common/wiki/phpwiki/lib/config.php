@@ -237,23 +237,11 @@ function update_locale($loc) {
         $setlocale = guessing_setlocale(LC_ALL, $setlocale); // try again
         if (!$setlocale) $setlocale = $loc;
     }
-    // Try to put new locale into environment (so any
-    // programs we run will get the right locale.)
-    if (!function_exists('bindtextdomain'))  {
-        // Reinitialize translation array.
-        global $locale;
-        $locale = array();
-        // do reinit to purge PHP's static cache [43ms]
-        if ( ($lcfile = FindLocalizedFile("LC_MESSAGES/phpwiki.php", 'missing_ok', 'reinit')) ) {
-            include($lcfile);
-        }
-    } else {
-        // If PHP is in safe mode, this is not allowed,
-        // so hide errors...
-        @putenv("LC_ALL=$setlocale");
-        @putenv("LANG=$loc");
-        @putenv("LANGUAGE=$loc");
-    }
+    // If PHP is in safe mode, this is not allowed,
+    // so hide errors...
+    @putenv("LC_ALL=$setlocale");
+    @putenv("LANG=$loc");
+    @putenv("LANGUAGE=$loc");
 
     // To get the POSIX character classes in the PCRE's (e.g.
     // [[:upper:]]) to match extended characters (e.g. Gr��Gott), we have
@@ -306,58 +294,6 @@ function IsProbablyRedirectToIndex () {
     $requri = preg_replace('/\?.*$/','',$_SERVER['REQUEST_URI']);
     $requri = preg_quote($requri, '%');
     return preg_match("%^${requri}[^/]*$%", $_SERVER['SCRIPT_NAME']);
-}
-
-// >= php-4.1.0
-if (!function_exists('array_key_exists')) { // lib/IniConfig.php, sqlite, adodb, ...
-    function array_key_exists($item, $array) {
-        return isset($array[$item]);
-    }
-}
-
-// => php-4.0.5
-if (!function_exists('is_scalar')) { // lib/stdlib.php:wikihash()
-    function is_scalar($x) {
-        return is_numeric($x) or is_string($x) or is_float($x) or is_bool($x); 
-    }
-}
-
-// => php-4.2.0. pear wants to break old php's! DB uses it now.
-if (!function_exists('is_a')) {
-    function is_a($item,$class) {
-        return isa($item,$class); 
-    }
-}
-
-// needed < php5
-// by bradhuizenga at softhome dot net from the php docs
-if (!function_exists('str_ireplace')) {
-  function str_ireplace($find, $replace, $string) {
-      if (!is_array($find)) $find = array($find);
-      if (!is_array($replace)) {
-          if (!is_array($find)) 
-              $replace = array($replace);
-          else {
-              // this will duplicate the string into an array the size of $find
-              $c = count($find);
-              $rString = $replace;
-              unset($replace);
-              for ($i = 0; $i < $c; $i++) {
-                  $replace[$i] = $rString;
-              }
-          }
-      }
-      foreach ($find as $fKey => $fItem) {
-          $between = explode(strtolower($fItem),strtolower($string));
-          $pos = 0;
-          foreach ($between as $bKey => $bItem) {
-              $between[$bKey] = substr($string,$pos,strlen($bItem));
-              $pos += strlen($bItem) + strlen($fItem);
-          }
-          $string = implode($replace[$fKey], $between);
-      }
-      return($string);
-  }
 }
 
 /** 

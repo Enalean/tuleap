@@ -174,14 +174,10 @@ extends WikiPlugin
             	$locale[$en] = $en;
             }
         // gettext module loaded: must load the LC_MESSAGES php hash
-        } elseif (function_exists ('bindtextdomain')) {
+        } else {
             include (FindFile("locale/$lang/LC_MESSAGES/phpwiki.php", 0,'reinit'));
             //include (FindLocalizedFile("LC_MESSAGES/phpwiki.php", 0,'reinit'));
         // we already have a $locale, but maybe it's in the wrong language
-        } elseif ($lang != $this->lang or empty($GLOBALS['locale'])) {
-            include (FindFile("locale/$lang/LC_MESSAGES/phpwiki.php", 0,'reinit'));
-        } else {
-           $locale = & $GLOBALS['locale'];
         }
         $this->_locales[$lang] = $locale;
     }

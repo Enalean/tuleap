@@ -27,8 +27,7 @@ class XML_Security {
     /**
      * Prevent XXE attacks
      *
-     * Important facts:
-     * * not available for PHP 5.1.6
+     * Important fact:
      * * not thread safe (php-fpm)
      *
      * Useful links:
@@ -42,9 +41,7 @@ class XML_Security {
     }
 
     private function setExternalLoadOfEntities($value) {
-        if ($this->canExternalLoadingBeDisabled()) {
-            return libxml_disable_entity_loader($value);
-        }
+        return libxml_disable_entity_loader($value);
     }
 
     /**
@@ -71,9 +68,5 @@ class XML_Security {
         $this->setExternalLoadOfEntities($previous_setting);
 
         return $xml_element;
-    }
-
-    private function canExternalLoadingBeDisabled() {
-        return function_exists('libxml_disable_entity_loader');
     }
 }
