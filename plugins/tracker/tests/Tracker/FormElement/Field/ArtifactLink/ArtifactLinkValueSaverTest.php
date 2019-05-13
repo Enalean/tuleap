@@ -122,7 +122,7 @@ class ArtifactLinkValueSaverTest extends TuleapTestCase {
             $this->artifact_factory,
             $this->dao,
             $this->reference_manager,
-            mock('EventManager'),
+            \Mockery::spy(\EventManager::class),
             $this->artifact_link_usage_dao
         );
 

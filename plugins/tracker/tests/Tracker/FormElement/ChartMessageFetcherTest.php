@@ -42,7 +42,7 @@ class ChartMessageFetcherTest extends \TuleapTestCase
         $this->message_fetcher = new ChartMessageFetcher(
             $hierarchy_factory,
             mock('Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever'),
-            mock('EventManager')
+            \Mockery::spy(\EventManager::class)
         );
         stub($hierarchy_factory)->getChildren()->returns(array());
 

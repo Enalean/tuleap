@@ -180,7 +180,7 @@ class SystemEvent_UGROUP_MODIFY_RenameTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
 
-        EventManager::setInstance(mock('EventManager'));
+        EventManager::setInstance(\Mockery::mock(\EventManager::class));
         ProjectManager::setInstance(mock('ProjectManager'));
 
         $event_params = array(

@@ -23,7 +23,6 @@ Mock::generate('PluginFactory');
 Mock::generate('Plugin');
 Mock::generate('Collection');
 Mock::generate('ArrayIterator', 'MockIterator');
-Mock::generate('EventManager');
 Mock::generate('DataAccessResult');
 
 Mock::generatePartial('ForgeUpgradeConfig', 'ForgeUpgradeConfigTestPluginManager', array('run'));

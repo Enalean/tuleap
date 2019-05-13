@@ -25,14 +25,8 @@ class HistoryCleanerTest extends \TuleapTestCase
     public function itClearsUserHistory()
     {
         $user          = mock('PFUser');
-        $event_manager = mock('EventManager');
-        $event_manager->expectOnce(
-            'processEvent',
-            array(
-                \Event::USER_HISTORY_CLEAR,
-                array('user' => $user)
-            )
-        );
+        $event_manager = \Mockery::mock(\EventManager::class);
+        $event_manager->shouldReceive('processEvent')->with(\Event::USER_HISTORY_CLEAR, array('user' => $user));
 
         $history_cleaner = new HistoryCleaner($event_manager);
         $history_cleaner->clearHistory($user);

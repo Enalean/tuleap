@@ -29,8 +29,7 @@ class URLRedirect_MakeUrlTest extends TuleapTestCase {
         ForgeConfig::set('sys_default_domain', 'example.com');
         ForgeConfig::set('sys_https_host', 'example.com');
 
-        $event_manager      = mock('EventManager');
-        $this->url_redirect = new URLRedirect($event_manager);
+        $this->url_redirect = new URLRedirect(\Mockery::spy(\EventManager::class));
     }
 
     public function tearDown()

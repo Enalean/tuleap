@@ -27,7 +27,6 @@ require_once('common/language/BaseLanguage.class.php');
 
 Mock::generate('PFUser');
 Mock::generate('UserManager');
-Mock::generate('EventManager');
 Mock::generate('Project');
 Mock::generate('ProjectManager');
 Mock::generate('DataAccessResult');
@@ -592,8 +591,7 @@ class FRSFileFactoryTest extends TuleapTestCase
         $um = new MockUserManager($this);
         $um->setReturnValue('getCurrentUser', $user);
         $fileFactory->setReturnValue('_getUserManager', $um);
-        $em = new MockEventManager($this);
-        $fileFactory->setReturnValue('_getEventManager', $em);
+        $fileFactory->setReturnValue('_getEventManager', \Mockery::spy(EventManager::class));
         $release = \Mockery::spy(FRSRelease::class);
         $release->shouldReceive('isDeleted')->andReturns(false);
         $releaseFactory = new MockFRSReleaseFactory($this);
@@ -672,8 +670,7 @@ class FRSFileFactoryTest extends TuleapTestCase
         $um = new MockUserManager($this);
         $um->setReturnValue('getCurrentUser', $user);
         $fileFactory->setReturnValue('_getUserManager', $um);
-        $em = new MockEventManager($this);
-        $fileFactory->setReturnValue('_getEventManager', $em);
+        $fileFactory->setReturnValue('_getEventManager', \Mockery::spy(EventManager::class));
         $release = \Mockery::spy(FRSRelease::class);
         $release->shouldReceive('isDeleted')->andReturns(false);
         $releaseFactory = new MockFRSReleaseFactory($this);
@@ -718,8 +715,7 @@ class FRSFileFactoryTest extends TuleapTestCase
         $um = new MockUserManager($this);
         $um->setReturnValue('getCurrentUser', $user);
         $fileFactory->setReturnValue('_getUserManager', $um);
-        $em = new MockEventManager($this);
-        $fileFactory->setReturnValue('_getEventManager', $em);
+        $fileFactory->setReturnValue('_getEventManager', \Mockery::spy(EventManager::class));
         $release = \Mockery::spy(FRSRelease::class);
         $release->shouldReceive('isDeleted')->andReturns(false);
         $releaseFactory = new MockFRSReleaseFactory($this);

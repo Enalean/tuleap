@@ -96,7 +96,7 @@ class FRSXMLImporterTest extends TuleapTestCase
             $this->processor_dao,
             $this->filetype_dao);
 
-        EventManager::setInstance(mock('EventManager'));
+        EventManager::setInstance(Mockery::spy(EventManager::class));
         $GLOBALS['Language'] = mock('BaseLanguage');
         if(isset($GLOBALS['ftp_incoming_dir'])) {
             $this->old_ftp_incoming_dir = $GLOBALS['ftp_incoming_dir'];

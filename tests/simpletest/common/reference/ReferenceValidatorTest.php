@@ -39,7 +39,7 @@ class ReferenceValidatorTest extends TuleapTestCase
 
         $this->reference_validator = new ReferenceValidator(
             mock('ReferenceDao'),
-            new ReservedKeywordsRetriever(mock('EventManager'))
+            new ReservedKeywordsRetriever(\Mockery::spy(\EventManager::class))
         );
     }
 

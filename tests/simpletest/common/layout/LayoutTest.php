@@ -18,8 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-Mock::generate('EventManager');
-
 /**
  * For all tests we have to use partial mock because there are sessions related stuff in Respone class.
  */
@@ -47,7 +45,7 @@ class LayoutTest extends TuleapTestCase
     public function testAddedStyleSheetShouldBeRenderedInPageHeaders()
     {
         $l = TestHelper::getPartialMock('Layout', array('header', 'getEventManager', 'getStylesheetTheme'));
-        $l->setReturnValue('getEventManager', new MockEventManager());
+        $l->setReturnValue('getEventManager', \Mockery::spy(EventManager::class));
 
         $css = '/vendor-css/styles.css';
 

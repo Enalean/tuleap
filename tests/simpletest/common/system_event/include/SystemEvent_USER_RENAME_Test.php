@@ -29,11 +29,6 @@ Mock::generate('BackendSVN');
 
 Mock::generate('BackendCVS');
 
-Mock::generate('EventManager');
-
-
-
-
 class SystemEvent_USER_RENAME_Test extends TuleapTestCase {
 
     public function setUp()

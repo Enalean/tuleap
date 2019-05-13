@@ -50,7 +50,6 @@ Mock::generate('Docman_NotificationsManager');
 
 Mock::generate('BaseLanguage');
 
-Mock::generate('EventManager');
 Mock::generate('UserManager');
 Mock::generate('PFUser');
 
@@ -84,7 +83,7 @@ class DocmanActionsTest extends TuleapTestCase {
         $actions->setReturnValue('_getItemFactory', $if);
         $actions->expectOnce('_getItemFactory', array(102));
 
-        $actions->setReturnValue('_getEventManager', new MockEventManager($this));
+        $actions->setReturnValue('_getEventManager', \Mockery::spy(EventManager::class));
 
         // Run test
         $actions->deleteVersion();
@@ -128,7 +127,7 @@ class DocmanActionsTest extends TuleapTestCase {
         $vf = M::mock(Docman_VersionFactory::class, ['getAllVersionForItem' => [$v1, $v2]]);
         $actions->setReturnValue('_getVersionFactory', $vf);
 
-        $actions->setReturnValue('_getEventManager', new MockEventManager($this));
+        $actions->setReturnValue('_getEventManager', \Mockery::spy(EventManager::class));
 
         // Run test
         $actions->deleteVersion();
@@ -166,7 +165,7 @@ class DocmanActionsTest extends TuleapTestCase {
         $vf = M::mock(Docman_VersionFactory::class, ['getAllVersionForItem' => [M::mock(Docman_Version::class)]]);
         $actions->setReturnValue('_getVersionFactory', $vf);
 
-        $actions->setReturnValue('_getEventManager', new MockEventManager($this));
+        $actions->setReturnValue('_getEventManager', \Mockery::spy(EventManager::class));
 
         // Run test
         $actions->deleteVersion();
@@ -210,7 +209,7 @@ class DocmanActionsTest extends TuleapTestCase {
         $vf = M::mock(Docman_VersionFactory::class, ['getAllVersionForItem' => [$v1, $v2]]);
         $actions->setReturnValue('_getVersionFactory', $vf);
 
-        $actions->setReturnValue('_getEventManager', new MockEventManager($this));
+        $actions->setReturnValue('_getEventManager', \Mockery::spy(EventManager::class));
 
         // Run test
         $actions->deleteVersion();
@@ -314,7 +313,7 @@ class DocmanActionsTest extends TuleapTestCase {
         $controller->notificationsManager = $notificationsManager;
         $actions = new Docman_ActionsTest();
         $actions->_controler = $controller;
-        $actions->event_manager = new MockEventManager($this);
+        $actions->event_manager = \Mockery::spy(EventManager::class);
         $actions->setReturnValue('_getUserManagerInstance', $userManager);
         $params['listeners_users_to_delete']   = array($user1, $user2, $user3);
         $params['listeners_ugroups_to_delete'] = array();
@@ -402,7 +401,7 @@ class DocmanActionsTest extends TuleapTestCase {
         $docmanPermissionsManager->setReturnValueAt(0,'userCanRead', true);
         $docmanPermissionsManager->setReturnValueAt(1,'userCanRead', false);
         $actions->setReturnValue('_getDocmanPermissionsManagerInstance', $docmanPermissionsManager);
-        $actions->event_manager = new MockEventManager($this);
+        $actions->event_manager = \Mockery::spy(EventManager::class);
         $user1 = mock('PFUser');
         $user1->setReturnValue('getId', 123);
         $user1->setReturnValue('getName', 'Carol');
@@ -435,7 +434,7 @@ class DocmanActionsTest extends TuleapTestCase {
         $controller->notificationsManager = $notificationsManager;
         $actions = new Docman_ActionsTest();
         $actions->_controler = $controller;
-        $actions->event_manager = new MockEventManager($this);
+        $actions->event_manager = \Mockery::spy(EventManager::class);
         $docmanPermissionsManager = new MockDocman_PermissionsManager();
         $docmanPermissionsManager->setReturnValue('userCanRead', true);
         $actions->setReturnValue('_getDocmanPermissionsManagerInstance', $docmanPermissionsManager);

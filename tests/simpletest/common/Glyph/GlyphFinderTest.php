@@ -40,7 +40,7 @@ class GlyphFinderTest extends \TuleapTestCase
 
     public function itThrowsAnExceptionWhenTheGlyphCanNotBeFound()
     {
-        $glyph_finder = new GlyphFinder(mock('EventManager'));
+        $glyph_finder = new GlyphFinder(\Mockery::spy(\EventManager::class));
 
         $this->expectException('Tuleap\\Glyph\\GlyphNotFoundException');
 
@@ -52,8 +52,8 @@ class GlyphFinderTest extends \TuleapTestCase
         mkdir($this->tmp_tuleap_dir . '/src/glyphs/', 0777, true);
         file_put_contents($this->tmp_tuleap_dir . '/src/glyphs/test.svg', 'Glyph in core');
 
-        $event_manager = mock('EventManager');
-        $event_manager->expectNever('processEvent');
+        $event_manager = \Mockery::mock(\EventManager::class);
+        $event_manager->shouldNotReceive('processEvent');
 
         $glyph_finder = new GlyphFinder($event_manager);
         $glyph = $glyph_finder->get('test');

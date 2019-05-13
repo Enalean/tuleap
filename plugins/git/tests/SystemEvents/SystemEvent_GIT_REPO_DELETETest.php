@@ -36,6 +36,10 @@ class SystemEvent_GIT_REPO_DELETETest extends TuleapTestCase {
 
     /** @var SystemEvent_GIT_REPO_DELETE */
     private $event;
+    /**
+     * @var a|\Mockery\MockInterface|EventManager
+     */
+    private $event_manager;
 
     public function setUp() {
         parent::setUp();
@@ -53,7 +57,7 @@ class SystemEvent_GIT_REPO_DELETETest extends TuleapTestCase {
         $this->system_event_manager  = mock('Git_SystemEventManager');
         $this->ugroups_to_notify_dao = \Mockery::spy(UgroupsToNotifyDao::class);
         $this->users_to_notify_dao   = \Mockery::spy(UsersToNotifyDao::class);
-        $this->event_manager         = mock('EventManager');
+        $this->event_manager         = \Mockery::spy(\EventManager::class);
 
         $this->event = partial_mock('SystemEvent_GIT_REPO_DELETE', array('done', 'warning', 'error', 'getId'));
         $this->event->setParameters($this->project_id . SystemEvent::PARAMETER_SEPARATOR . $this->repository_id);
@@ -89,9 +93,9 @@ class SystemEvent_GIT_REPO_DELETETest extends TuleapTestCase {
 
     public function itLaunchesAnEventToLetOthersDeleteStuffLinkedToTheRepository()
     {
-        expect($this->event_manager)
-            ->processEvent(new IsAExpectation('Tuleap\Git\GitRepositoryDeletionEvent'))
-            ->once();
+        $this->event_manager->shouldReceive('processEvent')->with(Mockery::on(function ($param) {
+            return $param instanceof \Tuleap\Git\GitRepositoryDeletionEvent;
+        }));
 
         $this->event->process();
     }

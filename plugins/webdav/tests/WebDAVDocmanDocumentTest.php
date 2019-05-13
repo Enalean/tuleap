@@ -28,7 +28,6 @@ Mock::generatePartial(
     'WebDAVDocmanDocumentTestVersion',
 array('getItem', 'getUtils', 'getProject')
 );
-Mock::generate('EventManager');
 Mock::generate('Project');
 
 /**

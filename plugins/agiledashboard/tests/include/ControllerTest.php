@@ -72,7 +72,7 @@ abstract class Planning_Controller_BaseTest extends TuleapTestCase
 
 
         $configuration_manager = mock('AgileDashboard_ConfigurationManager');
-        $this->event_manager   = mock('EventManager');
+        $this->event_manager   = \Mockery::spy(\EventManager::class);
 
         stub($configuration_manager)->getScrumTitle()->returns('Scrum');
         stub($configuration_manager)->getKanbanTitle()->returns('Kanban');

@@ -30,8 +30,8 @@ class ParameterSaverTest extends TuleapTestCase
         stub($dao)->save()->returns(true);
         $dao->expectOnce('save');
 
-        $event_manager = mock('EventManager');
-        $event_manager->expectOnce('processEvent');
+        $event_manager = \Mockery::mock(\EventManager::class);
+        $event_manager->shouldReceive('processEvent');
 
         $parameter_saver = new ParameterSaver($dao, $event_manager);
         $parameter_saver->save(5, 5);
@@ -42,8 +42,8 @@ class ParameterSaverTest extends TuleapTestCase
         $dao = mock('Tuleap\SvnCore\Cache\ParameterDao');
         $dao->expectNever('save');
 
-        $event_manager = mock('EventManager');
-        $event_manager->expectNever('processEvent');
+        $event_manager = \Mockery::mock(\EventManager::class);
+        $event_manager->shouldNotReceive('processEvent');
 
         $this->expectException('Tuleap\SvnCore\Cache\ParameterMalformedDataException');
 
@@ -57,8 +57,8 @@ class ParameterSaverTest extends TuleapTestCase
         $dao = mock('Tuleap\SvnCore\Cache\ParameterDao');
         stub($dao)->save()->returns(false);
 
-        $event_manager = mock('EventManager');
-        $event_manager->expectNever('processEvent');
+        $event_manager = \Mockery::mock(\EventManager::class);
+        $event_manager->shouldNotReceive('processEvent');
 
         $this->expectException('Tuleap\SvnCore\Cache\ParameterDataAccessException');
 

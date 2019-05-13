@@ -26,8 +26,6 @@ class SVN_Apache_SvnrootConfTestEventManager extends EventManager {
     }
 }
 
-Mock::generate('EventManager');
-
 class SVN_Apache_SvnrootConfTest extends TuleapTestCase {
 
     function setUp() {
