@@ -22,6 +22,7 @@ declare(strict_types = 1);
 
 namespace Tuleap\Docman\REST\v1;
 
+use Docman_Link;
 use Docman_LinkVersionFactory;
 use Docman_LockFactory;
 use Docman_PermissionsManager;
@@ -40,7 +41,6 @@ use Tuleap\Docman\Lock\LockChecker;
 use Tuleap\Docman\REST\v1\Links\DocmanLinkPATCHRepresentation;
 use Tuleap\Docman\REST\v1\Links\DocmanLinksValidityChecker;
 use Tuleap\Docman\REST\v1\Links\DocmanLinkUpdator;
-use Tuleap\Docman\REST\v1\Links\LinkVersionCreationBeforeUpdateValidator;
 use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataObsolescenceDateRetriever;
 use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataUsageChecker;
 use Tuleap\Docman\REST\v1\Metadata\HardcodedMetdataObsolescenceDateChecker;
@@ -119,11 +119,12 @@ class DocmanLinksResource extends AuthenticatedResource
         $this->getAllowOptionsPatch();
 
         $item_request = $this->request_builder->buildFromItemId($id);
-        $item         = $item_request->getItem();
 
-        $validator =  new LinkVersionCreationBeforeUpdateValidator();
-        $item->accept($validator, []);
         /** @var \Docman_Link $item */
+        $item = $item_request->getItem();
+
+        $validator =  new DocumentBeforeModificationValidatorVisitor(Docman_Link::class);
+        $item->accept($validator, []);
 
         $current_user = $this->rest_user_manager->getCurrentUser();
 

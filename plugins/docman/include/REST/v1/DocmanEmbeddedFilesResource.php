@@ -37,7 +37,6 @@ use Tuleap\Docman\ApprovalTable\Exceptions\ItemHasNoApprovalTableButHasApprovalA
 use Tuleap\Docman\Lock\LockChecker;
 use Tuleap\Docman\REST\v1\EmbeddedFiles\DocmanEmbeddedFilesPATCHRepresentation;
 use Tuleap\Docman\REST\v1\EmbeddedFiles\DocmanEmbeddedFileUpdator;
-use Tuleap\Docman\REST\v1\EmbeddedFiles\EmbeddedFileVersionCreationBeforeUpdateValidator;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
@@ -112,11 +111,12 @@ class DocmanEmbeddedFilesResource extends AuthenticatedResource
         $this->getAllowOptionsPatch();
 
         $item_request = $this->request_builder->buildFromItemId($id);
-        $item         = $item_request->getItem();
 
-        $validator = new EmbeddedFileVersionCreationBeforeUpdateValidator();
-        $item->accept($validator, []);
         /** @var \Docman_EmbeddedFile $item */
+        $item = $item_request->getItem();
+
+        $validator = new DocumentBeforeModificationValidatorVisitor(\Docman_EmbeddedFile::class);
+        $item->accept($validator, []);
 
         $current_user = $this->rest_user_manager->getCurrentUser();
 

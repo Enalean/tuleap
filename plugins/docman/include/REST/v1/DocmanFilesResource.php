@@ -37,7 +37,6 @@ use Tuleap\Docman\Lock\LockChecker;
 use Tuleap\Docman\REST\v1\Files\CreatedItemFilePropertiesRepresentation;
 use Tuleap\Docman\REST\v1\Files\DocmanFilesPATCHRepresentation;
 use Tuleap\Docman\REST\v1\Files\DocmanItemFileUpdator;
-use Tuleap\Docman\REST\v1\Files\FileVersionToUploadVisitorBeforeUpdateValidator;
 use Tuleap\Docman\Upload\UploadMaxSizeExceededException;
 use Tuleap\Docman\Upload\Version\DocumentOnGoingVersionToUploadDAO;
 use Tuleap\Docman\Upload\Version\VersionToUploadCreator;
@@ -114,7 +113,7 @@ class DocmanFilesResource extends AuthenticatedResource
         $item_request = $this->request_builder->buildFromItemId($id);
         $item         = $item_request->getItem();
 
-        $validator = new FileVersionToUploadVisitorBeforeUpdateValidator();
+        $validator = new DocumentBeforeModificationValidatorVisitor(\Docman_File::class);
         $item->accept($validator, []);
 
         $current_user = $this->rest_user_manager->getCurrentUser();
@@ -213,7 +212,7 @@ class DocmanFilesResource extends AuthenticatedResource
         $item_to_delete    = $item_request->getItem();
         $current_user      = $this->rest_user_manager->getCurrentUser();
         $project           = $item_request->getProject();
-        $validator_visitor = new DocumentBeforeDeletionValidatorVisitor(\Docman_File::class);
+        $validator_visitor = new DocumentBeforeModificationValidatorVisitor(\Docman_File::class);
 
         $docman_permission_manager = Docman_PermissionsManager::instance($project->getGroupId());
         if (! $docman_permission_manager->userCanDelete($current_user, $item_to_delete)) {
