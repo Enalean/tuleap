@@ -36,7 +36,8 @@ import {
     patchEmbeddedFile,
     patchWiki,
     patchLink,
-    deleteFile
+    deleteFile,
+    deleteLink
 } from "../api/rest-querier.js";
 
 import {
@@ -514,10 +515,16 @@ export const unsetUnderConstructionUserPreference = async context => {
 
 export const deleteItem = async (context, item) => {
     try {
-        if (item.type === TYPE_FILE) {
-            await deleteFile(item);
-            context.commit("removeItemFromFolderContent", item);
+        switch (item.type) {
+            case TYPE_FILE:
+                await deleteFile(item);
+                break;
+            case TYPE_LINK:
+                await deleteLink(item);
+                break;
         }
+
+        context.commit("removeItemFromFolderContent", item);
 
         if (
             context.state.currently_previewed_item &&

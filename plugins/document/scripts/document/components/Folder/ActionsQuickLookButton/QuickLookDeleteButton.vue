@@ -42,7 +42,7 @@
 <script>
 import { mapState } from "vuex";
 import { redirectToUrl } from "../../../helpers/location-helper.js";
-import { TYPE_FILE } from "../../../constants.js";
+import { TYPE_FILE, TYPE_LINK } from "../../../constants.js";
 
 export default {
     name: "QuickLookDeleteButton",
@@ -58,7 +58,7 @@ export default {
     },
     methods: {
         processDeletion() {
-            if (this.item.type === TYPE_FILE) {
+            if (this.item.type === TYPE_FILE || this.item.type === TYPE_LINK) {
                 document.dispatchEvent(
                     new CustomEvent("show-confirm-item-deletion-modal", {
                         detail: { current_item: this.item }

@@ -58,7 +58,8 @@ import {
     rewire$patchEmbeddedFile,
     rewire$patchWiki,
     rewire$patchLink,
-    rewire$deleteFile
+    rewire$deleteFile,
+    rewire$deleteLink
 } from "../api/rest-querier.js";
 import {
     restore as restoreLoadFolderContent,
@@ -68,7 +69,7 @@ import {
     restore as restoreLoadAscendantHierarchy,
     rewire$loadAscendantHierarchy
 } from "./actions-helpers/load-ascendant-hierarchy.js";
-import { TYPE_FILE } from "../constants.js";
+import { TYPE_FILE, TYPE_LINK } from "../constants.js";
 
 describe("Store actions", () => {
     afterEach(() => {
@@ -1166,7 +1167,7 @@ describe("Store actions", () => {
     });
 
     describe("deleteItem()", () => {
-        let item_to_delete, context, deleteFile;
+        let item_to_delete, context, deleteFile, deleteLink;
 
         beforeEach(() => {
             item_to_delete = {
@@ -1185,6 +1186,31 @@ describe("Store actions", () => {
 
             deleteFile = jasmine.createSpy("deleteItem");
             rewire$deleteFile(deleteFile);
+
+            deleteLink = jasmine.createSpy("deleteLink");
+            rewire$deleteLink(deleteLink);
+        });
+
+        it("when item is a file, then the delete file route is called", async () => {
+            const file_item = {
+                id: 111,
+                title: "My File",
+                type: TYPE_FILE
+            };
+
+            await deleteItem(context, file_item);
+            expect(deleteFile).toHaveBeenCalledWith(file_item);
+        });
+
+        it("when item is a link, then the delete link route is called", async () => {
+            const link_item = {
+                id: 222,
+                title: "My Link",
+                type: TYPE_LINK
+            };
+
+            await deleteItem(context, link_item);
+            expect(deleteLink).toHaveBeenCalledWith(link_item);
         });
 
         it("deletes the given item and removes it from the tree view", async () => {
@@ -1194,7 +1220,6 @@ describe("Store actions", () => {
                 "removeItemFromFolderContent",
                 item_to_delete
             );
-            expect(deleteFile).toHaveBeenCalledWith(item_to_delete);
         });
 
         it("resets currentlyPreviewedItem when it references the deleted item", async () => {
@@ -1202,7 +1227,6 @@ describe("Store actions", () => {
 
             await deleteItem(context, item_to_delete);
 
-            expect(deleteFile).toHaveBeenCalledWith(item_to_delete);
             expect(context.commit).toHaveBeenCalledWith(
                 "removeItemFromFolderContent",
                 item_to_delete
