@@ -30,7 +30,8 @@ use Tuleap\Tracker\Workflow\PostAction\Visitor;
 
 class FrozenFields extends Transition_PostAction
 {
-    public const SHORT_NAME = 'frozen_fields';
+    public const SHORT_NAME   = 'frozen_fields';
+    public const XML_TAG_NAME = 'postaction_frozen_fields';
 
     /** @var Tracker_FormElement_Field[] */
     private $fields = [];

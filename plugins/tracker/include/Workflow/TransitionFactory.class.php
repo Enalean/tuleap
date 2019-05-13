@@ -199,7 +199,7 @@ class TransitionFactory //phpcs:ignoreFile
         }
         $to = $xmlMapping[(string)$xml->to_id['REF']];
 
-        return $this->buildPostActionFromXML($xml, $project, $xmlMapping, $from, $to);
+        return $this->buildTransitionFromXML($xml, $project, $xmlMapping, $from, $to);
     }
 
     /**
@@ -216,7 +216,7 @@ class TransitionFactory //phpcs:ignoreFile
                 $from_id = $xml_mapping[(string)$transition_xml->from_id['REF']];
             }
 
-            $transitions[] = $this->buildPostActionFromXML($state_xml, $project, $xml_mapping, $from_id, $to_id);
+            $transitions[] = $this->buildTransitionFromXML($state_xml, $project, $xml_mapping, $from_id, $to_id);
         }
 
         return $transitions;
@@ -225,7 +225,7 @@ class TransitionFactory //phpcs:ignoreFile
     /**
      * @return Transition
      */
-    private function buildPostActionFromXML(
+    private function buildTransitionFromXML(
         SimpleXMLElement $xml,
         Project $project,
         array $xml_mapping,

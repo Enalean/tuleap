@@ -33,6 +33,13 @@
       </element>
     </optional>
   </define>
+  <define name="advancedPostActionsContent">
+    <optional>
+      <element name="postactions">
+        <ref name="advancedActions"/>
+      </element>
+    </optional>
+  </define>
   <define name="simpleWorkflow">
     <optional>
       <element name="simple_workflow">
@@ -70,7 +77,7 @@
                     </oneOrMore>
                   </element>
                 </optional>
-                <ref name="postactionsContent"/>
+                <ref name="simplePostActionsContent"/>
                 <ref name="preConditionsContent"/>
               </element>
             </oneOrMore>
@@ -79,54 +86,58 @@
       </element>
     </optional>
   </define>
-  <define name="postactionsContent">
+  <define name="simplePostActionsContent">
     <optional>
       <element name="postactions">
-        <zeroOrMore>
-          <element name="postaction_field_date">
-            <attribute name="valuetype">
-              <data type="long"/>
-            </attribute>
-            <element name="field_id">
-              <attribute name="REF">
-                <data type="IDREF"/>
-              </attribute>
-            </element>
-          </element>
-        </zeroOrMore>
-        <zeroOrMore>
-          <element name="postaction_field_int">
-            <attribute name="value">
-              <data type="long"/>
-            </attribute>
-            <element name="field_id">
-              <attribute name="REF">
-                <data type="IDREF"/>
-              </attribute>
-            </element>
-          </element>
-        </zeroOrMore>
-        <zeroOrMore>
-          <element name="postaction_field_float">
-            <attribute name="value">
-              <data type="float"/>
-            </attribute>
-            <element name="field_id">
-              <attribute name="REF">
-                <data type="IDREF"/>
-              </attribute>
-            </element>
-          </element>
-        </zeroOrMore>
-        <zeroOrMore>
-          <element name="postaction_ci_build">
-            <attribute name="job_url">
-              <data type="string"/>
-            </attribute>
-          </element>
-        </zeroOrMore>
+        <ref name="advancedActions"/>
+        <ref name="frozenFieldsActionContent"/>
       </element>
     </optional>
+  </define>
+  <define name="advancedActions">
+    <zeroOrMore>
+      <element name="postaction_field_date">
+        <attribute name="valuetype">
+          <data type="long"/>
+        </attribute>
+        <element name="field_id">
+          <attribute name="REF">
+            <data type="IDREF"/>
+          </attribute>
+        </element>
+      </element>
+    </zeroOrMore>
+    <zeroOrMore>
+      <element name="postaction_field_int">
+        <attribute name="value">
+          <data type="long"/>
+        </attribute>
+        <element name="field_id">
+          <attribute name="REF">
+            <data type="IDREF"/>
+          </attribute>
+        </element>
+      </element>
+    </zeroOrMore>
+    <zeroOrMore>
+      <element name="postaction_field_float">
+        <attribute name="value">
+          <data type="float"/>
+        </attribute>
+        <element name="field_id">
+          <attribute name="REF">
+            <data type="IDREF"/>
+          </attribute>
+        </element>
+      </element>
+    </zeroOrMore>
+    <zeroOrMore>
+      <element name="postaction_ci_build">
+        <attribute name="job_url">
+          <data type="string"/>
+        </attribute>
+      </element>
+    </zeroOrMore>
   </define>
   <define name="preConditionsContent">
     <choice>
@@ -177,8 +188,21 @@
         <data type="string"/>
       </attribute>
     </element>
-    <ref name="postactionsContent"/>
+    <ref name="advancedPostActionsContent"/>
     <ref name="preConditionsContent"/>
+  </define>
+  <define name="frozenFieldsActionContent">
+    <optional>
+      <element name="postaction_frozen_fields">
+        <oneOrMore>
+          <element name="field_id">
+            <attribute name="REF">
+              <data type="IDREF"/>
+            </attribute>
+          </element>
+        </oneOrMore>
+      </element>
+    </optional>
   </define>
   <define name="conditionPermissionsContent">
     <element name="permissions">

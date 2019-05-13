@@ -28,6 +28,7 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tracker_FormElementFactory;
+use SimpleXMLElement;
 
 final class FrozenFieldsFactoryTest extends TestCase
 {
@@ -90,5 +91,59 @@ final class FrozenFieldsFactoryTest extends TestCase
 
         $result = $this->frozen_fields_factory->loadPostActions($transition);
         $this->assertEquals([], $result);
+    }
+
+    public function testItImportsActionFromXML()
+    {
+        $xml_content = <<<XML
+            <postaction_frozen_fields>
+                <field_id REF="F1"/>
+                <field_id REF="F2"/>
+            </postaction_frozen_fields>
+XML;
+        $xml = new SimpleXMLElement($xml_content);
+
+        $int_field   = Mockery::mock(\Tracker_FormElement_Field_Integer::class);
+        $float_field = Mockery::mock(\Tracker_FormElement_Field_Float::class);
+
+        $int_field->shouldReceive('getId')->andReturn(0);
+        $float_field->shouldReceive('getId')->andReturn(0);
+
+        $mapping = [
+            'F1' => $int_field,
+            'F2' => $float_field
+        ];
+
+        $transition = Mockery::mock(\Transition::class);
+
+        $action = $this->frozen_fields_factory->getInstanceFromXML($xml, $mapping, $transition);
+
+        $this->assertInstanceOf(FrozenFields::class, $action);
+        $this->assertCount(2, $action->getFieldIds());
+    }
+
+    public function testItSkipsNonExistingFieldsDuringXMLImport()
+    {
+        $xml_content = <<<XML
+            <postaction_frozen_fields>
+                <field_id REF="F1"/>
+                <field_id REF="F2"/>
+            </postaction_frozen_fields>
+XML;
+        $xml = new SimpleXMLElement($xml_content);
+
+        $int_field = Mockery::mock(\Tracker_FormElement_Field_Integer::class);
+        $int_field->shouldReceive('getId')->andReturn(0);
+
+        $mapping = [
+            'F1' => $int_field,
+        ];
+
+        $transition = Mockery::mock(\Transition::class);
+
+        $action = $this->frozen_fields_factory->getInstanceFromXML($xml, $mapping, $transition);
+
+        $this->assertInstanceOf(FrozenFields::class, $action);
+        $this->assertCount(1, $action->getFieldIds());
     }
 }

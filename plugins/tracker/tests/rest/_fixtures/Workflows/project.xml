@@ -1198,6 +1198,9 @@
                             <postaction_field_date valuetype="2">
                                 <field_id REF="F10001"/>
                             </postaction_field_date>
+                            <postaction_frozen_fields>
+                                <field_id REF="F10002"/>
+                            </postaction_frozen_fields>
                         </postactions>
                         <conditions>
                             <condition type="perms">
