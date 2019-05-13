@@ -120,7 +120,7 @@ class TransitionFactoryTest extends TestCase
         $this->assertInstanceOf(Workflow_Transition_ConditionsCollection::class, $transition->getConditions());
     }
 
-    public function testItReconsititutesPermissionsForState()
+    public function testItReconsititutesTransitionsForState()
     {
         $xml = new SimpleXMLElement('
             <state>
@@ -136,7 +136,11 @@ class TransitionFactoryTest extends TestCase
             </state>
         ');
 
-        $transitions = $this->factory->getInstancesFromStateXML($xml, $this->xml_mapping);
+        $this->condition_factory->shouldReceive('getAllInstancesFromXML')
+            ->andReturn(new Workflow_Transition_ConditionsCollection())
+            ->times(2);
+
+        $transitions = $this->factory->getInstancesFromStateXML($xml, $this->xml_mapping, $this->project);
 
         $this->assertCount(2, $transitions);
     }

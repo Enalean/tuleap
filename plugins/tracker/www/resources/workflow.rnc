@@ -29,7 +29,8 @@ simpleWorkflow =
                         }
                     }+
                 }?,
-                postactionsContent
+                postactionsContent,
+                preConditionsContent
             }+
         }?
     }?
@@ -59,14 +60,7 @@ postactionsContent =
         }*
     }?
 
-transitionContent =
-    element from_id {
-        attribute REF { xsd:string }
-    },
-    element to_id {
-        attribute REF { xsd:string }
-    },
-    postactionsContent,
+preConditionsContent =
     (
         (
             conditionPermissionsContent
@@ -89,6 +83,17 @@ transitionContent =
             }?
         )
     )
+
+transitionContent =
+    element from_id {
+        attribute REF { xsd:string }
+    },
+    element to_id {
+        attribute REF { xsd:string }
+    },
+    postactionsContent,
+    preConditionsContent
+
 
 conditionPermissionsContent =
     element permissions {

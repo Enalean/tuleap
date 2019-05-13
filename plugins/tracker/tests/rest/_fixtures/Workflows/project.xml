@@ -1157,6 +1157,11 @@
                     <label><![CDATA[Closed Date]]></label>
                     <properties display_time="0"/>
                 </formElement>
+                <formElement type="int" ID="F10002" rank="3">
+                    <name>points</name>
+                    <label><![CDATA[Points]]></label>
+                    <properties size="5"/>
+                </formElement>
             </formElements>
             <semantics>
                 <semantic type="tooltip"/>
@@ -1194,6 +1199,16 @@
                                 <field_id REF="F10001"/>
                             </postaction_field_date>
                         </postactions>
+                        <conditions>
+                            <condition type="perms">
+                                <permissions>
+                                    <permission ugroup="UGROUP_PROJECT_ADMIN"/>
+                                </permissions>
+                            </condition>
+                            <condition type="notempty">
+                                <field REF="F10002"/>
+                            </condition>
+                        </conditions>
                     </state>
                     <state>
                         <to_id REF="V3"/>
@@ -1213,6 +1228,9 @@
                 <permission scope="field" REF="F10001" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
                 <permission scope="field" REF="F10001" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
                 <permission scope="field" REF="F10001" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+                <permission scope="field" REF="F10002" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+                <permission scope="field" REF="F10002" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+                <permission scope="field" REF="F10002" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
             </permissions>
         </tracker>
     </trackers>
