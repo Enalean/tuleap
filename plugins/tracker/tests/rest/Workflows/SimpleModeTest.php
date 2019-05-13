@@ -396,6 +396,21 @@ class SimpleModeTest extends TrackerBase
         );
         $transition_id = $transition['id'];
 
+        $response_transition = $this->getResponseByName(
+            \REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->client->get("tracker_workflow_transitions/$transition_id")
+        );
+        $this->assertEquals(200, $response_transition->getStatusCode());
+
+        $transition_content = $response_transition->json();
+
+        $this->assertEquals(
+            $transition_content['authorized_user_group_ids']['0'],
+            $this->tracker_workflows_project_id . '_4'
+        );
+
+        $this->assertTrue($transition_content['not_empty_field_ids']['0'] > 0);
+
         $response_actions = $this->getResponseByName(
             \REST_TestDataBuilder::ADMIN_USER_NAME,
             $this->client->get("tracker_workflow_transitions/$transition_id/actions")

@@ -842,7 +842,8 @@ class TrackerXmlImport
             $tracker->workflow = $this->workflow_factory->getSimpleInstanceFromXML(
                 $xml->simple_workflow,
                 $this->xml_fields_mapping,
-                $tracker
+                $tracker,
+                $project
             );
         }
 

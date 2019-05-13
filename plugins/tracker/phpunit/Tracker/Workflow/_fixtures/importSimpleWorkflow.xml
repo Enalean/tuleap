@@ -18,6 +18,9 @@
                     <field_id REF="F1"/>
                 </postaction_field_date>
             </postactions>
+            <permissions>
+                <permission ugroup="UGROUP_PROJECT_MEMBERS"/>
+            </permissions>
         </state>
     </states>
 </simple_workflow>

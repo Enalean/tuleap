@@ -85,7 +85,7 @@ class WorkflowFactoryTest extends TestCase
             'F32-V1' => 802
         );
 
-        $condition_factory  = Mockery::mock(Workflow_Transition_ConditionFactory::class);
+        $condition_factory = Mockery::mock(Workflow_Transition_ConditionFactory::class);
         $condition_factory->shouldReceive('getAllInstancesFromXML')
             ->andReturn(new Workflow_Transition_ConditionsCollection());
 
@@ -193,7 +193,8 @@ class WorkflowFactoryTest extends TestCase
                 Mockery::on(function (SimpleXMLElement $state) {
                     return (string)$state->to_id['REF'] === "F32-V0";
                 }),
-                $mapping
+                $mapping,
+                $this->project
             )
             ->andReturn([$first_transition, $second_transition]);
 

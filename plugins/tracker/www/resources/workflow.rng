@@ -71,6 +71,7 @@
                   </element>
                 </optional>
                 <ref name="postactionsContent"/>
+                <ref name="preConditionsContent"/>
               </element>
             </oneOrMore>
           </element>
@@ -127,18 +128,7 @@
       </element>
     </optional>
   </define>
-  <define name="transitionContent">
-    <element name="from_id">
-      <attribute name="REF">
-        <data type="string"/>
-      </attribute>
-    </element>
-    <element name="to_id">
-      <attribute name="REF">
-        <data type="string"/>
-      </attribute>
-    </element>
-    <ref name="postactionsContent"/>
+  <define name="preConditionsContent">
     <choice>
       <ref name="conditionPermissionsContent"/>
       <optional>
@@ -175,6 +165,20 @@
         </element>
       </optional>
     </choice>
+  </define>
+  <define name="transitionContent">
+    <element name="from_id">
+      <attribute name="REF">
+        <data type="string"/>
+      </attribute>
+    </element>
+    <element name="to_id">
+      <attribute name="REF">
+        <data type="string"/>
+      </attribute>
+    </element>
+    <ref name="postactionsContent"/>
+    <ref name="preConditionsContent"/>
   </define>
   <define name="conditionPermissionsContent">
     <element name="permissions">

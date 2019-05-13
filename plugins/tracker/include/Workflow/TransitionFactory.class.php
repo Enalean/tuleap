@@ -199,23 +199,13 @@ class TransitionFactory //phpcs:ignoreFile
         }
         $to = $xmlMapping[(string)$xml->to_id['REF']];
 
-        $transition = new Transition(0, 0, $from, $to);
-        $postactions = array();
-        if ($xml->postactions) {
-            $postactions = $this->getPostActionFactory()->getInstanceFromXML($xml->postactions, $xmlMapping, $transition);
-        }
-        $transition->setPostActions($postactions);
-
-        // Conditions on transition
-        $transition->setConditions($this->condition_factory->getAllInstancesFromXML($xml, $xmlMapping, $transition, $project));
-
-        return $transition;
+        return $this->buildPostActionFromXML($xml, $project, $xmlMapping, $from, $to);
     }
 
     /**
      * @return Transition[]
      */
-    public function getInstancesFromStateXML(SimpleXMLElement $state_xml, array &$xml_mapping)
+    public function getInstancesFromStateXML(SimpleXMLElement $state_xml, array &$xml_mapping, Project $project)
     {
         $transitions = [];
         $to_id       = $xml_mapping[(string)$state_xml->to_id['REF']];
@@ -226,23 +216,39 @@ class TransitionFactory //phpcs:ignoreFile
                 $from_id = $xml_mapping[(string)$transition_xml->from_id['REF']];
             }
 
-            $transition = new Transition(0, 0, $from_id, $to_id);
-
-            $postactions = [];
-            if ($state_xml->postactions) {
-                $postactions = $this->getPostActionFactory()->getInstanceFromXML(
-                    $state_xml->postactions,
-                    $xml_mapping,
-                    $transition
-                );
-            }
-
-            $transition->setPostActions($postactions);
-
-            $transitions[] = $transition;
+            $transitions[] = $this->buildPostActionFromXML($state_xml, $project, $xml_mapping, $from_id, $to_id);
         }
 
         return $transitions;
+    }
+
+    /**
+     * @return Transition
+     */
+    private function buildPostActionFromXML(
+        SimpleXMLElement $xml,
+        Project $project,
+        array $xml_mapping,
+        $from_id,
+        $to_id
+    ) {
+        $transition = new Transition(0, 0, $from_id, $to_id);
+        $postactions = array();
+        if ($xml->postactions) {
+            $postactions = $this->getPostActionFactory()->getInstanceFromXML(
+                $xml->postactions,
+                $xml_mapping,
+                $transition
+            );
+        }
+        $transition->setPostActions($postactions);
+
+        // Conditions on transition
+        $transition->setConditions(
+            $this->condition_factory->getAllInstancesFromXML($xml, $xml_mapping, $transition, $project)
+        );
+
+        return $transition;
     }
 
     /**
