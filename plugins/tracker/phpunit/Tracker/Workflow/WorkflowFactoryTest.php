@@ -177,11 +177,15 @@ class WorkflowFactoryTest extends TestCase
             'F32-V1' => 802
         );
 
+        $date_post_action = Mockery::mock(Transition_PostAction_Field_Date::class);
+        $date_post_action->shouldReceive('getField')->andReturn(110);
+        $date_post_action->shouldReceive('getValueType')->andReturn(1);
+
         $first_transition = Mockery::mock(Transition::class);
-        $first_transition->shouldReceive('getPostActions')->andReturns([]);
+        $first_transition->shouldReceive('getPostActions')->andReturns([$date_post_action]);
 
         $second_transition = Mockery::mock(Transition::class);
-        $second_transition->shouldReceive('getPostActions')->andReturns([]);
+        $second_transition->shouldReceive('getPostActions')->andReturns([$date_post_action]);
 
         $transition_factory = Mockery::mock(TransitionFactory::class);
         $transition_factory->shouldReceive('getInstancesFromStateXML')
@@ -210,7 +214,7 @@ class WorkflowFactoryTest extends TestCase
 
         // Test post actions
         $transitions = $workflow->getTransitions();
-        $this->assertEquals(count($transitions[0]->getPostActions()), 0);
-        $this->assertEquals(count($transitions[1]->getPostActions()), 0);
+        $this->assertEquals(count($transitions[0]->getPostActions()), 1);
+        $this->assertEquals(count($transitions[1]->getPostActions()), 1);
     }
 }

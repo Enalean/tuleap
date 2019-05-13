@@ -13,6 +13,11 @@
                     <from_id REF="F32-V1"/>
                 </transition>
             </transitions>
+            <postactions>
+                <postaction_field_date valuetype="1">
+                    <field_id REF="F1"/>
+                </postaction_field_date>
+            </postactions>
         </state>
     </states>
 </simple_workflow>
