@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,6 +20,7 @@
 
 namespace Tuleap\TestManagement\REST\v1;
 
+use BackendLogger;
 use EventManager;
 use Jenkins_Client;
 use Jenkins_ClientUnableToLaunchBuildException;
@@ -50,6 +51,8 @@ use Tracker_URLVerification;
 use TrackerFactory;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Cryptography\KeyFactory;
+use Tuleap\Http\HttpClientFactory;
+use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Jenkins\JenkinsCSRFCrumbRetriever;
 use Tuleap\RealTime\NodeJSClient;
 use Tuleap\REST\Header;
@@ -256,7 +259,12 @@ class CampaignsResource
 
         $this->artifactlink_updater = new ArtifactLinkUpdater($priority_manager);
 
-        $node_js_client         = new NodeJSClient();
+        $node_js_client         = new NodeJSClient(
+            HttpClientFactory::createClient(),
+            HTTPFactoryBuilder::requestFactory(),
+            HTTPFactoryBuilder::streamFactory(),
+            new BackendLogger()
+        );
         $permissions_serializer = new Tracker_Permission_PermissionsSerializer(
             new Tracker_Permission_PermissionRetrieveAssignee(UserManager::instance())
         );
