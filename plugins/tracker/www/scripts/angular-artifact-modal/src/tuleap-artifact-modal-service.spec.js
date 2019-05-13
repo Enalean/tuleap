@@ -514,6 +514,43 @@ describe("NewTuleapArtifactModalService", () => {
                     expect(promise).toBeResolved();
                     expect(enforceWorkflowTransitions).not.toHaveBeenCalled();
                 });
+
+                it("Given a tracker that had workflow transitions on a field with missing values, when I create the modal's edition model, it does not crash and enforce the transition like in the creation", () => {
+                    const workflow = {
+                        is_used: "1",
+                        field_id: 189,
+                        transitions: [
+                            {
+                                from_id: 757,
+                                to_id: 511
+                            }
+                        ]
+                    };
+                    tracker = {
+                        id: tracker_id,
+                        fields: [workflow_field],
+                        workflow: workflow
+                    };
+                    artifact = {
+                        title: "onomatomania",
+                        tracker,
+                        values: []
+                    };
+                    getArtifactWithCompleteTrackerStructure.and.returnValue($q.when(artifact));
+
+                    const promise = NewTuleapArtifactModalService.initEditionModalModel(
+                        user_id,
+                        tracker_id,
+                        artifact_id
+                    );
+
+                    expect(promise).toBeResolved();
+                    expect(enforceWorkflowTransitions).toHaveBeenCalledWith(
+                        null,
+                        workflow_field,
+                        workflow
+                    );
+                });
             });
         });
     });
