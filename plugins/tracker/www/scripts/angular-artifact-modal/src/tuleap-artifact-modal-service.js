@@ -250,10 +250,8 @@ function ArtifactModalService(
             return;
         }
 
-        var source_value_id;
-        if (isInCreationMode()) {
-            source_value_id = null;
-        } else {
+        var source_value_id = null;
+        if (!isInCreationMode() && typeof field_values[workflow.field_id] !== "undefined") {
             source_value_id = field_values[workflow.field_id].bind_value_ids[0];
         }
         enforceWorkflowTransitions(source_value_id, workflow_field, workflow);
