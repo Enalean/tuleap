@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-Present. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,19 +19,50 @@
 
 namespace Tuleap\RealTime;
 
-use Http_Client;
-use Http_ClientException;
 use ForgeConfig;
-use BackendLogger;
+use Logger;
+use Psr\Http\Client\ClientExceptionInterface;
+use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\RequestFactoryInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-class NodeJSClient implements Client {
+class NodeJSClient implements Client
+{
     /**
-     * @var String
+     * @var ClientInterface
+     */
+    private $http_client;
+    /**
+     * @var RequestFactoryInterface
+     */
+    private $request_factory;
+    /**
+     * @var StreamFactoryInterface
+     */
+    private $stream_factory;
+    /**
+     * @var Logger
+     */
+    private $logger;
+    /**
+     * @var string|null
      */
     private $url;
 
-    public function __construct() {
-        $this->url = 'https://' . $this->getNodeJsServerAddress();
+    public function __construct(
+        ClientInterface $http_client,
+        RequestFactoryInterface $request_factory,
+        StreamFactoryInterface $stream_factory,
+        Logger $logger
+    ) {
+        $this->http_client     = $http_client;
+        $this->request_factory = $request_factory;
+        $this->stream_factory  = $stream_factory;
+        $nodejs_server_address = $this->getNodeJsServerAddress();
+        $this->logger          = $logger;
+        if ($nodejs_server_address !== '') {
+            $this->url = 'https://' . $nodejs_server_address;
+        }
     }
 
     /**
@@ -39,33 +70,40 @@ class NodeJSClient implements Client {
      * want to broadcast a message
      *
      * @param $message (MessageDataPresenter) : Message to send to Node.js server
-     * @throws \Http_ClientException
      */
-    public function sendMessage(MessageDataPresenter $message) {
-        if ($this->getNodeJsServerAddress() !== '') {
-            $http_curl_client = new Http_Client();
+    public function sendMessage(MessageDataPresenter $message) : void
+    {
+        if ($this->url === null) {
+            return;
+        }
 
-            $options = array(
-                CURLOPT_URL             => $this->url . '/message',
-                CURLOPT_POST            => true,
-                CURLOPT_POST            => 1,
-                CURLOPT_HTTPHEADER      => array('Content-Type: application/json'),
-                CURLOPT_POSTFIELDS      => json_encode($message)
+        $request = $this->request_factory->createRequest('POST', $this->url . '/message')
+            ->withHeader('Content-Type', 'application/json')
+            ->withBody($this->stream_factory->createStream(json_encode($message)));
+
+        try {
+            $response = $this->http_client->sendRequest($request);
+        } catch (ClientExceptionInterface $e) {
+            $this->logger->error(
+                sprintf('Not able to send a message to the realtime NodeJS server (%s): %s', $this->url, $e->getMessage())
             );
+            return;
+        }
 
-            $http_curl_client->addOptions($options);
-
-            try {
-                $http_curl_client->doRequest();
-                $http_curl_client->close();
-            } catch(Http_ClientException $e) {
-                $logger = new BackendLogger();
-                $logger->error('Unable to reach nodejs server '. $this->url .' -> '. $e->getMessage());
-            }
+        $status_code = $response->getStatusCode();
+        if ($status_code !== 200) {
+            $this->logger->error(
+                sprintf(
+                    'Realtime NodeJS server (%s) has not processed a message: %d %s',
+                    $this->url,
+                    $status_code,
+                    $response->getReasonPhrase()
+                )
+            );
         }
     }
 
-    private function getNodeJsServerAddress()
+    private function getNodeJsServerAddress() : string
     {
         return ForgeConfig::get('nodejs_server_int') !== '' ?
             ForgeConfig::get('nodejs_server_int') : ForgeConfig::get('nodejs_server');

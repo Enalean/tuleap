@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,7 +19,10 @@
 
 namespace Tuleap\AgileDashboard\REST\v1\Kanban;
 
+use BackendLogger;
 use Luracast\Restler\RestException;
+use Tuleap\Http\HttpClientFactory;
+use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\REST\Header;
 use AgileDashboard_PermissionsManager;
 use AgileDashboard_KanbanDao;
@@ -94,7 +97,12 @@ class KanbanColumnsResource {
 
         $this->statistics_aggregator = new AgileDashboardStatisticsAggregator();
 
-        $this->node_js_client         = new NodeJSClient();
+        $this->node_js_client         = new NodeJSClient(
+            HttpClientFactory::createClient(),
+            HTTPFactoryBuilder::requestFactory(),
+            HTTPFactoryBuilder::streamFactory(),
+            new BackendLogger()
+        );
         $this->permissions_serializer = new Tracker_Permission_PermissionsSerializer(
             new Tracker_Permission_PermissionRetrieveAssignee(UserManager::instance())
         );

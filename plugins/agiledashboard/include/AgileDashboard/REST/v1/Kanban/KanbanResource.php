@@ -34,6 +34,7 @@ use AgileDashboard_KanbanUserPreferences;
 use AgileDashboard_PermissionsManager;
 use AgileDashboard_UserNotAdminException;
 use AgileDashboardStatisticsAggregator;
+use BackendLogger;
 use DateTime;
 use EventManager;
 use Exception;
@@ -76,6 +77,8 @@ use Tuleap\AgileDashboard\REST\v1\OrderRepresentation;
 use Tuleap\AgileDashboard\REST\v1\OrderValidator;
 use Tuleap\AgileDashboard\REST\v1\ResourcesPatcher;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
+use Tuleap\Http\HttpClientFactory;
+use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\RealTime\MessageDataPresenter;
 use Tuleap\RealTime\NodeJSClient;
 use Tuleap\REST\AuthenticatedResource;
@@ -221,7 +224,12 @@ class KanbanResource extends AuthenticatedResource
 
         $this->statistics_aggregator = new AgileDashboardStatisticsAggregator();
 
-        $this->node_js_client         = new NodeJSClient();
+        $this->node_js_client         = new NodeJSClient(
+            HttpClientFactory::createClient(),
+            HTTPFactoryBuilder::requestFactory(),
+            HTTPFactoryBuilder::streamFactory(),
+            new BackendLogger()
+        );
         $this->permissions_serializer = new Tracker_Permission_PermissionsSerializer(
             new Tracker_Permission_PermissionRetrieveAssignee(UserManager::instance())
         );
