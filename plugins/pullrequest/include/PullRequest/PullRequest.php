@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -34,10 +34,6 @@ class PullRequest implements Labelable
     public const FASTFORWARD_MERGE    = 2;
     public const CONFLICT_MERGE       = 3;
 
-    public const BUILD_STATUS_UNKNOWN = 'U';
-    public const BUILD_STATUS_SUCCESS = 'S';
-    public const BUILD_STATUS_FAIL    = 'F';
-
     private $id;
     private $title;
     private $description;
@@ -51,8 +47,6 @@ class PullRequest implements Labelable
     private $sha1_dest;
     private $status;
     private $merge_status;
-    private $last_build_status;
-    private $last_build_date;
 
     public function __construct(
         $id,
@@ -66,26 +60,22 @@ class PullRequest implements Labelable
         $repo_dest_id,
         $branch_dest,
         $sha1_dest,
-        $last_build_date = null,
-        $last_build_status = self::BUILD_STATUS_UNKNOWN,
         $status = 'R',
         $merge_status = self::UNKNOWN_MERGE
     ) {
-        $this->id                = $id;
-        $this->title             = $title;
-        $this->description       = $description;
-        $this->repository_id     = $repository_id;
-        $this->user_id           = $user_id;
-        $this->creation_date     = $creation_date;
-        $this->branch_src        = $branch_src;
-        $this->sha1_src          = $sha1_src;
-        $this->repo_dest_id      = $repo_dest_id;
-        $this->branch_dest       = $branch_dest;
-        $this->sha1_dest         = $sha1_dest;
-        $this->last_build_date   = $last_build_date;
-        $this->last_build_status = $last_build_status;
-        $this->status            = $status;
-        $this->merge_status      = $merge_status;
+        $this->id            = $id;
+        $this->title         = $title;
+        $this->description   = $description;
+        $this->repository_id = $repository_id;
+        $this->user_id       = $user_id;
+        $this->creation_date = $creation_date;
+        $this->branch_src    = $branch_src;
+        $this->sha1_src      = $sha1_src;
+        $this->repo_dest_id  = $repo_dest_id;
+        $this->branch_dest   = $branch_dest;
+        $this->sha1_dest     = $sha1_dest;
+        $this->status        = $status;
+        $this->merge_status  = $merge_status;
     }
 
     public function getId()
@@ -148,22 +138,6 @@ class PullRequest implements Labelable
         return $this->merge_status = $merge_status;
     }
 
-    /**
-     * @deprecated
-     */
-    public function getLastBuildDate()
-    {
-        return $this->last_build_date;
-    }
-
-    /**
-     * @deprecated
-     */
-    public function getLastBuildStatus()
-    {
-        return $this->last_build_status;
-    }
-
     public function getUserId()
     {
         return $this->user_id;
@@ -177,21 +151,5 @@ class PullRequest implements Labelable
     public function setId($id)
     {
         $this->id = $id;
-    }
-
-    /**
-     * @deprecated
-     */
-    public function setLastBuildStatus($status)
-    {
-        $this->last_build_status = $status;
-    }
-
-    /**
-     * @deprecated
-     */
-    public function setLastBuildDate($date)
-    {
-        $this->last_build_date = $date;
     }
 }

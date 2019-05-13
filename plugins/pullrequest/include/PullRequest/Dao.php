@@ -212,15 +212,6 @@ class Dao extends DataAccessObject
         $this->getDB()->run($sql, $new_title, $new_description, $pull_request_id);
     }
 
-    public function updateLastBuildStatus($pull_request_id, $build_status, $build_date)
-    {
-        $sql = 'UPDATE plugin_pullrequest_review
-                SET last_build_status=?, last_build_date=?
-                WHERE id=?';
-
-        $this->getDB()->run($sql, $build_status, $build_date, $pull_request_id);
-    }
-
     public function deleteAllPullRequestsOfRepository($repository_id)
     {
         $sql = 'DELETE pr, label, comments, inline, event

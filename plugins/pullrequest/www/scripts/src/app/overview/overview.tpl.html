@@ -69,12 +69,6 @@
                 <p class="tlp-text-warning" ng-if="overview.buildStatusIs('unknown')">
                     <i class="fa fa-exclamation-triangle"></i> <span translate>Unknown</span>
                 </p>
-                <p class="tlp-text-warning warning-deprecation-build-status-rest-route"
-                    ng-if="overview.pull_request.build_status_with_deprecated_route"
-                    title="{{ 'Your CI job is using a deprecated REST route to publish the build result and must be updated. Consult the documentation or the API Explorer for more information.' | translate }}"
-                >
-                    <i class="fa fa-exclamation-triangle"></i><span translate>Deprecated REST route</span>
-                </p>
             </div>
         </div>
 
