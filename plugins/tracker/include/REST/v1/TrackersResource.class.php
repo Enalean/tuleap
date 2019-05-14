@@ -160,6 +160,7 @@ class TrackersResource extends AuthenticatedResource
             $this->formelement_factory,
             new PermissionsExporter(
                 new FrozenFieldDetector(
+                    new TransitionRetriever(new \Workflow_TransitionDao(), \TransitionFactory::instance()),
                     new FrozenFieldsRetriever(
                         new FrozenFieldsDao()
                     )
@@ -633,6 +634,7 @@ class TrackersResource extends AuthenticatedResource
                 $this->formelement_factory,
                 new PermissionsExporter(
                     new FrozenFieldDetector(
+                        new TransitionRetriever(new \Workflow_TransitionDao(), \TransitionFactory::instance()),
                         new FrozenFieldsRetriever(
                             new FrozenFieldsDao()
                         )

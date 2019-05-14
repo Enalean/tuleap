@@ -62,7 +62,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
      *
      * @param Tracker_FormElement_Field $field The field
      *
-     * @return Tracker_Artifact_ChangesetValue, or null if not found
+     * @return Tracker_Artifact_ChangesetValue|null
      */
     public function getValue(Tracker_FormElement_Field $field) {
         if (! isset($this->values[$field->getId()])) {

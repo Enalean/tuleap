@@ -26,6 +26,7 @@ use Tuleap\Tracker\REST\Artifact\ArtifactFieldComputedValueFullRepresentation;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
+use Tuleap\Tracker\Workflow\SimpleMode\TransitionRetriever;
 
 class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float //phpcs:ignore
 {
@@ -1015,6 +1016,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
     private function getFrozenFieldDetector()
     {
         return new FrozenFieldDetector(
+            new TransitionRetriever(new \Workflow_TransitionDao(), \TransitionFactory::instance()),
             new FrozenFieldsRetriever(new FrozenFieldsDao())
         );
     }

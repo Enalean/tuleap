@@ -59,6 +59,7 @@ use Tuleap\Tracker\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
+use Tuleap\Tracker\Workflow\SimpleMode\TransitionRetriever;
 use Tuleap\Tracker\Workflow\WorkflowUpdateChecker;
 
 class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interface //phpcs:ignoreFile
@@ -1152,7 +1153,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     /**
      * Returns the latest changeset of this artifact
      *
-     * @return Tracker_Artifact_Changeset The latest changeset of this artifact, or null if no latest changeset
+     * @return Tracker_Artifact_Changeset|null The latest changeset of this artifact, or null if no latest changeset
      */
     public function getLastChangeset()
     {
@@ -1463,10 +1464,13 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     /**
      * Return Workflow the artifact should respect
      *
-     * @return Workflow
+     * @return Workflow|null
      */
     public function getWorkflow() {
         $workflow = $this->getTracker()->getWorkflow();
+        if ($workflow === null) {
+            return null;
+        }
         $workflow->setArtifact($this);
         return $workflow;
     }
@@ -2030,6 +2034,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     protected function getWorkflowUpdateChecker()
     {
         $frozen_field_detector = new FrozenFieldDetector(
+            new TransitionRetriever(new \Workflow_TransitionDao(), \TransitionFactory::instance()),
             new FrozenFieldsRetriever(new FrozenFieldsDao())
         );
         return new WorkflowUpdateChecker($frozen_field_detector);

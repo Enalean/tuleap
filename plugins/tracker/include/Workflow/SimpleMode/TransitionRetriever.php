@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Workflow\SimpleMode;
 
+use Tracker_Artifact;
+use Transition;
 use Tuleap\Tracker\Workflow\Transition\NoSiblingTransitionException;
 use Tuleap\Tracker\Workflow\Transition\NoTransitionForStateException;
 
@@ -45,7 +47,7 @@ class TransitionRetriever
     /**
      * @throws NoSiblingTransitionException
      */
-    public function getSiblingTransitions(\Transition $transition): TransitionCollection
+    public function getSiblingTransitions(Transition $transition): TransitionCollection
     {
         $rows = $this->transition_dao->searchSiblings(
             $transition->workflow_id,
@@ -66,7 +68,7 @@ class TransitionRetriever
     /**
      * @throws NoSiblingTransitionException
      */
-    public function getFirstSiblingTransition(\Transition $transition): \Transition
+    public function getFirstSiblingTransition(Transition $transition): Transition
     {
         $rows = $this->transition_dao->searchSiblings(
             $transition->workflow_id,
@@ -84,7 +86,35 @@ class TransitionRetriever
     /**
      * @throws NoTransitionForStateException
      */
-    public function getFirstTransitionForDestinationState(\Workflow $workflow, int $to): \Transition
+    public function getFirstTransitionForCurrentState(Tracker_Artifact $artifact) : Transition
+    {
+        $workflow = $artifact->getWorkflow();
+
+        if ($workflow === null || ! $workflow->isUsed() || $workflow->isAdvanced()) {
+            throw new NoTransitionForStateException();
+        }
+
+        $last_changeset = $artifact->getLastChangeset();
+        if ($last_changeset === null) {
+            throw new NoTransitionForStateException();
+        }
+
+        $field = $workflow->getField();
+
+        $current_value   = $last_changeset->getValue($field);
+        if ($current_value === null) {
+            throw new NoTransitionForStateException();
+        }
+
+        $current_status = (int) current($current_value->getValue());
+
+        return $this->getFirstTransitionForDestinationState($workflow, $current_status);
+    }
+
+    /**
+     * @throws NoTransitionForStateException
+     */
+    private function getFirstTransitionForDestinationState(\Workflow $workflow, int $to): Transition
     {
         $row = $this->transition_dao->searchFirstTransition(
             (int) $workflow->getId(),

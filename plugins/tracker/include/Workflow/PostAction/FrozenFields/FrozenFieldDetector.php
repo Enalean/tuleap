@@ -22,28 +22,30 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Workflow\PostAction\FrozenFields;
 
+use Tracker_Artifact;
+use Tracker_FormElement_Field;
+use Tuleap\Tracker\Workflow\SimpleMode\TransitionRetriever;
 use Tuleap\Tracker\Workflow\Transition\NoTransitionForStateException;
 
 class FrozenFieldDetector
 {
+    /**
+     * @var TransitionRetriever
+     */
+    private $transition_retriever;
     /** @var FrozenFieldsRetriever */
     private $frozen_fields_retriever;
 
-    public function __construct(FrozenFieldsRetriever $frozen_fields_retriever)
+    public function __construct(TransitionRetriever $transition_retriever, FrozenFieldsRetriever $frozen_fields_retriever)
     {
+        $this->transition_retriever    = $transition_retriever;
         $this->frozen_fields_retriever = $frozen_fields_retriever;
     }
 
-    public function isFieldFrozen(\Tracker_Artifact $artifact, \Tracker_FormElement_Field $field): bool
+    public function isFieldFrozen(Tracker_Artifact $artifact, Tracker_FormElement_Field $field): bool
     {
-        $workflow = $artifact->getWorkflow();
-
-        if ($workflow === null || ! $workflow->isUsed() || $workflow->isAdvanced()) {
-            return false;
-        }
-
         try {
-            $current_state_transition = $workflow->getFirstTransitionForCurrentState($artifact);
+            $current_state_transition = $this->transition_retriever->getFirstTransitionForCurrentState($artifact);
             $frozen_post_action       = $this->frozen_fields_retriever->getFrozenFields($current_state_transition);
         } catch (NoTransitionForStateException | NoFrozenFieldsPostActionException $e) {
             return false;

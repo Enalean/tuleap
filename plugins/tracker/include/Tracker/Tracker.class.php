@@ -61,6 +61,7 @@ use Tuleap\Tracker\Webhook\WebhookXMLExporter;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
+use Tuleap\Tracker\Workflow\SimpleMode\TransitionRetriever;
 use Tuleap\Tracker\Workflow\WorkflowUpdateChecker;
 use Tuleap\Tracker\XML\Updater\FieldChange\FieldChangeComputedXMLUpdater;
 
@@ -3594,7 +3595,7 @@ EOS;
     /**
      * Return workflow of the current tracker (there is always a workflow).
      *
-     * @return Workflow
+     * @return Workflow|null
      */
     public function getWorkflow() {
         if (! $this->workflow) {
@@ -3779,6 +3780,7 @@ EOS;
     private function getNewChangesetFieldsValidator()
     {
         $frozen_field_detector = new FrozenFieldDetector(
+            new TransitionRetriever(new \Workflow_TransitionDao(), \TransitionFactory::instance()),
             new FrozenFieldsRetriever(new FrozenFieldsDao())
         );
         $workflow_update_checker = new WorkflowUpdateChecker($frozen_field_detector);
