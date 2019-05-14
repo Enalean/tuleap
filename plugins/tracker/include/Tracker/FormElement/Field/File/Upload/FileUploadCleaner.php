@@ -22,16 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\Field\File\Upload;
 
+use Tracker_FileInfo;
+use Tracker_FormElementFactory;
 use Tuleap\DB\DBTransactionExecutor;
-use Tuleap\Upload\FileBeingUploadedInformation;
-use Tuleap\Upload\PathAllocator;
 
 final class FileUploadCleaner
 {
-    /**
-     * @var PathAllocator
-     */
-    private $path_allocator;
     /**
      * @var FileOngoingUploadDao
      */
@@ -44,17 +40,21 @@ final class FileUploadCleaner
      * @var \Logger
      */
     private $logger;
+    /**
+     * @var Tracker_FormElementFactory
+     */
+    private $form_element_factory;
 
     public function __construct(
         \Logger $logger,
-        PathAllocator $path_allocator,
         FileOngoingUploadDao $dao,
+        Tracker_FormElementFactory $form_element_factory,
         DBTransactionExecutor $transaction_executor
     ) {
         $this->logger               = $logger;
-        $this->path_allocator       = $path_allocator;
         $this->dao                  = $dao;
         $this->transaction_executor = $transaction_executor;
+        $this->form_element_factory = $form_element_factory;
     }
 
     public function deleteDanglingFilesToUpload(\DateTimeImmutable $current_time)
@@ -62,25 +62,37 @@ final class FileUploadCleaner
         $this->logger->info('Deleting dangling files to upload.');
         $this->transaction_executor->execute(
             function () use ($current_time): void {
-                $unused_current_file_size = 0;
-                $current_timestamp        = $current_time->getTimestamp();
-                $rows                     = $this->dao->searchUnusableFiles($current_timestamp);
+                $current_timestamp = $current_time->getTimestamp();
+                $rows              = $this->dao->searchUnusableFiles($current_timestamp);
                 $this->logger->info('Found ' . count($rows) . ' dangling files.');
-                foreach ($rows as $row) {
-                    $file_information = new FileBeingUploadedInformation(
-                        $row['id'],
-                        $row['filename'],
-                        $row['filesize'],
-                        $unused_current_file_size
-                    );
 
-                    $path = $this->path_allocator->getPathForItemBeingUploaded($file_information);
-                    if (\is_file($path)) {
-                        \unlink($path);
-                    }
+                foreach ($rows as $row) {
+                    $this->deleteUploadedFile($row);
                 }
                 $this->dao->deleteUnusableFiles($current_timestamp);
             }
         );
+    }
+
+    private function deleteUploadedFile(array $row): void
+    {
+        $field = $this->form_element_factory->getFieldById($row['field_id']);
+        if (! $field) {
+            $this->logger->error('Unable to find field from uploaded file with id ' . $row['id']);
+
+            return;
+        }
+
+        $file_info = new Tracker_FileInfo(
+            $row['id'],
+            $field,
+            $row['submitted_by'],
+            $row['description'],
+            $row['filename'],
+            $row['filesize'],
+            $row['filetype']
+        );
+
+        $file_info->deleteFiles();
     }
 }

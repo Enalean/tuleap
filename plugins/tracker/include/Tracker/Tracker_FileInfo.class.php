@@ -301,13 +301,18 @@ class Tracker_FileInfo {
      * @return bool true on success
      */
     public function delete() {
+        $this->deleteFiles();
+        $dao = new Tracker_FileInfoDao();
+        return $dao->delete($this->getId());
+    }
+
+    public function deleteFiles()
+    {
         if (file_exists($this->getPath())) {
             unlink($this->getPath());
         }
         if (file_exists($this->getThumbnailPath())) {
             unlink($this->getThumbnailPath());
         }
-        $dao = new Tracker_FileInfoDao();
-        return $dao->delete($this->getId());
     }
 }

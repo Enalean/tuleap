@@ -26,9 +26,8 @@ use Logger;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
+use Tracker_FormElementFactory;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
-use Tuleap\Tus\TusFileInformation;
-use Tuleap\Upload\PathAllocator;
 
 class FileUploadCleanerTest extends TestCase
 {
@@ -36,55 +35,54 @@ class FileUploadCleanerTest extends TestCase
 
     public function testDeleteDanglingFilesToUpload(): void
     {
-        $dao            = \Mockery::mock(FileOngoingUploadDao::class);
-        $path_allocator = \Mockery::mock(PathAllocator::class);
-        $logger         = \Mockery::mock(Logger::class);
+        $dao                  = \Mockery::mock(FileOngoingUploadDao::class);
+        $form_element_factory = \Mockery::mock(Tracker_FormElementFactory::class);
+        $logger               = \Mockery::mock(Logger::class);
+        $field                = \Mockery::mock(\Tracker_FormElement_Field_File::class);
 
         $logger->shouldReceive('info');
 
         $base_path = vfsStream::setup()->url();
-        mkdir($base_path . '/file', 0777, true);
-        \touch($base_path . '/file/11');
-        \touch($base_path . '/file/12');
-        \touch($base_path . '/file/13');
-
-        $path_allocator
-            ->shouldReceive('getPathForItemBeingUploaded')
-            ->withArgs(
-                function (TusFileInformation $file_information) {
-                    return $file_information->getID() === 11;
-                }
-            )
-            ->andReturn($base_path . '/file/11');
-
-        $path_allocator
-            ->shouldReceive('getPathForItemBeingUploaded')
-            ->withArgs(
-                function (TusFileInformation $file_information) {
-                    return $file_information->getID() === 13;
-                }
-            )
-            ->andReturn($base_path . '/file/13');
+        mkdir($base_path . '/field/thumbnails', 0777, true);
+        \touch($base_path . '/field/11');
+        \touch($base_path . '/field/thumbnails/11');
+        \touch($base_path . '/field/12');
+        \touch($base_path . '/field/13');
 
         $dao->shouldReceive('deleteUnusableFiles');
-        $dao->shouldReceive('searchUnusableFiles')->andReturn([
+        $dao->shouldReceive('searchUnusableFiles')->andReturn(
             [
-                'id' => 11,
-                'filename' => 'Readme.mkd',
-                'filesize' => 123
-            ],
-            [
-                'id' => 13,
-                'filename' => 'Readme.mkd',
-                'filesize' => 94830
+                [
+                    'id'           => 11,
+                    'filename'     => 'TaylorSwift.jpg',
+                    'description'  => '',
+                    'filesize'     => 123,
+                    'filetype'     => 'image/jpg',
+                    'field_id'     => 1001,
+                    'submitted_by' => 101
+                ],
+                [
+                    'id'           => 13,
+                    'filename'     => 'Readme.mkd',
+                    'description'  => '',
+                    'filesize'     => 94830,
+                    'filetype'     => 'text/plain',
+                    'field_id'     => 1001,
+                    'submitted_by' => 101
+                ]
             ]
-        ]);
+        );
 
-        (new FileUploadCleaner($logger, $path_allocator, $dao, new DBTransactionExecutorPassthrough()))
+        $form_element_factory->shouldReceive('getFieldById')->andReturn($field);
+
+        $field->shouldReceive('getRootPath')->andReturn($base_path . '/field');
+
+        (new FileUploadCleaner($logger, $dao, $form_element_factory, new DBTransactionExecutorPassthrough()))
             ->deleteDanglingFilesToUpload(new \DateTimeImmutable());
 
-        $this->assertFileNotExists($base_path . '/file/11');
-        $this->assertFileExists($base_path . '/file/12');
-        $this->assertFileNotExists($base_path . '/file/13');
+        $this->assertFileNotExists($base_path . '/field/11');
+        $this->assertFileNotExists($base_path . '/field/thumbnails/11');
+        $this->assertFileExists($base_path . '/field/12');
+        $this->assertFileNotExists($base_path . '/field/13');
     }
 }
