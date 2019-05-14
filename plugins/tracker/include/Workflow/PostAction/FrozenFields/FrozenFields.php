@@ -32,13 +32,14 @@ class FrozenFields extends Transition_PostAction
 {
     public const SHORT_NAME = 'frozen_fields';
 
-    /** @var int[] */
-    private $field_ids = [];
+    /** @var Tracker_FormElement_Field[] */
+    private $fields = [];
 
-    public function __construct(\Transition $transition, int $id, array $field_ids)
+    public function __construct(\Transition $transition, int $id, array $fields)
     {
         parent::__construct($transition, $id);
-        $this->field_ids = $field_ids;
+
+        $this->fields = $fields;
     }
 
     /** @return string */
@@ -50,7 +51,12 @@ class FrozenFields extends Transition_PostAction
     /** @return int[] */
     public function getFieldIds(): array
     {
-        return $this->field_ids;
+        $ids = [];
+        foreach ($this->fields as $field) {
+            $ids[] = $field->getId();
+        }
+
+        return $ids;
     }
 
     /** @return string */

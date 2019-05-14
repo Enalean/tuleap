@@ -201,7 +201,8 @@ class ArtifactsResource extends AuthenticatedResource {
                 new FrozenFieldDetector(
                     new TransitionRetriever(new \Workflow_TransitionDao(), \TransitionFactory::instance()),
                     new FrozenFieldsRetriever(
-                        new FrozenFieldsDao()
+                        new FrozenFieldsDao(),
+                        $this->formelement_factory
                     )
                 )
             )

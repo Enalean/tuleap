@@ -1009,15 +1009,4 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
     {
         return ! is_array($value) && $value === null;
     }
-
-    /**
-     * @return FrozenFieldDetector
-     */
-    private function getFrozenFieldDetector()
-    {
-        return new FrozenFieldDetector(
-            new TransitionRetriever(new \Workflow_TransitionDao(), \TransitionFactory::instance()),
-            new FrozenFieldsRetriever(new FrozenFieldsDao())
-        );
-    }
 }

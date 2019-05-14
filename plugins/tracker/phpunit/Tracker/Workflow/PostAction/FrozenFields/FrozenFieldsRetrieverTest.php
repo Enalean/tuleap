@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\Workflow\PostAction\FrozenFields;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tracker_FormElementFactory;
 
 final class FrozenFieldsRetrieverTest extends TestCase
 {
@@ -35,10 +36,20 @@ final class FrozenFieldsRetrieverTest extends TestCase
     /** @var FrozenFieldsRetriever */
     private $frozen_retriever;
 
+    /**
+     * @var Tracker_FormElementFactory
+     */
+    private $form_element_factory;
+
     protected function setUp(): void
     {
-        $this->frozen_dao       = Mockery::mock(FrozenFieldsDao::class);
-        $this->frozen_retriever = new FrozenFieldsRetriever($this->frozen_dao);
+        $this->frozen_dao           = Mockery::mock(FrozenFieldsDao::class);
+        $this->form_element_factory = Mockery::mock(\Tracker_FormElementFactory::class);
+
+        $this->frozen_retriever = new FrozenFieldsRetriever(
+            $this->frozen_dao,
+            $this->form_element_factory
+        );
     }
 
     public function testGetFrozenFieldsReturnsASinglePostAction()
@@ -51,8 +62,16 @@ final class FrozenFieldsRetrieverTest extends TestCase
             ]
         );
 
+        $int_field    = Mockery::mock(\Tracker_FormElement_Field_Integer::class);
+        $float_field  = Mockery::mock(\Tracker_FormElement_Field_Float::class);
+        $string_field = Mockery::mock(\Tracker_FormElement_Field_String::class);
+
+        $this->form_element_factory->shouldReceive('getFieldById')->with(331)->andReturn($int_field);
+        $this->form_element_factory->shouldReceive('getFieldById')->with(651)->andReturn($float_field);
+        $this->form_element_factory->shouldReceive('getFieldById')->with(987)->andReturn($string_field);
+
         $transition           = Mockery::mock(\Transition::class)->shouldReceive(['getId' => 97])->getMock();
-        $expected_post_action = new FrozenFields($transition, 72, [331, 651, 987]);
+        $expected_post_action = new FrozenFields($transition, 72, [$int_field, $float_field, $string_field]);
 
         $result = $this->frozen_retriever->getFrozenFields($transition);
         $this->assertEquals($expected_post_action, $result);
