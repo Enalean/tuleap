@@ -22,6 +22,7 @@ use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\CLI\CLICommandsCollector;
 use Tuleap\Dashboard\User\AtUserCreationDefaultWidgetsCreator;
 use Tuleap\DB\DBFactory;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Glyph\GlyphLocation;
 use Tuleap\Glyph\GlyphLocationsCollector;
 use Tuleap\Http\HTTPFactoryBuilder;
@@ -77,6 +78,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureUsagePresenterFac
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureValidator;
 use Tuleap\Tracker\FormElement\Field\File\AttachmentController;
 use Tuleap\Tracker\FormElement\Field\File\Upload\FileOngoingUploadDao;
+use Tuleap\Tracker\FormElement\Field\File\Upload\FileUploadCleaner;
 use Tuleap\Tracker\FormElement\Field\File\Upload\Tus\FileBeingUploadedInformationProvider;
 use Tuleap\Tracker\FormElement\Field\File\Upload\Tus\FileDataStore;
 use Tuleap\Tracker\FormElement\Field\File\Upload\Tus\FileUploadCanceler;
@@ -912,9 +914,9 @@ class trackerPlugin extends Plugin {
             SystemEvent::OWNER_APP
         );
 
-        $this->dailyCleanup();
+        $this->dailyCleanup($logger);
 
-        return $trackerManager->sendDateReminder();
+        $trackerManager->sendDateReminder();
     }
 
     /**
@@ -1583,10 +1585,19 @@ class trackerPlugin extends Plugin {
         $event->addPane($admin_permission_pane, $rank_in_project);
     }
 
-    private function dailyCleanup()
+    private function dailyCleanup(Logger $logger)
     {
         $deletions_remover = new ArtifactsDeletionRemover(new ArtifactsDeletionDAO());
         $deletions_remover->deleteOutdatedArtifactsDeletions();
+
+        $dao     = new FileOngoingUploadDao();
+        $cleaner = new FileUploadCleaner(
+            $logger,
+            new UploadPathAllocator($dao, Tracker_FormElementFactory::instance()),
+            $dao,
+            new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
+        );
+        $cleaner->deleteDanglingFilesToUpload(new \DateTimeImmutable());
     }
 
     /**

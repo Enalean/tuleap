@@ -136,4 +136,16 @@ class FileOngoingUploadDao extends DataAccessObject
             $current_time
         );
     }
+
+    public function searchUnusableFiles(int $current_time): array
+    {
+        return $this->getDB()->run(
+            'SELECT *
+                FROM plugin_tracker_file_upload AS upload
+                    INNER JOIN tracker_fileinfo AS fileinfo
+                        ON fileinfo.id = upload.fileinfo_id
+                WHERE ? >= upload.expiration_date',
+            $current_time
+        );
+    }
 }
