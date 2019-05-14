@@ -59,7 +59,8 @@ import {
     rewire$patchWiki,
     rewire$patchLink,
     rewire$deleteFile,
-    rewire$deleteLink
+    rewire$deleteLink,
+    rewire$deleteEmbeddedFile
 } from "../api/rest-querier.js";
 import {
     restore as restoreLoadFolderContent,
@@ -69,7 +70,7 @@ import {
     restore as restoreLoadAscendantHierarchy,
     rewire$loadAscendantHierarchy
 } from "./actions-helpers/load-ascendant-hierarchy.js";
-import { TYPE_FILE, TYPE_LINK } from "../constants.js";
+import { TYPE_FILE, TYPE_LINK, TYPE_EMBEDDED } from "../constants.js";
 
 describe("Store actions", () => {
     afterEach(() => {
@@ -1167,7 +1168,7 @@ describe("Store actions", () => {
     });
 
     describe("deleteItem()", () => {
-        let item_to_delete, context, deleteFile, deleteLink;
+        let item_to_delete, context, deleteFile, deleteLink, deleteEmbeddedFile;
 
         beforeEach(() => {
             item_to_delete = {
@@ -1189,6 +1190,9 @@ describe("Store actions", () => {
 
             deleteLink = jasmine.createSpy("deleteLink");
             rewire$deleteLink(deleteLink);
+
+            deleteEmbeddedFile = jasmine.createSpy("deleteEmbeddedFile");
+            rewire$deleteEmbeddedFile(deleteEmbeddedFile);
         });
 
         it("when item is a file, then the delete file route is called", async () => {
@@ -1211,6 +1215,17 @@ describe("Store actions", () => {
 
             await deleteItem(context, link_item);
             expect(deleteLink).toHaveBeenCalledWith(link_item);
+        });
+
+        it("when item is an embedded file, then the delete embeded file route is called", async () => {
+            const link_item = {
+                id: 222,
+                title: "My embedded file",
+                type: TYPE_EMBEDDED
+            };
+
+            await deleteItem(context, link_item);
+            expect(deleteEmbeddedFile).toHaveBeenCalledWith(link_item);
         });
 
         it("deletes the given item and removes it from the tree view", async () => {

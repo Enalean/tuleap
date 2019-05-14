@@ -458,4 +458,122 @@ class DocmanItemsTestFilesEmbeddedTest extends DocmanBase
         }
         return $items[$index];
     }
+
+    /**
+     * @depends testGetRootId
+     */
+    public function testGetItemsToTrash($root_id): array
+    {
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('docman_items/' . $root_id . '/docman_items')
+        );
+        $folder = $response->json();
+
+        $trash_folder    = $this->findItemByTitle($folder, "Trash");
+        $trash_folder_id = $trash_folder['id'];
+
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('docman_items/' . $trash_folder_id . '/docman_items')
+        );
+
+        $items_to_delete = $response->json();
+
+        $this->assertGreaterThan(0, count($items_to_delete));
+
+        return $items_to_delete;
+    }
+
+    /**
+     * @depends testGetItemsToTrash
+     */
+    public function testItThrowsAnErrorWhenUserHasNotPermissionToDeleteTheEmbeddedFile(array $items): void
+    {
+        $file_to_delete    = $this->findItemByTitle($items, 'another old embedded file');
+        $file_to_delete_id = $file_to_delete['id'];
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->delete('docman_embedded_files/' . $file_to_delete_id)
+        );
+
+        $this->assertEquals(403, $response->getStatusCode());
+
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('docman_items/' . $file_to_delete_id)
+        );
+
+        $this->assertEquals(200, $response->getStatusCode());
+    }
+
+    /**
+     * @depends testGetItemsToTrash
+     */
+    public function testItShouldThrowAnErrorWhenTheEmbeddedFileIsLockedByAnotherUser(array $items): void
+    {
+        $file_to_delete    = $this->findItemByTitle($items, 'old embedded file L');
+        $file_to_delete_id = $file_to_delete['id'];
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->delete('docman_embedded_files/' . $file_to_delete_id)
+        );
+
+        $this->assertEquals(403, $response->getStatusCode());
+
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('docman_items/' . $file_to_delete_id)
+        );
+
+        $this->assertEquals(200, $response->getStatusCode());
+    }
+
+    /**
+     * @depends testGetItemsToTrash
+     */
+    public function testItShouldDeleteWhenEmbeddedFileIsLockedAndUserIsAdmin(array $items): void
+    {
+        $file_to_delete    = $this->findItemByTitle($items, 'old embedded file L');
+        $file_to_delete_id = $file_to_delete['id'];
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->delete('docman_embedded_files/' . $file_to_delete_id)
+        );
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('docman_items/' . $file_to_delete_id)
+        );
+
+        $this->assertEquals(404, $response->getStatusCode());
+    }
+
+    /**
+     * @depends testGetItemsToTrash
+     */
+    public function testItDeletesAnEmbeddedFile(array $items): void
+    {
+        $file_to_delete    = $this->findItemByTitle($items, 'another old embedded file');
+        $file_to_delete_id = $file_to_delete['id'];
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->delete('docman_embedded_files/' . $file_to_delete_id)
+        );
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('docman_items/' . $file_to_delete_id)
+        );
+
+        $this->assertEquals(404, $response->getStatusCode());
+    }
 }

@@ -586,10 +586,10 @@ class DocmanDataBuilder extends DocmanDataBuildCommon
      *                                      +
      *                                      |
      *                                      +
-     *             +----------------+-------|-------+-------------+
-     *             |                |               |             |
-     *             +                +               +             +
-     *         old file L    another old file   old link L   another old link
+     *             +----------------+-------|-------+-------------+-----------------+
+     *             |                |               |             |                 |
+     *             +                +               +             +                 +
+     *         old file L    another old file   old link L   another old link   and so on ...
      *
      * (L)    => Lock on this item
      *
@@ -621,6 +621,13 @@ class DocmanDataBuilder extends DocmanDataBuildCommon
 
         $this->addReadPermissionOnItem($link_L_id, ProjectUGroup::DOCUMENT_ADMIN);
 
+        $embedded_file_L_id = $this->createItem(
+            \REST_TestDataBuilder::ADMIN_PROJECT_ID,
+            $folder_delete_id,
+            "old embedded file L",
+            PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE
+        );
+
         $dao = new \Docman_LockDao();
         $dao->addLock(
             $file_L_id,
@@ -630,6 +637,12 @@ class DocmanDataBuilder extends DocmanDataBuildCommon
 
         $dao->addLock(
             $link_L_id,
+            \REST_TestDataBuilder::ADMIN_PROJECT_ID,
+            time()
+        );
+
+        $dao->addLock(
+            $embedded_file_L_id,
             \REST_TestDataBuilder::ADMIN_PROJECT_ID,
             time()
         );
@@ -647,5 +660,14 @@ class DocmanDataBuilder extends DocmanDataBuildCommon
             "another old link",
             PLUGIN_DOCMAN_ITEM_TYPE_LINK
         );
+
+        $another_embedded_file_L_id = $this->createItem(
+            \REST_TestDataBuilder::ADMIN_PROJECT_ID,
+            $folder_delete_id,
+            "another old embedded file",
+            PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE
+        );
+
+        $this->addReadPermissionOnItem($another_embedded_file_L_id, self::REGULAR_USER_ID);
     }
 }
