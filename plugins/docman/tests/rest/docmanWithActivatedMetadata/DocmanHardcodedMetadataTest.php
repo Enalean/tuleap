@@ -1047,6 +1047,266 @@ class DocmanHardcodedMetadataTest extends DocmanWithMetadataActivatedBase
     }
 
     /**
+     * @depends testGetDocumentItemsForAdmin
+     */
+    public function testPatchEmbeddedFileDocumentWithHardcodedMetadata(array $items): void
+    {
+        $folder_HM = $this->findItemByTitle($items, 'Folder HM');
+
+
+        $headers = ['Content-Type' => 'application/json'];
+
+        $date           = new \DateTimeImmutable();
+        $date           = $date->setTimezone(new DateTimeZone('GMT+1'));
+        $date           = $date->setTime(0, 0, 0);
+        $formatted_date = $date->modify('+1 day')->format('Y-m-d');
+
+        $query = json_encode(
+            [
+                'title'               => 'My Super embbeded to patch',
+                'embedded_properties' => ['content' => 'content 1'],
+                'status'              => 'approved',
+                'obsolescence_date'   => $formatted_date
+            ]
+        );
+
+        $post_embedded_file_response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post('docman_folders/' . $folder_HM['id'] . '/embedded_files', $headers, $query)
+        );
+
+        $this->assertEquals(201, $post_embedded_file_response->getStatusCode());
+
+        $embedded_file_id = $post_embedded_file_response->json()['id'];
+
+        $embedded_properties = [
+            'content' => 'TULEAAAAAAAAP',
+        ];
+
+        $put_resource = json_encode(
+            [
+                'version_title'       => 'My version title',
+                'changelog'           => 'I have changed',
+                'title'               => 'My embedded to patched with a new title',
+                'should_lock_file'    => false,
+                'status'              => 'rejected',
+                'obsolescence_date'   => $date->modify('+2 day')->format('Y-m-d'),
+                'embedded_properties' => $embedded_properties
+            ]
+        );
+
+        $patch_embedded_file_response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->patch('docman_embedded_files/' . $embedded_file_id, $headers, $put_resource)
+        );
+
+        $this->assertEquals(200, $patch_embedded_file_response->getStatusCode());
+
+        $get_embedded_file_response = $this->getResponse(
+            $this->client->get('docman_items/' . $embedded_file_id),
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
+        );
+
+        $this->assertEquals(200, $get_embedded_file_response->getStatusCode());
+        $this->assertEquals('embedded', $get_embedded_file_response->json()['type']);
+        $status = $this->getMetadataByName($get_embedded_file_response->json()['metadata'], 'Status');
+        $this->assertEquals(
+            'Rejected',
+            $status['list_value'][0]['name']
+        );
+
+        $obsolescence_date_metadata = $this->getMetadataByName(
+            $get_embedded_file_response->json()['metadata'],
+            'Obsolescence Date'
+        );
+
+        $obsolescence_date_string = $obsolescence_date_metadata['value'];
+        $obsolescence_date        = \DateTimeImmutable::createFromFormat(
+            \DateTimeInterface::ISO8601,
+            $obsolescence_date_string
+        );
+        $obsolescence_date        = $obsolescence_date->setTimezone(new DateTimeZone('GMT+1'));
+        $obsolescence_date        = $obsolescence_date->setTime(0, 0, 0, 0);
+
+        $this->assertTrue($date->modify('+2 day')->getTimestamp() === $obsolescence_date->getTimestamp());
+        $this->assertEquals(
+            'TULEAAAAAAAAP',
+            $get_embedded_file_response->json()['embedded_file_properties']['content']
+        );
+    }
+
+    /**
+     * @depends testGetDocumentItemsForAdmin
+     */
+    public function testPatchEmbeddedFileThrows400IfTheDateIsNotWellFormatted(array $items): void
+    {
+        $folder_HM = $this->findItemByTitle($items, 'Folder HM');
+
+
+        $headers = ['Content-Type' => 'application/json'];
+
+        $date           = new \DateTimeImmutable();
+        $date           = $date->setTimezone(new DateTimeZone('GMT+1'));
+        $date           = $date->setTime(0, 0, 0);
+        $formatted_date = $date->modify('+1 day')->format('Y-m-d');
+
+        $query = json_encode(
+            [
+                'title'               => 'My fail embbeded to patch',
+                'embedded_properties' => ['content' => 'content 1'],
+                'status'              => 'approved',
+                'obsolescence_date'   => $formatted_date
+            ]
+        );
+
+        $post_embedded_file_response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post('docman_folders/' . $folder_HM['id'] . '/embedded_files', $headers, $query)
+        );
+
+        $this->assertEquals(201, $post_embedded_file_response->getStatusCode());
+
+        $embedded_file_id = $post_embedded_file_response->json()['id'];
+
+        $embedded_properties = [
+            'content' => 'TULEAAAAAAAAP',
+        ];
+
+        $put_resource = json_encode(
+            [
+                'version_title'       => 'My version title',
+                'changelog'           => 'I have not changed',
+                'title'               => 'My embedded to patched with a new title',
+                'should_lock_file'    => false,
+                'status'              => 'rejected',
+                'obsolescence_date'   => '2035-02-201548',
+                'embedded_properties' => $embedded_properties
+            ]
+        );
+
+        $patch_embedded_file_response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->patch('docman_embedded_files/' . $embedded_file_id, $headers, $put_resource)
+        );
+
+        $this->assertEquals(400, $patch_embedded_file_response->getStatusCode());
+
+        $get_embedded_file_response = $this->getResponse(
+            $this->client->get('docman_items/' . $embedded_file_id),
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
+        );
+
+        $this->assertEquals(200, $get_embedded_file_response->getStatusCode());
+        $this->assertEquals('embedded', $get_embedded_file_response->json()['type']);
+        $status = $this->getMetadataByName($get_embedded_file_response->json()['metadata'], 'Status');
+        $this->assertEquals(
+            'Approved',
+            $status['list_value'][0]['name']
+        );
+
+        $obsolescence_date_metadata = $this->getMetadataByName(
+            $get_embedded_file_response->json()['metadata'],
+            'Obsolescence Date'
+        );
+
+        $obsolescence_date_string = $obsolescence_date_metadata['value'];
+        $obsolescence_date        = \DateTimeImmutable::createFromFormat(
+            \DateTimeInterface::ISO8601,
+            $obsolescence_date_string
+        );
+        $obsolescence_date        = $obsolescence_date->setTimezone(new DateTimeZone('GMT+1'));
+        $obsolescence_date        = $obsolescence_date->setTime(0, 0, 0, 0);
+
+        $this->assertTrue($date->modify('+1 day')->getTimestamp() === $obsolescence_date->getTimestamp());
+        $this->assertEquals('content 1', $get_embedded_file_response->json()['embedded_file_properties']['content']);
+    }
+
+    /**
+     * @depends testGetDocumentItemsForAdmin
+     */
+    public function testPatchEmbeddedFileWithStatusThrows400IfThereIsABadStatus(array $items): void
+    {
+        $folder_HM = $this->findItemByTitle($items, 'Folder HM');
+
+
+        $headers = ['Content-Type' => 'application/json'];
+
+        $date           = new \DateTimeImmutable();
+        $date           = $date->setTimezone(new DateTimeZone('GMT+1'));
+        $date           = $date->setTime(0, 0, 0);
+        $formatted_date = $date->modify('+1 day')->format('Y-m-d');
+
+        $query = json_encode(
+            [
+                'title'               => 'My fail embbeded to patch fail status',
+                'embedded_properties' => ['content' => 'content 1'],
+                'status'              => 'approved',
+                'obsolescence_date'   => $formatted_date
+            ]
+        );
+
+        $post_embedded_file_response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post('docman_folders/' . $folder_HM['id'] . '/embedded_files', $headers, $query)
+        );
+
+        $this->assertEquals(201, $post_embedded_file_response->getStatusCode());
+
+        $embedded_file_id = $post_embedded_file_response->json()['id'];
+
+        $embedded_properties = [
+            'content' => 'TULEAAAAAAAAP',
+        ];
+
+        $put_resource = json_encode(
+            [
+                'version_title'       => 'My version title',
+                'changelog'           => 'I have not changed',
+                'title'               => 'My embedded to patched with a new title',
+                'should_lock_file'    => false,
+                'status'              => 'yeaaaaaaaaaah',
+                'embedded_properties' => $embedded_properties
+            ]
+        );
+
+        $patch_embedded_file_response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->patch('docman_embedded_files/' . $embedded_file_id, $headers, $put_resource)
+        );
+
+        $this->assertEquals(400, $patch_embedded_file_response->getStatusCode());
+
+        $get_embedded_file_response = $this->getResponse(
+            $this->client->get('docman_items/' . $embedded_file_id),
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
+        );
+
+        $this->assertEquals(200, $get_embedded_file_response->getStatusCode());
+        $this->assertEquals('embedded', $get_embedded_file_response->json()['type']);
+        $status = $this->getMetadataByName($get_embedded_file_response->json()['metadata'], 'Status');
+        $this->assertEquals(
+            'Approved',
+            $status['list_value'][0]['name']
+        );
+
+        $obsolescence_date_metadata = $this->getMetadataByName(
+            $get_embedded_file_response->json()['metadata'],
+            'Obsolescence Date'
+        );
+
+        $obsolescence_date_string = $obsolescence_date_metadata['value'];
+        $obsolescence_date        = \DateTimeImmutable::createFromFormat(
+            \DateTimeInterface::ISO8601,
+            $obsolescence_date_string
+        );
+        $obsolescence_date        = $obsolescence_date->setTimezone(new DateTimeZone('GMT+1'));
+        $obsolescence_date        = $obsolescence_date->setTime(0, 0, 0, 0);
+
+        $this->assertTrue($date->modify('+1 day')->getTimestamp() === $obsolescence_date->getTimestamp());
+        $this->assertEquals('content 1', $get_embedded_file_response->json()['embedded_file_properties']['content']);
+    }
+
+    /**
      * Find first item in given array of items which has given title.
      *
      * @return array|null Found item. null otherwise.

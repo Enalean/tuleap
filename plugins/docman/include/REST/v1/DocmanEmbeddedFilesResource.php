@@ -25,9 +25,11 @@ namespace Tuleap\Docman\REST\v1;
 use Docman_FileStorage;
 use Docman_LockFactory;
 use Docman_PermissionsManager;
+use Docman_SettingsBo;
 use Docman_VersionFactory;
 use Luracast\Restler\RestException;
 use PluginManager;
+use Project;
 use ProjectManager;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
@@ -38,6 +40,10 @@ use Tuleap\Docman\ApprovalTable\Exceptions\ItemHasNoApprovalTableButHasApprovalA
 use Tuleap\Docman\Lock\LockChecker;
 use Tuleap\Docman\REST\v1\EmbeddedFiles\DocmanEmbeddedFilesPATCHRepresentation;
 use Tuleap\Docman\REST\v1\EmbeddedFiles\DocmanEmbeddedFileUpdator;
+use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataObsolescenceDateRetriever;
+use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataUsageChecker;
+use Tuleap\Docman\REST\v1\Metadata\HardcodedMetdataObsolescenceDateChecker;
+use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
@@ -143,24 +149,18 @@ class DocmanEmbeddedFilesResource extends AuthenticatedResource
         $builder             = new DocmanItemUpdatorBuilder();
         $docman_item_updator = $builder->build($this->event_manager);
 
-        $docman_plugin       = PluginManager::instance()->getPluginByName('docman');
-        $docman_root         = $docman_plugin->getPluginInfo()->getPropertyValueForName('docman_root');
-        $version_factory     = new Docman_VersionFactory();
-        $docman_item_updator = new DocmanEmbeddedFileUpdator(
-            new Docman_FileStorage($docman_root),
-            $version_factory,
-            new LockChecker(new Docman_LockFactory()),
-            $docman_item_updator,
-            new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
-        );
+        $docman_plugin = PluginManager::instance()->getPluginByName('docman');
+        $docman_root   = $docman_plugin->getPluginInfo()->getPropertyValueForName('docman_root');
+        $updator       = $this->getEmbeddedFileUpdator($docman_root, $docman_item_updator, $project);
 
         try {
             $approval_check = new ApprovalTableUpdateActionChecker($docman_approval_table_retriever);
             $approval_check->checkApprovalTableForItem($representation->approval_table_action, $item);
-            $docman_item_updator->updateEmbeddedFile(
+            $updator->updateEmbeddedFile(
                 $item,
                 $current_user,
-                $representation
+                $representation,
+                new \DateTimeImmutable()
             );
         } catch (ExceptionItemIsLockedByAnotherUser $exception) {
             throw new I18NRestException(
@@ -176,6 +176,67 @@ class DocmanEmbeddedFilesResource extends AuthenticatedResource
             throw new I18NRestException(
                 400,
                 $exception->getMessage()
+            );
+        } catch (Metadata\ItemStatusUsageMismatchException $e) {
+            throw new I18NRestException(
+                400,
+                dgettext(
+                    'tuleap-docman',
+                    'The "Status" property is not activated for this item.'
+                )
+            );
+        } catch (Metadata\InvalidDateComparisonException $e) {
+            throw new I18NRestException(
+                400,
+                dgettext(
+                    'tuleap-docman',
+                    'The obsolescence date is before the current date'
+                )
+            );
+        } catch (Metadata\InvalidDateTimeFormatException $e) {
+            throw new I18NRestException(
+                400,
+                dgettext(
+                    'tuleap-docman',
+                    'The date format is incorrect. The format must be "YYYY-MM-DD"'
+                )
+            );
+        } catch (Metadata\ObsolescenceDateDisabledException $e) {
+            throw new I18NRestException(
+                400,
+                dgettext(
+                    'tuleap-docman',
+                    'The project does not support obsolescence date, you should not provide it to create a new document.'
+                )
+            );
+        } catch (Metadata\ObsolescenceDateMissingParameterException $e) {
+            throw new I18NRestException(
+                400,
+                dgettext(
+                    'tuleap-docman',
+                    '"obsolescence_date" parameter is required to create a new document.'
+                )
+            );
+        } catch (Metadata\ObsolescenceDateNullException $e) {
+            throw new I18NRestException(
+                400,
+                dgettext(
+                    'tuleap-docman',
+                    'The date cannot be null'
+                )
+            );
+        } catch (Metadata\StatusNotFoundBadStatusGivenException $e) {
+            throw new I18NRestException(
+                400,
+                sprintf(
+                    dgettext('tuleap-docman', 'The status "%s" is invalid.'),
+                    $representation->status
+                )
+            );
+        } catch (Metadata\StatusNotFoundNullException $e) {
+            throw new I18NRestException(
+                400,
+                dgettext('tuleap-docman', 'null is not a valid status.')
             );
         }
     }
@@ -233,5 +294,35 @@ class DocmanEmbeddedFilesResource extends AuthenticatedResource
     private function setHeaders(): void
     {
         Header::allowOptionsPatchDelete();
+    }
+
+
+    private function getEmbeddedFileUpdator(
+        string $docman_root,
+        DocmanItemUpdator $docman_item_updator,
+        Project $project
+    ): DocmanEmbeddedFileUpdator {
+        $version_factory                              = new Docman_VersionFactory();
+        $docman_setting_bo                            = new Docman_SettingsBo($project->getGroupId());
+        $hardcoded_metadata_status_checker            = new HardcodedMetadataUsageChecker($docman_setting_bo);
+        $hardcoded_metadata_obsolescence_date_checker = new HardcodedMetdataObsolescenceDateChecker(
+            $docman_setting_bo
+        );
+
+        $docman_item_updator = new DocmanEmbeddedFileUpdator(
+            new Docman_FileStorage($docman_root),
+            $version_factory,
+            new \Docman_ItemFactory(),
+            new LockChecker(new Docman_LockFactory()),
+            $docman_item_updator,
+            new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
+            new ItemStatusMapper(),
+            $hardcoded_metadata_status_checker,
+            $hardcoded_metadata_obsolescence_date_checker,
+            new HardcodedMetadataObsolescenceDateRetriever(
+                $hardcoded_metadata_obsolescence_date_checker
+            )
+        );
+        return $docman_item_updator;
     }
 }

@@ -27,6 +27,10 @@ use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Docman\Lock\LockChecker;
 use Tuleap\Docman\REST\v1\DocmanItemUpdator;
 use Tuleap\Docman\REST\v1\ExceptionItemIsLockedByAnotherUser;
+use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataObsolescenceDateRetriever;
+use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataUsageChecker;
+use Tuleap\Docman\REST\v1\Metadata\HardcodedMetdataObsolescenceDateChecker;
+use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
 
 class DocmanEmbeddedFileUpdator
 {
@@ -50,33 +54,76 @@ class DocmanEmbeddedFileUpdator
      * @var DBTransactionExecutor
      */
     private $transaction_executor;
+    /**
+     * @var ItemStatusMapper
+     */
+    private $status_mapper;
+    /**
+     * @var HardcodedMetadataUsageChecker
+     */
+    private $metadata_usage_checker;
+    /**
+     * @var HardcodedMetdataObsolescenceDateChecker
+     */
+    private $obsolescence_date_checker;
+    /**
+     * @var HardcodedMetadataObsolescenceDateRetriever
+     */
+    private $date_retriever;
+    /**
+     * @var \Docman_ItemFactory
+     */
+    private $item_factory;
 
     public function __construct(
         Docman_FileStorage $file_storage,
         \Docman_VersionFactory $version_factory,
+        \Docman_ItemFactory $item_factory,
         LockChecker $lock_checker,
         DocmanItemUpdator $updator,
-        DBTransactionExecutor $transaction_executor
+        DBTransactionExecutor $transaction_executor,
+        ItemStatusMapper $status_mapper,
+        HardcodedMetadataUsageChecker $metadata_usage_checker,
+        HardcodedMetdataObsolescenceDateChecker $obsolescence_date_checker,
+        HardcodedMetadataObsolescenceDateRetriever $date_retriever
     ) {
-        $this->file_storage            = $file_storage;
-        $this->version_factory         = $version_factory;
-        $this->lock_checker            = $lock_checker;
-        $this->updator                 = $updator;
-        $this->transaction_executor = $transaction_executor;
+        $this->file_storage              = $file_storage;
+        $this->version_factory           = $version_factory;
+        $this->lock_checker              = $lock_checker;
+        $this->updator                   = $updator;
+        $this->transaction_executor      = $transaction_executor;
+        $this->status_mapper             = $status_mapper;
+        $this->metadata_usage_checker    = $metadata_usage_checker;
+        $this->obsolescence_date_checker = $obsolescence_date_checker;
+        $this->date_retriever            = $date_retriever;
+        $this->item_factory              = $item_factory;
     }
 
     /**
      * @throws ExceptionItemIsLockedByAnotherUser
+     * @throws \Tuleap\Docman\REST\v1\Metadata\InvalidDateComparisonException
+     * @throws \Tuleap\Docman\REST\v1\Metadata\InvalidDateTimeFormatException
+     * @throws \Tuleap\Docman\REST\v1\Metadata\ItemStatusUsageMismatchException
+     * @throws \Tuleap\Docman\REST\v1\Metadata\ObsolescenceDateDisabledException
+     * @throws \Tuleap\Docman\REST\v1\Metadata\ObsolescenceDateMissingParameterException
+     * @throws \Tuleap\Docman\REST\v1\Metadata\ObsolescenceDateNullException
+     * @throws \Tuleap\Docman\REST\v1\Metadata\StatusNotFoundBadStatusGivenException
+     * @throws \Tuleap\Docman\REST\v1\Metadata\StatusNotFoundNullException
      */
     public function updateEmbeddedFile(
         \Docman_File $item,
         \PFUser $current_user,
-        DocmanEmbeddedFilesPATCHRepresentation $representation
+        DocmanEmbeddedFilesPATCHRepresentation $representation,
+        \DateTimeImmutable $current_time
     ): void {
         $this->lock_checker->checkItemIsLocked($item, $current_user);
 
+        $status_id = $this->getItemStatusId($representation);
+
+        $obsolescence_date_time_stamp = $this->getObsolescenceDateTimestamp($representation, $current_time);
+
         $this->transaction_executor->execute(
-            function () use ($item, $current_user, $representation) {
+            function () use ($item, $current_user, $representation, $status_id, $obsolescence_date_time_stamp, $current_time) {
                 $next_version_id = (int)$this->version_factory->getNextVersionNumber($item);
 
                 $created_file_path = $this->file_storage->store(
@@ -86,15 +133,13 @@ class DocmanEmbeddedFileUpdator
                     $next_version_id
                 );
 
-                $date = new \DateTimeImmutable();
-
                 $new_embedded_version_row = [
                     'item_id'   => $item->getId(),
                     'number'    => $next_version_id,
                     'user_id'   => $current_user->getId(),
                     'label'     => $representation->version_title,
                     'changelog' => $representation->change_log,
-                    'date'      => $date->getTimestamp(),
+                    'date'      => $current_time->getTimestamp(),
                     'filename'  => basename($created_file_path),
                     'filesize'  => filesize($created_file_path),
                     'filetype'  => 'text/html',
@@ -102,6 +147,16 @@ class DocmanEmbeddedFileUpdator
                 ];
 
                 $this->version_factory->create($new_embedded_version_row);
+
+                $new_embedded_hardcoded_metadata_row = [
+                    'id'                => $item->getId(),
+                    'title'             => $representation->title,
+                    'description'       => $representation->description,
+                    'status'            => $status_id,
+                    'obsolescence_date' => $obsolescence_date_time_stamp
+                ];
+
+                $this->item_factory->update($new_embedded_hardcoded_metadata_row);
 
                 $this->updator->updateCommonData(
                     $item,
@@ -112,5 +167,55 @@ class DocmanEmbeddedFileUpdator
                 );
             }
         );
+    }
+
+    /**
+     * @param DocmanEmbeddedFilesPATCHRepresentation $representation
+     *
+     * @return int
+     * @throws \Tuleap\Docman\REST\v1\Metadata\ItemStatusUsageMismatchException
+     * @throws \Tuleap\Docman\REST\v1\Metadata\StatusNotFoundBadStatusGivenException
+     * @throws \Tuleap\Docman\REST\v1\Metadata\StatusNotFoundNullException
+     */
+    private function getItemStatusId(DocmanEmbeddedFilesPATCHRepresentation $representation): int
+    {
+        $this->metadata_usage_checker->checkStatusIsNotSetWhenStatusMetadataIsNotAllowed(
+            $representation->status
+        );
+        $status_id = $this->status_mapper->getItemStatusIdFromItemStatusString(
+            $representation->status
+        );
+        return $status_id;
+    }
+
+    /**
+     * @param DocmanEmbeddedFilesPATCHRepresentation $representation
+     * @param \DateTimeImmutable                     $current_time
+     *
+     * @return int
+     * @throws \Tuleap\Docman\REST\v1\Metadata\InvalidDateComparisonException
+     * @throws \Tuleap\Docman\REST\v1\Metadata\InvalidDateTimeFormatException
+     * @throws \Tuleap\Docman\REST\v1\Metadata\ObsolescenceDateDisabledException
+     * @throws \Tuleap\Docman\REST\v1\Metadata\ObsolescenceDateMissingParameterException
+     * @throws \Tuleap\Docman\REST\v1\Metadata\ObsolescenceDateNullException
+     */
+    private function getObsolescenceDateTimestamp(
+        DocmanEmbeddedFilesPATCHRepresentation $representation,
+        \DateTimeImmutable $current_time
+    ): int {
+        $this->obsolescence_date_checker->checkObsolescenceDateUsage(
+            $representation->obsolescence_date,
+            PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE
+        );
+        $obsolescence_date_time_stamp = $this->date_retriever->getTimeStampOfDate(
+            $representation->obsolescence_date,
+            PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE
+        );
+        $this->obsolescence_date_checker->checkDateValidity(
+            $current_time->getTimestamp(),
+            $obsolescence_date_time_stamp,
+            PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE
+        );
+        return $obsolescence_date_time_stamp;
     }
 }
