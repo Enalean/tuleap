@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,17 +18,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\DB\DBFactory;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
 use Tuleap\Project\Admin\Navigation\NavigationItemPresenter;
 use Tuleap\Project\Admin\Navigation\NavigationPresenter;
 use Tuleap\Project\Admin\ProjectUGroup\ApproveProjectAdministratorRemoval;
+use Tuleap\Project\Admin\ProjectUGroup\ProjectImportCleanupUserCreatorFromAdministrators;
 use Tuleap\Project\Admin\ProjectUGroup\ProjectUGroupMemberUpdatable;
 use Tuleap\ProjectOwnership\ProjectAdmin\CannotRemoveProjectOwnerFromTheProjectAdministratorsException;
 use Tuleap\ProjectOwnership\ProjectAdmin\IndexController;
 use Tuleap\ProjectOwnership\ProjectAdmin\ProjectOwnerPresenterBuilder;
 use Tuleap\ProjectOwnership\ProjectOwner\ProjectOwnerDAO;
 use Tuleap\ProjectOwnership\ProjectOwner\ProjectOwnerRetriever;
+use Tuleap\ProjectOwnership\ProjectOwner\ProjectOwnerUpdater;
 use Tuleap\ProjectOwnership\ProjectOwner\UserWithStarBadgeFinder;
+use Tuleap\ProjectOwnership\ProjectOwner\XMLProjectImportUserCreatorProjectOwnerCleaner;
 use Tuleap\ProjectOwnership\REST\ProjectOwnershipResource;
 use Tuleap\ProjectOwnership\SystemEvents\ProjectOwnershipSystemEventManager;
 use Tuleap\ProjectOwnership\SystemEvents\ProjectOwnerStatusNotificationSystemEvent;
@@ -64,6 +69,7 @@ class project_ownershipPlugin extends Plugin // phpcs:ignore
         $this->addHook(CollectRoutesEvent::NAME);
         $this->addHook(ProjectUGroupMemberUpdatable::NAME);
         $this->addHook(ApproveProjectAdministratorRemoval::NAME);
+        $this->addHook(ProjectImportCleanupUserCreatorFromAdministrators::NAME);
         $this->addHook(UserWithStarBadgeCollector::NAME);
         $this->addHook('project_is_suspended');
         $this->addHook('project_is_active');
@@ -173,6 +179,19 @@ class project_ownershipPlugin extends Plugin // phpcs:ignore
                 $project_owner
             );
         }
+    }
+
+    public function projectImportCleanupUserCreatorFromAdministrators(
+        ProjectImportCleanupUserCreatorFromAdministrators $cleanup_user_creator_from_administrators
+    ) : void {
+        $xml_project_user_creator_project_owner_updater = new XMLProjectImportUserCreatorProjectOwnerCleaner(
+            new ProjectOwnerUpdater(
+                new ProjectOwnerDAO(),
+                new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
+            )
+        );
+
+        $xml_project_user_creator_project_owner_updater->updateProjectOwnership($cleanup_user_creator_from_administrators);
     }
 
     public function userWithStarBadgeCollector(UserWithStarBadgeCollector $collector)

@@ -73,7 +73,8 @@ class UGroup_AddUserTest extends TuleapTestCase {
         $ugroup->addUser($this->user);
     }
     
-    function itAddUserIntoDynamicGroup() {
+    public function itAddsUserIntoDynamicGroup() : void
+    {
         $ugroup_id = $GLOBALS['UGROUP_WIKI_ADMIN'];
         $group_id  = 300;
 
@@ -83,16 +84,11 @@ class UGroup_AddUserTest extends TuleapTestCase {
         $project_manager->shouldReceive('getProject')->with($group_id)->andReturn($project);
         $project->shouldReceive('getAccess')->andReturn(Project::ACCESS_PUBLIC);
 
-        $ugroup = TestHelper::getPartialMock('ProjectUGroup', array('getUserGroupDao'));
+        $ugroup = Mockery::mock(ProjectUGroup::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $ugroup->shouldReceive('addUserToDynamicGroup')->with($this->user)->once();
         
-        $dao = mock('UserGroupDao');
-        stub($ugroup)->getUserGroupDao()->returns($dao);
-        
-        $ugroup->__construct(array('ugroup_id' => $ugroup_id, 'group_id' => $group_id));
-        
-        
-        $dao->expectOnce('updateUserGroupFlags', array($this->user_id, $group_id, 'wiki_flags = 2'));
-        
+        $ugroup->__construct(['ugroup_id' => $ugroup_id, 'group_id' => $group_id]);
+
         $ugroup->addUser($this->user);
     }
     
@@ -164,37 +160,15 @@ class UGroup_RemoveUserTest extends TuleapTestCase {
         $ugroup->removeUser($this->user);
     }
     
-    function itRemoveUserFromDynamicGroup() {
+    public function itRemovesUserFromDynamicGroup() : void
+    {
         $ugroup_id = $GLOBALS['UGROUP_WIKI_ADMIN'];
         $group_id  = 300;
         
-        $ugroup = TestHelper::getPartialMock('ProjectUGroup', array('getUserGroupDao'));
+        $ugroup = Mockery::mock(ProjectUGroup::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $ugroup->shouldReceive('removeUserFromDynamicGroup')->with($this->user)->once();
         
-        $dao = mock('UserGroupDao');
-        stub($ugroup)->getUserGroupDao()->returns($dao);
-        
-        $ugroup->__construct(array('ugroup_id' => $ugroup_id, 'group_id' => $group_id));
-        
-        $dao->expectOnce('updateUserGroupFlags', array($this->user_id, $group_id, 'wiki_flags = 0'));
-        
-        $ugroup->removeUser($this->user);
-    }
-    
-    function itIsNotPossibleToRemoveAllAdminsOfAProject() {
-        $ugroup_id = $GLOBALS['UGROUP_PROJECT_ADMIN'];
-        $group_id  = 300;
-        
-        $ugroup = TestHelper::getPartialMock('ProjectUGroup', array('getUserGroupDao'));
-        
-        $project_admin_dar = TestHelper::emptyDar();
-
-        $dao = stub('UserGroupDao')->searchProjectAdminsByProjectIdExcludingOneUserId()->returns($project_admin_dar);
-        stub($ugroup)->getUserGroupDao()->returns($dao);
-        
-        $ugroup->__construct(array('ugroup_id' => $ugroup_id, 'group_id' => $group_id));
-        
-        $dao->expectNever('updateUserGroupFlags');
-        $this->expectException();
+        $ugroup->__construct(['ugroup_id' => $ugroup_id, 'group_id' => $group_id]);
         
         $ugroup->removeUser($this->user);
     }
@@ -321,27 +295,6 @@ class UGroup_getMembersTest extends UGroup_getUsersBaseTest {
         
         $this->assertArrayNotEmpty($ugroup->getMembersUserName());
         $this->assertArrayNotEmpty($ugroup->getMembersUserName(), array('garfiel', $this->goofy_incomplete_row));
-    }
-}
-
-class UGroup_DynamicGroupTest extends TuleapTestCase {
-    
-    function itConvertDynamicGroupIdToCorrespondingDatabaseFieldUpdateForAdd() {
-        $this->assertEqual(ProjectUGroup::getAddFlagForUGroupId($GLOBALS['UGROUP_PROJECT_ADMIN']),      "admin_flags = 'A'");
-        $this->assertEqual(ProjectUGroup::getAddFlagForUGroupId($GLOBALS['UGROUP_WIKI_ADMIN']),         'wiki_flags = 2');
-        $this->assertEqual(ProjectUGroup::getAddFlagForUGroupId(ProjectUGroup::FORUM_ADMIN),                   "forum_flags = 2");
-        $this->assertEqual(ProjectUGroup::getAddFlagForUGroupId(ProjectUGroup::SVN_ADMIN),                     "svn_flags = 2");
-        $this->assertEqual(ProjectUGroup::getAddFlagForUGroupId(ProjectUGroup::NEWS_ADMIN),                    "news_flags = 2");
-        $this->assertEqual(ProjectUGroup::getAddFlagForUGroupId(ProjectUGroup::NEWS_WRITER), "news_flags = 1");
-    }
-    
-    function itConvertDynamicGroupIdToCorrespondingDatabaseFieldUpdateForRemove() {
-        $this->assertEqual(ProjectUGroup::getRemoveFlagForUGroupId($GLOBALS['UGROUP_PROJECT_ADMIN']),      "admin_flags = ''");
-        $this->assertEqual(ProjectUGroup::getRemoveFlagForUGroupId($GLOBALS['UGROUP_WIKI_ADMIN']),         'wiki_flags = 0');
-        $this->assertEqual(ProjectUGroup::getRemoveFlagForUGroupId(ProjectUGroup::FORUM_ADMIN),                   "forum_flags = 0");
-        $this->assertEqual(ProjectUGroup::getRemoveFlagForUGroupId(ProjectUGroup::SVN_ADMIN),                     "svn_flags = 0");
-        $this->assertEqual(ProjectUGroup::getRemoveFlagForUGroupId(ProjectUGroup::NEWS_ADMIN),                    "news_flags = 0");
-        $this->assertEqual(ProjectUGroup::getRemoveFlagForUGroupId(ProjectUGroup::NEWS_WRITER), "news_flags = 0");
     }
 }
 
