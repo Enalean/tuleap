@@ -1,28 +1,28 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 
-require_once('Docman_Validator.class.php');
-
 class Docman_ValidateUpload extends Docman_Validator {
-    function __construct(&$request) {
+    public function __construct(Codendi_Request $request)
+    {
         if (!$request->exist('upload_content')) {
             $ok = false;
             if (isset($_FILES['file'])) {
@@ -54,11 +54,18 @@ class Docman_ValidateUpload extends Docman_Validator {
                         $this->addError($GLOBALS['Language']->getText('plugin_docman', 'error_upload_unknown', $_FILES['file']['error']));
                 }
             }
+            if ($ok && isset($_FILES['file']['size']) && (int) $_FILES['file']['size'] >= (int) ForgeConfig::get(PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING)) {
+                $ok = false;
+                $this->addError($GLOBALS['Language']->getText(
+                        'plugin_docman',
+                        'error_upload_size',
+                        $_FILES['file']['name'] ?? ''
+                    )
+                );
+            }
             if (!isset($_FILES['file']) || ($ok && $_FILES['file']['name'] == '')) {
                 $this->addError($GLOBALS['Language']->getText('plugin_docman', 'error_upload'));
             }
         }
     }
 }
-
-?>
