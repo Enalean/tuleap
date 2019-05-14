@@ -127,6 +127,10 @@ class AttachmentControllerTest extends TestCase
             ->andReturn(42);
         $server_request
             ->shouldReceive('getAttribute')
+            ->with('preview')
+            ->andReturn(null);
+        $server_request
+            ->shouldReceive('getAttribute')
             ->with('filename')
             ->andReturn('Readme.mkd');
         $server_request
@@ -153,6 +157,76 @@ class AttachmentControllerTest extends TestCase
         $path = vfsStream::setup()->url() . '/file';
         $this->path_allocator->shouldReceive(['getPathForItemBeingUploaded' => $path]);
         file_put_contents($path, $file_data);
+
+        $this->form_element_factory->shouldReceive(
+            [
+                'getUsedFormElementFieldById' => $this->field,
+                'isFieldAFileField'           => true
+            ]
+        );
+
+        $this->field->shouldReceive(
+            [
+                'getTracker'  => $this->tracker,
+                'userCanRead' => true
+            ]
+        );
+
+        $this->tracker->shouldReceive(['getProject' => $this->project]);
+
+        $this->project->shouldReceive(['isError' => false]);
+
+        $this->url_verification->shouldReceive('userCanAccessProject');
+
+        $response = $this->controller->handle($server_request);
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals($file_data, $response->getBody()->getContents());
+    }
+
+    public function testPreviewCanBeDownloaded(): void
+    {
+        $file_data = 'ABCDE';
+
+        $server_request = Mockery::mock(ServerRequestInterface::class);
+        $server_request
+            ->shouldReceive('getAttribute')
+            ->with('id')
+            ->andReturn(42);
+        $server_request
+            ->shouldReceive('getAttribute')
+            ->with('preview')
+            ->andReturn(true);
+        $server_request
+            ->shouldReceive('getAttribute')
+            ->with('filename')
+            ->andReturn('toto.png');
+        $server_request
+            ->shouldReceive('getAttribute')
+            ->with(RESTCurrentUserMiddleware::class)
+            ->andReturn($this->current_user);
+        $server_request
+            ->shouldReceive('getHeaderLine')
+            ->with('Range')
+            ->andReturn('');
+
+        $row = [
+            'field_id' => 1001,
+            'filesize' => 5,
+            'filename' => 'toto.png'
+        ];
+        $this->ongoing_upload_dao->shouldReceive(
+            [
+                'searchFileOngoingUploadByIDUserIDAndExpirationDate' => $row,
+                'searchFileOngoingUploadById'                        => $row
+            ]
+        );
+
+        $path = vfsStream::setup()->url() . '/file';
+        $this->path_allocator->shouldReceive(['getPathForItemBeingUploaded' => $path . '/42']);
+        mkdir($path . '/thumbnails', 0777, true);
+        file_put_contents($path . '/42', $file_data);
+        file_put_contents($path . '/thumbnails/42', $file_data);
 
         $this->form_element_factory->shouldReceive(
             [
@@ -578,6 +652,72 @@ class AttachmentControllerTest extends TestCase
             [
                 'getTracker'  => $this->tracker,
                 'userCanRead' => false
+            ]
+        );
+
+        $this->tracker->shouldReceive(['getProject' => $this->project]);
+
+        $this->project->shouldReceive(['isError' => false]);
+
+        $this->url_verification->shouldReceive('userCanAccessProject');
+
+        $this->expectException(NotFoundException::class);
+        $this->controller->handle($server_request);
+    }
+    public function testRequestIsRejectedIfFileDoesNotHavePreview(): void
+    {
+        $file_data = 'ABCDE';
+
+        $server_request = Mockery::mock(ServerRequestInterface::class);
+        $server_request
+            ->shouldReceive('getAttribute')
+            ->with('id')
+            ->andReturn(42);
+        $server_request
+            ->shouldReceive('getAttribute')
+            ->with('preview')
+            ->andReturn(true);
+        $server_request
+            ->shouldReceive('getAttribute')
+            ->with('filename')
+            ->andReturn('readme.mkd');
+        $server_request
+            ->shouldReceive('getAttribute')
+            ->with(RESTCurrentUserMiddleware::class)
+            ->andReturn($this->current_user);
+        $server_request
+            ->shouldReceive('getHeaderLine')
+            ->with('Range')
+            ->andReturn('');
+
+        $row = [
+            'field_id' => 1001,
+            'filesize' => 5,
+            'filename' => 'readme.mkd'
+        ];
+        $this->ongoing_upload_dao->shouldReceive(
+            [
+                'searchFileOngoingUploadByIDUserIDAndExpirationDate' => $row,
+                'searchFileOngoingUploadById'                        => $row
+            ]
+        );
+
+        $path = vfsStream::setup()->url() . '/file';
+        $this->path_allocator->shouldReceive(['getPathForItemBeingUploaded' => $path . '/42']);
+        mkdir($path . '/thumbnails', 0777, true);
+        file_put_contents($path . '/42', $file_data);
+
+        $this->form_element_factory->shouldReceive(
+            [
+                'getUsedFormElementFieldById' => $this->field,
+                'isFieldAFileField'           => true
+            ]
+        );
+
+        $this->field->shouldReceive(
+            [
+                'getTracker'  => $this->tracker,
+                'userCanRead' => true
             ]
         );
 

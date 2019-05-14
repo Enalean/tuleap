@@ -135,9 +135,18 @@ class AttachmentController extends DispatchablePSR15Compatible implements Dispat
             throw new NotFoundException(_('The file cannot be found'));
         }
 
+        $path = $this->path_allocator->getPathForItemBeingUploaded($file_information);
+        if ($request->getAttribute('preview') !== null) {
+            $path = dirname($path) . '/thumbnails/' . basename($path);
+        }
+
+        if (! is_file($path)) {
+            throw new NotFoundException(_('The file cannot be found'));
+        }
+
         return $this->response_builder->fromFilePath(
             $request,
-            $this->path_allocator->getPathForItemBeingUploaded($file_information),
+            $path,
             $file_information->getName()
         );
     }

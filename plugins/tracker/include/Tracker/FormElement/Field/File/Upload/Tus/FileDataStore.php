@@ -49,32 +49,38 @@ final class FileDataStore implements TusDataStore
      * @var FileUploadCanceler
      */
     private $file_upload_canceler;
+    /**
+     * @var FileUploadFinisher
+     */
+    private $file_upload_finisher;
 
     public function __construct(
         FileBeingUploadedInformationProvider $file_being_uploaded_information_provider,
         FileBeingUploadedWriter $file_being_uploaded_writer,
         FileBeingUploadedLocker $file_being_uploaded_locker,
+        FileUploadFinisher $file_upload_finisher,
         FileUploadCanceler $file_upload_canceler
     ) {
         $this->file_being_uploaded_information_provider = $file_being_uploaded_information_provider;
-        $this->file_being_uploaded_writer           = $file_being_uploaded_writer;
-        $this->file_being_uploaded_locker           = $file_being_uploaded_locker;
-        $this->file_upload_canceler                 = $file_upload_canceler;
+        $this->file_being_uploaded_writer               = $file_being_uploaded_writer;
+        $this->file_being_uploaded_locker               = $file_being_uploaded_locker;
+        $this->file_upload_finisher                     = $file_upload_finisher;
+        $this->file_upload_canceler                     = $file_upload_canceler;
     }
 
-    public function getFileInformationProvider() : TusFileInformationProvider
+    public function getFileInformationProvider(): TusFileInformationProvider
     {
         return $this->file_being_uploaded_information_provider;
     }
 
-    public function getWriter() : TusWriter
+    public function getWriter(): TusWriter
     {
         return $this->file_being_uploaded_writer;
     }
 
-    public function getFinisher() : ?TusFinisherDataStore
+    public function getFinisher(): ?TusFinisherDataStore
     {
-        return null;
+        return $this->file_upload_finisher;
     }
 
     public function getTerminater(): ?TusTerminaterDataStore
@@ -82,7 +88,7 @@ final class FileDataStore implements TusDataStore
         return $this->file_upload_canceler;
     }
 
-    public function getLocker() : ?TusLocker
+    public function getLocker(): ?TusLocker
     {
         return $this->file_being_uploaded_locker;
     }

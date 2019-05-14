@@ -1590,11 +1590,10 @@ class trackerPlugin extends Plugin {
         $deletions_remover = new ArtifactsDeletionRemover(new ArtifactsDeletionDAO());
         $deletions_remover->deleteOutdatedArtifactsDeletions();
 
-        $dao     = new FileOngoingUploadDao();
         $cleaner = new FileUploadCleaner(
             $logger,
-            new UploadPathAllocator($dao, Tracker_FormElementFactory::instance()),
-            $dao,
+            new FileOngoingUploadDao(),
+            Tracker_FormElementFactory::instance(),
             new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
         );
         $cleaner->deleteDanglingFilesToUpload(new \DateTimeImmutable());
@@ -1827,6 +1826,7 @@ class trackerPlugin extends Plugin {
             $r->post('/workflow/{tracker_id:\d+}/legacy_transitions', $this->getRouteHandler('routePostWorkflowLegacyTransitions'));
 
             $r->get('/attachments/{id:\d+}-{filename}', $this->getRouteHandler('routeAttachments'));
+            $r->get('/attachments/{preview:preview}/{id:\d+}-{filename}', $this->getRouteHandler('routeAttachments'));
         });
 
         $event->getRouteCollector()->addRoute(
@@ -1840,9 +1840,10 @@ class trackerPlugin extends Plugin {
     {
         $file_ongoing_upload_dao = new FileOngoingUploadDao();
         $db_connection           = DBFactory::getMainTuleapDBConnection();
+        $formelement_factory     = Tracker_FormElementFactory::instance();
         $path_allocator          = new UploadPathAllocator(
             $file_ongoing_upload_dao,
-            Tracker_FormElementFactory::instance()
+            $formelement_factory
         );
 
         return FileUploadController::build(
@@ -1850,6 +1851,7 @@ class trackerPlugin extends Plugin {
                 new FileBeingUploadedInformationProvider($path_allocator, $file_ongoing_upload_dao),
                 new FileBeingUploadedWriter($path_allocator, $db_connection),
                 new FileBeingUploadedLocker($path_allocator),
+                new FileUploadFinisher($file_ongoing_upload_dao, $formelement_factory),
                 new FileUploadCanceler($path_allocator, $file_ongoing_upload_dao)
             )
         );
