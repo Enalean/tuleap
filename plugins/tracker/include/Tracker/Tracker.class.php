@@ -61,6 +61,7 @@ use Tuleap\Tracker\Webhook\WebhookXMLExporter;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
+use Tuleap\Tracker\Workflow\SimpleMode\SimpleWorkflowXMLExporter;
 use Tuleap\Tracker\Workflow\SimpleMode\TransitionRetriever;
 use Tuleap\Tracker\Workflow\WorkflowUpdateChecker;
 use Tuleap\Tracker\XML\Updater\FieldChange\FieldChangeComputedXMLUpdater;
@@ -2666,10 +2667,17 @@ EOS;
         }
 
         // workflow
-        $child = $xmlElem->addChild('workflow');
         $workflow = $this->getWorkflowFactory()->getWorkflowByTrackerId($this->id);
-        if(!empty($workflow)) {
-            $workflow->exportToXML($child, $xmlMapping);
+        if (! empty($workflow)) {
+            if (! $workflow->isAdvanced() && ForgeConfig::get('sys_tracker_export_simple_workflows')) {
+                $child    = $xmlElem->addChild('simple_workflow');
+                $exporter = new SimpleWorkflowXMLExporter();
+                $exporter->exportToXML($workflow, $child, $xmlMapping);
+            } else {
+                $child = $xmlElem->addChild('workflow');
+                $workflow->exportToXML($child, $xmlMapping);
+            }
+
         }
 
         $webhook_xml_exporter = $this->getWebhookXMLExporter();
