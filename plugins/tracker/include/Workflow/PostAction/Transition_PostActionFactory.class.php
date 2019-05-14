@@ -196,8 +196,11 @@ class Transition_PostActionFactory //phpcs:ignoreFile
 
     private function getFrozenFieldsFactory(): FrozenFieldsFactory
     {
-        if (!$this->frozen_fields_factory) {
-            $this->frozen_fields_factory = new FrozenFieldsFactory(new FrozenFieldsDao());
+        if (! $this->frozen_fields_factory) {
+            $this->frozen_fields_factory = new FrozenFieldsFactory(
+                new FrozenFieldsDao(),
+                Tracker_FormElementFactory::instance()
+            );
         }
         return $this->frozen_fields_factory;
     }

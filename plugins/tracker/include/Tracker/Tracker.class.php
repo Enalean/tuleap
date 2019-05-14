@@ -3781,7 +3781,10 @@ EOS;
     {
         $frozen_field_detector = new FrozenFieldDetector(
             new TransitionRetriever(new \Workflow_TransitionDao(), \TransitionFactory::instance()),
-            new FrozenFieldsRetriever(new FrozenFieldsDao())
+            new FrozenFieldsRetriever(
+                new FrozenFieldsDao(),
+                $this->getFormElementFactory()
+            )
         );
         $workflow_update_checker = new WorkflowUpdateChecker($frozen_field_detector);
         return new Tracker_Artifact_Changeset_NewChangesetFieldsValidator(

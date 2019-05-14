@@ -2035,7 +2035,10 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     {
         $frozen_field_detector = new FrozenFieldDetector(
             new TransitionRetriever(new \Workflow_TransitionDao(), \TransitionFactory::instance()),
-            new FrozenFieldsRetriever(new FrozenFieldsDao())
+            new FrozenFieldsRetriever(
+                new FrozenFieldsDao(),
+                $this->getFormElementFactory()
+            )
         );
         return new WorkflowUpdateChecker($frozen_field_detector);
     }

@@ -1450,11 +1450,14 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     /**
      * @return FrozenFieldDetector
      */
-    private function getFrozenFieldDetector()
+    protected function getFrozenFieldDetector()
     {
         return new FrozenFieldDetector(
             new TransitionRetriever(new \Workflow_TransitionDao(), \TransitionFactory::instance()),
-            new FrozenFieldsRetriever(new FrozenFieldsDao())
+            new FrozenFieldsRetriever(
+                new FrozenFieldsDao(),
+                $this->getFormElementFactory()
+            )
         );
     }
 }

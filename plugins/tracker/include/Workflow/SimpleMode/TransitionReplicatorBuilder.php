@@ -149,7 +149,10 @@ class TransitionReplicatorBuilder
                     new Transition_PostAction_Field_IntDao(),
                     new Transition_PostAction_Field_FloatDao()
                 ),
-                new FrozenFieldsRetriever(new FrozenFieldsDao())
+                new FrozenFieldsRetriever(
+                    new FrozenFieldsDao(),
+                    $form_element_factory
+                )
             ),
             $post_action_collection_updater,
             new PostActionsMapper()

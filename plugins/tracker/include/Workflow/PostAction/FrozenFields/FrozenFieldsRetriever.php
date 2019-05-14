@@ -27,9 +27,15 @@ class FrozenFieldsRetriever
     /** @var FrozenFieldsDao */
     private $frozen_dao;
 
-    public function __construct(FrozenFieldsDao $frozen_dao)
+    /**
+     * @var \Tracker_FormElementFactory
+     */
+    private $form_element_factory;
+
+    public function __construct(FrozenFieldsDao $frozen_dao, \Tracker_FormElementFactory $form_element_factory)
     {
-        $this->frozen_dao = $frozen_dao;
+        $this->frozen_dao           = $frozen_dao;
+        $this->form_element_factory = $form_element_factory;
     }
 
     /**
@@ -49,6 +55,15 @@ class FrozenFieldsRetriever
         if ($post_action_id === null) {
             throw new NoFrozenFieldsPostActionException();
         }
-        return new FrozenFields($transition, $post_action_id, $field_ids);
+
+        $fields = [];
+        foreach ($field_ids as $field_id) {
+            $field = $this->form_element_factory->getFieldById($field_id);
+            if ($field) {
+                $fields[] = $field;
+            }
+        }
+
+        return new FrozenFields($transition, $post_action_id, $fields);
     }
 }

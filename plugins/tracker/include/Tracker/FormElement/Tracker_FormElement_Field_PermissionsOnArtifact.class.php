@@ -915,15 +915,4 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
     {
         return false;
     }
-
-    /**
-     * @return FrozenFieldDetector
-     */
-    private function getFrozenFieldDetector()
-    {
-        return new FrozenFieldDetector(
-            new TransitionRetriever(new \Workflow_TransitionDao(), \TransitionFactory::instance()),
-            new FrozenFieldsRetriever(new FrozenFieldsDao())
-        );
-    }
 }
