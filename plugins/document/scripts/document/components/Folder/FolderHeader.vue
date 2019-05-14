@@ -37,6 +37,11 @@
             <file-upload-manager/>
             <search-box v-if="can_display_search_box"/>
         </div>
+        <confirm-deletion-modal
+            v-if="item_to_delete"
+            v-bind:item="item_to_delete"
+            v-on:delete-modal-closed="hideDeleteItemModal"
+        />
     </div>
 </template>
 
@@ -58,12 +63,16 @@ export default {
         NewFolderModal,
         SearchBox,
         NewItemModal,
-        FileUploadManager
+        FileUploadManager,
+        "confirm-deletion-modal": () =>
+            import(/* webpackChunkName: "document-confirm-item-deletion-modal" */
+            "./ModalDeleteItem/ModalConfirmDeletion.vue")
     },
     data() {
         return {
             shown_modal: "",
-            updated_item: null
+            updated_item: null,
+            item_to_delete: null
         };
     },
     computed: {
@@ -86,9 +95,14 @@ export default {
     },
     mounted() {
         document.addEventListener("show-update-item-modal", this.showUpdateItemModal);
+        document.addEventListener("show-confirm-item-deletion-modal", this.showDeleteItemModal);
 
         this.$once("hook:beforeDestroy", () => {
             document.removeEventListener("show-update-item-modal", this.showUpdateItemModal);
+            document.removeEventListener(
+                "show-confirm-item-deletion-modal",
+                this.showDeleteItemModal
+            );
         });
     },
     methods: {
@@ -112,6 +126,12 @@ export default {
                     this.shown_modal = () =>
                         import(/* webpackChunkName: "document-update-wiki-modal" */ "./ModalUpdateItem/UpdateLinkModal.vue");
             }
+        },
+        showDeleteItemModal(event) {
+            this.item_to_delete = event.detail.current_item;
+        },
+        hideDeleteItemModal() {
+            this.item_to_delete = null;
         }
     }
 };

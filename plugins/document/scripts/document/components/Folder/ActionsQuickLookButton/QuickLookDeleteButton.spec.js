@@ -23,6 +23,7 @@ import { rewire$redirectToUrl, restore } from "../../../helpers/location-helper.
 
 import QuickLookDeleteButton from "./QuickLookDeleteButton.vue";
 import { createStoreMock } from "../../../helpers/store-wrapper.spec-helper.js";
+import { TYPE_LINK, TYPE_FILE } from "../../../constants.js";
 
 describe("QuickLookDeleteButton", () => {
     let delete_button_factory;
@@ -37,13 +38,14 @@ describe("QuickLookDeleteButton", () => {
 
         const store = createStoreMock(store_options);
 
-        delete_button_factory = user_can_write => {
+        delete_button_factory = (user_can_write, item_type) => {
             return shallowMount(QuickLookDeleteButton, {
                 localVue,
                 propsData: {
                     item: {
                         id: 1,
-                        user_can_write: user_can_write
+                        user_can_write: user_can_write,
+                        type: item_type
                     }
                 },
                 mocks: { $store: store }
@@ -56,11 +58,11 @@ describe("QuickLookDeleteButton", () => {
     });
 
     it(`Displays the delete button because the user can write`, () => {
-        const wrapper = delete_button_factory(true);
+        const wrapper = delete_button_factory(true, TYPE_LINK);
         expect(wrapper.find("[data-test=quick-look-delete-button]").exists()).toBeTruthy();
     });
     it(`Does not display the delete button if the user can't write`, () => {
-        const wrapper = delete_button_factory(false);
+        const wrapper = delete_button_factory(false, TYPE_LINK);
         expect(wrapper.find("[data-test=quick-look-delete-button]").exists()).toBeFalsy();
     });
 
@@ -68,11 +70,26 @@ describe("QuickLookDeleteButton", () => {
         const redirect_to_url = jasmine.createSpy("redirectToUrl");
         rewire$redirectToUrl(redirect_to_url);
 
-        const wrapper = delete_button_factory(true);
+        const wrapper = delete_button_factory(true, TYPE_LINK);
         wrapper.find("[data-test=quick-look-delete-button]").trigger("click");
 
         expect(redirect_to_url).toHaveBeenCalledWith(
             "/plugins/docman/?group_id=101&action=confirmDelete&id=1"
         );
+    });
+
+    it(`Given the item is a file, When the user clicks the button, then it should trigger an event to open the confirmation modal`, () => {
+        spyOn(document, "dispatchEvent");
+
+        const redirect_to_url = jasmine.createSpy("redirectToUrl");
+        rewire$redirectToUrl(redirect_to_url);
+
+        const wrapper = delete_button_factory(true, TYPE_FILE);
+        wrapper.find("[data-test=quick-look-delete-button]").trigger("click");
+
+        expect(document.dispatchEvent).toHaveBeenCalledWith(
+            new CustomEvent("show-confirm-item-deletion-modal")
+        );
+        expect(redirect_to_url).not.toHaveBeenCalled();
     });
 });

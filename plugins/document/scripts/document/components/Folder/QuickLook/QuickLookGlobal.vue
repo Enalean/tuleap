@@ -18,7 +18,7 @@
   -
   -->
 <template>
-    <section class="tlp-pane-container" v-if="currently_previewed_item !== null">
+    <section class="tlp-pane-container">
         <div class="tlp-pane-header document-quick-look-header">
             <h2 class="tlp-pane-title document-quick-look-title" v-bind:title="item.title">
                 <i class="tlp-pane-title-icon fa" v-bind:class="icon_class"></i>
@@ -51,7 +51,6 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
 import {
     ICON_EMBEDDED,
     ICON_EMPTY,
@@ -81,7 +80,6 @@ export default {
         item: Object
     },
     computed: {
-        ...mapState(["currently_previewed_item"]),
         icon_class() {
             switch (this.item.type) {
                 case TYPE_FOLDER:

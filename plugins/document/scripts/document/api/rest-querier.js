@@ -39,7 +39,8 @@ export {
     addNewEmpty,
     addNewWiki,
     addNewEmbedded,
-    addNewLink
+    addNewLink,
+    deleteFile
 };
 
 async function getProject(project_id) {
@@ -250,4 +251,9 @@ function cancelUpload(item) {
             "Tus-Resumable": "1.0.0"
         }
     });
+}
+
+function deleteFile(item) {
+    const escaped_item_id = encodeURIComponent(item.id);
+    return del(`/api/docman_files/${escaped_item_id}`);
 }

@@ -75,23 +75,23 @@
             </span>
         </a>
         <span class="tlp-dropdown-menu-separator" role="separator" v-if="item.user_can_write"></span>
-        <a v-if="item.user_can_write"
-           v-bind:href="delete_url"
-           class="tlp-dropdown-menu-item tlp-dropdown-menu-item-danger"
-           role="menuitem"
-           data-test="docman-dropdown-delete"
-        >
-            <i class="fa fa-fw fa-trash-o tlp-dropdown-menu-item-icon"></i>
-            <span v-translate> Delete </span>
-        </a>
+        <quick-look-delete-button
+            v-if="item.user_can_write"
+            v-bind:is-in-dropdown="true"
+            v-bind:item="item"
+            role="menuitem"
+            data-test="docman-dropdown-delete"
+        />
     </div>
 </template>
 <script>
 import { mapState } from "vuex";
 import { TYPE_EMPTY } from "../../../constants.js";
+import QuickLookDeleteButton from "../ActionsQuickLookButton/QuickLookDeleteButton.vue";
 
 export default {
     name: "DropdownMenu",
+    components: { QuickLookDeleteButton },
     props: {
         isInFolderEmptyState: Boolean,
         isInQuickLookMode: Boolean,
@@ -112,11 +112,6 @@ export default {
         ...mapState(["project_id"]),
         is_item_type_empty() {
             return this.item.type === TYPE_EMPTY;
-        },
-        delete_url() {
-            return `/plugins/docman/?group_id=${this.project_id}&action=confirmDelete&id=${
-                this.item.id
-            }`;
         }
     },
     methods: {
