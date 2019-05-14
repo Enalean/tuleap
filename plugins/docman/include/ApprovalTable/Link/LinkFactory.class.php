@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2007. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2007
@@ -40,7 +40,7 @@ class Docman_ApprovalTableLinkFactory extends Docman_ApprovalTableVersionnedFact
         $this->dao = new Docman_ApprovalTableLinkDao();
         $vFactory = new Docman_LinkVersionFactory();
 
-        $dar = $this->dao->getLatestTableByItemId($item->getId(), 'ver.number', true);
+        $dar = $this->dao->getLatestTableByItemId($item->getId(), 'ver.number');
         if($dar && !$dar->isError() && $dar->rowCount() == 1) {
             $row = $dar->getRow();
             $lastVersionNumber = $row['number'];

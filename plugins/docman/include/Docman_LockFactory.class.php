@@ -41,7 +41,7 @@ class Docman_LockFactory {
     *
     * @param int $groupId project id.
     *
-    * @return DataAccessResult of lockinfos or false if there isn't any document locked inside the project.
+    * @return DataAccessResult|false of lockinfos or false if there isn't any document locked inside the project.
     */
     function getProjectLockInfos($groupId) {
         $items = array();
@@ -152,11 +152,14 @@ class Docman_LockFactory {
      * 
      * @param Array $itemIds
      * 
-     * @return DataAccessResult
+     * @return DataAccessResult|false
      */
     function retreiveLocksForItems(array $itemIds) {
         $dao = $this->getDao();
         $dar = $dao->searchLocksForItemIds($itemIds);
+        if ($dar === false) {
+            return false;
+        }
         foreach ($dar as $row) {
             $this->_cachedItem[$row['item_id']] = $row;
         }

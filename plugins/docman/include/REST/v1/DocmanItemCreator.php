@@ -171,7 +171,7 @@ class DocmanItemCreator
         $title,
         $description,
         ?string $status,
-        ?string $obsolescence_date,
+        string $obsolescence_date,
         $wiki_page,
         $link_url,
         $content
@@ -236,7 +236,7 @@ class DocmanItemCreator
         $title,
         $description,
         ?string $status,
-        ?string $obsolescence_date,
+        string $obsolescence_date,
         \DateTimeImmutable $current_time,
         FilePropertiesPOSTPATCHRepresentation $file_properties
     ) {

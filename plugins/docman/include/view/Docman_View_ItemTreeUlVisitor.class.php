@@ -26,7 +26,8 @@
 
 use Tuleap\Docman\View\DocmanViewURLBuilder;
 
-class Docman_View_ItemTreeUlVisitor /* implements Visitor*/ {
+class Docman_View_ItemTreeUlVisitor implements \Tuleap\Docman\Item\ItemVisitor
+{
     var $html;
     var $js;
     var $stripFirstNode;
@@ -68,7 +69,7 @@ class Docman_View_ItemTreeUlVisitor /* implements Visitor*/ {
         return true;
     }
 
-    function visitFolder(&$item, $params = array()) {
+    function visitFolder(Docman_Folder $item, $params = array()) {
         $li_displayed = $this->_displayItem($item, $params);
         if($this->_canDisplaySubItems($item)) {
             $items = $item->getAllItems();
@@ -94,29 +95,35 @@ class Docman_View_ItemTreeUlVisitor /* implements Visitor*/ {
             $this->html .= '</li>'."\n";
         }
     }
-    function visitDocument(&$item, $params = array()) {
+    function visitDocument($item, $params = array()) {
         $params['popup_doc'] = true;
         $li_displayed = $this->_displayItem($item, $params);
         if($li_displayed) {
             $this->html .= '</li>'."\n";
         }
     }
-    function visitWiki(&$item, $params = array()) {
+    public function visitWiki(Docman_Wiki $item, $params = array()) {
         return $this->visitDocument($item, $params);
     }
-    function visitLink(&$item, $params = array()) {
+    public function visitLink(Docman_Link $item, $params = array()) {
         return $this->visitDocument($item, $params);
     }
-    function visitFile(&$item, $params = array()) {
+    public function visitFile(Docman_File $item, $params = array()) {
         return $this->visitDocument($item, $params);
     }
-    function visitEmbeddedFile(&$item, $params = array()) {
+    public function visitEmbeddedFile(Docman_EmbeddedFile $item, $params = array()) {
         return $this->visitDocument($item, $params);
     }
 
-    function visitEmpty(&$item, $params = array()) {
+    public function visitEmpty(Docman_Empty $item, $params = array()) {
         return $this->visitDocument($item, $params);
     }
+
+    public function visitItem(Docman_Item $item, array $params = [])
+    {
+        return '';
+    }
+
 
     //{{{
     function _displayItem(&$item, $params) {

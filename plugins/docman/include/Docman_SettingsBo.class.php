@@ -33,7 +33,8 @@ class Docman_SettingsBo {
         $this->dao = null;
     }
 
-    function &instance($groupId) {
+    public static function instance($groupId)
+    {
         static $_plugin_docman_settings_bo_i;
         if(!isset($_plugin_docman_settings_bo_i[$groupId])) {
             $_plugin_docman_settings_bo_i[$groupId] = new Docman_SettingsBo($groupId);

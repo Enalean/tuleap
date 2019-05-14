@@ -27,7 +27,8 @@
  *
  * The display of a folder (its children) would be great
  */
-class Docman_Widget_Embedded extends Widget /* implements Visitor */ {
+class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemVisitor
+{
 
     /**
      * The title given by the user to the widget
@@ -293,7 +294,8 @@ class Docman_Widget_Embedded extends Widget /* implements Visitor */ {
     }
 
 
-    function visitFolder($item, $params = array()) {
+    public function visitFolder(Docman_Folder $item, $params = array())
+    {
         // do nothing
         return '';
     }
@@ -303,19 +305,23 @@ class Docman_Widget_Embedded extends Widget /* implements Visitor */ {
         return '';
     }
 
-    function visitWiki($item, $params = array()) {
+    public function visitWiki(Docman_Wiki $item, $params = array())
+    {
         return $this->visitDocument($item, $params);
     }
 
-    function visitLink($item, $params = array()) {
+    public function visitLink(Docman_Link $item, $params = array())
+    {
         return $this->visitDocument($item, $params);
     }
 
-    function visitFile($item, $params = array()) {
+    public function visitFile(Docman_File $item, $params = array())
+    {
         return $this->visitDocument($item, $params);
     }
 
-    function visitEmbeddedFile($item, $params = array()) {
+    public function visitEmbeddedFile(Docman_EmbeddedFile $item, $params = array())
+    {
         $hp = Codendi_HTMLPurifier::instance();
         $html = '';
         $version = $item->getCurrentVersion();
@@ -342,8 +348,14 @@ class Docman_Widget_Embedded extends Widget /* implements Visitor */ {
         return $html;
     }
 
-    function visitEmpty($item, $params = array()) {
+    public function visitEmpty(Docman_Empty $item, $params = array())
+    {
         return $this->visitDocument($item, $params);
+    }
+
+    public function visitItem(Docman_Item $item, array $params = [])
+    {
+        return '';
     }
 
     function getDescription() {

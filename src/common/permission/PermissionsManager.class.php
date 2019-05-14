@@ -181,7 +181,7 @@ class PermissionsManager implements IPermissionsManagerNG {
       * @return DataAccessResult
       */
      public function getAuthorizedUgroups($objectId, $permissionType, $withName = true) {
-         $dar = $this->_permission_dao->searchUgroupByObjectIdAndPermissionType($objectId, $permissionType, $withName);
+         $dar = $this->_permission_dao->searchUgroupByObjectIdAndPermissionType((string) $objectId, $permissionType, $withName);
         if ($dar && $dar->rowCount() > 0) {
             return $dar;
         } else {
@@ -197,7 +197,7 @@ class PermissionsManager implements IPermissionsManagerNG {
       * @param int $objectId
       * @param String  $permissionType
       *
-      * @return DataAccessResult
+      * @return array
       */
      public function getAuthorizedUgroupIds($objectId, $permissionType, $withName = true) {
          $dar = $this->getAuthorizedUgroups($objectId, $permissionType, $withName);

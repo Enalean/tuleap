@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2019. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2010. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -29,14 +29,7 @@ abstract class Error_PermissionDenied {
      */
     protected $url;
 
-    /**
-     * Constructor of the class
-     *
-     * @param Url $url Url that lead to the error
-     *
-     * @return void
-     */
-    function __construct(?Url $url = null) {
+    function __construct(?URL $url = null) {
         if ($url === null) {
             $url = new URL();
         }

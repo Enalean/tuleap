@@ -30,7 +30,7 @@ class ItemStatusMapper
     public const ITEM_STATUS_APPROVED = 'approved';
     public const ITEM_STATUS_REJECTED = 'rejected';
 
-    public const ITEM_STATUS_ARRAY_MAP = [
+    private const ITEM_STATUS_ARRAY_MAP = [
         self::ITEM_STATUS_NONE     => PLUGIN_DOCMAN_ITEM_STATUS_NONE,
         self::ITEM_STATUS_DRAFT    => PLUGIN_DOCMAN_ITEM_STATUS_DRAFT,
         self::ITEM_STATUS_APPROVED => PLUGIN_DOCMAN_ITEM_STATUS_APPROVED,
@@ -38,21 +38,23 @@ class ItemStatusMapper
     ];
 
     /**
-     * @var HardcodedMetadataUsageChecker
-     */
-    private $checker;
-
-    public function __construct(HardcodedMetadataUsageChecker $checker)
-    {
-        $this->checker = $checker;
-    }
-
-    /**
      * @throws StatusNotFoundException
      */
     public function getItemStatusIdFromItemStatusString(?string $status_string): int
     {
-        $this->checker->checkItemStatusAuthorisedValue($status_string);
+        if ($status_string === null) {
+            throw new StatusNotFoundException('null is not a valid item status');
+        }
+
+        if (! isset(self::ITEM_STATUS_ARRAY_MAP[$status_string])) {
+            throw new StatusNotFoundException(
+                sprintf(
+                    'The status %s is invalid.',
+                    $status_string
+                )
+            );
+        }
+
         return self::ITEM_STATUS_ARRAY_MAP[$status_string];
     }
 }

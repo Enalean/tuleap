@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2006
@@ -21,11 +21,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Docman\Item\ItemVisitor;
 use Tuleap\PHPWiki\WikiPage;
 
-require_once('Docman_FileStorage.class.php');
-require_once('Docman_VersionFactory.class.php');
-class Docman_ActionsDeleteVisitor /* implements Visitor */ {
+class Docman_ActionsDeleteVisitor implements ItemVisitor
+{
     protected $user;
     protected $response;
 
@@ -42,7 +42,7 @@ class Docman_ActionsDeleteVisitor /* implements Visitor */ {
      * @param Docman_Folder $item
      * @param $params
      */
-    public function visitFolder(&$item, $params = array()) {
+    public function visitFolder(Docman_Folder $item, $params = array()) {
         //delete all sub items before
         $items = $item->getAllItems();
         if (isset($params['parent'])) {
@@ -83,12 +83,12 @@ class Docman_ActionsDeleteVisitor /* implements Visitor */ {
     * 1- User decides to keep wiki page in wiki service. In this case, we restrict access to that wiki page to wiki admins only.
     * 2- User decides to cascade deletion of the wiki page to wiki service too. In that case, we completely remove the wiki page from wiki service.
     *
-    * @param Docman_Item $item
+    * @param Docman_Wiki $item
     * @param array $params params.
     *
     * @return bool $deleted. True if there is no error.  False otherwise.
     */
-    public function visitWiki(&$item, $params = array()) {
+    public function visitWiki(Docman_Wiki $item, $params = array()) {
         // delete the document.
         $deleted = $this->visitDocument($item, $params);
 
@@ -124,11 +124,11 @@ class Docman_ActionsDeleteVisitor /* implements Visitor */ {
         return $deleted;
     }
     
-    public function visitLink(&$item, $params = array()) {
+    public function visitLink(Docman_Link $item, $params = array()) {
         return $this->visitDocument($item, $params);
     }
 
-    public function visitFile($item, $params = array()) {
+    public function visitFile(Docman_File $item, $params = array()) {
         if ($this->getPermissionManager($item->getGroupId())->userCanWrite($params['user'], $item->getId())) {
             if (isset($params['version']) && $params['version'] !== false) {
                 return $this->_deleteVersion($item, $params['version'], $params['user']);
@@ -141,12 +141,16 @@ class Docman_ActionsDeleteVisitor /* implements Visitor */ {
         }
     }
 
-    public function visitEmbeddedFile(&$item, $params = array()) {
+    public function visitEmbeddedFile(Docman_EmbeddedFile $item, $params = array()) {
         return $this->visitFile($item, $params);
     }
 
-    public function visitEmpty(&$item, $params = array()) {
+    public function visitEmpty(Docman_Empty $item, $params = array()) {
         return $this->visitDocument($item, $params);
+    }
+
+    public function visitItem(Docman_Item $item, array $params = [])
+    {
     }
 
     public function restrictAccess($item, $params = array()) {

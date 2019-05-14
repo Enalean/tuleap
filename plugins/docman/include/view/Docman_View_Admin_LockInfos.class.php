@@ -64,21 +64,23 @@ class Docman_View_Admin_LockInfos extends Docman_View_Extra {
 
 
         $altRowClass = 0;
-        foreach($lockInfos as $row) {
-            $trclass = html_get_alt_row_color($altRowClass++);
-            $item = $dIF->getItemFromDb($row['item_id']);
-            $parent = $dIF->getItemFromDb($item->getParentId());
-            $content .= '<tr class="'.$trclass.'">';
-            $content .= '<td>'. '<a href="/plugins/docman/?group_id='. $params['group_id']. '&action=details&id='. $item->getId(). '">'. $item->getTitle() .'</a></td>';
-            $content .= '<td>';
-            if($dIF->isRoot($parent)){
-                $content .= '</td>';
-            } else {
-                $content .=  '<a href="'. $this->defaultUrl. '&action=show&id='. $parent->getId(). '">' .$parent->getTitle() .'</a></td>';
+        if ($lockInfos !== false) {
+            foreach($lockInfos as $row) {
+                $trclass = html_get_alt_row_color($altRowClass++);
+                $item = $dIF->getItemFromDb($row['item_id']);
+                $parent = $dIF->getItemFromDb($item->getParentId());
+                $content .= '<tr class="'.$trclass.'">';
+                $content .= '<td>'. '<a href="/plugins/docman/?group_id='. $params['group_id']. '&action=details&id='. $item->getId(). '">'. $item->getTitle() .'</a></td>';
+                $content .= '<td>';
+                if($dIF->isRoot($parent)){
+                    $content .= '</td>';
+                } else {
+                    $content .=  '<a href="'. $this->defaultUrl. '&action=show&id='. $parent->getId(). '">' .$parent->getTitle() .'</a></td>';
+                }
+                $content .= '<td>'. $hp->purify($uH->getDisplayNameFromUserId($row['user_id'])) .'</td>';
+                $content .= '<td>'. format_date($GLOBALS['Language']->getText('system', 'datefmt'), $row['lock_date']) .'</td>';
+                $content .= '</tr>';
             }
-            $content .= '<td>'. $hp->purify($uH->getDisplayNameFromUserId($row['user_id'])) .'</td>';
-            $content .= '<td>'. format_date($GLOBALS['Language']->getText('system', 'datefmt'), $row['lock_date']) .'</td>';
-            $content .= '</tr>';
         }
 
         $content .= '</table>';
