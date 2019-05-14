@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -34,6 +34,7 @@ use Tuleap\Tracker\REST\PermissionsExporter;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
+use Tuleap\Tracker\Workflow\SimpleMode\TransitionRetriever;
 use Tuleap\Widget\Event\GetTrackersWithCriteria;
 
 /**
@@ -160,6 +161,7 @@ class ProjectTrackersResource
             Tracker_FormElementFactory::instance(),
             new PermissionsExporter(
                 new FrozenFieldDetector(
+                    new TransitionRetriever(new \Workflow_TransitionDao(), \TransitionFactory::instance()),
                     new FrozenFieldsRetriever(
                         new FrozenFieldsDao()
                     )

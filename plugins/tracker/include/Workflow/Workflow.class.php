@@ -385,24 +385,6 @@ class Workflow //phpcs:ignoreFile
         }
     }
 
-    /**
-     * @throws \Tuleap\Tracker\Workflow\Transition\NoTransitionForStateException
-     */
-    public function getFirstTransitionForCurrentState(Tracker_Artifact $artifact)
-    {
-        $current_value   = $artifact->getLastChangeset()->getValue($this->getField());
-        $current_status  = (int) current($current_value->getValue());
-
-        return $this->getTransitionRetriever()->getFirstTransitionForDestinationState($this, $current_status);
-    }
-
-    private function getTransitionRetriever() {
-        return new TransitionRetriever(
-            new Workflow_TransitionDao(),
-            TransitionFactory::instance()
-        );
-    }
-
     private function getCurrentTransition($fields_data, Tracker_Artifact_Changeset $changeset = null) {
         $oldValues = null;
         if ($changeset) {

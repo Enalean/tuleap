@@ -22,6 +22,7 @@
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
+use Tuleap\Tracker\Workflow\SimpleMode\TransitionRetriever;
 
 /**
  * The base class for fields in trackers. From int and string to selectboxes.
@@ -1452,6 +1453,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     private function getFrozenFieldDetector()
     {
         return new FrozenFieldDetector(
+            new TransitionRetriever(new \Workflow_TransitionDao(), \TransitionFactory::instance()),
             new FrozenFieldsRetriever(new FrozenFieldsDao())
         );
     }

@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright Enalean (c) 2018. All rights reserved.
+ * Copyright Enalean (c) 2018-Present. All rights reserved.
  *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
+ * Tuleap and Enalean names and logos are registered trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
  * owners.
  *
@@ -40,6 +40,7 @@ use Tuleap\Tracker\REST\PermissionsExporter;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
+use Tuleap\Tracker\Workflow\SimpleMode\TransitionRetriever;
 
 class ProjectResource
 {
@@ -80,6 +81,7 @@ class ProjectResource
                 Tracker_FormElementFactory::instance(),
                 new PermissionsExporter(
                     new FrozenFieldDetector(
+                        new TransitionRetriever(new \Workflow_TransitionDao(), \TransitionFactory::instance()),
                         new FrozenFieldsRetriever(
                             new FrozenFieldsDao()
                         )
