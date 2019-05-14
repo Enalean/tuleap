@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\REST\v1\Metadata;
 
-class StatusNotFoundException extends \Exception
+class StatusNotFoundNullException extends \Exception
 {
-
 }

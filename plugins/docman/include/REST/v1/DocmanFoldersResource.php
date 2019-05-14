@@ -125,16 +125,67 @@ class DocmanFoldersResource extends AuthenticatedResource
                 new \DateTimeImmutable(),
                 $files_representation->file_properties
             );
-        } catch (Metadata\StatusNotFoundException $e) {
-            throw new RestException(400, $e->getMessage());
         } catch (Metadata\ItemStatusUsageMismatchException $e) {
-            throw new RestException(403, 'The "Status" property is not activated for this item.');
+            throw new I18NRestException(
+                400,
+                dgettext(
+                    'tuleap-docman',
+                    'The "Status" property is not activated for this item.'
+                )
+            );
         } catch (Metadata\InvalidDateComparisonException $e) {
-            throw new RestException(400, 'The obsolescence date is before the current date');
+            throw new I18NRestException(
+                400,
+                dgettext(
+                    'tuleap-docman',
+                    'The obsolescence date is before the current date'
+                )
+            );
         } catch (Metadata\InvalidDateTimeFormatException $e) {
-            throw new RestException(400, 'The date format is incorrect. The format should be YYYY-MM-DD');
-        } catch (Metadata\ObsoloscenceDateUsageMismatchException $e) {
-            throw new RestException(403, $e->getMessage());
+            throw new I18NRestException(
+                400,
+                dgettext(
+                    'tuleap-docman',
+                    'The date format is incorrect. The format must be "YYYY-MM-DD"'
+                )
+            );
+        } catch (Metadata\ObsolescenceDateDisabledException $e) {
+            throw new I18NRestException(
+                400,
+                dgettext(
+                    'tuleap-docman',
+                    'The project does not support obsolescence date, you should not provide it to create a new document.'
+                )
+            );
+        } catch (Metadata\ObsolescenceDateMissingParameterException $e) {
+            throw new I18NRestException(
+                400,
+                dgettext(
+                    'tuleap-docman',
+                    '"obsolescence_date" parameter is required to create a new document.'
+                )
+            );
+        } catch (Metadata\ObsolescenceDateNullException $e) {
+            throw new I18NRestException(
+                400,
+                dgettext(
+                    'tuleap-docman',
+                    'The date cannot be null'
+                )
+            );
+        } catch (Metadata\StatusNotFoundBadStatusGivenException $e) {
+            throw new I18NRestException(
+                400,
+                sprintf(
+                    dgettext('tuleap-docman', 'The status "%s" is invalid.'),
+                    $files_representation->status
+                )
+            );
+        } catch (Metadata\StatusNotFoundNullException $e) {
+            throw new I18NRestException(
+                400,
+                dgettext('tuleap-docman', 'null is not a valid status.')
+            );
         }
     }
 
@@ -183,16 +234,27 @@ class DocmanFoldersResource extends AuthenticatedResource
                 new \DateTimeImmutable(),
                 $project
             );
-        } catch (Metadata\StatusNotFoundException $e) {
-            throw new RestException(400, $e->getMessage());
+        } catch (Metadata\StatusNotFoundBadStatusGivenException $e) {
+            throw new I18NRestException(
+                400,
+                sprintf(
+                    dgettext('tuleap-docman', 'The status "%s" is invalid.'),
+                    $folder_representation->status
+                )
+            );
+        } catch (Metadata\StatusNotFoundNullException $e) {
+            throw new I18NRestException(
+                400,
+                dgettext('tuleap-docman', 'null is not a valid status.')
+            );
         } catch (Metadata\ItemStatusUsageMismatchException $e) {
-            throw new RestException(403, 'The "Status" property is not activated for this item.');
-        } catch (Metadata\InvalidDateComparisonException $e) {
-            throw new RestException(400, 'The obsolescence date is before the current date');
-        } catch (Metadata\InvalidDateTimeFormatException $e) {
-            throw new RestException(400, 'The date format is incorrect. The format should be YYYY-MM-DD');
-        } catch (Metadata\ObsoloscenceDateUsageMismatchException $e) {
-            throw new RestException(400, 'The "Obsolescence date" property is not activated for this item.');
+            throw new I18NRestException(
+                400,
+                dgettext(
+                    'tuleap-docman',
+                    'The "Status" property is not activated for this item.'
+                )
+            );
         }
     }
 
@@ -247,16 +309,67 @@ class DocmanFoldersResource extends AuthenticatedResource
                 new \DateTimeImmutable(),
                 $project
             );
-        } catch (Metadata\StatusNotFoundException $e) {
-            throw new RestException(400, $e->getMessage());
         } catch (Metadata\ItemStatusUsageMismatchException $e) {
-            throw new RestException(403, 'The "Status" property is not activated for this item.');
+            throw new I18NRestException(
+                400,
+                dgettext(
+                    'tuleap-docman',
+                    'The "Status" property is not activated for this item.'
+                )
+            );
         } catch (Metadata\InvalidDateComparisonException $e) {
-            throw new RestException(400, 'The obsolescence date is before the current date');
+            throw new I18NRestException(
+                400,
+                dgettext(
+                    'tuleap-docman',
+                    'The obsolescence date is before the current date'
+                )
+            );
         } catch (Metadata\InvalidDateTimeFormatException $e) {
-            throw new RestException(400, 'The date format is incorrect. The format should be YYYY-MM-DD');
-        } catch (Metadata\ObsoloscenceDateUsageMismatchException $e) {
-            throw new RestException(403, $e->getMessage());
+            throw new I18NRestException(
+                400,
+                dgettext(
+                    'tuleap-docman',
+                    'The date format is incorrect. The format must be "YYYY-MM-DD"'
+                )
+            );
+        } catch (Metadata\ObsolescenceDateDisabledException $e) {
+            throw new I18NRestException(
+                400,
+                dgettext(
+                    'tuleap-docman',
+                    'The project does not support obsolescence date, you should not provide it to create a new document.'
+                )
+            );
+        } catch (Metadata\ObsolescenceDateMissingParameterException $e) {
+            throw new I18NRestException(
+                400,
+                dgettext(
+                    'tuleap-docman',
+                    '"obsolescence_date" parameter is required to create a new document.'
+                )
+            );
+        } catch (Metadata\ObsolescenceDateNullException $e) {
+            throw new I18NRestException(
+                400,
+                dgettext(
+                    'tuleap-docman',
+                    'The date cannot be null'
+                )
+            );
+        } catch (Metadata\StatusNotFoundBadStatusGivenException $e) {
+            throw new I18NRestException(
+                400,
+                sprintf(
+                    dgettext('tuleap-docman', 'The status "%s" is invalid.'),
+                    $empty_representation->status
+                )
+            );
+        } catch (Metadata\StatusNotFoundNullException $e) {
+            throw new I18NRestException(
+                400,
+                dgettext('tuleap-docman', 'null is not a valid status.')
+            );
         }
     }
 
@@ -310,16 +423,67 @@ class DocmanFoldersResource extends AuthenticatedResource
                 new \DateTimeImmutable(),
                 $project
             );
-        } catch (Metadata\StatusNotFoundException $e) {
-            throw new RestException(400, $e->getMessage());
         } catch (Metadata\ItemStatusUsageMismatchException $e) {
-            throw new RestException(403, 'The "Status" property is not activated for this item.');
+            throw new I18NRestException(
+                400,
+                dgettext(
+                    'tuleap-docman',
+                    'The "Status" property is not activated for this item.'
+                )
+            );
         } catch (Metadata\InvalidDateComparisonException $e) {
-            throw new RestException(400, 'The obsolescence date is before the current date');
+            throw new I18NRestException(
+                400,
+                dgettext(
+                    'tuleap-docman',
+                    'The obsolescence date is before the current date'
+                )
+            );
         } catch (Metadata\InvalidDateTimeFormatException $e) {
-            throw new RestException(400, 'The date format is incorrect. The format should be YYYY-MM-DD');
-        } catch (Metadata\ObsoloscenceDateUsageMismatchException $e) {
-            throw new RestException(403, $e->getMessage());
+            throw new I18NRestException(
+                400,
+                dgettext(
+                    'tuleap-docman',
+                    'The date format is incorrect. The format must be "YYYY-MM-DD"'
+                )
+            );
+        } catch (Metadata\ObsolescenceDateDisabledException $e) {
+            throw new I18NRestException(
+                400,
+                dgettext(
+                    'tuleap-docman',
+                    'The project does not support obsolescence date, you should not provide it to create a new document.'
+                )
+            );
+        } catch (Metadata\ObsolescenceDateMissingParameterException $e) {
+            throw new I18NRestException(
+                400,
+                dgettext(
+                    'tuleap-docman',
+                    '"obsolescence_date" parameter is required to create a new document.'
+                )
+            );
+        } catch (Metadata\ObsolescenceDateNullException $e) {
+            throw new I18NRestException(
+                400,
+                dgettext(
+                    'tuleap-docman',
+                    'The date cannot be null'
+                )
+            );
+        } catch (Metadata\StatusNotFoundBadStatusGivenException $e) {
+            throw new I18NRestException(
+                400,
+                sprintf(
+                    dgettext('tuleap-docman', 'The status "%s" is invalid.'),
+                    $wiki_representation->status
+                )
+            );
+        } catch (Metadata\StatusNotFoundNullException $e) {
+            throw new I18NRestException(
+                400,
+                dgettext('tuleap-docman', 'null is not a valid status.')
+            );
         }
     }
 
@@ -377,16 +541,67 @@ class DocmanFoldersResource extends AuthenticatedResource
                 new \DateTimeImmutable(),
                 $project
             );
-        } catch (Metadata\StatusNotFoundException $e) {
-            throw new RestException(400, $e->getMessage());
         } catch (Metadata\ItemStatusUsageMismatchException $e) {
-            throw new RestException(403, 'The "Status" property is not activated for this item.');
+            throw new I18NRestException(
+                400,
+                dgettext(
+                    'tuleap-docman',
+                    'The "Status" property is not activated for this item.'
+                )
+            );
         } catch (Metadata\InvalidDateComparisonException $e) {
-            throw new RestException(400, 'The obsolescence date is before the current date');
+            throw new I18NRestException(
+                400,
+                dgettext(
+                    'tuleap-docman',
+                    'The obsolescence date is before the current date'
+                )
+            );
         } catch (Metadata\InvalidDateTimeFormatException $e) {
-            throw new RestException(400, 'The date format is incorrect. The format should be YYYY-MM-DD');
-        } catch (Metadata\ObsoloscenceDateUsageMismatchException $e) {
-            throw new RestException(403, $e->getMessage());
+            throw new I18NRestException(
+                400,
+                dgettext(
+                    'tuleap-docman',
+                    'The date format is incorrect. The format must be "YYYY-MM-DD"'
+                )
+            );
+        } catch (Metadata\ObsolescenceDateDisabledException $e) {
+            throw new I18NRestException(
+                400,
+                dgettext(
+                    'tuleap-docman',
+                    'The project does not support obsolescence date, you should not provide it to create a new document.'
+                )
+            );
+        } catch (Metadata\ObsolescenceDateMissingParameterException $e) {
+            throw new I18NRestException(
+                400,
+                dgettext(
+                    'tuleap-docman',
+                    '"obsolescence_date" parameter is required to create a new document.'
+                )
+            );
+        } catch (Metadata\ObsolescenceDateNullException $e) {
+            throw new I18NRestException(
+                400,
+                dgettext(
+                    'tuleap-docman',
+                    'The date cannot be null'
+                )
+            );
+        } catch (Metadata\StatusNotFoundBadStatusGivenException $e) {
+            throw new I18NRestException(
+                400,
+                sprintf(
+                    dgettext('tuleap-docman', 'The status "%s" is invalid.'),
+                    $embeds_representation->status
+                )
+            );
+        } catch (Metadata\StatusNotFoundNullException $e) {
+            throw new I18NRestException(
+                400,
+                dgettext('tuleap-docman', 'null is not a valid status.')
+            );
         }
     }
 
@@ -442,16 +657,67 @@ class DocmanFoldersResource extends AuthenticatedResource
                 new \DateTimeImmutable(),
                 $project
             );
-        } catch (Metadata\StatusNotFoundException $e) {
-            throw new RestException(400, $e->getMessage());
         } catch (Metadata\ItemStatusUsageMismatchException $e) {
-            throw new RestException(403, 'The "Status" property is not activated for this item.');
+            throw new I18NRestException(
+                400,
+                dgettext(
+                    'tuleap-docman',
+                    'The "Status" property is not activated for this item.'
+                )
+            );
         } catch (Metadata\InvalidDateComparisonException $e) {
-            throw new RestException(400, 'The obsolescence date is before the current date');
+            throw new I18NRestException(
+                400,
+                dgettext(
+                    'tuleap-docman',
+                    'The obsolescence date is before the current date'
+                )
+            );
         } catch (Metadata\InvalidDateTimeFormatException $e) {
-            throw new RestException(400, 'The date format is incorrect. The format should be YYYY-MM-DD');
-        } catch (Metadata\ObsoloscenceDateUsageMismatchException $e) {
-            throw new RestException(403, $e->getMessage());
+            throw new I18NRestException(
+                400,
+                dgettext(
+                    'tuleap-docman',
+                    'The date format is incorrect. The format must be "YYYY-MM-DD"'
+                )
+            );
+        } catch (Metadata\ObsolescenceDateDisabledException $e) {
+            throw new I18NRestException(
+                400,
+                dgettext(
+                    'tuleap-docman',
+                    'The project does not support obsolescence date, you should not provide it to create a new document.'
+                )
+            );
+        } catch (Metadata\ObsolescenceDateMissingParameterException $e) {
+            throw new I18NRestException(
+                400,
+                dgettext(
+                    'tuleap-docman',
+                    '"obsolescence_date" parameter is required to create a new document.'
+                )
+            );
+        } catch (Metadata\ObsolescenceDateNullException $e) {
+            throw new I18NRestException(
+                400,
+                dgettext(
+                    'tuleap-docman',
+                    'The date cannot be null'
+                )
+            );
+        } catch (Metadata\StatusNotFoundBadStatusGivenException $e) {
+            throw new I18NRestException(
+                400,
+                sprintf(
+                    dgettext('tuleap-docman', 'The status "%s" is invalid.'),
+                    $links_representation->status
+                )
+            );
+        } catch (Metadata\StatusNotFoundNullException $e) {
+            throw new I18NRestException(
+                400,
+                dgettext('tuleap-docman', 'null is not a valid status.')
+            );
         }
     }
 

@@ -52,7 +52,9 @@ class HardcodedMetdataObsolescenceDateChecker
     }
 
     /**
-     * @throws ObsoloscenceDateUsageMismatchException
+     * @throws ObsolescenceDateDisabledException
+     * @throws ObsolescenceDateMissingParameterException
+     * @throws ObsolescenceDateNullException
      */
     public function checkObsolescenceDateUsage(?string $date, int $item_type): void
     {
@@ -61,19 +63,15 @@ class HardcodedMetdataObsolescenceDateChecker
         }
 
         if ($date === null) {
-            throw new ObsoloscenceDateUsageMismatchException('The date cannot be null');
+            throw new ObsolescenceDateNullException();
         }
 
         if ($date === ItemRepresentation::OBSOLESCENCE_DATE_NONE && $this->isObsolescenceMetadataUsed()) {
-            throw new ObsoloscenceDateUsageMismatchException(
-                '"obsolescence_date" parameter is required to create a new document.'
-            );
+            throw new ObsolescenceDateMissingParameterException();
         }
 
         if ($date !== ItemRepresentation::OBSOLESCENCE_DATE_NONE && !$this->isObsolescenceMetadataUsed()) {
-            throw new ObsoloscenceDateUsageMismatchException(
-                'The project does not support obsolescence date, you should not provide it to create a new document.'
-            );
+            throw new ObsolescenceDateDisabledException();
         }
     }
 

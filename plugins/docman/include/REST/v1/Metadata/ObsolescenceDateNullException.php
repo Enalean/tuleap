@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\REST\v1\Metadata;
 
-class ObsoloscenceDateUsageMismatchException extends \Exception
+class ObsolescenceDateNullException extends \Exception
 {
-
 }

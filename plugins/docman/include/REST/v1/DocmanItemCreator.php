@@ -37,7 +37,6 @@ use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataObsolescenceDateRetriever;
 use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataUsageChecker;
 use Tuleap\Docman\REST\v1\Metadata\HardcodedMetdataObsolescenceDateChecker;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
-use Tuleap\Docman\REST\v1\Metadata\StatusNotFoundException;
 use Tuleap\Docman\REST\v1\Wiki\DocmanWikiPOSTRepresentation;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
 use Tuleap\Docman\Upload\Document\DocumentToUploadCreator;
@@ -141,25 +140,15 @@ class DocmanItemCreator
     }
 
     /**
-     * @param                    $item_type_id
-     * @param \DateTimeImmutable $current_time
-     * @param Docman_Item        $parent_item
-     * @param PFUser             $user
-     * @param Project            $project
-     * @param                    $title
-     * @param                    $description
-     * @param string             $status
-     * @param string             $obsolescence_date
-     * @param                    $wiki_page
-     * @param                    $link_url
-     * @param                    $content
-     *
      * @return CreatedItemRepresentation
      * @throws Metadata\InvalidDateComparisonException
      * @throws Metadata\InvalidDateTimeFormatException
      * @throws Metadata\ItemStatusUsageMismatchException
-     * @throws Metadata\ObsoloscenceDateUsageMismatchException
-     * @throws StatusNotFoundException
+     * @throws Metadata\ObsolescenceDateDisabledException
+     * @throws Metadata\ObsolescenceDateMissingParameterException
+     * @throws Metadata\ObsolescenceDateNullException
+     * @throws Metadata\StatusNotFoundBadStatusGivenException
+     * @throws Metadata\StatusNotFoundNullException
      * @throws \Tuleap\Docman\CannotInstantiateItemWeHaveJustCreatedInDBException
      */
     private function createDocument(
@@ -223,12 +212,15 @@ class DocmanItemCreator
     }
 
     /**
-     * @throws RestException
-     * @throws Metadata\ItemStatusUsageMismatchException
-     * @throws StatusNotFoundException
-     * @throws Metadata\ObsoloscenceDateUsageMismatchException
-     * @throws Metadata\InvalidDateTimeFormatException
      * @throws Metadata\InvalidDateComparisonException
+     * @throws Metadata\InvalidDateTimeFormatException
+     * @throws Metadata\ItemStatusUsageMismatchException
+     * @throws Metadata\ObsolescenceDateDisabledException
+     * @throws Metadata\ObsolescenceDateMissingParameterException
+     * @throws Metadata\ObsolescenceDateNullException
+     * @throws Metadata\StatusNotFoundBadStatusGivenException
+     * @throws Metadata\StatusNotFoundNullException
+     * @throws RestException
      */
     public function createFileDocument(
         Docman_Item $parent_item,
@@ -296,19 +288,15 @@ class DocmanItemCreator
     }
 
     /**
-     * @param Docman_Item                    $parent_item
-     * @param PFUser                         $user
-     * @param DocmanFolderPOSTRepresentation $representation
-     * @param \DateTimeImmutable             $current_time
-     * @param Project                        $project
-     *
-     * @return CreatedItemRepresentation
      * @throws Metadata\InvalidDateComparisonException
      * @throws Metadata\InvalidDateTimeFormatException
      * @throws Metadata\ItemStatusUsageMismatchException
-     * @throws Metadata\ObsoloscenceDateUsageMismatchException
+     * @throws Metadata\ObsolescenceDateDisabledException
+     * @throws Metadata\ObsolescenceDateMissingParameterException
+     * @throws Metadata\ObsolescenceDateNullException
+     * @throws Metadata\StatusNotFoundBadStatusGivenException
+     * @throws Metadata\StatusNotFoundNullException
      * @throws RestException
-     * @throws StatusNotFoundException
      * @throws \Tuleap\Docman\CannotInstantiateItemWeHaveJustCreatedInDBException
      */
     public function createFolder(
@@ -347,19 +335,15 @@ class DocmanItemCreator
     }
 
     /**
-     * @param Docman_Item                   $parent_item
-     * @param PFUser                        $user
-     * @param DocmanEmptyPOSTRepresentation $representation
-     * @param \DateTimeImmutable            $current_time
-     * @param Project                       $project
-     *
-     * @return CreatedItemRepresentation
      * @throws Metadata\InvalidDateComparisonException
      * @throws Metadata\InvalidDateTimeFormatException
      * @throws Metadata\ItemStatusUsageMismatchException
-     * @throws Metadata\ObsoloscenceDateUsageMismatchException
+     * @throws Metadata\ObsolescenceDateDisabledException
+     * @throws Metadata\ObsolescenceDateMissingParameterException
+     * @throws Metadata\ObsolescenceDateNullException
+     * @throws Metadata\StatusNotFoundBadStatusGivenException
+     * @throws Metadata\StatusNotFoundNullException
      * @throws RestException
-     * @throws StatusNotFoundException
      * @throws \Tuleap\Docman\CannotInstantiateItemWeHaveJustCreatedInDBException
      */
     public function createEmpty(
@@ -397,19 +381,15 @@ class DocmanItemCreator
     }
 
     /**
-     * @param Docman_Item                  $parent_item
-     * @param PFUser                       $user
-     * @param DocmanWikiPOSTRepresentation $representation
-     * @param \DateTimeImmutable           $current_time
-     * @param Project                      $project
-     *
-     * @return CreatedItemRepresentation
      * @throws Metadata\InvalidDateComparisonException
      * @throws Metadata\InvalidDateTimeFormatException
      * @throws Metadata\ItemStatusUsageMismatchException
-     * @throws Metadata\ObsoloscenceDateUsageMismatchException
+     * @throws Metadata\ObsolescenceDateDisabledException
+     * @throws Metadata\ObsolescenceDateMissingParameterException
+     * @throws Metadata\ObsolescenceDateNullException
+     * @throws Metadata\StatusNotFoundBadStatusGivenException
+     * @throws Metadata\StatusNotFoundNullException
      * @throws RestException
-     * @throws StatusNotFoundException
      * @throws \Tuleap\Docman\CannotInstantiateItemWeHaveJustCreatedInDBException
      */
     public function createWiki(
@@ -454,19 +434,16 @@ class DocmanItemCreator
     }
 
     /**
-     * @param Docman_Item                      $parent_item
-     * @param PFUser                           $user
-     * @param DocmanEmbeddedPOSTRepresentation $representation
-     * @param \DateTimeImmutable               $current_time
-     * @param Project                          $project
-     *
      * @return CreatedItemRepresentation
      * @throws Metadata\InvalidDateComparisonException
      * @throws Metadata\InvalidDateTimeFormatException
      * @throws Metadata\ItemStatusUsageMismatchException
-     * @throws Metadata\ObsoloscenceDateUsageMismatchException
+     * @throws Metadata\ObsolescenceDateDisabledException
+     * @throws Metadata\ObsolescenceDateMissingParameterException
+     * @throws Metadata\ObsolescenceDateNullException
+     * @throws Metadata\StatusNotFoundBadStatusGivenException
+     * @throws Metadata\StatusNotFoundNullException
      * @throws RestException
-     * @throws StatusNotFoundException
      * @throws \Tuleap\Docman\CannotInstantiateItemWeHaveJustCreatedInDBException
      */
     public function createEmbedded(
@@ -504,19 +481,16 @@ class DocmanItemCreator
     }
 
     /**
-     * @param Docman_Item                  $parent_item
-     * @param PFUser                       $user
-     * @param DocmanLinkPOSTRepresentation $representation
-     * @param \DateTimeImmutable           $current_time
-     * @param Project                      $project
-     *
      * @return CreatedItemRepresentation
      * @throws Metadata\InvalidDateComparisonException
      * @throws Metadata\InvalidDateTimeFormatException
      * @throws Metadata\ItemStatusUsageMismatchException
-     * @throws Metadata\ObsoloscenceDateUsageMismatchException
+     * @throws Metadata\ObsolescenceDateDisabledException
+     * @throws Metadata\ObsolescenceDateMissingParameterException
+     * @throws Metadata\ObsolescenceDateNullException
+     * @throws Metadata\StatusNotFoundBadStatusGivenException
+     * @throws Metadata\StatusNotFoundNullException
      * @throws RestException
-     * @throws StatusNotFoundException
      * @throws \Tuleap\Docman\CannotInstantiateItemWeHaveJustCreatedInDBException
      */
     public function createLink(

@@ -12,6 +12,10 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 2.2.1\n"
 
+msgid "\"obsolescence_date\" parameter is required to create a new document."
+msgstr ""
+"Le paramètre \"obsolescence_date\" est requis pour créer un nouveau document"
+
 #, php-format
 msgid ""
 "%s does not have an approval table. The parameter \"approval_table_action\" "
@@ -134,6 +138,16 @@ msgstr "Les paramètres ont été sauvegardés avec succès"
 msgid "Switch to new user interface"
 msgstr "Basculer sur la nouvelle interface utilisateur"
 
+msgid "The \"Status\" property is not activated for this item."
+msgstr "La propriété \"Status\" n'est pas activée pour cette ressource."
+
+msgid "The date cannot be null"
+msgstr "La date ne peut pas être null."
+
+msgid "The date format is incorrect. The format must be \"YYYY-MM-DD\""
+msgstr ""
+"Le format de la date est incorrecte. Le format doit être \"YYYY-MM-DD\""
+
 msgid "The file cannot be found."
 msgstr "Le fichier ne peut être trouvé."
 
@@ -141,12 +155,26 @@ msgstr "Le fichier ne peut être trouvé."
 msgid "The item %d is not a folder."
 msgstr "L'objet %d n'est pas un dossier."
 
+msgid "The obsolescence date is before the current date"
+msgstr "La date d'obsolescence est antérieur à la date actuelle"
+
+msgid ""
+"The project does not support obsolescence date, you should not provide it to "
+"create a new document."
+msgstr ""
+"Le project ne supporte l'obsolescence date, vous ne devriez pas le "
+"renseigner à la création d'un document."
+
 msgid "The requested version of this file cannot be found."
 msgstr "La version demandée de ce fichier ne peut être trouvé."
 
 #, php-format
 msgid "The resource %d does not exist."
 msgstr "La ressource %d n'existe pas."
+
+#, php-format
+msgid "The status \"%s\" is invalid."
+msgstr "Le statut \"%s\" est invalide."
 
 msgid "There is already a document being uploaded for this item"
 msgstr "Il y a déjà un document en cours de téléversement pour cet élément"
@@ -182,6 +210,9 @@ msgstr "Vous n'êtes pas autorisé à modifier cet élément."
 
 msgid "You should be site administrator to access this page"
 msgstr "Vous devez être administrateur site pour accéder à cette page"
+
+msgid "null is not a valid status."
+msgstr "null n'est pas un statut valide."
 
 msgid "{{ user_group_name }} has no global permission"
 msgstr "{{ user_group_name }} n'a pas de permissions globales"

@@ -24,7 +24,9 @@ namespace Tuleap\Docman\Metadata;
 
 use PHPUnit\Framework\TestCase;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
+use Tuleap\Docman\REST\v1\Metadata\StatusNotFoundBadStatusGivenException;
 use Tuleap\Docman\REST\v1\Metadata\StatusNotFoundException;
+use Tuleap\Docman\REST\v1\Metadata\StatusNotFoundNullException;
 
 final class ItemStatusMapperTest extends TestCase
 {
@@ -40,7 +42,7 @@ final class ItemStatusMapperTest extends TestCase
     {
         $mapper = new ItemStatusMapper();
 
-        $this->expectException(StatusNotFoundException::class);
+        $this->expectException(StatusNotFoundBadStatusGivenException::class);
         $mapper->getItemStatusIdFromItemStatusString('swang');
     }
 
@@ -48,7 +50,7 @@ final class ItemStatusMapperTest extends TestCase
     {
         $mapper = new ItemStatusMapper();
 
-        $this->expectException(StatusNotFoundException::class);
+        $this->expectException(StatusNotFoundNullException::class);
         $mapper->getItemStatusIdFromItemStatusString(null);
     }
 }
