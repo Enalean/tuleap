@@ -206,7 +206,7 @@ class DocmanLinksResource extends AuthenticatedResource
         $item_to_delete    = $item_request->getItem();
         $current_user      = $this->rest_user_manager->getCurrentUser();
         $project           = $item_request->getProject();
-        $validator_visitor = new DocumentBeforeDeletionValidatorVisitor(\Docman_Link::class);
+        $validator_visitor = new DocumentBeforeModificationValidatorVisitor(\Docman_Link::class);
 
         $docman_permission_manager = Docman_PermissionsManager::instance($project->getGroupId());
         if (! $docman_permission_manager->userCanDelete($current_user, $item_to_delete)) {
