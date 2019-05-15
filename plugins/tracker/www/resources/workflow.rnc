@@ -11,6 +11,11 @@ advancedWorkflow =
         }?
     }?
 
+advancedPostActionsContent =
+    element postactions {
+        advancedActions
+    }?
+
 simpleWorkflow =
     element simple_workflow {
         element field_id {
@@ -29,36 +34,40 @@ simpleWorkflow =
                         }
                     }+
                 }?,
-                postactionsContent,
+                simplePostActionsContent,
                 preConditionsContent
             }+
         }?
     }?
 
-postactionsContent =
+simplePostActionsContent =
     element postactions {
-        element postaction_field_date {
-            attribute valuetype { xsd:long },
-            element field_id {
-                attribute REF { xsd:IDREF }
-            }
-        }*,
-        element postaction_field_int {
-            attribute value { xsd:long },
-            element field_id {
-                attribute REF { xsd:IDREF }
-            }
-        }*,
-        element postaction_field_float {
-            attribute value { xsd:float },
-            element field_id {
-                attribute REF { xsd:IDREF }
-            }
-        }*,
-        element postaction_ci_build {
-            attribute job_url { xsd:string }
-        }*
+        advancedActions,
+        frozenFieldsActionContent
     }?
+
+advancedActions =
+    element postaction_field_date {
+        attribute valuetype { xsd:long },
+        element field_id {
+            attribute REF { xsd:IDREF }
+        }
+    }*,
+    element postaction_field_int {
+        attribute value { xsd:long },
+        element field_id {
+            attribute REF { xsd:IDREF }
+        }
+    }*,
+    element postaction_field_float {
+        attribute value { xsd:float },
+        element field_id {
+            attribute REF { xsd:IDREF }
+        }
+    }*,
+    element postaction_ci_build {
+        attribute job_url { xsd:string }
+    }*
 
 preConditionsContent =
     (
@@ -91,9 +100,15 @@ transitionContent =
     element to_id {
         attribute REF { xsd:string }
     },
-    postactionsContent,
+    advancedPostActionsContent,
     preConditionsContent
 
+frozenFieldsActionContent =
+    element postaction_frozen_fields {
+        element field_id {
+            attribute REF { xsd:IDREF }
+        }+
+    }?
 
 conditionPermissionsContent =
     element permissions {

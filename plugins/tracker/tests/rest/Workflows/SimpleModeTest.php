@@ -419,6 +419,6 @@ class SimpleModeTest extends TrackerBase
 
         $transition_post_actions = $response_actions->json();
 
-        $this->assertCount(1, $transition_post_actions);
+        $this->assertCount(2, $transition_post_actions);
     }
 }

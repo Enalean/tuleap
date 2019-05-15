@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFields;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsFactory;
 
@@ -42,6 +43,13 @@ class Transition_PostActionFactory //phpcs:ignoreFile
 
     /** @var FrozenFieldsFactory */
     private $frozen_fields_factory;
+
+    public function __construct()
+    {
+        if ($this->areNewActionsEnabled()) {
+            $this->shortnames_by_xml_tag_name[FrozenFields::XML_TAG_NAME] = FrozenFields::SHORT_NAME;
+        }
+    }
 
     /**
      * Get html code to let someone choose a post action for a transition
@@ -87,9 +95,12 @@ class Transition_PostActionFactory //phpcs:ignoreFile
      *
      * @return void
      */
-    public function saveObject(Transition_PostAction $post_action) {
+    public function saveObject(Transition_PostAction $post_action)
+    {
         if ($post_action instanceof Transition_PostAction_Field) {
             $this->getFieldFactory()->saveObject($post_action);
+        } elseif ($this->areNewActionsEnabled() && is_a($post_action, FrozenFields::class)) {
+            $this->getFrozenFieldsFactory()->saveObject($post_action);
         } else {
             $this->getCIBuildFactory()->saveObject($post_action);
         }
@@ -165,6 +176,11 @@ class Transition_PostActionFactory //phpcs:ignoreFile
             Transition_PostAction_Field_Date::SHORT_NAME  => $field_factory,
             Transition_PostAction_CIBuild::SHORT_NAME     => $this->getCIBuildFactory(),
         );
+
+        if ($this->areNewActionsEnabled()) {
+            $factories[FrozenFields::SHORT_NAME] = $this->getFrozenFieldsFactory();
+        }
+
         if (isset($factories[$post_action_short_name])) {
             return $factories[$post_action_short_name];
         }

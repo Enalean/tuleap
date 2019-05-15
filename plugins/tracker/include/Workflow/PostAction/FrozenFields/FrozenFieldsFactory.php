@@ -106,7 +106,12 @@ class FrozenFieldsFactory implements \Transition_PostActionSubFactory
      */
     public function saveObject(Transition_PostAction $post_action)
     {
-        // Not implemented. We do not support the legacy UI for this new post action
+        $to_transition_id = $post_action->getTransition()->getId();
+
+        return $this->frozen_dao->createPostActionForTransitionId(
+            $to_transition_id,
+            $post_action->getFieldIds()
+        );
     }
 
     /**
@@ -166,11 +171,21 @@ class FrozenFieldsFactory implements \Transition_PostActionSubFactory
      * @param array            &$xmlMapping containig the newly created formElements idexed by their XML IDs
      * @param Transition        $transition to which the postaction is attached
      *
-     * @return Transition_PostAction|null The  Transition_PostAction object, or null if error
+     * @return FrozenFields|null The  Transition_PostAction object, or null if error
      */
     public function getInstanceFromXML($xml, &$xmlMapping, Transition $transition)
     {
-        // Not implemented.
+        $fields = [];
+        foreach ($xml->field_id as $xml_field_id) {
+            if (isset($xmlMapping[(string)$xml_field_id['REF']])) {
+                $fields[] = $xmlMapping[(string)$xml_field_id['REF']];
+            }
+        }
+
+        if (count($fields) > 0) {
+            return new FrozenFields($transition, 0, $fields);
+        }
+
         return null;
     }
 }
