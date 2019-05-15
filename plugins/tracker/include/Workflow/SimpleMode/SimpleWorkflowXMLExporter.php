@@ -27,10 +27,34 @@ use Workflow;
 
 class SimpleWorkflowXMLExporter
 {
+    /**
+     * @var SimpleWorkflowDao
+     */
+    private $simple_workflow_dao;
+
+    public function __construct(SimpleWorkflowDao $simple_workflow_dao)
+    {
+        $this->simple_workflow_dao = $simple_workflow_dao;
+    }
 
     public function exportToXML(Workflow $workflow, SimpleXMLElement $xml_simple_workflow, array $xml_mapping)
     {
         $xml_simple_workflow->addChild('field_id')->addAttribute('REF', array_search($workflow->getFieldId(), $xml_mapping));
         $xml_simple_workflow->addChild('is_used', (string) $workflow->isUsed());
+
+        $this->exportStatesToXML($workflow, $xml_simple_workflow, $xml_mapping);
+    }
+
+    private function exportStatesToXML(Workflow $workflow, SimpleXMLElement $xml_simple_workflow, array $xml_mapping)
+    {
+        $states_sql = $this->simple_workflow_dao->searchStatesForWorkflow((int) $workflow->getId());
+
+        if ($states_sql && count($states_sql) > 0) {
+            $states_xml = $xml_simple_workflow->addChild('states');
+            foreach ($states_sql as $state_sql) {
+                $state_xml = $states_xml->addChild('state');
+                $state_xml->addChild('to_id')->addAttribute('REF', array_search($state_sql['to_id'], $xml_mapping['values']));
+            }
+        }
     }
 }

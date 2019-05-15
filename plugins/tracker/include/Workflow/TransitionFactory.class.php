@@ -210,6 +210,10 @@ class TransitionFactory //phpcs:ignoreFile
         $transitions = [];
         $to_id       = $xml_mapping[(string)$state_xml->to_id['REF']];
 
+        if (! isset($state_xml->transitions)) {
+            return $transitions;
+        }
+
         foreach ($state_xml->transitions->transition as $transition_xml) {
             $from_id = null;
             if ((string)$transition_xml->from_id['REF'] !== 'null') {
