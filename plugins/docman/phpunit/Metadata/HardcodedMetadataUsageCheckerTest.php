@@ -28,7 +28,6 @@ use PHPUnit\Framework\TestCase;
 use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataUsageChecker;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
 use Tuleap\Docman\REST\v1\Metadata\ItemStatusUsageMismatchException;
-use Tuleap\Docman\REST\v1\Metadata\StatusNotFoundException;
 
 class HardcodedMetadataUsageCheckerTest extends TestCase
 {
@@ -68,46 +67,6 @@ class HardcodedMetadataUsageCheckerTest extends TestCase
 
         $checker->checkStatusIsNotSetWhenStatusMetadataIsNotAllowed(ItemStatusMapper::ITEM_STATUS_APPROVED);
     }
-
-    public function testCheckItemStatusAuthorisedValueIsOk(): void
-    {
-        $checker = new HardcodedMetadataUsageChecker(
-            $this->docman_settings_bo
-        );
-
-        $this->docman_settings_bo->shouldReceive("getMetadataUsage")->with('status')->andReturn('1');
-
-        $checker->checkItemStatusAuthorisedValue('rejected');
-
-        $this->addToAssertionCount(1);
-    }
-
-    public function testCheckItemStatusAuthorisedValueThrowsExceptionIfTheValueIsNotAuthorized(): void
-    {
-        $checker = new HardcodedMetadataUsageChecker(
-            $this->docman_settings_bo
-        );
-
-        $this->docman_settings_bo->shouldReceive("getMetadataUsage")->with('status')->andReturn('1');
-
-        $this->expectException(StatusNotFoundException::class);
-
-        $checker->checkItemStatusAuthorisedValue('swang');
-    }
-
-    public function testCheckItemStatusAuthorisedValueThrowsExceptionIfTheValueIsNull(): void
-    {
-        $checker = new HardcodedMetadataUsageChecker(
-            $this->docman_settings_bo
-        );
-
-        $this->docman_settings_bo->shouldReceive("getMetadataUsage")->with('status')->andReturn('1');
-
-        $this->expectException(StatusNotFoundException::class);
-
-        $checker->checkItemStatusAuthorisedValue(null);
-    }
-
 
     public function testCheckItemStatusUsageReturnExceptionIfTheMetadataReturnFalse(): void
     {

@@ -2208,10 +2208,11 @@ class Docman_Actions extends Actions {
     }
 
     function action_lock_del() {
+        /** @var Docman_Controller $this->_controler */
         $item = $this->_controler->_actionParams['item'];
         $user = $this->_controler->getUser();
         $lockFactory = new Docman_LockFactory();
-        if ($this->_controler->userCanWrite($item->getId())) {
+        if ($user !== null && $this->_controler->userCanWrite($item->getId())) {
             $lockFactory->unlock($item);
             $this->_raiseUnlockEvent($item, $user);
         }

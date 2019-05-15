@@ -107,7 +107,7 @@ class DocmanItemCreatorBuilder
                 $document_upload_path_allocator
             ),
             new DocmanLinksValidityChecker(),
-            new ItemStatusMapper($hardcoded_metadata_status_checker),
+            new ItemStatusMapper(),
             $hardcoded_metadata_status_checker,
             $hardcoded_metadata_obsolescence_date_checker,
             new HardcodedMetadataObsolescenceDateRetriever(

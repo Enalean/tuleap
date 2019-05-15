@@ -26,37 +26,39 @@ class Docman_ItemDao extends DataAccessObject {
     /**
      * Return the timestamp of the current day at 00:00
      */
-    function getObsoleteToday() {
+    private static function getObsoleteToday() : int
+    {
         $today = getdate();
-        $time = mktime(0,0,1,$today['mon'], $today['mday'], $today['year']);
-        return $time;
+        return mktime(0,0,1,$today['mon'], $today['mday'], $today['year']);
     }
 
     /**
      * Return the SQL statement that exclude the items that are obsolete as of today.
      * static
      */
-    function getExcludeObsoleteItemsStmt($table) {
+    private static function getExcludeObsoleteItemsStmt(string $table) : string
+    {
         $sql = '';
         $sql .= '('.$table.'.obsolescence_date = 0 OR ';
-        $sql .= ' '.$table.'.obsolescence_date > '.Docman_ItemDao::getObsoleteToday().')';
+        $sql .= ' '.$table.'.obsolescence_date > '.self::getObsoleteToday().')';
         return $sql;
     }
 
     /**
      * Return the SQL statement that exclude the items that are deleted.
      */
-    function getExcludeDeletedItemsStmt($table) {
-        $sql = $table.'.delete_date IS NULL';
-        return $sql;
+    private static function getExcludeDeletedItemsStmt(string $table) : string
+    {
+        return $table.'.delete_date IS NULL';
     }
 
     /**
      * Return the SQL statements that exclude deleted & obsolete items.
      */
-    function getCommonExcludeStmt($table) {
-        return Docman_ItemDao::getExcludeDeletedItemsStmt($table).' AND '.
-            Docman_ItemDao::getExcludeObsoleteItemsStmt($table);
+    public static function getCommonExcludeStmt($table)
+    {
+        return self::getExcludeDeletedItemsStmt($table).' AND '.
+            self::getExcludeObsoleteItemsStmt($table);
     }
 
     /**
@@ -935,6 +937,9 @@ class Docman_ItemDao extends DataAccessObject {
             
             $sql = 'SELECT FOUND_ROWS() as nb';
             $resNumrows = $this->retrieve($sql);
+            if ($resNumrows === false) {
+                return [];
+            }
             $row = $resNumrows->getRow();
             return array('items' => $pendings, 'nbItems' => $row['nb']);
         }
@@ -946,7 +951,7 @@ class Docman_ItemDao extends DataAccessObject {
      *
      * @param int $time
      *
-     * @return bool
+     * @return DataAccessResult|false
      */
     function listItemsToPurge($time) {
         $sql = 'SELECT item_id, parent_id, group_id, title, '.

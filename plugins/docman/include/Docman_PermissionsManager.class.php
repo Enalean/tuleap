@@ -55,13 +55,13 @@ class Docman_PermissionsManager {
     {
         $this->project          = $project;
         $this->url_verification = $url_verification;
-        $this->plugin           = PluginManager::instance()->getPluginByName(docmanPlugin::SERVICE_SHORTNAME);
+        $this->plugin           = PluginManager::instance()->getPluginByName(DocmanPlugin::SERVICE_SHORTNAME);
     }
 
     /**
      * The manager is a singleton
      *
-     * @param Integer $groupId Project id
+     * @param int $groupId Project id
      *
      * @return Docman_PermissionsManager
      */
@@ -116,7 +116,7 @@ class Docman_PermissionsManager {
     /**
      * Return an item factory
      *
-     * @param Integer $groupId
+     * @param int $groupId
      * @return Docman_ItemFactory
      */
     function _getItemFactory($groupId=0) {
@@ -516,7 +516,11 @@ class Docman_PermissionsManager {
             // Locks
             // Iter on all given item_ids and disable write if current user is not
             // lock owner and not doc manager.
-            foreach($this->getLockFactory()->retreiveLocksForItems($objIds) as $row){
+            $lock_rows = $this->getLockFactory()->retreiveLocksForItems($objIds);
+            if ($lock_rows === false) {
+                return;
+            }
+            foreach($lock_rows as $row){
                 if($row['user_id'] != $userId && !$this->cache_manage[$userId][$row['item_id']]) {
                     $this->cache_write[$userId][$row['item_id']] = false;
                 }

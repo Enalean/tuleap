@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) STMicroelectronics, 2012. All Rights Reserved.
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -132,27 +132,31 @@ class Docman_ApprovalTableReminder {
         $um       = UserManager::instance();
         $reviewer = $um->getUserById($reviewerId);
 
-        if (! $reviewer->getEmail()) {
-            return;
+        if ($reviewer === null) {
+            return false;
         }
 
+        if (! $reviewer->getEmail()) {
+            return false;
+        }
+
+        $itemId = '';
         if ($table instanceof Docman_ApprovalTableFile) {
             $versionFactory = new Docman_VersionFactory();
             $version        = $versionFactory->getSpecificVersionById($table->getVersionId(), 'plugin_docman_version');
-            $itemId = "";
             if ($version) {
                 $itemId = $version->getItemId();
             }
-        } elseif ($table) {
+        } elseif ($table && method_exists($table, 'getItemId')) {
             $itemId = $table->getItemId();
         }
         if (! $itemId) {
-            return;
+            return false;
         }
         $itemFactory = new Docman_ItemFactory();
         $docmanItem  = $itemFactory->getItemFromDb($itemId);
         if (! $docmanItem) {
-            return;
+            return false;
         }
 
         $subject     = $GLOBALS['Language']->getText('plugin_docman', 'approval_reminder_mail_subject', array($GLOBALS['sys_name'], $docmanItem->getTitle()));

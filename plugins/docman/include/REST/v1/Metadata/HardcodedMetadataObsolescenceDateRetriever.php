@@ -39,10 +39,6 @@ class HardcodedMetadataObsolescenceDateRetriever
     }
 
     /**
-     * @param string|null $date
-     *
-     * @param int         $item_type
-     *
      * @return int
      * @throws InvalidDateTimeFormatException
      */

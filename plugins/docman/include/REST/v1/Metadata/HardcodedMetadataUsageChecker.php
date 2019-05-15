@@ -45,23 +45,4 @@ class HardcodedMetadataUsageChecker
             throw new ItemStatusUsageMismatchException();
         }
     }
-
-    /**
-     * @throws StatusNotFoundException
-     */
-    public function checkItemStatusAuthorisedValue(?string $status_string): void
-    {
-        if ($status_string === null) {
-            throw new StatusNotFoundException('null is not a valid item status');
-        }
-
-        if (!isset(ItemStatusMapper::ITEM_STATUS_ARRAY_MAP[$status_string])) {
-            throw new StatusNotFoundException(
-                sprintf(
-                    'The status %s is invalid.',
-                    $status_string
-                )
-            );
-        }
-    }
 }

@@ -95,6 +95,9 @@ class NotificationsForProjectMemberCleaner
         if ($dar && ! $dar->isError()) {
             foreach ($dar as $row) {
                 $user = $this->user_manager->getUserById($row['user_id']);
+                if ($user === null) {
+                    continue;
+                }
                 if (! $user->isMember($project->getID())) {
                     $this->notifications_manager->removeUser($row['user_id'], $row['item_id'], $row['type']);
                 }

@@ -52,7 +52,7 @@ class Docman_LockDao extends DataAccessObject
     * Search all locks set on items that belong to the same given project. 
     *
     * @param int $groupId
-    * @return DataAccessResult
+    * @return DataAccessResult|false
     */
     function searchLocksForProjectByGroupId($groupId) {
         $sql = 'SELECT l.*'.
@@ -68,7 +68,7 @@ class Docman_LockDao extends DataAccessObject
      * 
      * @param Array $itemIds
      * 
-     * @return DataAccessResult
+     * @return DataAccessResult|false
      */
     function searchLocksForItemIds(array $itemIds) {
         $sql = 'SELECT l.item_id, l.user_id'.

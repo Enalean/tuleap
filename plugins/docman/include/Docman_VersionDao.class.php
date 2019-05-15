@@ -152,7 +152,7 @@ class Docman_VersionDao extends DataAccessObject {
      *
      * @param int $itemId
      *
-     * @return int
+     * @return int|false
      */
     function searchNextVersionNumber($itemId) {
         $sql = 'SELECT * FROM'.
@@ -319,6 +319,9 @@ class Docman_VersionDao extends DataAccessObject {
 
             $sql = 'SELECT FOUND_ROWS() as nb';
             $resNumrows = $this->retrieve($sql);
+            if ($resNumrows === false) {
+                return [];
+            }
             $row = $resNumrows->getRow();
             return array('versions' => $pendings, 'nbVersions' => $row['nb']);
         }
@@ -330,7 +333,7 @@ class Docman_VersionDao extends DataAccessObject {
      *
      * @param int $itemId
      *
-     * @return bool
+     * @return DataAccessResult|false
      */
     function listVersionsToPurgeByItemId($itemId) {
         $sql = 'SELECT v.id, v.number, v.item_id, v.user_id, v.label, v.changelog,'.
@@ -346,7 +349,7 @@ class Docman_VersionDao extends DataAccessObject {
      *
      * @param int $time
      *
-     * @return bool
+     * @return DataAccessResult|false
      */
     function listVersionsToPurge($time) {
         $sql=' SELECT id, item_id, number, user_id, label, changelog,'.

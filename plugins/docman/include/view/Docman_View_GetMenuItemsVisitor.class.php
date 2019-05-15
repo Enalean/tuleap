@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - 2019. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -19,12 +19,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Docman\Item\ItemVisitor;
 use Tuleap\Docman\Upload\Version\DocumentOnGoingVersionToUploadDAO;
 use Tuleap\Docman\Upload\Version\VersionOngoingUploadRetriever;
 
-require_once dirname(__FILE__).'/../Docman_LockFactory.class.php';
-
-class Docman_View_GetMenuItemsVisitor /* implements Visitor*/ {
+class Docman_View_GetMenuItemsVisitor implements ItemVisitor
+{
     var $actions;
     function __construct(&$user, $groupId) {
         $this->dPm = Docman_PermissionsManager::instance($groupId);
@@ -33,7 +33,7 @@ class Docman_View_GetMenuItemsVisitor /* implements Visitor*/ {
         $this->actions = array();
     }
 
-    function visitItem(&$item, $params = array()) {
+    function visitItem(Docman_Item $item, $params = array()) {
         if($this->dPm->userCanManage($this->user, $item->getId())) {
             $this->actions['canPermissions'] = true;
         }
@@ -79,7 +79,7 @@ class Docman_View_GetMenuItemsVisitor /* implements Visitor*/ {
         return $this->actions;
     }
 
-    function visitFolder(&$item, $params = array()) {
+    function visitFolder(Docman_Folder $item, $params = array()) {
         if($this->dPm->userCanWrite($this->user, $item->getId())) {
             $this->actions['canNewDocument'] = true;
             $this->actions['canNewFolder']   = true;
@@ -104,14 +104,14 @@ class Docman_View_GetMenuItemsVisitor /* implements Visitor*/ {
         return $this->visitItem($item, $params);
     }
 
-    function visitWiki(&$item, $params = array()) {
+    function visitWiki(Docman_Wiki $item, $params = array()) {
         if($this->dPm->userCanWrite($this->user, $item->getId())) {
             $this->actions['canUpdate'] = true;
         }
         return $this->visitDocument($item, $params);
     }
 
-    function visitLink(&$item, $params = array()) {
+    function visitLink(Docman_Link $item, $params = array()) {
         if ($this->dPm->userCanWrite($this->user, $item->getId())) {
             $this->actions['canNewVersion'] = true;
         }
@@ -119,7 +119,7 @@ class Docman_View_GetMenuItemsVisitor /* implements Visitor*/ {
         return $this->visitDocument($item, $params);
     }
 
-    function visitFile(&$item, $params = array()) {
+    function visitFile(Docman_File $item, $params = array()) {
         if($this->dPm->userCanWrite($this->user, $item->getId())) {
             $this->actions['canNewVersion'] = true;
         }
@@ -131,11 +131,11 @@ class Docman_View_GetMenuItemsVisitor /* implements Visitor*/ {
         return $this->visitDocument($item, $params);
     }
 
-    function visitEmbeddedFile(&$item, $params = array()) {
+    function visitEmbeddedFile(Docman_EmbeddedFile $item, $params = array()) {
         return $this->visitFile($item, $params);
     }
 
-    function visitEmpty(&$item, $params = array()) {
+    function visitEmpty(Docman_Empty $item, $params = array()) {
         if($this->dPm->userCanWrite($this->user, $item->getId())) {
             $this->actions['canUpdate'] = true;
         }

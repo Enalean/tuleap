@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All rights reserved
+ * Copyright (c) Enalean, 2018-Present. All rights reserved
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2006
@@ -21,12 +21,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('Docman_ItemFactory.class.php');
-require_once('Docman_PermissionsManager.class.php');
-require_once('Docman_MetadataValueFactory.class.php');
-require_once('Docman_MetadataFactory.class.php');
+use Tuleap\Docman\Item\ItemVisitor;
 
-class Docman_CloneItemsVisitor {
+class Docman_CloneItemsVisitor implements ItemVisitor
+{
     var $dstGroupId;
     var $_cacheMetadataUsage;
     var $itemMapping;
@@ -64,24 +62,28 @@ class Docman_CloneItemsVisitor {
         die('never happen');
     }
 
-    function visitWiki(&$item, $params = array()) {
+    public function visitWiki(Docman_Wiki $item, $params = array()) {
         $this->_cloneItem($item, $params);
     }
 
-    function visitLink(&$item, $params = array()) {
+    public function visitLink(Docman_Link $item, $params = array()) {
         $this->_cloneItem($item, $params);
     }
 
-    function visitFile(&$item, $params = array()) {
+    public function visitFile(Docman_File $item, $params = array()) {
         $this->_cloneFile($item, $params);
     }
 
-    function visitEmbeddedFile(&$item, $params = array()) {
+    public function visitEmbeddedFile(Docman_EmbeddedFile $item, $params = array()) {
         $this->_cloneFile($item, $params);
     }
 
-    function visitEmpty(&$item, $params = array()) {
+    public function visitEmpty(Docman_Empty $item, $params = array()) {
         $this->_cloneItem($item, $params);
+    }
+
+    public function visitItem(Docman_Item $item, array $params = [])
+    {
     }
 
     function _cloneFile($item, $params) {

@@ -214,7 +214,7 @@ class DocmanLinksResource extends AuthenticatedResource
             new DocmanLinksValidityChecker(),
             new Docman_LinkVersionFactory(),
             new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
-            new ItemStatusMapper($hardcoded_metadata_status_checker),
+            new ItemStatusMapper(),
             $hardcoded_metadata_status_checker,
             $hardcoded_metadata_obsolescence_date_checker,
             new HardcodedMetadataObsolescenceDateRetriever(

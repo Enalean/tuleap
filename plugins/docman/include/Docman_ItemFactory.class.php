@@ -32,6 +32,7 @@ class Docman_ItemFactory
     var $onlyOneChildForRoot;
     var $copiedItem;
     var $groupId;
+    private $cutItem;
 
     private static $instance;
 

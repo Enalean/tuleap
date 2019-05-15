@@ -301,7 +301,7 @@ class Docman_NotificationsManager
      * @param $groupId
      * @param $userId
      *
-     * @return bool
+     * @return DataAccessResult|false
      */
     function listAllMonitoredItems($groupId, $userId = null) {
         return $this->users_to_notify_dao->searchDocmanMonitoredItems($groupId, $userId);
