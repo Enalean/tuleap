@@ -72,7 +72,7 @@ class DocmanFilesResource extends AuthenticatedResource
      */
     public function optionsDocumentItems($id)
     {
-        $this->getHeaders();
+        $this->setHeaders();
     }
 
     /**
@@ -108,7 +108,7 @@ class DocmanFilesResource extends AuthenticatedResource
     public function patch(int $id, DocmanFilesPATCHRepresentation $representation)
     {
         $this->checkAccess();
-        $this->getHeaders();
+        $this->setHeaders();
 
         $item_request = $this->request_builder->buildFromItemId($id);
         $item         = $item_request->getItem();
@@ -206,7 +206,7 @@ class DocmanFilesResource extends AuthenticatedResource
     public function delete(int $id) : void
     {
         $this->checkAccess();
-        $this->getHeaders();
+        $this->setHeaders();
 
         $item_request      = $this->request_builder->buildFromItemId($id);
         $item_to_delete    = $item_request->getItem();
@@ -238,7 +238,7 @@ class DocmanFilesResource extends AuthenticatedResource
         return new DocmanItemsEventAdder($this->event_manager);
     }
 
-    private function getHeaders(): void
+    private function setHeaders(): void
     {
         Header::allowOptionsPatchDelete();
     }
