@@ -19,6 +19,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\FormElement\Field\File\AttachmentForRestCreator;
+use Tuleap\Tracker\FormElement\Field\File\AttachmentForTraditionalUploadCreator;
+use Tuleap\Tracker\FormElement\Field\File\AttachmentToFinalPlaceMover;
+use Tuleap\Tracker\FormElement\Field\File\ChangesetValueFileSaver;
+
 require_once('common/valid/Rule.class.php');
 require_once('common/include/Codendi_HTTPPurifier.class.php');
 
@@ -814,152 +819,31 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
      *
      * @return bool
      */
-    protected function saveValue($artifact, $changeset_value_id, $value, ?Tracker_Artifact_ChangesetValue $previous_changesetvalue = null) {
-        $save_ok = true;
+    protected function saveValue(
+        $artifact,
+        $changeset_value_id,
+        $value,
+        ?Tracker_Artifact_ChangesetValue $previous_changesetvalue = null
+    ) {
+        $mover              = new AttachmentToFinalPlaceMover();
+        $rule_file          = new Rule_File();
+        $attachment_creator = new AttachmentForRestCreator(
+            $mover,
+            $this->getTemporaryFileManager(),
+            new AttachmentForTraditionalUploadCreator($mover, $rule_file),
+            $rule_file
+        );
 
-        $success = array();
-        $dao = $this->getValueDao();
-        //first save the previous files
-        if ($previous_changesetvalue) {
-            $previous_fileinfo_ids = array();
-            foreach($previous_changesetvalue as $previous_attachment) {
-                if (empty($value['delete']) || !in_array($previous_attachment->getId(), $value['delete'])) {
-                    $previous_fileinfo_ids[] = $previous_attachment->getId();
-                }  elseif (! empty($value['delete']) && in_array($previous_attachment->getId(), $value['delete'])) {
-                    $previous_attachment->delete();
-                }
-            }
-            if (count($previous_fileinfo_ids)) {
-                $save_ok = $save_ok && $dao->create($changeset_value_id, $previous_fileinfo_ids);
-            }
-        }
+        $saver = new ChangesetValueFileSaver($this->getValueDao(), $attachment_creator);
 
-        //Now save the new submitted files
-        $current_user = $this->getUserManager()->getCurrentUser();
-        $r = new Rule_File();
-        foreach ($value as $i => $file_info) {
-            if ("$i" != 'delete' && $r->isValid($file_info)) {
-                $temporary = $this->getTemporaryFileManager();
-
-                if (isset($file_info['id'])) {
-                    $temporary_file = $temporary->getFileByTemporaryName($file_info['id']);
-                }
-
-                if (isset($temporary_file)) {
-                    $attachment = new Tracker_FileInfo(
-                        $temporary_file->getId(),
-                        $this,
-                        $current_user->getId(),
-                        trim($temporary_file->getDescription()),
-                        $temporary_file->getName(),
-                        $temporary_file->getSize(),
-                        $temporary_file->getType()
-                    );
-
-                    if ($this->createAttachmentForRest($attachment, $file_info)) {
-                        $success[] = $attachment->getId();
-                    }
-
-                } else {
-                    $submitted_by = $current_user;
-                    if (isset($file_info['submitted_by'])) {
-                        $submitted_by = $file_info['submitted_by'];
-                    }
-                    $attachment = new Tracker_FileInfo(
-                        null,
-                        $this,
-                        $submitted_by->getId(),
-                        trim($file_info['description']),
-                        $file_info['name'],
-                        $file_info['size'],
-                        $file_info['type']
-                    );
-
-                    if ($this->createAttachment($attachment, $file_info)) {
-                        $success[] = $attachment->getId();
-                    }
-                }
-            }
-        }
-
-        if (count($success)) {
-            $save_ok = $save_ok && $dao->create($changeset_value_id, $success);
-        }
-        return $save_ok;
-    }
-
-    protected function createAttachment(Tracker_FileInfo $attachment, $file_info) {
-        if ($attachment->save()) {
-            $this->initFolder();
-
-            $method   = 'move_uploaded_file';
-            $tmp_name = $file_info['tmp_name'];
-
-            if ($this->isImportOfArtifact($file_info)) {
-                $method = 'copy';
-            }
-
-            return $this->moveAttachmentToFinalPlace($attachment, $method, $tmp_name);
-        }
-        return false;
-    }
-
-    private function isImportOfArtifact(array $file_info) {
-        return isset($file_info[Tracker_Artifact_XMLImport_XMLImportFieldStrategyAttachment::FILE_INFO_COPY_OPTION]) &&
-            $file_info[Tracker_Artifact_XMLImport_XMLImportFieldStrategyAttachment::FILE_INFO_COPY_OPTION];
-    }
-
-    private function createAttachmentForRest(Tracker_FileInfo $attachment, $file_info) {
-        $this->initFolder();
-
-        $method   = 'move_uploaded_file';
-        $tmp_name = $file_info['tmp_name'];
-
-        if(isset($file_info['id'])) {
-            $filename  = $file_info['id'];
-            $temporary = $this->getTemporaryFileManager();
-
-            $user = $this->getUserManager()->getUserById($attachment->getSubmittedBy());
-            if (! $temporary->exists($user, $filename)) {
-                $attachment->delete();
-                return false;
-            }
-
-            $method   = 'rename';
-            $tmp_name = $temporary->getPath($user, $filename);
-
-            $temporary->removeTemporaryFileInDBByTemporaryName($filename);
-
-        }
-
-        return $this->moveAttachmentToFinalPlace($attachment, $method, $tmp_name);
-    }
-
-    private function initFolder()
-    {
-        $backend                  = Backend::instance();
-        $path                     = $this->getRootPath() . '/thumbnails';
-        $no_filter_file_extension = array();
-
-        if (! is_dir($path)) {
-            mkdir($path, 0777, true);
-            $backend->recurseChownChgrp(
-                $this->getGlobalTrackerRootPath(),
-                ForgeConfig::get('sys_http_user'),
-                ForgeConfig::get('sys_http_user'),
-                $no_filter_file_extension
-            );
-        }
-    }
-
-    private function moveAttachmentToFinalPlace(Tracker_FileInfo $attachment, $method, $src_path) {
-        if ($method($src_path, $attachment->getPath())) {
-            $attachment->postUploadActions();
-            return true;
-        } else {
-            $attachment->delete();
-            return false;
-        }
+        /** @var Tracker_Artifact_ChangesetValue_File $previous_changesetvalue */
+        return $saver->saveValue(
+            $this->getCurrentUser(),
+            $this,
+            $changeset_value_id,
+            $value,
+            $previous_changesetvalue
+        );
     }
 
     /**
@@ -1143,7 +1027,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
     /**
      * @return string
      */
-    private function getGlobalTrackerRootPath()
+    public function getGlobalTrackerRootPath()
     {
         return ForgeConfig::get('sys_data_dir') . '/tracker/';
     }

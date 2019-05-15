@@ -761,7 +761,7 @@ extends Rule {
     var $i18nPageName;
 
     function __construct() {
-        $this->maxSize = $GLOBALS['sys_max_size_upload'];
+        $this->maxSize = ForgeConfig::get('sys_max_size_upload');
         $this->i18nPageName = 'rule_file';
     }
 
