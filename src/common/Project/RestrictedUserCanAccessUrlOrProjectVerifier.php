@@ -22,17 +22,17 @@ declare(strict_types=1);
 
 namespace Tuleap\Project;
 
-use EventManager;
 use ForgeConfig;
 use PFUser;
 use Project;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\Request\RestrictedUsersAreHandledByPluginEvent;
 use URL;
 
 class RestrictedUserCanAccessUrlOrProjectVerifier implements RestrictedUserCanAccessVerifier
 {
     /**
-     * @var EventManager
+     * @var EventDispatcherInterface
      */
     private $event_manager;
     /**
@@ -44,7 +44,7 @@ class RestrictedUserCanAccessUrlOrProjectVerifier implements RestrictedUserCanAc
      */
     private $request_uri;
 
-    public function __construct(EventManager $event_manager, URL $url, string $request_uri)
+    public function __construct(EventDispatcherInterface $event_manager, URL $url, string $request_uri)
     {
         $this->event_manager = $event_manager;
         $this->url           = $url;
@@ -132,12 +132,9 @@ class RestrictedUserCanAccessUrlOrProjectVerifier implements RestrictedUserCanAc
         }
 
         //Forbid search unless it's on a tracker
-        if (strpos(
-                $req_uri,
-                '/search'
-            ) === 0 && isset($_REQUEST['type_of_search']) && $_REQUEST['type_of_search'] == 'tracker') {
+        if (strpos($req_uri, '/search') === 0 && isset($_REQUEST['type_of_search']) && $_REQUEST['type_of_search'] == 'tracker') {
             return true;
-        } else if (strpos($req_uri, '/search') === 0) {
+        } elseif (strpos($req_uri, '/search') === 0) {
             return false;
         }
 
@@ -203,8 +200,7 @@ class RestrictedUserCanAccessUrlOrProjectVerifier implements RestrictedUserCanAc
         }
 
         if (! $user_is_allowed) {
-            $event = new RestrictedUsersAreHandledByPluginEvent($this->request_uri);
-            $this->event_manager->processEvent($event);
+            $event = $this->event_manager->dispatch(new RestrictedUsersAreHandledByPluginEvent($this->request_uri));
             $user_is_allowed = $event->getPluginHandleRestricted();
         }
 

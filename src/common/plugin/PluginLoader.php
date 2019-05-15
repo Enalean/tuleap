@@ -60,7 +60,7 @@ class PluginLoader
                     $event_name,
                     function ($event, $params) use ($proxy, $listener) {
                         $plugin = $proxy->getPlugin($listener->plugin_id);
-                        $this->event_manager->dispatch($listener->event, $plugin, $listener->callback, $listener->recall_event, $params);
+                        $this->event_manager->eventManagerDispatch($listener->event, $plugin, $listener->callback, $listener->recall_event, $params);
                     }
                 );
             }

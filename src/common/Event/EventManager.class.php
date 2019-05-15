@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -19,12 +19,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class EventManager
+use Psr\EventDispatcher\EventDispatcherInterface;
+use Psr\EventDispatcher\ListenerProviderInterface;
+use Psr\EventDispatcher\StoppableEventInterface;
+use Tuleap\Event\EventManagerCannotDispatchException;
+
+class EventManager implements EventDispatcherInterface // phpcs:ignore
 {
     private $listeners = [];
 
     /**
-     * Holds an instance of the class
      * @var EventManager
      */
     private static $instance;
@@ -32,7 +36,8 @@ class EventManager
     /**
      * Allows clear instance for test. DO NOT USE IT IN PRODUCTION CODE!
      */
-    public static function clearInstance() {
+    public static function clearInstance()
+    {
         self::$instance = null;
     }
 
@@ -40,7 +45,8 @@ class EventManager
      * Set current instance of singleton.  DO NOT USE IT IN PRODUCTION CODE!
      * @param EventManager $instance
      */
-    public static function setInstance(EventManager $instance) {
+    public static function setInstance(EventManager $instance)
+    {
         self::$instance = $instance;
     }
 
@@ -49,7 +55,8 @@ class EventManager
      *
      * @return EventManager
      */
-    public static function instance() {
+    public static function instance()
+    {
         if (! self::$instance) {
             self::$instance = new EventManager();
         }
@@ -65,7 +72,8 @@ class EventManager
         ];
     }
 
-    public function addListener($event, $listener, $callback, $recallEvent) {
+    public function addListener($event, $listener, $callback, $recallEvent)
+    {
         $this->listeners[$event][] = array(
             'listener'    => $listener,
             'callback'    => $callback,
@@ -84,20 +92,18 @@ class EventManager
      * $event should be an object and $params should be ignored.
      * @see \Tuleap\Widget\Event\GetPublicAreas for usage example.
      *
-     * @param \Tuleap\Event\Dispatchable|string $event
-     * @param mixed $params
+     * @param Tuleap\Event\Dispatchable|string $event
+     * @param array $params
      */
     public function processEvent($event, $params = array())
     {
         if (is_object($event)) {
-            $event_name = $event::NAME;
-            $params     = $event;
-        } else {
-            $event_name = $event;
+            $this->dispatch($event);
+            return;
         }
 
-        if (isset($this->listeners[$event_name])) {
-            foreach ($this->listeners[$event_name] as $hook) {
+        if (isset($this->listeners[$event])) {
+            foreach ($this->listeners[$event] as $hook) {
                 $this->processEventOnListener($event, $params, $hook);
             }
         }
@@ -112,16 +118,49 @@ class EventManager
         if ($listener === null && is_callable($callback)) {
             $callback($event, $params);
         } else {
-            $this->dispatch($event, $listener, $callback, $recall_event, $params);
+            $this->eventManagerDispatch($event, $listener, $callback, $recall_event, $params);
         }
     }
 
-    public function dispatch($event, $listener, $callback, $recall_event, $params)
+    public function eventManagerDispatch($event, $listener, $callback, $recall_event, $params)
     {
         if ($recall_event) {
             $listener->$callback($event, $params);
         } else {
             $listener->$callback($params);
+        }
+    }
+
+    /**
+     * Provide all relevant listeners with an event to process.
+     *
+     * @param object $event
+     *   The object to process.
+     *
+     * @return object
+     *   The Event that was passed, now modified by listeners.
+     */
+    public function dispatch(object $event)
+    {
+        foreach ($this->getListenersForEvent($event) as $hook) {
+            if ($event instanceof StoppableEventInterface && $event->isPropagationStopped()) {
+                break;
+            }
+            $this->processEventOnListener($event, $event, $hook);
+        }
+
+        return $event;
+    }
+
+    private function getListenersForEvent(object $event): iterable
+    {
+        $class_name = get_class($event);
+        try {
+            $constant_reflex = new \ReflectionClassConstant($class_name, 'NAME');
+            $event_name = $constant_reflex->getValue();
+            return $this->listeners[$event_name] ?? [];
+        } catch (\ReflectionException $e) {
+            return $this->listeners[$class_name] ?? [];
         }
     }
 }

@@ -21,6 +21,7 @@
 namespace Tuleap\Widget;
 
 use EventManager;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use TemplateRendererFactory;
 use Tuleap\Dashboard\Project\ProjectDashboardController;
 use Tuleap\Dashboard\User\UserDashboardController;
@@ -66,14 +67,14 @@ class WidgetFactory
     private $forge_ugroup_permissions_manager;
 
     /**
-     * @var EventManager
+     * @var EventDispatcherInterface
      */
     private $event_manager;
 
     public function __construct(
         UserManager $user_manager,
         User_ForgeUserGroupPermissionsManager $forge_ugroup_permissions_manager,
-        EventManager $event_manager
+        EventDispatcherInterface $event_manager
     ) {
         $this->user_manager                     = $user_manager;
         $this->forge_ugroup_permissions_manager = $forge_ugroup_permissions_manager;
@@ -179,8 +180,7 @@ class WidgetFactory
                 );
                 break;
             default:
-                $get_widget_event = new GetWidget($widget_name);
-                $this->event_manager->processEvent($get_widget_event);
+                $get_widget_event = $this->event_manager->dispatch(new GetWidget($widget_name));
                 $widget = $get_widget_event->getWidget();
                 break;
         }
@@ -204,7 +204,7 @@ class WidgetFactory
             $event = new GetProjectWidgetList();
         }
 
-        $this->event_manager->processEvent($event);
+        $this->event_manager->dispatch($event);
         return $event->getWidgets();
     }
 
