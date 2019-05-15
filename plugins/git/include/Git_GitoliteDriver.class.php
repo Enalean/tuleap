@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,10 +19,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once 'PathJoinUtil.php';
-
 use Tuleap\Git\BigObjectAuthorization\BigObjectAuthorizationManager;
 use Tuleap\Git\Gitolite\VersionDetector;
+use Tuleap\Git\PathJoinUtil;
 
 /**
  * This class manage the interaction between Tuleap and Gitolite
@@ -355,8 +354,8 @@ class Git_GitoliteDriver {
     }
 
     public function fork($repo, $old_ns, $new_ns) {
-        $source = unixPathJoin(array($this->getRepositoriesPath(), $old_ns, $repo)) .'.git';
-        $target = unixPathJoin(array($this->getRepositoriesPath(), $new_ns, $repo)) .'.git';
+        $source = PathJoinUtil::unixPathJoin(array($this->getRepositoriesPath(), $old_ns, $repo)) .'.git';
+        $target = PathJoinUtil::unixPathJoin(array($this->getRepositoriesPath(), $new_ns, $repo)) .'.git';
 
         $this->executeShellCommand('sudo -u gitolite /usr/share/tuleap/plugins/git/bin/gl-clone-bundle.sh ' . escapeshellarg($source) . ' ' . escapeshellarg($target));
     }

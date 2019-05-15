@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,6 +23,7 @@ namespace Tuleap\Git\Permissions;
 use GitRepository;
 use PFUser;
 use System_Command;
+use Tuleap\Git\PathJoinUtil;
 
 class AccessControlVerifier
 {
@@ -62,8 +63,7 @@ class AccessControlVerifier
      */
     private function canWriteAccordingToGitolite(PFUser $user, GitRepository $repository, $reference)
     {
-        require_once GIT_BASE_DIR.'/PathJoinUtil.php';
-        $repository_name = escapeshellarg(unixPathJoin(array($repository->getProject()->getUnixName(), $repository->getFullName())));
+        $repository_name = escapeshellarg(PathJoinUtil::unixPathJoin(array($repository->getProject()->getUnixName(), $repository->getFullName())));
         $user_name       = escapeshellarg($user->getUserName());
         $reference       = escapeshellarg($reference);
 

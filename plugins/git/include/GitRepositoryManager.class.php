@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,12 +19,11 @@
  */
 
 use Tuleap\Git\Events\AfterRepositoryForked;
+use Tuleap\Git\PathJoinUtil;
 use Tuleap\Git\Permissions\FineGrainedPermissionReplicator;
 use Tuleap\Git\Permissions\HistoryValueFormatter;
 use Tuleap\Git\PostInitGitRepositoryWithDataEvent;
 use Tuleap\Git\Repository\GitRepositoryNameIsInvalidException;
-
-require_once 'PathJoinUtil.php';
 
 /**
  * This class is responsible of management of several repositories.
@@ -256,7 +255,7 @@ class GitRepositoryManager {
         $clone->setParent($repository);
         $clone->setNamespace($namespace);
         $clone->setId(null);
-        $path = unixPathJoin(array($to_project->getUnixName(), $namespace, $repository->getName())).'.git';
+        $path = PathJoinUtil::unixPathJoin(array($to_project->getUnixName(), $namespace, $repository->getName())).'.git';
         $clone->setPath($path);
         $clone->setScope($scope);
 
