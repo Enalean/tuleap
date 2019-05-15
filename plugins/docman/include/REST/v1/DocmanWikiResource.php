@@ -23,12 +23,19 @@ declare(strict_types = 1);
 namespace Tuleap\Docman\REST\v1;
 
 use Docman_PermissionsManager;
+use Docman_SettingsBo;
 use Docman_VersionFactory;
+use Luracast\Restler\RestException;
+use Project;
 use ProjectManager;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\Lock\LockChecker;
+use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataObsolescenceDateRetriever;
+use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataUsageChecker;
+use Tuleap\Docman\REST\v1\Metadata\HardcodedMetdataObsolescenceDateChecker;
+use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
 use Tuleap\Docman\REST\v1\Wiki\DocmanWikiPATCHRepresentation;
 use Tuleap\Docman\REST\v1\Wiki\DocmanWikiUpdator;
 use Tuleap\REST\AuthenticatedResource;
@@ -128,14 +135,7 @@ class DocmanWikiResource extends AuthenticatedResource
         $builder             = new DocmanItemUpdatorBuilder();
         $docman_item_updator = $builder->build($this->event_manager);
 
-        $updator = new DocmanWikiUpdator(
-            new \Docman_VersionFactory(),
-            new LockChecker(new \Docman_LockFactory()),
-            new \Docman_ItemFactory(),
-            $this->event_manager,
-            $docman_item_updator,
-            new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
-        );
+        $updator = $this->getDocmanWikiUpdator($docman_item_updator, $project);
 
         if ($docman_approval_table_retriever->hasApprovalTable($item)) {
             throw new I18NRestException(
@@ -148,13 +148,24 @@ class DocmanWikiResource extends AuthenticatedResource
             $updator->updateWiki(
                 $item,
                 $current_user,
-                $representation
+                $representation,
+                new \DateTimeImmutable()
             );
         } catch (ExceptionItemIsLockedByAnotherUser $exception) {
             throw new I18NRestException(
                 403,
                 dgettext('tuleap-docman', 'Document is locked by another user.')
             );
+        } catch (Metadata\StatusNotFoundException $e) {
+            throw new RestException(400, $e->getMessage());
+        } catch (Metadata\ItemStatusUsageMismatchException $e) {
+            throw new RestException(400, 'The "Status" property is not activated for this item.');
+        } catch (Metadata\InvalidDateComparisonException $e) {
+            throw new RestException(400, 'The obsolescence date is before the current date');
+        } catch (Metadata\InvalidDateTimeFormatException $e) {
+            throw new RestException(400, 'The date format is incorrect. The format should be YYYY-MM-DD');
+        } catch (Metadata\ObsoloscenceDateUsageMismatchException $e) {
+            throw new RestException(400, $e->getMessage());
         }
     }
 
@@ -166,5 +177,29 @@ class DocmanWikiResource extends AuthenticatedResource
     private function getAllowOptionsPatch(): void
     {
         Header::allowOptionsPatch();
+    }
+
+    private function getDocmanWikiUpdator(DocmanItemUpdator $docman_item_updator, Project $project): DocmanWikiUpdator
+    {
+
+        $docman_setting_bo                            = new Docman_SettingsBo($project->getGroupId());
+        $hardcoded_metadata_status_checker            = new HardcodedMetadataUsageChecker($docman_setting_bo);
+        $hardcoded_metadata_obsolescence_date_checker = new HardcodedMetdataObsolescenceDateChecker(
+            $docman_setting_bo
+        );
+        return new DocmanWikiUpdator(
+            new \Docman_VersionFactory(),
+            new LockChecker(new \Docman_LockFactory()),
+            new \Docman_ItemFactory(),
+            $this->event_manager,
+            $docman_item_updator,
+            new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
+            new ItemStatusMapper($hardcoded_metadata_status_checker),
+            $hardcoded_metadata_status_checker,
+            $hardcoded_metadata_obsolescence_date_checker,
+            new HardcodedMetadataObsolescenceDateRetriever(
+                $hardcoded_metadata_obsolescence_date_checker
+            )
+        );
     }
 }

@@ -87,6 +87,7 @@ class DocmanItemsTestWikiTest extends DocmanBase
                 'changelog'             => 'I have changed',
                 'should_lock_file'      => false,
                 'wiki_properties'       => ['page_name' => 'my new page name'],
+                'title'                 => 'No title',
                 'approval_table_action' => 'copy'
             ]
         );
@@ -107,6 +108,7 @@ class DocmanItemsTestWikiTest extends DocmanBase
 
         $put_resource = json_encode(
             [
+                'title'            => 'No title 2',
                 'should_lock_file' => false,
                 'wiki_properties'  => ['page_name' => 'my new page name']
             ]
@@ -132,6 +134,7 @@ class DocmanItemsTestWikiTest extends DocmanBase
 
         $put_resource = json_encode(
             [
+                'title'            => 'No title 3',
                 'should_lock_file' => false,
                 'wiki_properties'  => ['page_name' => 'my new page name']
             ]
@@ -157,6 +160,7 @@ class DocmanItemsTestWikiTest extends DocmanBase
 
         $put_resource = json_encode(
             [
+                'title'            => 'No title 4',
                 'should_lock_file' => false,
                 'wiki_properties'  => ['page_name' => 'my new page name']
             ]
@@ -196,11 +200,15 @@ class DocmanItemsTestWikiTest extends DocmanBase
         );
         $this->assertEquals(200, $wiki_item_response->getStatusCode());
         $this->assertEquals('wiki', $wiki_item_response->json()['type']);
+        $this->assertEquals('My new wiki', $wiki_item_response->json()['title']);
+        $this->assertEquals('', $wiki_item_response->json()['description']);
 
         $wiki_id = $response1->json()['id'];
 
         $put_resource = json_encode(
             [
+                'title'            => 'New wiki title :o',
+                'description'      => 'Add a description',
                 'should_lock_file' => false,
                 'wiki_properties'  => ['page_name' => 'my updated page name']
             ]
@@ -218,8 +226,101 @@ class DocmanItemsTestWikiTest extends DocmanBase
         );
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals('wiki', $response->json()['type']);
+        $this->assertEquals('New wiki title :o', $response->json()['title']);
+        $this->assertEquals('Add a description', $response->json()['description']);
         $this->assertEquals(null, $response->json()['lock_info']);
         $this->assertEquals('my updated page name', $response->json()['wiki_properties']['page_name']);
+    }
+
+
+    /**
+     * @depends testGetRootId
+     */
+    public function testPatchWikiWithObsolescenceDateWhenObsolescenceDateIsNotEnabledForProject(int $root_id): void
+    {
+        $query = json_encode(
+            [
+                'title'           => 'My new wiki fail',
+                'parent_id'       => $root_id,
+                'wiki_properties' => ['page_name' => 'my new page name'],
+            ]
+        );
+
+        $post_wiki_response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post('docman_folders/' . $root_id . '/wikis', null, $query)
+        );
+
+        $this->assertEquals(201, $post_wiki_response->getStatusCode());
+
+        $wiki_item_response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->get($post_wiki_response->json()['uri'])
+        );
+        $this->assertEquals(200, $wiki_item_response->getStatusCode());
+        $this->assertEquals('wiki', $wiki_item_response->json()['type']);
+
+        $wiki_id = $post_wiki_response->json()['id'];
+
+        $put_resource = json_encode(
+            [
+                'title'             => 'My new wiki fail',
+                'should_lock_file'  => false,
+                'wiki_properties'   => ['page_name' => 'my updated page name'],
+                'obsolescence_date' => '2040-02-03'
+            ]
+        );
+
+        $patch_wiki_response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->patch('docman_wikis/' . $wiki_id, null, $put_resource)
+        );
+        $this->assertEquals(400, $patch_wiki_response->getStatusCode());
+    }
+
+    /**
+     * @depends testGetRootId
+     */
+    public function testPatchWikiWithStatusWhenStatusIsNotEnabledForProject(int $root_id): void
+    {
+        $query = json_encode(
+            [
+                'title'           => 'My new wiki fail v2',
+                'parent_id'       => $root_id,
+                'wiki_properties' => ['page_name' => 'my new page name'],
+            ]
+        );
+
+        $post_wiki_response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post('docman_folders/' . $root_id . '/wikis', null, $query)
+        );
+
+        $this->assertEquals(201, $post_wiki_response->getStatusCode());
+
+        $wiki_item_response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->get($post_wiki_response->json()['uri'])
+        );
+        $this->assertEquals(200, $wiki_item_response->getStatusCode());
+        $this->assertEquals('wiki', $wiki_item_response->json()['type']);
+
+        $wiki_id = $post_wiki_response->json()['id'];
+
+        $put_resource = json_encode(
+            [
+                'should_lock_file' => false,
+                'title'            => 'My new wiki fail patch',
+                'wiki_properties'  => ['page_name' => 'my updated page name'],
+                'status'           => 'approved'
+            ]
+        );
+
+        $patch_wiki_response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->patch('docman_wikis/' . $wiki_id, null, $put_resource)
+        );
+        $this->assertEquals(400, $patch_wiki_response->getStatusCode());
     }
 
 
@@ -256,6 +357,7 @@ class DocmanItemsTestWikiTest extends DocmanBase
 
         $put_resource = json_encode(
             [
+                'title'            => 'My second wiki',
                 'should_lock_file' => true,
                 'wiki_properties'  => ['page_name' => 'my new page name']
             ]
