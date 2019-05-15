@@ -23,6 +23,8 @@ require_once __DIR__ . '/../../svn/include/svnPlugin.class.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/constants.php';
 
+use Tuleap\Http\HttpClientFactory;
+use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\HudsonSvn\BuildParams;
 use Tuleap\HudsonSvn\Plugin\HudsonSvnPluginInfo;
 use Tuleap\HudsonSvn\ContinuousIntegrationCollector;
@@ -216,11 +218,13 @@ class hudson_svnPlugin extends Plugin {
 
     public function process_post_commit($params)
     {
-        $jenkins_csrf_crumb_retriever = new JenkinsCSRFCrumbRetriever(new Http_Client());
+        $http_client                  = HttpClientFactory::createClient();
+        $http_request_factory         = HTTPFactoryBuilder::requestFactory();
+        $jenkins_csrf_crumb_retriever = new JenkinsCSRFCrumbRetriever($http_client, $http_request_factory);
         $launcher                     = new Launcher(
             $this->getJobFactory(),
             new SvnBackendLogger(),
-            new Jenkins_Client(new Http_Client(), $jenkins_csrf_crumb_retriever),
+            new Jenkins_Client($http_client, $http_request_factory, HTTPFactoryBuilder::streamFactory(), $jenkins_csrf_crumb_retriever),
             new BuildParams()
         );
 

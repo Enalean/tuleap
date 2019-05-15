@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,42 +20,69 @@
 
 namespace Tuleap\Jenkins;
 
+use Exception;
+use Http\Mock\Client;
+use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Psr\Http\Client\ClientExceptionInterface;
+use Psr\Http\Client\ClientInterface;
+use Tuleap\Http\HTTPFactoryBuilder;
 
 class JenkinsCSRFCrumbRetrieverTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    public function testRetrievalCSRFHeader()
+    /**
+     * @testWith ["https://example.com"]
+     *           ["https://example.com/"]
+     */
+    public function testRetrievalCSRFHeader(string $test_url) : void
     {
         $csrf_crumb_header = 'Jenkins-Crumb:eb62a7b696ef05275be811c0608cbbcb';
-        $http_client       = \Mockery::mock(\Http_Client::class);
-        $http_client->shouldReceive('addOptions')->with([
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_URL => 'https://example.com/crumbIssuer/api/xml?xpath=concat%28%2F%2FcrumbRequestField%2C%22%3A%22%2C%2F%2Fcrumb%29'
-        ]);
-        $http_client->shouldReceive('doRequest');
-        $http_client->shouldReceive('getLastResponse')->andReturns($csrf_crumb_header);
+        $http_client       = new Client();
+        $http_client->addResponse(
+            HTTPFactoryBuilder::responseFactory()->createResponse()->withBody(
+                HTTPFactoryBuilder::streamFactory()->createStream($csrf_crumb_header)
+            )
+        );
 
-        $csrf_crumb_retriever = new JenkinsCSRFCrumbRetriever($http_client);
+        $csrf_crumb_retriever = new JenkinsCSRFCrumbRetriever($http_client, HTTPFactoryBuilder::requestFactory());
 
-        $test_urls = ['https://example.com', 'https://example.com/'];
-        foreach ($test_urls as $test_url) {
-            $this->assertEquals(
-                $csrf_crumb_retriever->getCSRFCrumbHeader($test_url),
-                $csrf_crumb_header
-            );
-        }
+        $this->assertEquals(
+            $csrf_crumb_retriever->getCSRFCrumbHeader($test_url),
+            $csrf_crumb_header
+        );
+        $requests = $http_client->getRequests();
+        $this->assertCount(1, $requests);
+        $expected_request_url = 'https://example.com/crumbIssuer/api/xml?xpath=concat%28%2F%2FcrumbRequestField%2C%22%3A%22%2C%2F%2Fcrumb%29';
+        $this->assertEquals($expected_request_url, (string) $requests[0]->getUri());
     }
 
-    public function testItDoesNotFailOnHTTPError()
+    public function testItDoesNotFailOnHTTPError() : void
     {
-        $http_client = \Mockery::mock(\Http_Client::class);
-        $http_client->shouldReceive('addOptions');
-        $http_client->shouldReceive('doRequest')->andThrows(\Http_ClientException::class);
+        $http_client = new Client();
+        $http_client->addResponse(
+            HTTPFactoryBuilder::responseFactory()->createResponse(500)
+        );
 
-        $csrf_crumb_retriever = new JenkinsCSRFCrumbRetriever($http_client);
+        $csrf_crumb_retriever = new JenkinsCSRFCrumbRetriever($http_client, HTTPFactoryBuilder::requestFactory());
+
+        $this->assertEquals(
+            $csrf_crumb_retriever->getCSRFCrumbHeader('https://example.com'),
+            ''
+        );
+    }
+
+    public function testItDoesNotFailOnNetworkError() : void
+    {
+        $http_client = Mockery::mock(ClientInterface::class);
+        $http_client->shouldReceive('sendRequest')->andThrow(
+            new class extends Exception implements ClientExceptionInterface {
+            }
+        );
+
+        $csrf_crumb_retriever = new JenkinsCSRFCrumbRetriever($http_client, HTTPFactoryBuilder::requestFactory());
 
         $this->assertEquals(
             $csrf_crumb_retriever->getCSRFCrumbHeader('https://example.com'),

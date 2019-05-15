@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,24 +20,30 @@
 
 namespace Tuleap\Jenkins;
 
+use Psr\Http\Client\ClientExceptionInterface;
+use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\RequestFactoryInterface;
+
 class JenkinsCSRFCrumbRetriever
 {
-    public const CRUMB_ISSUER_PATH = '/crumbIssuer/api/xml';
+    private const CRUMB_ISSUER_PATH = '/crumbIssuer/api/xml';
 
     /**
-     * @var \Http_Client
+     * @var ClientInterface
      */
     private $http_client;
+    /**
+     * @var RequestFactoryInterface
+     */
+    private $request_factory;
 
-    public function __construct(\Http_Client $http_client)
+    public function __construct(ClientInterface $http_client, RequestFactoryInterface $request_factory)
     {
-        $this->http_client = $http_client;
+        $this->http_client     = $http_client;
+        $this->request_factory = $request_factory;
     }
 
-    /**
-     * @return string
-     */
-    public function getCSRFCrumbHeader($jenkins_server_url)
+    public function getCSRFCrumbHeader($jenkins_server_url) : string
     {
         if (mb_substr($jenkins_server_url, -1) === '/') {
             $jenkins_server_url = mb_substr($jenkins_server_url, 0, -1);
@@ -47,18 +53,18 @@ class JenkinsCSRFCrumbRetriever
 
         $csrf_crumb_retriever_url = $jenkins_server_url . self::CRUMB_ISSUER_PATH . '?' . http_build_query($url_parameters);
 
-        $curl_options = array(
-            CURLOPT_URL            => $csrf_crumb_retriever_url,
-            CURLOPT_RETURNTRANSFER => true
-        );
-        $this->http_client->addOptions($curl_options);
+        $request = $this->request_factory->createRequest('GET', $csrf_crumb_retriever_url);
 
         try {
-            $this->http_client->doRequest();
-        } catch (\Http_ClientException $ex) {
+            $response = $this->http_client->sendRequest($request);
+        } catch (ClientExceptionInterface $e) {
             return '';
         }
 
-        return $this->http_client->getLastResponse();
+        if ($response->getStatusCode() !== 200) {
+            return '';
+        }
+
+        return $response->getBody()->getContents();
     }
 }

@@ -59,7 +59,8 @@ if ($user_name === false) {
     $user_name         = $user_informations['name'];
 }
 
-$http_client = new Http_Client();
+$http_client          = HttpClientFactory::createClient();
+$http_request_factory = HTTPFactoryBuilder::requestFactory();
 
 $mail_builder = new MailBuilder(
     TemplateRendererFactory::build(),
@@ -77,7 +78,9 @@ $post_receive = new Git_Hook_PostReceive(
     new Git_Ci_Launcher(
         new Jenkins_Client(
             $http_client,
-            new JenkinsCSRFCrumbRetriever(new Http_Client())
+            $http_request_factory,
+            HTTPFactoryBuilder::streamFactory(),
+            new JenkinsCSRFCrumbRetriever($http_client, $http_request_factory)
         ),
         new Git_Ci_Dao(),
         $logger
