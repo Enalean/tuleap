@@ -54,7 +54,7 @@ class FrozenFields extends Transition_PostAction
     {
         $ids = [];
         foreach ($this->fields as $field) {
-            $ids[] = $field->getId();
+            $ids[] = (int) $field->getId();
         }
 
         return $ids;

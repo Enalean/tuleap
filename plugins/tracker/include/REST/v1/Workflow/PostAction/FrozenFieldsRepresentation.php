@@ -61,7 +61,7 @@ class FrozenFieldsRepresentation
     {
         return new self(
             JsonCast::toInt($id),
-            $field_ids
+            JsonCast::toArrayOfInts($field_ids)
         );
     }
 }
