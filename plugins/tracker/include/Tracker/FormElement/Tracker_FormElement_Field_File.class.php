@@ -349,14 +349,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
             return;
         }
 
-        return TRACKER_BASE_URL . '/?' . http_build_query(
-            array(
-                'aid'   => $artifact->getId(),
-                'field' => $this->id,
-                'func'  => 'show-attachment',
-                'attachment' => $file_info->getId()
-            )
-        );
+        return TRACKER_BASE_URL . '/attachments/' . $this->getFilenameSlug($file_info);
     }
 
     public function getFileHTMLPreviewUrl(Tracker_FileInfo $file_info) {
@@ -370,14 +363,15 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
             return;
         }
 
-        return TRACKER_BASE_URL . '/?' . http_build_query(
-            array(
-                'aid'   => $artifact->getId(),
-                'field' => $this->id,
-                'func'  => 'preview-attachment',
-                'attachment' => $file_info->getId()
-            )
-        );
+        return TRACKER_BASE_URL . '/attachments/preview/' . $this->getFilenameSlug($file_info);
+    }
+
+    /**
+     * @return string
+     */
+    private function getFilenameSlug(Tracker_FileInfo $file_info)
+    {
+        return (int) $file_info->getId() . '-' . rawurlencode($file_info->getFilename());
     }
 
     private function getVisioningAttributeForLink($fileinfo, $read_only, $lytebox_id) {

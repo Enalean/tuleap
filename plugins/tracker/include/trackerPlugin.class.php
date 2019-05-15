@@ -1863,13 +1863,25 @@ class trackerPlugin extends Plugin {
         $form_element_factory    = Tracker_FormElementFactory::instance();
         $path_allocator          = new UploadPathAllocator($file_ongoing_upload_dao, $form_element_factory);
 
+        $url_verification = new URLVerification();
+
+        $binary_file_response_builder = new BinaryFileResponseBuilder(
+            HTTPFactoryBuilder::responseFactory(),
+            HTTPFactoryBuilder::streamFactory()
+        );
+        $file_info_factory = new Tracker_FileInfoFactory(
+            new Tracker_FileInfoDao(),
+            $form_element_factory,
+            Tracker_ArtifactFactory::instance()
+        );
+
         return new AttachmentController(
-            new URLVerification(),
+            $url_verification,
             $file_ongoing_upload_dao,
             $form_element_factory,
             new FileBeingUploadedInformationProvider($path_allocator, $file_ongoing_upload_dao),
-            $path_allocator,
-            new BinaryFileResponseBuilder(HTTPFactoryBuilder::responseFactory(), HTTPFactoryBuilder::streamFactory()),
+            $file_info_factory,
+            $binary_file_response_builder,
             new SapiStreamEmitter(),
             new SessionWriteCloseMiddleware(),
             new RESTCurrentUserMiddleware(RESTUserManager::build(), new BasicAuthentication()),
