@@ -21,13 +21,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use FastRoute\RouteCollector;
 use Tuleap\Project\Admin\Navigation\NavigationItemPresenter;
 use Tuleap\Project\Admin\Navigation\NavigationPresenter;
+use Tuleap\Request\CollectRoutesEvent;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-//=============================================================================
-class ProjectLinksPlugin extends Plugin
+class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
 {
     public $pluginInfo;
 
@@ -47,6 +48,7 @@ class ProjectLinksPlugin extends Plugin
         $this->addHook(\Tuleap\Widget\Event\GetWidget::NAME);
         $this->addHook(\Tuleap\Widget\Event\GetProjectWidgetList::NAME);
         $this->addHook(NavigationPresenter::NAME);
+        $this->addHook(CollectRoutesEvent::NAME);
     }
 
     //========================================================================
@@ -66,7 +68,19 @@ class ProjectLinksPlugin extends Plugin
     }
 
     //========================================================================
-    function adminPage()
+    public function collectRoutesEvent(CollectRoutesEvent $event)
+    {
+        $event->getRouteCollector()->addGroup($this->getPluginPath(), function (RouteCollector $r) {
+            $r->addRoute(['GET', 'POST'], '/projectlinks_admin.php', $this->getRouteHandler('routeAdminPage'));
+        });
+    }
+
+    public function routeAdminPage() : \Tuleap\Request\DispatchableWithRequest
+    {
+        return new \Tuleap\Plugin\PluginLegacyController($this);
+    }
+
+    public function process() : void
     {
         // serve the administration pages for project links
 
