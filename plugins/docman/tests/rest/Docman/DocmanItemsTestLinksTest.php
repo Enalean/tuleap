@@ -613,8 +613,105 @@ class DocmanItemsTestLinksTest extends DocmanBase
     {
         $index = array_search($title, array_column($items, 'title'));
         if ($index === false) {
-            $this->fail();
+            $this->fail("'$title' not found in test data");
         }
         return $items[$index];
+    }
+
+    /**
+     * @depends testGetRootId
+     */
+    public function testGetItemsToTrash($root_id): array
+    {
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('docman_items/' . $root_id . '/docman_items')
+        );
+        $folder = $response->json();
+
+        $trash_folder    = $this->findItemByTitle($folder, "Trash");
+        $trash_folder_id = $trash_folder['id'];
+
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('docman_items/' . $trash_folder_id . '/docman_items')
+        );
+
+        $items_to_delete = $response->json();
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertGreaterThan(0, count($items_to_delete));
+
+
+        return $items_to_delete;
+    }
+
+    /**
+     * @depends testGetItemsToTrash
+     */
+    public function testItThrowsAnErrorWhenTheLinkIsLockedByAnotherUser(array $items): void
+    {
+        $file_to_delete    = $this->findItemByTitle($items, 'old link L');
+        $file_to_delete_id = $file_to_delete['id'];
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->delete('docman_links/' . $file_to_delete_id)
+        );
+
+        $this->assertEquals(403, $response->getStatusCode());
+
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('docman_items/' . $file_to_delete_id)
+        );
+
+        $this->assertEquals(200, $response->getStatusCode());
+    }
+
+    /**
+     * @depends testGetItemsToTrash
+     */
+    public function testItDeletesWhenLinkIsLockedAndUserIsAdmin(array $items): void
+    {
+        $file_to_delete    = $this->findItemByTitle($items, 'old link L');
+        $file_to_delete_id = $file_to_delete['id'];
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->delete('docman_links/' . $file_to_delete_id)
+        );
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('docman_items/' . $file_to_delete_id)
+        );
+
+        $this->assertEquals(404, $response->getStatusCode());
+    }
+
+    /**
+     * @depends testGetItemsToTrash
+     */
+    public function testItDeletesALink(array $items): void
+    {
+        $file_to_delete    = $this->findItemByTitle($items, 'another old link');
+        $file_to_delete_id = $file_to_delete['id'];
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->delete('docman_links/' . $file_to_delete_id)
+        );
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('docman_items/' . $file_to_delete_id)
+        );
+
+        $this->assertEquals(404, $response->getStatusCode());
     }
 }

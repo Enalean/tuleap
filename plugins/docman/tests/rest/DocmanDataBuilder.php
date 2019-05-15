@@ -582,14 +582,14 @@ class DocmanDataBuilder extends DocmanDataBuildCommon
     /**
      * To help understand tests structure, below a representation of folder hierarchy
      *
-     *                        Trash
-     *                          +
-     *                          |
-     *                          +
-     *             +------------|-------------+
-     *             |                          |
-     *             +                          +
-     *         old file L              another old file
+     *                                    Trash
+     *                                      +
+     *                                      |
+     *                                      +
+     *             +----------------+-------|-------+-------------+
+     *             |                |               |             |
+     *             +                +               +             +
+     *         old file L    another old file   old link L   another old link
      *
      * (L)    => Lock on this item
      *
@@ -612,9 +612,24 @@ class DocmanDataBuilder extends DocmanDataBuildCommon
 
         $this->addReadPermissionOnItem($file_L_id, ProjectUGroup::DOCUMENT_ADMIN);
 
+        $link_L_id = $this->createItem(
+            \REST_TestDataBuilder::ADMIN_PROJECT_ID,
+            $folder_delete_id,
+            "old link L",
+            PLUGIN_DOCMAN_ITEM_TYPE_LINK
+        );
+
+        $this->addReadPermissionOnItem($link_L_id, ProjectUGroup::DOCUMENT_ADMIN);
+
         $dao = new \Docman_LockDao();
         $dao->addLock(
             $file_L_id,
+            \REST_TestDataBuilder::ADMIN_PROJECT_ID,
+            time()
+        );
+
+        $dao->addLock(
+            $link_L_id,
             \REST_TestDataBuilder::ADMIN_PROJECT_ID,
             time()
         );
@@ -624,6 +639,13 @@ class DocmanDataBuilder extends DocmanDataBuildCommon
             $folder_delete_id,
             "another old file",
             PLUGIN_DOCMAN_ITEM_TYPE_FILE
+        );
+
+        $this->createItem(
+            \REST_TestDataBuilder::ADMIN_PROJECT_ID,
+            $folder_delete_id,
+            "another old link",
+            PLUGIN_DOCMAN_ITEM_TYPE_LINK
         );
     }
 }

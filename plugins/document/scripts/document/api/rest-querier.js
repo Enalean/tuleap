@@ -40,7 +40,8 @@ export {
     addNewWiki,
     addNewEmbedded,
     addNewLink,
-    deleteFile
+    deleteFile,
+    deleteLink
 };
 
 async function getProject(project_id) {
@@ -256,4 +257,9 @@ function cancelUpload(item) {
 function deleteFile(item) {
     const escaped_item_id = encodeURIComponent(item.id);
     return del(`/api/docman_files/${escaped_item_id}`);
+}
+
+function deleteLink(item) {
+    const escaped_item_id = encodeURIComponent(item.id);
+    return del(`/api/docman_links/${escaped_item_id}`);
 }

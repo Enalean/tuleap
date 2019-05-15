@@ -80,7 +80,7 @@ class DocmanItemsTestFilesTest extends DocmanBase
 
         $items = array_merge($items_folder_1, $items_file, $items_to_delete);
 
-        $this->assertEquals(count($items), 14);
+        $this->assertEquals(count($items), 16);
 
         return $items;
     }

@@ -66,18 +66,6 @@ describe("QuickLookDeleteButton", () => {
         expect(wrapper.find("[data-test=quick-look-delete-button]").exists()).toBeFalsy();
     });
 
-    it(`When the user clicks the button, Should redirect user on legacy url`, () => {
-        const redirect_to_url = jasmine.createSpy("redirectToUrl");
-        rewire$redirectToUrl(redirect_to_url);
-
-        const wrapper = delete_button_factory(true, TYPE_LINK);
-        wrapper.find("[data-test=quick-look-delete-button]").trigger("click");
-
-        expect(redirect_to_url).toHaveBeenCalledWith(
-            "/plugins/docman/?group_id=101&action=confirmDelete&id=1"
-        );
-    });
-
     it(`Given the item is a file, When the user clicks the button, then it should trigger an event to open the confirmation modal`, () => {
         spyOn(document, "dispatchEvent");
 
@@ -85,6 +73,21 @@ describe("QuickLookDeleteButton", () => {
         rewire$redirectToUrl(redirect_to_url);
 
         const wrapper = delete_button_factory(true, TYPE_FILE);
+        wrapper.find("[data-test=quick-look-delete-button]").trigger("click");
+
+        expect(document.dispatchEvent).toHaveBeenCalledWith(
+            new CustomEvent("show-confirm-item-deletion-modal")
+        );
+        expect(redirect_to_url).not.toHaveBeenCalled();
+    });
+
+    it(`Given the item is a link, When the user clicks the button, then it should trigger an event to open the confirmation modal`, () => {
+        spyOn(document, "dispatchEvent");
+
+        const redirect_to_url = jasmine.createSpy("redirectToUrl");
+        rewire$redirectToUrl(redirect_to_url);
+
+        const wrapper = delete_button_factory(true, TYPE_LINK);
         wrapper.find("[data-test=quick-look-delete-button]").trigger("click");
 
         expect(document.dispatchEvent).toHaveBeenCalledWith(
