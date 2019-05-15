@@ -47,11 +47,21 @@ class SimpleWorkflowXMLExporterTest extends TestCase
             ['to_id' => 201],
         ]);
 
+        $dao->shouldReceive('searchTransitionsForState')->with(200)->once()->andReturn([
+            ['from_id' => 0]
+        ]);
+
+        $dao->shouldReceive('searchTransitionsForState')->with(201)->once()->andReturn([
+            ['from_id' => 0],
+            ['from_id' => 410],
+        ]);
+
         $mapping = [
             'F114' => 114,
             'values' => [
                 'V114-0' => 200,
                 'V114-1' => 201,
+                'V114-2' => 410,
             ]
         ];
 
@@ -63,7 +73,20 @@ class SimpleWorkflowXMLExporterTest extends TestCase
         $this->assertTrue(isset($xml->states));
         $this->assertCount(2, $xml->states->state);
 
-        $this->assertSame((string) $xml->states->state[0]->to_id['REF'], 'V114-0');
-        $this->assertSame((string) $xml->states->state[1]->to_id['REF'], 'V114-1');
+        $xml_state_01 = $xml->states->state[0];
+        $xml_state_02 = $xml->states->state[1];
+
+        $this->assertSame((string) $xml_state_01->to_id['REF'], 'V114-0');
+        $this->assertSame((string) $xml_state_02->to_id['REF'], 'V114-1');
+
+        $xml_state_01_transitions = $xml_state_01->transitions;
+        $xml_state_02_transitions = $xml_state_02->transitions;
+
+        $this->assertCount(1, $xml_state_01_transitions->transition);
+        $this->assertCount(2, $xml_state_02_transitions->transition);
+
+        $this->assertSame((string) $xml_state_01_transitions->transition->from_id['REF'], 'null');
+        $this->assertSame((string) $xml_state_02_transitions->transition[0]->from_id['REF'], 'null');
+        $this->assertSame((string) $xml_state_02_transitions->transition[1]->from_id['REF'], 'V114-2');
     }
 }

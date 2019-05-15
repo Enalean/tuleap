@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011 - 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -25,6 +25,8 @@ use Tuleap\Tracker\Workflow\Transition\OrphanTransitionException;
 //phpcs:ignoreFile
 class Transition
 {
+    public const EXPORT_XML_FROM_NEW_VALUE = "null";
+
     public $transition_id;
     public $workflow_id;
 
@@ -335,10 +337,11 @@ class Transition
      *
      * @return void
      */
-    public function exportToXml(SimpleXMLElement $root, $xmlMapping) {
+    public function exportToXml(SimpleXMLElement $root, $xmlMapping)
+    {
         $child = $root->addChild('transition');
         if ($this->getFieldValueFrom() == null) {
-            $child->addChild('from_id')->addAttribute('REF', 'null');
+            $child->addChild('from_id')->addAttribute('REF', self::EXPORT_XML_FROM_NEW_VALUE);
         }else {
             $child->addChild('from_id')->addAttribute('REF', array_search($this->getFieldValueFrom()->getId(), $xmlMapping['values']));
         }
