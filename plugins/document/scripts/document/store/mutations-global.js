@@ -28,7 +28,9 @@ export {
     appendFolderToAscendantHierarchy,
     setCurrentFolder,
     removeIsUnderConstruction,
-    updateCurrentlyPreviewedItem
+    updateCurrentlyPreviewedItem,
+    showPostDeletionNotification,
+    hidePostDeletionNotification
 };
 
 function initApp(
@@ -124,4 +126,12 @@ function removeIsUnderConstruction(state) {
 
 function updateCurrentlyPreviewedItem(state, item) {
     state.currently_previewed_item = item;
+}
+
+function showPostDeletionNotification(state) {
+    state.show_post_deletion_notification = true;
+}
+
+function hidePostDeletionNotification(state) {
+    state.show_post_deletion_notification = false;
 }

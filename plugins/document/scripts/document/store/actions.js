@@ -524,14 +524,15 @@ export const deleteItem = async (context, item) => {
                 break;
         }
 
-        context.commit("removeItemFromFolderContent", item);
-
         if (
             context.state.currently_previewed_item &&
             item.id === context.state.currently_previewed_item.id
         ) {
             context.commit("updateCurrentlyPreviewedItem", null);
         }
+
+        context.commit("removeItemFromFolderContent", item);
+        context.commit("showPostDeletionNotification");
     } catch (exception) {
         return handleErrorsForDeletionModal(context, exception, item);
     }

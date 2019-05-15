@@ -38,7 +38,8 @@ const state = {
     embedded_are_allowed: false,
     currently_previewed_item: null,
     is_item_status_metadata_used: false,
-    is_obsolescence_date_metadata_used: false
+    is_obsolescence_date_metadata_used: false,
+    show_post_deletion_notification: false
 };
 
 export default state;

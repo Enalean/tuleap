@@ -351,6 +351,9 @@ msgstr "Basculer sur l'ancienne interface utilisateur"
 msgid "The document has been created below."
 msgstr "Le document a été créé ci dessous."
 
+msgid "The document has been deleted successfully."
+msgstr "Le document a été supprimé avec succès."
+
 msgid "The folder has been created below."
 msgstr "Le dossier a été créé ci dessous."
 

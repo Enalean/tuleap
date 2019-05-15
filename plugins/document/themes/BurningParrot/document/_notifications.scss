@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-.document-new-item-under-the-fold-notification {
+.document-notification {
     position: fixed;
     z-index: 11000;
     right: $tlp-half-spacing;
@@ -28,12 +28,12 @@
     box-shadow: 0 4px 15px rgba(0, 0, 0, .175);
 }
 
-.document-new-item-under-the-fold-notification-fadeout {
+.document-notification-fadeout {
     transition: opacity 1s ease-in-out;
     opacity: 0;
 }
 
-.document-new-item-under-the-fold-notification-fast-fadeout {
+.document-notification-fast-fadeout {
     transition: opacity 250ms ease-in-out;
     opacity: 0;
 }

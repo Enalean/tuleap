@@ -19,74 +19,53 @@
 
 <template>
     <div class="document-notification tlp-alert-success"
-         v-bind:class="notification_class"
+         v-bind:class="{
+             'document-notification-fadeout': is_fadeout
+         }"
          v-if="is_displayed"
     >
-        <translate v-if="is_folder">The folder has been created below.</translate>
-        <translate v-else>The document has been created below.</translate>
-        <i class="fa fa-arrow-down document-new-item-under-the-fold-notification-icon"></i>
+        <translate>The document has been deleted successfully.</translate>
     </div>
 </template>
 
 <script>
-import { TYPE_FOLDER } from "../../../constants.js";
+import { mapState } from "vuex";
 
 export default {
     data() {
         return {
             is_displayed: false,
-            is_folder: false,
             is_fadeout: false,
-            is_fast_fadeout: false,
             fadeout_timeout_id: null,
             hidden_timeout_id: null
         };
     },
     computed: {
-        notification_class() {
-            return {
-                "document-notification-fadeout": this.is_fadeout,
-                "document-notification-fast-fadeout": this.is_fast_fadeout
-            };
+        ...mapState(["show_post_deletion_notification"])
+    },
+    watch: {
+        show_post_deletion_notification: function(value) {
+            if (value) {
+                this.show();
+            }
         }
     },
-    created() {
-        document.addEventListener("item-has-been-created-under-the-fold", this.show);
-        this.$once("hook:beforeDestroy", () => {
-            document.removeEventListener("item-has-been-created-under-the-fold", this.show);
-        });
-    },
     methods: {
-        show(event) {
-            this.is_folder = event.detail.item.type === TYPE_FOLDER;
-
+        show() {
             if (this.is_displayed) {
                 clearTimeout(this.fadeout_timeout_id);
                 clearTimeout(this.hidden_timeout_id);
-            } else {
-                window.addEventListener("scroll", this.scroll, { passive: true });
             }
 
             this.is_displayed = true;
             this.is_fadeout = false;
-            this.is_fast_fadeout = false;
             this.fadeout_timeout_id = setTimeout(() => {
                 this.is_fadeout = true;
             }, 2000);
             this.hidden_timeout_id = setTimeout(() => {
                 this.is_displayed = false;
+                this.$store.commit("hidePostDeletionNotification");
             }, 3000);
-        },
-        scroll() {
-            window.removeEventListener("scroll", this.scroll, { passive: true });
-            clearTimeout(this.fadeout_timeout_id);
-            clearTimeout(this.hidden_timeout_id);
-            this.fadeout_timeout_id = setTimeout(() => {
-                this.is_fast_fadeout = true;
-            }, 0);
-            this.hidden_timeout_id = setTimeout(() => {
-                this.is_displayed = false;
-            }, 250);
         }
     }
 };
