@@ -116,15 +116,25 @@ class TransitionRetriever
      */
     private function getFirstTransitionForDestinationState(\Workflow $workflow, int $to): Transition
     {
-        $row = $this->transition_dao->searchFirstTransition(
+        $row_first_non_new = $this->transition_dao->searchFirstTransitionNotFromNew(
             (int) $workflow->getId(),
             $to
         );
-        if ($row === false) {
-            throw new NoTransitionForStateException();
+
+        if ($row_first_non_new !== false) {
+            return $this->transition_factory->getInstanceFromRow($row_first_non_new);
         }
 
-        return $this->transition_factory->getInstanceFromRow($row);
+        $row_only_new = $this->transition_dao->searchOnlyTransitionFromNew(
+            (int) $workflow->getId(),
+            $to
+        );
+
+        if ($row_only_new !== false) {
+            return $this->transition_factory->getInstanceFromRow($row_only_new);
+        }
+
+        throw new NoTransitionForStateException();
     }
 
     /**

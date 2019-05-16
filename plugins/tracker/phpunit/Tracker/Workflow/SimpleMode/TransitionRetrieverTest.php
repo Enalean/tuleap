@@ -184,7 +184,7 @@ final class TransitionRetrieverTest extends TestCase
         return new Transition($transition_id, $workflow_id, $from, $to);
     }
 
-    public function testFirstTransitionForAnArtifactStateCanBeRetrieved() : void
+    public function testFirstTransitionNotFromNewForAnArtifactStateCanBeRetrieved() : void
     {
         $artifact = Mockery::mock(Tracker_Artifact::class);
 
@@ -204,7 +204,37 @@ final class TransitionRetrieverTest extends TestCase
 
         $changeset_value->shouldReceive('getValue')->andReturn(['147']);
 
-        $this->transition_dao->shouldReceive('searchFirstTransition')->andReturn(['row']);
+        $this->transition_dao->shouldReceive('searchFirstTransitionNotFromNew')->once()->andReturn(['row']);
+        $this->transition_dao->shouldReceive('searchOnlyTransitionFromNew')->never();
+        $expected_transition = Mockery::mock(Transition::class);
+        $this->transition_factory->shouldReceive('getInstanceFromRow')->andReturn($expected_transition);
+
+        $transition = $this->transition_retriever->getFirstTransitionForCurrentState($artifact);
+        $this->assertSame($expected_transition, $transition);
+    }
+
+    public function testOnlyTransitionFromNewForAnArtifactStateCanBeRetrieved() : void
+    {
+        $artifact = Mockery::mock(Tracker_Artifact::class);
+
+        $workflow_id = 963;
+        $workflow    = Mockery::mock(Workflow::class);
+        $workflow->shouldReceive('getId')->andReturn($workflow_id);
+        $workflow->shouldReceive('isUsed')->andReturn(true);
+        $workflow->shouldReceive('isAdvanced')->andReturn(false);
+        $workflow->shouldReceive('getField')->andReturn(Mockery::mock(Tracker_FormElement_Field::class));
+        $artifact->shouldReceive('getWorkflow')->andReturn($workflow);
+
+        $changeset_value = Mockery::mock(Tracker_Artifact_ChangesetValue::class);
+
+        $last_changeset = Mockery::mock(Tracker_Artifact_Changeset::class);
+        $last_changeset->shouldReceive('getValue')->andReturn($changeset_value);
+        $artifact->shouldReceive('getLastChangeset')->andReturn($last_changeset);
+
+        $changeset_value->shouldReceive('getValue')->andReturn(['147']);
+
+        $this->transition_dao->shouldReceive('searchFirstTransitionNotFromNew')->once()->andReturn(false);
+        $this->transition_dao->shouldReceive('searchOnlyTransitionFromNew')->once()->andReturn(['row']);
         $expected_transition = Mockery::mock(Transition::class);
         $this->transition_factory->shouldReceive('getInstanceFromRow')->andReturn($expected_transition);
 
@@ -300,7 +330,8 @@ final class TransitionRetrieverTest extends TestCase
 
         $changeset_value->shouldReceive('getValue')->andReturn(['147']);
 
-        $this->transition_dao->shouldReceive('searchFirstTransition')->andReturn(false);
+        $this->transition_dao->shouldReceive('searchFirstTransitionNotFromNew')->once()->andReturn(false);
+        $this->transition_dao->shouldReceive('searchOnlyTransitionFromNew')->once()->andReturn(false);
 
         $this->expectException(NoTransitionForStateException::class);
         $this->transition_retriever->getFirstTransitionForCurrentState($artifact);
