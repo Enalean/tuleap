@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -25,25 +25,7 @@ use Tuleap\OpenGraph\NoOpenGraphPresenter;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\Project\Flags\ProjectFlagsDao;
 
-require_once 'common/templating/TemplateRenderer.class.php';
-require_once 'common/templating/TemplateRendererFactory.class.php';
-require_once 'HeaderPresenter.class.php';
-require_once 'BodyPresenter.class.php';
-require_once 'ContainerPresenter.class.php';
-require_once 'CurrentProjectNavbarInfoPresenter.php';
-require_once 'NavBarProjectPresenter.class.php';
-require_once 'NavBarPresenter.class.php';
-require_once 'NavBarItemPresentersCollection.php';
-require_once 'NavBarItemPresentersCollectionBuilder.php';
-require_once 'NavBarItemPresenter.php';
-require_once 'NavBarItemProjectsPresenter.php';
-require_once 'NavBarItemAdminPresenter.php';
-require_once 'NavBarItemLinkPresenter.php';
-require_once 'NavBarItemDropdownPresenter.php';
-require_once 'NavBarItemDropdownSectionPresenter.php';
-require_once 'SearchFormPresenter.class.php';
-require_once 'FlamingParrot_CSSFilesProvider.class.php';
-require_once 'keyboard_navigation/KeyboardNavigationModalPresenter.class.php';
+require_once __DIR__ . '/vendor/autoload.php';
 
 class FlamingParrot_Theme extends Layout {
 
