@@ -32,6 +32,8 @@ use Tuleap\Captcha\ConfigurationSaver;
 use Tuleap\Captcha\DataAccessObject;
 use Tuleap\Captcha\Plugin\Info as PluginInfo;
 use Tuleap\Captcha\Registration\Presenter;
+use Tuleap\Http\HttpClientFactory;
+use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Request\DispatchableWithRequest;
 
@@ -125,7 +127,12 @@ class captchaPlugin extends Plugin // @codingStandardsIgnoreLine
         $challenge   = $request->get('g-recaptcha-response');
         $http_client = new Http_Client();
 
-        $recaptcha_client = new \Tuleap\Captcha\Client($secret_key, $http_client);
+        $recaptcha_client = new \Tuleap\Captcha\Client(
+            $secret_key,
+            HttpClientFactory::createClient(),
+            HTTPFactoryBuilder::requestFactory(),
+            HTTPFactoryBuilder::streamFactory()
+        );
         $is_captcha_valid = $recaptcha_client->verify($challenge, $request->getIPAddress());
 
         if (! $is_captcha_valid) {
