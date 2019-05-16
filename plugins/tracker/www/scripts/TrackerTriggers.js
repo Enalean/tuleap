@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2013-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -466,11 +466,9 @@ tuleap.trackers.trigger.triggering_field = Class.create({
         populateFieldValues(field_values, this.container);
 
         function populateFieldValues(fields, container) {
-            $H(fields).each(function(field) {
-                var option = createOption(
-                    field.value,
-                    "trigger-triggering_field-tracker-field-value"
-                );
+            fields.forEach(function(field) {
+                var option = createOption(field, "trigger-triggering_field-tracker-field-value");
+
                 container
                     .down(".trigger_triggering_field_child_tracker_field_value")
                     .appendChild(option);
