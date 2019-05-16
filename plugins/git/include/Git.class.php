@@ -25,6 +25,7 @@ use Tuleap\Git\GitViews\Header\HeaderRenderer;
 use Tuleap\Git\History\GitPhpAccessLogger;
 use Tuleap\Git\Notifications\UgroupsToNotifyDao;
 use Tuleap\Git\Notifications\UsersToNotifyDao;
+use Tuleap\Git\PathJoinUtil;
 use Tuleap\Git\Permissions\DefaultFineGrainedPermissionFactory;
 use Tuleap\Git\Permissions\FineGrainedPermissionDestructor;
 use Tuleap\Git\Permissions\FineGrainedPermissionFactory;
@@ -1303,7 +1304,7 @@ class Git extends PluginController
         if($request->valid($valid)) {
             $path = trim($request->get('path'));
         }
-        $path = userRepoPath($user->getUserName(), $path);
+        $path = PathJoinUtil::userRepoPath($user->getUserName(), $path);
         $forkPermissions = $this->getForkPermissionsFromRequest($request);
 
         $valid = new Valid_String('repos');

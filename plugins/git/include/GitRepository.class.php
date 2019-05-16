@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -19,8 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(dirname(__FILE__).'/../DVCS/DVCSRepository.class.php');
-require_once 'PathJoinUtil.php';
+use Tuleap\Git\PathJoinUtil;
 
 /**
  * Description of GitRepositoryclass
@@ -364,10 +363,10 @@ class GitRepository implements DVCSRepository
     /**
      * Return relative path from project repository root (without .git)
      * 
-     * @return String
+     * @return string
      */
     public function getFullName() {
-        return unixPathJoin(array($this->getNamespace(), $this->getName()));
+        return PathJoinUtil::unixPathJoin(array($this->getNamespace(), $this->getName()));
     }
     
 

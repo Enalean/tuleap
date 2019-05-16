@@ -251,7 +251,7 @@ function plugin_forumml_show_all_threads($p, $list_id, $list_name, $offset) {
 							".$hp->purify($subject, CODENDI_PURIFIER_CONVERT_HTML)."
 						</a> <b><i>(".$count.")</i></b>						 
 			    </td>
-                <td class='info'>".util_timestamp_to_userdateformat(strtotime($msg['date']))."</td>
+                <td class='info'>".util_timestamp_to_userdateformat((string) strtotime($msg['date']))."</td>
                 <td class='info'>".$hp->purify($msg['sender'], CODENDI_PURIFIER_CONVERT_HTML)."</td>
             </tr>";	
         }

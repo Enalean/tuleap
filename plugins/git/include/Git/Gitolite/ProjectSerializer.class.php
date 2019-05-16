@@ -20,6 +20,7 @@
 
 use Tuleap\Git\BigObjectAuthorization\BigObjectAuthorizationManager;
 use Tuleap\Git\Gitolite\VersionDetector;
+use Tuleap\Git\PathJoinUtil;
 
 class Git_Gitolite_ProjectSerializer {
 
@@ -150,8 +151,7 @@ class Git_Gitolite_ProjectSerializer {
     }
 
     public function repoFullName(GitRepository $repo, $unix_name) {
-        require_once GIT_BASE_DIR.'/PathJoinUtil.php';
-        return unixPathJoin(array($unix_name, $repo->getFullName()));
+        return PathJoinUtil::unixPathJoin(array($unix_name, $repo->getFullName()));
     }
 
     /**

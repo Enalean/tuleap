@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011. All Rights Reserved.
+ * Copyright (c) Enalean, 2011-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,22 +19,31 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+namespace Tuleap\Git;
 
-function notEmpty($e) {
-    return !empty($e) || $e === '0';
-}
+use MalformedPathException;
 
-function unixPathJoin($elements) {
-    
-    $path = implode('/', array_filter($elements, 'notEmpty'));
-    return preg_replace('%/{1,}%',"/", $path);
-}
-
-function userRepoPath($username, $namespace) {
-    $path = unixPathJoin(array('u', $username, $namespace));
-    if (strpos($path, '..') !== false) {
-        throw new MalformedPathException();
+final class PathJoinUtil
+{
+    private static function notEmpty($e) : bool
+    {
+        return !empty($e) || $e === '0';
     }
-    return $path;
+
+    public static function unixPathJoin(array $elements) : string
+    {
+        $path = implode('/', array_filter($elements, function ($element) : bool {
+            return self::notEmpty($element);
+        }));
+        return preg_replace('%/{1,}%',"/", $path);
+    }
+
+    public static function userRepoPath($username, $namespace) : string
+    {
+        $path = self::unixPathJoin(['u', $username, $namespace]);
+        if (strpos($path, '..') !== false) {
+            throw new MalformedPathException();
+        }
+        return $path;
+    }
 }
-?>
