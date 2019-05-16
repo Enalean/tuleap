@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,70 +20,84 @@
 
 namespace Tuleap\Captcha;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Exception;
 use PHPUnit\Framework\TestCase;
+use Psr\Http\Client\ClientExceptionInterface;
+use Tuleap\Http\HTTPFactoryBuilder;
 
-require_once __DIR__ . '/bootstrap.php';
-
-class ClientTest extends TestCase
+final class ClientTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    public function testValidRequestIsAccepted()
+    public function testValidRequestIsAccepted() : void
     {
-        $http_client = \Mockery::mock(\Http_Client::class);
-        $http_client->shouldReceive('getLastResponse')->andReturns('{"success": true}');
-        $http_client->shouldReceive('addOptions');
-        $http_client->shouldReceive('doRequest');
+        $http_client    = new \Http\Mock\Client();
+        $stream_factory = HTTPFactoryBuilder::streamFactory();
+        $http_client->addResponse(HTTPFactoryBuilder::responseFactory()->createResponse()->withBody(
+            $stream_factory->createStream('{"success": true}')
+        ));
 
-        $client = new Client('secret', $http_client);
+        $client = new Client('secret', $http_client, HTTPFactoryBuilder::requestFactory(), $stream_factory);
 
         $this->assertTrue($client->verify('valid_challenge', '192.0.2.1'));
     }
 
-    public function testInvalidRequestIsRefused()
+    public function testInvalidRequestIsRefused() : void
     {
-        $http_client = \Mockery::mock(\Http_Client::class);
-        $http_client->shouldReceive('getLastResponse')->andReturns('{"success": false}');
-        $http_client->shouldReceive('addOptions');
-        $http_client->shouldReceive('doRequest');
+        $http_client    = new \Http\Mock\Client();
+        $stream_factory = HTTPFactoryBuilder::streamFactory();
+        $http_client->addResponse(HTTPFactoryBuilder::responseFactory()->createResponse()->withBody(
+            $stream_factory->createStream('{"success": false}')
+        ));
 
-        $client = new Client('wrong_secret', $http_client);
+        $client = new Client('secret', $http_client, HTTPFactoryBuilder::requestFactory(), $stream_factory);
 
         $this->assertFalse($client->verify('invalid_challenge', '192.0.2.1'));
     }
 
-    public function testValidationIsRefusedIfHTTPRequestFails()
+    public function testValidationIsRefusedIfThereIsANetworkFailure() : void
     {
-        $http_client = \Mockery::mock(\Http_Client::class);
-        $http_client->shouldReceive('addOptions');
-        $http_client->shouldReceive('doRequest')->andThrow(\Mockery::mock(\Http_ClientException::class));
+        $http_client = new \Http\Mock\Client();
+        $http_client->addException(
+            new class extends Exception implements ClientExceptionInterface {
+            }
+        );
 
-        $client = new Client('secret', $http_client);
+        $client = new Client('secret', $http_client, HTTPFactoryBuilder::requestFactory(), HTTPFactoryBuilder::streamFactory());
 
         $this->assertFalse($client->verify('valid_challenge', '192.0.2.1'));
     }
 
-    public function testValidationIsRefusedIfReceivedCanNotBeDecoded()
+    public function testValidationIsRefusedIfHTTPRequestFails() : void
     {
-        $http_client = \Mockery::mock(\Http_Client::class);
-        $http_client->shouldReceive('getLastResponse')->andReturns('');
-        $http_client->shouldReceive('addOptions');
-        $http_client->shouldReceive('doRequest');
+        $http_client = new \Http\Mock\Client();
+        $http_client->addResponse(HTTPFactoryBuilder::responseFactory()->createResponse(500));
 
-        $client = new Client('secret', $http_client);
+        $client = new Client('secret', $http_client, HTTPFactoryBuilder::requestFactory(), HTTPFactoryBuilder::streamFactory());
 
         $this->assertFalse($client->verify('valid_challenge', '192.0.2.1'));
     }
 
-    public function testValidationIsRefusedIfJSONObjectDoesNotContainSuccessKey()
+    public function testValidationIsRefusedIfReceivedCanNotBeDecoded() : void
     {
-        $http_client = \Mockery::mock(\Http_Client::class);
-        $http_client->shouldReceive('getLastResponse')->andReturns('{"unexpected": true}');
-        $http_client->shouldReceive('addOptions');
-        $http_client->shouldReceive('doRequest');
+        $http_client    = new \Http\Mock\Client();
+        $stream_factory = HTTPFactoryBuilder::streamFactory();
+        $http_client->addResponse(HTTPFactoryBuilder::responseFactory()->createResponse()->withBody(
+            $stream_factory->createStream('')
+        ));
 
-        $client = new Client('secret', $http_client);
+        $client = new Client('secret', $http_client, HTTPFactoryBuilder::requestFactory(), $stream_factory);
+
+        $this->assertFalse($client->verify('valid_challenge', '192.0.2.1'));
+    }
+
+    public function testValidationIsRefusedIfJSONObjectDoesNotContainSuccessKey() : void
+    {
+        $http_client    = new \Http\Mock\Client();
+        $stream_factory = HTTPFactoryBuilder::streamFactory();
+        $http_client->addResponse(HTTPFactoryBuilder::responseFactory()->createResponse()->withBody(
+            $stream_factory->createStream('{"unexpected": true}')
+        ));
+
+        $client = new Client('secret', $http_client, HTTPFactoryBuilder::requestFactory(), $stream_factory);
 
         $this->assertFalse($client->verify('valid_challenge', '192.0.2.1'));
     }

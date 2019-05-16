@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,56 +20,69 @@
 
 namespace Tuleap\Captcha;
 
-use Http_Client;
-use Http_ClientException;
+use Psr\Http\Client\ClientExceptionInterface;
+use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\RequestFactoryInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 class Client
 {
-    public const SITE_VERIFY_URL = 'https://www.google.com/recaptcha/api/siteverify';
+    private const SITE_VERIFY_URL = 'https://www.google.com/recaptcha/api/siteverify';
 
     /**
      * @var string
      */
     private $secret_key;
     /**
-     * @var Http_Client
+     * @var ClientInterface
      */
     private $http_client;
+    /**
+     * @var RequestFactoryInterface
+     */
+    private $request_factory;
+    /**
+     * @var StreamFactoryInterface
+     */
+    private $stream_factory;
 
-    public function __construct($secret_key, Http_Client $http_client)
-    {
-        $this->secret_key  = $secret_key;
-        $this->http_client = $http_client;
+    public function __construct(
+        string $secret_key,
+        ClientInterface $http_client,
+        RequestFactoryInterface $request_factory,
+        StreamFactoryInterface $stream_factory
+    ) {
+        $this->secret_key      = $secret_key;
+        $this->http_client     = $http_client;
+        $this->request_factory = $request_factory;
+        $this->stream_factory  = $stream_factory;
     }
 
-    /**
-     * @return bool
-     */
-    public function verify($challenge, $user_ip)
+    public function verify(string $challenge, string $user_ip) : bool
     {
-        $this->http_client->addOptions(array(
-            CURLOPT_URL        => self::SITE_VERIFY_URL,
-            CURLOPT_HTTPHEADER => array('Content-Type: application/x-www-form-urlencoded'),
-            CURLOPT_POST       => true,
-            CURLOPT_POSTFIELDS => http_build_query(array(
-                'secret'   => $this->secret_key,
-                'response' => $challenge,
-                'remoteip' => $user_ip
-            ))
-        ));
+        $request = $this->request_factory->createRequest('POST', self::SITE_VERIFY_URL)
+            ->withHeader('Content-Type', 'application/x-www-form-urlencoded')
+            ->withBody(
+                $this->stream_factory->createStream(
+                    http_build_query([
+                        'secret'   => $this->secret_key,
+                        'response' => $challenge,
+                        'remoteip' => $user_ip
+                    ])
+                )
+            );
 
         try {
-            $this->http_client->doRequest();
-        } catch (Http_ClientException $ex) {
+            $http_response = $this->http_client->sendRequest($request);
+        } catch (ClientExceptionInterface $e) {
             return false;
         }
 
-        $json_response = $this->http_client->getLastResponse();
-        $response      = json_decode($json_response, true);
-
-        if (! $response) {
+        if ($http_response->getStatusCode() !== 200) {
             return false;
         }
+
+        $response = json_decode($http_response->getBody()->getContents(), true);
 
         return isset($response['success']) && $response['success'] === true;
     }
