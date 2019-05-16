@@ -110,6 +110,8 @@ class WelcomeUpdateController implements DispatchableWithRequest
 
     private function welcomeExitError(HTTPRequest $request, BaseLayout $layout, $title, $text) : void
     {
+        assert($layout instanceof \FlamingParrot_Theme);
+
         $layout->addFeedback(\Feedback::ERROR, $title);
 
         if ((int) $request->get('pv') === 2) {
