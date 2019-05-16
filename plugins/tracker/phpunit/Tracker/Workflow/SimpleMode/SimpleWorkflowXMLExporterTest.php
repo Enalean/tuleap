@@ -35,19 +35,35 @@ class SimpleWorkflowXMLExporterTest extends TestCase
     public function testItExportsTheSimpleWorkflowInXML()
     {
         $xml      = new SimpleXMLElement('<simple_workflow/>');
-        $exporter = new SimpleWorkflowXMLExporter();
+        $dao      = Mockery::mock(SimpleWorkflowDao::class);
+        $exporter = new SimpleWorkflowXMLExporter($dao);
         $workflow = Mockery::mock(Workflow::class);
 
         $workflow->shouldReceive('getFieldId')->once()->andReturn(114);
         $workflow->shouldReceive('isUsed')->once()->andReturn(true);
+        $workflow->shouldReceive('getId')->once()->andReturn('999');
+        $dao->shouldReceive('searchStatesForWorkflow')->with(999)->once()->andReturn([
+            ['to_id' => 200],
+            ['to_id' => 201],
+        ]);
 
         $mapping = [
-            'F114' => 114
+            'F114' => 114,
+            'values' => [
+                'V114-0' => 200,
+                'V114-1' => 201,
+            ]
         ];
 
         $exporter->exportToXML($workflow, $xml, $mapping);
 
         $this->assertEquals((string) $xml->field_id['REF'], 'F114');
         $this->assertEquals((string) $xml->is_used, '1');
+
+        $this->assertTrue(isset($xml->states));
+        $this->assertCount(2, $xml->states->state);
+
+        $this->assertSame((string) $xml->states->state[0]->to_id['REF'], 'V114-0');
+        $this->assertSame((string) $xml->states->state[1]->to_id['REF'], 'V114-1');
     }
 }
