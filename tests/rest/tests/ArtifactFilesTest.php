@@ -311,7 +311,7 @@ class ArtifactFilesTest extends ArtifactFileBase
         $this->assertNotNull($show_url);
         $this->assertEquals(
             $show_url,
-            "/plugins/tracker/?aid=".$parameters['artifact_id']."&field=".$parameters['field_id']."&func=show-attachment&attachment=".$parameters['file_id']
+            '/plugins/tracker/attachments/'. $parameters['file_id'] . '-my%20file%203'
         );
 
         $preview_url = $this->getPreviewUrl($value['file_descriptions']);

@@ -123,12 +123,10 @@ function CardFieldsService($sce, $filter) {
     function getCardFieldFileValue(artifact_id, field_id, file_descriptions, filter_terms) {
         function getFileUrl(file) {
             return (
-                "/plugins/tracker/?aid=" +
-                artifact_id +
-                "&field=" +
-                field_id +
-                "&func=show-attachment&attachment=" +
-                file.id
+                "/plugins/tracker/attachments/" +
+                encodeURIComponent(file.id) +
+                "-" +
+                encodeURIComponent(file.name)
             );
         }
 

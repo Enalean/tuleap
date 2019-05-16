@@ -688,8 +688,8 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                     }
                 }
                 break;
-            case 'preview-attachment':
-            case 'show-attachment':
+            case 'preview-attachment': // deprecated urls: /plugins/tracker/?aid=193&field=94&func=preview-attachment&attachment=39
+            case 'show-attachment':    //                  /plugins/tracker/?aid=193&field=94&func=show-attachment&attachment=39
                 if ((int)$request->get('field') && (int)$request->get('attachment')) {
                     $ff = Tracker_FormElementFactory::instance();
                     /**
