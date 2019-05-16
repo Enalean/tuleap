@@ -67,6 +67,8 @@ class WelcomeDisplayController implements DispatchableWithRequest
      */
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
+        assert($layout instanceof \FlamingParrot_Theme);
+
         $currentUser = $request->getCurrentUser();
         $timezone = $request->get('timezone');
 

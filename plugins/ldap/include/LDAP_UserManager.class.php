@@ -124,7 +124,7 @@ class LDAP_UserManager {
     /**
      * Get LDAPResult object corresponding to a user id
      *
-     * @param  $userId    The user id
+     * @param  int $userId    The user id
      * @return LDAPResult
      */
     function getLdapFromUserId($userId) {

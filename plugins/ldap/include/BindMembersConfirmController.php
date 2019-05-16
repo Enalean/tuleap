@@ -128,21 +128,25 @@ class BindMembersConfirmController implements DispatchableWithRequest
         $to_remove = array();
         foreach ($this->ldap_project_group_manager->getUsersToBeRemoved($bind_option) as $user_id) {
             $user = $this->user_manager->getUserById($user_id);
-            $to_remove[] = array(
-                'display_name' => $this->user_helper->getDisplayNameFromUser($user),
-                'has_avatar'   => $user->hasAvatar(),
-                'avatar_url'   => $user->getAvatarUrl()
-            );
+            if ($user) {
+                $to_remove[] = array(
+                    'display_name' => $this->user_helper->getDisplayNameFromUser($user),
+                    'has_avatar'   => $user->hasAvatar(),
+                    'avatar_url'   => $user->getAvatarUrl()
+                );
+            }
         }
 
         $to_add = array();
         foreach ($this->ldap_project_group_manager->getUsersToBeAdded($bind_option) as $user_id) {
             $user = $this->user_manager->getUserById($user_id);
-            $to_add[] = array(
-                'display_name' => $this->user_helper->getDisplayNameFromUser($user),
-                'has_avatar'   => $user->hasAvatar(),
-                'avatar_url'   => $user->getAvatarUrl()
-            );
+            if ($user) {
+                $to_add[] = array(
+                    'display_name' => $this->user_helper->getDisplayNameFromUser($user),
+                    'has_avatar'   => $user->hasAvatar(),
+                    'avatar_url'   => $user->getAvatarUrl()
+                );
+            }
         }
 
         $layout->sendJSON(
