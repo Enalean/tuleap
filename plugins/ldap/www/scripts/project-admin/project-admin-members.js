@@ -52,7 +52,7 @@ function initLdapGroupsAutocompleter() {
     const synchronize = document.getElementById("project-admin-members-ldap-group-sync");
     const project_id = select.dataset.projectId;
     const display_name = select.dataset.displayName;
-    const base_url = "/plugins/ldap/bind_members_confirm.php";
+    const base_url = "/plugins/ldap/bind-members-confirm";
 
     initLdapBindingPreview(
         {

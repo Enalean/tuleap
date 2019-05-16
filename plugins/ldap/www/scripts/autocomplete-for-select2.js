@@ -32,7 +32,7 @@ function autocomplete_groups_for_select2(element, options) {
         minimumInputLength: 3,
         tags: true,
         ajax: {
-            url: "/plugins/ldap/autocomplete.php",
+            url: "/plugins/ldap/autocomplete",
             dataType: "json",
             delay: 250,
             data: function({ term, page = 1 }) {

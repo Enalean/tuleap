@@ -53,7 +53,7 @@ function initLdapGroupsAutocompleter() {
     const preview = document.getElementById("project-admin-ugroup-ldap-binding-modal-preview");
     const ugroup_id = select.dataset.ugroupId;
     const display_name = select.dataset.ugroupName;
-    const base_url = "/plugins/ldap/bind_ugroup_confirm.php";
+    const base_url = "/plugins/ldap/bind-ugroup-confirm";
 
     initLdapBindingPreview(
         {
