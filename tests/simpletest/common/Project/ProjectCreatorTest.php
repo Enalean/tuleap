@@ -19,8 +19,12 @@
 
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class ProjectCreatorTest extends TuleapTestCase
 {
+    private const TEMPLATE_ID = 10;
+
+    private $project_manager;
 
     public function setUp()
     {
@@ -33,7 +37,10 @@ class ProjectCreatorTest extends TuleapTestCase
         stub($this->event_manager)->isProjectNameAvailable()->returns(true);
         SystemEventManager::setInstance($this->event_manager);
 
-        $this->project_manager = stub('ProjectManager')->getProjectByUnixName()->returns(null);
+        $template_project = Mockery::mock(Project::class);
+        $template_project->shouldReceive('isError')->andReturn(false);
+        $this->project_manager = Mockery::spy(ProjectManager::class);
+        $this->project_manager->shouldReceive('getProject')->with(self::TEMPLATE_ID)->andReturn($template_project);
         ProjectManager::setInstance($this->project_manager);
 
         $this->user_manager = mock('UserManager');
@@ -82,19 +89,19 @@ class ProjectCreatorTest extends TuleapTestCase
     public function testInvalidShortNameShouldRaiseException()
     {
         $this->expectException('Project_InvalidShortName_Exception');
-        $this->creator->create('contains.point', 'sdf', array());
+        $this->creator->create('contains.point', 'sdf', ['project' => ['built_from_template' => self::TEMPLATE_ID]]);
     }
 
     public function testInvalidFullNameShouldRaiseException()
     {
         $this->expectException('Project_InvalidFullName_Exception');
-        $this->creator->create('shortname', 'a', array());
+        $this->creator->create('shortname', 'a', ['project' => ['built_from_template' => self::TEMPLATE_ID]]);
     }
 
     public function testCreationFailureShouldRaiseException()
     {
         $this->expectException('Project_Creation_Exception');
-        $this->creator->create('shortname', 'Valid Full Name', array());
+        $this->creator->create('shortname', 'Valid Full Name', ['project' => ['built_from_template' => self::TEMPLATE_ID]]);
     }
 
     public function itDoesNotCreateProjectWhenRegistrationIsDisabledAndTheUserIsNotSiteAdmin()
@@ -115,14 +122,11 @@ class ProjectCreatorTest extends TuleapTestCase
         stub($user_manager)->getCurrentUser()->returns($user);
         UserManager::setInstance($user_manager);
 
-        $project_manager = mock('ProjectManager');
-
-
         $project_creator = $this->creator = partial_mock(
             'ProjectCreator',
             array('createProject'),
             array(
-                $project_manager,
+                $this->project_manager,
                 mock('ReferenceManager'),
                 $user_manager,
                 mock('Tuleap\Project\UgroupDuplicator'),
@@ -139,12 +143,12 @@ class ProjectCreatorTest extends TuleapTestCase
 
         ForgeConfig::set('sys_use_project_registration', 0);
 
-        $project_manager->expectOnce('getProject', array($project_id));
+        $this->project_manager->shouldReceive('getProject')->with($project_id)->andReturn(Mockery::mock(Project::class));
 
         $project_creator->create(
             'registrationdisabledsiteadmin',
             'Registration disabled but siteadmin',
-            array()
+            ['project' => ['built_from_template' => self::TEMPLATE_ID]]
         );
     }
 }

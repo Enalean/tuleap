@@ -44,6 +44,7 @@ use Tuleap\Project\Event\ProjectRegistrationActivateService;
 use Tuleap\Project\DescriptionFieldsFactory;
 use Tuleap\Project\DescriptionFieldsDao;
 use Tuleap\Project\Label\LabelDao;
+use Tuleap\Project\ProjectInvalidTemplateException;
 use Tuleap\Project\ProjectRegistrationDisabledException;
 use Tuleap\Project\UgroupDuplicator;
 use Tuleap\FRS\FRSPermissionCreator;
@@ -165,8 +166,11 @@ class ProjectCreator {
      *
      * @param ProjectCreationData $data project data
      * @return Project created
+     * @throws ProjectInvalidTemplateException
      * @throws ProjectRegistrationDisabledException
      * @throws Project_Creation_Exception
+     * @throws Project_InvalidFullName_Exception
+     * @throws Project_InvalidShortName_Exception
      */
     public function build(ProjectCreationData $data)
     {
@@ -209,6 +213,7 @@ class ProjectCreator {
      * @throws Project_Creation_Exception
      * @throws Project_InvalidFullName_Exception
      * @throws Project_InvalidShortName_Exception
+     * @throws ProjectInvalidTemplateException
      */
     public function createFromRest($short_name, $public_name, array $data)
     {
@@ -266,16 +271,16 @@ class ProjectCreator {
 
         // Instanciate all services from the project template that are 'active'
         $group = $this->project_manager->getProject($group_id);
-        if (!$group || !is_object($group)) {
-            exit_no_group();
+        if ($group->isError()) {
+            throw new Project_Creation_Exception('Creation of the project entry has failed');
         }
 
         $this->fakeGroupIdIntoHTTPParams($group_id);
 
         $template_id    = $group->getTemplate();
         $template_group = $this->project_manager->getProject($template_id);
-        if (!$template_group || !is_object($template_group) || $template_group->isError()) {
-          exit_no_group();
+        if ($template_group->isError()) {
+            throw new Project_Creation_Exception('Template associated with the project is not valid');
         }
 
         $em     = EventManager::instance();
@@ -721,8 +726,9 @@ class ProjectCreator {
      * @param ProjectCreationData $data
      * @throws Project_InvalidFullName_Exception
      * @throws Project_InvalidShortName_Exception
+     * @throws ProjectInvalidTemplateException
      */
-    private function checkProjectCreationData(ProjectCreationData $data)
+    private function checkProjectCreationData(ProjectCreationData $data) : void
     {
         if (!$this->rule_short_name->isValid($data->getUnixName())) {
             throw new Project_InvalidShortName_Exception($this->rule_short_name->getErrorMessage());
@@ -730,6 +736,12 @@ class ProjectCreator {
 
         if (!$this->rule_full_name->isValid($data->getFullName())) {
             throw new Project_InvalidFullName_Exception($this->rule_full_name->getErrorMessage());
+        }
+
+        $template_id      = $data->getTemplateId();
+        $template_project = $this->project_manager->getProject($template_id);
+        if ($template_project->isError()) {
+            throw new ProjectInvalidTemplateException($template_id);
         }
     }
 
