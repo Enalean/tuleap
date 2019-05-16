@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,6 +24,7 @@ use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\FRS\UploadedLinksUpdater;
 use Tuleap\Project\Admin\ProjectUGroup\CannotCreateUGroupException;
 use Tuleap\Dashboard\Project\ProjectDashboardXMLImporter;
+use Tuleap\Project\Admin\ProjectUGroup\ProjectImportCleanupUserCreatorFromAdministrators;
 use Tuleap\Project\UgroupDuplicator;
 use Tuleap\Project\UserRemover;
 use Tuleap\Project\XML\Import\ArchiveInterface;
@@ -371,9 +372,12 @@ class ProjectXMLImporter {
         }
     }
 
-    private function cleanProjectAdminsFromUserCreator(ProjectUGroup $ugroup, array $users, PFUser $user_creator)
+    private function cleanProjectAdminsFromUserCreator(ProjectUGroup $ugroup, array $users, PFUser $user_creator) : void
     {
         if (! empty($users) && ! in_array($user_creator, $users)) {
+            $this->event_manager->processEvent(
+                new ProjectImportCleanupUserCreatorFromAdministrators($user_creator, $ugroup)
+            );
             $ugroup->removeUser($user_creator);
         }
     }

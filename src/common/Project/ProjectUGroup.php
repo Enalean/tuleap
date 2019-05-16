@@ -19,7 +19,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\DB\DBFactory;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Project\Admin\ProjectUGroup\CannotAddRestrictedUserToProjectNotAllowingRestricted;
+use Tuleap\Project\Admin\ProjectUGroup\DynamicUGroupMembersUpdater;
+use Tuleap\Project\UserPermissionsDao;
 use Tuleap\User\UserGroup\NameTranslator;
 
 /**
@@ -169,19 +173,6 @@ class ProjectUGroup implements User_UGroup // phpcs:ignore PSR1.Classes.ClassDec
     public function setProjectId($project_id)
     {
         $this->group_id = $project_id;
-    }
-
-    /**
-     * Get instance of UserGroupDao
-     *
-     * @return UserGroupDao
-     */
-    protected function getUserGroupDao()
-    {
-        if (!$this->user_group_dao) {
-            $this->user_group_dao = new UserGroupDao();
-        }
-        return $this->user_group_dao;
     }
 
     /**
@@ -506,47 +497,25 @@ class ProjectUGroup implements User_UGroup // phpcs:ignore PSR1.Classes.ClassDec
 
     /**
      * Add user to a dynamic ugroup
-     *
-     * @param PFUser $user User to add
-     *
-     * @return Void
      */
-    protected function addUserToDynamicGroup(PFUser $user)
+    protected function addUserToDynamicGroup(PFUser $user) : void
     {
-        $dao  = $this->getUserGroupDao();
-        $flag = $this->getAddFlagForUGroupId($this->id);
-        $dao->updateUserGroupFlags($user->getId(), $this->group_id, $flag);
+        $project = $this->getProject();
+        if ($project === null) {
+            return;
+        }
+
+        $this->getDynamicUGroupMembersUpdater()->addUser($project, $this, $user);
     }
 
-    /**
-     * Convert a dynamic ugroup_id into it's DB table update to add someone to a given group
-     *
-     * @param int $id Id of the ugroup
-     *
-     * @throws UGroup_Invalid_Exception
-     *
-     * @return string
-     */
-    public function getAddFlagForUGroupId($id)
+    private function getDynamicUGroupMembersUpdater() : DynamicUGroupMembersUpdater
     {
-        switch ($id) {
-            case self::PROJECT_ADMIN:
-                return "admin_flags = 'A'";
-            case self::FILE_MANAGER_ADMIN:
-                return 'file_flags = 2';
-            case self::WIKI_ADMIN:
-                return 'wiki_flags = 2';
-            case self::SVN_ADMIN:
-                return 'svn_flags = 2';
-            case self::FORUM_ADMIN:
-                return 'forum_flags = 2';
-            case self::NEWS_ADMIN:
-                return 'news_flags = 2';
-            case self::NEWS_WRITER:
-                return 'news_flags = 1';
-            default:
-                throw new UGroup_Invalid_Exception();
-        }
+        return new DynamicUGroupMembersUpdater(
+            new UserPermissionsDao(),
+            new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
+            new UGroupBinding($this->getUGroupUserDao(), new UGroupManager()),
+            EventManager::instance()
+        );
     }
 
     /**
@@ -588,52 +557,14 @@ class ProjectUGroup implements User_UGroup // phpcs:ignore PSR1.Classes.ClassDec
         ugroup_remove_user_from_ugroup($group_id, $ugroup_id, $user_id);
     }
 
-    /**
-     * Remove user from dynamic ugroup
-     *
-     * @param PFUser $user User to remove
-     *
-     * @return bool
-     */
-    protected function removeUserFromDynamicGroup(PFUser $user)
+    protected function removeUserFromDynamicGroup(PFUser $user) : void
     {
-        $dao  = $this->getUserGroupDao();
-        if ($this->id == self::PROJECT_ADMIN &&
-            $dao->searchProjectAdminsByProjectIdExcludingOneUserId($this->group_id, $user->getId())->rowCount() === 0) {
-            throw new Exception('Impossible to remove last admin of the project');
+        $project = $this->getProject();
+        if ($project === null) {
+            return;
         }
-        $flag = $this->getRemoveFlagForUGroupId($this->id);
-        return $dao->updateUserGroupFlags($user->getId(), $this->group_id, $flag);
-    }
 
-    /**
-     * Convert a dynamic ugroup_id into it's DB table update to remove someone from given group
-     *
-     * @param int $id Id of the ugroup
-     *
-     * @throws UGroup_Invalid_Exception
-     *
-     * @return string
-     */
-    public function getRemoveFlagForUGroupId($id)
-    {
-        switch ($id) {
-            case self::PROJECT_ADMIN:
-                return "admin_flags = ''";
-            case self::FILE_MANAGER_ADMIN:
-                return 'file_flags = 0';
-            case self::WIKI_ADMIN:
-                return 'wiki_flags = 0';
-            case self::SVN_ADMIN:
-                return 'svn_flags = 0';
-            case self::FORUM_ADMIN:
-                return 'forum_flags = 0';
-            case self::NEWS_ADMIN:
-            case self::NEWS_WRITER:
-                return 'news_flags = 0';
-            default:
-                throw new UGroup_Invalid_Exception();
-        }
+        $this->getDynamicUGroupMembersUpdater()->removeUser($project, $this, $user);
     }
 
     /**
