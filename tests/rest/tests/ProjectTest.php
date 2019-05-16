@@ -106,6 +106,27 @@ class ProjectTest extends ProjectBase
         $this->assertEquals($response->getStatusCode(), 201);
     }
 
+    public function testProjectCreationWithAnIncorrectProjectIDFails() : void
+    {
+        $post_resource = json_encode([
+            'label'       => 'Invalid project creation template ID',
+            'shortname'   => 'invalidtemplateid',
+            'description' => 'Invalid project creation template ID',
+            'is_public'   => true,
+            'template_id' => 0
+        ]);
+
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->client->post(
+                'projects',
+                null,
+                $post_resource
+            )
+        );
+        $this->assertEquals($response->getStatusCode(), 400);
+    }
+
     public function testGET()
     {
         $response      = $this->getResponse($this->client->get('projects'));

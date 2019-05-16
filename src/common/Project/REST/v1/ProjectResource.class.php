@@ -48,6 +48,7 @@ use Tuleap\Project\HeartbeatsEntryCollection;
 use Tuleap\Project\Label\LabelDao;
 use Tuleap\Project\Label\LabelsCurlyCoatedRetriever;
 use Tuleap\Project\PaginatedProjects;
+use Tuleap\Project\ProjectInvalidTemplateException;
 use Tuleap\Project\ProjectStatusMapper;
 use Tuleap\Project\REST\HeartbeatsRepresentation;
 use Tuleap\Project\REST\ProjectRepresentation;
@@ -242,6 +243,8 @@ class ProjectResource extends AuthenticatedResource
         } catch (Project_InvalidShortName_Exception $exception) {
             throw new RestException(400, $exception->getMessage());
         } catch (Project_InvalidFullName_Exception $exception) {
+            throw new RestException(400, $exception->getMessage());
+        } catch (ProjectInvalidTemplateException $exception) {
             throw new RestException(400, $exception->getMessage());
         }
 
