@@ -44,7 +44,7 @@ require_once 'constants.php';
 require_once __DIR__ . '/../../botmattermost/include/botmattermostPlugin.class.php';
 require_once __DIR__ . '/../../agiledashboard/include/agiledashboardPlugin.class.php';
 
-class botmattermost_agiledashboardPlugin extends Plugin
+class botmattermost_agiledashboardPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
 {
 
     public function __construct($id)
@@ -65,6 +65,8 @@ class botmattermost_agiledashboardPlugin extends Plugin
         }
         $this->addHook(EventCronJobEveryMinute::NAME);
         $this->addHook(BotMattermostDeleted::NAME);
+
+        $this->listenToCollectRouteEventWithDefaultController();
 
         return parent::getHooksAndCallbacks();
     }
@@ -196,7 +198,7 @@ class botmattermost_agiledashboardPlugin extends Plugin
         return HTTPRequest::instance();
     }
 
-    public function process()
+    public function process() : void
     {
         $request = $this->getRequest();
         if ($this->isAllowed($request->getProject()->getID())) {
