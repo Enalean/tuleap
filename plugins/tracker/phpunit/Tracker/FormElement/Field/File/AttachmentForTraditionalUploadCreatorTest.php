@@ -31,7 +31,7 @@ class AttachmentForTraditionalUploadCreatorTest extends TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    public function testItCreatesAttachment()
+    public function testItCreatesAttachment(): void
     {
         $rule_file = Mockery::mock(\Rule_File::class);
         $rule_file->shouldReceive('isValid')->andReturn(true);
@@ -65,7 +65,7 @@ class AttachmentForTraditionalUploadCreatorTest extends TestCase
         $this->assertEquals(101, $attachment->getSubmittedBy());
     }
 
-    public function testItCreatesAttachmentWithCopyInCaseOfArtifactImport()
+    public function testItCreatesAttachmentWithCopyInCaseOfArtifactImport(): void
     {
         $rule_file = Mockery::mock(\Rule_File::class);
         $rule_file->shouldReceive('isValid')->andReturn(true);
@@ -100,7 +100,7 @@ class AttachmentForTraditionalUploadCreatorTest extends TestCase
         $this->assertEquals(101, $attachment->getSubmittedBy());
     }
 
-    public function testItUsesSubmittedByFromValueInfoInsteadOfCurrentUser()
+    public function testItUsesSubmittedByFromValueInfoInsteadOfCurrentUser(): void
     {
         $rule_file = Mockery::mock(\Rule_File::class);
         $rule_file->shouldReceive('isValid')->andReturn(true);
@@ -138,7 +138,7 @@ class AttachmentForTraditionalUploadCreatorTest extends TestCase
         $this->assertEquals(666, $attachment->getSubmittedBy());
     }
 
-    public function testItReturnsNullIfAttachmentCannotBeSavedInDb()
+    public function testItReturnsNullIfAttachmentCannotBeSavedInDb(): void
     {
         $rule_file = Mockery::mock(\Rule_File::class);
         $rule_file->shouldReceive('isValid')->andReturn(true);
@@ -172,7 +172,7 @@ class AttachmentForTraditionalUploadCreatorTest extends TestCase
         $this->assertNull($attachment);
     }
 
-    public function testItReturnsNullIfAttachmentCannotBeMovedToFinalPlace()
+    public function testItReturnsNullIfAttachmentCannotBeMovedToFinalPlace(): void
     {
         $rule_file = Mockery::mock(\Rule_File::class);
         $rule_file->shouldReceive('isValid')->andReturn(true);
@@ -206,7 +206,7 @@ class AttachmentForTraditionalUploadCreatorTest extends TestCase
         $this->assertNull($attachment);
     }
 
-    public function testItReturnsNullIfFileIsNotValid()
+    public function testItReturnsNullIfFileIsNotValid(): void
     {
         $rule_file = Mockery::mock(\Rule_File::class);
         $rule_file->shouldReceive('isValid')->andReturn(false);

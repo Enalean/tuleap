@@ -33,7 +33,7 @@ class AttachmentForRestCreatorTest extends TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    public function testCreateAttachment()
+    public function testCreateAttachment(): void
     {
         $rule_file = Mockery::mock(\Rule_File::class);
         $rule_file->shouldReceive('isValid')->andReturn(true);
@@ -99,7 +99,7 @@ class AttachmentForRestCreatorTest extends TestCase
         $this->assertEquals('readme.mkd', $attachment->getFilename());
     }
 
-    public function testItReturnsNullIfMoveToFinalPlaceIsNotPossible()
+    public function testItReturnsNullIfMoveToFinalPlaceIsNotPossible(): void
     {
         $rule_file = Mockery::mock(\Rule_File::class);
         $rule_file->shouldReceive('isValid')->andReturn(true);
@@ -165,7 +165,7 @@ class AttachmentForRestCreatorTest extends TestCase
         $this->assertNull($attachment);
     }
 
-    public function testItReturnsNullIfTemporaryFileDoesNotExist()
+    public function testItReturnsNullIfTemporaryFileDoesNotExist(): void
     {
         $rule_file = Mockery::mock(\Rule_File::class);
         $rule_file->shouldReceive('isValid')->andReturn(true);
@@ -227,7 +227,7 @@ class AttachmentForRestCreatorTest extends TestCase
         $this->assertNull($attachment);
     }
 
-    public function testItDelegatesToNextCreatorInChainIfThereIsNoTemporaryFileForGivenId()
+    public function testItDelegatesToNextCreatorInChainIfThereIsNoTemporaryFileForGivenId(): void
     {
         $rule_file = Mockery::mock(\Rule_File::class);
         $rule_file->shouldReceive('isValid')->andReturn(true);
@@ -270,7 +270,7 @@ class AttachmentForRestCreatorTest extends TestCase
         $this->assertNull($attachment);
     }
 
-    public function testItDelegatesToNextCreatorInChainIfThereIsNoIdEntryInSubmittedValueInfo()
+    public function testItDelegatesToNextCreatorInChainIfThereIsNoIdEntryInSubmittedValueInfo(): void
     {
         $rule_file = Mockery::mock(\Rule_File::class);
         $rule_file->shouldReceive('isValid')->andReturn(true);
@@ -309,7 +309,7 @@ class AttachmentForRestCreatorTest extends TestCase
         $this->assertNull($attachment);
     }
 
-    public function testItDelegatesToNextCreatorInChainIfTheFileIsNotValid()
+    public function testItDelegatesToNextCreatorInChainIfTheFileIsNotValid(): void
     {
         $rule_file = Mockery::mock(\Rule_File::class);
         $rule_file->shouldReceive('isValid')->andReturn(false);

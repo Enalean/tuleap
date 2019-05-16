@@ -35,7 +35,7 @@ class ChangesetValueFileSaverTest extends TestCase
 {
     use MockeryPHPUnitIntegration, ForgeConfigSandbox;
 
-    public function testReturnsTrueWhenThereIsNothingToSaveForANewArtifact()
+    public function testReturnsTrueWhenThereIsNothingToSaveForANewArtifact(): void
     {
         ForgeConfig::set('sys_max_size_upload', 1024);
         $dao                = \Mockery::mock(Tracker_FormElement_Field_Value_FileDao::class);
@@ -60,7 +60,7 @@ class ChangesetValueFileSaverTest extends TestCase
         );
     }
 
-    public function testItDuplicatesPreviousValues()
+    public function testItDuplicatesPreviousValues(): void
     {
         ForgeConfig::set('sys_max_size_upload', 1024);
         $dao                = \Mockery::mock(Tracker_FormElement_Field_Value_FileDao::class);
@@ -99,7 +99,7 @@ class ChangesetValueFileSaverTest extends TestCase
         );
     }
 
-    public function testItReturnsFalseIfItCannotDuplicatePreviousValues()
+    public function testItReturnsFalseIfItCannotDuplicatePreviousValues(): void
     {
         ForgeConfig::set('sys_max_size_upload', 1024);
         $dao                = \Mockery::mock(Tracker_FormElement_Field_Value_FileDao::class);
@@ -138,7 +138,7 @@ class ChangesetValueFileSaverTest extends TestCase
         );
     }
 
-    public function testItDeletePreviousValues()
+    public function testItDeletePreviousValues(): void
     {
         ForgeConfig::set('sys_max_size_upload', 1024);
         $dao                = \Mockery::mock(Tracker_FormElement_Field_Value_FileDao::class);
@@ -180,7 +180,7 @@ class ChangesetValueFileSaverTest extends TestCase
         );
     }
 
-    public function testSavesNewFiles()
+    public function testSavesNewFiles(): void
     {
         ForgeConfig::set('sys_max_size_upload', 1024);
         $dao                = \Mockery::mock(Tracker_FormElement_Field_Value_FileDao::class);
@@ -234,7 +234,7 @@ class ChangesetValueFileSaverTest extends TestCase
         );
     }
 
-    public function testReturnsFalseIfItCannotSaveNewFiles()
+    public function testReturnsFalseIfItCannotSaveNewFiles(): void
     {
         ForgeConfig::set('sys_max_size_upload', 1024);
         $dao                = \Mockery::mock(Tracker_FormElement_Field_Value_FileDao::class);
@@ -288,7 +288,7 @@ class ChangesetValueFileSaverTest extends TestCase
         );
     }
 
-    public function testIgnoresFilesThatHaveNotBeenCreated()
+    public function testIgnoresFilesThatHaveNotBeenCreated(): void
     {
         ForgeConfig::set('sys_max_size_upload', 1024);
         $dao                = \Mockery::mock(Tracker_FormElement_Field_Value_FileDao::class);

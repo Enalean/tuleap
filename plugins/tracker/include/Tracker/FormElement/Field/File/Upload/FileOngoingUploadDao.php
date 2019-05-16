@@ -148,4 +148,12 @@ class FileOngoingUploadDao extends DataAccessObject
             $current_time
         );
     }
+
+    public function deleteUploadedFileThatIsAttached(int $fileinfo_id): void
+    {
+        $this->getDB()->run(
+            'DELETE FROM plugin_tracker_file_upload WHERE fileinfo_id = ?',
+            $fileinfo_id
+        );
+    }
 }

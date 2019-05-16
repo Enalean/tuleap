@@ -31,7 +31,7 @@ use Tuleap\Tus\TusFileInformationProvider;
 use Tuleap\Upload\FileBeingUploadedInformation;
 use Tuleap\Upload\PathAllocator;
 
-final class FileBeingUploadedInformationProvider implements TusFileInformationProvider
+class FileBeingUploadedInformationProvider implements TusFileInformationProvider
 {
     /**
      * @var PathAllocator
@@ -62,6 +62,11 @@ final class FileBeingUploadedInformationProvider implements TusFileInformationPr
         /** @var PFUser $current_user */
         $current_user = $request->getAttribute(RESTCurrentUserMiddleware::class);
 
+        return $this->getFileInformationByIdForUser($id, $current_user);
+    }
+
+    public function getFileInformationByIdForUser(int $id, PFUser $current_user): ?TusFileInformation
+    {
         $row = $this->dao->searchFileOngoingUploadByIDUserIDAndExpirationDate(
             $id,
             (int) $current_user->getId(),
