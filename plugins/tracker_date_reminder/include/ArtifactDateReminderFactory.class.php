@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2007. All Rights Reserved.
  *
  * Originally written by Mohamed CHAARI, 2006. STMicroelectronics.
@@ -387,6 +387,9 @@ class ArtifactDateReminderFactory {
                 } else {
                     // predefined ugroup
                     $qry = ugroup_db_get_dynamic_members($ugr_id, $this->getGroupArtifactId(), $this->getGroupId());
+                    if ($qry === null) {
+                        return $notified_people;
+                    }
                     $result = db_query($qry);
                     if (db_numrows($result) > 0) {
                         $idx = count($notified_people);

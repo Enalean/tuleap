@@ -1,9 +1,9 @@
 <?php
 /**
- * Copyright (c) Enalean SAS, 2017. All rights reserved
+ * Copyright (c) Enalean SAS, 2017-Present. All rights reserved
  * Copyright (c) STMicroelectronics, 2004-2009. All rights reserved
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -69,6 +69,9 @@ if ($request->valid($vExport)) {
                 } else {
                     $sqlUsers = ugroup_db_get_members($ugrp['ugroup_id']);
                 }
+                if ($sqlUsers === null) {
+                    continue;
+                }
                 $users = db_query($sqlUsers);
                 while ($user = db_fetch_array($users)) {
                     $r = array('group'    => util_translate_name_ugroup($ugrp['name']),
@@ -85,6 +88,9 @@ if ($request->valid($vExport)) {
             
             // Pick-up a random project member
             $sqlUsers = ugroup_db_get_dynamic_members($GLOBALS['UGROUP_PROJECT_MEMBERS'], false, $group_id);
+            if ($sqlUsers === null) {
+                return;
+            }
             $users = db_query($sqlUsers);
             $uRow = db_fetch_array($users);
             $user = $um->getUserById($uRow['user_id']);
