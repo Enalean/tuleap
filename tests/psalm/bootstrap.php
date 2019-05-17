@@ -21,6 +21,7 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/../../src/vendor/autoload.php';
+require_once __DIR__ . '/../../src/www/themes/FlamingParrot/vendor/autoload.php';
 require_once __DIR__ . '/../../src/www/themes/BurningParrot/vendor/autoload.php';
 
 ini_set('include_path', ini_get('include_path').':' . __DIR__ . '/../../src:'. __DIR__ . '/../../src/www/include');

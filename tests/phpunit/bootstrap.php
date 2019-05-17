@@ -26,6 +26,7 @@ $include_path = $basedir.'/src/www/include';
 ini_set('include_path', ini_get('include_path').':'.$src_path.':'.$include_path);
 
 require_once __DIR__ . '/../../src/vendor/autoload.php';
+require_once __DIR__ . '/../../src/www/themes/FlamingParrot/FlamingParrot_Theme.class.php';
 require_once __DIR__ . '/../../src/www/themes/BurningParrot/BurningParrotTheme.php';
 require_once __DIR__ . '/../lib/Network/HTTPResponseFunctionsOverload.php';
 
