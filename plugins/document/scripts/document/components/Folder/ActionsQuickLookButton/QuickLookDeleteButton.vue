@@ -42,7 +42,7 @@
 <script>
 import { mapState } from "vuex";
 import { redirectToUrl } from "../../../helpers/location-helper.js";
-import { TYPE_EMPTY, TYPE_FOLDER, TYPE_WIKI } from "../../../constants.js";
+import { TYPE_EMPTY, TYPE_FOLDER } from "../../../constants.js";
 
 export default {
     name: "QuickLookDeleteButton",
@@ -58,11 +58,7 @@ export default {
     },
     methods: {
         processDeletion() {
-            if (
-                this.item.type === TYPE_EMPTY ||
-                this.item.type === TYPE_FOLDER ||
-                this.item.type === TYPE_WIKI
-            ) {
+            if (this.item.type === TYPE_EMPTY || this.item.type === TYPE_FOLDER) {
                 return this.redirectDeleteUrl();
             }
 

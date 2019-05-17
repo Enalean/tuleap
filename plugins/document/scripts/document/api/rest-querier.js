@@ -42,7 +42,8 @@ export {
     addNewLink,
     deleteFile,
     deleteLink,
-    deleteEmbeddedFile
+    deleteEmbeddedFile,
+    deleteWiki
 };
 
 async function getProject(project_id) {
@@ -270,4 +271,9 @@ function deleteLink(item) {
 function deleteEmbeddedFile(item) {
     const escaped_item_id = encodeURIComponent(item.id);
     return del(`/api/docman_embedded_files/${escaped_item_id}`);
+}
+
+function deleteWiki(item) {
+    const escaped_item_id = encodeURIComponent(item.id);
+    return del(`/api/docman_wikis/${escaped_item_id}`);
 }

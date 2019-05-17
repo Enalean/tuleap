@@ -67,9 +67,19 @@ class DocmanItemsTestWikiTest extends DocmanBase
         );
         $items_wiki     = $response->json();
 
-        $items = array_merge($items_folder_1, $items_wiki);
+        $trash_folder    = $this->findItemByTitle($folder, "Trash");
+        $trash_folder_id = $trash_folder['id'];
 
-        $this->assertEquals(count($items), 8);
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('docman_items/' . $trash_folder_id . '/docman_items')
+        );
+
+        $items_to_delete = $response->json();
+
+        $items = array_merge($items_folder_1, $items_wiki, $items_to_delete);
+
+        $this->assertGreaterThan(0, count($items));
 
         return $items;
     }
@@ -391,5 +401,97 @@ class DocmanItemsTestWikiTest extends DocmanBase
             return null;
         }
         return $items[$index];
+    }
+
+    /**
+     * @depends testGetDocumentItemsForAdminUser
+     */
+    public function testItThrowsAnErrorWhenUserHasNotPermissionToDeleteTheWiki(array $items): void
+    {
+        $wiki_to_delete    = $this->findItemByTitle($items, 'old wiki L');
+        $wiki_to_delete_id = $wiki_to_delete['id'];
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->delete('docman_wikis/' . $wiki_to_delete_id)
+        );
+
+        $this->assertEquals(403, $response->getStatusCode());
+
+        $this->checkItemHasNotBeenDeleted($wiki_to_delete_id);
+    }
+
+    /**
+     * @depends testGetDocumentItemsForAdminUser
+     */
+    public function testItShouldThrowAnErrorWhenTheWikiIsLockedByAnotherUser(array $items): void
+    {
+        $wiki_to_delete    = $this->findItemByTitle($items, 'another old wiki');
+        $wiki_to_delete_id = $wiki_to_delete['id'];
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->delete('docman_wikis/' . $wiki_to_delete_id)
+        );
+
+        $this->assertEquals(403, $response->getStatusCode());
+
+        $this->checkItemHasNotBeenDeleted($wiki_to_delete_id);
+    }
+
+    /**
+     * @depends testGetDocumentItemsForAdminUser
+     */
+    public function testItShouldDeleteWhenWikiIsLockedAndUserIsAdmin(array $items): void
+    {
+        $wiki_to_delete    = $this->findItemByTitle($items, 'old wiki L');
+        $wiki_to_delete_id = $wiki_to_delete['id'];
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->delete('docman_wikis/' . $wiki_to_delete_id)
+        );
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $this->checkItemHasBeenDeleted($wiki_to_delete_id);
+    }
+
+    /**
+     * @depends testGetDocumentItemsForAdminUser
+     */
+    public function testItDeletesAWiki(array $items): void
+    {
+        $wiki_to_delete    = $this->findItemByTitle($items, 'another old wiki');
+        $wiki_to_delete_id = $wiki_to_delete['id'];
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->delete('docman_wikis/' . $wiki_to_delete_id)
+        );
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $this->checkItemHasBeenDeleted($wiki_to_delete_id);
+    }
+
+    private function checkItemHasNotBeenDeleted(int $wiki_to_delete_id) : void
+    {
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('docman_items/' . $wiki_to_delete_id)
+        );
+
+        $this->assertEquals(200, $response->getStatusCode());
+    }
+
+    private function checkItemHasBeenDeleted(int $wiki_to_delete_id) : void
+    {
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('docman_items/' . $wiki_to_delete_id)
+        );
+
+        $this->assertEquals(404, $response->getStatusCode());
     }
 }

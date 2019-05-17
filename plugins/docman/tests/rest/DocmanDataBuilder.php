@@ -628,6 +628,15 @@ class DocmanDataBuilder extends DocmanDataBuildCommon
             PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE
         );
 
+        $wiki_L_id = $this->createItem(
+            \REST_TestDataBuilder::ADMIN_PROJECT_ID,
+            $folder_delete_id,
+            "old wiki L",
+            PLUGIN_DOCMAN_ITEM_TYPE_WIKI
+        );
+
+        $this->addReadPermissionOnItem($wiki_L_id, ProjectUGroup::DOCUMENT_ADMIN);
+
         $dao = new \Docman_LockDao();
         $dao->addLock(
             $file_L_id,
@@ -647,6 +656,12 @@ class DocmanDataBuilder extends DocmanDataBuildCommon
             time()
         );
 
+        $dao->addLock(
+            $wiki_L_id,
+            \REST_TestDataBuilder::ADMIN_PROJECT_ID,
+            time()
+        );
+
         $this->createItem(
             \REST_TestDataBuilder::ADMIN_PROJECT_ID,
             $folder_delete_id,
@@ -661,13 +676,22 @@ class DocmanDataBuilder extends DocmanDataBuildCommon
             PLUGIN_DOCMAN_ITEM_TYPE_LINK
         );
 
-        $another_embedded_file_L_id = $this->createItem(
+        $another_embedded_file_id = $this->createItem(
             \REST_TestDataBuilder::ADMIN_PROJECT_ID,
             $folder_delete_id,
             "another old embedded file",
             PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE
         );
 
-        $this->addReadPermissionOnItem($another_embedded_file_L_id, self::REGULAR_USER_ID);
+        $this->addReadPermissionOnItem($another_embedded_file_id, self::REGULAR_USER_ID);
+
+        $another_wiki_id = $this->createItem(
+            \REST_TestDataBuilder::ADMIN_PROJECT_ID,
+            $folder_delete_id,
+            "another old wiki",
+            PLUGIN_DOCMAN_ITEM_TYPE_WIKI
+        );
+
+        $this->addReadPermissionOnItem($another_wiki_id, self::REGULAR_USER_ID);
     }
 }
