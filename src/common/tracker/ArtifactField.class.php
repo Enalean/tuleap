@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -661,7 +661,8 @@ class ArtifactField {
 			else
 			    $qry_value[$i] = ugroup_db_get_dynamic_members($matches[1], $group_artifact_id, $ath->getGroupID(), $with_display_preferences, null, $show_suspended);
 		}
-		$qry = $qry_value[0];
+	    $qry_value = array_filter($qry_value ?? []);
+		$qry       = $qry_value[0];
 		if (count($qry_value) > 1) {
 		    for ($i=1;$i<count($qry_value);$i++) {
 		        $qry = $qry." UNION ".$qry_value[$i];

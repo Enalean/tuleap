@@ -290,7 +290,7 @@ function ugroup_db_get_dynamic_members(
     $keyword = null,
     $show_suspended = false,
     array $user_ids = array()
-) {
+)  : ?string {
     $data_access = CodendiDataAccess::instance();
 
     $sqlname  = "user.user_name AS full_name";
@@ -319,10 +319,10 @@ function ugroup_db_get_dynamic_members(
 	// Special Cases
     if ($ugroup_id==$GLOBALS['UGROUP_NONE']) {
         // Empty group
-        return;
+        return null;
     } else if ($ugroup_id==$GLOBALS['UGROUP_ANONYMOUS']) {
         // Anonymous user
-        return;
+        return null;
     } else if ($ugroup_id==$GLOBALS['UGROUP_REGISTERED']) {
         // Registered user
         return "(SELECT user.user_id, ".$sqlname.", user.user_name FROM user WHERE " . $user_status . " $having_keyword ORDER BY ".$sqlorder." )";
@@ -366,6 +366,7 @@ function ugroup_db_get_dynamic_members(
                     AND " . $user_status . "
                     $having_keyword ORDER BY " . $sqlorder . " )";
     }
+    return null;
 }
 
 /**
@@ -388,6 +389,9 @@ function ugroup_get_all_dynamic_members($group_id, $atid=0) {
             continue;
         }
         $sql = ugroup_db_get_dynamic_members($ugroup_id, $atid, $group_id);
+        if ($sql === null) {
+            continue;
+        }
         $rs  = db_query($sql);
         while( $row = db_fetch_array($rs) ) {
             $members[] = array(
@@ -763,6 +767,9 @@ function ugroup_count_non_admin_for_dynamic_ugroups($groupId, $ugroups, &$validU
     $containNonAdmin = 0;
     foreach ($ugroups as $ugroupId) {
         $sql = ugroup_db_get_dynamic_members($ugroupId, null, $groupId);
+        if ($sql === null) {
+            continue;
+        }
         $arrayUsers = ugroup_count_project_admins($groupId, $sql);
         if ($arrayUsers['admins'] > 0) {
             $validUGroups[] = $ugroupId;
