@@ -26,22 +26,32 @@
  */
 
 function example($host, $user, $pass, $group_id) {
+    $opts = array(
+        'ssl' => array(
+            'verify_peer' => false,
+            'verify_peer_name' => false
+        )
+    );
+    $soap_options = array(
+        'verifypeer' => false,
+        'verifyhost' => false,
+        'cache_wsdl' => WSDL_CACHE_NONE,
+        'soap_version' => SOAP_1_2,
+        'trace'      => 1,
+        'stream_context' => stream_context_create($opts)
+    );
+
     try {
-        $soap_options = array(
-            'cache_wsdl' => WSDL_CACHE_NONE,
-            'trace'      => 1,
-        );
-        
         // Establish connexion to the server...
-        $soap = new SoapClient("http://$host/soap/?wsdl", $soap_options);
+        $soap = new SoapClient("https://$host/soap/?wsdl", $soap_options);
         // ...and get the session hash of the user.
         $session_hash = $soap->login($user, $pass)->session_hash;
         
         
         //Get statistics
         echo "Retrieving statistics for project $group_id\n";
-        $soap  = new SoapClient("http://$host/plugins/statistics/soap/?wsdl", $soap_options);
-        $stats = $soap->getProjectDiskStats($session_hash, $group_id);
+        $soap  = new SoapClient("https://$host/soap/?wsdl", $soap_options);
+        $stats = $soap->getProjectGroupsAndUsers($session_hash, $group_id);
         print_r($stats);
 
     } catch (Exception $e) {
