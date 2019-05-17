@@ -31,6 +31,11 @@ class Tracker_Workflow_Trigger_RulesProcessor {
     /** @var WorkflowBackendLogger */
     private $logger;
 
+    /**
+     * @var array<int, true>
+     */
+    private $artifacts_visited_in_processing = [];
+
     public function __construct(Tracker_Workflow_WorkflowUser $workflow_user, WorkflowBackendLogger $logger) {
         $this->workflow_user = $workflow_user;
         $this->logger        = $logger;
@@ -46,7 +51,21 @@ class Tracker_Workflow_Trigger_RulesProcessor {
         $this->logger->start(__METHOD__, $artifact->getXRef(), $rule->getId());
 
         $parent = $artifact->getParentWithoutPermissionChecking();
-        if ($parent && ! $this->parentAlreadyHasTargetValue($parent, $rule)) {
+
+        if ($parent === null) {
+            $this->logger->end(__METHOD__, $artifact->getId(), $rule->getId());
+            return;
+        }
+
+        if (isset($this->artifacts_visited_in_processing[$artifact->getId()])) {
+            unset($this->artifacts_visited_in_processing[$artifact->getId()]);
+            $this->logger->error('Cycle detected in the hierarchy while processing trigger rules for artifact #' . $artifact->getId());
+            $this->logger->end(__METHOD__, $artifact->getId(), $rule->getId());
+            return;
+        }
+        $this->artifacts_visited_in_processing[$artifact->getId()] = true;
+
+        if (! $this->parentAlreadyHasTargetValue($parent, $rule)) {
             $this->logger->debug('Parent '. $parent->getXRef() .' does not have target value…');
             $processor_strategy = $this->getRuleStrategy($artifact, $rule);
             if ($processor_strategy->allPrecondtionsAreMet()) {
@@ -55,6 +74,7 @@ class Tracker_Workflow_Trigger_RulesProcessor {
             }
         }
 
+        unset($this->artifacts_visited_in_processing[$artifact->getId()]);
         $this->logger->end(__METHOD__, $artifact->getId(), $rule->getId());
     }
 
@@ -96,5 +116,3 @@ class Tracker_Workflow_Trigger_RulesProcessor {
         }
     }
 }
-
-?>
