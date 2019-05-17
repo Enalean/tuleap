@@ -19,10 +19,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use GuzzleHttp\Psr7\ServerRequest;
 use Tuleap\Tracker\FormElement\Field\File\AttachmentForRestCreator;
 use Tuleap\Tracker\FormElement\Field\File\AttachmentForTraditionalUploadCreator;
+use Tuleap\Tracker\FormElement\Field\File\AttachmentForTusUploadCreator;
 use Tuleap\Tracker\FormElement\Field\File\AttachmentToFinalPlaceMover;
 use Tuleap\Tracker\FormElement\Field\File\ChangesetValueFileSaver;
+use Tuleap\Tracker\FormElement\Field\File\Upload\FileOngoingUploadDao;
+use Tuleap\Tracker\FormElement\Field\File\Upload\Tus\FileBeingUploadedInformationProvider;
+use Tuleap\Tracker\FormElement\Field\File\Upload\UploadPathAllocator;
 
 require_once('common/valid/Rule.class.php');
 require_once('common/include/Codendi_HTTPPurifier.class.php');
@@ -699,7 +704,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
      * @return bool
      */
     private function isAttachmentNeedsToBeValidated($attachment_index, array $attachment) {
-        if ($attachment_index === 'delete') {
+        if ($attachment_index === 'delete' || isset($attachment['tus-uploaded-id'])) {
             return false;
         }
 
@@ -744,9 +749,10 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
             if ($a_file_is_sent) {
                 break;
             }
-            if ((string) $action !== 'delete') {
-                $a_file_is_sent = $r->isValid($attachment);
+            if ((string) $action === 'delete') {
+                continue;
             }
+            $a_file_is_sent = isset($attachment['tus-uploaded-id']) || $r->isValid($attachment);
         }
         return $a_file_is_sent;
     }
@@ -821,11 +827,22 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
     ) {
         $mover              = new AttachmentToFinalPlaceMover();
         $rule_file          = new Rule_File();
-        $attachment_creator = new AttachmentForRestCreator(
-            $mover,
-            $this->getTemporaryFileManager(),
-            new AttachmentForTraditionalUploadCreator($mover, $rule_file),
-            $rule_file
+        $ongoing_upload_dao = new FileOngoingUploadDao();
+        $attachment_creator = new AttachmentForTusUploadCreator(
+            new FileBeingUploadedInformationProvider(
+                new UploadPathAllocator(
+                    $ongoing_upload_dao,
+                    Tracker_FormElementFactory::instance()
+                ),
+                $ongoing_upload_dao
+            ),
+            $ongoing_upload_dao,
+            new AttachmentForRestCreator(
+                $mover,
+                $this->getTemporaryFileManager(),
+                new AttachmentForTraditionalUploadCreator($mover, $rule_file),
+                $rule_file
+            )
         );
 
         $saver = new ChangesetValueFileSaver($this->getValueDao(), $attachment_creator);
