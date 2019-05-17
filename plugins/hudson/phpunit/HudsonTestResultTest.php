@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -19,29 +19,31 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\Hudson;
+
+use BaseLanguage;
+use Http\Mock\Client;
+use HudsonJobURLMalformedException;
+use HudsonTestResult;
+use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Http\HTTPFactoryBuilder;
+use XML_Security;
 
-require_once __DIR__ . '/bootstrap.php';
-
-class HudsonTestResultTest extends TestCase
+final class HudsonTestResultTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
     /** @var XML_Security */
     private $xml_security;
-    /**
-     * @var Http_Client
-     */
-    private $http_client;
 
-    public function setUp() : void
+    protected function setUp() : void
     {
         parent::setUp();
 
         $this->xml_security = new XML_Security();
         $this->xml_security->enableExternalLoadOfEntities();
-        $this->http_client = \Mockery::spy(\Http_Client::class);
 
         $GLOBALS['Language'] = Mockery::spy(BaseLanguage::class);
     }
@@ -58,21 +60,21 @@ class HudsonTestResultTest extends TestCase
     {
         $this->expectException(HudsonJobURLMalformedException::class);
 
-        new HudsonTestResult("toto", $this->http_client);
+        new HudsonTestResult("toto", new Client(), HTTPFactoryBuilder::requestFactory());
     }
 
     public function testMissingSchemeURL()
     {
         $this->expectException(HudsonJobURLMalformedException::class);
 
-        new HudsonTestResult("code4:8080/hudson/jobs/tuleap", $this->http_client);
+        new HudsonTestResult("code4:8080/hudson/jobs/tuleap", new Client(), HTTPFactoryBuilder::requestFactory());
     }
 
     public function testMissingHostURL()
     {
         $this->expectException(HudsonJobURLMalformedException::class);
 
-        new HudsonTestResult("http://", $this->http_client);
+        new HudsonTestResult("http://", new Client(), HTTPFactoryBuilder::requestFactory());
     }
 
     public function testSimpleJobTestResult()
@@ -82,7 +84,7 @@ class HudsonTestResultTest extends TestCase
 
         $test_result = Mockery::spy(HudsonTestResult::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $test_result->shouldReceive('_getXMLObject')->andReturn($xmldom);
-        $test_result->__construct("http://myCIserver/jobs/myCIjob/lastBuild/testReport/", $this->http_client);
+        $test_result->__construct("http://myCIserver/jobs/myCIjob/lastBuild/testReport/", new Client(), HTTPFactoryBuilder::requestFactory());
 
         $this->assertEquals($test_result->getFailCount(), 5);
         $this->assertEquals($test_result->getPassCount(), 416);

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All rights reserved
+ * Copyright (c) Enalean, 2016-Present. All rights reserved
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -19,21 +19,30 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\RequestFactoryInterface;
 
 class HudsonTestResult {
 
     protected $hudson_test_result_url;
     protected $dom_job;
     /**
-     * @var Http_Client
+     * @var ClientInterface
      */
     private $http_client;
+    /**
+     * @var RequestFactoryInterface
+     */
+    private $request_factory;
 
     /**
      * Construct an Hudson job from a job URL
      */
-    public function __construct($hudson_job_url, Http_Client $http_client)
-    {
+    public function __construct(
+        string $hudson_job_url,
+        ClientInterface $http_client,
+        RequestFactoryInterface $request_factory
+    ) {
         $parsed_url = parse_url($hudson_job_url);
 
         if ( ! $parsed_url || ! array_key_exists('scheme', $parsed_url) ) {
@@ -42,26 +51,25 @@ class HudsonTestResult {
 
         $this->hudson_test_result_url = $hudson_job_url . "/lastBuild/testReport/api/xml/";
         $this->http_client            = $http_client;
+        $this->request_factory        = $request_factory;
 
         $this->dom_job = $this->_getXMLObject($this->hudson_test_result_url);
     }
 
     protected function _getXMLObject($hudson_test_result_url)
     {
-        $this->http_client->setOption(CURLOPT_URL, $hudson_test_result_url);
-        $this->http_client->doRequest();
-
-        $xmlstr = $this->http_client->getLastResponse();
-        if ($xmlstr !== false) {
-            $xmlobj = simplexml_load_string($xmlstr);
-            if ($xmlobj !== false) {
-                return $xmlobj;
-            } else {
-                throw new HudsonJobURLFileException($GLOBALS['Language']->getText('plugin_hudson','job_url_file_error', array($hudson_test_result_url)));
-            }
-        } else {
+        $response = $this->http_client->sendRequest(
+            $this->request_factory->createRequest('GET', $hudson_test_result_url)
+        );
+        if ($response->getStatusCode() !== 200) {
             throw new HudsonJobURLFileNotFoundException($GLOBALS['Language']->getText('plugin_hudson','job_url_file_not_found', array($hudson_test_result_url)));
         }
+
+        $xmlobj = simplexml_load_string($response->getBody()->getContents());
+        if ($xmlobj !== false) {
+            return $xmlobj;
+        }
+        throw new HudsonJobURLFileException($GLOBALS['Language']->getText('plugin_hudson','job_url_file_error', array($hudson_test_result_url)));
     }
 
     public function getFailCount() {

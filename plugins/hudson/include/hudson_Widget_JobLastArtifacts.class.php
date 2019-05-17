@@ -20,6 +20,8 @@
  */
 
 use Tuleap\Dashboard\User\UserDashboardController;
+use Tuleap\Http\HttpClientFactory;
+use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Hudson\HudsonJobBuilder;
 
 class hudson_Widget_JobLastArtifacts extends HudsonJobWidget
@@ -94,9 +96,12 @@ class hudson_Widget_JobLastArtifacts extends HudsonJobWidget
                     $used_job  = $jobs[$this->job_id];
                     $this->job = $this->job_builder->getHudsonJob($used_job);
 
-                    $http_client          = new Http_Client();
                     $this->last_build_url = $this->job->getUrl() . '/lastBuild/';
-                    $this->build          = new HudsonBuild($this->last_build_url, $http_client);
+                    $this->build          = new HudsonBuild(
+                        $this->last_build_url,
+                        HttpClientFactory::createClient(),
+                        HTTPFactoryBuilder::requestFactory()
+                    );
                 } catch (Exception $e) {
                     $this->job   = null;
                     $this->build = null;
