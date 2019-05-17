@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { get, recursiveGet, patch, del, post } from "tlp";
+import { del, get, patch, post, recursiveGet } from "tlp";
 import { DOCMAN_FOLDER_EXPANDED_VALUE } from "../constants.js";
 
 export {
@@ -185,6 +185,8 @@ function patchWiki(item, page_name, version_title, change_log, should_lock_file)
             wiki_properties: {
                 page_name
             },
+            title: item.title,
+            description: item.description,
             should_lock_file
         })
     });
