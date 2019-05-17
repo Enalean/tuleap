@@ -39,4 +39,16 @@ class SimpleWorkflowDao extends DataAccessObject
 
         return $this->getDB()->run($sql, $workflow_id);
     }
+
+    /**
+     * @return mixed
+     */
+    public function searchTransitionsForState(int $to_id)
+    {
+        $sql = "SELECT DISTINCT tracker_workflow_transition.from_id
+                FROM tracker_workflow_transition
+                WHERE tracker_workflow_transition.to_id = ?";
+
+        return $this->getDB()->run($sql, $to_id);
+    }
 }

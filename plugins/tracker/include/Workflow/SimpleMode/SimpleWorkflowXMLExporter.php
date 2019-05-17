@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Workflow\SimpleMode;
 
 use SimpleXMLElement;
+use Transition;
 use Workflow;
 
 class SimpleWorkflowXMLExporter
@@ -52,9 +53,27 @@ class SimpleWorkflowXMLExporter
         if ($states_sql && count($states_sql) > 0) {
             $states_xml = $xml_simple_workflow->addChild('states');
             foreach ($states_sql as $state_sql) {
-                $state_xml = $states_xml->addChild('state');
-                $state_xml->addChild('to_id')->addAttribute('REF', array_search($state_sql['to_id'], $xml_mapping['values']));
+                $this->exportStateToXML($states_xml, $xml_mapping, $state_sql['to_id']);
             }
+        }
+    }
+
+    private function exportStateToXML(SimpleXMLElement $states_xml, array $xml_mapping, int $to_id)
+    {
+        $state_xml = $states_xml->addChild('state');
+        $state_xml->addChild('to_id')->addAttribute('REF', array_search($to_id, $xml_mapping['values']));
+
+        $transitions_xml = $state_xml->addChild('transitions');
+
+        $transitions_sql = $this->simple_workflow_dao->searchTransitionsForState($to_id);
+
+        foreach ($transitions_sql as $transition_sql) {
+            $xml_value_field_id =
+                $transition_sql['from_id'] === 0 ? Transition::EXPORT_XML_FROM_NEW_VALUE : array_search($transition_sql['from_id'], $xml_mapping['values']);
+
+            $transitions_xml->addChild('transition')
+                ->addChild('from_id')
+                ->addAttribute('REF', $xml_value_field_id);
         }
     }
 }
