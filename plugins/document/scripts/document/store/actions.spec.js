@@ -1207,7 +1207,7 @@ describe("Store actions", () => {
                 type: TYPE_FILE
             };
 
-            await deleteItem(context, file_item);
+            await deleteItem(context, [file_item]);
             expect(deleteFile).toHaveBeenCalledWith(file_item);
         });
 
@@ -1218,34 +1218,36 @@ describe("Store actions", () => {
                 type: TYPE_LINK
             };
 
-            await deleteItem(context, link_item);
+            await deleteItem(context, [link_item]);
             expect(deleteLink).toHaveBeenCalledWith(link_item);
         });
 
-        it("when item is an embedded file, then the delete embeded file route is called", async () => {
-            const link_item = {
+        it("when item is an embedded file, then the delete embedded file route is called", async () => {
+            const embedded_file_item = {
                 id: 222,
                 title: "My embedded file",
                 type: TYPE_EMBEDDED
             };
 
-            await deleteItem(context, link_item);
-            expect(deleteEmbeddedFile).toHaveBeenCalledWith(link_item);
+            await deleteItem(context, [embedded_file_item]);
+            expect(deleteEmbeddedFile).toHaveBeenCalledWith(embedded_file_item);
         });
 
         it("when item is a wiki, then the delete wiki route is called", async () => {
-            const link_item = {
+            const wiki_item = {
                 id: 222,
                 title: "My Wiki",
                 type: TYPE_WIKI
             };
 
-            await deleteItem(context, link_item);
-            expect(deleteWiki).toHaveBeenCalledWith(link_item);
+            const additional_options = { delete_associated_wiki_page: true };
+
+            await deleteItem(context, [wiki_item, additional_options]);
+            expect(deleteWiki).toHaveBeenCalledWith(wiki_item, additional_options);
         });
 
         it("deletes the given item and removes it from the tree view", async () => {
-            await deleteItem(context, item_to_delete);
+            await deleteItem(context, [item_to_delete]);
 
             expect(context.commit).toHaveBeenCalledWith(
                 "removeItemFromFolderContent",
@@ -1256,7 +1258,7 @@ describe("Store actions", () => {
         it("resets currentlyPreviewedItem when it references the deleted item", async () => {
             context.state.currently_previewed_item = item_to_delete;
 
-            await deleteItem(context, item_to_delete);
+            await deleteItem(context, [item_to_delete]);
 
             expect(context.commit).toHaveBeenCalledWith(
                 "removeItemFromFolderContent",

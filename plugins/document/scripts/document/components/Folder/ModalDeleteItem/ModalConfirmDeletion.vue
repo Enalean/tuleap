@@ -28,6 +28,7 @@
         <modal-feedback/>
         <div class="tlp-modal-body">
             <p>{{ modal_description }}</p>
+            <delete-associated-wiki-page-checkbox v-if="is_item_a_wiki" v-model="additional_options" v-bind:item="item"/>
         </div>
         <div class="tlp-modal-footer">
             <button type="button" class="tlp-button-danger tlp-button-outline tlp-modal-action" data-dismiss="modal">Cancel</button>
@@ -54,18 +55,24 @@
 <script>
 import { sprintf } from "sprintf-js";
 import { mapState } from "vuex";
-import { modal as createModal } from "tlp";
+import { modal } from "tlp";
 import ModalFeedback from "../ModalCommon/ModalFeedback.vue";
+import { TYPE_WIKI } from "../../../constants.js";
 
 export default {
-    components: { ModalFeedback },
+    components: {
+        ModalFeedback,
+        "delete-associated-wiki-page-checkbox": () =>
+            import("./AdditionalCheckboxes/DeleteAssociatedWikiPageCheckbox.vue")
+    },
     props: {
         item: Object
     },
     data() {
         return {
             modal: null,
-            is_item_being_deleted: false
+            is_item_being_deleted: false,
+            additional_options: {}
         };
     },
     computed: {
@@ -80,10 +87,13 @@ export default {
                 ),
                 this.item.title
             );
+        },
+        is_item_a_wiki() {
+            return this.item.type === TYPE_WIKI;
         }
     },
     mounted() {
-        this.modal = createModal(this.$el);
+        this.modal = modal(this.$el);
         this.modal.addEventListener("tlp-modal-hidden", this.resetModal);
 
         this.modal.show();
@@ -92,7 +102,7 @@ export default {
         async deleteItem() {
             this.is_item_being_deleted = true;
 
-            await this.$store.dispatch("deleteItem", this.item);
+            await this.$store.dispatch("deleteItem", [this.item, this.additional_options]);
 
             if (!this.has_modal_error) {
                 this.modal.hide();

@@ -62,6 +62,8 @@ import "./components/Folder/ItemTitle/FileCellTitle.spec.js";
 import "./components/Folder/ItemTitle/LinkCellTitle.spec.js";
 import "./components/Folder/LockInfo/DocumentTitleLockInfo.spec.js";
 
+import "./components/Folder/ModalDeleteItem/ModalConfirmationDeletion.spec.js";
+
 import "./components/Folder/QuickLook/QuickLookDocumentPreview.spec.js";
 
 import "./components/Folder/ProgressBar/UploadProgressBar.spec.js";
