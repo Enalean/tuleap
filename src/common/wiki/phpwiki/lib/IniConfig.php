@@ -483,46 +483,26 @@ function fixup_dynamic_configs($file) {
     }
  
     // Set up (possibly fake) gettext()
-    // Todo: this could be moved to fixup_static_configs()
-    // Bug #1381464 with php-5.1.1
-    if (!function_exists ('bindtextdomain')
-        and !function_exists ('gettext')
-        and !function_exists ('_'))
-    {
-        $locale = array();
-
-        function gettext ($text) { 
-            global $locale;
-            if (!empty ($locale[$text]))
-                return $locale[$text];
-            return $text;
-        }
-        function _ ($text) {
-            return gettext($text);
-        }
-    }
-    else {
-        // Working around really weird gettext problems: (4.3.2, 4.3.6 win)
-        // bindtextdomain() returns the current domain path.
-        // 1. If the script is not index.php but something like "de", on a different path
-        //    then bindtextdomain() fails, but after chdir to the correct path it will work okay.
-        // 2. But the weird error "Undefined variable: bindtextdomain" is generated then.
-        $bindtextdomain_path = FindFile("locale", false, true);
-        $chback = 0;
-        if (isWindows())
-            $bindtextdomain_path = str_replace("/", "\\", $bindtextdomain_path);
+    // Working around really weird gettext problems: (4.3.2, 4.3.6 win)
+    // bindtextdomain() returns the current domain path.
+    // 1. If the script is not index.php but something like "de", on a different path
+    //    then bindtextdomain() fails, but after chdir to the correct path it will work okay.
+    // 2. But the weird error "Undefined variable: bindtextdomain" is generated then.
+    $bindtextdomain_path = FindFile("locale", false, true);
+    $chback = 0;
+    if (isWindows())
+        $bindtextdomain_path = str_replace("/", "\\", $bindtextdomain_path);
+    $bindtextdomain_real = @bindtextdomain("phpwiki", $bindtextdomain_path);
+    if (realpath($bindtextdomain_real) != realpath($bindtextdomain_path)) {
+        // this will happen with virtual_paths. chdir and try again.
+        chdir($bindtextdomain_path);
+        $chback = 1;
         $bindtextdomain_real = @bindtextdomain("phpwiki", $bindtextdomain_path);
-        if (realpath($bindtextdomain_real) != realpath($bindtextdomain_path)) {
-            // this will happen with virtual_paths. chdir and try again.
-            chdir($bindtextdomain_path);
-            $chback = 1;
-            $bindtextdomain_real = @bindtextdomain("phpwiki", $bindtextdomain_path);
-        }
-        textdomain("phpwiki");
-        bind_textdomain_codeset("phpwiki", "UTF-8");
-        if ($chback) { // change back
-            chdir($bindtextdomain_real . (isWindows() ? "\\.." : "/.."));
-        }
+    }
+    textdomain("phpwiki");
+    bind_textdomain_codeset("phpwiki", "UTF-8");
+    if ($chback) { // change back
+        chdir($bindtextdomain_real . (isWindows() ? "\\.." : "/.."));
     }
 
     // language dependent updates:

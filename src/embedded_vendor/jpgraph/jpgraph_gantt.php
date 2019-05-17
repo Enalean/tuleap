@@ -123,18 +123,6 @@ define('ACTYPE_MILESTONE',2);
 define('ACTINFO_3D',1);
 define('ACTINFO_2D',0);
 
-
-// Check if array_fill() exists
-if (!function_exists('array_fill')) {
-    function array_fill($iStart, $iLen, $vValue) {
-        $aResult = array();
-        for ($iCount = $iStart; $iCount < $iLen + $iStart; $iCount++) {
-            $aResult[$iCount] = $vValue;
-        }
-        return $aResult;
-    }
-}
-
 //===================================================
 // CLASS GanttActivityInfo
 // Description:

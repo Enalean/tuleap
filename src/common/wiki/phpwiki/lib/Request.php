@@ -20,13 +20,6 @@ rcs_id('$Id: Request.php,v 1.100 2006/01/17 18:57:09 uckelman Exp $');
  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-// backward compatibility for PHP < 4.2.0
-if (!function_exists('ob_clean')) {
-    function ob_clean() {
-        ob_end_clean();
-        ob_start();
-    }
-}
 
 class Request {
         
@@ -406,7 +399,7 @@ class Request {
      */
     function chunkOutput() {
         if (!empty($this->_is_buffering_output) or 
-            (function_exists('ob_get_level') and @ob_get_level())) {
+            (@ob_get_level())) {
             $this->_do_chunked_output = true;
             if (empty($this->_ob_get_length)) $this->_ob_get_length = 0;
             $this->_ob_get_length += ob_get_length();

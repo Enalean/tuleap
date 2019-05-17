@@ -23,22 +23,18 @@ class Tracker_XML_Updater_TemporaryFileCreatorTest extends TuleapTestCase {
 
     /** @var Tracker_XML_Updater_TemporaryFileCreator */
     private $creator;
+    /**
+     * @var string
+     */
+    private $initial;
 
     public function setUp() {
         parent::setUp();
         ForgeConfig::store();
-        ForgeConfig::set('tmp_dir', $this->getTempDir());
+        ForgeConfig::set('tmp_dir', sys_get_temp_dir());
 
         $this->creator = new Tracker_XML_Updater_TemporaryFileCreator();
-        $this->initial = dirname(__FILE__).'/_fixtures/toto.txt';
-    }
-
-    private function getTempDir() {
-        if (! function_exists('sys_get_temp_dir')) {
-            return '/tmp';
-        }
-
-        return sys_get_temp_dir();
+        $this->initial = __DIR__ .'/_fixtures/toto.txt';
     }
 
     public function tearDown() {

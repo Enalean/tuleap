@@ -68,21 +68,11 @@ class LogScale extends LinearScale {
 
     // Use bcpow() for increased precision
     function GetMinVal() {
-        if( function_exists("bcpow") ) {
-            return round(bcpow(10,$this->scale[0],15),14);
-        }
-        else {
-            return round(pow(10,$this->scale[0]),14);
-        }
+        return round(bcpow(10,$this->scale[0],15),14);
     }
 
     function GetMaxVal() {
-        if( function_exists("bcpow") ) {
-            return round(bcpow(10,$this->scale[1],15),14);
-        }
-        else {
-            return round(pow(10,$this->scale[1]),14);
-        }
+        return round(bcpow(10,$this->scale[1],15),14);
     }
 
     // Logarithmic autoscaling is much simplier since we just

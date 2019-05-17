@@ -74,35 +74,7 @@ class TmpDir
      */
     public static function SystemTmpDir() // @codingStandardsIgnoreLine
     {
-        $tmpdir = '';
-
-        if (function_exists('sys_get_temp_dir')) {
-            $tmpdir = sys_get_temp_dir();
-        }
-
-        if (empty($tmpdir)) {
-            $tmpdir = getenv('TMP');
-        }
-
-        if (empty($tmpdir)) {
-            $tmpdir = getenv('TEMP');
-        }
-
-        if (empty($tmpdir)) {
-            $tmpdir = getenv('TMPDIR');
-        }
-
-        if (empty($tmpdir)) {
-            $tmpfile = tempnam(__FILE__, '');
-            if (file_exists($tmpfile)) {
-                unlink($tmpfile);
-                $tmpdir = dirname($temp);
-            }
-        }
-
-        if (empty($tmpdir)) {
-            $tmpdir = '/tmp';
-        }
+        $tmpdir = sys_get_temp_dir();
 
         return Util::AddSlash(realpath($tmpdir));
     }
