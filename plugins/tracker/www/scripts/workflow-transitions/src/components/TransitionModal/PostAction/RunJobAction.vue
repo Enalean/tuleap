@@ -19,7 +19,7 @@
   -->
 
 <template>
-    <post-action v-bind:post-action="post_action">
+    <post-action v-bind:post_action="post_action">
         <div class="tracker-workflow-transition-modal-action-details-element tlp-form-element">
             <label v-bind:for="job_url_input_id" class="tlp-label">
                 <translate>Job url</translate> <i class="fa fa-asterisk"></i>

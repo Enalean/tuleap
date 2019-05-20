@@ -20,7 +20,8 @@
 
 const POST_ACTION_TYPE = {
     RUN_JOB: "run_job",
-    SET_FIELD_VALUE: "set_field_value"
+    SET_FIELD_VALUE: "set_field_value",
+    FROZEN_FIELDS: "frozen_fields"
 };
 
 const DATE_FIELD_VALUE = {

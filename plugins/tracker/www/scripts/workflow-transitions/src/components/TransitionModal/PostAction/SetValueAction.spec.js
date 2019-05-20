@@ -18,7 +18,7 @@
  *
  */
 
-import { shallowMount } from "@vue/test-utils";
+import { mount } from "@vue/test-utils";
 
 import SetValueAction from "./SetValueAction.vue";
 import DateInput from "./DateInput.vue";
@@ -41,21 +41,29 @@ describe("SetValueAction", () => {
     let wrapper;
 
     beforeEach(() => {
+        const current_tracker = {
+            fields: [date_field, int_field, float_field]
+        };
+
         const store_options = {
             state: {
                 transitionModal: {
                     current_transition: create("transition"),
                     is_modal_save_running: false
-                }
+                },
+                current_tracker: current_tracker
             },
             getters: {
-                "transitionModal/set_value_action_fields": [date_field, int_field, float_field]
+                "transitionModal/set_value_action_fields": [date_field, int_field, float_field],
+                "transitionModal/post_actions": [],
+                current_workflow_field: create("field", { field_id: 455, type: "sb" }),
+                is_workflow_advanced: false
             }
         };
 
         store = createStoreMock(store_options);
 
-        wrapper = shallowMount(SetValueAction, {
+        wrapper = mount(SetValueAction, {
             mocks: { $store: store },
             propsData: { post_action: create("post_action", "presented") },
             localVue
@@ -90,10 +98,10 @@ describe("SetValueAction", () => {
     });
 
     describe("when there are no valid fields", () => {
-        it("shows a message", () => {
+        it("disables the option", () => {
             store.getters["transitionModal/set_value_action_fields"] = [];
 
-            expect(wrapper.contains("[data-test-type=no_fields]")).toBeTruthy();
+            expect(wrapper.find("[data-test=set_field]").attributes("disabled")).toBeTruthy();
         });
     });
 
