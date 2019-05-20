@@ -229,10 +229,6 @@ class Blob extends FilesystemObject
         $mime = $this->FileMime_Fileinfo();
 
         if (empty($mime)) {
-            $mime = $this->FileMime_File();
-        }
-
-        if (empty($mime)) {
             $mime = $this->FileMime_Extension();
         }
 
@@ -267,12 +263,7 @@ class Blob extends FilesystemObject
 
         $mime = '';
 
-        $magicdb = Config::GetInstance()->GetValue('magicdb', null);
-        if (empty($magicdb)) {
-            $magicdb = '/usr/share/misc/magic';
-        }
-
-        $finfo = @finfo_open(FILEINFO_MIME, $magicdb);
+        $finfo = @finfo_open(FILEINFO_MIME);
         if ($finfo) {
             $mime = finfo_buffer($finfo, $this->data, FILEINFO_MIME);
             if ($mime && strpos($mime, '/')) {
@@ -284,48 +275,6 @@ class Blob extends FilesystemObject
         }
 
         return $mime;
-    }
-
-    /**
-     * FileMime_File
-     *
-     * Get the file mimetype using file command
-     *
-     * @access private
-     * @return string mimetype
-     */
-    private function FileMime_File() // @codingStandardsIgnoreLine
-    {
-        if (!$this->dataRead) {
-            $this->ReadData();
-        }
-
-        if (!$this->data) {
-            return '';
-        }
-
-        $descspec = array(
-            0 => array('pipe', 'r'),
-            1 => array('pipe', 'w')
-        );
-
-        $proc = proc_open('file -b --mime -', $descspec, $pipes);
-        if (is_resource($proc)) {
-            fwrite($pipes[0], $this->data);
-            fclose($pipes[0]);
-            $mime = stream_get_contents($pipes[1]);
-            fclose($pipes[1]);
-            proc_close($proc);
-
-            if ($mime && strpos($mime, '/')) {
-                if (strpos($mime, ';')) {
-                    $mime = strtok($mime, ';');
-                }
-                return $mime;
-            }
-        }
-
-        return '';
     }
 
     /**
