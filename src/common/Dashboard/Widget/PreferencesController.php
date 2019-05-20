@@ -23,6 +23,7 @@ namespace Tuleap\Dashboard\Widget;
 use CSRFSynchronizerToken;
 use HTTPRequest;
 use PFUser;
+use Feedback;
 use Tuleap\Widget\WidgetFactory;
 
 class PreferencesController
@@ -71,7 +72,14 @@ class PreferencesController
         $this->forceGroupIdToBePresentInRequest($request, $row);
         $this->forceContentIdToBePresentInRequest($request, $row);
 
-        $this->getWidget($row)->updatePreferences($request);
+        try {
+            $this->getWidget($row)->updatePreferences($request);
+        } catch (\Exception $exception) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                _($exception->getMessage())
+            );
+        }
 
         $this->redirectToDashboard($row);
     }

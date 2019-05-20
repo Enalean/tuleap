@@ -26,6 +26,7 @@ use TemplateRendererFactory;
 use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Timetracking\Exceptions\TimetrackingOverviewWidgetNoTitle;
 use Tuleap\Timetracking\Time\TimetrackingReportDao;
 use Widget;
 
@@ -109,11 +110,15 @@ class TimeTrackingOverview extends Widget
         );
     }
 
+    /**
+     * @throws TimetrackingOverviewWidgetNoTitle
+     */
     public function updatePreferences(Codendi_Request $request)
     {
         $content_id = $request->getValidated('content_id', 'uint', 0);
 
-        $title = $request->get('timetracking-overview-title');
+        $title = $request->params[ "timetracking-overview-title" ];
+        $this->checkTitleValidity($title);
 
         return $this->report_dao->setReportTitleById($title, $content_id);
     }
@@ -148,13 +153,16 @@ class TimeTrackingOverview extends Widget
         return true;
     }
 
+    /**
+     * @throws TimetrackingOverviewWidgetNoTitle
+     */
     public function create(Codendi_Request $request)
     {
+        $title = $request->params[ "timetracking-overview-title" ];
+        $this->checkTitleValidity($title);
+
         $content_id = $this->report_dao->create();
-        if ($request->params[ "timetracking-overview-title" ]) {
-            $title = $request->params[ "timetracking-overview-title" ];
-            $this->report_dao->setReportTitleById($title, $content_id);
-        }
+        $this->report_dao->setReportTitleById($title, $content_id);
 
         return $content_id;
     }
@@ -162,5 +170,15 @@ class TimeTrackingOverview extends Widget
     public function destroy($content_id)
     {
         $this->report_dao->delete($content_id);
+    }
+
+    /**
+     * @throws TimetrackingOverviewWidgetNoTitle
+     */
+    private function checkTitleValidity(string $title): void
+    {
+        if (! $title) {
+            throw new TimetrackingOverviewWidgetNoTitle();
+        }
     }
 }
