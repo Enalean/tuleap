@@ -402,6 +402,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
         $assets_path    = ForgeConfig::get('tuleap_dir') . '/src/www/assets';
         $include_assets = new IncludeAssets($assets_path, '/assets');
 
+        echo $include_assets->getHTMLSnippet("rich-text-editor.js");
         echo $include_assets->getHTMLSnippet("ckeditor.js");
 
         //Javascript i18n

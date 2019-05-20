@@ -17,10 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-var tuleap = tuleap || {};
+var tuleap = window.tuleap || {};
 tuleap.textarea = tuleap.textarea || {};
 
-tuleap.textarea.RTE = Class.create(codendi.RTE, {
+import "../codendi/RichTextEditor.js";
+
+tuleap.textarea.RTE = Class.create(window.codendi.RTE, {
     initialize: function($super, element, options) {
         options = Object.extend({ toolbar: "tuleap" }, options || {});
         this.options = Object.extend({ htmlFormat: false, id: 0 }, options || {});
