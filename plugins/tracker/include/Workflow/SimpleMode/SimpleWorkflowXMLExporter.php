@@ -33,9 +33,15 @@ class SimpleWorkflowXMLExporter
      */
     private $simple_workflow_dao;
 
-    public function __construct(SimpleWorkflowDao $simple_workflow_dao)
+    /**
+     * @var TransitionRetriever
+     */
+    private $transition_retriever;
+
+    public function __construct(SimpleWorkflowDao $simple_workflow_dao, TransitionRetriever $transition_retriever)
     {
-        $this->simple_workflow_dao = $simple_workflow_dao;
+        $this->simple_workflow_dao  = $simple_workflow_dao;
+        $this->transition_retriever = $transition_retriever;
     }
 
     public function exportToXML(Workflow $workflow, SimpleXMLElement $xml_simple_workflow, array $xml_mapping)
@@ -53,12 +59,12 @@ class SimpleWorkflowXMLExporter
         if ($states_sql && count($states_sql) > 0) {
             $states_xml = $xml_simple_workflow->addChild('states');
             foreach ($states_sql as $state_sql) {
-                $this->exportStateToXML($states_xml, $xml_mapping, $state_sql['to_id']);
+                $this->exportStateToXML($workflow, $states_xml, $xml_mapping, $state_sql['to_id']);
             }
         }
     }
 
-    private function exportStateToXML(SimpleXMLElement $states_xml, array $xml_mapping, int $to_id)
+    private function exportStateToXML(Workflow $workflow, SimpleXMLElement $states_xml, array $xml_mapping, int $to_id)
     {
         $state_xml = $states_xml->addChild('state');
         $state_xml->addChild('to_id')->addAttribute('REF', array_search($to_id, $xml_mapping['values']));
@@ -75,5 +81,17 @@ class SimpleWorkflowXMLExporter
                 ->addChild('from_id')
                 ->addAttribute('REF', $xml_value_field_id);
         }
+
+        $first_transition = $this->transition_retriever->getFirstTransitionForDestinationState($workflow, $to_id);
+
+        $postactions = $first_transition->getPostActions();
+        if ($postactions) {
+            $grand_child = $state_xml->addChild('postactions');
+            foreach ($postactions as $postaction) {
+                $postaction->exportToXML($grand_child, $xml_mapping);
+            }
+        }
+
+        $first_transition->getConditions()->exportToXML($state_xml, $xml_mapping);
     }
 }

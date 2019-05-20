@@ -27,6 +27,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 use Workflow;
+use Workflow_Transition_ConditionsCollection;
 
 class SimpleWorkflowXMLExporterTest extends TestCase
 {
@@ -34,10 +35,11 @@ class SimpleWorkflowXMLExporterTest extends TestCase
 
     public function testItExportsTheSimpleWorkflowInXML()
     {
-        $xml      = new SimpleXMLElement('<simple_workflow/>');
-        $dao      = Mockery::mock(SimpleWorkflowDao::class);
-        $exporter = new SimpleWorkflowXMLExporter($dao);
-        $workflow = Mockery::mock(Workflow::class);
+        $xml       = new SimpleXMLElement('<simple_workflow/>');
+        $dao       = Mockery::mock(SimpleWorkflowDao::class);
+        $retriever = Mockery::mock(TransitionRetriever::class);
+        $exporter  = new SimpleWorkflowXMLExporter($dao, $retriever);
+        $workflow  = Mockery::mock(Workflow::class);
 
         $workflow->shouldReceive('getFieldId')->once()->andReturn(114);
         $workflow->shouldReceive('isUsed')->once()->andReturn(true);
@@ -55,6 +57,40 @@ class SimpleWorkflowXMLExporterTest extends TestCase
             ['from_id' => 0],
             ['from_id' => 410],
         ]);
+
+        $transition_01 = Mockery::mock(\Transition::class);
+        $transition_02 = Mockery::mock(\Transition::class);
+
+        $post_action_01 = Mockery::mock(\Transition_PostAction_CIBuild::class);
+        $post_action_02 = Mockery::mock(\Transition_PostAction_Field_Int::class);
+
+        $transition_01->shouldReceive('getPostActions')->andReturn([]);
+        $transition_02->shouldReceive('getPostActions')->andReturn([
+            $post_action_01,
+            $post_action_02,
+        ]);
+
+        $post_action_01->shouldReceive('exportToXML')->once();
+        $post_action_02->shouldReceive('exportToXML')->once();
+
+        $conditions_collection_01 = Mockery::mock(Workflow_Transition_ConditionsCollection::class);
+        $conditions_collection_02 = Mockery::mock(Workflow_Transition_ConditionsCollection::class);
+
+        $transition_01->shouldReceive('getConditions')->andReturn($conditions_collection_01);
+        $transition_02->shouldReceive('getConditions')->andReturn($conditions_collection_02);
+
+        $conditions_collection_01->shouldReceive('exportToXML')->once();
+        $conditions_collection_02->shouldReceive('exportToXML')->once();
+
+        $retriever->shouldReceive('getFirstTransitionForDestinationState')
+            ->with($workflow, 200)
+            ->once()
+            ->andReturn($transition_01);
+
+        $retriever->shouldReceive('getFirstTransitionForDestinationState')
+            ->with($workflow, 201)
+            ->once()
+            ->andReturn($transition_02);
 
         $mapping = [
             'F114' => 114,

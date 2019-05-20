@@ -114,7 +114,7 @@ class TransitionRetriever
     /**
      * @throws NoTransitionForStateException
      */
-    private function getFirstTransitionForDestinationState(\Workflow $workflow, int $to): Transition
+    public function getFirstTransitionForDestinationState(\Workflow $workflow, int $to): Transition
     {
         $row_first_non_new = $this->transition_dao->searchFirstTransitionNotFromNew(
             (int) $workflow->getId(),
