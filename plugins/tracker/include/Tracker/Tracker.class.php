@@ -2673,7 +2673,8 @@ EOS;
             if (! $workflow->isAdvanced() && ForgeConfig::get('sys_tracker_export_simple_workflows')) {
                 $child    = $xmlElem->addChild('simple_workflow');
                 $exporter = new SimpleWorkflowXMLExporter(
-                    new SimpleWorkflowDao()
+                    new SimpleWorkflowDao(),
+                    new TransitionRetriever(new \Workflow_TransitionDao(), \TransitionFactory::instance())
                 );
                 $exporter->exportToXML($workflow, $child, $xmlMapping);
             } else {
