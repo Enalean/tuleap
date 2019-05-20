@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -28,11 +28,14 @@ use Docman_NotificationsManager_Move;
 use Docman_NotificationsManager_Subscribers;
 use EventManager;
 use MailBuilder;
+use PermissionsOverrider_PermissionsOverriderManager;
 use Project;
 use TemplateRendererFactory;
 use Tuleap\Docman\ResponseFeedbackWrapper;
 use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;
+use Tuleap\Project\ProjectAccessChecker;
+use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use UGroupDao;
 use UGroupManager;
 use UGroupUserDao;
@@ -142,7 +145,15 @@ class NotificationBuilders
     {
         return new MailBuilder(
             TemplateRendererFactory::build(),
-            new MailFilter(UserManager::instance(), new URLVerification(), new MailLogger())
+            new MailFilter(
+                UserManager::instance(),
+                new ProjectAccessChecker(
+                    PermissionsOverrider_PermissionsOverriderManager::instance(),
+                    new RestrictedUserCanAccessProjectVerifier(),
+                    EventManager::instance()
+                ),
+                new MailLogger()
+            )
         );
     }
 

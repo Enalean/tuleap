@@ -20,6 +20,7 @@
 
 namespace Tuleap\REST;
 
+use EventManager;
 use Luracast\Restler\RestException;
 use PermissionsOverrider_PermissionsOverriderManager;
 use Project;
@@ -44,7 +45,8 @@ class ProjectStatusVerificator
         return new self(
             new ProjectAccessChecker(
                 PermissionsOverrider_PermissionsOverriderManager::instance(),
-                new RestrictedUserCanAccessProjectVerifier()
+                new RestrictedUserCanAccessProjectVerifier(),
+                EventManager::instance()
             )
         );
     }

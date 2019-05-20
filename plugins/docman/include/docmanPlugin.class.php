@@ -77,6 +77,8 @@ use Tuleap\Project\Admin\Navigation\NavigationDropdownQuickLinksCollector;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupFormatter;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupRetriever;
+use Tuleap\Project\ProjectAccessChecker;
+use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\REST\BasicAuthentication;
 use Tuleap\REST\RESTCurrentUserMiddleware;
@@ -84,7 +86,6 @@ use Tuleap\REST\TuleapRESTCORSMiddleware;
 use Tuleap\Upload\FileBeingUploadedLocker;
 use Tuleap\Upload\FileBeingUploadedWriter;
 use Tuleap\Upload\FileUploadController;
-use Tuleap\Upload\UploadPathAllocator;
 use Tuleap\Widget\Event\GetPublicAreas;
 use Zend\HttpHandlerRunner\Emitter\SapiStreamEmitter;
 
@@ -1026,7 +1027,15 @@ class DocmanPlugin extends Plugin
     {
         return new MailBuilder(
             TemplateRendererFactory::build(),
-            new MailFilter(UserManager::instance(), new URLVerification(), new MailLogger())
+            new MailFilter(
+                UserManager::instance(),
+                new ProjectAccessChecker(
+                    PermissionsOverrider_PermissionsOverriderManager::instance(),
+                    new RestrictedUserCanAccessProjectVerifier(),
+                    EventManager::instance()
+                ),
+                new MailLogger()
+            )
         );
     }
 

@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
- * Copyright (c) Enalean, 2017. All rights reserved
+ * Copyright (c) Enalean, 2017-Present. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -21,6 +21,8 @@
 
 use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;
+use Tuleap\Project\ProjectAccessChecker;
+use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 
 require_once('Docman_Controller.class.php');
 require_once('Docman_Actions.class.php');
@@ -123,7 +125,11 @@ class Docman_HTTPController extends Docman_Controller {
                     TemplateRendererFactory::build(),
                     new MailFilter(
                         UserManager::instance(),
-                        new URLVerification(),
+                        new ProjectAccessChecker(
+                            PermissionsOverrider_PermissionsOverriderManager::instance(),
+                            new RestrictedUserCanAccessProjectVerifier(),
+                            EventManager::instance()
+                        ),
                         new MailLogger()
                     )
                 )

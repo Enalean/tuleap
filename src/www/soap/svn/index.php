@@ -47,7 +47,8 @@ if ($request->exist('wsdl')) {
         $user_manager,
         new ProjectAccessChecker(
             new PermissionsOverrider_PermissionsOverriderManager(),
-            new RestrictedUserCanAccessProjectVerifier()
+            new RestrictedUserCanAccessProjectVerifier(),
+            EventManager::instance()
         )
     );
     $svn_repository_listing = new SVN_RepositoryListing(new SVN_PermissionsManager(), new SVN_Svnlook(), UserManager::instance());
@@ -60,5 +61,3 @@ if ($request->exist('wsdl')) {
     $server->handle();
     $xml_security->disableExternalLoadOfEntities();
 }
-
-?>

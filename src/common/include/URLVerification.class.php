@@ -447,33 +447,13 @@ class URLVerification {
     public function userCanAccessProject(PFUser $user, Project $project) {
         $checker = new ProjectAccessChecker(
             $this->getPermissionsOverriderManager(),
-            new RestrictedUserCanAccessUrlOrProjectVerifier($this->getEventManager(), $this->getUrl(), $_SERVER['REQUEST_URI'])
+            new RestrictedUserCanAccessUrlOrProjectVerifier($this->getEventManager(), $this->getUrl(), $_SERVER['REQUEST_URI']),
+            EventManager::instance()
         );
 
-        try {
-            $checker->checkUserCanAccessProject($user, $project);
-        } catch (Project_AccessPrivateException $exception) {
-            if ($this->userHasBeenDelegatedAccess($user)) {
-                return true;
-            }
-            throw $exception;
-        }
+        $checker->checkUserCanAccessProject($user, $project);
+
         return true;
-    }
-
-    private function userHasBeenDelegatedAccess(PFUser $user) {
-        $can_access    = false;
-        $event_manager = EventManager::instance();
-
-        $event_manager->processEvent(
-            Event::HAS_USER_BEEN_DELEGATED_ACCESS,
-            array(
-                'can_access' => &$can_access,
-                'user'       => $user,
-            )
-        );
-
-        return $can_access;
     }
 
     /**

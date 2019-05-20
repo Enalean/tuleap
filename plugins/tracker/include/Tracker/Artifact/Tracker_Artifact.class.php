@@ -210,7 +210,8 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             $user_manager,
             new ProjectAccessChecker(
                 PermissionsOverrider_PermissionsOverriderManager::instance(),
-                new RestrictedUserCanAccessProjectVerifier()
+                new RestrictedUserCanAccessProjectVerifier(),
+                EventManager::instance()
             )
         );
 

@@ -616,7 +616,8 @@ class BackendSVN extends Backend {
     {
         return new \Tuleap\Project\ProjectAccessChecker(
             PermissionsOverrider_PermissionsOverriderManager::instance(),
-            new \Tuleap\Project\RestrictedUserCanAccessProjectVerifier()
+            new \Tuleap\Project\RestrictedUserCanAccessProjectVerifier(),
+            EventManager::instance()
         );
     }
 

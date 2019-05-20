@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -27,7 +27,8 @@ use Project_AccessDeletedException;
 use Project_AccessPrivateException;
 use Project_AccessProjectNotFoundException;
 use Project_AccessRestrictedException;
-use URLVerification;
+use Tuleap\Project\ProjectAccessChecker;
+use Tuleap\Project\ProjectAccessSuspendedException;
 use UserManager;
 
 class MailFilter
@@ -36,12 +37,10 @@ class MailFilter
      * @var UserManager
      */
     private $user_manager;
-
     /**
-     * @var URLVerification
+     * @var ProjectAccessChecker
      */
-    private $url_verification;
-
+    private $project_access_checker;
     /**
      * @var Logger
      */
@@ -49,12 +48,12 @@ class MailFilter
 
     public function __construct(
         UserManager $user_manager,
-        URLVerification $url_verification,
+        ProjectAccessChecker $project_access_checker,
         Logger $logger
     ) {
-        $this->user_manager     = $user_manager;
-        $this->url_verification = $url_verification;
-        $this->logger           = $logger;
+        $this->user_manager           = $user_manager;
+        $this->project_access_checker = $project_access_checker;
+        $this->logger                 = $logger;
     }
 
     public function filter(Project $project, array $mails)
@@ -80,9 +79,8 @@ class MailFilter
             $users = $this->user_manager->getAllUsersByEmail($email);
             foreach ($users as $user) {
                 try {
-                    if ($this->url_verification->userCanAccessProject($user, $project)
-                        && $user->isAlive()
-                    ) {
+                    $this->project_access_checker->checkUserCanAccessProject($user, $project);
+                    if ($user->isAlive()) {
                         $filtered_mails[] = $email;
                         $this->logger->info("Mail sent to " . $email);
                         break;
@@ -97,6 +95,8 @@ class MailFilter
                     $this->logger->warn("Project is deleted - Mail not sent to " . $email);
                 } catch (Project_AccessRestrictedException $e) {
                     $this->logger->warn("Project is restricted - Mail not sent to " . $email);
+                } catch (ProjectAccessSuspendedException $e) {
+                    $this->logger->warn('Project is suspended - Mail not sent to ' . $email);
                 }
             }
 

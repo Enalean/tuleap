@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,12 +22,16 @@
 namespace Tuleap\Tracker\Artifact\Changeset\PostCreation;
 
 use Codendi_HTMLPurifier;
+use EventManager;
+use PermissionsOverrider_PermissionsOverriderManager;
 use Tracker_Artifact_Changeset;
 use trackerPlugin;
 use MailEnhancer;
 use MailNotificationBuilder;
 use MailBuilder;
 use TemplateRendererFactory;
+use Tuleap\Project\ProjectAccessChecker;
+use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use URLVerification;
 use Tracker_Artifact;
 use UserManager;
@@ -90,7 +94,15 @@ class MailSender
         $mail_notification_builder = new MailNotificationBuilder(
             new MailBuilder(
                 TemplateRendererFactory::build(),
-                new MailFilter(UserManager::instance(), new URLVerification(), new MailLogger())
+                new MailFilter(
+                    UserManager::instance(),
+                    new ProjectAccessChecker(
+                        PermissionsOverrider_PermissionsOverriderManager::instance(),
+                        new RestrictedUserCanAccessProjectVerifier(),
+                        EventManager::instance()
+                    ),
+                    new MailLogger()
+                )
             )
         );
         $mail_notification_builder->buildAndSendEmail(

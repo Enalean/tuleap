@@ -293,7 +293,8 @@ function getProjectGroupsAndUsers($session_key, $group_id) {
             $user_manager,
             new ProjectAccessChecker(
                 new PermissionsOverrider_PermissionsOverriderManager(),
-                new RestrictedUserCanAccessProjectVerifier()
+                new RestrictedUserCanAccessProjectVerifier(),
+                EventManager::instance()
             )
         );
 
