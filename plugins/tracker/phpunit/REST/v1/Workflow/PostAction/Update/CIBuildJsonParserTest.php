@@ -26,7 +26,7 @@ require_once __DIR__ . '/../../../../../bootstrap.php';
 use Mockery;
 use PHPUnit\Framework\TestCase;
 use Tuleap\REST\I18NRestException;
-use Tuleap\Tracker\Workflow\PostAction\Update\CIBuild;
+use Tuleap\Tracker\Workflow\PostAction\Update\CIBuildValue;
 use Workflow;
 
 class CIBuildJsonParserTest extends TestCase
@@ -74,7 +74,7 @@ class CIBuildJsonParserTest extends TestCase
                 "job_url" => "http://example.test",
             ]
         );
-        $this->assertEquals(new CIBuild(2, "http://example.test"), $ci_build);
+        $this->assertEquals(new CIBuildValue(2, "http://example.test"), $ci_build);
     }
 
     public function testParseWhenIdNotProvided()
@@ -89,7 +89,7 @@ class CIBuildJsonParserTest extends TestCase
                 "job_url" => "http://example.test",
             ]
         );
-        $this->assertEquals(new CIBuild(null, "http://example.test"), $ci_build);
+        $this->assertEquals(new CIBuildValue(null, "http://example.test"), $ci_build);
     }
 
     public function testParseReturnsNewCIBuildWithoutIdWhenWorkflowIsNotAdvanced()
@@ -105,7 +105,7 @@ class CIBuildJsonParserTest extends TestCase
                 "job_url" => "http://example.test",
             ]
         );
-        $this->assertEquals(new CIBuild(null, "http://example.test"), $ci_build);
+        $this->assertEquals(new CIBuildValue(null, "http://example.test"), $ci_build);
     }
 
     public function testParseThrowsWhenIdIsNotInt()

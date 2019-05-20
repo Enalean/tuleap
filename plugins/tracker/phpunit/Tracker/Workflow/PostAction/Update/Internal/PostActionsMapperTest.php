@@ -28,11 +28,11 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFields;
-use Tuleap\Tracker\Workflow\PostAction\Update\CIBuild;
+use Tuleap\Tracker\Workflow\PostAction\Update\CIBuildValue;
 use Tuleap\Tracker\Workflow\PostAction\Update\SetDateValue;
 use Tuleap\Tracker\Workflow\PostAction\Update\SetFloatValue;
 use Tuleap\Tracker\Workflow\PostAction\Update\SetIntValue;
-use Tuleap\Tracker\Workflow\PostAction\Update\FrozenFields as FrozenFieldsValue;
+use Tuleap\Tracker\Workflow\PostAction\Update\FrozenFieldsValue;
 
 class PostActionsMapperTest extends TestCase
 {
@@ -57,8 +57,8 @@ class PostActionsMapperTest extends TestCase
 
         $this->assertEquals(
             [
-                new CIBuild(null, 'https://example.com/1'),
-                new CIBuild(null, 'https://example.com/2')
+                new CIBuildValue(null, 'https://example.com/1'),
+                new CIBuildValue(null, 'https://example.com/2')
             ],
             $result
         );

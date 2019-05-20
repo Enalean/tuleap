@@ -30,7 +30,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
 use PHPUnit\Framework\TestCase;
 use Transition_PostAction_CIBuildDao;
-use Tuleap\Tracker\Workflow\PostAction\Update\CIBuild;
+use Tuleap\Tracker\Workflow\PostAction\Update\CIBuildValue;
 use Tuleap\Tracker\Workflow\PostAction\Update\TransitionFactory;
 
 class CIBuildRepositoryTest extends TestCase
@@ -38,7 +38,7 @@ class CIBuildRepositoryTest extends TestCase
     use MockeryPHPUnitIntegration;
 
     /**
-     * @var CIBuildRepository
+     * @var CIBuildValueRepository
      */
     private $ci_build_repository;
 
@@ -53,7 +53,7 @@ class CIBuildRepositoryTest extends TestCase
     public function createRepository()
     {
         $this->ci_build_dao        = Mockery::mock(Transition_PostAction_CIBuildDao::class);
-        $this->ci_build_repository = new CIBuildRepository($this->ci_build_dao);
+        $this->ci_build_repository = new CIBuildValueRepository($this->ci_build_dao);
     }
 
     public function testCreateCreatesGivenCIBuildOnGivenTransition()
@@ -63,7 +63,7 @@ class CIBuildRepositoryTest extends TestCase
             ->andReturn(9);
 
         $transition = TransitionFactory::buildATransitionWithId(1);
-        $ci_build   = new CIBuild(9, 'http://added-ci-url.test');
+        $ci_build   = new CIBuildValue(9, 'http://added-ci-url.test');
 
         $this->ci_build_repository->create($transition, $ci_build);
     }
@@ -74,7 +74,7 @@ class CIBuildRepositoryTest extends TestCase
             ->andReturn(false);
 
         $transition = TransitionFactory::buildATransition();
-        $ci_build   = new CIBuild(null, 'http://example.test');
+        $ci_build   = new CIBuildValue(null, 'http://example.test');
 
         $this->expectException(DataAccessQueryException::class);
 
@@ -87,7 +87,7 @@ class CIBuildRepositoryTest extends TestCase
             ->shouldReceive('updatePostAction')
             ->with(9, 'http://updated-ci-url.test')
             ->andReturn(true);
-        $ci_build = new CIBuild(9, 'http://updated-ci-url.test');
+        $ci_build = new CIBuildValue(9, 'http://updated-ci-url.test');
         $this->ci_build_repository->update($ci_build);
     }
 
@@ -96,7 +96,7 @@ class CIBuildRepositoryTest extends TestCase
         $this->ci_build_dao
             ->shouldReceive('updatePostAction')
             ->andReturn(false);
-        $ci_build = new CIBuild(9, 'http://updated-ci-url.test');
+        $ci_build = new CIBuildValue(9, 'http://updated-ci-url.test');
 
         $this->expectException(DataAccessQueryException::class);
 
@@ -106,9 +106,9 @@ class CIBuildRepositoryTest extends TestCase
     public function testDeleteAllByTransitionIfNotInDeletesExpectedTransitions()
     {
         $ci_builds = [
-            new CIBuild(1, 'http://updated-ci-url-1.test'),
-            new CIBuild(2, 'http://updated-ci-url-2.test'),
-            new CIBuild(3, 'http://updated-ci-url-3.test')
+            new CIBuildValue(1, 'http://updated-ci-url-1.test'),
+            new CIBuildValue(2, 'http://updated-ci-url-2.test'),
+            new CIBuildValue(3, 'http://updated-ci-url-3.test')
         ];
         $this->ci_build_dao
             ->shouldReceive('deletePostActionByTransitionIfIdNotIn')
@@ -121,9 +121,9 @@ class CIBuildRepositoryTest extends TestCase
     public function testDeleteAllByTransitionIfNotInThrowsIfDeleteFail()
     {
         $ci_builds = [
-            new CIBuild(1, 'http://updated-ci-url-1.test'),
-            new CIBuild(2, 'http://updated-ci-url-2.test'),
-            new CIBuild(3, 'http://updated-ci-url-3.test')
+            new CIBuildValue(1, 'http://updated-ci-url-1.test'),
+            new CIBuildValue(2, 'http://updated-ci-url-2.test'),
+            new CIBuildValue(3, 'http://updated-ci-url-3.test')
         ];
         $this->ci_build_dao
             ->shouldReceive('deletePostActionByTransitionIfIdNotIn')

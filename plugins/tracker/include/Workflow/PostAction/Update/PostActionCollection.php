@@ -21,8 +21,8 @@
 
 namespace Tuleap\Tracker\Workflow\PostAction\Update;
 
-use Tuleap\Tracker\Workflow\PostAction\Update\Internal\CIBuildValidator;
-use Tuleap\Tracker\Workflow\PostAction\Update\Internal\FrozenFieldsValidator;
+use Tuleap\Tracker\Workflow\PostAction\Update\Internal\CIBuildValueValidator;
+use Tuleap\Tracker\Workflow\PostAction\Update\Internal\FrozenFieldsValueValidator;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\InvalidPostActionException;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\PostActionIdCollection;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\PostActionsDiff;
@@ -39,7 +39,7 @@ use Tuleap\Tracker\Workflow\Update\PostAction;
 class PostActionCollection implements PostActionVisitor
 {
     /**
-     * @var CIBuild[]
+     * @var CIBuildValue[]
      */
     private $ci_build_actions = [];
 
@@ -59,7 +59,7 @@ class PostActionCollection implements PostActionVisitor
     private $set_float_value_actions = [];
 
     /**
-     * @var FrozenFields[]
+     * @var FrozenFieldsValue[]
      */
     private $frozen_fields_actions = [];
 
@@ -70,12 +70,12 @@ class PostActionCollection implements PostActionVisitor
         }
     }
 
-    public function visitFrozenFields(FrozenFields $frozen_fields_action)
+    public function visitFrozenFieldsValue(FrozenFieldsValue $frozen_fields_action)
     {
         $this->frozen_fields_actions[] = $frozen_fields_action;
     }
 
-    public function visitCIBuild(CIBuild $ci_build_action)
+    public function visitCIBuildValue(CIBuildValue $ci_build_action)
     {
         $this->ci_build_actions[] = $ci_build_action;
     }
@@ -98,7 +98,7 @@ class PostActionCollection implements PostActionVisitor
     /**
      * @throws Internal\InvalidPostActionException
      */
-    public function validateFrozenFieldsActions(FrozenFieldsValidator $validator, \Tracker $tracker): void
+    public function validateFrozenFieldsActions(FrozenFieldsValueValidator $validator, \Tracker $tracker): void
     {
         $validator->validate($tracker, ...$this->frozen_fields_actions);
     }
@@ -106,7 +106,7 @@ class PostActionCollection implements PostActionVisitor
     /**
      * @throws Internal\InvalidPostActionException
      */
-    public function validateCIBuildActions(CIBuildValidator $validator): void
+    public function validateCIBuildActions(CIBuildValueValidator $validator): void
     {
         $validator->validate(...$this->ci_build_actions);
     }

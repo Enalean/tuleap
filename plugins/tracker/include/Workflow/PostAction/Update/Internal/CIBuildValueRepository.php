@@ -24,12 +24,12 @@ namespace Tuleap\Tracker\Workflow\PostAction\Update\Internal;
 use DataAccessQueryException;
 use Transition;
 use Transition_PostAction_CIBuildDao;
-use Tuleap\Tracker\Workflow\PostAction\Update\CIBuild;
+use Tuleap\Tracker\Workflow\PostAction\Update\CIBuildValue;
 
 /**
  * Anti-corruption layer around Transition_PostAction_CIBuildDao, dedicated to CI Build updates.
  */
-class CIBuildRepository
+class CIBuildValueRepository
 {
     /**
      * @var Transition_PostAction_CIBuildDao
@@ -44,7 +44,7 @@ class CIBuildRepository
     /**
      * @throws DataAccessQueryException
      */
-    public function create(Transition $transition, CIBuild $build)
+    public function create(Transition $transition, CIBuildValue $build)
     {
         $id_or_failure = $this->ci_build_dao->create($transition->getId(), $build->getJobUrl());
         if ($id_or_failure === false) {
@@ -61,7 +61,7 @@ class CIBuildRepository
     /**
      * @throws DataAccessQueryException
      */
-    public function update(CIBuild $build): void
+    public function update(CIBuildValue $build): void
     {
         $success = $this->ci_build_dao->updatePostAction($build->getId(), $build->getJobUrl());
         if ($success === false) {
@@ -76,13 +76,13 @@ class CIBuildRepository
     }
 
     /**
-     * @param CIBuild[] $ci_builds
+     * @param CIBuildValue[] $ci_builds
      * @throws DataAccessQueryException
      */
     public function deleteAllByTransitionIfNotIn(Transition $transition, array $ci_builds)
     {
         $ids_to_skip = array_map(
-            function (CIBuild $action) {
+            function (CIBuildValue $action) {
                 return $action->getId();
             },
             $ci_builds

@@ -27,7 +27,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFields;
 use Tuleap\Tracker\Workflow\PostAction\PostActionsRetriever;
-use Tuleap\Tracker\Workflow\PostAction\Update\CIBuild;
+use Tuleap\Tracker\Workflow\PostAction\Update\CIBuildValue;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\PostActionsMapper;
 use Tuleap\Tracker\Workflow\PostAction\Update\PostActionCollection;
 use Tuleap\Tracker\Workflow\PostAction\Update\PostActionCollectionUpdater;
@@ -35,7 +35,7 @@ use Tuleap\Tracker\Workflow\PostAction\Update\SetDateValue;
 use Tuleap\Tracker\Workflow\PostAction\Update\SetFloatValue;
 use Tuleap\Tracker\Workflow\PostAction\Update\SetIntValue;
 use Tuleap\Tracker\Workflow\Transition\Condition\ConditionsUpdater;
-use Tuleap\Tracker\Workflow\PostAction\Update\FrozenFields as FrozenFieldsValue;
+use Tuleap\Tracker\Workflow\PostAction\Update\FrozenFieldsValue;
 
 class TransitionReplicatorTest extends TestCase
 {
@@ -137,7 +137,7 @@ class TransitionReplicatorTest extends TestCase
             ->with($to_transition, ['191', '154_3'], $not_empty_ids, $is_comment_required);
         $this->post_actions_updater
             ->shouldReceive('updateByTransition', $to_transition, new PostActionCollection(
-                new CIBuild(null, 'https://example.com'),
+                new CIBuildValue(null, 'https://example.com'),
                 new SetDateValue(null, 197, \Transition_PostAction_Field_Date::FILL_CURRENT_TIME),
                 new SetFloatValue(null, 201, 48.97),
                 new SetIntValue(null, 247, -128),

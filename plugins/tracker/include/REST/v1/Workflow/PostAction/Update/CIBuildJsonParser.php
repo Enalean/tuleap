@@ -22,7 +22,7 @@
 namespace Tuleap\Tracker\REST\v1\Workflow\PostAction\Update;
 
 use Tuleap\REST\I18NRestException;
-use Tuleap\Tracker\Workflow\PostAction\Update\CIBuild;
+use Tuleap\Tracker\Workflow\PostAction\Update\CIBuildValue;
 use Tuleap\Tracker\Workflow\Update\PostAction;
 use Workflow;
 
@@ -60,7 +60,7 @@ class CIBuildJsonParser implements PostActionUpdateJsonParser
             $id = $json['id'] ?? null;
         }
 
-        return new CIBuild(
+        return new CIBuildValue(
             $id,
             $json['job_url']
         );

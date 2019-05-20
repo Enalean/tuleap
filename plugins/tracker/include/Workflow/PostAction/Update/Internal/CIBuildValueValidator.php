@@ -22,9 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Workflow\PostAction\Update\Internal;
 
-use Tuleap\Tracker\Workflow\PostAction\Update\CIBuild;
+use Tuleap\Tracker\Workflow\PostAction\Update\CIBuildValue;
 
-class CIBuildValidator
+class CIBuildValueValidator
 {
     /**
      * @var PostActionIdValidator
@@ -39,7 +39,7 @@ class CIBuildValidator
     /**
      * @throws InvalidPostActionException
      */
-    public function validate(CIBuild ...$ci_builds): void
+    public function validate(CIBuildValue ...$ci_builds): void
     {
         try {
             $this->ids_validator->validate(...$ci_builds);
@@ -56,7 +56,7 @@ class CIBuildValidator
     /**
      * @throws InvalidPostActionException
      */
-    private function validateCIBuild(CIBuild $ci_build)
+    private function validateCIBuild(CIBuildValue $ci_build)
     {
         $job_url = $ci_build->getJobUrl();
         if (! $this->isUrlValid($job_url)) {

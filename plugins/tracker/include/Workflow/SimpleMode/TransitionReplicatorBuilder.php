@@ -36,12 +36,12 @@ use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Tracker\Workflow\PostAction\PostActionsRetriever;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
-use Tuleap\Tracker\Workflow\PostAction\Update\Internal\CIBuildRepository;
-use Tuleap\Tracker\Workflow\PostAction\Update\Internal\CIBuildUpdater;
-use Tuleap\Tracker\Workflow\PostAction\Update\Internal\CIBuildValidator;
-use Tuleap\Tracker\Workflow\PostAction\Update\Internal\FrozenFieldsRepository;
-use Tuleap\Tracker\Workflow\PostAction\Update\Internal\FrozenFieldsUpdater;
-use Tuleap\Tracker\Workflow\PostAction\Update\Internal\FrozenFieldsValidator;
+use Tuleap\Tracker\Workflow\PostAction\Update\Internal\CIBuildValueRepository;
+use Tuleap\Tracker\Workflow\PostAction\Update\Internal\CIBuildValueUpdater;
+use Tuleap\Tracker\Workflow\PostAction\Update\Internal\CIBuildValueValidator;
+use Tuleap\Tracker\Workflow\PostAction\Update\Internal\FrozenFieldsValueRepository;
+use Tuleap\Tracker\Workflow\PostAction\Update\Internal\FrozenFieldsValueUpdater;
+use Tuleap\Tracker\Workflow\PostAction\Update\Internal\FrozenFieldsValueValidator;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\PostActionFieldIdValidator;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\PostActionIdValidator;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\PostActionsMapper;
@@ -69,11 +69,11 @@ class TransitionReplicatorBuilder
 
         if (\ForgeConfig::get('sys_should_use_read_only_post_actions')) {
             $post_action_collection_updater = new PostActionCollectionUpdater(
-                new CIBuildUpdater(
-                    new CIBuildRepository(
+                new CIBuildValueUpdater(
+                    new CIBuildValueRepository(
                         new Transition_PostAction_CIBuildDao()
                     ),
-                    new CIBuildValidator($ids_validator)
+                    new CIBuildValueValidator($ids_validator)
                 ),
                 new SetDateValueUpdater(
                     new SetDateValueRepository(
@@ -96,20 +96,20 @@ class TransitionReplicatorBuilder
                     ),
                     new SetFloatValueValidator($ids_validator, $field_ids_validator, $form_element_factory)
                 ),
-                new FrozenFieldsUpdater(
-                    new FrozenFieldsRepository(
+                new FrozenFieldsValueUpdater(
+                    new FrozenFieldsValueRepository(
                         new FrozenFieldsDao()
                     ),
-                    new FrozenFieldsValidator($form_element_factory, Tracker_RuleFactory::instance())
+                    new FrozenFieldsValueValidator($form_element_factory, Tracker_RuleFactory::instance())
                 )
             );
         } else {
             $post_action_collection_updater = new PostActionCollectionUpdater(
-                new CIBuildUpdater(
-                    new CIBuildRepository(
+                new CIBuildValueUpdater(
+                    new CIBuildValueRepository(
                         new Transition_PostAction_CIBuildDao()
                     ),
-                    new CIBuildValidator($ids_validator)
+                    new CIBuildValueValidator($ids_validator)
                 ),
                 new SetDateValueUpdater(
                     new SetDateValueRepository(

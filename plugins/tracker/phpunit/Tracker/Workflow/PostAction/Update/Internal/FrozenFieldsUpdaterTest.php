@@ -27,7 +27,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
 use PHPUnit\Framework\TestCase;
 use Tracker;
-use Tuleap\Tracker\Workflow\PostAction\Update\FrozenFields;
+use Tuleap\Tracker\Workflow\PostAction\Update\FrozenFieldsValue;
 use Tuleap\Tracker\Workflow\PostAction\Update\PostActionCollection;
 use Tuleap\Tracker\Workflow\PostAction\Update\TransitionFactory;
 
@@ -36,7 +36,7 @@ class FrozenFieldsUpdaterTest extends TestCase
     use MockeryPHPUnitIntegration;
 
     /**
-     * @var FrozenFieldsUpdater
+     * @var FrozenFieldsValueUpdater
      */
     private $updater;
     /**
@@ -55,7 +55,7 @@ class FrozenFieldsUpdaterTest extends TestCase
      */
     public function createUpdater()
     {
-        $this->frozen_fields_repository = Mockery::mock(FrozenFieldsRepository::class);
+        $this->frozen_fields_repository = Mockery::mock(FrozenFieldsValueRepository::class);
         $this->frozen_fields_repository
             ->shouldReceive('deleteAllByTransition')
             ->byDefault();
@@ -63,15 +63,15 @@ class FrozenFieldsUpdaterTest extends TestCase
             ->shouldReceive('create')
             ->byDefault();
 
-        $this->frozen_fields_validator = Mockery::mock(FrozenFieldsValidator::class);
+        $this->frozen_fields_validator = Mockery::mock(FrozenFieldsValueValidator::class);
 
-        $this->updater = new FrozenFieldsUpdater($this->frozen_fields_repository, $this->frozen_fields_validator);
+        $this->updater = new FrozenFieldsValueUpdater($this->frozen_fields_repository, $this->frozen_fields_validator);
     }
 
     public function testUpdateAddsNewFrozenFieldsActions()
     {
         $transition   = TransitionFactory::buildATransitionWithTracker(Mockery::mock(Tracker::class));
-        $added_action = new FrozenFields(null, []);
+        $added_action = new FrozenFieldsValue(null, []);
         $actions      = new PostActionCollection($added_action);
 
         $this->frozen_fields_validator->shouldReceive('validate')->once();
@@ -87,7 +87,7 @@ class FrozenFieldsUpdaterTest extends TestCase
     public function testUpdateDeletesAllPreExistingFrozenFieldsActions()
     {
         $transition     = TransitionFactory::buildATransitionWithTracker(Mockery::mock(Tracker::class));
-        $updated_action = new FrozenFields(null, []);
+        $updated_action = new FrozenFieldsValue(null, []);
         $actions        = new PostActionCollection($updated_action);
 
         $this->frozen_fields_validator->shouldReceive('validate')->once();
@@ -103,7 +103,7 @@ class FrozenFieldsUpdaterTest extends TestCase
     public function testItDoesNothingIfFrozenFieldsActionsAreNotValid()
     {
         $transition     = TransitionFactory::buildATransitionWithTracker(Mockery::mock(Tracker::class));
-        $updated_action = new FrozenFields(null, []);
+        $updated_action = new FrozenFieldsValue(null, []);
         $actions        = new PostActionCollection($updated_action);
 
         $this->frozen_fields_validator->shouldReceive('validate')->andThrow(InvalidPostActionException::class);

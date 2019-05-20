@@ -71,7 +71,7 @@ class PostActionCollectionUpdaterTest extends TestCase
     {
         $transition = TransitionFactory::buildATransition();
 
-        $action            = new CIBuild(2, 'http://example.test');
+        $action            = new CIBuildValue(2, 'http://example.test');
         $action_collection = new PostActionCollection($action);
 
         $this->post_action_updater1
@@ -96,7 +96,7 @@ class PostActionCollectionUpdaterTest extends TestCase
             $transition3
         ];
 
-        $action            = new CIBuild(2, 'http://example.test');
+        $action            = new CIBuildValue(2, 'http://example.test');
         $action_collection = new PostActionCollection($action);
 
         $this->post_action_updater1

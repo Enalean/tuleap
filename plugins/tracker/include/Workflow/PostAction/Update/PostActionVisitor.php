@@ -21,15 +21,15 @@
 
 namespace Tuleap\Tracker\Workflow\PostAction\Update\Internal;
 
-use Tuleap\Tracker\Workflow\PostAction\Update\CIBuild;
-use Tuleap\Tracker\Workflow\PostAction\Update\FrozenFields;
+use Tuleap\Tracker\Workflow\PostAction\Update\CIBuildValue;
+use Tuleap\Tracker\Workflow\PostAction\Update\FrozenFieldsValue;
 use Tuleap\Tracker\Workflow\PostAction\Update\SetDateValue;
 use Tuleap\Tracker\Workflow\PostAction\Update\SetFloatValue;
 use Tuleap\Tracker\Workflow\PostAction\Update\SetIntValue;
 
 interface PostActionVisitor
 {
-    public function visitCIBuild(CIBuild $ci_build_action);
+    public function visitCIBuildValue(CIBuildValue $ci_build_action);
 
     public function visitSetDateValue(SetDateValue $set_date_value_action);
 
@@ -37,5 +37,5 @@ interface PostActionVisitor
 
     public function visitSetFloatValue(SetFloatValue $set_float_value_action);
 
-    public function visitFrozenFields(FrozenFields $frozen_fields);
+    public function visitFrozenFieldsValue(FrozenFieldsValue $frozen_fields);
 }

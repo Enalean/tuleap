@@ -25,9 +25,9 @@ namespace Tuleap\Tracker\Workflow\PostAction\Update\Internal;
 use Tracker;
 use Tracker_FormElementFactory;
 use Tracker_RuleFactory;
-use Tuleap\Tracker\Workflow\PostAction\Update\FrozenFields;
+use Tuleap\Tracker\Workflow\PostAction\Update\FrozenFieldsValue;
 
-class FrozenFieldsValidator
+class FrozenFieldsValueValidator
 {
     /**
      * @var Tracker_FormElementFactory
@@ -50,7 +50,7 @@ class FrozenFieldsValidator
     /**
      * @throws InvalidPostActionException
      */
-    public function validate(Tracker $tracker, FrozenFields ...$frozen_fields): void
+    public function validate(Tracker $tracker, FrozenFieldsValue ...$frozen_fields): void
     {
         foreach ($frozen_fields as $frozen_field) {
             if (count($frozen_field->getFieldIds()) !== count(array_unique($frozen_field->getFieldIds()))) {
@@ -93,7 +93,7 @@ class FrozenFieldsValidator
     /**
      * @throws InvalidPostActionException
      */
-    private function validateSelectedField(Tracker $tracker, FrozenFields $frozen_fields) : void
+    private function validateSelectedField(Tracker $tracker, FrozenFieldsValue $frozen_fields) : void
     {
         $used_field_ids     = $this->extractUsedFieldIds($tracker);
         $involved_field_ids = $this->extractFieldDependenciesFieldIds($tracker);
