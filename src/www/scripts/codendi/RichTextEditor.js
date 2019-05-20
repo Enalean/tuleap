@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-var codendi = codendi || {};
+var codendi = window.codendi || {};
 
 codendi.RTE = Class.create({
     initialize: function(element, options) {

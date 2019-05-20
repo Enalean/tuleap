@@ -23,6 +23,7 @@ const path = require("path");
 const polyfills_for_fetch = require("../../../tools/utils/scripts/ie11-polyfill-names.js")
     .polyfills_for_fetch;
 const webpack_configurator = require("../../../tools/utils/scripts/webpack-configurator.js");
+const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 
 const assets_dir_path = path.resolve(__dirname, "../assets");
 const manifest_plugin = new WebpackAssetsManifest({
@@ -169,10 +170,33 @@ const webpack_config_for_vue_components = {
     }
 };
 
+const webpack_config_for_rich_text_editor = {
+    entry: {
+        "rich-text-editor": "./tuleap/textarea_rte.js"
+    },
+    context: path.resolve(__dirname),
+    output: webpack_configurator.configureOutput(assets_dir_path),
+    module: {
+        rules: [webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11)]
+    },
+    plugins: [manifest_plugin],
+    optimization: {
+        minimizer: [
+            new UglifyJsPlugin({
+                // Prototype doesn't like minimization due to the fact
+                // that it checks for the presence of "$super" argument
+                // during class initialization.
+                exclude: /.*/
+            })
+        ]
+    }
+};
+
 module.exports = [
     webpack_config_for_ckeditor,
     webpack_config_for_dashboards,
     webpack_config_for_flaming_parrot_code,
     webpack_config_for_burning_parrot_code,
-    webpack_config_for_vue_components
+    webpack_config_for_vue_components,
+    webpack_config_for_rich_text_editor
 ];

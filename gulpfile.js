@@ -79,7 +79,6 @@ const fat_combined_files = [
         "src/www/scripts/lytebox/lytebox.js",
         "src/www/scripts/lightwindow/lightwindow.js",
         "src/www/scripts/tuleap/escaper.js",
-        "src/www/scripts/codendi/RichTextEditor.js",
         "src/www/scripts/codendi/Tracker.js",
         "src/www/scripts/codendi/TreeNode.js",
         "src/www/scripts/tuleap/tuleap-modal.js",
@@ -92,7 +91,6 @@ const fat_combined_files = [
         "src/www/scripts/tuleap/tuleap-mention.js",
         "src/www/scripts/tuleap/project-privacy-tooltip.js",
         "src/www/scripts/tuleap/massmail_project_members.js",
-        "src/www/scripts/tuleap/textarea_rte.js",
         "src/www/scripts/tuleap/tuleap-ckeditor-toolbar.js",
         "src/www/scripts/tuleap/project-visibility.js"
     ],
