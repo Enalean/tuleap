@@ -26,6 +26,7 @@ use Docman_FileStorage;
 use Docman_LockFactory;
 use Docman_PermissionsManager;
 use Docman_VersionFactory;
+use Luracast\Restler\RestException;
 use PluginManager;
 use ProjectManager;
 use Tuleap\DB\DBFactory;
@@ -74,7 +75,7 @@ class DocmanEmbeddedFilesResource extends AuthenticatedResource
      */
     public function optionsDocumentItems($id)
     {
-        $this->getAllowOptionsPatch();
+        $this->setHeaders();
     }
 
     /**
@@ -108,7 +109,7 @@ class DocmanEmbeddedFilesResource extends AuthenticatedResource
     public function patch(int $id, DocmanEmbeddedFilesPATCHRepresentation $representation)
     {
         $this->checkAccess();
-        $this->getAllowOptionsPatch();
+        $this->setHeaders();
 
         $item_request = $this->request_builder->buildFromItemId($id);
 
@@ -179,13 +180,58 @@ class DocmanEmbeddedFilesResource extends AuthenticatedResource
         }
     }
 
+    /**
+     * Delete an embedded file document in the document manager
+     *
+     * Delete an existing embedded file document
+     *
+     * @url    DELETE {id}
+     * @access hybrid
+     *
+     * @param int $id Id of the embedded file
+     *
+     * @status 200
+     * @throws RestException 401
+     * @throws RestException 403
+     * @throws RestException 404
+     */
+    public function delete(int $id) : void
+    {
+        $this->checkAccess();
+        $this->setHeaders();
+
+        $item_request      = $this->request_builder->buildFromItemId($id);
+        $item_to_delete    = $item_request->getItem();
+        $current_user      = $this->rest_user_manager->getCurrentUser();
+        $project           = $item_request->getProject();
+        $validator_visitor = new DocumentBeforeModificationValidatorVisitor(\Docman_EmbeddedFile::class);
+
+        $docman_permission_manager = Docman_PermissionsManager::instance($project->getGroupId());
+        if (! $docman_permission_manager->userCanDelete($current_user, $item_to_delete)) {
+            throw new I18NRestException(
+                403,
+                dgettext('tuleap-docman', 'You are not allowed to delete this item.')
+            );
+        }
+
+        $item_to_delete->accept($validator_visitor);
+
+        $event_adder = $this->getDocmanItemsEventAdder();
+        $event_adder->addLogEvents();
+        $event_adder->addNotificationEvents($project);
+
+        (new \Docman_ItemFactory())->delete($item_to_delete);
+
+        $this->event_manager->processEvent('send_notifications', []);
+    }
+
     private function getDocmanItemsEventAdder(): DocmanItemsEventAdder
     {
         return new DocmanItemsEventAdder($this->event_manager);
     }
 
-    private function getAllowOptionsPatch(): void
+    private function setHeaders(): void
     {
-        Header::allowOptionsPatch();
+        Header::allowOptionsPatchDelete();
     }
 }

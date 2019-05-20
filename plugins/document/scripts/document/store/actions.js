@@ -37,7 +37,8 @@ import {
     patchWiki,
     patchLink,
     deleteFile,
-    deleteLink
+    deleteLink,
+    deleteEmbeddedFile
 } from "../api/rest-querier.js";
 
 import {
@@ -521,6 +522,9 @@ export const deleteItem = async (context, item) => {
                 break;
             case TYPE_LINK:
                 await deleteLink(item);
+                break;
+            case TYPE_EMBEDDED:
+                await deleteEmbeddedFile(item);
                 break;
         }
 
