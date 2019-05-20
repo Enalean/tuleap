@@ -2671,7 +2671,7 @@ EOS;
         // workflow
         $workflow = $this->getWorkflowFactory()->getWorkflowByTrackerId($this->id);
         if (! empty($workflow)) {
-            if (! $workflow->isAdvanced() && ForgeConfig::get('sys_tracker_export_simple_workflows')) {
+            if (! $workflow->isAdvanced()) {
                 $child    = $xmlElem->addChild('simple_workflow');
                 $exporter = new SimpleWorkflowXMLExporter(
                     new SimpleWorkflowDao(),
