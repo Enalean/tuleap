@@ -45,6 +45,7 @@ use Tuleap\Project\Admin\ProjectUGroup\UserIsNoLongerProjectAdmin;
 use Tuleap\Project\Admin\ProjectUGroup\UserIsNoLongerWikiAdmin;
 use Tuleap\MediaWiki\MediawikiMaintenanceWrapper;
 use Tuleap\MediaWiki\XMLMediaWikiExporter;
+use Tuleap\Project\DelegatedUserAccessForProject;
 use Tuleap\Request\RestrictedUsersAreHandledByPluginEvent;
 use Tuleap\User\User_ForgeUserGroupPermissionsFactory;
 
@@ -82,7 +83,7 @@ class MediaWikiPlugin extends Plugin {
         $this->addHook('project_admin_ugroup_remove_user');
         $this->addHook('project_admin_remove_user_from_project_ugroups');
         $this->addHook('project_admin_ugroup_deletion');
-        $this->addHook(Event::HAS_USER_BEEN_DELEGATED_ACCESS, 'has_user_been_delegated_access');
+        $this->addHook(DelegatedUserAccessForProject::NAME);
         $this->addHook(RestrictedUsersAreHandledByPluginEvent::NAME);
         $this->addHook(Event::GET_SERVICES_ALLOWED_FOR_RESTRICTED);
 
@@ -383,16 +384,11 @@ class MediaWikiPlugin extends Plugin {
         }
     }
 
-    public function has_user_been_delegated_access($params) {
-        if (isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
-
-            /**
-             * Only change the access rights to the affirmative.
-             * Otherwise, we could overwrite a "true" value set by another plugin.
-             */
-            if ($this->doesUserHavePermission($params['user'])) {
-                $params['can_access'] = true;
-            }
+    public function has_user_been_delegated_access(DelegatedUserAccessForProject $event) : void
+    {
+        if (isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0 &&
+                $this->doesUserHavePermission($event->getUser())) {
+            $event->enableAccessToProjectToTheUser();
         }
     }
 

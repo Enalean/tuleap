@@ -19,6 +19,8 @@
 
 use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;
+use Tuleap\Project\ProjectAccessChecker;
+use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 
 require_once('common/mail/MailManager.class.php');
 require_once 'common/date/DateHelper.class.php';
@@ -242,7 +244,15 @@ class Tracker_DateReminderManager {
         $mail_notification_builder = new MailNotificationBuilder(
             new MailBuilder(
                 TemplateRendererFactory::build(),
-                new MailFilter(UserManager::instance(), new URLVerification(), new MailLogger())
+                new MailFilter(
+                    UserManager::instance(),
+                    new ProjectAccessChecker(
+                        PermissionsOverrider_PermissionsOverriderManager::instance(),
+                        new RestrictedUserCanAccessProjectVerifier(),
+                        EventManager::instance()
+                    ),
+                    new MailLogger()
+                )
             )
         );
         $mail_notification_builder->buildAndSendEmail(

@@ -377,7 +377,8 @@ class FRSReleaseFactory {
 
         $project_access_checker = new ProjectAccessChecker(
             PermissionsOverrider_PermissionsOverriderManager::instance(),
-            new RestrictedUserCanAccessProjectVerifier()
+            new RestrictedUserCanAccessProjectVerifier(),
+            EventManager::instance()
         );
 
         try {
@@ -537,7 +538,15 @@ class FRSReleaseFactory {
     {
         $builder = new MailBuilder(
             TemplateRendererFactory::build(),
-            new MailFilter(UserManager::instance(), new URLVerification(), new MailLogger())
+            new MailFilter(
+                UserManager::instance(),
+                new ProjectAccessChecker(
+                    PermissionsOverrider_PermissionsOverriderManager::instance(),
+                    new RestrictedUserCanAccessProjectVerifier(),
+                    EventManager::instance()
+                ),
+                new MailLogger()
+            )
         );
 
         return $builder->buildAndSendEmail($release->getProject(), $notification, new MailEnhancer());

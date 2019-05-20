@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2007. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2007
@@ -24,6 +24,8 @@
 
 use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;
+use Tuleap\Project\ProjectAccessChecker;
+use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 
 class Docman_View_ItemDetailsSectionApprovalCreate
 extends Docman_View_ItemDetailsSectionApproval {
@@ -57,7 +59,15 @@ extends Docman_View_ItemDetailsSectionApproval {
             new MailNotificationBuilder(
                 new MailBuilder(
                     TemplateRendererFactory::build(),
-                    new MailFilter(UserManager::instance(), new URLVerification(), new MailLogger())
+                    new MailFilter(
+                        UserManager::instance(),
+                        new ProjectAccessChecker(
+                            PermissionsOverrider_PermissionsOverriderManager::instance(),
+                            new RestrictedUserCanAccessProjectVerifier(),
+                            EventManager::instance()
+                        ),
+                        new MailLogger()
+                    )
                 )
             )
         );

@@ -1,7 +1,7 @@
 #!/usr/share/tuleap/src/utils/php-launcher.sh
 <?php
 /**
- * Copyright Enalean (c) 2011-2019. All rights reserved.
+ * Copyright Enalean (c) 2011-Present. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registered trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -29,6 +29,8 @@ use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Jenkins\JenkinsCSRFCrumbRetriever;
 use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;
+use Tuleap\Project\ProjectAccessChecker;
+use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 
 require_once __DIR__ . '/../../../src/www/include/pre.php';
 require_once __DIR__ . '/../include/gitPlugin.class.php';
@@ -64,7 +66,15 @@ $http_request_factory = HTTPFactoryBuilder::requestFactory();
 
 $mail_builder = new MailBuilder(
     TemplateRendererFactory::build(),
-    new MailFilter(UserManager::instance(), new URLVerification(), new MailLogger())
+    new MailFilter(
+            UserManager::instance(),
+            new ProjectAccessChecker(
+                PermissionsOverrider_PermissionsOverriderManager::instance(),
+                new RestrictedUserCanAccessProjectVerifier(),
+                EventManager::instance()
+            ),
+            new MailLogger()
+    )
 );
 
 $webhook_dao  = new \Tuleap\Git\Webhook\WebhookDao();

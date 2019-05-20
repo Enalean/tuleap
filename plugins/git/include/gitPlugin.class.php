@@ -140,6 +140,8 @@ use Tuleap\Project\Admin\ProjectUGroup\UserBecomesProjectAdmin;
 use Tuleap\Project\Admin\ProjectUGroup\UserIsNoLongerProjectAdmin;
 use Tuleap\Project\HeartbeatsEntryCollection;
 use Tuleap\Project\HierarchyDisplayer;
+use Tuleap\Project\ProjectAccessChecker;
+use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Project\Status\ProjectSuspendedAndNotBlockedWarningCollector;
 use Tuleap\Request\RestrictedUsersAreHandledByPluginEvent;
 use Tuleap\REST\JsonDecoder;
@@ -503,7 +505,11 @@ class GitPlugin extends Plugin
                         TemplateRendererFactory::build(),
                         new MailFilter(
                             UserManager::instance(),
-                            new URLVerification(),
+                            new ProjectAccessChecker(
+                                PermissionsOverrider_PermissionsOverriderManager::instance(),
+                                new RestrictedUserCanAccessProjectVerifier(),
+                                EventManager::instance()
+                            ),
                             new MailLogger()
                         )
                     ),

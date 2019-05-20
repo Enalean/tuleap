@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean 2017. All rights reserved
+ * Copyright (c) Enalean 2017-Present. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -21,6 +21,8 @@
 
 use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;
+use Tuleap\Project\ProjectAccessChecker;
+use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 
 require_once('FRSFile.class.php');
 require_once('common/dao/FileModuleMonitorDao.class.php');
@@ -267,7 +269,15 @@ class FileModuleMonitorFactory {
     function notifyAfterAdd(FRSPackage $package, PFUser $user) {
         $mail_builder = new MailBuilder(
             TemplateRendererFactory::build(),
-            new MailFilter(UserManager::instance(), new URLVerification(), new MailLogger())
+            new MailFilter(
+                UserManager::instance(),
+                new ProjectAccessChecker(
+                    PermissionsOverrider_PermissionsOverriderManager::instance(),
+                    new RestrictedUserCanAccessProjectVerifier(),
+                    EventManager::instance()
+                ),
+                new MailLogger()
+            )
         );
         $purifier     = Codendi_HTMLPurifier::instance();
 
@@ -299,7 +309,15 @@ class FileModuleMonitorFactory {
     function notifyAfterDelete(FRSPackage $package, PFUser $user) {
         $mail_builder = new MailBuilder(
             TemplateRendererFactory::build(),
-            new MailFilter(UserManager::instance(), new URLVerification(), new MailLogger())
+            new MailFilter(
+                UserManager::instance(),
+                new ProjectAccessChecker(
+                    PermissionsOverrider_PermissionsOverriderManager::instance(),
+                    new RestrictedUserCanAccessProjectVerifier(),
+                    EventManager::instance()
+                ),
+                new MailLogger()
+            )
         );
         $purifier     = Codendi_HTMLPurifier::instance();
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,7 +22,9 @@ namespace Tuleap\Mail;
 
 use ForgeAccess;
 use ForgeConfig;
+use Mockery;
 use Project_AccessPrivateException;
+use Tuleap\Project\ProjectAccessChecker;
 use TuleapTestCase;
 use UserManager;
 
@@ -34,9 +36,9 @@ class MailFilterTest extends TuleapTestCase
     private $user_manager;
 
     /**
-     * @var \URLVerification
+     * @var Mockery\MockInterface|ProjectAccessChecker
      */
-    private $url_verification;
+    private $project_access_checker;
 
     /**
      * @var MailFilter
@@ -49,7 +51,7 @@ class MailFilterTest extends TuleapTestCase
     private $project;
 
     /**
-     * @var Tuleap\Mail\MailLogger
+     * @var \Tuleap\Mail\MailLogger
      */
     private $mail_logger;
 
@@ -79,11 +81,11 @@ class MailFilterTest extends TuleapTestCase
 
         $this->unknown_user = array();
 
-        $this->user_manager     = mock('UserManager');
-        $this->url_verification = mock('URLVerification');
-        $this->mail_logger      = mock('Tuleap\Mail\MailLogger');
+        $this->user_manager           = mock('UserManager');
+        $this->project_access_checker = Mockery::mock(ProjectAccessChecker::class);
+        $this->mail_logger            = mock('Tuleap\Mail\MailLogger');
 
-        $this->mail_filter = new MailFilter($this->user_manager, $this->url_verification, $this->mail_logger);
+        $this->mail_filter = new MailFilter($this->user_manager, $this->project_access_checker, $this->mail_logger);
 
         $this->project = mock('Project');
 
@@ -117,9 +119,9 @@ class MailFilterTest extends TuleapTestCase
     public function itFilterPeopleWhoCanNotReadProject()
     {
         $this->initializeMails();
-        stub($this->url_verification)->userCanAccessProject($this->user_active, $this->project)->throws(
-            new Project_AccessPrivateException()
-        );
+        $this->project_access_checker->shouldReceive('checkUserCanAccessProject')
+            ->with($this->user_active, $this->project)
+            ->andThrow(Project_AccessPrivateException::class);
 
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::REGULAR);
         $filtered_mails = $this->mail_filter->filter($this->project, array($this->user_active->getEmail()));
@@ -134,7 +136,8 @@ class MailFilterTest extends TuleapTestCase
     public function itFilterPeopleWhoCanReadProjectAndAreSuspendedOrDeleted()
     {
         $this->initializeMails();
-        stub($this->url_verification)->userCanAccessProject($this->user_suspended, $this->project)->returns(true);
+        $this->project_access_checker->shouldReceive('checkUserCanAccessProject')
+            ->with($this->user_suspended, $this->project);
 
         $filtered_mails = $this->mail_filter->filter($this->project, array($this->user_suspended->getEmail()));
         $expected_mails = array();
@@ -147,7 +150,8 @@ class MailFilterTest extends TuleapTestCase
     public function itDoesNotFilterPeopleWhoCanReadProjectAndAreActive()
     {
         $this->initializeMails();
-        stub($this->url_verification)->userCanAccessProject($this->user_registered, $this->project)->returns(true);
+        $this->project_access_checker->shouldReceive('checkUserCanAccessProject')
+            ->with($this->user_registered, $this->project);
 
         $filtered_mails = $this->mail_filter->filter($this->project, array($this->user_registered->getEmail()));
         $expected_mails = array($this->user_registered->getEmail());
@@ -162,8 +166,10 @@ class MailFilterTest extends TuleapTestCase
         stub($this->user_manager)->getAllUsersByEmail($this->user_registered->getEmail())->returns(
             array($this->user_registered, $this->user_registered_bis)
         );
-        stub($this->url_verification)->userCanAccessProject($this->user_registered, $this->project)->returns(true);
-        stub($this->url_verification)->userCanAccessProject($this->user_registered_bis, $this->project)->returns(true);
+        $this->project_access_checker->shouldReceive('checkUserCanAccessProject')
+            ->with($this->user_registered, $this->project);
+        $this->project_access_checker->shouldReceive('checkUserCanAccessProject')
+            ->with($this->user_registered_bis, $this->project);
 
         $filtered_mails = $this->mail_filter->filter($this->project, array($this->user_registered->getEmail()));
         $expected_mails = array($this->user_registered->getEmail());
@@ -178,8 +184,11 @@ class MailFilterTest extends TuleapTestCase
         stub($this->user_manager)->getAllUsersByEmail($this->user_registered->getEmail())->returns(
             array($this->user_registered, $this->user_registered_bis)
         );
-        stub($this->url_verification)->userCanAccessProject($this->user_registered, $this->project)->returns(true);
-        stub($this->url_verification)->userCanAccessProject($this->user_registered_bis, $this->project)->returns(false);
+        $this->project_access_checker->shouldReceive('checkUserCanAccessProject')
+            ->with($this->user_registered, $this->project);
+        $this->project_access_checker->shouldReceive('checkUserCanAccessProject')
+            ->with($this->user_registered_bis, $this->project)
+            ->andThrow(Project_AccessPrivateException::class);
 
         $filtered_mails = $this->mail_filter->filter($this->project, array($this->user_registered->getEmail()));
         $expected_mails = array($this->user_registered->getEmail());
@@ -205,8 +214,10 @@ class MailFilterTest extends TuleapTestCase
     {
         $this->initializeMails();
 
-        stub($this->url_verification)->userCanAccessProject($this->user_registered, $this->project)->returns(true);
-        stub($this->url_verification)->userCanAccessProject($this->user_active, $this->project)->returns(true);
+        $this->project_access_checker->shouldReceive('checkUserCanAccessProject')
+            ->with($this->user_registered, $this->project);
+        $this->project_access_checker->shouldReceive('checkUserCanAccessProject')
+            ->with($this->user_active, $this->project);
 
         $filtered_mails = $this->mail_filter->filter(
             $this->project,

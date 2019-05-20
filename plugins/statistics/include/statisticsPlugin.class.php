@@ -274,7 +274,8 @@ class StatisticsPlugin extends Plugin
             $user_manager,
             new ProjectAccessChecker(
                 new PermissionsOverrider_PermissionsOverriderManager(),
-                new RestrictedUserCanAccessProjectVerifier()
+                new RestrictedUserCanAccessProjectVerifier(),
+                EventManager::instance()
             )
         );
         $disk_usage_manager     = $this->getDiskUsageManager();

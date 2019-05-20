@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Project;
 
+use Event;
+use EventManager;
 use ForgeConfig;
 use PermissionsOverrider_PermissionsOverriderManager;
 use PFUser;
@@ -41,13 +43,19 @@ class ProjectAccessChecker
      * @var RestrictedUserCanAccessVerifier
      */
     private $verifier;
+    /**
+     * @var EventManager
+     */
+    private $event_manager;
 
     public function __construct(
         PermissionsOverrider_PermissionsOverriderManager $permissions_overrider_manager,
-        RestrictedUserCanAccessVerifier $verifier
+        RestrictedUserCanAccessVerifier $verifier,
+        EventManager $event_manager
     ) {
         $this->permissions_overrider_manager = $permissions_overrider_manager;
         $this->verifier                      = $verifier;
+        $this->event_manager                 = $event_manager;
     }
 
     /**
@@ -101,6 +109,19 @@ class ProjectAccessChecker
             return;
         }
 
+        if ($this->userHasBeenDelegatedAccess($user)) {
+            return;
+        }
+
         throw new Project_AccessPrivateException();
+    }
+
+    private function userHasBeenDelegatedAccess(PFUser $user) : bool
+    {
+        $event = new DelegatedUserAccessForProject($user);
+
+        $this->event_manager->processEvent($event);
+
+        return $event->canUserAccessProject();
     }
 }

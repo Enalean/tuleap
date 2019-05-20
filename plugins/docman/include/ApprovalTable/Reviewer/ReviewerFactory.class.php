@@ -1,7 +1,7 @@
 <?php
-/*
+/**
  * Copyright (c) STMicroelectronics, 2008. All Rights Reserved.
- * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2008
  *
@@ -23,6 +23,8 @@
 
 use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;
+use Tuleap\Project\ProjectAccessChecker;
+use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 
 class Docman_ApprovalTableReviewerFactory {
     var $table;
@@ -410,7 +412,15 @@ class Docman_ApprovalTableReviewerFactory {
             new MailNotificationBuilder(
                 new MailBuilder(
                     TemplateRendererFactory::build(),
-                    new MailFilter(UserManager::instance(), new URLVerification(), new MailLogger())
+                    new MailFilter(
+                        UserManager::instance(),
+                        new ProjectAccessChecker(
+                            PermissionsOverrider_PermissionsOverriderManager::instance(),
+                            new RestrictedUserCanAccessProjectVerifier(),
+                            EventManager::instance()
+                        ),
+                        new MailLogger()
+                    )
                 )
             )
         );
