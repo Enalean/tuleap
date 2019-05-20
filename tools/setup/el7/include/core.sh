@@ -76,9 +76,9 @@ EOF
     fi
 
     if [ ${has_mailman_been_configured} = "true" ]; then
-        _serviceEnable "mailman-tuleap.service"
-        _serviceRestart "mailman-tuleap.service"
-        _serviceReload "httpd.service"
+        ${tuleapcfg} systemctl enable "mailman-tuleap.service"
+        ${tuleapcfg} systemctl restart "mailman-tuleap.service"
+        ${tuleapcfg} systemctl reload "httpd.service"
         _infoMessage "mailman-tuleap has been configured"
     else
         _infoMessage "mailman-tuleap is already configured"
@@ -147,13 +147,13 @@ function _configureCVS() {
 
     _configureNSSMySQL
 
-    if ! $(_serviceIsEnabled "cvs.socket"); then
-        _serviceEnable "cvs.socket"
+    if ! $(${tuleapcfg} systemctl is-enabled "cvs.socket"); then
+        ${tuleapcfg} systemctl enable "cvs.socket"
         has_cvs_been_configured="true"
     fi
 
     if [ ${has_cvs_been_configured} = "true" ]; then
-        _serviceRestart "cvs.socket"
+        ${tuleapcfg} systemctl restart "cvs.socket"
         _infoMessage "CVS has been configured"
     else
         _infoMessage "CVS is already configured"

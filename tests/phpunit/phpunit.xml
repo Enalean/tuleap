@@ -2,6 +2,7 @@
 <phpunit bootstrap="bootstrap.php" verbose="true" colors="true"
          failOnRisky="true" beStrictAboutChangesToGlobalState="true" beStrictAboutTestsThatDoNotTestAnything="true">
     <php>
+        <ini name="assert.exception" value="1"/>
         <ini name="date.timezone" value="Europe/Paris"/>
         <ini name="memory_limit" value="1024M" /> <!-- This needs to be quite permissive to be able to generate coverage report -->
     </php>

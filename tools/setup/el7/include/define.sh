@@ -28,6 +28,7 @@ declare -r su="/bin/su"
 declare -r systemctl="/usr/bin/systemctl"
 declare -r touch="/bin/touch"
 declare -r tr="/usr/bin/tr"
+declare -r tuleapcfg="/usr/bin/tuleap-cfg"
 
 declare -a cmd=("${awk}" "${basename}" "${cat}" "${chmod}" "${chown}"
                 "${cp}" "${date}" "${getenforce}" "${getopt}" "${grep}"

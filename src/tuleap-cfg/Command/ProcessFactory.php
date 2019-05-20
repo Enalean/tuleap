@@ -1,4 +1,3 @@
-#!/opt/remi/php72/root/usr/bin/php
 <?php
 /**
  * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
@@ -17,15 +16,19 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 declare(strict_types=1);
 
-require_once __DIR__.'/../vendor/autoload.php';
+namespace TuleapCfg\Command;
 
-use Symfony\Component\Console\Application;
+use Symfony\Component\Process\Process;
 
-$application = new Application();
-$application->add(new \TuleapCfg\Command\ConfigureCommand());
-$application->add(new \TuleapCfg\Command\SystemControlCommand(new \TuleapCfg\Command\ProcessFactory()));
-$application->run();
+class ProcessFactory
+{
+    public function getProcess(array $args) : Process
+    {
+        return new Process($args);
+    }
+}
