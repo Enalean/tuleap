@@ -21,9 +21,9 @@
 
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
+use Tuleap\SOAP\SOAPRequestValidatorImplementation;
 
-require_once 'pre.php';
-require_once 'common/svn/SVN_SOAPServer.class.php';
+require_once __DIR__ . '/../../include/pre.php';
 
 // Check if we the server is in secure mode or not.
 $request  = HTTPRequest::instance();
@@ -38,19 +38,19 @@ $uri = $protocol.'://'.$default_domain.'/soap/svn';
 $serviceClass = 'SVN_SOAPServer';
 
 if ($request->exist('wsdl')) {
-    require_once 'common/soap/SOAP_NusoapWSDL.class.php';
     $wsdlGen = new SOAP_NusoapWSDL($serviceClass, 'TuleapSubversionAPI', $uri);
     $wsdlGen->dumpWSDL();
 } else {
-    $soap_request_validator = $soap_request_validator = new SOAPRequestValidator(
-        $project_manager,
+    $user_manager = UserManager::instance();
+    $soap_request_validator = $soap_request_validator = new SOAPRequestValidatorImplementation(
+        ProjectManager::instance(),
         $user_manager,
         new ProjectAccessChecker(
             new PermissionsOverrider_PermissionsOverriderManager(),
             new RestrictedUserCanAccessProjectVerifier()
         )
     );
-    $svn_repository_listing = new SVN_RepositoryListing(new SVN_PermissionsManager(), new SVN_Svnlook(), UserManager::instance());
+    $svn_repository_listing = new SVN_RepositoryListing(new SVN_PermissionsManager(), new SVN_Svnlook(), $user_manager);
     
     $server = new TuleapSOAPServer($uri.'/?wsdl',
                              array('cache_wsdl' => WSDL_CACHE_NONE));
@@ -60,5 +60,3 @@ if ($request->exist('wsdl')) {
     $server->handle();
     $xml_security->disableExternalLoadOfEntities();
 }
-
-?>
