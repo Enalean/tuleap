@@ -387,7 +387,7 @@ class DocmanItemsTestLinksTest extends DocmanBase
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
             $this->client->patch('docman_links/' . $links_id, null, $put_resource)
         );
-        $this->assertEquals(403, $response->getStatusCode());
+        $this->assertEquals(400, $response->getStatusCode());
 
         $response = $this->getResponse(
             $this->client->get('docman_items/' . $links_id),
@@ -445,7 +445,7 @@ class DocmanItemsTestLinksTest extends DocmanBase
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
             $this->client->patch('docman_links/' . $links_id, null, $put_resource)
         );
-        $this->assertEquals(403, $response->getStatusCode());
+        $this->assertEquals(400, $response->getStatusCode());
 
         $response = $this->getResponse(
             $this->client->get('docman_items/' . $links_id),

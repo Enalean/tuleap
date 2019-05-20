@@ -468,7 +468,7 @@ class DocmanItemsTestFoldersTest extends DocmanBase
             $this->client->post('docman_folders/' . $root_id . "/folders", $headers, $query)
         );
 
-        $this->assertEquals(403, $response->getStatusCode());
+        $this->assertEquals(400, $response->getStatusCode());
     }
 
 
@@ -492,7 +492,7 @@ class DocmanItemsTestFoldersTest extends DocmanBase
             $this->client->post('docman_folders/' . $root_id . "/empties", $headers, $query)
         );
 
-        $this->assertEquals(403, $response->getStatusCode());
+        $this->assertEquals(400, $response->getStatusCode());
     }
 
     /**
@@ -515,7 +515,7 @@ class DocmanItemsTestFoldersTest extends DocmanBase
             $this->client->post('docman_folders/' . $root_id . "/empties", $headers, $query)
         );
 
-        $this->assertEquals(403, $response->getStatusCode());
+        $this->assertEquals(400, $response->getStatusCode());
     }
 
     /**
@@ -538,7 +538,7 @@ class DocmanItemsTestFoldersTest extends DocmanBase
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
             $this->client->post('docman_folders/' . $root_id . "/embedded_files", $headers, $query)
         );
-        $this->assertEquals(403, $response->getStatusCode());
+        $this->assertEquals(400, $response->getStatusCode());
     }
 
     /**
@@ -562,7 +562,7 @@ class DocmanItemsTestFoldersTest extends DocmanBase
             $this->client->post('docman_folders/' . $root_id . "/embedded_files", $headers, $query)
         );
 
-        $this->assertEquals(403, $response->getStatusCode());
+        $this->assertEquals(400, $response->getStatusCode());
     }
 
     /**
@@ -586,7 +586,7 @@ class DocmanItemsTestFoldersTest extends DocmanBase
             $this->client->post('docman_folders/' . $root_id . "/links", $headers, $query)
         );
 
-        $this->assertEquals(403, $response->getStatusCode());
+        $this->assertEquals(400, $response->getStatusCode());
     }
 
     /**
@@ -610,7 +610,7 @@ class DocmanItemsTestFoldersTest extends DocmanBase
             $this->client->post('docman_folders/' . $root_id . "/links", $headers, $query)
         );
 
-        $this->assertEquals(403, $response->getStatusCode());
+        $this->assertEquals(400, $response->getStatusCode());
     }
 
     /**
@@ -634,7 +634,7 @@ class DocmanItemsTestFoldersTest extends DocmanBase
             $this->client->post('docman_folders/' . $root_id . "/wikis", $headers, $query)
         );
 
-        $this->assertEquals(403, $response->getStatusCode());
+        $this->assertEquals(400, $response->getStatusCode());
     }
 
     /**
@@ -658,7 +658,7 @@ class DocmanItemsTestFoldersTest extends DocmanBase
             $this->client->post('docman_folders/' . $root_id . "/wikis", $headers, $query)
         );
 
-        $this->assertEquals(403, $response->getStatusCode());
+        $this->assertEquals(400, $response->getStatusCode());
     }
 
     /**
@@ -681,7 +681,7 @@ class DocmanItemsTestFoldersTest extends DocmanBase
             $this->client->post('docman_folders/' . $root_id . "/files", $headers, $query)
         );
 
-        $this->assertEquals(403, $response->getStatusCode());
+        $this->assertEquals(400, $response->getStatusCode());
     }
 
     /**
@@ -704,7 +704,7 @@ class DocmanItemsTestFoldersTest extends DocmanBase
             $this->client->post('docman_folders/' . $root_id . "/files", $headers, $query)
         );
 
-        $this->assertEquals(403, $response->getStatusCode());
+        $this->assertEquals(400, $response->getStatusCode());
     }
 
     /**

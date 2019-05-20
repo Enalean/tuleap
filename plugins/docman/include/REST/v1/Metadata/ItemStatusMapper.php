@@ -38,21 +38,17 @@ class ItemStatusMapper
     ];
 
     /**
-     * @throws StatusNotFoundException
+     * @throws StatusNotFoundBadStatusGivenException
+     * @throws StatusNotFoundNullException
      */
     public function getItemStatusIdFromItemStatusString(?string $status_string): int
     {
         if ($status_string === null) {
-            throw new StatusNotFoundException('null is not a valid item status');
+            throw new StatusNotFoundNullException();
         }
 
         if (! isset(self::ITEM_STATUS_ARRAY_MAP[$status_string])) {
-            throw new StatusNotFoundException(
-                sprintf(
-                    'The status %s is invalid.',
-                    $status_string
-                )
-            );
+            throw new StatusNotFoundBadStatusGivenException($status_string);
         }
 
         return self::ITEM_STATUS_ARRAY_MAP[$status_string];

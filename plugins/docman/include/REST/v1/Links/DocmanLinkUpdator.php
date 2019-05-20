@@ -120,8 +120,11 @@ class DocmanLinkUpdator
      * @throws \Tuleap\Docman\REST\v1\Metadata\InvalidDateComparisonException
      * @throws \Tuleap\Docman\REST\v1\Metadata\InvalidDateTimeFormatException
      * @throws \Tuleap\Docman\REST\v1\Metadata\ItemStatusUsageMismatchException
-     * @throws \Tuleap\Docman\REST\v1\Metadata\ObsoloscenceDateUsageMismatchException
-     * @throws \Tuleap\Docman\REST\v1\Metadata\StatusNotFoundException
+     * @throws \Tuleap\Docman\REST\v1\Metadata\ObsolescenceDateDisabledException
+     * @throws \Tuleap\Docman\REST\v1\Metadata\ObsolescenceDateMissingParameterException
+     * @throws \Tuleap\Docman\REST\v1\Metadata\ObsolescenceDateNullException
+     * @throws \Tuleap\Docman\REST\v1\Metadata\StatusNotFoundBadStatusGivenException
+     * @throws \Tuleap\Docman\REST\v1\Metadata\StatusNotFoundNullException
      */
     public function updateLink(
         \Docman_Link $item,

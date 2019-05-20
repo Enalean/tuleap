@@ -99,7 +99,7 @@ class HardcodedMetdataObsolescenceDateCheckerTest extends TestCase
         $this->docman_settings_bo->shouldReceive('getMetadataUsage')
                                  ->never();
 
-        $this->expectException(ObsoloscenceDateUsageMismatchException::class);
+        $this->expectException(ObsolescenceDateNullException::class);
 
         $checker->checkObsolescenceDateUsage(null, PLUGIN_DOCMAN_ITEM_TYPE_EMPTY);
 
@@ -114,7 +114,7 @@ class HardcodedMetdataObsolescenceDateCheckerTest extends TestCase
                                  ->with('obsolescence_date')
                                  ->andReturn('1');
 
-        $this->expectException(ObsoloscenceDateUsageMismatchException::class);
+        $this->expectException(ObsolescenceDateMissingParameterException::class);
 
         $checker->checkObsolescenceDateUsage('0', PLUGIN_DOCMAN_ITEM_TYPE_EMPTY);
     }
@@ -127,7 +127,7 @@ class HardcodedMetdataObsolescenceDateCheckerTest extends TestCase
                                  ->with('obsolescence_date')
                                  ->andReturn('0');
 
-        $this->expectException(ObsoloscenceDateUsageMismatchException::class);
+        $this->expectException(ObsolescenceDateDisabledException::class);
 
         $checker->checkObsolescenceDateUsage('2019-06-04', PLUGIN_DOCMAN_ITEM_TYPE_EMPTY);
     }
