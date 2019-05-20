@@ -57,6 +57,8 @@ import "./components/Folder/ActionsQuickLookButton/QuickLookDocumentActionButton
 
 import "./components/Folder/ItemDisplay/ActionsHeader.spec.js";
 import "./components/Folder/ItemDisplay/DisplayEmbedded.spec.js";
+import "./components/Folder/ItemDisplay/EmbeddedFileEditionSwitcher.spec.js";
+import "./components/Folder/ItemDisplay/DisplayEmbeddedContent.spec.js";
 
 import "./components/Folder/ItemTitle/FakeCaret.spec.js";
 import "./components/Folder/ItemTitle/FolderCellTitle.spec.js";

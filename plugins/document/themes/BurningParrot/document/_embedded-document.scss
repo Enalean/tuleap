@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -14,27 +14,41 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see http://www.gnu.org/licenses/.
+ *
+ *
  */
-@import 'headers';
-@import 'icons';
-@import 'folder-content';
-@import 'new-document';
-@import 'upload';
-@import 'notifications';
-@import 'switch-to-docman';
-@import 'quicklook';
-@import 'update-document';
-@import 'confirm-deletion-modal';
-@import 'embedded-document';
-@import '../../../../../src/www/themes/BurningParrot/css/includes/global-variables';
 
-.document-app {
+.embedded-document-container {
     display: flex;
+    flex: 1 1 auto;
     flex-direction: column;
-    height: calc(100vh - #{$navbar-height});
 
-    > .breadcrumb {
+    > .document-header {
         flex: 0 0 auto;
+    }
+}
+
+.embedded-document {
+    flex: 1 1 auto;
+    margin: 0;
+    border-right: 0;
+    border-left: 0;
+    border-radius: 0;
+
+    h1 {
+        font-size: 36px;
+    }
+
+    &.narrow {
+        justify-content: center;
+        background: mix($tlp-theme-background-color, $tlp-ui-white, 50%);
+
+        > .tlp-pane-container {
+            flex: 0 1 auto;
+            max-width: 800px;
+            padding: $tlp-double-spacing $tlp-spacing;
+            background: $tlp-ui-white;
+        }
     }
 }

@@ -31,7 +31,8 @@ export {
     updateCurrentlyPreviewedItem,
     updateCurrentlyDisplayedItem,
     showPostDeletionNotification,
-    hidePostDeletionNotification
+    hidePostDeletionNotification,
+    shouldDisplayEmbeddedInLargeMode
 };
 
 function initApp(
@@ -139,4 +140,7 @@ function showPostDeletionNotification(state) {
 
 function hidePostDeletionNotification(state) {
     state.show_post_deletion_notification = false;
+}
+function shouldDisplayEmbeddedInLargeMode(state, is_embedded_in_large_view) {
+    state.is_embedded_in_large_view = is_embedded_in_large_view;
 }

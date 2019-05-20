@@ -221,6 +221,9 @@ msgstr "Garder le verrou?"
 msgid "Keep reviewers, comments and commitments."
 msgstr "Garder les approbateurs, commentaires et les engagements."
 
+msgid "Large view"
+msgstr "Vue large"
+
 msgid "Last update date"
 msgstr "Mis à jour"
 
@@ -260,6 +263,9 @@ msgstr "Nom"
 
 msgid "Name, description..."
 msgstr "Nom, description..."
+
+msgid "Narrow view"
+msgstr "Vue étroite"
 
 msgid "New document"
 msgstr "Nouveau document"

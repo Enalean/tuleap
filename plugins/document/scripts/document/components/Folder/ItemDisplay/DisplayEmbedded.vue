@@ -18,7 +18,11 @@
   -->
 
 <template>
-    <display-embedded-content v-bind:embedded_file="embedded_file" v-if="has_loaded_without_error" data-test="embedded_content"/>
+    <display-embedded-content
+        v-bind:embedded-file="embedded_file"
+        v-if="has_loaded_without_error"
+        data-test="embedded_content"
+    />
     <display-embedded-spinner v-else-if="is_loading" data-test="embedded_spinner"/>
 </template>
 
@@ -49,6 +53,14 @@ export default {
             parseInt(this.$route.params.item_id, 10)
         );
         this.$store.commit("updateCurrentlyDisplayedItem", this.embedded_file);
+        const preference = await this.$store.dispatch(
+            "getEmbeddedFileDisplayPreference",
+            this.embedded_file
+        );
+        this.$store.commit(
+            "shouldDisplayEmbeddedInLargeMode",
+            preference && preference.value === false
+        );
         this.is_loading = false;
     },
     destroyed() {

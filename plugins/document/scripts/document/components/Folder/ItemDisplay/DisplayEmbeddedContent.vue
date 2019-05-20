@@ -18,20 +18,27 @@
   -->
 
 <template>
-    <div class="tlp-framed">
-        <div class="document-header">
-            <document-title-lock-info v-bind:item="embedded_file"
+    <div class="embedded-document-container tlp-framed-vertically">
+        <div class="document-header tlp-framed-horizontally">
+            <document-title-lock-info v-bind:item="embeddedFile"
                                       v-bind:is-displaying-in-header="true"
             />
 
-            <h1 class="document-header-title">{{ embedded_title }}</h1>
+            <h1 class="document-header-title">{{ embeddedFile.title }}</h1>
 
-            <actions-header v-bind:item="embedded_file"/>
+            <actions-header v-bind:item="embeddedFile"/>
 
-            <approval-table-badge v-bind:item="embedded_file" v-bind:is-in-folder-content-row="false"/>
+            <approval-table-badge v-bind:item="embeddedFile" v-bind:is-in-folder-content-row="false"/>
+
+            <embedded-file-edition-switcher
+                v-bind:is-in-large-view="is_embedded_in_large_view"
+            />
         </div>
 
-        <section class="tlp-pane">
+        <section class="tlp-pane embedded-document"
+                 v-bind:class="{ 'narrow': !is_embedded_in_large_view }"
+                 data-test="display-embedded-content"
+        >
             <div class="tlp-pane-container">
                 <section class="tlp-pane-section" v-dompurify-html="embedded_content"></section>
             </div>
@@ -39,12 +46,12 @@
 
         <create-new-embedded-file-version-modal
             v-if="is_modal_shown"
-            v-bind:item="embedded_file"
+            v-bind:item="embeddedFile"
             v-on:hidden="hideModal()"
         />
         <confirm-deletion-modal
             v-if="show_confirm_deletion_modal"
-            v-bind:item="embedded_file"
+            v-bind:item="embeddedFile"
             v-on:delete-modal-closed="hideDeleteItemModal"
             v-bind:should-redirect-to-parent-after-deletion="true"
         />
@@ -52,44 +59,42 @@
 </template>
 
 <script>
-import DropdownButton from "../ActionsDropDown/DropdownButton.vue";
-import DropdownMenu from "../ActionsDropDown/DropdownMenu.vue";
 import ActionsHeader from "./ActionsHeader.vue";
 import DocumentTitleLockInfo from "../LockInfo/DocumentTitleLockInfo.vue";
 import ApprovalTableBadge from "../ApprovalTables/ApprovalTableBadge.vue";
+import EmbeddedFileEditionSwitcher from "./EmbeddedFileEditionSwitcher.vue";
+import { mapState } from "vuex";
 
 export default {
     name: "DisplayEmbeddedContent",
     components: {
+        EmbeddedFileEditionSwitcher,
         ApprovalTableBadge,
         DocumentTitleLockInfo,
         ActionsHeader,
-        DropdownMenu,
-        DropdownButton,
         "create-new-embedded-file-version-modal": () =>
             import(/* webpackChunkName: "document-new-embedded-file-version-modal" */ "../ModalCreateNewItemVersion/CreateNewVersionEmbeddedFileModal.vue"),
         "confirm-deletion-modal": () =>
             import(/* webpackChunkName: "document-confirm-item-deletion-modal" */ "../ModalDeleteItem/ModalConfirmDeletion.vue")
     },
     props: {
-        embedded_file: Object
+        embeddedFile: Object
     },
     data() {
         return {
             is_modal_shown: false,
-            show_confirm_deletion_modal: false
+            show_confirm_deletion_modal: false,
+            is_in_large_view: false
         };
     },
     computed: {
-        embedded_title() {
-            return this.embedded_file.title;
-        },
+        ...mapState(["is_embedded_in_large_view"]),
         embedded_content() {
-            if (!this.embedded_file.embedded_file_properties) {
+            if (!this.embeddedFile.embedded_file_properties) {
                 return "";
             }
 
-            return this.embedded_file.embedded_file_properties.content;
+            return this.embeddedFile.embedded_file_properties.content;
         }
     },
     mounted() {
