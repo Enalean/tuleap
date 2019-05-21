@@ -197,16 +197,18 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement {
      *
      * @return string html
      */
-    public function fetchSubmit($submitted_values = array()) {
-        return $this->fetchRecursiveArtifact('fetchSubmit', array($submitted_values));
+    public function fetchSubmit($submitted_values = array())
+    {
+        return $this->fetchRecursiveArtifactForSubmit('fetchSubmit', $submitted_values);
     }
 
     /**
      * Fetch the element for the submit masschange form
      * @return <type>
      */
-    public function fetchSubmitMasschange($submitted_values = array()) {
-        return $this->fetchRecursiveArtifact('fetchSubmitMasschange', array($submitted_values=array()));
+    public function fetchSubmitMasschange($submitted_values = array())
+    {
+        return $this->fetchRecursiveArtifactForSubmit('fetchSubmitMasschange', []);
     }
 
     /**
@@ -216,16 +218,18 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement {
      *
      * @return string html
      */
-    public function fetchArtifact(Tracker_Artifact $artifact, $submitted_values = array()) {
-        return $this->fetchRecursiveArtifact('fetchArtifact', array($artifact, $submitted_values));
+    public function fetchArtifact(Tracker_Artifact $artifact, $submitted_values = array())
+    {
+        return $this->fetchRecursiveArtifact('fetchArtifact', $artifact, $submitted_values);
     }
 
-    public function fetchArtifactForOverlay(Tracker_Artifact $artifact, $submitted_values = array()) {
-        return $this->fetchRecursiveArtifact('fetchArtifactForOverlay', array($artifact, $submitted_values));
+    public function fetchArtifactForOverlay(Tracker_Artifact $artifact, $submitted_values = array())
+    {
+        return $this->fetchRecursiveArtifact('fetchArtifactForOverlay', $artifact, $submitted_values);
     }
 
     public function fetchSubmitForOverlay($submitted_values) {
-        return $this->fetchRecursiveArtifact('fetchSubmitForOverlay', array($submitted_values));
+        return $this->fetchRecursiveArtifactForSubmit('fetchSubmitForOverlay', $submitted_values);
     }
 
     /**
@@ -235,20 +239,38 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement {
      *
      * @return string html
      */
-    public function fetchArtifactReadOnly(Tracker_Artifact $artifact, $submitted_values = array()) {
-        return $this->fetchRecursiveArtifact('fetchArtifactReadOnly', array($artifact, $submitted_values));
+    public function fetchArtifactReadOnly(Tracker_Artifact $artifact, $submitted_values = array())
+    {
+        return $this->fetchRecursiveArtifact('fetchArtifactReadOnly', $artifact, $submitted_values);
     }
 
     /**
      * @see Tracker_FormElement::fetchArtifactCopyMode
      */
-    public function fetchArtifactCopyMode(Tracker_Artifact $artifact, $submitted_values = array()) {
-        return $this->fetchRecursiveArtifact('fetchArtifactCopyMode', array($artifact, $submitted_values));
+    public function fetchArtifactCopyMode(Tracker_Artifact $artifact, $submitted_values = array())
+    {
+        return $this->fetchRecursiveArtifact('fetchArtifactCopyMode', $artifact, $submitted_values);
     }
 
-    protected function fetchRecursiveArtifact($method, $params = array()) {
+    protected function fetchRecursiveArtifactForSubmit($method, $submitted_values)
+    {
         $html = '';
-        $content = $this->getContainerContent($method, $params);
+        $content = $this->getContainerContent($method, [$submitted_values]);
+
+        if (count($content)) {
+            $html .= $this->fetchArtifactPrefix();
+            $html .= $this->fetchArtifactContent($content);
+            $html .= $this->fetchArtifactSuffix();
+        }
+
+        $this->has_been_displayed = true;
+        return $html;
+    }
+
+    protected function fetchRecursiveArtifact($method, Tracker_Artifact $artifact, $submitted_values)
+    {
+        $html = '';
+        $content = $this->getContainerContent($method, [$artifact, $submitted_values]);
 
         if (count($content)) {
             $html .= $this->fetchArtifactPrefix();
