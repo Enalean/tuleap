@@ -172,6 +172,8 @@ function patchEmbeddedFile(
             embedded_properties: {
                 content
             },
+            title: item.title,
+            description: item.description,
             should_lock_file,
             approval_table_action
         })

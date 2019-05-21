@@ -95,6 +95,7 @@ class DocmanItemsTestFilesEmbeddedTest extends DocmanBase
             [
                 'version_title'         => 'My version title',
                 'changelog'             => 'I have changed',
+                'title'                 => 'embedded AT C',
                 'should_lock_file'      => false,
                 'embedded_properties'   => ['content' => 'my new content'],
                 'approval_table_action' => 'copy'
@@ -130,6 +131,7 @@ class DocmanItemsTestFilesEmbeddedTest extends DocmanBase
             [
                 'version_title'         => 'My version title',
                 'changelog'             => 'I have changed',
+                'title'                 => 'embedded AT R',
                 'should_lock_file'      => false,
                 'embedded_properties'   => ['content' => 'my new content'],
                 'approval_table_action' => 'reset'
@@ -165,6 +167,7 @@ class DocmanItemsTestFilesEmbeddedTest extends DocmanBase
             [
                 'version_title'         => 'My version title',
                 'changelog'             => 'I have changed',
+                'title'                 => 'embedded AT E',
                 'should_lock_file'      => false,
                 'embedded_properties'   => ['content' => 'my new content'],
                 'approval_table_action' => 'empty'
@@ -189,6 +192,7 @@ class DocmanItemsTestFilesEmbeddedTest extends DocmanBase
             [
                 'version_title'       => 'My version title',
                 'changelog'           => 'I have changed',
+                'title'               => 'embedded AT C',
                 'should_lock_file'    => false,
                 'embedded_properties' => ['content' => 'my new content']
             ]
@@ -213,6 +217,7 @@ class DocmanItemsTestFilesEmbeddedTest extends DocmanBase
                 'version_title'         => 'My version title',
                 'changelog'             => 'I have changed',
                 'should_lock_file'      => false,
+                'title'                 => 'embedded NO AT',
                 'embedded_properties'   => ['content' => 'my new content'],
                 'approval_table_action' => 'copy'
             ]
@@ -237,6 +242,7 @@ class DocmanItemsTestFilesEmbeddedTest extends DocmanBase
                 'version_title'       => 'My version title',
                 'changelog'           => 'I have changed',
                 'should_lock_file'    => false,
+                'title'               => 'empty',
                 'embedded_properties' => ['content' => 'my new content']
             ]
         );
@@ -264,6 +270,7 @@ class DocmanItemsTestFilesEmbeddedTest extends DocmanBase
                 'version_title'       => 'My version title',
                 'changelog'           => 'I have changed',
                 'should_lock_file'    => false,
+                'title'               => 'embedded L',
                 'embedded_properties' => ['content' => 'my new content']
             ]
         );
@@ -337,6 +344,8 @@ class DocmanItemsTestFilesEmbeddedTest extends DocmanBase
                 'version_title'       => 'My version title',
                 'changelog'           => 'I have changed',
                 'should_lock_file'    => false,
+                'title'               => 'New title',
+                'description'         => 'new description',
                 'embedded_properties' => ['content' => 'my new content']
             ]
         );
@@ -366,7 +375,6 @@ class DocmanItemsTestFilesEmbeddedTest extends DocmanBase
             [
                 'title'               => 'My second embedded',
                 'parent_id'           => $root_id,
-                'type'                => 'embedded',
                 'embedded_properties' => ['content' => 'my new content']
             ]
         );
@@ -392,6 +400,7 @@ class DocmanItemsTestFilesEmbeddedTest extends DocmanBase
             [
                 'version_title'       => 'My version title',
                 'changelog'           => 'I have changed',
+                'title'               => 'My second embedded',
                 'should_lock_file'    => true,
                 'embedded_properties' => ['content' => 'my new content']
             ]
@@ -445,6 +454,122 @@ class DocmanItemsTestFilesEmbeddedTest extends DocmanBase
         $this->assertEquals($copy_after_patch['approval_table']["approval_state"], "Approved");
     }
 
+    /**
+     * @depends testGetRootId
+     */
+    public function testPatchEmbeddedFileWithStatusThrows400WhenStatusIsNotEnabledForProject(int $root_id): void
+    {
+        $query = json_encode(
+            [
+                'title'               => 'Embedded file 403 v2',
+                'parent_id'           => $root_id,
+                'embedded_properties' => ['content' => 'I am content']
+            ]
+        );
+
+        $response1 = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post('docman_folders/' . $root_id . '/embedded_files', null, $query)
+        );
+
+        $this->assertEquals(201, $response1->getStatusCode());
+
+        $embedded_item_response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->get($response1->json()['uri'])
+        );
+        $this->assertEquals(200, $embedded_item_response->getStatusCode());
+        $this->assertEquals('embedded', $embedded_item_response->json()['type']);
+
+        $links_id = $response1->json()['id'];
+
+        $embedded_properties = [
+            'content' => 'https://example.com'
+        ];
+        $put_resource        = json_encode(
+            [
+                'version_title'       => 'My version title',
+                'changelog'           => 'I have changed',
+                'title'               => 'Embedded file 403 v2',
+                'status'              => 'approved',
+                'should_lock_file'    => false,
+                'embedded_properties' => $embedded_properties
+            ]
+        );
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->patch('docman_embedded_files/' . $links_id, null, $put_resource)
+        );
+        $this->assertEquals(400, $response->getStatusCode());
+
+        $response = $this->getResponse(
+            $this->client->get('docman_items/' . $links_id),
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
+        );
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals('embedded', $response->json()['type']);
+        $this->assertEquals(null, $response->json()['lock_info']);
+    }
+
+    /**
+     * @depends testGetRootId
+     */
+    public function testPatchEmbeddedFileWithStatusThrows400WhenObsolescenceDateIsNotEnabledForProject(
+        int $root_id
+    ): void {
+        $query = json_encode(
+            [
+                'title'               => 'Embedded file 403',
+                'parent_id'           => $root_id,
+                'embedded_properties' => ['content' => 'I am content']
+            ]
+        );
+
+        $post_embedded_file_response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post('docman_folders/' . $root_id . '/embedded_files', null, $query)
+        );
+
+        $this->assertEquals(201, $post_embedded_file_response->getStatusCode());
+
+        $links_item_response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->get($post_embedded_file_response->json()['uri'])
+        );
+        $this->assertEquals(200, $links_item_response->getStatusCode());
+        $this->assertEquals('embedded', $links_item_response->json()['type']);
+
+        $links_id = $post_embedded_file_response->json()['id'];
+
+        $embedded_properties = [
+            'content' => 'https://example.com',
+        ];
+        $patch_resource      = json_encode(
+            [
+                'version_title'       => 'My version title',
+                'changelog'           => 'I have changed',
+                'title'               => 'My new embedded with fail obsolescence date',
+                'obsolescence_date'   => '2038-12-31',
+                'should_lock_file'    => false,
+                'embedded_properties' => $embedded_properties
+            ]
+        );
+
+        $patch_embedded_file_repsonse = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->patch('docman_embedded_files/' . $links_id, null, $patch_resource)
+        );
+        $this->assertEquals(400, $patch_embedded_file_repsonse->getStatusCode());
+
+        $patch_embedded_file_repsonse = $this->getResponse(
+            $this->client->get('docman_items/' . $links_id),
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
+        );
+        $this->assertEquals(200, $patch_embedded_file_repsonse->getStatusCode());
+        $this->assertEquals('embedded', $patch_embedded_file_repsonse->json()['type']);
+        $this->assertEquals(null, $patch_embedded_file_repsonse->json()['lock_info']);
+    }
 
     /**
      * Find first item in given array of items which has given title.
