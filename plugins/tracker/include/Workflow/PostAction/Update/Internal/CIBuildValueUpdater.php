@@ -25,18 +25,18 @@ use DataAccessQueryException;
 use Transition;
 use Tuleap\Tracker\Workflow\PostAction\Update\PostActionCollection;
 
-class CIBuildUpdater implements PostActionUpdater
+class CIBuildValueUpdater implements PostActionUpdater
 {
     /**
-     * @var CIBuildRepository
+     * @var CIBuildValueRepository
      */
     private $ci_build_repository;
     /**
-     * @var CIBuildValidator
+     * @var CIBuildValueValidator
      */
     private $validator;
 
-    public function __construct(CIBuildRepository $ci_build_repository, CIBuildValidator $validator)
+    public function __construct(CIBuildValueRepository $ci_build_repository, CIBuildValueValidator $validator)
     {
         $this->ci_build_repository = $ci_build_repository;
         $this->validator           = $validator;

@@ -21,7 +21,7 @@
 namespace Tuleap\Tracker\REST\v1\Workflow\PostAction\Update;
 
 use Tuleap\REST\I18NRestException;
-use Tuleap\Tracker\Workflow\PostAction\Update\FrozenFields;
+use Tuleap\Tracker\Workflow\PostAction\Update\FrozenFieldsValue;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\IncompatibleWorkflowModeException;
 use Tuleap\Tracker\Workflow\Update\PostAction;
 use Workflow;
@@ -82,6 +82,6 @@ class FrozenFieldsJsonParser implements PostActionUpdateJsonParser
             }
         }
 
-        return new FrozenFields(null, $json['field_ids']);
+        return new FrozenFieldsValue(null, $json['field_ids']);
     }
 }

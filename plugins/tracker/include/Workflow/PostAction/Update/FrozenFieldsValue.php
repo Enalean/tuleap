@@ -18,31 +18,44 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Tracker\Workflow\PostAction\Update\Internal;
+namespace Tuleap\Tracker\Workflow\PostAction\Update;
 
-use Transition;
-use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
-use Tuleap\Tracker\Workflow\PostAction\Update\FrozenFields;
+use Tuleap\Tracker\Workflow\PostAction\Update\Internal\PostActionVisitor;
+use Tuleap\Tracker\Workflow\Update\PostAction;
 
-class FrozenFieldsRepository
+final class FrozenFieldsValue implements PostAction
 {
     /**
-     * @var FrozenFieldsDao
+     * @var int|null
      */
-    private $frozen_fields_dao;
+    private $id;
 
-    public function __construct(FrozenFieldsDao $frozen_fields_dao)
+    /**
+     * @var array
+     */
+    private $field_ids;
+
+    public function __construct(?int $id, array $field_ids)
     {
-        $this->frozen_fields_dao = $frozen_fields_dao;
+        $this->id        = $id;
+        $this->field_ids = $field_ids;
     }
 
-    public function create(Transition $transition, FrozenFields $frozen_fields) :  void
+    public function getId(): ?int
     {
-        $this->frozen_fields_dao->createPostActionForTransitionId($transition->getId(), $frozen_fields->getFieldIds());
+        return $this->id;
     }
 
-    public function deleteAllByTransition(Transition $transition) : void
+    /**
+     * @return array
+     */
+    public function getFieldIds(): array
     {
-        $this->frozen_fields_dao->deletePostActionsByTransitionId($transition->getId());
+        return $this->field_ids;
+    }
+
+    public function accept(PostActionVisitor $visitor)
+    {
+        $visitor->visitFrozenFieldsValue($this);
     }
 }

@@ -28,7 +28,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
 use PHPUnit\Framework\TestCase;
 use Tuleap\REST\I18NRestException;
-use Tuleap\Tracker\Workflow\PostAction\Update\CIBuild;
+use Tuleap\Tracker\Workflow\PostAction\Update\CIBuildValue;
 use Tuleap\Tracker\Workflow\PostAction\Update\PostActionCollection;
 use Workflow;
 
@@ -66,7 +66,7 @@ class PostActionCollectionJsonParserTest extends TestCase
         $this->action_parser
             ->shouldReceive('accept')
             ->andReturn(true);
-        $ci_build = new CIBuild(1, "http://example.test");
+        $ci_build = new CIBuildValue(1, "http://example.test");
         $this->action_parser
             ->shouldReceive('parse')
             ->andReturn($ci_build);

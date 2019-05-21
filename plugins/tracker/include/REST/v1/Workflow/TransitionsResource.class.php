@@ -50,12 +50,12 @@ use Tuleap\Tracker\REST\v1\Workflow\PostAction\Update\SetFloatValueJsonParser;
 use Tuleap\Tracker\REST\v1\Workflow\PostAction\Update\SetIntValueJsonParser;
 use Tuleap\Tracker\REST\WorkflowTransitionPOSTRepresentation;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
-use Tuleap\Tracker\Workflow\PostAction\Update\Internal\CIBuildRepository;
-use Tuleap\Tracker\Workflow\PostAction\Update\Internal\CIBuildUpdater;
-use Tuleap\Tracker\Workflow\PostAction\Update\Internal\CIBuildValidator;
-use Tuleap\Tracker\Workflow\PostAction\Update\Internal\FrozenFieldsRepository;
-use Tuleap\Tracker\Workflow\PostAction\Update\Internal\FrozenFieldsUpdater;
-use Tuleap\Tracker\Workflow\PostAction\Update\Internal\FrozenFieldsValidator;
+use Tuleap\Tracker\Workflow\PostAction\Update\Internal\CIBuildValueRepository;
+use Tuleap\Tracker\Workflow\PostAction\Update\Internal\CIBuildValueUpdater;
+use Tuleap\Tracker\Workflow\PostAction\Update\Internal\CIBuildValueValidator;
+use Tuleap\Tracker\Workflow\PostAction\Update\Internal\FrozenFieldsValueRepository;
+use Tuleap\Tracker\Workflow\PostAction\Update\Internal\FrozenFieldsValueUpdater;
+use Tuleap\Tracker\Workflow\PostAction\Update\Internal\FrozenFieldsValueValidator;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\IncompatibleWorkflowModeException;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\InvalidPostActionException;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\PostActionFieldIdValidator;
@@ -495,11 +495,11 @@ class TransitionsResource extends AuthenticatedResource
 
         if (\ForgeConfig::get('sys_should_use_read_only_post_actions')) {
             return new PostActionCollectionUpdater(
-                new CIBuildUpdater(
-                    new CIBuildRepository(
+                new CIBuildValueUpdater(
+                    new CIBuildValueRepository(
                         $this->getCIBuildDao()
                     ),
-                    new CIBuildValidator($ids_validator)
+                    new CIBuildValueValidator($ids_validator)
                 ),
                 new SetDateValueUpdater(
                     new SetDateValueRepository(
@@ -522,21 +522,21 @@ class TransitionsResource extends AuthenticatedResource
                     ),
                     new SetFloatValueValidator($ids_validator, $field_ids_validator, $form_element_factory)
                 ),
-                new FrozenFieldsUpdater(
-                    new FrozenFieldsRepository(
+                new FrozenFieldsValueUpdater(
+                    new FrozenFieldsValueRepository(
                         $this->getFrozenFieldsDao()
                     ),
-                    new FrozenFieldsValidator($form_element_factory, Tracker_RuleFactory::instance())
+                    new FrozenFieldsValueValidator($form_element_factory, Tracker_RuleFactory::instance())
                 )
             );
         }
 
         return new PostActionCollectionUpdater(
-            new CIBuildUpdater(
-                new CIBuildRepository(
+            new CIBuildValueUpdater(
+                new CIBuildValueRepository(
                     $this->getCIBuildDao()
                 ),
-                new CIBuildValidator($ids_validator)
+                new CIBuildValueValidator($ids_validator)
             ),
             new SetDateValueUpdater(
                 new SetDateValueRepository(

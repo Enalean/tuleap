@@ -23,21 +23,21 @@ namespace Tuleap\Tracker\Workflow\PostAction\Update\Internal;
 use Transition;
 use Tuleap\Tracker\Workflow\PostAction\Update\PostActionCollection;
 
-class FrozenFieldsUpdater implements PostActionUpdater
+class FrozenFieldsValueUpdater implements PostActionUpdater
 {
     /**
-     * @var FrozenFieldsRepository
+     * @var FrozenFieldsValueRepository
      */
     private $frozen_fields_repository;
 
     /**
-     * @var FrozenFieldsValidator
+     * @var FrozenFieldsValueValidator
      */
     private $frozen_fields_validator;
 
     public function __construct(
-        FrozenFieldsRepository $frozen_fields_repository,
-        FrozenFieldsValidator $frozen_fields_validator
+        FrozenFieldsValueRepository $frozen_fields_repository,
+        FrozenFieldsValueValidator $frozen_fields_validator
     ) {
         $this->frozen_fields_repository = $frozen_fields_repository;
         $this->frozen_fields_validator = $frozen_fields_validator;

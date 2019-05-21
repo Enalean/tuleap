@@ -24,7 +24,7 @@ namespace Tuleap\Tracker\Workflow\PostAction\Update;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\PostActionVisitor;
 use Tuleap\Tracker\Workflow\Update\PostAction;
 
-final class CIBuild implements PostAction
+final class CIBuildValue implements PostAction
 {
     /**
      * @var int|null
@@ -54,6 +54,6 @@ final class CIBuild implements PostAction
 
     public function accept(PostActionVisitor $visitor)
     {
-        $visitor->visitCIBuild($this);
+        $visitor->visitCIBuildValue($this);
     }
 }

@@ -25,7 +25,7 @@ require_once __DIR__ . '/../../../../../bootstrap.php';
 use Mockery;
 use PHPUnit\Framework\TestCase;
 use Tuleap\REST\I18NRestException;
-use Tuleap\Tracker\Workflow\PostAction\Update\FrozenFields;
+use Tuleap\Tracker\Workflow\PostAction\Update\FrozenFieldsValue;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\IncompatibleWorkflowModeException;
 use Tuleap\Tracker\Workflow\PostAction\Update\SetIntValue;
 use Workflow;
@@ -70,7 +70,7 @@ class FrozenFieldsJsonParserTest extends TestCase
                 "field_ids" => [43],
             ]
         );
-        $expected_action = new FrozenFields(null, [43]);
+        $expected_action = new FrozenFieldsValue(null, [43]);
         $this->assertEquals($expected_action, $frozen_fields_value);
     }
 
@@ -86,7 +86,7 @@ class FrozenFieldsJsonParserTest extends TestCase
                 "field_ids" => [43],
             ]
         );
-        $expected_action = new FrozenFields(null, [43]);
+        $expected_action = new FrozenFieldsValue(null, [43]);
         $this->assertEquals($expected_action, $frozen_fields_value);
     }
 

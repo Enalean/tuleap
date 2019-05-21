@@ -32,7 +32,7 @@ class PostActionCollectionTest extends TestCase
 
     public function testCompareCIBuildActionsToIdentifiesNewActions()
     {
-        $added_action = new CIBuild(null, 'http://example.test');
+        $added_action = new CIBuildValue(null, 'http://example.test');
         $actions      = new PostActionCollection($added_action);
         $existing_ids = Mockery::mock(PostActionIdCollection::class);
         $existing_ids->shouldReceive('contains')->andReturnFalse();
@@ -44,7 +44,7 @@ class PostActionCollectionTest extends TestCase
 
     public function testCompareCIBuildActionsToIdentifiesUpdatedActions()
     {
-        $updated_action = new CIBuild(2, 'http://example.test');
+        $updated_action = new CIBuildValue(2, 'http://example.test');
         $actions        = new PostActionCollection($updated_action);
         $existing_ids = Mockery::mock(PostActionIdCollection::class);
         $existing_ids->shouldReceive('contains')
@@ -58,7 +58,7 @@ class PostActionCollectionTest extends TestCase
 
     public function testCompareCIBuildActionsToThrowsWhenUnknownPostActionId()
     {
-        $unknown_action = new CIBuild(10, 'https://example.com');
+        $unknown_action = new CIBuildValue(10, 'https://example.com');
         $actions        = new PostActionCollection($unknown_action);
         $existing_ids = Mockery::mock(PostActionIdCollection::class);
         $existing_ids->shouldReceive('contains')

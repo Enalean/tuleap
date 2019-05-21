@@ -23,8 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Workflow\PostAction\Update\Internal;
 
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFields;
-use Tuleap\Tracker\Workflow\PostAction\Update\FrozenFields as FrozenFieldsValue;
-use Tuleap\Tracker\Workflow\PostAction\Update\CIBuild;
+use Tuleap\Tracker\Workflow\PostAction\Update\FrozenFieldsValue;
+use Tuleap\Tracker\Workflow\PostAction\Update\CIBuildValue;
 use Tuleap\Tracker\Workflow\PostAction\Update\SetDateValue;
 use Tuleap\Tracker\Workflow\PostAction\Update\SetFloatValue;
 use Tuleap\Tracker\Workflow\PostAction\Update\SetIntValue;
@@ -34,14 +34,14 @@ class PostActionsMapper
     /**
      * Converts from \Transition_PostAction_CIBuild to CIBuild object.
      * Sets the id to null to force the new post-action to be recreated.
-     * @return CIBuild[]
+     * @return CIBuildValue[]
      */
     public function convertToCIBuildWithNullId(\Transition_PostAction_CIBuild ...$ci_builds): array
     {
         $update_ci_builds = [];
         foreach ($ci_builds as $ci_build) {
             // We set $id to null so that all post actions are re-created from scratch in the $to transition
-            $update_ci_builds[] = new CIBuild(null, $ci_build->getJobUrl());
+            $update_ci_builds[] = new CIBuildValue(null, $ci_build->getJobUrl());
         }
         return $update_ci_builds;
     }

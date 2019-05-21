@@ -23,7 +23,7 @@ namespace Tuleap\Tracker\Workflow\PostAction\Update\Internal;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Tuleap\Tracker\Workflow\PostAction\Update\FrozenFields;
+use Tuleap\Tracker\Workflow\PostAction\Update\FrozenFieldsValue;
 
 require_once __DIR__ . '/../../../../../bootstrap.php';
 
@@ -32,7 +32,7 @@ class FrozenFieldsValidatorTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    /** @var FrozenFieldsValidator */
+    /** @var FrozenFieldsValueValidator */
     private $frozen_fields_validator;
 
     /** @var \Tracker_FormElementFactory | Mockery\MockInterface */
@@ -46,7 +46,7 @@ class FrozenFieldsValidatorTest extends TestCase
         $this->form_element_factory    = Mockery::mock(\Tracker_FormElementFactory::class);
         $this->tracker_rule_factory    = Mockery::mock(\Tracker_RuleFactory::class);
 
-        $this->frozen_fields_validator = new FrozenFieldsValidator(
+        $this->frozen_fields_validator = new FrozenFieldsValueValidator(
             $this->form_element_factory,
             $this->tracker_rule_factory
         );
@@ -78,7 +78,7 @@ class FrozenFieldsValidatorTest extends TestCase
             ->with(101)
             ->andReturn([]);
 
-        $frozen_fields_value = new FrozenFields(null, [1,2]);
+        $frozen_fields_value = new FrozenFieldsValue(null, [1,2]);
 
         $tracker  = Mockery::mock(\Tracker::class);
         $tracker->shouldReceive('getId')->andReturn(101);
@@ -107,7 +107,7 @@ class FrozenFieldsValidatorTest extends TestCase
             ->with(101)
             ->andReturn([]);
 
-        $frozen_fields_value = new FrozenFields(null, [1,1,2]);
+        $frozen_fields_value = new FrozenFieldsValue(null, [1,1,2]);
 
         $tracker = Mockery::mock(\Tracker::class);
         $tracker->shouldReceive('getId')->andReturn(101);
@@ -141,7 +141,7 @@ class FrozenFieldsValidatorTest extends TestCase
             ->with(101)
             ->andReturn([]);
 
-        $frozen_fields_value = new FrozenFields(null, [1,3]);
+        $frozen_fields_value = new FrozenFieldsValue(null, [1,3]);
 
         $tracker  = Mockery::mock(\Tracker::class);
         $workflow = Mockery::mock(\Workflow::class);
@@ -179,7 +179,7 @@ class FrozenFieldsValidatorTest extends TestCase
             ->with(101)
             ->andReturn([]);
 
-        $frozen_fields_value = new FrozenFields(null, [1,2]);
+        $frozen_fields_value = new FrozenFieldsValue(null, [1,2]);
 
         $this->expectException(InvalidPostActionException::class);
 
@@ -227,7 +227,7 @@ class FrozenFieldsValidatorTest extends TestCase
                 ]
             ]);
 
-        $frozen_fields_value = new FrozenFields(null, [1,2]);
+        $frozen_fields_value = new FrozenFieldsValue(null, [1,2]);
 
         $this->expectException(InvalidPostActionException::class);
 
