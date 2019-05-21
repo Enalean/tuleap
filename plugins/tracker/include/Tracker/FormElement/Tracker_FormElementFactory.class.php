@@ -633,7 +633,7 @@ class Tracker_FormElementFactory {
 
     /**
      * @param Tracker $tracker
-     * @return array All (multi) selectboxes formElements used by the tracker
+     * @return Tracker_FormElement_Field_List[] All (multi) selectboxes formElements used by the tracker
      */
     public function getUsedListFields($tracker) {
         return $this->getUsedFormElementsByType($tracker, array('sb', 'msb', 'tbl', 'cb', 'rb'));

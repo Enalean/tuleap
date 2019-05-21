@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -20,6 +20,7 @@
  */
 
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueUnchanged;
 use Tuleap\Tracker\FormElement\TransitionListValidator;
 
 abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field implements Tracker_FormElement_Field_Shareable {
@@ -910,7 +911,8 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
 
 
     protected function _fetchFieldMasschange($id, $name, $selected_values) {
-        $html = '';
+        $purifier = Codendi_HTMLPurifier::instance();
+        $html     = '';
         $multiple = ' ';
         $size     = ' ';
         if ($this->isMultiple()) {
@@ -929,10 +931,9 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         }
         $html .= $size . $multiple .'>';
 
-        //if ( $this->fieldHasEnableWorkflow() ) {
-        $html .= '<option value="'.$GLOBALS['Language']->getText('global','unchanged').'" selected="selected">'. $GLOBALS['Language']->getText('global','unchanged') .'</option>';
-        $html .= '<option value="'.Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID.'">'. $GLOBALS['Language']->getText('global','none') .'</option>';
-        //}
+        $html .= '<option value="' . $purifier->purify(BindStaticValueUnchanged::VALUE_ID) . '" selected="selected">' .
+            $GLOBALS['Language']->getText('global', 'unchanged') . '</option>';
+        $html .= '<option value="' . Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID . '">' . $GLOBALS['Language']->getText('global', 'none') . '</option>';
 
         foreach($this->getBind()->getAllValues() as $id => $value) {
                     if (!$value->isHidden()) {

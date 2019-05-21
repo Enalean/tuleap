@@ -1226,7 +1226,16 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
                 }
                 break;
             case 'update-masschange-aids':
-                $masschange_updater = new Tracker_MasschangeUpdater($tracker, $this);
+                $form_element_factory = $this->getFormElementFactory();
+                $masschange_updater   = new Tracker_MasschangeUpdater(
+                    $tracker,
+                    $this,
+                    new Tracker_MasschangeDataValueExtractor($form_element_factory),
+                    new Tracker_RuleFactory(new Tracker_RuleDao()),
+                    $form_element_factory,
+                    Tracker_ArtifactFactory::instance(),
+                    new Tracker_ArtifactDao()
+                );
                 $masschange_updater->updateArtifacts($current_user, $request);
                 break;
             case 'remove-criteria':

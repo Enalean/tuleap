@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,13 +19,26 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class Tracker_MasschangeDataValueExtractor {
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueUnchanged;
 
-    public function getNewValues(array $masschange_data) {
-        $fields_data  = array();
-        foreach($masschange_data as $field_id => $data) {
+class Tracker_MasschangeDataValueExtractor
+{
 
-            if ($this->hasDataChanged($data)) {
+    /**
+     * @var Tracker_FormElementFactory
+     */
+    private $form_element_factory;
+
+    public function __construct(Tracker_FormElementFactory $form_element_factory)
+    {
+        $this->form_element_factory = $form_element_factory;
+    }
+
+    public function getNewValues(array $masschange_data)
+    {
+        $fields_data = [];
+        foreach ($masschange_data as $field_id => $data) {
+            if ($this->hasDataChanged($field_id, $data)) {
                 $fields_data[$field_id] = $data;
             }
         }
@@ -33,10 +46,21 @@ class Tracker_MasschangeDataValueExtractor {
         return $fields_data;
     }
 
-    private function hasDataChanged($data) {
+    private function hasDataChanged(int $field_id, $data): bool
+    {
+        $field = $this->form_element_factory->getFieldById($field_id);
+        if ($field instanceof Tracker_FormElement_Field_List) {
+            return $this->isValueInData($data, (string) BindStaticValueUnchanged::VALUE_ID);
+        }
+
+        return $this->isValueInData($data, $GLOBALS['Language']->getText('global', 'unchanged'));
+    }
+
+    private function isValueInData($data, string $value): bool
+    {
         return (
-            (is_array($data) && ! in_array($GLOBALS['Language']->getText('global','unchanged'), $data)) ||
-            (! is_array($data) && $data !== $GLOBALS['Language']->getText('global','unchanged'))
+            (is_array($data) && ! in_array($value, $data)) ||
+            (! is_array($data) && $data !== $value)
         );
     }
 }

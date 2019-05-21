@@ -709,6 +709,7 @@ class Tracker_RulesManager
             if ($error_occured) {
                 break;
             }
+
             if (isset($values[$source])) {
                 foreach ($dependencies[$source] as $target => $not_used_target) {
                     if ($error_occured) {

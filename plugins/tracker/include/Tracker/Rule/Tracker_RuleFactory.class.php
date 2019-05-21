@@ -78,6 +78,9 @@ class Tracker_RuleFactory {
         return $_artifactrulefactory_instance;
     }
 
+    /**
+     * @return Tracker_Rule_List[]
+     */
     public function getAllListRulesByTrackerWithOrder($tracker_id) {
         $dar = $this->rules_dao->searchByTrackerIdWithOrder($tracker_id);
         $rules = array();
