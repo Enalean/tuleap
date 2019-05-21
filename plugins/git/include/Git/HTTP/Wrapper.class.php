@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,6 +24,10 @@ class Git_HTTP_Wrapper {
      * @var Logger
      */
     private $logger;
+    /**
+     * @var resource|false
+     */
+    private $process = false;
 
     public const CHUNK_LENGTH = 8192;
 
@@ -45,8 +49,8 @@ class Git_HTTP_Wrapper {
         $pipes = array();
         $this->logger->debug('Command: '.$command->getCommand());
         $this->logger->debug('Environment: '.print_r($command->getEnvironment(), true));
-        $process = proc_open($command->getCommand(), $descriptorspec, $pipes, $cwd, $command->getEnvironment());
-        if (is_resource($process)) {
+        $this->process = proc_open($command->getCommand(), $descriptorspec, $pipes, $cwd, $command->getEnvironment());
+        if (is_resource($this->process)) {
             if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 fwrite($pipes[0], file_get_contents('php://input'));
             }
@@ -68,7 +72,21 @@ class Git_HTTP_Wrapper {
             }
             fclose($pipes[1]);
 
-            $return_value = proc_close($process);
+            proc_close($this->process);
         }
+    }
+
+    public function __destruct()
+    {
+        if (! is_resource($this->process)) {
+            return;
+        }
+        proc_terminate($this->process, 15);
+        usleep(1000);
+        $process_information = proc_get_status($this->process);
+        if (isset($process_information['running']) && $process_information['running']) {
+            proc_terminate($this->process, 9);
+        }
+        proc_close($this->process);
     }
 }
