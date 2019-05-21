@@ -1,5 +1,5 @@
 /*
- * Copyright Enalean (c) 2018. All rights reserved.
+ * Copyright Enalean (c) 2018 - present. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -32,9 +32,29 @@ describe("Widget", () => {
     });
 
     describe("Call sums", () => {
-        it("Given a widget with state initialisation, Then we add times, times must change too", () => {
-            let times = [
-                [
+        describe("Given a widget with state initialisation", () => {
+            it("Then we add times, times must change too", () => {
+                let times = [
+                    [
+                        {
+                            artifact: {},
+                            project: {},
+                            minutes: 20
+                        },
+                        {
+                            artifact: {},
+                            project: {},
+                            minutes: 20
+                        }
+                    ]
+                ];
+
+                mutations.loadAChunkOfTimes(state, [times, times.length]);
+                expect(getters.get_formatted_total_sum(state)).toBe("00:40");
+            });
+
+            it("Then we add times, times must change too", () => {
+                let times = [
                     {
                         artifact: {},
                         project: {},
@@ -45,28 +65,10 @@ describe("Widget", () => {
                         project: {},
                         minutes: 20
                     }
-                ]
-            ];
+                ];
 
-            mutations.loadAChunkOfTimes(state, [times, times.length]);
-            expect(getters.get_formatted_total_sum(state)).toBe("00:40");
-        });
-
-        it("Given a widget with state initialisation, Then we add times, times must change too", () => {
-            let times = [
-                {
-                    artifact: {},
-                    project: {},
-                    minutes: 20
-                },
-                {
-                    artifact: {},
-                    project: {},
-                    minutes: 20
-                }
-            ];
-
-            expect(getters.get_formatted_aggregated_time()(times)).toBe("00:40");
+                expect(getters.get_formatted_aggregated_time()(times)).toBe("00:40");
+            });
         });
     });
 });

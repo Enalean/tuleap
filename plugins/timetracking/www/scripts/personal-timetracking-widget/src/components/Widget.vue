@@ -27,14 +27,12 @@
 
 <script>
 import { mapState } from "vuex";
-import store from "../store/index.js";
 import WidgetReadingMode from "./WidgetReadingMode.vue";
 import WidgetWritingMode from "./WidgetWritingMode.vue";
 import WidgetArtifactTable from "./WidgetArtifactTable.vue";
 
 export default {
     name: "Widget",
-    store,
     components: {
         WidgetReadingMode,
         WidgetWritingMode,

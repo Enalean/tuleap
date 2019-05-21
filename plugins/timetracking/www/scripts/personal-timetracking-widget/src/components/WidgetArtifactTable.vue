@@ -19,11 +19,11 @@
 
 <template>
     <div class="timetracking-artifacts-table">
-        <div v-if="has_rest_error" class="tlp-alert-danger">
+        <div v-if="has_rest_error" class="tlp-alert-danger" data-test="alert-danger">
             {{ error }}
         </div>
-        <div v-if="is_loading" class="timetracking-loader"></div>
-        <table v-if="can_results_be_displayed" class="tlp-table">
+        <div v-if="is_loading" class="timetracking-loader" data-test="timetracking-loader"></div>
+        <table v-if="can_results_be_displayed" class="tlp-table" data-test="artifact-table">
             <thead>
                 <tr>
                     <th v-translate> Artifact </th>
@@ -42,7 +42,7 @@
             </thead>
             <tbody>
                 <tr v-if="! has_data_to_display">
-                    <td colspan="4" class="tlp-table-cell-empty" v-translate>
+                    <td colspan="4" class="tlp-table-cell-empty" v-translate data-test="empty-tab">
                         No tracked time have been found for this period
                     </td>
                 </tr>
@@ -51,7 +51,7 @@
                                     v-bind:time-data="time"
                 />
             </tbody>
-            <tfoot v-if="has_data_to_display">
+            <tfoot v-if="has_data_to_display" data-test="table-foot">
                 <tr>
                     <th></th>
                     <th></th>
@@ -63,6 +63,7 @@
         <div class="tlp-pagination">
             <button
                 class="tlp-button-primary tlp-button-outline tlp-button-small"
+                data-test="load-more"
                 type="button"
                 v-if="can_load_more"
                 v-on:click="loadMore"
@@ -87,7 +88,7 @@ export default {
         };
     },
     computed: {
-        ...mapState(["reading_mode", "error_message", "times", "is_loading"]),
+        ...mapState(["error_message", "times", "is_loading"]),
         ...mapGetters([
             "get_formatted_total_sum",
             "has_rest_error",

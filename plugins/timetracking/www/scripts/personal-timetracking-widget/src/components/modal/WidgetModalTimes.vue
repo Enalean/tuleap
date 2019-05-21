@@ -28,9 +28,9 @@
                 &times;
             </div>
         </div>
-        <widget-modal-content v-if="current_artifact"/>
+        <widget-modal-content v-if="current_artifact" data-test="modal-content"/>
         <div class="tlp-modal-footer tlp-modal-footer-large">
-            <button v-on:click="reloadTimes" type="button" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">
+            <button type="button" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">
                 <translate> Close </translate>
             </button>
         </div>

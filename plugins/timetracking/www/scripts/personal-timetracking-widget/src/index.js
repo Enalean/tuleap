@@ -21,6 +21,7 @@ import Vue from "vue";
 import GetTextPlugin from "vue-gettext";
 import french_translations from "../../site-content/po/fr.po";
 import Widget from "./components/Widget.vue";
+import { createStore } from "./store/index.js";
 
 document.addEventListener("DOMContentLoaded", () => {
     const vue_mount_point = document.getElementById("personal-timetracking-widget");
@@ -34,11 +35,14 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         const locale = document.body.dataset.userLocale;
-        Vue.config.language = locale;
         const user_id = parseInt(document.body.dataset.userId, 10);
+        Vue.config.language = locale;
 
         const rootComponent = Vue.extend(Widget);
+        const store = createStore();
+
         new rootComponent({
+            store,
             propsData: {
                 userId: user_id
             }
