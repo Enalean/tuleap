@@ -23,6 +23,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDao;
+use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDetector;
+use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsRetriever;
+use Tuleap\Tracker\Workflow\SimpleMode\TransitionRetriever;
+
 class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Container
 {
 
@@ -46,7 +51,44 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
         }
     }
 
-    protected function fetchArtifactPrefix() {
+    protected function fetchRecursiveArtifact($method, Tracker_Artifact $artifact, $submitted_values)
+    {
+        $html = '';
+        $content = $this->getContainerContent($method, [$artifact, $submitted_values]);
+
+        if (count($content)) {
+            $extra_class = '';
+            if ($this->getHiddenFieldsetsDetector()->isFieldsetHidden($artifact, $this) &&
+                ForgeConfig::get('sys_should_use_hidden_fieldsets_post_actions'))
+            {
+                $extra_class = 'tracker_artifact_fieldset_hidden';
+            }
+
+            $html .= $this->fetchArtifactPrefix($extra_class);
+            $html .= $this->fetchArtifactContent($content);
+            $html .= $this->fetchArtifactSuffix();
+        }
+
+        $this->has_been_displayed = true;
+        return $html;
+    }
+
+    private function getHiddenFieldsetsDetector() : HiddenFieldsetsDetector
+    {
+        return new HiddenFieldsetsDetector(
+            new TransitionRetriever(
+                new Workflow_TransitionDao(),
+                TransitionFactory::instance()
+            ),
+            new HiddenFieldsetsRetriever(
+                new HiddenFieldsetsDao(),
+                Tracker_FormElementFactory::instance()
+            )
+        );
+    }
+
+    protected function fetchArtifactPrefix($extra_class = '')
+    {
         $hp           = Codendi_HTMLPurifier::instance();
         $current_user = UserManager::instance()->getCurrentUser();
         $always_collapsed      = '';
@@ -56,8 +98,10 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
             $always_collapsed = 'active';
         }
 
+        $purified_extra_class = $hp->purify($extra_class);
+
         $html  = '';
-        $html .= '<fieldset class="tracker_artifact_fieldset">';
+        $html .= "<fieldset class=\"tracker_artifact_fieldset $purified_extra_class\">";
         $html .= '<legend title="'. $hp->purify($this->getDescription(), CODENDI_PURIFIER_CONVERT_HTML) .'" 
                           class="'. Toggler::getClassName('fieldset_'. $this->getId(), $fieldset_is_expanded, true) .'"
                           id="fieldset_'. $this->getId() .'"

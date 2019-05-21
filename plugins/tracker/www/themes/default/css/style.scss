@@ -983,6 +983,10 @@ select.tracker-report-expert-allowed-fields {
     border-radius: 3px;
     margin-bottom: 20px;
     padding: 0 0 1px;
+
+    &.tracker_artifact_fieldset_hidden {
+        display: none;
+    }
 }
 
 .tracker_artifact_fieldset legend {

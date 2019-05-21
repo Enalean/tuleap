@@ -107,6 +107,8 @@ DROP TABLE IF EXISTS plugin_tracker_webhook_log;
 DROP TABLE IF EXISTS plugin_tracker_workflow_postactions_frozen_fields;
 DROP TABLE IF EXISTS plugin_tracker_workflow_postactions_frozen_fields_value;
 DROP TABLE IF EXISTS plugin_tracker_file_upload;
+DROP TABLE IF EXISTS plugin_tracker_workflow_postactions_hidden_fieldsets;
+DROP TABLE IF EXISTS plugin_tracker_workflow_postactions_hidden_fieldsets_value;
 
 DELETE FROM permissions WHERE permission_type LIKE 'PLUGIN_TRACKER_%';
 DELETE FROM permissions_values WHERE permission_type LIKE 'PLUGIN_TRACKER_%';

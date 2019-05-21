@@ -462,6 +462,15 @@ class Tracker_FormElementFactory {
         return $field;
     }
 
+    public function getFieldsetById($id)
+    {
+        $fieldset = $this->getFormElementById($id);
+        if (! is_a($fieldset, 'Tracker_FormElement_Container_Fieldset')) {
+            $fieldset = null;
+        }
+        return $fieldset;
+    }
+
     /**
      * @return Tracker_FormElement_Field_Shareable or null
      */
