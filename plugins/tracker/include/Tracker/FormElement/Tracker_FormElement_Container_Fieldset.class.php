@@ -1,7 +1,7 @@
 <?php
 /**
+ * Copyright Enalean (c) 2016 - Present. All rights reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright Enalean (c) 2016. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -80,14 +80,6 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
         $html = '</div>';
         $html .= '</fieldset>';
         return $html;
-    }
-
-    protected function fetchArtifactReadOnlyPrefix() {
-        return $this->fetchArtifactPrefix();
-    }
-
-    protected function fetchArtifactReadOnlySuffix() {
-        return $this->fetchArtifactSuffix();
     }
 
     protected function fetchMailArtifactPrefix($format) {
