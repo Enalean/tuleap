@@ -22,10 +22,11 @@ declare(strict_types = 1);
 
 namespace Tuleap\Docman\REST\v1\Files;
 
-use Docman_LockFactory;
 use Luracast\Restler\RestException;
 use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\Lock\LockChecker;
+use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataObsolescenceDateRetriever;
+use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
 use Tuleap\Docman\Upload\UploadCreationConflictException;
 use Tuleap\Docman\Upload\UploadCreationFileMismatchException;
 use Tuleap\Docman\Upload\UploadMaxSizeExceededException;
@@ -38,10 +39,6 @@ class DocmanItemFileUpdator
      */
     private $approval_table_retriever;
     /**
-     * @var Docman_LockFactory
-     */
-    private $lock_factory;
-    /**
      * @var VersionToUploadCreator
      */
     private $creator;
@@ -49,42 +46,66 @@ class DocmanItemFileUpdator
      * @var LockChecker
      */
     private $lock_checker;
+    /**
+     * @var ItemStatusMapper
+     */
+    private $status_mapper;
+    /**
+     * @var HardcodedMetadataObsolescenceDateRetriever
+     */
+    private $date_retriever;
 
     public function __construct(
         ApprovalTableRetriever $approval_table_retriever,
-        Docman_LockFactory $lock_factory,
         VersionToUploadCreator $creator,
-        LockChecker $lock_checker
+        LockChecker $lock_checker,
+        ItemStatusMapper $status_mapper,
+        HardcodedMetadataObsolescenceDateRetriever $date_retriever
     ) {
-        $this->approval_table_retriever = $approval_table_retriever;
-        $this->lock_factory             = $lock_factory;
-        $this->creator                  = $creator;
-        $this->lock_checker             = $lock_checker;
+        $this->approval_table_retriever  = $approval_table_retriever;
+        $this->creator                   = $creator;
+        $this->lock_checker              = $lock_checker;
+        $this->status_mapper             = $status_mapper;
+        $this->date_retriever            = $date_retriever;
     }
 
     /**
-     * @throws \Tuleap\Docman\REST\v1\ExceptionItemIsLockedByAnotherUser
-     * @throws UploadMaxSizeExceededException
+     * @return CreatedItemFilePropertiesRepresentation
      * @throws RestException
+     * @throws \Tuleap\Docman\REST\v1\ExceptionItemIsLockedByAnotherUser
+     * @throws \Tuleap\Docman\REST\v1\Metadata\HardCodedMetadataException
      */
     public function updateFile(
         \Docman_Item $item,
         \PFUser $user,
         DocmanFilesPATCHRepresentation $patch_representation,
-        \DateTimeImmutable $time
+        \DateTimeImmutable $current_time
     ): CreatedItemFilePropertiesRepresentation {
         $this->lock_checker->checkItemIsLocked($item, $user);
+
+        $status_id = $this->status_mapper->getItemStatusIdFromItemStatusString(
+            $patch_representation->status
+        );
+
+        $obsolescence_date_time_stamp = $obsolescence_date_time_stamp = $this->date_retriever->getTimeStampOfDate(
+            $patch_representation->obsolescence_date,
+            $current_time
+        );
 
         try {
             $document_to_upload = $this->creator->create(
                 $item,
                 $user,
-                $time,
+                $current_time,
                 $patch_representation->version_title,
                 $patch_representation->change_log,
                 $patch_representation->file_properties->file_name,
                 $patch_representation->file_properties->file_size,
                 $patch_representation->should_lock_file,
+                $status_id,
+                $obsolescence_date_time_stamp,
+                $patch_representation->title,
+                $patch_representation->description,
                 $patch_representation->approval_table_action
             );
         } catch (UploadCreationConflictException $exception) {

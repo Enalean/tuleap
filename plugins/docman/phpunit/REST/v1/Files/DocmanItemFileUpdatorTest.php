@@ -22,12 +22,15 @@ declare(strict_types = 1);
 
 namespace Tuleap\Docman\REST\v1\Files;
 
+use DateTimeZone;
 use Docman_Item;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\Lock\LockChecker;
+use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataObsolescenceDateRetriever;
+use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
 use Tuleap\Docman\Upload\Version\VersionToUpload;
 use Tuleap\Docman\Upload\Version\VersionToUploadCreator;
 
@@ -43,10 +46,6 @@ class DocmanItemFileUpdatorTest extends TestCase
      */
     private $creator;
     /**
-     * @var \Docman_LockFactory|Mockery\MockInterface
-     */
-    private $lock_factory;
-    /**
      * @var DocmanItemFileUpdator
      */
     private $updator;
@@ -55,21 +54,31 @@ class DocmanItemFileUpdatorTest extends TestCase
      * @var Mockery\MockInterface|ApprovalTableRetriever
      */
     private $approval_table_retriever;
+    /**
+     * @var Mockery\MockInterface|ItemStatusMapper
+     */
+    private $status_mapper;
+    /**
+     * @var Mockery\MockInterface|HardcodedMetadataObsolescenceDateRetriever
+     */
+    private $date_retriever;
 
     protected function setUp() : void
     {
         parent::setUp();
 
-        $this->approval_table_retriever = Mockery::mock(ApprovalTableRetriever::class);
-        $this->lock_factory             = Mockery::mock(\Docman_LockFactory::class);
-        $this->creator                  = Mockery::mock(VersionToUploadCreator::class);
-        $this->lock_checker             = Mockery::mock(LockChecker::class);
+        $this->approval_table_retriever  = Mockery::mock(ApprovalTableRetriever::class);
+        $this->creator                   = Mockery::mock(VersionToUploadCreator::class);
+        $this->lock_checker              = Mockery::mock(LockChecker::class);
+        $this->status_mapper             = Mockery::mock(ItemStatusMapper::class);
+        $this->date_retriever            = Mockery::mock(HardcodedMetadataObsolescenceDateRetriever::class);
 
         $this->updator = new DocmanItemFileUpdator(
             $this->approval_table_retriever,
-            $this->lock_factory,
             $this->creator,
-            $this->lock_checker
+            $this->lock_checker,
+            $this->status_mapper,
+            $this->date_retriever
         );
     }
 
@@ -82,12 +91,18 @@ class DocmanItemFileUpdatorTest extends TestCase
                                        ->with($item)
                                        ->andReturn(null);
 
+        $date                        = new \DateTimeImmutable();
+        $date                        = $date->setTimezone(new DateTimeZone('GMT+1'));
+        $date                        = $date->setTime(0, 0, 0);
+        $obsolescence_date           = $date->modify('+1 day');
+        $obsolescence_date_formatted = $obsolescence_date->format('Y-m-d');
         $this->lock_checker->shouldReceive('checkItemIsLocked');
 
-        $this->lock_factory->shouldReceive('getLockInfoForItem')
-                           ->with($item)
-                           ->andReturn(null);
+        $this->status_mapper->shouldReceive('getItemStatusIdFromItemStatusString')->with('rejected')->andReturn(103);
 
+        $this->date_retriever->shouldReceive('getTimeStampOfDate')->withArgs(
+            [$obsolescence_date_formatted, $date]
+        )->andReturn($obsolescence_date->getTimestamp());
 
         $representation                             = new DocmanFilesPATCHRepresentation();
         $representation->change_log                 = 'changelog';
@@ -97,14 +112,14 @@ class DocmanItemFileUpdatorTest extends TestCase
         $representation->file_properties->file_name = 'file';
         $representation->file_properties->file_size = 0;
         $representation->approval_table_action      = 'copy';
+        $representation->status                     = 'rejected';
+        $representation->obsolescence_date          = $obsolescence_date_formatted;
 
-        $version_id = 1;
+        $version_id        = 1;
         $version_to_upload = new VersionToUpload($version_id);
         $this->creator->shouldReceive('create')->once()->andReturn($version_to_upload);
 
-        $time = new \DateTimeImmutable();
-
-        $created_version_representation = $this->updator->updateFile($item, $user, $representation, $time);
+        $created_version_representation = $this->updator->updateFile($item, $user, $representation, $date);
 
         $this->assertEquals("/uploads/docman/version/1", $created_version_representation->upload_href);
     }

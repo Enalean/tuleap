@@ -174,6 +174,7 @@ final class VersionUploadFinisher implements TusFinisherDataStore
                 }
 
                 $next_version_id = (int) $this->version_factory->getNextVersionNumber($item);
+                $item_id         = (int)$item->getId();
 
                 /*
                  * Some tables of the docman plugin relies on the MyISAM engine so the DB transaction
@@ -183,19 +184,20 @@ final class VersionUploadFinisher implements TusFinisherDataStore
                  */
                 $file_path = $this->docman_file_storage->copy(
                     $uploaded_document_path,
-                    $item->getTitle(),
+                    $upload_row['title'],
                     $item->getGroupId(),
-                    $item->getId(),
+                    $item_id,
                     $next_version_id
                 );
                 if ($file_path === false) {
                     throw new \RuntimeException('Could not copy uploaded file for item #' . $item->getId() . ' of upload #' . $upload_id);
                 }
 
+
                 $current_time             = (new \DateTimeImmutable)->getTimestamp();
                 $has_version_been_created = $this->version_factory->create(
                     [
-                        'item_id'   => $item->getId(),
+                        'item_id'   => $item_id,
                         'number'    => $next_version_id,
                         'user_id'   => $upload_row['user_id'],
                         'label'     => $upload_row['version_title'],
@@ -216,15 +218,21 @@ final class VersionUploadFinisher implements TusFinisherDataStore
 
                 if (! $has_version_been_created) {
                     \unlink($file_path);
-                    $item_id = (int) $item->getId();
                     throw new \RuntimeException("Not able to create a new version for item #$item_id from upload #$upload_id");
                 }
 
-                $last_update_date_change = $this->docman_item_factory->update(['id' => $item->getId()]);
+                $last_update_date_change = $this->docman_item_factory->update(
+                    [
+                        'id'                => $item_id,
+                        'title'             => $upload_row['title'],
+                        'description'       => $upload_row['description'],
+                        'obsolescence_date' => $upload_row['obsolescence_date'],
+                        'status'            => $upload_row['status']
+                    ]
+                );
                 if (! $last_update_date_change) {
                     \unlink($file_path);
                     $this->version_factory->deleteSpecificVersion($item, $next_version_id);
-                    $item_id = (int)$item->getId();
                     throw new \RuntimeException("Not able to update last update date for item #$item_id from upload #$upload_id");
                 }
 

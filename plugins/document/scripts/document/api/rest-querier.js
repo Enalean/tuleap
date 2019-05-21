@@ -114,6 +114,8 @@ async function createNewVersion(
         body: JSON.stringify({
             version_title,
             change_log,
+            title: item.title,
+            description: item.description,
             file_properties: {
                 file_name: dropped_file.name,
                 file_size: dropped_file.size

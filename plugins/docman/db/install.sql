@@ -435,6 +435,10 @@ CREATE TABLE plugin_docman_new_version_upload(
     filesize INT(11) UNSIGNED NULL,
     is_file_locked BOOL NOT NULL,
     approval_table_action VARCHAR(6) NULL,
+    status TINYINT(4) DEFAULT 100 NOT NULL,
+    obsolescence_date INT(11) DEFAULT 0 NOT NULL,
+    title varchar(255) NULL,
+    description TEXT NULL,
     INDEX idx_expiration_date (expiration_date),
     INDEX idx_item_id (item_id)
 ) ENGINE=InnoDB;

@@ -71,6 +71,10 @@ class VersionToUploadCreatorTest extends TestCase
             'filename',
             123456,
             $is_file_locked,
+            101,
+            155815815,
+            'My new title',
+            'new description',
             'copy'
         );
 
@@ -104,6 +108,10 @@ class VersionToUploadCreatorTest extends TestCase
             'filename',
             123456,
             $is_file_locked,
+            101,
+            155815815,
+            'My new title',
+            'new description',
             'copy'
         );
 
@@ -139,6 +147,10 @@ class VersionToUploadCreatorTest extends TestCase
             'filename',
             123456,
             $is_file_locked,
+            101,
+            155815815,
+            'My new title',
+            'new description',
             'empty'
         );
     }
@@ -172,6 +184,10 @@ class VersionToUploadCreatorTest extends TestCase
             'filename2',
             789,
             $is_file_locked,
+            101,
+            155815815,
+            'My new title',
+            'new description',
             'reset'
         );
     }
@@ -197,6 +213,10 @@ class VersionToUploadCreatorTest extends TestCase
             'filename',
             2,
             $is_file_locked,
+            101,
+            155815815,
+            'My new title',
+            'new description',
             'reset'
         );
     }
