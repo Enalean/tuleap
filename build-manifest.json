@@ -41,6 +41,10 @@
         "project-admin": {
             "src": "src/www/scripts/project/admin",
             "po": "src/www/scripts/project/po"
+        },
+        "rich-text-editor": {
+            "src": "src/www/scripts/tuleap/ckeditor",
+            "po": "src/www/scripts/tuleap/ckeditor/po"
         }
     },
     "gettext-vue": {
