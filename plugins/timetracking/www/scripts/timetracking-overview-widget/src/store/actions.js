@@ -98,11 +98,20 @@ async function showRestError(context, rest_error) {
 export async function loadTimes(context) {
     context.commit("setIsLoading", true);
 
-    const times = await getTimesFromReport(
-        context.state.report_id,
-        context.state.start_date,
-        context.state.end_date
-    );
+    const times = await getTimesWithoutNewParameters(context);
+
+    context.commit("setTrackersTimes", times);
+    context.commit("setIsLoading", false);
+}
+
+export async function reloadTimetrackingOverviewTimes(context) {
+    context.commit("setIsLoading", true);
+    let times = null;
+    if (context.state.trackers_ids.length > 0) {
+        times = await getTimesWithNewParameters(context);
+    } else {
+        times = await getTimesWithoutNewParameters(context);
+    }
 
     context.commit("setTrackersTimes", times);
     context.commit("setIsLoading", false);
@@ -112,17 +121,29 @@ export async function loadTimesWithNewParameters(context) {
     context.commit("setIsLoading", true);
     context.commit("setTrackersIds");
 
-    const times = await getTimes(
-        context.state.report_id,
-        context.state.trackers_ids,
-        context.state.start_date,
-        context.state.end_date
-    );
+    const times = await getTimesWithNewParameters(context);
 
     context.commit("toggleReadingMode");
     context.commit("setIsReportSave", false);
     context.commit("setTrackersTimes", times);
     context.commit("setIsLoading", false);
+}
+
+function getTimesWithNewParameters(context) {
+    return getTimes(
+        context.state.report_id,
+        context.state.trackers_ids,
+        context.state.start_date,
+        context.state.end_date
+    );
+}
+
+function getTimesWithoutNewParameters(context) {
+    return getTimesFromReport(
+        context.state.report_id,
+        context.state.start_date,
+        context.state.end_date
+    );
 }
 
 export async function setPreference(context) {
