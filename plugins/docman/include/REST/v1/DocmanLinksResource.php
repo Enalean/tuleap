@@ -35,8 +35,7 @@ use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\ApprovalTable\ApprovalTableUpdateActionChecker;
-use Tuleap\Docman\ApprovalTable\Exceptions\ItemHasApprovalTableButNoApprovalActionException;
-use Tuleap\Docman\ApprovalTable\Exceptions\ItemHasNoApprovalTableButHasApprovalActionException;
+use Tuleap\Docman\ApprovalTable\ApprovalTableException;
 use Tuleap\Docman\DeleteFailedException;
 use Tuleap\Docman\REST\v1\Links\DocmanLinkPATCHRepresentation;
 use Tuleap\Docman\REST\v1\Links\DocmanLinksValidityChecker;
@@ -147,15 +146,10 @@ class DocmanLinksResource extends AuthenticatedResource
                 403,
                 dgettext('tuleap-docman', 'Document is locked by another user.')
             );
-        } catch (ItemHasApprovalTableButNoApprovalActionException $exception) {
+        } catch (ApprovalTableException $exception) {
             throw new I18NRestException(
                 400,
-                $exception->getMessage()
-            );
-        } catch (ItemHasNoApprovalTableButHasApprovalActionException $exception) {
-            throw new I18NRestException(
-                400,
-                $exception->getMessage()
+                $exception->getI18NExceptionMessage()
             );
         } catch (Metadata\HardCodedMetadataException $e) {
             throw new I18NRestException(

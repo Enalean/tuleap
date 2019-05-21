@@ -34,8 +34,7 @@ use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Docman\Actions\OwnerRetriever;
 use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\ApprovalTable\ApprovalTableUpdateActionChecker;
-use Tuleap\Docman\ApprovalTable\Exceptions\ItemHasApprovalTableButNoApprovalActionException;
-use Tuleap\Docman\ApprovalTable\Exceptions\ItemHasNoApprovalTableButHasApprovalActionException;
+use Tuleap\Docman\ApprovalTable\ApprovalTableException;
 use Tuleap\Docman\DeleteFailedException;
 use Tuleap\Docman\Metadata\MetadataEventProcessor;
 use Tuleap\Docman\REST\v1\Files\CreatedItemFilePropertiesRepresentation;
@@ -246,24 +245,10 @@ class DocmanFilesResource extends AuthenticatedResource
                 400,
                 $exception->getMessage()
             );
-        } catch (ItemHasApprovalTableButNoApprovalActionException $exception) {
+        } catch (ApprovalTableException $exception) {
             throw new I18NRestException(
                 400,
-                sprintf(
-                    dgettext(
-                        'tuleap-docman',
-                        '%s has an approval table, you must provide an option to have approval table on new version creation.'
-                    ),
-                    $item->title
-                )
-            );
-        } catch (ItemHasNoApprovalTableButHasApprovalActionException $exception) {
-            throw new I18NRestException(
-                400,
-                dgettext(
-                    'tuleap-docman',
-                    'Impossible to update a file which already has an approval table without approval action.'
-                )
+                $exception->getI18NExceptionMessage()
             );
         } catch (Metadata\HardCodedMetadataException $e) {
             throw new I18NRestException(
@@ -404,24 +389,10 @@ class DocmanFilesResource extends AuthenticatedResource
                 400,
                 $exception->getMessage()
             );
-        } catch (ItemHasApprovalTableButNoApprovalActionException $exception) {
+        } catch (ApprovalTableException $exception) {
             throw new I18NRestException(
                 400,
-                sprintf(
-                    dgettext(
-                        'tuleap-docman',
-                        '%s has an approval table, you must provide an option to have approval table on new version creation.'
-                    ),
-                    $item->title
-                )
-            );
-        } catch (ItemHasNoApprovalTableButHasApprovalActionException $exception) {
-            throw new I18NRestException(
-                400,
-                dgettext(
-                    'tuleap-docman',
-                    'Impossible to update a file which already has an approval table without approval action.'
-                )
+                $exception->getI18NExceptionMessage()
             );
         }
     }

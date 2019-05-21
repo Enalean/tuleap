@@ -17,7 +17,7 @@ msgid ""
 "%s does not have an approval table. The parameter \"approval_table_action\" "
 "must not be present."
 msgstr ""
-"%s n'a pasde table d'approbation. Le paramètre \"approval_table_action\" ne "
+"%s n'a pas de table d'approbation. Le paramètre \"approval_table_action\" ne "
 "doit pas être fourni."
 
 #, php-format
@@ -29,14 +29,6 @@ msgstr ""
 "%s a une table d'approbation, vous devez renseigner le paramètre  "
 "\"approval_table_action\" pour choisir l'option de la création de la table à "
 "la création de la version (valeurs possibles : copy,reset,empty)"
-
-#, php-format
-msgid ""
-"%s has an approval table, you must provide an option to have approval table "
-"on new version creation."
-msgstr ""
-"%s a une table d'approbation, vous devez renseigner une option pour avoir "
-"une table d'approbation lors de la création de la  nouvelle version"
 
 msgid "An error occurred during the update of the max file size"
 msgstr ""
@@ -100,13 +92,6 @@ msgstr "Permissions globales"
 
 msgid "Granted groups"
 msgstr "Groupes autorisés"
-
-msgid ""
-"Impossible to update a file which already has an approval table without "
-"approval action."
-msgstr ""
-"Impossible de mettre à jour un fichier ayant déjà une table d'approbation "
-"sans renseigner l'action d'approbation"
 
 msgid "Initial version"
 msgstr "Version initiale"
