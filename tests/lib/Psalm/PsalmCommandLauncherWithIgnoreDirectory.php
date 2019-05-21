@@ -33,14 +33,14 @@ final class PsalmCommandLauncherWithIgnoreDirectory
      */
     private $ignore_directory;
     /**
-     * @var callable
+     * @var ShellPassthrough
      */
     private $shell_passthrough;
 
     public function __construct(
         string $temporary_directory,
         PsalmIgnoreDirectory $ignore_directory,
-        callable $shell_passthrough
+        ShellPassthrough $shell_passthrough
     ) {
         $this->temporary_directory = $temporary_directory;
         $this->ignore_directory    = $ignore_directory;
@@ -87,10 +87,9 @@ final class PsalmCommandLauncherWithIgnoreDirectory
             $parameters[] = str_replace('{config_path}', escapeshellarg($temporary_config_path), $parameter);
         }
 
-        $return_value = 0;
-        ($this->shell_passthrough)(__DIR__ . "/../../../$command " . implode(' ', $parameters), $return_value);
+        $exit_code = ($this->shell_passthrough)(__DIR__ . "/../../../$command " . implode(' ', $parameters));
         @unlink($temporary_config_path);
-        return $return_value;
+        return $exit_code;
     }
 
     private function isPsalmCommand(string $command) : bool

@@ -67,12 +67,18 @@ def runJavascriptCodingStandards() {
     sh 'docker run --rm -v $WORKSPACE/sources:/sources:ro $DOCKER_REGISTRY/prettier-checker "**/*.{js,vue}"'
 }
 
-def runPsalm(String configPath) {
+def runPsalm(String configPath, String filesToAnalyze) {
     dir ('sources') {
-        sh """
-        mkdir -p ../results/psalm/
-        scl enable php73 "src/vendor/bin/psalm --show-info=false --config='${configPath}' --report=../results/psalm/report.txt"
-        """
+        if (filesToAnalyze == '') {
+            sh """
+            mkdir -p ../results/psalm/
+            scl enable php73 "src/vendor/bin/psalm --show-info=false --config='${configPath}' --report=../results/psalm/checkstyle.xml"
+            """
+        } else {
+            sh """
+            scl enable php73 "tests/psalm/psalm-ci-launcher.php --config='${configPath}' --report-folder=../results/psalm/ ${filesToAnalyze}"
+            """
+        }
     }
 }
 

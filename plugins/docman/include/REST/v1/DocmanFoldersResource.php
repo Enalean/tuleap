@@ -178,7 +178,7 @@ class DocmanFoldersResource extends AuthenticatedResource
                 400,
                 sprintf(
                     dgettext('tuleap-docman', 'The status "%s" is invalid.'),
-                    $files_representation->status
+                    (string) $files_representation->status
                 )
             );
         } catch (Metadata\StatusNotFoundNullException $e) {
@@ -239,7 +239,7 @@ class DocmanFoldersResource extends AuthenticatedResource
                 400,
                 sprintf(
                     dgettext('tuleap-docman', 'The status "%s" is invalid.'),
-                    $folder_representation->status
+                    (string) $folder_representation->status
                 )
             );
         } catch (Metadata\StatusNotFoundNullException $e) {
@@ -362,7 +362,7 @@ class DocmanFoldersResource extends AuthenticatedResource
                 400,
                 sprintf(
                     dgettext('tuleap-docman', 'The status "%s" is invalid.'),
-                    $empty_representation->status
+                    (string) $empty_representation->status
                 )
             );
         } catch (Metadata\StatusNotFoundNullException $e) {
@@ -476,7 +476,7 @@ class DocmanFoldersResource extends AuthenticatedResource
                 400,
                 sprintf(
                     dgettext('tuleap-docman', 'The status "%s" is invalid.'),
-                    $wiki_representation->status
+                    (string) $wiki_representation->status
                 )
             );
         } catch (Metadata\StatusNotFoundNullException $e) {
@@ -594,7 +594,7 @@ class DocmanFoldersResource extends AuthenticatedResource
                 400,
                 sprintf(
                     dgettext('tuleap-docman', 'The status "%s" is invalid.'),
-                    $embeds_representation->status
+                    (string) $embeds_representation->status
                 )
             );
         } catch (Metadata\StatusNotFoundNullException $e) {
@@ -710,7 +710,7 @@ class DocmanFoldersResource extends AuthenticatedResource
                 400,
                 sprintf(
                     dgettext('tuleap-docman', 'The status "%s" is invalid.'),
-                    $links_representation->status
+                    (string) $links_representation->status
                 )
             );
         } catch (Metadata\StatusNotFoundNullException $e) {

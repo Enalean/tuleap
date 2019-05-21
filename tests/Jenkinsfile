@@ -136,6 +136,23 @@ pipeline {
                                 }
                             }
                         }
+                        stage('Psalm static analysis') {
+                            when { not { branch 'master' } }
+                            agent {
+                                dockerfile {
+                                    dir 'sources/tests/psalm/'
+                                    reuseNode true
+                                }
+                            }
+                            steps {
+                                script {
+                                    def helpers = load 'sources/tests/helpers.groovy'
+                                    def filesToAnalyze = helpers.getModifiedFilesSinceFirstParentOfCurrentCommit('sources/')
+                                    actions.runPsalm('tests/psalm/psalm.xml', filesToAnalyze)
+                                }
+                            }
+                            post { always { recordIssues enabledForFailure: true, minimumSeverity: 'NORMAL', tools: [checkStyle(pattern: 'results/psalm/checkstyle.xml')] } }
+                        }
                     }
                 }
             }

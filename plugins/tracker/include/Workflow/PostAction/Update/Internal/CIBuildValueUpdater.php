@@ -23,6 +23,7 @@ namespace Tuleap\Tracker\Workflow\PostAction\Update\Internal;
 
 use DataAccessQueryException;
 use Transition;
+use Tuleap\Tracker\Workflow\PostAction\Update\CIBuildValue;
 use Tuleap\Tracker\Workflow\PostAction\Update\PostActionCollection;
 
 class CIBuildValueUpdater implements PostActionUpdater
@@ -54,12 +55,16 @@ class CIBuildValueUpdater implements PostActionUpdater
         $existing_ids_collection = $this->ci_build_repository->findAllIdsByTransition($transition);
         $diff                    = $actions->compareCIBuildActionsTo($existing_ids_collection);
 
-        $this->ci_build_repository->deleteAllByTransitionIfNotIn($transition, $diff->getUpdatedActions());
+        /** @var CIBuildValue[] $updated_actions */
+        $updated_actions = $diff->getUpdatedActions();
+        $this->ci_build_repository->deleteAllByTransitionIfNotIn($transition, $updated_actions);
 
         foreach ($diff->getAddedActions() as $added_action) {
+            assert($added_action instanceof CIBuildValue);
             $this->ci_build_repository->create($transition, $added_action);
         }
         foreach ($diff->getUpdatedActions() as $updated_action) {
+            assert($updated_action instanceof CIBuildValue);
             $this->ci_build_repository->update($updated_action);
         }
     }
