@@ -542,7 +542,7 @@ class Tracker_RulesManager
              }
           }
 
-          echo '<td class="matrix_cell" ><label class="pc_checkbox"><input type="checkbox" name="'.$box_value.'" '. $checked .'>&nbsp;</label></td>';
+          echo '<td class="matrix_cell" ><label class="pc_checkbox"><input type="checkbox" class=" tracker-field-dependencies-checkbox" name="'.$box_value.'" '. $checked .'>&nbsp;</label></td>';
     }
 
     function displayRulesAsJavascript() {
