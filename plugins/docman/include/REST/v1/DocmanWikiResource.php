@@ -228,6 +228,7 @@ class DocmanWikiResource extends AuthenticatedResource
      * @access hybrid
      *
      * @param int $id Id of the wiki
+     * @param bool $delete_associated_wiki_page {@from query} {@type bool} {@required false}
      *
      * @status 200
      * @throws I18NRestException 400
@@ -235,7 +236,7 @@ class DocmanWikiResource extends AuthenticatedResource
      * @throws I18NRestException 403
      * @throws I18NRestException 404
      */
-    public function delete(int $id) : void
+    public function delete(int $id, bool $delete_associated_wiki_page = false) : void
     {
         $this->checkAccess();
         $this->setHeaders();
@@ -261,7 +262,12 @@ class DocmanWikiResource extends AuthenticatedResource
         $event_adder->addLogEvents();
         $event_adder->addNotificationEvents($project);
 
-        (new \Docman_ItemFactory())->delete($item_to_delete);
+        $docman_item_factory = new \Docman_ItemFactory();
+        $docman_item_factory->delete($item_to_delete);
+
+        if ($delete_associated_wiki_page === true) {
+            $docman_item_factory->deleteWikiPage($item_to_delete->getPagename(), $project->getGroupId());
+        }
 
         $this->event_manager->processEvent('send_notifications', []);
     }

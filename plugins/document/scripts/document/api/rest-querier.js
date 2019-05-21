@@ -273,7 +273,11 @@ function deleteEmbeddedFile(item) {
     return del(`/api/docman_embedded_files/${escaped_item_id}`);
 }
 
-function deleteWiki(item) {
+function deleteWiki(item, { delete_associated_wiki_page = false }) {
     const escaped_item_id = encodeURIComponent(item.id);
-    return del(`/api/docman_wikis/${escaped_item_id}`);
+    const escaped_option = encodeURIComponent(delete_associated_wiki_page);
+
+    return del(
+        `/api/docman_wikis/${escaped_item_id}?delete_associated_wiki_page=${escaped_option}`
+    );
 }

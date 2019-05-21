@@ -296,11 +296,21 @@ msgstr "Permissions"
 msgid "Please describe the changes of the new version here"
 msgstr "Merci de décrire ici le changement de version."
 
+msgid ""
+"Please note that if you check the option above, the referenced wiki page "
+"will no longer exist in the wiki service too."
+msgstr ""
+"Veuillez noter que si vous activez l'option ci-dessus, la page wiki "
+"référencée n'existera également plus dans le service wiki."
+
 msgid "Please start again."
 msgstr "Merci de bien vouloir recommencer."
 
 msgid "Project documentation"
 msgstr "Documentation du projet"
+
+msgid "Propagate deletion to wiki service"
+msgstr "Propager la suppression au service wiki"
 
 msgid "Quick look"
 msgstr "Aperçu"
@@ -474,6 +484,15 @@ msgid "You may only access documents you are granted read permission on."
 msgstr ""
 "Vous pouvez seulement accéder aux documents pour lesquels vous avez la "
 "permission de lecture."
+
+msgid ""
+"You should also be aware that the other wiki documents referencing page \"%s"
+"\" will no longer be valid if you choose to propagate the deletion to the "
+"wiki service."
+msgstr ""
+"Vous devez également être conscient que les autres documents wiki "
+"référençant la page \"%s\" ne seront plus valides si vous choisissez de "
+"propager la suppression au service wiki."
 
 msgid "or you don't have permissions to see its items"
 msgstr "ou alors vous n'avez pas le droit de voir ses éléments"

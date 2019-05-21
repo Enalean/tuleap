@@ -515,7 +515,7 @@ export const unsetUnderConstructionUserPreference = async context => {
     }
 };
 
-export const deleteItem = async (context, item) => {
+export const deleteItem = async (context, [item, additional_options]) => {
     try {
         switch (item.type) {
             case TYPE_FILE:
@@ -528,7 +528,7 @@ export const deleteItem = async (context, item) => {
                 await deleteEmbeddedFile(item);
                 break;
             case TYPE_WIKI:
-                await deleteWiki(item);
+                await deleteWiki(item, additional_options);
                 break;
         }
 
