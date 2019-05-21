@@ -20,7 +20,7 @@
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../../helpers/local-vue.js";
 import TimeTrackingOverviewReadingMode from "../../../components/reading-mode/TimeTrackingOverviewReadingMode.vue";
-import { createStoreMock } from "../../helpers/store-wrapper.spec-helper";
+import { createStoreMock } from "@tuleap-vue-components/store-wrapper.js";
 
 describe("Given a timetracking overview widget on reading mode", () => {
     let component_options, store_options, store;

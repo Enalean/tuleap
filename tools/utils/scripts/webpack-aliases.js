@@ -50,6 +50,10 @@ const angular_artifact_modal_alias = {
     )
 };
 
+const vue_components_alias = {
+    "@tuleap-vue-components": path.join(path_to_tuleap_core, "vue-components")
+};
+
 const skeletons_alias = {
     skeletons: path.join(path_to_tuleap_core, "vue-components/skeletons/")
 };
@@ -84,5 +88,6 @@ module.exports = {
     tlp_fetch_alias,
     tlp_mocks_alias,
     tuleap_core_alias,
-    jquery_mocks_alias
+    jquery_mocks_alias,
+    vue_components_alias
 };

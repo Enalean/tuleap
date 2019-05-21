@@ -23,7 +23,7 @@ import TransitionRulesEnforcementWarning from "./TransitionRulesEnforcementWarni
 import localVue from "../support/local-vue.js";
 import { create } from "../support/factories.js";
 import store_options from "../store/index.js";
-import { createStoreMock } from "../support/store-wrapper.spec-helper.js";
+import { createStoreMock } from "@tuleap-vue-components/store-wrapper.js";
 
 describe("TransitionRulesEnforcementWarning", () => {
     let store;

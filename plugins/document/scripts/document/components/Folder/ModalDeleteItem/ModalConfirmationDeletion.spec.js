@@ -23,7 +23,7 @@ import localVue from "../../../helpers/local-vue.js";
 import { TYPE_WIKI } from "../../../constants.js";
 import ConfirmationModal from "./ModalConfirmDeletion.vue";
 import { tlp } from "tlp-mocks";
-import { createStoreMock } from "../../../helpers/store-wrapper.spec-helper.js";
+import { createStoreMock } from "@tuleap-vue-components/store-wrapper.js";
 
 describe("ModalConfirmationDeletion", () => {
     let state, store_options, store;

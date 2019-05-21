@@ -93,7 +93,7 @@ module.exports = {
     },
     overrides: [
         {
-            files: ["*.spec.js", "*.spec-helper.js"],
+            files: ["*.spec.js"],
             env: {
                 jasmine: true
             },

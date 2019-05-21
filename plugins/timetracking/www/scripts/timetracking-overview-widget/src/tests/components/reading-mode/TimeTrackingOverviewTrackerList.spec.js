@@ -19,7 +19,7 @@
 
 import { shallowMount } from "@vue/test-utils";
 import TimeTrackingOverviewTrackerList from "../../../components/reading-mode/TimeTrackingOverviewTrackerList.vue";
-import { createStoreMock } from "../../helpers/store-wrapper.spec-helper";
+import { createStoreMock } from "@tuleap-vue-components/store-wrapper.js";
 import localVue from "../../helpers/local-vue.js";
 
 describe("TimeTrackingOverviewTrackerList tests", () => {

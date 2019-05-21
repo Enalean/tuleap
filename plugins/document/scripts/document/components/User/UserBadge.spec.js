@@ -21,7 +21,7 @@ import { shallowMount } from "@vue/test-utils";
 import UserBadge from "./UserBadge.vue";
 
 import localVue from "../../helpers/local-vue.js";
-import { createStoreMock } from "../../helpers/store-wrapper.spec-helper.js";
+import { createStoreMock } from "@tuleap-vue-components/store-wrapper.js";
 
 describe("UserBadge", () => {
     let user_badge_factory;

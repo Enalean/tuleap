@@ -28,7 +28,7 @@ import HeaderSection from "./Header/HeaderSection.vue";
 import TransitionsMatrixSection from "./TransitionsMatrixSection.vue";
 import TransitionRulesEnforcementWarning from "./TransitionRulesEnforcementWarning.vue";
 import store_options from "../store/index.js";
-import { createStoreMock } from "../support/store-wrapper.spec-helper.js";
+import { createStoreMock } from "@tuleap-vue-components/store-wrapper.js";
 import { create } from "../support/factories.js";
 import localVue from "../support/local-vue.js";
 

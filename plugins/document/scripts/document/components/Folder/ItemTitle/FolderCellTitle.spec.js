@@ -22,7 +22,7 @@ import VueRouter from "vue-router";
 import { shallowMount } from "@vue/test-utils";
 import FolderCellTitle from "./FolderCellTitle.vue";
 import localVue from "../../../helpers/local-vue.js";
-import { createStoreMock } from "../../../helpers/store-wrapper.spec-helper.js";
+import { createStoreMock } from "@tuleap-vue-components/store-wrapper.js";
 
 describe("FolderCellTitle", () => {
     let router, item, component_options, store_options, store;

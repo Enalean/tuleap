@@ -22,7 +22,7 @@ import { shallowMount } from "@vue/test-utils";
 import localVue from "../../support/local-vue.js";
 import PostActionsSection from "./PostActionsSection.vue";
 import { createList } from "../../support/factories.js";
-import { createStoreMock } from "../../support/store-wrapper.spec-helper.js";
+import { createStoreMock } from "@tuleap-vue-components/store-wrapper.js";
 
 describe("PostActionsSection", () => {
     let store;

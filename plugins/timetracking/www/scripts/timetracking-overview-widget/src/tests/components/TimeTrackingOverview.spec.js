@@ -19,7 +19,7 @@
 
 import { shallowMount } from "@vue/test-utils";
 import TimeTrackingOverview from "../../components/TimeTrackingOverview.vue";
-import { createStoreMock } from "../helpers/store-wrapper.spec-helper";
+import { createStoreMock } from "@tuleap-vue-components/store-wrapper.js";
 
 const reportId = 8;
 function getTimetrackingOverviewInstance(store_options) {

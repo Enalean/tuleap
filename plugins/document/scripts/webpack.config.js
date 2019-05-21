@@ -36,7 +36,7 @@ const webpack_config = {
         alias: webpack_configurator.extendAliases(
             webpack_configurator.tlp_fetch_alias,
             webpack_configurator.tlp_mocks_alias,
-            webpack_configurator.skeletons_alias
+            webpack_configurator.vue_components_alias
         )
     },
     module: {

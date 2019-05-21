@@ -20,7 +20,7 @@
 import { shallowMount } from "@vue/test-utils";
 
 import localVue from "../../../support/local-vue.js";
-import { createStoreMock } from "../../../support/store-wrapper.spec-helper.js";
+import { createStoreMock } from "@tuleap-vue-components/store-wrapper.js";
 import { create } from "../../../support/factories.js";
 import PostAction from "./PostAction.vue";
 

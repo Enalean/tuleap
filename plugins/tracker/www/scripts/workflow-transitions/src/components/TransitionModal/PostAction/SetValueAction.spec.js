@@ -25,8 +25,8 @@ import DateInput from "./DateInput.vue";
 import FloatInput from "./FloatInput.vue";
 import IntInput from "./IntInput.vue";
 import localVue from "../../../support/local-vue.js";
-import { createStoreMock } from "../../../support/store-wrapper.spec-helper.js";
-import { create } from "../../../support/factories";
+import { createStoreMock } from "@tuleap-vue-components/store-wrapper.js";
+import { create } from "../../../support/factories.js";
 import { DATE_FIELD } from "../../../../../constants/fields-constants.js";
 
 describe("SetValueAction", () => {

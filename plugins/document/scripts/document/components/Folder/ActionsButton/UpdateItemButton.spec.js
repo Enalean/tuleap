@@ -22,7 +22,7 @@ import UpdateItemButton from "./UpdateItemButton.vue";
 
 import localVue from "../../../helpers/local-vue.js";
 import { rewire$redirectToUrl, restore } from "../../../helpers/location-helper.js";
-import { createStoreMock } from "../../../helpers/store-wrapper.spec-helper.js";
+import { createStoreMock } from "@tuleap-vue-components/store-wrapper.js";
 
 describe("UpdateItemButton", () => {
     let update_button_factory;
