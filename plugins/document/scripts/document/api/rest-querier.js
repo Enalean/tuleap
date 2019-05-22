@@ -44,6 +44,7 @@ export {
     deleteLink,
     deleteEmbeddedFile,
     deleteWiki,
+    deleteEmptyDocument,
     deleteFolder
 };
 
@@ -288,4 +289,9 @@ function deleteWiki(item, { delete_associated_wiki_page = false }) {
 function deleteFolder(item) {
     const escaped_item_id = encodeURIComponent(item.id);
     return del(`/api/docman_folders/${escaped_item_id}`);
+}
+
+function deleteEmptyDocument(item) {
+    const escaped_item_id = encodeURIComponent(item.id);
+    return del(`/api/docman_empty_documents/${escaped_item_id}`);
 }

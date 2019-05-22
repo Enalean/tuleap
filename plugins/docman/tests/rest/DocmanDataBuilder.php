@@ -651,6 +651,13 @@ class DocmanDataBuilder extends DocmanDataBuildCommon
             PLUGIN_DOCMAN_ITEM_TYPE_FOLDER
         );
 
+        $empty_doc_L_id = $this->createItem(
+            \REST_TestDataBuilder::ADMIN_PROJECT_ID,
+            $folder_delete_id,
+            "old empty doc L",
+            PLUGIN_DOCMAN_ITEM_TYPE_EMPTY
+        );
+
         $dao = new \Docman_LockDao();
         $dao->addLock(
             $file_L_id,
@@ -678,6 +685,12 @@ class DocmanDataBuilder extends DocmanDataBuildCommon
 
         $dao->addLock(
             $folder_L_id,
+            \REST_TestDataBuilder::ADMIN_PROJECT_ID,
+            time()
+        );
+
+        $dao->addLock(
+            $empty_doc_L_id,
             \REST_TestDataBuilder::ADMIN_PROJECT_ID,
             time()
         );
@@ -729,5 +742,14 @@ class DocmanDataBuilder extends DocmanDataBuildCommon
         );
 
         $this->addReadPermissionOnItem($wiki_id, self::REGULAR_USER_ID);
+
+        $another_empty_doc_id = $this->createItem(
+            \REST_TestDataBuilder::ADMIN_PROJECT_ID,
+            $folder_delete_id,
+            "another old empty doc",
+            PLUGIN_DOCMAN_ITEM_TYPE_EMPTY
+        );
+
+        $this->addReadPermissionOnItem($another_empty_doc_id, self::REGULAR_USER_ID);
     }
 }

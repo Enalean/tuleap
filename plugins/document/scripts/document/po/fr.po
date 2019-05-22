@@ -180,9 +180,6 @@ msgstr "Aller au dossier parent"
 msgid "Go to the wiki page"
 msgstr "Aller à la page wiki"
 
-msgid "Have a button to delete a document"
-msgstr "Avoir un bouton permettant de supprimer un document"
-
 msgid "History"
 msgstr "Historique"
 

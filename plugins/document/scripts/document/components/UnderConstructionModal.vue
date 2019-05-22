@@ -36,7 +36,6 @@
                 <li v-translate>Update modal for documents of type "empty"</li>
                 <li v-translate>Set the values of custom document properties in the document creation and update modals</li>
                 <li v-translate>Set the read and write permissions of a document in the document creation and update modals</li>
-                <li v-translate>Have a button to delete a document</li>
                 <li v-translate>Share the preview url of a document</li>
             </ul>
             <p v-translate>

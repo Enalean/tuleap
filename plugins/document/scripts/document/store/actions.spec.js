@@ -62,7 +62,8 @@ import {
     rewire$deleteLink,
     rewire$deleteEmbeddedFile,
     rewire$deleteWiki,
-    rewire$deleteFolder
+    rewire$deleteFolder,
+    rewire$deleteEmptyDocument
 } from "../api/rest-querier.js";
 import {
     restore as restoreLoadFolderContent,
@@ -73,7 +74,14 @@ import {
     rewire$loadAscendantHierarchy
 } from "./actions-helpers/load-ascendant-hierarchy.js";
 
-import { TYPE_FILE, TYPE_LINK, TYPE_EMBEDDED, TYPE_WIKI, TYPE_FOLDER } from "../constants.js";
+import {
+    TYPE_FILE,
+    TYPE_LINK,
+    TYPE_EMBEDDED,
+    TYPE_WIKI,
+    TYPE_FOLDER,
+    TYPE_EMPTY
+} from "../constants.js";
 
 describe("Store actions", () => {
     afterEach(() => {
@@ -1177,7 +1185,8 @@ describe("Store actions", () => {
             deleteLink,
             deleteEmbeddedFile,
             deleteWiki,
-            deleteFolder;
+            deleteFolder,
+            deleteEmptyDocument;
 
         beforeEach(() => {
             item_to_delete = {
@@ -1208,6 +1217,9 @@ describe("Store actions", () => {
 
             deleteFolder = jasmine.createSpy("deleteFolder");
             rewire$deleteFolder(deleteFolder);
+
+            deleteEmptyDocument = jasmine.createSpy("deleteEmptyDocument");
+            rewire$deleteEmptyDocument(deleteEmptyDocument);
         });
 
         it("when item is a file, then the delete file route is called", async () => {
@@ -1254,6 +1266,17 @@ describe("Store actions", () => {
 
             await deleteItem(context, [wiki_item, additional_options]);
             expect(deleteWiki).toHaveBeenCalledWith(wiki_item, additional_options);
+        });
+
+        it("when item is an empty document, then the delete empty document route is called", async () => {
+            const empty_doc_item = {
+                id: 222,
+                title: "My empty document",
+                type: TYPE_EMPTY
+            };
+
+            await deleteItem(context, [empty_doc_item]);
+            expect(deleteEmptyDocument).toHaveBeenCalledWith(empty_doc_item);
         });
 
         it("when item is a folder, then the delete folder route is called", async () => {

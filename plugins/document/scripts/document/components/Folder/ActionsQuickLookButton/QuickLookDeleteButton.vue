@@ -40,10 +40,6 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
-import { redirectToUrl } from "../../../helpers/location-helper.js";
-import { TYPE_EMPTY } from "../../../constants.js";
-
 export default {
     name: "QuickLookDeleteButton",
     props: {
@@ -53,26 +49,12 @@ export default {
             default: false
         }
     },
-    computed: {
-        ...mapState(["project_id"])
-    },
     methods: {
         processDeletion() {
-            if (this.item.type === TYPE_EMPTY) {
-                return this.redirectDeleteUrl();
-            }
-
             document.dispatchEvent(
                 new CustomEvent("show-confirm-item-deletion-modal", {
                     detail: { current_item: this.item }
                 })
-            );
-        },
-        redirectDeleteUrl() {
-            redirectToUrl(
-                `/plugins/docman/?group_id=${encodeURIComponent(
-                    this.project_id
-                )}&action=confirmDelete&id=${encodeURIComponent(this.item.id)}`
             );
         }
     }

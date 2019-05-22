@@ -19,7 +19,6 @@
 
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../../../helpers/local-vue.js";
-import { rewire$redirectToUrl, restore } from "../../../helpers/location-helper.js";
 
 import QuickLookDeleteButton from "./QuickLookDeleteButton.vue";
 import { createStoreMock } from "@tuleap-vue-components/store-wrapper.js";
@@ -53,10 +52,6 @@ describe("QuickLookDeleteButton", () => {
         };
     });
 
-    afterEach(() => {
-        restore();
-    });
-
     it(`Displays the delete button because the user can write`, () => {
         const wrapper = delete_button_factory(true, TYPE_LINK);
         expect(wrapper.find("[data-test=quick-look-delete-button]").exists()).toBeTruthy();
@@ -66,11 +61,8 @@ describe("QuickLookDeleteButton", () => {
         expect(wrapper.find("[data-test=quick-look-delete-button]").exists()).toBeFalsy();
     });
 
-    it(`Given the item is a file, When the user clicks the button, then it should trigger an event to open the confirmation modal`, () => {
+    it(`When the user clicks the button, then it should trigger an event to open the confirmation modal`, () => {
         spyOn(document, "dispatchEvent");
-
-        const redirect_to_url = jasmine.createSpy("redirectToUrl");
-        rewire$redirectToUrl(redirect_to_url);
 
         const wrapper = delete_button_factory(true, TYPE_FILE);
         wrapper.find("[data-test=quick-look-delete-button]").trigger("click");
@@ -78,21 +70,5 @@ describe("QuickLookDeleteButton", () => {
         expect(document.dispatchEvent).toHaveBeenCalledWith(
             new CustomEvent("show-confirm-item-deletion-modal")
         );
-        expect(redirect_to_url).not.toHaveBeenCalled();
-    });
-
-    it(`Given the item is a link, When the user clicks the button, then it should trigger an event to open the confirmation modal`, () => {
-        spyOn(document, "dispatchEvent");
-
-        const redirect_to_url = jasmine.createSpy("redirectToUrl");
-        rewire$redirectToUrl(redirect_to_url);
-
-        const wrapper = delete_button_factory(true, TYPE_LINK);
-        wrapper.find("[data-test=quick-look-delete-button]").trigger("click");
-
-        expect(document.dispatchEvent).toHaveBeenCalledWith(
-            new CustomEvent("show-confirm-item-deletion-modal")
-        );
-        expect(redirect_to_url).not.toHaveBeenCalled();
     });
 });
