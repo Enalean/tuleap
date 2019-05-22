@@ -27,8 +27,13 @@
                 v-bind:disabled="is_modal_save_running"
                 ref="select"
             >
-                <option v-bind:value="POST_ACTION_TYPE.RUN_JOB" v-translate>Launch a CI job</option>
-                <option v-bind:value="POST_ACTION_TYPE.SET_FIELD_VALUE" v-translate>Change the value of a field</option>
+                <optgroup v-bind:label="unique_actions_title">
+                    <option v-bind:value="POST_ACTION_TYPE.FROZEN_FIELDS" data-test="freeze_fields" v-bind:disabled="! frozen_fields_information.valid" v-bind:title="frozen_fields_information.title">{{ frozen_fields_information.option }}</option>
+                </optgroup>
+                <optgroup v-bind:label="other_actions_title">
+                    <option v-bind:value="POST_ACTION_TYPE.RUN_JOB" v-translate>Launch a CI job</option>
+                    <option v-bind:value="POST_ACTION_TYPE.SET_FIELD_VALUE" data-test="set_field" v-bind:disabled="! set_field_value_information.valid" v-bind:title="set_field_value_information.title">{{ set_field_value_information.option }}</option>
+                </optgroup>
             </select>
             <a
                 href="javascript:;"
@@ -46,17 +51,22 @@
 </template>
 <script>
 import { POST_ACTION_TYPE } from "../../../constants/workflow-constants.js";
-import { mapState } from "vuex";
+import {
+    DATE_FIELD,
+    FLOAT_FIELD,
+    INT_FIELD,
+    READ_ONLY_FIELDS,
+    STRUCTURAL_FIELDS
+} from "../../../../../constants/fields-constants.js";
+import { mapState, mapGetters } from "vuex";
+import { compare } from "../../../support/string.js";
 
 export default {
     name: "PostAction",
     props: {
-        postAction: {
+        post_action: {
             type: Object,
             required: true
-        },
-        is_invalid: {
-            type: Boolean
         }
     },
     data() {
@@ -65,35 +75,124 @@ export default {
         };
     },
     computed: {
+        ...mapGetters("transitionModal", ["post_actions", "set_value_action_fields"]),
         ...mapState("transitionModal", ["is_modal_save_running"]),
+        ...mapGetters(["current_workflow_field", "is_workflow_advanced"]),
+        ...mapState({
+            freezable_fields(state) {
+                const fields_blacklist = [...STRUCTURAL_FIELDS, ...READ_ONLY_FIELDS];
+
+                if (state.current_tracker === null) {
+                    return [];
+                }
+                return state.current_tracker.fields
+                    .filter(field => !fields_blacklist.includes(field.type))
+                    .filter(field => !(field.field_id === this.current_workflow_field.field_id))
+                    .sort((field1, field2) => compare(field1.label, field2.label));
+            }
+        }),
+        frozen_fields_information() {
+            if (this.frozen_fields_is_valid) {
+                return {
+                    valid: true,
+                    option: this.$gettext("Freeze fields"),
+                    title: ""
+                };
+            }
+            if (this.is_workflow_advanced) {
+                return {
+                    valid: false,
+                    option: this.$gettext("Freeze fields (incompatible)"),
+                    title: this.$gettext(
+                        "Advanced configuration is incompatible with this post-action"
+                    )
+                };
+            }
+
+            if (this.there_are_no_applicable_fields_for_frozen_fields) {
+                return {
+                    valid: false,
+                    option: this.$gettext("Freeze fields (incompatible)"),
+                    title: this.$gettext(
+                        "Your tracker doesn't seem to have available writable fields"
+                    )
+                };
+            }
+
+            return {
+                valid: false,
+                option: this.$gettext("Freeze fields (already used)"),
+                title: this.$gettext("You can only have this post-action once.")
+            };
+        },
         delete_title() {
             return this.$gettext("Delete this action");
         },
+        unique_actions_title() {
+            return this.$gettext("Unique actions");
+        },
+        other_actions_title() {
+            return this.$gettext("Other actions");
+        },
+        set_field_value_information() {
+            if (this.set_field_value_is_valid) {
+                return {
+                    valid: true,
+                    option: this.$gettext("Change the value of a field"),
+                    title: ""
+                };
+            }
+
+            return {
+                valid: false,
+                option: this.$gettext("Change the value of a field (incompatible)"),
+                title: this.$gettext(
+                    "Your tracker doesn't seem to have integer, float or date fields."
+                )
+            };
+        },
+        set_field_value_is_valid() {
+            const applicable_fields = this.available_fields_for_set_value.filter(({ type }) => {
+                return type === DATE_FIELD || type === INT_FIELD || type === FLOAT_FIELD;
+            });
+            return applicable_fields.length > 0;
+        },
+        available_fields_for_set_value() {
+            // Side effect is prevented with array duplication before sort
+            return [...this.set_value_action_fields].sort((field1, field2) =>
+                compare(field1.label, field2.label)
+            );
+        },
+        frozen_fields_is_valid() {
+            return (
+                !this.is_workflow_advanced &&
+                (this.post_action_type === this.POST_ACTION_TYPE.FROZEN_FIELDS ||
+                    !(
+                        this.there_are_no_applicable_fields_for_frozen_fields ||
+                        this.frozen_fields_is_already_present
+                    ))
+            );
+        },
+        frozen_fields_is_already_present() {
+            return (
+                this.post_actions.filter(
+                    post_action => post_action.type === this.POST_ACTION_TYPE.FROZEN_FIELDS
+                ).length > 0
+            );
+        },
+        there_are_no_applicable_fields_for_frozen_fields() {
+            return this.freezable_fields.length === 0;
+        },
         post_action_type: {
             get() {
-                return this.postAction.type;
+                return this.post_action.type;
             },
             set(type) {
                 this.$store.commit("transitionModal/updatePostActionType", {
-                    post_action: this.postAction,
+                    post_action: this.post_action,
                     type
                 });
             }
-        }
-    },
-    watch: {
-        is_invalid: {
-            async handler(new_value) {
-                await this.$nextTick();
-                if (new_value === true && this.$refs.select) {
-                    this.$refs.select.setCustomValidity(
-                        this.$gettext(
-                            "Your tracker doesn't seem to have integer, float or date fields."
-                        )
-                    );
-                }
-            },
-            immediate: true
         }
     },
     methods: {
@@ -101,7 +200,7 @@ export default {
             if (this.is_modal_save_running) {
                 return;
             }
-            this.$store.commit("transitionModal/deletePostAction", this.postAction);
+            this.$store.commit("transitionModal/deletePostAction", this.post_action);
         }
     }
 };

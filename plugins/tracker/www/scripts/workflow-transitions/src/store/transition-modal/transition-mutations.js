@@ -38,7 +38,8 @@ export {
     updateRunJobPostActionJobUrl,
     addPostAction,
     deletePostAction,
-    updatePostActionType
+    updatePostActionType,
+    updateFrozenFieldsPostActionFieldIds
 };
 
 function showModal(state) {
@@ -154,6 +155,13 @@ function updateRunJobPostActionJobUrl(state, { post_action, job_url }) {
     updatePostAction(state, {
         ...post_action,
         job_url
+    });
+}
+
+function updateFrozenFieldsPostActionFieldIds(state, { post_action, field_ids }) {
+    updatePostAction(state, {
+        ...post_action,
+        field_ids
     });
 }
 

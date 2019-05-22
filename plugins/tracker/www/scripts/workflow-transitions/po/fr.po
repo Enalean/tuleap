@@ -25,6 +25,9 @@ msgstr "Ajouter une action"
 msgid "Add another action"
 msgstr "Ajouter une nouvelle action"
 
+msgid "Advanced configuration is incompatible with this post-action"
+msgstr "La configuration avancée est incompatible avec cette post-action"
+
 msgid "An error occurred"
 msgstr "Une erreur est survenue"
 
@@ -73,6 +76,9 @@ msgstr "Modifier ou supprimer le champ"
 
 msgid "Change the value of a field"
 msgstr "Modifier la valeur d'un champ"
+
+msgid "Change the value of a field (incompatible)"
+msgstr "Modifier la valeur d'un champ (incompatible)"
 
 msgid "Choose a field"
 msgstr "Choisissez un champ"
@@ -128,8 +134,20 @@ msgstr "Champ"
 msgid "Field(s) that must not be empty"
 msgstr "Le(s) champs suivant(s) doivent obligatoirement avoir une valeur"
 
+msgid "Fields that will be set as read-only"
+msgstr "Champs qui seront passés en lecture seule"
+
 msgid "Floats"
 msgstr "Flottants"
+
+msgid "Freeze fields"
+msgstr "Figer des champs"
+
+msgid "Freeze fields (already used)"
+msgstr "Figer des champs (déjà utilisé)"
+
+msgid "Freeze fields (incompatible)"
+msgstr "Figer des champs (incompatible)"
 
 msgid "Fully deactivate the workflow"
 msgstr "Désactiver complètement le workflow"
@@ -139,7 +157,9 @@ msgstr "Groupes autorisés à effectuer la transition"
 
 msgid ""
 "If you have any post actions of type \"Frozen Fields\", they will be deleted."
-msgstr "Si vous avez configuré des post-actions de type \"Champs Figés\", elles seront supprimées."
+msgstr ""
+"Si vous avez configuré des post-actions de type \"Champs Figés\", elles "
+"seront supprimées."
 
 msgid ""
 "In order to configure transitions rules on this tracker, your first need to "
@@ -167,6 +187,9 @@ msgstr "Nouvelle valeur"
 
 msgid "No action is currently defined."
 msgstr "Aucune action n'est encore définie."
+
+msgid "Other actions"
+msgstr "Autres actions"
 
 msgid "Please choose"
 msgstr "Veuillez choisir"
@@ -237,6 +260,9 @@ msgid "Tuleap will automatically pass the following parameters to the job:"
 msgstr ""
 "Tuleap va automatiquement transmettre les paramètres suivants à la tâche :"
 
+msgid "Unique actions"
+msgstr "Actions uniques"
+
 msgid "Use advanced configuration"
 msgstr "Utiliser la configuration avancée"
 
@@ -249,6 +275,9 @@ msgstr ""
 
 msgid "Wait a minute..."
 msgstr "Attendez une minute..."
+
+msgid "You can only have this post-action once."
+msgstr "Vous ne pouvez avoir cette post-action qu'une seule fois."
 
 msgid ""
 "You're about to switch to advanced configuration mode.\n"
@@ -270,6 +299,9 @@ msgstr ""
 "pour tout l'état.\n"
 "Merci de bien vouloir vérifier les configurations mises en place pour chaque "
 "état."
+
+msgid "Your tracker doesn't seem to have available writable fields"
+msgstr "Votre tracker ne semble pas avoir de champs inscriptibles disponibles."
 
 msgid "Your tracker doesn't seem to have integer, float or date fields."
 msgstr "Votre tracker ne semble pas avoir de champs entier, flottant ou date."
