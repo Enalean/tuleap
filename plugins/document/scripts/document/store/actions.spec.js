@@ -61,7 +61,8 @@ import {
     rewire$deleteFile,
     rewire$deleteLink,
     rewire$deleteEmbeddedFile,
-    rewire$deleteWiki
+    rewire$deleteWiki,
+    rewire$deleteFolder
 } from "../api/rest-querier.js";
 import {
     restore as restoreLoadFolderContent,
@@ -72,7 +73,7 @@ import {
     rewire$loadAscendantHierarchy
 } from "./actions-helpers/load-ascendant-hierarchy.js";
 
-import { TYPE_FILE, TYPE_LINK, TYPE_EMBEDDED, TYPE_WIKI } from "../constants.js";
+import { TYPE_FILE, TYPE_LINK, TYPE_EMBEDDED, TYPE_WIKI, TYPE_FOLDER } from "../constants.js";
 
 describe("Store actions", () => {
     afterEach(() => {
@@ -1170,7 +1171,13 @@ describe("Store actions", () => {
     });
 
     describe("deleteItem()", () => {
-        let item_to_delete, context, deleteFile, deleteLink, deleteEmbeddedFile, deleteWiki;
+        let item_to_delete,
+            context,
+            deleteFile,
+            deleteLink,
+            deleteEmbeddedFile,
+            deleteWiki,
+            deleteFolder;
 
         beforeEach(() => {
             item_to_delete = {
@@ -1198,6 +1205,9 @@ describe("Store actions", () => {
 
             deleteWiki = jasmine.createSpy("deleteWiki");
             rewire$deleteWiki(deleteWiki);
+
+            deleteFolder = jasmine.createSpy("deleteFolder");
+            rewire$deleteFolder(deleteFolder);
         });
 
         it("when item is a file, then the delete file route is called", async () => {
@@ -1244,6 +1254,19 @@ describe("Store actions", () => {
 
             await deleteItem(context, [wiki_item, additional_options]);
             expect(deleteWiki).toHaveBeenCalledWith(wiki_item, additional_options);
+        });
+
+        it("when item is a folder, then the delete folder route is called", async () => {
+            const folder_item = {
+                id: 222,
+                title: "My folder",
+                type: TYPE_FOLDER
+            };
+
+            const additional_options = { delete_associated_wiki_page: true };
+
+            await deleteItem(context, [folder_item, additional_options]);
+            expect(deleteFolder).toHaveBeenCalledWith(folder_item, additional_options);
         });
 
         it("deletes the given item and removes it from the tree view", async () => {

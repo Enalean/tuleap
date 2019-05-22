@@ -708,6 +708,119 @@ class DocmanItemsTestFoldersTest extends DocmanBase
     }
 
     /**
+     * @depends testGetRootId
+     */
+    public function testGetTrashFolderContent(int $root_id): array
+    {
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('docman_items/' . $root_id . '/docman_items')
+        );
+        $folder = $response->json();
+
+        $trash_folder    = $this->findItemByTitle($folder, "Trash");
+        $trash_folder_id = $trash_folder['id'];
+
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('docman_items/' . $trash_folder_id . '/docman_items')
+        );
+
+        $items_to_delete = $response->json();
+
+        $this->assertGreaterThan(0, count($items_to_delete));
+
+        return $items_to_delete;
+    }
+
+    /**
+     * @depends testGetRootId
+     */
+    public function testItThrowsAnErrorWhenWeTryToDeleteTheRootFolder(int $root_id) : void
+    {
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->delete('docman_folders/' . $root_id)
+        );
+
+        $this->assertEquals(400, $response->getStatusCode());
+
+        $this->checkFolderHasNotBeenDeleted($root_id);
+    }
+
+    /**
+     * @depends testGetTrashFolderContent
+     */
+    public function testItThrowsAnErrorWhenUserHasNotPermissionToDeleteTheFolder(array $items): void
+    {
+        $folder_to_delete    = $this->findItemByTitle($items, 'old folder L');
+        $folder_to_delete_id = $folder_to_delete['id'];
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->delete('docman_folders/' . $folder_to_delete_id)
+        );
+
+        $this->assertEquals(403, $response->getStatusCode());
+
+        $this->checkFolderHasNotBeenDeleted($folder_to_delete_id);
+    }
+
+    /**
+     * @depends testGetTrashFolderContent
+     */
+    public function testItShouldThrowAnErrorWhenTheFolderContainsItemsUserIsNotAllowedToDelete(array $items): void
+    {
+        $folder_to_delete    = $this->findItemByTitle($items, 'folder with content you cannot delete');
+        $folder_to_delete_id = $folder_to_delete['id'];
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->delete('docman_folders/' . $folder_to_delete_id)
+        );
+
+        $this->assertEquals(403, $response->getStatusCode());
+
+        $this->checkFolderHasNotBeenDeleted($folder_to_delete_id);
+    }
+
+    /**
+     * @depends testGetTrashFolderContent
+     */
+    public function testItShouldDeleteWhenFolderIsLockedAndUserIsAdmin(array $items): void
+    {
+        $folder_to_delete    = $this->findItemByTitle($items, 'old folder L');
+        $folder_to_delete_id = $folder_to_delete['id'];
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->delete('docman_folders/' . $folder_to_delete_id)
+        );
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $this->checkFolderHasBeenDeleted($folder_to_delete_id);
+    }
+
+    /**
+     * @depends testGetTrashFolderContent
+     */
+    public function testItDeletesAFolder(array $items): void
+    {
+        $folder_to_delete    = $this->findItemByTitle($items, 'another old folder');
+        $folder_to_delete_id = $folder_to_delete['id'];
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::ADMIN_USER_NAME,
+            $this->client->delete('docman_folders/' . $folder_to_delete_id)
+        );
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $this->checkFolderHasBeenDeleted($folder_to_delete_id);
+    }
+
+    /**
      * Find first item in given array of items which has given title.
      * @return array|null Found item. null otherwise.
      */
@@ -718,5 +831,25 @@ class DocmanItemsTestFoldersTest extends DocmanBase
             return null;
         }
         return $items[$index];
+    }
+
+    private function checkFolderHasNotBeenDeleted(int $folder_to_delete_id) : void
+    {
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('docman_items/' . $folder_to_delete_id)
+        );
+
+        $this->assertEquals(200, $response->getStatusCode());
+    }
+
+    private function checkFolderHasBeenDeleted(int $folder_to_delete_id) : void
+    {
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('docman_items/' . $folder_to_delete_id)
+        );
+
+        $this->assertEquals(404, $response->getStatusCode());
     }
 }

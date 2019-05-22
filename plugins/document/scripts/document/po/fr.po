@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.2.1\n"
+"X-Generator: Poedit 2.2.3\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 msgid ""
@@ -367,11 +367,11 @@ msgstr "Basculer sur l'ancienne interface utilisateur"
 msgid "The document has been created below."
 msgstr "Le document a été créé ci dessous."
 
-msgid "The document has been deleted successfully."
-msgstr "Le document a été supprimé avec succès."
-
 msgid "The folder has been created below."
 msgstr "Le dossier a été créé ci dessous."
+
+msgid "The item has been deleted successfully."
+msgstr "L'objet a été supprimé avec succès."
 
 msgid ""
 "The item you have dropped is not a file. If you want to upload a folder, we "
@@ -443,6 +443,13 @@ msgstr "Nom de version"
 
 msgid "Welcome to the new documents manager"
 msgstr "Bienvenue dans le nouveau gestionnaire de documents"
+
+msgid ""
+"When you delete a folder, all its content is also deleted. Please think "
+"wisely!"
+msgstr ""
+"Lorsque vous supprimez un dossier, tout son contenu est également supprimé. "
+"Réfléchissez bien !"
 
 msgid "Wiki page"
 msgstr "Page wiki"

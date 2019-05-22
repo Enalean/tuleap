@@ -41,6 +41,7 @@
 
 <script>
 import { sprintf } from "sprintf-js";
+import { TYPE_WIKI } from "../../../../constants.js";
 
 export default {
     props: {
@@ -48,6 +49,9 @@ export default {
         model: Object
     },
     computed: {
+        is_item_a_wiki() {
+            return this.item.type === TYPE_WIKI;
+        },
         wiki_deletion_warning() {
             return sprintf(
                 this.$gettext(

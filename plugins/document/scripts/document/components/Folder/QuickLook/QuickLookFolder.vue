@@ -29,8 +29,10 @@
                 <dropdown-menu v-bind:item="item" v-bind:is-in-quick-look-mode="true" v-bind:hide-item-title="true"/>
             </dropdown-button>
         </div>
-        <div class="document-header-spacer"></div>
-        <quick-look-delete-button v-bind:item="item"/>
+        <template v-if="can_delete_folder">
+            <div class="document-header-spacer"></div>
+            <quick-look-delete-button v-bind:item="item"/>
+        </template>
     </div>
 </template>
 
@@ -44,6 +46,11 @@ export default {
     components: { NewItemButton, DropdownButton, DropdownMenu, QuickLookDeleteButton },
     props: {
         item: Object
+    },
+    computed: {
+        can_delete_folder() {
+            return this.$store.getters.can_user_delete_folder(this.item);
+        }
     },
     methods: {
         showNewFolderModal() {

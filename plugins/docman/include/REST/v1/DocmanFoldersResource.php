@@ -29,6 +29,7 @@ use Luracast\Restler\RestException;
 use PluginManager;
 use Project;
 use ProjectManager;
+use Tuleap\Docman\DeleteFailedException;
 use Tuleap\Docman\REST\v1\EmbeddedFiles\DocmanEmbeddedPOSTRepresentation;
 use Tuleap\Docman\REST\v1\Files\DocmanPOSTFilesRepresentation;
 use Tuleap\Docman\REST\v1\Folders\DocmanEmptyPOSTRepresentation;
@@ -98,7 +99,7 @@ class DocmanFoldersResource extends AuthenticatedResource
     public function postFiles(int $id, DocmanPOSTFilesRepresentation $files_representation): CreatedItemRepresentation
     {
         $this->checkAccess();
-        $this->sendAllowHeadersWithPost();
+        $this->setHeaders();
 
         $current_user = $this->rest_user_manager->getCurrentUser();
 
@@ -193,7 +194,7 @@ class DocmanFoldersResource extends AuthenticatedResource
     public function postFolders(int $id, DocmanFolderPOSTRepresentation $folder_representation): CreatedItemRepresentation
     {
         $this->checkAccess();
-        $this->sendAllowHeadersWithPost();
+        $this->setHeaders();
 
         $current_user = $this->rest_user_manager->getCurrentUser();
 
@@ -268,7 +269,7 @@ class DocmanFoldersResource extends AuthenticatedResource
     public function postEmpties(int $id, DocmanEmptyPOSTRepresentation $empty_representation): CreatedItemRepresentation
     {
         $this->checkAccess();
-        $this->sendAllowHeadersWithPost();
+        $this->setHeaders();
 
         $current_user = $this->rest_user_manager->getCurrentUser();
 
@@ -367,7 +368,7 @@ class DocmanFoldersResource extends AuthenticatedResource
     public function postWikis(int $id, DocmanWikiPOSTRepresentation $wiki_representation): CreatedItemRepresentation
     {
         $this->checkAccess();
-        $this->sendAllowHeadersWithPost();
+        $this->setHeaders();
 
         $current_user = $this->rest_user_manager->getCurrentUser();
 
@@ -460,7 +461,7 @@ class DocmanFoldersResource extends AuthenticatedResource
     public function postEmbeds(int $id, DocmanEmbeddedPOSTRepresentation $embeds_representation): CreatedItemRepresentation
     {
         $this->checkAccess();
-        $this->sendAllowHeadersWithPost();
+        $this->setHeaders();
 
         $current_user = $this->rest_user_manager->getCurrentUser();
 
@@ -568,7 +569,7 @@ class DocmanFoldersResource extends AuthenticatedResource
     public function postLinks(int $id, DocmanLinkPOSTRepresentation $links_representation): CreatedItemRepresentation
     {
         $this->checkAccess();
-        $this->sendAllowHeadersWithPost();
+        $this->setHeaders();
 
         $current_user = $this->rest_user_manager->getCurrentUser();
 
@@ -641,9 +642,58 @@ class DocmanFoldersResource extends AuthenticatedResource
         }
     }
 
-    private function sendAllowHeadersWithPost()
+    /**
+     * Delete a folder in the document manager
+     *
+     * Delete an existing folder and its content
+     *
+     * @url    DELETE {id}
+     * @access hybrid
+     *
+     * @param int $id Id of the folder
+     *
+     * @status 200
+     * @throws I18NRestException 400
+     * @throws RestException 401
+     * @throws I18NRestException 403
+     * @throws I18NRestException 404
+     */
+    public function delete(int $id) : void
     {
-        Header::allowOptionsPost();
+        $this->checkAccess();
+        $this->setHeaders();
+
+        $item_request        = $this->request_builder->buildFromItemId($id);
+        $item_to_delete      = $item_request->getItem();
+        $current_user        = $this->rest_user_manager->getCurrentUser();
+        $project             = $item_request->getProject();
+        $validator_visitor   = new DocumentBeforeModificationValidatorVisitor(\Docman_Folder::class);
+
+        $item_to_delete->accept($validator_visitor);
+
+        $event_adder = $this->getDocmanItemsEventAdder();
+        $event_adder->addLogEvents();
+        $event_adder->addNotificationEvents($project);
+
+        if ($item_to_delete->getParentId() === 0) {
+            throw new i18NRestException(400, dgettext("tuleap-docman", "You cannot delete the root folder."));
+        }
+
+        try {
+            (new \Docman_ItemFactory())->deleteSubTree($item_to_delete, $current_user, false);
+        } catch (DeleteFailedException $exception) {
+            throw new I18NRestException(
+                403,
+                $exception->getI18NExceptionMessage()
+            );
+        }
+
+        $this->event_manager->processEvent('send_notifications', []);
+    }
+
+    private function setHeaders()
+    {
+        Header::allowOptionsPostDelete();
     }
 
     /**

@@ -28,6 +28,13 @@
         <modal-feedback/>
         <div class="tlp-modal-body">
             <p>{{ modal_description }}</p>
+            <div
+                class="tlp-alert-warning"
+                v-if="is_item_a_folder"
+                v-translate
+            >
+                When you delete a folder, all its content is also deleted. Please think wisely!
+            </div>
             <delete-associated-wiki-page-checkbox v-if="is_item_a_wiki" v-model="additional_options" v-bind:item="item"/>
         </div>
         <div class="tlp-modal-footer">
@@ -35,8 +42,9 @@
             <button
                 type="button"
                 class="tlp-button-danger tlp-modal-action"
+                data-test="confirm-deletion-button"
                 v-on:click="deleteItem()"
-                v-bind:class="{ 'disabled': has_modal_error }"
+                v-bind:class="{'disabled': has_modal_error}"
                 v-bind:disabled="has_modal_error"
             >
                 <i
@@ -57,7 +65,7 @@ import { sprintf } from "sprintf-js";
 import { mapState } from "vuex";
 import { modal } from "tlp";
 import ModalFeedback from "../ModalCommon/ModalFeedback.vue";
-import { TYPE_WIKI } from "../../../constants.js";
+import { TYPE_WIKI, TYPE_FOLDER } from "../../../constants.js";
 
 export default {
     components: {
@@ -77,6 +85,7 @@ export default {
     },
     computed: {
         ...mapState("error", ["has_modal_error"]),
+        ...mapState(["current_folder"]),
         close() {
             return this.$gettext("Close");
         },
@@ -90,6 +99,9 @@ export default {
         },
         is_item_a_wiki() {
             return this.item.type === TYPE_WIKI;
+        },
+        is_item_a_folder() {
+            return this.item.type === TYPE_FOLDER;
         }
     },
     mounted() {
@@ -100,11 +112,22 @@ export default {
     },
     methods: {
         async deleteItem() {
+            const deleted_item = { ...this.item };
             this.is_item_being_deleted = true;
 
             await this.$store.dispatch("deleteItem", [this.item, this.additional_options]);
 
             if (!this.has_modal_error) {
+                if (
+                    deleted_item.type === TYPE_FOLDER &&
+                    deleted_item.id === this.current_folder.id
+                ) {
+                    this.$router.replace(
+                        { name: "folder", params: { item_id: deleted_item.parent_id } },
+                        this.$store.commit("showPostDeletionNotification")
+                    );
+                }
+
                 this.modal.hide();
             }
 
