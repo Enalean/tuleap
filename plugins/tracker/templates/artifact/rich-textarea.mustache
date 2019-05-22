@@ -1,0 +1,12 @@
+<textarea
+        id="{{ id }}"
+        class="user-mention"
+        wrap="soft"
+        rows="{{ rows }}"
+        cols="{{ cols }}"
+        name="{{ name }}"
+        {{# is_required }}required{{/ is_required }}
+        {{# data_attributes }}
+            data-{{ name }}="{{ value }}"
+        {{/ data_attributes }}
+>{{ value }}</textarea>

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -18,6 +18,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\Tracker\Artifact\RichTextareaProvider;
 
 class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum {
 
@@ -183,37 +185,24 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
      *
      * @return string html
      */
-    protected function fetchSubmitValue($submitted_values = array()) {
-        $html  = '';
-        $value = $this->getValueFromSubmitOrDefault($submitted_values);
-        $hp    = Codendi_HTMLPurifier::instance();
-
-        $user   = $this->getCurrentUser();
-        $format = $this->getDefaultFormatForUser($user);
+    protected function fetchSubmitValue($submitted_values = array())
+    {
+        $value  = $this->getValueFromSubmitOrDefault($submitted_values);
+        $format = $this->getDefaultFormatForUser($this->getCurrentUser());
 
         if (isset($value['format'])) {
             $format = $value['format'];
         }
 
-        $html .= '<input type="hidden"
-                         id="artifact['. $this->id .']_body_format"
-                         name="artifact['. $this->id .']_body_format"
-                         value="'.$hp->purify($format).'" />';
-
-        $data_field_default_value = '';
+        $data_attributes = [];
         if ($value === $this->getDefaultValue()) {
-            $data_field_default_value = 'data-field-default-value="1"';
+            $data_attributes[] = [
+                'name'  => 'field-default-value',
+                'value' => '1'
+            ];
         }
 
-        $html .= '<textarea id = field_'.$this->id.' class="user-mention"
-                            name="artifact['. $this->id .'][content]"
-                            rows="'. $this->getProperty('rows') .'"
-                            cols="'. $this->getProperty('cols') .'"
-                            '. ($this->isRequired() ? 'required' : '') ."
-                            $data_field_default_value>";
-        $html .= $hp->purify($value['content'], CODENDI_PURIFIER_CONVERT_HTML);
-        $html .= '</textarea>';
-        return $html;
+        return $this->getRichTextarea($data_attributes, $format, $value['content']);
     }
 
      /**
@@ -251,7 +240,6 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
      * @return string
      */
     protected function fetchArtifactValue(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
-        $html    = '';
         $content = '';
 
         if ($value) {
@@ -268,21 +256,38 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
             $content = $value->getText();
         }
 
+        return $this->getRichTextarea([], $format, $content);
+    }
+
+    /**
+     * @return string
+     */
+    private function getRichTextarea(array $data_attributes, string $format, string $content)
+    {
         $hp = Codendi_HTMLPurifier::instance();
 
-        $html .= '<input type="hidden"
-                         id="artifact['. $this->id .']_body_format"
-                         name="artifact['. $this->id .']_body_format"
-                         value="'.$format.'" />';
-        $html .= '<textarea id = field_'.$this->id.' class="user-mention"
-                            name="artifact['. $this->id .'][content]"
-                            rows="'. $this->getProperty('rows') .'"
-                            cols="'. $this->getProperty('cols') .'"
-                            '. ($this->isRequired() ? 'required' : '') .'
-                            >';
+        $rich_textarea_provider = new RichTextareaProvider(
+            Tracker_FormElementFactory::instance(),
+            TemplateRendererFactory::build()
+        );
 
-        $html .= $hp->purify($content, CODENDI_PURIFIER_CONVERT_HTML);
-        $html .= '</textarea>';
+        $html = '<input type="hidden"
+             id="artifact[' . $this->id . ']_body_format"
+             name="artifact[' . $this->id . ']_body_format"
+             value="' . $hp->purify($format) . '" />';
+
+        $html .= $rich_textarea_provider->getTextarea(
+            $this->getTracker(),
+            $this->getCurrentUser(),
+            'field_' . $this->id,
+            'artifact[' . $this->id . '][content]',
+            $this->getProperty('rows'),
+            $this->getProperty('cols'),
+            $content,
+            $this->isRequired(),
+            $data_attributes
+        );
+
         return $html;
     }
 

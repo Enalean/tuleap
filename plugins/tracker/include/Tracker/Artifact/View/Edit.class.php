@@ -20,6 +20,7 @@
 
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
+use Tuleap\Tracker\Artifact\RichTextareaProvider;
 
 class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View {
 
@@ -213,17 +214,18 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View {
         }
 
         if ($this->artifact->userCanUpdate($this->user)) {
-            $upload_information = $this->getUploadInformation($this->artifact, $this->user);
-            $html       .= '<textarea
-                id="tracker_followup_comment_new"
-                class="user-mention"
-                wrap="soft"
-                rows="8"
-                cols="80"
-                name="artifact_followup_comment"
-                data-upload-url="'. $hp->purify($upload_information['url']) .'"
-                data-upload-field-name="'. $hp->purify($upload_information['field-name']) .'"
-                id="artifact_followup_comment">'. $hp->purify($submitted_comment, CODENDI_PURIFIER_CONVERT_HTML).'</textarea>';
+            $rich_textarea_provider = new RichTextareaProvider(Tracker_FormElementFactory::instance(), TemplateRendererFactory::build());
+            $html .= $rich_textarea_provider->getTextarea(
+                $this->artifact->getTracker(),
+                $this->user,
+                'tracker_followup_comment_new',
+                'artifact_followup_comment',
+                8,
+                80,
+                $submitted_comment,
+                false,
+                []
+            );
             $html       .= $this->fetchReplyByMailHelp();
             $html       .= '</div>';
         }
@@ -231,31 +233,6 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View {
         $html .= '</li>';
 
         return $html;
-    }
-
-    private function getUploadInformation(Tracker_Artifact $artifact, PFUser $user)
-    {
-        $upload_information = [
-            'url'        => '',
-            'field-name' => ''
-        ];
-        $factory = Tracker_FormElementFactory::instance();
-        $tracker = $artifact->getTracker();
-        if (! $tracker) {
-            return $upload_information;
-        }
-
-        $fields = $factory->getUsedFileFields($tracker);
-        foreach ($fields as $field) {
-            if ($field->userCanUpdate($user)) {
-                $upload_information['url'] = '/api/v1/tracker_fields/' . (int) $field->getId() . '/files';
-                $upload_information['field-name'] = 'artifact['. (int) $field->getId() .'][][tus-uploaded-id]';
-
-                return $upload_information;
-            }
-        }
-
-        return $upload_information;
     }
 
     private function fetchReplyByMailHelp() {
