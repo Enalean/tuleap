@@ -32,8 +32,9 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
         return $this->fetchWithColumnGroup('fetchArtifact', array($artifact, $submitted_values));
     }
     
-    public function fetchArtifactInGroup(Tracker_Artifact $artifact, $submitted_values = array()) {
-        return $this->fetchRecursiveArtifact('fetchArtifact', array($artifact, $submitted_values));
+    public function fetchArtifactInGroup(Tracker_Artifact $artifact, $submitted_values = array())
+    {
+        return $this->fetchRecursiveArtifact('fetchArtifact', $artifact, $submitted_values);
     }
     
     /**
@@ -47,8 +48,9 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
         return $this->fetchWithColumnGroup('fetchArtifactReadOnly', array($artifact, $submitted_values));
     }
 
-    public function fetchArtifactReadOnlyInGroup(Tracker_Artifact $artifact, $submitted_values = array()) {
-        return $this->fetchRecursiveArtifact('fetchArtifactReadOnly', array($artifact, $submitted_values));
+    public function fetchArtifactReadOnlyInGroup(Tracker_Artifact $artifact, $submitted_values = array())
+    {
+        return $this->fetchRecursiveArtifact('fetchArtifactReadOnly', $artifact, $submitted_values);
     }
 
     public function fetchMailArtifact($recipient, Tracker_Artifact $artifact, $format='text', $ignore_perms=false) {
@@ -66,8 +68,9 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
         return $this->fetchWithColumnGroup('fetchArtifactCopyMode', array($artifact, $submitted_values));
     }
 
-    public function fetchArtifactCopyModeInGroup(Tracker_Artifact $artifact, $submitted_values = array()) {
-        return $this->fetchRecursiveArtifact('fetchArtifactCopyMode', array($artifact, $submitted_values));
+    public function fetchArtifactCopyModeInGroup(Tracker_Artifact $artifact, $submitted_values = array())
+    {
+        return $this->fetchRecursiveArtifact('fetchArtifactCopyMode', $artifact, $submitted_values);
     }
     
     /**
@@ -79,8 +82,9 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
     public function fetchSubmit($submitted_values = array()) {
         return $this->fetchWithColumnGroup('fetchSubmit', array($submitted_values));
     }
-    public function fetchSubmitInGroup($submitted_values = array()) {
-        return $this->fetchRecursiveArtifact('fetchSubmit', array($submitted_values));
+    public function fetchSubmitInGroup($submitted_values = array())
+    {
+        return $this->fetchRecursiveArtifactForSubmit('fetchSubmit', $submitted_values);
     }
     
     
@@ -91,8 +95,10 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
     public function fetchSubmitMasschange($submitted_values = array()) {
         return $this->fetchWithColumnGroup('fetchSubmitMasschange', array($submitted_values));
     }
-    public function fetchSubmitMasschangeInGroup($submitted_values = array()) {
-        return $this->fetchRecursiveArtifact('fetchSubmitMasschange', array($submitted_values));
+
+    public function fetchSubmitMasschangeInGroup($submitted_values = array())
+    {
+        return $this->fetchRecursiveArtifactForSubmit('fetchSubmitMasschange', $submitted_values);
     }
     
     /**
