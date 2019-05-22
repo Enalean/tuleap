@@ -24,7 +24,9 @@
                 <span>{{ time.label }}</span>
             </a>
         </td>
-        <td>{{ time.project.label }}</td>
+        <td>
+            <a v-bind:href="link_to_project_homepage">{{ time.project.label }}</a>
+        </td>
         <td class="tlp-table-cell-numeric">
             {{ get_formatted_time(time) }}
         </td>
@@ -44,6 +46,9 @@ export default {
         ...mapGetters(["get_formatted_time"]),
         html_url() {
             return "/plugins/tracker/?tracker=" + this.time.id;
+        },
+        link_to_project_homepage() {
+            return "/projects/" + this.time.project.shortname;
         },
         display_void_trackers() {
             return !(this.are_void_trackers_hidden && this.time.minutes === 0);
