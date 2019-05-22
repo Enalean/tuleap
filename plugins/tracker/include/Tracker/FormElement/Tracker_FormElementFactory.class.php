@@ -570,7 +570,7 @@ class Tracker_FormElementFactory {
 
     /**
      * @param Tracker $tracker
-     * @return array All date formElements used by the tracker
+     * @return Tracker_FormElement_Field_File[]
      */
     public function getUsedFileFields($tracker) {
         return $this->getUsedFormElementsByType($tracker, array('file'));

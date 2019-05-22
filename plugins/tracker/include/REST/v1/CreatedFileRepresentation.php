@@ -20,8 +20,14 @@
 
 namespace Tuleap\Tracker\REST\v1;
 
+use Tuleap\Tracker\FormElement\Field\File\Upload\FileToUpload;
+
 final class CreatedFileRepresentation
 {
+    /**
+     * @var int
+     */
+    public $id;
     /**
      * @var string
      */
@@ -31,14 +37,13 @@ final class CreatedFileRepresentation
      */
     public $upload_href;
 
-    public function build(string $download_href, string $upload_href): void
+    public function build(FileToUpload $file_to_upload, int $file_size): void
     {
-        $this->download_href = $download_href;
-        $this->upload_href   = $upload_href;
-    }
+        $this->id            = $file_to_upload->getId();
+        $this->download_href = $file_to_upload->getDownloadHref();
 
-    public function buildEmptyFile(string $download_href): void
-    {
-        $this->download_href = $download_href;
+        if ($file_size !== 0) {
+            $this->upload_href = $file_to_upload->getUploadHref();
+        }
     }
 }

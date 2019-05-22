@@ -26,6 +26,8 @@ const webpack_configurator = require("../../../tools/utils/scripts/webpack-confi
 const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 
 const assets_dir_path = path.resolve(__dirname, "../assets");
+const public_assets_path = "/assets/";
+
 const manifest_plugin = new WebpackAssetsManifest({
     output: "manifest.json",
     merge: true,
@@ -175,9 +177,17 @@ const webpack_config_for_rich_text_editor = {
         "rich-text-editor": "./tuleap/textarea_rte.js"
     },
     context: path.resolve(__dirname),
-    output: webpack_configurator.configureOutput(assets_dir_path),
+    output: webpack_configurator.configureOutput(assets_dir_path, public_assets_path),
     module: {
-        rules: [webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11)]
+        rules: [
+            webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
+            webpack_configurator.rule_po_files
+        ]
+    },
+    resolve: {
+        alias: {
+            "tlp-fetch": path.resolve(__dirname, "../themes/common/tlp/src/js/fetch-wrapper.js")
+        }
     },
     plugins: [manifest_plugin],
     optimization: {

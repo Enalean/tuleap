@@ -18,6 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {
+    getUploadImageOptions,
+    initiateUploadImage
+} from "../tuleap/ckeditor/getUploadImageOptions.js";
+
 var codendi = window.codendi || {};
 
 codendi.RTE = Class.create({
@@ -48,7 +53,8 @@ codendi.RTE = Class.create({
 
     init_rte: function() {
         var replace_options = {
-            resize_enabled: true
+            resize_enabled: true,
+            language: document.body.dataset.userLocale
         };
 
         if (CKEDITOR.instances && CKEDITOR.instances[this.element.id]) {
@@ -130,7 +136,16 @@ codendi.RTE = Class.create({
             replace_options.resize_enabled = false;
         }
 
+        replace_options = Object.assign(replace_options, {
+            ...getUploadImageOptions(this.element)
+        });
         this.rte = CKEDITOR.replace(this.element.id, replace_options);
+        initiateUploadImage(
+            this.rte,
+            replace_options,
+            this.element.form,
+            this.element.dataset.uploadFieldName
+        );
 
         /*CKEDITOR filters HTML tags
               So, if your default text is like <blabla>, this will not be displayed.

@@ -68,10 +68,8 @@ final class FileCreator
 
             if ($file_post_representation->file_size === 0) {
                 $this->empty_file_to_upload_finisher->createEmptyFile($file_to_upload, $file_post_representation->name);
-                $representation->buildEmptyFile($file_to_upload->getDownloadHref());
-            } else {
-                $representation->build($file_to_upload->getDownloadHref(), $file_to_upload->getUploadHref());
             }
+            $representation->build($file_to_upload, $file_post_representation->file_size);
         } catch (UploadCreationConflictException $exception) {
             throw new RestException(409, $exception->getMessage());
         } catch (UploadCreationFileMismatchException $exception) {
