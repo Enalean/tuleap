@@ -103,7 +103,12 @@ class FrozenFields extends Transition_PostAction
      */
     public function exportToXml(SimpleXMLElement $root, $xmlMapping)
     {
-        // Not implemented.
+        if (count($this->getFieldIds()) >0) {
+            $child = $root->addChild(self::XML_TAG_NAME);
+            foreach ($this->getFieldIds() as $field_id) {
+                $child->addChild('field_id')->addAttribute('REF', array_search($field_id, $xmlMapping));
+            }
+        }
     }
 
     /**
