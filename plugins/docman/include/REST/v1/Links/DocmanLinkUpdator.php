@@ -141,18 +141,9 @@ class DocmanLinkUpdator
             $representation->status
         );
 
-        $this->obsolescence_date_checker->checkObsolescenceDateUsage(
-            $representation->obsolescence_date,
-            PLUGIN_DOCMAN_ITEM_TYPE_LINK
-        );
         $obsolescence_date_time_stamp = $this->date_retriever->getTimeStampOfDate(
             $representation->obsolescence_date,
-            PLUGIN_DOCMAN_ITEM_TYPE_LINK
-        );
-        $this->obsolescence_date_checker->checkDateValidity(
-            $current_time->getTimestamp(),
-            $obsolescence_date_time_stamp,
-            PLUGIN_DOCMAN_ITEM_TYPE_LINK
+            $current_time
         );
 
         $this->transaction_executor->execute(

@@ -25,6 +25,7 @@ namespace Tuleap\Docman\REST\v1\Metadata;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Docman\REST\v1\ItemRepresentation;
 
 class HardcodedMetadataObsolescenceDateRetrieverTest extends TestCase
 {
@@ -43,36 +44,42 @@ class HardcodedMetadataObsolescenceDateRetrieverTest extends TestCase
         $this->metadata_obsolescence_date_checker = \Mockery::mock(HardcodedMetdataObsolescenceDateChecker::class);
     }
 
-    public function testGetTimeStampOfDateForFolder(): void
-    {
-        $retriever = new HardcodedMetadataObsolescenceDateRetriever($this->metadata_obsolescence_date_checker);
-
-        $this->metadata_obsolescence_date_checker->shouldReceive('isObsolescenceMetadataUsed')->andReturn('1');
-
-        $time_stamp = $retriever->getTimeStampOfDate('2019-02-25', PLUGIN_DOCMAN_ITEM_TYPE_FOLDER);
-
-        $this->assertEquals(0, $time_stamp);
-    }
-
     public function testGetTimeStampOfDateForDocument(): void
     {
         $retriever = new HardcodedMetadataObsolescenceDateRetriever($this->metadata_obsolescence_date_checker);
 
+        $current_time                = \DateTimeImmutable::createFromFormat('Y-m-d', '2019-02-20');
+        $obsolescence_date           = \DateTimeImmutable::createFromFormat('Y-m-d', '2019-02-21');
+        $obsolescence_date_formatted = $obsolescence_date->format('Y-m-d');
+
+        $this->metadata_obsolescence_date_checker->shouldReceive('checkObsolescenceDateUsageForDocument')
+                                                 ->withArgs(
+                                                     [
+                                                         $obsolescence_date_formatted,
+                                                     ]
+                                                 )->once();
         $this->metadata_obsolescence_date_checker->shouldReceive('isObsolescenceMetadataUsed')->andReturn('1');
+        $this->metadata_obsolescence_date_checker->shouldReceive('checkDateValidity')->once();
 
-        $time_stamp = $retriever->getTimeStampOfDate('2019-02-25', PLUGIN_DOCMAN_ITEM_TYPE_EMPTY);
-
-        $expected_date = \DateTimeImmutable::createFromFormat('Y-m-d', '2019-02-25');
-        $this->assertEquals($expected_date->getTimestamp(), $time_stamp);
+        $time_stamp              = $retriever->getTimeStampOfDate(
+            $obsolescence_date_formatted,
+            $current_time
+        );
+        $expected_date_timestamp = $obsolescence_date->getTimestamp();
+        $this->assertEquals($expected_date_timestamp, $time_stamp);
     }
 
     public function testGetTimeStampOfDateForDocumentWhichHaveAnUnlimitedObsolescenceDate(): void
     {
         $retriever = new HardcodedMetadataObsolescenceDateRetriever($this->metadata_obsolescence_date_checker);
 
+        $this->metadata_obsolescence_date_checker->shouldReceive('checkObsolescenceDateUsageForDocument')
+                                                 ->withArgs([ItemRepresentation::OBSOLESCENCE_DATE_NONE])
+                                                 ->once();
+
         $this->metadata_obsolescence_date_checker->shouldReceive('isObsolescenceMetadataUsed')->andReturn('1');
 
-        $time_stamp = $retriever->getTimeStampOfDate('0', PLUGIN_DOCMAN_ITEM_TYPE_EMPTY);
+        $time_stamp = $retriever->getTimeStampOfDate('0', new \DateTimeImmutable());
 
         $this->assertEquals(0, $time_stamp);
     }
@@ -81,20 +88,32 @@ class HardcodedMetadataObsolescenceDateRetrieverTest extends TestCase
     {
         $retriever = new HardcodedMetadataObsolescenceDateRetriever($this->metadata_obsolescence_date_checker);
 
+        $current_time                 = \DateTimeImmutable::createFromFormat('Y-m-d', '2019-02-20');
+        $obsolescence_date_bad_format = ' 2018-02-56459595';
+
+        $this->metadata_obsolescence_date_checker->shouldReceive('checkObsolescenceDateUsageForDocument')->withArgs(
+            [$obsolescence_date_bad_format]
+        )->once();
         $this->metadata_obsolescence_date_checker->shouldReceive('isObsolescenceMetadataUsed')->andReturn('1');
+        $this->metadata_obsolescence_date_checker->shouldReceive('checkDateValidity')->never();
+
 
         $this->expectException(InvalidDateTimeFormatException::class);
 
-        $retriever->getTimeStampOfDate('2018-02-56459595', PLUGIN_DOCMAN_ITEM_TYPE_EMPTY);
+        $retriever->getTimeStampOfDate($obsolescence_date_bad_format, $current_time);
     }
 
     public function testGetTimeStampOfDateReturns0IfTheDateIsNull(): void
     {
         $retriever = new HardcodedMetadataObsolescenceDateRetriever($this->metadata_obsolescence_date_checker);
 
+        $this->metadata_obsolescence_date_checker->shouldReceive('checkObsolescenceDateUsageForDocument')
+                                                 ->withArgs([null])
+                                                 ->once();
+
         $this->metadata_obsolescence_date_checker->shouldReceive('isObsolescenceMetadataUsed')->andReturn('1');
 
-        $time_stamp = $retriever->getTimeStampOfDate(null, PLUGIN_DOCMAN_ITEM_TYPE_EMPTY);
+        $time_stamp = $retriever->getTimeStampOfDate(null, new \DateTimeImmutable());
 
         $this->assertEquals(0, $time_stamp);
     }

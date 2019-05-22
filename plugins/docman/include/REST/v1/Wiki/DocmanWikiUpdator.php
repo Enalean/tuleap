@@ -118,7 +118,10 @@ class DocmanWikiUpdator
 
         $status_id = $this->getStatusId($representation);
 
-        $obsolescence_date_time_stamp = $this->getObsolescenceDateTimestamp($representation, $current_time);
+        $obsolescence_date_time_stamp = $this->date_retriever->getTimeStampOfDate(
+            $representation->obsolescence_date,
+            $current_time
+        );
 
         $this->transaction_executor->execute(
             function () use ($item, $current_user, $representation, $status_id, $obsolescence_date_time_stamp) {
@@ -186,30 +189,5 @@ class DocmanWikiUpdator
             $representation->status
         );
         return $status_id;
-    }
-
-    /**
-     * @throws \Tuleap\Docman\REST\v1\Metadata\InvalidDateComparisonException
-     * @throws \Tuleap\Docman\REST\v1\Metadata\InvalidDateTimeFormatException
-     * @throws \Tuleap\Docman\REST\v1\Metadata\ObsolescenceDateDisabledException
-     */
-    private function getObsolescenceDateTimestamp(
-        DocmanWikiPATCHRepresentation $representation,
-        \DateTimeImmutable $current_time
-    ): int {
-        $this->obsolescence_date_checker->checkObsolescenceDateUsage(
-            $representation->obsolescence_date,
-            PLUGIN_DOCMAN_ITEM_TYPE_WIKI
-        );
-        $obsolescence_date_time_stamp = $this->date_retriever->getTimeStampOfDate(
-            $representation->obsolescence_date,
-            PLUGIN_DOCMAN_ITEM_TYPE_WIKI
-        );
-        $this->obsolescence_date_checker->checkDateValidity(
-            $current_time->getTimestamp(),
-            $obsolescence_date_time_stamp,
-            PLUGIN_DOCMAN_ITEM_TYPE_WIKI
-        );
-        return $obsolescence_date_time_stamp;
     }
 }

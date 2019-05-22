@@ -40,13 +40,9 @@ class HardcodedMetdataObsolescenceDateChecker
     /**
      * @throws InvalidDateComparisonException
      */
-    public function checkDateValidity(int $current_date, int $obsolescence_date, int $item_type): void
+    public function checkDateValidity(int $current_date, int $obsolescence_date): void
     {
-        if ($item_type === PLUGIN_DOCMAN_ITEM_TYPE_FOLDER) {
-            return;
-        }
-
-        if ($obsolescence_date === 0) {
+        if ($obsolescence_date === (int)ItemRepresentation::OBSOLESCENCE_DATE_NONE) {
             return;
         }
 
@@ -58,12 +54,8 @@ class HardcodedMetdataObsolescenceDateChecker
     /**
      * @throws ObsolescenceDateDisabledException
      */
-    public function checkObsolescenceDateUsage(?string $date, int $item_type): void
+    public function checkObsolescenceDateUsageForDocument(?string $date): void
     {
-        if ($item_type === PLUGIN_DOCMAN_ITEM_TYPE_FOLDER) {
-            return;
-        }
-
         if ($date === ItemRepresentation::OBSOLESCENCE_DATE_NONE) {
             return;
         }

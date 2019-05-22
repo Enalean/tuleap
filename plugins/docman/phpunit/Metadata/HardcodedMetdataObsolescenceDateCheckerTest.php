@@ -24,6 +24,7 @@ namespace Tuleap\Docman\REST\v1\Metadata;
 use DateTimeImmutable;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Docman\REST\v1\ItemRepresentation;
 
 class HardcodedMetdataObsolescenceDateCheckerTest extends TestCase
 {
@@ -49,7 +50,7 @@ class HardcodedMetdataObsolescenceDateCheckerTest extends TestCase
                                  ->with('obsolescence_date')
                                  ->andReturn("1");
 
-        $checker->checkObsolescenceDateUsage('2019-06-04', PLUGIN_DOCMAN_ITEM_TYPE_EMPTY);
+        $checker->checkObsolescenceDateUsageForDocument('2019-06-04');
 
         $this->addToAssertionCount(1);
     }
@@ -62,7 +63,7 @@ class HardcodedMetdataObsolescenceDateCheckerTest extends TestCase
                                  ->with('obsolescence_date')
                                  ->andReturn("0");
 
-        $checker->checkObsolescenceDateUsage('0', PLUGIN_DOCMAN_ITEM_TYPE_EMPTY);
+        $checker->checkObsolescenceDateUsageForDocument(ItemRepresentation::OBSOLESCENCE_DATE_NONE);
 
         $this->addToAssertionCount(1);
     }
@@ -75,19 +76,7 @@ class HardcodedMetdataObsolescenceDateCheckerTest extends TestCase
                                  ->with('obsolescence_date')
                                  ->andReturn("1");
 
-        $checker->checkObsolescenceDateUsage('2019-06-04', PLUGIN_DOCMAN_ITEM_TYPE_EMPTY);
-
-        $this->addToAssertionCount(1);
-    }
-
-    public function testCheckObsolescenceDateUsageIsOkWithFolder(): void
-    {
-        $checker = new HardcodedMetdataObsolescenceDateChecker($this->docman_settings_bo);
-
-        $this->docman_settings_bo->shouldReceive('getMetadataUsage')
-                                 ->never();
-
-        $checker->checkObsolescenceDateUsage('2019-06-04', PLUGIN_DOCMAN_ITEM_TYPE_FOLDER);
+        $checker->checkObsolescenceDateUsageForDocument('2019-06-04');
 
         $this->addToAssertionCount(1);
     }
@@ -100,7 +89,7 @@ class HardcodedMetdataObsolescenceDateCheckerTest extends TestCase
                                  ->with('obsolescence_date')
                                  ->andReturn('1');
 
-        $checker->checkObsolescenceDateUsage('0', PLUGIN_DOCMAN_ITEM_TYPE_EMPTY);
+        $checker->checkObsolescenceDateUsageForDocument(ItemRepresentation::OBSOLESCENCE_DATE_NONE);
     }
 
     public function testCheckObsolescenceDateUsageThrowsExceptionIfTheMetadataIsNotUsedAndObsolescenceDateIsNot0(): void
@@ -109,11 +98,11 @@ class HardcodedMetdataObsolescenceDateCheckerTest extends TestCase
 
         $this->docman_settings_bo->shouldReceive('getMetadataUsage')
                                  ->with('obsolescence_date')
-                                 ->andReturn('0');
+                                 ->andReturn((int)ItemRepresentation::OBSOLESCENCE_DATE_NONE);
 
         $this->expectException(ObsolescenceDateDisabledException::class);
 
-        $checker->checkObsolescenceDateUsage('2019-06-04', PLUGIN_DOCMAN_ITEM_TYPE_EMPTY);
+        $checker->checkObsolescenceDateUsageForDocument('2019-06-04');
     }
 
     public function testCheckDateValidityIsOk(): void
@@ -150,20 +139,19 @@ class HardcodedMetdataObsolescenceDateCheckerTest extends TestCase
         );
     }
 
-    public function testCheckDateValidityIfTheItemIsAFolder(): void
+    public function testCheckDateValidityIsOkWhenTheObsolescenceDateIs0(): void
     {
         $checker = new HardcodedMetdataObsolescenceDateChecker($this->docman_settings_bo);
 
         $obsolescence_date = new DateTimeImmutable();
-        $current_date      = $obsolescence_date->add(new \DateInterval('P1D'));
 
         $this->docman_settings_bo->shouldReceive('getMetadataUsage')
                                  ->never();
 
         $checker->checkDateValidity(
-            $current_date->getTimestamp(),
+            (int)ItemRepresentation::OBSOLESCENCE_DATE_NONE,
             $obsolescence_date->getTimestamp(),
-            PLUGIN_DOCMAN_ITEM_TYPE_FOLDER
+            PLUGIN_DOCMAN_ITEM_TYPE_EMPTY
         );
     }
 }

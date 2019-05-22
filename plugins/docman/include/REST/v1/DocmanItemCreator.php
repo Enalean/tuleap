@@ -167,17 +167,14 @@ class DocmanItemCreator
         $this->metadata_usage_checker->checkStatusIsNotSetWhenStatusMetadataIsNotAllowed($status);
         $status_id = $this->status_mapper->getItemStatusIdFromItemStatusString($status);
 
-        $this->obsolescence_date_checker->checkObsolescenceDateUsage($obsolescence_date, $item_type_id);
-        $obsolescence_date_time_stamp = $this->date_retriever->getTimeStampOfDate(
-            $obsolescence_date,
-            $item_type_id
-        );
-        $this->obsolescence_date_checker->checkDateValidity(
-            $current_time->getTimestamp(),
-            $obsolescence_date_time_stamp,
-            $item_type_id
-        );
-
+        if ($item_type_id !== PLUGIN_DOCMAN_ITEM_TYPE_FOLDER) {
+            $obsolescence_date_time_stamp = $this->date_retriever->getTimeStampOfDate(
+                $obsolescence_date,
+                $current_time
+            );
+        } else {
+            $obsolescence_date_time_stamp = (int)ItemRepresentation::OBSOLESCENCE_DATE_NONE;
+        }
         $item = $this->item_factory->createWithoutOrdering(
             $title,
             $description,
@@ -235,15 +232,9 @@ class DocmanItemCreator
         $this->metadata_usage_checker->checkStatusIsNotSetWhenStatusMetadataIsNotAllowed($status);
         $status_id = $this->status_mapper->getItemStatusIdFromItemStatusString($status);
 
-        $this->obsolescence_date_checker->checkObsolescenceDateUsage($obsolescence_date, PLUGIN_DOCMAN_ITEM_TYPE_FILE);
         $obsolescence_date_time_stamp = $this->date_retriever->getTimeStampOfDate(
             $obsolescence_date,
-            PLUGIN_DOCMAN_ITEM_TYPE_FILE
-        );
-        $this->obsolescence_date_checker->checkDateValidity(
-            $current_time->getTimestamp(),
-            $obsolescence_date_time_stamp,
-            PLUGIN_DOCMAN_ITEM_TYPE_FILE
+            $current_time
         );
 
         try {

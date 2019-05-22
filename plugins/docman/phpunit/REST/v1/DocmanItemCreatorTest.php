@@ -133,12 +133,10 @@ class DocmanItemCreatorTest extends TestCase
         $this->item_status_mapper->shouldReceive('getItemStatusIdFromItemStatusString')
                                  ->andReturn(PLUGIN_DOCMAN_ITEM_STATUS_NONE);
 
-        $this->metadata_obsolescence_date_checker->shouldReceive('checkObsolescenceDateUsage')->once();
         $this->metadata_obsolesence_date_retriever
             ->shouldReceive('getTimeStampOfDate')
-            ->withArgs([ItemRepresentation::OBSOLESCENCE_DATE_NONE, PLUGIN_DOCMAN_ITEM_TYPE_EMPTY])
+            ->withArgs([ItemRepresentation::OBSOLESCENCE_DATE_NONE,$current_time])
             ->andReturn((int) ItemRepresentation::OBSOLESCENCE_DATE_NONE);
-        $this->metadata_obsolescence_date_checker->shouldReceive('checkDateValidity')->once();
 
         $this->metadata_item_status_checker->shouldReceive(
             'checkStatusIsNotSetWhenStatusMetadataIsNotAllowed'
@@ -210,12 +208,9 @@ class DocmanItemCreatorTest extends TestCase
             'checkStatusIsNotSetWhenStatusMetadataIsNotAllowed'
         )->andReturn(false);
 
-        $this->metadata_obsolescence_date_checker->shouldReceive('checkObsolescenceDateUsage')->once();
         $this->metadata_obsolesence_date_retriever->shouldReceive('getTimeStampOfDate')->andReturn(
             (int)ItemRepresentation::OBSOLESCENCE_DATE_NONE
         );
-        $this->metadata_obsolescence_date_checker->shouldReceive('checkDateValidity')->once();
-
 
         $created_item = \Mockery::mock(\Docman_Wiki::class);
         $created_item->shouldReceive('getId')->andReturns(12);
@@ -224,7 +219,7 @@ class DocmanItemCreatorTest extends TestCase
 
         $this->item_factory
             ->shouldReceive('createWithoutOrdering')
-            ->with('Title', '', 11, 100, 0, 222, PLUGIN_DOCMAN_ITEM_TYPE_WIKI, "Monchichi", null)
+            ->with('Title', '', 11, 100, (int)ItemRepresentation::OBSOLESCENCE_DATE_NONE, 222, PLUGIN_DOCMAN_ITEM_TYPE_WIKI, "Monchichi", null)
             ->once()
             ->andReturns($created_item);
 
@@ -337,11 +332,9 @@ class DocmanItemCreatorTest extends TestCase
             'checkStatusIsNotSetWhenStatusMetadataIsNotAllowed'
         )->andReturn(false);
 
-        $this->metadata_obsolescence_date_checker->shouldReceive('checkObsolescenceDateUsage')->once();
         $this->metadata_obsolesence_date_retriever->shouldReceive('getTimeStampOfDate')->andReturn(
             (int)ItemRepresentation::OBSOLESCENCE_DATE_NONE
         );
-        $this->metadata_obsolescence_date_checker->shouldReceive('checkDateValidity')->once();
 
         $this->item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
 
@@ -480,11 +473,9 @@ class DocmanItemCreatorTest extends TestCase
         $this->item_status_mapper->shouldReceive('getItemStatusIdFromItemStatusString')
                                  ->andReturn(PLUGIN_DOCMAN_ITEM_STATUS_NONE);
 
-        $this->metadata_obsolescence_date_checker->shouldReceive('checkObsolescenceDateUsage')->once();
         $this->metadata_obsolesence_date_retriever->shouldReceive('getTimeStampOfDate')->andReturn(
             (int)ItemRepresentation::OBSOLESCENCE_DATE_NONE
         );
-        $this->metadata_obsolescence_date_checker->shouldReceive('checkDateValidity')->once();
 
         $this->metadata_item_status_checker->shouldReceive(
             'checkStatusIsNotSetWhenStatusMetadataIsNotAllowed'
@@ -560,11 +551,9 @@ class DocmanItemCreatorTest extends TestCase
         $this->item_status_mapper->shouldReceive('getItemStatusIdFromItemStatusString')
                                  ->andReturn(PLUGIN_DOCMAN_ITEM_STATUS_NONE);
 
-        $this->metadata_obsolescence_date_checker->shouldReceive('checkObsolescenceDateUsage')->once();
         $this->metadata_obsolesence_date_retriever->shouldReceive('getTimeStampOfDate')->andReturn(
             (int)ItemRepresentation::OBSOLESCENCE_DATE_NONE
         );
-        $this->metadata_obsolescence_date_checker->shouldReceive('checkDateValidity')->once();
 
         $this->metadata_item_status_checker->shouldReceive(
             'checkStatusIsNotSetWhenStatusMetadataIsNotAllowed'
@@ -634,11 +623,9 @@ class DocmanItemCreatorTest extends TestCase
             'checkStatusIsNotSetWhenStatusMetadataIsNotAllowed'
         )->andReturn(false);
 
-        $this->metadata_obsolescence_date_checker->shouldReceive('checkObsolescenceDateUsage')->once();
         $this->metadata_obsolesence_date_retriever->shouldReceive('getTimeStampOfDate')->andReturn(
             (int)ItemRepresentation::OBSOLESCENCE_DATE_NONE
         );
-        $this->metadata_obsolescence_date_checker->shouldReceive('checkDateValidity')->once();
 
         $created_item = \Mockery::mock(\Docman_EmbeddedFile::class);
         $created_item->shouldReceive('getId')->andReturns(12);
@@ -806,12 +793,9 @@ class DocmanItemCreatorTest extends TestCase
             PLUGIN_DOCMAN_ITEM_STATUS_APPROVED
         );
 
-        $this->metadata_obsolescence_date_checker->shouldReceive('checkObsolescenceDateUsage')->once();
         $this->metadata_obsolesence_date_retriever->shouldReceive('getTimeStampOfDate')->andReturn(
             (int)ItemRepresentation::OBSOLESCENCE_DATE_NONE
         );
-        $this->metadata_obsolescence_date_checker->shouldReceive('checkDateValidity')->once();
-
         $this->metadata_item_status_checker->shouldReceive('checkStatusIsNotSetWhenStatusMetadataIsNotAllowed')->once(
         )->andReturn('approved');
 
@@ -887,18 +871,15 @@ class DocmanItemCreatorTest extends TestCase
         $this->item_status_mapper->shouldReceive('getItemStatusIdFromItemStatusString')
                                  ->andReturn(PLUGIN_DOCMAN_ITEM_STATUS_NONE);
 
-        $this->metadata_obsolescence_date_checker->shouldReceive('checkObsolescenceDateUsage')->once();
         $obsolescence_date_time_stamp = 123456;
         $this->metadata_obsolesence_date_retriever->shouldReceive('getTimeStampOfDate')
                                                   ->withArgs(
                                                       [
                                                           $post_representation->obsolescence_date,
-                                                          PLUGIN_DOCMAN_ITEM_TYPE_EMPTY
+                                                          $current_time
                                                       ]
                                                   )
                                                   ->andReturn($obsolescence_date_time_stamp);
-
-        $this->metadata_obsolescence_date_checker->shouldReceive('checkDateValidity')->once();
 
         $this->metadata_item_status_checker->shouldReceive(
             'checkStatusIsNotSetWhenStatusMetadataIsNotAllowed'
@@ -967,18 +948,15 @@ class DocmanItemCreatorTest extends TestCase
         $this->item_status_mapper->shouldReceive('getItemStatusIdFromItemStatusString')
                                  ->andReturn(PLUGIN_DOCMAN_ITEM_STATUS_APPROVED);
 
-        $this->metadata_obsolescence_date_checker->shouldReceive('checkObsolescenceDateUsage')->once();
         $obsolescence_date_time_stamp = 123456;
         $this->metadata_obsolesence_date_retriever->shouldReceive('getTimeStampOfDate')
                                                   ->withArgs(
                                                       [
                                                           $post_representation->obsolescence_date,
-                                                          PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE
+                                                          $current_time
                                                       ]
                                                   )
                                                   ->andReturn($obsolescence_date_time_stamp);
-
-        $this->metadata_obsolescence_date_checker->shouldReceive('checkDateValidity')->once();
 
         $this->metadata_item_status_checker->shouldReceive(
             'checkStatusIsNotSetWhenStatusMetadataIsNotAllowed'
@@ -1056,18 +1034,15 @@ class DocmanItemCreatorTest extends TestCase
         $this->item_status_mapper->shouldReceive('getItemStatusIdFromItemStatusString')
                                  ->andReturn(PLUGIN_DOCMAN_ITEM_STATUS_REJECTED);
 
-        $this->metadata_obsolescence_date_checker->shouldReceive('checkObsolescenceDateUsage')->once();
         $obsolescence_date_time_stamp = 123456;
         $this->metadata_obsolesence_date_retriever->shouldReceive('getTimeStampOfDate')
                                                   ->withArgs(
                                                       [
                                                           $post_representation->obsolescence_date,
-                                                          PLUGIN_DOCMAN_ITEM_TYPE_LINK
+                                                          $current_time
                                                       ]
                                                   )
                                                   ->andReturn($obsolescence_date_time_stamp);
-
-        $this->metadata_obsolescence_date_checker->shouldReceive('checkDateValidity')->once();
 
         $this->metadata_item_status_checker->shouldReceive(
             'checkStatusIsNotSetWhenStatusMetadataIsNotAllowed'
@@ -1152,18 +1127,16 @@ class DocmanItemCreatorTest extends TestCase
             'checkStatusIsNotSetWhenStatusMetadataIsNotAllowed'
         )->andReturn(false);
 
-        $this->metadata_obsolescence_date_checker->shouldReceive('checkObsolescenceDateUsage')->once();
         $obsolescence_date_time_stamp = 123456;
         $this->metadata_obsolesence_date_retriever->shouldReceive('getTimeStampOfDate')
                                                   ->withArgs(
                                                       [
                                                           $post_representation->obsolescence_date,
-                                                          PLUGIN_DOCMAN_ITEM_TYPE_WIKI
+                                                          $current_time
                                                       ]
                                                   )
                                                   ->andReturn($obsolescence_date_time_stamp);
 
-        $this->metadata_obsolescence_date_checker->shouldReceive('checkDateValidity')->once();
 
 
         $created_item = \Mockery::mock(\Docman_Wiki::class);
@@ -1242,18 +1215,15 @@ class DocmanItemCreatorTest extends TestCase
             'checkStatusIsNotSetWhenStatusMetadataIsNotAllowed'
         )->andReturn(false);
 
-        $this->metadata_obsolescence_date_checker->shouldReceive('checkObsolescenceDateUsage')->once();
         $obsolescence_date_time_stamp = 123456;
         $this->metadata_obsolesence_date_retriever->shouldReceive('getTimeStampOfDate')
                                                   ->withArgs(
                                                       [
                                                           $post_representation->obsolescence_date,
-                                                          PLUGIN_DOCMAN_ITEM_TYPE_FILE
+                                                          $current_time
                                                       ]
                                                   )
                                                   ->andReturn($obsolescence_date_time_stamp);
-
-        $this->metadata_obsolescence_date_checker->shouldReceive('checkDateValidity')->once();
 
         $this->item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
 
