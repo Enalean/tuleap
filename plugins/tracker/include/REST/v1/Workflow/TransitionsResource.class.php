@@ -463,12 +463,21 @@ class TransitionsResource extends AuthenticatedResource
 
     private function getPostActionCollectionJsonParser(): PostActionCollectionJsonParser
     {
+        if (\ForgeConfig::get("sys_should_use_read_only_post_actions")) {
+            return new PostActionCollectionJsonParser(
+                new CIBuildJsonParser(),
+                new SetDateValueJsonParser(),
+                new SetIntValueJsonParser(),
+                new SetFloatValueJsonParser(),
+                new FrozenFieldsJsonParser()
+            );
+        }
+
         return new PostActionCollectionJsonParser(
             new CIBuildJsonParser(),
             new SetDateValueJsonParser(),
             new SetIntValueJsonParser(),
-            new SetFloatValueJsonParser(),
-            new FrozenFieldsJsonParser()
+            new SetFloatValueJsonParser()
         );
     }
 
@@ -483,6 +492,44 @@ class TransitionsResource extends AuthenticatedResource
         $field_ids_validator  = new PostActionFieldIdValidator();
         $form_element_factory = \Tracker_FormElementFactory::instance();
         $transaction_executor = $this->getTransactionExecutor();
+
+        if (\ForgeConfig::get('sys_should_use_read_only_post_actions')) {
+            return new PostActionCollectionUpdater(
+                new CIBuildValueUpdater(
+                    new CIBuildValueRepository(
+                        $this->getCIBuildDao()
+                    ),
+                    new CIBuildValueValidator($ids_validator)
+                ),
+                new SetDateValueUpdater(
+                    new SetDateValueRepository(
+                        $this->getFieldDateDao(),
+                        $transaction_executor
+                    ),
+                    new SetDateValueValidator($ids_validator, $field_ids_validator, $form_element_factory)
+                ),
+                new SetIntValueUpdater(
+                    new SetintValueRepository(
+                        $this->getFieldIntDao(),
+                        $transaction_executor
+                    ),
+                    new SetIntValueValidator($ids_validator, $field_ids_validator, $form_element_factory)
+                ),
+                new SetFloatValueUpdater(
+                    new SetFloatValueRepository(
+                        $this->getFieldFloatDao(),
+                        $transaction_executor
+                    ),
+                    new SetFloatValueValidator($ids_validator, $field_ids_validator, $form_element_factory)
+                ),
+                new FrozenFieldsValueUpdater(
+                    new FrozenFieldsValueRepository(
+                        $this->getFrozenFieldsDao()
+                    ),
+                    new FrozenFieldsValueValidator($form_element_factory, Tracker_RuleFactory::instance())
+                )
+            );
+        }
 
         return new PostActionCollectionUpdater(
             new CIBuildValueUpdater(
@@ -511,12 +558,6 @@ class TransitionsResource extends AuthenticatedResource
                     $transaction_executor
                 ),
                 new SetFloatValueValidator($ids_validator, $field_ids_validator, $form_element_factory)
-            ),
-            new FrozenFieldsValueUpdater(
-                new FrozenFieldsValueRepository(
-                    $this->getFrozenFieldsDao()
-                ),
-                new FrozenFieldsValueValidator($form_element_factory, Tracker_RuleFactory::instance())
             )
         );
     }
