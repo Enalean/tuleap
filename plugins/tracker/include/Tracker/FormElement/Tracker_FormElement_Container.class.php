@@ -1,7 +1,7 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
 
 /**
  * Base class for composite formElements.
@@ -261,19 +260,6 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement {
         return $html;
     }
 
-    protected function fetchRecursiveArtifactReadOnly($method, $params = array()) {
-        $html = '';
-        $content = $this->getContainerContent($method, $params);
-
-        if (count($content)) {
-            $html .= $this->fetchArtifactReadOnlyPrefix();
-            $html .= $this->fetchArtifactReadOnlyContent($content);
-            $html .= $this->fetchArtifactReadOnlySuffix();
-        }
-        $this->has_been_displayed = true;
-        return $html;
-    }
-
     protected function fetchMailRecursiveArtifact($format, $method, $params = array()) {
         $output = '';
         $content = $this->getContainerContent($method, $params);
@@ -415,8 +401,6 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement {
 
     protected abstract function fetchArtifactPrefix();
     protected abstract function fetchArtifactSuffix();
-    protected abstract function fetchArtifactReadOnlyPrefix();
-    protected abstract function fetchArtifactReadOnlySuffix();
     protected abstract function fetchMailArtifactPrefix($format);
     protected abstract function fetchMailArtifactSuffix($format);
 
@@ -472,5 +456,4 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement {
 
         return $content_structure;
     }
-
 }
