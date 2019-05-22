@@ -181,6 +181,11 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
         return $html;
     }
 
+    public function canBeRemovedFromUsage() : bool
+    {
+        return parent::canBeRemovedFromUsage() && ! $this->isFieldsetUsedInPostAction();
+    }
+
     /**
      * getLabel - the label of this Tracker_FormElement_FieldSet
      * The tracker label can be internationalized.
@@ -287,5 +292,33 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
      */
     function getID() {
         return $this->id;
+    }
+
+    /**
+     * Is the form element can be removed from usage?
+     * This method is to prevent tracker inconsistency
+     *
+     * @return string
+     */
+    public function getCannotRemoveMessage()
+    {
+        if ($this->isFieldsetUsedInPostAction() === true) {
+            return dgettext(
+                'tuleap-tracker',
+                'Not allowed to delete a fieldset used in workflow.'
+            );
+        }
+
+        return parent::getCannotRemoveMessage();
+    }
+
+    protected function getHiddenFieldsetsDao() : HiddenFieldsetsDao
+    {
+        return new HiddenFieldsetsDao();
+    }
+
+    private function isFieldsetUsedInPostAction() : bool
+    {
+        return $this->getHiddenFieldsetsDao()->isFieldsetUsedInPostAction((int) $this->getID());
     }
 }

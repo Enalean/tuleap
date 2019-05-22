@@ -34,6 +34,7 @@ use Tracker_FormElement_Field_Float;
 use Tracker_FormElement_Field_String;
 use Tracker_FormElement_Field_Text;
 use Tracker_FormElementFactory;
+use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDao;
 use User\XML\Import\IFindUserFromXMLReference;
 
 class Tracker_FormElement_Container_FieldsetTest extends TestCase //phpcs:ignore
@@ -122,11 +123,15 @@ class Tracker_FormElement_Container_FieldsetTest extends TestCase //phpcs:ignore
 
     public function testIsDeletableWithoutFields()
     {
+        $hidden_dao = Mockery::mock(HiddenFieldsetsDao::class);
+        $hidden_dao->shouldReceive('isFieldsetUsedInPostAction')->andReturn(false);
+
         $container_fieldset = Mockery::mock(Tracker_FormElement_Container_Fieldset::class)
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
 
         $container_fieldset->shouldReceive('getFormElements')->andReturn(null);
+        $container_fieldset->shouldReceive('getHiddenFieldsetsDao')->andReturn($hidden_dao);
 
         $this->assertTrue($container_fieldset->canBeRemovedFromUsage());
     }

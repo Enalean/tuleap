@@ -27,6 +27,17 @@ use Tuleap\DB\DataAccessObject;
 class HiddenFieldsetsDao extends DataAccessObject
 {
 
+    public function isFieldsetUsedInPostAction(int $fieldset_id): bool
+    {
+        $sql = 'SELECT NULL
+            FROM plugin_tracker_workflow_postactions_hidden_fieldsets_value
+            WHERE plugin_tracker_workflow_postactions_hidden_fieldsets_value.fieldset_id = ?';
+
+        $result = $this->getDB()->cell($sql, $fieldset_id);
+
+        return $result !== false;
+    }
+
     public function searchByTransitionId(int $transition_id): array
     {
         $sql = 'SELECT plugin_tracker_workflow_postactions_hidden_fieldsets_value.*

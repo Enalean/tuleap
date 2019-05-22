@@ -409,6 +409,9 @@ msgstr "Aucun webhook n'est défini"
 msgid "No workflow defined on the given tracker."
 msgstr "Aucun workflow défini pour ce tracker."
 
+msgid "Not allowed to delete a fieldset used in workflow."
+msgstr "Impossible de supprimer un groupe de champs utilisé dans le workflow."
+
 msgid "Notification successfully deleted."
 msgstr "La notification a été supprimée"
 
@@ -657,7 +660,9 @@ msgstr ""
 
 #, php-format
 msgid "The field_id value '%u' is used in a field dependency in the tracker."
-msgstr "Le field_id '%u' est utilisé dans une dépendance entre champs dans le tracker."
+msgstr ""
+"Le field_id '%u' est utilisé dans une dépendance entre champs dans le "
+"tracker."
 
 #, php-format
 msgid "The file field '%s' cannot be compared to MYSELF()."
