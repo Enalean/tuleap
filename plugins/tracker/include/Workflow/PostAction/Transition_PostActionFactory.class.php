@@ -33,6 +33,7 @@ class Transition_PostActionFactory //phpcs:ignoreFile
         Transition_PostAction_Field_Int::XML_TAG_NAME   => Transition_PostAction_Field_Int::SHORT_NAME,
         Transition_PostAction_Field_Date::XML_TAG_NAME  => Transition_PostAction_Field_Date::SHORT_NAME,
         Transition_PostAction_CIBuild::XML_TAG_NAME     => Transition_PostAction_CIBuild::SHORT_NAME,
+        FrozenFields::XML_TAG_NAME                      => FrozenFields::SHORT_NAME
     );
 
     /** @var Transition_PostAction_FieldFactory */
@@ -43,13 +44,6 @@ class Transition_PostActionFactory //phpcs:ignoreFile
 
     /** @var FrozenFieldsFactory */
     private $frozen_fields_factory;
-
-    public function __construct()
-    {
-        if ($this->areNewActionsEnabled()) {
-            $this->shortnames_by_xml_tag_name[FrozenFields::XML_TAG_NAME] = FrozenFields::SHORT_NAME;
-        }
-    }
 
     /**
      * Get html code to let someone choose a post action for a transition
@@ -99,7 +93,7 @@ class Transition_PostActionFactory //phpcs:ignoreFile
     {
         if ($post_action instanceof Transition_PostAction_Field) {
             $this->getFieldFactory()->saveObject($post_action);
-        } elseif ($this->areNewActionsEnabled() && is_a($post_action, FrozenFields::class)) {
+        } elseif (is_a($post_action, FrozenFields::class)) {
             $this->getFrozenFieldsFactory()->saveObject($post_action);
         } else {
             $this->getCIBuildFactory()->saveObject($post_action);
@@ -175,11 +169,8 @@ class Transition_PostActionFactory //phpcs:ignoreFile
             Transition_PostAction_Field_Int::SHORT_NAME   => $field_factory,
             Transition_PostAction_Field_Date::SHORT_NAME  => $field_factory,
             Transition_PostAction_CIBuild::SHORT_NAME     => $this->getCIBuildFactory(),
+            FrozenFields::SHORT_NAME                      => $this->getFrozenFieldsFactory()
         );
-
-        if ($this->areNewActionsEnabled()) {
-            $factories[FrozenFields::SHORT_NAME] = $this->getFrozenFieldsFactory();
-        }
 
         if (isset($factories[$post_action_short_name])) {
             return $factories[$post_action_short_name];
@@ -221,24 +212,15 @@ class Transition_PostActionFactory //phpcs:ignoreFile
         return $this->frozen_fields_factory;
     }
 
-    private function areNewActionsEnabled(): bool
-    {
-        $enabled = trim(ForgeConfig::get('sys_should_use_read_only_post_actions'));
-        if (empty($enabled)) {
-            return false;
-        }
-
-        return true;
-    }
-
     /** @return Transition_PostActionSubFactories */
     private function getSubFactories()
     {
-        $sub_factories = [$this->getFieldFactory(), $this->getCIBuildFactory()];
+        $sub_factories = [
+            $this->getFieldFactory(),
+            $this->getCIBuildFactory(),
+            $this->getFrozenFieldsFactory()
+        ];
 
-        if ($this->areNewActionsEnabled()) {
-            $sub_factories[] = $this->getFrozenFieldsFactory();
-        }
         return new Transition_PostActionSubFactories($sub_factories);
     }
 
