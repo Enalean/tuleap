@@ -1611,6 +1611,10 @@ div.tracker_report_table_hide_masschange .tracker_report_table_masschange {
     display: inline;
 }
 
+.tracker-field-dependencies-checkbox{
+    display: none;
+}
+
 #tracker_workflow_matrix .pc_check_unchecked,
 #tracker_field_dependencies_matrix .pc_check_unchecked {
     background-image: url(../images/ic/bullet_grey.png);
