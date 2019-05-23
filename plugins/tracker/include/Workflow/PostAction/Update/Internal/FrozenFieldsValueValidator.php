@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Workflow\PostAction\Update\Internal;
 
+use LogicException;
 use Tracker;
 use Tracker_FormElementFactory;
 use Tracker_RuleFactory;
@@ -97,7 +98,11 @@ class FrozenFieldsValueValidator
     {
         $used_field_ids     = $this->extractUsedFieldIds($tracker);
         $involved_field_ids = $this->extractFieldDependenciesFieldIds($tracker);
-        $workflow_field_id  = (int) $tracker->getWorkflow()->getFieldId();
+        $workflow           = $tracker->getWorkflow();
+        if ($workflow === null) {
+            throw new LogicException('Tracker #' . $tracker->getId() . ' does not have a workflow');
+        }
+        $workflow_field_id  = (int) $workflow->getFieldId();
 
         foreach ($frozen_fields->getFieldIds() as $field_id) {
             $this->validateFieldIsUsedInTracker($field_id, $used_field_ids);

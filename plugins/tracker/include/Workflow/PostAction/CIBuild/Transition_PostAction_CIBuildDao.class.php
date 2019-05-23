@@ -1,7 +1,6 @@
 <?php
-
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -29,9 +28,9 @@ class Transition_PostAction_CIBuildDao extends DataAccessObject {
      * Create a new postaction entry
      *
      * @param int $transition_id The transition the post action belongs to
-     * @param int $job_url       The job url
+     * @param string $job_url       The job url
      *
-     * @return bool true if success false otherwise
+     * @return int|false ID if success false otherwise
      */
     public function create($transition_id, $job_url) {
         $transition_id = $this->da->escapeInt($transition_id);

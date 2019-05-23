@@ -221,7 +221,7 @@ class DocmanLinksResource extends AuthenticatedResource
                 400,
                 sprintf(
                     dgettext('tuleap-docman', 'The status "%s" is invalid.'),
-                    $representation->status
+                    (string) $representation->status
                 )
             );
         } catch (Metadata\StatusNotFoundNullException $e) {

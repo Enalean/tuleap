@@ -21,17 +21,14 @@
 
 declare(strict_types=1);
 
-use Tuleap\Test\Psalm\PsalmCommandLauncherWithIgnoreDirectory;
-use Tuleap\Test\Psalm\PsalmIgnoreGitExcludedTuleapPlugins;
-use Tuleap\Test\Psalm\ShellPassthroughUsingPassthruFunction;
-
 require_once __DIR__ . '/../../src/vendor/autoload.php';
 
-$psalm_command_launcher = new PsalmCommandLauncherWithIgnoreDirectory(
-    sys_get_temp_dir(),
-    new PsalmIgnoreGitExcludedTuleapPlugins(new System_Command()),
-    new ShellPassthroughUsingPassthruFunction()
-);
-$exit_code = $psalm_command_launcher->execute(...$argv);
+use Symfony\Component\Console\Application;
+use Tuleap\Test\Psalm\PsalmCILauncher;
+use Tuleap\Test\Psalm\ShellPassthroughUsingPassthruFunction;
 
-exit($exit_code);
+$application = new Application();
+$command     = new PsalmCILauncher(new ShellPassthroughUsingPassthruFunction());
+$application->add($command);
+$application->setDefaultCommand($command->getName(), true);
+$application->run();

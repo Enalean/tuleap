@@ -1,4 +1,3 @@
-#!/usr/bin/env php
 <?php
 /**
  * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
@@ -21,17 +20,22 @@
 
 declare(strict_types=1);
 
-use Tuleap\Test\Psalm\PsalmCommandLauncherWithIgnoreDirectory;
-use Tuleap\Test\Psalm\PsalmIgnoreGitExcludedTuleapPlugins;
-use Tuleap\Test\Psalm\ShellPassthroughUsingPassthruFunction;
+namespace Tuleap\Test\Psalm;
 
-require_once __DIR__ . '/../../src/vendor/autoload.php';
+use PHPUnit\Framework\TestCase;
 
-$psalm_command_launcher = new PsalmCommandLauncherWithIgnoreDirectory(
-    sys_get_temp_dir(),
-    new PsalmIgnoreGitExcludedTuleapPlugins(new System_Command()),
-    new ShellPassthroughUsingPassthruFunction()
-);
-$exit_code = $psalm_command_launcher->execute(...$argv);
+final class ShellPassthroughUsingPassthruFunctionTest extends TestCase
+{
+    /**
+     * @testWith [0]
+     *           [1]
+     */
+    public function testCommandPassthrough(int $expected_exit_code) : void
+    {
+        $shell_pathrough = new ShellPassthroughUsingPassthruFunction();
+        $exit_code       = $shell_pathrough('echo -n "Test" && exit ' . $expected_exit_code);
 
-exit($exit_code);
+        $this->expectOutputString('Test');
+        $this->assertEquals($expected_exit_code, $exit_code);
+    }
+}

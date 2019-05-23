@@ -1,4 +1,3 @@
-#!/usr/bin/env php
 <?php
 /**
  * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
@@ -21,17 +20,15 @@
 
 declare(strict_types=1);
 
-use Tuleap\Test\Psalm\PsalmCommandLauncherWithIgnoreDirectory;
-use Tuleap\Test\Psalm\PsalmIgnoreGitExcludedTuleapPlugins;
-use Tuleap\Test\Psalm\ShellPassthroughUsingPassthruFunction;
+namespace Tuleap\Test\Psalm;
 
-require_once __DIR__ . '/../../src/vendor/autoload.php';
+final class ShellPassthroughUsingPassthruFunction implements ShellPassthrough
+{
+    public function __invoke(string $command) : int
+    {
+        $exit_code = 0;
+        passthru($command, $exit_code);
 
-$psalm_command_launcher = new PsalmCommandLauncherWithIgnoreDirectory(
-    sys_get_temp_dir(),
-    new PsalmIgnoreGitExcludedTuleapPlugins(new System_Command()),
-    new ShellPassthroughUsingPassthruFunction()
-);
-$exit_code = $psalm_command_launcher->execute(...$argv);
-
-exit($exit_code);
+        return $exit_code;
+    }
+}

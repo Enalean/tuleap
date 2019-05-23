@@ -78,10 +78,11 @@ pipeline {
                     steps {
                         script {
                             try {
-                                actions.runPsalm('tests/psalm/psalm.xml')
+                                actions.runPsalm('tests/psalm/psalm.xml', '')
                             } catch (err) { }
                         }
                     }
+                    post { always { recordIssues enabledForFailure: true, minimumSeverity: 'NORMAL', tools: [checkStyle(pattern: 'results/psalm/checkstyle.xml')] } }
                 }
             }
             post {

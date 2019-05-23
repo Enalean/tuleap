@@ -644,6 +644,7 @@ class ArtifactField {
 	    // because possible values  are project members) and they are
 	    // not stored in the artifact_field_value table but in the user_group table	    
 	    $value_func = $this->getGlobalValueFunction();
+		$qry_value  = [];
 	    if (count($value_func) > 0) {
             $show_suspended = true;
 	        for ($i=0;$i<count($value_func);$i++) {
@@ -661,12 +662,14 @@ class ArtifactField {
 			else
 			    $qry_value[$i] = ugroup_db_get_dynamic_members($matches[1], $group_artifact_id, $ath->getGroupID(), $with_display_preferences, null, $show_suspended);
 		}
-	    $qry_value = array_filter($qry_value ?? []);
-		$qry       = $qry_value[0];
-		if (count($qry_value) > 1) {
-		    for ($i=1;$i<count($qry_value);$i++) {
-		        $qry = $qry." UNION ".$qry_value[$i];
-		    }
+	    $qry_value      = array_filter($qry_value);
+	    $qry_value_size = count($qry_value);
+	    if ($qry_value_size === 0) {
+			return [];
+		}
+		$qry = $qry_value[0];
+		for ($i = 1; $i < $qry_value_size; $i++) {
+			$qry = $qry." UNION ".$qry_value[$i];
 		}
 		$res_value = db_query($qry);
 

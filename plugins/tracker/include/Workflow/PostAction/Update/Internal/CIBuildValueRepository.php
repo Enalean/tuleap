@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,6 +22,7 @@
 namespace Tuleap\Tracker\Workflow\PostAction\Update\Internal;
 
 use DataAccessQueryException;
+use LogicException;
 use Transition;
 use Transition_PostAction_CIBuildDao;
 use Tuleap\Tracker\Workflow\PostAction\Update\CIBuildValue;
@@ -63,13 +64,18 @@ class CIBuildValueRepository
      */
     public function update(CIBuildValue $build): void
     {
-        $success = $this->ci_build_dao->updatePostAction($build->getId(), $build->getJobUrl());
+        $build_id = $build->getId();
+        if ($build_id === null) {
+            throw new LogicException('Cannot update a CI build value that does not exist');
+        }
+        $build_job_url = $build->getJobUrl();
+        $success       = $this->ci_build_dao->updatePostAction($build_id, $build_job_url);
         if ($success === false) {
             throw new DataAccessQueryException(
                 sprintf(
                     "Cannot update CI Build post action with id '%u' and Job_url '%s'",
-                    $build->getId(),
-                    $build->getJobUrl()
+                    $build_id,
+                    $build_job_url
                 )
             );
         }
@@ -81,12 +87,13 @@ class CIBuildValueRepository
      */
     public function deleteAllByTransitionIfNotIn(Transition $transition, array $ci_builds)
     {
-        $ids_to_skip = array_map(
-            function (CIBuildValue $action) {
-                return $action->getId();
-            },
-            $ci_builds
-        );
+        $ids_to_skip = [];
+        foreach ($ci_builds as $ci_build) {
+            $ci_build_id = $ci_build->getId();
+            if ($ci_build_id !== null) {
+                $ids_to_skip[] = $ci_build_id;
+            }
+        }
 
         $success = $this->ci_build_dao->deletePostActionByTransitionIfIdNotIn($transition->getId(), $ids_to_skip);
         if ($success === false) {
