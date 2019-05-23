@@ -20,6 +20,8 @@
 import { post } from "tlp-fetch";
 import { Upload } from "tus-js-client";
 import Gettext from "node-gettext";
+import { sprintf } from "sprintf-js";
+import prettyKibibytes from "pretty-kibibytes";
 import { addInstance } from "./consistentUploadedFilesBeforeSubmitChecker.js";
 
 let gettext_provider;
@@ -49,7 +51,7 @@ async function getGettextProvider(options) {
     return gettext_provider;
 }
 
-function initiateUploadImage(ckeditor_instance, options, form, field_name) {
+function initiateUploadImage(ckeditor_instance, options, form, field_name, max_size_upload) {
     if (typeof options.uploadUrl === "undefined") {
         return;
     }
@@ -60,6 +62,17 @@ function initiateUploadImage(ckeditor_instance, options, form, field_name) {
     async function fileUploadRequest(evt) {
         const loader = evt.data.fileLoader;
         evt.stop();
+
+        if (loader.file.size > max_size_upload) {
+            loader.message = sprintf(
+                (await getGettextProvider(options)).gettext(
+                    "You are not allowed to upload files bigger than %s."
+                ),
+                prettyKibibytes(max_size_upload)
+            );
+            loader.changeStatus("error");
+            return;
+        }
 
         try {
             const response = await post(loader.uploadUrl, {
