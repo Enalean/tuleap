@@ -71,7 +71,12 @@
                     They will copy their state configuration during the switch.
                 </p>
                 <p v-translate>Please confirm your action.</p>
-                <p v-translate class="tlp-alert-danger">If you have any post actions of type "Frozen Fields", they will be deleted.</p>
+                <p v-translate
+                   class="tlp-alert-danger"
+                   v-if="! is_workflow_advanced"
+                >
+                    If you have any post actions of type "Frozen Fields", they will be deleted.
+                </p>
             </template>
             <template slot="switch-button-label">
                 <translate v-if="is_workflow_advanced" key="switch_to_simple">Switch to simple configuration</translate>
