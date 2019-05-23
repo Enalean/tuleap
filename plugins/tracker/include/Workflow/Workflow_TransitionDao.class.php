@@ -21,18 +21,12 @@
 
 class Workflow_TransitionDao extends DataAccessObject //phpcs:ignoreFile
 {
-    public function __construct($da = null)
-    {
-        parent::__construct($da);
-        $this->table_name = 'tracker_workflow_transition';
-    }
-
     public function addTransition($workflow_id, $from, $to)
     {
         $workflow_id = $this->da->escapeInt($workflow_id);
         $to   = $this->da->escapeInt($to);
         $from   = $this->da->escapeInt($from);
-        $sql = "INSERT INTO $this->table_name (workflow_id, from_id, to_id)
+        $sql = "INSERT INTO tracker_workflow_transition (workflow_id, from_id, to_id)
                 VALUES ($workflow_id, $from, $to)";
         return $this->updateAndGetLastId($sql);
     }
@@ -106,8 +100,21 @@ class Workflow_TransitionDao extends DataAccessObject //phpcs:ignoreFile
     public function searchByWorkflow($workflow_id)
     {
         $workflow_id = $this->da->escapeInt($workflow_id);
-        $sql = "SELECT * FROM $this->table_name
+        $sql = "SELECT * FROM tracker_workflow_transition
                 WHERE workflow_id=$workflow_id";
+        return $this->retrieve($sql);
+    }
+
+    public function searchByWorkflowAndToId(int $workflow_id, int $to_id)
+    {
+        $workflow_id = $this->da->escapeInt($workflow_id);
+        $to_id       = $this->da->escapeInt($to_id);
+
+        $sql = "SELECT *
+                FROM tracker_workflow_transition
+                WHERE workflow_id=$workflow_id
+                AND to_id=$to_id";
+
         return $this->retrieve($sql);
     }
 
@@ -130,7 +137,7 @@ class Workflow_TransitionDao extends DataAccessObject //phpcs:ignoreFile
         $workflow_id = $this->da->escapeInt($workflow_id);
         $from = $this->da->escapeInt($from);
         $to = $this->da->escapeInt($to);
-        $sql = "SELECT * FROM $this->table_name
+        $sql = "SELECT * FROM tracker_workflow_transition
                 WHERE workflow_id=$workflow_id
                 AND from_id=$from
                 AND to_id=$to";
@@ -140,7 +147,7 @@ class Workflow_TransitionDao extends DataAccessObject //phpcs:ignoreFile
     public function getWorkflowId($transition_id)
     {
         $transition_id = $this->da->escapeInt($transition_id);
-        $sql = "SELECT workflow_id FROM $this->table_name
+        $sql = "SELECT workflow_id FROM tracker_workflow_transition
                 WHERE transition_id=$transition_id";
         return $this->retrieve($sql);
     }
@@ -148,7 +155,7 @@ class Workflow_TransitionDao extends DataAccessObject //phpcs:ignoreFile
     public function searchById($transition_id)
     {
         $transition_id = $this->da->escapeInt($transition_id);
-        $sql = "SELECT * FROM $this->table_name
+        $sql = "SELECT * FROM tracker_workflow_transition
                 WHERE transition_id=$transition_id";
         return $this->retrieve($sql);
     }

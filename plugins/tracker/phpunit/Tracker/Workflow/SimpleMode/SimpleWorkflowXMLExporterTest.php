@@ -26,6 +26,9 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
+use Tuleap\Tracker\Workflow\SimpleMode\State\ReferenceTransitionExtractor;
+use Tuleap\Tracker\Workflow\SimpleMode\State\State;
+use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
 use Workflow;
 use Workflow_Transition_ConditionsCollection;
 
@@ -35,10 +38,13 @@ class SimpleWorkflowXMLExporterTest extends TestCase
 
     public function testItExportsTheSimpleWorkflowInXML()
     {
-        $xml       = new SimpleXMLElement('<simple_workflow/>');
-        $dao       = Mockery::mock(SimpleWorkflowDao::class);
-        $retriever = Mockery::mock(TransitionRetriever::class);
-        $exporter  = new SimpleWorkflowXMLExporter($dao, $retriever);
+        $xml           = new SimpleXMLElement('<simple_workflow/>');
+        $dao           = Mockery::mock(SimpleWorkflowDao::class);
+        $extractor     = new ReferenceTransitionExtractor();
+        $state_factory = Mockery::mock(StateFactory::class);
+
+        $exporter  = new SimpleWorkflowXMLExporter($dao, $state_factory, $extractor);
+
         $workflow  = Mockery::mock(Workflow::class);
 
         $workflow->shouldReceive('getFieldId')->once()->andReturn(114);
@@ -49,23 +55,19 @@ class SimpleWorkflowXMLExporterTest extends TestCase
             ['to_id' => 201],
         ]);
 
-        $dao->shouldReceive('searchTransitionsForState')->with(200)->once()->andReturn([
-            ['from_id' => 0]
-        ]);
-
-        $dao->shouldReceive('searchTransitionsForState')->with(201)->once()->andReturn([
-            ['from_id' => 0],
-            ['from_id' => 410],
-        ]);
-
         $transition_01 = Mockery::mock(\Transition::class);
         $transition_02 = Mockery::mock(\Transition::class);
+        $transition_03 = Mockery::mock(\Transition::class);
+
+        $transition_01->shouldReceive('getIdFrom')->andReturn('');
+        $transition_02->shouldReceive('getIdFrom')->andReturn('');
+        $transition_03->shouldReceive('getIdFrom')->andReturn('410');
 
         $post_action_01 = Mockery::mock(\Transition_PostAction_CIBuild::class);
         $post_action_02 = Mockery::mock(\Transition_PostAction_Field_Int::class);
 
         $transition_01->shouldReceive('getPostActions')->andReturn([]);
-        $transition_02->shouldReceive('getPostActions')->andReturn([
+        $transition_03->shouldReceive('getPostActions')->andReturn([
             $post_action_01,
             $post_action_02,
         ]);
@@ -77,27 +79,25 @@ class SimpleWorkflowXMLExporterTest extends TestCase
         $conditions_collection_02 = Mockery::mock(Workflow_Transition_ConditionsCollection::class);
 
         $transition_01->shouldReceive('getConditions')->andReturn($conditions_collection_01);
-        $transition_02->shouldReceive('getConditions')->andReturn($conditions_collection_02);
+        $transition_03->shouldReceive('getConditions')->andReturn($conditions_collection_02);
 
         $conditions_collection_01->shouldReceive('exportToXML')->once();
         $conditions_collection_02->shouldReceive('exportToXML')->once();
 
-        $retriever->shouldReceive('getFirstTransitionForDestinationState')
+        $state_factory->shouldReceive('getStateFromValueId')
             ->with($workflow, 200)
-            ->once()
-            ->andReturn($transition_01);
+            ->andReturn(new State(200, [$transition_01]));
 
-        $retriever->shouldReceive('getFirstTransitionForDestinationState')
+        $state_factory->shouldReceive('getStateFromValueId')
             ->with($workflow, 201)
-            ->once()
-            ->andReturn($transition_02);
+            ->andReturn(new State(201, [$transition_02, $transition_03]));
 
         $mapping = [
-            'F114' => 114,
+            'F114' => '114',
             'values' => [
-                'V114-0' => 200,
-                'V114-1' => 201,
-                'V114-2' => 410,
+                'V114-0' => '200',
+                'V114-1' => '201',
+                'V114-2' => '410',
             ]
         ];
 

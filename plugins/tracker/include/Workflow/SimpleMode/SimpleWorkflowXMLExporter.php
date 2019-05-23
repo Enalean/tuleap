@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,6 +24,8 @@ namespace Tuleap\Tracker\Workflow\SimpleMode;
 
 use SimpleXMLElement;
 use Transition;
+use Tuleap\Tracker\Workflow\SimpleMode\State\ReferenceTransitionExtractor;
+use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
 use Workflow;
 
 class SimpleWorkflowXMLExporter
@@ -34,14 +36,23 @@ class SimpleWorkflowXMLExporter
     private $simple_workflow_dao;
 
     /**
-     * @var TransitionRetriever
+     * @var StateFactory
      */
-    private $transition_retriever;
+    private $state_factory;
 
-    public function __construct(SimpleWorkflowDao $simple_workflow_dao, TransitionRetriever $transition_retriever)
-    {
+    /**
+     * @var ReferenceTransitionExtractor
+     */
+    private $transition_extractor;
+
+    public function __construct(
+        SimpleWorkflowDao $simple_workflow_dao,
+        StateFactory $state_factory,
+        ReferenceTransitionExtractor $transition_extractor
+    ) {
         $this->simple_workflow_dao  = $simple_workflow_dao;
-        $this->transition_retriever = $transition_retriever;
+        $this->state_factory        = $state_factory;
+        $this->transition_extractor = $transition_extractor;
     }
 
     public function exportToXML(Workflow $workflow, SimpleXMLElement $xml_simple_workflow, array $xml_mapping)
@@ -69,20 +80,19 @@ class SimpleWorkflowXMLExporter
         $state_xml = $states_xml->addChild('state');
         $state_xml->addChild('to_id')->addAttribute('REF', array_search($to_id, $xml_mapping['values']));
 
+        $state = $this->state_factory->getStateFromValueId($workflow, $to_id);
+
         $transitions_xml = $state_xml->addChild('transitions');
-
-        $transitions_sql = $this->simple_workflow_dao->searchTransitionsForState($to_id);
-
-        foreach ($transitions_sql as $transition_sql) {
+        foreach ($state->getTransitions() as $transition) {
             $xml_value_field_id =
-                $transition_sql['from_id'] === 0 ? Transition::EXPORT_XML_FROM_NEW_VALUE : array_search($transition_sql['from_id'], $xml_mapping['values']);
+                $transition->getIdFrom() === '' ? Transition::EXPORT_XML_FROM_NEW_VALUE : array_search($transition->getIdFrom(), $xml_mapping['values']);
 
             $transitions_xml->addChild('transition')
                 ->addChild('from_id')
                 ->addAttribute('REF', $xml_value_field_id);
         }
 
-        $first_transition = $this->transition_retriever->getFirstTransitionForDestinationState($workflow, $to_id);
+        $first_transition = $this->transition_extractor->extractFirstTransitionFromStateObject($state);
 
         $postactions = $first_transition->getPostActions();
         if ($postactions) {

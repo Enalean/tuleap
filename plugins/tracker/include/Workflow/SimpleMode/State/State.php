@@ -20,23 +20,41 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Workflow\SimpleMode;
+namespace Tuleap\Tracker\Workflow\SimpleMode\State;
 
-use Tuleap\DB\DataAccessObject;
+use Transition;
 
-class SimpleWorkflowDao extends DataAccessObject
+class State
 {
     /**
-     * @return mixed
+     * @var Transition[]
      */
-    public function searchStatesForWorkflow(int $workflow_id)
-    {
-        $sql = "SELECT DISTINCT tracker_workflow_transition.to_id
-                FROM tracker_workflow
-                  INNER JOIN tracker_workflow_transition ON (tracker_workflow.workflow_id = tracker_workflow_transition.workflow_id)
-                WHERE tracker_workflow.workflow_id = ?
-                    AND tracker_workflow.is_advanced = 0";
+    private $transitions;
 
-        return $this->getDB()->run($sql, $workflow_id);
+    /**
+     * @var int
+     */
+    private $value_id;
+
+    public function __construct(int $value_id, array $transitions)
+    {
+        $this->value_id    = $value_id;
+        $this->transitions = $transitions;
+    }
+
+    /**
+     * @return Transition[]
+     */
+    public function getTransitions(): array
+    {
+        return $this->transitions;
+    }
+
+    /**
+     * @return int
+     */
+    public function getValueId(): int
+    {
+        return $this->value_id;
     }
 }
