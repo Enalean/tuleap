@@ -20,12 +20,11 @@
 
 namespace Tracker;
 
-use REST_TestDataBuilder;
-use TrackerDataBuilder;
+use SimpleXMLElement;
 use RestBase;
 use \Guzzle\Http\Client;
 
-require_once dirname(__FILE__).'/../bootstrap.php';
+require_once __DIR__ .'/../bootstrap.php';
 
 /**
  * @group TrackerTests
@@ -183,13 +182,9 @@ class ArtifactTest extends RestBase {
         $this->assertEquals((int) $artifact_xml->project->id, $this->project_id);
 
         $this->assertGreaterThan(0, count($artifact_xml->values->children()));
-        $this->assertEquals(0, count($artifact_xml->values_by_field->children()));
+        $this->assertCount(0, $artifact_xml->values_by_field->children());
 
-        $this->assertEquals((string) $artifact_xml->values->item[0]->label, 'Slogan');
-        $this->assertEquals((string) $artifact_xml->values->item[0]->value, 'slogan');
-        $this->assertEquals((string) $artifact_xml->values->item[5]->label, 'Status');
-        $this->assertEquals((string) $artifact_xml->values->item[5]->values->item->label, 'SM New');
-        $this->assertEquals((int) $artifact_xml->values->item[5]->bind_value_ids, $this->status_value_id);
+        $this->verifySloganAndStatusFieldPresenceAndValue($artifact_xml->values->item);
     }
 
     /**
@@ -225,13 +220,37 @@ class ArtifactTest extends RestBase {
         $this->assertGreaterThan(0, count($artifact_xml->values->children()));
         $this->assertGreaterThan(0, count($artifact_xml->values_by_field->children()));
 
-        $this->assertEquals((string) $artifact_xml->values->item[0]->label, 'Slogan');
-        $this->assertEquals((string) $artifact_xml->values->item[0]->value, 'slogan');
-        $this->assertEquals((string) $artifact_xml->values->item[5]->label, 'Status');
-        $this->assertEquals((string) $artifact_xml->values->item[5]->values->item->label, 'SM New');
-        $this->assertEquals((int) $artifact_xml->values->item[5]->bind_value_ids, $this->status_value_id);
+        $this->verifySloganAndStatusFieldPresenceAndValue($artifact_xml->values->item);
 
         $this->assertEquals((string) $artifact_xml->values_by_field->slogan->value, 'slogan');
+    }
+
+    private function verifySloganAndStatusFieldPresenceAndValue(SimpleXMLElement $items) : void
+    {
+        $this->assertTrue(
+            (static function (SimpleXMLElement $items) : bool {
+                foreach ($items as $item) {
+                    if ((string) $item->label === 'Slogan' && (string) $item->value === 'slogan') {
+                        return true;
+                    }
+                }
+                return false;
+            })($items),
+            'Slogan field not found or with an incorrect value'
+        );
+        $this->assertTrue(
+            (function (SimpleXMLElement $items) : bool {
+                foreach ($items as $item) {
+                    if ((string) $item->label === 'Status' &&
+                        (string) $item->values->item->label === 'SM New' &&
+                        (int) $item->bind_value_ids === $this->status_value_id) {
+                        return true;
+                    }
+                }
+                return false;
+            })($items),
+            'Status field not found or with an incorrect value'
+        );
     }
 
     /**
