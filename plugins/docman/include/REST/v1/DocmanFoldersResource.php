@@ -157,22 +157,6 @@ class DocmanFoldersResource extends AuthenticatedResource
                     'The project does not support obsolescence date, you should not provide it to create a new document.'
                 )
             );
-        } catch (Metadata\ObsolescenceDateMissingParameterException $e) {
-            throw new I18NRestException(
-                400,
-                dgettext(
-                    'tuleap-docman',
-                    '"obsolescence_date" parameter is required to create a new document.'
-                )
-            );
-        } catch (Metadata\ObsolescenceDateNullException $e) {
-            throw new I18NRestException(
-                400,
-                dgettext(
-                    'tuleap-docman',
-                    'The date cannot be null'
-                )
-            );
         } catch (Metadata\StatusNotFoundBadStatusGivenException $e) {
             throw new I18NRestException(
                 400,
@@ -341,22 +325,6 @@ class DocmanFoldersResource extends AuthenticatedResource
                     'The project does not support obsolescence date, you should not provide it to create a new document.'
                 )
             );
-        } catch (Metadata\ObsolescenceDateMissingParameterException $e) {
-            throw new I18NRestException(
-                400,
-                dgettext(
-                    'tuleap-docman',
-                    '"obsolescence_date" parameter is required to create a new document.'
-                )
-            );
-        } catch (Metadata\ObsolescenceDateNullException $e) {
-            throw new I18NRestException(
-                400,
-                dgettext(
-                    'tuleap-docman',
-                    'The date cannot be null'
-                )
-            );
         } catch (Metadata\StatusNotFoundBadStatusGivenException $e) {
             throw new I18NRestException(
                 400,
@@ -453,22 +421,6 @@ class DocmanFoldersResource extends AuthenticatedResource
                 dgettext(
                     'tuleap-docman',
                     'The project does not support obsolescence date, you should not provide it to create a new document.'
-                )
-            );
-        } catch (Metadata\ObsolescenceDateMissingParameterException $e) {
-            throw new I18NRestException(
-                400,
-                dgettext(
-                    'tuleap-docman',
-                    '"obsolescence_date" parameter is required to create a new document.'
-                )
-            );
-        } catch (Metadata\ObsolescenceDateNullException $e) {
-            throw new I18NRestException(
-                400,
-                dgettext(
-                    'tuleap-docman',
-                    'The date cannot be null'
                 )
             );
         } catch (Metadata\StatusNotFoundBadStatusGivenException $e) {
@@ -573,22 +525,6 @@ class DocmanFoldersResource extends AuthenticatedResource
                     'The project does not support obsolescence date, you should not provide it to create a new document.'
                 )
             );
-        } catch (Metadata\ObsolescenceDateMissingParameterException $e) {
-            throw new I18NRestException(
-                400,
-                dgettext(
-                    'tuleap-docman',
-                    '"obsolescence_date" parameter is required to create a new document.'
-                )
-            );
-        } catch (Metadata\ObsolescenceDateNullException $e) {
-            throw new I18NRestException(
-                400,
-                dgettext(
-                    'tuleap-docman',
-                    'The date cannot be null'
-                )
-            );
         } catch (Metadata\StatusNotFoundBadStatusGivenException $e) {
             throw new I18NRestException(
                 400,
@@ -687,22 +623,6 @@ class DocmanFoldersResource extends AuthenticatedResource
                 dgettext(
                     'tuleap-docman',
                     'The project does not support obsolescence date, you should not provide it to create a new document.'
-                )
-            );
-        } catch (Metadata\ObsolescenceDateMissingParameterException $e) {
-            throw new I18NRestException(
-                400,
-                dgettext(
-                    'tuleap-docman',
-                    '"obsolescence_date" parameter is required to create a new document.'
-                )
-            );
-        } catch (Metadata\ObsolescenceDateNullException $e) {
-            throw new I18NRestException(
-                400,
-                dgettext(
-                    'tuleap-docman',
-                    'The date cannot be null'
                 )
             );
         } catch (Metadata\StatusNotFoundBadStatusGivenException $e) {

@@ -19,8 +19,8 @@
 
 <template>
     <div class="tlp-property">
-        <label v-bind:for="metadata_label" class="tlp-label">
-            {{ metadata.name }}
+        <label v-bind:for="metadata_label" class="tlp-label" data-test="metadata-list-label">
+            {{ metadata_name }}
         </label>
         <p v-bind:id="metadata_label">
             <template v-if="metadata.type === METADATA_LIST_TYPE && ! is_list_empty">
@@ -29,17 +29,22 @@
                         {{ value.name }}
                     </li>
                 </ul>
-                <template v-else>
+                <template data-test="metadata-unique-list-value" v-else>
                     {{ metadata.list_value[0].name }}
                 </template>
             </template>
             <template v-else-if="metadata.type === METADATA_DATE_TYPE && is_date_valid">
-                <div class="tlp-tooltip tlp-tooltip-left" v-bind:data-tlp-tooltip="getFormattedDate(metadata.value)">
+                <div class="tlp-tooltip tlp-tooltip-left" v-bind:data-tlp-tooltip="getFormattedDate(metadata.value)" data-test="metadata-list-date">
                     {{ getFormattedDateForDisplay(metadata.value) }}
                 </div>
             </template>
-            <span class="document-quick-look-property-empty" v-else-if="! has_metadata_a_value" v-translate>
+            <span class="document-quick-look-property-empty"
+                  v-else-if="! has_metadata_a_value && ! has_obsolescence_date_metadata_unlimited_validity" v-translate>
                 Empty
+            </span>
+            <span class="document-quick-look-property-empty"
+                  v-else-if=" has_obsolescence_date_metadata_unlimited_validity" v-translate>
+                Permanent
             </span>
             <template v-else>
                 {{ metadata.value }}
@@ -51,8 +56,8 @@
 import { mapState } from "vuex";
 import {
     formatDateUsingPreferredUserFormat,
-    isDateValid,
-    getElapsedTimeFromNow
+    getElapsedTimeFromNow,
+    isDateValid
 } from "../../../helpers/date-formatter.js";
 
 export default {
@@ -73,6 +78,12 @@ export default {
 
             return `document-${metadata_name_kebab_case}`;
         },
+        metadata_name() {
+            if (this.metadata.name === this.$gettext("Obsolescence Date")) {
+                return this.$gettext("Validity");
+            }
+            return this.metadata.name;
+        },
         is_list_empty() {
             return !this.metadata.list_value || !this.metadata.list_value.length;
         },
@@ -89,6 +100,12 @@ export default {
             }
 
             return this.metadata.value;
+        },
+        has_obsolescence_date_metadata_unlimited_validity() {
+            return (
+                this.metadata.name === this.$gettext("Obsolescence Date") &&
+                this.metadata.value === "0"
+            );
         }
     },
     methods: {

@@ -145,8 +145,6 @@ class DocmanItemCreator
      * @throws Metadata\InvalidDateTimeFormatException
      * @throws Metadata\ItemStatusUsageMismatchException
      * @throws Metadata\ObsolescenceDateDisabledException
-     * @throws Metadata\ObsolescenceDateMissingParameterException
-     * @throws Metadata\ObsolescenceDateNullException
      * @throws Metadata\StatusNotFoundBadStatusGivenException
      * @throws Metadata\StatusNotFoundNullException
      * @throws \Tuleap\Docman\CannotInstantiateItemWeHaveJustCreatedInDBException
@@ -160,7 +158,7 @@ class DocmanItemCreator
         $title,
         $description,
         ?string $status,
-        string $obsolescence_date,
+        ?string $obsolescence_date,
         $wiki_page,
         $link_url,
         $content
@@ -216,8 +214,6 @@ class DocmanItemCreator
      * @throws Metadata\InvalidDateTimeFormatException
      * @throws Metadata\ItemStatusUsageMismatchException
      * @throws Metadata\ObsolescenceDateDisabledException
-     * @throws Metadata\ObsolescenceDateMissingParameterException
-     * @throws Metadata\ObsolescenceDateNullException
      * @throws Metadata\StatusNotFoundBadStatusGivenException
      * @throws Metadata\StatusNotFoundNullException
      * @throws RestException
@@ -228,7 +224,7 @@ class DocmanItemCreator
         $title,
         $description,
         ?string $status,
-        string $obsolescence_date,
+        ?string $obsolescence_date,
         \DateTimeImmutable $current_time,
         FilePropertiesPOSTPATCHRepresentation $file_properties
     ) {
@@ -292,8 +288,6 @@ class DocmanItemCreator
      * @throws Metadata\InvalidDateTimeFormatException
      * @throws Metadata\ItemStatusUsageMismatchException
      * @throws Metadata\ObsolescenceDateDisabledException
-     * @throws Metadata\ObsolescenceDateMissingParameterException
-     * @throws Metadata\ObsolescenceDateNullException
      * @throws Metadata\StatusNotFoundBadStatusGivenException
      * @throws Metadata\StatusNotFoundNullException
      * @throws RestException
@@ -339,8 +333,6 @@ class DocmanItemCreator
      * @throws Metadata\InvalidDateTimeFormatException
      * @throws Metadata\ItemStatusUsageMismatchException
      * @throws Metadata\ObsolescenceDateDisabledException
-     * @throws Metadata\ObsolescenceDateMissingParameterException
-     * @throws Metadata\ObsolescenceDateNullException
      * @throws Metadata\StatusNotFoundBadStatusGivenException
      * @throws Metadata\StatusNotFoundNullException
      * @throws RestException
@@ -385,8 +377,6 @@ class DocmanItemCreator
      * @throws Metadata\InvalidDateTimeFormatException
      * @throws Metadata\ItemStatusUsageMismatchException
      * @throws Metadata\ObsolescenceDateDisabledException
-     * @throws Metadata\ObsolescenceDateMissingParameterException
-     * @throws Metadata\ObsolescenceDateNullException
      * @throws Metadata\StatusNotFoundBadStatusGivenException
      * @throws Metadata\StatusNotFoundNullException
      * @throws RestException
@@ -439,8 +429,6 @@ class DocmanItemCreator
      * @throws Metadata\InvalidDateTimeFormatException
      * @throws Metadata\ItemStatusUsageMismatchException
      * @throws Metadata\ObsolescenceDateDisabledException
-     * @throws Metadata\ObsolescenceDateMissingParameterException
-     * @throws Metadata\ObsolescenceDateNullException
      * @throws Metadata\StatusNotFoundBadStatusGivenException
      * @throws Metadata\StatusNotFoundNullException
      * @throws RestException
@@ -486,8 +474,6 @@ class DocmanItemCreator
      * @throws Metadata\InvalidDateTimeFormatException
      * @throws Metadata\ItemStatusUsageMismatchException
      * @throws Metadata\ObsolescenceDateDisabledException
-     * @throws Metadata\ObsolescenceDateMissingParameterException
-     * @throws Metadata\ObsolescenceDateNullException
      * @throws Metadata\StatusNotFoundBadStatusGivenException
      * @throws Metadata\StatusNotFoundNullException
      * @throws RestException
