@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,6 +23,7 @@ declare(strict_types = 1);
 namespace Tuleap\layout\HomePage;
 
 use EventManager;
+use Project;
 use SVN_LogDao;
 use UserManager;
 
@@ -93,9 +94,7 @@ class StatisticsCollectionBuilder
 
     private function countAllProjects()
     {
-        $dar = $this->project_manager->getAllProjectsRows(0, 0, [\Project::STATUS_ACTIVE]);
-
-        return $dar['numrows'];
+        return $this->project_manager->countProjectsByStatus(Project::STATUS_ACTIVE);
     }
 
     private function countProjectRegisteredLastMonth(int $timestamp)

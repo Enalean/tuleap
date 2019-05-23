@@ -201,9 +201,7 @@ class ProjectManager
      */
     public function countProjectsByStatus($status)
     {
-        $dar = $this->_getDao()->searchByStatus($status);
-
-        return (int) $this->_getDao()->foundRows();
+        return $this->_getDao()->countByStatus($status);
     }
 
     /**
