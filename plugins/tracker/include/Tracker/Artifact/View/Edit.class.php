@@ -214,9 +214,13 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View {
         }
 
         if ($this->artifact->userCanUpdate($this->user)) {
-            $rich_textarea_provider = new RichTextareaProvider(Tracker_FormElementFactory::instance(), TemplateRendererFactory::build());
+            $rich_textarea_provider = new RichTextareaProvider(
+                Tracker_FormElementFactory::instance(),
+                TemplateRendererFactory::build()
+            );
+
             $html .= $rich_textarea_provider->getTextarea(
-                $this->artifact->getTracker(),
+                $tracker,
                 $this->user,
                 'tracker_followup_comment_new',
                 'artifact_followup_comment',
@@ -226,8 +230,8 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View {
                 false,
                 []
             );
-            $html       .= $this->fetchReplyByMailHelp();
-            $html       .= '</div>';
+            $html .= $this->fetchReplyByMailHelp();
+            $html .= '</div>';
         }
 
         $html .= '</li>';

@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact;
 
+use ForgeConfig;
 use PFUser;
 use TemplateRendererFactory;
 use Tracker;
@@ -69,6 +70,10 @@ class RichTextareaProvider
                 $data_attributes[] = [
                     'name'  => 'upload-field-name',
                     'value' => 'artifact[' . (int) $field->getId() . '][][tus-uploaded-id]'
+                ];
+                $data_attributes[] = [
+                    'name'  => 'upload-max-size',
+                    'value' => ForgeConfig::get('sys_max_size_upload')
                 ];
                 break;
             }

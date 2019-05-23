@@ -144,7 +144,8 @@ codendi.RTE = Class.create({
             this.rte,
             replace_options,
             this.element.form,
-            this.element.dataset.uploadFieldName
+            this.element.dataset.uploadFieldName,
+            parseInt(this.element.dataset.uploadMaxSize, 10)
         );
 
         /*CKEDITOR filters HTML tags

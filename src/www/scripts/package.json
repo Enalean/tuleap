@@ -20,6 +20,7 @@
     "mustache": "^2.3.0",
     "node-gettext": "^2.0.0",
     "phptomoment": "0.0.2",
+    "pretty-kibibytes": "^4.0.4",
     "smooth-scrollbar": "^7.4.1",
     "sprintf-js": "^1.1.1",
     "tus-js-client": "^1.8.0-1",
