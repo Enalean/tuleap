@@ -19,8 +19,8 @@
 
 import { post } from "tlp-fetch";
 import { Upload } from "tus-js-client";
-import "css.escape";
 import Gettext from "node-gettext";
+import { addInstance } from "./consistentUploadedFilesBeforeSubmitChecker.js";
 
 let gettext_provider;
 
@@ -55,7 +55,7 @@ function initiateUploadImage(ckeditor_instance, options, form, field_name) {
     }
 
     ckeditor_instance.on("fileUploadRequest", fileUploadRequest, null, null, 4);
-    form.addEventListener("submit", removeUnusedUploadedFilesFromForm);
+    addInstance(form, ckeditor_instance, field_name);
 
     async function fileUploadRequest(evt) {
         const loader = evt.data.fileLoader;
@@ -141,24 +141,6 @@ function initiateUploadImage(ckeditor_instance, options, form, field_name) {
             loader.message = loader.lang.filetools.httpError.replace("%1", originalRequest.status);
         }
         loader.changeStatus("error");
-    }
-
-    function removeUnusedUploadedFilesFromForm() {
-        const used_urls = Array.from(
-            new DOMParser()
-                .parseFromString(ckeditor_instance.getData(), "text/html")
-                .querySelectorAll("img")
-        ).map(img => img.getAttribute("src"));
-
-        const selector = "input[type=hidden][name=" + CSS.escape(field_name) + "]";
-        const potentially_used_uploaded_files = form.querySelectorAll(selector);
-        for (const input of potentially_used_uploaded_files) {
-            if (used_urls.find(used_url => used_url === input.dataset.url)) {
-                continue;
-            }
-
-            input.parentNode.removeChild(input);
-        }
     }
 }
 

@@ -1,0 +1,90 @@
+<?php
+/**
+ * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+declare(strict_types=1);
+
+namespace Tuleap\Tracker\Artifact;
+
+use PFUser;
+use TemplateRendererFactory;
+use Tracker;
+use Tracker_FormElementFactory;
+
+class RichTextareaProvider
+{
+    /**
+     * @var Tracker_FormElementFactory
+     */
+    private $form_element_factory;
+    /**
+     * @var TemplateRendererFactory
+     */
+    private $template_renderer_factory;
+
+    public function __construct(
+        Tracker_FormElementFactory $form_element_factory,
+        TemplateRendererFactory $template_renderer_factory
+    ) {
+        $this->form_element_factory      = $form_element_factory;
+        $this->template_renderer_factory = $template_renderer_factory;
+    }
+
+    public function getTextarea(
+        Tracker $tracker,
+        PFUser $user,
+        string $id,
+        string $name,
+        int $rows,
+        int $cols,
+        string $value,
+        bool $is_required,
+        array $data_attributes
+    ): string {
+        $renderer = $this->template_renderer_factory->getRenderer(__DIR__ . '/../../../templates/artifact');
+
+        $fields = $this->form_element_factory->getUsedFileFields($tracker);
+        foreach ($fields as $field) {
+            if ($field->userCanUpdate($user)) {
+                $data_attributes[] = [
+                    'name'  => 'upload-url',
+                    'value' => '/api/v1/tracker_fields/' . (int) $field->getId() . '/files'
+                ];
+                $data_attributes[] = [
+                    'name'  => 'upload-field-name',
+                    'value' => 'artifact[' . (int) $field->getId() . '][][tus-uploaded-id]'
+                ];
+                break;
+            }
+        }
+
+        return $renderer->renderToString(
+            'rich-textarea',
+            [
+                'id'              => $id,
+                'name'            => $name,
+                'rows'            => $rows,
+                'cols'            => $cols,
+                'value'           => $value,
+                'is_required'     => $is_required,
+                'data_attributes' => $data_attributes
+            ]
+        );
+    }
+}
