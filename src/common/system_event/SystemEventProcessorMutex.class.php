@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2011, 2012, 2013, 2015. All rights reserved.
+ * Copyright Enalean (c) 2011 - Present. All rights reserved.
  * 
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -22,9 +22,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'IRunInAMutex.php';
-require_once 'SystemEventProcessManager.class.php';
-
 /**
  * Process stored events.
  *
@@ -36,8 +33,7 @@ require_once 'SystemEventProcessManager.class.php';
  * the PID file). In this case, we send a signal to the process which PID is
  * in the file. If it returns TRUE, it means that there is a process
  * with this PID running. Then, we check that the command running with this PID
- * contains the name of this script (process_system_events.php). In this case,
- * we simply exit.
+ * contains the name of this script. In this case, we simply exit.
  */
 class SystemEventProcessorMutex {
     private $process_owner;

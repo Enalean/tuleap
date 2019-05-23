@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -25,6 +25,7 @@ class SystemEventProcessor_RootTest extends TuleapTestCase {
     private $processor;
     private $sys_http_user = 'www-data';
     private $logger;
+    private $site_cache;
 
     public function setUp()
     {
@@ -92,7 +93,7 @@ class SystemEventProcessor_RootTest extends TuleapTestCase {
     }
 
     public function itProcessApplicationOwnerEvents() {
-        $command   = '/usr/share/codendi/src/utils/php-launcher.sh /usr/share/codendi/src/utils/process_system_events.php '.SystemEvent::OWNER_APP;
+        $command   = '/usr/bin/tuleap process-system-events '.SystemEvent::OWNER_APP;
         expect($this->processor)->launchAs($this->sys_http_user, $command)->once();
         $category = SystemEvent::DEFAULT_QUEUE;
         $this->processor->execute($category);

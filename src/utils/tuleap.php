@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'pre.php';
+require_once __DIR__.'/../www/include/pre.php';
 
 use Tuleap\CLI\Application;
 use Tuleap\CLI\Command\ConfigGetCommand;
@@ -26,6 +26,8 @@ use Tuleap\CLI\Command\ConfigSetCommand;
 use Tuleap\CLI\Command\UserPasswordCommand;
 use Tuleap\Password\PasswordSanityChecker;
 use Tuleap\CLI\Command\ImportProjectXMLCommand;
+
+$event_manager = EventManager::instance();
 
 $application = new Application();
 $application->add(
@@ -40,14 +42,19 @@ $application->add(
 $application->add(
     new ConfigSetCommand(
         new ConfigDao(),
-        EventManager::instance()
+        $event_manager
     )
 );
 $application->add(
     new ImportProjectXMLCommand()
 );
+$application->add(
+    new \Tuleap\CLI\Command\ProcessSystemEventsCommand(
+        new SystemEventProcessor_Factory(BackendLogger::getDefaultLogger(), SystemEventManager::instance(), $event_manager),
+        new SystemEventProcessManager()
+    )
+);
 
-$event_manager         = EventManager::instance();
 $CLI_command_collector = new \Tuleap\CLI\CLICommandsCollector($application);
 $event_manager->processEvent($CLI_command_collector);
 

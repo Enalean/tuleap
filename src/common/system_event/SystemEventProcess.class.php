@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright Enalean (c) 2011, 2012, 2013. All rights reserved.
+ * Copyright Enalean (c) 2011 - Present. All rights reserved.
  *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
+ * Tuleap and Enalean names and logos are registered trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
  * owners.
  *
@@ -22,11 +22,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * A process
- */
-interface SystemEventProcess {
-
+interface SystemEventProcess
+{
+    /**
+     * @return string
+     */
     public function getQueue();
 
     /**
@@ -34,5 +34,25 @@ interface SystemEventProcess {
      *
      * @return string
      */
-    function getPidFile();
+    public function getPidFile();
+
+    /**
+     * Return the command name that match the process to launch
+     *
+     * This string will be used to ensure that the `pid` of a running process corresponds to a command that looks like
+     * a process that is at the origin of the pid.
+     *
+     * Let say `getPidFile` says that we "are" process 9888
+     * if we look at the process table and find process 9888 with name "firefox" it's likely that original command
+     * was killed/OMMed/crashed and the pid was re-attributed to another process.
+     * Hence we can safely start another instance of the command
+     *
+     * Beware with the "looks like", we don't have good means to ensure that a given pid actually corresponds to an
+     * instance of "the same app" so we do string compare on names to command name should be precise enough to not match
+     * everything (command would never been launched) and generic enough to not match nothing (command would be launched
+     * in parallel everytime).
+     *
+     * @return string
+     */
+    public function getCommandName();
 }
