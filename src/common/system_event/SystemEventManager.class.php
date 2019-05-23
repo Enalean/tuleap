@@ -151,7 +151,7 @@ class SystemEventManager {
         //$event = constant(strtoupper($event));
         switch ($event) {
         case Event::SYSTEM_CHECK:
-            if (! $this->areThereMultipleEventsQueuedMatchingFirstParameter(Event::SYSTEM_CHECK, $params)) {
+            if (! $this->areThereMultipleEventsQueuedMatchingFirstParameter(Event::SYSTEM_CHECK, null)) {
                 $this->createEvent(SystemEvent::TYPE_SYSTEM_CHECK,
                     '',
                     SystemEvent::PRIORITY_LOW);

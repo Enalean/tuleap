@@ -43,7 +43,7 @@ TLP_DELAY_CRON_CMD=1
 
 #
 # Regularly launch a system_check event (e.g. every half-hour)
-0,30 * * * * root php -r 'sleep(mt_rand(0,1799));' && (cd /usr/share/codendi/src/utils; ./php-launcher.sh ./launch_system_check.php)
+0,30 * * * * codendiadm /usr/bin/tuleap queue-system-check
 
 #
 # run the daily statistics script just a little bit after

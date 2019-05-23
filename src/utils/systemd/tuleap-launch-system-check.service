@@ -1,10 +1,10 @@
 [Unit]
-Description=Tuleap launch system check
+Description=Tuleap queue system check
 
 [Service]
 Type=simple
 User=root
-ExecStart=/usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/src/utils/launch_system_check.php
+ExecStart=/usr/bin/tuleap queue-system-check
 
 [Install]
 WantedBy=multi-user.target

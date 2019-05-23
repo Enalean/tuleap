@@ -23,59 +23,45 @@ declare(strict_types=1);
 
 namespace Tuleap\CLI\Command;
 
+use Event;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use SystemEvent;
-use SystemEventProcessManager;
-use SystemEventProcessor_Factory;
-use SystemEventProcessorMutex;
 
-class ProcessSystemEventsCommand extends Command
+class QueueSystemCheckCommand extends Command
 {
-    public const NAME = 'process-system-events';
 
+    public const NAME = 'queue-system-check';
     /**
-     * @var SystemEventProcessor_Factory
+     * @var \EventManager
      */
-    private $system_event_processor_factory;
-    /**
-     * @var SystemEventProcessManager
-     */
-    private $system_event_process_manager;
+    private $event_manager;
 
-    public function __construct(SystemEventProcessor_Factory $system_event_processor_factory, SystemEventProcessManager $system_event_process_manager)
+    public function __construct(\EventManager $event_manager)
     {
         parent::__construct(self::NAME);
-        $this->system_event_processor_factory = $system_event_processor_factory;
-        $this->system_event_process_manager = $system_event_process_manager;
+        $this->event_manager = $event_manager;
     }
 
     protected function configure()
     {
-        $this
-            ->setDescription('Process pending system events')
-            ->addArgument('queue', InputArgument::REQUIRED, sprintf('Which queue should be run. Default queue is `%s`', SystemEvent::DEFAULT_QUEUE));
+        $this->setDescription('Put a SYSTEM_CHECK event in processing queue');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         if (getenv('TLP_DELAY_CRON_CMD') === '1') {
             try {
-                sleep(random_int(0, 59));
+                sleep(random_int(0, 1799));
             } catch (\Exception $e) {
                 $error_output = $output instanceof ConsoleOutputInterface ? $output->getErrorOutput() : $output;
                 $error_output->writeln('Unable to get a random time for delay, aborting');
                 return 1;
             }
         }
-        $request_queue = $input->getArgument('queue');
 
-        $processor = $this->system_event_processor_factory->getProcessForQueue($request_queue);
-
-        $mutex = new SystemEventProcessorMutex($this->system_event_process_manager, $processor);
-        $mutex->execute();
+        $this->event_manager->processEvent(Event::SYSTEM_CHECK);
     }
 }
