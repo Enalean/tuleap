@@ -264,6 +264,11 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
      */
     private function getRichTextarea(array $data_attributes, string $format, string $content)
     {
+        $tracker = $this->getTracker();
+        if (! $tracker) {
+            throw new LogicException(__CLASS__.' # '.$this->getId().' must have a valid tracker');
+        }
+
         $hp = Codendi_HTMLPurifier::instance();
 
         $rich_textarea_provider = new RichTextareaProvider(
@@ -277,7 +282,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
              value="' . $hp->purify($format) . '" />';
 
         $html .= $rich_textarea_provider->getTextarea(
-            $this->getTracker(),
+            $tracker,
             $this->getCurrentUser(),
             'field_' . $this->id,
             'artifact[' . $this->id . '][content]',
