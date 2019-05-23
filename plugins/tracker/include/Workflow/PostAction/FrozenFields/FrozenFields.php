@@ -106,7 +106,10 @@ class FrozenFields extends Transition_PostAction
         if (count($this->getFieldIds()) >0) {
             $child = $root->addChild(self::XML_TAG_NAME);
             foreach ($this->getFieldIds() as $field_id) {
-                $child->addChild('field_id')->addAttribute('REF', array_search($field_id, $xmlMapping));
+                $field_id = array_search($field_id, $xmlMapping);
+                if ($field_id !== false) {
+                    $child->addChild('field_id')->addAttribute('REF', $field_id);
+                }
             }
         }
     }
