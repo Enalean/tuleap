@@ -21,6 +21,10 @@
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
 use Tuleap\Tracker\Artifact\RichTextareaProvider;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
+use Tuleap\Tracker\Workflow\SimpleMode\TransitionRetriever;
 
 class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View {
 
@@ -216,11 +220,19 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View {
         if ($this->artifact->userCanUpdate($this->user)) {
             $rich_textarea_provider = new RichTextareaProvider(
                 Tracker_FormElementFactory::instance(),
-                TemplateRendererFactory::build()
+                TemplateRendererFactory::build(),
+                new FrozenFieldDetector(
+                    new TransitionRetriever(new \Workflow_TransitionDao(), \TransitionFactory::instance()),
+                    new FrozenFieldsRetriever(
+                        new FrozenFieldsDao(),
+                        Tracker_FormElementFactory::instance()
+                    )
+                )
             );
 
             $html .= $rich_textarea_provider->getTextarea(
                 $tracker,
+                $this->artifact,
                 $this->user,
                 'tracker_followup_comment_new',
                 'artifact_followup_comment',

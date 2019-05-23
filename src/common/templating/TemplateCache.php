@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -25,7 +25,7 @@ class TemplateCache
     public const CACHE_FOLDER_NAME = 'template_engine';
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getPath()
     {
@@ -34,10 +34,16 @@ class TemplateCache
 
     public function invalidate()
     {
-        if (! is_dir($this->getPath())) {
+        $path = $this->getPath();
+        if ($path === null) {
             return;
         }
-        foreach (new \DirectoryIterator($this->getPath()) as $file_info) {
+
+        if (! is_dir($path)) {
+            return;
+        }
+
+        foreach (new \DirectoryIterator($path) as $file_info) {
             if ($file_info->isFile()) {
                 unlink($file_info->getPathname());
             }
