@@ -35,7 +35,6 @@ declare -r include="${tools_dir}/setup/el7/include"
 . ${include}/php.sh
 . ${include}/mysqlcli.sh
 . ${include}/sql.sh
-. ${include}/services.sh
 . ${include}/core.sh
 . ${include}/plugins.sh
 
@@ -47,7 +46,7 @@ fi
 
 _checkLogFile
 _optionsSelected "${@}"
-_serviceMask "php72-php-fpm.service"
+${tuleapcfg} systemctl mask "php72-php-fpm.service"
 _checkIfTuleapInstalled
 
 if [ ${tuleap_installed:-false} = "false" ] || \
@@ -127,16 +126,16 @@ if [ ${tuleap_installed:-false} = "false" ] || \
     _phpActivePlugin "tracker" "${tuleap_unix_user}"
     _phpImportTrackerTemplate
     _phpForgeupgrade "record-only"
-    _serviceEnable "${timers[@]}"
-    _serviceStart "${timers[@]}"
+    ${tuleapcfg} systemctl enable "${timers[@]}"
+    ${tuleapcfg} systemctl start "${timers[@]}"
     _phpConfigureModule "nginx,fpm"
-    _serviceRestart "nginx" "tuleap"
-    _serviceEnable "nginx"
+    ${tuleapcfg} systemctl restart "nginx" "tuleap"
+    ${tuleapcfg} systemctl enable "nginx"
     _endMessage
 fi
 
 if [ ${configure:-false} = "true" ]; then
-    tuleap-cfg configure apache
+    ${tuleapcfg} configure apache
     _configureMailman
     _checkInstalledPlugins
     _checkPluginsConfiguration
@@ -144,8 +143,8 @@ if [ ${configure:-false} = "true" ]; then
     if ${printf} '%s' ${plugins_configured[@]:-false} | \
         ${grep} --quiet "true"; then
         _phpConfigureModule "nginx"
-        _serviceReload "nginx"
-        _serviceRestart "tuleap.service"
+        ${tuleapcfg} systemctl reload "nginx"
+        ${tuleapcfg} systemctl restart "tuleap.service"
     fi
 fi
 

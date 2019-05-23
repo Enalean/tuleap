@@ -60,6 +60,7 @@
     "psr/http-server-handler": "^1.0",
     "psr/http-server-middleware": "^1.0",
     "symfony/console": "^4.2",
+    "symfony/process": "^4.2",
     "symfony/var-exporter": "^4.2",
     "zendframework/zend-cache": "^2.8",
     "zendframework/zend-feed": "^2.10",

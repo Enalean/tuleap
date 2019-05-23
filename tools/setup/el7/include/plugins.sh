@@ -56,7 +56,7 @@ _pluginGit() {
         plugin_git_configured="true"
     fi
 
-    if ! $(_serviceIsActive sshd); then
+    if ! $(${tuleapcfg} systemctl is-active sshd); then
         _errorMessage "Please, start the SSHD service to continue"
         exit 1
     fi
@@ -147,13 +147,13 @@ _pluginGit() {
         plugin_git_configured="true"
     fi
 
-    if ! $(_serviceIsEnabled tuleap-process-system-events-git.timer); then
-        _serviceEnable "tuleap-process-system-events-git.timer"
+    if ! $(${tuleapcfg} systemctl is-enabled tuleap-process-system-events-git.timer); then
+        ${tuleapcfg} systemctl enable "tuleap-process-system-events-git.timer"
         plugin_git_configured="true"
     fi
 
-    if ! $(_serviceIsActive tuleap-process-system-events-git.timer); then
-        _serviceStart "tuleap-process-system-events-git.timer"
+    if ! $(${tuleapcfg} systemctl is-active tuleap-process-system-events-git.timer); then
+        ${tuleapcfg} systemctl start "tuleap-process-system-events-git.timer"
         plugin_git_configured="true"
     fi
 
@@ -202,7 +202,7 @@ _pluginSVN() {
     fi
 
     if [ ${plugin_svn_configured} = "true" ]; then
-        _serviceRestart "httpd.service"
+        ${tuleapcfg} systemctl restart "httpd.service"
         _infoMessage "Plugin SVN is configured"
         plugins_configured+=('true')
     else
