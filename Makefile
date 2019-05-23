@@ -204,6 +204,18 @@ psalm-baseline-update: ## Update the baseline used by Psalm (PHP static analysis
 	cp -f "$(TMPPSALM)"/tests/psalm/tuleap-baseline.xml ./tests/psalm/tuleap-baseline.xml
 	rm -rf "$(TMPPSALM)"
 
+psalm-baseline-create-from-scratch: ## Recreate the Psalm baseline from scratch, should only be used when needed when upgrading Psalm.
+	$(eval TMPPSALM := $(shell mktemp -d))
+	git checkout-index -a --prefix="$(TMPPSALM)/"
+	rm "$(TMPPSALM)"/tests/psalm/tuleap-baseline.xml
+	$(MAKE) -C "$(TMPPSALM)/" composer npm-build
+	pushd "$(TMPPSALM)"; \
+	php -d display_errors=1 -d display_startup_errors=1 -d memory_limit=-1 \
+	    ./src/vendor/bin/psalm --no-cache --use-ini-defaults --set-baseline=./tests/psalm/tuleap-baseline.xml -c=./tests/psalm/psalm.xml; \
+	popd
+	cp -f "$(TMPPSALM)"/tests/psalm/tuleap-baseline.xml ./tests/psalm/tuleap-baseline.xml
+	rm -rf "$(TMPPSALM)"
+
 phpcs: ## Execute PHPCS with the "strict" ruleset. Use FILES parameter to execute on specific file or directory.
 	$(eval FILES ?= .)
 	@./src/vendor/bin/phpcs --extensions=php --encoding=utf-8 --standard=tests/phpcs/tuleap-ruleset-minimal.xml -p $(FILES)
