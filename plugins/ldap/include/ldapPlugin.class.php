@@ -42,6 +42,7 @@ use Tuleap\Project\Admin\ProjectUGroup\UGroupEditProcessAction;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\svn\Event\GetSVNLoginNameEvent;
+use Tuleap\SystemEvent\RootDailyStartEvent;
 use Tuleap\User\Admin\UserDetailsPresenter;
 use Tuleap\Project\UserRemover;
 use Tuleap\Project\UserRemoverDao;
@@ -139,6 +140,7 @@ class LdapPlugin extends Plugin {
 
         // Daily codendi job
         $this->addHook('codendi_daily_start', 'codendi_daily_start', false);
+        $this->addHook(RootDailyStartEvent::NAME);
 
         // SystemEvent
         $this->addHook(Event::SYSTEM_EVENT_GET_TYPES_FOR_DEFAULT_QUEUE);
@@ -156,7 +158,6 @@ class LdapPlugin extends Plugin {
         }
 
         $this->addHook(UserDetailsPresenter::ADDITIONAL_DETAILS);
-        $this->addHook('root_daily_start');
         $this->addHook('ugroup_duplication');
         $this->addHook(BindingAdditionalModalPresenterCollection::NAME);
         $this->addHook(UGroupEditProcessAction::NAME);
@@ -968,13 +969,14 @@ class LdapPlugin extends Plugin {
         $ldapUserGroupManager->synchronizeUgroups();
     }
 
-    public function root_daily_start($params) {
+    public function rootDailyStart(RootDailyStartEvent $event)
+    {
         if ($this->isLdapAuthType()) {
             $retriever       = new NonUniqueUidRetriever(new LDAP_UserDao());
             $non_unique_uids = $retriever->getNonUniqueLdapUid();
             if ($non_unique_uids) {
-                $params['warnings'][] = 'The following ldap_uids are non unique: ' . implode(', ', $non_unique_uids)
-                                      . PHP_EOL .' This might lead to some SVN misbehaviours for concerned users';
+                $event->addWarning('The following ldap_uids are non unique: ' . implode(', ', $non_unique_uids)
+                                      . PHP_EOL .' This might lead to some SVN misbehaviours for concerned users');
             }
         }
     }

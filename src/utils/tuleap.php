@@ -24,6 +24,7 @@ use Tuleap\CLI\Application;
 use Tuleap\CLI\CLICommandsCollector;
 use Tuleap\CLI\Command\ConfigGetCommand;
 use Tuleap\CLI\Command\ConfigSetCommand;
+use Tuleap\CLI\Command\DailyJobCommand;
 use Tuleap\CLI\Command\QueueSystemCheckCommand;
 use Tuleap\CLI\Command\ImportProjectXMLCommand;
 use Tuleap\CLI\Command\LaunchEveryMinuteJobCommand;
@@ -32,12 +33,9 @@ use Tuleap\CLI\Command\UserPasswordCommand;
 use Tuleap\DB\DBFactory;
 use Tuleap\Password\PasswordSanityChecker;
 
-$event_manager  = EventManager::instance();
-$user_manager   = UserManager::instance();
-$backend_logger = BackendLogger::getDefaultLogger();
-
 $event_manager         = EventManager::instance();
 $backend_logger        = BackendLogger::getDefaultLogger();
+$user_manager          = UserManager::instance();
 $CLI_command_collector = new CLICommandsCollector();
 
 $CLI_command_collector->addCommand(
@@ -57,9 +55,9 @@ $CLI_command_collector->addCommand(
 );
 $CLI_command_collector->addCommand(
     UserPasswordCommand::NAME,
-    static function() : UserPasswordCommand  {
+    static function() use ($user_manager): UserPasswordCommand  {
         return new UserPasswordCommand(
-            UserManager::instance(),
+            $user_manager,
             PasswordSanityChecker::build()
         );
     }
@@ -86,6 +84,7 @@ $CLI_command_collector->addCommand(
         return new QueueSystemCheckCommand($event_manager, DBFactory::getMainTuleapDBConnection());
     }
 );
+
 $CLI_command_collector->addCommand(
     LaunchEveryMinuteJobCommand::NAME,
     static function() use ($event_manager, $backend_logger) : LaunchEveryMinuteJobCommand  {
@@ -93,6 +92,16 @@ $CLI_command_collector->addCommand(
             $event_manager,
             $backend_logger,
             DBFactory::getMainTuleapDBConnection()
+        );
+    }
+);
+
+$CLI_command_collector->addCommand(
+    DailyJobCommand::NAME,
+    static function() use ($event_manager, $user_manager) : DailyJobCommand  {
+        return new DailyJobCommand(
+            $event_manager,
+            $user_manager
         );
     }
 );

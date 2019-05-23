@@ -37,6 +37,7 @@ use Tuleap\SVN\DiskUsage\Retriever as SVNRetriever;
 use Tuleap\CVS\DiskUsage\Retriever as CVSRetriever;
 use Tuleap\CVS\DiskUsage\Collector as CVSCollector;
 use Tuleap\CVS\DiskUsage\FullHistoryDao;
+use Tuleap\SystemEvent\RootDailyStartEvent;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once 'constants.php';
@@ -49,7 +50,7 @@ class StatisticsPlugin extends Plugin
         parent::__construct($id);
         $this->addHook('cssfile',                  'cssFile',                false);
         $this->addHook('site_admin_option_hook',   'site_admin_option_hook', false);
-        $this->addHook('root_daily_start',         'root_daily_start',       false);
+        $this->addHook(RootDailyStartEvent::NAME);
         $this->addHook(\Tuleap\Widget\Event\GetWidget::NAME);
         $this->addHook(\Tuleap\Widget\Event\GetProjectWidgetList::NAME);
         $this->addHook('usergroup_data',           'usergroup_data',         false);
@@ -153,10 +154,8 @@ class StatisticsPlugin extends Plugin
         );
     }
 
-    /**
-     * @see root_daily_start
-     */
-    public function root_daily_start($params) {
+    public function rootDailyStart(RootDailyStartEvent $event)
+    {
         SystemEventManager::instance()->createEvent(
             SystemEvent_STATISTICS_DAILY::NAME,
             null,

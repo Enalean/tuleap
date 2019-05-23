@@ -23,6 +23,7 @@ use FastRoute\RouteCollector;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\ForumML;
+use Tuleap\SystemEvent\RootDailyStartEvent;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -35,6 +36,7 @@ class ForumMLPlugin extends Plugin {
         $this->addHook('browse_archives','forumml_browse_archives');
         $this->addHook('cssfile','cssFile');
         $this->addHook('javascript_file', 'jsFile');
+        $this->addHook(RootDailyStartEvent::NAME);
 
         // Search
         $this->addHook(Event::SEARCH_TYPE);
@@ -234,5 +236,16 @@ class ForumMLPlugin extends Plugin {
             $r->get('/index.php', $this->getRouteHandler('routeWriteMail'));
             $r->post('/index.php', $this->getRouteHandler('routeSendMail'));
         });
+    }
+
+    public function rootDailyStart(RootDailyStartEvent $event)
+    {
+        try {
+            $tmp_watch = new \Tuleap\TmpWatch((string) $this->getPluginInfo()->getPropertyValueForName('forumml_tmp'), 24);
+            $tmp_watch->run();
+        } catch (Exception $exception) {
+            $event->getLogger()->error('ForumML root_daily_start '.get_class($exception).': '.$exception->getMessage(), $exception);
+            $event->addWarning($exception->getMessage());
+        }
     }
 }
