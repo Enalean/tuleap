@@ -72,4 +72,4 @@ TLP_DELAY_CRON_CMD=1
 10 0 * * * codendiadm php -r 'sleep(mt_rand(0,1799));' && /usr/share/codendi/src/utils/php-launcher.sh /usr/share/codendi/src/utils/codendi_daily.php
 
 # Ask plugins if they have something to execute each minute
-* * * * * codendiadm php -r 'sleep(mt_rand(0,59));' && (cd /usr/share/codendi/src/utils; ./php-launcher.sh ./process_cron_job_for_plugins.php)
+* * * * * codendiadm /usr/bin/tuleap launch-every-minute-job
