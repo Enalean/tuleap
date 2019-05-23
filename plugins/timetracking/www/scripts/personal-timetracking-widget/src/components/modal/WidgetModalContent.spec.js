@@ -20,7 +20,7 @@
 import { shallowMount } from "@vue/test-utils";
 import WidgetModalContent from "./WidgetModalContent.vue";
 import localVue from "../../helpers/local-vue.js";
-import { createStoreMock } from "../../helpers/store-wrapper.spec-helper";
+import { createStoreMock } from "@tuleap-vue-components/store-wrapper.js";
 
 function getWidgetModalContentInstance(store) {
     const component_options = {

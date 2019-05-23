@@ -21,7 +21,7 @@ import { shallowMount } from "@vue/test-utils";
 import localVue from "../../../helpers/local-vue.js";
 
 import QuickLookButton from "./QuickLookButton.vue";
-import { createStoreMock } from "../../../helpers/store-wrapper.spec-helper.js";
+import { createStoreMock } from "@tuleap-vue-components/store-wrapper.js";
 
 describe("QuickLookButton", () => {
     it(`Emit displayQuickLook event with correct parameters when user click on button`, () => {

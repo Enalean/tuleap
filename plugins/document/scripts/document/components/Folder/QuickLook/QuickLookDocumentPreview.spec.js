@@ -22,7 +22,7 @@ import QuickLookDocumentPreview from "./QuickLookDocumentPreview.vue";
 import { TYPE_EMBEDDED, TYPE_FILE, TYPE_LINK } from "../../../constants.js";
 
 import localVue from "../../../helpers/local-vue.js";
-import { createStoreMock } from "../../../helpers/store-wrapper.spec-helper.js";
+import { createStoreMock } from "@tuleap-vue-components/store-wrapper.js";
 
 describe("QuickLookDocumentPreview", () => {
     let preview_factory, state, store;

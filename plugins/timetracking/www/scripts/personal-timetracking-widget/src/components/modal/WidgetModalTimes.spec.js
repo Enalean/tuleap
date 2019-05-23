@@ -20,7 +20,7 @@
 import { shallowMount } from "@vue/test-utils";
 import WidgetModalTimes from "./WidgetModalTimes.vue";
 import localVue from "../../helpers/local-vue.js";
-import { createStoreMock } from "../../helpers/store-wrapper.spec-helper";
+import { createStoreMock } from "@tuleap-vue-components/store-wrapper.js";
 
 function getWidgetModalTimesInstance(store_options) {
     const store = createStoreMock(store_options);

@@ -20,7 +20,7 @@
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../../../helpers/local-vue.js";
 import DropdownMenuCurrentFolder from "./DropdownMenuCurrentFolder.vue";
-import { createStoreMock } from "../../../helpers/store-wrapper.spec-helper.js";
+import { createStoreMock } from "@tuleap-vue-components/store-wrapper.js";
 
 describe("DropdownMenuCurrentFolder", () => {
     let dropdown_factory, state, store, store_options;

@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import SkeletonTable from "skeletons/SkeletonTable.vue";
+import SkeletonTable from "@tuleap-vue-components/skeletons/SkeletonTable.vue";
 
 export default {
     name: "FolderLoadingScreen",

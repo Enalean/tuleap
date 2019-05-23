@@ -20,7 +20,7 @@
 import { shallowMount } from "@vue/test-utils";
 import WidgetModalTable from "./WidgetModalTable.vue";
 import localVue from "../../helpers/local-vue.js";
-import { createStoreMock } from "../../helpers/store-wrapper.spec-helper";
+import { createStoreMock } from "@tuleap-vue-components/store-wrapper.js";
 
 function getWidgetModalTableInstance(store_options) {
     const store = createStoreMock(store_options);

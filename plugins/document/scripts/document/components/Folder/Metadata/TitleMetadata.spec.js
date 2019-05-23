@@ -20,7 +20,7 @@
 import localVue from "../../../helpers/local-vue.js";
 import { shallowMount } from "@vue/test-utils";
 import TitleMetadata from "./TitleMetadata.vue";
-import { createStoreMock } from "../../../helpers/store-wrapper.spec-helper.js";
+import { createStoreMock } from "@tuleap-vue-components/store-wrapper.js";
 import { TYPE_EMBEDDED, TYPE_FILE, TYPE_FOLDER } from "../../../constants.js";
 
 describe("TitleMetadata", () => {

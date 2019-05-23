@@ -84,6 +84,7 @@ const webpack_config_for_vue = {
             webpack_configurator.tlp_fetch_alias,
             webpack_configurator.tlp_mocks_alias,
             webpack_configurator.jquery_mocks_alias,
+            webpack_configurator.vue_components_alias,
             {
                 "permission-badge": path_to_badge
             }

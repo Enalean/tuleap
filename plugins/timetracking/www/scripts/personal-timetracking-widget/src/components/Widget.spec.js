@@ -22,7 +22,7 @@ import Widget from "./Widget.vue";
 import WidgetReadingMode from "./WidgetReadingMode.vue";
 import WidgetWritingMode from "./WidgetWritingMode.vue";
 import WidgetArtifactTable from "./WidgetArtifactTable.vue";
-import { createStoreMock } from "../helpers/store-wrapper.spec-helper";
+import { createStoreMock } from "@tuleap-vue-components/store-wrapper.js";
 
 const userId = 102;
 function getPersonalWidgetInstance(store_options) {

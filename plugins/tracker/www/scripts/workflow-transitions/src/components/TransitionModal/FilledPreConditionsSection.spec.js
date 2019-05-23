@@ -23,8 +23,8 @@ import { shallowMount } from "@vue/test-utils";
 import FilledPreConditionsSection from "./FilledPreConditionsSection.vue";
 import localVue from "../../support/local-vue.js";
 import module_options from "../../store/transition-modal/module.js";
-import { createStoreMock } from "../../support/store-wrapper.spec-helper.js";
-import { create } from "../../support/factories";
+import { createStoreMock } from "@tuleap-vue-components/store-wrapper.js";
+import { create } from "../../support/factories.js";
 
 describe("FilledPreConditionsSection", () => {
     let store;

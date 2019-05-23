@@ -23,7 +23,7 @@ import { shallowMount } from "@vue/test-utils";
 import FirstConfigurationSections from "./FirstConfigurationSections.vue";
 import localVue from "../../support/local-vue.js";
 import store_options from "../../store/index.js";
-import { createStoreMock } from "../../support/store-wrapper.spec-helper.js";
+import { createStoreMock } from "@tuleap-vue-components/store-wrapper.js";
 
 describe("FirstConfigurationSections", () => {
     let store;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018 - 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,8 +15,9 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
+
+/* global jasmine */
 
 import { Store } from "vuex-mock-store";
 
@@ -33,7 +34,7 @@ export function createStoreMock(store_options, custom_state = {}) {
     const options = Object.assign({}, store_options, {
         state,
         spy: {
-            create: () => jasmine.createSpy(), // eslint-disable-line jasmine/no-unsafe-spy
+            create: () => jasmine.createSpy(),
             reset: spy => spy.and.stub()
         }
     });

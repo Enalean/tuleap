@@ -29,7 +29,8 @@
   },
   "devDependencies": {
     "imports-loader": "^0.7.1",
-    "load-json-file": "^5.1.0"
+    "load-json-file": "^5.1.0",
+    "vuex-mock-store": "0.0.7"
   },
   "config": {
     "bin": "../../../node_modules/.bin"
