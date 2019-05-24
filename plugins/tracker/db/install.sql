@@ -931,6 +931,20 @@ CREATE TABLE plugin_tracker_file_upload (
     KEY idx_expiration_date(expiration_date)
 ) ENGINE=InnoDB;
 
+DROP TABLE IF EXISTS plugin_tracker_workflow_postactions_hidden_fieldsets;
+CREATE TABLE IF NOT EXISTS plugin_tracker_workflow_postactions_hidden_fieldsets (
+    id INT(11) UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    transition_id INT(11) NOT NULL,
+    INDEX idx_wf_transition_id(transition_id)
+) ENGINE=InnoDB;
+
+DROP TABLE IF EXISTS plugin_tracker_workflow_postactions_hidden_fieldsets_value;
+CREATE TABLE IF NOT EXISTS plugin_tracker_workflow_postactions_hidden_fieldsets_value (
+    postaction_id INT(11) UNSIGNED NOT NULL,
+    fieldset_id INT(11) NOT NULL,
+    PRIMARY KEY (postaction_id, fieldset_id)
+) ENGINE=InnoDB;
+
 -- Enable service for project 100
 INSERT INTO service(group_id, label, description, short_name, link, is_active, is_used, scope, rank)
        VALUES      ( 100, 'plugin_tracker:service_lbl_key', 'plugin_tracker:service_desc_key', 'plugin_tracker', '/plugins/tracker/?group_id=$group_id', 1, 1, 'system', 151);
