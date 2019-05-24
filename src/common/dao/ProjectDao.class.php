@@ -74,6 +74,21 @@ class ProjectDao extends DataAccessObject {
         return (int) $this->foundRows();
     }
 
+    /**
+     * @return int
+     */
+    public function countByStatus(string $project_status)
+    {
+        $project_status = $this->da->quoteSmart($project_status);
+
+        $dar = $this->retrieve('SELECT count(*) AS nb FROM `groups` WHERE status = ' . $project_status);
+        if ($dar === false) {
+            return 0;
+        }
+
+        return (int) $dar->getRow()['nb'];
+    }
+
     public function searchByUnixGroupName($unixGroupName){
         $unixGroupName= $this->da->quoteSmart($unixGroupName);
         $sql = "SELECT *
