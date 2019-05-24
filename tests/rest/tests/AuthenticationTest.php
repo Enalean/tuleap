@@ -24,13 +24,6 @@
  */
 class AuthenticationTest extends RestBase {
 
-    public function testRestrictedGETResourceIsNotReadableByAnonymous()
-    {
-        $response = $this->client->get("projects/$this->project_public_id/user_groups")->send();
-
-        $this->assertEquals(401, $response->getStatusCode());
-    }
-
     public function testOPTIONSIsReadableByAnonymous() {
         $response = $this->client->options('projects')->send();
 

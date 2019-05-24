@@ -45,20 +45,43 @@ class UserGroupTest extends RestBase {
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
-    public function testGETIdDoesNotWorkIfUserIsProjectMemberButNotProjectAdmin() {
+    public function testGETIdDoesWorkIfUserIsProjectMemberButNotProjectAdmin() {
         $response = $this->getResponse(
             $this->client->get('user_groups/'.REST_TestDataBuilder::STATIC_UGROUP_1_ID),
-            REST_TestDataBuilder::TEST_USER_2_NAME
+            REST_TestDataBuilder::TEST_USER_1_NAME
         );
-        $this->assertEquals($response->getStatusCode(), 403);
+        $this->assertEquals(
+            $response->json(),
+            array(
+                'id'         => (string) REST_TestDataBuilder::STATIC_UGROUP_1_ID,
+                'uri'        => 'user_groups/'.REST_TestDataBuilder::STATIC_UGROUP_1_ID,
+                'label'      => REST_TestDataBuilder::STATIC_UGROUP_1_LABEL,
+                'users_uri'  => 'user_groups/'.REST_TestDataBuilder::STATIC_UGROUP_1_ID.'/users',
+                'key'        => REST_TestDataBuilder::STATIC_UGROUP_1_LABEL,
+                'short_name' => 'static_ugroup_1'
+            )
+        );
+        $this->assertEquals($response->getStatusCode(), 200);
     }
 
-    public function testGETIdDoesNotWorkIfUserIsNotProjectMember() {
+    public function testGETIdDoesWorkIfUserIsNotProjectMember() {
         $response = $this->getResponse(
             $this->client->get('user_groups/'.REST_TestDataBuilder::STATIC_UGROUP_2_ID),
             REST_TestDataBuilder::TEST_USER_2_NAME
         );
-        $this->assertEquals($response->getStatusCode(), 403);
+
+        $this->assertEquals(
+            $response->json(),
+            array(
+                'id'         => (string) REST_TestDataBuilder::STATIC_UGROUP_2_ID,
+                'uri'        => 'user_groups/'.REST_TestDataBuilder::STATIC_UGROUP_2_ID,
+                'label'      => REST_TestDataBuilder::STATIC_UGROUP_2_LABEL,
+                'users_uri'  => 'user_groups/'.REST_TestDataBuilder::STATIC_UGROUP_2_ID.'/users',
+                'key'        => REST_TestDataBuilder::STATIC_UGROUP_2_LABEL,
+                'short_name' => 'static_ugroup_2'
+            )
+        );
+        $this->assertEquals($response->getStatusCode(), 200);
     }
 
     public function testGETIdThrowsA404IfUserGroupIdDoesNotExist() {

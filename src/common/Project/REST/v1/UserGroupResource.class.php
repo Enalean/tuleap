@@ -425,7 +425,7 @@ class UserGroupResource extends AuthenticatedResource {
     private function userCanSeeUserGroups($project_id) {
         $project      = $this->project_manager->getProject($project_id);
         $user         = $this->user_manager->getCurrentUser();
-        ProjectAuthorization::canUserAccessUserGroupInfo($user, $project, new URLVerification());
+        ProjectAuthorization::userCanAccessProject($user, $project, new URLVerification());
 
         return true;
     }

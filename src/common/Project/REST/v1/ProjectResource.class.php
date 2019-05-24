@@ -70,6 +70,7 @@ use Tuleap\REST\v1\OrderRepresentationBase;
 use Tuleap\REST\v1\PhpWikiPageRepresentation;
 use Tuleap\Service\ServiceCreator;
 use Tuleap\User\ForgeUserGroupPermission\RestProjectManagementPermission;
+use Tracker_URLVerification;
 use Tuleap\Widget\Event\GetProjectsWithCriteria;
 use Tuleap\Widget\WidgetFactory;
 use UGroupBinding;
@@ -1174,6 +1175,7 @@ class ProjectResource extends AuthenticatedResource
      * Otherwise, these groupes are excluded.
      *
      * @url GET {id}/user_groups
+     * @access hybrid
      *
      * @param int    $id    Id of the project
      * @param string $query JSON object of filtering options {@from path} {@required false}
@@ -1182,7 +1184,7 @@ class ProjectResource extends AuthenticatedResource
      * @throws I18NRestException 400
      * @throws \Tuleap\REST\Exceptions\InvalidJsonException
      */
-    protected function getUserGroups($id, $query = '')
+    public function getUserGroups($id, $query = '')
     {
         $project = $this->getProjectForUser($id);
         $this->userCanSeeUserGroups($id);
@@ -1229,7 +1231,7 @@ class ProjectResource extends AuthenticatedResource
     {
         $project = $this->project_manager->getProject($project_id);
         $user    = $this->user_manager->getCurrentUser();
-        ProjectAuthorization::userCanAccessProjectAndIsProjectAdmin($user, $project);
+        ProjectAuthorization::userCanAccessProject($user, $project, new URLVerification());
 
         return true;
     }
