@@ -29,6 +29,9 @@ use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Transition;
 use TransitionFactory;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
+use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
+use Tuleap\Tracker\Workflow\SimpleMode\State\State;
+use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
 use Tuleap\Tracker\Workflow\SimpleMode\TransitionReplicator;
 use Tuleap\Tracker\Workflow\SimpleMode\TransitionRetriever;
 use Workflow;
@@ -44,26 +47,26 @@ class ModeUpdaterTest extends TestCase
     private $workflow_mode_updater;
     private $workflow_dao;
     private $transition_replicator;
-    private $transition_factory;
-    private $transition_retriever;
     private $frozen_fields_dao;
     private $tracker;
     private $workflow;
+    private $state_factory;
+    private $reference_transition_extractor;
 
     protected function setUp() :void
     {
-        $this->workflow_dao          = Mockery::mock(Workflow_Dao::class);
-        $this->transition_factory    = Mockery::mock(TransitionFactory::class);
-        $this->transition_retriever  = Mockery::mock(TransitionRetriever::class);
-        $this->transition_replicator = Mockery::mock(TransitionReplicator::class);
-        $this->frozen_fields_dao     = Mockery::mock(FrozenFieldsDao::class);
+        $this->workflow_dao                   = Mockery::mock(Workflow_Dao::class);
+        $this->transition_replicator          = Mockery::mock(TransitionReplicator::class);
+        $this->frozen_fields_dao              = Mockery::mock(FrozenFieldsDao::class);
+        $this->state_factory                  = Mockery::mock(StateFactory::class);
+        $this->reference_transition_extractor = new TransitionExtractor();
 
         $this->workflow_mode_updater = new ModeUpdater(
             $this->workflow_dao,
-            $this->transition_factory,
-            $this->transition_retriever,
             $this->transition_replicator,
-            $this->frozen_fields_dao
+            $this->frozen_fields_dao,
+            $this->state_factory,
+            $this->reference_transition_extractor
         );
 
         $this->tracker  = Mockery::mock(Tracker::class);
@@ -109,31 +112,14 @@ class ModeUpdaterTest extends TestCase
         $transition_open_closed      = new Transition(3, 25, $open_value, $closed_value);
         $transition_open_cancelled   = new Transition(4, 25, $open_value, $cancelled_value);
         $transition_closed_cancelled = new Transition(5, 25, $closed_value, $cancelled_value);
+        $state_open      = new State(1, [$transition_new_open]);
+        $state_closed    = new State(2, [$transition_new_closed, $transition_open_closed]);
+        $state_cancelled = new State(3, [$transition_open_cancelled, $transition_closed_cancelled]);
 
-        $this->transition_factory->shouldReceive('getTransitions')
+        $this->state_factory->shouldReceive('getAllStatesForWorkflow')
             ->with($this->workflow)
-            ->andReturn([
-                $transition_new_open,
-                $transition_new_closed,
-                $transition_open_closed,
-                $transition_open_cancelled,
-                $transition_closed_cancelled
-            ]);
-
-        $this->transition_retriever->shouldReceive('getFirstSiblingTransition')
-            ->with($transition_new_open)
-            ->andReturn($transition_new_open)
-            ->once();
-
-        $this->transition_retriever->shouldReceive('getFirstSiblingTransition')
-            ->with($transition_new_closed)
-            ->andReturn($transition_open_closed)
-            ->once();
-
-        $this->transition_retriever->shouldReceive('getFirstSiblingTransition')
-            ->with($transition_open_cancelled)
-            ->andReturn($transition_open_cancelled)
-            ->once();
+            ->once()
+            ->andReturn([$state_open, $state_closed, $state_cancelled]);
 
         $this->transition_replicator->shouldReceive('replicate')
             ->with($transition_new_open, Mockery::any())

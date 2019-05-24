@@ -35,6 +35,7 @@ use Tracker_ReportDao;
 use Tracker_ReportFactory;
 use Tracker_REST_TrackerRestBuilder;
 use TrackerFactory;
+use TransitionFactory;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\REST\AuthenticatedResource;
@@ -62,6 +63,9 @@ use Tuleap\Tracker\REST\v1\Workflow\ModeUpdater;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
+use Tuleap\Tracker\Workflow\SimpleMode\SimpleWorkflowDao;
+use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
+use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
 use Tuleap\Tracker\Workflow\SimpleMode\TransitionReplicator;
 use Tuleap\Tracker\Workflow\SimpleMode\TransitionReplicatorBuilder;
 use Tuleap\Tracker\Workflow\SimpleMode\TransitionRetriever;
@@ -707,17 +711,15 @@ class TrackersResource extends AuthenticatedResource
      */
     private function getModeUpdater() : ModeUpdater
     {
-        $transition_factory = \TransitionFactory::instance();
-
         return new ModeUpdater(
             new Workflow_Dao(),
-            $transition_factory,
-            new TransitionRetriever(
-                new Workflow_TransitionDao(),
-                $transition_factory
-            ),
             $this->getTransitionReplicator(),
-            new FrozenFieldsDao()
+            new FrozenFieldsDao(),
+            new StateFactory(
+                TransitionFactory::instance(),
+                new SimpleWorkflowDao()
+            ),
+            new TransitionExtractor()
         );
     }
 

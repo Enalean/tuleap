@@ -39,6 +39,7 @@ use Transition;
 use Transition_PostAction_Field_Date;
 use TransitionFactory;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
+use Tuleap\Tracker\Workflow\SimpleMode\SimpleWorkflowDao;
 use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
 use Workflow_Transition_ConditionFactory;
 use Workflow_Transition_ConditionsCollection;
@@ -214,7 +215,10 @@ class WorkflowFactoryTest extends TestCase
             )
             ->andReturn([$first_transition, $second_transition]);
 
-        $state_factory = new StateFactory($transition_factory);
+        $state_factory = new StateFactory(
+            $transition_factory,
+            Mockery::mock(SimpleWorkflowDao::class)
+        );
 
         $workflow_factory = new WorkflowFactory(
             $transition_factory,

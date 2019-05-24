@@ -24,7 +24,7 @@ namespace Tuleap\Tracker\Workflow\SimpleMode;
 
 use SimpleXMLElement;
 use Transition;
-use Tuleap\Tracker\Workflow\SimpleMode\State\ReferenceTransitionExtractor;
+use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
 use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
 use Workflow;
 
@@ -41,14 +41,14 @@ class SimpleWorkflowXMLExporter
     private $state_factory;
 
     /**
-     * @var ReferenceTransitionExtractor
+     * @var TransitionExtractor
      */
     private $transition_extractor;
 
     public function __construct(
         SimpleWorkflowDao $simple_workflow_dao,
         StateFactory $state_factory,
-        ReferenceTransitionExtractor $transition_extractor
+        TransitionExtractor $transition_extractor
     ) {
         $this->simple_workflow_dao  = $simple_workflow_dao;
         $this->state_factory        = $state_factory;
@@ -92,7 +92,7 @@ class SimpleWorkflowXMLExporter
                 ->addAttribute('REF', $xml_value_field_id);
         }
 
-        $first_transition = $this->transition_extractor->extractFirstTransitionFromStateObject($state);
+        $first_transition = $this->transition_extractor->extractReferenceTransitionFromState($state);
 
         $postactions = $first_transition->getPostActions();
         if ($postactions) {

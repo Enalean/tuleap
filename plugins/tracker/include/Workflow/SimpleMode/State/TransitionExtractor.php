@@ -25,13 +25,13 @@ namespace Tuleap\Tracker\Workflow\SimpleMode\State;
 use Transition;
 use Tuleap\Tracker\Workflow\Transition\NoTransitionForStateException;
 
-class ReferenceTransitionExtractor
+class TransitionExtractor
 {
     /**
      * @return Transition
      * @throws NoTransitionForStateException
      */
-    public function extractFirstTransitionFromStateObject(State $state) : Transition
+    public function extractReferenceTransitionFromState(State $state) : Transition
     {
         $transitions = $state->getTransitions();
 
@@ -47,5 +47,21 @@ class ReferenceTransitionExtractor
         }
 
         throw new NoTransitionForStateException();
+    }
+
+    public function extractSiblingTransitionsFromState(State $state, Transition $transition) : array
+    {
+        $sibling_transitions = [];
+        foreach ($state->getTransitions() as $state_transition) {
+            if ($transition->getIdFrom() === $state_transition->getIdFrom() &&
+                $transition->getIdTo() === $state_transition->getIdTo()
+            ) {
+                continue;
+            }
+
+            $sibling_transitions[] = $state_transition;
+        }
+
+        return $sibling_transitions;
     }
 }

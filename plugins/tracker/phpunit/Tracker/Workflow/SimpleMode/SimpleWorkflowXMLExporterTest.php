@@ -26,7 +26,7 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
-use Tuleap\Tracker\Workflow\SimpleMode\State\ReferenceTransitionExtractor;
+use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
 use Tuleap\Tracker\Workflow\SimpleMode\State\State;
 use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
 use Workflow;
@@ -40,7 +40,7 @@ class SimpleWorkflowXMLExporterTest extends TestCase
     {
         $xml           = new SimpleXMLElement('<simple_workflow/>');
         $dao           = Mockery::mock(SimpleWorkflowDao::class);
-        $extractor     = new ReferenceTransitionExtractor();
+        $extractor     = new TransitionExtractor();
         $state_factory = Mockery::mock(StateFactory::class);
 
         $exporter  = new SimpleWorkflowXMLExporter($dao, $state_factory, $extractor);
