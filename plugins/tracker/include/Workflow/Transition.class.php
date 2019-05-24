@@ -68,10 +68,10 @@ class Transition
     /**
      * Constructor
      *
-     * @param Integer                              $transition_id Id of the transition
-     * @param Integer                              $workflow_id   Id of the workflow
-     * @param Tracker_FormElement_Field_List_Value $from          Source value
-     * @param Tracker_FormElement_Field_List_Value $to            Destination value
+     * @param Integer                                   $transition_id Id of the transition
+     * @param Integer                                   $workflow_id   Id of the workflow
+     * @param Tracker_FormElement_Field_List_Value|null $from          Source value
+     * @param Tracker_FormElement_Field_List_Value|null $to            Destination value
      */
     public function __construct($transition_id, $workflow_id, $from, $to) {
         $this->transition_id = $transition_id;

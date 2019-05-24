@@ -205,22 +205,20 @@ class TransitionFactory //phpcs:ignoreFile
     /**
      * @return Transition[]
      */
-    public function getInstancesFromStateXML(SimpleXMLElement $state_xml, array &$xml_mapping, Project $project)
-    {
+    public function getInstancesFromStateXML(
+        SimpleXMLElement $state_xml,
+        array &$xml_mapping,
+        Project $project,
+        Tracker_FormElement_Field_List_Value $to_value
+    ) {
         $transitions = [];
-        $to_id       = $xml_mapping[(string)$state_xml->to_id['REF']];
-
-        if (! isset($state_xml->transitions)) {
-            return $transitions;
-        }
-
         foreach ($state_xml->transitions->transition as $transition_xml) {
-            $from_id = null;
+            $from_value = null;
             if ((string)$transition_xml->from_id['REF'] !== 'null') {
-                $from_id = $xml_mapping[(string)$transition_xml->from_id['REF']];
+                $from_value = $xml_mapping[(string)$transition_xml->from_id['REF']];
             }
 
-            $transitions[] = $this->buildTransitionFromXML($state_xml, $project, $xml_mapping, $from_id, $to_id);
+            $transitions[] = $this->buildTransitionFromXML($state_xml, $project, $xml_mapping, $from_value, $to_value);
         }
 
         return $transitions;
@@ -233,10 +231,10 @@ class TransitionFactory //phpcs:ignoreFile
         SimpleXMLElement $xml,
         Project $project,
         array $xml_mapping,
-        $from_id,
-        $to_id
+        ?Tracker_FormElement_Field_List_Value $from_value,
+        Tracker_FormElement_Field_List_Value $to_value
     ) {
-        $transition = new Transition(0, 0, $from_id, $to_id);
+        $transition = new Transition(0, 0, $from_value, $to_value);
         $postactions = array();
         if ($xml->postactions) {
             $postactions = $this->getPostActionFactory()->getInstanceFromXML(
