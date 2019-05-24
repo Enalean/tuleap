@@ -145,19 +145,19 @@
     <InvalidPropertyAssignmentValue occurrences="1">
       <code>$tracker_factory</code>
     </InvalidPropertyAssignmentValue>
-    <UndefinedClass occurrences="2">
+    <UndefinedDocblockClass occurrences="2">
       <code>Tracker_Factory</code>
       <code>$this-&gt;tracker_factory</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/KanbanColumnFactory.php">
     <InvalidPropertyAssignmentValue occurrences="1">
       <code>$column_dao</code>
     </InvalidPropertyAssignmentValue>
-    <UndefinedClass occurrences="2">
+    <UndefinedDocblockClass occurrences="2">
       <code>KanbanColumnDao</code>
       <code>$this-&gt;column_dao</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/KanbanDao.class.php">
     <PossiblyFalseIterator occurrences="1">
@@ -172,9 +172,9 @@
     </InvalidClass>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/KanbanItemDao.class.php">
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>type</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/KanbanPresenter.class.php">
     <InvalidPropertyAssignmentValue occurrences="3">
@@ -208,9 +208,9 @@
     <FalsableReturnStatement occurrences="1">
       <code>false</code>
     </FalsableReturnStatement>
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>@return string | number</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
     <UndefinedInterfaceMethod occurrences="2">
       <code>rewind</code>
       <code>current</code>
@@ -267,9 +267,12 @@
       <code>json_encode($paginated_backlog_items_representations)</code>
       <code>json_encode($paginated_milestones_representations)</code>
     </InvalidPropertyAssignmentValue>
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>MilestoneRepresentation</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
+  </file>
+  <file src="plugins/agiledashboard/include/AgileDashboard/Milestone/SelectedMilestoneProvider.php">
+    <PossiblyNullPropertyAssignmentValue occurrences="1"/>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/Planning/NearestPlanningTrackerProvider.class.php">
     <InvalidPropertyAssignmentValue occurrences="1">
@@ -278,10 +281,10 @@
     <InvalidScalarArgument occurrences="1">
       <code>$ordered_plannings</code>
     </InvalidScalarArgument>
-    <UndefinedClass occurrences="2">
+    <UndefinedDocblockClass occurrences="2">
       <code>PlanninqFactory</code>
       <code>$this-&gt;planning_factory</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/REST/v1/Artifact/BurnupPointRepresentation.php">
     <PossiblyNullPropertyAssignmentValue occurrences="2">
@@ -331,20 +334,20 @@
     <InvalidPropertyAssignmentValue occurrences="1">
       <code>new ArtifactLinkUpdater($priority_manager)</code>
     </InvalidPropertyAssignmentValue>
-    <UndefinedClass occurrences="2">
+    <UndefinedDocblockClass occurrences="2">
       <code>BacklogItemsUpdater</code>
       <code>$this-&gt;artifactlink_updater</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/REST/v1/CardRepresentation.class.php">
     <InvalidPropertyAssignmentValue occurrences="2">
       <code>$planning_id . '_' . $card-&gt;getId()</code>
       <code>array_map(function ($value) { return JsonCast::toInt($value); }, $card-&gt;getDropIntoIds())</code>
     </InvalidPropertyAssignmentValue>
-    <UndefinedClass occurrences="2">
+    <UndefinedDocblockClass occurrences="2">
       <code>ProjectReference</code>
       <code>ArtifactReference</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/REST/v1/FilterValidContent.class.php">
     <PossiblyNullReference occurrences="1">
@@ -359,11 +362,11 @@
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/REST/v1/Kanban/KanbanColumnsResource.php">
     <InvalidPropertyAssignmentValue occurrences="1"/>
-    <UndefinedClass occurrences="3">
+    <UndefinedDocblockClass occurrences="3">
       <code>AgileDashboard_KankanColumnFactory</code>
       <code>$this-&gt;kanban_column_factory</code>
       <code>$this-&gt;kanban_column_factory</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
     <UndefinedThisPropertyAssignment occurrences="2">
       <code>$this-&gt;node_js_client</code>
       <code>$this-&gt;permissions_serializer</code>
@@ -388,10 +391,10 @@
     <TypeDoesNotContainType occurrences="1">
       <code>$artifact</code>
     </TypeDoesNotContainType>
-    <UndefinedClass occurrences="2">
+    <UndefinedDocblockClass occurrences="2">
       <code>AgileDashboard_KankanColumnFactory</code>
       <code>Tuleap\AgileDashboard\REST\v1\Kanban\KanbanRepresentation</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/REST/v1/Kanban/KanbanRepresentation.php">
     <InvalidPropertyAssignmentValue occurrences="3">
@@ -399,10 +402,10 @@
       <code>new KanbanBacklogInfoRepresentation()</code>
       <code>new KanbanArchiveInfoRepresentation()</code>
     </InvalidPropertyAssignmentValue>
-    <UndefinedClass occurrences="2">
+    <UndefinedDocblockClass occurrences="2">
       <code>Tuleap\AgileDashboard\REST\v1\Kanban\KanbanBacklogInfoRepresentation</code>
       <code>Tuleap\AgileDashboard\REST\v1\Kanban\KanbanArchiveInfoRepresentation</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
     <UndefinedThisPropertyAssignment occurrences="1">
       <code>$this-&gt;tracker_id</code>
     </UndefinedThisPropertyAssignment>
@@ -420,10 +423,10 @@
     <InvalidReturnType occurrences="1">
       <code>Tuleap\AgileDashboard\REST\v1\Kanban\KanbanRepresentation</code>
     </InvalidReturnType>
-    <UndefinedClass occurrences="2">
+    <UndefinedDocblockClass occurrences="2">
       <code>AgileDashboard_KankanColumnFactory</code>
       <code>Tuleap\AgileDashboard\REST\v1\Kanban\KanbanRepresentation</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/REST/v1/Kanban/KanbanResource.php">
     <InvalidArgument occurrences="1">
@@ -441,22 +444,24 @@
     <PossiblyNullReference occurrences="1">
       <code>userCanView</code>
     </PossiblyNullReference>
-    <UndefinedClass occurrences="14">
+    <UndefinedClass occurrences="3">
+      <code>IdsFromBodyAreNotUniqueException</code>
+      <code>IdsFromBodyAreNotUniqueException</code>
+      <code>IdsFromBodyAreNotUniqueException</code>
+    </UndefinedClass>
+    <UndefinedDocblockClass occurrences="11">
       <code>AgileDashboard_KankanColumnFactory</code>
       <code>Tuleap\AgileDashboard\REST\v1\Kanban\KanbanRepresentation</code>
       <code>Tuleap\AgileDashboard\REST\v1\Kanban\ItemCollectionRepresentation</code>
       <code>$tracker</code>
-      <code>IdsFromBodyAreNotUniqueException</code>
       <code>$tracker</code>
       <code>Tuleap\AgileDashboard\REST\v1\Kanban\ItemCollectionRepresentation</code>
-      <code>IdsFromBodyAreNotUniqueException</code>
       <code>Tuleap\AgileDashboard\REST\v1\Kanban\ItemCollectionRepresentation</code>
-      <code>IdsFromBodyAreNotUniqueException</code>
       <code>Tuleap\AgileDashboard\REST\v1\Kanban\KanbanColumnRepresentation</code>
       <code>$this-&gt;kanban_column_factory</code>
       <code>Tuleap\AgileDashboard\REST\v1\Kanban\CumulativeFlowDiagram\DiagramRepresentation</code>
       <code>Tracker</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
     <UndefinedThisPropertyAssignment occurrences="1">
       <code>$this-&gt;kanban_representation_builder</code>
     </UndefinedThisPropertyAssignment>
@@ -500,11 +505,13 @@
       <code>checkFormat</code>
       <code>checkFormat</code>
     </TooManyArguments>
-    <UndefinedClass occurrences="3">
-      <code>Tuleap\AgileDashboard\REST\v1\MilestoneRepresentation</code>
+    <UndefinedClass occurrences="2">
       <code>Tracker_Artifact_Exception_CannotRankWithMyself</code>
       <code>Tracker_Artifact_Exception_CannotRankWithMyself</code>
     </UndefinedClass>
+    <UndefinedDocblockClass occurrences="1">
+      <code>Tuleap\AgileDashboard\REST\v1\MilestoneRepresentation</code>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/REST/v1/MilestoneResourceValidator.class.php">
     <PossiblyNullArgument occurrences="4">
@@ -525,9 +532,9 @@
     <PossiblyNullReference occurrences="1">
       <code>getTrackerId</code>
     </PossiblyNullReference>
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>Tracker[]</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/REST/v1/PlanningRepresentation.class.php">
     <InvalidPropertyAssignmentValue occurrences="2">
@@ -673,6 +680,11 @@
       <code>IS_SCRIPT</code>
     </UndefinedConstant>
   </file>
+  <file src="plugins/agiledashboard/include/PaneRedirectionExtractor.class.php">
+    <InvalidNullableReturnType occurrences="1">
+      <code>array</code>
+    </InvalidNullableReturnType>
+  </file>
   <file src="plugins/agiledashboard/include/Planning/ArtifactMilestone.class.php">
     <InvalidReturnStatement occurrences="1">
       <code>$this-&gt;getArtifact()-&gt;getLastUpdateDate()</code>
@@ -760,9 +772,9 @@
     <TypeDoesNotContainType occurrences="1">
       <code>$milestone_artifact == null</code>
     </TypeDoesNotContainType>
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>type</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
     <UndefinedInterfaceMethod occurrences="2">
       <code>setStartDate</code>
       <code>setPlannedArtifacts</code>
@@ -858,10 +870,10 @@
     <NullableReturnStatement occurrences="1">
       <code>null</code>
     </NullableReturnStatement>
-    <UndefinedClass occurrences="2">
+    <UndefinedDocblockClass occurrences="2">
       <code>$hierarchy</code>
       <code>$hierarchy</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
     <UndefinedThisPropertyFetch occurrences="1">
       <code>$this-&gt;tmp_tracker_ids_to_sort_plannings</code>
     </UndefinedThisPropertyFetch>
@@ -911,10 +923,10 @@
     <TooFewArguments occurrences="1">
       <code>getPaginatedTopMilestonesRepresentations</code>
     </TooFewArguments>
-    <UndefinedClass occurrences="2">
+    <UndefinedDocblockClass occurrences="2">
       <code>AgileDashboard_PaneInfo[]</code>
       <code>\AgileDashboard_Milestone_Pane_Planning_PlanningPaneInfo</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
     <UndefinedMethod occurrences="4">
       <code>$this-&gt;active_pane</code>
       <code>$this-&gt;active_pane</code>
@@ -987,11 +999,6 @@
       <code>$e</code>
     </InvalidArgument>
   </file>
-  <file src="plugins/captcha/include/Captcha/Client.php">
-    <InvalidArgument occurrences="1">
-      <code>$json_response</code>
-    </InvalidArgument>
-  </file>
   <file src="plugins/cardwall/include/CardFieldPresenter.class.php">
     <UndefinedThisPropertyAssignment occurrences="1">
       <code>$this-&gt;display_preferences</code>
@@ -1022,10 +1029,10 @@
     <InvalidArgument occurrences="1">
       <code>$criterion</code>
     </InvalidArgument>
-    <UndefinedClass occurrences="2">
+    <UndefinedDocblockClass occurrences="2">
       <code>Report</code>
       <code>Request</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
     <UndefinedMethod occurrences="2">
       <code>getField</code>
       <code>getField</code>
@@ -1181,10 +1188,10 @@
     <InvalidArgument occurrences="1">
       <code>$milestone_initial_effort</code>
     </InvalidArgument>
-    <UndefinedClass occurrences="2">
+    <UndefinedDocblockClass occurrences="2">
       <code>type</code>
       <code>type</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/cardwall/include/PaneContentPresenter.class.php">
     <UndefinedThisPropertyAssignment occurrences="2">
@@ -1210,9 +1217,9 @@
     <PossiblyNullReference occurrences="1">
       <code>getDashboardColumns</code>
     </PossiblyNullReference>
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>\Tuleap\Cardwall\REST\v1\MilestonesCardwallRepresentation</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/cardwall/include/RendererBoardBuilder.class.php">
     <PossiblyNullArgument occurrences="1">
@@ -1329,23 +1336,27 @@
     <MissingFile occurrences="1">
       <code>require_once __DIR__ . '/../../../botmattermost/include/botmattermostPlugin.class.php'</code>
     </MissingFile>
-    <UndefinedClass occurrences="3">
-      <code>BotFactory</code>
-      <code>Sender</code>
+    <UndefinedClass occurrences="1">
       <code>Message</code>
     </UndefinedClass>
+    <UndefinedDocblockClass occurrences="2">
+      <code>BotFactory</code>
+      <code>Sender</code>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/create_test_env/include/CreateTestEnv/NotificationBotIndexController.php">
-    <UndefinedClass occurrences="3">
+    <UndefinedClass occurrences="1">
       <code>BotFactory</code>
+    </UndefinedClass>
+    <UndefinedDocblockClass occurrences="2">
       <code>BotFactory</code>
       <code>$this-&gt;bot_factory</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/create_test_env/include/CreateTestEnv/NotificationBotPresenter.php">
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>Bot[]</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/create_test_env/include/create_test_envPlugin.class.php">
     <MissingFile occurrences="2">
@@ -1375,10 +1386,10 @@
     <InvalidReturnStatement occurrences="1">
       <code>["artifacts" =&gt; []]</code>
     </InvalidReturnStatement>
-    <UndefinedClass occurrences="2">
+    <UndefinedDocblockClass occurrences="2">
       <code>CrossTrackerArtifactRepresentationFactory</code>
       <code>$this-&gt;representation_factory</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/crosstracker/include/CrossTracker/Report/CSV/CSVRepresentationBuilder.php">
     <InvalidArgument occurrences="1">
@@ -1969,10 +1980,10 @@
       <code>$itemIds</code>
       <code>$stats</code>
     </PossiblyUndefinedVariable>
-    <UndefinedClass occurrences="2">
+    <UndefinedDocblockClass occurrences="2">
       <code>ItemNode</code>
       <code>Item_Folder</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
     <UndefinedMethod occurrences="1">
       <code>addItem</code>
     </UndefinedMethod>
@@ -1999,9 +2010,9 @@
     <FalsableReturnStatement occurrences="1">
       <code>false</code>
     </FalsableReturnStatement>
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>Intger</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/docman/include/Docman_LogDao.class.php">
     <FalsableReturnStatement occurrences="1">
@@ -2036,9 +2047,9 @@
     <PossiblyNullArgument occurrences="1">
       <code>$parentItem</code>
     </PossiblyNullArgument>
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>either</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
     <UndefinedThisPropertyAssignment occurrences="1">
       <code>$this-&gt;scalarMetadata</code>
     </UndefinedThisPropertyAssignment>
@@ -2111,7 +2122,7 @@
     <PossiblyNullArgument occurrences="1">
       <code>$srcItem</code>
     </PossiblyNullArgument>
-    <UndefinedClass occurrences="7">
+    <UndefinedDocblockClass occurrences="7">
       <code>Integer</code>
       <code>Boolean</code>
       <code>Integer</code>
@@ -2119,7 +2130,7 @@
       <code>Integer</code>
       <code>Integer</code>
       <code>Integer</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/docman/include/Docman_PermissionsManagerDao.class.php">
     <FalsableReturnStatement occurrences="1">
@@ -2131,10 +2142,10 @@
     <PossiblyFalseReference occurrences="1">
       <code>isError</code>
     </PossiblyFalseReference>
-    <UndefinedClass occurrences="2">
+    <UndefinedDocblockClass occurrences="2">
       <code>$row</code>
       <code>Integer</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/docman/include/Docman_ReportColumn.class.php">
     <InvalidStaticInvocation occurrences="1">
@@ -2205,9 +2216,9 @@
     <InvalidScalarArgument occurrences="1">
       <code>rand()</code>
     </InvalidScalarArgument>
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>the</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/docman/include/Docman_TokenDao.class.php">
     <FalsableReturnStatement occurrences="1">
@@ -2292,11 +2303,11 @@
     <PossiblyUndefinedVariable occurrences="1">
       <code>$res</code>
     </PossiblyUndefinedVariable>
-    <UndefinedClass occurrences="3">
+    <UndefinedDocblockClass occurrences="3">
       <code>$res</code>
       <code>$res</code>
       <code>group_id</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
     <UndefinedThisPropertyAssignment occurrences="1">
       <code>$this-&gt;_pluginPath</code>
     </UndefinedThisPropertyAssignment>
@@ -2335,11 +2346,6 @@
     <PossiblyNullPropertyAssignmentValue occurrences="1">
       <code>$file_properties</code>
     </PossiblyNullPropertyAssignmentValue>
-  </file>
-  <file src="plugins/docman/include/REST/v1/DocmanLinksResource.php">
-    <UndefinedClass occurrences="1">
-      <code>DocumentBeforeDeletionValidatorVisitor</code>
-    </UndefinedClass>
   </file>
   <file src="plugins/docman/include/REST/v1/ItemRepresentation.php">
     <PossiblyNullPropertyAssignmentValue occurrences="1">
@@ -2394,13 +2400,15 @@
       <code>$extraParams</code>
       <code>$extraParams</code>
     </PossiblyUndefinedVariable>
-    <UndefinedClass occurrences="2">
-      <code>unknown</code>
+    <UndefinedClass occurrences="1">
       <code>$result</code>
     </UndefinedClass>
     <UndefinedConstant occurrences="1">
       <code>invalid_session_fault</code>
     </UndefinedConstant>
+    <UndefinedDocblockClass occurrences="1">
+      <code>unknown</code>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/docman/include/view/Docman_View_Admin_LockInfos.class.php">
     <PossiblyNullReference occurrences="1">
@@ -2421,9 +2429,9 @@
     </InvalidStaticInvocation>
   </file>
   <file src="plugins/docman/include/view/Docman_View_Admin_Obsolete.class.php">
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>$itemIterator</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/docman/include/view/Docman_View_Details.class.php">
     <TooManyArguments occurrences="2">
@@ -2586,9 +2594,9 @@
     </UndefinedPropertyFetch>
   </file>
   <file src="plugins/docman/include/view/Docman_View_Table.class.php">
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>$itemIterator</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/docman/include/view/soap/Docman_View_SOAP_List.class.php">
     <UndefinedMethod occurrences="1">
@@ -2722,10 +2730,10 @@
     <PossiblyNullArgument occurrences="1">
       <code>$owner</code>
     </PossiblyNullArgument>
-    <UndefinedClass occurrences="2">
+    <UndefinedDocblockClass occurrences="2">
       <code>id</code>
       <code>uri</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/frs/include/FRS/REST/v1/PackageMinimalRepresentation.php">
     <InvalidScalarArgument occurrences="1">
@@ -2741,21 +2749,21 @@
     </UndefinedThisPropertyFetch>
   </file>
   <file src="plugins/frs/include/FRS/REST/v1/ReleasePATCHRepresentation.php">
-    <UndefinedClass occurrences="4">
+    <UndefinedDocblockClass occurrences="4">
       <code>name</code>
       <code>release_note</code>
       <code>changelog</code>
       <code>status</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/frs/include/FRS/REST/v1/ReleasePOSTRepresentation.php">
-    <UndefinedClass occurrences="5">
+    <UndefinedDocblockClass occurrences="5">
       <code>package_id</code>
       <code>name</code>
       <code>release_note</code>
       <code>changelog</code>
       <code>status</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/frs/include/FRS/REST/v1/ReleaseRepresentation.php">
     <InvalidPropertyAssignmentValue occurrences="2">
@@ -2772,11 +2780,11 @@
       <code>public $resources;</code>
       <code>public $status;</code>
     </MissingDocblockType>
-    <UndefinedClass occurrences="3">
+    <UndefinedDocblockClass occurrences="3">
       <code>id</code>
       <code>Tuleap\REST\ResourceReference</code>
       <code>Tuleap\Tracker\REST\Artifact\ArtifactRepresentation</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/frs/include/FRS/REST/v1/ReleaseResource.php">
     <InvalidCast occurrences="2">
@@ -2805,9 +2813,9 @@
       <code>json_encode($release_representation)</code>
       <code>json_encode($platform_license_info)</code>
     </InvalidPropertyAssignmentValue>
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>Tuleap\FRS\REST\v1\ReleaseRepresentation</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/git/include/CommitStatus/CommitStatusWithKnownStatus.php">
     <InvalidPropertyAssignmentValue occurrences="1">
@@ -2859,9 +2867,9 @@
     </UndefinedThisPropertyFetch>
   </file>
   <file src="plugins/git/include/Git/AdminAllowedProjectsGerritPresenter.class.php">
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>Project[]</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/git/include/Git/AdminGerritPresenter.class.php">
     <UndefinedThisPropertyAssignment occurrences="3">
@@ -2967,10 +2975,10 @@
       <code>PFUser</code>
       <code>PFUser</code>
     </MismatchingDocblockParamType>
-    <UndefinedClass occurrences="2">
+    <UndefinedDocblockClass occurrences="2">
       <code>type</code>
       <code>type</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/git/include/Git/Driver/GerritDriverFactory.php">
     <MissingFile occurrences="1">
@@ -2995,20 +3003,23 @@
       <code>PFUser</code>
       <code>PFUser</code>
     </MismatchingDocblockParamType>
-    <UndefinedClass occurrences="2">
+    <UndefinedDocblockClass occurrences="2">
       <code>type</code>
       <code>type</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/git/include/Git/Driver/GerritREST.class.php">
+    <ImplementedParamTypeMismatch occurrences="2">
+      <code>$user</code>
+      <code>$user</code>
+    </ImplementedParamTypeMismatch>
     <InvalidReturnType occurrences="1">
       <code>createProjectWithPermissionsOnly</code>
     </InvalidReturnType>
-    <MoreSpecificImplementedParamType occurrences="2">
-      <code>$user</code>
-      <code>$user</code>
-    </MoreSpecificImplementedParamType>
-    <UndefinedClass occurrences="24">
+    <UndefinedClass occurrences="1">
+      <code>Guzzle\Http\Message\RequestInterface</code>
+    </UndefinedClass>
+    <UndefinedDocblockClass occurrences="23">
       <code>Guzzle\Http\Client</code>
       <code>$this-&gt;guzzle_client</code>
       <code>$this-&gt;guzzle_client</code>
@@ -3029,11 +3040,10 @@
       <code>$this-&gt;guzzle_client</code>
       <code>$this-&gt;guzzle_client</code>
       <code>$this-&gt;guzzle_client</code>
-      <code>Guzzle\Http\Message\RequestInterface</code>
       <code>Guzzle\Http\Message\Response</code>
       <code>Guzzle\Http\Message\Response</code>
       <code>$this-&gt;guzzle_client</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/git/include/Git/Gitolite/ConfigPermissionsSerializer.class.php">
     <InvalidArgument occurrences="1">
@@ -3077,9 +3087,9 @@
     </ArgumentTypeCoercion>
   </file>
   <file src="plugins/git/include/Git/Gitolite/SSHKey/Provider/GerritServer.php">
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>$replication_key-&gt;setGerritHostId($row['id'])</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/git/include/Git/Gitolite/SSHKey/Provider/User.php">
     <InvalidMethodCall occurrences="6">
@@ -3130,11 +3140,11 @@
     </InvalidScalarArgument>
   </file>
   <file src="plugins/git/include/Git/Hook/LogAnalyzer.class.php">
-    <UndefinedClass occurrences="3">
+    <UndefinedDocblockClass occurrences="3">
       <code>type</code>
       <code>type</code>
       <code>type</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/git/include/Git/Mirror/MirrorDao.class.php">
     <InvalidReturnStatement occurrences="1">
@@ -3153,9 +3163,9 @@
     </PossiblyUndefinedVariable>
   </file>
   <file src="plugins/git/include/Git/Mirror/MirrorPresenter.php">
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>Git_AdminRepositoryListForProjectPresenter[]</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/git/include/Git/Permissions/DefaultFineGrainedPermissionFactory.php">
     <InvalidReturnStatement occurrences="2">
@@ -3166,10 +3176,10 @@
       <code>UGroups[]</code>
       <code>UGroups[]</code>
     </InvalidReturnType>
-    <UndefinedClass occurrences="2">
+    <UndefinedDocblockClass occurrences="2">
       <code>UGroups[]</code>
       <code>UGroups[]</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/git/include/Git/Permissions/FineGrainedPermissionFactory.php">
     <InvalidReturnStatement occurrences="2">
@@ -3180,10 +3190,10 @@
       <code>UGroups[]</code>
       <code>UGroups[]</code>
     </InvalidReturnType>
-    <UndefinedClass occurrences="2">
+    <UndefinedDocblockClass occurrences="2">
       <code>UGroups[]</code>
       <code>UGroups[]</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/git/include/Git/Permissions/TemplatePermissionsUpdater.php">
     <InvalidScalarArgument occurrences="1">
@@ -3191,23 +3201,23 @@
     </InvalidScalarArgument>
   </file>
   <file src="plugins/git/include/Git/PermissionsPerGroup/RepositoriesPermissionRepresentation.php">
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>RepositoryPermissionRepresentation[]</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/git/include/Git/PermissionsPerGroup/RepositoriesSectionPresenter.php">
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>RepositoryPermissionsPresenter[]</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/git/include/Git/PermissionsPerGroup/RepositorySimpleRepresentationBuilder.php">
     <InvalidReturnStatement occurrences="1"/>
     <InvalidReturnType occurrences="1">
       <code>RepositoryPermissionRepresentation</code>
     </InvalidReturnType>
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>RepositoryPermissionRepresentation</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/git/include/Git/ReferenceManager.class.php">
     <PossiblyFalseArgument occurrences="1">
@@ -3242,9 +3252,9 @@
       <code>null</code>
       <code>null</code>
     </PossiblyNullPropertyAssignmentValue>
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>\Git_RemoteServer_GerritReplicationSSHKey</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/git/include/Git/RemoteServer/GerritCanMigrateChecker.php">
     <TypeDoesNotContainType occurrences="1">
@@ -3359,11 +3369,11 @@
     <PossiblyInvalidArgument occurrences="1">
       <code>$results</code>
     </PossiblyInvalidArgument>
-    <UndefinedClass occurrences="3">
+    <UndefinedDocblockClass occurrences="3">
       <code>Integre</code>
       <code>Intger</code>
       <code>type</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/git/include/GitForkPermissionsManager.class.php">
     <PossiblyNullReference occurrences="1">
@@ -3608,9 +3618,9 @@
       <code>GetData</code>
       <code>GetData</code>
     </PossiblyNullReference>
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>an</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/git/include/GitPHP/git/GitExe.php">
     <ForbiddenCode occurrences="1">
@@ -3663,11 +3673,6 @@
     <InvalidOperand occurrences="1">
       <code>$regs[2]</code>
     </InvalidOperand>
-  </file>
-  <file src="plugins/git/include/GitPHP/git/TmpDir.php">
-    <UndefinedVariable occurrences="1">
-      <code>$temp</code>
-    </UndefinedVariable>
   </file>
   <file src="plugins/git/include/GitPHP/git/Tree.php">
     <PossiblyFalseOperand occurrences="3">
@@ -3785,10 +3790,10 @@
     <PossiblyNullReference occurrences="1">
       <code>userCanRead</code>
     </PossiblyNullReference>
-    <UndefinedClass occurrences="2">
+    <UndefinedDocblockClass occurrences="2">
       <code>type</code>
       <code>type</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/git/include/GitRepositoryManager.class.php">
     <InvalidNullableReturnType occurrences="1">
@@ -3850,13 +3855,11 @@
     </InvalidReturnType>
   </file>
   <file src="plugins/git/include/GitViews/RepoManagement/Pane/Gerrit.class.php">
-    <UndefinedClass occurrences="3">
+    <UndefinedDocblockClass occurrences="2">
       <code>Git_Drive_Gerrit_Template_Template[]</code>
       <code>$template</code>
-      <code>$template</code>
-    </UndefinedClass>
-    <UndefinedThisPropertyFetch occurrences="3">
-      <code>$this-&gt;hp</code>
+    </UndefinedDocblockClass>
+    <UndefinedThisPropertyFetch occurrences="2">
       <code>$this-&gt;hp</code>
       <code>$this-&gt;hp</code>
     </UndefinedThisPropertyFetch>
@@ -3870,10 +3873,10 @@
     <InvalidArgument occurrences="1">
       <code>$mirror</code>
     </InvalidArgument>
-    <UndefinedClass occurrences="2">
+    <UndefinedDocblockClass occurrences="2">
       <code>Git_Mirror_Mirror[]</code>
       <code>Git_Mirror_Mirror[]</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/git/include/GitViews/RepoManagement/Pane/Pane.class.php">
     <UndefinedThisPropertyAssignment occurrences="1">
@@ -3963,12 +3966,12 @@
     </InvalidReturnType>
   </file>
   <file src="plugins/git/include/Git_Widget_UserPushes.class.php">
+    <ImplementedParamTypeMismatch occurrences="1">
+      <code>$request</code>
+    </ImplementedParamTypeMismatch>
     <MismatchingDocblockParamType occurrences="1">
       <code>Array</code>
     </MismatchingDocblockParamType>
-    <MoreSpecificImplementedParamType occurrences="1">
-      <code>$request</code>
-    </MoreSpecificImplementedParamType>
   </file>
   <file src="plugins/git/include/REST/v1/GerritResource.php">
     <InvalidArgument occurrences="1">
@@ -3980,9 +3983,9 @@
     <InvalidReturnType occurrences="1">
       <code>Project</code>
     </InvalidReturnType>
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>Project</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/git/include/REST/v1/GitCommitRepresentation.php">
     <InvalidPropertyAssignmentValue occurrences="2">
@@ -3997,9 +4000,9 @@
     <InvalidPropertyAssignmentValue occurrences="1">
       <code>JsonCast::toDate($commit_status-&gt;getDate()-&gt;getTimestamp())</code>
     </InvalidPropertyAssignmentValue>
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>date</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/git/include/REST/v1/ProjectResource.class.php">
     <InvalidNullableReturnType occurrences="1">
@@ -4021,12 +4024,12 @@
     </InvalidReturnStatement>
   </file>
   <file src="plugins/git/include/REST/v1/RepositoryResource.class.php">
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>Tuleap\PullRequest\REST\v1\RepositoryPullRequestRepresentation</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/git/include/SystemEvents/SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMP.class.php">
-    <UndefinedClass occurrences="1"/>
+    <UndefinedDocblockClass occurrences="1"/>
   </file>
   <file src="plugins/git/include/SystemEvents/SystemEvent_GIT_GERRIT_MIGRATION.class.php">
     <NullArgument occurrences="1">
@@ -4190,11 +4193,6 @@
       <code>$filter</code>
     </InvalidArgument>
   </file>
-  <file src="plugins/gitlfs/include/StreamFilter/StreamFilterWrapper.php">
-    <MethodSignatureMismatch occurrences="1">
-      <code>$in</code>
-    </MethodSignatureMismatch>
-  </file>
   <file src="plugins/gitlfs/include/Transfer/Basic/LFSBasicTransferDownloadController.php">
     <PossiblyFalseArgument occurrences="1">
       <code>$object_resource</code>
@@ -4217,12 +4215,12 @@
     <InvalidArgument occurrences="1">
       <code>$e</code>
     </InvalidArgument>
-    <UndefinedClass occurrences="4">
+    <UndefinedDocblockClass occurrences="4">
       <code>$e-&gt;graph</code>
       <code>GraphOnTracker_Chart_Engine</code>
       <code>$e</code>
       <code>GraphOnTracker_Engine</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/graphontrackers/include/data-access/GraphOnTrackers_ChartDao.class.php">
     <UndefinedThisPropertyAssignment occurrences="1">
@@ -4260,9 +4258,9 @@
     <InvalidReturnType occurrences="1">
       <code>id</code>
     </InvalidReturnType>
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>id</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
     <UndefinedThisPropertyAssignment occurrences="1">
       <code>$this-&gt;chart_factories</code>
     </UndefinedThisPropertyAssignment>
@@ -4289,18 +4287,18 @@
     </PossiblyUndefinedGlobalVariable>
   </file>
   <file src="plugins/graphontrackers/include/data-transformation/GraphOnTrackers_Chart_BarDataBuilder.class.php">
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>Bar_Engine</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/graphontrackers/include/data-transformation/GraphOnTrackers_Chart_GanttDataBuilder.class.php">
     <TooManyArguments occurrences="2">
       <code>db_error($res)</code>
       <code>db_error($res)</code>
     </TooManyArguments>
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>Bar_Engine</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
     <UndefinedThisPropertyFetch occurrences="3">
       <code>$this-&gt;artPos</code>
       <code>$this-&gt;artPos</code>
@@ -4308,9 +4306,9 @@
     </UndefinedThisPropertyFetch>
   </file>
   <file src="plugins/graphontrackers/include/data-transformation/GraphOnTrackers_Chart_PieDataBuilder.class.php">
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>Pie_Engine</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
     <UndefinedThisPropertyFetch occurrences="1">
       <code>$this-&gt;bc</code>
     </UndefinedThisPropertyFetch>
@@ -4371,19 +4369,19 @@
     </UndefinedThisPropertyAssignment>
   </file>
   <file src="plugins/graphontrackersv5/include/GraphActionsPresenter.class.php">
-    <UndefinedClass occurrences="2">
+    <UndefinedDocblockClass occurrences="2">
       <code>WidgetMyDashboardPresenter[]</code>
       <code>ProjectDashboard[]</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/graphontrackersv5/include/GraphOnTrackersV5_Renderer.class.php">
     <TooManyArguments occurrences="1">
       <code>fetchAdditionalButton</code>
     </TooManyArguments>
-    <UndefinedClass occurrences="2">
+    <UndefinedDocblockClass occurrences="2">
       <code>Request</code>
       <code>Request</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
     <UndefinedMethod occurrences="1">
       <code>getCharts</code>
     </UndefinedMethod>
@@ -4418,12 +4416,12 @@
     <TooManyArguments occurrences="1">
       <code>userIsAdmin</code>
     </TooManyArguments>
-    <UndefinedClass occurrences="4">
+    <UndefinedDocblockClass occurrences="4">
       <code>$e-&gt;graph</code>
       <code>GraphOnTracker_Chart_Engine</code>
       <code>$this-&gt;engine</code>
       <code>GraphOnTracker_Engine</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
     <UndefinedThisPropertyAssignment occurrences="1">
       <code>$this-&gt;report_session</code>
     </UndefinedThisPropertyAssignment>
@@ -4491,9 +4489,9 @@
       <code>GraphOnTrackerV5_Engine</code>
       <code>ChartDataBuilder</code>
     </InvalidReturnType>
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>GraphOnTrackerV5_Engine</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
     <UndefinedThisPropertyAssignment occurrences="1">
       <code>$this-&gt;report_session</code>
     </UndefinedThisPropertyAssignment>
@@ -4524,9 +4522,9 @@
       <code>GraphOnTrackerV5_Engine</code>
       <code>ChartDataBuilder</code>
     </InvalidReturnType>
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>GraphOnTrackerV5_Engine</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
     <UndefinedThisPropertyAssignment occurrences="1">
       <code>$this-&gt;report_session</code>
     </UndefinedThisPropertyAssignment>
@@ -4615,28 +4613,28 @@
     </UndefinedMethod>
   </file>
   <file src="plugins/graphontrackersv5/include/data-transformation/GraphOnTrackersV5_Burndown_DataBuilder.class.php">
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>Burndown_Engine</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/graphontrackersv5/include/data-transformation/GraphOnTrackersV5_Chart_BarDataBuilder.class.php">
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>Pie_Engine</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/graphontrackersv5/include/data-transformation/GraphOnTrackersV5_Chart_GanttDataBuilder.class.php">
     <InvalidScalarArgument occurrences="2">
       <code>$aid</code>
       <code>$changesets[$i]</code>
     </InvalidScalarArgument>
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>Bar_Engine</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/graphontrackersv5/include/data-transformation/GraphOnTrackersV5_Chart_PieDataBuilder.class.php">
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>Pie_Engine</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/graphontrackersv5/include/data-transformation/GraphOnTrackersV5_CumulativeFlow_DataBuilder.class.php">
     <MissingDocblockType occurrences="1">
@@ -4759,9 +4757,9 @@
     <InvalidReturnType occurrences="1">
       <code>inserted</code>
     </InvalidReturnType>
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>inserted</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/hudson/include/TestResultsPieChart/TestResultsPieChartPresenter.php">
     <InvalidPropertyAssignmentValue occurrences="1">
@@ -4861,10 +4859,10 @@
     <InvalidPropertyAssignmentValue occurrences="1">
       <code>$repository_manager</code>
     </InvalidPropertyAssignmentValue>
-    <UndefinedClass occurrences="2">
+    <UndefinedDocblockClass occurrences="2">
       <code>Tuleap\SVN\Repository\RepositoryManager</code>
       <code>$this-&gt;repository_manager</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/hudson_svn/include/hudson_svnPlugin.class.php">
     <ArgumentTypeCoercion occurrences="1">
@@ -4883,9 +4881,9 @@
     <InvalidReturnType occurrences="1">
       <code>PFUser</code>
     </InvalidReturnType>
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>PFUser</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/ldap/include/LDAP.class.php">
     <InvalidArgument occurrences="2">
@@ -5332,11 +5330,11 @@
     <InvalidPropertyAssignmentValue occurrences="1">
       <code>$permissions_manager</code>
     </InvalidPropertyAssignmentValue>
-    <UndefinedClass occurrences="3">
+    <UndefinedDocblockClass occurrences="3">
       <code>PermissionsManager</code>
       <code>$this-&gt;permissions_manager</code>
       <code>$this-&gt;permissions_manager</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/proftpd/include/ProFTPd/SystemEventManager.class.php">
     <InvalidPropertyAssignmentValue occurrences="1">
@@ -5410,11 +5408,11 @@
     <InvalidPropertyAssignmentValue occurrences="1">
       <code>$dao</code>
     </InvalidPropertyAssignmentValue>
-    <UndefinedClass occurrences="3">
+    <UndefinedDocblockClass occurrences="3">
       <code>Tuleap\PullRequest\Comment\Dao</code>
       <code>$this-&gt;dao</code>
       <code>$this-&gt;dao</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/pullrequest/include/PullRequest/DefaultSettings/DefaultSettingsController.php">
     <InvalidClass occurrences="1">
@@ -5436,9 +5434,9 @@
     <InvalidReturnType occurrences="1">
       <code>the</code>
     </InvalidReturnType>
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>the</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/pullrequest/include/PullRequest/Label/LabeledItemCollector.php">
     <PossiblyNullArgument occurrences="1">
@@ -5457,9 +5455,9 @@
     </InvalidFalsableReturnType>
   </file>
   <file src="plugins/pullrequest/include/PullRequest/REST/v1/CommentRepresentation.php">
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>Tuleap\User\REST\MinimalUserRepresentation</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/pullrequest/include/PullRequest/REST/v1/GitRepositoryReference.php">
     <PossiblyNullPropertyAssignmentValue occurrences="2">
@@ -5476,10 +5474,10 @@
     <InvalidPropertyAssignmentValue occurrences="1">
       <code>$comment_factory</code>
     </InvalidPropertyAssignmentValue>
-    <UndefinedClass occurrences="2">
+    <UndefinedDocblockClass occurrences="2">
       <code>Tuleap\PullRequest\Comment\Factory</code>
       <code>$this-&gt;comment_factory</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/pullrequest/include/PullRequest/REST/v1/PaginatedTimelineRepresentationBuilder.php">
     <InvalidPropertyAssignmentValue occurrences="1">
@@ -5491,10 +5489,10 @@
     <PossiblyNullArgument occurrences="1">
       <code>$this-&gt;user_manager-&gt;getUserById($event-&gt;getUserId())</code>
     </PossiblyNullArgument>
-    <UndefinedClass occurrences="2">
+    <UndefinedDocblockClass occurrences="2">
       <code>Tuleap\PullRequest\Timeline\Factory</code>
       <code>$this-&gt;timeline_factory</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/pullrequest/include/PullRequest/REST/v1/PullRequestFileRepresentationFactory.php">
     <PossiblyUndefinedVariable occurrences="4">
@@ -5519,9 +5517,9 @@
     <InvalidPropertyAssignmentValue occurrences="1">
       <code>JsonCast::toInt($pull_request-&gt;getId())</code>
     </InvalidPropertyAssignmentValue>
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>id</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/pullrequest/include/PullRequest/REST/v1/PullRequestRepresentation.php">
     <InvalidPropertyAssignmentValue occurrences="1">
@@ -5551,7 +5549,7 @@
       <code>PathToHash</code>
       <code>PathToHash</code>
     </PossiblyNullReference>
-    <UndefinedClass occurrences="15">
+    <UndefinedDocblockClass occurrences="15">
       <code>Tuleap\PullRequest\Factory</code>
       <code>Tuleap\PullRequest\Timeline\Factory</code>
       <code>Tuleap\PullRequest\Comment\Factory</code>
@@ -5567,7 +5565,7 @@
       <code>$this-&gt;pull_request_factory</code>
       <code>$this-&gt;comment_factory</code>
       <code>$this-&gt;pull_request_factory</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
     <UndefinedMethod occurrences="1">
       <code>getPaginatedTimelineRepresentation</code>
     </UndefinedMethod>
@@ -5578,12 +5576,12 @@
       <code>new PullRequestFactory($this-&gt;pull_request_dao, ReferenceManager::instance())</code>
       <code>new Logger()</code>
     </InvalidPropertyAssignmentValue>
-    <UndefinedClass occurrences="4">
+    <UndefinedDocblockClass occurrences="4">
       <code>Tuleap\PullRequest\Dao</code>
       <code>Tuleap\PullRequest\Factory</code>
       <code>Tuleap\PullRequest\Logger</code>
       <code>$this-&gt;pull_request_dao</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/pullrequest/include/PullRequest/Reference/HTMLURLBuilder.php">
     <InvalidScalarArgument occurrences="3">
@@ -5609,24 +5607,24 @@
       <code>$inline_comments_dao</code>
       <code>$timeline_dao</code>
     </InvalidPropertyAssignmentValue>
-    <UndefinedClass occurrences="4">
+    <UndefinedDocblockClass occurrences="4">
       <code>Tuleap\PullRequest\Comment\Dao</code>
       <code>Tuleap\PullRequest\InlineComment\Dao</code>
       <code>Tuleap\PullRequest\Timeline\Dao</code>
       <code>$this-&gt;comments_dao</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/pullrequest/include/PullRequest/Timeline/TimelineEventCreator.php">
     <InvalidPropertyAssignmentValue occurrences="1">
       <code>$timeline_dao</code>
     </InvalidPropertyAssignmentValue>
-    <UndefinedClass occurrences="5">
+    <UndefinedDocblockClass occurrences="5">
       <code>Tuleap\PullRequest\Timeline\Dao</code>
       <code>$this-&gt;timeline_dao</code>
       <code>$this-&gt;timeline_dao</code>
       <code>$this-&gt;timeline_dao</code>
       <code>$this-&gt;timeline_dao</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/referencealias_core/include/ReferenceAliasCore/ReferencesBuilder.php">
     <InvalidNullableReturnType occurrences="2">
@@ -5683,10 +5681,10 @@
       <code>null</code>
       <code>null</code>
     </NullableReturnStatement>
-    <UndefinedClass occurrences="2">
+    <UndefinedDocblockClass occurrences="2">
       <code>Tuleap\SVN\Repository\RepositoryManager</code>
       <code>$this-&gt;repository_manager</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/referencealias_svn/include/referencealias_svnPlugin.class.php">
     <ArgumentTypeCoercion occurrences="1">
@@ -5819,10 +5817,10 @@
     <InvalidPropertyAssignmentValue occurrences="1">
       <code>$disk_usage_output</code>
     </InvalidPropertyAssignmentValue>
-    <UndefinedClass occurrences="2">
+    <UndefinedDocblockClass occurrences="2">
       <code>DiskUsageOutput</code>
       <code>$this-&gt;disk_usage_output</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/statistics/include/DiskUsageUserDetailsPresenter.php">
     <UndefinedThisPropertyAssignment occurrences="2">
@@ -5834,10 +5832,10 @@
     <InvalidPropertyAssignmentValue occurrences="1">
       <code>$disk_usage_output</code>
     </InvalidPropertyAssignmentValue>
-    <UndefinedClass occurrences="2">
+    <UndefinedDocblockClass occurrences="2">
       <code>DiskUsageOutput</code>
       <code>$this-&gt;disk_usage_output</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/statistics/include/Frequencies/GraphDataBuilders/Sample.php">
     <InvalidOperand occurrences="1">
@@ -5939,43 +5937,43 @@
     <PossiblyUndefinedVariable occurrences="1">
       <code>$interval</code>
     </PossiblyUndefinedVariable>
-    <UndefinedClass occurrences="6">
+    <UndefinedDocblockClass occurrences="6">
       <code>Date</code>
       <code>Date</code>
       <code>date</code>
       <code>date</code>
       <code>Date</code>
       <code>Date</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/statistics/include/Statistics_DiskUsageGraph.class.php">
-    <UndefinedClass occurrences="10">
-      <code>unknown_type</code>
-      <code>unknown_type</code>
-      <code>unknown_type</code>
-      <code>unknown_type</code>
-      <code>unknown_type</code>
-      <code>unknown_type</code>
-      <code>Date</code>
-      <code>Date</code>
-      <code>Date</code>
-      <code>Date</code>
-    </UndefinedClass>
     <UndefinedConstant occurrences="4">
       <code>FF_USERFONT</code>
       <code>FF_USERFONT</code>
       <code>FF_USERFONT</code>
       <code>FF_USERFONT</code>
     </UndefinedConstant>
+    <UndefinedDocblockClass occurrences="10">
+      <code>unknown_type</code>
+      <code>unknown_type</code>
+      <code>unknown_type</code>
+      <code>unknown_type</code>
+      <code>unknown_type</code>
+      <code>unknown_type</code>
+      <code>Date</code>
+      <code>Date</code>
+      <code>Date</code>
+      <code>Date</code>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/statistics/include/Statistics_DiskUsageHtml.class.php">
     <TooManyArguments occurrences="1">
       <code>userIsAdmin</code>
     </TooManyArguments>
-    <UndefinedClass occurrences="2">
+    <UndefinedDocblockClass occurrences="2">
       <code>Date</code>
       <code>Date</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/statistics/include/Statistics_DiskUsageManager.class.php">
     <InvalidReturnStatement occurrences="1">
@@ -6027,9 +6025,9 @@
     <InvalidReturnStatement occurrences="1">
       <code>new SoapFault((string) $e-&gt;getCode(), $e-&gt;getMessage())</code>
     </InvalidReturnStatement>
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>ArrayOfStatistics</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/statistics/include/Statistics_ScmCvsDao.class.php">
     <FalsableReturnStatement occurrences="7">
@@ -6072,9 +6070,9 @@
     </InvalidFalsableReturnType>
   </file>
   <file src="plugins/statistics/include/Statistics_Services_UsageFormatter.class.php">
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>type</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/statistics/include/Statistics_Widget_ProjectStatistics.class.php">
     <InvalidReturnStatement occurrences="1">
@@ -6435,16 +6433,16 @@
     </TypeDoesNotContainType>
   </file>
   <file src="plugins/tracker/include/REST/Artifact/ArtifactFieldValueArtifactLinksFullRepresentation.class.php">
-    <UndefinedClass occurrences="2">
+    <UndefinedDocblockClass occurrences="2">
       <code>Tuleap\Tracker\REST\Artifact\ArtifactReference[]</code>
       <code>Tuleap\Tracker\REST\Artifact\ArtifactReference[]</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker/include/REST/Artifact/ArtifactFieldValueArtifactLinksRepresentation.class.php">
-    <UndefinedClass occurrences="2">
+    <UndefinedDocblockClass occurrences="2">
       <code>Tuleap\Tracker\REST\Artifact\ArtifactReferenceRepresentation[]</code>
       <code>Tuleap\Tracker\REST\Artifact\ArtifactReferenceRepresentation[]</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker/include/REST/Artifact/ArtifactFieldValueComputedFullRepresentation.class.php">
     <PossiblyNullPropertyAssignmentValue occurrences="1">
@@ -6452,19 +6450,19 @@
     </PossiblyNullPropertyAssignmentValue>
   </file>
   <file src="plugins/tracker/include/REST/Artifact/ArtifactFieldValueFileFullRepresentation.class.php">
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>Tuleap\Tracker\REST\Artifact\FileInfoRepresentation[]</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker/include/REST/Artifact/ArtifactFieldValueFileRepresentation.class.php">
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>Tuleap\Tracker\REST\Artifact\FileInfoRepresentation[]</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker/include/REST/Artifact/ArtifactFieldValuePermissionsOnArtifactRepresentation.class.php">
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>Tuleap\Project\REST\UserGroupRepresentation[]</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker/include/REST/Artifact/ArtifactReferenceRepresentation.class.php">
     <UndefinedClass occurrences="1">
@@ -6483,12 +6481,12 @@
       <code>null</code>
       <code>null</code>
     </PossiblyNullPropertyAssignmentValue>
-    <UndefinedClass occurrences="4">
+    <UndefinedDocblockClass occurrences="4">
       <code>Tuleap\User\REST\MinimalUserRepresentation</code>
       <code>the</code>
       <code>the</code>
       <code>the</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker/include/REST/Artifact/ArtifactRepresentationBuilder.php">
     <PossiblyNullArgument occurrences="2">
@@ -6502,10 +6500,10 @@
     </TypeDoesNotContainType>
   </file>
   <file src="plugins/tracker/include/REST/Artifact/ArtifactValidator.class.php">
-    <UndefinedClass occurrences="2">
+    <UndefinedDocblockClass occurrences="2">
       <code>ArtifactValuesRepresentation[]</code>
       <code>ArtifactValuesRepresentation[]</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker/include/REST/Artifact/BurndownPointRepresentation.php">
     <PossiblyNullPropertyAssignmentValue occurrences="1">
@@ -6534,11 +6532,11 @@
       <code>null</code>
       <code>null</code>
     </PossiblyNullPropertyAssignmentValue>
-    <UndefinedClass occurrences="3">
+    <UndefinedDocblockClass occurrences="3">
       <code>Tuleap\User\REST\MinimalUserRepresentation</code>
       <code>Tuleap\Tracker\REST\ChangesetCommentRepresentation</code>
       <code>Tuleap\User\REST\MinimalUserRepresentation</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
     <UndefinedThisPropertyAssignment occurrences="1">
       <code>$this-&gt;last_modified_date</code>
     </UndefinedThisPropertyAssignment>
@@ -6552,9 +6550,9 @@
     <InvalidPropertyAssignmentValue occurrences="1">
       <code>(bool)$value-&gt;isHidden()</code>
     </InvalidPropertyAssignmentValue>
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>is_hidden</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker/include/REST/FieldOpenListRepresentation.class.php">
     <PossiblyNullPropertyAssignmentValue occurrences="1">
@@ -6624,19 +6622,21 @@
     <InvalidStaticInvocation occurrences="1">
       <code>Header::sendQuotaHeader($this-&gt;file_manager-&gt;getQuota())</code>
     </InvalidStaticInvocation>
-    <UndefinedClass occurrences="11">
+    <UndefinedClass occurrences="1">
+      <code>Tracker_FormElement_InvalidFieldException</code>
+    </UndefinedClass>
+    <UndefinedDocblockClass occurrences="10">
       <code>Tracker_Artifact_Attachment_TemporaryFileManager</code>
       <code>$this-&gt;file_manager</code>
       <code>$this-&gt;file_manager</code>
       <code>$this-&gt;file_manager</code>
       <code>$this-&gt;file_manager</code>
       <code>$this-&gt;file_manager</code>
-      <code>Tracker_FormElement_InvalidFieldException</code>
       <code>$this-&gt;file_manager</code>
       <code>$this-&gt;file_manager</code>
       <code>$this-&gt;file_manager</code>
       <code>$this-&gt;file_manager</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker/include/REST/v1/ArtifactsResource.class.php">
     <InvalidArgument occurrences="4">
@@ -6664,11 +6664,11 @@
     <TooManyArguments occurrences="1">
       <code>sendAllowHeadersForChangesets</code>
     </TooManyArguments>
-    <UndefinedClass occurrences="3">
+    <UndefinedDocblockClass occurrences="3">
       <code>Tuleap\Tracker\REST\Artifact\ArtifactRepresentation</code>
       <code>Tuleap\Tracker\REST\v1\ArtifactLinkRepresentation</code>
       <code>Tuleap\Tracker\REST\v1\ArtifactLinkRepresentation</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker/include/REST/v1/BacklogItemReference.class.php.php">
     <InvalidArrayAccess occurrences="1">
@@ -6695,13 +6695,13 @@
     <InvalidReturnType occurrences="1">
       <code>Tracker_Report</code>
     </InvalidReturnType>
-    <UndefinedClass occurrences="5">
+    <UndefinedDocblockClass occurrences="5">
       <code>Tuleap\Tracker\REST\ReportRepresentation</code>
       <code>$report</code>
       <code>$report</code>
       <code>Tuleap\Tracker\REST\Artifact\ArtifactRepresentation[]</code>
       <code>Tracker_Report</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker/include/REST/v1/TrackerFieldsResource.php">
     <InvalidScalarArgument occurrences="1">
@@ -6742,10 +6742,10 @@
     <PossiblyNullReference occurrences="1">
       <code>getId</code>
     </PossiblyNullReference>
-    <UndefinedClass occurrences="2">
+    <UndefinedDocblockClass occurrences="2">
       <code>Tracker_Factory</code>
       <code>$this-&gt;tracker_factory</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker/include/REST/v1/Workflow/ModeUpdater.php">
     <InvalidArgument occurrences="1">
@@ -7162,12 +7162,12 @@
     <TooManyArguments occurrences="1">
       <code>getChildNaturePresenterCollection</code>
     </TooManyArguments>
-    <UndefinedClass occurrences="4">
+    <UndefinedDocblockClass occurrences="4">
       <code>Boolean</code>
       <code>Tracker_Artifact_Changeset|Boolean</code>
       <code>Integer</code>
       <code>Integer</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
     <UndefinedMethod occurrences="5">
       <code>getContentAsText</code>
       <code>getContentAsText</code>
@@ -7200,11 +7200,11 @@
       <code>Tracker_Artifact[]</code>
     </InvalidReturnType>
     <TooManyArguments occurrences="1"/>
-    <UndefinedClass occurrences="3">
+    <UndefinedDocblockClass occurrences="3">
       <code>type</code>
       <code>type</code>
       <code>type</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/Tracker_ArtifactLinkInfo.class.php">
     <PossiblyNullPropertyAssignmentValue occurrences="1">
@@ -7245,10 +7245,12 @@
       <code>$this-&gt;getField()-&gt;getTracker()</code>
       <code>$tracker_artifact_factory-&gt;getArtifactById($artifact_id)</code>
     </PossiblyNullArgument>
-    <UndefinedClass occurrences="2">
+    <UndefinedClass occurrences="1">
       <code>$this-&gt;getArtifactIdsUserCanSee($user)</code>
-      <code>type</code>
     </UndefinedClass>
+    <UndefinedDocblockClass occurrences="1">
+      <code>type</code>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/Tracker_Artifact_ChangesetValue_ArtifactLinkDiff.class.php">
     <PossiblyNullArgument occurrences="3">
@@ -7618,19 +7620,21 @@
     <NullArgument occurrences="1">
       <code>null</code>
     </NullArgument>
-    <UndefinedClass occurrences="4">
-      <code>Tracker_ResponseFactory</code>
-      <code>CannedResponse</code>
+    <UndefinedClass occurrences="2">
       <code>$canned-&gt;title</code>
       <code>$canned-&gt;body</code>
     </UndefinedClass>
+    <UndefinedDocblockClass occurrences="2">
+      <code>Tracker_ResponseFactory</code>
+      <code>CannedResponse</code>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker/include/Tracker/CannedResponse/Tracker_CannedResponseManager.class.php">
-    <UndefinedClass occurrences="3">
+    <UndefinedDocblockClass occurrences="3">
       <code>Tracker_CannedResponseFactory::instance()</code>
       <code>Tracker_CannedResponseFactory::instance()</code>
       <code>Tracker_CannedResponseFactory::instance()</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker/include/Tracker/CannedResponse/dao/Tracker_CannedResponseDao.class.php">
     <UndefinedThisPropertyAssignment occurrences="1">
@@ -7712,11 +7716,11 @@
     </InvalidPropertyAssignmentValue>
   </file>
   <file src="plugins/tracker/include/Tracker/ConfigNotificationEmailCustomSender.php">
-    <UndefinedClass occurrences="3">
+    <UndefinedDocblockClass occurrences="3">
       <code>ConfigNotificationAssignedToDao</code>
       <code>$this-&gt;dao</code>
       <code>$this-&gt;dao</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker/include/Tracker/ConfigNotificationEmailCustomSenderFormatter.php">
     <InvalidReturnStatement occurrences="1">
@@ -7725,9 +7729,9 @@
     <InvalidReturnType occurrences="1">
       <code>the</code>
     </InvalidReturnType>
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>the</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker/include/Tracker/DateReminder/Tracker_DateReminder.class.php">
     <InvalidScalarArgument occurrences="1">
@@ -7736,9 +7740,9 @@
     <PossiblyNullPropertyAssignmentValue occurrences="1">
       <code>null</code>
     </PossiblyNullPropertyAssignmentValue>
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>date</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
     <UndefinedMethod occurrences="1">
       <code>getLastValue</code>
     </UndefinedMethod>
@@ -7824,9 +7828,9 @@
     </UndefinedThisPropertyFetch>
   </file>
   <file src="plugins/tracker/include/Tracker/FileInfoFactory.class.php">
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>type</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/BurndownCalculator.php">
     <NullOperand occurrences="1">
@@ -8030,12 +8034,12 @@
     </NullOperand>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/IProvideFactoryButtonInformation.class.php">
-    <UndefinedClass occurrences="4">
+    <UndefinedDocblockClass occurrences="4">
       <code>the</code>
       <code>the</code>
       <code>the</code>
       <code>the</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/SystemEvent/SystemEvent_BURNDOWN_DAILY.php">
     <PossiblyFalseIterator occurrences="1">
@@ -8215,9 +8219,9 @@
     <TypeDoesNotContainType occurrences="1">
       <code>$form_element instanceof Tracker_FormElement_Shared</code>
     </TypeDoesNotContainType>
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>the</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
     <UndefinedMethod occurrences="3">
       <code>fieldHasDefineWorkflow</code>
       <code>getWorkflow</code>
@@ -8236,12 +8240,12 @@
     </PossiblyNullArgument>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Container_Column.class.php">
-    <UndefinedClass occurrences="4">
+    <UndefinedDocblockClass occurrences="4">
       <code>the</code>
       <code>the</code>
       <code>the</code>
       <code>the</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Container_Fieldset.class.php">
     <InvalidReturnStatement occurrences="2">
@@ -8252,12 +8256,12 @@
       <code>true</code>
       <code>true</code>
     </InvalidReturnType>
-    <UndefinedClass occurrences="4">
+    <UndefinedDocblockClass occurrences="4">
       <code>the</code>
       <code>the</code>
       <code>the</code>
       <code>the</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field.class.php">
     <FalsableReturnStatement occurrences="1">
@@ -8289,7 +8293,7 @@
     <TooManyArguments occurrences="1">
       <code>fetchSubmitValue</code>
     </TooManyArguments>
-    <UndefinedClass occurrences="9">
+    <UndefinedDocblockClass occurrences="9">
       <code>Tracker_ReportCriteria</code>
       <code>Tracker_</code>
       <code>Tracker_ReportCriteria</code>
@@ -8299,7 +8303,7 @@
       <code>Criteria</code>
       <code>Criteria</code>
       <code>Tracker_</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_Alphanum.class.php">
     <ImplementedReturnTypeMismatch occurrences="1">
@@ -8307,14 +8311,17 @@
     </ImplementedReturnTypeMismatch>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_ArtifactId.class.php">
-    <UndefinedClass occurrences="4">
+    <UndefinedDocblockClass occurrences="4">
       <code>the</code>
       <code>the</code>
       <code>the</code>
       <code>the</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_ArtifactLink.class.php">
+    <ImplementedParamTypeMismatch occurrences="1">
+      <code>$fields_data</code>
+    </ImplementedParamTypeMismatch>
     <InvalidArgument occurrences="3">
       <code>''</code>
       <code>$artifact_links</code>
@@ -8327,10 +8334,9 @@
     <InvalidScalarArgument occurrences="1">
       <code>trim($id)</code>
     </InvalidScalarArgument>
-    <MoreSpecificImplementedParamType occurrences="3">
+    <MoreSpecificImplementedParamType occurrences="2">
       <code>$value</code>
       <code>$value</code>
-      <code>$fields_data</code>
     </MoreSpecificImplementedParamType>
     <PossiblyFalseIterator occurrences="1">
       <code>$dao-&gt;retrieve($sql)</code>
@@ -8358,7 +8364,7 @@
       <code>new CSVOutputStrategy(Codendi_HTMLPurifier::instance())</code>
       <code>searchById</code>
     </TooManyArguments>
-    <UndefinedClass occurrences="9">
+    <UndefinedDocblockClass occurrences="9">
       <code>Tracker_ReportCriteria</code>
       <code>Tracker_ReportCriteria</code>
       <code>Tracker_ReportCriteria</code>
@@ -8368,7 +8374,7 @@
       <code>the</code>
       <code>the</code>
       <code>type</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
     <UndefinedMethod occurrences="3">
       <code>getArtifactIds</code>
       <code>getArtifactIds</code>
@@ -8405,25 +8411,28 @@
       <code>$start_date</code>
       <code>$duration</code>
     </PossiblyNullArgument>
-    <UndefinedClass occurrences="4">
+    <UndefinedDocblockClass occurrences="4">
       <code>the</code>
       <code>the</code>
       <code>the</code>
       <code>the</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_Checkbox.class.php">
-    <UndefinedClass occurrences="4">
+    <UndefinedDocblockClass occurrences="4">
       <code>the</code>
       <code>the</code>
       <code>the</code>
       <code>the</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_Computed.class.php">
     <FalsableReturnStatement occurrences="1">
       <code>$value</code>
     </FalsableReturnStatement>
+    <ImplementedParamTypeMismatch occurrences="1">
+      <code>$value</code>
+    </ImplementedParamTypeMismatch>
     <InvalidFalsableReturnType occurrences="1">
       <code>@return int | null if no value found</code>
     </InvalidFalsableReturnType>
@@ -8439,9 +8448,6 @@
       <code>fetchRawValueFromChangeset</code>
       <code>getRESTAvailableValues</code>
     </InvalidReturnType>
-    <MoreSpecificImplementedParamType occurrences="1">
-      <code>$value</code>
-    </MoreSpecificImplementedParamType>
     <PossiblyNullReference occurrences="7">
       <code>getId</code>
       <code>getArtifact</code>
@@ -8454,12 +8460,12 @@
     <TooManyArguments occurrences="1">
       <code>getComputedValue</code>
     </TooManyArguments>
-    <UndefinedClass occurrences="4">
+    <UndefinedDocblockClass occurrences="4">
       <code>the</code>
       <code>the</code>
       <code>the</code>
       <code>the</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
     <UndefinedMethod occurrences="9">
       <code>isManualValue</code>
       <code>isManualValue</code>
@@ -8496,14 +8502,14 @@
       <code>getGroupId</code>
       <code>getGroupId</code>
     </PossiblyNullReference>
-    <UndefinedClass occurrences="6">
+    <UndefinedDocblockClass occurrences="6">
       <code>Tracker_ReportCriteria</code>
       <code>Tracker_</code>
       <code>the</code>
       <code>the</code>
       <code>the</code>
       <code>the</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_Date.class.php">
     <InvalidNullableReturnType occurrences="1">
@@ -8536,7 +8542,7 @@
     <PossiblyNullReference occurrences="1">
       <code>getValue</code>
     </PossiblyNullReference>
-    <UndefinedClass occurrences="9">
+    <UndefinedDocblockClass occurrences="9">
       <code>Tracker_ReportCriteria</code>
       <code>Tracker_</code>
       <code>the</code>
@@ -8546,13 +8552,18 @@
       <code>type</code>
       <code>Date</code>
       <code>date</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
     <UndefinedMethod occurrences="2">
       <code>getTimestamp</code>
       <code>getTimestamp</code>
     </UndefinedMethod>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_File.class.php">
+    <ImplementedParamTypeMismatch occurrences="3">
+      <code>$artifact</code>
+      <code>$value</code>
+      <code>$csv_value</code>
+    </ImplementedParamTypeMismatch>
     <InvalidArgument occurrences="1">
       <code>$value</code>
     </InvalidArgument>
@@ -8562,25 +8573,20 @@
     <MismatchingDocblockParamType occurrences="1">
       <code>Tracker_ChangesetValue_File</code>
     </MismatchingDocblockParamType>
-    <MoreSpecificImplementedParamType occurrences="3">
-      <code>$artifact</code>
-      <code>$value</code>
-      <code>$csv_value</code>
-    </MoreSpecificImplementedParamType>
     <PossiblyFalseIterator occurrences="1">
       <code>$dao-&gt;retrieve($sql)</code>
     </PossiblyFalseIterator>
     <PossiblyNullReference occurrences="1">
       <code>getFiles</code>
     </PossiblyNullReference>
-    <UndefinedClass occurrences="6">
+    <UndefinedDocblockClass occurrences="6">
       <code>the</code>
       <code>the</code>
       <code>the</code>
       <code>the</code>
       <code>Tracker_ChangesetValue_File</code>
       <code>type</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
     <UndefinedMethod occurrences="4">
       <code>$v</code>
       <code>$val</code>
@@ -8599,12 +8605,12 @@
     <NullableReturnStatement occurrences="1">
       <code>$changeset_value</code>
     </NullableReturnStatement>
-    <UndefinedClass occurrences="4">
+    <UndefinedDocblockClass occurrences="4">
       <code>the</code>
       <code>the</code>
       <code>the</code>
       <code>the</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_Integer.class.php">
     <InvalidNullableReturnType occurrences="1">
@@ -8616,12 +8622,12 @@
     <NullableReturnStatement occurrences="1">
       <code>$changeset_value</code>
     </NullableReturnStatement>
-    <UndefinedClass occurrences="4">
+    <UndefinedDocblockClass occurrences="4">
       <code>the</code>
       <code>the</code>
       <code>the</code>
       <code>the</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_LastModifiedBy.class.php">
     <InvalidNullableReturnType occurrences="2">
@@ -8673,14 +8679,14 @@
     <PossiblyNullReference occurrences="1">
       <code>getSubmittedOn</code>
     </PossiblyNullReference>
-    <UndefinedClass occurrences="6">
+    <UndefinedDocblockClass occurrences="6">
       <code>the</code>
       <code>the</code>
       <code>the</code>
       <code>the</code>
       <code>date</code>
       <code>date</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_List.class.php">
     <ArgumentTypeCoercion occurrences="1">
@@ -8723,13 +8729,13 @@
     <TooManyArguments occurrences="1">
       <code>searchById</code>
     </TooManyArguments>
-    <UndefinedClass occurrences="5">
+    <UndefinedDocblockClass occurrences="5">
       <code>Tracker_ReportCriteria</code>
       <code>Tracker_ReportCriteria</code>
       <code>Tracker_ReportCriteria</code>
       <code>Tracker_ReportCriteria</code>
       <code>Tracker_</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
     <UndefinedMethod occurrences="6">
       <code>getListValues</code>
       <code>getListValues</code>
@@ -8749,9 +8755,9 @@
     <TooManyArguments occurrences="1">
       <code>getAllValues</code>
     </TooManyArguments>
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>Field</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_List_BindDecorator.class.php">
     <InvalidScalarArgument occurrences="4">
@@ -8777,12 +8783,12 @@
       <code>getProject</code>
       <code>getProject</code>
     </PossiblyNullReference>
-    <UndefinedClass occurrences="4">
+    <UndefinedDocblockClass occurrences="4">
       <code>Field_List_Bind</code>
       <code>Tooltip</code>
       <code>Field</code>
       <code>Bind</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_List_Bind_Null.class.php">
     <InvalidNullableReturnType occurrences="1">
@@ -8794,9 +8800,9 @@
     <NullableReturnStatement occurrences="1">
       <code>null</code>
     </NullableReturnStatement>
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>Field</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_List_Bind_Static.class.php">
     <ArgumentTypeCoercion occurrences="2">
@@ -8819,9 +8825,9 @@
     <PossiblyNullPropertyFetch occurrences="1">
       <code>$this-&gt;field-&gt;getTracker()-&gt;id</code>
     </PossiblyNullPropertyFetch>
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>Field</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
     <UndefinedMethod occurrences="3">
       <code>getListValues</code>
       <code>isMultiple</code>
@@ -8861,9 +8867,9 @@
       <code>getProject</code>
       <code>getProject</code>
     </PossiblyNullReference>
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>Field</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
     <UndefinedMethod occurrences="4">
       <code>isMultiple</code>
       <code>getListValues</code>
@@ -8904,9 +8910,9 @@
       <code>$tracker-&gt;group_id</code>
       <code>$tracker-&gt;group_id</code>
     </PossiblyNullPropertyFetch>
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>Field</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
     <UndefinedMethod occurrences="5">
       <code>isMultiple</code>
       <code>getListValues</code>
@@ -8920,17 +8926,17 @@
     <InvalidReturnType occurrences="1">
       <code>type</code>
     </InvalidReturnType>
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>type</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_MultiSelectbox.class.php">
-    <UndefinedClass occurrences="4">
+    <UndefinedDocblockClass occurrences="4">
       <code>the</code>
       <code>the</code>
       <code>the</code>
       <code>the</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
     <UndefinedMethod occurrences="1">
       <code>delete</code>
     </UndefinedMethod>
@@ -8945,9 +8951,9 @@
     <InvalidScalarArgument occurrences="1">
       <code>$value</code>
     </InvalidScalarArgument>
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>Tracker_</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
     <UndefinedMethod occurrences="3">
       <code>getNumeric</code>
       <code>getNumeric</code>
@@ -8971,7 +8977,7 @@
     <TypeDoesNotContainType occurrences="1">
       <code>array()</code>
     </TypeDoesNotContainType>
-    <UndefinedClass occurrences="8">
+    <UndefinedDocblockClass occurrences="8">
       <code>the</code>
       <code>the</code>
       <code>the</code>
@@ -8980,7 +8986,7 @@
       <code>Tracker_ReportCriteria</code>
       <code>Tracker_ReportCriteria</code>
       <code>Tracker_ReportCriteria</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
     <UndefinedMethod occurrences="5">
       <code>getListValues</code>
       <code>getListValues</code>
@@ -8990,12 +8996,12 @@
     </UndefinedMethod>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_PerTrackerArtifactIdclass.php">
-    <UndefinedClass occurrences="4">
+    <UndefinedDocblockClass occurrences="4">
       <code>the</code>
       <code>the</code>
       <code>the</code>
       <code>the</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_PermissionsOnArtifact.class.php">
     <InvalidArgument occurrences="1">
@@ -9026,7 +9032,7 @@
     <TypeDoesNotContainType occurrences="1">
       <code>is_array($value)</code>
     </TypeDoesNotContainType>
-    <UndefinedClass occurrences="7">
+    <UndefinedDocblockClass occurrences="7">
       <code>Tracker_</code>
       <code>the</code>
       <code>the</code>
@@ -9034,7 +9040,7 @@
       <code>the</code>
       <code>Tracker_ReportCriteria</code>
       <code>Tracker_ReportCriteria</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
     <UndefinedMethod occurrences="2">
       <code>$v</code>
       <code>$val</code>
@@ -9053,35 +9059,35 @@
       <code>getId</code>
       <code>getValue</code>
     </PossiblyNullReference>
-    <UndefinedClass occurrences="4">
+    <UndefinedDocblockClass occurrences="4">
       <code>the</code>
       <code>the</code>
       <code>the</code>
       <code>the</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
     <UndefinedInterfaceMethod occurrences="1">
       <code>visitPriority</code>
     </UndefinedInterfaceMethod>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_Radiobutton.class.php">
-    <UndefinedClass occurrences="4">
+    <UndefinedDocblockClass occurrences="4">
       <code>the</code>
       <code>the</code>
       <code>the</code>
       <code>the</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_Selectbox.class.php">
     <PossiblyUndefinedVariable occurrences="2">
       <code>$submitted_values_array</code>
       <code>$transition</code>
     </PossiblyUndefinedVariable>
-    <UndefinedClass occurrences="4">
+    <UndefinedDocblockClass occurrences="4">
       <code>the</code>
       <code>the</code>
       <code>the</code>
       <code>the</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
     <UndefinedMethod occurrences="1">
       <code>getBind</code>
     </UndefinedMethod>
@@ -9096,12 +9102,12 @@
     <NullableReturnStatement occurrences="1">
       <code>$changeset_value</code>
     </NullableReturnStatement>
-    <UndefinedClass occurrences="4">
+    <UndefinedDocblockClass occurrences="4">
       <code>the</code>
       <code>the</code>
       <code>the</code>
       <code>the</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
     <UndefinedMethod occurrences="2">
       <code>getText</code>
       <code>getText</code>
@@ -9121,12 +9127,12 @@
     <PossiblyNullArgument occurrences="1">
       <code>$display_preferences</code>
     </PossiblyNullArgument>
-    <UndefinedClass occurrences="4">
+    <UndefinedDocblockClass occurrences="4">
       <code>the</code>
       <code>the</code>
       <code>the</code>
       <code>the</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_SubmittedOn.class.php">
     <ImplementedReturnTypeMismatch occurrences="1">
@@ -9149,14 +9155,14 @@
       <code>getTimestamp</code>
       <code>getTimestamp</code>
     </PossiblyUndefinedMethod>
-    <UndefinedClass occurrences="6">
+    <UndefinedDocblockClass occurrences="6">
       <code>the</code>
       <code>the</code>
       <code>the</code>
       <code>the</code>
       <code>date</code>
       <code>date</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_Text.class.php">
     <ForbiddenCode occurrences="2">
@@ -9186,13 +9192,13 @@
       <code>getGroupID</code>
       <code>getItemName</code>
     </PossiblyNullReference>
-    <UndefinedClass occurrences="5">
+    <UndefinedDocblockClass occurrences="5">
       <code>Tracker_</code>
       <code>the</code>
       <code>the</code>
       <code>the</code>
       <code>the</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
     <UndefinedMethod occurrences="6">
       <code>delete</code>
       <code>getFormat</code>
@@ -9211,12 +9217,12 @@
       <code>the</code>
       <code>the</code>
     </InvalidReturnType>
-    <UndefinedClass occurrences="4">
+    <UndefinedDocblockClass occurrences="4">
       <code>the</code>
       <code>the</code>
       <code>the</code>
       <code>the</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
     <UndefinedThisPropertyAssignment occurrences="11">
       <code>$this-&gt;id</code>
       <code>$this-&gt;tracker_id</code>
@@ -9247,31 +9253,31 @@
     </InvalidReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_StaticField_LineBreak.class.php">
-    <UndefinedClass occurrences="4">
+    <UndefinedDocblockClass occurrences="4">
       <code>the</code>
       <code>the</code>
       <code>the</code>
       <code>the</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_StaticField_RichText.class.php">
-    <UndefinedClass occurrences="4">
+    <UndefinedDocblockClass occurrences="4">
       <code>the</code>
       <code>the</code>
       <code>the</code>
       <code>the</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
     <UndefinedMethod occurrences="1">
       <code>searchByFieldId</code>
     </UndefinedMethod>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_StaticField_Separator.class.php">
-    <UndefinedClass occurrences="4">
+    <UndefinedDocblockClass occurrences="4">
       <code>the</code>
       <code>the</code>
       <code>the</code>
       <code>the</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_SharedFormElementFactory.class.php">
     <DuplicateArrayKey occurrences="1">
@@ -9750,9 +9756,9 @@
       <code>$insert_values</code>
       <code>$insert_values</code>
     </PossiblyUndefinedVariable>
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>type</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker/include/Tracker/Hierarchy/HierarchicalTrackerFactory.class.php">
     <UndefinedThisPropertyAssignment occurrences="2">
@@ -9768,10 +9774,10 @@
     </UndefinedThisPropertyFetch>
   </file>
   <file src="plugins/tracker/include/Tracker/Hierarchy/Hierarchy.class.php">
-    <UndefinedClass occurrences="2">
+    <UndefinedDocblockClass occurrences="2">
       <code>type</code>
       <code>type</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker/include/Tracker/Hierarchy/HierarchyFactory.class.php">
     <InvalidArgument occurrences="1">
@@ -9936,10 +9942,10 @@
       <code>$permission_type</code>
       <code>$ugroup_id</code>
     </InvalidArgument>
-    <UndefinedClass occurrences="2">
+    <UndefinedDocblockClass occurrences="2">
       <code>type</code>
       <code>type</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
     <UndefinedThisPropertyAssignment occurrences="1">
       <code>$this-&gt;tracker</code>
     </UndefinedThisPropertyAssignment>
@@ -10145,9 +10151,9 @@
     <InvalidReturnType occurrences="1">
       <code>IProvideFromAndWhereSQLFragments</code>
     </InvalidReturnType>
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>IProvideFromAndWhereSQLFragments</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
     <UndefinedInterfaceMethod occurrences="2">
       <code>getMinValue</code>
       <code>getMaxValue</code>
@@ -10214,9 +10220,9 @@
     <InvalidReturnType occurrences="1">
       <code>IProvideFromAndWhereSQLFragments</code>
     </InvalidReturnType>
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>IProvideFromAndWhereSQLFragments</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
     <UndefinedInterfaceMethod occurrences="1">
       <code>getValue</code>
     </UndefinedInterfaceMethod>
@@ -10324,10 +10330,10 @@
     <TypeDoesNotContainType occurrences="1">
       <code>$search_performed</code>
     </TypeDoesNotContainType>
-    <UndefinedClass occurrences="2">
+    <UndefinedDocblockClass occurrences="2">
       <code>Request</code>
       <code>ReportRenderer</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
     <UndefinedMethod occurrences="2">
       <code>isPost</code>
       <code>isPost</code>
@@ -10361,10 +10367,10 @@
       <code>addRenderer</code>
       <code>afterSaveObject</code>
     </PossiblyNullReference>
-    <UndefinedClass occurrences="2">
+    <UndefinedDocblockClass occurrences="2">
       <code>Report</code>
       <code>id</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker/include/Tracker/Report/Tracker_Report_CriteriaFactory.class.php">
     <InvalidReturnStatement occurrences="1"/>
@@ -10377,9 +10383,9 @@
     <PossiblyNullIterator occurrences="1">
       <code>$xml-&gt;attributes()</code>
     </PossiblyNullIterator>
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>Criteria</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker/include/Tracker/Report/Tracker_Report_HeaderRenderer.php">
     <InvalidArgument occurrences="4">
@@ -10401,15 +10407,15 @@
     <PossiblyFalseArgument occurrences="1">
       <code>$is_advanced</code>
     </PossiblyFalseArgument>
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>sting</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker/include/Tracker/Report/Tracker_Report_Renderer.class.php">
-    <UndefinedClass occurrences="2">
+    <UndefinedDocblockClass occurrences="2">
       <code>Request</code>
       <code>Request</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker/include/Tracker/Report/Tracker_Report_RendererFactory.class.php">
     <InvalidReturnType occurrences="1">
@@ -10426,7 +10432,7 @@
     <TypeDoesNotContainType occurrences="1">
       <code>$instance</code>
     </TypeDoesNotContainType>
-    <UndefinedClass occurrences="7">
+    <UndefinedDocblockClass occurrences="7">
       <code>Report</code>
       <code>Report</code>
       <code>Report</code>
@@ -10434,7 +10440,7 @@
       <code>Report</code>
       <code>Tracker_Report_RendererTableDao</code>
       <code>$this-&gt;getTableDao()</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
     <UndefinedThisPropertyAssignment occurrences="1">
       <code>$this-&gt;report_session</code>
     </UndefinedThisPropertyAssignment>
@@ -10474,10 +10480,10 @@
       <code>fetchAdditionnalButton</code>
       <code>buildOrderedQuery</code>
     </TooManyArguments>
-    <UndefinedClass occurrences="2">
+    <UndefinedDocblockClass occurrences="2">
       <code>Report</code>
       <code>Request</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
     <UndefinedMethod occurrences="3">
       <code>injectUnsavedColumnsInRendererDB</code>
       <code>getAggregates</code>
@@ -10497,10 +10503,10 @@
     </InvalidScalarArgument>
   </file>
   <file src="plugins/tracker/include/Tracker/Report/WidgetAddToDashboardDropdownPresenter.php">
-    <UndefinedClass occurrences="2">
+    <UndefinedDocblockClass occurrences="2">
       <code>WidgetMyDashboardPresenter[]</code>
       <code>WidgetMyDashboardPresenter[]</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker/include/Tracker/Report/WidgetAdditionalButtonPresenter.php">
     <InvalidScalarArgument occurrences="1">
@@ -10793,9 +10799,9 @@
     <InvalidReturnType occurrences="1">
       <code>a</code>
     </InvalidReturnType>
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>a</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker/include/Tracker/Rule/Tracker_RuleFactory.class.php">
     <InvalidClass occurrences="1">
@@ -11012,10 +11018,10 @@
     <InvalidReturnType occurrences="1">
       <code>Tooltip</code>
     </InvalidReturnType>
-    <UndefinedClass occurrences="2">
+    <UndefinedDocblockClass occurrences="2">
       <code>Tooltip</code>
       <code>Tooltip</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker/include/Tracker/Tooltip/dao/Tracker_TooltipDao.class.php">
     <InvalidFalsableReturnType occurrences="1">
@@ -11138,9 +11144,9 @@
       <code>$line === false</code>
       <code>count($error_nature) &gt;0</code>
     </TypeDoesNotContainType>
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>Boolean</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
     <UndefinedFunction occurrences="2"/>
     <UndefinedMethod occurrences="1">
       <code>getFieldDataFromCSVValue</code>
@@ -11184,11 +11190,11 @@
     <NullableReturnStatement occurrences="1">
       <code>null</code>
     </NullableReturnStatement>
-    <UndefinedClass occurrences="3">
+    <UndefinedDocblockClass occurrences="3">
       <code>Children</code>
       <code>Tracker_CannedResponseFactory::instance()</code>
       <code>Hierarchy</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker/include/Tracker/TrackerManager.class.php">
     <InvalidArgument occurrences="4">
@@ -11252,9 +11258,9 @@
     <NullableReturnStatement occurrences="1">
       <code>null</code>
     </NullableReturnStatement>
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>Tuleap\Tracker\REST\Artifact\FileInfoFullRepresentation</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker/include/Tracker/Tracker_NotificationsManager.class.php">
     <UndefinedVariable occurrences="1">
@@ -11265,9 +11271,9 @@
     <InvalidReturnType occurrences="1">
       <code>Tracker_UgroupPermissionsConsistencyMessage</code>
     </InvalidReturnType>
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>Tracker_UgroupPermissionsConsistencyMessage</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker/include/Tracker/Webhook/Actions/WebhookCreateController.php">
     <InvalidArgument occurrences="1">
@@ -11309,6 +11315,11 @@
     <InvalidScalarArgument occurrences="1">
       <code>$tracker-&gt;getId()</code>
     </InvalidScalarArgument>
+  </file>
+  <file src="plugins/tracker/include/Tracker/XML/ChildrenCollector.php">
+    <InvalidNullableReturnType occurrences="1">
+      <code>int</code>
+    </InvalidNullableReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/XML/Exporter/ArtifactAttachmentExporter.php">
     <ArgumentTypeCoercion occurrences="1">
@@ -11388,6 +11399,11 @@
     <PossiblyNullArgument occurrences="1">
       <code>$last_changeset</code>
     </PossiblyNullArgument>
+  </file>
+  <file src="plugins/tracker/include/Tracker/XML/Exporter/NullChildrenCollector.php">
+    <InvalidReturnType occurrences="1">
+      <code>pop</code>
+    </InvalidReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/XML/Updater/FieldChange/FieldChangeOpenListXMLUpdater.class.php">
     <MoreSpecificImplementedParamType occurrences="1">
@@ -11549,14 +11565,14 @@
       <code>$mapper[$xml_parent_id]</code>
       <code>$mapper[$this-&gt;getXmlTrackerAttribute($xml_tracker, 'id')]</code>
     </PossiblyInvalidArrayOffset>
-    <UndefinedClass occurrences="6">
+    <UndefinedDocblockClass occurrences="6">
       <code>type</code>
       <code>type</code>
       <code>type</code>
       <code>type</code>
       <code>type</code>
       <code>type</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
     <UndefinedPropertyAssignment occurrences="1">
       <code>$tracker-&gt;rules</code>
     </UndefinedPropertyAssignment>
@@ -11636,28 +11652,17 @@
     </UndefinedThisPropertyFetch>
   </file>
   <file src="plugins/tracker/include/Workflow/PostAction/CIBuild/Transition_PostAction_CIBuild.class.php">
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>Integer</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
     <UndefinedThisPropertyFetch occurrences="1">
       <code>$this-&gt;ci_client</code>
     </UndefinedThisPropertyFetch>
-  </file>
-  <file src="plugins/tracker/include/Workflow/PostAction/CIBuild/Transition_PostAction_CIBuildDao.class.php">
-    <InvalidReturnStatement occurrences="1">
-      <code>$this-&gt;updateAndGetLastId($sql)</code>
-    </InvalidReturnStatement>
-    <InvalidReturnType occurrences="1">
-      <code>bool</code>
-    </InvalidReturnType>
   </file>
   <file src="plugins/tracker/include/Workflow/PostAction/CIBuild/Transition_PostAction_CIBuildFactory.class.php">
     <InvalidArgument occurrences="1">
       <code>$id</code>
     </InvalidArgument>
-    <InvalidScalarArgument occurrences="1">
-      <code>$job_url</code>
-    </InvalidScalarArgument>
     <PossiblyNullArrayAccess occurrences="1">
       <code>$postaction_attributes['job_url']</code>
     </PossiblyNullArrayAccess>
@@ -11804,30 +11809,6 @@
       <code>Transition_PostAction</code>
     </InvalidReturnType>
   </file>
-  <file src="plugins/tracker/include/Workflow/PostAction/Update/Internal/CIBuildRepository.php">
-    <InvalidArgument occurrences="1">
-      <code>$ids_to_skip</code>
-    </InvalidArgument>
-    <InvalidScalarArgument occurrences="1">
-      <code>$build-&gt;getJobUrl()</code>
-    </InvalidScalarArgument>
-    <PossiblyNullArgument occurrences="2">
-      <code>$build-&gt;getId()</code>
-      <code>$build-&gt;getId()</code>
-    </PossiblyNullArgument>
-  </file>
-  <file src="plugins/tracker/include/Workflow/PostAction/Update/Internal/CIBuildUpdater.php">
-    <ArgumentTypeCoercion occurrences="3">
-      <code>$diff-&gt;getUpdatedActions()</code>
-      <code>$added_action</code>
-      <code>$updated_action</code>
-    </ArgumentTypeCoercion>
-  </file>
-  <file src="plugins/tracker/include/Workflow/PostAction/Update/Internal/FrozenFieldsValidator.php">
-    <PossiblyNullReference occurrences="1">
-      <code>getFieldId</code>
-    </PossiblyNullReference>
-  </file>
   <file src="plugins/tracker/include/Workflow/PostAction/Update/Internal/PostActionsMapper.php">
     <PossiblyInvalidArgument occurrences="1">
       <code>$field_int-&gt;getValue()</code>
@@ -11913,10 +11894,10 @@
       <code>null</code>
       <code>null</code>
     </PossiblyNullPropertyAssignmentValue>
-    <UndefinedClass occurrences="2">
+    <UndefinedDocblockClass occurrences="2">
       <code>Integer</code>
       <code>Integer</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker/include/Workflow/Transition/Condition/FieldNotEmpty.class.php">
     <InvalidArgument occurrences="1">
@@ -12127,11 +12108,11 @@
     <TooManyArguments occurrences="1">
       <code>getTransitions</code>
     </TooManyArguments>
-    <UndefinedClass occurrences="3">
+    <UndefinedDocblockClass occurrences="3">
       <code>Integer</code>
       <code>Integer</code>
       <code>Boolean</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
     <UndefinedMethod occurrences="1">
       <code>getBind</code>
     </UndefinedMethod>
@@ -12224,9 +12205,9 @@
     <TooManyArguments occurrences="1">
       <code>db_error($res)</code>
     </TooManyArguments>
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>result</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker_date_reminder/include/TrackerDateReminder_ArtifactFieldFactory.class.php">
     <TooManyArguments occurrences="1">
@@ -12244,10 +12225,10 @@
       <code>nothing</code>
       <code>nothing</code>
     </InvalidReturnType>
-    <UndefinedClass occurrences="2">
+    <UndefinedDocblockClass occurrences="2">
       <code>nothing</code>
       <code>nothing</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker_date_reminder/include/TrackerDateReminder_Logger_Prefix.class.php">
     <UndefinedThisPropertyAssignment occurrences="2">
@@ -12271,16 +12252,16 @@
     </InvalidClass>
   </file>
   <file src="plugins/tracker_encryption/include/Tracker_FormElement_Field_Encrypted.class.php">
+    <ImplementedParamTypeMismatch occurrences="1">
+      <code>$artifact</code>
+    </ImplementedParamTypeMismatch>
     <ImplementedReturnTypeMismatch occurrences="1">
       <code>@return Tracker_Artifact_ChangesetValue | null</code>
     </ImplementedReturnTypeMismatch>
     <InvalidReturnType occurrences="1">
       <code>getCriteriaDao</code>
     </InvalidReturnType>
-    <MoreSpecificImplementedParamType occurrences="1">
-      <code>$artifact</code>
-    </MoreSpecificImplementedParamType>
-    <UndefinedClass occurrences="7">
+    <UndefinedDocblockClass occurrences="7">
       <code>the</code>
       <code>the</code>
       <code>the</code>
@@ -12288,7 +12269,7 @@
       <code>Tracker_ReportCriteria</code>
       <code>Tracker_ReportCriteria</code>
       <code>Tracker_ReportCriteria</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker_encryption/include/Tracker_Key.class.php">
     <InvalidReturnStatement occurrences="1">
@@ -12509,9 +12490,9 @@
     <InvalidReturnType occurrences="1">
       <code>String</code>
     </InvalidReturnType>
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>Sabre_DAV_Server</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="src/common/Authentication/SplitToken/SplitTokenVerificationStringHasher.php">
     <ImplicitToStringCast occurrences="1">
@@ -12555,6 +12536,11 @@
       <code>false</code>
       <code>false</code>
     </FalsableReturnStatement>
+    <ImplementedParamTypeMismatch occurrences="3">
+      <code>$result</code>
+      <code>$result</code>
+      <code>$result</code>
+    </ImplementedParamTypeMismatch>
     <InvalidFalsableReturnType occurrences="2">
       <code>int</code>
       <code>array</code>
@@ -12567,18 +12553,13 @@
     <InvalidReturnType occurrences="1">
       <code>int</code>
     </InvalidReturnType>
-    <MoreSpecificImplementedParamType occurrences="3">
-      <code>$result</code>
-      <code>$result</code>
-      <code>$result</code>
-    </MoreSpecificImplementedParamType>
     <PossiblyNullPropertyAssignmentValue occurrences="1">
       <code>null</code>
     </PossiblyNullPropertyAssignmentValue>
-    <UndefinedClass occurrences="2">
+    <UndefinedDocblockClass occurrences="2">
       <code>type</code>
       <code>type</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="src/common/DB/Compat/Legacy2018/CompatPDODataAccessResult.php">
     <FalsableReturnStatement occurrences="3">
@@ -12592,20 +12573,20 @@
     <PossiblyNullReference occurrences="1">
       <code>closeCursor</code>
     </PossiblyNullReference>
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>callback</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="src/common/DB/Compat/Legacy2018/LegacyDataAccessInterface.php">
-    <UndefinedClass occurrences="2">
+    <UndefinedDocblockClass occurrences="2">
       <code>type</code>
       <code>type</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="src/common/DB/Compat/Legacy2018/LegacyDataAccessResultInterface.php">
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>callback</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="src/common/DB/DBConnection.php">
     <MissingDocblockType occurrences="1">
@@ -12732,9 +12713,9 @@
     <PossiblyNullReference occurrences="1">
       <code>getID</code>
     </PossiblyNullReference>
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>$res</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="src/common/Error/PermissionDeniedMailSender.php">
     <InvalidClass occurrences="1">
@@ -12825,11 +12806,11 @@
     <PossiblyNullArgument occurrences="1">
       <code>$this-&gt;getLastError()</code>
     </PossiblyNullArgument>
-    <UndefinedClass occurrences="3">
+    <UndefinedDocblockClass occurrences="3">
       <code>type</code>
       <code>multiple</code>
       <code>multiple</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="src/common/Http/HttpClientFactory.php">
     <InvalidReturnStatement occurrences="4">
@@ -12852,9 +12833,9 @@
     <InvalidReturnType occurrences="1">
       <code>Tuleap\JWT\REST\JWTRepresentation</code>
     </InvalidReturnType>
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>Tuleap\JWT\REST\JWTRepresentation</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="src/common/Jenkins/Client.class.php">
     <PossiblyNullPropertyAssignmentValue occurrences="1">
@@ -13055,9 +13036,9 @@
       <code>Project_CustomDescription_CustomDescription[]</code>
       <code>CustomDescription</code>
     </InvalidReturnType>
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>CustomDescription</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="src/common/Project/CustomDescription/CustomDescriptionValueDao.class.php">
     <PossiblyFalseReference occurrences="1">
@@ -13074,7 +13055,7 @@
   </file>
   <file src="src/common/Project/Hierarchy/HierarchyManager.class.php">
     <InvalidNullableReturnType occurrences="1">
-      <code>@return Project | null</code>
+      <code>Project</code>
     </InvalidNullableReturnType>
     <InvalidReturnStatement occurrences="1">
       <code>$this-&gt;dao</code>
@@ -13086,11 +13067,6 @@
     <NullableReturnStatement occurrences="1">
       <code>null</code>
     </NullableReturnStatement>
-    <UndefinedClass occurrences="3">
-      <code>@return Project | null</code>
-      <code>$parent_project</code>
-      <code>$parent_project</code>
-    </UndefinedClass>
     <UndefinedMethod occurrences="5">
       <code>addParentProject</code>
       <code>updateParentProject</code>
@@ -13118,9 +13094,9 @@
     </PossiblyInvalidArrayAccess>
   </file>
   <file src="src/common/Project/OneStepCreation/OneStepCreationPresenter.class.php">
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>type</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="src/common/Project/OneStepCreation/OneStepCreationRequest.class.php">
     <InvalidReturnStatement occurrences="1">
@@ -13129,9 +13105,9 @@
     <InvalidReturnType occurrences="1">
       <code>type</code>
     </InvalidReturnType>
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>type</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="src/common/Project/OneStepCreation/OneStepCreationValidator.class.php">
     <UndefinedThisPropertyAssignment occurrences="2">
@@ -13140,11 +13116,11 @@
     </UndefinedThisPropertyAssignment>
   </file>
   <file src="src/common/Project/PaginatedProjects.php">
-    <UndefinedClass occurrences="3">
+    <UndefinedDocblockClass occurrences="3">
       <code>Project[]</code>
       <code>Project[]</code>
       <code>Project[]</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="src/common/Project/Project.class.php">
     <PossiblyUndefinedVariable occurrences="2">
@@ -13171,9 +13147,9 @@
       <code>getProject</code>
       <code>getListOfAllowedServicesForProject</code>
     </PossiblyNullReference>
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>the</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="src/common/Project/ProjectCreator.class.php">
     <ArgumentTypeCoercion occurrences="1">
@@ -13207,27 +13183,25 @@
       <code>String</code>
       <code>String</code>
     </InvalidParamDefault>
-    <InvalidReturnStatement occurrences="6">
+    <InvalidReturnStatement occurrences="5">
       <code>true</code>
       <code>$success</code>
       <code>$dao-&gt;removeProjectMembers($project-&gt;getID())</code>
       <code>$result</code>
       <code>$result</code>
-      <code>$this-&gt;getHierarchyManager()-&gt;getParentProject($group_id)</code>
     </InvalidReturnStatement>
-    <InvalidReturnType occurrences="7">
+    <InvalidReturnType occurrences="6">
       <code>ProjectManager</code>
       <code>Boolean</code>
       <code>Boolean</code>
       <code>Boolean</code>
       <code>Boolean</code>
       <code>Boolean</code>
-      <code>Project|null</code>
     </InvalidReturnType>
     <NullableReturnStatement occurrences="1">
       <code>$p</code>
     </NullableReturnStatement>
-    <UndefinedClass occurrences="29">
+    <UndefinedDocblockClass occurrences="29">
       <code>Integer</code>
       <code>Integer</code>
       <code>Boolean</code>
@@ -13257,7 +13231,7 @@
       <code>Integer</code>
       <code>Boolean</code>
       <code>Boolean</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="src/common/Project/ProjectXMLImporter.class.php">
     <InvalidScalarArgument occurrences="1">
@@ -13292,13 +13266,13 @@
       <code>$user-&gt;getId()</code>
       <code>$user-&gt;getId()</code>
     </InvalidScalarArgument>
-    <UndefinedClass occurrences="5">
+    <UndefinedDocblockClass occurrences="5">
       <code>UserInfo</code>
       <code>UserInfo</code>
       <code>ArrayOfDescFields</code>
       <code>ArrayOfDescFieldsValues</code>
       <code>ArrayOfServicesValues</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="src/common/Project/REST/HeartbeatsEntryRepresentation.php">
     <InvalidPropertyAssignmentValue occurrences="1">
@@ -13344,9 +13318,9 @@
     <TypeDoesNotContainType occurrences="1">
       <code>$activated</code>
     </TypeDoesNotContainType>
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>Tuleap\Project\PaginatedProjects</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="src/common/Project/REST/v1/UserGroupResource.class.php">
     <InvalidReturnType occurrences="1">
@@ -13399,9 +13373,9 @@
     <NullableReturnStatement occurrences="1">
       <code>null</code>
     </NullableReturnStatement>
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>ServiceUsage</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="src/common/Project/ServiceManager.class.php">
     <LessSpecificReturnStatement occurrences="1">
@@ -13454,9 +13428,9 @@
       <code>$ugroup_user_dao</code>
       <code>$dynamic_ugroup_members_updater</code>
     </PossiblyNullPropertyAssignmentValue>
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>type</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="src/common/Project/XML/Import/ZipArchive.php">
     <ForbiddenCode occurrences="1">
@@ -13464,20 +13438,14 @@
     </ForbiddenCode>
   </file>
   <file src="src/common/Queue/Redis/RedisPersistentQueue.php">
-    <InvalidThrow occurrences="1">
-      <code>throw $e;</code>
-    </InvalidThrow>
-    <UndefinedClass occurrences="9">
+    <UndefinedDocblockClass occurrences="6">
       <code>\Redis</code>
       <code>$this-&gt;redis</code>
-      <code>RedisException</code>
-      <code>$e</code>
       <code>$this-&gt;redis</code>
       <code>$this-&gt;redis</code>
       <code>$this-&gt;redis</code>
       <code>$this-&gt;redis</code>
-      <code>$this-&gt;redis</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="src/common/Queue/Worker.php">
     <InvalidScalarArgument occurrences="1">
@@ -13508,11 +13476,11 @@
     </MissingDocblockType>
   </file>
   <file src="src/common/REST/v1/GitRepositoryPermissionRepresentationBase.class.php">
-    <UndefinedClass occurrences="3">
+    <UndefinedDocblockClass occurrences="3">
       <code>Tuleap\Project\REST\UserGroupRepresentation</code>
       <code>Tuleap\Project\REST\UserGroupRepresentation</code>
       <code>Tuleap\Project\REST\UserGroupRepresentation</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="src/common/REST/v1/MilestoneRepresentationBase.class.php">
     <PossiblyNullPropertyAssignmentValue occurrences="2">
@@ -13521,9 +13489,9 @@
     </PossiblyNullPropertyAssignmentValue>
   </file>
   <file src="src/common/REST/v2/BacklogRepresentationBase.class.php">
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>BacklogItemRepresentation[]</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="src/common/RSS/FeedHTTPClient.php">
     <LessSpecificImplementedReturnType occurrences="1">
@@ -13531,10 +13499,12 @@
     </LessSpecificImplementedReturnType>
   </file>
   <file src="src/common/Redis/ClientFactory.php">
-    <UndefinedClass occurrences="2">
-      <code>\Redis</code>
+    <UndefinedClass occurrences="1">
       <code>\Redis</code>
     </UndefinedClass>
+    <UndefinedDocblockClass occurrences="1">
+      <code>\Redis</code>
+    </UndefinedDocblockClass>
   </file>
   <file src="src/common/Redis/RedisInitializer.php">
     <UndefinedClass occurrences="1">
@@ -13563,11 +13533,13 @@
     <InvalidReturnType occurrences="1">
       <code>Tuleap\Token\REST\TokenRepresentation</code>
     </InvalidReturnType>
-    <UndefinedClass occurrences="3">
-      <code>Tuleap\Token\REST\TokenRepresentation</code>
+    <UndefinedClass occurrences="2">
       <code>User_LoginException</code>
       <code>Rest_Exception_InvalidTokenException</code>
     </UndefinedClass>
+    <UndefinedDocblockClass occurrences="1">
+      <code>Tuleap\Token\REST\TokenRepresentation</code>
+    </UndefinedDocblockClass>
   </file>
   <file src="src/common/TreeNode/TreeNode.class.php">
     <InvalidReturnType occurrences="1">
@@ -13620,9 +13592,9 @@
     <InvalidPropertyAssignmentValue occurrences="1">
       <code>$csrf_token</code>
     </InvalidPropertyAssignmentValue>
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>CSRFSynchronizerToken</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="src/common/User/Account/UserAvatarSaver.php">
     <InvalidScalarArgument occurrences="1">
@@ -13819,9 +13791,9 @@
     <InvalidReturnType occurrences="1">
       <code>PFUsers[]</code>
     </InvalidReturnType>
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>PFUsers[]</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="src/common/User/Password/Reset/ResetTokenSerializer.php">
     <ImplicitToStringCast occurrences="1">
@@ -13870,12 +13842,9 @@
     </InvalidPropertyAssignmentValue>
   </file>
   <file src="src/common/User/REST/v1/UserMembershipResource.php">
-    <InvalidArgument occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>$user</code>
-    </InvalidArgument>
-    <UndefinedClass occurrences="1">
-      <code>$user</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="src/common/User/REST/v1/UserResource.php">
     <InvalidArgument occurrences="1">
@@ -13907,9 +13876,9 @@
     <InvalidScalarArgument occurrences="1">
       <code>$toggle ? 1 : 0</code>
     </InvalidScalarArgument>
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>hash</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
     <UndefinedThisPropertyAssignment occurrences="1">
       <code>$this-&gt;user_pw_legacy</code>
     </UndefinedThisPropertyAssignment>
@@ -13924,9 +13893,9 @@
     <TypeDoesNotContainType occurrences="1">
       <code>''</code>
     </TypeDoesNotContainType>
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>the</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="src/common/User/UserImport.class.php">
     <UndefinedFunction occurrences="1">
@@ -13983,7 +13952,10 @@
       <code>$user</code>
       <code>$user</code>
     </TypeDoesNotContainType>
-    <UndefinedClass occurrences="8">
+    <UndefinedConstant occurrences="1">
+      <code>IS_SCRIPT</code>
+    </UndefinedConstant>
+    <UndefinedDocblockClass occurrences="8">
       <code>type</code>
       <code>Boolean</code>
       <code>Integer</code>
@@ -13992,10 +13964,7 @@
       <code>Boolean</code>
       <code>Boolean</code>
       <code>Boolean</code>
-    </UndefinedClass>
-    <UndefinedConstant occurrences="1">
-      <code>IS_SCRIPT</code>
-    </UndefinedConstant>
+    </UndefinedDocblockClass>
   </file>
   <file src="src/common/User/User_SSHKeyDumper.class.php">
     <InvalidArgument occurrences="2">
@@ -14015,12 +13984,12 @@
     <PossiblyUndefinedVariable occurrences="1">
       <code>$user</code>
     </PossiblyUndefinedVariable>
-    <UndefinedClass occurrences="4">
+    <UndefinedDocblockClass occurrences="4">
       <code>PFUser</code>
       <code>$imported_user</code>
       <code>$imported_user</code>
       <code>$imported_user</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
     <UndefinedThisPropertyAssignment occurrences="1">
       <code>$this-&gt;logger</code>
     </UndefinedThisPropertyAssignment>
@@ -14039,9 +14008,9 @@
     <PossiblyNullArrayOffset occurrences="1">
       <code>$lines</code>
     </PossiblyNullArrayOffset>
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>User\XML\Import\ReadyToBeImportedUsersCollection</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
     <UndefinedInterfaceMethod occurrences="3">
       <code>getOriginalUserId</code>
       <code>getOriginalLdapId</code>
@@ -14049,30 +14018,27 @@
     </UndefinedInterfaceMethod>
   </file>
   <file src="src/common/User/XML/Import/ReadyToBeImportedUser.php">
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>PFUser</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="src/common/User/XML/Import/ReadyToBeImportedUsersCollection.php">
-    <UndefinedClass occurrences="3">
+    <UndefinedDocblockClass occurrences="3">
       <code>User\XML\Import\User</code>
       <code>User\XML\Import\User</code>
       <code>User\XML\Import\User</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="src/common/User/XML/Import/ToBeMappedUser.php">
-    <UndefinedClass occurrences="5">
+    <UndefinedDocblockClass occurrences="2">
       <code>PFUser[]</code>
       <code>$user</code>
-      <code>$user</code>
-      <code>$user</code>
-      <code>$user</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="src/common/User/XML/Import/UsersToBeImportedCollection.php">
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>User\XML\Import\User</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="src/common/User/XML/Import/WillBeActivatedUser.php">
     <InvalidReturnType occurrences="1">
@@ -14186,9 +14152,9 @@
       <code>$rss</code>
       <code>""</code>
     </InvalidPropertyAssignmentValue>
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>unknown_type</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="src/common/account/TimezoneSelectorPresenter.class.php">
     <UndefinedThisPropertyAssignment occurrences="3">
@@ -14348,9 +14314,9 @@
     <PossiblyUndefinedVariable occurrences="1">
       <code>$current_string</code>
     </PossiblyUndefinedVariable>
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>number</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="src/common/backend/BackendAliases.class.php">
     <InvalidReturnStatement occurrences="2">
@@ -14403,10 +14369,10 @@
       <code>$cvsnt_marker</code>
       <code>$cvs_config_array</code>
     </PossiblyUndefinedVariable>
-    <UndefinedClass occurrences="2">
+    <UndefinedDocblockClass occurrences="2">
       <code>File</code>
       <code>File</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="src/common/backend/BackendFactory.class.php">
     <InvalidNullableReturnType occurrences="1">
@@ -14571,9 +14537,9 @@
       <code>true</code>
       <code>true</code>
     </InvalidReturnType>
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>the</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="src/common/collection/LinkedList.class.php">
     <InvalidReturnStatement occurrences="1">
@@ -14601,12 +14567,12 @@
       <code>true</code>
       <code>true</code>
     </InvalidReturnType>
-    <UndefinedClass occurrences="4">
+    <UndefinedDocblockClass occurrences="4">
       <code>the</code>
       <code>the</code>
       <code>the</code>
       <code>$this-&gt;getKeys()</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="src/common/cvs/DiskUsage/FullHistoryDao.php">
     <PossiblyFalseReference occurrences="1">
@@ -15103,9 +15069,9 @@
       <code>DataAccessResult</code>
       <code>DataAccessResult</code>
     </InvalidFalsableReturnType>
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>Integrer</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="src/common/dao/UGroupUserDao.class.php">
     <FalsableReturnStatement occurrences="4">
@@ -15180,9 +15146,9 @@
     <PossiblyFalseReference occurrences="1">
       <code>getRow</code>
     </PossiblyFalseReference>
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>Data</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="src/common/dao/UserPreferencesDao.class.php">
     <FalsableReturnStatement occurrences="1">
@@ -15263,9 +15229,9 @@
     <InvalidReturnType occurrences="1">
       <code>\ITimeInterval</code>
     </InvalidReturnType>
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>\ITimeInterval</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="src/common/frs/FRSFile.class.php">
     <LessSpecificReturnStatement occurrences="1">
@@ -15521,10 +15487,10 @@
     <InvalidPropertyAssignmentValue occurrences="1">
       <code>$ugroup_factory</code>
     </InvalidPropertyAssignmentValue>
-    <UndefinedClass occurrences="2">
+    <UndefinedDocblockClass occurrences="2">
       <code>UGr</code>
       <code>$this-&gt;ugroup_factory</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="src/common/frs/PermissionsPerGroup/PermissionPerTypeExtractor.php">
     <InvalidReturnType occurrences="1">
@@ -15696,10 +15662,10 @@
     <InvalidFalsableReturnType occurrences="1">
       <code>array</code>
     </InvalidFalsableReturnType>
-    <UndefinedClass occurrences="2">
+    <UndefinedDocblockClass occurrences="2">
       <code>resultset</code>
       <code>resultset</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="src/common/include/HTTPRequest.class.php">
     <InvalidReturnStatement occurrences="1">
@@ -15760,9 +15726,9 @@
     <InvalidReturnType occurrences="1">
       <code>Tuleap_Tour[]</code>
     </InvalidReturnType>
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>Tour[]</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="src/common/include/Toggler.class.php">
     <InvalidReturnStatement occurrences="1">
@@ -15786,11 +15752,11 @@
       <code>array()</code>
       <code>array()</code>
     </InvalidPropertyAssignmentValue>
-    <UndefinedClass occurrences="3">
+    <UndefinedDocblockClass occurrences="3">
       <code>The</code>
       <code>The</code>
       <code>$this-&gt;vars</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="src/common/include/URL.class.php">
     <FalsableReturnStatement occurrences="1">
@@ -15860,12 +15826,14 @@
     <PossiblyInvalidOperand occurrences="1">
       <code>$written</code>
     </PossiblyInvalidOperand>
-    <UndefinedClass occurrences="4">
+    <UndefinedClass occurrences="1">
       <code>COM</code>
+    </UndefinedClass>
+    <UndefinedDocblockClass occurrences="3">
       <code>Return</code>
       <code>Return</code>
       <code>Should</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
     <UndefinedThisPropertyAssignment occurrences="1">
       <code>$this-&gt;mode</code>
     </UndefinedThisPropertyAssignment>
@@ -16025,10 +15993,10 @@
     <PossiblyFalseOperand occurrences="1">
       <code>strpos($new_name, "_name_key")</code>
     </PossiblyFalseOperand>
-    <UndefinedClass occurrences="2">
+    <UndefinedDocblockClass occurrences="2">
       <code>type</code>
       <code>type</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="src/common/plugin/PluginConfigChecker.php">
     <UndefinedThisPropertyAssignment occurrences="1">
@@ -16063,9 +16031,9 @@
     <NullableReturnStatement occurrences="1">
       <code>null</code>
     </NullableReturnStatement>
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>the</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="src/common/plugin/PluginLoader.php">
     <PossiblyInvalidMethodCall occurrences="2">
@@ -16120,9 +16088,9 @@
     <TypeDoesNotContainType occurrences="1">
       <code>$is_reference_removed</code>
     </TypeDoesNotContainType>
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>Stirng</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
     <UndefinedMethod occurrences="1">
       <code>$system_reference_nature_row</code>
     </UndefinedMethod>
@@ -16203,11 +16171,13 @@
     </PossiblyNullPropertyAssignmentValue>
   </file>
   <file src="src/common/svn/SVNAuthenticationCacheInvalidator.php">
-    <UndefinedClass occurrences="3">
-      <code>\Redis|null</code>
+    <UndefinedClass occurrences="1">
       <code>?\Redis</code>
-      <code>$this-&gt;redis_client</code>
     </UndefinedClass>
+    <UndefinedDocblockClass occurrences="2">
+      <code>\Redis|null</code>
+      <code>$this-&gt;redis_client</code>
+    </UndefinedDocblockClass>
   </file>
   <file src="src/common/svn/SVN_LogDao.class.php">
     <PossiblyFalseReference occurrences="3">
@@ -16240,13 +16210,13 @@
       <code>$limit</code>
       <code>'3005'</code>
     </InvalidScalarArgument>
-    <UndefinedClass occurrences="5">
+    <UndefinedDocblockClass occurrences="5">
       <code>ArrayOfString</code>
       <code>ArrayOfSvnPathDetails</code>
       <code>ArrayOfRevision</code>
       <code>ArrayOfCommiter</code>
       <code>ArrayOfSvnPathInfo</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="src/common/svn/SVN_Svnlook.class.php">
     <InvalidScalarArgument occurrences="2">
@@ -16356,11 +16326,11 @@
     <NullableReturnStatement occurrences="1">
       <code>null</code>
     </NullableReturnStatement>
-    <UndefinedClass occurrences="3">
+    <UndefinedDocblockClass occurrences="3">
       <code>string|number|bool</code>
       <code>type</code>
       <code>type</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="src/common/system_event/SystemEventPresenter.php">
     <PossiblyFalseArgument occurrences="2">
@@ -16743,10 +16713,10 @@
       <code>$ok</code>
       <code>$ok</code>
     </TypeDoesNotContainType>
-    <UndefinedClass occurrences="2">
+    <UndefinedDocblockClass occurrences="2">
       <code>result</code>
       <code>result</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
     <UndefinedInterfaceMethod occurrences="1">
       <code>setBodyText</code>
     </UndefinedInterfaceMethod>
@@ -16824,14 +16794,7 @@
       <code>isSuperUser</code>
       <code>isSuperUser</code>
     </PossiblyNullReference>
-    <PossiblyUndefinedVariable occurrences="10">
-      <code>$qry_value</code>
-      <code>$qry_value</code>
-      <code>$qry_value</code>
-      <code>$qry_value</code>
-      <code>$qry_value</code>
-      <code>$qry_value</code>
-      <code>$qry_value</code>
+    <PossiblyUndefinedVariable occurrences="3">
       <code>$name</code>
       <code>$name</code>
       <code>$value</code>
@@ -17008,9 +16971,9 @@
       <code>fetchData</code>
       <code>db_insertid($res, 'artifact_report', 'report_id')</code>
     </TooManyArguments>
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>id</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
     <UndefinedThisPropertyAssignment occurrences="1">
       <code>$this-&gt;user_id</code>
     </UndefinedThisPropertyAssignment>
@@ -17057,9 +17020,9 @@
     <InvalidReturnType occurrences="1">
       <code>a</code>
     </InvalidReturnType>
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>a</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="src/common/tracker/ArtifactType.class.php">
     <EmptyArrayAccess occurrences="1">
@@ -17132,9 +17095,9 @@
     <TypeDoesNotContainType occurrences="1">
       <code>is_object($afh)</code>
     </TypeDoesNotContainType>
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>database</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
     <UndefinedVariable occurrences="1">
       <code>$dependent</code>
     </UndefinedVariable>
@@ -17170,12 +17133,12 @@
       <code>the</code>
       <code>id</code>
     </InvalidReturnType>
-    <UndefinedClass occurrences="4">
+    <UndefinedDocblockClass occurrences="4">
       <code>resultSet</code>
       <code>db_result</code>
       <code>the</code>
       <code>id</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="src/common/tracker/ArtifactXMLExporterArtifact.class.php">
     <PossiblyNullPropertyAssignmentValue occurrences="1">
@@ -17266,13 +17229,9 @@
       <code>$values</code>
       <code>$values</code>
     </PossiblyUndefinedVariable>
-    <UndefinedClass occurrences="5">
+    <UndefinedDocblockClass occurrences="1">
       <code>$field</code>
-      <code>$field</code>
-      <code>$field</code>
-      <code>$field</code>
-      <code>$field</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="src/common/tracker/HTML/ArtifactRuleValueJavascript.class.php">
     <InvalidReturnType occurrences="1">
@@ -17435,9 +17394,9 @@
     <InvalidReturnType occurrences="1">
       <code>WikiPageVersion</code>
     </InvalidReturnType>
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>WikiPageVersion</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
     <UndefinedThisPropertyAssignment occurrences="2">
       <code>$this-&gt;user_manager</code>
       <code>$this-&gt;project_manager</code>
@@ -17450,11 +17409,11 @@
     </UndefinedThisPropertyFetch>
   </file>
   <file src="src/common/wiki/lib/PaginatedWikiPages.class.php">
-    <UndefinedClass occurrences="3">
+    <UndefinedDocblockClass occurrences="3">
       <code>WikiPage[]</code>
       <code>WikiPage[]</code>
       <code>WikiPage[]</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="src/common/wiki/lib/PaginatedWikiPagesFactory.class.php">
     <InvalidArgument occurrences="1">
@@ -17469,10 +17428,10 @@
     <PossiblyNullReference occurrences="1">
       <code>isMember</code>
     </PossiblyNullReference>
-    <UndefinedClass occurrences="2">
+    <UndefinedDocblockClass occurrences="2">
       <code>number</code>
       <code>number</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="src/common/wiki/lib/WikiAttachment.class.php">
     <InvalidReturnStatement occurrences="1">
@@ -17562,26 +17521,28 @@
     <PossiblyNullPropertyAssignmentValue occurrences="1">
       <code>null</code>
     </PossiblyNullPropertyAssignmentValue>
-    <UndefinedClass occurrences="3">
+    <UndefinedDocblockClass occurrences="3">
       <code>$this-&gt;wrapper-&gt;getRequest()</code>
       <code>$this-&gt;wrapper-&gt;getRequest()</code>
       <code>$this-&gt;wrapper-&gt;getRequest()</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="src/common/wiki/lib/WikiPageVersionContentFormatter.php">
-    <UndefinedClass occurrences="2">
-      <code>$request</code>
+    <UndefinedClass occurrences="1">
       <code>WikiRequest</code>
     </UndefinedClass>
+    <UndefinedDocblockClass occurrences="1">
+      <code>$request</code>
+    </UndefinedDocblockClass>
   </file>
   <file src="src/common/wiki/lib/WikiPageWrapper.class.php">
-    <UndefinedClass occurrences="5">
+    <UndefinedDocblockClass occurrences="5">
       <code>WikiRequest</code>
       <code>$request</code>
       <code>$request</code>
       <code>$request</code>
       <code>$request</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
     <UndefinedFunction occurrences="2">
       <code>IniConfig(PHPWIKI_DIR."/config/config.ini")</code>
       <code>IniConfig(PHPWIKI_DIR."/config/config.ini")</code>
@@ -17623,23 +17584,15 @@
     </TypeDoesNotContainType>
   </file>
   <file src="src/common/xml/Security.class.php">
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>The</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="src/utils/codendi_daily.php">
     <InvalidScalarArgument occurrences="2">
       <code>0</code>
       <code>-1</code>
     </InvalidScalarArgument>
-  </file>
-  <file src="src/utils/export_project_xml.php">
-    <MethodSignatureMismatch occurrences="4">
-      <code>$filename</code>
-      <code>$dirname</code>
-      <code>$filename</code>
-      <code>$localname</code>
-    </MethodSignatureMismatch>
   </file>
   <file src="src/utils/tv3_to_test.php">
     <PossiblyFalseReference occurrences="1">
@@ -17789,9 +17742,9 @@
     <TooManyArguments occurrences="1">
       <code>db_result($result,0,'details', $group_id)</code>
     </TooManyArguments>
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>forum_id</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="src/www/help/browse_tracker_query_field.php">
     <TypeDoesNotContainType occurrences="2">
@@ -18039,7 +17992,7 @@
       <code>$params</code>
       <code>$paramArrayStr</code>
     </PossiblyUndefinedVariable>
-    <UndefinedClass occurrences="9">
+    <UndefinedDocblockClass occurrences="9">
       <code>debug</code>
       <code>debug</code>
       <code>fault</code>
@@ -18049,7 +18002,7 @@
       <code>if</code>
       <code>always</code>
       <code>always</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
     <UndefinedFunction occurrences="8">
       <code>'schemaStartElement'</code>
       <code>'schemaCharacterData'</code>
@@ -18209,9 +18162,9 @@
       <code>$event</code>
       <code>$event</code>
     </PossiblyNullOperand>
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>unknown_type</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
     <UndefinedFunction occurrences="2">
       <code>build_csv_header($col_list, $documents_title)</code>
       <code>build_csv_header($col_list, array())</code>
@@ -18238,11 +18191,13 @@
     <TooManyArguments occurrences="1">
       <code>db_error($result)</code>
     </TooManyArguments>
-    <UndefinedClass occurrences="3">
-      <code>DB</code>
+    <UndefinedClass occurrences="1">
       <code>$user</code>
-      <code>ugroup_id</code>
     </UndefinedClass>
+    <UndefinedDocblockClass occurrences="2">
+      <code>DB</code>
+      <code>ugroup_id</code>
+    </UndefinedDocblockClass>
   </file>
   <file src="src/www/project/export/access_logs_export.php">
     <UndefinedGlobalVariable occurrences="1">
@@ -18511,10 +18466,6 @@
       <code>null</code>
       <code>null</code>
     </NullableReturnStatement>
-    <UndefinedClass occurrences="2">
-      <code>the</code>
-      <code>the</code>
-    </UndefinedClass>
     <UndefinedConstant occurrences="17">
       <code>invalid_session_fault</code>
       <code>invalid_session_fault</code>
@@ -18534,6 +18485,10 @@
       <code>invalid_session_fault</code>
       <code>invalid_session_fault</code>
     </UndefinedConstant>
+    <UndefinedDocblockClass occurrences="2">
+      <code>the</code>
+      <code>the</code>
+    </UndefinedDocblockClass>
     <UndefinedPropertyFetch occurrences="1">
       <code>$server-&gt;wsdl</code>
     </UndefinedPropertyFetch>
@@ -18938,18 +18893,6 @@
       <code>is_object($art_field_fact)</code>
       <code>is_object($a)</code>
     </TypeDoesNotContainType>
-    <UndefinedClass occurrences="10">
-      <code>the</code>
-      <code>the</code>
-      <code>the</code>
-      <code>the</code>
-      <code>$extra_field_name-&gt;field_name</code>
-      <code>$extra_field_name-&gt;field_value</code>
-      <code>$extra_field_name-&gt;field_name</code>
-      <code>$extra_field_name-&gt;field_name</code>
-      <code>$extra_field_name-&gt;field_value</code>
-      <code>$extra_field_name-&gt;field_name</code>
-    </UndefinedClass>
     <UndefinedConstant occurrences="31">
       <code>invalid_session_fault</code>
       <code>invalid_session_fault</code>
@@ -18983,6 +18926,18 @@
       <code>invalid_session_fault</code>
       <code>invalid_session_fault</code>
     </UndefinedConstant>
+    <UndefinedDocblockClass occurrences="10">
+      <code>the</code>
+      <code>the</code>
+      <code>the</code>
+      <code>the</code>
+      <code>$extra_field_name-&gt;field_name</code>
+      <code>$extra_field_name-&gt;field_value</code>
+      <code>$extra_field_name-&gt;field_name</code>
+      <code>$extra_field_name-&gt;field_name</code>
+      <code>$extra_field_name-&gt;field_value</code>
+      <code>$extra_field_name-&gt;field_name</code>
+    </UndefinedDocblockClass>
     <UndefinedPropertyFetch occurrences="1">
       <code>$server-&gt;wsdl</code>
     </UndefinedPropertyFetch>
@@ -19060,9 +19015,9 @@
     <InvalidPropertyAssignmentValue occurrences="1">
       <code>$navbar_presenter</code>
     </InvalidPropertyAssignmentValue>
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>Tuleap\Theme\BurningParrot\Navbar\Presenter</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="src/www/themes/BurningParrot/HomePagePresenter.php">
     <InvalidClass occurrences="3">
@@ -19072,19 +19027,19 @@
     </InvalidClass>
   </file>
   <file src="src/www/themes/BurningParrot/JavascriptPresenter.php">
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>booean</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="src/www/themes/BurningParrot/Navbar/DropdownMenuItem/Presenter.php">
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>icon</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="src/www/themes/BurningParrot/Navbar/MenuItem/Presenter.php">
-    <UndefinedClass occurrences="1">
+    <UndefinedDocblockClass occurrences="1">
       <code>icon</code>
-    </UndefinedClass>
+    </UndefinedDocblockClass>
   </file>
   <file src="src/www/themes/FlamingParrot/NavBarPresenter.class.php">
     <UndefinedThisPropertyAssignment occurrences="3">
