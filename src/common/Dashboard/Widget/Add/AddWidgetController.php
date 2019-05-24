@@ -103,10 +103,17 @@ class AddWidgetController
                 );
             }
         } catch (Exception $exception) {
-            $GLOBALS['Response']->addFeedback(
-                Feedback::ERROR,
-                _('An error occurred while trying to add the widget to the dashboard')
-            );
+            if ($exception->getMessage()) {
+                $GLOBALS['Response']->addFeedback(
+                    Feedback::ERROR,
+                    $exception->getMessage()
+                );
+            } else {
+                $GLOBALS['Response']->addFeedback(
+                    Feedback::ERROR,
+                    _('An error occurred while trying to add the widget to the dashboard')
+                );
+            }
         }
         $this->redirectToDashboard($request, $dashboard_id, $dashboard_type);
     }
