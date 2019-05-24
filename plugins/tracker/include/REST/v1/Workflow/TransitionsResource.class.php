@@ -71,6 +71,10 @@ use Tuleap\Tracker\Workflow\PostAction\Update\Internal\SetIntValueUpdater;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\SetIntValueValidator;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\UnknownPostActionIdsException;
 use Tuleap\Tracker\Workflow\PostAction\Update\PostActionCollectionUpdater;
+use Tuleap\Tracker\Workflow\SimpleMode\SimpleWorkflowDao;
+use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
+use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionCreator;
+use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
 use Tuleap\Tracker\Workflow\SimpleMode\TransitionReplicator;
 use Tuleap\Tracker\Workflow\SimpleMode\TransitionReplicatorBuilder;
 use Tuleap\Tracker\Workflow\SimpleMode\TransitionRetriever;
@@ -134,8 +138,15 @@ class TransitionsResource extends AuthenticatedResource
             $this->getTransitionFactory(),
             new TransitionValidator(),
             $this->getTransactionExecutor(),
-            $this->getTransitionReplicator(),
-            $this->getTransitionRetriever()
+            new StateFactory(
+                $this->getTransitionFactory(),
+                new SimpleWorkflowDao()
+            ),
+            new TransitionCreator(
+                $this->getTransitionFactory(),
+                $this->getTransitionReplicator(),
+                new TransitionExtractor()
+            )
         );
 
         return $handler->handle($tracker_id, $from_id, $to_id);

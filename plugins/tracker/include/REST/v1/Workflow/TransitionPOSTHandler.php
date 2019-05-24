@@ -28,6 +28,9 @@ use Tuleap\REST\I18NRestException;
 use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\REST\UserManager;
 use Tuleap\Tracker\REST\WorkflowTransitionPOSTRepresentation;
+use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
+use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionCreator;
+use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
 use Tuleap\Tracker\Workflow\SimpleMode\TransitionReplicator;
 use Tuleap\Tracker\Workflow\SimpleMode\TransitionRetriever;
 use Tuleap\Tracker\Workflow\Transition\Condition\ConditionsUpdateException;
@@ -53,10 +56,16 @@ class TransitionPOSTHandler
     private $validator;
     /** @var DBTransactionExecutor */
     private $transaction_executor;
-    /** @var TransitionReplicator */
-    private $transition_replicator;
-    /** @var TransitionRetriever */
-    private $transition_retriever;
+
+    /**
+     * @var StateFactory
+     */
+    private $state_factory;
+
+    /**
+     * @var TransitionCreator
+     */
+    private $transition_creator;
 
     public function __construct(
         UserManager $user_manager,
@@ -67,8 +76,8 @@ class TransitionPOSTHandler
         \TransitionFactory $transition_factory,
         TransitionValidator $validator,
         DBTransactionExecutor $transaction_executor,
-        TransitionReplicator $conditions_replicator,
-        TransitionRetriever $transition_retriever
+        StateFactory $state_factory,
+        TransitionCreator $transition_creator
     ) {
         $this->user_manager               = $user_manager;
         $this->tracker_factory            = $tracker_factory;
@@ -78,8 +87,8 @@ class TransitionPOSTHandler
         $this->transition_factory         = $transition_factory;
         $this->validator                  = $validator;
         $this->transaction_executor       = $transaction_executor;
-        $this->transition_replicator      = $conditions_replicator;
-        $this->transition_retriever       = $transition_retriever;
+        $this->state_factory              = $state_factory;
+        $this->transition_creator         = $transition_creator;
     }
 
     /**
@@ -95,24 +104,22 @@ class TransitionPOSTHandler
         $this->project_status_verificator->checkProjectStatusAllowsAllUsersToAccessIt($tracker->getProject());
         $this->permissions_checker->checkCreate($current_user, $tracker);
 
-        $workflow       = $this->getWorkflowByTrackerId($tracker_id);
-        $params         = $this->validator->validateForCreation($workflow, $from_id, $to_id);
+        $workflow = $this->getWorkflowByTrackerId($tracker_id);
+        $params   = $this->validator->validateForCreation($workflow, $from_id, $to_id);
         try {
             $representation = null;
             $this->transaction_executor->execute(
                 function () use ($workflow, $params, &$representation) {
-                    $transition     = $this->transition_factory->createAndSaveTransition($workflow, $params);
+                    if ($workflow->isAdvanced()) {
+                        $transition = $this->transition_factory->createAndSaveTransition($workflow, $params);
+                    } else {
+                        $state      = $this->state_factory->getStateFromValueId($workflow, $params->getToId());
+                        $transition = $this->transition_creator->createTransitionInState($state, $workflow, $params);
+                    }
+
                     $representation = $this->buildRepresentation($transition);
 
-                    if ($workflow->isAdvanced()) {
-                        return;
-                    }
-                    try {
-                        $sibling_transition = $this->transition_retriever->getFirstSiblingTransition($transition);
-                        $this->transition_replicator->replicate($sibling_transition, $transition);
-                    } catch (NoSiblingTransitionException $e) {
-                        //Nothing to replicate, ignore
-                    }
+                    return;
                 }
             );
             return $representation;
