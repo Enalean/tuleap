@@ -53,6 +53,7 @@ use Tuleap\Tracker\Notifications\UsersToNotifyDao;
 use Tuleap\Tracker\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\RecentlyVisited\VisitRetriever;
+use Tuleap\Tracker\TrackerCrumbInContext;
 use Tuleap\Tracker\Webhook\Actions\AdminWebhooks;
 use Tuleap\Tracker\Webhook\WebhookDao;
 use Tuleap\Tracker\Webhook\WebhookFactory;
@@ -1292,12 +1293,13 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignoreFile
     {
         if ($project = ProjectManager::instance()->getProject($this->group_id)) {
             $hp = Codendi_HTMLPurifier::instance();
+
+            $tracker_crumb = EventManager::instance()->dispatch(new TrackerCrumbInContext($this, UserManager::instance()->getCurrentUser()));
+            assert($tracker_crumb instanceof TrackerCrumbInContext);
+
             $breadcrumbs = array_merge(
                 array(
-                    array(
-                        'title' => $this->name,
-                        'url'   => TRACKER_BASE_URL.'/?tracker='. $this->id
-                    )
+                    $tracker_crumb->getCrumb(TrackerCrumbInContext::TRACKER_CRUMB_IDENTIFIER)
                 ),
                 $breadcrumbs
             );

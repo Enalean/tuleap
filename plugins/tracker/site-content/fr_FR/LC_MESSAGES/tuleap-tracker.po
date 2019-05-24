@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Poedit 2.2.1\n"
 
 #, php-format
 msgid "%s has been created"
@@ -487,6 +487,9 @@ msgstr "Sauvegarder"
 msgid "Save webhook"
 msgstr "Sauvegarder le webhook"
 
+msgid "Shortcuts"
+msgstr "Raccourcis"
+
 msgid ""
 "Some selected values was not saved because they are used in another semantic."
 msgstr ""
@@ -657,7 +660,9 @@ msgstr ""
 
 #, php-format
 msgid "The field_id value '%u' is used in a field dependency in the tracker."
-msgstr "Le field_id '%u' est utilisé dans une dépendance entre champs dans le tracker."
+msgstr ""
+"Le field_id '%u' est utilisé dans une dépendance entre champs dans le "
+"tracker."
 
 #, php-format
 msgid "The file field '%s' cannot be compared to MYSELF()."

@@ -29,6 +29,7 @@ use Tuleap\AgileDashboard\FormElement\SystemEvent\SystemEvent_BURNUP_GENERATE;
 use Tuleap\AgileDashboard\Kanban\KanbanXmlImporter;
 use Tuleap\AgileDashboard\Kanban\RealTime\KanbanArtifactMessageBuilder;
 use Tuleap\AgileDashboard\Kanban\RealTime\KanbanArtifactMessageSender;
+use Tuleap\AgileDashboard\Kanban\TrackerCrumbBuilder;
 use Tuleap\AgileDashboard\Kanban\TrackerReport\TrackerReportDao;
 use Tuleap\AgileDashboard\Kanban\TrackerReport\TrackerReportUpdater;
 use Tuleap\AgileDashboard\KanbanJavascriptDependenciesProvider;
@@ -76,6 +77,7 @@ use Tuleap\Tracker\Artifact\ActionButtons\MoveArtifactActionAllowedByPluginRetri
 use Tuleap\Tracker\Semantic\SemanticStatusCanBeDeleted;
 use Tuleap\Tracker\Semantic\SemanticStatusFieldCanBeUpdated;
 use Tuleap\Tracker\Semantic\SemanticStatusGetDisabledValues;
+use Tuleap\Tracker\TrackerCrumbInContext;
 
 require_once __DIR__ . '/../../tracker/include/trackerPlugin.class.php';
 require_once __DIR__ . '/../../cardwall/include/cardwallPlugin.class.php';
@@ -178,6 +180,7 @@ class AgileDashboardPlugin extends Plugin
             $this->addHook(MoveArtifactParseFieldChangeNodes::NAME);
             $this->addHook(MoveArtifactActionAllowedByPluginRetriever::NAME);
             $this->addHook(\Tuleap\Request\CollectRoutesEvent::NAME);
+            $this->addHook(TrackerCrumbInContext::NAME);
         }
 
         if (defined('CARDWALL_BASE_URL')) {
@@ -448,10 +451,7 @@ class AgileDashboardPlugin extends Plugin
         );
 
         $permission_manager      = new AgileDashboard_PermissionsManager();
-        $kanban_factory          = new AgileDashboard_KanbanFactory(
-            TrackerFactory::instance(),
-            new AgileDashboard_KanbanDao()
-        );
+        $kanban_factory          = $this->getKanbanFactory();
 
         $widget_kanban_config_updater = new WidgetKanbanConfigUpdater(
             $widget_kanban_config_dao
@@ -858,14 +858,12 @@ class AgileDashboardPlugin extends Plugin
      * @see REST_PROJECT_ADDITIONAL_INFORMATIONS
      */
     public function rest_project_additional_informations($params) {
-        $planning_representation_class = '\\Tuleap\\AgileDashboard\\REST\\v1\\PlanningRepresentation';
-
         $root_planning = $this->getPlanningFactory()->getRootPlanning($this->getCurrentUser(), $params['project']->getGroupId());
         if (! $root_planning) {
             return;
         }
 
-        $planning_representation = new $planning_representation_class();
+        $planning_representation = new \Tuleap\AgileDashboard\REST\v1\PlanningRepresentation();
         $planning_representation->build($root_planning);
 
         $params['informations'][$this->getName()]['root_planning'] = $planning_representation;
@@ -1700,5 +1698,10 @@ class AgileDashboardPlugin extends Plugin
     public function routeLegacyController() : \Tuleap\AgileDashboard\AgileDashboardLegacyController
     {
         return new \Tuleap\AgileDashboard\AgileDashboardLegacyController();
+    }
+
+    public function trackerCrumbInContext(TrackerCrumbInContext $crumb)
+    {
+        (new \Tuleap\AgileDashboard\Kanban\BreadCrumbBuilder($this->getTrackerFactory(), $this->getKanbanFactory()))->addKanbanCrumb($crumb);
     }
 }
