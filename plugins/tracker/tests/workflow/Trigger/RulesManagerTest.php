@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Tracker\Workflow\WorkflowBackendLogger;
+use Tuleap\Tracker\Workflow\WorkflowRulesManagerLoopSafeGuard;
 
 require_once __DIR__.'/../../bootstrap.php';
 
@@ -32,6 +33,7 @@ abstract class Tracker_Workflow_Trigger_RulesManagerTest extends TuleapTestCase 
     public function setUp() {
         parent::setUp();
         $this->setUpGlobalsMockery();
+        $workflow_logger           = new WorkflowBackendLogger(Mockery::spy(BackendLogger::class), Logger::DEBUG);
         $this->target_value_id     = 789;
         $this->dao                 = \Mockery::spy(\Tracker_Workflow_Trigger_RulesDao::class);
         $this->formelement_factory = \Mockery::spy(\Tracker_FormElementFactory::class);
@@ -40,8 +42,9 @@ abstract class Tracker_Workflow_Trigger_RulesManagerTest extends TuleapTestCase 
             $this->dao,
             $this->formelement_factory,
             $this->rules_processor,
-            new WorkflowBackendLogger(Mockery::spy(BackendLogger::class), Logger::DEBUG),
-            \Mockery::spy(\Tracker_Workflow_Trigger_RulesBuilderFactory::class)
+            $workflow_logger,
+            \Mockery::spy(\Tracker_Workflow_Trigger_RulesBuilderFactory::class),
+            new WorkflowRulesManagerLoopSafeGuard($workflow_logger)
         );
     }
 }
@@ -51,6 +54,7 @@ class Tracker_Workflow_Trigger_RulesManager_duplicateTest extends Tracker_Workfl
     public function setUp() {
         parent::setUp();
         $this->setUpGlobalsMockery();
+        $workflow_logger = new WorkflowBackendLogger(Mockery::spy(BackendLogger::class), Logger::DEBUG);
 
         $this->manager = \Mockery::mock(
             \Tracker_Workflow_Trigger_RulesManager::class,
@@ -58,8 +62,9 @@ class Tracker_Workflow_Trigger_RulesManager_duplicateTest extends Tracker_Workfl
                 $this->dao,
                 $this->formelement_factory,
                 $this->rules_processor,
-                new WorkflowBackendLogger(Mockery::spy(BackendLogger::class), Logger::DEBUG),
-                mock('Tracker_Workflow_Trigger_RulesBuilderFactory')
+                $workflow_logger,
+                mock('Tracker_Workflow_Trigger_RulesBuilderFactory'),
+                new WorkflowRulesManagerLoopSafeGuard($workflow_logger)
             )
         )
             ->makePartial()
@@ -402,14 +407,16 @@ class Tracker_Workflow_Trigger_RulesManager_deleteByRuleIdTest extends Tracker_W
 class Tracker_Workflow_Trigger_RulesManager_processTriggersTest extends Tracker_Workflow_Trigger_RulesManagerTest {
 
     public function itProcessTheInvolvedTriggerRules() {
-        $manager = \Mockery::mock(
+        $workflow_logger = new WorkflowBackendLogger(Mockery::spy(BackendLogger::class), Logger::DEBUG);
+        $manager         = \Mockery::mock(
             \Tracker_Workflow_Trigger_RulesManager::class,
             array(
                 $this->dao,
                 $this->formelement_factory,
                 $this->rules_processor,
-                new WorkflowBackendLogger(Mockery::spy(BackendLogger::class), Logger::DEBUG),
-                mock('Tracker_Workflow_Trigger_RulesBuilderFactory')
+                $workflow_logger,
+                mock('Tracker_Workflow_Trigger_RulesBuilderFactory'),
+                new WorkflowRulesManagerLoopSafeGuard($workflow_logger)
             )
         )
             ->makePartial()

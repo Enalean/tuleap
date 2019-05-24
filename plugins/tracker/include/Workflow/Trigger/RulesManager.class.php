@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Tracker\Workflow\WorkflowBackendLogger;
+use Tuleap\Tracker\Workflow\WorkflowRulesManagerLoopSafeGuard;
 
 class Tracker_Workflow_Trigger_RulesManager {
     /** @var Tracker_Workflow_Trigger_RulesDao */
@@ -37,19 +38,25 @@ class Tracker_Workflow_Trigger_RulesManager {
      * @var Tracker_Workflow_Trigger_RulesBuilderFactory
      */
     private $trigger_builder;
+    /**
+     * @var WorkflowRulesManagerLoopSafeGuard
+     */
+    private $loop_safe_guard;
 
     public function __construct(
         Tracker_Workflow_Trigger_RulesDao $dao,
         Tracker_FormElementFactory $formelement_factory,
         Tracker_Workflow_Trigger_RulesProcessor $rules_processor,
         WorkflowBackendLogger $logger,
-        Tracker_Workflow_Trigger_RulesBuilderFactory $trigger_builder
+        Tracker_Workflow_Trigger_RulesBuilderFactory $trigger_builder,
+        WorkflowRulesManagerLoopSafeGuard $loop_safe_guard
     ) {
         $this->dao                 = $dao;
         $this->formelement_factory = $formelement_factory;
         $this->rules_processor     = $rules_processor;
         $this->logger              = $logger;
         $this->trigger_builder     = $trigger_builder;
+        $this->loop_safe_guard     = $loop_safe_guard;
     }
 
     /**
@@ -226,13 +233,24 @@ class Tracker_Workflow_Trigger_RulesManager {
         }
     }
 
-    public function processChildrenTriggers(Tracker_Artifact $parent) {
+    public function processChildrenTriggers(Tracker_Artifact $parent)
+    {
+        $this->loop_safe_guard->process(
+            $parent,
+            function () use ($parent) : void {
+                $this->processChildrenTriggersWithinLoopSafeGuard($parent);
+            }
+        );
+    }
+
+    private function processChildrenTriggersWithinLoopSafeGuard(Tracker_Artifact $parent) : void
+    {
         $this->logger->start(__METHOD__, $parent->getId());
 
         $dar_rules = $this->dao->searchForInvolvedRulesForChildrenLastChangeset($parent->getId());
         foreach ($dar_rules as $row) {
             $artifact = Tracker_ArtifactFactory::instance()->getInstanceFromRow($row);
-            $rule = $this->getRuleById($row['rule_id']);
+            $rule     = $this->getRuleById($row['rule_id']);
             $this->logger->debug("Found matching rule ". json_encode($rule->fetchFormattedForJson()));
             $this->rules_processor->process($artifact, $rule);
         }
