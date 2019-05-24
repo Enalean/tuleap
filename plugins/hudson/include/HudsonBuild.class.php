@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016-2018. All rights reserved
+ * Copyright (c) Enalean, 2016-Present. All rights reserved
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -18,7 +18,10 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
+use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\RequestFactoryInterface;
+
 class HudsonBuild {
 
     protected $hudson_build_url;
@@ -28,14 +31,22 @@ class HudsonBuild {
      */
     protected $dom_build;
     /**
-     * @var Http_Client
+     * @var ClientInterface
      */
     private $http_client;
     /**
+     * @var RequestFactoryInterface
+     */
+    private $request_factory;
+
+    /**
      * Construct an Hudson build from a build URL
      */
-    public function __construct($hudson_build_url, Http_Client $http_client)
-    {
+    public function __construct(
+        string $hudson_build_url,
+        ClientInterface $http_client,
+        RequestFactoryInterface $request_factory
+    ) {
         $parsed_url = parse_url($hudson_build_url);
         
         if ( ! $parsed_url || ! array_key_exists('scheme', $parsed_url) ) {
@@ -44,26 +55,25 @@ class HudsonBuild {
                 
         $this->hudson_build_url = $hudson_build_url . "/api/xml";
         $this->http_client      = $http_client;
+        $this->request_factory  = $request_factory;
 
         $this->dom_build = $this->_getXMLObject($this->hudson_build_url);
     }
     
-    protected function _getXMLObject($hudson_build_url)
+    protected function _getXMLObject(string $hudson_build_url)
     {
-        $this->http_client->setOption(CURLOPT_URL, $hudson_build_url);
-        $this->http_client->doRequest();
-
-        $xmlstr = $this->http_client->getLastResponse();
-        if ($xmlstr !== false) {
-            $xmlobj = simplexml_load_string($xmlstr);
-            if ($xmlobj !== false) {
-                return $xmlobj;
-            } else {
-                throw new HudsonJobURLFileException($GLOBALS['Language']->getText('plugin_hudson','job_url_file_error', array($hudson_build_url)));
-            }
-        } else {
+        $response = $this->http_client->sendRequest(
+            $this->request_factory->createRequest('GET', $hudson_build_url)
+        );
+        if ($response->getStatusCode() !== 200) {
             throw new HudsonJobURLFileNotFoundException($GLOBALS['Language']->getText('plugin_hudson','job_url_file_not_found', array($hudson_build_url)));
         }
+
+        $xmlobj = simplexml_load_string($response->getBody()->getContents());
+        if ($xmlobj !== false) {
+            return $xmlobj;
+        }
+        throw new HudsonJobURLFileException($GLOBALS['Language']->getText('plugin_hudson','job_url_file_error', array($hudson_build_url)));
     }
     
     function getDom() {

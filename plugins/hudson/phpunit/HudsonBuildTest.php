@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -19,12 +19,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\Hudson;
+
+use BaseLanguage;
+use Http\Mock\Client;
+use HudsonBuild;
+use HudsonJobURLMalformedException;
+use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Http\HTTPFactoryBuilder;
+use XML_Security;
 
-require_once __DIR__ . '/bootstrap.php';
-
-class HudsonBuildTest extends TestCase
+final class HudsonBuildTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -32,13 +39,12 @@ class HudsonBuildTest extends TestCase
     private $xml_security;
     private $http_client;
 
-    public function setUp() : void
+    protected function setUp() : void
     {
         parent::setUp();
 
         $this->xml_security = new XML_Security();
         $this->xml_security->enableExternalLoadOfEntities();
-        $this->http_client = \Mockery::spy(\Http_Client::class);
 
         $GLOBALS['Language'] = Mockery::spy(BaseLanguage::class);
     }
@@ -51,35 +57,35 @@ class HudsonBuildTest extends TestCase
         parent::tearDown();
     }
 
-    public function testMalformedURL()
+    public function testMalformedURL() : void
     {
         $this->expectException(HudsonJobURLMalformedException::class);
 
-        new HudsonBuild("toto", $this->http_client);
+        new HudsonBuild("toto", new Client(), HTTPFactoryBuilder::requestFactory());
     }
 
-    public function testMissingSchemeURL()
+    public function testMissingSchemeURL() : void
     {
         $this->expectException(HudsonJobURLMalformedException::class);
 
-        new HudsonBuild("code4:8080/hudson/jobs/tuleap", $this->http_client);
+        new HudsonBuild("code4:8080/hudson/jobs/tuleap", new Client(), HTTPFactoryBuilder::requestFactory());
     }
 
-    public function testMissingHostURL()
+    public function testMissingHostURL() : void
     {
         $this->expectException(HudsonJobURLMalformedException::class);
 
-        new HudsonBuild("http://", $this->http_client);
+        new HudsonBuild("http://", new Client(), HTTPFactoryBuilder::requestFactory());
     }
 
-    public function testSimpleJobBuild()
+    public function testSimpleJobBuild() : void
     {
         $build_file = __DIR__ . '/resources/jobbuild.xml';
         $xmldom     = simplexml_load_file($build_file);
 
         $build = Mockery::spy(HudsonBuild::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $build->shouldReceive('_getXMLObject')->andReturn($xmldom);
-        $build->__construct("http://myCIserver/jobs/myCIjob/lastBuild/", $this->http_client);
+        $build->__construct("http://myCIserver/jobs/myCIjob/lastBuild/", new Client(), HTTPFactoryBuilder::requestFactory());
 
         $this->assertEquals($build->getBuildStyle(), "freeStyleBuild");
         $this->assertFalse($build->isBuilding());

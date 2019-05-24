@@ -251,8 +251,11 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting
                 }
                 if ($dar && $dar->valid()) {
                     $row         = $dar->current();
-                    $http_client = new Http_Client();
-                    $build       = new HudsonBuild($row['job_url'] . '/' . $build_id . '/', $http_client);
+                    $build       = new HudsonBuild(
+                        $row['job_url'] . '/' . $build_id . '/',
+                        HttpClientFactory::createClient(),
+                        HTTPFactoryBuilder::requestFactory()
+                    );
                     $event->setOutput(
                         '<strong>' . $GLOBALS['Language']->getText('plugin_hudson', 'build_time') . '</strong> ' . $html_purifier->purify($build->getBuildTime()) . '<br />'.
                         '<strong>' . $GLOBALS['Language']->getText('plugin_hudson', 'status') . '</strong> ' . $html_purifier->purify($build->getResult())
@@ -336,8 +339,11 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting
                 if ($dar && $dar->valid()) {
                     $row = $dar->current();
                     try {
-                        $http_client         = new Http_Client();
-                        $build               = new HudsonBuild($row['job_url'] . '/' . $build_id . '/', $http_client);
+                        $build               = new HudsonBuild(
+                            $row['job_url'] . '/' . $build_id . '/',
+                            HttpClientFactory::createClient(),
+                            HTTPFactoryBuilder::requestFactory()
+                        );
                         $params['sparkline'] = $build->getStatusIcon();
                     } catch (Exception $e) {
                     }

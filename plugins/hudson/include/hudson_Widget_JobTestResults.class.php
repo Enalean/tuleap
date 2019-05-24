@@ -20,6 +20,8 @@
  */
 
 use Tuleap\Dashboard\User\UserDashboardController;
+use Tuleap\Http\HttpClientFactory;
+use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Hudson\HudsonJobBuilder;
 use Tuleap\Hudson\TestResultPieChart\TestResultsPieChartDisplayer;
 use Tuleap\Layout\CssAsset;
@@ -100,8 +102,11 @@ class hudson_Widget_JobTestResults extends HudsonJobWidget
                 try {
                     $used_job          = $jobs[$this->job_id];
                     $this->job         = $this->hudson_job_builder->getHudsonJob($used_job);
-                    $http_client       = new Http_Client();
-                    $this->test_result = new HudsonTestResult($this->job->getUrl(), $http_client);
+                    $this->test_result = new HudsonTestResult(
+                        $this->job->getUrl(),
+                        HttpClientFactory::createClient(),
+                        HTTPFactoryBuilder::requestFactory()
+                    );
                 } catch (Exception $e) {
                     $this->test_result = null;
                 }
