@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -1488,12 +1488,10 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         }
         $da = CodendiDataAccess::instance();
 
-        $artifact_ids  = $da->escapeIntImplode(explode(',', $matching_ids['id']));
         $changeset_ids = $da->escapeIntImplode(explode(',', $matching_ids['last_changeset_id']));
 
         $from   = " FROM tracker_artifact AS a INNER JOIN tracker_changeset AS c ON (c.artifact_id = a.id) ";
-        $where  = " WHERE a.id IN (". $artifact_ids .")
-                      AND c.id IN (". $changeset_ids .") ";
+        $where  = " WHERE c.id IN (". $changeset_ids .") ";
         if ($aggregates) {
             $group_by = '';
             $ordering = false;
