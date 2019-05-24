@@ -26,7 +26,9 @@ use ForgeConfig;
 use PFUser;
 use TemplateRendererFactory;
 use Tracker;
+use Tracker_Artifact;
 use Tracker_FormElementFactory;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 
 class RichTextareaProvider
 {
@@ -38,17 +40,24 @@ class RichTextareaProvider
      * @var TemplateRendererFactory
      */
     private $template_renderer_factory;
+    /**
+     * @var FrozenFieldDetector
+     */
+    private $frozen_field_detector;
 
     public function __construct(
         Tracker_FormElementFactory $form_element_factory,
-        TemplateRendererFactory $template_renderer_factory
+        TemplateRendererFactory $template_renderer_factory,
+        FrozenFieldDetector $frozen_field_detector
     ) {
         $this->form_element_factory      = $form_element_factory;
         $this->template_renderer_factory = $template_renderer_factory;
+        $this->frozen_field_detector     = $frozen_field_detector;
     }
 
     public function getTextarea(
         Tracker $tracker,
+        ?Tracker_Artifact $artifact,
         PFUser $user,
         string $id,
         string $name,
@@ -62,21 +71,27 @@ class RichTextareaProvider
 
         $fields = $this->form_element_factory->getUsedFileFields($tracker);
         foreach ($fields as $field) {
-            if ($field->userCanUpdate($user)) {
-                $data_attributes[] = [
-                    'name'  => 'upload-url',
-                    'value' => '/api/v1/tracker_fields/' . (int) $field->getId() . '/files'
-                ];
-                $data_attributes[] = [
-                    'name'  => 'upload-field-name',
-                    'value' => 'artifact[' . (int) $field->getId() . '][][tus-uploaded-id]'
-                ];
-                $data_attributes[] = [
-                    'name'  => 'upload-max-size',
-                    'value' => ForgeConfig::get('sys_max_size_upload')
-                ];
-                break;
+            if (! $field->userCanUpdate($user)) {
+                continue;
             }
+
+            if ($artifact !== null && $this->frozen_field_detector->isFieldFrozen($artifact, $field)) {
+                continue;
+            }
+
+            $data_attributes[] = [
+                'name'  => 'upload-url',
+                'value' => '/api/v1/tracker_fields/' . (int) $field->getId() . '/files'
+            ];
+            $data_attributes[] = [
+                'name'  => 'upload-field-name',
+                'value' => 'artifact[' . (int) $field->getId() . '][][tus-uploaded-id]'
+            ];
+            $data_attributes[] = [
+                'name'  => 'upload-max-size',
+                'value' => ForgeConfig::get('sys_max_size_upload')
+            ];
+            break;
         }
 
         return $renderer->renderToString(

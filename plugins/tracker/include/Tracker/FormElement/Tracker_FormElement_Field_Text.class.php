@@ -20,6 +20,10 @@
  */
 
 use Tuleap\Tracker\Artifact\RichTextareaProvider;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
+use Tuleap\Tracker\Workflow\SimpleMode\TransitionRetriever;
 
 class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum {
 
@@ -202,7 +206,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
             ];
         }
 
-        return $this->getRichTextarea($data_attributes, $format, $value['content']);
+        return $this->getRichTextarea(null, $data_attributes, $format, $value['content']);
     }
 
      /**
@@ -256,13 +260,13 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
             $content = $value->getText();
         }
 
-        return $this->getRichTextarea([], $format, $content);
+        return $this->getRichTextarea($artifact, [], $format, $content);
     }
 
     /**
      * @return string
      */
-    private function getRichTextarea(array $data_attributes, string $format, string $content)
+    private function getRichTextarea(?Tracker_Artifact $artifact, array $data_attributes, string $format, string $content)
     {
         $tracker = $this->getTracker();
         if (! $tracker) {
@@ -273,7 +277,8 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
 
         $rich_textarea_provider = new RichTextareaProvider(
             Tracker_FormElementFactory::instance(),
-            TemplateRendererFactory::build()
+            TemplateRendererFactory::build(),
+            $this->getFrozenFieldDetector()
         );
 
         $html = '<input type="hidden"
@@ -283,6 +288,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
 
         $html .= $rich_textarea_provider->getTextarea(
             $tracker,
+            $artifact,
             $this->getCurrentUser(),
             'field_' . $this->id,
             'artifact[' . $this->id . '][content]',
