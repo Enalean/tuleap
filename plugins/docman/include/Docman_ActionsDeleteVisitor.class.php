@@ -21,6 +21,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Docman\DeleteFailedException;
 use Tuleap\Docman\Item\ItemVisitor;
 use Tuleap\PHPWiki\WikiPage;
 
@@ -32,15 +33,16 @@ class Docman_ActionsDeleteVisitor implements ItemVisitor
     public function __construct() {
         //More coherent to have only one delete date for a whole hierarchy.
         $this->deleteDate = time();
-        $this->response   = $GLOBALS['Response'];
     }
-    
+
     /**
-     * 
+     *
      * Enter description here ...
      *
      * @param Docman_Folder $item
-     * @param $params
+     * @param               $params
+     *
+     * @throws DeleteFailedException
      */
     public function visitFolder(Docman_Folder $item, $params = array()) {
         //delete all sub items before
@@ -64,30 +66,35 @@ class Docman_ActionsDeleteVisitor implements ItemVisitor
         }
         
         if ($one_item_has_not_been_deleted) {
-            $this->response->addFeedback('error', $GLOBALS['Language']->getText('plugin_docman', 'error_delete_notempty', $item->getTitle()));
-            return false;
+            throw DeleteFailedException::fromFolder($item);
         } else {
             //Mark the folder as deleted;
             $params['parent'] = $parent;
             return $this->_deleteItem($item, $params);
         }
     }
-    
+
+    /**
+     * @throws DeleteFailedException
+     */
     public function visitDocument($item, $params = array()) {
         //Mark the document as deleted
         return $this->_deleteItem($item, $params);
     }
 
     /**
-    * Handles wiki page deletion with two different behaviors:
-    * 1- User decides to keep wiki page in wiki service. In this case, we restrict access to that wiki page to wiki admins only.
-    * 2- User decides to cascade deletion of the wiki page to wiki service too. In that case, we completely remove the wiki page from wiki service.
-    *
-    * @param Docman_Wiki $item
-    * @param array $params params.
-    *
-    * @return bool $deleted. True if there is no error.  False otherwise.
-    */
+     * Handles wiki page deletion with two different behaviors:
+     * 1- User decides to keep wiki page in wiki service. In this case, we restrict access to that wiki page to wiki
+     * admins only.
+     * 2- User decides to cascade deletion of the wiki page to wiki service too. In that case, we completely remove the
+     * wiki page from wiki service.
+     *
+     * @param Docman_Wiki $item
+     * @param array       $params params.
+     *
+     * @return bool $deleted. True if there is no error.  False otherwise.
+     * @throws DeleteFailedException
+     */
     public function visitWiki(Docman_Wiki $item, $params = array()) {
         // delete the document.
         $deleted = $this->visitDocument($item, $params);
@@ -114,10 +121,8 @@ class Docman_ActionsDeleteVisitor implements ItemVisitor
 
             } else { // User have choosen to delete wiki page from wiki service too
                 $dIF = $this->_getItemFactory();
-                if ($dIF->deleteWikiPage($item->getPageName(), $item->getGroupId())) {
-                    $this->response->addFeedback('info', $GLOBALS['Language']->getText('plugin_docman', 'docman_wiki_delete_wiki_page_success'));
-                } else {
-                    $this->response->addFeedback('error', $GLOBALS['Language']->getText('plugin_docman', 'docman_wiki_delete_wiki_page_failed'));
+                if (! $dIF->deleteWikiPage($item->getPageName(), $item->getGroupId())) {
+                    throw DeleteFailedException::fromWiki();
                 }
             }
         }
@@ -128,6 +133,9 @@ class Docman_ActionsDeleteVisitor implements ItemVisitor
         return $this->visitDocument($item, $params);
     }
 
+    /**
+     * @throws DeleteFailedException
+     */
     public function visitFile(Docman_File $item, $params = array()) {
         if ($this->getPermissionManager($item->getGroupId())->userCanWrite($params['user'], $item->getId())) {
             if (isset($params['version']) && $params['version'] !== false) {
@@ -136,15 +144,20 @@ class Docman_ActionsDeleteVisitor implements ItemVisitor
                 return $this->_deleteFile($item, $params);
             }
         } else {
-            $this->response->addFeedback('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_delete_item', $item->getTitle()));
-            return false;
+            throw DeleteFailedException::fromFile($item);
         }
     }
 
+    /**
+     * @throws DeleteFailedException
+     */
     public function visitEmbeddedFile(Docman_EmbeddedFile $item, $params = array()) {
         return $this->visitFile($item, $params);
     }
 
+    /**
+     * @throws DeleteFailedException
+     */
     public function visitEmpty(Docman_Empty $item, $params = array()) {
         return $this->visitDocument($item, $params);
     }
@@ -168,24 +181,27 @@ class Docman_ActionsDeleteVisitor implements ItemVisitor
         }
     }
 
+    /**
+     * @throws DeleteFailedException
+     */
     function _deleteItem($item, $params) {
        if ($this->getPermissionManager($item->getGroupId())->userCanWrite($params['user'], $item->getId())) {
             $dIF = $this->_getItemFactory();
             $dIF->delete($item);
             return true;
         } else {
-            $this->response->addFeedback('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_delete_item', $item->getTitle()));
-            return false;
+           throw DeleteFailedException::fromItem($item);
         }
     }
 
     /**
      * Delete a file (all versions of the file)
-     * 
+     *
      * @param Docman_File $item
      * @param Array       $params
-     * 
+     *
      * @return bool
+     * @throws DeleteFailedException
      */
     function _deleteFile(Docman_File $item, $params) {
         // Delete all versions before

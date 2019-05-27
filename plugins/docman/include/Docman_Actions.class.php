@@ -21,6 +21,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Docman\DeleteFailedException;
+
 require_once('service.php');
 require_once('www/project/admin/permissions.php');
 require_once('www/news/news_utils.php');
@@ -1317,8 +1319,10 @@ class Docman_Actions extends Actions {
             if ($itemFactory->deleteSubTree($parentItem, $user, $cascade)) {
                 $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_item_deleted'));
             }
+        } catch (DeleteFailedException $e) {
+            $this->_controler->feedback->log(Feedback::ERROR, $e->getI18NExceptionMessage());
         } catch (Exception $e) {
-            $this->_controler->feedback->log('error', $e->getMessage());
+            $this->_controler->feedback->log(Feedback::ERROR, $e->getMessage());
         }
         $this->event_manager->processEvent('send_notifications', array());
     }
@@ -1352,8 +1356,12 @@ class Docman_Actions extends Actions {
                     if ($version !== false) {
                         $user    = $this->_controler->getUser();
                         $deletor = $this->_getActionsDeleteVisitor();
-                        if ($item->accept($deletor, array('user' => $user, 'version' => $version))) {
-                            $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_item_version_deleted', array($version->getNumber(), $version->getLabel())));
+                        try {
+                            if ($item->accept($deletor, array('user' => $user, 'version' => $version))) {
+                                $this->_controler->feedback->log(Feedback::INFO, $GLOBALS['Language']->getText('plugin_docman', 'info_item_version_deleted', array($version->getNumber(), $version->getLabel())));
+                            }
+                        } catch (DeleteFailedException $exception) {
+                            $this->_controler->feedback->log(Feedback::ERROR, $exception->getI18NExceptionMessage());
                         }
                     } else {
                         $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_item_not_deleted_unknown_version'));
@@ -2313,25 +2321,29 @@ class Docman_Actions extends Actions {
 
     private function addMonitorinUgroups($cascade, Docman_Item $item, array $ugroups_to_add)
     {
+        /**
+         * @var Docman_Controller $controller
+         */
+        $controller = $this->_controler;
         $ugroups      = array();
         $ugroups_name = array();
         foreach ($ugroups_to_add as $ugroup) {
-            if ($this->_controler->notificationsManager->ugroupExists($ugroup->getId(), $item->getId())) {
-                $this->_controler->feedback->log('warning',
+            if ($controller->notificationsManager->ugroupExists($ugroup->getId(), $item->getId())) {
+                $controller->feedback->log(Feedback::WARN,
                     $GLOBALS['Language']->getText('plugin_docman', 'notifications_already_exists_ugroup',
                         array($ugroup->getTranslatedName())));
                 continue;
             }
-            if (! $this->_controler->notificationsManager->addUgroup($ugroup->getId(), $item->getId())) {
-                $this->_controler->feedback->log('error',
+            if (! $controller->notificationsManager->addUgroup($ugroup->getId(), $item->getId())) {
+                $controller->feedback->log(Feedback::ERROR,
                     $GLOBALS['Language']->getText('plugin_docman', 'notifications_not_added_ugroup',
                         array($ugroup->getTranslatedName())));
                 continue;
             }
-            if ($cascade && ! $this->_controler->notificationsManager->addUgroup($ugroup->getId(),
+            if ($cascade && ! $controller->notificationsManager->addUgroup($ugroup->getId(),
                     $item->getId(), PLUGIN_DOCMAN_NOTIFICATION_CASCADE)
             ) {
-                $this->_controler->feedback->log('error',
+                $controller->feedback->log(Feedback::ERROR,
                     $GLOBALS['Language']->getText('plugin_docman', 'notifications_cascade_not_added_ugroup',
                         array($ugroup->getTranslatedName())));
             }
@@ -2340,7 +2352,7 @@ class Docman_Actions extends Actions {
         }
 
         if (! empty($ugroups)) {
-            $this->_controler->feedback->log('info',
+            $controller->feedback->log(Feedback::INFO,
                 $GLOBALS['Language']->getText('plugin_docman', 'notifications_added_ugroup', array(implode(',', $ugroups_name))));
             $this->raiseMonitoringUgroups($item, $ugroups, 'plugin_docman_add_monitoring');
         }

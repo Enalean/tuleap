@@ -22,6 +22,7 @@
  */
 
 use Tuleap\Docman\CannotInstantiateItemWeHaveJustCreatedInDBException;
+use Tuleap\Docman\DeleteFailedException;
 use Tuleap\Docman\Notifications\UgroupsToNotifyDao;
 use Tuleap\Docman\Notifications\UsersToNotifyDao;
 use Tuleap\PHPWiki\WikiPage;
@@ -1362,10 +1363,14 @@ class Docman_ItemFactory
             if($subItemsWritable) {
                 $rootChildren = $this->getChildrenFromParent($root);
                 $user = $this->_getUserManager()->getCurrentUser();
-                foreach ($rootChildren as $children) {
-                    if (!$this->deleteSubTree($children, $user, true)) {
-                        $deleteStatus = false;
+                try {
+                    foreach ($rootChildren as $children) {
+                        if (!$this->deleteSubTree($children, $user, true)) {
+                            $deleteStatus = false;
+                        }
                     }
+                } catch (DeleteFailedException $exception) {
+                    $GLOBALS['Response']->feedback->log(Feedback::ERROR, $exception->getI18NExceptionMessage());
                 }
             } else {
                 $deleteStatus = false;
@@ -1380,10 +1385,11 @@ class Docman_ItemFactory
      * It's the recommended and official way to delete a file in the docman
      *
      * @param Docman_Item $item        Item to delete
-     * @param PFUser        $user        User who performs the delete
-     * @param bool $cascadeWiki If there are wiki documents, do we delete corresponding in wiki page too ?
+     * @param PFUser      $user        User who performs the delete
+     * @param bool        $cascadeWiki If there are wiki documents, do we delete corresponding in wiki page too ?
      *
      * @return bool success
+     * @throws DeleteFailedException
      */
     public function deleteSubTree(Docman_Item $item, PFUser $user, $cascadeWiki) {
         if($item && !$this->isRoot($item)) {
@@ -1396,11 +1402,14 @@ class Docman_ItemFactory
                 if ($itemSubTree) {
                     $deletor = new Docman_ActionsDeleteVisitor();
                     if ($itemSubTree->accept($deletor, array('user'  => $user, 'cascadeWikiPageDeletion' => $cascadeWiki))) {
+                        if ($cascadeWiki) {
+                            $GLOBALS['Response']->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('plugin_docman', 'docman_wiki_delete_wiki_page_success'));
+                        }
                         return true;
                     }
                 }
             } else {
-                throw new RuntimeException($GLOBALS['Language']->getText('plugin_docman', 'error_item_not_deleted_no_w'));
+                throw DeleteFailedException::missingPermissionSubItems();
             }
         }
         return false;

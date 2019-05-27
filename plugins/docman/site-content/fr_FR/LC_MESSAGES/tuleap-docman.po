@@ -198,9 +198,6 @@ msgstr "Utilisateur, groupe"
 msgid "Validate"
 msgstr "Valider"
 
-msgid "You are not allowed to delete this item."
-msgstr "Vous n'êtes pas autorisé à supprimer cet élément."
-
 #, php-format
 msgid "You are not allowed to write on folder with id '%d'"
 msgstr "Vous n'êtes pas autorisés à écrire dans le dossier ayant pour id '%d'"
