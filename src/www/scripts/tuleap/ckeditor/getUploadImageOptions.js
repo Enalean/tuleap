@@ -56,6 +56,8 @@ function initiateUploadImage(ckeditor_instance, options, form, field_name, max_s
         return;
     }
 
+    let nb_being_uploaded = 0;
+    const submit_buttons = form.querySelectorAll(".hidden-artifact-submit-button button");
     ckeditor_instance.on("fileUploadRequest", fileUploadRequest, null, null, 4);
     addInstance(form, ckeditor_instance, field_name);
 
@@ -100,14 +102,18 @@ function initiateUploadImage(ckeditor_instance, options, form, field_name, max_s
                 },
                 onSuccess: () => {
                     onSuccess(loader, id, download_href);
+                    enableFormSubmit();
                 },
                 onError: ({ originalRequest }) => {
                     onError(loader, originalRequest);
+                    enableFormSubmit();
                 }
             });
 
+            disableFormSubmit();
             uploader.start();
         } catch (exception) {
+            enableFormSubmit();
             loader.message = (await getGettextProvider(options)).gettext(
                 "Unable to upload the file"
             );
@@ -129,6 +135,30 @@ function initiateUploadImage(ckeditor_instance, options, form, field_name, max_s
                 loader.changeStatus("error");
             }
         }
+    }
+
+    function preventFormSubmissionListener(event) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+
+    function disableFormSubmit() {
+        ++nb_being_uploaded;
+        for (const button of submit_buttons) {
+            button.disabled = true;
+        }
+        form.addEventListener("submit", preventFormSubmissionListener);
+    }
+
+    function enableFormSubmit() {
+        --nb_being_uploaded;
+        if (nb_being_uploaded > 0) {
+            return;
+        }
+        for (const button of submit_buttons) {
+            button.disabled = false;
+        }
+        form.removeEventListener("submit", preventFormSubmissionListener);
     }
 
     function onSuccess(loader, id, download_href) {
