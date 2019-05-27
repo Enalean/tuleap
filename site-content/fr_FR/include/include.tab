@@ -349,4 +349,3 @@ common_mvc_view	warn	** WARNING !! ** Please confirm you want to $1
 
 include_browser	ie_deprecated	Veuillez enlever le mode compatibilité d'Internet Explorer, mettre à jour à une version plus récente (IE11 minimum) ou utiliser une alternative (Firefox, Chrome, etc).
 include_browser	ie_deprecated_button	Ok, j'ai compris. Me le rappeler plus tard.
-include_browser	ie_deprecated_warning_disabled	Nous vous importunerons plus tard à propos de la dépréciation de IE < 11.
