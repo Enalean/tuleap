@@ -20,6 +20,7 @@
  */
 
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
+use Tuleap\Tracker\Workflow\SimpleMode\SimpleWorkflowDao;
 use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
 use Tuleap\Tracker\Workflow\WorkflowBackendLogger;
 use Tuleap\Tracker\Workflow\WorkflowRulesManagerLoopSafeGuard;
@@ -118,7 +119,10 @@ class WorkflowFactory //phpcs:ignoreFile
                 $trigger_rules_manager,
                 $logger,
                 new FrozenFieldsDao(),
-                new StateFactory(TransitionFactory::instance())
+                new StateFactory(
+                    TransitionFactory::instance(),
+                    new SimpleWorkflowDao()
+                )
             );
         }
         return self::$_instance;

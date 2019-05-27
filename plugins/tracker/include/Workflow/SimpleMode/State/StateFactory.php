@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\Workflow\SimpleMode\State;
 use Project;
 use SimpleXMLElement;
 use TransitionFactory;
+use Tuleap\Tracker\Workflow\SimpleMode\SimpleWorkflowDao;
 use Workflow;
 
 class StateFactory
@@ -34,9 +35,15 @@ class StateFactory
      */
     private $transition_factory;
 
-    public function __construct(TransitionFactory $transition_factory)
+    /**
+     * @var SimpleWorkflowDao
+     */
+    private $simple_workflow_dao;
+
+    public function __construct(TransitionFactory $transition_factory, SimpleWorkflowDao $simple_workflow_dao)
     {
         $this->transition_factory = $transition_factory;
+        $this->simple_workflow_dao = $simple_workflow_dao;
     }
 
     /**
@@ -50,6 +57,19 @@ class StateFactory
         );
 
         return new State($value_id, $transitions);
+    }
+
+    /**
+     * @return State[]
+     */
+    public function getAllStatesForWorkflow(Workflow $workflow) : array
+    {
+        $states = [];
+        foreach ($this->simple_workflow_dao->searchStatesForWorkflow((int) $workflow->getId()) as $state_sql) {
+            $states[] = $this->getStateFromValueId($workflow, $state_sql['to_id']);
+        }
+
+        return $states;
     }
 
     /**
