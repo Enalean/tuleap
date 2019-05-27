@@ -657,7 +657,9 @@ msgstr ""
 
 #, php-format
 msgid "The field_id value '%u' is used in a field dependency in the tracker."
-msgstr "Le field_id '%u' est utilisé dans une dépendance entre champs dans le tracker."
+msgstr ""
+"Le field_id '%u' est utilisé dans une dépendance entre champs dans le "
+"tracker."
 
 #, php-format
 msgid "The file field '%s' cannot be compared to MYSELF()."
@@ -1128,6 +1130,10 @@ msgid ""
 msgstr ""
 "Vous pouvez définir plusieurs webhooks qui seront envoyés après chaque "
 "création et édition d'artéfact."
+
+msgid "You can drag 'n drop or paste image directly in the editor."
+msgstr ""
+"Vous pouvez glisser-déposer ou coller une image directement dans l'éditeur."
 
 msgid ""
 "You can use variables to customize the sender field. The available variables "
