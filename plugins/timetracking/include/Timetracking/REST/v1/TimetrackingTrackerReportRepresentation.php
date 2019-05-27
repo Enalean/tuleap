@@ -27,7 +27,7 @@ declare(strict_types=1);
 namespace Tuleap\Timetracking\REST\v1;
 
 use Tracker;
-use Tuleap\Project\REST\ProjectReference;
+use Tuleap\Project\REST\MinimalProjectRepresentation;
 use Tuleap\REST\JsonCast;
 
 class TimetrackingTrackerReportRepresentation
@@ -48,7 +48,7 @@ class TimetrackingTrackerReportRepresentation
     public $label;
 
     /**
-     * @var ProjectReference
+     * @var MinimalProjectRepresentation
      */
     public $project;
 
@@ -63,8 +63,8 @@ class TimetrackingTrackerReportRepresentation
         $this->uri   = $tracker->getUri();
         $this->label = $tracker->getName();
 
-        $project_reference = new ProjectReference();
-        $project_reference->build($tracker->getProject());
+        $project_reference = new MinimalProjectRepresentation();
+        $project_reference->buildMinimal($tracker->getProject());
         $this->project = $project_reference;
 
         $this->minutes = JsonCast::toInt($minutes);

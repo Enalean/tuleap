@@ -160,6 +160,17 @@
     margin: 0 5px 0 0;
 }
 
+.timetracking-widget-artifact-cell {
+    max-width: 400px;
+}
+
+.timetracking-widget-artifact-title {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 .timetracking-loader {
     height: 100px;
     background: url('/themes/BurningParrot/images/spinner.gif') no-repeat center center;

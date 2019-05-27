@@ -22,12 +22,14 @@
   -->
 <template>
     <tr>
-        <td>
+        <td class="timetracking-widget-artifact-cell">
             <widget-link-to-artifact
                 v-bind:artifact="artifact"
             />
         </td>
-        <td>{{ project.label }}</td>
+        <td>
+            <a v-bind:href="/projects/ + project.shortname">{{ project.label }}</a>
+        </td>
         <td class="tlp-table-cell-numeric">
             {{ get_formatted_aggregated_time(timeData) }}
         </td>
