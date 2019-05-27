@@ -92,29 +92,13 @@ class HardcodedMetdataObsolescenceDateCheckerTest extends TestCase
         $this->addToAssertionCount(1);
     }
 
-    public function testCheckObsolescenceDateUsageThrowsExceptionWhenTheDateIsNull(): void
-    {
-        $checker = new HardcodedMetdataObsolescenceDateChecker($this->docman_settings_bo);
-
-        $this->docman_settings_bo->shouldReceive('getMetadataUsage')
-                                 ->never();
-
-        $this->expectException(ObsolescenceDateNullException::class);
-
-        $checker->checkObsolescenceDateUsage(null, PLUGIN_DOCMAN_ITEM_TYPE_EMPTY);
-
-        $this->addToAssertionCount(1);
-    }
-
-    public function testCheckObsolescenceDateUsageThrowsExceptionIfTheMetadataIsUsedAndObsolescenceDateIs0(): void
+    public function testCheckObsolescenceDateUsageIsOkIfTheMetadataIsUsedAndObsolescenceDateIs0(): void
     {
         $checker = new HardcodedMetdataObsolescenceDateChecker($this->docman_settings_bo);
 
         $this->docman_settings_bo->shouldReceive('getMetadataUsage')
                                  ->with('obsolescence_date')
                                  ->andReturn('1');
-
-        $this->expectException(ObsolescenceDateMissingParameterException::class);
 
         $checker->checkObsolescenceDateUsage('0', PLUGIN_DOCMAN_ITEM_TYPE_EMPTY);
     }

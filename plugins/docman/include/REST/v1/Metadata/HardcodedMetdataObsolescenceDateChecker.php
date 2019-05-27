@@ -46,6 +46,10 @@ class HardcodedMetdataObsolescenceDateChecker
             return;
         }
 
+        if ($obsolescence_date === 0) {
+            return;
+        }
+
         if (($current_date > $obsolescence_date) && $this->isObsolescenceMetadataUsed()) {
             throw new InvalidDateComparisonException();
         }
@@ -53,8 +57,6 @@ class HardcodedMetdataObsolescenceDateChecker
 
     /**
      * @throws ObsolescenceDateDisabledException
-     * @throws ObsolescenceDateMissingParameterException
-     * @throws ObsolescenceDateNullException
      */
     public function checkObsolescenceDateUsage(?string $date, int $item_type): void
     {
@@ -62,15 +64,11 @@ class HardcodedMetdataObsolescenceDateChecker
             return;
         }
 
-        if ($date === null) {
-            throw new ObsolescenceDateNullException();
+        if ($date === ItemRepresentation::OBSOLESCENCE_DATE_NONE) {
+            return;
         }
 
-        if ($date === ItemRepresentation::OBSOLESCENCE_DATE_NONE && $this->isObsolescenceMetadataUsed()) {
-            throw new ObsolescenceDateMissingParameterException();
-        }
-
-        if ($date !== ItemRepresentation::OBSOLESCENCE_DATE_NONE && !$this->isObsolescenceMetadataUsed()) {
+        if (!$this->isObsolescenceMetadataUsed()) {
             throw new ObsolescenceDateDisabledException();
         }
     }

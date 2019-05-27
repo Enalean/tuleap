@@ -259,6 +259,9 @@ msgstr "Notifications"
 msgid "OK, got it"
 msgstr "OK, compris"
 
+msgid "Obsolescence Date"
+msgstr "Date d'obsolescence"
+
 msgid "Obsolescence date"
 msgstr "Date d'obsolescence"
 
@@ -289,6 +292,9 @@ msgstr "Propriétaire"
 msgid "Parent folders are not displayed to not clutter the interface"
 msgstr ""
 "Les dossiers parents ne sont pas affichés pour ne pas encombrer l'interface"
+
+msgid "Permanent"
+msgstr "Permanent"
 
 msgid "Permissions"
 msgstr "Permissions"
@@ -428,6 +434,9 @@ msgstr "Erreur de téléversement"
 
 msgid "Uploading documents"
 msgstr "Documents en cours de téléversement"
+
+msgid "Validity"
+msgstr "Validité"
 
 msgid "Version name"
 msgstr "Nom de version"

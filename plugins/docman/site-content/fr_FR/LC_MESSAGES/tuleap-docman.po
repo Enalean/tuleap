@@ -12,10 +12,6 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 2.2.1\n"
 
-msgid "\"obsolescence_date\" parameter is required to create a new document."
-msgstr ""
-"Le paramètre \"obsolescence_date\" est requis pour créer un nouveau document"
-
 #, php-format
 msgid ""
 "%s does not have an approval table. The parameter \"approval_table_action\" "
@@ -140,9 +136,6 @@ msgstr "Basculer sur la nouvelle interface utilisateur"
 
 msgid "The \"Status\" property is not activated for this item."
 msgstr "La propriété \"Status\" n'est pas activée pour cette ressource."
-
-msgid "The date cannot be null"
-msgstr "La date ne peut pas être null."
 
 msgid "The date format is incorrect. The format must be \"YYYY-MM-DD\""
 msgstr ""
