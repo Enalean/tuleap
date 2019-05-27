@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Workflow\SimpleMode\State;
 
+use Project;
+use SimpleXMLElement;
 use TransitionFactory;
 use Workflow;
 
@@ -48,5 +50,18 @@ class StateFactory
         );
 
         return new State($value_id, $transitions);
+    }
+
+    /**
+     * @return State
+     */
+    public function getInstanceFromXML(SimpleXMLElement $state_xml, array &$xml_mapping, Project $project) : State
+    {
+        $to_value = $xml_mapping[(string)$state_xml->to_id['REF']];
+
+        return new State(
+            (int) $to_value->getId(),
+            $this->transition_factory->getInstancesFromStateXML($state_xml, $xml_mapping, $project, $to_value)
+        );
     }
 }

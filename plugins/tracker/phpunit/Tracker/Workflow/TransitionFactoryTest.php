@@ -27,6 +27,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 use Tracker_FormElement_Field_List;
+use Tracker_FormElement_Field_List_Bind_StaticValue;
 use TransitionFactory;
 use Workflow_Transition_ConditionFactory;
 use Workflow_Transition_ConditionsCollection;
@@ -140,7 +141,12 @@ class TransitionFactoryTest extends TestCase
             ->andReturn(new Workflow_Transition_ConditionsCollection())
             ->times(2);
 
-        $transitions = $this->factory->getInstancesFromStateXML($xml, $this->xml_mapping, $this->project);
+        $transitions = $this->factory->getInstancesFromStateXML(
+            $xml,
+            $this->xml_mapping,
+            $this->project,
+            $this->to_value
+        );
 
         $this->assertCount(2, $transitions);
     }

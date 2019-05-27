@@ -31,6 +31,7 @@ use PHPUnit\Framework\TestCase;
 use Project;
 use SimpleXMLElement;
 use Tracker;
+use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Tracker_FormElementFactory;
 use Tracker_Workflow_Trigger_RulesManager;
 use TrackerFactory;
@@ -38,6 +39,7 @@ use Transition;
 use Transition_PostAction_Field_Date;
 use TransitionFactory;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
+use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
 use Workflow_Transition_ConditionFactory;
 use Workflow_Transition_ConditionsCollection;
 use WorkflowFactory;
@@ -78,11 +80,17 @@ class WorkflowFactoryTest extends TestCase
         $tracker = Mockery::mock(Tracker::class);
         $tracker->shouldReceive('getId')->andReturn(101);
 
+        $static_value_01 = Mockery::mock(Tracker_FormElement_Field_List_Bind_StaticValue::class);
+        $static_value_02 = Mockery::mock(Tracker_FormElement_Field_List_Bind_StaticValue::class);
+
+        $static_value_01->shouldReceive('getId')->andReturn(801);
+        $static_value_02->shouldReceive('getId')->andReturn(802);
+
         $mapping = array(
             'F1'     => aSelectBoxField()->withId(110)->build(),
             'F32'    => aSelectBoxField()->withId(111)->build(),
-            'F32-V0' => 801,
-            'F32-V1' => 802
+            'F32-V0' => $static_value_01,
+            'F32-V1' => $static_value_02
         );
 
         $condition_factory = Mockery::mock(Workflow_Transition_ConditionFactory::class);
@@ -134,13 +142,14 @@ class WorkflowFactoryTest extends TestCase
             )
             ->andReturn($third_transition);
 
-        $workflow_factory   = new WorkflowFactory(
+        $workflow_factory = new WorkflowFactory(
             $transition_factory,
             Mockery::mock(TrackerFactory::class),
             Mockery::mock(Tracker_FormElementFactory::class),
             Mockery::mock(Tracker_Workflow_Trigger_RulesManager::class),
             new WorkflowBackendLogger(Mockery::spy(BackendLogger::class), Logger::DEBUG),
-            Mockery::mock(FrozenFieldsDao::class)
+            Mockery::mock(FrozenFieldsDao::class),
+            Mockery::mock(StateFactory::class)
         );
 
         $workflow = $workflow_factory->getInstanceFromXML($xml, $mapping, $tracker, $this->project);
@@ -170,11 +179,17 @@ class WorkflowFactoryTest extends TestCase
         $tracker = Mockery::mock(Tracker::class);
         $tracker->shouldReceive('getId')->andReturn(101);
 
+        $static_value_01 = Mockery::mock(Tracker_FormElement_Field_List_Bind_StaticValue::class);
+        $static_value_02 = Mockery::mock(Tracker_FormElement_Field_List_Bind_StaticValue::class);
+
+        $static_value_01->shouldReceive('getId')->andReturn(801);
+        $static_value_02->shouldReceive('getId')->andReturn(802);
+
         $mapping = array(
             'F1'     => aSelectBoxField()->withId(110)->build(),
             'F32'    => aSelectBoxField()->withId(111)->build(),
-            'F32-V0' => 801,
-            'F32-V1' => 802
+            'F32-V0' => $static_value_01,
+            'F32-V1' => $static_value_02
         );
 
         $date_post_action = Mockery::mock(Transition_PostAction_Field_Date::class);
@@ -194,9 +209,12 @@ class WorkflowFactoryTest extends TestCase
                     return (string)$state->to_id['REF'] === "F32-V0";
                 }),
                 $mapping,
-                $this->project
+                $this->project,
+                $static_value_01
             )
             ->andReturn([$first_transition, $second_transition]);
+
+        $state_factory = new StateFactory($transition_factory);
 
         $workflow_factory = new WorkflowFactory(
             $transition_factory,
@@ -204,7 +222,8 @@ class WorkflowFactoryTest extends TestCase
             Mockery::mock(Tracker_FormElementFactory::class),
             Mockery::mock(Tracker_Workflow_Trigger_RulesManager::class),
             new WorkflowBackendLogger(Mockery::spy(BackendLogger::class), Logger::DEBUG),
-            Mockery::mock(FrozenFieldsDao::class)
+            Mockery::mock(FrozenFieldsDao::class),
+            $state_factory
         );
 
         $workflow = $workflow_factory->getSimpleInstanceFromXML($xml, $mapping, $tracker, $this->project);

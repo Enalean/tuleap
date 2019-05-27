@@ -20,6 +20,7 @@
  */
 
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
+use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
 use Tuleap\Tracker\Workflow\WorkflowBackendLogger;
 use Tuleap\Tracker\Workflow\WorkflowRulesManagerLoopSafeGuard;
 
@@ -43,6 +44,10 @@ class WorkflowFactory //phpcs:ignoreFile
 
     /** @var FrozenFieldsDao */
     private $read_only_dao;
+    /**
+     * @var StateFactory
+     */
+    private $state_factory;
 
     /**
      * Should use the singleton instance()
@@ -55,7 +60,8 @@ class WorkflowFactory //phpcs:ignoreFile
         Tracker_FormElementFactory $formelement_factory,
         Tracker_Workflow_Trigger_RulesManager $trigger_rules_manager,
         WorkflowBackendLogger $logger,
-        FrozenFieldsDao $read_only_dao
+        FrozenFieldsDao $read_only_dao,
+        StateFactory $state_factory
     ) {
         $this->transition_factory    = $transition_factory;
         $this->tracker_factory       = $tracker_factory;
@@ -63,6 +69,7 @@ class WorkflowFactory //phpcs:ignoreFile
         $this->trigger_rules_manager = $trigger_rules_manager;
         $this->logger                = $logger;
         $this->read_only_dao         = $read_only_dao;
+        $this->state_factory         = $state_factory;
     }
 
     /**
@@ -110,7 +117,8 @@ class WorkflowFactory //phpcs:ignoreFile
                 $formelement_factory,
                 $trigger_rules_manager,
                 $logger,
-                new FrozenFieldsDao()
+                new FrozenFieldsDao(),
+                new StateFactory(TransitionFactory::instance())
             );
         }
         return self::$_instance;
@@ -426,9 +434,10 @@ class WorkflowFactory //phpcs:ignoreFile
         $transitions    = [];
 
         foreach ($xml->states->state as $state_xml) {
+            $state = $this->state_factory->getInstanceFromXML($state_xml, $xml_mapping, $project);
             $transitions = array_merge(
                 $transitions,
-                $this->transition_factory->getInstancesFromStateXML($state_xml, $xml_mapping, $project)
+                $state->getTransitions()
             );
         }
 
