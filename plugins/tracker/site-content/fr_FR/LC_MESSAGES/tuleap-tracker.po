@@ -1134,6 +1134,10 @@ msgstr ""
 "Vous pouvez définir plusieurs webhooks qui seront envoyés après chaque "
 "création et édition d'artéfact."
 
+msgid "You can drag 'n drop or paste image directly in the editor."
+msgstr ""
+"Vous pouvez glisser-déposer ou coller une image directement dans l'éditeur."
+
 msgid ""
 "You can use variables to customize the sender field. The available variables "
 "are %%realname and %%username.\n"

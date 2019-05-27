@@ -64,6 +64,11 @@ tuleap.textarea.RTE = Class.create(window.codendi.RTE, {
         );
         selectbox.appendChild(text_option);
 
+        this.help_block = null;
+        if (typeof this.element.dataset.helpId !== "undefined") {
+            this.help_block = document.getElementById(this.element.dataset.helpId);
+        }
+
         // Add an option that tells that the content format is HTML
         // The value is defined in Artifact class.
         var html_option = Builder.node(
@@ -88,6 +93,9 @@ tuleap.textarea.RTE = Class.create(window.codendi.RTE, {
         }
 
         if ($("comment_format_html" + this.options.id).selected == true) {
+            if (this.help_block) {
+                this.help_block.classList.add("shown");
+            }
             this.init_rte();
         }
 
@@ -104,6 +112,10 @@ tuleap.textarea.RTE = Class.create(window.codendi.RTE, {
             option = "text";
         } else if (option === "1") {
             option = "html";
+        }
+
+        if (this.help_block) {
+            this.help_block.classList.toggle("shown");
         }
 
         if ($(id).hasAttribute("data-required") && option == "text" && this.rte) {

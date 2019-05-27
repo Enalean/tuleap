@@ -171,10 +171,14 @@ EOL
         cols="80"
         name="input-name"
         \n            data-artifact-id="123"
+            data-help-id="input-id-help"
             data-upload-url="/api/v1/tracker_fields/1002/files"
             data-upload-field-name="artifact[1002][][tus-uploaded-id]"
             data-upload-max-size="1024"
 >input-value</textarea>
+    <p class="muted tracker-richtexteditor-help" id="input-id-help">
+        You can drag 'n drop or paste image directly in the editor.
+    </p>
 
 EOL
             ,
@@ -262,10 +266,14 @@ EOL
         cols="80"
         name="input-name"
         \n            data-artifact-id="123"
+            data-help-id="input-id-help"
             data-upload-url="/api/v1/tracker_fields/1002/files"
             data-upload-field-name="artifact[1002][][tus-uploaded-id]"
             data-upload-max-size="1024"
 >input-value</textarea>
+    <p class="muted tracker-richtexteditor-help" id="input-id-help">
+        You can drag 'n drop or paste image directly in the editor.
+    </p>
 
 EOL
             ,

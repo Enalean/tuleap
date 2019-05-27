@@ -69,6 +69,9 @@ class RichTextareaProvider
     ): string {
         $renderer = $this->template_renderer_factory->getRenderer(__DIR__ . '/../../../templates/artifact');
 
+        $is_dragndrop_allowed = false;
+        $help_id              = $id . '-help';
+
         $fields = $this->form_element_factory->getUsedFileFields($tracker);
         foreach ($fields as $field) {
             if (! $field->userCanUpdate($user)) {
@@ -79,15 +82,20 @@ class RichTextareaProvider
                 continue;
             }
 
-            $data_attributes[] = [
+            $is_dragndrop_allowed = true;
+            $data_attributes[]    = [
+                'name'  => 'help-id',
+                'value' => $help_id
+            ];
+            $data_attributes[]    = [
                 'name'  => 'upload-url',
                 'value' => '/api/v1/tracker_fields/' . (int) $field->getId() . '/files'
             ];
-            $data_attributes[] = [
+            $data_attributes[]    = [
                 'name'  => 'upload-field-name',
                 'value' => 'artifact[' . (int) $field->getId() . '][][tus-uploaded-id]'
             ];
-            $data_attributes[] = [
+            $data_attributes[]    = [
                 'name'  => 'upload-max-size',
                 'value' => ForgeConfig::get('sys_max_size_upload')
             ];
@@ -97,13 +105,15 @@ class RichTextareaProvider
         return $renderer->renderToString(
             'rich-textarea',
             [
-                'id'              => $id,
-                'name'            => $name,
-                'rows'            => $rows,
-                'cols'            => $cols,
-                'value'           => $value,
-                'is_required'     => $is_required,
-                'data_attributes' => $data_attributes
+                'id'                   => $id,
+                'name'                 => $name,
+                'rows'                 => $rows,
+                'cols'                 => $cols,
+                'value'                => $value,
+                'is_required'          => $is_required,
+                'data_attributes'      => $data_attributes,
+                'is_dragndrop_allowed' => $is_dragndrop_allowed,
+                'help_id'              => $help_id
             ]
         );
     }

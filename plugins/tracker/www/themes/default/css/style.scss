@@ -3325,3 +3325,11 @@ td.tracker-unsubscriber-actions {
 #tracker-action-icon {
     margin: 10px 0 0 5px;
 }
+
+.tracker-richtexteditor-help {
+    display: none;
+
+    &.shown {
+        display: block;
+    }
+}
