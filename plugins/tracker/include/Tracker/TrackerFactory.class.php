@@ -20,6 +20,7 @@
 use Tuleap\Tracker\Webhook\WebhookDao;
 use Tuleap\Tracker\Webhook\WebhookFactory;
 use Tuleap\Tracker\Workflow\WorkflowBackendLogger;
+use Tuleap\Tracker\Workflow\WorkflowRulesManagerLoopSafeGuard;
 
 class TrackerFactory {
 
@@ -668,7 +669,8 @@ class TrackerFactory {
             $this->getFormElementFactory(),
             $rules_processor,
             $workflow_backend_logger,
-            new Tracker_Workflow_Trigger_RulesBuilderFactory($this->getFormElementFactory())
+            new Tracker_Workflow_Trigger_RulesBuilderFactory($this->getFormElementFactory()),
+            new WorkflowRulesManagerLoopSafeGuard($workflow_backend_logger)
         );
     }
 
