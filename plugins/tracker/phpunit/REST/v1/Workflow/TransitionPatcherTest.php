@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -26,8 +26,9 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
-use Tuleap\Tracker\Workflow\SimpleMode\TransitionCollection;
-use Tuleap\Tracker\Workflow\SimpleMode\TransitionRetriever;
+use Tuleap\Tracker\Workflow\SimpleMode\State\State;
+use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
+use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionUpdater;
 use Tuleap\Tracker\Workflow\Transition\Condition\ConditionsUpdater;
 use Tuleap\Tracker\Workflow\Transition\NoSiblingTransitionException;
 
@@ -44,14 +45,20 @@ class TransitionPatcherTest extends TestCase
     /** @var Mockery\MockInterface */
     private $transaction_executor;
 
+    private $state_factory;
+    private $transition_updater;
+
     protected function setUp(): void
     {
-        $this->updater              = Mockery::mock(ConditionsUpdater::class);
-        $this->retriever            = Mockery::mock(TransitionRetriever::class);
-        $this->patcher              = new TransitionPatcher(
+        $this->updater            = Mockery::mock(ConditionsUpdater::class);
+        $this->state_factory      = Mockery::mock(StateFactory::class);
+        $this->transition_updater = Mockery::mock(TransitionUpdater::class);
+
+        $this->patcher = new TransitionPatcher(
             $this->updater,
-            $this->retriever,
-            new DBTransactionExecutorPassthrough()
+            new DBTransactionExecutorPassthrough(),
+            $this->state_factory,
+            $this->transition_updater
         );
     }
 
@@ -97,44 +104,23 @@ class TransitionPatcherTest extends TestCase
         $patch_representation->not_empty_field_ids = [30];
         $patch_representation->is_comment_required = true;
 
-        $this->updater
-            ->shouldReceive('update')
+        $transition_from_simple_workflow->shouldReceive('getIdTo')->andReturn('999');
+
+        $state = Mockery::mock(State::class);
+
+        $this->state_factory->shouldReceive('getStateFromValueId')
+            ->once()
+            ->andReturn($state);
+
+        $this->transition_updater->shouldReceive('updateStatePreConditions')
             ->with(
-                Mockery::type(\Transition::class),
-                Mockery::contains(3, 374),
-                $patch_representation->not_empty_field_ids,
-                $patch_representation->is_comment_required
-            )->times(3);
-
-        $first_sibling_transition  = Mockery::mock(\Transition::class);
-        $second_sibling_transition = Mockery::mock(\Transition::class);
-        $this->retriever
-            ->shouldReceive('getSiblingTransitions')
-            ->andReturn(new TransitionCollection($first_sibling_transition, $second_sibling_transition));
-
-        $this->patcher->patch($transition_from_simple_workflow, $patch_representation);
-    }
-
-    public function testPatchIgnoresNoSiblingTransitionException()
-    {
-        $transition_from_simple_workflow = $this->buildTransitionWithWorkflowMode(false);
-        $patch_representation = new WorkflowTransitionPATCHRepresentation();
-        $patch_representation->authorized_user_group_ids = ['110_3', '374'];
-        $patch_representation->not_empty_field_ids = [30];
-        $patch_representation->is_comment_required = true;
-
-        $this->updater
-            ->shouldReceive('update')
-            ->with(
+                $state,
                 $transition_from_simple_workflow,
                 Mockery::contains(3, 374),
                 $patch_representation->not_empty_field_ids,
                 $patch_representation->is_comment_required
-            )->once();
-
-        $this->retriever
-            ->shouldReceive('getSiblingTransitions')
-            ->andThrow(new NoSiblingTransitionException());
+            )
+            ->once();
 
         $this->patcher->patch($transition_from_simple_workflow, $patch_representation);
     }

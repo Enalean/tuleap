@@ -75,6 +75,7 @@ use Tuleap\Tracker\Workflow\SimpleMode\SimpleWorkflowDao;
 use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionCreator;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
+use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionUpdater;
 use Tuleap\Tracker\Workflow\SimpleMode\TransitionReplicator;
 use Tuleap\Tracker\Workflow\SimpleMode\TransitionReplicatorBuilder;
 use Tuleap\Tracker\Workflow\SimpleMode\TransitionRetriever;
@@ -138,10 +139,7 @@ class TransitionsResource extends AuthenticatedResource
             $this->getTransitionFactory(),
             new TransitionValidator(),
             $this->getTransactionExecutor(),
-            new StateFactory(
-                $this->getTransitionFactory(),
-                new SimpleWorkflowDao()
-            ),
+            $this->getStateFactory(),
             new TransitionCreator(
                 $this->getTransitionFactory(),
                 $this->getTransitionReplicator(),
@@ -235,8 +233,12 @@ class TransitionsResource extends AuthenticatedResource
 
         $handler = new TransitionPatcher(
             $this->getConditionsUpdater(),
-            $this->getTransitionRetriever(),
-            $this->getTransactionExecutor()
+            $this->getTransactionExecutor(),
+            $this->getStateFactory(),
+            new TransitionUpdater(
+                $this->getConditionsUpdater(),
+                new TransitionExtractor()
+            )
         );
 
         try {
@@ -578,5 +580,13 @@ class TransitionsResource extends AuthenticatedResource
     private function getTransitionReplicator(): TransitionReplicator
     {
         return TransitionReplicatorBuilder::build();
+    }
+
+    private function getStateFactory() : StateFactory
+    {
+        return new StateFactory(
+            $this->getTransitionFactory(),
+            new SimpleWorkflowDao()
+        );
     }
 }
