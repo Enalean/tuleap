@@ -20,23 +20,32 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Workflow\SimpleMode;
+namespace Tuleap\Tracker\Workflow\SimpleMode\State;
 
-use Tuleap\DB\DataAccessObject;
+use Transition;
+use Tuleap\Tracker\Workflow\Transition\NoTransitionForStateException;
 
-class SimpleWorkflowDao extends DataAccessObject
+class ReferenceTransitionExtractor
 {
     /**
-     * @return mixed
+     * @return Transition
+     * @throws NoTransitionForStateException
      */
-    public function searchStatesForWorkflow(int $workflow_id)
+    public function extractFirstTransitionFromStateObject(State $state) : Transition
     {
-        $sql = "SELECT DISTINCT tracker_workflow_transition.to_id
-                FROM tracker_workflow
-                  INNER JOIN tracker_workflow_transition ON (tracker_workflow.workflow_id = tracker_workflow_transition.workflow_id)
-                WHERE tracker_workflow.workflow_id = ?
-                    AND tracker_workflow.is_advanced = 0";
+        $transitions = $state->getTransitions();
 
-        return $this->getDB()->run($sql, $workflow_id);
+        if (count($transitions) === 1) {
+            return $transitions[0];
+        }
+
+        foreach ($transitions as $transition) {
+            /** @var Transition $transition*/
+            if ($transition->getIdFrom() !== '') {
+                return $transition;
+            }
+        }
+
+        throw new NoTransitionForStateException();
     }
 }

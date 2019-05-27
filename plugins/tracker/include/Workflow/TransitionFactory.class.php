@@ -306,6 +306,22 @@ class TransitionFactory //phpcs:ignoreFile
     }
 
     /**
+     * Get the transitions of the workflow for a given destination value
+     *
+     * @param Workflow $workflow The workflow
+     *
+     * @return Transition[]
+     */
+    public function getTransitionsForAGivenDestination(Workflow $workflow, int $to_id)
+    {
+        $transitions = [];
+        foreach ($this->getDao()->searchByWorkflowAndToId($workflow->getId(), $to_id) as $row) {
+            $transitions[] = $this->getInstanceFromRow($row, $workflow);
+        }
+        return $transitions;
+    }
+
+    /**
      * Creates transition in the database
      *
      * @param int $workflow_id The workflow_id of the transitions to save
@@ -343,7 +359,7 @@ class TransitionFactory //phpcs:ignoreFile
     public function createAndSaveTransition(Workflow $workflow, TransitionCreationParameters $parameters)
     {
         $new_transition = $this->buildTransition($parameters->getFromId(), $parameters->getToId(), $workflow, null);
-        $this->saveObject($workflow->getId(), $new_transition);
+        $this->saveObject((int) $workflow->getId(), $new_transition);
 
         return $new_transition;
     }

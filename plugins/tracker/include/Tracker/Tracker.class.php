@@ -63,6 +63,8 @@ use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
 use Tuleap\Tracker\Workflow\SimpleMode\SimpleWorkflowDao;
 use Tuleap\Tracker\Workflow\SimpleMode\SimpleWorkflowXMLExporter;
+use Tuleap\Tracker\Workflow\SimpleMode\State\ReferenceTransitionExtractor;
+use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
 use Tuleap\Tracker\Workflow\SimpleMode\TransitionRetriever;
 use Tuleap\Tracker\Workflow\WorkflowUpdateChecker;
 use Tuleap\Tracker\XML\Updater\FieldChange\FieldChangeComputedXMLUpdater;
@@ -2675,7 +2677,8 @@ EOS;
                 $child    = $xmlElem->addChild('simple_workflow');
                 $exporter = new SimpleWorkflowXMLExporter(
                     new SimpleWorkflowDao(),
-                    new TransitionRetriever(new \Workflow_TransitionDao(), \TransitionFactory::instance())
+                    new StateFactory(TransitionFactory::instance()),
+                    new ReferenceTransitionExtractor()
                 );
                 $exporter->exportToXML($workflow, $child, $xmlMapping);
             } else {
