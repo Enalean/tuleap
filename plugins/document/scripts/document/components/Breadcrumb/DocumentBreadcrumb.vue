@@ -51,16 +51,22 @@
                 <span class="tlp-skeleton-text"></span>
             </a>
         </span>
+        <document-breadcrumb-document v-if="is_current_document_displayed"
+                                      v-bind:current_document="currently_displayed_item"
+                                      v-bind:parent_folder="current_folder"
+                                      data-test="breadcrumb-current-document"
+        />
     </nav>
 </template>
 
 <script>
 import { mapState } from "vuex";
 import DocumentBreadcrumbElement from "./DocumentBreadcrumbElement.vue";
+import DocumentBreadcrumbDocument from "./DocumentBreadcrumbDocument.vue";
 
 export default {
     name: "DocumentBreadcrumb",
-    components: { DocumentBreadcrumbElement },
+    components: { DocumentBreadcrumbElement, DocumentBreadcrumbDocument },
     data() {
         return {
             max_nb_to_display: 5
@@ -71,7 +77,9 @@ export default {
             "project_id",
             "is_user_administrator",
             "current_folder_ascendant_hierarchy",
-            "is_loading_ascendant_hierarchy"
+            "is_loading_ascendant_hierarchy",
+            "currently_displayed_item",
+            "current_folder"
         ]),
         document_tree_title() {
             return this.$gettext("Project documentation");
@@ -106,6 +114,9 @@ export default {
             return this.current_folder_ascendant_hierarchy
                 .filter(parent => parent.parent_id !== 0)
                 .slice(-this.max_nb_to_display);
+        },
+        is_current_document_displayed() {
+            return this.currently_displayed_item !== null && this.current_folder !== null;
         }
     }
 };

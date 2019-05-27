@@ -48,7 +48,11 @@ export default {
             "loadDocumentWithAscendentHierarchy",
             parseInt(this.$route.params.item_id, 10)
         );
+        this.$store.commit("updateCurrentlyDisplayedItem", this.embedded_file);
         this.is_loading = false;
+    },
+    destroyed() {
+        this.$store.commit("updateCurrentlyDisplayedItem", null);
     },
     methods: {
         ...mapActions(["loadDocumentWithAscendentHierarchy"])
