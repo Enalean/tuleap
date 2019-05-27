@@ -23,6 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Workflow\SimpleMode\State;
 
 use Transition;
+use Tuleap\Tracker\Workflow\PostAction\Update\PostActionCollection;
+use Tuleap\Tracker\Workflow\PostAction\Update\PostActionCollectionUpdater;
 use Tuleap\Tracker\Workflow\Transition\Condition\ConditionsUpdater;
 use Tuleap\Tracker\Workflow\Transition\NoSiblingTransitionException;
 
@@ -38,12 +40,19 @@ class TransitionUpdater
      */
     private $conditions_updater;
 
+    /**
+     * @var PostActionCollectionUpdater
+     */
+    private $action_collection_updater;
+
     public function __construct(
         ConditionsUpdater $conditions_updater,
-        TransitionExtractor $transition_extractor
+        TransitionExtractor $transition_extractor,
+        PostActionCollectionUpdater $action_collection_updater
     ) {
-        $this->transition_extractor = $transition_extractor;
-        $this->conditions_updater   = $conditions_updater;
+        $this->transition_extractor      = $transition_extractor;
+        $this->conditions_updater        = $conditions_updater;
+        $this->action_collection_updater = $action_collection_updater;
     }
 
     /**
@@ -75,6 +84,18 @@ class TransitionUpdater
             }
         } catch (NoSiblingTransitionException $exception) {
             //Do nothing, there simply are no siblings to update
+        }
+    }
+
+    /**
+     * @throws \DataAccessQueryException
+     * @throws \Tuleap\Tracker\Workflow\PostAction\Update\Internal\InvalidPostActionException
+     * @throws \Tuleap\Tracker\Workflow\PostAction\Update\Internal\UnknownPostActionIdsException
+     */
+    public function updateStateActions(State $state, PostActionCollection $post_actions)
+    {
+        foreach ($state->getTransitions() as $transition) {
+            $this->action_collection_updater->updateByTransition($transition, $post_actions);
         }
     }
 }

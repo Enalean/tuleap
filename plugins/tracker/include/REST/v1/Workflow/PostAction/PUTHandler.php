@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -31,6 +31,8 @@ use Tuleap\Tracker\REST\v1\Workflow\PostActionsPUTRepresentation;
 use Tuleap\Tracker\REST\v1\Workflow\TransitionsPermissionsChecker;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\IncompatibleWorkflowModeException;
 use Tuleap\Tracker\Workflow\PostAction\Update\PostActionCollectionUpdater;
+use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
+use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionUpdater;
 use Tuleap\Tracker\Workflow\SimpleMode\TransitionRetriever;
 use Tuleap\Tracker\Workflow\Transition\NoSiblingTransitionException;
 
@@ -56,11 +58,6 @@ class PUTHandler
     private $action_collection_updater;
 
     /**
-     * @var TransitionRetriever
-     */
-    private $transition_retriever;
-
-    /**
      * @var DBTransactionExecutor
      */
     private $transaction_executor;
@@ -70,22 +67,34 @@ class PUTHandler
      */
     private $tracker_checker;
 
+    /**
+     * @var StateFactory
+     */
+    private $state_factory;
+
+    /**
+     * @var TransitionUpdater
+     */
+    private $transition_updater;
+
     public function __construct(
         TransitionsPermissionsChecker $transitions_permissions_checker,
         ProjectStatusVerificator $project_status_verificator,
         PostActionCollectionJsonParser $post_action_collection_json_parser,
         PostActionCollectionUpdater $action_collection_updater,
-        TransitionRetriever $transition_retriever,
         TrackerChecker $tracker_checker,
-        DBTransactionExecutor $transaction_executor
+        DBTransactionExecutor $transaction_executor,
+        StateFactory $state_factory,
+        TransitionUpdater $transition_updater
     ) {
         $this->transitions_permissions_checker    = $transitions_permissions_checker;
         $this->project_status_verificator         = $project_status_verificator;
         $this->post_action_collection_json_parser = $post_action_collection_json_parser;
         $this->action_collection_updater          = $action_collection_updater;
-        $this->transition_retriever               = $transition_retriever;
         $this->transaction_executor               = $transaction_executor;
         $this->tracker_checker                    = $tracker_checker;
+        $this->state_factory                      = $state_factory;
+        $this->transition_updater                 = $transition_updater;
     }
 
     /**
@@ -112,33 +121,15 @@ class PUTHandler
 
         $this->tracker_checker->checkPostActionsAreEligibleForTracker($workflow->getTracker(), $post_actions);
 
-        if ($workflow->isAdvanced()) {
-            $this->transaction_executor->execute(
-                function () use ($transition, $post_actions) {
+        $this->transaction_executor->execute(
+            function () use ($workflow, $transition, $post_actions) {
+                if ($workflow->isAdvanced()) {
                     $this->action_collection_updater->updateByTransition($transition, $post_actions);
+                } else {
+                    $state = $this->state_factory->getStateFromValueId($workflow, (int) $transition->getIdTo());
+                    $this->transition_updater->updateStateActions($state, $post_actions);
                 }
-            );
-        } else {
-            $this->transaction_executor->execute(
-                function () use ($transition, $post_actions) {
-                    $all_transitions = $this->getAllSiblingsTransitions($transition);
-                    $this->action_collection_updater->updateForAllSiblingsTransition($all_transitions, $post_actions);
-                }
-            );
-        }
-    }
-
-    private function getAllSiblingsTransitions(Transition $transition) : array
-    {
-        $all_transitions = [$transition];
-
-        try {
-            $siblings_collection = $this->transition_retriever->getSiblingTransitions($transition);
-            $all_transitions = array_merge($all_transitions, $siblings_collection->getTransitions());
-        } catch (NoSiblingTransitionException $e) {
-            //Do nothing, no siblings
-        }
-
-        return $all_transitions;
+            }
+        );
     }
 }

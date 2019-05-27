@@ -24,7 +24,6 @@ namespace Tuleap\Tracker\Workflow\SimpleMode;
 
 use Tracker_Artifact;
 use Transition;
-use Tuleap\Tracker\Workflow\Transition\NoSiblingTransitionException;
 use Tuleap\Tracker\Workflow\Transition\NoTransitionForStateException;
 
 class TransitionRetriever
@@ -42,27 +41,6 @@ class TransitionRetriever
     {
         $this->transition_dao     = $transition_dao;
         $this->transition_factory = $transition_factory;
-    }
-
-    /**
-     * @throws NoSiblingTransitionException
-     */
-    public function getSiblingTransitions(Transition $transition): TransitionCollection
-    {
-        $rows = $this->transition_dao->searchSiblings(
-            $transition->workflow_id,
-            $transition->getIdTo(),
-            $transition->getId()
-        );
-        if ($rows === false) {
-            throw new NoSiblingTransitionException();
-        }
-
-        $siblings = [];
-        foreach ($rows as $row) {
-            $siblings[] = $this->transition_factory->getInstanceFromRow($row);
-        }
-        return new TransitionCollection(...$siblings);
     }
 
     /**
@@ -96,7 +74,7 @@ class TransitionRetriever
     /**
      * @throws NoTransitionForStateException
      */
-    public function getFirstTransitionForDestinationState(\Workflow $workflow, int $to): Transition
+    private function getFirstTransitionForDestinationState(\Workflow $workflow, int $to): Transition
     {
         $row_first_non_new = $this->transition_dao->searchFirstTransitionNotFromNew(
             (int) $workflow->getId(),
@@ -117,24 +95,5 @@ class TransitionRetriever
         }
 
         throw new NoTransitionForStateException();
-    }
-
-    /**
-     * @throws NoSiblingTransitionException
-     */
-    private function searchSiblingTransitionInRows($siblings): array
-    {
-        $transition_from_new_artifact = null;
-        foreach ($siblings as $row) {
-            if ($row['from_id'] === '0') {
-                $transition_from_new_artifact = $row;
-            } else {
-                return $row;
-            }
-        }
-        if ($transition_from_new_artifact !== null) {
-            return $transition_from_new_artifact;
-        }
-        throw new NoSiblingTransitionException();
     }
 }

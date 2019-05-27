@@ -52,67 +52,6 @@ final class TransitionRetrieverTest extends TestCase
         $this->transition_retriever = new TransitionRetriever($this->transition_dao, $this->transition_factory);
     }
 
-    public function testGetSiblingTransitionsReturnsTransitionCollection() : void
-    {
-        $workflow_id       = 38;
-        $transition_id     = 81;
-        $to_id             = 239;
-        $first_sibling_id  = 95;
-        $second_sibling_id = 105;
-
-        $first_row = ['transition_id' => $first_sibling_id];
-        $second_row = ['transition_id' => $second_sibling_id];
-        $this->transition_dao
-            ->shouldReceive('searchSiblings')
-            ->with($workflow_id, $to_id, $transition_id)
-            ->andReturn([$first_row, $second_row]);
-
-        $first_sibling  = $this->buildTransition($first_sibling_id, $workflow_id);
-        $second_sibling = $this->buildTransition($second_sibling_id, $workflow_id);
-        $this->transition_factory
-            ->shouldReceive('getInstanceFromRow')
-            ->with($first_row)
-            ->andReturn($first_sibling);
-        $this->transition_factory
-            ->shouldReceive('getInstanceFromRow')
-            ->with($second_row)
-            ->andReturn($second_sibling);
-
-        $transition = $this->buildTransitionWithToId($transition_id, $workflow_id, $to_id);
-
-        $result = $this->transition_retriever->getSiblingTransitions($transition);
-
-        $expected = new TransitionCollection($first_sibling, $second_sibling);
-        $this->assertEquals($expected, $result);
-    }
-
-    public function testGetSiblingTransitionsThrowsWhenNoSibling() : void
-    {
-        $this->transition_dao->shouldReceive('searchSiblings')->andReturnFalse();
-        $transition = $this->buildTransitionWithToId(19, 53, 483);
-
-        $this->expectException(NoSiblingTransitionException::class);
-
-        $this->transition_retriever->getSiblingTransitions($transition);
-    }
-
-    private function buildTransition(int $transition_id, int $workflow_id): Transition
-    {
-        $from = Mockery::mock(\Tracker_FormElement_Field_List_Value::class);
-        $to   = Mockery::mock(\Tracker_FormElement_Field_List_Value::class);
-        return new Transition($transition_id, $workflow_id, $from, $to);
-    }
-
-    private function buildTransitionWithToId(int $transition_id, int $workflow_id, int $to_id): Transition
-    {
-        $from = Mockery::mock(\Tracker_FormElement_Field_List_Value::class);
-        $to   = Mockery::mock(\Tracker_FormElement_Field_List_Value::class)
-            ->shouldReceive('getId')
-            ->andReturn($to_id)
-            ->getMock();
-        return new Transition($transition_id, $workflow_id, $from, $to);
-    }
-
     public function testFirstTransitionNotFromNewForAnArtifactStateCanBeRetrieved() : void
     {
         $artifact = Mockery::mock(Tracker_Artifact::class);
