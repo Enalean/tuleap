@@ -635,7 +635,7 @@ class SvnPlugin extends Plugin
     {
         $event->getRouteCollector()->addGroup($this->getPluginPath(), function (RouteCollector $r) {
             $r->get('/index.php/{path:.*}', $this->getRouteHandler('redirectOldViewVcRoutes'));
-            $r->addRoute(['GET', 'POST'], '/[{path:.*}]', $this->getRouteHandler('routeSvnPlugin'));
+            $r->addRoute(['GET', 'POST'], '[/{path:.*}]', $this->getRouteHandler('routeSvnPlugin'));
         });
     }
 
