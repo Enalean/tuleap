@@ -23,9 +23,9 @@ namespace Tuleap\OpenIDConnectClient;
 use Feedback;
 use HTTPRequest;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Request\DispatchableWithRequest;
+use Tuleap\Request\DispatchableWithRequestNoAuthz;
 
-class Router implements DispatchableWithRequest
+class Router implements DispatchableWithRequestNoAuthz
 {
 
     /**
