@@ -30,6 +30,7 @@ use ProjectManager;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
+use Tuleap\Docman\DeleteFailedException;
 use Tuleap\Docman\Lock\LockChecker;
 use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataObsolescenceDateRetriever;
 use Tuleap\Docman\REST\v1\Metadata\HardcodedMetadataUsageChecker;
@@ -231,14 +232,6 @@ class DocmanWikiResource extends AuthenticatedResource
         $project           = $item_request->getProject();
         $validator_visitor = new DocumentBeforeModificationValidatorVisitor(\Docman_Wiki::class);
 
-        $docman_permission_manager = Docman_PermissionsManager::instance($project->getGroupId());
-        if (! $docman_permission_manager->userCanDelete($current_user, $item_to_delete)) {
-            throw new I18NRestException(
-                403,
-                dgettext('tuleap-docman', 'You are not allowed to delete this item.')
-            );
-        }
-
         $item_to_delete->accept($validator_visitor);
         /** @var \Docman_Wiki $item_to_delete */
 
@@ -246,11 +239,13 @@ class DocmanWikiResource extends AuthenticatedResource
         $event_adder->addLogEvents();
         $event_adder->addNotificationEvents($project);
 
-        $docman_item_factory = new \Docman_ItemFactory();
-        $docman_item_factory->delete($item_to_delete);
-
-        if ($delete_associated_wiki_page === true) {
-            $docman_item_factory->deleteWikiPage($item_to_delete->getPagename(), $project->getGroupId());
+        try {
+            (new \Docman_ItemFactory())->deleteSubTree($item_to_delete, $current_user, $delete_associated_wiki_page);
+        } catch (DeleteFailedException $exception) {
+            throw new I18NRestException(
+                403,
+                $exception->getI18NExceptionMessage()
+            );
         }
 
         $this->event_manager->processEvent('send_notifications', []);

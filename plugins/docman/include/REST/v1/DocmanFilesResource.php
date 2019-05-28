@@ -33,6 +33,7 @@ use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\ApprovalTable\ApprovalTableUpdateActionChecker;
 use Tuleap\Docman\ApprovalTable\Exceptions\ItemHasApprovalTableButNoApprovalActionException;
 use Tuleap\Docman\ApprovalTable\Exceptions\ItemHasNoApprovalTableButHasApprovalActionException;
+use Tuleap\Docman\DeleteFailedException;
 use Tuleap\Docman\Lock\LockChecker;
 use Tuleap\Docman\REST\v1\Files\CreatedItemFilePropertiesRepresentation;
 use Tuleap\Docman\REST\v1\Files\DocmanFilesPATCHRepresentation;
@@ -200,7 +201,7 @@ class DocmanFilesResource extends AuthenticatedResource
      *
      * @status 200
      * @throws RestException 401
-     * @throws RestException 403
+     * @throws I18NRestException 403
      * @throws RestException 404
      */
     public function delete(int $id) : void
@@ -214,21 +215,20 @@ class DocmanFilesResource extends AuthenticatedResource
         $project           = $item_request->getProject();
         $validator_visitor = new DocumentBeforeModificationValidatorVisitor(\Docman_File::class);
 
-        $docman_permission_manager = Docman_PermissionsManager::instance($project->getGroupId());
-        if (! $docman_permission_manager->userCanDelete($current_user, $item_to_delete)) {
-            throw new I18NRestException(
-                403,
-                dgettext('tuleap-docman', 'You are not allowed to delete this item.')
-            );
-        }
-
         $item_to_delete->accept($validator_visitor);
 
         $event_adder = $this->getDocmanItemsEventAdder();
         $event_adder->addLogEvents();
         $event_adder->addNotificationEvents($project);
 
-        (new \Docman_ItemFactory())->delete($item_to_delete);
+        try {
+            (new \Docman_ItemFactory())->deleteSubTree($item_to_delete, $current_user, false);
+        } catch (DeleteFailedException $exception) {
+            throw new I18NRestException(
+                403,
+                $exception->getI18NExceptionMessage()
+            );
+        }
 
         $this->event_manager->processEvent('send_notifications', []);
     }
