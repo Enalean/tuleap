@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,44 +20,75 @@
 
 namespace Tuleap\AgileDashboard\Kanban;
 
-use AgileDashboard_Kanban;
-use Project;
+use AgileDashboard_KanbanNotFoundException;
+use EventManager;
+use TrackerFactory;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
-use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
+use Tuleap\Tracker\TrackerCrumbInContext;
+use Tuleap\Tracker\TrackerCrumbLinkInContext;
 
 class BreadCrumbBuilder
 {
-    /**
-     * @var string
-     */
-    private $plugin_path;
+    private const CRUMB_IDENTIFIER = 'kanban';
 
     /**
-     *
-     *
-     * @param string $plugin_path
+     * @var TrackerFactory
      */
-    public function __construct($plugin_path)
+    private $tracker_factory;
+    /**
+     * @var \AgileDashboard_KanbanFactory
+     */
+    private $kanban_factory;
+
+    public function __construct(TrackerFactory $tracker_factory, \AgileDashboard_KanbanFactory $kanban_factory)
     {
-        $this->plugin_path = $plugin_path;
+        $this->tracker_factory = $tracker_factory;
+        $this->kanban_factory  = $kanban_factory;
     }
 
     /**
+     * @param \PFUser $current_user
+     * @param int     $kanban_id
      * @return BreadCrumb
+     * @throws \AgileDashboard_KanbanCannotAccessException
+     * @throws \AgileDashboard_KanbanNotFoundException
      */
-    public function build(Project $project, AgileDashboard_Kanban $kanban)
+    public function build(\PFUser $current_user, int $kanban_id) : BreadCrumb
     {
-        $url = $this->plugin_path . '/?' .
-            http_build_query(
-                [
-                    'group_id' => $project->getID(),
-                    'action'   => 'showKanban',
-                    'id'       => $kanban->getId()
-                ]
-            );
+        $kanban  = $this->kanban_factory->getKanban($current_user, $kanban_id);
+        $tracker = $this->tracker_factory->getTrackerById($kanban->getTrackerId());
+        if ($tracker && $tracker->userCanView($current_user)) {
+            $tracker_crumb = EventManager::instance()->dispatch(new TrackerCrumbInContext($tracker, $current_user));
+            assert($tracker_crumb instanceof TrackerCrumbInContext);
+            return $tracker_crumb->getCrumb(self::CRUMB_IDENTIFIER);
+        }
+        throw new AgileDashboard_KanbanNotFoundException();
+    }
 
-        return new BreadCrumb(
-            new BreadCrumbLink($kanban->getName(), $url)
-        );
+    public function addKanbanCrumb(TrackerCrumbInContext $tracker_crumb)
+    {
+        $tracker = $tracker_crumb->getTracker();
+        $kanban_id = $this->kanban_factory->getKanbanIdByTrackerId($tracker_crumb->getTracker()->getId());
+        if ($kanban_id) {
+            try {
+                $kanban = $this->kanban_factory->getKanban($tracker_crumb->getUser(), $kanban_id);
+                $tracker_crumb->addGoToLink(
+                    self::CRUMB_IDENTIFIER,
+                    new TrackerCrumbLinkInContext(
+                        $kanban->getName(),
+                        sprintf(dgettext('tuleap-agiledashboard', '%s Kanban'), $kanban->getName()),
+                        AGILEDASHBOARD_BASE_URL.'?'. http_build_query(
+                            [
+                                'group_id' => $tracker->getProject()->getID(),
+                                'action'   => 'showKanban',
+                                'id'       => $kanban_id
+                            ]
+                        )
+                    )
+                );
+            } catch (\AgileDashboard_KanbanCannotAccessException $e) {
+            } catch (\AgileDashboard_KanbanNotFoundException $e) {
+            }
+        }
     }
 }

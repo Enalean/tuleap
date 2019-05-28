@@ -455,7 +455,11 @@ abstract class BaseLayout extends Response
         }
 
         foreach ($breadcrumbs as $breadcrumb) {
-            $this->breadcrumbs->addBreadCrumb($this->getBreadCrumbItem($breadcrumb));
+            if ($breadcrumb instanceof BreadCrumb) {
+                $this->breadcrumbs->addBreadCrumb($breadcrumb);
+            } else {
+                $this->breadcrumbs->addBreadCrumb($this->getBreadCrumbItem($breadcrumb));
+            }
         }
     }
 

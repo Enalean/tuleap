@@ -10,7 +10,11 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Poedit 2.2.1\n"
+
+#, php-format
+msgid "%s Kanban"
+msgstr "Kanban %s"
 
 #, php-format
 msgid "%s top backlog"

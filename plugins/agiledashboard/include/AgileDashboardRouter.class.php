@@ -234,15 +234,14 @@ class AgileDashboardRouter
                     Layout::INCLUDE_FAT_COMBINED => false,
                 );
 
-                $plugin_path = $this->plugin->getPluginPath();
-
+                $tracker_factory = TrackerFactory::instance();
                 $controller = new ShowKanbanController(
                     $request,
                     $this->kanban_factory,
                     TrackerFactory::instance(),
                     new AgileDashboard_PermissionsManager(),
                     $this->service_crumb_builder,
-                    new BreadCrumbBuilder($plugin_path)
+                    new BreadCrumbBuilder($tracker_factory, $this->kanban_factory)
                 );
                 $this->renderAction($controller, 'showKanban', $request, array(), $header_options);
                 break;

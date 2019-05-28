@@ -83,7 +83,7 @@ class ShowKanbanController extends BaseController
      */
     public function getBreadcrumbs()
     {
-        $kanban_id   = $this->request->get('id');
+        $kanban_id   = (int) $this->request->get('id');
         $user        = $this->request->getCurrentUser();
 
         $breadcrumbs = new BreadCrumbCollection();
@@ -95,8 +95,7 @@ class ShowKanbanController extends BaseController
         );
 
         try {
-            $kanban = $this->kanban_factory->getKanban($user, $kanban_id);
-            $breadcrumbs->addBreadCrumb($this->kanban_crumb_builder->build($this->project, $kanban));
+            $breadcrumbs->addBreadCrumb($this->kanban_crumb_builder->build($user, $kanban_id));
         } catch (AgileDashboard_KanbanNotFoundException $exception) {
             // ignore, it will be catch in showKanban
         } catch (AgileDashboard_KanbanCannotAccessException $exception) {
