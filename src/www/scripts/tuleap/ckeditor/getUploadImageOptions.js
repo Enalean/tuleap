@@ -168,7 +168,15 @@ function initiateUploadImage(ckeditor_instance, options, form, field_name, max_s
     }
 
     function onSuccess(loader, id, download_href) {
-        loader.responseData = {};
+        loader.responseData = {
+            // ckeditor uploadImage widget inserts real size of the image as inline style
+            // which causes strange rendering for big images in the artifact view once
+            // the artifact is updated.
+            // Using blank width & height inhibits this behavior.
+            // See https://github.com/ckeditor/ckeditor-dev/blob/4.11.1/plugins/uploadimage/plugin.js#L84-L86
+            width: " ",
+            height: " "
+        };
         loader.uploaded = 1;
         loader.fileName = loader.file.name;
         loader.url = download_href;
