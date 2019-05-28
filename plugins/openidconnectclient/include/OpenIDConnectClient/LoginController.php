@@ -29,10 +29,11 @@ use TemplateRendererFactory;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\OpenIDConnectClient\Login\ConnectorPresenterBuilder;
 use Tuleap\Request\DispatchableWithRequest;
+use Tuleap\Request\DispatchableWithRequestNoAuthz;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
 
-class LoginController implements DispatchableWithRequest
+class LoginController implements DispatchableWithRequestNoAuthz
 {
 
     /**
