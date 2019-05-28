@@ -53,6 +53,7 @@ async function getGettextProvider(options) {
 
 function initiateUploadImage(ckeditor_instance, options, form, field_name, max_size_upload) {
     if (typeof options.uploadUrl === "undefined") {
+        ckeditor_instance.on("paste", disablePasteOfImages);
         return;
     }
 
@@ -189,6 +190,23 @@ function initiateUploadImage(ckeditor_instance, options, form, field_name, max_s
             loader.message = loader.lang.filetools.httpError.replace("%1", originalRequest.status);
         }
         loader.changeStatus("error");
+    }
+
+    async function disablePasteOfImages(evt) {
+        const doc = new DOMParser().parseFromString(evt.data.dataValue, "text/html");
+        for (const img of doc.querySelectorAll("img")) {
+            if (img.src.match(/^data:/i)) {
+                evt.data.dataValue = "";
+                evt.cancel();
+                ckeditor_instance.showNotification(
+                    (await getGettextProvider(options)).gettext(
+                        "You are not allowed to paste images here"
+                    ),
+                    "warning"
+                );
+                return;
+            }
+        }
     }
 }
 
