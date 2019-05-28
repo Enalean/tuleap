@@ -100,6 +100,11 @@ function initiateUploadImage(ckeditor_instance, options, form, field_name, max_s
                     filename: loader.file.name,
                     filetype: loader.file.type
                 },
+                onProgress: (bytes_sent, bytes_total) => {
+                    loader.uploadTotal = bytes_total;
+                    loader.uploaded = bytes_sent;
+                    loader.update();
+                },
                 onSuccess: () => {
                     onSuccess(loader, id, download_href);
                     enableFormSubmit();
