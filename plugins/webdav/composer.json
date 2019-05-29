@@ -1,12 +1,25 @@
 {
-  "name": "tuleap/plugin-webdav",
-  "autoload": {
-    "psr-4": {
-      "Tuleap\\WebDAV\\": ["include/"]
+    "name": "tuleap/plugin-webdav",
+    "autoload": {
+        "psr-4": {
+            "Tuleap\\WebDAV\\": [
+                "include/"
+            ]
+        },
+        "classmap": [
+            "include/"
+        ]
     },
-    "classmap": ["include/"]
-  },
-  "config": {
-    "sort-packages": true
-  }
+    "config": {
+        "sort-packages": true
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/Enalean/dav.git"
+        }
+    ],
+    "require": {
+        "sabre/dav": "dev-tuleap-legacy-webdav"
+    }
 }

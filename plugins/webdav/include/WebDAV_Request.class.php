@@ -19,8 +19,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once 'common/include/Codendi_Request.class.php';
-
 /**
  * Standard request object for WebDav requests
  *
@@ -28,4 +26,3 @@ require_once 'common/include/Codendi_Request.class.php';
 class WebDAV_Request extends Codendi_Request {
 
 }
-?>

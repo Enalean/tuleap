@@ -19,9 +19,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once dirname(__FILE__).'/../../../docman/include/Docman_Controller.class.php';
-require_once dirname(__FILE__).'/../../../docman/include/Docman_Actions.class.php';
-
 /**
  * WebDav / Docman interactions aims to be done through the standard MVC pattern.
  * 

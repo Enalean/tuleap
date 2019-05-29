@@ -137,7 +137,7 @@ class WebDAVTreeTest extends TuleapTestCase {
     function testCanBeMovedFailNotMovable() {
         $source = null;
         $destination = null;
-        $tree = new TestTree($this->user, $this->project, $this->package, 0);
+        $tree = new TestTree(Mockery::mock(Sabre_DAV_ICollection::class));
 
         $this->assertEqual($tree->canBeMoved($source, $destination), false);
     }
@@ -145,7 +145,7 @@ class WebDAVTreeTest extends TuleapTestCase {
     function testCanBeMovedFailSourceNotReleaseDestinationPackage() {
         $source = null;
         $destination = new TestPackage($this->user, $this->project, $this->package, 0);
-        $tree = new TestTree();
+        $tree = new TestTree(Mockery::mock(Sabre_DAV_ICollection::class));
 
         $this->assertEqual($tree->canBeMoved($source, $destination), false);
     }
@@ -153,7 +153,7 @@ class WebDAVTreeTest extends TuleapTestCase {
     function testCanBeMovedFailSourceNotFileDestinationRelease() {
         $source = null;
         $destination = new TestRelease($this->user, $this->project, $this->package, $this->release, 0);
-        $tree = new TestTree();
+        $tree = new TestTree(Mockery::mock(Sabre_DAV_ICollection::class));
 
         $this->assertEqual($tree->canBeMoved($source, $destination), false);
     }
@@ -161,7 +161,7 @@ class WebDAVTreeTest extends TuleapTestCase {
     function testCanBeMovedFailSourceReleaseDestinationNotPackage() {
         $source = new TestRelease($this->user, $this->project, $this->package, $this->release, 0);
         $destination = null;
-        $tree = new TestTree();
+        $tree = new TestTree(Mockery::mock(Sabre_DAV_ICollection::class));
 
         $this->assertEqual($tree->canBeMoved($source, $destination), false);
     }
@@ -169,7 +169,7 @@ class WebDAVTreeTest extends TuleapTestCase {
     function testCanBeMovedFailSourceFileDestinationNotRelease() {
         $source = new TestFile($this->user, $this->project, $this->package, $this->release, 0);
         $destination = null;
-        $tree = new TestTree();
+        $tree = new TestTree(Mockery::mock(Sabre_DAV_ICollection::class));
 
         $this->assertEqual($tree->canBeMoved($source, $destination), false);
     }
@@ -177,7 +177,7 @@ class WebDAVTreeTest extends TuleapTestCase {
     function testCanBeMovedFailSourceReleaseDestinationPackageNotSameProject() {
         $source = new TestRelease2($this->user, $this->project, $this->package, $this->release, 0);
         $destination = new TestPackage($this->user, $this->project, $this->package, 0);
-        $tree = new TestTree();
+        $tree = new TestTree(Mockery::mock(Sabre_DAV_ICollection::class));
 
         $this->assertEqual($tree->canBeMoved($source, $destination), false);
     }
@@ -185,7 +185,7 @@ class WebDAVTreeTest extends TuleapTestCase {
     function testCanBeMovedFailSourceFileDestinationReleaseNotSameProject() {
         $source = new TestFile($this->user, $this->project, $this->package, $this->release, 0);
         $destination = new TestRelease2($this->user, $this->project, $this->package, $this->release, 0);
-        $tree = new TestTree();
+        $tree = new TestTree(Mockery::mock(Sabre_DAV_ICollection::class));
 
         $this->assertEqual($tree->canBeMoved($source, $destination), false);
     }
@@ -193,7 +193,7 @@ class WebDAVTreeTest extends TuleapTestCase {
     function testCanBeMovedSucceedeSourceReleaseDestinationPackage() {
         $source = new TestRelease($this->user, $this->project, $this->package, $this->release, 0);
         $destination = new TestPackage($this->user, $this->project, $this->package, 0);
-        $tree = new TestTree();
+        $tree = new TestTree(Mockery::mock(Sabre_DAV_ICollection::class));
 
         $this->assertEqual($tree->canBeMoved($source, $destination), true);
     }
@@ -201,7 +201,7 @@ class WebDAVTreeTest extends TuleapTestCase {
     function testCanBeMovedSucceedeSourceFileDestinationRelease() {
         $source = new TestFile($this->user, $this->project, $this->package, $this->release, $this->file);
         $destination = new TestRelease($this->user, $this->project, $this->package, $this->release, 0);
-        $tree = new TestTree();
+        $tree = new TestTree(Mockery::mock(Sabre_DAV_ICollection::class));
 
         $this->assertEqual($tree->canBeMoved($source, $destination), true);
     }

@@ -1,0 +1,67 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "59b27ec7174b2ff3af59e75f8e3aa97d",
+    "packages": [
+        {
+            "name": "sabre/dav",
+            "version": "dev-tuleap-legacy-webdav",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Enalean/dav.git",
+                "reference": "ec0a5d15214e7f064cd162c9a4299edaa3cc130b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Enalean/dav/zipball/ec0a5d15214e7f064cd162c9a4299edaa3cc130b",
+                "reference": "ec0a5d15214e7f064cd162c9a4299edaa3cc130b",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Sabre": "lib/"
+                }
+            },
+            "license": [
+                "New BSD License"
+            ],
+            "authors": [
+                {
+                    "name": "Evert Pot",
+                    "email": "evert@rooftopsolutions.nl",
+                    "homepage": "http://www.rooftopsolutions.nl/"
+                }
+            ],
+            "description": "WebDAV Framework for PHP",
+            "homepage": "http://code.google.com/p/sabredav/",
+            "keywords": [
+                "CalDAV",
+                "CardDAV",
+                "Framework",
+                "WebDAV",
+                "iCalendar"
+            ],
+            "support": {
+                "source": "https://github.com/Enalean/dav/tree/dev-tuleap-legacy-webdav"
+            },
+            "time": "2019-05-29T09:22:10+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": {
+        "sabre/dav": 20
+    },
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": []
+}

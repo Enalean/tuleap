@@ -19,8 +19,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once 'common/plugin/PluginDescriptor.class.php';
-
 class WebDAVPluginDescriptor extends PluginDescriptor {
 
     /**
@@ -33,5 +31,3 @@ class WebDAVPluginDescriptor extends PluginDescriptor {
         $this->setVersionFromFile(dirname(__FILE__).'/../VERSION');
     }
 }
-
-?>

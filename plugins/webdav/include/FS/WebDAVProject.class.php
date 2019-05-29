@@ -71,8 +71,7 @@ class WebDAVProject extends Sabre_DAV_Directory
                                                            'roots'    => &$roots));
         foreach ($roots as $service => $root) {
             if ($service == 'docman') {
-                include_once 'WebDAVDocmanFolder.class.php';
-                $docman = new WebDAVDocmanFolder($this->getUser() , $this->getProject(), $root, $this->getMaxFileSize());
+                $docman = new WebDAVDocmanFolder($this->getUser(), $this->getProject(), $root);
                 $children[$docman->getName()] = $docman;
             }
         }
